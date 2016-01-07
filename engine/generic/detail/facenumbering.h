@@ -43,6 +43,8 @@
 #endif
 
 #include "regina-core.h"
+
+// Permutation headers required for template specialisations.
 #include "maths/nperm2.h"
 #include "maths/nperm3.h"
 #include "maths/nperm4.h"
@@ -57,20 +59,35 @@ namespace detail {
  */
 
 /**
- * Implementation details for numbering <i>subdim</i>-faces of a
- * <i>dim</i>-dimensional simplex.
+ * Placeholder class that outlines the functions provided by
+ * FaceNumbering<dim, subdim>.
+ * This class exists merely to help with documentation.
  *
- * This numbering scheme is represented by the class FaceNumbering<dim, subdim>,
- * which uses this as a base class.  You can also access the numbering
- * scheme through Face<dim, subdim>, which likewise has this as a base class.
- * End users should not need to refer to FaceNumberingImpl directly.
+ * The class FaceNumbering<dim, subdim> details how the <i>subdim</i>-faces
+ * of a <i>dim</i>-dimensional simplex are numbered.  Its implementation
+ * is complex and involves many template specialisations, and so this base
+ * class FaceNumberingAPI serves to put all the documentation in one place.
+ *
+ * End users should access the numbering scheme through either
+ * FaceNumbering<dim, subdim> or its child class Face<dim, subdim>.
+ * There is no need to refer to FaceNumberingAPI directly.
+ *
+ * The member functions described here are never implemented in the base
+ * class FaceNumberingAPI; instead they are redeclared and implemented in the
+ * various specialisations of the child class FaceNumberingImpl.
+ *
+ * Note that FaceNumberingAPI documents member functions only.  The
+ * class FaceNumbering<dim, subdim> provides static constants also (in
+ * particular, the constant \a nFaces).
  *
  * See the FaceNumbering template class notes for further information,
- * including details of how the numbering scheme works.
+ * including details of how the face numbering scheme works.
  *
  * \ifacespython This base class is not present, and neither is
  * FaceNumbering<dim, subdim>.  Python users can access these routines
- * through the class Face<dim, subdim>.
+ * through the class Face<dim, subdim> (which in Python
+ * becomes Face<i>dim</i>_<i>subdim</i>, or one of the typedefs in
+ * \ref stddim "standard dimensions" such as Dim2Edge, NVertex and so on).
  *
  * \tparam dim the dimension of the simplex whose faces are being numbered.
  * This must be at least 1.
@@ -83,28 +100,10 @@ namespace detail {
  * is forced by \a dim and \a subdim; its purpose is to help with
  * template specialisations.
  */
-template <int dim, int subdim, bool lex>
-class FaceNumberingImpl {
-    static_assert((dim + 1) >= 2 * (subdim + 1),
-        "The generic FaceNumberingImpl<dim, subdim, lex> class "
-        "should only be used for low-dimensional faces.");
-    static_assert(subdim > 0,
-        "The generic FaceNumberingImpl<dim, subdim, lex> class "
-        "should not be used for vertices (i.e., subdim == 0).");
-    static_assert(lex,
-        "The generic FaceNumberingImpl<dim, subdim, lex> class "
-        "should only be used for lexicographic numbering (i.e., lex == true).");
-
+template <int dim, int subdim>
+class FaceNumberingAPI {
+#ifdef __DOXYGEN
     public:
-        /**
-         * The total number of <i>subdim</i>-dimensional faces in each
-         * <i>dim</i>-dimensional simplex.
-         */
-        static constexpr int nFaces =
-            FaceNumberingImpl<dim - 1, subdim - 1, lex>::nFaces +
-            FaceNumberingImpl<dim - 1, subdim,
-                (dim >= 2 * (subdim + 1))>::nFaces;
-
         /**
          * Given a <i>subdim</i>-face number within a <i>dim</i>-dimensional
          * simplex, returns the corresponding canonical ordering of the
@@ -113,8 +112,8 @@ class FaceNumberingImpl {
          * If this canonical ordering is \a c, then \a c[0,...,\a subdim]
          * will be the vertices of the given face in increasing numerical
          * order.  That is, \a c[0] &lt; ... &lt; \a c[\a subdim].
-         * For faces of dimension \a subdim &le; <i>dim</i>-2, the remaining
-         * images \a c[(\a subdim + 1),...,\a dim] will be arbitrary.
+         * The remaining images \a c[(\a subdim + 1),...,\a dim] will
+         * be ordered arbitrarily.
          *
          * Note that this is \e not the same permutation as returned by
          * Simplex<dim>::faceMapping<subdim>():
@@ -122,7 +121,8 @@ class FaceNumberingImpl {
          * - ordering() is a static function, which returns the same permutation
          *   for the same face number, regardless of which <i>dim</i>-simplex
          *   we are looking at.  The images of 0,...,\a subdim will always
-         *   appear in increasing order.
+         *   appear in increasing order, and the images of
+         *   (\a subdim + 1),...,\a dim will be arbitrary.
          *
          * - faceMapping() examines the underlying face \a F of the
          *   triangulation and, across all appearances of \a F in different
@@ -169,22 +169,117 @@ class FaceNumberingImpl {
          * contains the given vertex.
          */
         static bool containsVertex(unsigned face, unsigned vertex);
+#endif // __DOXYGEN
 };
 
-#ifndef __DOXYGEN
+/**
+ * Implementation details for numbering <i>subdim</i>-faces of a
+ * <i>dim</i>-dimensional simplex.
+ *
+ * This numbering scheme can be accessed via FaceNumbering<dim, subdim> or
+ * Face<dim, subdim>, both of which use this as a base class.
+ * End users should not need to refer to FaceNumberingImpl directly.
+ *
+ * See the FaceNumbering template class notes for further information,
+ * including details of how the face numbering scheme works.
+ *
+ * \ifacespython This base class is not present, and neither is
+ * FaceNumbering<dim, subdim>.  Python users can access these routines
+ * through the class Face<dim, subdim> (which in Python
+ * becomes Face<i>dim</i>_<i>subdim</i>, or one of the typedefs in
+ * \ref stddim "standard dimensions" such as Dim2Edge, NVertex and so on).
+ *
+ * \tparam dim the dimension of the simplex whose faces are being numbered.
+ * This must be at least 1.
+ * \tparam subdim the dimension of the faces being numbered.
+ * This must be between 0 and <i>dim</i>-1 inclusive.
+ * \tparam lex \c true if faces are numbered in lexicographical order
+ * according to their vertices (the scheme for low-dimensional faces),
+ * or \c false if faces are numbered in reverse lexicographical order
+ * (the scheme for high-dimensional faces).  The value of this parameter
+ * is forced by \a dim and \a subdim; its purpose is to help with
+ * template specialisations.
+ */
+template <int dim, int subdim, bool lex>
+class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
+    static_assert((dim + 1) >= 2 * (subdim + 1),
+        "The generic FaceNumberingImpl<dim, subdim, lex> class "
+        "should only be used for low-dimensional faces.");
+    static_assert(subdim > 0,
+        "The generic FaceNumberingImpl<dim, subdim, lex> class "
+        "should not be used for vertices (i.e., subdim == 0).");
+    static_assert(lex,
+        "The generic FaceNumberingImpl<dim, subdim, lex> class "
+        "should only be used for lexicographic numbering (i.e., lex == true).");
+    static_assert(! standardDim(dim),
+        "The generic FaceNumberingImpl<dim, subdim, lex> class "
+        "should not be used for Regina's standard dimensions.");
 
-// Specialisations of FaceNumbering
+    public:
+        /**
+         * The total number of <i>subdim</i>-dimensional faces in each
+         * <i>dim</i>-dimensional simplex.
+         */
+        static constexpr int nFaces =
+            FaceNumberingImpl<dim - 1, subdim - 1, lex>::nFaces +
+            FaceNumberingImpl<dim - 1, subdim,
+                (dim >= 2 * (subdim + 1))>::nFaces;
+
+        // The following routines are documented in FaceNumberingAPI.
+        static NPerm<dim + 1> ordering(unsigned face) {
+            // We can assume here that we are numbering faces in forward
+            // lexicographical order (i.e., the face dimension subdim is small).
+
+            // This generic implementation MUST order the images of
+            // subdim+1, ..., dim in DESCENDING order, since the
+            // implementation of ordering() for high-dimensional faces
+            // calls this function and reverses the permutation.
+
+            // TODO: Generic implementation for ordering().
+            return NPerm<dim + 1>();
+        }
+
+        static unsigned faceNumber(NPerm<dim + 1> vertices) {
+            // We can assume here that we are numbering faces in forward
+            // lexicographical order (i.e., the face dimension subdim is small).
+
+            // TODO: Generic implementation for faceNumber().
+            return 0;
+        }
+
+        static bool containsVertex(unsigned face, unsigned vertex) {
+            // We can assume here that we are numbering faces in forward
+            // lexicographical order (i.e., the face dimension subdim is small).
+
+            // TODO: Make this more efficient - we should be able to
+            // implement it "directly", without calling ordering().
+            NPerm<dim + 1> o = ordering(face);
+            for (unsigned i = 0; i <= subdim; ++i)
+                if (o[i] == vertex)
+                    return true;
+            return false;
+        }
+};
 
 template <int dim, int subdim>
-class FaceNumberingImpl<dim, subdim, false> {
+class FaceNumberingImpl<dim, subdim, false> :
+        public FaceNumberingAPI<dim, subdim> {
     static_assert((dim + 1) < 2 * (subdim + 1),
         "The specialisation FaceNumberingImpl<dim, subdim, false> "
         "should only be used for high-dimensional faces.");
+    static_assert(! standardDim(dim),
+        "The specialisation FaceNumberingImpl<dim, subdim, false> "
+        "should not be used for Regina's standard dimensions.");
 
     public:
+        /**
+         * The total number of <i>subdim</i>-dimensional faces in each
+         * <i>dim</i>-dimensional simplex.
+         */
         static constexpr int nFaces =
             FaceNumberingImpl<dim, dim - subdim - 1, true>::nFaces;
 
+        // The following routines are documented in FaceNumberingAPI.
         static NPerm<dim + 1> ordering(unsigned face) {
             return FaceNumberingImpl<dim, dim - subdim - 1, true>::
                 ordering(face).reverse();
@@ -202,10 +297,18 @@ class FaceNumberingImpl<dim, subdim, false> {
 };
 
 template <int dim>
-class FaceNumberingImpl<dim, 0, true> {
+class FaceNumberingImpl<dim, 0, true> : public FaceNumberingAPI<dim, 0> {
+    static_assert(! standardDim(dim),
+        "The specialisation FaceNumberingImpl<dim, 0, true> "
+        "should not be used for Regina's standard dimensions.");
+
     public:
+        /**
+         * The total number of vertices in each <i>dim</i>-dimensional simplex.
+         */
         static constexpr int nFaces = dim + 1;
 
+        // The following routines are documented in FaceNumberingAPI.
         static NPerm<dim + 1> ordering(unsigned face) {
             return NPerm<dim + 1>(face, 0);
         }
@@ -220,10 +323,14 @@ class FaceNumberingImpl<dim, 0, true> {
 };
 
 template <>
-class FaceNumberingImpl<1, 0, true> {
+class FaceNumberingImpl<1, 0, true> : public FaceNumberingAPI<1, 0> {
     public:
+        /**
+         * The total number of vertices in each edge.
+         */
         static constexpr int nFaces = 2;
 
+        // The following routines are documented in FaceNumberingAPI.
         static NPerm<2> ordering(unsigned face) {
             return NPerm2::fromPermCode(face);
         }
@@ -238,10 +345,14 @@ class FaceNumberingImpl<1, 0, true> {
 };
 
 template <>
-class FaceNumberingImpl<2, 0, true> {
+class FaceNumberingImpl<2, 0, true> : public FaceNumberingAPI<2, 0> {
     public:
+        /**
+         * The total number of vertices in each triangle.
+         */
         static constexpr int nFaces = 3;
 
+        // The following routines are documented in FaceNumberingAPI.
         static NPerm<3> ordering(unsigned face) {
             return NPerm<3>(face, (face + 1) % 3, (face + 2) % 3);
         }
@@ -256,13 +367,18 @@ class FaceNumberingImpl<2, 0, true> {
 };
 
 template <>
-class FaceNumberingImpl<2, 1, false> {
+class FaceNumberingImpl<2, 1, false> : public FaceNumberingAPI<2, 1> {
     private:
         static const NPerm<3> ordering_[3];
+            /**< A hard-coded list of all return values for ordering(). */
 
     public:
+        /**
+         * The total number of edges in each triangle.
+         */
         static constexpr int nFaces = 3;
 
+        // The following routines are documented in FaceNumberingAPI.
         static NPerm<3> ordering(unsigned face) {
             return ordering_[face];
         }
@@ -277,10 +393,14 @@ class FaceNumberingImpl<2, 1, false> {
 };
 
 template <>
-class FaceNumberingImpl<3, 0, true> {
+class FaceNumberingImpl<3, 0, true> : public FaceNumberingAPI<3, 0> {
     public:
+        /**
+         * The total number of vertices in each tetrahedron.
+         */
         static constexpr int nFaces = 4;
 
+        // The following routines are documented in FaceNumberingAPI.
         static NPerm<4> ordering(unsigned face) {
             return (face % 2 == 0 ?
                 NPerm4(face, (face + 1) % 4, (face + 2) % 4, (face + 3) % 4) :
@@ -297,7 +417,7 @@ class FaceNumberingImpl<3, 0, true> {
 };
 
 template <>
-class FaceNumberingImpl<3, 1, true> {
+class FaceNumberingImpl<3, 1, true> : public FaceNumberingAPI<3, 1> {
     public:
         /**
          * A table that maps vertices of a tetrahedron to edge numbers.
@@ -336,10 +456,15 @@ class FaceNumberingImpl<3, 1, true> {
 
     private:
         static const NPerm<4> ordering_[6];
+            /**< A hard-coded list of all return values for ordering(). */
 
     public:
+        /**
+         * The total number of edges in each tetrahedron.
+         */
         static constexpr int nFaces = 6;
 
+        // The following routines are documented in FaceNumberingAPI.
         static NPerm<4> ordering(unsigned face) {
             return ordering_[face];
         }
@@ -355,13 +480,18 @@ class FaceNumberingImpl<3, 1, true> {
 };
 
 template <>
-class FaceNumberingImpl<3, 2, false> {
+class FaceNumberingImpl<3, 2, false> : public FaceNumberingAPI<3, 2> {
     private:
         static const NPerm<4> ordering_[4];
+            /**< A hard-coded list of all return values for ordering(). */
 
     public:
+        /**
+         * The total number of triangles in each tetrahedron.
+         */
         static constexpr int nFaces = 4;
 
+        // The following routines are documented in FaceNumberingAPI.
         static NPerm<4> ordering(unsigned face) {
             return ordering_[face];
         }
@@ -376,10 +506,14 @@ class FaceNumberingImpl<3, 2, false> {
 };
 
 template <>
-class FaceNumberingImpl<4, 0, true> {
+class FaceNumberingImpl<4, 0, true> : public FaceNumberingAPI<4, 0> {
     public:
+        /**
+         * The total number of vertices in each pentachoron.
+         */
         static constexpr int nFaces = 5;
 
+        // The following routines are documented in FaceNumberingAPI.
         static NPerm<5> ordering(unsigned face) {
             return NPerm5(face, (face + 1) % 5, (face + 2) % 5,
                 (face + 3) % 5, (face + 4) % 5);
@@ -395,7 +529,7 @@ class FaceNumberingImpl<4, 0, true> {
 };
 
 template <>
-class FaceNumberingImpl<4, 1, true> {
+class FaceNumberingImpl<4, 1, true> : public FaceNumberingAPI<4, 1> {
     public:
         /**
          * A table that maps vertices of a pentachoron to edge numbers.
@@ -434,10 +568,15 @@ class FaceNumberingImpl<4, 1, true> {
 
     private:
         static const NPerm<5> ordering_[10];
+            /**< A hard-coded list of all return values for ordering(). */
 
     public:
+        /**
+         * The total number of edges in each pentachoron.
+         */
         static constexpr int nFaces = 10;
 
+        // The following routines are documented in FaceNumberingAPI.
         static NPerm<5> ordering(unsigned face) {
             return ordering_[face];
         }
@@ -453,7 +592,7 @@ class FaceNumberingImpl<4, 1, true> {
 };
 
 template <>
-class FaceNumberingImpl<4, 2, false> {
+class FaceNumberingImpl<4, 2, false> : public FaceNumberingAPI<4, 2> {
     public:
         /**
          * A table that maps vertices of a pentachoron to triangle numbers.
@@ -493,10 +632,15 @@ class FaceNumberingImpl<4, 2, false> {
 
     private:
         static const NPerm<5> ordering_[10];
+            /**< A hard-coded list of all return values for ordering(). */
 
     public:
+        /**
+         * The total number of triangles in each pentachoron.
+         */
         static constexpr int nFaces = 10;
 
+        // The following routines are documented in FaceNumberingAPI.
         static NPerm<5> ordering(unsigned face) {
             return ordering_[face];
         }
@@ -513,13 +657,18 @@ class FaceNumberingImpl<4, 2, false> {
 };
 
 template <>
-class FaceNumberingImpl<4, 3, false> {
+class FaceNumberingImpl<4, 3, false> : public FaceNumberingAPI<4, 3> {
     private:
         static const NPerm<5> ordering_[5];
+            /**< A hard-coded list of all return values for ordering(). */
 
     public:
+        /**
+         * The total number of tetrahedra in each pentachoron.
+         */
         static constexpr int nFaces = 5;
 
+        // The following routines are documented in FaceNumberingAPI.
         static NPerm<5> ordering(unsigned face) {
             return ordering_[face];
         }
@@ -532,61 +681,6 @@ class FaceNumberingImpl<4, 3, false> {
             return (face != vertex);
         }
 };
-
-#endif // __DOXYGEN
-
-// Inline functions for FaceNumbering
-
-template <int dim, int subdim, bool lex>
-inline NPerm<dim + 1> FaceNumberingImpl<dim, subdim, lex>::ordering(
-        unsigned face) {
-    static_assert(! standardDim(dim),
-        "The generic implementation of FaceBaseImpl::ordering() "
-        "should not be used for Regina's standard dimensions.");
-    static_assert(lex,
-        "The generic implementation of FaceBaseImpl::ordering() "
-        "should only be used for low-dimensional faces.");
-
-    // We can assume here that we are numbering faces in forward
-    // lexicographical order (i.e., the face dimension subdim is small).
-
-    // TODO: Generic implementation for ordering().
-    return NPerm<dim + 1>();
-}
-
-template <int dim, int subdim, bool lex>
-inline unsigned FaceNumberingImpl<dim, subdim, lex>::faceNumber(
-        NPerm<dim + 1> vertices) {
-    static_assert(! standardDim(dim),
-        "The generic implementation of FaceBaseImpl::faceNumber() "
-        "should not be used for Regina's standard dimensions.");
-    static_assert(lex,
-        "The generic implementation of FaceBaseImpl::faceNumber() "
-        "should only be used for low-dimensional faces.");
-
-    // We can assume here that we are numbering faces in forward
-    // lexicographical order (i.e., the face dimension subdim is small).
-
-    // TODO: Generic implementation for faceNumber().
-    return 0;
-}
-
-template <int dim, int subdim, bool lex>
-inline bool FaceNumberingImpl<dim, subdim, lex>::containsVertex(unsigned face,
-        unsigned vertex) {
-    static_assert(! standardDim(dim),
-        "The generic implementation of FaceBaseImpl::containsVertex() "
-        "should not be used for Regina's standard dimensions.");
-    static_assert(lex,
-        "The generic implementation of FaceBaseImpl::containsVertex() "
-        "should only be used for low-dimensional faces.");
-
-    // We can assume here that we are numbering faces in forward
-    // lexicographical order (i.e., the face dimension subdim is small).
-
-    // TODO: Generic implementation for containsVertex().
-    return false;
-}
 
 } } // namespace regina::detail
 
