@@ -52,14 +52,14 @@ namespace detail {
         NPerm4(2, 3, 0, 1)
     };
 
-    const int FaceNumberingImpl<3, 1, true>::faceNumber_[4][4] = {
+    const int FaceNumberingImpl<3, 1, true>::edgeNumber[4][4] = {
         { -1, 0, 1, 2 },
         {  0,-1, 3, 4 },
         {  1, 3,-1, 5 },
         {  2, 4, 5,-1 }
     };
 
-    const int FaceNumberingImpl<3, 1, true>::vertex_[6][2] = {
+    const int FaceNumberingImpl<3, 1, true>::edgeVertex[6][2] = {
         { 0, 1 },
         { 0, 2 },
         { 0, 3 },

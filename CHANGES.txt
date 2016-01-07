@@ -37,8 +37,8 @@ Version 4.97  [ (under development) ]
               All the code that used to work with these classes now
               works with the newer and more flexible NProgressTracker instead.
             * Global arrays edgeNumber[][], edgeStart[] and edgeEnd[] have
-              been depredated since 2009; this are now removed.  Use the
-              functions NEdge::faceNumber() and NEdge::ordering() instead.
+              been deprecated since 2009; this are now removed.  Use the
+              arrays NEdge::edgeNumber[][] and NEdge::edgeVertex[][] instead.
     ENGINE:
         All:
             - Removed ShareableObject from the class hierarchy.  All classes
@@ -224,8 +224,6 @@ Version 4.97  [ (under development) ]
               belong to which edges.
             - New trivial routine isLinkOrientable(), for consistency with
               faces in higher dimensions.
-            - Deprecated static arrays edgeNumber[][] and edgeVertex[][].
-              Call the new functions faceNumber() and ordering() instead.
             - Removed getEmbeddings() for C++, but kept it for Python.
             - Removed the old routine getNumberOfEmbeddings().  Just use
               the equivalent routine getDegree() instead.
@@ -542,7 +540,7 @@ Version 4.97  [ (under development) ]
         Global arrays edgeNumber[][], edgeStart[], edgeEnd[]:
             - This long-deprecated global arrays have now been removed, and
               the corresponding static arrays in NEdge are now deprecated.
-              Instead, call NEdge::faceNumber() and/or NEdge::ordering().
+              Instead, use NEdge::edgeNumber[][] and/or NEdge::edgeVertex[][].
         Header dim2edgepairing.h, nfacepairing.h:
             - Relocated from census/ into dim2/ and triangulation/ respectively.
               Deprecated headers have been kept in the old census/ folder.

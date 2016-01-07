@@ -300,10 +300,52 @@ class FaceNumberingImpl<3, 0, true> {
 
 template <>
 class FaceNumberingImpl<3, 1, true> {
+    public:
+        /**
+         * A table that maps vertices of a tetrahedron to edge numbers.
+         *
+         * Edges in a tetrahedron are numbered 0,...,5.  This table
+         * converts vertices to edge numbers; in particular, the edge
+         * joining vertices \a i and \a j of a tetrahedron is edge
+         * number <tt>edgeNumber[i][j]</tt>.  Here \a i and \a j must be
+         * distinct, must be between 0 and 3 inclusive, and may be given
+         * in any order.  The resulting edge number will be between 0 and 5
+         * inclusive.
+         *
+         * Note that edge \a i is always opposite edge \a 5-i in a
+         * tetrahedron.
+         *
+         * For reference, Regina assigns edge numbers in lexicographical
+         * order.  That is, edge 0 joins vertices 0 and 1, edge 1 joins
+         * vertices 0 and 2, edge 2 joins vertices 0 and 3, and so on.
+         *
+         * \note Accessing <tt>edgeNumber[i][j]</tt> is equivalent to calling
+         * <tt>faceNumber(p)</tt>, where \a p is a permutation that maps 
+         * 0,1 to \a i,\a j in some order.
+         */
+        static const int edgeNumber[4][4];
+
+        /**
+         * A table that maps edges of a tetrahedron to vertex numbers.
+         *
+         * Edges in a tetrahedron are numbered 0,...,5.  This table
+         * converts edge numbers to vertices; in particular, edge \a i
+         * in a tetrahedron joins vertices <tt>edgeVertex[i][0]</tt> and
+         * <tt>edgeVertex[i][1]</tt>.  Here \a i must be bewteen 0 and 5
+         * inclusive; the resulting vertex numbers will be between 0 and 3
+         * inclusive.
+         *
+         * Note that edge \a i is always opposite edge \a 5-i in a tetrahedron.
+         * It is guaranteed that <tt>edgeVertex[i][0]</tt> will always
+         * be smaller than <tt>edgeVertex[i][1]</tt>.
+         *
+         * \note Accessing <tt>edgeVertex[i][j]</tt> is equivalent to
+         * calling <tt>ordering(i)[j]</tt>.
+         */
+        static const int edgeVertex[6][2];
+
     private:
         static const NPerm<4> ordering_[6];
-        static const int faceNumber_[4][4];
-        static const int vertex_[6][2];
 
     public:
         static constexpr int nFaces = 6;
@@ -313,12 +355,12 @@ class FaceNumberingImpl<3, 1, true> {
         }
 
         static unsigned faceNumber(NPerm<4> vertices) {
-            return faceNumber_[vertices[0]][vertices[1]];
+            return edgeNumber[vertices[0]][vertices[1]];
         }
 
         static bool containsVertex(unsigned face, unsigned vertex) {
-            return (vertex == vertex_[face][0] ||
-                    vertex == vertex_[face][1]);
+            return (vertex == edgeVertex[face][0] ||
+                    vertex == edgeVertex[face][1]);
         }
 };
 

@@ -36,12 +36,6 @@
 
 namespace regina {
 
-const int (*const NEdge::edgeNumber)[4] =
-    FaceNumberingImpl<3, 1, true>::faceNumber_;
-
-const int (*const NEdge::edgeVertex)[2] =
-    FaceNumberingImpl<3, 1, true>::vertex_;
-
 void NEdge::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
     out << std::endl;
