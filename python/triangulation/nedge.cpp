@@ -45,14 +45,9 @@
 using namespace boost::python;
 using regina::NEdge;
 using regina::NEdgeEmbedding;
-using regina::python::GlobalArray;
 using regina::python::GlobalArray2D;
 
 namespace {
-    GlobalArray2D<int> edgeNumber_arr(regina::edgeNumber, 4);
-    GlobalArray<int> edgeStart_arr(regina::edgeStart, 6);
-    GlobalArray<int> edgeEnd_arr(regina::edgeEnd, 6);
-
     GlobalArray2D<int> NEdge_edgeNumber(NEdge::edgeNumber, 4);
     GlobalArray2D<int> NEdge_edgeVertex(NEdge::edgeVertex, 6);
 
@@ -65,11 +60,6 @@ namespace {
 }
 
 void addNEdge() {
-    // Global arrays:
-    scope().attr("edgeNumber") = &edgeNumber_arr;
-    scope().attr("edgeStart") = &edgeStart_arr;
-    scope().attr("edgeEnd") = &edgeEnd_arr;
-
     // Classes:
     class_<NEdgeEmbedding>("NEdgeEmbedding",
             init<regina::NTetrahedron*, int>())

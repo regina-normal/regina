@@ -52,14 +52,14 @@ namespace detail {
         NPerm4(2, 3, 0, 1)
     };
 
-    const int FaceNumberingImpl<3, 1, true>::faceNumber_[4][4] = {
+    const int FaceNumberingImpl<3, 1, true>::edgeNumber[4][4] = {
         { -1, 0, 1, 2 },
         {  0,-1, 3, 4 },
         {  1, 3,-1, 5 },
         {  2, 4, 5,-1 }
     };
 
-    const int FaceNumberingImpl<3, 1, true>::vertex_[6][2] = {
+    const int FaceNumberingImpl<3, 1, true>::edgeVertex[6][2] = {
         { 0, 1 },
         { 0, 2 },
         { 0, 3 },
@@ -73,6 +73,102 @@ namespace detail {
         NPerm4(0, 2, 3, 1),
         NPerm4(0, 1, 3, 2),
         NPerm4(0, 1, 2, 3)
+    };
+
+    const NPerm5 FaceNumberingImpl<4, 1, true>::ordering_[10] = {
+        NPerm5(0, 1, 2, 3, 4),
+        NPerm5(0, 2, 1, 4, 3),
+        NPerm5(0, 3, 1, 2, 4),
+        NPerm5(0, 4, 1, 3, 2),
+        NPerm5(1, 2, 0, 3, 4),
+        NPerm5(1, 3, 0, 4, 2),
+        NPerm5(1, 4, 0, 2, 3),
+        NPerm5(2, 3, 0, 1, 4),
+        NPerm5(2, 4, 0, 3, 1),
+        NPerm5(3, 4, 0, 1, 2)
+    };
+
+    const int FaceNumberingImpl<4, 1, true>::faceNumber_[5][5] = {
+        { -1, 0, 1, 2, 3 },
+        { 0, -1, 4, 5, 6 },
+        { 1, 4, -1, 7, 8 },
+        { 2, 5, 7, -1, 9 },
+        { 3, 6, 8, 9, -1 }};
+
+    const int FaceNumberingImpl<4, 1, true>::vertex_[10][2] = {
+        { 0, 1 },
+        { 0, 2 },
+        { 0, 3 },
+        { 0, 4 },
+        { 1, 2 },
+        { 1, 3 },
+        { 1, 4 },
+        { 2, 3 },
+        { 2, 4 },
+        { 3, 4 }};
+
+    const NPerm5 FaceNumberingImpl<4, 2, false>::ordering_[10] = {
+        NPerm5(2, 3, 4, 0, 1),
+        NPerm5(1, 3, 4, 2, 0),
+        NPerm5(1, 2, 4, 0, 3),
+        NPerm5(1, 2, 3, 4, 0),
+        NPerm5(0, 3, 4, 1, 2),
+        NPerm5(0, 2, 4, 3, 1),
+        NPerm5(0, 2, 3, 1, 4),
+        NPerm5(0, 1, 4, 2, 3),
+        NPerm5(0, 1, 3, 4, 2),
+        NPerm5(0, 1, 2, 3, 4)
+    };
+
+    const int FaceNumberingImpl<4, 2, false>::faceNumber_[5][5][5] = {
+        { { -1,-1,-1,-1,-1 },
+          { -1,-1, 9, 8, 7 },
+          { -1, 9,-1, 6, 5 },
+          { -1, 8, 6,-1, 4 },
+          { -1, 7, 5, 4,-1 } },
+
+        { { -1,-1, 9, 8, 7 },
+          { -1,-1,-1,-1,-1 },
+          {  9,-1,-1, 3, 2 },
+          {  8,-1, 3,-1, 1 },
+          {  7,-1, 2, 1,-1 } },
+
+        { { -1, 9,-1, 6, 5 },
+          {  9,-1,-1, 3, 2 },
+          { -1,-1,-1,-1,-1 },
+          {  6, 3,-1,-1, 0 },
+          {  5, 2,-1, 0,-1 } },
+
+        { { -1, 8, 6,-1, 4 },
+          {  8,-1, 3,-1, 1 },
+          {  6, 3,-1,-1, 0 },
+          { -1,-1,-1,-1,-1 },
+          {  4, 1, 0,-1,-1 } },
+
+        { { -1, 7, 5, 4,-1 },
+          {  7,-1, 2, 1,-1 },
+          {  5, 2,-1, 0,-1 },
+          {  4, 1, 0,-1,-1 },
+          { -1,-1,-1,-1,-1 } } };
+
+    const int FaceNumberingImpl<4, 2, false>::vertex_[10][3] = {
+        { 2, 3, 4 },
+        { 1, 3, 4 },
+        { 1, 2, 4 },
+        { 1, 2, 3 },
+        { 0, 3, 4 },
+        { 0, 2, 4 },
+        { 0, 2, 3 },
+        { 0, 1, 4 },
+        { 0, 1, 3 },
+        { 0, 1, 2 } };
+
+    const NPerm5 FaceNumberingImpl<4, 3, false>::ordering_[5] = {
+        NPerm5(1,2,3,4,0),
+        NPerm5(0,2,3,4,1),
+        NPerm5(0,1,3,4,2),
+        NPerm5(0,1,2,4,3),
+        NPerm5(0,1,2,3,4)
     };
 }
 

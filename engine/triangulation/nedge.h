@@ -64,56 +64,6 @@ typedef Face<3, 0> NVertex;
  */
 
 /**
- * <tt>edgeNumber[i][j]</tt> is the number of the edge linking vertices
- * <tt>i</tt> and <tt>j</tt> in a tetrahedron.  <tt>i</tt> and <tt>j</tt>
- * must be between 0 and 3 inclusive and may be given in any order.
- * The resulting edge number will be between 0 and 5 inclusive.
- *
- * Note that edge numbers of opposite edges will always add to 5.
- *
- * \deprecated This array has been replaced with the identical array
- * NEdge::edgeNumber.  Users are advised to switch to NEdge::edgeNumber
- * instead, since the old regina::edgeNumber will eventually be removed
- * in some future version of Regina.
- */
-REGINA_API extern const int edgeNumber[4][4];
-
-/**
- * <tt>edgeStart[k]</tt> is the vertex of a tetrahedron at which edge
- * <tt>k</tt> of the tetrahedron begins.  <tt>k</tt> must be between 0 and 5
- * inclusive.  The resulting vertex number will be between 0 and 3 inclusive.
- *
- * Note that edge numbers of opposite edges will always add to 5.
- * You are guaranteed that <tt>edgeStart[e]</tt> will always be smaller
- * than <tt>edgeEnd[e]</tt>.
- *
- * \deprecated This array has been superceded by NEdge::edgeVertex
- * (where <tt>edgeStart[i]</tt> is now <tt>NEdge::edgeVertex[i][0]</tt>).
- * Users are advised to switch to NEdge::edgeVertex instead, since the old
- * regina::edgeStart and regina::edgeEnd will eventually be removed in some
- * future version of Regina.
- */
-REGINA_API extern const int edgeStart[6];
-
-/**
- * <tt>edgeEnd[k]</tt> is the vertex of a tetrahedron
- * at which edge <tt>k</tt> of the tetrahedron ends.
- * <tt>k</tt> must be between 0 and 5 inclusive.
- * The resulting vertex number will be between 0 and 3 inclusive.
- *
- * Note that edge numbers of opposite edges will always add to 5.
- * You are guaranteed that <tt>edgeStart[e]</tt> will always be smaller
- * than <tt>edgeEnd[e]</tt>.
- *
- * \deprecated This array has been superceded by NEdge::edgeVertex
- * (where <tt>edgeEnd[i]</tt> is now <tt>NEdge::edgeVertex[i][1]</tt>).
- * Users are advised to switch to NEdge::edgeVertex instead, since the old
- * regina::edgeStart and regina::edgeEnd will eventually be removed in some
- * future version of Regina.
- */
-REGINA_API extern const int edgeEnd[6];
-
-/**
  * A convenience typedef for FaceEmbedding<3, 1>.
  */
 typedef FaceEmbedding<3, 1> NEdgeEmbedding;
@@ -130,56 +80,6 @@ typedef FaceEmbedding<3, 1> NEdgeEmbedding;
 template <>
 class REGINA_API Face<3, 1> : public detail::FaceBase<3, 1>,
         public Output<Face<3, 1>> {
-    public:
-        /**
-         * A table that maps vertices of a tetrahedron to edge numbers.
-         *
-         * Edges in a tetrahedron are numbered 0,...,5.  This table
-         * converts vertices to edge numbers; in particular, the edge
-         * joining vertices \a i and \a j of a tetrahedron is edge
-         * number <tt>edgeNumber[i][j]</tt>.  Here \a i and \a j must be
-         * distinct, must be between 0 and 3 inclusive, and may be given
-         * in any order.  The resulting edge number will be between 0 and 5
-         * inclusive.
-         *
-         * Note that edge \a i is always opposite edge \a 5-i in a
-         * tetrahedron.
-         *
-         * For reference, Regina assigns edge numbers in lexicographical
-         * order.  That is, edge 0 joins vertices 0 and 1, edge 1 joins
-         * vertices 0 and 2, edge 2 joins vertices 0 and 3, and so on.
-         *
-         * This is identical to the old regina::edgeNumber global array.
-         * Users are advised to use this NEdge::edgeNumber array instead,
-         * since the global regina::edgeNumber is deprecated and will
-         * eventually be removed in some future version of Regina.
-         */
-        static const int edgeNumber[4][4];
-
-        /**
-         * A table that maps edges of a tetrahedron to vertex numbers.
-         *
-         * Edges in a tetrahedron are numbered 0,...,5.  This table
-         * converts edge numbers to vertices; in particular, edge \a i
-         * in a tetrahedron joins vertices <tt>edgeVertex[i][0]</tt> and
-         * <tt>edgeVertex[i][1]</tt>.  Here \a i must be bewteen 0 and 5
-         * inclusive; the resulting vertex numbers will be between 0 and 3
-         * inclusive.
-         *
-         * Note that edge \a i is always opposite edge \a 5-i in a tetrahedron.
-         * It is guaranteed that <tt>edgeVertex[i][0]</tt> will always
-         * be smaller than <tt>edgeVertex[i][1]</tt>.
-         *
-         * This is a combination of the old regina::edgeStart and
-         * regina::edgeEnd global arrays (where
-         * <tt>edgeVertex[i][0] == edgeStart[i]</tt> and
-         * <tt>edgeVertex[i][1] == edgeEnd[i]</tt>).  Users are advised
-         * to use this NEdge::edgeVertex array instead, since the global
-         * regina::edgeStart and regina::edgeEnd arrays are deprecated
-         * and will eventually be removed in some future version of Regina.
-         */
-        static const int edgeVertex[6][2];
-
     private:
         NBoundaryComponent* boundaryComponent_;
             /**< The boundary component that this edge is a part of,
