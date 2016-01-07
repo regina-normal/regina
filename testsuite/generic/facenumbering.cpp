@@ -46,7 +46,7 @@
 #include "triangulation/nedge.h"
 #include "triangulation/ntriangle.h"
 
-using regina::detail::FaceNumbering;
+using regina::FaceNumbering;
 
 static const int64_t increment[] = {
     // Used to iterate through permutations on n elements.
@@ -90,7 +90,7 @@ class FaceNumberingTest : public CppUnit::TestFixture {
         }
 
         void ordering() {
-            for (int f = 0; f < regina::choose(dim + 1, subdim + 1); ++f) {
+            for (int f = 0; f < FaceNumbering<dim, subdim>::nFaces; ++f) {
                 NPerm p = FaceNumbering<dim, subdim>::ordering(f);
 
                 if (subdim <= dim - 2 && p.sign() != 1) {
@@ -114,7 +114,7 @@ class FaceNumberingTest : public CppUnit::TestFixture {
         }
 
         void faceNumber() {
-            for (int f = 0; f < regina::choose(dim + 1, subdim + 1); ++f) {
+            for (int f = 0; f < FaceNumbering<dim, subdim>::nFaces; ++f) {
                 NPerm p = FaceNumbering<dim, subdim>::ordering(f);
 
                 if (FaceNumbering<dim, subdim>::faceNumber(p) != f) {
@@ -129,7 +129,7 @@ class FaceNumberingTest : public CppUnit::TestFixture {
 
         void containsVertex() {
             int v;
-            for (int f = 0; f < regina::choose(dim + 1, subdim + 1); ++f) {
+            for (int f = 0; f < FaceNumbering<dim, subdim>::nFaces; ++f) {
                 NPerm p = FaceNumbering<dim, subdim>::ordering(f);
 
                 for (v = 0; v <= subdim; ++v)

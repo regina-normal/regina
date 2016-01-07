@@ -51,6 +51,7 @@ class NPermTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(index);
     CPPUNIT_TEST(products);
     CPPUNIT_TEST(compareWith);
+    CPPUNIT_TEST(reverse);
     CPPUNIT_TEST(comprehensive);
 
     CPPUNIT_TEST_SUITE_END();
@@ -421,6 +422,36 @@ class NPermTest : public CppUnit::TestFixture {
                             << p.str() << " do not appear to be distinct.";
                         CPPUNIT_FAIL(msg.str());
                     }
+                }
+            }
+        }
+
+        void reverse() {
+            for (int i = 0; i < nIdx; ++i) {
+                NPerm p = NPerm::atIndex(idx[i]);
+                NPerm r = p.reverse();
+
+                if (! looksEqual(p, r.reverse())) {
+                    std::ostringstream msg;
+                    msg << "Permutation #" << i << " indicates that "
+                        "reverse() is not idempotent.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (! looksDistinct(p, r)) {
+                    std::ostringstream msg;
+                    msg << "Permutation #" << i << " indicates that "
+                        "reverse() is not a different permutation.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                std::string s = p.str();
+                std::reverse(s.begin(), s.end());
+                if (s != r.str()) {
+                    std::ostringstream msg;
+                    msg << "Reverse of permutation #" << i << " does not have "
+                        "the reverse string representation.";
+                    CPPUNIT_FAIL(msg.str());
                 }
             }
         }

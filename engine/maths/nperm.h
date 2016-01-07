@@ -315,6 +315,15 @@ class REGINA_API NPerm {
         NPerm inverse() const;
 
         /**
+         * Finds the reverse of this permutation.
+         *
+         * Here \e reverse means that we reverse the images of
+         * 0,...,<i>n</i>-1.  In other words, if permutation \a q is the
+         * reverse of \a p, then <tt>p[i] == q[n - 1 - i]</tt> for all \a i.
+         */
+        NPerm reverse() const;
+
+        /**
          * Determines the sign of this permutation.
          *
          * @return 1 if this permutation is even, or -1 if this
@@ -589,6 +598,14 @@ inline NPerm<n> NPerm<n>::inverse() const {
     Code c = 0;
     for (int i = 0; i < n; ++i)
         c |= (static_cast<Code>(i) << (imageBits * (*this)[i]));
+    return NPerm<n>(c);
+}
+
+template <int n>
+inline NPerm<n> NPerm<n>::reverse() const {
+    Code c = 0;
+    for (int i = 0; i < n; ++i)
+        c |= (static_cast<Code>((*this)[i]) << (imageBits * (n - 1 - i)));
     return NPerm<n>(c);
 }
 

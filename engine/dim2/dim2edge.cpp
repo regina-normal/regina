@@ -36,14 +36,6 @@
 
 namespace regina {
 
-namespace detail {
-    const NPerm3 FaceNumbering<2, 1>::ordering_[3] = {
-        NPerm3(1,2,0),
-        NPerm3(0,2,1),
-        NPerm3(0,1,2),
-    };
-}
-
 void Dim2Edge::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
     out << std::endl;

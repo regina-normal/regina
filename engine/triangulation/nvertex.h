@@ -70,76 +70,6 @@ typedef Triangulation<3> NTriangulation;
  */
 typedef FaceEmbedding<3, 0> NVertexEmbedding;
 
-namespace detail {
-
-/**
- * Helper class that specifies how vertices are numbered within a tetrahedron.
- *
- * See the general FaceNumbering<dim, subdim> template class notes for
- * further details.
- */
-template <>
-class FaceNumbering<3, 0> {
-    public:
-        /**
-         * Given a vertex number within a tetrahedron, returns the
-         * corresponding canonical ordering of the tetrahedron vertices.
-         *
-         * If this canonical ordering is \a c, then <tt>c[0]</tt> will be
-         * the given vertex, and the images <tt>c[1,2,3]</tt> will be
-         * chosen to make the permutation even.
-         *
-         * Note that this is \e not the same permutation as returned by
-         * NTetrahedron::getVertexMapping():
-         *
-         * - ordering() is a static function, which returns the same
-         *   permutation for the same vertex number, regardless of which
-         *   tetrahedron we are looking at.  The permutation will always be
-         *   even.
-         *
-         * - getVertexMapping() examines the underlying vertex \a V of the
-         *   triangulation, and chooses the images of 1,2,3 to maintain
-         *   a "consistent orientation" constraint across the different
-         *   appearances of \a V in different tetrahedra.
-         *
-         * @param vertex identifies which vertex of a tetrahedron to query.
-         * This must be between 0 and 3 inclusive.
-         * @return the corresponding canonical ordering of the
-         * tetrahedron vertices.
-         */
-        static NPerm4 ordering(unsigned vertex);
-        /**
-         * Identifies which vertex number in a tetrahedron is represented
-         * by the first element of the given permutation.
-         *
-         * This routine is trivial: it simply returns <tt>vertices[0]</tt>.
-         * It is provided for consistency with higher-dimensional faces,
-         * where the faceNumber() routine has some genuine work to do.
-         *
-         * @param vertices a permutation whose first element represents
-         * some vertex number in a tetrahedron.
-         * @return the corresponding vertex number in a tetrahedron.
-         * This will be between 0 and 3 inclusive.
-         */
-        static unsigned faceNumber(NPerm4 vertices);
-        /**
-         * Tests whether the two given arguments are equal.
-         *
-         * This routine is trivial: it is provided for consistency with
-         * higher-dimensional faces, where Face::containsVertex<dim, subdim>()
-         * determines whether the given vertex belongs to the given face.
-         *
-         * @param face a vertex number in a triangle; this must be
-         * between 0 and 2 inclusive.
-         * @param vertex another vertex number in a triangle; this must be
-         * between 0 and 2 inclusive.
-         * @return \c true if and only if \a face and \a vertex are equal.
-         */
-        static bool containsVertex(unsigned face, unsigned vertex);
-};
-
-} // detail
-
 /**
  * Represents a vertex in the skeleton of a 3-manifold triangulation.
  *
@@ -440,27 +370,6 @@ typedef Face<3, 0> NVertex;
 // Some more headers that are required for inline functions:
 #include "triangulation/ntetrahedron.h"
 namespace regina {
-
-// Inline functions for FaceNumbering
-
-namespace detail {
-
-inline NPerm4 FaceNumbering<3, 0>::ordering(unsigned vertex) {
-    return (vertex % 2 == 0 ?
-        NPerm4(vertex, (vertex + 1) % 4, (vertex + 2) % 4, (vertex + 3) % 4) :
-        NPerm4(vertex, (vertex + 3) % 4, (vertex + 2) % 4, (vertex + 1) % 4));
-}
-
-inline unsigned FaceNumbering<3, 0>::faceNumber(NPerm4 vertices) {
-    return vertices[0];
-}
-
-inline bool FaceNumbering<3, 0>::containsVertex(unsigned face,
-        unsigned vertex) {
-    return (face == vertex);
-}
-
-} // namespace detail
 
 // Inline functions for NVertex
 

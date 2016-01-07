@@ -44,6 +44,7 @@
 
 #include "regina-core.h"
 #include "output.h"
+#include "generic/facenumbering.h"
 #include "generic/alias/face.h"
 #include "maths/nperm.h"
 #include "utilities/nmarkedvector.h"
@@ -79,20 +80,15 @@ template <int> class TriangulationBase;
 template <int dim, int subdim>
 class SimplexFaces {
     public:
-        static constexpr int nFaces = regina::choose(dim + 1, subdim + 1);
-            /** The total number of <i>subdim</i>-faces in each
-                <i>dim</i>-dimensional simplex. */
-
-    public:
         SimplexFaces(const SimplexFaces&) = delete;
         SimplexFaces& operator = (const SimplexFaces&) = delete;
 
     protected:
-        Face<dim, subdim>* face_[nFaces];
+        Face<dim, subdim>* face_[FaceNumbering<dim, subdim>::nFaces];
             /**< The faces of the underlying triangulation that form the
                  individual <i>subdim</i>-faces of this simplex. */
 
-        NPerm<dim+1> mapping_[nFaces];
+        NPerm<dim+1> mapping_[FaceNumbering<dim, subdim>::nFaces];
             /**< For each <i>subdim</i>-face of this simplex, maps vertices
                  (0,1,...,\a subdim) of the underlying <i>subdim</i>-face of
                  the triangulation to the corresponding vertices of this
@@ -625,7 +621,7 @@ class SimplexBase :
 
 template <int dim, int subdim>
 inline void SimplexFaces<dim, subdim>::clear() {
-    std::fill(face_, face_ + nFaces, nullptr);
+    std::fill(face_, face_ + FaceNumbering<dim, subdim>::nFaces, nullptr);
 }
 
 // Inline functions for SimplexBase

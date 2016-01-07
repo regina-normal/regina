@@ -32,44 +32,58 @@
 
 /* end stub */
 
-#include "triangulation/nedge.h"
+/*! \file generic/facenumbering.h
+ *  \brief Describes the way in which <i>subdim</i>-faces are numbered
+ *  within a <i>dim</i>-dimensional simplex.
+ */
+
+#ifndef __FACENUMBERING_H
+#ifndef __DOXYGEN
+#define __FACENUMBERING_H
+#endif
+
+#include "generic/detail/facenumbering.h"
 
 namespace regina {
 
-const int edgeNumber[4][4] = {
-    { -1, 0, 1, 2 },
-    {  0,-1, 3, 4 },
-    {  1, 3,-1, 5 },
-    {  2, 4, 5,-1 }};
+/**
+ * \weakgroup generic
+ * @{
+ */
 
-const int edgeStart[6] =
-    { 0, 0, 0, 1, 1, 2 };
-
-const int edgeEnd[6] =
-    { 1, 2, 3, 2, 3, 3 };
-
-const int NEdge::edgeNumber[4][4] = {
-    { -1, 0, 1, 2 },
-    {  0,-1, 3, 4 },
-    {  1, 3,-1, 5 },
-    {  2, 4, 5,-1 }};
-
-const int NEdge::edgeVertex[6][2] = {
-    { 0, 1 },
-    { 0, 2 },
-    { 0, 3 },
-    { 1, 2 },
-    { 1, 3 },
-    { 2, 3 }};
-
-void NEdge::writeTextLong(std::ostream& out) const {
-    writeTextShort(out);
-    out << std::endl;
-
-    out << "Appears as:" << std::endl;
-    for (auto& emb : *this)
-        out << "  " << emb << std::endl;
-}
+/**
+ * Specifies how <i>subdim</i>-faces are numbered within a
+ * <i>dim</i>-dimensional simplex.
+ *
+ * Every class Face<dim, subdim> inherits from this class, which means
+ * you can access these routines as Face<dim, subdim>::ordering(),
+ * Face<dim, subdim>::faceNumber(), and so on.
+ *
+ * An advantage of referring to FaceNumbering<dim, subdim> directly (as
+ * opposed to Face<dim, subdim>) is that its header is lightweight: it does not
+ * pull in the large and complex headers required by Face<dim, subdim>.
+ *
+ * This class is specialised (and optimised) in Regina's
+ * \ref stddim "standard dimensions".
+ *
+ * \ifacespython This class is not available in Python.  However, all of
+ * its routines can be accessed through Face<dim, subdim> (which in Python
+ * becomes Face<i>dim</i>_<i>subdim</i>, or one of the typedefs in
+ * \ref stddim "standard dimensions" such as Dim2Edge, NVertex and so on).
+ *
+ * \tparam dim the dimension of the simplex whose faces we are numbering.
+ * This must be at least 2.
+ * \tparam subdim the dimension of the faces that we are numbering.
+ * This must be between 0 and <i>dim</i>-1 inclusive.
+ *
+ * TODO: Finish docs.
+ */
+template <int dim, int subdim>
+class FaceNumbering : public detail::FaceNumberingImpl<
+        dim, subdim, ((dim + 1) >= 2 * (subdim + 1))> {
+};
 
 } // namespace regina
+
+#endif
 
