@@ -55,6 +55,22 @@ namespace regina {
  * Specifies how <i>subdim</i>-faces are numbered within a
  * <i>dim</i>-dimensional simplex.
  *
+ * Regina uses the following general scheme for numbering faces:
+ *
+ * - For low-dimensional faces (\a subdim &lt; \a dim / 2), faces are
+ *   numbered in lexicographical order according to their vertices.
+ *   For example, in a 3-dimensional triangulation, edges 0,...,5 contain
+ *   vertices 01, 02, 03, 12, 13, 23 respectively.
+ *
+ * - For high-dimensional faces (\a subdim &ge; \a dim / 2), faces are
+ *   numbered in \e reverse lexicographical order according to their vertices.
+ *   For example, in a 3-dimensional triangulation, triangles 0,...,3 contain
+ *   vertices 123, 023, 013, 012 respectively.
+ *
+ * - As a consequence, unless \a subdim = (<i>dim</i>-1)/2, we always have
+ *   <i>subdim</i>-face number \a i opposite (<i>dim</i>-1-<i>subdim</i>)-face
+ *   number \a i.
+ *
  * Every class Face<dim, subdim> inherits from this class, which means
  * you can access these routines as Face<dim, subdim>::ordering(),
  * Face<dim, subdim>::faceNumber(), and so on.
@@ -72,11 +88,9 @@ namespace regina {
  * \ref stddim "standard dimensions" such as Dim2Edge, NVertex and so on).
  *
  * \tparam dim the dimension of the simplex whose faces we are numbering.
- * This must be at least 2.
+ * This must be at least 1.
  * \tparam subdim the dimension of the faces that we are numbering.
  * This must be between 0 and <i>dim</i>-1 inclusive.
- *
- * TODO: Finish docs.
  */
 template <int dim, int subdim>
 class FaceNumbering : public detail::FaceNumberingImpl<
