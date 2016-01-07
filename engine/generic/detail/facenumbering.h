@@ -57,7 +57,31 @@ namespace detail {
  */
 
 /**
- * TODO: Document, including \a lex.
+ * Implementation details for numbering <i>subdim</i>-faces of a
+ * <i>dim</i>-dimensional simplex.
+ *
+ * This numbering scheme is represented by the class FaceNumbering<dim, subdim>,
+ * which uses this as a base class.  You can also access the numbering
+ * scheme through Face<dim, subdim>, which likewise has this as a base class.
+ * End users should not need to refer to FaceNumberingImpl directly.
+ *
+ * See the FaceNumbering template class notes for further information,
+ * including details of how the numbering scheme works.
+ *
+ * \ifacespython This base class is not present, and neither is
+ * FaceNumbering<dim, subdim>.  Python users can access these routines
+ * through the class Face<dim, subdim>.
+ *
+ * \tparam dim the dimension of the simplex whose faces are being numbered.
+ * This must be at least 1.
+ * \tparam subdim the dimension of the faces being numbered.
+ * This must be between 0 and <i>dim</i>-1 inclusive.
+ * \tparam lex \c true if faces are numbered in lexicographical order
+ * according to their vertices (the scheme for low-dimensional faces),
+ * or \c false if faces are numbered in reverse lexicographical order
+ * (the scheme for high-dimensional faces).  The value of this parameter
+ * is forced by \a dim and \a subdim; its purpose is to help with
+ * template specialisations.
  */
 template <int dim, int subdim, bool lex>
 class FaceNumberingImpl {
@@ -185,8 +209,7 @@ class FaceNumberingImpl<dim, 0, true> {
         static constexpr int nFaces = dim + 1;
 
         static NPerm<dim + 1> ordering(unsigned face) {
-            // TODO: (dim, 0) implementation
-            return NPerm<dim + 1>();
+            return NPerm<dim + 1>(face, 0);
         }
 
         static unsigned faceNumber(NPerm<dim + 1> vertices) {
@@ -222,7 +245,6 @@ class FaceNumberingImpl<2, 0, true> {
         static constexpr int nFaces = 3;
 
         static NPerm<3> ordering(unsigned face) {
-            // TODO: Unused vertices lexicographic?
             return NPerm<3>(face, (face + 1) % 3, (face + 2) % 3);
         }
 
@@ -262,7 +284,6 @@ class FaceNumberingImpl<3, 0, true> {
         static constexpr int nFaces = 4;
 
         static NPerm<4> ordering(unsigned face) {
-            // TODO: Unused vertices
             return (face % 2 == 0 ?
                 NPerm4(face, (face + 1) % 4, (face + 2) % 4, (face + 3) % 4) :
                 NPerm4(face, (face + 3) % 4, (face + 2) % 4, (face + 1) % 4));
@@ -425,7 +446,10 @@ inline NPerm<dim + 1> FaceNumberingImpl<dim, subdim, lex>::ordering(
         "The generic implementation of FaceBaseImpl::ordering() "
         "should only be used for low-dimensional faces.");
 
-    // TODO: Implement ordering().
+    // We can assume here that we are numbering faces in forward
+    // lexicographical order (i.e., the face dimension subdim is small).
+
+    // TODO: Generic implementation for ordering().
     return NPerm<dim + 1>();
 }
 
@@ -439,7 +463,10 @@ inline unsigned FaceNumberingImpl<dim, subdim, lex>::faceNumber(
         "The generic implementation of FaceBaseImpl::faceNumber() "
         "should only be used for low-dimensional faces.");
 
-    // TODO: Implement faceNumber().
+    // We can assume here that we are numbering faces in forward
+    // lexicographical order (i.e., the face dimension subdim is small).
+
+    // TODO: Generic implementation for faceNumber().
     return 0;
 }
 
@@ -453,7 +480,10 @@ inline bool FaceNumberingImpl<dim, subdim, lex>::containsVertex(unsigned face,
         "The generic implementation of FaceBaseImpl::containsVertex() "
         "should only be used for low-dimensional faces.");
 
-    // TODO: Implement containsVertex().
+    // We can assume here that we are numbering faces in forward
+    // lexicographical order (i.e., the face dimension subdim is small).
+
+    // TODO: Generic implementation for containsVertex().
     return false;
 }
 
