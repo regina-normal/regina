@@ -64,56 +64,6 @@ typedef Face<3, 0> NVertex;
  */
 
 /**
- * <tt>edgeNumber[i][j]</tt> is the number of the edge linking vertices
- * <tt>i</tt> and <tt>j</tt> in a tetrahedron.  <tt>i</tt> and <tt>j</tt>
- * must be between 0 and 3 inclusive and may be given in any order.
- * The resulting edge number will be between 0 and 5 inclusive.
- *
- * Note that edge numbers of opposite edges will always add to 5.
- *
- * \deprecated This array has been replaced with the identical array
- * NEdge::edgeNumber.  Users are advised to switch to NEdge::edgeNumber
- * instead, since the old regina::edgeNumber will eventually be removed
- * in some future version of Regina.
- */
-REGINA_API extern const int edgeNumber[4][4];
-
-/**
- * <tt>edgeStart[k]</tt> is the vertex of a tetrahedron at which edge
- * <tt>k</tt> of the tetrahedron begins.  <tt>k</tt> must be between 0 and 5
- * inclusive.  The resulting vertex number will be between 0 and 3 inclusive.
- *
- * Note that edge numbers of opposite edges will always add to 5.
- * You are guaranteed that <tt>edgeStart[e]</tt> will always be smaller
- * than <tt>edgeEnd[e]</tt>.
- *
- * \deprecated This array has been superceded by NEdge::edgeVertex
- * (where <tt>edgeStart[i]</tt> is now <tt>NEdge::edgeVertex[i][0]</tt>).
- * Users are advised to switch to NEdge::edgeVertex instead, since the old
- * regina::edgeStart and regina::edgeEnd will eventually be removed in some
- * future version of Regina.
- */
-REGINA_API extern const int edgeStart[6];
-
-/**
- * <tt>edgeEnd[k]</tt> is the vertex of a tetrahedron
- * at which edge <tt>k</tt> of the tetrahedron ends.
- * <tt>k</tt> must be between 0 and 5 inclusive.
- * The resulting vertex number will be between 0 and 3 inclusive.
- *
- * Note that edge numbers of opposite edges will always add to 5.
- * You are guaranteed that <tt>edgeStart[e]</tt> will always be smaller
- * than <tt>edgeEnd[e]</tt>.
- *
- * \deprecated This array has been superceded by NEdge::edgeVertex
- * (where <tt>edgeEnd[i]</tt> is now <tt>NEdge::edgeVertex[i][1]</tt>).
- * Users are advised to switch to NEdge::edgeVertex instead, since the old
- * regina::edgeStart and regina::edgeEnd will eventually be removed in some
- * future version of Regina.
- */
-REGINA_API extern const int edgeEnd[6];
-
-/**
  * A convenience typedef for FaceEmbedding<3, 1>.
  */
 typedef FaceEmbedding<3, 1> NEdgeEmbedding;

@@ -36,6 +36,9 @@ Version 4.97  [ (under development) ]
               deprecated since 2013; they are also removed completely.
               All the code that used to work with these classes now
               works with the newer and more flexible NProgressTracker instead.
+            * Global arrays edgeNumber[][], edgeStart[] and edgeEnd[] have
+              been depredated since 2009; this are now removed.  Use the
+              arrays NEdge::edgeNumber[][] and NEdge::edgeVertex[][] instead.
     ENGINE:
         All:
             - Removed ShareableObject from the class hierarchy.  All classes
@@ -534,6 +537,9 @@ Version 4.97  [ (under development) ]
         Routine open():
             - Added a variant that takes an input stream (as opposed to
               a filename).
+        Global arrays edgeNumber[][], edgeStart[], edgeEnd[]:
+            - This long-deprecated arrays have now been removed completely.
+              Use NEdge::edgeNumber[][] and NEdge::edgeVertex[][] instead.
         Header dim2edgepairing.h, nfacepairing.h:
             - Relocated from census/ into dim2/ and triangulation/ respectively.
               Deprecated headers have been kept in the old census/ folder.
