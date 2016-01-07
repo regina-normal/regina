@@ -312,13 +312,6 @@ class FaceNumberingImpl<3, 1, true> {
          * in any order.  The resulting edge number will be between 0 and 5
          * inclusive.
          *
-         * Note that edge \a i is always opposite edge \a 5-i in a
-         * tetrahedron.
-         *
-         * For reference, Regina assigns edge numbers in lexicographical
-         * order.  That is, edge 0 joins vertices 0 and 1, edge 1 joins
-         * vertices 0 and 2, edge 2 joins vertices 0 and 3, and so on.
-         *
          * \note Accessing <tt>edgeNumber[i][j]</tt> is equivalent to calling
          * <tt>faceNumber(p)</tt>, where \a p is a permutation that maps 
          * 0,1 to \a i,\a j in some order.
@@ -335,7 +328,6 @@ class FaceNumberingImpl<3, 1, true> {
          * inclusive; the resulting vertex numbers will be between 0 and 3
          * inclusive.
          *
-         * Note that edge \a i is always opposite edge \a 5-i in a tetrahedron.
          * It is guaranteed that <tt>edgeVertex[i][0]</tt> will always
          * be smaller than <tt>edgeVertex[i][1]</tt>.
          *
@@ -406,10 +398,44 @@ class FaceNumberingImpl<4, 0, true> {
 
 template <>
 class FaceNumberingImpl<4, 1, true> {
+    public:
+        /**
+         * A table that maps vertices of a pentachoron to edge numbers.
+         *
+         * Edges in a pentachoron are numbered 0,...,9.  This table
+         * converts vertices to edge numbers; in particular, the edge
+         * joining vertices \a i and \a j of a pentachoron is
+         * edge number <tt>edgeNumber[i][j]</tt>.  Here \a i and \a j
+         * must be distinct, must be between 0 and 4 inclusive, and may
+         * be given in any order.  The resulting edge number will be
+         * between 0 and 9 inclusive.
+         *
+         * \note Accessing <tt>edgeNumber[i][j]</tt> is equivalent to calling
+         * <tt>faceNumber(p)</tt>, where \a p is a permutation that maps 
+         * 0,1 to \a i,\a j in some order.
+         */
+        static const int edgeNumber[5][5];
+
+        /**
+         * A table that maps edges of a pentachoron to vertex numbers.
+         *
+         * Edges in a pentachoron are numbered 0,...,9.  This table
+         * converts edge numbers to vertices; in particular, edge \a i
+         * in a pentachoron joins vertices <tt>edgeVertex[i][0]</tt> and
+         * <tt>edgeVertex[i][1]</tt>.  Here \a i must be between 0 and 9
+         * inclusive; the resulting vertex numbers will be between 0 and 4
+         * inclusive.
+         *
+         * It is guaranteed that <tt>edgeVertex[i][0]</tt> will always
+         * be smaller than <tt>edgeVertex[i][1]</tt>.
+         *
+         * \note Accessing <tt>edgeVertex[i][j]</tt> is equivalent to
+         * calling <tt>ordering(i)[j]</tt>.
+         */
+        static const int edgeVertex[10][2];
+
     private:
         static const NPerm<5> ordering_[10];
-        static const int faceNumber_[5][5];
-        static const int vertex_[10][2];
 
     public:
         static constexpr int nFaces = 10;
@@ -419,21 +445,56 @@ class FaceNumberingImpl<4, 1, true> {
         }
 
         static unsigned faceNumber(NPerm<5> vertices) {
-            return faceNumber_[vertices[0]][vertices[1]];
+            return edgeNumber[vertices[0]][vertices[1]];
         }
 
         static bool containsVertex(unsigned face, unsigned vertex) {
-            return (vertex == vertex_[face][0] ||
-                    vertex == vertex_[face][1]);
+            return (vertex == edgeVertex[face][0] ||
+                    vertex == edgeVertex[face][1]);
         }
 };
 
 template <>
 class FaceNumberingImpl<4, 2, false> {
+    public:
+        /**
+         * A table that maps vertices of a pentachoron to triangle numbers.
+         *
+         * Triangles in a pentachoron are numbered 0,...,9.  This table
+         * converts vertices to triangle numbers; in particular, the triangle
+         * spanned by vertices \a i, \a j and \a k of a pentachoron is triangle
+         * number <tt>triangleNumber[i][j][k]</tt>.  Here \a i, \a j and \a k
+         * must be distinct, must be between 0 and 4 inclusive, and may
+         * be given in any order.  The resulting triangle number will be
+         * between 0 and 9 inclusive.
+         *
+         * \note Accessing <tt>triangleNumber[i][j][k]</tt> is equivalent to
+         * calling <tt>faceNumber(p)</tt>, where \a p is a permutation that
+         * maps 0,1,2 to \a i,\a j,\a k in some order.
+         */
+        static const int triangleNumber[5][5][5];
+
+        /**
+         * A table that maps triangles of a pentachoron to vertex numbers.
+         *
+         * Triangles in a pentachoron are numbered 0,...,9.  This table converts
+         * triangle numbers to vertices; in particular, triangle \a i in a
+         * pentachoron is spanned by vertices <tt>triangleVertex[i][0]</tt>,
+         * <tt>triangleVertex[i][1]</tt> and <tt>triangleVertex[i][2]</tt>.
+         * Here \a i must be between 0 and 9 inclusive; the resulting
+         * vertex numbers will be between 0 and 4 inclusive.
+         *
+         * It is guaranteed that <tt>triangleVertex[i][0]</tt> will always
+         * be smaller than <tt>triangleVertex[i][1]</tt>, which in turn will
+         * always be smaller than <tt>triangleVertex[i][2]</tt>.
+         *
+         * \note Accessing <tt>triangleVertex[i][j]</tt> is equivalent to
+         * calling <tt>ordering(i)[j]</tt>.
+         */
+        static const int triangleVertex[10][3];
+
     private:
         static const NPerm<5> ordering_[10];
-        static const int faceNumber_[5][5][5];
-        static const int vertex_[10][3];
 
     public:
         static constexpr int nFaces = 10;
@@ -443,13 +504,13 @@ class FaceNumberingImpl<4, 2, false> {
         }
 
         static unsigned faceNumber(NPerm<5> vertices) {
-            return faceNumber_[vertices[0]][vertices[1]][vertices[2]];
+            return triangleNumber[vertices[0]][vertices[1]][vertices[2]];
         }
 
         static bool containsVertex(unsigned face, unsigned vertex) {
-            return (vertex == vertex_[face][0] ||
-                    vertex == vertex_[face][1] ||
-                    vertex == vertex_[face][2]);
+            return (vertex == triangleVertex[face][0] ||
+                    vertex == triangleVertex[face][1] ||
+                    vertex == triangleVertex[face][2]);
         }
 };
 
