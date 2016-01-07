@@ -114,8 +114,7 @@ class FaceNumberingImpl {
          * will be the vertices of the given face in increasing numerical
          * order.  That is, \a c[0] &lt; ... &lt; \a c[\a subdim].
          * For faces of dimension \a subdim &le; <i>dim</i>-2, the remaining
-         * images \a c[(\a subdim + 1),...,\a dim] will be chosen to make
-         * the permutation even.
+         * images \a c[(\a subdim + 1),...,\a dim] will be arbitrary.
          *
          * Note that this is \e not the same permutation as returned by
          * Simplex<dim>::faceMapping<subdim>():
@@ -123,8 +122,7 @@ class FaceNumberingImpl {
          * - ordering() is a static function, which returns the same permutation
          *   for the same face number, regardless of which <i>dim</i>-simplex
          *   we are looking at.  The images of 0,...,\a subdim will always
-         *   appear in increasing order, and (for dimensions
-         *   \a subdim &le; <i>dim</i>-2) the permutation will always be even.
+         *   appear in increasing order.
          *
          * - faceMapping() examines the underlying face \a F of the
          *   triangulation and, across all appearances of \a F in different
