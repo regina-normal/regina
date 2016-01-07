@@ -79,50 +79,6 @@ typedef FaceEmbedding<4, 1> Dim4EdgeEmbedding;
 template <>
 class REGINA_API Face<4, 1> : public detail::FaceBase<4, 1>,
         public Output<Face<4, 1>> {
-    public:
-        /**
-         * A table that maps vertices of a pentachoron to edge numbers.
-         *
-         * Edges in a pentachoron are numbered 0,...,9.  This table
-         * converts vertices to edge numbers; in particular, the edge
-         * joining vertices \a i and \a j of a pentachoron is
-         * edge number <tt>edgeNumber[i][j]</tt>.  Here \a i and \a j
-         * must be distinct, must be between 0 and 4 inclusive, and may
-         * be given in any order.  The resulting edge number will be
-         * between 0 and 9 inclusive.
-         *
-         * Note that edge \i is always opposite triangle \i in a pentachoron.
-         *
-         * This table is the 4-manifold analogue to the 3-manifold table
-         * NEdge::edgeNumber.  Note that NEdge::edgeNumber is still used
-         * by 4-manifold triangulations to describe the numbering of
-         * \a tetrahedron edges 0,...,5; see Dim4Tetrahedron::getEdge()
-         * for details.
-         */
-        static const int edgeNumber[5][5];
-
-        /**
-         * A table that maps edges of a pentachoron to vertex numbers.
-         *
-         * Edges in a pentachoron are numbered 0,...,9.  This table
-         * converts edge numbers to vertices; in particular, edge \a i
-         * in a pentachoron joins vertices <tt>edgeVertex[i][0]</tt> and
-         * <tt>edgeVertex[i][1]</tt>.  Here \a i must be between 0 and 9
-         * inclusive; the resulting vertex numbers will be between 0 and 4
-         * inclusive.
-         *
-         * Note that edge \i is always opposite triangle \i in a pentachoron.
-         * It is guaranteed that <tt>edgeVertex[i][0]</tt> will always
-         * be smaller than <tt>edgeVertex[i][1]</tt>.
-         *
-         * This table is the 4-manifold analogue to the 3-manifold table
-         * NEdge::edgeVertex.  Note that NEdge::edgeVertex is still used
-         * by 4-manifold triangulations to describe the numbering of
-         * \a tetrahedron edges 0,...,5; see Dim4Tetrahedron::getEdge()
-         * for details.
-         */
-        static const int edgeVertex[10][2];
-
     private:
         Dim4BoundaryComponent* boundaryComponent_;
             /**< The boundary component that this edge is a part of,

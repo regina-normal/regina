@@ -39,25 +39,6 @@
 
 namespace regina {
 
-const int Face<4, 1>::edgeNumber[5][5] = {
-    { -1, 0, 1, 2, 3 },
-    { 0, -1, 4, 5, 6 },
-    { 1, 4, -1, 7, 8 },
-    { 2, 5, 7, -1, 9 },
-    { 3, 6, 8, 9, -1 }};
-
-const int Face<4, 1>::edgeVertex[10][2] = {
-    { 0, 1 },
-    { 0, 2 },
-    { 0, 3 },
-    { 0, 4 },
-    { 1, 2 },
-    { 1, 3 },
-    { 1, 4 },
-    { 2, 3 },
-    { 2, 4 },
-    { 3, 4 }};
-
 Dim2Triangulation* Face<4, 1>::buildLinkDetail(bool labels,
         Dim4Isomorphism** inclusion) const {
     // Build the triangulation.

@@ -78,47 +78,6 @@ typedef FaceEmbedding<4, 2> Dim4TriangleEmbedding;
 template <>
 class REGINA_API Face<4, 2> : public detail::FaceBase<4, 2>,
         public Output<Face<4, 2>> {
-    public:
-        /**
-         * A table that maps vertices of a pentachoron to triangle numbers.
-         *
-         * Triangles in a pentachoron are numbered 0,...,9.  This table
-         * converts vertices to triangle numbers; in particular, the triangle
-         * spanned by vertices \a i, \a j and \a k of a pentachoron is triangle
-         * number <tt>triangleNumber[i][j][k]</tt>.  Here \a i, \a j and \a k
-         * must be distinct, must be between 0 and 4 inclusive, and may
-         * be given in any order.  The resulting triangle number will be
-         * between 0 and 9 inclusive.
-         *
-         * Note that triangle \i is always opposite edge \i in a pentachoron.
-         *
-         * This is analagous to the lookup table NEdge::edgeNumber
-         * for 3-manifold triangulations (and its deprecated predecessor,
-         * the old global array regina::edgeNumber).
-         */
-        static const int triangleNumber[5][5][5];
-
-        /**
-         * A table that maps triangles of a pentachoron to vertex numbers.
-         *
-         * Triangles in a pentachoron are numbered 0,...,9.  This table converts
-         * triangle numbers to vertices; in particular, triangle \a i in a
-         * pentachoron is spanned by vertices <tt>triangleVertex[i][0]</tt>,
-         * <tt>triangleVertex[i][1]</tt> and <tt>triangleVertex[i][2]</tt>.
-         * Here \a i must be between 0 and 9 inclusive; the resulting
-         * vertex numbers will be between 0 and 4 inclusive.
-         *
-         * Note that triangle \i is always opposite edge \i in a pentachoron.
-         * It is guaranteed that <tt>triangleVertex[i][0]</tt> will always
-         * be smaller than <tt>triangleVertex[i][1]</tt>, which in turn will
-         * always be smaller than <tt>triangleVertex[i][2]</tt>.
-         *
-         * This is analagous to the lookup table NEdge::edgeVertex
-         * for 3-manifold triangulations (and its deprecated predecessors,
-         * the old global arrays regina::edgeStart and regina::edgeEnd).
-         */
-        static const int triangleVertex[10][3];
-
     private:
         Dim4BoundaryComponent* boundaryComponent_;
             /**< The boundary component that this triangle is a part of,
