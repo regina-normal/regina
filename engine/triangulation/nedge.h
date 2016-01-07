@@ -82,7 +82,7 @@ class REGINA_API Face<3, 1> : public detail::FaceBase<3, 1>,
         public Output<Face<3, 1>> {
     public:
         /**
-         * A table that maps vertices of a tetrahedron to edge numbers.
+         * Deprecated table that maps vertices of a tetrahedron to edge numbers.
          *
          * Edges in a tetrahedron are numbered 0,...,5.  This table
          * converts vertices to edge numbers; in particular, the edge
@@ -99,15 +99,15 @@ class REGINA_API Face<3, 1> : public detail::FaceBase<3, 1>,
          * order.  That is, edge 0 joins vertices 0 and 1, edge 1 joins
          * vertices 0 and 2, edge 2 joins vertices 0 and 3, and so on.
          *
-         * This is identical to the old regina::edgeNumber global array.
-         * Users are advised to use this NEdge::edgeNumber array instead,
-         * since the global regina::edgeNumber is deprecated and will
-         * eventually be removed in some future version of Regina.
+         * \deprecated This static array is deprecated, and will eventually be
+         * removed from Regina.  Instead of accessing <tt>edgeNumber[i][j]</tt>,
+         * you should instead call <tt>faceNumber(p)</tt>, where \a p is
+         * a permutation that maps 0,1 to \a i,\a j in some order.
          */
-        static const int edgeNumber[4][4];
+        static const int (*const edgeNumber)[4];
 
         /**
-         * A table that maps edges of a tetrahedron to vertex numbers.
+         * Deprecated table that maps edges of a tetrahedron to vertex numbers.
          *
          * Edges in a tetrahedron are numbered 0,...,5.  This table
          * converts edge numbers to vertices; in particular, edge \a i
@@ -120,15 +120,11 @@ class REGINA_API Face<3, 1> : public detail::FaceBase<3, 1>,
          * It is guaranteed that <tt>edgeVertex[i][0]</tt> will always
          * be smaller than <tt>edgeVertex[i][1]</tt>.
          *
-         * This is a combination of the old regina::edgeStart and
-         * regina::edgeEnd global arrays (where
-         * <tt>edgeVertex[i][0] == edgeStart[i]</tt> and
-         * <tt>edgeVertex[i][1] == edgeEnd[i]</tt>).  Users are advised
-         * to use this NEdge::edgeVertex array instead, since the global
-         * regina::edgeStart and regina::edgeEnd arrays are deprecated
-         * and will eventually be removed in some future version of Regina.
+         * \deprecated This static array is deprecated, and will eventually be
+         * removed from Regina.  Instead of accessing <tt>edgeVertex[i][j]</tt>,
+         * you should call <tt>ordering(i)[j]</tt> instead.
          */
-        static const int edgeVertex[6][2];
+        static const int (*const edgeVertex)[2];
 
     private:
         NBoundaryComponent* boundaryComponent_;
