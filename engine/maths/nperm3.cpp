@@ -51,6 +51,10 @@ const unsigned NPerm<3>::invS3[6] = {
     0, 1, 4, 3, 2, 5
 };
 
+const unsigned NPerm<3>::revS3[6] = {
+    5, 2, 1, 4, 3, 0
+};
+
 const unsigned* NPerm<3>::invSn = NPerm<3>::invS3;
 
 const NPerm<3> NPerm<3>::orderedS3[6] = {

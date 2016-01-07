@@ -66,76 +66,6 @@ typedef Triangulation<4> Dim4Triangulation;
  */
 typedef FaceEmbedding<4, 0> Dim4VertexEmbedding;
 
-namespace detail {
-
-/**
- * Helper class that specifies how vertices are numbered within a pentachoron.
- *
- * See the general FaceNumbering<dim, subdim> template class notes for
- * further details.
- */
-template <>
-class FaceNumbering<4, 0> {
-    public:
-        /**
-         * Given a vertex number within a pentachoron, returns the
-         * corresponding canonical ordering of the pentachoron vertices.
-         *
-         * If this canonical ordering is \a c, then <tt>c[0]</tt> will be
-         * the given vertex, and the images <tt>c[1,...,4]</tt> will be
-         * chosen to make the permutation even.
-         *
-         * Note that this is \e not the same permutation as returned by
-         * Dim4Pentachoron::getVertexMapping():
-         *
-         * - ordering() is a static function, which returns the same
-         *   permutation for the same vertex number, regardless of which
-         *   pentachoron we are looking at.  The permutation will always be
-         *   even.
-         *
-         * - getVertexMapping() examines the underlying vertex \a V of the
-         *   triangulation, and chooses the images of 1,...,4 to maintain
-         *   a "consistent orientation" constraint across the different
-         *   appearances of \a V in different pentachora.
-         *
-         * @param vertex identifies which vertex of a pentachoron to query.
-         * This must be between 0 and 4 inclusive.
-         * @return the corresponding canonical ordering of the
-         * pentachoron vertices.
-         */
-        static NPerm5 ordering(unsigned vertex);
-        /**
-         * Identifies which vertex number in a pentachoron is represented
-         * by the first element of the given permutation.
-         *
-         * This routine is trivial: it simply returns <tt>vertices[0]</tt>.
-         * It is provided for consistency with higher-dimensional faces,
-         * where the faceNumber() routine has some genuine work to do.
-         *
-         * @param vertices a permutation whose first element represents
-         * some vertex number in a pentachoron.
-         * @return the corresponding vertex number in a pentachoron.
-         * This will be between 0 and 4 inclusive.
-         */
-        static unsigned faceNumber(NPerm5 vertices);
-        /**
-         * Tests whether the two given arguments are equal.
-         *
-         * This routine is trivial: it is provided for consistency with
-         * higher-dimensional faces, where Face::containsVertex<dim, subdim>()
-         * determines whether the given vertex belongs to the given face.
-         *
-         * @param face a vertex number in a pentachoron; this must
-         * be between 0 and 4 inclusive.
-         * @param vertex another vertex number in a pentachoron; this must be
-         * between 0 and 4 inclusive.
-         * @return \c true if and only if \a face and \a vertex are equal.
-         */
-        static bool containsVertex(unsigned face, unsigned vertex);
-};
-
-} // namespace detail
-
 /**
  * Represents a vertex in the skeleton of a 4-manifold triangulation.
  *
@@ -367,26 +297,6 @@ typedef Face<4, 0> Dim4Vertex;
 // Some more headers that are required for inline functions:
 #include "dim4/dim4pentachoron.h"
 namespace regina {
-
-// Inline functions for FaceNumbering
-
-namespace detail {
-
-inline NPerm5 FaceNumbering<4, 0>::ordering(unsigned vertex) {
-    return NPerm5(vertex, (vertex + 1) % 5, (vertex + 2) % 5,
-        (vertex + 3) % 5, (vertex + 4) % 5);
-}
-
-inline unsigned FaceNumbering<4, 0>::faceNumber(NPerm5 vertices) {
-    return vertices[0];
-}
-
-inline bool FaceNumbering<4, 0>::containsVertex(unsigned face,
-        unsigned vertex) {
-    return (face == vertex);
-}
-
-} // namespace detail
 
 // Inline functions for Dim4Vertex
 

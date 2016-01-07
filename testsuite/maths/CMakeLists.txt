@@ -5,6 +5,7 @@ SET ( FILES
   matrixops
   ninteger
   nperm
+  nperm2
   nperm3
   nperm4
   nperm5

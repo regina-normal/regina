@@ -41,8 +41,7 @@
 #define __SIMPLEX_H
 #endif
 
-// Our #includes are a little further down - we need choose() to be
-// defined before we include generic/detail/simplex.h.
+#include "generic/detail/simplex.h"
 
 namespace regina {
 
@@ -50,29 +49,6 @@ namespace regina {
  * \weakgroup generic
  * @{
  */
-
-/**
- * Returns the binomial coefficient \a n choose \a r.
- *
- * This routine puts no restrictions on the value of \a r.  If \a r is
- * negative or greater than \a n, then it will simply return 0.
- *
- * @param n any non-negative integer; this must be at most 16
- * (since otherwise the result may overflow).
- * @param r any integer.
- * @return \a n choose \a r.
- */
-inline constexpr int choose(int n, int r) {
-    return (r < 0 || r > n ? 0 :
-            r == 0 || r == n ? 1 :
-            choose(n-1, r) + choose(n-1, r-1));
-}
-
-} // namespace regina
-
-#include "generic/detail/simplex.h"
-
-namespace regina {
 
 /**
  * Represents a top-dimensional simplex in a <i>dim</i>-manifold triangulation.

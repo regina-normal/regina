@@ -36,60 +36,50 @@
 // that breaks boost.python on MacOSX.
 #include "Python.h"
 #include <boost/python.hpp>
-#include "maths/nperm5.h"
+#include "maths/nperm2.h"
 #include "../globalarray.h"
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NPerm5;
+using regina::NPerm2;
 using regina::python::GlobalArray;
 
 namespace {
-    GlobalArray<NPerm5> NPerm5_S5_arr(NPerm5::S5, 120);
-    GlobalArray<NPerm5> NPerm5_orderedS5_arr(NPerm5::orderedS5, 120);
-    GlobalArray<unsigned> NPerm5_invS5_arr(NPerm5::invS5, 120);
-    GlobalArray<NPerm5> NPerm5_S4_arr(NPerm5::S4, 24);
-    GlobalArray<NPerm5> NPerm5_orderedS4_arr(NPerm5::orderedS4, 24);
-    GlobalArray<NPerm5> NPerm5_S3_arr(NPerm5::S3, 6);
-    GlobalArray<NPerm5> NPerm5_orderedS3_arr(NPerm5::orderedS3, 6);
-    GlobalArray<NPerm5> NPerm5_S2_arr(NPerm5::S2, 2);
+    GlobalArray<NPerm2> NPerm2_S2_arr(NPerm2::S2, 2);
+    GlobalArray<unsigned> NPerm2_invS2_arr(NPerm2::invS2, 2);
+    GlobalArray<NPerm2> NPerm2_S1_arr(NPerm2::S1, 1);
 
-    int perm5_getItem(const NPerm5& p, int index) {
+    int perm2_getItem(const NPerm2& p, int index) {
         return p[index];
     }
 }
 
-void addNPerm5() {
-    scope s = class_<NPerm5>("NPerm5")
+void addNPerm2() {
+    scope s = class_<NPerm2>("NPerm2")
         .def(init<int, int>())
-        .def(init<int, int, int, int, int>())
-        .def(init<int, int, int, int, int, int, int, int, int, int>())
-        .def(init<const NPerm5&>())
-        .def("getPermCode", &NPerm5::getPermCode)
-        .def("setPermCode", &NPerm5::setPermCode)
-        .def("fromPermCode", &NPerm5::fromPermCode)
-        .def("isPermCode", &NPerm5::isPermCode)
+        .def(init<const NPerm2&>())
+        .def("getPermCode", &NPerm2::getPermCode)
+        .def("setPermCode", &NPerm2::setPermCode)
+        .def("fromPermCode", &NPerm2::fromPermCode)
+        .def("isPermCode", &NPerm2::isPermCode)
         .def(self * self)
-        .def("inverse", &NPerm5::inverse)
-        .def("reverse", &NPerm5::reverse)
-        .def("sign", &NPerm5::sign)
-        .def("__getitem__", perm5_getItem)
-        .def("preImageOf", &NPerm5::preImageOf)
-        .def("compareWith", &NPerm5::compareWith)
-        .def("isIdentity", &NPerm5::isIdentity)
-        .def("atIndex", &NPerm5::atIndex)
-        .def("index", &NPerm5::index)
-        .def("rand", &NPerm5::rand)
-        .def("str", &NPerm5::str)
-        .def("trunc", &NPerm5::trunc)
-        .def("trunc2", &NPerm5::trunc2)
-        .def("trunc3", &NPerm5::trunc3)
-        .def("trunc4", &NPerm5::trunc4)
-        .def("S5Index", &NPerm5::S5Index)
-        .def("orderedS5Index", &NPerm5::orderedS5Index)
-        .def("orderedSnIndex", &NPerm5::orderedS5Index)
-        .def("__str__", &NPerm5::str)
-        .def("__repr__", &NPerm5::str)
+        .def("inverse", &NPerm2::inverse)
+        .def("reverse", &NPerm2::reverse)
+        .def("sign", &NPerm2::sign)
+        .def("__getitem__", perm2_getItem)
+        .def("preImageOf", &NPerm2::preImageOf)
+        .def("compareWith", &NPerm2::compareWith)
+        .def("isIdentity", &NPerm2::isIdentity)
+        .def("atIndex", &NPerm2::atIndex)
+        .def("index", &NPerm2::index)
+        .def("rand", &NPerm2::rand)
+        .def("str", &NPerm2::str)
+        .def("trunc", &NPerm2::trunc)
+        .def("S2Index", &NPerm2::S2Index)
+        .def("orderedS2Index", &NPerm2::orderedS2Index)
+        .def("orderedSnIndex", &NPerm2::orderedS2Index)
+        .def("__str__", &NPerm2::str)
+        .def("__repr__", &NPerm2::str)
         .def(regina::python::add_eq_operators())
         .staticmethod("fromPermCode")
         .staticmethod("isPermCode")
@@ -97,21 +87,16 @@ void addNPerm5() {
         .staticmethod("rand")
     ;
 
-    s.attr("imageBits") = NPerm5::imageBits;
-    s.attr("nPerms") = NPerm5::nPerms;
-    s.attr("nPerms_1") = NPerm5::nPerms_1;
+    s.attr("nPerms") = NPerm2::nPerms;
+    s.attr("nPerms_1") = NPerm2::nPerms_1;
 
-    s.attr("S5") = &NPerm5_S5_arr;
-    s.attr("Sn") = &NPerm5_S5_arr;
-    s.attr("orderedS5") = &NPerm5_orderedS5_arr;
-    s.attr("orderedSn") = &NPerm5_orderedS5_arr;
-    s.attr("invS5") = &NPerm5_invS5_arr;
-    s.attr("invSn") = &NPerm5_invS5_arr;
-    s.attr("S4") = &NPerm5_S4_arr;
-    s.attr("Sn_1") = &NPerm5_S4_arr;
-    s.attr("orderedS4") = &NPerm5_orderedS4_arr;
-    s.attr("S3") = &NPerm5_S3_arr;
-    s.attr("orderedS3") = &NPerm5_orderedS3_arr;
-    s.attr("S2") = &NPerm5_S2_arr;
+    s.attr("S2") = &NPerm2_S2_arr;
+    s.attr("Sn") = &NPerm2_S2_arr;
+    s.attr("orderedS2") = &NPerm2_S2_arr;
+    s.attr("orderedSn") = &NPerm2_S2_arr;
+    s.attr("invS2") = &NPerm2_invS2_arr;
+    s.attr("invSn") = &NPerm2_invS2_arr;
+    s.attr("S1") = &NPerm2_S1_arr;
+    s.attr("Sn_1") = &NPerm2_S1_arr;
 }
 

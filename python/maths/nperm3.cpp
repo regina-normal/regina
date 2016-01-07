@@ -66,6 +66,7 @@ void addNPerm3() {
         .def("isPermCode", &NPerm3::isPermCode)
         .def(self * self)
         .def("inverse", &NPerm3::inverse)
+        .def("reverse", &NPerm3::reverse)
         .def("sign", &NPerm3::sign)
         .def("__getitem__", perm3_getItem)
         .def("preImageOf", &NPerm3::preImageOf)

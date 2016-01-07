@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,39 +32,24 @@
 
 /* end stub */
 
-void addMatrixOps();
-void addNCyclotomic();
-void addNInteger();
-void addNLargeInteger();
-void addNMatrix2();
-void addNMatrixInt();
-void addNPerm2();
-void addNPerm3();
-void addNPerm4();
-void addNPerm5();
-void addNPerm();
-void addNPolynomial();
-void addNPrimes();
-void addNRational();
-void addNumberTheory();
-void addPermConv();
+#include <sstream>
+#include "maths/nperm2.h"
 
-void addMaths() {
-    addMatrixOps();
-    addNCyclotomic();
-    addNInteger();
-    addNLargeInteger();
-    addNMatrix2();
-    addNMatrixInt();
-    addNPerm2();
-    addNPerm3();
-    addNPerm4();
-    addNPerm5();
-    addNPerm();
-    addNPolynomial();
-    addNPrimes();
-    addNRational();
-    addNumberTheory();
-    addPermConv();
-}
+namespace regina {
+
+const NPerm<2>::Index NPerm<2>::nPerms;
+const NPerm<2>::Index NPerm<2>::nPerms_1;
+
+const NPerm<2> NPerm<2>::S2[2] = { NPerm<2>(), NPerm<2>(1) };
+const unsigned NPerm<2>::invS2[2] = { 0, 1 };
+
+const NPerm<2>* NPerm<2>::Sn = NPerm<2>::S2;
+const unsigned* NPerm<2>::invSn = NPerm<2>::invS2;
+
+const NPerm<2>* NPerm<2>::orderedS2 = NPerm<2>::S2;
+const NPerm<2>* NPerm<2>::orderedSn = NPerm<2>::S2;
+const NPerm<2>* NPerm<2>::S1 = NPerm<2>::S2;
+const NPerm<2>* NPerm<2>::Sn_1 = NPerm<2>::S2;
+
+} // namespace regina
 

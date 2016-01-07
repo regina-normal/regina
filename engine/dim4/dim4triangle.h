@@ -66,81 +66,6 @@ typedef Face<4, 1> Dim4Edge;
  */
 typedef FaceEmbedding<4, 2> Dim4TriangleEmbedding;
 
-namespace detail {
-
-/**
- * Helper class that specifies how triangles are numbered within a pentachoron.
- *
- * See the general FaceNumbering<dim, subdim> template class notes for
- * further details.
- */
-template <>
-class FaceNumbering<4, 2> {
-    private:
-        static const NPerm5 ordering_[10];
-            /**< An array that hard-codes the results of ordering(). */
-
-    public:
-        /**
-         * Given a triangle number within a pentachoron, returns the
-         * corresponding canonical ordering of the pentachoron vertices.
-         *
-         * If this canonical ordering is \a c, then <tt>c[0,1,2]</tt> will be
-         * the vertices of the given triangle in increasing numerical order.
-         * That is, <tt>c[0]</tt> &lt; <tt>c[1]</tt> &lt; <tt>c[2]</tt>.
-         * The remaining images <tt>c[3,4]</tt> will be chosen to make
-         * the permutation even.
-         *
-         * Note that this is \e not the same permutation as returned by
-         * Dim4Pentachoron::getTriangleMapping():
-         *
-         * - ordering() is a static function, which returns the same
-         *   permutation for the same triangle number, regardless of which
-         *   pentachoron we are looking at.  The images of 0,1,2 will always
-         *   appear in increasing order, and the permutation will always
-         *   be even.
-         *
-         * - getTriangleMapping() examines the underlying triangle \a T of the
-         *   triangulation and, across all appearances of \a T in different
-         *   pentachoraL (i) chooses the images of 0,1,2 to map to the same
-         *   respective vertices of \a T; and (ii) chooses the images
-         *   of 3,4 to maintain a "consistent orientation" constraint.
-         *
-         * @param triangle identifies which triangle of a pentachoron to query.
-         * This must be between 0 and 9 inclusive.
-         * @return the corresponding canonical ordering of the
-         * pentachoron vertices.
-         */
-        static NPerm5 ordering(unsigned triangle);
-        /**
-         * Identifies which triangle number in a pentachoron is represented
-         * by the first three elements of the given permutation.
-         *
-         * In other words, this routine identifies which triangle number in
-         * a pentachoron spans vertices <tt>vertices[0,1,2]</tt>.
-         *
-         * @param vertices a permutation whose first three elements
-         * represent some vertex numbers in a pentachoron.
-         * @return the corresponding triangle number in a pentachoron.
-         * This will be between 0 and 9 inclusive.
-         */
-        static unsigned faceNumber(NPerm5 vertices);
-        /**
-         * Tests whether the given triangle in a pentachoron contains the
-         * given vertex of the pentachoron.
-         *
-         * @param triangle a triangle number in a pentachoron; this must
-         * be between 0 and 9 inclusive.
-         * @param vertex a vertex number in a pentachoron; this must be
-         * between 0 and 4 inclusive.
-         * @return \c true if and only if the given triangle contains the
-         * given vertex.
-         */
-        static bool containsVertex(unsigned triangle, unsigned vertex);
-};
-
-} // namespace detail
-
 /**
  * Represents a triangle in the skeleton of a 4-manifold triangulation.
  *
@@ -312,27 +237,6 @@ typedef Face<4, 2> Dim4Triangle;
 // Some more headers that are required for inline functions:
 #include "dim4/dim4pentachoron.h"
 namespace regina {
-
-// Inline functions for FaceNumbering
-
-namespace detail {
-
-inline NPerm5 FaceNumbering<4, 2>::ordering(unsigned triangle) {
-    return ordering_[triangle];
-}
-
-inline unsigned FaceNumbering<4, 2>::faceNumber(NPerm5 vertices) {
-    return Dim4Triangle::triangleNumber[vertices[0]][vertices[1]][vertices[2]];
-}
-
-inline bool FaceNumbering<4, 2>::containsVertex(unsigned triangle,
-        unsigned vertex) {
-    return (vertex == Dim4Triangle::triangleVertex[triangle][0] ||
-            vertex == Dim4Triangle::triangleVertex[triangle][1] ||
-            vertex == Dim4Triangle::triangleVertex[triangle][2]);
-}
-
-} // namespace detail
 
 // Inline functions for Dim4Triangle
 

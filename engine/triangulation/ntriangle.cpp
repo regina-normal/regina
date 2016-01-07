@@ -37,15 +37,6 @@
 
 namespace regina {
 
-namespace detail {
-    const NPerm4 FaceNumbering<3, 2>::ordering_[4] = {
-        NPerm4(1, 2, 3, 0),
-        NPerm4(0, 2, 3, 1),
-        NPerm4(0, 1, 3, 2),
-        NPerm4(0, 1, 2, 3)
-    };
-}
-
 NTriangle::Type NTriangle::getType() {
     if (type_)
         return type_;

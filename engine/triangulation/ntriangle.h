@@ -69,77 +69,6 @@ typedef Face<3, 1> NEdge;
  */
 typedef FaceEmbedding<3, 2> NTriangleEmbedding;
 
-namespace detail {
-
-/**
- * Helper class that specifies how triangles are numbered within a tetrahedron.
- *
- * See the general FaceNumbering<dim, subdim> template class notes for
- * further details.
- */
-template <>
-class FaceNumbering<3, 2> {
-    private:
-        static const NPerm4 ordering_[4];
-            /**< An array that hard-codes the results of ordering(). */
-
-    public:
-        /**
-         * Given a triangle number within a tetrahedron, returns the
-         * corresponding canonical ordering of the tetrahedron vertices.
-         *
-         * If this canonical ordering is \a c, then <tt>c[0,1,2]</tt> will be
-         * the vertices of the given triangle in increasing numerical order.
-         * That is, <tt>c[0]</tt> &lt; <tt>c[1]</tt> &lt; <tt>c[2]</tt>.
-         *
-         * Note that this is \e not the same permutation as returned by
-         * NTetrahedron::getTriangleMapping():
-         *
-         * - ordering() is a static function, which returns the same
-         *   permutation for the same triangle number, regardless of which
-         *   tetrahedron we are looking at.  The images of 0,1,2 will always
-         *   appear in increasing order.
-         *
-         * - getTriangleMapping() examines the underlying triangle \a T
-         *   of the triangulation, and chooses the images of 0,1,2 to map to
-         *   the same respective vertices of \a T for all appearances of
-         *   \a T in different tetrahedra.
-         *
-         * @param triangle identifies which triangle of a tetrahedron to
-         * query.  This must be between 0 and 3 inclusive.
-         * @return the corresponding canonical ordering of the
-         * tetrahedron vertices.
-         */
-        static NPerm4 ordering(unsigned triangle);
-        /**
-         * Identifies which triangle number in a tetrahedron is represented
-         * by the first three elements of the given permutation.
-         *
-         * In other words, this routine identifies which triangle number in
-         * a tetrahedron spans vertices <tt>vertices[0,1,2]</tt>.
-         *
-         * @param vertices a permutation whose first three elements
-         * represent some vertex numbers in a tetrahedron.
-         * @return the corresponding triangle number in a tetrahedron.
-         * This will be between 0 and 3 inclusive.
-         */
-        static unsigned faceNumber(NPerm4 vertices);
-        /**
-         * Tests whether the given triangle of a tetrahedron contains the given
-         * vertex of the tetrahedron.
-         *
-         * @param triangle a triangle number in a tetrahedron; this must be
-         * between 0 and 3 inclusive.
-         * @param vertex a vertex number in a tetrahedron; this must be
-         * between 0 and 3 inclusive.
-         * @return \c true if and only if the given triangle contains the
-         * given vertex.
-         */
-        static bool containsVertex(unsigned triangle, unsigned vertex);
-};
-
-} // namespace detail
-
 /**
  * Represents a triangle in the skeleton of a 3-manifold triangulation.
  *
@@ -386,25 +315,6 @@ typedef Face<3, 2> NTriangle;
 // Some more headers that are required for inline functions:
 #include "triangulation/ntetrahedron.h"
 namespace regina {
-
-// Inline functions for FaceNumbering
-
-namespace detail {
-
-inline NPerm4 FaceNumbering<3, 2>::ordering(unsigned triangle) {
-    return ordering_[triangle];
-}
-
-inline unsigned FaceNumbering<3, 2>::faceNumber(NPerm4 vertices) {
-    return vertices[3];
-}
-
-inline bool FaceNumbering<3, 2>::containsVertex(unsigned triangle,
-        unsigned vertex) {
-    return (triangle != vertex);
-}
-
-} // namespace detail
 
 // Inline functions for NTriangle
 

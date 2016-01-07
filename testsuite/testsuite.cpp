@@ -112,9 +112,11 @@ void populateTests(CppUnit::TextTestRunner& runner) {
     // Maths:
     addNInteger(runner);
     addNRational(runner);
+    addNPerm2(runner);
     addNPerm3(runner);
     addNPerm4(runner);
     addNPerm5(runner);
+    addNPerm(runner);
     addNPrimes(runner);
     addNumberTheory(runner);
     addMatrixOps(runner);

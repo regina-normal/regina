@@ -2200,7 +2200,7 @@ void TriangulationBase<dim>::calculateSkeletonCodim2() {
     NPerm<dim+1> map, adjMap;
     int dir, exitFacet;
     for (auto s : simplices_) {
-        for (start = 0; start < SimplexFaces<dim, dim-2>::nFaces; ++start) {
+        for (start = 0; start < FaceNumbering<dim, dim-2>::nFaces; ++start) {
             if (s->SimplexFaces<dim, dim-2>::face_[start])
                 continue;
 
@@ -2287,12 +2287,12 @@ void TriangulationBase<dim>::calculateSkeletonSubdim() {
     // simplex is pushed on at most once, the array size does not need to
     // be very large.
     typedef std::pair<Simplex<dim>*, int> Spec; /* (simplex, face) */
-    Spec* queue = new Spec[size() * SimplexFaces<dim, subdim>::nFaces];
+    Spec* queue = new Spec[size() * FaceNumbering<dim, subdim>::nFaces];
     unsigned queueStart, queueEnd;
     unsigned pos;
 
     for (auto s : simplices_) {
-        for (start = 0; start < SimplexFaces<dim, subdim>::nFaces; ++start) {
+        for (start = 0; start < FaceNumbering<dim, subdim>::nFaces; ++start) {
             if (s->SimplexFaces<dim, subdim>::face_[start])
                 continue;
 

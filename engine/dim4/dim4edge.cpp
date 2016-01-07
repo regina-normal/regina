@@ -58,21 +58,6 @@ const int Face<4, 1>::edgeVertex[10][2] = {
     { 2, 4 },
     { 3, 4 }};
 
-namespace detail {
-    const NPerm5 FaceNumbering<4, 1>::ordering_[10] = {
-        NPerm5(0, 1, 2, 3, 4),
-        NPerm5(0, 2, 1, 4, 3),
-        NPerm5(0, 3, 1, 2, 4),
-        NPerm5(0, 4, 1, 3, 2),
-        NPerm5(1, 2, 0, 3, 4),
-        NPerm5(1, 3, 0, 4, 2),
-        NPerm5(1, 4, 0, 2, 3),
-        NPerm5(2, 3, 0, 1, 4),
-        NPerm5(2, 4, 0, 3, 1),
-        NPerm5(3, 4, 0, 1, 2)
-    };
-}
-
 Dim2Triangulation* Face<4, 1>::buildLinkDetail(bool labels,
         Dim4Isomorphism** inclusion) const {
     // Build the triangulation.

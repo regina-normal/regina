@@ -44,6 +44,7 @@
 #include "regina-core.h"
 #include "output.h"
 #include "maths/nperm.h"
+#include "generic/facenumbering.h"
 #include "generic/alias/facenumber.h"
 #include "generic/alias/simplex.h"
 #include "utilities/nmarkedvector.h"
@@ -813,102 +814,6 @@ class FaceOrientability<false> {
 };
 
 /**
- * Specifies how <i>subdim</i>-faces are numbered within a
- * <i>dim</i>-dimensional simplex.
- *
- * Every class Face<dim, subdim> inherits from this class.
- * End users should not need to reference this class directly - you can
- * just call the inherited routines in Face<dim, subdim>, such as
- * Face<dim, subdim>::ordering(), Face<dim, subdim>::faceNumber(), and so on.
- *
- * The routines in this class have been put into this separate FaceNumbering
- * class (instead of FaceBase or Face) so that they can be specialised
- * (and therefore optimised) in Regina's \ref stddim "standard dimensions".
- */
-template <int dim, int subdim>
-class FaceNumbering {
-    public:
-        /**
-         * Given a <i>subdim</i>-face number within a <i>dim</i>-dimensional
-         * simplex, returns the corresponding canonical ordering of the
-         * simplex vertices.
-         *
-         * If this canonical ordering is \a c, then \a c[0,...,\a subdim]
-         * will be the vertices of the given face in increasing numerical
-         * order.  That is, \a c[0] &lt; ... &lt; \a c[\a subdim].
-         * For faces of dimension \a subdim &le; <i>dim</i>-2, the remaining
-         * images \a c[(\a subdim + 1),...,\a dim] will be chosen to make
-         * the permutation even.
-         *
-         * Note that this is \e not the same permutation as returned by
-         * Simplex<dim>::faceMapping<subdim>():
-         *
-         * - ordering() is a static function, which returns the same permutation
-         *   for the same face number, regardless of which <i>dim</i>-simplex
-         *   we are looking at.  The images of 0,...,\a subdim will always
-         *   appear in increasing order, and (for dimensions
-         *   \a subdim &le; <i>dim</i>-2) the permutation will always be even.
-         *
-         * - faceMapping() examines the underlying face \a F of the
-         *   triangulation and, across all appearances of \a F in different
-         *   <i>dim</i>-simplices: (i) chooses the images of 0,...,\a subdim to
-         *   map to the same respective vertices of \a F; and (ii) chooses the
-         *   images of (\a subdim + 1),...,\a dim to maintain a "consistent
-         *   orientation" constraint.
-         *
-         * @param face identifies which <i>subdim</i>-face of a
-         * <i>dim</i>-dimensional simplex to query.  This must be between
-         * 0 and (<i>dim</i>+1 choose <i>subdim</i>+1)-1 inclusive.
-         * @return the corresponding canonical ordering of the simplex vertices.
-         */
-        static NPerm<dim + 1> ordering(unsigned face);
-
-        /**
-         * Identifies which <i>subdim</i>-face in a <i>dim</i>-dimensional
-         * simplex is represented by the first (\a subdim + 1) elements of the
-         * given permutation.
-         *
-         * In other words, this routine identifies which <i>subdim</i>-face
-         * number within a <i>dim</i>-dimensional simplex spans vertices
-         * <tt>vertices[0, ..., \a subdim]</tt>.
-         *
-         * @param vertices a permutation whose first (\a subdim + 1)
-         * elements represent some vertex numbers in a <i>dim</i>-simplex.
-         * @return the corresponding <i>subdim</i>-face number in the
-         * <i>dim</i>-simplex.  This will be between 0 and
-         * (<i>dim</i>+1 choose <i>subdim</i>+1)-1 inclusive.
-         */
-        static unsigned faceNumber(const NPerm<dim + 1>& vertices);
-
-        /**
-         * Tests whether the given <i>subdim</i>-face of a
-         * <i>dim</i>-dimensional simplex contains the given vertex
-         * of the simplex.
-         *
-         * @param face a <i>subdim</i>-face number in a <i>dim</i>-simplex;
-         * this must be between 0 and (<i>dim</i>+1 choose <i>subdim</i>+1)-1
-         * inclusive.
-         * @param vertex a vertex number in a <i>dim</i>-simplex; this must be
-         * between 0 and \a dim inclusive.
-         * @return \c true if and only if the given <i>subdim</i>-face
-         * contains the given vertex.
-         */
-        static bool containsVertex(unsigned face, unsigned vertex);
-};
-
-// Note that FaceNumbering is specialised in standard dimensions.
-// Do not explicitly drag in the specialised headers for now.
-template <> class FaceNumbering<2, 1>;
-template <> class FaceNumbering<2, 0>;
-template <> class FaceNumbering<3, 2>;
-template <> class FaceNumbering<3, 1>;
-template <> class FaceNumbering<3, 0>;
-template <> class FaceNumbering<4, 3>;
-template <> class FaceNumbering<4, 2>;
-template <> class FaceNumbering<4, 1>;
-template <> class FaceNumbering<4, 0>;
-
-/**
  * Helper class that indicates what data type \a Base uses to store its
  * list of <i>subdim</i>-faces.
  *
@@ -1342,37 +1247,6 @@ inline bool FaceOrientability<false>::isLinkOrientable() const {
 }
 
 inline void FaceOrientability<false>::markLinkNonorientable() {
-}
-
-// Inline functions for FaceNumbering
-
-template <int dim, int subdim>
-inline NPerm<dim + 1> FaceNumbering<dim, subdim>::ordering(unsigned face) {
-    static_assert(! standardDim(dim),
-        "The generic implementation of FaceBase<dim, subdim>::ordering() "
-        "should not be used for Regina's standard dimensions.");
-    // TODO: Implement ordering().
-    return NPerm<dim + 1>();
-}
-
-template <int dim, int subdim>
-inline unsigned FaceNumbering<dim, subdim>::faceNumber(
-        const NPerm<dim + 1>& vertices) {
-    static_assert(! standardDim(dim),
-        "The generic implementation of FaceBase<dim, subdim>::faceNumber() "
-        "should not be used for Regina's standard dimensions.");
-    // TODO: Implement faceNumber().
-    return 0;
-}
-
-template <int dim, int subdim>
-inline bool FaceNumbering<dim, subdim>::containsVertex(unsigned face,
-        unsigned vertex) {
-    static_assert(! standardDim(dim),
-        "The generic implementation of FaceBase<dim, subdim>::containsVertex() "
-        "should not be used for Regina's standard dimensions.");
-    // TODO: Implement containsVertex().
-    return false;
 }
 
 // Inline functions for FaceBase

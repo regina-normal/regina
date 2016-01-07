@@ -75,6 +75,7 @@ void addNPerm4() {
         .def("isPermCode2", &NPerm4::isPermCode2)
         .def(self * self)
         .def("inverse", &NPerm4::inverse)
+        .def("reverse", &NPerm4::reverse)
         .def("sign", &NPerm4::sign)
         .def("__getitem__", perm_getItem)
         .def("preImageOf", &NPerm4::preImageOf)

@@ -80,21 +80,6 @@ const int Face<4, 2>::triangleVertex[10][3] = {
     { 0, 1, 3 },
     { 0, 1, 2 } };
 
-namespace detail {
-    const NPerm5 FaceNumbering<4, 2>::ordering_[10] = {
-        NPerm5(2, 3, 4, 0, 1),
-        NPerm5(1, 3, 4, 2, 0),
-        NPerm5(1, 2, 4, 0, 3),
-        NPerm5(1, 2, 3, 4, 0),
-        NPerm5(0, 3, 4, 1, 2),
-        NPerm5(0, 2, 4, 3, 1),
-        NPerm5(0, 2, 3, 1, 4),
-        NPerm5(0, 1, 4, 2, 3),
-        NPerm5(0, 1, 3, 4, 2),
-        NPerm5(0, 1, 2, 3, 4)
-    };
-}
-
 Dim4Edge* Face<4, 2>::getEdge(int edge) const {
     NPerm5 p = front().getVertices();
     return front().getPentachoron()->getEdge(

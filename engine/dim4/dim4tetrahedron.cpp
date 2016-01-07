@@ -39,16 +39,6 @@
 
 namespace regina {
 
-namespace detail {
-    const NPerm5 FaceNumbering<4, 3>::ordering_[5] = {
-        NPerm5(1,2,3,4,0),
-        NPerm5(0,2,3,4,1),
-        NPerm5(0,1,3,4,2),
-        NPerm5(0,1,2,4,3),
-        NPerm5(0,1,2,3,4)
-    };
-}
-
 Dim4Edge* Dim4Tetrahedron::getEdge(int edge) const {
     NPerm5 p = front().getVertices();
     return front().getPentachoron()->getEdge(

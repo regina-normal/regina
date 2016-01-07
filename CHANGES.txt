@@ -332,8 +332,8 @@ Version 4.97  [ (under development) ]
             - New events childToBeRenamed(), childWasRenamed().
         Class NPerm:
             - New generic template class for permutations of 2..16 objects.
-              The old NPerm3, NPerm4 and NPerm5 classes are now
-              specialisations of this template.
+              The old NPerm3, NPerm4 and NPerm5 classes, as well as a
+              new NPerm2 class, are now specialisations of this template.
             - Removed the old deprecated NPerm typedef (this was synonymous
               with NPerm4).
         Class NPerm3, NPerm4, NPerm5:
@@ -350,6 +350,7 @@ Version 4.97  [ (under development) ]
             - New trunc() routine that takes a length argument.
             - New constructors that take two arrays.
             - New static rand() routine for generating a random permutation.
+            - New routine reverse() for reversing a permutation.
             - Removed deprecated toString() and setPerm() routines.
             - Removed deprecated arrays from NPerm4::invS3 and NPerm4::invS2.
             - Removed deprecated global arrays from nperm4.h, including

@@ -68,77 +68,6 @@ typedef Face<4, 0> Dim4Vertex;
  */
 typedef FaceEmbedding<4, 3> Dim4TetrahedronEmbedding;
 
-namespace detail {
-
-/**
- * Helper class that specifies how tetrahedra are numbered within a pentachoron.
- *
- * See the general FaceNumbering<dim, subdim> template class notes for
- * further details.
- */
-template <>
-class FaceNumbering<4, 3> {
-    private:
-        static const NPerm5 ordering_[5];
-            /**< An array that hard-codes the results of ordering(). */
-
-    public:
-        /**
-         * Given a tetrahedron number within a pentachoron, returns the
-         * corresponding canonical ordering of the pentachoron vertices.
-         *
-         * If this canonical ordering is \a c, then <tt>c[0,...,3]</tt> will be
-         * the vertices of the given tetrahedron in increasing numerical order.
-         * That is, <tt>c[0]</tt> &lt; ... &lt; <tt>c[3]</tt>.
-         *
-         * Note that this is \e not the same permutation as returned by
-         * Dim4Pentachoron::getTetrahedronMapping():
-         *
-         * - ordering() is a static function, which returns the same
-         *   permutation for the same tetrahedron number, regardless of which
-         *   pentachoron we are looking at.  The images of 0,...,3 will always
-         *   appear in increasing order.
-         *
-         * - getTetrahedronMapping() examines the underlying tetrahedron \a T
-         *   of the triangulation, and chooses the images of 0,...,3 to map to
-         *   the same respective vertices of \a T for all appearances of
-         *   \a T in different pentachora.
-         *
-         * @param tetrahedron identifies which tetrahedron of a pentachoron to
-         * query.  This must be between 0 and 4 inclusive.
-         * @return the corresponding canonical ordering of the
-         * pentachoron vertices.
-         */
-        static NPerm5 ordering(unsigned tetrahedron);
-        /**
-         * Identifies which tetrahedron number in a pentachoron is represented
-         * by the first four elements of the given permutation.
-         *
-         * In other words, this routine identifies which tetrahedron number in
-         * a pentachoron spans vertices <tt>vertices[0,...,3]</tt>.
-         *
-         * @param vertices a permutation whose first four elements
-         * represent some vertex numbers in a pentachoron.
-         * @return the corresponding tetrahedron number in a pentachoron.
-         * This will be between 0 and 4 inclusive.
-         */
-        static unsigned faceNumber(NPerm5 vertices);
-        /**
-         * Tests whether the given tetrahedron in a pentachoron contains the
-         * given vertex of the pentachoron.
-         *
-         * @param tetrahedron a tetrahedron number in a pentachoron; this must
-         * be between 0 and 4 inclusive.
-         * @param vertex a vertex number in a pentachoron; this must be
-         * between 0 and 4 inclusive.
-         * @return \c true if and only if the given tetrahedron contains the
-         * given vertex.
-         */
-        static bool containsVertex(unsigned tetrahedron, unsigned vertex);
-};
-
-} // namespace detail
-
 /**
  * Represents a tetrahedron in the skeleton of a 4-dimensional triangulation.
  *
@@ -331,25 +260,6 @@ typedef Face<4, 3> Dim4Tetrahedron;
 // Some more headers that are required for inline functions:
 #include "dim4/dim4pentachoron.h"
 namespace regina {
-
-// Inline functions for FaceNumbering
-
-namespace detail {
-
-inline NPerm5 FaceNumbering<4, 3>::ordering(unsigned tetrahedron) {
-    return ordering_[tetrahedron];
-}
-
-inline unsigned FaceNumbering<4, 3>::faceNumber(NPerm5 vertices) {
-    return vertices[4];
-}
-
-inline bool FaceNumbering<4, 3>::containsVertex(unsigned tetrahedron,
-        unsigned vertex) {
-    return (tetrahedron != vertex);
-}
-
-} // namespace detail
 
 // Inline functions for Dim4Tetrahedron
 

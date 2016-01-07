@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,39 +32,49 @@
 
 /* end stub */
 
-void addMatrixOps();
-void addNCyclotomic();
-void addNInteger();
-void addNLargeInteger();
-void addNMatrix2();
-void addNMatrixInt();
-void addNPerm2();
-void addNPerm3();
-void addNPerm4();
-void addNPerm5();
-void addNPerm();
-void addNPolynomial();
-void addNPrimes();
-void addNRational();
-void addNumberTheory();
-void addPermConv();
+#include "generic/facenumbering.h"
 
-void addMaths() {
-    addMatrixOps();
-    addNCyclotomic();
-    addNInteger();
-    addNLargeInteger();
-    addNMatrix2();
-    addNMatrixInt();
-    addNPerm2();
-    addNPerm3();
-    addNPerm4();
-    addNPerm5();
-    addNPerm();
-    addNPolynomial();
-    addNPrimes();
-    addNRational();
-    addNumberTheory();
-    addPermConv();
+namespace regina {
+
+namespace detail {
+    const NPerm3 FaceNumberingImpl<2, 1, false>::ordering_[3] = {
+        NPerm3(1,2,0),
+        NPerm3(0,2,1),
+        NPerm3(0,1,2),
+    };
+
+    const NPerm4 FaceNumberingImpl<3, 1, true>::ordering_[6] = {
+        NPerm4(0, 1, 2, 3),
+        NPerm4(0, 2, 3, 1),
+        NPerm4(0, 3, 1, 2),
+        NPerm4(1, 2, 0, 3),
+        NPerm4(1, 3, 2, 0),
+        NPerm4(2, 3, 0, 1)
+    };
+
+    const int FaceNumberingImpl<3, 1, true>::faceNumber_[4][4] = {
+        { -1, 0, 1, 2 },
+        {  0,-1, 3, 4 },
+        {  1, 3,-1, 5 },
+        {  2, 4, 5,-1 }
+    };
+
+    const int FaceNumberingImpl<3, 1, true>::vertex_[6][2] = {
+        { 0, 1 },
+        { 0, 2 },
+        { 0, 3 },
+        { 1, 2 },
+        { 1, 3 },
+        { 2, 3 }
+    };
+
+    const NPerm4 FaceNumberingImpl<3, 2, false>::ordering_[4] = {
+        NPerm4(1, 2, 3, 0),
+        NPerm4(0, 2, 3, 1),
+        NPerm4(0, 1, 3, 2),
+        NPerm4(0, 1, 2, 3)
+    };
 }
+
+} // namespace regina
 

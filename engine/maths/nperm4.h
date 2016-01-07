@@ -223,6 +223,16 @@ class REGINA_API NPerm<4> {
         Code code_;
             /**< The internal code representing this permutation. */
 
+        /**
+         * Contains the reverses of the permutations in the array \a S4.
+         *
+         * Specifically, the reverse of permutation <tt>S4[i]</tt> is
+         * the permutation <tt>S4[ revS4[i] ]</tt>.
+         *
+         * See reverse() for details on what "reverse" means.
+         */
+        static const unsigned revS4[24];
+
     public:
         /**
          * Creates the identity permutation.
@@ -456,6 +466,15 @@ class REGINA_API NPerm<4> {
          * @return the inverse of this permutation.
          */
         NPerm<4> inverse() const;
+
+        /**
+         * Finds the reverse of this permutation.
+         *
+         * Here \e reverse means that we reverse the images of 0,...,3.
+         * In other words, if permutation \a q is the
+         * reverse of \a p, then <tt>p[i] == q[3 - i]</tt> for all \a i.
+         */
+        NPerm<4> reverse() const;
 
         /**
          * Determines the sign of this permutation.
@@ -789,6 +808,10 @@ inline NPerm<4> NPerm<4>::operator *(const NPerm<4>& q) const {
 
 inline NPerm<4> NPerm<4>::inverse() const {
     return NPerm<4>(static_cast<Code>(invS4[code_]));
+}
+
+inline NPerm<4> NPerm<4>::reverse() const {
+    return NPerm<4>(static_cast<Code>(revS4[code_]));
 }
 
 inline int NPerm<4>::sign() const {

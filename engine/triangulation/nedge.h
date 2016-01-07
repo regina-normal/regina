@@ -118,81 +118,6 @@ REGINA_API extern const int edgeEnd[6];
  */
 typedef FaceEmbedding<3, 1> NEdgeEmbedding;
 
-namespace detail {
-
-/**
- * Helper class that specifies how edges are numbered within a tetrahedron.
- *
- * See the general FaceNumbering<dim, subdim> template class notes for
- * further details.
- */
-template <>
-class FaceNumbering<3, 1> {
-    private:
-        static const NPerm4 ordering_[6];
-            /**< An array that hard-codes the results of ordering(). */
-
-    public:
-        /**
-         * Given an edge number within a tetrahedron, returns the
-         * corresponding canonical ordering of the tetrahedron vertices.
-         *
-         * If this canonical ordering is \a c, then <tt>c[0,1]</tt> will be
-         * the vertices of the given edge in increasing numerical order.
-         * That is, <tt>c[0]</tt> &lt; <tt>c[1]</tt>.  The remaining images
-         * <tt>c[2,3]</tt> will be chosen to make the permutation even.
-         *
-         * Note that this is \e not the same permutation as returned by
-         * NTetrahedron::getEdgeMapping():
-         *
-         * - ordering() is a static function, which returns the same
-         *   permutation for the same edge number, regardless of which
-         *   tetrahedron we are looking at.  The images of 0,1 will always
-         *   appear in increasing order, and the permutation will always
-         *   be even.
-         *
-         * - getEdgeMapping() examines the underlying edge \a E of the
-         *   triangulation and, across all appearances of \a E in different
-         *   tetrahedra: (i) chooses the images of 0,1 to map to the same
-         *   respective vertices of \a E; and (ii) chooses the images
-         *   of 2,3 to maintain a "consistent orientation" constraint.
-         *
-         * @param edge identifies which edge of a tetrahedron to query.
-         * This must be between 0 and 5 inclusive.
-         * @return the corresponding canonical ordering of the
-         * tetrahedron vertices.
-         */
-        static NPerm4 ordering(unsigned edge);
-        /**
-         * Identifies which edge number in a tetrahedron is represented
-         * by the first two elements of the given permutation.
-         *
-         * In other words, this routine identifies which edge number in
-         * a tetrahedron joins vertices <tt>vertices[0]</tt> and
-         * <tt>vertices[1]</tt>.
-         *
-         * @param vertices a permutation whose first two elements
-         * represent some vertex numbers in a tetrahedron.
-         * @return the corresponding edge number in a tetrahedron.
-         * This will be between 0 and 5 inclusive.
-         */
-        static unsigned faceNumber(NPerm4 vertices);
-        /**
-         * Tests whether the given edge of a tetrahedron contains the given
-         * vertex of the tetrahedron.
-         *
-         * @param edge an edge number in a tetrahedron; this must be
-         * between 0 and 5 inclusive.
-         * @param vertex a vertex number in a tetrahedron; this must be
-         * between 0 and 3 inclusive.
-         * @return \c true if and only if the given edge contains the
-         * given vertex.
-         */
-        static bool containsVertex(unsigned edge, unsigned vertex);
-};
-
-} // namespace detail
-
 /**
  * Represents an edge in the skeleton of a 3-manifold triangulation.
  *
@@ -332,26 +257,6 @@ typedef Face<3, 1> NEdge;
 // Some more headers that are required for inline functions:
 #include "triangulation/ntetrahedron.h"
 namespace regina {
-
-// Inline functions for FaceNumbering
-
-namespace detail {
-
-inline NPerm4 FaceNumbering<3, 1>::ordering(unsigned edge) {
-    return ordering_[edge];
-}
-
-inline unsigned FaceNumbering<3, 1>::faceNumber(NPerm4 vertices) {
-    return edgeNumber[vertices[0]][vertices[1]];
-}
-
-inline bool FaceNumbering<3, 1>::containsVertex(unsigned edge,
-        unsigned vertex) {
-    return (vertex == NEdge::edgeVertex[edge][0] ||
-            vertex == NEdge::edgeVertex[edge][1]);
-}
-
-} // namespace detail
 
 // Inline functions for NEdge
 

@@ -83,6 +83,7 @@ void addNPerm(const char* name) {
         .def("isPermCode", &NPerm<n>::isPermCode)
         .def(self * self)
         .def("inverse", &NPerm<n>::inverse)
+        .def("reverse", &NPerm<n>::reverse)
         .def("sign", &NPerm<n>::sign)
         .def("__getitem__", perm_getItem<n>)
         .def("preImageOf", &NPerm<n>::preImageOf)
