@@ -127,8 +127,12 @@ void addDim4Edge() {
             return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &Dim4Edge::getBoundaryComponent,
             return_value_policy<reference_existing_object>())
+        .def("vertex", &Dim4Edge::vertex,
+            return_value_policy<reference_existing_object>())
         .def("getVertex", &Dim4Edge::getVertex,
             return_value_policy<reference_existing_object>())
+        .def("vertexMapping", &Dim4Edge::vertexMapping)
+        .def("getVertexMapping", &Dim4Edge::getVertexMapping)
         .def("degree", &Dim4Edge::degree)
         .def("getDegree", &Dim4Edge::getDegree)
         .def("isBoundary", &Dim4Edge::isBoundary)

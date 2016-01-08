@@ -113,10 +113,17 @@ void addDim4Triangle() {
             return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &Dim4Triangle::getBoundaryComponent,
             return_value_policy<reference_existing_object>())
+        .def("vertex", &Dim4Triangle::vertex,
+            return_value_policy<reference_existing_object>())
         .def("getVertex", &Dim4Triangle::getVertex,
+            return_value_policy<reference_existing_object>())
+        .def("edge", &Dim4Triangle::edge,
             return_value_policy<reference_existing_object>())
         .def("getEdge", &Dim4Triangle::getEdge,
             return_value_policy<reference_existing_object>())
+        .def("vertexMapping", &Dim4Triangle::vertexMapping)
+        .def("getVertexMapping", &Dim4Triangle::getVertexMapping)
+        .def("edgeMapping", &Dim4Triangle::edgeMapping)
         .def("getEdgeMapping", &Dim4Triangle::getEdgeMapping)
         .def("degree", &Dim4Triangle::degree)
         .def("getDegree", &Dim4Triangle::getDegree)

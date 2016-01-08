@@ -110,13 +110,23 @@ void addDim4Tetrahedron() {
             return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &Dim4Tetrahedron::getBoundaryComponent,
             return_value_policy<reference_existing_object>())
+        .def("vertex", &Dim4Tetrahedron::vertex,
+            return_value_policy<reference_existing_object>())
         .def("getVertex", &Dim4Tetrahedron::getVertex,
+            return_value_policy<reference_existing_object>())
+        .def("edge", &Dim4Tetrahedron::edge,
             return_value_policy<reference_existing_object>())
         .def("getEdge", &Dim4Tetrahedron::getEdge,
             return_value_policy<reference_existing_object>())
+        .def("triangle", &Dim4Tetrahedron::triangle,
+            return_value_policy<reference_existing_object>())
         .def("getTriangle", &Dim4Tetrahedron::getTriangle,
             return_value_policy<reference_existing_object>())
+        .def("vertexMapping", &Dim4Tetrahedron::vertexMapping)
+        .def("getVertexMapping", &Dim4Tetrahedron::getVertexMapping)
+        .def("edgeMapping", &Dim4Tetrahedron::edgeMapping)
         .def("getEdgeMapping", &Dim4Tetrahedron::getEdgeMapping)
+        .def("triangleMapping", &Dim4Tetrahedron::triangleMapping)
         .def("getTriangleMapping", &Dim4Tetrahedron::getTriangleMapping)
         .def("isValid", &Dim4Tetrahedron::isValid)
         .def("isLinkOrientable", &Dim4Tetrahedron::isLinkOrientable)
