@@ -1392,14 +1392,20 @@ inline Component<dim>* FaceBase<dim, subdim>::getComponent() const {
 template <int dim, int subdim>
 template <int lowerdim>
 inline Face<dim, lowerdim>* FaceBase<dim, subdim>::face(int f) const {
-    // Computing lowerNumber can be optimised for the case where lowerdim = 0:
-    // int lowerNumber = front().vertices()[f]
+    // Let S be the dim-simplex corresponding to the first embedding,
+    // i.e., this->front().
+    // Let face f of this subdim-face correspond to face inSimp of S.
 
-    int lowerNumber = Face<dim, lowerdim>::faceNumber(
-        FaceStorage<dim, dim - subdim>::front().vertices() *
-        Face<subdim, lowerdim>::ordering(f));
+    int inSimp = (
+        // If lowerdim = 0, the general formula can be simplified.
+        lowerdim == 0 ?
+        FaceStorage<dim, dim - subdim>::front().vertices()[f] :
+        FaceNumbering<dim, lowerdim>::faceNumber(
+            FaceStorage<dim, dim - subdim>::front().vertices() *
+            NPerm<dim + 1>::extend(
+                FaceNumbering<subdim, lowerdim>::ordering(f))));
     return FaceStorage<dim, dim - subdim>::front().simplex()->
-        face<lowerdim>(lowerNumber);
+        template face<lowerdim>(inSimp);
 }
 
 template <int dim, int subdim>
@@ -1410,17 +1416,40 @@ inline Face<dim, lowerdim>* FaceBase<dim, subdim>::getFace(int f) const {
 
 template <int dim, int subdim>
 template <int lowerdim>
-inline NPerm<dim + 1> FaceBase<dim, subdim>::faceMapping(int f) const {
-    // TODO: <3, 2, 1> - needs to map 3 to 3.
-    // Computing lowerNumber can be optimised for the case where lowerdim = 0:
-    // int lowerNumber = front().vertices()[f]
+NPerm<dim + 1> FaceBase<dim, subdim>::faceMapping(int f) const {
+    // Let S be the dim-simplex corresponding to the first embedding,
+    // i.e., this->front().
+    // Let face f of this subdim-face correspond to face inSimp of S.
 
-    int lowerNumber = Face<dim, lowerdim>::faceNumber(
-        FaceStorage<dim, dim - subdim>::front().vertices() *
-        Face<subdim, lowerdim>::ordering(f));
-    return FaceStorage<dim, dim - subdim>::front().vertices().inverse() *
+    int inSimp = (
+        // If lowerdim = 0, the general formula can be simplified.
+        lowerdim == 0 ?
+        FaceStorage<dim, dim - subdim>::front().vertices()[f] :
+        FaceNumbering<dim, lowerdim>::faceNumber(
+            FaceStorage<dim, dim - subdim>::front().vertices() *
+            NPerm<dim + 1>::extend(
+                FaceNumbering<subdim, lowerdim>::ordering(f))));
+
+    // Get the images of 0,...,lowerdim correct:
+    NPerm<dim + 1> p =
+        FaceStorage<dim, dim - subdim>::front().vertices().inverse() *
         FaceStorage<dim, dim - subdim>::front().simplex()->
-        faceMapping<lowerdim>(lowerNumber);
+            template faceMapping<lowerdim>(inSimp);
+
+    // Ensure the images of lowerdim+1,...,dim are correct also.
+    for (unsigned i = subdim + 1; i <= dim; ++i)
+        if (p[i] != i) {
+            // Suppose p maps x -> i -> y.
+            //
+            // Since i > subdim, we must have x > lowerdim.
+            // Therefore y is not one of the vertices of our lowerdim-face.
+            //
+            // Change p to map x -> y and i -> i.
+            //
+            p = NPerm<dim + 1>(p[i], i) * p;
+        }
+
+    return p;
 }
 
 template <int dim, int subdim>
