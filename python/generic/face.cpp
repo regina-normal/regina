@@ -297,15 +297,6 @@ void addFace(const char* name, const char* embName) {
 }
 
 void addFace() {
-    // Note: FaceEmbedding<4, subdim> does not get the aliases
-    // pentachoron() or getPentachoron().
-    // This is fixed in the 4-manifolds branch, since dim=4 is handled
-    // separately.
-    addFace<4, 0>("Face4_0", "FaceEmbedding4_0");
-    addFace<4, 1>("Face4_1", "FaceEmbedding4_1");
-    addFace<4, 2>("Face4_2", "FaceEmbedding4_2");
-    addFace<4, 3>("Face4_3", "FaceEmbedding4_3");
-
     addFace<5, 0>("Face5_0", "FaceEmbedding5_0");
     addFace<5, 1>("Face5_1", "FaceEmbedding5_1");
     addFace<5, 2>("Face5_2", "FaceEmbedding5_2");
