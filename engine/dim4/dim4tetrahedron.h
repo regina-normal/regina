@@ -97,89 +97,6 @@ class REGINA_API Face<4, 3> : public detail::FaceBase<4, 3>,
         Dim4BoundaryComponent* getBoundaryComponent() const;
 
         /**
-         * Returns the vertex of the 4-manifold triangulation corresponding
-         * to the given vertex of this tetrahedron.
-         *
-         * @param vertex the vertex of this tetrahedron to examine.  This
-         * should be between 0 and 3 inclusive.
-         * @return the corresponding vertex of the 4-manifold triangulation.
-         */
-        Dim4Vertex* getVertex(int vertex) const;
-
-        /**
-         * Returns the edge of the 4-manifold triangulation corresponding
-         * to the given edge of this tetrahedron.
-         *
-         * Edges of a tetrahedron are numbered from 0 to 5, as described
-         * by the arrays NEdge::edgeNumber and NEdge::edgeVertex.
-         * Edge \a i of a tetrahedron is always opposite edge \a 5-i.
-         *
-         * @param edge the edge of this tetrahedron to examine.  This should
-         * be between 0 and 5 inclusive.
-         * @return the corresponding edge of the 4-manifold triangulation.
-         */
-        Dim4Edge* getEdge(int edge) const;
-
-        /**
-         * Returns the triangle of the 4-manifold triangulation corresponding
-         * to the given triangular face of this tetrahedron.
-         *
-         * Note that triangle \a i of a tetrahedron is opposite vertex \a i of
-         * the tetrahedron.
-         *
-         * @param tri the triangle of this tetrahedron to examine.  This
-         * should be between 0 and 3 inclusive.
-         * @return the corresponding triangle of the 4-manifold triangulation.
-         */
-        Dim4Triangle* getTriangle(int tri) const;
-
-        /**
-         * Examines the given edge of this tetrahedron, and returns a mapping
-         * from the "canonical" vertices of the corresponding edge of
-         * the triangulation to the vertices of this tetrahedron.
-         *
-         * This routine behaves much the same way as
-         * Dim4Pentachoron::getEdgeMapping(), except that it maps the
-         * edge vertices into a tetrahedron, not into a pentachoron.  See
-         * Dim4Pentachoron::getEdgeMapping() for a more detailed
-         * explanation of precisely what this mapping means.
-         *
-         * This routine differs from Dim4Pentachoron::getEdgeMapping()
-         * in how it handles the images of 2, 3 and 4.  This routine
-         * will always map 2 and 3 to the remaining vertices of this
-         * tetrahedron (in arbitrary order), and will always map 4 to itself.
-         *
-         * @param edge the edge of this tetrahedron to examine.  This should
-         * be between 0 and 5 inclusive.
-         * @return a mapping from vertices (0,1) of the requested edge
-         * to the vertices of this tetrahedron.
-         */
-        NPerm5 getEdgeMapping(int edge) const;
-
-        /**
-         * Examines the given triangle of this tetrahedron, and returns a
-         * mapping from the "canonical" vertices of the corresponding triangle
-         * of the triangulation to the vertices of this tetrahedron.
-         *
-         * This routine behaves much the same way as
-         * Dim4Pentachoron::getTriangleMapping(), except that it maps the
-         * triangle vertices into a tetrahedron, not into a pentachoron.  See
-         * Dim4Pentachoron::getTriangleMapping() for a more detailed
-         * explanation of precisely what this mapping means.
-         *
-         * This routine differs from Dim4Pentachoron::getTriangleMapping()
-         * in how it handles the images of 3 and 4.  This routine
-         * will always map 3 to the remaining vertex of this tetrahedron (which
-         * is equal to the argument \a tri), and will always map 4 to itself.
-         *
-         * @param tri the triangle of this tetrahedron to examine.  This should
-         * be between 0 and 3 inclusive.
-         * @return a mapping from vertices (0,1,2) of the requested triangle
-         * to the vertices of this tetrahedron.
-         */
-        NPerm5 getTriangleMapping(int tri) const;
-
-        /**
          * Determines if this tetrahedron lies entirely on the boundary of the
          * triangulation.
          *
@@ -269,10 +186,6 @@ inline Face<4, 3>::Face(Dim4Component* component) :
 
 inline Dim4BoundaryComponent* Face<4, 3>::getBoundaryComponent() const {
     return boundaryComponent_;
-}
-
-inline Dim4Vertex* Face<4, 3>::getVertex(int vertex) const {
-    return front().pentachoron()->vertex(front().vertices()[vertex]);
 }
 
 inline bool Face<4, 3>::isBoundary() const {

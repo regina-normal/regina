@@ -103,16 +103,6 @@ class REGINA_API Face<4, 1> : public detail::FaceBase<4, 1>,
         Dim4BoundaryComponent* getBoundaryComponent() const;
 
         /**
-         * Returns the vertex of the 4-manifold triangulation corresponding
-         * to the given vertex of this edge.
-         *
-         * @param vertex the vertex of this edge to examine.  This should
-         * be 0 or 1.
-         * @return the corresponding vertex of the 4-manifold triangulation.
-         */
-        Dim4Vertex* getVertex(int vertex) const;
-
-        /**
          * Determines if this edge lies entirely on the boundary of the
          * triangulation.
          *
@@ -271,10 +261,6 @@ inline Face<4, 1>::Face(Dim4Component* component) :
 
 inline Dim4BoundaryComponent* Face<4, 1>::getBoundaryComponent() const {
     return boundaryComponent_;
-}
-
-inline Dim4Vertex* Face<4, 1>::getVertex(int vertex) const {
-    return front().pentachoron()->vertex(front().vertices()[vertex]);
 }
 
 inline bool Face<4, 1>::isBoundary() const {

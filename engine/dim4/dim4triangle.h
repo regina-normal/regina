@@ -95,56 +95,6 @@ class REGINA_API Face<4, 2> : public detail::FaceBase<4, 2>,
         Dim4BoundaryComponent* getBoundaryComponent() const;
 
         /**
-         * Returns the vertex of the 4-manifold triangulation corresponding
-         * to the given vertex of this triangle.
-         *
-         * Note that vertex \a i of a triangle is opposite edge \a i of
-         * the triangle.
-         *
-         * @param vertex the vertex of this triangle to examine.  This should
-         * be 0, 1 or 2.
-         * @return the corresponding vertex of the 4-manifold triangulation.
-         */
-        Dim4Vertex* getVertex(int vertex) const;
-
-        /**
-         * Returns the edge of the 4-manifold triangulation corresponding
-         * to the given edge of this triangle.
-         *
-         * Note that edge \a i of a triangle is opposite vertex \a i of
-         * the triangle.
-         *
-         * @param edge the edge of this triangle to examine.  This should
-         * be 0, 1 or 2.
-         * @return the corresponding edge of the 4-manifold triangulation.
-         */
-        Dim4Edge* getEdge(int edge) const;
-
-        /**
-         * Examines the given edge of this triangle, and returns a mapping
-         * from the "canonical" vertices of the corresponding edge of
-         * the triangulation to the vertices of this triangle.
-         *
-         * This routine behaves much the same way as
-         * Dim4Pentachoron::getEdgeMapping(), except that it maps the
-         * edge vertices into a triangle, not into a pentachoron.  See
-         * Dim4Pentachoron::getEdgeMapping() for a more detailed
-         * explanation of precisely what this mapping means.
-         *
-         * This routine differs from Dim4Pentachoron::getEdgeMapping()
-         * in how it handles the images of 2, 3 and 4.  This routine
-         * will always map 2 to the remaining vertex of this triangle (which
-         * is equal to the argument \a edge), and will always map 3 and 4
-         * to themselves.
-         *
-         * @param edge the edge of this triangle to examine.  This should be
-         * 0, 1 or 2.
-         * @return a mapping from vertices (0,1) of the requested edge
-         * to the vertices of this triangle.
-         */
-        NPerm5 getEdgeMapping(int edge) const;
-
-        /**
          * Determines if this triangle lies entirely on the boundary of the
          * triangulation.
          *
@@ -205,10 +155,6 @@ inline Face<4, 2>::Face(Dim4Component* component) :
 
 inline Dim4BoundaryComponent* Face<4, 2>::getBoundaryComponent() const {
     return boundaryComponent_;
-}
-
-inline Dim4Vertex* Face<4, 2>::getVertex(int vertex) const {
-    return front().pentachoron()->vertex(front().vertices()[vertex]);
 }
 
 inline bool Face<4, 2>::isBoundary() const {

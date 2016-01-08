@@ -37,24 +37,6 @@
 
 namespace regina {
 
-Dim4Edge* Face<4, 2>::getEdge(int edge) const {
-    NPerm5 p = front().getVertices();
-    return front().getPentachoron()->getEdge(
-        Dim4Edge::edgeNumber[p[(edge + 1) % 3]][p[(edge + 2) % 3]]);
-}
-
-NPerm5 Face<4, 2>::getEdgeMapping(int edge) const {
-    NPerm5 trianglePerm = front().getVertices();
-    NPerm5 edgePerm = front().getPentachoron()->getEdgeMapping(
-        Dim4Edge::edgeNumber[trianglePerm[(edge + 1) % 3]]
-                            [trianglePerm[(edge + 2) % 3]]);
-
-    return NPerm5(
-        trianglePerm.preImageOf(edgePerm[0]),
-        trianglePerm.preImageOf(edgePerm[1]),
-        edge, 3, 4);
-}
-
 void Face<4, 2>::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
     out << std::endl;
