@@ -91,6 +91,8 @@ void addNPerm4() {
         .def("S4Index", S4Index_void)
         .def("orderedS4Index", &NPerm4::orderedS4Index)
         .def("orderedSnIndex", &NPerm4::orderedS4Index)
+        .def("extend", &NPerm4::extend<2>)
+        .def("extend", &NPerm4::extend<3>)
         .def("__str__", &NPerm4::str)
         .def("__repr__", &NPerm4::str)
         .def(regina::python::add_eq_operators())
@@ -100,6 +102,7 @@ void addNPerm4() {
         .staticmethod("isPermCode2")
         .staticmethod("atIndex")
         .staticmethod("rand")
+        .staticmethod("extend")
     ;
 
     s.attr("nPerms") = NPerm4::nPerms;

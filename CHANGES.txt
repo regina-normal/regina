@@ -340,6 +340,7 @@ Version 4.97  [ (under development) ]
             - New constructors that take two arrays.
             - New static rand() routine for generating a random permutation.
             - New routine reverse() for reversing a permutation.
+            - New extend() routine for converting from smaller permutations.
             - Removed deprecated toString() and setPerm() routines.
             - Removed deprecated arrays from NPerm4::invS3 and NPerm4::invS2.
             - Removed deprecated global arrays from nperm4.h, including
@@ -541,6 +542,8 @@ Version 4.97  [ (under development) ]
         Routine open():
             - Added a variant that takes an input stream (as opposed to
               a filename).
+        Routine perm3to4(), perm3to5(), perm4to5():
+            - Deprecated.  Use the new routines NPerm<n>::extend() instead.
         Global arrays edgeNumber[][], edgeStart[], edgeEnd[]:
             - This long-deprecated global arrays have now been removed, and
               the corresponding static arrays in NEdge are now deprecated.

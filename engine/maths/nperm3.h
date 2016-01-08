@@ -44,7 +44,8 @@
 #include <cstdlib>
 #include <string>
 #include "regina-core.h"
-#include "nperm.h"
+#include "maths/nperm.h"
+#include "maths/nperm2.h"
 
 namespace regina {
 
@@ -553,6 +554,18 @@ class REGINA_API NPerm<3> {
          */
         int orderedSnIndex() const;
 
+        /**
+         * Extends a 2-element permutation to an 3-element permutation.
+         *
+         * The resulting permutation will map 0,1 to their respective images
+         * under \a p, and will map the "unused" element 3 to itself.
+         *
+         * @param p a permutation on two elements.
+         * @return the same permutation expressed as a permutation on
+         * three elements.
+         */
+        static NPerm<3> extend(NPerm<2> p);
+
     private:
         /**
          * Contains the images of every element under every possible
@@ -735,6 +748,11 @@ inline int NPerm<3>::orderedS3Index() const {
 
 inline int NPerm<3>::orderedSnIndex() const {
     return orderedS3Index();
+}
+
+inline NPerm<3> NPerm<3>::extend(NPerm<2> p) {
+    return NPerm<3>(static_cast<Code>(
+        p.getPermCode() == 0 ? code012 : code102));
 }
 
 } // namespace regina

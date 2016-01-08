@@ -81,6 +81,7 @@ void addNPerm3() {
         .def("S3Index", &NPerm3::S3Index)
         .def("orderedS3Index", &NPerm3::orderedS3Index)
         .def("orderedSnIndex", &NPerm3::orderedS3Index)
+        .def("extend", &NPerm3::extend)
         .def("__str__", &NPerm3::str)
         .def("__repr__", &NPerm3::str)
         .def(regina::python::add_eq_operators())
@@ -88,6 +89,7 @@ void addNPerm3() {
         .staticmethod("isPermCode")
         .staticmethod("atIndex")
         .staticmethod("rand")
+        .staticmethod("extend")
     ;
 
     s.attr("nPerms") = NPerm3::nPerms;
