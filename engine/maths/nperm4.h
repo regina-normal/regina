@@ -45,6 +45,8 @@
 #include <string>
 #include "regina-core.h"
 #include "maths/nperm.h"
+#include "maths/nperm2.h"
+#include "maths/nperm3.h"
 
 namespace regina {
 
@@ -666,6 +668,23 @@ class REGINA_API NPerm<4> {
          */
         int orderedSnIndex() const;
 
+        /**
+         * Extends a <i>k</i>-element permutation to a 4-element permutation.
+         *
+         * The resulting permutation will map 0,...,<i>k</i>-1 to their
+         * respective images under \a p, and will map the "unused" elements
+         * <i>k</i>,...,3 to themselves.
+         *
+         * \tparam k the number of elements for the input permutation;
+         * this must be 2 or 3.
+         *
+         * @param p a permutation on \a k elements.
+         * @return the same permutation expressed as a permutation on
+         * four elements.
+         */
+        template <int k>
+        static NPerm<4> extend(NPerm<k> p);
+
     private:
         /**
          * Contains the images of every element under every possible
@@ -887,6 +906,21 @@ inline int NPerm<4>::S4Index(int a, int b, int c, int d) {
 
 inline int NPerm<4>::SnIndex() const {
     return S4Index();
+}
+
+template <>
+inline NPerm<4> NPerm<4>::extend(NPerm<2> p) {
+    return NPerm<4>(static_cast<Code>(p.getPermCode() == 0 ? 0 : 7));
+}
+
+template <>
+inline NPerm<4> NPerm<4>::extend(NPerm<3> p) {
+    // Code map: 0,1,2,3,4,5 -> 0,3,8,7,12,15.
+    switch (p.getPermCode()) {
+        case 2 : return NPerm<4>(static_cast<Code>(8));
+        case 3 : return NPerm<4>(static_cast<Code>(7));
+        default : return NPerm<4>(static_cast<Code>(3 * p.getPermCode()));
+    }
 }
 
 } // namespace regina

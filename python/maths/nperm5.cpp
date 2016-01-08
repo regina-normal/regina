@@ -88,6 +88,9 @@ void addNPerm5() {
         .def("S5Index", &NPerm5::S5Index)
         .def("orderedS5Index", &NPerm5::orderedS5Index)
         .def("orderedSnIndex", &NPerm5::orderedS5Index)
+        .def("extend", &NPerm5::extend<2>)
+        .def("extend", &NPerm5::extend<3>)
+        .def("extend", &NPerm5::extend<4>)
         .def("__str__", &NPerm5::str)
         .def("__repr__", &NPerm5::str)
         .def(regina::python::add_eq_operators())
@@ -95,6 +98,7 @@ void addNPerm5() {
         .staticmethod("isPermCode")
         .staticmethod("atIndex")
         .staticmethod("rand")
+        .staticmethod("extend")
     ;
 
     s.attr("imageBits") = NPerm5::imageBits;

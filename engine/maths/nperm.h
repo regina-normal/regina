@@ -457,6 +457,24 @@ class REGINA_API NPerm {
          */
         std::string trunc(unsigned len) const;
 
+        /**
+         * Extends a <i>k</i>-element permutation to an <i>n</i>-element
+         * permutation.
+         *
+         * The resulting permutation will map 0,...,<i>k</i>-1 to their
+         * respective images under \a p, and will map the "unused" elements
+         * <i>k</i>,...,<i>n</i>-1 to themselves.
+         *
+         * \tparam k the number of elements for the input permutation;
+         * this must be at least 2, and strictly less than \a n.
+         *
+         * @param p a permutation on \a k elements.
+         * @return the same permutation expressed as a permutation on
+         * \a n elements.
+         */
+        template <int k>
+        static NPerm extend(NPerm<k> p);
+
     private:
         /**
          * Creates a permutation from the given internal code.
@@ -490,6 +508,7 @@ inline REGINA_API std::ostream& operator << (std::ostream& out,
 
 // Note that some of our permutation classes are specialised elsewhere.
 // Do not explicitly drag in the headers nperm3.h, ..., nperm5.h for now.
+template <> class NPerm<2>;
 template <> class NPerm<3>;
 template <> class NPerm<4>;
 template <> class NPerm<5>;
@@ -730,6 +749,23 @@ std::string NPerm<n>::trunc(unsigned len) const {
     ans[len] = 0;
 
     return ans;
+}
+
+template <int n>
+template <int k>
+NPerm<n> NPerm<n>::extend(NPerm<k> p) {
+    // TODO: Reimplement this to replace the first loop with a direct
+    // copy of p's code, in the case where NPerm<k> and NPerm<n> use the
+    // same style of code with the same value of imageBits.
+
+    Code c = 0;
+    int i = 0;
+    for ( ; i < k; ++i)
+        c |= (static_cast<Code>(p[i]) << (imageBits * i));
+    for ( ; i < n; ++i)
+        c |= (static_cast<Code>(i) << (imageBits * i));
+
+    return NPerm<n>(c);
 }
 
 } // namespace regina

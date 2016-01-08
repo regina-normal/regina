@@ -45,6 +45,9 @@
 #include <string>
 #include "regina-core.h"
 #include "maths/nperm.h"
+#include "maths/nperm2.h"
+#include "maths/nperm3.h"
+#include "maths/nperm4.h"
 
 namespace regina {
 
@@ -607,6 +610,23 @@ class REGINA_API NPerm<5> {
          */
         int orderedSnIndex() const;
 
+        /**
+         * Extends a <i>k</i>-element permutation to a 5-element permutation.
+         *
+         * The resulting permutation will map 0,...,<i>k</i>-1 to their
+         * respective images under \a p, and will map the "unused" elements
+         * <i>k</i>,...,4 to themselves.
+         *
+         * \tparam k the number of elements for the input permutation;
+         * this must be 2, 3 or 4.
+         *
+         * @param p a permutation on \a k elements.
+         * @return the same permutation expressed as a permutation on
+         * five elements.
+         */
+        template <int k>
+        static NPerm<5> extend(NPerm<k> p);
+
     private:
         /**
          * Creates a permutation from the given internal code.
@@ -770,6 +790,21 @@ inline int NPerm<5>::SnIndex() const {
 
 inline int NPerm<5>::orderedSnIndex() const {
     return orderedS5Index();
+}
+
+template <>
+inline NPerm<5> NPerm<5>::extend(NPerm<2> p) {
+    return NPerm<5>(static_cast<Code>(p.getPermCode() == 0 ? 18056 : 18049));
+}
+
+template <>
+inline NPerm<5> NPerm<5>::extend(NPerm<3> p) {
+    return NPerm<5>(p[0], p[1], p[2], 3, 4);
+}
+
+template <>
+inline NPerm<5> NPerm<5>::extend(NPerm<4> p) {
+    return NPerm<5>(p[0], p[1], p[2], p[3], 4);
 }
 
 } // namespace regina

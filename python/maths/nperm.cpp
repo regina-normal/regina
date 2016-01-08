@@ -37,6 +37,10 @@
 #include "Python.h"
 #include <boost/python.hpp>
 #include "maths/nperm.h"
+#include "maths/nperm5.h"
+#include "maths/nperm4.h"
+#include "maths/nperm3.h"
+#include "maths/nperm2.h"
 #include "../helpers.h"
 
 using namespace boost::python;
@@ -69,6 +73,27 @@ namespace {
         }
         return boost::shared_ptr<NPerm<n>>(new NPerm<n>(image));
     }
+
+    template <int n, int k>
+    struct NPerm_extend : boost::python::def_visitor<NPerm_extend<n, k>> {
+        friend class boost::python::def_visitor_access;
+
+        template <typename Class>
+        void visit(Class& c) const {
+            c.def("extend", &NPerm<n>::template extend<k>);
+            c.def(NPerm_extend<n, k-1>());
+        }
+    };
+
+    template <int n>
+    struct NPerm_extend<n, 2> : boost::python::def_visitor<NPerm_extend<n, 2>> {
+        friend class boost::python::def_visitor_access;
+
+        template <typename Class>
+        void visit(Class& c) const {
+            c.def("extend", &NPerm<n>::template extend<2>);
+        }
+    };
 }
 
 template <int n>
@@ -96,11 +121,13 @@ void addNPerm(const char* name) {
         .def("trunc", &NPerm<n>::trunc)
         .def("__str__", &NPerm<n>::str)
         .def("__repr__", &NPerm<n>::str)
+        .def(NPerm_extend<n, n-1>())
         .def(regina::python::add_eq_operators())
         .staticmethod("fromPermCode")
         .staticmethod("isPermCode")
         .staticmethod("atIndex")
         .staticmethod("rand")
+        .staticmethod("extend");
     ;
 
     s.attr("nPerms") = NPerm<n>::nPerms;
