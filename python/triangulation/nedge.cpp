@@ -109,8 +109,12 @@ void addNEdge() {
             return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &NEdge::getBoundaryComponent,
             return_value_policy<reference_existing_object>())
+        .def("vertex", &NEdge::vertex,
+            return_value_policy<reference_existing_object>())
         .def("getVertex", &NEdge::getVertex,
             return_value_policy<reference_existing_object>())
+        .def("vertexMapping", &NEdge::vertexMapping)
+        .def("getVertexMapping", &NEdge::getVertexMapping)
         .def("degree", &NEdge::degree)
         .def("getDegree", &NEdge::getDegree)
         .def("isBoundary", &NEdge::isBoundary)

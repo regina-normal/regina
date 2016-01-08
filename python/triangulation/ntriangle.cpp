@@ -117,10 +117,17 @@ void addNTriangle() {
                 return_value_policy<reference_existing_object>())
             .def("getBoundaryComponent", &NTriangle::getBoundaryComponent,
                 return_value_policy<reference_existing_object>())
+            .def("vertex", &NTriangle::vertex,
+                return_value_policy<reference_existing_object>())
             .def("getVertex", &NTriangle::getVertex,
+                return_value_policy<reference_existing_object>())
+            .def("edge", &NTriangle::edge,
                 return_value_policy<reference_existing_object>())
             .def("getEdge", &NTriangle::getEdge,
                 return_value_policy<reference_existing_object>())
+            .def("vertexMapping", &NTriangle::vertexMapping)
+            .def("getVertexMapping", &NTriangle::getVertexMapping)
+            .def("edgeMapping", &NTriangle::edgeMapping)
             .def("getEdgeMapping", &NTriangle::getEdgeMapping)
             .def("str", &NTriangle::str)
             .def("toString", &NTriangle::toString)

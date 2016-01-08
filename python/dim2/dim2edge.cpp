@@ -109,8 +109,12 @@ void addDim2Edge() {
             return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &Dim2Edge::getBoundaryComponent,
             return_value_policy<reference_existing_object>())
+        .def("vertex", &Dim2Edge::vertex,
+            return_value_policy<reference_existing_object>())
         .def("getVertex", &Dim2Edge::getVertex,
             return_value_policy<reference_existing_object>())
+        .def("vertexMapping", &Dim2Edge::vertexMapping)
+        .def("getVertexMapping", &Dim2Edge::getVertexMapping)
         .def("isBoundary", &Dim2Edge::isBoundary)
         .def("inMaximalForest", &Dim2Edge::inMaximalForest)
         .def("str", &Dim2Edge::str)
