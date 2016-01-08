@@ -41,6 +41,103 @@
 using namespace boost::python;
 using regina::Simplex;
 
+namespace {
+    template <int dim, int maxsubdim>
+    struct face_aliases :
+            boost::python::def_visitor<face_aliases<dim, maxsubdim>> {
+        friend class boost::python::def_visitor_access;
+
+        template <typename Class>
+        void visit(Class& c) const {
+            c.def(face_aliases<dim, maxsubdim - 1>());
+        }
+    };
+
+    template <int dim>
+    struct face_aliases<dim, 0> :
+            boost::python::def_visitor<face_aliases<dim, 0>> {
+        friend class boost::python::def_visitor_access;
+
+        template <typename Class>
+        void visit(Class& c) const {
+            c.def("vertex", &Simplex<dim>::vertex,
+                return_value_policy<reference_existing_object>())
+            c.def("getVertex", &Simplex<dim>::getVertex,
+                return_value_policy<reference_existing_object>())
+            c.def("vertexMapping", &Simplex<dim>::vertexMapping)
+            c.def("getVertexMapping", &Simplex<dim>::getVertexMapping)
+        }
+    };
+
+    template <int dim>
+    struct face_aliases<dim, 1> :
+            boost::python::def_visitor<face_aliases<dim, 1>> {
+        friend class boost::python::def_visitor_access;
+
+        template <typename Class>
+        void visit(Class& c) const {
+            c.def("edge", &Simplex<dim>::edge,
+                return_value_policy<reference_existing_object>())
+            c.def("getEdge", &Simplex<dim>::getEdge,
+                return_value_policy<reference_existing_object>())
+            c.def("edgeMapping", &Simplex<dim>::edgeMapping)
+            c.def("getEdgeMapping", &Simplex<dim>::getEdgeMapping)
+            c.def(face_aliases<dim, 0>());
+        }
+    };
+
+    template <int dim>
+    struct face_aliases<dim, 2> :
+            boost::python::def_visitor<face_aliases<dim, 2>> {
+        friend class boost::python::def_visitor_access;
+
+        template <typename Class>
+        void visit(Class& c) const {
+            c.def("triangle", &Simplex<dim>::triangle,
+                return_value_policy<reference_existing_object>())
+            c.def("getTriangle", &Simplex<dim>::getTriangle,
+                return_value_policy<reference_existing_object>())
+            c.def("triangleMapping", &Simplex<dim>::triangleMapping)
+            c.def("getTriangleMapping", &Simplex<dim>::getTriangleMapping)
+            c.def(face_aliases<dim, 1>());
+        }
+    };
+
+    template <int dim>
+    struct face_aliases<dim, 3> :
+            boost::python::def_visitor<face_aliases<dim, 3>> {
+        friend class boost::python::def_visitor_access;
+
+        template <typename Class>
+        void visit(Class& c) const {
+            c.def("tetrahedron", &Simplex<dim>::tetrahedron,
+                return_value_policy<reference_existing_object>())
+            c.def("getTetrahedron", &Simplex<dim>::getTetrahedron,
+                return_value_policy<reference_existing_object>())
+            c.def("tetrahedronMapping", &Simplex<dim>::tetrahedronMapping)
+            c.def("getTetrahedronMapping", &Simplex<dim>::getTetrahedronMapping)
+            c.def(face_aliases<dim, 2>());
+        }
+    };
+
+    template <int dim>
+    struct face_aliases<dim, 4> :
+            boost::python::def_visitor<face_aliases<dim, 4>> {
+        friend class boost::python::def_visitor_access;
+
+        template <typename Class>
+        void visit(Class& c) const {
+            c.def("pentachoron", &Simplex<dim>::pentachoron,
+                return_value_policy<reference_existing_object>())
+            c.def("getPentachoron", &Simplex<dim>::getPentachoron,
+                return_value_policy<reference_existing_object>())
+            c.def("pentachoronMapping", &Simplex<dim>::pentachoronMapping)
+            c.def("getPentachoronMapping", &Simplex<dim>::getPentachoronMapping)
+            c.def(face_aliases<dim, 3>());
+        }
+    };
+}
+
 template <int dim>
 void addSimplex(const char* name) {
     class_<regina::Simplex<dim>, std::auto_ptr<regina::Simplex<dim>>,
@@ -63,6 +160,17 @@ void addSimplex(const char* name) {
             return_value_policy<reference_existing_object>())
         .def("getTriangulation", &Simplex<dim>::getTriangulation,
             return_value_policy<reference_existing_object>())
+        .def("component", &Simplex<dim>::component,
+            return_value_policy<reference_existing_object>())
+        .def("getComponent", &Simplex<dim>::getComponent,
+            return_value_policy<reference_existing_object>())
+        .def("face", &regina::python::face<Simplex<dim>, dim, int>)
+        .def("getFace", &regina::python::face<Simplex<dim>, dim, int>)
+        .def("faceMapping", &regina::python::faceMapping<Simplex<dim>, dim>)
+        .def("getFaceMapping", &regina::python::faceMapping<Simplex<dim>, dim>)
+        .def(face_aliases<dim, dim - 1>())
+        .def("orientation", &Simplex<dim>::orientation)
+        .def("facetInMaximalForest", &Simplex<dim>::facetInMaximalForest)
         .def("str", &Simplex<dim>::str)
         .def("toString", &Simplex<dim>::toString)
         .def("detail", &Simplex<dim>::detail)
