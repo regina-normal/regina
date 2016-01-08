@@ -127,6 +127,7 @@ int main(int argc, char* argv[]) {
             break;
         regina::NTriangulation *tri = regina::NTriangulation::fromIsoSig(sig);
         regina::NFacePairing *fpg = new regina::NFacePairing(*tri);
+        fpg->makeCanonical();
         std::string fpgString = fpg->str();
 
         std::getline(in, name); // Discard rest of line.
