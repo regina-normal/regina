@@ -45,6 +45,7 @@
 #include "output.h"
 #include "maths/nperm.h"
 #include "generic/facenumbering.h"
+#include "generic/alias/face.h"
 #include "generic/alias/facenumber.h"
 #include "generic/alias/simplex.h"
 #include "utilities/nmarkedvector.h"
@@ -858,6 +859,7 @@ class FaceBase :
         public FaceOrientability<dim >= 3 && subdim <= dim - 3>,
         public FaceNumbering<dim, subdim>,
         public NMarkedElement,
+        public alias::FaceOfSimplex<FaceBase<dim, subdim>, dim, subdim - 1>,
         public boost::noncopyable {
     private:
         Component<dim>* component_;
@@ -907,6 +909,117 @@ class FaceBase :
          * See component() for further details.
          */
         Component<dim>* getComponent() const;
+
+        /**
+         * Returns the <i>lowerdim</i>-face of the underlying triangulation
+         * that appears as the given <i>lowerdim</i>-dimensional subface
+         * of this face.
+         *
+         * The argument \a face must represent a <i>lowerdim</i>-face
+         * number within a <i>subdim</i>-simplex.  This <i>lowerdim</i>-face
+         * number will be interpreted with respect to the inherent labelling
+         * (0, ..., \a subdim) of the vertices of this <i>subdim</i>-face.
+         * See FaceEmbedding<dim, subdim>::vertices() for details on how
+         * these map to the vertex numbers of the <i>dim</i>-dimensional
+         * simplices that contain this face in the overall triangulation.
+         *
+         * See FaceNumbering<subdim, lowerdim> for the conventions of how
+         * <i>lowerdim</i>-faces are numbered within a <i>subdim</i>-simplex.
+         *
+         * \ifacespython Python does not support templates.  Instead,
+         * Python users should call this function in the form
+         * <tt>face(lowerdim, face)</tt>; that is, the template parameter
+         * \a lowerdim becomes the first argument of the function.
+         *
+         * @param face the <i>lowerdim</i>-face of this <i>subdim</i>-face to
+         * examine.  This should be between 0 and
+         * (<i>subdim</i>+1 choose <i>lowerdim</i>+1)-1 inclusive.
+         * @return the corresponding <i>lowerdim</i>-face of the triangulation.
+         */
+        template <int lowerdim>
+        Face<dim, lowerdim>* face(int face) const;
+
+        /**
+         * Deprecated alias for face(), which returns the <i>lowerdim</i>-face
+         * of the underlying triangulation that appears as the given
+         * <i>lowerdim</i>-dimensional subface of this face.
+         *
+         * \deprecated Simply call face() instead.
+         *
+         * See face() for further details.
+         */
+        template <int lowerdim>
+        Face<dim, lowerdim>* getFace(int face) const;
+
+        /**
+         * Examines the given <i>lowerdim</i>-dimensional subface of this face,
+         * and returns the mapping between the underlying <i>lowerdim</i>-face
+         * of the triangulation and the individual vertices of this face.
+         *
+         * The argument \a face must represent a <i>lowerdim</i>-face
+         * number within a <i>subdim</i>-simplex.  This <i>lowerdim</i>-face
+         * number will be interpreted with respect to the inherent labelling
+         * (0, ..., \a subdim) of the vertices of this <i>subdim</i>-face.
+         * See FaceEmbedding<dim, subdim>::vertices() for details on how
+         * these map to the vertex numbers of the <i>dim</i>-dimensional
+         * simplices that contain this face in the overall triangulation.
+         *
+         * Let \a F denote this <i>subdim</i>-face of the triangulation, and
+         * let \a L denote the <i>lowerdim</i>-face of the triangulation that
+         * corresponds to the given subface of \a F.  Then the
+         * permutation returned by this routine maps the vertex numbers
+         * (0, ..., \a lowerdim) of \a L to the corresponding vertex numbers
+         * of \a F.  This is with respect to the inherent labellings
+         * (0, ..., \a lowerdim) and (0, ..., \a subdim) of the vertices of
+         * \a L and \a F respectively.
+         *
+         * In particular, if this routine returns the permutation \a p,
+         * then the images \a p[0,...,\a lowerdim] will be some permutation
+         * of the vertices
+         * Face<subdim, lowerdim>::ordering(face)[0,...,\a lowerdim].
+         *
+         * This routine differs from Simplex<dim>::faceMapping<lowerdim>()
+         * in how it handles the images of (<i>lowerdim</i>+1, ..., \a dim):
+         *
+         * - This routine will map (<i>lowerdim</i>+1, ..., \a subdim) to the
+         *   remaining vertices of this face in an arbitrary order, and will map
+         *   (<i>subdim</i>+1, ..., \a dim) to (<i>subdim</i>+1, ..., \a dim)
+         *   again in an arbitrary order.
+         *
+         * - In contrast, Simplex<dim>::faceMapping<lowerdim>() chooses
+         *   the images of (<i>lowerdim</i>+1, ..., \a dim) to satisfy
+         *   an additional orientability constraint.
+         *
+         * See FaceNumbering<subdim, lowerdim> for the conventions of how
+         * <i>lowerdim</i>-faces are numbered within a <i>subdim</i>-simplex.
+         *
+         * \ifacespython Python does not support templates.  Instead,
+         * Python users should call this function in the form
+         * <tt>faceMapping(lowerdim, face)</tt>; that is, the template
+         * parameter \a lowerdim becomes the first argument of the function.
+         *
+         * @param face the <i>lowerdim</i>-face of this <i>subdim</i>-face to
+         * examine.  This should be between 0 and
+         * (<i>subdim</i>+1 choose <i>lowerdim</i>+1)-1 inclusive.
+         * @return a mapping from the vertices of the underlying
+         * <i>lowerdim</i>-face of the triangulation to the vertices of
+         * this <i>subdim</i>-face.
+         */
+        template <int lowerdim>
+        NPerm<dim + 1> faceMapping(int face) const;
+
+        /**
+         * Deprecated alias for faceMapping(), which examines the given
+         * <i>lowerdim</i>-dimensional subface of this face, and returns the
+         * mapping between the underlying <i>lowerdim</i>-face of the
+         * triangulation and the individual vertices of this face.
+         *
+         * \deprecated Simply call faceMapping() instead.
+         *
+         * See faceMapping() for further details.
+         */
+        template <int lowerdim>
+        NPerm<dim + 1> getFaceMapping(int face) const;
 
     protected:
         /**
@@ -1274,6 +1387,46 @@ inline Component<dim>* FaceBase<dim, subdim>::component() const {
 template <int dim, int subdim>
 inline Component<dim>* FaceBase<dim, subdim>::getComponent() const {
     return component_;
+}
+
+template <int dim, int subdim>
+template <int lowerdim>
+inline Face<dim, lowerdim>* FaceBase<dim, subdim>::face(int f) const {
+    // Computing lowerNumber can be optimised for the case where lowerdim = 0:
+    // int lowerNumber = front().vertices()[f]
+
+    int lowerNumber = Face<dim, lowerdim>::faceNumber(
+        FaceStorage<dim, dim - subdim>::front().vertices() *
+        Face<subdim, lowerdim>::ordering(f));
+    return FaceStorage<dim, dim - subdim>::front().simplex()->
+        face<lowerdim>(lowerNumber);
+}
+
+template <int dim, int subdim>
+template <int lowerdim>
+inline Face<dim, lowerdim>* FaceBase<dim, subdim>::getFace(int f) const {
+    return face(f);
+}
+
+template <int dim, int subdim>
+template <int lowerdim>
+inline NPerm<dim + 1> FaceBase<dim, subdim>::faceMapping(int f) const {
+    // TODO: <3, 2, 1> - needs to map 3 to 3.
+    // Computing lowerNumber can be optimised for the case where lowerdim = 0:
+    // int lowerNumber = front().vertices()[f]
+
+    int lowerNumber = Face<dim, lowerdim>::faceNumber(
+        FaceStorage<dim, dim - subdim>::front().vertices() *
+        Face<subdim, lowerdim>::ordering(f));
+    return FaceStorage<dim, dim - subdim>::front().vertices().inverse() *
+        FaceStorage<dim, dim - subdim>::front().simplex()->
+        faceMapping<lowerdim>(lowerNumber);
+}
+
+template <int dim, int subdim>
+template <int lowerdim>
+inline NPerm<dim + 1> FaceBase<dim, subdim>::getFaceMapping(int f) const {
+    return faceMapping(f);
 }
 
 template <int dim, int subdim>

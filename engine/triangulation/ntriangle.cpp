@@ -97,22 +97,6 @@ NTriangle::Type NTriangle::getType() {
     return UNKNOWN_TYPE;
 }
 
-NEdge* NTriangle::getEdge(int edge) const {
-    NPerm4 p = front().getVertices();
-    return front().getTetrahedron()->getEdge(
-        NEdge::edgeNumber[p[(edge + 1) % 3]][p[(edge + 2) % 3]]);
-}
-
-NPerm4 NTriangle::getEdgeMapping(int edge) const {
-    NPerm4 triPerm = front().getVertices();
-        // Maps triangle -> tetrahedron
-    NPerm4 edgePerm = front().getTetrahedron()->getEdgeMapping(
-        NEdge::edgeNumber[triPerm[(edge + 1) % 3]][triPerm[(edge + 2) % 3]]);
-        // Maps edge -> tetrahedron
-    return NPerm4(triPerm.preImageOf(edgePerm[0]),
-        triPerm.preImageOf(edgePerm[1]), edge, 3);
-}
-
 void NTriangle::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
     out << std::endl;

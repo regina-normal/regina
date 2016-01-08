@@ -96,16 +96,6 @@ class REGINA_API Face<3, 1> : public detail::FaceBase<3, 1>,
         NBoundaryComponent* getBoundaryComponent() const;
 
         /**
-         * Returns the vertex of the triangulation that corresponds
-         * to the given vertex of this edge.
-         *
-         * @param vertex the vertex of this edge to examine.  This should
-         * be 0 or 1.
-         * @return the corresponding vertex of the triangulation.
-         */
-        NVertex* getVertex(int vertex) const;
-
-        /**
          * Determines if this edge lies entirely on the boundary of the
          * triangulation.
          *
@@ -167,10 +157,6 @@ inline Face<3, 1>::Face(NComponent* component) :
 
 inline NBoundaryComponent* Face<3, 1>::getBoundaryComponent() const {
     return boundaryComponent_;
-}
-
-inline NVertex* Face<3, 1>::getVertex(int vertex) const {
-    return front().getTetrahedron()->getVertex(front().getVertices()[vertex]);
 }
 
 inline bool Face<3, 1>::isBoundary() const {
