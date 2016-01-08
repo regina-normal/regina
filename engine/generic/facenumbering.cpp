@@ -88,14 +88,14 @@ namespace detail {
         NPerm5(3, 4, 0, 1, 2)
     };
 
-    const int FaceNumberingImpl<4, 1, true>::faceNumber_[5][5] = {
+    const int FaceNumberingImpl<4, 1, true>::edgeNumber[5][5] = {
         { -1, 0, 1, 2, 3 },
         { 0, -1, 4, 5, 6 },
         { 1, 4, -1, 7, 8 },
         { 2, 5, 7, -1, 9 },
         { 3, 6, 8, 9, -1 }};
 
-    const int FaceNumberingImpl<4, 1, true>::vertex_[10][2] = {
+    const int FaceNumberingImpl<4, 1, true>::edgeVertex[10][2] = {
         { 0, 1 },
         { 0, 2 },
         { 0, 3 },
@@ -120,7 +120,7 @@ namespace detail {
         NPerm5(0, 1, 2, 3, 4)
     };
 
-    const int FaceNumberingImpl<4, 2, false>::faceNumber_[5][5][5] = {
+    const int FaceNumberingImpl<4, 2, false>::triangleNumber[5][5][5] = {
         { { -1,-1,-1,-1,-1 },
           { -1,-1, 9, 8, 7 },
           { -1, 9,-1, 6, 5 },
@@ -151,7 +151,7 @@ namespace detail {
           {  4, 1, 0,-1,-1 },
           { -1,-1,-1,-1,-1 } } };
 
-    const int FaceNumberingImpl<4, 2, false>::vertex_[10][3] = {
+    const int FaceNumberingImpl<4, 2, false>::triangleVertex[10][3] = {
         { 2, 3, 4 },
         { 1, 3, 4 },
         { 1, 2, 4 },

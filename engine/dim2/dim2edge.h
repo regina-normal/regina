@@ -97,16 +97,6 @@ class REGINA_API Face<2, 1> : public detail::FaceBase<2, 1>,
         Dim2BoundaryComponent* getBoundaryComponent() const;
 
         /**
-         * Returns the vertex of the 2-manifold triangulation corresponding
-         * to the given vertex of this edge.
-         *
-         * @param vertex the vertex of this edge to examine.  This
-         * should be either 0 or 1.
-         * @return the corresponding vertex of the 2-manifold triangulation.
-         */
-        Dim2Vertex* getVertex(int vertex) const;
-
-        /**
          * Determines if this edge lies entirely on the boundary of the
          * triangulation.
          *
@@ -197,10 +187,6 @@ inline Face<2, 1>::Face(Dim2Component* component) :
 
 inline Dim2BoundaryComponent* Face<2, 1>::getBoundaryComponent() const {
     return boundaryComponent_;
-}
-
-inline Dim2Vertex* Face<2, 1>::getVertex(int vertex) const {
-    return front().getTriangle()->getVertex(front().getVertices()[vertex]);
 }
 
 inline bool Face<2, 1>::isBoundary() const {

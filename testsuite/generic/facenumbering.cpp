@@ -96,14 +96,6 @@ class FaceNumberingTest : public CppUnit::TestFixture {
             for (int f = 0; f < FaceNumbering<dim, subdim>::nFaces; ++f) {
                 NPerm p = FaceNumbering<dim, subdim>::ordering(f);
 
-                if (subdim <= dim - 2 && p.sign() != 1) {
-                    std::ostringstream msg;
-                    msg << "Face<" << dim << ", " << subdim
-                        << "> number " << f << " gives ordering "
-                        << p << ", which is not even.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-
                 for (int i = 0; i < subdim; ++i)
                     if (p[i] >= p[i + 1]) {
                         std::ostringstream msg;

@@ -225,53 +225,6 @@ class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2>,
         NBoundaryComponent* getBoundaryComponent() const;
 
         /**
-         * Returns the vertex of the triangulation that corresponds
-         * to the given vertex of this triangle.
-         *
-         * Note that vertex \a i of a triangle is opposite edge \a i of the
-         * triangle.
-         *
-         * @param vertex the vertex of this triangle to examine.  This should
-         * be 0, 1 or 2.
-         * @return the corresponding vertex of the triangulation.
-         */
-        NVertex* getVertex(int vertex) const;
-        /**
-         * Returns the edge of the triangulation that corresponds
-         * to the given edge of this triangle.
-         *
-         * Note that edge \a i of a triangle is opposite vertex \a i of the
-         * triangle.
-         *
-         * @param edge the edge of this triangle to examine.  This should be
-         * 0, 1 or 2.
-         * @return the corresponding edge of the triangulation.
-         */
-        NEdge* getEdge(int edge) const;
-        /**
-         * Examines the given edge of this triangle, and returns a mapping
-         * from the "canonical" vertices of the corresponding edge of
-         * the triangulation to the vertices of this triangle.
-         *
-         * This routine behaves much the same as
-         * NTetrahedron::getEdgeMapping(), except that it maps the edge
-         * vertices into a triangle, not into a tetrahedron.  See
-         * NTetrahedron::getEdgeMapping() for a more detailed
-         * explanation of precisely what this mapping means.
-         *
-         * This routine differs from NTetrahedron::getEdgeMapping() in
-         * how it handles the images of 2 and 3.  This routine will
-         * always map 2 to the remaining vertex of this triangle (which is
-         * equal to the argument \a edge), and will always map 3 to itself.
-         *
-         * @param edge the edge of this triangle to examine.  This should be
-         * 0, 1 or 2.
-         * @return a mapping from vertices (0,1) of the requested edge to
-         * the vertices of this triangle.
-         */
-        NPerm4 getEdgeMapping(int edge) const;
-
-        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -325,10 +278,6 @@ inline Face<3, 2>::Face(NComponent* component) :
 
 inline NBoundaryComponent* Face<3, 2>::getBoundaryComponent() const {
     return boundaryComponent_;
-}
-
-inline NVertex* Face<3, 2>::getVertex(int vertex) const {
-    return front().getTetrahedron()->getVertex(front().getVertices()[vertex]);
 }
 
 inline bool Face<3, 2>::isBoundary() const {

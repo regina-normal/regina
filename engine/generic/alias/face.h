@@ -77,6 +77,18 @@ class FaceOfSimplex : public FaceOfSimplex<Derived, dim, maxdim - 1> {
 };
 
 /**
+ * Helper class that provides nothing whatsoever.
+ *
+ * This is an extreme case of FaceOfSimplex<Derived, dim, maxdim>, which
+ * provides dimension-specific aliases for face<subdim>(int) and
+ * faceMapping<subdim>(int), where reasonable, for facial dimensions
+ * \a subdim &le; \a maxdim.
+ */
+template <class Derived, int dim>
+class FaceOfSimplex<Derived, dim, -1> {
+};
+
+/**
  * Helper class that provides dimension-specific aliases for
  * face<0>(int) and faceMapping<0>(int).
  *
