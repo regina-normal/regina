@@ -42,6 +42,7 @@
 #include "triangulation/nvertex.h"
 #include "../globalarray.h"
 #include "../helpers.h"
+#include "../generic/facehelper.h"
 
 using namespace boost::python;
 using regina::NTriangle;
@@ -117,6 +118,8 @@ void addNTriangle() {
                 return_value_policy<reference_existing_object>())
             .def("getBoundaryComponent", &NTriangle::getBoundaryComponent,
                 return_value_policy<reference_existing_object>())
+            .def("face", &regina::python::face<NTriangle, 2, int>)
+            .def("getFace", &regina::python::face<NTriangle, 2, int>)
             .def("vertex", &NTriangle::vertex,
                 return_value_policy<reference_existing_object>())
             .def("getVertex", &NTriangle::getVertex,
@@ -125,6 +128,9 @@ void addNTriangle() {
                 return_value_policy<reference_existing_object>())
             .def("getEdge", &NTriangle::getEdge,
                 return_value_policy<reference_existing_object>())
+            .def("faceMapping", &regina::python::faceMapping<NTriangle, 2, 4>)
+            .def("getFaceMapping",
+                &regina::python::faceMapping<NTriangle, 2, 4>)
             .def("vertexMapping", &NTriangle::vertexMapping)
             .def("getVertexMapping", &NTriangle::getVertexMapping)
             .def("edgeMapping", &NTriangle::edgeMapping)

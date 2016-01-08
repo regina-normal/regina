@@ -103,10 +103,12 @@ struct FaceHelper {
         return FaceHelper<T, dim, subdim - 1>::facesFrom(t, subdimArg);
     }
 
-    static NPerm<dim + 1> faceMappingFrom(const T& t, int subdimArg, int f) {
+    template <int permSize>
+    static NPerm<permSize> faceMappingFrom(const T& t, int subdimArg, int f) {
         if (subdimArg == subdim)
             return t.template faceMapping<subdim>(f);
-        return FaceHelper<T, dim, subdim - 1>::faceMappingFrom(t, subdimArg, f);
+        return FaceHelper<T, dim, subdim - 1>::
+            template faceMappingFrom<permSize>(t, subdimArg, f);
     }
 };
 
@@ -139,7 +141,8 @@ struct FaceHelper<T, dim, 0> {
         return ans;
     }
 
-    static NPerm<dim + 1> faceMappingFrom(const T& t, int, int f) {
+    template <int permSize>
+    static NPerm<permSize> faceMappingFrom(const T& t, int, int f) {
         return t.template faceMapping<0>(f);
     }
 };
@@ -192,13 +195,15 @@ boost::python::list faces(const T& t, int subdimArg) {
 /**
  * The Python binding for the C++ template member function
  * T::faceMapping<subdimArg>(f), where the valid range for the C++ template
- * parameter \a subdimArg is 0, ..., <i>dim</i>-1.
+ * parameter \a subdimArg is 0, ..., <i>dim</i>-1, and where the function
+ * returns a permutation on permSize elements.
  */
-template <class T, int dim>
-NPerm<dim + 1> faceMapping(const T& t, int subdimArg, int f) {
+template <class T, int dim, int permSize = dim + 1>
+NPerm<permSize> faceMapping(const T& t, int subdimArg, int f) {
     if (subdimArg < 0 || subdimArg >= dim)
         invalidFaceDimension("faceMapping", dim);
-    return FaceHelper<T, dim, dim - 1>::faceMappingFrom(t, subdimArg, f);
+    return FaceHelper<T, dim, dim - 1>::template faceMappingFrom<permSize>(
+        t, subdimArg, f);
 }
 
 } } // namespace regina::python

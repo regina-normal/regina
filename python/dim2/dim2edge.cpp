@@ -41,6 +41,7 @@
 #include "dim2/dim2vertex.h"
 #include "../globalarray.h"
 #include "../helpers.h"
+#include "../generic/facehelper.h"
 
 using namespace boost::python;
 using regina::Dim2Edge;
@@ -109,10 +110,14 @@ void addDim2Edge() {
             return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &Dim2Edge::getBoundaryComponent,
             return_value_policy<reference_existing_object>())
+        .def("face", &regina::python::face<Dim2Edge, 1, int>)
+        .def("getFace", &regina::python::face<Dim2Edge, 1, int>)
         .def("vertex", &Dim2Edge::vertex,
             return_value_policy<reference_existing_object>())
         .def("getVertex", &Dim2Edge::getVertex,
             return_value_policy<reference_existing_object>())
+        .def("faceMapping", &regina::python::faceMapping<Dim2Edge, 1, 3>)
+        .def("getFaceMapping", &regina::python::faceMapping<Dim2Edge, 1, 3>)
         .def("vertexMapping", &Dim2Edge::vertexMapping)
         .def("getVertexMapping", &Dim2Edge::getVertexMapping)
         .def("isBoundary", &Dim2Edge::isBoundary)
