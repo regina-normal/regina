@@ -35,6 +35,7 @@
 void addComponent();
 void addFacetPairing();
 void addIsomorphism();
+void addFace();
 void addSimplex();
 void addTriangulations();
 
@@ -42,6 +43,7 @@ void addGeneric() {
     addComponent();
     addFacetPairing();
     addIsomorphism();
+    addFace();
     addSimplex();
     addTriangulations();
 }
