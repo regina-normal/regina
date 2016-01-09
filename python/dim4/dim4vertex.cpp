@@ -45,6 +45,8 @@
 using namespace boost::python;
 using regina::Dim4Vertex;
 using regina::Dim4VertexEmbedding;
+using regina::Face;
+using regina::FaceEmbedding;
 
 namespace {
     boost::python::list Dim4Vertex_getEmbeddings_list(const Dim4Vertex* v) {
@@ -73,7 +75,7 @@ namespace {
 }
 
 void addDim4Vertex() {
-    class_<Dim4VertexEmbedding>("Dim4VertexEmbedding",
+    class_<FaceEmbedding<4, 0>>("FaceEmbedding4_0",
             init<regina::Dim4Pentachoron*, int>())
         .def(init<const Dim4VertexEmbedding&>())
         .def("simplex", &Dim4VertexEmbedding::simplex,
@@ -98,8 +100,8 @@ void addDim4Vertex() {
         .def(regina::python::add_eq_operators())
     ;
 
-    class_<Dim4Vertex, std::auto_ptr<Dim4Vertex>, boost::noncopyable>
-            ("Dim4Vertex", no_init)
+    class_<Face<4, 0>, std::auto_ptr<Face<4, 0>>, boost::noncopyable>
+            ("Face4_0", no_init)
         .def("index", &Dim4Vertex::index)
         .def("embeddings", Dim4Vertex_getEmbeddings_list)
         .def("getEmbeddings", Dim4Vertex_getEmbeddings_list)
@@ -148,5 +150,8 @@ void addDim4Vertex() {
         .staticmethod("faceNumber")
         .staticmethod("containsVertex")
     ;
+
+    scope().attr("Dim4VertexEmbedding") = scope().attr("FaceEmbedding4_0");
+    scope().attr("Dim4Vertex") = scope().attr("Face4_0");
 }
 

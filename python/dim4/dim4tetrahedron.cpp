@@ -48,6 +48,8 @@
 using namespace boost::python;
 using regina::Dim4Tetrahedron;
 using regina::Dim4TetrahedronEmbedding;
+using regina::Face;
+using regina::FaceEmbedding;
 using regina::python::GlobalArray;
 
 namespace {
@@ -61,8 +63,8 @@ namespace {
 }
 
 void addDim4Tetrahedron() {
-    class_<Dim4TetrahedronEmbedding, boost::noncopyable>
-            ("Dim4TetrahedronEmbedding", init<regina::Dim4Pentachoron*, int>())
+    class_<FaceEmbedding<4, 3>, boost::noncopyable>
+            ("FaceEmbedding4_3", init<regina::Dim4Pentachoron*, int>())
         .def(init<const Dim4TetrahedronEmbedding&>())
         .def("simplex", &Dim4TetrahedronEmbedding::simplex,
             return_value_policy<reference_existing_object>())
@@ -86,8 +88,8 @@ void addDim4Tetrahedron() {
         .def(regina::python::add_eq_operators())
     ;
 
-    class_<Dim4Tetrahedron, std::auto_ptr<Dim4Tetrahedron>,
-            boost::noncopyable>("Dim4Tetrahedron", no_init)
+    class_<Face<4, 3>, std::auto_ptr<Face<4, 3>>,
+            boost::noncopyable>("Face4_3", no_init)
         .def("index", &Dim4Tetrahedron::index)
         .def("degree", &Dim4Tetrahedron::degree)
         .def("getDegree", &Dim4Tetrahedron::getDegree)
@@ -151,5 +153,8 @@ void addDim4Tetrahedron() {
         .staticmethod("faceNumber")
         .staticmethod("containsVertex")
     ;
+
+    scope().attr("Dim4TetrahedronEmbedding") = scope().attr("FaceEmbedding4_3");
+    scope().attr("Dim4Tetrahedron") = scope().attr("Face4_3");
 }
 
