@@ -33,12 +33,16 @@
 /* end stub */
 
 #include <boost/python.hpp>
+#include "generic/component.h"
 #include "generic/face.h"
+#include "generic/simplex.h"
+#include "generic/triangulation.h"
 #include "../helpers.h"
 #include "../generic/facehelper.h"
 
 using namespace boost::python;
 using regina::Face;
+using regina::FaceEmbedding;
 
 namespace {
     template <int dim, int subdim>
@@ -51,7 +55,7 @@ namespace {
 
     template <int dim, int subdim>
     struct embedding_aliases :
-            boost::python::def_visitor<FaceEmbeddingAliases<dim, subdim>> {
+            boost::python::def_visitor<embedding_aliases<dim, subdim>> {
         template <typename Class>
         void visit(Class& c) const {
         }
@@ -59,61 +63,82 @@ namespace {
 
     template <int dim>
     struct embedding_aliases<dim, 0> :
-            boost::python::def_visitor<FaceEmbeddingAliases<dim, subdim>> {
+            boost::python::def_visitor<embedding_aliases<dim, 0>> {
         friend class boost::python::def_visitor_access;
 
         template <typename Class>
         void visit(Class& c) const {
-            c.def("vertex", &FaceEmbedding<dim, 0>::vertex)
-            c.def("getVertex", &FaceEmbedding<dim, 0>::getVertex)
+            c.def("vertex", &FaceEmbedding<dim, 0>::vertex);
+            c.def("getVertex", &FaceEmbedding<dim, 0>::getVertex);
         }
     };
 
     template <int dim>
     struct embedding_aliases<dim, 1> :
-            boost::python::def_visitor<FaceEmbeddingAliases<dim, subdim>> {
+            boost::python::def_visitor<embedding_aliases<dim, 1>> {
         friend class boost::python::def_visitor_access;
 
         template <typename Class>
         void visit(Class& c) const {
-            c.def("edge", &FaceEmbedding<dim, 1>::edge)
-            c.def("getEdge", &FaceEmbedding<dim, 1>::getEdge)
+            c.def("edge", &FaceEmbedding<dim, 1>::edge);
+            c.def("getEdge", &FaceEmbedding<dim, 1>::getEdge);
         }
     };
 
     template <int dim>
     struct embedding_aliases<dim, 2> :
-            boost::python::def_visitor<FaceEmbeddingAliases<dim, subdim>> {
+            boost::python::def_visitor<embedding_aliases<dim, 2>> {
         friend class boost::python::def_visitor_access;
 
         template <typename Class>
         void visit(Class& c) const {
-            c.def("triangle", &FaceEmbedding<dim, 2>::triangle)
-            c.def("getTriangle", &FaceEmbedding<dim, 2>::getTriangle)
+            c.def("triangle", &FaceEmbedding<dim, 2>::triangle);
+            c.def("getTriangle", &FaceEmbedding<dim, 2>::getTriangle);
         }
     };
 
     template <int dim>
     struct embedding_aliases<dim, 3> :
-            boost::python::def_visitor<FaceEmbeddingAliases<dim, subdim>> {
+            boost::python::def_visitor<embedding_aliases<dim, 3>> {
         friend class boost::python::def_visitor_access;
 
         template <typename Class>
         void visit(Class& c) const {
-            c.def("tetrahedron", &FaceEmbedding<dim, 3>::tetrahedron)
-            c.def("getTetrahedron", &FaceEmbedding<dim, 3>::getTetrahedron)
+            c.def("tetrahedron", &FaceEmbedding<dim, 3>::tetrahedron);
+            c.def("getTetrahedron", &FaceEmbedding<dim, 3>::getTetrahedron);
         }
     };
 
     template <int dim>
     struct embedding_aliases<dim, 4> :
-            boost::python::def_visitor<FaceEmbeddingAliases<dim, subdim>> {
+            boost::python::def_visitor<embedding_aliases<dim, 4>> {
         friend class boost::python::def_visitor_access;
 
         template <typename Class>
         void visit(Class& c) const {
-            c.def("pentachoron", &FaceEmbedding<dim, 4>::pentachoron)
-            c.def("getPentachoron", &FaceEmbedding<dim, 4>::getPentachoron)
+            c.def("pentachoron", &FaceEmbedding<dim, 4>::pentachoron);
+            c.def("getPentachoron", &FaceEmbedding<dim, 4>::getPentachoron);
+        }
+    };
+
+    template <int dim, int subdim, int codim>
+    struct face_validity_types : boost::python::def_visitor<
+            face_validity_types<dim, subdim, codim>> {
+        friend class boost::python::def_visitor_access;
+
+        template <typename Class>
+        void visit(Class& c) const {
+            // Only standard dimensions offer hasBadLink().
+            c.def("hasBadIdentification",
+                &Face<dim, subdim>::hasBadIdentification);
+        }
+    };
+
+    template <int dim, int subdim>
+    struct face_validity_types<dim, subdim, 1> :
+            boost::python::def_visitor<face_validity_types<dim, subdim, 1>> {
+        template <typename Class>
+        void visit(Class&) const {
         }
     };
 
@@ -146,11 +171,11 @@ namespace {
         template <typename Class>
         void visit(Class& c) const {
             c.def("vertex", &Face<dim, subdim>::vertex,
-                return_value_policy<reference_existing_object>())
+                return_value_policy<reference_existing_object>());
             c.def("getVertex", &Face<dim, subdim>::getVertex,
-                return_value_policy<reference_existing_object>())
-            c.def("vertexMapping", &Face<dim, subdim>::vertexMapping)
-            c.def("getVertexMapping", &Face<dim, subdim>::getVertexMapping)
+                return_value_policy<reference_existing_object>());
+            c.def("vertexMapping", &Face<dim, subdim>::vertexMapping);
+            c.def("getVertexMapping", &Face<dim, subdim>::getVertexMapping);
         }
     };
 
@@ -162,11 +187,11 @@ namespace {
         template <typename Class>
         void visit(Class& c) const {
             c.def("edge", &Face<dim, subdim>::edge,
-                return_value_policy<reference_existing_object>())
+                return_value_policy<reference_existing_object>());
             c.def("getEdge", &Face<dim, subdim>::getEdge,
-                return_value_policy<reference_existing_object>())
-            c.def("edgeMapping", &Face<dim, subdim>::edgeMapping)
-            c.def("getEdgeMapping", &Face<dim, subdim>::getEdgeMapping)
+                return_value_policy<reference_existing_object>());
+            c.def("edgeMapping", &Face<dim, subdim>::edgeMapping);
+            c.def("getEdgeMapping", &Face<dim, subdim>::getEdgeMapping);
             c.def(subface_aliases<dim, subdim, 0>());
         }
     };
@@ -179,11 +204,11 @@ namespace {
         template <typename Class>
         void visit(Class& c) const {
             c.def("triangle", &Face<dim, subdim>::triangle,
-                return_value_policy<reference_existing_object>())
+                return_value_policy<reference_existing_object>());
             c.def("getTriangle", &Face<dim, subdim>::getTriangle,
-                return_value_policy<reference_existing_object>())
-            c.def("triangleMapping", &Face<dim, subdim>::triangleMapping)
-            c.def("getTriangleMapping", &Face<dim, subdim>::getTriangleMapping)
+                return_value_policy<reference_existing_object>());
+            c.def("triangleMapping", &Face<dim, subdim>::triangleMapping);
+            c.def("getTriangleMapping", &Face<dim, subdim>::getTriangleMapping);
             c.def(subface_aliases<dim, subdim, 1>());
         }
     };
@@ -196,12 +221,12 @@ namespace {
         template <typename Class>
         void visit(Class& c) const {
             c.def("tetrahedron", &Face<dim, subdim>::tetrahedron,
-                return_value_policy<reference_existing_object>())
+                return_value_policy<reference_existing_object>());
             c.def("getTetrahedron", &Face<dim, subdim>::getTetrahedron,
-                return_value_policy<reference_existing_object>())
-            c.def("tetrahedronMapping", &Face<dim, subdim>::tetrahedronMapping)
+                return_value_policy<reference_existing_object>());
+            c.def("tetrahedronMapping", &Face<dim, subdim>::tetrahedronMapping);
             c.def("getTetrahedronMapping",
-                &Face<dim, subdim>::getTetrahedronMapping)
+                &Face<dim, subdim>::getTetrahedronMapping);
             c.def(subface_aliases<dim, subdim, 2>());
         }
     };
@@ -214,12 +239,12 @@ namespace {
         template <typename Class>
         void visit(Class& c) const {
             c.def("pentachoron", &Face<dim, subdim>::pentachoron,
-                return_value_policy<reference_existing_object>())
+                return_value_policy<reference_existing_object>());
             c.def("getPentachoron", &Face<dim, subdim>::getPentachoron,
-                return_value_policy<reference_existing_object>())
-            c.def("pentachoronMapping", &Face<dim, subdim>::pentachoronMapping)
+                return_value_policy<reference_existing_object>());
+            c.def("pentachoronMapping", &Face<dim, subdim>::pentachoronMapping);
             c.def("getPentachoronMapping",
-                &Face<dim, subdim>::getPentachoronMapping)
+                &Face<dim, subdim>::getPentachoronMapping);
             c.def(subface_aliases<dim, subdim, 3>());
         }
     };
@@ -250,8 +275,7 @@ void addFace(const char* name, const char* embName) {
     class_<regina::Face<dim, subdim>, std::auto_ptr<regina::Face<dim, subdim>>,
             boost::noncopyable>(name, no_init)
         .def("isValid", &Face<dim, subdim>::isValid)
-        // Only standard dimensions offer hasBadLink().
-        .def("hasBadIdentification", &Face<dim, subdim>::hasBadIdentification)
+        .def(face_validity_types<dim, subdim, dim - subdim>())
         .def("isLinkOrientable", &Face<dim, subdim>::isLinkOrientable)
         .def("degree", &Face<dim, subdim>::degree)
         .def("getDegree", &Face<dim, subdim>::getDegree)

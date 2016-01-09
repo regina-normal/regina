@@ -37,6 +37,7 @@
 #include "generic/triangulation.h"
 #include "maths/nperm5.h" // Specialisation needed for 4-D case.
 #include "../helpers.h"
+#include "../generic/facehelper.h"
 
 using namespace boost::python;
 using regina::Simplex;
@@ -61,11 +62,11 @@ namespace {
         template <typename Class>
         void visit(Class& c) const {
             c.def("vertex", &Simplex<dim>::vertex,
-                return_value_policy<reference_existing_object>())
+                return_value_policy<reference_existing_object>());
             c.def("getVertex", &Simplex<dim>::getVertex,
-                return_value_policy<reference_existing_object>())
-            c.def("vertexMapping", &Simplex<dim>::vertexMapping)
-            c.def("getVertexMapping", &Simplex<dim>::getVertexMapping)
+                return_value_policy<reference_existing_object>());
+            c.def("vertexMapping", &Simplex<dim>::vertexMapping);
+            c.def("getVertexMapping", &Simplex<dim>::getVertexMapping);
         }
     };
 
@@ -77,11 +78,11 @@ namespace {
         template <typename Class>
         void visit(Class& c) const {
             c.def("edge", &Simplex<dim>::edge,
-                return_value_policy<reference_existing_object>())
+                return_value_policy<reference_existing_object>());
             c.def("getEdge", &Simplex<dim>::getEdge,
-                return_value_policy<reference_existing_object>())
-            c.def("edgeMapping", &Simplex<dim>::edgeMapping)
-            c.def("getEdgeMapping", &Simplex<dim>::getEdgeMapping)
+                return_value_policy<reference_existing_object>());
+            c.def("edgeMapping", &Simplex<dim>::edgeMapping);
+            c.def("getEdgeMapping", &Simplex<dim>::getEdgeMapping);
             c.def(face_aliases<dim, 0>());
         }
     };
@@ -94,11 +95,11 @@ namespace {
         template <typename Class>
         void visit(Class& c) const {
             c.def("triangle", &Simplex<dim>::triangle,
-                return_value_policy<reference_existing_object>())
+                return_value_policy<reference_existing_object>());
             c.def("getTriangle", &Simplex<dim>::getTriangle,
-                return_value_policy<reference_existing_object>())
-            c.def("triangleMapping", &Simplex<dim>::triangleMapping)
-            c.def("getTriangleMapping", &Simplex<dim>::getTriangleMapping)
+                return_value_policy<reference_existing_object>());
+            c.def("triangleMapping", &Simplex<dim>::triangleMapping);
+            c.def("getTriangleMapping", &Simplex<dim>::getTriangleMapping);
             c.def(face_aliases<dim, 1>());
         }
     };
@@ -111,11 +112,12 @@ namespace {
         template <typename Class>
         void visit(Class& c) const {
             c.def("tetrahedron", &Simplex<dim>::tetrahedron,
-                return_value_policy<reference_existing_object>())
+                return_value_policy<reference_existing_object>());
             c.def("getTetrahedron", &Simplex<dim>::getTetrahedron,
-                return_value_policy<reference_existing_object>())
-            c.def("tetrahedronMapping", &Simplex<dim>::tetrahedronMapping)
-            c.def("getTetrahedronMapping", &Simplex<dim>::getTetrahedronMapping)
+                return_value_policy<reference_existing_object>());
+            c.def("tetrahedronMapping", &Simplex<dim>::tetrahedronMapping);
+            c.def("getTetrahedronMapping",
+                &Simplex<dim>::getTetrahedronMapping);
             c.def(face_aliases<dim, 2>());
         }
     };
@@ -128,11 +130,12 @@ namespace {
         template <typename Class>
         void visit(Class& c) const {
             c.def("pentachoron", &Simplex<dim>::pentachoron,
-                return_value_policy<reference_existing_object>())
+                return_value_policy<reference_existing_object>());
             c.def("getPentachoron", &Simplex<dim>::getPentachoron,
-                return_value_policy<reference_existing_object>())
-            c.def("pentachoronMapping", &Simplex<dim>::pentachoronMapping)
-            c.def("getPentachoronMapping", &Simplex<dim>::getPentachoronMapping)
+                return_value_policy<reference_existing_object>());
+            c.def("pentachoronMapping", &Simplex<dim>::pentachoronMapping);
+            c.def("getPentachoronMapping",
+                &Simplex<dim>::getPentachoronMapping);
             c.def(face_aliases<dim, 3>());
         }
     };

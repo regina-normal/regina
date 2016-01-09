@@ -151,7 +151,9 @@ class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
  * This must be between 0 and <i>dim</i>-1 inclusive.
  */
 template <int dim, int subdim>
-class Face : public detail::FaceBase<dim, subdim>, Output<Face<dim, subdim>> {
+class Face :
+        public detail::FaceBase<dim, subdim>,
+        public Output<Face<dim, subdim>> {
     static_assert(! standardDim(dim),
         "The generic implementation of Face<dim, subdim> "
         "should not be used for Regina's standard dimensions.");

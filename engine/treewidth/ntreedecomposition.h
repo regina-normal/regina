@@ -653,6 +653,9 @@ class REGINA_API NTreeDecomposition :
          * extra header, since Regina's calculation engine already includes
          * explicit instantiations for \ref stddim "standard dimensions".
          *
+         * \ifacespython This constructor is only available in Python when
+         * \a dim is one of Regina's \ref stddim "standard dimensions".
+         *
          * @param triangulation the triangulation whose facet pairing
          * graph we are working with.
          * @param alg the algorithm that should be used to compute the
@@ -675,6 +678,9 @@ class REGINA_API NTreeDecomposition :
          * by this file.  However, typical end users should never need this
          * extra header, since Regina's calculation engine already includes
          * explicit instantiations for \ref stddim "standard dimensions".
+         *
+         * \ifacespython This constructor is only available in Python when
+         * \a dim is one of Regina's \ref stddim "standard dimensions".
          *
          * @param pairing the facet pairing graph that we are working with.
          * @param alg the algorithm that should be used to compute the
