@@ -178,24 +178,24 @@ void addTriangulation(const char* name) {
         .def("countPentachora", &Triangulation<dim>::countPentachora)
         .def("getNumberOfPentachora",
             &Triangulation<dim>::getNumberOfPentachora)
-        .def("vertices", regina::python::faces_list<Triangluation<dim>, dim, 0>)
+        .def("vertices", regina::python::faces_list<Triangulation<dim>, dim, 0>)
         .def("getVertices",
-            regina::python::faces_list<Triangluation<dim>, dim, 0>)
-        .def("edges", regina::python::faces_list<Triangluation<dim>, dim, 1>)
-        .def("getEdges", regina::python::faces_list<Triangluation<dim>, dim, 1>)
+            regina::python::faces_list<Triangulation<dim>, dim, 0>)
+        .def("edges", regina::python::faces_list<Triangulation<dim>, dim, 1>)
+        .def("getEdges", regina::python::faces_list<Triangulation<dim>, dim, 1>)
         .def("triangles",
-            regina::python::faces_list<Triangluation<dim>, dim, 2>)
+            regina::python::faces_list<Triangulation<dim>, dim, 2>)
         .def("getTriangles",
-            regina::python::faces_list<Triangluation<dim>, dim, 2>)
+            regina::python::faces_list<Triangulation<dim>, dim, 2>)
         .def("tetrahedra",
-            regina::python::faces_list<Triangluation<dim>, dim, 3>)
+            regina::python::faces_list<Triangulation<dim>, dim, 3>)
         .def("getTetrahedra",
-            regina::python::faces_list<Triangluation<dim>, dim, 3>)
+            regina::python::faces_list<Triangulation<dim>, dim, 3>)
         /* We can only use pentachoron aliases for dimension dim > 4.
         .def("pentachora",
-            regina::python::faces_list<Triangluation<dim>, dim, 4>)
+            regina::python::faces_list<Triangulation<dim>, dim, 4>)
         .def("getPentachora",
-            regina::python::faces_list<Triangluation<dim>, dim, 4>)
+            regina::python::faces_list<Triangulation<dim>, dim, 4>)
         */
         .def("vertex", &Triangulation<dim>::vertex,
             return_internal_reference<>())
