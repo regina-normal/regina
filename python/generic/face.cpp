@@ -121,6 +121,27 @@ namespace {
         }
     };
 
+    template <int dim, int subdim, int codim>
+    struct face_validity_types : boost::python::def_visitor<
+            face_validity_types<dim, subdim, codim>> {
+        friend class boost::python::def_visitor_access;
+
+        template <typename Class>
+        void visit(Class& c) const {
+            // Only standard dimensions offer hasBadLink().
+            c.def("hasBadIdentification",
+                &Face<dim, subdim>::hasBadIdentification);
+        }
+    };
+
+    template <int dim, int subdim>
+    struct face_validity_types<dim, subdim, 1> :
+            boost::python::def_visitor<face_validity_types<dim, subdim, 1>> {
+        template <typename Class>
+        void visit(Class&) const {
+        }
+    };
+
     template <int dim, int subdim, int maxlower>
     struct subface_aliases :
             boost::python::def_visitor<subface_aliases<dim, subdim, maxlower>> {
@@ -254,8 +275,7 @@ void addFace(const char* name, const char* embName) {
     class_<regina::Face<dim, subdim>, std::auto_ptr<regina::Face<dim, subdim>>,
             boost::noncopyable>(name, no_init)
         .def("isValid", &Face<dim, subdim>::isValid)
-        // Only standard dimensions offer hasBadLink().
-        .def("hasBadIdentification", &Face<dim, subdim>::hasBadIdentification)
+        .def(face_validity_types<dim, subdim, dim - subdim>())
         .def("isLinkOrientable", &Face<dim, subdim>::isLinkOrientable)
         .def("degree", &Face<dim, subdim>::degree)
         .def("getDegree", &Face<dim, subdim>::getDegree)
