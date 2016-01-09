@@ -148,6 +148,35 @@ struct FaceHelper<T, dim, 0> {
 };
 
 /**
+ * Implementation details for Python bindings of template member functions.
+ *
+ * See the notes above.
+ *
+ * The compiler needs to instantiate this class, but none of its methods
+ * should ever be called.
+ */
+template <class T, int dim>
+struct FaceHelper<T, dim, -1> {
+    static size_t countFacesFrom(const T&, int) {
+        throw -1;
+    }
+
+    template <typename Index>
+    static PyObject* faceFrom(const T&, int, Index) {
+        throw -1;
+    }
+
+    static boost::python::list facesFrom(const T&, int) {
+        throw -1;
+    }
+
+    template <int permSize>
+    static NPerm<permSize> faceMappingFrom(const T&, int, int) {
+        throw -1;
+    }
+};
+
+/**
  * Throws an exception.  The error message will state that the argument
  * for the face dimension (which should be the first argument of the
  * function, corresponding to the C++ template argument) must be in the
