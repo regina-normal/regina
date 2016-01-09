@@ -39,9 +39,9 @@ using namespace boost::python;
 using regina::NScript;
 
 namespace {
-    regina::NPacket* (NScript::*getVariableValue_long)(unsigned long)
+    regina::NPacket* (NScript::*variableValue_long)(unsigned long)
         const = &NScript::getVariableValue;
-    regina::NPacket* (NScript::*getVariableValue_string)(const std::string&)
+    regina::NPacket* (NScript::*variableValue_string)(const std::string&)
         const = &NScript::getVariableValue;
 
     void (NScript::*removeVariable_long)(unsigned long) =
@@ -60,9 +60,9 @@ void addNScript() {
         .def("getNumberOfVariables", &NScript::getNumberOfVariables)
         .def("getVariableName", &NScript::getVariableName,
             return_value_policy<return_by_value>())
-        .def("getVariableValue", getVariableValue_long,
+        .def("getVariableValue", variableValue_long,
             return_value_policy<reference_existing_object>())
-        .def("getVariableValue", getVariableValue_string,
+        .def("getVariableValue", variableValue_string,
             return_value_policy<reference_existing_object>())
         .def("getVariableIndex", &NScript::getVariableIndex)
         .def("setVariableName", &NScript::setVariableName)

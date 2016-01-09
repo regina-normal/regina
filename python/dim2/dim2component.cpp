@@ -46,11 +46,10 @@ using regina::Component;
 using regina::Dim2Component;
 
 namespace {
-    boost::python::list getTriangles_list(Dim2Component& t) {
+    boost::python::list triangles_list(Dim2Component& t) {
         boost::python::list ans;
-        for (std::vector<regina::Dim2Triangle*>::const_iterator it =
-                t.getTriangles().begin(); it != t.getTriangles().end(); it++)
-            ans.append(boost::python::ptr(*it));
+        for (auto s : t.triangles())
+            ans.append(boost::python::ptr(s));
         return ans;
     }
 }
@@ -71,9 +70,9 @@ void addDim2Component() {
         .def("getNumberOfVertices", &Dim2Component::getNumberOfVertices)
         .def("getNumberOfBoundaryComponents",
             &Dim2Component::getNumberOfBoundaryComponents)
-        .def("simplices", getTriangles_list)
-        .def("triangles", getTriangles_list)
-        .def("getTriangles", getTriangles_list)
+        .def("simplices", triangles_list)
+        .def("triangles", triangles_list)
+        .def("getTriangles", triangles_list)
         .def("faces", &regina::python::faces<Dim2Component, 2>)
         .def("getFaces", &regina::python::faces<Dim2Component, 2>)
         .def("edges", regina::python::faces_list<Dim2Component, 2, 1>)

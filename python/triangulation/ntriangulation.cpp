@@ -110,21 +110,21 @@ namespace {
         return NTriangulation::enterTextTriangulation(std::cin, std::cout);
     }
 
-    boost::python::list getTetrahedra_list(NTriangulation& t) {
+    boost::python::list tetrahedra_list(NTriangulation& t) {
         boost::python::list ans;
         for (auto s : t.tetrahedra())
             ans.append(boost::python::ptr(s));
         return ans;
     }
 
-    boost::python::list getComponents_list(NTriangulation& t) {
+    boost::python::list components_list(NTriangulation& t) {
         boost::python::list ans;
         for (auto c : t.components())
             ans.append(boost::python::ptr(c));
         return ans;
     }
 
-    boost::python::list getBoundaryComponents_list(NTriangulation& t) {
+    boost::python::list boundaryComponents_list(NTriangulation& t) {
         boost::python::list ans;
         for (auto b : t.getBoundaryComponents())
             ans.append(boost::python::ptr(b));
@@ -211,10 +211,10 @@ void addNTriangulation() {
         .def("countTetrahedra", &NTriangulation::countTetrahedra)
         .def("getNumberOfTetrahedra", &NTriangulation::getNumberOfTetrahedra)
         .def("getNumberOfSimplices", &NTriangulation::getNumberOfSimplices)
-        .def("getTetrahedra", getTetrahedra_list)
-        .def("tetrahedra", getTetrahedra_list)
-        .def("getSimplices", getTetrahedra_list)
-        .def("simplices", getTetrahedra_list)
+        .def("getTetrahedra", tetrahedra_list)
+        .def("tetrahedra", tetrahedra_list)
+        .def("getSimplices", tetrahedra_list)
+        .def("simplices", tetrahedra_list)
         .def("tetrahedron", tetrahedron_non_const,
             return_internal_reference<>())
         .def("getTetrahedron", tetrahedron_non_const,
@@ -253,9 +253,9 @@ void addNTriangulation() {
         .def("getNumberOfEdges", &NTriangulation::getNumberOfEdges)
         .def("countTriangles", &NTriangulation::countTriangles)
         .def("getNumberOfTriangles", &NTriangulation::getNumberOfTriangles)
-        .def("components", getComponents_list)
-        .def("getComponents", getComponents_list)
-        .def("getBoundaryComponents", getBoundaryComponents_list)
+        .def("components", components_list)
+        .def("getComponents", components_list)
+        .def("getBoundaryComponents", boundaryComponents_list)
         .def("faces", &regina::python::faces<NTriangulation, 3>)
         .def("getFaces", &regina::python::faces<NTriangulation, 3>)
         .def("vertices", regina::python::faces_list<NTriangulation, 3, 0>)

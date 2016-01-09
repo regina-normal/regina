@@ -45,13 +45,13 @@ using regina::NMatrixInt;
 using regina::NLargeInteger;
 
 namespace {
-    unsigned long (NMarkedAbelianGroup::*getTorsionRank_large)(
+    unsigned long (NMarkedAbelianGroup::*torsionRank_large)(
         const regina::NLargeInteger&) const =
         &NMarkedAbelianGroup::getTorsionRank;
-    unsigned long (NMarkedAbelianGroup::*getTorsionRank_long)(unsigned long)
+    unsigned long (NMarkedAbelianGroup::*torsionRank_long)(unsigned long)
         const = &NMarkedAbelianGroup::getTorsionRank;
 
-    boost::python::list getFreeRep_list(
+    boost::python::list freeRep_list(
             const NMarkedAbelianGroup& g, unsigned long index) {
         boost::python::list ans;
 
@@ -64,7 +64,7 @@ namespace {
         return ans;
     }
 
-    boost::python::list getTorsionRep_list(
+    boost::python::list torsionRep_list(
             const NMarkedAbelianGroup& g, unsigned long index) {
         boost::python::list ans;
 
@@ -146,8 +146,8 @@ void addNMarkedAbelianGroup() {
         .def(init<unsigned long, const NLargeInteger&>())
         .def("isChainComplex", &NMarkedAbelianGroup::isChainComplex)
         .def("getRank", &NMarkedAbelianGroup::getRank)
-        .def("getTorsionRank", getTorsionRank_large)
-        .def("getTorsionRank", getTorsionRank_long)
+        .def("getTorsionRank", torsionRank_large)
+        .def("getTorsionRank", torsionRank_long)
         .def("minNumberOfGenerators",
             &NMarkedAbelianGroup::minNumberOfGenerators)
         .def("getNumberOfInvariantFactors",
@@ -160,8 +160,8 @@ void addNMarkedAbelianGroup() {
         // TODO: ccRep, ccRep, cycleProjection, cycleProjection
         // TODO: isCycle, boundaryMap, isBoundary, writeAsBoundary
         // TODO: cycleGen
-        .def("getFreeRep", getFreeRep_list)
-        .def("getTorsionRep", getTorsionRep_list)
+        .def("getFreeRep", freeRep_list)
+        .def("getTorsionRep", torsionRep_list)
         .def("getSNFIsoRep", snfRep_list_list)
         .def("snfRep", snfRep_list_list)
         .def("getRankCC", &NMarkedAbelianGroup::getRankCC)
