@@ -732,7 +732,6 @@ NPerm<n> NPerm<n>::rand() {
 template <int n>
 std::string NPerm<n>::str() const {
     char ans[n + 1];
-    int image;
     for (int i = 0; i < n; ++i)
         ans[i] = regina::digit((code_ >> (imageBits * i)) & imageMask_);
     ans[n] = 0;
@@ -743,7 +742,6 @@ std::string NPerm<n>::str() const {
 template <int n>
 std::string NPerm<n>::trunc(unsigned len) const {
     char ans[n + 1];
-    int image;
     for (int i = 0; i < len; ++i)
         ans[i] = regina::digit((code_ >> (imageBits * i)) & imageMask_);
     ans[len] = 0;
