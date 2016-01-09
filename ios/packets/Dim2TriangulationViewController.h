@@ -33,7 +33,8 @@
 #import "PacketTabBarController.h"
 
 namespace regina {
-    class Dim2Triangulation;
+    template <int> class Triangulation;
+    typedef Triangulation<2> Dim2Triangulation;
 }
 
 @interface Dim2TriangulationViewController : PacketTabBarController <PacketEditor>
