@@ -681,7 +681,6 @@ inline bool NPerm<n>::isIdentity() const {
 
 template <int n>
 NPerm<n> NPerm<n>::atIndex(Index i) {
-    Code c = idCode_;
     int image[n];
     int p, q;
     for (p = 0; p < n; ++p) {

@@ -131,7 +131,6 @@ namespace {
     template <>
     void TriBFS<false>::processQueue() {
         SigSet::iterator next;
-        size_t i;
         while (! (done_ || process_.empty())) {
             next = process_.front();
             process_.pop();
