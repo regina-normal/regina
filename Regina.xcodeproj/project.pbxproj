@@ -207,7 +207,6 @@
 		052F9EA0180600FB00FAE4DF /* nfacepairing.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C21180600FA00FAE4DF /* nfacepairing.h */; };
 		052F9EA1180600FB00FAE4DF /* ngenericfacetpairing-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C22180600FA00FAE4DF /* ngenericfacetpairing-impl.h */; };
 		052F9EA2180600FB00FAE4DF /* ngenericfacetpairing.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C23180600FA00FAE4DF /* ngenericfacetpairing.h */; };
-		052F9EA3180600FB00FAE4DF /* ngenericfacetpairing.tcc in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C24180600FA00FAE4DF /* ngenericfacetpairing.tcc */; };
 		052F9EA4180600FB00FAE4DF /* ngenericgluingperms-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C25180600FA00FAE4DF /* ngenericgluingperms-impl.h */; };
 		052F9EA5180600FB00FAE4DF /* ngenericgluingperms.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C26180600FA00FAE4DF /* ngenericgluingperms.h */; };
 		052F9EA6180600FB00FAE4DF /* ngenericgluingperms.tcc in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C27180600FA00FAE4DF /* ngenericgluingperms.tcc */; };
@@ -1141,6 +1140,7 @@
 		0569F93219B3658200051091 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0569F93119B3658200051091 /* libbz2.dylib */; };
 		056AA9941C41C10100FA81D3 /* boost-python.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9931C41C10100FA81D3 /* boost-python.framework */; };
 		056AA9951C41C11C00FA81D3 /* boost-python.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9931C41C10100FA81D3 /* boost-python.framework */; };
+		056AA9961C41CC8200FA81D3 /* ngenericfacetpairing.tcc in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C24180600FA00FAE4DF /* ngenericfacetpairing.tcc */; };
 		057118CA19B30A2D009FEDC5 /* snappea-census-sec5.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B319B308F8009FEDC5 /* snappea-census-sec5.dat */; };
 		057118CB19B30A2D009FEDC5 /* snappea-census-sec6n.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B419B308F8009FEDC5 /* snappea-census-sec6n.dat */; };
 		057118CC19B30A2D009FEDC5 /* snappea-census-sec6o.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B519B308F8009FEDC5 /* snappea-census-sec6o.dat */; };
@@ -6491,7 +6491,6 @@
 				052FA081180600FB00FAE4DF /* turaevviro.cpp in Sources */,
 				052F9F98180600FB00FAE4DF /* simplify_triangulation.c in Sources */,
 				052FA03E180600FB00FAE4DF /* nsquad.cpp in Sources */,
-				052F9EA3180600FB00FAE4DF /* ngenericfacetpairing.tcc in Sources */,
 				052F9EA6180600FB00FAE4DF /* ngenericgluingperms.tcc in Sources */,
 				052FA01A180600FB00FAE4DF /* ntrisolidtorus.cpp in Sources */,
 				052F9F9A180600FB00FAE4DF /* solve_equations.c in Sources */,
@@ -6502,6 +6501,7 @@
 				052FA03A180600FB00FAE4DF /* nsoriented.cpp in Sources */,
 				052F9FEE180600FB00FAE4DF /* nblockedsfstriple.cpp in Sources */,
 				052F9E9B180600FB00FAE4DF /* dim2gluingpermsearcher.cpp in Sources */,
+				056AA9961C41CC8200FA81D3 /* ngenericfacetpairing.tcc in Sources */,
 				052FA054180600FB00FAE4DF /* stdtoquad.cpp in Sources */,
 				052F9F7F180600FB00FAE4DF /* edge_classes.c in Sources */,
 				052F9EFD180600FB00FAE4DF /* ntypetrie.cpp in Sources */,
