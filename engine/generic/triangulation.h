@@ -309,6 +309,8 @@ class Triangulation :
          *
          * See NPacket::ChangeEventSpan for further detail on how
          * ChangeEventSpan objects should be used.
+         *
+         * \ifacespython Not present.
          */
         class ChangeEventSpan {
             public:
