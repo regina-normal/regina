@@ -163,7 +163,7 @@
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Edge" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
                 cell.data0.text = (e->isBoundary() ? @"Bdry" : @"Internal");
-                cell.data1.text = [NSString stringWithFormat:@"%d", e->getDegree()];
+                cell.data1.text = [NSString stringWithFormat:@"%zu", e->getDegree()];
 
                 NSMutableString* pieces = [NSMutableString string];
                 for (unsigned i = 0; i < e->getDegree(); i++)

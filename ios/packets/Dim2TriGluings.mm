@@ -113,7 +113,7 @@
     else
         return [NSString stringWithFormat:@"%ld (%s)",
                 destTri->markedIndex(),
-                (gluing * regina::Dim2Edge::ordering[srcEdge]).trunc2().c_str()];
+                (gluing * regina::Dim2Edge::ordering(srcEdge)).trunc2().c_str()];
 }
 
 - (IBAction)newTriangle:(id)sender {
@@ -295,7 +295,7 @@
                 goto cleanUpGluing;
             }
             regina::NPerm3 destGluing = regina::NPerm3(adj0, adj1, (3 - adj0 - adj1)) *
-                regina::Dim2Edge::ordering[editEdge].inverse();
+                regina::Dim2Edge::ordering(editEdge).inverse();
 
             // Are we gluing the edge to itself?
             if (destSimplex == editSimplex && destGluing[editEdge] == editEdge) {

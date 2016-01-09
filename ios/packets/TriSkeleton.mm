@@ -82,12 +82,12 @@
                          self.packet->countFaces<0>(),
                          self.packet->countFaces<1>(),
                          self.packet->countFaces<2>(),
-                         self.packet->countFaces<3>()];
+                         self.packet->size()];
 
     [self.viewWhich setTitle:[TextHelper countString:self.packet->countFaces<0>() singular:"vertex" plural:"vertices"] forSegmentAtIndex:0];
     [self.viewWhich setTitle:[TextHelper countString:self.packet->countFaces<1>() singular:"edge" plural:"edges"] forSegmentAtIndex:1];
     [self.viewWhich setTitle:[TextHelper countString:self.packet->countFaces<2>() singular:"triangle" plural:"triangles"] forSegmentAtIndex:2];
-    [self.viewWhich setTitle:[TextHelper countString:self.packet->countFaces<3>() singular:"tetrahedron" plural:"tetrahedra"] forSegmentAtIndex:3];
+    [self.viewWhich setTitle:[TextHelper countString:self.packet->size() singular:"tetrahedron" plural:"tetrahedra"] forSegmentAtIndex:3];
     [self.viewWhich setTitle:[TextHelper countString:self.packet->countComponents() singular:"component" plural:"components"] forSegmentAtIndex:4];
     [self.viewWhich setTitle:[TextHelper countString:self.packet->countBoundaryComponents() singular:"boundary" plural:"boundaries"] forSegmentAtIndex:5];
 

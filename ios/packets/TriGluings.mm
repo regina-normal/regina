@@ -123,7 +123,7 @@
     else
         return [NSString stringWithFormat:@"%ld (%s)",
                 destTet->markedIndex(),
-                (gluing * regina::NTriangle::ordering[srcFacet]).trunc3().c_str()];
+                (gluing * regina::NTriangle::ordering(srcFacet)).trunc3().c_str()];
 }
 
 - (IBAction)newSimplex:(id)sender {
@@ -546,7 +546,7 @@
                 goto cleanUpGluing;
             }
             regina::NPerm4 destGluing = regina::NPerm4(adj0, adj1, adj2, (6 - adj0 - adj1 - adj2)) *
-                regina::NTriangle::ordering[editFacet].inverse();
+                regina::NTriangle::ordering(editFacet).inverse();
             
             // Are we gluing the facet to itself?
             if (destSimplex == editSimplex && destGluing[editFacet] == editFacet) {

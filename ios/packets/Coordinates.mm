@@ -162,7 +162,7 @@ using regina::NTriangle;
         } else {
             // "false" orientation.
             if (stdCoord % 7 < 4)
-                return [NSString stringWithFormat:@"%ld: %s", (stdCoord / 7), NTriangle::ordering[stdCoord % 7].trunc3().c_str()];
+                return [NSString stringWithFormat:@"%ld: %s", (stdCoord / 7), NTriangle::ordering(stdCoord % 7).trunc3().c_str()];
             else
                 return [NSString stringWithFormat:@"%ld: %d%d", (stdCoord / 7), regina::vertexSplitDefn[(stdCoord % 7) - 4][2], regina::vertexSplitDefn[(stdCoord % 7) - 4][3]];
         }

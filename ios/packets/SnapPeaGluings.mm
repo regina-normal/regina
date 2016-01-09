@@ -93,7 +93,7 @@
     else
         return [NSString stringWithFormat:@"%ld (%s)",
                 destTet->markedIndex(),
-                (gluing * regina::NTriangle::ordering[srcFace]).trunc3().c_str()];
+                (gluing * regina::NTriangle::ordering(srcFace)).trunc3().c_str()];
 }
 
 - (IBAction)randomise:(id)sender {
