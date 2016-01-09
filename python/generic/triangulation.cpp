@@ -191,12 +191,10 @@ void addTriangulation(const char* name) {
             regina::python::faces_list<Triangluation<dim>, dim, 3>)
         .def("getTetrahedra",
             regina::python::faces_list<Triangluation<dim>, dim, 3>)
-        /* We can only use pentachoron aliases for dimension dim > 4.
         .def("pentachora",
             regina::python::faces_list<Triangluation<dim>, dim, 4>)
         .def("getPentachora",
             regina::python::faces_list<Triangluation<dim>, dim, 4>)
-        */
         .def("vertex", &Triangulation<dim>::vertex,
             return_internal_reference<>())
         .def("getVertex", &Triangulation<dim>::getVertex,
@@ -213,12 +211,10 @@ void addTriangulation(const char* name) {
             return_internal_reference<>())
         .def("getTetrahedron", &Triangulation<dim>::getTetrahedron,
             return_internal_reference<>())
-        /* We can only use pentachoron aliases for dimension dim > 4.
         .def("pentachoron", &Triangulation<dim>::pentachoron,
             return_internal_reference<>())
         .def("getPentachoron", &Triangulation<dim>::getPentachoron,
             return_internal_reference<>())
-        */
         .def("isEmpty", &Triangulation<dim>::isEmpty)
         .def("isValid", &Triangulation<dim>::isValid)
         .def("hasBoundaryFacets", &Triangulation<dim>::hasBoundaryFacets)

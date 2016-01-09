@@ -75,26 +75,22 @@ namespace {
 
     boost::python::list Dim4_getPentachora_list(Dim4Triangulation& t) {
         boost::python::list ans;
-        for (Dim4Triangulation::PentachoronIterator it =
-                t.getPentachora().begin(); it != t.getPentachora().end(); ++it)
-            ans.append(boost::python::ptr(*it));
+        for (auto s : t.getPentachora())
+            ans.append(boost::python::ptr(s));
         return ans;
     }
 
     boost::python::list Dim4_getComponents_list(Dim4Triangulation& t) {
         boost::python::list ans;
-        for (Dim4Triangulation::ComponentIterator it =
-                t.getComponents().begin(); it != t.getComponents().end(); ++it)
-            ans.append(boost::python::ptr(*it));
+        for (auto c : t.getComponents())
+            ans.append(boost::python::ptr(c));
         return ans;
     }
 
     boost::python::list Dim4_getBoundaryComponents_list(Dim4Triangulation& t) {
         boost::python::list ans;
-        for (Dim4Triangulation::BoundaryComponentIterator it =
-                t.getBoundaryComponents().begin();
-                it != t.getBoundaryComponents().end(); ++it)
-            ans.append(boost::python::ptr(*it));
+        for (auto b : t.getBoundaryComponents())
+            ans.append(boost::python::ptr(b));
         return ans;
     }
 
