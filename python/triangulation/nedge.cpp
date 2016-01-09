@@ -46,6 +46,8 @@
 using namespace boost::python;
 using regina::NEdge;
 using regina::NEdgeEmbedding;
+using regina::Face;
+using regina::FaceEmbedding;
 using regina::python::GlobalArray2D;
 
 namespace {
@@ -62,7 +64,7 @@ namespace {
 
 void addNEdge() {
     // Classes:
-    class_<NEdgeEmbedding>("NEdgeEmbedding",
+    class_<FaceEmbedding<3, 1>>("FaceEmbedding3_1",
             init<regina::NTetrahedron*, int>())
         .def(init<const NEdgeEmbedding&>())
         .def("simplex", &NEdgeEmbedding::simplex,
@@ -87,61 +89,66 @@ void addNEdge() {
         .def(regina::python::add_eq_operators())
     ;
 
-    scope s = class_<NEdge, std::auto_ptr<NEdge>, boost::noncopyable>
-            ("NEdge", no_init)
-        .def("index", &NEdge::index)
-        .def("embeddings", edge_getEmbeddings_list)
-        .def("getEmbeddings", edge_getEmbeddings_list)
-        .def("embedding", &NEdge::embedding,
-            return_internal_reference<>())
-        .def("getEmbedding", &NEdge::getEmbedding,
-            return_internal_reference<>())
-        .def("front", &NEdge::front,
-            return_internal_reference<>())
-        .def("back", &NEdge::back,
-            return_internal_reference<>())
-        .def("triangulation", &NEdge::triangulation,
-            return_value_policy<reference_existing_object>())
-        .def("getTriangulation", &NEdge::getTriangulation,
-            return_value_policy<reference_existing_object>())
-        .def("component", &NEdge::component,
-            return_value_policy<reference_existing_object>())
-        .def("getComponent", &NEdge::getComponent,
-            return_value_policy<reference_existing_object>())
-        .def("getBoundaryComponent", &NEdge::getBoundaryComponent,
-            return_value_policy<reference_existing_object>())
-        .def("face", &regina::python::face<NEdge, 1, int>)
-        .def("getFace", &regina::python::face<NEdge, 1, int>)
-        .def("vertex", &NEdge::vertex,
-            return_value_policy<reference_existing_object>())
-        .def("getVertex", &NEdge::getVertex,
-            return_value_policy<reference_existing_object>())
-        .def("faceMapping", &regina::python::faceMapping<NEdge, 1, 4>)
-        .def("getFaceMapping", &regina::python::faceMapping<NEdge, 1, 4>)
-        .def("vertexMapping", &NEdge::vertexMapping)
-        .def("getVertexMapping", &NEdge::getVertexMapping)
-        .def("degree", &NEdge::degree)
-        .def("getDegree", &NEdge::getDegree)
-        .def("isBoundary", &NEdge::isBoundary)
-        .def("isValid", &NEdge::isValid)
-        .def("hasBadIdentification", &NEdge::hasBadIdentification)
-        .def("hasBadLink", &NEdge::hasBadLink)
-        .def("isLinkOrientable", &NEdge::isLinkOrientable)
-        .def("str", &NEdge::str)
-        .def("toString", &NEdge::toString)
-        .def("detail", &NEdge::detail)
-        .def("toStringLong", &NEdge::toStringLong)
-        .def("__str__", &NEdge::str)
-        .def("ordering", &NEdge::ordering)
-        .def("faceNumber", &NEdge::faceNumber)
-        .def("containsVertex", &NEdge::containsVertex)
-        .def(regina::python::add_eq_operators())
-        .staticmethod("ordering")
-        .staticmethod("faceNumber")
-        .staticmethod("containsVertex")
-    ;
+    {
+        scope s = class_<Face<3, 1>, std::auto_ptr<Face<3, 1>>,
+                boost::noncopyable>("Face3_1", no_init)
+            .def("index", &NEdge::index)
+            .def("embeddings", edge_getEmbeddings_list)
+            .def("getEmbeddings", edge_getEmbeddings_list)
+            .def("embedding", &NEdge::embedding,
+                return_internal_reference<>())
+            .def("getEmbedding", &NEdge::getEmbedding,
+                return_internal_reference<>())
+            .def("front", &NEdge::front,
+                return_internal_reference<>())
+            .def("back", &NEdge::back,
+                return_internal_reference<>())
+            .def("triangulation", &NEdge::triangulation,
+                return_value_policy<reference_existing_object>())
+            .def("getTriangulation", &NEdge::getTriangulation,
+                return_value_policy<reference_existing_object>())
+            .def("component", &NEdge::component,
+                return_value_policy<reference_existing_object>())
+            .def("getComponent", &NEdge::getComponent,
+                return_value_policy<reference_existing_object>())
+            .def("getBoundaryComponent", &NEdge::getBoundaryComponent,
+                return_value_policy<reference_existing_object>())
+            .def("face", &regina::python::face<NEdge, 1, int>)
+            .def("getFace", &regina::python::face<NEdge, 1, int>)
+            .def("vertex", &NEdge::vertex,
+                return_value_policy<reference_existing_object>())
+            .def("getVertex", &NEdge::getVertex,
+                return_value_policy<reference_existing_object>())
+            .def("faceMapping", &regina::python::faceMapping<NEdge, 1, 4>)
+            .def("getFaceMapping", &regina::python::faceMapping<NEdge, 1, 4>)
+            .def("vertexMapping", &NEdge::vertexMapping)
+            .def("getVertexMapping", &NEdge::getVertexMapping)
+            .def("degree", &NEdge::degree)
+            .def("getDegree", &NEdge::getDegree)
+            .def("isBoundary", &NEdge::isBoundary)
+            .def("isValid", &NEdge::isValid)
+            .def("hasBadIdentification", &NEdge::hasBadIdentification)
+            .def("hasBadLink", &NEdge::hasBadLink)
+            .def("isLinkOrientable", &NEdge::isLinkOrientable)
+            .def("str", &NEdge::str)
+            .def("toString", &NEdge::toString)
+            .def("detail", &NEdge::detail)
+            .def("toStringLong", &NEdge::toStringLong)
+            .def("__str__", &NEdge::str)
+            .def("ordering", &NEdge::ordering)
+            .def("faceNumber", &NEdge::faceNumber)
+            .def("containsVertex", &NEdge::containsVertex)
+            .def(regina::python::add_eq_operators())
+            .staticmethod("ordering")
+            .staticmethod("faceNumber")
+            .staticmethod("containsVertex")
+        ;
 
-    s.attr("edgeNumber") = &NEdge_edgeNumber;
-    s.attr("edgeVertex") = &NEdge_edgeVertex;
+        s.attr("edgeNumber") = &NEdge_edgeNumber;
+        s.attr("edgeVertex") = &NEdge_edgeVertex;
+    }
+
+    scope().attr("NEdgeEmbedding") = scope().attr("FaceEmbedding3_1");
+    scope().attr("NEdge") = scope().attr("Face3_1");
 }
 

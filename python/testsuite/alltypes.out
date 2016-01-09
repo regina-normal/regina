@@ -352,6 +352,21 @@ Equality type : BY_REFERENCE
 Face15_9 : class
 Equality type : BY_REFERENCE
 
+Face2_0 : class
+Equality type : BY_REFERENCE
+
+Face2_1 : class
+Equality type : BY_REFERENCE
+
+Face3_0 : class
+Equality type : BY_REFERENCE
+
+Face3_1 : class
+Equality type : BY_REFERENCE
+
+Face3_2 : class
+Equality type : BY_REFERENCE
+
 Face4_0 : class
 Equality type : BY_REFERENCE
 
@@ -692,6 +707,21 @@ FaceEmbedding15_8 : class
 Equality type : BY_VALUE
 
 FaceEmbedding15_9 : class
+Equality type : BY_VALUE
+
+FaceEmbedding2_0 : class
+Equality type : BY_VALUE
+
+FaceEmbedding2_1 : class
+Equality type : BY_VALUE
+
+FaceEmbedding3_0 : class
+Equality type : BY_VALUE
+
+FaceEmbedding3_1 : class
+Equality type : BY_VALUE
+
+FaceEmbedding3_2 : class
 Equality type : BY_VALUE
 
 FaceEmbedding4_0 : class

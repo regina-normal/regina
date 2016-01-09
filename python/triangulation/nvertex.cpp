@@ -43,6 +43,8 @@
 #include "../helpers.h"
 
 using namespace boost::python;
+using regina::Face;
+using regina::FaceEmbedding;
 using regina::NVertex;
 using regina::NVertexEmbedding;
 
@@ -73,7 +75,7 @@ namespace {
 }
 
 void addNVertex() {
-    class_<NVertexEmbedding>("NVertexEmbedding",
+    class_<FaceEmbedding<3, 0>>("FaceEmbedding3_0",
             init<regina::NTetrahedron*, int>())
         .def(init<const NVertexEmbedding&>())
         .def("simplex", &NVertexEmbedding::simplex,
@@ -98,75 +100,80 @@ void addNVertex() {
         .def(regina::python::add_eq_operators())
     ;
 
-    scope s = class_<NVertex, std::auto_ptr<NVertex>, boost::noncopyable>
-            ("NVertex", no_init)
-        .def("index", &NVertex::index)
-        .def("embeddings", vertex_getEmbeddings_list)
-        .def("getEmbeddings", vertex_getEmbeddings_list)
-        .def("embedding", &NVertex::embedding,
-            return_internal_reference<>())
-        .def("getEmbedding", &NVertex::getEmbedding,
-            return_internal_reference<>())
-        .def("front", &NVertex::front,
-            return_internal_reference<>())
-        .def("back", &NVertex::back,
-            return_internal_reference<>())
-        .def("triangulation", &NVertex::triangulation,
-            return_value_policy<reference_existing_object>())
-        .def("getTriangulation", &NVertex::getTriangulation,
-            return_value_policy<reference_existing_object>())
-        .def("component", &NVertex::component,
-            return_value_policy<reference_existing_object>())
-        .def("getComponent", &NVertex::getComponent,
-            return_value_policy<reference_existing_object>())
-        .def("getBoundaryComponent", &NVertex::getBoundaryComponent,
-            return_value_policy<reference_existing_object>())
-        .def("degree", &NVertex::degree)
-        .def("getDegree", &NVertex::getDegree)
-        .def("getLink", &NVertex::getLink)
-        .def("buildLink", &NVertex::buildLink,
-            return_value_policy<reference_existing_object>())
-        .def("buildLinkDetail", vertex_buildLinkDetail_void)
-        .def("buildLinkDetail", vertex_buildLinkDetail_bool)
-        .def("isLinkClosed", &NVertex::isLinkClosed)
-        .def("isIdeal", &NVertex::isIdeal)
-        .def("isBoundary", &NVertex::isBoundary)
-        .def("isStandard", &NVertex::isStandard)
-        .def("isValid", &NVertex::isValid)
-        .def("hasBadIdentification", &NVertex::hasBadIdentification)
-        .def("hasBadLink", &NVertex::hasBadLink)
-        .def("isLinkOrientable", &NVertex::isLinkOrientable)
-        .def("getLinkEulerChar", &NVertex::getLinkEulerChar)
-        .def("getLinkEulerCharacteristic",
-            &NVertex::getLinkEulerCharacteristic)
-        .def("str", &NVertex::str)
-        .def("toString", &NVertex::toString)
-        .def("detail", &NVertex::detail)
-        .def("toStringLong", &NVertex::toStringLong)
-        .def("__str__", &NVertex::str)
-        .def("ordering", &NVertex::ordering)
-        .def("faceNumber", &NVertex::faceNumber)
-        .def("containsVertex", &NVertex::containsVertex)
-        .def(regina::python::add_eq_operators())
-        .staticmethod("ordering")
-        .staticmethod("faceNumber")
-        .staticmethod("containsVertex")
-    ;
-
-    enum_<regina::NVertex::LinkType>("LinkType")
-        .value("SPHERE", regina::NVertex::SPHERE)
-        .value("DISC", regina::NVertex::DISC)
-        .value("TORUS", regina::NVertex::TORUS)
-        .value("KLEIN_BOTTLE", regina::NVertex::KLEIN_BOTTLE)
-        .value("NON_STANDARD_CUSP", regina::NVertex::NON_STANDARD_CUSP)
-        .value("NON_STANDARD_BDRY", regina::NVertex::NON_STANDARD_BDRY)
+    {
+        scope s = class_<Face<3, 0>, std::auto_ptr<Face<3, 0>>,
+                boost::noncopyable>("Face3_0", no_init)
+            .def("index", &NVertex::index)
+            .def("embeddings", vertex_getEmbeddings_list)
+            .def("getEmbeddings", vertex_getEmbeddings_list)
+            .def("embedding", &NVertex::embedding,
+                return_internal_reference<>())
+            .def("getEmbedding", &NVertex::getEmbedding,
+                return_internal_reference<>())
+            .def("front", &NVertex::front,
+                return_internal_reference<>())
+            .def("back", &NVertex::back,
+                return_internal_reference<>())
+            .def("triangulation", &NVertex::triangulation,
+                return_value_policy<reference_existing_object>())
+            .def("getTriangulation", &NVertex::getTriangulation,
+                return_value_policy<reference_existing_object>())
+            .def("component", &NVertex::component,
+                return_value_policy<reference_existing_object>())
+            .def("getComponent", &NVertex::getComponent,
+                return_value_policy<reference_existing_object>())
+            .def("getBoundaryComponent", &NVertex::getBoundaryComponent,
+                return_value_policy<reference_existing_object>())
+            .def("degree", &NVertex::degree)
+            .def("getDegree", &NVertex::getDegree)
+            .def("getLink", &NVertex::getLink)
+            .def("buildLink", &NVertex::buildLink,
+                return_value_policy<reference_existing_object>())
+            .def("buildLinkDetail", vertex_buildLinkDetail_void)
+            .def("buildLinkDetail", vertex_buildLinkDetail_bool)
+            .def("isLinkClosed", &NVertex::isLinkClosed)
+            .def("isIdeal", &NVertex::isIdeal)
+            .def("isBoundary", &NVertex::isBoundary)
+            .def("isStandard", &NVertex::isStandard)
+            .def("isValid", &NVertex::isValid)
+            .def("hasBadIdentification", &NVertex::hasBadIdentification)
+            .def("hasBadLink", &NVertex::hasBadLink)
+            .def("isLinkOrientable", &NVertex::isLinkOrientable)
+            .def("getLinkEulerChar", &NVertex::getLinkEulerChar)
+            .def("getLinkEulerCharacteristic",
+                &NVertex::getLinkEulerCharacteristic)
+            .def("str", &NVertex::str)
+            .def("toString", &NVertex::toString)
+            .def("detail", &NVertex::detail)
+            .def("toStringLong", &NVertex::toStringLong)
+            .def("__str__", &NVertex::str)
+            .def("ordering", &NVertex::ordering)
+            .def("faceNumber", &NVertex::faceNumber)
+            .def("containsVertex", &NVertex::containsVertex)
+            .def(regina::python::add_eq_operators())
+            .staticmethod("ordering")
+            .staticmethod("faceNumber")
+            .staticmethod("containsVertex")
         ;
 
-    s.attr("SPHERE") = NVertex::SPHERE;
-    s.attr("DISC") = NVertex::DISC;
-    s.attr("TORUS") = NVertex::TORUS;
-    s.attr("KLEIN_BOTTLE") = NVertex::KLEIN_BOTTLE;
-    s.attr("NON_STANDARD_CUSP") = NVertex::NON_STANDARD_CUSP;
-    s.attr("NON_STANDARD_BDRY") = NVertex::NON_STANDARD_BDRY;
+        enum_<regina::NVertex::LinkType>("LinkType")
+            .value("SPHERE", regina::NVertex::SPHERE)
+            .value("DISC", regina::NVertex::DISC)
+            .value("TORUS", regina::NVertex::TORUS)
+            .value("KLEIN_BOTTLE", regina::NVertex::KLEIN_BOTTLE)
+            .value("NON_STANDARD_CUSP", regina::NVertex::NON_STANDARD_CUSP)
+            .value("NON_STANDARD_BDRY", regina::NVertex::NON_STANDARD_BDRY)
+            ;
+
+        s.attr("SPHERE") = NVertex::SPHERE;
+        s.attr("DISC") = NVertex::DISC;
+        s.attr("TORUS") = NVertex::TORUS;
+        s.attr("KLEIN_BOTTLE") = NVertex::KLEIN_BOTTLE;
+        s.attr("NON_STANDARD_CUSP") = NVertex::NON_STANDARD_CUSP;
+        s.attr("NON_STANDARD_BDRY") = NVertex::NON_STANDARD_BDRY;
+    }
+
+    scope().attr("NVertexEmbedding") = scope().attr("FaceEmbedding3_0");
+    scope().attr("NVertex") = scope().attr("Face3_0");
 }
 

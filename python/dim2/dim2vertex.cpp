@@ -44,6 +44,8 @@
 using namespace boost::python;
 using regina::Dim2Vertex;
 using regina::Dim2VertexEmbedding;
+using regina::Face;
+using regina::FaceEmbedding;
 
 namespace {
     boost::python::list Dim2Vertex_getEmbeddings_list(const Dim2Vertex* v) {
@@ -55,7 +57,7 @@ namespace {
 }
 
 void addDim2Vertex() {
-    class_<Dim2VertexEmbedding>("Dim2VertexEmbedding",
+    class_<FaceEmbedding<2, 0>>("FaceEmbedding2_0",
             init<regina::Dim2Triangle*, int>())
         .def(init<const Dim2VertexEmbedding&>())
         .def("simplex", &Dim2VertexEmbedding::simplex,
@@ -80,8 +82,8 @@ void addDim2Vertex() {
         .def(regina::python::add_eq_operators())
     ;
 
-    scope s = class_<Dim2Vertex, std::auto_ptr<Dim2Vertex>, boost::noncopyable>
-            ("Dim2Vertex", no_init)
+    class_<Face<2, 0>, std::auto_ptr<Face<2, 0>>, boost::noncopyable>
+            ("Face2_0", no_init)
         .def("index", &Dim2Vertex::index)
         .def("isValid", &Dim2Vertex::isValid)
         .def("isLinkOrientable", &Dim2Vertex::isLinkOrientable)
@@ -121,5 +123,8 @@ void addDim2Vertex() {
         .staticmethod("faceNumber")
         .staticmethod("containsVertex")
     ;
+
+    scope().attr("Dim2VertexEmbedding") = scope().attr("FaceEmbedding2_0");
+    scope().attr("Dim2Vertex") = scope().attr("Face2_0");
 }
 
