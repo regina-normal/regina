@@ -38,6 +38,7 @@
 #include "generic/triangulation.h"
 #include "maths/nperm5.h" // Specialisation needed for 4-D case.
 #include "../helpers.h"
+#include "../generic/facehelper.h"
 
 using namespace boost::python;
 using regina::Triangulation;
@@ -54,8 +55,15 @@ namespace {
 
         static boost::python::list simplices_list(Triangulation<dim>& t) {
             boost::python::list ans;
-            for (auto i = t.simplices().begin(); i != t.simplices().end(); ++i)
-                ans.append(boost::python::ptr(*i));
+            for (auto s : t.simplices())
+                ans.append(boost::python::ptr(s));
+            return ans;
+        }
+
+        static boost::python::list components_list(Triangulation<dim>& t) {
+            boost::python::list ans;
+            for (auto c : t.components())
+                ans.append(boost::python::ptr(c));
             return ans;
         }
 
@@ -125,24 +133,98 @@ void addTriangulation(const char* name) {
         .def("getSimplices", PyTriHelper<dim>::simplices_list)
         .def("simplex", typename PyTriHelper<dim>::simplex_non_const_type(
             &Triangulation<dim>::simplex),
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("getSimplex", typename PyTriHelper<dim>::simplex_non_const_type(
             &Triangulation<dim>::simplex),
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("simplexIndex", &Triangulation<dim>::simplexIndex)
         .def("newSimplex", typename PyTriHelper<dim>::newSimplex_void_type(
             &Triangulation<dim>::newSimplex),
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("newSimplex", typename PyTriHelper<dim>::newSimplex_string_type(
             &Triangulation<dim>::newSimplex),
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("removeSimplex", &Triangulation<dim>::removeSimplex)
         .def("removeSimplexAt", &Triangulation<dim>::removeSimplexAt)
         .def("removeAllSimplices", &Triangulation<dim>::removeAllSimplices)
         .def("swapContents", &Triangulation<dim>::swapContents)
         .def("moveContentsTo", &Triangulation<dim>::moveContentsTo)
+        .def("countComponents", &Triangulation<dim>::countComponents)
+        .def("getNumberOfComponents",
+            &Triangulation<dim>::getNumberOfComponents)
+        .def("countFaces", &regina::python::countFaces<Triangulation<dim>, dim>)
+        .def("getNumberOfFaces",
+            &regina::python::countFaces<Triangulation<dim>, dim>)
+        .def("components", PyTriHelper<dim>::components_list)
+        .def("getComponents", PyTriHelper<dim>::components_list)
+        .def("faces", &regina::python::faces<Triangulation<dim>, dim>)
+        .def("getFaces", &regina::python::faces<Triangulation<dim>, dim>)
+        .def("component", &Triangulation<dim>::component,
+            return_value_policy<reference_existing_object>())
+        .def("getComponent", &Triangulation<dim>::getComponent,
+            return_internal_reference<>())
+        .def("face", &regina::python::face<Triangulation<dim>, dim, size_t>)
+        .def("getFace", &regina::python::face<Triangulation<dim>, dim, size_t>)
+        .def("componentIndex", &Triangulation<dim>::componentIndex)
+        .def("countVertices", &Triangulation<dim>::countVertices)
+        .def("getNumberOfVertices", &Triangulation<dim>::getNumberOfVertices)
+        .def("countEdges", &Triangulation<dim>::countEdges)
+        .def("getNumberOfEdges", &Triangulation<dim>::getNumberOfEdges)
+        .def("countTriangles", &Triangulation<dim>::countTriangles)
+        .def("getNumberOfTriangles", &Triangulation<dim>::getNumberOfTriangles)
+        .def("countTetrahedra", &Triangulation<dim>::countTetrahedra)
+        .def("getNumberOfTetrahedra",
+            &Triangulation<dim>::getNumberOfTetrahedra)
+        .def("countPentachora", &Triangulation<dim>::countPentachora)
+        .def("getNumberOfPentachora",
+            &Triangulation<dim>::getNumberOfPentachora)
+        .def("vertices", regina::python::faces_list<Triangluation<dim>, dim, 0>)
+        .def("getVertices",
+            regina::python::faces_list<Triangluation<dim>, dim, 0>)
+        .def("edges", regina::python::faces_list<Triangluation<dim>, dim, 1>)
+        .def("getEdges", regina::python::faces_list<Triangluation<dim>, dim, 1>)
+        .def("triangles",
+            regina::python::faces_list<Triangluation<dim>, dim, 2>)
+        .def("getTriangles",
+            regina::python::faces_list<Triangluation<dim>, dim, 2>)
+        .def("tetrahedra",
+            regina::python::faces_list<Triangluation<dim>, dim, 3>)
+        .def("getTetrahedra",
+            regina::python::faces_list<Triangluation<dim>, dim, 3>)
+        /* We can only use pentachoron aliases for dimension dim > 4.
+        .def("pentachora",
+            regina::python::faces_list<Triangluation<dim>, dim, 4>)
+        .def("getPentachora",
+            regina::python::faces_list<Triangluation<dim>, dim, 4>)
+        */
+        .def("vertex", &Triangulation<dim>::vertex,
+            return_internal_reference<>())
+        .def("getVertex", &Triangulation<dim>::getVertex,
+            return_internal_reference<>())
+        .def("edge", &Triangulation<dim>::edge,
+            return_internal_reference<>())
+        .def("getEdge", &Triangulation<dim>::getEdge,
+            return_internal_reference<>())
+        .def("triangle", &Triangulation<dim>::triangle,
+            return_internal_reference<>())
+        .def("getTriangle", &Triangulation<dim>::getTriangle,
+            return_internal_reference<>())
+        .def("tetrahedron", &Triangulation<dim>::tetrahedron,
+            return_internal_reference<>())
+        .def("getTetrahedron", &Triangulation<dim>::getTetrahedron,
+            return_internal_reference<>())
+        /* We can only use pentachoron aliases for dimension dim > 4.
+        .def("pentachoron", &Triangulation<dim>::pentachoron,
+            return_internal_reference<>())
+        .def("getPentachoron", &Triangulation<dim>::getPentachoron,
+            return_internal_reference<>())
+        */
         .def("isEmpty", &Triangulation<dim>::isEmpty)
+        .def("isValid", &Triangulation<dim>::isValid)
         .def("hasBoundaryFacets", &Triangulation<dim>::hasBoundaryFacets)
+        .def("countBoundaryFacets", &Triangulation<dim>::countBoundaryFacets)
+        .def("isOrientable", &Triangulation<dim>::isOrientable)
+        .def("isConnected", &Triangulation<dim>::isConnected)
         .def("isIdenticalTo", &Triangulation<dim>::isIdenticalTo)
         .def("isIsomorphicTo", PyTriHelper<dim>::isIsomorphicTo,
             return_value_policy<manage_new_object>())

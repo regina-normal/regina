@@ -112,26 +112,22 @@ namespace {
 
     boost::python::list getTetrahedra_list(NTriangulation& t) {
         boost::python::list ans;
-        for (NTriangulation::TetrahedronIterator it =
-                t.getTetrahedra().begin(); it != t.getTetrahedra().end(); it++)
-            ans.append(boost::python::ptr(*it));
+        for (auto s : t.tetrahedra())
+            ans.append(boost::python::ptr(s));
         return ans;
     }
 
     boost::python::list getComponents_list(NTriangulation& t) {
         boost::python::list ans;
-        for (NTriangulation::ComponentIterator it =
-                t.getComponents().begin(); it != t.getComponents().end(); it++)
-            ans.append(boost::python::ptr(*it));
+        for (auto c : t.components())
+            ans.append(boost::python::ptr(c));
         return ans;
     }
 
     boost::python::list getBoundaryComponents_list(NTriangulation& t) {
         boost::python::list ans;
-        for (NTriangulation::BoundaryComponentIterator it =
-                t.getBoundaryComponents().begin();
-                it != t.getBoundaryComponents().end(); it++)
-            ans.append(boost::python::ptr(*it));
+        for (auto b : t.getBoundaryComponents())
+            ans.append(boost::python::ptr(b));
         return ans;
     }
 

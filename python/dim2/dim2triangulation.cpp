@@ -55,26 +55,22 @@ namespace {
 
     boost::python::list Dim2_getTriangles_list(Dim2Triangulation& t) {
         boost::python::list ans;
-        for (Dim2Triangulation::TriangleIterator it =
-                t.getTriangles().begin(); it != t.getTriangles().end(); ++it)
-            ans.append(boost::python::ptr(*it));
+        for (auto s : t.getTriangles())
+            ans.append(boost::python::ptr(s));
         return ans;
     }
 
     boost::python::list Dim2_getComponents_list(Dim2Triangulation& t) {
         boost::python::list ans;
-        for (Dim2Triangulation::ComponentIterator it =
-                t.getComponents().begin(); it != t.getComponents().end(); ++it)
-            ans.append(boost::python::ptr(*it));
+        for (auto c : t.getComponents())
+            ans.append(boost::python::ptr(c));
         return ans;
     }
 
     boost::python::list Dim2_getBoundaryComponents_list(Dim2Triangulation& t) {
         boost::python::list ans;
-        for (Dim2Triangulation::BoundaryComponentIterator it =
-                t.getBoundaryComponents().begin();
-                it != t.getBoundaryComponents().end(); ++it)
-            ans.append(boost::python::ptr(*it));
+        for (auto b : t.getBoundaryComponents())
+            ans.append(boost::python::ptr(b));
         return ans;
     }
 
