@@ -851,7 +851,6 @@
 		052FA23B180612DD00FAE4DF /* unix_file_io.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D5C180600FA00FAE4DF /* unix_file_io.c */; };
 		052FA23C180612DD00FAE4DF /* update_shapes.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D8F180600FB00FAE4DF /* update_shapes.c */; };
 		052FA23D180612DD00FAE4DF /* volume.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D90180600FB00FAE4DF /* volume.c */; };
-		052FA241180613A900FAE4DF /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA23E180613A900FAE4DF /* boost.framework */; };
 		052FA242180613A900FAE4DF /* libgmp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA23F180613A900FAE4DF /* libgmp.framework */; };
 		052FA243180613A900FAE4DF /* libgmpxx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA240180613A900FAE4DF /* libgmpxx.framework */; };
 		053E5B5219B3D45B00166778 /* libgmp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA23F180613A900FAE4DF /* libgmp.framework */; };
@@ -1199,7 +1198,6 @@
 		05937AD619CECF4300160F9A /* MDSpreadViewCellRowHeaderBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = 05937AA819CECF4300160F9A /* MDSpreadViewCellRowHeaderBackground.m */; };
 		05937AD719CECF4300160F9A /* MDSpreadViewHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 05937AAB19CECF4300160F9A /* MDSpreadViewHeaderCell.m */; };
 		05937B2319CF819C00160F9A /* PacketTabBarController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05937B2219CF819C00160F9A /* PacketTabBarController.mm */; };
-		05992CB319BA8BB90032CE65 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA23E180613A900FAE4DF /* boost.framework */; };
 		05998ED219F9362D00855238 /* closed-hyp-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05998ECB19F9360200855238 /* closed-hyp-census.rga */; };
 		05998ED319F9362D00855238 /* closed-nor-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05998ECC19F9360200855238 /* closed-nor-census.rga */; };
 		05998ED419F9362D00855238 /* closed-or-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05998ECD19F9360200855238 /* closed-or-census.rga */; };
@@ -1335,8 +1333,10 @@
 		05D1C17219C7F95100CF92F2 /* EditableTableViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D1C17119C7F95100CF92F2 /* EditableTableViewController.mm */; };
 		05D6CFA41A01D0A60039150F /* TriGraph.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D6CFA31A01D0A60039150F /* TriGraph.mm */; };
 		05D6CFA61A01D2C60039150F /* graphviz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05D6CFA51A01D2C60039150F /* graphviz.framework */; };
+		05DC051D1C41B85100C76D71 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05DC051C1C41B85100C76D71 /* boost.framework */; };
+		05DC051F1C41B87200C76D71 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05DC051E1C41B87200C76D71 /* boost.framework */; };
+		05DC05201C41B88D00C76D71 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05DC051C1C41B85100C76D71 /* boost.framework */; };
 		05EA195719F30A0100D37501 /* EltMovesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05EA195619F30A0100D37501 /* EltMovesController.mm */; };
-		05EC452F19B99A81002D0633 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA23E180613A900FAE4DF /* boost.framework */; };
 		05F23E0F19C08834005B53B5 /* snappea-doc-64.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F23E0D19C08834005B53B5 /* snappea-doc-64.png */; };
 		05F23E1019C08834005B53B5 /* snappea-doc-320.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F23E0E19C08834005B53B5 /* snappea-doc-320.png */; };
 		05F23E1319C1305A005B53B5 /* NewAnglesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F23E1219C1305A005B53B5 /* NewAnglesController.mm */; };
@@ -2363,7 +2363,6 @@
 		052FA13E1806103000FAE4DF /* MasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MasterViewController.h; sourceTree = "<group>"; };
 		052FA13F1806103000FAE4DF /* MasterViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MasterViewController.mm; sourceTree = "<group>"; };
 		052FA1441806103000FAE4DF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		052FA23E180613A900FAE4DF /* boost.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = boost.framework; path = ../../Library/Frameworks/boost.framework; sourceTree = "<group>"; };
 		052FA23F180613A900FAE4DF /* libgmp.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libgmp.framework; path = ../../Library/Frameworks/libgmp.framework; sourceTree = "<group>"; };
 		052FA240180613A900FAE4DF /* libgmpxx.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libgmpxx.framework; path = ../../Library/Frameworks/libgmpxx.framework; sourceTree = "<group>"; };
 		053E5B5519B3D79100166778 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = usr/lib/libbz2.dylib; sourceTree = SDKROOT; };
@@ -2920,6 +2919,8 @@
 		05D6CFA21A01D0A60039150F /* TriGraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriGraph.h; sourceTree = "<group>"; };
 		05D6CFA31A01D0A60039150F /* TriGraph.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TriGraph.mm; sourceTree = "<group>"; };
 		05D6CFA51A01D2C60039150F /* graphviz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = graphviz.framework; path = ../../Library/Frameworks/graphviz.framework; sourceTree = "<group>"; };
+		05DC051C1C41B85100C76D71 /* boost.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = boost.framework; path = ../../Library/Frameworks/osx/boost.framework; sourceTree = "<group>"; };
+		05DC051E1C41B87200C76D71 /* boost.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = boost.framework; path = ../../Library/Frameworks/ios/boost.framework; sourceTree = "<group>"; };
 		05EA195519F30A0100D37501 /* EltMovesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EltMovesController.h; sourceTree = "<group>"; };
 		05EA195619F30A0100D37501 /* EltMovesController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EltMovesController.mm; sourceTree = "<group>"; };
 		05F23E0D19C08834005B53B5 /* snappea-doc-64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "snappea-doc-64.png"; sourceTree = "<group>"; };
@@ -2972,7 +2973,7 @@
 				057FA752180615F6008E25F6 /* libiconv.dylib in Frameworks */,
 				057FA753180615F6008E25F6 /* libxml2.dylib in Frameworks */,
 				057FA754180615F6008E25F6 /* libz.dylib in Frameworks */,
-				052FA241180613A900FAE4DF /* boost.framework in Frameworks */,
+				05DC051F1C41B87200C76D71 /* boost.framework in Frameworks */,
 				05D1172A19EDFE6E003BEC55 /* cppunit.framework in Frameworks */,
 				05D6CFA61A01D2C60039150F /* graphviz.framework in Frameworks */,
 				052FA242180613A900FAE4DF /* libgmp.framework in Frameworks */,
@@ -3007,7 +3008,7 @@
 				055B7318181D7F2500449D14 /* libiconv.dylib in Frameworks */,
 				055B731A181D7F2C00449D14 /* libxml2.dylib in Frameworks */,
 				052FA0A61806047E00FAE4DF /* libz.dylib in Frameworks */,
-				05992CB319BA8BB90032CE65 /* boost.framework in Frameworks */,
+				05DC05201C41B88D00C76D71 /* boost.framework in Frameworks */,
 				053E5B5219B3D45B00166778 /* libgmp.framework in Frameworks */,
 				053E5B5319B3D46000166778 /* libgmpxx.framework in Frameworks */,
 				05937A9719CE387100160F9A /* libtokyocabinet-macosx.framework in Frameworks */,
@@ -3020,7 +3021,7 @@
 			files = (
 				05B14EB919B424F9002138C0 /* libbz2.dylib in Frameworks */,
 				05B14EB719B424D8002138C0 /* libz.dylib in Frameworks */,
-				05EC452F19B99A81002D0633 /* boost.framework in Frameworks */,
+				05DC051D1C41B85100C76D71 /* boost.framework in Frameworks */,
 				05937A9619CDBBF300160F9A /* libtokyocabinet-macosx.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4214,6 +4215,8 @@
 		052FA0AF180604A900FAE4DF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				05DC051E1C41B87200C76D71 /* boost.framework */,
+				05DC051C1C41B85100C76D71 /* boost.framework */,
 				05AB5ECC1B8ED9F9007034C8 /* QtCore.framework */,
 				05AB5ECD1B8ED9F9007034C8 /* QtGui.framework */,
 				05AB5ED21B8EDC27007034C8 /* QtSvg.framework */,
@@ -4223,7 +4226,6 @@
 				057FA74F180615F5008E25F6 /* libiconv.dylib */,
 				057FA750180615F5008E25F6 /* libxml2.dylib */,
 				057FA751180615F5008E25F6 /* libz.dylib */,
-				052FA23E180613A900FAE4DF /* boost.framework */,
 				05500A1019B422360074CE5D /* cppunit.framework */,
 				05D6CFA51A01D2C60039150F /* graphviz.framework */,
 				052FA23F180613A900FAE4DF /* libgmp.framework */,
@@ -6762,6 +6764,7 @@
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(USER_LIBRARY_DIR)/Frameworks",
+					"$(USER_LIBRARY_DIR)/Frameworks/ios",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ios/Regina-Prefix.pch";
@@ -6801,6 +6804,7 @@
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(USER_LIBRARY_DIR)/Frameworks",
+					"$(USER_LIBRARY_DIR)/Frameworks/ios",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ios/Regina-Prefix.pch";
@@ -7021,6 +7025,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -7039,6 +7044,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -7055,6 +7061,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -7076,6 +7083,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				MACOSX_DEPLOYMENT_TARGET = "";
