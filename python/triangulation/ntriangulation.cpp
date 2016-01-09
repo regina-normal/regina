@@ -243,6 +243,8 @@ void addNTriangulation() {
         .def("moveContentsTo", &NTriangulation::moveContentsTo)
         .def("countComponents", &NTriangulation::countComponents)
         .def("getNumberOfComponents", &NTriangulation::getNumberOfComponents)
+        .def("countBoundaryComponents",
+            &NTriangulation::countBoundaryComponents)
         .def("getNumberOfBoundaryComponents",
             &NTriangulation::getNumberOfBoundaryComponents)
         .def("countFaces", &regina::python::countFaces<NTriangulation, 3>)

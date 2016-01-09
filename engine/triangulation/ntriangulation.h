@@ -374,13 +374,20 @@ class REGINA_API Triangulation<3> :
         /*@{*/
 
         /**
-         * Returns the number of boundary components in this
-         * triangulation.  Note that each ideal vertex forms its own
-         * boundary component.
+         * Returns the number of boundary components in this triangulation.
+         * Note that each ideal vertex forms its own boundary component.
          *
          * @return the number of boundary components.
          */
-        unsigned long getNumberOfBoundaryComponents() const;
+        size_t countBoundaryComponents() const;
+
+        /**
+         * Deprecated function that returns the number of boundary
+         * components in this triangulation.
+         *
+         * \deprecated Simply call countBoundaryComponents() instead.
+         */
+        size_t getNumberOfBoundaryComponents() const;
 
         /**
          * Returns all boundary components of this triangulation.
@@ -407,8 +414,7 @@ class REGINA_API Triangulation<3> :
          * ones.  Thus this object should be considered temporary only.
          *
          * @param index the index of the desired boundary
-         * component, ranging from 0
-         * to getNumberOfBoundaryComponents()-1 inclusive.
+         * component, ranging from 0 to countBoundaryComponents()-1 inclusive.
          * @return the requested boundary component.
          */
         NBoundaryComponent* getBoundaryComponent(unsigned long index) const;
@@ -3208,9 +3214,13 @@ inline void Triangulation<3>::removeAllTetrahedra() {
     removeAllSimplices();
 }
 
-inline unsigned long Triangulation<3>::getNumberOfBoundaryComponents() const {
+inline size_t Triangulation<3>::countBoundaryComponents() const {
     ensureSkeleton();
     return boundaryComponents_.size();
+}
+
+inline size_t Triangulation<3>::getNumberOfBoundaryComponents() const {
+    return countBoundaryComponents();
 }
 
 inline long Triangulation<3>::getEulerCharTri() const {
