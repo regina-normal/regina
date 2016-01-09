@@ -86,8 +86,11 @@ BOOST_PYTHON_MODULE(engine) {
 
     // Core engine routines:
 
+    boost::python::def("versionString", regina::versionString);
     boost::python::def("getVersionString", regina::getVersionString);
+    boost::python::def("versionMajor", regina::versionMajor);
     boost::python::def("getVersionMajor", regina::getVersionMajor);
+    boost::python::def("versionMinor", regina::versionMinor);
     boost::python::def("getVersionMinor", regina::getVersionMinor);
     boost::python::def("versionUsesUTF8", regina::versionUsesUTF8);
     boost::python::def("testEngine", regina::testEngine);
