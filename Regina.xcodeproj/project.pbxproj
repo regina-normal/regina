@@ -1826,7 +1826,7 @@
 		052F9C0F180600FA00FAE4DF /* nanglestructurelist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nanglestructurelist.h; sourceTree = "<group>"; };
 		052F9C10180600FA00FAE4DF /* nxmlanglestructreader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nxmlanglestructreader.cpp; sourceTree = "<group>"; };
 		052F9C11180600FA00FAE4DF /* nxmlanglestructreader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nxmlanglestructreader.h; sourceTree = "<group>"; };
-		052F9C13180600FA00FAE4DF /* closedprimemin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = closedprimemin.cpp; sourceTree = "<group>"; };
+		052F9C13180600FA00FAE4DF /* closedprimemin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = closedprimemin.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		052F9C14180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052F9C15180600FA00FAE4DF /* compact.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = compact.cpp; sourceTree = "<group>"; };
 		052F9C16180600FA00FAE4DF /* dim2census.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim2census.cpp; sourceTree = "<group>"; };
@@ -2782,7 +2782,7 @@
 		0591012018141996000A8D16 /* NewPacketController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewPacketController.mm; sourceTree = "<group>"; };
 		05937A9519CDBBF300160F9A /* libtokyocabinet-macosx.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "libtokyocabinet-macosx.framework"; path = "../../Library/Frameworks/libtokyocabinet-macosx.framework"; sourceTree = "<group>"; };
 		05937A9819CEC20900160F9A /* AngleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AngleViewController.h; sourceTree = "<group>"; };
-		05937A9919CEC20900160F9A /* AngleViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AngleViewController.mm; sourceTree = "<group>"; };
+		05937A9919CEC20900160F9A /* AngleViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AngleViewController.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		05937A9D19CECF4300160F9A /* MDSpreadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDSpreadView.h; sourceTree = "<group>"; };
 		05937A9E19CECF4300160F9A /* MDSpreadView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MDSpreadView.m; sourceTree = "<group>"; };
 		05937A9F19CECF4300160F9A /* MDSpreadViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDSpreadViewCell.h; sourceTree = "<group>"; };
