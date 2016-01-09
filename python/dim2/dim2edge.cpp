@@ -46,6 +46,8 @@
 using namespace boost::python;
 using regina::Dim2Edge;
 using regina::Dim2EdgeEmbedding;
+using regina::Face;
+using regina::FaceEmbedding;
 using regina::python::GlobalArray;
 
 namespace {
@@ -58,7 +60,7 @@ namespace {
 }
 
 void addDim2Edge() {
-    class_<Dim2EdgeEmbedding>("Dim2EdgeEmbedding",
+    class_<FaceEmbedding<2, 1>>("FaceEmbedding2_1",
             init<regina::Dim2Triangle*, int>())
         .def(init<const Dim2EdgeEmbedding&>())
         .def("simplex", &Dim2EdgeEmbedding::simplex,
@@ -83,8 +85,8 @@ void addDim2Edge() {
         .def(regina::python::add_eq_operators())
     ;
 
-    class_<Dim2Edge, std::auto_ptr<Dim2Edge>, boost::noncopyable>
-            ("Dim2Edge", no_init)
+    class_<Face<2, 1>, std::auto_ptr<Face<2, 1>>, boost::noncopyable>
+            ("Face2_1", no_init)
         .def("index", &Dim2Edge::index)
         .def("isValid", &Dim2Edge::isValid)
         .def("isLinkOrientable", &Dim2Edge::isLinkOrientable)
@@ -135,5 +137,8 @@ void addDim2Edge() {
         .staticmethod("faceNumber")
         .staticmethod("containsVertex")
     ;
+
+    scope().attr("Dim2EdgeEmbedding") = scope().attr("FaceEmbedding2_1");
+    scope().attr("Dim2Edge") = scope().attr("Face2_1");
 }
 

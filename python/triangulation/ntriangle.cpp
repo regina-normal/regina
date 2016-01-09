@@ -45,6 +45,8 @@
 #include "../generic/facehelper.h"
 
 using namespace boost::python;
+using regina::Face;
+using regina::FaceEmbedding;
 using regina::NTriangle;
 using regina::NTriangleEmbedding;
 using regina::python::GlobalArray;
@@ -59,7 +61,7 @@ namespace {
 }
 
 void addNTriangle() {
-    class_<NTriangleEmbedding, boost::noncopyable>("NTriangleEmbedding",
+    class_<FaceEmbedding<3, 2>, boost::noncopyable>("FaceEmbedding3_2",
             init<regina::NTetrahedron*, int>())
         .def(init<const NTriangleEmbedding&>())
         .def("simplex", &NTriangleEmbedding::simplex,
@@ -85,8 +87,8 @@ void addNTriangle() {
     ;
 
     {
-        scope s = class_<NTriangle, std::auto_ptr<NTriangle>,
-                boost::noncopyable>("NTriangle", no_init)
+        scope s = class_<Face<3, 2>, std::auto_ptr<Face<3, 2>>,
+                boost::noncopyable>("Face3_2", no_init)
             .def("index", &NTriangle::index)
             .def("embeddings", NTriangle_getEmbeddings_list)
             .def("getEmbeddings", NTriangle_getEmbeddings_list)
@@ -170,6 +172,9 @@ void addNTriangle() {
         s.attr("DUNCEHAT") = NTriangle::DUNCEHAT;
         s.attr("L31") = NTriangle::L31;
     }
+
+    scope().attr("NTriangleEmbedding") = scope().attr("FaceEmbedding3_2");
+    scope().attr("NTriangle") = scope().attr("Face3_2");
 
     // Support for deprecated typedefs:
     scope().attr("NFace") = scope().attr("NTriangle");
