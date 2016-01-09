@@ -420,11 +420,11 @@ void EltMoveDialog::updateStates(ChooserClass* chooser, QRadioButton* button) {
 }
 
 void EltMoveDialog::packetWasChanged(regina::NPacket*) {
-    if (tri->getNumberOfTetrahedra() == 1)
+    if (tri->size() == 1)
         overview->setText(tr("1 tetrahedron"));
     else
         overview->setText(tr("%1 tetrahedra").
-            arg(tri->getNumberOfTetrahedra()));
+            arg(tri->size()));
 
     updateStates(box32, use32);
     updateStates(box23, use23);

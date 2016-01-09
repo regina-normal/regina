@@ -47,12 +47,12 @@ const unsigned long NAngleStructure::flagVeering = 8;
 
 NMatrixInt* NAngleStructureVector::makeAngleEquations(
         const NTriangulation* tri) {
-    unsigned long n = tri->getNumberOfTetrahedra();
+    unsigned long n = tri->size();
     unsigned long cols = 3 * n + 1;
 
     // We have one equation per non-boundary edge plus one per tetrahedron.
     long rows = long(tri->getNumberOfEdges()) +
-        long(tri->getNumberOfTetrahedra());
+        long(tri->size());
     for (NTriangulation::BoundaryComponentIterator bit =
             tri->getBoundaryComponents().begin();
             bit != tri->getBoundaryComponents().end(); bit++)
@@ -97,7 +97,7 @@ NRational NAngleStructure::getAngle(unsigned long tetIndex, int edgePair)
         const {
     const NLargeInteger& num = (*vector)[3 * tetIndex + edgePair];
     const NLargeInteger& den =
-        (*vector)[3 * triangulation->getNumberOfTetrahedra()];
+        (*vector)[3 * triangulation->size()];
 
     NLargeInteger gcd = den.gcd(num);
     if (gcd < 0)
@@ -106,7 +106,7 @@ NRational NAngleStructure::getAngle(unsigned long tetIndex, int edgePair)
 }
 
 void NAngleStructure::writeTextShort(std::ostream& out) const {
-    unsigned long nTets = triangulation->getNumberOfTetrahedra();
+    unsigned long nTets = triangulation->size();
     unsigned j;
     for (unsigned long tet = 0; tet < nTets; tet++) {
         if (tet > 0)
@@ -194,7 +194,7 @@ void NAngleStructure::calculateType() const {
             const NTetrahedron* tet;
             int orient;
             long e;
-            for (unsigned i = 0; i < triangulation->getNumberOfTetrahedra();
+            for (unsigned i = 0; i < triangulation->size();
                     ++i) {
                 tet = triangulation->getTetrahedron(i);
                 orient = tet->orientation();

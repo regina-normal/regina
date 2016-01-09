@@ -198,11 +198,11 @@ NIsomorphism* iso_from_edges(const NTriangulation &trig,
                              const std::vector<int> & edge_orientations,
                              bool force_oriented) {
 
-    NIsomorphism* iso = new NIsomorphism(trig.getNumberOfTetrahedra());
+    NIsomorphism* iso = new NIsomorphism(trig.size());
 
     // iterate through all tetrahedra
 
-    for(unsigned i = 0; i < trig.getNumberOfTetrahedra(); i++) {
+    for(unsigned i = 0; i < trig.size(); i++) {
 
         // consistency check
 
@@ -288,7 +288,7 @@ bool NTriangulation::isOriented() const {
 void NTriangulation::orient() {
     ensureSkeleton();
 
-    NIsomorphism flip_tets_iso(getNumberOfTetrahedra());
+    NIsomorphism flip_tets_iso(size());
 
     TetrahedronIterator it;
     int t;

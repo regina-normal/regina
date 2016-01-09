@@ -155,7 +155,7 @@ class NAngleStructureUI : public QObject, public PacketReadOnlyUI,
 
 inline AngleModel::AngleModel(regina::NAngleStructureList* structures) :
         structures_(structures),
-        nCoords(3 * structures_->getTriangulation()->getNumberOfTetrahedra()) {
+        nCoords(3 * structures_->getTriangulation()->size()) {
 }
 
 inline regina::NAngleStructureList* AngleModel::structures() const {

@@ -312,7 +312,7 @@ void NTriCompositionUI::viewIsomorphism() {
             "vertices.").
             arg(QString(comparingTri->getHumanLabel().c_str()).toHtmlEscaped());
 
-        for (unsigned long i = 0; i < tri->getNumberOfTetrahedra(); i++)
+        for (unsigned long i = 0; i < tri->size(); i++)
             details += QString("%1 (0123)  &rarr;  %2 (%3)").
                 arg(i).
                 arg(isomorphism->tetImage(i)).
@@ -330,7 +330,7 @@ void NTriCompositionUI::viewIsomorphism() {
             arg(QString(comparingTri->getHumanLabel().c_str()).toHtmlEscaped());
 
         if (isoType == IsSubcomplex)
-            for (unsigned long i = 0; i < tri->getNumberOfTetrahedra(); i++)
+            for (unsigned long i = 0; i < tri->size(); i++)
                 details += QString("%1 (0123)  &rarr;  %2 (%3)").
                     arg(i).
                     arg(isomorphism->tetImage(i)).
@@ -338,7 +338,7 @@ void NTriCompositionUI::viewIsomorphism() {
                     ;
         else
             for (unsigned long i = 0;
-                    i < comparingTri->getNumberOfTetrahedra(); i++)
+                    i < comparingTri->size(); i++)
                 details += QString("%2 (%3)  &rarr;  %1 (0123)").
                     arg(i).
                     arg(isomorphism->tetImage(i)).
@@ -766,7 +766,7 @@ void NTriCompositionUI::findLayeredLoops() {
 }
 
 void NTriCompositionUI::findLayeredSolidTori() {
-    unsigned long nTets = tri->getNumberOfTetrahedra();
+    unsigned long nTets = tri->size();
 
     QTreeWidgetItem* id = 0;
     QTreeWidgetItem* details = 0;
@@ -898,7 +898,7 @@ void NTriCompositionUI::findPlugTriSolidTori() {
 }
 
 void NTriCompositionUI::findSnappedBalls() {
-    unsigned long nTets = tri->getNumberOfTetrahedra();
+    unsigned long nTets = tri->size();
 
     QTreeWidgetItem* id = 0;
     QTreeWidgetItem* details = 0;
@@ -923,7 +923,7 @@ void NTriCompositionUI::findSnappedBalls() {
 }
 
 void NTriCompositionUI::findSnappedSpheres() {
-    unsigned long nTets = tri->getNumberOfTetrahedra();
+    unsigned long nTets = tri->size();
 
     QTreeWidgetItem* id = 0;
     QTreeWidgetItem* details = 0;
@@ -957,7 +957,7 @@ void NTriCompositionUI::findSnappedSpheres() {
 }
 
 void NTriCompositionUI::findSpiralSolidTori() {
-    unsigned long nTets = tri->getNumberOfTetrahedra();
+    unsigned long nTets = tri->size();
 
     QTreeWidgetItem* id = 0;
     QTreeWidgetItem* details = 0;

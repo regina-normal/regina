@@ -80,7 +80,7 @@ struct REGINA_API NDiscType {
     unsigned long tetIndex;
         /**< The index within the triangulation of the tetrahedron
              containing this disc type.  This must be between 0 and
-             NTriangulation::getNumberOfTetrahedra()-1 inclusive. */
+             NTriangulation::size()-1 inclusive. */
     int type;
         /**< Identifies the disc type within the specified tetrahedron.
              The precise meaning of this member is left up to the user,

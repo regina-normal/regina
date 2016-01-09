@@ -98,23 +98,23 @@ using regina::NTriangle;
 + (unsigned long)numColumns:(regina::NormalCoords)coordSystem tri:(regina::NTriangulation*)tri
 {
     if (coordSystem == regina::NS_STANDARD)
-        return tri->getNumberOfTetrahedra() * 7;
+        return tri->size() * 7;
     else if (coordSystem == regina::NS_AN_STANDARD)
-        return tri->getNumberOfTetrahedra() * 10;
+        return tri->size() * 10;
     else if (coordSystem == regina::NS_AN_LEGACY)
-        return tri->getNumberOfTetrahedra() * 10;
+        return tri->size() * 10;
     else if (coordSystem == regina::NS_QUAD)
-        return tri->getNumberOfTetrahedra() * 3;
+        return tri->size() * 3;
     else if (coordSystem == regina::NS_AN_QUAD_OCT)
-        return tri->getNumberOfTetrahedra() * 6;
+        return tri->size() * 6;
     else if (coordSystem == regina::NS_EDGE_WEIGHT)
         return tri->getNumberOfEdges();
     else if (coordSystem == regina::NS_TRIANGLE_ARCS)
         return tri->getNumberOfTriangles() * 3;
     else if (coordSystem == regina::NS_ORIENTED)
-        return tri->getNumberOfTetrahedra() * 14;
+        return tri->size() * 14;
     else if (coordSystem == regina::NS_ORIENTED_QUAD)
-        return tri->getNumberOfTetrahedra() * 6;
+        return tri->size() * 6;
     else
         return 0;
 }
@@ -189,7 +189,7 @@ using regina::NTriangle;
         case regina::NS_AN_STANDARD:
         case regina::NS_AN_QUAD_OCT:
         case regina::NS_AN_LEGACY:
-            return [NSString stringWithFormat:@"Q%ld: 00/00", tri->getNumberOfTetrahedra()];
+            return [NSString stringWithFormat:@"Q%ld: 00/00", tri->size()];
         case regina::NS_EDGE_WEIGHT:
             if (tri->hasBoundaryTriangles())
                 return [NSString stringWithFormat:@"%ld: ∂", tri->getNumberOfEdges()];
@@ -204,7 +204,7 @@ using regina::NTriangle;
             break;
         case regina::NS_ORIENTED:
         case regina::NS_ORIENTED_QUAD:
-            return [NSString stringWithFormat:@"%ld: 000", tri->getNumberOfTetrahedra()];
+            return [NSString stringWithFormat:@"%ld: 000", tri->size()];
             break;
         case regina::NS_ANGLE:
             // Should never appear.

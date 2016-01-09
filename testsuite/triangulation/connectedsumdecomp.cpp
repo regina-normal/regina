@@ -490,7 +490,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                     foundNor = true;
                 if (! term->isZeroEfficient()) {
                     // Special cases: 2-tetrahedron RP3, L(3,1), S2xS1, S2x~S1.
-                    if (! (term->getNumberOfTetrahedra() == 2 &&
+                    if (! (term->size() == 2 &&
                             (term->isoSig() == "cMcabbgqw" /* RP3 */ ||
                             term->isoSig() == "cMcabbgqj" /* L(3,1) */ ||
                             term->isoSig() == "cPcbbbaai" /* L(3,1) */ ||

@@ -79,15 +79,15 @@ NLargeInteger NNormalSurfaceVectorStandard::getTriangleArcs(
 NNormalSurfaceVector* NNormalSurfaceVectorStandard::makeZeroVector(
         const NTriangulation* triangulation) {
     return new NNormalSurfaceVectorStandard(
-        7 * triangulation->getNumberOfTetrahedra());
+        7 * triangulation->size());
 }
 
 NMatrixInt* NNormalSurfaceVectorStandard::makeMatchingEquations(
         const NTriangulation* triangulation) {
-    unsigned long nCoords = 7 * triangulation->getNumberOfTetrahedra();
+    unsigned long nCoords = 7 * triangulation->size();
     // Three equations per non-boundary triangle.
     // F_boundary + 2 F_internal = 4 T
-    long nEquations = 3 * (4 * long(triangulation->getNumberOfTetrahedra()) -
+    long nEquations = 3 * (4 * long(triangulation->size()) -
         long(triangulation->getNumberOfTriangles()));
     NMatrixInt* ans = new NMatrixInt(nEquations, nCoords);
 
@@ -125,7 +125,7 @@ NMatrixInt* NNormalSurfaceVectorStandard::makeMatchingEquations(
 NEnumConstraintList* NNormalSurfaceVectorStandard::makeEmbeddedConstraints(
         const NTriangulation* triangulation) {
     NEnumConstraintList* ans = new NEnumConstraintList(
-        triangulation->getNumberOfTetrahedra());
+        triangulation->size());
 
     unsigned base = 0;
     for (unsigned c = 0; c < ans->size(); ++c) {

@@ -259,19 +259,19 @@ void NNormalSurfaceList::Enumerator::fillVertexTree() {
     switch (list_->coords_) {
         case NS_STANDARD:
             eqns = makeMatchingEquations(triang_, NS_STANDARD);
-            maxColsRHS = triang_->getNumberOfTetrahedra() * 5;
+            maxColsRHS = triang_->size() * 5;
             break;
         case NS_QUAD:
             eqns = makeMatchingEquations(triang_, NS_QUAD);
-            maxColsRHS = triang_->getNumberOfTetrahedra();
+            maxColsRHS = triang_->size();
             break;
         case NS_AN_STANDARD:
             eqns = makeMatchingEquations(triang_, NS_STANDARD);
-            maxColsRHS = triang_->getNumberOfTetrahedra() * 5 + 1;
+            maxColsRHS = triang_->size() * 5 + 1;
             break;
         case NS_AN_QUAD_OCT:
             eqns = makeMatchingEquations(triang_, NS_QUAD);
-            maxColsRHS = triang_->getNumberOfTetrahedra() + 1;
+            maxColsRHS = triang_->size() + 1;
             break;
         default:
             // We shouldn't be here.. just use arbitrary precision arithmetic.

@@ -97,23 +97,23 @@ namespace Coordinates {
     unsigned long numColumns(NormalCoords coordSystem,
             regina::NTriangulation* tri) {
         if (coordSystem == regina::NS_STANDARD)
-            return tri->getNumberOfTetrahedra() * 7;
+            return tri->size() * 7;
         else if (coordSystem == regina::NS_AN_STANDARD)
-            return tri->getNumberOfTetrahedra() * 10;
+            return tri->size() * 10;
         else if (coordSystem == regina::NS_AN_LEGACY)
-            return tri->getNumberOfTetrahedra() * 10;
+            return tri->size() * 10;
         else if (coordSystem == regina::NS_QUAD)
-            return tri->getNumberOfTetrahedra() * 3;
+            return tri->size() * 3;
         else if (coordSystem == regina::NS_AN_QUAD_OCT)
-            return tri->getNumberOfTetrahedra() * 6;
+            return tri->size() * 6;
         else if (coordSystem == regina::NS_EDGE_WEIGHT)
             return tri->getNumberOfEdges();
         else if (coordSystem == regina::NS_TRIANGLE_ARCS)
             return tri->getNumberOfTriangles() * 3;
         else if (coordSystem == regina::NS_ORIENTED)
-            return tri->getNumberOfTetrahedra() * 14;
+            return tri->size() * 14;
         else if (coordSystem == regina::NS_ORIENTED_QUAD)
-            return tri->getNumberOfTetrahedra() * 6;
+            return tri->size() * 6;
         else
             return 0;
     }

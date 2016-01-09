@@ -196,7 +196,7 @@ namespace {
         if (s.rawVector()->allowsAlmostNormal()) {
             for (i = 0; i < compID; ++i)
                 ans[i] = new NNormalSurfaceVectorANStandard(
-                    10 * tri->getNumberOfTetrahedra());
+                    10 * tri->size());
 
             for (it.init(components); ! it.done(); ++it) {
                 vec = ans[components.data(*it).id];
@@ -206,7 +206,7 @@ namespace {
         } else {
             for (i = 0; i < compID; ++i)
                 ans[i] = new NNormalSurfaceVectorStandard(
-                    7 * tri->getNumberOfTetrahedra());
+                    7 * tri->size());
 
             for (it.init(components); ! it.done(); ++it) {
                 vec = ans[components.data(*it).id];

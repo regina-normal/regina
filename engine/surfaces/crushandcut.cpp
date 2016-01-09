@@ -1158,7 +1158,7 @@ NTriangulation* NNormalSurface::cutAlong() const {
     NTriangulation* ans = new NTriangulation();
     NPacket::ChangeEventSpan span(ans);
 
-    unsigned long nTet = getTriangulation()->getNumberOfTetrahedra();
+    unsigned long nTet = getTriangulation()->size();
     if (nTet == 0)
         return ans;
 
@@ -1217,7 +1217,7 @@ NTriangulation* NNormalSurface::cutAlong() const {
 
 NTriangulation* NNormalSurface::crush() const {
     NTriangulation* ans = new NTriangulation(*triangulation);
-    unsigned long nTet = ans->getNumberOfTetrahedra();
+    unsigned long nTet = ans->size();
     if (nTet == 0)
         return ans;
 

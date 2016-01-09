@@ -155,8 +155,8 @@ namespace {
              */
             RaySpec(const NTriangulation* tri, unsigned long whichLink,
                     unsigned coordsPerTet) :
-                    NRay(coordsPerTet * tri->getNumberOfTetrahedra()),
-                    facets_(coordsPerTet * tri->getNumberOfTetrahedra()) {
+                    NRay(coordsPerTet * tri->size()),
+                    facets_(coordsPerTet * tri->size()) {
                 // Note that the vector is initialised to zero since
                 // this is what NLargeInteger's default constructor does.
                 for (size_t i = 0; i < size(); ++i)
@@ -340,7 +340,7 @@ template <class Variant>
 void NNormalSurfaceList::buildStandardFromReduced(NTriangulation* owner,
         const std::vector<NNormalSurface*>& reducedList,
         NProgressTracker* tracker) {
-    size_t nFacets = Variant::stdLen(owner->getNumberOfTetrahedra());
+    size_t nFacets = Variant::stdLen(owner->size());
 
     // Choose a bitmask type for representing the set of facets that a
     // ray belongs to; in particular, use a (much faster) optimised
@@ -378,7 +378,7 @@ void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
         const std::vector<NNormalSurface*>& reducedList,
         NProgressTracker* tracker) {
     // Prepare for the reduced-to-standard double description run.
-    unsigned long n = owner->getNumberOfTetrahedra();
+    unsigned long n = owner->size();
     size_t slen = Variant::stdLen(n); // # standard coordinates
     unsigned long llen = owner->getNumberOfVertices(); // # vertex links
 

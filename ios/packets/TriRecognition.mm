@@ -147,24 +147,24 @@
     propertyList = [[NSMutableArray alloc] init];
     if (self.packet->isClosed() && ! self.packet->isEmpty()) {
         [propertyList addObject:@PROP_SPHERE];
-        if (self.packet->getNumberOfTetrahedra() <= 6)
+        if (self.packet->size() <= 6)
             self.packet->isThreeSphere();
     } else if (self.packet->getNumberOfBoundaryComponents() > 0) {
         // Real boundary only:
         if (self.packet->hasBoundaryTriangles()) {
             [propertyList addObject:@PROP_BALL];
-            if (self.packet->getNumberOfTetrahedra() <= 6)
+            if (self.packet->size() <= 6)
                 self.packet->isBall();
         }
         // Either real or ideal boundary:
         [propertyList addObject:@PROP_SOLIDTORUS];
-        if (self.packet->getNumberOfTetrahedra() <= 6)
+        if (self.packet->size() <= 6)
             self.packet->isSolidTorus();
     }
     if ((! self.packet->isEmpty()) && (! dynamic_cast<regina::NSnapPeaTriangulation*>(self.packet))) {
         [propertyList addObject:@PROP_ZEROEFF];
         [propertyList addObject:@PROP_SPLITTING];
-        if (self.packet->getNumberOfTetrahedra() <= 6) {
+        if (self.packet->size() <= 6) {
             self.packet->isZeroEfficient();
             self.packet->hasSplittingSurface();
         }
@@ -172,7 +172,7 @@
     if (self.packet->isOrientable() && self.packet->isClosed() && self.packet->isValid() && self.packet->isConnected() && ! self.packet->isEmpty()) {
         [propertyList addObject:@PROP_IRREDUCIBLE];
         [propertyList addObject:@PROP_HAKEN];
-        if (self.packet->getNumberOfTetrahedra() <= 6) {
+        if (self.packet->size() <= 6) {
             self.packet->isIrreducible();
             self.packet->isHaken();
         }
@@ -180,12 +180,12 @@
     if (self.packet->isIdeal() && ! self.packet->hasBoundaryTriangles()) {
         [propertyList addObject:@PROP_STRICT];
         [propertyList addObject:@PROP_HYPERBOLIC];
-        if (self.packet->getNumberOfTetrahedra() <= 50)
+        if (self.packet->size() <= 50)
             self.packet->hasStrictAngleStructure();
     }
 
     // Display the results of a census lookup.
-    if (self.packet->getNumberOfTetrahedra() <= MAX_CENSUS_TRIANGULATION_SIZE) {
+    if (self.packet->size() <= MAX_CENSUS_TRIANGULATION_SIZE) {
         regina::NCensusHits* hits = regina::NCensus::lookup(static_cast<regina::NTriangulation*>(self.packet)->isoSig());
         if (hits->count() == 0) {
             self.census.numberOfLines = 1;
@@ -280,7 +280,7 @@
                 return [TextHelper yesNoString:self.packet->isZeroEfficient() yes:@"Yes" no:@"No"];
             return nil;
         case PROP_SPLITTING:
-            if (self.packet->knowsSplittingSurface() || self.packet->getNumberOfTetrahedra() <= 6)
+            if (self.packet->knowsSplittingSurface() || self.packet->size() <= 6)
                 return [TextHelper yesNoString:self.packet->hasSplittingSurface() yes:@"Yes" no:@"No"];
             return nil;
         case PROP_IRREDUCIBLE:
@@ -389,7 +389,7 @@
 
                              // Special-case S2xS1, S2x~S1 and RP3, which do not have
                              // 0-efficient triangulations.
-                             if (small->getNumberOfTetrahedra() <= 2 && small->getHomologyH1().isZ()) {
+                             if (small->size() <= 2 && small->getHomologyH1().isZ()) {
                                  // The only closed prime manifolds with
                                  // H_1 = Z and <= 2 tetrahedra are S2xS1 and S2x~S1.
                                  if (small->isOrientable()) {
@@ -409,7 +409,7 @@
                                                                            otherButtonTitles:nil];
                                      [alert show];
                                  }
-                             } else if (small->getNumberOfTetrahedra() <= 2 && small->getHomologyH1().isZn(2)) {
+                             } else if (small->size() <= 2 && small->getHomologyH1().isZn(2)) {
                                  // The only closed prime orientable manifold with
                                  // H_1 = Z_2 and <= 2 tetrahedra is RP3.
                                  small->setPacketLabel("ℝP³ (Minimal)");

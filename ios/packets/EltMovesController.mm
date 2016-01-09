@@ -164,7 +164,7 @@
     }
 
     options14 = [[NSMutableArray alloc] init];
-    for (i = 0; i < self.packet->getNumberOfTetrahedra(); ++i)
+    for (i = 0; i < self.packet->size(); ++i)
         if (self.packet->oneFourMove(self.packet->getTetrahedron(i), true, false))
             [options14 addObject:@(i)];
     if (options14.count > 0) {
@@ -278,7 +278,7 @@
     }
 
     optionsShell = [[NSMutableArray alloc] init];
-    for (i = 0; i < self.packet->getNumberOfTetrahedra(); ++i)
+    for (i = 0; i < self.packet->size(); ++i)
         if (self.packet->shellBoundary(self.packet->getTetrahedron(i), true, false))
             [optionsShell addObject:@(i)];
     if (optionsShell.count > 0) {

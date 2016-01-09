@@ -79,15 +79,15 @@ NLargeInteger NNormalSurfaceVectorOriented::getTriangleArcs(
 NNormalSurfaceVector* NNormalSurfaceVectorOriented::makeZeroVector(
         const NTriangulation* triangulation) {
     return new NNormalSurfaceVectorOriented(
-        14 * triangulation->getNumberOfTetrahedra());
+        14 * triangulation->size());
 }
 
 NMatrixInt* NNormalSurfaceVectorOriented::makeMatchingEquations(
         const NTriangulation* triangulation) {
-    unsigned long nCoords = 14 * triangulation->getNumberOfTetrahedra();
+    unsigned long nCoords = 14 * triangulation->size();
     // Six equations per non-boundary triangle.
     // F_boundary + 2 F_internal = 4 T
-    long nEquations = 6 * (4 * long(triangulation->getNumberOfTetrahedra()) -
+    long nEquations = 6 * (4 * long(triangulation->size()) -
         long(triangulation->getNumberOfTriangles()));
     NMatrixInt* ans = new NMatrixInt(nEquations, nCoords);
 
@@ -147,7 +147,7 @@ NEnumConstraintList* NNormalSurfaceVectorOriented::makeEmbeddedConstraints(
     // TODO: Must be a neater way of doing this, but might mean re-working
     // bitmasks.
     NEnumConstraintList* ans = new NEnumConstraintList(
-        8 * triangulation->getNumberOfTetrahedra());
+        8 * triangulation->size());
 
     unsigned base = 0;
     unsigned c = 0;
