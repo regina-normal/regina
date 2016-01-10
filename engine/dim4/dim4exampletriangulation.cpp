@@ -172,7 +172,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::doubleCone(
     NPacket::ChangeEventSpan span(ans);
     ans->setPacketLabel("Double cone over " + base.getPacketLabel());
 
-    unsigned long n = base.getNumberOfTetrahedra();
+    unsigned long n = base.size();
     if (n == 0)
         return ans;
 
@@ -220,7 +220,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::singleCone(
     NPacket::ChangeEventSpan span(ans);
     ans->setPacketLabel("Single cone over " + base.getPacketLabel());
 
-    unsigned long n = base.getNumberOfTetrahedra();
+    unsigned long n = base.size();
     if (n == 0)
         return ans;
 
@@ -407,7 +407,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::iBundle(
     NPacket::ChangeEventSpan span(ans);
     ans->setPacketLabel(base.getPacketLabel() + " x I");
 
-    unsigned long n = base.getNumberOfTetrahedra();
+    unsigned long n = base.size();
     if (n == 0)
         return ans;
 
@@ -462,7 +462,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::s1Bundle(
     ans->setPacketLabel(base.getPacketLabel() + " x S1");
 
     NPerm5 id;
-    unsigned long n = base.getNumberOfTetrahedra();
+    unsigned long n = base.size();
     unsigned long i;
     for (i = 0; i < n; ++i)
         ans->getPentachoron(i)->joinTo(4, ans->getPentachoron(i + n), id);
@@ -477,7 +477,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::bundleWithMonodromy(
     ans->setPacketLabel(base.getPacketLabel() + " x I / ~");
 
     NPerm5 id;
-    unsigned long n = base.getNumberOfTetrahedra();
+    unsigned long n = base.size();
     unsigned long i;
     for (i = 0; i < n; ++i)
         ans->getPentachoron(i)->joinTo(4,

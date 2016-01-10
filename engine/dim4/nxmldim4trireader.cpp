@@ -78,7 +78,7 @@ namespace {
                         continue;
 
                     if (pentIndex < 0 || pentIndex >=
-                            static_cast<int>(tri_->getNumberOfPentachora()))
+                            static_cast<int>(tri_->size()))
                         continue;
                     if (! NPerm5::isPermCode(permCode))
                         continue;
@@ -124,7 +124,7 @@ namespace {
                     const std::string& subTagName,
                     const regina::xml::XMLPropertyDict&) {
                 if (subTagName == "pent") {
-                    if (readPents_ < tri_->getNumberOfPentachora())
+                    if (readPents_ < tri_->size())
                         return new Dim4PentachoronReader(tri_, readPents_++);
                     else
                         return new NXMLElementReader();

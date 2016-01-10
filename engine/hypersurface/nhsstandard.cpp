@@ -68,17 +68,16 @@ NLargeInteger NNormalHypersurfaceVectorStandard::getEdgeWeight(
 
 NNormalHypersurfaceVector* NNormalHypersurfaceVectorStandard::makeZeroVector(
         const Dim4Triangulation* triangulation) {
-    return new NNormalHypersurfaceVectorStandard(
-        15 * triangulation->getNumberOfPentachora());
+    return new NNormalHypersurfaceVectorStandard(15 * triangulation->size());
 }
 
 NMatrixInt* NNormalHypersurfaceVectorStandard::makeMatchingEquations(
         const Dim4Triangulation* triangulation) {
-    unsigned long nCoords = 15 * triangulation->getNumberOfPentachora();
+    unsigned long nCoords = 15 * triangulation->size();
     // Seven equations per non-boundary facet.
     // T_boundary + 2 T_internal = 5 P
-    long nEquations = 7 * (5 * long(triangulation->getNumberOfPentachora()) -
-        long(triangulation->getNumberOfTetrahedra()));
+    long nEquations = 7 * (5 * long(triangulation->size()) -
+        long(triangulation->countTetrahedra()));
     NMatrixInt* ans = new NMatrixInt(nEquations, nCoords);
 
     // Run through each internal facet and add the corresponding seven
@@ -137,13 +136,13 @@ NMatrixInt* NNormalHypersurfaceVectorStandard::makeMatchingEquations(
 NEnumConstraintList* NNormalHypersurfaceVectorStandard::makeEmbeddedConstraints(
         const Dim4Triangulation* triangulation) {
     NEnumConstraintList* ans = new NEnumConstraintList(
-        30 * triangulation->getNumberOfPentachora());
+        30 * triangulation->size());
 
     unsigned base = 5;
     unsigned edge1, edge2;
     unsigned c = 0;
     unsigned pent, i;
-    for (pent = 0; pent < triangulation->getNumberOfPentachora(); ++pent) {
+    for (pent = 0; pent < triangulation->size(); ++pent) {
         for (edge1 = 0; edge1 < 10; ++edge1)
             for (i = 0; i < 3; ++i) {
                 edge2 = Dim4Edge::edgeNumber[

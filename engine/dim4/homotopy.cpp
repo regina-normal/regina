@@ -42,7 +42,7 @@ const NGroupPresentation& Dim4Triangulation::getFundamentalGroup() const {
 
     NGroupPresentation* ans = new NGroupPresentation();
 
-    if (getNumberOfPentachora() == 0)
+    if (isEmpty())
         return *(fundGroup_ = ans);
 
     ensureSkeleton();

@@ -229,14 +229,14 @@ NTriangulation* NNormalHypersurface::triangulate() const {
     NTriangulation* inner = new NTriangulation();
 
     // Get rid of an empty *outer* triangulation now.
-    if (outer->getNumberOfPentachora() == 0)
+    if (outer->isEmpty())
         return inner;
 
     // Set up one NDiscSetTetData for each tetrahedron, storing the
     // relevant DiscData maps.  We don't actually need this for the
     // boundary tetrahedra, but for now we'll just do everything.
     typedef NDiscSetTetData<DiscData> TetData;
-    unsigned long nTets = outer->getNumberOfTetrahedra();
+    unsigned long nTets = outer->countTetrahedra();
     TetData** tetData = new TetData*[nTets];
 
     const Dim4Pentachoron* outerPent;
@@ -289,7 +289,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
     }
 
     // Run through normal tetrahedra, setting up DiscData maps as we go.
-    unsigned long nPents = outer->getNumberOfPentachora();
+    unsigned long nPents = outer->size();
 
     int type;
     unsigned long pieceNumber;

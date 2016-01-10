@@ -43,7 +43,7 @@ const NAbelianGroup& Dim4Triangulation::getHomologyH1() const {
     if (H1_.known())
         return *H1_.value();
 
-    if (getNumberOfPentachora() == 0)
+    if (isEmpty())
         return *(H1_ = new NAbelianGroup());
 
     // Calculate the first homology.
@@ -121,7 +121,7 @@ const NAbelianGroup& Dim4Triangulation::getHomologyH2() const {
     if (H2_.known())
         return *H2_.value();
 
-    if (getNumberOfPentachora() == 0)
+    if (isEmpty())
         return *(H1_ = new NAbelianGroup());
 
     ensureSkeleton();
@@ -140,9 +140,9 @@ const NAbelianGroup& Dim4Triangulation::getHomologyH2() const {
     NPerm5 perm, tmpPerm;
     int pentEdge, pentTriangle;
 
-    unsigned long nEdges = getNumberOfEdges();
-    unsigned long nTriangles = getNumberOfTriangles();
-    unsigned long nTetrahedra = getNumberOfTetrahedra();
+    unsigned long nEdges = countEdges();
+    unsigned long nTriangles = countTriangles();
+    unsigned long nTetrahedra = countTetrahedra();
 
     // Build a translation table from edge numbers -> "internal edge" indices.
     unsigned long nEdgesInternal = 0;

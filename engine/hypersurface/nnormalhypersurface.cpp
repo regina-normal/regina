@@ -47,7 +47,7 @@ namespace regina {
 
 bool NNormalHypersurfaceVector::isCompact(const Dim4Triangulation* triang)
         const {
-    unsigned long nPents = triang->getNumberOfPentachora();
+    unsigned long nPents = triang->size();
     unsigned long pent;
     int type;
     for (pent = 0; pent < nPents; pent++) {
@@ -77,7 +77,7 @@ NNormalHypersurface* NNormalHypersurface::clone() const {
 }
 
 void NNormalHypersurface::writeTextShort(std::ostream& out) const {
-    unsigned long nPents = triangulation_->getNumberOfPentachora();
+    unsigned long nPents = triangulation_->size();
     unsigned long pent;
     unsigned j;
     for (pent=0; pent < nPents; pent++) {
@@ -119,7 +119,7 @@ void NNormalHypersurface::writeXMLData(std::ostream& out) const {
 }
 
 bool NNormalHypersurface::isEmpty() const {
-    unsigned long nPents = triangulation_->getNumberOfPentachora();
+    unsigned long nPents = triangulation_->size();
 
     unsigned long p;
     int i;
@@ -138,7 +138,7 @@ bool NNormalHypersurface::isEmpty() const {
 }
 
 bool NNormalHypersurface::sameSurface(const NNormalHypersurface& other) const {
-    unsigned long nPents = triangulation_->getNumberOfPentachora();
+    unsigned long nPents = triangulation_->size();
 
     unsigned long p;
     int i;
@@ -157,7 +157,7 @@ bool NNormalHypersurface::sameSurface(const NNormalHypersurface& other) const {
 }
 
 bool NNormalHypersurface::embedded() const {
-    unsigned long nPent = triangulation_->getNumberOfPentachora();
+    unsigned long nPent = triangulation_->size();
 
     int type;
     int found, prism[2];
@@ -186,7 +186,7 @@ bool NNormalHypersurface::embedded() const {
 
 bool NNormalHypersurface::locallyCompatible(const NNormalHypersurface& other)
         const {
-    unsigned long nPent = triangulation_->getNumberOfPentachora();
+    unsigned long nPent = triangulation_->size();
 
     int type;
     int found, prism[2];
@@ -221,7 +221,7 @@ void NNormalHypersurface::calculateRealBoundary() const {
     }
 
     unsigned long index;
-    unsigned long tot = triangulation_->getNumberOfPentachora();
+    unsigned long tot = triangulation_->size();
     const Dim4Pentachoron* pent;
     int type, facet;
 

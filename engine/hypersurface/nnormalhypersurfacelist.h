@@ -319,7 +319,7 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          *
          * @return the number of hypersurfaces.
          */
-        virtual unsigned long size() const;
+        virtual size_t size() const;
         /**
          * Returns the hypersurface at the requested index in this list.
          *
@@ -328,8 +328,7 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          *
          * @return the normal hypersurface at the requested index in this list.
          */
-        virtual const NNormalHypersurface* getHypersurface(
-            unsigned long index) const;
+        virtual const NNormalHypersurface* getHypersurface(size_t index) const;
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
@@ -780,12 +779,12 @@ inline bool NNormalHypersurfaceList::isEmbeddedOnly() const {
     return embedded_;
 }
 
-inline unsigned long NNormalHypersurfaceList::size() const {
+inline size_t NNormalHypersurfaceList::size() const {
     return surfaces_.size();
 }
 
 inline const NNormalHypersurface* NNormalHypersurfaceList::getHypersurface(
-        unsigned long index) const {
+        size_t index) const {
     return surfaces_[index];
 }
 

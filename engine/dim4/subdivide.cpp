@@ -203,7 +203,7 @@ namespace {
 
 bool Dim4Triangulation::idealToFinite() {
     bool idVrts(false);
-    for (unsigned long i=0; i<getNumberOfVertices(); i++)
+    for (unsigned long i=0; i<countVertices(); i++)
         if (shouldTruncate(getVertex(i))) {
             idVrts=true;
             break;
@@ -217,7 +217,7 @@ bool Dim4Triangulation::idealToFinite() {
 
 // * * * Create the pentachora for the new triangulation * * *
     std::map< subDivNot, Dim4Pentachoron* > newPens; // this will index them.
-    for (unsigned long i=0; i<getNumberOfPentachora(); i++) {
+    for (unsigned long i=0; i<size(); i++) {
         const Dim4Pentachoron* aPen( getPentachoron(i) ); // ambient pent
         bool pIv(false);   // check if has ideal vertices
         for (unsigned long j=0; j<5; j++)
@@ -271,7 +271,7 @@ bool Dim4Triangulation::idealToFinite() {
 
 //                             * * Create the Gluings. * *
 //      * * * gluings corresponding to non-boundary tets in original tri * * *
-    for (unsigned long i=0; i<getNumberOfTetrahedra(); i++)
+    for (unsigned long i=0; i<countTetrahedra(); i++)
         if (!getTetrahedron(i)->isBoundary()) {
             // check if has ideal vertices
             const Dim4Tetrahedron* aTet( getTetrahedron(i) );
@@ -392,7 +392,7 @@ bool Dim4Triangulation::idealToFinite() {
         } // end look through tets.
 
 // * * * gluings corresponding to subdivision of individual pentachora * * *
-    for (unsigned long i=0; i<getNumberOfPentachora(); i++) {
+    for (unsigned long i=0; i<size(); i++) {
         const Dim4Pentachoron* aPen( getPentachoron(i) );
         bool pIv(false);
         for (unsigned long j=0; j<5; j++)

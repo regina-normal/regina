@@ -653,7 +653,7 @@ bool Dim4Triangulation::twoZeroMove(Dim4Triangle* t, bool check, bool perform) {
         }
         // Closed and bounded loops of length 3 are all covered by the
         // following check:
-        if (pent[0]->getComponent()->getNumberOfPentachora() == 2)
+        if (pent[0]->getComponent()->size() == 2)
             return false;
     }
 
@@ -746,7 +746,7 @@ bool Dim4Triangulation::twoZeroMove(Dim4Edge* e, bool check, bool perform) {
         // The cases with two pairs of identified facets and with one
         // pair of identified facets plus one pair of boundary facets
         // are all covered by the following check.
-        if (pent[0]->getComponent()->getNumberOfPentachora() == 2)
+        if (pent[0]->getComponent()->size() == 2)
             return false;
 
         // Check that the pentachora are joined along all three facets.

@@ -110,7 +110,7 @@ bool Dim4Triangulation::intelligentSimplify() {
             // Sync the real triangulation with the clone if appropriate.
             if (use != this) {
                 // At this point, changed == false.
-                if (use->getNumberOfPentachora() < getNumberOfPentachora()) {
+                if (use->size() < size()) {
                     // The 3-3 moves were successful; accept them.
                     cloneFrom(*use);
                     changed = true;
@@ -257,7 +257,7 @@ bool Dim4Triangulation::simplifyToLocalMinimum(bool perform) {
 
                     // Run through facets of this boundary component looking
                     // for shell boundary moves.
-                    nTetrahedra = (*bit)->getNumberOfTetrahedra();
+                    nTetrahedra = (*bit)->countTetrahedra();
                     for (iTet = 0; iTet < nTetrahedra; ++iTet) {
                         if (shellBoundary((*bit)->getTetrahedron(iTet)->
                                 getEmbedding(0).getPentachoron(),

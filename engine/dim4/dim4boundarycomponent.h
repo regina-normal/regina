@@ -187,7 +187,7 @@ class REGINA_API Dim4BoundaryComponent :
          * If this boundary component contains one or more tetrahedra
          * (i.e., it is a regular boundary built from pentachoron facets),
          * then the triangulation of this boundary component is as follows.
-         * Let \a i lie between 0 and getNumberOfTetrahedra()-1 inclusive.
+         * Let \a i lie between 0 and countTetrahedra()-1 inclusive.
          * Then tetrahedron \a i of the boundary 3-manifold triangulation is
          * a copy of tetrahedron <tt>getTetrahedron(i)</tt> of this 4-manifold
          * boundary component, and its vertices 0,1,2,3 are numbered in the

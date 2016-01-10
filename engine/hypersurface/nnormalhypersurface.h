@@ -289,8 +289,7 @@ class REGINA_API NNormalHypersurfaceVector : public NRay {
          *
          * @param pentIndex the index in the triangulation of the
          * pentachoron in which the requested tetrahedron pieces reside;
-         * this should be between 0 and
-         * Dim4Triangulation::getNumberOfPentachora()-1 inclusive.
+         * this should be between 0 and Dim4Triangulation::size()-1 inclusive.
          * @param vertex the vertex of the given pentachoron around
          * which the requested tetrahedron pieces lie; this should be between
          * 0 and 4 inclusive.
@@ -307,8 +306,7 @@ class REGINA_API NNormalHypersurfaceVector : public NRay {
          *
          * @param pentIndex the index in the triangulation of the
          * pentachoron in which the requested prism pieces reside;
-         * this should be between 0 and
-         * Dim4Triangulation::getNumberOfPentachora()-1 inclusive.
+         * this should be between 0 and Dim4Triangulation::size()-1 inclusive.
          * @param prismType the number of the vertex splitting that this
          * prism type represents; this should be between 0 and 9
          * inclusive.
@@ -325,7 +323,7 @@ class REGINA_API NNormalHypersurfaceVector : public NRay {
          *
          * @param edgeIndex the index in the triangulation of the edge
          * in which we are interested; this should be between 0 and
-         * Dim4Triangulation::getNumberOfEdges()-1 inclusive.
+         * Dim4Triangulation::countEdges()-1 inclusive.
          * @param triang the triangulation in which this normal hypersurface
          * lives.
          * @return the number of times this normal hypersurface crosses the
@@ -465,8 +463,7 @@ class REGINA_API NNormalHypersurface :
          *
          * @param pentIndex the index in the triangulation of the
          * pentachoron in which the requested pieces reside;
-         * this should be between 0 and
-         * Dim4Triangulation::getNumberOfPentachora()-1 inclusive.
+         * this should be between 0 and Dim4Triangulation::size()-1 inclusive.
          * @param vertex the vertex of the given pentachoron around
          * which the requested pieces lie; this should be between 0
          * and 4 inclusive.
@@ -489,8 +486,7 @@ class REGINA_API NNormalHypersurface :
          *
          * @param pentIndex the index in the triangulation of the
          * pentachoron in which the requested prisms reside;
-         * this should be between 0 and
-         * Dim4Triangulation::getNumberOfPentachora()-1 inclusive.
+         * this should be between 0 and Dim4Triangulation::size()-1 inclusive.
          * @param prismType specifies the edge of the given pentachoron that
          * this prism separates from the remaining three vertices;
          * this should be between 0 and 9 inclusive.
@@ -504,7 +500,7 @@ class REGINA_API NNormalHypersurface :
          *
          * @param edgeIndex the index in the triangulation of the edge
          * in which we are interested; this should be between 0 and
-         * Dim4Triangulation::getNumberOfEdges()-1 inclusive.
+         * Dim4Triangulation::countEdges()-1 inclusive.
          * @return the number of times this normal hypersurface crosses the
          * given edge.
          */
