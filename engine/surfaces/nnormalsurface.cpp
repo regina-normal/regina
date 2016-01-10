@@ -343,8 +343,7 @@ void NNormalSurface::calculateOctPosition() const {
     unsigned long tetIndex;
     int type;
 
-    for (tetIndex = 0; tetIndex < triangulation->getNumberOfTetrahedra();
-            ++tetIndex)
+    for (tetIndex = 0; tetIndex < triangulation->size(); ++tetIndex)
         for (type = 0; type < 3; ++type)
             if (getOctCoord(tetIndex, type) != 0) {
                 octPosition = NDiscType(tetIndex, type);
@@ -361,12 +360,12 @@ void NNormalSurface::calculateEulerChar() const {
     NLargeInteger ans = NLargeInteger::zero;
 
     // Add vertices.
-    tot = triangulation->getNumberOfEdges();
+    tot = triangulation->countEdges();
     for (index = 0; index < tot; index++)
         ans += getEdgeWeight(index);
 
     // Subtract edges.
-    tot = triangulation->getNumberOfTriangles();
+    tot = triangulation->countTriangles();
     for (index = 0; index < tot; index++)
         for (type = 0; type < 3; type++)
             ans -= getTriangleArcs(index, type);

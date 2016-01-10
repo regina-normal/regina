@@ -434,7 +434,7 @@
     _recentPacketIndex = [self packetIndexForPath:path];
     regina::NPacket* p = static_cast<regina::NPacket*>([_packets pointerAtIndex:_recentPacketIndex]);
 
-    unsigned long totalPackets = p->getNumberOfDescendants();
+    unsigned long totalPackets = p->countDescendants();
     if (totalPackets == 0)
         return @"Delete packet";
     else
@@ -482,7 +482,7 @@
     else
         cell = [tableView dequeueReusableCellWithIdentifier:@"Packet" forIndexPath:indexPath];
     cell.textLabel.text = [NSString stringWithUTF8String:p->getPacketLabel().c_str()];
-    unsigned long sub = p->getNumberOfChildren();
+    unsigned long sub = p->countChildren();
     if (sub == 0)
         cell.detailTextLabel.text = @"";
     else if (sub == 1)

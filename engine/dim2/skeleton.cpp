@@ -63,7 +63,7 @@ void Triangulation<2>::calculateSkeleton() {
 
 void Triangulation<2>::calculateBoundary() {
     // Are there any boundary edges at all?
-    long nBdry = 2 * getNumberOfEdges() - 3 * simplices_.size();
+    long nBdry = 2 * countEdges() - 3 * simplices_.size();
     if (nBdry == 0)
         return;
 

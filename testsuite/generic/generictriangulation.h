@@ -52,8 +52,7 @@ class TriangulationTest : public CppUnit::TestFixture {
             canonical.makeCanonical();
 
             for (int i = 0; i < trials; ++i) {
-                Isomorphism<dim>* iso = Isomorphism<dim>::random(
-                    tri->getNumberOfSimplices());
+                Isomorphism<dim>* iso = Isomorphism<dim>::random(tri->size());
                 Triangulation<dim>* t = iso->apply(tri);
                 delete iso;
 
@@ -87,7 +86,7 @@ class TriangulationTest : public CppUnit::TestFixture {
             }
 
             size_t sigSize = Triangulation<dim>::isoSigComponentSize(sig);
-            if (tri->getNumberOfSimplices() == 0) {
+            if (tri->isEmpty()) {
                 if (sigSize != 0) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel()
@@ -97,10 +96,10 @@ class TriangulationTest : public CppUnit::TestFixture {
                 }
             } else {
                 size_t c;
-                for (c = 0; c < tri->getNumberOfComponents(); ++c)
-                    if (sigSize == tri->getComponent(c)->getNumberOfSimplices())
+                for (c = 0; c < tri->countComponents(); ++c)
+                    if (sigSize == tri->getComponent(c)->size())
                         break;
-                if (c == tri->getNumberOfComponents()) {
+                if (c == tri->countComponents()) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel()
                         << ": isoSigSize() returns incorrect value: "
@@ -145,13 +144,12 @@ class TriangulationTest : public CppUnit::TestFixture {
             }
             delete rebuild;
 
-            if (tri->getNumberOfSimplices() == 0)
+            if (tri->isEmpty())
                 return;
 
             std::string otherSig;
             for (unsigned i = 0; i < 10; ++i) {
-                Isomorphism<dim>* iso = Isomorphism<dim>::random(
-                    tri->getNumberOfSimplices());
+                Isomorphism<dim>* iso = Isomorphism<dim>::random(tri->size());
                 Triangulation<dim>* other = iso->apply(tri);
                 delete iso;
 
@@ -167,8 +165,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                 delete other;
             }
             for (unsigned i = 0; i < 10; ++i) {
-                Isomorphism<dim>* iso = Isomorphism<dim>::random(
-                    tri->getNumberOfSimplices());
+                Isomorphism<dim>* iso = Isomorphism<dim>::random(tri->size());
                 Triangulation<dim> other(*tri);
                 iso->applyInPlace(&other);
                 delete iso;
@@ -184,7 +181,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                 }
             }
 
-            if (tri->getNumberOfComponents() == 1) {
+            if (tri->countComponents() == 1) {
                 Isomorphism<dim>* relabelling;
                 tri->isoSig(&relabelling);
 

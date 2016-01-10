@@ -68,8 +68,8 @@ NLayeredSolidTorus* NLayeredSolidTorus::clone() const {
 void NLayeredSolidTorus::transform(const NTriangulation* originalTri,
         const NIsomorphism* iso, NTriangulation* newTri) {
     unsigned i, j;
-    unsigned long baseTetID = originalTri->tetrahedronIndex(base);
-    unsigned long topTetID = originalTri->tetrahedronIndex(topLevel);
+    size_t baseTetID = originalTri->tetrahedronIndex(base);
+    size_t topTetID = originalTri->tetrahedronIndex(topLevel);
 
     // Data members nTetrahedra and meridinalCuts remain unchanged.
 
@@ -311,7 +311,7 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusTop(
     long w = 1, x = 0, y = 0, z = 1;
     long w_, x_, y_, z_;
     int rotation;
-    unsigned long nTets = 1;
+    size_t nTets = 1;
 
     NPerm4 rot180(3, 2, 1, 0);
 
@@ -590,9 +590,9 @@ NLayeredSolidTorus* NLayeredSolidTorus::isLayeredSolidTorus(NComponent* comp) {
     // Start with some basic property checks.
     if (! comp->isOrientable())
         return 0;
-    if (comp->getNumberOfBoundaryComponents() != 1)
+    if (comp->countBoundaryComponents() != 1)
         return 0;
-    if (comp->getBoundaryComponent(0)->getNumberOfTriangles() != 2)
+    if (comp->getBoundaryComponent(0)->countTriangles() != 2)
         return 0;
 
     NTriangleEmbedding f0 = comp->getBoundaryComponent(0)->getTriangle(0)->

@@ -187,12 +187,12 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
     // Basic property checks.
     if ((! comp->isClosed()) || (! comp->isOrientable()))
         return 0;
-    if (comp->getNumberOfVertices() > 1)
+    if (comp->countVertices() > 1)
         return 0;
 
     // We have a 1-vertex closed orientable triangulation.
 
-    unsigned long nTet = comp->getNumberOfTetrahedra();
+    unsigned long nTet = comp->size();
     if (nTet < 3)
         return 0;
 
@@ -268,7 +268,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
         layered[nLayered] = NLayeredSolidTorus::formsLayeredSolidTorusBase(
             comp->getTetrahedron(t));
         if (layered[nLayered]) {
-            usedTets += layered[nLayered]->getNumberOfTetrahedra();
+            usedTets += layered[nLayered]->size();
             nLayered++;
             if (nLayered == 4) {
                 // Too many layered solid tori.

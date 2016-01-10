@@ -88,7 +88,7 @@ NMatrixInt* NNormalSurfaceVectorStandard::makeMatchingEquations(
     // Three equations per non-boundary triangle.
     // F_boundary + 2 F_internal = 4 T
     long nEquations = 3 * (4 * long(triangulation->size()) -
-        long(triangulation->getNumberOfTriangles()));
+        long(triangulation->countTriangles()));
     NMatrixInt* ans = new NMatrixInt(nEquations, nCoords);
 
     // Run through each internal triangle and add the corresponding three

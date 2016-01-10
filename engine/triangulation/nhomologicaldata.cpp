@@ -200,12 +200,12 @@ void NHomologicalData::computeccIndexing() {
 
     // standard (0..3)-cells:
     numStandardCells[0] = sNIV.size() + sIEOE.size();
-    numStandardCells[1] = tri->getNumberOfEdges() + sIEEOF.size();
-    numStandardCells[2] = tri->getNumberOfTriangles() + sIEFOT.size();
-    numStandardCells[3] = tri->getNumberOfTetrahedra();
+    numStandardCells[1] = tri->countEdges() + sIEEOF.size();
+    numStandardCells[2] = tri->countTriangles() + sIEFOT.size();
+    numStandardCells[3] = tri->size();
 
     // dual (0..3)-cells:
-    numDualCells[0] = tri->getNumberOfTetrahedra();
+    numDualCells[0] = tri->size();
     numDualCells[1] = dNBF.size();
     numDualCells[2] = dNBE.size();
     numDualCells[3] = dNINBV.size();
@@ -257,7 +257,7 @@ void NHomologicalData::computeChainComplexes() {
     NPerm4 p1,p2;
 
     // This fills out matrix A1
-    for (i=0;i<tri->getNumberOfEdges();i++) {
+    for (i=0;i<tri->countEdges();i++) {
         // these are the standard edges
         temp=sNIV.index(tri->vertexIndex(tri->getEdge(i)->getVertex(0)));
         (A1->entry( ((temp==(-1)) ?
@@ -274,27 +274,27 @@ void NHomologicalData::computeChainComplexes() {
         if (p1.sign()==1) {
             A1->entry(sNIV.size() + sIEOE.index(2*(
                 tri->edgeIndex((tri->getTriangle(sIEEOF[i]/3))->
-                getEdge(p1[2])) )+1), tri->getNumberOfEdges()+i)-=1;
+                getEdge(p1[2])) )+1), tri->countEdges()+i)-=1;
         } else {
             A1->entry(sNIV.size() + sIEOE.index(2*(
                 tri->edgeIndex((tri->getTriangle(sIEEOF[i]/3))->
-                getEdge(p1[2])) )) , tri->getNumberOfEdges()+i)-=1;
+                getEdge(p1[2])) )) , tri->countEdges()+i)-=1;
         }
         p1=tri->getTriangle(sIEEOF[i]/3)->getEdgeMapping( (sIEEOF[i] + 2) % 3);
         if (p1.sign()==1) {
             A1->entry(sNIV.size() + sIEOE.index(2*(
                 tri->edgeIndex((tri->getTriangle(sIEEOF[i]/3))->
-                getEdge(p1[2])) )) , tri->getNumberOfEdges()+i)+=1;
+                getEdge(p1[2])) )) , tri->countEdges()+i)+=1;
         } else {
             A1->entry(sNIV.size() + sIEOE.index(2*(
                 tri->edgeIndex((tri->getTriangle(sIEEOF[i]/3))->
-                getEdge(p1[2])) )+1) , tri->getNumberOfEdges()+i)+=1;
+                getEdge(p1[2])) )+1) , tri->countEdges()+i)+=1;
         }
     }
     // that handles matrix A1.
 
     // start filling out A2...
-    for (i=0;i<tri->getNumberOfTriangles();i++) {
+    for (i=0;i<tri->countTriangles();i++) {
         // put boundary edges into A2..
         for (j=0;j<6;j++) {
             // run through the 6 possible boundary edges of the triangle
@@ -308,7 +308,7 @@ void NHomologicalData::computeChainComplexes() {
             } else {
                 // check triangle i vertex j % 3 is ideal
                 if (tri->getTriangle(i)->getVertex(j % 3)->isIdeal())
-                    A2->entry( tri->getNumberOfEdges() +
+                    A2->entry( tri->countEdges() +
                         sIEEOF.index((3*i) + (j % 3)), i) += 1;
             }
         }
@@ -330,17 +330,17 @@ void NHomologicalData::computeChainComplexes() {
         for (j=1;j<4;j++) {
             p1=tri->getTetrahedron( sIEFOT[i]/4 )->getTriangleMapping(
                 (sIEFOT[i] + j) % 4);
-            A2->entry( tri->getNumberOfEdges() + sIEEOF.index(
+            A2->entry( tri->countEdges() + sIEEOF.index(
                 3*tri->triangleIndex(tri->getTetrahedron(
                 sIEFOT[i]/4 )->getTriangle( (sIEFOT[i] + j) % 4)) +
                 p1.preImageOf(sIEFOT[i] % 4) ) ,
-                tri->getNumberOfTriangles()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );
+                tri->countTriangles()+i ) += ( (p1.sign()==1 ? -1 : 1 ) );
         }
     }
     // end A2
 
     // start A3
-    for (i=0;i<tri->getNumberOfTetrahedra();i++) {
+    for (i=0;i<tri->size();i++) {
         for (j=0;j<4;j++) {
             // first go through standard faces 0 through 3
             p1=tri->getTetrahedron(i)->getTriangleMapping(j);
@@ -350,7 +350,7 @@ void NHomologicalData::computeChainComplexes() {
             // then ideal faces 0 through 3, if they exist
             if (tri->getTetrahedron(i)->getVertex(j)->isIdeal()==1) {
                 // this part is in error.
-                A3->entry( tri->getNumberOfTriangles() +
+                A3->entry( tri->countTriangles() +
                     sIEFOT.index((4*i) + j), i) += 1;
             }
         }
@@ -411,7 +411,7 @@ void NHomologicalData::computeChainComplexes() {
         // with marked vertices.
         // Indices into the vector are 4*tetindex + vertex no.
         // Values are (index into vtet's list of embeddings, already oriented).
-        unorientedlist.resize(4 * tri->getNumberOfTetrahedra());
+        unorientedlist.resize(4 * tri->size());
 
         for (j=0;j<vtet->getDegree();j++) {
             // unoriented list stores the tetrahedra adjacent to the vertex
@@ -524,7 +524,7 @@ void NHomologicalData::computeChainComplexes() {
     // regular 0-cell associated to a dual 0-cell must be contained in
     // the same ideal simplex.
 
-    std::vector<unsigned long> zeroCellMap(tri->getNumberOfTetrahedra());
+    std::vector<unsigned long> zeroCellMap(tri->size());
     // zeroCellMap[i] describes the vertex of tetrahedra[i] that the dual
     // 0-cell is sent to. It will be stored as
     // 4*(vertex number 0,1,2,3) + 0,1,2,3 (equal to prev. number if
@@ -657,7 +657,7 @@ void NHomologicalData::computeChainComplexes() {
                 NEdge::edgeNumber[stage1v][tet0TriIndex] )[2];
             P3 = tri->getTriangle(dNBF[j])->getEmbedding(0).getTetrahedron()->
                 getTriangleMapping(stage1TriToUse);
-            stage1edgeNum = tri->getNumberOfEdges() + sIEEOF.index(
+            stage1edgeNum = tri->countEdges() + sIEEOF.index(
                 3*(tri->triangleIndex(tri->getTriangle(dNBF[j]) ->
                 getEmbedding(0).getTetrahedron() ->
                 getTriangle(stage1TriToUse))) + P3.preImageOf(stage1v) );
@@ -691,7 +691,7 @@ void NHomologicalData::computeChainComplexes() {
                 NEdge::edgeNumber[stage3v][tet1TriIndex] )[2];
             P3 = tri->getTriangle(dNBF[j])->getEmbedding(1).getTetrahedron()->
                 getTriangleMapping(stage3TriToUse);
-            stage3edgeNum = tri->getNumberOfEdges() + sIEEOF.index(
+            stage3edgeNum = tri->countEdges() + sIEEOF.index(
                 3*(tri->triangleIndex(tri->getTriangle(dNBF[j]) ->
                 getEmbedding(1).getTetrahedron() ->
                 getTriangle(stage3TriToUse))) + P3.preImageOf(stage3v) );
@@ -786,7 +786,7 @@ void NHomologicalData::computeChainComplexes() {
                 if (( currV/3  == prevV/3 ) && (tri->getTriangle(dNBF[j])->
                         getVertex(currV/3)->isIdeal()) )  // ideal edge
                 {
-                    H1map->entry( tri->getNumberOfEdges() +
+                    H1map->entry( tri->countEdges() +
                         sIEEOF.index(3*dNBF[j] + (currV/3)) , j ) += 1;
                 }
                 if ( currV/3  != prevV/3 ) // regular edge
@@ -909,11 +909,11 @@ void NHomologicalData::computeChainComplexes() {
     for (i=0;i<B1Incl->columns();i++)
         // each boundary edge corresponds to a triangulation edge
         B1Incl->entry( ( ( i < sBNIE.size() ) ? sBNIE[i] :
-                tri->getNumberOfEdges() + i - sBNIE.size() ) ,i)+=1;
+                tri->countEdges() + i - sBNIE.size() ) ,i)+=1;
     // fill out b2Incl
     for (i=0;i<B2Incl->columns();i++)
         B2Incl->entry( ( ( i < sBNIF.size() ) ? sBNIF[i] :
-                tri->getNumberOfTriangles() + i - sBNIF.size() ) ,i)+=1;
+                tri->countTriangles() + i - sBNIF.size() ) ,i)+=1;
 }
 
 const NMarkedAbelianGroup& NHomologicalData::getHomology(unsigned q) {
@@ -1098,7 +1098,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
     // dual h1 --> standard h1 isomorphism:
     const NHomMarkedAbelianGroup& h1CellAp(getH1CellAp());
     // min number of torsion gens:
-    unsigned long niv(dmHomology1->getNumberOfInvariantFactors());
+    unsigned long niv(dmHomology1->countInvariantFactors());
     // for holding prime decompositions.:
     std::vector<std::pair<NLargeInteger, unsigned long> > tFac;
 
@@ -1712,7 +1712,7 @@ void NHomologicalData::computeEmbeddabilityString() {
     if (! embeddabilityString.empty())
         return;
 
-    if (tri->getNumberOfTetrahedra() == 0)
+    if (tri->isEmpty())
       {
         // special-case the empty triangulation
         embeddabilityString = "Manifold is empty.";
@@ -1870,7 +1870,7 @@ bool NHomologicalData::formIsHyperbolic() {
     if (torsionFormComputed)
         return torsionLinkingFormIsHyperbolic;
 
-    unsigned long nif=tri->getHomologyH1().getNumberOfInvariantFactors();
+    unsigned long nif=tri->getHomologyH1().countInvariantFactors();
     if (nif == 0)
         return true;
 

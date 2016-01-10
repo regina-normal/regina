@@ -430,8 +430,8 @@ namespace {
             const InitialData<exact>& init) {
         typedef typename InitialData<exact>::TVType TVType;
 
-        unsigned long nEdges = tri.getNumberOfEdges();
-        unsigned long nTriangles = tri.getNumberOfTriangles();
+        unsigned long nEdges = tri.countEdges();
+        unsigned long nTriangles = tri.countTriangles();
         unsigned long nTet = tri.size();
 
         // Our plan is to run through all admissible colourings via a
@@ -615,7 +615,7 @@ namespace {
 
         // Compute the vertex contributions separately, since these are
         // constant.
-        for (i = 0; i < tri.getNumberOfVertices(); i++)
+        for (i = 0; i < tri.countVertices(); i++)
             ans *= init.vertexContrib;
 
         return ans;
@@ -627,8 +627,8 @@ namespace {
             const InitialData<exact>& init) {
         typedef typename InitialData<exact>::TVType TVType;
 
-        unsigned long nEdges = tri.getNumberOfEdges();
-        unsigned long nTriangles = tri.getNumberOfTriangles();
+        unsigned long nEdges = tri.countEdges();
+        unsigned long nTriangles = tri.countTriangles();
 
         // Our plan is to run through all admissible colourings via a
         // backtracking search, with the high-degree edges towards the root
@@ -738,7 +738,7 @@ namespace {
 
         // Compute the vertex contributions separately, since these are
         // constant.
-        for (i = 0; i < tri.getNumberOfVertices(); i++)
+        for (i = 0; i < tri.countVertices(); i++)
             ans *= init.vertexContrib;
 
         return ans;
@@ -752,7 +752,7 @@ namespace {
 
         const NTreeDecomposition& d = tri.niceTreeDecomposition();
 
-        int nEdges = tri.getNumberOfEdges();
+        int nEdges = tri.countEdges();
         int nBags = d.size();
         const NTreeBag *bag, *child, *sibling;
         int i, j;
@@ -1091,7 +1091,7 @@ namespace {
         // The final bag contains no tetrahedra, and so there should be
         // only one colouring stored (in which all edge colours are aggregated).
         TVType ans = partial[nBags - 1]->begin()->second;
-        for (i = 0; i < tri.getNumberOfVertices(); i++)
+        for (i = 0; i < tri.countVertices(); i++)
             ans *= init.vertexContrib;
 
         for (it = partial[nBags - 1]->begin(); it != partial[nBags - 1]->end();
@@ -1114,7 +1114,7 @@ namespace {
         typedef typename InitialData<exact>::TVType TVType;
 
         std::vector<std::vector<mpz_class> > input;
-        unsigned long nTri = tri.getNumberOfTriangles();
+        unsigned long nTri = tri.countTriangles();
 
         NTriangulation::EdgeIterator eit;
         const NTetrahedron* tet;

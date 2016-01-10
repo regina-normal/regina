@@ -68,6 +68,7 @@ void addDim2Component() {
         .def("getNumberOfEdges", &Dim2Component::getNumberOfEdges)
         .def("countVertices", &Dim2Component::countVertices)
         .def("getNumberOfVertices", &Dim2Component::getNumberOfVertices)
+        .def("countBoundaryComponents", &Dim2Component::countBoundaryComponents)
         .def("getNumberOfBoundaryComponents",
             &Dim2Component::getNumberOfBoundaryComponents)
         .def("simplices", triangles_list)

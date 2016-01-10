@@ -173,29 +173,29 @@ class NGroupPresentationTest : public CppUnit::TestFixture {
 
         word1.simplify();
         word2.simplify();
-        if (word1.getNumberOfTerms() != 6) 
+        if (word1.countTerms() != 6) 
             CPPUNIT_FAIL("NGroupExpression::number of terms (1). "+word1.str());
-        if (word1.getNumberOfTerms() != 6) 
+        if (word1.countTerms() != 6) 
             CPPUNIT_FAIL("NGroupExpression::number of terms (2). "+word1.str());
         word1.simplify(true);
         word2.simplify(true);
-        if (word1.getNumberOfTerms() != 6) 
+        if (word1.countTerms() != 6) 
             CPPUNIT_FAIL("NGroupExpression::number of terms (3). "+word1.str());
-        if (word1.getNumberOfTerms() != 6) 
+        if (word1.countTerms() != 6) 
             CPPUNIT_FAIL("NGroupExpression::number of terms (4). "+word1.str());
 
         word1.addTermsLast(word2);
         word1.simplify();
-        if (word1.getNumberOfTerms() != 0)
+        if (word1.countTerms() != 0)
             CPPUNIT_FAIL("NGroupExpression::inverse (2). "+word1.str());
 
-        if (word3.getNumberOfTerms() != 11)
+        if (word3.countTerms() != 11)
             CPPUNIT_FAIL("NGroupExpression::number of terms (5). "+word3.str());
         word3.simplify();
-        if (word3.getNumberOfTerms() != 9)
+        if (word3.countTerms() != 9)
             CPPUNIT_FAIL("NGroupExpression::number of terms (6). "+word3.str());
         word3.simplify(true);
-        if (word3.getNumberOfTerms() != 1)
+        if (word3.countTerms() != 1)
             CPPUNIT_FAIL("NGroupExpression::number of terms (7). "+word3.str());
     }
     void presValid_test() {
@@ -228,7 +228,7 @@ class NGroupPresentationTest : public CppUnit::TestFixture {
             NGroupPresentation tPres( *(*i) );
             tPres.homologicalAlignment();
             std::unique_ptr<NMarkedAbelianGroup> mab( tPres.markedAbelianisation() );
-            unsigned long N(mab->getNumberOfInvariantFactors());
+            unsigned long N(mab->countInvariantFactors());
             unsigned long M(mab->minNumberOfGenerators());
             /*
              * If the abelianisation of this group has rank N and M
@@ -240,8 +240,8 @@ class NGroupPresentationTest : public CppUnit::TestFixture {
              * mapped to +-1 in the appropriate factor. All further generators 
              * will be mapped to zero. 
              */
-            for (unsigned long j=0; j<tPres.getNumberOfGenerators(); j++) {
-                std::vector<NLargeInteger> epsilon( tPres.getNumberOfGenerators() );
+            for (unsigned long j=0; j<tPres.countGenerators(); j++) {
+                std::vector<NLargeInteger> epsilon( tPres.countGenerators() );
                 epsilon[j] = 1;
                 std::vector<NLargeInteger> temp( mab->snfRep(epsilon) );
 

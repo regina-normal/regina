@@ -336,7 +336,7 @@ void NBlockedSFS::writeTextLong(std::ostream& out) const {
 
 NBlockedSFS* NBlockedSFS::isBlockedSFS(NTriangulation* tri) {
     // Basic property checks.
-    if (tri->getNumberOfComponents() > 1)
+    if (tri->countComponents() > 1)
         return 0;
     if (tri->isIdeal())
         return 0;

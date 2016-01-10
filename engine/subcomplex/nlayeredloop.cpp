@@ -70,10 +70,10 @@ NLayeredLoop* NLayeredLoop::isLayeredLoop(const NComponent* comp) {
     if ((! comp->isClosed()) || (! comp->isOrientable()))
         return 0;
 
-    unsigned long nTet = comp->getNumberOfTetrahedra();
+    unsigned long nTet = comp->size();
     if (nTet == 0)
         return 0;
-    unsigned long nVertices = comp->getNumberOfVertices();
+    unsigned long nVertices = comp->countVertices();
     if (nVertices > 2)
         return 0;
     bool twisted = (nVertices == 1);

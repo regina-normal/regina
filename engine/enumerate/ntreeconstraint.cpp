@@ -46,7 +46,7 @@ bool LPConstraintEuler::addRows(
     NPerm4 p;
     for (i = 0; i < 7 * tri->size(); ++i)
         obj[i] = 1;
-    for (i = 0; i < tri->getNumberOfTriangles(); ++i) {
+    for (i = 0; i < tri->countTriangles(); ++i) {
         tet = tri->tetrahedronIndex(
             tri->getTriangle(i)->getEmbedding(0).getTetrahedron());
         p = tri->getTriangle(i)->getEmbedding(0).getVertices();
@@ -57,7 +57,7 @@ bool LPConstraintEuler::addRows(
         --obj[7 * tet + 5];
         --obj[7 * tet + 6];
     }
-    for (i = 0; i < tri->getNumberOfEdges(); ++i) {
+    for (i = 0; i < tri->countEdges(); ++i) {
         tet = tri->tetrahedronIndex(
             tri->getEdge(i)->getEmbedding(0).getTetrahedron());
         p = tri->getEdge(i)->getEmbedding(0).getVertices();
@@ -87,7 +87,7 @@ bool LPConstraintNonSpun::addRows(
 
     // For the time being we insist on one vertex, which must be
     // ideal with torus link.
-    if (tri->getNumberOfVertices() != 1 ||
+    if (tri->countVertices() != 1 ||
             (! tri->getVertex(0)->isIdeal()) ||
             (! tri->getVertex(0)->isLinkOrientable()) ||
             tri->getVertex(0)->getLinkEulerChar() != 0)
@@ -180,24 +180,24 @@ void BanTorusBoundary::init(const int* columnPerm) {
     unsigned tet, type, i, k;
 
     // Which boundary faces are we banning?
-    unsigned nTriangles = tri_->getNumberOfTriangles();
+    unsigned nTriangles = tri_->countTriangles();
     bool* banTriangle = new bool[nTriangles];
     std::fill(banTriangle, banTriangle + nTriangles, false);
 
     // Which vertex links are we marking normal triangles around?
-    unsigned nVertices = tri_->getNumberOfVertices();
+    unsigned nVertices = tri_->countVertices();
     bool* markVtx = new bool[nVertices];
     std::fill(markVtx, markVtx + nVertices, false);
 
     NBoundaryComponent* bc;
-    for (i = 0; i < tri_->getNumberOfBoundaryComponents(); ++i) {
+    for (i = 0; i < tri_->countBoundaryComponents(); ++i) {
         bc = tri_->getBoundaryComponent(i);
         if ((! bc->isIdeal()) && bc->isOrientable() &&
                 bc->getEulerChar() == 0) {
             // We've found a real torus boundary.
-            for (k = 0; k < bc->getNumberOfTriangles(); ++k)
+            for (k = 0; k < bc->countTriangles(); ++k)
                 banTriangle[bc->getTriangle(k)->markedIndex()] = true;
-            for (k = 0; k < bc->getNumberOfVertices(); ++k)
+            for (k = 0; k < bc->countVertices(); ++k)
                 markVtx[bc->getVertex(k)->markedIndex()] = true;
         }
     }

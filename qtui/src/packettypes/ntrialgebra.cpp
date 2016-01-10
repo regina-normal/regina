@@ -236,7 +236,7 @@ void NTriHomologyFundUI::refresh() {
         H2Z2->setText(msg);
     }
 
-    if (tri->getNumberOfComponents() <= 1) {
+    if (tri->countComponents() <= 1) {
         fgMsg->hide();
         fgGroup->refresh(&tri->getFundamentalGroup());
         fgGroup->show();

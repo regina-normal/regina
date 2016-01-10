@@ -220,7 +220,7 @@ regina::NPacket* NSnapPeaTriangulationCreator::createPacket(regina::NPacket*,
             return new NSnapPeaTriangulation(*fromSnapPea);
         }
 
-        if (from->getNumberOfTetrahedra() == 0) {
+        if (from->isEmpty()) {
             ReginaSupport::info(parentWidget,
                 QObject::tr("The source triangulation you have "
                     "selected is empty."));

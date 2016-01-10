@@ -72,6 +72,7 @@ void addNComponent() {
         .def("getNumberOfEdges", &NComponent::getNumberOfEdges)
         .def("countVertices", &NComponent::countVertices)
         .def("getNumberOfVertices", &NComponent::getNumberOfVertices)
+        .def("countBoundaryComponents", &NComponent::countBoundaryComponents)
         .def("getNumberOfBoundaryComponents",
             &NComponent::getNumberOfBoundaryComponents)
         .def("simplices", simplices_list)

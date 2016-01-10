@@ -151,7 +151,7 @@ void GroupWidget::refresh(const regina::NGroupPresentation* group) {
     } else
         fundName_->hide();
 
-    unsigned long nGens = group_->getNumberOfGenerators();
+    unsigned long nGens = group_->countGenerators();
     bool alphabetic = (nGens <= 26);
     if (nGens == 0)
         fundGens_->setText(tr("No generators"));
@@ -166,7 +166,7 @@ void GroupWidget::refresh(const regina::NGroupPresentation* group) {
         fundGens_->setText(tr("%1 generators: g0 ... g%2").
             arg(nGens).arg(nGens - 1));
 
-    unsigned long nRels = group_->getNumberOfRelations();
+    unsigned long nRels = group_->countRelations();
     if (nRels == 0) {
         fundRelCount_->setText(tr("No relations"));
         fundRels_->hide();
@@ -232,7 +232,7 @@ void GroupWidget::proliferateRelators() {
     if (! group_)
         return;
 
-    if (group_->getNumberOfRelations() > MAX_RELATIONS_FOR_PROLIFERATION)
+    if (group_->countRelations() > MAX_RELATIONS_FOR_PROLIFERATION)
         if (! ReginaSupport::warnYesNo(this,
                 tr("This group presentation is already large."),
                 tr("A relator explosion on a large group presentation "

@@ -308,6 +308,9 @@ Version 4.97  [ (under development) ]
               replaced with the easier-to-type size().
         Class NIsomorphismDirect:
             - Removed this class, which has been deprecated for some time now.
+        Class NLayeredSolidTorus:
+            - Renamed getNumberOfTetrahedra() to size().  The old name
+              is deprecated but kept for backward compatibility.
         Class NMarkedAbelianGroup:
             - Added != operator to complement the existing == operator.
         Class NMatrix:
@@ -393,6 +396,9 @@ Version 4.97  [ (under development) ]
               that the manifolds x101 and x103 are homeomorphic.  For details,
               see B.B., "A duplicate pair in the SnapPea census",
               Experimental Mathematics, 23:170-173, 2014.
+        Class NSpiralSolidTorus:
+            - Renamed getNumberOfTetrahedra() to size().  The old name
+              is deprecated but kept for backward compatibility.
         Class NSurfaceFilter:
             - The subclass constant filterType is now a constant of type
               SurfaceFilterType, not an anonymous enum type.

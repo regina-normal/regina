@@ -106,12 +106,12 @@ NPluggedTorusBundle* NPluggedTorusBundle::isPluggedTorusBundle(
     // Basic property checks.
     if (! tri->isClosed())
         return 0;
-    if (tri->getNumberOfComponents() > 1)
+    if (tri->countComponents() > 1)
         return 0;
 
     // The smallest non-trivial examples of these have nine tetrahedra
     // (six for the TxI core and another three for a non-trivial region).
-    if (tri->getNumberOfTetrahedra() < 9)
+    if (tri->size() < 9)
         return 0;
 
     // We have a closed and connected triangulation with at least
@@ -179,8 +179,7 @@ NPluggedTorusBundle* NPluggedTorusBundle::hunt(NTriangulation* triang,
         // In fact, we should have at least three spare tetrahedra for
         // housing a non-trivial saturated region.
         if (layerLower.getSize() + layerUpper.getSize() +
-                bundle.core().getNumberOfTetrahedra() + 3 >
-                triang->getNumberOfTetrahedra()) {
+                bundle.core().size() + 3 > triang->size()) {
             // No good.  Move on.
             delete *it;
             continue;

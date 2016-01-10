@@ -130,7 +130,7 @@
         name.attributedText = [TextHelper dimString:@"Not recognised"];
     }
     
-    unsigned long nGens = group.getNumberOfGenerators();
+    unsigned long nGens = group.countGenerators();
     bool alphabetic = (nGens <= 26);
     if (nGens == 0)
         gens.text = @"No generators";
@@ -145,7 +145,7 @@
         gens.text = [NSString stringWithFormat:@"%ld generators: g0 ... g%ld",
                      nGens, nGens - 1];
     
-    unsigned long nRels = group.getNumberOfRelations();
+    unsigned long nRels = group.countRelations();
     if (nRels == 0) {
         rels.text = @"No relations";
     } else if (nRels == 1) {
@@ -220,7 +220,7 @@
         self.h1Rel.text = self.h1Bdry.text = self.h2.text = self.h2z2.text = @"Invalid";
     }
 
-    if (t.getNumberOfComponents() > 1) {
+    if (t.countComponents() > 1) {
         self.fundName.text = @"Disconnected";
         self.fundGens.text = self.fundRels.text = self.fundRelsDetails.text = @"";
     } else {

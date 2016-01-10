@@ -56,10 +56,10 @@ NLayeredLensSpace* NLayeredLensSpace::isLayeredLensSpace(
     // Basic property check.
     if ((! comp->isClosed()) || (! comp->isOrientable()))
         return 0;
-    if (comp->getNumberOfVertices() > 1)
+    if (comp->countVertices() > 1)
         return 0;
 
-    unsigned long nTet = comp->getNumberOfTetrahedra();
+    unsigned long nTet = comp->size();
     NLayeredSolidTorus* torus;
     for (unsigned long i = 0; i < nTet; i++) {
         torus = NLayeredSolidTorus::formsLayeredSolidTorusBase(
@@ -159,7 +159,7 @@ NAbelianGroup* NLayeredLensSpace::getHomologyH1() const {
 std::ostream& NLayeredLensSpace::writeName(std::ostream& out) const {
     if (p == 3 && q == 1) {
         out << "L(3,1)";
-        if (torus->getNumberOfTetrahedra() != 2)
+        if (torus->size() != 2)
             return out;
         else if (isSnapped())
             return out << " (1)";
@@ -172,7 +172,7 @@ std::ostream& NLayeredLensSpace::writeName(std::ostream& out) const {
 std::ostream& NLayeredLensSpace::writeTeXName(std::ostream& out) const {
     if (p == 3 && q == 1) {
         out << "L_{3,1}";
-        if (torus->getNumberOfTetrahedra() != 2)
+        if (torus->size() != 2)
             return out;
         else if (isSnapped())
             return out << "^{(1)}";

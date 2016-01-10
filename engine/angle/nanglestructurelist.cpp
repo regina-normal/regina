@@ -51,7 +51,7 @@ void NAngleStructureList::enumerateInternal(NTriangulation* triang,
     // Form the matching equations.
     NMatrixInt* eqns = NAngleStructureVector::makeAngleEquations(triang);
 
-    if (tautOnly_ && triang->getNumberOfTetrahedra() > 0) {
+    if (tautOnly_ && (! triang->isEmpty())) {
         // For now just stick to arbitrary precision arithmetic.
         // TODO: Use native integer types when the angle equation matrix
         // is sufficiently small / simple.
@@ -116,8 +116,7 @@ NAngleStructureList* NAngleStructureList::enumerateTautDD(
     NMatrixInt* eqns = NAngleStructureVector::makeAngleEquations(owner);
 
     // Form the taut constraints.
-    NEnumConstraintList* constraints = new NEnumConstraintList(
-        owner->getNumberOfTetrahedra());
+    NEnumConstraintList* constraints = new NEnumConstraintList(owner->size());
 
     unsigned base = 0;
     for (unsigned c = 0; c < constraints->size(); ++c) {
@@ -200,7 +199,7 @@ void NAngleStructureList::calculateSpanStrict() const {
         return;
     }
 
-    unsigned long nTets = getTriangulation()->getNumberOfTetrahedra();
+    unsigned long nTets = getTriangulation()->size();
     if (nTets == 0) {
         doesSpanStrict = true;
         return;

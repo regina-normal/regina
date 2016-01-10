@@ -149,7 +149,7 @@
         [propertyList addObject:@PROP_SPHERE];
         if (self.packet->size() <= 6)
             self.packet->isThreeSphere();
-    } else if (self.packet->getNumberOfBoundaryComponents() > 0) {
+    } else if (self.packet->countBoundaryComponents() > 0) {
         // Real boundary only:
         if (self.packet->hasBoundaryTriangles()) {
             [propertyList addObject:@PROP_BALL];
@@ -243,7 +243,7 @@
         isHyp = false;
     else if (self.packet->hasBoundaryTriangles() && self.packet->knowsBall() && self.packet->isBall())
         isHyp = false;
-    else if (self.packet->getNumberOfBoundaryComponents() > 0 && self.packet->knowsSolidTorus() && self.packet->isSolidTorus())
+    else if (self.packet->countBoundaryComponents() > 0 && self.packet->knowsSolidTorus() && self.packet->isSolidTorus())
         isHyp = false;
     else if (self.packet->isOrientable() && self.packet->isClosed() && self.packet->isValid() && self.packet->isConnected() && self.packet->knowsIrreducible() && ! self.packet->isIrreducible())
         isHyp = false;

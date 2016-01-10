@@ -1695,7 +1695,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             // Check the group.
             if (g.getRank() != rank)
                 CPPUNIT_FAIL(msg.str());
-            else if (g.getNumberOfInvariantFactors() != 0)
+            else if (g.countInvariantFactors() != 0)
                 CPPUNIT_FAIL(msg.str());
         }
 
@@ -1715,7 +1715,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             else {
                 // Ranks match.
-                if (g.getNumberOfInvariantFactors() != 1 ||
+                if (g.countInvariantFactors() != 1 ||
                         g.getInvariantFactor(0) != torsionDegree)
                     CPPUNIT_FAIL(msg.str());
             }
@@ -1738,7 +1738,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             else {
                 // Ranks match.
-                if (g.getNumberOfInvariantFactors() != 2 ||
+                if (g.countInvariantFactors() != 2 ||
                         g.getInvariantFactor(0) != torsionDegree1 ||
                         g.getInvariantFactor(1) != torsionDegree2)
                     CPPUNIT_FAIL(msg.str());
@@ -1763,7 +1763,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             else {
                 // Ranks match.
-                if (g.getNumberOfInvariantFactors() != 3 ||
+                if (g.countInvariantFactors() != 3 ||
                         g.getInvariantFactor(0) != torsionDegree1 ||
                         g.getInvariantFactor(1) != torsionDegree2 ||
                         g.getInvariantFactor(2) != torsionDegree3)
@@ -1890,14 +1890,14 @@ class NTriangulationTest : public TriangulationTest<3> {
             pi1->intelligentSimplify();
 
             // Abelianise, and make sure we get H1.
-            size_t gen = pi1->getNumberOfGenerators();
-            size_t rel = pi1->getNumberOfRelations();
+            size_t gen = pi1->countGenerators();
+            size_t rel = pi1->countRelations();
 
             regina::NMatrixInt m(rel, gen);
             size_t i, j;
             for (i = 0; i < rel; ++i) {
                 const regina::NGroupExpression& r = pi1->getRelation(i);
-                for (j = 0; j < r.getNumberOfTerms(); ++j) {
+                for (j = 0; j < r.countTerms(); ++j) {
                     const regina::NGroupExpressionTerm& t = r.getTerm(j);
                     m.entry(i, t.generator) += t.exponent;
                 }

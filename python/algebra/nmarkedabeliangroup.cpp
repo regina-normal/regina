@@ -150,6 +150,8 @@ void addNMarkedAbelianGroup() {
         .def("getTorsionRank", torsionRank_long)
         .def("minNumberOfGenerators",
             &NMarkedAbelianGroup::minNumberOfGenerators)
+        .def("countInvariantFactors",
+            &NMarkedAbelianGroup::countInvariantFactors)
         .def("getNumberOfInvariantFactors",
             &NMarkedAbelianGroup::getNumberOfInvariantFactors)
         .def("getInvariantFactor", &NMarkedAbelianGroup::getInvariantFactor,

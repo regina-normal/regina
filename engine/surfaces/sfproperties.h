@@ -125,17 +125,24 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
          *
          * @return the number of allowable Euler characteristics.
          */
-        unsigned long getNumberOfECs() const;
+        size_t countECs() const;
+        /**
+         * Deprecated routine that returns the number of allowable
+         * Euler characteristics.
+         *
+         * \deprecated This routine has been renamed to countECs().
+         * See the countECs() documentation for further details.
+         */
+        size_t getNumberOfECs() const;
         /**
          * Returns the allowable Euler characteristic at the given index
          * in the set.  See getECs() for further details.
          *
          * @param index the index in the set of allowable Euler
-         * characteristics; this must be between 0 and getNumberOfECs()-1
-         * inclusive.
+         * characteristics; this must be between 0 and countECs()-1 inclusive.
          * @return the requested allowable Euler characteristic.
          */
-        NLargeInteger getEC(unsigned long index) const;
+        NLargeInteger getEC(size_t index) const;
         /**
          * Returns the set of allowable orientabilities.  Note that this
          * is a subset of <tt>{ true, false }</tt>.
@@ -256,7 +263,10 @@ inline const std::set<NLargeInteger>& NSurfaceFilterProperties::getECs()
         const {
     return eulerChar;
 }
-inline unsigned long NSurfaceFilterProperties::getNumberOfECs() const {
+inline size_t NSurfaceFilterProperties::countECs() const {
+    return eulerChar.size();
+}
+inline size_t NSurfaceFilterProperties::getNumberOfECs() const {
     return eulerChar.size();
 }
 inline NBoolSet NSurfaceFilterProperties::getOrientability() const {

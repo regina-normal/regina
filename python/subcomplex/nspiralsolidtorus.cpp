@@ -47,8 +47,8 @@ void addNSpiralSolidTorus() {
             ("NSpiralSolidTorus", no_init)
         .def("clone", &NSpiralSolidTorus::clone,
             return_value_policy<manage_new_object>())
-        .def("getNumberOfTetrahedra",
-            &NSpiralSolidTorus::getNumberOfTetrahedra)
+        .def("size", &NSpiralSolidTorus::size)
+        .def("getNumberOfTetrahedra", &NSpiralSolidTorus::getNumberOfTetrahedra)
         .def("getTetrahedron", &NSpiralSolidTorus::getTetrahedron,
             return_value_policy<reference_existing_object>())
         .def("getVertexRoles", &NSpiralSolidTorus::getVertexRoles)

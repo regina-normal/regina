@@ -148,7 +148,7 @@ void NNormalSurfaceList::Enumerator::fillVertex() {
 
     // ----- Run the enumeration algorithm -----
 
-    if (triang_->getNumberOfTetrahedra() == 0) {
+    if (triang_->isEmpty()) {
         // Handle the empty triangulation separately.
         list_->algorithm_ = NS_VERTEX_DD; /* shrug */
         // Nothing to do.
@@ -397,7 +397,7 @@ void NNormalSurfaceList::Enumerator::fillVertexTreeWith() {
 template <typename Coords>
 void NNormalSurfaceList::Enumerator::fillFundamental() {
     // Get the empty triangulation out of the way separately.
-    if (triang_->getNumberOfTetrahedra() == 0) {
+    if (triang_->isEmpty()) {
         list_->algorithm_ = NS_HILBERT_DUAL; /* shrug */
         return;
     }

@@ -43,7 +43,7 @@ namespace regina {
 
 NSpiralSolidTorus* NSpiralSolidTorus::clone() const {
     NSpiralSolidTorus* ans = new NSpiralSolidTorus(nTet);
-    for (unsigned long i = 0; i < nTet; i++) {
+    for (size_t i = 0; i < nTet; i++) {
         ans->tet[i] = tet[i];
         ans->vertexRoles[i] = vertexRoles[i];
     }
@@ -55,7 +55,7 @@ void NSpiralSolidTorus::reverse() {
     NPerm4* newRoles = new NPerm4[nTet];
 
     NPerm4 switchPerm(3, 2, 1, 0);
-    for (unsigned long i = 0; i < nTet; i++) {
+    for (size_t i = 0; i < nTet; i++) {
         newTet[i] = tet[nTet - 1 - i];
         newRoles[i] = vertexRoles[nTet - 1 - i] * switchPerm;
     }
@@ -66,11 +66,11 @@ void NSpiralSolidTorus::reverse() {
     vertexRoles = newRoles;
 }
 
-void NSpiralSolidTorus::cycle(unsigned long k) {
+void NSpiralSolidTorus::cycle(size_t k) {
     NTetrahedron** newTet = new NTetrahedron*[nTet];
     NPerm4* newRoles = new NPerm4[nTet];
 
-    for (unsigned long i = 0; i < nTet; i++) {
+    for (size_t i = 0; i < nTet; i++) {
         newTet[i] = tet[(i + k) % nTet];
         newRoles[i] = vertexRoles[(i + k) % nTet];
     }
@@ -82,10 +82,10 @@ void NSpiralSolidTorus::cycle(unsigned long k) {
 }
 
 bool NSpiralSolidTorus::makeCanonical(const NTriangulation* tri) {
-    unsigned long i, index;
+    size_t i, index;
 
-    unsigned long baseTet = 0;
-    unsigned long baseIndex = tri->tetrahedronIndex(tet[0]);
+    size_t baseTet = 0;
+    size_t baseIndex = tri->tetrahedronIndex(tet[0]);
     for (i = 1; i < nTet; i++) {
         index = tri->tetrahedronIndex(tet[i]);
         if (index < baseIndex) {
@@ -105,14 +105,14 @@ bool NSpiralSolidTorus::makeCanonical(const NTriangulation* tri) {
     if (reverseAlso) {
         // Make baseTet into tetrahedron 0 and reverse.
         NPerm4 switchPerm(3, 2, 1, 0);
-        for (unsigned long i = 0; i < nTet; i++) {
+        for (size_t i = 0; i < nTet; i++) {
             newTet[i] = tet[(baseTet + nTet - i) % nTet];
             newRoles[i] = vertexRoles[(baseTet + nTet - i) % nTet] *
                 switchPerm;
         }
     } else {
         // Make baseTet into tetrahedron 0 but don't reverse.
-        for (unsigned long i = 0; i < nTet; i++) {
+        for (size_t i = 0; i < nTet; i++) {
             newTet[i] = tet[(i + baseTet) % nTet];
             newRoles[i] = vertexRoles[(i + baseTet) % nTet];
         }
@@ -131,7 +131,7 @@ bool NSpiralSolidTorus::isCanonical(const NTriangulation* tri) const {
         return false;
 
     long baseIndex = tri->tetrahedronIndex(tet[0]);
-    for (unsigned long i = 1; i < nTet; i++)
+    for (size_t i = 1; i < nTet; i++)
         if (tri->tetrahedronIndex(tet[i]) < baseIndex)
             return false;
 

@@ -261,8 +261,7 @@ bool NCensus::mightBeMinimal(NTriangulation* tri, void*) {
         // Tests specific to closed finite orientable triangulations:
         if (tri->isOrientable() && (! tri->isIdeal())) {
             // Check for too many vertices.
-            if (tri->getNumberOfVertices() > 1 &&
-                    tri->getNumberOfTetrahedra() > 2)
+            if (tri->countVertices() > 1 && tri->size() > 2)
                 return false;
         }
 

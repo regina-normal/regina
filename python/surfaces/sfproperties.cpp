@@ -56,6 +56,7 @@ void addNSurfaceFilterProperties() {
             ("NSurfaceFilterProperties")
         .def(init<const NSurfaceFilterProperties&>())
         .def("getECs", ECs_list)
+        .def("countECs", &NSurfaceFilterProperties::countECs)
         .def("getNumberOfECs", &NSurfaceFilterProperties::getNumberOfECs)
         .def("getEC", &NSurfaceFilterProperties::getEC)
         .def("getOrientability", &NSurfaceFilterProperties::getOrientability)

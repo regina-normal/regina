@@ -985,7 +985,7 @@ void NTriCompositionUI::findSpiralSolidTori() {
             id = addComponentSection(tr("Spiralled solid torus ") +
                 spiral->getName().c_str());
 
-            unsigned long spiralTets = spiral->getNumberOfTetrahedra();
+            unsigned long spiralTets = spiral->size();
 
             unsigned long* tetIndex = new unsigned long[spiralTets];
             for (j = 0; j < spiralTets; j++)

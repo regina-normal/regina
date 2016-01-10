@@ -535,17 +535,17 @@ bool NPacket::isGrandparentOf(const NPacket* descendant) const {
     return false;
 }
 
-unsigned long NPacket::getNumberOfChildren() const {
-    unsigned long tot = 0;
+size_t NPacket::countChildren() const {
+    size_t tot = 0;
     for (NPacket* tmp = firstTreeChild; tmp; tmp = tmp->nextTreeSibling)
         tot++;
     return tot;
 }
 
-unsigned long NPacket::getTotalTreeSize() const {
-    unsigned long tot = 1;
+size_t NPacket::totalTreeSize() const {
+    size_t tot = 1;
     for (NPacket* tmp = firstTreeChild; tmp; tmp = tmp->nextTreeSibling)
-        tot += tmp->getTotalTreeSize();
+        tot += tmp->totalTreeSize();
     return tot;
 }
 
@@ -619,7 +619,7 @@ std::string NPacket::makeUniqueLabel(const std::string& base) const {
         return base;
 
     std::string ans;
-    unsigned long extraInt = 2;
+    size_t extraInt = 2;
     while(1) {
         std::ostringstream out;
         out << ' ' << extraInt;
@@ -648,7 +648,7 @@ bool NPacket::makeUniqueLabels(NPacket* reference) {
     int whichTree;
     NPacket* p;
     std::string label, newLabel;
-    unsigned long extraInt;
+    size_t extraInt;
     bool changed = false;
     for (whichTree = 0; tree[whichTree]; whichTree++)
         for (p = tree[whichTree]; p; p = p->nextTreePacket()) {

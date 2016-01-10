@@ -47,6 +47,7 @@ void addNLayeredSolidTorus() {
             ("NLayeredSolidTorus", no_init)
         .def("clone", &NLayeredSolidTorus::clone,
             return_value_policy<manage_new_object>())
+        .def("size", &NLayeredSolidTorus::size)
         .def("getNumberOfTetrahedra",
             &NLayeredSolidTorus::getNumberOfTetrahedra)
         .def("getBase", &NLayeredSolidTorus::getBase,

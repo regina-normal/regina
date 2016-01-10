@@ -135,23 +135,30 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
          *
          * @return the number of variables.
          */
-        unsigned long getNumberOfVariables() const;
+        size_t countVariables() const;
+        /**
+         * Deprecated routine that returns the number of variables
+         * associated with this script.
+         *
+         * \deprecated Simply call countVariables() instead.
+         */
+        size_t getNumberOfVariables() const;
         /**
          * Returns the name of the requested variable associated with
          * this script.
          *
          * @param index the index of the requested variable; this must
-         * be between 0 and getNumberOfVariables()-1 inclusive.
+         * be between 0 and countVariables()-1 inclusive.
          * @return the name of the requested variable.
          */
-        const std::string& getVariableName(unsigned long index) const;
+        const std::string& getVariableName(size_t index) const;
         /**
          * Returns the index of the variable stored with the given name.
          *
          * @param name the name of the requested variable; note that
          * names are case sensitive.
          * @return the index of the requested variable as an integer
-         * between 0 and getNumberOfVariables()-1 inclusive, or -1 if
+         * between 0 and countVariables()-1 inclusive, or -1 if
          * there is no variable with the given name.
          */
         long getVariableIndex(const std::string& name) const;
@@ -160,10 +167,10 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
          * this script.  Variables may take the value \c null.
          *
          * @param index the index of the requested variable; this must
-         * be between 0 and getNumberOfVariables()-1 inclusive.
+         * be between 0 and countVariables()-1 inclusive.
          * @return the value of the requested variable.
          */
-        NPacket* getVariableValue(unsigned long index) const;
+        NPacket* getVariableValue(size_t index) const;
         /**
          * Returns the value of the variable stored with the given
          * name.  Variables may take the value \c null.
@@ -186,19 +193,19 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
          * sorted order by name.
          *
          * @param index the index of the variable whose name should change;
-         * this must be between 0 and getNumberOfVariables()-1 inclusive.
+         * this must be between 0 and countVariables()-1 inclusive.
          * @param name the new name to assign to the variable.
          */
-        void setVariableName(unsigned long index, const std::string& name);
+        void setVariableName(size_t index, const std::string& name);
         /**
          * Changes the value of an existing variable associated with
          * this script.
          *
          * @param index the index of the variable whose value should change;
-         * this must be between 0 and getNumberOfVariables()-1 inclusive.
+         * this must be between 0 and countVariables()-1 inclusive.
          * @param value the new value to assign to the variable.
          */
-        void setVariableValue(unsigned long index, NPacket* value);
+        void setVariableValue(size_t index, NPacket* value);
 
         /**
          * Adds a new variable to be associated with this script.
@@ -206,7 +213,7 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
          * routine will do nothing.
          *
          * \warning The index of the new variable might not be
-         * getNumberOfVariables()-1, and this operation may change the
+         * countVariables()-1, and this operation may change the
          * indices of other variables also.  This is because (at present)
          * variables are kept stored in sorted order by name.
          *
@@ -236,9 +243,9 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
          * (at present) variables are kept stored in sorted order by name.
          *
          * @param index the index of the variable to remove;
-         * this must be between 0 and getNumberOfVariables()-1 inclusive.
+         * this must be between 0 and countVariables()-1 inclusive.
          */
-        void removeVariable(unsigned long index);
+        void removeVariable(size_t index);
         /**
          * Removes all variables associated with this script.
          */
@@ -284,7 +291,10 @@ inline void NScript::append(const std::string& extraText) {
     text += extraText;
 }
 
-inline unsigned long NScript::getNumberOfVariables() const {
+inline size_t NScript::countVariables() const {
+    return variables.size();
+}
+inline size_t NScript::getNumberOfVariables() const {
     return variables.size();
 }
 inline bool NScript::addVariable(const std::string& name, NPacket* value) {

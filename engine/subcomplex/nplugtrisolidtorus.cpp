@@ -153,10 +153,10 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
     if ((! comp->isClosed()) || (! comp->isOrientable()))
         return 0;
 
-    if (comp->getNumberOfVertices() > 1)
+    if (comp->countVertices() > 1)
         return 0;
 
-    unsigned long nTet = comp->getNumberOfTetrahedra();
+    unsigned long nTet = comp->size();
     if (nTet < 5)
         return 0;
 

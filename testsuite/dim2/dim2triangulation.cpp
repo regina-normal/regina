@@ -173,12 +173,12 @@ class Dim2TriangulationTest : public TriangulationTest<2> {
         }
 
         static void verifyEltMove13(Dim2Triangulation* tri) {
-            unsigned long n = tri->getNumberOfTriangles();
+            unsigned long n = tri->size();
             for (unsigned long i = 0; i < n; ++i) {
                 Dim2Triangulation large(*tri);
                 large.oneThreeMove(large.getTriangle(i));
 
-                if (large.getNumberOfTriangles() != n + 2) {
+                if (large.size() != n + 2) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel() << ", tri " << i << ": "
                         << "1-3 move gives wrong # triangles.";
@@ -199,8 +199,8 @@ class Dim2TriangulationTest : public TriangulationTest<2> {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (large.getNumberOfBoundaryComponents() !=
-                        tri->getNumberOfBoundaryComponents()) {
+                if (large.countBoundaryComponents() !=
+                        tri->countBoundaryComponents()) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel() << ", tri " << i << ": "
                         << "1-3 move changes # boundary components.";

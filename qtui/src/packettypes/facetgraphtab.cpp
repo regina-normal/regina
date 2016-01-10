@@ -208,7 +208,7 @@ std::string Dim2EdgeGraphData::dot(bool withLabels) {
 }
 
 unsigned long Dim2EdgeGraphData::numberOfSimplices() {
-    return tri_->getNumberOfSimplices();
+    return tri_->size();
 }
 
 QString Dim2EdgeGraphData::simplicesName() {
@@ -236,7 +236,7 @@ std::string Dim3FaceGraphData::dot(bool withLabels) {
 }
 
 unsigned long Dim3FaceGraphData::numberOfSimplices() {
-    return tri_->getNumberOfSimplices();
+    return tri_->size();
 }
 
 QString Dim3FaceGraphData::simplicesName() {

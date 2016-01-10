@@ -474,7 +474,7 @@ void NTriSurfacesUI::refresh() {
         btnThreeBall->setVisible(false);
     }
 
-    if (tri->getNumberOfBoundaryComponents() > 0) {
+    if (tri->countBoundaryComponents() > 0) {
         titleSolidTorus->setVisible(true);
         solidTorus->setVisible(true);
         btnSolidTorus->setVisible(true);

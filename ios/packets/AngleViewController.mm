@@ -115,7 +115,7 @@
     height = s.height;
 
     widthAngle = [RegularSpreadHeaderCell
-                  cellSizeFor:[NSString stringWithFormat:@"%ld: 01/23", self.packet->getTriangulation()->getNumberOfTetrahedra() - 1]].width;
+                  cellSizeFor:[NSString stringWithFormat:@"%ld: 01/23", self.packet->getTriangulation()->size() - 1]].width;
 }
 
 - (void)dealloc
@@ -148,7 +148,7 @@
 
 - (NSInteger)spreadView:(MDSpreadView *)aSpreadView numberOfColumnsInSection:(NSInteger)section
 {
-    return 1 + 3 * self.packet->getTriangulation()->getNumberOfTetrahedra();
+    return 1 + 3 * self.packet->getTriangulation()->size();
 }
 
 - (NSInteger)spreadView:(MDSpreadView *)aSpreadView numberOfRowsInSection:(NSInteger)section

@@ -120,7 +120,7 @@ void NTriHeaderUI::refresh() {
 }
 
 QString NTriHeaderUI::summaryInfo(regina::NTriangulation* tri) {
-    if (tri->getNumberOfTetrahedra() == 0)
+    if (tri->isEmpty())
         return QObject::tr("Empty");
 
     if (! tri->isValid())

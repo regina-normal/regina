@@ -70,11 +70,11 @@ NLayeredTorusBundle* NLayeredTorusBundle::isLayeredTorusBundle(
     // Basic property checks.
     if (! tri->isClosed())
         return 0;
-    if (tri->getNumberOfVertices() > 1)
+    if (tri->countVertices() > 1)
         return 0;
-    if (tri->getNumberOfComponents() > 1)
+    if (tri->countComponents() > 1)
         return 0;
-    if (tri->getNumberOfTetrahedra() < 6)
+    if (tri->size() < 6)
         return 0;
 
     // We have a 1-vertex 1-component closed triangulation with at least

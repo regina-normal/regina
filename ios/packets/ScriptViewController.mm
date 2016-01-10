@@ -86,7 +86,7 @@
     if (indexPath.row == 0)
         return [tableView dequeueReusableCellWithIdentifier:@"Header"];
 
-    if (self.packet->getNumberOfVariables() == 0)
+    if (self.packet->countVariables() == 0)
         return [tableView dequeueReusableCellWithIdentifier:@"Empty"];
 
     ScriptVariableCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Variable" forIndexPath:indexPath];
@@ -108,7 +108,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    unsigned long nVar = self.packet->getNumberOfVariables();
+    unsigned long nVar = self.packet->countVariables();
     return 1 + (nVar > 0 ? nVar : 1);
 }
 

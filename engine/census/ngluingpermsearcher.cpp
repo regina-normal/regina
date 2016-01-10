@@ -51,7 +51,7 @@ NGluingPermSearcher::NGluingPermSearcher(
         orientableOnly_(orientableOnly), finiteOnly_(finiteOnly),
         whichPurge_(whichPurge), use_(use), useArgs_(useArgs),
         started(false),
-        orientation(new int[pairing->getNumberOfTetrahedra()]) {
+        orientation(new int[pairing->size()]) {
     // Generate the list of face pairing automorphisms if necessary.
     // This will require us to remove the const for a wee moment.
     if (autosNew) {
@@ -61,7 +61,7 @@ NGluingPermSearcher::NGluingPermSearcher(
     }
 
     // Initialise arrays.
-    unsigned nTets = getNumberOfTetrahedra();
+    unsigned nTets = size();
 
     std::fill(orientation, orientation + nTets, 0);
     std::fill(permIndices_, permIndices_ + nTets* 4, -1);
@@ -97,7 +97,7 @@ NGluingPermSearcher* NGluingPermSearcher::bestSearcher(
         UseGluingPerms use, void* useArgs) {
     // Use an optimised algorithm if possible.
     if (finiteOnly) {
-        if (pairing->isClosed() && pairing->getNumberOfTetrahedra() >= 3 &&
+        if (pairing->isClosed() && pairing->size() >= 3 &&
                 (whichPurge & PURGE_NON_MINIMAL) &&
                 (whichPurge & PURGE_NON_PRIME) &&
                 (orientableOnly || (whichPurge & PURGE_P2_REDUCIBLE))) {
@@ -131,7 +131,7 @@ void NGluingPermSearcher::findAllPerms(const NFacePairing* pairing,
 void NGluingPermSearcher::runSearch(long maxDepth) {
     // In this generation algorithm, each orientation is simply +/-1.
 
-    unsigned nTetrahedra = getNumberOfTetrahedra();
+    unsigned nTetrahedra = size();
     if (maxDepth < 0) {
         // Larger than we will ever see (and in fact grossly so).
         maxDepth = nTetrahedra * 4 + 1;
@@ -307,7 +307,7 @@ void NGluingPermSearcher::dumpData(std::ostream& out) const {
     out << (started ? 's' : '.');
     out << ' ' << whichPurge_ << std::endl;
 
-    int nTets = getNumberOfTetrahedra();
+    int nTets = size();
     int i;
 
     for (i = 0; i < nTets; i++) {
@@ -372,7 +372,7 @@ NGluingPermSearcher::NGluingPermSearcher(std::istream& in,
 
     in >> whichPurge_;
 
-    int nTets = pairing_->getNumberOfTetrahedra();
+    int nTets = pairing_->size();
     int t;
 
     orientation = new int[nTets];
@@ -404,7 +404,7 @@ bool NGluingPermSearcher::isCanonical() const {
         // preimage under each face pairing automorphism, to see whether
         // our current permutation set is closest to canonical form.
         for (face.setFirst(); face.simp <
-                static_cast<int>(pairing_->getNumberOfTetrahedra()); face++) {
+                static_cast<int>(pairing_->size()); face++) {
             faceDest = pairing_->dest(face);
             if (pairing_->isUnmatched(face) || faceDest < face)
                 continue;

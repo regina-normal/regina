@@ -132,6 +132,14 @@ class REGINA_API Component<3> : public detail::ComponentBase<3>,
          *
          * @return the number of boundary components.
          */
+        size_t countBoundaryComponents() const;
+
+        /**
+         * Deprecated function that returns the number of boundary
+         * components in this component.
+         *
+         * \deprecated Simply call countBoundaryComponents() instead.
+         */
         size_t getNumberOfBoundaryComponents() const;
 
         /**
@@ -174,7 +182,7 @@ class REGINA_API Component<3> : public detail::ComponentBase<3>,
          *
          * @param index the index of the requested boundary component in
          * this component.  This should be between 0 and
-         * getNumberOfBoundaryComponents()-1 inclusive.
+         * countBoundaryComponents()-1 inclusive.
          * Note that the index of a boundary component in the component
          * need not be the index of the same boundary component in the
          * entire triangulation.
@@ -238,6 +246,10 @@ inline size_t Component<3>::countFaces<1>() const {
 template <>
 inline size_t Component<3>::countFaces<0>() const {
     return vertices_.size();
+}
+
+inline size_t Component<3>::countBoundaryComponents() const {
+    return boundaryComponents_.size();
 }
 
 inline size_t Component<3>::getNumberOfBoundaryComponents() const {
