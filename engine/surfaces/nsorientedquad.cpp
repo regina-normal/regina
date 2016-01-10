@@ -46,12 +46,12 @@ namespace regina {
 NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeZeroVector(
         const NTriangulation* triangulation) {
     return new NNormalSurfaceVectorOrientedQuad(
-        6 * triangulation->getNumberOfTetrahedra());
+        6 * triangulation->size());
 }
 
 NMatrixInt* NNormalSurfaceVectorOrientedQuad::makeMatchingEquations(
         const NTriangulation* triangulation) {
-    unsigned long nCoords = 6 * triangulation->getNumberOfTetrahedra();
+    unsigned long nCoords = 6 * triangulation->size();
     // Two equation per non-boundary edge.
     long nEquations = 2*long(triangulation->getNumberOfEdges());
     for (NTriangulation::BoundaryComponentIterator bit = triangulation->
@@ -96,7 +96,7 @@ NMatrixInt* NNormalSurfaceVectorOrientedQuad::makeMatchingEquations(
 NEnumConstraintList* NNormalSurfaceVectorOrientedQuad::makeEmbeddedConstraints(
         const NTriangulation* triangulation) {
     NEnumConstraintList* ans = new NEnumConstraintList(
-        8 * triangulation->getNumberOfTetrahedra());
+        8 * triangulation->size());
 
     unsigned base = 0;
     unsigned c = 0;
@@ -141,7 +141,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
         const NTriangulation* triang) const {
     // We're going to do this by wrapping around each edge and seeing
     // what comes.
-    unsigned long nRows = 14 * triang->getNumberOfTetrahedra();
+    unsigned long nRows = 14 * triang->size();
     NNormalSurfaceVectorOriented* ans =
         new NNormalSurfaceVectorOriented(nRows);
 

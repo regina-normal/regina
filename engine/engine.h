@@ -64,6 +64,14 @@ namespace regina {
  *
  * @return the version of this calculation engine.
  */
+REGINA_API const char* versionString();
+
+/**
+ * Deprecated routine that returns the full version number of this
+ * calculation engine.
+ *
+ * \deprecated Simply call versionString() instead.
+ */
 REGINA_API const char* getVersionString();
 
 /**
@@ -72,6 +80,14 @@ REGINA_API const char* getVersionString();
  *
  * @return the major version number of this calculation engine.
  */
+REGINA_API int versionMajor();
+
+/**
+ * Deprecated routine that returns the major version number of this
+ * calculation engine.
+ *
+ * \deprecated Simply call versionMajor() instead.
+ */
 REGINA_API int getVersionMajor();
 
 /**
@@ -79,6 +95,14 @@ REGINA_API int getVersionMajor();
  * For instance, version 2.3.1 would have minor version 3.
  *
  * @return the minor version number of this calculation engine.
+ */
+REGINA_API int versionMinor();
+
+/**
+ * Deprecated routine that returns the minor version number of this
+ * calculation engine.
+ *
+ * \deprecated Simply call versionMinor() instead.
  */
 REGINA_API int getVersionMinor();
 

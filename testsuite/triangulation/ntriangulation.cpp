@@ -788,7 +788,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             unsigned long found = 0;
 
             unsigned long i, j;
-            for (i = 0; i < tri->getNumberOfTetrahedra(); ++i)
+            for (i = 0; i < tri->size(); ++i)
                 for (j = 0; j < 4; ++j)
                     if (! tri->getTetrahedron(i)->adjacentTetrahedron(j))
                         ++found;
@@ -806,7 +806,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 comp = tri->getComponent(c);
                 found = 0;
 
-                for (i = 0; i < comp->getNumberOfTetrahedra(); ++i)
+                for (i = 0; i < comp->size(); ++i)
                     for (j = 0; j < 4; ++j)
                         if (! comp->getTetrahedron(i)->adjacentTetrahedron(j))
                             ++found;
@@ -2663,8 +2663,8 @@ class NTriangulationTest : public TriangulationTest<3> {
                          tri->getNumberOfBoundaryComponents() == 1 &&
                          tri->getBoundaryComponent(0)->getEulerChar() == 0 &&
                          tri->getHomologyH1().isZ() &&
-                         (tri->getNumberOfTetrahedra() < 4 ||
-                            (tri->getNumberOfTetrahedra() == 4 &&
+                         (tri->size() < 4 ||
+                            (tri->size() == 4 &&
                             tri->isoSig() != "eHLObcdddwun" &&
                             tri->isoSig() != "eHLObcdddwuj")));
 
@@ -3511,7 +3511,7 @@ class NTriangulationTest : public TriangulationTest<3> {
         }
 
         static void verifyPuncture(NTriangulation* tri) {
-            unsigned long n = tri->getNumberOfTetrahedra();
+            unsigned long n = tri->size();
             if (n == 0)
                 return;
 
@@ -3526,7 +3526,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                     punc.puncture(punc.getTetrahedron(i));
                 }
 
-                if (punc.getNumberOfTetrahedra() != n + 6) {
+                if (punc.size() != n + 6) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel() << ", tet " << i << ": "
                         << "puncture gives wrong # tetrahedra.";
@@ -3598,7 +3598,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                unsigned long nPunc = punc.getNumberOfTetrahedra();
+                unsigned long nPunc = punc.size();
                 NBoundaryComponent* bc = punc.getTetrahedron(nPunc - 1)->
                     getTriangle(0)->getBoundaryComponent();
                 if (bc == 0 || bc != punc.getTetrahedron(nPunc - 2)->
@@ -3705,7 +3705,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             }
 
             // We are about to start running exponential-time algorithms.
-            if (tri->getNumberOfTetrahedra() > 10)
+            if (tri->size() > 10)
                 return;
 
             long nOld = tri->connectedSumDecomposition();
@@ -3826,10 +3826,10 @@ class NTriangulationTest : public TriangulationTest<3> {
             NTriangulation t(tri);
             t.intelligentSimplify();
 
-            if (t.getNumberOfTetrahedra() != simpleSize) {
+            if (t.size() != simpleSize) {
                 std::ostringstream msg;
                 msg << "Large triangulation should simplify to " << simpleName
-                    << ", but simplifies to " << t.getNumberOfTetrahedra()
+                    << ", but simplifies to " << t.size()
                     << " tetrahedra instead of the expected "
                     << simpleSize << ".";
                 CPPUNIT_FAIL(msg.str());
@@ -3899,7 +3899,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             // (that should not be simplified away):
             tri = new NTriangulation();
             tri->insertRehydration("cabbbbxww");
-            if (tri->getNumberOfTetrahedra() != 2)
+            if (tri->size() != 2)
                 CPPUNIT_FAIL("Custom two-cusped triangulation failed "
                     "to rehydrate.");
             verifyNoSimplification(*tri, "Custom two-cusped triangluation");
@@ -3921,7 +3921,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                     "properly.");
 
             tri->intelligentSimplify();
-            if (tri->getNumberOfTetrahedra() != 1)
+            if (tri->size() != 1)
                 CPPUNIT_FAIL("Custom invalid triangulation did not simplify "
                     "to 1 tetrahedron.");
             if (tri->isValid() || tri->getEdge(0)->isValid())
@@ -4108,12 +4108,12 @@ class NTriangulationTest : public TriangulationTest<3> {
         }
 
         static void verifyEltMove14(NTriangulation* tri) {
-            unsigned long n = tri->getNumberOfTetrahedra();
+            unsigned long n = tri->size();
             for (unsigned long i = 0; i < n; ++i) {
                 NTriangulation large(*tri);
                 large.oneFourMove(large.getTetrahedron(i));
 
-                if (large.getNumberOfTetrahedra() != n + 3) {
+                if (large.size() != n + 3) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel() << ", tet " << i << ": "
                         << "1-4 move gives wrong # tetrahedra.";

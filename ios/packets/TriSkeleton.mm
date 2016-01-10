@@ -79,17 +79,17 @@
         [static_cast<TriangulationViewController*>(self.parentViewController) updateHeader:self.header lockIcon:self.lockIcon];
 
     self.fVector.text = [NSString stringWithFormat:@"f-vector: (%ld, %ld, %ld, %ld)",
-                         self.packet->getNumberOfFaces<0>(),
-                         self.packet->getNumberOfFaces<1>(),
-                         self.packet->getNumberOfFaces<2>(),
-                         self.packet->getNumberOfFaces<3>()];
+                         self.packet->countFaces<0>(),
+                         self.packet->countFaces<1>(),
+                         self.packet->countFaces<2>(),
+                         self.packet->size()];
 
-    [self.viewWhich setTitle:[TextHelper countString:self.packet->getNumberOfFaces<0>() singular:"vertex" plural:"vertices"] forSegmentAtIndex:0];
-    [self.viewWhich setTitle:[TextHelper countString:self.packet->getNumberOfFaces<1>() singular:"edge" plural:"edges"] forSegmentAtIndex:1];
-    [self.viewWhich setTitle:[TextHelper countString:self.packet->getNumberOfFaces<2>() singular:"triangle" plural:"triangles"] forSegmentAtIndex:2];
-    [self.viewWhich setTitle:[TextHelper countString:self.packet->getNumberOfFaces<3>() singular:"tetrahedron" plural:"tetrahedra"] forSegmentAtIndex:3];
-    [self.viewWhich setTitle:[TextHelper countString:self.packet->getNumberOfComponents() singular:"component" plural:"components"] forSegmentAtIndex:4];
-    [self.viewWhich setTitle:[TextHelper countString:self.packet->getNumberOfBoundaryComponents() singular:"boundary" plural:"boundaries"] forSegmentAtIndex:5];
+    [self.viewWhich setTitle:[TextHelper countString:self.packet->countFaces<0>() singular:"vertex" plural:"vertices"] forSegmentAtIndex:0];
+    [self.viewWhich setTitle:[TextHelper countString:self.packet->countFaces<1>() singular:"edge" plural:"edges"] forSegmentAtIndex:1];
+    [self.viewWhich setTitle:[TextHelper countString:self.packet->countFaces<2>() singular:"triangle" plural:"triangles"] forSegmentAtIndex:2];
+    [self.viewWhich setTitle:[TextHelper countString:self.packet->size() singular:"tetrahedron" plural:"tetrahedra"] forSegmentAtIndex:3];
+    [self.viewWhich setTitle:[TextHelper countString:self.packet->countComponents() singular:"component" plural:"components"] forSegmentAtIndex:4];
+    [self.viewWhich setTitle:[TextHelper countString:self.packet->countBoundaryComponents() singular:"boundary" plural:"boundaries"] forSegmentAtIndex:5];
 
     self.viewWhich.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:KEY_LAST_TRI_SKELETON_TYPE];
 
@@ -108,7 +108,7 @@
     BOOL enable = NO;
     if (self.viewWhich.selectedSegmentIndex == 0) {
         NSIndexPath* seln = self.details.indexPathForSelectedRow;
-        if (seln && seln.row > 0 && seln.row <= self.packet->getNumberOfVertices())
+        if (seln && seln.row > 0 && seln.row <= self.packet->countVertices())
             enable = YES;
     }
     self.vtxLinksButton.enabled = self.vtxLinksIcon.enabled = enable;
@@ -117,7 +117,7 @@
     enable = NO;
     if (self.viewWhich.selectedSegmentIndex == 1 && self.packet->getPacketType() == regina::PACKET_TRIANGULATION) {
         NSIndexPath* seln = self.details.indexPathForSelectedRow;
-        if (seln && seln.row > 0 && seln.row <= self.packet->getNumberOfEdges())
+        if (seln && seln.row > 0 && seln.row <= self.packet->countEdges())
             enable = YES;
     }
     self.drillEdgeButton.enabled = self.drillEdgeIcon.enabled = enable;
@@ -128,7 +128,7 @@
         return;
     
     NSIndexPath* seln = self.details.indexPathForSelectedRow;
-    if ((! seln) || seln.row <= 0 || seln.row > self.packet->getNumberOfVertices()) {
+    if ((! seln) || seln.row <= 0 || seln.row > self.packet->countVertices()) {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Please Select a Vertex"
                                                         message:nil
                                                        delegate:nil
@@ -149,7 +149,7 @@
         return;
     
     NSIndexPath* seln = self.details.indexPathForSelectedRow;
-    if ((! seln) || seln.row <= 0 || seln.row > self.packet->getNumberOfEdges()) {
+    if ((! seln) || seln.row <= 0 || seln.row > self.packet->countEdges()) {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Please Select an Edge"
                                                         message:nil
                                                        delegate:nil
@@ -177,17 +177,17 @@
 {
     switch (self.viewWhich.selectedSegmentIndex) {
         case 0: /* vertices */
-            return 1 + MAX(self.packet->getNumberOfVertices(), 1);
+            return 1 + MAX(self.packet->countVertices(), 1);
         case 1: /* edges */
-            return 1 + MAX(self.packet->getNumberOfEdges(), 1);
+            return 1 + MAX(self.packet->countEdges(), 1);
         case 2: /* triangles */
-            return 1 + MAX(self.packet->getNumberOfTriangles(), 1);;
+            return 1 + MAX(self.packet->countTriangles(), 1);;
         case 3: /* tetrahedra */
-            return 1 + MAX(self.packet->getNumberOfTetrahedra(), 1);;
+            return 1 + MAX(self.packet->size(), 1);;
         case 4: /* components */
-            return 1 + MAX(self.packet->getNumberOfComponents(), 1);
+            return 1 + MAX(self.packet->countComponents(), 1);
         case 5: /* boundary components */
-            return 1 + MAX(self.packet->getNumberOfBoundaryComponents(), 1);
+            return 1 + MAX(self.packet->countBoundaryComponents(), 1);
         default:
             return 0;
     }
@@ -217,7 +217,7 @@
     SkeletonCell *cell;
     switch (self.viewWhich.selectedSegmentIndex) {
         case 0: /* vertices */
-            if (self.packet->getNumberOfVertices() == 0) {
+            if (self.packet->countVertices() == 0) {
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Empty" forIndexPath:indexPath];
                 cell.index.text = @"No vertices";
                 cell.data0.text = cell.data1.text = cell.data2.text = @"";
@@ -263,7 +263,7 @@
             }
             break;
         case 1: /* edges */
-            if (self.packet->getNumberOfEdges() == 0) {
+            if (self.packet->countEdges() == 0) {
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Empty" forIndexPath:indexPath];
                 cell.index.text = @"No edges";
                 cell.data0.text = cell.data1.text = cell.data2.text = @"";
@@ -290,7 +290,7 @@
             }
             break;
         case 2: /* triangles */
-            if (self.packet->getNumberOfTriangles() == 0) {
+            if (self.packet->countTriangles() == 0) {
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Empty" forIndexPath:indexPath];
                 cell.index.text = @"No triangles";
                 cell.data0.text = cell.data1.text = cell.data2.text = @"";
@@ -341,7 +341,7 @@
             }
             break;
         case 3: /* tetrahedra */
-            if (self.packet->getNumberOfTetrahedra() == 0) {
+            if (self.packet->isEmpty()) {
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Empty" forIndexPath:indexPath];
                 cell.index.text = @"No tetrahedra";
                 cell.data0.text = cell.data1.text = cell.data2.text = @"";
@@ -372,7 +372,7 @@
             }
             break;
         case 4: /* components */
-            if (self.packet->getNumberOfComponents() == 0) {
+            if (self.packet->countComponents() == 0) {
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Empty" forIndexPath:indexPath];
                 cell.index.text = @"No components";
                 cell.data0.text = cell.data1.text = cell.data2.text = @"";
@@ -380,17 +380,17 @@
                 regina::NComponent* c = self.packet->getComponent(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Component" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%zd.", indexPath.row - 1];
-                cell.data1.text = [TextHelper countString:c->getNumberOfSimplices() singular:"tetrahedron" plural:"tetrahedra"];
+                cell.data1.text = [TextHelper countString:c->size() singular:"tetrahedron" plural:"tetrahedra"];
 
                 cell.data0.text = [NSString stringWithFormat:@"%s %s",
                                   (c->isIdeal() ? "Ideal, " : "Real, "),
                                   (c->isOrientable() ? "orbl" : "non-orbl")];
 
-                if (self.packet->getNumberOfComponents() == 1) {
+                if (self.packet->countComponents() == 1) {
                     cell.data2.text = @"All tetrahedra";
                 } else {
                     NSMutableString* pieces = [NSMutableString string];
-                    for (unsigned long i = 0; i < c->getNumberOfTriangles(); ++i)
+                    for (unsigned long i = 0; i < c->countTriangles(); ++i)
                         [TextHelper appendToList:pieces
                                             item:[NSString stringWithFormat:@"%ld",
                                                   self.packet->tetrahedronIndex(c->getTetrahedron(i))]];
@@ -399,7 +399,7 @@
             }
             break;
         case 5: /* boundary components */
-            if (self.packet->getNumberOfBoundaryComponents() == 0) {
+            if (self.packet->countBoundaryComponents() == 0) {
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Empty" forIndexPath:indexPath];
                 cell.index.text = @"No boundary components";
                 cell.data0.text = cell.data1.text = cell.data2.text = @"";
@@ -411,7 +411,7 @@
                 // Note: by parity, #triangles must be >= 2 and so we can safely use the plural form.
                 cell.data1.text = (b->isIdeal() ?
                                   [NSString stringWithFormat:@"Degree %ld", b->getVertex(0)->getDegree()] :
-                                  [NSString stringWithFormat:@"%ld triangles", b->getNumberOfTriangles()]);
+                                  [NSString stringWithFormat:@"%ld triangles", b->countTriangles()]);
 
                 NSMutableString* pieces = [NSMutableString string];
                 if (b->isIdeal()) {
@@ -424,7 +424,7 @@
                     cell.data2.text = [NSString stringWithFormat:@"Vertices %@", pieces];
                     // Parity says #vertices >= 2, so always use plural form.
                 } else {
-                    for (unsigned long i = 0; i < b->getNumberOfTriangles(); ++i) {
+                    for (unsigned long i = 0; i < b->countTriangles(); ++i) {
                         const regina::NTriangleEmbedding& emb = b->getTriangle(i)->getEmbedding(0);
                         [TextHelper appendToList:pieces
                                             item:[NSString stringWithFormat:@"%ld (%s)",

@@ -39,7 +39,7 @@ using namespace boost::python;
 using regina::NSurfaceFilterProperties;
 
 namespace {
-    boost::python::list getECs_list(const NSurfaceFilterProperties& f) {
+    boost::python::list ECs_list(const NSurfaceFilterProperties& f) {
         const std::set<regina::NLargeInteger>& ECs = f.getECs();
         std::set<regina::NLargeInteger>::const_iterator it;
 
@@ -55,7 +55,7 @@ void addNSurfaceFilterProperties() {
             std::auto_ptr<NSurfaceFilterProperties>, boost::noncopyable>
             ("NSurfaceFilterProperties")
         .def(init<const NSurfaceFilterProperties&>())
-        .def("getECs", getECs_list)
+        .def("getECs", ECs_list)
         .def("getNumberOfECs", &NSurfaceFilterProperties::getNumberOfECs)
         .def("getEC", &NSurfaceFilterProperties::getEC)
         .def("getOrientability", &NSurfaceFilterProperties::getOrientability)

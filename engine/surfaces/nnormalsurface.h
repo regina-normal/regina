@@ -542,7 +542,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested triangles reside;
          * this should be between 0 and
-         * NTriangulation::getNumberOfTetrahedra()-1 inclusive.
+         * NTriangulation::size()-1 inclusive.
          * @param vertex the vertex of the given tetrahedron around
          * which the requested triangles lie; this should be between 0
          * and 3 inclusive.
@@ -564,7 +564,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested triangles reside;
          * this should be between 0 and
-         * NTriangulation::getNumberOfTetrahedra()-1 inclusive.
+         * NTriangulation::size()-1 inclusive.
          * @param vertex the vertex of the given tetrahedron around
          * which the requested triangles lie; this should be between 0
          * and 3 inclusive.
@@ -583,7 +583,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested quadrilaterals reside;
          * this should be between 0 and
-         * NTriangulation::getNumberOfTetrahedra()-1 inclusive.
+         * NTriangulation::size()-1 inclusive.
          * @param quadType the number of the vertex splitting that this
          * quad type represents; this should be between 0 and 2
          * inclusive.
@@ -605,7 +605,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested quadrilaterals reside;
          * this should be between 0 and
-         * NTriangulation::getNumberOfTetrahedra()-1 inclusive.
+         * NTriangulation::size()-1 inclusive.
          * @param quadType the number of the vertex splitting that this
          * quad type represents; this should be between 0 and 2
          * inclusive.
@@ -623,7 +623,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested octagons reside;
          * this should be between 0 and
-         * NTriangulation::getNumberOfTetrahedra()-1 inclusive.
+         * NTriangulation::size()-1 inclusive.
          * @param octType the number of the vertex splitting that this
          * octagon type represents; this should be between 0 and 2
          * inclusive.
@@ -878,7 +878,7 @@ class REGINA_API NNormalSurface :
          * @param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested triangles reside;
          * this should be between 0 and
-         * NTriangulation::getNumberOfTetrahedra()-1 inclusive.
+         * NTriangulation::size()-1 inclusive.
          * @param vertex the vertex of the given tetrahedron around
          * which the requested triangles lie; this should be between 0
          * and 3 inclusive.
@@ -909,7 +909,7 @@ class REGINA_API NNormalSurface :
          * @param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested triangles reside;
          * this should be between 0 and
-         * NTriangulation::getNumberOfTetrahedra()-1 inclusive.
+         * NTriangulation::size()-1 inclusive.
          * @param vertex the vertex of the given tetrahedron around
          * which the requested triangles lie; this should be between 0
          * and 3 inclusive.
@@ -943,7 +943,7 @@ class REGINA_API NNormalSurface :
          * @param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested quadrilaterals reside;
          * this should be between 0 and
-         * NTriangulation::getNumberOfTetrahedra()-1 inclusive.
+         * NTriangulation::size()-1 inclusive.
          * @param quadType the number of the vertex splitting that this
          * quad type represents, as described above;
          * this should be between 0 and 2 inclusive.
@@ -974,7 +974,7 @@ class REGINA_API NNormalSurface :
          * @param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested quadrilaterals reside;
          * this should be between 0 and
-         * NTriangulation::getNumberOfTetrahedra()-1 inclusive.
+         * NTriangulation::size()-1 inclusive.
          * @param quadType the number of the vertex splitting that this
          * quad type represents; this should be between 0 and 2
          * inclusive.
@@ -1008,7 +1008,7 @@ class REGINA_API NNormalSurface :
          * @param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested octagons reside;
          * this should be between 0 and
-         * NTriangulation::getNumberOfTetrahedra()-1 inclusive.
+         * NTriangulation::size()-1 inclusive.
          * @param octType the number of the vertex splitting that this
          * octagon type represents, as described above;
          * this should be between 0 and 2 inclusive.

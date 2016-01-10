@@ -58,8 +58,6 @@ std::complex<double> NCyclotomic::evaluate(size_t whichRoot) const {
 }
 
 void NCyclotomic::invert() {
-    const NPolynomial<NInteger>& cyc = cyclotomic(field_);
-
     NPolynomial<NRational>* self = polynomial();
     NPolynomial<NRational> gcd, u, v;
 

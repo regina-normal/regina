@@ -172,6 +172,8 @@ void addDim2Triangulation() {
         .def("moveContentsTo", &Dim2Triangulation::moveContentsTo)
         .def("countComponents", &Dim2Triangulation::countComponents)
         .def("getNumberOfComponents", &Dim2Triangulation::getNumberOfComponents)
+        .def("countBoundaryComponents",
+            &Dim2Triangulation::countBoundaryComponents)
         .def("getNumberOfBoundaryComponents",
             &Dim2Triangulation::getNumberOfBoundaryComponents)
         .def("countFaces", &regina::python::countFaces<Dim2Triangulation, 2>)

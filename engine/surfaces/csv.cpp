@@ -164,7 +164,7 @@ bool NNormalSurfaceList::saveCSVStandard(const char* filename,
     if (! out)
         return false;
 
-    unsigned long n = getTriangulation()->getNumberOfTetrahedra();
+    unsigned long n = getTriangulation()->size();
 
     unsigned long i, j;
 

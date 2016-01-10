@@ -156,7 +156,7 @@ void NDiscSetTet::discFromArc(int arcFace, int arcVertex,
 
 NDiscSetSurface::NDiscSetSurface(const NNormalSurface& surface, bool) :
         triangulation(surface.getTriangulation()) {
-    unsigned long tot = triangulation->getNumberOfTetrahedra();
+    unsigned long tot = triangulation->size();
     if (tot == 0)
         discSets = 0;
     else
@@ -165,7 +165,7 @@ NDiscSetSurface::NDiscSetSurface(const NNormalSurface& surface, bool) :
 
 NDiscSetSurface::NDiscSetSurface(const NNormalSurface& surface) :
         triangulation(surface.getTriangulation()) {
-    unsigned long tot = triangulation->getNumberOfTetrahedra();
+    unsigned long tot = triangulation->size();
     if (tot == 0)
         discSets = 0;
     else {

@@ -432,7 +432,7 @@ namespace {
 
         unsigned long nEdges = tri.getNumberOfEdges();
         unsigned long nTriangles = tri.getNumberOfTriangles();
-        unsigned long nTet = tri.getNumberOfTetrahedra();
+        unsigned long nTet = tri.size();
 
         // Our plan is to run through all admissible colourings via a
         // backtracking search, with the high-degree edges towards the root
@@ -671,7 +671,7 @@ namespace {
 #endif
                 // Increment ans appropriately.
                 valColour = 1;
-                for (i = 0; i < tri.getNumberOfTetrahedra(); i++) {
+                for (i = 0; i < tri.size(); i++) {
                     tet = tri.getTetrahedron(i);
                     init.tetContrib(tet,
                         colour[tet->getEdge(0)->index()],

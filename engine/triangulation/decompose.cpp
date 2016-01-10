@@ -674,7 +674,7 @@ NPacket* NTriangulation::makeZeroEfficient() {
         return 0;
     } else {
         // 3-sphere.
-        if (getNumberOfTetrahedra() > 1) {
+        if (size() > 1) {
             removeAllTetrahedra();
             insertLayeredLensSpace(1,0);
         }
@@ -985,7 +985,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
     // Check to see whether any component is a one-tetrahedron solid torus.
     for (ComponentIterator cit = use.getComponents().begin();
             cit != use.getComponents().end(); ++cit)
-        if ((*cit)->getNumberOfTetrahedra() == 1 &&
+        if ((*cit)->size() == 1 &&
                 (*cit)->getNumberOfTriangles() == 3 &&
                 (*cit)->getNumberOfVertices() == 1) {
             // Because we know the triangulation is valid, this rules out

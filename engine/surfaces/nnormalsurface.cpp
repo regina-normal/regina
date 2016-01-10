@@ -138,7 +138,7 @@ NNormalSurface::NNormalSurface(const NTriangulation* triang,
 }
 
 void NNormalSurface::writeTextShort(std::ostream& out) const {
-    unsigned long nTets = triangulation->getNumberOfTetrahedra();
+    unsigned long nTets = triangulation->size();
     unsigned long tet;
     unsigned j;
     bool almostNormal = vector->allowsAlmostNormal();
@@ -160,7 +160,7 @@ void NNormalSurface::writeTextShort(std::ostream& out) const {
 
 bool NNormalSurfaceVector::hasMultipleOctDiscs(const NTriangulation* triang)
         const {
-    unsigned long nTets = triang->getNumberOfTetrahedra();
+    unsigned long nTets = triang->size();
     int oct;
     NLargeInteger coord;
     for (unsigned long tet=0; tet<nTets; tet++)
@@ -178,7 +178,7 @@ bool NNormalSurfaceVector::hasMultipleOctDiscs(const NTriangulation* triang)
 }
 
 bool NNormalSurfaceVector::isCompact(const NTriangulation* triang) const {
-    unsigned long nTets = triang->getNumberOfTetrahedra();
+    unsigned long nTets = triang->size();
     unsigned long tet;
     int type;
     for (tet = 0; tet < nTets; tet++) {
@@ -198,7 +198,7 @@ bool NNormalSurfaceVector::isCompact(const NTriangulation* triang) const {
 }
 
 bool NNormalSurfaceVector::isSplitting(const NTriangulation* triang) const {
-    unsigned long nTets = triang->getNumberOfTetrahedra();
+    unsigned long nTets = triang->size();
     unsigned long tet;
     int type;
     NLargeInteger tot;
@@ -222,7 +222,7 @@ bool NNormalSurfaceVector::isSplitting(const NTriangulation* triang) const {
 
 NLargeInteger NNormalSurfaceVector::isCentral(const NTriangulation* triang)
         const {
-    unsigned long nTets = triang->getNumberOfTetrahedra();
+    unsigned long nTets = triang->size();
     unsigned long tet;
     int type;
     NLargeInteger tot, tetTot;
@@ -242,7 +242,7 @@ NLargeInteger NNormalSurfaceVector::isCentral(const NTriangulation* triang)
 }
 
 bool NNormalSurface::isEmpty() const {
-    unsigned long nTet = triangulation->getNumberOfTetrahedra();
+    unsigned long nTet = triangulation->size();
     bool checkAlmostNormal = vector->allowsAlmostNormal();
 
     unsigned long t;
@@ -267,7 +267,7 @@ bool NNormalSurface::isEmpty() const {
 }
 
 bool NNormalSurface::sameSurface(const NNormalSurface& other) const {
-    unsigned long nTet = triangulation->getNumberOfTetrahedra();
+    unsigned long nTet = triangulation->size();
     bool checkAlmostNormal =
         (vector->allowsAlmostNormal() || other.vector->allowsAlmostNormal());
 
@@ -293,7 +293,7 @@ bool NNormalSurface::sameSurface(const NNormalSurface& other) const {
 }
 
 bool NNormalSurface::embedded() const {
-    unsigned long nTets = triangulation->getNumberOfTetrahedra();
+    unsigned long nTets = triangulation->size();
 
     int type;
     int found;
@@ -313,7 +313,7 @@ bool NNormalSurface::embedded() const {
 }
 
 bool NNormalSurface::locallyCompatible(const NNormalSurface& other) const {
-    unsigned long nTets = triangulation->getNumberOfTetrahedra();
+    unsigned long nTets = triangulation->size();
 
     int type;
     int found;
@@ -372,7 +372,7 @@ void NNormalSurface::calculateEulerChar() const {
             ans -= getTriangleArcs(index, type);
 
     // Add faces.
-    tot = triangulation->getNumberOfTetrahedra();
+    tot = triangulation->size();
     for (index = 0; index < tot; index++) {
         for (type=0; type<4; type++)
             ans += getTriangleCoord(index, type);
@@ -393,7 +393,7 @@ void NNormalSurface::calculateRealBoundary() const {
     }
 
     unsigned long index;
-    unsigned long tot = triangulation->getNumberOfTetrahedra();
+    unsigned long tot = triangulation->size();
     const NTetrahedron* tet;
     int type, face;
 
@@ -458,7 +458,7 @@ NMatrixInt* NNormalSurface::boundaryIntersections() const {
         return 0;
 
     unsigned long cusps = equations->rows() / 2;
-    unsigned long numTet = snapPea->getNumberOfTetrahedra();
+    unsigned long numTet = snapPea->size();
     NMatrixInt* slopes = new NMatrixInt(cusps, 2);
     for(unsigned int i=0; i < cusps; i++) {
         NLargeInteger meridian; // constructor sets this to 0

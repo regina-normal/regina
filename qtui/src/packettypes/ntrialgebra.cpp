@@ -368,8 +368,7 @@ void NTriTuraevViroUI::calculateInvariant() {
         return;
 
     // Run sanity checks.
-    if (! (tri->isValid() && tri->isClosed() &&
-            tri->getNumberOfTetrahedra() > 0)) {
+    if (! (tri->isValid() && tri->isClosed() && ! tri->empty())) {
         ReginaSupport::sorry(ui,
             tr("Turaev-Viro invariants are currently "
             "available only for closed, valid, non-empty triangulations."));

@@ -92,7 +92,7 @@ namespace {
         return subtree;
     }
 
-    boost::python::list getTags_list(const NPacket* p) {
+    boost::python::list tags_list(const NPacket* p) {
         const std::set<std::string>& tags = p->getTags();
         std::set<std::string>::const_iterator it;
 
@@ -121,7 +121,7 @@ void addNPacket() {
         .def("addTag", &NPacket::addTag)
         .def("removeTag", &NPacket::removeTag)
         .def("removeAllTags", &NPacket::removeAllTags)
-        .def("getTags", getTags_list)
+        .def("getTags", tags_list)
         .def("getTreeParent", &NPacket::getTreeParent,
             return_value_policy<reference_existing_object>())
         .def("getFirstTreeChild", &NPacket::getFirstTreeChild,

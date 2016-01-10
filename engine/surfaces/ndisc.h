@@ -220,7 +220,7 @@ class REGINA_API NDiscSetTet {
          * @param surface the normal surface whose discs we shall use.
          * @param tetIndex the index in the triangulation of the
          * tetrahedron that our discs must lie in; this must be between
-         * 0 and <tt>tri.getNumberOfTetrahedra()-1</tt> inclusive, where
+         * 0 and <tt>tri.size()-1</tt> inclusive, where
          * <tt>tri</tt> is the triangulation containing the given normal
          * surface.
          */
@@ -359,7 +359,7 @@ class NDiscSetTetData : public NDiscSetTet {
          * @param surface the normal surface whose discs we shall use.
          * @param tetIndex the index in the triangulation of the
          * tetrahedron that our discs must lie in; this must be between
-         * 0 and <tt>tri.getNumberOfTetrahedra()-1</tt> inclusive, where
+         * 0 and <tt>tri.size()-1</tt> inclusive, where
          * <tt>tri</tt> is the triangulation containing the given normal
          * surface.
          */
@@ -380,7 +380,7 @@ class NDiscSetTetData : public NDiscSetTet {
          * @param surface the normal surface whose discs we shall use.
          * @param tetIndex the index in the triangulation of the
          * tetrahedron that our discs must lie in; this must be between
-         * 0 and <tt>tri.getNumberOfTetrahedra()-1</tt> inclusive, where
+         * 0 and <tt>tri.size()-1</tt> inclusive, where
          * <tt>tri</tt> is the triangulation containing the given normal
          * surface.
          * @param initValue the value with which to initialise the data
@@ -496,7 +496,7 @@ class REGINA_API NDiscSetSurface {
          * in the \a discSets array <b>must</b> be created, since the
          * \a NDiscSetSurface destructor will attempt to destroy them!
          * The \a discSets array will have size
-         * <tt>surface.getTriangulation()->getNumberOfTetrahedra()</tt>.
+         * <tt>surface.getTriangulation()->size()</tt>.
          *
          * @param surface the normal surface whose discs we shall use.
          * @param b this parameter is ignored.
@@ -608,7 +608,7 @@ class NDiscSetSurfaceData : public NDiscSetSurface {
          */
         NDiscSetSurfaceData(const NNormalSurface& surface) :
                 NDiscSetSurface(surface, true) {
-            unsigned long tot = triangulation->getNumberOfTetrahedra();
+            unsigned long tot = triangulation->size();
             if (tot)
                 for (unsigned long index = 0; index < tot; index++)
                     discSets[index] = new NDiscSetTetData<T>(surface, index);
@@ -625,7 +625,7 @@ class NDiscSetSurfaceData : public NDiscSetSurface {
          */
         NDiscSetSurfaceData(const NNormalSurface& surface, const T& initValue) :
                 NDiscSetSurface(surface, true) {
-            unsigned long tot = triangulation->getNumberOfTetrahedra();
+            unsigned long tot = triangulation->size();
             if (tot)
                 for (unsigned long index = 0; index < tot; index++)
                     discSets[index] = new NDiscSetTetData<T>(surface, index,
@@ -814,7 +814,7 @@ inline unsigned long NDiscSetTet::nDiscs(int type) const {
 // Inline functions for NDiscSetSurface
 
 inline unsigned long NDiscSetSurface::nTets() const {
-    return triangulation->getNumberOfTetrahedra();
+    return triangulation->size();
 }
 
 inline unsigned long NDiscSetSurface::nDiscs(unsigned long tetIndex,

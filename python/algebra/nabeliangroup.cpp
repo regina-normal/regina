@@ -53,9 +53,9 @@ namespace {
         &NAbelianGroup::addGroup;
     void (NAbelianGroup::*addGroup_group)(const NAbelianGroup&) =
         &NAbelianGroup::addGroup;
-    unsigned (NAbelianGroup::*getTorsionRank_large)(
+    unsigned (NAbelianGroup::*torsionRank_large)(
         const regina::NLargeInteger&) const = &NAbelianGroup::getTorsionRank;
-    unsigned (NAbelianGroup::*getTorsionRank_long)(unsigned long)
+    unsigned (NAbelianGroup::*torsionRank_long)(unsigned long)
         const = &NAbelianGroup::getTorsionRank;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addRank,
@@ -110,8 +110,8 @@ void addNAbelianGroup() {
         .def("addGroup", addGroup_matrix)
         .def("addGroup", addGroup_group)
         .def("getRank", &NAbelianGroup::getRank)
-        .def("getTorsionRank", getTorsionRank_large)
-        .def("getTorsionRank", getTorsionRank_long)
+        .def("getTorsionRank", torsionRank_large)
+        .def("getTorsionRank", torsionRank_long)
         .def("getNumberOfInvariantFactors",
             &NAbelianGroup::getNumberOfInvariantFactors)
         .def("getInvariantFactor", &NAbelianGroup::getInvariantFactor,

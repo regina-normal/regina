@@ -351,7 +351,7 @@ class NPerm2Test : public CppUnit::TestFixture {
             }
 
             // An indirect test (using NPerm4 to verify).
-            int a, b, c, d, e, f;
+            int a, d;
             for (a = 0; a < 2; ++a) {
                 NPerm2 x = NPerm2::S2[a]; // 0 -> a, 1 -> 1-a.
 

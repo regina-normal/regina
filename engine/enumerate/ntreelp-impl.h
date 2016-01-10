@@ -178,7 +178,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool) {
         // Keep the tetrahedra in the same order, but move
         // quadrilaterals to the front and triangles to the back
         // as required by columnPerm().
-        int n = tri_->getNumberOfTetrahedra();
+        int n = tri_->size();
         for (i = 0; i < n; ++i) {
             columnPerm_[3 * i] = 7 * i + 4;
             columnPerm_[3 * i + 1] = 7 * i + 5;
@@ -231,7 +231,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool) {
 #else
 template <class LPConstraint>
 void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
-    int n = tri_->getNumberOfTetrahedra();
+    int n = tri_->size();
     int i, j, k;
 
     // Fill the columnPerm_ array according to what kind of
@@ -903,13 +903,13 @@ void LPData<LPConstraint, Integer>::extractSolution(
             // constrained to be positive is the final scaling coordinate.
             // Even better, this coordinate is never moved by the column
             // permutation.
-            pos = 3 * origTableaux_->tri()->getNumberOfTetrahedra();
+            pos = 3 * origTableaux_->tri()->size();
             v.setElement(pos, v[pos] + lcm);
         } else {
             // For strict angle structures, we pass type == 0, and we
             // constrain *all* coordinates as positive.
             for (pos = 0;
-                    pos <= 3 * origTableaux_->tri()->getNumberOfTetrahedra();
+                    pos <= 3 * origTableaux_->tri()->size();
                     ++pos)
                 v.setElement(pos, v[pos] + lcm);
         }
@@ -917,7 +917,7 @@ void LPData<LPConstraint, Integer>::extractSolution(
         // For normal and almost normal surfaces, we need to work through
         // each past call to constrainPositive() and/or constrainOct().
         const unsigned long nTets =
-            origTableaux_->tri()->getNumberOfTetrahedra();
+            origTableaux_->tri()->size();
 
         // First take into account the quadrilateral types...
         for (i = 0; i < nTets; ++i)
