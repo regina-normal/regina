@@ -277,7 +277,7 @@ class REGINA_API Triangulation<2> :
          * ones.  Thus this object should be considered temporary only.
          *
          * @param index the index of the desired boundary component, ranging
-         * from 0 to getNumberOfBoundaryComponents()-1 inclusive.
+         * from 0 to countBoundaryComponents()-1 inclusive.
          * @return the requested boundary component.
          */
         Dim2BoundaryComponent* getBoundaryComponent(unsigned long index) const;

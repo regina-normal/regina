@@ -171,7 +171,7 @@ bool process(const std::string& filename) {
             for (i = 0; i < n; ++i)
                 if (s->getSurface(i)->isThinEdgeLink().first)
                     ++links;
-            out << t->getNumberOfTetrahedra() << ' ' << links << " \""
+            out << t->size() << ' ' << links << " \""
                 << t->getPacketLabel() << '"' << std::endl;
 
             delete s;

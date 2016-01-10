@@ -134,7 +134,7 @@ void process(const char* filename) {
                 continue;
 
             if (checkZeroEff && t->isOrientable() &&
-                    t->getNumberOfTetrahedra() >= 3 && ! t->isZeroEfficient())
+                    t->size() >= 3 && ! t->isZeroEfficient())
                 continue;
 
             // Looks okay.  Use it.

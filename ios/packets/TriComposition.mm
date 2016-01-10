@@ -181,7 +181,7 @@
 
 - (void)findAugTriSolidTori:(NSMutableString*)details
 {
-    unsigned long nComps = self.packet->getNumberOfComponents();
+    unsigned long nComps = self.packet->countComponents();
     
     regina::NAugTriSolidTorus* aug;
     for (unsigned long i = 0; i < nComps; i++) {
@@ -214,7 +214,7 @@
 
 - (void)findL31Pillows:(NSMutableString*)details
 {
-    unsigned long nComps = self.packet->getNumberOfComponents();
+    unsigned long nComps = self.packet->countComponents();
     
     regina::NL31Pillow* pillow;
     for (unsigned long i = 0; i < nComps; i++) {
@@ -233,7 +233,7 @@
 
 - (void)findLayeredChainPairs:(NSMutableString*)details
 {
-    unsigned long nComps = self.packet->getNumberOfComponents();
+    unsigned long nComps = self.packet->countComponents();
     
     regina::NLayeredChainPair* pair;
     for (unsigned long i = 0; i < nComps; i++) {
@@ -253,7 +253,7 @@
 
 - (void)findLayeredLensSpaces:(NSMutableString*)details
 {
-    unsigned long nComps = self.packet->getNumberOfComponents();
+    unsigned long nComps = self.packet->countComponents();
     
     regina::NLayeredLensSpace* lens;
     for (unsigned long i = 0; i < nComps; i++) {
@@ -278,7 +278,7 @@
 
 - (void)findLayeredLoops:(NSMutableString*)details
 {
-    unsigned long nComps = self.packet->getNumberOfComponents();
+    unsigned long nComps = self.packet->countComponents();
     
     regina::NLayeredLoop* loop;
     for (unsigned long i = 0; i < nComps; i++) {
@@ -305,7 +305,7 @@
 
 - (void)findPlugTriSolidTori:(NSMutableString*)details
 {
-    unsigned long nComps = self.packet->getNumberOfComponents();
+    unsigned long nComps = self.packet->countComponents();
     
     regina::NPlugTriSolidTorus* plug;
     const regina::NLayeredChain* chain;
@@ -519,7 +519,7 @@
 
 - (void)findLayeredSolidTori:(NSMutableString*)details
 {
-    unsigned long nTets = self.packet->getNumberOfTetrahedra();
+    unsigned long nTets = self.packet->size();
     
     regina::NLayeredSolidTorus* torus;
     unsigned long topIndex;
@@ -554,7 +554,7 @@
 
 - (void)findSpiralSolidTori:(NSMutableString*)details
 {
-    unsigned long nTets = self.packet->getNumberOfTetrahedra();
+    unsigned long nTets = self.packet->size();
     
     regina::NSpiralSolidTorus* spiral;
     regina::NTetrahedron* tet;
@@ -641,7 +641,7 @@
 
 - (void)findSnappedBalls:(NSMutableString*)details
 {
-    unsigned long nTets = self.packet->getNumberOfTetrahedra();
+    unsigned long nTets = self.packet->size();
     
     regina::NSnappedBall* ball;
     for (unsigned long i = 0; i < nTets; i++) {
@@ -661,7 +661,7 @@
 
 - (void)findPillowSpheres:(NSMutableString*)details
 {
-    unsigned long nTriangles = self.packet->getNumberOfTriangles();
+    unsigned long nTriangles = self.packet->countTriangles();
     
     unsigned long i, j;
     regina::NTriangle* f1;
@@ -689,7 +689,7 @@
 
 - (void)findSnappedSpheres:(NSMutableString*)details
 {
-    unsigned long nTets = self.packet->getNumberOfTetrahedra();
+    unsigned long nTets = self.packet->size();
     
     unsigned long i, j;
     regina::NTetrahedron* t1;

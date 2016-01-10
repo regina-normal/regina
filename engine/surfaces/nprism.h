@@ -181,8 +181,7 @@ class REGINA_API NPrismSetSurface {
          *
          * @param tetIndex the index in the triangulation of the
          * tetrahedron in which we are interested; this should be
-         * between 0 and NTriangulation::getNumberOfTetrahedra()-1
-         * inclusive.
+         * between 0 and NTriangulation::size()-1 inclusive.
          * @return the quadrilateral type found within this tetrahedron.
          * This is 0, 1 or 2 and represents the same type parameter as is
          * used by NNormalSurface::getQuadCoord().  If the underlying surface

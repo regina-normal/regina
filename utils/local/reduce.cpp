@@ -96,7 +96,7 @@ unsigned long nReduced = 0;
 void processAlt(NTriangulation* t) {
     t->intelligentSimplify();
 
-    if (t->getNumberOfTetrahedra() >= orig->getNumberOfTetrahedra())
+    if (t->size() >= orig->size())
         return;
 
     // Got one.
@@ -122,7 +122,7 @@ void tryMovesDown(NTriangulation* t, int maxLevels) {
     unsigned i, j;
     bool found = false;
 
-    for (i = 0; i < t->getNumberOfEdges(); i++)
+    for (i = 0; i < t->countEdges(); i++)
         if (t->twoZeroMove(t->getEdge(i), true, false)) {
             alt = new NTriangulation(*t);
             alt->twoZeroMove(alt->getEdge(i));
@@ -134,7 +134,7 @@ void tryMovesDown(NTriangulation* t, int maxLevels) {
                 return;
         }
 
-    for (i = 0; i < t->getNumberOfEdges(); i++)
+    for (i = 0; i < t->countEdges(); i++)
         for (j = 0; j < 2; j++)
             if (t->twoOneMove(t->getEdge(i), j, true, false)) {
                 alt = new NTriangulation(*t);
@@ -149,7 +149,7 @@ void tryMovesDown(NTriangulation* t, int maxLevels) {
 
     // Only try 3-2 moves if nothing better has worked so far.
     if (! found)
-        for (i = 0; i < t->getNumberOfEdges(); i++)
+        for (i = 0; i < t->countEdges(); i++)
             if (t->threeTwoMove(t->getEdge(i), true, false)) {
                 alt = new NTriangulation(*t);
                 alt->threeTwoMove(alt->getEdge(i));
@@ -163,7 +163,7 @@ void tryMovesDown(NTriangulation* t, int maxLevels) {
 
     // Only try 4-4 moves if nothing else has worked.
     if (! found)
-        for (i = 0; i < t->getNumberOfEdges(); i++)
+        for (i = 0; i < t->countEdges(); i++)
             for (j = 0; j < 2; j++)
                 if (t->fourFourMove(t->getEdge(i), j, true, false)) {
                     alt = new NTriangulation(*t);
@@ -192,7 +192,7 @@ void tryMovesAcross(NTriangulation* t, int maxLevels,
     NTriangulation* alt;
 
     if (maxLevels > 0)
-        for (i = 0; i < t->getNumberOfEdges(); i++)
+        for (i = 0; i < t->countEdges(); i++)
             for (j = 0; j < 2; j++)
                 if (t->fourFourMove(t->getEdge(i), j, true, false)) {
                     alt = new NTriangulation(*t);
@@ -227,9 +227,9 @@ void tryMovesUp(NTriangulation* t, int levelsRemaining) {
         tryMovesAcross(alt, argAcross);
         delete alt;
     } else {
-        for (unsigned i = 0; i < t->getNumberOfFaces(); i++) {
+        for (unsigned i = 0; i < t->countTriangles(); i++) {
             alt = new NTriangulation(*t);
-            if (alt->twoThreeMove(alt->getFace(i))) {
+            if (alt->twoThreeMove(alt->getTriangle(i))) {
                 if (levelsRemaining > 1)
                     tryMovesUp(alt, levelsRemaining - 1);
                 else

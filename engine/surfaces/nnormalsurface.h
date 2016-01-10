@@ -639,7 +639,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          *
          * @param edgeIndex the index in the triangulation of the edge
          * in which we are interested; this should be between 0 and
-         * NTriangulation::getNumberOfEdges()-1 inclusive.
+         * NTriangulation::countEdges()-1 inclusive.
          * @param triang the triangulation in which this normal surface lives.
          * @return the number of times this normal surface crosses the
          * given edge.
@@ -653,7 +653,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          *
          * @param triIndex the index in the triangulation of the triangle
          * in which we are interested; this should be between 0 and
-         * NTriangulation::getNumberOfTriangles()-1 inclusive.
+         * NTriangulation::countTriangles()-1 inclusive.
          * @param triVertex the vertex of the triangle (0, 1 or 2) around
          * which the arcs of intersection that we are interested in lie;
          * only these arcs will be counted.
@@ -678,7 +678,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          *
          * @param triIndex the index in the triangulation of the triangle
          * in which we are interested; this should be between 0 and
-         * NTriangulation::getNumberOfTriangles()-1 inclusive.
+         * NTriangulation::countTriangles()-1 inclusive.
          * @param triVertex the vertex of the triangle (0, 1 or 2) around
          * which the arcs of intersection that we are interested in lie;
          * only these arcs will be counted.
@@ -1022,7 +1022,7 @@ class REGINA_API NNormalSurface :
          *
          * @param edgeIndex the index in the triangulation of the edge
          * in which we are interested; this should be between 0 and
-         * NTriangulation::getNumberOfEdges()-1 inclusive.
+         * NTriangulation::countEdges()-1 inclusive.
          * @return the number of times this normal surface crosses the
          * given edge.
          */
@@ -1033,7 +1033,7 @@ class REGINA_API NNormalSurface :
          *
          * @param triIndex the index in the triangulation of the triangle
          * in which we are interested; this should be between 0 and
-         * NTriangulation::getNumberOfTriangles()-1 inclusive.
+         * NTriangulation::countTriangles()-1 inclusive.
          * @param triVertex the vertex of the triangle (0, 1 or 2) around
          * which the arcs of intersection that we are interested in lie;
          * only these arcs will be counted.
@@ -1054,7 +1054,7 @@ class REGINA_API NNormalSurface :
          *
          * @param triIndex the index in the triangulation of the triangle
          * in which we are interested; this should be between 0 and
-         * NTriangulation::getNumberOfTriangles()-1 inclusive.
+         * NTriangulation::countTriangles()-1 inclusive.
          * @param triVertex the vertex of the triangle (0, 1 or 2) around
          * which the arcs of intersection that we are interested in lie;
          * only these arcs will be counted.

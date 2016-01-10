@@ -103,7 +103,7 @@ QModelIndex GluingsModel::index(int row, int column,
 }
 
 int GluingsModel::rowCount(const QModelIndex& /* unused parent*/) const {
-    return tri_->getNumberOfSimplices();
+    return tri_->size();
 }
 
 int GluingsModel::columnCount(const QModelIndex& /* unused parent*/) const {
@@ -204,7 +204,7 @@ bool GluingsModel::setData(const QModelIndex& index, const QVariant& value,
 
         // Check explicitly for a negative tetrahedron number
         // since isFaceStringValid() takes an unsigned integer.
-        if (newAdjTet < 0 || newAdjTet >= tri_->getNumberOfSimplices()) {
+        if (newAdjTet < 0 || newAdjTet >= tri_->size()) {
             showError(tr("There is no tetrahedron number %1.").
                 arg(newAdjTet));
             return false;
@@ -256,7 +256,7 @@ bool GluingsModel::setData(const QModelIndex& index, const QVariant& value,
 QString GluingsModel::isFaceStringValid(unsigned long srcTet, int srcFace,
         unsigned long destTet, const QString& destFace,
         regina::NPerm4* gluing) {
-    if (destTet >= tri_->getNumberOfSimplices())
+    if (destTet >= tri_->size())
         return tr("There is no tetrahedron number %1.").arg(destTet);
 
     if (! reFace.exactMatch(destFace))
@@ -754,7 +754,7 @@ void NTriGluingsUI::removeSelectedTets() {
         return;
 
     // Off we go!
-    if (first == 0 && last == tri->getNumberOfTetrahedra() - 1)
+    if (first == 0 && last == tri->size() - 1)
         tri->removeAllSimplices();
     else {
         regina::NPacket::ChangeEventSpan span(tri);
@@ -862,7 +862,7 @@ void NTriGluingsUI::puncture() {
 void NTriGluingsUI::drillEdge() {
     endEdit();
 
-    if (tri->getNumberOfEdges() == 0)
+    if (tri->countEdges() == 0)
         ReginaSupport::sorry(ui,
             tr("This triangulation does not have any edges."));
     else {
@@ -939,7 +939,7 @@ void NTriGluingsUI::boundaryComponents() {
 void NTriGluingsUI::vertexLinks() {
     endEdit();
 
-    if (tri->getNumberOfVertices() == 0)
+    if (tri->countVertices() == 0)
         ReginaSupport::sorry(ui,
             tr("This triangulation does not have any vertices."));
     else {
@@ -969,11 +969,11 @@ void NTriGluingsUI::vertexLinks() {
 void NTriGluingsUI::splitIntoComponents() {
     endEdit();
 
-    if (tri->getNumberOfComponents() == 0)
+    if (tri->countComponents() == 0)
         ReginaSupport::info(ui,
             tr("This triangulation is empty."),
             tr("It has no components."));
-    else if (tri->getNumberOfComponents() == 1)
+    else if (tri->countComponents() == 1)
         ReginaSupport::info(ui,
             tr("This triangulation is connected."),
             tr("It has only one component."));
@@ -1004,7 +1004,7 @@ void NTriGluingsUI::splitIntoComponents() {
 void NTriGluingsUI::connectedSumDecomposition() {
     endEdit();
 
-    if (tri->getNumberOfTetrahedra() == 0)
+    if (tri->isEmpty())
         ReginaSupport::info(ui,
             tr("This triangulation is empty."),
             tr("It has no prime summands."));
@@ -1056,8 +1056,7 @@ void NTriGluingsUI::connectedSumDecomposition() {
                 // 0-efficient triangulations.
                 NTriangulation* small = static_cast<NTriangulation*>
                     (base->getFirstTreeChild());
-                if (small->getNumberOfTetrahedra() <= 2 &&
-                        small->getHomologyH1().isZ()) {
+                if (small->size() <= 2 && small->getHomologyH1().isZ()) {
                     // The only closed prime manifolds with
                     // H_1 = Z and <= 2 tetrahedra are S2xS1 and S2x~S1.
                     if (small->isOrientable())
@@ -1075,7 +1074,7 @@ void NTriGluingsUI::connectedSumDecomposition() {
                             tr("I cannot decompose it further.  "
                             "However, I have constructed a new minimal "
                             "(but not 0-efficient) triangulation."));
-                } else if (small->getNumberOfTetrahedra() <= 2 &&
+                } else if (small->size() <= 2 &&
                         small->getHomologyH1().isZn(2)) {
                     // The only closed prime orientable manifold with
                     // H_1 = Z_2 and <= 2 tetrahedra is RP3. */) {
@@ -1107,7 +1106,7 @@ void NTriGluingsUI::connectedSumDecomposition() {
 void NTriGluingsUI::makeZeroEfficient() {
     endEdit();
 
-    unsigned long initTets = tri->getNumberOfTetrahedra();
+    unsigned long initTets = tri->size();
     if (initTets == 0) {
         ReginaSupport::info(ui, tr("This triangulation is empty."));
         return;
@@ -1150,7 +1149,7 @@ void NTriGluingsUI::makeZeroEfficient() {
             "prime summands (without modifying this triangulation)."));
     } else {
         // Prime 3-manifold.
-        unsigned long finalTets = tri->getNumberOfTetrahedra();
+        unsigned long finalTets = tri->size();
         if (finalTets <= 2) {
             // Check for special cases.
             if ((! tri->isZeroEfficient()) &&
@@ -1218,7 +1217,7 @@ void NTriGluingsUI::makeZeroEfficient() {
 void NTriGluingsUI::toSnapPea() {
     endEdit();
 
-    if (tri->getNumberOfTetrahedra() == 0 || tri->hasBoundaryTriangles() ||
+    if (tri->isEmpty() || tri->hasBoundaryTriangles() ||
             (! tri->isValid()) || (! tri->isStandard()) ||
             (! tri->isConnected())) {
         ReginaSupport::sorry(ui,

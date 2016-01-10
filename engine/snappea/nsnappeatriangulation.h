@@ -653,7 +653,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * <tt>Manifold.tetrahedra_shapes(part='rect')[tet]</tt>.
          *
          * @param tet the index of a tetrahedron; this must be between
-         * 0 and getNumberOfTetrahedra()-1 inclusive.
+         * 0 and size()-1 inclusive.
          * @return the shape of the given tetrahedron, in rectangular form.
          */
         const std::complex<double>& shape(unsigned tet) const;
@@ -682,7 +682,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * This will be with respect to the current Dehn filling (if any).
          *
          * Each row of this matrix will describe a single equation.
-         * The first getNumberOfEdges() rows will list the edge equations,
+         * The first countEdges() rows will list the edge equations,
          * and the following 2 * countCompleteCusps() + countFilledCusps()
          * rows will list the cusp equations.
          *
@@ -693,7 +693,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * is accessed through the cusp() routine) can help translate
          * between SnapPea's cusp numbers and Regina's vertex numbers.
          *
-         * The matrix will contain <tt>3 * getNumberOfTetrahedra()</tt> columns.
+         * The matrix will contain <tt>3 * size()</tt> columns.
          * The first three columns represent shape parameters <tt>z</tt>,
          * <tt>1/(1-z)</tt> and <tt>(z-1)/z</tt> for the first tetrahedron;
          * the next three columns represent shape parameters <tt>z</tt>,
@@ -733,8 +733,8 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * precise details see the documentation for gluingEquations(),
          * which uses the same ordering.
          *
-         * The matrix will contain <tt>2 * getNumberOfTetrahedra() + 1</tt>
-         * columns.  Let \a k = getNumberOfTetrahedra()-1, and suppose the
+         * The matrix will contain <tt>2 * size() + 1</tt>
+         * columns.  Let \a k = size()-1, and suppose the
          * shape parameters for tetrahedra 0, 1, ..., k are
          * \a z0, \a z1, ..., \a zk (here each shape parameter corresponds
          * to edges 0 and 5 of the corresponding tetrahedron).
@@ -765,7 +765,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * Returns the total number of cusps (both filled and complete).
          *
          * This returns the same value as the inherited function
-         * NTriangulation::getNumberOfBoundaryComponents().
+         * NTriangulation::countBoundaryComponents().
          *
          * \snappy In SnapPy, this routine corresponds to calling
          * <tt>Manifold.num_cusps()</tt>.
@@ -1518,11 +1518,11 @@ inline const std::complex<double>& NSnapPeaTriangulation::shape(unsigned tet)
 }
 
 inline unsigned NSnapPeaTriangulation::countCusps() const {
-    return getNumberOfBoundaryComponents();
+    return countBoundaryComponents();
 }
 
 inline unsigned NSnapPeaTriangulation::countCompleteCusps() const {
-    return getNumberOfBoundaryComponents() - filledCusps_;
+    return countBoundaryComponents() - filledCusps_;
 }
 
 inline unsigned NSnapPeaTriangulation::countFilledCusps() const {

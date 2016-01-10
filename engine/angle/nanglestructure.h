@@ -189,7 +189,7 @@ class REGINA_API NAngleStructure :
          *
          * @param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested angle lives; this should
-         * be between 0 and NTriangulation::getNumberOfTetrahedra()-1
+         * be between 0 and NTriangulation::size()-1
          * inclusive.
          * @param edgePair the number of the vertex splitting
          * representing the pair of edges holding the requested angle;

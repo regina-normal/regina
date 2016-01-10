@@ -182,7 +182,7 @@ QString VertexModel::overview() const {
 int VertexModel::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
-    return (parent.isValid() ? 0 : tri->getNumberOfVertices());
+    return (parent.isValid() ? 0 : tri->countVertices());
 }
 
 int VertexModel::columnCount(const QModelIndex& /* unused parent*/) const {
@@ -287,7 +287,7 @@ QString EdgeModel::overview() const {
 int EdgeModel::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
-    return (parent.isValid() ? 0 : tri->getNumberOfEdges());
+    return (parent.isValid() ? 0 : tri->countEdges());
 }
 
 int EdgeModel::columnCount(const QModelIndex& /* unused parent*/) const {
@@ -376,7 +376,7 @@ QString TriangleModel::overview() const {
 int TriangleModel::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
-    return (parent.isValid() ? 0 : tri->getNumberOfTriangles());
+    return (parent.isValid() ? 0 : tri->countTriangles());
 }
 
 int TriangleModel::columnCount(const QModelIndex& /* unused parent*/) const {
@@ -482,7 +482,7 @@ QString ComponentModel::overview() const {
 int ComponentModel::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
-    return (parent.isValid() ? 0 : tri->getNumberOfComponents());
+    return (parent.isValid() ? 0 : tri->countComponents());
 }
 
 int ComponentModel::columnCount(const QModelIndex& /* unused parent*/) const {
@@ -499,11 +499,10 @@ QVariant ComponentModel::data(const QModelIndex& index, int role) const {
                 return (item->isIdeal() ? tr("Ideal, ") : tr("Real, ")) +
                     (item->isOrientable() ? tr("Orbl") : tr("Non-orbl"));
             case 2:
-                return static_cast<unsigned>(item->getNumberOfTetrahedra());
+                return static_cast<unsigned>(item->size());
             case 3:
                 QString ans;
-                for (unsigned long i = 0; i < item->getNumberOfTetrahedra();
-                        i++)
+                for (unsigned long i = 0; i < item->size(); i++)
                     appendToList(ans, QString::number(
                         item->getTetrahedron(i)->index()));
                 return ans;
@@ -571,7 +570,7 @@ QString BoundaryComponentModel::overview() const {
 int BoundaryComponentModel::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
-    return (parent.isValid() ? 0 : tri->getNumberOfBoundaryComponents());
+    return (parent.isValid() ? 0 : tri->countBoundaryComponents());
 }
 
 int BoundaryComponentModel::columnCount(const QModelIndex& /* unused parent*/) const {
@@ -592,7 +591,7 @@ QVariant BoundaryComponentModel::data(const QModelIndex& index,
                 // (by a parity argument).
                 return (item->isIdeal() ?
                     tr("Degree %1").arg(item->getVertex(0)->getDegree()) :
-                    tr("%1 triangles").arg(item->getNumberOfTriangles()));
+                    tr("%1 triangles").arg(item->countTriangles()));
             case 3:
                 if (item->isIdeal()) {
                     NVertex* v = item->getVertex(0);
@@ -604,8 +603,7 @@ QVariant BoundaryComponentModel::data(const QModelIndex& index,
                     return tr("Vertex %1 = ").arg(v->index()) + ans;
                 } else {
                     QString ans;
-                    for (unsigned long i = 0;
-                            i < item->getNumberOfTriangles(); ++i) {
+                    for (unsigned long i = 0; i < item->countTriangles(); ++i) {
                         const NTriangleEmbedding& emb =
                             item->getTriangle(i)->front();
                         appendToList(ans, QString("%1 (%2)").
@@ -679,7 +677,7 @@ QString Dim2VertexModel::overview() const {
 int Dim2VertexModel::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
-    return (parent.isValid() ? 0 : tri->getNumberOfVertices());
+    return (parent.isValid() ? 0 : tri->countVertices());
 }
 
 int Dim2VertexModel::columnCount(const QModelIndex& /* unused parent*/) const {
@@ -767,7 +765,7 @@ QString Dim2EdgeModel::overview() const {
 int Dim2EdgeModel::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
-    return (parent.isValid() ? 0 : tri->getNumberOfEdges());
+    return (parent.isValid() ? 0 : tri->countEdges());
 }
 
 int Dim2EdgeModel::columnCount(const QModelIndex& /* unused parent*/) const {
@@ -853,7 +851,7 @@ QString Dim2ComponentModel::overview() const {
 int Dim2ComponentModel::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
-    return (parent.isValid() ? 0 : tri->getNumberOfComponents());
+    return (parent.isValid() ? 0 : tri->countComponents());
 }
 
 int Dim2ComponentModel::columnCount(const QModelIndex& /* unused */) const {
@@ -869,10 +867,10 @@ QVariant Dim2ComponentModel::data(const QModelIndex& index, int role) const {
             case 1:
                 return (item->isOrientable() ? tr("Orbl") : tr("Non-orbl"));
             case 2:
-                return static_cast<unsigned>(item->getNumberOfTriangles());
+                return static_cast<unsigned>(item->size());
             case 3:
                 QString ans;
-                for (unsigned long i = 0; i < item->getNumberOfTriangles(); ++i)
+                for (unsigned long i = 0; i < item->size(); ++i)
                     appendToList(ans, QString::number(
                         item->getTriangle(i)->index()));
                 return ans;
@@ -934,7 +932,7 @@ QString Dim2BoundaryComponentModel::overview() const {
 int Dim2BoundaryComponentModel::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
-    return (parent.isValid() ? 0 : tri->getNumberOfBoundaryComponents());
+    return (parent.isValid() ? 0 : tri->countBoundaryComponents());
 }
 
 int Dim2BoundaryComponentModel::columnCount(const QModelIndex& /* unused */)
@@ -950,11 +948,11 @@ QVariant Dim2BoundaryComponentModel::data(const QModelIndex& index,
             case 0:
                 return index.row();
             case 1:
-                return (item->getNumberOfEdges() == 1 ? tr("1 edge") :
-                    tr("%1 edges").arg(item->getNumberOfEdges()));
+                return (item->countEdges() == 1 ? tr("1 edge") :
+                    tr("%1 edges").arg(item->countEdges()));
             case 2:
                 QString ans;
-                for (unsigned long i = 0; i < item->getNumberOfEdges(); ++i) {
+                for (unsigned long i = 0; i < item->countEdges(); ++i) {
                     const Dim2EdgeEmbedding& emb = item->getEdge(i)->front();
                     appendToList(ans, QString("%1 (%2)").
                         arg(emb.getTriangle()->index()).

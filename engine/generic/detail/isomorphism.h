@@ -414,7 +414,7 @@ bool IsomorphismBase<dim>::isIdentity() const {
 template <int dim>
 Triangulation<dim>* IsomorphismBase<dim>::apply(
         const Triangulation<dim>* original) const {
-    if (original->getNumberOfSimplices() != nSimplices_)
+    if (original->size() != nSimplices_)
         return 0;
 
     if (nSimplices_ == 0)
@@ -460,7 +460,7 @@ Triangulation<dim>* IsomorphismBase<dim>::apply(
 
 template <int dim>
 void IsomorphismBase<dim>::applyInPlace(Triangulation<dim>* tri) const {
-    if (tri->getNumberOfSimplices() != nSimplices_)
+    if (tri->size() != nSimplices_)
         return;
 
     if (nSimplices_ == 0)

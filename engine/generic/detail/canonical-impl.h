@@ -72,7 +72,7 @@ struct CanonicalHelper {
             const Isomorphism<dim>& bestInv) {
         bool better = false;
 
-        size_t nSimp = tri->getNumberOfSimplices();
+        size_t nSimp = tri->size();
         size_t simplex;
 
         for (simplex = 0; simplex < nSimp; ++simplex)
@@ -180,7 +180,7 @@ struct CanonicalHelper {
 
 template <int dim>
 bool TriangulationBase<dim>::makeCanonical() {
-    size_t nSimp = getNumberOfSimplices();
+    size_t nSimp = size();
 
     // Get the empty triangulation out of the way.
     if (nSimp == 0)
