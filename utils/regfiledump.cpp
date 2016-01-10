@@ -195,7 +195,7 @@ int main(int argc, char* argv[]) {
     if (count) {
         if (dumpOpt != 'n')
             out << '\n';
-        out << tree->getTotalTreeSize() << " total packets in file.\n";
+        out << tree->totalTreeSize() << " total packets in file.\n";
     }
 
     delete tree;

@@ -196,7 +196,7 @@ int main(int argc, char* argv[]) {
     else
         for (HomologyMap::iterator it = H1Map.begin();
                 it != H1Map.end(); it++) {
-            size = it->second->getNumberOfChildren();
+            size = it->second->countChildren();
             std::cerr << "    " << it->first << " (" << size
                 << (size == 1 ? " triangulation)" : " triangulations)")
                 << std::endl;

@@ -90,7 +90,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
 
             CPPUNIT_ASSERT_MESSAGE("The 3-sphere " + triName +
                 " is reported to have prime summands.",
-                ans == 0 && summands.getNumberOfChildren() == 0);
+                ans == 0 && summands.countChildren() == 0);
 
             return tri;
         }
@@ -472,7 +472,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                 return;
             }
 
-            if (ncomp != parent.getNumberOfChildren()) {
+            if (ncomp != parent.countChildren()) {
                 std::ostringstream msg;
                 msg << "Triangulation " << tri->getPacketLabel()
                     << " reports a different number of connected sum "

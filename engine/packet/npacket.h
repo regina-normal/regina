@@ -615,7 +615,15 @@ class REGINA_API NPacket :
          *
          * @return the number of immediate children.
          */
-        unsigned long getNumberOfChildren() const;
+        size_t countChildren() const;
+        /**
+         * Deprecated routine that returns the number of immediate children
+         * of this packet.
+         *
+         * \deprecated This routine has been renamed to countChildren().
+         * See the countChildren() documentation for further details.
+         */
+        size_t getNumberOfChildren() const;
         /**
          * Returns the total number of descendants of this packet.  This
          * includes children, grandchildren and so on.  This packet is not
@@ -623,7 +631,15 @@ class REGINA_API NPacket :
          *
          * @return the total number of descendants.
          */
-        unsigned long getNumberOfDescendants() const;
+        size_t countDescendants() const;
+        /**
+         * Deprecated routine that returns the total number of descendants
+         * of this packet.
+         *
+         * \deprecated This routine has been renamed to countDescendants().
+         * See the countDescendants() documentation for further details.
+         */
+        size_t getNumberOfDescendants() const;
         /**
          * Determines the total number of packets in the tree or subtree
          * for which this packet is matriarch.  This packet is included
@@ -631,7 +647,15 @@ class REGINA_API NPacket :
          *
          * @return the total tree or subtree size.
          */
-        unsigned long getTotalTreeSize() const;
+        size_t totalTreeSize() const;
+        /**
+         * Deprecated routine that returns the total number of packets
+         * in the tree or subtree for which this packet is matriarch.
+         *
+         * \deprecated This routine has been renamed to totalTreeSize().
+         * See the totalTreeSize() documentation for further details.
+         */
+        size_t getTotalTreeSize() const;
 
         /*@}*/
         /**
@@ -1488,8 +1512,20 @@ inline unsigned NPacket::levelsUpTo(const NPacket* ancestor) const {
     return ancestor->levelsDownTo(this);
 }
 
-inline unsigned long NPacket::getNumberOfDescendants() const {
-    return getTotalTreeSize() - 1;
+inline size_t NPacket::countDescendants() const {
+    return totalTreeSize() - 1;
+}
+
+inline size_t NPacket::getNumberOfChildren() const {
+    return countChildren();
+}
+
+inline size_t NPacket::getNumberOfDescendants() const {
+    return countDescendants();
+}
+
+inline size_t NPacket::getTotalTreeSize() const {
+    return totalTreeSize();
 }
 
 inline NPacket::ChangeEventSpan::ChangeEventSpan(NPacket* packet) :
