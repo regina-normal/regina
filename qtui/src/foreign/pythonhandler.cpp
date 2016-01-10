@@ -158,7 +158,7 @@ bool PythonHandler::exportData(regina::NPacket* data, const QString& fileName,
     // Output the value of each variable.
     unsigned long i;
     regina::NPacket* value;
-    for (i = 0; i < script->getNumberOfVariables(); i++) {
+    for (i = 0; i < script->countVariables(); i++) {
         value = script->getVariableValue(i);
         out << "### " << varMarker
             << QString(script->getVariableName(i).c_str())

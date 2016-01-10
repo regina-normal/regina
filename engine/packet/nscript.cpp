@@ -40,13 +40,13 @@
 
 namespace regina {
 
-const std::string& NScript::getVariableName(unsigned long index) const {
+const std::string& NScript::getVariableName(size_t index) const {
     std::map<std::string, NPacket*>::const_iterator it = variables.begin();
     advance(it, index);
     return (*it).first;
 }
 
-NPacket* NScript::getVariableValue(unsigned long index) const {
+NPacket* NScript::getVariableValue(size_t index) const {
     std::map<std::string, NPacket*>::const_iterator it = variables.begin();
     advance(it, index);
     return (*it).second;
@@ -66,7 +66,7 @@ long NScript::getVariableIndex(const std::string& name) const {
     return distance(variables.begin(), it);
 }
 
-void NScript::setVariableName(unsigned long index, const std::string& name) {
+void NScript::setVariableName(size_t index, const std::string& name) {
     std::map<std::string, NPacket*>::iterator it = variables.begin();
     advance(it, index);
 
@@ -80,7 +80,7 @@ void NScript::setVariableName(unsigned long index, const std::string& name) {
     variables.insert(std::make_pair(name, value));
 }
 
-void NScript::setVariableValue(unsigned long index, NPacket* value) {
+void NScript::setVariableValue(size_t index, NPacket* value) {
     std::map<std::string, NPacket*>::iterator it = variables.begin();
     advance(it, index);
 
@@ -108,7 +108,7 @@ void NScript::removeVariable(const std::string& name) {
     variables.erase(it);
 }
 
-void NScript::removeVariable(unsigned long index) {
+void NScript::removeVariable(size_t index) {
     std::map<std::string, NPacket*>::iterator it = variables.begin();
     advance(it, index);
 

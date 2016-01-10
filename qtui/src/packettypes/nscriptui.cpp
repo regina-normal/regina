@@ -113,7 +113,7 @@ QModelIndex ScriptVarModel::index(int row, int column,
 }
 
 int ScriptVarModel::rowCount(const QModelIndex&) const {
-    return script_->getNumberOfVariables();
+    return script_->countVariables();
 }
 
 int ScriptVarModel::columnCount(const QModelIndex&) const {
@@ -233,7 +233,7 @@ bool ScriptVarModel::setData(const QModelIndex& index, const QVariant& value,
 }
 
 bool ScriptVarModel::nameUsedElsewhere(const QString& name, int exclude) const {
-    int n = script_->getNumberOfVariables();
+    int n = script_->countVariables();
     for (int i = 0; i < n; ++i) {
         if (i == exclude)
             continue;
@@ -464,7 +464,7 @@ void NScriptUI::addVariable() {
     // Find a suitable variable name.
     QString varName;
 
-    unsigned n = script->getNumberOfVariables();
+    unsigned n = script->countVariables();
     unsigned which = 0;
     unsigned i;
 
@@ -536,7 +536,7 @@ void NScriptUI::removeSelectedVariables() {
 void NScriptUI::updateRemoveState() {
     // Are we read-write?
     if (actAdd->isEnabled())
-        actRemove->setEnabled(script->getNumberOfVariables() > 0);
+        actRemove->setEnabled(script->countVariables() > 0);
     else
         actRemove->setEnabled(false);
 }
@@ -563,7 +563,7 @@ void NScriptUI::execute() {
     // Set up the variable list.
     PythonVariableList vars;
 
-    unsigned nVars = script->getNumberOfVariables();
+    unsigned nVars = script->countVariables();
     for (unsigned i = 0; i < nVars; i++)
         vars.push_back(PythonVariable(script->getVariableName(i).c_str(),
             script->getVariableValue(i)));
