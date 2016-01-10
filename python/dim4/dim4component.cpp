@@ -75,6 +75,7 @@ void addDim4Component() {
         .def("getNumberOfEdges", &Dim4Component::getNumberOfEdges)
         .def("countVertices", &Dim4Component::countVertices)
         .def("getNumberOfVertices", &Dim4Component::getNumberOfVertices)
+        .def("countBoundaryComponents", &Dim4Component::countBoundaryComponents)
         .def("getNumberOfBoundaryComponents",
             &Dim4Component::getNumberOfBoundaryComponents)
         .def("simplices", getSimplices_list)
