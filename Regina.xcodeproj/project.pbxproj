@@ -6788,6 +6788,10 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/ios/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/ios/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/ios/libtokyocabinet.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/ios/graphviz.framework/Headers",
 				);
 				INFOPLIST_FILE = "ios/Regina-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
@@ -6824,6 +6828,10 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/ios/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/ios/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/ios/libtokyocabinet.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/ios/graphviz.framework/Headers",
 				);
 				INFOPLIST_FILE = "ios/Regina-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
