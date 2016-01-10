@@ -678,7 +678,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          *
          * @return the number of surfaces.
          */
-        unsigned long size() const;
+        size_t size() const;
         /**
          * Deprecated routine to return the number of surfaces
          * stored in this list.
@@ -687,7 +687,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          *
          * @return the number of surfaces.
          */
-        unsigned long getNumberOfSurfaces() const;
+        size_t getNumberOfSurfaces() const;
         /**
          * Returns the surface at the requested index in this set.
          *
@@ -696,7 +696,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          *
          * @return the normal surface at the requested index in this set.
          */
-        const NNormalSurface* getSurface(unsigned long index) const;
+        const NNormalSurface* getSurface(size_t index) const;
         /**
          * Writes the number of surfaces in this set followed by the
          * details of each surface to the given output stream.  Output
@@ -1787,15 +1787,15 @@ inline bool NNormalSurfaceList::isEmbeddedOnly() const {
     return which_.has(NS_EMBEDDED_ONLY);
 }
 
-inline unsigned long NNormalSurfaceList::size() const {
+inline size_t NNormalSurfaceList::size() const {
     return surfaces.size();
 }
-inline unsigned long NNormalSurfaceList::getNumberOfSurfaces() const {
+inline size_t NNormalSurfaceList::getNumberOfSurfaces() const {
     return surfaces.size();
 }
 
 inline const NNormalSurface* NNormalSurfaceList::getSurface(
-        unsigned long index) const {
+        size_t index) const {
     return surfaces[index];
 }
 

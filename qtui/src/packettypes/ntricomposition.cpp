@@ -380,7 +380,7 @@ QTreeWidgetItem* NTriCompositionUI::addComponentSection(const QString& text) {
 }
 
 void NTriCompositionUI::findAugTriSolidTori() {
-    unsigned long nComps = tri->getNumberOfComponents();
+    unsigned long nComps = tri->countComponents();
 
     QTreeWidgetItem* id = 0;
     QTreeWidgetItem* details = 0;
@@ -638,7 +638,7 @@ void NTriCompositionUI::findBlockedTriangulations() {
 }
 
 void NTriCompositionUI::findL31Pillows() {
-    unsigned long nComps = tri->getNumberOfComponents();
+    unsigned long nComps = tri->countComponents();
 
     QTreeWidgetItem* id = 0;
     QTreeWidgetItem* details = 0;
@@ -666,7 +666,7 @@ void NTriCompositionUI::findL31Pillows() {
 }
 
 void NTriCompositionUI::findLayeredChainPairs() {
-    unsigned long nComps = tri->getNumberOfComponents();
+    unsigned long nComps = tri->countComponents();
 
     QTreeWidgetItem* id = 0;
     QTreeWidgetItem* details = 0;
@@ -694,7 +694,7 @@ void NTriCompositionUI::findLayeredChainPairs() {
 }
 
 void NTriCompositionUI::findLayeredLensSpaces() {
-    unsigned long nComps = tri->getNumberOfComponents();
+    unsigned long nComps = tri->countComponents();
 
     QTreeWidgetItem* id = 0;
     QTreeWidgetItem* details = 0;
@@ -726,7 +726,7 @@ void NTriCompositionUI::findLayeredLensSpaces() {
 }
 
 void NTriCompositionUI::findLayeredLoops() {
-    unsigned long nComps = tri->getNumberOfComponents();
+    unsigned long nComps = tri->countComponents();
 
     QTreeWidgetItem* id = 0;
     QTreeWidgetItem* details = 0;
@@ -810,7 +810,7 @@ void NTriCompositionUI::findLayeredSolidTori() {
 }
 
 void NTriCompositionUI::findPillowSpheres() {
-    unsigned long nTriangles = tri->getNumberOfTriangles();
+    unsigned long nTriangles = tri->countTriangles();
 
     QTreeWidgetItem* id = 0;
     QTreeWidgetItem* details = 0;
@@ -845,7 +845,7 @@ void NTriCompositionUI::findPillowSpheres() {
 }
 
 void NTriCompositionUI::findPlugTriSolidTori() {
-    unsigned long nComps = tri->getNumberOfComponents();
+    unsigned long nComps = tri->countComponents();
 
     QTreeWidgetItem* id = 0;
     QTreeWidgetItem* details = 0;

@@ -399,8 +399,7 @@ int mainSlave() {
                 t = static_cast<NTriangulation*>(p);
                 s = NNormalSurfaceList::enumerate(t,
                     (quad ? NS_QUAD : NS_STANDARD));
-                out << t->getNumberOfTetrahedra() << ' '
-                    << s->size() << " \""
+                out << t->size() << ' ' << s->size() << " \""
                     << t->getPacketLabel() << '"' << std::endl;
 
                 ++done;

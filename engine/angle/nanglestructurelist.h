@@ -132,7 +132,7 @@ class REGINA_API NAngleStructureList : public NPacket {
          *
          * @return the number of angle structures.
          */
-        unsigned long size() const;
+        size_t size() const;
         /**
          * Deprecated routine to return the number of angle structures
          * stored in this list.
@@ -141,7 +141,7 @@ class REGINA_API NAngleStructureList : public NPacket {
          *
          * @return the number of angle structures.
          */
-        unsigned long getNumberOfStructures() const;
+        size_t getNumberOfStructures() const;
         /**
          * Returns the angle structure at the requested index in this
          * list.
@@ -150,7 +150,7 @@ class REGINA_API NAngleStructureList : public NPacket {
          * this list; this must be between 0 and size()-1 inclusive.
          * @return the angle structure at the requested index.
          */
-        const NAngleStructure* getStructure(unsigned long index) const;
+        const NAngleStructure* getStructure(size_t index) const;
 
         /**
          * Determines whether any convex combination of the angle
@@ -457,15 +457,15 @@ inline bool NAngleStructureList::isTautOnly() const {
     return tautOnly_;
 }
 
-inline unsigned long NAngleStructureList::size() const {
+inline size_t NAngleStructureList::size() const {
     return structures.size();
 }
-inline unsigned long NAngleStructureList::getNumberOfStructures() const {
+inline size_t NAngleStructureList::getNumberOfStructures() const {
     return structures.size();
 }
 
 inline const NAngleStructure* NAngleStructureList::getStructure(
-        unsigned long index) const {
+        size_t index) const {
     return structures[index];
 }
 

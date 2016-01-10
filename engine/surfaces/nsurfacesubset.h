@@ -158,7 +158,7 @@ class REGINA_API NSurfaceSubset :
          *
          * @return the number of surfaces.
          */
-        unsigned long size() const;
+        size_t size() const;
         /**
          * Deprecated routine to return the number of surfaces
          * stored in this list.
@@ -167,7 +167,7 @@ class REGINA_API NSurfaceSubset :
          *
          * @return the number of surfaces.
          */
-        unsigned long getNumberOfSurfaces() const;
+        size_t getNumberOfSurfaces() const;
         /**
          * Returns the surface at the requested index in this set.
          *
@@ -176,7 +176,7 @@ class REGINA_API NSurfaceSubset :
          *
          * @return the normal surface at the requested index in this set.
          */
-        const NNormalSurface* getSurface(unsigned long index) const;
+        const NNormalSurface* getSurface(size_t index) const;
 
         /**
          * Writes the number of surfaces in this set followed by the
@@ -235,14 +235,13 @@ inline bool NSurfaceSubset::isEmbeddedOnly() const {
 inline NTriangulation* NSurfaceSubset::getTriangulation() const {
     return source.getTriangulation();
 }
-inline unsigned long NSurfaceSubset::size() const {
+inline size_t NSurfaceSubset::size() const {
     return surfaces.size();
 }
-inline unsigned long NSurfaceSubset::getNumberOfSurfaces() const {
+inline size_t NSurfaceSubset::getNumberOfSurfaces() const {
     return surfaces.size();
 }
-inline const NNormalSurface* NSurfaceSubset::getSurface(unsigned long index)
-        const {
+inline const NNormalSurface* NSurfaceSubset::getSurface(size_t index) const {
     return surfaces[index];
 }
 

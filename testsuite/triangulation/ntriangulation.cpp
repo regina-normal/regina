@@ -706,79 +706,79 @@ class NTriangulationTest : public TriangulationTest<3> {
 
         void boundaryComponents() {
             CPPUNIT_ASSERT_MESSAGE("The empty triangulation has boundary "
-                "components.", empty.getNumberOfBoundaryComponents() == 0);
+                "components.", empty.countBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("A single tetrahedron has no boundary "
-                "components.", singleTet.getNumberOfBoundaryComponents() > 0);
+                "components.", singleTet.countBoundaryComponents() > 0);
             CPPUNIT_ASSERT_MESSAGE("S^3 has boundary components.",
-                s3.getNumberOfBoundaryComponents() == 0);
+                s3.countBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("S^2 x S^1 has boundary components.",
-                s2xs1.getNumberOfBoundaryComponents() == 0);
+                s2xs1.countBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("RP^3 (1 vtx) has boundary components.",
-                rp3_1.getNumberOfBoundaryComponents() == 0);
+                rp3_1.countBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("RP^3 (2 vtx) has boundary components.",
-                rp3_2.getNumberOfBoundaryComponents() == 0);
+                rp3_2.countBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("L(3,1) has boundary components.",
-                lens3_1.getNumberOfBoundaryComponents() == 0);
+                lens3_1.countBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("Layered loop L(7,1) "
                 "has boundary components.",
-                lens7_1_loop.getNumberOfBoundaryComponents() == 0);
+                lens7_1_loop.countBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("L(8,3) has boundary components.",
-                lens8_3.getNumberOfBoundaryComponents() == 0);
+                lens8_3.countBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("Large L(8,3) has boundary components.",
-                lens8_3_large.getNumberOfBoundaryComponents() == 0);
+                lens8_3_large.countBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("RP^3 # RP^3 has boundary components.",
-                rp3rp3.getNumberOfBoundaryComponents() == 0);
+                rp3rp3.countBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("S^3 / Q_28 has boundary components.",
-                q28.getNumberOfBoundaryComponents() == 0);
+                q28.countBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE(
                 "The Weber-Seifert dodecahedral space has boundary components.",
-                weberSeifert.getNumberOfBoundaryComponents() == 0);
+                weberSeifert.countBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("S^3 / Q_32 x Z_3 has boundary components.",
-                q32xz3.getNumberOfBoundaryComponents() == 0);
+                q32xz3.countBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("L(100,1) has boundary components.",
-                lens100_1.getNumberOfBoundaryComponents() == 0);
+                lens100_1.countBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("The 4-tetrahedron ball has no boundary "
-                "components.", ball_large.getNumberOfBoundaryComponents() > 0);
+                "components.", ball_large.countBoundaryComponents() > 0);
             CPPUNIT_ASSERT_MESSAGE("The 4-tetrahedron pillow ball has no "
                 "boundary components.",
-                ball_large_pillows.getNumberOfBoundaryComponents() > 0);
+                ball_large_pillows.countBoundaryComponents() > 0);
             CPPUNIT_ASSERT_MESSAGE("The 3-tetrahedron snapped ball has no "
                 "boundary components.",
-                ball_large_snapped.getNumberOfBoundaryComponents() > 0);
+                ball_large_snapped.countBoundaryComponents() > 0);
             CPPUNIT_ASSERT_MESSAGE("LST(3,4,7) has no boundary components.",
-                lst3_4_7.getNumberOfBoundaryComponents() > 0);
+                lst3_4_7.countBoundaryComponents() > 0);
             CPPUNIT_ASSERT_MESSAGE("The figure eight knot complement "
                 "has no boundary components.",
-                figure8.getNumberOfBoundaryComponents() > 0);
+                figure8.countBoundaryComponents() > 0);
             CPPUNIT_ASSERT_MESSAGE("RP^2 x S^1 has boundary components.",
-                rp2xs1.getNumberOfBoundaryComponents() == 0);
+                rp2xs1.countBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("The solid Klein bottle "
                 "has no boundary components.",
-                solidKB.getNumberOfBoundaryComponents() > 0);
+                solidKB.countBoundaryComponents() > 0);
             CPPUNIT_ASSERT_MESSAGE("The Gieseking manifold "
                 "has no boundary components.",
-                gieseking.getNumberOfBoundaryComponents() > 0);
+                gieseking.countBoundaryComponents() > 0);
             CPPUNIT_ASSERT_MESSAGE("The triangulation with invalid edges "
                 "has boundary components.",
-                invalidEdges.getNumberOfBoundaryComponents() == 0);
+                invalidEdges.countBoundaryComponents() == 0);
             CPPUNIT_ASSERT_MESSAGE("The triangulation with projective plane "
                 "cusps has no boundary components.",
-                twoProjPlaneCusps.getNumberOfBoundaryComponents() > 0);
+                twoProjPlaneCusps.countBoundaryComponents() > 0);
             CPPUNIT_ASSERT_MESSAGE("The cusped solid genus two torus "
                 "has no boundary components.",
-                cuspedGenusTwoTorus.getNumberOfBoundaryComponents() > 0);
+                cuspedGenusTwoTorus.countBoundaryComponents() > 0);
             CPPUNIT_ASSERT_MESSAGE("The pinched solid torus "
                 "has no boundary components.",
-                pinchedSolidTorus.getNumberOfBoundaryComponents() > 0);
+                pinchedSolidTorus.countBoundaryComponents() > 0);
             CPPUNIT_ASSERT_MESSAGE("The pinched solid torus "
                 "has too many boundary components.",
-                pinchedSolidTorus.getNumberOfBoundaryComponents() < 2);
+                pinchedSolidTorus.countBoundaryComponents() < 2);
             CPPUNIT_ASSERT_MESSAGE("The pinched solid Klein bottle "
                 "has no boundary components.",
-                pinchedSolidKB.getNumberOfBoundaryComponents() > 0);
+                pinchedSolidKB.countBoundaryComponents() > 0);
             CPPUNIT_ASSERT_MESSAGE("The pinched solid Klein bottle "
                 "has too many boundary components.",
-                pinchedSolidKB.getNumberOfBoundaryComponents() < 2);
+                pinchedSolidKB.countBoundaryComponents() < 2);
 
             // TODO: Test the individual boundary components.
             // TODO: Check that nobody has too many boundary components.
@@ -793,7 +793,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                     if (! tri->getTetrahedron(i)->adjacentTetrahedron(j))
                         ++found;
 
-            if (found != tri->getNumberOfBoundaryTriangles()) {
+            if (found != tri->countBoundaryTriangles()) {
                 std::ostringstream msg;
                 msg << tri->getPacketLabel()
                     << " reports the wrong number of boundary triangles.";
@@ -802,7 +802,7 @@ class NTriangulationTest : public TriangulationTest<3> {
 
             unsigned long c;
             regina::NComponent* comp;
-            for (c = 0; c < tri->getNumberOfComponents(); ++c) {
+            for (c = 0; c < tri->countComponents(); ++c) {
                 comp = tri->getComponent(c);
                 found = 0;
 
@@ -811,7 +811,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                         if (! comp->getTetrahedron(i)->adjacentTetrahedron(j))
                             ++found;
 
-                if (found != comp->getNumberOfBoundaryTriangles()) {
+                if (found != comp->countBoundaryTriangles()) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel()
                         << " reports the wrong number of "
@@ -827,9 +827,9 @@ class NTriangulationTest : public TriangulationTest<3> {
 
         void verifyVertexCount(NTriangulation& tri, unsigned nVertices,
                 const char* triName) {
-            if (tri.getNumberOfVertices() != nVertices) {
+            if (tri.countVertices() != nVertices) {
                 std::ostringstream msg;
-                msg << triName << " has " << tri.getNumberOfVertices()
+                msg << triName << " has " << tri.countVertices()
                     << " vertices, not " << nVertices << '.';
                 CPPUNIT_FAIL(msg.str());
             }
@@ -837,10 +837,10 @@ class NTriangulationTest : public TriangulationTest<3> {
 
         void verifyVertexDisc(NTriangulation& tri, unsigned vertex,
                 const char* triName) {
-            if (vertex >= tri.getNumberOfVertices()) {
+            if (vertex >= tri.countVertices()) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
-                    << " does not exist.  Only " << tri.getNumberOfVertices()
+                    << " does not exist.  Only " << tri.countVertices()
                     << " vertices are available.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -894,10 +894,10 @@ class NTriangulationTest : public TriangulationTest<3> {
 
         void verifyVertexSphere(NTriangulation& tri, unsigned vertex,
                 const char* triName) {
-            if (vertex >= tri.getNumberOfVertices()) {
+            if (vertex >= tri.countVertices()) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
-                    << " does not exist.  Only " << tri.getNumberOfVertices()
+                    << " does not exist.  Only " << tri.countVertices()
                     << " vertices are available.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -951,10 +951,10 @@ class NTriangulationTest : public TriangulationTest<3> {
 
         void verifyVertexTorus(NTriangulation& tri, unsigned vertex,
                 const char* triName) {
-            if (vertex >= tri.getNumberOfVertices()) {
+            if (vertex >= tri.countVertices()) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
-                    << " does not exist.  Only " << tri.getNumberOfVertices()
+                    << " does not exist.  Only " << tri.countVertices()
                     << " vertices are available.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -1008,10 +1008,10 @@ class NTriangulationTest : public TriangulationTest<3> {
 
         void verifyVertexKB(NTriangulation& tri, unsigned vertex,
                 const char* triName) {
-            if (vertex >= tri.getNumberOfVertices()) {
+            if (vertex >= tri.countVertices()) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
-                    << " does not exist.  Only " << tri.getNumberOfVertices()
+                    << " does not exist.  Only " << tri.countVertices()
                     << " vertices are available.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -1065,10 +1065,10 @@ class NTriangulationTest : public TriangulationTest<3> {
 
         void verifyVertexTorusG2(NTriangulation& tri, unsigned vertex,
                 const char* triName) {
-            if (vertex >= tri.getNumberOfVertices()) {
+            if (vertex >= tri.countVertices()) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
-                    << " does not exist.  Only " << tri.getNumberOfVertices()
+                    << " does not exist.  Only " << tri.countVertices()
                     << " vertices are available.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -1122,10 +1122,10 @@ class NTriangulationTest : public TriangulationTest<3> {
 
         void verifyVertexProjPlane(NTriangulation& tri, unsigned vertex,
                 const char* triName) {
-            if (vertex >= tri.getNumberOfVertices()) {
+            if (vertex >= tri.countVertices()) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
-                    << " does not exist.  Only " << tri.getNumberOfVertices()
+                    << " does not exist.  Only " << tri.countVertices()
                     << " vertices are available.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -1179,10 +1179,10 @@ class NTriangulationTest : public TriangulationTest<3> {
 
         void verifyVertexAnnulus(NTriangulation& tri, unsigned vertex,
                 const char* triName) {
-            if (vertex >= tri.getNumberOfVertices()) {
+            if (vertex >= tri.countVertices()) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
-                    << " does not exist.  Only " << tri.getNumberOfVertices()
+                    << " does not exist.  Only " << tri.countVertices()
                     << " vertices are available.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -1236,10 +1236,10 @@ class NTriangulationTest : public TriangulationTest<3> {
 
         void verifyVertexMobius(NTriangulation& tri, unsigned vertex,
                 const char* triName) {
-            if (vertex >= tri.getNumberOfVertices()) {
+            if (vertex >= tri.countVertices()) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
-                    << " does not exist.  Only " << tri.getNumberOfVertices()
+                    << " does not exist.  Only " << tri.countVertices()
                     << " vertices are available.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -1444,14 +1444,14 @@ class NTriangulationTest : public TriangulationTest<3> {
         }
 
         static void verifyVertexLinks(NTriangulation* tri) {
-            for (unsigned long i = 0; i < tri->getNumberOfVertices(); ++i) {
+            for (unsigned long i = 0; i < tri->countVertices(); ++i) {
                 NVertex* v = tri->getVertex(i);
                 NIsomorphism* iso;
 
                 const Dim2Triangulation* link = v->buildLink();
                 Dim2Triangulation* link2 = v->buildLinkDetail(true, &iso);
 
-                if (link->getNumberOfTriangles() != v->getDegree()) {
+                if (link->size() != v->getDegree()) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel() << ", vertex " << i << ": "
                         << "link has incorrect number of triangles.";
@@ -2027,12 +2027,12 @@ class NTriangulationTest : public TriangulationTest<3> {
             bool ans = tri->isZeroEfficient();
 
             if (tri->isClosed() && tri->isConnected()) {
-                if (tri->getNumberOfVertices() > 2 && ans) {
+                if (tri->countVertices() > 2 && ans) {
                     std::ostringstream msg;
                     msg << "Triangulation " << tri->getPacketLabel()
                         << " has >2 vertices but is reported as 0-efficient.";
                     CPPUNIT_FAIL(msg.str());
-                } else if (tri->getNumberOfVertices() == 2 && ans &&
+                } else if (tri->countVertices() == 2 && ans &&
                         (! tri->getHomologyH1().isTrivial())) {
                     std::ostringstream msg;
                     msg << "Triangulation " << tri->getPacketLabel()
@@ -2660,8 +2660,8 @@ class NTriangulationTest : public TriangulationTest<3> {
                          (! tri->isIdeal()) &&
                          tri->isOrientable() &&
                          tri->isConnected() &&
-                         tri->getNumberOfBoundaryComponents() == 1 &&
-                         tri->getBoundaryComponent(0)->getEulerChar() == 0 &&
+                         tri->countBoundaryComponents() == 1 &&
+                         tri->boundaryComponent(0)->getEulerChar() == 0 &&
                          tri->getHomologyH1().isZ() &&
                          (tri->size() < 4 ||
                             (tri->size() == 4 &&
@@ -3030,8 +3030,8 @@ class NTriangulationTest : public TriangulationTest<3> {
             NTriangulation cover(*tri);
             cover.makeDoubleCover();
 
-            if (tri->getNumberOfTetrahedra() == 0) {
-                if (cover.getNumberOfTetrahedra() != 0)
+            if (tri->isEmpty()) {
+                if (! cover.isEmpty())
                     CPPUNIT_FAIL("Empty triangulation: "
                         "Double cover is non-empty.");
                 return;
@@ -3067,7 +3067,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 }
             } else {
                 // We should come away with a proper connected double cover.
-                if (cover.getNumberOfComponents() != 1) {
+                if (cover.countComponents() != 1) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel()
                         << ": Orientable double cover does not "
@@ -3083,8 +3083,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (cover.getNumberOfTetrahedra() !=
-                        2 * tri->getNumberOfTetrahedra()) {
+                if (cover.size() != 2 * tri->size()) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel()
                         << ": Orientable double cover does not "
@@ -3092,8 +3091,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (cover.getNumberOfTriangles() !=
-                        2 * tri->getNumberOfTriangles()) {
+                if (cover.countTriangles() != 2 * tri->countTriangles()) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel()
                         << ": Orientable double cover does not "
@@ -3101,8 +3099,8 @@ class NTriangulationTest : public TriangulationTest<3> {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (tri->isValid() && cover.getNumberOfEdges() !=
-                        2 * tri->getNumberOfEdges()) {
+                if (tri->isValid() && cover.countEdges() !=
+                        2 * tri->countEdges()) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel()
                         << ": Orientable double cover does not "
@@ -3111,8 +3109,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 }
 
                 if (tri->isValid() && (! tri->isIdeal()) &&
-                        cover.getNumberOfVertices() !=
-                        2 * tri->getNumberOfVertices()) {
+                        cover.countVertices() != 2 * tri->countVertices()) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel()
                         << ": Orientable double cover does not "
@@ -3193,7 +3190,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri->getNumberOfComponents() != b.getNumberOfComponents()) {
+            if (tri->countComponents() != b.countComponents()) {
                 std::ostringstream msg;
                 msg << tri->getPacketLabel()
                     << ": Barycentric subdivision breaks connected components.";
@@ -3202,8 +3199,8 @@ class NTriangulationTest : public TriangulationTest<3> {
 
             // Invalid vertices can become new boundary components.
             // Only consider valid inputs here.
-            if (tri->isValid() && (tri->getNumberOfBoundaryComponents() !=
-                    b.getNumberOfBoundaryComponents())) {
+            if (tri->isValid() && (tri->countBoundaryComponents() !=
+                    b.countBoundaryComponents())) {
                 std::ostringstream msg;
                 msg << tri->getPacketLabel()
                     << ": Barycentric subdivision breaks boundary components.";
@@ -3298,8 +3295,8 @@ class NTriangulationTest : public TriangulationTest<3> {
             }
 
             // Make sure we don't change the number of boundary components.
-            if (tri->getNumberOfBoundaryComponents() !=
-                    finite.getNumberOfBoundaryComponents()) {
+            if (tri->countBoundaryComponents() !=
+                    finite.countBoundaryComponents()) {
                 std::ostringstream msg;
                 msg << tri->getPacketLabel()
                     << ": idealToFinite() changes "
@@ -3451,10 +3448,10 @@ class NTriangulationTest : public TriangulationTest<3> {
                 NTriangulation tmp0(layer);
                 tmp0.drillEdge(tmp0.getEdge(0));
                 if (! (tmp0.isValid() && (! tmp0.isIdeal()) &&
-                        (tmp0.getNumberOfBoundaryComponents() == 1) &&
+                        (tmp0.countBoundaryComponents() == 1) &&
                         (tmp0.getHomologyH1().isZ()) &&
-                        (tmp0.getBoundaryComponent(0)->isOrientable()) &&
-                        (tmp0.getBoundaryComponent(0)->getEulerChar() == 0) &&
+                        (tmp0.boundaryComponent(0)->isOrientable()) &&
+                        (tmp0.boundaryComponent(0)->getEulerChar() == 0) &&
                         (! tmp0.isSolidTorus())))
                     CPPUNIT_FAIL("Layered 3-sphere: drilling edge 0 "
                         "does not give a non-trivial knot complement.");
@@ -3582,16 +3579,16 @@ class NTriangulationTest : public TriangulationTest<3> {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (punc.getNumberOfBoundaryComponents() !=
-                        tri->getNumberOfBoundaryComponents() + 1) {
+                if (punc.countBoundaryComponents() !=
+                        tri->countBoundaryComponents() + 1) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel() << ", tet " << i << ": "
                         << "puncture gives wrong # boundary components.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (punc.getNumberOfBoundaryTriangles() !=
-                        tri->getNumberOfBoundaryTriangles() + 2) {
+                if (punc.countBoundaryTriangles() !=
+                        tri->countBoundaryTriangles() + 2) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel() << ", tet " << i << ": "
                         << "puncture gives wrong # boundary triangles.";
@@ -3608,7 +3605,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                         << "puncture gives wrong boundary triangles.";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if (bc->getNumberOfTriangles() != 2) {
+                if (bc->countTriangles() != 2) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel() << ", tet " << i << ": "
                         << "puncture gives wrong number of S^2 triangles.";
@@ -3685,7 +3682,7 @@ class NTriangulationTest : public TriangulationTest<3> {
         }
 
         static void verifyConnectedSumWithSelf(NTriangulation* tri) {
-            if (tri->getNumberOfComponents() != 1)
+            if (tri->countComponents() != 1)
                 return;
 
             NTriangulation t(*tri);
@@ -4000,8 +3997,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             NTriangulation b(*t);
             b.reorderTetrahedraBFS(true);
 
-            NIsomorphism* iso = NIsomorphism::random(
-                t->getNumberOfTetrahedra());
+            NIsomorphism* iso = NIsomorphism::random(t->size());
             NTriangulation* c = iso->apply(t);
             delete iso;
 
@@ -4141,8 +4137,8 @@ class NTriangulationTest : public TriangulationTest<3> {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (large.getNumberOfBoundaryComponents() !=
-                        tri->getNumberOfBoundaryComponents()) {
+                if (large.countBoundaryComponents() !=
+                        tri->countBoundaryComponents()) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel() << ", tet " << i << ": "
                         << "1-4 move changes # boundary components.";

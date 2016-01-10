@@ -157,7 +157,7 @@ inline NGluingPerms::NGluingPerms(const NFacePairing* pairing) :
 }
 
 inline unsigned NGluingPerms::getNumberOfTetrahedra() const {
-    return pairing_->getNumberOfTetrahedra();
+    return pairing_->size();
 }
 
 inline const NFacePairing* NGluingPerms::getFacePairing() const {
