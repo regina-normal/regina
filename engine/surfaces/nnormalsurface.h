@@ -1091,6 +1091,14 @@ class REGINA_API NNormalSurface :
          *
          * @return the number of coordinates.
          */
+        size_t countCoords() const;
+        /**
+         * Deprecated routine that returns the number of coordinates in the
+         * specific underlying coordinate system being used.
+         *
+         * \deprecated This routine has been renamed to countCoords().
+         * See the countCoords() documentation for further details.
+         */
         size_t getNumberOfCoords() const;
         /**
          * Returns the triangulation in which this normal surface
@@ -1830,6 +1838,9 @@ inline NDiscType NNormalSurface::getOctPosition() const {
     return octPosition.value();
 }
 
+inline size_t NNormalSurface::countCoords() const {
+    return vector->size();
+}
 inline size_t NNormalSurface::getNumberOfCoords() const {
     return vector->size();
 }

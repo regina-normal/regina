@@ -145,6 +145,7 @@ void addNNormalSurface() {
         .def("getFaceArcs", &NNormalSurface::getFaceArcs)
         .def("getTriangleArcs", &NNormalSurface::getTriangleArcs)
         .def("getOctPosition", &NNormalSurface::getOctPosition)
+        .def("countCoords", &NNormalSurface::countCoords)
         .def("getNumberOfCoords", &NNormalSurface::getNumberOfCoords)
         .def("getTriangulation", &NNormalSurface::getTriangulation,
             return_value_policy<reference_existing_object>())
