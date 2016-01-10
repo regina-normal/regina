@@ -73,7 +73,7 @@ typedef Triangulation<3> NTriangulation;
  */
 class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
     private:
-        unsigned long nTetrahedra;
+        size_t nTetrahedra;
             /**< The number of tetrahedra in this torus. */
 
         NTetrahedron* base;
@@ -122,7 +122,15 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
          *
          * @return the number of tetrahedra.
          */
-        unsigned long getNumberOfTetrahedra() const;
+        size_t size() const;
+
+        /**
+         * Deprecated routine that returns the number of tetrahedra in this
+         * layered solid torus.
+         *
+         * \deprecated Simply call size() instead.
+         */
+        size_t getNumberOfTetrahedra() const;
 
         /**
          * Returns the tetrahedron that is glued to itself at the base of
@@ -413,7 +421,11 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
 inline NLayeredSolidTorus::NLayeredSolidTorus() {
 }
 
-inline unsigned long NLayeredSolidTorus::getNumberOfTetrahedra() const {
+inline size_t NLayeredSolidTorus::size() const {
+    return nTetrahedra;
+}
+
+inline size_t NLayeredSolidTorus::getNumberOfTetrahedra() const {
     return nTetrahedra;
 }
 

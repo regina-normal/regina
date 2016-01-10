@@ -78,7 +78,7 @@ namespace {
                         continue;
 
                     if (triIndex < 0 || triIndex >=
-                            static_cast<int>(tri_->getNumberOfTriangles()))
+                            static_cast<int>(tri_->size()))
                         continue;
                     if (! NPerm3::isPermCode(permCode))
                         continue;
@@ -124,7 +124,7 @@ namespace {
                     const std::string& subTagName,
                     const regina::xml::XMLPropertyDict&) {
                 if (subTagName == "triangle") {
-                    if (readTriangles_ < tri_->getNumberOfTriangles())
+                    if (readTriangles_ < tri_->size())
                         return new Dim2TriangleReader(tri_, readTriangles_++);
                     else
                         return new NXMLElementReader();

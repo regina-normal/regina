@@ -93,9 +93,9 @@ void Triangulation<3>::writeTextLong(std::ostream& out) const {
 
     out << "Size of the skeleton:\n";
     out << "  Tetrahedra: " << simplices_.size() << '\n';
-    out << "  Triangles: " << getNumberOfTriangles() << '\n';
-    out << "  Edges: " << getNumberOfEdges() << '\n';
-    out << "  Vertices: " << getNumberOfVertices() << '\n';
+    out << "  Triangles: " << countTriangles() << '\n';
+    out << "  Edges: " << countEdges() << '\n';
+    out << "  Vertices: " << countVertices() << '\n';
     out << '\n';
 
     NTetrahedron* tet;
@@ -477,7 +477,7 @@ void Triangulation<3>::snapPea(std::ostream& out) const {
     out << "0 0\n";
 
     // Write tetrahedra.
-    out << getNumberOfTetrahedra() << '\n';
+    out << size() << '\n';
 
     int i, j;
     for (Triangulation<3>::TetrahedronIterator it = getTetrahedra().begin();
@@ -550,7 +550,7 @@ void Triangulation<3>::recogniser(std::ostream& out) const {
     NTriangle* f;
     NTetrahedron* tet;
     NPerm4 vert;
-    for (unsigned i = 0; i < getNumberOfTriangles(); ++i) {
+    for (unsigned i = 0; i < countTriangles(); ++i) {
         f = getTriangle(i);
 
         tet = f->getEmbedding(0).getTetrahedron();
@@ -567,7 +567,7 @@ void Triangulation<3>::recogniser(std::ostream& out) const {
             << ',' << (vert[1] + 1)
             << ',' << (vert[2] + 1) << ')';
 
-        if (i != getNumberOfTriangles() - 1)
+        if (i != countTriangles() - 1)
             out << ',';
         out << std::endl;
     }

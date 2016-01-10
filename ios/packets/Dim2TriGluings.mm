@@ -122,9 +122,9 @@
     myEdit = NO;
 
     // Update the necessary elements of the UI.
-    NSIndexPath* last = [NSIndexPath indexPathForRow:self.packet->getNumberOfSimplices()
+    NSIndexPath* last = [NSIndexPath indexPathForRow:self.packet->size()
                                           inSection:0];
-    NSIndexPath* add = [NSIndexPath indexPathForRow:self.packet->getNumberOfSimplices()+1
+    NSIndexPath* add = [NSIndexPath indexPathForRow:self.packet->size()+1
                                           inSection:0];
     [self.triangles insertRowsAtIndexPaths:@[last]
                           withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -189,7 +189,7 @@
 
     CGPoint location = [tap locationInView:self.triangles];
     NSIndexPath *indexPath = [self.triangles indexPathForRowAtPoint:location];
-    if (indexPath.row == 0 || indexPath.row > self.packet->getNumberOfSimplices())
+    if (indexPath.row == 0 || indexPath.row > self.packet->size())
         return;
     
     Dim2GluingCell* cell = static_cast<Dim2GluingCell*>([self.triangles cellForRowAtIndexPath:indexPath]);
@@ -270,7 +270,7 @@
             }
             
             int destSimplex = [[dest substringWithRange:[result rangeAtIndex:1]] intValue];
-            if (destSimplex < 0 || destSimplex >= self.packet->getNumberOfSimplices()) {
+            if (destSimplex < 0 || destSimplex >= self.packet->size()) {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Triangle"
                                                                 message:@"Please enter the gluing in the form triangle (edge).  For example, you could enter \"5 (20)\", or just \"5 20\"."
                                                                delegate:nil
@@ -373,14 +373,14 @@ cleanUpGluing:
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 2 + self.packet->getNumberOfSimplices();
+    return 2 + self.packet->size();
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row == 0)
         return [tableView dequeueReusableCellWithIdentifier:@"Header"];
-    else if (indexPath.row == self.packet->getNumberOfSimplices() + 1)
+    else if (indexPath.row == self.packet->size() + 1)
         return [tableView dequeueReusableCellWithIdentifier:@"Add"];
 
     Dim2GluingCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Triangle" forIndexPath:indexPath];
@@ -394,12 +394,12 @@ cleanUpGluing:
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return (indexPath.row > 0 && indexPath.row <= self.packet->getNumberOfSimplices());
+    return (indexPath.row > 0 && indexPath.row <= self.packet->size());
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row == 0 || indexPath.row > self.packet->getNumberOfSimplices())
+    if (indexPath.row == 0 || indexPath.row > self.packet->size())
         return;
 
     // Many rows could change - not only do we blank out gluings for adjacent triangles,

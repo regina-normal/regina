@@ -107,9 +107,9 @@ namespace Coordinates {
         else if (coordSystem == regina::NS_AN_QUAD_OCT)
             return tri->size() * 6;
         else if (coordSystem == regina::NS_EDGE_WEIGHT)
-            return tri->getNumberOfEdges();
+            return tri->countEdges();
         else if (coordSystem == regina::NS_TRIANGLE_ARCS)
-            return tri->getNumberOfTriangles() * 3;
+            return tri->countTriangles() * 3;
         else if (coordSystem == regina::NS_ORIENTED)
             return tri->size() * 14;
         else if (coordSystem == regina::NS_ORIENTED_QUAD)

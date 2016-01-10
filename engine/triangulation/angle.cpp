@@ -50,7 +50,7 @@ bool NTriangulation::knowsStrictAngleStructure() const {
     if (! hasBoundaryTriangles()) {
         // It is easy to prove that, if an angle structure exists,
         // then we must have #edges = #tetrahedra.
-        if (getNumberOfEdges() != simplices_.size()) {
+        if (countEdges() != simplices_.size()) {
             strictAngleStructure_ = 0;
             return true;
         }

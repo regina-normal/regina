@@ -236,7 +236,7 @@ NIsomorphism* iso_from_edges(const NTriangulation &trig,
 
 NIsomorphism* ordering_iso(const NTriangulation &trig, bool force_oriented)
 {
-    std::vector<int> edge_orientations(trig.getNumberOfEdges(),0);
+    std::vector<int> edge_orientations(trig.countEdges(),0);
 
     int i = 0;
 
@@ -244,7 +244,7 @@ NIsomorphism* ordering_iso(const NTriangulation &trig, bool force_oriented)
         if(i < 0)
             return NULL;
 
-        if(i >= static_cast<int>(trig.getNumberOfEdges()))
+        if(i >= static_cast<int>(trig.countEdges()))
             return iso_from_edges(trig, edge_orientations, force_oriented);
 
         if(edge_orientations[i] == 0) {

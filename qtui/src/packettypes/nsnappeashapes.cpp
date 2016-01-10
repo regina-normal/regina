@@ -394,7 +394,7 @@ void NSnapPeaShapesUI::refresh() {
     }
 
     std::complex<double> s;
-    for (unsigned i = 0; i < tri->getNumberOfTetrahedra(); ++i) {
+    for (unsigned i = 0; i < tri->size(); ++i) {
         s = tri->shape(i);
         row = new QTreeWidgetItem();
         row->setText(0, QString::number(i));
@@ -429,7 +429,7 @@ void NSnapPeaShapesUI::setReadWrite(bool readWrite) {
 void NSnapPeaShapesUI::vertexLinks() {
     endEdit();
 
-    if (tri->getNumberOfVertices() == 0)
+    if (tri->countVertices() == 0)
         ReginaSupport::sorry(ui,
             tr("This triangulation does not have any vertices."));
     else {

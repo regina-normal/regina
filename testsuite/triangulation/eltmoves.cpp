@@ -97,7 +97,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 const std::string& caseName) {
             bool found = false;
             NEdge* edge;
-            for (unsigned long e = 0; e < tri->getNumberOfEdges(); e++) {
+            for (unsigned long e = 0; e < tri->countEdges(); e++) {
                 edge = tri->getEdge(e);
                 if (edge->getDegree() == 2 && ! edge->isBoundary())
                     found = true;

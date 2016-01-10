@@ -478,7 +478,7 @@ bool NTriangulation::twoZeroMove(NEdge* e, bool check, bool perform) {
         // The cases with two pairs of identified triangles and with one
         // pair of identified triangles plus one pair of boundary triangles are
         // all covered by the following check.
-        if (tet[0]->getComponent()->getNumberOfTetrahedra() == 2)
+        if (tet[0]->getComponent()->size() == 2)
             return false;
     }
 
@@ -976,11 +976,11 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
         //
         // Quite pleasant to deal with in the end.
         if (e->isBoundary())
-            if (e->getBoundaryComponent()->getNumberOfTriangles() == 2)
+            if (e->getBoundaryComponent()->countTriangles() == 2)
                 return false;
 
         {
-            size_t nEdges = getNumberOfEdges();
+            size_t nEdges = countEdges();
 
             // The parent of each edge in the union-find tree, or -1 if
             // an edge is at the root of a tree.
@@ -1058,7 +1058,7 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
         // overkill, since each vertex in the corresponding graph G will
         // have degree <= 2, but it's fast so we'll do it.
         {
-            size_t nTriangles = getNumberOfTriangles();
+            size_t nTriangles = countTriangles();
 
             // The parent of each triangle in the union-find tree, or -1 if
             // a triangle is at the root of a tree.
@@ -1145,7 +1145,7 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
 }
 
 void NTriangulation::reorderTetrahedraBFS(bool reverse) {
-    unsigned long n = getNumberOfTetrahedra();
+    unsigned long n = size();
     if (n == 0)
         return;
 

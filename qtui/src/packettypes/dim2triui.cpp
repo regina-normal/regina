@@ -112,7 +112,7 @@ void Dim2TriHeaderUI::refresh() {
 
 QString Dim2TriHeaderUI::summaryInfo(regina::Dim2Triangulation* tri) {
     QString msg;
-    if (tri->getNumberOfTriangles() == 0)
+    if (tri->isEmpty())
         msg = QObject::tr("Empty");
     else if (! tri->isConnected()) {
         msg = QObject::tr("Disconnected, ");
@@ -127,7 +127,7 @@ QString Dim2TriHeaderUI::summaryInfo(regina::Dim2Triangulation* tri) {
     } else {
         // It's connected.  Report the exact manifold.
         if (tri->isOrientable()) {
-            long punctures = tri->getNumberOfBoundaryComponents();
+            long punctures = tri->countBoundaryComponents();
             long genus = (2 - tri->getEulerChar() - punctures) / 2;
 
             // Special names for surfaces with boundary:
@@ -149,7 +149,7 @@ QString Dim2TriHeaderUI::summaryInfo(regina::Dim2Triangulation* tri) {
                     msg += QObject::tr(", %1 punctures").arg(punctures);
             }
         } else {
-            long punctures = tri->getNumberOfBoundaryComponents();
+            long punctures = tri->countBoundaryComponents();
             long genus = (2 - tri->getEulerChar() - punctures);
 
             // Special names for surfaces with boundary:

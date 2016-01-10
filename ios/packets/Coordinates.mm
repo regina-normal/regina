@@ -108,9 +108,9 @@ using regina::NTriangle;
     else if (coordSystem == regina::NS_AN_QUAD_OCT)
         return tri->size() * 6;
     else if (coordSystem == regina::NS_EDGE_WEIGHT)
-        return tri->getNumberOfEdges();
+        return tri->countEdges();
     else if (coordSystem == regina::NS_TRIANGLE_ARCS)
-        return tri->getNumberOfTriangles() * 3;
+        return tri->countTriangles() * 3;
     else if (coordSystem == regina::NS_ORIENTED)
         return tri->size() * 14;
     else if (coordSystem == regina::NS_ORIENTED_QUAD)
@@ -192,15 +192,15 @@ using regina::NTriangle;
             return [NSString stringWithFormat:@"Q%ld: 00/00", tri->size()];
         case regina::NS_EDGE_WEIGHT:
             if (tri->hasBoundaryTriangles())
-                return [NSString stringWithFormat:@"%ld: ∂", tri->getNumberOfEdges()];
+                return [NSString stringWithFormat:@"%ld: ∂", tri->countEdges()];
             else
-                return [NSString stringWithFormat:@"%ld", tri->getNumberOfEdges()];
+                return [NSString stringWithFormat:@"%ld", tri->countEdges()];
             break;
         case regina::NS_TRIANGLE_ARCS:
             if (tri->hasBoundaryTriangles())
-                return [NSString stringWithFormat:@"%ld: 0: ∂", tri->getNumberOfTriangles()];
+                return [NSString stringWithFormat:@"%ld: 0: ∂", tri->countTriangles()];
             else
-                return [NSString stringWithFormat:@"%ld: 0", tri->getNumberOfTriangles()];
+                return [NSString stringWithFormat:@"%ld: 0", tri->countTriangles()];
             break;
         case regina::NS_ORIENTED:
         case regina::NS_ORIENTED_QUAD:

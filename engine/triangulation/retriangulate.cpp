@@ -103,7 +103,7 @@ namespace {
 
         NTriangulation* t = NTriangulation::fromIsoSig(*it);
         size_t i;
-        for (i = 0; i < t->getNumberOfEdges(); ++i)
+        for (i = 0; i < t->countEdges(); ++i)
             if (t->threeTwoMove(t->getEdge(i), true, false)) {
                 NTriangulation alt(*t);
                 alt.threeTwoMove(alt.getEdge(i), false, true);
@@ -114,7 +114,7 @@ namespace {
             }
 
         if (t->size() < maxTet_)
-            for (i = 0; i < t->getNumberOfTriangles(); ++i)
+            for (i = 0; i < t->countTriangles(); ++i)
                 if (t->twoThreeMove(t->getTriangle(i), true, false)) {
                     NTriangulation alt(*t);
                     alt.twoThreeMove(alt.getTriangle(i), false, true);

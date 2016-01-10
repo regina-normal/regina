@@ -63,10 +63,10 @@ bool Triangulation<2>::isMinimal() const {
 
     // All other closed manifolds:
     if (isClosed())
-        return (getNumberOfVertices() == 1);
+        return (countVertices() == 1);
 
     // All other bounded manifolds:
-    return (getNumberOfVertices() == boundaryComponents_.size());
+    return (countVertices() == boundaryComponents_.size());
 }
 
 void Triangulation<2>::writeTextLong(std::ostream& out) const {
@@ -74,8 +74,8 @@ void Triangulation<2>::writeTextLong(std::ostream& out) const {
 
     out << "Size of the skeleton:\n";
     out << "  Triangles: " << simplices_.size() << '\n';
-    out << "  Edges: " << getNumberOfEdges() << '\n';
-    out << "  Vertices: " << getNumberOfVertices() << '\n';
+    out << "  Edges: " << countEdges() << '\n';
+    out << "  Vertices: " << countVertices() << '\n';
     out << '\n';
 
     Dim2Triangle* tri;

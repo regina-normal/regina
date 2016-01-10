@@ -135,9 +135,9 @@
     myEdit = NO;
     
     // Update the necessary elements of the UI.
-    NSIndexPath* last = [NSIndexPath indexPathForRow:self.packet->getNumberOfSimplices()
+    NSIndexPath* last = [NSIndexPath indexPathForRow:self.packet->size()
                                            inSection:0];
-    NSIndexPath* add = [NSIndexPath indexPathForRow:self.packet->getNumberOfSimplices()+1
+    NSIndexPath* add = [NSIndexPath indexPathForRow:self.packet->size()+1
                                           inSection:0];
     [self.tetrahedra insertRowsAtIndexPaths:@[last]
                           withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -205,7 +205,7 @@
     
     CGPoint location = [tap locationInView:self.tetrahedra];
     NSIndexPath *indexPath = [self.tetrahedra indexPathForRowAtPoint:location];
-    if (indexPath.row == 0 || indexPath.row > self.packet->getNumberOfSimplices())
+    if (indexPath.row == 0 || indexPath.row > self.packet->size())
         return;
     
     TriGluingCell* cell = static_cast<TriGluingCell*>([self.tetrahedra cellForRowAtIndexPath:indexPath]);
@@ -520,7 +520,7 @@
             }
             
             int destSimplex = [[dest substringWithRange:[result rangeAtIndex:1]] intValue];
-            if (destSimplex < 0 || destSimplex >= self.packet->getNumberOfSimplices()) {
+            if (destSimplex < 0 || destSimplex >= self.packet->size()) {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Tetrahedron"
                                                                 message:@"Please enter the gluing in the form tetrahedron (face).  For example, you could enter \"6 (130)\", or just \"6 130\"."
                                                                delegate:nil
@@ -624,14 +624,14 @@ cleanUpGluing:
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return (self.packet->isPacketEditable() ? 2 : 1) + self.packet->getNumberOfSimplices();
+    return (self.packet->isPacketEditable() ? 2 : 1) + self.packet->size();
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row == 0)
         return [tableView dequeueReusableCellWithIdentifier:@"Header"];
-    else if (indexPath.row == self.packet->getNumberOfSimplices() + 1)
+    else if (indexPath.row == self.packet->size() + 1)
         return [tableView dequeueReusableCellWithIdentifier:@"Add"];
     
     TriGluingCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Tetrahedron" forIndexPath:indexPath];
@@ -647,14 +647,14 @@ cleanUpGluing:
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.packet->isPacketEditable())
-        return (indexPath.row > 0 && indexPath.row <= self.packet->getNumberOfSimplices());
+        return (indexPath.row > 0 && indexPath.row <= self.packet->size());
     else
         return NO;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row == 0 || indexPath.row > self.packet->getNumberOfSimplices())
+    if (indexPath.row == 0 || indexPath.row > self.packet->size())
         return;
     
     // Many rows could change - not only do we blank out gluings for adjacent tetrahedra,

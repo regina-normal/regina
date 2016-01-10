@@ -53,7 +53,7 @@ void NoSnapPea::refresh() {
     QString msg = tr("<qt><p>SnapPea calculations are not available "
         "for this triangulation.</p><p>");
 
-    if (tri->getNumberOfTetrahedra() == 0)
+    if (tri->isEmpty())
         msg += tr("This is because the triangulation is empty.");
     else if (! tri->isValid())
         msg += tr("This is because the triangulation is not valid.");
@@ -65,7 +65,7 @@ void NoSnapPea::refresh() {
         msg += tr("This is because the triangulation contains non-standard "
             "vertices (vertices whose links are not spheres, tori or Klein "
             "bottles).");
-    else if (tri->getNumberOfTetrahedra() >= INT_MAX)
+    else if (tri->size() >= INT_MAX)
         msg += tr("This is because the triangulation has too many "
             "tetrahedra.");
     else

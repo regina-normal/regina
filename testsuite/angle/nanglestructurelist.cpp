@@ -236,7 +236,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
             for (i = 0; i < a->size(); ++i) {
                 const NAngleStructure* s = a->getStructure(i);
 
-                for (j = 0; j < tri->getNumberOfTetrahedra(); ++j) {
+                for (j = 0; j < tri->size(); ++j) {
                     tot = 0;
                     for (k = 0; k < 3; ++k) {
                         tmp = s->getAngle(j, k);
@@ -257,7 +257,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
                     }
                 }
 
-                for (j = 0; j < tri->getNumberOfEdges(); ++j) {
+                for (j = 0; j < tri->countEdges(); ++j) {
                     e = tri->getEdge(j);
                     if (e->isBoundary())
                         continue;
@@ -372,7 +372,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
 
         void verifyTautVsAll(const char* dehydration) {
             NTriangulation* t = NTriangulation::rehydrate(dehydration);
-            if (t->getNumberOfTetrahedra() == 0) {
+            if (t->isEmpty()) {
                 std::ostringstream msg;
                 msg << "Failed to rehydrate " << dehydration << ".";
                 CPPUNIT_FAIL(msg.str());
