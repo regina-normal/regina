@@ -239,7 +239,7 @@ bool NNormalSurfaceList::saveCSVEdgeWeight(const char* filename,
     if (! out)
         return false;
 
-    unsigned long n = getTriangulation()->getNumberOfEdges();
+    unsigned long n = getTriangulation()->countEdges();
 
     unsigned long i, j;
 

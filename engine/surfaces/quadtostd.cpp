@@ -147,7 +147,7 @@ namespace {
              * @param tri the underlying triangulation.
              * @param whichLink the index of the vertex whose link
              * we should negate; this must be strictly less than
-             * <tt>tri->getNumberOfVertices()</tt>.
+             * <tt>tri->countVertices()</tt>.
              * @param coordsPerTet the number of standard coordinate
              * positions for each tetrahedron (that is, 7 if we are
              * working with normal surfaces, or 10 if we are working
@@ -326,7 +326,7 @@ NNormalSurfaceList* NNormalSurfaceList::internalReducedToStandard() const {
         Variant::standardCoords(), NS_EMBEDDED_ONLY | NS_VERTEX,
         algorithm_ | NS_VERTEX_VIA_REDUCED);
 
-    if (owner->getNumberOfTetrahedra() > 0) {
+    if (! owner->isEmpty()) {
         // Run our internal conversion routine.
         ans->buildStandardFromReduced<Variant>(owner, surfaces);
     }
@@ -380,7 +380,7 @@ void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
     // Prepare for the reduced-to-standard double description run.
     unsigned long n = owner->size();
     size_t slen = Variant::stdLen(n); // # standard coordinates
-    unsigned long llen = owner->getNumberOfVertices(); // # vertex links
+    unsigned long llen = owner->countVertices(); // # vertex links
 
     unsigned i;
 

@@ -294,21 +294,29 @@ class REGINA_API NGroupExpression :
          *
          * @return the number of terms.
          */
-        unsigned long getNumberOfTerms() const;
+        size_t countTerms() const;
+        /**
+         * Deprecated routine that returns the number of terms in this
+         * expression.
+         *
+         * \deprecated This routine has been renamed to countTerms().
+         * See the countTerms() documentation for further details.
+         */
+        size_t getNumberOfTerms() const;
         /**
          * Returns the length of the word, i.e. the number of letters
          * with exponent +1 or -1 for which this word is expressable as a
          * product.
          *
          * For instance, the expression <tt>g1^2 g3^-1 g6</tt> is a word of
-         * length four.  See also getNumberOfTerms().
+         * length four.  See also countTerms().
          *
          * No attempt is made to remove redundant terms (so the word
          * <tt>g g^-1</tt> will count as length two).
          *
          * @return the length of the word.
          */
-        unsigned long wordLength() const;
+        size_t wordLength() const;
         /**
          * Tests whether this is the trivial (unit) word.
          *
@@ -334,10 +342,10 @@ class REGINA_API NGroupExpression :
          * of terms in this expression.
          *
          * @param index the index of the term to return; this must be
-         * between 0 and getNumberOfTerms()-1 inclusive.
+         * between 0 and countTerms()-1 inclusive.
          * @return the requested term.
          */
-        NGroupExpressionTerm& getTerm(unsigned long index);
+        NGroupExpressionTerm& getTerm(size_t index);
         /**
          * Returns a constant reference to the term at the given
          * index in this expression.
@@ -351,10 +359,10 @@ class REGINA_API NGroupExpression :
          * routine is available.
          *
          * @param index the index of the term to return; this must be
-         * between 0 and getNumberOfTerms()-1 inclusive.
+         * between 0 and countTerms()-1 inclusive.
          * @return the requested term.
          */
-        const NGroupExpressionTerm& getTerm(unsigned long index) const;
+        const NGroupExpressionTerm& getTerm(size_t index) const;
         /**
          * Returns the generator corresonding to the
          * term at the given index in this expression.
@@ -365,10 +373,10 @@ class REGINA_API NGroupExpression :
          * of terms in this expression.
          *
          * @param index the index of the term to return; this must be
-         * between 0 and getNumberOfTerms()-1 inclusive.
+         * between 0 and countTerms()-1 inclusive.
          * @return the number of the requested generator.
          */
-        unsigned long getGenerator(unsigned long index) const;
+        unsigned long getGenerator(size_t index) const;
         /**
          * Returns the exponent corresonding to the
          * term at the given index in this expression.
@@ -379,10 +387,10 @@ class REGINA_API NGroupExpression :
          * of terms in this expression.
          *
          * @param index the index of the term to return; this must be
-         * between 0 and getNumberOfTerms()-1 inclusive.
+         * between 0 and countTerms()-1 inclusive.
          * @return the requested exponent.
          */
-        long getExponent(unsigned long index) const;
+        long getExponent(size_t index) const;
 
         /**
          * Adds the given term to the beginning of this expression.
@@ -747,7 +755,7 @@ class REGINA_API NGroupPresentation :
          * \warning This routine does not check whether or not your relation
          * is a word only in the generators of this group.  In other
          * words, it does not stop you from using generators beyond the
-         * getNumberOfGenerators() bound.
+         * countGenerators() bound.
          *
          * \ifacespython Since this group presentation takes ownership
          * of the given expression, the python object containing the
@@ -765,26 +773,42 @@ class REGINA_API NGroupPresentation :
          *
          * @return the number of generators.
          */
+        unsigned long countGenerators() const;
+        /**
+         * Deprecated routine that returns the number of generators in this
+         * group presentation.
+         *
+         * \deprecated This routine has been renamed to countGenerators().
+         * See the countGenerators() documentation for further details.
+         */
         unsigned long getNumberOfGenerators() const;
         /**
          * Returns the number of relations in this group presentation.
          *
          * @return the number of relations.
          */
-        unsigned long getNumberOfRelations() const;
+        size_t countRelations() const;
+        /**
+         * Deprecated routine that returns the number of relations in this
+         * group presentation.
+         *
+         * \deprecated This routine has been renamed to countRelations().
+         * See the countRelations() documentation for further details.
+         */
+        size_t getNumberOfRelations() const;
         /**
          * Returns the relation at the given index in this group
          * presentation.  The relation will be of the form <tt>expresson
          * = 1</tt>.
          *
          * @param index the index of the desired relation; this must be
-         * between 0 and getNumberOfRelations()-1 inclusive.
+         * between 0 and countRelations()-1 inclusive.
          *
          * @return the expression that the requested relation sets to 1;
          * for instance, if the relation is <tt>g1^2 g2 = 1</tt> then
          * this will be the expression <tt>g1^2 g2</tt>.
          */
-        const NGroupExpression& getRelation(unsigned long index) const;
+        const NGroupExpression& getRelation(size_t index) const;
 
         /**
          * Tests whether all of the relations for the group are indeed words
@@ -961,7 +985,7 @@ class REGINA_API NGroupPresentation :
          *
          * @return the sum of word lengths.
          */
-        unsigned long relatorLength() const;
+        size_t relatorLength() const;
 
         /**
          * Computes the abelianisation of this group.
@@ -1014,7 +1038,7 @@ class REGINA_API NGroupPresentation :
          * three generator types of the automorphism group of a free group.
          *
          * \pre Both \a i and \a j are strictly less than
-         * getNumberOfGenerators().
+         * countGenerators().
          *
          * @param i indicates the first of the two generators to switch.
          * @param j indicates the second of the two generators to switch.
@@ -1028,7 +1052,7 @@ class REGINA_API NGroupPresentation :
          * recomputes the appropriate presentation. This is the second
          * generator type of the automorphism group of a free group.
          *
-         * \pre \a i is strictly less than getNumberOfGenerators().
+         * \pre \a i is strictly less than countGenerators().
          *
          * @param i indicates the generator to invert.
          * @return \c true if and only if the Nielsen automorphism had an
@@ -1046,8 +1070,7 @@ class REGINA_API NGroupPresentation :
          * the new presentation from the old by replacing occurrences of \c Gi
          * by <tt>(Gi)(gj)^(-k)</tt> or <tt>(gj)^(-k)(Gi)</tt> respectively.
          *
-         * \pre Both \a i and \a j are strictly less than
-         * getNumberOfGenerators().
+         * \pre Both \a i and \a j are strictly less than countGenerators().
          *
          * @param i indicates the generator to replace.
          * @param j indicates the generator to combine with \c gi.
@@ -1512,7 +1535,11 @@ inline const std::list<NGroupExpressionTerm>& NGroupExpression::getTerms()
     return terms;
 }
 
-inline unsigned long NGroupExpression::getNumberOfTerms() const {
+inline size_t NGroupExpression::countTerms() const {
+    return terms.size();
+}
+
+inline size_t NGroupExpression::getNumberOfTerms() const {
     return terms.size();
 }
 
@@ -1520,20 +1547,19 @@ inline bool NGroupExpression::isTrivial() const {
     return terms.empty();
 }
 
-inline unsigned long NGroupExpression::wordLength() const {
-    unsigned long retval(0);
+inline size_t NGroupExpression::wordLength() const {
+    size_t retval(0);
     std::list<NGroupExpressionTerm>::const_iterator it;
     for (it = terms.begin(); it!=terms.end(); it++)
         retval += labs((*it).exponent);
     return retval;
 }
 
-inline unsigned long NGroupExpression::getGenerator(unsigned long index)
-        const {
+inline unsigned long NGroupExpression::getGenerator(size_t index) const {
     return getTerm(index).generator;
 }
 
-inline long NGroupExpression::getExponent(unsigned long index) const {
+inline long NGroupExpression::getExponent(size_t index) const {
     return getTerm(index).exponent;
 }
 
@@ -1577,16 +1603,24 @@ inline void NGroupPresentation::addRelation(NGroupExpression* rel) {
     relations.push_back(rel);
 }
 
+inline unsigned long NGroupPresentation::countGenerators() const {
+    return nGenerators;
+}
+
 inline unsigned long NGroupPresentation::getNumberOfGenerators() const {
     return nGenerators;
 }
 
-inline unsigned long NGroupPresentation::getNumberOfRelations() const {
+inline size_t NGroupPresentation::countRelations() const {
+    return relations.size();
+}
+
+inline size_t NGroupPresentation::getNumberOfRelations() const {
     return relations.size();
 }
 
 inline const NGroupExpression& NGroupPresentation::getRelation(
-        unsigned long index) const {
+        size_t index) const {
     return *relations[index];
 }
 
@@ -1595,9 +1629,9 @@ inline void NGroupPresentation::writeTextShort(std::ostream& out) const {
         << relations.size() << " relations";
 }
 
-inline unsigned long NGroupPresentation::relatorLength() const {
-    unsigned long retval(0);
-    for (unsigned long i=0; i<relations.size(); i++)
+inline size_t NGroupPresentation::relatorLength() const {
+    size_t retval(0);
+    for (size_t i=0; i<relations.size(); i++)
         retval += relations[i]->wordLength();
     return retval;
 }

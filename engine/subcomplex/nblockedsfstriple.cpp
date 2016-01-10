@@ -156,7 +156,7 @@ NBlockedSFSTriple* NBlockedSFSTriple::isBlockedSFSTriple(
     // Basic property checks.
     if (! tri->isClosed())
         return 0;
-    if (tri->getNumberOfComponents() > 1)
+    if (tri->countComponents() > 1)
         return 0;
 
     // Watch out for twisted block boundaries that are incompatible with

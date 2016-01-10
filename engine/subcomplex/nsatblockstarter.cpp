@@ -109,8 +109,7 @@ void NSatBlockStarterSearcher::findStarterBlocks(NTriangulation* tri) {
         // Get trivialities out of the way first.
         if (tri->isOrientable() && ! (*it)->triangulation().isOrientable())
             continue;
-        if (tri->getNumberOfTetrahedra() <
-                (*it)->triangulation().getNumberOfTetrahedra())
+        if (tri->size() < (*it)->triangulation().size())
             continue;
 
         // Find all isomorphisms of the starter block within the given
@@ -130,7 +129,7 @@ void NSatBlockStarterSearcher::findStarterBlocks(NTriangulation* tri) {
 
             // Create an initial blacklist of tetrahedra consisting of
             // those in the isomorphic image of the initial starting block.
-            for (i = 0; i < (*it)->triangulation().getNumberOfTetrahedra(); i++)
+            for (i = 0; i < (*it)->triangulation().size(); i++)
                 usedTets.insert(tri->getTetrahedron((*isoIt)->tetImage(i)));
 
             // And process!

@@ -53,11 +53,11 @@ NMatrixInt* NNormalSurfaceVectorOrientedQuad::makeMatchingEquations(
         const NTriangulation* triangulation) {
     unsigned long nCoords = 6 * triangulation->size();
     // Two equation per non-boundary edge.
-    long nEquations = 2*long(triangulation->getNumberOfEdges());
+    long nEquations = 2*long(triangulation->countEdges());
     for (NTriangulation::BoundaryComponentIterator bit = triangulation->
             getBoundaryComponents().begin();
             bit != triangulation->getBoundaryComponents().end(); bit++)
-        nEquations -= 2*(*bit)->getNumberOfEdges();
+        nEquations -= 2*(*bit)->countEdges();
 
     NMatrixInt* ans = new NMatrixInt(nEquations, nCoords);
     unsigned long row = 0;

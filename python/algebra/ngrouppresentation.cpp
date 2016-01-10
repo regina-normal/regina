@@ -126,6 +126,7 @@ void addNGroupPresentation() {
         .def(init<const NGroupExpression&>())
         .def("__init__", boost::python::make_constructor(newExpression_str))
         .def("getTerms", getTerms_list)
+        .def("countTerms", &NGroupExpression::countTerms)
         .def("getNumberOfTerms", &NGroupExpression::getNumberOfTerms)
         .def("wordLength", &NGroupExpression::wordLength)
         .def("isTrivial", &NGroupExpression::isTrivial)
@@ -168,8 +169,10 @@ void addNGroupPresentation() {
         .def("addGenerator", &NGroupPresentation::addGenerator,
             OL_addGenerator())
         .def("addRelation", addRelation_own)
+        .def("countGenerators", &NGroupPresentation::countGenerators)
         .def("getNumberOfGenerators",
             &NGroupPresentation::getNumberOfGenerators)
+        .def("countRelations", &NGroupPresentation::countRelations)
         .def("getNumberOfRelations", &NGroupPresentation::getNumberOfRelations)
         .def("getRelation", &NGroupPresentation::getRelation,
             return_internal_reference<>())

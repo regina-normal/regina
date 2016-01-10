@@ -130,7 +130,7 @@
         name.attributedText = [TextHelper dimString:@"Not recognised"];
     }
     
-    unsigned long nGens = group.getNumberOfGenerators();
+    unsigned long nGens = group.countGenerators();
     bool alphabetic = (nGens <= 26);
     if (nGens == 0)
         gens.text = @"No generators";
@@ -145,7 +145,7 @@
         gens.text = [NSString stringWithFormat:@"%ld generators: g0 ... g%ld",
                      nGens, nGens - 1];
     
-    unsigned long nRels = group.getNumberOfRelations();
+    unsigned long nRels = group.countRelations();
     if (nRels == 0) {
         rels.text = @"No relations";
     } else if (nRels == 1) {

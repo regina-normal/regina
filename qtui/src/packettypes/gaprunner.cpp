@@ -210,7 +210,7 @@ void GAPRunner::processOutput(const QString& output) {
         case GAP_init:
             // Ignore any output.
             sendInput(QString("f := FreeGroup(%1);").arg(
-                origGroup.getNumberOfGenerators()));
+                origGroup.countGenerators()));
             stage = GAP_oldgens;
             status->setText(tr("Constructing original group "
                 "presentation..."));
@@ -318,7 +318,7 @@ void GAPRunner::processOutput(const QString& output) {
 }
 
 QString GAPRunner::origGroupRelns() {
-    unsigned long nRels = origGroup.getNumberOfRelations();
+    unsigned long nRels = origGroup.countRelations();
     bool empty = true;
 
     QString ans = "[ ";

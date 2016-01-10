@@ -141,7 +141,7 @@ NXMLElementReader* NXMLGroupPresentationReader::startSubElement(
         const regina::xml::XMLPropertyDict& /* subTagProps */) {
     if (group)
         if (subTagName == "reln")
-            return new NExpressionReader(group->getNumberOfGenerators());
+            return new NExpressionReader(group->countGenerators());
     return new NXMLElementReader();
 }
 

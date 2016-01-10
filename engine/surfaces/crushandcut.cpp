@@ -1322,8 +1322,8 @@ bool NNormalSurface::isCompressingDisc(bool knownConnected) const {
     // is compressing.
     std::unique_ptr<NTriangulation> cut(cutAlong());
 
-    if (cut->getNumberOfBoundaryComponents() ==
-            getTriangulation()->getNumberOfBoundaryComponents()) {
+    if (cut->countBoundaryComponents() ==
+            getTriangulation()->countBoundaryComponents()) {
         // The boundary of the disc is not a separating curve in the
         // boundary of the triangulation.  Therefore we might end up
         // converting a torus boundary into a sphere boundary, but the
@@ -1418,7 +1418,7 @@ namespace {
 
                 // The LP-and-crush method is only suitable for
                 // orientable triangulations with a single boundary component.
-                if (t_[side]->getNumberOfBoundaryComponents() > 1 ||
+                if (t_[side]->countBoundaryComponents() > 1 ||
                         ! t_[side]->isOrientable()) {
                     // Fall back to the slow and non-cancellable method.
                     if (t_[side]->hasCompressingDisc())
@@ -1440,11 +1440,11 @@ namespace {
 
                     // The LP-and-crushing method only works for
                     // 1-vertex triangulations (at present).
-                    if (t_[side]->getNumberOfVertices() > 1) {
+                    if (t_[side]->countVertices() > 1) {
                         // Try harder.
                         t_[side]->barycentricSubdivision();
                         t_[side]->intelligentSimplify();
-                        if (t_[side]->getNumberOfVertices() > 1) {
+                        if (t_[side]->countVertices() > 1) {
                             // Fall back to the old (slow and uncancellable)
                             // method.
                             if (t_[side]->hasCompressingDisc())
@@ -1497,7 +1497,7 @@ namespace {
                     t_[side] = static_cast<NTriangulation*>(
                         crush->getFirstTreeChild());
                     while (t_[side]) {
-                        if (t_[side]->getNumberOfBoundaryComponents() == 1 &&
+                        if (t_[side]->countBoundaryComponents() == 1 &&
                                 t_[side]->getBoundaryComponent(0)->
                                     getEulerChar() == ec) {
                             // Found it.

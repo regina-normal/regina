@@ -88,17 +88,16 @@ NLargeInteger NNormalSurfaceVectorANStandard::getTriangleArcs(
 
 NNormalSurfaceVector* NNormalSurfaceVectorANStandard::makeZeroVector(
         const NTriangulation* triangulation) {
-    return new NNormalSurfaceVectorANStandard(
-        10 * triangulation->getNumberOfTetrahedra());
+    return new NNormalSurfaceVectorANStandard(10 * triangulation->size());
 }
 
 NMatrixInt* NNormalSurfaceVectorANStandard::makeMatchingEquations(
         const NTriangulation* triangulation) {
-    unsigned long nCoords = 10 * triangulation->getNumberOfTetrahedra();
+    unsigned long nCoords = 10 * triangulation->size();
     // Three equations per non-boundary triangle.
     // F_boundary + 2 F_internal = 4 T
-    long nEquations = 3 * (4 * long(triangulation->getNumberOfTetrahedra()) -
-        long(triangulation->getNumberOfTriangles()));
+    long nEquations = 3 * (4 * long(triangulation->size()) -
+        long(triangulation->countTriangles()));
     NMatrixInt* ans = new NMatrixInt(nEquations, nCoords);
 
     // Run through each internal triangle and add the corresponding three
@@ -146,7 +145,7 @@ NEnumConstraintList* NNormalSurfaceVectorANStandard::makeEmbeddedConstraints(
     // At most one quad/oct per tetrahedron.
     // Also at most one oct type overall.
     NEnumConstraintList* ans = new NEnumConstraintList(
-        triangulation->getNumberOfTetrahedra() + 1);
+        triangulation->size() + 1);
 
     unsigned base = 0;
     for (unsigned c = 1; c < ans->size(); ++c) {

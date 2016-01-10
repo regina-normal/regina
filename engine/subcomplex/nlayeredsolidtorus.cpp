@@ -590,9 +590,9 @@ NLayeredSolidTorus* NLayeredSolidTorus::isLayeredSolidTorus(NComponent* comp) {
     // Start with some basic property checks.
     if (! comp->isOrientable())
         return 0;
-    if (comp->getNumberOfBoundaryComponents() != 1)
+    if (comp->countBoundaryComponents() != 1)
         return 0;
-    if (comp->getBoundaryComponent(0)->getNumberOfTriangles() != 2)
+    if (comp->getBoundaryComponent(0)->countTriangles() != 2)
         return 0;
 
     NTriangleEmbedding f0 = comp->getBoundaryComponent(0)->getTriangle(0)->

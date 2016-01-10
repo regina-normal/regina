@@ -99,7 +99,7 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(const NFacePairing* pairing,
     //
     // Note from the tests above that there are no triple edges.
 
-    unsigned nTets = getNumberOfTetrahedra();
+    unsigned nTets = size();
 
     orderType = new unsigned[nTets * 2];
 
@@ -326,7 +326,7 @@ void NClosedPrimeMinSearcher::runSearch(long maxDepth) {
     //     Only closed prime minimal P2-irreducible triangulations are needed.
     //     The given face pairing is closed with order >= 3.
 
-    unsigned nTets = getNumberOfTetrahedra();
+    unsigned nTets = size();
     if (maxDepth < 0) {
         // Larger than we will ever see (and in fact grossly so).
         maxDepth = nTets * 4 + 1;
@@ -705,7 +705,7 @@ NClosedPrimeMinSearcher::NClosedPrimeMinSearcher(std::istream& in,
     if (inputError_)
         return;
 
-    unsigned nTets = getNumberOfTetrahedra();
+    unsigned nTets = size();
     int i;
 
     orderType = new unsigned[2 * nTets];
@@ -818,7 +818,7 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
                 edgeState[fRep].size += edgeState[eRep].size;
 #if PRUNE_HIGH_DEG_EDGE_SET
 #else
-                if (edgeState[fRep].size > 3 * getNumberOfTetrahedra())
+                if (edgeState[fRep].size > 3 * size())
                     retVal |= ECLASS_HIGHDEG;
 #endif
 
@@ -849,7 +849,7 @@ int NClosedPrimeMinSearcher::mergeEdgeClasses() {
                 edgeState[eRep].size += edgeState[fRep].size;
 #if PRUNE_HIGH_DEG_EDGE_SET
 #else
-                if (edgeState[eRep].size > 3 * getNumberOfTetrahedra())
+                if (edgeState[eRep].size > 3 * size())
                     retVal |= ECLASS_HIGHDEG;
 #endif
 

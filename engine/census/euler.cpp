@@ -213,7 +213,7 @@ NEulerSearcher::NEulerSearcher(int useEuler, const NFacePairing* pairing,
     // Initialise the internal arrays to accurately reflect the underlying
     // face pairing.
 
-    unsigned nTets = getNumberOfTetrahedra();
+    unsigned nTets = size();
 
     // ---------- Tracking of vertex / edge equivalence classes ----------
 
@@ -266,7 +266,7 @@ NEulerSearcher::NEulerSearcher(int useEuler, const NFacePairing* pairing,
 }
 
 void NEulerSearcher::runSearch(long maxDepth) {
-    unsigned nTets = getNumberOfTetrahedra();
+    unsigned nTets = size();
     if (maxDepth < 0) {
         // Larger than we will ever see (and in fact grossly so).
         maxDepth = nTets * 4 + 1;
@@ -508,7 +508,7 @@ void NEulerSearcher::dumpData(std::ostream& out) const {
 
     out << euler_ << std::endl;
 
-    unsigned nTets = getNumberOfTetrahedra();
+    unsigned nTets = size();
     unsigned i;
 
     out << nVertexClasses << std::endl;
@@ -549,7 +549,7 @@ NEulerSearcher::NEulerSearcher(std::istream& in,
         inputError_ = true; return;
     }
 
-    unsigned nTets = getNumberOfTetrahedra();
+    unsigned nTets = size();
     unsigned i;
 
     in >> nVertexClasses;
@@ -1128,7 +1128,7 @@ void NEulerSearcher::splitEdgeClasses() {
 
 void NEulerSearcher::vtxBdryConsistencyCheck() {
     int adj, id, end;
-    for (id = 0; id < static_cast<int>(getNumberOfTetrahedra()) * 4; id++)
+    for (id = 0; id < static_cast<int>(size()) * 4; id++)
         if (vertexState[id].bdryEdges > 0)
             for (end = 0; end < 2; end++) {
                 adj = vertexState[id].bdryNext[end];
@@ -1151,7 +1151,7 @@ void NEulerSearcher::vtxBdryConsistencyCheck() {
 }
 
 void NEulerSearcher::vtxBdryDump(std::ostream& out) {
-    for (unsigned id = 0; id < getNumberOfTetrahedra() * 4; id++) {
+    for (unsigned id = 0; id < size() * 4; id++) {
         if (id > 0)
             out << ' ';
         out << vertexState[id].bdryNext[0]

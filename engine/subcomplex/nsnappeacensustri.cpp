@@ -60,7 +60,7 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
     // Before we do any further checks, make sure the number of
     // tetrahedra is within the supported range.
 
-    if (comp->getNumberOfTetrahedra() > 4)
+    if (comp->size() > 4)
         return 0;
 
     // Start with property checks to see if it has a chance of being
@@ -72,8 +72,8 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
     if (comp->isClosed())
         return 0;
 
-    unsigned long nVertices = comp->getNumberOfVertices();
-    unsigned long nEdges = comp->getNumberOfEdges();
+    unsigned long nVertices = comp->countVertices();
+    unsigned long nEdges = comp->countEdges();
     unsigned long i;
     int link;
     for (i = 0; i < nVertices; i++) {
@@ -87,19 +87,19 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
 
     // Now search for specific triangulations.
 
-    if (comp->getNumberOfTetrahedra() == 1) {
+    if (comp->size() == 1) {
         // At this point it must be m000, since there are no others
         // that fit these constraints.  But test orientability
         // anyway just to be safe.
         if (comp->isOrientable())
             return 0;
         return new NSnapPeaCensusTri(SEC_5, 0);
-    } else if (comp->getNumberOfTetrahedra() == 2) {
+    } else if (comp->size() == 2) {
         if (comp->isOrientable()) {
             // Orientable.  Looking for m003 or m004.
-            if (comp->getNumberOfVertices() != 1)
+            if (comp->countVertices() != 1)
                 return 0;
-            if (comp->getNumberOfEdges() != 2)
+            if (comp->countEdges() != 2)
                 return 0;
             if (comp->getEdge(0)->getDegree() != 6 ||
                     comp->getEdge(1)->getDegree() != 6)
@@ -114,9 +114,9 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
                 return new NSnapPeaCensusTri(SEC_5, 4);
         } else {
             // Non-orientable.  Looking for m001 or m002.
-            if (comp->getNumberOfVertices() == 1) {
+            if (comp->countVertices() == 1) {
                 // Looking for m001.
-                if (comp->getNumberOfEdges() != 2)
+                if (comp->countEdges() != 2)
                     return 0;
                 if (! ((comp->getEdge(0)->getDegree() == 4 &&
                         comp->getEdge(1)->getDegree() == 8) ||
@@ -128,9 +128,9 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
                     if (comp->getTriangle(i)->getType() == NTriangle::DUNCEHAT)
                         return 0;
                 return new NSnapPeaCensusTri(SEC_5, 1);
-            } else if (comp->getNumberOfVertices() == 2) {
+            } else if (comp->countVertices() == 2) {
                 // Looking for m002.
-                if (comp->getNumberOfEdges() != 2)
+                if (comp->countEdges() != 2)
                     return 0;
                 if (comp->getEdge(0)->getDegree() != 6 ||
                         comp->getEdge(1)->getDegree() != 6)
@@ -142,15 +142,15 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
                 return 0;
             }
         }
-    } else if (comp->getNumberOfTetrahedra() == 4) {
+    } else if (comp->size() == 4) {
         if (comp->isOrientable()) {
             // Search for the Whitehead link complement.
             // Note that this could be done with a smaller set of tests
             // since some can be deduced from others, but these tests
             // aren't terribly expensive anyway.
-            if (comp->getNumberOfVertices() != 2)
+            if (comp->countVertices() != 2)
                 return 0;
-            if (comp->getNumberOfEdges() != 4)
+            if (comp->countEdges() != 4)
                 return 0;
             if (comp->getVertex(0)->getLink() != NVertex::TORUS)
                 return 0;

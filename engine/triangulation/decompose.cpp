@@ -328,7 +328,7 @@ bool NTriangulation::isThreeSphere() const {
     working->intelligentSimplify();
 
     // The Poincare conjecture!
-    if (working->getFundamentalGroup().getNumberOfGenerators() == 0) {
+    if (working->getFundamentalGroup().countGenerators() == 0) {
         threeSphere_ = true;
         delete working;
 

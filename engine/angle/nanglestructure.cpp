@@ -51,12 +51,11 @@ NMatrixInt* NAngleStructureVector::makeAngleEquations(
     unsigned long cols = 3 * n + 1;
 
     // We have one equation per non-boundary edge plus one per tetrahedron.
-    long rows = long(tri->getNumberOfEdges()) +
-        long(tri->size());
+    long rows = long(tri->countEdges()) + long(tri->size());
     for (NTriangulation::BoundaryComponentIterator bit =
             tri->getBoundaryComponents().begin();
             bit != tri->getBoundaryComponents().end(); bit++)
-        rows -= (*bit)->getNumberOfEdges();
+        rows -= (*bit)->countEdges();
 
     NMatrixInt* eqns = new NMatrixInt(rows, cols);
     unsigned long row = 0;
@@ -188,7 +187,7 @@ void NAngleStructure::calculateType() const {
         // Is it veering also?
         bool veering = true;
         if (triangulation->isOrientable()) {
-            long nEdges = triangulation->getNumberOfEdges();
+            long nEdges = triangulation->countEdges();
             int* edgeColour = new int[nEdges];
             std::fill(edgeColour, edgeColour + nEdges, (int)0);
             const NTetrahedron* tet;

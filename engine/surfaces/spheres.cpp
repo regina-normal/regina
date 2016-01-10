@@ -99,7 +99,7 @@ NNormalSurface* NNormalSurface::findVtxOctAlmostNormalSphere(
     NNormalSurfaceList* surfaces = NNormalSurfaceList::enumerate(tri, quadOct ?
         NS_AN_QUAD_OCT : NS_AN_STANDARD);
     unsigned long nSurfaces = surfaces->size();
-    unsigned long nTets = tri->getNumberOfTetrahedra();
+    unsigned long nTets = tri->size();
 
     // Note that our surfaces are guaranteed to be in smallest possible
     // integer coordinates.
