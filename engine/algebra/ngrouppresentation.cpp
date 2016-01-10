@@ -1133,7 +1133,7 @@ NGroupPresentation::homologicalAlignmentDetail()
             abMat.entry(i,j) = temp[i]; // columns are snfreps of abelianized gens.
     }
 
-    unsigned long abNF( abelianized->getNumberOfInvariantFactors() );
+    unsigned long abNF( abelianized->countInvariantFactors() );
     unsigned long abNG( abelianized->minNumberOfGenerators() );
     // step 2: we will mimic the simple smith normal form algorithm algorithm
     //         using corresponding moves on the group presentation.
@@ -1681,8 +1681,8 @@ NGroupPresentation::identifyExtensionOverZ()
     std::unique_ptr< NMarkedAbelianGroup > abelianized( markedAbelianisation() );
     if (abelianized->getRank() != 1) return
             std::unique_ptr< NHomGroupPresentation >();
-    if (abelianized->getNumberOfInvariantFactors()>0)  // put Z generator at 0-th
-        nielsenTransposition(0, abelianized->getNumberOfInvariantFactors() );
+    if (abelianized->countInvariantFactors()>0)  // put Z generator at 0-th
+        nielsenTransposition(0, abelianized->countInvariantFactors() );
 
     // We have the presentation of this group in the form
     // < a, g1, g2, ..., gn | r1, ..., rm > with a->1, gi->0 under abelianization

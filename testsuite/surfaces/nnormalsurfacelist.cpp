@@ -1912,22 +1912,22 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             const NAbelianGroup& h1 = tri->getHomologyH1();
             const NAbelianGroup& bdry = tri->getHomologyH1Bdry();
 
-            if (h1.getNumberOfInvariantFactors() == 0) {
+            if (h1.countInvariantFactors() == 0) {
                 // Must have H1 = (2g)Z.
-                if (bdry.getNumberOfInvariantFactors() != 0)
+                if (bdry.countInvariantFactors() != 0)
                     return false;
                 if (bdry.getRank() != 2 * h1.getRank() - 2)
                     return false;
-            } else if (h1.getNumberOfInvariantFactors() == 1) {
+            } else if (h1.countInvariantFactors() == 1) {
                 // Must have H1 = Z_2 + (g-1)Z.
                 if (h1.getInvariantFactor(0) != 2)
                     return false;
 
-                if (bdry.getNumberOfInvariantFactors() == 0) {
+                if (bdry.countInvariantFactors() == 0) {
                     if (bdry.getRank() != 2 * h1.getRank())
                         return false;
                 } else {
-                    if (bdry.getNumberOfInvariantFactors() != 1)
+                    if (bdry.countInvariantFactors() != 1)
                         return false;
                     if (bdry.getInvariantFactor(0) != 2)
                         return false;
@@ -1968,19 +1968,19 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             const NAbelianGroup& h1 = tri->getHomologyH1();
             const NAbelianGroup& bdry = tri->getHomologyH1Bdry();
 
-            if (h1.getNumberOfInvariantFactors() == 0) {
+            if (h1.countInvariantFactors() == 0) {
                 // Must have H1 = (k)Z.
                 if (bdry.getRank() != 2 * h1.getRank())
                     return false;
-                if (bdry.getNumberOfInvariantFactors() != 0)
+                if (bdry.countInvariantFactors() != 0)
                     return false;
-            } else if (h1.getNumberOfInvariantFactors() == 1) {
+            } else if (h1.countInvariantFactors() == 1) {
                 // Must have H1 = Z_2 + (k)Z.
                 if (h1.getInvariantFactor(0) != 2)
                     return false;
                 if (bdry.getRank() != 2 * h1.getRank())
                     return false;
-                if (bdry.getNumberOfInvariantFactors() != 2)
+                if (bdry.countInvariantFactors() != 2)
                     return false;
                 if (bdry.getInvariantFactor(0) != 2)
                     return false;

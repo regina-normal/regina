@@ -1098,7 +1098,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
     // dual h1 --> standard h1 isomorphism:
     const NHomMarkedAbelianGroup& h1CellAp(getH1CellAp());
     // min number of torsion gens:
-    unsigned long niv(dmHomology1->getNumberOfInvariantFactors());
+    unsigned long niv(dmHomology1->countInvariantFactors());
     // for holding prime decompositions.:
     std::vector<std::pair<NLargeInteger, unsigned long> > tFac;
 
@@ -1870,7 +1870,7 @@ bool NHomologicalData::formIsHyperbolic() {
     if (torsionFormComputed)
         return torsionLinkingFormIsHyperbolic;
 
-    unsigned long nif=tri->getHomologyH1().getNumberOfInvariantFactors();
+    unsigned long nif=tri->getHomologyH1().countInvariantFactors();
     if (nif == 0)
         return true;
 

@@ -228,7 +228,7 @@ class NGroupPresentationTest : public CppUnit::TestFixture {
             NGroupPresentation tPres( *(*i) );
             tPres.homologicalAlignment();
             std::unique_ptr<NMarkedAbelianGroup> mab( tPres.markedAbelianisation() );
-            unsigned long N(mab->getNumberOfInvariantFactors());
+            unsigned long N(mab->countInvariantFactors());
             unsigned long M(mab->minNumberOfGenerators());
             /*
              * If the abelianisation of this group has rank N and M
