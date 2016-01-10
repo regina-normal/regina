@@ -283,7 +283,15 @@ class REGINA_API Triangulation<4> :
          *
          * @return the number of boundary components.
          */
-        unsigned long getNumberOfBoundaryComponents() const;
+        size_t countBoundaryComponents() const;
+
+        /**
+         * Deprecated function that returns the number of boundary
+         * components in this triangulation.
+         *
+         * \deprecated Simply call countBoundaryComponents() instead.
+         */
+        size_t getNumberOfBoundaryComponents() const;
 
         /**
          * Returns all boundary components of this triangulation.
@@ -314,7 +322,7 @@ class REGINA_API Triangulation<4> :
          * ones.  Thus this object should be considered temporary only.
          *
          * @param index the index of the desired boundary component, ranging
-         * from 0 to getNumberOfBoundaryComponents()-1 inclusive.
+         * from 0 to countBoundaryComponents()-1 inclusive.
          * @return the requested boundary component.
          */
         Dim4BoundaryComponent* getBoundaryComponent(unsigned long index) const;
@@ -1117,9 +1125,13 @@ inline void Triangulation<4>::removeAllPentachora() {
     removeAllSimplices();
 }
 
-inline unsigned long Triangulation<4>::getNumberOfBoundaryComponents() const {
+inline size_t Triangulation<4>::countBoundaryComponents() const {
     ensureSkeleton();
     return boundaryComponents_.size();
+}
+
+inline size_t Triangulation<4>::getNumberOfBoundaryComponents() const {
+    return countBoundaryComponents();
 }
 
 inline const std::vector<Dim4BoundaryComponent*>&
