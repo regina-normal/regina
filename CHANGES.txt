@@ -60,6 +60,8 @@ Version 4.97  [ (under development) ]
             * Global arrays edgeNumber[][], edgeStart[] and edgeEnd[] have
               been deprecated since 2009; this are now removed.  Use the
               arrays NEdge::edgeNumber[][] and NEdge::edgeVertex[][] instead.
+            * Some of the internal XML file I/O functions have been renamed,
+              though this should not affect end users.
         - The function NEdge::ordering(), which replaces the old array
           NEdge::ordering[], no longer guarantees an even permutation.
     ENGINE:
@@ -341,6 +343,8 @@ Version 4.97  [ (under development) ]
             - New routine transferChildren() for bulk tree reorganisation.
             - The subclass constant packetType is now a constant of type
               PacketType, not an anonymous enum type.
+            - Renamed getXMLReader() to xmlReader().  The old name has
+              been removed completely.
         Class NPacketListener:
             - New events childToBeRenamed(), childWasRenamed().
         Class NPerm:
@@ -522,6 +526,9 @@ Version 4.97  [ (under development) ]
             - Removed getEmbeddings() for C++, but kept it for Python.
             - Removed the old routine getNumberOfEmbeddings().  Just use
               the equivalent routine getDegree() instead.
+        Class NXMLPacketReader:
+            - Renamed getPacket() to packet().  The old getPacket() function
+              has been removed completely.
         Class Output, ShortOutput:
             - New classes that provide consistent APIs for objects to provide
               short and detailed string output.  These have been introduced as

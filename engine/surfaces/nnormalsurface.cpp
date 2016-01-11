@@ -95,7 +95,7 @@ const NPerm4 __octDiscArcs[24] = {
 };
 
 NNormalSurface* NNormalSurface::clone() const {
-    NNormalSurface* ans = new NNormalSurface(triangulation,
+    NNormalSurface* ans = new NNormalSurface(triangulation_,
         dynamic_cast<NNormalSurfaceVector*>(vector->clone()));
 
     ans->eulerChar_ = eulerChar_;
@@ -109,7 +109,7 @@ NNormalSurface* NNormalSurface::clone() const {
 }
 
 NNormalSurface* NNormalSurface::doubleSurface() const {
-    NNormalSurface* ans = new NNormalSurface(triangulation,
+    NNormalSurface* ans = new NNormalSurface(triangulation_,
         dynamic_cast<NNormalSurfaceVector*>(vector->clone()));
 
     (*(ans->vector)) *= 2;
@@ -134,11 +134,11 @@ NNormalSurface* NNormalSurface::doubleSurface() const {
 NNormalSurface::NNormalSurface(const NTriangulation* triang,
         NNormalSurfaceVector* newVector) :
         vector(newVector),
-        triangulation(triang) {
+        triangulation_(triang) {
 }
 
 void NNormalSurface::writeTextShort(std::ostream& out) const {
-    unsigned long nTets = triangulation->size();
+    unsigned long nTets = triangulation_->size();
     unsigned long tet;
     unsigned j;
     bool almostNormal = vector->allowsAlmostNormal();
@@ -242,7 +242,7 @@ NLargeInteger NNormalSurfaceVector::isCentral(const NTriangulation* triang)
 }
 
 bool NNormalSurface::isEmpty() const {
-    unsigned long nTet = triangulation->size();
+    unsigned long nTet = triangulation_->size();
     bool checkAlmostNormal = vector->allowsAlmostNormal();
 
     unsigned long t;
@@ -267,7 +267,7 @@ bool NNormalSurface::isEmpty() const {
 }
 
 bool NNormalSurface::sameSurface(const NNormalSurface& other) const {
-    unsigned long nTet = triangulation->size();
+    unsigned long nTet = triangulation_->size();
     bool checkAlmostNormal =
         (vector->allowsAlmostNormal() || other.vector->allowsAlmostNormal());
 
@@ -293,7 +293,7 @@ bool NNormalSurface::sameSurface(const NNormalSurface& other) const {
 }
 
 bool NNormalSurface::embedded() const {
-    unsigned long nTets = triangulation->size();
+    unsigned long nTets = triangulation_->size();
 
     int type;
     int found;
@@ -313,7 +313,7 @@ bool NNormalSurface::embedded() const {
 }
 
 bool NNormalSurface::locallyCompatible(const NNormalSurface& other) const {
-    unsigned long nTets = triangulation->size();
+    unsigned long nTets = triangulation_->size();
 
     int type;
     int found;
@@ -343,7 +343,7 @@ void NNormalSurface::calculateOctPosition() const {
     unsigned long tetIndex;
     int type;
 
-    for (tetIndex = 0; tetIndex < triangulation->size(); ++tetIndex)
+    for (tetIndex = 0; tetIndex < triangulation_->size(); ++tetIndex)
         for (type = 0; type < 3; ++type)
             if (getOctCoord(tetIndex, type) != 0) {
                 octPosition = NDiscType(tetIndex, type);
@@ -360,18 +360,18 @@ void NNormalSurface::calculateEulerChar() const {
     NLargeInteger ans = NLargeInteger::zero;
 
     // Add vertices.
-    tot = triangulation->countEdges();
+    tot = triangulation_->countEdges();
     for (index = 0; index < tot; index++)
         ans += getEdgeWeight(index);
 
     // Subtract edges.
-    tot = triangulation->countTriangles();
+    tot = triangulation_->countTriangles();
     for (index = 0; index < tot; index++)
         for (type = 0; type < 3; type++)
             ans -= getTriangleArcs(index, type);
 
     // Add faces.
-    tot = triangulation->size();
+    tot = triangulation_->size();
     for (index = 0; index < tot; index++) {
         for (type=0; type<4; type++)
             ans += getTriangleCoord(index, type);
@@ -386,18 +386,18 @@ void NNormalSurface::calculateEulerChar() const {
 }
 
 void NNormalSurface::calculateRealBoundary() const {
-    if (triangulation->isClosed()) {
+    if (triangulation_->isClosed()) {
         realBoundary = false;
         return;
     }
 
     unsigned long index;
-    unsigned long tot = triangulation->size();
+    unsigned long tot = triangulation_->size();
     const NTetrahedron* tet;
     int type, face;
 
     for (index = 0; index < tot; index++) {
-        tet = triangulation->getTetrahedron(index);
+        tet = triangulation_->getTetrahedron(index);
         if (tet->hasBoundary()) {
             // Check for disk types with boundary
             for (type=0; type<3; type++) {

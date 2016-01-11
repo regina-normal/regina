@@ -263,7 +263,7 @@ void NXMLTriangulationReader::endContentSubElement(const std::string&,
         NXMLElementReader*) {
 }
 
-NXMLPacketReader* NTriangulation::getXMLReader(NPacket*,
+NXMLPacketReader* NTriangulation::xmlReader(NPacket*,
         NXMLTreeResolver& resolver) {
     return new NXMLTriangulationReader(resolver);
 }

@@ -86,7 +86,7 @@ NMatrixInt* NAngleStructureVector::makeAngleEquations(
 }
 
 NAngleStructure* NAngleStructure::clone() const {
-    NAngleStructure* ans = new NAngleStructure(triangulation,
+    NAngleStructure* ans = new NAngleStructure(triangulation_,
         new NAngleStructureVector(*vector));
     ans->flags = flags;
     return ans;
@@ -96,7 +96,7 @@ NRational NAngleStructure::getAngle(unsigned long tetIndex, int edgePair)
         const {
     const NLargeInteger& num = (*vector)[3 * tetIndex + edgePair];
     const NLargeInteger& den =
-        (*vector)[3 * triangulation->size()];
+        (*vector)[3 * triangulation_->size()];
 
     NLargeInteger gcd = den.gcd(num);
     if (gcd < 0)
@@ -105,7 +105,7 @@ NRational NAngleStructure::getAngle(unsigned long tetIndex, int edgePair)
 }
 
 void NAngleStructure::writeTextShort(std::ostream& out) const {
-    unsigned long nTets = triangulation->size();
+    unsigned long nTets = triangulation_->size();
     unsigned j;
     for (unsigned long tet = 0; tet < nTets; tet++) {
         if (tet > 0)
@@ -186,40 +186,40 @@ void NAngleStructure::calculateType() const {
 
         // Is it veering also?
         bool veering = true;
-        if (triangulation->isOrientable()) {
-            long nEdges = triangulation->countEdges();
+        if (triangulation_->isOrientable()) {
+            long nEdges = triangulation_->countEdges();
             int* edgeColour = new int[nEdges];
             std::fill(edgeColour, edgeColour + nEdges, (int)0);
             const NTetrahedron* tet;
             int orient;
             long e;
-            for (unsigned i = 0; i < triangulation->size();
+            for (unsigned i = 0; i < triangulation_->size();
                     ++i) {
-                tet = triangulation->getTetrahedron(i);
+                tet = triangulation_->getTetrahedron(i);
                 orient = tet->orientation();
                 if ((*vector)[3 * i] > 0) {
                     // Edges 0,5 are marked as pi.
                     // For a positively oriented tetrahedron:
                     // Edges 1,4 vs 2,3 are of colour +1 vs -1.
-                    e = triangulation->edgeIndex(tet->getEdge(1));
+                    e = triangulation_->edgeIndex(tet->getEdge(1));
                     if (edgeColour[e] == -orient)
                         veering = false;
                     else
                         edgeColour[e] = orient;
 
-                    e = triangulation->edgeIndex(tet->getEdge(4));
+                    e = triangulation_->edgeIndex(tet->getEdge(4));
                     if (edgeColour[e] == -orient)
                         veering = false;
                     else
                         edgeColour[e] = orient;
 
-                    e = triangulation->edgeIndex(tet->getEdge(2));
+                    e = triangulation_->edgeIndex(tet->getEdge(2));
                     if (edgeColour[e] == orient)
                         veering = false;
                     else
                         edgeColour[e] = -orient;
 
-                    e = triangulation->edgeIndex(tet->getEdge(3));
+                    e = triangulation_->edgeIndex(tet->getEdge(3));
                     if (edgeColour[e] == orient)
                         veering = false;
                     else
@@ -228,25 +228,25 @@ void NAngleStructure::calculateType() const {
                     // Edges 1,4 are marked as pi.
                     // For a positively oriented tetrahedron:
                     // Edges 2,3 vs 0,5 are of colour +1 vs -1.
-                    e = triangulation->edgeIndex(tet->getEdge(2));
+                    e = triangulation_->edgeIndex(tet->getEdge(2));
                     if (edgeColour[e] == -orient)
                         veering = false;
                     else
                         edgeColour[e] = orient;
 
-                    e = triangulation->edgeIndex(tet->getEdge(3));
+                    e = triangulation_->edgeIndex(tet->getEdge(3));
                     if (edgeColour[e] == -orient)
                         veering = false;
                     else
                         edgeColour[e] = orient;
 
-                    e = triangulation->edgeIndex(tet->getEdge(0));
+                    e = triangulation_->edgeIndex(tet->getEdge(0));
                     if (edgeColour[e] == orient)
                         veering = false;
                     else
                         edgeColour[e] = -orient;
 
-                    e = triangulation->edgeIndex(tet->getEdge(5));
+                    e = triangulation_->edgeIndex(tet->getEdge(5));
                     if (edgeColour[e] == orient)
                         veering = false;
                     else
@@ -255,25 +255,25 @@ void NAngleStructure::calculateType() const {
                     // Edges 2,3 are marked as pi.
                     // For a positively oriented tetrahedron:
                     // Edges 0,5 vs 1,4 are of colour +1 vs -1.
-                    e = triangulation->edgeIndex(tet->getEdge(0));
+                    e = triangulation_->edgeIndex(tet->getEdge(0));
                     if (edgeColour[e] == -orient)
                         veering = false;
                     else
                         edgeColour[e] = orient;
 
-                    e = triangulation->edgeIndex(tet->getEdge(5));
+                    e = triangulation_->edgeIndex(tet->getEdge(5));
                     if (edgeColour[e] == -orient)
                         veering = false;
                     else
                         edgeColour[e] = orient;
 
-                    e = triangulation->edgeIndex(tet->getEdge(1));
+                    e = triangulation_->edgeIndex(tet->getEdge(1));
                     if (edgeColour[e] == orient)
                         veering = false;
                     else
                         edgeColour[e] = -orient;
 
-                    e = triangulation->edgeIndex(tet->getEdge(4));
+                    e = triangulation_->edgeIndex(tet->getEdge(4));
                     if (edgeColour[e] == orient)
                         veering = false;
                     else

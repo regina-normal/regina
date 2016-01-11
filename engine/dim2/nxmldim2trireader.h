@@ -71,7 +71,7 @@ class REGINA_API NXMLDim2TriangulationReader : public NXMLPacketReader {
          */
         NXMLDim2TriangulationReader(NXMLTreeResolver& resolver);
 
-        virtual NPacket* getPacket();
+        virtual NPacket* packet();
         virtual NXMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps);
@@ -88,7 +88,7 @@ inline NXMLDim2TriangulationReader::NXMLDim2TriangulationReader(
         NXMLPacketReader(resolver), tri_(new Dim2Triangulation()) {
 }
 
-inline NPacket* NXMLDim2TriangulationReader::getPacket() {
+inline NPacket* NXMLDim2TriangulationReader::packet() {
     return tri_;
 }
 

@@ -136,7 +136,7 @@ class REGINA_API NAngleStructure :
         NAngleStructureVector* vector;
             /**< Stores (indirectly) the individual angles in this angle
              *   structure. */
-        const NTriangulation* triangulation;
+        const NTriangulation* triangulation_;
             /**< The triangulation on which this angle structure is placed. */
 
         mutable unsigned long flags;
@@ -331,7 +331,7 @@ inline NAngleStructureVector::NAngleStructureVector(
 
 inline NAngleStructure::NAngleStructure(const NTriangulation* triang,
         NAngleStructureVector* newVector) : vector(newVector),
-        triangulation(triang), flags(0) {
+        triangulation_(triang), flags(0) {
 }
 
 inline NAngleStructure::~NAngleStructure() {
@@ -339,11 +339,11 @@ inline NAngleStructure::~NAngleStructure() {
 }
 
 inline const NTriangulation* NAngleStructure::triangulation() const {
-    return triangulation;
+    return triangulation_;
 }
 
 inline const NTriangulation* NAngleStructure::getTriangulation() const {
-    return triangulation;
+    return triangulation_;
 }
 
 inline bool NAngleStructure::isStrict() const {

@@ -119,7 +119,7 @@ class REGINA_API NXMLAngleStructureListReader : public NXMLPacketReader {
         NXMLAngleStructureListReader(NTriangulation* newTri,
             NXMLTreeResolver& resolver);
 
-        virtual NPacket* getPacket();
+        virtual NPacket* packet();
         virtual NXMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps);
@@ -147,7 +147,7 @@ inline NXMLAngleStructureListReader::NXMLAngleStructureListReader(
         list(new NAngleStructureList(false)), tri(newTri) {
 }
 
-inline NPacket* NXMLAngleStructureListReader::getPacket() {
+inline NPacket* NXMLAngleStructureListReader::packet() {
     return list;
 }
 

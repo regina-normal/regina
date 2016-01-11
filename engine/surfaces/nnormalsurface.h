@@ -765,7 +765,7 @@ class REGINA_API NNormalSurface :
         NNormalSurfaceVector* vector;
             /**< Contains the coordinates of the normal surface in whichever
              *   space is appropriate. */
-        const NTriangulation* triangulation;
+        const NTriangulation* triangulation_;
             /**< The triangulation in which this normal surface resides. */
 
         std::string name;
@@ -1815,37 +1815,37 @@ inline NNormalSurface::~NNormalSurface() {
 
 inline NLargeInteger NNormalSurface::getTriangleCoord(unsigned long tetIndex,
         int vertex) const {
-    return vector->getTriangleCoord(tetIndex, vertex, triangulation);
+    return vector->getTriangleCoord(tetIndex, vertex, triangulation_);
 }
 inline NLargeInteger NNormalSurface::getOrientedTriangleCoord(
         unsigned long tetIndex, int vertex, bool oriented) const {
-    return vector->getOrientedTriangleCoord(tetIndex, vertex, triangulation,
+    return vector->getOrientedTriangleCoord(tetIndex, vertex, triangulation_,
         oriented);
 }
 inline NLargeInteger NNormalSurface::getQuadCoord(unsigned long tetIndex,
         int quadType) const {
-    return vector->getQuadCoord(tetIndex, quadType, triangulation);
+    return vector->getQuadCoord(tetIndex, quadType, triangulation_);
 }
 inline NLargeInteger NNormalSurface::getOrientedQuadCoord(
         unsigned long tetIndex, int quadType, bool oriented) const {
-    return vector->getOrientedQuadCoord(tetIndex, quadType, triangulation,
+    return vector->getOrientedQuadCoord(tetIndex, quadType, triangulation_,
         oriented);
 }
 inline NLargeInteger NNormalSurface::getOctCoord(unsigned long tetIndex,
         int octType) const {
-    return vector->getOctCoord(tetIndex, octType, triangulation);
+    return vector->getOctCoord(tetIndex, octType, triangulation_);
 }
 inline NLargeInteger NNormalSurface::getEdgeWeight(unsigned long edgeIndex)
         const {
-    return vector->getEdgeWeight(edgeIndex, triangulation);
+    return vector->getEdgeWeight(edgeIndex, triangulation_);
 }
 inline NLargeInteger NNormalSurface::getTriangleArcs(unsigned long triIndex,
         int triVertex) const {
-    return vector->getTriangleArcs(triIndex, triVertex, triangulation);
+    return vector->getTriangleArcs(triIndex, triVertex, triangulation_);
 }
 inline NLargeInteger NNormalSurface::getFaceArcs(unsigned long triIndex,
         int triVertex) const {
-    return vector->getTriangleArcs(triIndex, triVertex, triangulation);
+    return vector->getTriangleArcs(triIndex, triVertex, triangulation_);
 }
 
 inline NDiscType NNormalSurface::getOctPosition() const {
@@ -1861,10 +1861,10 @@ inline size_t NNormalSurface::getNumberOfCoords() const {
     return vector->size();
 }
 inline const NTriangulation* NNormalSurface::triangulation() const {
-    return triangulation;
+    return triangulation_;
 }
 inline const NTriangulation* NNormalSurface::getTriangulation() const {
-    return triangulation;
+    return triangulation_;
 }
 
 inline const std::string& NNormalSurface::getName() const {
@@ -1880,7 +1880,7 @@ inline void NNormalSurface::writeRawVector(std::ostream& out) const {
 
 inline bool NNormalSurface::isCompact() const {
     if (! compact.known())
-        compact = vector->isCompact(triangulation);
+        compact = vector->isCompact(triangulation_);
     return compact.value();
 }
 
@@ -1923,24 +1923,24 @@ inline bool NNormalSurface::hasRealBoundary() const {
 }
 
 inline bool NNormalSurface::isVertexLinking() const {
-    return vector->isVertexLinking(triangulation);
+    return vector->isVertexLinking(triangulation_);
 }
 
 inline const NVertex* NNormalSurface::isVertexLink() const {
-    return vector->isVertexLink(triangulation);
+    return vector->isVertexLink(triangulation_);
 }
 
 inline std::pair<const NEdge*, const NEdge*> NNormalSurface::isThinEdgeLink()
         const {
-    return vector->isThinEdgeLink(triangulation);
+    return vector->isThinEdgeLink(triangulation_);
 }
 
 inline bool NNormalSurface::isSplitting() const {
-    return vector->isSplitting(triangulation);
+    return vector->isSplitting(triangulation_);
 }
 
 inline NLargeInteger NNormalSurface::isCentral() const {
-    return vector->isCentral(triangulation);
+    return vector->isCentral(triangulation_);
 }
 
 inline bool NNormalSurface::normal() const {
