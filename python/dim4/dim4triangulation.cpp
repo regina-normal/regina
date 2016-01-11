@@ -80,9 +80,9 @@ namespace {
         return ans;
     }
 
-    boost::python::list Dim4_getComponents_list(Dim4Triangulation& t) {
+    boost::python::list Dim4_components_list(Dim4Triangulation& t) {
         boost::python::list ans;
-        for (auto c : t.getComponents())
+        for (auto c : t.components())
             ans.append(boost::python::ptr(c));
         return ans;
     }
@@ -212,8 +212,8 @@ void addDim4Triangulation() {
         .def("getNumberOfTriangles", &Dim4Triangulation::getNumberOfTriangles)
         .def("countTetrahedra", &Dim4Triangulation::countTetrahedra)
         .def("getNumberOfTetrahedra", &Dim4Triangulation::getNumberOfTetrahedra)
-        .def("components", Dim4_getComponents_list)
-        .def("getComponents", Dim4_getComponents_list)
+        .def("components", Dim4_components_list)
+        .def("getComponents", Dim4_components_list)
         .def("getBoundaryComponents", Dim4_getBoundaryComponents_list)
         .def("faces", &regina::python::faces<Dim4Triangulation, 4>)
         .def("getFaces", &regina::python::faces<Dim4Triangulation, 4>)

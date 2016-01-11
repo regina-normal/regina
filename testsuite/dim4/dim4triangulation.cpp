@@ -777,7 +777,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             unsigned long c;
             regina::Dim4Component* comp;
             for (c = 0; c < tri->countComponents(); ++c) {
-                comp = tri->getComponent(c);
+                comp = tri->component(c);
                 found = 0;
 
                 for (i = 0; i < comp->size(); ++i)
@@ -1934,7 +1934,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             unsigned long expectBdryComp = 2 * tri->countComponents();
             unsigned long i;
             for (i = 0; i < tri->countComponents(); ++i)
-                if (tri->getComponent(i)->countBoundaryTriangles())
+                if (tri->component(i)->countBoundaryTriangles())
                     --expectBdryComp;
 
             if (b->countBoundaryComponents() != expectBdryComp) {

@@ -1393,7 +1393,7 @@ int Dim4ComponentModel::columnCount(const QModelIndex& /* unused parent*/) const
 
 QVariant Dim4ComponentModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        Dim4Component* item = tri->getComponent(index.row());
+        Dim4Component* item = tri->component(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();

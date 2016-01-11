@@ -121,7 +121,7 @@ void Dim4Triangulation::calculateBoundary() {
 
         label = new Dim4BoundaryComponent();
         boundaryComponents_.push_back(label);
-        loopTet->getComponent()->boundaryComponents_.push_back(label);
+        loopTet->component()->boundaryComponents_.push_back(label);
 
         label->boundary_ = new NTriangulation();
 
@@ -369,7 +369,7 @@ void Dim4Triangulation::calculateVertexLinks() {
                     ! vertex->link_->isThreeSphere()) {
                 // The vertex is fine but it's not a 3-sphere.
                 // We have an ideal triangulation.
-                ideal_ = vertex->getComponent()->ideal_ = vertex->ideal_ = true;
+                ideal_ = vertex->component()->ideal_ = vertex->ideal_ = true;
                 foundNonSimpleLink = true;
                 boundaryComponents_.push_back(
                     vertex->boundaryComponent_ =

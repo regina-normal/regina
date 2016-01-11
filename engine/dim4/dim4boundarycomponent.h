@@ -177,6 +177,14 @@ class REGINA_API Dim4BoundaryComponent :
          *
          * @return the component containing this boundary component.
          */
+        Dim4Component* component() const;
+        /**
+         * Deprecated routine that returns the component of the triangulation
+         * to which this boundary component belongs.
+         *
+         * \deprecated This routine has been renamed to component().
+         * See the component() documentation for further details.
+         */
         Dim4Component* getComponent() const;
 
         /**
@@ -343,9 +351,14 @@ inline Dim4Vertex* Dim4BoundaryComponent::face<0>(size_t index) const {
     return vertices_[index];
 }
 
+inline Dim4Component* Dim4BoundaryComponent::component() const {
+    // There may be no tetrahedra, but there is always a vertex.
+    return vertices_.front()->component();
+}
+
 inline Dim4Component* Dim4BoundaryComponent::getComponent() const {
     // There may be no tetrahedra, but there is always a vertex.
-    return vertices_.front()->getComponent();
+    return vertices_.front()->component();
 }
 
 inline const NTriangulation* Dim4BoundaryComponent::getTriangulation() const {
