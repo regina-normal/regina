@@ -1028,8 +1028,8 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
         void verifyEulerChar(const Dim4Triangulation& tri,
                 long expectedManifold, long expectedTri) {
-            long eulerManifold = tri.getEulerCharManifold();
-            long eulerTri = tri.getEulerCharTri();
+            long eulerManifold = tri.eulerCharManifold();
+            long eulerTri = tri.eulerCharTri();
 
             if (eulerManifold != expectedManifold) {
                 std::ostringstream msg;
@@ -1050,7 +1050,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
         void verifyEulerCharTri(const Dim4Triangulation& tri,
                 long expectedTri) {
-            long eulerTri = tri.getEulerCharTri();
+            long eulerTri = tri.eulerCharTri();
 
             if (eulerTri != expectedTri) {
                 std::ostringstream msg;
@@ -1221,7 +1221,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             // The same problem with invalid triangulations and boundary
             // components bites us with Euler characteristic also.
             if (tri->isValid() &&
-                    (tri->getEulerCharTri() != b.getEulerCharTri())) {
+                    (tri->eulerCharTri() != b.eulerCharTri())) {
                 std::ostringstream msg;
                 msg << tri->getPacketLabel()
                     << ": Barycentric subdivision breaks Euler char (tri).";
@@ -1229,7 +1229,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             }
 
             if (tri->isValid() &&
-                    (tri->getEulerCharManifold() != b.getEulerCharManifold())) {
+                    (tri->eulerCharManifold() != b.eulerCharManifold())) {
                 std::ostringstream msg;
                 msg << tri->getPacketLabel()
                     << ": Barycentric subdivision breaks Euler char (mfd).";
@@ -1304,7 +1304,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (large.getEulerCharTri() != tri->getEulerCharTri()) {
+                if (large.eulerCharTri() != tri->eulerCharTri()) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel() << ", pent " << i << ": "
                         << "1-5 move changes Euler characteristic.";
@@ -1602,7 +1602,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
                 if (e->isValid()) {
                     if (e->isBoundary()) {
-                        if (link->getEulerChar() != 1) {
+                        if (link->eulerChar() != 1) {
                             std::ostringstream msg;
                             msg << tri->getPacketLabel() << ", edge "
                                 << i << ": "
@@ -1610,7 +1610,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                             CPPUNIT_FAIL(msg.str());
                         }
                     } else {
-                        if (link->getEulerChar() != 2) {
+                        if (link->eulerChar() != 2) {
                             std::ostringstream msg;
                             msg << tri->getPacketLabel() << ", edge "
                                 << i << ": "
@@ -1852,8 +1852,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
                     // Subdivisions can change these properties for
                     // invalid triangulations.
-                    if (other.getEulerCharManifold() !=
-                            tri->getEulerCharManifold()) {
+                    if (other.eulerCharManifold() != tri->eulerCharManifold()) {
                         std::ostringstream msg;
                         msg << tri->getPacketLabel() << ": "
                             << "idealToFinite changes Euler characteristic.";
@@ -1923,8 +1922,8 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (b->getEulerCharTri() != tri->getEulerCharTri() ||
-                    b->getEulerCharManifold() != tri->getEulerCharManifold()) {
+            if (b->eulerCharTri() != tri->eulerCharTri() ||
+                    b->eulerCharManifold() != tri->eulerCharManifold()) {
                 std::ostringstream msg;
                 msg << tri->getPacketLabel() << ": "
                     << "iBundle gives the wrong Euler characteristic.";
@@ -2012,7 +2011,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (b->getEulerCharTri() != 0 || b->getEulerCharManifold() != 0) {
+            if (b->eulerCharTri() != 0 || b->eulerCharManifold() != 0) {
                 std::ostringstream msg;
                 msg << tri->getPacketLabel() << ": "
                     << "s1Bundle gives the wrong Euler characteristic.";
@@ -2107,8 +2106,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (b->getEulerCharTri() != 0 ||
-                        b->getEulerCharManifold() != 0) {
+                if (b->eulerCharTri() != 0 || b->eulerCharManifold() != 0) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel() << ": "
                         << "bundleWithMonodromy gives the wrong "

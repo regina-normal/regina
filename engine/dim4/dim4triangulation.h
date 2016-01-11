@@ -436,6 +436,14 @@ class REGINA_API Triangulation<4> :
          *
          * @return the Euler characteristic of this triangulation.
          */
+        long eulerCharTri() const;
+        /**
+         * Deprecated routine that returns the Euler characteristic of this
+         * triangulation.
+         *
+         * \deprecated This routine has been renamed to eulerCharTri().
+         * See the eulerCharTri() documentation for further details.
+         */
         long getEulerCharTri() const;
 
         /**
@@ -461,6 +469,14 @@ class REGINA_API Triangulation<4> :
          *
          * @return the Euler characteristic of the corresponding compact
          * manifold.
+         */
+        long eulerCharManifold() const;
+        /**
+         * Deprecated routine that returns the Euler characteristic of
+         * the corresponding compact manifold.
+         *
+         * \deprecated This routine has been renamed to eulerCharManifold().
+         * See the eulerCharManifold() documentation for further details.
          */
         long getEulerCharManifold() const;
 
@@ -1196,7 +1212,7 @@ inline long Triangulation<4>::tetrahedronIndex(const Dim4Tetrahedron* tet)
     return tet->index();
 }
 
-inline long Triangulation<4>::getEulerCharTri() const {
+inline long Triangulation<4>::eulerCharTri() const {
     ensureSkeleton();
 
     // Cast away the unsignedness of std::vector::size().
@@ -1205,6 +1221,14 @@ inline long Triangulation<4>::getEulerCharTri() const {
         + static_cast<long>(countTriangles())
         - static_cast<long>(countTetrahedra())
         + static_cast<long>(size());
+}
+
+inline long Triangulation<4>::getEulerCharTri() const {
+    return eulerCharTri();
+}
+
+inline long Triangulation<4>::getEulerCharManifold() const {
+    return eulerCharManifold();
 }
 
 inline bool Triangulation<4>::isIdeal() const {

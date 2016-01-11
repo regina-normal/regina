@@ -153,11 +153,11 @@ void Dim4Triangulation::writeTextLong(std::ostream& out) const {
     out << '\n';
 }
 
-long Dim4Triangulation::getEulerCharManifold() const {
+long Dim4Triangulation::eulerCharManifold() const {
     // Begin with V - E + F - T + P.
-    // This call to getEulerCharTri() also ensures that the skeleton has
+    // This call to eulerCharTri() also ensures that the skeleton has
     // been calculated.
-    long ans = getEulerCharTri();
+    long ans = eulerCharTri();
 
     // Truncate any ideal vertices.
     if (ideal_) {
@@ -167,7 +167,7 @@ long Dim4Triangulation::getEulerCharManifold() const {
                 // vertex links in the 3-manifold boundary must be
                 // spheres or discs.  We can therefore use V - E + F - T
                 // on this boundary component.
-                ans += bc->vertices_.front()->link_->getEulerCharTri() - 1;
+                ans += bc->vertices_.front()->link_->eulerCharTri() - 1;
             }
     }
 

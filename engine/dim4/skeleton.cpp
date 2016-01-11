@@ -439,8 +439,8 @@ void Dim4Triangulation::calculateEdgeLinks() {
             // Calling buildLink() causes the edge link to be cached by
             // Dim4Edge.
             const Dim2Triangulation* link = e->buildLink();
-            if ((link->isClosed() && link->getEulerChar() != 2) ||
-                    ((! link->isClosed()) && link->getEulerChar() != 1))
+            if ((link->isClosed() && link->eulerChar() != 2) ||
+                    ((! link->isClosed()) && link->eulerChar() != 1))
                 e->markBadLink();
         }
 }
