@@ -976,7 +976,7 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
         //
         // Quite pleasant to deal with in the end.
         if (e->isBoundary())
-            if (e->getBoundaryComponent()->countTriangles() == 2)
+            if (e->boundaryComponent()->countTriangles() == 2)
                 return false;
 
         {

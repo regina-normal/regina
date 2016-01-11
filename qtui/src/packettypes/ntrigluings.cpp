@@ -914,7 +914,7 @@ void NTriGluingsUI::connectedSumWith() {
 void NTriGluingsUI::boundaryComponents() {
     endEdit();
 
-    if (tri->getBoundaryComponents().empty())
+    if (tri->boundaryComponents().empty())
         ReginaSupport::sorry(ui,
             tr("This triangulation does not have any boundary components."));
     else {
@@ -1269,6 +1269,6 @@ void NTriGluingsUI::updateActionStates() {
     else
         actOrient->setEnabled(! tri->isOriented());
 
-    actBoundaryComponents->setEnabled(! tri->getBoundaryComponents().empty());
+    actBoundaryComponents->setEnabled(! tri->boundaryComponents().empty());
 }
 

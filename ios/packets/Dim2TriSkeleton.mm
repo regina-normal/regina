@@ -224,7 +224,7 @@
                 cell.index.text = @"No boundary components";
                 cell.data0.text = cell.data1.text = @"";
             } else {
-                regina::Dim2BoundaryComponent* b = self.packet->getBoundaryComponent(indexPath.row - 1);
+                regina::Dim2BoundaryComponent* b = self.packet->boundaryComponent(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Bdry" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
                 cell.data0.text = [TextHelper countString:b->countEdges() singular:"edge" plural:"edges"];

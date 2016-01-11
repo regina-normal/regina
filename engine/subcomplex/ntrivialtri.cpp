@@ -60,7 +60,7 @@ NTrivialTri* NTrivialTri::isTrivialTriangulation(const NComponent* comp) {
     if (! comp->isClosed()) {
         if (comp->countBoundaryComponents() == 1) {
             // We have precisely one boundary component.
-            NBoundaryComponent* bc = comp->getBoundaryComponent(0);
+            NBoundaryComponent* bc = comp->boundaryComponent(0);
 
             if (! bc->isIdeal()) {
                 // The boundary component includes boundary triangles.

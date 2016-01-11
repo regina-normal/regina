@@ -222,6 +222,14 @@ class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2>,
          * triangle does not lie entirely within the boundary of the
          * triangulation.
          */
+        NBoundaryComponent* boundaryComponent() const;
+        /**
+         * Deprecated routine that returns the boundary component of the
+         * triangulation to which this triangle belongs.
+         *
+         * \deprecated This routine has been renamed as boundaryComponent().
+         * See the boundaryComponent() documentation for further details.
+         */
         NBoundaryComponent* getBoundaryComponent() const;
 
         /**
@@ -274,6 +282,10 @@ namespace regina {
 inline Face<3, 2>::Face(NComponent* component) :
         FaceBase<3, 2>(component),
         boundaryComponent_(0), type_(UNKNOWN_TYPE) {
+}
+
+inline NBoundaryComponent* Face<3, 2>::boundaryComponent() const {
+    return boundaryComponent_;
 }
 
 inline NBoundaryComponent* Face<3, 2>::getBoundaryComponent() const {

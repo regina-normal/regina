@@ -55,8 +55,8 @@ NMatrixInt* NNormalSurfaceVectorQuad::makeMatchingEquations(
     // One equation per non-boundary edge.
     long nEquations = long(triangulation->countEdges());
     for (NTriangulation::BoundaryComponentIterator bit = triangulation->
-            getBoundaryComponents().begin();
-            bit != triangulation->getBoundaryComponents().end(); bit++)
+            boundaryComponents().begin();
+            bit != triangulation->boundaryComponents().end(); bit++)
         nEquations -= (*bit)->countEdges();
 
     NMatrixInt* ans = new NMatrixInt(nEquations, nCoords);

@@ -1953,8 +1953,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 return false;
 
             // Check that both boundary components are homeomorphic.
-            NBoundaryComponent* b0 = tri->getBoundaryComponent(0);
-            NBoundaryComponent* b1 = tri->getBoundaryComponent(1);
+            NBoundaryComponent* b0 = tri->boundaryComponent(0);
+            NBoundaryComponent* b1 = tri->boundaryComponent(1);
 
             if (b0->getEulerChar() != b1->getEulerChar())
                 return false;
@@ -2004,7 +2004,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 const NTriangulation* tri, unsigned& foundS,
                 unsigned& foundTwoCopies, unsigned& foundDoubleCover) {
             if (tri->countBoundaryComponents() == 1) {
-                const NBoundaryComponent* b = tri->getBoundaryComponent(0);
+                const NBoundaryComponent* b = tri->boundaryComponent(0);
 
                 if (s->getEulerChar() == b->getEulerChar()
                         && s->isOrientable() == b->isOrientable())
@@ -2013,8 +2013,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                         (b->isOrientable() || ! s->isOrientable()))
                     ++foundDoubleCover;
             } else if (tri->countBoundaryComponents() == 2) {
-                const NBoundaryComponent* b0 = tri->getBoundaryComponent(0);
-                const NBoundaryComponent* b1 = tri->getBoundaryComponent(1);
+                const NBoundaryComponent* b0 = tri->boundaryComponent(0);
+                const NBoundaryComponent* b1 = tri->boundaryComponent(1);
 
                 if (
                         s->getEulerChar() == b0->getEulerChar() &&

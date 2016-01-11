@@ -53,8 +53,8 @@ NMatrixInt* NAngleStructureVector::makeAngleEquations(
     // We have one equation per non-boundary edge plus one per tetrahedron.
     long rows = long(tri->countEdges()) + long(tri->size());
     for (NTriangulation::BoundaryComponentIterator bit =
-            tri->getBoundaryComponents().begin();
-            bit != tri->getBoundaryComponents().end(); bit++)
+            tri->boundaryComponents().begin();
+            bit != tri->boundaryComponents().end(); bit++)
         rows -= (*bit)->countEdges();
 
     NMatrixInt* eqns = new NMatrixInt(rows, cols);

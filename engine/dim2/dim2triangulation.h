@@ -223,7 +223,7 @@ class REGINA_API Triangulation<2> :
          *
          * See removeSimplexAt() for further information.
          */
-        void removeTriangleAt(unsigned long index);
+        void removeTriangleAt(size_t index);
         /**
          * A dimension-specific alias for removeAllSimplices().
          *
@@ -267,6 +267,14 @@ class REGINA_API Triangulation<2> :
          *
          * @return the list of all boundary components.
          */
+        const std::vector<Dim2BoundaryComponent*>& boundaryComponents() const;
+        /**
+         * Deprecated routine that returns all boundary components of this
+         * triangulation.
+         *
+         * \deprecated This routine has been renamed to boundaryComponents().
+         * See the boundaryComponents() documentation for further details.
+         */
         const std::vector<Dim2BoundaryComponent*>& getBoundaryComponents()
             const;
         /**
@@ -280,7 +288,15 @@ class REGINA_API Triangulation<2> :
          * from 0 to countBoundaryComponents()-1 inclusive.
          * @return the requested boundary component.
          */
-        Dim2BoundaryComponent* getBoundaryComponent(unsigned long index) const;
+        Dim2BoundaryComponent* boundaryComponent(size_t index) const;
+        /**
+         * Deprecated routine that returns the requested boundary component
+         * of this triangulation.
+         *
+         * \deprecated This routine has been renamed to boundaryComponent().
+         * See the boundaryComponent() documentation for further details.
+         */
+        Dim2BoundaryComponent* getBoundaryComponent(size_t index) const;
         /**
          * Deprecated routine that returns the index of the given
          * boundary component in the triangulation.
@@ -535,7 +551,7 @@ inline void Triangulation<2>::removeTriangle(Dim2Triangle* tri) {
     removeSimplex(tri);
 }
 
-inline void Triangulation<2>::removeTriangleAt(unsigned long index) {
+inline void Triangulation<2>::removeTriangleAt(size_t index) {
     removeSimplexAt(index);
 }
 
@@ -543,7 +559,7 @@ inline void Triangulation<2>::removeAllTriangles() {
     removeAllSimplices();
 }
 
-inline unsigned long Triangulation<2>::countBoundaryComponents() const {
+inline size_t Triangulation<2>::countBoundaryComponents() const {
     ensureSkeleton();
     return boundaryComponents_.size();
 }
@@ -553,13 +569,25 @@ inline size_t Triangulation<2>::getNumberOfBoundaryComponents() const {
 }
 
 inline const std::vector<Dim2BoundaryComponent*>&
+        Triangulation<2>::boundaryComponents() const {
+    ensureSkeleton();
+    return (const std::vector<Dim2BoundaryComponent*>&)(boundaryComponents_);
+}
+
+inline const std::vector<Dim2BoundaryComponent*>&
         Triangulation<2>::getBoundaryComponents() const {
     ensureSkeleton();
     return (const std::vector<Dim2BoundaryComponent*>&)(boundaryComponents_);
 }
 
+inline Dim2BoundaryComponent* Triangulation<2>::boundaryComponent(
+        size_t index) const {
+    ensureSkeleton();
+    return boundaryComponents_[index];
+}
+
 inline Dim2BoundaryComponent* Triangulation<2>::getBoundaryComponent(
-        unsigned long index) const {
+        size_t index) const {
     ensureSkeleton();
     return boundaryComponents_[index];
 }

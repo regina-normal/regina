@@ -92,6 +92,14 @@ class REGINA_API Face<2, 0> : public detail::FaceBase<2, 0>,
          * @return the boundary component containing this vertex,
          * or 0 if this vertex is not on the boundary of the triangulation.
          */
+        Dim2BoundaryComponent* boundaryComponent() const;
+        /**
+         * Deprecated routine that returns the boundary component of the
+         * triangulation to which this vertex belongs.
+         *
+         * \deprecated This routine has been renamed as boundaryComponent().
+         * See the boundaryComponent() documentation for further details.
+         */
         Dim2BoundaryComponent* getBoundaryComponent() const;
 
         /**
@@ -151,6 +159,10 @@ namespace regina {
 
 inline Face<2, 0>::Face(Dim2Component* component) :
         detail::FaceBase<2, 0>(component), boundaryComponent_(0) {
+}
+
+inline Dim2BoundaryComponent* Face<2, 0>::boundaryComponent() const {
+    return boundaryComponent_;
 }
 
 inline Dim2BoundaryComponent* Face<2, 0>::getBoundaryComponent() const {
