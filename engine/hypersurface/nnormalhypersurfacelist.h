@@ -340,7 +340,7 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
-        static NXMLPacketReader* getXMLReader(NPacket* parent,
+        static NXMLPacketReader* xmlReader(NPacket* parent,
             NXMLTreeResolver& resolver);
         virtual bool dependsOnParent() const;
 

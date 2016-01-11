@@ -222,7 +222,7 @@ void NXMLDim4TriangulationReader::endContentSubElement(const std::string&,
         NXMLElementReader*) {
 }
 
-NXMLPacketReader* Dim4Triangulation::getXMLReader(NPacket*,
+NXMLPacketReader* Dim4Triangulation::xmlReader(NPacket*,
         NXMLTreeResolver& resolver) {
     return new NXMLDim4TriangulationReader(resolver);
 }
