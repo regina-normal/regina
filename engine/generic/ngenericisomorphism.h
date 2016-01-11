@@ -394,7 +394,7 @@ class NGenericIsomorphism :
          * If f and g do not represent the exact same number of simplices, the
          * returned isomorphism is not guaranteed to be valid.
          */
-        const Isomorphism operator*(const Isomorphism& rhs);
+        Isomorphism operator*(const Isomorphism& rhs) const;
 
 };
 
@@ -477,8 +477,8 @@ inline bool NGenericIsomorphism<dim>::operator!=(
 }
 
 template <int dim>
-inline const typename DimTraits<dim>::Isomorphism NGenericIsomorphism<dim>::operator*(
-        const typename DimTraits<dim>::Isomorphism& rhs) {
+inline typename DimTraits<dim>::Isomorphism NGenericIsomorphism<dim>::operator*(
+        const typename DimTraits<dim>::Isomorphism& rhs) const {
     typename DimTraits<dim>::Isomorphism result(this->getSourceSimplices());
     for(int simp = 0; simp < result.getSourceSimplices(); simp++) {
         result.facetPerm_[simp] = this->facetPerm(rhs.simpImage(simp)) *
