@@ -313,7 +313,6 @@ void addNTriangulation() {
         .def("getEulerCharTri", &NTriangulation::getEulerCharTri)
         .def("eulerCharManifold", &NTriangulation::eulerCharManifold)
         .def("getEulerCharManifold", &NTriangulation::getEulerCharManifold)
-        .def("getEulerCharacteristic", &NTriangulation::getEulerCharacteristic)
         .def("isValid", &NTriangulation::isValid)
         .def("isIdeal", &NTriangulation::isIdeal)
         .def("isStandard", &NTriangulation::isStandard)

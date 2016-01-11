@@ -32,6 +32,9 @@ Version 4.97  [ (under development) ]
               since 2011, and has now been removed completely.  This routine
               is no longer necessary (it has done nothing since it was
               deprecated), and you can simply remove it from your code.
+            * NTriangulation::getEulerCharacteristic() has been deprecated
+              since 2007, and has again been removed completely.  Just call
+              the equivalent routine eulerCharTri() instead.
             * NProgress, NProgressManager and related classes have been
               deprecated since 2013; they are also removed completely.
               All the code that used to work with these classes now
@@ -478,6 +481,8 @@ Version 4.97  [ (under development) ]
               gluingsHaveChanged().
             - Removed maximalForestInDualSkeleton().  Just use
               NTriangle::inMaximalForest() instead.
+            - Removed getEulerCharacteristic(), which was deprecated
+              years ago to clarify the ambiguity in how it was computed.
             - New dimension-agnostic routine countBoundaryFacets().
             - Removed the long-deprecated addTetrahedron().
             - Removed 2-face members FaceIterator, faceIndex(), getFace(),

@@ -532,10 +532,6 @@ class REGINA_API Triangulation<3> :
          * as surface boundary components when computing the Euler
          * characteristic), see eulerCharManifold() instead.
          *
-         * This routine was previously called getEulerCharacteristic() in
-         * Regina 4.3.1 and earlier.  It was renamed in Regina 4.4 to
-         * clarify the non-standard handling of cusps.
-         *
          * @return the Euler characteristic of this triangulation.
          */
         long eulerCharTri() const;
@@ -580,24 +576,6 @@ class REGINA_API Triangulation<3> :
          * See the eulerCharManifold() documentation for further details.
          */
         long getEulerCharManifold() const;
-
-        /**
-         * A deprecated alias for eulerCharTri().
-         *
-         * This routine calculates the Euler characteristic of this
-         * triangulation.  Since it treats cusps in a non-standard way,
-         * it was renamed to eulerCharTri() in Regina 4.4 to clarify
-         * that this might differ from the Euler characteristic of the
-         * corresponding compact manifold.
-         *
-         * See eulerCharTri() for further details.
-         *
-         * \deprecated This routine will be removed in a future version
-         * of Regina.  Please use eulerCharTri() instead.
-         *
-         * @return the Euler characteristic of this triangulation.
-         */
-        long getEulerCharacteristic() const;
 
         /**
          * Determines if this triangulation is ideal.
@@ -3271,10 +3249,6 @@ inline long Triangulation<3>::getEulerCharTri() const {
 
 inline long Triangulation<3>::getEulerCharManifold() const {
     return eulerCharManifold();
-}
-
-inline long Triangulation<3>::getEulerCharacteristic() const {
-    return eulerCharTri();
 }
 
 inline const std::vector<NBoundaryComponent*>&
