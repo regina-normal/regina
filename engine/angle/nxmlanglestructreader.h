@@ -80,7 +80,7 @@ class REGINA_API NXMLAngleStructureReader : public NXMLElementReader {
          * @return the newly allocated angle structure, or 0 if an error
          * occurred.
          */
-        NAngleStructure* getStructure();
+        NAngleStructure* structure();
 
         virtual void startElement(const std::string& tagName,
             const regina::xml::XMLPropertyDict& tagProps,
@@ -135,7 +135,7 @@ inline NXMLAngleStructureReader::NXMLAngleStructureReader(
         NTriangulation* newTri) : angles(0), tri(newTri), vecLen(-1) {
 }
 
-inline NAngleStructure* NXMLAngleStructureReader::getStructure() {
+inline NAngleStructure* NXMLAngleStructureReader::structure() {
     return angles;
 }
 

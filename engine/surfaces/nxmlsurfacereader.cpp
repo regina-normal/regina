@@ -163,7 +163,7 @@ void NXMLNormalSurfaceListReader::endContentSubElement(
         if (subTagName == "surface")
             if (NNormalSurface* s =
                     dynamic_cast<NXMLNormalSurfaceReader*>(subReader)->
-                    getSurface())
+                    surface())
                 list->surfaces.push_back(s);
 }
 

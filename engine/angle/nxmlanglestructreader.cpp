@@ -121,8 +121,7 @@ void NXMLAngleStructureListReader::endContentSubElement(
         NXMLElementReader* subReader) {
     if (subTagName == "struct")
         if (NAngleStructure* s =
-                dynamic_cast<NXMLAngleStructureReader*>(subReader)->
-                getStructure())
+                dynamic_cast<NXMLAngleStructureReader*>(subReader)->structure())
             list->structures.push_back(s);
 }
 

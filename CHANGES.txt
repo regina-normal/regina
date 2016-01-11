@@ -526,9 +526,9 @@ Version 4.97  [ (under development) ]
             - Removed getEmbeddings() for C++, but kept it for Python.
             - Removed the old routine getNumberOfEmbeddings().  Just use
               the equivalent routine getDegree() instead.
-        Class NXMLPacketReader:
-            - Renamed getPacket() to packet().  The old getPacket() function
-              has been removed completely.
+        Class NXML...:
+            - Renamed routines of the form getFoo() to foo() across all of
+              these internal XML I/O classes, removing the old names completely.
         Class Output, ShortOutput:
             - New classes that provide consistent APIs for objects to provide
               short and detailed string output.  These have been introduced as
