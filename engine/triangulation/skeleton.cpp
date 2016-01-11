@@ -305,9 +305,9 @@ void NTriangulation::calculateBoundaryProperties() const {
 
     for (BoundaryComponentIterator it = boundaryComponents_.begin();
             it != boundaryComponents_.end(); it++) {
-        if ((*it)->getEulerChar() == 2)
+        if ((*it)->eulerChar() == 2)
             localTwoSphereBoundaryComponents = true;
-        else if ((*it)->isIdeal() && (*it)->getEulerChar() < 0)
+        else if ((*it)->isIdeal() && (*it)->eulerChar() < 0)
             localNegativeIdealBoundaryComponents = true;
 
         // Stop the search if we've found everything we're looking for.

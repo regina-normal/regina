@@ -227,6 +227,7 @@ void addDim2Triangulation() {
         .def("findAllSubcomplexesIn", findAllSubcomplexesIn_list)
         .def("isEmpty", &Dim2Triangulation::isEmpty)
         .def("isValid", &Dim2Triangulation::isValid)
+        .def("eulerChar", &Dim2Triangulation::eulerChar)
         .def("getEulerChar", &Dim2Triangulation::getEulerChar)
         .def("isClosed", &Dim2Triangulation::isClosed)
         .def("hasBoundaryFacets", &Dim2Triangulation::hasBoundaryFacets)

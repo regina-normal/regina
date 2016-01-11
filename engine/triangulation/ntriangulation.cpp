@@ -347,26 +347,26 @@ NTriangulation* Triangulation<3>::enterTextTriangulation(std::istream& in,
     return triang;
 }
 
-long Triangulation<3>::getEulerCharManifold() const {
+long Triangulation<3>::eulerCharManifold() const {
     // Begin with V - E + F - T.
-    // This call to getEulerCharTri() also ensures that the skeleton has
+    // This call to eulerCharTri() also ensures that the skeleton has
     // been calculated.
-    long ans = getEulerCharTri();
+    long ans = eulerCharTri();
 
     // Truncate any ideal vertices.
     for (BoundaryComponentIterator it = boundaryComponents_.begin();
             it != boundaryComponents_.end(); ++it)
         if ((*it)->isIdeal())
-            ans += (*it)->getEulerChar() - 1;
+            ans += (*it)->eulerChar() - 1;
 
     // If we have an invalid triangulation, we need to locate non-standard
     // boundary vertices and invalid edges, and truncate those unwanted bits
     // also.
     if (! valid_) {
-        for (NVertex* v : getVertices())
+        for (NVertex* v : vertices())
             if (v->getLink() == NVertex::NON_STANDARD_BDRY)
                 ans += v->getLinkEulerChar() - 1;
-        for (NEdge* e : getEdges())
+        for (NEdge* e : edges())
             if (! e->isValid())
                 ++ans;
     }

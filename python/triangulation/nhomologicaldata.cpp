@@ -58,6 +58,7 @@ void addNHomologicalData() {
         .def("getNumStandardCells", &NHomologicalData::getNumStandardCells)
         .def("getNumDualCells", &NHomologicalData::getNumDualCells)
         .def("getNumBdryCells", &NHomologicalData::getNumBdryCells)
+        .def("eulerChar", &NHomologicalData::eulerChar)
         .def("getEulerChar", &NHomologicalData::getEulerChar)
         .def("getTorsionRankVectorString",
             &NHomologicalData::getTorsionRankVectorString,

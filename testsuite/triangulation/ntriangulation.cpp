@@ -1479,7 +1479,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                         msg << tri->getPacketLabel() << ", vertex " << i << ": "
                             << "link of ideal vertex is not a closed surface.";
                         CPPUNIT_FAIL(msg.str());
-                    } else if (link->getEulerChar() == 2) {
+                    } else if (link->eulerChar() == 2) {
                         std::ostringstream msg;
                         msg << tri->getPacketLabel() << ", vertex " << i << ": "
                             << "link of ideal vertex is a sphere.";
@@ -1492,7 +1492,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                         msg << tri->getPacketLabel() << ", vertex " << i << ": "
                             << "link of invalid vertex is closed.";
                         CPPUNIT_FAIL(msg.str());
-                    } else if (link->getEulerChar() == 1) {
+                    } else if (link->eulerChar() == 1) {
                         std::ostringstream msg;
                         msg << tri->getPacketLabel() << ", vertex " << i << ": "
                             << "link of invalid vertex is a disc.";
@@ -1505,7 +1505,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                         msg << tri->getPacketLabel() << ", vertex " << i << ": "
                             << "link of internal vertex is not closed.";
                         CPPUNIT_FAIL(msg.str());
-                    } else if (link->getEulerChar() != 2) {
+                    } else if (link->eulerChar() != 2) {
                         std::ostringstream msg;
                         msg << tri->getPacketLabel() << ", vertex " << i << ": "
                             << "link of internal vertex is not a sphere.";
@@ -1513,7 +1513,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                     }
                 } else {
                     // Vertex link should be a disc.
-                    if (link->isClosed() || link->getEulerChar() != 1) {
+                    if (link->isClosed() || link->eulerChar() != 1) {
                         std::ostringstream msg;
                         msg << tri->getPacketLabel() << ", vertex " << i << ": "
                             << "link of real boundary vertex is not a disc.";
@@ -1599,8 +1599,8 @@ class NTriangulationTest : public TriangulationTest<3> {
 
         void verifyEuler(const NTriangulation& tri,
                 long expectedManifold, long expectedTri, const char* triName) {
-            long eulerManifold = tri.getEulerCharManifold();
-            long eulerTri = tri.getEulerCharTri();
+            long eulerManifold = tri.eulerCharManifold();
+            long eulerTri = tri.eulerCharTri();
 
             if (eulerManifold != expectedManifold) {
                 std::ostringstream msg;
@@ -2053,13 +2053,13 @@ class NTriangulationTest : public TriangulationTest<3> {
                 const NNormalSurface* f;
                 for (size_t i = 0; i < s->size(); ++i) {
                     f = s->getSurface(i);
-                    if (f->getEulerChar() == 2 &&
+                    if (f->eulerChar() == 2 &&
                             (! f->hasRealBoundary()) &&
                             ! f->isVertexLinking()) {
                         // Normal sphere
                         expected = false;
                         break;
-                    } else if (f->getEulerChar() == 1 &&
+                    } else if (f->eulerChar() == 1 &&
                             (! f->hasRealBoundary()) &&
                             (! f->isTwoSided()) &&
                             ! f->isVertexLinking()) {
@@ -2067,7 +2067,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                         // normal sphere
                         expected = false;
                         break;
-                    } else if (f->getEulerChar() == 1 &&
+                    } else if (f->eulerChar() == 1 &&
                             f->hasRealBoundary() && ! f->isVertexLinking()) {
                         // Normal disc
                         expected = false;
@@ -2661,7 +2661,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                          tri->isOrientable() &&
                          tri->isConnected() &&
                          tri->countBoundaryComponents() == 1 &&
-                         tri->boundaryComponent(0)->getEulerChar() == 0 &&
+                         tri->boundaryComponent(0)->eulerChar() == 0 &&
                          tri->getHomologyH1().isZ() &&
                          (tri->size() < 4 ||
                             (tri->size() == 4 &&
@@ -3210,7 +3210,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             // The same problem with invalid triangulations and boundary
             // components bites us with Euler characteristic also.
             if (tri->isValid() &&
-                    (tri->getEulerCharTri() != b.getEulerCharTri())) {
+                    (tri->eulerCharTri() != b.eulerCharTri())) {
                 std::ostringstream msg;
                 msg << tri->getPacketLabel()
                     << ": Barycentric subdivision breaks Euler char (tri).";
@@ -3218,7 +3218,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             }
 
             if (tri->isValid() &&
-                    (tri->getEulerCharManifold() != b.getEulerCharManifold())) {
+                    (tri->eulerCharManifold() != b.eulerCharManifold())) {
                 std::ostringstream msg;
                 msg << tri->getPacketLabel()
                     << ": Barycentric subdivision breaks Euler char (mfd).";
@@ -3313,14 +3313,14 @@ class NTriangulationTest : public TriangulationTest<3> {
                 std::vector<BCSpec> bcOld;
                 for (bcit = tri->boundaryComponents().begin();
                         bcit != tri->boundaryComponents().end(); ++bcit)
-                    bcOld.push_back(BCSpec((*bcit)->getEulerChar(),
+                    bcOld.push_back(BCSpec((*bcit)->eulerChar(),
                         (*bcit)->isOrientable()));
                 std::sort(bcOld.begin(), bcOld.end());
 
                 std::vector<BCSpec> bcNew;
                 for (bcit = finite.boundaryComponents().begin();
                         bcit != finite.boundaryComponents().end(); ++bcit)
-                    bcNew.push_back(BCSpec((*bcit)->getEulerChar(),
+                    bcNew.push_back(BCSpec((*bcit)->eulerChar(),
                         (*bcit)->isOrientable()));
                 std::sort(bcNew.begin(), bcNew.end());
 
@@ -3379,16 +3379,16 @@ class NTriangulationTest : public TriangulationTest<3> {
                 std::vector<BCSpec> bcOld;
                 for (bcit = tri->boundaryComponents().begin();
                         bcit != tri->boundaryComponents().end(); ++bcit)
-                    if ((*bcit)->getEulerChar() != 2)
+                    if ((*bcit)->eulerChar() != 2)
                         bcOld.push_back(
-                            BCSpec((*bcit)->getEulerChar(),
+                            BCSpec((*bcit)->eulerChar(),
                             (*bcit)->isOrientable()));
                 std::sort(bcOld.begin(), bcOld.end());
 
                 std::vector<BCSpec> bcNew;
                 for (bcit = ideal.boundaryComponents().begin();
                         bcit != ideal.boundaryComponents().end(); ++bcit)
-                    bcNew.push_back(BCSpec((*bcit)->getEulerChar(),
+                    bcNew.push_back(BCSpec((*bcit)->eulerChar(),
                         (*bcit)->isOrientable()));
                 std::sort(bcNew.begin(), bcNew.end());
 
@@ -3451,7 +3451,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                         (tmp0.countBoundaryComponents() == 1) &&
                         (tmp0.getHomologyH1().isZ()) &&
                         (tmp0.boundaryComponent(0)->isOrientable()) &&
-                        (tmp0.boundaryComponent(0)->getEulerChar() == 0) &&
+                        (tmp0.boundaryComponent(0)->eulerChar() == 0) &&
                         (! tmp0.isSolidTorus())))
                     CPPUNIT_FAIL("Layered 3-sphere: drilling edge 0 "
                         "does not give a non-trivial knot complement.");
@@ -3611,7 +3611,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                         << "puncture gives wrong number of S^2 triangles.";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if (bc->getEulerChar() != 2) {
+                if (bc->eulerChar() != 2) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel() << ", tet " << i << ": "
                         << "puncture gives wrong S^2 Euler characteristic.";
@@ -3629,15 +3629,14 @@ class NTriangulationTest : public TriangulationTest<3> {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (punc.getEulerCharTri() != tri->getEulerCharTri() + 1) {
+                if (punc.eulerCharTri() != tri->eulerCharTri() + 1) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel() << ", tet " << i << ": "
                         << "puncture gives wrong Euler characteristic (tri).";
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (punc.getEulerCharManifold() !=
-                        tri->getEulerCharManifold() + 1) {
+                if (punc.eulerCharManifold() != tri->eulerCharManifold() + 1) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel() << ", tet " << i << ": "
                         << "puncture gives wrong Euler characteristic (mfd).";
@@ -4145,7 +4144,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (large.getEulerCharTri() != tri->getEulerCharTri()) {
+                if (large.eulerCharTri() != tri->eulerCharTri()) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel() << ", tet " << i << ": "
                         << "1-4 move changes Euler characteristic.";

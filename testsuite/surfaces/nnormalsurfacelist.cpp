@@ -272,10 +272,10 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 std::ostringstream msg;
                 msg << "Surface [" << surfaceName << "] for " << triName
                     << " should have Euler char. " << euler << ", not "
-                    << surface->getEulerChar() << '.';
+                    << surface->eulerChar() << '.';
 
                 CPPUNIT_ASSERT_MESSAGE(msg.str(),
-                    surface->getEulerChar() == euler);
+                    surface->eulerChar() == euler);
             }
             if (compact) {
                 std::ostringstream msg;
@@ -395,7 +395,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             for (unsigned long i = 0; i < size; i++) {
                 s = list->getSurface(i);
 
-                if (s->getEulerChar() == euler &&
+                if (s->eulerChar() == euler &&
                         s->isConnected() == connected &&
                         s->isOrientable() == orient &&
                         s->isTwoSided() == twoSided &&
@@ -1956,7 +1956,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             NBoundaryComponent* b0 = tri->boundaryComponent(0);
             NBoundaryComponent* b1 = tri->boundaryComponent(1);
 
-            if (b0->getEulerChar() != b1->getEulerChar())
+            if (b0->eulerChar() != b1->eulerChar())
                 return false;
             if (b0->isOrientable() && ! b1->isOrientable())
                 return false;
@@ -2006,10 +2006,10 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             if (tri->countBoundaryComponents() == 1) {
                 const NBoundaryComponent* b = tri->boundaryComponent(0);
 
-                if (s->getEulerChar() == b->getEulerChar()
+                if (s->eulerChar() == b->eulerChar()
                         && s->isOrientable() == b->isOrientable())
                     ++foundS;
-                if (s->getEulerChar() * 2 == b->getEulerChar() &&
+                if (s->eulerChar() * 2 == b->eulerChar() &&
                         (b->isOrientable() || ! s->isOrientable()))
                     ++foundDoubleCover;
             } else if (tri->countBoundaryComponents() == 2) {
@@ -2017,8 +2017,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 const NBoundaryComponent* b1 = tri->boundaryComponent(1);
 
                 if (
-                        s->getEulerChar() == b0->getEulerChar() &&
-                        s->getEulerChar() == b1->getEulerChar() &&
+                        s->eulerChar() == b0->eulerChar() &&
+                        s->eulerChar() == b1->eulerChar() &&
                         s->isOrientable() == b0->isOrientable() &&
                         s->isOrientable() == b1->isOrientable())
                     ++foundTwoCopies;

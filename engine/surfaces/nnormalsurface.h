@@ -776,7 +776,7 @@ class REGINA_API NNormalSurface :
                  or NDiscType::NONE if there is no non-zero octagonal
                  coordinate.  Here NDiscType::type is an octagon type
                  between 0 and 2 inclusive. */
-        mutable NProperty<NLargeInteger> eulerChar;
+        mutable NProperty<NLargeInteger> eulerChar_;
             /**< The Euler characteristic of this surface. */
         mutable NProperty<bool> orientable;
             /**< Is this surface orientable? */
@@ -1196,9 +1196,17 @@ class REGINA_API NNormalSurface :
          *
          * @return the Euler characteristic.
          */
+        NLargeInteger eulerChar() const;
+        /**
+         * Deprecated routine that returns the Euler characteristic of this
+         * surface.
+         *
+         * \deprecated This routine has been renamed to eulerChar().
+         * See the eulerChar() documentation for further details.
+         */
         NLargeInteger getEulerChar() const;
         /**
-         * A deprecated alias for getEulerChar().
+         * A deprecated alias for eulerChar().
          *
          * Returns the Euler characteristic of this surface.
          *
@@ -1209,7 +1217,7 @@ class REGINA_API NNormalSurface :
          * \pre This normal surface is compact (has finitely many discs).
          *
          * \deprecated This routine will be removed in a future version of
-         * Regina.  Please use the identical routine getEulerChar() instead.
+         * Regina.  Please use the identical routine eulerChar() instead.
          *
          * @return the Euler characteristic.
          */
@@ -1876,14 +1884,18 @@ inline bool NNormalSurface::isCompact() const {
     return compact.value();
 }
 
-inline NLargeInteger NNormalSurface::getEulerChar() const {
-    if (! eulerChar.known())
+inline NLargeInteger NNormalSurface::eulerChar() const {
+    if (! eulerChar_.known())
         calculateEulerChar();
-    return eulerChar.value();
+    return eulerChar_.value();
+}
+
+inline NLargeInteger NNormalSurface::getEulerChar() const {
+    return eulerChar();
 }
 
 inline NLargeInteger NNormalSurface::getEulerCharacteristic() const {
-    return getEulerChar();
+    return eulerChar();
 }
 
 inline bool NNormalSurface::isOrientable() const {

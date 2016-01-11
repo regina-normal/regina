@@ -98,7 +98,7 @@ NNormalSurface* NNormalSurface::clone() const {
     NNormalSurface* ans = new NNormalSurface(triangulation,
         dynamic_cast<NNormalSurfaceVector*>(vector->clone()));
 
-    ans->eulerChar = eulerChar;
+    ans->eulerChar_ = eulerChar_;
     ans->orientable = orientable;
     ans->twoSided = twoSided;
     ans->connected = connected;
@@ -117,8 +117,8 @@ NNormalSurface* NNormalSurface::doubleSurface() const {
     // Some properties can be copied straight across.
     ans->realBoundary = realBoundary;
     ans->compact = compact;
-    if (eulerChar.known())
-        ans->eulerChar = eulerChar.value() * 2;
+    if (eulerChar_.known())
+        ans->eulerChar_ = eulerChar_.value() * 2;
 
     // The following three properties can be used together to deduce how
     // they change in the clone.  However, until we sit down and check
@@ -382,7 +382,7 @@ void NNormalSurface::calculateEulerChar() const {
     }
 
     // Done!
-    eulerChar = ans;
+    eulerChar_ = ans;
 }
 
 void NNormalSurface::calculateRealBoundary() const {
@@ -497,8 +497,8 @@ void NNormalSurface::writeXMLData(std::ostream& out) const {
     }
 
     // Write properties.
-    if (eulerChar.known())
-        out << "\n\t" << xmlValueTag("euler", eulerChar.value());
+    if (eulerChar_.known())
+        out << "\n\t" << xmlValueTag("euler", eulerChar_.value());
     if (orientable.known())
         out << "\n\t" << xmlValueTag("orbl", orientable.value());
     if (twoSided.known())

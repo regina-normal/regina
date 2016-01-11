@@ -601,16 +601,25 @@ public:
      * vertex treated as a surface boundary component.
      *
      * This routine returns the same value as
-     * NTriangulation::getEulerCharManifold(), though it computes it
+     * NTriangulation::eulerCharManifold(), though it computes it
      * in a different way.
      *
      * On the other hand, this routine differs from
-     * NTriangulation::getEulerCharTri(), which handles ideal triangulations
+     * NTriangulation::eulerCharTri(), which handles ideal triangulations
      * in a non-standard way (treating each ideal vertex as just a single
      * vertex).
      *
      * @return the Euler characteristic of the corresponding compact
      * triangulated 3-manifold.
+     */
+    long eulerChar();
+
+    /**
+     * Deprecated routine that returns the proper Euler characteristic
+     * of the manifold, computed from the CW-decomposition.
+     *
+     * \deprecated This routine has been renamed to eulerChar().
+     * See the eulerChar() documentation for further details.
      */
     long getEulerChar();
 
@@ -893,11 +902,16 @@ inline unsigned long NHomologicalData::getNumBdryCells(unsigned dimension)
     return numBdryCells[dimension];
 }
 
-inline long int NHomologicalData::getEulerChar()
+inline long int NHomologicalData::eulerChar()
 {
     // euler characteristic
     computeccIndexing();
     return numDualCells[0]-numDualCells[1]+numDualCells[2]-numDualCells[3];
+}
+
+inline long int NHomologicalData::getEulerChar()
+{
+    return eulerChar();
 }
 
 inline const std::vector< std::pair< NLargeInteger,
