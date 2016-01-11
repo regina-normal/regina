@@ -118,6 +118,8 @@ void addDim4Component() {
             return_value_policy<reference_existing_object>())
         .def("getVertex", &Dim4Component::getVertex,
             return_value_policy<reference_existing_object>())
+        .def("boundaryComponent", &Dim4Component::boundaryComponent,
+            return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &Dim4Component::getBoundaryComponent,
             return_value_policy<reference_existing_object>())
         .def("isIdeal", &Dim4Component::isIdeal)
