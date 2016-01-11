@@ -137,6 +137,10 @@ NAngleStructureList* NAngleStructureList::enumerateTautDD(
     return ans;
 }
 
+NTriangulation* NAngleStructureList::triangulation() const {
+    return dynamic_cast<NTriangulation*>(getTreeParent());
+}
+
 NTriangulation* NAngleStructureList::getTriangulation() const {
     return dynamic_cast<NTriangulation*>(getTreeParent());
 }
@@ -199,7 +203,7 @@ void NAngleStructureList::calculateSpanStrict() const {
         return;
     }
 
-    unsigned long nTets = getTriangulation()->size();
+    unsigned long nTets = triangulation()->size();
     if (nTets == 0) {
         doesSpanStrict = true;
         return;

@@ -1106,6 +1106,14 @@ class REGINA_API NNormalSurface :
          *
          * @return the underlying triangulation.
          */
+        const NTriangulation* triangulation() const;
+        /**
+         * Deprecated routine that returns the triangulation in which this
+         * normal surface resides.
+         *
+         * \deprecated This routine has been renamed to triangulation().
+         * See the triangulation() documentation for further details.
+         */
         const NTriangulation* getTriangulation() const;
 
         /**
@@ -1613,7 +1621,7 @@ class REGINA_API NNormalSurface :
          * cusp.  This information is \e only available through the SnapPea
          * kernel, since Regina does not use or store peripheral curves for
          * its own NTriangulation class.  Therefore, if the underlying
-         * triangulation (as returned by getTriangulation()) is not of the
+         * triangulation (as returned by triangulation()) is not of the
          * subclass NSnapPeaTriangulation, this routine will simply return 0.
          *
          * All cusps are treated as complete.  That is, any Dehn fillings
@@ -1843,6 +1851,9 @@ inline size_t NNormalSurface::countCoords() const {
 }
 inline size_t NNormalSurface::getNumberOfCoords() const {
     return vector->size();
+}
+inline const NTriangulation* NNormalSurface::triangulation() const {
+    return triangulation;
 }
 inline const NTriangulation* NNormalSurface::getTriangulation() const {
     return triangulation;

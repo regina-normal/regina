@@ -128,7 +128,7 @@ namespace {
         if (fields & surfaceExportLink) {
             // Mirror the information that gets shown in the Link column
             // in the GUI.
-            const NTriangulation* t = s->getTriangulation();
+            const NTriangulation* t = s->triangulation();
             const NVertex* v = s->isVertexLink();
             if (v)
                 out << "\"Vertex " << t->vertexIndex(v) << "\"";
@@ -164,7 +164,7 @@ bool NNormalSurfaceList::saveCSVStandard(const char* filename,
     if (! out)
         return false;
 
-    unsigned long n = getTriangulation()->size();
+    unsigned long n = triangulation()->size();
 
     unsigned long i, j;
 
@@ -239,7 +239,7 @@ bool NNormalSurfaceList::saveCSVEdgeWeight(const char* filename,
     if (! out)
         return false;
 
-    unsigned long n = getTriangulation()->countEdges();
+    unsigned long n = triangulation()->countEdges();
 
     unsigned long i, j;
 

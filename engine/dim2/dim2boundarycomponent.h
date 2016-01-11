@@ -86,7 +86,7 @@ class REGINA_API Dim2BoundaryComponent :
         /**
          * Returns the index of this boundary component in the underlying
          * triangulation.  This is identical to calling
-         * <tt>getTriangulation()->boundaryComponentIndex(this)</tt>.
+         * <tt>triangulation()->boundaryComponentIndex(this)</tt>.
          *
          * @return the index of this boundary component vertex.
          */

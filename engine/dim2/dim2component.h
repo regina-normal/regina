@@ -181,6 +181,14 @@ class REGINA_API Component<2> : public detail::ComponentBase<2>,
          * entire triangulation.
          * @return the requested boundary component.
          */
+        Dim2BoundaryComponent* boundaryComponent(size_t index) const;
+        /**
+         * Deprecated routine that returns the requested boundary component
+         * of this triangulation.
+         *
+         * \deprecated This routine has been renamed to boundaryComponent().
+         * See the boundaryComponent() documentation for further details.
+         */
         Dim2BoundaryComponent* getBoundaryComponent(size_t index) const;
 
         /**
@@ -251,6 +259,11 @@ inline Dim2Edge* Component<2>::face<1>(size_t index) const {
 template <>
 inline Dim2Vertex* Component<2>::face<0>(size_t index) const {
     return vertices_[index];
+}
+
+inline Dim2BoundaryComponent* Component<2>::boundaryComponent(size_t index)
+        const {
+    return boundaryComponents_[index];
 }
 
 inline Dim2BoundaryComponent* Component<2>::getBoundaryComponent(size_t index)

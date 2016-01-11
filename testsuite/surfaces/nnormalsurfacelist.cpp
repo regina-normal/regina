@@ -244,7 +244,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 const char* listType, unsigned long expectedSize) {
             std::ostringstream msg;
             msg << "Number of " << listType << " for "
-                << list->getTriangulation()->getPacketLabel()
+                << list->triangulation()->getPacketLabel()
                 << " should be " << expectedSize << ", not "
                 << list->size() << '.';
 
@@ -420,7 +420,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
             std::ostringstream msg;
             msg << "Number of " << surfaceType << " in "
-                    << list->getTriangulation()->getPacketLabel()
+                    << list->triangulation()->getPacketLabel()
                     << " should be " << expectedCount << ", not "
                     << tot << '.';
             CPPUNIT_ASSERT_MESSAGE(msg.str(), expectedCount == tot);
@@ -1893,7 +1893,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             NNormalSurfaceVector* v =
                 static_cast<NNormalSurfaceVector*>(s->rawVector()->clone());
             (*v) *= 2;
-            return new NNormalSurface(s->getTriangulation(), v);
+            return new NNormalSurface(s->triangulation(), v);
         }
 
         /**

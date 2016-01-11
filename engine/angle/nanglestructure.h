@@ -204,6 +204,14 @@ class REGINA_API NAngleStructure :
          *
          * @return the underlying triangulation.
          */
+        const NTriangulation* triangulation() const;
+        /**
+         * Deprecated routine that returns the triangulation on which this
+         * angle structure lies.
+         *
+         * \deprecated This routine has been renamed to triangulation().
+         * See the triangulation() documentation for further details.
+         */
         const NTriangulation* getTriangulation() const;
 
         /**
@@ -328,6 +336,10 @@ inline NAngleStructure::NAngleStructure(const NTriangulation* triang,
 
 inline NAngleStructure::~NAngleStructure() {
     delete vector;
+}
+
+inline const NTriangulation* NAngleStructure::triangulation() const {
+    return triangulation;
 }
 
 inline const NTriangulation* NAngleStructure::getTriangulation() const {

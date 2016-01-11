@@ -58,6 +58,8 @@ void addNSurfaceSubset() {
         .def("allowsSpun", &NSurfaceSubset::allowsSpun)
         .def("allowsOriented", &NSurfaceSubset::allowsOriented)
         .def("isEmbeddedOnly", &NSurfaceSubset::isEmbeddedOnly)
+        .def("triangulation", &NSurfaceSubset::triangulation,
+            return_value_policy<reference_existing_object>())
         .def("getTriangulation", &NSurfaceSubset::getTriangulation,
             return_value_policy<reference_existing_object>())
         .def("size", &NSurfaceSubset::size)

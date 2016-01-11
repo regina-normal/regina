@@ -155,11 +155,11 @@ void NTriangulation::labelBoundaryTriangle(NTriangle* firstTriangle,
         // Run through the edges and vertices on this triangle.
         tet = triangle->front().getTetrahedron();
         tetFace = triangle->front().getTriangle();
-        tetVertices = tet->SimplexFaces<3, 2>::mapping_[tetFace];
+        tetVertices = tet->regina::detail::SimplexFaces<3, 2>::mapping_[tetFace];
 
         // Run through the vertices.
         for (i=0; i<3; i++) {
-            vertex = tet->SimplexFaces<3, 0>::face_[tetVertices[i]];
+            vertex = tet->regina::detail::SimplexFaces<3, 0>::face_[tetVertices[i]];
             if (vertex->boundaryComponent_ != label) {
                 // A vertex in an invalid triangulation might end up in
                 // more than one boundary component.  Push it into all
@@ -172,7 +172,7 @@ void NTriangulation::labelBoundaryTriangle(NTriangle* firstTriangle,
         // Run through the edges.
         for (i=0; i<3; i++)
             for (j=i+1; j<3; j++) {
-                edge = tet->SimplexFaces<3, 1>::face_[
+                edge = tet->regina::detail::SimplexFaces<3, 1>::face_[
                     NEdge::edgeNumber[tetVertices[i]][tetVertices[j]]];
                 if (! (edge->boundaryComponent_)) {
                     edge->boundaryComponent_ = label;
@@ -192,12 +192,12 @@ void NTriangulation::labelBoundaryTriangle(NTriangle* firstTriangle,
                     nextFaceNumber = nextFacePerm[followFromFace];
                 }
                 nextTriangle =
-                    nextTet->SimplexFaces<3, 2>::face_[nextFaceNumber];
+                    nextTet->regina::detail::SimplexFaces<3, 2>::face_[nextFaceNumber];
                 // Find the expected orientation of the next triangle.
                 yourOrientation =
-                    (nextTet->SimplexFaces<3, 2>::mapping_[nextFaceNumber].
+                    (nextTet->regina::detail::SimplexFaces<3, 2>::mapping_[nextFaceNumber].
                         inverse() * nextFacePerm * switchPerm *
-                        tet->SimplexFaces<3, 2>::mapping_[tetFace])
+                        tet->regina::detail::SimplexFaces<3, 2>::mapping_[tetFace])
                     .sign() == 1 ? -tet->tmpOrientation_[tetFace] :
                     tet->tmpOrientation_[tetFace];
                 if (nextTriangle->boundaryComponent_) {
@@ -234,9 +234,9 @@ void NTriangulation::calculateVertexLinks() {
         // recompute the skeleton.
         const NEdgeEmbedding& emb = e->front();
         tet = emb.getTetrahedron();
-        end0 = tet->SimplexFaces<3, 0>::face_[tet->SimplexFaces<3, 1>::mapping_
+        end0 = tet->regina::detail::SimplexFaces<3, 0>::face_[tet->regina::detail::SimplexFaces<3, 1>::mapping_
             [emb.getEdge()][0]];
-        end1 = tet->SimplexFaces<3, 0>::face_[tet->SimplexFaces<3, 1>::mapping_
+        end1 = tet->regina::detail::SimplexFaces<3, 0>::face_[tet->regina::detail::SimplexFaces<3, 1>::mapping_
             [emb.getEdge()][1]];
 
         if (e->isBoundary()) {

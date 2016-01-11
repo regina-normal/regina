@@ -98,6 +98,8 @@ void addDim2Component() {
             return_value_policy<reference_existing_object>())
         .def("getVertex", &Dim2Component::getVertex,
             return_value_policy<reference_existing_object>())
+        .def("boundaryComponent", &Dim2Component::boundaryComponent,
+            return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &Dim2Component::getBoundaryComponent,
             return_value_policy<reference_existing_object>())
         .def("isOrientable", &Dim2Component::isOrientable)

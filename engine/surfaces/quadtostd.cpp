@@ -311,7 +311,7 @@ namespace {
 
 template <class Variant>
 NNormalSurfaceList* NNormalSurfaceList::internalReducedToStandard() const {
-    NTriangulation* owner = getTriangulation();
+    NTriangulation* owner = triangulation();
 
     // Basic sanity checks:
     if (coords_ != Variant::reducedCoords())

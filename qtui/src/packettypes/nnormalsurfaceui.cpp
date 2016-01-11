@@ -100,7 +100,7 @@ NSurfaceHeaderUI::NSurfaceHeaderUI(regina::NNormalSurfaceList* packet,
 
     // Listen for renaming events on the parent triangulation, since we
     // display its label in the header.
-    packet->getTriangulation()->listen(this);
+    packet->triangulation()->listen(this);
 }
 
 regina::NPacket* NSurfaceHeaderUI::getPacket() {
@@ -150,12 +150,12 @@ void NSurfaceHeaderUI::refresh() {
         "Triangulation: <a href=\"#\">%3</a></qt>").
         arg(count).
         arg(header->tr(Coordinates::name(surfaces->coords(), false))).
-        arg(QString(surfaces->getTriangulation()->getHumanLabel().c_str()).
+        arg(QString(surfaces->triangulation()->getHumanLabel().c_str()).
             toHtmlEscaped()));
 }
 
 void NSurfaceHeaderUI::viewTriangulation() {
-    enclosingPane->getMainWindow()->packetView(surfaces->getTriangulation(),
+    enclosingPane->getMainWindow()->packetView(surfaces->triangulation(),
         false /* visible in tree */, false /* select in tree */);
 }
 

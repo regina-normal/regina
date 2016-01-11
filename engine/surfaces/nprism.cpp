@@ -44,7 +44,7 @@ std::ostream& operator << (std::ostream& out, const NPrismSpec& spec) {
 }
 
 NPrismSetSurface::NPrismSetSurface(const NNormalSurface& surface) {
-    const NTriangulation* tri = surface.getTriangulation();
+    const NTriangulation* tri = surface.triangulation();
     unsigned long nTet = tri->size();
 
     if (nTet == 0) {

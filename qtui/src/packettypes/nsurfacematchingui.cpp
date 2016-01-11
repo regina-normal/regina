@@ -74,7 +74,7 @@ QVariant MatchingModel::data(const QModelIndex& index, int role) const {
             return ans.stringValue().c_str();
     } else if (role == Qt::ToolTipRole)
         return Coordinates::columnDesc(surfaces_->coords(), index.column(),
-            this, surfaces_->getTriangulation());
+            this, surfaces_->triangulation());
     else if (role == Qt::TextAlignmentRole)
         return Qt::AlignRight;
     else
@@ -88,10 +88,10 @@ QVariant MatchingModel::headerData(int section, Qt::Orientation orientation,
 
     if (role == Qt::DisplayRole)
         return Coordinates::columnName(surfaces_->coords(), section,
-            surfaces_->getTriangulation());
+            surfaces_->triangulation());
     else if (role == Qt::ToolTipRole)
         return Coordinates::columnDesc(surfaces_->coords(), section, this,
-            surfaces_->getTriangulation());
+            surfaces_->triangulation());
     else if (role == Qt::TextAlignmentRole)
         return Qt::AlignCenter;
     else

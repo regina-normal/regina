@@ -119,7 +119,7 @@ int SurfaceModel::rowCount(const QModelIndex& /* unused parent*/) const {
 
 int SurfaceModel::columnCount(const QModelIndex& /* unused parent*/) const {
     return propertyColCount() +
-        Coordinates::numColumns(coordSystem_, surfaces_->getTriangulation());
+        Coordinates::numColumns(coordSystem_, surfaces_->triangulation());
 }
 
 QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
@@ -178,18 +178,15 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
 
             if ((v = s->isVertexLink()))
                 return tr("Vertex %1").arg(
-                    surfaces_->getTriangulation()->vertexIndex(v));
+                    surfaces_->triangulation()->vertexIndex(v));
             else if ((e = s->isThinEdgeLink()).first) {
                 if (e.second)
                     return tr("Thin edges %1, %2").
-                        arg(surfaces_->getTriangulation()->edgeIndex(
-                            e.first)).
-                        arg(surfaces_->getTriangulation()->edgeIndex(
-                            e.second));
+                        arg(surfaces_->triangulation()->edgeIndex(e.first)).
+                        arg(surfaces_->triangulation()->edgeIndex(e.second));
                 else
                     return tr("Thin edge %1").
-                        arg(surfaces_->getTriangulation()->edgeIndex(
-                            e.first));
+                        arg(surfaces_->triangulation()->edgeIndex(e.first));
             } else
                 return QVariant();
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 7) ||
@@ -244,7 +241,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
             return propertyColDesc(index.column());
         else
             return Coordinates::columnDesc(coordSystem_,
-                index.column() - propertyCols, this, surfaces_->getTriangulation());
+                index.column() - propertyCols, this, surfaces_->triangulation());
     } else if (role == Qt::ForegroundRole) {
         const regina::NNormalSurface* s = surfaces_->getSurface(surfaceIndex);
 
@@ -321,7 +318,7 @@ QVariant SurfaceModel::headerData(int section, Qt::Orientation orientation,
             return propertyColName(section);
         else
             return Coordinates::columnName(coordSystem_, section - propCols,
-                surfaces_->getTriangulation());
+                surfaces_->triangulation());
     } else if (role == Qt::ToolTipRole) {
         int propertyCols = propertyColCount();
 
@@ -329,7 +326,7 @@ QVariant SurfaceModel::headerData(int section, Qt::Orientation orientation,
             return propertyColDesc(section);
         else
             return Coordinates::columnDesc(coordSystem_, section - propertyCols,
-                this, surfaces_->getTriangulation());
+                this, surfaces_->triangulation());
     } else if (role == Qt::TextAlignmentRole)
         return Qt::AlignCenter;
     else
@@ -641,7 +638,7 @@ void NSurfaceCoordinateUI::cutAlong() {
     // Be nice and simplify the triangulation, which could be very large.
     regina::NTriangulation* ans = toCutAlong->cutAlong();
     ans->intelligentSimplify();
-    ans->setPacketLabel(surfaces->getTriangulation()->adornedLabel("Cut"));
+    ans->setPacketLabel(surfaces->triangulation()->adornedLabel("Cut"));
     surfaces->insertChildLast(ans);
 
     enclosingPane->getMainWindow()->packetView(ans, true, true);
@@ -665,7 +662,7 @@ void NSurfaceCoordinateUI::crush() {
 
     // Go ahead and crush it.
     regina::NTriangulation* ans = toCrush->crush();
-    ans->setPacketLabel(surfaces->getTriangulation()->adornedLabel("Crushed"));
+    ans->setPacketLabel(surfaces->triangulation()->adornedLabel("Crushed"));
     surfaces->insertChildLast(ans);
 
     enclosingPane->getMainWindow()->packetView(ans, true, true);

@@ -62,6 +62,8 @@ void addNAngleStructureList() {
     scope s = class_<NAngleStructureList, bases<regina::NPacket>,
             std::auto_ptr<NAngleStructureList>, boost::noncopyable>
             ("NAngleStructureList", no_init)
+        .def("triangulation", &NAngleStructureList::triangulation,
+            return_value_policy<reference_existing_object>())
         .def("getTriangulation", &NAngleStructureList::getTriangulation,
             return_value_policy<reference_existing_object>())
         .def("isTautOnly", &NAngleStructureList::isTautOnly)

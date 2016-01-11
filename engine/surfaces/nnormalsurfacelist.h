@@ -672,6 +672,14 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * 
          * @return the triangulation in which these surfaces live.
          */
+        NTriangulation* triangulation() const;
+        /**
+         * Deprecated routine that returns the triangulation in which these
+         * normal surfaces live.
+         *
+         * \deprecated This routine has been renamed to triangulation().
+         * See the triangulation() documentation for further details.
+         */
         NTriangulation* getTriangulation() const;
         /**
          * Returns the number of surfaces stored in this list.
