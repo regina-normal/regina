@@ -133,7 +133,7 @@ void NXMLNormalHypersurfaceListReader::endContentSubElement(
         if (subTagName == "surface")
             if (NNormalHypersurface* s =
                     dynamic_cast<NXMLNormalHypersurfaceReader*>(subReader)->
-                    getHypersurface())
+                    hypersurface())
                 list_->surfaces_.push_back(s);
 }
 

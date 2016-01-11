@@ -87,7 +87,7 @@ class REGINA_API NXMLNormalHypersurfaceReader : public NXMLElementReader {
          * @return the newly allocated normal hypersurface, or 0 if an error
          * occurred.
          */
-        NNormalHypersurface* getHypersurface();
+        NNormalHypersurface* hypersurface();
 
         virtual void startElement(const std::string& tagName,
             const regina::xml::XMLPropertyDict& tagProps,
@@ -140,7 +140,7 @@ inline NXMLNormalHypersurfaceReader::NXMLNormalHypersurfaceReader(
         surface_(0), tri_(tri), coords_(coords), vecLen_(-1) {
 }
 
-inline NNormalHypersurface* NXMLNormalHypersurfaceReader::getHypersurface() {
+inline NNormalHypersurface* NXMLNormalHypersurfaceReader::hypersurface() {
     return surface_;
 }
 
