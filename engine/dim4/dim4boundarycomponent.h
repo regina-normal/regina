@@ -84,7 +84,7 @@ typedef Face<4, 0> Dim4Vertex;
  * listed as part of the same boundary component; if not then the
  * offending vertex will be included in all of these boundary components.
  * Nevertheless, only one of these can be considered the "official" boundary
- * component of the vertex as returned by Dim4Vertex::getBoundaryComponent().
+ * component of the vertex as returned by Dim4Vertex::boundaryComponent().
  * This is all a bit of a mess (and even more so when you consider that
  * the same thing can happen with invalid edges), but then again the
  * entire 4-manifold triangulation is invalid and so you almost certainly

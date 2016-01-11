@@ -1484,7 +1484,7 @@ int Dim4BoundaryComponentModel::columnCount(const QModelIndex& /* unused parent*
 QVariant Dim4BoundaryComponentModel::data(const QModelIndex& index,
         int role) const {
     if (role == Qt::DisplayRole) {
-        Dim4BoundaryComponent* item = tri->getBoundaryComponent(index.row());
+        Dim4BoundaryComponent* item = tri->boundaryComponent(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();

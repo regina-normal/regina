@@ -648,7 +648,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             std::string ans;
 
             regina::NTriangulation t(
-                *(tri.getBoundaryComponent(whichBdry)->getTriangulation()));
+                *(tri.boundaryComponent(whichBdry)->getTriangulation()));
             t.intelligentSimplify();
 
             if (makeBdryFinite) {
@@ -689,7 +689,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             // Do a barycentric subdivision to turn any invalid edges
             // into proper RP^2 ideal boundaries.
             NTriangulation t(
-                *(tri.getBoundaryComponent(whichBdry)->getTriangulation()));
+                *(tri.boundaryComponent(whichBdry)->getTriangulation()));
             t.barycentricSubdivision();
             t.intelligentSimplify();
 
@@ -809,7 +809,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             int i, j;
             int triangle;
             for (i = 0; i < n; ++i) {
-                bc = tri.getBoundaryComponent(i);
+                bc = tri.boundaryComponent(i);
                 if (bc->isIdeal())
                     continue;
 
@@ -1391,7 +1391,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 }
 
                 if (v->isValid()) {
-                    if (v->isBoundary() && v->getBoundaryComponent()->
+                    if (v->isBoundary() && v->boundaryComponent()->
                             countTetrahedra() > 0) {
                         if (! link->isBall()) {
                             std::ostringstream msg;
@@ -1435,7 +1435,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                             << i << ": "
                             << "invalid vertex is not marked as boundary.";
                         CPPUNIT_FAIL(msg.str());
-                    } else if (v->getBoundaryComponent()->
+                    } else if (v->boundaryComponent()->
                             countTetrahedra() > 0) {
                         // Link should have boundary faces but not be a 3-ball.
                         if (! link->hasBoundaryTriangles()) {
