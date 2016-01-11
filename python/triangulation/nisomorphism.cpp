@@ -55,6 +55,7 @@ namespace {
 void addNIsomorphism() {
     class_<NIsomorphism, std::auto_ptr<NIsomorphism>, boost::noncopyable>
             ("NIsomorphism", init<const NIsomorphism&>())
+        .def(self * self)
         .def("getSourceSimplices", &NIsomorphism::getSourceSimplices)
         .def("getSourceTetrahedra", &NIsomorphism::getSourceTetrahedra)
         .def("simpImage", simpImage_const)
