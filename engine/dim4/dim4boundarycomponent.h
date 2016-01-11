@@ -206,7 +206,7 @@ class REGINA_API Dim4BoundaryComponent :
          * If this boundary component consists only of a single vertex
          * (which happens with ideal vertices and also some invalid vertices),
          * then this routine returns the triangulation of the corresponding
-         * vertex link.  See Dim4Vertex::getLink() for details.
+         * vertex link.  See Dim4Vertex::link() for details.
          *
          * It is guaranteed that the full skeleton of this 3-manifold
          * triangulation will have been generated already.
@@ -372,11 +372,11 @@ inline Dim4Component* Dim4BoundaryComponent::getComponent() const {
 }
 
 inline const NTriangulation* Dim4BoundaryComponent::triangulation() const {
-    return (boundary_ ? boundary_ : vertices_.front()->getLink());
+    return (boundary_ ? boundary_ : vertices_.front()->link());
 }
 
 inline const NTriangulation* Dim4BoundaryComponent::getTriangulation() const {
-    return (boundary_ ? boundary_ : vertices_.front()->getLink());
+    return (boundary_ ? boundary_ : vertices_.front()->link());
 }
 
 inline void Dim4BoundaryComponent::writeTextShort(std::ostream& out) const {

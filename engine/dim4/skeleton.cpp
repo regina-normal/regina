@@ -287,7 +287,7 @@ void Dim4Triangulation::calculateVertexLinks() {
 
     // Construct the vertex linking tetrahedra, and insert them into each
     // vertex link in the correct order as described by the
-    // Dim4Vertex::getLink() docs.
+    // Dim4Vertex::link() docs.
     NTetrahedron** tet = new NTetrahedron*[5 * n];
 
     for (Dim4Vertex* vertex : vertices()) {
@@ -394,7 +394,7 @@ void Dim4Triangulation::calculateVertexLinks() {
             int type;
             for (linkit = vertex->link_->getVertices().begin();
                     linkit != vertex->link_->getVertices().end(); ++linkit) {
-                type = (*linkit)->getLink();
+                type = (*linkit)->link();
                 if (type != NVertex::SPHERE && type != NVertex::DISC) {
                     // This 3-manifold vertex is at the end of an
                     // invalid 4-manifold edge.

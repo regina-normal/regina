@@ -127,6 +127,8 @@ void addDim4Vertex() {
             return_value_policy<reference_existing_object>())
         .def("degree", &Dim4Vertex::degree)
         .def("getDegree", &Dim4Vertex::getDegree)
+        .def("link", &Dim4Vertex::link,
+            return_value_policy<reference_existing_object>())
         .def("getLink", &Dim4Vertex::getLink,
             return_value_policy<reference_existing_object>())
         .def("buildLink", &Dim4Vertex::buildLink,
