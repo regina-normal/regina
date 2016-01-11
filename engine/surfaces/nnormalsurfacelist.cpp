@@ -116,6 +116,10 @@ NEnumConstraintList* makeEmbeddedConstraints(
     return forCoords(coords, EmbeddedConstraints(), 0, triangulation);
 }
 
+NTriangulation* NNormalSurfaceList::triangulation() const {
+    return dynamic_cast<NTriangulation*>(getTreeParent());
+}
+
 NTriangulation* NNormalSurfaceList::getTriangulation() const {
     return dynamic_cast<NTriangulation*>(getTreeParent());
 }

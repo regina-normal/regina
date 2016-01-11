@@ -137,6 +137,10 @@ NAngleStructureList* NAngleStructureList::enumerateTautDD(
     return ans;
 }
 
+NTriangulation* NAngleStructureList::triangulation() const {
+    return dynamic_cast<NTriangulation*>(getTreeParent());
+}
+
 NTriangulation* NAngleStructureList::getTriangulation() const {
     return dynamic_cast<NTriangulation*>(getTreeParent());
 }

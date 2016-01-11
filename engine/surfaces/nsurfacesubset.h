@@ -151,6 +151,14 @@ class REGINA_API NSurfaceSubset :
          * 
          * @return the triangulation in which these surfaces live.
          */
+        NTriangulation* triangulation() const;
+        /**
+         * Deprecated routine that returns the triangulation in which these
+         * normal surfaces live.
+         *
+         * \deprecated This routine has been renamed to triangulation().
+         * See the triangulation() documentation for further details.
+         */
         NTriangulation* getTriangulation() const;
 
         /**
@@ -232,8 +240,11 @@ inline bool NSurfaceSubset::allowsOriented() const {
 inline bool NSurfaceSubset::isEmbeddedOnly() const {
     return source.isEmbeddedOnly();
 }
+inline NTriangulation* NSurfaceSubset::triangulation() const {
+    return source.triangulation();
+}
 inline NTriangulation* NSurfaceSubset::getTriangulation() const {
-    return source.getTriangulation();
+    return source.triangulation();
 }
 inline size_t NSurfaceSubset::size() const {
     return surfaces.size();
