@@ -128,6 +128,7 @@ void addNVertex() {
                 return_value_policy<reference_existing_object>())
             .def("degree", &NVertex::degree)
             .def("getDegree", &NVertex::getDegree)
+            .def("link", &NVertex::link)
             .def("getLink", &NVertex::getLink)
             .def("buildLink", &NVertex::buildLink,
                 return_value_policy<reference_existing_object>())
@@ -141,6 +142,7 @@ void addNVertex() {
             .def("hasBadIdentification", &NVertex::hasBadIdentification)
             .def("hasBadLink", &NVertex::hasBadLink)
             .def("isLinkOrientable", &NVertex::isLinkOrientable)
+            .def("linkEulerChar", &NVertex::linkEulerChar)
             .def("getLinkEulerChar", &NVertex::getLinkEulerChar)
             .def("getLinkEulerCharacteristic",
                 &NVertex::getLinkEulerCharacteristic)

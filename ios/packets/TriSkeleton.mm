@@ -227,7 +227,7 @@
                 cell.index.text = [NSString stringWithFormat:@"%zd.", indexPath.row - 1];
                 cell.data1.text = [NSString stringWithFormat:@"%ld", v->getDegree()];
 
-                switch (v->getLink()) {
+                switch (v->link()) {
                     case regina::NVertex::SPHERE:
                         cell.data0.text = @"Internal";
                         break;
@@ -242,9 +242,9 @@
                         break;
                     case regina::NVertex::NON_STANDARD_CUSP:
                         if (v->isLinkOrientable())
-                            cell.data0.text = [NSString stringWithFormat:@"Ideal: Genus %ld orbl", (1 - (v->getLinkEulerChar() / 2))];
+                            cell.data0.text = [NSString stringWithFormat:@"Ideal: Genus %ld orbl", (1 - (v->linkEulerChar() / 2))];
                         else
-                            cell.data0.text = [NSString stringWithFormat:@"Ideal: Genus %ld non-orbl", (2 - v->getLinkEulerChar())];
+                            cell.data0.text = [NSString stringWithFormat:@"Ideal: Genus %ld non-orbl", (2 - v->linkEulerChar())];
                         break;
                     case regina::NVertex::NON_STANDARD_BDRY:
                         cell.data0.attributedText = [TextHelper badString:@"Invalid"];

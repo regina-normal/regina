@@ -531,7 +531,7 @@ bool NTriangulation::twoZeroMove(NEdge* e, bool check, bool perform) {
 
 bool NTriangulation::twoZeroMove(NVertex* v, bool check, bool perform) {
     if (check) {
-        if (v->getLink() != NVertex::SPHERE)
+        if (v->link() != NVertex::SPHERE)
             return false;
         if (v->getDegree() != 2)
             return false;
@@ -764,7 +764,7 @@ bool NTriangulation::openBook(NTriangle* f, bool check, bool perform) {
 
         if (nBdry != 2)
             return false;
-        if (tet->getVertex(vertices[fVertex])->getLink() != NVertex::DISC)
+        if (tet->getVertex(vertices[fVertex])->link() != NVertex::DISC)
             return false;
         if (! f->getEdge(fVertex)->isValid())
             return false;
@@ -803,8 +803,8 @@ bool NTriangulation::closeBook(NEdge* e, bool check, bool perform) {
             return false;
         if (t0->getVertex(p0[2]) == t1->getVertex(p1[3]))
             return false;
-        if (t0->getVertex(p0[2])->getLink() != NVertex::DISC ||
-               t1->getVertex(p1[3])->getLink() != NVertex::DISC)
+        if (t0->getVertex(p0[2])->link() != NVertex::DISC ||
+               t1->getVertex(p1[3])->link() != NVertex::DISC)
             return false;
 
         NEdge* e1 = t0->getEdge(NEdge::edgeNumber[p0[0]][p0[2]]);
@@ -922,9 +922,9 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
         if (e->getVertex(0)->isBoundary() && e->getVertex(1)->isBoundary()) {
             if (! e->isBoundary())
                 return false;
-            if (e->getVertex(0)->getLink() != NVertex::DISC)
+            if (e->getVertex(0)->link() != NVertex::DISC)
                 return false;
-            if (e->getVertex(1)->getLink() != NVertex::DISC)
+            if (e->getVertex(1)->link() != NVertex::DISC)
                 return false;
         }
 

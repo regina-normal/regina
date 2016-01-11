@@ -847,7 +847,7 @@ class NTriangulationTest : public TriangulationTest<3> {
 
             NVertex* v = tri.getVertex(vertex);
 
-            if (v->getLink() != NVertex::DISC) {
+            if (v->link() != NVertex::DISC) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link is not listed as DISC.";
@@ -883,11 +883,11 @@ class NTriangulationTest : public TriangulationTest<3> {
                     << " link is non-orientable.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (v->getLinkEulerChar() != 1) {
+            if (v->linkEulerChar() != 1) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link has Euler characteristic "
-                    << v->getLinkEulerChar() << ", not 1.";
+                    << v->linkEulerChar() << ", not 1.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
@@ -904,7 +904,7 @@ class NTriangulationTest : public TriangulationTest<3> {
 
             NVertex* v = tri.getVertex(vertex);
 
-            if (v->getLink() != NVertex::SPHERE) {
+            if (v->link() != NVertex::SPHERE) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link is not listed as SPHERE.";
@@ -940,11 +940,11 @@ class NTriangulationTest : public TriangulationTest<3> {
                     << " link is non-orientable.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (v->getLinkEulerChar() != 2) {
+            if (v->linkEulerChar() != 2) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link has Euler characteristic "
-                    << v->getLinkEulerChar() << ", not 2.";
+                    << v->linkEulerChar() << ", not 2.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
@@ -961,7 +961,7 @@ class NTriangulationTest : public TriangulationTest<3> {
 
             NVertex* v = tri.getVertex(vertex);
 
-            if (v->getLink() != NVertex::TORUS) {
+            if (v->link() != NVertex::TORUS) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link is not listed as TORUS.";
@@ -997,11 +997,11 @@ class NTriangulationTest : public TriangulationTest<3> {
                     << " link is non-orientable.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (v->getLinkEulerChar() != 0) {
+            if (v->linkEulerChar() != 0) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link has Euler characteristic "
-                    << v->getLinkEulerChar() << ", not 0.";
+                    << v->linkEulerChar() << ", not 0.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
@@ -1018,7 +1018,7 @@ class NTriangulationTest : public TriangulationTest<3> {
 
             NVertex* v = tri.getVertex(vertex);
 
-            if (v->getLink() != NVertex::KLEIN_BOTTLE) {
+            if (v->link() != NVertex::KLEIN_BOTTLE) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link is not listed as KLEIN_BOTTLE.";
@@ -1054,11 +1054,11 @@ class NTriangulationTest : public TriangulationTest<3> {
                     << " link is orientable.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (v->getLinkEulerChar() != 0) {
+            if (v->linkEulerChar() != 0) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link has Euler characteristic "
-                    << v->getLinkEulerChar() << ", not 0.";
+                    << v->linkEulerChar() << ", not 0.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
@@ -1075,7 +1075,7 @@ class NTriangulationTest : public TriangulationTest<3> {
 
             NVertex* v = tri.getVertex(vertex);
 
-            if (v->getLink() != NVertex::NON_STANDARD_CUSP) {
+            if (v->link() != NVertex::NON_STANDARD_CUSP) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link is not listed as NON_STANDARD_CUSP.";
@@ -1111,11 +1111,11 @@ class NTriangulationTest : public TriangulationTest<3> {
                     << " link is non-orientable.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (v->getLinkEulerChar() != -2) {
+            if (v->linkEulerChar() != -2) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link has Euler characteristic "
-                    << v->getLinkEulerChar() << ", not -2.";
+                    << v->linkEulerChar() << ", not -2.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
@@ -1132,7 +1132,7 @@ class NTriangulationTest : public TriangulationTest<3> {
 
             NVertex* v = tri.getVertex(vertex);
 
-            if (v->getLink() != NVertex::NON_STANDARD_CUSP) {
+            if (v->link() != NVertex::NON_STANDARD_CUSP) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link is not listed as NON_STANDARD_CUSP.";
@@ -1168,11 +1168,11 @@ class NTriangulationTest : public TriangulationTest<3> {
                     << " link is orientable.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (v->getLinkEulerChar() != 1) {
+            if (v->linkEulerChar() != 1) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link has Euler characteristic "
-                    << v->getLinkEulerChar() << ", not 1.";
+                    << v->linkEulerChar() << ", not 1.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
@@ -1189,7 +1189,7 @@ class NTriangulationTest : public TriangulationTest<3> {
 
             NVertex* v = tri.getVertex(vertex);
 
-            if (v->getLink() != NVertex::NON_STANDARD_BDRY) {
+            if (v->link() != NVertex::NON_STANDARD_BDRY) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link is not listed as NON_STANDARD_BDRY.";
@@ -1225,11 +1225,11 @@ class NTriangulationTest : public TriangulationTest<3> {
                     << " link is non-orientable.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (v->getLinkEulerChar() != 0) {
+            if (v->linkEulerChar() != 0) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link has Euler characteristic "
-                    << v->getLinkEulerChar() << ", not 0.";
+                    << v->linkEulerChar() << ", not 0.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
@@ -1246,7 +1246,7 @@ class NTriangulationTest : public TriangulationTest<3> {
 
             NVertex* v = tri.getVertex(vertex);
 
-            if (v->getLink() != NVertex::NON_STANDARD_BDRY) {
+            if (v->link() != NVertex::NON_STANDARD_BDRY) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link is not listed as NON_STANDARD_BDRY.";
@@ -1282,11 +1282,11 @@ class NTriangulationTest : public TriangulationTest<3> {
                     << " link is orientable.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (v->getLinkEulerChar() != 0) {
+            if (v->linkEulerChar() != 0) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
                     << " link has Euler characteristic "
-                    << v->getLinkEulerChar() << ", not 0.";
+                    << v->linkEulerChar() << ", not 0.";
                 CPPUNIT_FAIL(msg.str());
             }
         }

@@ -321,7 +321,7 @@ inline NComponent* NBoundaryComponent::getComponent() const {
 
 inline long NBoundaryComponent::eulerChar() const {
     return (isIdeal() ?
-        vertices_.front()->getLinkEulerChar() :
+        vertices_.front()->linkEulerChar() :
         long(vertices_.size()) - long(edges_.size()) + long(triangles_.size()));
 }
 

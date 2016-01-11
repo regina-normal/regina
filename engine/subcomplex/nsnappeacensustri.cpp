@@ -77,7 +77,7 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
     unsigned long i;
     int link;
     for (i = 0; i < nVertices; i++) {
-        link = comp->getVertex(i)->getLink();
+        link = comp->getVertex(i)->link();
         if (link != NVertex::TORUS && link != NVertex::KLEIN_BOTTLE)
             return 0;
     }
@@ -101,8 +101,8 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
                 return 0;
             if (comp->countEdges() != 2)
                 return 0;
-            if (comp->getEdge(0)->getDegree() != 6 ||
-                    comp->getEdge(1)->getDegree() != 6)
+            if (comp->getEdge(0)->degree() != 6 ||
+                    comp->getEdge(1)->degree() != 6)
                 return 0;
 
             // Now we know it's either m003 or m004.  We distinguish
@@ -118,10 +118,10 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
                 // Looking for m001.
                 if (comp->countEdges() != 2)
                     return 0;
-                if (! ((comp->getEdge(0)->getDegree() == 4 &&
-                        comp->getEdge(1)->getDegree() == 8) ||
-                       (comp->getEdge(0)->getDegree() == 8 &&
-                        comp->getEdge(1)->getDegree() == 4)))
+                if (! ((comp->getEdge(0)->degree() == 4 &&
+                        comp->getEdge(1)->degree() == 8) ||
+                       (comp->getEdge(0)->degree() == 8 &&
+                        comp->getEdge(1)->degree() == 4)))
                     return 0;
                 // Census says it's m001 if no triangle forms a dunce hat.
                 for (int i = 0; i < 4; i++)
@@ -132,8 +132,8 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
                 // Looking for m002.
                 if (comp->countEdges() != 2)
                     return 0;
-                if (comp->getEdge(0)->getDegree() != 6 ||
-                        comp->getEdge(1)->getDegree() != 6)
+                if (comp->getEdge(0)->degree() != 6 ||
+                        comp->getEdge(1)->degree() != 6)
                     return 0;
                 // Census says it's m002 if some triangle forms a dunce hat.
                 for (int i = 0; i < 4; i++)
@@ -152,18 +152,18 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
                 return 0;
             if (comp->countEdges() != 4)
                 return 0;
-            if (comp->getVertex(0)->getLink() != NVertex::TORUS)
+            if (comp->getVertex(0)->link() != NVertex::TORUS)
                 return 0;
-            if (comp->getVertex(1)->getLink() != NVertex::TORUS)
+            if (comp->getVertex(1)->link() != NVertex::TORUS)
                 return 0;
-            if (comp->getVertex(0)->getDegree() != 8)
+            if (comp->getVertex(0)->degree() != 8)
                 return 0;
-            if (comp->getVertex(1)->getDegree() != 8)
+            if (comp->getVertex(1)->degree() != 8)
                 return 0;
             // Census says it's the Whitehead link if some edge has
             // degree 8.
             for (int i = 0; i < 4; i++)
-                if (comp->getEdge(i)->getDegree() == 8)
+                if (comp->getEdge(i)->degree() == 8)
                     return new NSnapPeaCensusTri(SEC_5, 129);
             return 0;
         }

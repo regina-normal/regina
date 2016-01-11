@@ -90,7 +90,7 @@ bool LPConstraintNonSpun::addRows(
     if (tri->countVertices() != 1 ||
             (! tri->getVertex(0)->isIdeal()) ||
             (! tri->getVertex(0)->isLinkOrientable()) ||
-            tri->getVertex(0)->getLinkEulerChar() != 0)
+            tri->getVertex(0)->linkEulerChar() != 0)
         return false;
 
     // Compute the two slope equations for the torus cusp, if we can.
