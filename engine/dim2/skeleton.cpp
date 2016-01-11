@@ -90,7 +90,7 @@ void Triangulation<2>::calculateBoundary() {
         tri = edge->front().getTriangle();
         edgeId = edge->front().getEdge();
         vertexId = edge->front().getVertices()[0];
-        vertex = tri->SimplexFaces<2, 0>::face_[vertexId];
+        vertex = tri->regina::detail::SimplexFaces<2, 0>::face_[vertexId];
         while (true) {
             if (! edge->boundaryComponent_) {
                 edge->boundaryComponent_ = label;
@@ -118,7 +118,7 @@ void Triangulation<2>::calculateBoundary() {
 
                 adjTri = vertexEmb.getTriangle();
                 adjEdgeId = vertexEmb.getVertices()[1];
-                adjEdge = adjTri->SimplexFaces<2, 1>::face_[adjEdgeId];
+                adjEdge = adjTri->regina::detail::SimplexFaces<2, 1>::face_[adjEdgeId];
                 adjVertexId = vertexEmb.getVertices()[2];
             } else {
                 // We must be looking at the embedding at the back
@@ -126,7 +126,7 @@ void Triangulation<2>::calculateBoundary() {
                 // already stored in vertexEmb).
                 adjTri = vertexEmb.getTriangle();
                 adjEdgeId = vertexEmb.getVertices()[2];
-                adjEdge = adjTri->SimplexFaces<2, 1>::face_[adjEdgeId];
+                adjEdge = adjTri->regina::detail::SimplexFaces<2, 1>::face_[adjEdgeId];
                 adjVertexId = vertexEmb.getVertices()[1];
 
                 // TODO: Sanity checking; remove this eventually.
@@ -145,7 +145,7 @@ void Triangulation<2>::calculateBoundary() {
             tri = adjTri;
             edgeId = adjEdgeId;
             vertexId = adjVertexId;
-            vertex = tri->SimplexFaces<2, 0>::face_[vertexId];
+            vertex = tri->regina::detail::SimplexFaces<2, 0>::face_[vertexId];
         }
     }
 }
