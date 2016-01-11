@@ -222,7 +222,7 @@ void NAngleStructureList::calculateSpanStrict() const {
     int edges;
     for (tet = 0; tet < nTets; tet++)
         for (edges = 0; edges < 3; edges++) {
-            angle = s->getAngle(tet, edges);
+            angle = s->angle(tet, edges);
             if (angle == NRational::zero || angle == NRational::one) {
                 fixedAngles[3 * tet + edges] = angle;
                 nFixed++;
@@ -244,7 +244,7 @@ void NAngleStructureList::calculateSpanStrict() const {
             for (edges = 0; edges < 3; edges++) {
                 if (fixedAngles[3 * tet + edges] == NRational::undefined)
                     continue;
-                if (s->getAngle(tet, edges) != fixedAngles[3 * tet + edges]) {
+                if (s->angle(tet, edges) != fixedAngles[3 * tet + edges]) {
                     // Here's a bad angle that finally changed.
                     fixedAngles[3 * tet + edges] = NRational::undefined;
                     nFixed--;

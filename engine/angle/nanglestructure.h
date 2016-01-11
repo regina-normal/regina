@@ -79,7 +79,7 @@ typedef Triangulation<3> NTriangulation;
  * three elements will be the angle members for the first tetrahedron,
  * the next three for the second tetrahedron and so on.  For each
  * tetraheron, the three individual elements are the angle members
- * for vertex splittings 0, 1 and 2 (see NAngleStructure::getAngle()).
+ * for vertex splittings 0, 1 and 2 (see NAngleStructure::angle()).
  * The final element of the vector is the scaling member as described
  * above.
  *
@@ -197,7 +197,15 @@ class REGINA_API NAngleStructure :
          * and regina::vertexSplitDefn for details regarding vertex splittings.
          * @return the requested angle scaled down by <i>pi</i>.
          */
-        NRational getAngle(unsigned long tetIndex, int edgePair) const;
+        NRational angle(size_t tetIndex, int edgePair) const;
+        /**
+         * Deprecated routine that returns the requested angle in this
+         * angle structure.
+         *
+         * \deprecated This routine has been renamed to angle().
+         * See the angle() documentation for further details.
+         */
+        NRational getAngle(size_t tetIndex, int edgePair) const;
 
         /**
          * Returns the triangulation on which this angle structure lies.
@@ -344,6 +352,11 @@ inline const NTriangulation* NAngleStructure::triangulation() const {
 
 inline const NTriangulation* NAngleStructure::getTriangulation() const {
     return triangulation_;
+}
+
+inline NRational NAngleStructure::getAngle(size_t tetIndex, int edgePair)
+        const {
+    return angle(tetIndex, edgePair);
 }
 
 inline bool NAngleStructure::isStrict() const {
