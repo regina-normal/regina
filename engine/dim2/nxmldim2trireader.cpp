@@ -146,7 +146,7 @@ void NXMLDim2TriangulationReader::endContentSubElement(const std::string&,
         NXMLElementReader*) {
 }
 
-NXMLPacketReader* Triangulation<2>::getXMLReader(NPacket*,
+NXMLPacketReader* Triangulation<2>::xmlReader(NPacket*,
         NXMLTreeResolver& resolver) {
     return new NXMLDim2TriangulationReader(resolver);
 }

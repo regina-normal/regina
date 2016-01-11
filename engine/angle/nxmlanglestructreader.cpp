@@ -126,7 +126,7 @@ void NXMLAngleStructureListReader::endContentSubElement(
             list->structures.push_back(s);
 }
 
-NXMLPacketReader* NAngleStructureList::getXMLReader(NPacket* parent,
+NXMLPacketReader* NAngleStructureList::xmlReader(NPacket* parent,
         NXMLTreeResolver& resolver) {
     return new NXMLAngleStructureListReader(
         dynamic_cast<NTriangulation*>(parent), resolver);

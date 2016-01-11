@@ -248,7 +248,7 @@ class REGINA_API NSurfaceFilter : public NPacket {
          * filter's parent in the tree structure.  This information is
          * for reference only, and need not be used.
          * See the description of parameter \a parent in
-         * NPacket::getXMLReader() for further details.
+         * NPacket::xmlReader() for further details.
          *
          * \ifacespython Not present.
          *
@@ -260,7 +260,7 @@ class REGINA_API NSurfaceFilter : public NPacket {
         static NXMLFilterReader* getXMLFilterReader(NPacket* parent);
 
         virtual void writeTextShort(std::ostream& out) const;
-        static NXMLPacketReader* getXMLReader(NPacket* parent,
+        static NXMLPacketReader* xmlReader(NPacket* parent,
             NXMLTreeResolver& resolver);
         virtual bool dependsOnParent() const;
 

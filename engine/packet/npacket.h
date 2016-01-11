@@ -136,9 +136,9 @@ struct PacketInfo;
  *   <li>All abstract functions must be implemented, except for those
  *     already provided by REGINA_PACKET.</li>
  *   <li>A public function
- *     <tt>static NXMLPacketReader* getXMLReader(NPacket* parent,
+ *     <tt>static NXMLPacketReader* xmlReader(NPacket* parent,
  *     NXMLTreeResolver& resolver)</tt>
- *     must be declared and implemented.  See the notes for getXMLReader()
+ *     must be declared and implemented.  See the notes for xmlReader()
  *     for further details.</li>
  *   <li>Whenever the contents of the packet are changed, a local
  *     ChangeEventSpan must be declared on the stack to notify listeners of
@@ -1175,7 +1175,7 @@ class REGINA_API NPacket :
          * @return the newly created XML element reader.
          */
         #ifdef __DOXYGEN
-        static NXMLPacketReader* getXMLReader(NPacket* parent,
+        static NXMLPacketReader* xmlReader(NPacket* parent,
             NXMLTreeResolver& resolver);
         #endif
 

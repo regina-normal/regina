@@ -325,6 +325,8 @@ Version 4.97  [ (under development) ]
             - New routine transferChildren() for bulk tree reorganisation.
             - The subclass constant packetType is now a constant of type
               PacketType, not an anonymous enum type.
+            - Renamed getXMLReader() to xmlReader().  The old name has
+              been removed completely.
         Class NPacketListener:
             - New events childToBeRenamed(), childWasRenamed().
         Class NPerm:

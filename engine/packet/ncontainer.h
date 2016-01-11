@@ -90,7 +90,7 @@ class REGINA_API NContainer : public NPacket {
         NContainer(const std::string& label);
 
         virtual void writeTextShort(std::ostream& out) const;
-        static NXMLPacketReader* getXMLReader(NPacket* parent,
+        static NXMLPacketReader* xmlReader(NPacket* parent,
             NXMLTreeResolver& resolver);
         virtual bool dependsOnParent() const;
 

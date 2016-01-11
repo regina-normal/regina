@@ -185,20 +185,20 @@ void NXMLScriptReader::endContentSubElement(const std::string& subTagName,
     }
 }
 
-NXMLPacketReader* NContainer::getXMLReader(NPacket*,
+NXMLPacketReader* NContainer::xmlReader(NPacket*,
         NXMLTreeResolver& resolver) {
     return new NXMLContainerReader(resolver);
 }
 
-NXMLPacketReader* NPDF::getXMLReader(NPacket*, NXMLTreeResolver& resolver) {
+NXMLPacketReader* NPDF::xmlReader(NPacket*, NXMLTreeResolver& resolver) {
     return new NXMLPDFReader(resolver);
 }
 
-NXMLPacketReader* NScript::getXMLReader(NPacket*, NXMLTreeResolver& resolver) {
+NXMLPacketReader* NScript::xmlReader(NPacket*, NXMLTreeResolver& resolver) {
     return new NXMLScriptReader(resolver);
 }
 
-NXMLPacketReader* NText::getXMLReader(NPacket*, NXMLTreeResolver& resolver) {
+NXMLPacketReader* NText::xmlReader(NPacket*, NXMLTreeResolver& resolver) {
     return new NXMLTextReader(resolver);
 }
 

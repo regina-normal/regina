@@ -463,7 +463,7 @@ class REGINA_API Triangulation<2> :
 
         /*@}*/
 
-        static NXMLPacketReader* getXMLReader(NPacket* parent,
+        static NXMLPacketReader* xmlReader(NPacket* parent,
             NXMLTreeResolver& resolver);
 
     protected:

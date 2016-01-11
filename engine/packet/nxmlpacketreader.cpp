@@ -45,7 +45,7 @@ namespace {
         template <typename Packet>
         inline NXMLElementReader* operator() (NPacket* me,
                 NXMLTreeResolver& resolver) {
-            return Packet::Class::getXMLReader(me, resolver);
+            return Packet::Class::xmlReader(me, resolver);
         }
     };
 }
