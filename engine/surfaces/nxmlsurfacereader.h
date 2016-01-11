@@ -86,7 +86,7 @@ class REGINA_API NXMLNormalSurfaceReader : public NXMLElementReader {
          * @return the newly allocated normal surface, or 0 if an error
          * occurred.
          */
-        NNormalSurface* getSurface();
+        NNormalSurface* surface();
 
         virtual void startElement(const std::string& tagName,
             const regina::xml::XMLPropertyDict& tagProps,
@@ -140,7 +140,7 @@ inline NXMLNormalSurfaceReader::NXMLNormalSurfaceReader(
         surface(0), tri(newTri), coords(newCoords), vecLen(-1) {
 }
 
-inline NNormalSurface* NXMLNormalSurfaceReader::getSurface() {
+inline NNormalSurface* NXMLNormalSurfaceReader::surface() {
     return surface;
 }
 
