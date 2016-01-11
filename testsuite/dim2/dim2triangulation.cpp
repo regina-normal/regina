@@ -207,7 +207,7 @@ class Dim2TriangulationTest : public TriangulationTest<2> {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (large.getEulerChar() != tri->getEulerChar()) {
+                if (large.eulerChar() != tri->eulerChar()) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel() << ", tri " << i << ": "
                         << "1-3 move changes Euler characteristic.";

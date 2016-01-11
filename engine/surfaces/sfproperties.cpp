@@ -61,7 +61,7 @@ bool NSurfaceFilterProperties::accept(const NNormalSurface& surface) const {
             return false;
 
         if (eulerChar.size() > 0)
-            if (! eulerChar.count(surface.getEulerChar()))
+            if (! eulerChar.count(surface.eulerChar()))
                 return false;
     }
 

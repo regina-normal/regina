@@ -311,7 +311,7 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          *
          * This routine does not require a full triangulation of the
          * vertex link, and so can be much faster than calling
-         * buildLink().getEulerChar().
+         * buildLink().eulerChar().
          *
          * @return the Euler characteristic of the vertex link.
          */
@@ -325,7 +325,7 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          *
          * This routine does not require a full triangulation of the
          * vertex link, and so can be much faster than calling
-         * buildLink().getEulerChar().
+         * buildLink().eulerChar().
          *
          * \deprecated This routine will be removed in a future version of
          * Regina.  Please use the identical routine getLinkEulerChar() instead.

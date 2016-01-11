@@ -367,6 +367,14 @@ class REGINA_API Triangulation<2> :
          *
          * @return the Euler characteristic of this triangulation.
          */
+        long eulerChar() const;
+        /**
+         * Deprecated routine that returns the Euler characteristic of this
+         * triangulation.
+         *
+         * \deprecated This routine has been renamed to eulerChar().
+         * See the eulerChar() documentation for further details.
+         */
         long getEulerChar() const;
         /**
          * Determines if this triangulation is closed.
@@ -609,13 +617,17 @@ inline bool Triangulation<2>::isValid() const {
     return true;
 }
 
-inline long Triangulation<2>::getEulerChar() const {
+inline long Triangulation<2>::eulerChar() const {
     ensureSkeleton();
 
     // Cast away the unsignedness of std::vector::size().
     return static_cast<long>(countVertices())
         - static_cast<long>(countEdges())
         + static_cast<long>(simplices_.size());
+}
+
+inline long Triangulation<2>::getEulerChar() const {
+    return eulerChar();
 }
 
 inline bool Triangulation<2>::isClosed() const {

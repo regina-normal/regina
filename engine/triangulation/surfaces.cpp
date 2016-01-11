@@ -86,7 +86,7 @@ NNormalSurface* NTriangulation::hasNonTrivialSphereOrDisc() {
         if (tree.find()) {
             NNormalSurface* s = tree.buildSurface();
             if (! ((! s->hasRealBoundary()) &&
-                    (s->getEulerChar() == 1) && s->isTwoSided()))
+                    (s->eulerChar() == 1) && s->isTwoSided()))
                 return s;
             // Looks like we've found a two-sided projective plane.
             // Fall through to a full enumeration of vertex surfaces.
@@ -116,10 +116,10 @@ NNormalSurface* NTriangulation::hasNonTrivialSphereOrDisc() {
 
         // Now they are compact, connected and non-vertex-linking.
         // We just need to pick out spheres and discs.
-        if (s->getEulerChar() == 2) {
+        if (s->eulerChar() == 2) {
             // Must be a sphere; no bounded surface has chi=2.
             ans = s->clone();
-        } else if (s->getEulerChar() == 1) {
+        } else if (s->eulerChar() == 1) {
             if (s->hasRealBoundary()) {
                 // Must be a disc.
                 ans = s->clone();
@@ -185,7 +185,7 @@ NNormalSurface* NTriangulation::hasOctagonalAlmostNormalSphere() {
         // Hunt for spheres with exactly one octagon.
         // Note that 1-sided projective planes are no good here,
         // since when doubled they give too many octagonal discs.
-        if (s->getEulerChar() == 2) {
+        if (s->eulerChar() == 2) {
             // Euler char = 2 implies no real boundary.
             found = false; // At least one octagon found so far?
             broken = false; // More than one octagon found so far?

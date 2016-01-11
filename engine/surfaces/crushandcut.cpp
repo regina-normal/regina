@@ -1298,7 +1298,7 @@ bool NNormalSurface::isCompressingDisc(bool knownConnected) const {
     // Is it even a disc?
     if (! hasRealBoundary())
         return false;
-    if (getEulerChar() != 1)
+    if (eulerChar() != 1)
         return false;
 
     if (! knownConnected) {
@@ -1314,7 +1314,7 @@ bool NNormalSurface::isCompressingDisc(bool knownConnected) const {
     NTriangulation::BoundaryComponentIterator bit;
     for (bit = triangulation()->boundaryComponents().begin();
             bit != triangulation()->boundaryComponents().end(); ++bit)
-        if ((*bit)->getEulerChar() == 2)
+        if ((*bit)->eulerChar() == 2)
             ++origSphereCount;
 
     // Now cut along the disc, and see if we get an extra sphere as a
@@ -1334,7 +1334,7 @@ bool NNormalSurface::isCompressingDisc(bool knownConnected) const {
     unsigned long newSphereCount = 0;
     for (bit = cut->boundaryComponents().begin();
             bit != cut->boundaryComponents().end(); ++bit)
-        if ((*bit)->getEulerChar() == 2)
+        if ((*bit)->eulerChar() == 2)
             ++newSphereCount;
 
     if (newSphereCount == origSphereCount)
@@ -1428,7 +1428,7 @@ namespace {
                 }
 
                 // Compute the Euler characteristic of the boundary component.
-                long ec = t_[side]->boundaryComponent(0)->getEulerChar();
+                long ec = t_[side]->boundaryComponent(0)->eulerChar();
 
                 // Look for a normal disc or sphere to crush.
                 NNormalSurface* ans;
@@ -1499,7 +1499,7 @@ namespace {
                     while (t_[side]) {
                         if (t_[side]->countBoundaryComponents() == 1 &&
                                 t_[side]->boundaryComponent(0)->
-                                    getEulerChar() == ec) {
+                                    eulerChar() == ec) {
                             // Found it.
                             t_[side]->makeOrphan();
                             break;
@@ -1536,7 +1536,7 @@ bool NNormalSurface::isIncompressible() const {
     // Rule out spheres.
     // From the preconditions, we can assume this surface to be
     // closed, compact and connected.
-    if (getEulerChar() == 2 || ((! isTwoSided()) && getEulerChar() == 1))
+    if (eulerChar() == 2 || ((! isTwoSided()) && eulerChar() == 1))
         return false;
 
     if (isThinEdgeLink().first) {

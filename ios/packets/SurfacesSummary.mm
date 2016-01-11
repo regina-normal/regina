@@ -183,7 +183,7 @@ struct CountSet {
         if (! s->isCompact())
             ++nSpun;
         else {
-            euler = s->getEulerChar();
+            euler = s->eulerChar();
             if (s->hasRealBoundary()) {
                 nBounded.append(s);
                 eulerBounded[euler].append(s);

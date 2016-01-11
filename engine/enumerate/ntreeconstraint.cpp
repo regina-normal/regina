@@ -193,7 +193,7 @@ void BanTorusBoundary::init(const int* columnPerm) {
     for (i = 0; i < tri_->countBoundaryComponents(); ++i) {
         bc = tri_->boundaryComponent(i);
         if ((! bc->isIdeal()) && bc->isOrientable() &&
-                bc->getEulerChar() == 0) {
+                bc->eulerChar() == 0) {
             // We've found a real torus boundary.
             for (k = 0; k < bc->countTriangles(); ++k)
                 banTriangle[bc->getTriangle(k)->markedIndex()] = true;

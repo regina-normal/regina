@@ -54,11 +54,11 @@ Triangulation<2>::Triangulation(const std::string& description) {
 
 bool Triangulation<2>::isMinimal() const {
     // 2-sphere:
-    if (getEulerChar() == 2)
+    if (eulerChar() == 2)
         return (simplices_.size() == 2);
 
     // Projective plane and disc:
-    if (getEulerChar() == 1)
+    if (eulerChar() == 1)
         return (simplices_.size() == (isClosed() ? 2 : 1));
 
     // All other closed manifolds:

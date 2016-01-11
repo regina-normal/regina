@@ -481,7 +481,7 @@ void NTriCellularInfoUI::refresh() {
             arg(minfo.getNumDualCells(2)).
             arg(minfo.getNumDualCells(3)));
 
-        EulerChar->setText(QString::number(minfo.getEulerChar()));
+        EulerChar->setText(QString::number(minfo.eulerChar()));
 
         H0H1H2H3->setText(QObject::tr("H0 = %1,  H1 = %2,  H2 = %3,  H3 = %4").
             arg(minfo.getHomology(0).str().c_str()).

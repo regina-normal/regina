@@ -455,7 +455,7 @@ bool NTriangulation::isBall() const {
     // Basic property checks.
     if (! (isValid() && hasBoundaryTriangles() && isOrientable() && isConnected()
             && boundaryComponents_.size() == 1
-            && boundaryComponents_.front()->getEulerChar() == 2)) {
+            && boundaryComponents_.front()->eulerChar() == 2)) {
         threeBall_ = false;
         return false;
     }
@@ -484,7 +484,7 @@ bool NTriangulation::knowsBall() const {
     // Run some very fast prelimiary tests before we give up and say no.
     if (! (isValid() && hasBoundaryTriangles() && isOrientable() && isConnected()
             && boundaryComponents_.size() == 1
-            && boundaryComponents_.front()->getEulerChar() == 2)) {
+            && boundaryComponents_.front()->eulerChar() == 2)) {
         threeBall_ = false;
         return true;
     }
@@ -500,7 +500,7 @@ bool NTriangulation::isSolidTorus() const {
     // Basic property checks.
     if (! (isValid() && isOrientable() && isConnected() &&
             boundaryComponents_.size() == 1 &&
-            boundaryComponents_.front()->getEulerChar() == 0 &&
+            boundaryComponents_.front()->eulerChar() == 0 &&
             boundaryComponents_.front()->isOrientable()))
         return (solidTorus_ = false);
 
@@ -588,7 +588,7 @@ bool NTriangulation::isSolidTorus() const {
                 // At any rate, it means we did not have a solid torus.
                 delete crushed;
                 return (solidTorus_ = false);
-            } else if (comp->boundaryComponent(0)->getEulerChar() == 2) {
+            } else if (comp->boundaryComponent(0)->eulerChar() == 2) {
                 // A component with sphere boundary.
                 // Must be a 3-ball, or else we didn't have a solid torus.
                 if (! comp->isBall()) {
@@ -643,7 +643,7 @@ bool NTriangulation::knowsSolidTorus() const {
         return true;
     }
 
-    if (boundaryComponents_.front()->getEulerChar() != 0 ||
+    if (boundaryComponents_.front()->eulerChar() != 0 ||
             (! boundaryComponents_.front()->isOrientable())) {
         solidTorus_ = false;
         return true;
@@ -840,8 +840,8 @@ bool NTriangulation::hasCompressingDisc() const {
     long minBdryEuler = 2;
     for (BoundaryComponentIterator it = boundaryComponents_.begin();
             it != boundaryComponents_.end(); ++it) {
-        if ((*it)->getEulerChar() < minBdryEuler)
-            minBdryEuler = (*it)->getEulerChar();
+        if ((*it)->eulerChar() < minBdryEuler)
+            minBdryEuler = (*it)->eulerChar();
     }
     if (minBdryEuler == 2)
         return (compressingDisc_ = false);
@@ -909,7 +909,7 @@ bool NTriangulation::hasCompressingDisc() const {
             comp = static_cast<NTriangulation*>(crush->getFirstTreeChild());
             while (comp) {
                 if (comp->countBoundaryComponents() == 1 &&
-                        comp->boundaryComponent(0)->getEulerChar()
+                        comp->boundaryComponent(0)->eulerChar()
                         == minBdryEuler) {
                     // This must be our original manifold.
                     comp->makeOrphan();
@@ -961,7 +961,7 @@ bool NTriangulation::knowsCompressingDisc() const {
     // Quickly check for non-spherical boundary components before we give up.
     for (BoundaryComponentIterator it = boundaryComponents_.begin();
             it != boundaryComponents_.end(); ++it) {
-        if ((*it)->getEulerChar() < 2)
+        if ((*it)->eulerChar() < 2)
             return false;
     }
 
@@ -1014,7 +1014,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
     BoundaryComponentIterator bit;
     for (bit = use.boundaryComponents().begin(); bit !=
             use.boundaryComponents().end(); ++bit)
-        if ((*bit)->getEulerChar() == 2)
+        if ((*bit)->eulerChar() == 2)
             ++origSphereCount;
 
     // Look for a single internal triangle surrounded by three boundary edges.
@@ -1048,7 +1048,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
         newSphereCount = 0;
         for (bit = cut.boundaryComponents().begin(); bit !=
                 cut.boundaryComponents().end(); ++bit)
-            if ((*bit)->getEulerChar() == 2)
+            if ((*bit)->eulerChar() == 2)
                 ++newSphereCount;
 
         // Was the boundary of the disc non-trivial?
@@ -1104,7 +1104,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
         newSphereCount = 0;
         for (bit = cut.boundaryComponents().begin(); bit !=
                 cut.boundaryComponents().end(); ++bit)
-            if ((*bit)->getEulerChar() == 2)
+            if ((*bit)->eulerChar() == 2)
                 ++newSphereCount;
 
         // Was the boundary of the disc non-trivial?
@@ -1171,7 +1171,7 @@ bool NTriangulation::isHaken() const {
     unsigned i;
     for (i = 0; i < list->size(); ++i) {
         id[i].index = i;
-        id[i].euler = list->getSurface(i)->getEulerChar().longValue();
+        id[i].euler = list->getSurface(i)->eulerChar().longValue();
     }
     std::sort(id, id + list->size());
 

@@ -67,7 +67,7 @@ NNormalSurface* NNormalSurface::findNonTrivialSphere(NTriangulation* tri) {
         // No need to test for connectedness since these are vertex surfaces.
         if (s->isCompact() && (! s->hasRealBoundary()) &&
                 (! s->isVertexLinking())) {
-            chi = s->getEulerChar();
+            chi = s->eulerChar();
             if (chi == 2 || (chi == 1 && ! s->isTwoSided())) {
                 // It's a non-trivial 2-sphere!
                 // Clone the surface for our return value.
@@ -119,7 +119,7 @@ NNormalSurface* NNormalSurface::findVtxOctAlmostNormalSphere(
         // No need to test for vertex links since we're about to test
         // for octagons.
         if (s->isCompact() && (! s->hasRealBoundary())) {
-            if (s->getEulerChar() == 2) {
+            if (s->eulerChar() == 2) {
                 // Test for the existence of precisely one octagon.
                 for (tet = 0; tet < nTets; tet++)
                     for (oct = 0; oct < 3; oct++)

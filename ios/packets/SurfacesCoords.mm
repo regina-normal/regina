@@ -435,7 +435,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
             return cell;
         case PROP_EULER:
             if (s->isCompact())
-                cell.textLabel.text = @(s->getEulerChar().stringValue().c_str());
+                cell.textLabel.text = @(s->eulerChar().stringValue().c_str());
             else
                 cell.textLabel.text = @"";
             cell.textLabel.textAlignment = NSTextAlignmentRight;

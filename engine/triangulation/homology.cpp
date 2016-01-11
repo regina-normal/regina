@@ -208,9 +208,9 @@ const NAbelianGroup& NTriangulation::getHomologyH1Bdry() const {
     for (BoundaryComponentIterator bit = boundaryComponents_.begin();
             bit != boundaryComponents_.end(); bit++) {
         if ((*bit)->isOrientable()) {
-            rank += (2 - (*bit)->getEulerChar());
+            rank += (2 - (*bit)->eulerChar());
         } else {
-            rank += (1 - (*bit)->getEulerChar());
+            rank += (1 - (*bit)->eulerChar());
             z2rank++;
         }
     }

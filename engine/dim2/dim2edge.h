@@ -206,7 +206,7 @@ inline bool Face<2, 1>::isBoundary() const {
 }
 
 inline bool Face<2, 1>::inMaximalForest() const {
-    return front().getTriangle()->facetInMaximalForest(front().getEdge());
+    return front().triangle()->facetInMaximalForest(front().edge());
 }
 
 inline void Face<2, 1>::writeTextShort(std::ostream& out) const {

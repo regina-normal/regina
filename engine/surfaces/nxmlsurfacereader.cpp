@@ -96,7 +96,7 @@ NXMLElementReader* NXMLNormalSurfaceReader::startSubElement(
     if (subTagName == "euler") {
         NLargeInteger val;
         if (valueOf(props.lookup("value"), val))
-            surface->eulerChar = val;
+            surface->eulerChar_ = val;
     } else if (subTagName == "orbl") {
         bool val;
         if (valueOf(props.lookup("value"), val))

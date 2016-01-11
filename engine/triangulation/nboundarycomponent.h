@@ -109,7 +109,8 @@ class REGINA_API NBoundaryComponent :
         /**
          * Returns the index of this boundary component in the underlying
          * triangulation.  This is identical to calling
-         * <tt>triangulation()->boundaryComponentIndex(this)</tt>.
+         * <tt>boundaryComponentIndex(this)</tt> on the underlying
+         * triangulation.
          *
          * @return the index of this boundary component vertex.
          */
@@ -173,17 +174,26 @@ class REGINA_API NBoundaryComponent :
          *
          * @return the Euler characteristic.
          */
+        long eulerChar() const;
+
+        /**
+         * Deprecated routine that returns the Euler characteristic of this
+         * boundary component.
+         *
+         * \deprecated This routine has been renamed to eulerChar().
+         * See the eulerChar() documentation for further details.
+         */
         long getEulerChar() const;
 
         /**
-         * A deprecated alias for getEulerChar().
+         * A deprecated alias for eulerChar().
          *
          * Returns the Euler characteristic of this boundary component.
          * If this boundary component is ideal, the Euler characteristic
          * of the link of the corresponding ideal vertex is returned.
          *
          * \deprecated This routine will be removed in a future version of
-         * Regina.  Please use the identical routine getEulerChar() instead.
+         * Regina.  Please use the identical routine eulerChar() instead.
          *
          * @return the Euler characteristic.
          */
@@ -309,14 +319,18 @@ inline NComponent* NBoundaryComponent::getComponent() const {
     return vertices_.front()->component();
 }
 
-inline long NBoundaryComponent::getEulerChar() const {
+inline long NBoundaryComponent::eulerChar() const {
     return (isIdeal() ?
         vertices_.front()->getLinkEulerChar() :
         long(vertices_.size()) - long(edges_.size()) + long(triangles_.size()));
 }
 
+inline long NBoundaryComponent::getEulerChar() const {
+    return eulerChar();
+}
+
 inline long NBoundaryComponent::getEulerCharacteristic() const {
-    return getEulerChar();
+    return eulerChar();
 }
 
 inline bool NBoundaryComponent::isIdeal() const {
