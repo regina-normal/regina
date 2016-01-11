@@ -2661,7 +2661,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                          tri->isOrientable() &&
                          tri->isConnected() &&
                          tri->countBoundaryComponents() == 1 &&
-                         tri->getBoundaryComponent(0)->getEulerChar() == 0 &&
+                         tri->boundaryComponent(0)->getEulerChar() == 0 &&
                          tri->getHomologyH1().isZ() &&
                          (tri->size() < 4 ||
                             (tri->size() == 4 &&
@@ -3311,15 +3311,15 @@ class NTriangulationTest : public TriangulationTest<3> {
                 NTriangulation::BoundaryComponentIterator bcit;
 
                 std::vector<BCSpec> bcOld;
-                for (bcit = tri->getBoundaryComponents().begin();
-                        bcit != tri->getBoundaryComponents().end(); ++bcit)
+                for (bcit = tri->boundaryComponents().begin();
+                        bcit != tri->boundaryComponents().end(); ++bcit)
                     bcOld.push_back(BCSpec((*bcit)->getEulerChar(),
                         (*bcit)->isOrientable()));
                 std::sort(bcOld.begin(), bcOld.end());
 
                 std::vector<BCSpec> bcNew;
-                for (bcit = finite.getBoundaryComponents().begin();
-                        bcit != finite.getBoundaryComponents().end(); ++bcit)
+                for (bcit = finite.boundaryComponents().begin();
+                        bcit != finite.boundaryComponents().end(); ++bcit)
                     bcNew.push_back(BCSpec((*bcit)->getEulerChar(),
                         (*bcit)->isOrientable()));
                 std::sort(bcNew.begin(), bcNew.end());
@@ -3377,8 +3377,8 @@ class NTriangulationTest : public TriangulationTest<3> {
                 NTriangulation::BoundaryComponentIterator bcit;
 
                 std::vector<BCSpec> bcOld;
-                for (bcit = tri->getBoundaryComponents().begin();
-                        bcit != tri->getBoundaryComponents().end(); ++bcit)
+                for (bcit = tri->boundaryComponents().begin();
+                        bcit != tri->boundaryComponents().end(); ++bcit)
                     if ((*bcit)->getEulerChar() != 2)
                         bcOld.push_back(
                             BCSpec((*bcit)->getEulerChar(),
@@ -3386,8 +3386,8 @@ class NTriangulationTest : public TriangulationTest<3> {
                 std::sort(bcOld.begin(), bcOld.end());
 
                 std::vector<BCSpec> bcNew;
-                for (bcit = ideal.getBoundaryComponents().begin();
-                        bcit != ideal.getBoundaryComponents().end(); ++bcit)
+                for (bcit = ideal.boundaryComponents().begin();
+                        bcit != ideal.boundaryComponents().end(); ++bcit)
                     bcNew.push_back(BCSpec((*bcit)->getEulerChar(),
                         (*bcit)->isOrientable()));
                 std::sort(bcNew.begin(), bcNew.end());
@@ -3450,8 +3450,8 @@ class NTriangulationTest : public TriangulationTest<3> {
                 if (! (tmp0.isValid() && (! tmp0.isIdeal()) &&
                         (tmp0.countBoundaryComponents() == 1) &&
                         (tmp0.getHomologyH1().isZ()) &&
-                        (tmp0.getBoundaryComponent(0)->isOrientable()) &&
-                        (tmp0.getBoundaryComponent(0)->getEulerChar() == 0) &&
+                        (tmp0.boundaryComponent(0)->isOrientable()) &&
+                        (tmp0.boundaryComponent(0)->getEulerChar() == 0) &&
                         (! tmp0.isSolidTorus())))
                     CPPUNIT_FAIL("Layered 3-sphere: drilling edge 0 "
                         "does not give a non-trivial knot complement.");
@@ -3597,9 +3597,9 @@ class NTriangulationTest : public TriangulationTest<3> {
 
                 unsigned long nPunc = punc.size();
                 NBoundaryComponent* bc = punc.getTetrahedron(nPunc - 1)->
-                    getTriangle(0)->getBoundaryComponent();
+                    getTriangle(0)->boundaryComponent();
                 if (bc == 0 || bc != punc.getTetrahedron(nPunc - 2)->
-                        getTriangle(0)->getBoundaryComponent()) {
+                        getTriangle(0)->boundaryComponent()) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel() << ", tet " << i << ": "
                         << "puncture gives wrong boundary triangles.";

@@ -572,7 +572,7 @@ int BoundaryComponentModel::columnCount(const QModelIndex& /* unused parent*/) c
 QVariant BoundaryComponentModel::data(const QModelIndex& index,
         int role) const {
     if (role == Qt::DisplayRole) {
-        NBoundaryComponent* item = tri->getBoundaryComponent(index.row());
+        NBoundaryComponent* item = tri->boundaryComponent(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -935,7 +935,7 @@ int Dim2BoundaryComponentModel::columnCount(const QModelIndex& /* unused */)
 QVariant Dim2BoundaryComponentModel::data(const QModelIndex& index,
         int role) const {
     if (role == Qt::DisplayRole) {
-        Dim2BoundaryComponent* item = tri->getBoundaryComponent(index.row());
+        Dim2BoundaryComponent* item = tri->boundaryComponent(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();

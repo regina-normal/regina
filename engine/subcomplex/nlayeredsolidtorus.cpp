@@ -592,13 +592,13 @@ NLayeredSolidTorus* NLayeredSolidTorus::isLayeredSolidTorus(NComponent* comp) {
         return 0;
     if (comp->countBoundaryComponents() != 1)
         return 0;
-    if (comp->getBoundaryComponent(0)->countTriangles() != 2)
+    if (comp->boundaryComponent(0)->countTriangles() != 2)
         return 0;
 
-    NTriangleEmbedding f0 = comp->getBoundaryComponent(0)->getTriangle(0)->
-        getEmbedding(0);
-    NTriangleEmbedding f1 = comp->getBoundaryComponent(0)->getTriangle(1)->
-        getEmbedding(0);
+    NTriangleEmbedding f0 = comp->boundaryComponent(0)->triangle(0)->
+        embedding(0);
+    NTriangleEmbedding f1 = comp->boundaryComponent(0)->triangle(1)->
+        embedding(0);
 
     NTetrahedron* top = f0.getTetrahedron();
     if (f1.getTetrahedron() != top)

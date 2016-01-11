@@ -115,8 +115,8 @@ QString BoundaryComponentChooser::description(
 
 void BoundaryComponentChooser::fill() {
     regina::NTriangulation::BoundaryComponentIterator it;
-    for (it = tri_->getBoundaryComponents().begin();
-            it != tri_->getBoundaryComponents().end(); ++it)
+    for (it = tri_->boundaryComponents().begin();
+            it != tri_->boundaryComponents().end(); ++it)
         if ((! filter_) || (*filter_)(*it)) {
             addItem(description(*it));
             options_.push_back(*it);

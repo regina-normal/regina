@@ -1312,8 +1312,8 @@ bool NNormalSurface::isCompressingDisc(bool knownConnected) const {
     // to begin with.
     unsigned long origSphereCount = 0;
     NTriangulation::BoundaryComponentIterator bit;
-    for (bit = getTriangulation()->getBoundaryComponents().begin();
-            bit != getTriangulation()->getBoundaryComponents().end(); ++bit)
+    for (bit = getTriangulation()->boundaryComponents().begin();
+            bit != getTriangulation()->boundaryComponents().end(); ++bit)
         if ((*bit)->getEulerChar() == 2)
             ++origSphereCount;
 
@@ -1332,8 +1332,8 @@ bool NNormalSurface::isCompressingDisc(bool knownConnected) const {
     }
 
     unsigned long newSphereCount = 0;
-    for (bit = cut->getBoundaryComponents().begin();
-            bit != cut->getBoundaryComponents().end(); ++bit)
+    for (bit = cut->boundaryComponents().begin();
+            bit != cut->boundaryComponents().end(); ++bit)
         if ((*bit)->getEulerChar() == 2)
             ++newSphereCount;
 
@@ -1428,7 +1428,7 @@ namespace {
                 }
 
                 // Compute the Euler characteristic of the boundary component.
-                long ec = t_[side]->getBoundaryComponent(0)->getEulerChar();
+                long ec = t_[side]->boundaryComponent(0)->getEulerChar();
 
                 // Look for a normal disc or sphere to crush.
                 NNormalSurface* ans;
@@ -1498,7 +1498,7 @@ namespace {
                         crush->getFirstTreeChild());
                     while (t_[side]) {
                         if (t_[side]->countBoundaryComponents() == 1 &&
-                                t_[side]->getBoundaryComponent(0)->
+                                t_[side]->boundaryComponent(0)->
                                     getEulerChar() == ec) {
                             // Found it.
                             t_[side]->makeOrphan();

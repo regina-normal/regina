@@ -588,7 +588,7 @@ bool NTriangulation::isSolidTorus() const {
                 // At any rate, it means we did not have a solid torus.
                 delete crushed;
                 return (solidTorus_ = false);
-            } else if (comp->getBoundaryComponent(0)->getEulerChar() == 2) {
+            } else if (comp->boundaryComponent(0)->getEulerChar() == 2) {
                 // A component with sphere boundary.
                 // Must be a 3-ball, or else we didn't have a solid torus.
                 if (! comp->isBall()) {
@@ -909,7 +909,7 @@ bool NTriangulation::hasCompressingDisc() const {
             comp = static_cast<NTriangulation*>(crush->getFirstTreeChild());
             while (comp) {
                 if (comp->countBoundaryComponents() == 1 &&
-                        comp->getBoundaryComponent(0)->getEulerChar()
+                        comp->boundaryComponent(0)->getEulerChar()
                         == minBdryEuler) {
                     // This must be our original manifold.
                     comp->makeOrphan();
@@ -1012,8 +1012,8 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
     // spheres that might result.
     unsigned long origSphereCount = 0;
     BoundaryComponentIterator bit;
-    for (bit = use.getBoundaryComponents().begin(); bit !=
-            use.getBoundaryComponents().end(); ++bit)
+    for (bit = use.boundaryComponents().begin(); bit !=
+            use.boundaryComponents().end(); ++bit)
         if ((*bit)->getEulerChar() == 2)
             ++origSphereCount;
 
@@ -1046,8 +1046,8 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
             return (compressingDisc_ = true);
 
         newSphereCount = 0;
-        for (bit = cut.getBoundaryComponents().begin(); bit !=
-                cut.getBoundaryComponents().end(); ++bit)
+        for (bit = cut.boundaryComponents().begin(); bit !=
+                cut.boundaryComponents().end(); ++bit)
             if ((*bit)->getEulerChar() == 2)
                 ++newSphereCount;
 
@@ -1102,8 +1102,8 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
             return (compressingDisc_ = true);
 
         newSphereCount = 0;
-        for (bit = cut.getBoundaryComponents().begin(); bit !=
-                cut.getBoundaryComponents().end(); ++bit)
+        for (bit = cut.boundaryComponents().begin(); bit !=
+                cut.boundaryComponents().end(); ++bit)
             if ((*bit)->getEulerChar() == 2)
                 ++newSphereCount;
 
