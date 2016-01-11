@@ -2,9 +2,9 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Computational Engine                                                  *
+ *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2014, Ben Burton                                   *
+ *  Copyright (c) 1999-2013, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -32,16 +32,17 @@
 
 /* end stub */
 
-#include "generic/ngenericisomorphism-impl.h"
+/**
+ * This file allows all tests from this directory to be added to
+ * the overall test runner, without requiring any further inclusion
+ * of headers that define the specific corresponding test fixtures.
+ *
+ * The routines declared below (which should add tests to the given
+ * test runner) should be implemented in this directory and then called
+ * from the top-level test suite directory.
+ */
 
-// Headers required for our template instantiations:
-#include "dim2/dim2isomorphism.h"
-#include "dim2/dim2triangulation.h"
-#include "triangulation/nisomorphism.h"
-#include "triangulation/ntriangulation.h"
+#include <cppunit/ui/text/TestRunner.h>
 
-// Instantiate templates for standard dimensions.
-// The header has matching "extern template class REGINA_API" declarations.
-template class regina::NGenericIsomorphism<2>;
-template class regina::NGenericIsomorphism<3>;
+void addFaceNumbering(CppUnit::TextUi::TestRunner& runner);
 

@@ -37,6 +37,7 @@
 #include "dim2/dim2edge.h"
 #include "dim2/dim2vertex.h"
 #include "../helpers.h"
+#include "../generic/facehelper.h"
 
 using namespace boost::python;
 using regina::Dim2BoundaryComponent;
@@ -45,9 +46,21 @@ void addDim2BoundaryComponent() {
     class_<Dim2BoundaryComponent, std::auto_ptr<Dim2BoundaryComponent>,
             boost::noncopyable> ("Dim2BoundaryComponent", no_init)
         .def("index", &Dim2BoundaryComponent::index)
+        .def("countFaces",
+            &regina::python::countFaces<Dim2BoundaryComponent, 2>)
+        .def("getNumberOfFaces",
+            &regina::python::countFaces<Dim2BoundaryComponent, 2>)
+        .def("countEdges", &Dim2BoundaryComponent::countEdges)
         .def("getNumberOfEdges", &Dim2BoundaryComponent::getNumberOfEdges)
+        .def("countVertices", &Dim2BoundaryComponent::countVertices)
         .def("getNumberOfVertices", &Dim2BoundaryComponent::getNumberOfVertices)
+        .def("face", &regina::python::face<Dim2BoundaryComponent, 2, size_t>)
+        .def("getFace", &regina::python::face<Dim2BoundaryComponent, 2, size_t>)
+        .def("edge", &Dim2BoundaryComponent::edge,
+            return_value_policy<reference_existing_object>())
         .def("getEdge", &Dim2BoundaryComponent::getEdge,
+            return_value_policy<reference_existing_object>())
+        .def("vertex", &Dim2BoundaryComponent::vertex,
             return_value_policy<reference_existing_object>())
         .def("getVertex", &Dim2BoundaryComponent::getVertex,
             return_value_policy<reference_existing_object>())

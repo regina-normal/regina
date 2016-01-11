@@ -34,8 +34,8 @@
 
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
-#include "census/nfacepairing.h"
 #include "testsuite/census/testcensus.h"
+#include "triangulation/nfacepairing.h"
 
 using regina::NFacePairing;
 using regina::NBoolSet;

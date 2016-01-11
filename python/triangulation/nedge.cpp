@@ -41,78 +41,114 @@
 #include "triangulation/nvertex.h"
 #include "../globalarray.h"
 #include "../helpers.h"
+#include "../generic/facehelper.h"
 
 using namespace boost::python;
 using regina::NEdge;
 using regina::NEdgeEmbedding;
-using regina::python::GlobalArray;
+using regina::Face;
+using regina::FaceEmbedding;
 using regina::python::GlobalArray2D;
 
 namespace {
-    GlobalArray2D<int> edgeNumber_arr(regina::edgeNumber, 4);
-    GlobalArray<int> edgeStart_arr(regina::edgeStart, 6);
-    GlobalArray<int> edgeEnd_arr(regina::edgeEnd, 6);
-
     GlobalArray2D<int> NEdge_edgeNumber(NEdge::edgeNumber, 4);
     GlobalArray2D<int> NEdge_edgeVertex(NEdge::edgeVertex, 6);
-    GlobalArray<regina::NPerm4> NEdge_ordering(NEdge::ordering, 6);
 
     boost::python::list edge_getEmbeddings_list(const NEdge* e) {
-        const std::deque<NEdgeEmbedding>& embs = e->getEmbeddings();
-        std::deque<NEdgeEmbedding>::const_iterator it;
-
         boost::python::list ans;
-        for (it = embs.begin(); it != embs.end(); it++)
-            ans.append(*it);
+        for (auto& emb: *e)
+            ans.append(emb);
         return ans;
     }
 }
 
 void addNEdge() {
-    // Global arrays:
-    scope().attr("edgeNumber") = &edgeNumber_arr;
-    scope().attr("edgeStart") = &edgeStart_arr;
-    scope().attr("edgeEnd") = &edgeEnd_arr;
-
     // Classes:
-    class_<NEdgeEmbedding>("NEdgeEmbedding",
+    class_<FaceEmbedding<3, 1>>("FaceEmbedding3_1",
             init<regina::NTetrahedron*, int>())
         .def(init<const NEdgeEmbedding&>())
+        .def("simplex", &NEdgeEmbedding::simplex,
+            return_value_policy<reference_existing_object>())
+        .def("getSimplex", &NEdgeEmbedding::getSimplex,
+            return_value_policy<reference_existing_object>())
+        .def("tetrahedron", &NEdgeEmbedding::tetrahedron,
+            return_value_policy<reference_existing_object>())
         .def("getTetrahedron", &NEdgeEmbedding::getTetrahedron,
             return_value_policy<reference_existing_object>())
+        .def("face", &NEdgeEmbedding::face)
+        .def("getFace", &NEdgeEmbedding::getFace)
+        .def("edge", &NEdgeEmbedding::edge)
         .def("getEdge", &NEdgeEmbedding::getEdge)
+        .def("vertices", &NEdgeEmbedding::vertices)
         .def("getVertices", &NEdgeEmbedding::getVertices)
+        .def("str", &NEdgeEmbedding::str)
+        .def("toString", &NEdgeEmbedding::toString)
+        .def("detail", &NEdgeEmbedding::detail)
+        .def("toStringLong", &NEdgeEmbedding::toStringLong)
+        .def("__str__", &NEdgeEmbedding::str)
         .def(regina::python::add_eq_operators())
     ;
 
-    scope s = class_<NEdge, std::auto_ptr<NEdge>, boost::noncopyable>
-            ("NEdge", no_init)
-        .def("index", &NEdge::index)
-        .def("getEmbeddings", edge_getEmbeddings_list)
-        .def("getNumberOfEmbeddings", &NEdge::getNumberOfEmbeddings)
-        .def("getEmbedding", &NEdge::getEmbedding,
-            return_internal_reference<>())
-        .def("getTriangulation", &NEdge::getTriangulation,
-            return_value_policy<reference_existing_object>())
-        .def("getComponent", &NEdge::getComponent,
-            return_value_policy<reference_existing_object>())
-        .def("getBoundaryComponent", &NEdge::getBoundaryComponent,
-            return_value_policy<reference_existing_object>())
-        .def("getVertex", &NEdge::getVertex,
-            return_value_policy<reference_existing_object>())
-        .def("getDegree", &NEdge::getDegree)
-        .def("isBoundary", &NEdge::isBoundary)
-        .def("isValid", &NEdge::isValid)
-        .def("str", &NEdge::str)
-        .def("toString", &NEdge::toString)
-        .def("detail", &NEdge::detail)
-        .def("toStringLong", &NEdge::toStringLong)
-        .def("__str__", &NEdge::str)
-        .def(regina::python::add_eq_operators())
-    ;
+    {
+        scope s = class_<Face<3, 1>, std::auto_ptr<Face<3, 1>>,
+                boost::noncopyable>("Face3_1", no_init)
+            .def("index", &NEdge::index)
+            .def("embeddings", edge_getEmbeddings_list)
+            .def("getEmbeddings", edge_getEmbeddings_list)
+            .def("embedding", &NEdge::embedding,
+                return_internal_reference<>())
+            .def("getEmbedding", &NEdge::getEmbedding,
+                return_internal_reference<>())
+            .def("front", &NEdge::front,
+                return_internal_reference<>())
+            .def("back", &NEdge::back,
+                return_internal_reference<>())
+            .def("triangulation", &NEdge::triangulation,
+                return_value_policy<reference_existing_object>())
+            .def("getTriangulation", &NEdge::getTriangulation,
+                return_value_policy<reference_existing_object>())
+            .def("component", &NEdge::component,
+                return_value_policy<reference_existing_object>())
+            .def("getComponent", &NEdge::getComponent,
+                return_value_policy<reference_existing_object>())
+            .def("getBoundaryComponent", &NEdge::getBoundaryComponent,
+                return_value_policy<reference_existing_object>())
+            .def("face", &regina::python::face<NEdge, 1, int>)
+            .def("getFace", &regina::python::face<NEdge, 1, int>)
+            .def("vertex", &NEdge::vertex,
+                return_value_policy<reference_existing_object>())
+            .def("getVertex", &NEdge::getVertex,
+                return_value_policy<reference_existing_object>())
+            .def("faceMapping", &regina::python::faceMapping<NEdge, 1, 4>)
+            .def("getFaceMapping", &regina::python::faceMapping<NEdge, 1, 4>)
+            .def("vertexMapping", &NEdge::vertexMapping)
+            .def("getVertexMapping", &NEdge::getVertexMapping)
+            .def("degree", &NEdge::degree)
+            .def("getDegree", &NEdge::getDegree)
+            .def("isBoundary", &NEdge::isBoundary)
+            .def("isValid", &NEdge::isValid)
+            .def("hasBadIdentification", &NEdge::hasBadIdentification)
+            .def("hasBadLink", &NEdge::hasBadLink)
+            .def("isLinkOrientable", &NEdge::isLinkOrientable)
+            .def("str", &NEdge::str)
+            .def("toString", &NEdge::toString)
+            .def("detail", &NEdge::detail)
+            .def("toStringLong", &NEdge::toStringLong)
+            .def("__str__", &NEdge::str)
+            .def("ordering", &NEdge::ordering)
+            .def("faceNumber", &NEdge::faceNumber)
+            .def("containsVertex", &NEdge::containsVertex)
+            .def(regina::python::add_eq_operators())
+            .staticmethod("ordering")
+            .staticmethod("faceNumber")
+            .staticmethod("containsVertex")
+        ;
 
-    s.attr("edgeNumber") = &NEdge_edgeNumber;
-    s.attr("edgeVertex") = &NEdge_edgeVertex;
-    s.attr("ordering") = &NEdge_ordering;
+        s.attr("edgeNumber") = &NEdge_edgeNumber;
+        s.attr("edgeVertex") = &NEdge_edgeVertex;
+    }
+
+    scope().attr("NEdgeEmbedding") = scope().attr("FaceEmbedding3_1");
+    scope().attr("NEdge") = scope().attr("Face3_1");
 }
 

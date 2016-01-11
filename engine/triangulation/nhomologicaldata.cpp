@@ -371,10 +371,8 @@ void NHomologicalData::computeChainComplexes() {
     // start B2: for each dual triangle == non-boundary edge,
     // find dual edges it bounds == link of tetrahedra that contain it
     for (i=0;i<dNBE.size();i++) {
-        const std::deque<NEdgeEmbedding>& edgeque(
-            tri->getEdge(dNBE[i])->getEmbeddings());
-        for (j=0;j<edgeque.size();j++) {
-            p1=edgeque[j].getVertices();
+        for (auto& emb : *tri->getEdge(dNBE[i])) {
+            p1=emb.getVertices();
             // the face of the tetrahedron corresponding to vertex 2 is
             // what we want to orient... but we need to decide on its
             // orientation.  For that we check to see if this face's
@@ -382,11 +380,11 @@ void NHomologicalData::computeChainComplexes() {
             // getEmbedding(0).getTriangle() is this current face p1[2]...
 
             B2->entry( dNBF.index( tri->triangleIndex(
-                edgeque[j].getTetrahedron()->getTriangle(p1[2]) ) ) ,i)+=
-                    ( ( edgeque[j].getTetrahedron() ==
-                        edgeque[j].getTetrahedron()->getTriangle(
+                emb.getTetrahedron()->getTriangle(p1[2]) ) ) ,i)+=
+                    ( ( emb.getTetrahedron() ==
+                        emb.getTetrahedron()->getTriangle(
                             p1[2] )->getEmbedding( 0 ).getTetrahedron() &&
-                        edgeque[j].getTetrahedron()->getTriangle(
+                        emb.getTetrahedron()->getTriangle(
                             p1[2] )->getEmbedding( 0 ).getTriangle() == p1[2] )
                               ? 1 : -1);
         }
@@ -405,45 +403,47 @@ void NHomologicalData::computeChainComplexes() {
 
     for (i=0;i<dNINBV.size();i++) {
         // dNINBV[i] is the vertices.index() of this vertex.
-        const std::vector<NVertexEmbedding>& vtetlist(
-            tri->getVertex(dNINBV[i])->getEmbeddings());
-        tetor.resize(vtetlist.size(),0);
+        NVertex* vtet = tri->getVertex(dNINBV[i]);
+        tetor.resize(vtet->getDegree(),0);
 
         std::vector<std::pair<long, bool> > unorientedlist;
         // This should be the list of unoriented tetrahedra, together
         // with marked vertices.
         // Indices into the vector are 4*tetindex + vertex no.
-        // Values are (index into vtetlist, already oriented).
+        // Values are (index into vtet's list of embeddings, already oriented).
         unorientedlist.resize(4 * tri->getNumberOfTetrahedra());
 
-        for (j=0;j<vtetlist.size();j++) {
+        for (j=0;j<vtet->getDegree();j++) {
             // unoriented list stores the tetrahedra adjacent to the vertex
             // plus the vertex index in that tetrahedra's coords
             unorientedlist[
-                4*tri->tetrahedronIndex( vtetlist[j].getTetrahedron() ) +
-                vtetlist[j].getVertex() ] = std::make_pair(j, false);
+                4*tri->tetrahedronIndex(
+                    vtet->getEmbedding(j).getTetrahedron() ) +
+                vtet->getEmbedding(j).getVertex() ] = std::make_pair(j, false);
         }
 
         // need to set up a local orientation for the tangent
         // bundle at the vertex so that we can compare with the
         // normal orientations of the edges incident. This normal
         // orientation will have the form of a sign +-1 for each
-        // NVertexEmbedding in the list vtetlist. Our orientation convention
-        // will be chosen so that vtetlist[0] is positively oriented,
+        // NVertexEmbedding in vtet's embedding list. Our orientation convention
+        // will be chosen so that vtet->front() is positively oriented,
         // ie: tetor[0]==1 always.
 
         tetor[0]=1;
-        unorientedlist[ 4*tri->tetrahedronIndex( vtetlist[0].getTetrahedron()) +
-            vtetlist[0].getVertex() ].second = true;
+        unorientedlist[ 4*tri->tetrahedronIndex(
+            vtet->front().getTetrahedron()) +
+            vtet->front().getVertex() ].second = true;
 
-        size_t stillToOrient = vtetlist.size() - 1;
+        size_t stillToOrient = vtet->getDegree() - 1;
         while (stillToOrient > 0)
-          for (j=0;j<vtetlist.size();j++)
+          for (j=0;j<vtet->getDegree();j++)
             // go through all oriented tetrahedra and orient
             // the adjacent tetrahedra
             {
-                ind1 = 4*tri->tetrahedronIndex( vtetlist[j].getTetrahedron() ) +
-                    vtetlist[j].getVertex();
+                ind1 = 4*tri->tetrahedronIndex(
+                        vtet->getEmbedding(j).getTetrahedron() ) +
+                    vtet->getEmbedding(j).getVertex();
 
                 if ( unorientedlist[ ind1 ].second ) {
                     // this tetrahedron has been oriented check to see
@@ -452,10 +452,10 @@ void NHomologicalData::computeChainComplexes() {
                     for (k=0;k<4;k++) {
                         if (k!= (ind1 % 4))
                         {
-                            p1=vtetlist[j].getTetrahedron() ->
+                            p1=vtet->getEmbedding(j).getTetrahedron() ->
                                 adjacentGluing(k);
                             ind2=4*tri->tetrahedronIndex(
-                                vtetlist[j].getTetrahedron() ->
+                                vtet->getEmbedding(j).getTetrahedron() ->
                                 adjacentTetrahedron(k) ) + p1[ind1 % 4];
                             if (! unorientedlist[ ind2 ].second )
                             {
@@ -479,14 +479,15 @@ void NHomologicalData::computeChainComplexes() {
         // 4*(edge index) + 2*(endpt index) + sign stored as 0 or 1.
         std::set<long> edge_adjacency;
 
-        for (j=0;j<vtetlist.size();j++)
+        for (j=0;j<vtet->getDegree();j++)
             for (k=0;k<6;k++) {
-                ind2=vtetlist[j].getTetrahedron()->getEdgeMapping(k).
-                    preImageOf( vtetlist[j].getVertex() );
+                ind2=vtet->getEmbedding(j).getTetrahedron()->getEdgeMapping(k).
+                    preImageOf( vtet->getEmbedding(j).getVertex() );
                 if ( ind2<2 ) {
                     // edge k of tetrahedron j, moreover we know that
                     // the vertex of the edge corresponds to ind2
-                    tempe=NEdgeEmbedding( vtetlist[j].getTetrahedron(), k );
+                    tempe=NEdgeEmbedding(
+                        vtet->getEmbedding(j).getTetrahedron(), k );
                     // the corresp orientation coming from our local
                     // orientation
                     // plus orienting the edge out of vertex k % 2...
@@ -498,7 +499,7 @@ void NHomologicalData::computeChainComplexes() {
                     // if p1.sign() == tetor[j] then sign = +1 otherwise -1.
 
                     ind1=4*tri->edgeIndex(
-                        vtetlist[j].getTetrahedron()->getEdge(k) )
+                        vtet->getEmbedding(j).getTetrahedron()->getEdge(k) )
                         + 2*ind2 + (p1.sign() == tetor[j] ? 1 : 0);
 
                     // Insertion in std::set is harmless if the key

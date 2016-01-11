@@ -7,6 +7,7 @@ SET ( FILES
   ncyclotomic
   ninteger
   nmatrix2
+  nperm2
   nperm3
   nperm4
   nperm5
@@ -33,6 +34,8 @@ if (${REGINA_INSTALL_DEV})
     nmatrix.h
     nmatrix2.h
     nmatrixint.h
+    nperm.h
+    nperm2.h
     nperm3.h
     nperm4.h
     nperm5.h

@@ -43,15 +43,17 @@
 #endif
 
 #include "regina-core.h"
-#include "census/dim2edgepairing.h"
+#include "dim2/dim2edgepairing.h"
 #include "utilities/nbooleans.h"
 
 namespace regina {
 
 class Dim2GluingPerms;
 class Dim2GluingPermSearcher;
-class Dim2Triangulation;
 class NPacket;
+
+template <int> class Triangulation;
+typedef Triangulation<2> Dim2Triangulation;
 
 /**
  * \weakgroup census

@@ -37,6 +37,7 @@ void addNComponent();
 void addNEdge();
 void addNExampleTriangulation();
 void addNFacePair();
+void addNFacePairing();
 void addNHomologicalData();
 void addNIsomorphism();
 void addNTetFace();
@@ -51,6 +52,7 @@ void addTriangulation() {
     addNEdge();
     addNExampleTriangulation();
     addNFacePair();
+    addNFacePairing();
     addNHomologicalData();
     addNIsomorphism();
     addNTetFace();

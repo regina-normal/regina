@@ -32,6 +32,7 @@
 
 /* end stub */
 
+#include <algorithm>
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "maths/nperm4.h"
@@ -50,6 +51,7 @@ class NPerm5Test : public CppUnit::TestFixture {
     CPPUNIT_TEST(exhaustive);
     CPPUNIT_TEST(products);
     CPPUNIT_TEST(compareWith);
+    CPPUNIT_TEST(reverse);
     CPPUNIT_TEST(databases);
     CPPUNIT_TEST(aliases);
 
@@ -163,14 +165,27 @@ class NPerm5Test : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            int arr[5];
-            arr[0] = a; arr[1] = b; arr[2] = c; arr[3] = d; arr[4] = e;
-            NPerm5 parr(arr);
-            if (! looksEqual(parr, p, name.str())) {
-                std::ostringstream msg;
-                msg << "The array constructor fails for "
-                    "the permutation " << name.str() << ".";
-                CPPUNIT_FAIL(msg.str());
+            {
+                int arr[5] = { a, b, c, d, e };
+                NPerm5 parr(arr);
+                if (! looksEqual(parr, p, name.str())) {
+                    std::ostringstream msg;
+                    msg << "The array constructor fails for "
+                        "the permutation " << name.str() << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            {
+                int arrA[5] = { 2, 3, 0, 4, 1 };
+                int arrB[5] = { c, d, a, e, b };
+                NPerm5 parr2(arrA, arrB);
+                if (! looksEqual(parr2, p, name.str())) {
+                    std::ostringstream msg;
+                    msg << "The two-array constructor fails for "
+                        "the permutation " << name.str() << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
             }
 
             NPerm5 p3(p);
@@ -447,6 +462,36 @@ class NPerm5Test : public CppUnit::TestFixture {
                             << q.str() << " > " << p.str() << ".";
                         CPPUNIT_FAIL(msg.str());
                     }
+                }
+            }
+        }
+
+        void reverse() {
+            for (int i = 0; i < 120; i++) {
+                NPerm5 p = NPerm5::S5[i];
+                NPerm5 r = p.reverse();
+
+                if (! looksEqual(p, r.reverse())) {
+                    std::ostringstream msg;
+                    msg << "Permutation #" << i << " indicates that "
+                        "reverse() is not idempotent.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (! looksDistinct(p, r)) {
+                    std::ostringstream msg;
+                    msg << "Permutation #" << i << " indicates that "
+                        "reverse() is not a different permutation.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                std::string s = p.str();
+                std::reverse(s.begin(), s.end());
+                if (s != r.str()) {
+                    std::ostringstream msg;
+                    msg << "Reverse of permutation #" << i << " does not have "
+                        "the reverse string representation.";
+                    CPPUNIT_FAIL(msg.str());
                 }
             }
         }

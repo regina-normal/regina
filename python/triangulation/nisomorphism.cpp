@@ -38,6 +38,7 @@
 #include "../helpers.h"
 
 using namespace boost::python;
+using regina::Isomorphism;
 using regina::NIsomorphism;
 
 namespace {
@@ -53,9 +54,9 @@ namespace {
 }
 
 void addNIsomorphism() {
-    class_<NIsomorphism, std::auto_ptr<NIsomorphism>, boost::noncopyable>
-            ("NIsomorphism", init<const NIsomorphism&>())
-        .def(self * self)
+    class_<Isomorphism<3>, std::auto_ptr<Isomorphism<3>>, boost::noncopyable>
+            ("Isomorphism3", init<const NIsomorphism&>())
+        .def("size", &NIsomorphism::size)
         .def("getSourceSimplices", &NIsomorphism::getSourceSimplices)
         .def("getSourceTetrahedra", &NIsomorphism::getSourceTetrahedra)
         .def("simpImage", simpImage_const)
@@ -69,6 +70,8 @@ void addNIsomorphism() {
         .def("applyInPlace", &NIsomorphism::applyInPlace)
         .def("random", &NIsomorphism::random,
             return_value_policy<manage_new_object>())
+        .def("identity", &NIsomorphism::identity,
+            return_value_policy<manage_new_object>())
         .def("str", &NIsomorphism::str)
         .def("toString", &NIsomorphism::toString)
         .def("detail", &NIsomorphism::detail)
@@ -76,6 +79,9 @@ void addNIsomorphism() {
         .def("__str__", &NIsomorphism::str)
         .def(regina::python::add_eq_operators())
         .staticmethod("random")
+        .staticmethod("identity")
     ;
+
+    scope().attr("NIsomorphism") = scope().attr("Isomorphism3");
 }
 

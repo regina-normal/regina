@@ -39,13 +39,14 @@
 #include "dim2/dim2triangulation.h"
 #include "dim2/dim2vertex.h"
 #include "../helpers.h"
+#include "../generic/facehelper.h"
 
 using namespace boost::python;
 using regina::Dim2Triangle;
 
 void addDim2Triangle() {
-    class_<Dim2Triangle, std::auto_ptr<Dim2Triangle>, boost::noncopyable>(
-            "Dim2Triangle", no_init)
+    class_<regina::Simplex<2>, std::auto_ptr<regina::Simplex<2>>,
+            boost::noncopyable>("Simplex2", no_init)
         .def("getDescription", &Dim2Triangle::getDescription,
             return_value_policy<return_by_value>())
         .def("setDescription", &Dim2Triangle::setDescription)
@@ -59,20 +60,36 @@ void addDim2Triangle() {
         .def("adjacentFacet", &Dim2Triangle::adjacentFacet)
         .def("hasBoundary", &Dim2Triangle::hasBoundary)
         .def("joinTo", &Dim2Triangle::joinTo)
+        .def("join", &Dim2Triangle::join)
         .def("unjoin", &Dim2Triangle::unjoin,
             return_value_policy<reference_existing_object>())
         .def("isolate", &Dim2Triangle::isolate)
+        .def("triangulation", &Dim2Triangle::triangulation,
+            return_value_policy<reference_existing_object>())
         .def("getTriangulation", &Dim2Triangle::getTriangulation,
+            return_value_policy<reference_existing_object>())
+        .def("component", &Dim2Triangle::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim2Triangle::getComponent,
             return_value_policy<reference_existing_object>())
+        .def("face", &regina::python::face<Dim2Triangle, 2, int>)
+        .def("getFace", &regina::python::face<Dim2Triangle, 2, int>)
+        .def("vertex", &Dim2Triangle::vertex,
+            return_value_policy<reference_existing_object>())
         .def("getVertex", &Dim2Triangle::getVertex,
+            return_value_policy<reference_existing_object>())
+        .def("edge", &Dim2Triangle::edge,
             return_value_policy<reference_existing_object>())
         .def("getEdge", &Dim2Triangle::getEdge,
             return_value_policy<reference_existing_object>())
+        .def("faceMapping", &regina::python::faceMapping<Dim2Triangle, 2>)
+        .def("getFaceMapping", &regina::python::faceMapping<Dim2Triangle, 2>)
+        .def("vertexMapping", &Dim2Triangle::vertexMapping)
         .def("getVertexMapping", &Dim2Triangle::getVertexMapping)
+        .def("edgeMapping", &Dim2Triangle::edgeMapping)
         .def("getEdgeMapping", &Dim2Triangle::getEdgeMapping)
         .def("orientation", &Dim2Triangle::orientation)
+        .def("facetInMaximalForest", &Dim2Triangle::facetInMaximalForest)
         .def("str", &Dim2Triangle::str)
         .def("toString", &Dim2Triangle::toString)
         .def("detail", &Dim2Triangle::detail)
@@ -80,5 +97,7 @@ void addDim2Triangle() {
         .def("__str__", &Dim2Triangle::str)
         .def(regina::python::add_eq_operators())
     ;
+
+    scope().attr("Dim2Triangle") = scope().attr("Simplex2");
 }
 

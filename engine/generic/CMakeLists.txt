@@ -1,9 +1,11 @@
 # generic 
 
+ADD_SUBDIRECTORY("alias")
+ADD_SUBDIRECTORY("detail")
+
 # Files to compile
 SET ( FILES
-  ngenericisomorphism
-  ngenerictriangulation
+  facenumbering
   )
 
 # Prepend folder name
@@ -16,13 +18,13 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
-    canonical-impl.h
+    component.h
     dimtraits.h
-    isomorphism-impl.h
-    isosig-impl.h
+    face.h
+    facetpairing.h
+    isomorphism.h
     nfacetspec.h
-    ngenericisomorphism-impl.h
-    ngenericisomorphism.h
-    ngenerictriangulation.h
+    simplex.h
+    triangulation.h
     DESTINATION ${INCLUDEDIR}/generic COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

@@ -50,8 +50,9 @@ class PacketUI;
 class QTreeView;
 
 namespace regina {
-    class Dim2Triangulation;
-    class NTriangulation;
+    template <int> class Triangulation;
+    typedef Triangulation<2> Dim2Triangulation;
+    typedef Triangulation<3> NTriangulation;
 };
 
 /**

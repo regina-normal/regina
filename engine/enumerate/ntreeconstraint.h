@@ -49,7 +49,9 @@ namespace regina {
 
 class NAngleStructure;
 class NNormalSurface;
-class NTriangulation;
+
+template <int> class Triangulation;
+typedef Triangulation<3> NTriangulation;
 
 template <typename Integer> class LPMatrix;
 template <class LPConstraint> class LPCol;

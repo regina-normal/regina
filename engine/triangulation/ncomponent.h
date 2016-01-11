@@ -38,40 +38,67 @@
 #endif
 
 /*! \file triangulation/ncomponent.h
- *  \brief Deals with components of a triangulation.
+ *  \brief Deals with connected components of a 3-manifold triangulation.
  */
 
-#include <vector>
 #include "regina-core.h"
-#include "output.h"
-#include "utilities/nmarkedvector.h"
-#include <boost/noncopyable.hpp>
+#include "generic/component.h"
+#include "generic/alias/face.h"
 
 namespace regina {
 
-class NTetrahedron;
-class NTriangle;
-class NEdge;
-class NVertex;
 class NBoundaryComponent;
+
+template <int> class Simplex;
+template <int> class Triangulation;
+template <int, int> class Face;
+typedef Simplex<3> NTetrahedron;
+typedef Triangulation<3> NTriangulation;
+typedef Face<3, 0> NVertex;
+typedef Face<3, 1> NEdge;
+typedef Face<3, 2> NTriangle;
 
 /**
  * \weakgroup triangulation
  * @{
  */
 
+namespace detail {
+
 /**
- * Represents a component of a triangulation.
- * Components are highly temporary; once a triangulation changes, all
- * its component objects will be deleted and new ones will be created.
+ * Helper class that indicates what data type is used by a connected component
+ * of a triangulation to store a list of <i>subdim</i>-faces.
  */
-class REGINA_API NComponent :
-        public Output<NComponent>,
-        public boost::noncopyable,
-        public NMarkedElement {
+template <int subdim>
+struct FaceListHolder<Component<3>, subdim> {
+    /**
+     * The data type used by Component<3> to store the list of all
+     * <i>subdim</i>-faces of the connected component.
+     *
+     * The function Component<3>::faces<subdim>() returns a const
+     * reference to this type.
+     */
+    typedef std::vector<Face<3, subdim>*> Holder;
+};
+
+} // namespace regina::detail
+
+/**
+ * Represents a connected component of a 3-manifold triangulation.
+ *
+ * This is a specialisation of the generic Component class template; see
+ * the Component documentation for an overview of how this class works.
+ *
+ * This 3-dimensional specialisation contains some extra functionality.
+ * In particular, each 3-dimensional component also stores details on
+ * lower-dimensional faces (i.e., vertices, edges and triangles), as well as
+ * boundary components.
+ */
+template <>
+class REGINA_API Component<3> : public detail::ComponentBase<3>,
+        public alias::FaceOfTriangulation<Component<3>, 3>,
+        public alias::FacesOfTriangulation<Component<3>, 3> {
     private:
-        std::vector<NTetrahedron*> tetrahedra_;
-            /**< List of tetrahedra in the component. */
         std::vector<NTriangle*> triangles_;
             /**< List of triangles in the component. */
         std::vector<NEdge*> edges_;
@@ -83,158 +110,64 @@ class REGINA_API NComponent :
 
         bool ideal_;
             /**< Is the component ideal? */
-        bool orientable_;
-            /**< Is the component orientable? */
 
     public:
-
         /**
-         * Returns the index of this component in the underlying
-         * triangulation.  This is identical to calling
-         * <tt>getTriangulation()->componentIndex(this)</tt>.
+         * Returns the number of <i>subdim</i>-faces in this component.
          *
-         * @return the index of this component vertex.
+         * \pre The template argument \a subdim is between 0 and 2 inclusive.
+         *
+         * \ifacespython Python does not support templates.  Instead,
+         * Python users should call this function in the form
+         * <tt>countFaces(subdim)</tt>; that is, the template parameter
+         * \a subdim becomes the first argument of the function.
+         *
+         * @return the number of <i>subdim</i>-faces.
          */
-        unsigned long index() const;
-
-        /**
-         * Returns the number of tetrahedra in this component.
-         *
-         * @return the number of tetrahedra.
-         */
-        unsigned long getNumberOfTetrahedra() const;
-        /**
-         * A dimension-agnostic alias for getNumberOfTetrahedra().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         * 
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 3-manifold triangulations means a tetrahedron).
-         * 
-         * See getNumberOfTetrahedra() for further information.
-         */
-        unsigned long getNumberOfSimplices() const;
-
-        /**
-         * Returns the number of triangles in this component.
-         *
-         * @return the number of triangles.
-         */
-        unsigned long getNumberOfTriangles() const;
-        /**
-         * A deprecated alias for getNumberOfTriangles().
-         *
-         * This routine returns the number of triangular faces in this
-         * component.  See getNumberOfTriangles() for further details.
-         *
-         * \deprecated This routine will be removed in a future version
-         * of Regina.  Please use getNumberOfTriangles() instead.
-         *
-         * @return the number of triangles.
-         */
-        unsigned long getNumberOfFaces() const;
-
-        /**
-         * Returns the number of edges in this component.
-         *
-         * @return the number of edges.
-         */
-        unsigned long getNumberOfEdges() const;
-
-        /**
-         * Returns the number of vertices in this component.
-         *
-         * @return the number of vertices.
-         */
-        unsigned long getNumberOfVertices() const;
+        template <int subdim>
+        size_t countFaces() const;
 
         /**
          * Returns the number of boundary components in this component.
          *
          * @return the number of boundary components.
          */
-        unsigned long getNumberOfBoundaryComponents() const;
+        size_t getNumberOfBoundaryComponents() const;
 
         /**
-         * Returns the requested tetrahedron in this component.
+         * Returns a reference to the list of all <i>subdim</i>-faces in
+         * this component.
          *
-         * @param index the index of the requested tetrahedron in the
-         * component.  This should be between 0 and
-         * getNumberOfTetrahedra()-1 inclusive.
-         * Note that the index of a tetrahedron in the component need
-         * not be the index of the same tetrahedron in the entire
-         * triangulation.
-         * @return the requested tetrahedron.
+         * \pre The template argument \a subdim is between 0 and 2 inclusive.
+         *
+         * \ifacespython Python users should call this function in the
+         * form <tt>faces(subdim)</tt>.  It will then return a Python list
+         * containing all the <i>subdim</i>-faces of the triangulation.
+         *
+         * @return the list of all <i>subdim</i>-faces.
          */
-        NTetrahedron* getTetrahedron(unsigned long index) const;
-        /**
-         * A dimension-agnostic alias for getTetrahedron().
-         * This is to assist with writing dimension-agnostic code that
-         * can be reused to work in different dimensions.
-         * 
-         * Here "simplex" refers to a top-dimensional simplex (which for
-         * 3-manifold triangulations means a tetrahedron).
-         * 
-         * See getTetrahedron() for further information.
-         */
-        NTetrahedron* getSimplex(unsigned long index) const;
+        template <int subdim>
+        const std::vector<Face<3, subdim>*>& faces() const;
 
         /**
-         * Returns the requested triangle in this component.
+         * Returns the requested <i>subdim</i>-face in this component.
          *
-         * @param index the index of the requested triangle in the
-         * component.  This should be between 0 and
-         * getNumberOfTriangles()-1 inclusive.
-         * Note that the index of a triangle in the component need
-         * not be the index of the same triangle in the entire
-         * triangulation.
-         * @return the requested triangle.
+         * Note that the index of a face in the component need
+         * not be the index of the same face in the overall triangulation.
+         *
+         * \pre The template argument \a subdim is between 0 and 2 inclusive.
+         *
+         * \ifacespython Python does not support templates.  Instead,
+         * Python users should call this function in the form
+         * <tt>face(subdim, index)</tt>; that is, the template parameter
+         * \a subdim becomes the first argument of the function.
+         *
+         * @param index the index of the desired face, ranging from 0 to
+         * countFaces<subdim>()-1 inclusive.
+         * @return the requested face.
          */
-        NTriangle* getTriangle(unsigned long index) const;
-        /**
-         * A deprecated alias for getTriangle().
-         *
-         * This routine returns the requested triangular face in this
-         * component.  See getTriangle() for further details.
-         *
-         * \deprecated This routine will be removed in a future version
-         * of Regina.  Please use getTriangle() instead.
-         *
-         * @param index the index of the requested triangle in the
-         * component.  This should be between 0 and
-         * getNumberOfTriangles()-1 inclusive.
-         * Note that the index of a triangle in the component need
-         * not be the index of the same triangle in the entire
-         * triangulation.
-         * @return the requested triangle.
-         */
-        NTriangle* getFace(unsigned long index) const;
-
-        /**
-         * Returns the requested edge in this component.
-         *
-         * @param index the index of the requested edge in the
-         * component.  This should be between 0 and
-         * getNumberOfEdges()-1 inclusive.
-         * Note that the index of an edge in the component need
-         * not be the index of the same edge in the entire
-         * triangulation.
-         * @return the requested edge.
-         */
-        NEdge* getEdge(unsigned long index) const;
-
-        /**
-         * Returns the requested vertex in this component.
-         *
-         * @param index the index of the requested vertex in the
-         * component.  This should be between 0 and
-         * getNumberOfVertices()-1 inclusive.
-         * Note that the index of a vertex in the component need
-         * not be the index of the same vertex in the entire
-         * triangulation.
-         * @return the requested vertex.
-         */
-        NVertex* getVertex(unsigned long index) const;
+        template <int subdim>
+        Face<3, subdim>* face(size_t index) const;
 
         /**
          * Returns the requested boundary component in this component.
@@ -247,7 +180,7 @@ class REGINA_API NComponent :
          * entire triangulation.
          * @return the requested boundary component.
          */
-        NBoundaryComponent* getBoundaryComponent(unsigned long index) const;
+        NBoundaryComponent* getBoundaryComponent(size_t index) const;
 
         /**
          * Determines if this component is ideal.
@@ -259,13 +192,6 @@ class REGINA_API NComponent :
         bool isIdeal() const;
 
         /**
-         * Determines if this component is orientable.
-         * 
-         * @return \c true if and only if this component is orientable.
-         */
-        bool isOrientable() const;
-
-        /**
          * Determines if this component is closed.
          * This is the case if and only if it has no boundary.
          * Note that ideal components are not closed.
@@ -273,124 +199,92 @@ class REGINA_API NComponent :
          * @return \c true if and only if this component is closed.
          */
         bool isClosed() const;
-        /**
-         * Returns the number of boundary triangles in this component.
-         *
-         * @return the number of boundary triangles.
-         */
-        unsigned long getNumberOfBoundaryTriangles() const;
-
-        /**
-         * Writes a short text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextShort(std::ostream& out) const;
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const;
 
     private:
         /**
          * Default constructor.
+         *
+         * Marks the component as orientable and non-ideal, with
+         * no boundary facets.
          */
-        NComponent();
+        Component();
 
-    friend class NTriangulation;
-        /**< Allow access to private members. */
+    friend class Triangulation<3>;
+    friend class detail::TriangulationBase<3>;
 };
+
+/**
+ * A convenience typedef for Component<3>.
+ */
+typedef Component<3> NComponent;
 
 /*@}*/
 
-// Inline functions for NComponent
+// Inline functions for Component<3>
 
-inline NComponent::NComponent() : ideal_(false), orientable_(true) {
+inline Component<3>::Component() : detail::ComponentBase<3>(), ideal_(false) {
 }
 
-inline unsigned long NComponent::index() const {
-    return markedIndex();
-}
-
-inline unsigned long NComponent::getNumberOfTetrahedra() const {
-    return tetrahedra_.size();
-}
-
-inline unsigned long NComponent::getNumberOfSimplices() const {
-    return tetrahedra_.size();
-}
-
-inline unsigned long NComponent::getNumberOfTriangles() const {
+template <>
+inline size_t Component<3>::countFaces<2>() const {
     return triangles_.size();
 }
 
-inline unsigned long NComponent::getNumberOfFaces() const {
-    return triangles_.size();
-}
-
-inline unsigned long NComponent::getNumberOfEdges() const {
+template <>
+inline size_t Component<3>::countFaces<1>() const {
     return edges_.size();
 }
 
-inline unsigned long NComponent::getNumberOfVertices() const {
+template <>
+inline size_t Component<3>::countFaces<0>() const {
     return vertices_.size();
 }
 
-inline unsigned long NComponent::getNumberOfBoundaryComponents() const {
+inline size_t Component<3>::getNumberOfBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
-inline NTetrahedron* NComponent::getTetrahedron(unsigned long index) const {
-    return tetrahedra_[index];
+template <>
+inline const std::vector<NTriangle*>& Component<3>::faces<2>() const {
+    return triangles_;
 }
 
-inline NTetrahedron* NComponent::getSimplex(unsigned long index) const {
-    return tetrahedra_[index];
+template <>
+inline const std::vector<NEdge*>& Component<3>::faces<1>() const {
+    return edges_;
 }
 
-inline NTriangle* NComponent::getTriangle(unsigned long index) const {
+template <>
+inline const std::vector<NVertex*>& Component<3>::faces<0>() const {
+    return vertices_;
+}
+
+template <>
+inline NTriangle* Component<3>::face<2>(size_t index) const {
     return triangles_[index];
 }
 
-inline NTriangle* NComponent::getFace(unsigned long index) const {
-    return triangles_[index];
-}
-
-inline NEdge* NComponent::getEdge(unsigned long index) const {
+template <>
+inline NEdge* Component<3>::face<1>(size_t index) const {
     return edges_[index];
 }
 
-inline NVertex* NComponent::getVertex(unsigned long index) const {
+template <>
+inline NVertex* Component<3>::face<0>(size_t index) const {
     return vertices_[index];
 }
 
-inline NBoundaryComponent* NComponent::getBoundaryComponent(unsigned long index)
+inline NBoundaryComponent* Component<3>::getBoundaryComponent(size_t index)
         const {
     return boundaryComponents_[index];
 }
 
-inline bool NComponent::isIdeal() const {
+inline bool Component<3>::isIdeal() const {
     return ideal_;
 }
 
-inline bool NComponent::isOrientable() const {
-    return orientable_;
-}
-
-inline bool NComponent::isClosed() const {
+inline bool Component<3>::isClosed() const {
     return (boundaryComponents_.empty());
-}
-
-inline unsigned long NComponent::getNumberOfBoundaryTriangles() const {
-    return 2 * triangles_.size() - 4 * tetrahedra_.size();
 }
 
 } // namespace regina

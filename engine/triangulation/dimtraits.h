@@ -36,7 +36,5 @@
  *  \brief Deprecated header.
  */
 
-#warning This header is deprecated; please use generic/dimtraits.h instead.
-
-#include "generic/dimtraits.h"
+#warning This header is deprecated, and the old DimTraits class no longer exists.
 

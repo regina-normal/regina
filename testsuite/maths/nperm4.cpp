@@ -32,6 +32,7 @@
 
 /* end stub */
 
+#include <algorithm>
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "maths/nperm4.h"
@@ -49,9 +50,9 @@ class NPerm4Test : public CppUnit::TestFixture {
     CPPUNIT_TEST(exhaustive);
     CPPUNIT_TEST(products);
     CPPUNIT_TEST(compareWith);
+    CPPUNIT_TEST(reverse);
     CPPUNIT_TEST(databases);
     CPPUNIT_TEST(aliases);
-    CPPUNIT_TEST(deprecatedArrays);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -175,14 +176,27 @@ class NPerm4Test : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            int arr[4];
-            arr[0] = a; arr[1] = b; arr[2] = c; arr[3] = d;
-            NPerm4 parr(arr);
-            if (! looksEqual(parr, p, name.str())) {
-                std::ostringstream msg;
-                msg << "The array constructor fails for "
-                    "the permutation " << name.str() << ".";
-                CPPUNIT_FAIL(msg.str());
+            {
+                int arr[4] = { a, b, c, d };
+                NPerm4 parr(arr);
+                if (! looksEqual(parr, p, name.str())) {
+                    std::ostringstream msg;
+                    msg << "The array constructor fails for "
+                        "the permutation " << name.str() << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            {
+                int arrA[4] = { 1, 3, 2, 0 };
+                int arrB[4] = { b, d, c, a };
+                NPerm4 parr2(arrA, arrB);
+                if (! looksEqual(parr2, p, name.str())) {
+                    std::ostringstream msg;
+                    msg << "The two-array constructor fails for "
+                        "the permutation " << name.str() << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
             }
 
             NPerm4 p3(p);
@@ -470,6 +484,36 @@ class NPerm4Test : public CppUnit::TestFixture {
             }
         }
 
+        void reverse() {
+            for (int i = 0; i < 24; i++) {
+                NPerm4 p = NPerm4::S4[i];
+                NPerm4 r = p.reverse();
+
+                if (! looksEqual(p, r.reverse())) {
+                    std::ostringstream msg;
+                    msg << "Permutation #" << i << " indicates that "
+                        "reverse() is not idempotent.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (! looksDistinct(p, r)) {
+                    std::ostringstream msg;
+                    msg << "Permutation #" << i << " indicates that "
+                        "reverse() is not a different permutation.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                std::string s = p.str();
+                std::reverse(s.begin(), s.end());
+                if (s != r.str()) {
+                    std::ostringstream msg;
+                    msg << "Reverse of permutation #" << i << " does not have "
+                        "the reverse string representation.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
         void databases() {
             unsigned i;
             for (i = 0; i < 6; ++i) {
@@ -497,43 +541,6 @@ class NPerm4Test : public CppUnit::TestFixture {
             for (i = 0; i < 6; ++i)
                 if (NPerm4::S3[i] != NPerm4::Sn_1[i])
                     CPPUNIT_FAIL("Arrays S3 and Sn_1 disagree for NPerm4.");
-        }
-
-        void deprecatedArrays() {
-            unsigned i;
-
-            for (i = 0; i < 24; ++i) {
-                if (regina::allPermsS4[i] != NPerm4::S4[i])
-                    CPPUNIT_FAIL("The deprecated regina::allPermsS4 "
-                        "does not match the new NPerm4::S4.");
-                if (regina::allPermsS4Inv[i] != NPerm4::invS4[i])
-                    CPPUNIT_FAIL("The deprecated regina::allPermsS4 "
-                        "does not match the new NPerm4::S4.");
-                if (regina::orderedPermsS4[i] != NPerm4::orderedS4[i])
-                    CPPUNIT_FAIL("The deprecated regina::allPermsS4 "
-                        "does not match the new NPerm4::S4.");
-            }
-
-            for (i = 0; i < 6; ++i) {
-                if (regina::allPermsS3[i] != NPerm4::S3[i])
-                    CPPUNIT_FAIL("The deprecated regina::allPermsS4 "
-                        "does not match the new NPerm4::S4.");
-                if (regina::allPermsS3Inv[i] != NPerm4::invS3[i])
-                    CPPUNIT_FAIL("The deprecated regina::allPermsS4 "
-                        "does not match the new NPerm4::S4.");
-                if (regina::orderedPermsS3[i] != NPerm4::orderedS3[i])
-                    CPPUNIT_FAIL("The deprecated regina::allPermsS4 "
-                        "does not match the new NPerm4::S4.");
-            }
-
-            for (i = 0; i < 2; ++i) {
-                if (regina::allPermsS2[i] != NPerm4::S2[i])
-                    CPPUNIT_FAIL("The deprecated regina::allPermsS4 "
-                        "does not match the new NPerm4::S4.");
-                if (regina::allPermsS2Inv[i] != NPerm4::invS2[i])
-                    CPPUNIT_FAIL("The deprecated regina::allPermsS4 "
-                        "does not match the new NPerm4::S4.");
-            }
         }
 };
 

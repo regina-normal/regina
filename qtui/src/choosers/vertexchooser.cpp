@@ -83,16 +83,16 @@ void VertexChooser::select(regina::NVertex* option) {
 }
 
 QString VertexChooser::description(regina::NVertex* option) {
-    if (option->getNumberOfEmbeddings() == 1)
+    if (option->getDegree() == 1)
         return trUtf8("Vertex %2 — %3 (%4)")
             .arg(tri_->vertexIndex(option))
             .arg(tri_->tetrahedronIndex(
-                option->getEmbeddings().front().getTetrahedron()))
-            .arg(option->getEmbeddings().front().getVertex());
+                option->front().getTetrahedron()))
+            .arg(option->front().getVertex());
     else {
         const regina::NVertexEmbedding& e0 = option->getEmbedding(0);
         const regina::NVertexEmbedding& e1 = option->getEmbedding(1);
-        if (option->getNumberOfEmbeddings() == 2)
+        if (option->getDegree() == 2)
             return trUtf8("Vertex %1 — %2 (%3), %4 (%5)")
                 .arg(tri_->vertexIndex(option))
                 .arg(tri_->tetrahedronIndex(e0.getTetrahedron()))

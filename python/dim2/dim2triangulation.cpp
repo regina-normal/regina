@@ -36,59 +36,41 @@
 #include "algebra/ngrouppresentation.h"
 #include "dim2/dim2isomorphism.h"
 #include "dim2/dim2triangulation.h"
+#include "../generic/facehelper.h"
 
 using namespace boost::python;
 using regina::Dim2Triangulation;
+using regina::Triangulation;
 
 namespace {
     regina::Dim2Triangle* (Dim2Triangulation::*newTriangle_void)() =
         &Dim2Triangulation::newTriangle;
     regina::Dim2Triangle* (Dim2Triangulation::*newTriangle_string)(
         const std::string&) = &Dim2Triangulation::newTriangle;
-    regina::Dim2Triangle* (Dim2Triangulation::*getTriangle_non_const)(
-        unsigned long) = &Dim2Triangulation::getTriangle;
+    regina::Dim2Triangle* (Dim2Triangulation::*triangle_non_const)(
+        size_t) = &Dim2Triangulation::triangle;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_oneThreeMove,
         Dim2Triangulation::oneThreeMove, 1, 3);
 
     boost::python::list Dim2_getTriangles_list(Dim2Triangulation& t) {
         boost::python::list ans;
-        for (Dim2Triangulation::TriangleIterator it =
-                t.getTriangles().begin(); it != t.getTriangles().end(); ++it)
-            ans.append(boost::python::ptr(*it));
+        for (auto s : t.getTriangles())
+            ans.append(boost::python::ptr(s));
         return ans;
     }
 
     boost::python::list Dim2_getComponents_list(Dim2Triangulation& t) {
         boost::python::list ans;
-        for (Dim2Triangulation::ComponentIterator it =
-                t.getComponents().begin(); it != t.getComponents().end(); ++it)
-            ans.append(boost::python::ptr(*it));
+        for (auto c : t.getComponents())
+            ans.append(boost::python::ptr(c));
         return ans;
     }
 
     boost::python::list Dim2_getBoundaryComponents_list(Dim2Triangulation& t) {
         boost::python::list ans;
-        for (Dim2Triangulation::BoundaryComponentIterator it =
-                t.getBoundaryComponents().begin();
-                it != t.getBoundaryComponents().end(); ++it)
-            ans.append(boost::python::ptr(*it));
-        return ans;
-    }
-
-    boost::python::list Dim2_getVertices_list(Dim2Triangulation& t) {
-        boost::python::list ans;
-        for (Dim2Triangulation::VertexIterator it =
-                t.getVertices().begin(); it != t.getVertices().end(); ++it)
-            ans.append(boost::python::ptr(*it));
-        return ans;
-    }
-
-    boost::python::list Dim2_getEdges_list(Dim2Triangulation& t) {
-        boost::python::list ans;
-        for (Dim2Triangulation::EdgeIterator it =
-                t.getEdges().begin(); it != t.getEdges().end(); ++it)
-            ans.append(boost::python::ptr(*it));
+        for (auto b : t.getBoundaryComponents())
+            ans.append(boost::python::ptr(b));
         return ans;
     }
 
@@ -107,7 +89,7 @@ namespace {
         boost::python::list ans;
 
         std::list<regina::Dim2Isomorphism*> isos;
-        t.findAllIsomorphisms(other, isos);
+        t.findAllIsomorphisms(other, back_inserter(isos));
 
         for (std::list<regina::Dim2Isomorphism*>::iterator it =
                  isos.begin(); it != isos.end(); it++) {
@@ -122,7 +104,7 @@ namespace {
         boost::python::list ans;
 
         std::list<regina::Dim2Isomorphism*> isos;
-        t.findAllSubcomplexesIn(other, isos);
+        t.findAllSubcomplexesIn(other, back_inserter(isos));
 
         for (std::list<regina::Dim2Isomorphism*>::iterator it =
                  isos.begin(); it != isos.end(); it++) {
@@ -148,18 +130,27 @@ namespace {
 }
 
 void addDim2Triangulation() {
-    scope s = class_<Dim2Triangulation, bases<regina::NPacket>,
-            std::auto_ptr<Dim2Triangulation>,
-            boost::noncopyable>("Dim2Triangulation")
+    {
+    scope s = class_<Triangulation<2>, bases<regina::NPacket>,
+            std::auto_ptr<Triangulation<2>>,
+            boost::noncopyable>("Triangulation2")
         .def(init<const Dim2Triangulation&>())
         .def(init<const std::string&>())
+        .def("size", &Dim2Triangulation::size)
+        .def("countTriangles", &Dim2Triangulation::countTriangles)
         .def("getNumberOfTriangles", &Dim2Triangulation::getNumberOfTriangles)
         .def("getNumberOfSimplices", &Dim2Triangulation::getNumberOfSimplices)
         .def("getTriangles", Dim2_getTriangles_list)
+        .def("triangles", Dim2_getTriangles_list)
         .def("getSimplices", Dim2_getTriangles_list)
-        .def("getTriangle", getTriangle_non_const,
+        .def("simplices", Dim2_getTriangles_list)
+        .def("triangle", triangle_non_const,
             return_internal_reference<>())
-        .def("getSimplex", getTriangle_non_const,
+        .def("getTriangle", triangle_non_const,
+            return_internal_reference<>())
+        .def("getSimplex", triangle_non_const,
+            return_internal_reference<>())
+        .def("simplex", triangle_non_const,
             return_internal_reference<>())
         .def("triangleIndex", &Dim2Triangulation::triangleIndex)
         .def("simplexIndex", &Dim2Triangulation::simplexIndex)
@@ -179,20 +170,39 @@ void addDim2Triangulation() {
         .def("removeAllSimplices", &Dim2Triangulation::removeAllSimplices)
         .def("swapContents", &Dim2Triangulation::swapContents)
         .def("moveContentsTo", &Dim2Triangulation::moveContentsTo)
+        .def("countComponents", &Dim2Triangulation::countComponents)
         .def("getNumberOfComponents", &Dim2Triangulation::getNumberOfComponents)
         .def("getNumberOfBoundaryComponents",
             &Dim2Triangulation::getNumberOfBoundaryComponents)
+        .def("countFaces", &regina::python::countFaces<Dim2Triangulation, 2>)
+        .def("getNumberOfFaces",
+            &regina::python::countFaces<Dim2Triangulation, 2>)
+        .def("countVertices", &Dim2Triangulation::countVertices)
         .def("getNumberOfVertices", &Dim2Triangulation::getNumberOfVertices)
+        .def("countEdges", &Dim2Triangulation::countEdges)
         .def("getNumberOfEdges", &Dim2Triangulation::getNumberOfEdges)
+        .def("components", Dim2_getComponents_list)
         .def("getComponents", Dim2_getComponents_list)
         .def("getBoundaryComponents", Dim2_getBoundaryComponents_list)
-        .def("getVertices", Dim2_getVertices_list)
-        .def("getEdges", Dim2_getEdges_list)
+        .def("faces", &regina::python::faces<Dim2Triangulation, 2>)
+        .def("getFaces", &regina::python::faces<Dim2Triangulation, 2>)
+        .def("vertices", regina::python::faces_list<Dim2Triangulation, 2, 0>)
+        .def("getVertices", regina::python::faces_list<Dim2Triangulation, 2, 0>)
+        .def("edges", regina::python::faces_list<Dim2Triangulation, 2, 1>)
+        .def("getEdges", regina::python::faces_list<Dim2Triangulation, 2, 1>)
+        .def("component", &Dim2Triangulation::component,
+            return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim2Triangulation::getComponent,
             return_internal_reference<>())
         .def("getBoundaryComponent", &Dim2Triangulation::getBoundaryComponent,
             return_internal_reference<>())
+        .def("face", &regina::python::face<Dim2Triangulation, 2, size_t>)
+        .def("getFace", &regina::python::face<Dim2Triangulation, 2, size_t>)
+        .def("vertex", &Dim2Triangulation::vertex,
+            return_internal_reference<>())
         .def("getVertex", &Dim2Triangulation::getVertex,
+            return_internal_reference<>())
+        .def("edge", &Dim2Triangulation::edge,
             return_internal_reference<>())
         .def("getEdge", &Dim2Triangulation::getEdge,
             return_internal_reference<>())
@@ -204,17 +214,20 @@ void addDim2Triangulation() {
         .def("isIdenticalTo", &Dim2Triangulation::isIdenticalTo)
         .def("isIsomorphicTo", isIsomorphicTo_ptr,
             return_value_policy<manage_new_object>())
+        .def("findAllIsomorphisms", findAllIsomorphisms_list)
         .def("makeCanonical", &Dim2Triangulation::makeCanonical)
         .def("isContainedIn", isContainedIn_ptr,
             return_value_policy<manage_new_object>())
         .def("findAllIsomorphisms", findAllIsomorphisms_list)
         .def("findAllSubcomplexesIn", findAllSubcomplexesIn_list)
         .def("isEmpty", &Dim2Triangulation::isEmpty)
-        .def("size", &Dim2Triangulation::size)
         .def("isValid", &Dim2Triangulation::isValid)
         .def("getEulerChar", &Dim2Triangulation::getEulerChar)
         .def("isClosed", &Dim2Triangulation::isClosed)
+        .def("hasBoundaryFacets", &Dim2Triangulation::hasBoundaryFacets)
         .def("hasBoundaryEdges", &Dim2Triangulation::hasBoundaryEdges)
+        .def("countBoundaryFacets", &Dim2Triangulation::countBoundaryFacets)
+        .def("countBoundaryEdges", &Dim2Triangulation::countBoundaryEdges)
         .def("getNumberOfBoundaryEdges",
             &Dim2Triangulation::getNumberOfBoundaryEdges)
         .def("isOrientable", &Dim2Triangulation::isOrientable)
@@ -238,5 +251,8 @@ void addDim2Triangulation() {
 
     implicitly_convertible<std::auto_ptr<Dim2Triangulation>,
         std::auto_ptr<regina::NPacket> >();
+    }
+
+    scope().attr("Dim2Triangulation") = scope().attr("Triangulation2");
 }
 

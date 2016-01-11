@@ -280,7 +280,8 @@ class GlobalArray2D {
         template<size_t newCols>
         GlobalArray2D(const T newData[][newCols], size_t newRows) :
                 data(new Row[newRows]), nRows(newRows) {
-            BOOST_STATIC_ASSERT(newCols > 0);
+            static_assert(newCols > 0,
+                "GlobalArray2D: newCols must be positive.");
             for (size_t i = 0; i < nRows; i++)
                 data[i].init(newData[i], newCols);
         }
@@ -441,7 +442,8 @@ class GlobalArray2D {
          */
         template<size_t newCols>
         void init(const T newData[][newCols], size_t newRows) {
-            BOOST_STATIC_ASSERT(newCols > 0);
+            static_assert(newCols > 0,
+                "GlobalArray2D: newCols must be positive.");
             data = new Row[newRows];
             nRows = newRows;
             for (size_t i = 0; i < nRows; i++)
@@ -532,8 +534,10 @@ class GlobalArray3D {
         template<size_t newDim2, size_t newDim3>
         GlobalArray3D(const T newData[][newDim2][newDim3], size_t newDim1) :
                 data(new Subarray[newDim1]), nSubarrays(newDim1) {
-            BOOST_STATIC_ASSERT(newDim2 > 0);
-            BOOST_STATIC_ASSERT(newDim3 > 0);
+            static_assert(newDim2 > 0,
+                "GlobalArray3D: newDim2 must be positive.");
+            static_assert(newDim3 > 0,
+                "GlobalArray3D: newDim3 must be positive.");
             for (size_t i = 0; i < newDim1; i++)
                 data[i].init(newData[i], newDim2);
         }

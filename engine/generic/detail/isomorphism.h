@@ -32,123 +32,89 @@
 
 /* end stub */
 
-/*! \file generic/ngenericisomorphism.h
- *  \brief Deals with combinatorial isomorphisms of \a n-manifold
+/*! \file generic/detail/isomorphism.h
+ *  \brief Implementation details for combinatorial isomorphisms between
  *  triangulations.
  */
 
-#ifndef __NGENERALISOMORPHISM_H
+#ifndef __ISOMORPHISM_H_DETAIL
 #ifndef __DOXYGEN
-#define __NGENERALISOMORPHISM_H
+#define __ISOMORPHISM_H_DETAIL
 #endif
 
 #include "regina-core.h"
 #include "output.h"
-#include "generic/dimtraits.h"
 #include "generic/nfacetspec.h"
+#include "maths/nperm.h"
+#include <algorithm>
 #include <boost/noncopyable.hpp>
 
 namespace regina {
 
+template <int dim> class Isomorphism;
+template <int dim> class Simplex;
+template <int dim> class Triangulation;
+
+namespace detail {
+
 /**
- * \weakgroup generic
+ * \weakgroup detail
  * @{
  */
 
 /**
- * A dimension-agnostic base class that represents a combinatorial
- * isomorphism from one <i>dim</i>-manifold triangulation into another.
+ * Provides core functionality for combinatorial isomorphisms between
+ * <i>dim</i>-manifold triangulations.
  *
- * Each of Regina's \ref stddim "standard dimensions" offers its own
- * subclass with richer functionality; users typically do not need to
- * work with this template base class directly.
+ * Such an isomorphism is represented by the class Isomorphism<dim>,
+ * which uses this as a base class.  End users should not need to refer
+ * to IsomorphismBase directly.
  *
- * In essence, a combinatorial isomorphism from triangulation \a T to
- * triangulation \a U is a one-to-one map from the simplices of \a T to the
- * simplices of \a U that allows relabelling of both the simplices and
- * their facets (or equivalently, their vertices), and that preserves
- * gluings across adjacent simplices.
+ * See the Isomorphism class notes for further information.
  *
- * More precisely:  An isomorphism consists of (i) a one-to-one map \a f
- * from the simplices of \a T to the simplices of \a U, and (ii) for each
- * simplex \a S of \a T, a permutation \a f<sub>S</sub> of the facets
- * (0,...,\a dim) of \a S, for which the following condition holds:
+ * \ifacespython This base class is not present, but the "end user" class
+ * Isomorphism<dim> is.
  *
- *   - If facet \a k of simplex \a S and facet \a k' of simplex \a S'
- *     are identified in \a T, then facet \a f<sub>S</sub>(\a k) of \a f(S)
- *     and facet \a f<sub>S'</sub>(\a k') of \a f(S') are identified in \a U.
- *     Moreover, their gluing is consistent with the facet/vertex permutations;
- *     that is, there is a commutative square involving the gluing maps in
- *     \a T and \a U and the permutations \a f<sub>S</sub> and
- *     \a f<sub>S'</sub>.
- *
- * Isomorphisms can be <i>boundary complete</i> or
- * <i>boundary incomplete</i>.  A boundary complete isomorphism
- * satisfies the additional condition:
- *
- *   - If facet \a x is a boundary facet of \a T then facet \a f(x) is a
- *     boundary facet of \a U.
- *
- * A boundary complete isomorphism thus indicates that a copy of
- * triangulation \a T is present as an entire component (or components) of \a U,
- * whereas a boundary incomplete isomorphism represents an embedding of a
- * copy of triangulation \a T as a subcomplex of some possibly larger component
- * (or components) of \a U.
- *
- * Note that for all types of isomorphism, triangulation \a U is allowed
- * to contain more simplices than triangulation \a T.
- *
- * \headers Parts of this template class are implemented in a separate header
- * (ngenericisomorphism-impl.h), which is not included automatically by
- * this file.  However, typical end users should never need this extra header,
- * since Regina's calculation engine already includes explicit instantiations
- * for \ref stddim "standard dimensions".
- *
- * \ifacespython Not present, though the dimension-specific subclasses
- * (such as NIsomorphism and Dim2Isomorphism) are available for Python users.
- *
- * \tparam dim The dimension of the underlying triangulation.
+ * \tparam dim the dimension of the triangulations that this isomorphism
+ * class works with.  This must be at least 2.
  */
 template <int dim>
-class NGenericIsomorphism :
-        public DimTraits<dim>,
-        public Output<NGenericIsomorphism<dim> >,
+class IsomorphismBase :
+        public Output<IsomorphismBase<dim>>,
         public boost::noncopyable {
-    public:
-        using typename DimTraits<dim>::Isomorphism;
-        using typename DimTraits<dim>::Perm;
-        using typename DimTraits<dim>::Simplex;
-        using typename DimTraits<dim>::Triangulation;
-
+    static_assert(dim >= 2, "Isomorphism requires dimension >= 2.");
     protected:
         unsigned nSimplices_;
             /**< The number of simplices in the source triangulation. */
         int* simpImage_;
-            /**< The simplex of the destination triangulation that
-                 each simplex of the source triangulation maps to. */
-        Perm* facetPerm_;
+            /**< Stores the simplex of the destination triangulation that
+                 each simplex of the source triangulation maps to.
+                 This array has size nSimplices_. */
+        NPerm<dim+1>* facetPerm_;
             /**< The permutation applied to the facets of each
-                 source simplex. */
+                 source simplex.  This array has size nSimplices_. */
 
     public:
         /**
          * Creates a new isomorphism with no initialisation.
+         * The images of the simplices and their vertices must be
+         * explicitly set using simpImage() and facetPerm().
          *
          * @param nSimplices the number of simplices in the source
-         * triangulation associated with this isomorphism; this may be zero.
+         * triangulation associated with this isomorphism.
+         * This is allowed to be zero.
          */
-        NGenericIsomorphism(unsigned nSimplices);
+        IsomorphismBase(unsigned nSimplices);
         /**
-         * Creates a new isomorphism identical to the given isomorphism.
+         * Creates a new copy of the given isomorphism.
          *
-         * @param cloneMe the isomorphism upon which to base the new
-         * isomorphism.
+         * @param copy the isomorphism to copy.
          */
-        NGenericIsomorphism(const NGenericIsomorphism& cloneMe);
+        IsomorphismBase(const IsomorphismBase<dim>& copy);
         /**
          * Destroys this isomorphism.
          */
-        ~NGenericIsomorphism();
+        ~IsomorphismBase();
 
         /**
          * Returns the number of simplices in the source triangulation
@@ -158,18 +124,28 @@ class NGenericIsomorphism :
          *
          * @return the number of simplices in the source triangulation.
          */
+        unsigned size() const;
+
+        /**
+         * A deprecated alias for size(), which returns the number of
+         * simplices in the source triangulation associated with this
+         * isomorphism.
+         *
+         * \deprecated Simply call size() instead.
+         *
+         * @return the number of simplices in the source triangulation.
+         */
         unsigned getSourceSimplices() const;
 
         /**
          * Determines the image of the given source simplex under
          * this isomorphism.
          *
-         * \ifacespython This is not available for Python users, even in
-         * the dimension-specific subclasses.  However, the read-only
-         * version of this routine is.
+         * \ifacespython This is not available for Python users.
+         * However, the read-only version of this routine is.
          *
          * @param sourceSimp the index of the source simplex; this must
-         * be between 0 and <tt>getSourceSimplices()-1</tt> inclusive.
+         * be between 0 and <tt>size()-1</tt> inclusive.
          * @return a reference to the index of the destination simplex
          * that the source simplex maps to.
          */
@@ -179,7 +155,7 @@ class NGenericIsomorphism :
          * this isomorphism.
          *
          * @param sourceSimp the index of the source simplex; this must
-         * be between 0 and <tt>getSourceSimplices()-1</tt> inclusive.
+         * be between 0 and <tt>size()-1</tt> inclusive.
          * @return the index of the destination simplex
          * that the source simplex maps to.
          */
@@ -192,17 +168,16 @@ class NGenericIsomorphism :
          * facet <tt>facetPerm(sourceSimp)[i]</tt> of simplex
          * <tt>simpImage(sourceSimp)</tt>.
          *
-         * \ifacespython This is not available for Python users, even in
-         * the dimension-specific subclasses.  However, the read-only
-         * version of this routine is.
+         * \ifacespython This is not available for Python users.
+         * However, the read-only version of this routine is.
          *
          * @param sourceSimp the index of the source simplex containing
          * the original (\a dim + 1) facets; this must be between 0 and
-         * <tt>getSourceSimplices()-1</tt> inclusive.
+         * <tt>size()-1</tt> inclusive.
          * @return a read-write reference to the permutation applied to the
          * facets of the source simplex.
          */
-        typename DimTraits<dim>::Perm& facetPerm(unsigned sourceSimp);
+        NPerm<dim+1>& facetPerm(unsigned sourceSimp);
         /**
          * Determines the permutation that is applied to the (\a dim + 1)
          * facets of the given source simplex under this isomorphism.
@@ -212,18 +187,18 @@ class NGenericIsomorphism :
          *
          * @param sourceSimp the index of the source simplex containing
          * the original (\a dim + 1) facets; this must be between 0 and
-         * <tt>getSourceSimplices()-1</tt> inclusive.
+         * <tt>size()-1</tt> inclusive.
          * @return the permutation applied to the facets of the
          * source simplex.
          */
-        typename DimTraits<dim>::Perm facetPerm(unsigned sourceSimp) const;
+        NPerm<dim+1> facetPerm(unsigned sourceSimp) const;
         /**
          * Determines the image of the given source simplex facet
-         * under this isomorphism.  Note that a value only is returned; this
-         * routine cannot be used to alter the isomorphism.
+         * under this isomorphism.  This operator returns by value:
+         * it cannot be used to alter the isomorphism.
          *
          * @param source the given source simplex facet; this must
-         * be one of the (\a dim + 1) facets of one of the getSourceSimplices()
+         * be one of the (\a dim + 1) facets of one of the size()
          * simplices in the source triangulation.
          * @return the image of the source simplex facet under this
          * isomorphism.
@@ -235,7 +210,7 @@ class NGenericIsomorphism :
          * isomorphism should be deleted by the caller when it is no longer
          * required.
          */
-        Isomorphism* inverse() const;
+        Isomorphism<dim>* inverse() const;
 
         /**
          * Determines whether or not this is an identity isomorphism.
@@ -250,47 +225,42 @@ class NGenericIsomorphism :
         bool isIdentity() const;
 
         /**
-         * This NGenericIsomorphism object represents a combinatorial 
-         * identification from a triangulation T to a triangulation U. 
-         * This routine produces the triangulation U, i.e. the range. The 
-         * input parameter (original) represents the domain, T.  
+         * Applies this isomorphism to the given triangulation, and
+         * returns the result as a new triangulation.
          *
-         * The given triangulation (call this T) is not modified in any way.
-         * A new triangulation (call this U) is returned, so that this
+         * An isomorphism represents a combinatorial map from a triangulation
+         * \a T to a triangulation \a U.  This routine treats the given
+         * triangulation as the domain \a T, and returns the corresponding
+         * range \a U.  The given triangulation \a T is not modified in any way.
+         *
+         * In more detail: A new triangulation \a U is returned, so that this
          * isomorphism represents a one-to-one, onto and boundary complete
-         * isomorphism from T to U.  That is, T and U are combinatorially
-         * identical triangulations, and this isomorphism describes the
-         * corresponding mapping between simplex and simplex facets.
+         * isomorphism from \a T to \a U.  That is, \a T and \a U will be
+         * combinatorially identical triangulations, and this isomorphism
+         * describes the mapping from the simplices of \a T and their facets
+         * to the simplices of \a U and their facets.
          *
-         * The resulting triangulation U is newly created, and must be
+         * The resulting triangulation \a U is newly created, and must be
          * destroyed by the caller of this routine.
          *
          * There are several preconditions to this routine.  This
          * routine does a small amount of sanity checking (and returns 0
          * if an error is detected), but it certainly does not check the
-         * entire set of preconditions.  It is up to the caller of this
-         * routine to verify that all of the following preconditions are
-         * met.
+         * full set of preconditions.  It is up to the caller of this
+         * routine to verify that all of the following preconditions are met.
          *
          * \pre The number of simplices in the given triangulation is
-         * precisely the number returned by getSourceSimplices() for
-         * this isomorphism.
-         * \pre This is a valid isomorphism (i.e., it has been properly
-         * initialised, so that all simplex images are non-negative
-         * and distinct, and all facet permutations are real permutations
-         * of (0,...,\a dim).
-         * \pre Each simplex image for this isomorphism lies
-         * between 0 and <tt>getSourceSimplices()-1</tt> inclusive
-         * (i.e., this isomorphism does not represent a mapping from a
+         * precisely the number returned by size() for this isomorphism.
+         * \pre The simplex images are precisely 0,1,...,size()-1 in some
+         * order (i.e., this isomorphism does not represent a mapping from a
          * smaller triangulation into a larger triangulation).
          *
          * @param original the triangulation to which this isomorphism
          * should be applied.
-         * @return the resulting new triangulation, or 0 if a problem
+         * @return the new isomorphic triangulation, or 0 if a problem
          * was encountered (i.e., an unmet precondition was noticed).
          */
-        typename DimTraits<dim>::Triangulation* apply(
-            const typename DimTraits<dim>::Triangulation* original) const;
+        Triangulation<dim>* apply(const Triangulation<dim>* original) const;
 
         /**
          * Applies this isomorphism to the given triangulation,
@@ -298,33 +268,27 @@ class NGenericIsomorphism :
          *
          * This is similar to apply(), except that instead of creating a
          * new triangulation, the simplices and vertices of the given
-         * triangulation are modified directly.
+         * triangulation are modified in-place.
          *
          * See apply() for further details on how this operation is performed.
          *
          * As with apply(), there are several preconditions to this routine.
          * This routine does a small amount of sanity checking (and returns
          * without changes if an error is detected), but it certainly does
-         * not check the entire set of preconditions.  It is up to the
+         * not check the full set of preconditions.  It is up to the
          * caller of this routine to verify that all of the following
          * preconditions are met.
          *
          * \pre The number of simplices in the given triangulation is
-         * precisely the number returned by getSourceSimplices() for
-         * this isomorphism.
-         * \pre This is a valid isomorphism (i.e., it has been properly
-         * initialised, so that all simplex images are non-negative
-         * and distinct, and all facet permutations are real permutations
-         * of (0,...,\a dim).
-         * \pre Each simplex image for this isomorphism lies
-         * between 0 and <tt>getSourceSimplices()-1</tt> inclusive
-         * (i.e., this isomorphism does not represent a mapping from a
+         * precisely the number returned by size() for this isomorphism.
+         * \pre The simplex images are precisely 0,1,...,size()-1 in some
+         * order (i.e., this isomorphism does not represent a mapping from a
          * smaller triangulation into a larger triangulation).
          *
          * @param tri the triangulation to which this isomorphism
          * should be applied.
          */
-        void applyInPlace(typename DimTraits<dim>::Triangulation* tri) const;
+        void applyInPlace(Triangulation<dim>* tri) const;
 
         /**
          * Writes a short text representation of this object to the
@@ -346,17 +310,27 @@ class NGenericIsomorphism :
         void writeTextLong(std::ostream& out) const;
 
         /**
-         * Returns a random isomorphism for the given number of
-         * simplices.  This isomorphism will reorder simplices
+         * Returns the identity isomorphism for the given number of simplices.
+         * This isomorphism sends every simplex and every vertex to itself.
+         *
+         * The isomorphism will be newly constructed, and must be
+         * destroyed by the caller of this routine.
+         *
+         * @param nSimplices the number of simplices that the new
+         * isomorphism should operate upon.
+         * @return the newly constructed identity isomorphism.
+         */
+        static Isomorphism<dim>* identity(unsigned nSimplices);
+
+        /**
+         * Returns a random isomorphism for the given number of simplices.
+         * This isomorphism will reorder simplices
          * 0 to <tt>nSimplices-1</tt> in a random fashion, and for
          * each simplex a random permutation of its (\a dim + 1) vertices
          * will be selected.
          *
          * The isomorphism will be newly constructed, and must be
-         * destroyed by the caller of this routine.  The new isomorphism
-         * will be of the appropriate dimension-specific subclass
-         * (e.g., NIsomorphism for \a dim=3, or Dim2Isomorphism for
-         * \a dim=2).
+         * destroyed by the caller of this routine.
          *
          * Note that both the STL random number generator and the
          * standard C function rand() are used in this routine.  All
@@ -367,8 +341,7 @@ class NGenericIsomorphism :
          * isomorphism should operate upon.
          * @return the newly constructed random isomorphism.
          */
-        static typename DimTraits<dim>::Isomorphism* random(
-            unsigned nSimplices);
+        static Isomorphism<dim>* random(unsigned nSimplices);
 
         /**
          * Test for equality between two isomorphisms. Two isomorphisms are
@@ -376,7 +349,7 @@ class NGenericIsomorphism :
          * and if for every simplex they agree on both the image of the
          * simplex, and the permutations of the facets of the simplex.
          */
-        bool operator==(const Isomorphism& rhs) const;
+        bool operator==(const IsomorphismBase<dim>& rhs) const;
 
         /**
          * Test for inequality between two isomorphisms. Two isomorphisms are
@@ -384,7 +357,7 @@ class NGenericIsomorphism :
          * and if for every simplex they agree on both the image of the
          * simplex, and the permutations of the facets of the simplex.
          */
-        bool operator!=(const Isomorphism& rhs) const;
+        bool operator!=(const IsomorphismBase<dim>& rhs) const;
 
         /**
          * Combine two isomorphisms. Note that this is done right-to-left. That
@@ -394,71 +367,76 @@ class NGenericIsomorphism :
          * If f and g do not represent the exact same number of simplices, the
          * returned isomorphism is not guaranteed to be valid.
          */
-        Isomorphism operator*(const Isomorphism& rhs) const;
+        Isomorphism<dim> operator*(const IsomorphismBase<dim>& rhs) const;
 
 };
 
 /*@}*/
 
-// Help the compiler by noting which explicit instantiations we offer.
-extern template class REGINA_API NGenericIsomorphism<2>;
-extern template class REGINA_API NGenericIsomorphism<3>;
-
-// Inline functions for NGenericIsomorphism
+// Inline functions for IsomorphismBase
 
 template <int dim>
-inline NGenericIsomorphism<dim>::NGenericIsomorphism(unsigned nSimplices) :
+inline IsomorphismBase<dim>::IsomorphismBase(unsigned nSimplices) :
         nSimplices_(nSimplices),
-        simpImage_(nSimplices > 0 ? new int[nSimplices] : 0),
-        facetPerm_(nSimplices > 0 ? new Perm[nSimplices] : 0) {
+        simpImage_(new int[nSimplices]),
+        facetPerm_(new NPerm<dim+1>[nSimplices]) {
 }
 
 template <int dim>
-inline NGenericIsomorphism<dim>::~NGenericIsomorphism() {
-    // Always safe to delete null.
+inline IsomorphismBase<dim>::IsomorphismBase(const IsomorphismBase<dim>& copy) :
+        nSimplices_(copy.nSimplices_),
+        simpImage_(new int[copy.nSimplices_]),
+        facetPerm_(new NPerm<dim+1>[copy.nSimplices_]) {
+    std::copy(copy.simpImage_, copy.simpImage_ + nSimplices_, simpImage_);
+    std::copy(copy.facetPerm_, copy.facetPerm_ + nSimplices_, facetPerm_);
+}
+
+template <int dim>
+inline IsomorphismBase<dim>::~IsomorphismBase() {
     delete[] simpImage_;
     delete[] facetPerm_;
 }
 
 template <int dim>
-inline unsigned NGenericIsomorphism<dim>::getSourceSimplices() const {
+inline unsigned IsomorphismBase<dim>::size() const {
     return nSimplices_;
 }
 
 template <int dim>
-inline int& NGenericIsomorphism<dim>::simpImage(unsigned sourceSimp) {
+inline unsigned IsomorphismBase<dim>::getSourceSimplices() const {
+    return nSimplices_;
+}
+
+template <int dim>
+inline int& IsomorphismBase<dim>::simpImage(unsigned sourceSimp) {
     return simpImage_[sourceSimp];
 }
 
 template <int dim>
-inline int NGenericIsomorphism<dim>::simpImage(unsigned sourceSimp) const {
+inline int IsomorphismBase<dim>::simpImage(unsigned sourceSimp) const {
     return simpImage_[sourceSimp];
 }
 
 template <int dim>
-inline typename DimTraits<dim>::Perm&
-        NGenericIsomorphism<dim>::facetPerm(
-        unsigned sourceSimp) {
+inline NPerm<dim+1>& IsomorphismBase<dim>::facetPerm(unsigned sourceSimp) {
     return facetPerm_[sourceSimp];
 }
 
 template <int dim>
-inline typename DimTraits<dim>::Perm
-        NGenericIsomorphism<dim>::facetPerm(
-        unsigned sourceSimp) const {
+inline NPerm<dim+1> IsomorphismBase<dim>::facetPerm(unsigned sourceSimp) const {
     return facetPerm_[sourceSimp];
 }
 
 template <int dim>
-inline NFacetSpec<dim> NGenericIsomorphism<dim>::operator [] (
+inline NFacetSpec<dim> IsomorphismBase<dim>::operator [] (
         const NFacetSpec<dim>& source) const {
     return NFacetSpec<dim>(simpImage_[source.simp],
         facetPerm_[source.simp][source.facet]);
 }
 
 template <int dim>
-inline bool NGenericIsomorphism<dim>::operator==(
-        const typename DimTraits<dim>::Isomorphism& rhs) const {
+bool IsomorphismBase<dim>::operator==(
+        const IsomorphismBase<dim>& rhs) const {
     if (this->getSourceSimplices() != rhs.getSourceSimplices())
         return false;
     for(int simp = 0; simp < this->getSourceSimplices(); simp++) {
@@ -471,15 +449,15 @@ inline bool NGenericIsomorphism<dim>::operator==(
 }
 
 template <int dim>
-inline bool NGenericIsomorphism<dim>::operator!=(
-        const typename DimTraits<dim>::Isomorphism& rhs) const {
+inline bool IsomorphismBase<dim>::operator!=(
+        const IsomorphismBase<dim>& rhs) const {
     return !(*this == rhs);
 }
 
 template <int dim>
-inline typename DimTraits<dim>::Isomorphism NGenericIsomorphism<dim>::operator*(
-        const typename DimTraits<dim>::Isomorphism& rhs) const {
-    typename DimTraits<dim>::Isomorphism result(this->getSourceSimplices());
+Isomorphism<dim> IsomorphismBase<dim>::operator*(
+        const IsomorphismBase<dim>& rhs) const {
+    Isomorphism<dim> result(this->getSourceSimplices());
     for(int simp = 0; simp < result.getSourceSimplices(); simp++) {
         result.facetPerm_[simp] = this->facetPerm(rhs.simpImage(simp)) *
             rhs.facetPerm(simp);
@@ -488,7 +466,125 @@ inline typename DimTraits<dim>::Isomorphism NGenericIsomorphism<dim>::operator*(
     return result;
 }
 
-} // namespace regina
+template <int dim>
+bool IsomorphismBase<dim>::isIdentity() const {
+    for (unsigned p = 0; p < nSimplices_; ++p) {
+        if (simpImage_[p] != p)
+            return false;
+        if (! facetPerm_[p].isIdentity())
+            return false;
+    }
+    return true;
+}
+
+template <int dim>
+Triangulation<dim>* IsomorphismBase<dim>::apply(
+        const Triangulation<dim>* original) const {
+    if (original->getNumberOfSimplices() != nSimplices_)
+        return 0;
+
+    if (nSimplices_ == 0)
+        return new Triangulation<dim>();
+
+    Triangulation<dim>* ans = new Triangulation<dim>();
+    Simplex<dim>** tet = new Simplex<dim>*[nSimplices_];
+    unsigned long t;
+    int f;
+
+    typename Triangulation<dim>::ChangeEventSpan span(ans);
+    for (t = 0; t < nSimplices_; t++)
+        tet[t] = ans->newSimplex();
+
+    for (t = 0; t < nSimplices_; t++)
+        tet[simpImage_[t]]->setDescription(
+            original->getSimplex(t)->getDescription());
+
+    const Simplex<dim> *myTet, *adjTet;
+    unsigned long adjTetIndex;
+    NPerm<dim+1> gluingPerm;
+    for (t = 0; t < nSimplices_; t++) {
+        myTet = original->getSimplex(t);
+        for (f = 0; f <= dim; f++)
+            if ((adjTet = myTet->adjacentSimplex(f))) {
+                // We have an adjacent simplex.
+                adjTetIndex = original->simplexIndex(adjTet);
+                gluingPerm = myTet->adjacentGluing(f);
+
+                // Make the gluing from one side only.
+                if (adjTetIndex > t || (adjTetIndex == t &&
+                        gluingPerm[f] > f))
+                    tet[simpImage_[t]]->joinTo(facetPerm_[t][f],
+                        tet[simpImage_[adjTetIndex]],
+                        facetPerm_[adjTetIndex] * gluingPerm *
+                            facetPerm_[t].inverse());
+            }
+    }
+
+    delete[] tet;
+    return ans;
+}
+
+template <int dim>
+void IsomorphismBase<dim>::applyInPlace(Triangulation<dim>* tri) const {
+    if (tri->getNumberOfSimplices() != nSimplices_)
+        return;
+
+    if (nSimplices_ == 0)
+        return;
+
+    Triangulation<dim>* staging = apply(tri);
+    tri->swapContents(*staging);
+    delete staging;
+}
+
+template <int dim>
+inline void IsomorphismBase<dim>::writeTextShort(std::ostream& out) const {
+    out << "Isomorphism between " << dim << "-manifold triangulations";
+}
+
+template <int dim>
+inline void IsomorphismBase<dim>::writeTextLong(std::ostream& out) const {
+    for (unsigned i = 0; i < nSimplices_; ++i)
+        out << i << " -> " << simpImage_[i] << " (" << facetPerm_[i] << ")\n";
+}
+
+template <int dim>
+inline Isomorphism<dim>* IsomorphismBase<dim>::identity(unsigned nSimplices) {
+    Isomorphism<dim>* id = new Isomorphism<dim>(nSimplices);
+    for (unsigned i = 0; i < nSimplices; ++i)
+        id->simpImage_[i] = i;
+    return id;
+}
+
+template <int dim>
+Isomorphism<dim>* IsomorphismBase<dim>::inverse() const {
+    Isomorphism<dim>* ans = new Isomorphism<dim>(nSimplices_);
+    for (unsigned i = 0; i < nSimplices_; i++) {
+        ans->simpImage_[simpImage_[i]] = i;
+        ans->facetPerm_[simpImage_[i]] = facetPerm_[i].inverse();
+    }
+    return ans;
+
+}
+
+template <int dim>
+Isomorphism<dim>* IsomorphismBase<dim>::random(unsigned nSimplices) {
+    Isomorphism<dim>* ans = new Isomorphism<dim>(nSimplices);
+
+    // Randomly choose the destination simplices.
+    unsigned i;
+    for (i = 0; i < nSimplices; i++)
+        ans->simpImage_[i] = i;
+    std::random_shuffle(ans->simpImage_, ans->simpImage_ + nSimplices);
+
+    // Randomly choose the individual permutations.
+    for (i = 0; i < nSimplices; i++)
+        ans->facetPerm_[i] = NPerm<dim+1>::rand();
+
+    return ans;
+}
+
+} } // namespace regina::detail
 
 #endif
 

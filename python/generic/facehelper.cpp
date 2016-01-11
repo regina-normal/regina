@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Computational Engine                                                  *
+ *  Python Interface                                                      *
  *                                                                        *
  *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,28 +32,20 @@
 
 /* end stub */
 
-#include "triangulation/ncomponent.h"
-#include "triangulation/ntetrahedron.h"
+#include <boost/python.hpp>
+#include <sstream>
+#include "facehelper.h"
 
 namespace regina {
+namespace python {
 
-void NComponent::writeTextShort(std::ostream& out) const {
-    if (tetrahedra_.size() == 1)
-        out << "Component with 1 tetrahedron";
-    else
-        out << "Component with " << getNumberOfTetrahedra() << " tetrahedra";
+void invalidFaceDimension(const char* functionName, int dim) {
+    std::ostringstream s;
+    s << functionName << "() requires a face dimension in the range 0.."
+        << (dim - 1);
+    PyErr_SetString(PyExc_AssertionError, s.str().c_str());
+    ::boost::python::throw_error_already_set();
 }
 
-void NComponent::writeTextLong(std::ostream& out) const {
-    writeTextShort(out);
-    out << std::endl;
-
-    out << (tetrahedra_.size() == 1 ? "Tetrahedron:" : "Tetrahedra:");
-    std::vector<NTetrahedron*>::const_iterator it;
-    for (it = tetrahedra_.begin(); it != tetrahedra_.end(); ++it)
-        out << ' ' << (*it)->markedIndex();
-    out << std::endl;
-}
-
-} // namespace regina
+} } // namespace regina::python
 

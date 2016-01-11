@@ -49,14 +49,65 @@
 namespace regina {
 
 /**
- * Gives access to k-byte integer types, where \a k is a constant that
- * is not known until compile time.
+ * Returns the number of bits required to store integers in the range
+ * 0,...,<i>n</i>-1.
+ * This is simply the number of bits in the binary expansion of <i>n</i>-1.
+ *
+ * If \a n is non-positive then this function will return 0.
+ *
+ * \ifacespython In Python, this routine fixes the integer type
+ * \a IntType to be \c long.
+ *
+ * \param n any integer.
+ * \return the number of bits required to store 0,...,<i>n</i>-1.
+ *
+ * \tparam IntType any integer type, such as \c int, \c long, and so on.
+ */
+template <typename IntType>
+constexpr int bitsRequired(IntType n) {
+    return (n <= 1 ? 0 : (bitsRequired((n + 1) / 2)) + 1);
+}
+
+/**
+ * Returns the smallest integer power of two that is greater than or equal to
+ * the given argument \a n.
+ *
+ * If \a n is non-positive then this function will return 1.
+ *
+ * \ifacespython In Python, this routine fixes the integer type
+ * \a IntType to be \c long.
+ *
+ * \warning Even though the return value is the same type as the
+ * argument \a n, this routine may still overflow.  For example, if
+ * \a IntType is a signed char then nextPowerOfTwo(127) will return -128, and
+ * if \a IntType is an unsigned char then nextPowerOfTwo(255) will return 0.
+ * Be sure that \a IntType is large enough for your requirements.
+ *
+ * \param n any integer.
+ * \return the smallest integer power of two that is &ge; \a n.
+ *
+ * \tparam IntType any integer type, such as \c int, \c long, and so on.
+ */
+template <typename IntType>
+constexpr IntType nextPowerOfTwo(IntType n) {
+    return (n <= 1 ? 1 : (nextPowerOfTwo((n + 1) / 2)) << 1);
+}
+
+/**
+ * Gives access to native integer types that hold \e exactly \a k bytes,
+ * where \a k may be any compile-time constant.
+ *
+ * \tparam k the exact number of bytes in the native integer types.
+ *
+ * \ifacespython Not present.
+ *
+ * @see IntOfMinSize
  */
 template <int bytes>
 struct IntOfSize {
     /**
-     * A signed integer type with \a k bytes, where \a k is the template
-     * parameter.
+     * A native signed integer type with exactly \a k bytes, where \a k is the
+     * template parameter.
      *
      * The default is \c void, which indicates that Regina does not know
      * how to access an integer type of the requested size.
@@ -64,13 +115,44 @@ struct IntOfSize {
     typedef void type;
 
     /**
-     * An unsigned integer type with \a k bytes, where \a k is the template
-     * parameter.
+     * A native unsigned integer type with exactly \a k bytes, where \a k is the
+     * template parameter.
      *
      * The default is \c void, which indicates that Regina does not know
      * how to access an integer type of the requested size.
      */
     typedef void utype;
+};
+
+/**
+ * Gives access to native integer types that hold <em>at least</em> \a k bytes,
+ * where \a k may be any compile-time constant.
+ *
+ * \tparam k the minimum number of bytes in the native integer types.
+ *
+ * \ifacespython Not present.
+ *
+ * @see IntOfSize
+ */
+template <int bytes>
+struct IntOfMinSize {
+    /**
+     * A native signed integer type with at least \a k bytes, where \a k is
+     * the template parameter.
+     *
+     * The default is \c void, which indicates that Regina does not know
+     * how to access an integer type of the requested size.
+     */
+    typedef typename IntOfSize<nextPowerOfTwo(bytes)>::type type;
+
+    /**
+     * A native unsigned integer type with at least \a k bytes, where \a k is
+     * the template parameter.
+     *
+     * The default is \c void, which indicates that Regina does not know
+     * how to access an integer type of the requested size.
+     */
+    typedef typename IntOfSize<nextPowerOfTwo(bytes)>::utype utype;
 };
 
 #ifndef __DOXYGEN

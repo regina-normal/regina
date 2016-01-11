@@ -44,6 +44,7 @@
 #include "testsuite/angle/testangle.h"
 #include "testsuite/census/testcensus.h"
 #include "testsuite/dim2/testdim2.h"
+#include "testsuite/generic/testgeneric.h"
 #include "testsuite/maths/testmaths.h"
 #include "testsuite/snappea/testsnappea.h"
 #include "testsuite/subcomplex/testsubcomplex.h"
@@ -110,9 +111,11 @@ void populateTests(CppUnit::TextTestRunner& runner) {
     // Maths:
     addNInteger(runner);
     addNRational(runner);
+    addNPerm2(runner);
     addNPerm3(runner);
     addNPerm4(runner);
     addNPerm5(runner);
+    addNPerm(runner);
     addNPrimes(runner);
     addNumberTheory(runner);
     addMatrixOps(runner);
@@ -130,6 +133,9 @@ void populateTests(CppUnit::TextTestRunner& runner) {
     addConnectedSumDecomp(runner);
     addNIsomorphism(runner);
     addNHomologicalData(runner);
+
+    // Generic triangulations:
+    addFaceNumbering(runner);
 
     // Subcomplexes:
     addNStandardTriangulation(runner);

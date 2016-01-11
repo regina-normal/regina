@@ -11,8 +11,6 @@ SET ( FILES
   euler
   hyperbolic
   ncensus
-  nfacepairing
-  ngenericfacetpairing
   ngenericgluingperms
   ngluingpermsearcher
   )

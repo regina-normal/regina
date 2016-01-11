@@ -44,8 +44,7 @@
 
 #include "regina-core.h"
 #include "output.h"
-#include "census/ngenericfacetpairing.h"
-#include "generic/ngenerictriangulation.h"
+#include "generic/facetpairing.h"
 #include <boost/noncopyable.hpp>
 
 namespace regina {
@@ -654,6 +653,9 @@ class REGINA_API NTreeDecomposition :
          * extra header, since Regina's calculation engine already includes
          * explicit instantiations for \ref stddim "standard dimensions".
          *
+         * \ifacespython This constructor is only available in Python when
+         * \a dim is one of Regina's \ref stddim "standard dimensions".
+         *
          * @param triangulation the triangulation whose facet pairing
          * graph we are working with.
          * @param alg the algorithm that should be used to compute the
@@ -662,7 +664,7 @@ class REGINA_API NTreeDecomposition :
          */
         template <int dim>
         NTreeDecomposition(
-            const NGenericTriangulation<dim>& triangulation,
+            const Triangulation<dim>& triangulation,
             TreeDecompositionAlg alg = TD_UPPER);
 
         /**
@@ -677,6 +679,9 @@ class REGINA_API NTreeDecomposition :
          * extra header, since Regina's calculation engine already includes
          * explicit instantiations for \ref stddim "standard dimensions".
          *
+         * \ifacespython This constructor is only available in Python when
+         * \a dim is one of Regina's \ref stddim "standard dimensions".
+         *
          * @param pairing the facet pairing graph that we are working with.
          * @param alg the algorithm that should be used to compute the
          * tree decomposition; in particular, this specifies whether to
@@ -684,7 +689,7 @@ class REGINA_API NTreeDecomposition :
          */
         template <int dim>
         NTreeDecomposition(
-            const NGenericFacetPairing<dim>& pairing,
+            const FacetPairing<dim>& pairing,
             TreeDecompositionAlg alg = TD_UPPER);
 
         /**
@@ -918,14 +923,14 @@ class REGINA_API NTreeDecomposition :
 // Help the compiler by noting which explicit instantiations we offer.
 
 extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
-    const NGenericTriangulation<2>&, TreeDecompositionAlg);
+    const Triangulation<2>&, TreeDecompositionAlg);
 extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
-    const NGenericTriangulation<3>&, TreeDecompositionAlg);
+    const Triangulation<3>&, TreeDecompositionAlg);
 
 extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
-    const NGenericFacetPairing<2>&, TreeDecompositionAlg);
+    const FacetPairing<2>&, TreeDecompositionAlg);
 extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
-    const NGenericFacetPairing<3>&, TreeDecompositionAlg);
+    const FacetPairing<3>&, TreeDecompositionAlg);
 
 extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
     unsigned, bool const**, TreeDecompositionAlg);

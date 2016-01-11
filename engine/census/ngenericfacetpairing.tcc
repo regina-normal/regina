@@ -36,7 +36,7 @@
  *  \brief Deprecated header.
  */
 
-#warning This header is deprecated; please use ngenericfacetpairing-impl.h instead.
+#warning This header is deprecated; please use generic/facetpairing-impl.h instead.
 
-#include "census/ngenericfacetpairing-impl.h"
+#include "generic/facetpairing-impl.h"
 

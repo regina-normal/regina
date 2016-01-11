@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Computational Engine                                                  *
+ *  Python Interface                                                      *
  *                                                                        *
  *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,39 +32,13 @@
 
 /* end stub */
 
-/*! \file triangulation/nperm.h
- *  \brief A deprecated header for dealing with permutations of {0,1,2,3}.
- */
+#include <boost/python.hpp>
+#include "utilities/intutils.h"
 
-#ifndef __NPERM_H
-#ifndef __DOXYGEN
-#define __NPERM_H
-#endif
+using namespace boost::python;
 
-#warning This header is deprecated; please use maths/nperm4.h instead.
-
-#include "maths/nperm4.h"
-
-namespace regina {
-
-/**
- * \weakgroup triangulation
- * @{
- */
-
-/**
- * A legacy typedef provided for backward compatibility only.
- *
- * \deprecated As of Regina 4.6.1, the class NPerm has been renamed as
- * NPerm4 (which has identical functionality).  This NPerm typedef is
- * provided for backward compatibility, and will be removed in some future
- * version of Regina.
- */
-typedef NPerm4 NPerm;
-
-/*@}*/
-
-} // namespace regina
-
-#endif
+void addIntUtils() {
+    boost::python::def("bitsRequired", regina::bitsRequired<long>);
+    boost::python::def("nextPowerOfTwo", regina::nextPowerOfTwo<long>);
+}
 

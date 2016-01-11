@@ -294,7 +294,7 @@ QString GluingsModel::destString(int srcFace, regina::NTetrahedron* destTet,
         return "";
     else
         return QString::number(destTet->markedIndex()) + " (" +
-            (gluing * regina::NTriangle::ordering[srcFace]).trunc3().c_str() +
+            (gluing * regina::NTriangle::ordering(srcFace)).trunc3().c_str() +
             ')';
 }
 
@@ -310,7 +310,7 @@ regina::NPerm4 GluingsModel::faceStringToPerm(int srcFace, const QString& str) {
     }
 
     return regina::NPerm4(destVertex[0], destVertex[1], destVertex[2],
-        destVertex[3]) * regina::NTriangle::ordering[srcFace].inverse();
+        destVertex[3]) * regina::NTriangle::ordering(srcFace).inverse();
 }
 
 NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
@@ -862,7 +862,7 @@ void NTriGluingsUI::puncture() {
 void NTriGluingsUI::drillEdge() {
     endEdit();
 
-    if (tri->getEdges().empty())
+    if (tri->getNumberOfEdges() == 0)
         ReginaSupport::sorry(ui,
             tr("This triangulation does not have any edges."));
     else {
@@ -939,7 +939,7 @@ void NTriGluingsUI::boundaryComponents() {
 void NTriGluingsUI::vertexLinks() {
     endEdit();
 
-    if (tri->getVertices().empty())
+    if (tri->getNumberOfVertices() == 0)
         ReginaSupport::sorry(ui,
             tr("This triangulation does not have any vertices."));
     else {

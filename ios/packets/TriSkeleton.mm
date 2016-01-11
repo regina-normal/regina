@@ -254,12 +254,11 @@
                 }
 
                 NSMutableString* pieces = [NSMutableString string];
-                std::vector<regina::NVertexEmbedding>::const_iterator it;
-                for (it = v->getEmbeddings().begin(); it != v->getEmbeddings().end(); ++it)
+                for (auto& emb : *v)
                     [TextHelper appendToList:pieces
                                         item:[NSString stringWithFormat:@"%ld (%d)",
-                                              self.packet->tetrahedronIndex(it->getTetrahedron()),
-                                              it->getVertex()]];
+                                              self.packet->tetrahedronIndex(emb.getTetrahedron()),
+                                              emb.getVertex()]];
                 cell.data2.text = pieces;
             }
             break;
@@ -272,7 +271,7 @@
                 regina::NEdge* e = self.packet->getEdge(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Edge" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%zd.", indexPath.row - 1];
-                cell.data1.text = [NSString stringWithFormat:@"%ld", e->getNumberOfEmbeddings()];
+                cell.data1.text = [NSString stringWithFormat:@"%ld", e->getDegree()];
 
                 if (! e->isValid())
                     cell.data0.attributedText = [TextHelper badString:@"Invalid"];
@@ -282,12 +281,11 @@
                     cell.data0.text = @"Internal";
 
                 NSMutableString* pieces = [NSMutableString string];
-                std::deque<regina::NEdgeEmbedding>::const_iterator it;
-                for (it = e->getEmbeddings().begin(); it != e->getEmbeddings().end(); ++it)
+                for (auto& emb : *e)
                     [TextHelper appendToList:pieces
                                         item:[NSString stringWithFormat:@"%ld (%s)",
-                                              self.packet->tetrahedronIndex(it->getTetrahedron()),
-                                              it->getVertices().trunc2().c_str()]];
+                                              self.packet->tetrahedronIndex(emb.getTetrahedron()),
+                                              emb.getVertices().trunc2().c_str()]];
                 cell.data2.text = pieces;
             }
             break;
@@ -334,7 +332,7 @@
                 }
 
                 NSMutableString* pieces = [NSMutableString string];
-                for (unsigned i = 0; i < t->getNumberOfEmbeddings(); i++)
+                for (unsigned i = 0; i < t->getDegree(); i++)
                     [TextHelper appendToList:pieces
                                         item:[NSString stringWithFormat:@"%ld (%s)",
                                               self.packet->tetrahedronIndex(t->getEmbedding(i).getTetrahedron()),
@@ -418,12 +416,11 @@
                 NSMutableString* pieces = [NSMutableString string];
                 if (b->isIdeal()) {
                     regina::NVertex* v = b->getVertex(0);
-                    std::vector<regina::NVertexEmbedding>::const_iterator it;
-                    for (it = v->getEmbeddings().begin(); it != v->getEmbeddings().end(); ++it)
+                    for (auto& emb : *v)
                         [TextHelper appendToList:pieces
                                             item:[NSString stringWithFormat:@"%ld (%d)",
-                                                  self.packet->tetrahedronIndex(it->getTetrahedron()),
-                                                  it->getVertex()]];
+                                                  self.packet->tetrahedronIndex(emb.getTetrahedron()),
+                                                  emb.getVertex()]];
                     cell.data2.text = [NSString stringWithFormat:@"Vertices %@", pieces];
                     // Parity says #vertices >= 2, so always use plural form.
                 } else {

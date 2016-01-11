@@ -51,7 +51,8 @@ namespace regina {
     class NMatrixInt;
     class NNormalSurfaceList;
     class NPacket;
-    class NTriangulation;
+    template <int> class Triangulation;
+    typedef Triangulation<3> NTriangulation;
 };
 
 class MatchingModel : public QAbstractItemModel {

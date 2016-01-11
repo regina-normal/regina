@@ -66,23 +66,34 @@ void addNPerm3() {
         .def("isPermCode", &NPerm3::isPermCode)
         .def(self * self)
         .def("inverse", &NPerm3::inverse)
+        .def("reverse", &NPerm3::reverse)
         .def("sign", &NPerm3::sign)
         .def("__getitem__", perm3_getItem)
         .def("preImageOf", &NPerm3::preImageOf)
         .def("compareWith", &NPerm3::compareWith)
         .def("isIdentity", &NPerm3::isIdentity)
-        .def("toString", &NPerm3::toString)
+        .def("atIndex", &NPerm3::atIndex)
+        .def("index", &NPerm3::index)
+        .def("rand", &NPerm3::rand)
         .def("str", &NPerm3::str)
+        .def("trunc", &NPerm3::trunc)
         .def("trunc2", &NPerm3::trunc2)
         .def("S3Index", &NPerm3::S3Index)
         .def("orderedS3Index", &NPerm3::orderedS3Index)
         .def("orderedSnIndex", &NPerm3::orderedS3Index)
+        .def("extend", &NPerm3::extend)
         .def("__str__", &NPerm3::str)
         .def("__repr__", &NPerm3::str)
         .def(regina::python::add_eq_operators())
         .staticmethod("fromPermCode")
         .staticmethod("isPermCode")
+        .staticmethod("atIndex")
+        .staticmethod("rand")
+        .staticmethod("extend")
     ;
+
+    s.attr("nPerms") = NPerm3::nPerms;
+    s.attr("nPerms_1") = NPerm3::nPerms_1;
 
     s.attr("S3") = &NPerm3_S3_arr;
     s.attr("Sn") = &NPerm3_S3_arr;

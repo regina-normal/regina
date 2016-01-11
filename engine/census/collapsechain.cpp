@@ -355,7 +355,7 @@ void NCollapsedChainSearcher::buildUp() {
                 continue;
             }
         }
-        permIndex(adj) = NPerm4::invS3[permIndex(face)];
+        permIndex(adj) = NPerm3::invS3[permIndex(face)];
         orderElt++;
     }
     // Reset

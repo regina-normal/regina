@@ -54,12 +54,17 @@
 
 namespace regina {
 
-class NTriangulation;
 class NMatrixInt;
 class NNormalSurfaceList;
 class NProgressTracker;
 class NXMLPacketReader;
 class NXMLNormalSurfaceListReader;
+
+template <int> class Triangulation;
+// We *must* declare the specialisation here; otherwise this header has
+// the side-effect of instantiating Trianglation<3> using the generic template.
+template <> class Triangulation<3>;
+typedef Triangulation<3> NTriangulation;
 
 /**
  * \weakgroup surfaces
@@ -1852,10 +1857,6 @@ inline NNormalSurfaceList* NNormalSurfaceList::enumerateFundFullCone(
         NS_FUNDAMENTAL |
             (embeddedOnly ? NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
         NS_HILBERT_FULLCONE);
-}
-
-inline NMatrixInt* NNormalSurfaceList::recreateMatchingEquations() const {
-    return makeMatchingEquations(getTriangulation(), coords_);
 }
 
 inline NNormalSurfaceList::VectorIterator::VectorIterator() {

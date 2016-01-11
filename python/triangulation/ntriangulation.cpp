@@ -38,17 +38,19 @@
 #include "surfaces/nnormalsurface.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
+#include "../generic/facehelper.h"
 
 using namespace boost::python;
 using regina::NTriangulation;
+using regina::Triangulation;
 
 namespace {
     regina::NTetrahedron* (NTriangulation::*newTetrahedron_void)() =
         &NTriangulation::newTetrahedron;
     regina::NTetrahedron* (NTriangulation::*newTetrahedron_string)(
         const std::string&) = &NTriangulation::newTetrahedron;
-    regina::NTetrahedron* (NTriangulation::*getTetrahedron_non_const)(
-        unsigned long) = &NTriangulation::getTetrahedron;
+    regina::NTetrahedron* (NTriangulation::*tetrahedron_non_const)(
+        size_t) = &NTriangulation::tetrahedron;
     bool (NTriangulation::*twoZeroMove_vertex)(regina::NVertex*, bool, bool) =
         &NTriangulation::twoZeroMove;
     bool (NTriangulation::*twoZeroMove_edge)(regina::NEdge*, bool, bool) =
@@ -110,50 +112,22 @@ namespace {
 
     boost::python::list getTetrahedra_list(NTriangulation& t) {
         boost::python::list ans;
-        for (NTriangulation::TetrahedronIterator it =
-                t.getTetrahedra().begin(); it != t.getTetrahedra().end(); it++)
-            ans.append(boost::python::ptr(*it));
+        for (auto s : t.tetrahedra())
+            ans.append(boost::python::ptr(s));
         return ans;
     }
 
     boost::python::list getComponents_list(NTriangulation& t) {
         boost::python::list ans;
-        for (NTriangulation::ComponentIterator it =
-                t.getComponents().begin(); it != t.getComponents().end(); it++)
-            ans.append(boost::python::ptr(*it));
+        for (auto c : t.components())
+            ans.append(boost::python::ptr(c));
         return ans;
     }
 
     boost::python::list getBoundaryComponents_list(NTriangulation& t) {
         boost::python::list ans;
-        for (NTriangulation::BoundaryComponentIterator it =
-                t.getBoundaryComponents().begin();
-                it != t.getBoundaryComponents().end(); it++)
-            ans.append(boost::python::ptr(*it));
-        return ans;
-    }
-
-    boost::python::list getVertices_list(NTriangulation& t) {
-        boost::python::list ans;
-        for (NTriangulation::VertexIterator it =
-                t.getVertices().begin(); it != t.getVertices().end(); it++)
-            ans.append(boost::python::ptr(*it));
-        return ans;
-    }
-
-    boost::python::list getEdges_list(NTriangulation& t) {
-        boost::python::list ans;
-        for (NTriangulation::EdgeIterator it =
-                t.getEdges().begin(); it != t.getEdges().end(); it++)
-            ans.append(boost::python::ptr(*it));
-        return ans;
-    }
-
-    boost::python::list getTriangles_list(NTriangulation& t) {
-        boost::python::list ans;
-        for (NTriangulation::TriangleIterator it =
-                t.getTriangles().begin(); it != t.getTriangles().end(); it++)
-            ans.append(boost::python::ptr(*it));
+        for (auto b : t.getBoundaryComponents())
+            ans.append(boost::python::ptr(b));
         return ans;
     }
 
@@ -162,7 +136,7 @@ namespace {
         boost::python::list ans;
 
         std::list<regina::NIsomorphism*> isos;
-        t.findAllIsomorphisms(other, isos);
+        t.findAllIsomorphisms(other, back_inserter(isos));
 
         for (std::list<regina::NIsomorphism*>::iterator it =
                  isos.begin(); it != isos.end(); it++) {
@@ -177,29 +151,13 @@ namespace {
         boost::python::list ans;
 
         std::list<regina::NIsomorphism*> isos;
-        t.findAllSubcomplexesIn(other, isos);
+        t.findAllSubcomplexesIn(other, back_inserter(isos));
 
         for (std::list<regina::NIsomorphism*>::iterator it =
                  isos.begin(); it != isos.end(); it++) {
             std::auto_ptr<regina::NIsomorphism> iso(*it);
             ans.append(iso);
         }
-        return ans;
-    }
-
-    boost::python::list maximalForestInDualSkeleton_list(NTriangulation& t) {
-        std::set<regina::NTriangle*> triangleSet;
-        t.maximalForestInDualSkeleton(triangleSet);
-
-        // boost::python does not contain python sets. We use a python list
-        // here instead which needs a well-defined order, thus we iterate
-        // through getTriangles().
-
-        boost::python::list ans;
-        for (NTriangulation::TriangleIterator it =
-                t.getTriangles().begin(); it != t.getTriangles().end(); it++)
-            if (triangleSet.count(*it) > 0)
-                ans.append(boost::python::ptr(*it));
         return ans;
     }
 
@@ -229,6 +187,7 @@ namespace {
 }
 
 void addNTriangulation() {
+    {
     scope global;
 
     enum_<regina::TuraevViroAlg>("TuraevViroAlg")
@@ -243,18 +202,26 @@ void addNTriangulation() {
     global.attr("TV_TREEWIDTH") = regina::TV_TREEWIDTH;
     global.attr("TV_NAIVE") = regina::TV_NAIVE;
 
-    scope s = class_<NTriangulation, bases<regina::NPacket>,
-            std::auto_ptr<NTriangulation>,
-            boost::noncopyable>("NTriangulation")
+    scope s = class_<Triangulation<3>, bases<regina::NPacket>,
+            std::auto_ptr<Triangulation<3>>,
+            boost::noncopyable>("Triangulation3")
         .def(init<const NTriangulation&>())
         .def(init<const std::string&>())
+        .def("size", &NTriangulation::size)
+        .def("countTetrahedra", &NTriangulation::countTetrahedra)
         .def("getNumberOfTetrahedra", &NTriangulation::getNumberOfTetrahedra)
         .def("getNumberOfSimplices", &NTriangulation::getNumberOfSimplices)
         .def("getTetrahedra", getTetrahedra_list)
+        .def("tetrahedra", getTetrahedra_list)
         .def("getSimplices", getTetrahedra_list)
-        .def("getTetrahedron", getTetrahedron_non_const,
+        .def("simplices", getTetrahedra_list)
+        .def("tetrahedron", tetrahedron_non_const,
             return_internal_reference<>())
-        .def("getSimplex", getTetrahedron_non_const,
+        .def("getTetrahedron", tetrahedron_non_const,
+            return_internal_reference<>())
+        .def("simplex", tetrahedron_non_const,
+            return_internal_reference<>())
+        .def("getSimplex", tetrahedron_non_const,
             return_internal_reference<>())
         .def("tetrahedronIndex", &NTriangulation::tetrahedronIndex)
         .def("simplexIndex", &NTriangulation::simplexIndex)
@@ -274,28 +241,46 @@ void addNTriangulation() {
         .def("removeAllSimplices", &NTriangulation::removeAllSimplices)
         .def("swapContents", &NTriangulation::swapContents)
         .def("moveContentsTo", &NTriangulation::moveContentsTo)
+        .def("countComponents", &NTriangulation::countComponents)
         .def("getNumberOfComponents", &NTriangulation::getNumberOfComponents)
         .def("getNumberOfBoundaryComponents",
             &NTriangulation::getNumberOfBoundaryComponents)
+        .def("countFaces", &regina::python::countFaces<NTriangulation, 3>)
+        .def("getNumberOfFaces", &regina::python::countFaces<NTriangulation, 3>)
+        .def("countVertices", &NTriangulation::countVertices)
         .def("getNumberOfVertices", &NTriangulation::getNumberOfVertices)
+        .def("countEdges", &NTriangulation::countEdges)
         .def("getNumberOfEdges", &NTriangulation::getNumberOfEdges)
-        .def("getNumberOfFaces", &NTriangulation::getNumberOfTriangles)
+        .def("countTriangles", &NTriangulation::countTriangles)
         .def("getNumberOfTriangles", &NTriangulation::getNumberOfTriangles)
+        .def("components", getComponents_list)
         .def("getComponents", getComponents_list)
         .def("getBoundaryComponents", getBoundaryComponents_list)
-        .def("getVertices", getVertices_list)
-        .def("getEdges", getEdges_list)
-        .def("getFaces", getTriangles_list)
-        .def("getTriangles", getTriangles_list)
+        .def("faces", &regina::python::faces<NTriangulation, 3>)
+        .def("getFaces", &regina::python::faces<NTriangulation, 3>)
+        .def("vertices", regina::python::faces_list<NTriangulation, 3, 0>)
+        .def("getVertices", regina::python::faces_list<NTriangulation, 3, 0>)
+        .def("edges", regina::python::faces_list<NTriangulation, 3, 1>)
+        .def("getEdges", regina::python::faces_list<NTriangulation, 3, 1>)
+        .def("triangles", regina::python::faces_list<NTriangulation, 3, 2>)
+        .def("getTriangles", regina::python::faces_list<NTriangulation, 3, 2>)
+        .def("component", &NTriangulation::component,
+            return_value_policy<reference_existing_object>())
         .def("getComponent", &NTriangulation::getComponent,
             return_internal_reference<>())
         .def("getBoundaryComponent", &NTriangulation::getBoundaryComponent,
             return_internal_reference<>())
+        .def("face", &regina::python::face<NTriangulation, 3, size_t>)
+        .def("getFace", &regina::python::face<NTriangulation, 3, size_t>)
+        .def("vertex", &NTriangulation::vertex,
+            return_internal_reference<>())
         .def("getVertex", &NTriangulation::getVertex,
+            return_internal_reference<>())
+        .def("edge", &NTriangulation::edge,
             return_internal_reference<>())
         .def("getEdge", &NTriangulation::getEdge,
             return_internal_reference<>())
-        .def("getFace", &NTriangulation::getTriangle,
+        .def("triangle", &NTriangulation::triangle,
             return_internal_reference<>())
         .def("getTriangle", &NTriangulation::getTriangle,
             return_internal_reference<>())
@@ -319,15 +304,16 @@ void addNTriangulation() {
         .def("hasNegativeIdealBoundaryComponents",
             &NTriangulation::hasNegativeIdealBoundaryComponents)
         .def("isEmpty", &NTriangulation::isEmpty)
-        .def("size", &NTriangulation::size)
         .def("getEulerCharTri", &NTriangulation::getEulerCharTri)
         .def("getEulerCharManifold", &NTriangulation::getEulerCharManifold)
         .def("getEulerCharacteristic", &NTriangulation::getEulerCharacteristic)
         .def("isValid", &NTriangulation::isValid)
         .def("isIdeal", &NTriangulation::isIdeal)
         .def("isStandard", &NTriangulation::isStandard)
-        .def("hasBoundaryFaces", &NTriangulation::hasBoundaryFaces)
+        .def("hasBoundaryFacets", &NTriangulation::hasBoundaryFacets)
         .def("hasBoundaryTriangles", &NTriangulation::hasBoundaryTriangles)
+        .def("countBoundaryFacets", &NTriangulation::countBoundaryFacets)
+        .def("countBoundaryTriangles", &NTriangulation::countBoundaryTriangles)
         .def("getNumberOfBoundaryTriangles",
             &NTriangulation::getNumberOfBoundaryTriangles)
         .def("isClosed", &NTriangulation::isClosed)
@@ -367,7 +353,6 @@ void addNTriangulation() {
             &NTriangulation::hasStrictAngleStructure)
         .def("knowsStrictAngleStructure",
             &NTriangulation::knowsStrictAngleStructure)
-        .def("maximalForestInDualSkeleton", maximalForestInDualSkeleton_list)
         .def("intelligentSimplify", &NTriangulation::intelligentSimplify)
         .def("simplifyToLocalMinimum", &NTriangulation::simplifyToLocalMinimum,
             OL_simplifyToLocalMinimum())
@@ -459,5 +444,9 @@ void addNTriangulation() {
 
     implicitly_convertible<std::auto_ptr<NTriangulation>,
         std::auto_ptr<regina::NPacket> >();
+
+    }
+
+    scope().attr("NTriangulation") = scope().attr("Triangulation3");
 }
 

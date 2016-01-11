@@ -32,16 +32,24 @@
 
 /* end stub */
 
-#include "census/ngenericfacetpairing-impl.h"
+#include <sstream>
+#include "maths/nperm2.h"
 
-// Headers required for our template instantiations:
-#include "census/dim2edgepairing.h"
-#include "census/nfacepairing.h"
-#include "dim2/dim2triangulation.h"
-#include "triangulation/ntriangulation.h"
+namespace regina {
 
-// Instantiate templates for standard dimensions.
-// The header has matching "extern template class REGINA_API" declarations.
-template class regina::NGenericFacetPairing<2>;
-template class regina::NGenericFacetPairing<3>;
+const NPerm<2>::Index NPerm<2>::nPerms;
+const NPerm<2>::Index NPerm<2>::nPerms_1;
+
+const NPerm<2> NPerm<2>::S2[2] = { NPerm<2>(), NPerm<2>(1) };
+const unsigned NPerm<2>::invS2[2] = { 0, 1 };
+
+const NPerm<2>* NPerm<2>::Sn = NPerm<2>::S2;
+const unsigned* NPerm<2>::invSn = NPerm<2>::invS2;
+
+const NPerm<2>* NPerm<2>::orderedS2 = NPerm<2>::S2;
+const NPerm<2>* NPerm<2>::orderedSn = NPerm<2>::S2;
+const NPerm<2>* NPerm<2>::S1 = NPerm<2>::S2;
+const NPerm<2>* NPerm<2>::Sn_1 = NPerm<2>::S2;
+
+} // namespace regina
 

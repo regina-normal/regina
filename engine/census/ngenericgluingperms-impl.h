@@ -49,6 +49,8 @@
 
 namespace regina {
 
+template <int> class Simplex;
+
 template <int dim>
 NGenericGluingPerms<dim>::NGenericGluingPerms(
         const NGenericGluingPerms<dim>& cloneMe) :
@@ -61,12 +63,11 @@ NGenericGluingPerms<dim>::NGenericGluingPerms(
 }
 
 template <int dim>
-typename NGenericGluingPerms<dim>::Triangulation*
-        NGenericGluingPerms<dim>::triangulate() const {
+Triangulation<dim>* NGenericGluingPerms<dim>::triangulate() const {
     unsigned nSimp = size();
 
-    Triangulation* ans = new Triangulation;
-    Simplex** simp = new Simplex*[nSimp];
+    Triangulation<dim>* ans = new Triangulation<dim>;
+    Simplex<dim>** simp = new Simplex<dim>*[nSimp];
 
     unsigned t, facet;
     for (t = 0; t < nSimp; ++t)
@@ -85,20 +86,23 @@ typename NGenericGluingPerms<dim>::Triangulation*
 
 template <int dim>
 int NGenericGluingPerms<dim>::gluingToIndex(const NFacetSpec<dim>& source,
-        const Perm& gluing) const {
-    Perm permSn_1 = Perm(pairing_->dest(source).facet, dim) * gluing *
-        Perm(source.facet, dim);
-    return (std::find(Perm::Sn_1, Perm::Sn_1 + Perm::nPerms_1, permSn_1)
-        - Perm::Sn_1);
+        const NPerm<dim+1>& gluing) const {
+    NPerm<dim+1> permSn_1 = NPerm<dim+1>(pairing_->dest(source).facet, dim)
+        * gluing * NPerm<dim+1>(source.facet, dim);
+    return (std::find(NPerm<dim+1>::Sn_1,
+        NPerm<dim+1>::Sn_1 + NPerm<dim+1>::nPerms_1, permSn_1)
+        - NPerm<dim+1>::Sn_1);
 }
 
 template <int dim>
 int NGenericGluingPerms<dim>::gluingToIndex(unsigned simp, unsigned facet,
-        const Perm& gluing) const {
-    Perm permSn_1 = Perm(pairing_->dest(simp, facet).facet, dim) * gluing *
-        Perm(facet, dim);
-    return (std::find(Perm::Sn_1, Perm::Sn_1 + Perm::nPerms_1, permSn_1)
-        - Perm::Sn_1);
+        const NPerm<dim+1>& gluing) const {
+    NPerm<dim+1> permSn_1 =
+        NPerm<dim+1>(pairing_->dest(simp, facet).facet, dim) * gluing *
+        NPerm<dim+1>(facet, dim);
+    return (std::find(NPerm<dim+1>::Sn_1,
+        NPerm<dim+1>::Sn_1 + NPerm<dim+1>::nPerms_1, permSn_1)
+        - NPerm<dim+1>::Sn_1);
 }
 
 template <int dim>
@@ -133,7 +137,7 @@ NGenericGluingPerms<dim>::NGenericGluingPerms(std::istream& in) :
             break;
     }
 
-    pairing_ = FacetPairing::fromTextRep(line);
+    pairing_ = FacetPairing<dim>::fromTextRep(line);
     if (! pairing_) {
         inputError_ = true; return;
     }

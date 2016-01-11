@@ -33,18 +33,14 @@
 /* end stub */
 
 #include <cppunit/extensions/HelperMacros.h>
-#include "generic/dimtraits.h"
 
-using regina::DimTraits;
+using regina::Isomorphism;
+using regina::Triangulation;
 
 template <int dim>
 class TriangulationTest : public CppUnit::TestFixture {
     public:
-        typedef typename DimTraits<dim>::Triangulation Triangulation;
-        typedef typename DimTraits<dim>::Isomorphism Isomorphism;
-
-    public:
-        static void verifyMakeCanonical(Triangulation* tri) {
+        static void verifyMakeCanonical(Triangulation<dim>* tri) {
             // Currently makeCanonical() insists on connected
             // triangulations only.
             if (! tri->isConnected())
@@ -52,13 +48,13 @@ class TriangulationTest : public CppUnit::TestFixture {
 
             const int trials = 10;
 
-            Triangulation canonical(*tri);
+            Triangulation<dim> canonical(*tri);
             canonical.makeCanonical();
 
             for (int i = 0; i < trials; ++i) {
-                Isomorphism* iso = Isomorphism::random(
+                Isomorphism<dim>* iso = Isomorphism<dim>::random(
                     tri->getNumberOfSimplices());
-                Triangulation* t = iso->apply(tri);
+                Triangulation<dim>* t = iso->apply(tri);
                 delete iso;
 
                 t->makeCanonical();
@@ -80,7 +76,7 @@ class TriangulationTest : public CppUnit::TestFixture {
             }
         }
 
-        static void verifyIsomorphismSignature(Triangulation* tri) {
+        static void verifyIsomorphismSignature(Triangulation<dim>* tri) {
             std::string sig = tri->isoSig();
 
             if (sig.empty()) {
@@ -90,7 +86,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            size_t sigSize = Triangulation::isoSigComponentSize(sig);
+            size_t sigSize = Triangulation<dim>::isoSigComponentSize(sig);
             if (tri->getNumberOfSimplices() == 0) {
                 if (sigSize != 0) {
                     std::ostringstream msg;
@@ -113,7 +109,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                 }
             }
 
-            Triangulation* rebuild = Triangulation::fromIsoSig(sig);
+            Triangulation<dim>* rebuild = Triangulation<dim>::fromIsoSig(sig);
             if (! rebuild) {
                 std::ostringstream msg;
                 msg << tri->getPacketLabel()
@@ -131,7 +127,7 @@ class TriangulationTest : public CppUnit::TestFixture {
             delete rebuild;
 
             // Does rebuilding still work if the signature has whitespace?
-            rebuild = Triangulation::fromIsoSig(
+            rebuild = Triangulation<dim>::fromIsoSig(
                 std::string("\t " + sig + "\t \n"));
             if (! rebuild) {
                 std::ostringstream msg;
@@ -154,9 +150,9 @@ class TriangulationTest : public CppUnit::TestFixture {
 
             std::string otherSig;
             for (unsigned i = 0; i < 10; ++i) {
-                Isomorphism* iso = Isomorphism::random(
+                Isomorphism<dim>* iso = Isomorphism<dim>::random(
                     tri->getNumberOfSimplices());
-                Triangulation* other = iso->apply(tri);
+                Triangulation<dim>* other = iso->apply(tri);
                 delete iso;
 
                 otherSig = other->isoSig();
@@ -171,9 +167,9 @@ class TriangulationTest : public CppUnit::TestFixture {
                 delete other;
             }
             for (unsigned i = 0; i < 10; ++i) {
-                Isomorphism* iso = Isomorphism::random(
+                Isomorphism<dim>* iso = Isomorphism<dim>::random(
                     tri->getNumberOfSimplices());
-                Triangulation other(*tri);
+                Triangulation<dim> other(*tri);
                 iso->applyInPlace(&other);
                 delete iso;
 
@@ -189,11 +185,12 @@ class TriangulationTest : public CppUnit::TestFixture {
             }
 
             if (tri->getNumberOfComponents() == 1) {
-                Isomorphism* relabelling;
+                Isomorphism<dim>* relabelling;
                 tri->isoSig(&relabelling);
 
-                Triangulation* rebuild = Triangulation::fromIsoSig(sig);
-                Triangulation* relabel = relabelling->apply(tri);
+                Triangulation<dim>* rebuild =
+                    Triangulation<dim>::fromIsoSig(sig);
+                Triangulation<dim>* relabel = relabelling->apply(tri);
 
                 if (relabel->detail() != rebuild->detail()) {
                     std::ostringstream msg;

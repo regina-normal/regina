@@ -38,8 +38,7 @@ namespace regina {
 
 void NTriangulation::maximalForestInBoundary(std::set<NEdge*>& edgeSet,
         std::set<NVertex*>& vertexSet) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
 
     vertexSet.clear();
     edgeSet.clear();
@@ -54,14 +53,11 @@ void NTriangulation::stretchBoundaryForestFromVertex(NVertex* from,
         std::set<NVertex*>& vertexSet) const {
     vertexSet.insert(from);
 
-    std::vector<NVertexEmbedding>::const_iterator it =
-        from->getEmbeddings().begin();
     NTetrahedron* tet;
     NVertex* otherVertex;
     NEdge* edge;
     int vertex, yourVertex;
-    while (it != from->getEmbeddings().end()) {
-        const NVertexEmbedding& emb = *it;
+    for (auto& emb : *from) {
         tet = emb.getTetrahedron();
         vertex = emb.getVertex();
         for (yourVertex = 0; yourVertex < 4; yourVertex++) {
@@ -77,14 +73,12 @@ void NTriangulation::stretchBoundaryForestFromVertex(NVertex* from,
                     vertexSet);
             }
         }
-        it++;
     }
 }
 
 void NTriangulation::maximalForestInSkeleton(std::set<NEdge*>& edgeSet,
         bool canJoinBoundaries) const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
 
     std::set<NVertex*> vertexSet;
     std::set<NVertex*> thisBranch;
@@ -94,9 +88,9 @@ void NTriangulation::maximalForestInSkeleton(std::set<NEdge*>& edgeSet,
     else
         maximalForestInBoundary(edgeSet, vertexSet);
 
-    for (VertexIterator vit = vertices_.begin(); vit != vertices_.end(); vit++)
-        if (! (vertexSet.count(*vit))) {
-            stretchForestFromVertex(*vit, edgeSet, vertexSet, thisBranch);
+    for (NVertex* v : getVertices())
+        if (! (vertexSet.count(v))) {
+            stretchForestFromVertex(v, edgeSet, vertexSet, thisBranch);
             thisBranch.clear();
         }
 }
@@ -112,14 +106,11 @@ bool NTriangulation::stretchForestFromVertex(NVertex* from,
     vertexSet.insert(from);
     thisStretch.insert(from);
 
-    std::vector<NVertexEmbedding>::const_iterator it =
-        from->getEmbeddings().begin();
     NTetrahedron* tet;
     NVertex* otherVertex;
     int vertex, yourVertex;
     bool madeLink = false;
-    while (it != from->getEmbeddings().end()) {
-        const NVertexEmbedding& emb = *it;
+    for (auto& emb : *from) {
         tet = emb.getTetrahedron();
         vertex = emb.getVertex();
         for (yourVertex = 0; yourVertex < 4; yourVertex++) {
@@ -137,37 +128,8 @@ bool NTriangulation::stretchForestFromVertex(NVertex* from,
             if (madeLink)
                 return true;
         }
-        it++;
     }
     return false;
-}
-
-void NTriangulation::maximalForestInDualSkeleton(std::set<NTriangle*>& triSet)
-        const {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
-
-    triSet.clear();
-    std::set<NTetrahedron*> visited;
-    for (TetrahedronIterator it = tetrahedra_.begin(); it != tetrahedra_.end();
-            it++)
-        if (! (visited.count(*it)))
-            stretchDualForestFromTet(*it, triSet, visited);
-}
-
-void NTriangulation::stretchDualForestFromTet(NTetrahedron* tet,
-        std::set<NTriangle*>& triSet, std::set<NTetrahedron*>& visited) const {
-    visited.insert(tet);
-
-    NTetrahedron* adjTet;
-    for (int face = 0; face < 4; face++) {
-        adjTet = tet->adjacentTetrahedron(face);
-        if (adjTet)
-            if (! (visited.count(adjTet))) {
-                triSet.insert(tet->getTriangle(face));
-                stretchDualForestFromTet(adjTet, triSet, visited);
-            }
-    }
 }
 
 } // namespace regina

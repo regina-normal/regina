@@ -177,7 +177,7 @@
             self.packet->isHaken();
         }
     }
-    if (self.packet->isIdeal() && ! self.packet->hasBoundaryFaces()) {
+    if (self.packet->isIdeal() && ! self.packet->hasBoundaryTriangles()) {
         [propertyList addObject:@PROP_STRICT];
         [propertyList addObject:@PROP_HYPERBOLIC];
         if (self.packet->getNumberOfTetrahedra() <= 50)

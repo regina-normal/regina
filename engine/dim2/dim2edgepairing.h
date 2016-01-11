@@ -32,72 +32,33 @@
 
 /* end stub */
 
-#include "dim2/dim2triangle.h"
+#ifndef __DIM2EDGEPAIRING_H
+#ifndef __DOXYGEN
+#define __DIM2EDGEPAIRING_H
+#endif
+
+/*! \file dim2/dim2edgepairing.h
+ *  \brief Deals with dual graphs of 2-manifold triangulations.
+ */
+
+#include "regina-core.h"
+#include "dim2/dim2isomorphism.h"
 #include "dim2/dim2triangulation.h"
-#include <algorithm>
+#include "generic/facetpairing.h"
 
 namespace regina {
 
-Dim2Triangle::Dim2Triangle(Dim2Triangulation* tri) : tri_(tri) {
-    std::fill(adj_, adj_ + 3, nullptr);
-}
+/**
+ * \weakgroup dim2
+ * @{
+ */
 
-Dim2Triangle::Dim2Triangle(const std::string& desc, Dim2Triangulation* tri) :
-        desc_(desc), tri_(tri) {
-    std::fill(adj_, adj_ + 3, nullptr);
-}
-
-bool Dim2Triangle::hasBoundary() const {
-    for (int i=0; i<3; ++i)
-        if (adj_[i] == 0)
-            return true;
-    return false;
-}
-
-void Dim2Triangle::joinTo(int myEdge, Dim2Triangle* you, NPerm3 gluing) {
-    NPacket::ChangeEventSpan span(tri_);
-
-    adj_[myEdge] = you;
-    adjPerm_[myEdge] = gluing;
-    int yourEdge = gluing[myEdge];
-    you->adj_[yourEdge] = this;
-    you->adjPerm_[yourEdge] = gluing.inverse();
-
-    tri_->clearAllProperties();
-}
-
-Dim2Triangle* Dim2Triangle::unjoin(int myEdge) {
-    NPacket::ChangeEventSpan span(tri_);
-
-    Dim2Triangle* you = adj_[myEdge];
-    int yourEdge = adjPerm_[myEdge][myEdge];
-    you->adj_[yourEdge] = 0;
-    adj_[myEdge] = 0;
-
-    tri_->clearAllProperties();
-
-    return you;
-}
-
-void Dim2Triangle::isolate() {
-    for (int i=0; i<3; ++i)
-        if (adj_[i])
-            unjoin(i);
-}
-
-void Dim2Triangle::writeTextLong(std::ostream& out) const {
-    writeTextShort(out);
-    out << std::endl;
-    for (int i = 2; i >= 0; --i) {
-        out << Dim2Edge::ordering[i].trunc2() << " -> ";
-        if (! adj_[i])
-            out << "boundary";
-        else
-            out << adj_[i]->markedIndex() << " ("
-                << (adjPerm_[i] * Dim2Edge::ordering[i]).trunc2() << ')';
-        out << std::endl;
-    }
-}
+/**
+ * A convenience typedef for FacetPairing<2>.
+ */
+typedef FacetPairing<2> Dim2EdgePairing;
 
 } // namespace regina
+
+#endif
 

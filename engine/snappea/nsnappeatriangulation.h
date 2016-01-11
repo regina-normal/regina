@@ -54,8 +54,10 @@ namespace snappea {
 
 class NMatrixInt;
 class NSnapPeaTriangulation;
-class NTriangulation;
 class NXMLSnapPeaReader;
+
+template <int> class Triangulation;
+typedef Triangulation<3> NTriangulation;
 
 /**
  * \weakgroup triangulation

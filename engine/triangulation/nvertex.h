@@ -41,22 +41,24 @@
 #define __NVERTEX_H
 #endif
 
-#include <vector>
 #include "regina-core.h"
-#include "output.h"
+#include "generic/face.h"
 #include "maths/nperm4.h"
-#include "utilities/nmarkedvector.h"
-#include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {
 
-class Dim2Triangulation;
 class NBoundaryComponent;
-class NComponent;
-class NIsomorphism;
-class NTetrahedron;
-class NTriangulation;
+
+template <int> class Component;
+template <int> class Isomorphism;
+template <int> class Simplex;
+template <int> class Triangulation;
+typedef Component<3> NComponent;
+typedef Isomorphism<3> NIsomorphism;
+typedef Simplex<3> NTetrahedron;
+typedef Triangulation<2> Dim2Triangulation;
+typedef Triangulation<3> NTriangulation;
 
 /**
  * \weakgroup triangulation
@@ -64,110 +66,22 @@ class NTriangulation;
  */
 
 /**
- * Details how a vertex in the skeleton forms part of an individual
- * tetrahedron.
+ * A convenience typedef for FaceEmbedding<3, 0>.
  */
-class REGINA_API NVertexEmbedding {
-    private:
-        NTetrahedron* tetrahedron_;
-            /**< The tetrahedron in which this vertex is contained. */
-        int vertex_;
-            /**< The vertex number of the tetrahedron that is this vertex. */
-
-    public:
-        /**
-         * Default constructor.  The embedding descriptor created is
-         * unusable until it has some data assigned to it using
-         * <tt>operator =</tt>.
-         *
-         * \ifacespython Not present.
-         */
-        NVertexEmbedding();
-
-        /**
-         * Creates an embedding descriptor containing the given data.
-         *
-         * @param newTet the tetrahedron in which this vertex is
-         * contained.
-         * @param newVertex the vertex number of \a newTet that is this vertex.
-         */
-        NVertexEmbedding(NTetrahedron* newTet, int newVertex);
-
-        /**
-         * Creates an embedding descriptor containing the same data as
-         * the given embedding descriptor.
-         *
-         * @param cloneMe the embedding descriptor to clone.
-         */
-        NVertexEmbedding(const NVertexEmbedding& cloneMe);
-
-        /**
-         * Assigns to this embedding descriptor the same data as is
-         * contained in the given embedding descriptor.
-         *
-         * @param cloneMe the embedding descriptor to clone.
-         */
-        NVertexEmbedding& operator =(const NVertexEmbedding& cloneMe);
-
-        /**
-         * Returns the tetrahedron in which this vertex is contained.
-         *
-         * @return the tetrahedron.
-         */
-        REGINA_INLINE_REQUIRED
-        NTetrahedron* getTetrahedron() const;
-
-        /**
-         * Returns the vertex number within getTetrahedron() that is
-         * this vertex.
-         *
-         * @return the vertex number that is this vertex.
-         */
-        int getVertex() const;
-
-        /**
-         * Returns a permutation that maps 0 to the vertex number within
-         * getTetrahedron() that is this vertex.  The real point of this
-         * routine is that (1,2,3) maps to the three remaining tetrahedron
-         * vertices in a manner that preserves orientation as you walk around
-         * the vertex (assuming this is actually possible).  See
-         * NTetrahedron::getVertexMapping() for details.
-         *
-         * @return a permutation that maps 0 to the vertex number that
-         * is this vertex.
-         */
-        NPerm4 getVertices() const;
-
-        /**
-         * Tests whether this and the given embedding are identical.
-         * Here "identical" means that they refer to the same vertex of
-         * the same tetrahedron.
-         *
-         * @param rhs the embedding to compare with this.
-         * @return \c true if and only if both embeddings are identical.
-         */
-        bool operator == (const NVertexEmbedding& rhs) const;
-
-        /**
-         * Tests whether this and the given embedding are different.
-         * Here "different" means that they do not refer to the same vertex of
-         * the same tetrahedron.
-         *
-         * @param rhs the embedding to compare with this.
-         * @return \c true if and only if both embeddings are identical.
-         */
-        bool operator != (const NVertexEmbedding& rhs) const;
-};
+typedef FaceEmbedding<3, 0> NVertexEmbedding;
 
 /**
- * Represents a vertex in the skeleton of a triangulation.
- * Vertices are highly temporary; once a triangulation changes, all its
- * vertex objects will be deleted and new ones will be created.
+ * Represents a vertex in the skeleton of a 3-manifold triangulation.
+ *
+ * This is a specialisation of the generic Face class template; see the
+ * documentation for Face for a general overview of how this class works.
+ *
+ * These specialisations for Regina's \ref stddim "standard dimensions"
+ * offer significant extra functionality.
  */
-class REGINA_API NVertex :
-        public Output<NVertex>,
-        public boost::noncopyable,
-        public NMarkedElement {
+template <>
+class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
+        public Output<Face<3, 0>> {
     public:
         /**
          * Categorises the possible links of a vertex into a small number
@@ -203,18 +117,11 @@ class REGINA_API NVertex :
                      triangulation invalid. */
         };
     private:
-        std::vector<NVertexEmbedding> embeddings_;
-            /**< A list of descriptors telling how this vertex forms a part of
-                 each individual tetrahedron that it belongs to. */
-        NComponent* component_;
-            /**< The component that this vertex is a part of. */
         NBoundaryComponent* boundaryComponent_;
             /**< The boundary component that this vertex is a part of,
                  or 0 if this vertex is internal. */
         LinkType link_;
             /**< A broad categorisation of the topology of the vertex link. */
-        bool linkOrientable_;
-            /**< Specifies whether the vertex link is orientable. */
         long linkEulerChar_;
             /**< Specifies the Euler characteristic of the vertex link. */
         Dim2Triangulation* linkTri_;
@@ -225,64 +132,7 @@ class REGINA_API NVertex :
         /**
          * Default destructor.
          */
-        ~NVertex();
-
-        /**
-         * Returns the index of this vertex in the underlying
-         * triangulation.  This is identical to calling
-         * <tt>getTriangulation()->vertexIndex(this)</tt>.
-         *
-         * @return the index of this vertex.
-         */
-        unsigned long index() const;
-
-        /**
-         * Returns the list of descriptors detailing how this vertex forms a
-         * part of various tetrahedra in the triangulation.
-         * Note that if this vertex represents multiple vertices of a
-         * particular tetrahedron, then there will be multiple embedding
-         * descriptors in the list regarding that tetrahedron.
-         *
-         * \ifacespython This routine returns a python list.
-         *
-         * @return the list of embedding descriptors.
-         * @see NVertexEmbedding
-         */
-        const std::vector<NVertexEmbedding>& getEmbeddings() const;
-
-        /**
-         * Returns the number of descriptors in the list returned by
-         * getEmbeddings().  Note that this is identical to getDegree().
-         *
-         * @return the number of embedding descriptors.
-         */
-        unsigned long getNumberOfEmbeddings() const;
-
-        /**
-         * Returns the requested descriptor from the list returned by
-         * getEmbeddings().
-         *
-         * @param index the index of the requested descriptor.  This
-         * should be between 0 and getNumberOfEmbeddings()-1 inclusive.
-         * @return the requested embedding descriptor.
-         */
-        const NVertexEmbedding& getEmbedding(unsigned long index) const;
-
-        /**
-         * Returns the triangulation to which this vertex belongs.
-         *
-         * @return the triangulation containing this vertex.
-         */
-        NTriangulation* getTriangulation() const;
-
-        /**
-         * Returns the component of the triangulation to which this
-         * vertex belongs.
-         *
-         * @return the component containing this vertex.
-         */
-        REGINA_INLINE_REQUIRED
-        NComponent* getComponent() const;
+        ~Face();
 
         /**
          * Returns the boundary component of the triangulation to which
@@ -301,14 +151,6 @@ class REGINA_API NVertex :
          * as determined by isBoundary().
          */
         NBoundaryComponent* getBoundaryComponent() const;
-
-        /**
-         * Returns the degree of this vertex.  Note that this is
-         * identical to getNumberOfEmbeddings().
-         *
-         * @return the degree of this vertex.
-         */
-        unsigned long getDegree() const;
 
         /**
          * Returns a broad categorisation of the link of the vertex.
@@ -336,7 +178,7 @@ class REGINA_API NVertex :
          * information, then call buildLinkDetail() instead.
          *
          * The triangulation of the vertex link is built as follows.
-         * Let \a i lie between 0 and getDegree()-1 inclusive, let
+         * Let \a i lie between 0 and degree()-1 inclusive, let
          * \a tet represent <tt>getEmbedding(i).getTetrahedron()</tt>,
          * and let \a v represent <tt>getEmbedding(i).getVertex()</tt>.
          * Then <tt>buildLink()->getTriangle(i)</tt> is the triangle
@@ -457,17 +299,6 @@ class REGINA_API NVertex :
         bool isStandard() const;
 
         /**
-         * Determines if the vertex link is orientable.
-         *
-         * This routine does not require a full triangulation of the
-         * vertex link, and so can be much faster than calling
-         * buildLink().isOrientable().
-         *
-         * @return \c true if and only if the vertex link is orientable.
-         */
-        bool isLinkOrientable() const;
-
-        /**
          * Returns the Euler characteristic of the vertex link.
          *
          * This routine does not require a full triangulation of the
@@ -522,11 +353,16 @@ class REGINA_API NVertex :
          * @param myComponent the triangulation component to which this
          * vertex belongs.
          */
-        NVertex(NComponent* myComponent);
+        Face(NComponent* component);
 
-    friend class NTriangulation;
-        /**< Allow access to private members. */
+    friend class Triangulation<3>;
+    friend class detail::TriangulationBase<3>;
 };
+
+/**
+ * A convenience typedef for Face<3, 0>.
+ */
+typedef Face<3, 0> NVertex;
 
 /*@}*/
 
@@ -537,36 +373,20 @@ namespace regina {
 
 // Inline functions for NVertex
 
-inline NVertex::NVertex(NComponent* myComponent) : component_(myComponent),
-        boundaryComponent_(0), linkOrientable_(true),
-        linkEulerChar_(0), linkTri_(0) {
+inline Face<3, 0>::Face(NComponent* component) :
+        detail::FaceBase<3, 0>(component),
+        boundaryComponent_(0), linkEulerChar_(0), linkTri_(0) {
 }
 
-inline unsigned long NVertex::index() const {
-    return markedIndex();
-}
-
-inline NTriangulation* NVertex::getTriangulation() const {
-    return embeddings_.front().getTetrahedron()->getTriangulation();
-}
-
-inline NComponent* NVertex::getComponent() const {
-    return component_;
-}
-
-inline NBoundaryComponent* NVertex::getBoundaryComponent() const {
+inline NBoundaryComponent* Face<3, 0>::getBoundaryComponent() const {
     return boundaryComponent_;
 }
 
-inline unsigned long NVertex::getDegree() const {
-    return embeddings_.size();
-}
-
-inline NVertex::LinkType NVertex::getLink() const {
+inline NVertex::LinkType Face<3, 0>::getLink() const {
     return link_;
 }
 
-inline const Dim2Triangulation* NVertex::buildLink() const {
+inline const Dim2Triangulation* Face<3, 0>::buildLink() const {
     if (! linkTri_) {
         // This is a construct-on-demand member: cast away constness to
         // set it here.
@@ -575,86 +395,29 @@ inline const Dim2Triangulation* NVertex::buildLink() const {
     return linkTri_;
 }
 
-inline bool NVertex::isLinkClosed() const {
+inline bool Face<3, 0>::isLinkClosed() const {
     return (link_ != DISC && link_ != NON_STANDARD_BDRY);
 }
 
-inline bool NVertex::isIdeal() const {
+inline bool Face<3, 0>::isIdeal() const {
     return (link_ == TORUS || link_ == KLEIN_BOTTLE ||
         link_ == NON_STANDARD_CUSP);
 }
 
-inline bool NVertex::isBoundary() const {
+inline bool Face<3, 0>::isBoundary() const {
     return (boundaryComponent_ != 0);
 }
 
-inline bool NVertex::isStandard() const {
+inline bool Face<3, 0>::isStandard() const {
     return (link_ != NON_STANDARD_CUSP && link_ != NON_STANDARD_BDRY);
 }
 
-inline bool NVertex::isLinkOrientable() const {
-    return linkOrientable_;
-}
-
-inline long NVertex::getLinkEulerChar() const {
+inline long Face<3, 0>::getLinkEulerChar() const {
     return linkEulerChar_;
 }
 
-inline long NVertex::getLinkEulerCharacteristic() const {
+inline long Face<3, 0>::getLinkEulerCharacteristic() const {
     return linkEulerChar_;
-}
-
-inline const std::vector<NVertexEmbedding>& NVertex::getEmbeddings() const {
-    return embeddings_;
-}
-
-inline unsigned long NVertex::getNumberOfEmbeddings() const {
-    return embeddings_.size();
-}
-
-inline const NVertexEmbedding& NVertex::getEmbedding(unsigned long index)
-        const {
-    return embeddings_[index];
-}
-
-inline NVertexEmbedding::NVertexEmbedding() : tetrahedron_(0) {
-}
-
-inline NVertexEmbedding::NVertexEmbedding(NTetrahedron* newTet, int newVertex) :
-        tetrahedron_(newTet), vertex_(newVertex) {
-}
-
-inline NVertexEmbedding::NVertexEmbedding(const NVertexEmbedding& cloneMe) :
-        tetrahedron_(cloneMe.tetrahedron_), vertex_(cloneMe.vertex_) {
-}
-
-inline NVertexEmbedding& NVertexEmbedding::operator =
-        (const NVertexEmbedding& cloneMe) {
-    tetrahedron_ = cloneMe.tetrahedron_;
-    vertex_ = cloneMe.vertex_;
-    return *this;
-}
-
-inline NTetrahedron* NVertexEmbedding::getTetrahedron() const {
-    return tetrahedron_;
-}
-
-inline int NVertexEmbedding::getVertex() const {
-    return vertex_;
-}
-
-inline NPerm4 NVertexEmbedding::getVertices() const {
-    return tetrahedron_->getVertexMapping(vertex_);
-}
-
-inline bool NVertexEmbedding::operator == (const NVertexEmbedding& other)
-        const {
-    return ((tetrahedron_ == other.tetrahedron_) && (vertex_ == other.vertex_));
-}
-
-inline bool NVertexEmbedding::operator != (const NVertexEmbedding& other)
-        const {
-    return ((tetrahedron_ != other.tetrahedron_) || (vertex_ != other.vertex_));
 }
 
 } // namespace regina

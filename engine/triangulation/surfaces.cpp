@@ -72,7 +72,7 @@ namespace regina {
 
 NNormalSurface* NTriangulation::hasNonTrivialSphereOrDisc() {
     // Get the empty triangulation out of the way now.
-    if (tetrahedra_.empty())
+    if (simplices_.empty())
         return 0;
 
     // Do we already know the answer?
@@ -80,7 +80,7 @@ NNormalSurface* NTriangulation::hasNonTrivialSphereOrDisc() {
         return 0;
 
     // Use combinatorial optimisation if we can.
-    if (isValid() && vertices_.size() == 1) {
+    if (isValid() && getNumberOfVertices() == 1) {
         // For now, just use the safe arbitrary-precision NInteger type.
         NTreeSingleSoln<LPConstraintEuler> tree(this, NS_STANDARD);
         if (tree.find()) {
@@ -136,14 +136,14 @@ NNormalSurface* NTriangulation::hasNonTrivialSphereOrDisc() {
 
 NNormalSurface* NTriangulation::hasOctagonalAlmostNormalSphere() {
     // Get the empty triangulation out of the way now.
-    if (tetrahedra_.empty())
+    if (simplices_.empty())
         return 0;
 
     // Use combinatorial optimisation if we can.
     // This is good for large problems, but for small problems a full
     // enumeration is usually faster.  Still, the big problems are the
     // ones we need to be more fussy about.
-    if (vertices_.size() == 1) {
+    if (getNumberOfVertices() == 1) {
         // For now, just use the safe arbitrary-precision NInteger type.
         NTreeSingleSoln<LPConstraintEuler> tree(this, NS_AN_STANDARD);
         if (tree.find()) {
@@ -189,7 +189,7 @@ NNormalSurface* NTriangulation::hasOctagonalAlmostNormalSphere() {
             // Euler char = 2 implies no real boundary.
             found = false; // At least one octagon found so far?
             broken = false; // More than one octagon found so far?
-            for (tet = 0; tet < tetrahedra_.size() && ! broken; ++tet)
+            for (tet = 0; tet < simplices_.size() && ! broken; ++tet)
                 for (oct = 0; oct < 3; ++oct) {
                     coord = s->getOctCoord(tet, oct);
                     if (coord > 1) {

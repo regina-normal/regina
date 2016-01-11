@@ -182,18 +182,11 @@ bool check_consistency_around_edge(const NTriangulation &trig,
                                    int edge_index,
                                    bool force_oriented)
 {
-    typedef std::deque<NEdgeEmbedding> NEmbed;
-    typedef NEmbed::const_iterator NEmbedIterator;
-
-    NEdge*           edge            = trig.getEdge(edge_index);
-    const NEmbed &   edge_embeddings = edge -> getEmbeddings();
-    NEmbedIterator   it;
-
     // iterate through all tetrahedra around an edge
 
-    for(it = edge_embeddings.begin(); it != edge_embeddings.end(); ++it)
+    for(auto& emb : *trig.getEdge(edge_index))
         if(!check_consistency_on_tet(trig, edge_orientations,
-                                     it->getTetrahedron(), force_oriented))
+                                     emb.getTetrahedron(), force_oriented))
             return false;
 
     return true;
@@ -285,24 +278,23 @@ bool NTriangulation::isOriented() const {
     if(!isOrientable())
         return false;
 
-    for(it = tetrahedra_.begin(); it != tetrahedra_.end(); ++it)
-        if( (*it) -> tetOrientation_ != 1)
+    for(it = simplices_.begin(); it != simplices_.end(); ++it)
+        if( (*it) -> orientation() != 1)
             return false;
 
     return true;
 }
 
 void NTriangulation::orient() {
-    if (! calculatedSkeleton_)
-        calculateSkeleton();
+    ensureSkeleton();
 
     NIsomorphism flip_tets_iso(getNumberOfTetrahedra());
 
     TetrahedronIterator it;
     int t;
-    for (t = 0, it = tetrahedra_.begin(); it != tetrahedra_.end(); ++it, ++t) {
+    for (t = 0, it = simplices_.begin(); it != simplices_.end(); ++it, ++t) {
         flip_tets_iso.tetImage(t) = t;
-        if ((*it)->tetOrientation_ == 1 ||
+        if ((*it)->orientation() == 1 ||
                 ! (*it)->getComponent()->isOrientable())
             flip_tets_iso.facePerm(t) = NPerm4(); // Identity
         else
@@ -315,11 +307,11 @@ void NTriangulation::orient() {
 bool NTriangulation::isOrdered() const {
     TetrahedronIterator it;
 
-    for(it = tetrahedra_.begin(); it != tetrahedra_.end(); ++it)
+    for(it = simplices_.begin(); it != simplices_.end(); ++it)
         for(int face = 0; face < 4; face++)
 
-            if((*it)->tetrahedra_[face]) {
-                NPerm4 perm = (*it) -> tetrahedronPerm_[face];
+            if((*it)->adj_[face]) {
+                NPerm4 perm = (*it) -> gluing_[face];
 
                 // check that the permutation is order preserving on the face
                 int last = -1;
@@ -333,10 +325,8 @@ bool NTriangulation::isOrdered() const {
     return true;
 }
 
-bool NTriangulation::order(bool force_oriented)
-{
-    if(!calculatedSkeleton_)
-        calculateSkeleton();
+bool NTriangulation::order(bool force_oriented) {
+    ensureSkeleton();
 
     if(force_oriented && !isOrientable())
         return false;

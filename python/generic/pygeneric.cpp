@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Computational Engine                                                  *
+ *  Python Interface                                                      *
  *                                                                        *
  *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,16 +32,19 @@
 
 /* end stub */
 
-#include "generic/canonical-impl.h"
-#include "generic/isomorphism-impl.h"
-#include "generic/isosig-impl.h"
+void addComponent();
+void addFacetPairing();
+void addIsomorphism();
+void addFace();
+void addSimplex();
+void addTriangulations();
 
-// Headers required for our template instantiations:
-#include "dim2/dim2triangulation.h"
-#include "triangulation/ntriangulation.h"
-
-// Instantiate templates for standard dimensions.
-// The header has matching "extern template class REGINA_API" declarations.
-template class regina::NGenericTriangulation<2>;
-template class regina::NGenericTriangulation<3>;
+void addGeneric() {
+    addComponent();
+    addFacetPairing();
+    addIsomorphism();
+    addFace();
+    addSimplex();
+    addTriangulations();
+}
 

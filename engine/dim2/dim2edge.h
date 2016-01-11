@@ -42,19 +42,21 @@
 #endif
 
 #include "regina-core.h"
-#include "output.h"
+#include "generic/face.h"
 #include "maths/nperm3.h"
-#include "utilities/nmarkedvector.h"
-#include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {
 
 class Dim2BoundaryComponent;
-class Dim2Component;
-class Dim2Triangle;
-class Dim2Triangulation;
-class Dim2Vertex;
+
+template <int> class Component;
+template <int> class Simplex;
+template <int> class Triangulation;
+typedef Component<2> Dim2Component;
+typedef Simplex<2> Dim2Triangle;
+typedef Triangulation<2> Dim2Triangulation;
+typedef Face<2, 0> Dim2Vertex;
 
 /**
  * \weakgroup dim2
@@ -62,188 +64,28 @@ class Dim2Vertex;
  */
 
 /**
- * Details how an edge in the 1-skeleton of a 2-manifold triangulation
- * forms part of an individual triangle.
+ * A convenience typedef for FaceEmbedding<2, 1>.
  */
-class REGINA_API Dim2EdgeEmbedding {
-    private:
-        Dim2Triangle* triangle_;
-            /**< The triangle in which this edge is contained. */
-        int edge_;
-            /**< The edge number of the triangle that is this edge. */
-
-    public:
-        /**
-         * Default constructor.  The embedding descriptor created is
-         * unusable until it has some data assigned to it using
-         * <tt>operator =</tt>.
-         *
-         * \ifacespython Not present.
-         */
-        Dim2EdgeEmbedding();
-
-        /**
-         * Creates an embedding descriptor containing the given data.
-         *
-         * @param tri the triangle in which this edge is contained.
-         * @param edge the edge number of \a tri that is this edge.
-         */
-        Dim2EdgeEmbedding(Dim2Triangle* tri, int edge);
-
-        /**
-         * Creates an embedding descriptor containing the same data as
-         * the given embedding descriptor.
-         *
-         * @param cloneMe the embedding descriptor to clone.
-         */
-        Dim2EdgeEmbedding(const Dim2EdgeEmbedding& cloneMe);
-
-        /**
-         * Assigns to this embedding descriptor the same data as is
-         * contained in the given embedding descriptor.
-         *
-         * @param cloneMe the embedding descriptor to clone.
-         */
-        Dim2EdgeEmbedding& operator = (const Dim2EdgeEmbedding& cloneMe);
-
-        /**
-         * Returns the triangle in which this edge is contained.
-         *
-         * @return the triangle.
-         */
-        Dim2Triangle* getTriangle() const;
-
-        /**
-         * Returns the edge number within getTriangle() that is this edge.
-         *
-         * @return the edge number that is this edge.
-         */
-        int getEdge() const;
-
-        /**
-         * Returns a mapping from vertices (0,1) of this edge to the
-         * corresponding vertex numbers in getTriangle(), as described
-         * in Dim2Triangle::getEdgeMapping().
-         *
-         * @return a mapping from the vertices of this edge to the
-         * corresponding vertices of getTriangle().
-         */
-        NPerm3 getVertices() const;
-
-        /**
-         * Tests whether this and the given embedding are identical.
-         * Here "identical" means that they refer to the same edge of
-         * the same triangle.
-         *
-         * @param rhs the embedding to compare with this.
-         * @return \c true if and only if both embeddings are identical.
-         */
-        bool operator == (const Dim2EdgeEmbedding& rhs) const;
-
-        /**
-         * Tests whether this and the given embedding are different.
-         * Here "different" means that they do not refer to the same edge of
-         * the same triangle.
-         *
-         * @param rhs the embedding to compare with this.
-         * @return \c true if and only if both embeddings are identical.
-         */
-        bool operator != (const Dim2EdgeEmbedding& rhs) const;
-};
+typedef FaceEmbedding<2, 1> Dim2EdgeEmbedding;
 
 /**
- * Represents an edge in the 1-skeleton of a 2-manifold triangulation.
- * Edges are highly temporary; once a triangulation changes, all its
- * edge objects will be deleted and new ones will be created.
+ * Represents an edge in the skeleton of a 2-manifold triangulation.
+ *
+ * This is a specialisation of the generic Face class template; see the
+ * documentation for Face for a general overview of how this class works.
+ *
+ * These specialisations for Regina's \ref stddim "standard dimensions"
+ * offer significant extra functionality.
  */
-class REGINA_API Dim2Edge :
-        public Output<Dim2Edge>,
-        public boost::noncopyable,
-        public NMarkedElement {
-    public:
-        /**
-         * An array that maps edge numbers within a triangle to the canonical
-         * ordering of the individual triangle vertices that form each edge.
-         *
-         * This means that the vertices of edge \a i in a triangle
-         * are, in canonical order, <tt>ordering[i][0,1]</tt>.  As an
-         * immediate consequence, we obtain <tt>ordering[i][2] == i</tt>.
-         *
-         * Regina defines canonical order to be \e increasing order.
-         * That is, <tt>ordering[i][0] &lt; ordering[i][1]</tt>.
-         *
-         * This table does \e not describe the mapping from specific
-         * edges within a triangulation into individual triangles
-         * (for that, see Dim2Triangle::getEdgeMapping() instead).
-         * This table merely provides a neat and consistent way of
-         * listing the vertices of any given edge of a triangle.
-         */
-        static const NPerm3 ordering[3];
-
+template <>
+class REGINA_API Face<2, 1> : public detail::FaceBase<2, 1>,
+        public Output<Face<2, 1>> {
     private:
-        Dim2EdgeEmbedding emb_[2];
-            /**< A list of descriptors telling how this edge forms a
-                 part of each individual triangle that it belongs to. */
-        unsigned nEmb_;
-            /**< The number of descriptors stored in the list \a emb_.
-                 This will never exceed two. */
-        Dim2Component* component_;
-            /**< The component that this edge is a part of. */
         Dim2BoundaryComponent* boundaryComponent_;
             /**< The boundary component that this edge is a part of,
                  or 0 if this edge is internal. */
 
     public:
-        /**
-         * Default destructor.
-         */
-        ~Dim2Edge();
-
-        /**
-         * Returns the index of this edge in the underlying
-         * triangulation.  This is identical to calling
-         * <tt>getTriangulation()->edgeIndex(this)</tt>.
-         *
-         * @return the index of this edge.
-         */
-        unsigned long index() const;
-
-        /**
-         * Returns the number of descriptors available through getEmbedding().
-         * Note that this number will never be greater than two.
-         *
-         * @return the number of embedding descriptors.
-         */
-        unsigned getNumberOfEmbeddings() const;
-
-        /**
-         * Returns the requested descriptor detailing how this edge
-         * forms a part of a particular triangle in the triangulation.
-         * Note that if this edge represents multiple edges of a
-         * particular triangle, then there will be multiple embedding
-         * descriptors available regarding that triangle.
-         *
-         * @param index the index of the requested descriptor.  This
-         * should be between 0 and getNumberOfEmbeddings()-1 inclusive.
-         * @return the requested embedding descriptor.
-         */
-        const Dim2EdgeEmbedding& getEmbedding(unsigned index) const;
-
-        /**
-         * Returns the triangulation to which this edge belongs.
-         *
-         * @return the triangulation containing this edge.
-         */
-        Dim2Triangulation* getTriangulation() const;
-
-        /**
-         * Returns the component of the triangulation to which this
-         * edge belongs.
-         *
-         * @return the component containing this edge.
-         */
-        Dim2Component* getComponent() const;
-
         /**
          * Returns the boundary component of the triangulation to which
          * this edge belongs.
@@ -255,22 +97,42 @@ class REGINA_API Dim2Edge :
         Dim2BoundaryComponent* getBoundaryComponent() const;
 
         /**
-         * Returns the vertex of the 2-manifold triangulation corresponding
-         * to the given vertex of this edge.
-         *
-         * @param vertex the vertex of this edge to examine.  This
-         * should be either 0 or 1.
-         * @return the corresponding vertex of the 2-manifold triangulation.
-         */
-        Dim2Vertex* getVertex(int vertex) const;
-
-        /**
          * Determines if this edge lies entirely on the boundary of the
          * triangulation.
          *
          * @return \c true if and only if this edge lies on the boundary.
          */
         bool isBoundary() const;
+
+        /**
+         * Determines whether this edge represents a dual edge in the
+         * maximal forest that has been chosen for the dual 1-skeleton of the
+         * triangulation.
+         *
+         * When the skeletal structure of a triangulation is first computed,
+         * a maximal forest in the dual 1-skeleton of the triangulation is
+         * also constructed.  Each dual edge in this maximal forest
+         * represents a (transverse) edge in the primal skeleton of the
+         * triangulation.
+         *
+         * This maximal forest will remain fixed until the triangulation
+         * changes, at which point it will be recomputed (as will all
+         * other skeletal objects, such as connected components and so on).
+         * There is no guarantee that, when it is recomputed, the
+         * maximal forest will use the same dual edges as before.
+         *
+         * This routine identifies whether this edge corresponds to a
+         * member of this dual forest.  In this sense it performs a similar
+         * role to Simplex::facetInMaximalForest(), but this routine is
+         * typically easier to use.
+         *
+         * If the skeleton has already been computed, then this routine is
+         * very fast (since it just returns a precomputed answer).
+         *
+         * @return \c true if and only if this edge represents a
+         * dual edge in the maximal forest.
+         */
+        bool inMaximalForest() const;
 
         /**
          * Writes a short text representation of this object to the
@@ -299,11 +161,16 @@ class REGINA_API Dim2Edge :
          * @param component the triangulation component to which this
          * edge belongs.
          */
-        Dim2Edge(Dim2Component* component);
+        Face(Dim2Component* component);
 
-    friend class Dim2Triangulation;
-        /**< Allow access to private members. */
+    friend class Triangulation<2>;
+    friend class detail::TriangulationBase<2>;
 };
+
+/**
+ * A convenience typedef for Face<2, 1>.
+ */
+typedef Face<2, 1> Dim2Edge;
 
 /*@}*/
 
@@ -312,93 +179,25 @@ class REGINA_API Dim2Edge :
 #include "dim2/dim2triangle.h"
 namespace regina {
 
-// Inline functions for Dim2EdgeEmbedding
-
-inline Dim2EdgeEmbedding::Dim2EdgeEmbedding() : triangle_(0) {
-}
-
-inline Dim2EdgeEmbedding::Dim2EdgeEmbedding(
-        Dim2Triangle* tri, int edge) :
-        triangle_(tri), edge_(edge) {
-}
-
-inline Dim2EdgeEmbedding::Dim2EdgeEmbedding(
-        const Dim2EdgeEmbedding& cloneMe) :
-        triangle_(cloneMe.triangle_), edge_(cloneMe.edge_) {
-}
-
-inline Dim2EdgeEmbedding& Dim2EdgeEmbedding::operator =
-        (const Dim2EdgeEmbedding& cloneMe) {
-    triangle_ = cloneMe.triangle_;
-    edge_ = cloneMe.edge_;
-    return *this;
-}
-
-inline Dim2Triangle* Dim2EdgeEmbedding::getTriangle() const {
-    return triangle_;
-}
-
-inline int Dim2EdgeEmbedding::getEdge() const {
-    return edge_;
-}
-
-inline NPerm3 Dim2EdgeEmbedding::getVertices() const {
-    return triangle_->getEdgeMapping(edge_);
-}
-
-inline bool Dim2EdgeEmbedding::operator == (const Dim2EdgeEmbedding& other)
-        const {
-    return ((triangle_ == other.triangle_) && (edge_ == other.edge_));
-}
-
-inline bool Dim2EdgeEmbedding::operator != (const Dim2EdgeEmbedding& other)
-        const {
-    return ((triangle_ != other.triangle_) || (edge_ != other.edge_));
-}
-
 // Inline functions for Dim2Edge
 
-inline Dim2Edge::Dim2Edge(Dim2Component* component) :
-        nEmb_(0), component_(component), boundaryComponent_(0) {
+inline Face<2, 1>::Face(Dim2Component* component) :
+        detail::FaceBase<2, 1>(component), boundaryComponent_(0) {
 }
 
-inline Dim2Edge::~Dim2Edge() {
-}
-
-inline unsigned long Dim2Edge::index() const {
-    return markedIndex();
-}
-
-inline unsigned Dim2Edge::getNumberOfEmbeddings() const {
-    return nEmb_;
-}
-
-inline const Dim2EdgeEmbedding& Dim2Edge::getEmbedding(
-        unsigned index) const {
-    return emb_[index];
-}
-
-inline Dim2Triangulation* Dim2Edge::getTriangulation() const {
-    return emb_[0].getTriangle()->getTriangulation();
-}
-
-inline Dim2Component* Dim2Edge::getComponent() const {
-    return component_;
-}
-
-inline Dim2BoundaryComponent* Dim2Edge::getBoundaryComponent() const {
+inline Dim2BoundaryComponent* Face<2, 1>::getBoundaryComponent() const {
     return boundaryComponent_;
 }
 
-inline Dim2Vertex* Dim2Edge::getVertex(int vertex) const {
-    return emb_[0].getTriangle()->getVertex(emb_[0].getVertices()[vertex]);
-}
-
-inline bool Dim2Edge::isBoundary() const {
+inline bool Face<2, 1>::isBoundary() const {
     return (boundaryComponent_ != 0);
 }
 
-inline void Dim2Edge::writeTextShort(std::ostream& out) const {
+inline bool Face<2, 1>::inMaximalForest() const {
+    return front().getTriangle()->facetInMaximalForest(front().getEdge());
+}
+
+inline void Face<2, 1>::writeTextShort(std::ostream& out) const {
     out << (boundaryComponent_ ? "Boundary " : "Internal ") << "edge";
 }
 

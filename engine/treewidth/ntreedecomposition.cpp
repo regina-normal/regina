@@ -33,23 +33,25 @@
 /* end stub */
 
 #include <algorithm>
+#include "dim2/dim2edgepairing.h"
 #include "dim2/dim2triangulation.h"
 #include "treewidth/ntreedecomposition.h"
 #include "treewidth/ntreedecomposition-impl.h"
+#include "triangulation/nfacepairing.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
 
 // Instantiate templates for standard dimensions:
 template REGINA_API NTreeDecomposition::NTreeDecomposition(
-    const NGenericTriangulation<2>&, TreeDecompositionAlg);
+    const Triangulation<2>&, TreeDecompositionAlg);
 template REGINA_API NTreeDecomposition::NTreeDecomposition(
-    const NGenericTriangulation<3>&, TreeDecompositionAlg);
+    const Triangulation<3>&, TreeDecompositionAlg);
 
 template REGINA_API NTreeDecomposition::NTreeDecomposition(
-    const NGenericFacetPairing<2>&, TreeDecompositionAlg);
+    const FacetPairing<2>&, TreeDecompositionAlg);
 template REGINA_API NTreeDecomposition::NTreeDecomposition(
-    const NGenericFacetPairing<3>&, TreeDecompositionAlg);
+    const FacetPairing<3>&, TreeDecompositionAlg);
 
 // Instantiate templates for common types:
 template REGINA_API NTreeDecomposition::NTreeDecomposition(

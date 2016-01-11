@@ -36,6 +36,7 @@
 // that breaks boost.python on MacOSX.
 #include "Python.h"
 
+#include "maths/nperm2.h"
 #include "maths/nperm3.h"
 #include "maths/nperm4.h"
 #include "maths/nperm5.h"
@@ -47,6 +48,7 @@ void addGlobalArray() {
     regina::python::GlobalArray3D<int>::wrapClass("GlobalArray3D_int");
     regina::python::GlobalArray<unsigned>::wrapClass("GlobalArray_unsigned");
     regina::python::GlobalArray<const char*>::wrapClass("GlobalArray_char_string");
+    regina::python::GlobalArray<regina::NPerm2>::wrapClass("GlobalArray_NPerm2");
     regina::python::GlobalArray<regina::NPerm3>::wrapClass("GlobalArray_NPerm3");
     regina::python::GlobalArray<regina::NPerm4>::wrapClass("GlobalArray_NPerm4");
     regina::python::GlobalArray2D<regina::NPerm4>::wrapClass("GlobalArray2D_NPerm4");

@@ -41,13 +41,14 @@
 #include "triangulation/nvertex.h"
 #include "../globalarray.h"
 #include "../helpers.h"
+#include "../generic/facehelper.h"
 
 using namespace boost::python;
 using regina::NTetrahedron;
 
 void addNTetrahedron() {
-    class_<NTetrahedron, std::auto_ptr<NTetrahedron>, boost::noncopyable>(
-            "NTetrahedron", no_init)
+    class_<regina::Simplex<3>, std::auto_ptr<regina::Simplex<3>>,
+            boost::noncopyable>("Simplex3", no_init)
         .def("getDescription", &NTetrahedron::getDescription,
             return_value_policy<return_by_value>())
         .def("setDescription", &NTetrahedron::setDescription)
@@ -56,36 +57,47 @@ void addNTetrahedron() {
             return_value_policy<reference_existing_object>())
         .def("adjacentSimplex", &NTetrahedron::adjacentSimplex,
             return_value_policy<reference_existing_object>())
-        .def("getAdjacentTetrahedron", &NTetrahedron::getAdjacentTetrahedron,
-            return_value_policy<reference_existing_object>())
         .def("adjacentGluing", &NTetrahedron::adjacentGluing)
-        .def("getAdjacentTetrahedronGluing",
-            &NTetrahedron::getAdjacentTetrahedronGluing)
         .def("adjacentFace", &NTetrahedron::adjacentFace)
         .def("adjacentFacet", &NTetrahedron::adjacentFacet)
-        .def("getAdjacentFace", &NTetrahedron::getAdjacentFace)
         .def("hasBoundary", &NTetrahedron::hasBoundary)
         .def("joinTo", &NTetrahedron::joinTo)
+        .def("join", &NTetrahedron::join)
         .def("unjoin", &NTetrahedron::unjoin,
+            return_value_policy<reference_existing_object>())
+        .def("triangulation", &NTetrahedron::triangulation,
             return_value_policy<reference_existing_object>())
         .def("isolate", &NTetrahedron::isolate)
         .def("getTriangulation", &NTetrahedron::getTriangulation,
             return_value_policy<reference_existing_object>())
+        .def("component", &NTetrahedron::component,
+            return_value_policy<reference_existing_object>())
         .def("getComponent", &NTetrahedron::getComponent,
+            return_value_policy<reference_existing_object>())
+        .def("face", &regina::python::face<NTetrahedron, 3, int>)
+        .def("getFace", &regina::python::face<NTetrahedron, 3, int>)
+        .def("vertex", &NTetrahedron::vertex,
             return_value_policy<reference_existing_object>())
         .def("getVertex", &NTetrahedron::getVertex,
             return_value_policy<reference_existing_object>())
+        .def("edge", &NTetrahedron::edge,
+            return_value_policy<reference_existing_object>())
         .def("getEdge", &NTetrahedron::getEdge,
             return_value_policy<reference_existing_object>())
-        .def("getFace", &NTetrahedron::getFace,
+        .def("triangle", &NTetrahedron::triangle,
             return_value_policy<reference_existing_object>())
         .def("getTriangle", &NTetrahedron::getTriangle,
             return_value_policy<reference_existing_object>())
+        .def("faceMapping", &regina::python::faceMapping<NTetrahedron, 3>)
+        .def("getFaceMapping", &regina::python::faceMapping<NTetrahedron, 3>)
+        .def("vertexMapping", &NTetrahedron::vertexMapping)
         .def("getVertexMapping", &NTetrahedron::getVertexMapping)
+        .def("edgeMapping", &NTetrahedron::edgeMapping)
         .def("getEdgeMapping", &NTetrahedron::getEdgeMapping)
-        .def("getFaceMapping", &NTetrahedron::getFaceMapping)
+        .def("triangleMapping", &NTetrahedron::triangleMapping)
         .def("getTriangleMapping", &NTetrahedron::getTriangleMapping)
         .def("orientation", &NTetrahedron::orientation)
+        .def("facetInMaximalForest", &NTetrahedron::facetInMaximalForest)
         .def("str", &NTetrahedron::str)
         .def("toString", &NTetrahedron::toString)
         .def("detail", &NTetrahedron::detail)
@@ -93,5 +105,7 @@ void addNTetrahedron() {
         .def("__str__", &NTetrahedron::str)
         .def(regina::python::add_eq_operators())
     ;
+
+    scope().attr("NTetrahedron") = scope().attr("Simplex3");
 }
 

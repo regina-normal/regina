@@ -34,7 +34,7 @@
 
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
-#include "census/dim2edgepairing.h"
+#include "dim2/dim2edgepairing.h"
 #include "testsuite/census/testcensus.h"
 
 using regina::Dim2EdgePairing;

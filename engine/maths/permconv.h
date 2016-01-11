@@ -54,9 +54,14 @@ namespace regina {
  */
 
 /**
- * Converts the given 4-element permutation to a 5-element permutation.
+ * Deprecated routine that converts a 4-element permutation to a
+ * 5-element permutation.
+ *
  * The resulting 5-element permutation will map 4 to 4, and will map
  * 0, 1, 2 and 3 to their respective images under \a p.
+ *
+ * \deprecated This routine will be removed from some future release of
+ * Regina.  You should instead call NPerm5::extend(\a p).
  *
  * @param p the given 4-element permutation.
  * @return the permutation \a p expressed as a permutation of five
@@ -79,9 +84,14 @@ REGINA_API NPerm5 perm4to5(const NPerm4& p);
 REGINA_API NPerm4 perm5to4(const NPerm5& p);
 
 /**
- * Converts the given 3-element permutation to a 4-element permutation.
+ * Deprecated routine that converts a 3-element permutation to a
+ * 4-element permutation.
+ *
  * The resulting 4-element permutation will map 3 to 3, and will map
  * 0, 1 and 2 to their respective images under \a p.
+ *
+ * \deprecated This routine will be removed from some future release of
+ * Regina.  You should instead call NPerm4::extend(\a p).
  *
  * @param p the given 3-element permutation.
  * @return the permutation \a p expressed as a permutation of four
@@ -104,9 +114,14 @@ REGINA_API NPerm4 perm3to4(const NPerm3& p);
 REGINA_API NPerm3 perm4to3(const NPerm4& p);
 
 /**
- * Converts the given 3-element permutation to a 5-element permutation.
+ * Deprecated routine that converts a 3-element permutation to a
+ * 5-element permutation.
+ *
  * The resulting 5-element permutation will map 3 to 3 and 4 to 4, and will
  * map 0, 1 and 2 to their respective images under \a p.
+ *
+ * \deprecated This routine will be removed from some future release of
+ * Regina.  You should instead call NPerm5::extend(\a p).
  *
  * @param p the given 3-element permutation.
  * @return the permutation \a p expressed as a permutation of five
@@ -134,7 +149,7 @@ REGINA_API NPerm3 perm5to3(const NPerm5& p);
 // Inline conversion functions
 
 inline NPerm5 perm4to5(const NPerm4& p) {
-    return NPerm5(p[0], p[1], p[2], p[3], 4);
+    return NPerm5::extend(p);
 }
 
 inline NPerm4 perm5to4(const NPerm5& p) {
@@ -144,9 +159,7 @@ inline NPerm4 perm5to4(const NPerm5& p) {
 }
 
 inline NPerm4 perm3to4(const NPerm3& p) {
-    // Code map: 0,1,2,3,4,5 -> 0,3,8,7,12,15.
-    unsigned char c = p.getPermCode();
-    return NPerm4::fromPermCode2(c == 2 ? 8 : c == 3 ? 7 : 3 * c);
+    return NPerm4::extend(p);
 }
 
 inline NPerm3 perm4to3(const NPerm4& p) {
@@ -156,7 +169,7 @@ inline NPerm3 perm4to3(const NPerm4& p) {
 }
 
 inline NPerm5 perm3to5(const NPerm3& p) {
-    return NPerm5(p[0], p[1], p[2], 3, 4);
+    return NPerm5::extend(p);
 }
 
 inline NPerm3 perm5to3(const NPerm5& p) {

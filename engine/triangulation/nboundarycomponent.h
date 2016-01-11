@@ -44,17 +44,23 @@
 #include <vector>
 #include "regina-core.h"
 #include "output.h"
+#include "generic/alias/face.h"
 #include "utilities/nmarkedvector.h"
 #include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {
 
-class NComponent;
-class NEdge;
-class NTriangle;
-class NTetrahedron;
-class NVertex;
+template <int> class Component;
+template <int> class Simplex;
+template <int> class Triangulation;
+template <int, int> class Face;
+typedef Component<3> NComponent;
+typedef Simplex<3> NTetrahedron;
+typedef Triangulation<3> NTriangulation;
+typedef Face<3, 0> NVertex;
+typedef Face<3, 1> NEdge;
+typedef Face<3, 2> NTriangle;
 
 /**
  * \weakgroup triangulation
@@ -63,8 +69,9 @@ class NVertex;
 
 /**
  * Represents a component of the boundary of a triangulation.
+ *
  * Note that an ideal vertex constitutes a boundary component of its
- * own.
+ * own - it consists of one vertex, no edges, and no triangles.
  *
  * We can run into some interesting cases with invalid triangulations.
  * Suppose some vertex link is a multiply punctured surface (which makes
@@ -85,6 +92,7 @@ class NVertex;
  */
 class REGINA_API NBoundaryComponent :
         public Output<NBoundaryComponent>,
+        public alias::FaceOfTriangulation<NBoundaryComponent, 3>,
         public NMarkedElement {
     private:
         std::vector<NTriangle*> triangles_;
@@ -109,102 +117,39 @@ class REGINA_API NBoundaryComponent :
         unsigned long index() const;
 
         /**
-         * Returns the number of triangles in this boundary component.
+         * Returns the number of <i>subdim</i>-faces in this boundary component.
          *
-         * @return the number of triangles.
+         * \pre The template argument \a subdim is between 0 and 2 inclusive.
+         *
+         * \ifacespython Python does not support templates.  Instead,
+         * Python users should call this function in the form
+         * <tt>countFaces(subdim)</tt>; that is, the template parameter
+         * \a subdim becomes the first argument of the function.
+         *
+         * @return the number of <i>subdim</i>-faces.
          */
-        unsigned long getNumberOfTriangles() const;
-        /**
-         * A deprecated alias for getNumberOfTriangles().
-         *
-         * This routine returns the number of triangular faces in this
-         * boundary component.  See getNumberOfTriangles() for further details.
-         *
-         * \deprecated This routine will be removed in a future version
-         * of Regina.  Please use getNumberOfTriangles() instead.
-         *
-         * @return the number of triangles.
-         */
-        unsigned long getNumberOfFaces() const;
+        template <int subdim>
+        size_t countFaces() const;
 
         /**
-         * Returns the number of edges in this boundary component.
+         * Returns the requested <i>subdim</i>-face in this boundary component.
          *
-         * @return the number of edges.
+         * Note that the index of a face in the boundary component need
+         * not be the index of the same face in the overall triangulation.
+         *
+         * \pre The template argument \a subdim is between 0 and 2 inclusive.
+         *
+         * \ifacespython Python does not support templates.  Instead,
+         * Python users should call this function in the form
+         * <tt>face(subdim, index)</tt>; that is, the template parameter
+         * \a subdim becomes the first argument of the function.
+         *
+         * @param index the index of the desired face, ranging from 0 to
+         * countFaces<subdim>()-1 inclusive.
+         * @return the requested face.
          */
-        unsigned long getNumberOfEdges() const;
-
-        /**
-         * Returns the number of vertices in this boundary component.
-         *
-         * @return the number of vertices.
-         */
-        unsigned long getNumberOfVertices() const;
-
-        /**
-         * Returns the requested triangle in this boundary component.
-         *
-         * For an ideal boundary component (which consists of a single
-         * vertex), there are no real triangles in the boundary component
-         * and this routine cannot be used.
-         *
-         * @param index the index of the requested triangle in the boundary
-         * component.  This should be between 0 and getNumberOfTriangles()-1
-         * inclusive.
-         * Note that the index of a triangle in the boundary component need
-         * not be the index of the same triangle in the entire
-         * triangulation.
-         * @return the requested triangle.
-         */
-        NTriangle* getTriangle(unsigned long index) const;
-        /**
-         * A deprecated alias for getTriangle().
-         *
-         * This routine returns the requested triangular face in this
-         * boundary component.  See getTriangle() for further details.
-         *
-         * \deprecated This routine will be removed in a future version
-         * of Regina.  Please use getTriangle() instead.
-         *
-         * @param index the index of the requested triangle in the boundary
-         * component.  This should be between 0 and getNumberOfTriangles()-1
-         * inclusive.
-         * Note that the index of a triangle in the boundary component need
-         * not be the index of the same triangle in the entire
-         * triangulation.
-         * @return the requested triangle.
-         */
-        NTriangle* getFace(unsigned long index) const;
-
-        /**
-         * Returns the requested edge in this boundary component.
-         *
-         * For an ideal boundary component (which consists of a single
-         * vertex), there are no real edges in the boundary component
-         * and this routine cannot be used.
-         *
-         * @param index the index of the requested edge in the boundary
-         * component.  This should be between 0 and getNumberOfEdges()-1
-         * inclusive.
-         * Note that the index of a edge in the boundary component need
-         * not be the index of the same edge in the entire
-         * triangulation.
-         * @return the requested edge.
-         */
-        NEdge* getEdge(unsigned long index) const;
-
-        /**
-         * Returns the requested vertex in this boundary component.
-         *
-         * @param index the index of the requested vertex in the boundary
-         * component.  This should be between 0 and getNumberOfVertices()-1
-         * inclusive.
-         * Note that the index of a vertex in the boundary component need
-         * not be the index of the same vertex in the entire
-         * triangulation.
-         * @return the requested vertex.
-         */
-        NVertex* getVertex(unsigned long index) const;
+        template <int subdim>
+        Face<3, subdim>* face(size_t index) const;
 
         /**
          * Returns the component of the triangulation to which this
@@ -294,7 +239,7 @@ class REGINA_API NBoundaryComponent :
          */
         NBoundaryComponent(NVertex* idealVertex);
 
-    friend class NTriangulation;
+    friend class Triangulation<3>;
         /**< Allow access to private members. */
 };
 
@@ -318,35 +263,33 @@ inline unsigned long NBoundaryComponent::index() const {
     return markedIndex();
 }
 
-inline unsigned long NBoundaryComponent::getNumberOfTriangles() const {
+template <>
+inline size_t NBoundaryComponent::countFaces<2>() const {
     return triangles_.size();
 }
 
-inline unsigned long NBoundaryComponent::getNumberOfFaces() const {
-    return triangles_.size();
-}
-
-inline unsigned long NBoundaryComponent::getNumberOfEdges() const {
+template <>
+inline size_t NBoundaryComponent::countFaces<1>() const {
     return edges_.size();
 }
 
-inline unsigned long NBoundaryComponent::getNumberOfVertices() const {
+template <>
+inline size_t NBoundaryComponent::countFaces<0>() const {
     return vertices_.size();
 }
 
-inline NTriangle* NBoundaryComponent::getTriangle(unsigned long index) const {
+template <>
+inline NTriangle* NBoundaryComponent::face<2>(size_t index) const {
     return triangles_[index];
 }
 
-inline NTriangle* NBoundaryComponent::getFace(unsigned long index) const {
-    return triangles_[index];
-}
-
-inline NEdge* NBoundaryComponent::getEdge(unsigned long index) const {
+template <>
+inline NEdge* NBoundaryComponent::face<1>(size_t index) const {
     return edges_[index];
 }
 
-inline NVertex* NBoundaryComponent::getVertex(unsigned long index) const {
+template <>
+inline NVertex* NBoundaryComponent::face<0>(size_t index) const {
     return vertices_[index];
 }
 

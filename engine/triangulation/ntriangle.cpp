@@ -37,13 +37,6 @@
 
 namespace regina {
 
-const NPerm4 NTriangle::ordering[4] = {
-    NPerm4(1, 2, 3, 0),
-    NPerm4(0, 2, 3, 1),
-    NPerm4(0, 1, 3, 2),
-    NPerm4(0, 1, 2, 3)
-};
-
 NTriangle::Type NTriangle::getType() {
     if (type_)
         return type_;
@@ -104,31 +97,13 @@ NTriangle::Type NTriangle::getType() {
     return UNKNOWN_TYPE;
 }
 
-NEdge* NTriangle::getEdge(int edge) const {
-    NPerm4 p = embeddings_[0]->getVertices();
-    return embeddings_[0]->getTetrahedron()->getEdge(
-        NEdge::edgeNumber[p[(edge + 1) % 3]][p[(edge + 2) % 3]]);
-}
-
-NPerm4 NTriangle::getEdgeMapping(int edge) const {
-    NPerm4 triPerm = embeddings_[0]->getVertices();
-        // Maps triangle -> tetrahedron
-    NPerm4 edgePerm = embeddings_[0]->getTetrahedron()->getEdgeMapping(
-        NEdge::edgeNumber[triPerm[(edge + 1) % 3]][triPerm[(edge + 2) % 3]]);
-        // Maps edge -> tetrahedron
-    return NPerm4(triPerm.preImageOf(edgePerm[0]),
-        triPerm.preImageOf(edgePerm[1]), edge, 3);
-}
-
 void NTriangle::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
     out << std::endl;
 
     out << "Appears as:" << std::endl;
-    for (int i = 0; i < nEmbeddings_; ++i)
-        out << "  " << embeddings_[i]->getTetrahedron()->markedIndex()
-            << " (" << embeddings_[i]->getVertices().trunc3() << ')'
-            << std::endl;
+    for (auto& emb : *this)
+        out << "  " << emb << std::endl;
 }
 
 } // namespace regina

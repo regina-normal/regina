@@ -279,7 +279,7 @@ QString Dim2GluingsModel::destString(int srcEdge, regina::Dim2Triangle* destTri,
         return "";
     else
         return QString::number(destTri->markedIndex()) + " (" + (gluing *
-            regina::Dim2Edge::ordering[srcEdge]).trunc2().c_str() + ')';
+            regina::Dim2Edge::ordering(srcEdge)).trunc2().c_str() + ')';
 }
 
 regina::NPerm3 Dim2GluingsModel::edgeStringToPerm(int srcEdge,
@@ -295,7 +295,7 @@ regina::NPerm3 Dim2GluingsModel::edgeStringToPerm(int srcEdge,
     }
 
     return regina::NPerm3(destVertex[0], destVertex[1], destVertex[2]) *
-        regina::Dim2Edge::ordering[srcEdge].inverse();
+        regina::Dim2Edge::ordering(srcEdge).inverse();
 }
 
 Dim2TriGluingsUI::Dim2TriGluingsUI(regina::Dim2Triangulation* packet,

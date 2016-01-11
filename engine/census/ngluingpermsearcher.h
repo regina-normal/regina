@@ -2505,7 +2505,7 @@ class REGINA_API NCollapsedChainSearcher : public NGluingPermSearcher {
             /**< A database of enumeration results sorted by face pairing
                  graph. If possible, this searcher will use these results after
                  a collapse rather than rebuilding smaller triangulations. */
-        FacetPairing *modified;
+        NFacePairing *modified;
             /**< The modified face pairing graph. */
         NIsomorphism *iso;
             /**< The isomorphism applied to the original pairing to retrieve

@@ -44,7 +44,7 @@
 
 #include <boost/noncopyable.hpp>
 #include "regina-core.h"
-#include "census/nfacepairing.h"
+#include "triangulation/nfacepairing.h"
 #include "utilities/nbooleans.h"
 
 namespace regina {
@@ -53,7 +53,9 @@ class NCensusHits;
 class NGluingPerms;
 class NGluingPermSearcher;
 class NPacket;
-class NTriangulation;
+
+template <int> class Triangulation;
+typedef Triangulation<3> NTriangulation;
 
 /**
  * \addtogroup census Census of Triangulations

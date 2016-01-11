@@ -46,12 +46,11 @@
  */
 
 namespace regina {
-    class Dim2Triangulation;
-    class NTriangulation;
+    template <int> class Triangulation;
 }
 
-typedef void (*Dim2TriangulationTestFunction)(regina::Dim2Triangulation*);
-typedef void (*NTriangulationTestFunction)(regina::NTriangulation*);
+typedef void (*Dim2TriangulationTestFunction)(regina::Triangulation<2>*);
+typedef void (*NTriangulationTestFunction)(regina::Triangulation<3>*);
 
 void runCensusMinClosed(NTriangulationTestFunction f, bool small_ = false);
 void runCensusAllClosed(NTriangulationTestFunction f, bool small_ = false);

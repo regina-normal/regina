@@ -3,10 +3,8 @@
 # Files to compile
 SET ( FILES
   dim2boundarycomponent
-  dim2component
   dim2edge
   dim2exampletriangulation
-  dim2triangle
   dim2triangulation
   dim2vertex
   isomorphic
@@ -26,9 +24,10 @@ if (${REGINA_INSTALL_DEV})
     dim2boundarycomponent.h
     dim2component.h
     dim2edge.h
+    dim2edgepairing.h
     dim2exampletriangulation.h
-    dim2triangle.h
     dim2isomorphism.h
+    dim2triangle.h
     dim2triangulation.h
     dim2vertex.h
     nxmldim2trireader.h
