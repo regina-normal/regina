@@ -67,9 +67,9 @@ namespace {
         return ans;
     }
 
-    boost::python::list Dim2_getBoundaryComponents_list(Dim2Triangulation& t) {
+    boost::python::list Dim2_boundaryComponents_list(Dim2Triangulation& t) {
         boost::python::list ans;
-        for (auto b : t.getBoundaryComponents())
+        for (auto b : t.boundaryComponents())
             ans.append(boost::python::ptr(b));
         return ans;
     }
@@ -185,7 +185,8 @@ void addDim2Triangulation() {
         .def("getNumberOfEdges", &Dim2Triangulation::getNumberOfEdges)
         .def("components", Dim2_components_list)
         .def("getComponents", Dim2_components_list)
-        .def("getBoundaryComponents", Dim2_getBoundaryComponents_list)
+        .def("boundaryComponents", Dim2_boundaryComponents_list)
+        .def("getBoundaryComponents", Dim2_boundaryComponents_list)
         .def("faces", &regina::python::faces<Dim2Triangulation, 2>)
         .def("getFaces", &regina::python::faces<Dim2Triangulation, 2>)
         .def("vertices", regina::python::faces_list<Dim2Triangulation, 2, 0>)
@@ -195,6 +196,8 @@ void addDim2Triangulation() {
         .def("component", &Dim2Triangulation::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim2Triangulation::getComponent,
+            return_internal_reference<>())
+        .def("boundaryComponent", &Dim2Triangulation::boundaryComponent,
             return_internal_reference<>())
         .def("getBoundaryComponent", &Dim2Triangulation::getBoundaryComponent,
             return_internal_reference<>())

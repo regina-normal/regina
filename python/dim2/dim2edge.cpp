@@ -110,6 +110,8 @@ void addDim2Edge() {
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim2Edge::getComponent,
             return_value_policy<reference_existing_object>())
+        .def("boundaryComponent", &Dim2Edge::boundaryComponent,
+            return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &Dim2Edge::getBoundaryComponent,
             return_value_policy<reference_existing_object>())
         .def("face", &regina::python::face<Dim2Edge, 1, int>)

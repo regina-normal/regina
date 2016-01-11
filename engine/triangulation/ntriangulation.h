@@ -359,7 +359,7 @@ class REGINA_API Triangulation<3> :
          *
          * See removeSimplexAt() for further information.
          */
-        void removeTetrahedronAt(unsigned long index);
+        void removeTetrahedronAt(size_t index);
         /**
          * A dimension-specific alias for removeAllSimplices().
          *
@@ -405,6 +405,14 @@ class REGINA_API Triangulation<3> :
          *
          * @return the list of all boundary components.
          */
+        const std::vector<NBoundaryComponent*>& boundaryComponents() const;
+        /**
+         * Deprecated routine that returns all boundary components of this
+         * triangulation.
+         *
+         * \deprecated This routine has been renamed to boundaryComponents().
+         * See the boundaryComponents() documentation for further details.
+         */
         const std::vector<NBoundaryComponent*>& getBoundaryComponents() const;
         /**
          * Returns the requested triangulation boundary component.
@@ -417,7 +425,15 @@ class REGINA_API Triangulation<3> :
          * component, ranging from 0 to countBoundaryComponents()-1 inclusive.
          * @return the requested boundary component.
          */
-        NBoundaryComponent* getBoundaryComponent(unsigned long index) const;
+        NBoundaryComponent* boundaryComponent(size_t index) const;
+        /**
+         * Deprecated routine that returns the requested boundary component
+         * of this triangulation.
+         *
+         * \deprecated This routine has been renamed to boundaryComponent().
+         * See the boundaryComponent() documentation for further details.
+         */
+        NBoundaryComponent* getBoundaryComponent(size_t index) const;
         /**
          * Deprecated routine that returns the index of the given
          * boundary component in the triangulation.
@@ -3202,7 +3218,7 @@ inline NTetrahedron* Triangulation<3>::newTetrahedron(const std::string& desc) {
     return newSimplex(desc);
 }
 
-inline void Triangulation<3>::removeTetrahedronAt(unsigned long index) {
+inline void Triangulation<3>::removeTetrahedronAt(size_t index) {
     removeSimplexAt(index);
 }
 
@@ -3238,13 +3254,25 @@ inline long Triangulation<3>::getEulerCharacteristic() const {
 }
 
 inline const std::vector<NBoundaryComponent*>&
+        Triangulation<3>::boundaryComponents() const {
+    ensureSkeleton();
+    return (const std::vector<NBoundaryComponent*>&)(boundaryComponents_);
+}
+
+inline const std::vector<NBoundaryComponent*>&
         Triangulation<3>::getBoundaryComponents() const {
     ensureSkeleton();
     return (const std::vector<NBoundaryComponent*>&)(boundaryComponents_);
 }
 
+inline NBoundaryComponent* Triangulation<3>::boundaryComponent(
+        size_t index) const {
+    ensureSkeleton();
+    return boundaryComponents_[index];
+}
+
 inline NBoundaryComponent* Triangulation<3>::getBoundaryComponent(
-        unsigned long index) const {
+        size_t index) const {
     ensureSkeleton();
     return boundaryComponents_[index];
 }

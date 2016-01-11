@@ -126,7 +126,7 @@ namespace {
 
     boost::python::list boundaryComponents_list(NTriangulation& t) {
         boost::python::list ans;
-        for (auto b : t.getBoundaryComponents())
+        for (auto b : t.boundaryComponents())
             ans.append(boost::python::ptr(b));
         return ans;
     }
@@ -257,6 +257,7 @@ void addNTriangulation() {
         .def("getNumberOfTriangles", &NTriangulation::getNumberOfTriangles)
         .def("components", components_list)
         .def("getComponents", components_list)
+        .def("boundaryComponents", boundaryComponents_list)
         .def("getBoundaryComponents", boundaryComponents_list)
         .def("faces", &regina::python::faces<NTriangulation, 3>)
         .def("getFaces", &regina::python::faces<NTriangulation, 3>)
@@ -269,6 +270,8 @@ void addNTriangulation() {
         .def("component", &NTriangulation::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &NTriangulation::getComponent,
+            return_internal_reference<>())
+        .def("boundaryComponent", &NTriangulation::boundaryComponent,
             return_internal_reference<>())
         .def("getBoundaryComponent", &NTriangulation::getBoundaryComponent,
             return_internal_reference<>())
