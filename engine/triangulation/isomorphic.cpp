@@ -161,8 +161,8 @@ bool detail::TriangulationBase<3>::compatible(
         if (src->getVertex(vertex)->degree() !=
                 dest->getVertex(p[vertex])->degree())
             return false;
-        if (src->getVertex(vertex)->getLink() !=
-                dest->getVertex(p[vertex])->getLink())
+        if (src->getVertex(vertex)->link() !=
+                dest->getVertex(p[vertex])->link())
             return false;
     }
 

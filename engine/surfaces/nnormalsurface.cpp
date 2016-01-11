@@ -448,7 +448,7 @@ NMatrixInt* NNormalSurface::boundaryIntersections() const {
             return 0;
         if (! (*it)->isLinkOrientable())
             return 0;
-        if ((*it)->getLinkEulerChar() != 0)
+        if ((*it)->linkEulerChar() != 0)
             return 0;
     }
 

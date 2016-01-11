@@ -196,7 +196,7 @@ QVariant VertexModel::data(const QModelIndex& index, int role) const {
             case 0:
                 return index.row();
             case 1: {
-                int link = item->getLink();
+                int link = item->link();
                 if (link == NVertex::SPHERE)
                     return QString();
                 if (link == NVertex::DISC)
@@ -208,10 +208,10 @@ QVariant VertexModel::data(const QModelIndex& index, int role) const {
                 if (link == NVertex::NON_STANDARD_CUSP) {
                     if (item->isLinkOrientable())
                         return tr("Cusp (orbl, genus %1)").arg(
-                            1 - (item->getLinkEulerChar() / 2));
+                            1 - (item->linkEulerChar() / 2));
                     else
                         return tr("Cusp (non-or, genus %1)").arg(
-                            2 - item->getLinkEulerChar());
+                            2 - item->linkEulerChar());
                 }
                 if (link == NVertex::NON_STANDARD_BDRY)
                     return tr("Non-std bdry");

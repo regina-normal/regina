@@ -364,8 +364,8 @@ long Triangulation<3>::eulerCharManifold() const {
     // also.
     if (! valid_) {
         for (NVertex* v : vertices())
-            if (v->getLink() == NVertex::NON_STANDARD_BDRY)
-                ans += v->getLinkEulerChar() - 1;
+            if (v->link() == NVertex::NON_STANDARD_BDRY)
+                ans += v->linkEulerChar() - 1;
         for (NEdge* e : edges())
             if (! e->isValid())
                 ++ans;
