@@ -260,7 +260,7 @@ class REGINA_API Triangulation<4> :
          *
          * See removeSimplexAt() for further information.
          */
-        void removePentachoronAt(unsigned long index);
+        void removePentachoronAt(size_t index);
         /**
          * A dimension-specific alias for removeAllSimplices().
          *
@@ -312,6 +312,14 @@ class REGINA_API Triangulation<4> :
          *
          * @return the list of all boundary components.
          */
+        const std::vector<Dim4BoundaryComponent*>& boundaryComponents() const;
+        /**
+         * Deprecated routine that returns all boundary components of this
+         * triangulation.
+         *
+         * \deprecated This routine has been renamed to boundaryComponents().
+         * See the boundaryComponents() documentation for further details.
+         */
         const std::vector<Dim4BoundaryComponent*>& getBoundaryComponents()
             const;
         /**
@@ -325,7 +333,15 @@ class REGINA_API Triangulation<4> :
          * from 0 to countBoundaryComponents()-1 inclusive.
          * @return the requested boundary component.
          */
-        Dim4BoundaryComponent* getBoundaryComponent(unsigned long index) const;
+        Dim4BoundaryComponent* boundaryComponent(size_t index) const;
+        /**
+         * Deprecated routine that returns the requested boundary component
+         * of this triangulation.
+         *
+         * \deprecated This routine has been renamed to boundaryComponent().
+         * See the boundaryComponent() documentation for further details.
+         */
+        Dim4BoundaryComponent* getBoundaryComponent(size_t index) const;
         /**
          * Deprecated routine that returns the index of the given
          * boundary component in the triangulation.
@@ -1117,7 +1133,7 @@ inline void Triangulation<4>::removePentachoron(Dim4Pentachoron* pent) {
     removeSimplex(pent);
 }
 
-inline void Triangulation<4>::removePentachoronAt(unsigned long index) {
+inline void Triangulation<4>::removePentachoronAt(size_t index) {
     removeSimplexAt(index);
 }
 
@@ -1135,13 +1151,25 @@ inline size_t Triangulation<4>::getNumberOfBoundaryComponents() const {
 }
 
 inline const std::vector<Dim4BoundaryComponent*>&
+        Triangulation<4>::boundaryComponents() const {
+    ensureSkeleton();
+    return (const std::vector<Dim4BoundaryComponent*>&)(boundaryComponents_);
+}
+
+inline const std::vector<Dim4BoundaryComponent*>&
         Triangulation<4>::getBoundaryComponents() const {
     ensureSkeleton();
     return (const std::vector<Dim4BoundaryComponent*>&)(boundaryComponents_);
 }
 
+inline Dim4BoundaryComponent* Triangulation<4>::boundaryComponent(
+        size_t index) const {
+    ensureSkeleton();
+    return boundaryComponents_[index];
+}
+
 inline Dim4BoundaryComponent* Triangulation<4>::getBoundaryComponent(
-        unsigned long index) const {
+        size_t index) const {
     ensureSkeleton();
     return boundaryComponents_[index];
 }

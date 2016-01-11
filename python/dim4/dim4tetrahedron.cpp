@@ -111,6 +111,8 @@ void addDim4Tetrahedron() {
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim4Tetrahedron::getComponent,
             return_value_policy<reference_existing_object>())
+        .def("boundaryComponent", &Dim4Tetrahedron::boundaryComponent,
+            return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &Dim4Tetrahedron::getBoundaryComponent,
             return_value_policy<reference_existing_object>())
         .def("face", &regina::python::face<Dim4Tetrahedron, 3, int>)

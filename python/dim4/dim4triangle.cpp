@@ -115,6 +115,8 @@ void addDim4Triangle() {
                 return_value_policy<reference_existing_object>())
             .def("getComponent", &Dim4Triangle::getComponent,
                 return_value_policy<reference_existing_object>())
+            .def("boundaryComponent", &Dim4Triangle::boundaryComponent,
+                return_value_policy<reference_existing_object>())
             .def("getBoundaryComponent", &Dim4Triangle::getBoundaryComponent,
                 return_value_policy<reference_existing_object>())
             .def("face", &regina::python::face<Dim4Triangle, 2, int>)

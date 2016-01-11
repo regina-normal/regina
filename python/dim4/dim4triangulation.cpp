@@ -87,9 +87,9 @@ namespace {
         return ans;
     }
 
-    boost::python::list Dim4_getBoundaryComponents_list(Dim4Triangulation& t) {
+    boost::python::list Dim4_boundaryComponents_list(Dim4Triangulation& t) {
         boost::python::list ans;
-        for (auto b : t.getBoundaryComponents())
+        for (auto b : t.boundaryComponents())
             ans.append(boost::python::ptr(b));
         return ans;
     }
@@ -214,7 +214,8 @@ void addDim4Triangulation() {
         .def("getNumberOfTetrahedra", &Dim4Triangulation::getNumberOfTetrahedra)
         .def("components", Dim4_components_list)
         .def("getComponents", Dim4_components_list)
-        .def("getBoundaryComponents", Dim4_getBoundaryComponents_list)
+        .def("boundaryComponents", Dim4_boundaryComponents_list)
+        .def("getBoundaryComponents", Dim4_boundaryComponents_list)
         .def("faces", &regina::python::faces<Dim4Triangulation, 4>)
         .def("getFaces", &regina::python::faces<Dim4Triangulation, 4>)
         .def("vertices", regina::python::faces_list<Dim4Triangulation, 4, 0>)
@@ -230,6 +231,8 @@ void addDim4Triangulation() {
         .def("component", &Dim4Triangulation::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim4Triangulation::getComponent,
+            return_internal_reference<>())
+        .def("boundaryComponent", &Dim4Triangulation::boundaryComponent,
             return_internal_reference<>())
         .def("getBoundaryComponent", &Dim4Triangulation::getBoundaryComponent,
             return_internal_reference<>())

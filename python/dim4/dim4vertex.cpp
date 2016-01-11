@@ -121,6 +121,8 @@ void addDim4Vertex() {
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim4Vertex::getComponent,
             return_value_policy<reference_existing_object>())
+        .def("boundaryComponent", &Dim4Vertex::boundaryComponent,
+            return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &Dim4Vertex::getBoundaryComponent,
             return_value_policy<reference_existing_object>())
         .def("degree", &Dim4Vertex::degree)
