@@ -369,6 +369,33 @@ class NGenericIsomorphism :
          */
         static typename DimTraits<dim>::Isomorphism* random(
             unsigned nSimplices);
+
+        /**
+         * Test for equality between two isomorphisms. Two isomorphisms are
+         * equal if and only if they are isomorphisms on sets of the same size,
+         * and if for every simplex they agree on both the image of the
+         * simplex, and the permutations of the facets of the simplex.
+         */
+        bool operator==(const Isomorphism& rhs) const;
+
+        /**
+         * Test for inequality between two isomorphisms. Two isomorphisms are
+         * equal if and only if they are isomorphisms on sets of the same size,
+         * and if for every simplex they agree on both the image of the
+         * simplex, and the permutations of the facets of the simplex.
+         */
+        bool operator!=(const Isomorphism& rhs) const;
+
+        /**
+         * Combine two isomorphisms. Note that this is done right-to-left. That
+         * is, given two isomorphisms f and g, the result of (f * g)(x) is
+         * the same as f(g(x)) for all valid x.
+         *
+         * If f and g do not represent the exact same number of simplices, the
+         * returned isomorphism is not guaranteed to be valid.
+         */
+        const Isomorphism operator*(const Isomorphism& rhs);
+
 };
 
 /*@}*/
@@ -427,6 +454,38 @@ inline NFacetSpec<dim> NGenericIsomorphism<dim>::operator [] (
         const NFacetSpec<dim>& source) const {
     return NFacetSpec<dim>(simpImage_[source.simp],
         facetPerm_[source.simp][source.facet]);
+}
+
+template <int dim>
+inline bool NGenericIsomorphism<dim>::operator==(
+        const typename DimTraits<dim>::Isomorphism& rhs) const {
+    if (this->getSourceSimplices() != rhs.getSourceSimplices())
+        return false;
+    for(int simp = 0; simp < this->getSourceSimplices(); simp++) {
+        if (this->simpImage(simp) != rhs.simpImage(simp))
+            return false;
+        if (this->facetPerm(simp) != rhs.facetPerm(simp))
+            return false;
+    }
+    return true;
+}
+
+template <int dim>
+inline bool NGenericIsomorphism<dim>::operator!=(
+        const typename DimTraits<dim>::Isomorphism& rhs) const {
+    return !(*this == rhs);
+}
+
+template <int dim>
+inline const typename DimTraits<dim>::Isomorphism NGenericIsomorphism<dim>::operator*(
+        const typename DimTraits<dim>::Isomorphism& rhs) {
+    typename DimTraits<dim>::Isomorphism result(this->getSourceSimplices());
+    for(int simp = 0; simp < result.getSourceSimplices(); simp++) {
+        result.facetPerm_[simp] = this->facetPerm(rhs.simpImage(simp)) *
+            rhs.facetPerm(simp);
+        result.simpImage_[simp] = this->simpImage(rhs.simpImage(simp));
+    }
+    return result;
 }
 
 } // namespace regina
