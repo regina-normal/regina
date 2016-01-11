@@ -188,6 +188,14 @@ class REGINA_API Component<3> : public detail::ComponentBase<3>,
          * entire triangulation.
          * @return the requested boundary component.
          */
+        NBoundaryComponent* boundaryComponent(size_t index) const;
+        /**
+         * Deprecated routine that returns the requested boundary component
+         * of this triangulation.
+         *
+         * \deprecated This routine has been renamed to boundaryComponent().
+         * See the boundaryComponent() documentation for further details.
+         */
         NBoundaryComponent* getBoundaryComponent(size_t index) const;
 
         /**
@@ -284,6 +292,10 @@ inline NEdge* Component<3>::face<1>(size_t index) const {
 template <>
 inline NVertex* Component<3>::face<0>(size_t index) const {
     return vertices_[index];
+}
+
+inline NBoundaryComponent* Component<3>::boundaryComponent(size_t index) const {
+    return boundaryComponents_[index];
 }
 
 inline NBoundaryComponent* Component<3>::getBoundaryComponent(size_t index)

@@ -109,6 +109,8 @@ void addNComponent() {
             return_value_policy<reference_existing_object>())
         .def("getVertex", &NComponent::getVertex,
             return_value_policy<reference_existing_object>())
+        .def("boundaryComponent", &NComponent::boundaryComponent,
+            return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &NComponent::getBoundaryComponent,
             return_value_policy<reference_existing_object>())
         .def("isIdeal", &NComponent::isIdeal)
