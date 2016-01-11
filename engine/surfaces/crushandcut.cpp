@@ -1216,7 +1216,7 @@ NTriangulation* NNormalSurface::cutAlong() const {
 // ------------------------------------------------------------------------
 
 NTriangulation* NNormalSurface::crush() const {
-    NTriangulation* ans = new NTriangulation(*triangulation);
+    NTriangulation* ans = new NTriangulation(*triangulation_);
     unsigned long nTet = ans->size();
     if (nTet == 0)
         return ans;

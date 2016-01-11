@@ -242,7 +242,7 @@ bool NNormalSurface::disjoint(const NNormalSurface& other) const {
     NNormalSurfaceVector* v =
         static_cast<NNormalSurfaceVector*>(vector->clone());
     (*v) += *(other.vector);
-    NNormalSurface* sum = new NNormalSurface(triangulation, v);
+    NNormalSurface* sum = new NNormalSurface(triangulation_, v);
 
     typedef std::vector<NNormalSurface*> CompVector;
     CompVector bits;

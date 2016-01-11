@@ -120,7 +120,7 @@ class REGINA_API NXMLFilterPacketReader : public NXMLPacketReader {
          */
         NXMLFilterPacketReader(NPacket* newParent, NXMLTreeResolver& resolver);
 
-        virtual NPacket* getPacket();
+        virtual NPacket* packet();
         virtual NXMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps);
@@ -146,7 +146,7 @@ inline NXMLFilterPacketReader::NXMLFilterPacketReader(NPacket* newParent,
         NXMLPacketReader(resolver), filter(0), parent(newParent) {
 }
 
-inline NPacket* NXMLFilterPacketReader::getPacket() {
+inline NPacket* NXMLFilterPacketReader::packet() {
     return filter;
 }
 

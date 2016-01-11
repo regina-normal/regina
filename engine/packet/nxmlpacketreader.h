@@ -62,7 +62,7 @@ class NXMLTreeResolver;
  * ignore a particular packet (and all of its descendants), you can use
  * class NXMLPacketReader itself for the packet(s) you wish to ignore.
  *
- * Routine getPacket() is used to return the packet that was read; see
+ * Routine packet() is used to return the packet that was read; see
  * its documentation for further notes on how the packet should be
  * constructed.
  *
@@ -135,7 +135,7 @@ class REGINA_API NXMLPacketReader : public NXMLElementReader {
          * is incomplete, the packet should be ignored or an error
          * occurred.
          */
-        virtual NPacket* getPacket();
+        virtual NPacket* packet();
 
         /**
          * Used instead of startSubElement() for XML subelements that
@@ -186,7 +186,7 @@ inline NXMLPacketReader::NXMLPacketReader(NXMLTreeResolver& resolver) :
         resolver_(resolver) {
 }
 
-inline NPacket* NXMLPacketReader::getPacket() {
+inline NPacket* NXMLPacketReader::packet() {
     return 0;
 }
 
