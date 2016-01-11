@@ -109,7 +109,8 @@ class REGINA_API NBoundaryComponent :
         /**
          * Returns the index of this boundary component in the underlying
          * triangulation.  This is identical to calling
-         * <tt>triangulation()->boundaryComponentIndex(this)</tt>.
+         * <tt>boundaryComponentIndex(this)</tt> on the underlying
+         * triangulation.
          *
          * @return the index of this boundary component vertex.
          */
