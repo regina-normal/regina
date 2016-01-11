@@ -307,7 +307,7 @@ inline NComponent* NBoundaryComponent::component() const {
 }
 
 inline NComponent* NBoundaryComponent::getComponent() const {
-    return component();
+    return vertices_.front()->component();
 }
 
 inline long NBoundaryComponent::getEulerChar() const {
