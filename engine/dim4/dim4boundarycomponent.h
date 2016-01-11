@@ -125,7 +125,8 @@ class REGINA_API Dim4BoundaryComponent :
         /**
          * Returns the index of this boundary component in the underlying
          * triangulation.  This is identical to calling
-         * <tt>getTriangulation()->boundaryComponentIndex(this)</tt>.
+         * <tt>boundaryComponentIndex(this)</tt> on the underlying
+         * triangulation.
          *
          * @return the index of this boundary component tetrahedron.
          */
@@ -155,7 +156,7 @@ class REGINA_API Dim4BoundaryComponent :
          * tetrahedra (i.e., it is not ideal), then the index of each
          * <i>subdim</i>-face in this boundary component
          * matches the index of the corresponding <i>subdim</i>-face in the
-         * 3-manifold triangulation returned by getTriangulation().
+         * 3-manifold triangulation returned by triangulation().
          *
          * \pre The template argument \a subdim is between 0 and 3 inclusive.
          *
@@ -211,6 +212,15 @@ class REGINA_API Dim4BoundaryComponent :
          * triangulation will have been generated already.
          *
          * @return the triangulation of this boundary component.
+         */
+        const NTriangulation* triangulation() const;
+
+        /**
+         * Deprecated routine that returns the full 3-manifold triangulation
+         * of this boundary component.
+         *
+         * \deprecated This routine has been renamed to triangulation().
+         * See the triangulation() documentation for further details.
          */
         const NTriangulation* getTriangulation() const;
 
@@ -359,6 +369,10 @@ inline Dim4Component* Dim4BoundaryComponent::component() const {
 inline Dim4Component* Dim4BoundaryComponent::getComponent() const {
     // There may be no tetrahedra, but there is always a vertex.
     return vertices_.front()->component();
+}
+
+inline const NTriangulation* Dim4BoundaryComponent::triangulation() const {
+    return (boundary_ ? boundary_ : vertices_.front()->getLink());
 }
 
 inline const NTriangulation* Dim4BoundaryComponent::getTriangulation() const {

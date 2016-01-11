@@ -293,7 +293,7 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          *
          * @return the coordinate system used.
          */
-        virtual HyperCoords coords() const;
+        HyperCoords coords() const;
         /**
          * Returns whether this set is known to contain only embedded normal
          * hypersurfaces.
@@ -306,20 +306,28 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          * hypersurfaces exist in this list, or \c false if immersed
          * and/or singular normal hypersurfaces might be present.
          */
-        virtual bool isEmbeddedOnly() const;
+        bool isEmbeddedOnly() const;
         /**
          * Returns the triangulation in which these normal hypersurfaces live.
          *
          * @return the triangulation in which these hypersurfaces live.
          */
-        virtual Dim4Triangulation* getTriangulation() const;
+        Dim4Triangulation* triangulation() const;
+        /**
+         * Deprecated routine that returns the triangulation in which these
+         * normal hypersurfaces live.
+         *
+         * \deprecated This routine has been renamed to triangulation().
+         * See the triangulation() documentation for further details.
+         */
+        Dim4Triangulation* getTriangulation() const;
 
         /**
          * Returns the number of hypersurfaces stored in this list.
          *
          * @return the number of hypersurfaces.
          */
-        virtual size_t size() const;
+        size_t size() const;
         /**
          * Returns the hypersurface at the requested index in this list.
          *
@@ -328,7 +336,7 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          *
          * @return the normal hypersurface at the requested index in this list.
          */
-        virtual const NNormalHypersurface* getHypersurface(size_t index) const;
+        const NNormalHypersurface* getHypersurface(size_t index) const;
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
@@ -793,7 +801,7 @@ inline bool NNormalHypersurfaceList::dependsOnParent() const {
 }
 
 inline NMatrixInt* NNormalHypersurfaceList::recreateMatchingEquations() const {
-    return makeMatchingEquations(getTriangulation(), coords_);
+    return makeMatchingEquations(triangulation(), coords_);
 }
 
 inline NNormalHypersurfaceList::VectorIterator::VectorIterator() {

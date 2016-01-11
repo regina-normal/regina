@@ -244,6 +244,10 @@ NNormalHypersurfaceList* NNormalHypersurfaceList::enumerateFundDual(
     return ans;
 }
 
+Dim4Triangulation* NNormalHypersurfaceList::triangulation() const {
+    return dynamic_cast<Dim4Triangulation*>(getTreeParent());
+}
+
 Dim4Triangulation* NNormalHypersurfaceList::getTriangulation() const {
     return dynamic_cast<Dim4Triangulation*>(getTreeParent());
 }

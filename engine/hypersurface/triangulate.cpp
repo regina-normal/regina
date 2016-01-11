@@ -225,7 +225,7 @@ namespace {
 // ------------------------------------------------------------------------
 
 NTriangulation* NNormalHypersurface::triangulate() const {
-    const Dim4Triangulation* outer = getTriangulation();
+    const Dim4Triangulation* outer = triangulation();
     NTriangulation* inner = new NTriangulation();
 
     // Get rid of an empty *outer* triangulation now.

@@ -522,10 +522,17 @@ class REGINA_API NNormalHypersurface :
          */
         size_t getNumberOfCoords() const;
         /**
-         * Returns the triangulation in which this normal hypersurface
-         * resides.
+         * Returns the triangulation in which this normal hypersurface resides.
          *
          * @return the underlying triangulation.
+         */
+        const Dim4Triangulation* triangulation() const;
+        /**
+         * Deprecated routine that returns the triangulation in which this
+         * normal hypersurface resides.
+         *
+         * \deprecated This routine has been renamed to triangulation().
+         * See the triangulation() documentation for further details.
          */
         const Dim4Triangulation* getTriangulation() const;
 
@@ -799,6 +806,9 @@ inline size_t NNormalHypersurface::countCoords() const {
 }
 inline size_t NNormalHypersurface::getNumberOfCoords() const {
     return vector_->size();
+}
+inline const Dim4Triangulation* NNormalHypersurface::triangulation() const {
+    return triangulation_;
 }
 inline const Dim4Triangulation* NNormalHypersurface::getTriangulation() const {
     return triangulation_;
