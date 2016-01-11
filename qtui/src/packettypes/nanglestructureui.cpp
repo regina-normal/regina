@@ -208,7 +208,7 @@ NAngleStructureUI::NAngleStructureUI(NAngleStructureList* packet,
 
     // Listen for renaming events on the parent triangulation, since we
     // display its label in the header.
-    packet->getTriangulation()->listen(this);
+    packet->triangulation()->listen(this);
 }
 
 NAngleStructureUI::~NAngleStructureUI() {
@@ -271,13 +271,13 @@ void NAngleStructureUI::refreshHeader() {
         "<qt>%1<br>%2<br>Triangulation: <a href=\"#\">%3</a></qt>").
         arg(count).
         arg(span).
-        arg(QString(model->structures()->getTriangulation()->
+        arg(QString(model->structures()->triangulation()->
             getHumanLabel().c_str()).toHtmlEscaped()));
 }
 
 void NAngleStructureUI::viewTriangulation() {
     enclosingPane->getMainWindow()->packetView(
-        model->structures()->getTriangulation(),
+        model->structures()->triangulation(),
         false /* visible in tree */, false /* select in tree */);
 }
 

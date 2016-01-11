@@ -1613,7 +1613,7 @@ class REGINA_API NNormalSurface :
          * cusp.  This information is \e only available through the SnapPea
          * kernel, since Regina does not use or store peripheral curves for
          * its own NTriangulation class.  Therefore, if the underlying
-         * triangulation (as returned by getTriangulation()) is not of the
+         * triangulation (as returned by triangulation()) is not of the
          * subclass NSnapPeaTriangulation, this routine will simply return 0.
          *
          * All cusps are treated as complete.  That is, any Dehn fillings

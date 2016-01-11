@@ -199,7 +199,7 @@ void NAngleStructureList::calculateSpanStrict() const {
         return;
     }
 
-    unsigned long nTets = getTriangulation()->size();
+    unsigned long nTets = triangulation()->size();
     if (nTets == 0) {
         doesSpanStrict = true;
         return;

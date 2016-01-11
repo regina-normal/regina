@@ -88,7 +88,7 @@
 
 - (void)updateTriangulationButton:(UIButton*)button
 {
-    regina::NPacket* tri = self.packet->getTriangulation();
+    regina::NPacket* tri = self.packet->triangulation();
     NSString* triName = [NSString stringWithUTF8String:tri->getPacketLabel().c_str()];
     if (triName.length == 0)
         triName = @"(Unnamed)";
@@ -127,7 +127,7 @@
     self.packet = self.viewer.packet;
 
     [_triListener permanentlyUnlisten];
-    _triListener = [PacketListenerIOS listenerWithPacket:self.packet->getTriangulation() delegate:self listenChildren:NO];
+    _triListener = [PacketListenerIOS listenerWithPacket:self.packet->triangulation() delegate:self listenChildren:NO];
 }
 
 - (void)dealloc
@@ -141,12 +141,12 @@
 }
 
 - (IBAction)openTriangulation:(id)sender {
-    [ReginaHelper viewPacket:self.packet->getTriangulation()];
+    [ReginaHelper viewPacket:self.packet->triangulation()];
 }
 
 - (void)packetWasRenamed:(regina::NPacket *)packet
 {
-    if (packet == self.packet->getTriangulation())
+    if (packet == self.packet->triangulation())
         [self.viewer updateTriangulationButton:self.tri];
 }
 

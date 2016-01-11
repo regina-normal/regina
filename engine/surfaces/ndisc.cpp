@@ -155,7 +155,7 @@ void NDiscSetTet::discFromArc(int arcFace, int arcVertex,
 }
 
 NDiscSetSurface::NDiscSetSurface(const NNormalSurface& surface, bool) :
-        triangulation(surface.getTriangulation()) {
+        triangulation(surface.triangulation()) {
     unsigned long tot = triangulation->size();
     if (tot == 0)
         discSets = 0;
@@ -164,7 +164,7 @@ NDiscSetSurface::NDiscSetSurface(const NNormalSurface& surface, bool) :
 }
 
 NDiscSetSurface::NDiscSetSurface(const NNormalSurface& surface) :
-        triangulation(surface.getTriangulation()) {
+        triangulation(surface.triangulation()) {
     unsigned long tot = triangulation->size();
     if (tot == 0)
         discSets = 0;

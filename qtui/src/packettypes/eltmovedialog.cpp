@@ -65,43 +65,43 @@ namespace {
     const int ID_COLLAPSEEDGE = 10;
 
     bool has20v(regina::NVertex* v) {
-        return v->getTriangulation()->twoZeroMove(v, true, false);
+        return v->triangulation()->twoZeroMove(v, true, false);
     }
 
     bool has32(regina::NEdge* e) {
-        return e->getTriangulation()->threeTwoMove(e, true, false);
+        return e->triangulation()->threeTwoMove(e, true, false);
     }
 
     bool has20e(regina::NEdge* e) {
-        return e->getTriangulation()->twoZeroMove(e, true, false);
+        return e->triangulation()->twoZeroMove(e, true, false);
     }
 
     bool hasCloseBook(regina::NEdge* e) {
-        return e->getTriangulation()->closeBook(e, true, false);
+        return e->triangulation()->closeBook(e, true, false);
     }
 
     bool hasCollapseEdge(regina::NEdge* e) {
-        return e->getTriangulation()->collapseEdge(e, true, false);
+        return e->triangulation()->collapseEdge(e, true, false);
     }
 
     bool has44(regina::NEdge* e, int axis) {
-        return e->getTriangulation()->fourFourMove(e, axis, true, false);
+        return e->triangulation()->fourFourMove(e, axis, true, false);
     }
 
     bool has21(regina::NEdge* e, int end) {
-        return e->getTriangulation()->twoOneMove(e, end, true, false);
+        return e->triangulation()->twoOneMove(e, end, true, false);
     }
 
     bool has23(regina::NTriangle* f) {
-        return f->getTriangulation()->twoThreeMove(f, true, false);
+        return f->triangulation()->twoThreeMove(f, true, false);
     }
 
     bool hasOpenBook(regina::NTriangle* f) {
-        return f->getTriangulation()->openBook(f, true, false);
+        return f->triangulation()->openBook(f, true, false);
     }
 
     bool hasShellBoundary(regina::NTetrahedron* t) {
-        return t->getTriangulation()->shellBoundary(t, true, false);
+        return t->triangulation()->shellBoundary(t, true, false);
     }
 }
 

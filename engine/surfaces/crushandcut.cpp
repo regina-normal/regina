@@ -648,7 +648,7 @@ namespace {
 
     inline NTetrahedron* Block::layeringTetrahedron() {
         return (innerTet_[nInnerTet_++] =
-            innerTet_[0]->getTriangulation()->newTetrahedron());
+            innerTet_[0]->triangulation()->newTetrahedron());
     }
 
     inline void Block::attachVertexNbd(NTetrahedron* nbd, int vertex) {
@@ -1029,7 +1029,7 @@ namespace {
             quadType_ = -1;
         }
 
-        const NTetrahedron* tet = s->getTriangulation()->getTetrahedron(tetIndex);
+        const NTetrahedron* tet = s->triangulation()->getTetrahedron(tetIndex);
 
         // Build the blocks.
         // Note in all of this that we insert an extra "fake" triangle at each
@@ -1158,7 +1158,7 @@ NTriangulation* NNormalSurface::cutAlong() const {
     NTriangulation* ans = new NTriangulation();
     NPacket::ChangeEventSpan span(ans);
 
-    unsigned long nTet = getTriangulation()->size();
+    unsigned long nTet = triangulation()->size();
     if (nTet == 0)
         return ans;
 
@@ -1174,8 +1174,8 @@ NTriangulation* NNormalSurface::cutAlong() const {
     int fromVertex0, fromVertex1;
     NPerm4 gluing;
     unsigned long quadBlocks;
-    for (fit = getTriangulation()->getTriangles().begin();
-            fit != getTriangulation()->getTriangles().end(); ++fit) {
+    for (fit = triangulation()->getTriangles().begin();
+            fit != triangulation()->getTriangles().end(); ++fit) {
         f = *fit;
         if (f->isBoundary())
             continue;
@@ -1312,8 +1312,8 @@ bool NNormalSurface::isCompressingDisc(bool knownConnected) const {
     // to begin with.
     unsigned long origSphereCount = 0;
     NTriangulation::BoundaryComponentIterator bit;
-    for (bit = getTriangulation()->boundaryComponents().begin();
-            bit != getTriangulation()->boundaryComponents().end(); ++bit)
+    for (bit = triangulation()->boundaryComponents().begin();
+            bit != triangulation()->boundaryComponents().end(); ++bit)
         if ((*bit)->getEulerChar() == 2)
             ++origSphereCount;
 
@@ -1323,7 +1323,7 @@ bool NNormalSurface::isCompressingDisc(bool knownConnected) const {
     std::unique_ptr<NTriangulation> cut(cutAlong());
 
     if (cut->countBoundaryComponents() ==
-            getTriangulation()->countBoundaryComponents()) {
+            triangulation()->countBoundaryComponents()) {
         // The boundary of the disc is not a separating curve in the
         // boundary of the triangulation.  Therefore we might end up
         // converting a torus boundary into a sphere boundary, but the

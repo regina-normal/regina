@@ -496,7 +496,7 @@ class REGINA_API NDiscSetSurface {
          * in the \a discSets array <b>must</b> be created, since the
          * \a NDiscSetSurface destructor will attempt to destroy them!
          * The \a discSets array will have size
-         * <tt>surface.getTriangulation()->size()</tt>.
+         * <tt>surface.triangulation()->size()</tt>.
          *
          * @param surface the normal surface whose discs we shall use.
          * @param b this parameter is ignored.

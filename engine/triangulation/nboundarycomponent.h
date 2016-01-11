@@ -106,11 +106,10 @@ class REGINA_API NBoundaryComponent :
             /**< Is this boundary component orientable? */
 
     public:
-
         /**
          * Returns the index of this boundary component in the underlying
          * triangulation.  This is identical to calling
-         * <tt>getTriangulation()->boundaryComponentIndex(this)</tt>.
+         * <tt>triangulation()->boundaryComponentIndex(this)</tt>.
          *
          * @return the index of this boundary component vertex.
          */

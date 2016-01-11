@@ -257,7 +257,7 @@ void NSurfaceSummaryUI::refresh() {
         tableClosed->show();
     }
 
-    if (surfaces->getTriangulation()->hasBoundaryTriangles()) {
+    if (surfaces->triangulation()->hasBoundaryTriangles()) {
         tableBounded->clear();
 
         if (bounded == 0) {
@@ -314,8 +314,8 @@ void NSurfaceSummaryUI::refresh() {
     // deal with it).
     // Furthermore, spun normal surfaces are only possible in certain
     // coordinate systems.
-    if ((surfaces->getTriangulation()->isIdeal() ||
-            ! surfaces->getTriangulation()->isValid()) &&
+    if ((surfaces->triangulation()->isIdeal() ||
+            ! surfaces->triangulation()->isValid()) &&
             (surfaces->allowsSpun())) {
         if (spun == 0) {
             totSpun->setText(tr("No spun (non-compact) surfaces."));
