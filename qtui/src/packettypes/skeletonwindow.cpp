@@ -491,7 +491,7 @@ int ComponentModel::columnCount(const QModelIndex& /* unused parent*/) const {
 
 QVariant ComponentModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        NComponent* item = tri->getComponent(index.row());
+        NComponent* item = tri->component(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -860,7 +860,7 @@ int Dim2ComponentModel::columnCount(const QModelIndex& /* unused */) const {
 
 QVariant Dim2ComponentModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        Dim2Component* item = tri->getComponent(index.row());
+        Dim2Component* item = tri->component(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();

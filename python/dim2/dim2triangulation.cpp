@@ -60,9 +60,9 @@ namespace {
         return ans;
     }
 
-    boost::python::list Dim2_getComponents_list(Dim2Triangulation& t) {
+    boost::python::list Dim2_components_list(Dim2Triangulation& t) {
         boost::python::list ans;
-        for (auto c : t.getComponents())
+        for (auto c : t.components())
             ans.append(boost::python::ptr(c));
         return ans;
     }
@@ -183,8 +183,8 @@ void addDim2Triangulation() {
         .def("getNumberOfVertices", &Dim2Triangulation::getNumberOfVertices)
         .def("countEdges", &Dim2Triangulation::countEdges)
         .def("getNumberOfEdges", &Dim2Triangulation::getNumberOfEdges)
-        .def("components", Dim2_getComponents_list)
-        .def("getComponents", Dim2_getComponents_list)
+        .def("components", Dim2_components_list)
+        .def("getComponents", Dim2_components_list)
         .def("getBoundaryComponents", Dim2_getBoundaryComponents_list)
         .def("faces", &regina::python::faces<Dim2Triangulation, 2>)
         .def("getFaces", &regina::python::faces<Dim2Triangulation, 2>)

@@ -82,7 +82,7 @@ void Triangulation<2>::calculateBoundary() {
 
         label = new Dim2BoundaryComponent();
         boundaryComponents_.push_back(label);
-        edge->getComponent()->boundaryComponents_.push_back(label);
+        edge->component()->boundaryComponents_.push_back(label);
 
         // Loop around from this boundary edge to
         // completely enumerate all edges in this boundary component.

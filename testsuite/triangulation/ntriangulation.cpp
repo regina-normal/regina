@@ -803,7 +803,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             unsigned long c;
             regina::NComponent* comp;
             for (c = 0; c < tri->countComponents(); ++c) {
-                comp = tri->getComponent(c);
+                comp = tri->component(c);
                 found = 0;
 
                 for (i = 0; i < comp->size(); ++i)
@@ -2661,7 +2661,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                          tri->isOrientable() &&
                          tri->isConnected() &&
                          tri->countBoundaryComponents() == 1 &&
-                         tri->boundaryComponent(0)->getEulerChar() == 0 &&
+                         tri->getBoundaryComponent(0)->getEulerChar() == 0 &&
                          tri->getHomologyH1().isZ() &&
                          (tri->size() < 4 ||
                             (tri->size() == 4 &&
@@ -3450,8 +3450,8 @@ class NTriangulationTest : public TriangulationTest<3> {
                 if (! (tmp0.isValid() && (! tmp0.isIdeal()) &&
                         (tmp0.countBoundaryComponents() == 1) &&
                         (tmp0.getHomologyH1().isZ()) &&
-                        (tmp0.boundaryComponent(0)->isOrientable()) &&
-                        (tmp0.boundaryComponent(0)->getEulerChar() == 0) &&
+                        (tmp0.getBoundaryComponent(0)->isOrientable()) &&
+                        (tmp0.getBoundaryComponent(0)->getEulerChar() == 0) &&
                         (! tmp0.isSolidTorus())))
                     CPPUNIT_FAIL("Layered 3-sphere: drilling edge 0 "
                         "does not give a non-trivial knot complement.");
@@ -3654,7 +3654,7 @@ class NTriangulationTest : public TriangulationTest<3> {
 
                     NAbelianGroup expectH2(tri->getHomologyH2());
                     NAbelianGroup foundH2(punc.getHomologyH2());
-                    NComponent* c = origTet->getComponent();
+                    NComponent* c = origTet->component();
                     if (! c->isClosed()) {
                         // X -> X + Z
                         expectH2.addRank();

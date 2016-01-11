@@ -783,7 +783,7 @@ void NTriGluingsUI::orient() {
 
     bool hasOr = false;
     NTriangulation::ComponentIterator cit;
-    for (cit = tri->getComponents().begin(); cit != tri->getComponents().end();
+    for (cit = tri->components().begin(); cit != tri->components().end();
             ++cit)
         if ((*cit)->isOrientable()) {
             hasOr = true;

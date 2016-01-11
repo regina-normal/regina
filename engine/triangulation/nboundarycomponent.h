@@ -157,6 +157,14 @@ class REGINA_API NBoundaryComponent :
          *
          * @return the component containing this boundary component.
          */
+        NComponent* component() const;
+        /**
+         * Deprecated routine that returns the component of the triangulation
+         * to which this boundary component belongs.
+         *
+         * \deprecated This routine has been renamed to component().
+         * See the component() documentation for further details.
+         */
         NComponent* getComponent() const;
 
         /**
@@ -293,9 +301,13 @@ inline NVertex* NBoundaryComponent::face<0>(size_t index) const {
     return vertices_[index];
 }
 
-inline NComponent* NBoundaryComponent::getComponent() const {
+inline NComponent* NBoundaryComponent::component() const {
     // There may be no triangles, but there is always a vertex.
-    return vertices_.front()->getComponent();
+    return vertices_.front()->component();
+}
+
+inline NComponent* NBoundaryComponent::getComponent() const {
+    return component();
 }
 
 inline long NBoundaryComponent::getEulerChar() const {

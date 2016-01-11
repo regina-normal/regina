@@ -76,7 +76,7 @@ unsigned long NTriangulation::splitIntoComponents(NPacket* componentParent,
 
     for (tetPos = 0; tetPos < nTets; tetPos++)
         newTets[tetPos] =
-            newTris[componentIndex(simplices_[tetPos]->getComponent())]->
+            newTris[componentIndex(simplices_[tetPos]->component())]->
             newTetrahedron(simplices_[tetPos]->getDescription());
 
     // Clone the tetrahedron gluings also.
@@ -983,8 +983,8 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
     use.intelligentSimplify();
 
     // Check to see whether any component is a one-tetrahedron solid torus.
-    for (ComponentIterator cit = use.getComponents().begin();
-            cit != use.getComponents().end(); ++cit)
+    for (ComponentIterator cit = use.components().begin();
+            cit != use.components().end(); ++cit)
         if ((*cit)->size() == 1 &&
                 (*cit)->countTriangles() == 3 &&
                 (*cit)->countVertices() == 1) {

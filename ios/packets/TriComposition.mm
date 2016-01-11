@@ -185,7 +185,7 @@
     
     regina::NAugTriSolidTorus* aug;
     for (unsigned long i = 0; i < nComps; i++) {
-        aug = regina::NAugTriSolidTorus::isAugTriSolidTorus(self.packet->getComponent(i));
+        aug = regina::NAugTriSolidTorus::isAugTriSolidTorus(self.packet->component(i));
         if (aug) {
             [details appendFormat:@"Augmented triangular solid torus %s\n", aug->getName().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
@@ -218,7 +218,7 @@
     
     regina::NL31Pillow* pillow;
     for (unsigned long i = 0; i < nComps; i++) {
-        pillow = regina::NL31Pillow::isL31Pillow(self.packet->getComponent(i));
+        pillow = regina::NL31Pillow::isL31Pillow(self.packet->component(i));
         if (pillow) {
             [details appendFormat:@"L(3,1) pillow %s\n", pillow->getName().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
@@ -237,7 +237,7 @@
     
     regina::NLayeredChainPair* pair;
     for (unsigned long i = 0; i < nComps; i++) {
-        pair = regina::NLayeredChainPair::isLayeredChainPair(self.packet->getComponent(i));
+        pair = regina::NLayeredChainPair::isLayeredChainPair(self.packet->component(i));
         if (pair) {
             [details appendFormat:@"Layered chain pair %s\n", pair->getName().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
@@ -257,8 +257,7 @@
     
     regina::NLayeredLensSpace* lens;
     for (unsigned long i = 0; i < nComps; i++) {
-        lens = regina::NLayeredLensSpace::isLayeredLensSpace(
-                                                             self.packet->getComponent(i));
+        lens = regina::NLayeredLensSpace::isLayeredLensSpace(self.packet->component(i));
         if (lens) {
             [details appendFormat:@"Layered lens space %s\n", lens->getName().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
@@ -282,7 +281,7 @@
     
     regina::NLayeredLoop* loop;
     for (unsigned long i = 0; i < nComps; i++) {
-        loop = regina::NLayeredLoop::isLayeredLoop(self.packet->getComponent(i));
+        loop = regina::NLayeredLoop::isLayeredLoop(self.packet->component(i));
         if (loop) {
             [details appendFormat:@"Layered loop %s\n", loop->getName().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
@@ -310,7 +309,7 @@
     regina::NPlugTriSolidTorus* plug;
     const regina::NLayeredChain* chain;
     for (unsigned long i = 0; i < nComps; i++) {
-        plug = regina::NPlugTriSolidTorus::isPlugTriSolidTorus(self.packet->getComponent(i));
+        plug = regina::NPlugTriSolidTorus::isPlugTriSolidTorus(self.packet->component(i));
         if (plug) {
             [details appendFormat:@"Plugged triangular solid torus %s\n", plug->getName().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];

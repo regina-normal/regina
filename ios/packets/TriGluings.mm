@@ -273,7 +273,7 @@
     
     bool hasOr = false;
     regina::NTriangulation::ComponentIterator cit;
-    for (cit = self.packet->getComponents().begin(); cit != self.packet->getComponents().end(); ++cit)
+    for (cit = self.packet->components().begin(); cit != self.packet->components().end(); ++cit)
         if ((*cit)->isOrientable()) {
             hasOr = true;
             break;
