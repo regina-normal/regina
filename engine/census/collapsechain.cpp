@@ -236,7 +236,6 @@ void NCollapsedChainSearcher::extendTri(const NTriangulation *tri) {
             NTetFace aut(automorph->simpImage(modF.simp),
                     automorph->facetPerm(modF.simp)[modF.facet]);
             // autAdj will be the image of modAdj under this automorphism
-            NTetFace aut(automorph->simpImage(modF.simp),
             NTetFace autAdj(automorph->simpImage(modAdj.simp),
                     automorph->facetPerm(modAdj.simp)[modAdj.facet]);
             NPerm4 autPerm = automorph->facetPerm(modF.simp);
