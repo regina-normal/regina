@@ -478,7 +478,7 @@ bool NTriangulation::twoZeroMove(NEdge* e, bool check, bool perform) {
         // The cases with two pairs of identified triangles and with one
         // pair of identified triangles plus one pair of boundary triangles are
         // all covered by the following check.
-        if (tet[0]->getComponent()->size() == 2)
+        if (tet[0]->component()->size() == 2)
             return false;
     }
 

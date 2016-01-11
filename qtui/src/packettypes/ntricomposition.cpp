@@ -388,7 +388,7 @@ void NTriCompositionUI::findAugTriSolidTori() {
     regina::NAugTriSolidTorus* aug;
     for (unsigned long i = 0; i < nComps; i++) {
         aug = regina::NAugTriSolidTorus::isAugTriSolidTorus(
-            tri->getComponent(i));
+            tri->component(i));
         if (aug) {
             id = addComponentSection(tr(
                 "Augmented triangular solid torus ") + aug->getName().c_str());
@@ -645,7 +645,7 @@ void NTriCompositionUI::findL31Pillows() {
 
     regina::NL31Pillow* pillow;
     for (unsigned long i = 0; i < nComps; i++) {
-        pillow = regina::NL31Pillow::isL31Pillow(tri->getComponent(i));
+        pillow = regina::NL31Pillow::isL31Pillow(tri->component(i));
         if (pillow) {
             id = addComponentSection(tr("L(3,1) pillow ") +
                 pillow->getName().c_str());
@@ -674,7 +674,7 @@ void NTriCompositionUI::findLayeredChainPairs() {
     regina::NLayeredChainPair* pair;
     for (unsigned long i = 0; i < nComps; i++) {
         pair = regina::NLayeredChainPair::isLayeredChainPair(
-            tri->getComponent(i));
+            tri->component(i));
         if (pair) {
             id = addComponentSection(tr("Layered chain pair ") +
                 pair->getName().c_str());
@@ -702,7 +702,7 @@ void NTriCompositionUI::findLayeredLensSpaces() {
     regina::NLayeredLensSpace* lens;
     for (unsigned long i = 0; i < nComps; i++) {
         lens = regina::NLayeredLensSpace::isLayeredLensSpace(
-            tri->getComponent(i));
+            tri->component(i));
         if (lens) {
             id = addComponentSection(tr("Layered lens space ") +
                 lens->getName().c_str());
@@ -733,7 +733,7 @@ void NTriCompositionUI::findLayeredLoops() {
 
     regina::NLayeredLoop* loop;
     for (unsigned long i = 0; i < nComps; i++) {
-        loop = regina::NLayeredLoop::isLayeredLoop(tri->getComponent(i));
+        loop = regina::NLayeredLoop::isLayeredLoop(tri->component(i));
         if (loop) {
             id = addComponentSection(tr("Layered loop ") +
                 loop->getName().c_str());
@@ -854,7 +854,7 @@ void NTriCompositionUI::findPlugTriSolidTori() {
     const regina::NLayeredChain* chain;
     for (unsigned long i = 0; i < nComps; i++) {
         plug = regina::NPlugTriSolidTorus::isPlugTriSolidTorus(
-            tri->getComponent(i));
+            tri->component(i));
         if (plug) {
             id = addComponentSection(tr("Plugged triangular solid torus ") +
                 plug->getName().c_str());

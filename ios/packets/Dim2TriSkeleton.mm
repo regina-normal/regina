@@ -201,7 +201,7 @@
                 cell.index.text = @"No components";
                 cell.data0.text = cell.data1.text = cell.data2.text = @"";
             } else {
-                regina::Dim2Component* c = self.packet->getComponent(indexPath.row - 1);
+                regina::Dim2Component* c = self.packet->component(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Component" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
                 cell.data0.text = (c->isOrientable() ? @"Orbl" : @"Non-orbl");

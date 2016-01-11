@@ -117,7 +117,7 @@ void NTriangulation::calculateBoundary() {
                 label->orientable_ = true;
                 labelBoundaryTriangle(triangle, label);
                 boundaryComponents_.push_back(label);
-                triangle->getComponent()->boundaryComponents_.push_back(label);
+                triangle->component()->boundaryComponents_.push_back(label);
             }
     }
 }
@@ -284,13 +284,13 @@ void NTriangulation::calculateVertexLinks() {
                 }
 
                 ideal_ = true;
-                vertex->getComponent()->ideal_ = true;
+                vertex->component()->ideal_ = true;
 
                 NBoundaryComponent* bc = new NBoundaryComponent(vertex);
                 bc->orientable_ = vertex->isLinkOrientable();
                 vertex->boundaryComponent_ = bc;
                 boundaryComponents_.push_back(bc);
-                vertex->getComponent()->boundaryComponents_.push_back(bc);
+                vertex->component()->boundaryComponents_.push_back(bc);
             }
         }
     }

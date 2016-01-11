@@ -95,7 +95,7 @@ NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
 
     // Do what we can through components.
     NStandardTriangulation* ans;
-    if ((ans = isStandardTriangulation(tri->getComponent(0))))
+    if ((ans = isStandardTriangulation(tri->component(0))))
         return ans;
 
     // Run tests that require entire triangulations.

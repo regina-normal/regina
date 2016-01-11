@@ -97,7 +97,7 @@ class TriangulationTest : public CppUnit::TestFixture {
             } else {
                 size_t c;
                 for (c = 0; c < tri->countComponents(); ++c)
-                    if (sigSize == tri->getComponent(c)->size())
+                    if (sigSize == tri->component(c)->size())
                         break;
                 if (c == tri->countComponents()) {
                     std::ostringstream msg;

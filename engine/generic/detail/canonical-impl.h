@@ -342,7 +342,7 @@ size_t TriangulationBase<dim>::findIsomorphisms(
             // 2) The component sizes match precisely.
             while (startSimp[comp] < nDestSimplices &&
                     (whichComp[startSimp[comp]] >= 0 ||
-                     other.simplices_[startSimp[comp]]->getComponent()->size()
+                     other.simplices_[startSimp[comp]]->component()->size()
                         != compSize))
                 startSimp[comp]++;
         } else {
@@ -352,7 +352,7 @@ size_t TriangulationBase<dim>::findIsomorphisms(
             // the source component.
             while (startSimp[comp] < nDestSimplices &&
                     (whichComp[startSimp[comp]] >= 0 ||
-                     other.simplices_[startSimp[comp]]->getComponent()->size()
+                     other.simplices_[startSimp[comp]]->component()->size()
                         < compSize))
                 startSimp[comp]++;
         }

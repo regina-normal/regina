@@ -64,6 +64,8 @@ void addDim2BoundaryComponent() {
             return_value_policy<reference_existing_object>())
         .def("getVertex", &Dim2BoundaryComponent::getVertex,
             return_value_policy<reference_existing_object>())
+        .def("component", &Dim2BoundaryComponent::component,
+            return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim2BoundaryComponent::getComponent,
             return_value_policy<reference_existing_object>())
         .def("str", &Dim2BoundaryComponent::str)
