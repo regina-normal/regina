@@ -264,7 +264,7 @@ std::string Dim4FacetGraphData::dot(bool withLabels) {
 }
 
 unsigned long Dim4FacetGraphData::numberOfSimplices() {
-    return tri_->getNumberOfSimplices();
+    return tri_->size();
 }
 
 QString Dim4FacetGraphData::simplicesName() {

@@ -211,13 +211,13 @@ QWidget* Dim4TriSkelCompUI::getInterface() {
 }
 
 void Dim4TriSkelCompUI::refresh() {
-    nVertices->setText(QString::number(tri->getNumberOfVertices()));
-    nEdges->setText(QString::number(tri->getNumberOfEdges()));
-    nTriangles->setText(QString::number(tri->getNumberOfTriangles()));
-    nTetrahedra->setText(QString::number(tri->getNumberOfTetrahedra()));
-    nPentachora->setText(QString::number(tri->getNumberOfPentachora()));
-    nComps->setText(QString::number(tri->getNumberOfComponents()));
-    nBdryComps->setText(QString::number(tri->getNumberOfBoundaryComponents()));
+    nVertices->setText(QString::number(tri->countVertices()));
+    nEdges->setText(QString::number(tri->countEdges()));
+    nTriangles->setText(QString::number(tri->countTriangles()));
+    nTetrahedra->setText(QString::number(tri->countTetrahedra()));
+    nPentachora->setText(QString::number(tri->size()));
+    nComps->setText(QString::number(tri->countComponents()));
+    nBdryComps->setText(QString::number(tri->countBoundaryComponents()));
 
     QLinkedListIterator<SkeletonWindow*> it(viewers);
     while( it.hasNext())

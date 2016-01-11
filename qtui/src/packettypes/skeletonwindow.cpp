@@ -1016,7 +1016,7 @@ QString Dim4VertexModel::overview() const {
 int Dim4VertexModel::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
-    return (parent.isValid() ? 0 : tri->getNumberOfVertices());
+    return (parent.isValid() ? 0 : tri->countVertices());
 }
 
 int Dim4VertexModel::columnCount(const QModelIndex& /* unused parent*/) const {
@@ -1109,7 +1109,7 @@ QString Dim4EdgeModel::overview() const {
 int Dim4EdgeModel::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
-    return (parent.isValid() ? 0 : tri->getNumberOfEdges());
+    return (parent.isValid() ? 0 : tri->countEdges());
 }
 
 int Dim4EdgeModel::columnCount(const QModelIndex& /* unused parent*/) const {
@@ -1204,7 +1204,7 @@ QString Dim4TriangleModel::overview() const {
 int Dim4TriangleModel::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
-    return (parent.isValid() ? 0 : tri->getNumberOfTriangles());
+    return (parent.isValid() ? 0 : tri->countTriangles());
 }
 
 int Dim4TriangleModel::columnCount(const QModelIndex& /* unused parent*/) const {
@@ -1294,7 +1294,7 @@ QString Dim4TetrahedronModel::overview() const {
 int Dim4TetrahedronModel::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
-    return (parent.isValid() ? 0 : tri->getNumberOfTetrahedra());
+    return (parent.isValid() ? 0 : tri->countTetrahedra());
 }
 
 int Dim4TetrahedronModel::columnCount(const QModelIndex& /* unused parent*/)
@@ -1384,7 +1384,7 @@ QString Dim4ComponentModel::overview() const {
 int Dim4ComponentModel::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
-    return (parent.isValid() ? 0 : tri->getNumberOfComponents());
+    return (parent.isValid() ? 0 : tri->countComponents());
 }
 
 int Dim4ComponentModel::columnCount(const QModelIndex& /* unused parent*/) const {
@@ -1401,10 +1401,10 @@ QVariant Dim4ComponentModel::data(const QModelIndex& index, int role) const {
                 return (item->isIdeal() ? tr("Ideal, ") : tr("Real, ")) +
                     (item->isOrientable() ? tr("Orbl") : tr("Non-orbl"));
             case 2:
-                return static_cast<unsigned>(item->getNumberOfSimplices());
+                return static_cast<unsigned>(item->size());
             case 3:
                 QString ans;
-                for (unsigned long i = 0; i < item->getNumberOfSimplices(); i++)
+                for (unsigned long i = 0; i < item->size(); i++)
                     appendToList(ans, QString::number(
                         item->simplex(i)->index()));
                 return ans;
@@ -1474,7 +1474,7 @@ QString Dim4BoundaryComponentModel::overview() const {
 int Dim4BoundaryComponentModel::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
-    return (parent.isValid() ? 0 : tri->getNumberOfBoundaryComponents());
+    return (parent.isValid() ? 0 : tri->countBoundaryComponents());
 }
 
 int Dim4BoundaryComponentModel::columnCount(const QModelIndex& /* unused parent*/) const {
@@ -1495,8 +1495,8 @@ QVariant Dim4BoundaryComponentModel::data(const QModelIndex& index,
             case 2:
                 return ((item->isIdeal() || item->isInvalidVertex()) ?
                     tr("Degree %1").arg(item->getVertex(0)->getDegree()):
-                    item->getNumberOfTetrahedra() == 1 ? tr("1 tetrahedron") :
-                    tr("%1 tetrahedra").arg(item->getNumberOfTetrahedra()));
+                    item->countTetrahedra() == 1 ? tr("1 tetrahedron") :
+                    tr("%1 tetrahedra").arg(item->countTetrahedra()));
             case 3:
                 if (item->isIdeal() || item->isInvalidVertex()) {
                     Dim4Vertex* v = item->getVertex(0);
@@ -1509,7 +1509,7 @@ QVariant Dim4BoundaryComponentModel::data(const QModelIndex& index,
                 } else {
                     QString ans;
                     for (unsigned long i = 0;
-                            i < item->getNumberOfTetrahedra(); i++) {
+                            i < item->countTetrahedra(); i++) {
                         const Dim4TetrahedronEmbedding& emb =
                             item->getTetrahedron(i)->front();
                         appendToList(ans, QString("%1 (%2)").

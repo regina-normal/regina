@@ -135,7 +135,7 @@ void Dim4TriHomologyFundUI::refresh() {
         fgMsg->setText(tr("<qt>Cannot calculate<p>"
             "(invalid triangulation)</qt>"));
         fgMsg->show();
-    } else if (tri->getNumberOfComponents() > 1) {
+    } else if (tri->countComponents() > 1) {
         fgGroup->hide();
         fgMsg->setText(tr("<qt>Cannot calculate<p>"
             "(disconnected triangulation)</qt>"));

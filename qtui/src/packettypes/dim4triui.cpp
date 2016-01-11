@@ -113,7 +113,7 @@ void Dim4TriHeaderUI::refresh() {
 }
 
 QString Dim4TriHeaderUI::summaryInfo(regina::Dim4Triangulation* tri) {
-    if (tri->getNumberOfPentachora() == 0)
+    if (tri->isEmpty())
         return QObject::tr("Empty");
 
     if (! tri->isValid())

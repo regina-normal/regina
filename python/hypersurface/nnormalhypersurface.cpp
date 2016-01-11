@@ -59,6 +59,7 @@ void addNNormalHypersurface() {
         .def("getTetrahedronCoord", &NNormalHypersurface::getTetrahedronCoord)
         .def("getPrismCoord", &NNormalHypersurface::getPrismCoord)
         .def("getEdgeWeight", &NNormalHypersurface::getEdgeWeight)
+        .def("countCoords", &NNormalHypersurface::countCoords)
         .def("getNumberOfCoords", &NNormalHypersurface::getNumberOfCoords)
         .def("getTriangulation", &NNormalHypersurface::getTriangulation,
             return_value_policy<reference_existing_object>())

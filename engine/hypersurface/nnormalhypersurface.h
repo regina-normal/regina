@@ -512,7 +512,15 @@ class REGINA_API NNormalHypersurface :
          *
          * @return the number of coordinates.
          */
-        unsigned getNumberOfCoords() const;
+        size_t countCoords() const;
+        /**
+         * Deprecated routine that returns the number of coordinates in the
+         * specific underlying coordinate system being used.
+         *
+         * \deprecated This routine has been renamed to countCoords().
+         * See the countCoords() documentation for further details.
+         */
+        size_t getNumberOfCoords() const;
         /**
          * Returns the triangulation in which this normal hypersurface
          * resides.
@@ -786,7 +794,10 @@ inline NLargeInteger NNormalHypersurface::getEdgeWeight(unsigned long edgeIndex)
     return vector_->getEdgeWeight(edgeIndex, triangulation_);
 }
 
-inline unsigned NNormalHypersurface::getNumberOfCoords() const {
+inline size_t NNormalHypersurface::countCoords() const {
+    return vector_->size();
+}
+inline size_t NNormalHypersurface::getNumberOfCoords() const {
     return vector_->size();
 }
 inline const Dim4Triangulation* NNormalHypersurface::getTriangulation() const {

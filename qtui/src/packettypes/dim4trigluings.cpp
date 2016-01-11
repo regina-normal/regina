@@ -85,7 +85,7 @@ QModelIndex Dim4GluingsModel::index(int row, int column,
 }
 
 int Dim4GluingsModel::rowCount(const QModelIndex& parent) const {
-    return tri_->getNumberOfSimplices();
+    return tri_->size();
 }
 
 int Dim4GluingsModel::columnCount(const QModelIndex& parent) const {
@@ -187,7 +187,7 @@ bool Dim4GluingsModel::setData(const QModelIndex& index, const QVariant& value,
 
         // Check explicitly for a negative pentachoron number
         // since isFacetStringValid() takes an unsigned integer.
-        if (newAdjPent < 0 || newAdjPent >= tri_->getNumberOfSimplices()) {
+        if (newAdjPent < 0 || newAdjPent >= tri_->size()) {
             showError(tr("There is no pentachoron number %1.").
                 arg(newAdjPent));
             return false;
@@ -239,7 +239,7 @@ bool Dim4GluingsModel::setData(const QModelIndex& index, const QVariant& value,
 QString Dim4GluingsModel::isFacetStringValid(unsigned long srcPent,
         int srcFacet, unsigned long destPent, const QString& destFacet,
         regina::NPerm5* gluing) {
-    if (destPent >= tri_->getNumberOfSimplices())
+    if (destPent >= tri_->size())
         return tr("There is no pentachoron number %1.").arg(destPent);
 
     if (! reFacet.exactMatch(destFacet))
@@ -494,7 +494,7 @@ void Dim4TriGluingsUI::removeSelectedPents() {
         return;
 
     // Off we go!
-    if (first == 0 && last == tri->getNumberOfPentachora() - 1)
+    if (first == 0 && last == tri->size() - 1)
         tri->removeAllSimplices();
     else {
         regina::NPacket::ChangeEventSpan span(tri);

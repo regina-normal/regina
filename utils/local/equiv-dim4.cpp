@@ -163,9 +163,9 @@ void sameSize(Dim4Triangulation* t) {
 void processAlt(Dim4Triangulation* t) {
     t->intelligentSimplify();
 
-    if (t->getNumberOfPentachora() < orig->getNumberOfPentachora())
+    if (t->size() < orig->size())
         nonMin = true;
-    else if (t->getNumberOfPentachora() == orig->getNumberOfPentachora())
+    else if (t->size() == orig->size())
         sameSize(t);
 }
 
@@ -186,7 +186,7 @@ void tryMovesDown(Dim4Triangulation* t, int maxLevels) {
 
     // Only try 4-2 moves if nothing better has worked so far.
     if (! found)
-        for (i = 0; i < t->getNumberOfEdges(); i++)
+        for (i = 0; i < t->countEdges(); i++)
             if (t->fourTwoMove(t->getEdge(i), true, false)) {
                 alt = new Dim4Triangulation(*t);
                 alt->fourTwoMove(alt->getEdge(i));
@@ -200,10 +200,10 @@ void tryMovesDown(Dim4Triangulation* t, int maxLevels) {
 
     // Only try 3-3 moves if nothing else has worked.
     if (! found)
-        for (i = 0; i < t->getNumberOfFaces(); i++)
-            if (t->threeThreeMove(t->getFace(i), true, false)) {
+        for (i = 0; i < t->countTriangles(); i++)
+            if (t->threeThreeMove(t->triangle(i), true, false)) {
                 alt = new Dim4Triangulation(*t);
-                alt->threeThreeMove(alt->getFace(i));
+                alt->threeThreeMove(alt->triangle(i));
                 tryMovesDown(alt, maxLevels - 1);
                 found = true;
                 delete alt;
@@ -228,10 +228,10 @@ void tryMovesAcross(Dim4Triangulation* t, int maxLevels,
     Dim4Triangulation* alt;
 
     if (maxLevels > 0)
-        for (i = 0; i < t->getNumberOfFaces(); i++)
-            if (t->threeThreeMove(t->getFace(i), true, false)) {
+        for (i = 0; i < t->countTriangles(); i++)
+            if (t->threeThreeMove(t->triangle(i), true, false)) {
                 alt = new Dim4Triangulation(*t);
-                alt->threeThreeMove(alt->getFace(i));
+                alt->threeThreeMove(alt->triangle(i));
                 if (prev && alt->isIsomorphicTo(*prev).get()) {
                     // Ignore, reversion.
                 } else if (prev2 && alt->isIsomorphicTo(*prev2).get()) {
@@ -262,7 +262,7 @@ void tryMovesUp(Dim4Triangulation* t, int levelsRemaining) {
         tryMovesAcross(alt, argAcross);
         delete alt;
     } else {
-        for (unsigned i = 0; i < t->getNumberOfTetrahedra(); i++) {
+        for (unsigned i = 0; i < t->countTetrahedra(); i++) {
             alt = new Dim4Triangulation(*t);
             if (alt->twoFourMove(alt->getTetrahedron(i))) {
                 if (levelsRemaining > 1)

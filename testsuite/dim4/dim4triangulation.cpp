@@ -361,14 +361,14 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                     " is reported as invalid.");
             }
             unsigned long i;
-            for (i = 0; i < tri.getNumberOfVertices(); ++i)
+            for (i = 0; i < tri.countVertices(); ++i)
                 if (! tri.getVertex(i)->isValid()) {
                     std::ostringstream msg;
                     msg << "Vertex " << i << " of triangulation "
                         << tri.getPacketLabel() << " is reported as invalid.";
                     CPPUNIT_FAIL(msg.str());
                 }
-            for (i = 0; i < tri.getNumberOfEdges(); ++i)
+            for (i = 0; i < tri.countEdges(); ++i)
                 if ((! tri.getEdge(i)->isValid()) ||
                         tri.getEdge(i)->hasBadLink() ||
                         tri.getEdge(i)->hasBadIdentification()) {
@@ -377,7 +377,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                         << tri.getPacketLabel() << " is reported as invalid.";
                     CPPUNIT_FAIL(msg.str());
                 }
-            for (i = 0; i < tri.getNumberOfTriangles(); ++i)
+            for (i = 0; i < tri.countTriangles(); ++i)
                 if (! tri.getTriangle(i)->isValid()) {
                     std::ostringstream msg;
                     msg << "Triangle " << i << " of triangulation "
@@ -398,7 +398,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             int found;
 
             found = 0;
-            for (i = 0; i < tri.getNumberOfVertices(); ++i)
+            for (i = 0; i < tri.countVertices(); ++i)
                 if (! tri.getVertex(i)->isValid())
                     ++found;
             if (found != invalidVertices) {
@@ -410,7 +410,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             }
 
             found = 0;
-            for (i = 0; i < tri.getNumberOfEdges(); ++i)
+            for (i = 0; i < tri.countEdges(); ++i)
                 if (! tri.getEdge(i)->isValid())
                     ++found;
             if (found != invalidEdges) {
@@ -422,7 +422,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             }
 
             found = 0;
-            for (i = 0; i < tri.getNumberOfEdges(); ++i)
+            for (i = 0; i < tri.countEdges(); ++i)
                 if (tri.getEdge(i)->hasBadLink())
                     ++found;
             if (found != invalidEdgeLinks) {
@@ -434,7 +434,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             }
 
             found = 0;
-            for (i = 0; i < tri.getNumberOfEdges(); ++i)
+            for (i = 0; i < tri.countEdges(); ++i)
                 if (tri.getEdge(i)->hasBadIdentification())
                     ++found;
             if (found != invalidEdgeIDs) {
@@ -446,7 +446,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             }
 
             found = 0;
-            for (i = 0; i < tri.getNumberOfTriangles(); ++i)
+            for (i = 0; i < tri.countTriangles(); ++i)
                 if (! tri.getTriangle(i)->isValid())
                     ++found;
             if (found != invalidTriangles) {
@@ -587,7 +587,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             int found;
 
             found = 0;
-            for (i = 0; i < tri.getNumberOfVertices(); ++i)
+            for (i = 0; i < tri.countVertices(); ++i)
                 if (tri.getVertex(i)->isIdeal())
                     ++found;
             if (found != idealVertices) {
@@ -632,7 +632,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
         }
 
         void verifyBoundaryCount(const Dim4Triangulation& tri, unsigned nBdry) {
-            unsigned long ans = tri.getNumberOfBoundaryComponents();
+            unsigned long ans = tri.countBoundaryComponents();
             if (ans != nBdry) {
                 std::ostringstream msg;
                 msg << "Triangulation " << tri.getPacketLabel() << " gives "
@@ -762,7 +762,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             unsigned long found = 0;
 
             unsigned long i, j;
-            for (i = 0; i < tri->getNumberOfPentachora(); ++i)
+            for (i = 0; i < tri->size(); ++i)
                 for (j = 0; j < 5; ++j)
                     if (! tri->getPentachoron(i)->adjacentPentachoron(j))
                         ++found;
@@ -776,11 +776,11 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
             unsigned long c;
             regina::Dim4Component* comp;
-            for (c = 0; c < tri->getNumberOfComponents(); ++c) {
+            for (c = 0; c < tri->countComponents(); ++c) {
                 comp = tri->getComponent(c);
                 found = 0;
 
-                for (i = 0; i < comp->getNumberOfPentachora(); ++i)
+                for (i = 0; i < comp->size(); ++i)
                     for (j = 0; j < 5; ++j)
                         if (! comp->getPentachoron(i)->adjacentPentachoron(j))
                             ++found;
@@ -804,7 +804,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             const NTetrahedron *tet3, *adj3;
             Dim4Tetrahedron *tet4, *adj4;
 
-            int n = tri.getNumberOfBoundaryComponents();
+            int n = tri.countBoundaryComponents();
             int count;
             int i, j;
             int triangle;
@@ -813,7 +813,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 if (bc->isIdeal())
                     continue;
 
-                count = bc->getNumberOfTetrahedra();
+                count = bc->countTetrahedra();
                 for (j = 0; j < count; ++j) {
                     tet4 = bc->getTetrahedron(j);
                     tet3 = bc->getTriangulation()->getTetrahedron(j);
@@ -845,10 +845,10 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
         }
 
         void verifyLinkCount(const Dim4Triangulation& tri, unsigned nVert) {
-            if (tri.getNumberOfVertices() != nVert) {
+            if (tri.countVertices() != nVert) {
                 std::ostringstream msg;
                 msg << "Triangulation " << tri.getPacketLabel()
-                    << " has " << tri.getNumberOfVertices()
+                    << " has " << tri.countVertices()
                     << " vertices, not the expected " << nVert << ".";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -1200,7 +1200,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (tri->getNumberOfComponents() != b.getNumberOfComponents()) {
+            if (tri->countComponents() != b.countComponents()) {
                 std::ostringstream msg;
                 msg << tri->getPacketLabel()
                     << ": Barycentric subdivision breaks connected components.";
@@ -1210,8 +1210,8 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             // Invalid vertices and edges can wreak havoc on the
             // counting and labelling of boundary components (see
             // Dim4BoundaryComponent for details).
-            if (tri->isValid() && (tri->getNumberOfBoundaryComponents() !=
-                    b.getNumberOfBoundaryComponents())) {
+            if (tri->isValid() && (tri->countBoundaryComponents() !=
+                    b.countBoundaryComponents())) {
                 std::ostringstream msg;
                 msg << tri->getPacketLabel()
                     << ": Barycentric subdivision breaks boundary components.";
@@ -1263,12 +1263,12 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
         }
 
         static void verifyEltMove15(Dim4Triangulation* tri) {
-            unsigned long n = tri->getNumberOfPentachora();
+            unsigned long n = tri->size();
             for (unsigned long i = 0; i < n; ++i) {
                 Dim4Triangulation large(*tri);
                 large.oneFiveMove(large.getPentachoron(i));
 
-                if (large.getNumberOfPentachora() != n + 4) {
+                if (large.size() != n + 4) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel() << ", pent " << i << ": "
                         << "1-5 move gives wrong # pentachora.";
@@ -1296,8 +1296,8 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (large.getNumberOfBoundaryComponents() !=
-                        tri->getNumberOfBoundaryComponents()) {
+                if (large.countBoundaryComponents() !=
+                        tri->countBoundaryComponents()) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel() << ", pent " << i << ": "
                         << "1-5 move changes # boundary components.";
@@ -1362,14 +1362,14 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
         }
 
         static void verifyVertexLinks(Dim4Triangulation* tri) {
-            for (unsigned long i = 0; i < tri->getNumberOfVertices(); ++i) {
+            for (unsigned long i = 0; i < tri->countVertices(); ++i) {
                 Dim4Vertex* v = tri->getVertex(i);
                 Dim4Isomorphism* iso;
 
                 const NTriangulation* link = v->buildLink();
                 NTriangulation* link2 = v->buildLinkDetail(true, &iso);
 
-                if (link->getNumberOfTetrahedra() != v->getDegree()) {
+                if (link->size() != v->getDegree()) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel() << ", vertex " << i << ": "
                         << "link has incorrect number of tetrahedra.";
@@ -1392,7 +1392,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
                 if (v->isValid()) {
                     if (v->isBoundary() && v->getBoundaryComponent()->
-                            getNumberOfTetrahedra() > 0) {
+                            countTetrahedra() > 0) {
                         if (! link->isBall()) {
                             std::ostringstream msg;
                             msg << tri->getPacketLabel() << ", vertex "
@@ -1436,7 +1436,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                             << "invalid vertex is not marked as boundary.";
                         CPPUNIT_FAIL(msg.str());
                     } else if (v->getBoundaryComponent()->
-                            getNumberOfTetrahedra() > 0) {
+                            countTetrahedra() > 0) {
                         // Link should have boundary faces but not be a 3-ball.
                         if (! link->hasBoundaryTriangles()) {
                             std::ostringstream msg;
@@ -1556,14 +1556,14 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
         }
 
         static void verifyEdgeLinks(Dim4Triangulation* tri) {
-            for (unsigned long i = 0; i < tri->getNumberOfEdges(); ++i) {
+            for (unsigned long i = 0; i < tri->countEdges(); ++i) {
                 Dim4Edge* e = tri->getEdge(i);
                 Dim4Isomorphism* iso;
 
                 const Dim2Triangulation* link = e->buildLink();
                 Dim2Triangulation* link2 = e->buildLinkDetail(true, &iso);
 
-                if (link->getNumberOfTriangles() != e->getDegree()) {
+                if (link->countTriangles() != e->getDegree()) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel() << ", edge " << i << ": "
                         << "link has incorrect number of triangles.";
@@ -1759,7 +1759,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             if (tri->isValid() && ! tri->isIdeal()) {
                 // Should not truncate any vertices.
             } else {
-                for (unsigned i = 0; i < tri->getNumberOfVertices(); ++i)
+                for (unsigned i = 0; i < tri->countVertices(); ++i)
                     if (tri->getVertex(i)->isIdeal() ||
                             ! tri->getVertex(i)->isValid()) {
                         shouldTruncate = true;
@@ -1791,7 +1791,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 Dim4Triangulation other(*tri);
                 if (i > 0) {
                     Dim4Isomorphism* iso = Dim4Isomorphism::random(
-                        other.getNumberOfPentachora());
+                        other.size());
                     iso->applyInPlace(&other);
                     delete iso;
                 }
@@ -1860,8 +1860,8 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                         CPPUNIT_FAIL(msg.str());
                     }
 
-                    if (other.getNumberOfBoundaryComponents() !=
-                            tri->getNumberOfBoundaryComponents()) {
+                    if (other.countBoundaryComponents() !=
+                            tri->countBoundaryComponents()) {
                         std::ostringstream msg;
                         msg << tri->getPacketLabel() << ": "
                             << "idealToFinite changes # boundary components.";
@@ -1916,7 +1916,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (b->getNumberOfComponents() != tri->getNumberOfComponents()) {
+            if (b->countComponents() != tri->countComponents()) {
                 std::ostringstream msg;
                 msg << tri->getPacketLabel() << ": "
                     << "iBundle has the wrong number of components.";
@@ -1931,13 +1931,13 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            unsigned long expectBdryComp = 2 * tri->getNumberOfComponents();
+            unsigned long expectBdryComp = 2 * tri->countComponents();
             unsigned long i;
-            for (i = 0; i < tri->getNumberOfComponents(); ++i)
-                if (tri->getComponent(i)->getNumberOfBoundaryTriangles())
+            for (i = 0; i < tri->countComponents(); ++i)
+                if (tri->getComponent(i)->countBoundaryTriangles())
                     --expectBdryComp;
 
-            if (b->getNumberOfBoundaryComponents() != expectBdryComp) {
+            if (b->countBoundaryComponents() != expectBdryComp) {
                 std::ostringstream msg;
                 msg << tri->getPacketLabel() << ": "
                     << "iBundle has the wrong number of "
@@ -1945,8 +1945,8 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            unsigned long expectBdryTets = 2 * tri->getNumberOfTetrahedra() +
-                20 * tri->getNumberOfBoundaryTriangles();
+            unsigned long expectBdryTets = 2 * tri->countTetrahedra() +
+                20 * tri->countBoundaryTriangles();
 
             if (b->countBoundaryFacets() != expectBdryTets) {
                 std::ostringstream msg;
@@ -2005,7 +2005,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (b->getNumberOfComponents() != tri->getNumberOfComponents()) {
+            if (b->countComponents() != tri->countComponents()) {
                 std::ostringstream msg;
                 msg << tri->getPacketLabel() << ": "
                     << "s1Bundle has the wrong number of components.";
@@ -2019,8 +2019,8 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (b->getNumberOfBoundaryComponents() !=
-                    tri->getNumberOfBoundaryComponents()) {
+            if (b->countBoundaryComponents() !=
+                    tri->countBoundaryComponents()) {
                 std::ostringstream msg;
                 msg << tri->getPacketLabel() << ": "
                     << "s1Bundle has the wrong number of "
@@ -2029,7 +2029,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             }
 
             unsigned long expectBdryTets =
-                20 * tri->getNumberOfBoundaryTriangles();
+                20 * tri->countBoundaryTriangles();
 
             if (b->countBoundaryFacets() != expectBdryTets) {
                 std::ostringstream msg;
@@ -2099,8 +2099,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (b->getNumberOfComponents() !=
-                        tri->getNumberOfComponents()) {
+                if (b->countComponents() != tri->countComponents()) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel() << ": "
                         << "bundleWithMonodromy has the wrong number "
@@ -2117,8 +2116,8 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (b->getNumberOfBoundaryComponents() !=
-                        tri->getNumberOfBoundaryComponents()) {
+                if (b->countBoundaryComponents() !=
+                        tri->countBoundaryComponents()) {
                     std::ostringstream msg;
                     msg << tri->getPacketLabel() << ": "
                         << "bundleWithMonodromy gives the wrong number of "
@@ -2127,7 +2126,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 }
 
                 unsigned long expectBdryTets =
-                    20 * tri->getNumberOfBoundaryTriangles();
+                    20 * tri->countBoundaryTriangles();
 
                 if (b->countBoundaryFacets() != expectBdryTets) {
                     std::ostringstream msg;
