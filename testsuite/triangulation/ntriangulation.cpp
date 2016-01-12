@@ -1693,7 +1693,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             msg << '.';
 
             // Check the group.
-            if (g.getRank() != rank)
+            if (g.rank() != rank)
                 CPPUNIT_FAIL(msg.str());
             else if (g.countInvariantFactors() != 0)
                 CPPUNIT_FAIL(msg.str());
@@ -1711,7 +1711,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             msg << "Z_" << torsionDegree << '.';
 
             // Check the group.
-            if (g.getRank() != rank)
+            if (g.rank() != rank)
                 CPPUNIT_FAIL(msg.str());
             else {
                 // Ranks match.
@@ -1734,7 +1734,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             msg << "Z_" << torsionDegree1 << " + Z_" << torsionDegree2 << '.';
 
             // Check the group.
-            if (g.getRank() != rank)
+            if (g.rank() != rank)
                 CPPUNIT_FAIL(msg.str());
             else {
                 // Ranks match.
@@ -1759,7 +1759,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 << " + Z_" << torsionDegree3 << '.';
 
             // Check the group.
-            if (g.getRank() != rank)
+            if (g.rank() != rank)
                 CPPUNIT_FAIL(msg.str());
             else {
                 // Ranks match.

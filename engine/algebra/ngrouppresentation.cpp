@@ -243,7 +243,7 @@ std::string NGroupPresentation::recogniseGroup() const {
     // TODO: eventually look for extensions over at least fg abelian groups.
     //   ??maybe?? some other finite groups but it's not clear how to look
     //   for those.
-    if (ab.get()->getRank()==1) {
+    if (ab.get()->rank()==1) {
         NGroupPresentation presCopy( *this );
         std::unique_ptr< NHomGroupPresentation > AUT(
             presCopy.identifyExtensionOverZ() );

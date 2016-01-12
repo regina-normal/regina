@@ -129,7 +129,7 @@ long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
     unsigned long initZ, initZ2, initZ3;
     {
         const NAbelianGroup& homology = working->getHomologyH1();
-        initZ = homology.getRank();
+        initZ = homology.rank();
         initZ2 = homology.getTorsionRank(2);
         initZ3 = homology.getTorsionRank(3);
     }
@@ -240,7 +240,7 @@ long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
     for (std::list<NTriangulation*>::iterator it = primeComponents.begin();
             it != primeComponents.end(); it++) {
         const NAbelianGroup& homology = (*it)->getHomologyH1();
-        finalZ += homology.getRank();
+        finalZ += homology.rank();
         finalZ2 += homology.getTorsionRank(2);
         finalZ3 += homology.getTorsionRank(3);
     }
@@ -703,7 +703,7 @@ bool NTriangulation::isIrreducible() const {
     unsigned long Z, Z2, Z3;
     {
         const NAbelianGroup& homology = working->getHomologyH1();
-        Z = homology.getRank();
+        Z = homology.rank();
         Z2 = homology.getTorsionRank(2);
         Z3 = homology.getTorsionRank(3);
     }
@@ -791,7 +791,7 @@ bool NTriangulation::isIrreducible() const {
                     // Note which parts of our initial homology we have
                     // now accounted for.
                     const NAbelianGroup& h1 = processing->getHomologyH1();
-                    Z -= h1.getRank();
+                    Z -= h1.rank();
                     Z2 -= h1.getTorsionRank(2);
                     Z3 -= h1.getTorsionRank(3);
 
@@ -1155,7 +1155,7 @@ bool NTriangulation::isHaken() const {
     t.intelligentSimplify();
 
     // First check for an easy answer via homology:
-    if (t.getHomologyH1().getRank() > 0) {
+    if (t.getHomologyH1().rank() > 0) {
         threeSphere_ = false; // Implied by Hakenness.
         return (haken_ = true);
     }

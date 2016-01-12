@@ -127,7 +127,7 @@ void NAbelianGroup::addGroup(const NMatrixInt& presentation) {
 }
 
 void NAbelianGroup::addGroup(const NAbelianGroup& group) {
-    rank += group.rank;
+    rank_ += group.rank_;
 
     // Work out the torsion elements.
     if (invariantFactors.empty()) {
@@ -178,9 +178,9 @@ unsigned NAbelianGroup::getTorsionRank(const NLargeInteger& degree) const {
 void NAbelianGroup::writeTextShort(std::ostream& out) const {
     bool writtenSomething = false;
 
-    if (rank > 0) {
-        if (rank > 1)
-            out << rank << ' ';
+    if (rank_ > 0) {
+        if (rank_ > 1)
+            out << rank_ << ' ';
         out << 'Z';
         writtenSomething = true;
     }
@@ -228,12 +228,12 @@ void NAbelianGroup::replaceTorsion(const NMatrixInt& matrix) {
     unsigned long rows = matrix.rows();
     unsigned long i = matrix.columns();
     if (i > rows) {
-        rank += (i - rows);
+        rank_ += (i - rows);
         i = rows;
     }
     while (i > 0) {
         if (matrix.entry(i-1, i-1) == 0)
-            rank++;
+            rank_++;
         else if (matrix.entry(i-1, i-1) == 1)
             return;
         else
@@ -244,7 +244,7 @@ void NAbelianGroup::replaceTorsion(const NMatrixInt& matrix) {
 }
 
 void NAbelianGroup::writeXMLData(std::ostream& out) const {
-    out << "<abeliangroup rank=\"" << rank << "\"> ";
+    out << "<abeliangroup rank=\"" << rank_ << "\"> ";
     for (std::multiset<NLargeInteger>::const_iterator it =
             invariantFactors.begin(); it != invariantFactors.end(); it++)
         out << (*it) << ' ';
@@ -253,7 +253,7 @@ void NAbelianGroup::writeXMLData(std::ostream& out) const {
 
 // ---N--> CC --M-->  ie: M*N = 0.
 NAbelianGroup::NAbelianGroup(const NMatrixInt& M, const NMatrixInt& N) {
-    rank = N.rows();
+    rank_ = N.rows();
     NMatrixInt tempN(N);
     metricalSmithNormalForm(tempN);
     unsigned long lim =
@@ -261,7 +261,7 @@ NAbelianGroup::NAbelianGroup(const NMatrixInt& M, const NMatrixInt& N) {
     std::multiset<NLargeInteger> torsion;
     for (unsigned long i=0; i<lim; i++) {
         if (tempN.entry(i,i) != 0) {
-            rank--;
+            rank_--;
             if (tempN.entry(i,i) > 1)
                 torsion.insert(tempN.entry(i,i));
         }
@@ -273,14 +273,14 @@ NAbelianGroup::NAbelianGroup(const NMatrixInt& M, const NMatrixInt& N) {
     lim = (tempM.rows() < tempM.columns() ? tempM.rows() : tempM.columns());
     for (unsigned long i=0; i<lim; ++i) {
         if (tempM.entry(i,i) != 0)
-            rank --;
+            rank_--;
     }
 }
 
 NAbelianGroup::NAbelianGroup(const NMatrixInt& M, const NMatrixInt& N,
         const NLargeInteger &p) {
     NLargeInteger cof(p.abs());
-    rank = N.rows();
+    rank_ = N.rows();
 
     NMatrixInt tempN(N);
     metricalSmithNormalForm(tempN);
@@ -291,14 +291,14 @@ NAbelianGroup::NAbelianGroup(const NMatrixInt& M, const NMatrixInt& N,
     if (cof == 0) {
         for (unsigned long i=0; i<lim; i++)
             if (tempN.entry(i,i) != 0) {
-                rank--;
+                rank_--;
                 if (tempN.entry(i,i) > 1)
                     torsion.insert(tempN.entry(i,i));
             }
     } else {
         for (unsigned long i=0; i<lim; i++)
             if (tempN.entry(i,i) !=0) {
-                rank--;
+                rank_--;
                 NLargeInteger g( tempN.entry(i,i).gcd(cof) );
                 if (g > 1)
                     torsion.insert(g);
@@ -310,7 +310,7 @@ NAbelianGroup::NAbelianGroup(const NMatrixInt& M, const NMatrixInt& N,
     lim = (tempM.rows() < tempM.columns() ? tempM.rows() : tempM.columns() );
     for (unsigned long i=0; i<lim; i++) {
         if (tempM.entry(i,i) != 0) {
-            rank--;
+            rank_--;
             if (cof != 0) {
                 NLargeInteger g( tempM.entry(i,i).gcd(cof) );
                 if (g>1)
@@ -319,9 +319,9 @@ NAbelianGroup::NAbelianGroup(const NMatrixInt& M, const NMatrixInt& N,
         }
     }
     if (cof != 0) {
-        for (unsigned long i=0; i<rank; i++)
+        for (unsigned long i=0; i<rank_; i++)
             torsion.insert(cof);
-        rank = 0;
+        rank_ = 0;
     }
     addTorsionElements(torsion);
 }

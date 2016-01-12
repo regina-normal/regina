@@ -3339,7 +3339,7 @@ inline bool Triangulation<3>::hasStrictAngleStructure() const {
 }
 
 inline unsigned long Triangulation<3>::getHomologyH2Z2() const {
-    return getHomologyH1Rel().getRank() + getHomologyH1Rel().getTorsionRank(2);
+    return getHomologyH1Rel().rank() + getHomologyH1Rel().getTorsionRank(2);
 }
 
 inline const Triangulation<3>::TuraevViroSet&
