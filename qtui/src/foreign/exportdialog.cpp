@@ -114,7 +114,7 @@ void ExportDialog::slotOk() {
             tr("Please select a different packet."),
             tr("<qt>The packet <i>%1</i> cannot "
             "be exported to this file format.</qt>").
-            arg(QString(chosenPacket->getHumanLabel().c_str()).toHtmlEscaped()));
+            arg(QString(chosenPacket->humanLabel().c_str()).toHtmlEscaped()));
         return;
     }
 

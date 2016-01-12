@@ -405,7 +405,7 @@ void EltMoveDialog::updateApply() {
 }
 
 void EltMoveDialog::packetWasRenamed(regina::NPacket*) {
-    name->setText(tri->getHumanLabel().c_str());
+    name->setText(tri->humanLabel().c_str());
 }
 
 template <typename ChooserClass>

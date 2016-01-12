@@ -69,7 +69,7 @@ NPacket::~NPacket() {
 }
 
 std::string NPacket::fullName() const {
-    return getHumanLabel() + " (" + typeName() + ")";
+    return humanLabel() + " (" + typeName() + ")";
 }
 
 std::string NPacket::adornedLabel(const std::string& adornment) const {

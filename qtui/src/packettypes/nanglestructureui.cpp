@@ -271,7 +271,7 @@ void NAngleStructureUI::refreshHeader() {
         arg(count).
         arg(span).
         arg(QString(model->structures()->triangulation()->
-            getHumanLabel().c_str()).toHtmlEscaped()));
+            humanLabel().c_str()).toHtmlEscaped()));
 }
 
 void NAngleStructureUI::viewTriangulation() {
