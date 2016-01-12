@@ -74,7 +74,7 @@ class REGINA_API NXMLContainerReader : public NXMLPacketReader {
          */
         NXMLContainerReader(NXMLTreeResolver& resolver);
 
-        virtual NPacket* packet();
+        virtual NPacket* packet() override;
 };
 
 /**
@@ -96,12 +96,12 @@ class REGINA_API NXMLPDFReader : public NXMLPacketReader {
          */
         NXMLPDFReader(NXMLTreeResolver& resolver);
 
-        virtual NPacket* packet();
+        virtual NPacket* packet() override;
         virtual NXMLElementReader* startContentSubElement(
             const std::string& subTagName,
-            const regina::xml::XMLPropertyDict& subTagProps);
+            const regina::xml::XMLPropertyDict& subTagProps) override;
         virtual void endContentSubElement(const std::string& subTagName,
-            NXMLElementReader* subReader);
+            NXMLElementReader* subReader) override;
 };
 
 /**
@@ -123,12 +123,12 @@ class REGINA_API NXMLScriptReader : public NXMLPacketReader {
          */
         NXMLScriptReader(NXMLTreeResolver& resolver);
 
-        virtual NPacket* packet();
+        virtual NPacket* packet() override;
         virtual NXMLElementReader* startContentSubElement(
             const std::string& subTagName,
-            const regina::xml::XMLPropertyDict& subTagProps);
+            const regina::xml::XMLPropertyDict& subTagProps) override;
         virtual void endContentSubElement(const std::string& subTagName,
-            NXMLElementReader* subReader);
+            NXMLElementReader* subReader) override;
 };
 
 /**
@@ -150,12 +150,12 @@ class REGINA_API NXMLTextReader : public NXMLPacketReader {
          */
         NXMLTextReader(NXMLTreeResolver& resolver);
 
-        virtual NPacket* packet();
+        virtual NPacket* packet() override;
         virtual NXMLElementReader* startContentSubElement(
             const std::string& subTagName,
-            const regina::xml::XMLPropertyDict& subTagProps);
+            const regina::xml::XMLPropertyDict& subTagProps) override;
         virtual void endContentSubElement(const std::string& subTagName,
-            NXMLElementReader* subReader);
+            NXMLElementReader* subReader) override;
 };
 
 /*@}*/
