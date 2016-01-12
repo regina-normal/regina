@@ -53,7 +53,7 @@ PacketWindow::PacketWindow(PacketPane* newPane, ReginaMain* parent) :
     // Set destructive close
     setAttribute(Qt::WA_DeleteOnClose);
 
-    setWindowTitle(heldPane->getPacket()->getHumanLabel().c_str());
+    setWindowTitle(heldPane->getPacket()->humanLabel().c_str());
 
     // On windows, the close button does not seem to appear automatically.
     setWindowFlags(windowFlags() | Qt::WindowCloseButtonHint);

@@ -134,7 +134,7 @@ void ImportDialog::slotOk() {
             "for the import."),
             tr("<qt>The packet <i>%1</i> cannot act as a parent for "
             "this imported data.</qt>").
-            arg(QString(parentPacket->getHumanLabel().c_str()).toHtmlEscaped()));
+            arg(QString(parentPacket->humanLabel().c_str()).toHtmlEscaped()));
         return;
     }
 

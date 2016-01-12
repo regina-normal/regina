@@ -457,13 +457,13 @@ void ReginaMain::packetDelete() {
     if (packet->getFirstTreeChild()) {
         msgBox.setText(tr("<qt>You are about to delete the packet <i>%1</i> "
             "and all of its children.</qt>").
-            arg(QString(packet->getHumanLabel().c_str()).toHtmlEscaped()));
+            arg(QString(packet->humanLabel().c_str()).toHtmlEscaped()));
         delBtn = msgBox.addButton(tr("Delete All"),
             QMessageBox::AcceptRole);
     } else {
         msgBox.setText(tr("<qt>You are about to delete the packet "
             "<i>%1</i>.</qt>").
-            arg(QString(packet->getHumanLabel().c_str()).toHtmlEscaped()));
+            arg(QString(packet->humanLabel().c_str()).toHtmlEscaped()));
         delBtn = msgBox.addButton(tr("Delete"),
             QMessageBox::AcceptRole);
     }

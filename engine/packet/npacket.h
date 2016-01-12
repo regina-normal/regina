@@ -282,6 +282,14 @@ class REGINA_API NPacket :
          *
          * @return this individual packet's label.
          */
+        std::string humanLabel() const;
+        /**
+         * Deprecated routine that returns the label associated with this
+         * individual packet, adjusted if necessary for human-readable output.
+         *
+         * \deprecated This routine has been renamed to humanLabel().
+         * See the humanLabel() documentation for further details.
+         */
         std::string getHumanLabel() const;
 
         /**
@@ -325,9 +333,17 @@ class REGINA_API NPacket :
          * The string is of the form <i>label (packet-type)</i>.
          *
          * The packet label will be adjusted for human-readable output
-         * according to the behaviour of getHumanLabel().
+         * according to the behaviour of humanLabel().
          *
          * @return the descriptive text string.
+         */
+        std::string fullName() const;
+        /**
+         * Deprecated routine that returns a descriptive text string for
+         * the packet.
+         *
+         * \deprecated This routine has been renamed to fullName().
+         * See the fullName() documentation for further details.
          */
         std::string getFullName() const;
 
@@ -480,6 +496,14 @@ class REGINA_API NPacket :
          * \ifacespython This routine returns a python list of strings.
          *
          * @return the set of all tags associated with this packet.
+         */
+        const std::set<std::string>& tags() const;
+        /**
+         * Deprecated routine that returns the set of all tags associated
+         * with this packet.
+         *
+         * \deprecated This routine has been renamed to tags().
+         * See the tags() documentation for further information.
          */
         const std::set<std::string>& getTags() const;
 
@@ -1494,10 +1518,18 @@ inline std::string NPacket::getPacketTypeName() const {
     return typeName();
 }
 
-inline std::string NPacket::getHumanLabel() const {
+inline std::string NPacket::humanLabel() const {
     if (label_.empty())
         return "(no label)";
     return label_;
+}
+
+inline std::string NPacket::getHumanLabel() const {
+    return humanLabel();
+}
+
+inline std::string NPacket::getFullName() const {
+    return fullName();
 }
 
 inline bool NPacket::hasTag(const std::string& tag) const {
@@ -1512,10 +1544,14 @@ inline bool NPacket::hasTags() const {
     return (! tags_->empty());
 }
 
-inline const std::set<std::string>& NPacket::getTags() const {
+inline const std::set<std::string>& NPacket::tags() const {
     if (! tags_.get())
         const_cast<NPacket*>(this)->tags_.reset(new std::set<std::string>());
     return *tags_;
+}
+
+inline const std::set<std::string>& NPacket::getTags() const {
+    return tags();
 }
 
 inline bool NPacket::isListening(NPacketListener* listener) {

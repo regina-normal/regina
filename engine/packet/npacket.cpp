@@ -68,8 +68,8 @@ NPacket::~NPacket() {
     fireDestructionEvent();
 }
 
-std::string NPacket::getFullName() const {
-    return getHumanLabel() + " (" + typeName() + ")";
+std::string NPacket::fullName() const {
+    return humanLabel() + " (" + typeName() + ")";
 }
 
 std::string NPacket::adornedLabel(const std::string& adornment) const {

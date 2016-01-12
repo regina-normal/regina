@@ -299,8 +299,8 @@ void NTriCompositionUI::viewIsomorphism() {
     QStringList details;
 
     details += QString("[%1]  &rarr;  [%2]").
-        arg(QString(tri->getHumanLabel().c_str()).toHtmlEscaped()).
-        arg(QString(comparingTri->getHumanLabel().c_str()).toHtmlEscaped());
+        arg(QString(tri->humanLabel().c_str()).toHtmlEscaped()).
+        arg(QString(comparingTri->humanLabel().c_str()).toHtmlEscaped());
 
     if (isoType == IsIsomorphic) {
         title = tr("Details of the isomorphism between "
@@ -310,7 +310,7 @@ void NTriCompositionUI::viewIsomorphism() {
             "triangulation <i>%1</i>.<p>"
             "Each line represents a single tetrahedron and its four "
             "vertices.").
-            arg(QString(comparingTri->getHumanLabel().c_str()).toHtmlEscaped());
+            arg(QString(comparingTri->humanLabel().c_str()).toHtmlEscaped());
 
         for (unsigned long i = 0; i < tri->size(); i++)
             details += QString("%1 (0123)  &rarr;  %2 (%3)").
@@ -327,7 +327,7 @@ void NTriCompositionUI::viewIsomorphism() {
             "triangulation <i>%1</i>.<p>"
             "Each line represents a single tetrahedron and its four "
             "vertices.").
-            arg(QString(comparingTri->getHumanLabel().c_str()).toHtmlEscaped());
+            arg(QString(comparingTri->humanLabel().c_str()).toHtmlEscaped());
 
         if (isoType == IsSubcomplex)
             for (unsigned long i = 0; i < tri->size(); i++)

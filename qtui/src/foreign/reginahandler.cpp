@@ -68,7 +68,7 @@ bool ReginaHandler::exportData(regina::NPacket* data,
             QObject::tr("I cannot export this packet subtree on its own."), 
             QObject::tr("<qt>This is because the root packet <i>%1</i> "
             "must stay connected to its parent.</qt>").
-            arg(QString(data->getHumanLabel().c_str()).toHtmlEscaped()));
+            arg(QString(data->humanLabel().c_str()).toHtmlEscaped()));
         return false;
     }
     if (! data->save(QFile::encodeName(fileName), compressed)) {

@@ -93,12 +93,9 @@ namespace {
     }
 
     boost::python::list tags_list(const NPacket* p) {
-        const std::set<std::string>& tags = p->getTags();
-        std::set<std::string>::const_iterator it;
-
         boost::python::list ans;
-        for (it = tags.begin(); it != tags.end(); it++)
-            ans.append(*it);
+        for (auto& t : p->tags())
+            ans.append(t);
         return ans;
     }
 }
@@ -114,9 +111,11 @@ void addNPacket() {
             return_value_policy<return_by_value>())
         .def("getPacketLabel", &NPacket::getPacketLabel,
             return_value_policy<return_by_value>())
+        .def("humanLabel", &NPacket::humanLabel)
         .def("getHumanLabel", &NPacket::getHumanLabel)
         .def("adornedLabel", &NPacket::adornedLabel)
         .def("setPacketLabel", &NPacket::setPacketLabel)
+        .def("fullName", &NPacket::fullName)
         .def("getFullName", &NPacket::getFullName)
         .def("makeUniqueLabel", &NPacket::makeUniqueLabel)
         .def("makeUniqueLabels", &NPacket::makeUniqueLabels)
@@ -125,6 +124,7 @@ void addNPacket() {
         .def("addTag", &NPacket::addTag)
         .def("removeTag", &NPacket::removeTag)
         .def("removeAllTags", &NPacket::removeAllTags)
+        .def("tags", tags_list)
         .def("getTags", tags_list)
         .def("getTreeParent", &NPacket::getTreeParent,
             return_value_policy<reference_existing_object>())
