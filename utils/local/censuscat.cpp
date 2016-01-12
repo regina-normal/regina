@@ -90,7 +90,7 @@ void usage(const char* progName, const std::string& error = std::string()) {
 
 void insertTri(const NTriangulation& source) {
     NTriangulation* t = new NTriangulation(source);
-    t->setPacketLabel(source.getPacketLabel());
+    t->setPacketLabel(source.label());
 
     std::string H1 = t->getHomologyH1().str();
 

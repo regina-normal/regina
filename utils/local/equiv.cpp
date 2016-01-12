@@ -312,7 +312,7 @@ void processTree() {
         if (p->getPacketType() == NTriangulation::packetType) {
             // A triangulation to process.
             t = static_cast<NTriangulation*>(p);
-            fprintf(stderr, "Processing %s ...\n", t->getPacketLabel().c_str());
+            fprintf(stderr, "Processing %s ...\n", t->label().c_str());
             nTris++;
 
             nonMin = false;
@@ -372,7 +372,7 @@ void processTree() {
         printf("NON-MINIMAL TRIANGULATIONS:\n\n");
         for (std::list<NTriangulation*>::const_iterator it = allNonMin.begin();
                 it != allNonMin.end(); it++)
-            printf("    %s\n", (*it)->getPacketLabel().c_str());
+            printf("    %s\n", (*it)->label().c_str());
         printf("\n");
     }
 
@@ -411,10 +411,10 @@ void processTree() {
                 for (cit2 = cit; cit2 != eClass.end(); cit2++)
                     if (cit2->second == c) {
                         printf("    %s\n",
-                            cit2->first->getPacketLabel().c_str());
+                            cit2->first->label().c_str());
                         if (outFile) {
                             t = new NTriangulation(*(cit2->first));
-                            t->setPacketLabel(cit2->first->getPacketLabel());
+                            t->setPacketLabel(cit2->first->label());
                             classCnt->insertChildLast(t);
                         }
 

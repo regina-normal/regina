@@ -1248,7 +1248,7 @@ void NTriGluingsUI::toSnapPea() {
             "For peripheral curves, I have attempted to install the "
             "(shortest, second shortest) basis on each cusp.</qt>"));
 
-    ans->setPacketLabel(tri->getPacketLabel());
+    ans->setPacketLabel(tri->label());
     tri->insertChildLast(ans);
     enclosingPane->getMainWindow()->packetView(ans, true, true);
 }

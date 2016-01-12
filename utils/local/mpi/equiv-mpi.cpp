@@ -260,19 +260,19 @@ bool checkInputTree() {
     unsigned labelLen;
 
     for (NPacket* p = tree; p; p = p->nextTreePacket()) {
-        labelLen = p->getPacketLabel().length();
+        labelLen = p->label().length();
         if (labelLen == 0) {
             fprintf(stderr, "ERROR: Empty packet label found in input file.\n");
             return false;
         } else if (labelLen > MAX_TRI_LABEL_LEN) {
             fprintf(stderr, "ERROR: Overlong packet label [%s] found in "
                 "input file.\n",
-                p->getPacketLabel().c_str());
+                p->label().c_str());
             return false;
-        } else if (! allLabels.insert(p->getPacketLabel()).second) {
+        } else if (! allLabels.insert(p->label()).second) {
             fprintf(stderr, "ERROR: Duplicate packet label [%s] found in "
                 "input file.\n",
-                p->getPacketLabel().c_str());
+                p->label().c_str());
             return false;
         }
     }
@@ -478,11 +478,11 @@ void ctrlFarmTri(NTriangulation* tri) {
     }
 
     if (tri) {
-        ctrlLogStamp() << "Farmed [" << tri->getPacketLabel()
+        ctrlLogStamp() << "Farmed [" << tri->label()
             << "] to slave " << slave << "." << std::endl;
 
-        MPI_Send(const_cast<char*>(tri->getPacketLabel().c_str()),
-            tri->getPacketLabel().length() + 1, MPI_CHAR, slave,
+        MPI_Send(const_cast<char*>(tri->label().c_str()),
+            tri->label().length() + 1, MPI_CHAR, slave,
             TAG_REQUEST_TASK, MPI_COMM_WORLD);
         nRunningSlaves++;
     } else
@@ -560,10 +560,10 @@ int mainController() {
                 for (cit2 = cit; cit2 != eClass.end(); cit2++)
                     if (cit2->second == c) {
                         printf("    %s\n",
-                            cit2->first->getPacketLabel().c_str());
+                            cit2->first->label().c_str());
                         if (outFile) {
                             t = new NTriangulation(*(cit2->first));
-                            t->setPacketLabel(cit2->first->getPacketLabel());
+                            t->setPacketLabel(cit2->first->label());
                             classCnt->insertChildLast(t);
                         }
 
@@ -630,8 +630,8 @@ void slaveSendNonMin() {
     long result = RESULT_NON_MINIMAL;
     MPI_Send(&result, 1, MPI_LONG, 0, TAG_RESULT, MPI_COMM_WORLD);
 
-    MPI_Send(const_cast<char*>(orig->getPacketLabel().c_str()),
-        orig->getPacketLabel().length() + 1, MPI_CHAR, 0,
+    MPI_Send(const_cast<char*>(orig->label().c_str()),
+        orig->label().length() + 1, MPI_CHAR, 0,
         TAG_RESULT_DATA, MPI_COMM_WORLD);
 }
 
@@ -650,13 +650,13 @@ void slaveSendNew() {
 
     // Send the original packet label for logging purposes, then send
     // the entire set of equivalent triangulations as per normal.
-    MPI_Send(const_cast<char*>(orig->getPacketLabel().c_str()),
-        orig->getPacketLabel().length() + 1, MPI_CHAR, 0,
+    MPI_Send(const_cast<char*>(orig->label().c_str()),
+        orig->label().length() + 1, MPI_CHAR, 0,
         TAG_RESULT_DATA, MPI_COMM_WORLD);
 
     for (TriSet::iterator tit = equivs.begin(); tit != equivs.end(); tit++)
-        MPI_Send(const_cast<char*>((*tit)->getPacketLabel().c_str()),
-            (*tit)->getPacketLabel().length() + 1, MPI_CHAR, 0,
+        MPI_Send(const_cast<char*>((*tit)->label().c_str()),
+            (*tit)->label().length() + 1, MPI_CHAR, 0,
             TAG_RESULT_DATA, MPI_COMM_WORLD);
 
     char null = 0;
@@ -674,8 +674,8 @@ void slaveSendEquivs() {
     MPI_Send(&result, 1, MPI_LONG, 0, TAG_RESULT, MPI_COMM_WORLD);
 
     for (TriSet::iterator tit = equivs.begin(); tit != equivs.end(); tit++)
-        MPI_Send(const_cast<char*>((*tit)->getPacketLabel().c_str()),
-            (*tit)->getPacketLabel().length() + 1, MPI_CHAR, 0,
+        MPI_Send(const_cast<char*>((*tit)->label().c_str()),
+            (*tit)->label().length() + 1, MPI_CHAR, 0,
             TAG_RESULT_DATA, MPI_COMM_WORLD);
 
     char null = 0;

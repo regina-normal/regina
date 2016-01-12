@@ -400,7 +400,7 @@ int mainSlave() {
                 s = NNormalSurfaceList::enumerate(t,
                     (quad ? NS_QUAD : NS_STANDARD));
                 out << t->size() << ' ' << s->size() << " \""
-                    << t->getPacketLabel() << '"' << std::endl;
+                    << t->label() << '"' << std::endl;
 
                 ++done;
                 delete s;

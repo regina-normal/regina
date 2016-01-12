@@ -373,7 +373,7 @@ void NPacket::sortChildren() {
         largest = current;
         current = current->nextTreeSibling_;
         while (current) {
-            if (current->getPacketLabel() > largest->getPacketLabel())
+            if (current->label() > largest->label())
                 largest = current;
             current = current->nextTreeSibling_;
         }
@@ -652,7 +652,7 @@ bool NPacket::makeUniqueLabels(NPacket* reference) {
     bool changed = false;
     for (whichTree = 0; tree[whichTree]; whichTree++)
         for (p = tree[whichTree]; p; p = p->nextTreePacket()) {
-            label = p->getPacketLabel();
+            label = p->label();
             if (! labels.insert(label).second) {
                 extraInt = 1;
                 do {

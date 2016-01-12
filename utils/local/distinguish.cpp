@@ -172,14 +172,14 @@ void process(NContainer* c) {
 
         if (! mfdData) {
             mfdData = triData;
-            mfdDataName = child->getPacketLabel();
+            mfdDataName = child->label();
             mfdData->manifold = c;
             manifolds.push_back(mfdData);
         } else {
             if (! triData->mayBeEqual(*mfdData)) {
-                std::cout << "INCONSISTENCY: " << c->getPacketLabel() << '\n';
+                std::cout << "INCONSISTENCY: " << c->label() << '\n';
                 std::cout << "    a) " << mfdDataName << '\n';
-                std::cout << "    b) " << child->getPacketLabel() << '\n';
+                std::cout << "    b) " << child->label() << '\n';
 
                 if (! mfdInconsistent) {
                     totMfdsInconsistent++;
@@ -206,12 +206,12 @@ void findDuplicates() {
             if (! first) {
                 first = prev;
                 std::cout << "POSSIBLE DUPLICATES:\n";
-                std::cout << "    - " << prev->manifold->getPacketLabel()
+                std::cout << "    - " << prev->manifold->label()
                     << '\n';
                 totMfdsDuplicate++;
             }
 
-            std::cout << "    - " << (*it)->manifold->getPacketLabel() << '\n';
+            std::cout << "    - " << (*it)->manifold->label() << '\n';
             totMfdsDuplicate++;
         } else
             first = 0;
@@ -303,7 +303,7 @@ int main(int argc, const char* argv[]) {
     for (NPacket* p = tree; p; p = p->nextTreePacket())
         if (p->getPacketType() == NContainer::packetType) {
             if (verbose)
-                std::cout << "... " << p->getPacketLabel() << " ...\n";
+                std::cout << "... " << p->label() << " ...\n";
             process(static_cast<NContainer*>(p));
         }
 

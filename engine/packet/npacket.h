@@ -241,6 +241,15 @@ class REGINA_API NPacket :
          *
          * @return this individual packet's label.
          */
+        const std::string& label() const;
+
+        /**
+         * Deprecated routine that returns the label associated with this
+         * individual packet.
+         *
+         * \deprecated This routine has been renamed to label().
+         * See the label() documentation for further information.
+         */
         const std::string& getPacketLabel() const;
 
         /**
@@ -1453,6 +1462,10 @@ inline NPacket::NPacket(NPacket* parent) :
 inline void NPacket::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
     out << '\n';
+}
+
+inline const std::string& NPacket::label() const {
+    return label_;
 }
 
 inline const std::string& NPacket::getPacketLabel() const {

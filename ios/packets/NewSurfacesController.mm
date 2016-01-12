@@ -76,7 +76,7 @@ static NSArray* embText;
         [NewSurfacesController initArrays];
     
     if (self.spec.parent)
-        _triangulation.text = [NSString stringWithUTF8String:self.spec.parent->getPacketLabel().c_str()];
+        _triangulation.text = [NSString stringWithUTF8String:self.spec.parent->label().c_str()];
 
     self.whichControl.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:KEY_LAST_TYPE];
     self.coordControl.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:KEY_LAST_COORDS];

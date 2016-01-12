@@ -194,17 +194,17 @@ bool process(NContainer* c) {
                 delete h1;
             }
         } else if (! sortMfds)
-            std::cout << c->getPacketLabel() << "  ->>  " << name;
+            std::cout << c->label() << "  ->>  " << name;
         totMfds++;
         totMfdsOk++;
 
         if (renameMfds)
-            if (c->getPacketLabel() != name) {
+            if (c->label() != name) {
                 c->setPacketLabel(name);
                 totMfdsRenamed++;
 
                 if (sortMfds)
-                    std::cout << "RENAMED: " << c->getPacketLabel() <<
+                    std::cout << "RENAMED: " << c->label() <<
                         "  ->>  " << name << '\n';
                 else
                     std::cout << "  (RENAMED)";
@@ -226,7 +226,7 @@ bool process(NContainer* c) {
         if (rawList)
             std::cout << "UNKNOWN\n";
         else if (! sortMfds)
-            std::cout << c->getPacketLabel() << "  ->>  UNKNOWN\n";
+            std::cout << c->label() << "  ->>  UNKNOWN\n";
         totMfds++;
     }
 
@@ -324,7 +324,7 @@ int main(int argc, char* argv[]) {
         std::cout << "Final container listing:\n\n";
         for (p = tree; p; p = p->nextTreePacket())
             if (p->getPacketType() == NContainer::packetType)
-                std::cout << p->getPacketLabel() << '\n';
+                std::cout << p->label() << '\n';
     }
 
     // Save the data file if required.

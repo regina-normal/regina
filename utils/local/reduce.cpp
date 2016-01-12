@@ -253,7 +253,7 @@ void processTree() {
         if (p->getPacketType() == NTriangulation::packetType) {
             // A triangulation to process.
             orig = static_cast<NTriangulation*>(p);
-            printf("Processing %s ...\n", orig->getPacketLabel().c_str());
+            printf("Processing %s ...\n", orig->label().c_str());
             nTris++;
 
             nonMin = false;

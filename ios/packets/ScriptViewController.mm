@@ -96,7 +96,7 @@
     if (value) {
         cell.icon.image = [PacketManagerIOS iconFor:value];
         if (value->getTreeParent())
-            cell.value.text = [NSString stringWithUTF8String:value->getPacketLabel().c_str()];
+            cell.value.text = [NSString stringWithUTF8String:value->label().c_str()];
         else
             cell.value.text = @"⟨Entire tree⟩";
     } else {

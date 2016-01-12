@@ -150,7 +150,7 @@ bool PythonHandler::exportData(regina::NPacket* data, const QString& fileName,
 
     // Write the name of the script.
     out << "### " << scriptMarker << ' ';
-    out << QString(script->getPacketLabel().c_str());
+    out << QString(script->label().c_str());
     endl(out);
     out << "###";
     endl(out);
@@ -162,7 +162,7 @@ bool PythonHandler::exportData(regina::NPacket* data, const QString& fileName,
         value = script->getVariableValue(i);
         out << "### " << varMarker
             << QString(script->getVariableName(i).c_str())
-            << ": " << (value ? QString(value->getPacketLabel().c_str()) : "");
+            << ": " << (value ? QString(value->label().c_str()) : "");
         endl(out);
     }
 

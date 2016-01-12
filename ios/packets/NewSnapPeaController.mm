@@ -137,7 +137,7 @@
         [alert show];
     }
 
-    ans->setPacketLabel(tri->getPacketLabel());
+    ans->setPacketLabel(tri->label());
     return ans;
 }
 

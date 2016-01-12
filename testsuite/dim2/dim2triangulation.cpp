@@ -95,7 +95,7 @@ class Dim2TriangulationTest : public TriangulationTest<2> {
     public:
         void copyAndDelete(Dim2Triangulation& dest, Dim2Triangulation* source) {
             dest.insertTriangulation(*source);
-            dest.setPacketLabel(source->getPacketLabel());
+            dest.setPacketLabel(source->label());
             delete source;
         }
 
@@ -180,21 +180,21 @@ class Dim2TriangulationTest : public TriangulationTest<2> {
 
                 if (large.size() != n + 2) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ", tri " << i << ": "
+                    msg << tri->label() << ", tri " << i << ": "
                         << "1-3 move gives wrong # triangles.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 if (large.isOrientable() != tri->isOrientable()) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ", tri " << i << ": "
+                    msg << tri->label() << ", tri " << i << ": "
                         << "1-3 move changes orientability.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 if (large.isClosed() != tri->isClosed()) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ", tri " << i << ": "
+                    msg << tri->label() << ", tri " << i << ": "
                         << "1-3 move changes closedness.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -202,14 +202,14 @@ class Dim2TriangulationTest : public TriangulationTest<2> {
                 if (large.countBoundaryComponents() !=
                         tri->countBoundaryComponents()) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ", tri " << i << ": "
+                    msg << tri->label() << ", tri " << i << ": "
                         << "1-3 move changes # boundary components.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 if (large.eulerChar() != tri->eulerChar()) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ", tri " << i << ": "
+                    msg << tri->label() << ", tri " << i << ": "
                         << "1-3 move changes Euler characteristic.";
                     CPPUNIT_FAIL(msg.str());
                 }

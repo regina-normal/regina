@@ -465,7 +465,7 @@ void NSnapPeaShapesUI::toRegina() {
             "triangulation for me to convert."));
     else {
         regina::NTriangulation* ans = new regina::NTriangulation(*tri);
-        ans->setPacketLabel(tri->getPacketLabel());
+        ans->setPacketLabel(tri->label());
         tri->insertChildLast(ans);
         enclosingPane->getMainWindow()->packetView(ans, true, true);
     }

@@ -433,12 +433,12 @@ void ReginaMain::packetRename() {
         return;
 
     bool ok;
-    QString suggest = packet->getPacketLabel().c_str();
+    QString suggest = packet->label().c_str();
 
     QString newLabel = QInputDialog::getText(this,
         tr("Rename Packet"), tr("New label:"), QLineEdit::Normal,
             suggest, &ok).trimmed();
-    if ((! ok) || (newLabel == packet->getPacketLabel().c_str()))
+    if ((! ok) || (newLabel == packet->label().c_str()))
         return;
 
     packet->setPacketLabel(newLabel.toUtf8().constData());

@@ -1943,9 +1943,9 @@ std::string TriangulationBase<dim>::dumpConstruction() const {
 "/**\n";
 #if 0
 TODO: output packet labels if we derive from NPacket
-    if (! getPacketLabel().empty())
+    if (! label().empty())
         ans <<
-" * " << dim << "-dimensional triangulation: " << getPacketLabel() << "\n";
+" * " << dim << "-dimensional triangulation: " << label() << "\n";
 #endif
     ans <<
 " * " << dim << "-dimensional triangulation:\n";

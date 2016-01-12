@@ -141,7 +141,7 @@
 {
     _node = p;
     _listener = [PacketListenerIOS listenerWithPacket:_node delegate:self listenChildren:YES];
-    self.title = [NSString stringWithUTF8String:p->getPacketLabel().c_str()];
+    self.title = [NSString stringWithUTF8String:p->label().c_str()];
     [self refreshPackets];
 }
 
@@ -317,7 +317,7 @@
     if (packet == self.node) {
         // Refresh the title, but only if this is not the root of the packet tree.
         if (packet->getTreeParent())
-            self.title = [NSString stringWithUTF8String:packet->getPacketLabel().c_str()];
+            self.title = [NSString stringWithUTF8String:packet->label().c_str()];
     } else {
         // Don't animate, since this was most likely a result of the user editing the cell.
         NSIndexPath* path = [self pathForPacket:packet];
@@ -394,7 +394,7 @@
 
 - (NSString *)renameInit:(NSIndexPath *)path
 {
-    return [NSString stringWithUTF8String:[self packetForPath:path]->getPacketLabel().c_str()];
+    return [NSString stringWithUTF8String:[self packetForPath:path]->label().c_str()];
 }
 
 - (void)renameDone:(NSIndexPath *)path result:(NSString *)result
@@ -481,7 +481,7 @@
         cell = [tableView dequeueReusableCellWithIdentifier:@"Container" forIndexPath:indexPath];
     else
         cell = [tableView dequeueReusableCellWithIdentifier:@"Packet" forIndexPath:indexPath];
-    cell.textLabel.text = [NSString stringWithUTF8String:p->getPacketLabel().c_str()];
+    cell.textLabel.text = [NSString stringWithUTF8String:p->label().c_str()];
     unsigned long sub = p->countChildren();
     if (sub == 0)
         cell.detailTextLabel.text = @"";

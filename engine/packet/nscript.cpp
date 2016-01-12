@@ -127,7 +127,7 @@ void NScript::writeTextLong(std::ostream& o) const {
                 variables.begin(); vit != variables.end(); vit++) {
             o << "Variable: " << vit->first << " = ";
             if (vit->second)
-                o << vit->second->getPacketLabel() << '\n';
+                o << vit->second->label() << '\n';
             else
                 o << "(null)" << '\n';
         }
@@ -153,7 +153,7 @@ void NScript::writeXMLPacketData(std::ostream& out) const {
             out << vit->second->internalID();
         out << "\" value=\"";
         if (vit->second)
-            out << xmlEncodeSpecialChars(vit->second->getPacketLabel());
+            out << xmlEncodeSpecialChars(vit->second->label());
         out << "\"/>\n";
     }
 

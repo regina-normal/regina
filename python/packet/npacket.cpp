@@ -108,6 +108,7 @@ void addNPacket() {
             std::auto_ptr<NPacket> >("NPacket", no_init)
         .def("getPacketType", &NPacket::getPacketType)
         .def("getPacketTypeName", &NPacket::getPacketTypeName)
+        .def("label", &NPacket::label,
         .def("getPacketLabel", &NPacket::getPacketLabel,
             return_value_policy<return_by_value>())
         .def("getHumanLabel", &NPacket::getHumanLabel)

@@ -57,7 +57,7 @@ Triangulation<3>::Triangulation(const std::string& description) {
         setPacketLabel(description);
     } else if ((attempt = fromSnapPea(description))) {
         cloneFrom(*attempt);
-        setPacketLabel(attempt->getPacketLabel());
+        setPacketLabel(attempt->label());
     }
 
     delete attempt;
@@ -463,10 +463,10 @@ void Triangulation<3>::snapPea(std::ostream& out) const {
 
     // Write header information.
     out << "% Triangulation\n";
-    if (getPacketLabel().empty())
+    if (label().empty())
         out << "Regina_Triangulation\n";
     else
-        out << stringToToken(getPacketLabel()) << '\n';
+        out << stringToToken(label()) << '\n';
 
     // Write general details.
     out << "not_attempted 0.0\n";

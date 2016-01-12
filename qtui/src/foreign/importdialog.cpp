@@ -78,7 +78,7 @@ ImportDialog::ImportDialog(QWidget* parent, regina::NPacket* importedData,
     l = new QLabel(tr("Label:"));
     l->setWhatsThis(expln);
     hStrip->addWidget(l);
-    label = new QLineEdit(newTree->getPacketLabel().c_str());
+    label = new QLineEdit(newTree->label().c_str());
     label->setWhatsThis(expln);
     hStrip->addWidget(label, 1);
 
