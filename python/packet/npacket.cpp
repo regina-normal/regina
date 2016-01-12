@@ -109,6 +109,7 @@ void addNPacket() {
         .def("getPacketType", &NPacket::getPacketType)
         .def("getPacketTypeName", &NPacket::getPacketTypeName)
         .def("label", &NPacket::label,
+            return_value_policy<return_by_value>())
         .def("getPacketLabel", &NPacket::getPacketLabel,
             return_value_policy<return_by_value>())
         .def("getHumanLabel", &NPacket::getHumanLabel)
