@@ -999,7 +999,7 @@ QString Dim2BoundaryComponentModel::toolTipForCol(int column) {
 }
 
 QString Dim4VertexModel::caption() const {
-    return tr("Vertices (%1)").arg(tri->getPacketLabel().c_str());
+    return tr("Vertices (%1)").arg(tri->label().c_str());
 }
 
 QString Dim4VertexModel::overview() const {
@@ -1092,7 +1092,7 @@ QString Dim4VertexModel::toolTipForCol(int column) {
 }
 
 QString Dim4EdgeModel::caption() const {
-    return tr("Edges (%1)").arg(tri->getPacketLabel().c_str());
+    return tr("Edges (%1)").arg(tri->label().c_str());
 }
 
 QString Dim4EdgeModel::overview() const {
@@ -1187,7 +1187,7 @@ QString Dim4EdgeModel::toolTipForCol(int column) {
 }
 
 QString Dim4TriangleModel::caption() const {
-    return tr("Triangles (%1)").arg(tri->getPacketLabel().c_str());
+    return tr("Triangles (%1)").arg(tri->label().c_str());
 }
 
 QString Dim4TriangleModel::overview() const {
@@ -1277,7 +1277,7 @@ QString Dim4TriangleModel::toolTipForCol(int column) {
 }
 
 QString Dim4TetrahedronModel::caption() const {
-    return tr("Tetrahedra (%1)").arg(tri->getPacketLabel().c_str());
+    return tr("Tetrahedra (%1)").arg(tri->label().c_str());
 }
 
 QString Dim4TetrahedronModel::overview() const {
@@ -1368,7 +1368,7 @@ QString Dim4TetrahedronModel::toolTipForCol(int column) {
 }
 
 QString Dim4ComponentModel::caption() const {
-    return tr("Components (%1)").arg(tri->getPacketLabel().c_str());
+    return tr("Components (%1)").arg(tri->label().c_str());
 }
 
 QString Dim4ComponentModel::overview() const {
@@ -1451,7 +1451,7 @@ QString Dim4ComponentModel::toolTipForCol(int column) {
 }
 
 QString Dim4BoundaryComponentModel::caption() const {
-    return tr("Boundary Components (%1)").arg(tri->getPacketLabel().c_str());
+    return tr("Boundary Components (%1)").arg(tri->label().c_str());
 }
 
 QString Dim4BoundaryComponentModel::overview() const {

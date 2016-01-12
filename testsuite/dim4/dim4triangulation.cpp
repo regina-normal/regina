@@ -357,7 +357,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
         void verifyValid(const Dim4Triangulation& tri) {
             if (! tri.isValid()) {
-                CPPUNIT_FAIL("Triangulation " + tri.getPacketLabel() +
+                CPPUNIT_FAIL("Triangulation " + tri.label() +
                     " is reported as invalid.");
             }
             unsigned long i;
@@ -365,7 +365,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 if (! tri.getVertex(i)->isValid()) {
                     std::ostringstream msg;
                     msg << "Vertex " << i << " of triangulation "
-                        << tri.getPacketLabel() << " is reported as invalid.";
+                        << tri.label() << " is reported as invalid.";
                     CPPUNIT_FAIL(msg.str());
                 }
             for (i = 0; i < tri.countEdges(); ++i)
@@ -374,14 +374,14 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                         tri.getEdge(i)->hasBadIdentification()) {
                     std::ostringstream msg;
                     msg << "Edge " << i << " of triangulation "
-                        << tri.getPacketLabel() << " is reported as invalid.";
+                        << tri.label() << " is reported as invalid.";
                     CPPUNIT_FAIL(msg.str());
                 }
             for (i = 0; i < tri.countTriangles(); ++i)
                 if (! tri.getTriangle(i)->isValid()) {
                     std::ostringstream msg;
                     msg << "Triangle " << i << " of triangulation "
-                        << tri.getPacketLabel() << " is reported as invalid.";
+                        << tri.label() << " is reported as invalid.";
                     CPPUNIT_FAIL(msg.str());
                 }
         }
@@ -391,7 +391,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 int invalidEdgeLinks, int invalidEdgeIDs,
                 int invalidTriangles) {
             if (tri.isValid()) {
-                CPPUNIT_FAIL("Triangulation " + tri.getPacketLabel() +
+                CPPUNIT_FAIL("Triangulation " + tri.label() +
                     " is reported as valid.");
             }
             unsigned long i;
@@ -403,7 +403,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                     ++found;
             if (found != invalidVertices) {
                 std::ostringstream msg;
-                msg << "Triangulation " << tri.getPacketLabel()
+                msg << "Triangulation " << tri.label()
                     << " contains " << found << " invalid vertices "
                     "instead of the expected " << invalidVertices << ".";
                 CPPUNIT_FAIL(msg.str());
@@ -415,7 +415,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                     ++found;
             if (found != invalidEdges) {
                 std::ostringstream msg;
-                msg << "Triangulation " << tri.getPacketLabel()
+                msg << "Triangulation " << tri.label()
                     << " contains " << found << " invalid edges "
                     "instead of the expected " << invalidEdges << ".";
                 CPPUNIT_FAIL(msg.str());
@@ -427,7 +427,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                     ++found;
             if (found != invalidEdgeLinks) {
                 std::ostringstream msg;
-                msg << "Triangulation " << tri.getPacketLabel()
+                msg << "Triangulation " << tri.label()
                     << " contains " << found << " invalid edge links "
                     "instead of the expected " << invalidEdgeLinks << ".";
                 CPPUNIT_FAIL(msg.str());
@@ -439,7 +439,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                     ++found;
             if (found != invalidEdgeIDs) {
                 std::ostringstream msg;
-                msg << "Triangulation " << tri.getPacketLabel() << " contains "
+                msg << "Triangulation " << tri.label() << " contains "
                     << found << " invalid edge self-identifications "
                     "instead of the expected " << invalidEdgeIDs << ".";
                 CPPUNIT_FAIL(msg.str());
@@ -451,7 +451,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                     ++found;
             if (found != invalidTriangles) {
                 std::ostringstream msg;
-                msg << "Triangulation " << tri.getPacketLabel()
+                msg << "Triangulation " << tri.label()
                     << " contains " << found << " invalid triangles "
                     "instead of the expected " << invalidTriangles << ".";
                 CPPUNIT_FAIL(msg.str());
@@ -481,13 +481,13 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
         void verifyConnected(const Dim4Triangulation& tri) {
             if (! tri.isConnected())
-                CPPUNIT_FAIL("Triangulation " + tri.getPacketLabel() +
+                CPPUNIT_FAIL("Triangulation " + tri.label() +
                     " is reported as disconnected.");
         }
 
         void verifyDisconnected(const Dim4Triangulation& tri) {
             if (tri.isConnected())
-                CPPUNIT_FAIL("Triangulation " + tri.getPacketLabel() +
+                CPPUNIT_FAIL("Triangulation " + tri.label() +
                     " is reported as connected.");
         }
 
@@ -518,11 +518,11 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 bool isOrientable = true) {
             if (isOrientable) {
                 if (! tri.isOrientable())
-                    CPPUNIT_FAIL("Triangulation " + tri.getPacketLabel() +
+                    CPPUNIT_FAIL("Triangulation " + tri.label() +
                         " is reported as non-orientable.");
             } else {
                 if (tri.isOrientable())
-                    CPPUNIT_FAIL("Triangulation " + tri.getPacketLabel() +
+                    CPPUNIT_FAIL("Triangulation " + tri.label() +
                         " is reported as orientable.");
             }
         }
@@ -555,31 +555,31 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
             if (closed) {
                 if (! tri.isClosed())
-                    CPPUNIT_FAIL("Triangulation " + tri.getPacketLabel() +
+                    CPPUNIT_FAIL("Triangulation " + tri.label() +
                         " is reported as being not closed.");
             } else {
                 if (tri.isClosed())
-                    CPPUNIT_FAIL("Triangulation " + tri.getPacketLabel() +
+                    CPPUNIT_FAIL("Triangulation " + tri.label() +
                         " is reported as being closed.");
             }
 
             if (realBdry) {
                 if (! tri.hasBoundaryTetrahedra())
-                    CPPUNIT_FAIL("Triangulation " + tri.getPacketLabel() +
+                    CPPUNIT_FAIL("Triangulation " + tri.label() +
                         " is reported as having no boundary tetrahedra.");
             } else {
                 if (tri.hasBoundaryTetrahedra())
-                    CPPUNIT_FAIL("Triangulation " + tri.getPacketLabel() +
+                    CPPUNIT_FAIL("Triangulation " + tri.label() +
                         " is reported as having boundary tetrahedra.");
             }
 
             if (idealVertices && valid) {
                 if (! tri.isIdeal())
-                    CPPUNIT_FAIL("Triangulation " + tri.getPacketLabel() +
+                    CPPUNIT_FAIL("Triangulation " + tri.label() +
                         " is reported as being not ideal.");
             } else {
                 if (tri.isIdeal())
-                    CPPUNIT_FAIL("Triangulation " + tri.getPacketLabel() +
+                    CPPUNIT_FAIL("Triangulation " + tri.label() +
                         " is reported as being ideal.");
             }
 
@@ -592,7 +592,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                     ++found;
             if (found != idealVertices) {
                 std::ostringstream msg;
-                msg << "Triangulation " << tri.getPacketLabel()
+                msg << "Triangulation " << tri.label()
                     << " contains " << found << " ideal vertices "
                     "instead of the expected " << idealVertices << ".";
                 CPPUNIT_FAIL(msg.str());
@@ -601,11 +601,11 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             // Hum, we've already check this but might as well cross-check.
             if (valid) {
                 if (! tri.isValid())
-                    CPPUNIT_FAIL("Triangulation " + tri.getPacketLabel() +
+                    CPPUNIT_FAIL("Triangulation " + tri.label() +
                         " is reported as being invalid.");
             } else {
                 if (tri.isValid())
-                    CPPUNIT_FAIL("Triangulation " + tri.getPacketLabel() +
+                    CPPUNIT_FAIL("Triangulation " + tri.label() +
                         " is reported as being valid.");
             }
         }
@@ -635,7 +635,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             unsigned long ans = tri.countBoundaryComponents();
             if (ans != nBdry) {
                 std::ostringstream msg;
-                msg << "Triangulation " << tri.getPacketLabel() << " gives "
+                msg << "Triangulation " << tri.label() << " gives "
                     << ans << " boundary component(s) instead of the expected "
                     << nBdry << "." << std::endl;
                 CPPUNIT_FAIL(msg.str());
@@ -674,7 +674,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             if (ans != bdryManifold) {
                 std::ostringstream msg;
                 msg << "Boundary component " << whichBdry
-                    << " of triangulation " << tri.getPacketLabel()
+                    << " of triangulation " << tri.label()
                     << " simplifies to " << ans
                     << " instead of the expected " << bdryManifold << ".";
                 CPPUNIT_FAIL(msg.str());
@@ -698,7 +698,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             if (ans != h1) {
                 std::ostringstream msg;
                 msg << "Boundary component " << whichBdry
-                    << " of triangulation " << tri.getPacketLabel()
+                    << " of triangulation " << tri.label()
                     << " has first homology " << ans
                     << " instead of the expected " << h1 << ".";
                 CPPUNIT_FAIL(msg.str());
@@ -769,7 +769,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
             if (found != tri->countBoundaryFacets()) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel()
+                msg << tri->label()
                     << " reports the wrong number of boundary tetrahedra.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -787,7 +787,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
                 if (found != comp->countBoundaryFacets()) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel()
+                    msg << tri->label()
                         << " reports the wrong number of "
                         "boundary tetrahedra in component " << c << ".";
                     CPPUNIT_FAIL(msg.str());
@@ -826,7 +826,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                                     tet3->adjacentFace(triangle))) {
                                 std::ostringstream msg;
                                 msg << "Boundary tetrahedron adjacency "
-                                    "test failed for " << tri.getPacketLabel()
+                                    "test failed for " << tri.label()
                                     << ", BC #" << i << ", tet #" << j
                                     << ", triangle #" << triangle << ".";
                                 CPPUNIT_FAIL(msg.str());
@@ -847,7 +847,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
         void verifyLinkCount(const Dim4Triangulation& tri, unsigned nVert) {
             if (tri.countVertices() != nVert) {
                 std::ostringstream msg;
-                msg << "Triangulation " << tri.getPacketLabel()
+                msg << "Triangulation " << tri.label()
                     << " has " << tri.countVertices()
                     << " vertices, not the expected " << nVert << ".";
                 CPPUNIT_FAIL(msg.str());
@@ -880,7 +880,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 if (link != "S3") {
                     std::ostringstream msg;
                     msg << "Vertex " << i << " of triangulation "
-                        << tri.getPacketLabel() << " simplifies to "
+                        << tri.label() << " simplifies to "
                         << link << ", not S3 as expected.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -913,7 +913,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 if (link != "B3") {
                     std::ostringstream msg;
                     msg << "Vertex " << i << " of triangulation "
-                        << tri.getPacketLabel() << " simplifies to "
+                        << tri.label() << " simplifies to "
                         << link << ", not B3 as expected.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -945,7 +945,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             if (link != manifold) {
                 std::ostringstream msg;
                 msg << "Vertex " << whichVertex
-                    << " of triangulation " << tri.getPacketLabel()
+                    << " of triangulation " << tri.label()
                     << " simplifies to " << link
                     << " instead of the expected " << manifold << ".";
                 CPPUNIT_FAIL(msg.str());
@@ -968,7 +968,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             if (ans != h1) {
                 std::ostringstream msg;
                 msg << "Vertex " << whichVertex
-                    << " of triangulation " << tri.getPacketLabel()
+                    << " of triangulation " << tri.label()
                     << " has first homology " << ans
                     << " instead of the expected " << h1 << ".";
                 CPPUNIT_FAIL(msg.str());
@@ -1033,7 +1033,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
             if (eulerManifold != expectedManifold) {
                 std::ostringstream msg;
-                msg << "Triangulation " << tri.getPacketLabel() << " gives "
+                msg << "Triangulation " << tri.label() << " gives "
                     "manifold Euler characteristic = " << eulerManifold
                     << " instead of the expected " << expectedManifold << ".";
                 CPPUNIT_FAIL(msg.str());
@@ -1041,7 +1041,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
             if (eulerTri != expectedTri) {
                 std::ostringstream msg;
-                msg << "Triangulation " << tri.getPacketLabel() << " gives "
+                msg << "Triangulation " << tri.label() << " gives "
                     "triangulation Euler characteristic = " << eulerTri
                     << " instead of the expected " << expectedTri << ".";
                 CPPUNIT_FAIL(msg.str());
@@ -1054,7 +1054,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
             if (eulerTri != expectedTri) {
                 std::ostringstream msg;
-                msg << "Triangulation " << tri.getPacketLabel() << " gives "
+                msg << "Triangulation " << tri.label() << " gives "
                     "triangulation Euler characteristic = " << eulerTri
                     << " instead of the expected " << expectedTri << ".";
                 CPPUNIT_FAIL(msg.str());
@@ -1085,7 +1085,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             std::string ans = tri.getHomologyH1().str();
             if (ans != H1) {
                 std::ostringstream msg;
-                msg << "Triangulation " << tri.getPacketLabel()
+                msg << "Triangulation " << tri.label()
                     << " has homology H1 = " << ans
                     << " instead of the expected " << H1 << ".";
                 CPPUNIT_FAIL(msg.str());
@@ -1122,7 +1122,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                     showGroup = "<unrecognised>";
 
                 std::ostringstream msg;
-                msg << "Triangulation " << tri.getPacketLabel()
+                msg << "Triangulation " << tri.label()
                     << " has fundamental group = " << showAns
                     << " instead of the expected " << showGroup << ".";
                 CPPUNIT_FAIL(msg.str());
@@ -1156,7 +1156,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             // they can never turn valid into invalid.
             if (tri->isValid() && ! b.isValid()) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel()
+                msg << tri->label()
                     << ": Barycentric subdivision breaks validity.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -1165,14 +1165,14 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             // valid -> valid case here.
             if (tri->isValid() && (tri->isIdeal() != b.isIdeal())) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel()
+                msg << tri->label()
                     << ": Barycentric subdivision breaks idealness.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             if (tri->hasBoundaryTetrahedra() != b.hasBoundaryTetrahedra()) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel()
+                msg << tri->label()
                     << ": Barycentric subdivision breaks boundary tetrahedra.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -1181,28 +1181,28 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             // Just consider valid only.
             if (tri->isValid() && (tri->isClosed() != b.isClosed())) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel()
+                msg << tri->label()
                     << ": Barycentric subdivision breaks closedness.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             if (tri->isOrientable() != b.isOrientable()) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel()
+                msg << tri->label()
                     << ": Barycentric subdivision breaks orientability.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             if (tri->isConnected() != b.isConnected()) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel()
+                msg << tri->label()
                     << ": Barycentric subdivision breaks connectedness.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             if (tri->countComponents() != b.countComponents()) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel()
+                msg << tri->label()
                     << ": Barycentric subdivision breaks connected components.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -1213,7 +1213,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             if (tri->isValid() && (tri->countBoundaryComponents() !=
                     b.countBoundaryComponents())) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel()
+                msg << tri->label()
                     << ": Barycentric subdivision breaks boundary components.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -1223,7 +1223,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             if (tri->isValid() &&
                     (tri->eulerCharTri() != b.eulerCharTri())) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel()
+                msg << tri->label()
                     << ": Barycentric subdivision breaks Euler char (tri).";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -1231,7 +1231,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             if (tri->isValid() &&
                     (tri->eulerCharManifold() != b.eulerCharManifold())) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel()
+                msg << tri->label()
                     << ": Barycentric subdivision breaks Euler char (mfd).";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -1245,14 +1245,14 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
             if (! (tri->getHomologyH1() == b.getHomologyH1())) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel()
+                msg << tri->label()
                     << ": Barycentric subdivision breaks H1.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             if (! (tri->getHomologyH2() == b.getHomologyH2())) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel()
+                msg << tri->label()
                     << ": Barycentric subdivision breaks H2.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -1270,28 +1270,28 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
                 if (large.size() != n + 4) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ", pent " << i << ": "
+                    msg << tri->label() << ", pent " << i << ": "
                         << "1-5 move gives wrong # pentachora.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 if (large.isValid() != tri->isValid()) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ", pent " << i << ": "
+                    msg << tri->label() << ", pent " << i << ": "
                         << "1-5 move changes validity.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 if (large.isOrientable() != tri->isOrientable()) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ", pent " << i << ": "
+                    msg << tri->label() << ", pent " << i << ": "
                         << "1-5 move changes orientability.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 if (large.isClosed() != tri->isClosed()) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ", pent " << i << ": "
+                    msg << tri->label() << ", pent " << i << ": "
                         << "1-5 move changes closedness.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -1299,14 +1299,14 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 if (large.countBoundaryComponents() !=
                         tri->countBoundaryComponents()) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ", pent " << i << ": "
+                    msg << tri->label() << ", pent " << i << ": "
                         << "1-5 move changes # boundary components.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 if (large.eulerCharTri() != tri->eulerCharTri()) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ", pent " << i << ": "
+                    msg << tri->label() << ", pent " << i << ": "
                         << "1-5 move changes Euler characteristic.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -1314,14 +1314,14 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 if (tri->isValid()) {
                     if (! (large.getHomologyH1() == tri->getHomologyH1())) {
                         std::ostringstream msg;
-                        msg << tri->getPacketLabel() << ", pent " << i << ": "
+                        msg << tri->label() << ", pent " << i << ": "
                             << "1-5 move changes H1.";
                         CPPUNIT_FAIL(msg.str());
                     }
 
                     if (! (large.getHomologyH2() == tri->getHomologyH2())) {
                         std::ostringstream msg;
-                        msg << tri->getPacketLabel() << ", pent " << i << ": "
+                        msg << tri->label() << ", pent " << i << ": "
                             << "1-5 move changes H2.";
                         CPPUNIT_FAIL(msg.str());
                     }
@@ -1330,7 +1330,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 // Shrink.
                 if (large.isIsomorphicTo(*tri).get()) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ", pent " << i << ": "
+                    msg << tri->label() << ", pent " << i << ": "
                         << "1-5 move: result is isomorphic.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -1341,14 +1341,14 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
                 if (! res) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ", pent " << i << ": "
+                    msg << tri->label() << ", pent " << i << ": "
                         << "1-5 move: could not recollapse edge.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 if (! large.isIsomorphicTo(*tri).get()) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ", pent " << i << ": "
+                    msg << tri->label() << ", pent " << i << ": "
                         << "1-5 move: recollapse is not isomorphic.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -1371,21 +1371,21 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
                 if (link->size() != v->getDegree()) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ", vertex " << i << ": "
+                    msg << tri->label() << ", vertex " << i << ": "
                         << "link has incorrect number of tetrahedra.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 if (! link2->isIdenticalTo(*link)) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ", vertex " << i << ": "
+                    msg << tri->label() << ", vertex " << i << ": "
                         << "variants of buildLink() give different results.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 if (! link->isConnected()) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ", vertex " << i << ": "
+                    msg << tri->label() << ", vertex " << i << ": "
                         << "link of vertex is not connected.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -1395,7 +1395,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                             countTetrahedra() > 0) {
                         if (! link->isBall()) {
                             std::ostringstream msg;
-                            msg << tri->getPacketLabel() << ", vertex "
+                            msg << tri->label() << ", vertex "
                                 << i << ": "
                                 << "link of real boundary vertex "
                                 "is not a 3-ball.";
@@ -1404,7 +1404,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                     } else if (v->isBoundary()) {
                         if (! link->isClosed()) {
                             std::ostringstream msg;
-                            msg << tri->getPacketLabel() << ", vertex "
+                            msg << tri->label() << ", vertex "
                                 << i << ": "
                                 << "link of ideal boundary vertex "
                                 "is not a closed 3-manifold.";
@@ -1412,7 +1412,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                         }
                         if (link->isThreeSphere()) {
                             std::ostringstream msg;
-                            msg << tri->getPacketLabel() << ", vertex "
+                            msg << tri->label() << ", vertex "
                                 << i << ": "
                                 << "link of ideal boundary vertex "
                                 "is a 3-sphere.";
@@ -1421,7 +1421,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                     } else {
                         if (! link->isThreeSphere()) {
                             std::ostringstream msg;
-                            msg << tri->getPacketLabel() << ", vertex "
+                            msg << tri->label() << ", vertex "
                                 << i << ": "
                                 << "link of internal edge is not a 3-sphere.";
                             CPPUNIT_FAIL(msg.str());
@@ -1431,7 +1431,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                     // Invalid vertex.
                     if (! v->isBoundary()) {
                         std::ostringstream msg;
-                        msg << tri->getPacketLabel() << ", vertex "
+                        msg << tri->label() << ", vertex "
                             << i << ": "
                             << "invalid vertex is not marked as boundary.";
                         CPPUNIT_FAIL(msg.str());
@@ -1440,7 +1440,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                         // Link should have boundary faces but not be a 3-ball.
                         if (! link->hasBoundaryTriangles()) {
                             std::ostringstream msg;
-                            msg << tri->getPacketLabel() << ", vertex "
+                            msg << tri->label() << ", vertex "
                                 << i << ": "
                                 << "link of invalid real boundary vertex "
                                 "has no boundary faces.";
@@ -1448,7 +1448,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                         }
                         if (link->isBall()) {
                             std::ostringstream msg;
-                            msg << tri->getPacketLabel() << ", vertex "
+                            msg << tri->label() << ", vertex "
                                 << i << ": "
                                 << "link of invalid real boundary vertex "
                                 "is a 3-ball.";
@@ -1459,7 +1459,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                         // be a closed 3-manifold.
                         if (link->hasBoundaryTriangles()) {
                             std::ostringstream msg;
-                            msg << tri->getPacketLabel() << ", vertex "
+                            msg << tri->label() << ", vertex "
                                 << i << ": "
                                 << "link of invalid ideal vertex "
                                 "has boundary faces.";
@@ -1467,7 +1467,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                         }
                         if (link->isClosed()) {
                             std::ostringstream msg;
-                            msg << tri->getPacketLabel() << ", vertex "
+                            msg << tri->label() << ", vertex "
                                 << i << ": "
                                 << "link of invalid ideal vertex "
                                 "is a closed 3-manifold.";
@@ -1489,7 +1489,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                     vNum = perm[4];
                     if (p->getVertex(vNum) != v) {
                         std::ostringstream msg;
-                        msg << tri->getPacketLabel() << ", vertex " << i << ": "
+                        msg << tri->label() << ", vertex " << i << ": "
                             << "link does not map 4 -> vertex correctly.";
                         CPPUNIT_FAIL(msg.str());
                     }
@@ -1498,7 +1498,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                             perm[2] != p->getTetrahedronMapping(vNum)[2] ||
                             perm[3] != p->getTetrahedronMapping(vNum)[3]) {
                         std::ostringstream msg;
-                        msg << tri->getPacketLabel() << ", vertex " << i << ": "
+                        msg << tri->label() << ", vertex " << i << ": "
                             << "link does not map 0,1,2,3 -> opposite "
                             "tetrahedron correctly.";
                         CPPUNIT_FAIL(msg.str());
@@ -1509,7 +1509,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                         if (adj) {
                             if (! p->adjacentPentachoron(perm[k])) {
                                 std::ostringstream msg;
-                                msg << tri->getPacketLabel()
+                                msg << tri->label()
                                     << ", vertex " << i << ": "
                                     << "link has extra adjacent tetrahedron.";
                                 CPPUNIT_FAIL(msg.str());
@@ -1517,7 +1517,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                                     tri->getPentachoron(iso->pentImage(
                                     link->tetrahedronIndex(adj)))) {
                                 std::ostringstream msg;
-                                msg << tri->getPacketLabel()
+                                msg << tri->label()
                                     << ", vertex " << i << ": "
                                     << "link has wrong adjacent tetrahedron.";
                                 CPPUNIT_FAIL(msg.str());
@@ -1527,7 +1527,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                                     perm4to5(t->adjacentGluing(k)) *
                                     perm.inverse()) {
                                 std::ostringstream msg;
-                                msg << tri->getPacketLabel()
+                                msg << tri->label()
                                     << ", vertex " << i << ": "
                                     << "link has wrong adjacent gluing.";
                                 CPPUNIT_FAIL(msg.str());
@@ -1535,7 +1535,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                         } else {
                             if (p->adjacentPentachoron(perm[k])) {
                                 std::ostringstream msg;
-                                msg << tri->getPacketLabel()
+                                msg << tri->label()
                                     << ", vertex " << i << ": "
                                     << "link missing adjacent tetrahedron.";
                                 CPPUNIT_FAIL(msg.str());
@@ -1565,21 +1565,21 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
                 if (link->countTriangles() != e->getDegree()) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ", edge " << i << ": "
+                    msg << tri->label() << ", edge " << i << ": "
                         << "link has incorrect number of triangles.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 if (! link2->isIdenticalTo(*link)) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ", edge " << i << ": "
+                    msg << tri->label() << ", edge " << i << ": "
                         << "variants of buildLink() give different results.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 if (! link->isConnected()) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ", edge " << i << ": "
+                    msg << tri->label() << ", edge " << i << ": "
                         << "link of edge is not connected.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -1587,14 +1587,14 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 if (e->isBoundary()) {
                     if (link->isClosed()) {
                         std::ostringstream msg;
-                        msg << tri->getPacketLabel() << ", edge " << i << ": "
+                        msg << tri->label() << ", edge " << i << ": "
                             << "link of boundary edge is closed.";
                         CPPUNIT_FAIL(msg.str());
                     }
                 } else {
                     if (! link->isClosed()) {
                         std::ostringstream msg;
-                        msg << tri->getPacketLabel() << ", edge " << i << ": "
+                        msg << tri->label() << ", edge " << i << ": "
                             << "link of internal edge is not closed.";
                         CPPUNIT_FAIL(msg.str());
                     }
@@ -1604,7 +1604,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                     if (e->isBoundary()) {
                         if (link->eulerChar() != 1) {
                             std::ostringstream msg;
-                            msg << tri->getPacketLabel() << ", edge "
+                            msg << tri->label() << ", edge "
                                 << i << ": "
                                 << "link of boundary edge is not a disc.";
                             CPPUNIT_FAIL(msg.str());
@@ -1612,7 +1612,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                     } else {
                         if (link->eulerChar() != 2) {
                             std::ostringstream msg;
-                            msg << tri->getPacketLabel() << ", edge "
+                            msg << tri->label() << ", edge "
                                 << i << ": "
                                 << "link of internal edge is not a sphere.";
                             CPPUNIT_FAIL(msg.str());
@@ -1642,7 +1642,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                             break;
                     if (k == v->getDegree()) {
                         std::ostringstream msg;
-                        msg << tri->getPacketLabel() << ", edge " << i << ": "
+                        msg << tri->label() << ", edge " << i << ": "
                             << "misconstructed vertex link.";
                         CPPUNIT_FAIL(msg.str());
                     }
@@ -1654,7 +1654,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                     if (! e->hasBadIdentification()) {
                         if (! match->buildLink()->isIsomorphicTo(*link).get()) {
                             std::ostringstream msg;
-                            msg << tri->getPacketLabel() << ", edge "
+                            msg << tri->label() << ", edge "
                                 << i << ": "
                                 << "non-isomorphic 2-D triangulations in "
                                 "edge vs vertex links.";
@@ -1663,7 +1663,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                     } else {
                         if (match->getDegree() != 2 * e->getDegree()) {
                             std::ostringstream msg;
-                            msg << tri->getPacketLabel() << ", edge " << i << ": "
+                            msg << tri->label() << ", edge " << i << ": "
                                 << "mismatched degrees in edge vs vertex links.";
                             CPPUNIT_FAIL(msg.str());
                         }
@@ -1683,7 +1683,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                             p->getEdgeMapping(eNum)[0] != perm[3] ||
                             p->getEdgeMapping(eNum)[1] != perm[4]) {
                         std::ostringstream msg;
-                        msg << tri->getPacketLabel() << ", edge " << i << ": "
+                        msg << tri->label() << ", edge " << i << ": "
                             << "link does not map 3,4 -> edge correctly.";
                         CPPUNIT_FAIL(msg.str());
                     }
@@ -1691,7 +1691,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                             perm[1] != p->getTriangleMapping(eNum)[1] ||
                             perm[2] != p->getTriangleMapping(eNum)[2]) {
                         std::ostringstream msg;
-                        msg << tri->getPacketLabel() << ", edge " << i << ": "
+                        msg << tri->label() << ", edge " << i << ": "
                             << "link does not map 0,1,2 -> opposite "
                             "triangle correctly.";
                         CPPUNIT_FAIL(msg.str());
@@ -1702,7 +1702,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                         if (adj) {
                             if (! p->adjacentPentachoron(perm[k])) {
                                 std::ostringstream msg;
-                                msg << tri->getPacketLabel()
+                                msg << tri->label()
                                     << ", edge " << i << ": "
                                     << "link has extra adjacent triangle.";
                                 CPPUNIT_FAIL(msg.str());
@@ -1710,7 +1710,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                                     tri->getPentachoron(iso->pentImage(
                                     link->triangleIndex(adj)))) {
                                 std::ostringstream msg;
-                                msg << tri->getPacketLabel()
+                                msg << tri->label()
                                     << ", edge " << i << ": "
                                     << "link has wrong adjacent triangle.";
                                 CPPUNIT_FAIL(msg.str());
@@ -1722,7 +1722,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                                 // Note: we expect broken gluings with
                                 // reverse self-identifications.
                                 std::ostringstream msg;
-                                msg << tri->getPacketLabel()
+                                msg << tri->label()
                                     << ", edge " << i << ": "
                                     << "link has wrong adjacent gluing.";
                                 CPPUNIT_FAIL(msg.str());
@@ -1730,7 +1730,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                         } else {
                             if (p->adjacentPentachoron(perm[k])) {
                                 std::ostringstream msg;
-                                msg << tri->getPacketLabel()
+                                msg << tri->label()
                                     << ", edge " << i << ": "
                                     << "link missing adjacent triangle.";
                                 CPPUNIT_FAIL(msg.str());
@@ -1773,7 +1773,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 other.idealToFinite();
                 if (! other.isIdenticalTo(*tri)) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ": "
+                    msg << tri->label() << ": "
                         << "idealToFinite modifies a triangulation with "
                         "no truncatable vertices.";
                     CPPUNIT_FAIL(msg.str());
@@ -1800,42 +1800,42 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
                 if (other.isIdenticalTo(*tri)) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ": "
+                    msg << tri->label() << ": "
                         << "idealToFinite does not modify a triangulation with "
                         "truncatable vertices.";
                     CPPUNIT_FAIL(msg.str());
                 }
                 if (! other.hasBoundaryTetrahedra()) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ": "
+                    msg << tri->label() << ": "
                         << "idealToFinite does not produce real boundary.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 if (other.isIdeal()) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ": "
+                    msg << tri->label() << ": "
                         << "idealToFinite does not remove ideal vertices.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 if (other.isOrientable() != tri->isOrientable()) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ": "
+                    msg << tri->label() << ": "
                         << "idealToFinite changes orientability.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 if (other.isClosed() != tri->isClosed()) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ": "
+                    msg << tri->label() << ": "
                         << "idealToFinite changes closedness.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 if (other.isConnected() != tri->isConnected()) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ": "
+                    msg << tri->label() << ": "
                         << "idealToFinite changes connectedness.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -1845,7 +1845,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                     // the other way.
                     if (! other.isValid()) {
                         std::ostringstream msg;
-                        msg << tri->getPacketLabel() << ": "
+                        msg << tri->label() << ": "
                             << "idealToFinite destroys validity.";
                         CPPUNIT_FAIL(msg.str());
                     }
@@ -1854,7 +1854,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                     // invalid triangulations.
                     if (other.eulerCharManifold() != tri->eulerCharManifold()) {
                         std::ostringstream msg;
-                        msg << tri->getPacketLabel() << ": "
+                        msg << tri->label() << ": "
                             << "idealToFinite changes Euler characteristic.";
                         CPPUNIT_FAIL(msg.str());
                     }
@@ -1862,7 +1862,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                     if (other.countBoundaryComponents() !=
                             tri->countBoundaryComponents()) {
                         std::ostringstream msg;
-                        msg << tri->getPacketLabel() << ": "
+                        msg << tri->label() << ": "
                             << "idealToFinite changes # boundary components.";
                         CPPUNIT_FAIL(msg.str());
                     }
@@ -1873,14 +1873,14 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
                     if (! (other.getHomologyH1() == tri->getHomologyH1())) {
                         std::ostringstream msg;
-                        msg << tri->getPacketLabel() << ": "
+                        msg << tri->label() << ": "
                             << "idealToFinite changes H1.";
                         CPPUNIT_FAIL(msg.str());
                     }
 
                     if (! (other.getHomologyH2() == tri->getHomologyH2())) {
                         std::ostringstream msg;
-                        msg << tri->getPacketLabel() << ": "
+                        msg << tri->label() << ": "
                             << "idealToFinite changes H2.";
                         CPPUNIT_FAIL(msg.str());
                     }
@@ -1903,21 +1903,21 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
             if (! b->isValid()) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel() << ": "
+                msg << tri->label() << ": "
                     << "iBundle gives an invalid triangulation.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             if (b->isOrientable() != tri->isOrientable()) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel() << ": "
+                msg << tri->label() << ": "
                     << "iBundle has mismatched orientability.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             if (b->countComponents() != tri->countComponents()) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel() << ": "
+                msg << tri->label() << ": "
                     << "iBundle has the wrong number of components.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -1925,7 +1925,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             if (b->eulerCharTri() != tri->eulerCharTri() ||
                     b->eulerCharManifold() != tri->eulerCharManifold()) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel() << ": "
+                msg << tri->label() << ": "
                     << "iBundle gives the wrong Euler characteristic.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -1938,7 +1938,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
             if (b->countBoundaryComponents() != expectBdryComp) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel() << ": "
+                msg << tri->label() << ": "
                     << "iBundle has the wrong number of "
                         "boundary components.";
                 CPPUNIT_FAIL(msg.str());
@@ -1949,7 +1949,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
             if (b->countBoundaryFacets() != expectBdryTets) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel() << ": "
+                msg << tri->label() << ": "
                     << "iBundle has the wrong number of "
                         "boundary tetrahedra.";
                 CPPUNIT_FAIL(msg.str());
@@ -1963,14 +1963,14 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
             if (b->getHomologyH1() != tri->getHomologyH1()) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel() << ": "
+                msg << tri->label() << ": "
                     << "iBundle gives a mismatched H1.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             if (b->getHomologyH2() != tri->getHomologyH2()) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel() << ": "
+                msg << tri->label() << ": "
                     << "iBundle gives a mismatched H2.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -1992,28 +1992,28 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
             if (! b->isValid()) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel() << ": "
+                msg << tri->label() << ": "
                     << "s1Bundle gives an invalid triangulation.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             if (b->isOrientable() != tri->isOrientable()) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel() << ": "
+                msg << tri->label() << ": "
                     << "s1Bundle has mismatched orientability.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             if (b->countComponents() != tri->countComponents()) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel() << ": "
+                msg << tri->label() << ": "
                     << "s1Bundle has the wrong number of components.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             if (b->eulerCharTri() != 0 || b->eulerCharManifold() != 0) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel() << ": "
+                msg << tri->label() << ": "
                     << "s1Bundle gives the wrong Euler characteristic.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -2021,7 +2021,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             if (b->countBoundaryComponents() !=
                     tri->countBoundaryComponents()) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel() << ": "
+                msg << tri->label() << ": "
                     << "s1Bundle has the wrong number of "
                         "boundary components.";
                 CPPUNIT_FAIL(msg.str());
@@ -2032,7 +2032,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
             if (b->countBoundaryFacets() != expectBdryTets) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel() << ": "
+                msg << tri->label() << ": "
                     << "s1Bundle has the wrong number of "
                         "boundary tetrahedra.";
                 CPPUNIT_FAIL(msg.str());
@@ -2047,7 +2047,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
             if (b->getHomologyH1() != expectH1) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel() << ": "
+                msg << tri->label() << ": "
                     << "s1Bundle gives incorrect H1.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -2057,7 +2057,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
             if (b->getHomologyH2() != expectH2) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel() << ": "
+                msg << tri->label() << ": "
                     << "s1Bundle gives incorrect H2.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -2085,7 +2085,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
                 if (! b->isValid()) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ": "
+                    msg << tri->label() << ": "
                         << "bundleWithMonodromy gives an "
                         "invalid triangulation.";
                     CPPUNIT_FAIL(msg.str());
@@ -2093,14 +2093,14 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
                 if (b->isOrientable() && ! tri->isOrientable()) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ": "
+                    msg << tri->label() << ": "
                         << "bundleWithMonodromy destroys non-orientability.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 if (b->countComponents() != tri->countComponents()) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ": "
+                    msg << tri->label() << ": "
                         << "bundleWithMonodromy has the wrong number "
                         "of components.";
                     CPPUNIT_FAIL(msg.str());
@@ -2108,7 +2108,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
                 if (b->eulerCharTri() != 0 || b->eulerCharManifold() != 0) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ": "
+                    msg << tri->label() << ": "
                         << "bundleWithMonodromy gives the wrong "
                         "Euler characteristic.";
                     CPPUNIT_FAIL(msg.str());
@@ -2117,7 +2117,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 if (b->countBoundaryComponents() !=
                         tri->countBoundaryComponents()) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ": "
+                    msg << tri->label() << ": "
                         << "bundleWithMonodromy gives the wrong number of "
                             "boundary components.";
                     CPPUNIT_FAIL(msg.str());
@@ -2128,7 +2128,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
                 if (b->countBoundaryFacets() != expectBdryTets) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel() << ": "
+                    msg << tri->label() << ": "
                         << "bundleWithMonodromy gives the wrong number of "
                             "boundary tetrahedra.";
                     CPPUNIT_FAIL(msg.str());

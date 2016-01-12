@@ -99,9 +99,9 @@ void runMatches(NPacket* tree1, NPacket* tree2, std::ostream& out) {
                 if (p2->getPacketType() == Dim4Triangulation::packetType)
                     if (compare(static_cast<Dim4Triangulation*>(p1),
                             static_cast<Dim4Triangulation*>(p2))) {
-                        out << "    " << p1->getPacketLabel()
+                        out << "    " << p1->label()
                             << (subcomplexTesting ? "  <=  " : "  ==  ")
-                            << p2->getPacketLabel() << std::endl;
+                            << p2->label() << std::endl;
                         nMatches++;
                     }
         }
@@ -143,7 +143,7 @@ void runNonMatches(const std::string& file1, NPacket* tree1,
                             static_cast<Dim4Triangulation*>(p2)))
                         matched = true;
             if (! matched) {
-                out << "    " << p1->getPacketLabel() << std::endl;
+                out << "    " << p1->label() << std::endl;
                 nMissing++;
             }
         }

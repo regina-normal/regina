@@ -68,12 +68,12 @@ class REGINA_API NXMLDim4TriangulationReader : public NXMLPacketReader {
          */
         NXMLDim4TriangulationReader(NXMLTreeResolver& resolver);
 
-        virtual NPacket* packet();
+        virtual NPacket* packet() override;
         virtual NXMLElementReader* startContentSubElement(
             const std::string& subTagName,
-            const regina::xml::XMLPropertyDict& subTagProps);
+            const regina::xml::XMLPropertyDict& subTagProps) override;
         virtual void endContentSubElement(const std::string& subTagName,
-            NXMLElementReader* subReader);
+            NXMLElementReader* subReader) override;
 };
 
 /*@}*/
