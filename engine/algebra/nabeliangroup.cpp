@@ -162,7 +162,7 @@ void NAbelianGroup::addGroup(const NAbelianGroup& group) {
     replaceTorsion(a);
 }
 
-unsigned NAbelianGroup::getTorsionRank(const NLargeInteger& degree) const {
+unsigned NAbelianGroup::torsionRank(const NLargeInteger& degree) const {
     std::multiset<NLargeInteger>::const_reverse_iterator it;
     unsigned ans = 0;
     // Because we have SNF, we can bail as soon as we reach a factor

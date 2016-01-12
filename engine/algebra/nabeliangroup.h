@@ -247,7 +247,7 @@ class REGINA_API NAbelianGroup :
          * @param degree the degree of the torsion term to query.
          * @return the rank in the group of the given torsion term.
          */
-        unsigned getTorsionRank(const NLargeInteger& degree) const;
+        unsigned torsionRank(const NLargeInteger& degree) const;
         /**
          * Returns the rank in the group of the torsion term of given degree.
          * If the given degree is <i>d</i>, this routine will return the
@@ -263,6 +263,22 @@ class REGINA_API NAbelianGroup :
          *
          * @param degree the degree of the torsion term to query.
          * @return the rank in the group of the given torsion term.
+         */
+        unsigned torsionRank(unsigned long degree) const;
+        /**
+         * Deprecated routine that returns the rank in the group of the torsion
+         * term of given degree.
+         *
+         * \deprecated This routine has been renamed to torsionRank().
+         * See the torsionRank() documentation for further details.
+         */
+        unsigned getTorsionRank(const NLargeInteger& degree) const;
+        /**
+         * Deprecated routine that returns the rank in the group of the torsion
+         * term of given degree.
+         *
+         * \deprecated This routine has been renamed to torsionRank().
+         * See the torsionRank() documentation for further details.
          */
         unsigned getTorsionRank(unsigned long degree) const;
         /**
@@ -412,8 +428,16 @@ inline unsigned NAbelianGroup::getRank() const {
     return rank_;
 }
 
+inline unsigned NAbelianGroup::torsionRank(unsigned long degree) const {
+    return torsionRank(NLargeInteger(degree));
+}
+
 inline unsigned NAbelianGroup::getTorsionRank(unsigned long degree) const {
-    return getTorsionRank(NLargeInteger(degree));
+    return torsionRank(NLargeInteger(degree));
+}
+
+inline unsigned NAbelianGroup::getTorsionRank(NLargeInteger degree) const {
+    return torsionRank(degree);
 }
 
 inline size_t NAbelianGroup::countInvariantFactors() const {

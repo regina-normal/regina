@@ -130,8 +130,8 @@ long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
     {
         const NAbelianGroup& homology = working->getHomologyH1();
         initZ = homology.rank();
-        initZ2 = homology.getTorsionRank(2);
-        initZ3 = homology.getTorsionRank(3);
+        initZ2 = homology.torsionRank(2);
+        initZ3 = homology.torsionRank(3);
     }
 
     // Start crushing normal spheres.
@@ -241,8 +241,8 @@ long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
             it != primeComponents.end(); it++) {
         const NAbelianGroup& homology = (*it)->getHomologyH1();
         finalZ += homology.rank();
-        finalZ2 += homology.getTorsionRank(2);
-        finalZ3 += homology.getTorsionRank(3);
+        finalZ2 += homology.torsionRank(2);
+        finalZ3 += homology.torsionRank(3);
     }
 
     while (finalZ++ < initZ) {
@@ -704,8 +704,8 @@ bool NTriangulation::isIrreducible() const {
     {
         const NAbelianGroup& homology = working->getHomologyH1();
         Z = homology.rank();
-        Z2 = homology.getTorsionRank(2);
-        Z3 = homology.getTorsionRank(3);
+        Z2 = homology.torsionRank(2);
+        Z3 = homology.torsionRank(3);
     }
 
     // Start crushing normal spheres.
@@ -792,8 +792,8 @@ bool NTriangulation::isIrreducible() const {
                     // now accounted for.
                     const NAbelianGroup& h1 = processing->getHomologyH1();
                     Z -= h1.rank();
-                    Z2 -= h1.getTorsionRank(2);
-                    Z3 -= h1.getTorsionRank(3);
+                    Z2 -= h1.torsionRank(2);
+                    Z3 -= h1.torsionRank(3);
 
                     // Toss away our prime summand and keep going.
                     delete processing;

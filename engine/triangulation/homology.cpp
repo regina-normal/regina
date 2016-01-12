@@ -249,8 +249,8 @@ const NAbelianGroup& NTriangulation::getHomologyH2() const {
 
         // Find rank(Z_2) + rank(Z) and take off z2rank.
         rank = getHomologyH1Rel().rank() +
-            getHomologyH1Rel().getTorsionRank(2) -
-            getHomologyH1().getTorsionRank(2) -
+            getHomologyH1Rel().torsionRank(2) -
+            getHomologyH1().torsionRank(2) -
             z2rank;
     }
 
