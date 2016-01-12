@@ -565,6 +565,15 @@ class REGINA_API NPacket :
          *
          * @return the parent packet, or 0 if there is none.
          */
+        NPacket* parent() const;
+
+        /**
+         * Deprecated routine that determines the parent packet in the
+         * tree structure.
+         *
+         * \deprecated This routine has been renamed as parent().
+         * See the parent() documentation for further details.
+         */
         NPacket* getTreeParent() const;
 
         /**
@@ -575,6 +584,15 @@ class REGINA_API NPacket :
          *
          * @return the first child packet, or 0 if there is none.
          */
+        NPacket* firstChild() const;
+
+        /**
+         * Deprecated routine that determines the first child of this
+         * packet in the tree structure.
+         *
+         * \deprecated This routine has been renamed as firstChild().
+         * See the firstChild() documentation for further details.
+         */
         NPacket* getFirstTreeChild() const;
 
         /**
@@ -584,6 +602,15 @@ class REGINA_API NPacket :
          * This routine takes small constant time.
          *
          * @return the last child packet, or 0 if there is none.
+         */
+        NPacket* lastChild() const;
+
+        /**
+         * Deprecated routine that determines the last child of this
+         * packet in the tree structure.
+         *
+         * \deprecated This routine has been renamed as lastChild().
+         * See the lastChild() documentation for further details.
          */
         NPacket* getLastTreeChild() const;
 
@@ -597,6 +624,15 @@ class REGINA_API NPacket :
          * @return the next sibling of this packet, or 0 if there is
          * none.
          */
+        NPacket* nextSibling() const;
+
+        /**
+         * Deprecated routine that determines the next sibling of this
+         * packet in the tree structure.
+         *
+         * \deprecated This routine has been renamed as nextSibling().
+         * See the nextSibling() documentation for further details.
+         */
         NPacket* getNextTreeSibling() const;
 
         /**
@@ -609,13 +645,30 @@ class REGINA_API NPacket :
          * @return the previous sibling of this packet, or 0 if there is
          * none.
          */
+        NPacket* prevSibling() const;
+
+        /**
+         * Deprecated routine that determines the previous sibling of this
+         * packet in the tree structure.
+         *
+         * \deprecated This routine has been renamed as prevSibling().
+         * See the prevSibling() documentation for further details.
+         */
         NPacket* getPrevTreeSibling() const;
 
         /**
-         * Determines the matriarch (the root) of the tree to which this
-         * packet belongs.
+         * Determines the root of the tree to which this packet belongs.
          *
          * @return the matriarch of the packet tree.
+         */
+        NPacket* root() const;
+
+        /**
+         * Deprecated routine that determines the root of the tree to
+         * which this packet belongs.
+         *
+         * \deprecated This routine has been renamed as root().
+         * See the root() documentation for further details.
          */
         NPacket* getTreeMatriarch() const;
 
@@ -1560,24 +1613,48 @@ inline bool NPacket::isListening(NPacketListener* listener) {
     return listeners_->count(listener);
 }
 
+inline NPacket* NPacket::parent() const {
+    return treeParent_;
+}
+
 inline NPacket* NPacket::getTreeParent() const {
     return treeParent_;
+}
+
+inline NPacket* NPacket::firstChild() const {
+    return firstTreeChild_;
 }
 
 inline NPacket* NPacket::getFirstTreeChild() const {
     return firstTreeChild_;
 }
 
+inline NPacket* NPacket::lastChild() const {
+    return lastTreeChild_;
+}
+
 inline NPacket* NPacket::getLastTreeChild() const {
     return lastTreeChild_;
+}
+
+inline NPacket* NPacket::prevSibling() const {
+    return prevTreeSibling_;
 }
 
 inline NPacket* NPacket::getPrevTreeSibling() const {
     return prevTreeSibling_;
 }
 
+inline NPacket* NPacket::nextSibling() const {
+    return nextTreeSibling_;
+}
+
 inline NPacket* NPacket::getNextTreeSibling() const {
     return nextTreeSibling_;
+}
+
+inline NPacket* NPacket::getTreeMatriarch() const {
+    return root();
 }
 
 inline unsigned NPacket::levelsUpTo(const NPacket* ancestor) const {

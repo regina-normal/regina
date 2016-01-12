@@ -62,7 +62,7 @@ namespace {
 
     void reparent_check(NPacket& child, NPacket* newParent,
             bool first = false) {
-        if (child.getTreeParent())
+        if (child.parent())
             child.reparent(newParent, first);
         else {
             PyErr_SetString(PyExc_AssertionError,
@@ -126,15 +126,27 @@ void addNPacket() {
         .def("removeAllTags", &NPacket::removeAllTags)
         .def("tags", tags_list)
         .def("getTags", tags_list)
+        .def("parent", &NPacket::parent,
+            return_value_policy<reference_existing_object>())
         .def("getTreeParent", &NPacket::getTreeParent,
+            return_value_policy<reference_existing_object>())
+        .def("firstChild", &NPacket::firstChild,
             return_value_policy<reference_existing_object>())
         .def("getFirstTreeChild", &NPacket::getFirstTreeChild,
             return_value_policy<reference_existing_object>())
+        .def("lastChild", &NPacket::lastChild,
+            return_value_policy<reference_existing_object>())
         .def("getLastTreeChild", &NPacket::getLastTreeChild,
+            return_value_policy<reference_existing_object>())
+        .def("nextSibling", &NPacket::nextSibling,
             return_value_policy<reference_existing_object>())
         .def("getNextTreeSibling", &NPacket::getNextTreeSibling,
             return_value_policy<reference_existing_object>())
+        .def("prevSibling", &NPacket::prevSibling,
+            return_value_policy<reference_existing_object>())
         .def("getPrevTreeSibling", &NPacket::getPrevTreeSibling,
+            return_value_policy<reference_existing_object>())
+        .def("root", &NPacket::root,
             return_value_policy<reference_existing_object>())
         .def("getTreeMatriarch", &NPacket::getTreeMatriarch,
             return_value_policy<reference_existing_object>())

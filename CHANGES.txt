@@ -328,6 +328,10 @@ Version 4.97  [ (under development) ]
             - Renamed getPacketLabel(), getPacketType() and getPacketTypeName()
               to label(), type() and typeName().  The old names are kept
               but deprecated.
+            - Renamed getTreeParent(), getFirstTreeChild(), getLastTreeChild(),
+              getNextTreeSibling(), getPrevTreeSibling() and getMatriarch() to
+              parent(), firstChild(), lastChild(), nextSibling(), prevSibling()
+              and root() respectively.  The old names are kept but deprecated.
             - Renamed getXMLReader() to xmlReader().  The old name has
               been removed completely.
         Class NPacketListener:
