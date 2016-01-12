@@ -122,7 +122,7 @@ void usage(const char* progName, const std::string& error = std::string()) {
 bool hasTriangulation(NContainer* c) {
     for (NPacket* child = c->getFirstTreeChild(); child;
             child = child->getNextTreeSibling())
-        if (child->getPacketType() == NTriangulation::packetType)
+        if (child->type() == NTriangulation::packetType)
             return true;
 
     return false;
@@ -138,7 +138,7 @@ void process(NContainer* c) {
     for (NPacket* child = c->getFirstTreeChild(); child;
             child = child->getNextTreeSibling()) {
         spec.packet = child;
-        spec.isTri = (child->getPacketType() == NTriangulation::packetType);
+        spec.isTri = (child->type() == NTriangulation::packetType);
 
         if (spec.isTri) {
             std = NStandardTriangulation::isStandardTriangulation(
@@ -209,7 +209,7 @@ int main(int argc, char* argv[]) {
 
     // Process each container.
     for (NPacket* p = tree; p; p = p->nextTreePacket())
-        if (p->getPacketType() == NContainer::packetType)
+        if (p->type() == NContainer::packetType)
             process(static_cast<NContainer*>(p));
 
     // Save the data file if required.

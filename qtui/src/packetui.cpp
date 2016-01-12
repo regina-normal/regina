@@ -101,7 +101,7 @@ DefaultPacketUI::DefaultPacketUI(regina::NPacket* newPacket,
         PacketPane* newEnclosingPane) :
         ErrorPacketUI(newPacket, newEnclosingPane,
         newEnclosingPane->tr("Packets of type %1\nare not yet supported.").arg(
-        newPacket->getPacketTypeName().c_str())) {
+        newPacket->typeName().c_str())) {
 }
 
 PacketPane::PacketPane(ReginaMain* newMainWindow, NPacket* newPacket,

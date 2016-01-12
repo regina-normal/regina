@@ -47,7 +47,7 @@
     if (! p->getTreeParent())
         return [UIImage imageNamed:@"Document"];
 
-    switch (p->getPacketType()) {
+    switch (p->type()) {
         case regina::PACKET_ANGLESTRUCTURELIST:
             return [UIImage imageNamed:@"Angles"];
         case regina::PACKET_CONTAINER:
@@ -74,7 +74,7 @@
 }
 
 + (NSString *)viewerFor:(regina::NPacket *)p {
-    switch (p->getPacketType()) {
+    switch (p->type()) {
         case regina::PACKET_ANGLESTRUCTURELIST: return @"viewAngles";
         case regina::PACKET_DIM2TRIANGULATION: return @"viewDim2Triangulation";
         case regina::PACKET_NORMALSURFACELIST: return @"viewSurfaces";

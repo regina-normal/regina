@@ -210,7 +210,7 @@ void NSurfaceFilterCombUI::refreshChildList() {
     // constructor puts new items at the front.
     for (regina::NPacket* p = filter->getFirstTreeChild(); p;
             p = p->getNextTreeSibling())
-        if (p->getPacketType() == regina::NSurfaceFilter::packetType) {
+        if (p->type() == regina::NSurfaceFilter::packetType) {
             new QListWidgetItem(PacketManager::icon(p),
                 p->getHumanLabel().c_str(), children);
 

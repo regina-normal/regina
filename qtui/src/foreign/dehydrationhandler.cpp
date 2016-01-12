@@ -74,7 +74,7 @@ regina::NPacket* DehydrationHandler::importData(const QString& fileName,
                 "dehydration strings.") + explnSuffix);
         delete ans;
         return 0;
-    } else if (last->getPacketType() == regina::NText::packetType) {
+    } else if (last->type() == regina::NText::packetType) {
         if (last == ans->getFirstTreeChild()) {
             ReginaSupport::sorry(parentWidget, 
                 QObject::tr("The import failed."),

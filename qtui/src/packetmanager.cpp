@@ -61,18 +61,18 @@ using namespace regina;
 QIcon PacketManager::icon(NPacket* packet, bool allowLock) {
     IconCache::IconID id;
 
-    if (packet->getPacketType() == NAngleStructureList::packetType)
+    if (packet->type() == NAngleStructureList::packetType)
         id = IconCache::packet_angles;
-    else if (packet->getPacketType() == NContainer::packetType)
+    else if (packet->type() == NContainer::packetType)
         id = (packet->getTreeParent() ? IconCache::packet_container :
             IconCache::regina);
-    else if (packet->getPacketType() == Dim2Triangulation::packetType)
+    else if (packet->type() == Dim2Triangulation::packetType)
         id = IconCache::packet_dim2triangulation;
-    else if (packet->getPacketType() == Dim4Triangulation::packetType)
+    else if (packet->type() == Dim4Triangulation::packetType)
         id = IconCache::packet_dim4triangulation;
-    else if (packet->getPacketType() == NPDF::packetType)
+    else if (packet->type() == NPDF::packetType)
         id = IconCache::packet_pdf;
-    else if (packet->getPacketType() == NSurfaceFilter::packetType) {
+    else if (packet->type() == NSurfaceFilter::packetType) {
         if (((NSurfaceFilter*)packet)->getFilterType() ==
                 NSurfaceFilterCombination::filterType)
             id = IconCache::filter_comb;
@@ -82,15 +82,15 @@ QIcon PacketManager::icon(NPacket* packet, bool allowLock) {
         else
             id = IconCache::packet_filter;
     }
-    else if (packet->getPacketType() == NScript::packetType)
+    else if (packet->type() == NScript::packetType)
         id = IconCache::packet_script;
-    else if (packet->getPacketType() == NSnapPeaTriangulation::packetType)
+    else if (packet->type() == NSnapPeaTriangulation::packetType)
         id = IconCache::packet_snappea;
-    else if (packet->getPacketType() == NNormalSurfaceList::packetType)
+    else if (packet->type() == NNormalSurfaceList::packetType)
         id = IconCache::packet_surfaces;
-    else if (packet->getPacketType() == NText::packetType)
+    else if (packet->type() == NText::packetType)
         id = IconCache::packet_text;
-    else if (packet->getPacketType() == NTriangulation::packetType)
+    else if (packet->type() == NTriangulation::packetType)
         id = IconCache::packet_triangulation;
     else {
         // Unknown packet type.
@@ -105,29 +105,29 @@ QIcon PacketManager::icon(NPacket* packet, bool allowLock) {
 
 PacketUI* PacketManager::createUI(regina::NPacket* packet,
         PacketPane* enclosingPane) {
-    if (packet->getPacketType() == NAngleStructureList::packetType)
+    if (packet->type() == NAngleStructureList::packetType)
         return new NAngleStructureUI(dynamic_cast<NAngleStructureList*>(packet),
             enclosingPane);
-    if (packet->getPacketType() == NContainer::packetType)
+    if (packet->type() == NContainer::packetType)
         return new NContainerUI(dynamic_cast<NContainer*>(packet),
             enclosingPane);
-    if (packet->getPacketType() == Dim2Triangulation::packetType)
+    if (packet->type() == Dim2Triangulation::packetType)
         return new Dim2TriangulationUI(dynamic_cast<Dim2Triangulation*>(packet),
             enclosingPane);
-    if (packet->getPacketType() == Dim4Triangulation::packetType)
+    if (packet->type() == Dim4Triangulation::packetType)
         return new Dim4TriangulationUI(dynamic_cast<Dim4Triangulation*>(packet),
             enclosingPane);
-    if (packet->getPacketType() == NNormalSurfaceList::packetType)
+    if (packet->type() == NNormalSurfaceList::packetType)
         return new NNormalSurfaceUI(dynamic_cast<NNormalSurfaceList*>(packet),
             enclosingPane);
-    if (packet->getPacketType() == NScript::packetType) {
+    if (packet->type() == NScript::packetType) {
         return new NScriptUI(dynamic_cast<NScript*>(packet), enclosingPane);
     }
-    if (packet->getPacketType() == NSnapPeaTriangulation::packetType) {
+    if (packet->type() == NSnapPeaTriangulation::packetType) {
         return new NSnapPeaUI(dynamic_cast<NSnapPeaTriangulation*>(packet),
             enclosingPane);
     }
-    if (packet->getPacketType() == NSurfaceFilter::packetType) {
+    if (packet->type() == NSurfaceFilter::packetType) {
         if (((NSurfaceFilter*)packet)->getFilterType() ==
                 NSurfaceFilterCombination::filterType)
             return new NSurfaceFilterCombUI(
@@ -140,17 +140,17 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
                 enclosingPane);
         return new DefaultPacketUI(packet, enclosingPane);
     }
-    if (packet->getPacketType() == NText::packetType) {
+    if (packet->type() == NText::packetType) {
         return new NTextUI(dynamic_cast<NText*>(packet), enclosingPane);
     }
-    if (packet->getPacketType() == NTriangulation::packetType)
+    if (packet->type() == NTriangulation::packetType)
         return new NTriangulationUI(dynamic_cast<NTriangulation*>(packet),
             enclosingPane);
     return new DefaultPacketUI(packet, enclosingPane);
 }
 
 PacketExternalViewer PacketManager::externalViewer(regina::NPacket* packet) {
-    if (packet->getPacketType() == NPDF::packetType)
+    if (packet->type() == NPDF::packetType)
         return &NPDFExternalViewer::view;
     return 0;
 }

@@ -99,7 +99,7 @@ struct PacketInfo;
  * - a compile-time constant \a packetType, which is equal to the
  *   corresponding PacketType constant;
  * - declarations and implementations of the virtual functions
- *   NPacket::getPacketType() and NPacket::getPacketTypeName().
+ *   NPacket::type() and NPacket::typeName().
  *
  * @param class_ the name of this descendant class of NSurfaceFilter.
  * @param id the corresponding PacketType constant.
@@ -107,10 +107,10 @@ struct PacketInfo;
 #define REGINA_PACKET(class_, id) \
     public: \
         static constexpr const PacketType packetType = id; \
-        inline virtual PacketType getPacketType() const { \
+        inline virtual PacketType type() const { \
             return id; \
         } \
-        inline virtual std::string getPacketTypeName() const { \
+        inline virtual std::string typeName() const { \
             return PacketInfo<id>::name(); \
         }
 
@@ -222,7 +222,16 @@ class REGINA_API NPacket :
          *
          * @return the packet type ID.
          */
-        virtual PacketType getPacketType() const = 0;
+        virtual PacketType type() const = 0;
+
+        /**
+         * Deprecated routine that returns the unique integer ID representing
+         * this type of packet.
+         *
+         * \deprecated This routine has been renamed to type().
+         * See the type() documentation for further details.
+         */
+        PacketType getPacketType() const;
 
         /**
          * Returns an English name for this type of packet.
@@ -231,7 +240,16 @@ class REGINA_API NPacket :
          *
          * @return the packet type name.
          */
-        virtual std::string getPacketTypeName() const = 0;
+        virtual std::string typeName() const = 0;
+
+        /**
+         * Deprecated routine that returns an English name for this type of
+         * packet.
+         *
+         * \deprecated This routine has been renamed to typeName().
+         * See the typeName() documentation for further details.
+         */
+        std::string getPacketTypeName() const;
 
         /**
          * Returns the label associated with this individual packet.
@@ -910,8 +928,7 @@ class REGINA_API NPacket :
          * depth-first iteration.
          *
          * @param type the type of packet to search for, as returned by
-         * getPacketTypeName().  Note that string comparisons are case
-         * sensitive.
+         * typeName().  Note that string comparisons are case sensitive.
          * @return the first such packet, or 0 if there are no packets of
          * the requested type.
          */
@@ -928,8 +945,7 @@ class REGINA_API NPacket :
          * depth-first iteration.
          *
          * @param type the type of packet to search for, as returned by
-         * getPacketTypeName().  Note that string comparisons are case
-         * sensitive.
+         * typeName().  Note that string comparisons are case sensitive.
          * @return the first such packet, or 0 if there are no packets of
          * the requested type.
          */
@@ -943,8 +959,7 @@ class REGINA_API NPacket :
          * firstTreePacket().
          *
          * @param type the type of packet to search for, as returned by
-         * getPacketTypeName().  Note that string comparisons are case
-         * sensitive.
+         * typeName().  Note that string comparisons are case sensitive.
          * @return the next such packet, or 0 if this is the last packet
          * of the requested type in such an iteration.
          */
@@ -958,8 +973,7 @@ class REGINA_API NPacket :
          * firstTreePacket().
          *
          * @param type the type of packet to search for, as returned by
-         * getPacketTypeName().  Note that string comparisons are case
-         * sensitive.
+         * typeName().  Note that string comparisons are case sensitive.
          * @return the next such packet, or 0 if this is the last packet
          * of the requested type in such an iteration.
          */
@@ -1470,6 +1484,14 @@ inline const std::string& NPacket::label() const {
 
 inline const std::string& NPacket::getPacketLabel() const {
     return label_;
+}
+
+inline PacketType NPacket::getPacketType() const {
+    return type();
+}
+
+inline std::string NPacket::getPacketTypeName() const {
+    return typeName();
 }
 
 inline std::string NPacket::getHumanLabel() const {
