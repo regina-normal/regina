@@ -70,10 +70,10 @@ namespace {
         return std::auto_ptr<NGroupExpression>(new NGroupExpression(str, 0));
     }
 
-    object getTerms_list(const NGroupExpression& e) {
+    object terms_list(const NGroupExpression& e) {
         boost::python::list ans;
         for (std::list<NGroupExpressionTerm>::const_iterator it =
-                e.getTerms().begin(); it != e.getTerms().end(); it++)
+                e.terms().begin(); it != e.terms().end(); it++)
             ans.append(*it);
         return ans;
     }
@@ -125,7 +125,8 @@ void addNGroupPresentation() {
             ("NGroupExpression")
         .def(init<const NGroupExpression&>())
         .def("__init__", boost::python::make_constructor(newExpression_str))
-        .def("getTerms", getTerms_list)
+        .def("terms", terms_list)
+        .def("getTerms", terms_list)
         .def("countTerms", &NGroupExpression::countTerms)
         .def("getNumberOfTerms", &NGroupExpression::getNumberOfTerms)
         .def("wordLength", &NGroupExpression::wordLength)
