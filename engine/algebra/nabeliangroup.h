@@ -436,7 +436,8 @@ inline unsigned NAbelianGroup::getTorsionRank(unsigned long degree) const {
     return torsionRank(NLargeInteger(degree));
 }
 
-inline unsigned NAbelianGroup::getTorsionRank(NLargeInteger degree) const {
+inline unsigned NAbelianGroup::getTorsionRank(const NLargeInteger& degree)
+        const {
     return torsionRank(degree);
 }
 
