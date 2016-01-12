@@ -68,7 +68,7 @@ NPacket::~NPacket() {
     fireDestructionEvent();
 }
 
-std::string NPacket::getFullName() const {
+std::string NPacket::fullName() const {
     return getHumanLabel() + " (" + typeName() + ")";
 }
 
