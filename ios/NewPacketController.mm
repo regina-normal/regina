@@ -113,7 +113,7 @@
 - (void)created:(regina::NPacket *)result
 {
     if (result) {
-        if (self.viewOnCreation && result->getPacketType() != regina::PACKET_CONTAINER)
+        if (self.viewOnCreation && result->type() != regina::PACKET_CONTAINER)
             [ReginaHelper viewPacket:result];
         else
             [[ReginaHelper tree] selectPacket:result];
@@ -122,7 +122,7 @@
 
 + (BOOL)isTriangulation:(regina::NPacket*)p
 {
-    return (p->getPacketType() == regina::PACKET_TRIANGULATION || p->getPacketType() == regina::PACKET_SNAPPEATRIANGULATION);
+    return (p->type() == regina::PACKET_TRIANGULATION || p->type() == regina::PACKET_SNAPPEATRIANGULATION);
 }
 
 @end

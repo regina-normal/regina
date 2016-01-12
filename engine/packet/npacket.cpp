@@ -69,7 +69,7 @@ NPacket::~NPacket() {
 }
 
 std::string NPacket::getFullName() const {
-    return getHumanLabel() + " (" + getPacketTypeName() + ")";
+    return getHumanLabel() + " (" + typeName() + ")";
 }
 
 std::string NPacket::adornedLabel(const std::string& adornment) const {
@@ -458,13 +458,13 @@ const NPacket* NPacket::nextTreePacket() const {
 }
 
 NPacket* NPacket::firstTreePacket(const std::string& type) {
-    if (getPacketTypeName() == type)
+    if (typeName() == type)
         return this;
     return nextTreePacket(type);
 }
 
 const NPacket* NPacket::firstTreePacket(const std::string& type) const {
-    if (getPacketTypeName() == type)
+    if (typeName() == type)
         return this;
     return nextTreePacket(type);
 }
@@ -472,7 +472,7 @@ const NPacket* NPacket::firstTreePacket(const std::string& type) const {
 NPacket* NPacket::nextTreePacket(const std::string& type) {
     NPacket* ans = nextTreePacket();
     while (ans) {
-        if (ans->getPacketTypeName() == type)
+        if (ans->typeName() == type)
             return ans;
         ans = ans->nextTreePacket();
     }
@@ -482,7 +482,7 @@ NPacket* NPacket::nextTreePacket(const std::string& type) {
 const NPacket* NPacket::nextTreePacket(const std::string& type) const {
     const NPacket* ans = nextTreePacket();
     while (ans) {
-        if (ans->getPacketTypeName() == type)
+        if (ans->typeName() == type)
             return ans;
         ans = ans->nextTreePacket();
     }
@@ -782,8 +782,7 @@ void NPacket::writeXMLPacketTree(std::ostream& out) const {
 
     // Write the packet opening tag including packet label and type.
     out << "<packet label=\"" << xmlEncodeSpecialChars(label_) << "\"\n";
-    out << "\ttype=\"" << getPacketTypeName() << "\" typeid=\""
-        << getPacketType() << "\"\n";
+    out << "\ttype=\"" << typeName() << "\" typeid=\"" << type() << "\"\n";
 
     // If we appear as a variable in a script packet, then write an ID that the
     // script can reference.  We can look through our packet listeners to see
@@ -815,7 +814,7 @@ void NPacket::writeXMLPacketTree(std::ostream& out) const {
 
     // Write the packet closing tag.
     out << "</packet> <!-- " << xmlEncodeComment(label_)
-        << " (" << xmlEncodeComment(getPacketTypeName()) << ") -->\n";
+        << " (" << xmlEncodeComment(typeName()) << ") -->\n";
 }
 
 std::string NPacket::internalID() const {

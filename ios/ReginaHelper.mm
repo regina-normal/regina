@@ -87,7 +87,7 @@ BOOL ios8;
 
 + (void)viewPacket:(regina::NPacket *)packet
 {
-    BOOL display = (packet->getPacketType() != regina::PACKET_CONTAINER);
+    BOOL display = (packet->type() != regina::PACKET_CONTAINER);
     if (display)
         detail.packet = packet;
     

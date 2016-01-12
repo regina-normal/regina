@@ -106,7 +106,9 @@ namespace {
 void addNPacket() {
     class_<NPacket, boost::noncopyable,
             std::auto_ptr<NPacket> >("NPacket", no_init)
+        .def("type", &NPacket::type)
         .def("getPacketType", &NPacket::getPacketType)
+        .def("typeName", &NPacket::typeName)
         .def("getPacketTypeName", &NPacket::getPacketTypeName)
         .def("label", &NPacket::label,
             return_value_policy<return_by_value>())

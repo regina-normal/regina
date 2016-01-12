@@ -165,7 +165,7 @@ void process(NContainer* c) {
 
     for (NPacket* child = c->getFirstTreeChild(); child;
             child = child->getNextTreeSibling()) {
-        if (child->getPacketType() != NTriangulation::packetType)
+        if (child->type() != NTriangulation::packetType)
             continue;
 
         triData = new InvData(static_cast<NTriangulation*>(child));
@@ -301,7 +301,7 @@ int main(int argc, const char* argv[]) {
 
     // Process the packets.
     for (NPacket* p = tree; p; p = p->nextTreePacket())
-        if (p->getPacketType() == NContainer::packetType) {
+        if (p->type() == NContainer::packetType) {
             if (verbose)
                 std::cout << "... " << p->label() << " ...\n";
             process(static_cast<NContainer*>(p));

@@ -219,7 +219,7 @@
     if (! path)
         return NO;
 
-    if (p->getPacketType() != regina::PACKET_CONTAINER && ! [self.tableView.indexPathForSelectedRow isEqual:path])
+    if (p->type() != regina::PACKET_CONTAINER && ! [self.tableView.indexPathForSelectedRow isEqual:path])
         [self.tableView selectRowAtIndexPath:path animated:NO scrollPosition:UITableViewScrollPositionNone];
 
     [self.tableView scrollToRowAtIndexPath:[self pathForPacket:p] atScrollPosition:UITableViewScrollPositionNone animated:YES];
@@ -477,7 +477,7 @@
     regina::NPacket* p = [self packetForPath:indexPath];
 
     UITableViewCell *cell;
-    if (p->getPacketType() == regina::NContainer::packetType)
+    if (p->type() == regina::NContainer::packetType)
         cell = [tableView dequeueReusableCellWithIdentifier:@"Container" forIndexPath:indexPath];
     else
         cell = [tableView dequeueReusableCellWithIdentifier:@"Packet" forIndexPath:indexPath];
@@ -514,7 +514,7 @@
         // The subtree row might need to change.
         NSInteger oldSubtreeRow = _subtreeRow;
 
-        if (p->getPacketType() != regina::NContainer::packetType && p->getFirstTreeChild()) {
+        if (p->type() != regina::NContainer::packetType && p->getFirstTreeChild()) {
             // The subtree row should appear beneath this packet.
             _subtreeRow = _recentPacketIndex + 1;
             if (oldSubtreeRow == 0) {
@@ -541,7 +541,7 @@
         }
     }
 
-    if (p->getPacketType() != regina::PACKET_CONTAINER)
+    if (p->type() != regina::PACKET_CONTAINER)
         [ReginaHelper detail].packet = p;
 }
 

@@ -161,7 +161,7 @@ bool process(NContainer* c) {
     std::string name, structure;
     for (NPacket* child = c->getFirstTreeChild(); child;
             child = child->getNextTreeSibling()) {
-        if (child->getPacketType() != NTriangulation::packetType)
+        if (child->type() != NTriangulation::packetType)
             continue;
 
         foundTri = true;
@@ -284,7 +284,7 @@ int main(int argc, char* argv[]) {
     if (! sortMfds) {
         // Just run through them in prefix order.
         for (NPacket* p = tree; p; p = p->nextTreePacket())
-            if (p->getPacketType() == NContainer::packetType)
+            if (p->type() == NContainer::packetType)
                 process(static_cast<NContainer*>(p));
     } else {
         // We need to be careful about how we run through the tree.
@@ -293,7 +293,7 @@ int main(int argc, char* argv[]) {
 
         // Process the root first, since it doesn't have a parent to be
         // sorted within.
-        if (tree->getPacketType() == NContainer::packetType)
+        if (tree->type() == NContainer::packetType)
             process(static_cast<NContainer*>(tree));
 
         NPacket *parent, *p;
@@ -305,7 +305,7 @@ int main(int argc, char* argv[]) {
 
             for (p = parent->getFirstTreeChild(); p;
                     p = p->getNextTreeSibling())
-                if (p->getPacketType() == NContainer::packetType) {
+                if (p->type() == NContainer::packetType) {
                     if (process(static_cast<NContainer*>(p)))
                         foundManifolds = true;
                 } else
@@ -323,7 +323,7 @@ int main(int argc, char* argv[]) {
         // Finally tell us what we did.
         std::cout << "Final container listing:\n\n";
         for (p = tree; p; p = p->nextTreePacket())
-            if (p->getPacketType() == NContainer::packetType)
+            if (p->type() == NContainer::packetType)
                 std::cout << p->label() << '\n';
     }
 

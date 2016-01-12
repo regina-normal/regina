@@ -274,7 +274,7 @@ static NSMutableCharacterSet* eulerSeparators;
 
     regina::NPacket* p;
     for (p = self.packet->getFirstTreeChild(); p; p = p->getNextTreeSibling())
-        if (p->getPacketType() == regina::PACKET_SURFACEFILTER)
+        if (p->type() == regina::PACKET_SURFACEFILTER)
             [_subfilters addPointer:p];
 
     [self.children reloadData];

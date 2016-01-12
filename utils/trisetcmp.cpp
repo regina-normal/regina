@@ -75,9 +75,9 @@ void runMatches(NPacket* tree1, NPacket* tree2, std::ostream& out) {
     long nMatches = 0;
 
     for (p1 = tree1; p1; p1 = p1->nextTreePacket())
-        if (p1->getPacketType() == NTriangulation::packetType)
+        if (p1->type() == NTriangulation::packetType)
             for (p2 = tree2; p2; p2 = p2->nextTreePacket())
-                if (p2->getPacketType() == NTriangulation::packetType)
+                if (p2->type() == NTriangulation::packetType)
                     if (compare(static_cast<NTriangulation*>(p1),
                             static_cast<NTriangulation*>(p2))) {
                         out << "    " << p1->getHumanLabel()
@@ -104,10 +104,10 @@ void runNonMatches(const std::string& file1, NPacket* tree1,
 
     bool matched;
     for (p1 = tree1; p1; p1 = p1->nextTreePacket())
-        if (p1->getPacketType() == NTriangulation::packetType) {
+        if (p1->type() == NTriangulation::packetType) {
             matched = false;
             for (p2 = tree2; p2 && ! matched; p2 = p2->nextTreePacket())
-                if (p2->getPacketType() == NTriangulation::packetType)
+                if (p2->type() == NTriangulation::packetType)
                     if (compare(static_cast<NTriangulation*>(p1),
                             static_cast<NTriangulation*>(p2)))
                         matched = true;

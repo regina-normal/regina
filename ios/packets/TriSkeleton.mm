@@ -115,7 +115,7 @@
     
     // Drill edge:
     enable = NO;
-    if (self.viewWhich.selectedSegmentIndex == 1 && self.packet->getPacketType() == regina::PACKET_TRIANGULATION) {
+    if (self.viewWhich.selectedSegmentIndex == 1 && self.packet->type() == regina::PACKET_TRIANGULATION) {
         NSIndexPath* seln = self.details.indexPathForSelectedRow;
         if (seln && seln.row > 0 && seln.row <= self.packet->countEdges())
             enable = YES;

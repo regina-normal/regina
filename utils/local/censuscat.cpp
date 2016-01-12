@@ -125,7 +125,7 @@ void process(const char* filename) {
     NTriangulation* t;
 
     for (NPacket* p = tree; p; p = p->nextTreePacket())
-        if (p->getPacketType() == NTriangulation::packetType) {
+        if (p->type() == NTriangulation::packetType) {
             nTris++;
 
             t = static_cast<NTriangulation*>(p);

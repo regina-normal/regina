@@ -99,7 +99,7 @@
 
     regina::NPacket* p;
     for (p = tree; p; p = p->nextTreePacket())
-        if (p->getPacketType() == packetType)
+        if (p->type() == packetType)
             [self.choices addObject:[PacketChoice packetChoiceWithPacket:p]];
 
     if (self.choices.count == 0)
