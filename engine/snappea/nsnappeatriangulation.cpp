@@ -133,7 +133,7 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(const NTriangulation& tri, bool) :
 
     // Looks good; go build the SnapPea triangulation.
     regina::snappea::TriangulationData tData;
-    tData.name = strdup(tri.getPacketLabel().c_str());
+    tData.name = strdup(tri.label().c_str());
     tData.num_tetrahedra = static_cast<int>(tri.size());
 
     // Fields recalculated by SnapPea:

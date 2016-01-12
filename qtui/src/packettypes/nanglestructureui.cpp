@@ -73,8 +73,7 @@ int AngleModel::columnCount(const QModelIndex& /* unused parent */) const {
 
 QVariant AngleModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        const regina::NAngleStructure* s =
-            structures_->getStructure(index.row());
+        const regina::NAngleStructure* s = structures_->structure(index.row());
         if (index.column() == 0) {
             if (s->isStrict())
                 return tr("Strict");
@@ -85,7 +84,7 @@ QVariant AngleModel::data(const QModelIndex& index, int role) const {
             else
                 return QVariant();
         } else {
-            regina::NRational angle = s->getAngle((index.column() - 1) / 3,
+            regina::NRational angle = s->angle((index.column() - 1) / 3,
                 (index.column() - 1) % 3);
             if (angle == 0)
                 return QVariant();

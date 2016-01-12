@@ -204,7 +204,7 @@
         [self.interaction presentPreviewAnimated:YES];
     } else {
         // Display the relevant packet viewer / editor.
-        self.navigationItem.title = [NSString stringWithUTF8String:p->getPacketLabel().c_str()];
+        self.navigationItem.title = [NSString stringWithUTF8String:p->label().c_str()];
         [self embedViewer:[PacketManagerIOS viewerFor:p]];
 
         editable = p->isPacketEditable();
@@ -298,7 +298,7 @@
 - (void)packetWasRenamed:(regina::NPacket *)packet
 {
     if (packet == self.packet)
-        self.title = [NSString stringWithUTF8String:packet->getPacketLabel().c_str()];
+        self.title = [NSString stringWithUTF8String:packet->label().c_str()];
 }
 
 - (void)packetToBeDestroyed:(regina::NPacket *)packet

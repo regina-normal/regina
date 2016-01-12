@@ -59,7 +59,7 @@ namespace regina {
  */
 class REGINA_API NXMLNormalSurfaceReader : public NXMLElementReader {
     private:
-        NNormalSurface* surface;
+        NNormalSurface* surface_;
             /**< The normal surface currently being read. */
         const NTriangulation* tri;
             /**< The triangulation in which this surface lives. */
@@ -123,12 +123,12 @@ class REGINA_API NXMLNormalSurfaceListReader : public NXMLPacketReader {
         NXMLNormalSurfaceListReader(const NTriangulation* newTri,
             NXMLTreeResolver& resolver);
 
-        virtual NPacket* packet();
+        virtual NPacket* packet() override;
         virtual NXMLElementReader* startContentSubElement(
             const std::string& subTagName,
-            const regina::xml::XMLPropertyDict& subTagProps);
+            const regina::xml::XMLPropertyDict& subTagProps) override;
         virtual void endContentSubElement(const std::string& subTagName,
-            NXMLElementReader* subReader);
+            NXMLElementReader* subReader) override;
 };
 
 /*@}*/
@@ -137,11 +137,11 @@ class REGINA_API NXMLNormalSurfaceListReader : public NXMLPacketReader {
 
 inline NXMLNormalSurfaceReader::NXMLNormalSurfaceReader(
         const NTriangulation* newTri, NormalCoords newCoords) :
-        surface(0), tri(newTri), coords(newCoords), vecLen(-1) {
+        surface_(0), tri(newTri), coords(newCoords), vecLen(-1) {
 }
 
 inline NNormalSurface* NXMLNormalSurfaceReader::surface() {
-    return surface;
+    return surface_;
 }
 
 // Inline functions for NXMLNormalSurfaceListReader

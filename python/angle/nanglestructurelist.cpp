@@ -70,6 +70,8 @@ void addNAngleStructureList() {
         .def("size", &NAngleStructureList::size)
         .def("getNumberOfStructures",
             &NAngleStructureList::getNumberOfStructures)
+        .def("structure", &NAngleStructureList::structure,
+            return_internal_reference<>())
         .def("getStructure", &NAngleStructureList::getStructure,
             return_internal_reference<>())
         .def("spansStrict", &NAngleStructureList::spansStrict)

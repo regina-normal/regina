@@ -130,7 +130,7 @@
 - (void)updateTriangulationButton
 {
     regina::NPacket* tri = self.packet->triangulation();
-    NSString* triName = [NSString stringWithUTF8String:tri->getPacketLabel().c_str()];
+    NSString* triName = [NSString stringWithUTF8String:tri->label().c_str()];
     if (triName.length == 0)
         triName = @"(Unnamed)";
     [self.triangulation setTitle:triName forState:UIControlStateNormal];
@@ -179,7 +179,7 @@
 
 - (id)spreadView:(MDSpreadView *)aSpreadView objectValueForRowAtIndexPath:(MDIndexPath *)rowPath forColumnAtIndexPath:(MDIndexPath *)columnPath
 {
-    const regina::NAngleStructure* a = self.packet->getStructure(rowPath.row);
+    const regina::NAngleStructure* a = self.packet->structure(rowPath.row);
 
     if (columnPath.column == 0) {
         if (a->isStrict())
@@ -192,7 +192,7 @@
             return @"";
     }
 
-    regina::NRational angle = a->getAngle((columnPath.column - 1) / 3, (columnPath.column - 1) % 3);
+    regina::NRational angle = a->angle((columnPath.column - 1) / 3, (columnPath.column - 1) % 3);
     if (angle == 0)
         return @"";
     if (angle == 1)

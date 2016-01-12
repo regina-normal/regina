@@ -173,7 +173,7 @@ bool process(const std::string& filename) {
             s = NNormalSurfaceList::enumerate(t,
                 (quad ? NS_QUAD : NS_STANDARD));
             out << t->size() << ' ' << s->size() << " \""
-                << t->getPacketLabel() << '"' << std::endl;
+                << t->label() << '"' << std::endl;
 
             delete s;
         }

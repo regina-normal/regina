@@ -141,7 +141,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
 
             const NAngleStructure* s;
             for (unsigned long i = 0; i < size; i++) {
-                s = list->getStructure(i);
+                s = list->structure(i);
 
                 if (s->isStrict() == strict && s->isTaut() == taut)
                     tot++;
@@ -234,12 +234,12 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
             regina::NRational tmp, tot;
             regina::NEdge* e;
             for (i = 0; i < a->size(); ++i) {
-                const NAngleStructure* s = a->getStructure(i);
+                const NAngleStructure* s = a->structure(i);
 
                 for (j = 0; j < tri->size(); ++j) {
                     tot = 0;
                     for (k = 0; k < 3; ++k) {
-                        tmp = s->getAngle(j, k);
+                        tmp = s->angle(j, k);
                         if (tmp != 0 && tmp != 1) {
                             std::ostringstream msg;
                             msg << "Taut angle structures #" << i
@@ -264,7 +264,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
 
                     tot = 0;
                     for (k = 0; k < e->getDegree(); ++k) {
-                        tot += s->getAngle(
+                        tot += s->angle(
                             e->getEmbedding(k).getTetrahedron()->markedIndex(),
                             regina::vertexSplit[
                                 e->getEmbedding(k).getVertices()[0]][
@@ -345,11 +345,11 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
             unsigned i;
 
             for (i = 0; i < all->size(); ++i)
-                if (all->getStructure(i)->isTaut())
+                if (all->structure(i)->isTaut())
                     ++nAll;
 
             for (i = 0; i < taut->size(); ++i)
-                if (taut->getStructure(i)->isTaut())
+                if (taut->structure(i)->isTaut())
                     ++nTaut;
                 else {
                     std::ostringstream msg;
@@ -419,8 +419,8 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
 
             unsigned long i;
             for (i = 0; i < n; ++i) {
-                lhsRaw[i] = lhs->getStructure(i)->rawVector();
-                rhsRaw[i] = rhs->getStructure(i)->rawVector();
+                lhsRaw[i] = lhs->structure(i)->rawVector();
+                rhsRaw[i] = rhs->structure(i)->rawVector();
             }
 
             std::sort(lhsRaw, lhsRaw + n, lexLess);
@@ -453,10 +453,10 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
             unsigned long i;
             unsigned long foundAll = 0;
             for (i = 0; i < nAll; ++i)
-                if (all->getStructure(i)->isTaut())
-                    allRaw[foundAll++] = all->getStructure(i)->rawVector();
+                if (all->structure(i)->isTaut())
+                    allRaw[foundAll++] = all->structure(i)->rawVector();
             for (i = 0; i < nTaut; ++i)
-                tautRaw[i] = taut->getStructure(i)->rawVector();
+                tautRaw[i] = taut->structure(i)->rawVector();
 
             if (foundAll != nTaut) {
                 delete[] allRaw;
@@ -491,21 +491,21 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
             if (all->isTautOnly()) {
                 std::ostringstream msg;
                 msg << "Vertex angle structure enumeration gives "
-                    "incorrect flags for " << tri->getPacketLabel() << ".";
+                    "incorrect flags for " << tri->label() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
             if (! tautTree->isTautOnly()) {
                 std::ostringstream msg;
                 msg << "Taut angle structure enumeration (tree) gives "
-                    "incorrect flags for " << tri->getPacketLabel() << ".";
+                    "incorrect flags for " << tri->label() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
             if (! tautDD->isTautOnly()) {
                 std::ostringstream msg;
                 msg << "Taut angle structure enumeration (DD) gives "
-                    "incorrect flags for " << tri->getPacketLabel() << ".";
+                    "incorrect flags for " << tri->label() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -514,7 +514,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
                 std::ostringstream msg;
                 msg << "Flag for spansTaut() mismatched between "
                     "different enumeration methods for "
-                    << tri->getPacketLabel() << ".";
+                    << tri->label() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -522,14 +522,14 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
                 std::ostringstream msg;
                 msg << "Finding a strict angle structure (tree) gives "
                     "no solution when one should exist for "
-                    << tri->getPacketLabel() << ".";
+                    << tri->label() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
             if (strictTree && ! all->spansStrict()) {
                 std::ostringstream msg;
                 msg << "Finding a strict angle structure (tree) gives "
                     "a solution when none should exist for "
-                    << tri->getPacketLabel() << ".";
+                    << tri->label() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -537,7 +537,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
                 std::ostringstream msg;
                 msg << "Taut angle structure enumeration gives "
                     "different solutions for tree vs DD for "
-                    << tri->getPacketLabel() << ".";
+                    << tri->label() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -545,7 +545,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
                 std::ostringstream msg;
                 msg << "Taut angle structure enumeration (tree) gives "
                     "different taut solutions from full vertex enumeration "
-                    "for "<< tri->getPacketLabel() << ".";
+                    "for "<< tri->label() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 

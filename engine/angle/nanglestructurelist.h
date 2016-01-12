@@ -157,6 +157,14 @@ class REGINA_API NAngleStructureList : public NPacket {
          * this list; this must be between 0 and size()-1 inclusive.
          * @return the angle structure at the requested index.
          */
+        const NAngleStructure* structure(size_t index) const;
+        /**
+         * Deprecated routine that returns the angle structure at the
+         * requested index in this list.
+         *
+         * \deprecated This routine has been renamed to structure().
+         * See the structure() documentation for further details.
+         */
         const NAngleStructure* getStructure(size_t index) const;
 
         /**
@@ -469,6 +477,11 @@ inline size_t NAngleStructureList::size() const {
 }
 inline size_t NAngleStructureList::getNumberOfStructures() const {
     return structures.size();
+}
+
+inline const NAngleStructure* NAngleStructureList::structure(
+        size_t index) const {
+    return structures[index];
 }
 
 inline const NAngleStructure* NAngleStructureList::getStructure(

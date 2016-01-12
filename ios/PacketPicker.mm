@@ -53,7 +53,7 @@
     self = [super init];
     if (self) {
         _packet = p;
-        _text = [NSString stringWithUTF8String:p->getPacketLabel().c_str()];
+        _text = [NSString stringWithUTF8String:p->label().c_str()];
     }
     return self;
 }

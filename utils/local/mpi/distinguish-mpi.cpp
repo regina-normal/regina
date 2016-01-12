@@ -250,19 +250,19 @@ bool checkInputTree() {
     unsigned labelLen;
 
     for (NPacket* p = tree; p; p = p->nextTreePacket()) {
-        labelLen = p->getPacketLabel().length();
+        labelLen = p->label().length();
         if (labelLen == 0) {
             fprintf(stderr, "ERROR: Empty packet label found in input file.\n");
             return false;
         } else if (labelLen > MAX_TRI_LABEL_LEN) {
             fprintf(stderr, "ERROR: Overlong packet label [%s] found in "
                 "input file.\n",
-                p->getPacketLabel().c_str());
+                p->label().c_str());
             return false;
-        } else if (! allLabels.insert(p->getPacketLabel()).second) {
+        } else if (! allLabels.insert(p->label()).second) {
             fprintf(stderr, "ERROR: Duplicate packet label [%s] found in "
                 "input file.\n",
-                p->getPacketLabel().c_str());
+                p->label().c_str());
             return false;
         }
     }
@@ -397,9 +397,9 @@ inline bool cmpInvData(const InvData* x, const InvData* y) {
  * discovered to have different invariants.
  */
 void ctrlInconsistent(InvData* data, NTriangulation* tri, const char* inv) {
-    printf("INCONSISTENCY: %s\n", data->manifold->getPacketLabel().c_str());
+    printf("INCONSISTENCY: %s\n", data->manifold->label().c_str());
     printf("    Invariant: %s\n", inv);
-    printf("    Triangulation: %s\n", tri->getPacketLabel().c_str());
+    printf("    Triangulation: %s\n", tri->label().c_str());
 
     if (! data->inconsistent) {
         totMfdsInconsistent++;
@@ -414,10 +414,10 @@ void ctrlInconsistent(InvData* data, NTriangulation* tri, const char* inv) {
  * discovered to have different Turaev-Viro invariants.
  */
 void ctrlInconsistentTV(InvData* data, NTriangulation* tri, int whichTV) {
-    printf("INCONSISTENCY: %s\n", data->manifold->getPacketLabel().c_str());
+    printf("INCONSISTENCY: %s\n", data->manifold->label().c_str());
     printf("    Invariant: Turaev-Viro(%ld, %ld)\n",
         tvParams[whichTV][0], tvParams[whichTV][1]);
-    printf("    Triangulation: %s\n", tri->getPacketLabel().c_str());
+    printf("    Triangulation: %s\n", tri->label().c_str());
 
     if (! data->inconsistent) {
         totMfdsInconsistent++;
@@ -496,8 +496,8 @@ void ctrlFarmTask(NTriangulation* tri, InvData* data, int whichTV) {
     if (slaveWorkingTri[slave] != tri) {
         MPI_Send(const_cast<long*>(signalChangeTri), 2, MPI_LONG, slave,
             TAG_REQUEST_TASK, MPI_COMM_WORLD);
-        MPI_Send(const_cast<char*>(tri->getPacketLabel().c_str()),
-            tri->getPacketLabel().length() + 1, MPI_CHAR, slave,
+        MPI_Send(const_cast<char*>(tri->label().c_str()),
+            tri->label().length() + 1, MPI_CHAR, slave,
             TAG_CHANGE_TRI, MPI_COMM_WORLD);
 
         slaveWorkingTri[slave] = tri;
@@ -532,7 +532,7 @@ void ctrlProcess(NContainer* c) {
         tri = static_cast<NTriangulation*>(child);
 
         ctrlLogStamp() << "Processing triangulation: "
-            << tri->getPacketLabel() << std::endl;
+            << tri->label() << std::endl;
 
         if (! mfdData) {
             mfdData = new InvData(c);
@@ -590,11 +590,11 @@ void ctrlFindDuplicates() {
             if (! first) {
                 first = prev;
                 printf("POSSIBLE DUPLICATES:\n");
-                printf("    - %s\n", prev->manifold->getPacketLabel().c_str());
+                printf("    - %s\n", prev->manifold->label().c_str());
                 totMfdsDuplicate++;
             }
 
-            printf("    - %s\n", (*it)->manifold->getPacketLabel().c_str());
+            printf("    - %s\n", (*it)->manifold->label().c_str());
             totMfdsDuplicate++;
         } else
             first = 0;
@@ -627,7 +627,7 @@ int mainController() {
     // Process the packets.
     for (NPacket* p = tree; p; p = p->nextTreePacket())
         if (p->getPacketType() == NContainer::packetType) {
-            ctrlLogStamp() << "Processing container: " << p->getPacketLabel()
+            ctrlLogStamp() << "Processing container: " << p->label()
                 << std::endl;
             ctrlProcess(static_cast<NContainer*>(p));
         }

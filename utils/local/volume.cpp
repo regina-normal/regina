@@ -78,7 +78,7 @@ void usage(const char* progName, const std::string& error = std::string()) {
 }
 
 void process(NTriangulation* t) {
-    std::cout << t->getPacketLabel() << "  -->  ";
+    std::cout << t->label() << "  -->  ";
     totTris++;
 
     NSnapPeaTriangulation s(*t, true);
@@ -157,7 +157,7 @@ int main(int argc, char* argv[]) {
             process(static_cast<NTriangulation*>(p));
         else if (outputContainers &&
                 p->getPacketType() == NContainer::packetType)
-            std::cout << "----- " << p->getPacketLabel() << " -----"
+            std::cout << "----- " << p->label() << " -----"
                 << std::endl;
 
     // Write statistics and clean up.

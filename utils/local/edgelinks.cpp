@@ -172,7 +172,7 @@ bool process(const std::string& filename) {
                 if (s->getSurface(i)->isThinEdgeLink().first)
                     ++links;
             out << t->size() << ' ' << links << " \""
-                << t->getPacketLabel() << '"' << std::endl;
+                << t->label() << '"' << std::endl;
 
             delete s;
         }

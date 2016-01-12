@@ -89,7 +89,7 @@
 - (void)updateTriangulationButton:(UIButton*)button
 {
     regina::NPacket* tri = self.packet->triangulation();
-    NSString* triName = [NSString stringWithUTF8String:tri->getPacketLabel().c_str()];
+    NSString* triName = [NSString stringWithUTF8String:tri->label().c_str()];
     if (triName.length == 0)
         triName = @"(Unnamed)";
 

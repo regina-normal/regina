@@ -69,7 +69,7 @@ namespace {
                     isReginaData(false) {
             }
 
-            virtual NPacket* getPacket() {
+            virtual NPacket* packet() {
                 if (isReginaData)
                     return &container;
                 else
@@ -254,7 +254,7 @@ NPacket* open(std::istream& s) {
 
     // See if we read anything.
     // If so, break it away from the top-level container and return it.
-    NPacket* p = reader.getPacket();
+    NPacket* p = reader.packet();
     if (p) {
         p = p->getFirstTreeChild();
         if (p)

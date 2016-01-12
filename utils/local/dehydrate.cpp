@@ -93,7 +93,7 @@ int main(int argc, char* argv[]) {
                 found = true;
                 dehydration = static_cast<NTriangulation*>(p)->dehydrate();
 
-                std::cout << p->getPacketLabel() << " : ";
+                std::cout << p->label() << " : ";
                 if (dehydration.empty())
                     std::cout << "---";
                 else

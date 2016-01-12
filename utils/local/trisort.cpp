@@ -168,7 +168,7 @@ void process(NContainer* c) {
         it->packet->moveToLast();
         if (it->isTri) {
             std::ostringstream s;
-            s << c->getPacketLabel() << " : #" << (which++);
+            s << c->label() << " : #" << (which++);
             it->packet->setPacketLabel(s.str());
         }
     }

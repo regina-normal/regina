@@ -304,7 +304,7 @@ static NSMutableCharacterSet* eulerSeparators;
         return [self.children dequeueReusableCellWithIdentifier:@"Add" forIndexPath:indexPath];
     else {
         UITableViewCell* cell = [self.children dequeueReusableCellWithIdentifier:@"Subfilter" forIndexPath:indexPath];
-        cell.textLabel.text = [NSString stringWithUTF8String:static_cast<regina::NPacket*>([_subfilters pointerAtIndex:indexPath.row])->getPacketLabel().c_str()];
+        cell.textLabel.text = [NSString stringWithUTF8String:static_cast<regina::NPacket*>([_subfilters pointerAtIndex:indexPath.row])->label().c_str()];
         return cell;
     }
 }

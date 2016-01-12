@@ -132,7 +132,7 @@
     }
     
     regina::NTriangulation* ans = new regina::NTriangulation(*self.packet);
-    ans->setPacketLabel(self.packet->getPacketLabel());
+    ans->setPacketLabel(self.packet->label());
     self.packet->insertChildLast(ans);
     [ReginaHelper viewPacket:ans];
 }

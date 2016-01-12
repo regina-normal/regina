@@ -165,7 +165,7 @@ void SkeletonWindow::packetToBeDestroyed(regina::NPacket*) {
 }
 
 QString VertexModel::caption() const {
-    return tr("Vertices (%1)").arg(tri->getPacketLabel().c_str());
+    return tr("Vertices (%1)").arg(tri->label().c_str());
 }
 
 QString VertexModel::overview() const {
@@ -270,7 +270,7 @@ QString VertexModel::toolTipForCol(int column) {
 }
 
 QString EdgeModel::caption() const {
-    return tr("Edges (%1)").arg(tri->getPacketLabel().c_str());
+    return tr("Edges (%1)").arg(tri->label().c_str());
 }
 
 QString EdgeModel::overview() const {
@@ -359,7 +359,7 @@ QString EdgeModel::toolTipForCol(int column) {
 }
 
 QString TriangleModel::caption() const {
-    return tr("Triangles (%1)").arg(tri->getPacketLabel().c_str());
+    return tr("Triangles (%1)").arg(tri->label().c_str());
 }
 
 QString TriangleModel::overview() const {
@@ -466,7 +466,7 @@ QString TriangleModel::toolTipForCol(int column) {
 }
 
 QString ComponentModel::caption() const {
-    return tr("Components (%1)").arg(tri->getPacketLabel().c_str());
+    return tr("Components (%1)").arg(tri->label().c_str());
 }
 
 QString ComponentModel::overview() const {
@@ -549,7 +549,7 @@ QString ComponentModel::toolTipForCol(int column) {
 }
 
 QString BoundaryComponentModel::caption() const {
-    return tr("Boundary Components (%1)").arg(tri->getPacketLabel().c_str());
+    return tr("Boundary Components (%1)").arg(tri->label().c_str());
 }
 
 QString BoundaryComponentModel::overview() const {
@@ -660,7 +660,7 @@ QString BoundaryComponentModel::toolTipForCol(int column) {
 }
 
 QString Dim2VertexModel::caption() const {
-    return tr("Vertices (%1)").arg(tri->getPacketLabel().c_str());
+    return tr("Vertices (%1)").arg(tri->label().c_str());
 }
 
 QString Dim2VertexModel::overview() const {
@@ -748,7 +748,7 @@ QString Dim2VertexModel::toolTipForCol(int column) {
 }
 
 QString Dim2EdgeModel::caption() const {
-    return tr("Edges (%1)").arg(tri->getPacketLabel().c_str());
+    return tr("Edges (%1)").arg(tri->label().c_str());
 }
 
 QString Dim2EdgeModel::overview() const {
@@ -835,7 +835,7 @@ QString Dim2EdgeModel::toolTipForCol(int column) {
 }
 
 QString Dim2ComponentModel::caption() const {
-    return tr("Components (%1)").arg(tri->getPacketLabel().c_str());
+    return tr("Components (%1)").arg(tri->label().c_str());
 }
 
 QString Dim2ComponentModel::overview() const {
@@ -916,7 +916,7 @@ QString Dim2ComponentModel::toolTipForCol(int column) {
 }
 
 QString Dim2BoundaryComponentModel::caption() const {
-    return tr("Boundary Components (%1)").arg(tri->getPacketLabel().c_str());
+    return tr("Boundary Components (%1)").arg(tri->label().c_str());
 }
 
 QString Dim2BoundaryComponentModel::overview() const {

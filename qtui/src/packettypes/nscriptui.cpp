@@ -128,10 +128,10 @@ QVariant ScriptVarModel::data(const QModelIndex& index, int role) const {
             NPacket* p = script_->getVariableValue(index.row());
             if (! p)
                 return tr("<None>");
-            else if (p->getPacketLabel().empty())
+            else if (p->label().empty())
                 return tr("(no label)");
             else
-                return p->getPacketLabel().c_str();
+                return p->label().c_str();
         } else
             return QVariant();
     } else if (role == Qt::DecorationRole) {

@@ -52,7 +52,7 @@ regina::NPacket* ReginaHandler::importData(const QString& fileName,
             QObject::tr("<qt>Please check that the file <tt>%1</tt> "
             "is readable and in Regina format.</qt>").
                 arg(fileName.toHtmlEscaped()));
-    if (ans->getPacketLabel().empty())
+    if (ans->label().empty())
         ans->setPacketLabel("Imported data");
     return ans;
 }

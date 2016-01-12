@@ -156,30 +156,30 @@ class REGINA_API NPacket :
         public Output<NPacket>,
         public boost::noncopyable {
     private:
-        std::string packetLabel;
+        std::string label_;
             /**< The unique label for this individual packet of information. */
 
-        NPacket* treeParent;
+        NPacket* treeParent_;
             /**< Parent packet in the tree structure (0 if none). */
-        NPacket* firstTreeChild;
+        NPacket* firstTreeChild_;
             /**< First child packet in the tree structure (0 if none). */
-        NPacket* lastTreeChild;
+        NPacket* lastTreeChild_;
             /**< Last child packet in the tree structure (0 if none). */
-        NPacket* prevTreeSibling;
+        NPacket* prevTreeSibling_;
             /**< Previous sibling packet in the tree structure (0 if none). */
-        NPacket* nextTreeSibling;
+        NPacket* nextTreeSibling_;
             /**< Next sibling packet in the tree structure (0 if none). */
 
-        std::unique_ptr<std::set<std::string>> tags;
+        std::unique_ptr<std::set<std::string>> tags_;
             /**< The set of all tags associated with this packet. */
 
-        std::unique_ptr<std::set<NPacketListener*>> listeners;
+        std::unique_ptr<std::set<NPacketListener*>> listeners_;
             /**< All objects listening for events on this packet. */
-        unsigned changeEventSpans;
+        unsigned changeEventSpans_;
             /**< The number of change event spans currently registered.
                  Change events will only be fired when this count is zero. */
 
-        bool inDestructor;
+        bool inDestructor_;
             /**< Have we entered the packet destructor? */
 
     public:
@@ -240,6 +240,15 @@ class REGINA_API NPacket :
          * have a unique label.
          *
          * @return this individual packet's label.
+         */
+        const std::string& label() const;
+
+        /**
+         * Deprecated routine that returns the label associated with this
+         * individual packet.
+         *
+         * \deprecated This routine has been renamed to label().
+         * See the label() documentation for further information.
          */
         const std::string& getPacketLabel() const;
 
@@ -1440,13 +1449,14 @@ REGINA_API NPacket* open(std::istream& s);
 
 // Inline functions for NPacket
 
-inline NPacket::NPacket(NPacket* parent) : firstTreeChild(0), lastTreeChild(0),
-        prevTreeSibling(0), nextTreeSibling(0), changeEventSpans(0),
-        inDestructor(false) {
+inline NPacket::NPacket(NPacket* parent) :
+        firstTreeChild_(0), lastTreeChild_(0),
+        prevTreeSibling_(0), nextTreeSibling_(0), changeEventSpans_(0),
+        inDestructor_(false) {
     if (parent)
         parent->insertChildLast(this);
     else
-        treeParent = 0;
+        treeParent_ = 0;
 }
 
 inline void NPacket::writeTextLong(std::ostream& out) const {
@@ -1454,58 +1464,62 @@ inline void NPacket::writeTextLong(std::ostream& out) const {
     out << '\n';
 }
 
+inline const std::string& NPacket::label() const {
+    return label_;
+}
+
 inline const std::string& NPacket::getPacketLabel() const {
-    return packetLabel;
+    return label_;
 }
 
 inline std::string NPacket::getHumanLabel() const {
-    if (packetLabel.empty())
+    if (label_.empty())
         return "(no label)";
-    return packetLabel;
+    return label_;
 }
 
 inline bool NPacket::hasTag(const std::string& tag) const {
-    if (! tags.get())
+    if (! tags_.get())
         return false;
-    return tags->count(tag);
+    return tags_->count(tag);
 }
 
 inline bool NPacket::hasTags() const {
-    if (! tags.get())
+    if (! tags_.get())
         return false;
-    return (! tags->empty());
+    return (! tags_->empty());
 }
 
 inline const std::set<std::string>& NPacket::getTags() const {
-    if (! tags.get())
-        const_cast<NPacket*>(this)->tags.reset(new std::set<std::string>());
-    return *tags;
+    if (! tags_.get())
+        const_cast<NPacket*>(this)->tags_.reset(new std::set<std::string>());
+    return *tags_;
 }
 
 inline bool NPacket::isListening(NPacketListener* listener) {
-    if (! listeners.get())
+    if (! listeners_.get())
         return false;
-    return listeners->count(listener);
+    return listeners_->count(listener);
 }
 
 inline NPacket* NPacket::getTreeParent() const {
-    return treeParent;
+    return treeParent_;
 }
 
 inline NPacket* NPacket::getFirstTreeChild() const {
-    return firstTreeChild;
+    return firstTreeChild_;
 }
 
 inline NPacket* NPacket::getLastTreeChild() const {
-    return lastTreeChild;
+    return lastTreeChild_;
 }
 
 inline NPacket* NPacket::getPrevTreeSibling() const {
-    return prevTreeSibling;
+    return prevTreeSibling_;
 }
 
 inline NPacket* NPacket::getNextTreeSibling() const {
-    return nextTreeSibling;
+    return nextTreeSibling_;
 }
 
 inline unsigned NPacket::levelsUpTo(const NPacket* ancestor) const {
@@ -1530,16 +1544,16 @@ inline size_t NPacket::getTotalTreeSize() const {
 
 inline NPacket::ChangeEventSpan::ChangeEventSpan(NPacket* packet) :
         packet_(packet) {
-    if (! packet_->changeEventSpans)
+    if (! packet_->changeEventSpans_)
         packet_->fireEvent(&NPacketListener::packetToBeChanged);
 
-    packet_->changeEventSpans++;
+    packet_->changeEventSpans_++;
 }
 
 inline NPacket::ChangeEventSpan::~ChangeEventSpan() {
-    packet_->changeEventSpans--;
+    packet_->changeEventSpans_--;
 
-    if (! packet_->changeEventSpans)
+    if (! packet_->changeEventSpans_)
         packet_->fireEvent(&NPacketListener::packetWasChanged);
 }
 
