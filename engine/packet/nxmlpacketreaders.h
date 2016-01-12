@@ -211,7 +211,7 @@ inline NXMLElementReader* NXMLTextReader::startContentSubElement(
 inline void NXMLTextReader::endContentSubElement(const std::string& subTagName,
         NXMLElementReader* subReader) {
     if (subTagName == "text")
-        text->setText(dynamic_cast<NXMLCharsReader*>(subReader)->getChars());
+        text->setText(dynamic_cast<NXMLCharsReader*>(subReader)->chars());
 }
 
 } // namespace regina

@@ -218,7 +218,7 @@ class REGINA_API NXMLCharsReader : public NXMLElementReader {
          *
          * @return the characters stored in the XML element.
          */
-        const std::string& getChars();
+        const std::string& chars();
 
         virtual void initialChars(const std::string& chars);
 };
@@ -263,7 +263,7 @@ inline void NXMLElementReader::abort(NXMLElementReader*) {
 inline NXMLCharsReader::NXMLCharsReader() {
 }
 
-inline const std::string& NXMLCharsReader::getChars() {
+inline const std::string& NXMLCharsReader::chars() {
     return readChars;
 }
 
