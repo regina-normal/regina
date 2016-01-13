@@ -110,7 +110,7 @@ void addNAbelianGroup() {
         .def("addGroup", addGroup_matrix)
         .def("addGroup", addGroup_group)
         .def("rank", &NAbelianGroup::rank)
-        .def("getRank", &NAbelianGroup::rank)
+        .def("getRank", &NAbelianGroup::getRank)
         .def("torsionRank", torsionRank_large)
         .def("torsionRank", torsionRank_long)
         .def("getTorsionRank", torsionRank_large)
