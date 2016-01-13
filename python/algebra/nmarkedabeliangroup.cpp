@@ -173,6 +173,8 @@ void addNMarkedAbelianGroup() {
         .def("rankCC", &NMarkedAbelianGroup::rankCC)
         .def("getRankCC", &NMarkedAbelianGroup::getRankCC)
         .def("minNumberCycleGens", &NMarkedAbelianGroup::minNumberCycleGens)
+        .def("MRB", &NMarkedAbelianGroup::MRB,
+            return_internal_reference<>())
         .def("getMRB", &NMarkedAbelianGroup::getMRB,
             return_internal_reference<>())
         .def("getMRBi", &NMarkedAbelianGroup::getMRBi,
