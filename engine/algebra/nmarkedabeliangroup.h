@@ -843,13 +843,21 @@ class REGINA_API NMarkedAbelianGroup :
          * For details on the internal presentation matrix, see the class
          * overview.  If \a P is the internal presentation matrix, then:
          *
-         * - getNCB() * P * getNRB() is the Smith normal form of \a P;
-         * - getNCBi() and getNRBi() are the inverses of getNCB() and getNRB()
+         * - NCB() * P * NRB() is the Smith normal form of \a P;
+         * - NCBi() and NRBi() are the inverses of NCB() and NRB()
          *   respectively.
          *
          * \deprecated This routine will be removed in Regina 5.0.
          *
-         * @return the matrix getNRB() as described above.
+         * @return the matrix NRB() as described above.
+         */
+        const NMatrixInt& NRB() const;
+        /**
+         * Deprecated routine that returns a change-of-basis matrix for the
+         * Smith normal form of the internal presentation matrix.
+         *
+         * \deprecated This routine has been renamed to NRB().
+         * See the NRB() documentation for further details.
          */
         const NMatrixInt& getNRB() const;
         /**
@@ -862,13 +870,21 @@ class REGINA_API NMarkedAbelianGroup :
          * For details on the internal presentation matrix, see the class
          * overview.  If \a P is the internal presentation matrix, then:
          *
-         * - getNCB() * P * getNRB() is the Smith normal form of \a P;
-         * - getNCBi() and getNRBi() are the inverses of getNCB() and getNRB()
+         * - NCB() * P * NRB() is the Smith normal form of \a P;
+         * - NCBi() and NRBi() are the inverses of NCB() and NRB()
          *   respectively.
          *
          * \deprecated This routine will be removed in Regina 5.0.
          *
-         * @return the matrix getNRBi() as described above.
+         * @return the matrix NRBi() as described above.
+         */
+        const NMatrixInt& NRBi() const;
+        /**
+         * Deprecated routine that returns an inverse change-of-basis matrix
+         * for the Smith normal form of the internal presentation matrix.
+         *
+         * \deprecated This routine has been renamed to NRBi().
+         * See the NRBi() documentation for further details.
          */
         const NMatrixInt& getNRBi() const;
         /**
@@ -881,13 +897,21 @@ class REGINA_API NMarkedAbelianGroup :
          * For details on the internal presentation matrix, see the class
          * overview.  If \a P is the internal presentation matrix, then:
          *
-         * - getNCB() * P * getNRB() is the Smith normal form of \a P;
-         * - getNCBi() and getNRBi() are the inverses of getNCB() and getNRB()
+         * - NCB() * P * NRB() is the Smith normal form of \a P;
+         * - NCBi() and NRBi() are the inverses of NCB() and NRB()
          *   respectively.
          *
          * \deprecated This routine will be removed in Regina 5.0.
          *
-         * @return the matrix getNCB() as described above.
+         * @return the matrix NCB() as described above.
+         */
+        const NMatrixInt& NCB() const;
+        /**
+         * Returns a change-of-basis matrix for the Smith normal form of
+         * the internal presentation matrix.
+         *
+         * \deprecated This routine has been renamed to NCB().
+         * See the NCB() documentation for further details.
          */
         const NMatrixInt& getNCB() const;
         /**
@@ -900,13 +924,21 @@ class REGINA_API NMarkedAbelianGroup :
          * For details on the internal presentation matrix, see the class
          * overview.  If \a P is the internal presentation matrix, then:
          *
-         * - getNCB() * P * getNRB() is the Smith normal form of \a P;
-         * - getNCBi() and getNRBi() are the inverses of getNCB() and getNRB()
+         * - NCB() * P * NRB() is the Smith normal form of \a P;
+         * - NCBi() and NRBi() are the inverses of NCB() and NRB()
          *   respectively.
          *
          * \deprecated This routine will be removed in Regina 5.0.
          *
-         * @return the matrix getNCBi() as described above.
+         * @return the matrix NCBi() as described above.
+         */
+        const NMatrixInt& NCBi() const;
+        /**
+         * Deprecated routine that returns an inverse change-of-basis matrix
+         * for the Smith normal form of the internal presentation matrix.
+         *
+         * \deprecated This routine has been renamed to NCBi().
+         * See the NCBi() documentation for further details.
          */
         const NMatrixInt& getNCBi() const;
 
@@ -1511,14 +1543,26 @@ inline const NMatrixInt& NMarkedAbelianGroup::MCBi() const {
 inline const NMatrixInt& NMarkedAbelianGroup::getMCBi() const {
     return OMCi;
 }
+inline const NMatrixInt& NMarkedAbelianGroup::NRB() const {
+    return *ornR;
+}
 inline const NMatrixInt& NMarkedAbelianGroup::getNRB() const {
     return *ornR;
+}
+inline const NMatrixInt& NMarkedAbelianGroup::NRBi() const {
+    return *ornRi;
 }
 inline const NMatrixInt& NMarkedAbelianGroup::getNRBi() const {
     return *ornRi;
 }
+inline const NMatrixInt& NMarkedAbelianGroup::NCB() const {
+    return *ornC;
+}
 inline const NMatrixInt& NMarkedAbelianGroup::getNCB() const {
     return *ornC;
+}
+inline const NMatrixInt& NMarkedAbelianGroup::NCBi() const {
+    return *ornCi;
 }
 inline const NMatrixInt& NMarkedAbelianGroup::getNCBi() const {
     return *ornCi;

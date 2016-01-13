@@ -189,11 +189,19 @@ void addNMarkedAbelianGroup() {
             return_internal_reference<>())
         .def("getMCBi", &NMarkedAbelianGroup::getMCBi,
             return_internal_reference<>())
+        .def("NRB", &NMarkedAbelianGroup::NRB,
+            return_internal_reference<>())
         .def("getNRB", &NMarkedAbelianGroup::getNRB,
+            return_internal_reference<>())
+        .def("NRBi", &NMarkedAbelianGroup::NRBi,
             return_internal_reference<>())
         .def("getNRBi", &NMarkedAbelianGroup::getNRBi,
             return_internal_reference<>())
+        .def("NCB", &NMarkedAbelianGroup::NCB,
+            return_internal_reference<>())
         .def("getNCB", &NMarkedAbelianGroup::getNCB,
+            return_internal_reference<>())
+        .def("NCBi", &NMarkedAbelianGroup::NCBi,
             return_internal_reference<>())
         .def("getNCBi", &NMarkedAbelianGroup::getNCBi,
             return_internal_reference<>())
