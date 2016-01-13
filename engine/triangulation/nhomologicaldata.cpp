@@ -1125,7 +1125,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
     unsigned long i, j, k, l;
 
     for (i=0; i<niv; i++) {
-        tI = dmHomology1->getInvariantFactor(i);
+        tI = dmHomology1->invariantFactor(i);
         tFac = NPrimes::primePowerDecomp(tI);
 
         for (j=0; j<tFac.size(); j++) {
@@ -1142,7 +1142,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
             ppList.push_back( fac1 ); // record the order...
             // now the corresponding vector...
             // this will have to be fac1i * vector corresponding to
-            // getInvariantFactor(i).
+            // invariantFactor(i).
             tV = dmHomology1->getTorsionRep(i);
 
             for (k=0; k<tV.size(); k++) tV[k]=fac1i*fac2*tV[k];

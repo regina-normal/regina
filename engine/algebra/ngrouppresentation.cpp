@@ -1198,17 +1198,17 @@ NGroupPresentation::homologicalAlignmentDetail()
         unsigned long j0=0, j1=abMat.columns()-1;
         while (j0 < j1) {
             // if at j0 its zero, inc, if at j1 zero, dec
-            if ((abMat.entry(i,j0) % abelianized->getInvariantFactor(i)).isZero()) {
+            if ((abMat.entry(i,j0) % abelianized->invariantFactor(i)).isZero()) {
                 j0++;
                 continue;
             }
-            if ((abMat.entry(i,j1) % abelianized->getInvariantFactor(i)).isZero()) {
+            if ((abMat.entry(i,j1) % abelianized->invariantFactor(i)).isZero()) {
                 j1--;
                 continue;
             }
             // column op!
-            bool colFlag( (abMat.entry(i,j0) % abelianized->getInvariantFactor(i)).abs() <
-                          (abMat.entry(i,j1) % abelianized->getInvariantFactor(i)).abs() );
+            bool colFlag( (abMat.entry(i,j0) % abelianized->invariantFactor(i)).abs() <
+                          (abMat.entry(i,j1) % abelianized->invariantFactor(i)).abs() );
             NLargeInteger q = abMat.entry(i,colFlag ? j1 : j0) /
                               abMat.entry(i,colFlag ? j0 : j1);
 

@@ -717,7 +717,7 @@ std::unique_ptr<NMarkedAbelianGroup> NMarkedAbelianGroup::torsionSubgroup()
     NMatrixInt dM(1, countInvariantFactors() );
     NMatrixInt dN(countInvariantFactors(), countInvariantFactors() );
     for (unsigned long i=0; i<countInvariantFactors(); i++)
-        dN.entry(i,i) = getInvariantFactor(i);
+        dN.entry(i,i) = invariantFactor(i);
     return std::unique_ptr<NMarkedAbelianGroup>(new NMarkedAbelianGroup(dM, dN));
 }
 
@@ -896,7 +896,7 @@ void NHomMarkedAbelianGroup::computeReducedKernelLattice() {
             range.countInvariantFactors() );
         for (unsigned long i=0; i<dcL.size(); i++)
             if (i<range.countInvariantFactors())
-                dcL[i]=range.getInvariantFactor(i);
+                dcL[i]=range.invariantFactor(i);
             else
                 dcL[i]=NLargeInteger::zero;
 
@@ -925,7 +925,7 @@ void NHomMarkedAbelianGroup::computeKernel() {
         for (unsigned long i=0;i<workMat.rows();i++)
             for (unsigned long j=0;j<workMat.columns();j++)
                 for (unsigned long k=0;k<R.columns();k++) {
-                    workMat.entry(i,j) += (domain.getInvariantFactor(j) *
+                    workMat.entry(i,j) += (domain.invariantFactor(j) *
                         R.entry(i,k) * C.entry(k,j) ) / dcLpreimage.entry(k,k);
                 }
 
@@ -949,7 +949,7 @@ void NHomMarkedAbelianGroup::computeCokernel() {
                 ccrelators.entry(i,j)=reducedMatrix->entry(i,j);
         for (i=0;i<range.countInvariantFactors();i++)
             ccrelators.entry(i,i+reducedMatrix->columns())=
-                range.getInvariantFactor(i);
+                range.invariantFactor(i);
 
         NMatrixInt ccgenerators( 1, reducedMatrix->rows() );
 
@@ -968,7 +968,7 @@ void NHomMarkedAbelianGroup::computeImage() {
             dcLpreimage.columns() + domain.countInvariantFactors() );
 
         for (unsigned long i=0;i<domain.countInvariantFactors();i++)
-            imgCCn.entry(i,i) = domain.getInvariantFactor(i);
+            imgCCn.entry(i,i) = domain.invariantFactor(i);
 
         for (unsigned long i=0;i<imgCCn.rows();i++)
             for (unsigned long j=0;j< dcLpreimage.columns(); j++)
@@ -1015,8 +1015,8 @@ std::vector<NLargeInteger> NHomMarkedAbelianGroup::evalSNF(
         for (unsigned long j=0; j<getReducedMatrix().columns(); j++) 
             retval[i] += input[j] * getReducedMatrix().entry(i,j);
         if ( i < range.countInvariantFactors() ) { 
-            retval[i] %= range.getInvariantFactor(i);
-            if (retval[i]<0) retval[i] += range.getInvariantFactor(i); }
+            retval[i] %= range.invariantFactor(i);
+            if (retval[i]<0) retval[i] += range.invariantFactor(i); }
     }
     return retval;
 }
@@ -1198,7 +1198,7 @@ std::unique_ptr<NHomMarkedAbelianGroup> NHomMarkedAbelianGroup::inverseHom() con
  // and Dold is the old D.
  std::vector<NLargeInteger> invF(domain.countInvariantFactors());
  for (unsigned long i=0; i<invF.size(); i++) 
-    invF[i] = domain.getInvariantFactor(i);
+    invF[i] = domain.invariantFactor(i);
  std::unique_ptr<NMatrixInt> Ai = torsionAutInverse( A, invF);
  // then Bi is given by Bi = -AiBDi
     NMatrixInt Bi(range.countInvariantFactors(), domain.rank());
@@ -1218,13 +1218,13 @@ std::unique_ptr<NHomMarkedAbelianGroup> NHomMarkedAbelianGroup::inverseHom() con
     {
      for (unsigned long j=0; j<Ai->columns(); j++)
       {
-       Ai->entry(i,j) %= domain.getInvariantFactor(i); 
-       if (Ai->entry(i,j) < 0) Ai->entry(i,j) += domain.getInvariantFactor(i);
+       Ai->entry(i,j) %= domain.invariantFactor(i);
+       if (Ai->entry(i,j) < 0) Ai->entry(i,j) += domain.invariantFactor(i);
       }
      for (unsigned long j=0; j<Bi.columns(); j++)
       {
-       Bi.entry(i,j) %= domain.getInvariantFactor(i); 
-       if (Bi.entry(i,j) < 0) Bi.entry(i,j) += domain.getInvariantFactor(i);
+       Bi.entry(i,j) %= domain.invariantFactor(i);
+       if (Bi.entry(i,j) < 0) Bi.entry(i,j) += domain.invariantFactor(i);
       }
     }
  // compute the coefficients of invMat.  We're in the funny situation where we 

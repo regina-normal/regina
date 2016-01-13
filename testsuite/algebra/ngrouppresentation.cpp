@@ -251,16 +251,16 @@ class NGroupPresentationTest : public CppUnit::TestFixture {
                         // check in temp if dj | entry(j) for all j != k
                         // and             GCD(dj,entry(j)) == 1  j == k
                         if (k==j) {
-                            if (temp[k].gcd( mab->getInvariantFactor(k) )!=
+                            if (temp[k].gcd( mab->invariantFactor(k) )!=
                                     NLargeInteger::one)
                                 CPPUNIT_FAIL("NGroupPresentation: homologicalAlignment Error 1.");
                         } else if ( k < N ) {
-                            if ( temp[k] % mab->getInvariantFactor(k) != 
+                            if ( temp[k] % mab->invariantFactor(k) !=
                                     NLargeInteger::zero )
                                 CPPUNIT_FAIL("NGroupPresentation: homologicalAlignment Error 2.");
                         } else if ( temp[k] != NLargeInteger::zero )
                             CPPUNIT_FAIL("NGroupPresentation: homologicalAlignment Error 3.");
-                        // dj divides entry(j) for all j!=k, 
+                        // dj divides entry(j) for all j!=k,
                         // and GCD(dk,entry(k)==1.
                         continue;
                     }
@@ -268,10 +268,10 @@ class NGroupPresentationTest : public CppUnit::TestFixture {
                     // case 2: column should be delta_ij
                     if (j<M) {  // entry
                         if (k==j) {
-                            if (temp[k].abs() != NLargeInteger::one) 
+                            if (temp[k].abs() != NLargeInteger::one)
                                 CPPUNIT_FAIL("NGroupPresentation: homologicalAlignment Error 4.");
                         } else if (k<N) {
-                            if (temp[k] % mab->getInvariantFactor(k) !=
+                            if (temp[k] % mab->invariantFactor(k) !=
                                     NLargeInteger::zero )
                                 CPPUNIT_FAIL("NGroupPresentation: homologicalAlignment Error 5.");
                         } else if (temp[k] != NLargeInteger::zero)
@@ -281,7 +281,7 @@ class NGroupPresentationTest : public CppUnit::TestFixture {
 
                     // case 3: column should be zero (modulo d's)
                     if (k<N) {
-                        if (temp[k] % mab->getInvariantFactor(k) !=
+                        if (temp[k] % mab->invariantFactor(k) !=
                                 NLargeInteger::zero )
                             CPPUNIT_FAIL("NGroupPresentation: homologicalAlignment Error 7.");
                     } else if (temp[k] != NLargeInteger::zero)

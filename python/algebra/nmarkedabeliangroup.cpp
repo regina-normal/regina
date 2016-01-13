@@ -154,6 +154,8 @@ void addNMarkedAbelianGroup() {
             &NMarkedAbelianGroup::countInvariantFactors)
         .def("getNumberOfInvariantFactors",
             &NMarkedAbelianGroup::getNumberOfInvariantFactors)
+        .def("invariantFactor", &NMarkedAbelianGroup::invariantFactor,
+            return_value_policy<return_by_value>())
         .def("getInvariantFactor", &NMarkedAbelianGroup::getInvariantFactor,
             return_value_policy<return_by_value>())
         .def("isTrivial", &NMarkedAbelianGroup::isTrivial)
