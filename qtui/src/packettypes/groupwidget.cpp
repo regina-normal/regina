@@ -184,7 +184,7 @@ void GroupWidget::refresh(const regina::NGroupPresentation* group) {
         for (long i = 0; i < nRels; ++i) {
             QString rel;
             const std::list<regina::NGroupExpressionTerm>& terms(
-                group_->getRelation(i).getTerms());
+                group_->getRelation(i).terms());
             if (terms.empty())
                 rel = "1";
             else {

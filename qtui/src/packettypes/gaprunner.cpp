@@ -324,7 +324,7 @@ QString GAPRunner::origGroupRelns() {
     QString ans = "[ ";
     for (unsigned long i = 0; i < nRels; i++) {
         const regina::NGroupExpression& reln(origGroup.getRelation(i));
-        if (reln.getTerms().empty())
+        if (reln.terms().empty())
             continue;
 
         // It's a non-empty relation.  Include it.
@@ -342,7 +342,7 @@ QString GAPRunner::origGroupReln(const regina::NGroupExpression& reln) {
     // Assumes the relation is non-empty.
     QString ans = "";
     std::list<regina::NGroupExpressionTerm>::const_iterator it;
-    for (it = reln.getTerms().begin(); it != reln.getTerms().end(); it++) {
+    for (it = reln.terms().begin(); it != reln.terms().end(); it++) {
         if (! ans.isEmpty())
             ans += " * ";
         ans += QString("f.%1^%2").arg(it->generator + 1).arg(it->exponent);

@@ -1916,7 +1916,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 // Must have H1 = (2g)Z.
                 if (bdry.countInvariantFactors() != 0)
                     return false;
-                if (bdry.getRank() != 2 * h1.getRank() - 2)
+                if (bdry.rank() != 2 * h1.rank() - 2)
                     return false;
             } else if (h1.countInvariantFactors() == 1) {
                 // Must have H1 = Z_2 + (g-1)Z.
@@ -1924,14 +1924,14 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                     return false;
 
                 if (bdry.countInvariantFactors() == 0) {
-                    if (bdry.getRank() != 2 * h1.getRank())
+                    if (bdry.rank() != 2 * h1.rank())
                         return false;
                 } else {
                     if (bdry.countInvariantFactors() != 1)
                         return false;
                     if (bdry.getInvariantFactor(0) != 2)
                         return false;
-                    if (bdry.getRank() != 2 * h1.getRank() - 1)
+                    if (bdry.rank() != 2 * h1.rank() - 1)
                         return false;
                 }
             } else
@@ -1970,7 +1970,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
             if (h1.countInvariantFactors() == 0) {
                 // Must have H1 = (k)Z.
-                if (bdry.getRank() != 2 * h1.getRank())
+                if (bdry.rank() != 2 * h1.rank())
                     return false;
                 if (bdry.countInvariantFactors() != 0)
                     return false;
@@ -1978,7 +1978,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 // Must have H1 = Z_2 + (k)Z.
                 if (h1.getInvariantFactor(0) != 2)
                     return false;
-                if (bdry.getRank() != 2 * h1.getRank())
+                if (bdry.rank() != 2 * h1.rank())
                     return false;
                 if (bdry.countInvariantFactors() != 2)
                     return false;
