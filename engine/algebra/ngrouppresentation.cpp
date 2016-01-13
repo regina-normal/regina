@@ -1678,7 +1678,7 @@ NGroupPresentation::identifyExtensionOverZ()
     // step 1: let's build the abelianization homomorphism.
     homologicalAlignment();
     std::unique_ptr< NMarkedAbelianGroup > abelianized( markedAbelianisation() );
-    if (abelianized->getRank() != 1) return
+    if (abelianized->rank() != 1) return
             std::unique_ptr< NHomGroupPresentation >();
     if (abelianized->countInvariantFactors()>0)  // put Z generator at 0-th
         nielsenTransposition(0, abelianized->countInvariantFactors() );

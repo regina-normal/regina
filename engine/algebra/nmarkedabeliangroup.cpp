@@ -583,7 +583,7 @@ bool NMarkedAbelianGroup::isBoundary(
 { 
     if (input.size() != OM.columns()) return false;
     std::vector<NLargeInteger> snF(snfRep(input));
-    if (snF.size() != countInvariantFactors() + getRank()) return false;
+    if (snF.size() != countInvariantFactors() + rank()) return false;
     for (unsigned long i=0; i<snF.size(); i++) if (snF[i]!=0) return false;
     return true;
 }
@@ -892,7 +892,7 @@ void NHomMarkedAbelianGroup::computeReducedKernelLattice() {
         computeReducedMatrix();
         const NMatrixInt& redMatrix(*reducedMatrix);
 
-        std::vector<NLargeInteger> dcL(range.getRank() +
+        std::vector<NLargeInteger> dcL(range.rank() +
             range.countInvariantFactors() );
         for (unsigned long i=0; i<dcL.size(); i++)
             if (i<range.countInvariantFactors())
@@ -1170,12 +1170,12 @@ std::unique_ptr<NHomMarkedAbelianGroup> NHomMarkedAbelianGroup::inverseHom() con
      new NHomMarkedAbelianGroup( invMat, range, domain ));
  // get A, B, D from reducedMatrix
  // A must be square with domain/range.countInvariantFactors() columns
- // D must be square with domain/range.getRank() columns
- // B may not be square with domain.getRank() columns and 
+ // D must be square with domain/range.rank() columns
+ // B may not be square with domain.rank() columns and
  //  range.countInvariantFactors() rows.
  NMatrixInt A(range.countInvariantFactors(), domain.countInvariantFactors());
- NMatrixInt B(range.countInvariantFactors(), domain.getRank());
- NMatrixInt D(range.getRank(), domain.getRank());
+ NMatrixInt B(range.countInvariantFactors(), domain.rank());
+ NMatrixInt D(range.rank(), domain.rank());
  for (unsigned long i=0; i<A.rows(); i++) 
    for (unsigned long j=0; j<A.columns(); j++)
      A.entry(i,j) = reducedMatrix->entry(i,j);
@@ -1201,8 +1201,8 @@ std::unique_ptr<NHomMarkedAbelianGroup> NHomMarkedAbelianGroup::inverseHom() con
     invF[i] = domain.getInvariantFactor(i);
  std::unique_ptr<NMatrixInt> Ai = torsionAutInverse( A, invF);
  // then Bi is given by Bi = -AiBDi
-    NMatrixInt Bi(range.countInvariantFactors(), domain.getRank());
-    NMatrixInt Btemp(range.countInvariantFactors(), domain.getRank());
+    NMatrixInt Bi(range.countInvariantFactors(), domain.rank());
+    NMatrixInt Btemp(range.countInvariantFactors(), domain.rank());
     // Btemp will give -BDi
     // Bi will be AiBtemp
     for (unsigned long i=0; i<Btemp.rows(); i++) 

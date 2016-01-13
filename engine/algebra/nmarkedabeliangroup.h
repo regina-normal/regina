@@ -228,6 +228,13 @@ class REGINA_API NMarkedAbelianGroup :
          *
          * @return the rank of the group.
          */
+        unsigned long rank() const;
+        /**
+         * Deprecated routine that returns the rank of the group.
+         *
+         * \deprecated This routine has been renamed to rank().
+         * See the rank() documentation for further details.
+         */
         unsigned long getRank() const;
 
         /**
@@ -392,7 +399,7 @@ class REGINA_API NMarkedAbelianGroup :
          * \ifacespython The return value will be a python list.
          *
          * @param index specifies which free generator to look up;
-         * this must be between 0 and getRank()-1 inclusive.
+         * this must be between 0 and rank()-1 inclusive.
          * @return the coordinates of the free generator in the nullspace of
          * \a M; this vector will have length M.columns() (or
          * equivalently, N.rows()). If this generator does not exist, 
@@ -595,7 +602,7 @@ class REGINA_API NMarkedAbelianGroup :
          * When it is constructed, this group is computed to be isomorphic to
          * some Z_{d0} + ... + Z_{dk} + Z^d, where:
          *
-         * - \a d is the number of free generators, as returned by getRank();
+         * - \a d is the number of free generators, as returned by rank();
          * - \a d1, ..., \a dk are the invariant factors that describe the
          *   torsion elements of the group, where
          *   1 < \a d1 | \a d2 | ... | \a dk.
@@ -1192,7 +1199,7 @@ class REGINA_API NHomMarkedAbelianGroup :
          *             Z^d + Z_{d0} + ... + Z_{dk}
          * where:
          *
-         * - \a d is the number of free generators, as returned by getRank();
+         * - \a d is the number of free generators, as returned by rank();
          * - \a d1, ..., \a dk are the invariant factors that describe the
          *   torsion elements of the group, where
          *   1 < \a d1 | \a d2 | ... | \a dk.
@@ -1342,6 +1349,10 @@ inline size_t NMarkedAbelianGroup::getNumberOfInvariantFactors() const {
 inline const NLargeInteger& NMarkedAbelianGroup::getInvariantFactor(
         size_t index) const {
     return InvFacList[index];
+}
+
+inline unsigned long NMarkedAbelianGroup::rank() const {
+    return snfrank;
 }
 
 inline unsigned long NMarkedAbelianGroup::getRank() const {
