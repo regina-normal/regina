@@ -245,11 +245,11 @@ NNormalHypersurfaceList* NNormalHypersurfaceList::enumerateFundDual(
 }
 
 Dim4Triangulation* NNormalHypersurfaceList::triangulation() const {
-    return dynamic_cast<Dim4Triangulation*>(getTreeParent());
+    return dynamic_cast<Dim4Triangulation*>(parent());
 }
 
 Dim4Triangulation* NNormalHypersurfaceList::getTriangulation() const {
-    return dynamic_cast<Dim4Triangulation*>(getTreeParent());
+    return dynamic_cast<Dim4Triangulation*>(parent());
 }
 
 namespace {
