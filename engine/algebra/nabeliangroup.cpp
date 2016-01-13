@@ -37,7 +37,7 @@
 
 namespace regina {
 
-const NLargeInteger& NAbelianGroup::getInvariantFactor(size_t index) const {
+const NLargeInteger& NAbelianGroup::invariantFactor(size_t index) const {
     std::multiset<NLargeInteger>::const_iterator it = invariantFactors.begin();
     advance(it, index);
     return *it;

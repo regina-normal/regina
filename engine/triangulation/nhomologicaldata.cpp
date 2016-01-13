@@ -1880,8 +1880,8 @@ bool NHomologicalData::formIsHyperbolic() {
     // check invariant factors agree in pairs, if so call
     // computeTorsionLinkingForm
     for (unsigned long i=0;i<(nif/2);i++) {
-        if (tri->getHomologyH1().getInvariantFactor(2*i) <
-                tri->getHomologyH1().getInvariantFactor((2*i)+1))
+        if (tri->getHomologyH1().invariantFactor(2*i) <
+                tri->getHomologyH1().invariantFactor((2*i)+1))
             return false;
     }
 

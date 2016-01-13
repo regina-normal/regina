@@ -1716,7 +1716,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             else {
                 // Ranks match.
                 if (g.countInvariantFactors() != 1 ||
-                        g.getInvariantFactor(0) != torsionDegree)
+                        g.invariantFactor(0) != torsionDegree)
                     CPPUNIT_FAIL(msg.str());
             }
         }
@@ -1739,8 +1739,8 @@ class NTriangulationTest : public TriangulationTest<3> {
             else {
                 // Ranks match.
                 if (g.countInvariantFactors() != 2 ||
-                        g.getInvariantFactor(0) != torsionDegree1 ||
-                        g.getInvariantFactor(1) != torsionDegree2)
+                        g.invariantFactor(0) != torsionDegree1 ||
+                        g.invariantFactor(1) != torsionDegree2)
                     CPPUNIT_FAIL(msg.str());
             }
         }
@@ -1764,9 +1764,9 @@ class NTriangulationTest : public TriangulationTest<3> {
             else {
                 // Ranks match.
                 if (g.countInvariantFactors() != 3 ||
-                        g.getInvariantFactor(0) != torsionDegree1 ||
-                        g.getInvariantFactor(1) != torsionDegree2 ||
-                        g.getInvariantFactor(2) != torsionDegree3)
+                        g.invariantFactor(0) != torsionDegree1 ||
+                        g.invariantFactor(1) != torsionDegree2 ||
+                        g.invariantFactor(2) != torsionDegree3)
                     CPPUNIT_FAIL(msg.str());
             }
         }

@@ -118,6 +118,8 @@ void addNAbelianGroup() {
         .def("countInvariantFactors", &NAbelianGroup::countInvariantFactors)
         .def("getNumberOfInvariantFactors",
             &NAbelianGroup::getNumberOfInvariantFactors)
+        .def("invariantFactor", &NAbelianGroup::invariantFactor,
+            return_value_policy<return_by_value>())
         .def("getInvariantFactor", &NAbelianGroup::getInvariantFactor,
             return_value_policy<return_by_value>())
         .def("isTrivial", &NAbelianGroup::isTrivial)

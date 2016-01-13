@@ -1920,7 +1920,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                     return false;
             } else if (h1.countInvariantFactors() == 1) {
                 // Must have H1 = Z_2 + (g-1)Z.
-                if (h1.getInvariantFactor(0) != 2)
+                if (h1.invariantFactor(0) != 2)
                     return false;
 
                 if (bdry.countInvariantFactors() == 0) {
@@ -1929,7 +1929,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 } else {
                     if (bdry.countInvariantFactors() != 1)
                         return false;
-                    if (bdry.getInvariantFactor(0) != 2)
+                    if (bdry.invariantFactor(0) != 2)
                         return false;
                     if (bdry.rank() != 2 * h1.rank() - 1)
                         return false;
@@ -1976,15 +1976,15 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                     return false;
             } else if (h1.countInvariantFactors() == 1) {
                 // Must have H1 = Z_2 + (k)Z.
-                if (h1.getInvariantFactor(0) != 2)
+                if (h1.invariantFactor(0) != 2)
                     return false;
                 if (bdry.rank() != 2 * h1.rank())
                     return false;
                 if (bdry.countInvariantFactors() != 2)
                     return false;
-                if (bdry.getInvariantFactor(0) != 2)
+                if (bdry.invariantFactor(0) != 2)
                     return false;
-                if (bdry.getInvariantFactor(1) != 2)
+                if (bdry.invariantFactor(1) != 2)
                     return false;
             } else
                 return false;
