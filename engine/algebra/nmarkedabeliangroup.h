@@ -737,7 +737,7 @@ class REGINA_API NMarkedAbelianGroup :
          * is defined by matrices \a M and \a N, where M*N = 0.
          *
          * - MCB() * M * MRB() is the Smith normal form of \a M;
-         * - getMCBi() and MRBi() are the inverses of MCB() and MRB()
+         * - MCBi() and MRBi() are the inverses of MCB() and MRB()
          *   respectively.
          *
          * \deprecated This routine will be removed in Regina 5.0.
@@ -764,7 +764,7 @@ class REGINA_API NMarkedAbelianGroup :
          * is defined by matrices \a M and \a N, where M*N = 0.
          *
          * - MCB() * M * MRB() is the Smith normal form of \a M;
-         * - getMCBi() and MRBi() are the inverses of MCB() and MRB()
+         * - MCBi() and MRBi() are the inverses of MCB() and MRB()
          *   respectively.
          *
          * \deprecated This routine will be removed in Regina 5.0.
@@ -790,7 +790,7 @@ class REGINA_API NMarkedAbelianGroup :
          * is defined by matrices \a M and \a N, where M*N = 0.
          *
          * - MCB() * M * MRB() is the Smith normal form of \a M;
-         * - getMCBi() and MRBi() are the inverses of MCB() and MRB()
+         * - MCBi() and MRBi() are the inverses of MCB() and MRB()
          *   respectively.
          *
          * \deprecated This routine will be removed in Regina 5.0.
@@ -817,12 +817,20 @@ class REGINA_API NMarkedAbelianGroup :
          * is defined by matrices \a M and \a N, where M*N = 0.
          *
          * - MCB() * M * MRB() is the Smith normal form of \a M;
-         * - getMCBi() and MRBi() are the inverses of MCB() and MRB()
+         * - MCBi() and MRBi() are the inverses of MCB() and MRB()
          *   respectively.
          *
          * \deprecated This routine will be removed in Regina 5.0.
          *
          * @return the matrix MCBi() as described above.
+         */
+        const NMatrixInt& MCBi() const;
+        /**
+         * Deprecated routine that returns an inverse change-of-basis matrix
+         * for the Smith normal form of \a M.
+         *
+         * \deprecated This routine has been renamed to MCBi().
+         * See the MCBi() documentation for further details.
          */
         const NMatrixInt& getMCBi() const;
         /**
@@ -1496,6 +1504,9 @@ inline const NMatrixInt& NMarkedAbelianGroup::MCB() const {
 }
 inline const NMatrixInt& NMarkedAbelianGroup::getMCB() const {
     return OMC;
+}
+inline const NMatrixInt& NMarkedAbelianGroup::MCBi() const {
+    return OMCi;
 }
 inline const NMatrixInt& NMarkedAbelianGroup::getMCBi() const {
     return OMCi;
