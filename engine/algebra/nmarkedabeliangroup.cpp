@@ -252,7 +252,7 @@ bool NMarkedAbelianGroup::isChainComplex() const
     return true;
 }
 
-unsigned long NMarkedAbelianGroup::getTorsionRank(const NLargeInteger& degree)
+unsigned long NMarkedAbelianGroup::torsionRank(const NLargeInteger& degree)
         const {
     unsigned long ans = 0;
     for (unsigned long i=0;i<InvFacList.size();i++) {

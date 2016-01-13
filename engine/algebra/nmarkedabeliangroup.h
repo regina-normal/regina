@@ -253,7 +253,7 @@ class REGINA_API NMarkedAbelianGroup :
          * @param degree the degree of the torsion term to query.
          * @return the rank in the group of the given torsion term.
          */
-        unsigned long getTorsionRank(const NLargeInteger& degree) const;
+        unsigned long torsionRank(const NLargeInteger& degree) const;
 
         /**
          * Returns the rank in the group of the torsion term of given degree.
@@ -271,7 +271,27 @@ class REGINA_API NMarkedAbelianGroup :
          * @param degree the degree of the torsion term to query.
          * @return the rank in the group of the given torsion term.
          */
+        unsigned long torsionRank(unsigned long degree) const;
+
+        /**
+         * Deprecated routine that returns the rank in the group of the torsion
+         * term of given degree.
+         *
+         * \deprecated This routine has been renamed to
+         * torsionRank(unsigned long) const.
+         * See the torsionRank(unsigned long) const for further details.
+         */
         unsigned long getTorsionRank(unsigned long degree) const;
+
+        /**
+         * Deprecated routine that returns the rank in the group of the torsion
+         * term of given degree.
+         *
+         * \deprecated This routine has been renamed to
+         * torsionRank(const NLargeInteger&) const.
+         * See the torsionRank(const NLargeInteger&) const for further details.
+         */
+        unsigned long getTorsionRank(const NLargeInteger& degree) const;
 
         /**
          * Returns the number of invariant factors that describe the
@@ -1333,9 +1353,19 @@ inline NMarkedAbelianGroup::NMarkedAbelianGroup(const NMarkedAbelianGroup& g) :
         tensorIfNum(g.tensorIfNum), tensorInvFacList(g.tensorInvFacList) {
 }
 
+inline unsigned long NMarkedAbelianGroup::torsionRank(unsigned long degree)
+        const {
+    return torsionRank(NLargeInteger(degree));
+}
+
 inline unsigned long NMarkedAbelianGroup::getTorsionRank(unsigned long degree)
         const {
-    return getTorsionRank(NLargeInteger(degree));
+    return torsionRank(NLargeInteger(degree));
+}
+
+inline unsigned long NMarkedAbelianGroup::getTorsionRank(
+        const NLargeInteger& degree) const {
+    return torsionRank(degree);
 }
 
 inline size_t NMarkedAbelianGroup::countInvariantFactors() const {
