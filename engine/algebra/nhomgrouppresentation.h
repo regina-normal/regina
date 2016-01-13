@@ -162,6 +162,13 @@ class REGINA_API NHomGroupPresentation :
          *
          * @return a reference to the domain.
          */
+        const NGroupPresentation& domain() const;
+        /**
+         * Deprecated routine that returns the domain of the map.
+         *
+         * \deprecated This routine has been renamed to domain().
+         * See the domain() documentation for further details.
+         */
         const NGroupPresentation& getDomain() const;
         /**
          * The range of the map.
@@ -424,6 +431,10 @@ inline NHomGroupPresentation::~NHomGroupPresentation() {
         delete inv_;
     }
     delete domain_; delete range_;
+}
+
+inline const NGroupPresentation& NHomGroupPresentation::domain() const {
+    return *domain_;
 }
 
 inline const NGroupPresentation& NHomGroupPresentation::getDomain() const {

@@ -249,11 +249,11 @@ std::string NGroupPresentation::recogniseGroup() const {
             presCopy.identifyExtensionOverZ() );
         if (AUT.get() != nullptr) {
             // Let's try to identify the fibre.
-            std::string domStr( AUT.get()->getDomain().recogniseGroup() );
+            std::string domStr( AUT.get()->domain().recogniseGroup() );
             if (domStr.length()>0) {
                 out<<"Z~"<<domStr<<" w/monodromy ";
             unsigned long numGen(
-                AUT.get()->getDomain().countGenerators() );
+                AUT.get()->domain().countGenerators() );
             for (unsigned long i=0; i<numGen; i++) {
               if (i!=0) out<<", ";
               if (numGen<27) out<<( (char) (i+97) );
@@ -1917,23 +1917,23 @@ NGroupPresentation::identifyExtensionOverZ()
     // deallocate relations, and resize and repopulate with copies of kerPres's
     //  relations.
 
-    nGenerators = retval->getDomain().nGenerators + 1;
+    nGenerators = retval->domain().nGenerators + 1;
     for (unsigned long i=0; i<relations.size(); i++)
         delete relations[i];
-    relations.resize( retval->getDomain().nGenerators +
-                      retval->getDomain().relations.size() );
+    relations.resize( retval->domain().nGenerators +
+                      retval->domain().relations.size() );
 
-    for (unsigned long i=0; i<retval->getDomain().relations.size(); i++)
-        relations[i] = new NGroupExpression( *retval->getDomain().relations[i] );
+    for (unsigned long i=0; i<retval->domain().relations.size(); i++)
+        relations[i] = new NGroupExpression( *retval->domain().relations[i] );
 
     // And now all the b^-1g_ib = genKiller(i) and b^-1g_ib = g_{i+1} relations.
-    for (unsigned long i=0; i<retval->getDomain().nGenerators; i++) {
+    for (unsigned long i=0; i<retval->domain().nGenerators; i++) {
         NGroupExpression* temp;
         temp = new NGroupExpression( retval->evaluate(i) );
-        temp->addTermFirst( retval->getDomain().nGenerators, 1);
+        temp->addTermFirst( retval->domain().nGenerators, 1);
         temp->addTermFirst( i, -1);
-        temp->addTermFirst( retval->getDomain().nGenerators, -1);
-        relations[ i+retval->getDomain().relations.size() ] = temp;
+        temp->addTermFirst( retval->domain().nGenerators, -1);
+        relations[ i+retval->domain().relations.size() ] = temp;
     }
 
     return retval;
