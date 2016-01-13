@@ -361,7 +361,7 @@ class REGINA_API NGroupExpression :
          * between 0 and countTerms()-1 inclusive.
          * @return the requested term.
          */
-        NGroupExpressionTerm& getTerm(size_t index);
+        NGroupExpressionTerm& term(size_t index);
         /**
          * Returns a constant reference to the term at the given
          * index in this expression.
@@ -377,6 +377,22 @@ class REGINA_API NGroupExpression :
          * @param index the index of the term to return; this must be
          * between 0 and countTerms()-1 inclusive.
          * @return the requested term.
+         */
+        const NGroupExpressionTerm& term(size_t index) const;
+        /**
+         * Deprecated routine that returns the term at the given index in this
+         * expression.
+         *
+         * \deprecated This routine has been renamed to term().
+         * See the term() documentation for further details.
+         */
+        NGroupExpressionTerm& getTerm(size_t index);
+        /**
+         * Deprecated routine that returns a constant reference to the term at
+         * the given index in this expression.
+         *
+         * \deprecated This routine has been renamed to term(size_t) const.
+         * See the term(size_t) const documentation for further details.
          */
         const NGroupExpressionTerm& getTerm(size_t index) const;
         /**
@@ -1572,6 +1588,14 @@ inline bool NGroupExpression::isTrivial() const {
     return terms_.empty();
 }
 
+inline NGroupExpressionTerm& NGroupExpression::getTerm(size_t index) {
+    return term(index);
+}
+
+inline const NGroupExpressionTerm& NGroupExpression::getTerm(size_t index) const {
+    return term(index);
+}
+
 inline size_t NGroupExpression::wordLength() const {
     size_t retval(0);
     std::list<NGroupExpressionTerm>::const_iterator it;
@@ -1581,11 +1605,11 @@ inline size_t NGroupExpression::wordLength() const {
 }
 
 inline unsigned long NGroupExpression::getGenerator(size_t index) const {
-    return getTerm(index).generator;
+    return term(index).generator;
 }
 
 inline long NGroupExpression::getExponent(size_t index) const {
-    return getTerm(index).exponent;
+    return term(index).exponent;
 }
 
 inline void NGroupExpression::addTermFirst(const NGroupExpressionTerm& term) {

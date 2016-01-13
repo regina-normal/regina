@@ -65,13 +65,13 @@ std::ostream& operator << (std::ostream& out,
     return out;
 }
 
-NGroupExpressionTerm& NGroupExpression::getTerm(size_t index) {
+NGroupExpressionTerm& NGroupExpression::term(size_t index) {
     TermIterator pos = terms_.begin();
     advance(pos, index);
     return *pos;
 }
 
-const NGroupExpressionTerm& NGroupExpression::getTerm(size_t index) const {
+const NGroupExpressionTerm& NGroupExpression::term(size_t index) const {
     TermIteratorConst pos = terms_.begin();
     advance(pos, index);
     return *pos;
@@ -1425,7 +1425,7 @@ NGroupPresentation::identifyFreeProduct() const
         // decide which relators from *this are relevant.
         for (unsigned long i=0; i<relations.size(); i++) {
             // check if relations[i] generator is in *I
-            if (I->find( relations[i]->getTerm(0).generator)!=I->end()) { // yes!
+            if (I->find( relations[i]->term(0).generator)!=I->end()) { // yes!
                 NGroupExpression* newRel( new NGroupExpression );
                 for (std::list<NGroupExpressionTerm>::const_iterator
                         ET=relations[i]->terms().begin();
@@ -2133,7 +2133,7 @@ std::unique_ptr<NHomGroupPresentation> NGroupPresentation::prettyRewritingDetail
                     j!=relations[i]->terms().end(); j++)
                 usedTerms.insert( j->generator );
             unsigned long smallestGen( *usedTerms.begin() );
-            while ( relations[i]->getTerm(0).generator != smallestGen )
+            while ( relations[i]->term(0).generator != smallestGen )
                 relations[i]->cycleRight();
         }
 

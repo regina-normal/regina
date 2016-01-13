@@ -55,6 +55,8 @@ namespace {
         &NGroupExpression::addTermLast;
     NGroupExpressionTerm& (NGroupExpression::*getTerm_non_const)(
         unsigned long) = &NGroupExpression::getTerm;
+    NGroupExpressionTerm& (NGroupExpression::*term_non_const)(
+        unsigned long) = &NGroupExpression::term;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplify,
         NGroupExpression::simplify, 0, 1);
@@ -133,6 +135,7 @@ void addNGroupPresentation() {
         .def("isTrivial", &NGroupExpression::isTrivial)
         .def("erase", &NGroupExpression::erase)
         .def("getTerm", getTerm_non_const, return_internal_reference<>())
+        .def("term", term_non_const, return_internal_reference<>())
         .def("getGenerator", &NGroupExpression::getGenerator)
         .def("getExponent", &NGroupExpression::getExponent)
         .def("addTermFirst", addTermFirst_term)

@@ -61,7 +61,7 @@ NGroupExpression NHomGroupPresentation::evaluate(
    NGroupExpression retval(arg);
    unsigned long N( range_->countGenerators() );
    for (unsigned long i=0; i<retval.countTerms(); i++)
-       retval.getTerm(i).generator += N;
+       retval.term(i).generator += N;
    for (unsigned long i=0; i<map_.size(); i++)
        retval.substitute( N+i, *map_[i] );
    return retval;
@@ -73,7 +73,7 @@ NGroupExpression NHomGroupPresentation::invEvaluate(
    NGroupExpression retval(arg);
    unsigned long N( domain_->countGenerators() );
    for (unsigned long i=0; i<retval.countTerms(); i++)
-       retval.getTerm(i).generator += N;
+       retval.term(i).generator += N;
    for (unsigned long i=0; i<inv_->size(); i++)
        retval.substitute( N+i, *(*inv_)[i] );
    return retval;
