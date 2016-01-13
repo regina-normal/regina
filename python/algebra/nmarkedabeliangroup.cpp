@@ -79,7 +79,7 @@ namespace {
 
     boost::python::list snfRep_list_list(
             const NMarkedAbelianGroup& g, boost::python::list element) {
-        unsigned long needLen = g.getM().columns();
+        unsigned long needLen = g.M().columns();
 
         if (boost::python::len(element) != needLen) {
             PyErr_SetString(PyExc_IndexError,
@@ -205,10 +205,17 @@ void addNMarkedAbelianGroup() {
             return_internal_reference<>())
         .def("getNCBi", &NMarkedAbelianGroup::getNCBi,
             return_internal_reference<>())
+        .def("rankM", &NMarkedAbelianGroup::rankM)
         .def("getRankM", &NMarkedAbelianGroup::getRankM)
+        .def("freeLoc", &NMarkedAbelianGroup::freeLoc)
         .def("getFreeLoc", &NMarkedAbelianGroup::getFreeLoc)
+        .def("torsionLoc", &NMarkedAbelianGroup::torsionLoc)
         .def("getTorsionLoc", &NMarkedAbelianGroup::getTorsionLoc)
+        .def("M", &NMarkedAbelianGroup::M,
+            return_internal_reference<>())
         .def("getM", &NMarkedAbelianGroup::getM,
+            return_internal_reference<>())
+        .def("N", &NMarkedAbelianGroup::N,
             return_internal_reference<>())
         .def("getN", &NMarkedAbelianGroup::getN,
             return_internal_reference<>())
@@ -237,13 +244,23 @@ void addNMarkedAbelianGroup() {
         .def("isIsomorphism", &NHomMarkedAbelianGroup::isIsomorphism)
         .def("isIdentity", &NHomMarkedAbelianGroup::isIdentity)
         .def("isZero", &NHomMarkedAbelianGroup::isZero)
+        .def("kernel", &NHomMarkedAbelianGroup::kernel,
+            return_internal_reference<>())
         .def("getKernel", &NHomMarkedAbelianGroup::getKernel,
+            return_internal_reference<>())
+        .def("cokernel", &NHomMarkedAbelianGroup::cokernel,
             return_internal_reference<>())
         .def("getCokernel", &NHomMarkedAbelianGroup::getCokernel,
             return_internal_reference<>())
+        .def("image", &NHomMarkedAbelianGroup::image,
+            return_internal_reference<>())
         .def("getImage", &NHomMarkedAbelianGroup::getImage,
             return_internal_reference<>())
+        .def("domain", &NHomMarkedAbelianGroup::domain,
+            return_internal_reference<>())
         .def("getDomain", &NHomMarkedAbelianGroup::getDomain,
+            return_internal_reference<>())
+        .def("range", &NHomMarkedAbelianGroup::range,
             return_internal_reference<>())
         .def("getRange", &NHomMarkedAbelianGroup::getRange,
             return_internal_reference<>())

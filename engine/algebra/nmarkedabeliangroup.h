@@ -952,6 +952,14 @@ class REGINA_API NMarkedAbelianGroup :
          *
          * @return the rank of the defining matrix \a M.
          */
+        unsigned long rankM() const;
+        /**
+         * Deprecated routine that returns the rank of the defining 
+         * matrix \a M.
+         *
+         * \deprecated This routine has been renamed to rankM().
+         * See the rankM() documentation for further details.
+         */
         unsigned long getRankM() const;
 
         /**
@@ -963,6 +971,15 @@ class REGINA_API NMarkedAbelianGroup :
          *
          * @return the index of the first free generator.
          */
+        unsigned long freeLoc() const;
+        /**
+         * Deprecated routine that returns the index of the first free
+         * generator in the Smith normal form of the internal presentation
+         * matrix.
+         *
+         * \deprecated This routine has been renamed to freeLoc().
+         * See the freeLoc() documentation for further details.
+         */
         unsigned long getFreeLoc() const;
 
         /**
@@ -973,6 +990,15 @@ class REGINA_API NMarkedAbelianGroup :
          * \deprecated This routine will be removed in Regina 5.0.
          *
          * @return the index of the first torsion generator.
+         */
+        unsigned long torsionLoc() const;
+        /**
+         * Deprecated routine that returns the index of the first torsion
+         * generator in the Smith normal form of the internal presentation
+         * matrix.
+         *
+         * \deprecated This routine has been renamed to torsionLoc().
+         * See the torsionLoc() documentation for further details.
          */
         unsigned long getTorsionLoc() const;
 
@@ -987,6 +1013,13 @@ class REGINA_API NMarkedAbelianGroup :
          *
          * @return a reference to the defining matrix M.
          */
+        const NMatrixInt& M() const;
+        /**
+         * Returns the `right' matrix used in defining the chain complex.
+         *
+         * \deprecated This routine has been renamed to M().
+         * See the M() documentation for further details.
+         */
         const NMatrixInt& getM() const;
         /**
          * Returns the `left' matrix used in defining the chain complex.
@@ -998,6 +1031,13 @@ class REGINA_API NMarkedAbelianGroup :
          * matrices \a M and \a N and their roles in defining the chain complex.
          *
          * @return a reference to the defining matrix N.
+         */
+        const NMatrixInt& N() const;
+        /**
+         * Returns the `left' matrix used in defining the chain complex.
+         *
+         * \deprecated This routine has been renamed to N().
+         * See the N() documentation for further details.
          */
         const NMatrixInt& getN() const;
         /**
@@ -1072,9 +1112,9 @@ class REGINA_API NHomMarkedAbelianGroup :
         public boost::noncopyable {
     private:
         /** internal rep of domain of the homomorphism */
-        NMarkedAbelianGroup domain;
+        NMarkedAbelianGroup domain_;
         /** internal rep of range of the homomorphism */
-        NMarkedAbelianGroup range;
+        NMarkedAbelianGroup range_;
         /** matrix describing map from domain to range, in the coordinates
             of the chain complexes used to construct domain and range, see
             above description */
@@ -1089,11 +1129,11 @@ class REGINA_API NHomMarkedAbelianGroup :
             factors. */
         NMatrixInt* reducedMatrix;
         /** pointer to kernel of map */
-        NMarkedAbelianGroup* kernel;
+        NMarkedAbelianGroup* kernel_;
         /** pointer to coKernel of map */
-        NMarkedAbelianGroup* coKernel;
+        NMarkedAbelianGroup* coKernel_;
         /** pointer to image */
-        NMarkedAbelianGroup* image;
+        NMarkedAbelianGroup* image_;
         /** pointer to a lattice which describes the kernel of the
             homomorphism. */
         NMatrixInt* reducedKernelLattice;
@@ -1233,6 +1273,14 @@ class REGINA_API NHomMarkedAbelianGroup :
          * @return the kernel of the homomorphism, as a marked abelian group.
          */
         REGINA_INLINE_REQUIRED
+        const NMarkedAbelianGroup& kernel() const;
+        /**
+         * Deprecated routine that returns the kernel of this homomorphism.
+         *
+         * \deprecated This routine has been renamed to kernel().
+         * See the kernel() documentation for further details.
+         */
+        REGINA_INLINE_REQUIRED
         const NMarkedAbelianGroup& getKernel() const;
         /**
          * Returns the cokernel of this homomorphism.
@@ -1240,11 +1288,27 @@ class REGINA_API NHomMarkedAbelianGroup :
          * @return the cokernel of the homomorphism, as a marked abelian group.
          */
         REGINA_INLINE_REQUIRED
+        const NMarkedAbelianGroup& cokernel() const;
+        /**
+         * Deprecated routine that returns the cokernel of this homomorphism.
+         *
+         * \deprecated This routine has been renamed to cokernel().
+         * See the cokernel() documentation for further details.
+         */
+        REGINA_INLINE_REQUIRED
         const NMarkedAbelianGroup& getCokernel() const;
         /**
          * Returns the image of this homomorphism.
          *
          * @return the image of the homomorphism, as a marked abelian group.
+         */
+        REGINA_INLINE_REQUIRED
+        const NMarkedAbelianGroup& image() const;
+        /**
+         * Deprecated routine that returns the image of this homomorphism.
+         *
+         * \deprecated This routine has been renamed to image().
+         * See the image() documentation for further details.
          */
         REGINA_INLINE_REQUIRED
         const NMarkedAbelianGroup& getImage() const;
@@ -1276,11 +1340,25 @@ class REGINA_API NHomMarkedAbelianGroup :
          *
          * @return the domain that was used to define the homomorphism.
          */
+        const NMarkedAbelianGroup& domain() const;
+        /**
+         * Deprecated routine that returns the domain of this homomorphism.
+         *
+         * \deprecated This routine has been renamed to domain().
+         * See the domain() documentation for further details.
+         */
         const NMarkedAbelianGroup& getDomain() const;
         /**
          * Returns the range of this homomorphism.
          *
          * @return the range that was used to define the homomorphism.
+         */
+        const NMarkedAbelianGroup& range() const;
+        /**
+         * Deprecated routine that returns the range of this homomorphism.
+         *
+         * \deprecated This routine has been renamed to domain().
+         * See the domain() documentation for further details.
          */
         const NMarkedAbelianGroup& getRange() const;
         /**
@@ -1317,9 +1395,9 @@ class REGINA_API NHomMarkedAbelianGroup :
          * accessible to Python in a future release.
          *
          * @param input an input vector in the domain chain complex's
-         * coordinates, of length getDomain().getM().columns().
+         * coordinates, of length domain().M().columns().
          * @return the image of this vector in the range chain complex's
-         * coordinates, of length getRange().getM().columns().
+         * coordinates, of length range().M().columns().
          */
         std::vector<NLargeInteger> evalCC(
             const std::vector<NLargeInteger> &input) const; 
@@ -1338,9 +1416,9 @@ class REGINA_API NHomMarkedAbelianGroup :
          * accessible to Python in a future release.
          *
          * @param input an input vector in the domain SNF coordinates,
-         * of length getDomain().minNumberOfGenerators().
+         * of length domain().minNumberOfGenerators().
          * @return the image of this vector in the range chain complex's
-         * coordinates, of length getRange().minNumberOfGenerators().
+         * coordinates, of length range().minNumberOfGenerators().
          */
         std::vector<NLargeInteger> evalSNF(
             const std::vector<NLargeInteger> &input) const;
@@ -1568,18 +1646,33 @@ inline const NMatrixInt& NMarkedAbelianGroup::getNCBi() const {
     return *ornCi;
 }
 
+inline unsigned long NMarkedAbelianGroup::rankM() const {
+    return rankOM;
+}
 inline unsigned long NMarkedAbelianGroup::getRankM() const {
     return rankOM;
 }
+inline unsigned long NMarkedAbelianGroup::freeLoc() const {
+    return snffreeindex;
+}
 inline unsigned long NMarkedAbelianGroup::getFreeLoc() const {
     return snffreeindex;
+}
+inline unsigned long NMarkedAbelianGroup::torsionLoc() const {
+    return ifLoc;
 }
 inline unsigned long NMarkedAbelianGroup::getTorsionLoc() const {
     return ifLoc;
 }
 
+inline const NMatrixInt& NMarkedAbelianGroup::M() const {
+    return OM;
+}
 inline const NMatrixInt& NMarkedAbelianGroup::getM() const {
     return OM;
+}
+inline const NMatrixInt& NMarkedAbelianGroup::N() const {
+    return ON;
 }
 inline const NMatrixInt& NMarkedAbelianGroup::getN() const {
     return ON;
@@ -1594,29 +1687,35 @@ inline NHomMarkedAbelianGroup::NHomMarkedAbelianGroup(
         const NMarkedAbelianGroup& dom,
         const NMarkedAbelianGroup& ran,
         const NMatrixInt &mat) :
-        domain(dom), range(ran), matrix(mat),
-        reducedMatrix(0), kernel(0), coKernel(0), image(0),
+        domain_(dom), range_(ran), matrix(mat),
+        reducedMatrix(0), kernel_(0), coKernel_(0), image_(0),
         reducedKernelLattice(0) {
 }
 
 inline NHomMarkedAbelianGroup::~NHomMarkedAbelianGroup() {
     if (reducedMatrix)
         delete reducedMatrix;
-    if (kernel)
-        delete kernel;
-    if (coKernel)
-        delete coKernel;
-    if (image)
-        delete image;
+    if (kernel_)
+        delete kernel_;
+    if (coKernel_)
+        delete coKernel_;
+    if (image_)
+        delete image_;
     if (reducedKernelLattice)
         delete reducedKernelLattice;
 }
 
+inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::domain() const {
+    return domain_;
+}
 inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getDomain() const {
-    return domain;
+    return domain_;
+}
+inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::range() const {
+    return range_;
 }
 inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getRange() const {
-    return range;
+    return range_;
 }
 inline const NMatrixInt& NHomMarkedAbelianGroup::getDefiningMatrix() const {
     return matrix;
@@ -1631,11 +1730,11 @@ inline const NMatrixInt& NHomMarkedAbelianGroup::getReducedMatrix() const {
 }
 
 inline bool NHomMarkedAbelianGroup::isEpic() const {
-    return getCokernel().isTrivial();
+    return cokernel().isTrivial();
 }
 
 inline bool NHomMarkedAbelianGroup::isMonic() const {
-    return getKernel().isTrivial();
+    return kernel().isTrivial();
 }
 
 inline bool NHomMarkedAbelianGroup::isIso() const {
@@ -1643,11 +1742,19 @@ inline bool NHomMarkedAbelianGroup::isIso() const {
 }
 
 inline bool NHomMarkedAbelianGroup::isIsomorphism() const {
-    return (getCokernel().isTrivial() && getKernel().isTrivial());
+    return (cokernel().isTrivial() && kernel().isTrivial());
 }
 
 inline bool NHomMarkedAbelianGroup::isZero() const {
-    return getImage().isTrivial();
+    return image().isTrivial();
+}
+
+inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::kernel() const {
+    // Cast away const to compute the kernel -- the only reason we're
+    // changing data members now is because we delayed calculations
+    // until they were really required.
+    const_cast<NHomMarkedAbelianGroup*>(this)->computeKernel();
+    return *kernel_;
 }
 
 inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getKernel() const {
@@ -1655,7 +1762,15 @@ inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getKernel() const {
     // changing data members now is because we delayed calculations
     // until they were really required.
     const_cast<NHomMarkedAbelianGroup*>(this)->computeKernel();
-    return *kernel;
+    return *kernel_;
+}
+
+inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::image() const {
+    // Cast away const to compute the kernel -- the only reason we're
+    // changing data members now is because we delayed calculations
+    // until they were really required.
+    const_cast<NHomMarkedAbelianGroup*>(this)->computeImage();
+    return *image_;
 }
 
 inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getImage() const {
@@ -1663,7 +1778,15 @@ inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getImage() const {
     // changing data members now is because we delayed calculations
     // until they were really required.
     const_cast<NHomMarkedAbelianGroup*>(this)->computeImage();
-    return *image;
+    return *image_;
+}
+
+inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::cokernel() const {
+    // Cast away const to compute the kernel -- the only reason we're
+    // changing data members now is because we delayed calculations
+    // until they were really required.
+    const_cast<NHomMarkedAbelianGroup*>(this)->computeCokernel();
+    return *coKernel_;
 }
 
 inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getCokernel() const {
@@ -1671,7 +1794,7 @@ inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getCokernel() const {
     // changing data members now is because we delayed calculations
     // until they were really required.
     const_cast<NHomMarkedAbelianGroup*>(this)->computeCokernel();
-    return *coKernel;
+    return *coKernel_;
 }
 
 } // namespace regina

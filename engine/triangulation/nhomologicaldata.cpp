@@ -1237,7 +1237,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
     //           ppList[j] bounds, so find a chain with that boundary and
     //           put its info in a matrix.
 
-    NMatrixInt ON(mHomology1->getN());
+    NMatrixInt ON(mHomology1->N());
     NMatrixInt R(ON.columns(),ON.columns());
     NMatrixInt Ri(ON.columns(),ON.columns());
     NMatrixInt C(ON.rows(),ON.rows());
@@ -1779,7 +1779,7 @@ void NHomologicalData::computeEmbeddabilityString() {
                             embeddabilityString += "graph complement.";
                         }
                     }
-                 else if (getBdryHomologyMap(1).getCokernel().rank()==0)
+                 else if (getBdryHomologyMap(1).cokernel().rank()==0)
                     {
                     embeddabilityString =
                         "Embeds in a rational homology 3-sphere as a ";
@@ -1811,7 +1811,7 @@ void NHomologicalData::computeEmbeddabilityString() {
                    embeddabilityString =
                         "Embeds in homology 3-sphere "
                         "but not homology 4-sphere.";
-                 else if (getBdryHomologyMap(1).getCokernel().rank()==0)
+                 else if (getBdryHomologyMap(1).cokernel().rank()==0)
                    embeddabilityString =
                         "Embeds in rational homology 3-sphere but not "
                         "homology 4-sphere.";
@@ -1826,7 +1826,7 @@ void NHomologicalData::computeEmbeddabilityString() {
                    embeddabilityString =
                         "Embeds in homology 3-sphere.  "
                         "KK 2-tor condition satisfied.";
-                 else if (getBdryHomologyMap(1).getCokernel().rank()==0)
+                 else if (getBdryHomologyMap(1).cokernel().rank()==0)
                    embeddabilityString =
                         "Embeds in rational homology 3-sphere.  "
                         "KK 2-tor condition satisfied.";
