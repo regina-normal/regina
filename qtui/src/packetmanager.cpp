@@ -64,7 +64,7 @@ QIcon PacketManager::icon(NPacket* packet, bool allowLock) {
     if (packet->type() == NAngleStructureList::packetType)
         id = IconCache::packet_angles;
     else if (packet->type() == NContainer::packetType)
-        id = (packet->getTreeParent() ? IconCache::packet_container :
+        id = (packet->parent() ? IconCache::packet_container :
             IconCache::regina);
     else if (packet->type() == Dim2Triangulation::packetType)
         id = IconCache::packet_dim2triangulation;

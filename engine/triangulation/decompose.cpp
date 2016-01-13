@@ -145,7 +145,7 @@ long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
     NTriangulation* crushed;
     NNormalSurface* sphere;
     while ((processing = static_cast<NTriangulation*>(
-            toProcess.getFirstTreeChild()))) {
+            toProcess.firstChild()))) {
         // INV: Our triangulation is the connected sum of all the
         // children of toProcess, all the elements of primeComponents
         // and possibly some copies of S2xS1, S2x~S1, RP3, and/or L(3,1).
@@ -354,8 +354,7 @@ bool NTriangulation::isThreeSphere() const {
     NTriangulation* processing;
     NTriangulation* crushed;
     NNormalSurface* sphere;
-    while ((processing = static_cast<NTriangulation*>(
-            toProcess.getLastTreeChild()))) {
+    while ((processing = static_cast<NTriangulation*>(toProcess.lastChild()))) {
         // INV: Our triangulation is the connected sum of all the
         // children of toProcess.  Each of these children has trivial
         // homology (and therefore we have no S2xS1 / RP3 / L(3,1)
@@ -568,7 +567,7 @@ bool NTriangulation::isSolidTorus() const {
 
         crushed->intelligentSimplify();
         crushed->splitIntoComponents(0, false);
-        for (p = crushed->getFirstTreeChild(); p; p = p->getNextTreeSibling()) {
+        for (p = crushed->firstChild(); p; p = p->nextSibling()) {
             // Examine each connected component after crushing.
             comp = static_cast<NTriangulation*>(p);
             if (comp->isClosed()) {
@@ -665,7 +664,7 @@ NPacket* NTriangulation::makeZeroEfficient() {
     } else if (ans == 1) {
         // Prime.
         NTriangulation* newTri = dynamic_cast<NTriangulation*>(
-            connSum->getLastTreeChild());
+            connSum->lastChild());
         if (! isIsomorphicTo(*newTri).get()) {
             removeAllTetrahedra();
             insertTriangulation(*newTri);
@@ -716,7 +715,7 @@ bool NTriangulation::isIrreducible() const {
     NTriangulation* crushed;
     NNormalSurface* sphere;
     while ((processing = static_cast<NTriangulation*>(
-            toProcess.getFirstTreeChild()))) {
+            toProcess.firstChild()))) {
         // INV: Our triangulation is the connected sum of all the
         // children of toProcess, all the prime components that we threw away,
         // and possibly some copies of S2xS1, RP3 and/or L(3,1).
@@ -906,7 +905,7 @@ bool NTriangulation::hasCompressingDisc() const {
             delete use;
 
             nComp = crush->splitIntoComponents();
-            comp = static_cast<NTriangulation*>(crush->getFirstTreeChild());
+            comp = static_cast<NTriangulation*>(crush->firstChild());
             while (comp) {
                 if (comp->countBoundaryComponents() == 1 &&
                         comp->boundaryComponent(0)->eulerChar()
@@ -916,7 +915,7 @@ bool NTriangulation::hasCompressingDisc() const {
                     break;
                 }
 
-                comp = static_cast<NTriangulation*>(comp->getNextTreeSibling());
+                comp = static_cast<NTriangulation*>(comp->nextSibling());
             }
 
             delete crush;

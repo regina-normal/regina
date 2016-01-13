@@ -44,7 +44,7 @@
 @implementation PacketManagerIOS
 
 + (UIImage*)iconFor:(regina::NPacket *)p {
-    if (! p->getTreeParent())
+    if (! p->parent())
         return [UIImage imageNamed:@"Document"];
 
     switch (p->type()) {

@@ -85,8 +85,8 @@ void dumpPacketHeader(std::ostream& out, NPacket* p) {
     out << "*\n";
     out << "* Label: " << p->humanLabel() << '\n';
     out << "* Type: " << p->typeName() << '\n';
-    out << "* Parent: " << (p->getTreeParent() ?
-        p->getTreeParent()->humanLabel() : "(none)") << '\n';
+    out << "* Parent: " << (p->parent() ?
+        p->parent()->humanLabel() : "(none)") << '\n';
     if (p->hasTags()) {
         out << "* Tags: ";
         const std::set<std::string>& tags = p->tags();

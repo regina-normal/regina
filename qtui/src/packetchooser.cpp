@@ -208,7 +208,7 @@ void PacketChooser::fill(bool allowNone, NPacket* select) {
     regina::NPacket* p = subtree;
     while (p && subtree->isGrandparentOf(p)) {
         if ((! filter) || (filter->accept(p))) {
-            if (p->getTreeParent())
+            if (p->parent())
                 addItem(PacketManager::icon(p), p->humanLabel().c_str());
             else switch (rootRole) {
                 case ROOT_AS_INSERTION_POINT:

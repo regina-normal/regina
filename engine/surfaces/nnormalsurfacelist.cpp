@@ -117,11 +117,11 @@ NEnumConstraintList* makeEmbeddedConstraints(
 }
 
 NTriangulation* NNormalSurfaceList::triangulation() const {
-    return dynamic_cast<NTriangulation*>(getTreeParent());
+    return dynamic_cast<NTriangulation*>(parent());
 }
 
 NTriangulation* NNormalSurfaceList::getTriangulation() const {
-    return dynamic_cast<NTriangulation*>(getTreeParent());
+    return dynamic_cast<NTriangulation*>(parent());
 }
 
 namespace {

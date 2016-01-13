@@ -68,7 +68,7 @@ regina::NPacket* IsoSigHandler::importData(const QString& fileName,
         return 0;
     }
 
-    regina::NPacket* last = ans->getLastTreeChild();
+    regina::NPacket* last = ans->lastChild();
     if (last == 0) {
         ReginaSupport::sorry(parentWidget,
             QObject::tr("The import failed."),
@@ -77,7 +77,7 @@ regina::NPacket* IsoSigHandler::importData(const QString& fileName,
         delete ans;
         return 0;
     } else if (last->type() == regina::NText::packetType) {
-        if (last == ans->getFirstTreeChild()) {
+        if (last == ans->firstChild()) {
             ReginaSupport::sorry(parentWidget, 
                 QObject::tr("The import failed."),
                 QObject::tr("<qt>None of the lines in the selected file "

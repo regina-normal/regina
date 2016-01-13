@@ -82,7 +82,7 @@
 - (void)viewDidLoad
 {
     NewSnapPeaController* c = static_cast<NewSnapPeaController*>(self.parentViewController.parentViewController);
-    [self.from fill:c.spec.parent->getTreeMatriarch() type:regina::PACKET_TRIANGULATION allowNone:NO noneText:@"No Regina triangulations in this document"];
+    [self.from fill:c.spec.parent->root() type:regina::PACKET_TRIANGULATION allowNone:NO noneText:@"No Regina triangulations in this document"];
 }
 
 - (regina::NPacket*)create

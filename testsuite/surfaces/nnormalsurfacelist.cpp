@@ -2150,8 +2150,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                for (p = comp->getFirstTreeChild(); p;
-                        p = p->getNextTreeSibling())
+                for (p = comp->firstChild(); p; p = p->nextSibling())
                     if (! static_cast<NTriangulation*>(p)->
                             hasBoundaryTriangles()) {
                         std::ostringstream msg;
@@ -2160,8 +2159,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                             << " gives a component with no boundary triangles.";
                         CPPUNIT_FAIL(msg.str());
                     }
-                for (p = compDouble->getFirstTreeChild(); p;
-                        p = p->getNextTreeSibling())
+                for (p = compDouble->firstChild(); p; p = p->nextSibling())
                     if (! static_cast<NTriangulation*>(p)->
                             hasBoundaryTriangles()) {
                         std::ostringstream msg;
@@ -2200,8 +2198,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
                 foundS = foundTwoCopies = foundDoubleCover = 0;
-                for (p = comp->getFirstTreeChild(); p;
-                        p = p->getNextTreeSibling())
+                for (p = comp->firstChild(); p; p = p->nextSibling())
                     checkBoundaryType(s, static_cast<NTriangulation*>(p),
                         foundS, foundTwoCopies, foundDoubleCover);
                 if (foundS < expectS || foundTwoCopies < expectTwoCopies ||
@@ -2236,8 +2233,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
                 foundS = foundTwoCopies = foundDoubleCover = 0;
-                for (p = compDouble->getFirstTreeChild(); p;
-                        p = p->getNextTreeSibling())
+                for (p = compDouble->firstChild(); p; p = p->nextSibling())
                     checkBoundaryType(s, static_cast<NTriangulation*>(p),
                         foundS, foundTwoCopies, foundDoubleCover);
                 if (foundS < expectS || foundTwoCopies < expectTwoCopies ||
@@ -2251,8 +2247,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
                 // Look for the product piece when cutting along the
                 // double surface.
-                for (p = compDouble->getFirstTreeChild(); p;
-                        p = p->getNextTreeSibling()) {
+                for (p = compDouble->firstChild(); p; p = p->nextSibling()) {
                     if (s->isTwoSided()) {
                         if (mightBeUntwistedProduct(
                                 static_cast<NTriangulation*>(p)))

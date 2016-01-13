@@ -111,7 +111,7 @@ bool NPacket::unlisten(NPacketListener* listener) {
     return listeners_->erase(listener);
 }
 
-NPacket* NPacket::getTreeMatriarch() const {
+NPacket* NPacket::root() const {
     NPacket* p = const_cast<NPacket*>(this);
     while (p->treeParent_)
         p = p->treeParent_;

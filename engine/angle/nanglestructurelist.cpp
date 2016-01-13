@@ -138,11 +138,11 @@ NAngleStructureList* NAngleStructureList::enumerateTautDD(
 }
 
 NTriangulation* NAngleStructureList::triangulation() const {
-    return dynamic_cast<NTriangulation*>(getTreeParent());
+    return dynamic_cast<NTriangulation*>(parent());
 }
 
 NTriangulation* NAngleStructureList::getTriangulation() const {
-    return dynamic_cast<NTriangulation*>(getTreeParent());
+    return dynamic_cast<NTriangulation*>(parent());
 }
 
 void NAngleStructureList::writeTextShort(std::ostream& o) const {

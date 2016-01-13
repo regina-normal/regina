@@ -108,13 +108,13 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
 
             CPPUNIT_ASSERT_MESSAGE("The prime 3-manifold " + triName +
                 " is reported to be a 3-sphere.",
-                ans > 0 && summands.getFirstTreeChild() != 0);
+                ans > 0 && summands.firstChild() != 0);
             CPPUNIT_ASSERT_MESSAGE("The prime 3-manifold " + triName +
                 " is reported to be composite.", ans == 1 &&
-                summands.getFirstTreeChild() == summands.getLastTreeChild());
+                summands.firstChild() == summands.lastChild());
 
             NTriangulation* summand = static_cast<NTriangulation*>(
-                summands.getFirstTreeChild());
+                summands.firstChild());
 
             std::unique_ptr<NStandardTriangulation> stdTri(
                 NStandardTriangulation::isStandardTriangulation(summand));
@@ -161,19 +161,18 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
 
             CPPUNIT_ASSERT_MESSAGE("The composite 3-manifold " + triName +
                 " is reported to be a 3-sphere.",
-                ans > 0 && summands.getFirstTreeChild() != 0);
+                ans > 0 && summands.firstChild() != 0);
             CPPUNIT_ASSERT_MESSAGE("The composite 3-manifold " + triName +
                 " is reported to be prime.", ans > 1 &&
-                summands.getFirstTreeChild() != summands.getLastTreeChild());
+                summands.firstChild() != summands.lastChild());
             CPPUNIT_ASSERT_MESSAGE("The composite 3-manifold " + triName +
                 " is reported to have more than two summands.", ans == 2 &&
-                summands.getFirstTreeChild()->getNextTreeSibling() ==
-                summands.getLastTreeChild());
+                summands.firstChild()->nextSibling() == summands.lastChild());
 
             NTriangulation* summand1 = static_cast<NTriangulation*>(
-                summands.getFirstTreeChild());
+                summands.firstChild());
             NTriangulation* summand2 = static_cast<NTriangulation*>(
-                summands.getLastTreeChild());
+                summands.lastChild());
 
             std::unique_ptr<NStandardTriangulation> stdTri1(
                 NStandardTriangulation::isStandardTriangulation(summand1));
@@ -253,21 +252,21 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             unsigned long ans = tri->connectedSumDecomposition(&summands);
 
             NTriangulation* summand1 = static_cast<NTriangulation*>(
-                summands.getFirstTreeChild());
+                summands.firstChild());
             CPPUNIT_ASSERT_MESSAGE("The composite 3-manifold " + triName +
                 " is reported to be a 3-sphere.", ans > 0 && summand1 != 0);
             NTriangulation* summand2 = static_cast<NTriangulation*>(
-                summand1->getNextTreeSibling());
+                summand1->nextSibling());
             CPPUNIT_ASSERT_MESSAGE("The composite 3-manifold " + triName +
                 " is reported to be prime.", ans > 1 && summand2 != 0);
             NTriangulation* summand3 = static_cast<NTriangulation*>(
-                summand2->getNextTreeSibling());
+                summand2->nextSibling());
             CPPUNIT_ASSERT_MESSAGE("The composite 3-manifold " + triName +
                 " is reported to have only two prime summands.",
                 ans > 2 && summand3 != 0);
             CPPUNIT_ASSERT_MESSAGE("The composite 3-manifold " + triName +
                 " is reported to have more than three summands.", ans == 3 &&
-                summand3 == summands.getLastTreeChild());
+                summand3 == summands.lastChild());
 
             std::unique_ptr<NStandardTriangulation> stdTri1(
                 NStandardTriangulation::isStandardTriangulation(summand1));
@@ -483,8 +482,8 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             NAbelianGroup h1;
             NTriangulation* term;
             bool foundNor = false;
-            for (regina::NPacket* p = parent.getFirstTreeChild(); p;
-                    p = p->getNextTreeSibling()) {
+            for (regina::NPacket* p = parent.firstChild(); p;
+                    p = p->nextSibling()) {
                 term = static_cast<NTriangulation*>(p);
                 if (! term->isOrientable())
                     foundNor = true;

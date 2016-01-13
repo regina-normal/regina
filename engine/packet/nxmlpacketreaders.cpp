@@ -103,8 +103,7 @@ namespace {
                     resolution = (it == resolver.ids().end() ? 0 : it->second);
                 }
                 if ((! resolution) && (! valueLabel_.empty()))
-                    resolution = script_->getTreeMatriarch()->
-                        findPacketLabel(valueLabel_);
+                    resolution = script_->root()->findPacketLabel(valueLabel_);
 
                 script_->addVariable(name_, resolution);
             }

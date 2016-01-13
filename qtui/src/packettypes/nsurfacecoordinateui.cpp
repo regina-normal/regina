@@ -461,7 +461,7 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
     // Set up the filter selector.
     label = new QLabel(tr("Apply filter:"));
     hdrLayout->addWidget(label);
-    filter = new PacketChooser(surfaces->getTreeMatriarch(),
+    filter = new PacketChooser(surfaces->root(),
         new SingleTypeFilter<regina::NSurfaceFilter>(),
         PacketChooser::ROOT_AS_PACKET, true, 0, ui);
     filter->setAutoUpdate(true);

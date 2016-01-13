@@ -109,7 +109,7 @@ void NXMLPacketReader::endSubElement(const std::string& subTagName,
                 child->setPacketLabel(childLabel);
                 if (! childID.empty())
                     resolver_.storeID(childID, child);
-                if (! child->getTreeParent())
+                if (! child->parent())
                     me->insertChildLast(child);
             } else
                 delete child;
@@ -123,7 +123,7 @@ void NXMLPacketReader::endSubElement(const std::string& subTagName,
 void NXMLPacketReader::abort(NXMLElementReader* /* subReader */) {
     NPacket* me = packet();
     if (me)
-        if (! me->getTreeParent())
+        if (! me->parent())
             delete me;
 }
 
