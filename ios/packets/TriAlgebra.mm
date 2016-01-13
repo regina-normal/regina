@@ -159,7 +159,7 @@
         // Generators are a, b, ...
         for (long i = 0; i < nRels; ++i) {
             NSMutableString* rel;
-            const std::list<regina::NGroupExpressionTerm>& terms(group.getRelation(i).terms());
+            const std::list<regina::NGroupExpressionTerm>& terms(group.relation(i).terms());
             if (terms.empty())
                 rel = [[NSMutableString alloc] initWithString:@"1"];
             else {
@@ -186,7 +186,7 @@
         for (long i = 0; i < nRels; ++i) {
             if (i > 0)
                 [relsText appendString:@"\n"];
-            [relsText appendFormat:@"1 = %s", group.getRelation(i).str().c_str()];
+            [relsText appendFormat:@"1 = %s", group.relation(i).str().c_str()];
         }
     }
     details.text = relsText;

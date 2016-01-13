@@ -180,6 +180,8 @@ void addNGroupPresentation() {
             &NGroupPresentation::getNumberOfGenerators)
         .def("countRelations", &NGroupPresentation::countRelations)
         .def("getNumberOfRelations", &NGroupPresentation::getNumberOfRelations)
+        .def("relation", &NGroupPresentation::relation,
+            return_internal_reference<>())
         .def("getRelation", &NGroupPresentation::getRelation,
             return_internal_reference<>())
         .def("isValid", &NGroupPresentation::isValid)

@@ -1896,7 +1896,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             regina::NMatrixInt m(rel, gen);
             size_t i, j;
             for (i = 0; i < rel; ++i) {
-                const regina::NGroupExpression& r = pi1->getRelation(i);
+                const regina::NGroupExpression& r = pi1->relation(i);
                 for (j = 0; j < r.countTerms(); ++j) {
                     const regina::NGroupExpressionTerm& t = r.getTerm(j);
                     m.entry(i, t.generator) += t.exponent;

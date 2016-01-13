@@ -856,6 +856,14 @@ class REGINA_API NGroupPresentation :
          * for instance, if the relation is <tt>g1^2 g2 = 1</tt> then
          * this will be the expression <tt>g1^2 g2</tt>.
          */
+        const NGroupExpression& relation(size_t index) const;
+        /**
+         * Deprecated routine that returns the relation at the given index in
+         * this group presentation.
+         *
+         * \deprecated This routine has been renamed to relation().
+         * See the relation() documentation for further details.
+         */
         const NGroupExpression& getRelation(size_t index) const;
 
         /**
@@ -1692,6 +1700,10 @@ inline size_t NGroupPresentation::getNumberOfRelations() const {
     return relations.size();
 }
 
+inline const NGroupExpression& NGroupPresentation::relation(
+        size_t index) const {
+    return *relations[index];
+}
 inline const NGroupExpression& NGroupPresentation::getRelation(
         size_t index) const {
     return *relations[index];

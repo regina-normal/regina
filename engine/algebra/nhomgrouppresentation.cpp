@@ -322,7 +322,7 @@ bool NHomGroupPresentation::verify() const
 {
  for (unsigned long i=0; i<domain_->countRelations(); i++)
   {
-   const NGroupExpression& reli( domain_->getRelation(i) );
+   const NGroupExpression& reli( domain_->relation(i) );
    NGroupExpression imgRel( evaluate(reli) );
    range_->simplifyWord(imgRel);
    if (!imgRel.isTrivial()) return false;

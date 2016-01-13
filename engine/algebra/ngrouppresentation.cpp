@@ -300,7 +300,7 @@ std::unique_ptr<NAbelianGroup> NGroupPresentation::abelianisation() const
     NMatrixInt N(countGenerators(), countRelations() );
     // run through rels, increment N entries appropriately
     for (unsigned long j=0; j<countRelations(); j++) {
-        NGroupExpression Rj ( getRelation(j) );
+        NGroupExpression Rj ( relation(j) );
         for (unsigned long i=0; i<Rj.countTerms(); i++)
             N.entry( Rj.generator(i), j ) += Rj.exponent(i);
     }
@@ -315,7 +315,7 @@ const
     NMatrixInt N(countGenerators(), countRelations() );
     // run through rels, increment N entries appropriately
     for (unsigned long j=0; j<countRelations(); j++) {
-        NGroupExpression Rj ( getRelation(j) );
+        NGroupExpression Rj ( relation(j) );
         for (unsigned long i=0; i<Rj.countTerms(); i++)
             N.entry( Rj.generator(i), j ) += Rj.exponent(i);
     }
