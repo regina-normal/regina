@@ -177,6 +177,8 @@ void addNMarkedAbelianGroup() {
             return_internal_reference<>())
         .def("getMRB", &NMarkedAbelianGroup::getMRB,
             return_internal_reference<>())
+        .def("MRBi", &NMarkedAbelianGroup::MRBi,
+            return_internal_reference<>())
         .def("getMRBi", &NMarkedAbelianGroup::getMRBi,
             return_internal_reference<>())
         .def("getMCB", &NMarkedAbelianGroup::getMCB,

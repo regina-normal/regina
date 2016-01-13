@@ -82,7 +82,7 @@ class NHomMarkedAbelianGroup;
  *
  * Some routines in this class refer to the internal <i>presentation
  * matrix</i>.  This is a proper presentation matrix for the abelian group,
- * and is created by constructing the product getMRBi() * \a N, and then
+ * and is created by constructing the product MRBi() * \a N, and then
  * removing the first getRankM() rows.
  *
  * @author Ryan Budney
@@ -737,7 +737,7 @@ class REGINA_API NMarkedAbelianGroup :
          * is defined by matrices \a M and \a N, where M*N = 0.
          *
          * - getMCB() * M * MRB() is the Smith normal form of \a M;
-         * - getMCBi() and getMRBi() are the inverses of getMCB() and MRB()
+         * - getMCBi() and MRBi() are the inverses of getMCB() and MRB()
          *   respectively.
          *
          * \deprecated This routine will be removed in Regina 5.0.
@@ -764,12 +764,20 @@ class REGINA_API NMarkedAbelianGroup :
          * is defined by matrices \a M and \a N, where M*N = 0.
          *
          * - getMCB() * M * MRB() is the Smith normal form of \a M;
-         * - getMCBi() and getMRBi() are the inverses of getMCB() and MRB()
+         * - getMCBi() and MRBi() are the inverses of getMCB() and MRB()
          *   respectively.
          *
          * \deprecated This routine will be removed in Regina 5.0.
          *
-         * @return the matrix getMRBi() as described above.
+         * @return the matrix MRBi() as described above.
+         */
+        const NMatrixInt& MRBi() const;
+        /**
+         * Deprecated routine that returns an inverse change-of-basis matrix
+         * for the Smith normal form of \a M.
+         *
+         * \deprecated This routine has been renamed to MRBi().
+         * See the MRBi() documentation for further details.
          */
         const NMatrixInt& getMRBi() const;
         /**
@@ -782,7 +790,7 @@ class REGINA_API NMarkedAbelianGroup :
          * is defined by matrices \a M and \a N, where M*N = 0.
          *
          * - getMCB() * M * MRB() is the Smith normal form of \a M;
-         * - getMCBi() and getMRBi() are the inverses of getMCB() and MRB()
+         * - getMCBi() and MRBi() are the inverses of getMCB() and MRB()
          *   respectively.
          *
          * \deprecated This routine will be removed in Regina 5.0.
@@ -801,7 +809,7 @@ class REGINA_API NMarkedAbelianGroup :
          * is defined by matrices \a M and \a N, where M*N = 0.
          *
          * - getMCB() * M * MRB() is the Smith normal form of \a M;
-         * - getMCBi() and getMRBi() are the inverses of getMCB() and MRB()
+         * - getMCBi() and MRBi() are the inverses of getMCB() and MRB()
          *   respectively.
          *
          * \deprecated This routine will be removed in Regina 5.0.
@@ -1468,6 +1476,9 @@ inline const NMatrixInt& NMarkedAbelianGroup::MRB() const {
 }
 inline const NMatrixInt& NMarkedAbelianGroup::getMRB() const {
     return OMR;
+}
+inline const NMatrixInt& NMarkedAbelianGroup::MRBi() const {
+    return OMRi;
 }
 inline const NMatrixInt& NMarkedAbelianGroup::getMRBi() const {
     return OMRi;
