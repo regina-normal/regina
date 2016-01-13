@@ -1224,7 +1224,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
 
 
     NMatrixInt standardBasis( numStandardCells[1], pvList.size() );
-    const NMatrixInt& dualtostandard(h1CellAp.getDefiningMatrix());
+    const NMatrixInt& dualtostandard(h1CellAp.definingMatrix());
 
     for (i=0; i<standardBasis.rows(); i++)
         for (j=0; j<standardBasis.columns(); j++)

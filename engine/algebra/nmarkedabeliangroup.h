@@ -954,7 +954,7 @@ class REGINA_API NMarkedAbelianGroup :
          */
         unsigned long rankM() const;
         /**
-         * Deprecated routine that returns the rank of the defining 
+         * Deprecated routine that returns the rank of the defining
          * matrix \a M.
          *
          * \deprecated This routine has been renamed to rankM().
@@ -1127,7 +1127,7 @@ class REGINA_API NHomMarkedAbelianGroup :
             reducedMatrix will not have the same dimensions as matrix. This
             means the torsion factors appear first, followed by the free
             factors. */
-        NMatrixInt* reducedMatrix;
+        NMatrixInt* reducedMatrix_;
         /** pointer to kernel of map */
         NMarkedAbelianGroup* kernel_;
         /** pointer to coKernel of map */
@@ -1366,6 +1366,14 @@ class REGINA_API NHomMarkedAbelianGroup :
          *
          * @return the matrix that was used to define the homomorphism.
          */
+        const NMatrixInt& definingMatrix() const;
+        /**
+         * Deprecated routine that returns the defining matrix for the
+         * homomorphism.
+         *
+         * \deprecated This routine has been renamed to definingMatrix().
+         * See the definingMatrix() documentation for further details.
+         */
         const NMatrixInt& getDefiningMatrix() const;
 
         /**
@@ -1383,6 +1391,14 @@ class REGINA_API NHomMarkedAbelianGroup :
          *   1 < \a d1 | \a d2 | ... | \a dk.
          *
          * @return a copy of the internal representation of the homomorphism.
+         */
+        const NMatrixInt& reducedMatrix() const;
+        /**
+         * Deprecated routine that returns the internal reduced matrix
+         * representing the homomorphism.
+         *
+         * \deprecated This routine has been renamed to reducedMatrix().
+         * See the reducedMatrix() documentation for further details.
          */
         const NMatrixInt& getReducedMatrix() const;
 
@@ -1688,13 +1704,13 @@ inline NHomMarkedAbelianGroup::NHomMarkedAbelianGroup(
         const NMarkedAbelianGroup& ran,
         const NMatrixInt &mat) :
         domain_(dom), range_(ran), matrix(mat),
-        reducedMatrix(0), kernel_(0), coKernel_(0), image_(0),
+        reducedMatrix_(0), kernel_(0), coKernel_(0), image_(0),
         reducedKernelLattice(0) {
 }
 
 inline NHomMarkedAbelianGroup::~NHomMarkedAbelianGroup() {
-    if (reducedMatrix)
-        delete reducedMatrix;
+    if (reducedMatrix_)
+        delete reducedMatrix_;
     if (kernel_)
         delete kernel_;
     if (coKernel_)
@@ -1717,8 +1733,19 @@ inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::range() const {
 inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getRange() const {
     return range_;
 }
+inline const NMatrixInt& NHomMarkedAbelianGroup::definingMatrix() const {
+    return matrix;
+}
 inline const NMatrixInt& NHomMarkedAbelianGroup::getDefiningMatrix() const {
     return matrix;
+}
+
+inline const NMatrixInt& NHomMarkedAbelianGroup::reducedMatrix() const {
+    // Cast away const to compute the reduced matrix -- the only reason we're
+    // changing data members now is because we delayed calculations
+    // until they were really required.
+    const_cast<NHomMarkedAbelianGroup*>(this)->computeReducedMatrix();
+    return *reducedMatrix_;
 }
 
 inline const NMatrixInt& NHomMarkedAbelianGroup::getReducedMatrix() const {
@@ -1726,7 +1753,7 @@ inline const NMatrixInt& NHomMarkedAbelianGroup::getReducedMatrix() const {
     // changing data members now is because we delayed calculations
     // until they were really required.
     const_cast<NHomMarkedAbelianGroup*>(this)->computeReducedMatrix();
-    return *reducedMatrix;
+    return *reducedMatrix_;
 }
 
 inline bool NHomMarkedAbelianGroup::isEpic() const {

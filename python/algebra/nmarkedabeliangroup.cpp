@@ -264,7 +264,11 @@ void addNMarkedAbelianGroup() {
             return_internal_reference<>())
         .def("getRange", &NHomMarkedAbelianGroup::getRange,
             return_internal_reference<>())
+        .def("definingMatrix", &NHomMarkedAbelianGroup::definingMatrix,
+            return_internal_reference<>())
         .def("getDefiningMatrix", &NHomMarkedAbelianGroup::getDefiningMatrix,
+            return_internal_reference<>())
+        .def("reducedMatrix", &NHomMarkedAbelianGroup::reducedMatrix,
             return_internal_reference<>())
         .def("getReducedMatrix", &NHomMarkedAbelianGroup::getReducedMatrix,
             return_internal_reference<>())

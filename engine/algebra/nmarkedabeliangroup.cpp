@@ -739,9 +739,9 @@ NHomMarkedAbelianGroup::NHomMarkedAbelianGroup(const NMatrixInt &tobeRedMat,
         const NMarkedAbelianGroup &dom,
         const NMarkedAbelianGroup &ran) :
     domain_(dom), range_(ran), matrix(ran.M().columns(), dom.M().columns()),
-    reducedMatrix(0), kernel_(0), coKernel_(0), image_(0), reducedKernelLattice(0)
+    reducedMatrix_(0), kernel_(0), coKernel_(0), image_(0), reducedKernelLattice(0)
 {
-    reducedMatrix = new NMatrixInt(tobeRedMat);
+    reducedMatrix_ = new NMatrixInt(tobeRedMat);
 
     // If using mod p coeff, p != 0: 
     //
@@ -850,8 +850,8 @@ NHomMarkedAbelianGroup::NHomMarkedAbelianGroup(const NMatrixInt &tobeRedMat,
 
 NHomMarkedAbelianGroup::NHomMarkedAbelianGroup(const NHomMarkedAbelianGroup& g):
         domain_(g.domain_), range_(g.range_), matrix(g.matrix) {
-    if (g.reducedMatrix) { reducedMatrix = new NMatrixInt(*g.reducedMatrix); } 
-     else reducedMatrix = 0;
+    if (g.reducedMatrix_) { reducedMatrix_ = new NMatrixInt(*g.reducedMatrix_); }
+     else reducedMatrix_ = 0;
     if (g.kernel_) { kernel_ = new NMarkedAbelianGroup(*g.kernel_); }
      else kernel_ = 0;
     if (g.coKernel_) { coKernel_ = new NMarkedAbelianGroup(*g.coKernel_); }
@@ -863,14 +863,14 @@ NHomMarkedAbelianGroup::NHomMarkedAbelianGroup(const NHomMarkedAbelianGroup& g):
      else reducedKernelLattice = 0;
 }
 
-void NHomMarkedAbelianGroup::computeReducedMatrix() 
+void NHomMarkedAbelianGroup::computeReducedMatrix()
 {
- if (!reducedMatrix) 
+ if (!reducedMatrix_)
   {
-   reducedMatrix = new NMatrixInt( range_.minNumberOfGenerators(),
+   reducedMatrix_ = new NMatrixInt( range_.minNumberOfGenerators(),
     domain_.minNumberOfGenerators() );
 
-   for (unsigned long j=0; j<reducedMatrix->columns(); j++)
+   for (unsigned long j=0; j<reducedMatrix_->columns(); j++)
     {
      std::vector<NLargeInteger> colV(
       (j<domain_.countInvariantFactors()) ?
@@ -882,7 +882,7 @@ void NHomMarkedAbelianGroup::computeReducedMatrix()
        icv[i] += matrix.entry(i,k) * colV[k];
      std::vector<NLargeInteger> midge( range_.snfRep(icv) );
      for (unsigned long i=0; i<midge.size(); i++)
-     reducedMatrix->entry(i,j) = midge[i];
+     reducedMatrix_->entry(i,j) = midge[i];
     }
   }
 }
@@ -890,7 +890,7 @@ void NHomMarkedAbelianGroup::computeReducedMatrix()
 void NHomMarkedAbelianGroup::computeReducedKernelLattice() {
     if (!reducedKernelLattice) {
         computeReducedMatrix();
-        const NMatrixInt& redMatrix(*reducedMatrix);
+        const NMatrixInt& redMatrix(*reducedMatrix_);
 
         std::vector<NLargeInteger> dcL(range_.rank() +
             range_.countInvariantFactors() );
@@ -941,17 +941,17 @@ void NHomMarkedAbelianGroup::computeCokernel() {
     if (!coKernel_) {
         computeReducedMatrix();
 
-        NMatrixInt ccrelators( reducedMatrix->rows(),
-            reducedMatrix->columns() + range_.countInvariantFactors() );
+        NMatrixInt ccrelators( reducedMatrix_->rows(),
+            reducedMatrix_->columns() + range_.countInvariantFactors() );
         unsigned i,j;
-        for (i=0;i<reducedMatrix->rows();i++)
-            for (j=0;j<reducedMatrix->columns();j++)
-                ccrelators.entry(i,j)=reducedMatrix->entry(i,j);
+        for (i=0;i<reducedMatrix_->rows();i++)
+            for (j=0;j<reducedMatrix_->columns();j++)
+                ccrelators.entry(i,j)=reducedMatrix_->entry(i,j);
         for (i=0;i<range_.countInvariantFactors();i++)
-            ccrelators.entry(i,i+reducedMatrix->columns())=
+            ccrelators.entry(i,i+reducedMatrix_->columns())=
                 range_.invariantFactor(i);
 
-        NMatrixInt ccgenerators( 1, reducedMatrix->rows() );
+        NMatrixInt ccgenerators( 1, reducedMatrix_->rows() );
 
         coKernel_ = new NMarkedAbelianGroup(ccgenerators, ccrelators);
     }
@@ -1012,8 +1012,8 @@ std::vector<NLargeInteger> NHomMarkedAbelianGroup::evalSNF(
 
     for (unsigned long i=0; i<retval.size(); i++) 
     {
-        for (unsigned long j=0; j<getReducedMatrix().columns(); j++)
-            retval[i] += input[j] * getReducedMatrix().entry(i,j);
+        for (unsigned long j=0; j<reducedMatrix().columns(); j++)
+            retval[i] += input[j] * reducedMatrix().entry(i,j);
         if ( i < range_.countInvariantFactors() ) {
             retval[i] %= range_.invariantFactor(i);
             if (retval[i]<0) retval[i] += range_.invariantFactor(i); }
@@ -1028,17 +1028,17 @@ void NHomMarkedAbelianGroup::writeReducedMatrix(std::ostream& out) const {
     // until they were really required.
     const_cast<NHomMarkedAbelianGroup*>(this)->computeReducedMatrix();
 
-    out<<"Reduced Matrix is "<<reducedMatrix->rows()<<" by "
-        <<reducedMatrix->columns()<<" corresponding to domain ";
+    out<<"Reduced Matrix is "<<reducedMatrix_->rows()<<" by "
+        <<reducedMatrix_->columns()<<" corresponding to domain ";
     domain_.writeTextShort(out);
     out<<" and range ";
     range_.writeTextShort(out);
     out<<"\n";
-    for (unsigned long i=0;i<reducedMatrix->rows();i++) {
+    for (unsigned long i=0;i<reducedMatrix_->rows();i++) {
         out<<"[";
-        for (unsigned long j=0;j<reducedMatrix->columns();j++) {
-            out<<reducedMatrix->entry(i,j);
-            if (j+1 < reducedMatrix->columns()) out<<" ";
+        for (unsigned long j=0;j<reducedMatrix_->columns();j++) {
+            out<<reducedMatrix_->entry(i,j);
+            if (j+1 < reducedMatrix_->columns()) out<<" ";
         }
         out<<"]\n";
     }
@@ -1075,7 +1075,7 @@ bool NHomMarkedAbelianGroup::isIdentity() const
 {
     if (!(domain_.equalTo(range_))) return false;
     const_cast<NHomMarkedAbelianGroup*>(this)->computeReducedMatrix();
-    if (!reducedMatrix->isIdentity()) return false;
+    if (!reducedMatrix_->isIdentity()) return false;
     return true;
 }
 
@@ -1134,10 +1134,10 @@ bool NHomMarkedAbelianGroup::isChainMap(
     ) return false;
  if ( (range().M() != other.range().N()) ||
       (domain().M() != other.domain().N()) ) return false;
- std::unique_ptr< NMatrixRing<NLargeInteger> > 
-  prodLU = range_.M() * getDefiningMatrix();
- std::unique_ptr< NMatrixRing<NLargeInteger> > 
-  prodBR = other.getDefiningMatrix() * domain_.M();
+ std::unique_ptr< NMatrixRing<NLargeInteger> >
+    prodLU = range_.M() * definingMatrix();
+ std::unique_ptr< NMatrixRing<NLargeInteger> >
+    prodBR = other.definingMatrix() * domain_.M();
  if ( (*prodLU) != (*prodBR) ) return false;
  return true;
 }
@@ -1165,7 +1165,7 @@ bool NHomMarkedAbelianGroup::isChainMap(
 std::unique_ptr<NHomMarkedAbelianGroup> NHomMarkedAbelianGroup::inverseHom() const
 {
  const_cast<NHomMarkedAbelianGroup*>(this)->computeReducedMatrix();
- NMatrixInt invMat( reducedMatrix->columns(), reducedMatrix->rows() );
+ NMatrixInt invMat( reducedMatrix_->columns(), reducedMatrix_->rows() );
  if (!isIsomorphism()) return std::unique_ptr<NHomMarkedAbelianGroup>(
      new NHomMarkedAbelianGroup( invMat, range_, domain_ ));
  // get A, B, D from reducedMatrix
@@ -1176,15 +1176,15 @@ std::unique_ptr<NHomMarkedAbelianGroup> NHomMarkedAbelianGroup::inverseHom() con
  NMatrixInt A(range_.countInvariantFactors(), domain_.countInvariantFactors());
  NMatrixInt B(range_.countInvariantFactors(), domain_.rank());
  NMatrixInt D(range_.rank(), domain_.rank());
- for (unsigned long i=0; i<A.rows(); i++) 
+ for (unsigned long i=0; i<A.rows(); i++)
    for (unsigned long j=0; j<A.columns(); j++)
-     A.entry(i,j) = reducedMatrix->entry(i,j);
- for (unsigned long i=0; i<B.rows(); i++) 
+     A.entry(i,j) = reducedMatrix_->entry(i,j);
+ for (unsigned long i=0; i<B.rows(); i++)
    for (unsigned long j=0; j<B.columns(); j++)
-     B.entry(i,j) = reducedMatrix->entry(i, j + A.columns());
- for (unsigned long i=0; i<D.rows(); i++) 
+     B.entry(i,j) = reducedMatrix_->entry(i, j + A.columns());
+ for (unsigned long i=0; i<D.rows(); i++)
    for (unsigned long j=0; j<D.columns(); j++)
-     D.entry(i,j) = reducedMatrix->entry( i + A.rows(), j + A.columns() );
+     D.entry(i,j) = reducedMatrix_->entry( i + A.rows(), j + A.columns() );
  // compute A', B', D'
  // use void columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri,
  // const std::vector<unsigned> &rowList); 
