@@ -408,6 +408,14 @@ class REGINA_API NGroupExpression :
          * between 0 and countTerms()-1 inclusive.
          * @return the number of the requested generator.
          */
+        unsigned long generator(size_t index) const;
+        /**
+         * Deprecated routine that returns the generator corresponding to the
+         * term at the given index in this expression.
+         *
+         * \deprecated This routine has been renamed to generator().
+         * See the generator() documentation for further details.
+         */
         unsigned long getGenerator(size_t index) const;
         /**
          * Returns the exponent corresonding to the
@@ -1602,6 +1610,10 @@ inline size_t NGroupExpression::wordLength() const {
     for (it = terms_.begin(); it!=terms_.end(); it++)
         retval += labs((*it).exponent);
     return retval;
+}
+
+inline unsigned long NGroupExpression::generator(size_t index) const {
+    return term(index).generator;
 }
 
 inline unsigned long NGroupExpression::getGenerator(size_t index) const {

@@ -302,7 +302,7 @@ std::unique_ptr<NAbelianGroup> NGroupPresentation::abelianisation() const
     for (unsigned long j=0; j<countRelations(); j++) {
         NGroupExpression Rj ( getRelation(j) );
         for (unsigned long i=0; i<Rj.countTerms(); i++)
-            N.entry( Rj.getGenerator(i), j ) += Rj.getExponent(i);
+            N.entry( Rj.generator(i), j ) += Rj.getExponent(i);
     }
     return std::unique_ptr<NAbelianGroup>(new NAbelianGroup(M,N));
 }
@@ -317,7 +317,7 @@ const
     for (unsigned long j=0; j<countRelations(); j++) {
         NGroupExpression Rj ( getRelation(j) );
         for (unsigned long i=0; i<Rj.countTerms(); i++)
-            N.entry( Rj.getGenerator(i), j ) += Rj.getExponent(i);
+            N.entry( Rj.generator(i), j ) += Rj.getExponent(i);
     }
     return std::unique_ptr<NMarkedAbelianGroup>(new NMarkedAbelianGroup(M,N));
 }
@@ -877,7 +877,7 @@ NGroupPresentation::smallCancellationDetail()
             for (unsigned long i=0; i<genUsage.size(); i++) if (genUsage[i] == 1) {
                     // have we found a substitution for generator i ?
                     if ( ( substitutionTable[i].countTerms() == 1 ) &&
-                            ( substitutionTable[i].getGenerator(0) == i ) ) {
+                            ( substitutionTable[i].generator(0) == i ) ) {
                         // we have a valid substitution.  Replace all occurances
                         // of generator genUsage[i] with the inverse of the remaining word
                         bool inv(true);
@@ -916,7 +916,7 @@ found_a_generator_killer:
     nGenerators = 0;
     for (unsigned long i=0; i<substitutionTable.size(); i++)
         if ( substitutionTable[i].countTerms() == 1 )
-            if ( substitutionTable[i].getGenerator(0) == i ) nGenerators++;
+            if ( substitutionTable[i].generator(0) == i ) nGenerators++;
 
     // now we can build up a mapping of where the current generators get sent to.
     // make it a std::vector.
@@ -925,7 +925,7 @@ found_a_generator_killer:
     unsigned long indx(0);
     for (unsigned long i=0; i<substitutionTable.size(); i++) {
         if ( substitutionTable[i].countTerms() == 1 )
-            if ( substitutionTable[i].getGenerator(0) == i ) {
+            if ( substitutionTable[i].generator(0) == i ) {
                 genReductionMapping[ indx ] = i;
                 indx++;
             }
