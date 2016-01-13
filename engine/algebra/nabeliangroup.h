@@ -269,16 +269,18 @@ class REGINA_API NAbelianGroup :
          * Deprecated routine that returns the rank in the group of the torsion
          * term of given degree.
          *
-         * \deprecated This routine has been renamed to torsionRank().
-         * See the torsionRank() documentation for further details.
+         * \deprecated This routine has been renamed to
+         * torsionRank(const NLargeInteger&).  See the
+         * torsionRank(const NLargeInteger&) documentation for further details.
          */
         unsigned getTorsionRank(const NLargeInteger& degree) const;
         /**
          * Deprecated routine that returns the rank in the group of the torsion
          * term of given degree.
          *
-         * \deprecated This routine has been renamed to torsionRank().
-         * See the torsionRank() documentation for further details.
+         * \deprecated This routine has been renamed to
+         * torsionRank(unsigned long).  See the torsionRank(unsigned long)
+         * documentation for further details.
          */
         unsigned getTorsionRank(unsigned long degree) const;
         /**
