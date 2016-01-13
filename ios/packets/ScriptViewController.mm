@@ -95,7 +95,7 @@
     regina::NPacket* value = self.packet->getVariableValue(indexPath.row - 1);
     if (value) {
         cell.icon.image = [PacketManagerIOS iconFor:value];
-        if (value->getTreeParent())
+        if (value->parent())
             cell.value.text = [NSString stringWithUTF8String:value->label().c_str()];
         else
             cell.value.text = @"⟨Entire tree⟩";

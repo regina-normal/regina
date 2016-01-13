@@ -179,7 +179,7 @@ void NSurfaceFilterCombUI::setReadWrite(bool readWrite) {
 }
 
 void NSurfaceFilterCombUI::packetWasRenamed(NPacket* p) {
-    if (p->getTreeParent() == filter)
+    if (p->parent() == filter)
         refreshChildList();
 }
 
@@ -208,8 +208,7 @@ void NSurfaceFilterCombUI::refreshChildList() {
 
     // Add the items in reverse order since the QListViewItem
     // constructor puts new items at the front.
-    for (regina::NPacket* p = filter->getFirstTreeChild(); p;
-            p = p->getNextTreeSibling())
+    for (regina::NPacket* p = filter->firstChild(); p; p = p->nextSibling())
         if (p->type() == regina::NSurfaceFilter::packetType) {
             new QListWidgetItem(PacketManager::icon(p),
                 p->humanLabel().c_str(), children);

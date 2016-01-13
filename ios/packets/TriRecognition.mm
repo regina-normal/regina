@@ -385,7 +385,7 @@
                                                                    otherButtonTitles:nil];
                              [alert show];
                          } else if (nSummands == 1) {
-                             regina::NTriangulation* small = static_cast<regina::NTriangulation*>(base->getFirstTreeChild());
+                             regina::NTriangulation* small = static_cast<regina::NTriangulation*>(base->firstChild());
 
                              // Special-case S2xS1, S2x~S1 and RP3, which do not have
                              // 0-efficient triangulations.
@@ -440,7 +440,7 @@
                                                                    otherButtonTitles:nil];
                              [alert show];
 
-                             if (self.packet->getFirstTreeChild()) {
+                             if (self.packet->firstChild()) {
                                  // This packet already has children.
                                  // Insert the summands at a deeper level.
                                  base->setPacketLabel(self.packet->adornedLabel("Summands"));

@@ -120,8 +120,7 @@ void usage(const char* progName, const std::string& error = std::string()) {
 }
 
 bool hasTriangulation(NContainer* c) {
-    for (NPacket* child = c->getFirstTreeChild(); child;
-            child = child->getNextTreeSibling())
+    for (NPacket* child = c->firstChild(); child; child = child->nextSibling())
         if (child->type() == NTriangulation::packetType)
             return true;
 
@@ -135,8 +134,8 @@ void process(NContainer* c) {
     NStandardTriangulation* std;
     std::vector<TriSpec> children;
     TriSpec spec;
-    for (NPacket* child = c->getFirstTreeChild(); child;
-            child = child->getNextTreeSibling()) {
+    for (NPacket* child = c->firstChild(); child;
+            child = child->nextSibling()) {
         spec.packet = child;
         spec.isTri = (child->type() == NTriangulation::packetType);
 

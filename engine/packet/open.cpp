@@ -95,7 +95,7 @@ namespace {
 
             virtual void abort(NXMLElementReader*) {
                 // Delete all children of the top-level container.
-                while (NPacket* child = container.getFirstTreeChild()) {
+                while (NPacket* child = container.firstChild()) {
                     child->makeOrphan();
                     delete child;
                 }
@@ -256,7 +256,7 @@ NPacket* open(std::istream& s) {
     // If so, break it away from the top-level container and return it.
     NPacket* p = reader.packet();
     if (p) {
-        p = p->getFirstTreeChild();
+        p = p->firstChild();
         if (p)
             p->makeOrphan();
 

@@ -3042,7 +3042,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 }
 
                 NTriangulation* child = static_cast<NTriangulation*>(
-                    parent.getFirstTreeChild());
+                    parent.firstChild());
                 while (child) {
                     if (! tri->isIsomorphicTo(*child).get()) {
                         std::ostringstream msg;
@@ -3053,8 +3053,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                         CPPUNIT_FAIL(msg.str());
                     }
 
-                    child = static_cast<NTriangulation*>(
-                        child->getNextTreeSibling());
+                    child = static_cast<NTriangulation*>(child->nextSibling());
                 }
             } else {
                 // We should come away with a proper connected double cover.
@@ -3716,9 +3715,9 @@ class NTriangulationTest : public TriangulationTest<3> {
                     // There should be two summands, each homeomorphic
                     // to the original.
                     NTriangulation* c1 = static_cast<NTriangulation*>(
-                        t.getFirstTreeChild());
+                        t.firstChild());
                     NTriangulation* c2 = static_cast<NTriangulation*>(
-                        c1->getNextTreeSibling());
+                        c1->nextSibling());
                     if (c1->getHomologyH1() != tri->getHomologyH1() ||
                             c2->getHomologyH1() != tri->getHomologyH1()) {
                         std::ostringstream msg;

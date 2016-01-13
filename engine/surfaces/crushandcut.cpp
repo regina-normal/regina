@@ -1495,7 +1495,7 @@ namespace {
                     // right Euler characteristic on the boundary, if it exists.
                     nComp = crush->splitIntoComponents();
                     t_[side] = static_cast<NTriangulation*>(
-                        crush->getFirstTreeChild());
+                        crush->firstChild());
                     while (t_[side]) {
                         if (t_[side]->countBoundaryComponents() == 1 &&
                                 t_[side]->boundaryComponent(0)->
@@ -1506,7 +1506,7 @@ namespace {
                         }
 
                         t_[side] = static_cast<NTriangulation*>(
-                            t_[side]->getNextTreeSibling());
+                            t_[side]->nextSibling());
                     }
 
                     delete crush;
@@ -1555,8 +1555,7 @@ bool NNormalSurface::isIncompressible() const {
 
     cut->splitIntoComponents();
     int which = 0;
-    for (NPacket* comp = cut->getFirstTreeChild(); comp;
-            comp = comp->getNextTreeSibling())
+    for (NPacket* comp = cut->firstChild(); comp; comp = comp->nextSibling())
         if (static_cast<NTriangulation*>(comp)->hasBoundaryTriangles()) {
             if (which == 2) {
                 // We have more than two components with boundary.

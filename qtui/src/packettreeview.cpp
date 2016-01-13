@@ -77,8 +77,7 @@ void PacketTreeItem::init() {
 
 void PacketTreeItem::fill() {
     PacketTreeItem* childTree = 0;
-    for (NPacket* p = packet->getFirstTreeChild(); p;
-            p = p->getNextTreeSibling()) {
+    for (NPacket* p = packet->firstChild(); p; p = p->nextSibling()) {
         if (childTree)
             childTree = static_cast<PacketTreeView*>(treeWidget())->
                 createAndSelect(this, childTree, p);
@@ -186,8 +185,7 @@ void PacketTreeView::fill(NPacket* topPacket) {
     root->listen(this);
 
     // The root packet itself does not appear in the tree.
-    for (NPacket* p = root->getFirstTreeChild();
-            p; p = p->getNextTreeSibling())
+    for (NPacket* p = root->firstChild(); p; p = p->nextSibling())
         createAndSelect(p)->fill();
 }
 
@@ -260,13 +258,13 @@ void PacketTreeView::refreshSubtree(regina::NPacket* fromPacket,
 
     // Run through the child packets and child nodes and ensure they
     // match up.
-    NPacket* p = fromPacket->getFirstTreeChild();
+    NPacket* p = fromPacket->firstChild();
     int itemCounter = 0;
     PacketTreeItem* item = static_cast<PacketTreeItem*>(
         fromItem->child(itemCounter));
     PacketTreeItem* prev = 0;
     PacketTreeItem* other;
-    for ( ; p; ++itemCounter, p = p->getNextTreeSibling()) {
+    for ( ; p; ++itemCounter, p = p->nextSibling()) {
         // INV: itemCounter is the current index of p and item.
         if (! item) {
             // We've already run out of child nodes.  Add a new one.

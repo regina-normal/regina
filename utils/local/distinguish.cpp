@@ -163,8 +163,8 @@ void process(NContainer* c) {
 
     InvData* triData;
 
-    for (NPacket* child = c->getFirstTreeChild(); child;
-            child = child->getNextTreeSibling()) {
+    for (NPacket* child = c->firstChild(); child;
+            child = child->nextSibling()) {
         if (child->type() != NTriangulation::packetType)
             continue;
 

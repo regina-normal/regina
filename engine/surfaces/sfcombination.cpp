@@ -42,16 +42,14 @@ namespace regina {
 bool NSurfaceFilterCombination::accept(const NNormalSurface& surface) const {
     if (usesAnd) {
         // Combine all child filters using AND.
-        for (NPacket* child = getFirstTreeChild(); child;
-                child = child->getNextTreeSibling())
+        for (NPacket* child = firstChild(); child; child = child->nextSibling())
             if (child->type() == NSurfaceFilter::packetType)
                 if (! (dynamic_cast<NSurfaceFilter*>(child)->accept(surface)))
                     return false;
         return true;
     } else {
         // Combine all child filters using OR.
-        for (NPacket* child = getFirstTreeChild(); child;
-                child = child->getNextTreeSibling())
+        for (NPacket* child = firstChild(); child; child = child->nextSibling())
             if (child->type() == NSurfaceFilter::packetType)
                 if (dynamic_cast<NSurfaceFilter*>(child)->accept(surface))
                     return true;

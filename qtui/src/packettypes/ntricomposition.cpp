@@ -116,7 +116,7 @@ NTriCompositionUI::NTriCompositionUI(regina::NTriangulation* packet,
     label = new QLabel(tr("Compare with T ="), ui);
     label->setWhatsThis(msg);
     isoSelectArea->addWidget(label);
-    isoTest = new PacketChooser(tri->getTreeMatriarch(),
+    isoTest = new PacketChooser(tri->root(),
         new SubclassFilter<NTriangulation>(),
         PacketChooser::ROOT_AS_PACKET, true, 0, ui);
     isoTest->setAutoUpdate(true);

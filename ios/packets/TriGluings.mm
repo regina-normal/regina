@@ -318,7 +318,7 @@
     // If there are already children of this triangulation, insert
     // the new triangulations at a deeper level.
     regina::NPacket* base;
-    if (self.packet->getFirstTreeChild()) {
+    if (self.packet->firstChild()) {
         base = new regina::NContainer();
         self.packet->insertChildLast(base);
         base->setPacketLabel(self.packet->adornedLabel("Components"));

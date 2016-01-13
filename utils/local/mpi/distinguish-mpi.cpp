@@ -525,8 +525,8 @@ void ctrlProcess(NContainer* c) {
     NTriangulation* tri;
     int i;
 
-    for (NPacket* child = c->getFirstTreeChild(); child;
-            child = child->getNextTreeSibling()) {
+    for (NPacket* child = c->firstChild(); child;
+            child = child->nextSibling()) {
         if (child->type() != NTriangulation::packetType)
             continue;
         tri = static_cast<NTriangulation*>(child);

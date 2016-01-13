@@ -273,7 +273,7 @@ static NSMutableCharacterSet* eulerSeparators;
     _subfilters = [NSPointerArray pointerArrayWithOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsOpaquePersonality];
 
     regina::NPacket* p;
-    for (p = self.packet->getFirstTreeChild(); p; p = p->getNextTreeSibling())
+    for (p = self.packet->firstChild(); p; p = p->nextSibling())
         if (p->type() == regina::PACKET_SURFACEFILTER)
             [_subfilters addPointer:p];
 

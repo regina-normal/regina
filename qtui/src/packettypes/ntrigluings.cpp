@@ -899,7 +899,7 @@ void NTriGluingsUI::connectedSumWith() {
 
     regina::NTriangulation* other = static_cast<regina::NTriangulation*>(
         PacketDialog::choose(ui,
-            tri->getTreeMatriarch(),
+            tri->root(),
             new SubclassFilter<regina::NTriangulation>(),
             tr("Connected Sum"),
             tr("Sum this with which other triangulation?"),
@@ -981,7 +981,7 @@ void NTriGluingsUI::splitIntoComponents() {
         // If there are already children of this triangulation, insert
         // the new triangulations at a deeper level.
         NPacket* base;
-        if (tri->getFirstTreeChild()) {
+        if (tri->firstChild()) {
             base = new regina::NContainer();
             tri->insertChildLast(base);
             base->setPacketLabel(tri->adornedLabel("Components"));
@@ -992,8 +992,7 @@ void NTriGluingsUI::splitIntoComponents() {
         unsigned long nComps = tri->splitIntoComponents(base);
 
         // Make sure the new components are visible.
-        enclosingPane->getMainWindow()->ensureVisibleInTree(
-            base->getFirstTreeChild());
+        enclosingPane->getMainWindow()->ensureVisibleInTree(base->firstChild());
 
         // Tell the user what happened.
         ReginaSupport::info(ui,
@@ -1022,7 +1021,7 @@ void NTriGluingsUI::connectedSumDecomposition() {
         // If there are already children of this triangulation, insert
         // the new triangulations at a deeper level.
         NPacket* base;
-        if (tri->getFirstTreeChild()) {
+        if (tri->firstChild()) {
             base = new regina::NContainer();
             tri->insertChildLast(base);
             base->setPacketLabel(tri->adornedLabel("Summands"));
@@ -1049,13 +1048,13 @@ void NTriGluingsUI::connectedSumDecomposition() {
             // There is at least one new summand triangulation.
             // Make sure the new summands are visible.
             enclosingPane->getMainWindow()->ensureVisibleInTree(
-                base->getLastTreeChild());
+                base->lastChild());
 
             if (nSummands == 1) {
                 // Special-case S2xS1, S2x~S1 and RP3, which do not have
                 // 0-efficient triangulations.
                 NTriangulation* small = static_cast<NTriangulation*>
-                    (base->getFirstTreeChild());
+                    (base->firstChild());
                 if (small->size() <= 2 && small->getHomologyH1().isZ()) {
                     // The only closed prime manifolds with
                     // H_1 = Z and <= 2 tetrahedra are S2xS1 and S2x~S1.
@@ -1140,7 +1139,7 @@ void NTriGluingsUI::makeZeroEfficient() {
         // Composite 3-manifold.
         tri->insertChildLast(decomp);
         enclosingPane->getMainWindow()->ensureVisibleInTree(
-            decomp->getLastTreeChild());
+            decomp->lastChild());
 
         ReginaSupport::info(ui,
             tr("This triangulation represents a composite 3-manifold."),

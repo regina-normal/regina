@@ -159,8 +159,8 @@ bool process(NContainer* c) {
     NStandardTriangulation* std;
     NManifold* mfd;
     std::string name, structure;
-    for (NPacket* child = c->getFirstTreeChild(); child;
-            child = child->getNextTreeSibling()) {
+    for (NPacket* child = c->firstChild(); child;
+            child = child->nextSibling()) {
         if (child->type() != NTriangulation::packetType)
             continue;
 
@@ -303,8 +303,7 @@ int main(int argc, char* argv[]) {
             foundManifolds = false;
             children.clear();
 
-            for (p = parent->getFirstTreeChild(); p;
-                    p = p->getNextTreeSibling())
+            for (p = parent->firstChild(); p; p = p->nextSibling())
                 if (p->type() == NContainer::packetType) {
                     if (process(static_cast<NContainer*>(p)))
                         foundManifolds = true;
