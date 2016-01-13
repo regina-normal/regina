@@ -175,6 +175,13 @@ class REGINA_API NHomGroupPresentation :
          *
          * @return a reference to the range.
          */
+        const NGroupPresentation& range() const;
+        /**
+         * Deprecated routine that returns the range of the map.
+         *
+         * \deprecated This routine has been renamed to range().
+         * See the range() documentation for further details.
+         */
         const NGroupPresentation& getRange() const;
 
         /**
@@ -439,6 +446,10 @@ inline const NGroupPresentation& NHomGroupPresentation::domain() const {
 
 inline const NGroupPresentation& NHomGroupPresentation::getDomain() const {
     return *domain_;
+}
+
+inline const NGroupPresentation& NHomGroupPresentation::range() const {
+    return *range_;
 }
 
 inline const NGroupPresentation& NHomGroupPresentation::getRange() const {

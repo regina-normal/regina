@@ -64,6 +64,8 @@ void addNHomGroupPresentation() {
             return_internal_reference<>())
         .def("getDomain", &NHomGroupPresentation::getDomain,
             return_internal_reference<>())
+        .def("range", &NHomGroupPresentation::range,
+            return_internal_reference<>())
         .def("getRange", &NHomGroupPresentation::getRange,
             return_internal_reference<>())
         .def("knowsInverse", &NHomGroupPresentation::knowsInverse)
