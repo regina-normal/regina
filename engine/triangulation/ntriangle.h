@@ -88,7 +88,7 @@ class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2>,
          * of a triangle are considered unlabelled (so a relabelling
          * will not change the triangle type).
          *
-         * @see getType
+         * @see type
          */
         enum Type {
             UNKNOWN_TYPE = 0,
@@ -178,17 +178,34 @@ class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2>,
          * @return the type of this triangle.  This routine will never
          * return UNKNOWN_TYPE.
          */
+        Type type();
+
+        /**
+         * Deprecated routine that returns a description of the triangle type.
+         *
+         * \deprecated This routine has been renamed to type().
+         * See the type() documentation for further details.
+         */
         Type getType();
 
         /**
          * Return the triangle vertex or triangle edge that plays a special role
          * for the triangle type of this triangle.  Note that this routine is
          * only relevant for some triangle types.  The triangle type is
-         * returned by getType().
+         * returned by type().
          *
          * @return The vertex or edge that plays a special role (this
          * will be 0, 1 or 2), or -1 if this triangle type has no special
          * vertex or edge.
+         */
+        int subtype();
+
+        /**
+         * Deprecated routine that returns the triangle vertex or triangle edge
+         * that plays a special role for the triangle type of this triangle.
+         *
+         * \deprecated This routine has been renamed to subtype().
+         * See the subtype() documentation for further details.
          */
         int getSubtype();
 
@@ -196,7 +213,7 @@ class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2>,
          * Determines whether this triangle is wrapped up to form a Mobius band.
          *
          * Note that several different triangle types (as returned by
-         * getType()) can produce this result.
+         * type()) can produce this result.
          * Note also that a triangle can be both a Mobius band \a and a cone.
          *
          * @return \c true if and only if this triangle is a Mobius band.
@@ -207,7 +224,7 @@ class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2>,
          * Determines whether this triangle is wrapped up to form a cone.
          *
          * Note that several different triangle types (as returned by
-         * getType()) can produce this result.
+         * type()) can produce this result.
          * Note also that a triangle can be both a Mobius band \a and a cone.
          *
          * @return \c true if and only if this triangle is a cone.
@@ -301,18 +318,27 @@ inline bool Face<3, 2>::inMaximalForest() const {
         front().getTriangle());
 }
 
+inline NTriangle::Type Face<3, 2>::getType() {
+    return type();
+}
+
+inline int Face<3, 2>::subtype() {
+    type();
+    return subtype_;
+}
+
 inline int Face<3, 2>::getSubtype() {
-    getType();
+    type();
     return subtype_;
 }
 
 inline bool Face<3, 2>::isMobiusBand() {
-    getType();
+    type();
     return (type_ == L31 || type_ == DUNCEHAT || type_ == MOBIUS);
 }
 
 inline bool Face<3, 2>::isCone() {
-    getType();
+    type();
     return (type_ == DUNCEHAT || type_ == CONE || type_ == HORN);
 }
 

@@ -301,7 +301,7 @@
 
                 cell.data0.text = (t->isBoundary() ? @"Bdry" : @"Internal");
 
-                switch (t->getType()) {
+                switch (t->type()) {
                     case regina::NTriangle::TRIANGLE:
                         cell.data1.text = @"Triangle";
                         break;
