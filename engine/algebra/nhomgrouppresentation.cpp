@@ -90,7 +90,7 @@ std::unique_ptr< NHomMarkedAbelianGroup >
   {
    NGroupExpression COLj( evaluate(j) );
    for (unsigned long i=0; i<COLj.countTerms(); i++)
-    ccMat.entry( COLj.generator(i), j ) += COLj.getExponent(i);
+    ccMat.entry( COLj.generator(i), j ) += COLj.exponent(i);
   }
  return std::unique_ptr<NHomMarkedAbelianGroup>(
         new NHomMarkedAbelianGroup( *DOM, *RAN, ccMat ) );

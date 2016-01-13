@@ -430,6 +430,14 @@ class REGINA_API NGroupExpression :
          * between 0 and countTerms()-1 inclusive.
          * @return the requested exponent.
          */
+        long exponent(size_t index) const;
+        /**
+         * Deprecated routine that returns the exponent corresponding to the
+         * term at the given index in this expression.
+         *
+         * \deprecated This routine has been renamed to exponent().
+         * See the exponent() documentation for further details.
+         */
         long getExponent(size_t index) const;
 
         /**
@@ -1618,6 +1626,10 @@ inline unsigned long NGroupExpression::generator(size_t index) const {
 
 inline unsigned long NGroupExpression::getGenerator(size_t index) const {
     return term(index).generator;
+}
+
+inline long NGroupExpression::exponent(size_t index) const {
+    return term(index).exponent;
 }
 
 inline long NGroupExpression::getExponent(size_t index) const {

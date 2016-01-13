@@ -138,6 +138,7 @@ void addNGroupPresentation() {
         .def("term", term_non_const, return_internal_reference<>())
         .def("generator", &NGroupExpression::generator)
         .def("getGenerator", &NGroupExpression::getGenerator)
+        .def("exponent", &NGroupExpression::exponent)
         .def("getExponent", &NGroupExpression::getExponent)
         .def("addTermFirst", addTermFirst_term)
         .def("addTermFirst", addTermFirst_pair)

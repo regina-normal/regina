@@ -302,7 +302,7 @@ std::unique_ptr<NAbelianGroup> NGroupPresentation::abelianisation() const
     for (unsigned long j=0; j<countRelations(); j++) {
         NGroupExpression Rj ( getRelation(j) );
         for (unsigned long i=0; i<Rj.countTerms(); i++)
-            N.entry( Rj.generator(i), j ) += Rj.getExponent(i);
+            N.entry( Rj.generator(i), j ) += Rj.exponent(i);
     }
     return std::unique_ptr<NAbelianGroup>(new NAbelianGroup(M,N));
 }
@@ -317,7 +317,7 @@ const
     for (unsigned long j=0; j<countRelations(); j++) {
         NGroupExpression Rj ( getRelation(j) );
         for (unsigned long i=0; i<Rj.countTerms(); i++)
-            N.entry( Rj.generator(i), j ) += Rj.getExponent(i);
+            N.entry( Rj.generator(i), j ) += Rj.exponent(i);
     }
     return std::unique_ptr<NMarkedAbelianGroup>(new NMarkedAbelianGroup(M,N));
 }
