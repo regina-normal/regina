@@ -611,9 +611,17 @@ class REGINA_API NMarkedAbelianGroup :
          * Returns the rank of the chain complex supporting the homology
          *  computation. In the description of this class, this is also given
          *  by M.columns() and N.rows() from the constructor that takes as
-         *  input two matrices, M and N.  
+         *  input two matrices, M and N.
          *
          * @return the rank of the chain complex.
+         */
+        unsigned long rankCC() const;
+        /**
+         * Deprecated routine that returns the rank of the chain complex
+         * supporting the homology computation.
+         *
+         * \deprecated This routine has been renamed to rankCC().
+         * See the rankCC() documentation for further details.
          */
         unsigned long getRankCC() const;
 
@@ -669,13 +677,13 @@ class REGINA_API NMarkedAbelianGroup :
          * \ifacespython Both \a v and the return value are python lists.
          *
          * @param v a vector of length M.columns(). M.columns() is also
-         *  getRankCC(). 
-         *  
+         *  rankCC().
+         *
          * @return a vector that describes \a v in the standard
          *  Z_{d1} + ... + Z_{dk} + Z^d form, or the empty vector if
          *  \a v is not in the kernel of \a M. k+d is equal to 
-         *  minNumberOfGenerators(). 
-         * 
+         *  minNumberOfGenerators().
+         *
          */
         std::vector<NLargeInteger> snfRep(
             const std::vector<NLargeInteger>& v) const;
@@ -1404,6 +1412,10 @@ inline unsigned long NMarkedAbelianGroup::getRank() const {
 
 inline unsigned long NMarkedAbelianGroup::minNumberOfGenerators() const {
     return snfrank + ifNum;
+}
+
+inline unsigned long NMarkedAbelianGroup::rankCC() const {
+    return OM.columns();
 }
 
 inline unsigned long NMarkedAbelianGroup::getRankCC() const {

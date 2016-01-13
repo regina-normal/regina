@@ -47,9 +47,9 @@ using regina::NLargeInteger;
 namespace {
     unsigned long (NMarkedAbelianGroup::*torsionRank_large)(
         const regina::NLargeInteger&) const =
-        &NMarkedAbelianGroup::getTorsionRank;
+        &NMarkedAbelianGroup::torsionRank;
     unsigned long (NMarkedAbelianGroup::*torsionRank_long)(unsigned long)
-        const = &NMarkedAbelianGroup::getTorsionRank;
+        const = &NMarkedAbelianGroup::torsionRank;
 
     boost::python::list freeRep_list(
             const NMarkedAbelianGroup& g, unsigned long index) {
@@ -146,6 +146,8 @@ void addNMarkedAbelianGroup() {
         .def(init<unsigned long, const NLargeInteger&>())
         .def("isChainComplex", &NMarkedAbelianGroup::isChainComplex)
         .def("getRank", &NMarkedAbelianGroup::getRank)
+        .def("torsionRank", torsionRank_large)
+        .def("torsionRank", torsionRank_long)
         .def("getTorsionRank", torsionRank_large)
         .def("getTorsionRank", torsionRank_long)
         .def("minNumberOfGenerators",
@@ -168,6 +170,7 @@ void addNMarkedAbelianGroup() {
         .def("getTorsionRep", torsionRep_list)
         .def("getSNFIsoRep", snfRep_list_list)
         .def("snfRep", snfRep_list_list)
+        .def("rankCC", &NMarkedAbelianGroup::rankCC)
         .def("getRankCC", &NMarkedAbelianGroup::getRankCC)
         .def("minNumberCycleGens", &NMarkedAbelianGroup::minNumberCycleGens)
         .def("getMRB", &NMarkedAbelianGroup::getMRB,

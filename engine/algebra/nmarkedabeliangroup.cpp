@@ -724,7 +724,7 @@ std::unique_ptr<NMarkedAbelianGroup> NMarkedAbelianGroup::torsionSubgroup()
 // and its canonical inclusion map
 std::unique_ptr<NHomMarkedAbelianGroup> NMarkedAbelianGroup::torsionInclusion()
         const {
-    NMatrixInt iM( getRankCC(), countInvariantFactors() );
+    NMatrixInt iM( rankCC(), countInvariantFactors() );
     for (unsigned long j=0; j<iM.columns(); j++) {
         std::vector<NLargeInteger> jtor( getTorsionRep(j) );
         for (unsigned long i=0; i<iM.rows(); i++)
@@ -1084,7 +1084,7 @@ bool NHomMarkedAbelianGroup::isCycleMap() const
     for (unsigned long j=0; j<domain.minNumberCycleGens(); j++)
     {
         std::vector<NLargeInteger> cycJ( domain.cycleGen(j) );
-        std::vector<NLargeInteger> FcycJ( range.getRankCC(), NLargeInteger::zero );
+        std::vector<NLargeInteger> FcycJ( range.rankCC(), NLargeInteger::zero );
         for (unsigned long i=0; i<matrix.rows(); i++) 
           for (unsigned long k=0; k<matrix.columns(); k++)
             FcycJ[i] += matrix.entry(i,k) * cycJ[k];
