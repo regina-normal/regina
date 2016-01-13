@@ -71,7 +71,7 @@
 
 - (void)reloadPacket
 {
-    self.script.text = [NSString stringWithUTF8String:self.packet->getText().c_str()];
+    self.script.text = [NSString stringWithUTF8String:self.packet->text().c_str()];
     [self.script scrollRangeToVisible:NSMakeRange(0, 0)];
     [self.variables reloadData];
 }
@@ -90,9 +90,9 @@
         return [tableView dequeueReusableCellWithIdentifier:@"Empty"];
 
     ScriptVariableCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Variable" forIndexPath:indexPath];
-    cell.variable.text = [NSString stringWithUTF8String:self.packet->getVariableName(indexPath.row - 1).c_str()];
+    cell.variable.text = [NSString stringWithUTF8String:self.packet->variableName(indexPath.row - 1).c_str()];
 
-    regina::NPacket* value = self.packet->getVariableValue(indexPath.row - 1);
+    regina::NPacket* value = self.packet->variableValue(indexPath.row - 1);
     if (value) {
         cell.icon.image = [PacketManagerIOS iconFor:value];
         if (value->parent())

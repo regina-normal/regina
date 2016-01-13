@@ -132,12 +132,12 @@ void NScript::writeTextLong(std::ostream& o) const {
                 o << "(null)" << '\n';
         }
     }
-    o << '\n' << text;
+    o << '\n' << text_;
 }
 
 NPacket* NScript::internalClonePacket(NPacket*) const {
     NScript* ans = new NScript();
-    ans->text = text;
+    ans->text_ = text_;
     ans->variables = variables;
     return ans;
 }
@@ -157,7 +157,7 @@ void NScript::writeXMLPacketData(std::ostream& out) const {
         out << "\"/>\n";
     }
 
-    out << "  <text>" << xmlEncodeSpecialChars(text) << "</text>\n";
+    out << "  <text>" << xmlEncodeSpecialChars(text_) << "</text>\n";
 }
 
 void NScript::packetWasRenamed(NPacket*) {

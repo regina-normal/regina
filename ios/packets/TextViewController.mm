@@ -69,7 +69,7 @@
     if (myEdit)
         return;
 
-    self.detail.text = [NSString stringWithUTF8String:self.packet->getText().c_str()];
+    self.detail.text = [NSString stringWithUTF8String:self.packet->text().c_str()];
     [self.detail scrollRangeToVisible:NSMakeRange(0, 0)];
     // TODO: It still doesn't scroll quite far enough up (same for scripts also).
     // Find out what we need to set the contentOffset to.

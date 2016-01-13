@@ -89,7 +89,7 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
     REGINA_PACKET(NScript, PACKET_SCRIPT)
 
     private:
-        std::string text;
+        std::string text_;
             /**< The complete text of this script, including newlines. */
         std::map<std::string, NPacket*> variables;
             /**< A map storing the variables with which this script
@@ -109,6 +109,14 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
          * and set them through other member functions (see below).
          *
          * @return the complete text of this script.
+         */
+        const std::string& text() const;
+
+        /**
+         * Deprecated routine that returns the complete text of this script.
+         *
+         * \deprecated This routine has been renamed to text().
+         * See the text() documentation for further details.
          */
         const std::string& getText() const;
 
@@ -151,6 +159,14 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
          * be between 0 and countVariables()-1 inclusive.
          * @return the name of the requested variable.
          */
+        const std::string& variableName(size_t index) const;
+        /**
+         * Deprecated routine that returns the name of the requested variable
+         * associated with this script.
+         *
+         * \deprecated This routine has been renamed to variableName().
+         * See the variableName() documentation for further details.
+         */
         const std::string& getVariableName(size_t index) const;
         /**
          * Returns the index of the variable stored with the given name.
@@ -161,6 +177,14 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
          * between 0 and countVariables()-1 inclusive, or -1 if
          * there is no variable with the given name.
          */
+        long variableIndex(const std::string& name) const;
+        /**
+         * Deprecated routine that returns the index of the variable stored
+         * with the given name.
+         *
+         * \deprecated This routine has been renamed to variableIndex().
+         * See the variableIndex() documentation for further details.
+         */
         long getVariableIndex(const std::string& name) const;
         /**
          * Returns the value of the requested variable associated with
@@ -169,6 +193,14 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
          * @param index the index of the requested variable; this must
          * be between 0 and countVariables()-1 inclusive.
          * @return the value of the requested variable.
+         */
+        NPacket* variableValue(size_t index) const;
+        /**
+         * Deprecated routine that returns the value of the requested
+         * variable associated with this script.
+         *
+         * \deprecated This routine has been renamed to variableValue(size_t).
+         * See the variableValue(size_t) documentation for further details.
          */
         NPacket* getVariableValue(size_t index) const;
         /**
@@ -181,6 +213,15 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
          * @param name the name of the requested variable; note that
          * names are case sensitive.
          * @return the value of the requested variable.
+         */
+        NPacket* variableValue(const std::string& name) const;
+        /**
+         * Deprecated routine that returns the value of the variable stored
+         * with the given name.
+         *
+         * \deprecated This routine has been renamed to
+         * variableValue(const std::string&).  See the
+         * variableValue(const std::string&) documentation for further details.
          */
         NPacket* getVariableValue(const std::string& name) const;
 
@@ -272,15 +313,18 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
 inline NScript::NScript() {
 }
 
+inline const std::string& NScript::text() const {
+    return text_;
+}
 inline const std::string& NScript::getText() const {
-    return text;
+    return text_;
 }
 inline void NScript::setText(const std::string& newText) {
-    if (text == newText)
+    if (text_ == newText)
         return; // No change event fired.
 
     ChangeEventSpan span(this);
-    text = newText;
+    text_ = newText;
 }
 
 inline void NScript::append(const std::string& extraText) {
@@ -288,7 +332,7 @@ inline void NScript::append(const std::string& extraText) {
         return; // No change event fired.
 
     ChangeEventSpan span(this);
-    text += extraText;
+    text_ += extraText;
 }
 
 inline size_t NScript::countVariables() const {
@@ -297,6 +341,23 @@ inline size_t NScript::countVariables() const {
 inline size_t NScript::getNumberOfVariables() const {
     return variables.size();
 }
+
+inline const std::string& NScript::getVariableName(size_t index) const {
+    return variableName(index);
+}
+
+inline NPacket* NScript::getVariableValue(size_t index) const {
+    return variableValue(index);
+}
+
+inline NPacket* NScript::getVariableValue(const std::string& name) const {
+    return variableValue(name);
+}
+
+inline long NScript::getVariableIndex(const std::string& name) const {
+    return variableIndex(name);
+}
+
 inline bool NScript::addVariable(const std::string& name, NPacket* value) {
     ChangeEventSpan span(this);
     bool ans = variables.insert(std::make_pair(name, value)).second;

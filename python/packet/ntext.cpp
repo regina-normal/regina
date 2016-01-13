@@ -48,6 +48,8 @@ void addNText() {
             std::auto_ptr<NText>, boost::noncopyable>("NText", init<>())
         .def(init<const std::string&>())
         .def(init<const char*>())
+        .def("text", &NText::text,
+            return_value_policy<return_by_value>())
         .def("getText", &NText::getText,
             return_value_policy<return_by_value>())
         .def("setText", setText_string)
