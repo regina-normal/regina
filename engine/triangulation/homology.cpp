@@ -235,7 +235,7 @@ const NAbelianGroup& NTriangulation::getHomologyH2() const {
     long rank, z2rank;
     if (isOrientable()) {
         // Same as H1Rel without the torsion elements.
-        rank = getHomologyH1Rel().getRank();
+        rank = getHomologyH1Rel().rank();
         z2rank = 0;
     } else {
         // Non-orientable!
@@ -248,9 +248,9 @@ const NAbelianGroup& NTriangulation::getHomologyH2() const {
                     z2rank++;
 
         // Find rank(Z_2) + rank(Z) and take off z2rank.
-        rank = getHomologyH1Rel().getRank() +
-            getHomologyH1Rel().getTorsionRank(2) -
-            getHomologyH1().getTorsionRank(2) -
+        rank = getHomologyH1Rel().rank() +
+            getHomologyH1Rel().torsionRank(2) -
+            getHomologyH1().torsionRank(2) -
             z2rank;
     }
 

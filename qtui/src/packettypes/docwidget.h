@@ -51,7 +51,7 @@ class QTextDocument;
  * A widget for displaying and editing the text contents of a text-based
  * packet.  The template argument PacketType should be one of Regina's
  * text-based packet types, such as NText or NScript.  In particular, it
- * must have the text-based member functions getText() and setText().
+ * must have the text-based member functions text() and setText().
  *
  * This widget keeps an internal registry, through which each packet
  * is associated with a single QTextDocument.  This QTextDocument is
@@ -135,7 +135,7 @@ DocWidget<PacketType, Sanitise>::DocWidget(
         setDocument(it->doc);
     } else {
         Details d;
-        d.doc = new QTextDocument(packet->getText().c_str());
+        d.doc = new QTextDocument(packet->text().c_str());
         d.doc->setDocumentLayout(new QPlainTextDocumentLayout(d.doc));
         d.users = 1;
         registry_.insert(packet, d);
@@ -166,7 +166,7 @@ inline void DocWidget<PacketType, Sanitise>::refresh() {
     // position, sigh.
     QTextCursor c = textCursor();
     int pos = c.position();
-    setPlainText(packet_->getText().c_str());
+    setPlainText(packet_->text().c_str());
     c.setPosition(pos);
     setTextCursor(c);
 }

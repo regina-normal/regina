@@ -40,26 +40,26 @@
 
 namespace regina {
 
-const std::string& NScript::getVariableName(size_t index) const {
+const std::string& NScript::variableName(size_t index) const {
     std::map<std::string, NPacket*>::const_iterator it = variables.begin();
     advance(it, index);
     return (*it).first;
 }
 
-NPacket* NScript::getVariableValue(size_t index) const {
+NPacket* NScript::variableValue(size_t index) const {
     std::map<std::string, NPacket*>::const_iterator it = variables.begin();
     advance(it, index);
     return (*it).second;
 }
 
-NPacket* NScript::getVariableValue(const std::string& name) const {
+NPacket* NScript::variableValue(const std::string& name) const {
     std::map<std::string, NPacket*>::const_iterator it = variables.find(name);
     if (it == variables.end())
         return 0;
     return (*it).second;
 }
 
-long NScript::getVariableIndex(const std::string& name) const {
+long NScript::variableIndex(const std::string& name) const {
     std::map<std::string, NPacket*>::const_iterator it = variables.find(name);
     if (it == variables.end())
         return -1;
@@ -132,12 +132,12 @@ void NScript::writeTextLong(std::ostream& o) const {
                 o << "(null)" << '\n';
         }
     }
-    o << '\n' << text;
+    o << '\n' << text_;
 }
 
 NPacket* NScript::internalClonePacket(NPacket*) const {
     NScript* ans = new NScript();
-    ans->text = text;
+    ans->text_ = text_;
     ans->variables = variables;
     return ans;
 }
@@ -157,7 +157,7 @@ void NScript::writeXMLPacketData(std::ostream& out) const {
         out << "\"/>\n";
     }
 
-    out << "  <text>" << xmlEncodeSpecialChars(text) << "</text>\n";
+    out << "  <text>" << xmlEncodeSpecialChars(text_) << "</text>\n";
 }
 
 void NScript::packetWasRenamed(NPacket*) {

@@ -71,7 +71,7 @@ class REGINA_API NText : public NPacket {
     REGINA_PACKET(NText, PACKET_TEXT)
 
     private:
-        std::string text;
+        std::string text_;
             /**< The text string stored in this packet. */
     public:
         /**
@@ -97,6 +97,14 @@ class REGINA_API NText : public NPacket {
          * Returns the string stored in the packet.
          *
          * @return the stored string.
+         */
+        const std::string& text() const;
+
+        /**
+         * Deprecated routine that returns the string stored in the packet.
+         *
+         * \deprecated This routine has been renamed to text().
+         * See the text() documentation for further details.
          */
         const std::string& getText() const;
 
@@ -132,30 +140,34 @@ class REGINA_API NText : public NPacket {
 inline NText::NText() {
 }
 
-inline NText::NText(const std::string& newText) : text(newText) {
+inline NText::NText(const std::string& newText) : text_(newText) {
 }
 
-inline NText::NText(const char* newText) : text(newText) {
+inline NText::NText(const char* newText) : text_(newText) {
+}
+
+inline const std::string& NText::text() const {
+    return text_;
 }
 
 inline const std::string& NText::getText() const {
-    return text;
+    return text_;
 }
 
 inline void NText::setText(const std::string& newText) {
-    if (text == newText)
+    if (text_ == newText)
         return; // No change event fired.
 
     ChangeEventSpan span(this);
-    text = newText;
+    text_ = newText;
 }
 
 inline void NText::setText(const char* newText) {
-    if (text == newText)
+    if (text_ == newText)
         return; // No change event fired.
 
     ChangeEventSpan span(this);
-    text = newText;
+    text_ = newText;
 }
 
 inline void NText::writeTextShort(std::ostream& o) const {
@@ -163,7 +175,7 @@ inline void NText::writeTextShort(std::ostream& o) const {
 }
 
 inline void NText::writeTextLong(std::ostream& o) const {
-    o << text << '\n';
+    o << text_ << '\n';
 }
 
 inline bool NText::dependsOnParent() const {
@@ -171,7 +183,7 @@ inline bool NText::dependsOnParent() const {
 }
 
 inline NPacket* NText::internalClonePacket(NPacket*) const {
-    return new NText(text);
+    return new NText(text_);
 }
 
 } // namespace regina

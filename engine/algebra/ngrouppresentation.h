@@ -182,7 +182,7 @@ class REGINA_API NGroupExpression :
         public ShortOutput<NGroupExpression>,
         public boost::noncopyable {
     private:
-        std::list<NGroupExpressionTerm> terms;
+        std::list<NGroupExpressionTerm> terms_;
             /** The terms that make up this expression. */
 
     public:
@@ -269,7 +269,7 @@ class REGINA_API NGroupExpression :
          *
          * @return the list of terms.
          */
-        std::list<NGroupExpressionTerm>& getTerms();
+        std::list<NGroupExpressionTerm>& terms();
         /**
          * Returns a constant reference to the list of terms in this
          * expression.
@@ -284,6 +284,22 @@ class REGINA_API NGroupExpression :
          * expression from which they came.
          *
          * @return the list of terms.
+         */
+        const std::list<NGroupExpressionTerm>& terms() const;
+        /**
+         * Deprecated routine that returns the list of terms in this
+         * expression.
+         *
+         * \deprecated This routine has been renamed to terms().
+         * See the terms() documentation for further details.
+         */
+        std::list<NGroupExpressionTerm>& getTerms();
+        /**
+         * Deprecated routine that returns a constant reference to the list of
+         * terms in this expression.
+         *
+         * \deprecated This routine has been renamed to terms().
+         * See the terms() documentation for further details.
          */
         const std::list<NGroupExpressionTerm>& getTerms() const;
         /**
@@ -1509,48 +1525,57 @@ inline NGroupExpression::NGroupExpression() {
 }
 
 inline NGroupExpression::NGroupExpression(const NGroupExpression& cloneMe) :
-        terms(cloneMe.terms) {
+        terms_(cloneMe.terms_) {
 }
 
 inline bool NGroupExpression::operator ==(const NGroupExpression& comp) const {
-    return terms == comp.terms;
+    return terms_ == comp.terms_;
 }
 
 inline bool NGroupExpression::operator !=(const NGroupExpression& comp) const {
-    return terms != comp.terms;
+    return terms_ != comp.terms_;
 }
 
 inline NGroupExpression& NGroupExpression::operator=(
         const NGroupExpression& cloneMe) {
-    terms = cloneMe.terms;
+    terms_ = cloneMe.terms_;
     return *this;
 }
 
+inline std::list<NGroupExpressionTerm>& NGroupExpression::terms() {
+    return terms_;
+}
+
+inline const std::list<NGroupExpressionTerm>& NGroupExpression::terms()
+        const {
+    return terms_;
+}
+
 inline std::list<NGroupExpressionTerm>& NGroupExpression::getTerms() {
-    return terms;
+    return terms_;
 }
 
 inline const std::list<NGroupExpressionTerm>& NGroupExpression::getTerms()
         const {
-    return terms;
+    return terms_;
 }
 
 inline size_t NGroupExpression::countTerms() const {
-    return terms.size();
+    return terms_.size();
 }
 
 inline size_t NGroupExpression::getNumberOfTerms() const {
-    return terms.size();
+    return terms_.size();
 }
 
 inline bool NGroupExpression::isTrivial() const {
-    return terms.empty();
+    return terms_.empty();
 }
 
 inline size_t NGroupExpression::wordLength() const {
     size_t retval(0);
     std::list<NGroupExpressionTerm>::const_iterator it;
-    for (it = terms.begin(); it!=terms.end(); it++)
+    for (it = terms_.begin(); it!=terms_.end(); it++)
         retval += labs((*it).exponent);
     return retval;
 }
@@ -1564,25 +1589,25 @@ inline long NGroupExpression::getExponent(size_t index) const {
 }
 
 inline void NGroupExpression::addTermFirst(const NGroupExpressionTerm& term) {
-    terms.push_front(term);
+    terms_.push_front(term);
 }
 
 inline void NGroupExpression::addTermFirst(unsigned long generator,
         long exponent) {
-    terms.push_front(NGroupExpressionTerm(generator, exponent));
+    terms_.push_front(NGroupExpressionTerm(generator, exponent));
 }
 
 inline void NGroupExpression::addTermLast(const NGroupExpressionTerm& term) {
-    terms.push_back(term);
+    terms_.push_back(term);
 }
 
 inline void NGroupExpression::addTermLast(unsigned long generator,
         long exponent) {
-    terms.push_back(NGroupExpressionTerm(generator, exponent));
+    terms_.push_back(NGroupExpressionTerm(generator, exponent));
 }
 
 inline void NGroupExpression::erase() {
-    terms.clear();
+    terms_.clear();
 }
 
 // Inline functions for NGroupPresentation

@@ -159,9 +159,9 @@ bool PythonHandler::exportData(regina::NPacket* data, const QString& fileName,
     unsigned long i;
     regina::NPacket* value;
     for (i = 0; i < script->countVariables(); i++) {
-        value = script->getVariableValue(i);
+        value = script->variableValue(i);
         out << "### " << varMarker
-            << QString(script->getVariableName(i).c_str())
+            << QString(script->variableName(i).c_str())
             << ": " << (value ? QString(value->label().c_str()) : "");
         endl(out);
     }
@@ -170,7 +170,7 @@ bool PythonHandler::exportData(regina::NPacket* data, const QString& fileName,
     endl(out);
     out << "### " << endMetadataMarker;
     endl(out);
-    out << script->getText().c_str();
+    out << script->text().c_str();
 
     // All done!
     return true;

@@ -32,6 +32,7 @@
 
 /* end stub */
 
+#include <algorithm>
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "maths/nperm.h"
