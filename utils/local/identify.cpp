@@ -107,12 +107,12 @@ void process(NTriangulation* t) {
             if ((! structure.empty()) && (structure != manifold))
                 std::cout << "  ==  " << structure;
 
-            NAbelianGroup* h1 = m->getHomologyH1();
+            NAbelianGroup* h1 = m->homology();
             if (h1) {
                 homChecked++;
-                if (! (*h1 == t->getHomologyH1())) {
+                if (! (*h1 == t->homology())) {
                     std::cout << "  ...  HOMOLOGY ERROR: "
-                        << h1->str() << " != " << t->getHomologyH1().str();
+                        << h1->str() << " != " << t->homology().str();
                     homBad++;
                 }
 

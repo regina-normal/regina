@@ -207,7 +207,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
                 }
             }
 
-            std::string fromTri = tri.getHomologyH1().str();
+            std::string fromTri = tri.homology().str();
             fromDual = dat.getDualHomology(1).str();
 
             if (fromTri != fromDual) {

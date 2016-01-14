@@ -488,6 +488,11 @@ Version 4.97  [ (under development) ]
               triangleIndex(), tetrahedronIndex(), componentIndex() and
               boundaryComponentIndex() are all deprecated.  Just call
               NVertex::index() and so on instead.
+            - Renamed first homology routines getHomologyH1(),
+              getHomologyH1Rel() and getHomologyH1Bdry() to homology(),
+              homologyRel() and homologyBdry(), and renamed second homology
+              routines getHomologyH2() and getHomologyH2Z2() to homologyH2()
+              and homologyH2Z2().  The old names are kept but deprecated.
             - Removed deprecated routines addTetrahedron() and
               gluingsHaveChanged().
             - Removed maximalForestInDualSkeleton().  Just use

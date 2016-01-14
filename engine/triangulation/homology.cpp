@@ -37,7 +37,7 @@
 
 namespace regina {
 
-const NAbelianGroup& NTriangulation::getHomologyH1() const {
+const NAbelianGroup& NTriangulation::homology() const {
     if (H1_.known())
         return *H1_.value();
 
@@ -106,12 +106,12 @@ const NAbelianGroup& NTriangulation::getHomologyH1() const {
     return *(H1_ = ans);
 }
 
-const NAbelianGroup& NTriangulation::getHomologyH1Rel() const {
+const NAbelianGroup& NTriangulation::homologyRel() const {
     if (H1Rel_.known())
         return *H1Rel_.value();
 
     if (countBoundaryComponents() == 0)
-        return *(H1Rel_ = new NAbelianGroup(getHomologyH1()));
+        return *(H1Rel_ = new NAbelianGroup(homology()));
 
     // Calculate the relative first homology wrt the boundary.
 
@@ -193,7 +193,7 @@ const NAbelianGroup& NTriangulation::getHomologyH1Rel() const {
     return *(H1Rel_ = ans);
 }
 
-const NAbelianGroup& NTriangulation::getHomologyH1Bdry() const {
+const NAbelianGroup& NTriangulation::homologyBdry() const {
     if (H1Bdry_.known())
         return *H1Bdry_.value();
 
@@ -222,7 +222,7 @@ const NAbelianGroup& NTriangulation::getHomologyH1Bdry() const {
     return *(H1Bdry_ = ans);
 }
 
-const NAbelianGroup& NTriangulation::getHomologyH2() const {
+const NAbelianGroup& NTriangulation::homologyH2() const {
     if (H2_.known())
         return *H2_.value();
 
@@ -235,22 +235,20 @@ const NAbelianGroup& NTriangulation::getHomologyH2() const {
     long rank, z2rank;
     if (isOrientable()) {
         // Same as H1Rel without the torsion elements.
-        rank = getHomologyH1Rel().rank();
+        rank = homologyRel().rank();
         z2rank = 0;
     } else {
         // Non-orientable!
         // z2rank = # closed cmpts - # closed orientable cmpts
         z2rank = 0;
-        for (ComponentIterator cit = components().begin();
-                cit != components().end(); cit++)
-            if ((*cit)->isClosed())
-                if (! ((*cit)->isOrientable()))
-                    z2rank++;
+        for (auto c : components())
+            if (c->isClosed() && (! c->isOrientable()))
+                ++z2rank;
 
         // Find rank(Z_2) + rank(Z) and take off z2rank.
-        rank = getHomologyH1Rel().rank() +
-            getHomologyH1Rel().torsionRank(2) -
-            getHomologyH1().torsionRank(2) -
+        rank = homologyRel().rank() +
+            homologyRel().torsionRank(2) -
+            homology().torsionRank(2) -
             z2rank;
     }
 

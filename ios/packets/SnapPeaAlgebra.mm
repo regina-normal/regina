@@ -78,7 +78,7 @@
 - (void)reloadPacket
 {
     [self.viewer updateHeader:self.header volume:self.volume solnType:self.solnType];
-    
+
     if (self.packet->isNull() || self.packet->countFilledCusps() == 0) {
         self.filledHomologyLabel.hidden = YES;
         self.filledHomology.hidden = YES;
@@ -101,7 +101,7 @@
             self.filledHomology.text = @(h1->str().c_str());
         else
             self.filledHomology.attributedText = [TextHelper dimString:@"Could not compute"];
-        
+
         const regina::NGroupPresentation* pi1 = self.packet->fundamentalGroupFilled();
         if (pi1)
             [TriAlgebra reloadGroup:*pi1
@@ -114,7 +114,7 @@
             self.filledFundGens.text = self.filledFundRels.text = self.filledFundDetails.text = nil;
         }
     }
-    
+
     if (self.packet->isNull()) {
         self.unfilledHomologyLabel.hidden = YES;
         self.unfilledHomology.hidden = YES;
@@ -131,9 +131,9 @@
         self.unfilledFundGens.hidden = NO;
         self.unfilledFundRels.hidden = NO;
         self.unfilledFundDetails.hidden = NO;
-        
-        self.unfilledHomology.text = @(self.packet->getHomologyH1().str().c_str());
-        [TriAlgebra reloadGroup:self.packet->getFundamentalGroup()
+
+        self.unfilledHomology.text = @(self.packet->homology().str().c_str());
+        [TriAlgebra reloadGroup:self.packet->fundamentalGroup()
                            name:self.unfilledFundName
                            gens:self.unfilledFundGens
                            rels:self.unfilledFundRels
