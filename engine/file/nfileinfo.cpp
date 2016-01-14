@@ -103,9 +103,9 @@ NFileInfo* NFileInfo::identify(const std::string& idPathname) {
     }
 
     if (ans) {
-        ans->pathname = idPathname;
-        ans->type = NFileInfo::TYPE_XML;
-        ans->typeDescription = "XML Regina data file";
+        ans->pathname_ = idPathname;
+        ans->type_ = NFileInfo::TYPE_XML;
+        ans->typeDescription_ = "XML Regina data file";
 
         // Make it an invalid file until we know otherwise.
         ans->invalid = true;
@@ -171,7 +171,7 @@ NFileInfo* NFileInfo::identify(const std::string& idPathname) {
         std::string::size_type pos = s.find('"', 8);
         if (pos == std::string::npos)
             return ans;
-        ans->engine = s.substr(8, pos - 8);
+        ans->engine_ = s.substr(8, pos - 8);
 
         // That's as far as we need to go; we've extracted everything we want.
         ans->invalid = false;
@@ -183,13 +183,13 @@ NFileInfo* NFileInfo::identify(const std::string& idPathname) {
 }
 
 void NFileInfo::writeTextShort(std::ostream& out) const {
-    out << "File information: " << typeDescription;
+    out << "File information: " << typeDescription_;
     if (compressed)
         out << " (compressed)";
 }
 
 void NFileInfo::writeTextLong(std::ostream& out) const {
-    out << "Regina data\n" << typeDescription;
+    out << "Regina data\n" << typeDescription_;
     if (compressed)
         out << " (compressed)";
     out << '\n';
@@ -197,7 +197,7 @@ void NFileInfo::writeTextLong(std::ostream& out) const {
     if (invalid)
         out << "File contains invalid metadata.\n";
     else
-        out << "Engine " << engine << '\n';
+        out << "Engine " << engine_ << '\n';
 }
 
 } // namespace regina

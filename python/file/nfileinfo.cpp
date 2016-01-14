@@ -42,10 +42,17 @@ using regina::NFileInfo;
 void addNFileInfo() {
     scope s = class_<NFileInfo, std::auto_ptr<NFileInfo>, boost::noncopyable>
             ("NFileInfo", no_init)
+        .def("pathname", &NFileInfo::pathname,
+            return_value_policy<return_by_value>())
         .def("getPathname", &NFileInfo::getPathname,
             return_value_policy<return_by_value>())
+        .def("type", &NFileInfo::type)
         .def("getType", &NFileInfo::getType)
+        .def("typeDescription", &NFileInfo::typeDescription,
+            return_value_policy<return_by_value>())
         .def("getTypeDescription", &NFileInfo::getTypeDescription,
+            return_value_policy<return_by_value>())
+        .def("engine", &NFileInfo::engine,
             return_value_policy<return_by_value>())
         .def("getEngine", &NFileInfo::getEngine,
             return_value_policy<return_by_value>())
