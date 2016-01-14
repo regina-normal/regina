@@ -389,7 +389,7 @@
 
                              // Special-case S2xS1, S2x~S1 and RP3, which do not have
                              // 0-efficient triangulations.
-                             if (small->size() <= 2 && small->getHomologyH1().isZ()) {
+                             if (small->size() <= 2 && small->homology().isZ()) {
                                  // The only closed prime manifolds with
                                  // H_1 = Z and <= 2 tetrahedra are S2xS1 and S2x~S1.
                                  if (small->isOrientable()) {
@@ -409,7 +409,7 @@
                                                                            otherButtonTitles:nil];
                                      [alert show];
                                  }
-                             } else if (small->size() <= 2 && small->getHomologyH1().isZn(2)) {
+                             } else if (small->size() <= 2 && small->homology().isZn(2)) {
                                  // The only closed prime orientable manifold with
                                  // H_1 = Z_2 and <= 2 tetrahedra is RP3.
                                  small->setPacketLabel("ℝP³ (Minimal)");

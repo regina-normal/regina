@@ -214,14 +214,14 @@ QWidget* NTriHomologyFundUI::getInterface() {
 }
 
 void NTriHomologyFundUI::refresh() {
-    H1->setText(tri->getHomologyH1().str().c_str());
+    H1->setText(tri->homology().str().c_str());
 
     if (tri->isValid()) {
-        H1Rel->setText(tri->getHomologyH1Rel().str().c_str());
-        H1Bdry->setText(tri->getHomologyH1Bdry().str().c_str());
-        H2->setText(tri->getHomologyH2().str().c_str());
+        H1Rel->setText(tri->homologyRel().str().c_str());
+        H1Bdry->setText(tri->homologyBdry().str().c_str());
+        H2->setText(tri->homologyH2().str().c_str());
 
-        unsigned long coeffZ2 = tri->getHomologyH2Z2();
+        unsigned long coeffZ2 = tri->homologyH2Z2();
         if (coeffZ2 == 0)
             H2Z2->setText("0");
         else if (coeffZ2 == 1)
@@ -238,7 +238,7 @@ void NTriHomologyFundUI::refresh() {
 
     if (tri->countComponents() <= 1) {
         fgMsg->hide();
-        fgGroup->refresh(&tri->getFundamentalGroup());
+        fgGroup->refresh(&tri->fundamentalGroup());
         fgGroup->show();
     } else {
         fgGroup->hide();

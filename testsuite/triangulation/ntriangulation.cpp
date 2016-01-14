@@ -92,8 +92,8 @@ class NTriangulationTest : public TriangulationTest<3> {
     CPPUNIT_TEST(vertexLinksSpecific);
     CPPUNIT_TEST(vertexLinks);
     CPPUNIT_TEST(eulerChar);
-    CPPUNIT_TEST(homologyH1);
-    CPPUNIT_TEST(homologyH1Bdry);
+    CPPUNIT_TEST(homology);
+    CPPUNIT_TEST(homologyBdry);
     CPPUNIT_TEST(fundGroup);
     CPPUNIT_TEST(fundGroupVsH1);
     CPPUNIT_TEST(zeroEfficiency);
@@ -1771,121 +1771,121 @@ class NTriangulationTest : public TriangulationTest<3> {
             }
         }
 
-        void homologyH1() {
-            verifyGroup(empty.getHomologyH1(),
+        void homology() {
+            verifyGroup(empty.homology(),
                 "H1(empty triangulation)", 0);
-            verifyGroup(singleTet.getHomologyH1(),
+            verifyGroup(singleTet.homology(),
                 "H1(single tetrahedron)", 0);
-            verifyGroup(s3.getHomologyH1(),
+            verifyGroup(s3.homology(),
                 "H1(S^3)", 0);
-            verifyGroup(s2xs1.getHomologyH1(),
+            verifyGroup(s2xs1.homology(),
                 "H1(S^2 x S^1)", 1);
-            verifyGroup(rp3_1.getHomologyH1(),
+            verifyGroup(rp3_1.homology(),
                 "H1(RP^3, 1 vtx)", 0, 2);
-            verifyGroup(rp3_2.getHomologyH1(),
+            verifyGroup(rp3_2.homology(),
                 "H1(RP^3, 2 vtx)", 0, 2);
-            verifyGroup(lens3_1.getHomologyH1(),
+            verifyGroup(lens3_1.homology(),
                 "H1(L(3,1))", 0, 3);
-            verifyGroup(lens7_1_loop.getHomologyH1(),
+            verifyGroup(lens7_1_loop.homology(),
                 "H1(Loop L(7,1))", 0, 7);
-            verifyGroup(lens8_3.getHomologyH1(),
+            verifyGroup(lens8_3.homology(),
                 "H1(L(8,3))", 0, 8);
-            verifyGroup(lens8_3_large.getHomologyH1(),
+            verifyGroup(lens8_3_large.homology(),
                 "H1(Large L(8,3))", 0, 8);
-            verifyGroup(rp3rp3.getHomologyH1(),
+            verifyGroup(rp3rp3.homology(),
                 "H1(RP^3 # RP^3)", 0, 2, 2);
-            verifyGroup(q28.getHomologyH1(),
+            verifyGroup(q28.homology(),
                 "H1(S^3 / Q_28)", 0, 4);
-            verifyGroup(weberSeifert.getHomologyH1(),
+            verifyGroup(weberSeifert.homology(),
                 "H1(SeifertWeber)", 0, 5, 5, 5);
-            verifyGroup(q32xz3.getHomologyH1(),
+            verifyGroup(q32xz3.homology(),
                 "H1(S^3 / Q_32 x Z_3)", 0, 2, 6);
-            verifyGroup(lens100_1.getHomologyH1(),
+            verifyGroup(lens100_1.homology(),
                 "H1(L(100,1))", 0, 100);
-            verifyGroup(ball_large.getHomologyH1(),
+            verifyGroup(ball_large.homology(),
                 "H1(4-tetrahedron ball)", 0);
-            verifyGroup(ball_large_pillows.getHomologyH1(),
+            verifyGroup(ball_large_pillows.homology(),
                 "H1(4-tetrahedron pillow ball)", 0);
-            verifyGroup(ball_large_snapped.getHomologyH1(),
+            verifyGroup(ball_large_snapped.homology(),
                 "H1(3-tetrahedron snapped ball)", 0);
-            verifyGroup(lst3_4_7.getHomologyH1(),
+            verifyGroup(lst3_4_7.homology(),
                 "H1(LST(3,4,7))", 1);
-            verifyGroup(figure8.getHomologyH1(),
+            verifyGroup(figure8.homology(),
                 "H1(figure eight knot complement)", 1);
-            verifyGroup(rp2xs1.getHomologyH1(),
+            verifyGroup(rp2xs1.homology(),
                 "H1(RP^2 x S^1)", 1, 2);
-            verifyGroup(solidKB.getHomologyH1(),
+            verifyGroup(solidKB.homology(),
                 "H1(solid Klein bottle)", 1);
-            verifyGroup(gieseking.getHomologyH1(),
+            verifyGroup(gieseking.homology(),
                 "H1(Gieseking manifold)", 1);
-            verifyGroup(invalidEdges.getHomologyH1(),
+            verifyGroup(invalidEdges.homology(),
                 "H1(tri with invalid edges)", 0);
-            verifyGroup(twoProjPlaneCusps.getHomologyH1(),
+            verifyGroup(twoProjPlaneCusps.homology(),
                 "H1(tri with projective plane cusps)", 0, 2);
-            verifyGroup(cuspedGenusTwoTorus.getHomologyH1(),
+            verifyGroup(cuspedGenusTwoTorus.homology(),
                 "H1(cusped solid genus two torus)", 2);
-            verifyGroup(pinchedSolidTorus.getHomologyH1(),
+            verifyGroup(pinchedSolidTorus.homology(),
                 "H1(pinched solid torus)", 1);
-            verifyGroup(pinchedSolidKB.getHomologyH1(),
+            verifyGroup(pinchedSolidKB.homology(),
                 "H1(pinched solid Klein bottle)", 1);
         }
 
-        void homologyH1Bdry() {
-            verifyGroup(empty.getHomologyH1Bdry(),
+        void homologyBdry() {
+            verifyGroup(empty.homologyBdry(),
                 "Boundary H1(empty triangulation)", 0);
-            verifyGroup(singleTet.getHomologyH1Bdry(),
+            verifyGroup(singleTet.homologyBdry(),
                 "Boundary H1(single tetrahedron)", 0);
-            verifyGroup(s3.getHomologyH1Bdry(),
+            verifyGroup(s3.homologyBdry(),
                 "Boundary H1(S^3)", 0);
-            verifyGroup(s2xs1.getHomologyH1Bdry(),
+            verifyGroup(s2xs1.homologyBdry(),
                 "Boundary H1(S^2 x S^1)", 0);
-            verifyGroup(rp3_1.getHomologyH1Bdry(),
+            verifyGroup(rp3_1.homologyBdry(),
                 "Boundary H1(RP^3, 1 vtx)", 0);
-            verifyGroup(rp3_2.getHomologyH1Bdry(),
+            verifyGroup(rp3_2.homologyBdry(),
                 "Boundary H1(RP^3, 2 vtx)", 0);
-            verifyGroup(lens3_1.getHomologyH1Bdry(),
+            verifyGroup(lens3_1.homologyBdry(),
                 "Boundary H1(L(3,1))", 0);
-            verifyGroup(lens7_1_loop.getHomologyH1Bdry(),
+            verifyGroup(lens7_1_loop.homologyBdry(),
                 "Boundary H1(Loop L(7,1))", 0);
-            verifyGroup(lens8_3.getHomologyH1Bdry(),
+            verifyGroup(lens8_3.homologyBdry(),
                 "Boundary H1(L(8,3))", 0);
-            verifyGroup(lens8_3_large.getHomologyH1Bdry(),
+            verifyGroup(lens8_3_large.homologyBdry(),
                 "Boundary H1(Large L(8,3))", 0);
-            verifyGroup(rp3rp3.getHomologyH1Bdry(),
+            verifyGroup(rp3rp3.homologyBdry(),
                 "Boundary H1(RP^3 # RP^3)", 0);
-            verifyGroup(q28.getHomologyH1Bdry(),
+            verifyGroup(q28.homologyBdry(),
                 "Boundary H1(S^3 / Q_28)", 0);
-            verifyGroup(weberSeifert.getHomologyH1Bdry(),
+            verifyGroup(weberSeifert.homologyBdry(),
                 "Boundary H1(Weber-Seifert)", 0);
-            verifyGroup(q32xz3.getHomologyH1Bdry(),
+            verifyGroup(q32xz3.homologyBdry(),
                 "Boundary H1(S^3 / Q_32 x Z_3)", 0);
-            verifyGroup(lens100_1.getHomologyH1Bdry(),
+            verifyGroup(lens100_1.homologyBdry(),
                 "Boundary H1(L(100,1))", 0);
-            verifyGroup(ball_large.getHomologyH1Bdry(),
+            verifyGroup(ball_large.homologyBdry(),
                 "Boundary H1(4-tetrahedron ball)", 0);
-            verifyGroup(ball_large_pillows.getHomologyH1Bdry(),
+            verifyGroup(ball_large_pillows.homologyBdry(),
                 "Boundary H1(4-tetrahedron pillow ball)", 0);
-            verifyGroup(ball_large_snapped.getHomologyH1Bdry(),
+            verifyGroup(ball_large_snapped.homologyBdry(),
                 "Boundary H1(3-tetrahedron snapped ball)", 0);
-            verifyGroup(lst3_4_7.getHomologyH1Bdry(),
+            verifyGroup(lst3_4_7.homologyBdry(),
                 "Boundary H1(LST(3,4,7))", 2);
-            verifyGroup(figure8.getHomologyH1Bdry(),
+            verifyGroup(figure8.homologyBdry(),
                 "Boundary H1(figure eight knot complement)", 2);
-            verifyGroup(rp2xs1.getHomologyH1Bdry(),
+            verifyGroup(rp2xs1.homologyBdry(),
                 "Boundary H1(RP^2 x S^1)", 0);
-            verifyGroup(solidKB.getHomologyH1Bdry(),
+            verifyGroup(solidKB.homologyBdry(),
                 "Boundary H1(solid Klein bottle)", 1, 2);
-            verifyGroup(gieseking.getHomologyH1Bdry(),
+            verifyGroup(gieseking.homologyBdry(),
                 "Boundary H1(Gieseking manifold)", 1, 2);
-            verifyGroup(twoProjPlaneCusps.getHomologyH1Bdry(),
+            verifyGroup(twoProjPlaneCusps.homologyBdry(),
                 "Boundary H1(tri with projective plane cusps)", 0, 2, 2);
-            verifyGroup(cuspedGenusTwoTorus.getHomologyH1Bdry(),
+            verifyGroup(cuspedGenusTwoTorus.homologyBdry(),
                 "Boundary H1(cusped solid genus two torus)", 4);
         }
 
         static void verifyFundGroupVsH1(NTriangulation* tri) {
             NGroupPresentation* pi1 =
-                new NGroupPresentation(tri->getFundamentalGroup());
+                new NGroupPresentation(tri->fundamentalGroup());
 
             pi1->intelligentSimplify();
 
@@ -1907,7 +1907,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             NAbelianGroup abelian;
             abelian.addGroup(m);
 
-            if (abelian.detail() != tri->getHomologyH1().detail()) {
+            if (abelian.detail() != tri->homology().detail()) {
                 std::ostringstream msg;
                 msg << "Abelianised fundamental group does not match H1 "
                     "for " << tri->label() << ".";
@@ -1963,63 +1963,63 @@ class NTriangulationTest : public TriangulationTest<3> {
         }
 
         void fundGroup() {
-            verifyFundGroup(empty.getFundamentalGroup(),
+            verifyFundGroup(empty.fundamentalGroup(),
                 "Fund(empty triangulation)", "0");
-            verifyFundGroup(singleTet.getFundamentalGroup(),
+            verifyFundGroup(singleTet.fundamentalGroup(),
                 "Fund(single tetrahedron)", "0");
-            verifyFundGroup(s3.getFundamentalGroup(),
+            verifyFundGroup(s3.fundamentalGroup(),
                 "Fund(S^3)", "0");
-            verifyFundGroup(s2xs1.getFundamentalGroup(),
+            verifyFundGroup(s2xs1.fundamentalGroup(),
                 "Fund(S^2 x S^1)", "Z");
-            verifyFundGroup(rp3_1.getFundamentalGroup(),
+            verifyFundGroup(rp3_1.fundamentalGroup(),
                 "Fund(RP^3, 1 vtx)", "Z_2");
-            verifyFundGroup(rp3_2.getFundamentalGroup(),
+            verifyFundGroup(rp3_2.fundamentalGroup(),
                 "Fund(RP^3, 2 vtx)", "Z_2");
-            verifyFundGroup(lens3_1.getFundamentalGroup(),
+            verifyFundGroup(lens3_1.fundamentalGroup(),
                 "Fund(L(3,1))", "Z_3");
-            verifyFundGroup(lens7_1_loop.getFundamentalGroup(),
+            verifyFundGroup(lens7_1_loop.fundamentalGroup(),
                 "Fund(Loop L(7,1))", "Z_7");
-            verifyFundGroup(lens8_3.getFundamentalGroup(),
+            verifyFundGroup(lens8_3.fundamentalGroup(),
                 "Fund(L(8,3))", "Z_8");
-            verifyFundGroup(lens8_3_large.getFundamentalGroup(),
+            verifyFundGroup(lens8_3_large.fundamentalGroup(),
                 "Fund(Large L(8,3))", "Z_8");
-            //verifyFundGroup(rp3rp3.getFundamentalGroup(),
+            //verifyFundGroup(rp3rp3.fundamentalGroup(),
             //    "Fund(RP^3 # RP^3)", 0, 2, 2);
-            //verifyFundGroup(q28.getFundamentalGroup(),
+            //verifyFundGroup(q28.fundamentalGroup(),
             //    "Fund(S^3 / Q_28)", 0, 4);
-            //verifyGroup(weberSeifert.getHomologyH1(),
+            //verifyGroup(weberSeifert.homology(),
             //    "Fund(SeifertWeber)", 0, 5, 5, 5);
-            //verifyFundGroup(q32xz3.getFundamentalGroup(),
+            //verifyFundGroup(q32xz3.fundamentalGroup(),
             //    "Fund(S^3 / Q_32 x Z_3)", 0, 2, 6);
-            verifyFundGroup(lens100_1.getFundamentalGroup(),
+            verifyFundGroup(lens100_1.fundamentalGroup(),
                 "Fund(L(100,1))", "Z_100");
-            verifyFundGroup(ball_large.getFundamentalGroup(),
+            verifyFundGroup(ball_large.fundamentalGroup(),
                 "Fund(4-tetrahedron ball)", "0");
-            verifyFundGroup(ball_large_pillows.getFundamentalGroup(),
+            verifyFundGroup(ball_large_pillows.fundamentalGroup(),
                 "Fund(4-tetrahedron pillow ball)", "0");
-            verifyFundGroup(ball_large_snapped.getFundamentalGroup(),
+            verifyFundGroup(ball_large_snapped.fundamentalGroup(),
                 "Fund(3-tetrahedron snapped ball)", "0");
-            verifyFundGroup(lst3_4_7.getFundamentalGroup(),
+            verifyFundGroup(lst3_4_7.fundamentalGroup(),
                 "Fund(LST(3,4,7))", "Z");
-            verifyFundGroup(figure8.getFundamentalGroup(),
+            verifyFundGroup(figure8.fundamentalGroup(),
                 "Fund(figure eight knot complement)",
                 "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b a^-1 b^2");
                 // Note: \u21A6 is the unicode mapsto symbol.
-            verifyFundGroup(rp2xs1.getFundamentalGroup(),
+            verifyFundGroup(rp2xs1.fundamentalGroup(),
                 "Fund(RP^2 x S^1)", "Z + Z_2");
-            verifyFundGroup(solidKB.getFundamentalGroup(),
+            verifyFundGroup(solidKB.fundamentalGroup(),
                 "Fund(solid Klein bottle)", "Z");
-            //verifyFundGroup(gieseking.getFundamentalGroup(),
+            //verifyFundGroup(gieseking.fundamentalGroup(),
             //    "Fund(Gieseking manifold)", 1);
-            verifyFundGroup(invalidEdges.getFundamentalGroup(),
+            verifyFundGroup(invalidEdges.fundamentalGroup(),
                 "Fund(tri with invalid edges)", "0");
-            verifyFundGroup(twoProjPlaneCusps.getFundamentalGroup(),
+            verifyFundGroup(twoProjPlaneCusps.fundamentalGroup(),
                 "Fund(tri with projective plane cusps)", "Z_2");
-            verifyFundGroup(cuspedGenusTwoTorus.getFundamentalGroup(),
+            verifyFundGroup(cuspedGenusTwoTorus.fundamentalGroup(),
                 "Fund(cusped solid genus two torus)", "Free(2)");
-            verifyFundGroup(pinchedSolidTorus.getFundamentalGroup(),
+            verifyFundGroup(pinchedSolidTorus.fundamentalGroup(),
                 "Fund(pinched solid torus)", "Z");
-            verifyFundGroup(pinchedSolidKB.getFundamentalGroup(),
+            verifyFundGroup(pinchedSolidKB.fundamentalGroup(),
                 "Fund(pinched solid Klein bottle)", "Z");
         }
 
@@ -2033,7 +2033,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                         << " has >2 vertices but is reported as 0-efficient.";
                     CPPUNIT_FAIL(msg.str());
                 } else if (tri->countVertices() == 2 && ans &&
-                        (! tri->getHomologyH1().isTrivial())) {
+                        (! tri->homology().isTrivial())) {
                     std::ostringstream msg;
                     msg << "Triangulation " << tri->label()
                         << " has 2 vertices and non-trivial homology "
@@ -2288,7 +2288,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                          tri->isClosed() &&
                          tri->isOrientable() &&
                          tri->isConnected() &&
-                         tri->getHomologyH1().isTrivial() &&
+                         tri->homology().isTrivial() &&
                          tri->turaevViroApprox(5, 1) < 0.5);
 
             if (expected && ! found) {
@@ -2661,7 +2661,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                          tri->isConnected() &&
                          tri->countBoundaryComponents() == 1 &&
                          tri->boundaryComponent(0)->eulerChar() == 0 &&
-                         tri->getHomologyH1().isZ() &&
+                         tri->homology().isZ() &&
                          (tri->size() < 4 ||
                             (tri->size() == 4 &&
                             tri->isoSig() != "eHLObcdddwun" &&
@@ -2867,7 +2867,7 @@ class NTriangulationTest : public TriangulationTest<3> {
 
                 double tv = t.turaevViroApprox(3, q0);
                 double expectedTV = 0.5;
-                for (unsigned long i = 0; i < t.getHomologyH2Z2(); i++)
+                for (unsigned long i = 0; i < t.homologyH2Z2(); i++)
                     expectedTV += expectedTV;
 
                 if (regina::isNonZero(tv - expectedTV)) {
@@ -3109,16 +3109,16 @@ class NTriangulationTest : public TriangulationTest<3> {
 
                 // We expect the first homology group to be identical,
                 // or to be missing a copy of Z_2.
-                if (! (tri->getHomologyH1() == cover.getHomologyH1())) {
-                    NAbelianGroup hCover(cover.getHomologyH1());
+                if (! (tri->homology() == cover.homology())) {
+                    NAbelianGroup hCover(cover.homology());
                     hCover.addTorsionElement(2);
-                    if (! (tri->getHomologyH1() == hCover)) {
+                    if (! (tri->homology() == hCover)) {
                         std::ostringstream msg;
                         msg << tri->label()
                             << ": Orientable double cover has H1 = "
-                            << cover.getHomologyH1().str()
+                            << cover.homology().str()
                             << ", which does not match the original H1 = "
-                            << tri->getHomologyH1().str() << '.';
+                            << tri->homology().str() << '.';
                         CPPUNIT_FAIL(msg.str());
                     }
                 }
@@ -3222,14 +3222,14 @@ class NTriangulationTest : public TriangulationTest<3> {
 
             b.intelligentSimplify();
 
-            if (! (tri->getHomologyH1() == b.getHomologyH1())) {
+            if (! (tri->homology() == b.homology())) {
                 std::ostringstream msg;
                 msg << tri->label()
                     << ": Barycentric subdivision breaks H1.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! (tri->getHomologyH2() == b.getHomologyH2())) {
+            if (! (tri->homologyH2() == b.homologyH2())) {
                 std::ostringstream msg;
                 msg << tri->label()
                     << ": Barycentric subdivision breaks H2.";
@@ -3439,7 +3439,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 tmp0.drillEdge(tmp0.getEdge(0));
                 if (! (tmp0.isValid() && (! tmp0.isIdeal()) &&
                         (tmp0.countBoundaryComponents() == 1) &&
-                        (tmp0.getHomologyH1().isZ()) &&
+                        (tmp0.homology().isZ()) &&
                         (tmp0.boundaryComponent(0)->isOrientable()) &&
                         (tmp0.boundaryComponent(0)->eulerChar() == 0) &&
                         (! tmp0.isSolidTorus())))
@@ -3634,15 +3634,15 @@ class NTriangulationTest : public TriangulationTest<3> {
                 }
 
                 if (tri->isValid()) {
-                    if (! (punc.getHomologyH1() == tri->getHomologyH1())) {
+                    if (! (punc.homology() == tri->homology())) {
                         std::ostringstream msg;
                         msg << tri->label() << ", tet " << i << ": "
                             << "puncture changes H1.";
                         CPPUNIT_FAIL(msg.str());
                     }
 
-                    NAbelianGroup expectH2(tri->getHomologyH2());
-                    NAbelianGroup foundH2(punc.getHomologyH2());
+                    NAbelianGroup expectH2(tri->homologyH2());
+                    NAbelianGroup foundH2(punc.homologyH2());
                     NComponent* c = origTet->component();
                     if (! c->isClosed()) {
                         // X -> X + Z
@@ -3718,8 +3718,8 @@ class NTriangulationTest : public TriangulationTest<3> {
                         t.firstChild());
                     NTriangulation* c2 = static_cast<NTriangulation*>(
                         c1->nextSibling());
-                    if (c1->getHomologyH1() != tri->getHomologyH1() ||
-                            c2->getHomologyH1() != tri->getHomologyH1()) {
+                    if (c1->homology() != tri->homology() ||
+                            c2->homology() != tri->homology()) {
                         std::ostringstream msg;
                         msg << tri->label() << ": tri # tri has "
                             "summands with the wrong homology.";
@@ -3926,10 +3926,10 @@ class NTriangulationTest : public TriangulationTest<3> {
             tet[2]->joinTo(0, tet[0], NPerm4(3, 0, 1, 2));
             tet[1]->joinTo(3, tet[0], NPerm4(0, 3, 1, 2));
             tet[1]->joinTo(1, tet[0], NPerm4());
-            if (tri->getHomologyH1().str() != "Z")
+            if (tri->homology().str() != "Z")
                 CPPUNIT_FAIL("Custom solid torus has incorrect H1.");
             tri->intelligentSimplify();
-            if (tri->getHomologyH1().str() != "Z")
+            if (tri->homology().str() != "Z")
                 CPPUNIT_FAIL("Custom solid torus simplifies to "
                     "something different.");
             delete tri;
@@ -4050,9 +4050,9 @@ class NTriangulationTest : public TriangulationTest<3> {
                 t.isValid());
             CPPUNIT_ASSERT_MESSAGE("The empty triangulation is not orientable.",
                 t.isOrientable());
-            verifyGroup(t.getHomologyH1(),
+            verifyGroup(t.homology(),
                 "H1(empty triangulation)", 0);
-            verifyGroup(t.getHomologyH1Bdry(),
+            verifyGroup(t.homologyBdry(),
                 "Boundary H1(empty triangulation)", 0);
             CPPUNIT_ASSERT_MESSAGE("The empty triangulation is not "
                 "0-efficient.", t.isZeroEfficient());
@@ -4077,9 +4077,9 @@ class NTriangulationTest : public TriangulationTest<3> {
             t.getTetrahedron(0)->joinTo(0, t.getTetrahedron(0),
                 NPerm4(1, 2, 3, 0));
 
-            verifyGroup(t.getHomologyH1(),
+            verifyGroup(t.homology(),
                 "H1(LST(1,2,3))", 1);
-            verifyGroup(t.getHomologyH1Bdry(),
+            verifyGroup(t.homologyBdry(),
                 "Boundary H1(LST(1,2,3))", 2);
 
             // Glue the remaining two faces in a non-orientable fashion.
@@ -4142,14 +4142,14 @@ class NTriangulationTest : public TriangulationTest<3> {
                 }
 
                 if (tri->isValid()) {
-                    if (! (large.getHomologyH1() == tri->getHomologyH1())) {
+                    if (! (large.homology() == tri->homology())) {
                         std::ostringstream msg;
                         msg << tri->label() << ", tet " << i << ": "
                             << "1-4 move changes H1.";
                         CPPUNIT_FAIL(msg.str());
                     }
 
-                    if (! (large.getHomologyH2() == tri->getHomologyH2())) {
+                    if (! (large.homologyH2() == tri->homologyH2())) {
                         std::ostringstream msg;
                         msg << tri->label() << ", tet " << i << ": "
                             << "1-4 move changes H2.";

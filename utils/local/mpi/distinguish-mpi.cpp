@@ -547,8 +547,8 @@ void ctrlProcess(NContainer* c) {
                     ctrlFarmTask(tri, mfdData, i);
                 }
 
-            mfdData->h1 = tri->getHomologyH1().str();
-            mfdData->h2z2 = tri->getHomologyH2Z2();
+            mfdData->h1 = tri->homology().str();
+            mfdData->h2z2 = tri->homologyH2Z2();
         } else {
             for (i = tvParamCount - 1; i >= 0; i--)
                 if (tvParams[i][0] <= tvMaxRSelf) {
@@ -558,9 +558,9 @@ void ctrlProcess(NContainer* c) {
                 } else
                     ctrlFarmTask(tri, mfdData, i);
 
-            if (mfdData->h1 != tri->getHomologyH1().str())
+            if (mfdData->h1 != tri->homology().str())
                 ctrlInconsistent(mfdData, tri, "H1(M)");
-            if (mfdData->h2z2 != tri->getHomologyH2Z2())
+            if (mfdData->h2z2 != tri->homologyH2Z2())
                 ctrlInconsistent(mfdData, tri, "H2(M ; Z_2)");
         }
 

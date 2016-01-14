@@ -236,7 +236,7 @@ class REGINA_API NCusp :
  * - You can happily query this object using both SnapPea functions (such as
  *   NSnapPeaTriangulation::volume(), and others specific to this class)
  *   and Regina's native triangulation functions (such as
- *   NTriangulation::getHomologyH1(), and others inherited from NTriangulation).
+ *   NTriangulation::homology(), and others inherited from NTriangulation).
  *   This is because an object of this class stores \e two representations of
  *   the triangulation (SnapPea's and Regina's), which are always kept in sync.
  *
@@ -275,7 +275,7 @@ class REGINA_API NCusp :
  * at all.  Therefore:
  *
  * - Routines inherited through the NTriangulation interface will ignore
- *   fillings completely (so, for instance, getHomologyH1() will return the
+ *   fillings completely (so, for instance, homology() will return the
  *   first homology of the unfilled manifold, even if SnapPea has
  *   designated fillings on the cusps).
  *
@@ -1020,7 +1020,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * (without fillings) will be treated as though they had been
          * truncated.
          *
-         * This is different from the inherited getHomologyH1() routine from
+         * This is different from the inherited homology() routine from
          * the parent NTriangulation class:
          *
          * - This routine homologyFilled() respects Dehn fillings, and uses
@@ -1029,12 +1029,12 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          *   kernel cannot perform its part of the computation (see below),
          *   in which case this routine will return a null pointer.
          *
-         * - The inherited getHomologyH1() routine uses only Regina's code, and
+         * - The inherited homology() routine uses only Regina's code, and
          *   works purely within Regina's parent NTriangulation class.
          *   Since NTriangulation knows nothing about SnapPea or fillings,
          *   this means that any fillings on the cusps (which are
          *   specific to SnapPea triangulations) will be ignored.
-         *   The getHomologyH1() routine will always return a solution.
+         *   The homology() routine will always return a solution.
          *
          * This routine uses exact arithmetic, and so you are guaranteed
          * that - if it returns a result at all - that this result does
@@ -1070,13 +1070,13 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * the current Dehn filling (if any).  Any complete cusps (without
          * fillings) will be treated as though they had been truncated.
          *
-         * This is different from the inherited getFundamentalGroup() routine
+         * This is different from the inherited fundamentalGroup() routine
          * from the parent NTriangulation class:
          *
          * - This routine fundamentalGroupFilled() respects Dehn fillings, and
          *   directly uses SnapPea's code to compute fundamental groups.
          *
-         * - The inherited getFundamentalGroup() routine uses only Regina's
+         * - The inherited fundamentalGroup() routine uses only Regina's
          *   code, and works purely within Regina's parent NTriangulation class.
          *   Since NTriangulation knows nothing about SnapPea or fillings,
          *   this means that any fillings on the cusps (which are specific

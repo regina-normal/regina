@@ -97,8 +97,8 @@ struct InvData {
     double* turaevViro;
 
     InvData(NTriangulation* tri) : manifold(0) {
-        h1 = tri->getHomologyH1().str();
-        h2z2 = tri->getHomologyH2Z2();
+        h1 = tri->homology().str();
+        h2z2 = tri->homologyH2Z2();
 
         turaevViro = new double[tvParamCount];
         for (unsigned i = 0; i < tvParamCount; i++)

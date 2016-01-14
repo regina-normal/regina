@@ -36,7 +36,7 @@
 
 namespace regina {
 
-const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
+const NGroupPresentation& NTriangulation::fundamentalGroup() const {
     if (fundamentalGroup_.known())
         return *fundamentalGroup_.value();
 

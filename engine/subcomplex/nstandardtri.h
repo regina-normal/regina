@@ -132,10 +132,10 @@ class REGINA_API NStandardTriangulation :
          * homology has not yet been implemented for this triangulation
          * then this routine will return 0.
          *
-         * This routine does not work by calling
-         * NTriangulation::getHomologyH1() on the associated real
-         * triangulation.  Instead the homology is calculated directly
-         * from the known properties of this standard triangulation.
+         * This routine does not work by calling NTriangulation::homology()
+         * on the associated real triangulation.  Instead the homology is
+         * calculated directly from the known properties of this
+         * standard triangulation.
          *
          * The details of which standard triangulations have homology
          * calculation routines can be found in the notes for the
@@ -148,8 +148,7 @@ class REGINA_API NStandardTriangulation :
          * If this NStandardTriangulation describes an entire NTriangulation
          * (and not just a part thereof) then the results of this routine
          * should be identical to the homology group obtained by calling
-         * NTriangulation::getHomologyH1() upon the associated real
-         * triangulation.
+         * NTriangulation::homology() upon the associated real triangulation.
          *
          * @return the first homology group of this triangulation, or 0 if
          * the appropriate calculation routine has not yet been implemented.
