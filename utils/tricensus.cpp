@@ -121,7 +121,7 @@ struct Dim2Params {
     }
 
     inline static const Pairing* pairingFor(const GluingPermSearcher* s) {
-        return s->getFacetPairing();
+        return s->facetPairing();
     }
 };
 
@@ -143,7 +143,7 @@ struct Dim3Params {
     }
 
     inline static const Pairing* pairingFor(const GluingPermSearcher* s) {
-        return s->getFacePairing();
+        return s->facetPairing();
     }
 };
 
@@ -166,7 +166,7 @@ struct Dim4Params {
     }
 
     inline static const Pairing* pairingFor(const GluingPermSearcher* s) {
-        return s->getFacetPairing();
+        return s->facetPairing();
     }
 };
 #endif
