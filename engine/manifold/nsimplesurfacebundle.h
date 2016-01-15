@@ -74,7 +74,7 @@ class REGINA_API NSimpleSurfaceBundle : public NManifold {
          */
         static const int RP2xS1;
     private:
-        int type;
+        int type_;
             /**< The specific surface bundle being represented.
                  This must be one of the 3-manifold constants defined in
                  this class. */
@@ -99,6 +99,15 @@ class REGINA_API NSimpleSurfaceBundle : public NManifold {
          *
          * @return the type of surface bundle.  This will be one of the
          * 3-manifold constants defined in this class.
+         */
+        int type() const;
+        /**
+         * Deprecated routine that returns the specific type of surface bundle
+         * being represented.
+         *
+         *
+         * \deprecated This routine has been renamed to type().
+         * See the type() documentation for further details.
          */
         int getType() const;
         /**
@@ -132,22 +141,25 @@ class REGINA_API NSimpleSurfaceBundle : public NManifold {
 // Inline functions for NSimpleSurfaceBundle
 
 inline NSimpleSurfaceBundle::NSimpleSurfaceBundle(
-        int newType) : type(newType) {
+        int newType) : type_(newType) {
 }
 inline NSimpleSurfaceBundle::NSimpleSurfaceBundle(
         const NSimpleSurfaceBundle& cloneMe) : NManifold(),
-        type(cloneMe.type) {
+        type_(cloneMe.type_) {
+}
+inline int NSimpleSurfaceBundle::type() const {
+    return type_;
 }
 inline int NSimpleSurfaceBundle::getType() const {
-    return type;
+    return type_;
 }
 inline bool NSimpleSurfaceBundle::operator ==
         (const NSimpleSurfaceBundle& compare) const {
-    return (type == compare.type);
+    return (type_ == compare.type_);
 }
 inline bool NSimpleSurfaceBundle::operator !=
         (const NSimpleSurfaceBundle& compare) const {
-    return (type != compare.type);
+    return (type_ != compare.type_);
 }
 
 inline bool NSimpleSurfaceBundle::isHyperbolic() const {
