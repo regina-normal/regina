@@ -105,11 +105,11 @@ class REGINA_API NSnapPeaCensusManifold : public NManifold {
                  There are 887 manifolds in this section. */
 
     private:
-        char section;
+        char section_;
             /**< The section of the SnapPea census to which this
                  manifold belongs.  This must be one of the section
                  constants defined in this class. */
-        unsigned long index;
+        unsigned long index_;
             /**< The index within the given section of this specific
                  manifold.  Note that the first index in each section
                  is zero. */
@@ -145,6 +145,14 @@ class REGINA_API NSnapPeaCensusManifold : public NManifold {
          *
          * @return the section of the SnapPea census.
          */
+        char section() const;
+        /**
+         * Deprecated routine that returns the section of the SnapPea census to
+         * which this manifold belongs.
+         *
+         * \deprecated This routine has been renamed to section().
+         * See the section() documentation for further details.
+         */
         char getSection() const;
         /**
          * Returns the index of this manifold within its particular
@@ -152,6 +160,14 @@ class REGINA_API NSnapPeaCensusManifold : public NManifold {
          * section begin counting at zero.
          *
          * @return the index of this manifold within its section.
+         */
+        unsigned long index() const;
+        /**
+         * Deprecated routine that returns the index of this manifold within
+         * its particular section of the SnapPea census.
+         *
+         * \deprecated This routine has been renamed to index().
+         * See the index() documentation for further details.
          */
         unsigned long getIndex() const;
         /**
@@ -197,35 +213,41 @@ class REGINA_API NSnapPeaCensusManifold : public NManifold {
 
 inline NSnapPeaCensusManifold::NSnapPeaCensusManifold(char newSection,
         unsigned long newIndex) :
-        section(newSection), index(newIndex) {
+        section_(newSection), index_(newIndex) {
 }
 inline NSnapPeaCensusManifold::NSnapPeaCensusManifold(
         const NSnapPeaCensusManifold& cloneMe) : NManifold(),
-        section(cloneMe.section), index(cloneMe.index) {
+        section_(cloneMe.section_), index_(cloneMe.index_) {
 }
 inline NSnapPeaCensusManifold::~NSnapPeaCensusManifold() {
 }
+inline char NSnapPeaCensusManifold::section() const {
+    return section_;
+}
 inline char NSnapPeaCensusManifold::getSection() const {
-    return section;
+    return section_;
+}
+inline unsigned long NSnapPeaCensusManifold::index() const {
+    return index_;
 }
 inline unsigned long NSnapPeaCensusManifold::getIndex() const {
-    return index;
+    return index_;
 }
 inline bool NSnapPeaCensusManifold::operator == (
         const NSnapPeaCensusManifold& compare) const {
-    if (section == SEC_6_NOR && compare.section == SEC_6_NOR &&
-            (index == 101 || index == 103) &&
-            (compare.index == 101 || compare.index == 103))
+    if (section_ == SEC_6_NOR && compare.section_ == SEC_6_NOR &&
+            (index_ == 101 || index_ == 103) &&
+            (compare.index_ == 101 || compare.index_ == 103))
         return true;
-    return (section == compare.section && index == compare.index);
+    return (section_ == compare.section_ && index_ == compare.index_);
 }
 inline bool NSnapPeaCensusManifold::operator != (
         const NSnapPeaCensusManifold& compare) const {
-    if (section == SEC_6_NOR && compare.section == SEC_6_NOR &&
-            (index == 101 || index == 103) &&
-            (compare.index == 101 || compare.index == 103))
+    if (section_ == SEC_6_NOR && compare.section_ == SEC_6_NOR &&
+            (index_ == 101 || index_ == 103) &&
+            (compare.index_ == 101 || compare.index_ == 103))
         return false;
-    return (section != compare.section || index != compare.index);
+    return (section_ != compare.section_ || index_ != compare.index_);
 }
 inline bool NSnapPeaCensusManifold::isHyperbolic() const {
     return true;
