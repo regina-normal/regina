@@ -266,10 +266,10 @@ std::ostream& operator << (std::ostream& out, const NRational& rat) {
         out << "Inf";
     else if (rat.flavour == NRational::f_undefined)
         out << "Undef";
-    else if (rat.getDenominator() == 1)
-        out << rat.getNumerator();
+    else if (rat.denominator() == 1)
+        out << rat.numerator();
     else
-        out << rat.getNumerator() << '/' << rat.getDenominator();
+        out << rat.numerator() << '/' << rat.denominator();
     return out;
 }
 
@@ -284,10 +284,10 @@ std::ostream& NRational::writeTeX(std::ostream &out) const {
         out << "\\infty";
     else if (flavour == NRational::f_undefined)
         out << "0/0";
-    else if (getDenominator() == 1)
-        out << getNumerator();
+    else if (denominator() == 1)
+        out << numerator();
     else
-        out << "\\frac{" << getNumerator() << "}{" << getDenominator() << "}";
+        out << "\\frac{" << numerator() << "}{" << denominator() << "}";
     return out;
 }
 
