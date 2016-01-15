@@ -37,7 +37,7 @@
 
 namespace regina {
 
-NAbelianGroup* NHandlebody::getHomologyH1() const {
+NAbelianGroup* NHandlebody::homologyH1() const {
     NAbelianGroup* ans = new NAbelianGroup();
     if (nHandles)
         ans->addRank(nHandles);

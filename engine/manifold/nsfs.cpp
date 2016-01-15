@@ -803,7 +803,7 @@ NTriangulation* NSFSpace::construct() const {
     return ans;
 }
 
-NAbelianGroup* NSFSpace::getHomologyH1() const {
+NAbelianGroup* NSFSpace::homologyH1() const {
     if (punctures_ || puncturesTwisted_) {
         // Not just now.
         return 0;
