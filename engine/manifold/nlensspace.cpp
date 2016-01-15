@@ -40,64 +40,64 @@
 namespace regina {
 
 void NLensSpace::reduce() {
-    if (p == 0) {
-        q = 1;
+    if (p_ == 0) {
+        q_ = 1;
         return;
-    } else if (p == 1) {
-        q = 0;
+    } else if (p_ == 1) {
+        q_ = 0;
         return;
     }
 
     // p > 1 and gcd(p,q) = 1.
     
     // Reduce q to +/-q.
-    q = q % p;
-    if (2 * q > p)
-        q = p - q;
+    q_ = q_ % p_;
+    if (2 * q_ > p_)
+        q_ = p_ - q_;
 
-    unsigned long inv = modularInverse(p, q);
-    if (2 * inv > p)
-        inv = p - inv;
-    if (inv < q)
-        q = inv;
+    unsigned long inv = modularInverse(p_, q_);
+    if (2 * inv > p_)
+        inv = p_ - inv;
+    if (inv < q_)
+        q_ = inv;
 }
 
 NTriangulation* NLensSpace::construct() const {
     NTriangulation* ans = new NTriangulation();
-    ans->insertLayeredLensSpace(p, q);
+    ans->insertLayeredLensSpace(p_, q_);
     return ans;
 }
 
-NAbelianGroup* NLensSpace::getHomologyH1() const {
+NAbelianGroup* NLensSpace::homologyH1() const {
     NAbelianGroup* ans = new NAbelianGroup();
-    if (p == 0)
+    if (p_ == 0)
         ans->addRank();
-    else if (p > 1)
-        ans->addTorsionElement(p);
+    else if (p_ > 1)
+        ans->addTorsionElement(p_);
     return ans;
 }
 
 std::ostream& NLensSpace::writeName(std::ostream& out) const {
-    if (p == 0)
+    if (p_ == 0)
         out << "S2 x S1";
-    else if (p == 1)
+    else if (p_ == 1)
         out << "S3";
-    else if (p == 2 && q == 1)
+    else if (p_ == 2 && q_ == 1)
         out << "RP3";
     else
-        out << "L(" << p << ',' << q << ')';
+        out << "L(" << p_ << ',' << q_ << ')';
     return out;
 }
 
 std::ostream& NLensSpace::writeTeXName(std::ostream& out) const {
-    if (p == 0)
+    if (p_ == 0)
         out << "S^2 \\times S^1";
-    else if (p == 1)
+    else if (p_ == 1)
         out << "S^3";
-    else if (p == 2 && q == 1)
+    else if (p_ == 2 && q_ == 1)
         out << "\\mathbb{R}P^3";
     else
-        out << "L(" << p << ',' << q << ')';
+        out << "L(" << p_ << ',' << q_ << ')';
     return out;
 }
 

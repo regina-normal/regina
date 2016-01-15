@@ -44,7 +44,9 @@ void addNLensSpace() {
             std::auto_ptr<NLensSpace>, boost::noncopyable>
             ("NLensSpace", init<unsigned long, unsigned long>())
         .def(init<const NLensSpace&>())
+        .def("p", &NLensSpace::p)
         .def("getP", &NLensSpace::getP)
+        .def("q", &NLensSpace::q)
         .def("getQ", &NLensSpace::getQ)
         .def(regina::python::add_eq_operators())
     ;
