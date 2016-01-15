@@ -49,12 +49,12 @@ void* NSigCensus::run(void*) {
     sig.nCycles = 0;
     sig.nCycleGroups = 0;
     nextLabel = 0;
-    std::fill(used, used + sig.order, 0);
+    std::fill(used, used + sig.order_, 0);
     totalFound = 0;
 
     // Try creating a first cycle.
     extendAutomorphisms();
-    for (unsigned i = 2 * sig.order; i > 0; i--)
+    for (unsigned i = 2 * sig.order_; i > 0; i--)
         tryCycle(i, true, 0);
     clearTopAutomorphisms();
 
@@ -122,7 +122,7 @@ bool NSigCensus::extendAutomorphisms() {
 void NSigCensus::tryCycle(unsigned cycleLen, bool newCycleGroup,
         unsigned startPos) {
     // Are we finished?
-    if (startPos == 2 * sig.order) {
+    if (startPos == 2 * sig.order_) {
         totalFound++;
         use(sig, automorph[sig.nCycleGroups], useArgs);
         return;
@@ -163,7 +163,7 @@ void NSigCensus::tryCycle(unsigned cycleLen, bool newCycleGroup,
             }
 
             if (! avoid) {
-                if (endPos == 2 * sig.order) {
+                if (endPos == 2 * sig.order_) {
                     // Found a complete cycle set.
                     sig.cycleGroupStart[sig.nCycleGroups] = sig.nCycles;
                     if (extendAutomorphisms())
@@ -172,12 +172,12 @@ void NSigCensus::tryCycle(unsigned cycleLen, bool newCycleGroup,
                 } else {
                     // Move on to create the next cycle.
                     // The next cycle will have length i.
-                    if (endPos + cycleLen <= 2 * sig.order)
+                    if (endPos + cycleLen <= 2 * sig.order_)
                         tryCycle(cycleLen, false, endPos);
                     sig.cycleGroupStart[sig.nCycleGroups] = sig.nCycles;
                     if (extendAutomorphisms())
-                        for (i = (endPos + cycleLen - 1 <= 2 * sig.order ?
-                                cycleLen - 1 : 2 * sig.order - endPos);
+                        for (i = (endPos + cycleLen - 1 <= 2 * sig.order_ ?
+                                cycleLen - 1 : 2 * sig.order_ - endPos);
                                 i > 0; i--)
                             tryCycle(i, true, endPos);
                     clearTopAutomorphisms();
@@ -204,8 +204,8 @@ void NSigCensus::tryCycle(unsigned cycleLen, bool newCycleGroup,
                     sig.label[startPos] + 1);
                 upperBnd = nextLabel + 1;
             }
-            if (upperBnd >= sig.order)
-                upperBnd = sig.order;
+            if (upperBnd >= sig.order_)
+                upperBnd = sig.order_;
 
             if (sig.label[tryPos] < lowerBnd)
                 sig.label[tryPos] = lowerBnd;

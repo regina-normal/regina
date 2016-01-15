@@ -56,13 +56,13 @@ namespace {
     }
 }
 
-NSignature::NSignature(const NSignature& sig) : order(sig.order),
-        label(new unsigned[2 * sig.order]), labelInv(new bool[2 * sig.order]),
+NSignature::NSignature(const NSignature& sig) : order_(sig.order_),
+        label(new unsigned[2 * sig.order_]), labelInv(new bool[2 * sig.order_]),
         nCycles(sig.nCycles), cycleStart(new unsigned[sig.nCycles + 1]),
         nCycleGroups(sig.nCycleGroups),
         cycleGroupStart(new unsigned[sig.nCycleGroups + 1]) {
-    std::copy(sig.label, sig.label + 2 * sig.order, label);
-    std::copy(sig.labelInv, sig.labelInv + 2 * sig.order, labelInv);
+    std::copy(sig.label, sig.label + 2 * sig.order_, label);
+    std::copy(sig.labelInv, sig.labelInv + 2 * sig.order_, labelInv);
     std::copy(sig.cycleStart, sig.cycleStart + sig.nCycles + 1, cycleStart);
     std::copy(sig.cycleGroupStart, sig.cycleGroupStart + sig.nCycleGroups + 1,
         cycleGroupStart);
@@ -152,7 +152,7 @@ NSignature* NSignature::parse(const std::string& str) {
 
     // We now have a valid signature!
     NSignature* sig = new NSignature();
-    sig->order = order;
+    sig->order_ = order;
     sig->label = label;
     sig->labelInv = labelInv;
     sig->nCycles = nCycles;
@@ -174,21 +174,21 @@ NSignature* NSignature::parse(const std::string& str) {
 }
 
 NTriangulation* NSignature::triangulate() const {
-    unsigned sigLen = 2 * order;
+    unsigned sigLen = 2 * order_;
     NTriangulation* tri = new NTriangulation();
 
     // Create a new set of tetrahedra.
     // Tetrahedron vertices will be:
     //   bottom left -> top right: 0 -> 1
     //   bottom right -> top left: 2 -> 3
-    NTetrahedron** tet = new NTetrahedron*[order];
+    NTetrahedron** tet = new NTetrahedron*[order_];
     unsigned pos;
-    for (pos = 0; pos < order; pos++)
+    for (pos = 0; pos < order_; pos++)
         tet[pos] = tri->newTetrahedron();
 
     // Store the first occurrence of each symbol.
-    unsigned* first = new unsigned[order];
-    std::fill(first, first + order, sigLen);
+    unsigned* first = new unsigned[order_];
+    std::fill(first, first + order_, sigLen);
 
     for (pos = 0; pos < sigLen; pos++)
         if (first[label[pos]] == sigLen)
@@ -263,7 +263,7 @@ void NSignature::writeCycles(std::ostream& out, const std::string& cycleOpen,
     out << cycleOpen;
 
     unsigned cycle = 0;
-    for (unsigned pos = 0; pos < 2 * order; pos++) {
+    for (unsigned pos = 0; pos < 2 * order_; pos++) {
         if (cycleStart[cycle] == pos) {
             if (cycle > 0)
                 out << cycleClose << cycleJoin << cycleOpen;
