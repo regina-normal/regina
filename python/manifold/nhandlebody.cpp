@@ -44,6 +44,7 @@ void addNHandlebody() {
             std::auto_ptr<NHandlebody>, boost::noncopyable>
             ("NHandlebody", init<unsigned long, bool>())
         .def(init<const NHandlebody&>())
+        .def("handles", &NHandlebody::handles)
         .def("getHandles", &NHandlebody::getHandles)
         .def("isOrientable", &NHandlebody::isOrientable)
         .def(regina::python::add_eq_operators())
