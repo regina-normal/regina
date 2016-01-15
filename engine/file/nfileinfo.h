@@ -115,17 +115,40 @@ class REGINA_API NFileInfo :
          *
          * @return the type of data file.
          */
+        int type() const;
+        /**
+         * Deprecated routine that returns the type of data file.
+         *
+         * \deprecated This routine has been renamed to type().
+         * See the type() documentation for further details.
+         */
         int getType() const;
         /**
          * Returns a human-readable description of the type of data file.
          *
          * @return a description of the type of data file.
          */
+        const std::string& typeDescription() const;
+        /**
+         * Deprecated routine that returns a human-readable description of the
+         * type of data file.
+         *
+         * \deprecated This routine has been renamed to typeDescription().
+         * See the typeDescription() documentation for further details.
+         */
         const std::string& getTypeDescription() const;
         /**
          * Returns the version of the calculation engine that wrote this file.
          *
          * @return the engine version for this file.
+         */
+        const std::string& engine() const;
+        /**
+         * Deprecated routine that returns the version of the calculation
+         * engine that wrote this file.
+         *
+         * \deprecated This routine has been renamed to engine().
+         * See the engine() documentation for further details.
          */
         const std::string& getEngine() const;
         /**
@@ -200,12 +223,24 @@ inline const std::string& NFileInfo::getPathname() const {
     return pathname_;
 }
 
+inline int NFileInfo::type() const {
+    return type_;
+}
+
 inline int NFileInfo::getType() const {
     return type_;
 }
 
+inline const std::string& NFileInfo::typeDescription() const {
+    return typeDescription_;
+}
+
 inline const std::string& NFileInfo::getTypeDescription() const {
     return typeDescription_;
+}
+
+inline const std::string& NFileInfo::engine() const {
+    return engine_;
 }
 
 inline const std::string& NFileInfo::getEngine() const {
