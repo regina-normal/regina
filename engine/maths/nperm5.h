@@ -337,6 +337,14 @@ class REGINA_API NPerm<5> {
          *
          * @return the internal code.
          */
+        Code permCode() const;
+        /**
+         * Deprecated routine that returns the internal code representing this
+         * permutation.
+         *
+         * \deprecated This routine has been renamed to permCode().
+         * See the permCode() documentation for further details.
+         */
         Code getPermCode() const;
 
         /**
@@ -365,7 +373,7 @@ class REGINA_API NPerm<5> {
         /**
          * Determines whether the given integer is a valid internal
          * permutation code.  Valid permutation codes can be passed to
-         * setPermCode() or fromPermCode(), and are returned by getPermCode().
+         * setPermCode() or fromPermCode(), and are returned by permCode().
          *
          * @return \c true if and only if the given code is a valid
          * internal permutation code.
@@ -703,6 +711,10 @@ inline NPerm<5>::NPerm(int a0, int a1, int b0, int b1,
 inline NPerm<5>::NPerm(const NPerm<5>& cloneMe) : code(cloneMe.code) {
 }
 
+inline NPerm<5>::Code NPerm<5>::permCode() const {
+    return code;
+}
+
 inline NPerm<5>::Code NPerm<5>::getPermCode() const {
     return code;
 }
@@ -794,7 +806,7 @@ inline int NPerm<5>::orderedSnIndex() const {
 
 template <>
 inline NPerm<5> NPerm<5>::extend(NPerm<2> p) {
-    return NPerm<5>(static_cast<Code>(p.getPermCode() == 0 ? 18056 : 18049));
+    return NPerm<5>(static_cast<Code>(p.permCode() == 0 ? 18056 : 18049));
 }
 
 template <>

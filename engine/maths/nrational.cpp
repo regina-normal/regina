@@ -61,7 +61,7 @@ NRational::NRational(long newNum, unsigned long newDen) {
     }
 }
 
-NInteger NRational::getNumerator() const {
+NInteger NRational::numerator() const {
     if (flavour == f_infinity)
         return NInteger::one;
     else if (flavour == f_undefined)
@@ -72,7 +72,7 @@ NInteger NRational::getNumerator() const {
     return ans;
 }
 
-NInteger NRational::getDenominator() const {
+NInteger NRational::denominator() const {
     if (flavour != f_normal)
         return NInteger::zero;
 

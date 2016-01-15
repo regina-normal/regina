@@ -110,23 +110,23 @@ class NPerm3Test : public CppUnit::TestFixture {
 
         bool looksLikeIdentity(const NPerm3& p) {
             return (p.isIdentity() && p == NPerm3() &&
-                p.getPermCode() == 0 && p.str() == "012");
+                p.permCode() == 0 && p.str() == "012");
         }
 
         bool looksEqual(const NPerm3& p, const NPerm3& q) {
             return (p == q && (! (p != q)) && p.str() == q.str() &&
-                p.getPermCode() == q.getPermCode());
+                p.permCode() == q.permCode());
         }
 
         bool looksEqual(const NPerm3& p, const NPerm3& q,
                 const std::string& qStr) {
             return (p == q && (! (p != q)) && p.str() == q.str() &&
-                p.getPermCode() == q.getPermCode() && p.str() == qStr);
+                p.permCode() == q.permCode() && p.str() == qStr);
         }
 
         bool looksDistinct(const NPerm3& p, const NPerm3& q) {
             return (p != q && (! (p == q)) && p.str() != q.str() &&
-                p.getPermCode() != q.getPermCode());
+                p.permCode() != q.permCode());
         }
 
         int expectedSign(const NPerm3& p) {
@@ -148,7 +148,7 @@ class NPerm3Test : public CppUnit::TestFixture {
             std::ostringstream name;
             name << a << b << c;
 
-            NPerm3 p1 = NPerm3::fromPermCode(p.getPermCode());
+            NPerm3 p1 = NPerm3::fromPermCode(p.permCode());
             if (! looksEqual(p1, p, name.str())) {
                 std::ostringstream msg;
                 msg << "The internal code constructor fails for "
@@ -206,15 +206,15 @@ class NPerm3Test : public CppUnit::TestFixture {
             }
 
             NPerm3 p5(2, 0, 1);
-            p5.setPermCode(p3.getPermCode());
+            p5.setPermCode(p3.permCode());
             if (! looksEqual(p5, p, name.str())) {
                 std::ostringstream msg;
-                msg << "The setPermCode() / getPermCode() routines fail for "
+                msg << "The setPermCode() / permCode() routines fail for "
                     "the permutation " << name.str() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! NPerm3::isPermCode(p.getPermCode())) {
+            if (! NPerm3::isPermCode(p.permCode())) {
                 std::ostringstream msg;
                 msg << "Routine isPermCode() suggests that the permutation "
                     << name.str() << " has an invalid permutation code.";
