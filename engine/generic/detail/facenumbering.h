@@ -225,6 +225,9 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             FaceNumberingImpl<dim - 1, subdim,
                 (dim >= 2 * (subdim + 1))>::nFaces;
 
+        // TODO: change all ###binom### into the actual function name for
+        //       the binomial coefficients.
+
         // The following routines are documented in FaceNumberingAPI.
         static NPerm<dim + 1> ordering(unsigned face) {
             // We can assume here that we are numbering faces in forward
@@ -235,7 +238,64 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             // implementation of ordering() for high-dimensional faces
             // calls this function and reverses the permutation.
 
-            // TODO: Generic implementation for ordering().
+            // This implementation runs in linear time in dim (TODO: check)
+
+            // TODO: so far, the function takes a number and produces a 
+            //       list "perm". I don't know how to make this a permutation,
+            //       see end of this function.
+            unsigned *perm = malloc(sizeof(unsigned) * (subdim+1));
+            unsigned val;
+
+            // IDEA: use the combinatorial number system which associates 
+            //       numbers face = 0, 1, .... , ###binom###(dim+1,subdim+1)-1 
+            //       to sets of distinct integers 
+            //       dim >= c_(subdim+1) > ... c_1 >= 0
+            //       in lexicographic ordering.
+            // 
+            // ALGORITHM: the last vertex is the maximal number x_(subdim) such 
+            //            that
+            //            y_(subdim) = ( x_(subdim) \choose k ) <= remaining
+            //            the second last vertex is the maximal number 
+            //            x_(subdim-1) such that
+            //            y_(subdim-1) = ( x_(subdim-1) \choose k-1 ) <= 
+            //            remaining - y_(subdim)
+            //
+            // PROBLEM: we need lexicographic ordering 
+            //       0 <= c_1 < ... < c_(subdim+1) <= dim
+            //       so we must reverse the ordering and apply the transformation
+            //       c_i \mapsto d_i = dim-c_i
+
+            // reverse ordering
+            unsigned remaining = ###binom###(dim+1,subdim+1) - face - 1;
+            
+            unsigned k = subdim+1;
+            unsigned max = dim;
+            unsigned done;
+
+            while (remaining > 0) {
+              done = 0;
+              while (done == 0) {
+                val = ###binom###(max,k);
+                if (val <= remaining) {
+                  k--;
+                  perm[subdim-k] = dim-max;
+                  //printf("new element: %u\n",perm[k]);
+
+                  remaining = remaining - val;
+                  //printf("remaining: %u\n",remaining);
+                  done = 1;
+                }
+                max--;
+              }
+
+            }
+            while (k > 0) {
+              k--;
+              perm[subdim-k]=dim-k;
+            }
+
+            // TODO: make "perm" into permutation
+            // So far "perm" lists the vertices of the face in increasing order
             return NPerm<dim + 1>();
         }
 
@@ -243,8 +303,34 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             // We can assume here that we are numbering faces in forward
             // lexicographical order (i.e., the face dimension subdim is small).
 
-            // TODO: Generic implementation for faceNumber().
-            return 0;
+            // This implementation runs in linear time in subdim (TODO: check)
+
+            // IDEA: use the combinatorial number system which associates 
+            //       numbers face = 0, 1, .... , ###binom###(dim+1,subdim+1)-1 
+            //       to sets of distinct integers 
+            //       dim >= c_(subdim+1) > ... c_1 >= 0
+            //       in lexicographic ordering.
+            // 
+            // ALGORITHM: the number N associated to the face vertices 
+            //            is given by 
+            //            N = ###binom### (c_(subdim+1),subdim+1) + 
+            //            ###binom### (c_(subdim),subdim) + 
+            //            ... + 
+            //            ###binom### (c_1,1) 
+            //
+            // PROBLEM: we need lexicographic ordering 
+            //       0 <= c_1 < ... < c_(subdim+1) <= dim
+            //       so we must reverse the ordering and apply the transformation
+            //       c_i \mapsto d_i = dim-c_i
+
+            // TODO: convert permutation "vertices" into list "vertices"
+
+            unsigned i;
+            unsigned val = 0;
+            for (i=0; i<=subdim; i++) {
+              val += ###binom###(dim-vertices[subdim-i],i+1);
+            }
+            return ###binom###(dim+1,subdim+1)-1-val;
         }
 
         static bool containsVertex(unsigned face, unsigned vertex) {
