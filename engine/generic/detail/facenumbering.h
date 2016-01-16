@@ -59,6 +59,18 @@ namespace detail {
  */
 
 /**
+ * A lookup table that stores (\a n choose \a k) for all \a n &le; \a 16.
+ *
+ * For all values 0 &le; \a k &le; \a n &le; 16, the value
+ * \a binomSmall_[\a n][\a k] is the binomial coefficient (\a n choose \a k).
+ *
+ * This array is used in the implementation of the function binomSmall().
+ * End users should call binomSmall() instead of referring to this array
+ * directly.
+ */
+extern const int* const binomSmall_[17];
+
+/**
  * Placeholder class that outlines the functions provided by
  * FaceNumbering<dim, subdim>.
  * This class exists merely to help with documentation.
@@ -225,9 +237,6 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             FaceNumberingImpl<dim - 1, subdim,
                 (dim >= 2 * (subdim + 1))>::nFaces;
 
-        // TODO: change all ###binom### into the actual function name for
-        //       the binomial coefficients.
-
         // The following routines are documented in FaceNumberingAPI.
         static NPerm<dim + 1> ordering(unsigned face) {
             // We can assume here that we are numbering faces in forward
@@ -247,7 +256,7 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             unsigned val;
 
             // IDEA: use the combinatorial number system which associates 
-            //       numbers face = 0, 1, .... , ###binom###(dim+1,subdim+1)-1 
+            //       numbers face = 0, 1, .... , binom(dim+1,subdim+1)-1 
             //       to sets of distinct integers 
             //       dim >= c_(subdim+1) > ... c_1 >= 0
             //       in lexicographic ordering.
@@ -266,8 +275,8 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             //       c_i \mapsto d_i = dim-c_i
 
             // reverse ordering
-            unsigned remaining = ###binom###(dim+1,subdim+1) - face - 1;
-            
+            unsigned remaining = binomSmall_[dim+1][subdim+1] - face - 1;
+
             unsigned k = subdim+1;
             unsigned max = dim;
             unsigned done;
@@ -275,7 +284,7 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             while (remaining > 0) {
               done = 0;
               while (done == 0) {
-                val = ###binom###(max,k);
+                val = binomSmall_[max][k];
                 if (val <= remaining) {
                   k--;
                   perm[subdim-k] = dim-max;
@@ -306,17 +315,17 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             // This implementation runs in linear time in subdim (TODO: check)
 
             // IDEA: use the combinatorial number system which associates 
-            //       numbers face = 0, 1, .... , ###binom###(dim+1,subdim+1)-1 
+            //       numbers face = 0, 1, .... , binom(dim+1,subdim+1)-1 
             //       to sets of distinct integers 
             //       dim >= c_(subdim+1) > ... c_1 >= 0
             //       in lexicographic ordering.
             // 
             // ALGORITHM: the number N associated to the face vertices 
             //            is given by 
-            //            N = ###binom### (c_(subdim+1),subdim+1) + 
-            //            ###binom### (c_(subdim),subdim) + 
-            //            ... + 
-            //            ###binom### (c_1,1) 
+            //            N = binom (c_(subdim+1),subdim+1) + 
+            //                binom (c_(subdim),subdim) + 
+            //                ... + 
+            //                binom (c_1,1) 
             //
             // PROBLEM: we need lexicographic ordering 
             //       0 <= c_1 < ... < c_(subdim+1) <= dim
@@ -328,9 +337,9 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             unsigned i;
             unsigned val = 0;
             for (i=0; i<=subdim; i++) {
-              val += ###binom###(dim-vertices[subdim-i],i+1);
+              val += binomSmall_[dim-v[subdim-i]][i+1];
             }
-            return ###binom###(dim+1,subdim+1)-1-val;
+            return binomSmall_[dim+1][subdim+1]-1-val;
         }
 
         static bool containsVertex(unsigned face, unsigned vertex) {

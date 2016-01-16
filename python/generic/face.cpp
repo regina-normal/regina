@@ -321,6 +321,8 @@ void addFace(const char* name, const char* embName) {
 }
 
 void addFace() {
+    def("binomSmall", regina::binomSmall);
+
     // Note: FaceEmbedding<4, subdim> does not get the aliases
     // pentachoron() or getPentachoron().
     // This is fixed in the 4-manifolds branch, since dim=4 is handled

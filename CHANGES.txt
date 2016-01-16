@@ -545,6 +545,8 @@ Version 4.97  [ (under development) ]
               whereas Triangulation<dim> is specialised for dimensions 2, 3, 4.
             - The old class names Dim2Triangulation and NTriangulation have
               been kept as typedefs for convenience.
+        Routine binomSmall():
+            - New constant-time routine to compute (n choose k) for small n.
         Routine bitsRequired():
             - New constexpr routine for counting bits in an integer.
         Routine digit():
