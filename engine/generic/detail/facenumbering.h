@@ -248,11 +248,7 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             // calls this function and reverses the permutation.
 
             // This implementation runs in linear time in dim (TODO: check)
-
-            // TODO: so far, the function takes a number and produces a 
-            //       list "perm". I don't know how to make this a permutation,
-            //       see end of this function.
-            unsigned *perm = malloc(sizeof(unsigned) * (subdim+1));
+            int perm[dim + 1];
             unsigned val;
 
             // IDEA: use the combinatorial number system which associates 
@@ -303,9 +299,8 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
               perm[subdim-k]=dim-k;
             }
 
-            // TODO: make "perm" into permutation
             // So far "perm" lists the vertices of the face in increasing order
-            return NPerm<dim + 1>();
+            return NPerm<dim + 1>(perm);
         }
 
         static unsigned faceNumber(NPerm<dim + 1> vertices) {
@@ -332,9 +327,15 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             //       so we must reverse the ordering and apply the transformation
             //       c_i \mapsto d_i = dim-c_i
 
-            // TODO: convert permutation "vertices" into list "vertices"
-
             unsigned i;
+
+            int v[dim + 1];
+            for (i = 0; i <= subdim; ++i)
+                v[i] = vertices[i];
+
+            // Sort the vertices of the face in increasing order.
+            std::sort(v, v + subdim + 1);
+
             unsigned val = 0;
             for (i=0; i<=subdim; i++) {
               val += binomSmall_[dim-v[subdim-i]][i+1];
