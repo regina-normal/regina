@@ -90,7 +90,7 @@ namespace detail {
  * \ref stddim "standard dimensions" such as Dim2Edge, NVertex and so on).
  *
  * \tparam dim the dimension of the simplex whose faces are being numbered.
- * This must be at least 1.
+ * This must be between 1 and 15 inclusive.
  * \tparam subdim the dimension of the faces being numbered.
  * This must be between 0 and <i>dim</i>-1 inclusive.
  * \tparam lex \c true if faces are numbered in lexicographical order
@@ -190,7 +190,7 @@ class FaceNumberingAPI {
  * \ref stddim "standard dimensions" such as Dim2Edge, NVertex and so on).
  *
  * \tparam dim the dimension of the simplex whose faces are being numbered.
- * This must be at least 1.
+ * This must be between 1 and 15 inclusive.
  * \tparam subdim the dimension of the faces being numbered.
  * This must be between 0 and <i>dim</i>-1 inclusive.
  * \tparam lex \c true if faces are numbered in lexicographical order

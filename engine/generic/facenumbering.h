@@ -91,7 +91,7 @@ namespace regina {
  * \ref stddim "standard dimensions" such as Dim2Edge, NVertex and so on).
  *
  * \tparam dim the dimension of the simplex whose faces we are numbering.
- * This must be at least 1.
+ * This must be between 1 and 15 inclusive.
  * \tparam subdim the dimension of the faces that we are numbering.
  * This must be between 0 and <i>dim</i>-1 inclusive.
  */
