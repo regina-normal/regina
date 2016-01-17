@@ -129,7 +129,7 @@ class REGINA_API NManifold :
          * \deprecated This routine has been renamed to structure().
          * See the structure() documentation for further details.
          */
-        std::string getStructure() const __attribute__ ((deprecated));
+        std::string getStructure() const;
         /**
          * Returns a triangulation of this 3-manifold, if such a
          * construction has been implemented.  If no construction routine
