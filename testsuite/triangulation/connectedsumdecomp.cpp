@@ -138,7 +138,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
 
             CPPUNIT_ASSERT_MESSAGE("The single prime summand of " + triName +
                 " has an inconsistent first homology group.",
-                summand->getHomologyH1() == tri->getHomologyH1());
+                summand->homology() == tri->homology());
 
             return tri;
         }
@@ -215,11 +215,11 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                 stdName2 == manifold2);
 
             // Test that the homologies are consistent.
-            NAbelianGroup combined(summand1->getHomologyH1());
-            combined.addGroup(summand2->getHomologyH1());
+            NAbelianGroup combined(summand1->homology());
+            combined.addGroup(summand2->homology());
             CPPUNIT_ASSERT_MESSAGE("The prime summands of " + triName +
                 " have inconsistent first homology groups.",
-                tri->getHomologyH1() == combined);
+                tri->homology() == combined);
 
 
             // Finish with a 0-efficiency test.
@@ -305,12 +305,12 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                 stdName1 == "RP3" && stdName2 == "RP3" && stdName3 == "RP3");
 
             // Test that the homologies are consistent.
-            NAbelianGroup combined(summand1->getHomologyH1());
-            combined.addGroup(summand2->getHomologyH1());
-            combined.addGroup(summand3->getHomologyH1());
+            NAbelianGroup combined(summand1->homology());
+            combined.addGroup(summand2->homology());
+            combined.addGroup(summand3->homology());
             CPPUNIT_ASSERT_MESSAGE("The prime summands of " + triName +
                 " have inconsistent first homology groups.",
-                tri->getHomologyH1() == combined);
+                tri->homology() == combined);
 
             // All above board.
             return tri;
@@ -509,7 +509,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                         << term->isoSig() << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
-                h1.addGroup(term->getHomologyH1());
+                h1.addGroup(term->homology());
             }
 
             if ((! foundNor) && (! tri->isOrientable())) {
@@ -526,7 +526,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! (h1 == tri->getHomologyH1())) {
+            if (! (h1 == tri->homology())) {
                 std::ostringstream msg;
                 msg << "Triangulation " << tri->label()
                     << " has first homology that does not match "

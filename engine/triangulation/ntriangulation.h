@@ -659,12 +659,12 @@ class REGINA_API Triangulation<3> :
          * calculations will be performed <b>without</b> any truncation
          * of the corresponding projective plane cusp.  Thus if a
          * barycentric subdivision is performed on the triangulation, the
-         * result of getFundamentalGroup() will change.
+         * result of fundamentalGroup() will change.
          *
          * Bear in mind that each time the triangulation changes, the
          * fundamental group will be deleted.  Thus the reference that is
          * returned from this routine should not be kept for later use.
-         * Instead, getFundamentalGroup() should be called again; this will
+         * Instead, fundamentalGroup() should be called again; this will
          * be instantaneous if the group has already been calculated.
          *
          * Note that this triangulation is not required to be valid
@@ -680,6 +680,14 @@ class REGINA_API Triangulation<3> :
          * instead.
          *
          * @return the fundamental group.
+         */
+        const NGroupPresentation& fundamentalGroup() const;
+        /**
+         * Deprecated routine that returns the fundamental group of this
+         * triangulation.
+         *
+         * \deprecated This routine has been renamed to fundamentalGroup().
+         * See the fundamentalGroup() documentation for further details.
          */
         const NGroupPresentation& getFundamentalGroup() const;
         /**
@@ -700,7 +708,7 @@ class REGINA_API Triangulation<3> :
          * triangulation, this routine will nevertheless take ownership
          * of the new group, under the assumption that you have worked
          * out the group through some other clever means without ever
-         * having needed to call getFundamentalGroup() at all.
+         * having needed to call fundamentalGroup() at all.
          *
          * Note that this routine will not fire a packet change event.
          *
@@ -714,16 +722,19 @@ class REGINA_API Triangulation<3> :
          * vertices, the homology group will be
          * calculated as if each such vertex had been truncated.
          *
-         * If this triangulation contains any invalid edges, the
-         * calculations will be performed <b>without</b> any truncation
-         * of the corresponding projective plane cusp.  Thus if a
-         * barycentric subdivision is performed on the triangulation, the
-         * result of getHomologyH1() will change.
+         * If this triangulation contains any edges that are self-identified
+         * in reverse, the homology will be computed \b without truncating
+         * the corresponding projective plane cusp(s).  Therefore, if a
+         * barycentric subdivision is performed on such a triangulation,
+         * the result of homology() will change.
+         *
+         * This routine can also be accessed via the alias homologyH1()
+         * (a name that is more specific, but a little longer to type).
          *
          * Bear in mind that each time the triangulation changes, the
          * homology groups will be deleted.  Thus the reference that is
          * returned from this routine should not be kept for later use.
-         * Instead, getHomologyH1() should be called again; this will be
+         * Instead, homology() should be called again; this will be
          * instantaneous if the group has already been calculated.
          *
          * Note that this triangulation is not required to be valid
@@ -737,6 +748,47 @@ class REGINA_API Triangulation<3> :
          *
          * @return the first homology group.
          */
+        const NAbelianGroup& homology() const;
+        /**
+         * Returns the first homology group for this triangulation.
+         * If this triangulation contains any ideal or non-standard
+         * vertices, the homology group will be
+         * calculated as if each such vertex had been truncated.
+         *
+         * If this triangulation contains any edges that are self-identified
+         * in reverse, the homology will be computed \b without truncating
+         * the corresponding projective plane cusp(s).  Therefore, if a
+         * barycentric subdivision is performed on such a triangulation,
+         * the result of homologyH1() will change.
+         *
+         * This routine can also be accessed via the alias homology()
+         * (a name that is less specific, but a little easier to type).
+         *
+         * Bear in mind that each time the triangulation changes, the
+         * homology groups will be deleted.  Thus the reference that is
+         * returned from this routine should not be kept for later use.
+         * Instead, homologyH1() should be called again; this will be
+         * instantaneous if the group has already been calculated.
+         *
+         * Note that this triangulation is not required to be valid
+         * (see isValid()).
+         *
+         * \warning As with every routine implemented by Regina's
+         * NTriangulation class, if you are calling this from the subclass
+         * NSnapPeaTriangulation then <b>any fillings on the cusps will
+         * be ignored</b>.  If you wish to compute homology with fillings,
+         * call NSnapPeaTriangulation::homologyFilled() instead.
+         *
+         * @return the first homology group.
+         */
+        const NAbelianGroup& homologyH1() const;
+        /**
+         * Deprecated routine that returns the first homology group for
+         * this triangulation.
+         *
+         * \deprecated This routine has been renamed to homology().
+         * See the homology() documentation for further details.
+         */
         const NAbelianGroup& getHomologyH1() const;
         /**
          * Returns the relative first homology group with
@@ -746,13 +798,21 @@ class REGINA_API Triangulation<3> :
          * Bear in mind that each time the triangulation changes, the
          * homology groups will be deleted.  Thus the reference that is
          * returned from this routine should not be kept for later use.
-         * Instead, getHomologyH1Rel() should be called again; this will be
+         * Instead, homologyRel() should be called again; this will be
          * instantaneous if the group has already been calculated.
          *
          * \pre This triangulation is valid.
          *
          * @return the relative first homology group with respect to the
          * boundary.
+         */
+        const NAbelianGroup& homologyRel() const;
+        /**
+         * Deprecated routine that returns the relative first homology
+         * group with respect to the boundary for this triangulation.
+         *
+         * \deprecated This routine has been renamed to homologyRel().
+         * See the homologyRel() documentation for further details.
          */
         const NAbelianGroup& getHomologyH1Rel() const;
         /**
@@ -763,7 +823,7 @@ class REGINA_API Triangulation<3> :
          * Bear in mind that each time the triangulation changes, the
          * homology groups will be deleted.  Thus the reference that is
          * returned from this routine should not be kept for later use.
-         * Instead, getHomologyH1Bdry() should be called again; this will be
+         * Instead, homologyBdry() should be called again; this will be
          * instantaneous if the group has already been calculated.
          *
          * This routine is fairly fast, since it deduces the homology of
@@ -773,6 +833,14 @@ class REGINA_API Triangulation<3> :
          * \pre This triangulation is valid.
          *
          * @return the first homology group of the boundary.
+         */
+        const NAbelianGroup& homologyBdry() const;
+        /**
+         * Deprecated routine that returns the first homology group of
+         * the boundary for this triangulation.
+         *
+         * \deprecated This routine has been renamed to homologyBdry().
+         * See the homologyBdry() documentation for further details.
          */
         const NAbelianGroup& getHomologyH1Bdry() const;
         /**
@@ -787,12 +855,20 @@ class REGINA_API Triangulation<3> :
          * Bear in mind that each time the triangulation changes, the
          * homology groups will be deleted.  Thus the reference that is
          * returned from this routine should not be kept for later use.
-         * Instead, getHomologyH2() should be called again; this will be
+         * Instead, homologyH2() should be called again; this will be
          * instantaneous if the group has already been calculated.
          *
          * \pre This triangulation is valid.
          *
          * @return the second homology group.
+         */
+        const NAbelianGroup& homologyH2() const;
+        /**
+         * Deprecated routine that returns the second homology group for
+         * this triangulation.
+         *
+         * \deprecated This routine has been renamed to homologyH2().
+         * See the homologyH2() documentation for further details.
          */
         const NAbelianGroup& getHomologyH2() const;
         /**
@@ -812,6 +888,14 @@ class REGINA_API Triangulation<3> :
          *
          * @return the number of Z_2 terms in the second homology group
          * with coefficients in Z_2.
+         */
+        unsigned long homologyH2Z2() const;
+        /**
+         * Deprecated routine that returns the second homology group
+         * with coefficients in Z_2 for this triangulation.
+         *
+         * \deprecated This routine has been renamed to homologyH2Z2().
+         * See the homologyH2Z2() documentation for further details.
          */
         unsigned long getHomologyH2Z2() const;
         /**
@@ -3338,8 +3422,36 @@ inline bool Triangulation<3>::hasStrictAngleStructure() const {
     return (strictAngleStructure_.value() != 0);
 }
 
+inline const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
+    return fundamentalGroup();
+}
+
+inline const NAbelianGroup& NTriangulation::homologyH1() const {
+    return homology();
+}
+
+inline const NAbelianGroup& NTriangulation::getHomologyH1() const {
+    return homology();
+}
+
+inline const NAbelianGroup& NTriangulation::getHomologyH1Rel() const {
+    return homologyRel();
+}
+
+inline const NAbelianGroup& NTriangulation::getHomologyH1Bdry() const {
+    return homologyBdry();
+}
+
+inline unsigned long Triangulation<3>::homologyH2Z2() const {
+    return homologyRel().rank() + homologyRel().torsionRank(2);
+}
+
 inline unsigned long Triangulation<3>::getHomologyH2Z2() const {
-    return getHomologyH1Rel().rank() + getHomologyH1Rel().torsionRank(2);
+    return homologyRel().rank() + homologyRel().torsionRank(2);
+}
+
+inline const NAbelianGroup& NTriangulation::getHomologyH2() const {
+    return homologyH2();
 }
 
 inline const Triangulation<3>::TuraevViroSet&

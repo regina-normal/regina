@@ -1909,8 +1909,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             //  -  H1 = (2g)Z, H1Bdry = (4g-2)Z;
             //  -  H1 = Z_2 + (g-1)Z, H1Bdry = Z_2 + (2g-3)Z;
             //  -  H1 = Z_2 + (g-1)Z, H1Bdry = (2g-2)Z;
-            const NAbelianGroup& h1 = tri->getHomologyH1();
-            const NAbelianGroup& bdry = tri->getHomologyH1Bdry();
+            const NAbelianGroup& h1 = tri->homology();
+            const NAbelianGroup& bdry = tri->homologyBdry();
 
             if (h1.countInvariantFactors() == 0) {
                 // Must have H1 = (2g)Z.
@@ -1938,7 +1938,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 return false;
 
             // Check that H1Rel is just Z_2.
-            if (! tri->getHomologyH1Rel().isZn(2))
+            if (! tri->homologyRel().isZn(2))
                 return false;
 
             return true;
@@ -1965,8 +1965,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
             // Check that H1 is of the form (k)Z or Z_2 + (k)Z, and that
             // H1Bdry = 2 H1.
-            const NAbelianGroup& h1 = tri->getHomologyH1();
-            const NAbelianGroup& bdry = tri->getHomologyH1Bdry();
+            const NAbelianGroup& h1 = tri->homology();
+            const NAbelianGroup& bdry = tri->homologyBdry();
 
             if (h1.countInvariantFactors() == 0) {
                 // Must have H1 = (k)Z.
@@ -1990,7 +1990,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 return false;
 
             // Check that H1Rel is just Z.
-            if (! tri->getHomologyH1Rel().isZ())
+            if (! tri->homologyRel().isZ())
                 return false;
 
             return true;

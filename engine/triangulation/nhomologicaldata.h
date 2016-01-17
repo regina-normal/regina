@@ -492,17 +492,25 @@ public:
      * This routine gives access to the manifold's homology computed
      * with the regular CW-decomposition.
      *
-     * This routine is typically slower than getDualHomology(), since
-     * getDualHomology() uses the dual CW-decomposition which typically
+     * This routine is typically slower than dualHomology(), since
+     * dualHomology() uses the dual CW-decomposition which typically
      * has an order of magnitude fewer cells.
      *
-     * Note that the groups returned by getHomology() and getDualHomology()
+     * Note that the groups returned by homology() and dualHomology()
      * are isomorphic, though they are generally described by different
      * presentations.
      *
      * @param q the dimension of the homology group: can be 0, 1, 2 or 3.
      * @return the q-th homology group, computed in the standard
      * CW-decomposition.
+     */
+    const NMarkedAbelianGroup& homology(unsigned q);
+    /**
+     * Deprecated routine that gives access to the manifold's homology
+     * computed with the regular CW-decomposition.
+     *
+     * \deprecated This routine has been renamed to homology().
+     * See the homology() documentation for further details.
      */
     const NMarkedAbelianGroup& getHomology(unsigned q);
     /**
@@ -512,6 +520,14 @@ public:
      * @param q the dimension of the homology group: can be 0, 1 or 2.
      * @return the q-th boundary homology group, in standard cellular
      * homology coordinates
+     */
+    const NMarkedAbelianGroup& bdryHomology(unsigned q);
+    /**
+     * Deprecated routine that gives access to the homology of the
+     * boundary of the manifold, computed with the regular CW-decomposition.
+     *
+     * \deprecated This routine has been renamed to bdryHomology().
+     * See the bdryHomology() documentation for further details.
      */
     const NMarkedAbelianGroup& getBdryHomology(unsigned q);
 
@@ -523,31 +539,56 @@ public:
      * @return the map from H_q of the boundary to H_q of the manifold,
      * computed in standard coordinates.
      */
+    const NHomMarkedAbelianGroup& bdryHomologyMap(unsigned q);
+    /**
+     * Deprecated routine that gives access to the homomorphism from the
+     * homology of the boundary to the homology of the manifold.
+     *
+     * \deprecated This routine has been renamed to bdryHomologyMap().
+     * See the bdryHomologyMap() documentation for further details.
+     */
     const NHomMarkedAbelianGroup& getBdryHomologyMap(unsigned q);
 
     /**
      * This routine gives access to the manifold's homology computed
      * with the dual CW-decomposition.
      *
-     * This routine is typically faster than getHomology() since the
+     * This routine is typically faster than homology() since the
      * dual CW-decomposition generally has far fewer cells.
      *
-     * Note that the groups returned by getHomology() and getDualHomology()
+     * Note that the groups returned by homology() and dualHomology()
      * are isomorphic, though they are generally described by different
      * presentations.
      *
      * @param q the dimension of the homology group: can be 0, 1, 2 or 3.
      * @return the q-th homology group, computed in the dual CW-decomposition.
      */
+    const NMarkedAbelianGroup& dualHomology(unsigned q);
+    /**
+     * Deprecated routine that gives access to the manifold's homology
+     * computed with the dual CW-decomposition.
+     *
+     * \deprecated This routine has been renamed to dualHomology().
+     * See the dualHomology() documentation for further details.
+     */
     const NMarkedAbelianGroup& getDualHomology(unsigned q);
 
     /**
-     * Returns the isomorphism from getDualHomology(1) to getHomology(1)
+     * Returns the isomorphism from dualHomology(1) to homology(1)
      * given by a cellular approximation to the identity map on the manifold.
      *
-     * @return The isomorphism from getDualHomology(1) to getHomology(1)
+     * @return The isomorphism from dualHomology(1) to homology(1)
      * computed via a cellular approximation of the identity map from
      * the first 1-skeleton to the second.
+     */
+    const NHomMarkedAbelianGroup& h1CellAp();
+    /**
+     * Deprecated routine that returns the isomorphism from dualHomology(1)
+     * to homology(1) given by a cellular approximation to the identity
+     * map on the manifold.
+     *
+     * \deprecated This routine has been renamed to h1CellAp().
+     * See the h1CellAp() documentation for further details.
      */
     const NHomMarkedAbelianGroup& getH1CellAp();
 
@@ -569,27 +610,52 @@ public:
      * @return the number of cells of the given dimension in the standard
      * CW-decomposition of the closed manifold.
      */
+    unsigned long countStandardCells(unsigned dimension);
+    /**
+     * Deprecated routine that returns the number of cells of the given
+     * dimension in the standard genuine CW-decomposition of the manifold.
+     *
+     * \deprecated This routine has been renamed to countStandardCells().
+     * See the countStandardCells() documentation for further details.
+     */
     unsigned long getNumStandardCells(unsigned dimension);
     /**
      * Returns the number of cells of the given dimension
      * in the dual CW-decomposition of the manifold. This is typically
-     * much smaller than getNumStandardCells().
+     * much smaller than countStandardCells().
      *
      * @param dimension the dimension of the cells in question; this must
      * be 0, 1, 2 or 3.
      * @return the number of cells of the given dimension in the dual
      * CW-decomposition to the triangulation.
      */
+    unsigned long countDualCells(unsigned dimension);
+    /**
+     * Deprecated routine that returns the number of cells of the given
+     * dimension in the dual CW-decomposition of the manifold.
+     *
+     * \deprecated This routine has been renamed to countDualCells().
+     * See the countDualCells() documentation for further details.
+     */
     unsigned long getNumDualCells(unsigned dimension);
     /**
      * Returns the number of cells of the given dimension in the
      * standard CW-decomposition of the boundary of the manifold.
-     * This is a subcomplex of the complex used in getNumStandardCells().
+     * This is a subcomplex of the complex used in countStandardCells().
      *
      * @param dimension the dimension of the cells in question; this must
      * be 0, 1 or 2.
      * @return the number of cells of the given dimension in the standard
      * CW-decomposition of the boundary.
+     */
+    unsigned long countBdryCells(unsigned dimension);
+    /**
+     * Deprecated routine that returns the number of cells of the given
+     * dimension in the standard CW-decomposition of the boundary of the
+     * manifold.
+     *
+     * \deprecated This routine has been renamed to countBdryCells().
+     * See the countBdryCells() documentation for further details.
      */
     unsigned long getNumBdryCells(unsigned dimension);
     /**
@@ -639,19 +705,35 @@ public:
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
      * \ifacespython Not available, though the string routine
-     * getTorsionRankVectorString() can still be used.
+     * torsionRankVectorString() can still be used.
      *
      * @return the torsion form rank vector.
      */
     const std::vector< std::pair< NLargeInteger,
+        std::vector< unsigned long > > >& torsionRankVector();
+    /**
+     * Deprecated routine that returns the torsion form rank vector.
+     *
+     * \deprecated This routine has been renamed to torsionRankVector().
+     * See the torsionRankVector() documentation for further details.
+     */
+    const std::vector< std::pair< NLargeInteger,
         std::vector< unsigned long > > >& getTorsionRankVector();
     /**
-     * Same as getTorsionRankVector() but returns as a human-readable string.
+     * Same as torsionRankVector() but returns as a human-readable string.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
      * @return human-readable prime power factorization of the order of
      * the torsion subgroup of H1.
+     */
+    const std::string& torsionRankVectorString();
+    /**
+     * Deprecated routine that returns torsionRankVector() as a
+     * human-readable string.
+     *
+     * \deprecated This routine has been renamed to torsionRankVectorString().
+     * See the torsionRankVectorString() documentation for further details.
      */
     const std::string& getTorsionRankVectorString();
     /**
@@ -665,18 +747,33 @@ public:
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
      * \ifacespython Not available, though the string routine
-     * getTorsionSigmaVectorString() can still be used.
+     * torsionSigmaVectorString() can still be used.
      *
      * @return the Kawauchi-Kojima sigma-vector.
      */
+    const std::vector<NLargeInteger>& torsionSigmaVector();
+    /**
+     * Deprecated routine that returns the 2-torsion sigma vector.
+     *
+     * \deprecated This routine has been renamed to torsionSigmaVector().
+     * See the torsionSigmaVector() documentation for further details.
+     */
     const std::vector<NLargeInteger>& getTorsionSigmaVector();
     /**
-     * Same as getTorsionSigmaVector() but returns as a human-readable string.
+     * Same as torsionSigmaVector() but returns as a human-readable string.
      * This is an orientation-sensitive invariant.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
      * @return the Kawauchi-Kojima sigma-vector in human readable form.
+     */
+    const std::string& torsionSigmaVectorString();
+    /**
+     * Deprecated routine that returns torsionSigmaVector() as a
+     * human-readable string.
+     *
+     * \deprecated This routine has been renamed to torsionSigmaVectorString().
+     * See the torsionSigmaVectorString() documentation for further details.
      */
     const std::string& getTorsionSigmaVectorString();
 
@@ -691,20 +788,38 @@ public:
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
      * \ifacespython Not available, though the string routine
-     * getTorsionLegendreSymbolVectorString() can still be used.
+     * torsionLegendreSymbolVectorString() can still be used.
      *
      * @return the Legendre symbol vector associated to the torsion
      * linking form.
      */
     const std::vector< std::pair< NLargeInteger, std::vector< int > > >&
+        torsionLegendreSymbolVector();
+    /**
+     * Deprecated routine that returns the odd p-torsion Legendre symbol vector.
+     *
+     * \deprecated This routine has been renamed to
+     * torsionLegendreSymbolVector().  See the torsionLegendreSymbolVector()
+     * documentation for further details.
+     */
+    const std::vector< std::pair< NLargeInteger, std::vector< int > > >&
         getTorsionLegendreSymbolVector();
     /**
-     * Same as getTorsionLegendreSymbolVector() but returns as a
+     * Same as torsionLegendreSymbolVector() but returns as a
      * human-readable string.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
      * @return the Legendre symbol vector in human-readable form.
+     */
+    const std::string& torsionLegendreSymbolVectorString();
+    /**
+     * Deprecated routine that returns torsionLegendreSymbolVector() as
+     * a human-readable string.
+     *
+     * \deprecated This routine has been renamed to
+     * torsionLegendreSymbolVectorString().  See the
+     * torsionLegendreSymbolVectorString() documentation for further details.
      */
     const std::string& getTorsionLegendreSymbolVectorString();
 
@@ -768,6 +883,14 @@ public:
      * @return a string giving a one-line description of what
      * is known about where this manifold embeds, based solely
      * on the manifold's homological data.
+     */
+    const std::string& embeddabilityComment();
+    /**
+     * Deprecated routine that returns a comment on whether the manifold
+     * might embed in a homology 3-sphere or 4-sphere.
+     *
+     * \deprecated This routine has been renamed to embeddabilityComment().
+     * See the embeddabilityComment() documentation for further details.
      */
     const std::string& getEmbeddabilityComment();
 };
@@ -881,25 +1004,40 @@ inline NHomologicalData::~NHomologicalData() {
     }
 }
 
-inline unsigned long NHomologicalData::getNumStandardCells(unsigned dimension)
+inline unsigned long NHomologicalData::countStandardCells(unsigned dimension)
 {
     // number of cells of dimension 0, 1, 2, 3.
     computeccIndexing();
     return numStandardCells[dimension];
 }
 
-inline unsigned long NHomologicalData::getNumDualCells(unsigned dimension)
+inline unsigned long NHomologicalData::getNumStandardCells(unsigned dimension)
+{
+    return countStandardCells(dimension);
+}
+
+inline unsigned long NHomologicalData::countDualCells(unsigned dimension)
 {
     // dual cells
     computeccIndexing();
     return numDualCells[dimension];
 }
 
-inline unsigned long NHomologicalData::getNumBdryCells(unsigned dimension)
+inline unsigned long NHomologicalData::getNumDualCells(unsigned dimension)
+{
+    return countDualCells(dimension);
+}
+
+inline unsigned long NHomologicalData::countBdryCells(unsigned dimension)
 {
     // standard boundary cells
     computeccIndexing();
     return numBdryCells[dimension];
+}
+
+inline unsigned long NHomologicalData::getNumBdryCells(unsigned dimension)
+{
+    return countBdryCells(dimension);
 }
 
 inline long int NHomologicalData::eulerChar()
@@ -914,23 +1052,63 @@ inline long int NHomologicalData::getEulerChar()
     return eulerChar();
 }
 
+inline const NMarkedAbelianGroup& NHomologicalData::getHomology(unsigned q)
+{
+    return homology(q);
+}
+
+inline const NMarkedAbelianGroup& NHomologicalData::getBdryHomology(unsigned q)
+{
+    return bdryHomology(q);
+}
+
+inline const NHomMarkedAbelianGroup& NHomologicalData::getBdryHomologyMap(
+        unsigned q)
+{
+    return bdryHomologyMap(q);
+}
+
+inline const NMarkedAbelianGroup& NHomologicalData::getDualHomology(unsigned q)
+{
+    return dualHomology(q);
+}
+
+inline const NHomMarkedAbelianGroup& NHomologicalData::getH1CellAp()
+{
+    return h1CellAp();
+}
+
 inline const std::vector< std::pair< NLargeInteger,
-std::vector< unsigned long > > >& NHomologicalData::getTorsionRankVector()
+std::vector< unsigned long > > >& NHomologicalData::torsionRankVector()
 {
     computeTorsionLinkingForm();
     return torRankV;
 }
-inline const std::vector<NLargeInteger>&
-NHomologicalData::getTorsionSigmaVector()
+inline const std::vector< std::pair< NLargeInteger,
+std::vector< unsigned long > > >& NHomologicalData::getTorsionRankVector()
+{
+    return torsionRankVector();
+}
+inline const std::vector<NLargeInteger>& NHomologicalData::torsionSigmaVector()
 {
     computeTorsionLinkingForm();
     return twoTorSigmaV;
 }
+inline const std::vector<NLargeInteger>&
+NHomologicalData::getTorsionSigmaVector()
+{
+    return torsionSigmaVector();
+}
 inline const std::vector< std::pair< NLargeInteger, std::vector< int > > >&
-NHomologicalData::getTorsionLegendreSymbolVector()
+NHomologicalData::torsionLegendreSymbolVector()
 {
     computeTorsionLinkingForm();
     return oddTorLegSymV;
+}
+inline const std::vector< std::pair< NLargeInteger, std::vector< int > > >&
+NHomologicalData::getTorsionLegendreSymbolVector()
+{
+    return torsionLegendreSymbolVector();
 }
 
 inline bool NHomologicalData::formIsSplit()
@@ -943,29 +1121,46 @@ inline bool NHomologicalData::formSatKK()
     computeTorsionLinkingForm();
     return torsionLinkingFormSatisfiesKKtwoTorCondition;
 }
-inline const std::string& NHomologicalData::getTorsionRankVectorString()
+inline const std::string& NHomologicalData::torsionRankVectorString()
 {
     computeTorsionLinkingForm();
     return torsionRankString;
 }
+inline const std::string& NHomologicalData::getTorsionRankVectorString()
+{
+    return torsionRankVectorString();
+}
 
-inline const std::string& NHomologicalData::getTorsionSigmaVectorString()
+inline const std::string& NHomologicalData::torsionSigmaVectorString()
 {
     computeTorsionLinkingForm();
     return torsionSigmaString;
 }
+inline const std::string& NHomologicalData::getTorsionSigmaVectorString()
+{
+    return torsionSigmaVectorString();
+}
 
 inline const std::string&
-NHomologicalData::getTorsionLegendreSymbolVectorString()
+NHomologicalData::torsionLegendreSymbolVectorString()
 {
     computeTorsionLinkingForm();
     return torsionLegendreString;
 }
+inline const std::string&
+NHomologicalData::getTorsionLegendreSymbolVectorString()
+{
+    return torsionLegendreSymbolVectorString();
+}
 
-inline const std::string& NHomologicalData::getEmbeddabilityComment()
+inline const std::string& NHomologicalData::embeddabilityComment()
 {
     computeEmbeddabilityString();
     return embeddabilityString;
+}
+inline const std::string& NHomologicalData::getEmbeddabilityComment()
+{
+    return embeddabilityComment();
 }
 
 } // namespace regina

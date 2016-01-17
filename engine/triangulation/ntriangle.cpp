@@ -37,7 +37,7 @@
 
 namespace regina {
 
-NTriangle::Type NTriangle::getType() {
+NTriangle::Type NTriangle::type() {
     if (type_)
         return type_;
 

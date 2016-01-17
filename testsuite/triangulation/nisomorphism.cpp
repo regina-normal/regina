@@ -212,7 +212,7 @@ class NIsomorphismTest : public CppUnit::TestFixture {
             if (! image->isClosed())
                 CPPUNIT_FAIL(msg.str() + "that was not closed.");
 
-            const NAbelianGroup& h1 = image->getHomologyH1();
+            const NAbelianGroup& h1 = image->homology();
             if (h1.rank() != 1 || h1.countInvariantFactors() != 1 ||
                     h1.invariantFactor(0) != 2)
                 CPPUNIT_FAIL(msg.str() + "that had homology different from "

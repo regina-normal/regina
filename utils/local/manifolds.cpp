@@ -188,7 +188,7 @@ bool process(NContainer* c) {
         if (rawList) {
             std::cout << name;
 
-            NAbelianGroup* h1 = mfd->getHomologyH1();
+            NAbelianGroup* h1 = mfd->homology();
             if (h1) {
                 std::cout << ", H1 = " << h1->str();
                 delete h1;

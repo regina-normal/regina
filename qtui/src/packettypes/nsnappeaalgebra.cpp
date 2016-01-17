@@ -152,8 +152,8 @@ void NSnapPeaAlgebraUI::refresh() {
         filledFundGroup->show();
     }
 
-    unfilledH1->setText(tri->getHomologyH1().str().c_str());
-    unfilledFundGroup->refresh(&tri->getFundamentalGroup());
+    unfilledH1->setText(tri->homology().str().c_str());
+    unfilledFundGroup->refresh(&tri->fundamentalGroup());
 
     unfilledH1Title->show();
     unfilledH1->show();

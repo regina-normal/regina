@@ -128,7 +128,7 @@ long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
 
     unsigned long initZ, initZ2, initZ3;
     {
-        const NAbelianGroup& homology = working->getHomologyH1();
+        const NAbelianGroup& homology = working->homology();
         initZ = homology.rank();
         initZ2 = homology.torsionRank(2);
         initZ3 = homology.torsionRank(3);
@@ -239,7 +239,7 @@ long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
     unsigned long finalZ = 0, finalZ2 = 0, finalZ3 = 0;
     for (std::list<NTriangulation*>::iterator it = primeComponents.begin();
             it != primeComponents.end(); it++) {
-        const NAbelianGroup& homology = (*it)->getHomologyH1();
+        const NAbelianGroup& homology = (*it)->homology();
         finalZ += homology.rank();
         finalZ2 += homology.torsionRank(2);
         finalZ3 += homology.torsionRank(3);
@@ -328,7 +328,7 @@ bool NTriangulation::isThreeSphere() const {
     working->intelligentSimplify();
 
     // The Poincare conjecture!
-    if (working->getFundamentalGroup().countGenerators() == 0) {
+    if (working->fundamentalGroup().countGenerators() == 0) {
         threeSphere_ = true;
         delete working;
 
@@ -341,7 +341,7 @@ bool NTriangulation::isThreeSphere() const {
 
     // We could still have a trivial group but not know it.
     // At least we can at least check homology precisely.
-    if (! working->getHomologyH1().isTrivial()) {
+    if (! working->homology().isTrivial()) {
         threeSphere_ = false;
         delete working;
         return false;
@@ -513,7 +513,7 @@ bool NTriangulation::isSolidTorus() const {
     }
 
     // Check homology.
-    if (! (working->getHomologyH1().isZ())) {
+    if (! (working->homology().isZ())) {
         delete working;
         return (solidTorus_ = false);
     }
@@ -701,7 +701,7 @@ bool NTriangulation::isIrreducible() const {
 
     unsigned long Z, Z2, Z3;
     {
-        const NAbelianGroup& homology = working->getHomologyH1();
+        const NAbelianGroup& homology = working->homology();
         Z = homology.rank();
         Z2 = homology.torsionRank(2);
         Z3 = homology.torsionRank(3);
@@ -789,7 +789,7 @@ bool NTriangulation::isIrreducible() const {
 
                     // Note which parts of our initial homology we have
                     // now accounted for.
-                    const NAbelianGroup& h1 = processing->getHomologyH1();
+                    const NAbelianGroup& h1 = processing->homology();
                     Z -= h1.rank();
                     Z2 -= h1.torsionRank(2);
                     Z3 -= h1.torsionRank(3);
@@ -1154,7 +1154,7 @@ bool NTriangulation::isHaken() const {
     t.intelligentSimplify();
 
     // First check for an easy answer via homology:
-    if (t.getHomologyH1().rank() > 0) {
+    if (t.homology().rank() > 0) {
         threeSphere_ = false; // Implied by Hakenness.
         return (haken_ = true);
     }

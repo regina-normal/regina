@@ -1055,7 +1055,7 @@ void NTriGluingsUI::connectedSumDecomposition() {
                 // 0-efficient triangulations.
                 NTriangulation* small = static_cast<NTriangulation*>
                     (base->firstChild());
-                if (small->size() <= 2 && small->getHomologyH1().isZ()) {
+                if (small->size() <= 2 && small->homology().isZ()) {
                     // The only closed prime manifolds with
                     // H_1 = Z and <= 2 tetrahedra are S2xS1 and S2x~S1.
                     if (small->isOrientable())
@@ -1073,8 +1073,7 @@ void NTriGluingsUI::connectedSumDecomposition() {
                             tr("I cannot decompose it further.  "
                             "However, I have constructed a new minimal "
                             "(but not 0-efficient) triangulation."));
-                } else if (small->size() <= 2 &&
-                        small->getHomologyH1().isZn(2)) {
+                } else if (small->size() <= 2 && small->homology().isZn(2)) {
                     // The only closed prime orientable manifold with
                     // H_1 = Z_2 and <= 2 tetrahedra is RP3. */) {
                     ReginaSupport::info(ui,
@@ -1151,8 +1150,7 @@ void NTriGluingsUI::makeZeroEfficient() {
         unsigned long finalTets = tri->size();
         if (finalTets <= 2) {
             // Check for special cases.
-            if ((! tri->isZeroEfficient()) &&
-                    tri->getHomologyH1().isZn(2)) {
+            if ((! tri->isZeroEfficient()) && tri->homology().isZn(2)) {
                 // RP3.
                 if (finalTets < initTets)
                     ReginaSupport::info(ui,
@@ -1177,8 +1175,7 @@ void NTriGluingsUI::makeZeroEfficient() {
                         "one-vertex minimal triangulation "
                         "of RP<sup>3</sup>.</qt>"));
                 return;
-            } else if ((! tri->isZeroEfficient()) &&
-                    tri->getHomologyH1().isZ()) {
+            } else if ((! tri->isZeroEfficient()) && tri->homology().isZ()) {
                 // S2xS1.
                 if (finalTets < initTets)
                     ReginaSupport::info(ui,
