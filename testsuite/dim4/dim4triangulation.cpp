@@ -693,7 +693,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             t.barycentricSubdivision();
             t.intelligentSimplify();
 
-            std::string ans = t.getHomologyH1().str();
+            std::string ans = t.homology().str();
 
             if (ans != h1) {
                 std::ostringstream msg;
@@ -963,7 +963,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             t.barycentricSubdivision();
             t.intelligentSimplify();
 
-            std::string ans = t.getHomologyH1().str();
+            std::string ans = t.homology().str();
 
             if (ans != h1) {
                 std::ostringstream msg;
@@ -1082,7 +1082,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
         }
 
         void verifyHomologyH1(const Dim4Triangulation& tri, const char* H1) {
-            std::string ans = tri.getHomologyH1().str();
+            std::string ans = tri.homology().str();
             if (ans != H1) {
                 std::ostringstream msg;
                 msg << "Triangulation " << tri.label()
@@ -1243,14 +1243,14 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
             b.intelligentSimplify();
 
-            if (! (tri->getHomologyH1() == b.getHomologyH1())) {
+            if (! (tri->homologyH1() == b.homologyH1())) {
                 std::ostringstream msg;
                 msg << tri->label()
                     << ": Barycentric subdivision breaks H1.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! (tri->getHomologyH2() == b.getHomologyH2())) {
+            if (! (tri->homologyH2() == b.homologyH2())) {
                 std::ostringstream msg;
                 msg << tri->label()
                     << ": Barycentric subdivision breaks H2.";
@@ -1312,14 +1312,14 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 }
 
                 if (tri->isValid()) {
-                    if (! (large.getHomologyH1() == tri->getHomologyH1())) {
+                    if (! (large.homologyH1() == tri->homologyH1())) {
                         std::ostringstream msg;
                         msg << tri->label() << ", pent " << i << ": "
                             << "1-5 move changes H1.";
                         CPPUNIT_FAIL(msg.str());
                     }
 
-                    if (! (large.getHomologyH2() == tri->getHomologyH2())) {
+                    if (! (large.homologyH2() == tri->homologyH2())) {
                         std::ostringstream msg;
                         msg << tri->label() << ", pent " << i << ": "
                             << "1-5 move changes H2.";
@@ -1871,14 +1871,14 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                     // triangulations.
                     other.intelligentSimplify();
 
-                    if (! (other.getHomologyH1() == tri->getHomologyH1())) {
+                    if (! (other.homologyH1() == tri->homologyH1())) {
                         std::ostringstream msg;
                         msg << tri->label() << ": "
                             << "idealToFinite changes H1.";
                         CPPUNIT_FAIL(msg.str());
                     }
 
-                    if (! (other.getHomologyH2() == tri->getHomologyH2())) {
+                    if (! (other.homologyH2() == tri->homologyH2())) {
                         std::ostringstream msg;
                         msg << tri->label() << ": "
                             << "idealToFinite changes H2.";
@@ -1961,14 +1961,14 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             // expensive tests.
             b->intelligentSimplify();
 
-            if (b->getHomologyH1() != tri->getHomologyH1()) {
+            if (b->homologyH1() != tri->homologyH1()) {
                 std::ostringstream msg;
                 msg << tri->label() << ": "
                     << "iBundle gives a mismatched H1.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (b->getHomologyH2() != tri->getHomologyH2()) {
+            if (b->homologyH2() != tri->homologyH2()) {
                 std::ostringstream msg;
                 msg << tri->label() << ": "
                     << "iBundle gives a mismatched H2.";
@@ -2042,20 +2042,20 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             // expensive tests.
             b->intelligentSimplify();
 
-            regina::NAbelianGroup expectH1(tri->getHomologyH1());
+            regina::NAbelianGroup expectH1(tri->homologyH1());
             expectH1.addRank();
 
-            if (b->getHomologyH1() != expectH1) {
+            if (b->homologyH1() != expectH1) {
                 std::ostringstream msg;
                 msg << tri->label() << ": "
                     << "s1Bundle gives incorrect H1.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            regina::NAbelianGroup expectH2(tri->getHomologyH2());
-            expectH2.addGroup(tri->getHomologyH1());
+            regina::NAbelianGroup expectH2(tri->homologyH2());
+            expectH2.addGroup(tri->homology());
 
-            if (b->getHomologyH2() != expectH2) {
+            if (b->homologyH2() != expectH2) {
                 std::ostringstream msg;
                 msg << tri->label() << ": "
                     << "s1Bundle gives incorrect H2.";

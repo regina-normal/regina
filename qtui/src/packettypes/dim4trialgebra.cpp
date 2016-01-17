@@ -122,8 +122,8 @@ QWidget* Dim4TriHomologyFundUI::getInterface() {
 
 void Dim4TriHomologyFundUI::refresh() {
     if (tri->isValid()) {
-        H1->setText(tri->getHomologyH1().str().c_str());
-        H2->setText(tri->getHomologyH2().str().c_str());
+        H1->setText(tri->homologyH1().str().c_str());
+        H2->setText(tri->homologyH2().str().c_str());
     } else {
         QString msg(QObject::tr("Invalid Triangulation"));
         H1->setText(msg);

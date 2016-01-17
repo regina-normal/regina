@@ -563,17 +563,42 @@ class REGINA_API Triangulation<4> :
          * If this triangulation contains any ideal vertices, the homology
          * group will be calculated as if each such vertex had been truncated.
          *
+         * This routine is identical to homologyH1().  It is provided
+         * for consistency with NTriangulation::homology(), which
+         * likewise returns the first homology group.
+         *
          * Bear in mind that each time the triangulation changes, the
          * homology groups will be deleted.  Thus the reference that is
          * returned from this routine should not be kept for later use.
-         * Instead, getHomologyH1() should be called again; this will be
+         * Instead, homology() should be called again; this will be
          * instantaneous if the group has already been calculated.
          *
          * \pre This triangulation is valid.
          *
          * @return the first homology group.
          */
-        const NAbelianGroup& getHomologyH1() const;
+        const NAbelianGroup& homology() const;
+
+        /**
+         * Returns the first homology group for this triangulation.
+         * If this triangulation contains any ideal vertices, the homology
+         * group will be calculated as if each such vertex had been truncated.
+         *
+         * This routine is identical to homology().  The alias homology()
+         * is provided for consistency with NTriangulation::homology(), which
+         * likewise returns the first homology group.
+         *
+         * Bear in mind that each time the triangulation changes, the
+         * homology groups will be deleted.  Thus the reference that is
+         * returned from this routine should not be kept for later use.
+         * Instead, homologyH1() should be called again; this will be
+         * instantaneous if the group has already been calculated.
+         *
+         * \pre This triangulation is valid.
+         *
+         * @return the first homology group.
+         */
+        const NAbelianGroup& homologyH1() const;
 
         /**
          * Returns the second homology group for this triangulation.
@@ -583,14 +608,14 @@ class REGINA_API Triangulation<4> :
          * Bear in mind that each time the triangulation changes, the
          * homology groups will be deleted.  Thus the reference that is
          * returned from this routine should not be kept for later use.
-         * Instead, getHomologyH2() should be called again; this will be
+         * Instead, homologyH2() should be called again; this will be
          * instantaneous if the group has already been calculated.
          *
          * \pre This triangulation is valid.
          *
          * @return the second homology group.
          */
-        const NAbelianGroup& getHomologyH2() const;
+        const NAbelianGroup& homologyH2() const;
 
         /*@}*/
         /**
@@ -1244,6 +1269,10 @@ inline bool Triangulation<4>::isClosed() const {
 inline void Triangulation<4>::simplifiedFundamentalGroup(
         NGroupPresentation* newGroup) {
     fundGroup_ = newGroup;
+}
+
+inline const NAbelianGroup& Triangulation<4>::homology() const {
+    return homologyH1();
 }
 
 inline NPacket* Triangulation<4>::internalClonePacket(NPacket*) const {

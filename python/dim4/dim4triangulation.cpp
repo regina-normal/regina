@@ -289,9 +289,11 @@ void addDim4Triangulation() {
         .def("getFundamentalGroup", &Dim4Triangulation::getFundamentalGroup,
             return_internal_reference<>())
         .def("simplifiedFundamentalGroup", simplifiedFundamentalGroup_own)
-        .def("getHomologyH1", &Dim4Triangulation::getHomologyH1,
+        .def("homology", &Dim4Triangulation::homology,
             return_internal_reference<>())
-        .def("getHomologyH2", &Dim4Triangulation::getHomologyH2,
+        .def("homologyH1", &Dim4Triangulation::homologyH1,
+            return_internal_reference<>())
+        .def("homologyH2", &Dim4Triangulation::homologyH2,
             return_internal_reference<>())
         .def("intelligentSimplify", &Dim4Triangulation::intelligentSimplify)
         .def("simplifyToLocalMinimum",

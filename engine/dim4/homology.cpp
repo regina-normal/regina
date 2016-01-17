@@ -39,7 +39,7 @@
 
 namespace regina {
 
-const NAbelianGroup& Dim4Triangulation::getHomologyH1() const {
+const NAbelianGroup& Dim4Triangulation::homologyH1() const {
     if (H1_.known())
         return *H1_.value();
 
@@ -117,7 +117,7 @@ const NAbelianGroup& Dim4Triangulation::getHomologyH1() const {
     return *(H1_ = ans);
 }
 
-const NAbelianGroup& Dim4Triangulation::getHomologyH2() const {
+const NAbelianGroup& Dim4Triangulation::homologyH2() const {
     if (H2_.known())
         return *H2_.value();
 
