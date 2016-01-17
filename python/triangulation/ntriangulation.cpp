@@ -334,6 +334,8 @@ void addNTriangulation() {
         .def("simplifiedFundamentalGroup", simplifiedFundamentalGroup_own)
         .def("homology", &NTriangulation::homology,
             return_internal_reference<>())
+        .def("homologyH1", &NTriangulation::homologyH1,
+            return_internal_reference<>())
         .def("getHomologyH1", &NTriangulation::getHomologyH1,
             return_internal_reference<>())
         .def("homologyRel", &NTriangulation::homologyRel,

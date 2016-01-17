@@ -492,7 +492,8 @@ Version 4.97  [ (under development) ]
               getHomologyH1Rel() and getHomologyH1Bdry() to homology(),
               homologyRel() and homologyBdry(), and renamed second homology
               routines getHomologyH2() and getHomologyH2Z2() to homologyH2()
-              and homologyH2Z2().  The old names are kept but deprecated.
+              and homologyH2Z2().  In addition, homology() has a new
+              alias homologyH1().  The old names are kept but deprecated.
             - Removed deprecated routines addTetrahedron() and
               gluingsHaveChanged().
             - Removed maximalForestInDualSkeleton().  Just use
