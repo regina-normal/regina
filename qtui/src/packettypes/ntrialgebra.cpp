@@ -470,31 +470,31 @@ void NTriCellularInfoUI::refresh() {
         regina::NHomologicalData minfo(*tri);
 
         Cells->setText(QObject::tr("%1, %2, %3, %4").
-            arg(minfo.getNumStandardCells(0)).
-            arg(minfo.getNumStandardCells(1)).
-            arg(minfo.getNumStandardCells(2)).
-            arg(minfo.getNumStandardCells(3)));
+            arg(minfo.countStandardCells(0)).
+            arg(minfo.countStandardCells(1)).
+            arg(minfo.countStandardCells(2)).
+            arg(minfo.countStandardCells(3)));
 
         DualCells->setText(QObject::tr("%1, %2, %3, %4").
-            arg(minfo.getNumDualCells(0)).
-            arg(minfo.getNumDualCells(1)).
-            arg(minfo.getNumDualCells(2)).
-            arg(minfo.getNumDualCells(3)));
+            arg(minfo.countDualCells(0)).
+            arg(minfo.countDualCells(1)).
+            arg(minfo.countDualCells(2)).
+            arg(minfo.countDualCells(3)));
 
         EulerChar->setText(QString::number(minfo.eulerChar()));
 
         H0H1H2H3->setText(QObject::tr("H0 = %1,  H1 = %2,  H2 = %3,  H3 = %4").
-            arg(minfo.getHomology(0).str().c_str()).
-            arg(minfo.getHomology(1).str().c_str()).
-            arg(minfo.getHomology(2).str().c_str()).
-            arg(minfo.getHomology(3).str().c_str()));
+            arg(minfo.homology(0).str().c_str()).
+            arg(minfo.homology(1).str().c_str()).
+            arg(minfo.homology(2).str().c_str()).
+            arg(minfo.homology(3).str().c_str()));
 
         HBdry->setText(QObject::tr("H0 = %1,  H1 = %2,  H2 = %3").
-            arg(minfo.getBdryHomology(0).str().c_str()).
-            arg(minfo.getBdryHomology(1).str().c_str()).
-            arg(minfo.getBdryHomology(2).str().c_str()));
+            arg(minfo.bdryHomology(0).str().c_str()).
+            arg(minfo.bdryHomology(1).str().c_str()).
+            arg(minfo.bdryHomology(2).str().c_str()));
 
-        BdryMap->setText(minfo.getBdryHomologyMap(1).str().c_str());
+        BdryMap->setText(minfo.bdryHomologyMap(1).str().c_str());
 
         if (! tri->isConnected()) {
             QString msg(QObject::tr("Triangulation is disconnected."));
@@ -508,11 +508,11 @@ void NTriCellularInfoUI::refresh() {
             // orientable y/n, boundary y/n, torsion exists y/n
             if (tri->isOrientable()) {
                 TorForOrders->setText(
-                    minfo.getTorsionRankVectorString().c_str());
+                    minfo.torsionRankVectorString().c_str());
                 TorForSigma->setText(
-                    minfo.getTorsionSigmaVectorString().c_str());
+                    minfo.torsionSigmaVectorString().c_str());
                 TorForLegendre->setText(
-                    minfo.getTorsionLegendreSymbolVectorString().c_str());
+                    minfo.torsionLegendreSymbolVectorString().c_str());
             } else {
                 // The torsion linking form routines insist on orientability,
                 // so we should avoid calling them.
@@ -527,7 +527,7 @@ void NTriCellularInfoUI::refresh() {
             // non-orientable triangulations.
             // Encase it in <qt>..</qt> so it can wrap over multiple lines.
             EmbeddingComments->setText(QString("<qt>%1</qt>").arg(
-                QString(minfo.getEmbeddabilityComment().c_str()).toHtmlEscaped()));
+                QString(minfo.embeddabilityComment().c_str()).toHtmlEscaped()));
         }
     } else {
         QString msg(QObject::tr("Invalid Triangulation"));

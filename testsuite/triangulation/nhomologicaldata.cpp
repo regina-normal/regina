@@ -194,8 +194,8 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
 
             std::string fromStandard, fromDual;
             for (int i = 0; i <= 3; ++i) {
-                fromStandard = dat.getHomology(i).str();
-                fromDual = dat.getDualHomology(i).str();
+                fromStandard = dat.homology(i).str();
+                fromDual = dat.dualHomology(i).str();
 
                 if (fromStandard != fromDual) {
                     std::ostringstream msg;
@@ -208,7 +208,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
             }
 
             std::string fromTri = tri.homology().str();
-            fromDual = dat.getDualHomology(1).str();
+            fromDual = dat.dualHomology(1).str();
 
             if (fromTri != fromDual) {
                 std::ostringstream msg;
@@ -257,7 +257,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
         void verifyBdryManifoldMapH1(const NTriangulation& tri,
                 const char* name, const char* ans) {
             NHomologicalData dat(tri);
-            std::string val = dat.getBdryHomologyMap(1).str();
+            std::string val = dat.bdryHomologyMap(1).str();
             if (val != ans) {
                 std::ostringstream msg;
                 msg << name << ": Map from H1(bdry) to H1(mfd) is "
@@ -291,7 +291,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
 
             unsigned long val;
             for (int i = 0; i < 4; i++) {
-                val = dat.getNumStandardCells(i);
+                val = dat.countStandardCells(i);
                 if (val != ans[i]) {
                     std::ostringstream msg;
                     msg << name << ": Number of standard cells of dimension "
@@ -323,7 +323,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
 
             unsigned long val;
             for (int i = 0; i < 4; i++) {
-                val = dat.getNumDualCells(i);
+                val = dat.countDualCells(i);
                 if (val != ans[i]) {
                     std::ostringstream msg;
                     msg << name << ": Number of dual cells of dimension "
@@ -350,7 +350,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
         void verifyTorsionRankVector(NTriangulation& tri,
                 const char* name, const char* ans) {
             NHomologicalData dat(tri);
-            std::string val = dat.getTorsionRankVectorString();
+            std::string val = dat.torsionRankVectorString();
             if (val != ans) {
                 std::ostringstream msg;
                 msg << name << ": Torsion form rank vector is "
@@ -377,7 +377,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
         void verifyTorsionSigmaVector(NTriangulation& tri,
                 const char* name, const char* ans) {
             NHomologicalData dat(tri);
-            std::string val = dat.getTorsionSigmaVectorString();
+            std::string val = dat.torsionSigmaVectorString();
             if (val != ans) {
                 std::ostringstream msg;
                 msg << name << ": 2-torsion sigma vector is "
@@ -405,7 +405,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
         void verifyTorsionLegendreSymbolVector(NTriangulation& tri,
                 const char* name, const char* ans) {
             NHomologicalData dat(tri);
-            std::string val = dat.getTorsionLegendreSymbolVectorString();
+            std::string val = dat.torsionLegendreSymbolVectorString();
             if (val != ans) {
                 std::ostringstream msg;
                 msg << name << ": Odd p-torsion Legendre symbol vector is "
@@ -436,7 +436,7 @@ class NHomologicalDataTest : public CppUnit::TestFixture {
         void verifyEmbeddability(const NTriangulation& tri,
                 const char* name, const char* ans) {
             NHomologicalData dat(tri);
-            std::string val = dat.getEmbeddabilityComment();
+            std::string val = dat.embeddabilityComment();
             if (val != ans) {
                 std::ostringstream msg;
                 msg << name << ": Embeddability comment is \"" << val

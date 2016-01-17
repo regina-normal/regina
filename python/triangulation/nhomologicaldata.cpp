@@ -45,26 +45,48 @@ void addNHomologicalData() {
             boost::noncopyable>
             ("NHomologicalData", init<const NTriangulation&>())
         .def(init<const NHomologicalData&>())
+        .def("homology", &NHomologicalData::homology,
+            return_internal_reference<>())
         .def("getHomology", &NHomologicalData::getHomology,
+            return_internal_reference<>())
+        .def("bdryHomology", &NHomologicalData::bdryHomology,
             return_internal_reference<>())
         .def("getBdryHomology", &NHomologicalData::getBdryHomology,
             return_internal_reference<>())
+        .def("bdryHomologyMap", &NHomologicalData::bdryHomologyMap,
+            return_internal_reference<>())
         .def("getBdryHomologyMap", &NHomologicalData::getBdryHomologyMap,
+            return_internal_reference<>())
+        .def("dualHomology", &NHomologicalData::dualHomology,
             return_internal_reference<>())
         .def("getDualHomology", &NHomologicalData::getDualHomology,
             return_internal_reference<>())
+        .def("h1CellAp", &NHomologicalData::h1CellAp,
+            return_internal_reference<>())
         .def("getH1CellAp", &NHomologicalData::getH1CellAp,
             return_internal_reference<>())
+        .def("countStandardCells", &NHomologicalData::countStandardCells)
         .def("getNumStandardCells", &NHomologicalData::getNumStandardCells)
+        .def("countDualCells", &NHomologicalData::countDualCells)
         .def("getNumDualCells", &NHomologicalData::getNumDualCells)
+        .def("countBdryCells", &NHomologicalData::countBdryCells)
         .def("getNumBdryCells", &NHomologicalData::getNumBdryCells)
         .def("eulerChar", &NHomologicalData::eulerChar)
         .def("getEulerChar", &NHomologicalData::getEulerChar)
+        .def("torsionRankVectorString",
+            &NHomologicalData::torsionRankVectorString,
+            return_value_policy<copy_const_reference>())
         .def("getTorsionRankVectorString",
             &NHomologicalData::getTorsionRankVectorString,
             return_value_policy<copy_const_reference>())
+        .def("torsionSigmaVectorString",
+            &NHomologicalData::torsionSigmaVectorString,
+            return_value_policy<copy_const_reference>())
         .def("getTorsionSigmaVectorString",
             &NHomologicalData::getTorsionSigmaVectorString,
+            return_value_policy<copy_const_reference>())
+        .def("torsionLegendreSymbolVectorString",
+            &NHomologicalData::torsionLegendreSymbolVectorString,
             return_value_policy<copy_const_reference>())
         .def("getTorsionLegendreSymbolVectorString",
             &NHomologicalData::getTorsionLegendreSymbolVectorString,
@@ -72,6 +94,9 @@ void addNHomologicalData() {
         .def("formIsHyperbolic", &NHomologicalData::formIsHyperbolic)
         .def("formIsSplit", &NHomologicalData::formIsSplit)
         .def("formSatKK", &NHomologicalData::formSatKK)
+        .def("embeddabilityComment",
+            &NHomologicalData::embeddabilityComment,
+            return_value_policy<copy_const_reference>())
         .def("getEmbeddabilityComment",
             &NHomologicalData::getEmbeddabilityComment,
             return_value_policy<copy_const_reference>())
