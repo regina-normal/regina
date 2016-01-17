@@ -145,15 +145,15 @@ namespace {
     };
 }
 
-NXMLFilterReader* NSurfaceFilter::getXMLFilterReader(NPacket*) {
+NXMLFilterReader* NSurfaceFilter::xmlFilterReader(NPacket*) {
     return new NPlainFilterReader();
 }
 
-NXMLFilterReader* NSurfaceFilterCombination::getXMLFilterReader(NPacket*) {
+NXMLFilterReader* NSurfaceFilterCombination::xmlFilterReader(NPacket*) {
     return new NCombinationReader();
 }
 
-NXMLFilterReader* NSurfaceFilterProperties::getXMLFilterReader(NPacket*) {
+NXMLFilterReader* NSurfaceFilterProperties::xmlFilterReader(NPacket*) {
     return new NPropertiesReader();
 }
 

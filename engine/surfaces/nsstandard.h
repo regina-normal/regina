@@ -104,15 +104,15 @@ class REGINA_API NNormalSurfaceVectorStandard : public NNormalSurfaceVector {
          */
         NNormalSurfaceVectorStandard(const NVector<NLargeInteger>& cloneMe);
 
-        virtual NLargeInteger getTriangleCoord(unsigned long tetIndex,
+        virtual NLargeInteger getTriangleCoord(size_t tetIndex,
             int vertex, const NTriangulation* triang) const;
-        virtual NLargeInteger getQuadCoord(unsigned long tetIndex,
+        virtual NLargeInteger getQuadCoord(size_t tetIndex,
             int quadType, const NTriangulation* triang) const;
-        virtual NLargeInteger getOctCoord(unsigned long tetIndex,
+        virtual NLargeInteger getOctCoord(size_t tetIndex,
             int octType, const NTriangulation* triang) const;
-        virtual NLargeInteger getEdgeWeight(unsigned long edgeIndex,
+        virtual NLargeInteger edgeWeight(size_t edgeIndex,
             const NTriangulation* triang) const;
-        virtual NLargeInteger getTriangleArcs(unsigned long triIndex,
+        virtual NLargeInteger getTriangleArcs(size_t triIndex,
             int triVertex, const NTriangulation* triang) const;
 
         static NNormalSurfaceVector* makeZeroVector(
@@ -136,15 +136,15 @@ inline NNormalSurfaceVectorStandard::NNormalSurfaceVectorStandard(
 }
 
 inline NLargeInteger NNormalSurfaceVectorStandard::getTriangleCoord(
-        unsigned long tetIndex, int vertex, const NTriangulation*) const {
+        size_t tetIndex, int vertex, const NTriangulation*) const {
     return (*this)[7 * tetIndex + vertex];
 }
 inline NLargeInteger NNormalSurfaceVectorStandard::getQuadCoord(
-        unsigned long tetIndex, int quadType, const NTriangulation*) const {
+        size_t tetIndex, int quadType, const NTriangulation*) const {
     return (*this)[7 * tetIndex + 4 + quadType];
 }
 inline NLargeInteger NNormalSurfaceVectorStandard::getOctCoord(
-        unsigned long, int, const NTriangulation*) const {
+        size_t, int, const NTriangulation*) const {
     return zero;
 }
 

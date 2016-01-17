@@ -66,7 +66,7 @@ class NNormalSurface;
  * normal surfaces.
  */
 struct REGINA_API NPrismSpec {
-    unsigned long tetIndex;
+    size_t tetIndex;
         /**< The index in the triangulation of the tetrahedron
              containing the prism. */
     int edge;
@@ -84,7 +84,7 @@ struct REGINA_API NPrismSpec {
      * @param newEdge the edge of the tetrahedron that is contained in
      * this prism; this must be between 0 and 5 inclusive.
      */
-    NPrismSpec(unsigned long newTetIndex, int newEdge);
+    NPrismSpec(size_t newTetIndex, int newEdge);
     /**
      * Creates a new prism specifier that is a clone of the given specifier.
      *
@@ -188,7 +188,7 @@ class REGINA_API NPrismSetSurface {
          * does not meet the given tetrahedron in any quadrilateral discs,
          * this routine returns -1.
          */
-        signed char getQuadType(unsigned long tetIndex) const;
+        signed char getQuadType(size_t tetIndex) const;
 };
 
 /*@}*/
@@ -197,7 +197,7 @@ class REGINA_API NPrismSetSurface {
 
 inline NPrismSpec::NPrismSpec() {
 }
-inline NPrismSpec::NPrismSpec(unsigned long newTetIndex, int newEdge) :
+inline NPrismSpec::NPrismSpec(size_t newTetIndex, int newEdge) :
         tetIndex(newTetIndex), edge(newEdge) {
 }
 inline NPrismSpec::NPrismSpec(const NPrismSpec& cloneMe) :
@@ -223,8 +223,7 @@ inline NPrismSetSurface::~NPrismSetSurface() {
         delete[] quadType;
 }
 
-inline signed char NPrismSetSurface::getQuadType(unsigned long tetIndex)
-        const {
+inline signed char NPrismSetSurface::getQuadType(size_t tetIndex) const {
     return quadType[tetIndex];
 }
 

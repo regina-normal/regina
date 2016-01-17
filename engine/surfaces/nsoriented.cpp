@@ -40,8 +40,8 @@
 
 namespace regina {
 
-NLargeInteger NNormalSurfaceVectorOriented::getEdgeWeight(
-        unsigned long edgeIndex, const NTriangulation* triang) const {
+NLargeInteger NNormalSurfaceVectorOriented::edgeWeight(
+        size_t edgeIndex, const NTriangulation* triang) const {
     // Find a tetrahedron next to the edge in question.
     const NEdgeEmbedding& emb = triang->edge(edgeIndex)->front();
     long tetIndex = triang->tetrahedronIndex(emb.getTetrahedron());
@@ -59,7 +59,7 @@ NLargeInteger NNormalSurfaceVectorOriented::getEdgeWeight(
 }
 
 NLargeInteger NNormalSurfaceVectorOriented::getTriangleArcs(
-        unsigned long triIndex, int triVertex, const NTriangulation* triang)
+        size_t triIndex, int triVertex, const NTriangulation* triang)
         const {
     // Find a tetrahedron next to the triangle in question.
     const NTriangleEmbedding& emb = triang->getTriangles()[triIndex]->
@@ -84,7 +84,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorOriented::makeZeroVector(
 
 NMatrixInt* NNormalSurfaceVectorOriented::makeMatchingEquations(
         const NTriangulation* triangulation) {
-    unsigned long nCoords = 14 * triangulation->size();
+    size_t nCoords = 14 * triangulation->size();
     // Six equations per non-boundary triangle.
     // F_boundary + 2 F_internal = 4 T
     long nEquations = 6 * (4 * long(triangulation->size()) -
@@ -95,7 +95,7 @@ NMatrixInt* NNormalSurfaceVectorOriented::makeMatchingEquations(
     // equations.
     unsigned row = 0;
     int i;
-    unsigned long tet0, tet1;
+    size_t tet0, tet1;
     NPerm4 perm0, perm1;
     bool natural;
     for (NTriangulation::TriangleIterator fit = triangulation->getTriangles().begin();

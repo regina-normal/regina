@@ -262,7 +262,7 @@ bool NNormalSurfaceList::saveCSVEdgeWeight(const char* filename,
         writePropData(out, s, additionalFields);
 
         for (j = 0; j < n; ++j) {
-            out << s->getEdgeWeight(j);
+            out << s->edgeWeight(j);
 
             if (j < n - 1)
                 out << ',';

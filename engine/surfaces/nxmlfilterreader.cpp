@@ -42,7 +42,7 @@ namespace {
     struct XMLReaderFunction : public Returns<NXMLElementReader*> {
         template <typename Filter>
         inline NXMLElementReader* operator() (NPacket* parent) {
-            return Filter::Class::getXMLFilterReader(parent);
+            return Filter::Class::xmlFilterReader(parent);
         }
     };
 }

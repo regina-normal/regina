@@ -141,6 +141,7 @@ void addNNormalSurface() {
         .def("getQuadCoord", &NNormalSurface::getQuadCoord)
         .def("getOrientedQuadCoord", &NNormalSurface::getOrientedQuadCoord)
         .def("getOctCoord", &NNormalSurface::getOctCoord)
+        .def("edgeWeight", &NNormalSurface::edgeWeight)
         .def("getEdgeWeight", &NNormalSurface::getEdgeWeight)
         .def("getFaceArcs", &NNormalSurface::getFaceArcs)
         .def("getTriangleArcs", &NNormalSurface::getTriangleArcs)

@@ -161,7 +161,7 @@ struct SurfaceFilterInfo<NS_FILTER_DEFAULT> {
  *   writing.</li>
  *   <li>Virtual functions accept(), internalClonePacket(), writeTextLong() and
  *   writeXMLFilterData() must be overridden.</li>
- *   <li>Static function getXMLFilterReader() must be declared and
+ *   <li>Static function xmlFilterReader() must be declared and
  *   implemented as described in the documentation below.</li>
  * </ul>
  *
@@ -257,7 +257,7 @@ class REGINA_API NSurfaceFilter : public NPacket {
          * tree matriarch.
          * @return the newly created XML filter reader.
          */
-        static NXMLFilterReader* getXMLFilterReader(NPacket* parent);
+        static NXMLFilterReader* xmlFilterReader(NPacket* parent);
 
         virtual void writeTextShort(std::ostream& out) const;
         static NXMLPacketReader* xmlReader(NPacket* parent,

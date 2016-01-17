@@ -107,15 +107,15 @@ class REGINA_API NNormalSurfaceVectorANStandard : public NNormalSurfaceVector {
          */
         NNormalSurfaceVectorANStandard(const NVector<NLargeInteger>& cloneMe);
 
-        virtual NLargeInteger getTriangleCoord(unsigned long tetIndex,
+        virtual NLargeInteger getTriangleCoord(size_t tetIndex,
             int vertex, const NTriangulation* triang) const;
-        virtual NLargeInteger getQuadCoord(unsigned long tetIndex,
+        virtual NLargeInteger getQuadCoord(size_t tetIndex,
             int quadType, const NTriangulation* triang) const;
-        virtual NLargeInteger getOctCoord(unsigned long tetIndex,
+        virtual NLargeInteger getOctCoord(size_t tetIndex,
             int octType, const NTriangulation* triang) const;
-        virtual NLargeInteger getEdgeWeight(unsigned long edgeIndex,
+        virtual NLargeInteger edgeWeight(size_t edgeIndex,
             const NTriangulation* triang) const;
-        virtual NLargeInteger getTriangleArcs(unsigned long triIndex,
+        virtual NLargeInteger getTriangleArcs(size_t triIndex,
             int triVertex, const NTriangulation* triang) const;
 
         static NNormalSurfaceVector* makeZeroVector(
@@ -139,15 +139,15 @@ inline NNormalSurfaceVectorANStandard::NNormalSurfaceVectorANStandard(
 }
 
 inline NLargeInteger NNormalSurfaceVectorANStandard::getTriangleCoord(
-        unsigned long tetIndex, int vertex, const NTriangulation*) const {
+        size_t tetIndex, int vertex, const NTriangulation*) const {
     return (*this)[10 * tetIndex + vertex];
 }
 inline NLargeInteger NNormalSurfaceVectorANStandard::getQuadCoord(
-        unsigned long tetIndex, int quadType, const NTriangulation*) const {
+        size_t tetIndex, int quadType, const NTriangulation*) const {
     return (*this)[10 * tetIndex + 4 + quadType];
 }
 inline NLargeInteger NNormalSurfaceVectorANStandard::getOctCoord(
-        unsigned long tetIndex, int octType, const NTriangulation*) const {
+        size_t tetIndex, int octType, const NTriangulation*) const {
     return (*this)[10 * tetIndex + 7 + octType];
 }
 

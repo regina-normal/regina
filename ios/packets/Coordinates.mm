@@ -242,7 +242,7 @@ using regina::NTriangle;
             return surface.getOctCoord(
                 whichCoord / 6, (whichCoord % 6) - 3);
     } else if (coordSystem == regina::NS_EDGE_WEIGHT) {
-        return surface.getEdgeWeight(whichCoord);
+        return surface.edgeWeight(whichCoord);
     } else if (coordSystem == regina::NS_TRIANGLE_ARCS) {
         return surface.getTriangleArcs(whichCoord / 3, whichCoord % 3);
     } else if (coordSystem == regina::NS_ORIENTED) {

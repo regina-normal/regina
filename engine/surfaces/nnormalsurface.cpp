@@ -138,8 +138,8 @@ NNormalSurface::NNormalSurface(const NTriangulation* triang,
 }
 
 void NNormalSurface::writeTextShort(std::ostream& out) const {
-    unsigned long nTets = triangulation_->size();
-    unsigned long tet;
+    size_t nTets = triangulation_->size();
+    size_t tet;
     unsigned j;
     bool almostNormal = vector->allowsAlmostNormal();
     for (tet=0; tet<nTets; tet++) {
@@ -160,10 +160,10 @@ void NNormalSurface::writeTextShort(std::ostream& out) const {
 
 bool NNormalSurfaceVector::hasMultipleOctDiscs(const NTriangulation* triang)
         const {
-    unsigned long nTets = triang->size();
+    size_t nTets = triang->size();
     int oct;
     NLargeInteger coord;
-    for (unsigned long tet=0; tet<nTets; tet++)
+    for (size_t tet=0; tet<nTets; tet++)
         for (oct=0; oct<3; oct++) {
             coord = getOctCoord(tet, oct, triang);
             if (coord == 0)
@@ -178,8 +178,8 @@ bool NNormalSurfaceVector::hasMultipleOctDiscs(const NTriangulation* triang)
 }
 
 bool NNormalSurfaceVector::isCompact(const NTriangulation* triang) const {
-    unsigned long nTets = triang->size();
-    unsigned long tet;
+    size_t nTets = triang->size();
+    size_t tet;
     int type;
     for (tet = 0; tet < nTets; tet++) {
         for (type = 0; type < 4; type++)
@@ -198,8 +198,8 @@ bool NNormalSurfaceVector::isCompact(const NTriangulation* triang) const {
 }
 
 bool NNormalSurfaceVector::isSplitting(const NTriangulation* triang) const {
-    unsigned long nTets = triang->size();
-    unsigned long tet;
+    size_t nTets = triang->size();
+    size_t tet;
     int type;
     NLargeInteger tot;
     for (tet = 0; tet < nTets; tet++) {
@@ -222,8 +222,8 @@ bool NNormalSurfaceVector::isSplitting(const NTriangulation* triang) const {
 
 NLargeInteger NNormalSurfaceVector::isCentral(const NTriangulation* triang)
         const {
-    unsigned long nTets = triang->size();
-    unsigned long tet;
+    size_t nTets = triang->size();
+    size_t tet;
     int type;
     NLargeInteger tot, tetTot;
     for (tet = 0; tet < nTets; tet++) {
@@ -242,10 +242,10 @@ NLargeInteger NNormalSurfaceVector::isCentral(const NTriangulation* triang)
 }
 
 bool NNormalSurface::isEmpty() const {
-    unsigned long nTet = triangulation_->size();
+    size_t nTet = triangulation_->size();
     bool checkAlmostNormal = vector->allowsAlmostNormal();
 
-    unsigned long t;
+    size_t t;
     int i;
 
     for (t = 0; t < nTet; ++t) {
@@ -267,11 +267,11 @@ bool NNormalSurface::isEmpty() const {
 }
 
 bool NNormalSurface::sameSurface(const NNormalSurface& other) const {
-    unsigned long nTet = triangulation_->size();
+    size_t nTet = triangulation_->size();
     bool checkAlmostNormal =
         (vector->allowsAlmostNormal() || other.vector->allowsAlmostNormal());
 
-    unsigned long t;
+    size_t t;
     int i;
 
     for (t = 0; t < nTet; ++t) {
@@ -293,11 +293,11 @@ bool NNormalSurface::sameSurface(const NNormalSurface& other) const {
 }
 
 bool NNormalSurface::embedded() const {
-    unsigned long nTets = triangulation_->size();
+    size_t nTets = triangulation_->size();
 
     int type;
     int found;
-    for (unsigned long tet = 0; tet < nTets; ++tet) {
+    for (size_t tet = 0; tet < nTets; ++tet) {
         found = 0;
         for (type = 0; type < 3; ++type)
             if (getQuadCoord(tet, type) > 0)
@@ -313,11 +313,11 @@ bool NNormalSurface::embedded() const {
 }
 
 bool NNormalSurface::locallyCompatible(const NNormalSurface& other) const {
-    unsigned long nTets = triangulation_->size();
+    size_t nTets = triangulation_->size();
 
     int type;
     int found;
-    for (unsigned long tet = 0; tet < nTets; ++tet) {
+    for (size_t tet = 0; tet < nTets; ++tet) {
         found = 0;
         for (type = 0; type < 3; ++type)
             if (getQuadCoord(tet, type) > 0 ||
@@ -340,7 +340,7 @@ void NNormalSurface::calculateOctPosition() const {
         return;
     }
 
-    unsigned long tetIndex;
+    size_t tetIndex;
     int type;
 
     for (tetIndex = 0; tetIndex < triangulation_->size(); ++tetIndex)
@@ -355,14 +355,14 @@ void NNormalSurface::calculateOctPosition() const {
 }
 
 void NNormalSurface::calculateEulerChar() const {
-    unsigned long index, tot;
+    size_t index, tot;
     int type;
     NLargeInteger ans = NLargeInteger::zero;
 
     // Add vertices.
     tot = triangulation_->countEdges();
     for (index = 0; index < tot; index++)
-        ans += getEdgeWeight(index);
+        ans += edgeWeight(index);
 
     // Subtract edges.
     tot = triangulation_->countTriangles();
@@ -391,8 +391,8 @@ void NNormalSurface::calculateRealBoundary() const {
         return;
     }
 
-    unsigned long index;
-    unsigned long tot = triangulation_->size();
+    size_t index;
+    size_t tot = triangulation_->size();
     const NTetrahedron* tet;
     int type, face;
 
@@ -456,8 +456,8 @@ NMatrixInt* NNormalSurface::boundaryIntersections() const {
     if (! equations)
         return 0;
 
-    unsigned long cusps = equations->rows() / 2;
-    unsigned long numTet = snapPea->size();
+    size_t cusps = equations->rows() / 2;
+    size_t numTet = snapPea->size();
     NMatrixInt* slopes = new NMatrixInt(cusps, 2);
     for(unsigned int i=0; i < cusps; i++) {
         NLargeInteger meridian; // constructor sets this to 0
@@ -517,12 +517,12 @@ void NNormalSurface::writeXMLData(std::ostream& out) const {
 // Default implementations for oriented surfaces. Returns zero as any
 // coordinate system which supports orientation should override these.
 NLargeInteger NNormalSurfaceVector::getOrientedTriangleCoord(
-        unsigned long, int, const NTriangulation*, bool) const {
+        size_t, int, const NTriangulation*, bool) const {
     return NLargeInteger::zero;
 };
 
 NLargeInteger NNormalSurfaceVector::getOrientedQuadCoord(
-        unsigned long, int, const NTriangulation*, bool) const {
+        size_t, int, const NTriangulation*, bool) const {
     return NLargeInteger::zero;
 };
 

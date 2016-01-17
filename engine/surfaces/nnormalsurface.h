@@ -549,7 +549,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @param triang the triangulation in which this normal surface lives.
          * @return the number of triangular discs of the given type.
          */
-        virtual NLargeInteger getTriangleCoord(unsigned long tetIndex,
+        virtual NLargeInteger getTriangleCoord(size_t tetIndex,
             int vertex, const NTriangulation* triang) const = 0;
 
         /**
@@ -572,7 +572,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @param orientation the orientation of the normal discs.
          * @return the number of triangular discs of the given type.
          */
-        virtual NLargeInteger getOrientedTriangleCoord(unsigned long tetIndex,
+        virtual NLargeInteger getOrientedTriangleCoord(size_t tetIndex,
             int vertex, const NTriangulation* triang, bool orientation) const;
 
         /**
@@ -590,7 +590,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @param triang the triangulation in which this normal surface lives.
          * @return the number of quadrilateral discs of the given type.
          */
-        virtual NLargeInteger getQuadCoord(unsigned long tetIndex,
+        virtual NLargeInteger getQuadCoord(size_t tetIndex,
             int quadType, const NTriangulation* triang) const = 0;
 
         /**
@@ -613,7 +613,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @param orientation the orientation of the normal discs.
          * @return the number of quadrilateral discs of the given type.
          */
-        virtual NLargeInteger getOrientedQuadCoord(unsigned long tetIndex,
+        virtual NLargeInteger getOrientedQuadCoord(size_t tetIndex,
             int quadType, const NTriangulation* triang, bool orientation) const;
         /**
          * Returns the number of octagonal discs of the given type
@@ -630,12 +630,12 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @param triang the triangulation in which this normal surface lives.
          * @return the number of octagonal discs of the given type.
          */
-        virtual NLargeInteger getOctCoord(unsigned long tetIndex,
+        virtual NLargeInteger getOctCoord(size_t tetIndex,
             int octType, const NTriangulation* triang) const = 0;
         /**
          * Returns the number of times this normal surface crosses the
          * given edge.
-         * See NNormalSurface::getEdgeWeight() for further details.
+         * See NNormalSurface::edgeWeight() for further details.
          *
          * @param edgeIndex the index in the triangulation of the edge
          * in which we are interested; this should be between 0 and
@@ -644,8 +644,17 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @return the number of times this normal surface crosses the
          * given edge.
          */
-        virtual NLargeInteger getEdgeWeight(unsigned long edgeIndex,
+        virtual NLargeInteger edgeWeight(size_t edgeIndex,
             const NTriangulation* triang) const = 0;
+        /**
+         * Deprecated routine that returns the number of times this
+         * normal surfaces crosses the given edge.
+         *
+         * \deprecated This routine has been renamed to edgeWeight().
+         * See the edgeWeight() documentation for further details.
+         */
+        NLargeInteger getEdgeWeight(size_t edgeIndex,
+            const NTriangulation* triang) const;
         /**
          * Returns the number of arcs in which this normal surface
          * intersects the given triangle in the given direction.
@@ -661,7 +670,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @return the number of times this normal surface intersect the
          * given triangle with the given arc type.
          */
-        virtual NLargeInteger getTriangleArcs(unsigned long triIndex,
+        virtual NLargeInteger getTriangleArcs(size_t triIndex,
             int triVertex, const NTriangulation* triang) const = 0;
         /**
          * A deprecated alias for getTriangleArcs().
@@ -686,7 +695,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @return the number of times this normal surface intersect the
          * given triangle with the given arc type.
          */
-        NLargeInteger getFaceArcs(unsigned long triIndex,
+        NLargeInteger getFaceArcs(size_t triIndex,
             int triVertex, const NTriangulation* triang) const;
 
         /**
@@ -884,7 +893,7 @@ class REGINA_API NNormalSurface :
          * and 3 inclusive.
          * @return the number of triangular discs of the given type.
          */
-        NLargeInteger getTriangleCoord(unsigned long tetIndex,
+        NLargeInteger getTriangleCoord(size_t tetIndex,
             int vertex) const;
 
         /**
@@ -916,7 +925,7 @@ class REGINA_API NNormalSurface :
          * @param orientation the orientation of the triangle 
          * @return the number of triangular discs of the given type.
          */
-        NLargeInteger getOrientedTriangleCoord(unsigned long tetIndex,
+        NLargeInteger getOrientedTriangleCoord(size_t tetIndex,
             int vertex, bool orientation) const;
         /**
          * Returns the number of quadrilateral discs of the given
@@ -949,8 +958,7 @@ class REGINA_API NNormalSurface :
          * this should be between 0 and 2 inclusive.
          * @return the number of quadrilateral discs of the given type.
          */
-        NLargeInteger getQuadCoord(unsigned long tetIndex,
-            int quadType) const;
+        NLargeInteger getQuadCoord(size_t tetIndex, int quadType) const;
         /**
          * Returns the number of oriented quadrilateral discs of the given type
          * in this normal surface.
@@ -981,7 +989,7 @@ class REGINA_API NNormalSurface :
          * @param orientation the orientation of the quadrilateral disc 
          * @return the number of quadrilateral discs of the given type.
          */
-        NLargeInteger getOrientedQuadCoord(unsigned long tetIndex,
+        NLargeInteger getOrientedQuadCoord(size_t tetIndex,
             int quadType, bool orientation) const;
         /**
          * Returns the number of octagonal discs of the given type
@@ -1014,8 +1022,7 @@ class REGINA_API NNormalSurface :
          * this should be between 0 and 2 inclusive.
          * @return the number of octagonal discs of the given type.
          */
-        NLargeInteger getOctCoord(unsigned long tetIndex,
-            int octType) const;
+        NLargeInteger getOctCoord(size_t tetIndex, int octType) const;
         /**
          * Returns the number of times this normal surface crosses the
          * given edge.
@@ -1026,7 +1033,15 @@ class REGINA_API NNormalSurface :
          * @return the number of times this normal surface crosses the
          * given edge.
          */
-        NLargeInteger getEdgeWeight(unsigned long edgeIndex) const;
+        NLargeInteger edgeWeight(size_t edgeIndex) const;
+        /**
+         * Deprecated routine that returns the number of times this
+         * normal surfaces crosses the given edge.
+         *
+         * \deprecated This routine has been renamed to edgeWeight().
+         * See the edgeWeight() documentation for further details.
+         */
+        NLargeInteger getEdgeWeight(size_t edgeIndex) const;
         /**
          * Returns the number of arcs in which this normal surface
          * intersects the given triangle in the given direction.
@@ -1040,8 +1055,7 @@ class REGINA_API NNormalSurface :
          * @return the number of times this normal surface intersect the
          * given triangle with the given arc type.
          */
-        NLargeInteger getTriangleArcs(unsigned long triIndex,
-            int triVertex) const;
+        NLargeInteger getTriangleArcs(size_t triIndex, int triVertex) const;
         /**
          * A deprecated alias for getTriangleArcs().
          *
@@ -1061,7 +1075,7 @@ class REGINA_API NNormalSurface :
          * @return the number of times this normal surface intersect the
          * given triangle with the given arc type.
          */
-        NLargeInteger getFaceArcs(unsigned long triIndex, int triVertex) const;
+        NLargeInteger getFaceArcs(size_t triIndex, int triVertex) const;
 
         /**
          * Determines the first coordinate position at which this surface
@@ -1802,7 +1816,11 @@ inline NNormalSurfaceVector::NNormalSurfaceVector(
 }
 inline NNormalSurfaceVector::~NNormalSurfaceVector() {
 }
-inline NLargeInteger NNormalSurfaceVector::getFaceArcs(unsigned long triIndex,
+inline NLargeInteger NNormalSurfaceVector::getEdgeWeight(size_t edgeIndex,
+        const NTriangulation* triang) const {
+    return edgeWeight(edgeIndex, triang);
+}
+inline NLargeInteger NNormalSurfaceVector::getFaceArcs(size_t triIndex,
         int triVertex, const NTriangulation* triang) const {
     return getTriangleArcs(triIndex, triVertex, triang);
 }
@@ -1813,37 +1831,41 @@ inline NNormalSurface::~NNormalSurface() {
     delete vector;
 }
 
-inline NLargeInteger NNormalSurface::getTriangleCoord(unsigned long tetIndex,
+inline NLargeInteger NNormalSurface::getTriangleCoord(size_t tetIndex,
         int vertex) const {
     return vector->getTriangleCoord(tetIndex, vertex, triangulation_);
 }
 inline NLargeInteger NNormalSurface::getOrientedTriangleCoord(
-        unsigned long tetIndex, int vertex, bool oriented) const {
+        size_t tetIndex, int vertex, bool oriented) const {
     return vector->getOrientedTriangleCoord(tetIndex, vertex, triangulation_,
         oriented);
 }
-inline NLargeInteger NNormalSurface::getQuadCoord(unsigned long tetIndex,
+inline NLargeInteger NNormalSurface::getQuadCoord(size_t tetIndex,
         int quadType) const {
     return vector->getQuadCoord(tetIndex, quadType, triangulation_);
 }
 inline NLargeInteger NNormalSurface::getOrientedQuadCoord(
-        unsigned long tetIndex, int quadType, bool oriented) const {
+        size_t tetIndex, int quadType, bool oriented) const {
     return vector->getOrientedQuadCoord(tetIndex, quadType, triangulation_,
         oriented);
 }
-inline NLargeInteger NNormalSurface::getOctCoord(unsigned long tetIndex,
+inline NLargeInteger NNormalSurface::getOctCoord(size_t tetIndex,
         int octType) const {
     return vector->getOctCoord(tetIndex, octType, triangulation_);
 }
-inline NLargeInteger NNormalSurface::getEdgeWeight(unsigned long edgeIndex)
+inline NLargeInteger NNormalSurface::edgeWeight(size_t edgeIndex)
         const {
-    return vector->getEdgeWeight(edgeIndex, triangulation_);
+    return vector->edgeWeight(edgeIndex, triangulation_);
 }
-inline NLargeInteger NNormalSurface::getTriangleArcs(unsigned long triIndex,
+inline NLargeInteger NNormalSurface::getEdgeWeight(size_t edgeIndex)
+        const {
+    return vector->edgeWeight(edgeIndex, triangulation_);
+}
+inline NLargeInteger NNormalSurface::getTriangleArcs(size_t triIndex,
         int triVertex) const {
     return vector->getTriangleArcs(triIndex, triVertex, triangulation_);
 }
-inline NLargeInteger NNormalSurface::getFaceArcs(unsigned long triIndex,
+inline NLargeInteger NNormalSurface::getFaceArcs(size_t triIndex,
         int triVertex) const {
     return vector->getTriangleArcs(triIndex, triVertex, triangulation_);
 }

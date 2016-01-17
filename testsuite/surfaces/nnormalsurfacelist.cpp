@@ -1823,7 +1823,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                                     << ", which is a vertex link.";
                                 CPPUNIT_FAIL(msg.str());
                             }
-                        } else if (t->getEdgeWeight(edge) == 0) {
+                        } else if (t->edgeWeight(edge) == 0) {
                             if (! s->disjoint(*t)) {
                                 std::ostringstream msg;
                                 msg << "Surface #" << i << " for "

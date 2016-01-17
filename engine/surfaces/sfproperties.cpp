@@ -44,24 +44,24 @@
 namespace regina {
 
 NLargeInteger NSurfaceFilterProperties::getEC(size_t index) const {
-    std::set<NLargeInteger>::const_iterator it = eulerChar.begin();
+    std::set<NLargeInteger>::const_iterator it = eulerChar_.begin();
     advance(it, index);
     return *it;
 }
 
 bool NSurfaceFilterProperties::accept(const NNormalSurface& surface) const {
-    if (! realBoundary.contains(surface.hasRealBoundary()))
+    if (! realBoundary_.contains(surface.hasRealBoundary()))
         return false;
-    if (! compactness.contains(surface.isCompact()))
+    if (! compactness_.contains(surface.isCompact()))
         return false;
 
     // Some properties may only be calculated for compact surfaces.
     if (surface.isCompact()) {
-        if (! orientability.contains(surface.isOrientable()))
+        if (! orientability_.contains(surface.isOrientable()))
             return false;
 
-        if (eulerChar.size() > 0)
-            if (! eulerChar.count(surface.eulerChar()))
+        if (! eulerChar_.empty())
+            if (! eulerChar_.count(surface.eulerChar()))
                 return false;
     }
 
@@ -72,40 +72,36 @@ bool NSurfaceFilterProperties::accept(const NNormalSurface& surface) const {
 void NSurfaceFilterProperties::writeTextLong(std::ostream& o) const {
     o << "Filter normal surfaces with restrictions:\n";
 
-    if (eulerChar.size() > 0) {
+    if (eulerChar_.size() > 0) {
         o << "    Euler characteristic:";
-        std::set<NLargeInteger>::const_reverse_iterator it;
-        for (it = eulerChar.rbegin();
-                it != eulerChar.rend(); it++)
+        for (auto it = eulerChar_.rbegin(); it != eulerChar_.rend(); ++it)
             o << ' ' << *it;
         o << '\n';
     }
-    if (orientability != NBoolSet::sBoth)
-        o << "    Orientability: " << orientability << '\n';
-    if (compactness != NBoolSet::sBoth)
-        o << "    Compactness: " << compactness << '\n';
-    if (realBoundary != NBoolSet::sBoth)
-        o << "    Has real boundary: " << realBoundary << '\n';
+    if (orientability_ != NBoolSet::sBoth)
+        o << "    Orientability: " << orientability_ << '\n';
+    if (compactness_ != NBoolSet::sBoth)
+        o << "    Compactness: " << compactness_ << '\n';
+    if (realBoundary_ != NBoolSet::sBoth)
+        o << "    Has real boundary: " << realBoundary_ << '\n';
 }
 
 void NSurfaceFilterProperties::writeXMLFilterData(std::ostream& out) const {
     using regina::xml::xmlValueTag;
 
-    if (eulerChar.size() > 0) {
+    if (! eulerChar_.empty()) {
         out << "    <euler> ";
-        for (std::set<NLargeInteger>::const_iterator it =
-                eulerChar.begin(); it != eulerChar.end();
-                it++)
+        for (auto it = eulerChar_.begin(); it != eulerChar_.end(); ++it)
             out << (*it) << ' ';
         out << "</euler>\n";
     }
 
-    if (orientability != NBoolSet::sBoth)
-        out << "    " << xmlValueTag("orbl", orientability) << '\n';
-    if (compactness != NBoolSet::sBoth)
-        out << "    " << xmlValueTag("compact", compactness) << '\n';
-    if (realBoundary != NBoolSet::sBoth)
-        out << "    " << xmlValueTag("realbdry", realBoundary) << '\n';
+    if (orientability_ != NBoolSet::sBoth)
+        out << "    " << xmlValueTag("orbl", orientability_) << '\n';
+    if (compactness_ != NBoolSet::sBoth)
+        out << "    " << xmlValueTag("compact", compactness_) << '\n';
+    if (realBoundary_ != NBoolSet::sBoth)
+        out << "    " << xmlValueTag("realbdry", realBoundary_) << '\n';
 }
 
 } // namespace regina

@@ -82,14 +82,14 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
     REGINA_SURFACE_FILTER(NSurfaceFilterProperties, NS_FILTER_PROPERTIES)
 
     private:
-        std::set<NLargeInteger> eulerChar;
+        std::set<NLargeInteger> eulerChar_;
             /**< The set of allowable Euler characteristics.  An empty
                  set signifies that any Euler characteristic is allowed. */
-        NBoolSet orientability;
+        NBoolSet orientability_;
             /**< The set of allowable orientability properties. */
-        NBoolSet compactness;
+        NBoolSet compactness_;
             /**< The set of allowable compactness properties. */
-        NBoolSet realBoundary;
+        NBoolSet realBoundary_;
             /**< The set of allowable has-real-boundary properties. */
 
     public:
@@ -234,7 +234,7 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
 
         virtual bool accept(const NNormalSurface& surface) const;
         virtual void writeTextLong(std::ostream& out) const;
-        static NXMLFilterReader* getXMLFilterReader(NPacket* parent);
+        static NXMLFilterReader* xmlFilterReader(NPacket* parent);
 
     protected:
         virtual NPacket* internalClonePacket(NPacket* parent) const;
@@ -246,73 +246,73 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
 // Inline functions for NSurfaceFilterProperties
 
 inline NSurfaceFilterProperties::NSurfaceFilterProperties() :
-        orientability(NBoolSet::sBoth),
-        compactness(NBoolSet::sBoth),
-        realBoundary(NBoolSet::sBoth) {
+        orientability_(NBoolSet::sBoth),
+        compactness_(NBoolSet::sBoth),
+        realBoundary_(NBoolSet::sBoth) {
 }
 inline NSurfaceFilterProperties::NSurfaceFilterProperties(
         const NSurfaceFilterProperties& cloneMe) :
         NSurfaceFilter(),
-        eulerChar(cloneMe.eulerChar),
-        orientability(cloneMe.orientability),
-        compactness(cloneMe.compactness),
-        realBoundary(cloneMe.realBoundary) {
+        eulerChar_(cloneMe.eulerChar_),
+        orientability_(cloneMe.orientability_),
+        compactness_(cloneMe.compactness_),
+        realBoundary_(cloneMe.realBoundary_) {
 }
 
 inline const std::set<NLargeInteger>& NSurfaceFilterProperties::getECs()
         const {
-    return eulerChar;
+    return eulerChar_;
 }
 inline size_t NSurfaceFilterProperties::countECs() const {
-    return eulerChar.size();
+    return eulerChar_.size();
 }
 inline size_t NSurfaceFilterProperties::getNumberOfECs() const {
-    return eulerChar.size();
+    return eulerChar_.size();
 }
 inline NBoolSet NSurfaceFilterProperties::getOrientability() const {
-    return orientability;
+    return orientability_;
 }
 inline NBoolSet NSurfaceFilterProperties::getCompactness() const {
-    return compactness;
+    return compactness_;
 }
 inline NBoolSet NSurfaceFilterProperties::getRealBoundary() const {
-    return realBoundary;
+    return realBoundary_;
 }
 
 inline void NSurfaceFilterProperties::setECs(const std::set<NLargeInteger>& s) {
-    if (eulerChar != s) {
+    if (eulerChar_ != s) {
         ChangeEventSpan span(this);
-        eulerChar = s;
+        eulerChar_ = s;
     }
 }
 inline void NSurfaceFilterProperties::addEC(const NLargeInteger& ec) {
     ChangeEventSpan span(this);
-    eulerChar.insert(ec);
+    eulerChar_.insert(ec);
 }
 inline void NSurfaceFilterProperties::removeEC(const NLargeInteger& ec) {
     ChangeEventSpan span(this);
-    eulerChar.erase(ec);
+    eulerChar_.erase(ec);
 }
 inline void NSurfaceFilterProperties::removeAllECs() {
     ChangeEventSpan span(this);
-    eulerChar.clear();
+    eulerChar_.clear();
 }
 inline void NSurfaceFilterProperties::setOrientability(const NBoolSet& value) {
-    if (orientability != value) {
+    if (orientability_ != value) {
         ChangeEventSpan span(this);
-        orientability = value;
+        orientability_ = value;
     }
 }
 inline void NSurfaceFilterProperties::setCompactness(const NBoolSet& value) {
-    if (compactness != value) {
+    if (compactness_ != value) {
         ChangeEventSpan span(this);
-        compactness = value;
+        compactness_ = value;
     }
 }
 inline void NSurfaceFilterProperties::setRealBoundary(const NBoolSet& value) {
-    if (realBoundary != value) {
+    if (realBoundary_ != value) {
         ChangeEventSpan span(this);
-        realBoundary = value;
+        realBoundary_ = value;
     }
 }
 

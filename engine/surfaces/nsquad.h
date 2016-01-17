@@ -108,7 +108,7 @@ class REGINA_API NNormalSurfaceVectorQuad :
 
         virtual const NVertex* isVertexLink(const NTriangulation* triang) const;
 
-        virtual NLargeInteger getOctCoord(unsigned long tetIndex,
+        virtual NLargeInteger getOctCoord(size_t tetIndex,
             int octType, const NTriangulation* triang) const;
 
         static NNormalSurfaceVector* makeZeroVector(
@@ -138,7 +138,7 @@ inline const NVertex* NNormalSurfaceVectorQuad::isVertexLink(
 }
 
 inline NLargeInteger NNormalSurfaceVectorQuad::getOctCoord(
-        unsigned long, int, const NTriangulation*) const {
+        size_t, int, const NTriangulation*) const {
     return zero;
 }
 
