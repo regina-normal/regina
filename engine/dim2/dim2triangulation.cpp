@@ -153,7 +153,7 @@ void Triangulation<2>::writeXMLPacketData(std::ostream& out) const {
             if (adjTri) {
                 out << triangleIndex(adjTri) << ' '
                     << static_cast<int>((*it)->
-                        adjacentGluing(edge).getPermCode()) << ' ';
+                        adjacentGluing(edge).permCode()) << ' ';
             } else
                 out << "-1 -1 ";
         }

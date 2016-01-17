@@ -305,6 +305,14 @@ class REGINA_API NPerm<3> {
          *
          * @return the internal code.
          */
+        Code permCode() const;
+        /**
+         * Deprecated routine that returns the internal code representing this
+         * permutation.
+         *
+         * \deprecated This routine has been renamed to permCode().
+         * See the permCode() documentation for further details.
+         */
         Code getPermCode() const;
 
         /**
@@ -333,7 +341,7 @@ class REGINA_API NPerm<3> {
         /**
          * Determines whether the given integer is a valid internal
          * permutation code.  Valid permutation codes can be passed to
-         * setPermCode() or fromPermCode(), and are returned by getPermCode().
+         * setPermCode() or fromPermCode(), and are returned by permCode().
          *
          * @return \c true if and only if the given code is a valid
          * internal permutation code.
@@ -653,6 +661,10 @@ inline NPerm<3>::NPerm(const int* image) {
 inline NPerm<3>::NPerm(const NPerm<3>& cloneMe) : code_(cloneMe.code_) {
 }
 
+inline NPerm<3>::Code NPerm<3>::permCode() const {
+    return code_;
+}
+
 inline NPerm<3>::Code NPerm<3>::getPermCode() const {
     return code_;
 }
@@ -752,7 +764,7 @@ inline int NPerm<3>::orderedSnIndex() const {
 
 inline NPerm<3> NPerm<3>::extend(NPerm<2> p) {
     return NPerm<3>(static_cast<Code>(
-        p.getPermCode() == 0 ? code012 : code102));
+        p.permCode() == 0 ? code012 : code102));
 }
 
 } // namespace regina

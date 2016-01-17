@@ -59,7 +59,7 @@ bool NGraphPair::operator < (const NGraphPair& compare) const {
     return simpler(matchingReln_, compare.matchingReln_);
 }
 
-NAbelianGroup* NGraphPair::getHomologyH1() const {
+NAbelianGroup* NGraphPair::homologyH1() const {
     // Just for safety (this should always be true anyway):
     if (sfs_[0]->punctures(false) != 1 || sfs_[0]->punctures(true) != 0)
         return 0;

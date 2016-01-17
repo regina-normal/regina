@@ -1120,7 +1120,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
     unsigned long i, j, k, l;
 
     for (i=0; i<niv; i++) {
-        tI = dmHomology1->getInvariantFactor(i);
+        tI = dmHomology1->invariantFactor(i);
         tFac = NPrimes::primePowerDecomp(tI);
 
         for (j=0; j<tFac.size(); j++) {
@@ -1137,7 +1137,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
             ppList.push_back( fac1 ); // record the order...
             // now the corresponding vector...
             // this will have to be fac1i * vector corresponding to
-            // getInvariantFactor(i).
+            // invariantFactor(i).
             tV = dmHomology1->getTorsionRep(i);
 
             for (k=0; k<tV.size(); k++) tV[k]=fac1i*fac2*tV[k];
@@ -1219,7 +1219,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
 
 
     NMatrixInt standardBasis( numStandardCells[1], pvList.size() );
-    const NMatrixInt& dualtostandard(h1CellApComputed.getDefiningMatrix());
+    const NMatrixInt& dualtostandard(h1CellApComputed.definingMatrix());
 
     for (i=0; i<standardBasis.rows(); i++)
         for (j=0; j<standardBasis.columns(); j++)
@@ -1232,7 +1232,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
     //           ppList[j] bounds, so find a chain with that boundary and
     //           put its info in a matrix.
 
-    NMatrixInt ON(mHomology1->getN());
+    NMatrixInt ON(mHomology1->N());
     NMatrixInt R(ON.columns(),ON.columns());
     NMatrixInt Ri(ON.columns(),ON.columns());
     NMatrixInt C(ON.rows(),ON.rows());
@@ -1739,7 +1739,7 @@ void NHomologicalData::computeEmbeddabilityString() {
                 else
                     embeddabilityString = "The torsion linking form is "
                         "of hyperbolic type.";
-                if (dualHomology(1).getRank()==0)
+                if (dualHomology(1).rank()==0)
                     embeddabilityString += "  Manifold is a rational "
                         "homology sphere.";
             } // torsion : no boundary, orientable
@@ -1758,37 +1758,37 @@ void NHomologicalData::computeEmbeddabilityString() {
                     {
                     embeddabilityString =
                         "Embeds in a homology 3-sphere as a ";
-                    if (bdryHomology(1).getRank() ==
-                            2*bdryHomology(0).getRank())
+                    if (bdryHomology(1).rank() ==
+                            2*bdryHomology(0).rank())
                         {
-                        if (bdryHomology(0).getRank()==1)
+                        if (bdryHomology(0).rank()==1)
                             embeddabilityString += "knot complement.";
                         else
                             embeddabilityString += "link complement.";
                         }
                     else
                         {
-                        if (bdryHomology(1).getRank() == 0)
+                        if (bdryHomology(1).rank() == 0)
                             embeddabilityString += "ball complement.";
                         else
                             embeddabilityString += "graph complement.";
                         }
                     }
-                 else if (bdryHomologyMap(1).getCokernel().getRank()==0)
+                 else if (bdryHomologyMap(1).cokernel().rank()==0)
                     {
                     embeddabilityString =
                         "Embeds in a rational homology 3-sphere as a ";
-                    if (bdryHomology(1).getRank() ==
-                            2*bdryHomology(0).getRank() )
+                    if (bdryHomology(1).rank() ==
+                            2*bdryHomology(0).rank() )
                         {
-                        if (bdryHomology(0).getRank()==1)
+                        if (bdryHomology(0).rank()==1)
                             embeddabilityString += "knot complement.";
                         else
                             embeddabilityString += "link complement.";
                         }
                     else
                         {
-                        if (bdryHomology(1).getRank() == 0)
+                        if (bdryHomology(1).rank() == 0)
                             embeddabilityString += "ball complement.";
                         else
                             embeddabilityString += "graph complement.";
@@ -1806,7 +1806,7 @@ void NHomologicalData::computeEmbeddabilityString() {
                    embeddabilityString =
                         "Embeds in homology 3-sphere "
                         "but not homology 4-sphere.";
-                 else if (bdryHomologyMap(1).getCokernel().getRank()==0)
+                 else if (bdryHomologyMap(1).cokernel().rank()==0)
                    embeddabilityString =
                         "Embeds in rational homology 3-sphere but not "
                         "homology 4-sphere.";
@@ -1821,7 +1821,7 @@ void NHomologicalData::computeEmbeddabilityString() {
                    embeddabilityString =
                         "Embeds in homology 3-sphere.  "
                         "KK 2-tor condition satisfied.";
-                 else if (bdryHomologyMap(1).getCokernel().getRank()==0)
+                 else if (bdryHomologyMap(1).cokernel().rank()==0)
                    embeddabilityString =
                         "Embeds in rational homology 3-sphere.  "
                         "KK 2-tor condition satisfied.";
@@ -1875,8 +1875,8 @@ bool NHomologicalData::formIsHyperbolic() {
     // check invariant factors agree in pairs, if so call
     // computeTorsionLinkingForm
     for (unsigned long i=0;i<(nif/2);i++) {
-        if (tri->homology().getInvariantFactor(2*i) <
-                tri->homology().getInvariantFactor((2*i)+1))
+        if (tri->homology().invariantFactor(2*i) <
+                tri->homology().invariantFactor((2*i)+1))
             return false;
     }
 

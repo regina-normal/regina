@@ -55,6 +55,8 @@ namespace {
         &NGroupExpression::addTermLast;
     NGroupExpressionTerm& (NGroupExpression::*getTerm_non_const)(
         unsigned long) = &NGroupExpression::getTerm;
+    NGroupExpressionTerm& (NGroupExpression::*term_non_const)(
+        unsigned long) = &NGroupExpression::term;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplify,
         NGroupExpression::simplify, 0, 1);
@@ -133,7 +135,10 @@ void addNGroupPresentation() {
         .def("isTrivial", &NGroupExpression::isTrivial)
         .def("erase", &NGroupExpression::erase)
         .def("getTerm", getTerm_non_const, return_internal_reference<>())
+        .def("term", term_non_const, return_internal_reference<>())
+        .def("generator", &NGroupExpression::generator)
         .def("getGenerator", &NGroupExpression::getGenerator)
+        .def("exponent", &NGroupExpression::exponent)
         .def("getExponent", &NGroupExpression::getExponent)
         .def("addTermFirst", addTermFirst_term)
         .def("addTermFirst", addTermFirst_pair)
@@ -175,6 +180,8 @@ void addNGroupPresentation() {
             &NGroupPresentation::getNumberOfGenerators)
         .def("countRelations", &NGroupPresentation::countRelations)
         .def("getNumberOfRelations", &NGroupPresentation::getNumberOfRelations)
+        .def("relation", &NGroupPresentation::relation,
+            return_internal_reference<>())
         .def("getRelation", &NGroupPresentation::getRelation,
             return_internal_reference<>())
         .def("isValid", &NGroupPresentation::isValid)

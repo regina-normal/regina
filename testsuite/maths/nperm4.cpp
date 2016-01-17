@@ -110,27 +110,27 @@ class NPerm4Test : public CppUnit::TestFixture {
 
         bool looksLikeIdentity(const NPerm4& p) {
             return (p.isIdentity() && p == NPerm4() &&
-                p.getPermCode() == 228 && p.getPermCode2() == 0 &&
+                p.permCode() == 228 && p.permCode2() == 0 &&
                 p.str() == "0123");
         }
 
         bool looksEqual(const NPerm4& p, const NPerm4& q) {
             return (p == q && (! (p != q)) && p.str() == q.str() &&
-                p.getPermCode() == q.getPermCode() &&
-                p.getPermCode2() == q.getPermCode2());
+                p.permCode() == q.permCode() &&
+                p.permCode2() == q.permCode2());
         }
 
         bool looksEqual(const NPerm4& p, const NPerm4& q,
                 const std::string& qStr) {
             return (p == q && (! (p != q)) && p.str() == q.str() &&
-                p.getPermCode() == q.getPermCode() &&
-                p.getPermCode2() == q.getPermCode2() && p.str() == qStr);
+                p.permCode() == q.permCode() &&
+                p.permCode2() == q.permCode2() && p.str() == qStr);
         }
 
         bool looksDistinct(const NPerm4& p, const NPerm4& q) {
             return (p != q && (! (p == q)) && p.str() != q.str() &&
-                p.getPermCode() != q.getPermCode() &&
-                p.getPermCode2() != q.getPermCode2());
+                p.permCode() != q.permCode() &&
+                p.permCode2() != q.permCode2());
         }
 
         int expectedSign(const NPerm4& p) {
@@ -152,7 +152,7 @@ class NPerm4Test : public CppUnit::TestFixture {
             std::ostringstream name;
             name << a << b << c << d;
 
-            NPerm4 p0 = NPerm4::fromPermCode(p.getPermCode());
+            NPerm4 p0 = NPerm4::fromPermCode(p.permCode());
             if (! looksEqual(p0, p, name.str())) {
                 std::ostringstream msg;
                 msg << "The first-generation code constructor fails for "
@@ -160,7 +160,7 @@ class NPerm4Test : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NPerm4 p1 = NPerm4::fromPermCode2(p.getPermCode2());
+            NPerm4 p1 = NPerm4::fromPermCode2(p.permCode2());
             if (! looksEqual(p1, p, name.str())) {
                 std::ostringstream msg;
                 msg << "The second-generation code constructor fails for "
@@ -226,31 +226,31 @@ class NPerm4Test : public CppUnit::TestFixture {
             }
 
             NPerm4 p5(2, 3, 1, 0);
-            p5.setPermCode(p3.getPermCode());
+            p5.setPermCode(p3.permCode());
             if (! looksEqual(p5, p, name.str())) {
                 std::ostringstream msg;
-                msg << "The setPermCode() / getPermCode() routines fail for "
+                msg << "The setPermCode() / permCode() routines fail for "
                     "the permutation " << name.str() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
             NPerm4 p6(3, 2, 0, 1);
-            p6.setPermCode2(p3.getPermCode2());
+            p6.setPermCode2(p3.permCode2());
             if (! looksEqual(p6, p, name.str())) {
                 std::ostringstream msg;
-                msg << "The setPermCode2() / getPermCode2() routines fail for "
+                msg << "The setPermCode2() / permCode2() routines fail for "
                     "the permutation " << name.str() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! NPerm4::isPermCode(p.getPermCode())) {
+            if (! NPerm4::isPermCode(p.permCode())) {
                 std::ostringstream msg;
                 msg << "Routine isPermCode() suggests that the permutation "
                     << name.str() << " has an invalid first-generation code.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! NPerm4::isPermCode2(p.getPermCode2())) {
+            if (! NPerm4::isPermCode2(p.permCode2())) {
                 std::ostringstream msg;
                 msg << "Routine isPermCode2() suggests that the permutation "
                     << name.str() << " has an invalid second-generation code.";

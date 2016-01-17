@@ -61,7 +61,7 @@ NGroupExpression NHomGroupPresentation::evaluate(
    NGroupExpression retval(arg);
    unsigned long N( range_->countGenerators() );
    for (unsigned long i=0; i<retval.countTerms(); i++)
-       retval.getTerm(i).generator += N;
+       retval.term(i).generator += N;
    for (unsigned long i=0; i<map_.size(); i++)
        retval.substitute( N+i, *map_[i] );
    return retval;
@@ -73,7 +73,7 @@ NGroupExpression NHomGroupPresentation::invEvaluate(
    NGroupExpression retval(arg);
    unsigned long N( domain_->countGenerators() );
    for (unsigned long i=0; i<retval.countTerms(); i++)
-       retval.getTerm(i).generator += N;
+       retval.term(i).generator += N;
    for (unsigned long i=0; i<inv_->size(); i++)
        retval.substitute( N+i, *(*inv_)[i] );
    return retval;
@@ -85,12 +85,12 @@ std::unique_ptr< NHomMarkedAbelianGroup >
 {
  std::unique_ptr<NMarkedAbelianGroup> DOM( domain_->markedAbelianisation() );
  std::unique_ptr<NMarkedAbelianGroup> RAN( range_->markedAbelianisation() );
- NMatrixInt ccMat( RAN->getRankCC(), DOM->getRankCC() );
+ NMatrixInt ccMat( RAN->rankCC(), DOM->rankCC() );
  for (unsigned long j=0; j<ccMat.columns(); j++)
   {
    NGroupExpression COLj( evaluate(j) );
    for (unsigned long i=0; i<COLj.countTerms(); i++)
-    ccMat.entry( COLj.getGenerator(i), j ) += COLj.getExponent(i);
+    ccMat.entry( COLj.generator(i), j ) += COLj.exponent(i);
   }
  return std::unique_ptr<NHomMarkedAbelianGroup>(
         new NHomMarkedAbelianGroup( *DOM, *RAN, ccMat ) );
@@ -322,7 +322,7 @@ bool NHomGroupPresentation::verify() const
 {
  for (unsigned long i=0; i<domain_->countRelations(); i++)
   {
-   const NGroupExpression& reli( domain_->getRelation(i) );
+   const NGroupExpression& reli( domain_->relation(i) );
    NGroupExpression imgRel( evaluate(reli) );
    range_->simplifyWord(imgRel);
    if (!imgRel.isTrivial()) return false;

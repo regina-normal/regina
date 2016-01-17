@@ -153,7 +153,7 @@ inline NPerm5 perm4to5(const NPerm4& p) {
 }
 
 inline NPerm4 perm5to4(const NPerm5& p) {
-    unsigned code = p.getPermCode();
+    unsigned code = p.permCode();
     return NPerm4(code & 0x03, (code >> 3) & 0x03,
         (code >> 6) & 0x03, (code >> 9) & 0x03);
 }
@@ -164,7 +164,7 @@ inline NPerm4 perm3to4(const NPerm3& p) {
 
 inline NPerm3 perm4to3(const NPerm4& p) {
     // Code map: 0,3,8,7,12,15 -> 0,1,2,3,4,5.
-    unsigned char c = p.getPermCode2();
+    unsigned char c = p.permCode2();
     return NPerm3::fromPermCode(c == 8 ? 2 : c == 7 ? 3 : c / 3);
 }
 
