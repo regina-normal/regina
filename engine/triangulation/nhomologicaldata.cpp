@@ -911,7 +911,7 @@ void NHomologicalData::computeChainComplexes() {
                 tri->countTriangles() + i - sBNIF.size() ) ,i)+=1;
 }
 
-const NMarkedAbelianGroup& NHomologicalData::getHomology(unsigned q) {
+const NMarkedAbelianGroup& NHomologicalData::homology(unsigned q) {
     if (q==0) {
         if (!mHomology0.get()) {
             computeChainComplexes();
@@ -942,7 +942,7 @@ const NMarkedAbelianGroup& NHomologicalData::getHomology(unsigned q) {
     // the A's should probably be redone as an array of pointers...
 }
 
-const NMarkedAbelianGroup& NHomologicalData::getBdryHomology(unsigned q) {
+const NMarkedAbelianGroup& NHomologicalData::bdryHomology(unsigned q) {
     if (q==0) {
         if (!bHomology0.get()) {
             computeChainComplexes();
@@ -966,7 +966,7 @@ const NMarkedAbelianGroup& NHomologicalData::getBdryHomology(unsigned q) {
     }
 }
 
-const NMarkedAbelianGroup& NHomologicalData::getDualHomology(unsigned q) {
+const NMarkedAbelianGroup& NHomologicalData::dualHomology(unsigned q) {
     if (q==0) {
         if (!dmHomology0.get()) {
             computeChainComplexes();
@@ -1030,7 +1030,7 @@ void NHomologicalData::computeDHomology() {
         dmHomology3.reset(new NMarkedAbelianGroup(*B3,*B4));
 }
 
-const NHomMarkedAbelianGroup& NHomologicalData::getH1CellAp() {
+const NHomMarkedAbelianGroup& NHomologicalData::h1CellAp() {
     if (!dmTomMap1.get()) {
         computeHomology();
         computeDHomology();
@@ -1040,7 +1040,7 @@ const NHomMarkedAbelianGroup& NHomologicalData::getH1CellAp() {
     return (*dmTomMap1);
 }
 
-const NHomMarkedAbelianGroup& NHomologicalData::getBdryHomologyMap(unsigned q) {
+const NHomMarkedAbelianGroup& NHomologicalData::bdryHomologyMap(unsigned q) {
     if (q==0) {
         if (!bmMap0.get()) {
             computeHomology();
