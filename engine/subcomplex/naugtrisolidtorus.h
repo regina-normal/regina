@@ -84,9 +84,9 @@ typedef Component<3> NComponent;
  * edge glued to an axis edge) the resulting space will be a Seifert
  * fibred space over the 2-sphere with at most three exceptional fibres.
  *
- * Of the optional NStandardTriangulation routines, getManifold() is
+ * Of the optional NStandardTriangulation routines, manifold() is
  * implemented for most augmented triangular solid tori and
- * getHomologyH1() is not implemented at all.
+ * homology() is not implemented at all.
  */
 class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
     public:
@@ -245,7 +245,7 @@ class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
          */
         static NAugTriSolidTorus* isAugTriSolidTorus(const NComponent* comp);
 
-        NManifold* getManifold() const;
+        NManifold* manifold() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;

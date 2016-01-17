@@ -173,12 +173,12 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
     return 0;
 }
 
-NManifold* NSnapPeaCensusTri::getManifold() const {
+NManifold* NSnapPeaCensusTri::manifold() const {
     return new NSnapPeaCensusManifold(section, index);
 }
 
-NAbelianGroup* NSnapPeaCensusTri::getHomologyH1() const {
-    return NSnapPeaCensusManifold(section, index).getHomologyH1();
+NAbelianGroup* NSnapPeaCensusTri::homology() const {
+    return NSnapPeaCensusManifold(section, index).homology();
 }
 
 std::ostream& NSnapPeaCensusTri::writeName(std::ostream& out) const {

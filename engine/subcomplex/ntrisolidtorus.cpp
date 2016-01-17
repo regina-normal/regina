@@ -179,13 +179,13 @@ NTriSolidTorus* NTriSolidTorus::formsTriSolidTorus(NTetrahedron* tet,
     return ans;
 }
 
-NAbelianGroup* NTriSolidTorus::getHomologyH1() const {
+NAbelianGroup* NTriSolidTorus::homology() const {
     NAbelianGroup* ans = new NAbelianGroup();
     ans->addRank();
     return ans;
 }
 
-NManifold* NTriSolidTorus::getManifold() const {
+NManifold* NTriSolidTorus::manifold() const {
     return new NHandlebody(1, true);
 }
 

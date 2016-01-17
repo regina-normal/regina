@@ -76,25 +76,25 @@ class NStandardTriangulationTest : public CppUnit::TestFixture {
                     << " was not recognised at all.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (std->getName() != triName) {
+            if (std->name() != triName) {
                 std::ostringstream msg;
                 msg << "The standard triangulation " << triName
                     << " was instead recognised as "
-                    << std->getName() << ".";
+                    << std->name() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NManifold* mfd = std->getManifold();
+            NManifold* mfd = std->manifold();
             if (! mfd) {
                 std::ostringstream msg;
                 msg << "The 3-manifold for the standard triangulation "
                     << triName << " was not recognised at all.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (mfd->getName() != mfdName) {
+            if (mfd->name() != mfdName) {
                 std::ostringstream msg;
                 msg << "The 3-manifold for the standard triangulation "
-                    << triName << " was recognised as " << mfd->getName()
+                    << triName << " was recognised as " << mfd->name()
                     << ", not the expected " << mfdName << ".";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -121,25 +121,25 @@ class NStandardTriangulationTest : public CppUnit::TestFixture {
                     << " was not recognised at all.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (std->getName() != triName) {
+            if (std->name() != triName) {
                 std::ostringstream msg;
                 msg << "The standard triangulation " << triName
                     << " was instead recognised as "
-                    << std->getName() << ".";
+                    << std->name() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NManifold* mfd = std->getManifold();
+            NManifold* mfd = std->manifold();
             if (! mfd) {
                 std::ostringstream msg;
                 msg << "The 3-manifold for the standard triangulation "
                     << triName << " was not recognised at all.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (mfd->getName() != mfdName) {
+            if (mfd->name() != mfdName) {
                 std::ostringstream msg;
                 msg << "The 3-manifold for the standard triangulation "
-                    << triName << " was recognised as " << mfd->getName()
+                    << triName << " was recognised as " << mfd->name()
                     << ", not the expected " << mfdName << ".";
                 CPPUNIT_FAIL(msg.str());
             }

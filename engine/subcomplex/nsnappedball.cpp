@@ -65,11 +65,11 @@ NSnappedBall* NSnappedBall::formsSnappedBall(NTetrahedron* tet) {
     return 0;
 }
 
-NManifold* NSnappedBall::getManifold() const {
+NManifold* NSnappedBall::manifold() const {
     return new NHandlebody(0, true);
 }
 
-NAbelianGroup* NSnappedBall::getHomologyH1() const {
+NAbelianGroup* NSnappedBall::homology() const {
     return new NAbelianGroup();
 }
 

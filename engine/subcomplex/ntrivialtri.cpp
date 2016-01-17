@@ -141,7 +141,7 @@ NTrivialTri* NTrivialTri::isTrivialTriangulation(const NComponent* comp) {
     return 0;
 }
 
-NManifold* NTrivialTri::getManifold() const {
+NManifold* NTrivialTri::manifold() const {
     if (type == SPHERE_4_VERTEX)
         return new NLensSpace(1, 0);
     else if (type == BALL_3_VERTEX || type == BALL_4_VERTEX)
@@ -153,7 +153,7 @@ NManifold* NTrivialTri::getManifold() const {
     return 0;
 }
 
-NAbelianGroup* NTrivialTri::getHomologyH1() const {
+NAbelianGroup* NTrivialTri::homology() const {
     NAbelianGroup* ans = new NAbelianGroup();
 
     if (type == N2)

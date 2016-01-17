@@ -143,11 +143,11 @@ NLayeredLensSpace* NLayeredLensSpace::isLayeredLensSpace(
     return 0;
 }
 
-NManifold* NLayeredLensSpace::getManifold() const {
+NManifold* NLayeredLensSpace::manifold() const {
     return new NLensSpace(p, q);
 }
 
-NAbelianGroup* NLayeredLensSpace::getHomologyH1() const {
+NAbelianGroup* NLayeredLensSpace::homology() const {
     NAbelianGroup* ans = new NAbelianGroup();
     if (p == 0)
         ans->addRank();

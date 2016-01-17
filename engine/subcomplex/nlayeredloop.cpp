@@ -50,7 +50,7 @@ NLayeredLoop* NLayeredLoop::clone() const {
     return ans;
 }
 
-NManifold* NLayeredLoop::getManifold() const {
+NManifold* NLayeredLoop::manifold() const {
     if (hinge[1]) {
         // Not twisted.
         return new NLensSpace(length, 1);
@@ -204,7 +204,7 @@ NLayeredLoop* NLayeredLoop::isLayeredLoop(const NComponent* comp) {
     return 0;
 }
 
-NAbelianGroup* NLayeredLoop::getHomologyH1() const {
+NAbelianGroup* NLayeredLoop::homology() const {
     NAbelianGroup* ans = new NAbelianGroup();
     if (hinge[1]) {
         // Untwisted.

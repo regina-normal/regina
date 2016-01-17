@@ -180,8 +180,8 @@ class REGINA_API NSnapPeaCensusTri: public NStandardTriangulation {
         static NSnapPeaCensusTri* isSmallSnapPeaCensusTri(
             const NComponent* comp);
 
-        NManifold* getManifold() const;
-        NAbelianGroup* getHomologyH1() const;
+        NManifold* manifold() const;
+        NAbelianGroup* homology() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
 

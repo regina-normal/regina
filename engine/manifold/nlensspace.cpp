@@ -68,7 +68,7 @@ NTriangulation* NLensSpace::construct() const {
     return ans;
 }
 
-NAbelianGroup* NLensSpace::homologyH1() const {
+NAbelianGroup* NLensSpace::homology() const {
     NAbelianGroup* ans = new NAbelianGroup();
     if (p_ == 0)
         ans->addRank();

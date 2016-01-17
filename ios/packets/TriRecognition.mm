@@ -116,7 +116,7 @@
         simp.intelligentSimplify();
         regina::NStandardTriangulation* std = regina::NStandardTriangulation::isStandardTriangulation(&simp);
         if (std) {
-            regina::NManifold* mfd = std->getManifold();
+            regina::NManifold* mfd = std->manifold();
             if (mfd) {
                 isHyp = mfd->isHyperbolic();
                 manifoldName = @(mfd->getName().c_str());

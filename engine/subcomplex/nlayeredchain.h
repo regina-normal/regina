@@ -84,7 +84,7 @@ typedef Simplex<3> NTetrahedron;
  * The \a index of the layered chain is the number of tetrahedra it
  * contains.  A layered chain must contain at least one tetrahedron.
  *
- * Note that for the purposes of getManifold() and getHomologyH1(), a
+ * Note that for the purposes of manifold() and homology(), a
  * layered chain containing only one tetrahedron will be considered as a
  * standalone tetrahedron that forms a 3-ball (and not a solid torus).
  *
@@ -250,8 +250,8 @@ class REGINA_API NLayeredChain : public NStandardTriangulation {
          */
         void invert();
 
-        NManifold* getManifold() const;
-        NAbelianGroup* getHomologyH1() const;
+        NManifold* manifold() const;
+        NAbelianGroup* homology() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;

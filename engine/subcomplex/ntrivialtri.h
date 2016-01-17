@@ -127,8 +127,8 @@ class REGINA_API NTrivialTri : public NStandardTriangulation {
          */
         static NTrivialTri* isTrivialTriangulation(const NComponent* comp);
 
-        NManifold* getManifold() const;
-        NAbelianGroup* getHomologyH1() const;
+        NManifold* manifold() const;
+        NAbelianGroup* homology() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;

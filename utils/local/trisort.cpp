@@ -145,7 +145,7 @@ void process(NContainer* c) {
             spec.hasName = (std != 0);
 
             if (spec.hasName) {
-                spec.name = std->getName();
+                spec.name = std->name();
                 spec.hasSpecialName = false;
 
                 NBlockedSFS* sfs = dynamic_cast<NBlockedSFS*>(std);

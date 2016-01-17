@@ -195,11 +195,11 @@ NSpiralSolidTorus* NSpiralSolidTorus::formsSpiralSolidTorus(NTetrahedron* tet,
     return ans;
 }
 
-NManifold* NSpiralSolidTorus::getManifold() const {
+NManifold* NSpiralSolidTorus::manifold() const {
     return new NHandlebody(1, true);
 }
 
-NAbelianGroup* NSpiralSolidTorus::getHomologyH1() const {
+NAbelianGroup* NSpiralSolidTorus::homology() const {
     NAbelianGroup* ans = new NAbelianGroup();
     ans->addRank();
     return ans;

@@ -38,7 +38,7 @@
 
 namespace regina {
 
-NAbelianGroup* NTorusBundle::getHomologyH1() const {
+NAbelianGroup* NTorusBundle::homology() const {
     NMatrixInt relns(2, 2);
 
     relns.entry(0, 0) = monodromy[0][0] - 1;

@@ -99,11 +99,11 @@ NL31Pillow* NL31Pillow::isL31Pillow(const NComponent* comp) {
     return ans;
 }
 
-NManifold* NL31Pillow::getManifold() const {
+NManifold* NL31Pillow::manifold() const {
     return new NLensSpace(3, 1);
 }
 
-NAbelianGroup* NL31Pillow::getHomologyH1() const {
+NAbelianGroup* NL31Pillow::homology() const {
     NAbelianGroup* ans = new NAbelianGroup();
     ans->addTorsionElement(3);
     return ans;

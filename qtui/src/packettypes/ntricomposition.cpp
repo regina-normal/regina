@@ -196,12 +196,12 @@ void NTriCompositionUI::refresh() {
         regina::NStandardTriangulation::isStandardTriangulation(tri));
     if (standardTri.get()) {
         addTopLevelSection(
-            tr("Triangulation: ") + standardTri->getName().c_str());
+            tr("Triangulation: ") + standardTri->name().c_str());
 
-        std::unique_ptr<regina::NManifold> manifold(standardTri->getManifold());
+        std::unique_ptr<regina::NManifold> manifold(standardTri->manifold());
         if (manifold.get())
             addTopLevelSection(
-                tr("3-manifold: ") + manifold->getName().c_str());
+                tr("3-manifold: ") + manifold->name().c_str());
         else
             addTopLevelSection(tr("3-manifold not recognised"));
     } else
@@ -391,7 +391,7 @@ void NTriCompositionUI::findAugTriSolidTori() {
             tri->component(i));
         if (aug) {
             id = addComponentSection(tr(
-                "Augmented triangular solid torus ") + aug->getName().c_str());
+                "Augmented triangular solid torus ") + aug->name().c_str());
 
             details = new QTreeWidgetItem(id);
             details->setText(0,tr("Component %1").arg(i));
@@ -648,7 +648,7 @@ void NTriCompositionUI::findL31Pillows() {
         pillow = regina::NL31Pillow::isL31Pillow(tri->component(i));
         if (pillow) {
             id = addComponentSection(tr("L(3,1) pillow ") +
-                pillow->getName().c_str());
+                pillow->name().c_str());
 
             details = new QTreeWidgetItem(id);
             details->setText(0, tr("Component %1").arg(i));
@@ -677,7 +677,7 @@ void NTriCompositionUI::findLayeredChainPairs() {
             tri->component(i));
         if (pair) {
             id = addComponentSection(tr("Layered chain pair ") +
-                pair->getName().c_str());
+                pair->name().c_str());
 
             details = new QTreeWidgetItem(id);
             details->setText(0, tr("Component %1").arg(i));
@@ -705,7 +705,7 @@ void NTriCompositionUI::findLayeredLensSpaces() {
             tri->component(i));
         if (lens) {
             id = addComponentSection(tr("Layered lens space ") +
-                lens->getName().c_str());
+                lens->name().c_str());
 
             details = new QTreeWidgetItem(id);
             details->setText(0, tr("Component %1").arg(i));
@@ -736,7 +736,7 @@ void NTriCompositionUI::findLayeredLoops() {
         loop = regina::NLayeredLoop::isLayeredLoop(tri->component(i));
         if (loop) {
             id = addComponentSection(tr("Layered loop ") +
-                loop->getName().c_str());
+                loop->name().c_str());
 
             details = new QTreeWidgetItem(id);
             details->setText(0, tr("Component %1").arg(i));
@@ -778,7 +778,7 @@ void NTriCompositionUI::findLayeredSolidTori() {
             tri->getTetrahedron(i));
         if (torus) {
             id = addComponentSection(tr("Layered solid torus ") +
-                torus->getName().c_str());
+                torus->name().c_str());
 
             details = new QTreeWidgetItem(id);
             details->setText(0, tr("Base: tet %1").arg(
@@ -857,7 +857,7 @@ void NTriCompositionUI::findPlugTriSolidTori() {
             tri->component(i));
         if (plug) {
             id = addComponentSection(tr("Plugged triangular solid torus ") +
-                plug->getName().c_str());
+                plug->name().c_str());
 
             details = new QTreeWidgetItem(id);
             details->setText(0, tr("Component %1").arg(i));
@@ -983,7 +983,7 @@ void NTriCompositionUI::findSpiralSolidTori() {
 
             // We've got one!
             id = addComponentSection(tr("Spiralled solid torus ") +
-                spiral->getName().c_str());
+                spiral->name().c_str());
 
             unsigned long spiralTets = spiral->size();
 

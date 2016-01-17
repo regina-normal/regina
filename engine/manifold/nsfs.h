@@ -178,14 +178,14 @@ REGINA_API std::ostream& operator << (std::ostream& out, const NSFSFibre& f);
  *
  * Exceptional fibres are sorted first by \a alpha (the index) and then
  * by \a beta.  The obstruction constant \a b is stored separately,
- * though in output routines such as getName() and getStructure() it is
+ * though in output routines such as name() and structure() it is
  * merged in with the exceptional fibres.  Specifically, it is merged in
  * with the \a beta of the final exceptional fibre (replacing it with
  * <tt>beta + b.alpha</tt>), or if there are no exceptional fibres then
  * it is presented as a single (1,b) fibre.
  *
- * The NManifold routines getHomologyH1() and construct() are only
- * implemented in some cases.  The getHomologyH1() routine is
+ * The NManifold routines homology() and construct() are only
+ * implemented in some cases.  The homology() routine is
  * implemented if and only if the base orbifold has no punctures.
  * The construct() routine is implemented only for lens spaces and
  * Seifert fibred spaces over the 2-sphere without punctures or reflector
@@ -764,7 +764,7 @@ class REGINA_API NSFSpace : public NManifold {
         bool operator < (const NSFSpace& compare) const;
 
         NTriangulation* construct() const;
-        NAbelianGroup* homologyH1() const;
+        NAbelianGroup* homology() const;
         bool isHyperbolic() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;

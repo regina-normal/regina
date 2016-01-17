@@ -64,6 +64,8 @@ void addNManifold() {
         .def("getStructure", &NManifold::getStructure)
         .def("construct", &NManifold::construct,
             return_value_policy<manage_new_object>())
+        .def("homology", &NManifold::homology,
+            return_value_policy<manage_new_object>())
         .def("homologyH1", &NManifold::homologyH1,
             return_value_policy<manage_new_object>())
         .def("getHomologyH1", &NManifold::getHomologyH1,

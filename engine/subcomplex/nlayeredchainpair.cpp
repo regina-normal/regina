@@ -189,7 +189,7 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
     return 0;
 }
 
-NManifold* NLayeredChainPair::getManifold() const {
+NManifold* NLayeredChainPair::manifold() const {
     NSFSpace* ans = new NSFSpace();
 
     ans->insertFibre(2, -1);
@@ -200,7 +200,7 @@ NManifold* NLayeredChainPair::getManifold() const {
     return ans;
 }
 
-NAbelianGroup* NLayeredChainPair::getHomologyH1() const {
+NAbelianGroup* NLayeredChainPair::homology() const {
     // The first homology group can be obtained from the matrix:
     //
     //   [  1  -1   1 ]

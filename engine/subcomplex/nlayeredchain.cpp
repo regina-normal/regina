@@ -106,11 +106,11 @@ void NLayeredChain::invert() {
     bottomVertexRoles = bottomVertexRoles * NPerm4(3, 2, 1, 0);
 }
 
-NManifold* NLayeredChain::getManifold() const {
+NManifold* NLayeredChain::manifold() const {
     return new NHandlebody(index <= 1 ? 0 : 1, true);
 }
 
-NAbelianGroup* NLayeredChain::getHomologyH1() const {
+NAbelianGroup* NLayeredChain::homology() const {
     NAbelianGroup* ans = new NAbelianGroup();
     if (index > 1)
         ans->addRank();

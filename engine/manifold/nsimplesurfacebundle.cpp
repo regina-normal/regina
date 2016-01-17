@@ -73,7 +73,7 @@ NTriangulation* NSimpleSurfaceBundle::construct() const {
     return ans;
 }
 
-NAbelianGroup* NSimpleSurfaceBundle::homologyH1() const {
+NAbelianGroup* NSimpleSurfaceBundle::homology() const {
     NAbelianGroup* ans = new NAbelianGroup();
     ans->addRank();
     if (type_ == RP2xS1)

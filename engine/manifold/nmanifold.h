@@ -159,16 +159,39 @@ class REGINA_API NManifold :
          * The homology group will be newly allocated and must be destroyed
          * by the caller of this routine.
          *
+         * This routine can also be accessed via the alias homologyH1()
+         * (a name that is more specific, but a little longer to type).
+         *
          * @return the first homology group of this 3-manifold, or 0 if
          * the appropriate calculation routine has not yet been implemented.
          */
-        virtual NAbelianGroup* homologyH1() const;
+        virtual NAbelianGroup* homology() const;
         /**
-         * Deprecated routine that returns the first homology group of this 3-manifold, if such
-         * a routine has been implemented.
+         * Returns the first homology group of this 3-manifold, if such
+         * a routine has been implemented.  If the calculation of
+         * homology has not yet been implemented for this 3-manifold
+         * then this routine will return 0.
          *
-         * \deprecated This routine has been renamed to homologyH1().
-         * See the homologyH1() documentation for further details.
+         * The details of which 3-manifolds have homology calculation routines
+         * can be found in the notes for the corresponding subclasses of
+         * NManifold.  The default implemention of this routine returns 0.
+         *
+         * The homology group will be newly allocated and must be destroyed
+         * by the caller of this routine.
+         *
+         * This routine can also be accessed via the alias homology()
+         * (a name that is less specific, but a little easier to type).
+         *
+         * @return the first homology group of this 3-manifold, or 0 if
+         * the appropriate calculation routine has not yet been implemented.
+         */
+        NAbelianGroup* homologyH1() const;
+        /**
+         * Deprecated routine that returns the first homology group of this
+         * 3-manifold, if such a routine has been implemented.
+         *
+         * \deprecated This routine has been renamed to homology().
+         * See the homology() documentation for further details.
          */
         NAbelianGroup* getHomologyH1() const;
 
@@ -199,7 +222,7 @@ class REGINA_API NManifold :
          *
          * \warning Currently this routine is only implemented in full for
          * closed 3-manifolds.  For most classes of bounded 3-manifolds,
-         * this routine simply compares the strings returned by getName().
+         * this routine simply compares the strings returned by name().
          *
          * @param compare the 3-manifold representation with which this
          * will be compared.
@@ -290,12 +313,16 @@ inline NTriangulation* NManifold::construct() const {
     return 0;
 }
 
-inline NAbelianGroup* NManifold::homologyH1() const {
+inline NAbelianGroup* NManifold::homology() const {
     return 0;
 }
 
+inline NAbelianGroup* NManifold::homologyH1() const {
+    return homology();
+}
+
 inline NAbelianGroup* NManifold::getHomologyH1() const {
-    return homologyH1();
+    return homology();
 }
 
 inline std::string NManifold::getName() const {

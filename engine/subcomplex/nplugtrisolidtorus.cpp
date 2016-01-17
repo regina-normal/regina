@@ -120,7 +120,7 @@ void NPlugTriSolidTorus::writeTextLong(std::ostream& out) const {
     writeName(out);
 }
 
-NManifold* NPlugTriSolidTorus::getManifold() const {
+NManifold* NPlugTriSolidTorus::manifold() const {
     NSFSpace* ans = new NSFSpace();
     ans->insertFibre(2, -1);
     ans->insertFibre(3, 1);

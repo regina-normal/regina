@@ -141,8 +141,8 @@ class REGINA_API NSnappedBall : public NStandardTriangulation {
          */
         static NSnappedBall* formsSnappedBall(NTetrahedron* tet);
 
-        NManifold* getManifold() const;
-        NAbelianGroup* getHomologyH1() const;
+        NManifold* manifold() const;
+        NAbelianGroup* homology() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;

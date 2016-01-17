@@ -135,7 +135,7 @@ class REGINA_API NTorusBundle : public NManifold {
          */
         const NMatrix2& getMonodromy() const;
 
-        NAbelianGroup* getHomologyH1() const;
+        NAbelianGroup* homology() const;
         bool isHyperbolic() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;

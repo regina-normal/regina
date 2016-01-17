@@ -662,11 +662,11 @@ void NLayeredSolidTorus::followEdge(int destGroup, int sourceGroup) {
     }
 }
 
-NManifold* NLayeredSolidTorus::getManifold() const {
+NManifold* NLayeredSolidTorus::manifold() const {
     return new NHandlebody(1, true);
 }
 
-NAbelianGroup* NLayeredSolidTorus::getHomologyH1() const {
+NAbelianGroup* NLayeredSolidTorus::homology() const {
     NAbelianGroup* ans = new NAbelianGroup();
     ans->addRank();
     return ans;
