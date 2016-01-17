@@ -563,9 +563,8 @@ class REGINA_API Triangulation<4> :
          * If this triangulation contains any ideal vertices, the homology
          * group will be calculated as if each such vertex had been truncated.
          *
-         * This routine is identical to homologyH1().  It is provided
-         * for consistency with NTriangulation::homology(), which
-         * likewise returns the first homology group.
+         * This routine can also be accessed via the alias homologyH1()
+         * (a name that is more specific, but a little longer to type).
          *
          * Bear in mind that each time the triangulation changes, the
          * homology groups will be deleted.  Thus the reference that is
@@ -584,9 +583,8 @@ class REGINA_API Triangulation<4> :
          * If this triangulation contains any ideal vertices, the homology
          * group will be calculated as if each such vertex had been truncated.
          *
-         * This routine is identical to homology().  The alias homology()
-         * is provided for consistency with NTriangulation::homology(), which
-         * likewise returns the first homology group.
+         * This routine can also be accessed via the alias homology()
+         * (a name that is less specific, but a little easier to type).
          *
          * Bear in mind that each time the triangulation changes, the
          * homology groups will be deleted.  Thus the reference that is
