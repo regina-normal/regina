@@ -358,7 +358,7 @@
     NSString *thisAnnulus, *adjAnnulus;
     for (b = region.numberOfBlocks() - 1; b >= 0; b--) {
         spec = region.block(b);
-        [details appendFormat:@INDENT2 "Block %ld: %s\n", b, spec.block->getAbbr().c_str()];
+        [details appendFormat:@INDENT2 "Block %ld: %s\n", b, spec.block->abbr().c_str()];
         
         nAnnuli = spec.block->nAnnuli();
         

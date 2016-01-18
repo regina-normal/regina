@@ -443,7 +443,7 @@ void NTriCompositionUI::describeSatRegion(const NSatRegion& region,
         spec = region.block(b);
         details = new QTreeWidgetItem(parent);
         details->setText(0,tr("Block %1: %2").
-            arg(b).arg(spec.block->getAbbr().c_str()));
+            arg(b).arg(spec.block->abbr().c_str()));
 
         nAnnuli = spec.block->nAnnuli();
 

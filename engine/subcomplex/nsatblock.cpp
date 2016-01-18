@@ -95,7 +95,7 @@ void NSatBlock::nextBoundaryAnnulus(unsigned thisAnnulus,
     }
 }
 
-std::string NSatBlock::getAbbr(bool tex) const {
+std::string NSatBlock::abbr(bool tex) const {
     std::ostringstream s;
     writeAbbr(s, tex);
     return s.str();
