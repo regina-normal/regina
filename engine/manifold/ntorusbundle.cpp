@@ -41,10 +41,10 @@ namespace regina {
 NAbelianGroup* NTorusBundle::homology() const {
     NMatrixInt relns(2, 2);
 
-    relns.entry(0, 0) = monodromy[0][0] - 1;
-    relns.entry(0, 1) = monodromy[0][1];
-    relns.entry(1, 0) = monodromy[1][0];
-    relns.entry(1, 1) = monodromy[1][1] - 1;
+    relns.entry(0, 0) = monodromy_[0][0] - 1;
+    relns.entry(0, 1) = monodromy_[0][1];
+    relns.entry(1, 0) = monodromy_[1][0];
+    relns.entry(1, 1) = monodromy_[1][1] - 1;
 
     NAbelianGroup* ans = new NAbelianGroup();
     ans->addGroup(relns);
@@ -54,21 +54,21 @@ NAbelianGroup* NTorusBundle::homology() const {
 }
 
 std::ostream& NTorusBundle::writeName(std::ostream& out) const {
-    if (monodromy.isIdentity())
+    if (monodromy_.isIdentity())
         return out << "T x I";
     else
-        return out << "T x I / [ " << monodromy[0][0] << ','
-            << monodromy[0][1] << " | " << monodromy[1][0] << ','
-            << monodromy[1][1] << " ]";
+        return out << "T x I / [ " << monodromy_[0][0] << ','
+            << monodromy_[0][1] << " | " << monodromy_[1][0] << ','
+            << monodromy_[1][1] << " ]";
 }
 
 std::ostream& NTorusBundle::writeTeXName(std::ostream& out) const {
-    if (monodromy.isIdentity())
+    if (monodromy_.isIdentity())
         return out << "T^2 \\times I";
     else
-        return out << "T^2 \\times I / \\homtwo{" << monodromy[0][0] << "}{"
-            << monodromy[0][1] << "}{" << monodromy[1][0] << "}{"
-            << monodromy[1][1] << "}";
+        return out << "T^2 \\times I / \\homtwo{" << monodromy_[0][0] << "}{"
+            << monodromy_[0][1] << "}{" << monodromy_[1][0] << "}{"
+            << monodromy_[1][1] << "}";
 }
 
 void NTorusBundle::reduce() {
@@ -94,7 +94,7 @@ void NTorusBundle::reduce() {
 
     // The determinant should be +/-1 according to our preconditions,
     // but we'd better check that anyway.
-    long det = monodromy.determinant();
+    long det = monodromy_.determinant();
     if (det != 1 && det != -1) {
         // Something is very wrong.  Don't touch it.
         std::cerr << "ERROR: NTorusBundle monodromy does not have "
@@ -105,30 +105,30 @@ void NTorusBundle::reduce() {
     // Deal with the case where the main diagonal has strictly opposite
     // signs.
     long x;
-    if (monodromy[0][0] < 0 && monodromy[1][1] > 0) {
+    if (monodromy_[0][0] < 0 && monodromy_[1][1] > 0) {
         // Rotate 180 degrees to put the positive element up top.
         rotate();
     }
-    while (monodromy[0][0] > 0 && monodromy[1][1] < 0) {
+    while (monodromy_[0][0] > 0 && monodromy_[1][1] < 0) {
         // Set x to the greatest absolute value of any main diagonal element.
-        if (monodromy[0][0] >= - monodromy[1][1])
-            x = monodromy[0][0];
+        if (monodromy_[0][0] >= - monodromy_[1][1])
+            x = monodromy_[0][0];
         else
-            x = - monodromy[1][1];
+            x = - monodromy_[1][1];
 
         // If we catch any of the following four cases, the main diagonal
         // will either no longer have opposite signs, or it will have a
         // strictly smaller maximum absolute value.
-        if (0 < monodromy[0][1] && monodromy[0][1] <= x) {
+        if (0 < monodromy_[0][1] && monodromy_[0][1] <= x) {
             addRCDown();
             continue;
-        } else if (0 < - monodromy[0][1] && - monodromy[0][1] <= x) {
+        } else if (0 < - monodromy_[0][1] && - monodromy_[0][1] <= x) {
             subtractRCDown();
             continue;
-        } else if (0 < monodromy[1][0] && monodromy[1][0] <= x) {
+        } else if (0 < monodromy_[1][0] && monodromy_[1][0] <= x) {
             subtractRCUp();
             continue;
-        } else if (0 < - monodromy[1][0] && - monodromy[1][0] <= x) {
+        } else if (0 < - monodromy_[1][0] && - monodromy_[1][0] <= x) {
             addRCUp();
             continue;
         }
@@ -145,11 +145,11 @@ void NTorusBundle::reduce() {
         // modulo 2.  This leaves us with the following possibilities:
         //   [ 1 0 | 0 -1 ] ,   [ 1 1 | 0 -1 ],   [ 1 0 | 1 -1 ].
         // The final two possibilities are both equivalent to [ 0 1 | 1 0 ].
-        if ((monodromy[0][1] % 2) || (monodromy[1][0] % 2)) {
-            monodromy[0][0] = monodromy[1][1] = 0;
-            monodromy[0][1] = monodromy[1][0] = 1;
+        if ((monodromy_[0][1] % 2) || (monodromy_[1][0] % 2)) {
+            monodromy_[0][0] = monodromy_[1][1] = 0;
+            monodromy_[0][1] = monodromy_[1][0] = 1;
         } else {
-            monodromy[0][1] = monodromy[1][0] = 0;
+            monodromy_[0][1] = monodromy_[1][0] = 0;
             // The main diagonal elements stay as they are (1, -1).
         }
 
@@ -165,27 +165,27 @@ void NTorusBundle::reduce() {
     // If the off-diagonal has strictly opposite signs, the elements
     // must be +1 and -1, and the main diagonal must contain a zero.
     // Otherwise there is no way we can get determinant +/-1.
-    if (monodromy[0][1] < 0 && monodromy[1][0] > 0) {
+    if (monodromy_[0][1] < 0 && monodromy_[1][0] > 0) {
         // We have [ a -1 | 1 d ].
         // Move the -1 to the bottom left corner by negating the off-diagonal.
-        monodromy[0][1] = 1;
-        monodromy[1][0] = -1;
+        monodromy_[0][1] = 1;
+        monodromy_[1][0] = -1;
     }
-    if (monodromy[0][1] > 0 && monodromy[1][0] < 0) {
+    if (monodromy_[0][1] > 0 && monodromy_[1][0] < 0) {
         // We have [ a 1 | -1 d ], where one of a or d is zero.
         // Rotate by 180 degrees to move the 0 to the bottom right
         // corner, negating the off-diagonal if necessary to preserve
         // the 1/-1 positions.
-        if (monodromy[1][1]) {
-            monodromy[0][0] = monodromy[1][1];
-            monodromy[1][1] = 0;
+        if (monodromy_[1][1]) {
+            monodromy_[0][0] = monodromy_[1][1];
+            monodromy_[1][1] = 0;
         }
 
         // Now we have [ a 1 | -1 0 ].
-        if (monodromy[0][0] > 1) {
+        if (monodromy_[0][0] > 1) {
             addRCDown();
             // Everything becomes non-negative.
-        } else if (monodromy[0][0] < -1) {
+        } else if (monodromy_[0][0] < -1) {
             subtractRCUp();
             // Everything becomes non-positive.
         } else {
@@ -203,29 +203,29 @@ void NTorusBundle::reduce() {
         // the main diagonal.
         // If it's going to end up negative, just switch the signs for
         // now and remember this fact for later on.
-        if (monodromy[0][0] < 0 || monodromy[1][1] < 0) {
+        if (monodromy_[0][0] < 0 || monodromy_[1][1] < 0) {
             allNegative = true;
-            monodromy[0][0] = - monodromy[0][0];
-            monodromy[1][1] = - monodromy[1][1];
+            monodromy_[0][0] = - monodromy_[0][0];
+            monodromy_[1][1] = - monodromy_[1][1];
         }
-        if (monodromy[0][1] < 0 || monodromy[1][0] < 0) {
+        if (monodromy_[0][1] < 0 || monodromy_[1][0] < 0) {
             // We're always allowed to do this.
-            monodromy[0][1] = - monodromy[0][1];
-            monodromy[1][0] = - monodromy[1][0];
+            monodromy_[0][1] = - monodromy_[0][1];
+            monodromy_[1][0] = - monodromy_[1][0];
         }
     } else {
         // The determinant is -1.
         // The entire matrix can be made non-negative.
-        if (monodromy[0][0] < 0 || monodromy[1][1] < 0) {
+        if (monodromy_[0][0] < 0 || monodromy_[1][1] < 0) {
             // Invert (swap and negate the main diagonal).
-            x = monodromy[0][0];
-            monodromy[0][0] = - monodromy[1][1];
-            monodromy[1][1] = -x;
+            x = monodromy_[0][0];
+            monodromy_[0][0] = - monodromy_[1][1];
+            monodromy_[1][1] = -x;
         }
-        if (monodromy[0][1] < 0 || monodromy[1][0] < 0) {
+        if (monodromy_[0][1] < 0 || monodromy_[1][0] < 0) {
             // Negate the off-diagonal as usual.
-            monodromy[0][1] = - monodromy[0][1];
-            monodromy[1][0] = - monodromy[1][0];
+            monodromy_[0][1] = - monodromy_[0][1];
+            monodromy_[1][0] = - monodromy_[1][0];
         }
     }
 
@@ -233,39 +233,39 @@ void NTorusBundle::reduce() {
     // Run through a cycle of equivalent matrices, and choose the nicest.
     // I'm pretty sure I can prove that this is a cycle, but the proof
     // really should be written down.
-    NMatrix2 start = monodromy;
-    NMatrix2 best = monodromy;
+    NMatrix2 start = monodromy_;
+    NMatrix2 best = monodromy_;
     while (1) {
         // INV: monodromy has all non-negative entries.
         // INV: best contains the best seen matrix, including the current one.
 
         // It can be proven (via det = +/-1) that one row must dominate
         // another, unless we have [ 1 0 | 0 1 ] or [ 0 1 | 1 0 ].
-        if (monodromy.isIdentity()) {
+        if (monodromy_.isIdentity()) {
             if (allNegative)
-                monodromy.negate();
+                monodromy_.negate();
             return;
         }
-        if (monodromy[0][0] == 0 && monodromy[0][1] == 1 &&
-                monodromy[1][0] == 1 && monodromy[1][1] == 0) {
+        if (monodromy_[0][0] == 0 && monodromy_[0][1] == 1 &&
+                monodromy_[1][0] == 1 && monodromy_[1][1] == 0) {
             if (allNegative)
-                monodromy.negate();
+                monodromy_.negate();
             return;
         }
 
         // We know at this point that one row dominates the other.
-        if (monodromy[0][0] >= monodromy[1][0] &&
-                monodromy[0][1] >= monodromy[1][1])
+        if (monodromy_[0][0] >= monodromy_[1][0] &&
+                monodromy_[0][1] >= monodromy_[1][1])
             subtractRCUp();
         else
             subtractRCDown();
 
         // Looking at a new matrix.
-        if (monodromy == start)
+        if (monodromy_ == start)
             break;
 
-        if (NTorusBundle::simplerNonNeg(monodromy, best))
-            best = monodromy;
+        if (NTorusBundle::simplerNonNeg(monodromy_, best))
+            best = monodromy_;
     }
 
     // In the orientable case, run this all again for the rotated matrix.
@@ -273,44 +273,44 @@ void NTorusBundle::reduce() {
     // rotated matrix belongs to the same cycle as the original.
     if (det > 0) {
         rotate();
-        if (NTorusBundle::simplerNonNeg(monodromy, best))
-            best = monodromy;
+        if (NTorusBundle::simplerNonNeg(monodromy_, best))
+            best = monodromy_;
 
-        start = monodromy;
+        start = monodromy_;
         while (1) {
-            if (monodromy.isIdentity()) {
+            if (monodromy_.isIdentity()) {
                 if (allNegative)
-                    monodromy.negate();
+                    monodromy_.negate();
                 return;
             }
-            if (monodromy[0][0] == 0 && monodromy[0][1] == 1 &&
-                    monodromy[1][0] == 1 && monodromy[1][1] == 0) {
+            if (monodromy_[0][0] == 0 && monodromy_[0][1] == 1 &&
+                    monodromy_[1][0] == 1 && monodromy_[1][1] == 0) {
                 if (allNegative)
-                    monodromy.negate();
+                    monodromy_.negate();
                 return;
             }
 
             // We know at this point that one row dominates the other.
-            if (monodromy[0][0] >= monodromy[1][0] &&
-                    monodromy[0][1] >= monodromy[1][1])
+            if (monodromy_[0][0] >= monodromy_[1][0] &&
+                    monodromy_[0][1] >= monodromy_[1][1])
                 subtractRCUp();
             else
                 subtractRCDown();
 
             // Looking at a new matrix.
-            if (monodromy == start)
+            if (monodromy_ == start)
                 break;
 
-            if (NTorusBundle::simplerNonNeg(monodromy, best))
-                best = monodromy;
+            if (NTorusBundle::simplerNonNeg(monodromy_, best))
+                best = monodromy_;
         }
     }
 
-    monodromy = best;
+    monodromy_ = best;
 
     // Don't forget that negative case.
     if (allNegative)
-        monodromy.negate();
+        monodromy_.negate();
 }
 
 bool NTorusBundle::simplerNonNeg(const NMatrix2& m1, const NMatrix2& m2) {

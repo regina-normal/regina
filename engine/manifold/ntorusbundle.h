@@ -78,7 +78,7 @@ namespace regina {
  */
 class REGINA_API NTorusBundle : public NManifold {
     private:
-        NMatrix2 monodromy;
+        NMatrix2 monodromy_;
             /**< The monodromy describing how the two torus boundaries
                  are identified.  See the class notes for details. */
 
@@ -132,6 +132,14 @@ class REGINA_API NTorusBundle : public NManifold {
          * details.
          *
          * @return the monodromy for this torus bundle.
+         */
+        const NMatrix2& monodromy() const;
+        /**
+         * Deprecated routine that returns the monodromy describing how the
+         * upper and lower torus boundaries are identified.
+         *
+         * \deprecated This routine has been renamed to monodromy().
+         * See the monodromy() documentation for further details.
          */
         const NMatrix2& getMonodromy() const;
 
@@ -218,63 +226,67 @@ class REGINA_API NTorusBundle : public NManifold {
 // Inline functions for NTorusBundle
 
 inline NTorusBundle::NTorusBundle() :
-        monodromy(1, 0, 0, 1) {
+        monodromy_(1, 0, 0, 1) {
 }
 
 inline NTorusBundle::NTorusBundle(const NMatrix2& newMonodromy) :
-        monodromy(newMonodromy) {
+        monodromy_(newMonodromy) {
     reduce();
 }
 
 inline NTorusBundle::NTorusBundle(long mon00, long mon01, long mon10,
-        long mon11) : monodromy(mon00, mon01, mon10, mon11) {
+        long mon11) : monodromy_(mon00, mon01, mon10, mon11) {
     reduce();
 }
 
 inline NTorusBundle::NTorusBundle(const NTorusBundle& cloneMe) :
-        NManifold(), monodromy(cloneMe.monodromy) {
+        NManifold(), monodromy_(cloneMe.monodromy_) {
+}
+
+inline const NMatrix2& NTorusBundle::monodromy() const {
+    return monodromy_;
 }
 
 inline const NMatrix2& NTorusBundle::getMonodromy() const {
-    return monodromy;
+    return monodromy_;
 }
 
 inline void NTorusBundle::rotate() {
-    long x = monodromy[0][0];
-    monodromy[0][0] = monodromy[1][1];
-    monodromy[1][1] = x;
+    long x = monodromy_[0][0];
+    monodromy_[0][0] = monodromy_[1][1];
+    monodromy_[1][1] = x;
 
-    x = monodromy[0][1];
-    monodromy[0][1] = monodromy[1][0];
-    monodromy[1][0] = x;
+    x = monodromy_[0][1];
+    monodromy_[0][1] = monodromy_[1][0];
+    monodromy_[1][0] = x;
 }
 
 inline void NTorusBundle::addRCDown() {
-    monodromy[1][0] += monodromy[0][0];
-    monodromy[1][1] += monodromy[0][1];
-    monodromy[0][0] -= monodromy[0][1];
-    monodromy[1][0] -= monodromy[1][1];
+    monodromy_[1][0] += monodromy_[0][0];
+    monodromy_[1][1] += monodromy_[0][1];
+    monodromy_[0][0] -= monodromy_[0][1];
+    monodromy_[1][0] -= monodromy_[1][1];
 }
 
 inline void NTorusBundle::subtractRCDown() {
-    monodromy[1][0] -= monodromy[0][0];
-    monodromy[1][1] -= monodromy[0][1];
-    monodromy[0][0] += monodromy[0][1];
-    monodromy[1][0] += monodromy[1][1];
+    monodromy_[1][0] -= monodromy_[0][0];
+    monodromy_[1][1] -= monodromy_[0][1];
+    monodromy_[0][0] += monodromy_[0][1];
+    monodromy_[1][0] += monodromy_[1][1];
 }
 
 inline void NTorusBundle::addRCUp() {
-    monodromy[0][0] += monodromy[1][0];
-    monodromy[0][1] += monodromy[1][1];
-    monodromy[0][1] -= monodromy[0][0];
-    monodromy[1][1] -= monodromy[1][0];
+    monodromy_[0][0] += monodromy_[1][0];
+    monodromy_[0][1] += monodromy_[1][1];
+    monodromy_[0][1] -= monodromy_[0][0];
+    monodromy_[1][1] -= monodromy_[1][0];
 }
 
 inline void NTorusBundle::subtractRCUp() {
-    monodromy[0][0] -= monodromy[1][0];
-    monodromy[0][1] -= monodromy[1][1];
-    monodromy[0][1] += monodromy[0][0];
-    monodromy[1][1] += monodromy[1][0];
+    monodromy_[0][0] -= monodromy_[1][0];
+    monodromy_[0][1] -= monodromy_[1][1];
+    monodromy_[0][1] += monodromy_[0][0];
+    monodromy_[1][1] += monodromy_[1][0];
 }
 
 inline bool NTorusBundle::isHyperbolic() const {
