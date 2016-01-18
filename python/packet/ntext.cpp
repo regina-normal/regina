@@ -56,7 +56,8 @@ void addNText() {
         .def("setText", setText_chars)
     ;
 
-    s.attr("packetType") = PACKET_TEXT;
+    s.attr("typeID") = regina::PACKET_TEXT;
+    s.attr("packetType") = regina::PACKET_TEXT;
 
     implicitly_convertible<std::auto_ptr<NText>,
         std::auto_ptr<regina::NPacket> >();

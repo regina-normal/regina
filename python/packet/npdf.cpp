@@ -52,7 +52,8 @@ void addNPDF() {
         .def("savePDF", &NPDF::savePDF)
     ;
 
-    s.attr("packetType") = PACKET_PDF;
+    s.attr("typeID") = regina::PACKET_PDF;
+    s.attr("packetType") = regina::PACKET_PDF;
 
     implicitly_convertible<std::auto_ptr<NPDF>,
         std::auto_ptr<regina::NPacket> >();

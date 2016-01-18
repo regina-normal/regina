@@ -326,8 +326,9 @@ Version 4.97  [ (under development) ]
             - Renamed getNumberOfSurfaces() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
         Class NNormalSurfaceVector:
-            - The subclass constant coordType is now a constant of type
-              NormalCoords, not an anonymous enum type.
+            - The subclass constant coordType is renamed to coordsID, and is
+              now a constant of type NormalCoords, not an anonymous enum type.
+              The old name is kept but deprecated.
             - Renamed getTriangleCoord(), getQuadCoord(), getOctCoord() and
               getTriangleArcs() to triangles(), quads(), octs() and arcs().
               The old names are kept but deprecated.
@@ -336,8 +337,9 @@ Version 4.97  [ (under development) ]
               opposed to a filename).
             - New routine adornedLabel() for creating modified packet labels.
             - New routine transferChildren() for bulk tree reorganisation.
-            - The subclass constant packetType is now a constant of type
-              PacketType, not an anonymous enum type.
+            - The subclass constant packetType is renamed to typeID, and is
+              now a constant of type PacketType, not an anonymous enum type.
+              The old name is kept but deprecated.
             - Renamed getPacketLabel(), getPacketType() and getPacketTypeName()
               to label(), type() and typeName().  The old names are kept
               but deprecated.
