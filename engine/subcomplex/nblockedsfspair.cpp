@@ -207,8 +207,8 @@ bool NBlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
 
     // We make the shell of an other-side boundary annulus; we will fill
     // in the precise vertex role permutations later on.
-    NSatAnnulus otherSide(layering.getNewBoundaryTet(0), NPerm4(),
-        layering.getNewBoundaryTet(1), NPerm4());
+    NSatAnnulus otherSide(layering.newBoundaryTet(0), NPerm4(),
+        layering.newBoundaryTet(1), NPerm4());
 
     if (otherSide.meetsBoundary()) {
         delete region[0];
@@ -227,23 +227,23 @@ bool NBlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
         // Construct the boundary annulus for the second region.
         // Refresh the tetrahedra as well as the vertex roles, since
         // it may have switched sides since our last run through the loop.
-        otherSide.tet[0] = layering.getNewBoundaryTet(0);
-        otherSide.tet[1] = layering.getNewBoundaryTet(1);
+        otherSide.tet[0] = layering.newBoundaryTet(0);
+        otherSide.tet[1] = layering.newBoundaryTet(1);
 
         if (plugPos == 0) {
-            otherSide.roles[0] = layering.getNewBoundaryRoles(0);
-            otherSide.roles[1] = layering.getNewBoundaryRoles(1);
+            otherSide.roles[0] = layering.newBoundaryRoles(0);
+            otherSide.roles[1] = layering.newBoundaryRoles(1);
             layeringToAnnulus1 = NMatrix2(1, 0, 0, 1);
         } else if (plugPos == 1) {
-            otherSide.roles[0] = layering.getNewBoundaryRoles(0) *
+            otherSide.roles[0] = layering.newBoundaryRoles(0) *
                 NPerm4(1, 2, 0, 3);
-            otherSide.roles[1] = layering.getNewBoundaryRoles(1) *
+            otherSide.roles[1] = layering.newBoundaryRoles(1) *
                 NPerm4(1, 2, 0, 3);
             layeringToAnnulus1 = NMatrix2(-1, 1, -1, 0);
         } else {
-            otherSide.roles[0] = layering.getNewBoundaryRoles(0) *
+            otherSide.roles[0] = layering.newBoundaryRoles(0) *
                 NPerm4(2, 0, 1, 3);
-            otherSide.roles[1] = layering.getNewBoundaryRoles(1) *
+            otherSide.roles[1] = layering.newBoundaryRoles(1) *
                 NPerm4(2, 0, 1, 3);
             layeringToAnnulus1 = NMatrix2(0, -1, 1, -1);
         }
@@ -253,8 +253,8 @@ bool NBlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
         // again on the other side.  We'll just re-insert the layering
         // boundary tetrahedra.
         usedTets.clear();
-        usedTets.insert(layering.getNewBoundaryTet(0));
-        usedTets.insert(layering.getNewBoundaryTet(1));
+        usedTets.insert(layering.newBoundaryTet(0));
+        usedTets.insert(layering.newBoundaryTet(1));
 
         // See if we can flesh the other side out to an entire region.
         otherSide.switchSides();
