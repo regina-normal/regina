@@ -415,7 +415,13 @@ Version 4.97  [ (under development) ]
             - Removed the deprecated getFilterID() and getFilterName()
               routines, and the deprecated filterID constants.
         Class NSurfaceFilterProperties:
-            - New set-based routine setECs().
+            - New set-based routine setEulerChars().
+            - Renamed getEC(), getECs() and getNumberOfECs() to eulerChar(),
+              eulerChars() and countEulerChars().  The old names are kept but
+              deprecated.
+            - Renamed addEC(), removeEC() and removeAllECs() to addEulerChar(),
+              removeEulerChar() and removeAllEulerChars().  The old names are
+              kept but deprecated.
         Class NTetrahedron:
             - Now just a typedef for the new class Simplex<3>, which has
               the same functionality as the old NTetrahedron.
