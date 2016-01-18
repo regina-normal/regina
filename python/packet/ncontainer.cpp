@@ -45,7 +45,7 @@ void addNContainer() {
         .def(init<const std::string&>())
     ;
 
-    s.attr("packetType") = regina::PacketType(NContainer::packetType);
+    s.attr("packetType") = PACKET_CONTAINER;
 
     implicitly_convertible<std::auto_ptr<NContainer>,
         std::auto_ptr<regina::NPacket> >();

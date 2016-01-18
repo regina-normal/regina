@@ -253,7 +253,7 @@ void addDim2Triangulation() {
         .staticmethod("isoSigComponentSize")
     ;
 
-    s.attr("packetType") = regina::PacketType(Dim2Triangulation::packetType);
+    s.attr("packetType") = PACKET_DIM2TRIANGULATION;
 
     implicitly_convertible<std::auto_ptr<Dim2Triangulation>,
         std::auto_ptr<regina::NPacket> >();

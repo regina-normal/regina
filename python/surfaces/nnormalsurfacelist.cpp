@@ -243,7 +243,7 @@ void addNNormalSurfaceList() {
         .staticmethod("enumerateFundCD")
     ;
 
-    s.attr("packetType") = regina::PacketType(NNormalSurfaceList::packetType);
+    s.attr("packetType") = PACKET_NORMALSURFACELIST;
     s.attr("STANDARD") = regina::NS_STANDARD;
     s.attr("AN_STANDARD") = regina::NS_AN_STANDARD;
     s.attr("QUAD") = regina::NS_QUAD;
