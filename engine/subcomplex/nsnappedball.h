@@ -83,6 +83,14 @@ class REGINA_API NSnappedBall : public NStandardTriangulation {
          *
          * @return the tetrahedron.
          */
+        NTetrahedron* tetrahedron() const;
+        /**
+         * Deprecated routine that returns the tetrahedron that forms this
+         * snapped ball.
+         *
+         * \deprecated This routine has been renamed to tetrahedron().
+         * See the tetrahedron() documentation for further details.
+         */
         NTetrahedron* getTetrahedron() const;
 
         /**
@@ -96,6 +104,14 @@ class REGINA_API NSnappedBall : public NStandardTriangulation {
          * this must be either 0 or 1.
          * @return the corresponding face number in the tetrahedron.
          */
+        int boundaryFace(int index) const;
+        /**
+         * Deprecated routine that returns one of the two tetrahedron faces
+         * that forms the boundary of this snapped ball.
+         *
+         * \deprecated This routine has been renamed to boundaryFace().
+         * See the boundaryFace() documentation for further details.
+         */
         int getBoundaryFace(int index) const;
         /**
          * Returns one of the two tetrahedron faces internal to this snapped
@@ -108,6 +124,14 @@ class REGINA_API NSnappedBall : public NStandardTriangulation {
          * this must be either 0 or 1.
          * @return the corresponding face number in the tetrahedron.
          */
+        int internalFace(int index) const;
+        /**
+         * Deprecated routine that returns one of the two tetrahedron faces
+         * internal to this snapped ball.
+         *
+         * \deprecated This routine has been renamed to internalFace().
+         * See the internalFace() documentation for further details.
+         */
         int getInternalFace(int index) const;
         /**
          * Returns the edge that forms the equator of the boundary sphere
@@ -115,11 +139,28 @@ class REGINA_API NSnappedBall : public NStandardTriangulation {
          *
          * @return the corresponding edge number in the tetrahedron.
          */
+        int equatorEdge() const;
+        /**
+         * Deprecated routine that returns the edge that forms the equator of
+         * the boundary sphere of this ball.
+         *
+         * \deprecated This routine has been renamed to equatoryEdge().
+         * See the equatorEdge() documentation for further details.
+         */
         int getEquatorEdge() const;
         /**
          * Returns the edge internal to this snapped ball.
          *
          * @return the corresponding edge number in the tetrahedron.
+         */
+        int internalEdge() const;
+        /**
+         * Deprecated routine that returns the edge internal to this snapped
+         * ball.
+         *
+         *
+         * \deprecated This routine has been renamed to internalEdge().
+         * See the internalEdge() documentation for further details.
          */
         int getInternalEdge() const;
 
@@ -160,21 +201,40 @@ class REGINA_API NSnappedBall : public NStandardTriangulation {
 
 inline NSnappedBall::NSnappedBall() {
 }
+inline NTetrahedron* NSnappedBall::tetrahedron() const {
+    return tet;
+}
 inline NTetrahedron* NSnappedBall::getTetrahedron() const {
     return tet;
+}
+inline int NSnappedBall::boundaryFace(int index) const {
+    return index == 0 ?
+        NEdge::edgeVertex[5 - equator][0] :
+        NEdge::edgeVertex[5 - equator][1];
 }
 inline int NSnappedBall::getBoundaryFace(int index) const {
     return index == 0 ?
         NEdge::edgeVertex[5 - equator][0] :
         NEdge::edgeVertex[5 - equator][1];
 }
+inline int NSnappedBall::internalFace(int index) const {
+    return index == 0 ?
+        NEdge::edgeVertex[equator][0] :
+        NEdge::edgeVertex[equator][1];
+}
 inline int NSnappedBall::getInternalFace(int index) const {
     return index == 0 ?
         NEdge::edgeVertex[equator][0] :
         NEdge::edgeVertex[equator][1];
 }
+inline int NSnappedBall::equatorEdge() const {
+    return equator;
+}
 inline int NSnappedBall::getEquatorEdge() const {
     return equator;
+}
+inline int NSnappedBall::internalEdge() const {
+    return 5 - equator;
 }
 inline int NSnappedBall::getInternalEdge() const {
     return 5 - equator;

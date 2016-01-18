@@ -915,7 +915,7 @@ void NTriCompositionUI::findSnappedBalls() {
 
             details = new QTreeWidgetItem(id, details);
             details->setText(0, tr("Equator: edge %1%2").
-                arg(ball->getInternalFace(0)).arg(ball->getInternalFace(1)));
+                arg(ball->internalFace(0)).arg(ball->internalFace(1)));
 
             delete ball;
         }
@@ -948,7 +948,7 @@ void NTriCompositionUI::findSnappedSpheres() {
                 details = new QTreeWidgetItem(id, details);
                 details->setText(0, tr(
                     "Equator: edge %1").arg(tri->edgeIndex(
-                    ball->getTetrahedron()->getEdge(ball->getEquatorEdge()))));
+                    ball->tetrahedron()->getEdge(ball->equatorEdge()))));
 
                 delete sphere;
             }

@@ -649,8 +649,8 @@
             [details appendString:@"Snapped 3-ball\n"];
             [details appendFormat:@INDENT1 "Tetrahedron %ld\n", i];
             [details appendFormat:@INDENT1 "Equator: edge %d%d\n",
-             ball->getInternalFace(0),
-             ball->getInternalFace(1)];
+             ball->internalFace(0),
+             ball->internalFace(1)];
             
             [details appendString:@"\n"];
             delete ball;
@@ -705,7 +705,7 @@
                 
                 const regina::NSnappedBall* ball = sphere->snappedBall(0);
                 [details appendFormat:@INDENT1 "Equator: edge %ld\n",
-                 ball->getTetrahedron()->getEdge(ball->getEquatorEdge())->index()];
+                 ball->tetrahedron()->getEdge(ball->equatorEdge())->index()];
                 
                 [details appendString:@"\n"];
                 delete sphere;
