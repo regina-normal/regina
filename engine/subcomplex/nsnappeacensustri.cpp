@@ -174,43 +174,43 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
 }
 
 NManifold* NSnapPeaCensusTri::manifold() const {
-    return new NSnapPeaCensusManifold(section, index);
+    return new NSnapPeaCensusManifold(section_, index_);
 }
 
 NAbelianGroup* NSnapPeaCensusTri::homology() const {
-    return NSnapPeaCensusManifold(section, index).homology();
+    return NSnapPeaCensusManifold(section_, index_).homology();
 }
 
 std::ostream& NSnapPeaCensusTri::writeName(std::ostream& out) const {
-    out << "SnapPea " << section;
+    out << "SnapPea " << section_;
 
     // Pad the index with leading zeroes.
     // All sections are written with three-digit indices, except for
     // 7-tetrahedron orientable which uses four-digit indices.
-    if (section == SEC_7_OR && index < 1000)
+    if (section_ == SEC_7_OR && index_ < 1000)
         out << '0';
-    if (index < 100)
+    if (index_ < 100)
         out << '0';
-    if (index < 10)
+    if (index_ < 10)
         out << '0';
-    out << index;
+    out << index_;
 
     return out;
 }
 
 std::ostream& NSnapPeaCensusTri::writeTeXName(std::ostream& out) const {
-    out << section << "_{";
+    out << section_ << "_{";
 
     // Pad the index with leading zeroes.
     // All sections are written with three-digit indices, except for
     // 7-tetrahedron orientable which uses four-digit indices.
-    if (section == SEC_7_OR && index < 1000)
+    if (section_ == SEC_7_OR && index_ < 1000)
         out << '0';
-    if (index < 100)
+    if (index_ < 100)
         out << '0';
-    if (index < 10)
+    if (index_ < 10)
         out << '0';
-    out << index << '}';
+    out << index_ << '}';
 
     return out;
 }

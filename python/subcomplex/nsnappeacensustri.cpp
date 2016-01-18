@@ -46,7 +46,9 @@ void addNSnapPeaCensusTri() {
             ("NSnapPeaCensusTri", no_init)
         .def("clone", &NSnapPeaCensusTri::clone,
             return_value_policy<manage_new_object>())
+        .def("section", &NSnapPeaCensusTri::section)
         .def("getSection", &NSnapPeaCensusTri::getSection)
+        .def("index", &NSnapPeaCensusTri::index)
         .def("getIndex", &NSnapPeaCensusTri::getIndex)
         .def("isSmallSnapPeaCensusTri",
             &NSnapPeaCensusTri::isSmallSnapPeaCensusTri,
