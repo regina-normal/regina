@@ -139,7 +139,7 @@ namespace {
                     for (std::list<std::string>::const_iterator it =
                             tokens.begin(); it != tokens.end(); it++)
                         if (valueOf(*it, val))
-                            filter_->addEC(val);
+                            filter_->addEulerChar(val);
                 }
             }
     };
