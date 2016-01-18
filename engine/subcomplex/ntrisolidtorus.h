@@ -93,7 +93,7 @@ class REGINA_API NTriSolidTorus : public NStandardTriangulation {
     private:
         NTetrahedron* tet[3];
             /**< The tetrahedra that make up this solid torus. */
-        NPerm4 vertexRoles[3];
+        NPerm4 vertexRoles_[3];
             /**< For tetrahedron \a i, <tt>vertexRoles[i]</tt> is a
                  permutation p chosen so that the axis edge for that
                  tetrahedron runs from vertex p[0] to p[3] and the
@@ -157,6 +157,15 @@ class REGINA_API NTriSolidTorus : public NStandardTriangulation {
          * to examine; this must be 0, 1 or 2.
          * @return a permutation representing the roles of the vertices
          * of the requested tetrahedron.
+         */
+        NPerm4 vertexRoles(int index) const;
+        /**
+         * Deprecated routine that returns a permutation represeting the role
+         * that each vertex of the requested tetrahedron plays in the solid
+         * torus.
+         *
+         * \deprecated This routine has been renamed to vertexRoles().
+         * See the vertexRoles() documentation for further details.
          */
         NPerm4 getVertexRoles(int index) const;
 
@@ -304,8 +313,11 @@ inline NTetrahedron* NTriSolidTorus::tetrahedron(int index) const {
 inline NTetrahedron* NTriSolidTorus::getTetrahedron(int index) const {
     return tet[index];
 }
+inline NPerm4 NTriSolidTorus::vertexRoles(int index) const {
+    return vertexRoles_[index];
+}
 inline NPerm4 NTriSolidTorus::getVertexRoles(int index) const {
-    return vertexRoles[index];
+    return vertexRoles_[index];
 }
 
 inline std::ostream& NTriSolidTorus::writeName(std::ostream& out) const {

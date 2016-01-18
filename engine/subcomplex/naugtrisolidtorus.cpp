@@ -380,10 +380,10 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                                     core->tetrahedron(2)) &&
                                 (top->adjacentGluing(topRoles[0])
                                     * topRoles * NPerm4(1, 0, 2, 3) ==
-                                    core->getVertexRoles(1)) &&
+                                    core->vertexRoles(1)) &&
                                 (top->adjacentGluing(topRoles[3])
                                     * topRoles * NPerm4(0, 1, 3, 2) ==
-                                    core->getVertexRoles(2)) &&
+                                    core->vertexRoles(2)) &&
                                 core->isAnnulusSelfIdentified(
                                     0, &annulusPerm)) {
                             // We have the entire structure!
@@ -437,13 +437,13 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                                 (bottom->adjacentGluing(
                                         bottomRoles[1])
                                     * bottomRoles * NPerm4(2, 1, 0, 3) ==
-                                    core->getVertexRoles(1)) &&
+                                    core->vertexRoles(1)) &&
                                 (top->adjacentGluing(topRoles[0])
                                     * topRoles * NPerm4(3, 0, 1, 2) ==
-                                    core->getVertexRoles(0)) &&
+                                    core->vertexRoles(0)) &&
                                 (top->adjacentGluing(topRoles[3])
                                     * topRoles * NPerm4(1, 2, 3, 0) ==
-                                    core->getVertexRoles(2)) &&
+                                    core->vertexRoles(2)) &&
                                 core->isAnnulusSelfIdentified(
                                     0, &annulusPerm)) {
                             // We have the entire structure!
@@ -535,7 +535,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
             // tori hang from it accordingly.
             for (j = 0; j < 3; j++) {
                 coreTets[j] = core->tetrahedron(j);
-                coreVertexRoles[j] = core->getVertexRoles(j);
+                coreVertexRoles[j] = core->vertexRoles(j);
             }
             usedLayered = 0;
             torusAnnulus = -1;

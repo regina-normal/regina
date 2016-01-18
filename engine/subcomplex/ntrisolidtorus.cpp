@@ -44,7 +44,7 @@ NTriSolidTorus* NTriSolidTorus::clone() const {
     NTriSolidTorus* ans = new NTriSolidTorus();
     for (int i = 0; i < 3; i++) {
         ans->tet[i] = tet[i];
-        ans->vertexRoles[i] = vertexRoles[i];
+        ans->vertexRoles_[i] = vertexRoles_[i];
     }
     return ans;
 }
@@ -52,19 +52,19 @@ NTriSolidTorus* NTriSolidTorus::clone() const {
 bool NTriSolidTorus::isAnnulusSelfIdentified(int index, NPerm4* roleMap) const {
     int lower = (index + 1) % 3;
     int upper = (index + 2) % 3;
-    if (tet[lower]->adjacentTetrahedron(vertexRoles[lower][2]) !=
+    if (tet[lower]->adjacentTetrahedron(vertexRoles_[lower][2]) !=
             tet[upper])
         return false;
-    if (tet[lower]->adjacentFace(vertexRoles[lower][2]) !=
-            vertexRoles[upper][1])
+    if (tet[lower]->adjacentFace(vertexRoles_[lower][2]) !=
+            vertexRoles_[upper][1])
         return false;
 
     // We have a self-identification.
 
     if (roleMap)
-        *roleMap = vertexRoles[upper].inverse() *
-            tet[lower]->adjacentGluing(vertexRoles[lower][2]) *
-            vertexRoles[lower];
+        *roleMap = vertexRoles_[upper].inverse() *
+            tet[lower]->adjacentGluing(vertexRoles_[lower][2]) *
+            vertexRoles_[lower];
 
     return true;
 }
@@ -73,15 +73,15 @@ unsigned long NTriSolidTorus::areAnnuliLinkedMajor(int otherAnnulus) const {
     int right = (otherAnnulus + 1) % 3;
     int left = (otherAnnulus + 2) % 3;
     NTetrahedron* adj = tet[right]->adjacentTetrahedron(
-        vertexRoles[right][1]);
-    if (adj != tet[left]->adjacentTetrahedron(vertexRoles[left][2]))
+        vertexRoles_[right][1]);
+    if (adj != tet[left]->adjacentTetrahedron(vertexRoles_[left][2]))
         return 0;
     if (adj == tet[0] || adj == tet[1] || adj == tet[2] || adj == 0)
         return 0;
     NPerm4 roles = tet[right]->adjacentGluing(
-        vertexRoles[right][1]) * vertexRoles[right] * NPerm4(2, 3, 1, 0);
+        vertexRoles_[right][1]) * vertexRoles_[right] * NPerm4(2, 3, 1, 0);
     if (roles != tet[left]->adjacentGluing(
-            vertexRoles[left][2]) * vertexRoles[left] * NPerm4(3, 2, 0, 1))
+            vertexRoles_[left][2]) * vertexRoles_[left] * NPerm4(3, 2, 0, 1))
         return 0;
 
     // We've successfully identified the first tetrahedron of the
@@ -90,7 +90,7 @@ unsigned long NTriSolidTorus::areAnnuliLinkedMajor(int otherAnnulus) const {
     chain.extendMaximal();
     if (chain.getTop() != tet[otherAnnulus])
         return 0;
-    if (chain.getTopVertexRoles() != vertexRoles[otherAnnulus] *
+    if (chain.getTopVertexRoles() != vertexRoles_[otherAnnulus] *
             NPerm4(0, 1, 2, 3))
         return 0;
 
@@ -102,16 +102,16 @@ unsigned long NTriSolidTorus::areAnnuliLinkedAxis(int otherAnnulus) const {
     int right = (otherAnnulus + 1) % 3;
     int left = (otherAnnulus + 2) % 3;
     NTetrahedron* adj = tet[right]->adjacentTetrahedron(
-        vertexRoles[right][1]);
+        vertexRoles_[right][1]);
     if (adj != tet[otherAnnulus]->adjacentTetrahedron(
-            vertexRoles[otherAnnulus][2]))
+            vertexRoles_[otherAnnulus][2]))
         return 0;
     if (adj == tet[0] || adj == tet[1] || adj == tet[2] || adj == 0)
         return 0;
     NPerm4 roles = tet[right]->adjacentGluing(
-        vertexRoles[right][1]) * vertexRoles[right] * NPerm4(2, 1, 0, 3);
+        vertexRoles_[right][1]) * vertexRoles_[right] * NPerm4(2, 1, 0, 3);
     if (roles != tet[otherAnnulus]->adjacentGluing(
-            vertexRoles[otherAnnulus][2]) * vertexRoles[otherAnnulus] *
+            vertexRoles_[otherAnnulus][2]) * vertexRoles_[otherAnnulus] *
             NPerm4(0, 3, 2, 1))
         return 0;
 
@@ -127,10 +127,10 @@ unsigned long NTriSolidTorus::areAnnuliLinkedAxis(int otherAnnulus) const {
     if (top->adjacentTetrahedron(topRoles[0]) != tet[otherAnnulus])
         return 0;
     if (topRoles != tet[left]->adjacentGluing(
-            vertexRoles[left][2]) * vertexRoles[left] * NPerm4(3, 0, 1, 2))
+            vertexRoles_[left][2]) * vertexRoles_[left] * NPerm4(3, 0, 1, 2))
         return 0;
     if (topRoles != tet[otherAnnulus]->adjacentGluing(
-            vertexRoles[otherAnnulus][1]) * vertexRoles[otherAnnulus] *
+            vertexRoles_[otherAnnulus][1]) * vertexRoles_[otherAnnulus] *
             NPerm4(1, 2, 3, 0))
         return 0;
 
@@ -142,8 +142,8 @@ NTriSolidTorus* NTriSolidTorus::formsTriSolidTorus(NTetrahedron* tet,
         NPerm4 useVertexRoles) {
     NTriSolidTorus* ans = new NTriSolidTorus();
     ans->tet[0] = tet;
-    ans->vertexRoles[0] = useVertexRoles;
-    
+    ans->vertexRoles_[0] = useVertexRoles;
+
     // Find the adjacent tetrahedra.
     ans->tet[1] = tet->adjacentTetrahedron(useVertexRoles[0]);
     ans->tet[2] = tet->adjacentTetrahedron(useVertexRoles[3]);
@@ -156,21 +156,21 @@ NTriSolidTorus* NTriSolidTorus::formsTriSolidTorus(NTetrahedron* tet,
     }
 
     // Find the vertex roles for tetrahedra 1 and 2.
-    ans->vertexRoles[1] = tet->adjacentGluing(useVertexRoles[0])
+    ans->vertexRoles_[1] = tet->adjacentGluing(useVertexRoles[0])
         * useVertexRoles * NPerm4(1, 2, 3, 0);
-    ans->vertexRoles[2] = tet->adjacentGluing(useVertexRoles[3])
+    ans->vertexRoles_[2] = tet->adjacentGluing(useVertexRoles[3])
         * useVertexRoles * NPerm4(3, 0, 1, 2);
-    
+
     // Finally, check that tetrahedra 1 and 2 are glued together
     // properly.
-    NPerm4 roles1 = ans->vertexRoles[1];
+    NPerm4 roles1 = ans->vertexRoles_[1];
     if (ans->tet[1]->adjacentTetrahedron(roles1[0]) != ans->tet[2]) {
         delete ans;
         return 0;
     }
 
     if (ans->tet[1]->adjacentGluing(roles1[0]) * roles1 *
-            NPerm4(1, 2, 3, 0) != ans->vertexRoles[2]) {
+            NPerm4(1, 2, 3, 0) != ans->vertexRoles_[2]) {
         delete ans;
         return 0;
     }

@@ -50,6 +50,7 @@ void addNTriSolidTorus() {
             return_value_policy<reference_existing_object>())
         .def("getTetrahedron", &NTriSolidTorus::getTetrahedron,
             return_value_policy<reference_existing_object>())
+        .def("vertexRoles", &NTriSolidTorus::vertexRoles)
         .def("getVertexRoles", &NTriSolidTorus::getVertexRoles)
         .def("isAnnulusSelfIdentified",
             &NTriSolidTorus::isAnnulusSelfIdentified)
