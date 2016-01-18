@@ -685,8 +685,8 @@ void NTriCompositionUI::findLayeredChainPairs() {
             details = new QTreeWidgetItem(id, details);
             details->setText(0,
                 tr("Chain lengths: %1, %2").
-                arg(pair->getChain(0)->getIndex()).
-                arg(pair->getChain(1)->getIndex()));
+                arg(pair->getChain(0)->index()).
+                arg(pair->getChain(1)->index()));
 
             delete pair;
         }
@@ -874,7 +874,7 @@ void NTriCompositionUI::findPlugTriSolidTori() {
             for (int j = 0; j < 3; j++) {
                 chain = plug->chain(j);
                 if (chain)
-                    lengths += tr("%1 (%2)").arg(chain->getIndex()).
+                    lengths += tr("%1 (%2)").arg(chain->index()).
                         arg(plug->chainType(j) ==
                         regina::NPlugTriSolidTorus::CHAIN_MAJOR ?
                         tr("major") : tr("minor"));

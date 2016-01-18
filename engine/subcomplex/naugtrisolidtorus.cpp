@@ -355,9 +355,9 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
             chain.extendMaximal();
 
             // Note that the chain will run into one of the core tetrahedra.
-            if (chain.getIndex() + 2 == nTet)
+            if (chain.index() + 2 == nTet)
                 chainType = CHAIN_MAJOR;
-            else if (chain.getIndex() + 3 == nTet)
+            else if (chain.index() + 3 == nTet)
                 chainType = CHAIN_AXIS;
             else
                 continue;
@@ -367,12 +367,12 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
             // Test the chain at both ends (bottom / top).
             for (j = 0; j < 2; j++) {
                 if (chainType == CHAIN_MAJOR) {
-                    core = NTriSolidTorus::formsTriSolidTorus(chain.getBottom(),
-                        chain.getBottomVertexRoles() * NPerm4(2, 3, 0, 1));
+                    core = NTriSolidTorus::formsTriSolidTorus(chain.bottom(),
+                        chain.bottomVertexRoles() * NPerm4(2, 3, 0, 1));
                     if (core) {
                         // Test that everything is put together properly.
-                        top = chain.getTop();
-                        topRoles = chain.getTopVertexRoles();
+                        top = chain.top();
+                        topRoles = chain.topVertexRoles();
 
                         if ((top->adjacentTetrahedron(topRoles[0]) ==
                                     core->tetrahedron(1)) &&
@@ -400,7 +400,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                                     ans->edgeGroupRoles[0] = NPerm4(0, 1, 2, 3);
                                     break;
                             }
-                            ans->chainIndex = chain.getIndex() - 1;
+                            ans->chainIndex = chain.index() - 1;
                             ans->chainType = chainType;
                             ans->torusAnnulus = 0;
                             return ans;
@@ -409,8 +409,8 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                         delete core;
                     }
                 } else if (chainType == CHAIN_AXIS) {
-                    bottom = chain.getBottom();
-                    bottomRoles = chain.getBottomVertexRoles();
+                    bottom = chain.bottom();
+                    bottomRoles = chain.bottomVertexRoles();
 
                     NTetrahedron* startCore = bottom->adjacentTetrahedron(
                         bottomRoles[2]);
@@ -425,8 +425,8 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
 
                     if (core) {
                         // Test that everything is put together properly.
-                        top = chain.getTop();
-                        topRoles = chain.getTopVertexRoles();
+                        top = chain.top();
+                        topRoles = chain.topVertexRoles();
 
                         if ((bottom->adjacentTetrahedron(bottomRoles[1]) ==
                                     core->tetrahedron(1)) &&
@@ -460,7 +460,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                                     ans->edgeGroupRoles[0] = NPerm4(0, 1, 2, 3);
                                     break;
                             }
-                            ans->chainIndex = chain.getIndex();
+                            ans->chainIndex = chain.index();
                             ans->chainType = chainType;
                             ans->torusAnnulus = 0;
                             return ans;

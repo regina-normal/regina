@@ -93,16 +93,16 @@ typedef Simplex<3> NTetrahedron;
  */
 class REGINA_API NLayeredChain : public NStandardTriangulation {
     private:
-        NTetrahedron* bottom;
+        NTetrahedron* bottom_;
             /**< The bottom tetrahedron of this layered chain. */
-        NTetrahedron* top;
+        NTetrahedron* top_;
             /**< The top tetrahedron of this layered chain. */
-        unsigned long index;
+        unsigned long index_;
             /**< The number of tetrahedra in this layered chain. */
-        NPerm4 bottomVertexRoles;
-            /**< The permutation described by getBottomVertexRoles(). */
-        NPerm4 topVertexRoles;
-            /**< The permutation described by getTopVertexRoles(). */
+        NPerm4 bottomVertexRoles_;
+            /**< The permutation described by bottomVertexRoles(). */
+        NPerm4 topVertexRoles_;
+            /**< The permutation described by topVertexRoles(). */
 
     public:
         /**
@@ -116,7 +116,7 @@ class REGINA_API NLayeredChain : public NStandardTriangulation {
          * @param vertexRoles a permutation describing the role each
          * tetrahedron vertex must play in the layered chain; this must be
          * in the same format as the permutation returned by
-         * getBottomVertexRoles() and getTopVertexRoles().
+         * bottomVertexRoles() and topVertexRoles().
          */
         NLayeredChain(NTetrahedron* tet, NPerm4 vertexRoles);
 
@@ -138,17 +138,41 @@ class REGINA_API NLayeredChain : public NStandardTriangulation {
          *
          * @return the bottom tetrahedron.
          */
+        NTetrahedron* bottom() const;
+        /**
+         * Deprecated routine that returns the bottom tetrahedron of this
+         * layered chain.
+         *
+         * \deprecated This routine has been renamed to bottom().
+         * See the bottom() documentation for further details.
+         */
         NTetrahedron* getBottom() const;
         /**
          * Returns the top tetrahedron of this layered chain.
          *
          * @return the top tetrahedron.
          */
+        NTetrahedron* top() const;
+        /**
+         * Deprecated routine that returns the top tetrahedron of this layered
+         * chain.
+         *
+         * \deprecated This routine has been renamed to top().
+         * See the top() documentation for further details.
+         */
         NTetrahedron* getTop() const;
         /**
          * Returns the number of tetrahedra in this layered chain.
          *
          * @return the number of tetrahedra.
+         */
+        unsigned long index() const;
+        /**
+         * Deprecated routine that returns the number of tetrahedra in this
+         * layered chain.
+         *
+         * \deprecated This routine has been renamed to index().
+         * See the index() documentation for further details.
          */
         unsigned long getIndex() const;
 
@@ -168,6 +192,15 @@ class REGINA_API NLayeredChain : public NStandardTriangulation {
          * @return a permutation representing the roles of the vertices
          * of the bottom tetrahedron.
          */
+        NPerm4 bottomVertexRoles() const;
+        /**
+         * Deprecated routine that returns a permutation represeting the role
+         * that each vertex of the bottom tetrahedron plays in the layered
+         * chain.
+         *
+         * \deprecated This routine has been renamed to bottomVertexRoles().
+         * See the bottomVertexRoles() documentation for further details.
+         */
         NPerm4 getBottomVertexRoles() const;
 
         /**
@@ -185,6 +218,14 @@ class REGINA_API NLayeredChain : public NStandardTriangulation {
          *
          * @return a permutation representing the roles of the vertices
          * of the top tetrahedron.
+         */
+        NPerm4 topVertexRoles() const;
+        /**
+         * Deprecated routine that returns a permutation represeting the role
+         * that each vertex of the top tetrahedron plays in the layered chain.
+         *
+         * \deprecated This routine has been renamed to topVertexRoles().
+         * See the topVertexRoles() documentation for further details.
          */
         NPerm4 getTopVertexRoles() const;
 
@@ -262,42 +303,57 @@ class REGINA_API NLayeredChain : public NStandardTriangulation {
 // Inline functions for NLayeredChain
 
 inline NLayeredChain::NLayeredChain(NTetrahedron* tet, NPerm4 vertexRoles) :
-        bottom(tet), top(tet), index(1), bottomVertexRoles(vertexRoles),
-        topVertexRoles(vertexRoles) {
+        bottom_(tet), top_(tet), index_(1), bottomVertexRoles_(vertexRoles),
+        topVertexRoles_(vertexRoles) {
 }
 inline NLayeredChain::NLayeredChain(const NLayeredChain& cloneMe) :
-        NStandardTriangulation(), bottom(cloneMe.bottom), top(cloneMe.top),
-        index(cloneMe.index), bottomVertexRoles(cloneMe.bottomVertexRoles),
-        topVertexRoles(cloneMe.topVertexRoles) {
+        NStandardTriangulation(), bottom_(cloneMe.bottom_), top_(cloneMe.top_),
+        index_(cloneMe.index_), bottomVertexRoles_(cloneMe.bottomVertexRoles_),
+        topVertexRoles_(cloneMe.topVertexRoles_) {
 }
 inline NLayeredChain::~NLayeredChain() {
 }
 
+inline NTetrahedron* NLayeredChain::bottom() const {
+    return bottom_;
+}
 inline NTetrahedron* NLayeredChain::getBottom() const {
-    return bottom;
+    return bottom_;
+}
+inline NTetrahedron* NLayeredChain::top() const {
+    return top_;
 }
 inline NTetrahedron* NLayeredChain::getTop() const {
-    return top;
+    return top_;
+}
+inline unsigned long NLayeredChain::index() const {
+    return index_;
 }
 inline unsigned long NLayeredChain::getIndex() const {
-    return index;
+    return index_;
 }
 
+inline NPerm4 NLayeredChain::bottomVertexRoles() const {
+    return bottomVertexRoles_;
+}
 inline NPerm4 NLayeredChain::getBottomVertexRoles() const {
-    return bottomVertexRoles;
+    return bottomVertexRoles_;
+}
+inline NPerm4 NLayeredChain::topVertexRoles() const {
+    return topVertexRoles_;
 }
 inline NPerm4 NLayeredChain::getTopVertexRoles() const {
-    return topVertexRoles;
+    return topVertexRoles_;
 }
 
 inline std::ostream& NLayeredChain::writeName(std::ostream& out) const {
-    return out << "Chain(" << index << ')';
+    return out << "Chain(" << index_ << ')';
 }
 inline std::ostream& NLayeredChain::writeTeXName(std::ostream& out) const {
-    return out << "\\mathit{Chain}(" << index << ')';
+    return out << "\\mathit{Chain}(" << index_ << ')';
 }
 inline void NLayeredChain::writeTextLong(std::ostream& out) const {
-    out << "Layered chain of index " << index;
+    out << "Layered chain of index " << index_;
 }
 
 } // namespace regina

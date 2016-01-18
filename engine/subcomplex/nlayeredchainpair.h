@@ -151,15 +151,15 @@ inline const NLayeredChain* NLayeredChainPair::getChain(int which) const {
 }
 inline std::ostream& NLayeredChainPair::writeName(std::ostream& out) const {
     return out << "C("
-        << chain[0]->getIndex() << ',' << chain[1]->getIndex() << ')';
+        << chain[0]->index() << ',' << chain[1]->index() << ')';
 }
 inline std::ostream& NLayeredChainPair::writeTeXName(std::ostream& out) const {
     return out << "C_{"
-        << chain[0]->getIndex() << ',' << chain[1]->getIndex() << '}';
+        << chain[0]->index() << ',' << chain[1]->index() << '}';
 }
 inline void NLayeredChainPair::writeTextLong(std::ostream& out) const {
     out << "Layered chain pair (chain lengths "
-        << chain[0]->getIndex() << ", " << chain[1]->getIndex() << ')';
+        << chain[0]->index() << ", " << chain[1]->index() << ')';
 }
 
 } // namespace regina

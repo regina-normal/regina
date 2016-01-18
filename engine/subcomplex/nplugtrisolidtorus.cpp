@@ -73,9 +73,9 @@ std::ostream& NPlugTriSolidTorus::writeName(std::ostream& out) const {
     for (i = 0; i < 3; i++)
         if (chainType_[i] != CHAIN_NONE) {
             if (chainType_[i] == CHAIN_MAJOR)
-                params[nParams++] = chain_[i]->getIndex();
+                params[nParams++] = chain_[i]->index();
             else
-                params[nParams++] = -chain_[i]->getIndex();
+                params[nParams++] = -chain_[i]->index();
         }
     std::sort(params, params + nParams);
 
@@ -98,9 +98,9 @@ std::ostream& NPlugTriSolidTorus::writeTeXName(std::ostream& out) const {
     for (i = 0; i < 3; i++)
         if (chainType_[i] != CHAIN_NONE) {
             if (chainType_[i] == CHAIN_MAJOR)
-                params[nParams++] = chain_[i]->getIndex();
+                params[nParams++] = chain_[i]->index();
             else
-                params[nParams++] = -chain_[i]->getIndex();
+                params[nParams++] = -chain_[i]->index();
         }
     std::sort(params, params + nParams);
 
@@ -129,9 +129,9 @@ NManifold* NPlugTriSolidTorus::manifold() const {
     for (int i = 0; i < 3; i++)
         if (chainType_[i] != CHAIN_NONE) {
             if (chainType_[i] == equatorType_)
-                rot += chain_[i]->getIndex();
+                rot += chain_[i]->index();
             else
-                rot -= chain_[i]->getIndex();
+                rot -= chain_[i]->index();
         }
     if (rot != 0)
         ans->insertFibre(rot, 1);
@@ -268,17 +268,17 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
             if (i < 3)
                 error = true;
             else if (chain[0] && chain[1] &&
-                    chain[0]->getBottom() == chain[1]->getTop())
+                    chain[0]->bottom() == chain[1]->top())
                 error = true;
             else if (chain[1] && chain[2] &&
-                    chain[1]->getBottom() == chain[2]->getTop())
+                    chain[1]->bottom() == chain[2]->top())
                 error = true;
             else if (chain[2] && chain[0] &&
-                    chain[2]->getBottom() == chain[0]->getTop())
+                    chain[2]->bottom() == chain[0]->top())
                 error = true;
-            else if ((chain[0] ? chain[0]->getIndex() : 0) +
-                    (chain[1] ? chain[1]->getIndex() : 0) +
-                    (chain[2] ? chain[2]->getIndex() : 0) +
+            else if ((chain[0] ? chain[0]->index() : 0) +
+                    (chain[1] ? chain[1]->index() : 0) +
+                    (chain[2] ? chain[2]->index() : 0) +
                     5 != nTet)
                 error = true;
 
@@ -299,20 +299,20 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
 
             for (i = 0; i < 3; i++) {
                 if (chain[i]) {
-                    plugTet[i][0] = chain[i]->getTop()->adjacentTetrahedron(
-                        chain[i]->getTopVertexRoles()[3]);
-                    plugTet[i][1] = chain[i]->getTop()->adjacentTetrahedron(
-                        chain[i]->getTopVertexRoles()[0]);
-                    plugRoles[i][0] = chain[i]->getTop()->
+                    plugTet[i][0] = chain[i]->top()->adjacentTetrahedron(
+                        chain[i]->topVertexRoles()[3]);
+                    plugTet[i][1] = chain[i]->top()->adjacentTetrahedron(
+                        chain[i]->topVertexRoles()[0]);
+                    plugRoles[i][0] = chain[i]->top()->
                         adjacentGluing(chain[i]->
-                        getTopVertexRoles()[3]) *
-                        chain[i]->getTopVertexRoles() *
+                        topVertexRoles()[3]) *
+                        chain[i]->topVertexRoles() *
                         (chainType[i] == CHAIN_MAJOR ? NPerm4(0, 1, 2, 3) :
                         NPerm4(1, 0, 2, 3));
-                    plugRoles[i][1] = chain[i]->getTop()->
+                    plugRoles[i][1] = chain[i]->top()->
                         adjacentGluing(chain[i]->
-                        getTopVertexRoles()[0]) *
-                        chain[i]->getTopVertexRoles() *
+                        topVertexRoles()[0]) *
+                        chain[i]->topVertexRoles() *
                         (chainType[i] == CHAIN_MAJOR ? NPerm4(2, 3, 1, 0) :
                         NPerm4(3, 2, 1, 0));
                 } else {

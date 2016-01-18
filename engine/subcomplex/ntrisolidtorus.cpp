@@ -88,14 +88,14 @@ unsigned long NTriSolidTorus::areAnnuliLinkedMajor(int otherAnnulus) const {
     // layered chain.
     NLayeredChain chain(adj, roles);
     chain.extendMaximal();
-    if (chain.getTop() != tet[otherAnnulus])
+    if (chain.top() != tet[otherAnnulus])
         return 0;
-    if (chain.getTopVertexRoles() != vertexRoles_[otherAnnulus] *
+    if (chain.topVertexRoles() != vertexRoles_[otherAnnulus] *
             NPerm4(0, 1, 2, 3))
         return 0;
 
     // Success!
-    return chain.getIndex() - 1;
+    return chain.index() - 1;
 }
 
 unsigned long NTriSolidTorus::areAnnuliLinkedAxis(int otherAnnulus) const {
@@ -119,8 +119,8 @@ unsigned long NTriSolidTorus::areAnnuliLinkedAxis(int otherAnnulus) const {
     // layered chain.
     NLayeredChain chain(adj, roles);
     chain.extendMaximal();
-    NTetrahedron* top = chain.getTop();
-    NPerm4 topRoles(chain.getTopVertexRoles());
+    NTetrahedron* top = chain.top();
+    NPerm4 topRoles(chain.topVertexRoles());
 
     if (top->adjacentTetrahedron(topRoles[3]) != tet[left])
         return 0;
@@ -135,7 +135,7 @@ unsigned long NTriSolidTorus::areAnnuliLinkedAxis(int otherAnnulus) const {
         return 0;
 
     // Success!
-    return chain.getIndex();
+    return chain.index();
 }
 
 NTriSolidTorus* NTriSolidTorus::formsTriSolidTorus(NTetrahedron* tet,

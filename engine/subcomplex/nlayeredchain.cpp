@@ -41,44 +41,44 @@
 namespace regina {
 
 bool NLayeredChain::extendAbove() {
-    NTetrahedron* adj = top->adjacentTetrahedron(topVertexRoles[0]);
-    if (adj == bottom || adj == top || adj == 0)
+    NTetrahedron* adj = top_->adjacentTetrahedron(topVertexRoles_[0]);
+    if (adj == bottom_ || adj == top_ || adj == 0)
         return false;
-    if (adj != top->adjacentTetrahedron(topVertexRoles[3]))
+    if (adj != top_->adjacentTetrahedron(topVertexRoles_[3]))
         return false;
 
     // Check the gluings.
-    NPerm4 adjRoles = top->adjacentGluing(topVertexRoles[0]) *
-        topVertexRoles * NPerm4(0, 1);
-    if (adjRoles != top->adjacentGluing(topVertexRoles[3]) *
-            topVertexRoles * NPerm4(2, 3))
+    NPerm4 adjRoles = top_->adjacentGluing(topVertexRoles_[0]) *
+        topVertexRoles_ * NPerm4(0, 1);
+    if (adjRoles != top_->adjacentGluing(topVertexRoles_[3]) *
+            topVertexRoles_ * NPerm4(2, 3))
         return false;
 
     // We can extend the layered chain.
-    top = adj;
-    topVertexRoles = adjRoles;
-    index++;
+    top_ = adj;
+    topVertexRoles_ = adjRoles;
+    index_++;
     return true;
 }
 
 bool NLayeredChain::extendBelow() {
-    NTetrahedron* adj = bottom->adjacentTetrahedron(bottomVertexRoles[1]);
-    if (adj == bottom || adj == top || adj == 0)
+    NTetrahedron* adj = bottom_->adjacentTetrahedron(bottomVertexRoles_[1]);
+    if (adj == bottom_ || adj == top_ || adj == 0)
         return false;
-    if (adj != bottom->adjacentTetrahedron(bottomVertexRoles[2]))
+    if (adj != bottom_->adjacentTetrahedron(bottomVertexRoles_[2]))
         return false;
 
     // Check the gluings.
-    NPerm4 adjRoles = bottom->adjacentGluing(bottomVertexRoles[1])
-        * bottomVertexRoles * NPerm4(0, 1);
-    if (adjRoles != bottom->adjacentGluing(bottomVertexRoles[2])
-            * bottomVertexRoles * NPerm4(2, 3))
+    NPerm4 adjRoles = bottom_->adjacentGluing(bottomVertexRoles_[1])
+        * bottomVertexRoles_ * NPerm4(0, 1);
+    if (adjRoles != bottom_->adjacentGluing(bottomVertexRoles_[2])
+            * bottomVertexRoles_ * NPerm4(2, 3))
         return false;
 
     // We can extend the layered chain.
-    bottom = adj;
-    bottomVertexRoles = adjRoles;
-    index++;
+    bottom_ = adj;
+    bottomVertexRoles_ = adjRoles;
+    index_++;
     return true;
 }
 
@@ -92,27 +92,27 @@ bool NLayeredChain::extendMaximal() {
 }
 
 void NLayeredChain::reverse() {
-    NTetrahedron* tmp = top;
-    top = bottom;
-    bottom = tmp;
+    NTetrahedron* tmp = top_;
+    top_ = bottom_;
+    bottom_ = tmp;
 
-    NPerm4 pTmp = topVertexRoles * NPerm4(1, 0, 3, 2);
-    topVertexRoles = bottomVertexRoles * NPerm4(1, 0, 3, 2);
-    bottomVertexRoles = pTmp;
+    NPerm4 pTmp = topVertexRoles_ * NPerm4(1, 0, 3, 2);
+    topVertexRoles_ = bottomVertexRoles_ * NPerm4(1, 0, 3, 2);
+    bottomVertexRoles_ = pTmp;
 }
 
 void NLayeredChain::invert() {
-    topVertexRoles = topVertexRoles * NPerm4(3, 2, 1, 0);
-    bottomVertexRoles = bottomVertexRoles * NPerm4(3, 2, 1, 0);
+    topVertexRoles_ = topVertexRoles_ * NPerm4(3, 2, 1, 0);
+    bottomVertexRoles_ = bottomVertexRoles_ * NPerm4(3, 2, 1, 0);
 }
 
 NManifold* NLayeredChain::manifold() const {
-    return new NHandlebody(index <= 1 ? 0 : 1, true);
+    return new NHandlebody(index_ <= 1 ? 0 : 1, true);
 }
 
 NAbelianGroup* NLayeredChain::homology() const {
     NAbelianGroup* ans = new NAbelianGroup();
-    if (index > 1)
+    if (index_ > 1)
         ans->addRank();
     return ans;
 }

@@ -242,8 +242,8 @@
             [details appendFormat:@"Layered chain pair %s\n", pair->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
             [details appendFormat:@INDENT1 "Chain lengths: %ld, %ld\n",
-             pair->getChain(0)->getIndex(),
-             pair->getChain(1)->getIndex()];
+             pair->getChain(0)->index(),
+             pair->getChain(1)->index()];
             
             [details appendString:@"\n"];
             delete pair;
@@ -324,7 +324,7 @@
             for (int j = 0; j < 3; j++) {
                 chain = plug->chain(j);
                 if (chain) {
-                    [details appendFormat:@"%ld", chain->getIndex()];
+                    [details appendFormat:@"%ld", chain->index()];
                     if (plug->chainType(j) == regina::NPlugTriSolidTorus::CHAIN_MAJOR)
                         [details appendString:@" (major)"];
                     else
