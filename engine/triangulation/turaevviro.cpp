@@ -512,7 +512,6 @@ namespace {
         TVType valColour(init.halfField ? init.r : 2 * init.r);
         TVType tmpTVType(init.halfField ? init.r : 2 * init.r);
         bool admissible;
-        long index1, index2;
         const NTetrahedron* tet;
         const NTriangle* triangle;
         while (curr >= 0) {
@@ -628,7 +627,6 @@ namespace {
         typedef typename InitialData<exact>::TVType TVType;
 
         unsigned long nEdges = tri.countEdges();
-        unsigned long nTriangles = tri.countTriangles();
 
         // Our plan is to run through all admissible colourings via a
         // backtracking search, with the high-degree edges towards the root
@@ -814,7 +812,6 @@ namespace {
         LightweightSequence<int>* seq;
         SolnIterator it, it2;
         std::pair<SolnIterator, bool> existingSoln;
-        int e1, e2;
         int tetEdge[6];
         int colour[6];
         int level;
