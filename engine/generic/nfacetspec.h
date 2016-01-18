@@ -43,6 +43,7 @@
 #endif
 
 #include "regina-core.h"
+#include <cstddef>
 
 namespace regina {
 
@@ -120,7 +121,7 @@ struct NFacetSpec {
      * @return \c true if and only if this specifier represents the
      * overall boundary.
      */
-    bool isBoundary(unsigned nSimplices) const;
+    bool isBoundary(size_t nSimplices) const;
     /**
      * Determines if this specifier represents a before-the-start value.
      *
@@ -140,7 +141,7 @@ struct NFacetSpec {
      * value.
      * @return \c true if and only if this specifier is past-the-end.
      */
-    bool isPastEnd(unsigned nSimplices, bool boundaryAlso) const;
+    bool isPastEnd(size_t nSimplices, bool boundaryAlso) const;
 
     /**
      * Sets this specifier to the first facet of the first simplex.
@@ -153,7 +154,7 @@ struct NFacetSpec {
      * Note that the boundary is represented in this specifier as
      * simplex \a nSimplices, facet 0.
      */
-    void setBoundary(unsigned nSimplices);
+    void setBoundary(size_t nSimplices);
     /**
      * Sets this specifier to before-the-start.
      */
@@ -165,7 +166,7 @@ struct NFacetSpec {
      * Note that past-the-end is represented in this specifier as
      * simplex \a nSimplices, facet 1.
      */
-    void setPastEnd(unsigned nSimplices);
+    void setPastEnd(size_t nSimplices);
 
     /**
      * Sets this specifier to the value of the given specifier.
@@ -308,7 +309,7 @@ inline NFacetSpec<dim>::NFacetSpec(const NFacetSpec& cloneMe) :
 }
 
 template <int dim>
-inline bool NFacetSpec<dim>::isBoundary(unsigned nSimplices) const {
+inline bool NFacetSpec<dim>::isBoundary(size_t nSimplices) const {
     return (simp == static_cast<int>(nSimplices) && facet == 0);
 }
 
@@ -318,7 +319,7 @@ inline bool NFacetSpec<dim>::isBeforeStart() const {
 }
 
 template <int dim>
-inline bool NFacetSpec<dim>::isPastEnd(unsigned nSimplices, bool boundaryAlso)
+inline bool NFacetSpec<dim>::isPastEnd(size_t nSimplices, bool boundaryAlso)
         const {
     return (simp == static_cast<int>(nSimplices) &&
         (boundaryAlso || facet > 0));
@@ -330,7 +331,7 @@ inline void NFacetSpec<dim>::setFirst() {
 }
 
 template <int dim>
-inline void NFacetSpec<dim>::setBoundary(unsigned nSimplices) {
+inline void NFacetSpec<dim>::setBoundary(size_t nSimplices) {
     simp = nSimplices;
     facet = 0;
 }
@@ -342,7 +343,7 @@ inline void NFacetSpec<dim>::setBeforeStart() {
 }
 
 template <int dim>
-inline void NFacetSpec<dim>::setPastEnd(unsigned nSimplices) {
+inline void NFacetSpec<dim>::setPastEnd(size_t nSimplices) {
     simp = nSimplices;
     facet = 1;
 }
