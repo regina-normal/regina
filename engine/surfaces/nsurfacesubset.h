@@ -184,6 +184,14 @@ class REGINA_API NSurfaceSubset :
          *
          * @return the normal surface at the requested index in this set.
          */
+        const NNormalSurface* surface(size_t index) const;
+        /**
+         * Deprecated routine that returns the surface at the requested
+         * index in this set.
+         *
+         * \deprecated This routine has been renamed to surface().
+         * See the surface() documentation for further details.
+         */
         const NNormalSurface* getSurface(size_t index) const;
 
         /**
@@ -251,6 +259,9 @@ inline size_t NSurfaceSubset::size() const {
 }
 inline size_t NSurfaceSubset::getNumberOfSurfaces() const {
     return surfaces.size();
+}
+inline const NNormalSurface* NSurfaceSubset::surface(size_t index) const {
+    return surfaces[index];
 }
 inline const NNormalSurface* NSurfaceSubset::getSurface(size_t index) const {
     return surfaces[index];

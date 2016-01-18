@@ -174,7 +174,7 @@ void NSurfaceSummaryUI::refresh() {
     std::pair<int, int> type;
     unsigned long i;
     for (i = 0; i < n; ++i) {
-        s = surfaces->getSurface(i);
+        s = surfaces->surface(i);
 
         if (! s->isCompact())
             ++spun;

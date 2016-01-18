@@ -57,6 +57,11 @@ Version 4.97  [ (under development) ]
               deprecated since 2013; they are also removed completely.
               All the code that used to work with these classes now
               works with the newer and more flexible NProgressTracker instead.
+            * NSurfaceFilter::getFilterName(), NSurfaceFilter::getFilterID()
+              and the filterID class constants have been deprecated since 2013;
+              these are now removed completely.  The filterType class constants
+              are also removed due to a name clash.  Use filterTypeName(),
+              filterType() and the filterTypeID constants instead.
             * Global arrays edgeNumber[][], edgeStart[] and edgeEnd[] have
               been deprecated since 2009; this are now removed.  Use the
               arrays NEdge::edgeNumber[][] and NEdge::edgeVertex[][] instead.
@@ -326,6 +331,11 @@ Version 4.97  [ (under development) ]
             - Deprecated; just use std::mutex and related classes instead.
         Class NNormalSurface:
             - New convenience routines normal() and embedded().
+            - Renamed getTriangleCoord(), getQuadCoord(), getOctCoord(),
+              getOrientedTriangleCoords(), getOrientedQuadCoord() and
+              getTriangleArcs() to triangles(), quads(), octs(),
+              orientedTriangles(), orientedQuads() and arcs().
+              The old names are kept but deprecated.
         Class NNormalSurfaceList:
             - Renamed getNumberOfSurfaces() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
@@ -336,6 +346,9 @@ Version 4.97  [ (under development) ]
         Class NNormalSurfaceVector:
             - The subclass constant coordType is now a constant of type
               NormalCoords, not an anonymous enum type.
+            - Renamed getTriangleCoord(), getQuadCoord(), getOctCoord() and
+              getTriangleArcs() to triangles(), quads(), octs() and arcs().
+              The old names are kept but deprecated.
         Class NPacket:
             - Added a variant of save() that takes an output stream (as
               opposed to a filename).
@@ -414,8 +427,11 @@ Version 4.97  [ (under development) ]
             - Renamed getNumberOfTetrahedra() to size().  The old name
               is deprecated but kept for backward compatibility.
         Class NSurfaceFilter:
-            - The subclass constant filterType is now a constant of type
-              SurfaceFilterType, not an anonymous enum type.
+            - The subclass constant filterType has been renamed to filterTypeID,
+              and is now a constant of type SurfaceFilterType, not an
+              anonymous enum type.  The old name has been removed completely.
+            - Removed the deprecated getFilterID() and getFilterName()
+              routines, and the deprecated filterID constants.
         Class NSurfaceFilterProperties:
             - New set-based routine setECs().
         Class NTetrahedron:
@@ -510,7 +526,8 @@ Version 4.97  [ (under development) ]
               getHomologyH1Rel() and getHomologyH1Bdry() to homology(),
               homologyRel() and homologyBdry(), and renamed second homology
               routines getHomologyH2() and getHomologyH2Z2() to homologyH2()
-              and homologyH2Z2().  The old names are kept but deprecated.
+              and homologyH2Z2().  In addition, homology() has a new
+              alias homologyH1().  The old names are kept but deprecated.
             - Removed deprecated routines addTetrahedron() and
               gluingsHaveChanged().
             - Removed maximalForestInDualSkeleton().  Just use
@@ -568,6 +585,8 @@ Version 4.97  [ (under development) ]
               whereas Triangulation<dim> is specialised for dimensions 2, 3, 4.
             - The old class names Dim2Triangulation and NTriangulation have
               been kept as typedefs for convenience.
+        Routine binomSmall():
+            - New constant-time routine to compute (n choose k) for small n.
         Routine bitsRequired():
             - New constexpr routine for counting bits in an integer.
         Routine digit():

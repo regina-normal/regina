@@ -62,7 +62,7 @@ namespace regina {
  */
 class REGINA_API NXMLAbelianGroupReader : public NXMLElementReader {
     private:
-        NAbelianGroup* group;
+        NAbelianGroup* group_;
             /**< The abelian group currently being read. */
 
     public:
@@ -76,6 +76,14 @@ class REGINA_API NXMLAbelianGroupReader : public NXMLElementReader {
          * this element reader.
          *
          * @return the group that has been read, or 0 if an error occurred.
+         */
+        virtual NAbelianGroup* group();
+        /**
+         * Deprecated routine that returns the newly allocated abelian group
+         * that has been read by this element reader.
+         *
+         * \deprecated This routine has been renamed to group().
+         * See the group() documentation for further details.
          */
         virtual NAbelianGroup* getGroup();
 
@@ -94,7 +102,7 @@ class REGINA_API NXMLAbelianGroupReader : public NXMLElementReader {
  */
 class REGINA_API NXMLGroupPresentationReader : public NXMLElementReader {
     private:
-        NGroupPresentation* group;
+        NGroupPresentation* group_;
             /**< The group presentation currently being read. */
 
     public:
@@ -108,6 +116,14 @@ class REGINA_API NXMLGroupPresentationReader : public NXMLElementReader {
          * this element reader.
          *
          * @return the group that has been read, or 0 if an error occurred.
+         */
+        virtual NGroupPresentation* group();
+        /**
+         * Deprecated routine that returns the newly allocated group
+         * presentation that has been read by this element reader.
+         *
+         * \deprecated This routine has been renamed to group().
+         * See the group() documentation for further details.
          */
         virtual NGroupPresentation* getGroup();
 
@@ -125,20 +141,28 @@ class REGINA_API NXMLGroupPresentationReader : public NXMLElementReader {
 
 // Inline functions for NXMLAbelianGroupReader
 
-inline NXMLAbelianGroupReader::NXMLAbelianGroupReader() : group(0) {
+inline NXMLAbelianGroupReader::NXMLAbelianGroupReader() : group_(0) {
+}
+
+inline NAbelianGroup* NXMLAbelianGroupReader::group() {
+    return group_;
 }
 
 inline NAbelianGroup* NXMLAbelianGroupReader::getGroup() {
-    return group;
+    return group_;
 }
 
 // Inline functions for NXMLGroupPresentationReader
 
-inline NXMLGroupPresentationReader::NXMLGroupPresentationReader() : group(0) {
+inline NXMLGroupPresentationReader::NXMLGroupPresentationReader() : group_(0) {
+}
+
+inline NGroupPresentation* NXMLGroupPresentationReader::group() {
+    return group_;
 }
 
 inline NGroupPresentation* NXMLGroupPresentationReader::getGroup() {
-    return group;
+    return group_;
 }
 
 } // namespace regina

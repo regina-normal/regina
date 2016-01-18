@@ -89,6 +89,14 @@ class REGINA_API NHandlebody : public NManifold {
          *
          * @return the number of handles.
          */
+        unsigned long handles() const;
+        /**
+         * Deprecated routine that returns the number of handles of this
+         * handlebody.
+         *
+         * \deprecated This routine has been renamed to handles().
+         * See the handles() documentation for further details.
+         */
         unsigned long getHandles() const;
         /**
          * Returns whether this handlebody is orientable.
@@ -116,7 +124,7 @@ class REGINA_API NHandlebody : public NManifold {
          */
         bool operator != (const NHandlebody& compare) const;
 
-        NAbelianGroup* getHomologyH1() const;
+        NAbelianGroup* homologyH1() const;
         bool isHyperbolic() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
@@ -133,6 +141,9 @@ inline NHandlebody::NHandlebody(const NHandlebody& cloneMe) : NManifold(),
         nHandles(cloneMe.nHandles), orientable(cloneMe.orientable) {
 }
 inline NHandlebody::~NHandlebody() {
+}
+inline unsigned long NHandlebody::handles() const {
+    return nHandles;
 }
 inline unsigned long NHandlebody::getHandles() const {
     return nHandles;

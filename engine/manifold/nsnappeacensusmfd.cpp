@@ -64,11 +64,11 @@ NTriangulation* NSnapPeaCensusManifold::construct() const {
 
     // Hard-code a few special cases so that the numbering of tetrahedra
     // and vertices is compatible with earlier versions of Regina.
-    if (section == SEC_5) {
-        if (index == 0) {
+    if (section_ == SEC_5) {
+        if (index_ == 0) {
             ans = NExampleTriangulation::gieseking();
             ans->setPacketLabel("");
-        } else if (index == 1) {
+        } else if (index_ == 1) {
             ans = new NTriangulation();
             NTetrahedron* r = ans->newTetrahedron();
             NTetrahedron* s = ans->newTetrahedron();
@@ -76,7 +76,7 @@ NTriangulation* NSnapPeaCensusManifold::construct() const {
             r->joinTo(1, s, NPerm4(2, 3, 1, 0));
             r->joinTo(2, s, NPerm4(3, 2, 1, 0));
             r->joinTo(3, s, NPerm4(1, 0, 3, 2));
-        } else if (index == 2) {
+        } else if (index_ == 2) {
             ans = new NTriangulation();
             NTetrahedron* r = ans->newTetrahedron();
             NTetrahedron* s = ans->newTetrahedron();
@@ -84,7 +84,7 @@ NTriangulation* NSnapPeaCensusManifold::construct() const {
             r->joinTo(1, s, NPerm4(3, 1, 2, 0));
             r->joinTo(2, s, NPerm4(2, 1, 3, 0));
             r->joinTo(3, s, NPerm4(3, 1, 0, 2));
-        } else if (index == 3) {
+        } else if (index_ == 3) {
             ans = new NTriangulation();
             NTetrahedron* r = ans->newTetrahedron();
             NTetrahedron* s = ans->newTetrahedron();
@@ -92,10 +92,10 @@ NTriangulation* NSnapPeaCensusManifold::construct() const {
             r->joinTo(1, s, NPerm4(2, 1, 0, 3));
             r->joinTo(2, s, NPerm4(0, 3, 2, 1));
             r->joinTo(3, s, NPerm4(1, 0, 2, 3));
-        } else if (index == 4) {
+        } else if (index_ == 4) {
             ans = NExampleTriangulation::figureEight();
             ans->setPacketLabel("");
-        } else if (index == 129) {
+        } else if (index_ == 129) {
             ans = NExampleTriangulation::whiteheadLink();
             ans->setPacketLabel("");
         }
@@ -105,7 +105,7 @@ NTriangulation* NSnapPeaCensusManifold::construct() const {
 
     // Fetch the relevant data from the census dehydration files.
     std::string file = NGlobalDirs::data() + "/snappea";
-    switch (section) {
+    switch (section_) {
         case SEC_5:
             file += "/snappea-census-sec5.dat"; break;
         case SEC_6_OR:
@@ -127,7 +127,7 @@ NTriangulation* NSnapPeaCensusManifold::construct() const {
     }
     char tri[30], hom[30]; /* Long enough to deal with the snappea census
                               files for <= 7 tetrahedra. */
-    for (unsigned i = 0; i <= index; ++i) {
+    for (unsigned i = 0; i <= index_; ++i) {
         if (fscanf(dat, "%s%s", tri, hom) != 2) {
             if (feof(dat))
                 std::cerr << "Read beyond end of data file: "
@@ -146,7 +146,7 @@ NTriangulation* NSnapPeaCensusManifold::construct() const {
 NAbelianGroup* NSnapPeaCensusManifold::getHomologyH1() const {
     // Fetch the relevant data from the census dehydration files.
     std::string file = NGlobalDirs::data() + "/snappea";
-    switch (section) {
+    switch (section_) {
         case SEC_5:
             file += "/snappea-census-sec5.dat"; break;
         case SEC_6_OR:
@@ -168,7 +168,7 @@ NAbelianGroup* NSnapPeaCensusManifold::getHomologyH1() const {
     }
     char tri[30], hom[30]; /* Long enough to deal with the snappea census
                               files for <= 7 tetrahedra. */
-    for (unsigned i = 0; i <= index; ++i) {
+    for (unsigned i = 0; i <= index_; ++i) {
         if (fscanf(dat, "%s%s", tri, hom) != 2) {
             if (feof(dat))
                 std::cerr << "Read beyond end of data file: "
@@ -209,28 +209,28 @@ NAbelianGroup* NSnapPeaCensusManifold::getHomologyH1() const {
 std::ostream& NSnapPeaCensusManifold::writeName(std::ostream& out) const {
     // Some manifolds will get special names, and will have their usual
     // SnapPea names written in writeStructure() instead.
-    if (section == SEC_5) {
-        if (index == 0)
+    if (section_ == SEC_5) {
+        if (index_ == 0)
             return out << "Gieseking manifold";
-        if (index == 4)
+        if (index_ == 4)
             return out << "Figure eight knot complement";
-        if (index == 129)
+        if (index_ == 129)
             return out << "Whitehead link complement";
     }
 
     // No special names, just the usual SnapPea notation.
-    return NSnapPeaCensusTri(section, index).writeName(out);
+    return NSnapPeaCensusTri(section_, index_).writeName(out);
 }
 
 std::ostream& NSnapPeaCensusManifold::writeTeXName(std::ostream& out) const {
-    return NSnapPeaCensusTri(section, index).writeTeXName(out);
+    return NSnapPeaCensusTri(section_, index_).writeTeXName(out);
 }
 
 std::ostream& NSnapPeaCensusManifold::writeStructure(std::ostream& out) const {
     // If we didn't give the usual SnapPea name in writeName(), give it here.
-    if (section == SEC_5) {
-        if (index == 0 || index == 4 || index == 129)
-            return NSnapPeaCensusTri(section, index).writeName(out);
+    if (section_ == SEC_5) {
+        if (index_ == 0 || index_ == 4 || index_ == 129)
+            return NSnapPeaCensusTri(section_, index_).writeName(out);
     }
 
     return out;

@@ -82,7 +82,7 @@ struct NormalInfo<NS_STANDARD> {
  * tetrahedron, the first four represent the number of
  * triangular discs about vertex 0, 1, 2 and 3, and the next
  * three represent the number of quadrilateral discs of type 0,
- * 1 and 2 (see NNormalSurface::getQuadCoord()).
+ * 1 and 2 (see NNormalSurface::quads()).
  *
  * \ifacespython Not present.
  */
@@ -104,15 +104,15 @@ class REGINA_API NNormalSurfaceVectorStandard : public NNormalSurfaceVector {
          */
         NNormalSurfaceVectorStandard(const NVector<NLargeInteger>& cloneMe);
 
-        virtual NLargeInteger getTriangleCoord(unsigned long tetIndex,
+        virtual NLargeInteger triangles(size_t tetIndex,
             int vertex, const NTriangulation* triang) const;
-        virtual NLargeInteger getQuadCoord(unsigned long tetIndex,
+        virtual NLargeInteger quads(size_t tetIndex,
             int quadType, const NTriangulation* triang) const;
-        virtual NLargeInteger getOctCoord(unsigned long tetIndex,
+        virtual NLargeInteger octs(size_t tetIndex,
             int octType, const NTriangulation* triang) const;
-        virtual NLargeInteger getEdgeWeight(unsigned long edgeIndex,
+        virtual NLargeInteger edgeWeight(size_t edgeIndex,
             const NTriangulation* triang) const;
-        virtual NLargeInteger getTriangleArcs(unsigned long triIndex,
+        virtual NLargeInteger arcs(size_t triIndex,
             int triVertex, const NTriangulation* triang) const;
 
         static NNormalSurfaceVector* makeZeroVector(
@@ -135,16 +135,16 @@ inline NNormalSurfaceVectorStandard::NNormalSurfaceVectorStandard(
         NNormalSurfaceVector(cloneMe) {
 }
 
-inline NLargeInteger NNormalSurfaceVectorStandard::getTriangleCoord(
-        unsigned long tetIndex, int vertex, const NTriangulation*) const {
+inline NLargeInteger NNormalSurfaceVectorStandard::triangles(
+        size_t tetIndex, int vertex, const NTriangulation*) const {
     return (*this)[7 * tetIndex + vertex];
 }
-inline NLargeInteger NNormalSurfaceVectorStandard::getQuadCoord(
-        unsigned long tetIndex, int quadType, const NTriangulation*) const {
+inline NLargeInteger NNormalSurfaceVectorStandard::quads(
+        size_t tetIndex, int quadType, const NTriangulation*) const {
     return (*this)[7 * tetIndex + 4 + quadType];
 }
-inline NLargeInteger NNormalSurfaceVectorStandard::getOctCoord(
-        unsigned long, int, const NTriangulation*) const {
+inline NLargeInteger NNormalSurfaceVectorStandard::octs(
+        size_t, int, const NTriangulation*) const {
     return zero;
 }
 

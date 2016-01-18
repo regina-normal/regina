@@ -43,14 +43,12 @@ void addNSurfaceFilterCombination() {
             std::auto_ptr<NSurfaceFilterCombination>, boost::noncopyable>
             ("NSurfaceFilterCombination")
         .def(init<const NSurfaceFilterCombination&>())
+        .def("usesAnd", &NSurfaceFilterCombination::usesAnd)
         .def("getUsesAnd", &NSurfaceFilterCombination::getUsesAnd)
         .def("setUsesAnd", &NSurfaceFilterCombination::setUsesAnd)
     ;
 
-    s.attr("filterID") = regina::SurfaceFilterType(
-        NSurfaceFilterCombination::filterID);
-    s.attr("filterType") = regina::SurfaceFilterType(
-        NSurfaceFilterCombination::filterType);
+    s.attr("filterTypeID") = regina::NS_FILTER_COMBINATION;
 
     implicitly_convertible<std::auto_ptr<NSurfaceFilterCombination>,
         std::auto_ptr<regina::NSurfaceFilter> >();

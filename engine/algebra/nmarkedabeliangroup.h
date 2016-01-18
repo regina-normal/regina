@@ -82,7 +82,7 @@ class NHomMarkedAbelianGroup;
  *
  * Some routines in this class refer to the internal <i>presentation
  * matrix</i>.  This is a proper presentation matrix for the abelian group,
- * and is created by constructing the product getMRBi() * \a N, and then
+ * and is created by constructing the product MRBi() * \a N, and then
  * removing the first getRankM() rows.
  *
  * @author Ryan Budney
@@ -228,6 +228,13 @@ class REGINA_API NMarkedAbelianGroup :
          *
          * @return the rank of the group.
          */
+        unsigned long rank() const;
+        /**
+         * Deprecated routine that returns the rank of the group.
+         *
+         * \deprecated This routine has been renamed to rank().
+         * See the rank() documentation for further details.
+         */
         unsigned long getRank() const;
 
         /**
@@ -246,7 +253,7 @@ class REGINA_API NMarkedAbelianGroup :
          * @param degree the degree of the torsion term to query.
          * @return the rank in the group of the given torsion term.
          */
-        unsigned long getTorsionRank(const NLargeInteger& degree) const;
+        unsigned long torsionRank(const NLargeInteger& degree) const;
 
         /**
          * Returns the rank in the group of the torsion term of given degree.
@@ -264,7 +271,27 @@ class REGINA_API NMarkedAbelianGroup :
          * @param degree the degree of the torsion term to query.
          * @return the rank in the group of the given torsion term.
          */
+        unsigned long torsionRank(unsigned long degree) const;
+
+        /**
+         * Deprecated routine that returns the rank in the group of the torsion
+         * term of given degree.
+         *
+         * \deprecated This routine has been renamed to
+         * torsionRank(unsigned long) const.
+         * See the torsionRank(unsigned long) const for further details.
+         */
         unsigned long getTorsionRank(unsigned long degree) const;
+
+        /**
+         * Deprecated routine that returns the rank in the group of the torsion
+         * term of given degree.
+         *
+         * \deprecated This routine has been renamed to
+         * torsionRank(const NLargeInteger&) const.
+         * See the torsionRank(const NLargeInteger&) const for further details.
+         */
+        unsigned long getTorsionRank(const NLargeInteger& degree) const;
 
         /**
          * Returns the number of invariant factors that describe the
@@ -304,6 +331,14 @@ class REGINA_API NMarkedAbelianGroup :
          * @param index the index of the invariant factor to return;
          * this must be between 0 and countInvariantFactors()-1 inclusive.
          * @return the requested invariant factor.
+         */
+        const NLargeInteger& invariantFactor(size_t index) const;
+        /**
+         * Deprecated routine that returns the given invariant factor
+         * describing the torsion elements of this group.
+         *
+         * \deprecated This routine has been renamed to invariantFactor().
+         * See the invariantFactor() documentation for further details.
          */
         const NLargeInteger& getInvariantFactor(size_t index) const;
 
@@ -392,7 +427,7 @@ class REGINA_API NMarkedAbelianGroup :
          * \ifacespython The return value will be a python list.
          *
          * @param index specifies which free generator to look up;
-         * this must be between 0 and getRank()-1 inclusive.
+         * this must be between 0 and rank()-1 inclusive.
          * @return the coordinates of the free generator in the nullspace of
          * \a M; this vector will have length M.columns() (or
          * equivalently, N.rows()). If this generator does not exist, 
@@ -576,9 +611,17 @@ class REGINA_API NMarkedAbelianGroup :
          * Returns the rank of the chain complex supporting the homology
          *  computation. In the description of this class, this is also given
          *  by M.columns() and N.rows() from the constructor that takes as
-         *  input two matrices, M and N.  
+         *  input two matrices, M and N.
          *
          * @return the rank of the chain complex.
+         */
+        unsigned long rankCC() const;
+        /**
+         * Deprecated routine that returns the rank of the chain complex
+         * supporting the homology computation.
+         *
+         * \deprecated This routine has been renamed to rankCC().
+         * See the rankCC() documentation for further details.
          */
         unsigned long getRankCC() const;
 
@@ -595,7 +638,7 @@ class REGINA_API NMarkedAbelianGroup :
          * When it is constructed, this group is computed to be isomorphic to
          * some Z_{d0} + ... + Z_{dk} + Z^d, where:
          *
-         * - \a d is the number of free generators, as returned by getRank();
+         * - \a d is the number of free generators, as returned by rank();
          * - \a d1, ..., \a dk are the invariant factors that describe the
          *   torsion elements of the group, where
          *   1 < \a d1 | \a d2 | ... | \a dk.
@@ -634,13 +677,13 @@ class REGINA_API NMarkedAbelianGroup :
          * \ifacespython Both \a v and the return value are python lists.
          *
          * @param v a vector of length M.columns(). M.columns() is also
-         *  getRankCC(). 
-         *  
+         *  rankCC().
+         *
          * @return a vector that describes \a v in the standard
          *  Z_{d1} + ... + Z_{dk} + Z^d form, or the empty vector if
          *  \a v is not in the kernel of \a M. k+d is equal to 
-         *  minNumberOfGenerators(). 
-         * 
+         *  minNumberOfGenerators().
+         *
          */
         std::vector<NLargeInteger> snfRep(
             const std::vector<NLargeInteger>& v) const;
@@ -693,13 +736,21 @@ class REGINA_API NMarkedAbelianGroup :
          * Recall from the class overview that this marked abelian group
          * is defined by matrices \a M and \a N, where M*N = 0.
          *
-         * - getMCB() * M * getMRB() is the Smith normal form of \a M;
-         * - getMCBi() and getMRBi() are the inverses of getMCB() and getMRB()
+         * - MCB() * M * MRB() is the Smith normal form of \a M;
+         * - MCBi() and MRBi() are the inverses of MCB() and MRB()
          *   respectively.
          *
          * \deprecated This routine will be removed in Regina 5.0.
          *
-         * @return the matrix getMRB() as described above.
+         * @return the matrix MRB() as described above.
+         */
+        const NMatrixInt& MRB() const;
+        /**
+         * Deprecated routine that returns a change-of-basis matrix for the
+         * Smith normal form of \a M.
+         *
+         * \deprecated This routine has been renamed to MRB().
+         * See the MRB() documentation for further details.
          */
         const NMatrixInt& getMRB() const;
         /**
@@ -712,13 +763,21 @@ class REGINA_API NMarkedAbelianGroup :
          * Recall from the class overview that this marked abelian group
          * is defined by matrices \a M and \a N, where M*N = 0.
          *
-         * - getMCB() * M * getMRB() is the Smith normal form of \a M;
-         * - getMCBi() and getMRBi() are the inverses of getMCB() and getMRB()
+         * - MCB() * M * MRB() is the Smith normal form of \a M;
+         * - MCBi() and MRBi() are the inverses of MCB() and MRB()
          *   respectively.
          *
          * \deprecated This routine will be removed in Regina 5.0.
          *
-         * @return the matrix getMRBi() as described above.
+         * @return the matrix MRBi() as described above.
+         */
+        const NMatrixInt& MRBi() const;
+        /**
+         * Deprecated routine that returns an inverse change-of-basis matrix
+         * for the Smith normal form of \a M.
+         *
+         * \deprecated This routine has been renamed to MRBi().
+         * See the MRBi() documentation for further details.
          */
         const NMatrixInt& getMRBi() const;
         /**
@@ -730,13 +789,21 @@ class REGINA_API NMarkedAbelianGroup :
          * Recall from the class overview that this marked abelian group
          * is defined by matrices \a M and \a N, where M*N = 0.
          *
-         * - getMCB() * M * getMRB() is the Smith normal form of \a M;
-         * - getMCBi() and getMRBi() are the inverses of getMCB() and getMRB()
+         * - MCB() * M * MRB() is the Smith normal form of \a M;
+         * - MCBi() and MRBi() are the inverses of MCB() and MRB()
          *   respectively.
          *
          * \deprecated This routine will be removed in Regina 5.0.
          *
-         * @return the matrix getMCB() as described above.
+         * @return the matrix MCB() as described above.
+         */
+        const NMatrixInt& MCB() const;
+        /**
+         * Deprecated routine that returns a change-of-basis matrix for the
+         * Smith normal form of \a M.
+         *
+         * \deprecated This routine has been renamed to MCB().
+         * See the MCB() documentation for further details.
          */
         const NMatrixInt& getMCB() const;
         /**
@@ -749,13 +816,21 @@ class REGINA_API NMarkedAbelianGroup :
          * Recall from the class overview that this marked abelian group
          * is defined by matrices \a M and \a N, where M*N = 0.
          *
-         * - getMCB() * M * getMRB() is the Smith normal form of \a M;
-         * - getMCBi() and getMRBi() are the inverses of getMCB() and getMRB()
+         * - MCB() * M * MRB() is the Smith normal form of \a M;
+         * - MCBi() and MRBi() are the inverses of MCB() and MRB()
          *   respectively.
          *
          * \deprecated This routine will be removed in Regina 5.0.
          *
-         * @return the matrix getMCBi() as described above.
+         * @return the matrix MCBi() as described above.
+         */
+        const NMatrixInt& MCBi() const;
+        /**
+         * Deprecated routine that returns an inverse change-of-basis matrix
+         * for the Smith normal form of \a M.
+         *
+         * \deprecated This routine has been renamed to MCBi().
+         * See the MCBi() documentation for further details.
          */
         const NMatrixInt& getMCBi() const;
         /**
@@ -768,13 +843,21 @@ class REGINA_API NMarkedAbelianGroup :
          * For details on the internal presentation matrix, see the class
          * overview.  If \a P is the internal presentation matrix, then:
          *
-         * - getNCB() * P * getNRB() is the Smith normal form of \a P;
-         * - getNCBi() and getNRBi() are the inverses of getNCB() and getNRB()
+         * - NCB() * P * NRB() is the Smith normal form of \a P;
+         * - NCBi() and NRBi() are the inverses of NCB() and NRB()
          *   respectively.
          *
          * \deprecated This routine will be removed in Regina 5.0.
          *
-         * @return the matrix getNRB() as described above.
+         * @return the matrix NRB() as described above.
+         */
+        const NMatrixInt& NRB() const;
+        /**
+         * Deprecated routine that returns a change-of-basis matrix for the
+         * Smith normal form of the internal presentation matrix.
+         *
+         * \deprecated This routine has been renamed to NRB().
+         * See the NRB() documentation for further details.
          */
         const NMatrixInt& getNRB() const;
         /**
@@ -787,13 +870,21 @@ class REGINA_API NMarkedAbelianGroup :
          * For details on the internal presentation matrix, see the class
          * overview.  If \a P is the internal presentation matrix, then:
          *
-         * - getNCB() * P * getNRB() is the Smith normal form of \a P;
-         * - getNCBi() and getNRBi() are the inverses of getNCB() and getNRB()
+         * - NCB() * P * NRB() is the Smith normal form of \a P;
+         * - NCBi() and NRBi() are the inverses of NCB() and NRB()
          *   respectively.
          *
          * \deprecated This routine will be removed in Regina 5.0.
          *
-         * @return the matrix getNRBi() as described above.
+         * @return the matrix NRBi() as described above.
+         */
+        const NMatrixInt& NRBi() const;
+        /**
+         * Deprecated routine that returns an inverse change-of-basis matrix
+         * for the Smith normal form of the internal presentation matrix.
+         *
+         * \deprecated This routine has been renamed to NRBi().
+         * See the NRBi() documentation for further details.
          */
         const NMatrixInt& getNRBi() const;
         /**
@@ -806,13 +897,21 @@ class REGINA_API NMarkedAbelianGroup :
          * For details on the internal presentation matrix, see the class
          * overview.  If \a P is the internal presentation matrix, then:
          *
-         * - getNCB() * P * getNRB() is the Smith normal form of \a P;
-         * - getNCBi() and getNRBi() are the inverses of getNCB() and getNRB()
+         * - NCB() * P * NRB() is the Smith normal form of \a P;
+         * - NCBi() and NRBi() are the inverses of NCB() and NRB()
          *   respectively.
          *
          * \deprecated This routine will be removed in Regina 5.0.
          *
-         * @return the matrix getNCB() as described above.
+         * @return the matrix NCB() as described above.
+         */
+        const NMatrixInt& NCB() const;
+        /**
+         * Returns a change-of-basis matrix for the Smith normal form of
+         * the internal presentation matrix.
+         *
+         * \deprecated This routine has been renamed to NCB().
+         * See the NCB() documentation for further details.
          */
         const NMatrixInt& getNCB() const;
         /**
@@ -825,13 +924,21 @@ class REGINA_API NMarkedAbelianGroup :
          * For details on the internal presentation matrix, see the class
          * overview.  If \a P is the internal presentation matrix, then:
          *
-         * - getNCB() * P * getNRB() is the Smith normal form of \a P;
-         * - getNCBi() and getNRBi() are the inverses of getNCB() and getNRB()
+         * - NCB() * P * NRB() is the Smith normal form of \a P;
+         * - NCBi() and NRBi() are the inverses of NCB() and NRB()
          *   respectively.
          *
          * \deprecated This routine will be removed in Regina 5.0.
          *
-         * @return the matrix getNCBi() as described above.
+         * @return the matrix NCBi() as described above.
+         */
+        const NMatrixInt& NCBi() const;
+        /**
+         * Deprecated routine that returns an inverse change-of-basis matrix
+         * for the Smith normal form of the internal presentation matrix.
+         *
+         * \deprecated This routine has been renamed to NCBi().
+         * See the NCBi() documentation for further details.
          */
         const NMatrixInt& getNCBi() const;
 
@@ -845,6 +952,14 @@ class REGINA_API NMarkedAbelianGroup :
          *
          * @return the rank of the defining matrix \a M.
          */
+        unsigned long rankM() const;
+        /**
+         * Deprecated routine that returns the rank of the defining
+         * matrix \a M.
+         *
+         * \deprecated This routine has been renamed to rankM().
+         * See the rankM() documentation for further details.
+         */
         unsigned long getRankM() const;
 
         /**
@@ -856,6 +971,15 @@ class REGINA_API NMarkedAbelianGroup :
          *
          * @return the index of the first free generator.
          */
+        unsigned long freeLoc() const;
+        /**
+         * Deprecated routine that returns the index of the first free
+         * generator in the Smith normal form of the internal presentation
+         * matrix.
+         *
+         * \deprecated This routine has been renamed to freeLoc().
+         * See the freeLoc() documentation for further details.
+         */
         unsigned long getFreeLoc() const;
 
         /**
@@ -866,6 +990,15 @@ class REGINA_API NMarkedAbelianGroup :
          * \deprecated This routine will be removed in Regina 5.0.
          *
          * @return the index of the first torsion generator.
+         */
+        unsigned long torsionLoc() const;
+        /**
+         * Deprecated routine that returns the index of the first torsion
+         * generator in the Smith normal form of the internal presentation
+         * matrix.
+         *
+         * \deprecated This routine has been renamed to torsionLoc().
+         * See the torsionLoc() documentation for further details.
          */
         unsigned long getTorsionLoc() const;
 
@@ -880,6 +1013,13 @@ class REGINA_API NMarkedAbelianGroup :
          *
          * @return a reference to the defining matrix M.
          */
+        const NMatrixInt& M() const;
+        /**
+         * Returns the `right' matrix used in defining the chain complex.
+         *
+         * \deprecated This routine has been renamed to M().
+         * See the M() documentation for further details.
+         */
         const NMatrixInt& getM() const;
         /**
          * Returns the `left' matrix used in defining the chain complex.
@@ -891,6 +1031,13 @@ class REGINA_API NMarkedAbelianGroup :
          * matrices \a M and \a N and their roles in defining the chain complex.
          *
          * @return a reference to the defining matrix N.
+         */
+        const NMatrixInt& N() const;
+        /**
+         * Returns the `left' matrix used in defining the chain complex.
+         *
+         * \deprecated This routine has been renamed to N().
+         * See the N() documentation for further details.
          */
         const NMatrixInt& getN() const;
         /**
@@ -965,9 +1112,9 @@ class REGINA_API NHomMarkedAbelianGroup :
         public boost::noncopyable {
     private:
         /** internal rep of domain of the homomorphism */
-        NMarkedAbelianGroup domain;
+        NMarkedAbelianGroup domain_;
         /** internal rep of range of the homomorphism */
-        NMarkedAbelianGroup range;
+        NMarkedAbelianGroup range_;
         /** matrix describing map from domain to range, in the coordinates
             of the chain complexes used to construct domain and range, see
             above description */
@@ -980,13 +1127,13 @@ class REGINA_API NHomMarkedAbelianGroup :
             reducedMatrix will not have the same dimensions as matrix. This
             means the torsion factors appear first, followed by the free
             factors. */
-        NMatrixInt* reducedMatrix;
+        NMatrixInt* reducedMatrix_;
         /** pointer to kernel of map */
-        NMarkedAbelianGroup* kernel;
+        NMarkedAbelianGroup* kernel_;
         /** pointer to coKernel of map */
-        NMarkedAbelianGroup* coKernel;
+        NMarkedAbelianGroup* coKernel_;
         /** pointer to image */
-        NMarkedAbelianGroup* image;
+        NMarkedAbelianGroup* image_;
         /** pointer to a lattice which describes the kernel of the
             homomorphism. */
         NMatrixInt* reducedKernelLattice;
@@ -1126,6 +1273,14 @@ class REGINA_API NHomMarkedAbelianGroup :
          * @return the kernel of the homomorphism, as a marked abelian group.
          */
         REGINA_INLINE_REQUIRED
+        const NMarkedAbelianGroup& kernel() const;
+        /**
+         * Deprecated routine that returns the kernel of this homomorphism.
+         *
+         * \deprecated This routine has been renamed to kernel().
+         * See the kernel() documentation for further details.
+         */
+        REGINA_INLINE_REQUIRED
         const NMarkedAbelianGroup& getKernel() const;
         /**
          * Returns the cokernel of this homomorphism.
@@ -1133,11 +1288,27 @@ class REGINA_API NHomMarkedAbelianGroup :
          * @return the cokernel of the homomorphism, as a marked abelian group.
          */
         REGINA_INLINE_REQUIRED
+        const NMarkedAbelianGroup& cokernel() const;
+        /**
+         * Deprecated routine that returns the cokernel of this homomorphism.
+         *
+         * \deprecated This routine has been renamed to cokernel().
+         * See the cokernel() documentation for further details.
+         */
+        REGINA_INLINE_REQUIRED
         const NMarkedAbelianGroup& getCokernel() const;
         /**
          * Returns the image of this homomorphism.
          *
          * @return the image of the homomorphism, as a marked abelian group.
+         */
+        REGINA_INLINE_REQUIRED
+        const NMarkedAbelianGroup& image() const;
+        /**
+         * Deprecated routine that returns the image of this homomorphism.
+         *
+         * \deprecated This routine has been renamed to image().
+         * See the image() documentation for further details.
          */
         REGINA_INLINE_REQUIRED
         const NMarkedAbelianGroup& getImage() const;
@@ -1169,17 +1340,39 @@ class REGINA_API NHomMarkedAbelianGroup :
          *
          * @return the domain that was used to define the homomorphism.
          */
+        const NMarkedAbelianGroup& domain() const;
+        /**
+         * Deprecated routine that returns the domain of this homomorphism.
+         *
+         * \deprecated This routine has been renamed to domain().
+         * See the domain() documentation for further details.
+         */
         const NMarkedAbelianGroup& getDomain() const;
         /**
          * Returns the range of this homomorphism.
          *
          * @return the range that was used to define the homomorphism.
          */
+        const NMarkedAbelianGroup& range() const;
+        /**
+         * Deprecated routine that returns the range of this homomorphism.
+         *
+         * \deprecated This routine has been renamed to domain().
+         * See the domain() documentation for further details.
+         */
         const NMarkedAbelianGroup& getRange() const;
         /**
          * Returns the defining matrix for the homomorphism.
          *
          * @return the matrix that was used to define the homomorphism.
+         */
+        const NMatrixInt& definingMatrix() const;
+        /**
+         * Deprecated routine that returns the defining matrix for the
+         * homomorphism.
+         *
+         * \deprecated This routine has been renamed to definingMatrix().
+         * See the definingMatrix() documentation for further details.
          */
         const NMatrixInt& getDefiningMatrix() const;
 
@@ -1192,12 +1385,20 @@ class REGINA_API NHomMarkedAbelianGroup :
          *             Z^d + Z_{d0} + ... + Z_{dk}
          * where:
          *
-         * - \a d is the number of free generators, as returned by getRank();
+         * - \a d is the number of free generators, as returned by rank();
          * - \a d1, ..., \a dk are the invariant factors that describe the
          *   torsion elements of the group, where
          *   1 < \a d1 | \a d2 | ... | \a dk.
          *
          * @return a copy of the internal representation of the homomorphism.
+         */
+        const NMatrixInt& reducedMatrix() const;
+        /**
+         * Deprecated routine that returns the internal reduced matrix
+         * representing the homomorphism.
+         *
+         * \deprecated This routine has been renamed to reducedMatrix().
+         * See the reducedMatrix() documentation for further details.
          */
         const NMatrixInt& getReducedMatrix() const;
 
@@ -1210,9 +1411,9 @@ class REGINA_API NHomMarkedAbelianGroup :
          * accessible to Python in a future release.
          *
          * @param input an input vector in the domain chain complex's
-         * coordinates, of length getDomain().getM().columns().
+         * coordinates, of length domain().M().columns().
          * @return the image of this vector in the range chain complex's
-         * coordinates, of length getRange().getM().columns().
+         * coordinates, of length range().M().columns().
          */
         std::vector<NLargeInteger> evalCC(
             const std::vector<NLargeInteger> &input) const; 
@@ -1231,9 +1432,9 @@ class REGINA_API NHomMarkedAbelianGroup :
          * accessible to Python in a future release.
          *
          * @param input an input vector in the domain SNF coordinates,
-         * of length getDomain().minNumberOfGenerators().
+         * of length domain().minNumberOfGenerators().
          * @return the image of this vector in the range chain complex's
-         * coordinates, of length getRange().minNumberOfGenerators().
+         * coordinates, of length range().minNumberOfGenerators().
          */
         std::vector<NLargeInteger> evalSNF(
             const std::vector<NLargeInteger> &input) const;
@@ -1326,9 +1527,19 @@ inline NMarkedAbelianGroup::NMarkedAbelianGroup(const NMarkedAbelianGroup& g) :
         tensorIfNum(g.tensorIfNum), tensorInvFacList(g.tensorInvFacList) {
 }
 
+inline unsigned long NMarkedAbelianGroup::torsionRank(unsigned long degree)
+        const {
+    return torsionRank(NLargeInteger(degree));
+}
+
 inline unsigned long NMarkedAbelianGroup::getTorsionRank(unsigned long degree)
         const {
-    return getTorsionRank(NLargeInteger(degree));
+    return torsionRank(NLargeInteger(degree));
+}
+
+inline unsigned long NMarkedAbelianGroup::getTorsionRank(
+        const NLargeInteger& degree) const {
+    return torsionRank(degree);
 }
 
 inline size_t NMarkedAbelianGroup::countInvariantFactors() const {
@@ -1339,9 +1550,18 @@ inline size_t NMarkedAbelianGroup::getNumberOfInvariantFactors() const {
     return ifNum;
 }
 
+inline const NLargeInteger& NMarkedAbelianGroup::invariantFactor(
+        size_t index) const {
+    return InvFacList[index];
+}
+
 inline const NLargeInteger& NMarkedAbelianGroup::getInvariantFactor(
         size_t index) const {
     return InvFacList[index];
+}
+
+inline unsigned long NMarkedAbelianGroup::rank() const {
+    return snfrank;
 }
 
 inline unsigned long NMarkedAbelianGroup::getRank() const {
@@ -1350,6 +1570,10 @@ inline unsigned long NMarkedAbelianGroup::getRank() const {
 
 inline unsigned long NMarkedAbelianGroup::minNumberOfGenerators() const {
     return snfrank + ifNum;
+}
+
+inline unsigned long NMarkedAbelianGroup::rankCC() const {
+    return OM.columns();
 }
 
 inline unsigned long NMarkedAbelianGroup::getRankCC() const {
@@ -1389,43 +1613,82 @@ inline bool NMarkedAbelianGroup::isIsomorphicTo(
     return ((InvFacList == other.InvFacList) && (snfrank == other.snfrank));
 }
 
+inline const NMatrixInt& NMarkedAbelianGroup::MRB() const {
+    return OMR;
+}
 inline const NMatrixInt& NMarkedAbelianGroup::getMRB() const {
     return OMR;
+}
+inline const NMatrixInt& NMarkedAbelianGroup::MRBi() const {
+    return OMRi;
 }
 inline const NMatrixInt& NMarkedAbelianGroup::getMRBi() const {
     return OMRi;
 }
+inline const NMatrixInt& NMarkedAbelianGroup::MCB() const {
+    return OMC;
+}
 inline const NMatrixInt& NMarkedAbelianGroup::getMCB() const {
     return OMC;
+}
+inline const NMatrixInt& NMarkedAbelianGroup::MCBi() const {
+    return OMCi;
 }
 inline const NMatrixInt& NMarkedAbelianGroup::getMCBi() const {
     return OMCi;
 }
+inline const NMatrixInt& NMarkedAbelianGroup::NRB() const {
+    return *ornR;
+}
 inline const NMatrixInt& NMarkedAbelianGroup::getNRB() const {
     return *ornR;
+}
+inline const NMatrixInt& NMarkedAbelianGroup::NRBi() const {
+    return *ornRi;
 }
 inline const NMatrixInt& NMarkedAbelianGroup::getNRBi() const {
     return *ornRi;
 }
+inline const NMatrixInt& NMarkedAbelianGroup::NCB() const {
+    return *ornC;
+}
 inline const NMatrixInt& NMarkedAbelianGroup::getNCB() const {
     return *ornC;
+}
+inline const NMatrixInt& NMarkedAbelianGroup::NCBi() const {
+    return *ornCi;
 }
 inline const NMatrixInt& NMarkedAbelianGroup::getNCBi() const {
     return *ornCi;
 }
 
+inline unsigned long NMarkedAbelianGroup::rankM() const {
+    return rankOM;
+}
 inline unsigned long NMarkedAbelianGroup::getRankM() const {
     return rankOM;
 }
+inline unsigned long NMarkedAbelianGroup::freeLoc() const {
+    return snffreeindex;
+}
 inline unsigned long NMarkedAbelianGroup::getFreeLoc() const {
     return snffreeindex;
+}
+inline unsigned long NMarkedAbelianGroup::torsionLoc() const {
+    return ifLoc;
 }
 inline unsigned long NMarkedAbelianGroup::getTorsionLoc() const {
     return ifLoc;
 }
 
+inline const NMatrixInt& NMarkedAbelianGroup::M() const {
+    return OM;
+}
 inline const NMatrixInt& NMarkedAbelianGroup::getM() const {
     return OM;
+}
+inline const NMatrixInt& NMarkedAbelianGroup::N() const {
+    return ON;
 }
 inline const NMatrixInt& NMarkedAbelianGroup::getN() const {
     return ON;
@@ -1440,32 +1703,49 @@ inline NHomMarkedAbelianGroup::NHomMarkedAbelianGroup(
         const NMarkedAbelianGroup& dom,
         const NMarkedAbelianGroup& ran,
         const NMatrixInt &mat) :
-        domain(dom), range(ran), matrix(mat),
-        reducedMatrix(0), kernel(0), coKernel(0), image(0),
+        domain_(dom), range_(ran), matrix(mat),
+        reducedMatrix_(0), kernel_(0), coKernel_(0), image_(0),
         reducedKernelLattice(0) {
 }
 
 inline NHomMarkedAbelianGroup::~NHomMarkedAbelianGroup() {
-    if (reducedMatrix)
-        delete reducedMatrix;
-    if (kernel)
-        delete kernel;
-    if (coKernel)
-        delete coKernel;
-    if (image)
-        delete image;
+    if (reducedMatrix_)
+        delete reducedMatrix_;
+    if (kernel_)
+        delete kernel_;
+    if (coKernel_)
+        delete coKernel_;
+    if (image_)
+        delete image_;
     if (reducedKernelLattice)
         delete reducedKernelLattice;
 }
 
+inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::domain() const {
+    return domain_;
+}
 inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getDomain() const {
-    return domain;
+    return domain_;
+}
+inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::range() const {
+    return range_;
 }
 inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getRange() const {
-    return range;
+    return range_;
+}
+inline const NMatrixInt& NHomMarkedAbelianGroup::definingMatrix() const {
+    return matrix;
 }
 inline const NMatrixInt& NHomMarkedAbelianGroup::getDefiningMatrix() const {
     return matrix;
+}
+
+inline const NMatrixInt& NHomMarkedAbelianGroup::reducedMatrix() const {
+    // Cast away const to compute the reduced matrix -- the only reason we're
+    // changing data members now is because we delayed calculations
+    // until they were really required.
+    const_cast<NHomMarkedAbelianGroup*>(this)->computeReducedMatrix();
+    return *reducedMatrix_;
 }
 
 inline const NMatrixInt& NHomMarkedAbelianGroup::getReducedMatrix() const {
@@ -1473,15 +1753,15 @@ inline const NMatrixInt& NHomMarkedAbelianGroup::getReducedMatrix() const {
     // changing data members now is because we delayed calculations
     // until they were really required.
     const_cast<NHomMarkedAbelianGroup*>(this)->computeReducedMatrix();
-    return *reducedMatrix;
+    return *reducedMatrix_;
 }
 
 inline bool NHomMarkedAbelianGroup::isEpic() const {
-    return getCokernel().isTrivial();
+    return cokernel().isTrivial();
 }
 
 inline bool NHomMarkedAbelianGroup::isMonic() const {
-    return getKernel().isTrivial();
+    return kernel().isTrivial();
 }
 
 inline bool NHomMarkedAbelianGroup::isIso() const {
@@ -1489,11 +1769,19 @@ inline bool NHomMarkedAbelianGroup::isIso() const {
 }
 
 inline bool NHomMarkedAbelianGroup::isIsomorphism() const {
-    return (getCokernel().isTrivial() && getKernel().isTrivial());
+    return (cokernel().isTrivial() && kernel().isTrivial());
 }
 
 inline bool NHomMarkedAbelianGroup::isZero() const {
-    return getImage().isTrivial();
+    return image().isTrivial();
+}
+
+inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::kernel() const {
+    // Cast away const to compute the kernel -- the only reason we're
+    // changing data members now is because we delayed calculations
+    // until they were really required.
+    const_cast<NHomMarkedAbelianGroup*>(this)->computeKernel();
+    return *kernel_;
 }
 
 inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getKernel() const {
@@ -1501,7 +1789,15 @@ inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getKernel() const {
     // changing data members now is because we delayed calculations
     // until they were really required.
     const_cast<NHomMarkedAbelianGroup*>(this)->computeKernel();
-    return *kernel;
+    return *kernel_;
+}
+
+inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::image() const {
+    // Cast away const to compute the kernel -- the only reason we're
+    // changing data members now is because we delayed calculations
+    // until they were really required.
+    const_cast<NHomMarkedAbelianGroup*>(this)->computeImage();
+    return *image_;
 }
 
 inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getImage() const {
@@ -1509,7 +1805,15 @@ inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getImage() const {
     // changing data members now is because we delayed calculations
     // until they were really required.
     const_cast<NHomMarkedAbelianGroup*>(this)->computeImage();
-    return *image;
+    return *image_;
+}
+
+inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::cokernel() const {
+    // Cast away const to compute the kernel -- the only reason we're
+    // changing data members now is because we delayed calculations
+    // until they were really required.
+    const_cast<NHomMarkedAbelianGroup*>(this)->computeCokernel();
+    return *coKernel_;
 }
 
 inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getCokernel() const {
@@ -1517,7 +1821,7 @@ inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getCokernel() const {
     // changing data members now is because we delayed calculations
     // until they were really required.
     const_cast<NHomMarkedAbelianGroup*>(this)->computeCokernel();
-    return *coKernel;
+    return *coKernel_;
 }
 
 } // namespace regina

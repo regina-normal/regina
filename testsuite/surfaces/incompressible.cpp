@@ -77,7 +77,7 @@ class IncompressibleTest : public CppUnit::TestFixture {
             NNormalSurfaceList* s = NNormalSurfaceList::enumerate(tri,
                 regina::NS_STANDARD, true);
             for (unsigned i = 0; i < s->size(); ++i)
-                verifyNotIncompressible(s->getSurface(i), triName);
+                verifyNotIncompressible(s->surface(i), triName);
             delete s;
             return tri;
         }
@@ -87,7 +87,7 @@ class IncompressibleTest : public CppUnit::TestFixture {
             NNormalSurfaceList* s = NNormalSurfaceList::enumerate(tri,
                 regina::NS_STANDARD, true);
             for (unsigned i = 0; i < s->size(); ++i)
-                if (s->getSurface(i)->isIncompressible()) {
+                if (s->surface(i)->isIncompressible()) {
                     delete s;
                     return tri;
                 }

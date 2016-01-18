@@ -77,7 +77,7 @@ bool NManifold::operator < (const NManifold& compare) const {
     if (bundle1 && bundle2) {
         // TODO: Just sort by name here, since bundle parameters will
         // probably need to be made canonical anyway.
-        return getName() < compare.getName();
+        return name() < compare.name();
     }
 
     // Finally graph manifolds (SFS pairs, triples and loops).
@@ -109,7 +109,7 @@ bool NManifold::operator < (const NManifold& compare) const {
         return (*loop1 < *loop2);
 
     // No idea.  Use the dictionary.
-    return getName() < compare.getName();
+    return name() < compare.name();
 }
 
 } // namespace regina

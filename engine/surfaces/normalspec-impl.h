@@ -110,14 +110,14 @@ struct REGINA_API NNormalSurfaceList::NormalSpec {
      * Returns the total length of a vector in standard form for the
      * given number of tetrahedra.
      */
-    inline static size_t stdLen(unsigned long nTet) {
+    inline static size_t stdLen(size_t nTet) {
         return 7 * nTet;
     }
     /**
      * Returns the total length of a vector in reduced form for the
      * given number of tetrahedra.
      */
-    inline static size_t redLen(unsigned long nTet) {
+    inline static size_t redLen(size_t nTet) {
         return 3 * nTet;
     }
 
@@ -125,14 +125,14 @@ struct REGINA_API NNormalSurfaceList::NormalSpec {
      * Returns the coordinate number in standard form that corresponds
      * to the given disc type within the given tetrahedron.
      */
-    inline static size_t stdPos(unsigned long tet, unsigned discType) {
+    inline static size_t stdPos(size_t tet, unsigned discType) {
         return 7 * tet + discType;
     }
     /**
      * Returns the coordinate number in reduced form that corresponds
      * to the given disc type within the given tetrahedron.
      */
-    inline static size_t redPos(unsigned long tet, unsigned discType) {
+    inline static size_t redPos(size_t tet, unsigned discType) {
         return 3 * tet + discType;
     }
 };
@@ -194,14 +194,14 @@ struct REGINA_API NNormalSurfaceList::AlmostNormalSpec {
      * Returns the total length of a vector in standard form for the
      * given number of tetrahedra.
      */
-    inline static size_t stdLen(unsigned long nTet) {
+    inline static size_t stdLen(size_t nTet) {
         return 10 * nTet;
     }
     /**
      * Returns the total length of a vector in reduced form for the
      * given number of tetrahedra.
      */
-    inline static size_t redLen(unsigned long nTet) {
+    inline static size_t redLen(size_t nTet) {
         return 6 * nTet;
     }
 
@@ -209,14 +209,14 @@ struct REGINA_API NNormalSurfaceList::AlmostNormalSpec {
      * Returns the coordinate number in standard form that corresponds
      * to the given disc type within the given tetrahedron.
      */
-    inline static size_t stdPos(unsigned long tet, unsigned discType) {
+    inline static size_t stdPos(size_t tet, unsigned discType) {
         return 10 * tet + discType;
     }
     /**
      * Returns the coordinate number in reduced form that corresponds
      * to the given disc type within the given tetrahedron.
      */
-    inline static size_t redPos(unsigned long tet, unsigned discType) {
+    inline static size_t redPos(size_t tet, unsigned discType) {
         return 6 * tet + discType;
     }
 };

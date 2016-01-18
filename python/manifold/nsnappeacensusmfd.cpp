@@ -44,7 +44,9 @@ void addNSnapPeaCensusManifold() {
             std::auto_ptr<NSnapPeaCensusManifold>, boost::noncopyable>
             ("NSnapPeaCensusManifold", init<char, unsigned long>())
         .def(init<const NSnapPeaCensusManifold&>())
+        .def("section", &NSnapPeaCensusManifold::section)
         .def("getSection", &NSnapPeaCensusManifold::getSection)
+        .def("index", &NSnapPeaCensusManifold::index)
         .def("getIndex", &NSnapPeaCensusManifold::getIndex)
         .def(regina::python::add_eq_operators())
     ;

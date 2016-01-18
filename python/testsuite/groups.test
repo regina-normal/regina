@@ -64,7 +64,7 @@ def groupStats(g):
 	print 'Group:', g
 
 	print 'Free generators:'
-	for i in range(g.getRank()):
+	for i in range(g.rank()):
 		print str(i) + ':', vecToString(g.getFreeRep(i))
 	print 'Torsion generators:'
 	for i in range(g.getNumberOfInvariantFactors()):
@@ -78,11 +78,11 @@ def homStats(h):
 	print "New homomorphism"
 	print "----------------"
 	print
-	print 'Domain:', h.getDomain()
-	print 'Range:', h.getRange()
-	print 'Kernel:', h.getKernel()
-	print 'Cokernel:', h.getCokernel()
-	print 'Image:', h.getImage()
+	print 'Domain:', h.domain()
+	print 'Range:', h.range()
+	print 'Kernel:', h.kernel()
+	print 'Cokernel:', h.cokernel()
+	print 'Image:', h.image()
 
 	# Nothing else to say.
 	print

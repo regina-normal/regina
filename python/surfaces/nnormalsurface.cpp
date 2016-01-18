@@ -135,15 +135,23 @@ void addNNormalSurface() {
             return_value_policy<manage_new_object>())
         .def("doubleSurface", &NNormalSurface::doubleSurface,
             return_value_policy<manage_new_object>())
+        .def("triangles", &NNormalSurface::triangles)
         .def("getTriangleCoord", &NNormalSurface::getTriangleCoord)
+        .def("orientedTriangles", &NNormalSurface::orientedTriangles)
         .def("getOrientedTriangleCoord",
             &NNormalSurface::getOrientedTriangleCoord)
+        .def("quads", &NNormalSurface::quads)
         .def("getQuadCoord", &NNormalSurface::getQuadCoord)
+        .def("orientedQuads", &NNormalSurface::orientedQuads)
         .def("getOrientedQuadCoord", &NNormalSurface::getOrientedQuadCoord)
+        .def("octs", &NNormalSurface::octs)
         .def("getOctCoord", &NNormalSurface::getOctCoord)
+        .def("edgeWeight", &NNormalSurface::edgeWeight)
         .def("getEdgeWeight", &NNormalSurface::getEdgeWeight)
         .def("getFaceArcs", &NNormalSurface::getFaceArcs)
+        .def("arcs", &NNormalSurface::arcs)
         .def("getTriangleArcs", &NNormalSurface::getTriangleArcs)
+        .def("octPosition", &NNormalSurface::octPosition)
         .def("getOctPosition", &NNormalSurface::getOctPosition)
         .def("countCoords", &NNormalSurface::countCoords)
         .def("getNumberOfCoords", &NNormalSurface::getNumberOfCoords)
@@ -151,6 +159,8 @@ void addNNormalSurface() {
             return_value_policy<reference_existing_object>())
         .def("getTriangulation", &NNormalSurface::getTriangulation,
             return_value_policy<reference_existing_object>())
+        .def("name", &NNormalSurface::name,
+            return_value_policy<return_by_value>())
         .def("getName", &NNormalSurface::getName,
             return_value_policy<return_by_value>())
         .def("setName", &NNormalSurface::setName)

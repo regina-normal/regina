@@ -45,9 +45,9 @@ const int NSimpleSurfaceBundle::RP2xS1 = 3;
 NTriangulation* NSimpleSurfaceBundle::construct() const {
     NTriangulation* ans = new NTriangulation();
 
-    if (type == S2xS1) {
+    if (type_ == S2xS1) {
         ans->insertLayeredLensSpace(0, 1);
-    } else if (type == S2xS1_TWISTED) {
+    } else if (type_ == S2xS1_TWISTED) {
         // Taken from section 3.5.1 of Ben Burton's PhD thesis.
         NTetrahedron* r = ans->newTetrahedron();
         NTetrahedron* s = ans->newTetrahedron();
@@ -56,7 +56,7 @@ NTriangulation* NSimpleSurfaceBundle::construct() const {
         r->joinTo(3, s, NPerm4());
         r->joinTo(2, s, NPerm4(3, 2, 0, 1));
         s->joinTo(2, r, NPerm4(3, 2, 0, 1));
-    } else if (type == RP2xS1) {
+    } else if (type_ == RP2xS1) {
         // Taken from section 3.5.1 of Ben Burton's PhD thesis.
         NTetrahedron* r = ans->newTetrahedron();
         NTetrahedron* s = ans->newTetrahedron();
@@ -73,30 +73,30 @@ NTriangulation* NSimpleSurfaceBundle::construct() const {
     return ans;
 }
 
-NAbelianGroup* NSimpleSurfaceBundle::getHomologyH1() const {
+NAbelianGroup* NSimpleSurfaceBundle::homologyH1() const {
     NAbelianGroup* ans = new NAbelianGroup();
     ans->addRank();
-    if (type == RP2xS1)
+    if (type_ == RP2xS1)
         ans->addTorsionElement(2);
     return ans;
 }
 
 std::ostream& NSimpleSurfaceBundle::writeName(std::ostream& out) const {
-    if (type == S2xS1)
+    if (type_ == S2xS1)
         out << "S2 x S1";
-    else if (type == S2xS1_TWISTED)
+    else if (type_ == S2xS1_TWISTED)
         out << "S2 x~ S1";
-    else if (type == RP2xS1)
+    else if (type_ == RP2xS1)
         out << "RP2 x S1";
     return out;
 }
 
 std::ostream& NSimpleSurfaceBundle::writeTeXName(std::ostream& out) const {
-    if (type == S2xS1)
+    if (type_ == S2xS1)
         out << "S^2 \\times S^1";
-    else if (type == S2xS1_TWISTED)
+    else if (type_ == S2xS1_TWISTED)
         out << "S^2 \\twisted S^1";
-    else if (type == RP2xS1)
+    else if (type_ == RP2xS1)
         out << "\\mathbb{R}P^2 \\times S^1";
     return out;
 }

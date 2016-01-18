@@ -82,15 +82,14 @@ bool discOrientationFollowsEdge(int discType, int vertex, int edgeStart,
     return false;
 }
 
-NDiscSetTet::NDiscSetTet(const NNormalSurface& surface,
-        unsigned long tetIndex) {
+NDiscSetTet::NDiscSetTet(const NNormalSurface& surface, size_t tetIndex) {
     int i;
     for (i=0; i<4; i++)
-        internalNDiscs[i] = surface.getTriangleCoord(tetIndex, i).longValue();
+        internalNDiscs[i] = surface.triangles(tetIndex, i).longValue();
     for (i=4; i<7; i++)
-        internalNDiscs[i] = surface.getQuadCoord(tetIndex, i - 4).longValue();
+        internalNDiscs[i] = surface.quads(tetIndex, i - 4).longValue();
     for (i=7; i<10; i++)
-        internalNDiscs[i] = surface.getOctCoord(tetIndex, i - 7).longValue();
+        internalNDiscs[i] = surface.octs(tetIndex, i - 7).longValue();
 }
 
 NDiscSetTet::NDiscSetTet(unsigned long tri0, unsigned long tri1,
@@ -156,7 +155,7 @@ void NDiscSetTet::discFromArc(int arcFace, int arcVertex,
 
 NDiscSetSurface::NDiscSetSurface(const NNormalSurface& surface, bool) :
         triangulation(surface.triangulation()) {
-    unsigned long tot = triangulation->size();
+    size_t tot = triangulation->size();
     if (tot == 0)
         discSets = 0;
     else
@@ -165,20 +164,20 @@ NDiscSetSurface::NDiscSetSurface(const NNormalSurface& surface, bool) :
 
 NDiscSetSurface::NDiscSetSurface(const NNormalSurface& surface) :
         triangulation(surface.triangulation()) {
-    unsigned long tot = triangulation->size();
+    size_t tot = triangulation->size();
     if (tot == 0)
         discSets = 0;
     else {
         discSets = new NDiscSetTet*[tot];
-        for (unsigned long index = 0; index < tot; index++)
+        for (size_t index = 0; index < tot; index++)
             discSets[index] = new NDiscSetTet(surface, index);
     }
 }
 
 NDiscSetSurface::~NDiscSetSurface() {
     if (discSets) {
-        unsigned long tot = nTets();
-        for (unsigned long index = 0; index < tot; index++)
+        size_t tot = nTets();
+        for (size_t index = 0; index < tot; index++)
             delete discSets[index];
         delete[] discSets;
     }

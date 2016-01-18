@@ -312,6 +312,14 @@ class REGINA_API NAbelianGroup :
          * this must be between 0 and countInvariantFactors()-1 inclusive.
          * @return the requested invariant factor.
          */
+        const NLargeInteger& invariantFactor(size_t index) const;
+        /**
+         * Deprecated routine that returns the given invariant factor
+         * describing the torsion elements of this group.
+         *
+         * \deprecated This routine has been renamed as invariantFactor().
+         * See the invariantFactor() documentation for further details.
+         */
         const NLargeInteger& getInvariantFactor(size_t index) const;
 
         /**
@@ -449,6 +457,10 @@ inline size_t NAbelianGroup::countInvariantFactors() const {
 
 inline size_t NAbelianGroup::getNumberOfInvariantFactors() const {
     return invariantFactors.size();
+}
+
+inline const NLargeInteger& NAbelianGroup::getInvariantFactor(size_t index) const {
+    return invariantFactor(index);
 }
 
 inline bool NAbelianGroup::isTrivial() const {

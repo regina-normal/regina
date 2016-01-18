@@ -70,7 +70,7 @@ bool NGraphTriple::operator < (const NGraphTriple& compare) const {
     return simpler(matchingReln_[1], compare.matchingReln_[1]);
 }
 
-NAbelianGroup* NGraphTriple::getHomologyH1() const {
+NAbelianGroup* NGraphTriple::homologyH1() const {
     // Just for safety (this should always be true anyway):
     if (end_[0]->punctures(false) != 1 || end_[0]->punctures(true) != 0)
         return 0;

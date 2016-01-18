@@ -52,10 +52,10 @@ void NXMLCallback::start_document(regina::xml::XMLParser* parser) {
 }
 
 void NXMLCallback::end_document() {
-    if (state == WAITING) {
+    if (state_ == WAITING) {
         errStream << "XML Fatal Error: File contains no tags." << std::endl;
         abort();
-    } else if (state == WORKING || ! readers.empty()) {
+    } else if (state_ == WORKING || ! readers.empty()) {
         errStream << "XML Fatal Error: Unfinished file." << std::endl;
         abort();
     }
@@ -63,16 +63,16 @@ void NXMLCallback::end_document() {
 
 void NXMLCallback::start_element(const std::string& n,
         const regina::xml::XMLPropertyDict& p) {
-    if (state == DONE) {
+    if (state_ == DONE) {
         errStream << "XML Fatal Error: File contains multiple top-level tags."
             << std::endl;
         abort();
-    } else if (state == WAITING) {
+    } else if (state_ == WAITING) {
         currentReader()->startElement(n, p, 0);
         currChars = "";
         charsAreInitial = true;
-        state = WORKING;
-    } else if (state == WORKING) {
+        state_ = WORKING;
+    } else if (state_ == WORKING) {
         NXMLElementReader* current = currentReader();
         if (charsAreInitial)
             current->initialChars(currChars);
@@ -86,7 +86,7 @@ void NXMLCallback::start_element(const std::string& n,
 }
 
 void NXMLCallback::end_element(const std::string& n) {
-    if (state == WORKING) {
+    if (state_ == WORKING) {
         NXMLElementReader* current = currentReader();
 
         if (charsAreInitial) {
@@ -97,7 +97,7 @@ void NXMLCallback::end_element(const std::string& n) {
 
         if (readers.empty()) {
             // In this case, current is the top-level reader.
-            state = DONE;
+            state_ = DONE;
         } else {
             // In this case, current is at the top of the stack.
             readers.pop();
@@ -108,7 +108,7 @@ void NXMLCallback::end_element(const std::string& n) {
 }
 
 void NXMLCallback::characters(const std::string& s) {
-    if (state == WORKING)
+    if (state_ == WORKING)
         if (charsAreInitial)
             currChars += s;
 }
@@ -128,9 +128,9 @@ void NXMLCallback::fatal_error(const std::string& s) {
 }
 
 void NXMLCallback::abort() {
-    if (state == ABORTED)
+    if (state_ == ABORTED)
         return;
-    state = ABORTED;
+    state_ = ABORTED;
 
     // Make sure we don't delete a child reader until we've called
     // abortElement() on its parent.

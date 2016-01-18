@@ -184,7 +184,7 @@ void GroupWidget::refresh(const regina::NGroupPresentation* group) {
         for (long i = 0; i < nRels; ++i) {
             QString rel;
             const std::list<regina::NGroupExpressionTerm>& terms(
-                group_->getRelation(i).terms());
+                group_->relation(i).terms());
             if (terms.empty())
                 rel = "1";
             else {
@@ -207,7 +207,7 @@ void GroupWidget::refresh(const regina::NGroupPresentation* group) {
         // Generators are g0, g1, ...
         // This is the default text that comes from the calculation engine.
         for (long i = 0; i < nRels; ++i)
-            new QListWidgetItem(QString(group_->getRelation(i).str().c_str()),
+            new QListWidgetItem(QString(group_->relation(i).str().c_str()),
                 fundRels_);
     }
 }

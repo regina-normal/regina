@@ -87,7 +87,7 @@ class REGINA_API NXMLCallback : public regina::xml::XMLParserCallback {
             /**< \c true if and only if we have not yet finished
                  receiving initial characters for the current deepest-level
                  XML element. */
-        int state;
+        int state_;
             /**< The current state of this callback object; this will be
                  one of the state constants defined in this class. */
 
@@ -116,6 +116,14 @@ class REGINA_API NXMLCallback : public regina::xml::XMLParserCallback {
          * in this class.
          *
          * @return the current state of this callback object.
+         */
+        int state() const;
+        /**
+         * Deprecated routine that returns the state that this callback object
+         * is currently in.
+         *
+         * \deprecated This routine has been renamed to state().
+         * See the state() documentation for further details.
          */
         int getState() const;
 
@@ -156,15 +164,19 @@ class REGINA_API NXMLCallback : public regina::xml::XMLParserCallback {
 
 inline NXMLCallback::NXMLCallback(NXMLElementReader& newTopReader,
         std::ostream& newErrStream) : topReader(newTopReader),
-        errStream(newErrStream), charsAreInitial(true), state(WAITING) {
+        errStream(newErrStream), charsAreInitial(true), state_(WAITING) {
 }
 
 inline NXMLElementReader* NXMLCallback::currentReader() {
     return (readers.empty() ? &topReader : readers.top());
 }
 
+inline int NXMLCallback::state() const {
+    return state_;
+}
+
 inline int NXMLCallback::getState() const {
-    return state;
+    return state_;
 }
 
 } // namespace regina

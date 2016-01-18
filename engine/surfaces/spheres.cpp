@@ -62,7 +62,7 @@ NNormalSurface* NNormalSurface::findNonTrivialSphere(NTriangulation* tri) {
     const NNormalSurface* s;
     NLargeInteger chi;
     for (unsigned long i = 0; i < nSurfaces; i++) {
-        s = surfaces->getSurface(i);
+        s = surfaces->surface(i);
 
         // No need to test for connectedness since these are vertex surfaces.
         if (s->isCompact() && (! s->hasRealBoundary()) &&
@@ -113,7 +113,7 @@ NNormalSurface* NNormalSurface::findVtxOctAlmostNormalSphere(
     int oct;
     NLargeInteger octCoord;
     for (unsigned long i = 0; i < nSurfaces; i++) {
-        s = surfaces->getSurface(i);
+        s = surfaces->surface(i);
 
         // No need to test for connectedness since these are vertex surfaces.
         // No need to test for vertex links since we're about to test
@@ -123,7 +123,7 @@ NNormalSurface* NNormalSurface::findVtxOctAlmostNormalSphere(
                 // Test for the existence of precisely one octagon.
                 for (tet = 0; tet < nTets; tet++)
                     for (oct = 0; oct < 3; oct++)
-                        if ((octCoord = s->getOctCoord(tet, oct)) > 0) {
+                        if ((octCoord = s->octs(tet, oct)) > 0) {
                             // We found our one and only non-zero
                             // octagonal coordinate.
                             if (octCoord > 1) {

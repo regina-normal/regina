@@ -35,9 +35,9 @@ def encode(i):
     sys.exit(1)
 
 def grouprep(g):
-    ans = encode(g.getRank())
+    ans = encode(g.rank())
     for i in range(g.getNumberOfInvariantFactors()):
-        ans = ans + encode(g.getInvariantFactor(i).longValue())
+        ans = ans + encode(g.invariantFactor(i).longValue())
     return ans
 
 def process(tri):

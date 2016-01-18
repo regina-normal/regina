@@ -169,7 +169,7 @@ bool process(const std::string& filename) {
             links = 0;
             n = s->size();
             for (i = 0; i < n; ++i)
-                if (s->getSurface(i)->isThinEdgeLink().first)
+                if (s->surface(i)->isThinEdgeLink().first)
                     ++links;
             out << t->size() << ' ' << links << " \""
                 << t->label() << '"' << std::endl;

@@ -722,11 +722,14 @@ class REGINA_API Triangulation<3> :
          * vertices, the homology group will be
          * calculated as if each such vertex had been truncated.
          *
-         * If this triangulation contains any invalid edges, the
-         * calculations will be performed <b>without</b> any truncation
-         * of the corresponding projective plane cusp.  Thus if a
-         * barycentric subdivision is performed on the triangulation, the
-         * result of homology() will change.
+         * If this triangulation contains any edges that are self-identified
+         * in reverse, the homology will be computed \b without truncating
+         * the corresponding projective plane cusp(s).  Therefore, if a
+         * barycentric subdivision is performed on such a triangulation,
+         * the result of homology() will change.
+         *
+         * This routine can also be accessed via the alias homologyH1()
+         * (a name that is more specific, but a little longer to type).
          *
          * Bear in mind that each time the triangulation changes, the
          * homology groups will be deleted.  Thus the reference that is
@@ -746,6 +749,39 @@ class REGINA_API Triangulation<3> :
          * @return the first homology group.
          */
         const NAbelianGroup& homology() const;
+        /**
+         * Returns the first homology group for this triangulation.
+         * If this triangulation contains any ideal or non-standard
+         * vertices, the homology group will be
+         * calculated as if each such vertex had been truncated.
+         *
+         * If this triangulation contains any edges that are self-identified
+         * in reverse, the homology will be computed \b without truncating
+         * the corresponding projective plane cusp(s).  Therefore, if a
+         * barycentric subdivision is performed on such a triangulation,
+         * the result of homologyH1() will change.
+         *
+         * This routine can also be accessed via the alias homology()
+         * (a name that is less specific, but a little easier to type).
+         *
+         * Bear in mind that each time the triangulation changes, the
+         * homology groups will be deleted.  Thus the reference that is
+         * returned from this routine should not be kept for later use.
+         * Instead, homologyH1() should be called again; this will be
+         * instantaneous if the group has already been calculated.
+         *
+         * Note that this triangulation is not required to be valid
+         * (see isValid()).
+         *
+         * \warning As with every routine implemented by Regina's
+         * NTriangulation class, if you are calling this from the subclass
+         * NSnapPeaTriangulation then <b>any fillings on the cusps will
+         * be ignored</b>.  If you wish to compute homology with fillings,
+         * call NSnapPeaTriangulation::homologyFilled() instead.
+         *
+         * @return the first homology group.
+         */
+        const NAbelianGroup& homologyH1() const;
         /**
          * Deprecated routine that returns the first homology group for
          * this triangulation.
@@ -3388,6 +3424,10 @@ inline bool Triangulation<3>::hasStrictAngleStructure() const {
 
 inline const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
     return fundamentalGroup();
+}
+
+inline const NAbelianGroup& NTriangulation::homologyH1() const {
+    return homology();
 }
 
 inline const NAbelianGroup& NTriangulation::getHomologyH1() const {

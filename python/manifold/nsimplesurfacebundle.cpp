@@ -44,6 +44,7 @@ void addNSimpleSurfaceBundle() {
             std::auto_ptr<NSimpleSurfaceBundle>, boost::noncopyable>
             ("NSimpleSurfaceBundle", init<int>())
         .def(init<const NSimpleSurfaceBundle&>())
+        .def("type", &NSimpleSurfaceBundle::type)
         .def("getType", &NSimpleSurfaceBundle::getType)
         .def(regina::python::add_eq_operators())
     ;

@@ -321,6 +321,8 @@ void addFace(const char* name, const char* embName) {
 }
 
 void addFace() {
+    def("binomSmall", regina::binomSmall);
+
     addFace<5, 0>("Face5_0", "FaceEmbedding5_0");
     addFace<5, 1>("Face5_1", "FaceEmbedding5_1");
     addFace<5, 2>("Face5_2", "FaceEmbedding5_2");

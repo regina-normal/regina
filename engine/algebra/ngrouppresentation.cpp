@@ -65,13 +65,13 @@ std::ostream& operator << (std::ostream& out,
     return out;
 }
 
-NGroupExpressionTerm& NGroupExpression::getTerm(size_t index) {
+NGroupExpressionTerm& NGroupExpression::term(size_t index) {
     TermIterator pos = terms_.begin();
     advance(pos, index);
     return *pos;
 }
 
-const NGroupExpressionTerm& NGroupExpression::getTerm(size_t index) const {
+const NGroupExpressionTerm& NGroupExpression::term(size_t index) const {
     TermIteratorConst pos = terms_.begin();
     advance(pos, index);
     return *pos;
@@ -249,11 +249,11 @@ std::string NGroupPresentation::recogniseGroup() const {
             presCopy.identifyExtensionOverZ() );
         if (AUT.get() != nullptr) {
             // Let's try to identify the fibre.
-            std::string domStr( AUT.get()->getDomain().recogniseGroup() );
+            std::string domStr( AUT.get()->domain().recogniseGroup() );
             if (domStr.length()>0) {
                 out<<"Z~"<<domStr<<" w/monodromy ";
             unsigned long numGen(
-                AUT.get()->getDomain().countGenerators() );
+                AUT.get()->domain().countGenerators() );
             for (unsigned long i=0; i<numGen; i++) {
               if (i!=0) out<<", ";
               if (numGen<27) out<<( (char) (i+97) );
@@ -300,9 +300,9 @@ std::unique_ptr<NAbelianGroup> NGroupPresentation::abelianisation() const
     NMatrixInt N(countGenerators(), countRelations() );
     // run through rels, increment N entries appropriately
     for (unsigned long j=0; j<countRelations(); j++) {
-        NGroupExpression Rj ( getRelation(j) );
+        NGroupExpression Rj ( relation(j) );
         for (unsigned long i=0; i<Rj.countTerms(); i++)
-            N.entry( Rj.getGenerator(i), j ) += Rj.getExponent(i);
+            N.entry( Rj.generator(i), j ) += Rj.exponent(i);
     }
     return std::unique_ptr<NAbelianGroup>(new NAbelianGroup(M,N));
 }
@@ -315,9 +315,9 @@ const
     NMatrixInt N(countGenerators(), countRelations() );
     // run through rels, increment N entries appropriately
     for (unsigned long j=0; j<countRelations(); j++) {
-        NGroupExpression Rj ( getRelation(j) );
+        NGroupExpression Rj ( relation(j) );
         for (unsigned long i=0; i<Rj.countTerms(); i++)
-            N.entry( Rj.getGenerator(i), j ) += Rj.getExponent(i);
+            N.entry( Rj.generator(i), j ) += Rj.exponent(i);
     }
     return std::unique_ptr<NMarkedAbelianGroup>(new NMarkedAbelianGroup(M,N));
 }
@@ -877,7 +877,7 @@ NGroupPresentation::smallCancellationDetail()
             for (unsigned long i=0; i<genUsage.size(); i++) if (genUsage[i] == 1) {
                     // have we found a substitution for generator i ?
                     if ( ( substitutionTable[i].countTerms() == 1 ) &&
-                            ( substitutionTable[i].getGenerator(0) == i ) ) {
+                            ( substitutionTable[i].generator(0) == i ) ) {
                         // we have a valid substitution.  Replace all occurances
                         // of generator genUsage[i] with the inverse of the remaining word
                         bool inv(true);
@@ -916,7 +916,7 @@ found_a_generator_killer:
     nGenerators = 0;
     for (unsigned long i=0; i<substitutionTable.size(); i++)
         if ( substitutionTable[i].countTerms() == 1 )
-            if ( substitutionTable[i].getGenerator(0) == i ) nGenerators++;
+            if ( substitutionTable[i].generator(0) == i ) nGenerators++;
 
     // now we can build up a mapping of where the current generators get sent to.
     // make it a std::vector.
@@ -925,7 +925,7 @@ found_a_generator_killer:
     unsigned long indx(0);
     for (unsigned long i=0; i<substitutionTable.size(); i++) {
         if ( substitutionTable[i].countTerms() == 1 )
-            if ( substitutionTable[i].getGenerator(0) == i ) {
+            if ( substitutionTable[i].generator(0) == i ) {
                 genReductionMapping[ indx ] = i;
                 indx++;
             }
@@ -1198,17 +1198,17 @@ NGroupPresentation::homologicalAlignmentDetail()
         unsigned long j0=0, j1=abMat.columns()-1;
         while (j0 < j1) {
             // if at j0 its zero, inc, if at j1 zero, dec
-            if ((abMat.entry(i,j0) % abelianized->getInvariantFactor(i)).isZero()) {
+            if ((abMat.entry(i,j0) % abelianized->invariantFactor(i)).isZero()) {
                 j0++;
                 continue;
             }
-            if ((abMat.entry(i,j1) % abelianized->getInvariantFactor(i)).isZero()) {
+            if ((abMat.entry(i,j1) % abelianized->invariantFactor(i)).isZero()) {
                 j1--;
                 continue;
             }
             // column op!
-            bool colFlag( (abMat.entry(i,j0) % abelianized->getInvariantFactor(i)).abs() <
-                          (abMat.entry(i,j1) % abelianized->getInvariantFactor(i)).abs() );
+            bool colFlag( (abMat.entry(i,j0) % abelianized->invariantFactor(i)).abs() <
+                          (abMat.entry(i,j1) % abelianized->invariantFactor(i)).abs() );
             NLargeInteger q = abMat.entry(i,colFlag ? j1 : j0) /
                               abMat.entry(i,colFlag ? j0 : j1);
 
@@ -1425,7 +1425,7 @@ NGroupPresentation::identifyFreeProduct() const
         // decide which relators from *this are relevant.
         for (unsigned long i=0; i<relations.size(); i++) {
             // check if relations[i] generator is in *I
-            if (I->find( relations[i]->getTerm(0).generator)!=I->end()) { // yes!
+            if (I->find( relations[i]->term(0).generator)!=I->end()) { // yes!
                 NGroupExpression* newRel( new NGroupExpression );
                 for (std::list<NGroupExpressionTerm>::const_iterator
                         ET=relations[i]->terms().begin();
@@ -1678,7 +1678,7 @@ NGroupPresentation::identifyExtensionOverZ()
     // step 1: let's build the abelianization homomorphism.
     homologicalAlignment();
     std::unique_ptr< NMarkedAbelianGroup > abelianized( markedAbelianisation() );
-    if (abelianized->getRank() != 1) return
+    if (abelianized->rank() != 1) return
             std::unique_ptr< NHomGroupPresentation >();
     if (abelianized->countInvariantFactors()>0)  // put Z generator at 0-th
         nielsenTransposition(0, abelianized->countInvariantFactors() );
@@ -1917,23 +1917,23 @@ NGroupPresentation::identifyExtensionOverZ()
     // deallocate relations, and resize and repopulate with copies of kerPres's
     //  relations.
 
-    nGenerators = retval->getDomain().nGenerators + 1;
+    nGenerators = retval->domain().nGenerators + 1;
     for (unsigned long i=0; i<relations.size(); i++)
         delete relations[i];
-    relations.resize( retval->getDomain().nGenerators +
-                      retval->getDomain().relations.size() );
+    relations.resize( retval->domain().nGenerators +
+                      retval->domain().relations.size() );
 
-    for (unsigned long i=0; i<retval->getDomain().relations.size(); i++)
-        relations[i] = new NGroupExpression( *retval->getDomain().relations[i] );
+    for (unsigned long i=0; i<retval->domain().relations.size(); i++)
+        relations[i] = new NGroupExpression( *retval->domain().relations[i] );
 
     // And now all the b^-1g_ib = genKiller(i) and b^-1g_ib = g_{i+1} relations.
-    for (unsigned long i=0; i<retval->getDomain().nGenerators; i++) {
+    for (unsigned long i=0; i<retval->domain().nGenerators; i++) {
         NGroupExpression* temp;
         temp = new NGroupExpression( retval->evaluate(i) );
-        temp->addTermFirst( retval->getDomain().nGenerators, 1);
+        temp->addTermFirst( retval->domain().nGenerators, 1);
         temp->addTermFirst( i, -1);
-        temp->addTermFirst( retval->getDomain().nGenerators, -1);
-        relations[ i+retval->getDomain().relations.size() ] = temp;
+        temp->addTermFirst( retval->domain().nGenerators, -1);
+        relations[ i+retval->domain().relations.size() ] = temp;
     }
 
     return retval;
@@ -2133,7 +2133,7 @@ std::unique_ptr<NHomGroupPresentation> NGroupPresentation::prettyRewritingDetail
                     j!=relations[i]->terms().end(); j++)
                 usedTerms.insert( j->generator );
             unsigned long smallestGen( *usedTerms.begin() );
-            while ( relations[i]->getTerm(0).generator != smallestGen )
+            while ( relations[i]->term(0).generator != smallestGen )
                 relations[i]->cycleRight();
         }
 

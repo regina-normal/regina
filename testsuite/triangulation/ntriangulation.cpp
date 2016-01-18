@@ -1716,7 +1716,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             else {
                 // Ranks match.
                 if (g.countInvariantFactors() != 1 ||
-                        g.getInvariantFactor(0) != torsionDegree)
+                        g.invariantFactor(0) != torsionDegree)
                     CPPUNIT_FAIL(msg.str());
             }
         }
@@ -1739,8 +1739,8 @@ class NTriangulationTest : public TriangulationTest<3> {
             else {
                 // Ranks match.
                 if (g.countInvariantFactors() != 2 ||
-                        g.getInvariantFactor(0) != torsionDegree1 ||
-                        g.getInvariantFactor(1) != torsionDegree2)
+                        g.invariantFactor(0) != torsionDegree1 ||
+                        g.invariantFactor(1) != torsionDegree2)
                     CPPUNIT_FAIL(msg.str());
             }
         }
@@ -1764,9 +1764,9 @@ class NTriangulationTest : public TriangulationTest<3> {
             else {
                 // Ranks match.
                 if (g.countInvariantFactors() != 3 ||
-                        g.getInvariantFactor(0) != torsionDegree1 ||
-                        g.getInvariantFactor(1) != torsionDegree2 ||
-                        g.getInvariantFactor(2) != torsionDegree3)
+                        g.invariantFactor(0) != torsionDegree1 ||
+                        g.invariantFactor(1) != torsionDegree2 ||
+                        g.invariantFactor(2) != torsionDegree3)
                     CPPUNIT_FAIL(msg.str());
             }
         }
@@ -1896,7 +1896,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             regina::NMatrixInt m(rel, gen);
             size_t i, j;
             for (i = 0; i < rel; ++i) {
-                const regina::NGroupExpression& r = pi1->getRelation(i);
+                const regina::NGroupExpression& r = pi1->relation(i);
                 for (j = 0; j < r.countTerms(); ++j) {
                     const regina::NGroupExpressionTerm& t = r.getTerm(j);
                     m.entry(i, t.generator) += t.exponent;
@@ -2052,7 +2052,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                     tri, regina::NS_STANDARD);
                 const NNormalSurface* f;
                 for (size_t i = 0; i < s->size(); ++i) {
-                    f = s->getSurface(i);
+                    f = s->surface(i);
                     if (f->eulerChar() == 2 &&
                             (! f->hasRealBoundary()) &&
                             ! f->isVertexLinking()) {

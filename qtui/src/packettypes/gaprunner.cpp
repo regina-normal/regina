@@ -323,7 +323,7 @@ QString GAPRunner::origGroupRelns() {
 
     QString ans = "[ ";
     for (unsigned long i = 0; i < nRels; i++) {
-        const regina::NGroupExpression& reln(origGroup.getRelation(i));
+        const regina::NGroupExpression& reln(origGroup.relation(i));
         if (reln.terms().empty())
             continue;
 

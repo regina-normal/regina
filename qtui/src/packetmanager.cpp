@@ -73,11 +73,10 @@ QIcon PacketManager::icon(NPacket* packet, bool allowLock) {
     else if (packet->type() == NPDF::packetType)
         id = IconCache::packet_pdf;
     else if (packet->type() == NSurfaceFilter::packetType) {
-        if (((NSurfaceFilter*)packet)->getFilterType() ==
-                NSurfaceFilterCombination::filterType)
+        if (((NSurfaceFilter*)packet)->filterType() == NS_FILTER_COMBINATION)
             id = IconCache::filter_comb;
-        else if (((NSurfaceFilter*)packet)->getFilterType() ==
-                NSurfaceFilterProperties::filterType)
+        else if (((NSurfaceFilter*)packet)->filterType() ==
+                NS_FILTER_PROPERTIES)
             id = IconCache::filter_prop;
         else
             id = IconCache::packet_filter;
@@ -128,13 +127,11 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
             enclosingPane);
     }
     if (packet->type() == NSurfaceFilter::packetType) {
-        if (((NSurfaceFilter*)packet)->getFilterType() ==
-                NSurfaceFilterCombination::filterType)
+        if (((NSurfaceFilter*)packet)->filterType() == NS_FILTER_COMBINATION)
             return new NSurfaceFilterCombUI(
                 dynamic_cast<NSurfaceFilterCombination*>(packet),
                 enclosingPane);
-        if (((NSurfaceFilter*)packet)->getFilterType() ==
-                NSurfaceFilterProperties::filterType)
+        if (((NSurfaceFilter*)packet)->filterType() == NS_FILTER_PROPERTIES)
             return new NSurfaceFilterPropUI(
                 dynamic_cast<NSurfaceFilterProperties*>(packet),
                 enclosingPane);

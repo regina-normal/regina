@@ -231,7 +231,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
         return;
     }
     
-    const regina::NNormalSurface* s = self.packet->getSurface(selectedRow - 1);
+    const regina::NNormalSurface* s = self.packet->surface(selectedRow - 1);
     if (! s->isCompact()) {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Surface Not Compact"
                                                         message:@"I can only cut along compact surfaces, not spun-normal surfaces."
@@ -278,7 +278,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
         return;
     }
     
-    const regina::NNormalSurface* s = self.packet->getSurface(selectedRow - 1);
+    const regina::NNormalSurface* s = self.packet->surface(selectedRow - 1);
     if (! s->isCompact()) {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Surface Not Compact"
                                                         message:@"I can only crush compact surfaces, not spun-normal surfaces."
@@ -409,7 +409,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
             cell = [[RegularSpreadViewCell alloc] initWithReuseIdentifier:regularCellID];
     }
 
-    const regina::NNormalSurface* s = self.packet->getSurface(rowPath.row);
+    const regina::NNormalSurface* s = self.packet->surface(rowPath.row);
 
     int prop = PROP_NONE;
     int coord = columnPath.column;
@@ -430,7 +430,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
         case PROP_NONE:
             break;
         case PROP_NAME:
-            cell.textLabel.text = @(s->getName().c_str());
+            cell.textLabel.text = @(s->name().c_str());
             cell.textLabel.textAlignment = NSTextAlignmentLeft;
             return cell;
         case PROP_EULER:
@@ -512,13 +512,13 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
 
     if (self.packet->allowsAlmostNormal()) {
         if (coord == 0) {
-            regina::NDiscType oct = s->getOctPosition();
+            regina::NDiscType oct = s->octPosition();
             if (oct == regina::NDiscType::NONE) {
                 cell.textLabel.text = @"";
                 return cell;
             }
 
-            regina::NLargeInteger tot = s->getOctCoord(oct.tetIndex, oct.type);
+            regina::NLargeInteger tot = s->octs(oct.tetIndex, oct.type);
             if (tot == 1) {
                 cell.textLabel.attributedText = [TextHelper yesNoString:[NSString stringWithFormat:@"K%ld: %s (1 oct)",
                                                                          oct.tetIndex,
