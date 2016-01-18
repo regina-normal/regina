@@ -84,7 +84,7 @@ typedef Component<3> NComponent;
  */
 class REGINA_API NLayeredChainPair : public NStandardTriangulation {
     private:
-        NLayeredChain* chain[2];
+        NLayeredChain* chain_[2];
             /**< The two layered chains that make up this pair. */
 
     public:
@@ -107,6 +107,14 @@ class REGINA_API NLayeredChainPair : public NStandardTriangulation {
          * @param which specifies which chain to return; this must be 0
          * or 1.
          * @return the requested layered chain.
+         */
+        const NLayeredChain* chain(int which) const;
+        /**
+         * Deprecated routine that returns the requested layered chain used to
+         * form this structure.
+         *
+         * \deprecated This routine has been renamed to chain().
+         * See the chain() documentation for further details.
          */
         const NLayeredChain* getChain(int which) const;
 
@@ -139,27 +147,30 @@ class REGINA_API NLayeredChainPair : public NStandardTriangulation {
 // Inline functions for NLayeredChainPair
 
 inline NLayeredChainPair::NLayeredChainPair() {
-    chain[0] = chain[1] = 0;
+    chain_[0] = chain_[1] = 0;
 }
 inline NLayeredChainPair::~NLayeredChainPair() {
-    if (chain[0]) delete chain[0];
-    if (chain[1]) delete chain[1];
+    if (chain_[0]) delete chain_[0];
+    if (chain_[1]) delete chain_[1];
 }
 
+inline const NLayeredChain* NLayeredChainPair::chain(int which) const {
+    return chain_[which];
+}
 inline const NLayeredChain* NLayeredChainPair::getChain(int which) const {
-    return chain[which];
+    return chain_[which];
 }
 inline std::ostream& NLayeredChainPair::writeName(std::ostream& out) const {
     return out << "C("
-        << chain[0]->index() << ',' << chain[1]->index() << ')';
+        << chain_[0]->index() << ',' << chain_[1]->index() << ')';
 }
 inline std::ostream& NLayeredChainPair::writeTeXName(std::ostream& out) const {
     return out << "C_{"
-        << chain[0]->index() << ',' << chain[1]->index() << '}';
+        << chain_[0]->index() << ',' << chain_[1]->index() << '}';
 }
 inline void NLayeredChainPair::writeTextLong(std::ostream& out) const {
     out << "Layered chain pair (chain lengths "
-        << chain[0]->index() << ", " << chain[1]->index() << ')';
+        << chain_[0]->index() << ", " << chain_[1]->index() << ')';
 }
 
 } // namespace regina

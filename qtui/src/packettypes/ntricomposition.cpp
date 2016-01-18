@@ -685,8 +685,8 @@ void NTriCompositionUI::findLayeredChainPairs() {
             details = new QTreeWidgetItem(id, details);
             details->setText(0,
                 tr("Chain lengths: %1, %2").
-                arg(pair->getChain(0)->index()).
-                arg(pair->getChain(1)->index()));
+                arg(pair->chain(0)->index()).
+                arg(pair->chain(1)->index()));
 
             delete pair;
         }

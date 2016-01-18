@@ -43,10 +43,10 @@ namespace regina {
 
 NLayeredChainPair* NLayeredChainPair::clone() const {
     NLayeredChainPair* ans = new NLayeredChainPair();
-    if (chain[0])
-        ans->chain[0] = new NLayeredChain(*chain[0]);
-    if (chain[1])
-        ans->chain[1] = new NLayeredChain(*chain[1]);
+    if (chain_[0])
+        ans->chain_[0] = new NLayeredChain(*chain_[0]);
+    if (chain_[1])
+        ans->chain_[1] = new NLayeredChain(*chain_[1]);
     return ans;
 }
 
@@ -112,8 +112,8 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
                     // Extend longChain to (n-1) tetrahedra.
                     while (longChain->index() + 1 < nTet)
                         longChain->extendBelow();
-                    ans->chain[1] = longChain;
-                    ans->chain[0] = new NLayeredChain(
+                    ans->chain_[1] = longChain;
+                    ans->chain_[0] = new NLayeredChain(
                         firstBottom->adjacentTetrahedron(
                             firstBottomRoles[0]),
                         firstBottom->adjacentGluing(
@@ -172,11 +172,11 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
             // We found one!
             NLayeredChainPair* ans = new NLayeredChainPair();
             if (first->index() > second->index()) {
-                ans->chain[0] = second;
-                ans->chain[1] = first;
+                ans->chain_[0] = second;
+                ans->chain_[1] = first;
             } else {
-                ans->chain[0] = first;
-                ans->chain[1] = second;
+                ans->chain_[0] = first;
+                ans->chain_[1] = second;
             }
             return ans;
         } else {
@@ -193,8 +193,8 @@ NManifold* NLayeredChainPair::manifold() const {
     NSFSpace* ans = new NSFSpace();
 
     ans->insertFibre(2, -1);
-    ans->insertFibre(chain[0]->index() + 1, 1);
-    ans->insertFibre(chain[1]->index() + 1, 1);
+    ans->insertFibre(chain_[0]->index() + 1, 1);
+    ans->insertFibre(chain_[1]->index() + 1, 1);
 
     ans->reduce();
     return ans;
@@ -213,8 +213,8 @@ NAbelianGroup* NLayeredChainPair::homology() const {
     NMatrixInt mat(3, 3);
     mat.initialise(1);
     mat.entry(0, 1) = mat.entry(2, 2) = -1;
-    mat.entry(1, 0) = chain[0]->index();
-    mat.entry(2, 1) = chain[1]->index();
+    mat.entry(1, 0) = chain_[0]->index();
+    mat.entry(2, 1) = chain_[1]->index();
     ans->addGroup(mat);
     return ans;
 }
