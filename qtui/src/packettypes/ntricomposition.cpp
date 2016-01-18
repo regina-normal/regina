@@ -744,20 +744,20 @@ void NTriCompositionUI::findLayeredLoops() {
             if (loop->isTwisted()) {
                 details = new QTreeWidgetItem(id, details);
                 details->setText(0, tr(
-                    "Length %1, twisted").arg(loop->getLength()));
+                    "Length %1, twisted").arg(loop->length()));
                 details = new QTreeWidgetItem(id, details);
                 details->setText(0, tr(
                     "Hinge: edge %1").
-                    arg(tri->edgeIndex(loop->getHinge(0))));
+                    arg(tri->edgeIndex(loop->hinge(0))));
             } else {
                 details = new QTreeWidgetItem(id, details);
                 details->setText(0, tr(
-                    "Length %1, not twisted").arg(loop->getLength()));
+                    "Length %1, not twisted").arg(loop->length()));
                 details = new QTreeWidgetItem(id);
                 details->setText(0, tr(
                     "Hinges: edge %1, %2").
-                    arg(tri->edgeIndex(loop->getHinge(0))).
-                    arg(tri->edgeIndex(loop->getHinge(1))));
+                    arg(tri->edgeIndex(loop->hinge(0))).
+                    arg(tri->edgeIndex(loop->hinge(1))));
             }
 
             delete loop;

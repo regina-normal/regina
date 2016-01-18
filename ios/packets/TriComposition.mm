@@ -287,13 +287,13 @@
             [details appendFormat:@INDENT1 "Component %ld\n", i];
             
             if (loop->isTwisted()) {
-                [details appendFormat:@INDENT1 "Length %ld, twisted\n", loop->getLength()];
-                [details appendFormat:@INDENT1 "Hinge: edge %ld\n", loop->getHinge(0)->index()];
+                [details appendFormat:@INDENT1 "Length %ld, twisted\n", loop->length()];
+                [details appendFormat:@INDENT1 "Hinge: edge %ld\n", loop->hinge(0)->index()];
             } else {
-                [details appendFormat:@INDENT1 "Length %ld, not twisted\n", loop->getLength()];
+                [details appendFormat:@INDENT1 "Length %ld, not twisted\n", loop->length()];
                 [details appendFormat:@INDENT1 "Hinges: edge %ld, %ld\n",
-                 loop->getHinge(0)->index(),
-                 loop->getHinge(1)->index()];
+                 loop->hinge(0)->index(),
+                 loop->hinge(1)->index()];
             }
             
             [details appendString:@"\n"];
