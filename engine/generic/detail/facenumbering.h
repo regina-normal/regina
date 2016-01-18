@@ -43,6 +43,7 @@
 #endif
 
 #include "regina-core.h"
+#include <algorithm>
 
 // Permutation headers required for template specialisations.
 #include "maths/nperm2.h"
@@ -280,7 +281,11 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             while (remaining > 0) {
               done = 0;
               while (done == 0) {
-                val = binomSmall_[max][k];
+                if (max < k) {
+                  val = 0;
+                } else {
+                  val = binomSmall_[max][k];
+                }
                 if (val <= remaining) {
                   k--;
                   perm[subdim-k] = dim-max;
@@ -338,7 +343,9 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
 
             unsigned val = 0;
             for (i=0; i<=subdim; i++) {
-              val += binomSmall_[dim-v[subdim-i]][i+1];
+              if (dim - v[subdim-i] >= i+1) {
+                val += binomSmall_[dim-v[subdim-i]][i+1];
+              }
             }
             return binomSmall_[dim+1][subdim+1]-1-val;
         }

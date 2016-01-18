@@ -243,8 +243,8 @@ struct NormalInfo;
  *
  * This macro provides the class with:
  *
- * - a compile-time constant \a coordType, which is equal to the
- *   corresponding NormalCoords constant;
+ * - a compile-time constant \a coordsID and a deprecated compile-time constant
+ *   \a coordType, both equal to the corresponding NormalCoords constant;
  * - a typedef \a Info, which refers to the corresponding specialisation
  *   of the NormalInfo<> template;
  * - declarations and implementations of the virtual functions
@@ -259,6 +259,7 @@ struct NormalInfo;
 #define REGINA_NORMAL_SURFACE_FLAVOUR(class_, id) \
     public: \
         typedef NormalInfo<id> Info; \
+        static constexpr const NormalCoords coordsID = id; \
         static constexpr const NormalCoords coordType = id; \
         inline virtual NNormalSurfaceVector* clone() const { \
             return new class_(*this); \

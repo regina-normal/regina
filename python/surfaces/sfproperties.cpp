@@ -39,9 +39,9 @@ using namespace boost::python;
 using regina::NSurfaceFilterProperties;
 
 namespace {
-    boost::python::list ECs_list(const NSurfaceFilterProperties& f) {
+    boost::python::list eulerChars_list(const NSurfaceFilterProperties& f) {
         boost::python::list ans;
-        for (auto& e : f.ECs())
+        for (auto& e : f.eulerChars())
             ans.append(e);
         return ans;
     }
@@ -52,11 +52,11 @@ void addNSurfaceFilterProperties() {
             std::auto_ptr<NSurfaceFilterProperties>, boost::noncopyable>
             ("NSurfaceFilterProperties")
         .def(init<const NSurfaceFilterProperties&>())
-        .def("ECs", ECs_list)
-        .def("getECs", ECs_list)
-        .def("countECs", &NSurfaceFilterProperties::countECs)
+        .def("eulerChars", eulerChars_list)
+        .def("getECs", eulerChars_list)
+        .def("countEulerChars", &NSurfaceFilterProperties::countEulerChars)
         .def("getNumberOfECs", &NSurfaceFilterProperties::getNumberOfECs)
-        .def("EC", &NSurfaceFilterProperties::EC)
+        .def("eulerChar", &NSurfaceFilterProperties::eulerChar)
         .def("getEC", &NSurfaceFilterProperties::getEC)
         .def("orientability", &NSurfaceFilterProperties::orientability)
         .def("getOrientability", &NSurfaceFilterProperties::getOrientability)
@@ -64,8 +64,12 @@ void addNSurfaceFilterProperties() {
         .def("getCompactness", &NSurfaceFilterProperties::getCompactness)
         .def("realBoundary", &NSurfaceFilterProperties::realBoundary)
         .def("getRealBoundary", &NSurfaceFilterProperties::getRealBoundary)
+        .def("addEulerChar", &NSurfaceFilterProperties::addEulerChar)
         .def("addEC", &NSurfaceFilterProperties::addEC)
+        .def("removeEulerChar", &NSurfaceFilterProperties::removeEulerChar)
         .def("removeEC", &NSurfaceFilterProperties::removeEC)
+        .def("removeAllEulerChars",
+            &NSurfaceFilterProperties::removeAllEulerChars)
         .def("removeAllECs", &NSurfaceFilterProperties::removeAllECs)
         .def("setOrientability", &NSurfaceFilterProperties::setOrientability)
         .def("setCompactness", &NSurfaceFilterProperties::setCompactness)

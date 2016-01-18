@@ -527,7 +527,7 @@ void ctrlProcess(NContainer* c) {
 
     for (NPacket* child = c->firstChild(); child;
             child = child->nextSibling()) {
-        if (child->type() != NTriangulation::packetType)
+        if (child->type() != PACKET_TRIANGULATION)
             continue;
         tri = static_cast<NTriangulation*>(child);
 
@@ -626,7 +626,7 @@ int mainController() {
 
     // Process the packets.
     for (NPacket* p = tree; p; p = p->nextTreePacket())
-        if (p->type() == NContainer::packetType) {
+        if (p->type() == PACKET_CONTAINER) {
             ctrlLogStamp() << "Processing container: " << p->label()
                 << std::endl;
             ctrlProcess(static_cast<NContainer*>(p));

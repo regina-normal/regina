@@ -96,8 +96,8 @@ struct PacketInfo;
  *
  * This macro provides the class with:
  *
- * - a compile-time constant \a packetType, which is equal to the
- *   corresponding PacketType constant;
+ * - a compile-time constant \a typeID and a deprecated compile-time constant
+ *   \a packetType, both equal to the corresponding PacketType constant;
  * - declarations and implementations of the virtual functions
  *   NPacket::type() and NPacket::typeName().
  *
@@ -106,6 +106,7 @@ struct PacketInfo;
  */
 #define REGINA_PACKET(class_, id) \
     public: \
+        static constexpr const PacketType typeID = id; \
         static constexpr const PacketType packetType = id; \
         inline virtual PacketType type() const { \
             return id; \

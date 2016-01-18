@@ -54,9 +54,9 @@ namespace {
     void (NGroupExpression::*addTermLast_pair)(unsigned long, long) =
         &NGroupExpression::addTermLast;
     NGroupExpressionTerm& (NGroupExpression::*getTerm_non_const)(
-        unsigned long) = &NGroupExpression::getTerm;
+        size_t) = &NGroupExpression::getTerm;
     NGroupExpressionTerm& (NGroupExpression::*term_non_const)(
-        unsigned long) = &NGroupExpression::term;
+        size_t) = &NGroupExpression::term;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplify,
         NGroupExpression::simplify, 0, 1);
