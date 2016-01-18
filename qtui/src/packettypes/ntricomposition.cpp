@@ -710,7 +710,7 @@ void NTriCompositionUI::findLayeredLensSpaces() {
             details = new QTreeWidgetItem(id);
             details->setText(0, tr("Component %1").arg(i));
 
-            const regina::NLayeredSolidTorus& torus(lens->getTorus());
+            const regina::NLayeredSolidTorus& torus(lens->torus());
             details = new QTreeWidgetItem(id, details);
             details->setText(0, tr(
                 "Layered %1-%2-%3 solid torus %4").

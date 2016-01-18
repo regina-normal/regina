@@ -44,10 +44,10 @@ namespace regina {
 
 NLayeredLensSpace* NLayeredLensSpace::clone() const {
     NLayeredLensSpace* ans = new NLayeredLensSpace();
-    ans->torus = torus->clone();
-    ans->mobiusBoundaryGroup = mobiusBoundaryGroup;
-    ans->p = p;
-    ans->q = q;
+    ans->torus_ = torus_->clone();
+    ans->mobiusBoundaryGroup_ = mobiusBoundaryGroup_;
+    ans->p_ = p_;
+    ans->q_ = q_;
     return ans;
 }
 
@@ -84,56 +84,56 @@ NLayeredLensSpace* NLayeredLensSpace::isLayeredLensSpace(
 
             // This is the real thing!
             NLayeredLensSpace* ans = new NLayeredLensSpace();
-            ans->torus = torus;
+            ans->torus_ = torus;
 
             NPerm4 perm = tet->adjacentGluing(tf0);
             if (perm[tf1] == tf0) {
                 // Snapped shut.
-                ans->mobiusBoundaryGroup = torus->getTopEdgeGroup(
+                ans->mobiusBoundaryGroup_ = torus->getTopEdgeGroup(
                     5 - NEdge::edgeNumber[tf0][tf1]);
             } else {
                 // Twisted shut.
-                ans->mobiusBoundaryGroup = torus->getTopEdgeGroup(
+                ans->mobiusBoundaryGroup_ = torus->getTopEdgeGroup(
                     NEdge::edgeNumber[perm[tf1]][tf0]);
             }
 
             // Work out p and q.
-            switch (ans->mobiusBoundaryGroup) {
+            switch (ans->mobiusBoundaryGroup_) {
                 // For layered solid torus (x < y < z):
                 case 0:
                     // L( x + 2y, y )
-                    ans->p =
+                    ans->p_ =
                         torus->getMeridinalCuts(1) + torus->getMeridinalCuts(2);
-                    ans->q = torus->getMeridinalCuts(1);
+                    ans->q_ = torus->getMeridinalCuts(1);
                     break;
                 case 1:
                     // L( 2x + y, x )
-                    ans->p =
+                    ans->p_ =
                         torus->getMeridinalCuts(0) + torus->getMeridinalCuts(2);
-                    ans->q = torus->getMeridinalCuts(0);
+                    ans->q_ = torus->getMeridinalCuts(0);
                     break;
                 case 2:
                     // L( y - x, x )
-                    ans->p =
+                    ans->p_ =
                         torus->getMeridinalCuts(1) - torus->getMeridinalCuts(0);
-                    if (ans->p == 0)
-                        ans->q = 1;
+                    if (ans->p_ == 0)
+                        ans->q_ = 1;
                     else
-                        ans->q = torus->getMeridinalCuts(0) % ans->p;
+                        ans->q_ = torus->getMeridinalCuts(0) % ans->p_;
                     break;
             }
 
             // Find the nicest possible value for q.
             // Choices are +/- q, +/- 1/q.
-            if (ans->p > 0) {
-                if (2 * ans->q > ans->p)
-                    ans->q = ans->p - ans->q;
-                if (ans->q > 0) {
-                    unsigned long qAlt = modularInverse(ans->p, ans->q);
-                    if (2 * qAlt > ans->p)
-                        qAlt = ans->p - qAlt;
-                    if (qAlt < ans->q)
-                        ans->q = qAlt;
+            if (ans->p_ > 0) {
+                if (2 * ans->q_ > ans->p_)
+                    ans->q_ = ans->p_ - ans->q_;
+                if (ans->q_ > 0) {
+                    unsigned long qAlt = modularInverse(ans->p_, ans->q_);
+                    if (2 * qAlt > ans->p_)
+                        qAlt = ans->p_ - qAlt;
+                    if (qAlt < ans->q_)
+                        ans->q_ = qAlt;
                 }
             }
 
@@ -144,42 +144,42 @@ NLayeredLensSpace* NLayeredLensSpace::isLayeredLensSpace(
 }
 
 NManifold* NLayeredLensSpace::manifold() const {
-    return new NLensSpace(p, q);
+    return new NLensSpace(p_, q_);
 }
 
 NAbelianGroup* NLayeredLensSpace::homology() const {
     NAbelianGroup* ans = new NAbelianGroup();
-    if (p == 0)
+    if (p_ == 0)
         ans->addRank();
-    else if (p > 1)
-        ans->addTorsionElement(p);
+    else if (p_ > 1)
+        ans->addTorsionElement(p_);
     return ans;
 }
 
 std::ostream& NLayeredLensSpace::writeName(std::ostream& out) const {
-    if (p == 3 && q == 1) {
+    if (p_ == 3 && q_ == 1) {
         out << "L(3,1)";
-        if (torus->size() != 2)
+        if (torus_->size() != 2)
             return out;
         else if (isSnapped())
             return out << " (1)";
         else
             return out << " (2)";
     } else
-        return out << "L(" << p << ',' << q << ')';
+        return out << "L(" << p_ << ',' << q_ << ')';
 }
 
 std::ostream& NLayeredLensSpace::writeTeXName(std::ostream& out) const {
-    if (p == 3 && q == 1) {
+    if (p_ == 3 && q_ == 1) {
         out << "L_{3,1}";
-        if (torus->size() != 2)
+        if (torus_->size() != 2)
             return out;
         else if (isSnapped())
             return out << "^{(1)}";
         else
             return out << "^{(2)}";
     } else
-        return out << "L_{" << p << ',' << q << '}';
+        return out << "L_{" << p_ << ',' << q_ << '}';
 }
 
 } // namespace regina

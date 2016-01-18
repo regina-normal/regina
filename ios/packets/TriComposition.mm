@@ -262,7 +262,7 @@
             [details appendFormat:@"Layered lens space %s\n", lens->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
             
-            const regina::NLayeredSolidTorus& torus(lens->getTorus());
+            const regina::NLayeredSolidTorus& torus(lens->torus());
             [details appendFormat:@INDENT1 "Layered %ld-%ld-%ld solid torus %s\n",
              torus.getMeridinalCuts(0),
              torus.getMeridinalCuts(1),
