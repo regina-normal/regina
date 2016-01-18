@@ -38,7 +38,7 @@ namespace regina {
 
 std::vector<NLargeInteger> NPrimes::largePrimes;
 
-NLargeInteger NPrimes::prime(size_t which, bool autoGrow) {
+NLargeInteger NPrimes::prime(unsigned long which, bool autoGrow) {
     // Can we grab it straight out of the hard-coded seed list?
     if (which < numPrimeSeeds)
         return primeSeedList[which];
@@ -55,7 +55,7 @@ NLargeInteger NPrimes::prime(size_t which, bool autoGrow) {
     return largePrimes[which - numPrimeSeeds];
 }
 
-void NPrimes::growPrimeList(size_t extras) {
+void NPrimes::growPrimeList(unsigned long extras) {
     NLargeInteger lastPrime = (largePrimes.empty() ?
         primeSeedList[numPrimeSeeds - 1] :
         largePrimes[largePrimes.size() - 1]);
@@ -101,9 +101,9 @@ std::vector<NLargeInteger> NPrimes::primeDecomp(const NLargeInteger& n) {
     // ad-hoc since the current usage in Regina rarely demands the
     // factorization of even a 4-digit number.
 
-    size_t cpi=0; // current prime index.
-    size_t iterSinceDivision=0; // keeps track of how many iterations
-                                // since the last successful division
+    unsigned long cpi=0; // current prime index.
+    unsigned long iterSinceDivision=0; // keeps track of how many iterations
+                                       // since the last successful division
 
     while ( temp != NLargeInteger::one ) {
         // now cpi<size(), check to see if temp % prime(cpi) == 0
@@ -149,7 +149,7 @@ std::vector<std::pair<NLargeInteger, unsigned long> >
     // go through list1, record number of each prime, put in retlist.
     if (! list1.empty()) {
         NLargeInteger cp(list1.front()); // current prime
-        size_t cc(1); // current count
+        unsigned long cc(1); // current count
         std::vector<NLargeInteger>::const_iterator it = list1.begin();
         for (++it; it != list1.end(); ++it) {
             if (*it == cp)

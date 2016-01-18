@@ -180,7 +180,7 @@ REGINA_API void metricalSmithNormalForm(NMatrixInt& matrix,
  * @param matrix the matrix to examine and rearrange.
  * @return the rank of the given matrix.
  */
-REGINA_API size_t rowBasis(NMatrixInt& matrix);
+REGINA_API unsigned rowBasis(NMatrixInt& matrix);
 
 /**
  * Finds a basis for the row space of the given matrix, as well as an
@@ -217,7 +217,7 @@ REGINA_API size_t rowBasis(NMatrixInt& matrix);
  * "incremental" basis for the orthogonal complement of \a input.
  * @return the rank of the given matrix \a input.
  */
-REGINA_API size_t rowBasisAndOrthComp(NMatrixInt& input,
+REGINA_API unsigned rowBasisAndOrthComp(NMatrixInt& input,
     NMatrixInt& complement);
 
 /**
@@ -275,7 +275,7 @@ REGINA_API size_t rowBasisAndOrthComp(NMatrixInt& input,
  * \author Ryan Budney
  */
 REGINA_API void columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri,
-        const std::vector<size_t> &rowList);
+        const std::vector<unsigned> &rowList);
 
 /**
  * Given a homomorphism from Z^n to Z^k and a sublattice of Z^k,

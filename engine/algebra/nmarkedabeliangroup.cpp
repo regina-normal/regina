@@ -1191,7 +1191,7 @@ std::unique_ptr<NHomMarkedAbelianGroup> NHomMarkedAbelianGroup::inverseHom() con
  //  from matrixOps to compute the inverse of D.
  NMatrixInt Di(D.rows(), D.columns()); Di.makeIdentity();
  NMatrixInt Dold(D.rows(), D.columns()); Dold.makeIdentity();
- std::vector<size_t> rowList(D.rows());
+ std::vector<unsigned> rowList(D.rows());
  for (unsigned i=0; i<rowList.size(); i++) rowList[i]=i;
  columnEchelonForm(D, Di, Dold, rowList); 
  // now Di is the inverse of the old D, and D is the identity, 

@@ -77,7 +77,7 @@ class REGINA_API NMatrixInt : public NMatrixRing<NLargeInteger> {
          * @param rows the number of rows in the new matrix.
          * @param cols the number of columns in the new matrix.
          */
-        NMatrixInt(size_t rows, size_t cols);
+        NMatrixInt(unsigned long rows, unsigned long cols);
         /**
          * Creates a new matrix that is a clone of the given matrix.
          *
@@ -101,7 +101,7 @@ class REGINA_API NMatrixInt : public NMatrixRing<NLargeInteger> {
          * divided by \a divBy.
          * @param divBy the integer to divide each row element by.
          */
-        void divRowExact(size_t row, const NLargeInteger& divBy) {
+        void divRowExact(unsigned long row, const NLargeInteger& divBy) {
             for (NLargeInteger* x = this->data[row];
                     x != this->data[row] + nCols; ++x)
                 x->divByExact(divBy);
@@ -123,7 +123,7 @@ class REGINA_API NMatrixInt : public NMatrixRing<NLargeInteger> {
          * divided by \a divBy.
          * @param divBy the integer to divide each column element by.
          */
-        void divColExact(size_t col, const NLargeInteger& divBy) {
+        void divColExact(unsigned long col, const NLargeInteger& divBy) {
             for (NLargeInteger** row = this->data; row != this->data + nRows;
                     ++row)
                 (*row)[col].divByExact(divBy);
@@ -138,7 +138,7 @@ class REGINA_API NMatrixInt : public NMatrixRing<NLargeInteger> {
          * @param row the index of the row whose gcd should be computed.
          * @return the greatest common divisor of all elements of this row.
          */
-        NLargeInteger gcdRow(size_t row) {
+        NLargeInteger gcdRow(unsigned long row) {
             NLargeInteger* x = this->data[row];
 
             NLargeInteger gcd = *x++;
@@ -159,7 +159,7 @@ class REGINA_API NMatrixInt : public NMatrixRing<NLargeInteger> {
          * @param col the index of the column whose gcd should be computed.
          * @return the greatest common divisor of all elements of this column.
          */
-        NLargeInteger gcdCol(size_t col) {
+        NLargeInteger gcdCol(unsigned long col) {
             NLargeInteger** row = this->data;
 
             NLargeInteger gcd = (*row++)[col];
@@ -180,7 +180,7 @@ class REGINA_API NMatrixInt : public NMatrixRing<NLargeInteger> {
          *
          * @param row the index of the row to reduce.
          */
-        void reduceRow(size_t row) {
+        void reduceRow(unsigned long row) {
             NLargeInteger gcd = gcdRow(row);
             if (gcd != NLargeInteger::zero && gcd != NLargeInteger::one)
                 divRowExact(row, gcd);
@@ -195,7 +195,7 @@ class REGINA_API NMatrixInt : public NMatrixRing<NLargeInteger> {
          *
          * @param col the index of the column to reduce.
          */
-        void reduceCol(size_t col) {
+        void reduceCol(unsigned long col) {
             NLargeInteger gcd = gcdCol(col);
             if (gcd != NLargeInteger::zero && gcd != NLargeInteger::one)
                 divColExact(col, gcd);
@@ -204,7 +204,7 @@ class REGINA_API NMatrixInt : public NMatrixRing<NLargeInteger> {
 
 // Inline functions for NMatrixInt
 
-inline NMatrixInt::NMatrixInt(size_t rows, size_t cols) :
+inline NMatrixInt::NMatrixInt(unsigned long rows, unsigned long cols) :
         NMatrixRing<NLargeInteger>(rows, cols) {
 }
 inline NMatrixInt::NMatrixInt(const NMatrixInt& cloneMe) :
