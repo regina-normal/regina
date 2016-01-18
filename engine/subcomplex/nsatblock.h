@@ -493,6 +493,14 @@ class REGINA_API NSatBlock :
          * or \c false if it should be in plain text format.
          * @return an abbreviated name for this block.
          */
+        std::string abbr(bool tex = false) const;
+        /**
+         * Deprecated routine that returns an abbreviated name or symbol for
+         * this block.
+         *
+         * \deprecated This routine has been renamed to abbr().
+         * See the abbr() documentation for further details.
+         */
         std::string getAbbr(bool tex = false) const;
 
         /**
@@ -802,6 +810,10 @@ inline void NSatBlock::setAdjacent(unsigned whichAnnulus, NSatBlock* adjBlock,
     adjBlock->adjAnnulus_[adjAnnulus] = whichAnnulus;
     adjBlock->adjReflected_[adjAnnulus] = adjReflected;
     adjBlock->adjBackwards_[adjAnnulus] = adjBackwards;
+}
+
+inline std::string NSatBlock::getAbbr(bool tex) const {
+    return abbr();
 }
 
 inline bool NSatBlock::notUnique(NTetrahedron* test) {

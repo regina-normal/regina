@@ -61,7 +61,7 @@ NPluggedTorusBundle::~NPluggedTorusBundle() {
     delete region_;
 }
 
-NManifold* NPluggedTorusBundle::getManifold() const {
+NManifold* NPluggedTorusBundle::manifold() const {
     NSFSpace* sfs = region_->createSFS(false);
     if (! sfs)
         return 0;
@@ -178,17 +178,17 @@ NPluggedTorusBundle* NPluggedTorusBundle::hunt(NTriangulation* triang,
         // Count tetrahedra to ensure that the layerings haven't crossed.
         // In fact, we should have at least three spare tetrahedra for
         // housing a non-trivial saturated region.
-        if (layerLower.getSize() + layerUpper.getSize() +
+        if (layerLower.size() + layerUpper.size() +
                 bundle.core().size() + 3 > triang->size()) {
             // No good.  Move on.
             delete *it;
             continue;
         }
 
-        lowerAnnulus.tet[0] = layerLower.getNewBoundaryTet(0);
-        lowerAnnulus.tet[1] = layerLower.getNewBoundaryTet(1);
-        lowerAnnulus.roles[0] = layerLower.getNewBoundaryRoles(0);
-        lowerAnnulus.roles[1] = layerLower.getNewBoundaryRoles(1);
+        lowerAnnulus.tet[0] = layerLower.newBoundaryTet(0);
+        lowerAnnulus.tet[1] = layerLower.newBoundaryTet(1);
+        lowerAnnulus.roles[0] = layerLower.newBoundaryRoles(0);
+        lowerAnnulus.roles[1] = layerLower.newBoundaryRoles(1);
 
         // Look for the saturated region.
         for (regionPos = 0; regionPos < 3; regionPos++) {
@@ -198,11 +198,11 @@ NPluggedTorusBundle* NPluggedTorusBundle::hunt(NTriangulation* triang,
             annulusToUpperLayer = NPerm4(regionPos, (regionPos + 1) % 3,
                 (regionPos + 2) % 3, 3);
 
-            upperAnnulus.tet[0] = layerUpper.getNewBoundaryTet(0);
-            upperAnnulus.tet[1] = layerUpper.getNewBoundaryTet(1);
-            upperAnnulus.roles[0] = layerUpper.getNewBoundaryRoles(0)
+            upperAnnulus.tet[0] = layerUpper.newBoundaryTet(0);
+            upperAnnulus.tet[1] = layerUpper.newBoundaryTet(1);
+            upperAnnulus.roles[0] = layerUpper.newBoundaryRoles(0)
                 * annulusToUpperLayer;
-            upperAnnulus.roles[1] = layerUpper.getNewBoundaryRoles(1)
+            upperAnnulus.roles[1] = layerUpper.newBoundaryRoles(1)
                 * annulusToUpperLayer;
 
             // Recall that we already know the triangulation to be closed.
@@ -213,10 +213,10 @@ NPluggedTorusBundle* NPluggedTorusBundle::hunt(NTriangulation* triang,
             // within the layerings or the thin I-bundle; as long as we've got
             // the boundary tetrahedra we'll be fine.
             avoidTets.clear();
-            avoidTets.insert(layerUpper.getNewBoundaryTet(0));
-            avoidTets.insert(layerUpper.getNewBoundaryTet(1));
-            avoidTets.insert(layerLower.getNewBoundaryTet(0));
-            avoidTets.insert(layerLower.getNewBoundaryTet(1));
+            avoidTets.insert(layerUpper.newBoundaryTet(0));
+            avoidTets.insert(layerUpper.newBoundaryTet(1));
+            avoidTets.insert(layerLower.newBoundaryTet(0));
+            avoidTets.insert(layerLower.newBoundaryTet(1));
 
             starter = NSatBlock::isBlock(upperAnnulus, avoidTets);
             if (! starter)

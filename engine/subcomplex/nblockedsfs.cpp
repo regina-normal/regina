@@ -275,7 +275,7 @@ bool NBlockedSFS::isPluggedIBundle(std::string& name) const {
     return false;
 }
 
-NManifold* NBlockedSFS::getManifold() const {
+NManifold* NBlockedSFS::manifold() const {
     NSFSpace* ans = region_->createSFS(false);
     if (! ans)
         return 0;
@@ -417,8 +417,8 @@ bool NBlockedSFS::findPluggedTori(bool thin, int id, std::string& name,
         }
     } else if ((lst = dynamic_cast<const NSatLST*>(torus0))) {
         roles = lst->roles();
-        p0 = lst->lst()->getMeridinalCuts(roles[0]);
-        q0 = lst->lst()->getMeridinalCuts(roles[horiz0 ? 1 : 2]);
+        p0 = lst->lst()->meridinalCuts(roles[0]);
+        q0 = lst->lst()->meridinalCuts(roles[horiz0 ? 1 : 2]);
         if (! ((roles[2] == 2 && horiz0) || (roles[1] == 2 && ! horiz0)))
             q0 = -q0;
     } else
@@ -437,8 +437,8 @@ bool NBlockedSFS::findPluggedTori(bool thin, int id, std::string& name,
         }
     } else if ((lst = dynamic_cast<const NSatLST*>(torus1))) {
         roles = lst->roles();
-        p1 = lst->lst()->getMeridinalCuts(roles[0]);
-        q1 = lst->lst()->getMeridinalCuts(roles[horiz1 ? 1 : 2]);
+        p1 = lst->lst()->meridinalCuts(roles[0]);
+        q1 = lst->lst()->meridinalCuts(roles[horiz1 ? 1 : 2]);
         if (! ((roles[2] == 2 && horiz1) || (roles[1] == 2 && ! horiz1)))
             q1 = -q1;
     } else

@@ -44,22 +44,22 @@ namespace regina {
 
 NLayeredLoop* NLayeredLoop::clone() const {
     NLayeredLoop* ans = new NLayeredLoop();
-    ans->length = length;
-    ans->hinge[0] = hinge[0];
-    ans->hinge[1] = hinge[1];
+    ans->length_ = length_;
+    ans->hinge_[0] = hinge_[0];
+    ans->hinge_[1] = hinge_[1];
     return ans;
 }
 
-NManifold* NLayeredLoop::getManifold() const {
-    if (hinge[1]) {
+NManifold* NLayeredLoop::manifold() const {
+    if (hinge_[1]) {
         // Not twisted.
-        return new NLensSpace(length, 1);
+        return new NLensSpace(length_, 1);
     } else {
         // Twisted.
         NSFSpace* ans = new NSFSpace();
         ans->insertFibre(2, -1);
         ans->insertFibre(2, 1);
-        ans->insertFibre(length, 1);
+        ans->insertFibre(length_, 1);
         ans->reduce();
         return ans;
     }
@@ -192,9 +192,9 @@ NLayeredLoop* NLayeredLoop::isLayeredLoop(const NComponent* comp) {
 
                 // We have a solution!
                 NLayeredLoop* ans = new NLayeredLoop();
-                ans->length = nTet;
-                ans->hinge[0] = base->getEdge(hinge0);
-                ans->hinge[1] = (twisted ? 0 : base->getEdge(hinge1));
+                ans->length_ = nTet;
+                ans->hinge_[0] = base->getEdge(hinge0);
+                ans->hinge_[1] = (twisted ? 0 : base->getEdge(hinge1));
                 return ans;
             }
         }
@@ -204,15 +204,15 @@ NLayeredLoop* NLayeredLoop::isLayeredLoop(const NComponent* comp) {
     return 0;
 }
 
-NAbelianGroup* NLayeredLoop::getHomologyH1() const {
+NAbelianGroup* NLayeredLoop::homology() const {
     NAbelianGroup* ans = new NAbelianGroup();
-    if (hinge[1]) {
+    if (hinge_[1]) {
         // Untwisted.
-        if (length > 1)
-            ans->addTorsionElement(length);
+        if (length_ > 1)
+            ans->addTorsionElement(length_);
     } else {
         // Twisted.
-        if (length % 2 == 0)
+        if (length_ % 2 == 0)
             ans->addTorsionElement(2, 2);
         else
             ans->addTorsionElement(4);

@@ -196,12 +196,12 @@ void NTriCompositionUI::refresh() {
         regina::NStandardTriangulation::isStandardTriangulation(tri));
     if (standardTri.get()) {
         addTopLevelSection(
-            tr("Triangulation: ") + standardTri->getName().c_str());
+            tr("Triangulation: ") + standardTri->name().c_str());
 
-        std::unique_ptr<regina::NManifold> manifold(standardTri->getManifold());
+        std::unique_ptr<regina::NManifold> manifold(standardTri->manifold());
         if (manifold.get())
             addTopLevelSection(
-                tr("3-manifold: ") + manifold->getName().c_str());
+                tr("3-manifold: ") + manifold->name().c_str());
         else
             addTopLevelSection(tr("3-manifold not recognised"));
     } else
@@ -391,12 +391,12 @@ void NTriCompositionUI::findAugTriSolidTori() {
             tri->component(i));
         if (aug) {
             id = addComponentSection(tr(
-                "Augmented triangular solid torus ") + aug->getName().c_str());
+                "Augmented triangular solid torus ") + aug->name().c_str());
 
             details = new QTreeWidgetItem(id);
             details->setText(0,tr("Component %1").arg(i));
 
-            const regina::NTriSolidTorus& core = aug->getCore();
+            const regina::NTriSolidTorus& core = aug->core();
             details = new QTreeWidgetItem(id, details);
             details->setText(0,tr("Core: tets %1, %2, %3").
                 arg(tri->tetrahedronIndex(core.getTetrahedron(0))).
@@ -405,10 +405,10 @@ void NTriCompositionUI::findAugTriSolidTori() {
 
             if (aug->hasLayeredChain()) {
                 QString chainType;
-                if (aug->getChainType() ==
+                if (aug->chainType() ==
                         regina::NAugTriSolidTorus::CHAIN_MAJOR)
                     chainType = tr("major");
-                else if (aug->getChainType() ==
+                else if (aug->chainType() ==
                         regina::NAugTriSolidTorus::CHAIN_AXIS)
                     chainType = tr("axis");
                 else
@@ -443,7 +443,7 @@ void NTriCompositionUI::describeSatRegion(const NSatRegion& region,
         spec = region.block(b);
         details = new QTreeWidgetItem(parent);
         details->setText(0,tr("Block %1: %2").
-            arg(b).arg(spec.block->getAbbr().c_str()));
+            arg(b).arg(spec.block->abbr().c_str()));
 
         nAnnuli = spec.block->nAnnuli();
 
@@ -611,7 +611,7 @@ void NTriCompositionUI::findBlockedTriangulations() {
 
         (new QTreeWidgetItem(id))->setText(0,
             tr("Core T x I triangulation: %1").
-            arg(bundle->core().getName().c_str()));
+            arg(bundle->core().name().c_str()));
 
         delete bundle;
     }
@@ -631,7 +631,7 @@ void NTriCompositionUI::findBlockedTriangulations() {
 
         (new QTreeWidgetItem(id))->setText(0,
             tr("Thin I-bundle (T x I): %1").
-            arg(pBundle->bundle().getName().c_str()));
+            arg(pBundle->bundle().name().c_str()));
 
         delete pBundle;
     }
@@ -648,7 +648,7 @@ void NTriCompositionUI::findL31Pillows() {
         pillow = regina::NL31Pillow::isL31Pillow(tri->component(i));
         if (pillow) {
             id = addComponentSection(tr("L(3,1) pillow ") +
-                pillow->getName().c_str());
+                pillow->name().c_str());
 
             details = new QTreeWidgetItem(id);
             details->setText(0, tr("Component %1").arg(i));
@@ -657,8 +657,8 @@ void NTriCompositionUI::findL31Pillows() {
             details->setText(0, 
                 tr("Pillow interior vertex: %1").
                 arg(tri->vertexIndex(
-                    pillow->getTetrahedron(0)->getVertex(
-                    pillow->getInteriorVertex(0)))));
+                    pillow->tetrahedron(0)->getVertex(
+                    pillow->interiorVertex(0)))));
 
             delete pillow;
         }
@@ -677,7 +677,7 @@ void NTriCompositionUI::findLayeredChainPairs() {
             tri->component(i));
         if (pair) {
             id = addComponentSection(tr("Layered chain pair ") +
-                pair->getName().c_str());
+                pair->name().c_str());
 
             details = new QTreeWidgetItem(id);
             details->setText(0, tr("Component %1").arg(i));
@@ -685,8 +685,8 @@ void NTriCompositionUI::findLayeredChainPairs() {
             details = new QTreeWidgetItem(id, details);
             details->setText(0,
                 tr("Chain lengths: %1, %2").
-                arg(pair->getChain(0)->getIndex()).
-                arg(pair->getChain(1)->getIndex()));
+                arg(pair->chain(0)->index()).
+                arg(pair->chain(1)->index()));
 
             delete pair;
         }
@@ -705,18 +705,18 @@ void NTriCompositionUI::findLayeredLensSpaces() {
             tri->component(i));
         if (lens) {
             id = addComponentSection(tr("Layered lens space ") +
-                lens->getName().c_str());
+                lens->name().c_str());
 
             details = new QTreeWidgetItem(id);
             details->setText(0, tr("Component %1").arg(i));
 
-            const regina::NLayeredSolidTorus& torus(lens->getTorus());
+            const regina::NLayeredSolidTorus& torus(lens->torus());
             details = new QTreeWidgetItem(id, details);
             details->setText(0, tr(
                 "Layered %1-%2-%3 solid torus %4").
-                arg(torus.getMeridinalCuts(0)).
-                arg(torus.getMeridinalCuts(1)).
-                arg(torus.getMeridinalCuts(2)).
+                arg(torus.meridinalCuts(0)).
+                arg(torus.meridinalCuts(1)).
+                arg(torus.meridinalCuts(2)).
                 arg(lens->isSnapped() ? tr("snapped shut") :
                     tr("twisted shut")));
 
@@ -736,7 +736,7 @@ void NTriCompositionUI::findLayeredLoops() {
         loop = regina::NLayeredLoop::isLayeredLoop(tri->component(i));
         if (loop) {
             id = addComponentSection(tr("Layered loop ") +
-                loop->getName().c_str());
+                loop->name().c_str());
 
             details = new QTreeWidgetItem(id);
             details->setText(0, tr("Component %1").arg(i));
@@ -744,20 +744,20 @@ void NTriCompositionUI::findLayeredLoops() {
             if (loop->isTwisted()) {
                 details = new QTreeWidgetItem(id, details);
                 details->setText(0, tr(
-                    "Length %1, twisted").arg(loop->getLength()));
+                    "Length %1, twisted").arg(loop->length()));
                 details = new QTreeWidgetItem(id, details);
                 details->setText(0, tr(
                     "Hinge: edge %1").
-                    arg(tri->edgeIndex(loop->getHinge(0))));
+                    arg(tri->edgeIndex(loop->hinge(0))));
             } else {
                 details = new QTreeWidgetItem(id, details);
                 details->setText(0, tr(
-                    "Length %1, not twisted").arg(loop->getLength()));
+                    "Length %1, not twisted").arg(loop->length()));
                 details = new QTreeWidgetItem(id);
                 details->setText(0, tr(
                     "Hinges: edge %1, %2").
-                    arg(tri->edgeIndex(loop->getHinge(0))).
-                    arg(tri->edgeIndex(loop->getHinge(1))));
+                    arg(tri->edgeIndex(loop->hinge(0))).
+                    arg(tri->edgeIndex(loop->hinge(1))));
             }
 
             delete loop;
@@ -778,31 +778,31 @@ void NTriCompositionUI::findLayeredSolidTori() {
             tri->getTetrahedron(i));
         if (torus) {
             id = addComponentSection(tr("Layered solid torus ") +
-                torus->getName().c_str());
+                torus->name().c_str());
 
             details = new QTreeWidgetItem(id);
             details->setText(0, tr("Base: tet %1").arg(
-                tri->tetrahedronIndex(torus->getBase())));
-            topIndex = tri->tetrahedronIndex(torus->getTopLevel());
+                tri->tetrahedronIndex(torus->base())));
+            topIndex = tri->tetrahedronIndex(torus->topLevel());
             details = new QTreeWidgetItem(id, details);
             details->setText(0, tr("Top level: tet %1").
                 arg(topIndex));
 
             details = new QTreeWidgetItem(id, details);
             details->setText(0, tr(
-                "Weight %1 edge: %2").arg(torus->getMeridinalCuts(0)).
-                arg(edgeString(topIndex, torus->getTopEdge(0, 0),
-                    torus->getTopEdge(0, 1))));
+                "Weight %1 edge: %2").arg(torus->meridinalCuts(0)).
+                arg(edgeString(topIndex, torus->topEdge(0, 0),
+                    torus->topEdge(0, 1))));
             details = new QTreeWidgetItem(id, details);
             details->setText(0, tr(
-                "Weight %1 edge: %2").arg(torus->getMeridinalCuts(1)).
-                arg(edgeString(topIndex, torus->getTopEdge(1, 0),
-                    torus->getTopEdge(1, 1))));
+                "Weight %1 edge: %2").arg(torus->meridinalCuts(1)).
+                arg(edgeString(topIndex, torus->topEdge(1, 0),
+                    torus->topEdge(1, 1))));
             details = new QTreeWidgetItem(id, details);
             details->setText(0, tr(
-                "Weight %1 edge: %2").arg(torus->getMeridinalCuts(2)).
-                arg(edgeString(topIndex, torus->getTopEdge(2, 0),
-                    torus->getTopEdge(2, 1))));
+                "Weight %1 edge: %2").arg(torus->meridinalCuts(2)).
+                arg(edgeString(topIndex, torus->topEdge(2, 0),
+                    torus->topEdge(2, 1))));
 
             delete torus;
         }
@@ -857,12 +857,12 @@ void NTriCompositionUI::findPlugTriSolidTori() {
             tri->component(i));
         if (plug) {
             id = addComponentSection(tr("Plugged triangular solid torus ") +
-                plug->getName().c_str());
+                plug->name().c_str());
 
             details = new QTreeWidgetItem(id);
             details->setText(0, tr("Component %1").arg(i));
 
-            const regina::NTriSolidTorus& core(plug->getCore());
+            const regina::NTriSolidTorus& core(plug->core());
             details = new QTreeWidgetItem(id, details);
             details->setText(0,
                 tr("Core: tets %1, %2, %3").
@@ -872,10 +872,10 @@ void NTriCompositionUI::findPlugTriSolidTori() {
 
             QString lengths(tr("Chain lengths: "));
             for (int j = 0; j < 3; j++) {
-                chain = plug->getChain(j);
+                chain = plug->chain(j);
                 if (chain)
-                    lengths += tr("%1 (%2)").arg(chain->getIndex()).
-                        arg(plug->getChainType(j) ==
+                    lengths += tr("%1 (%2)").arg(chain->index()).
+                        arg(plug->chainType(j) ==
                         regina::NPlugTriSolidTorus::CHAIN_MAJOR ?
                         tr("major") : tr("minor"));
                 else
@@ -888,7 +888,7 @@ void NTriCompositionUI::findPlugTriSolidTori() {
 
             details = new QTreeWidgetItem(id, details);
             details->setText(0, tr("Equator type: ") +
-                (plug->getEquatorType() ==
+                (plug->equatorType() ==
                 regina::NPlugTriSolidTorus::EQUATOR_MAJOR ?
                 tr("major") : tr("minor")));
 
@@ -915,7 +915,7 @@ void NTriCompositionUI::findSnappedBalls() {
 
             details = new QTreeWidgetItem(id, details);
             details->setText(0, tr("Equator: edge %1%2").
-                arg(ball->getInternalFace(0)).arg(ball->getInternalFace(1)));
+                arg(ball->internalFace(0)).arg(ball->internalFace(1)));
 
             delete ball;
         }
@@ -944,11 +944,11 @@ void NTriCompositionUI::findSnappedSpheres() {
                 details->setText(0, tr("Tetrahedra: %1, %2").
                     arg(i).arg(j));
 
-                const regina::NSnappedBall* ball = sphere->getSnappedBall(0);
+                const regina::NSnappedBall* ball = sphere->snappedBall(0);
                 details = new QTreeWidgetItem(id, details);
                 details->setText(0, tr(
                     "Equator: edge %1").arg(tri->edgeIndex(
-                    ball->getTetrahedron()->getEdge(ball->getEquatorEdge()))));
+                    ball->tetrahedron()->getEdge(ball->equatorEdge()))));
 
                 delete sphere;
             }
@@ -983,13 +983,13 @@ void NTriCompositionUI::findSpiralSolidTori() {
 
             // We've got one!
             id = addComponentSection(tr("Spiralled solid torus ") +
-                spiral->getName().c_str());
+                spiral->name().c_str());
 
             unsigned long spiralTets = spiral->size();
 
             unsigned long* tetIndex = new unsigned long[spiralTets];
             for (j = 0; j < spiralTets; j++)
-                tetIndex[j] = tri->tetrahedronIndex(spiral->getTetrahedron(j));
+                tetIndex[j] = tri->tetrahedronIndex(spiral->tetrahedron(j));
 
             QString tetSet(spiralTets == 1 ? tr("Tet: ") : tr("Tets: "));
             for (j = 0; j < spiralTets; j++) {
@@ -1008,13 +1008,13 @@ void NTriCompositionUI::findSpiralSolidTori() {
             for (j = 0; j < spiralTets; j++) {
                 data =
                     edgeString(tetIndex[(j + spiralTets - 1) % spiralTets],
-                        spiral->getVertexRoles(
+                        spiral->vertexRoles(
                         (j + spiralTets - 1) % spiralTets), 2, 3) +
                     " = " +
-                    edgeString(tetIndex[j], spiral->getVertexRoles(j), 1, 2) +
+                    edgeString(tetIndex[j], spiral->vertexRoles(j), 1, 2) +
                     " = " +
                     edgeString(tetIndex[(j + 1) % spiralTets],
-                        spiral->getVertexRoles((j + 1) % spiralTets), 0, 1);
+                        spiral->vertexRoles((j + 1) % spiralTets), 0, 1);
                 if (edge)
                     edge = new QTreeWidgetItem(details, edge);
                 else
@@ -1028,10 +1028,10 @@ void NTriCompositionUI::findSpiralSolidTori() {
             edge = 0;
             for (j = 0; j < spiralTets; j++) {
                 data =
-                    edgeString(tetIndex[j], spiral->getVertexRoles(j), 1, 3) +
+                    edgeString(tetIndex[j], spiral->vertexRoles(j), 1, 3) +
                     " = " +
                     edgeString(tetIndex[(j + 1) % spiralTets],
-                        spiral->getVertexRoles((j + 1) % spiralTets), 0, 2);
+                        spiral->vertexRoles((j + 1) % spiralTets), 0, 2);
                 if (edge)
                     edge = new QTreeWidgetItem(details, edge);
                 else
@@ -1044,7 +1044,7 @@ void NTriCompositionUI::findSpiralSolidTori() {
             details->setText(0, tr("Axis edges:"));
             edge = 0;
             for (j = 0; j < spiralTets; j++) {
-                data = edgeString(tetIndex[j], spiral->getVertexRoles(j),
+                data = edgeString(tetIndex[j], spiral->vertexRoles(j),
                     0, 3);
                 if (edge)
                     edge = new QTreeWidgetItem(details, edge);

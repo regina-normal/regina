@@ -39,9 +39,9 @@ namespace regina {
 
 NPillowTwoSphere* NPillowTwoSphere::clone() const {
     NPillowTwoSphere* ans = new NPillowTwoSphere();
-    ans->triangle[0] = triangle[0];
-    ans->triangle[1] = triangle[1];
-    ans->triMapping = triMapping;
+    ans->triangle_[0] = triangle_[0];
+    ans->triangle_[1] = triangle_[1];
+    ans->triMapping_ = triMapping_;
     return ans;
 }
 
@@ -84,9 +84,9 @@ NPillowTwoSphere* NPillowTwoSphere::formsPillowTwoSphere(
 
     // We have an answer.
     NPillowTwoSphere* ans = new NPillowTwoSphere();
-    ans->triangle[0] = tri1;
-    ans->triangle[1] = tri2;
-    ans->triMapping = perm;
+    ans->triangle_[0] = tri1;
+    ans->triangle_[1] = tri2;
+    ans->triMapping_ = perm;
     return ans;
 }
 

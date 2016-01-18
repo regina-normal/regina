@@ -321,6 +321,10 @@ Version 4.97  [ (under development) ]
         Class NLayeredSolidTorus:
             - Renamed getNumberOfTetrahedra() to size().  The old name
               is deprecated but kept for backward compatibility.
+        Class NManifold:
+            - Renamed first homology routine getHomologyH1() to homology().  In
+              addition, homology() has a new alias homologyH1().  The old names
+              are kept but deprecated.
         Class NMarkedAbelianGroup:
             - Added != operator to complement the existing == operator.
         Class NMatrix:
@@ -428,6 +432,10 @@ Version 4.97  [ (under development) ]
         Class NSpiralSolidTorus:
             - Renamed getNumberOfTetrahedra() to size().  The old name
               is deprecated but kept for backward compatibility.
+        Class NStandardTriangulation:
+            - Renamed first homology routine getHomologyH1() to homology().  In
+              addition, homology() has a new alias homologyH1().  The old names
+              are kept but deprecated.
         Class NSurfaceFilter:
             - The subclass constant filterType has been renamed to filterTypeID,
               and is now a constant of type SurfaceFilterType, not an
@@ -442,6 +450,9 @@ Version 4.97  [ (under development) ]
             - Renamed addEC(), removeEC() and removeAllECs() to addEulerChar(),
               removeEulerChar() and removeAllEulerChars().  The old names are
               kept but deprecated.
+        Struct NTetFace:
+            - Removed data members tet and face from the python bindings.
+              These were already removed from C++ in 2012.
         Class NTetrahedron:
             - Now just a typedef for the new class Simplex<3>, which has
               the same functionality as the old NTetrahedron.

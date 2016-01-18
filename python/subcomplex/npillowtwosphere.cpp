@@ -49,9 +49,12 @@ void addNPillowTwoSphere() {
             return_value_policy<manage_new_object>())
         .def("getFace", &NPillowTwoSphere::getFace,
             return_value_policy<reference_existing_object>())
+        .def("triangle", &NPillowTwoSphere::triangle,
+            return_value_policy<reference_existing_object>())
         .def("getTriangle", &NPillowTwoSphere::getTriangle,
             return_value_policy<reference_existing_object>())
         .def("getFaceMapping", &NPillowTwoSphere::getFaceMapping)
+        .def("triangleMapping", &NPillowTwoSphere::triangleMapping)
         .def("getTriangleMapping", &NPillowTwoSphere::getTriangleMapping)
         .def("formsPillowTwoSphere", &NPillowTwoSphere::formsPillowTwoSphere,
             return_value_policy<manage_new_object>())

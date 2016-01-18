@@ -47,8 +47,11 @@ void addNL31Pillow() {
             ("NL31Pillow", no_init)
         .def("clone", &NL31Pillow::clone,
             return_value_policy<manage_new_object>())
+        .def("tetrahedron", &NL31Pillow::tetrahedron,
+            return_value_policy<reference_existing_object>())
         .def("getTetrahedron", &NL31Pillow::getTetrahedron,
             return_value_policy<reference_existing_object>())
+        .def("interiorVertex", &NL31Pillow::interiorVertex)
         .def("getInteriorVertex", &NL31Pillow::getInteriorVertex)
         .def("isL31Pillow", &NL31Pillow::isL31Pillow,
             return_value_policy<manage_new_object>())

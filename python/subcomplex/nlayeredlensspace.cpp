@@ -46,10 +46,16 @@ void addNLayeredLensSpace() {
             ("NLayeredLensSpace", no_init)
         .def("clone", &NLayeredLensSpace::clone,
             return_value_policy<manage_new_object>())
+        .def("P", &NLayeredLensSpace::P)
         .def("getP", &NLayeredLensSpace::getP)
+        .def("Q", &NLayeredLensSpace::Q)
         .def("getQ", &NLayeredLensSpace::getQ)
+        .def("torus", &NLayeredLensSpace::getTorus,
+            return_internal_reference<>())
         .def("getTorus", &NLayeredLensSpace::getTorus,
             return_internal_reference<>())
+        .def("mobiusBoundaryGroup",
+            &NLayeredLensSpace::getMobiusBoundaryGroup)
         .def("getMobiusBoundaryGroup",
             &NLayeredLensSpace::getMobiusBoundaryGroup)
         .def("isSnapped", &NLayeredLensSpace::isSnapped)

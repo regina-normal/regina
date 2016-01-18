@@ -84,9 +84,9 @@ typedef Face<3, 1> NEdge;
  */
 class REGINA_API NLayeredLoop : public NStandardTriangulation {
     private:
-        unsigned long length;
+        unsigned long length_;
             /**< The length of this layered loop. */
-        NEdge* hinge[2];
+        NEdge* hinge_[2];
             /**< The hinge edge(s) of this layered loop.  If the loop is
                  twisted, the second element in this array will be \c null. */
 
@@ -107,6 +107,13 @@ class REGINA_API NLayeredLoop : public NStandardTriangulation {
          * See the general class notes for further details.
          *
          * @return the length of this layered loop.
+         */
+        unsigned long length() const;
+        /**
+         * Deprecated routine that returns the length of this layered loop.
+         *
+         * \deprecated This routine has been renamed to length().
+         * See the length() documentation for further details.
          */
         unsigned long getLength() const;
         /**
@@ -137,6 +144,14 @@ class REGINA_API NLayeredLoop : public NStandardTriangulation {
          * or 1.
          * @return the requested hinge edge.
          */
+        NEdge* hinge(int which) const;
+        /**
+         * Deprecated routine that returns the requested hinge edge of this
+         * layered loop.
+         *
+         * \deprecated This routine has been renamed to hinge().
+         * See the hinge() documentation for further details.
+         */
         NEdge* getHinge(int which) const;
 
         /**
@@ -150,8 +165,8 @@ class REGINA_API NLayeredLoop : public NStandardTriangulation {
          */
         static NLayeredLoop* isLayeredLoop(const NComponent* comp);
 
-        NManifold* getManifold() const;
-        NAbelianGroup* getHomologyH1() const;
+        NManifold* manifold() const;
+        NAbelianGroup* homology() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
@@ -172,27 +187,33 @@ inline NLayeredLoop::NLayeredLoop() {
 inline NLayeredLoop::~NLayeredLoop() {
 }
 
+inline unsigned long NLayeredLoop::length() const {
+    return length_;
+}
 inline unsigned long NLayeredLoop::getLength() const {
-    return length;
+    return length_;
 }
 inline unsigned long NLayeredLoop::getIndex() const {
-    return length;
+    return length_;
 }
 inline bool NLayeredLoop::isTwisted() const {
-    return (hinge[1] == 0);
+    return (hinge_[1] == 0);
+}
+inline NEdge* NLayeredLoop::hinge(int which) const {
+    return hinge_[which];
 }
 inline NEdge* NLayeredLoop::getHinge(int which) const {
-    return hinge[which];
+    return hinge_[which];
 }
 inline std::ostream& NLayeredLoop::writeName(std::ostream& out) const {
-    return out << (hinge[1] ? "C(" : "C~(") << length << ')';
+    return out << (hinge_[1] ? "C(" : "C~(") << length_ << ')';
 }
 inline std::ostream& NLayeredLoop::writeTeXName(std::ostream& out) const {
-    return out << (hinge[1] ? "C_{" : "\\tilde{C}_{") << length << '}';
+    return out << (hinge_[1] ? "C_{" : "\\tilde{C}_{") << length_ << '}';
 }
 inline void NLayeredLoop::writeTextLong(std::ostream& out) const {
-    out << "Layered loop (" << (hinge[1] ? "not twisted" : "twisted") <<
-        ") of length " << length;
+    out << "Layered loop (" << (hinge_[1] ? "not twisted" : "twisted") <<
+        ") of length " << length_;
 }
 
 } // namespace regina

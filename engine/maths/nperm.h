@@ -728,7 +728,6 @@ template <int n>
 NPerm<n> NPerm<n>::rand() {
     // We can't just call atIndex(rand() % nPerms), since nPerms might
     // be too large to fit into an int (which is what rand() returns).
-    Code c = idCode_;
     int image[n];
     int p, q;
     for (p = 0; p < n; ++p)

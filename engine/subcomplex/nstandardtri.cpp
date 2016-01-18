@@ -51,13 +51,13 @@
 
 namespace regina {
 
-std::string NStandardTriangulation::getName() const {
+std::string NStandardTriangulation::name() const {
     std::ostringstream ans;
     writeName(ans);
     return ans.str();
 }
 
-std::string NStandardTriangulation::getTeXName() const {
+std::string NStandardTriangulation::TeXName() const {
     std::ostringstream ans;
     writeTeXName(ans);
     return ans.str();

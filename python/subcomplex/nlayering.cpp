@@ -45,12 +45,19 @@ using regina::NTetrahedron;
 void addNLayering() {
     class_<NLayering, boost::noncopyable, std::auto_ptr<NLayering> >
             ("NLayering", init<NTetrahedron*, NPerm4, NTetrahedron*, NPerm4>())
+        .def("size", &NLayering::size)
         .def("getSize", &NLayering::getSize)
+        .def("oldBoundaryTet", &NLayering::oldBoundaryTet,
+            return_value_policy<reference_existing_object>())
         .def("getOldBoundaryTet", &NLayering::getOldBoundaryTet,
             return_value_policy<reference_existing_object>())
+        .def("oldBoundaryRoles", &NLayering::oldBoundaryRoles)
         .def("getOldBoundaryRoles", &NLayering::getOldBoundaryRoles)
+        .def("newBoundaryTet", &NLayering::newBoundaryTet,
+            return_value_policy<reference_existing_object>())
         .def("getNewBoundaryTet", &NLayering::getNewBoundaryTet,
             return_value_policy<reference_existing_object>())
+        .def("newBoundaryRoles", &NLayering::newBoundaryRoles)
         .def("getNewBoundaryRoles", &NLayering::getNewBoundaryRoles)
         .def("boundaryReln", &NLayering::boundaryReln,
             return_internal_reference<>())

@@ -58,7 +58,9 @@ namespace regina {
     class NSatRegion;
     class NStandardTriangulation;
     template <int> class Isomorphism;
+    template <int> class NPerm;
     template <int> class Triangulation;
+    typedef NPerm<4> NPerm4;
     typedef Triangulation<3> NTriangulation;
 };
 

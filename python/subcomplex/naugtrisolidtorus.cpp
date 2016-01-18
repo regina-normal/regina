@@ -47,13 +47,21 @@ void addNAugTriSolidTorus() {
             ("NAugTriSolidTorus", no_init)
         .def("clone", &NAugTriSolidTorus::clone,
             return_value_policy<manage_new_object>())
+        .def("core", &NAugTriSolidTorus::core,
+            return_internal_reference<>())
         .def("getCore", &NAugTriSolidTorus::getCore,
+            return_internal_reference<>())
+        .def("augTorus", &NAugTriSolidTorus::augTorus,
             return_internal_reference<>())
         .def("getAugTorus", &NAugTriSolidTorus::getAugTorus,
             return_internal_reference<>())
+        .def("edgeGroupRoles", &NAugTriSolidTorus::edgeGroupRoles)
         .def("getEdgeGroupRoles", &NAugTriSolidTorus::getEdgeGroupRoles)
+        .def("chainLength", &NAugTriSolidTorus::chainLength)
         .def("getChainLength", &NAugTriSolidTorus::getChainLength)
+        .def("chainType", &NAugTriSolidTorus::chainType)
         .def("getChainType", &NAugTriSolidTorus::getChainType)
+        .def("torusAnnulus", &NAugTriSolidTorus::torusAnnulus)
         .def("getTorusAnnulus", &NAugTriSolidTorus::getTorusAnnulus)
         .def("hasLayeredChain", &NAugTriSolidTorus::hasLayeredChain)
         .def("isAugTriSolidTorus", &NAugTriSolidTorus::isAugTriSolidTorus,

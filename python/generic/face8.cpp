@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Computational Engine                                                  *
+ *  Python Interface                                                      *
  *                                                                        *
  *  Copyright (c) 1999-2014, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -32,54 +32,16 @@
 
 /* end stub */
 
-#include "triangulation/ntetrahedron.h"
-#include "subcomplex/nsnappedtwosphere.h"
-#include "subcomplex/nsnappedball.h"
+#include "face-bindings.h"
 
-namespace regina {
-
-NSnappedTwoSphere* NSnappedTwoSphere::clone() const {
-    NSnappedTwoSphere* ans = new NSnappedTwoSphere();
-    ans->ball[0] = ball[0]->clone();
-    ans->ball[1] = ball[1]->clone();
-    return ans;
+void addFace8() {
+    addFace<8, 0>("Face8_0", "FaceEmbedding8_0");
+    addFace<8, 1>("Face8_1", "FaceEmbedding8_1");
+    addFace<8, 2>("Face8_2", "FaceEmbedding8_2");
+    addFace<8, 3>("Face8_3", "FaceEmbedding8_3");
+    addFace<8, 4>("Face8_4", "FaceEmbedding8_4");
+    addFace<8, 5>("Face8_5", "FaceEmbedding8_5");
+    addFace<8, 6>("Face8_6", "FaceEmbedding8_6");
+    addFace<8, 7>("Face8_7", "FaceEmbedding8_7");
 }
-
-NSnappedTwoSphere* NSnappedTwoSphere::formsSnappedTwoSphere(
-        NTetrahedron* tet1, NTetrahedron* tet2) {
-    NSnappedBall* ball[2];
-    if (! (ball[0] = NSnappedBall::formsSnappedBall(tet1)))
-        return 0;
-    if (! (ball[1] = NSnappedBall::formsSnappedBall(tet2))) {
-        delete ball[0];
-        return 0;
-    }
-    if (tet1->getEdge(ball[0]->equatorEdge()) !=
-            tet2->getEdge(ball[1]->equatorEdge())) {
-        delete ball[0];
-        delete ball[1];
-        return 0;
-    }
-
-    // This is it.
-    NSnappedTwoSphere* ans = new NSnappedTwoSphere();
-    ans->ball[0] = ball[0];
-    ans->ball[1] = ball[1];
-    return ans;
-}
-
-NSnappedTwoSphere* NSnappedTwoSphere::formsSnappedTwoSphere(
-        NSnappedBall* ball1, NSnappedBall* ball2) {
-    if (ball1->tetrahedron()->getEdge(ball1->equatorEdge()) !=
-            ball2->tetrahedron()->getEdge(ball2->equatorEdge()))
-        return 0;
-
-    // This is it.
-    NSnappedTwoSphere* ans = new NSnappedTwoSphere();
-    ans->ball[0] = ball1->clone();
-    ans->ball[1] = ball2->clone();
-    return ans;
-}
-
-} // namespace regina
 

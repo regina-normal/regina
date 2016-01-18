@@ -84,7 +84,7 @@ class NSFSpace;
  * See the page on \ref sfsnotation for details on some of the
  * terminology used above.
  *
- * The optional NManifold routine getHomologyH1() is implemented, but
+ * The optional NManifold routine homology() is implemented, but
  * the optional routine construct() is not.
  *
  * \todo \opt Speed up homology calculations involving orientable base
@@ -194,7 +194,7 @@ class REGINA_API NGraphPair : public NManifold {
          */
         bool operator < (const NGraphPair& compare) const;
 
-        NAbelianGroup* homologyH1() const;
+        NAbelianGroup* homology() const;
         bool isHyperbolic() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
