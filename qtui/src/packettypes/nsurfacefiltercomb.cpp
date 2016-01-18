@@ -209,7 +209,7 @@ void NSurfaceFilterCombUI::refreshChildList() {
     // Add the items in reverse order since the QListViewItem
     // constructor puts new items at the front.
     for (regina::NPacket* p = filter->firstChild(); p; p = p->nextSibling())
-        if (p->type() == PACKET_SURFACEFILTER) {
+        if (p->type() == regina::PACKET_SURFACEFILTER) {
             new QListWidgetItem(PacketManager::icon(p),
                 p->humanLabel().c_str(), children);
 

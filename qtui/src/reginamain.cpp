@@ -325,7 +325,7 @@ void ReginaMain::fileOpenUrl(const QUrl& url) {
 
     // As of Regina 4.95, the root packet is hidden.
     // If the root packet is not a container, create a new fake root above it.
-    if (packetTree->type() != PACKET_CONTAINER) {
+    if (packetTree->type() != regina::PACKET_CONTAINER) {
         regina::NContainer* newRoot = new regina::NContainer();
         newRoot->insertChildLast(packetTree);
         packetTree = newRoot;
