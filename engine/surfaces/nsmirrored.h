@@ -132,11 +132,11 @@ class REGINA_API NNormalSurfaceVectorMirrored : public NNormalSurfaceVector {
 
         virtual NLargeInteger triangles(size_t tetIndex,
             int vertex, const NTriangulation* triang) const;
-        virtual NLargeInteger getOrientedTriangleCoord(size_t tetIndex,
+        virtual NLargeInteger orientedTriangles(size_t tetIndex,
             int vertex, const NTriangulation* triang, bool orientation) const;
         virtual NLargeInteger quads(size_t tetIndex,
             int quadType, const NTriangulation* triang) const;
-        virtual NLargeInteger getOrientedQuadCoord(size_t tetIndex,
+        virtual NLargeInteger orientedQuads(size_t tetIndex,
             int quadType, const NTriangulation* triang, bool orientation) const;
         virtual NLargeInteger octs(size_t tetIndex,
             int octType, const NTriangulation* triang) const;
@@ -173,13 +173,13 @@ inline NLargeInteger NNormalSurfaceVectorMirrored::triangles(
             makeMirror(triang);
     return mirror->triangles(tetIndex, vertex, triang);
 }
-inline NLargeInteger NNormalSurfaceVectorMirrored::getOrientedTriangleCoord(
+inline NLargeInteger NNormalSurfaceVectorMirrored::orientedTriangles(
         size_t tetIndex, int vertex, const NTriangulation* triang,
         bool orientation) const {
     if (! mirror)
         const_cast<NNormalSurfaceVectorMirrored*>(this)->mirror =
             makeMirror(triang);
-    return mirror->getOrientedTriangleCoord(tetIndex, vertex, triang,
+    return mirror->orientedTriangles(tetIndex, vertex, triang,
         orientation);
 }
 inline NLargeInteger NNormalSurfaceVectorMirrored::quads(
@@ -189,13 +189,13 @@ inline NLargeInteger NNormalSurfaceVectorMirrored::quads(
             makeMirror(triang);
     return mirror->quads(tetIndex, quadType, triang);
 }
-inline NLargeInteger NNormalSurfaceVectorMirrored::getOrientedQuadCoord(
+inline NLargeInteger NNormalSurfaceVectorMirrored::orientedQuads(
         size_t tetIndex, int quadType, const NTriangulation* triang,
         bool orientation) const {
     if (! mirror)
         const_cast<NNormalSurfaceVectorMirrored*>(this)->mirror =
             makeMirror(triang);
-    return mirror->getOrientedQuadCoord(tetIndex, quadType, triang,
+    return mirror->orientedQuads(tetIndex, quadType, triang,
         orientation);
 }
 inline NLargeInteger NNormalSurfaceVectorMirrored::octs(

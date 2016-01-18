@@ -308,8 +308,10 @@ Version 4.97  [ (under development) ]
             - Deprecated; just use std::mutex and related classes instead.
         Class NNormalSurface:
             - New convenience routines normal() and embedded().
-            - Renamed getTriangleCoord(), getQuadCoord(), getOctCoord() and
-              getTriangleArcs() to triangles(), quads(), octs() and arcs().
+            - Renamed getTriangleCoord(), getQuadCoord(), getOctCoord(),
+              getOrientedTriangleCoords(), getOrientedQuadCoord() and
+              getTriangleArcs() to triangles(), quads(), octs(),
+              orientedTriangles(), orientedQuads() and arcs().
               The old names are kept but deprecated.
         Class NNormalSurfaceList:
             - Renamed getNumberOfSurfaces() to size().  The old name is

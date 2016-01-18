@@ -114,7 +114,7 @@ class REGINA_API NNormalSurfaceVectorOrientedQuad :
 
         virtual NLargeInteger quads(size_t tetIndex,
             int quadType, const NTriangulation* triang) const;
-        virtual NLargeInteger getOrientedQuadCoord(size_t tetIndex,
+        virtual NLargeInteger orientedQuads(size_t tetIndex,
             int quadType, const NTriangulation* triang, bool orientation) const;
         virtual NLargeInteger octs(size_t tetIndex,
             int octType, const NTriangulation* triang) const;
@@ -141,11 +141,11 @@ inline NNormalSurfaceVectorOrientedQuad::NNormalSurfaceVectorOrientedQuad(
 
 inline NLargeInteger NNormalSurfaceVectorOrientedQuad::quads(
         size_t tetIndex, int quadType, const NTriangulation* tri) const {
-    return getOrientedQuadCoord(tetIndex, quadType, tri, true)
-           + getOrientedQuadCoord(tetIndex, quadType, tri, false);
+    return orientedQuads(tetIndex, quadType, tri, true)
+           + orientedQuads(tetIndex, quadType, tri, false);
 }
 
-inline NLargeInteger NNormalSurfaceVectorOrientedQuad::getOrientedQuadCoord(
+inline NLargeInteger NNormalSurfaceVectorOrientedQuad::orientedQuads(
         size_t tetIndex, int quadType, const NTriangulation*, 
         bool orientation) const {
     return (*this)[6 * tetIndex + 2 * quadType +

@@ -243,15 +243,15 @@ using regina::NTriangle;
         bool orientation = (whichCoord % 2 == 0);
         whichCoord /= 2;
         if (whichCoord % 7 < 4)
-            return surface.getOrientedTriangleCoord(
+            return surface.orientedTriangles(
                 whichCoord / 7, whichCoord % 7, orientation);
         else
-            return surface.getOrientedQuadCoord(
+            return surface.orientedQuads(
                 whichCoord / 7, (whichCoord % 7) - 4, orientation);
     } else if (coordSystem == regina::NS_ORIENTED_QUAD) {
         bool orientation = (whichCoord % 2 == 0);
         whichCoord /= 2;
-        return surface.getOrientedQuadCoord(
+        return surface.orientedQuads(
             whichCoord / 3, whichCoord % 3, orientation);
     }
 

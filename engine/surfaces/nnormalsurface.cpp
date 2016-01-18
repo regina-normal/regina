@@ -514,12 +514,12 @@ void NNormalSurface::writeXMLData(std::ostream& out) const {
 
 // Default implementations for oriented surfaces. Returns zero as any
 // coordinate system which supports orientation should override these.
-NLargeInteger NNormalSurfaceVector::getOrientedTriangleCoord(
+NLargeInteger NNormalSurfaceVector::orientedTriangles(
         size_t, int, const NTriangulation*, bool) const {
     return NLargeInteger::zero;
 };
 
-NLargeInteger NNormalSurfaceVector::getOrientedQuadCoord(
+NLargeInteger NNormalSurfaceVector::orientedQuads(
         size_t, int, const NTriangulation*, bool) const {
     return NLargeInteger::zero;
 };

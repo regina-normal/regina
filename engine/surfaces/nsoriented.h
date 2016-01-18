@@ -110,9 +110,9 @@ class REGINA_API NNormalSurfaceVectorOriented : public NNormalSurfaceVector {
             int vertex, const NTriangulation* triang) const;
         virtual NLargeInteger quads(size_t tetIndex,
             int quadType, const NTriangulation* triang) const;
-        virtual NLargeInteger getOrientedTriangleCoord(size_t tetIndex,
+        virtual NLargeInteger orientedTriangles(size_t tetIndex,
             int vertex, const NTriangulation* triang, bool orientation) const;
-        virtual NLargeInteger getOrientedQuadCoord(size_t tetIndex,
+        virtual NLargeInteger orientedQuads(size_t tetIndex,
             int quadType, const NTriangulation* triang, bool orientation) const;
         virtual NLargeInteger octs(size_t tetIndex,
             int octType, const NTriangulation* triang) const;
@@ -143,22 +143,22 @@ inline NNormalSurfaceVectorOriented::NNormalSurfaceVectorOriented(
 
 inline NLargeInteger NNormalSurfaceVectorOriented::triangles(
         size_t tetIndex, int vertex, const NTriangulation* tri) const {
-    return getOrientedTriangleCoord(tetIndex,vertex,tri, true)
-           + getOrientedTriangleCoord(tetIndex,vertex,tri, false);
+    return orientedTriangles(tetIndex,vertex,tri, true)
+           + orientedTriangles(tetIndex,vertex,tri, false);
 }
 inline NLargeInteger NNormalSurfaceVectorOriented::quads(
         size_t tetIndex, int quadType, const NTriangulation* tri) const {
-    return getOrientedQuadCoord(tetIndex,quadType,tri, true)
-           + getOrientedQuadCoord(tetIndex,quadType,tri, false);
+    return orientedQuads(tetIndex,quadType,tri, true)
+           + orientedQuads(tetIndex,quadType,tri, false);
 }
 
-inline NLargeInteger NNormalSurfaceVectorOriented::getOrientedTriangleCoord(
+inline NLargeInteger NNormalSurfaceVectorOriented::orientedTriangles(
         size_t tetIndex, int vertex, const NTriangulation*,
         bool orientation) const {
     return (*this)[14 * tetIndex + 2 * vertex +
         (orientation ? 0 : 1)];
 }
-inline NLargeInteger NNormalSurfaceVectorOriented::getOrientedQuadCoord(
+inline NLargeInteger NNormalSurfaceVectorOriented::orientedQuads(
         size_t tetIndex, int quadType, const NTriangulation*, 
         bool orientation) const {
     return (*this)[14 * tetIndex + 8 + 2 * quadType +
