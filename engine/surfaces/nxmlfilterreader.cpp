@@ -69,9 +69,9 @@ NXMLElementReader* NXMLFilterPacketReader::startContentSubElement(
 void NXMLFilterPacketReader::endContentSubElement(
         const std::string& subTagName,
         NXMLElementReader* subReader) {
-    if (! filter)
+    if (! filter_)
         if (subTagName == "filter")
-            filter = dynamic_cast<NXMLFilterReader*>(subReader)->getFilter();
+            filter_ = dynamic_cast<NXMLFilterReader*>(subReader)->filter();
 }
 
 NXMLPacketReader* NSurfaceFilter::xmlReader(NPacket* parent,
