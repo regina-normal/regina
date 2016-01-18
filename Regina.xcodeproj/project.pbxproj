@@ -6873,6 +6873,9 @@
 					"$(HOME)/Qt5/5.5/clang_64/lib/QtGui.framework/Headers",
 					"$(HOME)/Qt5/5.5/clang_64/lib/QtSvg.framework/Headers",
 					"$(HOME)/Qt5/5.5/clang_64/lib/QtWidgets.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/graphviz.framework/Headers",
 					/usr/include/python2.7,
 				);
 				INFOPLIST_FILE = qtui/src/regina.plist;
@@ -6920,6 +6923,9 @@
 					"$(HOME)/Qt5/5.5/clang_64/lib/QtGui.framework/Headers",
 					"$(HOME)/Qt5/5.5/clang_64/lib/QtSvg.framework/Headers",
 					"$(HOME)/Qt5/5.5/clang_64/lib/QtWidgets.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/graphviz.framework/Headers",
 					/usr/include/python2.7,
 				);
 				INFOPLIST_FILE = qtui/src/regina.plist;
