@@ -146,9 +146,7 @@
 		050F5E511B9BAB9C00C1F681 /* pyutilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DBE1B9BAB9C00C1F681 /* pyutilities.cpp */; };
 		050F5E521B9BAB9C00C1F681 /* stringutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DBF1B9BAB9C00C1F681 /* stringutils.cpp */; };
 		050F5E531B9BAB9C00C1F681 /* dim2census.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DC21B9BAB9C00C1F681 /* dim2census.cpp */; };
-		050F5E541B9BAB9C00C1F681 /* dim2edgepairing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DC31B9BAB9C00C1F681 /* dim2edgepairing.cpp */; };
 		050F5E551B9BAB9C00C1F681 /* ncensus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DC41B9BAB9C00C1F681 /* ncensus.cpp */; };
-		050F5E561B9BAB9C00C1F681 /* nfacepairing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DC51B9BAB9C00C1F681 /* nfacepairing.cpp */; };
 		050F5E571B9BAB9C00C1F681 /* ngluingpermsearcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DC61B9BAB9C00C1F681 /* ngluingpermsearcher.cpp */; };
 		050F5E581B9BAB9C00C1F681 /* pycensus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DC71B9BAB9C00C1F681 /* pycensus.cpp */; };
 		050F5E591B9BAB9C00C1F681 /* csvsurfacelist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DCA1B9BAB9C00C1F681 /* csvsurfacelist.cpp */; };
@@ -1781,9 +1779,7 @@
 		050F5DBF1B9BAB9C00C1F681 /* stringutils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = stringutils.cpp; sourceTree = "<group>"; };
 		050F5DC11B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		050F5DC21B9BAB9C00C1F681 /* dim2census.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim2census.cpp; sourceTree = "<group>"; };
-		050F5DC31B9BAB9C00C1F681 /* dim2edgepairing.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim2edgepairing.cpp; sourceTree = "<group>"; };
 		050F5DC41B9BAB9C00C1F681 /* ncensus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ncensus.cpp; sourceTree = "<group>"; };
-		050F5DC51B9BAB9C00C1F681 /* nfacepairing.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nfacepairing.cpp; sourceTree = "<group>"; };
 		050F5DC61B9BAB9C00C1F681 /* ngluingpermsearcher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ngluingpermsearcher.cpp; sourceTree = "<group>"; };
 		050F5DC71B9BAB9C00C1F681 /* pycensus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pycensus.cpp; sourceTree = "<group>"; };
 		050F5DC91B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
@@ -3453,9 +3449,7 @@
 			children = (
 				050F5DC11B9BAB9C00C1F681 /* CMakeLists.txt */,
 				050F5DC21B9BAB9C00C1F681 /* dim2census.cpp */,
-				050F5DC31B9BAB9C00C1F681 /* dim2edgepairing.cpp */,
 				050F5DC41B9BAB9C00C1F681 /* ncensus.cpp */,
-				050F5DC51B9BAB9C00C1F681 /* nfacepairing.cpp */,
 				050F5DC61B9BAB9C00C1F681 /* ngluingpermsearcher.cpp */,
 				050F5DC71B9BAB9C00C1F681 /* pycensus.cpp */,
 			);
@@ -5689,7 +5683,6 @@
 				05431FC31C40F5D4009BC072 /* isomorphism.cpp in Sources */,
 				050F5E4F1B9BAB9C00C1F681 /* nbooleans.cpp in Sources */,
 				050F5DE61B9BAB9C00C1F681 /* nglobaldirs.cpp in Sources */,
-				050F5E561B9BAB9C00C1F681 /* nfacepairing.cpp in Sources */,
 				050F5E1E1B9BAB9C00C1F681 /* nlayeredloop.cpp in Sources */,
 				050F5E401B9BAB9C00C1F681 /* pytreewidth.cpp in Sources */,
 				050F5DDC1B9BAB9C00C1F681 /* dim2component.cpp in Sources */,
@@ -5701,7 +5694,6 @@
 				05431FBF1C40F5D4009BC072 /* component.cpp in Sources */,
 				05431FC11C40F5D4009BC072 /* facehelper.cpp in Sources */,
 				05CAFB4F1C4CEA160001C253 /* face11.cpp in Sources */,
-				050F5E541B9BAB9C00C1F681 /* dim2edgepairing.cpp in Sources */,
 				050F5E171B9BAB9C00C1F681 /* nblockedsfsloop.cpp in Sources */,
 				050F5DEB1B9BAB9C00C1F681 /* ngraphpair.cpp in Sources */,
 				050F5E201B9BAB9C00C1F681 /* nlayeredsurfacebundle.cpp in Sources */,
