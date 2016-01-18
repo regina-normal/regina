@@ -190,10 +190,10 @@ void NTriSnapPeaUI::refresh() {
             // beneath.
             volume->setText(tr("Possibly zero\n(calculated %1,\n"
                 "est. %2 places accuracy)").
-                arg(snappeaTri->volume(places), 0, 'g', 9).arg(places));
+                arg(ans, 0, 'g', 9).arg(places));
         } else {
             volume->setText(tr("%1\n(est. %2 places accuracy)").
-                arg(snappeaTri->volume(places), 0, 'g', 9).arg(places));
+                arg(ans, 0, 'g', 9).arg(places));
         }
 
         volume->setEnabled(true);
