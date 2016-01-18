@@ -39,6 +39,10 @@ Version 4.97  [ (under development) ]
               deprecated since 2013; they are also removed completely.
               All the code that used to work with these classes now
               works with the newer and more flexible NProgressTracker instead.
+            * NSurfaceFilter::getFilterName(), NSurfaceFilter::getFilterID()
+              and the filterID class constants have been deprecated since 2013;
+              these are now removed completely.  Use filterTypeName(),
+              filterType() and the filterType constants instead.
             * Global arrays edgeNumber[][], edgeStart[] and edgeEnd[] have
               been deprecated since 2009; this are now removed.  Use the
               arrays NEdge::edgeNumber[][] and NEdge::edgeVertex[][] instead.
@@ -406,6 +410,8 @@ Version 4.97  [ (under development) ]
         Class NSurfaceFilter:
             - The subclass constant filterType is now a constant of type
               SurfaceFilterType, not an anonymous enum type.
+            - Removed the deprecated getFilterID() and getFilterName()
+              routines, and the deprecated filterID constants.
         Class NSurfaceFilterProperties:
             - New set-based routine setECs().
         Class NTetrahedron:

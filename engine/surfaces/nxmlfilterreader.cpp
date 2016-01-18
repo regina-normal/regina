@@ -50,13 +50,13 @@ namespace {
 NXMLElementReader* NXMLFilterPacketReader::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
-    if (! filter)
+    if (! filter_)
         if (subTagName == "filter") {
             int type;
             if (valueOf(props.lookup("typeid"), type)) {
                 NXMLElementReader* ans = forFilter(
                     static_cast<SurfaceFilterType>(type),
-                    XMLReaderFunction(), 0, parent);
+                    XMLReaderFunction(), 0, parent_);
                 if (ans)
                     return ans;
                 else

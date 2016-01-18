@@ -93,12 +93,8 @@ struct SurfaceFilterInfo;
  *
  * - a compile-time constant \a filterType, which is equal to the
  *   corresponding SurfaceFilterType constant;
- * - a deprecated compile-time constant \a filterID, which is
- *   identical to \a filterType;
  * - declarations and implementations of the virtual functions
  *   NSurfaceFilter::getFilterType() and NSurfaceFilter::getFilterTypeName();
- * - declarations and implementations of the deprecated virtual functions
- *   NSurfaceFilter::getFilterID() and NSurfaceFilter::getFilterName().
  *
  * @param class_ the name of this descendant class of NSurfaceFilter.
  * @param id the corresponding SurfaceFilterType constant.
@@ -106,17 +102,10 @@ struct SurfaceFilterInfo;
 #define REGINA_SURFACE_FILTER(class_, id) \
     public: \
         static constexpr const SurfaceFilterType filterType = id; \
-        static constexpr const SurfaceFilterType filterID = id; \
         inline virtual SurfaceFilterType getFilterType() const { \
             return id; \
         } \
-        inline virtual SurfaceFilterType getFilterID() const { \
-            return id; \
-        } \
         inline virtual std::string getFilterTypeName() const { \
-            return SurfaceFilterInfo<id>::name(); \
-        } \
-        inline virtual std::string getFilterName() const { \
             return SurfaceFilterInfo<id>::name(); \
         }
 
@@ -211,28 +200,12 @@ class REGINA_API NSurfaceFilter : public NPacket {
          */
         virtual SurfaceFilterType getFilterType() const;
         /**
-         * A deprecated alias for getFilterType().
-         * This returns the unique integer ID corresponding to the filtering
-         * method that is this particular subclass of NSurfaceFilter.
-         *
-         * @return the unique integer filtering method ID.
-         */
-        virtual SurfaceFilterType getFilterID() const;
-        /**
          * Returns a string description of the filtering method that is
          * this particular subclass of NSurfaceFilter.
          *
          * @return a string description of this filtering method.
          */
         virtual std::string getFilterTypeName() const;
-        /**
-         * A deprecated alias for getFilterTypeName().
-         * This returns a string description of the filtering method that is
-         * this particular subclass of NSurfaceFilter.
-         *
-         * @return a string description of this filtering method.
-         */
-        virtual std::string getFilterName() const;
 #endif
 
         /**
