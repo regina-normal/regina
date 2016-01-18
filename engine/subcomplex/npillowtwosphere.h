@@ -110,13 +110,13 @@ class REGINA_API NPillowTwoSphere :
          */
         NTriangle* getTriangle(int index) const;
         /**
-         * A deprecated alias for getTriangle().
+         * A deprecated alias for triangle().
          *
          * This routine returns one of the two triangles whose boundaries
-         * are joined.  See getTriangle() for further details.
+         * are joined.  See triangle() for further details.
          *
          * \deprecated This routine will be removed in a future version
-         * of Regina.  Please use getTriangle() instead.
+         * of Regina.  Please use triangle() instead.
          *
          * @param index specifies which of the two triangles to return;
          * this must be either 0 or 1.
@@ -145,14 +145,14 @@ class REGINA_API NPillowTwoSphere :
          */
         NPerm4 getTriangleMapping() const;
         /**
-         * A deprecated alias for getTriangleMapping().
+         * A deprecated alias for triangleMapping().
          *
          * This routine returns a permutation describing how the boundaries
-         * of the two triangles are joined.  See getTriangleMapping()
+         * of the two triangles are joined.  See triangleMapping()
          * for further details.
          *
          * \deprecated This routine will be removed in a future version
-         * of Regina.  Please use getTriangleMapping() instead.
+         * of Regina.  Please use triangleMapping() instead.
          *
          * @return a permutation describing how the triangle boundaries are
          * joined.
