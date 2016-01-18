@@ -997,6 +997,11 @@
 		054F7E29180B93770090B1F3 /* WelcomePopupController.m in Sources */ = {isa = PBXBuildFile; fileRef = 054F7E28180B93770090B1F3 /* WelcomePopupController.m */; };
 		054F7E2B180B96AC0090B1F3 /* welcome.html in Resources */ = {isa = PBXBuildFile; fileRef = 054F7E2A180B96AC0090B1F3 /* welcome.html */; };
 		054F7E2D180B99270090B1F3 /* regina.css in Resources */ = {isa = PBXBuildFile; fileRef = 054F7E2C180B99270090B1F3 /* regina.css */; };
+		055001091C4D9EF900501C24 /* face5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055000FF1C4D9EEB00501C24 /* face5.cpp */; };
+		0550010A1C4D9EF900501C24 /* face6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055001001C4D9EEB00501C24 /* face6.cpp */; };
+		0550010B1C4D9EF900501C24 /* face7.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055001011C4D9EEB00501C24 /* face7.cpp */; };
+		0550010C1C4D9EF900501C24 /* face8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055001021C4D9EEB00501C24 /* face8.cpp */; };
+		0550010D1C4D9EF900501C24 /* face9.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055001031C4D9EEB00501C24 /* face9.cpp */; };
 		05583A6219B8041F00076187 /* ReginaDocument.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05583A6119B8041F00076187 /* ReginaDocument.mm */; };
 		055ABEA519B49C1900044C1B /* closed-hyp-census-full.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABE9E19B499DC00044C1B /* closed-hyp-census-full.zsig */; };
 		055ABEA619B49C1900044C1B /* closed-nor-census-11.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABE9F19B499DC00044C1B /* closed-nor-census-11.zsig */; };
@@ -2473,6 +2478,11 @@
 		054F7E28180B93770090B1F3 /* WelcomePopupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WelcomePopupController.m; sourceTree = "<group>"; };
 		054F7E2A180B96AC0090B1F3 /* welcome.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = welcome.html; sourceTree = "<group>"; };
 		054F7E2C180B99270090B1F3 /* regina.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = regina.css; sourceTree = "<group>"; };
+		055000FF1C4D9EEB00501C24 /* face5.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face5.cpp; sourceTree = "<group>"; };
+		055001001C4D9EEB00501C24 /* face6.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face6.cpp; sourceTree = "<group>"; };
+		055001011C4D9EEB00501C24 /* face7.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face7.cpp; sourceTree = "<group>"; };
+		055001021C4D9EEB00501C24 /* face8.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face8.cpp; sourceTree = "<group>"; };
+		055001031C4D9EEB00501C24 /* face9.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face9.cpp; sourceTree = "<group>"; };
 		05561D181811F27A00FD6E2E /* regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = regina.icns; path = src/regina.icns; sourceTree = "<group>"; };
 		05561D191811F27A00FD6E2E /* x-regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "x-regina.icns"; path = "src/x-regina.icns"; sourceTree = "<group>"; };
 		05583A6019B8041F00076187 /* ReginaDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReginaDocument.h; sourceTree = "<group>"; };
@@ -4548,6 +4558,11 @@
 				05431FAD1C40F5CA009BC072 /* component.cpp */,
 				05CAFB401C4CEA020001C253 /* face-bindings.h */,
 				05431FAE1C40F5CA009BC072 /* face.cpp */,
+				055000FF1C4D9EEB00501C24 /* face5.cpp */,
+				055001001C4D9EEB00501C24 /* face6.cpp */,
+				055001011C4D9EEB00501C24 /* face7.cpp */,
+				055001021C4D9EEB00501C24 /* face8.cpp */,
+				055001031C4D9EEB00501C24 /* face9.cpp */,
 				05CAFB411C4CEA020001C253 /* face10.cpp */,
 				05CAFB421C4CEA020001C253 /* face11.cpp */,
 				05CAFB431C4CEA020001C253 /* face12.cpp */,
@@ -5620,6 +5635,7 @@
 				050F5DF71B9BAB9C00C1F681 /* ninteger.cpp in Sources */,
 				050F5DD41B9BAB9C00C1F681 /* ngrouppresentation.cpp in Sources */,
 				050F5E311B9BAB9C00C1F681 /* pysubcomplex.cpp in Sources */,
+				0550010A1C4D9EF900501C24 /* face6.cpp in Sources */,
 				05CAFB4E1C4CEA160001C253 /* face10.cpp in Sources */,
 				050F5E181B9BAB9C00C1F681 /* nblockedsfspair.cpp in Sources */,
 				05431FA91C40F5A2009BC072 /* nperm.cpp in Sources */,
@@ -5678,6 +5694,7 @@
 				050F5DE61B9BAB9C00C1F681 /* nglobaldirs.cpp in Sources */,
 				050F5E1E1B9BAB9C00C1F681 /* nlayeredloop.cpp in Sources */,
 				050F5E401B9BAB9C00C1F681 /* pytreewidth.cpp in Sources */,
+				0550010D1C4D9EF900501C24 /* face9.cpp in Sources */,
 				050F5DDC1B9BAB9C00C1F681 /* dim2component.cpp in Sources */,
 				050F5DF11B9BAB9C00C1F681 /* nsimplesurfacebundle.cpp in Sources */,
 				050F5DD91B9BAB9C00C1F681 /* nanglestructurelist.cpp in Sources */,
@@ -5685,6 +5702,7 @@
 				050F5E301B9BAB9C00C1F681 /* ntxicore.cpp in Sources */,
 				050F5DF91B9BAB9C00C1F681 /* nmatrix2.cpp in Sources */,
 				05431FBF1C40F5D4009BC072 /* component.cpp in Sources */,
+				0550010C1C4D9EF900501C24 /* face8.cpp in Sources */,
 				05431FC11C40F5D4009BC072 /* facehelper.cpp in Sources */,
 				05CAFB4F1C4CEA160001C253 /* face11.cpp in Sources */,
 				050F5E171B9BAB9C00C1F681 /* nblockedsfsloop.cpp in Sources */,
@@ -5726,6 +5744,7 @@
 				05431FCC1C40F653009BC072 /* nfacepairing.cpp in Sources */,
 				050F5E431B9BAB9C00C1F681 /* nedge.cpp in Sources */,
 				050F5DF61B9BAB9C00C1F681 /* ncyclotomic.cpp in Sources */,
+				0550010B1C4D9EF900501C24 /* face7.cpp in Sources */,
 				050F5E281B9BAB9C00C1F681 /* nsatregion.cpp in Sources */,
 				050F5DD61B9BAB9C00C1F681 /* nmarkedabeliangroup.cpp in Sources */,
 				050F5E3E1B9BAB9C00C1F681 /* surfacefiltertype.cpp in Sources */,
@@ -5742,6 +5761,7 @@
 				050F5E0B1B9BAB9C00C1F681 /* pypacket.cpp in Sources */,
 				050F5DE01B9BAB9C00C1F681 /* dim2triangle.cpp in Sources */,
 				050F5E531B9BAB9C00C1F681 /* dim2census.cpp in Sources */,
+				055001091C4D9EF900501C24 /* face5.cpp in Sources */,
 				050F5E251B9BAB9C00C1F681 /* nsatannulus.cpp in Sources */,
 				050F5E2E1B9BAB9C00C1F681 /* ntrisolidtorus.cpp in Sources */,
 				050F5E131B9BAB9C00C1F681 /* nsignature.cpp in Sources */,

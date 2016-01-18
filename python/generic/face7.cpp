@@ -32,41 +32,15 @@
 
 /* end stub */
 
-void addComponent();
-void addFacetPairing();
-void addIsomorphism();
-void addFace();
-void addFace5();
-void addFace6();
-void addFace7();
-void addFace8();
-void addFace9();
-void addFace10();
-void addFace11();
-void addFace12();
-void addFace13();
-void addFace14();
-void addFace15();
-void addSimplex();
-void addTriangulations();
+#include "face-bindings.h"
 
-void addGeneric() {
-    addComponent();
-    addFacetPairing();
-    addIsomorphism();
-    addFace();
-    addFace5();
-    addFace6();
-    addFace7();
-    addFace8();
-    addFace9();
-    addFace10();
-    addFace11();
-    addFace12();
-    addFace13();
-    addFace14();
-    addFace15();
-    addSimplex();
-    addTriangulations();
+void addFace7() {
+    addFace<7, 0>("Face7_0", "FaceEmbedding7_0");
+    addFace<7, 1>("Face7_1", "FaceEmbedding7_1");
+    addFace<7, 2>("Face7_2", "FaceEmbedding7_2");
+    addFace<7, 3>("Face7_3", "FaceEmbedding7_3");
+    addFace<7, 4>("Face7_4", "FaceEmbedding7_4");
+    addFace<7, 5>("Face7_5", "FaceEmbedding7_5");
+    addFace<7, 6>("Face7_6", "FaceEmbedding7_6");
 }
 
