@@ -1288,6 +1288,8 @@
 		05CAFB511C4CEA160001C253 /* face13.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB441C4CEA020001C253 /* face13.cpp */; };
 		05CAFB521C4CEA160001C253 /* face14.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB451C4CEA020001C253 /* face14.cpp */; };
 		05CAFB531C4CEA160001C253 /* face15.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB461C4CEA020001C253 /* face15.cpp */; };
+		05CAFB551C4D8FCF0001C253 /* graphviz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05CAFB541C4D8FCE0001C253 /* graphviz.framework */; };
+		05CAFB561C4D904A0001C253 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A51806047E00FAE4DF /* libz.dylib */; };
 		05D0A1101812F0BE005ED097 /* TriangulationViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D0A10F1812F0BE005ED097 /* TriangulationViewController.mm */; };
 		05D1172919EDF43F003BEC55 /* WelcomeViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D1172819EDF43F003BEC55 /* WelcomeViewController.mm */; };
 		05D1172B19EE0166003BEC55 /* nbitmask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA1011806088B00FAE4DF /* nbitmask.cpp */; };
@@ -2906,6 +2908,7 @@
 		05CAFB441C4CEA020001C253 /* face13.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face13.cpp; sourceTree = "<group>"; };
 		05CAFB451C4CEA020001C253 /* face14.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face14.cpp; sourceTree = "<group>"; };
 		05CAFB461C4CEA020001C253 /* face15.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face15.cpp; sourceTree = "<group>"; };
+		05CAFB541C4D8FCE0001C253 /* graphviz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = graphviz.framework; path = ../../Library/Frameworks/osx/graphviz.framework; sourceTree = "<group>"; };
 		05D0A10E1812F0BE005ED097 /* TriangulationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriangulationViewController.h; sourceTree = "<group>"; };
 		05D0A10F1812F0BE005ED097 /* TriangulationViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TriangulationViewController.mm; sourceTree = "<group>"; };
 		05D1172719EDF43F003BEC55 /* WelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomeViewController.h; sourceTree = "<group>"; };
@@ -2994,6 +2997,8 @@
 				05AB5ED01B8ED9FA007034C8 /* QtGui.framework in Frameworks */,
 				05AB5ED31B8EDC27007034C8 /* QtSvg.framework in Frameworks */,
 				05AB5ED11B8ED9FA007034C8 /* QtWidgets.framework in Frameworks */,
+				05CAFB561C4D904A0001C253 /* libz.dylib in Frameworks */,
+				05CAFB551C4D8FCF0001C253 /* graphviz.framework in Frameworks */,
 				050F5E871B9BD7EF00C1F681 /* libpython2.7.dylib in Frameworks */,
 				056AA9941C41C10100FA81D3 /* boost-python.framework in Frameworks */,
 			);
@@ -4212,6 +4217,7 @@
 		052FA0AF180604A900FAE4DF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				05CAFB541C4D8FCE0001C253 /* graphviz.framework */,
 				05AB5ECC1B8ED9F9007034C8 /* QtCore.framework */,
 				05AB5ECD1B8ED9F9007034C8 /* QtGui.framework */,
 				05AB5ED21B8EDC27007034C8 /* QtSvg.framework */,
