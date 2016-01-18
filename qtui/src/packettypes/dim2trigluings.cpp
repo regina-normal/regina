@@ -340,8 +340,6 @@ Dim2TriGluingsUI::Dim2TriGluingsUI(regina::Dim2Triangulation* packet,
     ui = edgeTable;
 
     // Set up the triangulation actions.
-    QAction* sep;
-
     actAddTri = new QAction(this);
     actAddTri->setText(tr("&Add Triangle"));
     actAddTri->setIcon(ReginaSupport::regIcon("insert"));
@@ -365,7 +363,7 @@ Dim2TriGluingsUI::Dim2TriGluingsUI(regina::Dim2Triangulation* packet,
         this, SLOT(updateRemoveState()));
     triActionList.append(actRemoveTri);
 
-    //sep = new QAction(this);
+    //QAction* sep = new QAction(this);
     //sep->setSeparator(true);
     //triActionList.append(sep);
 
