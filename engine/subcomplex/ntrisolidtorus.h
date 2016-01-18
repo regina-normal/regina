@@ -120,6 +120,14 @@ class REGINA_API NTriSolidTorus : public NStandardTriangulation {
          * to return; this must be 0, 1 or 2.
          * @return the requested tetrahedron.
          */
+        NTetrahedron* tetrahedron(int index) const;
+        /**
+         * Deprecated routine that returns the requested tetrahedron in this
+         * solid torus.
+         *
+         * \deprecated This routine has been renamed to tetrahedron().
+         * See the tetrahedron() documentation for further details.
+         */
         NTetrahedron* getTetrahedron(int index) const;
 
         /**
@@ -290,6 +298,9 @@ inline NTriSolidTorus::NTriSolidTorus() {
 inline NTriSolidTorus::~NTriSolidTorus() {
 }
 
+inline NTetrahedron* NTriSolidTorus::tetrahedron(int index) const {
+    return tet[index];
+}
 inline NTetrahedron* NTriSolidTorus::getTetrahedron(int index) const {
     return tet[index];
 }

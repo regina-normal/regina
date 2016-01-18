@@ -199,7 +199,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
     // Handle the 3-tetrahedron case separately.
     if (nTet == 3) {
         // Note that there cannot be a layered chain.
-        NTetrahedron* base = comp->getTetrahedron(0);
+        NTetrahedron* base = comp->tetrahedron(0);
         NTriSolidTorus* core;
         NPerm4 annulusMap[3];
         // Check every possible choice of vertex roles in tetrahedron 0.
@@ -266,7 +266,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
     unsigned long usedTets = 0;
     for (unsigned long t = 0; t < nTet; t++) {
         layered[nLayered] = NLayeredSolidTorus::formsLayeredSolidTorusBase(
-            comp->getTetrahedron(t));
+            comp->tetrahedron(t));
         if (layered[nLayered]) {
             usedTets += layered[nLayered]->size();
             nLayered++;
@@ -285,7 +285,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
         
         // Start with tetrahedron 0.  Either it belongs to the chain or
         // it belongs to the core.
-        NTetrahedron* tet = comp->getTetrahedron(0);
+        NTetrahedron* tet = comp->tetrahedron(0);
 
         // Run through all possible cores to which it might belong.
         int i;
@@ -375,9 +375,9 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                         topRoles = chain.getTopVertexRoles();
 
                         if ((top->adjacentTetrahedron(topRoles[0]) ==
-                                    core->getTetrahedron(1)) &&
+                                    core->tetrahedron(1)) &&
                                 (top->adjacentTetrahedron(topRoles[3]) ==
-                                    core->getTetrahedron(2)) &&
+                                    core->tetrahedron(2)) &&
                                 (top->adjacentGluing(topRoles[0])
                                     * topRoles * NPerm4(1, 0, 2, 3) ==
                                     core->getVertexRoles(1)) &&
@@ -429,11 +429,11 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                         topRoles = chain.getTopVertexRoles();
 
                         if ((bottom->adjacentTetrahedron(bottomRoles[1]) ==
-                                    core->getTetrahedron(1)) &&
+                                    core->tetrahedron(1)) &&
                                 (top->adjacentTetrahedron(topRoles[0]) ==
-                                    core->getTetrahedron(0)) &&
+                                    core->tetrahedron(0)) &&
                                 (top->adjacentTetrahedron(topRoles[3]) ==
-                                    core->getTetrahedron(2)) &&
+                                    core->tetrahedron(2)) &&
                                 (bottom->adjacentGluing(
                                         bottomRoles[1])
                                     * bottomRoles * NPerm4(2, 1, 0, 3) ==
@@ -534,7 +534,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
             // Now all that remains is to ensure that the layered solid
             // tori hang from it accordingly.
             for (j = 0; j < 3; j++) {
-                coreTets[j] = core->getTetrahedron(j);
+                coreTets[j] = core->tetrahedron(j);
                 coreVertexRoles[j] = core->getVertexRoles(j);
             }
             usedLayered = 0;

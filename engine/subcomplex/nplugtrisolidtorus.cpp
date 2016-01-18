@@ -198,7 +198,7 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
                 continue;
 
             for (i = 0; i < 3; i++) {
-                coreTet[i] = core->getTetrahedron(i);
+                coreTet[i] = core->tetrahedron(i);
                 coreRoles[i] = core->getVertexRoles(i);
                 axis[i] = coreTet[i]->getEdge(
                     NEdge::edgeNumber[coreRoles[i][0]][coreRoles[i][3]]);

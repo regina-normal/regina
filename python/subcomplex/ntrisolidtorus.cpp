@@ -46,6 +46,8 @@ void addNTriSolidTorus() {
             ("NTriSolidTorus", no_init)
         .def("clone", &NTriSolidTorus::clone,
             return_value_policy<manage_new_object>())
+        .def("tetrahedron", &NTriSolidTorus::getTetrahedron,
+            return_value_policy<reference_existing_object>())
         .def("getTetrahedron", &NTriSolidTorus::getTetrahedron,
             return_value_policy<reference_existing_object>())
         .def("getVertexRoles", &NTriSolidTorus::getVertexRoles)
