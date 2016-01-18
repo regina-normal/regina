@@ -112,11 +112,11 @@ class REGINA_API NNormalSurfaceVectorOrientedQuad :
 
         virtual const NVertex* isVertexLink(const NTriangulation* triang) const;
 
-        virtual NLargeInteger getQuadCoord(size_t tetIndex,
+        virtual NLargeInteger quads(size_t tetIndex,
             int quadType, const NTriangulation* triang) const;
         virtual NLargeInteger getOrientedQuadCoord(size_t tetIndex,
             int quadType, const NTriangulation* triang, bool orientation) const;
-        virtual NLargeInteger getOctCoord(size_t tetIndex,
+        virtual NLargeInteger octs(size_t tetIndex,
             int octType, const NTriangulation* triang) const;
 
         static NNormalSurfaceVector* makeZeroVector(
@@ -139,7 +139,7 @@ inline NNormalSurfaceVectorOrientedQuad::NNormalSurfaceVectorOrientedQuad(
         NNormalSurfaceVectorMirrored(cloneMe) {
 }
 
-inline NLargeInteger NNormalSurfaceVectorOrientedQuad::getQuadCoord(
+inline NLargeInteger NNormalSurfaceVectorOrientedQuad::quads(
         size_t tetIndex, int quadType, const NTriangulation* tri) const {
     return getOrientedQuadCoord(tetIndex, quadType, tri, true)
            + getOrientedQuadCoord(tetIndex, quadType, tri, false);
@@ -158,7 +158,7 @@ inline const NVertex* NNormalSurfaceVectorOrientedQuad::isVertexLink(
     return 0;
 }
 
-inline NLargeInteger NNormalSurfaceVectorOrientedQuad::getOctCoord(
+inline NLargeInteger NNormalSurfaceVectorOrientedQuad::octs(
         size_t, int, const NTriangulation*) const {
     return zero;
 }

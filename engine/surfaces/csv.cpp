@@ -204,13 +204,13 @@ bool NNormalSurfaceList::saveCSVStandard(const char* filename,
         writePropData(out, s, additionalFields);
 
         for (j = 0; j < n; ++j) {
-            out << s->getTriangleCoord(j, 0) << ',';
-            out << s->getTriangleCoord(j, 1) << ',';
-            out << s->getTriangleCoord(j, 2) << ',';
-            out << s->getTriangleCoord(j, 3) << ',';
-            out << s->getQuadCoord(j, 0) << ',';
-            out << s->getQuadCoord(j, 1) << ',';
-            out << s->getQuadCoord(j, 2);
+            out << s->triangles(j, 0) << ',';
+            out << s->triangles(j, 1) << ',';
+            out << s->triangles(j, 2) << ',';
+            out << s->triangles(j, 3) << ',';
+            out << s->quads(j, 0) << ',';
+            out << s->quads(j, 1) << ',';
+            out << s->quads(j, 2);
 
             if (! allowsAlmostNormal()) {
                 if (j < n - 1)
@@ -219,9 +219,9 @@ bool NNormalSurfaceList::saveCSVStandard(const char* filename,
             }
             out << ',';
 
-            out << s->getOctCoord(j, 0) << ',';
-            out << s->getOctCoord(j, 1) << ',';
-            out << s->getOctCoord(j, 2);
+            out << s->octs(j, 0) << ',';
+            out << s->octs(j, 1) << ',';
+            out << s->octs(j, 2);
 
             if (j < n - 1)
                 out << ',';

@@ -80,7 +80,7 @@ struct NormalInfo<NS_QUAD> {
  * next three for the second tetrahedron and so on.  For each
  * tetrahedron, the three individual coordinates represent the
  * number of quadrilateral discs of type 0, 1 and 2
- * (see NNormalSurface::getQuadCoord()).
+ * (see NNormalSurface::quads()).
  *
  * \ifacespython Not present.
  */
@@ -108,7 +108,7 @@ class REGINA_API NNormalSurfaceVectorQuad :
 
         virtual const NVertex* isVertexLink(const NTriangulation* triang) const;
 
-        virtual NLargeInteger getOctCoord(size_t tetIndex,
+        virtual NLargeInteger octs(size_t tetIndex,
             int octType, const NTriangulation* triang) const;
 
         static NNormalSurfaceVector* makeZeroVector(
@@ -137,7 +137,7 @@ inline const NVertex* NNormalSurfaceVectorQuad::isVertexLink(
     return 0;
 }
 
-inline NLargeInteger NNormalSurfaceVectorQuad::getOctCoord(
+inline NLargeInteger NNormalSurfaceVectorQuad::octs(
         size_t, int, const NTriangulation*) const {
     return zero;
 }

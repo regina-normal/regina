@@ -135,11 +135,14 @@ void addNNormalSurface() {
             return_value_policy<manage_new_object>())
         .def("doubleSurface", &NNormalSurface::doubleSurface,
             return_value_policy<manage_new_object>())
+        .def("triangles", &NNormalSurface::triangles)
         .def("getTriangleCoord", &NNormalSurface::getTriangleCoord)
         .def("getOrientedTriangleCoord",
             &NNormalSurface::getOrientedTriangleCoord)
+        .def("quads", &NNormalSurface::quads)
         .def("getQuadCoord", &NNormalSurface::getQuadCoord)
         .def("getOrientedQuadCoord", &NNormalSurface::getOrientedQuadCoord)
+        .def("octs", &NNormalSurface::octs)
         .def("getOctCoord", &NNormalSurface::getOctCoord)
         .def("edgeWeight", &NNormalSurface::edgeWeight)
         .def("getEdgeWeight", &NNormalSurface::getEdgeWeight)

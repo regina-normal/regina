@@ -518,7 +518,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
                 return cell;
             }
 
-            regina::NLargeInteger tot = s->getOctCoord(oct.tetIndex, oct.type);
+            regina::NLargeInteger tot = s->octs(oct.tetIndex, oct.type);
             if (tot == 1) {
                 cell.textLabel.attributedText = [TextHelper yesNoString:[NSString stringWithFormat:@"K%ld: %s (1 oct)",
                                                                          oct.tetIndex,

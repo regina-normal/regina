@@ -46,13 +46,13 @@ bool NNormalSurfaceVector::isVertexLinking(const NTriangulation* triang) const {
     int type;
     for (tet = 0; tet < nTets; tet++) {
         for (type = 0; type < 3; type++)
-            if (getQuadCoord(tet, type, triang) != 0)
+            if (quads(tet, type, triang) != 0)
                 return false;
     }
     if (allowsAlmostNormal())
         for (tet = 0; tet < nTets; tet++)
             for (type = 0; type < 3; type++)
-                if (getOctCoord(tet, type, triang) != 0)
+                if (octs(tet, type, triang) != 0)
                     return false;
     return true;
 }
@@ -66,13 +66,13 @@ const NVertex* NNormalSurfaceVector::isVertexLink(const NTriangulation* triang)
     // Check that there are no quad/oct discs.
     for (tet = 0; tet < nTets; tet++) {
         for (type = 0; type < 3; type++)
-            if (getQuadCoord(tet, type, triang) != 0)
+            if (quads(tet, type, triang) != 0)
                 return 0;
     }
     if (allowsAlmostNormal())
         for (tet = 0; tet < nTets; tet++)
             for (type = 0; type < 3; type++)
-                if (getOctCoord(tet, type, triang) != 0)
+                if (octs(tet, type, triang) != 0)
                     return 0;
 
     // Now examine the triangle to see if we link only a single vertex.
@@ -88,8 +88,8 @@ const NVertex* NNormalSurfaceVector::isVertexLink(const NTriangulation* triang)
     for (tet = 0; tet < nTets; tet++) {
         t = triang->getTetrahedron(tet);
         for (type = 0; type < 4; type++) {
-            v = t->getVertex(type);
-            coord = getTriangleCoord(tet, type, triang);
+            v = t->vertex(type);
+            coord = triangles(tet, type, triang);
 
             if (coord == 0) {
                 // No discs in this coordinate.
@@ -141,7 +141,7 @@ std::pair<const NEdge*, const NEdge*> NNormalSurfaceVector::isThinEdgeLink(
     if (allowsAlmostNormal())
         for (tet = 0; tet < nTets; tet++)
             for (type = 0; type < 3; type++)
-                if (getOctCoord(tet, type, triang) != 0)
+                if (octs(tet, type, triang) != 0)
                     return NO_EDGES;
 
     // Run through the quadrilateral discs and work out if there are any
@@ -160,18 +160,18 @@ std::pair<const NEdge*, const NEdge*> NNormalSurfaceVector::isThinEdgeLink(
     for (tet = 0; tet < nTets; tet++) {
         t = triang->getTetrahedron(tet);
         for (type = 0; type < 3; type++) {
-            coord = getQuadCoord(tet, type, triang);
-            e[0] = t->getEdge(NEdge::edgeNumber[vertexSplitDefn[type][0]]
+            coord = quads(tet, type, triang);
+            e[0] = t->edge(NEdge::edgeNumber[vertexSplitDefn[type][0]]
                 [vertexSplitDefn[type][1]]);
-            e[1] = t->getEdge(NEdge::edgeNumber[vertexSplitDefn[type][2]]
+            e[1] = t->edge(NEdge::edgeNumber[vertexSplitDefn[type][2]]
                 [vertexSplitDefn[type][3]]);
-            e[2] = t->getEdge(NEdge::edgeNumber[vertexSplitDefn[type][0]]
+            e[2] = t->edge(NEdge::edgeNumber[vertexSplitDefn[type][0]]
                 [vertexSplitDefn[type][2]]);
-            e[3] = t->getEdge(NEdge::edgeNumber[vertexSplitDefn[type][0]]
+            e[3] = t->edge(NEdge::edgeNumber[vertexSplitDefn[type][0]]
                 [vertexSplitDefn[type][3]]);
-            e[4] = t->getEdge(NEdge::edgeNumber[vertexSplitDefn[type][1]]
+            e[4] = t->edge(NEdge::edgeNumber[vertexSplitDefn[type][1]]
                 [vertexSplitDefn[type][2]]);
-            e[5] = t->getEdge(NEdge::edgeNumber[vertexSplitDefn[type][1]]
+            e[5] = t->edge(NEdge::edgeNumber[vertexSplitDefn[type][1]]
                 [vertexSplitDefn[type][3]]);
 
             if (coord == 0) {
@@ -269,8 +269,8 @@ std::pair<const NEdge*, const NEdge*> NNormalSurfaceVector::isThinEdgeLink(
     for (tet = 0; tet < nTets; tet++) {
         t = triang->getTetrahedron(tet);
         for (type = 0; type < 4; type++) {
-            v = t->getVertex(type);
-            coord = getTriangleCoord(tet, type, triang);
+            v = t->vertex(type);
+            coord = triangles(tet, type, triang);
 
             // Should we actually see any discs?
             for (i = 0; i < 2; i++) {
@@ -286,7 +286,7 @@ std::pair<const NEdge*, const NEdge*> NNormalSurfaceVector::isThinEdgeLink(
                 // edge, the coordinate should also be 0.
                 if (! expectZero[i])
                     for (j = 0; j < 3; j++)
-                        if (t->getEdge(NEdge::edgeNumber[type][(type+j+1) % 4])
+                        if (t->edge(NEdge::edgeNumber[type][(type+j+1) % 4])
                                 == ans[i]) {
                             expectZero[i] = true;
                             break;

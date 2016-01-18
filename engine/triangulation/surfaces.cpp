@@ -191,7 +191,7 @@ NNormalSurface* NTriangulation::hasOctagonalAlmostNormalSphere() {
             broken = false; // More than one octagon found so far?
             for (tet = 0; tet < simplices_.size() && ! broken; ++tet)
                 for (oct = 0; oct < 3; ++oct) {
-                    coord = s->getOctCoord(tet, oct);
+                    coord = s->octs(tet, oct);
                     if (coord > 1) {
                         broken = true;
                         break;

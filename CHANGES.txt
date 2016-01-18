@@ -308,8 +308,9 @@ Version 4.97  [ (under development) ]
             - Deprecated; just use std::mutex and related classes instead.
         Class NNormalSurface:
             - New convenience routines normal() and embedded().
-            - Renamed getTriangleArcs() to arcs().  The old name is kept
-              but deprecated.
+            - Renamed getTriangleCoord(), getQuadCoord(), getOctCoord() and
+              getTriangleArcs() to triangles(), quads(), octs() and arcs().
+              The old names are kept but deprecated.
         Class NNormalSurfaceList:
             - Renamed getNumberOfSurfaces() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
@@ -320,8 +321,9 @@ Version 4.97  [ (under development) ]
         Class NNormalSurfaceVector:
             - The subclass constant coordType is now a constant of type
               NormalCoords, not an anonymous enum type.
-            - Renamed getTriangleArcs() to arcs().  The old name is kept
-              but deprecated.
+            - Renamed getTriangleCoord(), getQuadCoord(), getOctCoord() and
+              getTriangleArcs() to triangles(), quads(), octs() and arcs().
+              The old names are kept but deprecated.
         Class NPacket:
             - Added a variant of save() that takes an output stream (as
               opposed to a filename).

@@ -1012,16 +1012,16 @@ namespace {
             NTriangulation* insertInto) {
         unsigned long i, j;
         for (i = 0; i < 4; ++i)
-            triCount_[i] = s->getTriangleCoord(tetIndex, i).longValue();
+            triCount_[i] = s->triangles(tetIndex, i).longValue();
 
         NLargeInteger coord;
-        if ((coord = s->getQuadCoord(tetIndex, 0)) > 0) {
+        if ((coord = s->quads(tetIndex, 0)) > 0) {
             quadCount_ = coord.longValue();
             quadType_ = 0;
-        } else if ((coord = s->getQuadCoord(tetIndex, 1)) > 0) {
+        } else if ((coord = s->quads(tetIndex, 1)) > 0) {
             quadCount_ = coord.longValue();
             quadType_ = 1;
-        } else if ((coord = s->getQuadCoord(tetIndex, 2)) > 0) {
+        } else if ((coord = s->quads(tetIndex, 2)) > 0) {
             quadCount_ = coord.longValue();
             quadType_ = 2;
         } else {
@@ -1174,16 +1174,16 @@ NTriangulation* NNormalSurface::cutAlong() const {
     int fromVertex0, fromVertex1;
     NPerm4 gluing;
     unsigned long quadBlocks;
-    for (fit = triangulation()->getTriangles().begin();
-            fit != triangulation()->getTriangles().end(); ++fit) {
+    for (fit = triangulation()->triangles().begin();
+            fit != triangulation()->triangles().end(); ++fit) {
         f = *fit;
         if (f->isBoundary())
             continue;
 
-        tet0 = f->getEmbedding(0).getTetrahedron()->markedIndex();
-        tet1 = f->getEmbedding(1).getTetrahedron()->markedIndex();
-        face0 = f->getEmbedding(0).getTriangle();
-        face1 = f->getEmbedding(1).getTriangle();
+        tet0 = f->getEmbedding(0).tetrahedron()->markedIndex();
+        tet1 = f->getEmbedding(1).tetrahedron()->markedIndex();
+        face0 = f->getEmbedding(0).triangle();
+        face1 = f->getEmbedding(1).triangle();
 
         gluing = f->getEmbedding(0).getTetrahedron()->adjacentGluing(face0);
 
@@ -1222,17 +1222,17 @@ NTriangulation* NNormalSurface::crush() const {
         return ans;
 
     // Work out which tetrahedra contain which quad types.
-    int* quads = new int[nTet];
+    int* quadTypes = new int[nTet];
     long whichTet = 0;
     for (whichTet = 0; whichTet < static_cast<long>(nTet); whichTet++) {
-        if (getQuadCoord(whichTet, 0) != 0)
-            quads[whichTet] = 0;
-        else if (getQuadCoord(whichTet, 1) != 0)
-            quads[whichTet] = 1;
-        else if (getQuadCoord(whichTet, 2) != 0)
-            quads[whichTet] = 2;
+        if (quads(whichTet, 0) != 0)
+            quadTypes[whichTet] = 0;
+        else if (quads(whichTet, 1) != 0)
+            quadTypes[whichTet] = 1;
+        else if (quads(whichTet, 2) != 0)
+            quadTypes[whichTet] = 2;
         else
-            quads[whichTet] = -1;
+            quadTypes[whichTet] = -1;
     }
 
     // Run through and fix the tetrahedron gluings.
@@ -1243,7 +1243,7 @@ NTriangulation* NNormalSurface::crush() const {
     NPerm4 swap;
     int face, adjFace;
     for (whichTet = 0; whichTet < static_cast<long>(nTet); whichTet++)
-        if (quads[whichTet] == -1) {
+        if (quadTypes[whichTet] == -1) {
             // We want to keep this tetrahedron, so make sure it's glued
             // up correctly.
             tet = ans->getTetrahedron(whichTet);
@@ -1251,7 +1251,7 @@ NTriangulation* NNormalSurface::crush() const {
                 adj = tet->adjacentTetrahedron(face);
                 if (! adj)
                     continue;
-                adjQuads = quads[ans->tetrahedronIndex(adj)];
+                adjQuads = quadTypes[ans->tetrahedronIndex(adj)];
                 if (adjQuads == -1)
                     continue;
 
@@ -1270,7 +1270,7 @@ NTriangulation* NNormalSurface::crush() const {
                     adjFace = adjPerm[face];
 
                     if (adj)
-                        adjQuads = quads[ans->tetrahedronIndex(adj)];
+                        adjQuads = quadTypes[ans->tetrahedronIndex(adj)];
                 }
 
                 // Reglue the tetrahedron face accordingly.
@@ -1287,10 +1287,10 @@ NTriangulation* NNormalSurface::crush() const {
 
     // Delete unwanted tetrahedra.
     for (whichTet = nTet - 1; whichTet >= 0; whichTet--)
-        if (quads[whichTet] >= 0)
+        if (quadTypes[whichTet] >= 0)
             ans->removeTetrahedronAt(whichTet);
 
-    delete[] quads;
+    delete[] quadTypes;
     return ans;
 }
 

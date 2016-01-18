@@ -123,7 +123,7 @@ NNormalSurface* NNormalSurface::findVtxOctAlmostNormalSphere(
                 // Test for the existence of precisely one octagon.
                 for (tet = 0; tet < nTets; tet++)
                     for (oct = 0; oct < 3; oct++)
-                        if ((octCoord = s->getOctCoord(tet, oct)) > 0) {
+                        if ((octCoord = s->octs(tet, oct)) > 0) {
                             // We found our one and only non-zero
                             // octagonal coordinate.
                             if (octCoord > 1) {

@@ -205,8 +205,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
             if (oct == regina::NDiscType::NONE)
                 return QVariant();
             else {
-                regina::NLargeInteger tot = s->getOctCoord(
-                    oct.tetIndex, oct.type);
+                regina::NLargeInteger tot = s->octs(oct.tetIndex, oct.type);
                 if (tot == 1) {
                     return tr("K%1: %2 (1 oct)").
                         arg(oct.tetIndex).
@@ -274,7 +273,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 6))) {
             regina::NDiscType oct = s->getOctPosition();
             if (oct != regina::NDiscType::NONE) {
-                if (s->getOctCoord(oct.tetIndex, oct.type) > 1)
+                if (s->octs(oct.tetIndex, oct.type) > 1)
                     return QColor(Qt::darkRed);
                 else
                     return QColor(Qt::darkGreen);

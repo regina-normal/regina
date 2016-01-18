@@ -303,30 +303,24 @@ namespace Coordinates {
             const regina::NNormalSurface& surface, unsigned long whichCoord) {
         if (coordSystem == regina::NS_STANDARD) {
             if (whichCoord % 7 < 4)
-                return surface.getTriangleCoord(
-                    whichCoord / 7, whichCoord % 7);
+                return surface.triangles(whichCoord / 7, whichCoord % 7);
             else
-                return surface.getQuadCoord(
-                    whichCoord / 7, (whichCoord % 7) - 4);
+                return surface.quads(whichCoord / 7, (whichCoord % 7) - 4);
         } else if (coordSystem == regina::NS_AN_STANDARD ||
                 coordSystem == regina::NS_AN_LEGACY) {
             if (whichCoord % 10 < 4)
-                return surface.getTriangleCoord(
-                    whichCoord / 10, whichCoord % 10);
+                return surface.triangles(whichCoord / 10, whichCoord % 10);
             else if (whichCoord % 10 < 7)
-                return surface.getQuadCoord(
-                    whichCoord / 10, (whichCoord % 10) - 4);
+                return surface.quads(whichCoord / 10, (whichCoord % 10) - 4);
             else
-                return surface.getOctCoord(
-                    whichCoord / 10, (whichCoord % 10) - 7);
+                return surface.octs(whichCoord / 10, (whichCoord % 10) - 7);
         } else if (coordSystem == regina::NS_QUAD) {
-            return surface.getQuadCoord(whichCoord / 3, whichCoord % 3);
+            return surface.quads(whichCoord / 3, whichCoord % 3);
         } else if (coordSystem == regina::NS_AN_QUAD_OCT) {
             if (whichCoord % 6 < 3)
-                return surface.getQuadCoord(whichCoord / 6, whichCoord % 6);
+                return surface.quads(whichCoord / 6, whichCoord % 6);
             else
-                return surface.getOctCoord(
-                    whichCoord / 6, (whichCoord % 6) - 3);
+                return surface.octs(whichCoord / 6, (whichCoord % 6) - 3);
         } else if (coordSystem == regina::NS_EDGE_WEIGHT) {
             return surface.edgeWeight(whichCoord);
         } else if (coordSystem == regina::NS_TRIANGLE_ARCS) {

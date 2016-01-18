@@ -184,7 +184,7 @@ class REGINA_API NPrismSetSurface {
          * between 0 and NTriangulation::size()-1 inclusive.
          * @return the quadrilateral type found within this tetrahedron.
          * This is 0, 1 or 2 and represents the same type parameter as is
-         * used by NNormalSurface::getQuadCoord().  If the underlying surface
+         * used by NNormalSurface::quads().  If the underlying surface
          * does not meet the given tetrahedron in any quadrilateral discs,
          * this routine returns -1.
          */

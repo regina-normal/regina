@@ -86,11 +86,11 @@ NDiscSetTet::NDiscSetTet(const NNormalSurface& surface,
         unsigned long tetIndex) {
     int i;
     for (i=0; i<4; i++)
-        internalNDiscs[i] = surface.getTriangleCoord(tetIndex, i).longValue();
+        internalNDiscs[i] = surface.triangles(tetIndex, i).longValue();
     for (i=4; i<7; i++)
-        internalNDiscs[i] = surface.getQuadCoord(tetIndex, i - 4).longValue();
+        internalNDiscs[i] = surface.quads(tetIndex, i - 4).longValue();
     for (i=7; i<10; i++)
-        internalNDiscs[i] = surface.getOctCoord(tetIndex, i - 7).longValue();
+        internalNDiscs[i] = surface.octs(tetIndex, i - 7).longValue();
 }
 
 NDiscSetTet::NDiscSetTet(unsigned long tri0, unsigned long tri1,

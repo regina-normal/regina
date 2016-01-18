@@ -50,18 +50,18 @@ NLargeInteger NNormalSurfaceVectorOriented::edgeWeight(
 
     // Add up the triangles and quads meeting that edge.
     // Triangles:
-    NLargeInteger ans(getTriangleCoord(tetIndex,start,triang));
-    ans += getTriangleCoord(tetIndex,end,triang);
+    NLargeInteger ans(triangles(tetIndex,start,triang));
+    ans += triangles(tetIndex,end,triang);
     // Quads:
-    ans += getQuadCoord(tetIndex,vertexSplitMeeting[start][end][0],triang);
-    ans += getQuadCoord(tetIndex,vertexSplitMeeting[start][end][1],triang);
+    ans += quads(tetIndex,vertexSplitMeeting[start][end][0],triang);
+    ans += quads(tetIndex,vertexSplitMeeting[start][end][1],triang);
     return ans;
 }
 
 NLargeInteger NNormalSurfaceVectorOriented::arcs(size_t triIndex,
         int triVertex, const NTriangulation* triang) const {
     // Find a tetrahedron next to the triangle in question.
-    const NTriangleEmbedding& emb = triang->getTriangles()[triIndex]->
+    const NTriangleEmbedding& emb = triang->triangles()[triIndex]->
         getEmbedding(0);
     long tetIndex = triang->tetrahedronIndex(emb.getTetrahedron());
     int vertex = emb.getVertices()[triVertex];
@@ -69,9 +69,9 @@ NLargeInteger NNormalSurfaceVectorOriented::arcs(size_t triIndex,
 
     // Add up the triangles and quads meeting that triangle in the required arc.
     // Triangles:
-    NLargeInteger ans(getTriangleCoord(tetIndex,vertex,triang));
+    NLargeInteger ans(triangles(tetIndex,vertex,triang));
     // Quads:
-    ans += getQuadCoord(tetIndex,vertexSplit[vertex][backOfFace],triang);
+    ans += quads(tetIndex,vertexSplit[vertex][backOfFace],triang);
     return ans;
 }
 
@@ -97,8 +97,8 @@ NMatrixInt* NNormalSurfaceVectorOriented::makeMatchingEquations(
     size_t tet0, tet1;
     NPerm4 perm0, perm1;
     bool natural;
-    for (NTriangulation::TriangleIterator fit = triangulation->getTriangles().begin();
-            fit != triangulation->getTriangles().end(); fit++) {
+    for (auto fit = triangulation->triangles().begin();
+            fit != triangulation->triangles().end(); fit++) {
         if (! (*fit)->isBoundary()) {
             tet0 = triangulation->tetrahedronIndex(
                 (*fit)->getEmbedding(0).getTetrahedron());
