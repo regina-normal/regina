@@ -368,7 +368,7 @@ void NNormalSurface::calculateEulerChar() const {
     tot = triangulation_->countTriangles();
     for (index = 0; index < tot; index++)
         for (type = 0; type < 3; type++)
-            ans -= getTriangleArcs(index, type);
+            ans -= arcs(index, type);
 
     // Add faces.
     tot = triangulation_->size();

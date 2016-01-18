@@ -58,9 +58,8 @@ NLargeInteger NNormalSurfaceVectorOriented::edgeWeight(
     return ans;
 }
 
-NLargeInteger NNormalSurfaceVectorOriented::getTriangleArcs(
-        size_t triIndex, int triVertex, const NTriangulation* triang)
-        const {
+NLargeInteger NNormalSurfaceVectorOriented::arcs(size_t triIndex,
+        int triVertex, const NTriangulation* triang) const {
     // Find a tetrahedron next to the triangle in question.
     const NTriangleEmbedding& emb = triang->getTriangles()[triIndex]->
         getEmbedding(0);

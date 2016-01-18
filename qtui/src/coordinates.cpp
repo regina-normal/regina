@@ -330,7 +330,7 @@ namespace Coordinates {
         } else if (coordSystem == regina::NS_EDGE_WEIGHT) {
             return surface.edgeWeight(whichCoord);
         } else if (coordSystem == regina::NS_TRIANGLE_ARCS) {
-            return surface.getTriangleArcs(whichCoord / 3, whichCoord % 3);
+            return surface.arcs(whichCoord / 3, whichCoord % 3);
         } else if (coordSystem == regina::NS_ORIENTED) {
             bool orientation = (whichCoord % 2 == 0);
             whichCoord /= 2;

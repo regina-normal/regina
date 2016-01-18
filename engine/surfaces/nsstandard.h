@@ -112,7 +112,7 @@ class REGINA_API NNormalSurfaceVectorStandard : public NNormalSurfaceVector {
             int octType, const NTriangulation* triang) const;
         virtual NLargeInteger edgeWeight(size_t edgeIndex,
             const NTriangulation* triang) const;
-        virtual NLargeInteger getTriangleArcs(size_t triIndex,
+        virtual NLargeInteger arcs(size_t triIndex,
             int triVertex, const NTriangulation* triang) const;
 
         static NNormalSurfaceVector* makeZeroVector(

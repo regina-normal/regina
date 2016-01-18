@@ -142,7 +142,7 @@ class REGINA_API NNormalSurfaceVectorMirrored : public NNormalSurfaceVector {
             int octType, const NTriangulation* triang) const;
         virtual NLargeInteger edgeWeight(size_t edgeIndex,
             const NTriangulation* triang) const;
-        virtual NLargeInteger getTriangleArcs(size_t triIndex,
+        virtual NLargeInteger arcs(size_t triIndex,
             int triVertex, const NTriangulation* triang) const;
 };
 
@@ -212,13 +212,13 @@ inline NLargeInteger NNormalSurfaceVectorMirrored::edgeWeight(
             makeMirror(triang);
     return mirror->edgeWeight(edgeIndex, triang);
 }
-inline NLargeInteger NNormalSurfaceVectorMirrored::getTriangleArcs(
+inline NLargeInteger NNormalSurfaceVectorMirrored::arcs(
         size_t triIndex, int triVertex,
         const NTriangulation* triang) const {
     if (! mirror)
         const_cast<NNormalSurfaceVectorMirrored*>(this)->mirror =
             makeMirror(triang);
-    return mirror->getTriangleArcs(triIndex, triVertex, triang);
+    return mirror->arcs(triIndex, triVertex, triang);
 }
 
 } // namespace regina
