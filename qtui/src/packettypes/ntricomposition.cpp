@@ -396,7 +396,7 @@ void NTriCompositionUI::findAugTriSolidTori() {
             details = new QTreeWidgetItem(id);
             details->setText(0,tr("Component %1").arg(i));
 
-            const regina::NTriSolidTorus& core = aug->getCore();
+            const regina::NTriSolidTorus& core = aug->core();
             details = new QTreeWidgetItem(id, details);
             details->setText(0,tr("Core: tets %1, %2, %3").
                 arg(tri->tetrahedronIndex(core.getTetrahedron(0))).
@@ -405,10 +405,10 @@ void NTriCompositionUI::findAugTriSolidTori() {
 
             if (aug->hasLayeredChain()) {
                 QString chainType;
-                if (aug->getChainType() ==
+                if (aug->chainType() ==
                         regina::NAugTriSolidTorus::CHAIN_MAJOR)
                     chainType = tr("major");
-                else if (aug->getChainType() ==
+                else if (aug->chainType() ==
                         regina::NAugTriSolidTorus::CHAIN_AXIS)
                     chainType = tr("axis");
                 else

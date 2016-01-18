@@ -49,54 +49,54 @@ const int NAugTriSolidTorus::CHAIN_MAJOR = 1;
 const int NAugTriSolidTorus::CHAIN_AXIS = 2;
 
 NAugTriSolidTorus::~NAugTriSolidTorus() {
-    if (core)
-        delete core;
+    if (core_)
+        delete core_;
     for (int i = 0; i < 3; i++)
-        if (augTorus[i])
-            delete augTorus[i];
+        if (augTorus_[i])
+            delete augTorus_[i];
 }
 
 NAugTriSolidTorus* NAugTriSolidTorus::clone() const {
     NAugTriSolidTorus* ans = new NAugTriSolidTorus();
-    ans->core = core->clone();
+    ans->core_ = core_->clone();
     for (int i = 0; i < 3; i++) {
-        if (augTorus[i])
-            ans->augTorus[i] = augTorus[i]->clone();
-        ans->edgeGroupRoles[i] = edgeGroupRoles[i];
+        if (augTorus_[i])
+            ans->augTorus_[i] = augTorus_[i]->clone();
+        ans->edgeGroupRoles_[i] = edgeGroupRoles_[i];
     }
     ans->chainIndex = chainIndex;
-    ans->chainType = chainType;
-    ans->torusAnnulus = torusAnnulus;
+    ans->chainType_ = chainType_;
+    ans->torusAnnulus_ = torusAnnulus_;
     return ans;
 }
 
 NManifold* NAugTriSolidTorus::manifold() const {
     NSFSpace* ans = new NSFSpace();
-    if (chainType == CHAIN_MAJOR) {
+    if (chainType_ == CHAIN_MAJOR) {
         // Layered solid torus + layered chain.
         ans->insertFibre(2, 1);
         ans->insertFibre(chainIndex + 1, 1);
 
         long q, r;
-        if (edgeGroupRoles[torusAnnulus][2] == 2) {
-            if (augTorus[torusAnnulus]) {
-                r = augTorus[torusAnnulus]->getMeridinalCuts(
-                    edgeGroupRoles[torusAnnulus][0]);
-                q = augTorus[torusAnnulus]->getMeridinalCuts(
-                    edgeGroupRoles[torusAnnulus][1]);
+        if (edgeGroupRoles_[torusAnnulus_][2] == 2) {
+            if (augTorus_[torusAnnulus_]) {
+                r = augTorus_[torusAnnulus_]->getMeridinalCuts(
+                    edgeGroupRoles_[torusAnnulus_][0]);
+                q = augTorus_[torusAnnulus_]->getMeridinalCuts(
+                    edgeGroupRoles_[torusAnnulus_][1]);
             } else {
                 r = 1;
                 q = 1;
             }
         } else {
-            if (augTorus[torusAnnulus]) {
-                r = augTorus[torusAnnulus]->getMeridinalCuts(
-                    edgeGroupRoles[torusAnnulus][0]);
-                q = -augTorus[torusAnnulus]->getMeridinalCuts(
-                    edgeGroupRoles[torusAnnulus][1]);
+            if (augTorus_[torusAnnulus_]) {
+                r = augTorus_[torusAnnulus_]->getMeridinalCuts(
+                    edgeGroupRoles_[torusAnnulus_][0]);
+                q = -augTorus_[torusAnnulus_]->getMeridinalCuts(
+                    edgeGroupRoles_[torusAnnulus_][1]);
             } else {
-                r = (edgeGroupRoles[torusAnnulus][0] == 2 ? 2 : 1);
-                q = -(edgeGroupRoles[torusAnnulus][1] == 2 ? 2 : 1);
+                r = (edgeGroupRoles_[torusAnnulus_][0] == 2 ? 2 : 1);
+                q = -(edgeGroupRoles_[torusAnnulus_][1] == 2 ? 2 : 1);
             }
         }
         r = r - q;
@@ -109,31 +109,31 @@ NManifold* NAugTriSolidTorus::manifold() const {
             return 0;
         } else
             ans->insertFibre(r, q);
-    } else if (chainType == CHAIN_AXIS) {
+    } else if (chainType_ == CHAIN_AXIS) {
         // Layered solid torus + layered chain.
         ans->insertFibre(2, 1);
         ans->insertFibre(2, -1);
 
         long q, r;
-        if (edgeGroupRoles[torusAnnulus][2] == 2) {
-            if (augTorus[torusAnnulus]) {
-                r = augTorus[torusAnnulus]->getMeridinalCuts(
-                    edgeGroupRoles[torusAnnulus][0]);
-                q = augTorus[torusAnnulus]->getMeridinalCuts(
-                    edgeGroupRoles[torusAnnulus][1]);
+        if (edgeGroupRoles_[torusAnnulus_][2] == 2) {
+            if (augTorus_[torusAnnulus_]) {
+                r = augTorus_[torusAnnulus_]->getMeridinalCuts(
+                    edgeGroupRoles_[torusAnnulus_][0]);
+                q = augTorus_[torusAnnulus_]->getMeridinalCuts(
+                    edgeGroupRoles_[torusAnnulus_][1]);
             } else {
                 r = 1;
                 q = 1;
             }
         } else {
-            if (augTorus[torusAnnulus]) {
-                r = augTorus[torusAnnulus]->getMeridinalCuts(
-                    edgeGroupRoles[torusAnnulus][0]);
-                q = -augTorus[torusAnnulus]->getMeridinalCuts(
-                    edgeGroupRoles[torusAnnulus][1]);
+            if (augTorus_[torusAnnulus_]) {
+                r = augTorus_[torusAnnulus_]->getMeridinalCuts(
+                    edgeGroupRoles_[torusAnnulus_][0]);
+                q = -augTorus_[torusAnnulus_]->getMeridinalCuts(
+                    edgeGroupRoles_[torusAnnulus_][1]);
             } else {
-                r = (edgeGroupRoles[torusAnnulus][0] == 2 ? 2 : 1);
-                q = -(edgeGroupRoles[torusAnnulus][1] == 2 ? 2 : 1);
+                r = (edgeGroupRoles_[torusAnnulus_][0] == 2 ? 2 : 1);
+                q = -(edgeGroupRoles_[torusAnnulus_][1] == 2 ? 2 : 1);
             }
         }
         long alpha = q - chainIndex * r;
@@ -153,21 +153,21 @@ NManifold* NAugTriSolidTorus::manifold() const {
 
         long alpha, beta;
         for (int i = 0; i < 3; i++) {
-            if (edgeGroupRoles[i][2] == 2) {
-                if (augTorus[i]) {
-                    alpha = augTorus[i]->getMeridinalCuts(edgeGroupRoles[i][0]);
-                    beta = augTorus[i]->getMeridinalCuts(edgeGroupRoles[i][1]);
+            if (edgeGroupRoles_[i][2] == 2) {
+                if (augTorus_[i]) {
+                    alpha = augTorus_[i]->getMeridinalCuts(edgeGroupRoles_[i][0]);
+                    beta = augTorus_[i]->getMeridinalCuts(edgeGroupRoles_[i][1]);
                 } else {
                     alpha = 1;
                     beta = 1;
                 }
             } else {
-                if (augTorus[i]) {
-                    alpha = augTorus[i]->getMeridinalCuts(edgeGroupRoles[i][0]);
-                    beta = -augTorus[i]->getMeridinalCuts(edgeGroupRoles[i][1]);
+                if (augTorus_[i]) {
+                    alpha = augTorus_[i]->getMeridinalCuts(edgeGroupRoles_[i][0]);
+                    beta = -augTorus_[i]->getMeridinalCuts(edgeGroupRoles_[i][1]);
                 } else {
-                    alpha = (edgeGroupRoles[i][0] == 2 ? 2 : 1);
-                    beta = -(edgeGroupRoles[i][1] == 2 ? 2 : 1);
+                    alpha = (edgeGroupRoles_[i][0] == 2 ? 2 : 1);
+                    beta = -(edgeGroupRoles_[i][1] == 2 ? 2 : 1);
                 }
             }
             if (alpha == 0) {
@@ -226,27 +226,27 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                 if (core) {
                     // We got one!
                     NAugTriSolidTorus* ans = new NAugTriSolidTorus();
-                    ans->core = core;
+                    ans->core_ = core;
 
                     // Work out how the mobius strip is glued onto each
                     // annulus.
                     for (j = 0; j < 3; j++) {
                         switch (annulusMap[j][0]) {
                             case 0:
-                                ans->edgeGroupRoles[j] = NPerm4(2, 0, 1, 3);
+                                ans->edgeGroupRoles_[j] = NPerm4(2, 0, 1, 3);
                                 break;
                             case 2:
-                                ans->edgeGroupRoles[j] = NPerm4(1, 2, 0, 3);
+                                ans->edgeGroupRoles_[j] = NPerm4(1, 2, 0, 3);
                                 break;
                             case 3:
-                                ans->edgeGroupRoles[j] = NPerm4(0, 1, 2, 3);
+                                ans->edgeGroupRoles_[j] = NPerm4(0, 1, 2, 3);
                                 break;
                         }
                     }
 
                     ans->chainIndex = 0;
-                    ans->chainType = CHAIN_NONE;
-                    ans->torusAnnulus = -1;
+                    ans->chainType_ = CHAIN_NONE;
+                    ans->torusAnnulus_ = -1;
                     return ans;
                 }
             }
@@ -282,7 +282,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
     if (nLayered == 0) {
         // Our only chance now is a layered chain plus a degenerate
         // layered solid torus.
-        
+
         // Start with tetrahedron 0.  Either it belongs to the chain or
         // it belongs to the core.
         NTetrahedron* tet = comp->tetrahedron(0);
@@ -308,7 +308,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                     // Look now for a layered chain.
                     // If we don't find it, the entire core must be wrong.
                     int chainType = CHAIN_NONE;
-                    
+
                     if ((chainLen = core->areAnnuliLinkedMajor(torusAnnulus)))
                         chainType = CHAIN_MAJOR;
                     else if ((chainLen =
@@ -320,21 +320,21 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
 
                     // We have the entire structure!
                     NAugTriSolidTorus* ans = new NAugTriSolidTorus();
-                    ans->core = core;
+                    ans->core_ = core;
                     switch (annulusPerm[0]) {
                         case 0:
-                            ans->edgeGroupRoles[torusAnnulus] = NPerm4(2,0,1,3);
+                            ans->edgeGroupRoles_[torusAnnulus] = NPerm4(2,0,1,3);
                             break;
                         case 2:
-                            ans->edgeGroupRoles[torusAnnulus] = NPerm4(1,2,0,3);
+                            ans->edgeGroupRoles_[torusAnnulus] = NPerm4(1,2,0,3);
                             break;
                         case 3:
-                            ans->edgeGroupRoles[torusAnnulus] = NPerm4(0,1,2,3);
+                            ans->edgeGroupRoles_[torusAnnulus] = NPerm4(0,1,2,3);
                             break;
                     }
                     ans->chainIndex = chainLen;
-                    ans->chainType = chainType;
-                    ans->torusAnnulus = torusAnnulus;
+                    ans->chainType_ = chainType;
+                    ans->torusAnnulus_ = torusAnnulus;
                     return ans;
                 }
 
@@ -388,21 +388,21 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                                     0, &annulusPerm)) {
                             // We have the entire structure!
                             NAugTriSolidTorus* ans = new NAugTriSolidTorus();
-                            ans->core = core;
+                            ans->core_ = core;
                             switch (annulusPerm[0]) {
                                 case 0:
-                                    ans->edgeGroupRoles[0] = NPerm4(2, 0, 1, 3);
+                                    ans->edgeGroupRoles_[0] = NPerm4(2, 0, 1, 3);
                                     break;
                                 case 2:
-                                    ans->edgeGroupRoles[0] = NPerm4(1, 2, 0, 3);
+                                    ans->edgeGroupRoles_[0] = NPerm4(1, 2, 0, 3);
                                     break;
                                 case 3:
-                                    ans->edgeGroupRoles[0] = NPerm4(0, 1, 2, 3);
+                                    ans->edgeGroupRoles_[0] = NPerm4(0, 1, 2, 3);
                                     break;
                             }
                             ans->chainIndex = chain.index() - 1;
-                            ans->chainType = chainType;
-                            ans->torusAnnulus = 0;
+                            ans->chainType_ = chainType;
+                            ans->torusAnnulus_ = 0;
                             return ans;
                         }
 
@@ -448,21 +448,21 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                                     0, &annulusPerm)) {
                             // We have the entire structure!
                             NAugTriSolidTorus* ans = new NAugTriSolidTorus();
-                            ans->core = core;
+                            ans->core_ = core;
                             switch (annulusPerm[0]) {
                                 case 0:
-                                    ans->edgeGroupRoles[0] = NPerm4(2, 0, 1, 3);
+                                    ans->edgeGroupRoles_[0] = NPerm4(2, 0, 1, 3);
                                     break;
                                 case 2:
-                                    ans->edgeGroupRoles[0] = NPerm4(1, 2, 0, 3);
+                                    ans->edgeGroupRoles_[0] = NPerm4(1, 2, 0, 3);
                                     break;
                                 case 3:
-                                    ans->edgeGroupRoles[0] = NPerm4(0, 1, 2, 3);
+                                    ans->edgeGroupRoles_[0] = NPerm4(0, 1, 2, 3);
                                     break;
                             }
                             ans->chainIndex = chain.index();
-                            ans->chainType = chainType;
-                            ans->torusAnnulus = 0;
+                            ans->chainType_ = chainType;
+                            ans->torusAnnulus_ = 0;
                             return ans;
                         }
 
@@ -637,30 +637,30 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
 
                 // We've got one!
                 NAugTriSolidTorus* ans = new NAugTriSolidTorus();
-                ans->core = core;
+                ans->core_ = core;
                 for (j = 0; j < 3; j++) {
                     if (whichLayered[j] >= 0) {
-                        ans->augTorus[j] = layered[whichLayered[j]];
-                        ans->edgeGroupRoles[j] = edgeGroupRoles[j];
+                        ans->augTorus_[j] = layered[whichLayered[j]];
+                        ans->edgeGroupRoles_[j] = edgeGroupRoles[j];
                     }
                 }
                 ans->chainIndex = chainLen;
-                ans->chainType = chainType;
-                ans->torusAnnulus = torusAnnulus;
+                ans->chainType_ = chainType;
+                ans->torusAnnulus_ = torusAnnulus;
                 return ans;
             } else {
                 // We're not looking for a layered chain.
                 // This means we have found the entire structure!
                 NAugTriSolidTorus* ans = new NAugTriSolidTorus();
-                ans->core = core;
+                ans->core_ = core;
                 for (j = 0; j < 3; j++) {
-                    ans->edgeGroupRoles[j] = edgeGroupRoles[j];
+                    ans->edgeGroupRoles_[j] = edgeGroupRoles[j];
                     if (whichLayered[j] >= 0)
-                        ans->augTorus[j] = layered[whichLayered[j]];
+                        ans->augTorus_[j] = layered[whichLayered[j]];
                 }
                 ans->chainIndex = 0;
-                ans->chainType = CHAIN_NONE;
-                ans->torusAnnulus = -1;
+                ans->chainType_ = CHAIN_NONE;
+                ans->torusAnnulus_ = -1;
                 return ans;
             }
         }
@@ -676,8 +676,8 @@ std::ostream& NAugTriSolidTorus::writeCommonName(std::ostream& out,
         bool tex) const {
     if (chainIndex) {
         // We have a layered solid torus and a layered chain.
-        NPerm4 roles = edgeGroupRoles[torusAnnulus];
-        const NLayeredSolidTorus* torus = augTorus[torusAnnulus];
+        NPerm4 roles = edgeGroupRoles_[torusAnnulus_];
+        const NLayeredSolidTorus* torus = augTorus_[torusAnnulus_];
 
         long params[3];
         if (torus) {
@@ -696,7 +696,7 @@ std::ostream& NAugTriSolidTorus::writeCommonName(std::ostream& out,
             params[2] = - params[2];
         }
 
-        if (chainType == CHAIN_MAJOR)
+        if (chainType_ == CHAIN_MAJOR)
             out << (tex ? "J_{" : "J(");
         else
             out << (tex ? "X_{" : "X(");
@@ -712,8 +712,8 @@ std::ostream& NAugTriSolidTorus::writeCommonName(std::ostream& out,
         std::pair<long, long> lstParams;
         int i;
         for (i = 0; i < 3; i++) {
-            roles = edgeGroupRoles[i];
-            torus = augTorus[i];
+            roles = edgeGroupRoles_[i];
+            torus = augTorus_[i];
             if (torus) {
                 params[0] = torus->getMeridinalCuts(0);
                 params[1] = torus->getMeridinalCuts(1);
@@ -754,7 +754,7 @@ std::ostream& NAugTriSolidTorus::writeTeXName(std::ostream& out) const {
 void NAugTriSolidTorus::writeTextLong(std::ostream& out) const {
     out << (chainIndex ? "Chained " : "Augmented ")
         << "triangular solid torus "
-        << (torusAnnulus == -1 ? "(three tori): " : "(torus + chain): ");
+        << (torusAnnulus_ == -1 ? "(three tori): " : "(torus + chain): ");
     writeName(out);
 }
 

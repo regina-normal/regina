@@ -189,17 +189,17 @@
         if (aug) {
             [details appendFormat:@"Augmented triangular solid torus %s\n", aug->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
-            
-            const regina::NTriSolidTorus& core = aug->getCore();
+
+            const regina::NTriSolidTorus& core = aug->core();
             [details appendFormat:@INDENT1 "Core: tets %ld, %ld, %ld\n",
              core.getTetrahedron(0)->index(),
              core.getTetrahedron(1)->index(),
              core.getTetrahedron(2)->index()];
-            
+
             if (aug->hasLayeredChain()) {
-                if (aug->getChainType() == regina::NAugTriSolidTorus::CHAIN_MAJOR)
+                if (aug->chainType() == regina::NAugTriSolidTorus::CHAIN_MAJOR)
                     [details appendString:@INDENT1 "Attached: layered chain (major) + layered solid torus]n"];
-                else if (aug->getChainType() == regina::NAugTriSolidTorus::CHAIN_AXIS)
+                else if (aug->chainType() == regina::NAugTriSolidTorus::CHAIN_AXIS)
                     [details appendString:@INDENT1 "Attached: layered chain (axis) + layered solid torus\n"];
                 else
                     [details appendString:@INDENT1 "Attached: layered chain (unknown) + layered solid torus\n"];
