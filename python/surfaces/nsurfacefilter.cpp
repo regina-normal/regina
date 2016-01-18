@@ -45,12 +45,14 @@ void addNSurfaceFilter() {
             ("NSurfaceFilter")
         .def(init<const NSurfaceFilter&>())
         .def("accept", &NSurfaceFilter::accept)
+        .def("filterType", &NSurfaceFilter::filterType)
         .def("getFilterType", &NSurfaceFilter::getFilterType)
+        .def("filterTypeName", &NSurfaceFilter::filterTypeName)
         .def("getFilterTypeName", &NSurfaceFilter::getFilterTypeName)
     ;
 
     s.attr("packetType") = regina::PacketType(NSurfaceFilter::packetType);
-    s.attr("filterType") = regina::NS_FILTER_DEFAULT;
+    s.attr("filterTypeID") = regina::NS_FILTER_DEFAULT;
 
     implicitly_convertible<std::auto_ptr<NSurfaceFilter>,
         std::auto_ptr<regina::NPacket> >();

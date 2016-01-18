@@ -70,7 +70,7 @@ void addNSurfaceFilterProperties() {
         .def("setRealBoundary", &NSurfaceFilterProperties::setRealBoundary)
     ;
 
-    s.attr("filterType") = regina::NS_FILTER_PROPERTIES;
+    s.attr("filterTypeID") = regina::NS_FILTER_PROPERTIES;
 
     implicitly_convertible<std::auto_ptr<NSurfaceFilterProperties>,
         std::auto_ptr<regina::NSurfaceFilter> >();

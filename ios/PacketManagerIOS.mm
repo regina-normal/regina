@@ -81,7 +81,7 @@
         case regina::PACKET_SCRIPT: return @"viewScript";
         case regina::PACKET_SNAPPEATRIANGULATION: return @"viewSnapPea";
         case regina::PACKET_SURFACEFILTER:
-            switch (static_cast<regina::NSurfaceFilter*>(p)->getFilterType()) {
+            switch (static_cast<regina::NSurfaceFilter*>(p)->filterType()) {
                 case regina::NS_FILTER_PROPERTIES: return @"viewFilterProperties";
                 case regina::NS_FILTER_COMBINATION: return @"viewFilterCombination";
                 default: return @"viewDefault";
