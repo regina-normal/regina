@@ -205,7 +205,6 @@
 		052F9EA2180600FB00FAE4DF /* ngenericfacetpairing.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C23180600FA00FAE4DF /* ngenericfacetpairing.h */; };
 		052F9EA4180600FB00FAE4DF /* ngenericgluingperms-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C25180600FA00FAE4DF /* ngenericgluingperms-impl.h */; };
 		052F9EA5180600FB00FAE4DF /* ngenericgluingperms.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C26180600FA00FAE4DF /* ngenericgluingperms.h */; };
-		052F9EA6180600FB00FAE4DF /* ngenericgluingperms.tcc in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C27180600FA00FAE4DF /* ngenericgluingperms.tcc */; };
 		052F9EA8180600FB00FAE4DF /* ngluingperms.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C29180600FA00FAE4DF /* ngluingperms.h */; };
 		052F9EA9180600FB00FAE4DF /* ngluingpermsearcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C2A180600FA00FAE4DF /* ngluingpermsearcher.cpp */; };
 		052F9EAA180600FB00FAE4DF /* ngluingpermsearcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C2B180600FA00FAE4DF /* ngluingpermsearcher.h */; };
@@ -229,32 +228,24 @@
 		052F9EBF180600FB00FAE4DF /* engine.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C52180600FA00FAE4DF /* engine.h */; };
 		052F9EC0180600FB00FAE4DF /* ndoubledescription-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C55180600FA00FAE4DF /* ndoubledescription-impl.h */; };
 		052F9EC1180600FB00FAE4DF /* ndoubledescription.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C56180600FA00FAE4DF /* ndoubledescription.h */; };
-		052F9EC2180600FB00FAE4DF /* ndoubledescription.tcc in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C57180600FA00FAE4DF /* ndoubledescription.tcc */; };
 		052F9EC3180600FB00FAE4DF /* ndoubledescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C58180600FA00FAE4DF /* ndoubledescriptor.h */; };
-		052F9EC4180600FB00FAE4DF /* ndoubledescriptor.tcc in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C59180600FA00FAE4DF /* ndoubledescriptor.tcc */; };
 		052F9EC5180600FB00FAE4DF /* nenumconstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C5A180600FA00FAE4DF /* nenumconstraint.h */; };
 		052F9EC6180600FB00FAE4DF /* nhilbertcd-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C5B180600FA00FAE4DF /* nhilbertcd-impl.h */; };
 		052F9EC7180600FB00FAE4DF /* nhilbertcd.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C5C180600FA00FAE4DF /* nhilbertcd.h */; };
-		052F9EC8180600FB00FAE4DF /* nhilbertcd.tcc in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C5D180600FA00FAE4DF /* nhilbertcd.tcc */; };
 		052F9EC9180600FB00FAE4DF /* nhilbertdual-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C5E180600FA00FAE4DF /* nhilbertdual-impl.h */; };
 		052F9ECA180600FB00FAE4DF /* nhilbertdual.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C5F180600FA00FAE4DF /* nhilbertdual.h */; };
-		052F9ECB180600FB00FAE4DF /* nhilbertdual.tcc in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C60180600FA00FAE4DF /* nhilbertdual.tcc */; };
 		052F9ECC180600FB00FAE4DF /* nhilbertprimal-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C61180600FA00FAE4DF /* nhilbertprimal-impl.h */; };
 		052F9ECD180600FB00FAE4DF /* nhilbertprimal.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C62180600FA00FAE4DF /* nhilbertprimal.h */; };
-		052F9ECE180600FB00FAE4DF /* nhilbertprimal.tcc in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C63180600FA00FAE4DF /* nhilbertprimal.tcc */; };
 		052F9ECF180600FB00FAE4DF /* nmaxadmissible-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C64180600FA00FAE4DF /* nmaxadmissible-impl.h */; };
 		052F9ED0180600FB00FAE4DF /* nmaxadmissible.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C65180600FA00FAE4DF /* nmaxadmissible.h */; };
-		052F9ED1180600FB00FAE4DF /* nmaxadmissible.tcc in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C66180600FA00FAE4DF /* nmaxadmissible.tcc */; };
 		052F9EF3180600FB00FAE4DF /* ntreeconstraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C8E180600FA00FAE4DF /* ntreeconstraint.cpp */; };
 		052F9EF4180600FB00FAE4DF /* ntreeconstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C8F180600FA00FAE4DF /* ntreeconstraint.h */; };
 		052F9EF5180600FB00FAE4DF /* ntreelp-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C90180600FA00FAE4DF /* ntreelp-impl.h */; };
 		052F9EF6180600FB00FAE4DF /* ntreelp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C91180600FA00FAE4DF /* ntreelp.cpp */; };
 		052F9EF7180600FB00FAE4DF /* ntreelp.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C92180600FA00FAE4DF /* ntreelp.h */; };
-		052F9EF8180600FB00FAE4DF /* ntreelp.tcc in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C93180600FA00FAE4DF /* ntreelp.tcc */; };
 		052F9EF9180600FB00FAE4DF /* ntreetraversal-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C94180600FA00FAE4DF /* ntreetraversal-impl.h */; };
 		052F9EFA180600FB00FAE4DF /* ntreetraversal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C95180600FA00FAE4DF /* ntreetraversal.cpp */; };
 		052F9EFB180600FB00FAE4DF /* ntreetraversal.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C96180600FA00FAE4DF /* ntreetraversal.h */; };
-		052F9EFC180600FB00FAE4DF /* ntreetraversal.tcc in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C97180600FA00FAE4DF /* ntreetraversal.tcc */; };
 		052F9EFD180600FB00FAE4DF /* ntypetrie.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C98180600FA00FAE4DF /* ntypetrie.cpp */; };
 		052F9EFE180600FB00FAE4DF /* ntypetrie.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C99180600FA00FAE4DF /* ntypetrie.h */; };
 		052F9EFF180600FB00FAE4DF /* ordering.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C9A180600FA00FAE4DF /* ordering.h */; };
@@ -501,7 +492,6 @@
 		052FA031180600FB00FAE4DF /* normalcoords.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E0B180600FB00FAE4DF /* normalcoords.h */; };
 		052FA032180600FB00FAE4DF /* normalflags.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E0C180600FB00FAE4DF /* normalflags.h */; };
 		052FA033180600FB00FAE4DF /* normalspec-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E0D180600FB00FAE4DF /* normalspec-impl.h */; };
-		052FA034180600FB00FAE4DF /* normalspec.tcc in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E0E180600FB00FAE4DF /* normalspec.tcc */; };
 		052FA035180600FB00FAE4DF /* nprism.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E0F180600FB00FAE4DF /* nprism.cpp */; };
 		052FA036180600FB00FAE4DF /* nprism.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E10180600FB00FAE4DF /* nprism.h */; };
 		052FA037180600FB00FAE4DF /* nsanstandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E11180600FB00FAE4DF /* nsanstandard.cpp */; };
@@ -554,7 +544,6 @@
 		052FA066180600FB00FAE4DF /* nfacepair.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E42180600FB00FAE4DF /* nfacepair.h */; };
 		052FA067180600FB00FAE4DF /* nfacetspec.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E43180600FB00FAE4DF /* nfacetspec.h */; };
 		052FA068180600FB00FAE4DF /* ngenericisomorphism.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E44180600FB00FAE4DF /* ngenericisomorphism.h */; };
-		052FA069180600FB00FAE4DF /* ngenericisomorphism.tcc in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E45180600FB00FAE4DF /* ngenericisomorphism.tcc */; };
 		052FA06A180600FB00FAE4DF /* nhomologicaldata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E46180600FB00FAE4DF /* nhomologicaldata.cpp */; };
 		052FA06B180600FB00FAE4DF /* nhomologicaldata.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E47180600FB00FAE4DF /* nhomologicaldata.h */; };
 		052FA06D180600FB00FAE4DF /* nisomorphism.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E49180600FB00FAE4DF /* nisomorphism.h */; };
@@ -604,7 +593,6 @@
 		052FA09D180600FB00FAE4DF /* stringutils-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E7B180600FB00FAE4DF /* stringutils-impl.h */; };
 		052FA09E180600FB00FAE4DF /* stringutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E7C180600FB00FAE4DF /* stringutils.cpp */; };
 		052FA09F180600FB00FAE4DF /* stringutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E7D180600FB00FAE4DF /* stringutils.h */; };
-		052FA0A0180600FB00FAE4DF /* stringutils.tcc in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E7E180600FB00FAE4DF /* stringutils.tcc */; };
 		052FA0A1180600FB00FAE4DF /* xmlutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E7F180600FB00FAE4DF /* xmlutils.cpp */; };
 		052FA0A2180600FB00FAE4DF /* xmlutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E80180600FB00FAE4DF /* xmlutils.h */; };
 		052FA0A61806047E00FAE4DF /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A51806047E00FAE4DF /* libz.dylib */; };
@@ -1130,7 +1118,6 @@
 		0569F93219B3658200051091 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0569F93119B3658200051091 /* libbz2.dylib */; };
 		056AA9941C41C10100FA81D3 /* boost-python.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9931C41C10100FA81D3 /* boost-python.framework */; };
 		056AA9951C41C11C00FA81D3 /* boost-python.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9931C41C10100FA81D3 /* boost-python.framework */; };
-		056AA9961C41CC8200FA81D3 /* ngenericfacetpairing.tcc in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C24180600FA00FAE4DF /* ngenericfacetpairing.tcc */; };
 		056AA9981C41DA4800FA81D3 /* libtokyocabinet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */; };
 		056AA99A1C41DA6A00FA81D3 /* cppunit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9991C41DA6900FA81D3 /* cppunit.framework */; };
 		056AA99B1C41DAA300FA81D3 /* libtokyocabinet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */; };
@@ -6332,10 +6319,7 @@
 				05431EFE1C40F1F6009BC072 /* facenumbering.cpp in Sources */,
 				052F9FD8180600FB00FAE4DF /* update_shapes.c in Sources */,
 				052F9F00180600FB00FAE4DF /* nfileinfo.cpp in Sources */,
-				052FA034180600FB00FAE4DF /* normalspec.tcc in Sources */,
 				05431F341C40F363009BC072 /* nfacepairing.cpp in Sources */,
-				052F9ECE180600FB00FAE4DF /* nhilbertprimal.tcc in Sources */,
-				052F9EFC180600FB00FAE4DF /* ntreetraversal.tcc in Sources */,
 				052FA01C180600FB00FAE4DF /* ntrivialtri.cpp in Sources */,
 				052F9F2C180600FB00FAE4DF /* nsfs.cpp in Sources */,
 				052F9FF0180600FB00FAE4DF /* nl31pillow.cpp in Sources */,
@@ -6364,7 +6348,6 @@
 				052F9EBA180600FB00FAE4DF /* nxmldim2trireader.cpp in Sources */,
 				052FA037180600FB00FAE4DF /* nsanstandard.cpp in Sources */,
 				052FA073180600FB00FAE4DF /* ntriangle.cpp in Sources */,
-				052F9EC4180600FB00FAE4DF /* ndoubledescriptor.tcc in Sources */,
 				0583655D18DB882B008B08D9 /* simplify.cpp in Sources */,
 				052FA05B180600FB00FAE4DF /* hydrate.cpp in Sources */,
 				052FA02F180600FB00FAE4DF /* nnormalsurfacelist.cpp in Sources */,
@@ -6379,7 +6362,6 @@
 				052F9F4E180600FB00FAE4DF /* numbertheory.cpp in Sources */,
 				052F9F30180600FB00FAE4DF /* nsimplesurfacebundle.cpp in Sources */,
 				052F9F54180600FB00FAE4DF /* npacket.cpp in Sources */,
-				052FA0A0180600FB00FAE4DF /* stringutils.tcc in Sources */,
 				052FA07F180600FB00FAE4DF /* subdivide.cpp in Sources */,
 				052F9F75180600FB00FAE4DF /* complex.c in Sources */,
 				052F9FDB180600FB00FAE4DF /* nsnappeatriangulation.cpp in Sources */,
@@ -6515,7 +6497,6 @@
 				052FA081180600FB00FAE4DF /* turaevviro.cpp in Sources */,
 				052F9F98180600FB00FAE4DF /* simplify_triangulation.c in Sources */,
 				052FA03E180600FB00FAE4DF /* nsquad.cpp in Sources */,
-				052F9EA6180600FB00FAE4DF /* ngenericgluingperms.tcc in Sources */,
 				052FA01A180600FB00FAE4DF /* ntrisolidtorus.cpp in Sources */,
 				052F9F9A180600FB00FAE4DF /* solve_equations.c in Sources */,
 				052F9EBC180600FB00FAE4DF /* skeleton.cpp in Sources */,
@@ -6525,7 +6506,6 @@
 				052FA03A180600FB00FAE4DF /* nsoriented.cpp in Sources */,
 				052F9FEE180600FB00FAE4DF /* nblockedsfstriple.cpp in Sources */,
 				052F9E9B180600FB00FAE4DF /* dim2gluingpermsearcher.cpp in Sources */,
-				056AA9961C41CC8200FA81D3 /* ngenericfacetpairing.tcc in Sources */,
 				052FA054180600FB00FAE4DF /* stdtoquad.cpp in Sources */,
 				052F9F7F180600FB00FAE4DF /* edge_classes.c in Sources */,
 				052F9EFD180600FB00FAE4DF /* ntypetrie.cpp in Sources */,
@@ -6544,7 +6524,6 @@
 				052F9FE2180600FB00FAE4DF /* nsigisomorphism.cpp in Sources */,
 				052FA079180600FB00FAE4DF /* nxmltrireader.cpp in Sources */,
 				052FA000180600FB00FAE4DF /* npillowtwosphere.cpp in Sources */,
-				052F9EF8180600FB00FAE4DF /* ntreelp.tcc in Sources */,
 				05431F881C40F40D009BC072 /* bottom.cpp in Sources */,
 				052F9F10180600FB00FAE4DF /* orb.cpp in Sources */,
 				052FA03C180600FB00FAE4DF /* nsorientedquad.cpp in Sources */,
@@ -6553,17 +6532,12 @@
 				052FA087180600FB00FAE4DF /* i18nutils.cpp in Sources */,
 				052FA042180600FB00FAE4DF /* nsstandard.cpp in Sources */,
 				052FA048180600FB00FAE4DF /* nxmlfilterreader.cpp in Sources */,
-				052F9ED1180600FB00FAE4DF /* nmaxadmissible.tcc in Sources */,
-				052F9ECB180600FB00FAE4DF /* nhilbertdual.tcc in Sources */,
 				052FA04F180600FB00FAE4DF /* sfcombination.cpp in Sources */,
-				052F9EC8180600FB00FAE4DF /* nhilbertcd.tcc in Sources */,
 				052FA07D180600FB00FAE4DF /* simplifyglobal.cpp in Sources */,
-				052FA069180600FB00FAE4DF /* ngenericisomorphism.tcc in Sources */,
 				052F9F7D180600FB00FAE4DF /* Dehn_coefficients.c in Sources */,
 				052F9EB0180600FB00FAE4DF /* dim2exampletriangulation.cpp in Sources */,
 				052F9F5B180600FB00FAE4DF /* nscript.cpp in Sources */,
 				052FA01E180600FB00FAE4DF /* ntxicore.cpp in Sources */,
-				052F9EC2180600FB00FAE4DF /* ndoubledescription.tcc in Sources */,
 				052F9F91180600FB00FAE4DF /* o31_matrices.c in Sources */,
 				052FA04E180600FB00FAE4DF /* quadtostd.cpp in Sources */,
 				052FA02B180600FB00FAE4DF /* ndisctype.cpp in Sources */,
