@@ -477,7 +477,7 @@
     regina::NPacket* p = [self packetForPath:indexPath];
 
     UITableViewCell *cell;
-    if (p->type() == PACKET_CONTAINER)
+    if (p->type() == regina::PACKET_CONTAINER)
         cell = [tableView dequeueReusableCellWithIdentifier:@"Container" forIndexPath:indexPath];
     else
         cell = [tableView dequeueReusableCellWithIdentifier:@"Packet" forIndexPath:indexPath];
@@ -514,7 +514,7 @@
         // The subtree row might need to change.
         NSInteger oldSubtreeRow = _subtreeRow;
 
-        if (p->type() != PACKET_CONTAINER && p->firstChild()) {
+        if (p->type() != regina::PACKET_CONTAINER && p->firstChild()) {
             // The subtree row should appear beneath this packet.
             _subtreeRow = _recentPacketIndex + 1;
             if (oldSubtreeRow == 0) {
