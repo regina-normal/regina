@@ -84,9 +84,9 @@ namespace regina {
  */
 class REGINA_API NPrimes {
     private:
-        static const unsigned long numPrimeSeeds;
+        static const size_t numPrimeSeeds;
             /**< The size of the hard-coded list of seed primes. */
-        static const unsigned long primeSeedList[];
+        static const size_t primeSeedList[];
             /**< The full hard-coded list of seed primes. */
 
         static std::vector<NLargeInteger> largePrimes;
@@ -110,7 +110,7 @@ class REGINA_API NPrimes {
          *
          * @return the number of primes or suspected primes currently stored.
          */
-        static unsigned long size();
+        static size_t size();
 
         /**
          * Returns the requested prime (or suspected prime).  More
@@ -139,7 +139,7 @@ class REGINA_API NPrimes {
          * @return the requested prime (or suspected prime), or zero if
          * \a which was too large and \a autoGrow was \c false.
          */
-        static NLargeInteger prime(unsigned long which, bool autoGrow = true);
+        static NLargeInteger prime(size_t which, bool autoGrow = true);
 
         /**
          * Returns the prime factorisation of the given integer as a list
@@ -255,7 +255,7 @@ class REGINA_API NPrimes {
          * @param extras the number of additional suspected primes to
          * calculate.
          */
-        static void growPrimeList(unsigned long extras = 1);
+        static void growPrimeList(size_t extras = 1);
 };
 
 /*@}*/
@@ -265,7 +265,7 @@ class REGINA_API NPrimes {
 inline NPrimes::NPrimes() {
 }
 
-inline unsigned long NPrimes::size() {
+inline size_t NPrimes::size() {
     return numPrimeSeeds + largePrimes.size();
 }
 

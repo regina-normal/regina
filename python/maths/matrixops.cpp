@@ -46,7 +46,7 @@ namespace {
 
     void columnEchelonForm_list(NMatrixInt& m, NMatrixInt& r,
             NMatrixInt& rInv, boost::python::list rowList) {
-        std::vector<unsigned> rowListVector;
+        std::vector<size_t> rowListVector;
 
         long len = boost::python::len(rowList);
         for (long i = 0; i < len; i++) {
