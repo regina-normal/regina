@@ -147,6 +147,8 @@ REGINA_API std::ostream& operator << (std::ostream& out,
  * \deprecated This class has essentially been a placeholder for the
  * last 12 years, and was never fleshed out in that time.  It will be
  * removed in a future release.
+ *
+ * \ifacespython Not present.
  */
 class REGINA_API NPrismSetSurface {
     private:
