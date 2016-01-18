@@ -703,7 +703,7 @@
                 [details appendString:@"Snapped 2-sphere\n"];
                 [details appendFormat:@INDENT1 "Tetrahedra: %ld, %ld\n", i, j];
                 
-                const regina::NSnappedBall* ball = sphere->getSnappedBall(0);
+                const regina::NSnappedBall* ball = sphere->snappedBall(0);
                 [details appendFormat:@INDENT1 "Equator: edge %ld\n",
                  ball->getTetrahedron()->getEdge(ball->getEquatorEdge())->index()];
                 

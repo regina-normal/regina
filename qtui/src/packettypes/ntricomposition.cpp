@@ -944,7 +944,7 @@ void NTriCompositionUI::findSnappedSpheres() {
                 details->setText(0, tr("Tetrahedra: %1, %2").
                     arg(i).arg(j));
 
-                const regina::NSnappedBall* ball = sphere->getSnappedBall(0);
+                const regina::NSnappedBall* ball = sphere->snappedBall(0);
                 details = new QTreeWidgetItem(id, details);
                 details->setText(0, tr(
                     "Equator: edge %1").arg(tri->edgeIndex(
