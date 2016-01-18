@@ -42,7 +42,7 @@ NSurfaceSubset::NSurfaceSubset(const NNormalSurfaceList& set,
     unsigned long n = set.size();
     NNormalSurface* s;
     for (unsigned long i = 0; i < n; i++) {
-        s = const_cast<NNormalSurface*>(set.getSurface(i));
+        s = const_cast<NNormalSurface*>(set.surface(i));
         if (filter.accept(*s))
             surfaces.push_back(s);
     }
@@ -52,7 +52,7 @@ void NSurfaceSubset::writeAllSurfaces(std::ostream& out) const {
     unsigned long n = size();
     out << "Number of surfaces is " << n << '\n';
     for (unsigned long i = 0; i < n; i++) {
-        getSurface(i)->writeTextShort(out);
+        surface(i)->writeTextShort(out);
         out << '\n';
     }
 }

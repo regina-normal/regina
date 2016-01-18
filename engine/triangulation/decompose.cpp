@@ -880,7 +880,7 @@ bool NTriangulation::hasCompressingDisc() const {
 
                     unsigned long nSurfaces = q->size();
                     for (unsigned long i = 0; i < nSurfaces; ++i) {
-                        if (q->getSurface(i)->isCompressingDisc(true)) {
+                        if (q->surface(i)->isCompressingDisc(true)) {
                             delete use;
                             return (compressingDisc_ = true);
                         }
@@ -941,7 +941,7 @@ bool NTriangulation::hasCompressingDisc() const {
         unsigned long nSurfaces = q->size();
         for (unsigned long i = 0; i < nSurfaces; ++i) {
             // Use the fact that all vertex normal surfaces are connected.
-            if (q->getSurface(i)->isCompressingDisc(true)) {
+            if (q->surface(i)->isCompressingDisc(true)) {
                 delete use;
                 return (compressingDisc_ = true);
             }
@@ -1170,13 +1170,13 @@ bool NTriangulation::isHaken() const {
     unsigned i;
     for (i = 0; i < list->size(); ++i) {
         id[i].index = i;
-        id[i].euler = list->getSurface(i)->eulerChar().longValue();
+        id[i].euler = list->surface(i)->eulerChar().longValue();
     }
     std::sort(id, id + list->size());
 
     for (unsigned i = 0; i < list->size(); ++i) {
         // std::cout << "Testing surface " << i << "..." << std::endl;
-        if (list->getSurface(id[i].index)->isIncompressible()) {
+        if (list->surface(id[i].index)->isIncompressible()) {
             delete[] id;
             threeSphere_ = false; // Implied by Hakenness.
             return (haken_ = true);

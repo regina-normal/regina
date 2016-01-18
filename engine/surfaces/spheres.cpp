@@ -62,7 +62,7 @@ NNormalSurface* NNormalSurface::findNonTrivialSphere(NTriangulation* tri) {
     const NNormalSurface* s;
     NLargeInteger chi;
     for (unsigned long i = 0; i < nSurfaces; i++) {
-        s = surfaces->getSurface(i);
+        s = surfaces->surface(i);
 
         // No need to test for connectedness since these are vertex surfaces.
         if (s->isCompact() && (! s->hasRealBoundary()) &&
@@ -113,7 +113,7 @@ NNormalSurface* NNormalSurface::findVtxOctAlmostNormalSphere(
     int oct;
     NLargeInteger octCoord;
     for (unsigned long i = 0; i < nSurfaces; i++) {
-        s = surfaces->getSurface(i);
+        s = surfaces->surface(i);
 
         // No need to test for connectedness since these are vertex surfaces.
         // No need to test for vertex links since we're about to test

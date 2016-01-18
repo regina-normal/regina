@@ -199,7 +199,7 @@ bool NNormalSurfaceList::saveCSVStandard(const char* filename,
     unsigned long tot = size();
     const NNormalSurface* s;
     for (i = 0; i < tot; ++i) {
-        s = getSurface(i);
+        s = surface(i);
 
         writePropData(out, s, additionalFields);
 
@@ -257,7 +257,7 @@ bool NNormalSurfaceList::saveCSVEdgeWeight(const char* filename,
     unsigned long tot = size();
     const NNormalSurface* s;
     for (i = 0; i < tot; ++i) {
-        s = getSurface(i);
+        s = surface(i);
 
         writePropData(out, s, additionalFields);
 

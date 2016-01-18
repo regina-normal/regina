@@ -260,10 +260,10 @@ void NCompatCanvas::fillLocal(const NNormalSurfaceList& surfaces) {
     unsigned i, j;
     const NNormalSurface *s, *t;
     for (i = 0; i < nSurfaces; ++i) {
-        s = surfaces.getSurface(i);
+        s = surfaces.surface(i);
 
         for (j = i; j < nSurfaces; ++j) {
-            t = surfaces.getSurface(j);
+            t = surfaces.surface(j);
 
             if (s->locallyCompatible(*t)) {
                 box = new QGraphicsRectItem(
@@ -304,7 +304,7 @@ void NCompatCanvas::fillGlobal(const NNormalSurfaceList& surfaces) {
 
     bool* usable = new bool[nSurfaces];
     for (i = 0; i < nSurfaces; ++i) {
-        s = surfaces.getSurface(i);
+        s = surfaces.surface(i);
         usable[i] = (s->isCompact() && (! s->isEmpty()) && s->isConnected());
     }
 
@@ -334,13 +334,13 @@ void NCompatCanvas::fillGlobal(const NNormalSurfaceList& surfaces) {
             continue;
         }
 
-        s = surfaces.getSurface(i);
+        s = surfaces.surface(i);
 
         for (j = i; j < nSurfaces; ++j) {
             if (! usable[j])
                 continue;
 
-            t = surfaces.getSurface(j);
+            t = surfaces.surface(j);
 
             if (s->disjoint(*t)) {
                 box = new QGraphicsRectItem(

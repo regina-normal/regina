@@ -393,7 +393,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
             const NNormalSurface* s;
             for (unsigned long i = 0; i < size; i++) {
-                s = list->getSurface(i);
+                s = list->surface(i);
 
                 if (s->eulerChar() == euler &&
                         s->isConnected() == connected &&
@@ -452,8 +452,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
             unsigned long i;
             for (i = 0; i < n; ++i) {
-                lhsRaw[i] = lhs->getSurface(i)->rawVector();
-                rhsRaw[i] = rhs->getSurface(i)->rawVector();
+                lhsRaw[i] = lhs->surface(i)->rawVector();
+                rhsRaw[i] = rhs->surface(i)->rawVector();
             }
 
             std::sort(lhsRaw, lhsRaw + n, lexLess);
@@ -566,7 +566,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 &gieseking, NS_STANDARD);
 
             testSize(list, "standard normal surfaces", 1);
-            testSurface(list->getSurface(0), "the Gieseking manifold",
+            testSurface(list->surface(0), "the Gieseking manifold",
                 "vertex link",
                 0 /* euler */, true /* connected */,
                 false /* orient */, true /* two-sided */,
@@ -591,7 +591,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 &gieseking, NS_AN_STANDARD);
 
             testSize(list, "standard almost normal surfaces", 1);
-            testSurface(list->getSurface(0), "the Gieseking manifold",
+            testSurface(list->surface(0), "the Gieseking manifold",
                 "vertex link",
                 0 /* euler */, true /* connected */,
                 false /* orient */, true /* two-sided */,
@@ -607,7 +607,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 &figure8, NS_STANDARD);
 
             testSize(list, "standard normal surfaces", 1);
-            testSurface(list->getSurface(0), "the figure eight knot complement",
+            testSurface(list->surface(0), "the figure eight knot complement",
                 "vertex link",
                 0 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
@@ -624,7 +624,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
             testSize(list, "quad normal surfaces", 4);
             for (unsigned long i = 0; i < list->size(); i++)
-                testSurface(list->getSurface(i),
+                testSurface(list->surface(i),
                     "the figure eight knot complement", "spun surface",
                     0 /* euler, N/A */, 0 /* connected, N/A */,
                     0 /* orient, N/A */, 0 /* two-sided, N/A */,
@@ -640,7 +640,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 &figure8, NS_AN_STANDARD);
 
             testSize(list, "standard almost normal surfaces", 1);
-            testSurface(list->getSurface(0), "the figure eight knot complement",
+            testSurface(list->surface(0), "the figure eight knot complement",
                 "vertex link",
                 0 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
@@ -1782,14 +1782,14 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             unsigned long edge;
 
             for (i = 0; i < n; ++i) {
-                s = list->getSurface(i);
+                s = list->surface(i);
 
                 // For some types of surfaces we know exactly what it
                 // should be disjoint from.
                 if (s->isVertexLinking()) {
                     // Vertex links are disjoint from everything.
                     for (j = 0; j < n; ++j) {
-                        t = list->getSurface(j);
+                        t = list->surface(j);
                         if (! s->disjoint(*t)) {
                             std::ostringstream msg;
                             msg << "Surface #" << i << " for "
@@ -1812,7 +1812,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                         if (j == i)
                             continue;
 
-                        t = list->getSurface(j);
+                        t = list->surface(j);
                         if (t->isVertexLinking()) {
                             if (! s->disjoint(*t)) {
                                 std::ostringstream msg;
@@ -2050,7 +2050,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
             // We use the fact that each normal surface is connected.
             for (unsigned long i = 0; i < n; ++i) {
-                s = list->getSurface(i);
+                s = list->surface(i);
                 t.reset(s->cutAlong());
                 t->intelligentSimplify();
                 comp.reset(new NContainer());

@@ -217,7 +217,7 @@ inline regina::NNormalSurfaceList* SurfaceModel::surfaces() const {
 
 inline const regina::NNormalSurface* SurfaceModel::surface(
         const QModelIndex& index) const {
-    return surfaces_->getSurface(realIndex[index.row()]);
+    return surfaces_->surface(realIndex[index.row()]);
 }
 
 inline regina::NormalCoords SurfaceModel::coordSystem() const {
