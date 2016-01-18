@@ -313,19 +313,19 @@
         if (plug) {
             [details appendFormat:@"Plugged triangular solid torus %s\n", plug->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
-            
-            const regina::NTriSolidTorus& core(plug->getCore());
+
+            const regina::NTriSolidTorus& core(plug->core());
             [details appendFormat:@INDENT1 "Core: tets %ld, %ld, %ld\n",
              core.getTetrahedron(0)->index(),
              core.getTetrahedron(1)->index(),
              core.getTetrahedron(2)->index()];
-            
+
             [details appendString:@INDENT1 "Chain lengths: "];
             for (int j = 0; j < 3; j++) {
-                chain = plug->getChain(j);
+                chain = plug->chain(j);
                 if (chain) {
                     [details appendFormat:@"%ld", chain->getIndex()];
-                    if (plug->getChainType(j) == regina::NPlugTriSolidTorus::CHAIN_MAJOR)
+                    if (plug->chainType(j) == regina::NPlugTriSolidTorus::CHAIN_MAJOR)
                         [details appendString:@" (major)"];
                     else
                         [details appendString:@" (minor)"];
@@ -335,8 +335,8 @@
                     [details appendString:@", "];
             }
             [details appendString:@"\n"];
-            
-            if (plug->getEquatorType() == regina::NPlugTriSolidTorus::EQUATOR_MAJOR)
+
+            if (plug->equatorType() == regina::NPlugTriSolidTorus::EQUATOR_MAJOR)
                 [details appendString:@INDENT1 "Equator type: major\n"];
             else
                 [details appendString:@INDENT1 "Equator type: minor\n"];

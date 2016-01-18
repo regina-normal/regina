@@ -862,7 +862,7 @@ void NTriCompositionUI::findPlugTriSolidTori() {
             details = new QTreeWidgetItem(id);
             details->setText(0, tr("Component %1").arg(i));
 
-            const regina::NTriSolidTorus& core(plug->getCore());
+            const regina::NTriSolidTorus& core(plug->core());
             details = new QTreeWidgetItem(id, details);
             details->setText(0,
                 tr("Core: tets %1, %2, %3").
@@ -872,10 +872,10 @@ void NTriCompositionUI::findPlugTriSolidTori() {
 
             QString lengths(tr("Chain lengths: "));
             for (int j = 0; j < 3; j++) {
-                chain = plug->getChain(j);
+                chain = plug->chain(j);
                 if (chain)
                     lengths += tr("%1 (%2)").arg(chain->getIndex()).
-                        arg(plug->getChainType(j) ==
+                        arg(plug->chainType(j) ==
                         regina::NPlugTriSolidTorus::CHAIN_MAJOR ?
                         tr("major") : tr("minor"));
                 else
@@ -888,7 +888,7 @@ void NTriCompositionUI::findPlugTriSolidTori() {
 
             details = new QTreeWidgetItem(id, details);
             details->setText(0, tr("Equator type: ") +
-                (plug->getEquatorType() ==
+                (plug->equatorType() ==
                 regina::NPlugTriSolidTorus::EQUATOR_MAJOR ?
                 tr("major") : tr("minor")));
 
