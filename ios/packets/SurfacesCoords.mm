@@ -430,7 +430,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
         case PROP_NONE:
             break;
         case PROP_NAME:
-            cell.textLabel.text = @(s->getName().c_str());
+            cell.textLabel.text = @(s->name().c_str());
             cell.textLabel.textAlignment = NSTextAlignmentLeft;
             return cell;
         case PROP_EULER:

@@ -831,7 +831,7 @@ class REGINA_API NNormalSurface :
         const NTriangulation* triangulation_;
             /**< The triangulation in which this normal surface resides. */
 
-        std::string name;
+        std::string name_;
             /**< An optional name associated with this surface. */
 
         mutable NProperty<NDiscType> octPosition_;
@@ -1247,6 +1247,14 @@ class REGINA_API NNormalSurface :
          * The default name for a surface is the empty string.
          *
          * @return the name of associated with this surface.
+         */
+        const std::string& name() const;
+        /**
+         * Deprecated routine that returns the name associated with this
+         * normal surface.
+         *
+         * \deprecated This routine has been renamed to name().
+         * See the name() documentation for further details.
          */
         const std::string& getName() const;
         /**
@@ -2055,11 +2063,14 @@ inline const NTriangulation* NNormalSurface::getTriangulation() const {
     return triangulation_;
 }
 
+inline const std::string& NNormalSurface::name() const {
+    return name_;
+}
 inline const std::string& NNormalSurface::getName() const {
-    return name;
+    return name_;
 }
 inline void NNormalSurface::setName(const std::string& newName) {
-    name = newName;
+    name_ = newName;
 }
 
 inline void NNormalSurface::writeRawVector(std::ostream& out) const {

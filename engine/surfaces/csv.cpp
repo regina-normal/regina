@@ -86,8 +86,8 @@ namespace {
      */
     void writePropData(std::ostream& out, const NNormalSurface* s, int fields) {
         if (fields & surfaceExportName) {
-            if (s->getName().length() > 0)
-                writeCSVQuotedString(out, s->getName().c_str());
+            if (! s->name().empty())
+                writeCSVQuotedString(out, s->name().c_str());
             out << ',';
         }
         if (fields & surfaceExportEuler) {

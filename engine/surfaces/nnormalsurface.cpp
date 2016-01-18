@@ -484,7 +484,7 @@ void NNormalSurface::writeXMLData(std::ostream& out) const {
     // Write the opening tag including vector length.
     size_t vecLen = vector->size();
     out << "  <surface len=\"" << vecLen << "\" name=\""
-        << xmlEncodeSpecialChars(name) << "\">";
+        << xmlEncodeSpecialChars(name_) << "\">";
 
     // Write all non-zero entries.
     NLargeInteger entry;

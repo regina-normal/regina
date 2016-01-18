@@ -131,7 +131,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         if (index.column() == 0)
             return tr("%1.").arg(surfaceIndex);
         else if (index.column() == 1)
-            return s->getName().c_str();
+            return s->name().c_str();
         else if (index.column() == 2) {
             if (! s->isCompact())
                 return QVariant();
@@ -230,7 +230,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         }
     } else if (role == Qt::EditRole) {
         if (index.column() == 1)
-            return surfaces_->surface(surfaceIndex)->getName().c_str();
+            return surfaces_->surface(surfaceIndex)->name().c_str();
         else
             return QVariant();
     } else if (role == Qt::ToolTipRole) {

@@ -159,6 +159,8 @@ void addNNormalSurface() {
             return_value_policy<reference_existing_object>())
         .def("getTriangulation", &NNormalSurface::getTriangulation,
             return_value_policy<reference_existing_object>())
+        .def("name", &NNormalSurface::name,
+            return_value_policy<return_by_value>())
         .def("getName", &NNormalSurface::getName,
             return_value_policy<return_by_value>())
         .def("setName", &NNormalSurface::setName)
