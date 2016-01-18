@@ -285,15 +285,7 @@ typedef NFacetSpec<2> Dim2TriangleEdge;
  * convenience typedef for the template instance NFacetSpec<3>.
  *
  * \ifacespython The specific class NTetFace is available through Python,
- * even though the generic template NFacetSpec is not.  Both the old field
- * names (\a tet and \a face) and the new field names (\a simp and \a facet)
- * are provided, though the old names are deprecated and will be removed
- * in a future version of Regina.
- *
- * \deprecated For the 3-dimensional class NTetFace, the old field names
- * \a tet and \a face are deprecated.  Please use the new (generic) names
- * \a simp and \a facet instead.  The old names are no longer supported
- * in C++, but will continue to be supported in Python until Regina 5.0.
+ * even though the generic template NFacetSpec is not.
  */
 typedef NFacetSpec<3> NTetFace;
 
