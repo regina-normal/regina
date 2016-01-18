@@ -152,7 +152,7 @@ REGINA_API std::ostream& operator << (std::ostream& out,
  */
 class REGINA_API NPrismSetSurface {
     private:
-        signed char* quadType;
+        signed char* quadType_;
             /**< A list of which types of normal quad are contained in which
                  tetrahedra.  Tetrahedra containing no quads at all
                  will have quad type -1 in this array. */
@@ -190,6 +190,14 @@ class REGINA_API NPrismSetSurface {
          * does not meet the given tetrahedron in any quadrilateral discs,
          * this routine returns -1.
          */
+        signed char quadType(size_t tetIndex) const;
+        /**
+         * Deprecated routine that returns the quadrilateral type with which
+         * the underlying normal surface meets the given tetrahedron.
+         *
+         * \deprecated This routine has been renamed to quadType().
+         * See the quadType() documentation for further details.
+         */
         signed char getQuadType(size_t tetIndex) const;
 };
 
@@ -221,12 +229,16 @@ inline bool NPrismSpec::operator != (const NPrismSpec& other) const {
 // Inline functions for NPrismSetSurface
 
 inline NPrismSetSurface::~NPrismSetSurface() {
-    if (quadType)
-        delete[] quadType;
+    if (quadType_)
+        delete[] quadType_;
+}
+
+inline signed char NPrismSetSurface::quadType(size_t tetIndex) const {
+    return quadType_[tetIndex];
 }
 
 inline signed char NPrismSetSurface::getQuadType(size_t tetIndex) const {
-    return quadType[tetIndex];
+    return quadType_[tetIndex];
 }
 
 } // namespace regina

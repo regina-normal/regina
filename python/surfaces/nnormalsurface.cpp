@@ -151,6 +151,7 @@ void addNNormalSurface() {
         .def("getFaceArcs", &NNormalSurface::getFaceArcs)
         .def("arcs", &NNormalSurface::arcs)
         .def("getTriangleArcs", &NNormalSurface::getTriangleArcs)
+        .def("octPosition", &NNormalSurface::octPosition)
         .def("getOctPosition", &NNormalSurface::getOctPosition)
         .def("countCoords", &NNormalSurface::countCoords)
         .def("getNumberOfCoords", &NNormalSurface::getNumberOfCoords)

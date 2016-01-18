@@ -334,7 +334,7 @@ bool NNormalSurface::locallyCompatible(const NNormalSurface& other) const {
 
 void NNormalSurface::calculateOctPosition() const {
     if (! vector->allowsAlmostNormal()) {
-        octPosition = NDiscType::NONE;
+        octPosition_ = NDiscType::NONE;
         return;
     }
 
@@ -344,11 +344,11 @@ void NNormalSurface::calculateOctPosition() const {
     for (tetIndex = 0; tetIndex < triangulation_->size(); ++tetIndex)
         for (type = 0; type < 3; ++type)
             if (octs(tetIndex, type) != 0) {
-                octPosition = NDiscType(tetIndex, type);
+                octPosition_ = NDiscType(tetIndex, type);
                 return;
             }
 
-    octPosition = NDiscType::NONE;
+    octPosition_ = NDiscType::NONE;
     return;
 }
 

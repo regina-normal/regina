@@ -834,7 +834,7 @@ class REGINA_API NNormalSurface :
         std::string name;
             /**< An optional name associated with this surface. */
 
-        mutable NProperty<NDiscType> octPosition;
+        mutable NProperty<NDiscType> octPosition_;
             /**< The position of the first non-zero octagonal coordinate,
                  or NDiscType::NONE if there is no non-zero octagonal
                  coordinate.  Here NDiscType::type is an octagon type
@@ -1199,6 +1199,14 @@ class REGINA_API NNormalSurface :
          *
          * @return the position of the first non-zero octagonal coordinate,
          * or NDiscType::NONE if there is no such coordinate.
+         */
+        NDiscType octPosition() const;
+        /**
+         * Deprecated routine that determines the first coordinate position
+         * at which this surface has a non-zero octagonal coordinate.
+         *
+         * \deprecated This routine has been renamed to octPosition().
+         * See the octPosition() documentation for further details.
          */
         NDiscType getOctPosition() const;
 
@@ -2024,10 +2032,14 @@ inline NLargeInteger NNormalSurface::getFaceArcs(size_t triIndex,
     return vector->arcs(triIndex, triVertex, triangulation_);
 }
 
-inline NDiscType NNormalSurface::getOctPosition() const {
-    if (! octPosition.known())
+inline NDiscType NNormalSurface::octPosition() const {
+    if (! octPosition_.known())
         calculateOctPosition();
-    return octPosition.value();
+    return octPosition_.value();
+}
+
+inline NDiscType NNormalSurface::getOctPosition() const {
+    return octPosition();
 }
 
 inline size_t NNormalSurface::countCoords() const {
@@ -2120,7 +2132,7 @@ inline NLargeInteger NNormalSurface::isCentral() const {
 }
 
 inline bool NNormalSurface::normal() const {
-    return (getOctPosition() == NDiscType::NONE);
+    return (octPosition() == NDiscType::NONE);
 }
 
 inline const NNormalSurfaceVector* NNormalSurface::rawVector() const {

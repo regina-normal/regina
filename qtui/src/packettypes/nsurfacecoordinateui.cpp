@@ -201,7 +201,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         } else if (surfaces_->allowsAlmostNormal() &&
                 ((surfaces_->isEmbeddedOnly() && index.column() == 8) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 6))) {
-            regina::NDiscType oct = s->getOctPosition();
+            regina::NDiscType oct = s->octPosition();
             if (oct == regina::NDiscType::NONE)
                 return QVariant();
             else {
@@ -271,7 +271,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         } else if (surfaces_->allowsAlmostNormal() &&
                 ((surfaces_->isEmbeddedOnly() && index.column() == 8) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 6))) {
-            regina::NDiscType oct = s->getOctPosition();
+            regina::NDiscType oct = s->octPosition();
             if (oct != regina::NDiscType::NONE) {
                 if (s->octs(oct.tetIndex, oct.type) > 1)
                     return QColor(Qt::darkRed);
