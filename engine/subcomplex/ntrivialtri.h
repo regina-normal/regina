@@ -95,7 +95,7 @@ class REGINA_API NTrivialTri : public NStandardTriangulation {
          */
         static const int N3_2;
     private:
-        int type;
+        int type_;
             /**< The specific triangulation being represented.
                  This must be one of the triangulation constants defined
                  in this class. */
@@ -113,6 +113,14 @@ class REGINA_API NTrivialTri : public NStandardTriangulation {
          *
          * @return the specific triangulation.  This will be one of the
          * triangulation constants defined in this class.
+         */
+        int type() const;
+        /**
+         * Deprecated routine that returns the specific trivial triangulation
+         * being represented.
+         *
+         * \deprecated This routine has been renamed to type().
+         * See the type() documentation for further details.
          */
         int getType() const;
 
@@ -144,15 +152,19 @@ class REGINA_API NTrivialTri : public NStandardTriangulation {
 
 // Inline functions for NTrivialTri
 
-inline NTrivialTri::NTrivialTri(int newType) : type(newType) {
+inline NTrivialTri::NTrivialTri(int newType) : type_(newType) {
 }
 
 inline NTrivialTri* NTrivialTri::clone() const {
-    return new NTrivialTri(type);
+    return new NTrivialTri(type_);
+}
+
+inline int NTrivialTri::type() const {
+    return type_;
 }
 
 inline int NTrivialTri::getType() const {
-    return type;
+    return type_;
 }
 
 } // namespace regina
