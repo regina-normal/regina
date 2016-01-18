@@ -229,10 +229,10 @@ inline int NLayeredLensSpace::getMobiusBoundaryGroup() const {
     return mobiusBoundaryGroup_;
 }
 inline bool NLayeredLensSpace::isSnapped() const {
-    return (torus_->getTopEdge(mobiusBoundaryGroup_, 1) == -1);
+    return (torus_->topEdge(mobiusBoundaryGroup_, 1) == -1);
 }
 inline bool NLayeredLensSpace::isTwisted() const {
-    return (torus_->getTopEdge(mobiusBoundaryGroup_, 1) != -1);
+    return (torus_->topEdge(mobiusBoundaryGroup_, 1) != -1);
 }
 inline void NLayeredLensSpace::writeTextLong(std::ostream& out) const {
     out << "Layered lens space ";

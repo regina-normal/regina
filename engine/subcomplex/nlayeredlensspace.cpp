@@ -67,9 +67,9 @@ NLayeredLensSpace* NLayeredLensSpace::isLayeredLensSpace(
         if (torus) {
             // We have found a layered solid torus; either this makes the
             // layered lens space or nothing makes the layered lens space.
-            NTetrahedron* tet = torus->getTopLevel();
-            int tf0 = torus->getTopFace(0);
-            int tf1 = torus->getTopFace(1);
+            NTetrahedron* tet = torus->topLevel();
+            int tf0 = torus->topFace(0);
+            int tf1 = torus->topFace(1);
             if (tet->adjacentTetrahedron(tf0) != tet) {
                 delete torus;
                 return 0;
@@ -89,11 +89,11 @@ NLayeredLensSpace* NLayeredLensSpace::isLayeredLensSpace(
             NPerm4 perm = tet->adjacentGluing(tf0);
             if (perm[tf1] == tf0) {
                 // Snapped shut.
-                ans->mobiusBoundaryGroup_ = torus->getTopEdgeGroup(
+                ans->mobiusBoundaryGroup_ = torus->topEdgeGroup(
                     5 - NEdge::edgeNumber[tf0][tf1]);
             } else {
                 // Twisted shut.
-                ans->mobiusBoundaryGroup_ = torus->getTopEdgeGroup(
+                ans->mobiusBoundaryGroup_ = torus->topEdgeGroup(
                     NEdge::edgeNumber[perm[tf1]][tf0]);
             }
 
@@ -103,23 +103,23 @@ NLayeredLensSpace* NLayeredLensSpace::isLayeredLensSpace(
                 case 0:
                     // L( x + 2y, y )
                     ans->p_ =
-                        torus->getMeridinalCuts(1) + torus->getMeridinalCuts(2);
-                    ans->q_ = torus->getMeridinalCuts(1);
+                        torus->meridinalCuts(1) + torus->meridinalCuts(2);
+                    ans->q_ = torus->meridinalCuts(1);
                     break;
                 case 1:
                     // L( 2x + y, x )
                     ans->p_ =
-                        torus->getMeridinalCuts(0) + torus->getMeridinalCuts(2);
-                    ans->q_ = torus->getMeridinalCuts(0);
+                        torus->meridinalCuts(0) + torus->meridinalCuts(2);
+                    ans->q_ = torus->meridinalCuts(0);
                     break;
                 case 2:
                     // L( y - x, x )
                     ans->p_ =
-                        torus->getMeridinalCuts(1) - torus->getMeridinalCuts(0);
+                        torus->meridinalCuts(1) - torus->meridinalCuts(0);
                     if (ans->p_ == 0)
                         ans->q_ = 1;
                     else
-                        ans->q_ = torus->getMeridinalCuts(0) % ans->p_;
+                        ans->q_ = torus->meridinalCuts(0) % ans->p_;
                     break;
             }
 

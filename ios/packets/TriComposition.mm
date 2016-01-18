@@ -264,9 +264,9 @@
             
             const regina::NLayeredSolidTorus& torus(lens->torus());
             [details appendFormat:@INDENT1 "Layered %ld-%ld-%ld solid torus %s\n",
-             torus.getMeridinalCuts(0),
-             torus.getMeridinalCuts(1),
-             torus.getMeridinalCuts(2),
+             torus.meridinalCuts(0),
+             torus.meridinalCuts(1),
+             torus.meridinalCuts(2),
              (lens->isSnapped() ? "snapped shut" : "twisted shut")];
 
             [details appendString:@"\n"];
@@ -526,24 +526,24 @@
         torus = regina::NLayeredSolidTorus::formsLayeredSolidTorusBase(self.packet->getTetrahedron(i));
         if (torus) {
             [details appendFormat:@"Layered solid torus %s\n", torus->name().c_str()];
-            [details appendFormat:@INDENT1 "Base: tet %ld\n", torus->getBase()->index()];
-            topIndex = torus->getTopLevel()->index();
+            [details appendFormat:@INDENT1 "Base: tet %ld\n", torus->base()->index()];
+            topIndex = torus->topLevel()->index();
             [details appendFormat:@INDENT1 "Top level: tet %ld\n", topIndex];
             [details appendFormat:@INDENT1 "Weight %ld edge: %@\n",
-             torus->getMeridinalCuts(0),
+             torus->meridinalCuts(0),
              [TriComposition edgeStringForTorus:topIndex
-                                          first:torus->getTopEdge(0, 0)
-                                         second:torus->getTopEdge(0, 1)]];
+                                          first:torus->topEdge(0, 0)
+                                         second:torus->topEdge(0, 1)]];
             [details appendFormat:@INDENT1 "Weight %ld edge: %@\n",
-             torus->getMeridinalCuts(1),
+             torus->meridinalCuts(1),
              [TriComposition edgeStringForTorus:topIndex
-                                          first:torus->getTopEdge(1, 0)
-                                         second:torus->getTopEdge(1, 1)]];
+                                          first:torus->topEdge(1, 0)
+                                         second:torus->topEdge(1, 1)]];
             [details appendFormat:@INDENT1 "Weight %ld edge: %@\n",
-             torus->getMeridinalCuts(2),
+             torus->meridinalCuts(2),
              [TriComposition edgeStringForTorus:topIndex
-                                          first:torus->getTopEdge(2, 0)
-                                         second:torus->getTopEdge(2, 1)]];
+                                          first:torus->topEdge(2, 0)
+                                         second:torus->topEdge(2, 1)]];
             
             [details appendString:@"\n"];
             delete torus;

@@ -714,9 +714,9 @@ void NTriCompositionUI::findLayeredLensSpaces() {
             details = new QTreeWidgetItem(id, details);
             details->setText(0, tr(
                 "Layered %1-%2-%3 solid torus %4").
-                arg(torus.getMeridinalCuts(0)).
-                arg(torus.getMeridinalCuts(1)).
-                arg(torus.getMeridinalCuts(2)).
+                arg(torus.meridinalCuts(0)).
+                arg(torus.meridinalCuts(1)).
+                arg(torus.meridinalCuts(2)).
                 arg(lens->isSnapped() ? tr("snapped shut") :
                     tr("twisted shut")));
 
@@ -782,27 +782,27 @@ void NTriCompositionUI::findLayeredSolidTori() {
 
             details = new QTreeWidgetItem(id);
             details->setText(0, tr("Base: tet %1").arg(
-                tri->tetrahedronIndex(torus->getBase())));
-            topIndex = tri->tetrahedronIndex(torus->getTopLevel());
+                tri->tetrahedronIndex(torus->base())));
+            topIndex = tri->tetrahedronIndex(torus->topLevel());
             details = new QTreeWidgetItem(id, details);
             details->setText(0, tr("Top level: tet %1").
                 arg(topIndex));
 
             details = new QTreeWidgetItem(id, details);
             details->setText(0, tr(
-                "Weight %1 edge: %2").arg(torus->getMeridinalCuts(0)).
-                arg(edgeString(topIndex, torus->getTopEdge(0, 0),
-                    torus->getTopEdge(0, 1))));
+                "Weight %1 edge: %2").arg(torus->meridinalCuts(0)).
+                arg(edgeString(topIndex, torus->topEdge(0, 0),
+                    torus->topEdge(0, 1))));
             details = new QTreeWidgetItem(id, details);
             details->setText(0, tr(
-                "Weight %1 edge: %2").arg(torus->getMeridinalCuts(1)).
-                arg(edgeString(topIndex, torus->getTopEdge(1, 0),
-                    torus->getTopEdge(1, 1))));
+                "Weight %1 edge: %2").arg(torus->meridinalCuts(1)).
+                arg(edgeString(topIndex, torus->topEdge(1, 0),
+                    torus->topEdge(1, 1))));
             details = new QTreeWidgetItem(id, details);
             details->setText(0, tr(
-                "Weight %1 edge: %2").arg(torus->getMeridinalCuts(2)).
-                arg(edgeString(topIndex, torus->getTopEdge(2, 0),
-                    torus->getTopEdge(2, 1))));
+                "Weight %1 edge: %2").arg(torus->meridinalCuts(2)).
+                arg(edgeString(topIndex, torus->topEdge(2, 0),
+                    torus->topEdge(2, 1))));
 
             delete torus;
         }

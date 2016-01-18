@@ -80,9 +80,9 @@ NManifold* NAugTriSolidTorus::manifold() const {
         long q, r;
         if (edgeGroupRoles_[torusAnnulus_][2] == 2) {
             if (augTorus_[torusAnnulus_]) {
-                r = augTorus_[torusAnnulus_]->getMeridinalCuts(
+                r = augTorus_[torusAnnulus_]->meridinalCuts(
                     edgeGroupRoles_[torusAnnulus_][0]);
-                q = augTorus_[torusAnnulus_]->getMeridinalCuts(
+                q = augTorus_[torusAnnulus_]->meridinalCuts(
                     edgeGroupRoles_[torusAnnulus_][1]);
             } else {
                 r = 1;
@@ -90,9 +90,9 @@ NManifold* NAugTriSolidTorus::manifold() const {
             }
         } else {
             if (augTorus_[torusAnnulus_]) {
-                r = augTorus_[torusAnnulus_]->getMeridinalCuts(
+                r = augTorus_[torusAnnulus_]->meridinalCuts(
                     edgeGroupRoles_[torusAnnulus_][0]);
-                q = -augTorus_[torusAnnulus_]->getMeridinalCuts(
+                q = -augTorus_[torusAnnulus_]->meridinalCuts(
                     edgeGroupRoles_[torusAnnulus_][1]);
             } else {
                 r = (edgeGroupRoles_[torusAnnulus_][0] == 2 ? 2 : 1);
@@ -117,9 +117,9 @@ NManifold* NAugTriSolidTorus::manifold() const {
         long q, r;
         if (edgeGroupRoles_[torusAnnulus_][2] == 2) {
             if (augTorus_[torusAnnulus_]) {
-                r = augTorus_[torusAnnulus_]->getMeridinalCuts(
+                r = augTorus_[torusAnnulus_]->meridinalCuts(
                     edgeGroupRoles_[torusAnnulus_][0]);
-                q = augTorus_[torusAnnulus_]->getMeridinalCuts(
+                q = augTorus_[torusAnnulus_]->meridinalCuts(
                     edgeGroupRoles_[torusAnnulus_][1]);
             } else {
                 r = 1;
@@ -127,9 +127,9 @@ NManifold* NAugTriSolidTorus::manifold() const {
             }
         } else {
             if (augTorus_[torusAnnulus_]) {
-                r = augTorus_[torusAnnulus_]->getMeridinalCuts(
+                r = augTorus_[torusAnnulus_]->meridinalCuts(
                     edgeGroupRoles_[torusAnnulus_][0]);
-                q = -augTorus_[torusAnnulus_]->getMeridinalCuts(
+                q = -augTorus_[torusAnnulus_]->meridinalCuts(
                     edgeGroupRoles_[torusAnnulus_][1]);
             } else {
                 r = (edgeGroupRoles_[torusAnnulus_][0] == 2 ? 2 : 1);
@@ -155,16 +155,16 @@ NManifold* NAugTriSolidTorus::manifold() const {
         for (int i = 0; i < 3; i++) {
             if (edgeGroupRoles_[i][2] == 2) {
                 if (augTorus_[i]) {
-                    alpha = augTorus_[i]->getMeridinalCuts(edgeGroupRoles_[i][0]);
-                    beta = augTorus_[i]->getMeridinalCuts(edgeGroupRoles_[i][1]);
+                    alpha = augTorus_[i]->meridinalCuts(edgeGroupRoles_[i][0]);
+                    beta = augTorus_[i]->meridinalCuts(edgeGroupRoles_[i][1]);
                 } else {
                     alpha = 1;
                     beta = 1;
                 }
             } else {
                 if (augTorus_[i]) {
-                    alpha = augTorus_[i]->getMeridinalCuts(edgeGroupRoles_[i][0]);
-                    beta = -augTorus_[i]->getMeridinalCuts(edgeGroupRoles_[i][1]);
+                    alpha = augTorus_[i]->meridinalCuts(edgeGroupRoles_[i][0]);
+                    beta = -augTorus_[i]->meridinalCuts(edgeGroupRoles_[i][1]);
                 } else {
                     alpha = (edgeGroupRoles_[i][0] == 2 ? 2 : 1);
                     beta = -(edgeGroupRoles_[i][1] == 2 ? 2 : 1);
@@ -495,9 +495,9 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
     // Examine each layered solid torus.
     NTetrahedron* top[3];
     for (i = 0; i < nLayered; i++) {
-        top[i] = layered[i]->getTopLevel();
-        if (top[i]->adjacentTetrahedron(layered[i]->getTopFace(0)) ==
-                top[i]->adjacentTetrahedron(layered[i]->getTopFace(1))) {
+        top[i] = layered[i]->topLevel();
+        if (top[i]->adjacentTetrahedron(layered[i]->topFace(0)) ==
+                top[i]->adjacentTetrahedron(layered[i]->topFace(1))) {
             // These two top triangles should be glued to different
             // tetrahedra.
             for (j = 0; j < nLayered; j++)
@@ -508,7 +508,7 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
 
     // Run to the top of the first layered solid torus; this should give
     // us our core.
-    int topFace = layered[0]->getTopFace(0);
+    int topFace = layered[0]->topFace(0);
     NTetrahedron* coreTet = top[0]->adjacentTetrahedron(topFace);
 
     // We will declare that this triangle hooks onto vertex roles 0, 1 and 3
@@ -582,11 +582,11 @@ NAugTriSolidTorus* NAugTriSolidTorus::isAugTriSolidTorus(
                             // vertices of the top tetrahedron in
                             // layered[whichLayered[j]].
                             edgeGroupRoles[j] = NPerm4(
-                                layered[whichLayered[j]]->getTopEdgeGroup(
+                                layered[whichLayered[j]]->topEdgeGroup(
                                     NEdge::edgeNumber[q[0]][q[3]]),
-                                layered[whichLayered[j]]->getTopEdgeGroup(
+                                layered[whichLayered[j]]->topEdgeGroup(
                                     NEdge::edgeNumber[q[0]][q[1]]),
-                                layered[whichLayered[j]]->getTopEdgeGroup(
+                                layered[whichLayered[j]]->topEdgeGroup(
                                     NEdge::edgeNumber[q[1]][q[3]]),
                                 3);
                             usedLayered++;
@@ -681,9 +681,9 @@ std::ostream& NAugTriSolidTorus::writeCommonName(std::ostream& out,
 
         long params[3];
         if (torus) {
-            params[0] = torus->getMeridinalCuts(0);
-            params[1] = torus->getMeridinalCuts(1);
-            params[2] = - torus->getMeridinalCuts(2);
+            params[0] = torus->meridinalCuts(0);
+            params[1] = torus->meridinalCuts(1);
+            params[2] = - torus->meridinalCuts(2);
         } else {
             params[0] = 1;
             params[1] = 1;
@@ -715,9 +715,9 @@ std::ostream& NAugTriSolidTorus::writeCommonName(std::ostream& out,
             roles = edgeGroupRoles_[i];
             torus = augTorus_[i];
             if (torus) {
-                params[0] = torus->getMeridinalCuts(0);
-                params[1] = torus->getMeridinalCuts(1);
-                params[2] = - torus->getMeridinalCuts(2);
+                params[0] = torus->meridinalCuts(0);
+                params[1] = torus->meridinalCuts(1);
+                params[2] = - torus->meridinalCuts(2);
             } else {
                 params[0] = 1;
                 params[1] = 1;
