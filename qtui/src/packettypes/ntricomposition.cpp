@@ -989,7 +989,7 @@ void NTriCompositionUI::findSpiralSolidTori() {
 
             unsigned long* tetIndex = new unsigned long[spiralTets];
             for (j = 0; j < spiralTets; j++)
-                tetIndex[j] = tri->tetrahedronIndex(spiral->getTetrahedron(j));
+                tetIndex[j] = tri->tetrahedronIndex(spiral->tetrahedron(j));
 
             QString tetSet(spiralTets == 1 ? tr("Tet: ") : tr("Tets: "));
             for (j = 0; j < spiralTets; j++) {
@@ -1008,13 +1008,13 @@ void NTriCompositionUI::findSpiralSolidTori() {
             for (j = 0; j < spiralTets; j++) {
                 data =
                     edgeString(tetIndex[(j + spiralTets - 1) % spiralTets],
-                        spiral->getVertexRoles(
+                        spiral->vertexRoles(
                         (j + spiralTets - 1) % spiralTets), 2, 3) +
                     " = " +
-                    edgeString(tetIndex[j], spiral->getVertexRoles(j), 1, 2) +
+                    edgeString(tetIndex[j], spiral->vertexRoles(j), 1, 2) +
                     " = " +
                     edgeString(tetIndex[(j + 1) % spiralTets],
-                        spiral->getVertexRoles((j + 1) % spiralTets), 0, 1);
+                        spiral->vertexRoles((j + 1) % spiralTets), 0, 1);
                 if (edge)
                     edge = new QTreeWidgetItem(details, edge);
                 else
@@ -1028,10 +1028,10 @@ void NTriCompositionUI::findSpiralSolidTori() {
             edge = 0;
             for (j = 0; j < spiralTets; j++) {
                 data =
-                    edgeString(tetIndex[j], spiral->getVertexRoles(j), 1, 3) +
+                    edgeString(tetIndex[j], spiral->vertexRoles(j), 1, 3) +
                     " = " +
                     edgeString(tetIndex[(j + 1) % spiralTets],
-                        spiral->getVertexRoles((j + 1) % spiralTets), 0, 2);
+                        spiral->vertexRoles((j + 1) % spiralTets), 0, 2);
                 if (edge)
                     edge = new QTreeWidgetItem(details, edge);
                 else
@@ -1044,7 +1044,7 @@ void NTriCompositionUI::findSpiralSolidTori() {
             details->setText(0, tr("Axis edges:"));
             edge = 0;
             for (j = 0; j < spiralTets; j++) {
-                data = edgeString(tetIndex[j], spiral->getVertexRoles(j),
+                data = edgeString(tetIndex[j], spiral->vertexRoles(j),
                     0, 3);
                 if (edge)
                     edge = new QTreeWidgetItem(details, edge);

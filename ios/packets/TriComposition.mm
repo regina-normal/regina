@@ -580,7 +580,7 @@
             
             unsigned long* tetIndex = new unsigned long[spiralTets];
             for (j = 0; j < spiralTets; j++)
-                tetIndex[j] = self.packet->tetrahedronIndex(spiral->getTetrahedron(j));
+                tetIndex[j] = self.packet->tetrahedronIndex(spiral->tetrahedron(j));
             
             [details appendString:(spiralTets == 1 ? @INDENT1 "Tet: " : @INDENT1 "Tets: ")];
             for (j = 0; j < spiralTets; j++) {
@@ -594,15 +594,15 @@
             for (j = 0; j < spiralTets; j++) {
                 [details appendFormat:@INDENT2 "%@ = %@ = %@",
                  [TriComposition edgeStringForTet:tetIndex[(j + spiralTets - 1) % spiralTets]
-                                            roles:spiral->getVertexRoles((j + spiralTets - 1) % spiralTets)
+                                            roles:spiral->vertexRoles((j + spiralTets - 1) % spiralTets)
                                             start:2
                                               end:3],
                  [TriComposition edgeStringForTet:tetIndex[j]
-                                            roles:spiral->getVertexRoles(j)
+                                            roles:spiral->vertexRoles(j)
                                             start:1
                                               end:2],
                  [TriComposition edgeStringForTet:tetIndex[(j + 1) % spiralTets]
-                                            roles:spiral->getVertexRoles((j + 1) % spiralTets)
+                                            roles:spiral->vertexRoles((j + 1) % spiralTets)
                                             start:0
                                               end:1]];
                 [details appendString:@"\n"];
@@ -612,11 +612,11 @@
             for (j = 0; j < spiralTets; j++) {
                 [details appendFormat:@INDENT2 "%@ = %@",
                  [TriComposition edgeStringForTet:tetIndex[j]
-                                            roles:spiral->getVertexRoles(j)
+                                            roles:spiral->vertexRoles(j)
                                             start:1
                                               end:3],
                  [TriComposition edgeStringForTet:tetIndex[(j + 1) % spiralTets]
-                                            roles:spiral->getVertexRoles((j + 1) % spiralTets)
+                                            roles:spiral->vertexRoles((j + 1) % spiralTets)
                                             start:0
                                               end:2]];
                 [details appendString:@"\n"];
@@ -626,7 +626,7 @@
             for (j = 0; j < spiralTets; j++) {
                 [details appendFormat:@INDENT2 "%@",
                  [TriComposition edgeStringForTet:tetIndex[j]
-                                            roles:spiral->getVertexRoles(j)
+                                            roles:spiral->vertexRoles(j)
                                             start:0
                                               end:3]];
                 [details appendString:@"\n"];
