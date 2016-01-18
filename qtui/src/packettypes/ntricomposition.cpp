@@ -611,7 +611,7 @@ void NTriCompositionUI::findBlockedTriangulations() {
 
         (new QTreeWidgetItem(id))->setText(0,
             tr("Core T x I triangulation: %1").
-            arg(bundle->core().getName().c_str()));
+            arg(bundle->core().name().c_str()));
 
         delete bundle;
     }
@@ -631,7 +631,7 @@ void NTriCompositionUI::findBlockedTriangulations() {
 
         (new QTreeWidgetItem(id))->setText(0,
             tr("Thin I-bundle (T x I): %1").
-            arg(pBundle->bundle().getName().c_str()));
+            arg(pBundle->bundle().name().c_str()));
 
         delete pBundle;
     }
