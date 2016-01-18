@@ -657,8 +657,8 @@ void NTriCompositionUI::findL31Pillows() {
             details->setText(0, 
                 tr("Pillow interior vertex: %1").
                 arg(tri->vertexIndex(
-                    pillow->getTetrahedron(0)->getVertex(
-                    pillow->getInteriorVertex(0)))));
+                    pillow->tetrahedron(0)->getVertex(
+                    pillow->interiorVertex(0)))));
 
             delete pillow;
         }

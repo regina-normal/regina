@@ -94,6 +94,14 @@ class REGINA_API NL31Pillow : public NStandardTriangulation {
          * must be either 0 or 1.
          * @return the requested tetrahedron.
          */
+        NTetrahedron* tetrahedron(int whichTet) const;
+        /**
+         * Deprecated routine that returns one of the two tetrahedra involved
+         * in this structure.
+         *
+         * \deprecated This routine has been renamed to tetrahedron().
+         * See the tetrahedron() documentation for further details.
+         */
         NTetrahedron* getTetrahedron(int whichTet) const;
         /**
          * Returns the vertex number of the given tetrahedron
@@ -110,6 +118,15 @@ class REGINA_API NL31Pillow : public NStandardTriangulation {
          * @return the vertex of tetrahedron \a whichTet corresponding
          * to the vertex in the interior of the triangular pillow; this
          * will be between 0 and 3 inclusive.
+         */
+        unsigned interiorVertex(int whichTet) const;
+        /**
+         * Deprecated routine that returns the vertex number of the given
+         * tetrahedron corresponding to the degree three vertex in the interior
+         * of the triangular pillow.
+         *
+         * \deprecated This routine has been renamed to interiorVertex().
+         * See the interiorVertex() documentation for further details.
          */
         unsigned getInteriorVertex(int whichTet) const;
 
@@ -146,8 +163,14 @@ inline NL31Pillow::NL31Pillow() {
 inline NL31Pillow::~NL31Pillow() {
 }
 
+inline NTetrahedron* NL31Pillow::tetrahedron(int whichTet) const {
+    return tet[whichTet];
+}
 inline NTetrahedron* NL31Pillow::getTetrahedron(int whichTet) const {
     return tet[whichTet];
+}
+inline unsigned NL31Pillow::interiorVertex(int whichTet) const {
+    return interior[whichTet];
 }
 inline unsigned NL31Pillow::getInteriorVertex(int whichTet) const {
     return interior[whichTet];
