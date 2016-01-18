@@ -248,10 +248,6 @@ Dim4Triangulation* NNormalHypersurfaceList::triangulation() const {
     return dynamic_cast<Dim4Triangulation*>(parent());
 }
 
-Dim4Triangulation* NNormalHypersurfaceList::getTriangulation() const {
-    return dynamic_cast<Dim4Triangulation*>(parent());
-}
-
 namespace {
     struct NameFunction : public Returns<const char*> {
         template <typename Coords>
@@ -275,10 +271,10 @@ void NNormalHypersurfaceList::writeTextLong(std::ostream& o) const {
     o << "Coordinates: " << forCoords(coords_, NameFunction(), "Unknown")
         << '\n';
 
-    unsigned long n = size();
+    size_t n = size();
     o << "Number of hypersurfaces is " << n << '\n';
-    for (unsigned long i = 0; i < n; i++) {
-        getHypersurface(i)->writeTextShort(o);
+    for (size_t i = 0; i < n; i++) {
+        hypersurface(i)->writeTextShort(o);
         o << '\n';
     }
 }

@@ -137,7 +137,7 @@ struct HyperInfo;
  *
  * Note that if a mirrored vector class is being used (see
  * NNormalHypersurfaceVectorMirrored), the vector <b>may not change</b> once
- * the first coordinate lookup routine (such as getTetrahedronCoord() and
+ * the first coordinate lookup routine (such as tetrahedra() and
  * the like) has been called.  See
  * NNormalHypersurfaceVectorMirrored for further explanation.
  *
@@ -173,7 +173,7 @@ struct HyperInfo;
  *   corresponding superclass constructors.</li>
  *   <li>All abstract functions must be implemented, except for those
  *   already provided by REGINA_NORMAL_HYPERSURFACE_FLAVOUR.
- *   Note that coordinate functions such as getTetrahedronCoord() must return
+ *   Note that coordinate functions such as tetrahedra() must return
  *   the \e total number of pieces of the requested type; if your new
  *   coordinate system adorns pieces with extra information (such as
  *   orientation) then your implementation must compute the appropriate
@@ -285,7 +285,7 @@ class REGINA_API NNormalHypersurfaceVector : public NRay {
         /**
          * Returns the number of tetrahedron pieces of the given type in
          * this normal hypersurface.
-         * See NNormalHypersurface::getTetrahedronCoord() for further details.
+         * See NNormalHypersurface::tetrahedra() for further details.
          *
          * @param pentIndex the index in the triangulation of the
          * pentachoron in which the requested tetrahedron pieces reside;
@@ -297,12 +297,12 @@ class REGINA_API NNormalHypersurfaceVector : public NRay {
          * lives.
          * @return the number of tetrahedron pieces of the given type.
          */
-        virtual NLargeInteger getTetrahedronCoord(unsigned long pentIndex,
+        virtual NLargeInteger tetrahedra(size_t pentIndex,
             int vertex, const Dim4Triangulation* triang) const = 0;
         /**
          * Returns the number of prism pieces of the given type
          * in this normal hypersurface.
-         * See NNormalHypersurface::getPrismCoord() for further details.
+         * See NNormalHypersurface::prisms() for further details.
          *
          * @param pentIndex the index in the triangulation of the
          * pentachoron in which the requested prism pieces reside;
@@ -314,12 +314,12 @@ class REGINA_API NNormalHypersurfaceVector : public NRay {
          * lives.
          * @return the number of prism pieces of the given type.
          */
-        virtual NLargeInteger getPrismCoord(unsigned long pentIndex,
+        virtual NLargeInteger prisms(size_t pentIndex,
             int prismType, const Dim4Triangulation* triang) const = 0;
         /**
          * Returns the number of times this normal hypersurface crosses the
          * given edge.
-         * See NNormalHypersurface::getEdgeWeight() for further details.
+         * See NNormalHypersurface::edgeWeight() for further details.
          *
          * @param edgeIndex the index in the triangulation of the edge
          * in which we are interested; this should be between 0 and
@@ -329,7 +329,7 @@ class REGINA_API NNormalHypersurfaceVector : public NRay {
          * @return the number of times this normal hypersurface crosses the
          * given edge.
          */
-        virtual NLargeInteger getEdgeWeight(unsigned long edgeIndex,
+        virtual NLargeInteger edgeWeight(size_t edgeIndex,
             const Dim4Triangulation* triang) const = 0;
 
         /**
@@ -469,8 +469,7 @@ class REGINA_API NNormalHypersurface :
          * and 4 inclusive.
          * @return the number of tetrahedron pieces of the given type.
          */
-        NLargeInteger getTetrahedronCoord(unsigned long pentIndex,
-            int vertex) const;
+        NLargeInteger tetrahedra(size_t pentIndex, int vertex) const;
         /**
          * Returns the number of prism pieces of the given type
          * in this normal hypersurface.
@@ -492,8 +491,7 @@ class REGINA_API NNormalHypersurface :
          * this should be between 0 and 9 inclusive.
          * @return the number of prism pieces of the given type.
          */
-        NLargeInteger getPrismCoord(unsigned long pentIndex,
-            int prismType) const;
+        NLargeInteger prisms(size_t pentIndex, int prismType) const;
         /**
          * Returns the number of times this normal hypersurface crosses the
          * given edge.
@@ -504,7 +502,7 @@ class REGINA_API NNormalHypersurface :
          * @return the number of times this normal hypersurface crosses the
          * given edge.
          */
-        NLargeInteger getEdgeWeight(unsigned long edgeIndex) const;
+        NLargeInteger edgeWeight(size_t edgeIndex) const;
 
         /**
          * Returns the number of coordinates in the specific underlying
@@ -514,27 +512,11 @@ class REGINA_API NNormalHypersurface :
          */
         size_t countCoords() const;
         /**
-         * Deprecated routine that returns the number of coordinates in the
-         * specific underlying coordinate system being used.
-         *
-         * \deprecated This routine has been renamed to countCoords().
-         * See the countCoords() documentation for further details.
-         */
-        size_t getNumberOfCoords() const;
-        /**
          * Returns the triangulation in which this normal hypersurface resides.
          *
          * @return the underlying triangulation.
          */
         const Dim4Triangulation* triangulation() const;
-        /**
-         * Deprecated routine that returns the triangulation in which this
-         * normal hypersurface resides.
-         *
-         * \deprecated This routine has been renamed to triangulation().
-         * See the triangulation() documentation for further details.
-         */
-        const Dim4Triangulation* getTriangulation() const;
 
         /**
          * Returns the name associated with this normal hypersurface.
@@ -543,7 +525,7 @@ class REGINA_API NNormalHypersurface :
          *
          * @return the name of associated with this hypersurface.
          */
-        const std::string& getName() const;
+        const std::string& name() const;
         /**
          * Sets the name associated with this normal hypersurface.
          * Names are optional and need not be unique.
@@ -750,8 +732,8 @@ class REGINA_API NNormalHypersurface :
          * the coordinate system in advance (i.e., you created the hypersurface
          * yourself), it is best to keep to the coordinate-system-agnostic
          * access functions such as
-         * NNormalHypersurfaceVector::getTetrahedronCoord() and
-         * NNormalHypersurfaceVector::getPrismCoord().
+         * NNormalHypersurfaceVector::tetrahedra() and
+         * NNormalHypersurfaceVector::prisms().
          *
          * \ifacespython Not present.
          *
@@ -788,33 +770,26 @@ inline NNormalHypersurface::~NNormalHypersurface() {
     delete vector_;
 }
 
-inline NLargeInteger NNormalHypersurface::getTetrahedronCoord(
-        unsigned long pentIndex, int vertex) const {
-    return vector_->getTetrahedronCoord(pentIndex, vertex, triangulation_);
+inline NLargeInteger NNormalHypersurface::tetrahedra(
+        size_t pentIndex, int vertex) const {
+    return vector_->tetrahedra(pentIndex, vertex, triangulation_);
 }
-inline NLargeInteger NNormalHypersurface::getPrismCoord(
-        unsigned long pentIndex, int prismType) const {
-    return vector_->getPrismCoord(pentIndex, prismType, triangulation_);
+inline NLargeInteger NNormalHypersurface::prisms(
+        size_t pentIndex, int prismType) const {
+    return vector_->prisms(pentIndex, prismType, triangulation_);
 }
-inline NLargeInteger NNormalHypersurface::getEdgeWeight(unsigned long edgeIndex)
-        const {
-    return vector_->getEdgeWeight(edgeIndex, triangulation_);
+inline NLargeInteger NNormalHypersurface::edgeWeight(size_t edgeIndex) const {
+    return vector_->edgeWeight(edgeIndex, triangulation_);
 }
 
 inline size_t NNormalHypersurface::countCoords() const {
     return vector_->size();
 }
-inline size_t NNormalHypersurface::getNumberOfCoords() const {
-    return vector_->size();
-}
 inline const Dim4Triangulation* NNormalHypersurface::triangulation() const {
     return triangulation_;
 }
-inline const Dim4Triangulation* NNormalHypersurface::getTriangulation() const {
-    return triangulation_;
-}
 
-inline const std::string& NNormalHypersurface::getName() const {
+inline const std::string& NNormalHypersurface::name() const {
     return name_;
 }
 inline void NNormalHypersurface::setName(const std::string& name) {

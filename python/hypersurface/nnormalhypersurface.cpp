@@ -56,14 +56,13 @@ void addNNormalHypersurface() {
             boost::noncopyable>("NNormalHypersurface", no_init)
         .def("clone", &NNormalHypersurface::clone,
             return_value_policy<manage_new_object>())
-        .def("getTetrahedronCoord", &NNormalHypersurface::getTetrahedronCoord)
-        .def("getPrismCoord", &NNormalHypersurface::getPrismCoord)
-        .def("getEdgeWeight", &NNormalHypersurface::getEdgeWeight)
+        .def("tetrahedra", &NNormalHypersurface::tetrahedra)
+        .def("prisms", &NNormalHypersurface::prisms)
+        .def("edgeWeight", &NNormalHypersurface::edgeWeight)
         .def("countCoords", &NNormalHypersurface::countCoords)
-        .def("getNumberOfCoords", &NNormalHypersurface::getNumberOfCoords)
-        .def("getTriangulation", &NNormalHypersurface::getTriangulation,
+        .def("triangulation", &NNormalHypersurface::triangulation,
             return_value_policy<reference_existing_object>())
-        .def("getName", &NNormalHypersurface::getName,
+        .def("name", &NNormalHypersurface::name,
             return_value_policy<return_by_value>())
         .def("setName", &NNormalHypersurface::setName)
         .def("writeTextShort", writeTextShort_stdio)

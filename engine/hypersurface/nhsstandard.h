@@ -75,7 +75,7 @@ struct HyperInfo<HS_STANDARD> {
  * pentachoron, the first five represent the number of
  * tetrahedron pieces about vertex 0,...,4, and the next
  * ten represent the number of prism pieces of type 0,...,9
- * (see NNormalHypersurface::getPrismCoord() for details).
+ * (see NNormalHypersurface::prisms() for details).
  *
  * \ifacespython Not present.
  */
@@ -99,11 +99,11 @@ class REGINA_API NNormalHypersurfaceVectorStandard :
         NNormalHypersurfaceVectorStandard(
             const NVector<NLargeInteger>& cloneMe);
 
-        virtual NLargeInteger getTetrahedronCoord(unsigned long pentIndex,
+        virtual NLargeInteger tetrahedra(size_t pentIndex,
             int vertex, const Dim4Triangulation* triang) const;
-        virtual NLargeInteger getPrismCoord(unsigned long pentIndex,
+        virtual NLargeInteger prisms(size_t pentIndex,
             int prismType, const Dim4Triangulation* triang) const;
-        virtual NLargeInteger getEdgeWeight(unsigned long edgeIndex,
+        virtual NLargeInteger edgeWeight(size_t edgeIndex,
             const Dim4Triangulation* triang) const;
 
         static NNormalHypersurfaceVector* makeZeroVector(
@@ -126,13 +126,12 @@ inline NNormalHypersurfaceVectorStandard::NNormalHypersurfaceVectorStandard(
         NNormalHypersurfaceVector(cloneMe) {
 }
 
-inline NLargeInteger NNormalHypersurfaceVectorStandard::getTetrahedronCoord(
-        unsigned long pentIndex, int vertex, const Dim4Triangulation*) const {
+inline NLargeInteger NNormalHypersurfaceVectorStandard::tetrahedra(
+        size_t pentIndex, int vertex, const Dim4Triangulation*) const {
     return (*this)[15 * pentIndex + vertex];
 }
-inline NLargeInteger NNormalHypersurfaceVectorStandard::getPrismCoord(
-        unsigned long pentIndex, int prismType, const Dim4Triangulation*)
-        const {
+inline NLargeInteger NNormalHypersurfaceVectorStandard::prisms(
+        size_t pentIndex, int prismType, const Dim4Triangulation*) const {
     return (*this)[15 * pentIndex + 5 + prismType];
 }
 

@@ -65,7 +65,7 @@ void NXMLNormalHypersurfaceReader::initialChars(const std::string& chars) {
 
     long pos;
     NLargeInteger value;
-    for (unsigned long i = 0; i < tokens.size(); i += 2) {
+    for (size_t i = 0; i < tokens.size(); i += 2) {
         if (valueOf(tokens[i], pos))
             if (valueOf(tokens[i + 1], value))
                 if (pos >= 0 && pos < vecLen_) {

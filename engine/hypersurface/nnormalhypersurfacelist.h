@@ -313,14 +313,6 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          * @return the triangulation in which these hypersurfaces live.
          */
         Dim4Triangulation* triangulation() const;
-        /**
-         * Deprecated routine that returns the triangulation in which these
-         * normal hypersurfaces live.
-         *
-         * \deprecated This routine has been renamed to triangulation().
-         * See the triangulation() documentation for further details.
-         */
-        Dim4Triangulation* getTriangulation() const;
 
         /**
          * Returns the number of hypersurfaces stored in this list.
@@ -336,7 +328,7 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          *
          * @return the normal hypersurface at the requested index in this list.
          */
-        const NNormalHypersurface* getHypersurface(size_t index) const;
+        const NNormalHypersurface* hypersurface(size_t index) const;
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
@@ -791,7 +783,7 @@ inline size_t NNormalHypersurfaceList::size() const {
     return surfaces_.size();
 }
 
-inline const NNormalHypersurface* NNormalHypersurfaceList::getHypersurface(
+inline const NNormalHypersurface* NNormalHypersurfaceList::hypersurface(
         size_t index) const {
     return surfaces_[index];
 }

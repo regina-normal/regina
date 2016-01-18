@@ -134,10 +134,10 @@ void addNNormalHypersurfaceList() {
             return_value_policy<manage_new_object>())
         .def("coords", &NNormalHypersurfaceList::coords)
         .def("isEmbeddedOnly", &NNormalHypersurfaceList::isEmbeddedOnly)
-        .def("getTriangulation", &NNormalHypersurfaceList::getTriangulation,
+        .def("triangulation", &NNormalHypersurfaceList::triangulation,
             return_value_policy<reference_existing_object>())
         .def("size", &NNormalHypersurfaceList::size)
-        .def("getHypersurface", &NNormalHypersurfaceList::getHypersurface,
+        .def("hypersurface", &NNormalHypersurfaceList::hypersurface,
             return_internal_reference<>())
         .staticmethod("enumerate")
         .staticmethod("enumerateFundPrimal")

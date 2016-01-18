@@ -47,15 +47,15 @@ namespace regina {
 
 bool NNormalHypersurfaceVector::isCompact(const Dim4Triangulation* triang)
         const {
-    unsigned long nPents = triang->size();
-    unsigned long pent;
+    size_t nPents = triang->size();
+    size_t pent;
     int type;
     for (pent = 0; pent < nPents; pent++) {
         for (type = 0; type < 5; type++)
-            if (getTetrahedronCoord(pent, type, triang).isInfinite())
+            if (tetrahedra(pent, type, triang).isInfinite())
                 return false;
         for (type = 0; type < 10; type++)
-            if (getPrismCoord(pent, type, triang).isInfinite())
+            if (prisms(pent, type, triang).isInfinite())
                 return false;
     }
     return true;
@@ -77,17 +77,17 @@ NNormalHypersurface* NNormalHypersurface::clone() const {
 }
 
 void NNormalHypersurface::writeTextShort(std::ostream& out) const {
-    unsigned long nPents = triangulation_->size();
-    unsigned long pent;
+    size_t nPents = triangulation_->size();
+    size_t pent;
     unsigned j;
     for (pent=0; pent < nPents; pent++) {
         if (pent > 0)
             out << " || ";
         for (j=0; j<5; j++)
-            out << getTetrahedronCoord(pent, j) << ' ';
+            out << tetrahedra(pent, j) << ' ';
         out << ';';
         for (j=0; j<10; j++)
-            out << ' ' << getPrismCoord(pent, j);
+            out << ' ' << prisms(pent, j);
     }
 }
 
@@ -119,18 +119,18 @@ void NNormalHypersurface::writeXMLData(std::ostream& out) const {
 }
 
 bool NNormalHypersurface::isEmpty() const {
-    unsigned long nPents = triangulation_->size();
+    size_t nPents = triangulation_->size();
 
-    unsigned long p;
+    size_t p;
     int i;
 
     for (p = 0; p < nPents; ++p) {
         for (i = 0; i < 5; ++i)
-            if (getTetrahedronCoord(p, i) != 0)
+            if (tetrahedra(p, i) != 0)
                 return false;
 
         for (i = 0; i < 10; ++i)
-            if (getPrismCoord(p, i) != 0)
+            if (prisms(p, i) != 0)
                 return false;
     }
 
@@ -138,18 +138,18 @@ bool NNormalHypersurface::isEmpty() const {
 }
 
 bool NNormalHypersurface::sameSurface(const NNormalHypersurface& other) const {
-    unsigned long nPents = triangulation_->size();
+    size_t nPents = triangulation_->size();
 
-    unsigned long p;
+    size_t p;
     int i;
 
     for (p = 0; p < nPents; ++p) {
         for (i = 0; i < 5; ++i)
-            if (getTetrahedronCoord(p, i) != other.getTetrahedronCoord(p, i))
+            if (tetrahedra(p, i) != other.tetrahedra(p, i))
                 return false;
 
         for (i = 0; i < 10; ++i)
-            if (getPrismCoord(p, i) != other.getPrismCoord(p, i))
+            if (prisms(p, i) != other.prisms(p, i))
                 return false;
     }
 
@@ -157,16 +157,16 @@ bool NNormalHypersurface::sameSurface(const NNormalHypersurface& other) const {
 }
 
 bool NNormalHypersurface::embedded() const {
-    unsigned long nPent = triangulation_->size();
+    size_t nPent = triangulation_->size();
 
     int type;
     int found, prism[2];
     int i, j;
-    for (unsigned long pent = 0; pent < nPent; ++pent) {
+    for (size_t pent = 0; pent < nPent; ++pent) {
         // Find all prism types that appear in this pentachoron.
         found = 0;
         for (type = 0; type < 10; ++type)
-            if (getPrismCoord(pent, type) > 0) {
+            if (prisms(pent, type) > 0) {
                 if (found == 2)
                     return false;
                 prism[found++] = type;
@@ -186,17 +186,16 @@ bool NNormalHypersurface::embedded() const {
 
 bool NNormalHypersurface::locallyCompatible(const NNormalHypersurface& other)
         const {
-    unsigned long nPent = triangulation_->size();
+    size_t nPent = triangulation_->size();
 
     int type;
     int found, prism[2];
     int i, j;
-    for (unsigned long pent = 0; pent < nPent; ++pent) {
+    for (size_t pent = 0; pent < nPent; ++pent) {
         // Find all prism types that appear in this pentachoron.
         found = 0;
         for (type = 0; type < 10; ++type)
-            if (getPrismCoord(pent, type) > 0 ||
-                    other.getPrismCoord(pent, type) > 0) {
+            if (prisms(pent, type) > 0 || other.prisms(pent, type) > 0) {
                 if (found == 2)
                     return false;
                 prism[found++] = type;
@@ -220,23 +219,23 @@ void NNormalHypersurface::calculateRealBoundary() const {
         return;
     }
 
-    unsigned long index;
-    unsigned long tot = triangulation_->size();
+    size_t index;
+    size_t tot = triangulation_->size();
     const Dim4Pentachoron* pent;
     int type, facet;
 
     for (index = 0; index < tot; index++) {
-        pent = triangulation_->getPentachoron(index);
+        pent = triangulation_->pentachoron(index);
         if (pent->hasBoundary()) {
             // Check for piece types with boundary
             for (type = 0; type < 10; type++) {
-                if (getPrismCoord(index, type) > 0) {
+                if (prisms(index, type) > 0) {
                     realBoundary_ = true;
                     return;
                 }
             }
             for (type = 0; type < 5; type++)
-                if (getTetrahedronCoord(index, type) > 0) {
+                if (tetrahedra(index, type) > 0) {
                     // Make sure the tetrahedron actually hits the
                     // boundary.
                     for (facet = 0; facet < 5; facet++) {

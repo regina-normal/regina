@@ -61,7 +61,7 @@ namespace regina {
  * performed through the pre-converted mirror vector.
  *
  * Once the first coordinate lookup has taken place (via
- * getTetrahedronCoord() or the like), <b>this vector may
+ * tetrahedra() or the like), <b>this vector may
  * not change!</b>  The mirror will be created at this point and will
  * not change, so if the native coordinates change further then any
  * requests passed to the mirror will return incorrect results.
@@ -121,7 +121,7 @@ class REGINA_API NNormalHypersurfaceVectorMirrored :
          * Creates a new mirror vector corresponding to this vector.
          * The mirror vector should represent the same normal hypersurface as
          * this vector, and should have fast coordinate lookup routines
-         * (getTetrahedronCoord(), getPrismCord() and so on).  It is
+         * (tetrahedra(), prisms() and so on).  It is
          * recommended that the mirror vector be of the class
          * NNormalHypersurfaceVectorStandard.
          *
@@ -132,11 +132,11 @@ class REGINA_API NNormalHypersurfaceVectorMirrored :
         virtual NNormalHypersurfaceVector* makeMirror(
             const Dim4Triangulation* triang) const = 0;
 
-        virtual NLargeInteger getTetrahedronCoord(unsigned long pentIndex,
+        virtual NLargeInteger tetrahedra(size_t pentIndex,
             int vertex, const Dim4Triangulation* triang) const;
-        virtual NLargeInteger getPrismCoord(unsigned long pentIndex,
+        virtual NLargeInteger prisms(size_t pentIndex,
             int prismType, const Dim4Triangulation* triang) const;
-        virtual NLargeInteger getEdgeWeight(unsigned long edgeIndex,
+        virtual NLargeInteger edgeWeight(size_t edgeIndex,
             const Dim4Triangulation* triang) const;
 };
 
@@ -160,28 +160,27 @@ inline NNormalHypersurfaceVectorMirrored::~NNormalHypersurfaceVectorMirrored() {
         delete mirror_;
 }
 
-inline NLargeInteger NNormalHypersurfaceVectorMirrored::getTetrahedronCoord(
-        unsigned long pentIndex, int vertex, const Dim4Triangulation* triang)
+inline NLargeInteger NNormalHypersurfaceVectorMirrored::tetrahedra(
+        size_t pentIndex, int vertex, const Dim4Triangulation* triang) const {
+    if (! mirror_)
+        const_cast<NNormalHypersurfaceVectorMirrored*>(this)->mirror_ =
+            makeMirror(triang);
+    return mirror_->tetrahedra(pentIndex, vertex, triang);
+}
+inline NLargeInteger NNormalHypersurfaceVectorMirrored::prisms(
+        size_t pentIndex, int prismType, const Dim4Triangulation* triang)
         const {
     if (! mirror_)
         const_cast<NNormalHypersurfaceVectorMirrored*>(this)->mirror_ =
             makeMirror(triang);
-    return mirror_->getTetrahedronCoord(pentIndex, vertex, triang);
+    return mirror_->prisms(pentIndex, prismType, triang);
 }
-inline NLargeInteger NNormalHypersurfaceVectorMirrored::getPrismCoord(
-        unsigned long pentIndex, int prismType, const Dim4Triangulation* triang)
-        const {
+inline NLargeInteger NNormalHypersurfaceVectorMirrored::edgeWeight(
+        size_t edgeIndex, const Dim4Triangulation* triang) const {
     if (! mirror_)
         const_cast<NNormalHypersurfaceVectorMirrored*>(this)->mirror_ =
             makeMirror(triang);
-    return mirror_->getPrismCoord(pentIndex, prismType, triang);
-}
-inline NLargeInteger NNormalHypersurfaceVectorMirrored::getEdgeWeight(
-        unsigned long edgeIndex, const Dim4Triangulation* triang) const {
-    if (! mirror_)
-        const_cast<NNormalHypersurfaceVectorMirrored*>(this)->mirror_ =
-            makeMirror(triang);
-    return mirror_->getEdgeWeight(edgeIndex, triang);
+    return mirror_->edgeWeight(edgeIndex, triang);
 }
 
 } // namespace regina

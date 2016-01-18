@@ -43,13 +43,13 @@
 
 namespace regina {
 
-NLargeInteger NNormalHypersurfaceVectorStandard::getEdgeWeight(
-        unsigned long edgeIndex, const Dim4Triangulation* triang) const {
+NLargeInteger NNormalHypersurfaceVectorStandard::edgeWeight(
+        size_t edgeIndex, const Dim4Triangulation* triang) const {
     // Find a pentachoron next to the edge in question.
     const Dim4EdgeEmbedding& emb = triang->edge(edgeIndex)->front();
-    long pentIndex = emb.getPentachoron()->index();
-    int start = emb.getVertices()[0];
-    int end = emb.getVertices()[1];
+    long pentIndex = emb.pentachoron()->index();
+    int start = emb.vertices()[0];
+    int end = emb.vertices()[1];
 
     // Add up the tetrahedra and prisms meeting that edge.
     // Tetrahedra:
@@ -73,7 +73,7 @@ NNormalHypersurfaceVector* NNormalHypersurfaceVectorStandard::makeZeroVector(
 
 NMatrixInt* NNormalHypersurfaceVectorStandard::makeMatchingEquations(
         const Dim4Triangulation* triangulation) {
-    unsigned long nCoords = 15 * triangulation->size();
+    size_t nCoords = 15 * triangulation->size();
     // Seven equations per non-boundary facet.
     // T_boundary + 2 T_internal = 5 P
     long nEquations = 7 * (5 * long(triangulation->size()) -
@@ -84,18 +84,18 @@ NMatrixInt* NNormalHypersurfaceVectorStandard::makeMatchingEquations(
     // equations.
     unsigned row = 0;
     int i;
-    unsigned long pent0, pent1;
+    size_t pent0, pent1;
     NPerm5 perm0, perm1;
     for (Dim4Triangulation::TetrahedronIterator tit =
-            triangulation->getTetrahedra().begin();
-            tit != triangulation->getTetrahedra().end(); tit++) {
+            triangulation->tetrahedra().begin();
+            tit != triangulation->tetrahedra().end(); tit++) {
         if (! (*tit)->isBoundary()) {
             pent0 = triangulation->pentachoronIndex(
-                (*tit)->getEmbedding(0).getPentachoron());
+                (*tit)->embedding(0).pentachoron());
             pent1 = triangulation->pentachoronIndex(
-                (*tit)->getEmbedding(1).getPentachoron());
-            perm0 = (*tit)->getEmbedding(0).getVertices();
-            perm1 = (*tit)->getEmbedding(1).getVertices();
+                (*tit)->embedding(1).pentachoron());
+            perm0 = (*tit)->embedding(0).vertices();
+            perm1 = (*tit)->embedding(1).vertices();
 
             // Triangles:
             for (i=0; i<4; i++) {
