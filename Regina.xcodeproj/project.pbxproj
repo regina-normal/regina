@@ -1297,6 +1297,12 @@
 		05B9EC1C18245F2100DCACF3 /* euler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B9EC1A18245F2100DCACF3 /* euler.cpp */; };
 		05BEB0C119CCE0B0006AB2C8 /* UIView+Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = 05BEB0C019CCE0B0006AB2C8 /* UIView+Toast.m */; };
 		05CA99E618078466006161DC /* registryutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 05CA99E518078465006161DC /* registryutils.h */; };
+		05CAFB4E1C4CEA160001C253 /* face10.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB411C4CEA020001C253 /* face10.cpp */; };
+		05CAFB4F1C4CEA160001C253 /* face11.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB421C4CEA020001C253 /* face11.cpp */; };
+		05CAFB501C4CEA160001C253 /* face12.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB431C4CEA020001C253 /* face12.cpp */; };
+		05CAFB511C4CEA160001C253 /* face13.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB441C4CEA020001C253 /* face13.cpp */; };
+		05CAFB521C4CEA160001C253 /* face14.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB451C4CEA020001C253 /* face14.cpp */; };
+		05CAFB531C4CEA160001C253 /* face15.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB461C4CEA020001C253 /* face15.cpp */; };
 		05D0A1101812F0BE005ED097 /* TriangulationViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D0A10F1812F0BE005ED097 /* TriangulationViewController.mm */; };
 		05D1172919EDF43F003BEC55 /* WelcomeViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D1172819EDF43F003BEC55 /* WelcomeViewController.mm */; };
 		05D1172B19EE0166003BEC55 /* nbitmask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA1011806088B00FAE4DF /* nbitmask.cpp */; };
@@ -2910,6 +2916,13 @@
 		05BEB0BF19CCE0B0006AB2C8 /* UIView+Toast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIView+Toast.h"; path = "Toast/UIView+Toast.h"; sourceTree = "<group>"; };
 		05BEB0C019CCE0B0006AB2C8 /* UIView+Toast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIView+Toast.m"; path = "Toast/UIView+Toast.m"; sourceTree = "<group>"; };
 		05CA99E518078465006161DC /* registryutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = registryutils.h; sourceTree = "<group>"; };
+		05CAFB401C4CEA020001C253 /* face-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "face-bindings.h"; sourceTree = "<group>"; };
+		05CAFB411C4CEA020001C253 /* face10.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face10.cpp; sourceTree = "<group>"; };
+		05CAFB421C4CEA020001C253 /* face11.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face11.cpp; sourceTree = "<group>"; };
+		05CAFB431C4CEA020001C253 /* face12.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face12.cpp; sourceTree = "<group>"; };
+		05CAFB441C4CEA020001C253 /* face13.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face13.cpp; sourceTree = "<group>"; };
+		05CAFB451C4CEA020001C253 /* face14.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face14.cpp; sourceTree = "<group>"; };
+		05CAFB461C4CEA020001C253 /* face15.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face15.cpp; sourceTree = "<group>"; };
 		05D0A10E1812F0BE005ED097 /* TriangulationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriangulationViewController.h; sourceTree = "<group>"; };
 		05D0A10F1812F0BE005ED097 /* TriangulationViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TriangulationViewController.mm; sourceTree = "<group>"; };
 		05D1172719EDF43F003BEC55 /* WelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomeViewController.h; sourceTree = "<group>"; };
@@ -4546,7 +4559,14 @@
 			children = (
 				05431FAC1C40F5CA009BC072 /* CMakeLists.txt */,
 				05431FAD1C40F5CA009BC072 /* component.cpp */,
+				05CAFB401C4CEA020001C253 /* face-bindings.h */,
 				05431FAE1C40F5CA009BC072 /* face.cpp */,
+				05CAFB411C4CEA020001C253 /* face10.cpp */,
+				05CAFB421C4CEA020001C253 /* face11.cpp */,
+				05CAFB431C4CEA020001C253 /* face12.cpp */,
+				05CAFB441C4CEA020001C253 /* face13.cpp */,
+				05CAFB451C4CEA020001C253 /* face14.cpp */,
+				05CAFB461C4CEA020001C253 /* face15.cpp */,
 				05431FAF1C40F5CA009BC072 /* facehelper.cpp */,
 				05431FB01C40F5CA009BC072 /* facehelper.h */,
 				05431FB11C40F5CA009BC072 /* facetpairing.cpp */,
@@ -5584,6 +5604,7 @@
 			files = (
 				050F5E321B9BAB9C00C1F681 /* ndisc.cpp in Sources */,
 				050F5DE81B9BAB9C00C1F681 /* pyfile.cpp in Sources */,
+				05CAFB511C4CEA160001C253 /* face13.cpp in Sources */,
 				050F5E0F1B9BAB9C00C1F681 /* pyprogress.cpp in Sources */,
 				050F5DDD1B9BAB9C00C1F681 /* dim2edge.cpp in Sources */,
 				050F5E591B9BAB9C00C1F681 /* csvsurfacelist.cpp in Sources */,
@@ -5603,6 +5624,7 @@
 				050F5DF31B9BAB9C00C1F681 /* ntorusbundle.cpp in Sources */,
 				050F5E081B9BAB9C00C1F681 /* nscript.cpp in Sources */,
 				050F5E601B9BAB9C00C1F681 /* snappea.cpp in Sources */,
+				05CAFB531C4CEA160001C253 /* face15.cpp in Sources */,
 				050F5E3D1B9BAB9C00C1F681 /* sfproperties.cpp in Sources */,
 				050F5DE41B9BAB9C00C1F681 /* pydim2.cpp in Sources */,
 				050F5E241B9BAB9C00C1F681 /* nplugtrisolidtorus.cpp in Sources */,
@@ -5611,14 +5633,17 @@
 				050F5DF71B9BAB9C00C1F681 /* ninteger.cpp in Sources */,
 				050F5DD41B9BAB9C00C1F681 /* ngrouppresentation.cpp in Sources */,
 				050F5E311B9BAB9C00C1F681 /* pysubcomplex.cpp in Sources */,
+				05CAFB4E1C4CEA160001C253 /* face10.cpp in Sources */,
 				050F5E181B9BAB9C00C1F681 /* nblockedsfspair.cpp in Sources */,
 				05431FA91C40F5A2009BC072 /* nperm.cpp in Sources */,
 				050F5DE31B9BAB9C00C1F681 /* dim2vertex.cpp in Sources */,
+				05CAFB521C4CEA160001C253 /* face14.cpp in Sources */,
 				050F5E071B9BAB9C00C1F681 /* npdf.cpp in Sources */,
 				050F5E271B9BAB9C00C1F681 /* nsatblocktypes.cpp in Sources */,
 				050F5E421B9BAB9C00C1F681 /* ncomponent.cpp in Sources */,
 				050F5DED1B9BAB9C00C1F681 /* nhandlebody.cpp in Sources */,
 				050F5E411B9BAB9C00C1F681 /* nboundarycomponent.cpp in Sources */,
+				05CAFB501C4CEA160001C253 /* face12.cpp in Sources */,
 				050F5E231B9BAB9C00C1F681 /* npluggedtorusbundle.cpp in Sources */,
 				050F5DE21B9BAB9C00C1F681 /* dim2triangulation.cpp in Sources */,
 				050F5E061B9BAB9C00C1F681 /* npacket.cpp in Sources */,
@@ -5675,6 +5700,7 @@
 				050F5DF91B9BAB9C00C1F681 /* nmatrix2.cpp in Sources */,
 				05431FBF1C40F5D4009BC072 /* component.cpp in Sources */,
 				05431FC11C40F5D4009BC072 /* facehelper.cpp in Sources */,
+				05CAFB4F1C4CEA160001C253 /* face11.cpp in Sources */,
 				050F5E541B9BAB9C00C1F681 /* dim2edgepairing.cpp in Sources */,
 				050F5E171B9BAB9C00C1F681 /* nblockedsfsloop.cpp in Sources */,
 				050F5DEB1B9BAB9C00C1F681 /* ngraphpair.cpp in Sources */,
