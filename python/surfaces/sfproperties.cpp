@@ -40,12 +40,9 @@ using regina::NSurfaceFilterProperties;
 
 namespace {
     boost::python::list ECs_list(const NSurfaceFilterProperties& f) {
-        const std::set<regina::NLargeInteger>& ECs = f.getECs();
-        std::set<regina::NLargeInteger>::const_iterator it;
-
         boost::python::list ans;
-        for (it = ECs.begin(); it != ECs.end(); it++)
-            ans.append(*it);
+        for (auto& e : f.ECs())
+            ans.append(e);
         return ans;
     }
 }
@@ -55,12 +52,17 @@ void addNSurfaceFilterProperties() {
             std::auto_ptr<NSurfaceFilterProperties>, boost::noncopyable>
             ("NSurfaceFilterProperties")
         .def(init<const NSurfaceFilterProperties&>())
+        .def("ECs", ECs_list)
         .def("getECs", ECs_list)
         .def("countECs", &NSurfaceFilterProperties::countECs)
         .def("getNumberOfECs", &NSurfaceFilterProperties::getNumberOfECs)
+        .def("EC", &NSurfaceFilterProperties::EC)
         .def("getEC", &NSurfaceFilterProperties::getEC)
+        .def("orientability", &NSurfaceFilterProperties::orientability)
         .def("getOrientability", &NSurfaceFilterProperties::getOrientability)
+        .def("compactness", &NSurfaceFilterProperties::compactness)
         .def("getCompactness", &NSurfaceFilterProperties::getCompactness)
+        .def("realBoundary", &NSurfaceFilterProperties::realBoundary)
         .def("getRealBoundary", &NSurfaceFilterProperties::getRealBoundary)
         .def("addEC", &NSurfaceFilterProperties::addEC)
         .def("removeEC", &NSurfaceFilterProperties::removeEC)

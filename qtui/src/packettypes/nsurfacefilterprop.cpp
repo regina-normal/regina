@@ -209,9 +209,9 @@ QString NSurfaceFilterPropUI::getPacketMenuText() const {
 }
 
 void NSurfaceFilterPropUI::refresh() {
-    setBoolSet(useOrient, optOrient, filter->getOrientability());
-    setBoolSet(useCompact, optCompact, filter->getCompactness());
-    setBoolSet(useBdry, optBdry, filter->getRealBoundary());
+    setBoolSet(useOrient, optOrient, filter->orientability());
+    setBoolSet(useCompact, optCompact, filter->compactness());
+    setBoolSet(useBdry, optBdry, filter->realBoundary());
     eulerList->setText(filterECList());
 }
 
@@ -319,7 +319,7 @@ void NSurfaceFilterPropUI::setBoolSet(QCheckBox* use, QComboBox* opt,
 }
 
 QString NSurfaceFilterPropUI::filterECList() {
-    const std::set<regina::NLargeInteger>& ecs(filter->getECs());
+    const std::set<regina::NLargeInteger>& ecs(filter->ECs());
     if (ecs.empty())
         return QString();
 

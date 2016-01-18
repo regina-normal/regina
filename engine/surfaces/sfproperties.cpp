@@ -43,7 +43,7 @@
 
 namespace regina {
 
-NLargeInteger NSurfaceFilterProperties::getEC(size_t index) const {
+NLargeInteger NSurfaceFilterProperties::EC(size_t index) const {
     std::set<NLargeInteger>::const_iterator it = eulerChar_.begin();
     advance(it, index);
     return *it;

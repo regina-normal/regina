@@ -40,7 +40,7 @@
 namespace regina {
 
 bool NSurfaceFilterCombination::accept(const NNormalSurface& surface) const {
-    if (usesAnd) {
+    if (usesAnd_) {
         // Combine all child filters using AND.
         for (NPacket* child = firstChild(); child; child = child->nextSibling())
             if (child->type() == NSurfaceFilter::packetType)
@@ -58,7 +58,7 @@ bool NSurfaceFilterCombination::accept(const NNormalSurface& surface) const {
 }
 
 void NSurfaceFilterCombination::writeXMLFilterData(std::ostream& out) const {
-    out << "    <op type=\"" << (usesAnd ? "and" : "or") << "\"/>\n";
+    out << "    <op type=\"" << (usesAnd_ ? "and" : "or") << "\"/>\n";
 }
 
 } // namespace regina

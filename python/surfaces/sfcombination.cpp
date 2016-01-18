@@ -43,6 +43,7 @@ void addNSurfaceFilterCombination() {
             std::auto_ptr<NSurfaceFilterCombination>, boost::noncopyable>
             ("NSurfaceFilterCombination")
         .def(init<const NSurfaceFilterCombination&>())
+        .def("usesAnd", &NSurfaceFilterCombination::usesAnd)
         .def("getUsesAnd", &NSurfaceFilterCombination::getUsesAnd)
         .def("setUsesAnd", &NSurfaceFilterCombination::setUsesAnd)
     ;

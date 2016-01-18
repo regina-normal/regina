@@ -77,9 +77,9 @@ static NSMutableCharacterSet* eulerSeparators;
     if (myEdit)
         return;
 
-    self.orientability.selectedSegmentIndex = [FilterPropertiesViewController selectionFromSet:self.packet->getOrientability()];
-    self.compactness.selectedSegmentIndex = [FilterPropertiesViewController selectionFromSet:self.packet->getCompactness()];
-    self.boundary.selectedSegmentIndex = [FilterPropertiesViewController selectionFromSet:self.packet->getRealBoundary()];
+    self.orientability.selectedSegmentIndex = [FilterPropertiesViewController selectionFromSet:self.packet->orientability()];
+    self.compactness.selectedSegmentIndex = [FilterPropertiesViewController selectionFromSet:self.packet->compactness()];
+    self.boundary.selectedSegmentIndex = [FilterPropertiesViewController selectionFromSet:self.packet->realBoundary()];
 
     [self updateEulerDisplay];
 
@@ -93,7 +93,7 @@ static NSMutableCharacterSet* eulerSeparators;
 
 - (void)updateEulerDisplay
 {
-    const std::set<regina::NLargeInteger>& ECs = self.packet->getECs();
+    const std::set<regina::NLargeInteger>& ECs = self.packet->ECs();
     if (ECs.empty()) {
         self.euler.text = @"";
         self.eulerExpln.text = @"No restrictions on Euler characteristic.";
@@ -249,7 +249,7 @@ static NSMutableCharacterSet* eulerSeparators;
     if (myEdit)
         return;
 
-    self.type.selectedSegmentIndex = (self.packet->getUsesAnd() ? 0 : 1);
+    self.type.selectedSegmentIndex = (self.packet->usesAnd() ? 0 : 1);
 
     [self updateSubfilters];
 
