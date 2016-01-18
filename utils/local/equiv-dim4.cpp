@@ -131,7 +131,7 @@ void sameSize(Dim4Triangulation* t) {
     // Hunt for it in the packet tree.
     Dim4Triangulation* found = 0;
     for (NPacket* p = tree; p; p = p->nextTreePacket())
-        if (p->type() == Dim4Triangulation::packetType)
+        if (p->type() == PACKET_DIM4TRIANGULATION)
             if (static_cast<Dim4Triangulation*>(p)->isIsomorphicTo(*t).get()) {
                 found = static_cast<Dim4Triangulation*>(p);
                 break;
@@ -284,7 +284,7 @@ void processTree() {
     Dim4Triangulation* t;
 
     for (NPacket* p = tree; p; p = p->nextTreePacket())
-        if (p->type() == Dim4Triangulation::packetType) {
+        if (p->type() == PACKET_DIM4TRIANGULATION) {
             // A triangulation to process.
             t = static_cast<Dim4Triangulation*>(p);
             fprintf(stderr, "Processing %s ...\n", t->label().c_str());

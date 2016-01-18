@@ -94,9 +94,9 @@ void runMatches(NPacket* tree1, NPacket* tree2, std::ostream& out) {
                             << p2->humanLabel() << std::endl;
                         nMatches++;
                     }
-        } else if (p1->type() == Dim4Triangulation::packetType) {
+        } else if (p1->type() == regina::PACKET_DIM4TRIANGULATION) {
             for (p2 = tree2; p2; p2 = p2->nextTreePacket())
-                if (p2->type() == Dim4Triangulation::packetType)
+                if (p2->type() == regina::PACKET_DIM4TRIANGULATION)
                     if (compare(static_cast<Dim4Triangulation*>(p1),
                             static_cast<Dim4Triangulation*>(p2))) {
                         out << "    " << p1->label()
@@ -135,10 +135,10 @@ void runNonMatches(const std::string& file1, NPacket* tree1,
                 out << "    " << p1->humanLabel() << std::endl;
                 nMissing++;
             }
-        } else if (p1->type() == Dim4Triangulation::packetType) {
+        } else if (p1->type() == regina::PACKET_DIM4TRIANGULATION) {
             matched = false;
             for (p2 = tree2; p2 && ! matched; p2 = p2->nextTreePacket())
-                if (p2->type() == Dim4Triangulation::packetType)
+                if (p2->type() == regina::PACKET_DIM4TRIANGULATION)
                     if (compare(static_cast<Dim4Triangulation*>(p1),
                             static_cast<Dim4Triangulation*>(p2)))
                         matched = true;
