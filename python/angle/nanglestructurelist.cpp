@@ -90,7 +90,8 @@ void addNAngleStructureList() {
         .staticmethod("enumerateTautDD")
     ;
 
-    s.attr("packetType") = regina::PacketType(NAngleStructureList::packetType);
+    s.attr("typeID") = regina::PACKET_ANGLESTRUCTURELIST;
+    s.attr("packetType") = regina::PACKET_ANGLESTRUCTURELIST;
 
     implicitly_convertible<std::auto_ptr<NAngleStructureList>,
         std::auto_ptr<regina::NPacket> >();

@@ -153,10 +153,9 @@ int main(int argc, char* argv[]) {
 
     // Process the packets.
     for (NPacket* p = tree; p; p = p->nextTreePacket())
-        if (p->type() == NTriangulation::packetType)
+        if (p->type() == PACKET_TRIANGULATION)
             process(static_cast<NTriangulation*>(p));
-        else if (outputContainers &&
-                p->type() == NContainer::packetType)
+        else if (outputContainers && p->type() == PACKET_CONTAINER)
             std::cout << "----- " << p->label() << " -----"
                 << std::endl;
 

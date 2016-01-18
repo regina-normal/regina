@@ -304,7 +304,7 @@ int mainController() {
     }
 
     NPacket* p = tree;
-    while (p && p->type() != NTriangulation::packetType)
+    while (p && p->type() != PACKET_TRIANGULATION)
         p = p->nextTreePacket();
     long currTri = 0;
 
@@ -312,7 +312,7 @@ int mainController() {
         ctrlFarmTask(currTri);
 
         p = p->nextTreePacket();
-        while (p && p->type() != NTriangulation::packetType)
+        while (p && p->type() != PACKET_TRIANGULATION)
             p = p->nextTreePacket();
 
         ++currTri;
@@ -378,7 +378,7 @@ int mainSlave() {
     }
 
     NPacket* p = tree;
-    while (p && p->type() != NTriangulation::packetType)
+    while (p && p->type() != PACKET_TRIANGULATION)
         p = p->nextTreePacket();
     long currTri = 0;
 
@@ -410,7 +410,7 @@ int mainSlave() {
 
         while (p && currTri < useTri) {
             p = p->nextTreePacket();
-            while (p && p->type() != NTriangulation::packetType)
+            while (p && p->type() != PACKET_TRIANGULATION)
                 p = p->nextTreePacket();
 
             ++currTri;

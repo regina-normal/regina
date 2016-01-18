@@ -704,6 +704,14 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          *
          * @return the normal surface at the requested index in this set.
          */
+        const NNormalSurface* surface(size_t index) const;
+        /**
+         * Deprecated routine that returns the surface at the requested
+         * index in this set.
+         *
+         * \deprecated This routine has been renamed to surface().
+         * See the surface() documentation for further details.
+         */
         const NNormalSurface* getSurface(size_t index) const;
         /**
          * Writes the number of surfaces in this set followed by the
@@ -1800,6 +1808,10 @@ inline size_t NNormalSurfaceList::size() const {
 }
 inline size_t NNormalSurfaceList::getNumberOfSurfaces() const {
     return surfaces.size();
+}
+
+inline const NNormalSurface* NNormalSurfaceList::surface(size_t index) const {
+    return surfaces[index];
 }
 
 inline const NNormalSurface* NNormalSurfaceList::getSurface(

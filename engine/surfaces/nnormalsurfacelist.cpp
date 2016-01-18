@@ -69,7 +69,7 @@ void NNormalSurfaceList::writeAllSurfaces(std::ostream& out) const {
     unsigned long n = size();
     out << "Number of surfaces is " << n << '\n';
     for (unsigned long i = 0; i < n; i++) {
-        getSurface(i)->writeTextShort(out);
+        surface(i)->writeTextShort(out);
         out << '\n';
     }
 }

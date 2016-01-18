@@ -39,6 +39,11 @@ Version 4.97  [ (under development) ]
               deprecated since 2013; they are also removed completely.
               All the code that used to work with these classes now
               works with the newer and more flexible NProgressTracker instead.
+            * NSurfaceFilter::getFilterName(), NSurfaceFilter::getFilterID()
+              and the filterID class constants have been deprecated since 2013;
+              these are now removed completely.  The filterType class constants
+              are also removed due to a name clash.  Use filterTypeName(),
+              filterType() and the filterTypeID constants instead.
             * Global arrays edgeNumber[][], edgeStart[] and edgeEnd[] have
               been deprecated since 2009; this are now removed.  Use the
               arrays NEdge::edgeNumber[][] and NEdge::edgeVertex[][] instead.
@@ -312,6 +317,11 @@ Version 4.97  [ (under development) ]
             - Deprecated; just use std::mutex and related classes instead.
         Class NNormalSurface:
             - New convenience routines normal() and embedded().
+            - Renamed getTriangleCoord(), getQuadCoord(), getOctCoord(),
+              getOrientedTriangleCoords(), getOrientedQuadCoord() and
+              getTriangleArcs() to triangles(), quads(), octs(),
+              orientedTriangles(), orientedQuads() and arcs().
+              The old names are kept but deprecated.
         Class NNormalSurfaceList:
             - Renamed getNumberOfSurfaces() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
@@ -320,15 +330,20 @@ Version 4.97  [ (under development) ]
             - Renamed getNumberOfSurfaces() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
         Class NNormalSurfaceVector:
-            - The subclass constant coordType is now a constant of type
-              NormalCoords, not an anonymous enum type.
+            - The subclass constant coordType is renamed to coordsID, and is
+              now a constant of type NormalCoords, not an anonymous enum type.
+              The old name is kept but deprecated.
+            - Renamed getTriangleCoord(), getQuadCoord(), getOctCoord() and
+              getTriangleArcs() to triangles(), quads(), octs() and arcs().
+              The old names are kept but deprecated.
         Class NPacket:
             - Added a variant of save() that takes an output stream (as
               opposed to a filename).
             - New routine adornedLabel() for creating modified packet labels.
             - New routine transferChildren() for bulk tree reorganisation.
-            - The subclass constant packetType is now a constant of type
-              PacketType, not an anonymous enum type.
+            - The subclass constant packetType is renamed to typeID, and is
+              now a constant of type PacketType, not an anonymous enum type.
+              The old name is kept but deprecated.
             - Renamed getPacketLabel(), getPacketType() and getPacketTypeName()
               to label(), type() and typeName().  The old names are kept
               but deprecated.
@@ -404,10 +419,19 @@ Version 4.97  [ (under development) ]
               addition, homology() has a new alias homologyH1().  The old names
               are kept but deprecated.
         Class NSurfaceFilter:
-            - The subclass constant filterType is now a constant of type
-              SurfaceFilterType, not an anonymous enum type.
+            - The subclass constant filterType has been renamed to filterTypeID,
+              and is now a constant of type SurfaceFilterType, not an
+              anonymous enum type.  The old name has been removed completely.
+            - Removed the deprecated getFilterID() and getFilterName()
+              routines, and the deprecated filterID constants.
         Class NSurfaceFilterProperties:
-            - New set-based routine setECs().
+            - New set-based routine setEulerChars().
+            - Renamed getEC(), getECs() and getNumberOfECs() to eulerChar(),
+              eulerChars() and countEulerChars().  The old names are kept but
+              deprecated.
+            - Renamed addEC(), removeEC() and removeAllECs() to addEulerChar(),
+              removeEulerChar() and removeAllEulerChars().  The old names are
+              kept but deprecated.
         Class NTetrahedron:
             - Now just a typedef for the new class Simplex<3>, which has
               the same functionality as the old NTetrahedron.

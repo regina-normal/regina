@@ -82,14 +82,14 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
     REGINA_SURFACE_FILTER(NSurfaceFilterProperties, NS_FILTER_PROPERTIES)
 
     private:
-        std::set<NLargeInteger> eulerChar;
+        std::set<NLargeInteger> eulerChar_;
             /**< The set of allowable Euler characteristics.  An empty
                  set signifies that any Euler characteristic is allowed. */
-        NBoolSet orientability;
+        NBoolSet orientability_;
             /**< The set of allowable orientability properties. */
-        NBoolSet compactness;
+        NBoolSet compactness_;
             /**< The set of allowable compactness properties. */
-        NBoolSet realBoundary;
+        NBoolSet realBoundary_;
             /**< The set of allowable has-real-boundary properties. */
 
     public:
@@ -118,29 +118,46 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
          *
          * @return the set of allowable Euler characteristics.
          */
+        const std::set<NLargeInteger>& eulerChars() const;
+        /**
+         * Deprecated routine that returns the set of allowable
+         * Euler characteristics.
+         *
+         * \deprecated This routine has been renamed to eulerChars().
+         * See the eulerChars() documentation for further details.
+         */
         const std::set<NLargeInteger>& getECs() const;
         /**
          * Returns the number of allowable Euler characteristics.
-         * See getECs() for further details.
+         * See eulerChars() for further details.
          *
          * @return the number of allowable Euler characteristics.
          */
-        size_t countECs() const;
+        size_t countEulerChars() const;
         /**
          * Deprecated routine that returns the number of allowable
          * Euler characteristics.
          *
-         * \deprecated This routine has been renamed to countECs().
-         * See the countECs() documentation for further details.
+         * \deprecated This routine has been renamed to countEulerChars().
+         * See the countEulerChars() documentation for further details.
          */
         size_t getNumberOfECs() const;
         /**
          * Returns the allowable Euler characteristic at the given index
-         * in the set.  See getECs() for further details.
+         * in the set.  See eulerChars() for further details.
          *
          * @param index the index in the set of allowable Euler
-         * characteristics; this must be between 0 and countECs()-1 inclusive.
+         * characteristics; this must be between 0 and countEulerChars()-1
+         * inclusive.
          * @return the requested allowable Euler characteristic.
+         */
+        NLargeInteger eulerChar(size_t index) const;
+        /**
+         * Deprecated routine that returns the allowable Euler characteristic
+         * at the given index in the set.
+         *
+         * \deprecated This routine has been renamed to eulerChar().
+         * See the eulerChar() documentation for further details.
          */
         NLargeInteger getEC(size_t index) const;
         /**
@@ -151,6 +168,13 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
          *
          * @return the set of allowable orientabilities.
          */
+        NBoolSet orientability() const;
+        /**
+         * Deprecated routine that returns the set of allowable orientabilities.
+         *
+         * \deprecated This routine has been renamed to orientability().
+         * See the orientability() documentation for further details.
+         */
         NBoolSet getOrientability() const;
         /**
          * Returns the set of allowable compactness properties.
@@ -159,6 +183,14 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
          * not be accepted by this filter.
          *
          * @return the set of allowable compactness properties.
+         */
+        NBoolSet compactness() const;
+        /**
+         * Deprecated routine that returns the set of allowable
+         * compactness properties.
+         *
+         * \deprecated This routine has been renamed to compactness().
+         * See the compactness() documentation for further details.
          */
         NBoolSet getCompactness() const;
         /**
@@ -169,28 +201,44 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
          *
          * @return the set of allowable has-real-boundary properties.
          */
+        NBoolSet realBoundary() const;
+        /**
+         * Deprecated routine that returns the set of allowable
+         * has-real-boundary properties.
+         *
+         * \deprecated This routine has been renamed to realBoundary().
+         * See the realBoundary() documentation for further details.
+         */
         NBoolSet getRealBoundary() const;
 
         /**
          * Sets the allowable Euler characteristics to the given set.
-         * See getECs() for further details.
+         * See eulerChars() for further details.
          *
          * \ifaces Not present.
          *
          * @param s the new set of allowable Euler characteristics.
          */
-        void setECs(const std::set<NLargeInteger>& s);
+        void setEulerChars(const std::set<NLargeInteger>& s);
 
         /**
          * Adds the given Euler characteristic to the set of allowable
-         * Euler characteristics.  See getECs() for further details.
+         * Euler characteristics.  See eulerChars() for further details.
          *
          * @param ec the new allowable Euler characteristic.
+         */
+        void addEulerChar(const NLargeInteger& ec);
+        /**
+         * Deprecated routine that adds the given Euler characteristic
+         * to the set of allowable Euler characteristics.
+         *
+         * \deprecated This routine has been renamed to addEulerChar().
+         * See the addEulerChar() documentation for further details.
          */
         void addEC(const NLargeInteger& ec);
         /**
          * Removes the given Euler characteristic from the set of allowable
-         * Euler characteristics.  See getECs() for further details.
+         * Euler characteristics.  See eulerChars() for further details.
          *
          * Note that if the allowable set is completely emptied, this
          * filter will allow <i>any</i> Euler characteristic to pass.
@@ -200,32 +248,48 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
          *
          * @param ec the allowable Euler characteristic to remove.
          */
+        void removeEulerChar(const NLargeInteger& ec);
+        /**
+         * Deprecated routine that removes the given Euler characteristic
+         * from the set of allowable Euler characteristics.
+         *
+         * \deprecated This routine has been renamed to removeEulerChar().
+         * See the removeEulerChar() documentation for further details.
+         */
         void removeEC(const NLargeInteger& ec);
         /**
          * Empties the set of allowable Euler characteristics.  See
-         * getECs() for further details.
+         * eulerChars() for further details.
          *
          * Note that this will mean that this filter will allow
          * <i>any</i> Euler characteristic to pass.
          */
+        void removeAllEulerChars();
+        /**
+         * Deprecated routine that empties the set of allowable Euler
+         * characteristics.
+         *
+         * \deprecated This routine has been renamed to removeAllEulerChars().
+         * See the removeAllEulerChars() documentation for further details.
+         */
         void removeAllECs();
         /**
          * Sets the set of allowable orientabilities.
-         * See getOrientability() for further details.
+         * See orientability() for further details.
          *
          * @param value the new set of allowable orientabilities.
          */
         void setOrientability(const NBoolSet& value);
         /**
          * Sets the set of allowable compactness properties.
-         * See getCompactness() for further details.
+         * See compactness() for further details.
          *
          * @param value the new set of allowable compactness properties.
          */
         void setCompactness(const NBoolSet& value);
         /**
          * Sets the set of allowable has-real-boundary properties.
-         * See getRealBoundary() for further details.
+         * See realBoundary() for further details.
          *
          * @param value the new set of allowable has-real-boundary
          * properties.
@@ -234,7 +298,7 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
 
         virtual bool accept(const NNormalSurface& surface) const;
         virtual void writeTextLong(std::ostream& out) const;
-        static NXMLFilterReader* getXMLFilterReader(NPacket* parent);
+        static NXMLFilterReader* xmlFilterReader(NPacket* parent);
 
     protected:
         virtual NPacket* internalClonePacket(NPacket* parent) const;
@@ -246,73 +310,98 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
 // Inline functions for NSurfaceFilterProperties
 
 inline NSurfaceFilterProperties::NSurfaceFilterProperties() :
-        orientability(NBoolSet::sBoth),
-        compactness(NBoolSet::sBoth),
-        realBoundary(NBoolSet::sBoth) {
+        orientability_(NBoolSet::sBoth),
+        compactness_(NBoolSet::sBoth),
+        realBoundary_(NBoolSet::sBoth) {
 }
 inline NSurfaceFilterProperties::NSurfaceFilterProperties(
         const NSurfaceFilterProperties& cloneMe) :
         NSurfaceFilter(),
-        eulerChar(cloneMe.eulerChar),
-        orientability(cloneMe.orientability),
-        compactness(cloneMe.compactness),
-        realBoundary(cloneMe.realBoundary) {
+        eulerChar_(cloneMe.eulerChar_),
+        orientability_(cloneMe.orientability_),
+        compactness_(cloneMe.compactness_),
+        realBoundary_(cloneMe.realBoundary_) {
 }
 
-inline const std::set<NLargeInteger>& NSurfaceFilterProperties::getECs()
+inline const std::set<NLargeInteger>& NSurfaceFilterProperties::eulerChars()
         const {
-    return eulerChar;
+    return eulerChar_;
 }
-inline size_t NSurfaceFilterProperties::countECs() const {
-    return eulerChar.size();
+inline const std::set<NLargeInteger>& NSurfaceFilterProperties::getECs() const {
+    return eulerChar_;
+}
+inline size_t NSurfaceFilterProperties::countEulerChars() const {
+    return eulerChar_.size();
 }
 inline size_t NSurfaceFilterProperties::getNumberOfECs() const {
-    return eulerChar.size();
+    return eulerChar_.size();
+}
+inline NLargeInteger NSurfaceFilterProperties::getEC(size_t index) const {
+    return eulerChar(index);
+}
+inline NBoolSet NSurfaceFilterProperties::orientability() const {
+    return orientability_;
 }
 inline NBoolSet NSurfaceFilterProperties::getOrientability() const {
-    return orientability;
+    return orientability_;
+}
+inline NBoolSet NSurfaceFilterProperties::compactness() const {
+    return compactness_;
 }
 inline NBoolSet NSurfaceFilterProperties::getCompactness() const {
-    return compactness;
+    return compactness_;
+}
+inline NBoolSet NSurfaceFilterProperties::realBoundary() const {
+    return realBoundary_;
 }
 inline NBoolSet NSurfaceFilterProperties::getRealBoundary() const {
-    return realBoundary;
+    return realBoundary_;
 }
 
-inline void NSurfaceFilterProperties::setECs(const std::set<NLargeInteger>& s) {
-    if (eulerChar != s) {
+inline void NSurfaceFilterProperties::setEulerChars(
+        const std::set<NLargeInteger>& s) {
+    if (eulerChar_ != s) {
         ChangeEventSpan span(this);
-        eulerChar = s;
+        eulerChar_ = s;
     }
 }
-inline void NSurfaceFilterProperties::addEC(const NLargeInteger& ec) {
+inline void NSurfaceFilterProperties::addEulerChar(const NLargeInteger& ec) {
     ChangeEventSpan span(this);
-    eulerChar.insert(ec);
+    eulerChar_.insert(ec);
+}
+inline void NSurfaceFilterProperties::addEC(const NLargeInteger& ec) {
+    addEulerChar(ec);
+}
+inline void NSurfaceFilterProperties::removeEulerChar(const NLargeInteger& ec) {
+    ChangeEventSpan span(this);
+    eulerChar_.erase(ec);
 }
 inline void NSurfaceFilterProperties::removeEC(const NLargeInteger& ec) {
+    removeEulerChar(ec);
+}
+inline void NSurfaceFilterProperties::removeAllEulerChars() {
     ChangeEventSpan span(this);
-    eulerChar.erase(ec);
+    eulerChar_.clear();
 }
 inline void NSurfaceFilterProperties::removeAllECs() {
-    ChangeEventSpan span(this);
-    eulerChar.clear();
+    removeAllEulerChars();
 }
 inline void NSurfaceFilterProperties::setOrientability(const NBoolSet& value) {
-    if (orientability != value) {
+    if (orientability_ != value) {
         ChangeEventSpan span(this);
-        orientability = value;
+        orientability_ = value;
     }
 }
 inline void NSurfaceFilterProperties::setCompactness(const NBoolSet& value) {
-    if (compactness != value) {
+    if (compactness_ != value) {
         ChangeEventSpan span(this);
-        compactness = value;
+        compactness_ = value;
     }
 }
 inline void NSurfaceFilterProperties::setRealBoundary(const NBoolSet& value) {
-    if (realBoundary != value) {
+    if (realBoundary_ != value) {
         ChangeEventSpan span(this);
-        realBoundary = value;
+        realBoundary_ = value;
     }
 }
 

@@ -2052,7 +2052,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                     tri, regina::NS_STANDARD);
                 const NNormalSurface* f;
                 for (size_t i = 0; i < s->size(); ++i) {
-                    f = s->getSurface(i);
+                    f = s->surface(i);
                     if (f->eulerChar() == 2 &&
                             (! f->hasRealBoundary()) &&
                             ! f->isVertexLinking()) {

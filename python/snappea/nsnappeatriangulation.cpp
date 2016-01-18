@@ -164,6 +164,9 @@ void addNSnapPeaTriangulation() {
         .value("no_solution", NSnapPeaTriangulation::no_solution)
     ;
 
+    s.attr("typeID") = regina::PACKET_SNAPPEATRIANGULATION;
+    s.attr("packetType") = regina::PACKET_SNAPPEATRIANGULATION;
+
     implicitly_convertible<std::auto_ptr<NSnapPeaTriangulation>,
         std::auto_ptr<regina::NTriangulation> >();
 }

@@ -51,7 +51,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeZeroVector(
 
 NMatrixInt* NNormalSurfaceVectorOrientedQuad::makeMatchingEquations(
         const NTriangulation* triangulation) {
-    unsigned long nCoords = 6 * triangulation->size();
+    size_t nCoords = 6 * triangulation->size();
     // Two equation per non-boundary edge.
     long nEquations = 2*long(triangulation->countEdges());
     for (NTriangulation::BoundaryComponentIterator bit = triangulation->
@@ -60,12 +60,12 @@ NMatrixInt* NNormalSurfaceVectorOrientedQuad::makeMatchingEquations(
         nEquations -= 2*(*bit)->countEdges();
 
     NMatrixInt* ans = new NMatrixInt(nEquations, nCoords);
-    unsigned long row = 0;
+    size_t row = 0;
 
     // Run through each internal edge and add the corresponding
     // equation.
     NPerm4 perm;
-    unsigned long tetIndex;
+    size_t tetIndex;
     bool flip;
     for (NTriangulation::EdgeIterator eit = triangulation->getEdges().begin();
             eit != triangulation->getEdges().end(); eit++) {
@@ -141,14 +141,14 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
         const NTriangulation* triang) const {
     // We're going to do this by wrapping around each edge and seeing
     // what comes.
-    unsigned long nRows = 14 * triang->size();
+    size_t nRows = 14 * triang->size();
     NNormalSurfaceVectorOriented* ans =
         new NNormalSurfaceVectorOriented(nRows);
 
     // Set every triangular coordinate in the answer to infinity.
     // For coordinates about vertices not enjoying infinitely many discs,
     // infinity will mean "unknown".
-    unsigned long row;
+    size_t row;
     int i;
     for (row = 0; row < nRows; row+=14)
         for (i = 0; i < 8; i++)
@@ -180,7 +180,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
             endit, beginit;
         NTetrahedron* tet;
         NPerm4 tetPerm, adjPerm;
-        unsigned long tetIndex, adjIndex;
+        size_t tetIndex, adjIndex;
         NLargeInteger expect;
         for (NTriangulation::VertexIterator vit = triang->getVertices().begin();
                 vit != triang->getVertices().end(); vit++) {

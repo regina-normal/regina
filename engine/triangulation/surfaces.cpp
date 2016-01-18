@@ -104,7 +104,7 @@ NNormalSurface* NTriangulation::hasNonTrivialSphereOrDisc() {
     const NNormalSurface* s;
     NNormalSurface* ans = 0;
     for (size_t i = 0; i < surfaces->size() && ! ans; ++i) {
-        s = surfaces->getSurface(i);
+        s = surfaces->surface(i);
 
         // These are vertex surfaces, so we know they must be connected.
         // Because we are either (i) using standard coordinates, or
@@ -176,7 +176,7 @@ NNormalSurface* NTriangulation::hasOctagonalAlmostNormalSphere() {
     bool found, broken;
     NLargeInteger coord;
     for (size_t i = 0; i < surfaces->size() && ! ans; ++i) {
-        s = surfaces->getSurface(i);
+        s = surfaces->surface(i);
 
         // These are vertex surfaces, so we know they must be connected.
         // Because we are working with a non-ideal triangulation, we know the
@@ -191,7 +191,7 @@ NNormalSurface* NTriangulation::hasOctagonalAlmostNormalSphere() {
             broken = false; // More than one octagon found so far?
             for (tet = 0; tet < simplices_.size() && ! broken; ++tet)
                 for (oct = 0; oct < 3; ++oct) {
-                    coord = s->getOctCoord(tet, oct);
+                    coord = s->octs(tet, oct);
                     if (coord > 1) {
                         broken = true;
                         break;
@@ -257,7 +257,7 @@ bool NTriangulation::hasSplittingSurface() {
     const NNormalSurface* s;
     NLargeInteger chi;
     for (unsigned long i = 0; i < nSurfaces; i++) {
-        s = surfaces->getSurface(i);
+        s = surfaces->surface(i);
 
         if (! splittingSurface_.known())
             if (s->isSplitting())

@@ -39,13 +39,10 @@ using namespace boost::python;
 using regina::NSurfaceFilterProperties;
 
 namespace {
-    boost::python::list ECs_list(const NSurfaceFilterProperties& f) {
-        const std::set<regina::NLargeInteger>& ECs = f.getECs();
-        std::set<regina::NLargeInteger>::const_iterator it;
-
+    boost::python::list eulerChars_list(const NSurfaceFilterProperties& f) {
         boost::python::list ans;
-        for (it = ECs.begin(); it != ECs.end(); it++)
-            ans.append(*it);
+        for (auto& e : f.eulerChars())
+            ans.append(e);
         return ans;
     }
 }
@@ -55,25 +52,31 @@ void addNSurfaceFilterProperties() {
             std::auto_ptr<NSurfaceFilterProperties>, boost::noncopyable>
             ("NSurfaceFilterProperties")
         .def(init<const NSurfaceFilterProperties&>())
-        .def("getECs", ECs_list)
-        .def("countECs", &NSurfaceFilterProperties::countECs)
+        .def("eulerChars", eulerChars_list)
+        .def("getECs", eulerChars_list)
+        .def("countEulerChars", &NSurfaceFilterProperties::countEulerChars)
         .def("getNumberOfECs", &NSurfaceFilterProperties::getNumberOfECs)
+        .def("eulerChar", &NSurfaceFilterProperties::eulerChar)
         .def("getEC", &NSurfaceFilterProperties::getEC)
+        .def("orientability", &NSurfaceFilterProperties::orientability)
         .def("getOrientability", &NSurfaceFilterProperties::getOrientability)
+        .def("compactness", &NSurfaceFilterProperties::compactness)
         .def("getCompactness", &NSurfaceFilterProperties::getCompactness)
+        .def("realBoundary", &NSurfaceFilterProperties::realBoundary)
         .def("getRealBoundary", &NSurfaceFilterProperties::getRealBoundary)
+        .def("addEulerChar", &NSurfaceFilterProperties::addEulerChar)
         .def("addEC", &NSurfaceFilterProperties::addEC)
+        .def("removeEulerChar", &NSurfaceFilterProperties::removeEulerChar)
         .def("removeEC", &NSurfaceFilterProperties::removeEC)
+        .def("removeAllEulerChars",
+            &NSurfaceFilterProperties::removeAllEulerChars)
         .def("removeAllECs", &NSurfaceFilterProperties::removeAllECs)
         .def("setOrientability", &NSurfaceFilterProperties::setOrientability)
         .def("setCompactness", &NSurfaceFilterProperties::setCompactness)
         .def("setRealBoundary", &NSurfaceFilterProperties::setRealBoundary)
     ;
 
-    s.attr("filterID") = regina::SurfaceFilterType(
-        NSurfaceFilterProperties::filterID);
-    s.attr("filterType") = regina::SurfaceFilterType(
-        NSurfaceFilterProperties::filterType);
+    s.attr("filterTypeID") = regina::NS_FILTER_PROPERTIES;
 
     implicitly_convertible<std::auto_ptr<NSurfaceFilterProperties>,
         std::auto_ptr<regina::NSurfaceFilter> >();

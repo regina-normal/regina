@@ -49,14 +49,14 @@ namespace {
      */
     class NPlainFilterReader : public NXMLFilterReader {
         private:
-            NSurfaceFilter* filter;
+            NSurfaceFilter* filter_;
 
         public:
-            NPlainFilterReader() : filter(new NSurfaceFilter()) {
+            NPlainFilterReader() : filter_(new NSurfaceFilter()) {
             }
 
-            virtual NSurfaceFilter* getFilter() {
-                return filter;
+            virtual NSurfaceFilter* filter() {
+                return filter_;
             }
     };
 
@@ -65,27 +65,27 @@ namespace {
      */
     class NCombinationReader : public NXMLFilterReader {
         private:
-            NSurfaceFilterCombination* filter;
+            NSurfaceFilterCombination* filter_;
 
         public:
-            NCombinationReader() : filter(0) {
+            NCombinationReader() : filter_(0) {
             }
 
-            virtual NSurfaceFilter* getFilter() {
-                return filter;
+            virtual NSurfaceFilter* filter() {
+                return filter_;
             }
 
             NXMLElementReader* startSubElement(const std::string& subTagName,
                     const regina::xml::XMLPropertyDict& props) {
-                if (! filter)
+                if (! filter_)
                     if (subTagName == "op") {
                         std::string type = props.lookup("type");
                         if (type == "and") {
-                            filter = new NSurfaceFilterCombination();
-                            filter->setUsesAnd(true);
+                            filter_ = new NSurfaceFilterCombination();
+                            filter_->setUsesAnd(true);
                         } else if (type == "or") {
-                            filter = new NSurfaceFilterCombination();
-                            filter->setUsesAnd(false);
+                            filter_ = new NSurfaceFilterCombination();
+                            filter_->setUsesAnd(false);
                         }
                     }
                 return new NXMLElementReader();
@@ -97,14 +97,14 @@ namespace {
      */
     class NPropertiesReader : public NXMLFilterReader {
         private:
-            NSurfaceFilterProperties* filter;
+            NSurfaceFilterProperties* filter_;
 
         public:
-            NPropertiesReader() : filter(new NSurfaceFilterProperties()) {
+            NPropertiesReader() : filter_(new NSurfaceFilterProperties()) {
             }
 
-            virtual NSurfaceFilter* getFilter() {
-                return filter;
+            virtual NSurfaceFilter* filter() {
+                return filter_;
             }
 
             NXMLElementReader* startSubElement(const std::string& subTagName,
@@ -114,15 +114,15 @@ namespace {
                 } else if (subTagName == "orbl") {
                     NBoolSet b;
                     if (valueOf(props.lookup("value"), b))
-                        filter->setOrientability(b);
+                        filter_->setOrientability(b);
                 } else if (subTagName == "compact") {
                     NBoolSet b;
                     if (valueOf(props.lookup("value"), b))
-                        filter->setCompactness(b);
+                        filter_->setCompactness(b);
                 } else if (subTagName == "realbdry") {
                     NBoolSet b;
                     if (valueOf(props.lookup("value"), b))
-                        filter->setRealBoundary(b);
+                        filter_->setRealBoundary(b);
                 }
                 return new NXMLElementReader();
             }
@@ -139,21 +139,21 @@ namespace {
                     for (std::list<std::string>::const_iterator it =
                             tokens.begin(); it != tokens.end(); it++)
                         if (valueOf(*it, val))
-                            filter->addEC(val);
+                            filter_->addEulerChar(val);
                 }
             }
     };
 }
 
-NXMLFilterReader* NSurfaceFilter::getXMLFilterReader(NPacket*) {
+NXMLFilterReader* NSurfaceFilter::xmlFilterReader(NPacket*) {
     return new NPlainFilterReader();
 }
 
-NXMLFilterReader* NSurfaceFilterCombination::getXMLFilterReader(NPacket*) {
+NXMLFilterReader* NSurfaceFilterCombination::xmlFilterReader(NPacket*) {
     return new NCombinationReader();
 }
 
-NXMLFilterReader* NSurfaceFilterProperties::getXMLFilterReader(NPacket*) {
+NXMLFilterReader* NSurfaceFilterProperties::xmlFilterReader(NPacket*) {
     return new NPropertiesReader();
 }
 

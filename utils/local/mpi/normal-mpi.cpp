@@ -395,7 +395,7 @@ int mainSlave() {
 
         done = 0;
         for (p = tree; p; p = p->nextTreePacket())
-            if (p->type() == NTriangulation::packetType) {
+            if (p->type() == PACKET_TRIANGULATION) {
                 t = static_cast<NTriangulation*>(p);
                 s = NNormalSurfaceList::enumerate(t,
                     (quad ? NS_QUAD : NS_STANDARD));

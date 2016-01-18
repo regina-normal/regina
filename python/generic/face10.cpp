@@ -32,23 +32,18 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
-#include "packet/ncontainer.h"
+#include "face-bindings.h"
 
-using namespace boost::python;
-using regina::NContainer;
-
-void addNContainer() {
-    scope s = class_<NContainer, bases<regina::NPacket>,
-            std::auto_ptr<NContainer>, boost::noncopyable>(
-            "NContainer", init<>())
-        .def(init<const std::string&>())
-    ;
-
-    s.attr("typeID") = regina::PACKET_CONTAINER;
-    s.attr("packetType") = regina::PACKET_CONTAINER;
-
-    implicitly_convertible<std::auto_ptr<NContainer>,
-        std::auto_ptr<regina::NPacket> >();
+void addFace10() {
+    addFace<10, 0>("Face10_0", "FaceEmbedding10_0");
+    addFace<10, 1>("Face10_1", "FaceEmbedding10_1");
+    addFace<10, 2>("Face10_2", "FaceEmbedding10_2");
+    addFace<10, 3>("Face10_3", "FaceEmbedding10_3");
+    addFace<10, 4>("Face10_4", "FaceEmbedding10_4");
+    addFace<10, 5>("Face10_5", "FaceEmbedding10_5");
+    addFace<10, 6>("Face10_6", "FaceEmbedding10_6");
+    addFace<10, 7>("Face10_7", "FaceEmbedding10_7");
+    addFace<10, 8>("Face10_8", "FaceEmbedding10_8");
+    addFace<10, 9>("Face10_9", "FaceEmbedding10_9");
 }
 

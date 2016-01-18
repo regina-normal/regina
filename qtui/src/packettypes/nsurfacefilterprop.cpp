@@ -209,9 +209,9 @@ QString NSurfaceFilterPropUI::getPacketMenuText() const {
 }
 
 void NSurfaceFilterPropUI::refresh() {
-    setBoolSet(useOrient, optOrient, filter->getOrientability());
-    setBoolSet(useCompact, optCompact, filter->getCompactness());
-    setBoolSet(useBdry, optBdry, filter->getRealBoundary());
+    setBoolSet(useOrient, optOrient, filter->orientability());
+    setBoolSet(useCompact, optCompact, filter->compactness());
+    setBoolSet(useBdry, optBdry, filter->realBoundary());
     eulerList->setText(filterECList());
 }
 
@@ -254,7 +254,7 @@ bool NSurfaceFilterPropUI::notifyOptionsChanged() {
     QString ecText = eulerList->text().trimmed();
     if (ecText.isEmpty()) {
         // No Euler characteristics have been entered.
-        filter->removeAllECs();
+        filter->removeAllEulerChars();
     } else if (! reECList.exactMatch(ecText)) {
         ReginaSupport::info(eulerList,
             tr("The list of Euler characteristics is invalid."),
@@ -265,12 +265,12 @@ bool NSurfaceFilterPropUI::notifyOptionsChanged() {
         success = false;
     } else {
         // We have a valid and non-empty list of Euler characteristics.
-        filter->removeAllECs();
+        filter->removeAllEulerChars();
 
         QStringList list = ecText.split(reECSeps);
         for (QStringList::Iterator it = list.begin(); it != list.end();
                 it++)
-            filter->addEC((*it).toUtf8().constData());
+            filter->addEulerChar((*it).toUtf8().constData());
 
         // Refill the text box so that it looks nice.
         eulerList->setText(filterECList());
@@ -319,7 +319,7 @@ void NSurfaceFilterPropUI::setBoolSet(QCheckBox* use, QComboBox* opt,
 }
 
 QString NSurfaceFilterPropUI::filterECList() {
-    const std::set<regina::NLargeInteger>& ecs(filter->getECs());
+    const std::set<regina::NLargeInteger>& ecs(filter->eulerChars());
     if (ecs.empty())
         return QString();
 

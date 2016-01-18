@@ -89,7 +89,7 @@ void SurfaceModel::rebuild(regina::NormalCoords coordSystem,
     else {
         realIndex = new unsigned[surfaces_->size()];
         for (unsigned i = 0; i < surfaces_->size(); ++i)
-            if ((! filter) || filter->accept(*surfaces_->getSurface(i)))
+            if ((! filter) || filter->accept(*surfaces_->surface(i)))
                 realIndex[nFiltered++] = i;
     }
 
@@ -126,12 +126,12 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
     unsigned surfaceIndex = realIndex[index.row()];
 
     if (role == Qt::DisplayRole) {
-        const regina::NNormalSurface* s = surfaces_->getSurface(surfaceIndex);
+        const regina::NNormalSurface* s = surfaces_->surface(surfaceIndex);
 
         if (index.column() == 0)
             return tr("%1.").arg(surfaceIndex);
         else if (index.column() == 1)
-            return s->getName().c_str();
+            return s->name().c_str();
         else if (index.column() == 2) {
             if (! s->isCompact())
                 return QVariant();
@@ -201,12 +201,11 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         } else if (surfaces_->allowsAlmostNormal() &&
                 ((surfaces_->isEmbeddedOnly() && index.column() == 8) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 6))) {
-            regina::NDiscType oct = s->getOctPosition();
+            regina::NDiscType oct = s->octPosition();
             if (oct == regina::NDiscType::NONE)
                 return QVariant();
             else {
-                regina::NLargeInteger tot = s->getOctCoord(
-                    oct.tetIndex, oct.type);
+                regina::NLargeInteger tot = s->octs(oct.tetIndex, oct.type);
                 if (tot == 1) {
                     return tr("K%1: %2 (1 oct)").
                         arg(oct.tetIndex).
@@ -231,7 +230,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         }
     } else if (role == Qt::EditRole) {
         if (index.column() == 1)
-            return surfaces_->getSurface(surfaceIndex)->getName().c_str();
+            return surfaces_->surface(surfaceIndex)->name().c_str();
         else
             return QVariant();
     } else if (role == Qt::ToolTipRole) {
@@ -243,7 +242,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
             return Coordinates::columnDesc(coordSystem_,
                 index.column() - propertyCols, this, surfaces_->triangulation());
     } else if (role == Qt::ForegroundRole) {
-        const regina::NNormalSurface* s = surfaces_->getSurface(surfaceIndex);
+        const regina::NNormalSurface* s = surfaces_->surface(surfaceIndex);
 
         if (surfaces_->isEmbeddedOnly() && index.column() == 3) {
             if (! s->isCompact())
@@ -272,9 +271,9 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         } else if (surfaces_->allowsAlmostNormal() &&
                 ((surfaces_->isEmbeddedOnly() && index.column() == 8) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 6))) {
-            regina::NDiscType oct = s->getOctPosition();
+            regina::NDiscType oct = s->octPosition();
             if (oct != regina::NDiscType::NONE) {
-                if (s->getOctCoord(oct.tetIndex, oct.type) > 1)
+                if (s->octs(oct.tetIndex, oct.type) > 1)
                     return QColor(Qt::darkRed);
                 else
                     return QColor(Qt::darkGreen);
@@ -348,7 +347,7 @@ bool SurfaceModel::setData(const QModelIndex& index, const QVariant& value,
         // belongs to).  Fire it here instead.
         regina::NPacket::ChangeEventSpan span(surfaces_);
         const_cast<regina::NNormalSurface*>(
-            surfaces_->getSurface(realIndex[index.row()]))->
+            surfaces_->surface(realIndex[index.row()]))->
             setName(value.toString().toUtf8().constData());
         return true;
     } else

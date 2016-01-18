@@ -94,7 +94,7 @@ NSurfaceFilterCombUI::NSurfaceFilterCombUI(NSurfaceFilterCombination* packet,
     boolType = new QButtonGroup();
     boolType->addButton(typeAnd, ID_AND);
     boolType->addButton(typeOr, ID_OR);
-    boolType->button(filter->getUsesAnd() ? ID_AND : ID_OR)->setChecked(true);
+    boolType->button(filter->usesAnd() ? ID_AND : ID_OR)->setChecked(true);
 
     layout->addStretch(1);
 
@@ -170,7 +170,7 @@ QString NSurfaceFilterCombUI::getPacketMenuText() const {
 }
 
 void NSurfaceFilterCombUI::refresh() {
-    boolType->button(filter->getUsesAnd() ? ID_AND : ID_OR)->setChecked(true);
+    boolType->button(filter->usesAnd() ? ID_AND : ID_OR)->setChecked(true);
 }
 
 void NSurfaceFilterCombUI::setReadWrite(bool readWrite) {
@@ -209,7 +209,7 @@ void NSurfaceFilterCombUI::refreshChildList() {
     // Add the items in reverse order since the QListViewItem
     // constructor puts new items at the front.
     for (regina::NPacket* p = filter->firstChild(); p; p = p->nextSibling())
-        if (p->type() == regina::NSurfaceFilter::packetType) {
+        if (p->type() == regina::PACKET_SURFACEFILTER) {
             new QListWidgetItem(PacketManager::icon(p),
                 p->humanLabel().c_str(), children);
 

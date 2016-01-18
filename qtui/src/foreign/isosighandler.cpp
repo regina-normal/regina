@@ -75,7 +75,7 @@ regina::NPacket* IsoSigHandler::importData(const QString& fileName,
             "not contain any isomorphism signatures.") + explnSuffix);
         delete ans;
         return 0;
-    } else if (last->type() == regina::NText::packetType) {
+    } else if (last->type() == regina::PACKET_TEXT) {
         if (last == ans->firstChild()) {
             ReginaSupport::sorry(parentWidget, 
                 QObject::tr("The import failed."),

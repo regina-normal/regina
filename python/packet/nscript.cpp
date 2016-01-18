@@ -39,13 +39,12 @@ using namespace boost::python;
 using regina::NScript;
 
 namespace {
-    regina::NPacket* (NScript::*variableValue_long)(unsigned long)
-        const = &NScript::variableValue;
+    regina::NPacket* (NScript::*variableValue_long)(size_t) const =
+        &NScript::variableValue;
     regina::NPacket* (NScript::*variableValue_string)(const std::string&)
         const = &NScript::variableValue;
 
-    void (NScript::*removeVariable_long)(unsigned long) =
-        &NScript::removeVariable;
+    void (NScript::*removeVariable_long)(size_t) = &NScript::removeVariable;
     void (NScript::*removeVariable_string)(const std::string&) =
         &NScript::removeVariable;
 }
@@ -83,7 +82,8 @@ void addNScript() {
         .def("removeAllVariables", &NScript::removeAllVariables)
     ;
 
-    s.attr("packetType") = regina::PacketType(NScript::packetType);
+    s.attr("typeID") = regina::PACKET_SCRIPT;
+    s.attr("packetType") = regina::PACKET_SCRIPT;
 
     implicitly_convertible<std::auto_ptr<NScript>,
         std::auto_ptr<regina::NPacket> >();
