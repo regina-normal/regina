@@ -84,9 +84,9 @@ typedef Component<3> NComponent;
  * edge glued to an axis edge) the resulting space will be a Seifert
  * fibred space over the 2-sphere with at most three exceptional fibres.
  *
- * Of the optional NStandardTriangulation routines, getManifold() is
+ * Of the optional NStandardTriangulation routines, manifold() is
  * implemented for most augmented triangular solid tori and
- * getHomologyH1() is not implemented at all.
+ * homology() is not implemented at all.
  */
 class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
     public:
@@ -103,16 +103,16 @@ class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
                  NTriSolidTorus::areAnnuliLinkedAxis(). */
 
     private:
-        NTriSolidTorus* core;
+        NTriSolidTorus* core_;
             /**< The triangular solid torus at the core of this
                  triangulation. */
-        NLayeredSolidTorus* augTorus[3];
+        NLayeredSolidTorus* augTorus_[3];
             /**< The layered solid tori attached to the boundary annuli.
                  If one of the layered solid tori is a degenerate (2,1,1)
                  triangle, the corresponding pointer will be 0.
                  Note that <tt>augTorus[i]</tt> will be attached to
                  annulus \c i of the triangular solid torus. */
-        NPerm4 edgeGroupRoles[3];
+        NPerm4 edgeGroupRoles_[3];
             /**< Permutation <tt>edgeGroupRoles[i]</tt> describes the role
                  played by each top level edge group of layered solid torus
                  <tt>i</tt>.  For permutation <tt>p</tt>, group <tt>p[0]</tt>
@@ -121,10 +121,10 @@ class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
         unsigned long chainIndex;
             /**< The number of tetrahedra in the layered chain if
                  present, or 0 if there is no layered chain. */
-        int chainType;
+        int chainType_;
             /**< The way in which the layered chain is attached, or
                  \a CHAIN_NONE if there is no layered chain. */
-        int torusAnnulus;
+        int torusAnnulus_;
             /**< The annulus to which the single layered solid torus is
                  attached (if there is a layered chain), or -1 if there is
                  no layered chain. */
@@ -148,6 +148,14 @@ class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
          *
          * @return the core triangular solid torus.
          */
+        const NTriSolidTorus& core() const;
+        /**
+         * Deprecated routine that returns the triangular solid torus at the
+         * core of this triangulation.
+         *
+         * \deprecated This routine has been renamed to core().
+         * See the core() documentation for further details.
+         */
         const NTriSolidTorus& getCore() const;
         /**
          * Returns the layered solid torus attached to the requested
@@ -155,10 +163,19 @@ class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
          * If the layered solid torus is a degenerate (2,1,1) mobius
          * band (i.e., the two triangles of the corresponding annulus have
          * simply been glued together), \c null will be returned.
-         * 
+         *
          * @param annulus specifies which annulus to examine; this must
          * be 0, 1 or 2.
          * @return the corresponding layered solid torus.
+         */
+        const NLayeredSolidTorus* augTorus(int annulus) const;
+        /**
+         * Deprecated routine that returns the layered solid torus attached to
+         * the requested annulus on the boundary of the core triangular solid
+         * torus.
+         *
+         * \deprecated This routine has been renamed to augTorus().
+         * See the augTorus() documentation for further details.
          */
         const NLayeredSolidTorus* getAugTorus(int annulus) const;
 
@@ -177,12 +194,21 @@ class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
          * (2,1,1) mobius band (i.e., getAugTorus() returns \c null),
          * the concept of edge groups is still
          * meaningful and this routine will return correct results.
-         * 
+         *
          * @param annulus specifies which annulus to examine; this must
          * be 0, 1 or 2.  It is the layered solid torus glued to this
          * annulus whose edge groups will be described.
          * @return a permutation describing the roles of the
          * corresponding top level edge groups.
+         */
+        NPerm4 edgeGroupRoles(int annulus) const;
+        /**
+         * Deprecated routine that returns a permutation describing the role
+         * played by each top level edge group of the layered solid torus glued
+         * to the requested annulus of the core triangular solid torus.
+         *
+         * \deprecated This routine has been renamed to edgeGroupRoles().
+         * See the edgeGroupRoles() documentation for further details.
          */
         NPerm4 getEdgeGroupRoles(int annulus) const;
 
@@ -195,6 +221,15 @@ class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
          * @return the number of tetrahedra in the layered chain, or 0
          * if there is no layered chain linking two boundary annuli.
          */
+        unsigned long chainLength() const;
+        /**
+         * Deprecated routine that returns the number of tetrahedra in the
+         * layered chain linking two of the boundary annuli of the core
+         * triangular solid torus.
+         *
+         * \deprecated This routine has been renamed to chainLength().
+         * See the chainLength() documentation for further details.
+         */
         unsigned long getChainLength() const;
 
         /**
@@ -205,6 +240,14 @@ class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
          *
          * @return the type of layered chain, or \a CHAIN_NONE
          * if there is no layered chain linking two boundary annuli.
+         */
+        int chainType() const;
+        /**
+         * Deprecated routine that returns the way in which a layered chain
+         * links two of the boundary annuli of the core triangular solid torus.
+         *
+         * \deprecated This routine has been renamed to chainType().
+         * See the chainType() documentation for further details.
          */
         int getChainType() const;
 
@@ -221,6 +264,15 @@ class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
          * @return the single annulus to which the layered solid torus
          * is attached, or -1 if there is no layered chain (and thus all
          * three annuli have layered solid tori attached).
+         */
+        int torusAnnulus() const;
+        /**
+         * Deprecated routine that returns the single boundary annulus of the
+         * core triangular solid torus to which a layered solid torus is
+         * attached.
+         *
+         * \deprecated This routine has been renamed to torusAnnulus().
+         * See the torusAnnulus() documentation for further details.
          */
         int getTorusAnnulus() const;
 
@@ -245,7 +297,7 @@ class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
          */
         static NAugTriSolidTorus* isAugTriSolidTorus(const NComponent* comp);
 
-        NManifold* getManifold() const;
+        NManifold* manifold() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
@@ -272,29 +324,48 @@ class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
 
 // Inline functions for NAugTriSolidTorus
 
-inline NAugTriSolidTorus::NAugTriSolidTorus() : core(0),
-        chainType(CHAIN_NONE) {
-    augTorus[0] = augTorus[1] = augTorus[2] = 0;
+inline NAugTriSolidTorus::NAugTriSolidTorus() : core_(0),
+        chainType_(CHAIN_NONE) {
+    augTorus_[0] = augTorus_[1] = augTorus_[2] = 0;
 }
 
+inline const NTriSolidTorus& NAugTriSolidTorus::core() const {
+    return *core_;
+}
 inline const NTriSolidTorus& NAugTriSolidTorus::getCore() const {
-    return *core;
+    return *core_;
+}
+inline const NLayeredSolidTorus* NAugTriSolidTorus::augTorus(
+        int annulus) const {
+    return augTorus_[annulus];
 }
 inline const NLayeredSolidTorus* NAugTriSolidTorus::getAugTorus(
         int annulus) const {
-    return augTorus[annulus];
+    return augTorus_[annulus];
+}
+inline NPerm4 NAugTriSolidTorus::edgeGroupRoles(int annulus) const {
+    return edgeGroupRoles_[annulus];
 }
 inline NPerm4 NAugTriSolidTorus::getEdgeGroupRoles(int annulus) const {
-    return edgeGroupRoles[annulus];
+    return edgeGroupRoles_[annulus];
+}
+inline unsigned long NAugTriSolidTorus::chainLength() const {
+    return chainIndex;
 }
 inline unsigned long NAugTriSolidTorus::getChainLength() const {
     return chainIndex;
 }
+inline int NAugTriSolidTorus::chainType() const {
+    return chainType_;
+}
 inline int NAugTriSolidTorus::getChainType() const {
-    return chainType;
+    return chainType_;
+}
+inline int NAugTriSolidTorus::torusAnnulus() const {
+    return torusAnnulus_;
 }
 inline int NAugTriSolidTorus::getTorusAnnulus() const {
-    return torusAnnulus;
+    return torusAnnulus_;
 }
 inline bool NAugTriSolidTorus::hasLayeredChain() const {
     return (chainIndex != 0);

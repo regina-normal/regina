@@ -143,7 +143,7 @@ NTriangulation* NSnapPeaCensusManifold::construct() const {
     return ans;
 }
 
-NAbelianGroup* NSnapPeaCensusManifold::getHomologyH1() const {
+NAbelianGroup* NSnapPeaCensusManifold::homology() const {
     // Fetch the relevant data from the census dehydration files.
     std::string file = NGlobalDirs::data() + "/snappea";
     switch (section_) {

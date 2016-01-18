@@ -171,13 +171,13 @@ bool process(NContainer* c) {
         if (! std)
             continue;
 
-        mfd = std->getManifold();
+        mfd = std->manifold();
         if (! mfd) {
             delete std;
             continue;
         }
 
-        name = mfd->getName();
+        name = mfd->name();
         if (detailedNames) {
             structure = mfd->getStructure();
             if ((! structure.empty()) && (structure != name))

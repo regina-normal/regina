@@ -94,17 +94,17 @@ bool NSatBlock::operator < (const NSatBlock& compare) const {
         return false;
     if (lst1 && lst2) {
         // Order first by LST parameters, then by roles.
-        if (lst1->lst()->getMeridinalCuts(2) < lst2->lst()->getMeridinalCuts(2))
+        if (lst1->lst()->meridinalCuts(2) < lst2->lst()->meridinalCuts(2))
             return true;
-        if (lst1->lst()->getMeridinalCuts(2) > lst2->lst()->getMeridinalCuts(2))
+        if (lst1->lst()->meridinalCuts(2) > lst2->lst()->meridinalCuts(2))
             return false;
-        if (lst1->lst()->getMeridinalCuts(1) < lst2->lst()->getMeridinalCuts(1))
+        if (lst1->lst()->meridinalCuts(1) < lst2->lst()->meridinalCuts(1))
             return true;
-        if (lst1->lst()->getMeridinalCuts(1) > lst2->lst()->getMeridinalCuts(1))
+        if (lst1->lst()->meridinalCuts(1) > lst2->lst()->meridinalCuts(1))
             return false;
-        if (lst1->lst()->getMeridinalCuts(0) < lst2->lst()->getMeridinalCuts(0))
+        if (lst1->lst()->meridinalCuts(0) < lst2->lst()->meridinalCuts(0))
             return true;
-        if (lst1->lst()->getMeridinalCuts(0) > lst2->lst()->getMeridinalCuts(0))
+        if (lst1->lst()->meridinalCuts(0) > lst2->lst()->meridinalCuts(0))
             return false;
 
         // Sorts by which edge group is joined to the vertical annulus
@@ -260,8 +260,8 @@ NSatLST::~NSatLST() {
 }
 
 void NSatLST::adjustSFS(NSFSpace& sfs, bool reflect) const {
-    long cutsVert = lst_->getMeridinalCuts(roles_[0]);
-    long cutsHoriz = lst_->getMeridinalCuts(roles_[1]);
+    long cutsVert = lst_->meridinalCuts(roles_[0]);
+    long cutsHoriz = lst_->meridinalCuts(roles_[1]);
     if (roles_[2] == 2) {
         // Most cuts are on the diagonal, which means the meridinal
         // curve is negative.
@@ -273,16 +273,16 @@ void NSatLST::adjustSFS(NSFSpace& sfs, bool reflect) const {
 
 void NSatLST::writeTextShort(std::ostream& out) const {
     out << "Saturated ("
-        << lst_->getMeridinalCuts(0) << ", "
-        << lst_->getMeridinalCuts(1) << ", "
-        << lst_->getMeridinalCuts(2) << ") layered solid torus";
+        << lst_->meridinalCuts(0) << ", "
+        << lst_->meridinalCuts(1) << ", "
+        << lst_->meridinalCuts(2) << ") layered solid torus";
 }
 
 void NSatLST::writeAbbr(std::ostream& out, bool tex) const {
     out << (tex ? "\\mathrm{LST}_{" : "LST(")
-        << lst_->getMeridinalCuts(0) << ", "
-        << lst_->getMeridinalCuts(1) << ", "
-        << lst_->getMeridinalCuts(2) << (tex ? '}' : ')');
+        << lst_->meridinalCuts(0) << ", "
+        << lst_->meridinalCuts(1) << ", "
+        << lst_->meridinalCuts(2) << (tex ? '}' : ')');
 }
 
 void NSatLST::transform(const NTriangulation* originalTri,
@@ -323,15 +323,15 @@ NSatLST* NSatLST::isBlockLST(const NSatAnnulus& annulus, TetList& avoidTets) {
 
     // Make sure we're not about to create a (0,k) curve.
     NPerm4 lstRoles(
-        lst->getTopEdgeGroup(
+        lst->topEdgeGroup(
             NEdge::edgeNumber[annulus.roles[0][0]][annulus.roles[0][1]]),
-        lst->getTopEdgeGroup(
+        lst->topEdgeGroup(
             NEdge::edgeNumber[annulus.roles[0][0]][annulus.roles[0][2]]),
-        lst->getTopEdgeGroup(
+        lst->topEdgeGroup(
             NEdge::edgeNumber[annulus.roles[0][1]][annulus.roles[0][2]]),
         3);
 
-    if (lst->getMeridinalCuts(lstRoles[0]) == 0)
+    if (lst->meridinalCuts(lstRoles[0]) == 0)
         return 0;
 
     // Make two runs through the full set of tetrahedra.
@@ -340,7 +340,7 @@ NSatLST* NSatLST::isBlockLST(const NSatAnnulus& annulus, TetList& avoidTets) {
     NTetrahedron* current = annulus.tet[0];
     NFacePair currPair = centralEdge;
     NFacePair nextPair;
-    while (current != lst->getBase()) {
+    while (current != lst->base()) {
         // INV: The current tetrahedron is usable.
         // INV: The next two faces to push through are in currPair.
 
@@ -361,7 +361,7 @@ NSatLST* NSatLST::isBlockLST(const NSatAnnulus& annulus, TetList& avoidTets) {
     current = annulus.tet[0];
     currPair = centralEdge;
     avoidTets.insert(current);
-    while (current != lst->getBase()) {
+    while (current != lst->base()) {
         // INV: All tetrahedra up to and including current have been added.
         // INV: The next two faces to push through are in currPair.
 

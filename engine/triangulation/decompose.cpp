@@ -1066,7 +1066,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
         if (! ball)
             continue;
 
-        int equator = ball->getEquatorEdge();
+        int equator = ball->equatorEdge();
         if (! (*tit)->getEdge(equator)->isBoundary()) {
             delete ball;
             continue;
@@ -1077,7 +1077,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
         // We do this by removing the tetrahedron, and then plugging
         // both holes on either side of the disc with new copies of the
         // tetrahedron.
-        int upper = ball->getBoundaryFace(0);
+        int upper = ball->boundaryFace(0);
         delete ball;
 
         NTetrahedron* adj = (*tit)->adjacentTetrahedron(upper);

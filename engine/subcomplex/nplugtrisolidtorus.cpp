@@ -46,22 +46,22 @@ const int NPlugTriSolidTorus::EQUATOR_MAJOR = 1;
 const int NPlugTriSolidTorus::EQUATOR_MINOR = 3;
 
 NPlugTriSolidTorus::~NPlugTriSolidTorus() {
-    if (core)
-        delete core;
+    if (core_)
+        delete core_;
     for (int i = 0; i < 3; i++)
-        if (chain[i])
-            delete chain[i];
+        if (chain_[i])
+            delete chain_[i];
 }
 
 NPlugTriSolidTorus* NPlugTriSolidTorus::clone() const {
     NPlugTriSolidTorus* ans = new NPlugTriSolidTorus();
-    ans->core = core->clone();
+    ans->core_ = core_->clone();
     for (int i = 0; i < 3; i++) {
-        if (chain[i])
-            ans->chain[i] = new NLayeredChain(*chain[i]);
-        ans->chainType[i] = chainType[i];
+        if (chain_[i])
+            ans->chain_[i] = new NLayeredChain(*chain_[i]);
+        ans->chainType_[i] = chainType_[i];
     }
-    ans->equatorType = equatorType;
+    ans->equatorType_ = equatorType_;
     return ans;
 }
 
@@ -71,15 +71,15 @@ std::ostream& NPlugTriSolidTorus::writeName(std::ostream& out) const {
 
     int i;
     for (i = 0; i < 3; i++)
-        if (chainType[i] != CHAIN_NONE) {
-            if (chainType[i] == CHAIN_MAJOR)
-                params[nParams++] = chain[i]->getIndex();
+        if (chainType_[i] != CHAIN_NONE) {
+            if (chainType_[i] == CHAIN_MAJOR)
+                params[nParams++] = chain_[i]->index();
             else
-                params[nParams++] = -chain[i]->getIndex();
+                params[nParams++] = -chain_[i]->index();
         }
     std::sort(params, params + nParams);
 
-    out << (equatorType == EQUATOR_MAJOR ? "P(" : "P'(");
+    out << (equatorType_ == EQUATOR_MAJOR ? "P(" : "P'(");
     if (nParams == 0)
         return out << "0)";
     for (i = 0; i < nParams; i++) {
@@ -96,15 +96,15 @@ std::ostream& NPlugTriSolidTorus::writeTeXName(std::ostream& out) const {
 
     int i;
     for (i = 0; i < 3; i++)
-        if (chainType[i] != CHAIN_NONE) {
-            if (chainType[i] == CHAIN_MAJOR)
-                params[nParams++] = chain[i]->getIndex();
+        if (chainType_[i] != CHAIN_NONE) {
+            if (chainType_[i] == CHAIN_MAJOR)
+                params[nParams++] = chain_[i]->index();
             else
-                params[nParams++] = -chain[i]->getIndex();
+                params[nParams++] = -chain_[i]->index();
         }
     std::sort(params, params + nParams);
 
-    out << (equatorType == EQUATOR_MAJOR ? "P_{" : "P'_{");
+    out << (equatorType_ == EQUATOR_MAJOR ? "P_{" : "P'_{");
     if (nParams == 0)
         return out << "0}";
     for (i = 0; i < nParams; i++) {
@@ -120,18 +120,18 @@ void NPlugTriSolidTorus::writeTextLong(std::ostream& out) const {
     writeName(out);
 }
 
-NManifold* NPlugTriSolidTorus::getManifold() const {
+NManifold* NPlugTriSolidTorus::manifold() const {
     NSFSpace* ans = new NSFSpace();
     ans->insertFibre(2, -1);
     ans->insertFibre(3, 1);
 
-    long rot = (equatorType == EQUATOR_MAJOR ? 5 : 4);
+    long rot = (equatorType_ == EQUATOR_MAJOR ? 5 : 4);
     for (int i = 0; i < 3; i++)
-        if (chainType[i] != CHAIN_NONE) {
-            if (chainType[i] == equatorType)
-                rot += chain[i]->getIndex();
+        if (chainType_[i] != CHAIN_NONE) {
+            if (chainType_[i] == equatorType_)
+                rot += chain_[i]->index();
             else
-                rot -= chain[i]->getIndex();
+                rot -= chain_[i]->index();
         }
     if (rot != 0)
         ans->insertFibre(rot, 1);
@@ -198,8 +198,8 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
                 continue;
 
             for (i = 0; i < 3; i++) {
-                coreTet[i] = core->getTetrahedron(i);
-                coreRoles[i] = core->getVertexRoles(i);
+                coreTet[i] = core->tetrahedron(i);
+                coreRoles[i] = core->vertexRoles(i);
                 axis[i] = coreTet[i]->getEdge(
                     NEdge::edgeNumber[coreRoles[i][0]][coreRoles[i][3]]);
             }
@@ -268,17 +268,17 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
             if (i < 3)
                 error = true;
             else if (chain[0] && chain[1] &&
-                    chain[0]->getBottom() == chain[1]->getTop())
+                    chain[0]->bottom() == chain[1]->top())
                 error = true;
             else if (chain[1] && chain[2] &&
-                    chain[1]->getBottom() == chain[2]->getTop())
+                    chain[1]->bottom() == chain[2]->top())
                 error = true;
             else if (chain[2] && chain[0] &&
-                    chain[2]->getBottom() == chain[0]->getTop())
+                    chain[2]->bottom() == chain[0]->top())
                 error = true;
-            else if ((chain[0] ? chain[0]->getIndex() : 0) +
-                    (chain[1] ? chain[1]->getIndex() : 0) +
-                    (chain[2] ? chain[2]->getIndex() : 0) +
+            else if ((chain[0] ? chain[0]->index() : 0) +
+                    (chain[1] ? chain[1]->index() : 0) +
+                    (chain[2] ? chain[2]->index() : 0) +
                     5 != nTet)
                 error = true;
 
@@ -299,20 +299,20 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
 
             for (i = 0; i < 3; i++) {
                 if (chain[i]) {
-                    plugTet[i][0] = chain[i]->getTop()->adjacentTetrahedron(
-                        chain[i]->getTopVertexRoles()[3]);
-                    plugTet[i][1] = chain[i]->getTop()->adjacentTetrahedron(
-                        chain[i]->getTopVertexRoles()[0]);
-                    plugRoles[i][0] = chain[i]->getTop()->
+                    plugTet[i][0] = chain[i]->top()->adjacentTetrahedron(
+                        chain[i]->topVertexRoles()[3]);
+                    plugTet[i][1] = chain[i]->top()->adjacentTetrahedron(
+                        chain[i]->topVertexRoles()[0]);
+                    plugRoles[i][0] = chain[i]->top()->
                         adjacentGluing(chain[i]->
-                        getTopVertexRoles()[3]) *
-                        chain[i]->getTopVertexRoles() *
+                        topVertexRoles()[3]) *
+                        chain[i]->topVertexRoles() *
                         (chainType[i] == CHAIN_MAJOR ? NPerm4(0, 1, 2, 3) :
                         NPerm4(1, 0, 2, 3));
-                    plugRoles[i][1] = chain[i]->getTop()->
+                    plugRoles[i][1] = chain[i]->top()->
                         adjacentGluing(chain[i]->
-                        getTopVertexRoles()[0]) *
-                        chain[i]->getTopVertexRoles() *
+                        topVertexRoles()[0]) *
+                        chain[i]->topVertexRoles() *
                         (chainType[i] == CHAIN_MAJOR ? NPerm4(2, 3, 1, 0) :
                         NPerm4(3, 2, 1, 0));
                 } else {
@@ -409,12 +409,12 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
 
             // Success!
             NPlugTriSolidTorus* plug = new NPlugTriSolidTorus();
-            plug->core = core;
+            plug->core_ = core;
             for (i = 0; i < 3; i++) {
-                plug->chain[i] = chain[i];
-                plug->chainType[i] = chainType[i];
+                plug->chain_[i] = chain[i];
+                plug->chainType_[i] = chainType[i];
             }
-            plug->equatorType = equatorType;
+            plug->equatorType_ = equatorType;
             return plug;
         }
 

@@ -46,11 +46,17 @@ void addNPlugTriSolidTorus() {
             ("NPlugTriSolidTorus", no_init)
         .def("clone", &NPlugTriSolidTorus::clone,
             return_value_policy<manage_new_object>())
+        .def("core", &NPlugTriSolidTorus::core,
+            return_internal_reference<>())
         .def("getCore", &NPlugTriSolidTorus::getCore,
+            return_internal_reference<>())
+        .def("chain", &NPlugTriSolidTorus::getChain,
             return_internal_reference<>())
         .def("getChain", &NPlugTriSolidTorus::getChain,
             return_internal_reference<>())
+        .def("chainType", &NPlugTriSolidTorus::getChainType)
         .def("getChainType", &NPlugTriSolidTorus::getChainType)
+        .def("equatorType", &NPlugTriSolidTorus::getEquatorType)
         .def("getEquatorType", &NPlugTriSolidTorus::getEquatorType)
         .def("isPlugTriSolidTorus", &NPlugTriSolidTorus::isPlugTriSolidTorus,
             return_value_policy<manage_new_object>())

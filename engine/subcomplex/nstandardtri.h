@@ -94,6 +94,14 @@ class REGINA_API NStandardTriangulation :
          *
          * @return the name of this triangulation.
          */
+        std::string name() const;
+        /**
+         * Deprecated routine that returns the name of this specific
+         * triangulation as a human-readable string.
+         *
+         * \deprecated This routine has been renamed to name().
+         * See the name() documentation for further details.
+         */
         std::string getName() const;
         /**
          * Returns the name of this specific triangulation in TeX
@@ -104,6 +112,14 @@ class REGINA_API NStandardTriangulation :
          * signs were provided.
          *
          * @return the name of this triangulation in TeX format.
+         */
+        std::string TeXName() const;
+        /**
+         * Deprecated routine that returns the name of this specific
+         * triangulation in TeX format.
+         *
+         * \deprecated This routine has been renamed to TeXName().
+         * See the TeXName() documentation for further details.
          */
         std::string getTeXName() const;
         /**
@@ -125,7 +141,15 @@ class REGINA_API NStandardTriangulation :
          *
          * @return the underlying 3-manifold.
          */
-        virtual NManifold* getManifold() const;
+        virtual NManifold* manifold() const;
+        /**
+         * Deprecated routine that returns the 3-manifold represented by this
+         * triangulation,
+         *
+         * \deprecated This routine has been renamed to manifold().
+         * See the manifold() documentation for further details.
+         */
+        NManifold* getManifold() const;
         /**
          * Returns the expected first homology group of this triangulation,
          * if such a routine has been implemented.  If the calculation of
@@ -150,10 +174,52 @@ class REGINA_API NStandardTriangulation :
          * should be identical to the homology group obtained by calling
          * NTriangulation::homology() upon the associated real triangulation.
          *
+         * This routine can also be accessed via the alias homologyH1()
+         * (a name that is more specific, but a little longer to type).
+         *
          * @return the first homology group of this triangulation, or 0 if
          * the appropriate calculation routine has not yet been implemented.
          */
-        virtual NAbelianGroup* getHomologyH1() const;
+        virtual NAbelianGroup* homology() const;
+        /**
+         * Returns the expected first homology group of this triangulation,
+         * if such a routine has been implemented.  If the calculation of
+         * homology has not yet been implemented for this triangulation
+         * then this routine will return 0.
+         *
+         * This routine does not work by calling NTriangulation::homology()
+         * on the associated real triangulation.  Instead the homology is
+         * calculated directly from the known properties of this
+         * standard triangulation.
+         *
+         * The details of which standard triangulations have homology
+         * calculation routines can be found in the notes for the
+         * corresponding subclasses of NStandardTriangulation.  The
+         * default implementation of this routine returns 0.
+         *
+         * The homology group will be newly allocated and must be
+         * destroyed by the caller of this routine.
+         *
+         * If this NStandardTriangulation describes an entire NTriangulation
+         * (and not just a part thereof) then the results of this routine
+         * should be identical to the homology group obtained by calling
+         * NTriangulation::homology() upon the associated real triangulation.
+         *
+         * This routine can also be accessed via the alias homology()
+         * (a name that is less specific, but a little easier to type).
+         *
+         * @return the first homology group of this triangulation, or 0 if
+         * the appropriate calculation routine has not yet been implemented.
+         */
+        NAbelianGroup* homologyH1() const;
+        /**
+         * Deprecated routine that returns the expected first homology group of
+         * this triangulation, if such a routine has been implemented.
+         *
+         * \deprecated This routine has been renamed to homology().
+         * See the homology() documentation for further details.
+         */
+        NAbelianGroup* getHomologyH1() const;
 
         /**
          * Writes the name of this triangulation as a human-readable
@@ -264,12 +330,32 @@ class REGINA_API NStandardTriangulation :
 inline NStandardTriangulation::~NStandardTriangulation() {
 }
 
-inline NManifold* NStandardTriangulation::getManifold() const {
+inline std::string NStandardTriangulation::getName() const {
+    return name();
+}
+
+inline std::string NStandardTriangulation::getTeXName() const {
+    return TeXName();
+}
+
+inline NManifold* NStandardTriangulation::manifold() const {
     return 0;
 }
 
-inline NAbelianGroup* NStandardTriangulation::getHomologyH1() const {
+inline NManifold* NStandardTriangulation::getManifold() const {
+    return manifold();
+}
+
+inline NAbelianGroup* NStandardTriangulation::homology() const {
     return 0;
+}
+
+inline NAbelianGroup* NStandardTriangulation::homologyH1() const {
+    return homology();
+}
+
+inline NAbelianGroup* NStandardTriangulation::getHomologyH1() const {
+    return homology();
 }
 
 inline void NStandardTriangulation::writeTextShort(std::ostream& out) const {

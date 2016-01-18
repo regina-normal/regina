@@ -42,6 +42,7 @@
 #define __FACENUMBERING_H_DETAIL
 #endif
 
+#include <algorithm>
 #include "regina-core.h"
 #include <algorithm>
 

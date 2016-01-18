@@ -56,6 +56,8 @@ void addNSnappedTwoSphere() {
             boost::noncopyable> ("NSnappedTwoSphere", no_init)
         .def("clone", &NSnappedTwoSphere::clone,
             return_value_policy<manage_new_object>())
+        .def("snappedBall", &NSnappedTwoSphere::getSnappedBall,
+            return_internal_reference<>())
         .def("getSnappedBall", &NSnappedTwoSphere::getSnappedBall,
             return_internal_reference<>())
         .def("formsSnappedTwoSphere", formsStructure_tets,

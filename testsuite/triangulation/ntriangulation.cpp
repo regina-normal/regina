@@ -3830,10 +3830,10 @@ class NTriangulationTest : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (std->getName() != simpleName) {
+            if (std->name() != simpleName) {
                 std::ostringstream msg;
                 msg << "Large triangulation should simplify to " << simpleName
-                    << ", but instead simplifies to " << std->getName() << ".";
+                    << ", but instead simplifies to " << std->name() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -3841,13 +3841,13 @@ class NTriangulationTest : public TriangulationTest<3> {
             NTriangulation t2(t);
             if (t2.intelligentSimplify()) {
                 std::ostringstream msg;
-                msg << "The simple triangulation " << std->getName()
+                msg << "The simple triangulation " << std->name()
                     << " should not simplify any further, but it does.";
                 CPPUNIT_FAIL(msg.str());
             }
             if (t2.dumpConstruction() != t.dumpConstruction()) {
                 std::ostringstream msg;
-                msg << "The simple triangulation " << std->getName()
+                msg << "The simple triangulation " << std->name()
                     << " should not change at all when simplified again, "
                     "but it does.";
                 CPPUNIT_FAIL(msg.str());

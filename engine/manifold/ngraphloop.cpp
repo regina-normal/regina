@@ -53,7 +53,7 @@ bool NGraphLoop::operator < (const NGraphLoop& compare) const {
     return simpler(matchingReln_, compare.matchingReln_);
 }
 
-NAbelianGroup* NGraphLoop::homologyH1() const {
+NAbelianGroup* NGraphLoop::homology() const {
     // Just for safety (this should always be true anyway):
     if (sfs_->punctures(false) != 2 || sfs_->punctures(true) != 0)
         return 0;

@@ -67,16 +67,16 @@ namespace regina {
  */
 class REGINA_API NLayeredLensSpace : public NStandardTriangulation {
     private:
-        NLayeredSolidTorus* torus;
+        NLayeredSolidTorus* torus_;
             /**< The layered solid torus that forms the basis of this
                  layered lens space. */
-        int mobiusBoundaryGroup;
+        int mobiusBoundaryGroup_;
             /**< The edge group of the top level tetrahedron in the
                  layered solid torus to which the boundary of the mobius
                  strip is glued. */
-        unsigned long p,q;
+        unsigned long p_,q_;
             /**< The lens space parameters for L(p,q). */
-    
+
     public:
         /**
          * Destroys this lens space; note that the corresponding layered
@@ -95,11 +95,27 @@ class REGINA_API NLayeredLensSpace : public NStandardTriangulation {
          *
          * @return the first parameter \a p.
          */
+        unsigned long P() const;
+        /**
+         * Deprecated routine that returns the first parameter \a p of this
+         * lens space L(p,q).
+         *
+         * \deprecated This routine has been renamed to P().
+         * See the P() documentation for further details.
+         */
         unsigned long getP() const;
         /**
          * Returns the second parameter \a q of this lens space L(p,q).
          *
          * @return the second parameter \a q.
+         */
+        unsigned long Q() const;
+        /**
+         * Deprecated routine that returns the second parameter \a q of this
+         * lens space L(p,q).
+         *
+         * \deprecated This routine has been renamed to Q().
+         * See the Q() documentation for further details.
          */
         unsigned long getQ() const;
 
@@ -108,6 +124,14 @@ class REGINA_API NLayeredLensSpace : public NStandardTriangulation {
          * glued.
          *
          * @return the layered solid torus.
+         */
+        const NLayeredSolidTorus& torus() const;
+        /**
+         * Deprecated routine that returns the layered solid torus to which the
+         * mobius strip is glued.
+         *
+         * \deprecated This routine has been renamed to torus().
+         * See the torus() documentation for further details.
          */
         const NLayeredSolidTorus& getTorus() const;
         /**
@@ -121,6 +145,14 @@ class REGINA_API NLayeredLensSpace : public NStandardTriangulation {
          *
          * @return the top level edge group of the layered solid torus to
          * which the mobius strip boundary is glued.
+         */
+        int mobiusBoundaryGroup() const;
+        /**
+         * Deprecated routine that retermines which edge of the layered solid
+         * torus is glued to the boundary of the mobius strip.
+         *
+         * \deprecated This routine has been renamed to mobiusBoundaryGroup().
+         * See the mobiousBoundaryGroup() documentation for further details.
          */
         int getMobiusBoundaryGroup() const;
         /**
@@ -149,8 +181,8 @@ class REGINA_API NLayeredLensSpace : public NStandardTriangulation {
          */
         static NLayeredLensSpace* isLayeredLensSpace(const NComponent* comp);
 
-        NManifold* getManifold() const;
-        NAbelianGroup* getHomologyH1() const;
+        NManifold* manifold() const;
+        NAbelianGroup* homology() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
@@ -169,26 +201,38 @@ class REGINA_API NLayeredLensSpace : public NStandardTriangulation {
 inline NLayeredLensSpace::NLayeredLensSpace() {
 }
 inline NLayeredLensSpace::~NLayeredLensSpace() {
-    delete torus;
+    delete torus_;
 }
 
+inline unsigned long NLayeredLensSpace::P() const {
+    return p_;
+}
 inline unsigned long NLayeredLensSpace::getP() const {
-    return p;
+    return p_;
+}
+inline unsigned long NLayeredLensSpace::Q() const {
+    return q_;
 }
 inline unsigned long NLayeredLensSpace::getQ() const {
-    return q;
+    return q_;
+}
+inline const NLayeredSolidTorus& NLayeredLensSpace::torus() const {
+    return *torus_;
 }
 inline const NLayeredSolidTorus& NLayeredLensSpace::getTorus() const {
-    return *torus;
+    return *torus_;
+}
+inline int NLayeredLensSpace::mobiusBoundaryGroup() const {
+    return mobiusBoundaryGroup_;
 }
 inline int NLayeredLensSpace::getMobiusBoundaryGroup() const {
-    return mobiusBoundaryGroup;
+    return mobiusBoundaryGroup_;
 }
 inline bool NLayeredLensSpace::isSnapped() const {
-    return (torus->getTopEdge(mobiusBoundaryGroup, 1) == -1);
+    return (torus_->topEdge(mobiusBoundaryGroup_, 1) == -1);
 }
 inline bool NLayeredLensSpace::isTwisted() const {
-    return (torus->getTopEdge(mobiusBoundaryGroup, 1) != -1);
+    return (torus_->topEdge(mobiusBoundaryGroup_, 1) != -1);
 }
 inline void NLayeredLensSpace::writeTextLong(std::ostream& out) const {
     out << "Layered lens space ";

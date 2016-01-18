@@ -37,13 +37,13 @@
 
 namespace regina {
 
-std::string NTxICore::getName() const {
+std::string NTxICore::name() const {
     std::ostringstream out;
     writeName(out);
     return out.str();
 }
 
-std::string NTxICore::getTeXName() const {
+std::string NTxICore::TeXName() const {
     std::ostringstream out;
     writeTeXName(out);
     return out.str();

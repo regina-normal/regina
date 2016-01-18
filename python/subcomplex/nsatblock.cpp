@@ -64,6 +64,9 @@ namespace {
         return NSatBlock::isBlock(a, avoidTets);
     }
 
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_abbr,
+        NSatBlock::abbr, 0, 1);
+
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_getAbbr,
         NSatBlock::getAbbr, 0, 1);
 
@@ -90,6 +93,7 @@ void addNSatBlock() {
         .def("adjustSFS", &NSatBlock::adjustSFS)
         .def("transform", &NSatBlock::transform)
         .def("nextBoundaryAnnulus", nextBoundaryAnnulus_tuple)
+        .def("abbr", &NSatBlock::abbr, OL_abbr())
         .def("getAbbr", &NSatBlock::getAbbr, OL_getAbbr())
         .def("writeAbbr", writeAbbr_stdio, OL_writeAbbr())
         .def(self < self)
