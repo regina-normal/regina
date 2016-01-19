@@ -88,7 +88,7 @@ QString BoundaryComponentChooser::description(
     if (option->countTriangles() == 0) {
         regina::NVertex* v = option->getVertex(0);
         QString desc;
-        if (v->getDegree() == 1)
+        if (v->degree() == 1)
             desc = trUtf8("Ideal bdry comp %1 — Vertex %2 — %3 (%4)");
         else
             desc = trUtf8("Ideal bdry comp %1 — Vertex %2 — %3 (%4), ...");

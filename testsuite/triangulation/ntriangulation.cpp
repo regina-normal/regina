@@ -1451,7 +1451,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 const Dim2Triangulation* link = v->buildLink();
                 Dim2Triangulation* link2 = v->buildLinkDetail(true, &iso);
 
-                if (link->size() != v->getDegree()) {
+                if (link->size() != v->degree()) {
                     std::ostringstream msg;
                     msg << tri->label() << ", vertex " << i << ": "
                         << "link has incorrect number of triangles.";
@@ -1526,7 +1526,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 NPerm4 perm;
                 const regina::Dim2Triangle *t, *adj;
                 unsigned vNum;
-                for (j = 0; j < v->getDegree(); ++j) {
+                for (j = 0; j < v->degree(); ++j) {
                     tet = tri->getTetrahedron(iso->tetImage(j));
                     perm = iso->facePerm(j);
                     vNum = perm[3];

@@ -137,7 +137,7 @@ void Triangulation<3>::writeTextLong(std::ostream& out) const {
         out << "  " << std::setw(3) << tetPos << "  |          ";
         for (vertex=0; vertex<4; vertex++)
             out << ' ' << std::setw(3) <<
-                vertexIndex(tet->getVertex(vertex));
+                vertexIndex(tet->vertex(vertex));
         out << '\n';
     }
     out << '\n';
@@ -151,7 +151,7 @@ void Triangulation<3>::writeTextLong(std::ostream& out) const {
         for (start=0; start<4; start++)
             for (end=start+1; end<4; end++)
                 out << ' ' << std::setw(3)
-                    << edgeIndex(tet->getEdge(NEdge::edgeNumber[start][end]));
+                    << edgeIndex(tet->edge(NEdge::edgeNumber[start][end]));
         out << '\n';
     }
     out << '\n';
@@ -163,7 +163,7 @@ void Triangulation<3>::writeTextLong(std::ostream& out) const {
         tet = simplices_[tetPos];
         out << "  " << std::setw(3) << tetPos << "  |        ";
         for (face=3; face>=0; face--)
-            out << ' ' << std::setw(3) << triangleIndex(tet->getTriangle(face));
+            out << ' ' << std::setw(3) << triangleIndex(tet->triangle(face));
         out << '\n';
     }
     out << '\n';
@@ -480,8 +480,8 @@ void Triangulation<3>::snapPea(std::ostream& out) const {
     out << size() << '\n';
 
     int i, j;
-    for (Triangulation<3>::TetrahedronIterator it = getTetrahedra().begin();
-            it != getTetrahedra().end(); it++) {
+    for (Triangulation<3>::TetrahedronIterator it = tetrahedra().begin();
+            it != tetrahedra().end(); it++) {
         // Although our precondition states that there are no boundary
         // triangles, we test for this anyway.  If somebody makes a mistake and
         // calls this routine with a bounded triangulation, we don't want
@@ -551,17 +551,17 @@ void Triangulation<3>::recogniser(std::ostream& out) const {
     NTetrahedron* tet;
     NPerm4 vert;
     for (unsigned i = 0; i < countTriangles(); ++i) {
-        f = getTriangle(i);
+        f = triangle(i);
 
-        tet = f->getEmbedding(0).getTetrahedron();
-        vert = f->getEmbedding(0).getVertices();
+        tet = f->embedding(0).tetrahedron();
+        vert = f->embedding(0).vertices();
         out << 't' << (tetrahedronIndex(tet) + 1)
             << '(' << (vert[0] + 1)
             << ',' << (vert[1] + 1)
             << ',' << (vert[2] + 1) << ") - ";
 
-        tet = f->getEmbedding(1).getTetrahedron();
-        vert = f->getEmbedding(1).getVertices();
+        tet = f->embedding(1).tetrahedron();
+        vert = f->embedding(1).vertices();
         out << 't' << (tetrahedronIndex(tet) + 1)
             << '(' << (vert[0] + 1)
             << ',' << (vert[1] + 1)

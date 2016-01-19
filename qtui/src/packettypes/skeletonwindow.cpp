@@ -218,7 +218,7 @@ QVariant VertexModel::data(const QModelIndex& index, int role) const {
                 return QString();
             }
             case 2:
-                return static_cast<unsigned>(item->getDegree());
+                return static_cast<unsigned>(item->degree());
             case 3:
                 QString ans;
                 for (auto& emb : *item)
@@ -308,7 +308,7 @@ QVariant EdgeModel::data(const QModelIndex& index, int role) const {
                 else
                     return QString();
             case 2:
-                return static_cast<unsigned>(item->getDegree());
+                return static_cast<unsigned>(item->degree());
             case 3:
                 QString ans;
                 for (auto& emb : *item)
@@ -414,7 +414,7 @@ QVariant TriangleModel::data(const QModelIndex& index, int role) const {
                 return prefix + tr("UNKNOWN");
             }
             case 2:
-                return static_cast<unsigned>(item->getDegree());
+                return static_cast<unsigned>(item->degree());
             case 3:
                 QString ans;
                 for (auto& emb : *item)
@@ -590,7 +590,7 @@ QVariant BoundaryComponentModel::data(const QModelIndex& index,
                 // Note that we can't have just one triangle
                 // (by a parity argument).
                 return (item->isIdeal() ?
-                    tr("Degree %1").arg(item->getVertex(0)->getDegree()) :
+                    tr("Degree %1").arg(item->getVertex(0)->degree()) :
                     tr("%1 triangles").arg(item->countTriangles()));
             case 3:
                 if (item->isIdeal()) {
@@ -696,7 +696,7 @@ QVariant Dim2VertexModel::data(const QModelIndex& index, int role) const {
                 else
                     return QString();
             case 2:
-                return static_cast<unsigned>(item->getDegree());
+                return static_cast<unsigned>(item->degree());
             case 3:
                 QString ans;
                 for (auto& emb : *item)
@@ -784,7 +784,7 @@ QVariant Dim2EdgeModel::data(const QModelIndex& index, int role) const {
                 else
                     return QString();
             case 2:
-                return static_cast<unsigned>(item->getDegree());
+                return static_cast<unsigned>(item->degree());
             case 3:
                 QString ans;
                 for (auto& emb : *item)

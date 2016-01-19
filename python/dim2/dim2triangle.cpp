@@ -47,6 +47,8 @@ using regina::Dim2Triangle;
 void addDim2Triangle() {
     class_<regina::Simplex<2>, std::auto_ptr<regina::Simplex<2>>,
             boost::noncopyable>("Simplex2", no_init)
+        .def("description", &Dim2Triangle::description,
+            return_value_policy<return_by_value>())
         .def("getDescription", &Dim2Triangle::getDescription,
             return_value_policy<return_by_value>())
         .def("setDescription", &Dim2Triangle::setDescription)

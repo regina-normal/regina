@@ -304,7 +304,7 @@ namespace {
          * along with all triangle and edge contributions for which that
          * tetrahedron is responsible.  A tetrahedron is "responsible" for
          * a triangle or edge contribution iff it is the tetrahedron
-         * referenced by getEmbedding(0) for that triangle or edge.
+         * referenced by front() for that triangle or edge.
          *
          * The six arguments colour0, ..., colour5 refer to the colours
          * on tetrahedron edges 0, ..., 5 respectively.
@@ -323,9 +323,9 @@ namespace {
             const NTriangle* triangle;
             const NEdge* edge;
             for (i = 0; i < 4; ++i) {
-                triangle = tet->getTriangle(i);
-                if (triangle->getEmbedding(0).getTetrahedron() == tet &&
-                        triangle->getEmbedding(0).getTriangle() == i) {
+                triangle = tet->triangle(i);
+                if (triangle->front().tetrahedron() == tet &&
+                        triangle->front().triangle() == i) {
                     switch (i) {
                         case 0:
                             triContrib(colour3, colour4, colour5, ans);
@@ -343,9 +343,9 @@ namespace {
                 }
             }
             for (i = 0; i < 6; ++i) {
-                edge = tet->getEdge(i);
-                if (edge->getEmbedding(0).getTetrahedron() == tet &&
-                        edge->getEmbedding(0).getEdge() == i) {
+                edge = tet->edge(i);
+                if (edge->front().tetrahedron() == tet &&
+                        edge->front().edge() == i) {
                     switch (i) {
                         case 0: edgeContrib(colour0, ans); break;
                         case 1: edgeContrib(colour1, ans); break;
@@ -460,9 +460,9 @@ namespace {
 
         tmp = new unsigned long[nTriangles];
         for (i = 0; i < nEdges; ++i) {
-            for (auto& emb : *tri.getEdge(sortedEdges[i]))
-                tmp[emb.getTetrahedron()->
-                    getTriangle(emb.getVertices()[2])->index()] = i;
+            for (auto& emb : *tri.edge(sortedEdges[i]))
+                tmp[emb.tetrahedron()->
+                    triangle(emb.vertices()[2])->index()] = i;
         }
         unsigned long* triDone = new unsigned long[nTriangles];
         unsigned long* triDoneStart = new unsigned long[nEdges + 1];
@@ -477,8 +477,8 @@ namespace {
 
         tmp = new unsigned long[nTet];
         for (i = 0; i < nEdges; ++i)
-            for (auto& emb : *tri.getEdge(sortedEdges[i]))
-                tmp[emb.getTetrahedron()->index()] = i;
+            for (auto& emb : *tri.edge(sortedEdges[i]))
+                tmp[emb.tetrahedron()->index()] = i;
         unsigned long* tetDone = new unsigned long[nTet];
         unsigned long* tetDoneStart = new unsigned long[nEdges + 1];
         tetDoneStart[0] = 0;
@@ -555,11 +555,11 @@ namespace {
             admissible = true;
             for (i = triDoneStart[curr];
                     admissible && i < triDoneStart[curr + 1]; ++i) {
-                triangle = tri.getTriangle(triDone[i]);
+                triangle = tri.triangle(triDone[i]);
                 if (! init.isAdmissible(
-                        colour[triangle->getEdge(0)->index()],
-                        colour[triangle->getEdge(1)->index()],
-                        colour[triangle->getEdge(2)->index()]))
+                        colour[triangle->edge(0)->index()],
+                        colour[triangle->edge(1)->index()],
+                        colour[triangle->edge(2)->index()]))
                     admissible = false;
             }
 
@@ -574,25 +574,25 @@ namespace {
 
                 triangleCache[curr] = triangleCache[curr - 1];
                 for (i = triDoneStart[curr - 1]; i < triDoneStart[curr]; ++i) {
-                    triangle = tri.getTriangle(triDone[i]);
+                    triangle = tri.triangle(triDone[i]);
                     init.triContrib(
-                        colour[triangle->getEdge(0)->index()],
-                        colour[triangle->getEdge(1)->index()],
-                        colour[triangle->getEdge(2)->index()],
+                        colour[triangle->edge(0)->index()],
+                        colour[triangle->edge(1)->index()],
+                        colour[triangle->edge(2)->index()],
                         triangleCache[curr]);
                 }
 
                 tetCache[curr] = tetCache[curr - 1];
                 for (i = tetDoneStart[curr - 1]; i < tetDoneStart[curr]; ++i) {
                     // Unlike the others, this call overwrites tmpTVType.
-                    tet = tri.getTetrahedron(tetDone[i]);
+                    tet = tri.tetrahedron(tetDone[i]);
                     init.tetContrib(
-                        colour[tet->getEdge(0)->index()],
-                        colour[tet->getEdge(1)->index()],
-                        colour[tet->getEdge(3)->index()],
-                        colour[tet->getEdge(5)->index()],
-                        colour[tet->getEdge(4)->index()],
-                        colour[tet->getEdge(2)->index()],
+                        colour[tet->edge(0)->index()],
+                        colour[tet->edge(1)->index()],
+                        colour[tet->edge(3)->index()],
+                        colour[tet->edge(5)->index()],
+                        colour[tet->edge(4)->index()],
+                        colour[tet->edge(2)->index()],
                         tmpTVType);
                     tetCache[curr] *= tmpTVType;
                 }
@@ -670,14 +670,14 @@ namespace {
                 // Increment ans appropriately.
                 valColour = 1;
                 for (i = 0; i < tri.size(); i++) {
-                    tet = tri.getTetrahedron(i);
+                    tet = tri.tetrahedron(i);
                     init.tetContrib(tet,
-                        colour[tet->getEdge(0)->index()],
-                        colour[tet->getEdge(1)->index()],
-                        colour[tet->getEdge(2)->index()],
-                        colour[tet->getEdge(3)->index()],
-                        colour[tet->getEdge(4)->index()],
-                        colour[tet->getEdge(5)->index()],
+                        colour[tet->edge(0)->index()],
+                        colour[tet->edge(1)->index()],
+                        colour[tet->edge(2)->index()],
+                        colour[tet->edge(3)->index()],
+                        colour[tet->edge(4)->index()],
+                        colour[tet->edge(5)->index()],
                         valColour);
                 }
 
@@ -704,13 +704,13 @@ namespace {
 
             // Does the current value for colour[curr] preserve admissibility?
             admissible = true;
-            for (auto& emb : *tri.getEdge(sortedEdges[curr])) {
-                index1 = tri.edgeIndex(emb.getTetrahedron()->getEdge(
-                    NEdge::edgeNumber[emb.getVertices()[0]]
-                    [emb.getVertices()[2]]));
-                index2 = tri.edgeIndex(emb.getTetrahedron()->getEdge(
-                    NEdge::edgeNumber[emb.getVertices()[1]]
-                    [emb.getVertices()[2]]));
+            for (auto& emb : *tri.edge(sortedEdges[curr])) {
+                index1 = tri.edgeIndex(emb.tetrahedron()->edge(
+                    NEdge::edgeNumber[emb.vertices()[0]]
+                    [emb.vertices()[2]]));
+                index2 = tri.edgeIndex(emb.tetrahedron()->edge(
+                    NEdge::edgeNumber[emb.vertices()[1]]
+                    [emb.vertices()[2]]));
                 if (edgePos[index1] <= curr && edgePos[index2] <= curr) {
                     // We've decided upon colours for all three edges of
                     // this triangle containing the current edge.
@@ -760,7 +760,7 @@ namespace {
 
         // In the seenDegree[] array, an edge that has been seen in all
         // of its tetrahedra will be marked as seenDegree[i] = -1 (as
-        // opposed to seenDegree[i] = tri.getEdge(i)->getDegree()).
+        // opposed to seenDegree[i] = tri.edge(i)->degree()).
         // This is simply to make such a condition easier to test.
         LightweightSequence<int>* seenDegree =
             new LightweightSequence<int>[nBags];
@@ -781,14 +781,14 @@ namespace {
             } else if (bag->type() == NICE_FORGET) {
                 // Forget bag.
                 child = bag->children();
-                tet = tri.getTetrahedron(child->element(bag->subtype()));
+                tet = tri.tetrahedron(child->element(bag->subtype()));
                 std::copy(seenDegree[child->index()].begin(),
                     seenDegree[child->index()].end(),
                     seenDegree[index].begin());
                 for (i = 0; i < 6; ++i) {
-                    edge = tet->getEdge(i);
+                    edge = tet->edge(i);
                     ++seenDegree[index][edge->index()];
-                    if (seenDegree[index][edge->index()] == edge->getDegree())
+                    if (seenDegree[index][edge->index()] == edge->degree())
                         seenDegree[index][edge->index()] = -1;
                 }
             } else {
@@ -798,7 +798,7 @@ namespace {
                 for (i = 0; i < nEdges; ++i) {
                     seenDegree[index][i] = seenDegree[child->index()][i] +
                         seenDegree[sibling->index()][i];
-                    if (seenDegree[index][i] == tri.getEdge(i)->getDegree())
+                    if (seenDegree[index][i] == tri.edge(i)->degree())
                         seenDegree[index][i] = -1;
                 }
             }
@@ -857,10 +857,10 @@ namespace {
             } else if (bag->type() == NICE_FORGET) {
                 // Forget bag.
                 child = bag->children();
-                tet = tri.getTetrahedron(child->element(bag->subtype()));
+                tet = tri.tetrahedron(child->element(bag->subtype()));
 
                 for (i = 5; i >= 0; --i) {
-                    tetEdge[i] = tet->getEdge(i)->index();
+                    tetEdge[i] = tet->edge(i)->index();
                     if (seenDegree[child->index()][tetEdge[i]] > 0) {
                         // The child will have already coloured this edge.
                         choiceType[i] = -1;
@@ -1117,7 +1117,7 @@ namespace {
         const NTetrahedron* tet;
         NPerm4 p;
         unsigned long i;
-        for (eit = tri.getEdges().begin(); eit != tri.getEdges().end(); ++eit) {
+        for (eit = tri.edges().begin(); eit != tri.edges().end(); ++eit) {
             for (auto& emb : **eit) {
                 input.push_back(std::vector<mpz_class>());
                 std::vector<mpz_class>& v(input.back());
@@ -1126,17 +1126,17 @@ namespace {
                 for (i = 0; i < 3 * nTri; ++i)
                     v.push_back(long(0));
 
-                tet = emb.getTetrahedron();
-                p = emb.getVertices();
+                tet = emb.tetrahedron();
+                p = emb.vertices();
 
-                ++v[3 * tet->getTriangle(p[2])->index() +
-                    tet->getTriangleMapping(p[2]).preImageOf(p[0])];
-                ++v[3 * tet->getTriangle(p[2])->index() +
-                    tet->getTriangleMapping(p[2]).preImageOf(p[1])];
-                --v[3 * tet->getTriangle(p[3])->index() +
-                    tet->getTriangleMapping(p[3]).preImageOf(p[0])];
-                --v[3 * tet->getTriangle(p[3])->index() +
-                    tet->getTriangleMapping(p[3]).preImageOf(p[1])];
+                ++v[3 * tet->triangle(p[2])->index() +
+                    tet->triangleMapping(p[2]).preImageOf(p[0])];
+                ++v[3 * tet->triangle(p[2])->index() +
+                    tet->triangleMapping(p[2]).preImageOf(p[1])];
+                --v[3 * tet->triangle(p[3])->index() +
+                    tet->triangleMapping(p[3]).preImageOf(p[0])];
+                --v[3 * tet->triangle(p[3])->index() +
+                    tet->triangleMapping(p[3]).preImageOf(p[1])];
             }
         }
 

@@ -48,8 +48,8 @@ bool LPConstraintEuler::addRows(
         obj[i] = 1;
     for (i = 0; i < tri->countTriangles(); ++i) {
         tet = tri->tetrahedronIndex(
-            tri->getTriangle(i)->getEmbedding(0).getTetrahedron());
-        p = tri->getTriangle(i)->getEmbedding(0).getVertices();
+            tri->getTriangle(i)->front().getTetrahedron());
+        p = tri->getTriangle(i)->front().getVertices();
         --obj[7 * tet + p[0]];
         --obj[7 * tet + p[1]];
         --obj[7 * tet + p[2]];
@@ -59,8 +59,8 @@ bool LPConstraintEuler::addRows(
     }
     for (i = 0; i < tri->countEdges(); ++i) {
         tet = tri->tetrahedronIndex(
-            tri->getEdge(i)->getEmbedding(0).getTetrahedron());
-        p = tri->getEdge(i)->getEmbedding(0).getVertices();
+            tri->getEdge(i)->front().getTetrahedron());
+        p = tri->getEdge(i)->front().getVertices();
         ++obj[7 * tet + p[0]];
         ++obj[7 * tet + p[1]];
         ++obj[7 * tet + 4 + vertexSplitMeeting[p[0]][p[1]][0]];

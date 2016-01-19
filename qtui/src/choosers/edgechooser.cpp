@@ -83,28 +83,28 @@ void EdgeChooser::select(regina::NEdge* option) {
 }
 
 QString EdgeChooser::description(regina::NEdge* option) {
-    if (option->getDegree() == 1) {
-        const regina::NEdgeEmbedding& e0 = option->getEmbedding(0);
+    if (option->degree() == 1) {
+        const regina::NEdgeEmbedding& e0 = option->embedding(0);
         return trUtf8("Edge %1 — %2 (%3)")
             .arg(tri_->edgeIndex(option))
-            .arg(tri_->tetrahedronIndex(e0.getTetrahedron()))
+            .arg(tri_->tetrahedronIndex(e0.tetrahedron()))
             .arg(e0.getVertices().trunc2().c_str());
     } else {
-        const regina::NEdgeEmbedding& e0 = option->getEmbedding(0);
-        const regina::NEdgeEmbedding& e1 = option->getEmbedding(1);
-        if (option->getDegree() == 2)
+        const regina::NEdgeEmbedding& e0 = option->embedding(0);
+        const regina::NEdgeEmbedding& e1 = option->embedding(1);
+        if (option->degree() == 2)
             return trUtf8("Edge %1 — %2 (%3), %4 (%5)")
                 .arg(tri_->edgeIndex(option))
-                .arg(tri_->tetrahedronIndex(e0.getTetrahedron()))
+                .arg(tri_->tetrahedronIndex(e0.tetrahedron()))
                 .arg(e0.getVertices().trunc2().c_str())
-                .arg(tri_->tetrahedronIndex(e1.getTetrahedron()))
+                .arg(tri_->tetrahedronIndex(e1.tetrahedron()))
                 .arg(e1.getVertices().trunc2().c_str());
         else
             return trUtf8("Edge %1 — %2 (%3), %4 (%5), ...")
                 .arg(tri_->edgeIndex(option))
-                .arg(tri_->tetrahedronIndex(e0.getTetrahedron()))
+                .arg(tri_->tetrahedronIndex(e0.tetrahedron()))
                 .arg(e0.getVertices().trunc2().c_str())
-                .arg(tri_->tetrahedronIndex(e1.getTetrahedron()))
+                .arg(tri_->tetrahedronIndex(e1.tetrahedron()))
                 .arg(e1.getVertices().trunc2().c_str());
     }
 }

@@ -195,22 +195,22 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          *
          * The triangulation of the vertex link is built as follows.
          * Let \a i lie between 0 and degree()-1 inclusive, let
-         * \a tet represent <tt>getEmbedding(i).getTetrahedron()</tt>,
-         * and let \a v represent <tt>getEmbedding(i).getVertex()</tt>.
-         * Then <tt>buildLink()->getTriangle(i)</tt> is the triangle
+         * \a tet represent <tt>embedding(i).tetrahedron()</tt>,
+         * and let \a v represent <tt>embedding(i).vertex()</tt>.
+         * Then <tt>buildLink()->triangle(i)</tt> is the triangle
          * in the vertex link that "slices off" vertex \a v from
          * tetrahedron \a tet.  In other words,
-         * <tt>buildLink()->getTriangle(i)</tt> in the vertex link
-         * is parallel to triangle <tt>tet->getTriangle(v)</tt> in the
+         * <tt>buildLink()->triangle(i)</tt> in the vertex link
+         * is parallel to triangle <tt>tet->triangle(v)</tt> in the
          * surrounding 3-manifold triangulation.
          *
          * The vertices of each triangle in the vertex link are
          * numbered as follows.  Following the discussion above,
-         * suppose that <tt>buildLink()->getTriangle(i)</tt> sits within
-         * \c tet and is parallel to <tt>tet->getTriangle(v)</tt>.
+         * suppose that <tt>buildLink()->triangle(i)</tt> sits within
+         * \c tet and is parallel to <tt>tet->triangle(v)</tt>.
          * Then vertices 0,1,2 of the triangle in the link will be
          * parallel to vertices 0,1,2 of the corresponding NTriangle.
-         * The permutation <tt>tet->getTriangleMapping(v)</tt> will map
+         * The permutation <tt>tet->triangleMapping(v)</tt> will map
          * vertices 0,1,2 of the triangle in the link to the
          * corresponding vertices of \c tet (those opposite \c v),
          * and will map 3 to \c v itself.

@@ -91,7 +91,7 @@ NTrivialTri* NTrivialTri::isTrivialTriangulation(const NComponent* comp) {
     unsigned long nEdges = comp->countEdges();
     unsigned long i;
     for (i = 0; i < nEdges; i++)
-        if (! comp->getEdge(i)->isValid())
+        if (! comp->edge(i)->isValid())
             return 0;
 
     // Test for the specific triangulations that we know about.
@@ -122,7 +122,7 @@ NTrivialTri* NTrivialTri::isTrivialTriangulation(const NComponent* comp) {
 
             long degree[4];
             for (i = 0; i < 4; i++)
-                degree[i] = comp->getEdge(i)->getDegree();
+                degree[i] = comp->edge(i)->degree();
             std::sort(degree, degree + 4);
 
             if (degree[0] == 2 && degree[1] == 4 && degree[2] == 6 &&

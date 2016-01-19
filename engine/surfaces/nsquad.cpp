@@ -167,7 +167,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
         broken = false;
 
         // Pick some triangular disc and set it to zero.
-        const NVertexEmbedding& vemb = (*vit)->getEmbedding(0);
+        const NVertexEmbedding& vemb = (*vit)->front();
         row = 7 * triang->tetrahedronIndex(vemb.getTetrahedron())
             + vemb.getVertex();
         ans->setElement(row, NLargeInteger::zero);

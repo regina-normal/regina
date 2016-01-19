@@ -92,7 +92,7 @@ void NTriangulation::barycentricSubdivision() {
                 NPerm4(perm[1], perm[0]));
 
             // Adjacent gluings to the adjacent tetrahedron:
-            oldTet = getTetrahedron(tet);
+            oldTet = tetrahedron(tet);
             if (! oldTet->adjacentTetrahedron(perm[0]))
                 continue; // This hits a boundary triangle.
             if (newTet[24 * tet + permIdx]->adjacentTetrahedron(perm[0]))
@@ -128,8 +128,8 @@ void NTriangulation::drillEdge(NEdge* e) {
     // In each case the corresponding edge number in the new tetrahedron
     // equals the edge number from the original tetrahedron.
 
-    int edgeNum = e->getEmbedding(0).getEdge();
-    long tetNum = tetrahedronIndex(e->getEmbedding(0).getTetrahedron());
+    int edgeNum = e->front().edge();
+    long tetNum = tetrahedronIndex(e->front().tetrahedron());
 
     int oldToNew[2]; // Identifies two of the 24 tetrahedra in a subdivision
                      // that contain the two corresponding half-edges.
@@ -158,10 +158,10 @@ void NTriangulation::drillEdge(NEdge* e) {
             // Remove all tetrahedra that touch each endpoint of the
             // resulting edge in the second barycentric subdivision.
             for (k = 0; k < 2; ++k) {
-                finalVertex = simplices_[finalTet]->getEdge(edgeNum)->
-                    getVertex(k);
+                finalVertex = simplices_[finalTet]->edge(edgeNum)->
+                    vertex(k);
                 for (auto& emb : *finalVertex)
-                    toRemove.insert(tetrahedronIndex(emb.getTetrahedron()));
+                    toRemove.insert(tetrahedronIndex(emb.tetrahedron()));
             }
         }
 
@@ -245,7 +245,7 @@ bool NTriangulation::idealToFinite() {
     long oppTet;
     NPerm4 p;
     for (i=0; i<numOldTet; i++) {
-        ot = getTetrahedron(i);
+        ot = tetrahedron(i);
         for (j=0; j<4; j++)
             if (ot->adjacentTetrahedron(j)) {
                  oppTet = tetrahedronIndex(ot->adjacentTetrahedron(j));
@@ -282,10 +282,10 @@ bool NTriangulation::idealToFinite() {
     // ideal vertices.
     // First we make a list of the tetrahedra.
     std::vector<NTetrahedron*> tetList;
-    for (NVertex* v : getVertices())
+    for (NVertex* v : vertices())
         if (v->isIdeal() || ! v->isStandard())
             for (auto& emb : *v)
-                tetList.push_back(emb.getTetrahedron());
+                tetList.push_back(emb.tetrahedron());
 
     // Now remove the tetrahedra.
     // For each tetrahedron, remove it and delete it.
@@ -311,14 +311,14 @@ bool NTriangulation::finiteToIdeal() {
 
     ChangeEventSpan span1(&staging);
 
-    for (NTriangle* t : getTriangles()) {
+    for (NTriangle* t : triangles()) {
         if (! t->isBoundary()) {
             bdry[t->index()] = newTet[t->index()] = 0;
             continue;
         }
 
-        bdry[t->index()] = t->front().getTetrahedron();
-        bdryPerm[t->index()] = t->front().getVertices();
+        bdry[t->index()] = t->front().tetrahedron();
+        bdryPerm[t->index()] = t->front().vertices();
     }
 
     // Add the new tetrahedra one boundary component at a time, so that
@@ -329,7 +329,7 @@ bool NTriangulation::finiteToIdeal() {
     for (bit = boundaryComponents_.begin();
             bit != boundaryComponents_.end(); bit++)
         for (i = 0; i < (*bit)->countTriangles(); ++i)
-            newTet[(*bit)->getTriangle(i)->index()] = staging.newTetrahedron();
+            newTet[(*bit)->triangle(i)->index()] = staging.newTetrahedron();
 
     // Glue the new tetrahedra to each other.
     NEdge* edge;
@@ -338,20 +338,20 @@ bool NTriangulation::finiteToIdeal() {
     for (bit = boundaryComponents_.begin();
             bit != boundaryComponents_.end(); bit++)
         for (i = 0; i < (*bit)->countEdges(); i++) {
-            edge = (*bit)->getEdge(i);
+            edge = (*bit)->edge(i);
 
             // This must be a valid boundary edge.
             // Find the boundary triangles at either end.
             NEdgeEmbedding e1 = edge->front();
             NEdgeEmbedding e2 = edge->back();
 
-            tetTriangle1 = e1.getTetrahedron()->getTriangle(
-                e1.getVertices()[3])->index();
-            tetTriangle2 = e2.getTetrahedron()->getTriangle(
-                e2.getVertices()[2])->index();
+            tetTriangle1 = e1.tetrahedron()->triangle(
+                e1.vertices()[3])->index();
+            tetTriangle2 = e2.tetrahedron()->triangle(
+                e2.vertices()[2])->index();
 
-            t1Perm = bdryPerm[tetTriangle1].inverse() * e1.getVertices();
-            t2Perm = bdryPerm[tetTriangle2].inverse() * e2.getVertices() *
+            t1Perm = bdryPerm[tetTriangle1].inverse() * e1.vertices();
+            t2Perm = bdryPerm[tetTriangle2].inverse() * e2.vertices() *
                 NPerm4(2, 3);
 
             newTet[tetTriangle1]->joinTo(t1Perm[2], newTet[tetTriangle2],

@@ -53,7 +53,7 @@ void NVertex::writeTextShort(std::ostream& out) const {
         case NON_STANDARD_CUSP: out << "Non-standard cusp "; break;
         case NON_STANDARD_BDRY: out << "Non-standard boundary "; break;
     }
-    out << "vertex of degree " << getDegree();
+    out << "vertex of degree " << degree();
 }
 
 void NVertex::writeTextLong(std::ostream& out) const {
@@ -72,7 +72,7 @@ Dim2Triangulation* NVertex::buildLinkDetail(bool labels,
     NPacket::ChangeEventSpan span(ans);
 
     if (inclusion)
-        *inclusion = new NIsomorphism(getDegree());
+        *inclusion = new NIsomorphism(degree());
 
     std::vector<NVertexEmbedding>::const_iterator it, adjIt;
     Dim2Triangle* tTri;

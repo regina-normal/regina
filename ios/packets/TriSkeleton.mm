@@ -138,7 +138,7 @@
         return;
     }
     
-    regina::Dim2Triangulation* ans = new regina::Dim2Triangulation(*self.packet->getVertex(seln.row - 1)->buildLink());
+    regina::Dim2Triangulation* ans = new regina::Dim2Triangulation(*self.packet->vertex(seln.row - 1)->buildLink());
     ans->setPacketLabel([NSString stringWithFormat:@"Link of vertex %zd", seln.row - 1].UTF8String);
     self.packet->insertChildLast(ans);
     [ReginaHelper viewPacket:ans];
@@ -162,7 +162,7 @@
     regina::NTriangulation* ans = new regina::NTriangulation(*self.packet);
     [ReginaHelper runWithHUD:@"Drilling…"
                         code:^{
-                            ans->drillEdge(ans->getEdge(seln.row - 1));
+                            ans->drillEdge(ans->edge(seln.row - 1));
                             ans->setPacketLabel(self.packet->adornedLabel("Drilled"));
                         }
                      cleanup:^{
@@ -222,10 +222,10 @@
                 cell.index.text = @"No vertices";
                 cell.data0.text = cell.data1.text = cell.data2.text = @"";
             } else {
-                regina::NVertex* v = self.packet->getVertex(indexPath.row - 1);
+                regina::NVertex* v = self.packet->vertex(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Vertex" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%zd.", indexPath.row - 1];
-                cell.data1.text = [NSString stringWithFormat:@"%ld", v->getDegree()];
+                cell.data1.text = [NSString stringWithFormat:@"%ld", v->degree()];
 
                 switch (v->link()) {
                     case regina::NVertex::SPHERE:
@@ -257,8 +257,8 @@
                 for (auto& emb : *v)
                     [TextHelper appendToList:pieces
                                         item:[NSString stringWithFormat:@"%ld (%d)",
-                                              self.packet->tetrahedronIndex(emb.getTetrahedron()),
-                                              emb.getVertex()]];
+                                              self.packet->tetrahedronIndex(emb.tetrahedron()),
+                                              emb.vertex()]];
                 cell.data2.text = pieces;
             }
             break;
@@ -268,10 +268,10 @@
                 cell.index.text = @"No edges";
                 cell.data0.text = cell.data1.text = cell.data2.text = @"";
             } else {
-                regina::NEdge* e = self.packet->getEdge(indexPath.row - 1);
+                regina::NEdge* e = self.packet->edge(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Edge" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%zd.", indexPath.row - 1];
-                cell.data1.text = [NSString stringWithFormat:@"%ld", e->getDegree()];
+                cell.data1.text = [NSString stringWithFormat:@"%ld", e->degree()];
 
                 if (! e->isValid())
                     cell.data0.attributedText = [TextHelper badString:@"Invalid"];
@@ -284,8 +284,8 @@
                 for (auto& emb : *e)
                     [TextHelper appendToList:pieces
                                         item:[NSString stringWithFormat:@"%ld (%s)",
-                                              self.packet->tetrahedronIndex(emb.getTetrahedron()),
-                                              emb.getVertices().trunc2().c_str()]];
+                                              self.packet->tetrahedronIndex(emb.tetrahedron()),
+                                              emb.vertices().trunc2().c_str()]];
                 cell.data2.text = pieces;
             }
             break;
@@ -295,7 +295,7 @@
                 cell.index.text = @"No triangles";
                 cell.data0.text = cell.data1.text = cell.data2.text = @"";
             } else {
-                regina::NTriangle* t = self.packet->getTriangle(indexPath.row - 1);
+                regina::NTriangle* t = self.packet->triangle(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Triangle" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%zd.", indexPath.row - 1];
 
@@ -332,11 +332,11 @@
                 }
 
                 NSMutableString* pieces = [NSMutableString string];
-                for (unsigned i = 0; i < t->getDegree(); i++)
+                for (unsigned i = 0; i < t->degree(); i++)
                     [TextHelper appendToList:pieces
                                         item:[NSString stringWithFormat:@"%ld (%s)",
-                                              self.packet->tetrahedronIndex(t->getEmbedding(i).getTetrahedron()),
-                                              t->getEmbedding(i).getVertices().trunc3().c_str()]];
+                                              self.packet->tetrahedronIndex(t->embedding(i).tetrahedron()),
+                                              t->embedding(i).vertices().trunc3().c_str()]];
                 cell.data2.text = pieces;
             }
             break;
@@ -346,29 +346,29 @@
                 cell.index.text = @"No tetrahedra";
                 cell.data0.text = cell.data1.text = cell.data2.text = @"";
             } else {
-                regina::NTetrahedron *t = self.packet->getTetrahedron(indexPath.row - 1);
+                regina::NTetrahedron *t = self.packet->tetrahedron(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Tetrahedron" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%zd.", indexPath.row - 1];
 
                 cell.data0.text = [NSString stringWithFormat:@"%ld, %ld, %ld, %ld",
-                                  t->getVertex(0)->markedIndex(),
-                                  t->getVertex(1)->markedIndex(),
-                                  t->getVertex(2)->markedIndex(),
-                                  t->getVertex(3)->markedIndex()];
+                                  t->vertex(0)->markedIndex(),
+                                  t->vertex(1)->markedIndex(),
+                                  t->vertex(2)->markedIndex(),
+                                  t->vertex(3)->markedIndex()];
 
                 cell.data1.text = [NSString stringWithFormat:@"%ld, %ld, %ld, %ld, %ld, %ld",
-                                  t->getEdge(0)->markedIndex(),
-                                  t->getEdge(1)->markedIndex(),
-                                  t->getEdge(2)->markedIndex(),
-                                  t->getEdge(3)->markedIndex(),
-                                  t->getEdge(4)->markedIndex(),
-                                  t->getEdge(5)->markedIndex()];
+                                  t->edge(0)->markedIndex(),
+                                  t->edge(1)->markedIndex(),
+                                  t->edge(2)->markedIndex(),
+                                  t->edge(3)->markedIndex(),
+                                  t->edge(4)->markedIndex(),
+                                  t->edge(5)->markedIndex()];
 
                 cell.data2.text = [NSString stringWithFormat:@"%ld, %ld, %ld, %ld",
-                                    t->getTriangle(3)->markedIndex(),
-                                    t->getTriangle(2)->markedIndex(),
-                                    t->getTriangle(1)->markedIndex(),
-                                    t->getTriangle(0)->markedIndex()];
+                                    t->triangle(3)->markedIndex(),
+                                    t->triangle(2)->markedIndex(),
+                                    t->triangle(1)->markedIndex(),
+                                    t->triangle(0)->markedIndex()];
             }
             break;
         case 4: /* components */
@@ -393,7 +393,7 @@
                     for (unsigned long i = 0; i < c->countTriangles(); ++i)
                         [TextHelper appendToList:pieces
                                             item:[NSString stringWithFormat:@"%ld",
-                                                  self.packet->tetrahedronIndex(c->getTetrahedron(i))]];
+                                                  self.packet->tetrahedronIndex(c->tetrahedron(i))]];
                     cell.data2.text = pieces;
                 }
             }
@@ -410,26 +410,26 @@
                 cell.data0.text = (b->isIdeal() ? @"Ideal" : @"Real");
                 // Note: by parity, #triangles must be >= 2 and so we can safely use the plural form.
                 cell.data1.text = (b->isIdeal() ?
-                                  [NSString stringWithFormat:@"Degree %ld", b->getVertex(0)->getDegree()] :
+                                  [NSString stringWithFormat:@"Degree %ld", b->vertex(0)->degree()] :
                                   [NSString stringWithFormat:@"%ld triangles", b->countTriangles()]);
 
                 NSMutableString* pieces = [NSMutableString string];
                 if (b->isIdeal()) {
-                    regina::NVertex* v = b->getVertex(0);
+                    regina::NVertex* v = b->vertex(0);
                     for (auto& emb : *v)
                         [TextHelper appendToList:pieces
                                             item:[NSString stringWithFormat:@"%ld (%d)",
-                                                  self.packet->tetrahedronIndex(emb.getTetrahedron()),
-                                                  emb.getVertex()]];
+                                                  self.packet->tetrahedronIndex(emb.tetrahedron()),
+                                                  emb.vertex()]];
                     cell.data2.text = [NSString stringWithFormat:@"Vertices %@", pieces];
                     // Parity says #vertices >= 2, so always use plural form.
                 } else {
                     for (unsigned long i = 0; i < b->countTriangles(); ++i) {
-                        const regina::NTriangleEmbedding& emb = b->getTriangle(i)->getEmbedding(0);
+                        const regina::NTriangleEmbedding& emb = b->triangle(i)->front();
                         [TextHelper appendToList:pieces
                                             item:[NSString stringWithFormat:@"%ld (%s)",
-                                                  self.packet->tetrahedronIndex(emb.getTetrahedron()),
-                                                  emb.getVertices().trunc3().c_str()]];
+                                                  self.packet->tetrahedronIndex(emb.tetrahedron()),
+                                                  emb.vertices().trunc3().c_str()]];
                     }
                     cell.data2.text = [NSString stringWithFormat:@"Faces %@", pieces];
                     // Parity says #faces >= 2, so always use plural form.

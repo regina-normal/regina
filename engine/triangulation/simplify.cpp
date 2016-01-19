@@ -95,7 +95,7 @@ bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
     if (check) {
         if (e->isBoundary() || ! e->isValid())
             return false;
-        if (e->getDegree() != 3)
+        if (e->degree() != 3)
             return false;
     }
 
@@ -105,11 +105,11 @@ bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
     std::set<NTetrahedron*> oldTets;
     int oldPos = 0;
     for (auto& emb : *e) {
-        oldTet[oldPos] = emb.getTetrahedron();
+        oldTet[oldPos] = emb.tetrahedron();
         if (check)
             if (! oldTets.insert(oldTet[oldPos]).second)
                 return false;
-        oldVertexPerm[oldPos] = emb.getVertices();
+        oldVertexPerm[oldPos] = emb.vertices();
         oldPos++;
     }
 
@@ -213,7 +213,7 @@ bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
 
 bool NTriangulation::twoThreeMove(NTriangle* f, bool check, bool perform) {
     if (check) {
-        if (f->getDegree() != 2)
+        if (f->degree() != 2)
             return false;
         // We now know that the given triangle is not on the boundary.
     }
@@ -223,8 +223,8 @@ bool NTriangulation::twoThreeMove(NTriangle* f, bool check, bool perform) {
     NPerm4 oldVertexPerm[2];
     int oldPos;
     for (oldPos = 0; oldPos < 2; oldPos++) {
-        oldTet[oldPos] = f->getEmbedding(oldPos).getTetrahedron();
-        oldVertexPerm[oldPos] = f->getEmbedding(oldPos).getVertices();
+        oldTet[oldPos] = f->embedding(oldPos).tetrahedron();
+        oldVertexPerm[oldPos] = f->embedding(oldPos).vertices();
     }
 
     if (check)
@@ -395,7 +395,7 @@ bool NTriangulation::fourFourMove(NEdge* e, int newAxis, bool check,
     if (check) {
         if (e->isBoundary() || ! e->isValid())
             return false;
-        if (e->getDegree() != 4)
+        if (e->degree() != 4)
             return false;
     }
 
@@ -404,7 +404,7 @@ bool NTriangulation::fourFourMove(NEdge* e, int newAxis, bool check,
     std::set<NTetrahedron*> oldTets;
     int oldPos = 0;
     for (auto& emb : *e) {
-        oldTet[oldPos] = emb.getTetrahedron();
+        oldTet[oldPos] = emb.tetrahedron();
         if (check)
             if (! oldTets.insert(oldTet[oldPos]).second)
                 return false;
@@ -421,12 +421,12 @@ bool NTriangulation::fourFourMove(NEdge* e, int newAxis, bool check,
     // Perform the 4-4 move as a 2-3 move followed by a 3-2 move.
     ChangeEventSpan span(this);
     NTriangle* tri23 = (newAxis == 0 ?
-        oldTet[0]->getTriangle(e->getEmbedding(0).getVertices()[2]) :
-        oldTet[1]->getTriangle(e->getEmbedding(1).getVertices()[2]));
-    int edge32 = e->getEmbedding(3).getEdge();
+        oldTet[0]->triangle(e->embedding(0).vertices()[2]) :
+        oldTet[1]->triangle(e->embedding(1).vertices()[2]));
+    int edge32 = e->embedding(3).edge();
 
     twoThreeMove(tri23, false, true);
-    threeTwoMove(oldTet[3]->getEdge(edge32), false, true);
+    threeTwoMove(oldTet[3]->edge(edge32), false, true);
 
     // Done!
     return true;
@@ -436,7 +436,7 @@ bool NTriangulation::twoZeroMove(NEdge* e, bool check, bool perform) {
     if (check) {
         if (e->isBoundary() || ! e->isValid())
             return false;
-        if (e->getDegree() != 2)
+        if (e->degree() != 2)
             return false;
     }
 
@@ -445,8 +445,8 @@ bool NTriangulation::twoZeroMove(NEdge* e, bool check, bool perform) {
 
     int i = 0;
     for (auto& emb : *e) {
-        tet[i] = emb.getTetrahedron();
-        perm[i] = emb.getVertices();
+        tet[i] = emb.tetrahedron();
+        perm[i] = emb.vertices();
         i++;
     }
 
@@ -460,10 +460,9 @@ bool NTriangulation::twoZeroMove(NEdge* e, bool check, bool perform) {
             // triangle[i][j] will be on tetrahedron i opposite vertex j of the
             // internal edge.
         for (i=0; i<2; i++) {
-            edge[i] = tet[i]->getEdge(
-                NEdge::edgeNumber[perm[i][2]][perm[i][3]]);
-            triangle[i][0] = tet[i]->getTriangle(perm[i][0]);
-            triangle[i][1] = tet[i]->getTriangle(perm[i][1]);
+            edge[i] = tet[i]->edge(NEdge::edgeNumber[perm[i][2]][perm[i][3]]);
+            triangle[i][0] = tet[i]->triangle(perm[i][0]);
+            triangle[i][1] = tet[i]->triangle(perm[i][1]);
         }
 
         if (edge[0] == edge[1])
@@ -533,7 +532,7 @@ bool NTriangulation::twoZeroMove(NVertex* v, bool check, bool perform) {
     if (check) {
         if (v->link() != NVertex::SPHERE)
             return false;
-        if (v->getDegree() != 2)
+        if (v->degree() != 2)
             return false;
     }
 
@@ -542,8 +541,8 @@ bool NTriangulation::twoZeroMove(NVertex* v, bool check, bool perform) {
 
     int i = 0;
     for (auto& emb : *v) {
-        tet[i] = emb.getTetrahedron();
-        vertex[i] = emb.getVertex();
+        tet[i] = emb.tetrahedron();
+        vertex[i] = emb.vertex();
         i++;
     }
 
@@ -553,7 +552,7 @@ bool NTriangulation::twoZeroMove(NVertex* v, bool check, bool perform) {
 
         NTriangle* triangle[2];
         for (i = 0; i < 2; i++)
-            triangle[i] = tet[i]->getTriangle(vertex[i]);
+            triangle[i] = tet[i]->triangle(vertex[i]);
         if (triangle[0] == triangle[1])
             return false;
         if (triangle[0]->isBoundary() && triangle[1]->isBoundary())
@@ -616,13 +615,13 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
     if (check) {
         if (e->isBoundary() || ! e->isValid())
             return false;
-        if (e->getDegree() != 1)
+        if (e->degree() != 1)
             return false;
     }
 
     const NEdgeEmbedding& emb = e->front();
-    NTetrahedron* oldTet = emb.getTetrahedron();
-    NPerm4 oldVertices = emb.getVertices();
+    NTetrahedron* oldTet = emb.tetrahedron();
+    NPerm4 oldVertices = emb.vertices();
 
     NTetrahedron* top = oldTet->adjacentTetrahedron(oldVertices[edgeEnd]);
     int otherEdgeEnd = 1 - edgeEnd;
@@ -631,8 +630,8 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
         if (! top)
             return false;
 
-    NTriangle* centreTri = oldTet->getTriangle(oldVertices[edgeEnd]);
-    NTriangle* bottomTri = oldTet->getTriangle(oldVertices[otherEdgeEnd]);
+    NTriangle* centreTri = oldTet->triangle(oldVertices[edgeEnd]);
+    NTriangle* bottomTri = oldTet->triangle(oldVertices[otherEdgeEnd]);
     NPerm4 bottomToTop =
         oldTet->adjacentGluing(oldVertices[edgeEnd]);
     int topGlued[2];
@@ -640,7 +639,7 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
     int i;
     for (i=0; i<2; i++) {
         topGlued[i] = bottomToTop[oldVertices[i + 2]];
-        flatEdge[i] = top->getEdge(
+        flatEdge[i] = top->edge(
             NEdge::edgeNumber[topGlued[i]][bottomToTop[oldVertices[edgeEnd]]]);
     }
 
@@ -653,7 +652,7 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
             return false;
         // This next test should follow from the two edges being distinct,
         // but we'll do it anyway.
-        if (top->getTriangle(topGlued[0]) == top->getTriangle(topGlued[1]))
+        if (top->triangle(topGlued[0]) == top->triangle(topGlued[1]))
             return false;
     }
 
@@ -737,26 +736,26 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
 }
 
 bool NTriangulation::openBook(NTriangle* f, bool check, bool perform) {
-    const NTriangleEmbedding& emb = f->getEmbedding(0);
-    NTetrahedron* tet = emb.getTetrahedron();
-    NPerm4 vertices = emb.getVertices();
+    const NTriangleEmbedding& emb = f->front();
+    NTetrahedron* tet = emb.tetrahedron();
+    NPerm4 vertices = emb.vertices();
 
     // Check that the triangle has exactly two boundary edges.
     // Note that this will imply that the triangle joins two tetrahedra.
     if (check) {
         int fVertex = -1;
         int nBdry = 0;
-        if (tet->getEdge(NEdge::edgeNumber[vertices[0]][vertices[1]])->
+        if (tet->edge(NEdge::edgeNumber[vertices[0]][vertices[1]])->
                 isBoundary())
             nBdry++;
         else
             fVertex = 2;
-        if (tet->getEdge(NEdge::edgeNumber[vertices[1]][vertices[2]])->
+        if (tet->edge(NEdge::edgeNumber[vertices[1]][vertices[2]])->
                 isBoundary())
             nBdry++;
         else
             fVertex = 0;
-        if (tet->getEdge(NEdge::edgeNumber[vertices[2]][vertices[0]])->
+        if (tet->edge(NEdge::edgeNumber[vertices[2]][vertices[0]])->
                 isBoundary())
             nBdry++;
         else
@@ -764,9 +763,9 @@ bool NTriangulation::openBook(NTriangle* f, bool check, bool perform) {
 
         if (nBdry != 2)
             return false;
-        if (tet->getVertex(vertices[fVertex])->link() != NVertex::DISC)
+        if (tet->vertex(vertices[fVertex])->link() != NVertex::DISC)
             return false;
-        if (! f->getEdge(fVertex)->isValid())
+        if (! f->edge(fVertex)->isValid())
             return false;
     }
 
@@ -779,7 +778,7 @@ bool NTriangulation::openBook(NTriangle* f, bool check, bool perform) {
 
     // Actually perform the move.
     // Don't bother with a block since this is so simple.
-    tet->unjoin(emb.getTriangle());
+    tet->unjoin(emb.triangle());
     return true;
 }
 
@@ -793,24 +792,24 @@ bool NTriangulation::closeBook(NEdge* e, bool check, bool perform) {
     const NEdgeEmbedding& front = e->front();
     const NEdgeEmbedding& back = e->back();
 
-    NTetrahedron* t0 = front.getTetrahedron();
-    NTetrahedron* t1 = back.getTetrahedron();
-    NPerm4 p0 = front.getVertices();
-    NPerm4 p1 = back.getVertices();
+    NTetrahedron* t0 = front.tetrahedron();
+    NTetrahedron* t1 = back.tetrahedron();
+    NPerm4 p0 = front.vertices();
+    NPerm4 p1 = back.vertices();
 
     if (check) {
-        if (t0->getTriangle(p0[3]) == t1->getTriangle(p1[2]))
+        if (t0->triangle(p0[3]) == t1->triangle(p1[2]))
             return false;
-        if (t0->getVertex(p0[2]) == t1->getVertex(p1[3]))
+        if (t0->vertex(p0[2]) == t1->vertex(p1[3]))
             return false;
-        if (t0->getVertex(p0[2])->link() != NVertex::DISC ||
-               t1->getVertex(p1[3])->link() != NVertex::DISC)
+        if (t0->vertex(p0[2])->link() != NVertex::DISC ||
+               t1->vertex(p1[3])->link() != NVertex::DISC)
             return false;
 
-        NEdge* e1 = t0->getEdge(NEdge::edgeNumber[p0[0]][p0[2]]);
-        NEdge* e2 = t0->getEdge(NEdge::edgeNumber[p0[1]][p0[2]]);
-        NEdge* f1 = t1->getEdge(NEdge::edgeNumber[p1[0]][p1[3]]);
-        NEdge* f2 = t1->getEdge(NEdge::edgeNumber[p1[1]][p1[3]]);
+        NEdge* e1 = t0->edge(NEdge::edgeNumber[p0[0]][p0[2]]);
+        NEdge* e2 = t0->edge(NEdge::edgeNumber[p0[1]][p0[2]]);
+        NEdge* f1 = t1->edge(NEdge::edgeNumber[p1[0]][p1[3]]);
+        NEdge* f2 = t1->edge(NEdge::edgeNumber[p1[1]][p1[3]]);
 
         if (e1 == e2 && f1 == f2)
             return false;
@@ -840,19 +839,19 @@ bool NTriangulation::shellBoundary(NTetrahedron* t,
         int i, j;
         int bdry[4];
         for (i=0; i<4; i++)
-            if (t->getTriangle(i)->isBoundary())
+            if (t->triangle(i)->isBoundary())
                 bdry[nBdry++] = i;
         if (nBdry < 1 || nBdry > 3)
             return false;
         if (nBdry == 1) {
-            if (t->getVertex(bdry[0])->isBoundary())
+            if (t->vertex(bdry[0])->isBoundary())
                 return false;
 
             NEdge* internal[3];
             j = 0;
             for (i = 0; i < 4; ++i)
                 if (i != bdry[0])
-                    internal[j++] = t->getEdge(NEdge::edgeNumber[bdry[0]][i]);
+                    internal[j++] = t->edge(NEdge::edgeNumber[bdry[0]][i]);
 
             if (! (internal[0]->isValid() &&
                     internal[1]->isValid() &&
@@ -865,9 +864,9 @@ bool NTriangulation::shellBoundary(NTetrahedron* t,
                 return false;
         } else if (nBdry == 2) {
             i = NEdge::edgeNumber[bdry[0]][bdry[1]];
-            if (t->getEdge(i)->isBoundary())
+            if (t->edge(i)->isBoundary())
                 return false;
-            if (! t->getEdge(i)->isValid())
+            if (! t->edge(i)->isValid())
                 return false;
             if (t->adjacentTetrahedron(NEdge::edgeVertex[5 - i][0]) == t)
                 return false;
@@ -913,18 +912,18 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
         // pillows with bigon boundaries)?
 
         // The vertices must be distinct.
-        if (e->getVertex(0) == e->getVertex(1))
+        if (e->vertex(0) == e->vertex(1))
             return false;
 
         // If both vertices are in the boundary then we must be collapsing a
         // boundary edge, and both vertices must have plain old disc links.
         // Recall that ideal vertices return isBoundary() == true.
-        if (e->getVertex(0)->isBoundary() && e->getVertex(1)->isBoundary()) {
+        if (e->vertex(0)->isBoundary() && e->vertex(1)->isBoundary()) {
             if (! e->isBoundary())
                 return false;
-            if (e->getVertex(0)->link() != NVertex::DISC)
+            if (e->vertex(0)->link() != NVertex::DISC)
                 return false;
-            if (e->getVertex(1)->link() != NVertex::DISC)
+            if (e->vertex(1)->link() != NVertex::DISC)
                 return false;
         }
 
@@ -1003,11 +1002,11 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
             it = e->begin();
 
             for ( ; it != e->end(); ++it) {
-                tet = it->getTetrahedron();
-                p = it->getVertices();
+                tet = it->tetrahedron();
+                p = it->vertices();
 
-                upper = tet->getEdge(NEdge::edgeNumber[p[0]][p[2]]);
-                lower = tet->getEdge(NEdge::edgeNumber[p[1]][p[2]]);
+                upper = tet->edge(NEdge::edgeNumber[p[0]][p[2]]);
+                lower = tet->edge(NEdge::edgeNumber[p[1]][p[2]]);
 
                 if (upper == e || lower == e) {
                     // [0a]: Check 0 fails (see explanation earlier).
@@ -1077,11 +1076,11 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
             long id1, id2;
 
             for (it = e->begin(); it != e->end(); ++it) {
-                tet = it->getTetrahedron();
-                p = it->getVertices();
+                tet = it->tetrahedron();
+                p = it->vertices();
 
-                upper = tet->getTriangle(p[0]);
-                lower = tet->getTriangle(p[1]);
+                upper = tet->triangle(p[0]);
+                lower = tet->triangle(p[1]);
 
                 id1 = (upper->isBoundary() ? nTriangles : upper->markedIndex());
                 id2 = (lower->isBoundary() ? nTriangles : lower->markedIndex());
@@ -1114,14 +1113,14 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
 
     // Clone the edge embeddings because we cannot rely on skeletal
     // objects once we start changing the triangulation.
-    size_t degree = e->getDegree();
+    size_t degree = e->degree();
     NTetrahedron** embTet = new NTetrahedron*[degree];
     NPerm4* embVertices = new NPerm4[degree];
 
     unsigned i;
     for (i = 0, it = e->begin(); it != e->end(); ++i, ++it) {
-        embTet[i] = (*it).getTetrahedron();
-        embVertices[i] = (*it).getVertices();
+        embTet[i] = (*it).tetrahedron();
+        embVertices[i] = (*it).vertices();
     }
 
     for (i = 0; i < degree; ++i) {

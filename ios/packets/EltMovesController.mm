@@ -133,7 +133,7 @@
 
     options32 = [[NSMutableArray alloc] init];
     for (i = 0; i < self.packet->countEdges(); ++i)
-        if (self.packet->threeTwoMove(self.packet->getEdge(i), true, false))
+        if (self.packet->threeTwoMove(self.packet->edge(i), true, false))
             [options32 addObject:@(i)];
     if (options32.count > 0) {
         self.button32.enabled = self.stepper32.enabled = YES;
@@ -149,7 +149,7 @@
 
     options23 = [[NSMutableArray alloc] init];
     for (i = 0; i < self.packet->countTriangles(); ++i)
-        if (self.packet->twoThreeMove(self.packet->getTriangle(i), true, false))
+        if (self.packet->twoThreeMove(self.packet->triangle(i), true, false))
             [options23 addObject:@(i)];
     if (options23.count > 0) {
         self.button23.enabled = self.stepper23.enabled = YES;
@@ -165,7 +165,7 @@
 
     options14 = [[NSMutableArray alloc] init];
     for (i = 0; i < self.packet->size(); ++i)
-        if (self.packet->oneFourMove(self.packet->getTetrahedron(i), true, false))
+        if (self.packet->oneFourMove(self.packet->tetrahedron(i), true, false))
             [options14 addObject:@(i)];
     if (options14.count > 0) {
         self.button14.enabled = self.stepper14.enabled = YES;
@@ -182,7 +182,7 @@
     options44 = [[NSMutableArray alloc] init];
     for (i = 0; i < self.packet->countEdges(); ++i)
         for (arg = 0; arg < 2; ++arg)
-            if (self.packet->fourFourMove(self.packet->getEdge(i), arg, true, false))
+            if (self.packet->fourFourMove(self.packet->edge(i), arg, true, false))
                 [options44 addObject:[[EdgeArg alloc] init:i arg:arg]];
     if (options44.count > 0) {
         self.button44.enabled = self.stepper44.enabled = YES;
@@ -198,7 +198,7 @@
 
     options20Edge = [[NSMutableArray alloc] init];
     for (i = 0; i < self.packet->countEdges(); ++i)
-        if (self.packet->twoZeroMove(self.packet->getEdge(i), true, false))
+        if (self.packet->twoZeroMove(self.packet->edge(i), true, false))
             [options20Edge addObject:@(i)];
     if (options20Edge.count > 0) {
         self.button20Edge.enabled = self.stepper20Edge.enabled = YES;
@@ -214,7 +214,7 @@
 
     options20Vtx = [[NSMutableArray alloc] init];
     for (i = 0; i < self.packet->countVertices(); ++i)
-        if (self.packet->twoZeroMove(self.packet->getVertex(i), true, false))
+        if (self.packet->twoZeroMove(self.packet->vertex(i), true, false))
             [options20Vtx addObject:@(i)];
     if (options20Vtx.count > 0) {
         self.button20Vtx.enabled = self.stepper20Vtx.enabled = YES;
@@ -231,7 +231,7 @@
     options21 = [[NSMutableArray alloc] init];
     for (i = 0; i < self.packet->countEdges(); ++i)
         for (arg = 0; arg < 2; ++arg)
-            if (self.packet->twoOneMove(self.packet->getEdge(i), arg, true, false))
+            if (self.packet->twoOneMove(self.packet->edge(i), arg, true, false))
                 [options21 addObject:[[EdgeArg alloc] init:i arg:arg]];
     if (options21.count > 0) {
         self.button21.enabled = self.stepper21.enabled = YES;
@@ -247,7 +247,7 @@
 
     optionsOpenBook = [[NSMutableArray alloc] init];
     for (i = 0; i < self.packet->countTriangles(); ++i)
-        if (self.packet->openBook(self.packet->getTriangle(i), true, false))
+        if (self.packet->openBook(self.packet->triangle(i), true, false))
             [optionsOpenBook addObject:@(i)];
     if (optionsOpenBook.count > 0) {
         self.buttonOpenBook.enabled = self.stepperOpenBook.enabled = YES;
@@ -263,7 +263,7 @@
 
     optionsCloseBook = [[NSMutableArray alloc] init];
     for (i = 0; i < self.packet->countEdges(); ++i)
-        if (self.packet->closeBook(self.packet->getEdge(i), true, false))
+        if (self.packet->closeBook(self.packet->edge(i), true, false))
             [optionsCloseBook addObject:@(i)];
     if (optionsCloseBook.count > 0) {
         self.buttonCloseBook.enabled = self.stepperCloseBook.enabled = YES;
@@ -279,7 +279,7 @@
 
     optionsShell = [[NSMutableArray alloc] init];
     for (i = 0; i < self.packet->size(); ++i)
-        if (self.packet->shellBoundary(self.packet->getTetrahedron(i), true, false))
+        if (self.packet->shellBoundary(self.packet->tetrahedron(i), true, false))
             [optionsShell addObject:@(i)];
     if (optionsShell.count > 0) {
         self.buttonShell.enabled = self.stepperShell.enabled = YES;
@@ -295,7 +295,7 @@
 
     optionsCollapseEdge = [[NSMutableArray alloc] init];
     for (i = 0; i < self.packet->countEdges(); ++i)
-        if (self.packet->collapseEdge(self.packet->getEdge(i), true, false))
+        if (self.packet->collapseEdge(self.packet->edge(i), true, false))
             [optionsCollapseEdge addObject:@(i)];
     if (optionsCollapseEdge.count > 0) {
         self.buttonCollapseEdge.enabled = self.stepperCollapseEdge.enabled = YES;
@@ -317,7 +317,7 @@
         NSLog(@"Invalid vertex stepper value: %d", use);
         return 0;
     }
-    return self.packet->getVertex([options[use] longValue]);
+    return self.packet->vertex([options[use] longValue]);
 }
 
 - (regina::NEdge*)edgeFor:(UIStepper*)stepper options:(NSArray*)options
@@ -327,7 +327,7 @@
         NSLog(@"Invalid edge stepper value: %d", use);
         return 0;
     }
-    return self.packet->getEdge([options[use] longValue]);
+    return self.packet->edge([options[use] longValue]);
 }
 
 - (EdgeArg*)edgeArgFor:(UIStepper*)stepper options:(NSArray*)options
@@ -347,7 +347,7 @@
         NSLog(@"Invalid triangle stepper value: %d", use);
         return 0;
     }
-    return self.packet->getTriangle([options[use] longValue]);
+    return self.packet->triangle([options[use] longValue]);
 }
 
 - (regina::NTetrahedron*)tetrahedronFor:(UIStepper*)stepper options:(NSArray*)options
@@ -357,7 +357,7 @@
         NSLog(@"Invalid tetrahedron stepper value: %d", use);
         return 0;
     }
-    return self.packet->getTetrahedron([options[use] longValue]);
+    return self.packet->tetrahedron([options[use] longValue]);
 }
 
 - (NSAttributedString*)vertexDesc:(regina::NVertex*)vertex
@@ -367,18 +367,18 @@
 
     NSMutableString* text = [[NSMutableString alloc] init];
 
-    const regina::NVertexEmbedding& e0 = vertex->getEmbedding(0);
+    const regina::NVertexEmbedding& e0 = vertex->embedding(0);
     [text appendFormat:@"Vertex %ld — %ld (%d)",
      vertex->index(),
-     e0.getTetrahedron()->index(),
-     e0.getVertex()];
+     e0.tetrahedron()->index(),
+     e0.vertex()];
 
-    if (vertex->getDegree() > 1) {
-        const regina::NVertexEmbedding& e1 = vertex->getEmbedding(1);
+    if (vertex->degree() > 1) {
+        const regina::NVertexEmbedding& e1 = vertex->embedding(1);
         [text appendFormat:@", %ld (%d)",
-         e1.getTetrahedron()->index(),
-         e1.getVertex()];
-        if (vertex->getDegree() > 2)
+         e1.tetrahedron()->index(),
+         e1.vertex()];
+        if (vertex->degree() > 2)
             [text appendString:@", …"];
     }
 
@@ -392,18 +392,18 @@
 
     NSMutableString* text = [[NSMutableString alloc] init];
 
-    const regina::NEdgeEmbedding& e0 = edge->getEmbedding(0);
+    const regina::NEdgeEmbedding& e0 = edge->embedding(0);
     [text appendFormat:@"Edge %ld — %ld (%s)",
      edge->index(),
-     e0.getTetrahedron()->index(),
-     e0.getVertices().trunc2().c_str()];
+     e0.tetrahedron()->index(),
+     e0.vertices().trunc2().c_str()];
 
-    if (edge->getDegree() > 1) {
-        const regina::NEdgeEmbedding& e1 = edge->getEmbedding(1);
+    if (edge->degree() > 1) {
+        const regina::NEdgeEmbedding& e1 = edge->embedding(1);
         [text appendFormat:@", %ld (%s)",
-         e1.getTetrahedron()->index(),
-         e1.getVertices().trunc2().c_str()];
-        if (edge->getDegree() > 2)
+         e1.tetrahedron()->index(),
+         e1.vertices().trunc2().c_str()];
+        if (edge->degree() > 2)
             [text appendString:@", …"];
     }
 
@@ -417,21 +417,21 @@
 
     NSMutableString* text = [[NSMutableString alloc] init];
 
-    regina::NEdge* edge = self.packet->getEdge(edgeArg.edge);
-    const regina::NEdgeEmbedding& e0 = edge->getEmbedding(0);
+    regina::NEdge* edge = self.packet->edge(edgeArg.edge);
+    const regina::NEdgeEmbedding& e0 = edge->embedding(0);
     [text appendFormat:@"Edge %ld [%@ %d] — %ld (%s)",
      edge->index(),
      type,
      edgeArg.arg,
-     e0.getTetrahedron()->index(),
-     e0.getVertices().trunc2().c_str()];
+     e0.tetrahedron()->index(),
+     e0.vertices().trunc2().c_str()];
 
-    if (edge->getDegree() > 1) {
-        const regina::NEdgeEmbedding& e1 = edge->getEmbedding(1);
+    if (edge->degree() > 1) {
+        const regina::NEdgeEmbedding& e1 = edge->embedding(1);
         [text appendFormat:@", %ld (%s)",
-         e1.getTetrahedron()->index(),
-         e1.getVertices().trunc2().c_str()];
-        if (edge->getDegree() > 2)
+         e1.tetrahedron()->index(),
+         e1.vertices().trunc2().c_str()];
+        if (edge->degree() > 2)
             [text appendString:@", …"];
     }
 
@@ -445,17 +445,17 @@
 
     NSMutableString* text = [[NSMutableString alloc] init];
 
-    const regina::NTriangleEmbedding& e0 = triangle->getEmbedding(0);
+    const regina::NTriangleEmbedding& e0 = triangle->embedding(0);
     [text appendFormat:@"Triangle %ld — %ld (%s)",
      triangle->index(),
-     e0.getTetrahedron()->index(),
-     e0.getVertices().trunc3().c_str()];
+     e0.tetrahedron()->index(),
+     e0.vertices().trunc3().c_str()];
 
-    if (triangle->getDegree() > 1) {
-        const regina::NTriangleEmbedding& e1 = triangle->getEmbedding(1);
+    if (triangle->degree() > 1) {
+        const regina::NTriangleEmbedding& e1 = triangle->embedding(1);
         [text appendFormat:@", %ld (%s)",
-         e1.getTetrahedron()->index(),
-         e1.getVertices().trunc3().c_str()];
+         e1.tetrahedron()->index(),
+         e1.vertices().trunc3().c_str()];
     }
 
     return [[NSAttributedString alloc] initWithString:text];
@@ -506,7 +506,7 @@
     if (! use)
         return;
 
-    self.packet->fourFourMove(self.packet->getEdge(use.edge), use.arg, true, true);
+    self.packet->fourFourMove(self.packet->edge(use.edge), use.arg, true, true);
     [self reloadMoves];
 }
 
@@ -536,7 +536,7 @@
     if (! use)
         return;
 
-    self.packet->twoOneMove(self.packet->getEdge(use.edge), use.arg, true, true);
+    self.packet->twoOneMove(self.packet->edge(use.edge), use.arg, true, true);
     [self reloadMoves];
 }
 
