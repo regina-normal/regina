@@ -281,13 +281,13 @@ class REGINA_API NLayering : public boost::noncopyable {
          *
          * Let \a t and \a p be the first tetrahedron and
          * permutation of the old boundary (as returned by
-         * getOldBoundaryTet(0) and getOldBoundaryRoles(0)), and let
+         * oldBoundaryTet(0) and oldBoundaryRoles(0)), and let
          * \a old_x and \a old_y be the directed edges \a p[0]-\a p[1]
          * and \a p[0]-\a p[2] respectively of tetrahedron \a t (these
          * are the leftmost and uppermost edges of the diagram below).
          * Likewise, let \a s and \a q be the first tetrahedron and
          * permutation of the new boundary (as returned by
-         * getNewBoundaryTet(0) and getNewBoundaryRoles(0)), and let
+         * newBoundaryTet(0) and newBoundaryRoles(0)), and let
          * \a new_x and \a new_y be the directed edges \a q[0]-\a q[1]
          * and \a q[0]-\a q[2] respectively of tetrahedron \a s.
          *
@@ -391,7 +391,7 @@ class REGINA_API NLayering : public boost::noncopyable {
          *
          * Specifically, let \a t0 and \a p0 be the first tetrahedron and
          * permutation of the old boundary (as returned by
-         * getOldBoundaryTet(0) and getOldBoundaryRoles(0)), and let
+         * oldBoundaryTet(0) and oldBoundaryRoles(0)), and let
          * \a x and \a y be the directed edges \a p0[0]-\a p0[1] and
          * \a p0[0]-\a p0[2] of tetrahedron \a t0 respectively (these
          * are the leftmost and uppermost edges of the diagram below).

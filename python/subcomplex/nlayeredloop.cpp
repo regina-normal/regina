@@ -47,11 +47,11 @@ void addNLayeredLoop() {
             ("NLayeredLoop", no_init)
         .def("clone", &NLayeredLoop::clone,
             return_value_policy<manage_new_object>())
-        .def("length", &NLayeredLoop::getLength)
+        .def("length", &NLayeredLoop::length)
         .def("getLength", &NLayeredLoop::getLength)
         .def("getIndex", &NLayeredLoop::getIndex)
         .def("isTwisted", &NLayeredLoop::isTwisted)
-        .def("hinge", &NLayeredLoop::getHinge,
+        .def("hinge", &NLayeredLoop::hinge,
             return_value_policy<reference_existing_object>())
         .def("getHinge", &NLayeredLoop::getHinge,
             return_value_policy<reference_existing_object>())

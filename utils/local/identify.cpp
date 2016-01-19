@@ -103,7 +103,7 @@ void process(NTriangulation* t) {
             std::cout << "  ==  " << manifold;
             mfdsOk++;
 
-            std::string structure = m->getStructure();
+            std::string structure = m->structure();
             if ((! structure.empty()) && (structure != manifold))
                 std::cout << "  ==  " << structure;
 

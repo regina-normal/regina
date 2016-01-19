@@ -119,7 +119,7 @@
             regina::NManifold* mfd = std->manifold();
             if (mfd) {
                 isHyp = mfd->isHyperbolic();
-                manifoldName = @(mfd->getName().c_str());
+                manifoldName = @(mfd->name().c_str());
                 delete mfd;
 
                 // If we have the 3-sphere, 3-ball or solid torus, then

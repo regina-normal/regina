@@ -51,8 +51,8 @@ bool NManifold::operator < (const NManifold& compare) const {
     if (lens2 && ! lens1)
         return false;
     if (lens1 && lens2) {
-        return (lens1->getP() < lens2->getP() ||
-            (lens1->getP() == lens2->getP() && lens1->getQ() < lens2->getQ()));
+        return (lens1->p() < lens2->p() ||
+            (lens1->p() == lens2->p() && lens1->q() < lens2->q()));
     }
 
     // Next go through Seifert fibred spaces.

@@ -83,7 +83,7 @@ class NHomMarkedAbelianGroup;
  * Some routines in this class refer to the internal <i>presentation
  * matrix</i>.  This is a proper presentation matrix for the abelian group,
  * and is created by constructing the product MRBi() * \a N, and then
- * removing the first getRankM() rows.
+ * removing the first rankM() rows.
  *
  * @author Ryan Budney
  *
@@ -430,8 +430,16 @@ class REGINA_API NMarkedAbelianGroup :
          * this must be between 0 and rank()-1 inclusive.
          * @return the coordinates of the free generator in the nullspace of
          * \a M; this vector will have length M.columns() (or
-         * equivalently, N.rows()). If this generator does not exist, 
+         * equivalently, N.rows()). If this generator does not exist,
          * you will receive an empty vector.
+         */
+        std::vector<NLargeInteger> freeRep(unsigned long index) const;
+        /**
+         * Deprecated routine that returns the requested free generator in the
+         * original chain complex defining the group.
+         *
+         * \deprecated This routine has been renamed to freeRep().
+         * See the freeRep() documentation for further details.
          */
         std::vector<NLargeInteger> getFreeRep(unsigned long index) const;
 
@@ -458,10 +466,19 @@ class REGINA_API NMarkedAbelianGroup :
          * \a M; this vector will have length M.columns() (or
          * equivalently, N.rows()).
          */
+        std::vector<NLargeInteger> torsionRep(unsigned long index) const;
+        /**
+         * Deprecated routine that returns the requested generator of the
+         * torsion subgroup but represented in the original chain complex
+         * defining the group.
+         *
+         * \deprecated This routine has been renamed to torsionRep().
+         * See the torsionRep() documentation for further details.
+         */
         std::vector<NLargeInteger> getTorsionRep(unsigned long index) const;
 
         /**
-         * A combination of getFreeRep and getTorsion rep, this routine takes
+         * A combination of freeRep and torsionRep, this routine takes
          * a vector which represents an element in the group in the SNF
          * coordinates and returns a corresponding vector in the original
          * chain complex.
@@ -660,8 +677,8 @@ class REGINA_API NMarkedAbelianGroup :
          * In other words, suppose \a v belongs to ker(M) and snfRep(v)
          * returns the vector (\a b1, ..., \a bk, \a a1, ..., \a ad).
          * Suppose furthermore that the free generators returned
-         * by getFreeRep(0..(d-1)) are \a f1, ..., \a fd respectively, and
-         * that the torsion generators returned by getTorsionRep(0..(k-1))
+         * by freeRep(0..(d-1)) are \a f1, ..., \a fd respectively, and
+         * that the torsion generators returned by torsionRep(0..(k-1))
          * are \a t1, ..., \a tk respectively.  Then
          * \a v = \a b1.t1 + ... + \a bk.tk + \a a1.f1 + ... + \a ad.fd
          * modulo img(N).
@@ -1613,6 +1630,15 @@ inline bool NMarkedAbelianGroup::isIsomorphicTo(
     return ((InvFacList == other.InvFacList) && (snfrank == other.snfrank));
 }
 
+inline std::vector<NLargeInteger> NMarkedAbelianGroup::getFreeRep(unsigned long index)
+        const {
+    return freeRep(index);
+}
+
+inline std::vector<NLargeInteger> NMarkedAbelianGroup::getTorsionRep(unsigned long
+        index) const {
+    return torsionRep(index);
+}
 inline const NMatrixInt& NMarkedAbelianGroup::MRB() const {
     return OMR;
 }

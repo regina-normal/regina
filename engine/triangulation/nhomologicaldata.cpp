@@ -1138,7 +1138,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
             // now the corresponding vector...
             // this will have to be fac1i * vector corresponding to
             // invariantFactor(i).
-            tV = dmHomology1->getTorsionRep(i);
+            tV = dmHomology1->torsionRep(i);
 
             for (k=0; k<tV.size(); k++) tV[k]=fac1i*fac2*tV[k];
 
@@ -1312,8 +1312,8 @@ void NHomologicalData::computeTorsionLinkingForm() {
                             tri->triangle(dNBF[k])->embedding(0).
                                 vertices().sign() ), ppList[i] );
             }
-            tN=torsionLinkingFormPresentationMat.entry(i,j).getNumerator();
-            tD=torsionLinkingFormPresentationMat.entry(i,j).getDenominator();
+            tN=torsionLinkingFormPresentationMat.entry(i,j).numerator();
+            tD=torsionLinkingFormPresentationMat.entry(i,j).denominator();
             tN.divisionAlg(tD,tR);
             tN = tR.gcd(tD);
             tR.divByExact(tN);
@@ -1468,8 +1468,8 @@ void NHomologicalData::computeTorsionLinkingForm() {
 
                     // reduce mod 1, then turn into a long double and
                     // evaluate cos, sin
-                    tN = tSum.getNumerator();
-                    tD = tSum.getDenominator();
+                    tN = tSum.numerator();
+                    tD = tSum.denominator();
                     tN.divisionAlg(tD,tR);
                     tSum = NRational(twoPow) * pi * NRational( tR, tD );
                     tLD = tSum.doubleApprox();
@@ -1566,7 +1566,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
             for (k=0; k<torRankV[i].second[j]; k++)
                 for (l=0; l<torRankV[i].second[j]; l++)
                     tempM.entry(k,l) = (NRational(tI)*linkingFormPD[i]->
-                        entry(k+curri,l+curri)).getNumerator();
+                        entry(k+curri,l+curri)).numerator();
 
             tempa.push_back( tempM.det().legendre(torRankV[i].first) );
             // legendre symbol, compute and append to tempa
@@ -1643,8 +1643,8 @@ void NHomologicalData::computeTorsionLinkingForm() {
             tI = NLargeInteger("2");
             tI.raiseToPower(h1PrimePowerDecomp[0].second[i]-1);
             tRat = NRational(tI) * linkingFormPD[0]->entry(i,i);
-            tN = tRat.getNumerator();
-            tD = tRat.getDenominator();
+            tN = tRat.numerator();
+            tD = tRat.denominator();
             tN.divisionAlg(tD,tR);
             if (tR != NLargeInteger::zero)
                 torsionLinkingFormSatisfiesKKtwoTorCondition=false;

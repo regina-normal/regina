@@ -95,13 +95,13 @@ class REGINA_API NLayeredLensSpace : public NStandardTriangulation {
          *
          * @return the first parameter \a p.
          */
-        unsigned long P() const;
+        unsigned long p() const;
         /**
          * Deprecated routine that returns the first parameter \a p of this
          * lens space L(p,q).
          *
-         * \deprecated This routine has been renamed to P().
-         * See the P() documentation for further details.
+         * \deprecated This routine has been renamed to p().
+         * See the p() documentation for further details.
          */
         unsigned long getP() const;
         /**
@@ -109,13 +109,13 @@ class REGINA_API NLayeredLensSpace : public NStandardTriangulation {
          *
          * @return the second parameter \a q.
          */
-        unsigned long Q() const;
+        unsigned long q() const;
         /**
          * Deprecated routine that returns the second parameter \a q of this
          * lens space L(p,q).
          *
-         * \deprecated This routine has been renamed to Q().
-         * See the Q() documentation for further details.
+         * \deprecated This routine has been renamed to q().
+         * See the q() documentation for further details.
          */
         unsigned long getQ() const;
 
@@ -140,7 +140,7 @@ class REGINA_API NLayeredLensSpace : public NStandardTriangulation {
          * of the degenerate (2,1,1) layered solid torus).  The return
          * value will be one of the three top level tetrahedron edge
          * groups in the layered solid torus; see
-         * NLayeredSolidTorus::getTopEdge() for further details about
+         * NLayeredSolidTorus::topEdge() for further details about
          * edge groups.
          *
          * @return the top level edge group of the layered solid torus to
@@ -204,13 +204,13 @@ inline NLayeredLensSpace::~NLayeredLensSpace() {
     delete torus_;
 }
 
-inline unsigned long NLayeredLensSpace::P() const {
+inline unsigned long NLayeredLensSpace::p() const {
     return p_;
 }
 inline unsigned long NLayeredLensSpace::getP() const {
     return p_;
 }
-inline unsigned long NLayeredLensSpace::Q() const {
+inline unsigned long NLayeredLensSpace::q() const {
     return q_;
 }
 inline unsigned long NLayeredLensSpace::getQ() const {

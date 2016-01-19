@@ -183,7 +183,7 @@ class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
          * Returns a permutation describing the role played by each top
          * level edge group of the layered solid torus glued to the
          * requested annulus of the core triangular solid torus.  See
-         * NLayeredSolidTorus::getTopEdge() for details regarding edge groups.
+         * NLayeredSolidTorus::topEdge() for details regarding edge groups.
          *
          * If the permutation returned is <tt>p</tt>, edge group <tt>p[0]</tt>
          * will be glued to an axis edge, group <tt>p[1]</tt> will be
@@ -191,7 +191,7 @@ class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
          * to a minor edge.  <tt>p[3]</tt> will always be 3.
          *
          * Even if the corresponding layered solid torus is a degenerate
-         * (2,1,1) mobius band (i.e., getAugTorus() returns \c null),
+         * (2,1,1) mobius band (i.e., augTorus() returns \c null),
          * the concept of edge groups is still
          * meaningful and this routine will return correct results.
          *
