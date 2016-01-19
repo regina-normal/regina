@@ -648,7 +648,7 @@ namespace {
 
     inline NTetrahedron* Block::layeringTetrahedron() {
         return (innerTet_[nInnerTet_++] =
-            innerTet_[0]->getTriangulation()->newTetrahedron());
+            innerTet_[0]->triangulation()->newTetrahedron());
     }
 
     inline void Block::attachVertexNbd(NTetrahedron* nbd, int vertex) {
@@ -1012,16 +1012,16 @@ namespace {
             NTriangulation* insertInto) {
         unsigned long i, j;
         for (i = 0; i < 4; ++i)
-            triCount_[i] = s->getTriangleCoord(tetIndex, i).longValue();
+            triCount_[i] = s->triangles(tetIndex, i).longValue();
 
         NLargeInteger coord;
-        if ((coord = s->getQuadCoord(tetIndex, 0)) > 0) {
+        if ((coord = s->quads(tetIndex, 0)) > 0) {
             quadCount_ = coord.longValue();
             quadType_ = 0;
-        } else if ((coord = s->getQuadCoord(tetIndex, 1)) > 0) {
+        } else if ((coord = s->quads(tetIndex, 1)) > 0) {
             quadCount_ = coord.longValue();
             quadType_ = 1;
-        } else if ((coord = s->getQuadCoord(tetIndex, 2)) > 0) {
+        } else if ((coord = s->quads(tetIndex, 2)) > 0) {
             quadCount_ = coord.longValue();
             quadType_ = 2;
         } else {
@@ -1029,7 +1029,7 @@ namespace {
             quadType_ = -1;
         }
 
-        const NTetrahedron* tet = s->getTriangulation()->getTetrahedron(tetIndex);
+        const NTetrahedron* tet = s->triangulation()->getTetrahedron(tetIndex);
 
         // Build the blocks.
         // Note in all of this that we insert an extra "fake" triangle at each
@@ -1158,7 +1158,7 @@ NTriangulation* NNormalSurface::cutAlong() const {
     NTriangulation* ans = new NTriangulation();
     NPacket::ChangeEventSpan span(ans);
 
-    unsigned long nTet = getTriangulation()->getNumberOfTetrahedra();
+    unsigned long nTet = triangulation()->size();
     if (nTet == 0)
         return ans;
 
@@ -1174,16 +1174,16 @@ NTriangulation* NNormalSurface::cutAlong() const {
     int fromVertex0, fromVertex1;
     NPerm4 gluing;
     unsigned long quadBlocks;
-    for (fit = getTriangulation()->getTriangles().begin();
-            fit != getTriangulation()->getTriangles().end(); ++fit) {
+    for (fit = triangulation()->triangles().begin();
+            fit != triangulation()->triangles().end(); ++fit) {
         f = *fit;
         if (f->isBoundary())
             continue;
 
-        tet0 = f->getEmbedding(0).getTetrahedron()->markedIndex();
-        tet1 = f->getEmbedding(1).getTetrahedron()->markedIndex();
-        face0 = f->getEmbedding(0).getTriangle();
-        face1 = f->getEmbedding(1).getTriangle();
+        tet0 = f->getEmbedding(0).tetrahedron()->markedIndex();
+        tet1 = f->getEmbedding(1).tetrahedron()->markedIndex();
+        face0 = f->getEmbedding(0).triangle();
+        face1 = f->getEmbedding(1).triangle();
 
         gluing = f->getEmbedding(0).getTetrahedron()->adjacentGluing(face0);
 
@@ -1216,23 +1216,23 @@ NTriangulation* NNormalSurface::cutAlong() const {
 // ------------------------------------------------------------------------
 
 NTriangulation* NNormalSurface::crush() const {
-    NTriangulation* ans = new NTriangulation(*triangulation);
-    unsigned long nTet = ans->getNumberOfTetrahedra();
+    NTriangulation* ans = new NTriangulation(*triangulation_);
+    unsigned long nTet = ans->size();
     if (nTet == 0)
         return ans;
 
     // Work out which tetrahedra contain which quad types.
-    int* quads = new int[nTet];
+    int* quadTypes = new int[nTet];
     long whichTet = 0;
     for (whichTet = 0; whichTet < static_cast<long>(nTet); whichTet++) {
-        if (getQuadCoord(whichTet, 0) != 0)
-            quads[whichTet] = 0;
-        else if (getQuadCoord(whichTet, 1) != 0)
-            quads[whichTet] = 1;
-        else if (getQuadCoord(whichTet, 2) != 0)
-            quads[whichTet] = 2;
+        if (quads(whichTet, 0) != 0)
+            quadTypes[whichTet] = 0;
+        else if (quads(whichTet, 1) != 0)
+            quadTypes[whichTet] = 1;
+        else if (quads(whichTet, 2) != 0)
+            quadTypes[whichTet] = 2;
         else
-            quads[whichTet] = -1;
+            quadTypes[whichTet] = -1;
     }
 
     // Run through and fix the tetrahedron gluings.
@@ -1243,7 +1243,7 @@ NTriangulation* NNormalSurface::crush() const {
     NPerm4 swap;
     int face, adjFace;
     for (whichTet = 0; whichTet < static_cast<long>(nTet); whichTet++)
-        if (quads[whichTet] == -1) {
+        if (quadTypes[whichTet] == -1) {
             // We want to keep this tetrahedron, so make sure it's glued
             // up correctly.
             tet = ans->getTetrahedron(whichTet);
@@ -1251,7 +1251,7 @@ NTriangulation* NNormalSurface::crush() const {
                 adj = tet->adjacentTetrahedron(face);
                 if (! adj)
                     continue;
-                adjQuads = quads[ans->tetrahedronIndex(adj)];
+                adjQuads = quadTypes[ans->tetrahedronIndex(adj)];
                 if (adjQuads == -1)
                     continue;
 
@@ -1270,7 +1270,7 @@ NTriangulation* NNormalSurface::crush() const {
                     adjFace = adjPerm[face];
 
                     if (adj)
-                        adjQuads = quads[ans->tetrahedronIndex(adj)];
+                        adjQuads = quadTypes[ans->tetrahedronIndex(adj)];
                 }
 
                 // Reglue the tetrahedron face accordingly.
@@ -1287,10 +1287,10 @@ NTriangulation* NNormalSurface::crush() const {
 
     // Delete unwanted tetrahedra.
     for (whichTet = nTet - 1; whichTet >= 0; whichTet--)
-        if (quads[whichTet] >= 0)
+        if (quadTypes[whichTet] >= 0)
             ans->removeTetrahedronAt(whichTet);
 
-    delete[] quads;
+    delete[] quadTypes;
     return ans;
 }
 
@@ -1298,7 +1298,7 @@ bool NNormalSurface::isCompressingDisc(bool knownConnected) const {
     // Is it even a disc?
     if (! hasRealBoundary())
         return false;
-    if (getEulerChar() != 1)
+    if (eulerChar() != 1)
         return false;
 
     if (! knownConnected) {
@@ -1312,9 +1312,9 @@ bool NNormalSurface::isCompressingDisc(bool knownConnected) const {
     // to begin with.
     unsigned long origSphereCount = 0;
     NTriangulation::BoundaryComponentIterator bit;
-    for (bit = getTriangulation()->getBoundaryComponents().begin();
-            bit != getTriangulation()->getBoundaryComponents().end(); ++bit)
-        if ((*bit)->getEulerChar() == 2)
+    for (bit = triangulation()->boundaryComponents().begin();
+            bit != triangulation()->boundaryComponents().end(); ++bit)
+        if ((*bit)->eulerChar() == 2)
             ++origSphereCount;
 
     // Now cut along the disc, and see if we get an extra sphere as a
@@ -1322,8 +1322,8 @@ bool NNormalSurface::isCompressingDisc(bool knownConnected) const {
     // is compressing.
     std::unique_ptr<NTriangulation> cut(cutAlong());
 
-    if (cut->getNumberOfBoundaryComponents() ==
-            getTriangulation()->getNumberOfBoundaryComponents()) {
+    if (cut->countBoundaryComponents() ==
+            triangulation()->countBoundaryComponents()) {
         // The boundary of the disc is not a separating curve in the
         // boundary of the triangulation.  Therefore we might end up
         // converting a torus boundary into a sphere boundary, but the
@@ -1332,9 +1332,9 @@ bool NNormalSurface::isCompressingDisc(bool knownConnected) const {
     }
 
     unsigned long newSphereCount = 0;
-    for (bit = cut->getBoundaryComponents().begin();
-            bit != cut->getBoundaryComponents().end(); ++bit)
-        if ((*bit)->getEulerChar() == 2)
+    for (bit = cut->boundaryComponents().begin();
+            bit != cut->boundaryComponents().end(); ++bit)
+        if ((*bit)->eulerChar() == 2)
             ++newSphereCount;
 
     if (newSphereCount == origSphereCount)
@@ -1418,7 +1418,7 @@ namespace {
 
                 // The LP-and-crush method is only suitable for
                 // orientable triangulations with a single boundary component.
-                if (t_[side]->getNumberOfBoundaryComponents() > 1 ||
+                if (t_[side]->countBoundaryComponents() > 1 ||
                         ! t_[side]->isOrientable()) {
                     // Fall back to the slow and non-cancellable method.
                     if (t_[side]->hasCompressingDisc())
@@ -1428,7 +1428,7 @@ namespace {
                 }
 
                 // Compute the Euler characteristic of the boundary component.
-                long ec = t_[side]->getBoundaryComponent(0)->getEulerChar();
+                long ec = t_[side]->boundaryComponent(0)->eulerChar();
 
                 // Look for a normal disc or sphere to crush.
                 NNormalSurface* ans;
@@ -1440,11 +1440,11 @@ namespace {
 
                     // The LP-and-crushing method only works for
                     // 1-vertex triangulations (at present).
-                    if (t_[side]->getNumberOfVertices() > 1) {
+                    if (t_[side]->countVertices() > 1) {
                         // Try harder.
                         t_[side]->barycentricSubdivision();
                         t_[side]->intelligentSimplify();
-                        if (t_[side]->getNumberOfVertices() > 1) {
+                        if (t_[side]->countVertices() > 1) {
                             // Fall back to the old (slow and uncancellable)
                             // method.
                             if (t_[side]->hasCompressingDisc())
@@ -1495,18 +1495,18 @@ namespace {
                     // right Euler characteristic on the boundary, if it exists.
                     nComp = crush->splitIntoComponents();
                     t_[side] = static_cast<NTriangulation*>(
-                        crush->getFirstTreeChild());
+                        crush->firstChild());
                     while (t_[side]) {
-                        if (t_[side]->getNumberOfBoundaryComponents() == 1 &&
-                                t_[side]->getBoundaryComponent(0)->
-                                    getEulerChar() == ec) {
+                        if (t_[side]->countBoundaryComponents() == 1 &&
+                                t_[side]->boundaryComponent(0)->
+                                    eulerChar() == ec) {
                             // Found it.
                             t_[side]->makeOrphan();
                             break;
                         }
 
                         t_[side] = static_cast<NTriangulation*>(
-                            t_[side]->getNextTreeSibling());
+                            t_[side]->nextSibling());
                     }
 
                     delete crush;
@@ -1536,7 +1536,7 @@ bool NNormalSurface::isIncompressible() const {
     // Rule out spheres.
     // From the preconditions, we can assume this surface to be
     // closed, compact and connected.
-    if (getEulerChar() == 2 || ((! isTwoSided()) && getEulerChar() == 1))
+    if (eulerChar() == 2 || ((! isTwoSided()) && eulerChar() == 1))
         return false;
 
     if (isThinEdgeLink().first) {
@@ -1555,8 +1555,7 @@ bool NNormalSurface::isIncompressible() const {
 
     cut->splitIntoComponents();
     int which = 0;
-    for (NPacket* comp = cut->getFirstTreeChild(); comp;
-            comp = comp->getNextTreeSibling())
+    for (NPacket* comp = cut->firstChild(); comp; comp = comp->nextSibling())
         if (static_cast<NTriangulation*>(comp)->hasBoundaryTriangles()) {
             if (which == 2) {
                 // We have more than two components with boundary.

@@ -110,10 +110,17 @@ class REGINA_API NAngleStructureList : public NPacket {
         virtual ~NAngleStructureList();
 
         /**
-         * Returns the triangulation on which these angle structures
-         * lie.
+         * Returns the triangulation on which these angle structures lie.
          *
          * @return the corresponding triangulation.
+         */
+        NTriangulation* triangulation() const;
+        /**
+         * Deprecated routine that returns the triangulation on which these
+         * angle structures lie.
+         *
+         * \deprecated This routine has been renamed to triangulation().
+         * See the triangulation() documentation for further details.
          */
         NTriangulation* getTriangulation() const;
 
@@ -132,7 +139,7 @@ class REGINA_API NAngleStructureList : public NPacket {
          *
          * @return the number of angle structures.
          */
-        unsigned long size() const;
+        size_t size() const;
         /**
          * Deprecated routine to return the number of angle structures
          * stored in this list.
@@ -141,7 +148,7 @@ class REGINA_API NAngleStructureList : public NPacket {
          *
          * @return the number of angle structures.
          */
-        unsigned long getNumberOfStructures() const;
+        size_t getNumberOfStructures() const;
         /**
          * Returns the angle structure at the requested index in this
          * list.
@@ -150,7 +157,15 @@ class REGINA_API NAngleStructureList : public NPacket {
          * this list; this must be between 0 and size()-1 inclusive.
          * @return the angle structure at the requested index.
          */
-        const NAngleStructure* getStructure(unsigned long index) const;
+        const NAngleStructure* structure(size_t index) const;
+        /**
+         * Deprecated routine that returns the angle structure at the
+         * requested index in this list.
+         *
+         * \deprecated This routine has been renamed to structure().
+         * See the structure() documentation for further details.
+         */
+        const NAngleStructure* getStructure(size_t index) const;
 
         /**
          * Determines whether any convex combination of the angle
@@ -273,7 +288,7 @@ class REGINA_API NAngleStructureList : public NPacket {
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
-        static NXMLPacketReader* getXMLReader(NPacket* parent,
+        static NXMLPacketReader* xmlReader(NPacket* parent,
             NXMLTreeResolver& resolver);
         virtual bool dependsOnParent() const;
 
@@ -457,15 +472,20 @@ inline bool NAngleStructureList::isTautOnly() const {
     return tautOnly_;
 }
 
-inline unsigned long NAngleStructureList::size() const {
+inline size_t NAngleStructureList::size() const {
     return structures.size();
 }
-inline unsigned long NAngleStructureList::getNumberOfStructures() const {
+inline size_t NAngleStructureList::getNumberOfStructures() const {
     return structures.size();
 }
 
+inline const NAngleStructure* NAngleStructureList::structure(
+        size_t index) const {
+    return structures[index];
+}
+
 inline const NAngleStructure* NAngleStructureList::getStructure(
-        unsigned long index) const {
+        size_t index) const {
     return structures[index];
 }
 

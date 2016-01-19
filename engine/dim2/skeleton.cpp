@@ -63,7 +63,7 @@ void Triangulation<2>::calculateSkeleton() {
 
 void Triangulation<2>::calculateBoundary() {
     // Are there any boundary edges at all?
-    long nBdry = 2 * getNumberOfEdges() - 3 * simplices_.size();
+    long nBdry = 2 * countEdges() - 3 * simplices_.size();
     if (nBdry == 0)
         return;
 
@@ -82,7 +82,7 @@ void Triangulation<2>::calculateBoundary() {
 
         label = new Dim2BoundaryComponent();
         boundaryComponents_.push_back(label);
-        edge->getComponent()->boundaryComponents_.push_back(label);
+        edge->component()->boundaryComponents_.push_back(label);
 
         // Loop around from this boundary edge to
         // completely enumerate all edges in this boundary component.

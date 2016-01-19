@@ -168,6 +168,14 @@ class NGenericGluingPerms {
          *
          * @return the corresponding simplex facet pairing.
          */
+        const FacetPairing<dim>* facetPairing() const;
+        /**
+         * Deprecated routine that returns the specific pairing of simplex
+         * facets that this set of gluing permutations complements.
+         *
+         * \deprecated This routine has been renamed to facetPairing().
+         * See the facetPairing() documentation for further details.
+         */
         const FacetPairing<dim>* getFacetPairing() const;
 
         /**
@@ -175,7 +183,7 @@ class NGenericGluingPerms {
          * simplex facet.
          *
          * \pre The given facet is actually paired with some other facet in
-         * the underlying pairwise matching (see routine getFacetPairing()).
+         * the underlying pairwise matching (see routine facetPairing()).
          * \pre The given facet is a real simplex
          * facet (not boundary, before-the-start or past-the-end).
          *
@@ -189,7 +197,7 @@ class NGenericGluingPerms {
          * simplex facet.
          *
          * \pre The given facet is actually paired with some other facet in
-         * the underlying pairwise matching (see routine getFacetPairing()).
+         * the underlying pairwise matching (see routine facetPairing()).
          *
          * @param simp the simplex under investigation (this must be
          * strictly less than the total number of simplices under
@@ -469,6 +477,12 @@ inline bool NGenericGluingPerms<dim>::inputError() const {
 template <int dim>
 inline unsigned NGenericGluingPerms<dim>::size() const {
     return pairing_->size();
+}
+
+template <int dim>
+inline const FacetPairing<dim>* NGenericGluingPerms<dim>::facetPairing()
+        const {
+    return pairing_;
 }
 
 template <int dim>

@@ -478,7 +478,7 @@ bool NTriangulation::twoZeroMove(NEdge* e, bool check, bool perform) {
         // The cases with two pairs of identified triangles and with one
         // pair of identified triangles plus one pair of boundary triangles are
         // all covered by the following check.
-        if (tet[0]->getComponent()->getNumberOfTetrahedra() == 2)
+        if (tet[0]->component()->size() == 2)
             return false;
     }
 
@@ -531,7 +531,7 @@ bool NTriangulation::twoZeroMove(NEdge* e, bool check, bool perform) {
 
 bool NTriangulation::twoZeroMove(NVertex* v, bool check, bool perform) {
     if (check) {
-        if (v->getLink() != NVertex::SPHERE)
+        if (v->link() != NVertex::SPHERE)
             return false;
         if (v->getDegree() != 2)
             return false;
@@ -764,7 +764,7 @@ bool NTriangulation::openBook(NTriangle* f, bool check, bool perform) {
 
         if (nBdry != 2)
             return false;
-        if (tet->getVertex(vertices[fVertex])->getLink() != NVertex::DISC)
+        if (tet->getVertex(vertices[fVertex])->link() != NVertex::DISC)
             return false;
         if (! f->getEdge(fVertex)->isValid())
             return false;
@@ -803,8 +803,8 @@ bool NTriangulation::closeBook(NEdge* e, bool check, bool perform) {
             return false;
         if (t0->getVertex(p0[2]) == t1->getVertex(p1[3]))
             return false;
-        if (t0->getVertex(p0[2])->getLink() != NVertex::DISC ||
-               t1->getVertex(p1[3])->getLink() != NVertex::DISC)
+        if (t0->getVertex(p0[2])->link() != NVertex::DISC ||
+               t1->getVertex(p1[3])->link() != NVertex::DISC)
             return false;
 
         NEdge* e1 = t0->getEdge(NEdge::edgeNumber[p0[0]][p0[2]]);
@@ -922,9 +922,9 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
         if (e->getVertex(0)->isBoundary() && e->getVertex(1)->isBoundary()) {
             if (! e->isBoundary())
                 return false;
-            if (e->getVertex(0)->getLink() != NVertex::DISC)
+            if (e->getVertex(0)->link() != NVertex::DISC)
                 return false;
-            if (e->getVertex(1)->getLink() != NVertex::DISC)
+            if (e->getVertex(1)->link() != NVertex::DISC)
                 return false;
         }
 
@@ -976,11 +976,11 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
         //
         // Quite pleasant to deal with in the end.
         if (e->isBoundary())
-            if (e->getBoundaryComponent()->getNumberOfTriangles() == 2)
+            if (e->boundaryComponent()->countTriangles() == 2)
                 return false;
 
         {
-            size_t nEdges = getNumberOfEdges();
+            size_t nEdges = countEdges();
 
             // The parent of each edge in the union-find tree, or -1 if
             // an edge is at the root of a tree.
@@ -1058,7 +1058,7 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
         // overkill, since each vertex in the corresponding graph G will
         // have degree <= 2, but it's fast so we'll do it.
         {
-            size_t nTriangles = getNumberOfTriangles();
+            size_t nTriangles = countTriangles();
 
             // The parent of each triangle in the union-find tree, or -1 if
             // a triangle is at the root of a tree.
@@ -1145,7 +1145,7 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
 }
 
 void NTriangulation::reorderTetrahedraBFS(bool reverse) {
-    unsigned long n = getNumberOfTetrahedra();
+    unsigned long n = size();
     if (n == 0)
         return;
 

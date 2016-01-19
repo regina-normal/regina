@@ -52,11 +52,11 @@ bool detail::TriangulationBase<3>::compatible(
         // identical.
         if (simplices_.size() != other.simplices_.size())
             return false;
-        if (me->getNumberOfTriangles() != other.getNumberOfTriangles())
+        if (me->countTriangles() != other.countTriangles())
             return false;
-        if (me->getNumberOfEdges() != other.getNumberOfEdges())
+        if (me->countEdges() != other.countEdges())
             return false;
-        if (me->getNumberOfVertices() != other.getNumberOfVertices())
+        if (me->countVertices() != other.countVertices())
             return false;
         if (components().size() != other.components().size())
             return false;
@@ -103,14 +103,12 @@ bool detail::TriangulationBase<3>::compatible(
         {
             ComponentIterator it;
             for (it = components().begin(); it != components().end(); it++) {
-                mapIt = map1.insert(
-                    std::make_pair((*it)->getNumberOfTetrahedra(), 0)).first;
+                mapIt = map1.insert(std::make_pair((*it)->size(), 0)).first;
                 (*mapIt).second++;
             }
             for (it = other.components().begin();
                     it != other.components().end(); it++) {
-                mapIt = map2.insert(
-                    std::make_pair((*it)->getNumberOfTetrahedra(), 0)).first;
+                mapIt = map2.insert(std::make_pair((*it)->size(), 0)).first;
                 (*mapIt).second++;
             }
             if (! (map1 == map2))
@@ -123,13 +121,13 @@ bool detail::TriangulationBase<3>::compatible(
             for (it = me->boundaryComponents_.begin();
                     it != me->boundaryComponents_.end(); it++) {
                 mapIt = map1.insert(
-                    std::make_pair((*it)->getNumberOfTriangles(), 0)).first;
+                    std::make_pair((*it)->countTriangles(), 0)).first;
                 (*mapIt).second++;
             }
             for (it = other.boundaryComponents_.begin();
                     it != other.boundaryComponents_.end(); it++) {
                 mapIt = map2.insert(
-                    std::make_pair((*it)->getNumberOfTriangles(), 0)).first;
+                    std::make_pair((*it)->countTriangles(), 0)).first;
                 (*mapIt).second++;
             }
             if (! (map1 == map2))
@@ -163,8 +161,8 @@ bool detail::TriangulationBase<3>::compatible(
         if (src->getVertex(vertex)->degree() !=
                 dest->getVertex(p[vertex])->degree())
             return false;
-        if (src->getVertex(vertex)->getLink() !=
-                dest->getVertex(p[vertex])->getLink())
+        if (src->getVertex(vertex)->link() !=
+                dest->getVertex(p[vertex])->link())
             return false;
     }
 

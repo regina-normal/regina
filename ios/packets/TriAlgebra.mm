@@ -130,7 +130,7 @@
         name.attributedText = [TextHelper dimString:@"Not recognised"];
     }
     
-    unsigned long nGens = group.getNumberOfGenerators();
+    unsigned long nGens = group.countGenerators();
     bool alphabetic = (nGens <= 26);
     if (nGens == 0)
         gens.text = @"No generators";
@@ -145,7 +145,7 @@
         gens.text = [NSString stringWithFormat:@"%ld generators: g0 ... g%ld",
                      nGens, nGens - 1];
     
-    unsigned long nRels = group.getNumberOfRelations();
+    unsigned long nRels = group.countRelations();
     if (nRels == 0) {
         rels.text = @"No relations";
     } else if (nRels == 1) {
@@ -159,7 +159,7 @@
         // Generators are a, b, ...
         for (long i = 0; i < nRels; ++i) {
             NSMutableString* rel;
-            const std::list<regina::NGroupExpressionTerm>& terms(group.getRelation(i).getTerms());
+            const std::list<regina::NGroupExpressionTerm>& terms(group.relation(i).terms());
             if (terms.empty())
                 rel = [[NSMutableString alloc] initWithString:@"1"];
             else {
@@ -186,7 +186,7 @@
         for (long i = 0; i < nRels; ++i) {
             if (i > 0)
                 [relsText appendString:@"\n"];
-            [relsText appendFormat:@"1 = %s", group.getRelation(i).str().c_str()];
+            [relsText appendFormat:@"1 = %s", group.relation(i).str().c_str()];
         }
     }
     details.text = relsText;
@@ -202,14 +202,14 @@
     regina::NTriangulation t(*self.packet);
     t.intelligentSimplify();
 
-    self.h1.text = @(t.getHomologyH1().str().c_str());
+    self.h1.text = @(t.homology().str().c_str());
 
     if (self.packet->isValid()) {
-        self.h1Rel.text = @(t.getHomologyH1Rel().str().c_str());
-        self.h1Bdry.text = @(t.getHomologyH1Bdry().str().c_str());
-        self.h2.text = @(t.getHomologyH2().str().c_str());
+        self.h1Rel.text = @(t.homologyRel().str().c_str());
+        self.h1Bdry.text = @(t.homologyBdry().str().c_str());
+        self.h2.text = @(t.homologyH2().str().c_str());
 
-        unsigned long coeffZ2 = t.getHomologyH2Z2();
+        unsigned long coeffZ2 = t.homologyH2Z2();
         if (coeffZ2 == 0)
             self.h2z2.text = @"0";
         else if (coeffZ2 == 1)
@@ -220,11 +220,11 @@
         self.h1Rel.text = self.h1Bdry.text = self.h2.text = self.h2z2.text = @"Invalid";
     }
 
-    if (t.getNumberOfComponents() > 1) {
+    if (t.countComponents() > 1) {
         self.fundName.text = @"Disconnected";
         self.fundGens.text = self.fundRels.text = self.fundRelsDetails.text = @"";
     } else {
-        [TriAlgebra reloadGroup:self.packet->getFundamentalGroup()
+        [TriAlgebra reloadGroup:self.packet->fundamentalGroup()
                            name:self.fundName
                            gens:self.fundGens
                            rels:self.fundRels

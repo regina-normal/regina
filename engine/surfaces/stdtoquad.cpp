@@ -62,7 +62,7 @@ NNormalSurfaceList* NNormalSurfaceList::standardANToQuadOct() const {
 template <class Variant>
 NNormalSurfaceList* NNormalSurfaceList::internalStandardToReduced() const {
     // And off we go!
-    NTriangulation* owner = getTriangulation();
+    NTriangulation* owner = triangulation();
 
     // Basic sanity checks:
     if (coords_ != Variant::standardCoords())
@@ -77,7 +77,7 @@ NNormalSurfaceList* NNormalSurfaceList::internalStandardToReduced() const {
         Variant::reducedCoords(), NS_EMBEDDED_ONLY | NS_VERTEX, NS_ALG_CUSTOM);
 
     // Get the empty triangulation out of the way now.
-    unsigned long n = owner->getNumberOfTetrahedra();
+    unsigned long n = owner->size();
     if (n == 0) {
         owner->insertChildLast(ans);
         return ans;

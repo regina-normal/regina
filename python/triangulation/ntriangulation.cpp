@@ -110,23 +110,23 @@ namespace {
         return NTriangulation::enterTextTriangulation(std::cin, std::cout);
     }
 
-    boost::python::list getTetrahedra_list(NTriangulation& t) {
+    boost::python::list tetrahedra_list(NTriangulation& t) {
         boost::python::list ans;
         for (auto s : t.tetrahedra())
             ans.append(boost::python::ptr(s));
         return ans;
     }
 
-    boost::python::list getComponents_list(NTriangulation& t) {
+    boost::python::list components_list(NTriangulation& t) {
         boost::python::list ans;
         for (auto c : t.components())
             ans.append(boost::python::ptr(c));
         return ans;
     }
 
-    boost::python::list getBoundaryComponents_list(NTriangulation& t) {
+    boost::python::list boundaryComponents_list(NTriangulation& t) {
         boost::python::list ans;
-        for (auto b : t.getBoundaryComponents())
+        for (auto b : t.boundaryComponents())
             ans.append(boost::python::ptr(b));
         return ans;
     }
@@ -211,10 +211,10 @@ void addNTriangulation() {
         .def("countTetrahedra", &NTriangulation::countTetrahedra)
         .def("getNumberOfTetrahedra", &NTriangulation::getNumberOfTetrahedra)
         .def("getNumberOfSimplices", &NTriangulation::getNumberOfSimplices)
-        .def("getTetrahedra", getTetrahedra_list)
-        .def("tetrahedra", getTetrahedra_list)
-        .def("getSimplices", getTetrahedra_list)
-        .def("simplices", getTetrahedra_list)
+        .def("getTetrahedra", tetrahedra_list)
+        .def("tetrahedra", tetrahedra_list)
+        .def("getSimplices", tetrahedra_list)
+        .def("simplices", tetrahedra_list)
         .def("tetrahedron", tetrahedron_non_const,
             return_internal_reference<>())
         .def("getTetrahedron", tetrahedron_non_const,
@@ -243,6 +243,8 @@ void addNTriangulation() {
         .def("moveContentsTo", &NTriangulation::moveContentsTo)
         .def("countComponents", &NTriangulation::countComponents)
         .def("getNumberOfComponents", &NTriangulation::getNumberOfComponents)
+        .def("countBoundaryComponents",
+            &NTriangulation::countBoundaryComponents)
         .def("getNumberOfBoundaryComponents",
             &NTriangulation::getNumberOfBoundaryComponents)
         .def("countFaces", &regina::python::countFaces<NTriangulation, 3>)
@@ -253,9 +255,10 @@ void addNTriangulation() {
         .def("getNumberOfEdges", &NTriangulation::getNumberOfEdges)
         .def("countTriangles", &NTriangulation::countTriangles)
         .def("getNumberOfTriangles", &NTriangulation::getNumberOfTriangles)
-        .def("components", getComponents_list)
-        .def("getComponents", getComponents_list)
-        .def("getBoundaryComponents", getBoundaryComponents_list)
+        .def("components", components_list)
+        .def("getComponents", components_list)
+        .def("boundaryComponents", boundaryComponents_list)
+        .def("getBoundaryComponents", boundaryComponents_list)
         .def("faces", &regina::python::faces<NTriangulation, 3>)
         .def("getFaces", &regina::python::faces<NTriangulation, 3>)
         .def("vertices", regina::python::faces_list<NTriangulation, 3, 0>)
@@ -267,6 +270,8 @@ void addNTriangulation() {
         .def("component", &NTriangulation::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &NTriangulation::getComponent,
+            return_internal_reference<>())
+        .def("boundaryComponent", &NTriangulation::boundaryComponent,
             return_internal_reference<>())
         .def("getBoundaryComponent", &NTriangulation::getBoundaryComponent,
             return_internal_reference<>())
@@ -304,9 +309,10 @@ void addNTriangulation() {
         .def("hasNegativeIdealBoundaryComponents",
             &NTriangulation::hasNegativeIdealBoundaryComponents)
         .def("isEmpty", &NTriangulation::isEmpty)
+        .def("eulerCharTri", &NTriangulation::eulerCharTri)
         .def("getEulerCharTri", &NTriangulation::getEulerCharTri)
+        .def("eulerCharManifold", &NTriangulation::eulerCharManifold)
         .def("getEulerCharManifold", &NTriangulation::getEulerCharManifold)
-        .def("getEulerCharacteristic", &NTriangulation::getEulerCharacteristic)
         .def("isValid", &NTriangulation::isValid)
         .def("isIdeal", &NTriangulation::isIdeal)
         .def("isStandard", &NTriangulation::isStandard)
@@ -321,17 +327,30 @@ void addNTriangulation() {
         .def("isOriented", &NTriangulation::isOriented)
         .def("isOrdered", &NTriangulation::isOrdered)
         .def("isConnected", &NTriangulation::isConnected)
+        .def("fundamentalGroup", &NTriangulation::fundamentalGroup,
+            return_internal_reference<>())
         .def("getFundamentalGroup", &NTriangulation::getFundamentalGroup,
             return_internal_reference<>())
         .def("simplifiedFundamentalGroup", simplifiedFundamentalGroup_own)
+        .def("homology", &NTriangulation::homology,
+            return_internal_reference<>())
+        .def("homologyH1", &NTriangulation::homologyH1,
+            return_internal_reference<>())
         .def("getHomologyH1", &NTriangulation::getHomologyH1,
+            return_internal_reference<>())
+        .def("homologyRel", &NTriangulation::homologyRel,
             return_internal_reference<>())
         .def("getHomologyH1Rel", &NTriangulation::getHomologyH1Rel,
             return_internal_reference<>())
+        .def("homologyBdry", &NTriangulation::homologyBdry,
+            return_internal_reference<>())
         .def("getHomologyH1Bdry", &NTriangulation::getHomologyH1Bdry,
+            return_internal_reference<>())
+        .def("homologyH2", &NTriangulation::homologyH2,
             return_internal_reference<>())
         .def("getHomologyH2", &NTriangulation::getHomologyH2,
             return_internal_reference<>())
+        .def("homologyH2Z2", &NTriangulation::homologyH2Z2)
         .def("getHomologyH2Z2", &NTriangulation::getHomologyH2Z2)
         .def("turaevViro", &NTriangulation::turaevViro, OL_turaevViro())
         .def("turaevViroApprox", &NTriangulation::turaevViroApprox,
@@ -440,7 +459,8 @@ void addNTriangulation() {
         .staticmethod("enterTextTriangulation")
     ;
 
-    s.attr("packetType") = regina::PacketType(NTriangulation::packetType);
+    s.attr("typeID") = regina::PACKET_TRIANGULATION;
+    s.attr("packetType") = regina::PACKET_TRIANGULATION;
 
     implicitly_convertible<std::auto_ptr<NTriangulation>,
         std::auto_ptr<regina::NPacket> >();

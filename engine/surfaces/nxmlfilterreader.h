@@ -62,7 +62,7 @@ namespace regina {
  * ignore a particular filter (and all of its descendants), you can use
  * class NXMLFilterReader itself for the filter(s) you wish to ignore.
  *
- * Routine getFilter() is used to return the filter that was read; see
+ * Routine filter() is used to return the filter that was read; see
  * its documentation for further notes on how the filter should be
  * constructed.
  *
@@ -90,7 +90,7 @@ class REGINA_API NXMLFilterReader : public NXMLElementReader {
          * is incomplete, the filter should be ignored or an error
          * occurred.
          */
-        virtual NSurfaceFilter* getFilter();
+        virtual NSurfaceFilter* filter();
 };
 
 /**
@@ -104,9 +104,9 @@ class REGINA_API NXMLFilterReader : public NXMLElementReader {
  */
 class REGINA_API NXMLFilterPacketReader : public NXMLPacketReader {
     private:
-        NSurfaceFilter* filter;
+        NSurfaceFilter* filter_;
             /**< The surface filter currently being read. */
-        NPacket* parent;
+        NPacket* parent_;
             /**< The parent packet of the filter currently being read. */
 
     public:
@@ -120,12 +120,12 @@ class REGINA_API NXMLFilterPacketReader : public NXMLPacketReader {
          */
         NXMLFilterPacketReader(NPacket* newParent, NXMLTreeResolver& resolver);
 
-        virtual NPacket* getPacket();
+        virtual NPacket* packet() override;
         virtual NXMLElementReader* startContentSubElement(
             const std::string& subTagName,
-            const regina::xml::XMLPropertyDict& subTagProps);
+            const regina::xml::XMLPropertyDict& subTagProps) override;
         virtual void endContentSubElement(const std::string& subTagName,
-            NXMLElementReader* subReader);
+            NXMLElementReader* subReader) override;
 };
 
 /*@}*/
@@ -135,7 +135,7 @@ class REGINA_API NXMLFilterPacketReader : public NXMLPacketReader {
 inline NXMLFilterReader::NXMLFilterReader() {
 }
 
-inline NSurfaceFilter* NXMLFilterReader::getFilter() {
+inline NSurfaceFilter* NXMLFilterReader::filter() {
     return 0;
 }
 
@@ -143,11 +143,11 @@ inline NSurfaceFilter* NXMLFilterReader::getFilter() {
 
 inline NXMLFilterPacketReader::NXMLFilterPacketReader(NPacket* newParent,
         NXMLTreeResolver& resolver) :
-        NXMLPacketReader(resolver), filter(0), parent(newParent) {
+        NXMLPacketReader(resolver), filter_(0), parent_(newParent) {
 }
 
-inline NPacket* NXMLFilterPacketReader::getPacket() {
-    return filter;
+inline NPacket* NXMLFilterPacketReader::packet() {
+    return filter_;
 }
 
 } // namespace regina

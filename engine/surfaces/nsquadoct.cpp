@@ -46,18 +46,18 @@ namespace regina {
 NNormalSurfaceVector* NNormalSurfaceVectorQuadOct::makeZeroVector(
         const NTriangulation* triangulation) {
     return new NNormalSurfaceVectorQuadOct(
-        6 * triangulation->getNumberOfTetrahedra());
+        6 * triangulation->size());
 }
 
 NMatrixInt* NNormalSurfaceVectorQuadOct::makeMatchingEquations(
         const NTriangulation* triangulation) {
-    unsigned long nCoords = 6 * triangulation->getNumberOfTetrahedra();
+    unsigned long nCoords = 6 * triangulation->size();
     // One equation per non-boundary edge.
-    long nEquations = long(triangulation->getNumberOfEdges());
+    long nEquations = long(triangulation->countEdges());
     for (NTriangulation::BoundaryComponentIterator bit = triangulation->
-            getBoundaryComponents().begin();
-            bit != triangulation->getBoundaryComponents().end(); bit++)
-        nEquations -= (*bit)->getNumberOfEdges();
+            boundaryComponents().begin();
+            bit != triangulation->boundaryComponents().end(); bit++)
+        nEquations -= (*bit)->countEdges();
 
     NMatrixInt* ans = new NMatrixInt(nEquations, nCoords);
     unsigned long row = 0;
@@ -93,7 +93,7 @@ NEnumConstraintList* NNormalSurfaceVectorQuadOct::makeEmbeddedConstraints(
     // At most one quad/oct per tetrahedron.
     // At most one oct type overall.
     NEnumConstraintList* ans = new NEnumConstraintList(
-        triangulation->getNumberOfTetrahedra() + 1);
+        triangulation->size() + 1);
 
     unsigned base = 0;
     for (unsigned c = 1; c < ans->size(); ++c) {
@@ -138,7 +138,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuadOct::makeMirror(
         const NTriangulation* triang) const {
     // We're going to do this by wrapping around each edge and seeing
     // what comes.
-    unsigned long nRows = 10 * triang->getNumberOfTetrahedra();
+    unsigned long nRows = 10 * triang->size();
     NNormalSurfaceVectorANStandard* ans =
         new NNormalSurfaceVectorANStandard(nRows);
 

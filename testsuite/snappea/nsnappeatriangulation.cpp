@@ -336,7 +336,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             NSnapPeaTriangulation s(tri);
             {
                 std::ostringstream msg;
-                msg << "Triangulation " << tri.getPacketLabel() <<
+                msg << "Triangulation " << tri.label() <<
                     " could not be represented in SnapPea format.";
 
                 CPPUNIT_ASSERT_MESSAGE(msg.str(), ! s.isNull());
@@ -346,7 +346,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             double foundVol = s.volume(precision);
             if (precision < static_cast<int>(places)) {
                 std::ostringstream msg;
-                msg << "Volume for " << tri.getPacketLabel() <<
+                msg << "Volume for " << tri.label() <<
                     " has a precision of " << precision
                     << " places, which is less than the desired "
                     << places << " places.";
@@ -359,7 +359,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
 
             if (foundVol > vol + epsilon || foundVol < vol - epsilon) {
                 std::ostringstream msg;
-                msg << "Volume for " << tri.getPacketLabel() << " should be "
+                msg << "Volume for " << tri.label() << " should be "
                     << std::setprecision(
                         places + static_cast<int>(ceil(log10(vol))))
                     << vol << ", not "
@@ -524,7 +524,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             regina::NMatrixInt* m;
             bool found[4];
             for (int i = 0; i < s->size(); ++i) {
-                m = s->getSurface(i)->boundaryIntersections();
+                m = s->surface(i)->boundaryIntersections();
                 if (m->rows() != 1 || m->columns() != 2) {
                     CPPUNIT_FAIL(
                         "Figure 8 knot complement: boundaryIntersections() "
@@ -585,8 +585,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             NSnapPeaTriangulation s(tri);
             if (s.isNull()) {
                 std::ostringstream msg;
-                msg << "Null SnapPea triangulation for "
-                    << tri.getPacketLabel() << ".";
+                msg << "Null SnapPea triangulation for " << tri.label() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -596,13 +595,13 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             if (! h1) {
                 std::ostringstream msg;
                 msg << "Could not compute filled homology for "
-                    << tri.getPacketLabel() << ".";
+                    << tri.label() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
             if (h1->str() != expectedH1) {
                 std::ostringstream msg;
                 msg << "Filling (" << m << ", " << l << ") for "
-                    << tri.getPacketLabel() << " gives homology "
+                    << tri.label() << " gives homology "
                     << h1->str() << ", not " << expectedH1 << ".";
                 CPPUNIT_FAIL(msg.str());
             }

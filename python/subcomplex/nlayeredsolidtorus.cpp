@@ -47,18 +47,30 @@ void addNLayeredSolidTorus() {
             ("NLayeredSolidTorus", no_init)
         .def("clone", &NLayeredSolidTorus::clone,
             return_value_policy<manage_new_object>())
+        .def("size", &NLayeredSolidTorus::size)
         .def("getNumberOfTetrahedra",
             &NLayeredSolidTorus::getNumberOfTetrahedra)
+        .def("base", &NLayeredSolidTorus::base,
+            return_value_policy<reference_existing_object>())
         .def("getBase", &NLayeredSolidTorus::getBase,
             return_value_policy<reference_existing_object>())
+        .def("baseEdge", &NLayeredSolidTorus::baseEdge)
         .def("getBaseEdge", &NLayeredSolidTorus::getBaseEdge)
+        .def("baseEdgeGroup", &NLayeredSolidTorus::baseEdgeGroup)
         .def("getBaseEdgeGroup", &NLayeredSolidTorus::getBaseEdgeGroup)
+        .def("baseFace", &NLayeredSolidTorus::baseFace)
         .def("getBaseFace", &NLayeredSolidTorus::getBaseFace)
+        .def("topLevel", &NLayeredSolidTorus::topLevel,
+            return_value_policy<reference_existing_object>())
         .def("getTopLevel", &NLayeredSolidTorus::getTopLevel,
             return_value_policy<reference_existing_object>())
+        .def("meridinalCuts", &NLayeredSolidTorus::meridinalCuts)
         .def("getMeridinalCuts", &NLayeredSolidTorus::getMeridinalCuts)
+        .def("topEdge", &NLayeredSolidTorus::topEdge)
         .def("getTopEdge", &NLayeredSolidTorus::getTopEdge)
+        .def("topEdgeGroup", &NLayeredSolidTorus::topEdgeGroup)
         .def("getTopEdgeGroup", &NLayeredSolidTorus::getTopEdgeGroup)
+        .def("topFace", &NLayeredSolidTorus::topFace)
         .def("getTopFace", &NLayeredSolidTorus::getTopFace)
         .def("flatten", &NLayeredSolidTorus::flatten,
             return_value_policy<manage_new_object>())

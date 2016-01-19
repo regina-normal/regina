@@ -129,7 +129,7 @@ public:
         packet->listen(_wrapper);
 
         if (listenChildren)
-            for (regina::NPacket* p = packet->getFirstTreeChild(); p; p = p->getNextTreeSibling())
+            for (regina::NPacket* p = packet->firstChild(); p; p = p->nextSibling())
                 p->listen(_wrapper);
     }
     return self;

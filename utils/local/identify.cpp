@@ -88,31 +88,31 @@ void usage(const char* progName, const std::string& error = std::string()) {
 }
 
 void process(NTriangulation* t) {
-    std::cout << t->getPacketLabel() << "  -->  ";
+    std::cout << t->label() << "  -->  ";
     totTris++;
 
     NStandardTriangulation* s =
         NStandardTriangulation::isStandardTriangulation(t);
     if (s) {
-        std::cout << s->getName();
+        std::cout << s->name();
         trisOk++;
 
-        NManifold* m = s->getManifold();
+        NManifold* m = s->manifold();
         if (m) {
-            std::string manifold = m->getName();
+            std::string manifold = m->name();
             std::cout << "  ==  " << manifold;
             mfdsOk++;
 
-            std::string structure = m->getStructure();
+            std::string structure = m->structure();
             if ((! structure.empty()) && (structure != manifold))
                 std::cout << "  ==  " << structure;
 
-            NAbelianGroup* h1 = m->getHomologyH1();
+            NAbelianGroup* h1 = m->homology();
             if (h1) {
                 homChecked++;
-                if (! (*h1 == t->getHomologyH1())) {
+                if (! (*h1 == t->homology())) {
                     std::cout << "  ...  HOMOLOGY ERROR: "
-                        << h1->str() << " != " << t->getHomologyH1().str();
+                        << h1->str() << " != " << t->homology().str();
                     homBad++;
                 }
 
@@ -164,11 +164,10 @@ int main(int argc, char* argv[]) {
 
     // Process the packets.
     for (NPacket* p = tree; p; p = p->nextTreePacket())
-        if (p->getPacketType() == NTriangulation::packetType)
+        if (p->type() == PACKET_TRIANGULATION)
             process(static_cast<NTriangulation*>(p));
-        else if (outputContainers &&
-                p->getPacketType() == NContainer::packetType)
-            std::cout << "----- " << p->getPacketLabel() << " -----"
+        else if (outputContainers && p->type() == PACKET_CONTAINER)
+            std::cout << "----- " << p->label() << " -----"
                 << std::endl;
 
     // Write statistics and clean up.

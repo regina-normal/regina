@@ -46,6 +46,8 @@ void addNLayeredChainPair() {
             ("NLayeredChainPair", no_init)
         .def("clone", &NLayeredChainPair::clone,
             return_value_policy<manage_new_object>())
+        .def("chain", &NLayeredChainPair::chain,
+            return_internal_reference<>())
         .def("getChain", &NLayeredChainPair::getChain,
             return_internal_reference<>())
         .def("isLayeredChainPair", &NLayeredChainPair::isLayeredChainPair,

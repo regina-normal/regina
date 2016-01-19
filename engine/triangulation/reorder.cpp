@@ -198,11 +198,11 @@ NIsomorphism* iso_from_edges(const NTriangulation &trig,
                              const std::vector<int> & edge_orientations,
                              bool force_oriented) {
 
-    NIsomorphism* iso = new NIsomorphism(trig.getNumberOfTetrahedra());
+    NIsomorphism* iso = new NIsomorphism(trig.size());
 
     // iterate through all tetrahedra
 
-    for(unsigned i = 0; i < trig.getNumberOfTetrahedra(); i++) {
+    for(unsigned i = 0; i < trig.size(); i++) {
 
         // consistency check
 
@@ -236,7 +236,7 @@ NIsomorphism* iso_from_edges(const NTriangulation &trig,
 
 NIsomorphism* ordering_iso(const NTriangulation &trig, bool force_oriented)
 {
-    std::vector<int> edge_orientations(trig.getNumberOfEdges(),0);
+    std::vector<int> edge_orientations(trig.countEdges(),0);
 
     int i = 0;
 
@@ -244,7 +244,7 @@ NIsomorphism* ordering_iso(const NTriangulation &trig, bool force_oriented)
         if(i < 0)
             return NULL;
 
-        if(i >= static_cast<int>(trig.getNumberOfEdges()))
+        if(i >= static_cast<int>(trig.countEdges()))
             return iso_from_edges(trig, edge_orientations, force_oriented);
 
         if(edge_orientations[i] == 0) {
@@ -288,14 +288,14 @@ bool NTriangulation::isOriented() const {
 void NTriangulation::orient() {
     ensureSkeleton();
 
-    NIsomorphism flip_tets_iso(getNumberOfTetrahedra());
+    NIsomorphism flip_tets_iso(size());
 
     TetrahedronIterator it;
     int t;
     for (t = 0, it = simplices_.begin(); it != simplices_.end(); ++it, ++t) {
         flip_tets_iso.tetImage(t) = t;
         if ((*it)->orientation() == 1 ||
-                ! (*it)->getComponent()->isOrientable())
+                ! (*it)->component()->isOrientable())
             flip_tets_iso.facePerm(t) = NPerm4(); // Identity
         else
             flip_tets_iso.facePerm(t) = NPerm4(2,3);

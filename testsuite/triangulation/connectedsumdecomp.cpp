@@ -90,7 +90,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
 
             CPPUNIT_ASSERT_MESSAGE("The 3-sphere " + triName +
                 " is reported to have prime summands.",
-                ans == 0 && summands.getNumberOfChildren() == 0);
+                ans == 0 && summands.countChildren() == 0);
 
             return tri;
         }
@@ -108,24 +108,24 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
 
             CPPUNIT_ASSERT_MESSAGE("The prime 3-manifold " + triName +
                 " is reported to be a 3-sphere.",
-                ans > 0 && summands.getFirstTreeChild() != 0);
+                ans > 0 && summands.firstChild() != 0);
             CPPUNIT_ASSERT_MESSAGE("The prime 3-manifold " + triName +
                 " is reported to be composite.", ans == 1 &&
-                summands.getFirstTreeChild() == summands.getLastTreeChild());
+                summands.firstChild() == summands.lastChild());
 
             NTriangulation* summand = static_cast<NTriangulation*>(
-                summands.getFirstTreeChild());
+                summands.firstChild());
 
             std::unique_ptr<NStandardTriangulation> stdTri(
                 NStandardTriangulation::isStandardTriangulation(summand));
             CPPUNIT_ASSERT_MESSAGE("The single prime summand of " + triName +
                 " forms an unrecognised triangulation.", stdTri.get() != 0);
 
-            std::unique_ptr<NManifold> stdManifold(stdTri->getManifold());
+            std::unique_ptr<NManifold> stdManifold(stdTri->manifold());
             CPPUNIT_ASSERT_MESSAGE("The single prime summand of " + triName +
                 " forms an unrecognised 3-manifold.", stdManifold.get() != 0);
 
-            std::string stdName = stdManifold->getName();
+            std::string stdName = stdManifold->name();
             CPPUNIT_ASSERT_MESSAGE("The single prime summand of " + triName +
                 " forms " + stdName + ", not " + manifold + ".",
                 stdName == manifold);
@@ -138,7 +138,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
 
             CPPUNIT_ASSERT_MESSAGE("The single prime summand of " + triName +
                 " has an inconsistent first homology group.",
-                summand->getHomologyH1() == tri->getHomologyH1());
+                summand->homology() == tri->homology());
 
             return tri;
         }
@@ -161,19 +161,18 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
 
             CPPUNIT_ASSERT_MESSAGE("The composite 3-manifold " + triName +
                 " is reported to be a 3-sphere.",
-                ans > 0 && summands.getFirstTreeChild() != 0);
+                ans > 0 && summands.firstChild() != 0);
             CPPUNIT_ASSERT_MESSAGE("The composite 3-manifold " + triName +
                 " is reported to be prime.", ans > 1 &&
-                summands.getFirstTreeChild() != summands.getLastTreeChild());
+                summands.firstChild() != summands.lastChild());
             CPPUNIT_ASSERT_MESSAGE("The composite 3-manifold " + triName +
                 " is reported to have more than two summands.", ans == 2 &&
-                summands.getFirstTreeChild()->getNextTreeSibling() ==
-                summands.getLastTreeChild());
+                summands.firstChild()->nextSibling() == summands.lastChild());
 
             NTriangulation* summand1 = static_cast<NTriangulation*>(
-                summands.getFirstTreeChild());
+                summands.firstChild());
             NTriangulation* summand2 = static_cast<NTriangulation*>(
-                summands.getLastTreeChild());
+                summands.lastChild());
 
             std::unique_ptr<NStandardTriangulation> stdTri1(
                 NStandardTriangulation::isStandardTriangulation(summand1));
@@ -185,17 +184,17 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_MESSAGE("The second prime summand of " + triName +
                 " forms an unrecognised triangulation.", stdTri2.get() != 0);
 
-            std::unique_ptr<NManifold> stdManifold1(stdTri1->getManifold());
+            std::unique_ptr<NManifold> stdManifold1(stdTri1->manifold());
             CPPUNIT_ASSERT_MESSAGE("The first prime summand of " + triName +
                 " forms an unrecognised 3-manifold.", stdManifold1.get() != 0);
 
-            std::unique_ptr<NManifold> stdManifold2(stdTri2->getManifold());
+            std::unique_ptr<NManifold> stdManifold2(stdTri2->manifold());
             CPPUNIT_ASSERT_MESSAGE("The second prime summand of " + triName +
                 " forms an unrecognised 3-manifold.", stdManifold2.get() != 0);
 
             // Obtain the manifold names in lexicographical order.
-            std::string stdName1 = stdManifold1->getName();
-            std::string stdName2 = stdManifold2->getName();
+            std::string stdName1 = stdManifold1->name();
+            std::string stdName2 = stdManifold2->name();
             if (stdName2 < stdName1) {
                 std::string tmp = stdName2;
                 stdName2 = stdName1;
@@ -216,11 +215,11 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                 stdName2 == manifold2);
 
             // Test that the homologies are consistent.
-            NAbelianGroup combined(summand1->getHomologyH1());
-            combined.addGroup(summand2->getHomologyH1());
+            NAbelianGroup combined(summand1->homology());
+            combined.addGroup(summand2->homology());
             CPPUNIT_ASSERT_MESSAGE("The prime summands of " + triName +
                 " have inconsistent first homology groups.",
-                tri->getHomologyH1() == combined);
+                tri->homology() == combined);
 
 
             // Finish with a 0-efficiency test.
@@ -253,21 +252,21 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             unsigned long ans = tri->connectedSumDecomposition(&summands);
 
             NTriangulation* summand1 = static_cast<NTriangulation*>(
-                summands.getFirstTreeChild());
+                summands.firstChild());
             CPPUNIT_ASSERT_MESSAGE("The composite 3-manifold " + triName +
                 " is reported to be a 3-sphere.", ans > 0 && summand1 != 0);
             NTriangulation* summand2 = static_cast<NTriangulation*>(
-                summand1->getNextTreeSibling());
+                summand1->nextSibling());
             CPPUNIT_ASSERT_MESSAGE("The composite 3-manifold " + triName +
                 " is reported to be prime.", ans > 1 && summand2 != 0);
             NTriangulation* summand3 = static_cast<NTriangulation*>(
-                summand2->getNextTreeSibling());
+                summand2->nextSibling());
             CPPUNIT_ASSERT_MESSAGE("The composite 3-manifold " + triName +
                 " is reported to have only two prime summands.",
                 ans > 2 && summand3 != 0);
             CPPUNIT_ASSERT_MESSAGE("The composite 3-manifold " + triName +
                 " is reported to have more than three summands.", ans == 3 &&
-                summand3 == summands.getLastTreeChild());
+                summand3 == summands.lastChild());
 
             std::unique_ptr<NStandardTriangulation> stdTri1(
                 NStandardTriangulation::isStandardTriangulation(summand1));
@@ -284,34 +283,34 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_MESSAGE("The third prime summand of " + triName +
                 " forms an unrecognised triangulation.", stdTri3.get() != 0);
 
-            std::unique_ptr<NManifold> stdManifold1(stdTri1->getManifold());
+            std::unique_ptr<NManifold> stdManifold1(stdTri1->manifold());
             CPPUNIT_ASSERT_MESSAGE("The first prime summand of " + triName +
                 " forms an unrecognised 3-manifold.", stdManifold1.get() != 0);
 
-            std::unique_ptr<NManifold> stdManifold2(stdTri2->getManifold());
+            std::unique_ptr<NManifold> stdManifold2(stdTri2->manifold());
             CPPUNIT_ASSERT_MESSAGE("The second prime summand of " + triName +
                 " forms an unrecognised 3-manifold.", stdManifold2.get() != 0);
 
-            std::unique_ptr<NManifold> stdManifold3(stdTri3->getManifold());
+            std::unique_ptr<NManifold> stdManifold3(stdTri3->manifold());
             CPPUNIT_ASSERT_MESSAGE("The third prime summand of " + triName +
                 " forms an unrecognised 3-manifold.", stdManifold3.get() != 0);
 
             // Obtain the manifold names in lexicographical order.
-            std::string stdName1 = stdManifold1->getName();
-            std::string stdName2 = stdManifold2->getName();
-            std::string stdName3 = stdManifold3->getName();
+            std::string stdName1 = stdManifold1->name();
+            std::string stdName2 = stdManifold2->name();
+            std::string stdName3 = stdManifold3->name();
 
             CPPUNIT_ASSERT_MESSAGE("One of the three prime summands of " +
                 triName + " does not form RP3.",
                 stdName1 == "RP3" && stdName2 == "RP3" && stdName3 == "RP3");
 
             // Test that the homologies are consistent.
-            NAbelianGroup combined(summand1->getHomologyH1());
-            combined.addGroup(summand2->getHomologyH1());
-            combined.addGroup(summand3->getHomologyH1());
+            NAbelianGroup combined(summand1->homology());
+            combined.addGroup(summand2->homology());
+            combined.addGroup(summand3->homology());
             CPPUNIT_ASSERT_MESSAGE("The prime summands of " + triName +
                 " have inconsistent first homology groups.",
-                tri->getHomologyH1() == combined);
+                tri->homology() == combined);
 
             // All above board.
             return tri;
@@ -464,7 +463,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                 // The routine reported an embedded two-sided projective plane.
                 if (tri->isOrientable()) {
                     std::ostringstream msg;
-                    msg << "Triangulation " << tri->getPacketLabel()
+                    msg << "Triangulation " << tri->label()
                         << " is orientable but reports an embedded "
                         "two-sided projective plane.";
                     CPPUNIT_FAIL(msg.str());
@@ -472,9 +471,9 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                 return;
             }
 
-            if (ncomp != parent.getNumberOfChildren()) {
+            if (ncomp != parent.countChildren()) {
                 std::ostringstream msg;
-                msg << "Triangulation " << tri->getPacketLabel()
+                msg << "Triangulation " << tri->label()
                     << " reports a different number of connected sum "
                     "components from how many it actually builds.";
                 CPPUNIT_FAIL(msg.str());
@@ -483,21 +482,21 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             NAbelianGroup h1;
             NTriangulation* term;
             bool foundNor = false;
-            for (regina::NPacket* p = parent.getFirstTreeChild(); p;
-                    p = p->getNextTreeSibling()) {
+            for (regina::NPacket* p = parent.firstChild(); p;
+                    p = p->nextSibling()) {
                 term = static_cast<NTriangulation*>(p);
                 if (! term->isOrientable())
                     foundNor = true;
                 if (! term->isZeroEfficient()) {
                     // Special cases: 2-tetrahedron RP3, L(3,1), S2xS1, S2x~S1.
-                    if (! (term->getNumberOfTetrahedra() == 2 &&
+                    if (! (term->size() == 2 &&
                             (term->isoSig() == "cMcabbgqw" /* RP3 */ ||
                             term->isoSig() == "cMcabbgqj" /* L(3,1) */ ||
                             term->isoSig() == "cPcbbbaai" /* L(3,1) */ ||
                             term->isoSig() == "cMcabbjaj" /* S2xS1 */ ||
                             term->isoSig() == "cPcbbbajs" /* S2x~S1 */))) {
                         std::ostringstream msg;
-                        msg << "Triangulation " << tri->getPacketLabel()
+                        msg << "Triangulation " << tri->label()
                             << " reports a non-zero-efficient summand "
                             << term->isoSig() << ".";
                         CPPUNIT_FAIL(msg.str());
@@ -505,31 +504,31 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                 }
                 if (term->isThreeSphere()) {
                     std::ostringstream msg;
-                    msg << "Triangulation " << tri->getPacketLabel()
+                    msg << "Triangulation " << tri->label()
                         << " reports a 3-sphere summand "
                         << term->isoSig() << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
-                h1.addGroup(term->getHomologyH1());
+                h1.addGroup(term->homology());
             }
 
             if ((! foundNor) && (! tri->isOrientable())) {
                 std::ostringstream msg;
-                msg << "Triangulation " << tri->getPacketLabel()
+                msg << "Triangulation " << tri->label()
                     << " is non-orientable but none of its summands are.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             if (foundNor && tri->isOrientable()) {
                 std::ostringstream msg;
-                msg << "Triangulation " << tri->getPacketLabel()
+                msg << "Triangulation " << tri->label()
                     << " is orientable but one of its summands is not.";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! (h1 == tri->getHomologyH1())) {
+            if (! (h1 == tri->homology())) {
                 std::ostringstream msg;
-                msg << "Triangulation " << tri->getPacketLabel()
+                msg << "Triangulation " << tri->label()
                     << " has first homology that does not match "
                     "the combination of its summands' first homologies.";
                 CPPUNIT_FAIL(msg.str());

@@ -62,14 +62,14 @@ const NormalCoords NNormalSurfaceList::ORIENTED_QUAD = NS_ORIENTED_QUAD;
 // specialisation is not enough to stop it.  I wish I understood how to
 // avoid this, but in the meantime, here we are.
 NMatrixInt* NNormalSurfaceList::recreateMatchingEquations() const {
-    return makeMatchingEquations(getTriangulation(), coords_);
+    return makeMatchingEquations(triangulation(), coords_);
 }
 
 void NNormalSurfaceList::writeAllSurfaces(std::ostream& out) const {
     unsigned long n = size();
     out << "Number of surfaces is " << n << '\n';
     for (unsigned long i = 0; i < n; i++) {
-        getSurface(i)->writeTextShort(out);
+        surface(i)->writeTextShort(out);
         out << '\n';
     }
 }
@@ -116,8 +116,12 @@ NEnumConstraintList* makeEmbeddedConstraints(
     return forCoords(coords, EmbeddedConstraints(), 0, triangulation);
 }
 
+NTriangulation* NNormalSurfaceList::triangulation() const {
+    return dynamic_cast<NTriangulation*>(parent());
+}
+
 NTriangulation* NNormalSurfaceList::getTriangulation() const {
-    return dynamic_cast<NTriangulation*>(getTreeParent());
+    return dynamic_cast<NTriangulation*>(parent());
 }
 
 namespace {

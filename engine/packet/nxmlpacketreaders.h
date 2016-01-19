@@ -74,7 +74,7 @@ class REGINA_API NXMLContainerReader : public NXMLPacketReader {
          */
         NXMLContainerReader(NXMLTreeResolver& resolver);
 
-        virtual NPacket* getPacket();
+        virtual NPacket* packet() override;
 };
 
 /**
@@ -96,12 +96,12 @@ class REGINA_API NXMLPDFReader : public NXMLPacketReader {
          */
         NXMLPDFReader(NXMLTreeResolver& resolver);
 
-        virtual NPacket* getPacket();
+        virtual NPacket* packet() override;
         virtual NXMLElementReader* startContentSubElement(
             const std::string& subTagName,
-            const regina::xml::XMLPropertyDict& subTagProps);
+            const regina::xml::XMLPropertyDict& subTagProps) override;
         virtual void endContentSubElement(const std::string& subTagName,
-            NXMLElementReader* subReader);
+            NXMLElementReader* subReader) override;
 };
 
 /**
@@ -123,12 +123,12 @@ class REGINA_API NXMLScriptReader : public NXMLPacketReader {
          */
         NXMLScriptReader(NXMLTreeResolver& resolver);
 
-        virtual NPacket* getPacket();
+        virtual NPacket* packet() override;
         virtual NXMLElementReader* startContentSubElement(
             const std::string& subTagName,
-            const regina::xml::XMLPropertyDict& subTagProps);
+            const regina::xml::XMLPropertyDict& subTagProps) override;
         virtual void endContentSubElement(const std::string& subTagName,
-            NXMLElementReader* subReader);
+            NXMLElementReader* subReader) override;
 };
 
 /**
@@ -150,12 +150,12 @@ class REGINA_API NXMLTextReader : public NXMLPacketReader {
          */
         NXMLTextReader(NXMLTreeResolver& resolver);
 
-        virtual NPacket* getPacket();
+        virtual NPacket* packet() override;
         virtual NXMLElementReader* startContentSubElement(
             const std::string& subTagName,
-            const regina::xml::XMLPropertyDict& subTagProps);
+            const regina::xml::XMLPropertyDict& subTagProps) override;
         virtual void endContentSubElement(const std::string& subTagName,
-            NXMLElementReader* subReader);
+            NXMLElementReader* subReader) override;
 };
 
 /*@}*/
@@ -166,7 +166,7 @@ inline NXMLContainerReader::NXMLContainerReader(NXMLTreeResolver& resolver) :
         NXMLPacketReader(resolver), container(new NContainer()) {
 }
 
-inline NPacket* NXMLContainerReader::getPacket() {
+inline NPacket* NXMLContainerReader::packet() {
     return container;
 }
 
@@ -176,7 +176,7 @@ inline NXMLPDFReader::NXMLPDFReader(NXMLTreeResolver& resolver) :
         NXMLPacketReader(resolver), pdf(new NPDF()) {
 }
 
-inline NPacket* NXMLPDFReader::getPacket() {
+inline NPacket* NXMLPDFReader::packet() {
     return pdf;
 }
 
@@ -186,7 +186,7 @@ inline NXMLScriptReader::NXMLScriptReader(NXMLTreeResolver& resolver) :
         NXMLPacketReader(resolver), script(new NScript()) {
 }
 
-inline NPacket* NXMLScriptReader::getPacket() {
+inline NPacket* NXMLScriptReader::packet() {
     return script;
 }
 
@@ -196,7 +196,7 @@ inline NXMLTextReader::NXMLTextReader(NXMLTreeResolver& resolver) :
         NXMLPacketReader(resolver), text(new NText()) {
 }
 
-inline NPacket* NXMLTextReader::getPacket() {
+inline NPacket* NXMLTextReader::packet() {
     return text;
 }
 
@@ -211,7 +211,7 @@ inline NXMLElementReader* NXMLTextReader::startContentSubElement(
 inline void NXMLTextReader::endContentSubElement(const std::string& subTagName,
         NXMLElementReader* subReader) {
     if (subTagName == "text")
-        text->setText(dynamic_cast<NXMLCharsReader*>(subReader)->getChars());
+        text->setText(dynamic_cast<NXMLCharsReader*>(subReader)->chars());
 }
 
 } // namespace regina

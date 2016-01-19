@@ -52,7 +52,7 @@ regina::NPacket* ReginaHandler::importData(const QString& fileName,
             QObject::tr("<qt>Please check that the file <tt>%1</tt> "
             "is readable and in Regina format.</qt>").
                 arg(fileName.toHtmlEscaped()));
-    if (ans->getPacketLabel().empty())
+    if (ans->label().empty())
         ans->setPacketLabel("Imported data");
     return ans;
 }
@@ -68,7 +68,7 @@ bool ReginaHandler::exportData(regina::NPacket* data,
             QObject::tr("I cannot export this packet subtree on its own."), 
             QObject::tr("<qt>This is because the root packet <i>%1</i> "
             "must stay connected to its parent.</qt>").
-            arg(QString(data->getHumanLabel().c_str()).toHtmlEscaped()));
+            arg(QString(data->humanLabel().c_str()).toHtmlEscaped()));
         return false;
     }
     if (! data->save(QFile::encodeName(fileName), compressed)) {

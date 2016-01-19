@@ -69,7 +69,7 @@ namespace {
                     isReginaData(false) {
             }
 
-            virtual NPacket* getPacket() {
+            virtual NPacket* packet() {
                 if (isReginaData)
                     return &container;
                 else
@@ -95,7 +95,7 @@ namespace {
 
             virtual void abort(NXMLElementReader*) {
                 // Delete all children of the top-level container.
-                while (NPacket* child = container.getFirstTreeChild()) {
+                while (NPacket* child = container.firstChild()) {
                     child->makeOrphan();
                     delete child;
                 }
@@ -153,7 +153,7 @@ NPacket* open(std::istream& s) {
         char* buf = new char[regChunkSize];
         int chunkRead;
         bool seenFirstChunk = false;
-        while (callback.getState() != NXMLCallback::ABORTED) {
+        while (callback.state() != NXMLCallback::ABORTED) {
             // Read in the next chunk.
             for (chunkRead = 0; chunkRead < regChunkSize; chunkRead++) {
                 buf[chunkRead] = static_cast<char>(in.get());
@@ -254,9 +254,9 @@ NPacket* open(std::istream& s) {
 
     // See if we read anything.
     // If so, break it away from the top-level container and return it.
-    NPacket* p = reader.getPacket();
+    NPacket* p = reader.packet();
     if (p) {
-        p = p->getFirstTreeChild();
+        p = p->firstChild();
         if (p)
             p->makeOrphan();
 

@@ -94,6 +94,14 @@ class REGINA_API Face<2, 1> : public detail::FaceBase<2, 1>,
          * if this edge does not lie entirely within the boundary of
          * the triangulation.
          */
+        Dim2BoundaryComponent* boundaryComponent() const;
+        /**
+         * Deprecated routine that returns the boundary component of the
+         * triangulation to which this edge belongs.
+         *
+         * \deprecated This routine has been renamed as boundaryComponent().
+         * See the boundaryComponent() documentation for further details.
+         */
         Dim2BoundaryComponent* getBoundaryComponent() const;
 
         /**
@@ -185,6 +193,10 @@ inline Face<2, 1>::Face(Dim2Component* component) :
         detail::FaceBase<2, 1>(component), boundaryComponent_(0) {
 }
 
+inline Dim2BoundaryComponent* Face<2, 1>::boundaryComponent() const {
+    return boundaryComponent_;
+}
+
 inline Dim2BoundaryComponent* Face<2, 1>::getBoundaryComponent() const {
     return boundaryComponent_;
 }
@@ -194,7 +206,7 @@ inline bool Face<2, 1>::isBoundary() const {
 }
 
 inline bool Face<2, 1>::inMaximalForest() const {
-    return front().getTriangle()->facetInMaximalForest(front().getEdge());
+    return front().triangle()->facetInMaximalForest(front().edge());
 }
 
 inline void Face<2, 1>::writeTextShort(std::ostream& out) const {

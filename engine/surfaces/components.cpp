@@ -188,7 +188,7 @@ namespace {
 
         // Create the set of normal surfaces!
         // Note that all vectors are automagically initialised to zero.
-        const NTriangulation* tri = s.getTriangulation();
+        const NTriangulation* tri = s.triangulation();
         NNormalSurfaceVector** ans = new NNormalSurfaceVector*[compID];
 
         NNormalSurfaceVector* vec;
@@ -196,7 +196,7 @@ namespace {
         if (s.rawVector()->allowsAlmostNormal()) {
             for (i = 0; i < compID; ++i)
                 ans[i] = new NNormalSurfaceVectorANStandard(
-                    10 * tri->getNumberOfTetrahedra());
+                    10 * tri->size());
 
             for (it.init(components); ! it.done(); ++it) {
                 vec = ans[components.data(*it).id];
@@ -206,7 +206,7 @@ namespace {
         } else {
             for (i = 0; i < compID; ++i)
                 ans[i] = new NNormalSurfaceVectorStandard(
-                    7 * tri->getNumberOfTetrahedra());
+                    7 * tri->size());
 
             for (it.init(components); ! it.done(); ++it) {
                 vec = ans[components.data(*it).id];
@@ -242,7 +242,7 @@ bool NNormalSurface::disjoint(const NNormalSurface& other) const {
     NNormalSurfaceVector* v =
         static_cast<NNormalSurfaceVector*>(vector->clone());
     (*v) += *(other.vector);
-    NNormalSurface* sum = new NNormalSurface(triangulation, v);
+    NNormalSurface* sum = new NNormalSurface(triangulation_, v);
 
     typedef std::vector<NNormalSurface*> CompVector;
     CompVector bits;

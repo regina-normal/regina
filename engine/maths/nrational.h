@@ -218,6 +218,13 @@ class REGINA_API NRational {
          *
          * @return the numerator.
          */
+        NInteger numerator() const;
+        /**
+         * Deprecated routine that returns the numerator of this rational.
+         *
+         * \deprecated This routine has been renamed to numerator().
+         * See the numeration() documentation for further details.
+         */
         NInteger getNumerator() const;
         /**
          * Returns the denominator of this rational.
@@ -225,6 +232,13 @@ class REGINA_API NRational {
          * non-negative denominator.  Infinity will be stored as 1/0.
          *
          * @return the denominator.
+         */
+        NInteger denominator() const;
+        /**
+         * Deprecated routine that returns the denominator of this rational.
+         *
+         * \deprecated This routine has been renamed to denominator().
+         * See the denominator() documentation for further details.
          */
         NInteger getDenominator() const;
 
@@ -424,6 +438,14 @@ class REGINA_API NRational {
          *
          * @author Ryan Budney
          */
+        std::string TeX() const;
+        /**
+         * Deprecated routine that returns this rational as written using TeX
+         * formatting.
+         *
+         * \deprecated This routine has been renamed to TeX().
+         * See the TeX() documentation for further details.
+         */
         std::string getTeX() const;
 
         /**
@@ -558,6 +580,18 @@ inline void NRational::swap(NRational& other) {
 inline void NRational::negate() {
     if (flavour == f_normal)
         mpq_neg(data, data);
+}
+
+inline NInteger NRational::getNumerator() const {
+    return numerator();
+}
+
+inline NInteger NRational::getDenominator() const {
+    return denominator();
+}
+
+inline std::string NRational::getTeX() const {
+    return TeX();
 }
 
 inline bool NRational::operator <= (const NRational& compare) const {

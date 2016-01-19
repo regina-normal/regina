@@ -47,7 +47,7 @@ using regina::Component;
 using regina::NComponent;
 
 namespace {
-    boost::python::list getSimplices_list(NComponent& t) {
+    boost::python::list simplices_list(NComponent& t) {
         boost::python::list ans;
         for (std::vector<regina::Simplex<3>*>::const_iterator it =
                 t.simplices().begin(); it != t.simplices().end(); ++it)
@@ -72,12 +72,13 @@ void addNComponent() {
         .def("getNumberOfEdges", &NComponent::getNumberOfEdges)
         .def("countVertices", &NComponent::countVertices)
         .def("getNumberOfVertices", &NComponent::getNumberOfVertices)
+        .def("countBoundaryComponents", &NComponent::countBoundaryComponents)
         .def("getNumberOfBoundaryComponents",
             &NComponent::getNumberOfBoundaryComponents)
-        .def("simplices", getSimplices_list)
-        .def("getSimplices", getSimplices_list)
-        .def("tetrahedra", getSimplices_list)
-        .def("getTetrahedra", getSimplices_list)
+        .def("simplices", simplices_list)
+        .def("getSimplices", simplices_list)
+        .def("tetrahedra", simplices_list)
+        .def("getTetrahedra", simplices_list)
         .def("simplex", &NComponent::simplex,
             return_value_policy<reference_existing_object>())
         .def("tetrahedron", &NComponent::tetrahedron,
@@ -107,6 +108,8 @@ void addNComponent() {
         .def("vertex", &NComponent::vertex,
             return_value_policy<reference_existing_object>())
         .def("getVertex", &NComponent::getVertex,
+            return_value_policy<reference_existing_object>())
+        .def("boundaryComponent", &NComponent::boundaryComponent,
             return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &NComponent::getBoundaryComponent,
             return_value_policy<reference_existing_object>())

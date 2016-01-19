@@ -356,7 +356,7 @@ void PythonConsole::setSelectedPacket(regina::NPacket* packet) {
     if (interpreter->setVar("item", packet)) {
         if (packet)
             addOutput(tr("The selected packet (%1) is in the "
-                "variable [item].").arg(packet->getHumanLabel().c_str()));
+                "variable [item].").arg(packet->humanLabel().c_str()));
         // Set "selected" for backward compatibility with Regina <= 4.92.
         // Ignore any errors.
         interpreter->setVar("selected", packet);
@@ -374,7 +374,7 @@ void PythonConsole::setVar(const QString& name, regina::NPacket* value) {
     if (! interpreter->setVar(name.toUtf8(), value)) {
         QString pktName;
         if (value)
-            pktName = value->getHumanLabel().c_str();
+            pktName = value->humanLabel().c_str();
         else
             pktName = tr("None");
 

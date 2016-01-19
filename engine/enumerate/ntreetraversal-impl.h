@@ -229,7 +229,7 @@ NTreeTraversal<LPConstraint, BanConstraint, Integer>::NTreeTraversal(
              coords),
             enumeration),
         coords_(coords),
-        nTets_(tri->getNumberOfTetrahedra()),
+        nTets_(tri->size()),
         nTypes_(coords == NS_QUAD || coords == NS_AN_QUAD_OCT ||
             coords == NS_ANGLE ? nTets_ : 5 * nTets_),
         /* Each time we branch, one LP can be solved in-place:

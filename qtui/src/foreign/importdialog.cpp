@@ -78,7 +78,7 @@ ImportDialog::ImportDialog(QWidget* parent, regina::NPacket* importedData,
     l = new QLabel(tr("Label:"));
     l->setWhatsThis(expln);
     hStrip->addWidget(l);
-    label = new QLineEdit(newTree->getPacketLabel().c_str());
+    label = new QLineEdit(newTree->label().c_str());
     label->setWhatsThis(expln);
     hStrip->addWidget(label, 1);
 
@@ -134,7 +134,7 @@ void ImportDialog::slotOk() {
             "for the import."),
             tr("<qt>The packet <i>%1</i> cannot act as a parent for "
             "this imported data.</qt>").
-            arg(QString(parentPacket->getHumanLabel().c_str()).toHtmlEscaped()));
+            arg(QString(parentPacket->humanLabel().c_str()).toHtmlEscaped()));
         return;
     }
 

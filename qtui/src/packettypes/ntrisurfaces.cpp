@@ -327,10 +327,10 @@ void NTriSurfacesUI::refresh() {
     regina::NStandardTriangulation* std =
         regina::NStandardTriangulation::isStandardTriangulation(tri);
     if (std) {
-        regina::NManifold* mfd = std->getManifold();
+        regina::NManifold* mfd = std->manifold();
         if (mfd) {
             isHyp = mfd->isHyperbolic();
-            name = mfd->getName();
+            name = mfd->name();
             delete mfd;
 
             // If we have the 3-sphere, 3-ball or solid torus, then
@@ -358,7 +358,7 @@ void NTriSurfacesUI::refresh() {
         btnSplitting->setVisible(true);
 
         if (tri->knowsZeroEfficient() ||
-                tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
+                tri->size() <= autoCalcThreshold) {
             if (tri->isZeroEfficient()) {
                 zeroEff->setText(tr("True"));
                 QPalette pal = zeroEff->palette();
@@ -378,7 +378,7 @@ void NTriSurfacesUI::refresh() {
         }
 
         if (tri->knowsSplittingSurface() ||
-                tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
+                tri->size() <= autoCalcThreshold) {
             if (tri->hasSplittingSurface()) {
                 splitting->setText(tr("True"));
                 QPalette pal = splitting->palette();
@@ -412,7 +412,7 @@ void NTriSurfacesUI::refresh() {
         btnThreeSphere->setVisible(true);
 
         if (tri->knowsThreeSphere() ||
-                tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
+                tri->size() <= autoCalcThreshold) {
             if (tri->isThreeSphere()) {
                 threeSphere->setText(tr("True"));
                 QPalette pal = threeSphere->palette();
@@ -446,7 +446,7 @@ void NTriSurfacesUI::refresh() {
         btnThreeBall->setVisible(true);
 
         if (tri->knowsBall() ||
-                tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
+                tri->size() <= autoCalcThreshold) {
             if (tri->isBall()) {
                 threeBall->setText(tr("True"));
                 QPalette pal = threeBall->palette();
@@ -474,13 +474,13 @@ void NTriSurfacesUI::refresh() {
         btnThreeBall->setVisible(false);
     }
 
-    if (tri->getNumberOfBoundaryComponents() > 0) {
+    if (tri->countBoundaryComponents() > 0) {
         titleSolidTorus->setVisible(true);
         solidTorus->setVisible(true);
         btnSolidTorus->setVisible(true);
 
         if (tri->knowsSolidTorus() ||
-                tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
+                tri->size() <= autoCalcThreshold) {
             if (tri->isSolidTorus()) {
                 solidTorus->setText(tr("True"));
                 QPalette pal = solidTorus->palette();
@@ -515,7 +515,7 @@ void NTriSurfacesUI::refresh() {
         btnIrreducible->setVisible(true);
 
         if (tri->knowsIrreducible() ||
-                tri->getNumberOfTetrahedra() <= autoCalcThreshold) {
+                tri->size() <= autoCalcThreshold) {
             if (tri->isIrreducible()) {
                 irreducible->setText(tr("True"));
                 QPalette pal = irreducible->palette();
@@ -556,7 +556,7 @@ void NTriSurfacesUI::refresh() {
             haken->setPalette(pal);
             btnHaken->setEnabled(false);
         } else if (tri->knowsHaken() ||
-                tri->getNumberOfTetrahedra() + HAKEN_AUTO_CALC_ADJUSTMENT
+                tri->size() + HAKEN_AUTO_CALC_ADJUSTMENT
                 <= autoCalcThreshold) {
             // This will not trigger new knowledge about irreducibility,
             // since if the triangulation has few tetrahedra we would
@@ -593,7 +593,7 @@ void NTriSurfacesUI::refresh() {
         hyperbolic->setVisible(true);
 
         if (tri->knowsStrictAngleStructure() ||
-                tri->getNumberOfTetrahedra() <= STRICT_AUTO_CALC_THRESHOLD) {
+                tri->size() <= STRICT_AUTO_CALC_THRESHOLD) {
             if (tri->hasStrictAngleStructure()) {
                 strict->setText("Yes");
                 QPalette pal = strict->palette();

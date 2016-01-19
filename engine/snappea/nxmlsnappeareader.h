@@ -71,12 +71,12 @@ class REGINA_API NXMLSnapPeaReader : public NXMLPacketReader {
          */
         NXMLSnapPeaReader(NXMLTreeResolver& resolver);
 
-        virtual NPacket* getPacket();
+        virtual NPacket* packet() override;
         virtual NXMLElementReader* startContentSubElement(
             const std::string& subTagName,
-            const regina::xml::XMLPropertyDict& subTagProps);
+            const regina::xml::XMLPropertyDict& subTagProps) override;
         virtual void endContentSubElement(const std::string& subTagName,
-            NXMLElementReader* subReader);
+            NXMLElementReader* subReader) override;
 };
 
 /*@}*/
@@ -87,7 +87,7 @@ inline NXMLSnapPeaReader::NXMLSnapPeaReader(NXMLTreeResolver& resolver) :
         NXMLPacketReader(resolver), snappea_(new NSnapPeaTriangulation()) {
 }
 
-inline NPacket* NXMLSnapPeaReader::getPacket() {
+inline NPacket* NXMLSnapPeaReader::packet() {
     return snappea_;
 }
 

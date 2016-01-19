@@ -150,7 +150,7 @@ bool PythonHandler::exportData(regina::NPacket* data, const QString& fileName,
 
     // Write the name of the script.
     out << "### " << scriptMarker << ' ';
-    out << QString(script->getPacketLabel().c_str());
+    out << QString(script->label().c_str());
     endl(out);
     out << "###";
     endl(out);
@@ -158,11 +158,11 @@ bool PythonHandler::exportData(regina::NPacket* data, const QString& fileName,
     // Output the value of each variable.
     unsigned long i;
     regina::NPacket* value;
-    for (i = 0; i < script->getNumberOfVariables(); i++) {
-        value = script->getVariableValue(i);
+    for (i = 0; i < script->countVariables(); i++) {
+        value = script->variableValue(i);
         out << "### " << varMarker
-            << QString(script->getVariableName(i).c_str())
-            << ": " << (value ? QString(value->getPacketLabel().c_str()) : "");
+            << QString(script->variableName(i).c_str())
+            << ": " << (value ? QString(value->label().c_str()) : "");
         endl(out);
     }
 
@@ -170,7 +170,7 @@ bool PythonHandler::exportData(regina::NPacket* data, const QString& fileName,
     endl(out);
     out << "### " << endMetadataMarker;
     endl(out);
-    out << script->getText().c_str();
+    out << script->text().c_str();
 
     // All done!
     return true;

@@ -101,7 +101,7 @@ class REGINA_API NSignature :
         public ShortOutput<NSignature>,
         public boost::noncopyable {
     private:
-        unsigned order;
+        unsigned order_;
             /**< The number of quads in this splitting surface. */
         unsigned* label;
             /**< The 2<i>n</i> letters making up this signature from
@@ -142,6 +142,13 @@ class REGINA_API NSignature :
          * of quads in the corresponding splitting surface.
          *
          * @return the order of this signature.
+         */
+        unsigned order() const;
+        /**
+         * Deprecated routine that returns the order of this signature.
+         *
+         * \deprecated This routine has been renamed to order().
+         * See the order() documentation for further details.
          */
         unsigned getOrder() const;
 
@@ -195,7 +202,7 @@ class REGINA_API NSignature :
          * cycle or negative to use a reversed cycle.
          * @param relabel1 allows the first cycle to be transformed by
          * relabelling; this parameter must be an array of size at least
-         * <tt>sig1.getOrder()</tt> mapping old labels 0,1,...
+         * <tt>sig1.order()</tt> mapping old labels 0,1,...
          * (representing letters A,B,...) to new labels (which must also be
          * 0,1,..., possibly in a different order).  This parameter may
          * be 0 if no relabelling is to be used.
@@ -213,7 +220,7 @@ class REGINA_API NSignature :
          * cycle or negative to use a reversed cycle.
          * @param relabel2 allows the second cycle to be transformed by
          * relabelling; this parameter must be an array of size at least
-         * <tt>sig2.getOrder()</tt> mapping old labels 0,1,...
+         * <tt>sig2.order()</tt> mapping old labels 0,1,...
          * (representing letters A,B,...) to new labels (which must also be
          * 0,1,..., possibly in a different order).  This parameter may
          * be 0 if no relabelling is to be used.
@@ -288,7 +295,7 @@ class REGINA_API NSignature :
 inline NSignature::NSignature() {
 }
 
-inline NSignature::NSignature(unsigned newOrder) : order(newOrder),
+inline NSignature::NSignature(unsigned newOrder) : order_(newOrder),
         label(new unsigned[2 * newOrder]), labelInv(new bool[2 * newOrder]),
         nCycles(0), cycleStart(new unsigned[2 * newOrder + 1]),
         nCycleGroups(0), cycleGroupStart(new unsigned[2 * newOrder + 1]) {
@@ -303,8 +310,12 @@ inline NSignature::~NSignature() {
     delete[] cycleGroupStart;
 }
 
+inline unsigned NSignature::order() const {
+    return order_;
+}
+
 inline unsigned NSignature::getOrder() const {
-    return order;
+    return order_;
 }
 
 inline void NSignature::writeTextShort(std::ostream& out) const {

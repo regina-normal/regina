@@ -132,6 +132,14 @@ class REGINA_API Component<3> : public detail::ComponentBase<3>,
          *
          * @return the number of boundary components.
          */
+        size_t countBoundaryComponents() const;
+
+        /**
+         * Deprecated function that returns the number of boundary
+         * components in this component.
+         *
+         * \deprecated Simply call countBoundaryComponents() instead.
+         */
         size_t getNumberOfBoundaryComponents() const;
 
         /**
@@ -174,11 +182,19 @@ class REGINA_API Component<3> : public detail::ComponentBase<3>,
          *
          * @param index the index of the requested boundary component in
          * this component.  This should be between 0 and
-         * getNumberOfBoundaryComponents()-1 inclusive.
+         * countBoundaryComponents()-1 inclusive.
          * Note that the index of a boundary component in the component
          * need not be the index of the same boundary component in the
          * entire triangulation.
          * @return the requested boundary component.
+         */
+        NBoundaryComponent* boundaryComponent(size_t index) const;
+        /**
+         * Deprecated routine that returns the requested boundary component
+         * of this triangulation.
+         *
+         * \deprecated This routine has been renamed to boundaryComponent().
+         * See the boundaryComponent() documentation for further details.
          */
         NBoundaryComponent* getBoundaryComponent(size_t index) const;
 
@@ -240,6 +256,10 @@ inline size_t Component<3>::countFaces<0>() const {
     return vertices_.size();
 }
 
+inline size_t Component<3>::countBoundaryComponents() const {
+    return boundaryComponents_.size();
+}
+
 inline size_t Component<3>::getNumberOfBoundaryComponents() const {
     return boundaryComponents_.size();
 }
@@ -272,6 +292,10 @@ inline NEdge* Component<3>::face<1>(size_t index) const {
 template <>
 inline NVertex* Component<3>::face<0>(size_t index) const {
     return vertices_[index];
+}
+
+inline NBoundaryComponent* Component<3>::boundaryComponent(size_t index) const {
+    return boundaryComponents_[index];
 }
 
 inline NBoundaryComponent* Component<3>::getBoundaryComponent(size_t index)

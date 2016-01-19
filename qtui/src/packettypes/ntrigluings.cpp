@@ -103,7 +103,7 @@ QModelIndex GluingsModel::index(int row, int column,
 }
 
 int GluingsModel::rowCount(const QModelIndex& /* unused parent*/) const {
-    return tri_->getNumberOfSimplices();
+    return tri_->size();
 }
 
 int GluingsModel::columnCount(const QModelIndex& /* unused parent*/) const {
@@ -204,7 +204,7 @@ bool GluingsModel::setData(const QModelIndex& index, const QVariant& value,
 
         // Check explicitly for a negative tetrahedron number
         // since isFaceStringValid() takes an unsigned integer.
-        if (newAdjTet < 0 || newAdjTet >= tri_->getNumberOfSimplices()) {
+        if (newAdjTet < 0 || newAdjTet >= tri_->size()) {
             showError(tr("There is no tetrahedron number %1.").
                 arg(newAdjTet));
             return false;
@@ -256,7 +256,7 @@ bool GluingsModel::setData(const QModelIndex& index, const QVariant& value,
 QString GluingsModel::isFaceStringValid(unsigned long srcTet, int srcFace,
         unsigned long destTet, const QString& destFace,
         regina::NPerm4* gluing) {
-    if (destTet >= tri_->getNumberOfSimplices())
+    if (destTet >= tri_->size())
         return tr("There is no tetrahedron number %1.").arg(destTet);
 
     if (! reFace.exactMatch(destFace))
@@ -754,7 +754,7 @@ void NTriGluingsUI::removeSelectedTets() {
         return;
 
     // Off we go!
-    if (first == 0 && last == tri->getNumberOfTetrahedra() - 1)
+    if (first == 0 && last == tri->size() - 1)
         tri->removeAllSimplices();
     else {
         regina::NPacket::ChangeEventSpan span(tri);
@@ -783,7 +783,7 @@ void NTriGluingsUI::orient() {
 
     bool hasOr = false;
     NTriangulation::ComponentIterator cit;
-    for (cit = tri->getComponents().begin(); cit != tri->getComponents().end();
+    for (cit = tri->components().begin(); cit != tri->components().end();
             ++cit)
         if ((*cit)->isOrientable()) {
             hasOr = true;
@@ -862,7 +862,7 @@ void NTriGluingsUI::puncture() {
 void NTriGluingsUI::drillEdge() {
     endEdit();
 
-    if (tri->getNumberOfEdges() == 0)
+    if (tri->countEdges() == 0)
         ReginaSupport::sorry(ui,
             tr("This triangulation does not have any edges."));
     else {
@@ -899,7 +899,7 @@ void NTriGluingsUI::connectedSumWith() {
 
     regina::NTriangulation* other = static_cast<regina::NTriangulation*>(
         PacketDialog::choose(ui,
-            tri->getTreeMatriarch(),
+            tri->root(),
             new SubclassFilter<regina::NTriangulation>(),
             tr("Connected Sum"),
             tr("Sum this with which other triangulation?"),
@@ -914,7 +914,7 @@ void NTriGluingsUI::connectedSumWith() {
 void NTriGluingsUI::boundaryComponents() {
     endEdit();
 
-    if (tri->getBoundaryComponents().empty())
+    if (tri->boundaryComponents().empty())
         ReginaSupport::sorry(ui,
             tr("This triangulation does not have any boundary components."));
     else {
@@ -939,7 +939,7 @@ void NTriGluingsUI::boundaryComponents() {
 void NTriGluingsUI::vertexLinks() {
     endEdit();
 
-    if (tri->getNumberOfVertices() == 0)
+    if (tri->countVertices() == 0)
         ReginaSupport::sorry(ui,
             tr("This triangulation does not have any vertices."));
     else {
@@ -969,11 +969,11 @@ void NTriGluingsUI::vertexLinks() {
 void NTriGluingsUI::splitIntoComponents() {
     endEdit();
 
-    if (tri->getNumberOfComponents() == 0)
+    if (tri->countComponents() == 0)
         ReginaSupport::info(ui,
             tr("This triangulation is empty."),
             tr("It has no components."));
-    else if (tri->getNumberOfComponents() == 1)
+    else if (tri->countComponents() == 1)
         ReginaSupport::info(ui,
             tr("This triangulation is connected."),
             tr("It has only one component."));
@@ -981,7 +981,7 @@ void NTriGluingsUI::splitIntoComponents() {
         // If there are already children of this triangulation, insert
         // the new triangulations at a deeper level.
         NPacket* base;
-        if (tri->getFirstTreeChild()) {
+        if (tri->firstChild()) {
             base = new regina::NContainer();
             tri->insertChildLast(base);
             base->setPacketLabel(tri->adornedLabel("Components"));
@@ -992,8 +992,7 @@ void NTriGluingsUI::splitIntoComponents() {
         unsigned long nComps = tri->splitIntoComponents(base);
 
         // Make sure the new components are visible.
-        enclosingPane->getMainWindow()->ensureVisibleInTree(
-            base->getFirstTreeChild());
+        enclosingPane->getMainWindow()->ensureVisibleInTree(base->firstChild());
 
         // Tell the user what happened.
         ReginaSupport::info(ui,
@@ -1004,7 +1003,7 @@ void NTriGluingsUI::splitIntoComponents() {
 void NTriGluingsUI::connectedSumDecomposition() {
     endEdit();
 
-    if (tri->getNumberOfTetrahedra() == 0)
+    if (tri->isEmpty())
         ReginaSupport::info(ui,
             tr("This triangulation is empty."),
             tr("It has no prime summands."));
@@ -1022,7 +1021,7 @@ void NTriGluingsUI::connectedSumDecomposition() {
         // If there are already children of this triangulation, insert
         // the new triangulations at a deeper level.
         NPacket* base;
-        if (tri->getFirstTreeChild()) {
+        if (tri->firstChild()) {
             base = new regina::NContainer();
             tri->insertChildLast(base);
             base->setPacketLabel(tri->adornedLabel("Summands"));
@@ -1049,15 +1048,14 @@ void NTriGluingsUI::connectedSumDecomposition() {
             // There is at least one new summand triangulation.
             // Make sure the new summands are visible.
             enclosingPane->getMainWindow()->ensureVisibleInTree(
-                base->getLastTreeChild());
+                base->lastChild());
 
             if (nSummands == 1) {
                 // Special-case S2xS1, S2x~S1 and RP3, which do not have
                 // 0-efficient triangulations.
                 NTriangulation* small = static_cast<NTriangulation*>
-                    (base->getFirstTreeChild());
-                if (small->getNumberOfTetrahedra() <= 2 &&
-                        small->getHomologyH1().isZ()) {
+                    (base->firstChild());
+                if (small->size() <= 2 && small->homology().isZ()) {
                     // The only closed prime manifolds with
                     // H_1 = Z and <= 2 tetrahedra are S2xS1 and S2x~S1.
                     if (small->isOrientable())
@@ -1075,8 +1073,7 @@ void NTriGluingsUI::connectedSumDecomposition() {
                             tr("I cannot decompose it further.  "
                             "However, I have constructed a new minimal "
                             "(but not 0-efficient) triangulation."));
-                } else if (small->getNumberOfTetrahedra() <= 2 &&
-                        small->getHomologyH1().isZn(2)) {
+                } else if (small->size() <= 2 && small->homology().isZn(2)) {
                     // The only closed prime orientable manifold with
                     // H_1 = Z_2 and <= 2 tetrahedra is RP3. */) {
                     ReginaSupport::info(ui,
@@ -1107,7 +1104,7 @@ void NTriGluingsUI::connectedSumDecomposition() {
 void NTriGluingsUI::makeZeroEfficient() {
     endEdit();
 
-    unsigned long initTets = tri->getNumberOfTetrahedra();
+    unsigned long initTets = tri->size();
     if (initTets == 0) {
         ReginaSupport::info(ui, tr("This triangulation is empty."));
         return;
@@ -1141,7 +1138,7 @@ void NTriGluingsUI::makeZeroEfficient() {
         // Composite 3-manifold.
         tri->insertChildLast(decomp);
         enclosingPane->getMainWindow()->ensureVisibleInTree(
-            decomp->getLastTreeChild());
+            decomp->lastChild());
 
         ReginaSupport::info(ui,
             tr("This triangulation represents a composite 3-manifold."),
@@ -1150,11 +1147,10 @@ void NTriGluingsUI::makeZeroEfficient() {
             "prime summands (without modifying this triangulation)."));
     } else {
         // Prime 3-manifold.
-        unsigned long finalTets = tri->getNumberOfTetrahedra();
+        unsigned long finalTets = tri->size();
         if (finalTets <= 2) {
             // Check for special cases.
-            if ((! tri->isZeroEfficient()) &&
-                    tri->getHomologyH1().isZn(2)) {
+            if ((! tri->isZeroEfficient()) && tri->homology().isZn(2)) {
                 // RP3.
                 if (finalTets < initTets)
                     ReginaSupport::info(ui,
@@ -1179,8 +1175,7 @@ void NTriGluingsUI::makeZeroEfficient() {
                         "one-vertex minimal triangulation "
                         "of RP<sup>3</sup>.</qt>"));
                 return;
-            } else if ((! tri->isZeroEfficient()) &&
-                    tri->getHomologyH1().isZ()) {
+            } else if ((! tri->isZeroEfficient()) && tri->homology().isZ()) {
                 // S2xS1.
                 if (finalTets < initTets)
                     ReginaSupport::info(ui,
@@ -1218,7 +1213,7 @@ void NTriGluingsUI::makeZeroEfficient() {
 void NTriGluingsUI::toSnapPea() {
     endEdit();
 
-    if (tri->getNumberOfTetrahedra() == 0 || tri->hasBoundaryTriangles() ||
+    if (tri->isEmpty() || tri->hasBoundaryTriangles() ||
             (! tri->isValid()) || (! tri->isStandard()) ||
             (! tri->isConnected())) {
         ReginaSupport::sorry(ui,
@@ -1249,7 +1244,7 @@ void NTriGluingsUI::toSnapPea() {
             "For peripheral curves, I have attempted to install the "
             "(shortest, second shortest) basis on each cusp.</qt>"));
 
-    ans->setPacketLabel(tri->getPacketLabel());
+    ans->setPacketLabel(tri->label());
     tri->insertChildLast(ans);
     enclosingPane->getMainWindow()->packetView(ans, true, true);
 }
@@ -1270,6 +1265,6 @@ void NTriGluingsUI::updateActionStates() {
     else
         actOrient->setEnabled(! tri->isOriented());
 
-    actBoundaryComponents->setEnabled(! tri->getBoundaryComponents().empty());
+    actBoundaryComponents->setEnabled(! tri->boundaryComponents().empty());
 }
 

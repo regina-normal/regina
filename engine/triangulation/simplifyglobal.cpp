@@ -113,7 +113,7 @@ bool NTriangulation::intelligentSimplify() {
             // Sync the real triangulation with the clone if appropriate.
             if (use != this) {
                 // At this point, changed == false.
-                if (use->getNumberOfTetrahedra() < getNumberOfTetrahedra()) {
+                if (use->size() < size()) {
                     // The 4-4 moves were successful; accept them.
                     cloneFrom(*use);
                     changed = true;
@@ -225,8 +225,8 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
             ensureSkeleton();
 
             // Crush edges if we can.
-            if (getNumberOfVertices() > components().size() &&
-                    getNumberOfVertices() > boundaryComponents_.size()) {
+            if (countVertices() > components().size() &&
+                    countVertices() > boundaryComponents_.size()) {
                 for (NEdge* edge : getEdges())
                     if (collapseEdge(edge, true, perform)) {
                         changedNow = changed = true;
@@ -283,7 +283,7 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
                         bit != boundaryComponents_.end(); bit++) {
                     // Run through triangles of this boundary component looking
                     // for shell boundary moves.
-                    nTriangles = (*bit)->getNumberOfTriangles();
+                    nTriangles = (*bit)->countTriangles();
                     for (iTriangle = 0; iTriangle < nTriangles; iTriangle++) {
                         if (shellBoundary((*bit)->getTriangle(iTriangle)->
                                 getEmbedding(0).getTetrahedron(),

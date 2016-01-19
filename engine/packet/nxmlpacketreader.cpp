@@ -45,7 +45,7 @@ namespace {
         template <typename Packet>
         inline NXMLElementReader* operator() (NPacket* me,
                 NXMLTreeResolver& resolver) {
-            return Packet::Class::getXMLReader(me, resolver);
+            return Packet::Class::xmlReader(me, resolver);
         }
     };
 }
@@ -54,7 +54,7 @@ NXMLElementReader* NXMLPacketReader::startSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& subTagProps) {
     if (subTagName == "packet") {
-        NPacket* me = getPacket();
+        NPacket* me = packet();
         if (! me)
             return new NXMLPacketReader(resolver_);
 
@@ -88,7 +88,7 @@ NXMLElementReader* NXMLPacketReader::startSubElement(
         else
             return new NXMLPacketReader(resolver_);
     } else if (subTagName == "tag") {
-        if (NPacket* me = getPacket()) {
+        if (NPacket* me = packet()) {
             std::string packetTag = subTagProps.lookup("name");
             if (! packetTag.empty())
                 me->addTag(packetTag);
@@ -102,14 +102,14 @@ void NXMLPacketReader::endSubElement(const std::string& subTagName,
         NXMLElementReader* subReader) {
     if (subTagName == "packet") {
         NPacket* child =
-            dynamic_cast<NXMLPacketReader*>(subReader)->getPacket();
+            dynamic_cast<NXMLPacketReader*>(subReader)->packet();
         if (child) {
-            NPacket* me = getPacket();
+            NPacket* me = packet();
             if (me) {
                 child->setPacketLabel(childLabel);
                 if (! childID.empty())
                     resolver_.storeID(childID, child);
-                if (! child->getTreeParent())
+                if (! child->parent())
                     me->insertChildLast(child);
             } else
                 delete child;
@@ -121,9 +121,9 @@ void NXMLPacketReader::endSubElement(const std::string& subTagName,
 }
 
 void NXMLPacketReader::abort(NXMLElementReader* /* subReader */) {
-    NPacket* me = getPacket();
+    NPacket* me = packet();
     if (me)
-        if (! me->getTreeParent())
+        if (! me->parent())
             delete me;
 }
 

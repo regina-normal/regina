@@ -53,7 +53,7 @@
     self = [super init];
     if (self) {
         _packet = p;
-        _text = [NSString stringWithUTF8String:p->getPacketLabel().c_str()];
+        _text = [NSString stringWithUTF8String:p->label().c_str()];
     }
     return self;
 }
@@ -99,7 +99,7 @@
 
     regina::NPacket* p;
     for (p = tree; p; p = p->nextTreePacket())
-        if (p->getPacketType() == packetType)
+        if (p->type() == packetType)
             [self.choices addObject:[PacketChoice packetChoiceWithPacket:p]];
 
     if (self.choices.count == 0)

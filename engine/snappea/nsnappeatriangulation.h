@@ -236,7 +236,7 @@ class REGINA_API NCusp :
  * - You can happily query this object using both SnapPea functions (such as
  *   NSnapPeaTriangulation::volume(), and others specific to this class)
  *   and Regina's native triangulation functions (such as
- *   NTriangulation::getHomologyH1(), and others inherited from NTriangulation).
+ *   NTriangulation::homology(), and others inherited from NTriangulation).
  *   This is because an object of this class stores \e two representations of
  *   the triangulation (SnapPea's and Regina's), which are always kept in sync.
  *
@@ -275,7 +275,7 @@ class REGINA_API NCusp :
  * at all.  Therefore:
  *
  * - Routines inherited through the NTriangulation interface will ignore
- *   fillings completely (so, for instance, getHomologyH1() will return the
+ *   fillings completely (so, for instance, homology() will return the
  *   first homology of the unfilled manifold, even if SnapPea has
  *   designated fillings on the cusps).
  *
@@ -653,7 +653,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * <tt>Manifold.tetrahedra_shapes(part='rect')[tet]</tt>.
          *
          * @param tet the index of a tetrahedron; this must be between
-         * 0 and getNumberOfTetrahedra()-1 inclusive.
+         * 0 and size()-1 inclusive.
          * @return the shape of the given tetrahedron, in rectangular form.
          */
         const std::complex<double>& shape(unsigned tet) const;
@@ -682,7 +682,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * This will be with respect to the current Dehn filling (if any).
          *
          * Each row of this matrix will describe a single equation.
-         * The first getNumberOfEdges() rows will list the edge equations,
+         * The first countEdges() rows will list the edge equations,
          * and the following 2 * countCompleteCusps() + countFilledCusps()
          * rows will list the cusp equations.
          *
@@ -693,7 +693,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * is accessed through the cusp() routine) can help translate
          * between SnapPea's cusp numbers and Regina's vertex numbers.
          *
-         * The matrix will contain <tt>3 * getNumberOfTetrahedra()</tt> columns.
+         * The matrix will contain <tt>3 * size()</tt> columns.
          * The first three columns represent shape parameters <tt>z</tt>,
          * <tt>1/(1-z)</tt> and <tt>(z-1)/z</tt> for the first tetrahedron;
          * the next three columns represent shape parameters <tt>z</tt>,
@@ -733,8 +733,8 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * precise details see the documentation for gluingEquations(),
          * which uses the same ordering.
          *
-         * The matrix will contain <tt>2 * getNumberOfTetrahedra() + 1</tt>
-         * columns.  Let \a k = getNumberOfTetrahedra()-1, and suppose the
+         * The matrix will contain <tt>2 * size() + 1</tt>
+         * columns.  Let \a k = size()-1, and suppose the
          * shape parameters for tetrahedra 0, 1, ..., k are
          * \a z0, \a z1, ..., \a zk (here each shape parameter corresponds
          * to edges 0 and 5 of the corresponding tetrahedron).
@@ -765,7 +765,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * Returns the total number of cusps (both filled and complete).
          *
          * This returns the same value as the inherited function
-         * NTriangulation::getNumberOfBoundaryComponents().
+         * NTriangulation::countBoundaryComponents().
          *
          * \snappy In SnapPy, this routine corresponds to calling
          * <tt>Manifold.num_cusps()</tt>.
@@ -1020,7 +1020,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * (without fillings) will be treated as though they had been
          * truncated.
          *
-         * This is different from the inherited getHomologyH1() routine from
+         * This is different from the inherited homology() routine from
          * the parent NTriangulation class:
          *
          * - This routine homologyFilled() respects Dehn fillings, and uses
@@ -1029,12 +1029,12 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          *   kernel cannot perform its part of the computation (see below),
          *   in which case this routine will return a null pointer.
          *
-         * - The inherited getHomologyH1() routine uses only Regina's code, and
+         * - The inherited homology() routine uses only Regina's code, and
          *   works purely within Regina's parent NTriangulation class.
          *   Since NTriangulation knows nothing about SnapPea or fillings,
          *   this means that any fillings on the cusps (which are
          *   specific to SnapPea triangulations) will be ignored.
-         *   The getHomologyH1() routine will always return a solution.
+         *   The homology() routine will always return a solution.
          *
          * This routine uses exact arithmetic, and so you are guaranteed
          * that - if it returns a result at all - that this result does
@@ -1070,13 +1070,13 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * the current Dehn filling (if any).  Any complete cusps (without
          * fillings) will be treated as though they had been truncated.
          *
-         * This is different from the inherited getFundamentalGroup() routine
+         * This is different from the inherited fundamentalGroup() routine
          * from the parent NTriangulation class:
          *
          * - This routine fundamentalGroupFilled() respects Dehn fillings, and
          *   directly uses SnapPea's code to compute fundamental groups.
          *
-         * - The inherited getFundamentalGroup() routine uses only Regina's
+         * - The inherited fundamentalGroup() routine uses only Regina's
          *   code, and works purely within Regina's parent NTriangulation class.
          *   Since NTriangulation knows nothing about SnapPea or fillings,
          *   this means that any fillings on the cusps (which are specific
@@ -1393,7 +1393,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         virtual void writeTextLong(std::ostream& out) const;
 
         virtual bool dependsOnParent() const;
-        static NXMLPacketReader* getXMLReader(NPacket* parent,
+        static NXMLPacketReader* xmlReader(NPacket* parent,
             NXMLTreeResolver& resolver);
 
         /*@}*/
@@ -1518,11 +1518,11 @@ inline const std::complex<double>& NSnapPeaTriangulation::shape(unsigned tet)
 }
 
 inline unsigned NSnapPeaTriangulation::countCusps() const {
-    return getNumberOfBoundaryComponents();
+    return countBoundaryComponents();
 }
 
 inline unsigned NSnapPeaTriangulation::countCompleteCusps() const {
-    return getNumberOfBoundaryComponents() - filledCusps_;
+    return countBoundaryComponents() - filledCusps_;
 }
 
 inline unsigned NSnapPeaTriangulation::countFilledCusps() const {

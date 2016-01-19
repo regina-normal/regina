@@ -75,7 +75,7 @@ namespace regina {
  * - \e First-generation codes were used internally in Regina 4.6 and earlier.
  *   These codes were characters whose lowest two bits represented the
  *   image of 0, whose next lowest two bits represented the image of 1,
- *   and so on.  The routines getPermCode(), setPermCode(), fromPermCode()
+ *   and so on.  The routines permCode(), setPermCode(), fromPermCode()
  *   and isPermCode() continue to work with first-generation codes for
  *   backward compatibility.  Likewise, the XML data file format
  *   continues to use first-generation codes to describe tetrahedron gluings.
@@ -83,7 +83,7 @@ namespace regina {
  * - \e Second-generation codes are used internally in Regina 4.6.1 and above.
  *   These codes are integers between 0 and 23 inclusive, representing the
  *   index of the permutation in the array NPerm<4>::S4.  The routines
- *   getPermCode2(), setPermCode2(), fromPermCode2() and isPermCode2()
+ *   permCode2(), setPermCode2(), fromPermCode2() and isPermCode2()
  *   work with second-generation codes.
  *
  * It is highly recommended that, if you need to work with permutation
@@ -330,9 +330,17 @@ class REGINA_API NPerm<4> {
          *
          * \warning This routine will incur additional overhead, since
          * NPerm<4> now uses second-generation codes internally.
-         * See the class notes and the routine getPermCode2() for details.
+         * See the class notes and the routine permCode2() for details.
          *
          * @return the first-generation permutation code.
+         */
+        Code permCode() const;
+        /**
+         * Deprecated routine that returns the first-generation code
+         * representing this permutation.
+         *
+         * \deprecated This routine has been renamed to permCode().
+         * See the permCode() documentation for further details.
          */
         Code getPermCode() const;
 
@@ -347,6 +355,14 @@ class REGINA_API NPerm<4> {
          * used internally by the NPerm<4> class.
          *
          * @return the second-generation permutation code.
+         */
+        Code permCode2() const;
+        /**
+         * Deprecated routine that returns the second-generation code
+         * representing this permutation.
+         *
+         * \deprecated This routine has been renamed to permCode2().
+         * See the permCode2() documentation for further details.
          */
         Code getPermCode2() const;
 
@@ -415,7 +431,7 @@ class REGINA_API NPerm<4> {
         /**
          * Determines whether the given character is a valid first-generation
          * permutation code.  Valid first-generation codes can be passed to
-         * setPermCode() or fromPermCode(), and are returned by getPermCode().
+         * setPermCode() or fromPermCode(), and are returned by permCode().
          *
          * \warning This routine will incur additional overhead, since
          * NPerm<4> now uses second-generation codes internally.
@@ -429,9 +445,8 @@ class REGINA_API NPerm<4> {
 
         /**
          * Determines whether the given character is a valid second-generation
-         * permutation code.  Valid second-generation codes can be passed
-         * to setPermCode2() or fromPermCode2(), and are returned by
-         * getPermCode2().
+         * permutation code.  Valid second-generation codes can be passed to
+         * setPermCode2() or fromPermCode2(), and are returned by permCode2().
          *
          * Second-generation codes are fast to work with, since they are
          * used internally by the NPerm<4> class.
@@ -775,12 +790,24 @@ inline NPerm<4>::NPerm(const int* image) :
 inline NPerm<4>::NPerm(const NPerm<4>& cloneMe) : code_(cloneMe.code_) {
 }
 
+inline NPerm<4>::Code NPerm<4>::permCode() const {
+    return static_cast<Code>(
+        imageTable[code_][0] |
+        (imageTable[code_][1] << 2) |
+        (imageTable[code_][2] << 4) |
+        (imageTable[code_][3] << 6));
+}
+
 inline NPerm<4>::Code NPerm<4>::getPermCode() const {
     return static_cast<Code>(
         imageTable[code_][0] |
         (imageTable[code_][1] << 2) |
         (imageTable[code_][2] << 4) |
         (imageTable[code_][3] << 6));
+}
+
+inline NPerm<4>::Code NPerm<4>::permCode2() const {
+    return code_;
 }
 
 inline NPerm<4>::Code NPerm<4>::getPermCode2() const {
@@ -910,16 +937,16 @@ inline int NPerm<4>::SnIndex() const {
 
 template <>
 inline NPerm<4> NPerm<4>::extend(NPerm<2> p) {
-    return NPerm<4>(static_cast<Code>(p.getPermCode() == 0 ? 0 : 7));
+    return NPerm<4>(static_cast<Code>(p.permCode() == 0 ? 0 : 7));
 }
 
 template <>
 inline NPerm<4> NPerm<4>::extend(NPerm<3> p) {
     // Code map: 0,1,2,3,4,5 -> 0,3,8,7,12,15.
-    switch (p.getPermCode()) {
+    switch (p.permCode()) {
         case 2 : return NPerm<4>(static_cast<Code>(8));
         case 3 : return NPerm<4>(static_cast<Code>(7));
-        default : return NPerm<4>(static_cast<Code>(3 * p.getPermCode()));
+        default : return NPerm<4>(static_cast<Code>(3 * p.permCode()));
     }
 }
 

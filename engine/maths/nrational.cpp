@@ -61,7 +61,7 @@ NRational::NRational(long newNum, unsigned long newDen) {
     }
 }
 
-NInteger NRational::getNumerator() const {
+NInteger NRational::numerator() const {
     if (flavour == f_infinity)
         return NInteger::one;
     else if (flavour == f_undefined)
@@ -72,7 +72,7 @@ NInteger NRational::getNumerator() const {
     return ans;
 }
 
-NInteger NRational::getDenominator() const {
+NInteger NRational::denominator() const {
     if (flavour != f_normal)
         return NInteger::zero;
 
@@ -266,14 +266,14 @@ std::ostream& operator << (std::ostream& out, const NRational& rat) {
         out << "Inf";
     else if (rat.flavour == NRational::f_undefined)
         out << "Undef";
-    else if (rat.getDenominator() == 1)
-        out << rat.getNumerator();
+    else if (rat.denominator() == 1)
+        out << rat.numerator();
     else
-        out << rat.getNumerator() << '/' << rat.getDenominator();
+        out << rat.numerator() << '/' << rat.denominator();
     return out;
 }
 
-std::string NRational::getTeX() const {
+std::string NRational::TeX() const {
     std::ostringstream out;
     writeTeX(out);
     return out.str();
@@ -284,10 +284,10 @@ std::ostream& NRational::writeTeX(std::ostream &out) const {
         out << "\\infty";
     else if (flavour == NRational::f_undefined)
         out << "0/0";
-    else if (getDenominator() == 1)
-        out << getNumerator();
+    else if (denominator() == 1)
+        out << numerator();
     else
-        out << "\\frac{" << getNumerator() << "}{" << getDenominator() << "}";
+        out << "\\frac{" << numerator() << "}{" << denominator() << "}";
     return out;
 }
 

@@ -79,7 +79,7 @@ class REGINA_API NSurfaceFilterCombination : public NSurfaceFilter {
     REGINA_SURFACE_FILTER(NSurfaceFilterCombination, NS_FILTER_COMBINATION)
 
     private:
-        bool usesAnd;
+        bool usesAnd_;
             /**< \c true if children are combined using boolean \a and, or
                  \c false if children are combined using boolean \a or. */
 
@@ -103,6 +103,14 @@ class REGINA_API NSurfaceFilterCombination : public NSurfaceFilter {
          * @return \c true if this is an \a and combination, or \c false
          * if this is an \a or combination.
          */
+        bool usesAnd() const;
+        /**
+         * Deprecated routine that determines whether this is an \a and
+         * or an \a or combination.
+         *
+         * \deprecated This routine has been renamed to usesAnd().
+         * See the usesAnd() documentation for further details.
+         */
         bool getUsesAnd() const;
         /**
          * Sets whether this is an \a and or an \a or combination.
@@ -114,7 +122,7 @@ class REGINA_API NSurfaceFilterCombination : public NSurfaceFilter {
 
         virtual bool accept(const NNormalSurface& surface) const;
         virtual void writeTextLong(std::ostream& out) const;
-        static NXMLFilterReader* getXMLFilterReader(NPacket* parent);
+        static NXMLFilterReader* xmlFilterReader(NPacket* parent);
 
     protected:
         virtual NPacket* internalClonePacket(NPacket* parent) const;
@@ -125,25 +133,28 @@ class REGINA_API NSurfaceFilterCombination : public NSurfaceFilter {
 
 // Inline functions for NSurfaceFilterCombination
 
-inline NSurfaceFilterCombination::NSurfaceFilterCombination() : usesAnd(true) {
+inline NSurfaceFilterCombination::NSurfaceFilterCombination() : usesAnd_(true) {
 }
 inline NSurfaceFilterCombination::NSurfaceFilterCombination(
         const NSurfaceFilterCombination& cloneMe) : NSurfaceFilter(),
-        usesAnd(cloneMe.usesAnd) {
+        usesAnd_(cloneMe.usesAnd_) {
 }
 
+inline bool NSurfaceFilterCombination::usesAnd() const {
+    return usesAnd_;
+}
 inline bool NSurfaceFilterCombination::getUsesAnd() const {
-    return usesAnd;
+    return usesAnd_;
 }
 inline void NSurfaceFilterCombination::setUsesAnd(bool value) {
-    if (usesAnd != value) {
+    if (usesAnd_ != value) {
         ChangeEventSpan span(this);
-        usesAnd = value;
+        usesAnd_ = value;
     }
 }
 
 inline void NSurfaceFilterCombination::writeTextLong(std::ostream& o) const {
-    o << (usesAnd ? "AND" : "OR") << " combination normal surface filter\n";
+    o << (usesAnd_ ? "AND" : "OR") << " combination normal surface filter\n";
 }
 
 inline NPacket* NSurfaceFilterCombination::internalClonePacket(NPacket*) const {

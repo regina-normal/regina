@@ -192,7 +192,7 @@ int main(int argc, char* argv[]) {
     }
 
     NPacket* p = tree;
-    while (p && p->getPacketType() != NTriangulation::packetType)
+    while (p && p->type() != PACKET_TRIANGULATION)
         p = p->nextTreePacket();
     long currTri = 0;
 
@@ -207,7 +207,7 @@ int main(int argc, char* argv[]) {
     // Find the requested triangulation.
     while (p && currTri < useTri) {
         p = p->nextTreePacket();
-        while (p && p->getPacketType() != NTriangulation::packetType)
+        while (p && p->type() != PACKET_TRIANGULATION)
             p = p->nextTreePacket();
 
         ++currTri;

@@ -52,9 +52,9 @@ NL31Pillow* NL31Pillow::clone() const {
 
 NL31Pillow* NL31Pillow::isL31Pillow(const NComponent* comp) {
     // Basic property check.
-    if (comp->getNumberOfTetrahedra() != 2 ||
-            comp->getNumberOfVertices() != 2 ||
-            comp->getNumberOfEdges() != 4 ||
+    if (comp->size() != 2 ||
+            comp->countVertices() != 2 ||
+            comp->countEdges() != 4 ||
             (! comp->isClosed()) ||
             (! comp->isOrientable()))
         return 0;
@@ -99,11 +99,11 @@ NL31Pillow* NL31Pillow::isL31Pillow(const NComponent* comp) {
     return ans;
 }
 
-NManifold* NL31Pillow::getManifold() const {
+NManifold* NL31Pillow::manifold() const {
     return new NLensSpace(3, 1);
 }
 
-NAbelianGroup* NL31Pillow::getHomologyH1() const {
+NAbelianGroup* NL31Pillow::homology() const {
     NAbelianGroup* ans = new NAbelianGroup();
     ans->addTorsionElement(3);
     return ans;

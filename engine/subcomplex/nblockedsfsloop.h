@@ -101,8 +101,8 @@ class NSatRegion;
  * since this essentially requires 2-dimensional assemblings of
  * saturated blocks.  For full details, writeTextLong() may be used instead.
  *
- * The optional NStandardTriangulation routine getManifold() is
- * implemented for this class, but getHomologyH1() is not.
+ * The optional NStandardTriangulation routine manifold() is
+ * implemented for this class, but homology() is not.
  */
 class REGINA_API NBlockedSFSLoop : public NStandardTriangulation {
     private:
@@ -141,7 +141,7 @@ class REGINA_API NBlockedSFSLoop : public NStandardTriangulation {
          */
         const NMatrix2& matchingReln() const;
 
-        NManifold* getManifold() const;
+        NManifold* manifold() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;

@@ -152,11 +152,11 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
                 tmp = (self.compact.on ? [RegularSpreadViewCell cellSizeFor:@"2"] : [RegularSpreadHeaderCell cellSizeFor:@"Sides"]).width;
                 break;
             case PROP_BDRY:
-                if (self.packet->getTriangulation()->isClosed())
+                if (self.packet->triangulation()->isClosed())
                     tmp = (self.compact.on ? [RegularSpreadViewCell cellSizeFor:@"—"] : [RegularSpreadHeaderCell cellSizeFor:@"Bdry"]).width;
                 else if (! self.packet->allowsSpun())
                     tmp = [RegularSpreadViewCell cellSizeFor:@"Real"].width;
-                else if (! dynamic_cast<regina::NSnapPeaTriangulation*>(self.packet->getTriangulation()))
+                else if (! dynamic_cast<regina::NSnapPeaTriangulation*>(self.packet->triangulation()))
                     tmp = [RegularSpreadViewCell cellSizeFor:@"Spun"].width;
                 else
                     tmp = [RegularSpreadViewCell cellSizeFor:@"Spun (99, 99)"].width;
@@ -185,7 +185,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
         widthCoord = s.width;
         height = s.height;
     } else {
-        NSString* longestColumnName = [Coordinates longestColumnName:viewCoords tri:self.packet->getTriangulation()];
+        NSString* longestColumnName = [Coordinates longestColumnName:viewCoords tri:self.packet->triangulation()];
         if (longestColumnName.length < 2)
             longestColumnName = @"99"; // Ah, edge weight space.
         widthCoord = [RegularSpreadHeaderCell cellSizeFor:longestColumnName].width;
@@ -231,7 +231,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
         return;
     }
     
-    const regina::NNormalSurface* s = self.packet->getSurface(selectedRow - 1);
+    const regina::NNormalSurface* s = self.packet->surface(selectedRow - 1);
     if (! s->isCompact()) {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Surface Not Compact"
                                                         message:@"I can only cut along compact surfaces, not spun-normal surfaces."
@@ -262,7 +262,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
     
     regina::NTriangulation* ans = s->cutAlong();
     ans->intelligentSimplify();
-    ans->setPacketLabel(self.packet->getTriangulation()->adornedLabel("Cut"));
+    ans->setPacketLabel(self.packet->triangulation()->adornedLabel("Cut"));
     self.packet->insertChildLast(ans);
     [ReginaHelper viewPacket:ans];
 }
@@ -278,7 +278,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
         return;
     }
     
-    const regina::NNormalSurface* s = self.packet->getSurface(selectedRow - 1);
+    const regina::NNormalSurface* s = self.packet->surface(selectedRow - 1);
     if (! s->isCompact()) {
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Surface Not Compact"
                                                         message:@"I can only crush compact surfaces, not spun-normal surfaces."
@@ -309,7 +309,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
 
     regina::NTriangulation* ans = s->crush();
     ans->intelligentSimplify();
-    ans->setPacketLabel(self.packet->getTriangulation()->adornedLabel("Crushed"));
+    ans->setPacketLabel(self.packet->triangulation()->adornedLabel("Crushed"));
     self.packet->insertChildLast(ans);
     [ReginaHelper viewPacket:ans];
 }
@@ -325,7 +325,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
 {
     return (self.packet->isEmbeddedOnly() ? embProps.count : nonEmbProps.count) +
            (self.packet->allowsAlmostNormal() ? 1 : 0) +
-           [Coordinates numColumns:viewCoords tri:self.packet->getTriangulation()];
+           [Coordinates numColumns:viewCoords tri:self.packet->triangulation()];
 }
 
 - (NSInteger)spreadView:(MDSpreadView *)aSpreadView numberOfRowsInSection:(NSInteger)section
@@ -387,10 +387,10 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
 
     cell.textLabel.text = [Coordinates columnName:viewCoords
                                        whichCoord:coord
-                                              tri:self.packet->getTriangulation()];
+                                              tri:self.packet->triangulation()];
 
-    if ((viewCoords == regina::NS_EDGE_WEIGHT && self.packet->getTriangulation()->getEdge(coord)->isBoundary()) ||
-            (viewCoords == regina::NS_TRIANGLE_ARCS && self.packet->getTriangulation()->getTriangle(coord / 3)->isBoundary()))
+    if ((viewCoords == regina::NS_EDGE_WEIGHT && self.packet->triangulation()->getEdge(coord)->isBoundary()) ||
+            (viewCoords == regina::NS_TRIANGLE_ARCS && self.packet->triangulation()->getTriangle(coord / 3)->isBoundary()))
         cell.textLabel.textColor = headerBdry;
 
     return cell;
@@ -409,7 +409,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
             cell = [[RegularSpreadViewCell alloc] initWithReuseIdentifier:regularCellID];
     }
 
-    const regina::NNormalSurface* s = self.packet->getSurface(rowPath.row);
+    const regina::NNormalSurface* s = self.packet->surface(rowPath.row);
 
     int prop = PROP_NONE;
     int coord = columnPath.column;
@@ -430,12 +430,12 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
         case PROP_NONE:
             break;
         case PROP_NAME:
-            cell.textLabel.text = @(s->getName().c_str());
+            cell.textLabel.text = @(s->name().c_str());
             cell.textLabel.textAlignment = NSTextAlignmentLeft;
             return cell;
         case PROP_EULER:
             if (s->isCompact())
-                cell.textLabel.text = @(s->getEulerChar().stringValue().c_str());
+                cell.textLabel.text = @(s->eulerChar().stringValue().c_str());
             else
                 cell.textLabel.text = @"";
             cell.textLabel.textAlignment = NSTextAlignmentRight;
@@ -482,15 +482,15 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
 
             if ((v = s->isVertexLink()))
                 cell.textLabel.text = [NSString stringWithFormat:@"Vertex %ld",
-                                       self.packet->getTriangulation()->vertexIndex(v)];
+                                       self.packet->triangulation()->vertexIndex(v)];
             else if ((e = s->isThinEdgeLink()).first) {
                 if (e.second)
                     cell.textLabel.text = [NSString stringWithFormat:@"Edges %ld, %ld",
-                                           self.packet->getTriangulation()->edgeIndex(e.first),
-                                           self.packet->getTriangulation()->edgeIndex(e.second)];
+                                           self.packet->triangulation()->edgeIndex(e.first),
+                                           self.packet->triangulation()->edgeIndex(e.second)];
                 else
                     cell.textLabel.text = [NSString stringWithFormat:@"Edge %ld",
-                                           self.packet->getTriangulation()->edgeIndex(e.first)];
+                                           self.packet->triangulation()->edgeIndex(e.first)];
             } else
                 cell.textLabel.text = @"";
             cell.textLabel.textAlignment = NSTextAlignmentLeft;
@@ -512,13 +512,13 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
 
     if (self.packet->allowsAlmostNormal()) {
         if (coord == 0) {
-            regina::NDiscType oct = s->getOctPosition();
+            regina::NDiscType oct = s->octPosition();
             if (oct == regina::NDiscType::NONE) {
                 cell.textLabel.text = @"";
                 return cell;
             }
 
-            regina::NLargeInteger tot = s->getOctCoord(oct.tetIndex, oct.type);
+            regina::NLargeInteger tot = s->octs(oct.tetIndex, oct.type);
             if (tot == 1) {
                 cell.textLabel.attributedText = [TextHelper yesNoString:[NSString stringWithFormat:@"K%ld: %s (1 oct)",
                                                                          oct.tetIndex,

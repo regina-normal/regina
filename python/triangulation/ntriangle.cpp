@@ -98,7 +98,9 @@ void addNTriangle() {
                 return_internal_reference<>())
             .def("isBoundary", &NTriangle::isBoundary)
             .def("inMaximalForest", &NTriangle::inMaximalForest)
+            .def("type", &NTriangle::type)
             .def("getType", &NTriangle::getType)
+            .def("subtype", &NTriangle::subtype)
             .def("getSubtype", &NTriangle::getSubtype)
             .def("isMobiusBand", &NTriangle::isMobiusBand)
             .def("isCone", &NTriangle::isCone)
@@ -117,6 +119,8 @@ void addNTriangle() {
             .def("component", &NTriangle::component,
                 return_value_policy<reference_existing_object>())
             .def("getComponent", &NTriangle::getComponent,
+                return_value_policy<reference_existing_object>())
+            .def("boundaryComponent", &NTriangle::boundaryComponent,
                 return_value_policy<reference_existing_object>())
             .def("getBoundaryComponent", &NTriangle::getBoundaryComponent,
                 return_value_policy<reference_existing_object>())

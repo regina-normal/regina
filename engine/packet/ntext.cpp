@@ -38,7 +38,7 @@
 namespace regina {
 
 void NText::writeXMLPacketData(std::ostream& out) const {
-    out << "  <text>" << regina::xml::xmlEncodeSpecialChars(text)
+    out << "  <text>" << regina::xml::xmlEncodeSpecialChars(text_)
         << "</text>\n";
 }
 

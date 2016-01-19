@@ -114,7 +114,7 @@ class REGINA_API NGluingPerms : public NGenericGluingPerms<3> {
          * Returns the specific pairing of tetrahedron faces that this
          * set of gluing permutations complements.
          *
-         * \deprecated This routine has been renamed to getFacetPairing().
+         * \deprecated This routine has been renamed to facetPairing().
          * This old name has been kept for backward compatibility, but
          * will be removed in some future version of Regina.
          *
@@ -157,7 +157,7 @@ inline NGluingPerms::NGluingPerms(const NFacePairing* pairing) :
 }
 
 inline unsigned NGluingPerms::getNumberOfTetrahedra() const {
-    return pairing_->getNumberOfTetrahedra();
+    return pairing_->size();
 }
 
 inline const NFacePairing* NGluingPerms::getFacePairing() const {

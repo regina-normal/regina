@@ -93,7 +93,7 @@ class REGINA_API NTriSolidTorus : public NStandardTriangulation {
     private:
         NTetrahedron* tet[3];
             /**< The tetrahedra that make up this solid torus. */
-        NPerm4 vertexRoles[3];
+        NPerm4 vertexRoles_[3];
             /**< For tetrahedron \a i, <tt>vertexRoles[i]</tt> is a
                  permutation p chosen so that the axis edge for that
                  tetrahedron runs from vertex p[0] to p[3] and the
@@ -119,6 +119,14 @@ class REGINA_API NTriSolidTorus : public NStandardTriangulation {
          * @param index specifies which tetrahedron in the solid torus
          * to return; this must be 0, 1 or 2.
          * @return the requested tetrahedron.
+         */
+        NTetrahedron* tetrahedron(int index) const;
+        /**
+         * Deprecated routine that returns the requested tetrahedron in this
+         * solid torus.
+         *
+         * \deprecated This routine has been renamed to tetrahedron().
+         * See the tetrahedron() documentation for further details.
          */
         NTetrahedron* getTetrahedron(int index) const;
 
@@ -150,6 +158,15 @@ class REGINA_API NTriSolidTorus : public NStandardTriangulation {
          * @return a permutation representing the roles of the vertices
          * of the requested tetrahedron.
          */
+        NPerm4 vertexRoles(int index) const;
+        /**
+         * Deprecated routine that returns a permutation represeting the role
+         * that each vertex of the requested tetrahedron plays in the solid
+         * torus.
+         *
+         * \deprecated This routine has been renamed to vertexRoles().
+         * See the vertexRoles() documentation for further details.
+         */
         NPerm4 getVertexRoles(int index) const;
 
         /**
@@ -162,14 +179,14 @@ class REGINA_API NTriSolidTorus : public NStandardTriangulation {
          * how axis edges, major edges and minor edges map to each other
          * without having to worry about the specific assignment of
          * tetrahedron vertex numbers.  For a discussion of vertex
-         * roles, see getVertexRoles().
+         * roles, see vertexRoles().
          *
          * Note that annulus <tt>index</tt> uses faces
          * from tetrahedra <tt>index+1</tt> and <tt>index+2</tt>.
          * The gluing permutation that maps vertices
          * of tetrahedron <tt>index+1</tt> to vertices of tetrahedron
-         * <tt>index+2</tt> will be <tt>getVertexRoles(index+2) * roleMap *
-         * getVertexRoles(index+1).inverse()</tt>.
+         * <tt>index+2</tt> will be <tt>vertexRoles(index+2) * roleMap *
+         * vertexRoles(index+1).inverse()</tt>.
          *
          * @param index specifies which annulus on the solid torus
          * boundary to examine; this must be 0, 1 or 2.
@@ -259,7 +276,7 @@ class REGINA_API NTriSolidTorus : public NStandardTriangulation {
          * @param useVertexRoles a permutation describing the role each
          * tetrahedron vertex must play in the solid torus; this must be
          * in the same format as the permutation returned by
-         * getVertexRoles().
+         * vertexRoles().
          * @return a newly created structure containing details of the
          * solid torus with the given tetrahedron as tetrahedron 0, or
          * \c null if the given tetrahedron is not part of a triangular
@@ -268,8 +285,8 @@ class REGINA_API NTriSolidTorus : public NStandardTriangulation {
         static NTriSolidTorus* formsTriSolidTorus(NTetrahedron* tet,
                 NPerm4 useVertexRoles);
 
-        NManifold* getManifold() const;
-        NAbelianGroup* getHomologyH1() const;
+        NManifold* manifold() const;
+        NAbelianGroup* homology() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
@@ -290,11 +307,17 @@ inline NTriSolidTorus::NTriSolidTorus() {
 inline NTriSolidTorus::~NTriSolidTorus() {
 }
 
+inline NTetrahedron* NTriSolidTorus::tetrahedron(int index) const {
+    return tet[index];
+}
 inline NTetrahedron* NTriSolidTorus::getTetrahedron(int index) const {
     return tet[index];
 }
+inline NPerm4 NTriSolidTorus::vertexRoles(int index) const {
+    return vertexRoles_[index];
+}
 inline NPerm4 NTriSolidTorus::getVertexRoles(int index) const {
-    return vertexRoles[index];
+    return vertexRoles_[index];
 }
 
 inline std::ostream& NTriSolidTorus::writeName(std::ostream& out) const {

@@ -159,9 +159,9 @@ bool process(NContainer* c) {
     NStandardTriangulation* std;
     NManifold* mfd;
     std::string name, structure;
-    for (NPacket* child = c->getFirstTreeChild(); child;
-            child = child->getNextTreeSibling()) {
-        if (child->getPacketType() != NTriangulation::packetType)
+    for (NPacket* child = c->firstChild(); child;
+            child = child->nextSibling()) {
+        if (child->type() != PACKET_TRIANGULATION)
             continue;
 
         foundTri = true;
@@ -171,15 +171,15 @@ bool process(NContainer* c) {
         if (! std)
             continue;
 
-        mfd = std->getManifold();
+        mfd = std->manifold();
         if (! mfd) {
             delete std;
             continue;
         }
 
-        name = mfd->getName();
+        name = mfd->name();
         if (detailedNames) {
-            structure = mfd->getStructure();
+            structure = mfd->structure();
             if ((! structure.empty()) && (structure != name))
                 name = structure;
         }
@@ -188,23 +188,23 @@ bool process(NContainer* c) {
         if (rawList) {
             std::cout << name;
 
-            NAbelianGroup* h1 = mfd->getHomologyH1();
+            NAbelianGroup* h1 = mfd->homology();
             if (h1) {
                 std::cout << ", H1 = " << h1->str();
                 delete h1;
             }
         } else if (! sortMfds)
-            std::cout << c->getPacketLabel() << "  ->>  " << name;
+            std::cout << c->label() << "  ->>  " << name;
         totMfds++;
         totMfdsOk++;
 
         if (renameMfds)
-            if (c->getPacketLabel() != name) {
+            if (c->label() != name) {
                 c->setPacketLabel(name);
                 totMfdsRenamed++;
 
                 if (sortMfds)
-                    std::cout << "RENAMED: " << c->getPacketLabel() <<
+                    std::cout << "RENAMED: " << c->label() <<
                         "  ->>  " << name << '\n';
                 else
                     std::cout << "  (RENAMED)";
@@ -226,7 +226,7 @@ bool process(NContainer* c) {
         if (rawList)
             std::cout << "UNKNOWN\n";
         else if (! sortMfds)
-            std::cout << c->getPacketLabel() << "  ->>  UNKNOWN\n";
+            std::cout << c->label() << "  ->>  UNKNOWN\n";
         totMfds++;
     }
 
@@ -284,7 +284,7 @@ int main(int argc, char* argv[]) {
     if (! sortMfds) {
         // Just run through them in prefix order.
         for (NPacket* p = tree; p; p = p->nextTreePacket())
-            if (p->getPacketType() == NContainer::packetType)
+            if (p->type() == PACKET_CONTAINER)
                 process(static_cast<NContainer*>(p));
     } else {
         // We need to be careful about how we run through the tree.
@@ -293,7 +293,7 @@ int main(int argc, char* argv[]) {
 
         // Process the root first, since it doesn't have a parent to be
         // sorted within.
-        if (tree->getPacketType() == NContainer::packetType)
+        if (tree->type() == PACKET_CONTAINER)
             process(static_cast<NContainer*>(tree));
 
         NPacket *parent, *p;
@@ -303,9 +303,8 @@ int main(int argc, char* argv[]) {
             foundManifolds = false;
             children.clear();
 
-            for (p = parent->getFirstTreeChild(); p;
-                    p = p->getNextTreeSibling())
-                if (p->getPacketType() == NContainer::packetType) {
+            for (p = parent->firstChild(); p; p = p->nextSibling())
+                if (p->type() == PACKET_CONTAINER) {
                     if (process(static_cast<NContainer*>(p)))
                         foundManifolds = true;
                 } else
@@ -323,8 +322,8 @@ int main(int argc, char* argv[]) {
         // Finally tell us what we did.
         std::cout << "Final container listing:\n\n";
         for (p = tree; p; p = p->nextTreePacket())
-            if (p->getPacketType() == NContainer::packetType)
-                std::cout << p->getPacketLabel() << '\n';
+            if (p->type() == PACKET_CONTAINER)
+                std::cout << p->label() << '\n';
     }
 
     // Save the data file if required.

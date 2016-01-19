@@ -95,10 +95,10 @@ const NPerm4 __octDiscArcs[24] = {
 };
 
 NNormalSurface* NNormalSurface::clone() const {
-    NNormalSurface* ans = new NNormalSurface(triangulation,
+    NNormalSurface* ans = new NNormalSurface(triangulation_,
         dynamic_cast<NNormalSurfaceVector*>(vector->clone()));
 
-    ans->eulerChar = eulerChar;
+    ans->eulerChar_ = eulerChar_;
     ans->orientable = orientable;
     ans->twoSided = twoSided;
     ans->connected = connected;
@@ -109,7 +109,7 @@ NNormalSurface* NNormalSurface::clone() const {
 }
 
 NNormalSurface* NNormalSurface::doubleSurface() const {
-    NNormalSurface* ans = new NNormalSurface(triangulation,
+    NNormalSurface* ans = new NNormalSurface(triangulation_,
         dynamic_cast<NNormalSurfaceVector*>(vector->clone()));
 
     (*(ans->vector)) *= 2;
@@ -117,8 +117,8 @@ NNormalSurface* NNormalSurface::doubleSurface() const {
     // Some properties can be copied straight across.
     ans->realBoundary = realBoundary;
     ans->compact = compact;
-    if (eulerChar.known())
-        ans->eulerChar = eulerChar.value() * 2;
+    if (eulerChar_.known())
+        ans->eulerChar_ = eulerChar_.value() * 2;
 
     // The following three properties can be used together to deduce how
     // they change in the clone.  However, until we sit down and check
@@ -134,38 +134,38 @@ NNormalSurface* NNormalSurface::doubleSurface() const {
 NNormalSurface::NNormalSurface(const NTriangulation* triang,
         NNormalSurfaceVector* newVector) :
         vector(newVector),
-        triangulation(triang) {
+        triangulation_(triang) {
 }
 
 void NNormalSurface::writeTextShort(std::ostream& out) const {
-    unsigned long nTets = triangulation->getNumberOfTetrahedra();
-    unsigned long tet;
+    size_t nTets = triangulation_->size();
+    size_t tet;
     unsigned j;
     bool almostNormal = vector->allowsAlmostNormal();
     for (tet=0; tet<nTets; tet++) {
         if (tet > 0)
             out << " || ";
         for (j=0; j<4; j++)
-            out << getTriangleCoord(tet, j) << ' ';
+            out << triangles(tet, j) << ' ';
         out << ';';
         for (j=0; j<3; j++)
-            out << ' ' << getQuadCoord(tet, j);
+            out << ' ' << quads(tet, j);
         if (almostNormal) {
             out << " ;";
             for (j=0; j<3; j++)
-                out << ' ' << getOctCoord(tet, j);
+                out << ' ' << octs(tet, j);
         }
     }
 }
 
 bool NNormalSurfaceVector::hasMultipleOctDiscs(const NTriangulation* triang)
         const {
-    unsigned long nTets = triang->getNumberOfTetrahedra();
+    size_t nTets = triang->size();
     int oct;
     NLargeInteger coord;
-    for (unsigned long tet=0; tet<nTets; tet++)
+    for (size_t tet=0; tet<nTets; tet++)
         for (oct=0; oct<3; oct++) {
-            coord = getOctCoord(tet, oct, triang);
+            coord = octs(tet, oct, triang);
             if (coord == 0)
                 continue;
             // We have found our one and only oct type!
@@ -178,62 +178,62 @@ bool NNormalSurfaceVector::hasMultipleOctDiscs(const NTriangulation* triang)
 }
 
 bool NNormalSurfaceVector::isCompact(const NTriangulation* triang) const {
-    unsigned long nTets = triang->getNumberOfTetrahedra();
-    unsigned long tet;
+    size_t nTets = triang->size();
+    size_t tet;
     int type;
     for (tet = 0; tet < nTets; tet++) {
         for (type = 0; type < 4; type++)
-            if (getTriangleCoord(tet, type, triang).isInfinite())
+            if (triangles(tet, type, triang).isInfinite())
                 return false;
         for (type = 0; type < 3; type++)
-            if (getQuadCoord(tet, type, triang).isInfinite())
+            if (quads(tet, type, triang).isInfinite())
                 return false;
     }
     if (allowsAlmostNormal())
         for (tet = 0; tet < nTets; tet++)
             for (type = 0; type < 3; type++)
-                if (getOctCoord(tet, type, triang).isInfinite())
+                if (octs(tet, type, triang).isInfinite())
                     return false;
     return true;
 }
 
 bool NNormalSurfaceVector::isSplitting(const NTriangulation* triang) const {
-    unsigned long nTets = triang->getNumberOfTetrahedra();
-    unsigned long tet;
+    size_t nTets = triang->size();
+    size_t tet;
     int type;
     NLargeInteger tot;
     for (tet = 0; tet < nTets; tet++) {
         for (type = 0; type < 4; type++)
-            if (getTriangleCoord(tet, type, triang) != 0)
+            if (triangles(tet, type, triang) != 0)
                 return false;
         tot = 0L;
         for (type = 0; type < 3; type++)
-            tot += getQuadCoord(tet, type, triang);
+            tot += quads(tet, type, triang);
         if (tot != 1)
             return false;
     }
     if (allowsAlmostNormal())
         for (tet = 0; tet < nTets; tet++)
             for (type = 0; type < 3; type++)
-                if (getOctCoord(tet, type, triang) != 0)
+                if (octs(tet, type, triang) != 0)
                     return false;
     return true;
 }
 
 NLargeInteger NNormalSurfaceVector::isCentral(const NTriangulation* triang)
         const {
-    unsigned long nTets = triang->getNumberOfTetrahedra();
-    unsigned long tet;
+    size_t nTets = triang->size();
+    size_t tet;
     int type;
     NLargeInteger tot, tetTot;
     for (tet = 0; tet < nTets; tet++) {
         tetTot = 0L;
         for (type = 0; type < 4; type++)
-            tetTot += getTriangleCoord(tet, type, triang);
+            tetTot += triangles(tet, type, triang);
         for (type = 0; type < 3; type++)
-            tetTot += getQuadCoord(tet, type, triang);
+            tetTot += quads(tet, type, triang);
         for (type = 0; type < 3; type++)
-            tetTot += getOctCoord(tet, type, triang);
+            tetTot += octs(tet, type, triang);
         if (tetTot > 1)
             return NLargeInteger::zero;
         tot += tetTot;
@@ -242,24 +242,24 @@ NLargeInteger NNormalSurfaceVector::isCentral(const NTriangulation* triang)
 }
 
 bool NNormalSurface::isEmpty() const {
-    unsigned long nTet = triangulation->getNumberOfTetrahedra();
+    size_t nTet = triangulation_->size();
     bool checkAlmostNormal = vector->allowsAlmostNormal();
 
-    unsigned long t;
+    size_t t;
     int i;
 
     for (t = 0; t < nTet; ++t) {
         for (i = 0; i < 4; ++i)
-            if (getTriangleCoord(t, i) != 0)
+            if (triangles(t, i) != 0)
                 return false;
 
         for (i = 0; i < 3; ++i)
-            if (getQuadCoord(t, i) != 0)
+            if (quads(t, i) != 0)
                 return false;
 
         if (checkAlmostNormal)
             for (i = 0; i < 3; ++i)
-                if (getOctCoord(t, i) != 0)
+                if (octs(t, i) != 0)
                     return false;
     }
 
@@ -267,25 +267,25 @@ bool NNormalSurface::isEmpty() const {
 }
 
 bool NNormalSurface::sameSurface(const NNormalSurface& other) const {
-    unsigned long nTet = triangulation->getNumberOfTetrahedra();
+    size_t nTet = triangulation_->size();
     bool checkAlmostNormal =
         (vector->allowsAlmostNormal() || other.vector->allowsAlmostNormal());
 
-    unsigned long t;
+    size_t t;
     int i;
 
     for (t = 0; t < nTet; ++t) {
         for (i = 0; i < 4; ++i)
-            if (getTriangleCoord(t, i) != other.getTriangleCoord(t, i))
+            if (triangles(t, i) != other.triangles(t, i))
                 return false;
 
         for (i = 0; i < 3; ++i)
-            if (getQuadCoord(t, i) != other.getQuadCoord(t, i))
+            if (quads(t, i) != other.quads(t, i))
                 return false;
 
         if (checkAlmostNormal)
             for (i = 0; i < 3; ++i)
-                if (getOctCoord(t, i) != other.getOctCoord(t, i))
+                if (octs(t, i) != other.octs(t, i))
                     return false;
     }
 
@@ -293,17 +293,17 @@ bool NNormalSurface::sameSurface(const NNormalSurface& other) const {
 }
 
 bool NNormalSurface::embedded() const {
-    unsigned long nTets = triangulation->getNumberOfTetrahedra();
+    size_t nTets = triangulation_->size();
 
     int type;
     int found;
-    for (unsigned long tet = 0; tet < nTets; ++tet) {
+    for (size_t tet = 0; tet < nTets; ++tet) {
         found = 0;
         for (type = 0; type < 3; ++type)
-            if (getQuadCoord(tet, type) > 0)
+            if (quads(tet, type) > 0)
                 ++found;
         for (type = 0; type < 3; ++type)
-            if (getOctCoord(tet, type) > 0)
+            if (octs(tet, type) > 0)
                 ++found;
         if (found > 1)
             return false;
@@ -313,19 +313,17 @@ bool NNormalSurface::embedded() const {
 }
 
 bool NNormalSurface::locallyCompatible(const NNormalSurface& other) const {
-    unsigned long nTets = triangulation->getNumberOfTetrahedra();
+    size_t nTets = triangulation_->size();
 
     int type;
     int found;
-    for (unsigned long tet = 0; tet < nTets; ++tet) {
+    for (size_t tet = 0; tet < nTets; ++tet) {
         found = 0;
         for (type = 0; type < 3; ++type)
-            if (getQuadCoord(tet, type) > 0 ||
-                    other.getQuadCoord(tet, type) > 0)
+            if (quads(tet, type) > 0 || other.quads(tet, type) > 0)
                 ++found;
         for (type = 0; type < 3; ++type)
-            if (getOctCoord(tet, type) > 0 ||
-                    other.getOctCoord(tet, type) > 0)
+            if (octs(tet, type) > 0 || other.octs(tet, type) > 0)
                 ++found;
         if (found > 1)
             return false;
@@ -336,85 +334,84 @@ bool NNormalSurface::locallyCompatible(const NNormalSurface& other) const {
 
 void NNormalSurface::calculateOctPosition() const {
     if (! vector->allowsAlmostNormal()) {
-        octPosition = NDiscType::NONE;
+        octPosition_ = NDiscType::NONE;
         return;
     }
 
-    unsigned long tetIndex;
+    size_t tetIndex;
     int type;
 
-    for (tetIndex = 0; tetIndex < triangulation->getNumberOfTetrahedra();
-            ++tetIndex)
+    for (tetIndex = 0; tetIndex < triangulation_->size(); ++tetIndex)
         for (type = 0; type < 3; ++type)
-            if (getOctCoord(tetIndex, type) != 0) {
-                octPosition = NDiscType(tetIndex, type);
+            if (octs(tetIndex, type) != 0) {
+                octPosition_ = NDiscType(tetIndex, type);
                 return;
             }
 
-    octPosition = NDiscType::NONE;
+    octPosition_ = NDiscType::NONE;
     return;
 }
 
 void NNormalSurface::calculateEulerChar() const {
-    unsigned long index, tot;
+    size_t index, tot;
     int type;
     NLargeInteger ans = NLargeInteger::zero;
 
     // Add vertices.
-    tot = triangulation->getNumberOfEdges();
+    tot = triangulation_->countEdges();
     for (index = 0; index < tot; index++)
-        ans += getEdgeWeight(index);
+        ans += edgeWeight(index);
 
     // Subtract edges.
-    tot = triangulation->getNumberOfTriangles();
+    tot = triangulation_->countTriangles();
     for (index = 0; index < tot; index++)
         for (type = 0; type < 3; type++)
-            ans -= getTriangleArcs(index, type);
+            ans -= arcs(index, type);
 
     // Add faces.
-    tot = triangulation->getNumberOfTetrahedra();
+    tot = triangulation_->size();
     for (index = 0; index < tot; index++) {
         for (type=0; type<4; type++)
-            ans += getTriangleCoord(index, type);
+            ans += triangles(index, type);
         for (type=0; type<3; type++)
-            ans += getQuadCoord(index, type);
+            ans += quads(index, type);
         for (type=0; type<3; type++)
-            ans += getOctCoord(index, type);
+            ans += octs(index, type);
     }
 
     // Done!
-    eulerChar = ans;
+    eulerChar_ = ans;
 }
 
 void NNormalSurface::calculateRealBoundary() const {
-    if (triangulation->isClosed()) {
+    if (triangulation_->isClosed()) {
         realBoundary = false;
         return;
     }
 
-    unsigned long index;
-    unsigned long tot = triangulation->getNumberOfTetrahedra();
+    size_t index;
+    size_t tot = triangulation_->size();
     const NTetrahedron* tet;
     int type, face;
 
     for (index = 0; index < tot; index++) {
-        tet = triangulation->getTetrahedron(index);
+        tet = triangulation_->getTetrahedron(index);
         if (tet->hasBoundary()) {
             // Check for disk types with boundary
             for (type=0; type<3; type++) {
-                if (getQuadCoord(index, type) > 0) {
+                if (quads(index, type) > 0) {
                     realBoundary = true;
                     return;
                 }
             }
             for (type=0; type<3; type++) {
-                if (getOctCoord(index, type) > 0) {
+                if (octs(index, type) > 0) {
                     realBoundary = true;
                     return;
                 }
             }
             for (type=0; type<4; type++)
-                if (getTriangleCoord(index, type) > 0) {
+                if (triangles(index, type) > 0) {
                     // Make sure the triangle actually hits the
                     // boundary.
                     for (face=0; face<4; face++) {
@@ -434,7 +431,7 @@ void NNormalSurface::calculateRealBoundary() const {
 NMatrixInt* NNormalSurface::boundaryIntersections() const {
     // Make sure this is really a SnapPea triangulation.
     const NSnapPeaTriangulation* snapPea =
-        dynamic_cast<const NSnapPeaTriangulation*>(getTriangulation());
+        dynamic_cast<const NSnapPeaTriangulation*>(triangulation());
     if (! snapPea)
         return 0;
 
@@ -449,7 +446,7 @@ NMatrixInt* NNormalSurface::boundaryIntersections() const {
             return 0;
         if (! (*it)->isLinkOrientable())
             return 0;
-        if ((*it)->getLinkEulerChar() != 0)
+        if ((*it)->linkEulerChar() != 0)
             return 0;
     }
 
@@ -457,21 +454,21 @@ NMatrixInt* NNormalSurface::boundaryIntersections() const {
     if (! equations)
         return 0;
 
-    unsigned long cusps = equations->rows() / 2;
-    unsigned long numTet = snapPea->getNumberOfTetrahedra();
+    size_t cusps = equations->rows() / 2;
+    size_t numTet = snapPea->size();
     NMatrixInt* slopes = new NMatrixInt(cusps, 2);
     for(unsigned int i=0; i < cusps; i++) {
         NLargeInteger meridian; // constructor sets this to 0
         NLargeInteger longitude; // constructor sets this to 0
         for(unsigned int j=0; j < numTet; j++) {
             meridian += 
-                equations->entry(2*i, 3*j)*getQuadCoord(j,vertexSplit[0][1]) +
-                equations->entry(2*i, 3*j+1)*getQuadCoord(j,vertexSplit[0][2]) +
-                equations->entry(2*i, 3*j+2)*getQuadCoord(j,vertexSplit[0][3]); 
+                equations->entry(2*i, 3*j)*quads(j,vertexSplit[0][1]) +
+                equations->entry(2*i, 3*j+1)*quads(j,vertexSplit[0][2]) +
+                equations->entry(2*i, 3*j+2)*quads(j,vertexSplit[0][3]); 
             longitude += 
-                equations->entry(2*i+1, 3*j)*getQuadCoord(j,vertexSplit[0][1]) +
-                equations->entry(2*i+1, 3*j+1)*getQuadCoord(j,vertexSplit[0][2]) +
-                equations->entry(2*i+1, 3*j+2)*getQuadCoord(j,vertexSplit[0][3]); 
+                equations->entry(2*i+1, 3*j)*quads(j,vertexSplit[0][1]) +
+                equations->entry(2*i+1, 3*j+1)*quads(j,vertexSplit[0][2]) +
+                equations->entry(2*i+1, 3*j+2)*quads(j,vertexSplit[0][3]); 
         }
         slopes->entry(i,0) = meridian;
         slopes->entry(i,1) = longitude;
@@ -487,7 +484,7 @@ void NNormalSurface::writeXMLData(std::ostream& out) const {
     // Write the opening tag including vector length.
     size_t vecLen = vector->size();
     out << "  <surface len=\"" << vecLen << "\" name=\""
-        << xmlEncodeSpecialChars(name) << "\">";
+        << xmlEncodeSpecialChars(name_) << "\">";
 
     // Write all non-zero entries.
     NLargeInteger entry;
@@ -498,8 +495,8 @@ void NNormalSurface::writeXMLData(std::ostream& out) const {
     }
 
     // Write properties.
-    if (eulerChar.known())
-        out << "\n\t" << xmlValueTag("euler", eulerChar.value());
+    if (eulerChar_.known())
+        out << "\n\t" << xmlValueTag("euler", eulerChar_.value());
     if (orientable.known())
         out << "\n\t" << xmlValueTag("orbl", orientable.value());
     if (twoSided.known())
@@ -517,13 +514,13 @@ void NNormalSurface::writeXMLData(std::ostream& out) const {
 
 // Default implementations for oriented surfaces. Returns zero as any
 // coordinate system which supports orientation should override these.
-NLargeInteger NNormalSurfaceVector::getOrientedTriangleCoord(
-        unsigned long, int, const NTriangulation*, bool) const {
+NLargeInteger NNormalSurfaceVector::orientedTriangles(
+        size_t, int, const NTriangulation*, bool) const {
     return NLargeInteger::zero;
 };
 
-NLargeInteger NNormalSurfaceVector::getOrientedQuadCoord(
-        unsigned long, int, const NTriangulation*, bool) const {
+NLargeInteger NNormalSurfaceVector::orientedQuads(
+        size_t, int, const NTriangulation*, bool) const {
     return NLargeInteger::zero;
 };
 

@@ -260,19 +260,19 @@ bool checkInputTree() {
     unsigned labelLen;
 
     for (NPacket* p = tree; p; p = p->nextTreePacket()) {
-        labelLen = p->getPacketLabel().length();
+        labelLen = p->label().length();
         if (labelLen == 0) {
             fprintf(stderr, "ERROR: Empty packet label found in input file.\n");
             return false;
         } else if (labelLen > MAX_TRI_LABEL_LEN) {
             fprintf(stderr, "ERROR: Overlong packet label [%s] found in "
                 "input file.\n",
-                p->getPacketLabel().c_str());
+                p->label().c_str());
             return false;
-        } else if (! allLabels.insert(p->getPacketLabel()).second) {
+        } else if (! allLabels.insert(p->label()).second) {
             fprintf(stderr, "ERROR: Duplicate packet label [%s] found in "
                 "input file.\n",
-                p->getPacketLabel().c_str());
+                p->label().c_str());
             return false;
         }
     }
@@ -478,11 +478,11 @@ void ctrlFarmTri(NTriangulation* tri) {
     }
 
     if (tri) {
-        ctrlLogStamp() << "Farmed [" << tri->getPacketLabel()
+        ctrlLogStamp() << "Farmed [" << tri->label()
             << "] to slave " << slave << "." << std::endl;
 
-        MPI_Send(const_cast<char*>(tri->getPacketLabel().c_str()),
-            tri->getPacketLabel().length() + 1, MPI_CHAR, slave,
+        MPI_Send(const_cast<char*>(tri->label().c_str()),
+            tri->label().length() + 1, MPI_CHAR, slave,
             TAG_REQUEST_TASK, MPI_COMM_WORLD);
         nRunningSlaves++;
     } else
@@ -504,7 +504,7 @@ int mainController() {
 
     // Do it.
     for (NPacket* p = tree; p; p = p->nextTreePacket())
-        if (p->getPacketType() == NTriangulation::packetType) {
+        if (p->type() == PACKET_TRIANGULATION) {
             nTris++;
             ctrlFarmTri(static_cast<NTriangulation*>(p));
         }
@@ -544,7 +544,7 @@ int mainController() {
 
                 std::ostringstream s;
                 s << "Class " << classNum << " : " <<
-                    cit->first->getHomologyH1().str();
+                    cit->first->homology().str();
                 className = s.str();
                 classNum++;
 
@@ -560,10 +560,10 @@ int mainController() {
                 for (cit2 = cit; cit2 != eClass.end(); cit2++)
                     if (cit2->second == c) {
                         printf("    %s\n",
-                            cit2->first->getPacketLabel().c_str());
+                            cit2->first->label().c_str());
                         if (outFile) {
                             t = new NTriangulation(*(cit2->first));
-                            t->setPacketLabel(cit2->first->getPacketLabel());
+                            t->setPacketLabel(cit2->first->label());
                             classCnt->insertChildLast(t);
                         }
 
@@ -630,8 +630,8 @@ void slaveSendNonMin() {
     long result = RESULT_NON_MINIMAL;
     MPI_Send(&result, 1, MPI_LONG, 0, TAG_RESULT, MPI_COMM_WORLD);
 
-    MPI_Send(const_cast<char*>(orig->getPacketLabel().c_str()),
-        orig->getPacketLabel().length() + 1, MPI_CHAR, 0,
+    MPI_Send(const_cast<char*>(orig->label().c_str()),
+        orig->label().length() + 1, MPI_CHAR, 0,
         TAG_RESULT_DATA, MPI_COMM_WORLD);
 }
 
@@ -650,13 +650,13 @@ void slaveSendNew() {
 
     // Send the original packet label for logging purposes, then send
     // the entire set of equivalent triangulations as per normal.
-    MPI_Send(const_cast<char*>(orig->getPacketLabel().c_str()),
-        orig->getPacketLabel().length() + 1, MPI_CHAR, 0,
+    MPI_Send(const_cast<char*>(orig->label().c_str()),
+        orig->label().length() + 1, MPI_CHAR, 0,
         TAG_RESULT_DATA, MPI_COMM_WORLD);
 
     for (TriSet::iterator tit = equivs.begin(); tit != equivs.end(); tit++)
-        MPI_Send(const_cast<char*>((*tit)->getPacketLabel().c_str()),
-            (*tit)->getPacketLabel().length() + 1, MPI_CHAR, 0,
+        MPI_Send(const_cast<char*>((*tit)->label().c_str()),
+            (*tit)->label().length() + 1, MPI_CHAR, 0,
             TAG_RESULT_DATA, MPI_COMM_WORLD);
 
     char null = 0;
@@ -674,8 +674,8 @@ void slaveSendEquivs() {
     MPI_Send(&result, 1, MPI_LONG, 0, TAG_RESULT, MPI_COMM_WORLD);
 
     for (TriSet::iterator tit = equivs.begin(); tit != equivs.end(); tit++)
-        MPI_Send(const_cast<char*>((*tit)->getPacketLabel().c_str()),
-            (*tit)->getPacketLabel().length() + 1, MPI_CHAR, 0,
+        MPI_Send(const_cast<char*>((*tit)->label().c_str()),
+            (*tit)->label().length() + 1, MPI_CHAR, 0,
             TAG_RESULT_DATA, MPI_COMM_WORLD);
 
     char null = 0;
@@ -691,7 +691,7 @@ void slaveSameSize(NTriangulation* t) {
     // Hunt for it in the packet tree.
     NTriangulation* found = 0;
     for (NPacket* p = tree; p; p = p->nextTreePacket())
-        if (p->getPacketType() == NTriangulation::packetType)
+        if (p->type() == PACKET_TRIANGULATION)
             if (static_cast<NTriangulation*>(p)->isIsomorphicTo(*t).get()) {
                 found = static_cast<NTriangulation*>(p);
                 break;
@@ -722,9 +722,9 @@ void slaveSameSize(NTriangulation* t) {
 void slaveProcessAlt(NTriangulation* t) {
     t->intelligentSimplify();
 
-    if (t->getNumberOfTetrahedra() < orig->getNumberOfTetrahedra())
+    if (t->size() < orig->size())
         nonMin = true;
-    else if (t->getNumberOfTetrahedra() == orig->getNumberOfTetrahedra())
+    else if (t->size() == orig->size())
         slaveSameSize(t);
 }
 
@@ -743,7 +743,7 @@ void slaveTryMovesDown(NTriangulation* t, int maxLevels) {
     unsigned i, j;
     bool found = false;
 
-    for (i = 0; i < t->getNumberOfEdges(); i++)
+    for (i = 0; i < t->countEdges(); i++)
         if (t->twoZeroMove(t->getEdge(i), true, false)) {
             alt = new NTriangulation(*t);
             alt->twoZeroMove(alt->getEdge(i));
@@ -755,7 +755,7 @@ void slaveTryMovesDown(NTriangulation* t, int maxLevels) {
                 return;
         }
 
-    for (i = 0; i < t->getNumberOfEdges(); i++)
+    for (i = 0; i < t->countEdges(); i++)
         for (j = 0; j < 2; j++)
             if (t->twoOneMove(t->getEdge(i), j, true, false)) {
                 alt = new NTriangulation(*t);
@@ -770,7 +770,7 @@ void slaveTryMovesDown(NTriangulation* t, int maxLevels) {
 
     // Only try 3-2 moves if nothing better has worked so far.
     if (! found)
-        for (i = 0; i < t->getNumberOfEdges(); i++)
+        for (i = 0; i < t->countEdges(); i++)
             if (t->threeTwoMove(t->getEdge(i), true, false)) {
                 alt = new NTriangulation(*t);
                 alt->threeTwoMove(alt->getEdge(i));
@@ -784,7 +784,7 @@ void slaveTryMovesDown(NTriangulation* t, int maxLevels) {
 
     // Only try 4-4 moves if nothing else has worked.
     if (! found)
-        for (i = 0; i < t->getNumberOfEdges(); i++)
+        for (i = 0; i < t->countEdges(); i++)
             for (j = 0; j < 2; j++)
                 if (t->fourFourMove(t->getEdge(i), j, true, false)) {
                     alt = new NTriangulation(*t);
@@ -815,7 +815,7 @@ void slaveTryMovesAcross(NTriangulation* t, int maxLevels,
     NTriangulation* alt;
 
     if (maxLevels > 0)
-        for (i = 0; i < t->getNumberOfEdges(); i++)
+        for (i = 0; i < t->countEdges(); i++)
             for (j = 0; j < 2; j++)
                 if (t->fourFourMove(t->getEdge(i), j, true, false)) {
                     alt = new NTriangulation(*t);
@@ -852,9 +852,9 @@ void slaveTryMovesUp(NTriangulation* t, int levelsRemaining) {
         slaveTryMovesAcross(alt, argAcross);
         delete alt;
     } else {
-        for (unsigned i = 0; i < t->getNumberOfFaces(); i++) {
+        for (unsigned i = 0; i < t->countTriangles(); i++) {
             alt = new NTriangulation(*t);
-            if (alt->twoThreeMove(alt->getFace(i))) {
+            if (alt->twoThreeMove(alt->getTriangle(i))) {
                 if (levelsRemaining > 1)
                     slaveTryMovesUp(alt, levelsRemaining - 1);
                 else

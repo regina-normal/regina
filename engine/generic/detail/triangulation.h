@@ -1871,8 +1871,8 @@ void TriangulationBase<dim>::insertTriangulation(
     typename Triangulation<dim>::ChangeEventSpan span(
         static_cast<Triangulation<dim>*>(this));
 
-    size_t nOrig = getNumberOfSimplices();
-    size_t nSource = source.getNumberOfSimplices();
+    size_t nOrig = size();
+    size_t nSource = source.size();
 
     // To ensure that things work even if source is this triangulation:
     // - we only make nSource iterations through each loop;
@@ -1910,7 +1910,7 @@ void TriangulationBase<dim>::insertConstruction(size_t nSimplices,
     typename Triangulation<dim>::ChangeEventSpan span(
         static_cast<Triangulation<dim>*>(this));
 
-    size_t nOrig = getNumberOfSimplices();
+    size_t nOrig = size();
 
     // Each time we loop through simplices we must only make nSimplices
     // iterations.  This ensures that the routine behaves correctly even
@@ -1943,9 +1943,9 @@ std::string TriangulationBase<dim>::dumpConstruction() const {
 "/**\n";
 #if 0
 TODO: output packet labels if we derive from NPacket
-    if (! getPacketLabel().empty())
+    if (! label().empty())
         ans <<
-" * " << dim << "-dimensional triangulation: " << getPacketLabel() << "\n";
+" * " << dim << "-dimensional triangulation: " << label() << "\n";
 #endif
     ans <<
 " * " << dim << "-dimensional triangulation:\n";

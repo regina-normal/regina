@@ -71,15 +71,15 @@
     [self.viewer updateHeader:self.summary];
 
     self.fVector.text = [NSString stringWithFormat:@"f-vector: (%ld, %ld, %ld)",
-                         self.packet->getNumberOfFaces<0>(),
-                         self.packet->getNumberOfFaces<1>(),
-                         self.packet->getNumberOfFaces<2>()];
+                         self.packet->countFaces<0>(),
+                         self.packet->countFaces<1>(),
+                         self.packet->size()];
 
-    [self.viewWhich setTitle:[TextHelper countString:self.packet->getNumberOfFaces<0>() singular:"vertex" plural:"vertices"] forSegmentAtIndex:0];
-    [self.viewWhich setTitle:[TextHelper countString:self.packet->getNumberOfFaces<1>() singular:"edge" plural:"edges"] forSegmentAtIndex:1];
-    [self.viewWhich setTitle:[TextHelper countString:self.packet->getNumberOfFaces<2>() singular:"triangle" plural:"triangles"] forSegmentAtIndex:2];
-    [self.viewWhich setTitle:[TextHelper countString:self.packet->getNumberOfComponents() singular:"component" plural:"components"] forSegmentAtIndex:3];
-    [self.viewWhich setTitle:[TextHelper countString:self.packet->getNumberOfBoundaryComponents() singular:"boundary" plural:"boundaries"] forSegmentAtIndex:4];
+    [self.viewWhich setTitle:[TextHelper countString:self.packet->countFaces<0>() singular:"vertex" plural:"vertices"] forSegmentAtIndex:0];
+    [self.viewWhich setTitle:[TextHelper countString:self.packet->countFaces<1>() singular:"edge" plural:"edges"] forSegmentAtIndex:1];
+    [self.viewWhich setTitle:[TextHelper countString:self.packet->size() singular:"triangle" plural:"triangles"] forSegmentAtIndex:2];
+    [self.viewWhich setTitle:[TextHelper countString:self.packet->countComponents() singular:"component" plural:"components"] forSegmentAtIndex:3];
+    [self.viewWhich setTitle:[TextHelper countString:self.packet->countBoundaryComponents() singular:"boundary" plural:"boundaries"] forSegmentAtIndex:4];
 
     self.viewWhich.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:KEY_LAST_DIM2_SKELETON_TYPE];
 
@@ -97,15 +97,15 @@
 {
     switch (self.viewWhich.selectedSegmentIndex) {
         case 0: /* vertices */
-            return 1 + MAX(self.packet->getNumberOfVertices(), 1);
+            return 1 + MAX(self.packet->countVertices(), 1);
         case 1: /* edges */
-            return 1 + MAX(self.packet->getNumberOfEdges(), 1);
+            return 1 + MAX(self.packet->countEdges(), 1);
         case 2: /* triangles */
-            return 1 + MAX(self.packet->getNumberOfTriangles(), 1);;
+            return 1 + MAX(self.packet->size(), 1);;
         case 3: /* components */
-            return 1 + MAX(self.packet->getNumberOfComponents(), 1);
+            return 1 + MAX(self.packet->countComponents(), 1);
         case 4: /* boundary components */
-            return 1 + MAX(self.packet->getNumberOfBoundaryComponents(), 1);
+            return 1 + MAX(self.packet->countBoundaryComponents(), 1);
         default:
             return 0;
     }
@@ -133,7 +133,7 @@
     SkeletonCell *cell;
     switch (self.viewWhich.selectedSegmentIndex) {
         case 0: /* vertices */
-            if (self.packet->getNumberOfVertices() == 0) {
+            if (self.packet->countVertices() == 0) {
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Empty" forIndexPath:indexPath];
                 cell.index.text = @"No vertices";
                 cell.data0.text = cell.data1.text = cell.data2.text = @"";
@@ -154,7 +154,7 @@
             }
             break;
         case 1: /* edges */
-            if (self.packet->getNumberOfEdges() == 0) {
+            if (self.packet->countEdges() == 0) {
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Empty" forIndexPath:indexPath];
                 cell.index.text = @"No edges";
                 cell.data0.text = cell.data1.text = cell.data2.text = @"";
@@ -163,7 +163,7 @@
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Edge" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
                 cell.data0.text = (e->isBoundary() ? @"Bdry" : @"Internal");
-                cell.data1.text = [NSString stringWithFormat:@"%d", e->getDegree()];
+                cell.data1.text = [NSString stringWithFormat:@"%zu", e->getDegree()];
 
                 NSMutableString* pieces = [NSMutableString string];
                 for (unsigned i = 0; i < e->getDegree(); i++)
@@ -175,7 +175,7 @@
             }
             break;
         case 2: /* triangles */
-            if (self.packet->getNumberOfTriangles() == 0) {
+            if (self.packet->isEmpty()) {
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Empty" forIndexPath:indexPath];
                 cell.index.text = @"No triangles";
                 cell.data0.text = cell.data1.text = @"";
@@ -196,21 +196,21 @@
             }
             break;
         case 3: /* components */
-            if (self.packet->getNumberOfComponents() == 0) {
+            if (self.packet->countComponents() == 0) {
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Empty" forIndexPath:indexPath];
                 cell.index.text = @"No components";
                 cell.data0.text = cell.data1.text = cell.data2.text = @"";
             } else {
-                regina::Dim2Component* c = self.packet->getComponent(indexPath.row - 1);
+                regina::Dim2Component* c = self.packet->component(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Component" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
                 cell.data0.text = (c->isOrientable() ? @"Orbl" : @"Non-orbl");
-                cell.data1.text = [TextHelper countString:c->getNumberOfSimplices() singular:"triangle" plural:"triangles"];
-                if (self.packet->getNumberOfComponents() == 1) {
+                cell.data1.text = [TextHelper countString:c->size() singular:"triangle" plural:"triangles"];
+                if (self.packet->countComponents() == 1) {
                     cell.data2.text = @"All triangles";
                 } else {
                     NSMutableString* pieces = [NSMutableString string];
-                    for (unsigned long i = 0; i < c->getNumberOfTriangles(); ++i)
+                    for (unsigned long i = 0; i < c->size(); ++i)
                         [TextHelper appendToList:pieces
                                             item:[NSString stringWithFormat:@"%ld",
                                                   self.packet->triangleIndex(c->getTriangle(i))]];
@@ -219,18 +219,18 @@
             }
             break;
         case 4: /* boundary components */
-            if (self.packet->getNumberOfBoundaryComponents() == 0) {
+            if (self.packet->countBoundaryComponents() == 0) {
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Empty" forIndexPath:indexPath];
                 cell.index.text = @"No boundary components";
                 cell.data0.text = cell.data1.text = @"";
             } else {
-                regina::Dim2BoundaryComponent* b = self.packet->getBoundaryComponent(indexPath.row - 1);
+                regina::Dim2BoundaryComponent* b = self.packet->boundaryComponent(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Bdry" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
-                cell.data0.text = [TextHelper countString:b->getNumberOfEdges() singular:"edge" plural:"edges"];
+                cell.data0.text = [TextHelper countString:b->countEdges() singular:"edge" plural:"edges"];
 
                 NSMutableString* pieces = [NSMutableString string];
-                for (unsigned long i = 0; i < b->getNumberOfEdges(); ++i) {
+                for (unsigned long i = 0; i < b->countEdges(); ++i) {
                     const regina::Dim2EdgeEmbedding& emb = b->getEdge(i)->getEmbedding(0);
                     [TextHelper appendToList:pieces
                                         item:[NSString stringWithFormat:@"%ld (%s)",

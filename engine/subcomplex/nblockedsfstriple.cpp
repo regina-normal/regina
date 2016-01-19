@@ -88,7 +88,7 @@ NBlockedSFSTriple::~NBlockedSFSTriple() {
         delete centre_;
 }
 
-NManifold* NBlockedSFSTriple::getManifold() const {
+NManifold* NBlockedSFSTriple::manifold() const {
     // Go ahead and create the Seifert fibred spaces.
     NSFSpace* end0 = end_[0]->createSFS(false);
     if (! end0)
@@ -156,7 +156,7 @@ NBlockedSFSTriple* NBlockedSFSTriple::isBlockedSFSTriple(
     // Basic property checks.
     if (! tri->isClosed())
         return 0;
-    if (tri->getNumberOfComponents() > 1)
+    if (tri->countComponents() > 1)
         return 0;
 
     // Watch out for twisted block boundaries that are incompatible with
@@ -243,17 +243,17 @@ bool NBlockedSFSTripleSearcher::useStarterBlock(NSatBlock* starter) {
             bdry[e].tet[1], bdry[e].roles[1]));
 
         while (layering[e]->extendOne()) {
-            if (usedTets.find(layering[e]->getNewBoundaryTet(0)) !=
+            if (usedTets.find(layering[e]->newBoundaryTet(0)) !=
                     usedTets.end() ||
-                    usedTets.find(layering[e]->getNewBoundaryTet(1)) !=
+                    usedTets.find(layering[e]->newBoundaryTet(1)) !=
                     usedTets.end()) {
                 // Oops, we've run back into something we've already seen.
                 delete centre;
                 centre = 0;
                 return true;
             }
-            usedTets.insert(layering[e]->getNewBoundaryTet(0));
-            usedTets.insert(layering[e]->getNewBoundaryTet(1));
+            usedTets.insert(layering[e]->newBoundaryTet(0));
+            usedTets.insert(layering[e]->newBoundaryTet(1));
         }
     }
 
@@ -270,8 +270,8 @@ bool NBlockedSFSTripleSearcher::useStarterBlock(NSatBlock* starter) {
 
         // We make the shell of an other-side boundary annulus; we will fill
         // in the precise vertex role permutations later on.
-        NSatAnnulus otherSide(layering[e]->getNewBoundaryTet(0), NPerm4(),
-            layering[e]->getNewBoundaryTet(1), NPerm4());
+        NSatAnnulus otherSide(layering[e]->newBoundaryTet(0), NPerm4(),
+            layering[e]->newBoundaryTet(1), NPerm4());
 
         if (otherSide.meetsBoundary()) {
             delete centre;
@@ -288,26 +288,26 @@ bool NBlockedSFSTripleSearcher::useStarterBlock(NSatBlock* starter) {
             // Construct the boundary annulus for the end region.
             // Refresh the tetrahedra as well as the vertex roles, since
             // it may have switched sides since our last run through the loop.
-            otherSide.tet[0] = layering[e]->getNewBoundaryTet(0);
-            otherSide.tet[1] = layering[e]->getNewBoundaryTet(1);
+            otherSide.tet[0] = layering[e]->newBoundaryTet(0);
+            otherSide.tet[1] = layering[e]->newBoundaryTet(1);
 
             // In each case, also fill in the mapping from (layering first
             // triangle markings 01/02) to (other side annulus first triangle
             // markings 01/02).  This is stored in layeringToEndAnnulus.
             if (plugPos == 0) {
-                otherSide.roles[0] = layering[e]->getNewBoundaryRoles(0);
-                otherSide.roles[1] = layering[e]->getNewBoundaryRoles(1);
+                otherSide.roles[0] = layering[e]->newBoundaryRoles(0);
+                otherSide.roles[1] = layering[e]->newBoundaryRoles(1);
                 layeringToEndAnnulus = NMatrix2(1, 0, 0, 1);
             } else if (plugPos == 1) {
-                otherSide.roles[0] = layering[e]->getNewBoundaryRoles(0) *
+                otherSide.roles[0] = layering[e]->newBoundaryRoles(0) *
                     NPerm4(1, 2, 0, 3);
-                otherSide.roles[1] = layering[e]->getNewBoundaryRoles(1) *
+                otherSide.roles[1] = layering[e]->newBoundaryRoles(1) *
                     NPerm4(1, 2, 0, 3);
                 layeringToEndAnnulus = NMatrix2(-1, 1, -1, 0);
             } else {
-                otherSide.roles[0] = layering[e]->getNewBoundaryRoles(0) *
+                otherSide.roles[0] = layering[e]->newBoundaryRoles(0) *
                     NPerm4(2, 0, 1, 3);
-                otherSide.roles[1] = layering[e]->getNewBoundaryRoles(1) *
+                otherSide.roles[1] = layering[e]->newBoundaryRoles(1) *
                     NPerm4(2, 0, 1, 3);
                 layeringToEndAnnulus = NMatrix2(0, -1, 1, -1);
             }
@@ -317,10 +317,10 @@ bool NBlockedSFSTripleSearcher::useStarterBlock(NSatBlock* starter) {
             // into any of it again on the other side.  We'll just re-insert
             // the layering boundary tetrahedra.
             usedTets.clear();
-            usedTets.insert(layering[0]->getNewBoundaryTet(0));
-            usedTets.insert(layering[0]->getNewBoundaryTet(1));
-            usedTets.insert(layering[1]->getNewBoundaryTet(0));
-            usedTets.insert(layering[1]->getNewBoundaryTet(1));
+            usedTets.insert(layering[0]->newBoundaryTet(0));
+            usedTets.insert(layering[0]->newBoundaryTet(1));
+            usedTets.insert(layering[1]->newBoundaryTet(0));
+            usedTets.insert(layering[1]->newBoundaryTet(1));
 
             // See if we can flesh the other side out to an entire region.
             otherSide.switchSides();

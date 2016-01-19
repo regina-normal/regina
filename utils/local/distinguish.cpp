@@ -97,8 +97,8 @@ struct InvData {
     double* turaevViro;
 
     InvData(NTriangulation* tri) : manifold(0) {
-        h1 = tri->getHomologyH1().str();
-        h2z2 = tri->getHomologyH2Z2();
+        h1 = tri->homology().str();
+        h2z2 = tri->homologyH2Z2();
 
         turaevViro = new double[tvParamCount];
         for (unsigned i = 0; i < tvParamCount; i++)
@@ -163,23 +163,23 @@ void process(NContainer* c) {
 
     InvData* triData;
 
-    for (NPacket* child = c->getFirstTreeChild(); child;
-            child = child->getNextTreeSibling()) {
-        if (child->getPacketType() != NTriangulation::packetType)
+    for (NPacket* child = c->firstChild(); child;
+            child = child->nextSibling()) {
+        if (child->type() != PACKET_TRIANGULATION)
             continue;
 
         triData = new InvData(static_cast<NTriangulation*>(child));
 
         if (! mfdData) {
             mfdData = triData;
-            mfdDataName = child->getPacketLabel();
+            mfdDataName = child->label();
             mfdData->manifold = c;
             manifolds.push_back(mfdData);
         } else {
             if (! triData->mayBeEqual(*mfdData)) {
-                std::cout << "INCONSISTENCY: " << c->getPacketLabel() << '\n';
+                std::cout << "INCONSISTENCY: " << c->label() << '\n';
                 std::cout << "    a) " << mfdDataName << '\n';
-                std::cout << "    b) " << child->getPacketLabel() << '\n';
+                std::cout << "    b) " << child->label() << '\n';
 
                 if (! mfdInconsistent) {
                     totMfdsInconsistent++;
@@ -206,12 +206,12 @@ void findDuplicates() {
             if (! first) {
                 first = prev;
                 std::cout << "POSSIBLE DUPLICATES:\n";
-                std::cout << "    - " << prev->manifold->getPacketLabel()
+                std::cout << "    - " << prev->manifold->label()
                     << '\n';
                 totMfdsDuplicate++;
             }
 
-            std::cout << "    - " << (*it)->manifold->getPacketLabel() << '\n';
+            std::cout << "    - " << (*it)->manifold->label() << '\n';
             totMfdsDuplicate++;
         } else
             first = 0;
@@ -301,9 +301,9 @@ int main(int argc, const char* argv[]) {
 
     // Process the packets.
     for (NPacket* p = tree; p; p = p->nextTreePacket())
-        if (p->getPacketType() == NContainer::packetType) {
+        if (p->type() == PACKET_CONTAINER) {
             if (verbose)
-                std::cout << "... " << p->getPacketLabel() << " ...\n";
+                std::cout << "... " << p->label() << " ...\n";
             process(static_cast<NContainer*>(p));
         }
 

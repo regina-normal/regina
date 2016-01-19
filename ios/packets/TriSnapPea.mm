@@ -119,7 +119,7 @@
 
 - (IBAction)toSnapPea:(id)sender {
     regina::NSnapPeaTriangulation* s = new regina::NSnapPeaTriangulation(*self.packet);
-    s->setPacketLabel(self.packet->getPacketLabel());
+    s->setPacketLabel(self.packet->label());
 
     self.packet->insertChildLast(s);
     [ReginaHelper viewPacket:s];

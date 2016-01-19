@@ -96,7 +96,7 @@ static NSString *regularCellID = @"_ReginaRegularSpreadCell";
     } else {
         cellSize = [RegularSpreadHeaderCell cellSizeFor:
                     [Coordinates longestColumnName:self.packet->coords()
-                                               tri:self.packet->getTriangulation()]];
+                                               tri:self.packet->triangulation()]];
     }
 }
 
@@ -124,7 +124,7 @@ static NSString *regularCellID = @"_ReginaRegularSpreadCell";
     return (self.compact.on ? @"" :
             [Coordinates columnName:self.packet->coords()
                          whichCoord:columnPath.column
-                                tri:self.packet->getTriangulation()]);
+                                tri:self.packet->triangulation()]);
 }
 
 - (id)spreadView:(MDSpreadView *)aSpreadView titleForHeaderInColumnSection:(NSInteger)section forRowAtIndexPath:(MDIndexPath *)rowPath

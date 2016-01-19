@@ -129,7 +129,7 @@ void PacketChooser::packetWasRenamed(regina::NPacket* renamed) {
         // we're at the end of the routine.
         int index = it - packets.begin();
         setItemIcon(index, PacketManager::icon(renamed));
-        setItemText(index, renamed->getHumanLabel().c_str());
+        setItemText(index, renamed->humanLabel().c_str());
     }
 }
 
@@ -208,8 +208,8 @@ void PacketChooser::fill(bool allowNone, NPacket* select) {
     regina::NPacket* p = subtree;
     while (p && subtree->isGrandparentOf(p)) {
         if ((! filter) || (filter->accept(p))) {
-            if (p->getTreeParent())
-                addItem(PacketManager::icon(p), p->getHumanLabel().c_str());
+            if (p->parent())
+                addItem(PacketManager::icon(p), p->humanLabel().c_str());
             else switch (rootRole) {
                 case ROOT_AS_INSERTION_POINT:
                     // No icon for this role.

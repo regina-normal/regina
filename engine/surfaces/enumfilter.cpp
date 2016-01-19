@@ -62,7 +62,7 @@ NNormalSurfaceList* NNormalSurfaceList::filterForLocallyCompatiblePairs()
         }
     }
 
-    getTriangulation()->insertChildLast(ans);
+    triangulation()->insertChildLast(ans);
     return ans;
 }
 
@@ -104,7 +104,7 @@ NNormalSurfaceList* NNormalSurfaceList::filterForDisjointPairs() const {
         }
     }
 
-    getTriangulation()->insertChildLast(ans);
+    triangulation()->insertChildLast(ans);
     return ans;
 }
 
@@ -142,7 +142,7 @@ NNormalSurfaceList* NNormalSurfaceList::filterForPotentiallyIncompressible()
         delete t;
     }
 
-    getTriangulation()->insertChildLast(ans);
+    triangulation()->insertChildLast(ans);
     return ans;
 }
 

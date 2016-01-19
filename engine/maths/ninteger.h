@@ -43,6 +43,7 @@
 
 #include <climits>
 #include <stdint.h> // MPIR (and thus SAGE) needs this *before* gmp.h.
+#include <stddef.h> // OSX needs this before gmp.h to avoid a ::ptrdiff_t error.
 #include <gmp.h>
 #include <iostream>
 #include <string>

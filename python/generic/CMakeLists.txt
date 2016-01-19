@@ -2,6 +2,17 @@
 SET ( FILES
   component
   face
+  face5
+  face6
+  face7
+  face8
+  face9
+  face10
+  face11
+  face12
+  face13
+  face14
+  face15
   facehelper
   facetpairing
   isomorphism

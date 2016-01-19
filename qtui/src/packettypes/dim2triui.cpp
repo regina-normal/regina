@@ -112,7 +112,7 @@ void Dim2TriHeaderUI::refresh() {
 
 QString Dim2TriHeaderUI::summaryInfo(regina::Dim2Triangulation* tri) {
     QString msg;
-    if (tri->getNumberOfTriangles() == 0)
+    if (tri->isEmpty())
         msg = QObject::tr("Empty");
     else if (! tri->isConnected()) {
         msg = QObject::tr("Disconnected, ");
@@ -127,8 +127,8 @@ QString Dim2TriHeaderUI::summaryInfo(regina::Dim2Triangulation* tri) {
     } else {
         // It's connected.  Report the exact manifold.
         if (tri->isOrientable()) {
-            long punctures = tri->getNumberOfBoundaryComponents();
-            long genus = (2 - tri->getEulerChar() - punctures) / 2;
+            long punctures = tri->countBoundaryComponents();
+            long genus = (2 - tri->eulerChar() - punctures) / 2;
 
             // Special names for surfaces with boundary:
             if (genus == 0 && punctures == 1)
@@ -149,8 +149,8 @@ QString Dim2TriHeaderUI::summaryInfo(regina::Dim2Triangulation* tri) {
                     msg += QObject::tr(", %1 punctures").arg(punctures);
             }
         } else {
-            long punctures = tri->getNumberOfBoundaryComponents();
-            long genus = (2 - tri->getEulerChar() - punctures);
+            long punctures = tri->countBoundaryComponents();
+            long genus = (2 - tri->eulerChar() - punctures);
 
             // Special names for surfaces with boundary:
             if (genus == 1 && punctures == 1)
@@ -172,7 +172,7 @@ QString Dim2TriHeaderUI::summaryInfo(regina::Dim2Triangulation* tri) {
         }
     }
 
-    msg += QObject::trUtf8(" (χ = %1)").arg(tri->getEulerChar());
+    msg += QObject::trUtf8(" (χ = %1)").arg(tri->eulerChar());
     return msg;
 }
 

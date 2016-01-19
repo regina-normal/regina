@@ -103,8 +103,7 @@ namespace {
                     resolution = (it == resolver.ids().end() ? 0 : it->second);
                 }
                 if ((! resolution) && (! valueLabel_.empty()))
-                    resolution = script_->getTreeMatriarch()->
-                        findPacketLabel(valueLabel_);
+                    resolution = script_->root()->findPacketLabel(valueLabel_);
 
                 script_->addVariable(name_, resolution);
             }
@@ -123,7 +122,7 @@ void NXMLPDFReader::endContentSubElement(const std::string& subTagName,
         NXMLElementReader* subReader) {
     if (subTagName == "pdf") {
         std::string base64 = dynamic_cast<NXMLCharsReader*>(subReader)->
-            getChars();
+            chars();
 
         // Strip out whitespace.
         std::string::iterator in = base64.begin();
@@ -172,9 +171,9 @@ NXMLElementReader* NXMLScriptReader::startContentSubElement(
 void NXMLScriptReader::endContentSubElement(const std::string& subTagName,
         NXMLElementReader* subReader) {
     if (subTagName == "text")
-        script->setText(dynamic_cast<NXMLCharsReader*>(subReader)->getChars());
+        script->setText(dynamic_cast<NXMLCharsReader*>(subReader)->chars());
     else if (subTagName == "line") { // Old-style
-        script->append(dynamic_cast<NXMLCharsReader*>(subReader)->getChars());
+        script->append(dynamic_cast<NXMLCharsReader*>(subReader)->chars());
         script->append("\n");
     } else if (subTagName == "var") {
         NScriptVarReader* var = dynamic_cast<NScriptVarReader*>(subReader);
@@ -185,20 +184,20 @@ void NXMLScriptReader::endContentSubElement(const std::string& subTagName,
     }
 }
 
-NXMLPacketReader* NContainer::getXMLReader(NPacket*,
+NXMLPacketReader* NContainer::xmlReader(NPacket*,
         NXMLTreeResolver& resolver) {
     return new NXMLContainerReader(resolver);
 }
 
-NXMLPacketReader* NPDF::getXMLReader(NPacket*, NXMLTreeResolver& resolver) {
+NXMLPacketReader* NPDF::xmlReader(NPacket*, NXMLTreeResolver& resolver) {
     return new NXMLPDFReader(resolver);
 }
 
-NXMLPacketReader* NScript::getXMLReader(NPacket*, NXMLTreeResolver& resolver) {
+NXMLPacketReader* NScript::xmlReader(NPacket*, NXMLTreeResolver& resolver) {
     return new NXMLScriptReader(resolver);
 }
 
-NXMLPacketReader* NText::getXMLReader(NPacket*, NXMLTreeResolver& resolver) {
+NXMLPacketReader* NText::xmlReader(NPacket*, NXMLTreeResolver& resolver) {
     return new NXMLTextReader(resolver);
 }
 

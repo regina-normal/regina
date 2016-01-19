@@ -82,6 +82,14 @@ class REGINA_API NManifold :
          *
          * @return the common name of this 3-manifold.
          */
+        std::string name() const;
+        /**
+         * Deprecated routine that returns the common name of this 3-manifold
+         * as a human-readable string.
+         *
+         * \deprecated This routine has been renamed to name().
+         * See the name() documentation for further details.
+         */
         std::string getName() const;
         /**
          * Returns the common name of this 3-manifold in TeX format.
@@ -92,6 +100,14 @@ class REGINA_API NManifold :
          * signs were provided.
          *
          * @return the common name of this 3-manifold in TeX format.
+         */
+        std::string TeXName() const;
+        /**
+         * Deprecated routine that returns the common name of this 3-manifold
+         * in TeX format.
+         *
+         * \deprecated This routine has been renamed to TeXName().
+         * See the TeXName() documentation for further details.
          */
         std::string getTeXName() const;
         /**
@@ -104,6 +120,14 @@ class REGINA_API NManifold :
          * details are deemed necessary.
          *
          * @return a string describing additional structural details.
+         */
+        std::string structure() const;
+        /**
+         * Deprecated routine that returns details of the structure of this
+         * 3-manifold that might not be evident from its common name.
+         *
+         * \deprecated This routine has been renamed to structure().
+         * See the structure() documentation for further details.
          */
         std::string getStructure() const;
         /**
@@ -135,10 +159,41 @@ class REGINA_API NManifold :
          * The homology group will be newly allocated and must be destroyed
          * by the caller of this routine.
          *
+         * This routine can also be accessed via the alias homologyH1()
+         * (a name that is more specific, but a little longer to type).
+         *
          * @return the first homology group of this 3-manifold, or 0 if
          * the appropriate calculation routine has not yet been implemented.
          */
-        virtual NAbelianGroup* getHomologyH1() const;
+        virtual NAbelianGroup* homology() const;
+        /**
+         * Returns the first homology group of this 3-manifold, if such
+         * a routine has been implemented.  If the calculation of
+         * homology has not yet been implemented for this 3-manifold
+         * then this routine will return 0.
+         *
+         * The details of which 3-manifolds have homology calculation routines
+         * can be found in the notes for the corresponding subclasses of
+         * NManifold.  The default implemention of this routine returns 0.
+         *
+         * The homology group will be newly allocated and must be destroyed
+         * by the caller of this routine.
+         *
+         * This routine can also be accessed via the alias homology()
+         * (a name that is less specific, but a little easier to type).
+         *
+         * @return the first homology group of this 3-manifold, or 0 if
+         * the appropriate calculation routine has not yet been implemented.
+         */
+        NAbelianGroup* homologyH1() const;
+        /**
+         * Deprecated routine that returns the first homology group of this
+         * 3-manifold, if such a routine has been implemented.
+         *
+         * \deprecated This routine has been renamed to homology().
+         * See the homology() documentation for further details.
+         */
+        NAbelianGroup* getHomologyH1() const;
 
         /**
          * Returns whether or not this is a finite-volume hyperbolic manifold.
@@ -167,7 +222,7 @@ class REGINA_API NManifold :
          *
          * \warning Currently this routine is only implemented in full for
          * closed 3-manifolds.  For most classes of bounded 3-manifolds,
-         * this routine simply compares the strings returned by getName().
+         * this routine simply compares the strings returned by name().
          *
          * @param compare the 3-manifold representation with which this
          * will be compared.
@@ -258,8 +313,28 @@ inline NTriangulation* NManifold::construct() const {
     return 0;
 }
 
-inline NAbelianGroup* NManifold::getHomologyH1() const {
+inline NAbelianGroup* NManifold::homology() const {
     return 0;
+}
+
+inline NAbelianGroup* NManifold::homologyH1() const {
+    return homology();
+}
+
+inline NAbelianGroup* NManifold::getHomologyH1() const {
+    return homology();
+}
+
+inline std::string NManifold::getName() const {
+    return name();
+}
+
+inline std::string NManifold::getTeXName() const {
+    return TeXName();
+}
+
+inline std::string NManifold::getStructure() const {
+    return structure();
 }
 
 inline std::ostream& NManifold::writeStructure(std::ostream& out) const {
@@ -272,7 +347,7 @@ inline void NManifold::writeTextShort(std::ostream& out) const {
 
 inline void NManifold::writeTextLong(std::ostream& out) const {
     writeName(out);
-    std::string details = getStructure();
+    std::string details = structure();
     if (! details.empty())
         out << " ( " << details << " )";
     out << std::endl;

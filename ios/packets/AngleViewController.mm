@@ -99,7 +99,7 @@
     [self updateTriangulationButton];
     // Continue to update the button text if the triangulation is renamed.
     if (! _triListener)
-        _triListener = [PacketListenerIOS listenerWithPacket:self.packet->getTriangulation() delegate:self listenChildren:NO];
+        _triListener = [PacketListenerIOS listenerWithPacket:self.packet->triangulation() delegate:self listenChildren:NO];
 
     [self initMetrics];
     [self.angles reloadData];
@@ -115,7 +115,7 @@
     height = s.height;
 
     widthAngle = [RegularSpreadHeaderCell
-                  cellSizeFor:[NSString stringWithFormat:@"%ld: 01/23", self.packet->getTriangulation()->getNumberOfTetrahedra() - 1]].width;
+                  cellSizeFor:[NSString stringWithFormat:@"%ld: 01/23", self.packet->triangulation()->size() - 1]].width;
 }
 
 - (void)dealloc
@@ -124,13 +124,13 @@
 }
 
 - (IBAction)openTriangulation:(id)sender {
-    [ReginaHelper viewPacket:self.packet->getTriangulation()];
+    [ReginaHelper viewPacket:self.packet->triangulation()];
 }
 
 - (void)updateTriangulationButton
 {
-    regina::NPacket* tri = self.packet->getTriangulation();
-    NSString* triName = [NSString stringWithUTF8String:tri->getPacketLabel().c_str()];
+    regina::NPacket* tri = self.packet->triangulation();
+    NSString* triName = [NSString stringWithUTF8String:tri->label().c_str()];
     if (triName.length == 0)
         triName = @"(Unnamed)";
     [self.triangulation setTitle:triName forState:UIControlStateNormal];
@@ -140,7 +140,7 @@
 
 - (void)packetWasRenamed:(regina::NPacket *)packet
 {
-    if (packet == self.packet->getTriangulation())
+    if (packet == self.packet->triangulation())
         [self updateTriangulationButton];
 }
 
@@ -148,7 +148,7 @@
 
 - (NSInteger)spreadView:(MDSpreadView *)aSpreadView numberOfColumnsInSection:(NSInteger)section
 {
-    return 1 + 3 * self.packet->getTriangulation()->getNumberOfTetrahedra();
+    return 1 + 3 * self.packet->triangulation()->size();
 }
 
 - (NSInteger)spreadView:(MDSpreadView *)aSpreadView numberOfRowsInSection:(NSInteger)section
@@ -179,7 +179,7 @@
 
 - (id)spreadView:(MDSpreadView *)aSpreadView objectValueForRowAtIndexPath:(MDIndexPath *)rowPath forColumnAtIndexPath:(MDIndexPath *)columnPath
 {
-    const regina::NAngleStructure* a = self.packet->getStructure(rowPath.row);
+    const regina::NAngleStructure* a = self.packet->structure(rowPath.row);
 
     if (columnPath.column == 0) {
         if (a->isStrict())
@@ -192,20 +192,20 @@
             return @"";
     }
 
-    regina::NRational angle = a->getAngle((columnPath.column - 1) / 3, (columnPath.column - 1) % 3);
+    regina::NRational angle = a->angle((columnPath.column - 1) / 3, (columnPath.column - 1) % 3);
     if (angle == 0)
         return @"";
     if (angle == 1)
         return @"π";
-    if (angle.getDenominator() == 1)
+    if (angle.denominator() == 1)
         return [NSString stringWithFormat:@"%s π",
-                angle.getNumerator().stringValue().c_str()];
-    if (angle.getNumerator() == 1)
+                angle.numerator().stringValue().c_str()];
+    if (angle.numerator() == 1)
         return [NSString stringWithFormat:@"π / %s",
-                angle.getDenominator().stringValue().c_str()];
+                angle.denominator().stringValue().c_str()];
     return [NSString stringWithFormat:@"%s π / %s",
-            angle.getNumerator().stringValue().c_str(),
-            angle.getDenominator().stringValue().c_str()];
+            angle.numerator().stringValue().c_str(),
+            angle.denominator().stringValue().c_str()];
 }
 
 #pragma mark - MDSpreadView delegate

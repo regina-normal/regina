@@ -54,7 +54,9 @@ namespace {
     void (NGroupExpression::*addTermLast_pair)(unsigned long, long) =
         &NGroupExpression::addTermLast;
     NGroupExpressionTerm& (NGroupExpression::*getTerm_non_const)(
-        unsigned long) = &NGroupExpression::getTerm;
+        size_t) = &NGroupExpression::getTerm;
+    NGroupExpressionTerm& (NGroupExpression::*term_non_const)(
+        size_t) = &NGroupExpression::term;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplify,
         NGroupExpression::simplify, 0, 1);
@@ -70,10 +72,10 @@ namespace {
         return std::auto_ptr<NGroupExpression>(new NGroupExpression(str, 0));
     }
 
-    object getTerms_list(const NGroupExpression& e) {
+    object terms_list(const NGroupExpression& e) {
         boost::python::list ans;
         for (std::list<NGroupExpressionTerm>::const_iterator it =
-                e.getTerms().begin(); it != e.getTerms().end(); it++)
+                e.terms().begin(); it != e.terms().end(); it++)
             ans.append(*it);
         return ans;
     }
@@ -125,13 +127,18 @@ void addNGroupPresentation() {
             ("NGroupExpression")
         .def(init<const NGroupExpression&>())
         .def("__init__", boost::python::make_constructor(newExpression_str))
-        .def("getTerms", getTerms_list)
+        .def("terms", terms_list)
+        .def("getTerms", terms_list)
+        .def("countTerms", &NGroupExpression::countTerms)
         .def("getNumberOfTerms", &NGroupExpression::getNumberOfTerms)
         .def("wordLength", &NGroupExpression::wordLength)
         .def("isTrivial", &NGroupExpression::isTrivial)
         .def("erase", &NGroupExpression::erase)
         .def("getTerm", getTerm_non_const, return_internal_reference<>())
+        .def("term", term_non_const, return_internal_reference<>())
+        .def("generator", &NGroupExpression::generator)
         .def("getGenerator", &NGroupExpression::getGenerator)
+        .def("exponent", &NGroupExpression::exponent)
         .def("getExponent", &NGroupExpression::getExponent)
         .def("addTermFirst", addTermFirst_term)
         .def("addTermFirst", addTermFirst_pair)
@@ -168,9 +175,13 @@ void addNGroupPresentation() {
         .def("addGenerator", &NGroupPresentation::addGenerator,
             OL_addGenerator())
         .def("addRelation", addRelation_own)
+        .def("countGenerators", &NGroupPresentation::countGenerators)
         .def("getNumberOfGenerators",
             &NGroupPresentation::getNumberOfGenerators)
+        .def("countRelations", &NGroupPresentation::countRelations)
         .def("getNumberOfRelations", &NGroupPresentation::getNumberOfRelations)
+        .def("relation", &NGroupPresentation::relation,
+            return_internal_reference<>())
         .def("getRelation", &NGroupPresentation::getRelation,
             return_internal_reference<>())
         .def("isValid", &NGroupPresentation::isValid)

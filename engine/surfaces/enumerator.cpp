@@ -148,7 +148,7 @@ void NNormalSurfaceList::Enumerator::fillVertex() {
 
     // ----- Run the enumeration algorithm -----
 
-    if (triang_->getNumberOfTetrahedra() == 0) {
+    if (triang_->isEmpty()) {
         // Handle the empty triangulation separately.
         list_->algorithm_ = NS_VERTEX_DD; /* shrug */
         // Nothing to do.
@@ -259,19 +259,19 @@ void NNormalSurfaceList::Enumerator::fillVertexTree() {
     switch (list_->coords_) {
         case NS_STANDARD:
             eqns = makeMatchingEquations(triang_, NS_STANDARD);
-            maxColsRHS = triang_->getNumberOfTetrahedra() * 5;
+            maxColsRHS = triang_->size() * 5;
             break;
         case NS_QUAD:
             eqns = makeMatchingEquations(triang_, NS_QUAD);
-            maxColsRHS = triang_->getNumberOfTetrahedra();
+            maxColsRHS = triang_->size();
             break;
         case NS_AN_STANDARD:
             eqns = makeMatchingEquations(triang_, NS_STANDARD);
-            maxColsRHS = triang_->getNumberOfTetrahedra() * 5 + 1;
+            maxColsRHS = triang_->size() * 5 + 1;
             break;
         case NS_AN_QUAD_OCT:
             eqns = makeMatchingEquations(triang_, NS_QUAD);
-            maxColsRHS = triang_->getNumberOfTetrahedra() + 1;
+            maxColsRHS = triang_->size() + 1;
             break;
         default:
             // We shouldn't be here.. just use arbitrary precision arithmetic.
@@ -397,7 +397,7 @@ void NNormalSurfaceList::Enumerator::fillVertexTreeWith() {
 template <typename Coords>
 void NNormalSurfaceList::Enumerator::fillFundamental() {
     // Get the empty triangulation out of the way separately.
-    if (triang_->getNumberOfTetrahedra() == 0) {
+    if (triang_->isEmpty()) {
         list_->algorithm_ = NS_HILBERT_DUAL; /* shrug */
         return;
     }

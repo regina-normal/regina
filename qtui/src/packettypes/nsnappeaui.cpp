@@ -125,7 +125,7 @@ void NSnapPeaHeaderUI::refresh() {
 QString NSnapPeaHeaderUI::summaryInfo(regina::NSnapPeaTriangulation* tri) {
     if (tri->isNull())
         return QObject::tr("Null triangulation (no SnapPea data)");
-    if (tri->getNumberOfTetrahedra() == 0)
+    if (tri->isEmpty())
         return QObject::tr("Empty");
 
     if (! tri->isValid())

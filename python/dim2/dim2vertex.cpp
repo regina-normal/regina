@@ -105,6 +105,8 @@ void addDim2Vertex() {
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim2Vertex::getComponent,
             return_value_policy<reference_existing_object>())
+        .def("boundaryComponent", &Dim2Vertex::boundaryComponent,
+            return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &Dim2Vertex::getBoundaryComponent,
             return_value_policy<reference_existing_object>())
         .def("degree", &Dim2Vertex::degree)

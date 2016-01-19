@@ -120,9 +120,8 @@ void usage(const char* progName, const std::string& error = std::string()) {
 }
 
 bool hasTriangulation(NContainer* c) {
-    for (NPacket* child = c->getFirstTreeChild(); child;
-            child = child->getNextTreeSibling())
-        if (child->getPacketType() == NTriangulation::packetType)
+    for (NPacket* child = c->firstChild(); child; child = child->nextSibling())
+        if (child->type() == PACKET_TRIANGULATION)
             return true;
 
     return false;
@@ -135,10 +134,10 @@ void process(NContainer* c) {
     NStandardTriangulation* std;
     std::vector<TriSpec> children;
     TriSpec spec;
-    for (NPacket* child = c->getFirstTreeChild(); child;
-            child = child->getNextTreeSibling()) {
+    for (NPacket* child = c->firstChild(); child;
+            child = child->nextSibling()) {
         spec.packet = child;
-        spec.isTri = (child->getPacketType() == NTriangulation::packetType);
+        spec.isTri = (child->type() == PACKET_TRIANGULATION);
 
         if (spec.isTri) {
             std = NStandardTriangulation::isStandardTriangulation(
@@ -146,7 +145,7 @@ void process(NContainer* c) {
             spec.hasName = (std != 0);
 
             if (spec.hasName) {
-                spec.name = std->getName();
+                spec.name = std->name();
                 spec.hasSpecialName = false;
 
                 NBlockedSFS* sfs = dynamic_cast<NBlockedSFS*>(std);
@@ -168,7 +167,7 @@ void process(NContainer* c) {
         it->packet->moveToLast();
         if (it->isTri) {
             std::ostringstream s;
-            s << c->getPacketLabel() << " : #" << (which++);
+            s << c->label() << " : #" << (which++);
             it->packet->setPacketLabel(s.str());
         }
     }
@@ -209,7 +208,7 @@ int main(int argc, char* argv[]) {
 
     // Process each container.
     for (NPacket* p = tree; p; p = p->nextTreePacket())
-        if (p->getPacketType() == NContainer::packetType)
+        if (p->type() == PACKET_CONTAINER)
             process(static_cast<NContainer*>(p));
 
     // Save the data file if required.

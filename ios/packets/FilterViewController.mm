@@ -77,9 +77,9 @@ static NSMutableCharacterSet* eulerSeparators;
     if (myEdit)
         return;
 
-    self.orientability.selectedSegmentIndex = [FilterPropertiesViewController selectionFromSet:self.packet->getOrientability()];
-    self.compactness.selectedSegmentIndex = [FilterPropertiesViewController selectionFromSet:self.packet->getCompactness()];
-    self.boundary.selectedSegmentIndex = [FilterPropertiesViewController selectionFromSet:self.packet->getRealBoundary()];
+    self.orientability.selectedSegmentIndex = [FilterPropertiesViewController selectionFromSet:self.packet->orientability()];
+    self.compactness.selectedSegmentIndex = [FilterPropertiesViewController selectionFromSet:self.packet->compactness()];
+    self.boundary.selectedSegmentIndex = [FilterPropertiesViewController selectionFromSet:self.packet->realBoundary()];
 
     [self updateEulerDisplay];
 
@@ -93,7 +93,7 @@ static NSMutableCharacterSet* eulerSeparators;
 
 - (void)updateEulerDisplay
 {
-    const std::set<regina::NLargeInteger>& ECs = self.packet->getECs();
+    const std::set<regina::NLargeInteger>& ECs = self.packet->eulerChars();
     if (ECs.empty()) {
         self.euler.text = @"";
         self.eulerExpln.text = @"No restrictions on Euler characteristic.";
@@ -207,7 +207,7 @@ static NSMutableCharacterSet* eulerSeparators;
     }
 
     myEdit = YES;
-    self.packet->setECs(set);
+    self.packet->setEulerChars(set);
     [self updateEulerDisplay];
     myEdit = NO;
 }
@@ -249,7 +249,7 @@ static NSMutableCharacterSet* eulerSeparators;
     if (myEdit)
         return;
 
-    self.type.selectedSegmentIndex = (self.packet->getUsesAnd() ? 0 : 1);
+    self.type.selectedSegmentIndex = (self.packet->usesAnd() ? 0 : 1);
 
     [self updateSubfilters];
 
@@ -273,8 +273,8 @@ static NSMutableCharacterSet* eulerSeparators;
     _subfilters = [NSPointerArray pointerArrayWithOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsOpaquePersonality];
 
     regina::NPacket* p;
-    for (p = self.packet->getFirstTreeChild(); p; p = p->getNextTreeSibling())
-        if (p->getPacketType() == regina::PACKET_SURFACEFILTER)
+    for (p = self.packet->firstChild(); p; p = p->nextSibling())
+        if (p->type() == regina::PACKET_SURFACEFILTER)
             [_subfilters addPointer:p];
 
     [self.children reloadData];
@@ -304,7 +304,7 @@ static NSMutableCharacterSet* eulerSeparators;
         return [self.children dequeueReusableCellWithIdentifier:@"Add" forIndexPath:indexPath];
     else {
         UITableViewCell* cell = [self.children dequeueReusableCellWithIdentifier:@"Subfilter" forIndexPath:indexPath];
-        cell.textLabel.text = [NSString stringWithUTF8String:static_cast<regina::NPacket*>([_subfilters pointerAtIndex:indexPath.row])->getPacketLabel().c_str()];
+        cell.textLabel.text = [NSString stringWithUTF8String:static_cast<regina::NPacket*>([_subfilters pointerAtIndex:indexPath.row])->label().c_str()];
         return cell;
     }
 }

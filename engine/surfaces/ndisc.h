@@ -79,7 +79,7 @@ namespace regina {
  * normal surfaces.
  */
 struct REGINA_API NDiscSpec {
-    unsigned long tetIndex;
+    size_t tetIndex;
         /**< The index in the triangulation of the tetrahedron
              containing the disc. */
     int type;
@@ -105,7 +105,7 @@ struct REGINA_API NDiscSpec {
      * particular tetrahedron is being referred to; discs are numbered
      * as described in the \a NDiscSpec class notes.
      */
-    NDiscSpec(unsigned long newTetIndex, int newType, unsigned long newNumber);
+    NDiscSpec(size_t newTetIndex, int newType, unsigned long newNumber);
     /**
      * Creates a new disc specifier that is a clone of the given specifier.
      *
@@ -220,11 +220,11 @@ class REGINA_API NDiscSetTet {
          * @param surface the normal surface whose discs we shall use.
          * @param tetIndex the index in the triangulation of the
          * tetrahedron that our discs must lie in; this must be between
-         * 0 and <tt>tri.getNumberOfTetrahedra()-1</tt> inclusive, where
+         * 0 and <tt>tri.size()-1</tt> inclusive, where
          * <tt>tri</tt> is the triangulation containing the given normal
          * surface.
          */
-        NDiscSetTet(const NNormalSurface& surface, unsigned long tetIndex);
+        NDiscSetTet(const NNormalSurface& surface, size_t tetIndex);
         /**
          * Creates a new set of normal discs where the number of discs of
          * each type is explicitly given.
@@ -359,12 +359,12 @@ class NDiscSetTetData : public NDiscSetTet {
          * @param surface the normal surface whose discs we shall use.
          * @param tetIndex the index in the triangulation of the
          * tetrahedron that our discs must lie in; this must be between
-         * 0 and <tt>tri.getNumberOfTetrahedra()-1</tt> inclusive, where
+         * 0 and <tt>tri.size()-1</tt> inclusive, where
          * <tt>tri</tt> is the triangulation containing the given normal
          * surface.
          */
         NDiscSetTetData(const NNormalSurface& surface,
-                unsigned long tetIndex) : NDiscSetTet(surface, tetIndex) {
+                size_t tetIndex) : NDiscSetTet(surface, tetIndex) {
             for (int i=0; i<10; i++)
                 if (internalNDiscs[i])
                     internalData[i] = new T[internalNDiscs[i]];
@@ -380,14 +380,14 @@ class NDiscSetTetData : public NDiscSetTet {
          * @param surface the normal surface whose discs we shall use.
          * @param tetIndex the index in the triangulation of the
          * tetrahedron that our discs must lie in; this must be between
-         * 0 and <tt>tri.getNumberOfTetrahedra()-1</tt> inclusive, where
+         * 0 and <tt>tri.size()-1</tt> inclusive, where
          * <tt>tri</tt> is the triangulation containing the given normal
          * surface.
          * @param initValue the value with which to initialise the data
          * corresponding to each disc.
          */
         NDiscSetTetData(const NNormalSurface& surface,
-                unsigned long tetIndex, const T& initValue) :
+                size_t tetIndex, const T& initValue) :
                 NDiscSetTet(surface, tetIndex) {
             unsigned long disc;
             for (int i=0; i<10; i++)
@@ -496,7 +496,7 @@ class REGINA_API NDiscSetSurface {
          * in the \a discSets array <b>must</b> be created, since the
          * \a NDiscSetSurface destructor will attempt to destroy them!
          * The \a discSets array will have size
-         * <tt>surface.getTriangulation()->getNumberOfTetrahedra()</tt>.
+         * <tt>surface.triangulation()->size()</tt>.
          *
          * @param surface the normal surface whose discs we shall use.
          * @param b this parameter is ignored.
@@ -522,7 +522,7 @@ class REGINA_API NDiscSetSurface {
          *
          * @return the number of tetrahedra.
          */
-        unsigned long nTets() const;
+        size_t nTets() const;
         /**
          * Determines the number of discs of the given type inside the
          * given tetrahedron.
@@ -535,7 +535,7 @@ class REGINA_API NDiscSetSurface {
          * @return the number of discs of the given type inside the
          * given tetrahedron.
          */
-        unsigned long nDiscs(unsigned long tetIndex, int type) const;
+        unsigned long nDiscs(size_t tetIndex, int type) const;
         /**
          * Returns the specific set of discs living inside the given
          * tetrahedron.
@@ -544,7 +544,7 @@ class REGINA_API NDiscSetSurface {
          * tetrahedron.
          * @return the set of discs inside the given tetrahedron.
          */
-        NDiscSetTet& tetDiscs(unsigned long tetIndex) const;
+        NDiscSetTet& tetDiscs(size_t tetIndex) const;
 
         /**
          * Determines which normal disc is adjacent to the given normal disc
@@ -608,9 +608,9 @@ class NDiscSetSurfaceData : public NDiscSetSurface {
          */
         NDiscSetSurfaceData(const NNormalSurface& surface) :
                 NDiscSetSurface(surface, true) {
-            unsigned long tot = triangulation->getNumberOfTetrahedra();
+            size_t tot = triangulation->size();
             if (tot)
-                for (unsigned long index = 0; index < tot; index++)
+                for (size_t index = 0; index < tot; index++)
                     discSets[index] = new NDiscSetTetData<T>(surface, index);
         }
         /**
@@ -625,9 +625,9 @@ class NDiscSetSurfaceData : public NDiscSetSurface {
          */
         NDiscSetSurfaceData(const NNormalSurface& surface, const T& initValue) :
                 NDiscSetSurface(surface, true) {
-            unsigned long tot = triangulation->getNumberOfTetrahedra();
+            size_t tot = triangulation->size();
             if (tot)
-                for (unsigned long index = 0; index < tot; index++)
+                for (size_t index = 0; index < tot; index++)
                     discSets[index] = new NDiscSetTetData<T>(surface, index,
                         initValue);
         }
@@ -778,7 +778,7 @@ class REGINA_API NDiscSpecIterator {
 
 inline NDiscSpec::NDiscSpec() {
 }
-inline NDiscSpec::NDiscSpec(unsigned long newTetIndex, int newType,
+inline NDiscSpec::NDiscSpec(size_t newTetIndex, int newType,
         unsigned long newNumber) : tetIndex(newTetIndex), type(newType),
         number(newNumber) {
 }
@@ -813,16 +813,15 @@ inline unsigned long NDiscSetTet::nDiscs(int type) const {
 
 // Inline functions for NDiscSetSurface
 
-inline unsigned long NDiscSetSurface::nTets() const {
-    return triangulation->getNumberOfTetrahedra();
+inline size_t NDiscSetSurface::nTets() const {
+    return triangulation->size();
 }
 
-inline unsigned long NDiscSetSurface::nDiscs(unsigned long tetIndex,
-        int type) const {
+inline unsigned long NDiscSetSurface::nDiscs(size_t tetIndex, int type) const {
     return discSets[tetIndex]->nDiscs(type);
 }
 
-inline NDiscSetTet& NDiscSetSurface::tetDiscs(unsigned long tetIndex) const {
+inline NDiscSetTet& NDiscSetSurface::tetDiscs(size_t tetIndex) const {
     return *(discSets[tetIndex]);
 }
 

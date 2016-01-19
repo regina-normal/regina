@@ -60,16 +60,16 @@ namespace {
         return ans;
     }
 
-    boost::python::list Dim2_getComponents_list(Dim2Triangulation& t) {
+    boost::python::list Dim2_components_list(Dim2Triangulation& t) {
         boost::python::list ans;
-        for (auto c : t.getComponents())
+        for (auto c : t.components())
             ans.append(boost::python::ptr(c));
         return ans;
     }
 
-    boost::python::list Dim2_getBoundaryComponents_list(Dim2Triangulation& t) {
+    boost::python::list Dim2_boundaryComponents_list(Dim2Triangulation& t) {
         boost::python::list ans;
-        for (auto b : t.getBoundaryComponents())
+        for (auto b : t.boundaryComponents())
             ans.append(boost::python::ptr(b));
         return ans;
     }
@@ -172,6 +172,8 @@ void addDim2Triangulation() {
         .def("moveContentsTo", &Dim2Triangulation::moveContentsTo)
         .def("countComponents", &Dim2Triangulation::countComponents)
         .def("getNumberOfComponents", &Dim2Triangulation::getNumberOfComponents)
+        .def("countBoundaryComponents",
+            &Dim2Triangulation::countBoundaryComponents)
         .def("getNumberOfBoundaryComponents",
             &Dim2Triangulation::getNumberOfBoundaryComponents)
         .def("countFaces", &regina::python::countFaces<Dim2Triangulation, 2>)
@@ -181,9 +183,10 @@ void addDim2Triangulation() {
         .def("getNumberOfVertices", &Dim2Triangulation::getNumberOfVertices)
         .def("countEdges", &Dim2Triangulation::countEdges)
         .def("getNumberOfEdges", &Dim2Triangulation::getNumberOfEdges)
-        .def("components", Dim2_getComponents_list)
-        .def("getComponents", Dim2_getComponents_list)
-        .def("getBoundaryComponents", Dim2_getBoundaryComponents_list)
+        .def("components", Dim2_components_list)
+        .def("getComponents", Dim2_components_list)
+        .def("boundaryComponents", Dim2_boundaryComponents_list)
+        .def("getBoundaryComponents", Dim2_boundaryComponents_list)
         .def("faces", &regina::python::faces<Dim2Triangulation, 2>)
         .def("getFaces", &regina::python::faces<Dim2Triangulation, 2>)
         .def("vertices", regina::python::faces_list<Dim2Triangulation, 2, 0>)
@@ -193,6 +196,8 @@ void addDim2Triangulation() {
         .def("component", &Dim2Triangulation::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim2Triangulation::getComponent,
+            return_internal_reference<>())
+        .def("boundaryComponent", &Dim2Triangulation::boundaryComponent,
             return_internal_reference<>())
         .def("getBoundaryComponent", &Dim2Triangulation::getBoundaryComponent,
             return_internal_reference<>())
@@ -222,6 +227,7 @@ void addDim2Triangulation() {
         .def("findAllSubcomplexesIn", findAllSubcomplexesIn_list)
         .def("isEmpty", &Dim2Triangulation::isEmpty)
         .def("isValid", &Dim2Triangulation::isValid)
+        .def("eulerChar", &Dim2Triangulation::eulerChar)
         .def("getEulerChar", &Dim2Triangulation::getEulerChar)
         .def("isClosed", &Dim2Triangulation::isClosed)
         .def("hasBoundaryFacets", &Dim2Triangulation::hasBoundaryFacets)
@@ -247,7 +253,8 @@ void addDim2Triangulation() {
         .staticmethod("isoSigComponentSize")
     ;
 
-    s.attr("packetType") = regina::PacketType(Dim2Triangulation::packetType);
+    s.attr("typeID") = regina::PACKET_DIM2TRIANGULATION;
+    s.attr("packetType") = regina::PACKET_DIM2TRIANGULATION;
 
     implicitly_convertible<std::auto_ptr<Dim2Triangulation>,
         std::auto_ptr<regina::NPacket> >();

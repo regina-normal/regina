@@ -168,13 +168,12 @@ bool process(const std::string& filename) {
     NTriangulation* t;
     NNormalSurfaceList* s;
     for (NPacket* p = tree; p; p = p->nextTreePacket())
-        if (p->getPacketType() == NTriangulation::packetType) {
+        if (p->type() == PACKET_TRIANGULATION) {
             t = static_cast<NTriangulation*>(p);
             s = NNormalSurfaceList::enumerate(t,
                 (quad ? NS_QUAD : NS_STANDARD));
-            out << t->getNumberOfTetrahedra() << ' '
-                << s->size() << " \""
-                << t->getPacketLabel() << '"' << std::endl;
+            out << t->size() << ' ' << s->size() << " \""
+                << t->label() << '"' << std::endl;
 
             delete s;
         }

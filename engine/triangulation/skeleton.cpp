@@ -117,7 +117,7 @@ void NTriangulation::calculateBoundary() {
                 label->orientable_ = true;
                 labelBoundaryTriangle(triangle, label);
                 boundaryComponents_.push_back(label);
-                triangle->getComponent()->boundaryComponents_.push_back(label);
+                triangle->component()->boundaryComponents_.push_back(label);
             }
     }
 }
@@ -284,13 +284,13 @@ void NTriangulation::calculateVertexLinks() {
                 }
 
                 ideal_ = true;
-                vertex->getComponent()->ideal_ = true;
+                vertex->component()->ideal_ = true;
 
                 NBoundaryComponent* bc = new NBoundaryComponent(vertex);
                 bc->orientable_ = vertex->isLinkOrientable();
                 vertex->boundaryComponent_ = bc;
                 boundaryComponents_.push_back(bc);
-                vertex->getComponent()->boundaryComponents_.push_back(bc);
+                vertex->component()->boundaryComponents_.push_back(bc);
             }
         }
     }
@@ -305,9 +305,9 @@ void NTriangulation::calculateBoundaryProperties() const {
 
     for (BoundaryComponentIterator it = boundaryComponents_.begin();
             it != boundaryComponents_.end(); it++) {
-        if ((*it)->getEulerChar() == 2)
+        if ((*it)->eulerChar() == 2)
             localTwoSphereBoundaryComponents = true;
-        else if ((*it)->isIdeal() && (*it)->getEulerChar() < 0)
+        else if ((*it)->isIdeal() && (*it)->eulerChar() < 0)
             localNegativeIdealBoundaryComponents = true;
 
         // Stop the search if we've found everything we're looking for.

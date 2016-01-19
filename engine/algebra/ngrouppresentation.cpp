@@ -65,31 +65,30 @@ std::ostream& operator << (std::ostream& out,
     return out;
 }
 
-NGroupExpressionTerm& NGroupExpression::getTerm(unsigned long index) {
-    TermIterator pos = terms.begin();
+NGroupExpressionTerm& NGroupExpression::term(size_t index) {
+    TermIterator pos = terms_.begin();
     advance(pos, index);
     return *pos;
 }
 
-const NGroupExpressionTerm& NGroupExpression::getTerm(
-        unsigned long index) const {
-    TermIteratorConst pos = terms.begin();
+const NGroupExpressionTerm& NGroupExpression::term(size_t index) const {
+    TermIteratorConst pos = terms_.begin();
     advance(pos, index);
     return *pos;
 }
 
 NGroupExpression* NGroupExpression::inverse() const {
     NGroupExpression* ans = new NGroupExpression();
-    transform(terms.begin(), terms.end(), front_inserter(ans->terms),
+    transform(terms_.begin(), terms_.end(), front_inserter(ans->terms_),
         std::mem_fun_ref(&NGroupExpressionTerm::inverse));
     return ans;
 }
 
 void NGroupExpression::invert() {
-	reverse(terms.begin(), terms.end());
-	std::list< NGroupExpressionTerm >::iterator it;
-	for (it = terms.begin(); it != terms.end(); it++)
-		(*it).exponent = -(*it).exponent;
+    reverse(terms_.begin(), terms_.end());
+    std::list< NGroupExpressionTerm >::iterator it;
+    for (it = terms_.begin(); it != terms_.end(); it++)
+        (*it).exponent = -(*it).exponent;
 }
 
 NGroupExpression* NGroupExpression::power(long exponent) const {
@@ -100,10 +99,10 @@ NGroupExpression* NGroupExpression::power(long exponent) const {
     long i;
     if (exponent > 0)
         for (i = 0; i < exponent; i++)
-            ans->terms.insert(ans->terms.end(), terms.begin(), terms.end());
+            ans->terms_.insert(ans->terms_.end(), terms_.begin(), terms_.end());
     else
         for (i = 0; i > exponent; i--)
-            transform(terms.begin(), terms.end(), front_inserter(ans->terms),
+            transform(terms_.begin(), terms_.end(), front_inserter(ans->terms_),
                 std::mem_fun_ref(&NGroupExpressionTerm::inverse));
     return ans;
 }
@@ -111,14 +110,14 @@ NGroupExpression* NGroupExpression::power(long exponent) const {
 bool NGroupExpression::simplify(bool cyclic) {
     bool changed = false;
     TermIterator next, tmpIt;
-    for (next = terms.begin(); next != terms.end(); ) {
+    for (next = terms_.begin(); next != terms_.end(); ) {
         // Take a look at merging next forwards.
         if ((*next).exponent == 0) {
             // Zero exponent.
             // Delete this term and step back to the previous term in
             // case we can now merge the previous and next terms.
-            next = terms.erase(next);
-            if (next != terms.begin())
+            next = terms_.erase(next);
+            if (next != terms_.begin())
                 next--;
             changed = true;
             continue;
@@ -128,12 +127,12 @@ bool NGroupExpression::simplify(bool cyclic) {
         tmpIt++;
 
         // Now tmpIt points to the term after next.
-        if (tmpIt == terms.end()) {
+        if (tmpIt == terms_.end()) {
             // No term to merge forwards with.
             next++;
         } else if ((*tmpIt) += (*next)) {
             // Successfully merged this with the following term.
-            next = terms.erase(next);
+            next = terms_.erase(next);
             changed = true;
             // Look at this term again to see if it can be merged further.
         } else {
@@ -148,18 +147,18 @@ bool NGroupExpression::simplify(bool cyclic) {
     // Now trying merging front and back terms.
     // We shall do this by popping terms off the back and merging them
     // with the front term.
-    while (terms.begin() != terms.end() &&
-            ++terms.begin() != terms.end()) {
-        // Thus terms.size() > 1.  The unusual test above is used to
-        // avoid calling terms.size() which takes linear time.
-        if (terms.front() += terms.back()) {
+    while (terms_.begin() != terms_.end() &&
+            ++terms_.begin() != terms_.end()) {
+        // Thus terms_.size() > 1.  The unusual test above is used to
+        // avoid calling terms_.size() which takes linear time.
+        if (terms_.front() += terms_.back()) {
             // Merged!
-            terms.pop_back();
+            terms_.pop_back();
             changed = true;
 
             // Did we create an empty term?
-            if (terms.front().exponent == 0)
-                terms.pop_front();
+            if (terms_.front().exponent == 0)
+                terms_.pop_front();
         } else
             break;
     }
@@ -173,7 +172,7 @@ bool NGroupExpression::substitute(unsigned long generator,
     NGroupExpression* inverse = 0;
     const NGroupExpression* use;
     long exponent, i;
-    for (TermIterator current = terms.begin(); current != terms.end(); ) {
+    for (TermIterator current = terms_.begin(); current != terms_.end(); ) {
         if ((*current).generator != generator)
             current++;
         else {
@@ -193,10 +192,10 @@ bool NGroupExpression::substitute(unsigned long generator,
                 // Note that the following insertion will invalidate
                 // current if the wrong type of data structure is being used!
                 for (i = 0; i < exponent; i++)
-                    terms.insert(current, use->terms.begin(), use->terms.end());
+                    terms_.insert(current, use->terms_.begin(), use->terms_.end());
             }
 
-            current = terms.erase(current);
+            current = terms_.erase(current);
             changed = true;
         }
     }
@@ -244,17 +243,17 @@ std::string NGroupPresentation::recogniseGroup() const {
     // TODO: eventually look for extensions over at least fg abelian groups.
     //   ??maybe?? some other finite groups but it's not clear how to look
     //   for those.
-    if (ab.get()->getRank()==1) {
+    if (ab.get()->rank()==1) {
         NGroupPresentation presCopy( *this );
         std::unique_ptr< NHomGroupPresentation > AUT(
             presCopy.identifyExtensionOverZ() );
         if (AUT.get() != nullptr) {
             // Let's try to identify the fibre.
-            std::string domStr( AUT.get()->getDomain().recogniseGroup() );
+            std::string domStr( AUT.get()->domain().recogniseGroup() );
             if (domStr.length()>0) {
                 out<<"Z~"<<domStr<<" w/monodromy ";
             unsigned long numGen(
-                AUT.get()->getDomain().getNumberOfGenerators() );
+                AUT.get()->domain().countGenerators() );
             for (unsigned long i=0; i<numGen; i++) {
               if (i!=0) out<<", ";
               if (numGen<27) out<<( (char) (i+97) );
@@ -297,13 +296,13 @@ std::string NGroupPresentation::recogniseGroup() const {
 std::unique_ptr<NAbelianGroup> NGroupPresentation::abelianisation() const
 {
     // create presentation matrices to pass to NAbelianGroup(M, N)
-    NMatrixInt M(1, getNumberOfGenerators() ); // zero matrix
-    NMatrixInt N(getNumberOfGenerators(), getNumberOfRelations() );
+    NMatrixInt M(1, countGenerators() ); // zero matrix
+    NMatrixInt N(countGenerators(), countRelations() );
     // run through rels, increment N entries appropriately
-    for (unsigned long j=0; j<getNumberOfRelations(); j++) {
-        NGroupExpression Rj ( getRelation(j) );
-        for (unsigned long i=0; i<Rj.getNumberOfTerms(); i++)
-            N.entry( Rj.getGenerator(i), j ) += Rj.getExponent(i);
+    for (unsigned long j=0; j<countRelations(); j++) {
+        NGroupExpression Rj ( relation(j) );
+        for (unsigned long i=0; i<Rj.countTerms(); i++)
+            N.entry( Rj.generator(i), j ) += Rj.exponent(i);
     }
     return std::unique_ptr<NAbelianGroup>(new NAbelianGroup(M,N));
 }
@@ -312,13 +311,13 @@ std::unique_ptr<NMarkedAbelianGroup> NGroupPresentation::markedAbelianisation()
 const
 {
     // create presentation matrices to pass to NMarkedAbelianGroup(M, N)
-    NMatrixInt M(1, getNumberOfGenerators() ); // zero matrix
-    NMatrixInt N(getNumberOfGenerators(), getNumberOfRelations() );
+    NMatrixInt M(1, countGenerators() ); // zero matrix
+    NMatrixInt N(countGenerators(), countRelations() );
     // run through rels, increment N entries appropriately
-    for (unsigned long j=0; j<getNumberOfRelations(); j++) {
-        NGroupExpression Rj ( getRelation(j) );
-        for (unsigned long i=0; i<Rj.getNumberOfTerms(); i++)
-            N.entry( Rj.getGenerator(i), j ) += Rj.getExponent(i);
+    for (unsigned long j=0; j<countRelations(); j++) {
+        NGroupExpression Rj ( relation(j) );
+        for (unsigned long i=0; i<Rj.countTerms(); i++)
+            N.entry( Rj.generator(i), j ) += Rj.exponent(i);
     }
     return std::unique_ptr<NMarkedAbelianGroup>(new NMarkedAbelianGroup(M,N));
 }
@@ -342,13 +341,13 @@ void NGroupPresentation::dehnAlgorithmSubMetric(
     this_word_vec.reserve( this_length );
     reducer.reserve( that_length );
     std::list<NGroupExpressionTerm>::const_iterator it;
-    for (it = this_word.getTerms().begin(); it!=this_word.getTerms().end(); it++) {
+    for (it = this_word.terms().begin(); it!=this_word.terms().end(); it++) {
         for (unsigned long i=0; i<std::abs((*it).exponent); i++)
             this_word_vec.push_back( NGroupExpressionTerm( (*it).generator,
                                      ((*it).exponent>0) ? 1 : -1 ) );
     }
-    for (it = that_word.getTerms().begin();
-            it!=that_word.getTerms().end(); it++) {
+    for (it = that_word.terms().begin();
+            it!=that_word.terms().end(); it++) {
         for (unsigned long i=0; i<std::abs((*it).exponent); i++)
             reducer.push_back( NGroupExpressionTerm( (*it).generator,
                                ((*it).exponent>0) ? 1 : -1 ) );
@@ -428,13 +427,13 @@ void NGroupPresentation::applySubstitution( NGroupExpression& this_word,
     reducer.reserve( that_length );
     std::list<NGroupExpressionTerm>::const_iterator it;
     // start the splaying of terms
-    for (it = this_word.getTerms().begin(); it!=this_word.getTerms().end(); it++) {
+    for (it = this_word.terms().begin(); it!=this_word.terms().end(); it++) {
         for (unsigned long i=0; i<std::abs((*it).exponent); i++)
             this_word_vec.push_back( NGroupExpressionTerm( (*it).generator,
                                      ((*it).exponent>0) ? 1 : -1 ) );
     }
     // and that_word
-    for (it = that_word.getTerms().begin(); it!=that_word.getTerms().end(); it++) {
+    for (it = that_word.terms().begin(); it!=that_word.terms().end(); it++) {
         for (unsigned long i=0; i<std::abs((*it).exponent); i++)
             reducer.push_back( NGroupExpressionTerm( (*it).generator,
                                ((*it).exponent>0) ? 1 : -1 ) );
@@ -444,19 +443,19 @@ void NGroupPresentation::applySubstitution( NGroupExpression& this_word,
     for (unsigned long i=0; i<that_length; i++) inv_reducer[that_length-(i+1)] =
             reducer[i].inverse();
     // done with inv_reducer, erase terms
-    this_word.getTerms().clear();
+    this_word.terms().clear();
 
     // *this word is some conjugate of AB and the relator is some conjugate of AC.
     //  We are performing the substitution
     // A=C^{-1}, thus we need to produce the word C^{-1}B. Put in C^{-1} first..
     for (unsigned long i=0; i<(that_length - sub_data.sub_length); i++)
-        this_word.getTerms().push_back( sub_data.invertB ?
+        this_word.terms().push_back( sub_data.invertB ?
                                         reducer[(that_length - sub_data.start_from + i) % that_length] :
                                         inv_reducer[(that_length - sub_data.start_from + i) % that_length] );
     // iterate through remainder of this_word_vec, starting from
     //     sub_data.start_sub_at + sub_length, ie fill in B
     for (unsigned long i=0; i<(this_length - sub_data.sub_length); i++)
-        this_word.getTerms().push_back(
+        this_word.terms().push_back(
             this_word_vec[(sub_data.start_sub_at + sub_data.sub_length + i) %
                           this_length] );
     // done
@@ -502,7 +501,7 @@ namespace { // anonymous namespace
      reducer.reserve( word_length );
      std::list<NGroupExpressionTerm>::const_iterator it;
       // splay word
-     for (it = word.getTerms().begin(); it!=word.getTerms().end(); it++)
+     for (it = word.terms().begin(); it!=word.terms().end(); it++)
       { for (unsigned long i=0; i<std::abs((*it).exponent); i++)
          reducer.push_back( NGroupExpressionTerm( (*it).generator,
                           ((*it).exponent>0) ? 1 : -1 ) );    }
@@ -531,7 +530,7 @@ namespace { // anonymous namespace
 void NGroupExpression::addTermsLast(const NGroupExpression& word)
 {
     std::list< NGroupExpressionTerm >::const_iterator it;
-    for (it = word.terms.begin(); it != word.terms.end(); it++)
+    for (it = word.terms_.begin(); it != word.terms_.end(); it++)
         addTermLast( *it );
 }
 
@@ -539,7 +538,7 @@ void NGroupExpression::addTermsFirst(const NGroupExpression& word)
 {
     // traverse word's terms in reverse order.
     std::list< NGroupExpressionTerm >::const_reverse_iterator it;
-    for (it = word.terms.rbegin(); it != word.terms.rend(); it++)
+    for (it = word.terms_.rbegin(); it != word.terms_.rend(); it++)
         addTermFirst( *it );
 }
 
@@ -549,10 +548,10 @@ void NGroupExpression::addTermsFirst(const NGroupExpression& word)
  */
 void NGroupExpression::cycleRight()
 {
-    if (terms.size() > 1) {
-        NGroupExpressionTerm temp(terms.front());
-        terms.pop_front();
-        terms.push_back(temp);
+    if (terms_.size() > 1) {
+        NGroupExpressionTerm temp(terms_.front());
+        terms_.pop_front();
+        terms_.push_back(temp);
     }
 }
 
@@ -562,10 +561,10 @@ void NGroupExpression::cycleRight()
  */
 void NGroupExpression::cycleLeft()
 {
-    if (terms.size() > 1) {
-        NGroupExpressionTerm temp(terms.back());
-        terms.pop_back();
-        terms.push_front(temp);
+    if (terms_.size() > 1) {
+        NGroupExpressionTerm temp(terms_.back());
+        terms_.pop_back();
+        terms_.push_front(temp);
     }
 }
 
@@ -610,7 +609,7 @@ NGroupExpression::NGroupExpression( const std::string &input, bool* valid )
                 continue;
             } else if ( (WS==WSVARLET) || (WS==WSVARNUM) || (WS==WSEXPNUM) ) {
                 // new letter but previous letter to finish
-                terms.push_back(buildTerm);
+                terms_.push_back(buildTerm);
                 if ( (int(*i) >= int('a') ) && ( int(*i) <= int('z') ) ) {
                     buildTerm.generator = (unsigned long)(*i) - (unsigned long)('a');
                     buildTerm.exponent = 1;
@@ -694,13 +693,13 @@ NGroupExpression::NGroupExpression( const std::string &input, bool* valid )
     } // end i loop
     // did we reach the end of input without any errors? if so, append buildTerm
     if (WS!=WSERR) {
-        terms.push_back(buildTerm);
+        terms_.push_back(buildTerm);
         if (valid != NULL) (*valid) = true;
     }
     // if not, delete everything in this word
     else {
         if (valid != NULL) (*valid) = false;
-        terms.clear();
+        terms_.clear();
     }
 }
 
@@ -872,20 +871,20 @@ NGroupPresentation::smallCancellationDetail()
             unsigned long WL ( (*it)->wordLength() );
             // build a table expressing number of times each generator is used in *it.
             std::vector< unsigned long > genUsage( nGenerators );
-            build_exponent_vec( (*it)->getTerms(), genUsage );
+            build_exponent_vec( (*it)->terms(), genUsage );
 
             std::list<NGroupExpressionTerm>::iterator tit;
             for (unsigned long i=0; i<genUsage.size(); i++) if (genUsage[i] == 1) {
                     // have we found a substitution for generator i ?
-                    if ( ( substitutionTable[i].getNumberOfTerms() == 1 ) &&
-                            ( substitutionTable[i].getGenerator(0) == i ) ) {
+                    if ( ( substitutionTable[i].countTerms() == 1 ) &&
+                            ( substitutionTable[i].generator(0) == i ) ) {
                         // we have a valid substitution.  Replace all occurances
                         // of generator genUsage[i] with the inverse of the remaining word
                         bool inv(true);
                         bool before_flag(true); // true if we have not yet encountered gen
                         NGroupExpression prefix, complement;
-                        for ( tit = (*it)->getTerms().begin();
-                                ( tit != (*it)->getTerms().end() ); tit++) {
+                        for ( tit = (*it)->terms().begin();
+                                ( tit != (*it)->terms().end() ); tit++) {
                             if ( (*tit).generator == i ) {
                                 inv = ((*tit).exponent != 1);
                                 before_flag=false;
@@ -916,8 +915,8 @@ found_a_generator_killer:
 
     nGenerators = 0;
     for (unsigned long i=0; i<substitutionTable.size(); i++)
-        if ( substitutionTable[i].getNumberOfTerms() == 1 )
-            if ( substitutionTable[i].getGenerator(0) == i ) nGenerators++;
+        if ( substitutionTable[i].countTerms() == 1 )
+            if ( substitutionTable[i].generator(0) == i ) nGenerators++;
 
     // now we can build up a mapping of where the current generators get sent to.
     // make it a std::vector.
@@ -925,8 +924,8 @@ found_a_generator_killer:
     std::vector< unsigned long > genReductionMapping( nGenerators );
     unsigned long indx(0);
     for (unsigned long i=0; i<substitutionTable.size(); i++) {
-        if ( substitutionTable[i].getNumberOfTerms() == 1 )
-            if ( substitutionTable[i].getGenerator(0) == i ) {
+        if ( substitutionTable[i].countTerms() == 1 )
+            if ( substitutionTable[i].generator(0) == i ) {
                 genReductionMapping[ indx ] = i;
                 indx++;
             }
@@ -1000,7 +999,7 @@ NGroupPresentation::intelligentNielsenDetail()
                 // run through all the relators.
                 for (unsigned long l=0; l<relations.size(); l++) {
                     NGroupExpression* rel(relations[l]);
-                    std::list<NGroupExpressionTerm>& terms( rel->getTerms() );
+                    std::list<NGroupExpressionTerm>& terms( rel->terms() );
                     // now we run from front to back, cyclically keeping track of the
                     //  previous and next terms respectively.
                     NGroupExpressionTerm prevTerm(terms.back()),
@@ -1076,8 +1075,8 @@ NGroupPresentation::intelligentNielsenDetail()
             // perform sub!
             didSomething=true;
             NGroupPresentation oldPres(*this);
-            std::vector<NGroupExpression> DomToRan( oldPres.getNumberOfGenerators() );
-            std::vector<NGroupExpression> RanToDom( oldPres.getNumberOfGenerators() );
+            std::vector<NGroupExpression> DomToRan( oldPres.countGenerators() );
+            std::vector<NGroupExpression> RanToDom( oldPres.countGenerators() );
             for (unsigned long i=0; i<DomToRan.size(); i++) {
                 DomToRan[i].addTermFirst( NGroupExpressionTerm( i, 1 ) );
                 RanToDom[i].addTermFirst( NGroupExpressionTerm( i, 1 ) );
@@ -1123,17 +1122,17 @@ NGroupPresentation::homologicalAlignmentDetail()
     // step 1: compute abelianization and how generators map to abelianization.
     std::unique_ptr< NMarkedAbelianGroup > abelianized( markedAbelianisation() );
     NMatrixInt abMat( abelianized->minNumberOfGenerators(),
-                      getNumberOfGenerators() );
+                      countGenerators() );
 
-    for (unsigned long j=0; j<getNumberOfGenerators(); j++) {
-        std::vector<NLargeInteger> epsilon( getNumberOfGenerators() );
+    for (unsigned long j=0; j<countGenerators(); j++) {
+        std::vector<NLargeInteger> epsilon( countGenerators() );
         epsilon[j] = 1;
         std::vector<NLargeInteger> temp( abelianized->snfRep(epsilon) );
         for (unsigned long i=0; i<abelianized->minNumberOfGenerators(); i++)
             abMat.entry(i,j) = temp[i]; // columns are snfreps of abelianized gens.
     }
 
-    unsigned long abNF( abelianized->getNumberOfInvariantFactors() );
+    unsigned long abNF( abelianized->countInvariantFactors() );
     unsigned long abNG( abelianized->minNumberOfGenerators() );
     // step 2: we will mimic the simple smith normal form algorithm algorithm
     //         using corresponding moves on the group presentation.
@@ -1199,17 +1198,17 @@ NGroupPresentation::homologicalAlignmentDetail()
         unsigned long j0=0, j1=abMat.columns()-1;
         while (j0 < j1) {
             // if at j0 its zero, inc, if at j1 zero, dec
-            if ((abMat.entry(i,j0) % abelianized->getInvariantFactor(i)).isZero()) {
+            if ((abMat.entry(i,j0) % abelianized->invariantFactor(i)).isZero()) {
                 j0++;
                 continue;
             }
-            if ((abMat.entry(i,j1) % abelianized->getInvariantFactor(i)).isZero()) {
+            if ((abMat.entry(i,j1) % abelianized->invariantFactor(i)).isZero()) {
                 j1--;
                 continue;
             }
             // column op!
-            bool colFlag( (abMat.entry(i,j0) % abelianized->getInvariantFactor(i)).abs() <
-                          (abMat.entry(i,j1) % abelianized->getInvariantFactor(i)).abs() );
+            bool colFlag( (abMat.entry(i,j0) % abelianized->invariantFactor(i)).abs() <
+                          (abMat.entry(i,j1) % abelianized->invariantFactor(i)).abs() );
             NLargeInteger q = abMat.entry(i,colFlag ? j1 : j0) /
                               abMat.entry(i,colFlag ? j0 : j1);
 
@@ -1295,10 +1294,10 @@ NGroupExpression::relabellingsThisToOther( const NGroupExpression &other,
     // we'll handle the cyclic==true case as a repeated cyclic==false call.
     if (cyclic) {
         std::list< std::map< unsigned long, NGroupExpressionTerm > > retval;
-        if (getNumberOfTerms() != other.getNumberOfTerms())
+        if (countTerms() != other.countTerms())
             return retval;
         NGroupExpression tempW( *this );
-        for (unsigned long i=0; i<tempW.getNumberOfTerms(); i++) {
+        for (unsigned long i=0; i<tempW.countTerms(); i++) {
             std::list< std::map< unsigned long, NGroupExpressionTerm > > tempL(
                 tempW.relabellingsThisToOther( other, false ) );
             // append to retval
@@ -1308,7 +1307,7 @@ NGroupExpression::relabellingsThisToOther( const NGroupExpression &other,
             tempW.cycleRight();
         }
         tempW.invert();
-        for (unsigned long i=0; i<tempW.getNumberOfTerms(); i++) {
+        for (unsigned long i=0; i<tempW.countTerms(); i++) {
             std::list< std::map< unsigned long, NGroupExpressionTerm > > tempL(
                 tempW.relabellingsThisToOther( other, false ) );
             // append to retval
@@ -1324,9 +1323,9 @@ NGroupExpression::relabellingsThisToOther( const NGroupExpression &other,
 
     // cyclic==false
     std::map< unsigned long, NGroupExpressionTerm > tempMap;
-    std::list<NGroupExpressionTerm>::const_iterator j=other.getTerms().begin();
-    std::list<NGroupExpressionTerm>::const_iterator i=getTerms().begin();
-    for ( ; ( (i!=getTerms().end()) && (j!=other.getTerms().end()) ); i++, j++)
+    std::list<NGroupExpressionTerm>::const_iterator j=other.terms().begin();
+    std::list<NGroupExpressionTerm>::const_iterator i=terms().begin();
+    for ( ; ( (i!=terms().end()) && (j!=other.terms().end()) ); i++, j++)
         if (std::abs(i->exponent) == std::abs(j->exponent)) {
             // matching exponents, so check if generators have been used yet.
             std::map< unsigned long, NGroupExpressionTerm >::iterator k;
@@ -1339,7 +1338,7 @@ NGroupExpression::relabellingsThisToOther( const NGroupExpression &other,
             } else tempMap[i->generator] = MAPTO;
         }
     // check if words had different number of terms
-    if ( (i!=getTerms().end()) || (j!=other.getTerms().end()) )
+    if ( (i!=terms().end()) || (j!=other.terms().end()) )
         return std::list< std::map< unsigned long, NGroupExpressionTerm > >();
 
     // okay, we have something.
@@ -1354,7 +1353,7 @@ NGroupPresentation::identifyFreeProduct() const
     // let's create a list of generators not used in the relators, then
     // generators that appear in a common generator, or recursively related
     std::set< unsigned long > unRelated;
-    for (unsigned long i=0; i<getNumberOfGenerators(); i++)
+    for (unsigned long i=0; i<countGenerators(); i++)
         unRelated.insert(i);
     std::list< std::set< unsigned long > > equivRel;
     // determine which generators are used in the relators, to initialize
@@ -1364,8 +1363,8 @@ NGroupPresentation::identifyFreeProduct() const
         std::set< unsigned long > usedRels;
         for (unsigned long i=0; i<relations.size(); i++)
             for (std::list<NGroupExpressionTerm>::const_iterator
-                    T=relations[i]->getTerms().begin();
-                    T!=relations[i]->getTerms().end(); T++)
+                    T=relations[i]->terms().begin();
+                    T!=relations[i]->terms().end(); T++)
                 usedRels.insert( T->generator );
         for (std::set< unsigned long >::iterator i=usedRels.begin();
                 i!=usedRels.end(); i++) {
@@ -1381,8 +1380,8 @@ NGroupPresentation::identifyFreeProduct() const
         std::set< unsigned long > relSet; // related by relations[i]
         if ( (unRelated.size()==0) && (equivRel.size()==1) ) break;
         for (std::list<NGroupExpressionTerm>::const_iterator
-                T=relations[i]->getTerms().begin();
-                T!=relations[i]->getTerms().end(); T++)
+                T=relations[i]->terms().begin();
+                T!=relations[i]->terms().end(); T++)
             relSet.insert( T->generator );
         if (relSet.size() < 2) continue; // in case of empty word
         for (std::set< unsigned long >::iterator I=relSet.begin(); I!=relSet.end();
@@ -1426,11 +1425,11 @@ NGroupPresentation::identifyFreeProduct() const
         // decide which relators from *this are relevant.
         for (unsigned long i=0; i<relations.size(); i++) {
             // check if relations[i] generator is in *I
-            if (I->find( relations[i]->getTerm(0).generator)!=I->end()) { // yes!
+            if (I->find( relations[i]->term(0).generator)!=I->end()) { // yes!
                 NGroupExpression* newRel( new NGroupExpression );
                 for (std::list<NGroupExpressionTerm>::const_iterator
-                        ET=relations[i]->getTerms().begin();
-                        ET!=relations[i]->getTerms().end(); ET++)
+                        ET=relations[i]->terms().begin();
+                        ET!=relations[i]->terms().end(); ET++)
                     newRel->addTermLast( downMap[ ET->generator ], ET->exponent );
                 newGrp->addRelation( newRel );
             }
@@ -1478,7 +1477,7 @@ bool NGroupPresentation::identifySimplyIsomorphicTo(
     std::map< unsigned long, std::list< NGroupExpression* > > domRelIdx, ranRelIdx;
 
     for (unsigned long i=0; i<relations.size(); i++) {
-        const std::list<NGroupExpressionTerm> nget( relations[i]->getTerms() );
+        const std::list<NGroupExpressionTerm> nget( relations[i]->terms() );
         std::set< unsigned long > gensUsed;
         for (std::list<NGroupExpressionTerm>::const_iterator j=nget.begin();
                 j!=nget.end(); j++)
@@ -1486,7 +1485,7 @@ bool NGroupPresentation::identifySimplyIsomorphicTo(
         domRelIdx[ gensUsed.size() ].push_back( relations[i] );
     }
     for (unsigned long i=0; i<other.relations.size(); i++) {
-        const std::list<NGroupExpressionTerm> nget( other.relations[i]->getTerms() );
+        const std::list<NGroupExpressionTerm> nget( other.relations[i]->terms() );
         std::set< unsigned long > gensUsed;
         for (std::list<NGroupExpressionTerm>::const_iterator j=nget.begin();
                 j!=nget.end(); j++)
@@ -1606,7 +1605,7 @@ bool NGroupPresentation::nielsenTransposition(unsigned long i, unsigned long j)
     if (i==j) return false;
     bool retval=false;
     for (unsigned long l=0; l<relations.size(); l++) {
-        std::list<NGroupExpressionTerm>& terms( relations[l]->getTerms() );
+        std::list<NGroupExpressionTerm>& terms( relations[l]->terms() );
         for (std::list<NGroupExpressionTerm>::iterator k=terms.begin();
                 k!=terms.end(); k++) {
             if (k->generator == i) {
@@ -1625,7 +1624,7 @@ bool NGroupPresentation::nielsenInvert(unsigned long i)
 {
     bool retval=false;
     for (unsigned long l=0; l<relations.size(); l++) {
-        std::list<NGroupExpressionTerm>& terms(relations[l]->getTerms());
+        std::list<NGroupExpressionTerm>& terms(relations[l]->terms());
         for (std::list<NGroupExpressionTerm>::iterator k=terms.begin();
                 k!=terms.end(); k++) {
             if (k->generator == i) {
@@ -1679,10 +1678,10 @@ NGroupPresentation::identifyExtensionOverZ()
     // step 1: let's build the abelianization homomorphism.
     homologicalAlignment();
     std::unique_ptr< NMarkedAbelianGroup > abelianized( markedAbelianisation() );
-    if (abelianized->getRank() != 1) return
+    if (abelianized->rank() != 1) return
             std::unique_ptr< NHomGroupPresentation >();
-    if (abelianized->getNumberOfInvariantFactors()>0)  // put Z generator at 0-th
-        nielsenTransposition(0, abelianized->getNumberOfInvariantFactors() );
+    if (abelianized->countInvariantFactors()>0)  // put Z generator at 0-th
+        nielsenTransposition(0, abelianized->countInvariantFactors() );
 
     // We have the presentation of this group in the form
     // < a, g1, g2, ..., gn | r1, ..., rm > with a->1, gi->0 under abelianization
@@ -1712,7 +1711,7 @@ NGroupPresentation::identifyExtensionOverZ()
         signed long maxLift(0), minLift(0);   // sheet index
         unsigned long maxCell(0), minCell(0); // generator's index in presentation
         bool dupMax(false), dupMin(false);    // duplicate lift height?
-        std::list<NGroupExpressionTerm>& terms(relations[l]->getTerms());
+        std::list<NGroupExpressionTerm>& terms(relations[l]->terms());
         for (std::list<NGroupExpressionTerm>::reverse_iterator k=terms.rbegin();
                 k!=terms.rend(); k++) {
             // right to left through the relator
@@ -1813,7 +1812,7 @@ NGroupPresentation::identifyExtensionOverZ()
     // by the above idx and unidx macros.
     std::map<unsigned long, NGroupExpression> genKiller;
     // start with the liftCount lift, i.e. the first order reducers a^-Mg_ia^M =...
-    for (unsigned long i=1; i<getNumberOfGenerators(); i++) {
+    for (unsigned long i=1; i<countGenerators(); i++) {
         NGroupExpression temp;
         // maxKiller[i] is the index in lifts of the relator that kills generator gi
         // i is a liftIdx
@@ -1838,12 +1837,12 @@ NGroupPresentation::identifyExtensionOverZ()
     // We could alternatively use the genKiller to reduce the width of the other
     // relators.  But for now we use this less-sophisticated work-around.
     for (unsigned long j=liftCount; j<maxWidth; j++) {
-        for (unsigned long i=1; i<getNumberOfGenerators(); i++) {
+        for (unsigned long i=1; i<countGenerators(); i++) {
             // bump-up lift of each genKiller then apply previous genKillers to them
             // to create word in the fibre group.
             NGroupExpression tempW( genKiller[idx(i, j)] );
-            for (std::list<NGroupExpressionTerm>::iterator I=tempW.getTerms().begin();
-                    I!=tempW.getTerms().end(); I++) I->generator += nGm1;
+            for (std::list<NGroupExpressionTerm>::iterator I=tempW.terms().begin();
+                    I!=tempW.terms().end(); I++) I->generator += nGm1;
             for (std::map<unsigned long, NGroupExpression>::iterator
                     J=genKiller.begin(); J!=genKiller.end(); J++)
                 tempW.substitute( J->first, J->second, false );
@@ -1885,7 +1884,7 @@ NGroupPresentation::identifyExtensionOverZ()
         // increment the words in tempTable
         for ( std::list< NGroupExpression >::iterator I=tempTable.begin();
                 I != tempTable.end(); I++) {
-            std::list< NGroupExpressionTerm >& It(I->getTerms() );
+            std::list< NGroupExpressionTerm >& It(I->terms() );
             for (std::list<NGroupExpressionTerm>::iterator J=It.begin();
                     J!=It.end(); J++)
                 J->generator += nGm1; // this depends on choice of idx function
@@ -1918,23 +1917,23 @@ NGroupPresentation::identifyExtensionOverZ()
     // deallocate relations, and resize and repopulate with copies of kerPres's
     //  relations.
 
-    nGenerators = retval->getDomain().nGenerators + 1;
+    nGenerators = retval->domain().nGenerators + 1;
     for (unsigned long i=0; i<relations.size(); i++)
         delete relations[i];
-    relations.resize( retval->getDomain().nGenerators +
-                      retval->getDomain().relations.size() );
+    relations.resize( retval->domain().nGenerators +
+                      retval->domain().relations.size() );
 
-    for (unsigned long i=0; i<retval->getDomain().relations.size(); i++)
-        relations[i] = new NGroupExpression( *retval->getDomain().relations[i] );
+    for (unsigned long i=0; i<retval->domain().relations.size(); i++)
+        relations[i] = new NGroupExpression( *retval->domain().relations[i] );
 
     // And now all the b^-1g_ib = genKiller(i) and b^-1g_ib = g_{i+1} relations.
-    for (unsigned long i=0; i<retval->getDomain().nGenerators; i++) {
+    for (unsigned long i=0; i<retval->domain().nGenerators; i++) {
         NGroupExpression* temp;
         temp = new NGroupExpression( retval->evaluate(i) );
-        temp->addTermFirst( retval->getDomain().nGenerators, 1);
+        temp->addTermFirst( retval->domain().nGenerators, 1);
         temp->addTermFirst( i, -1);
-        temp->addTermFirst( retval->getDomain().nGenerators, -1);
-        relations[ i+retval->getDomain().relations.size() ] = temp;
+        temp->addTermFirst( retval->domain().nGenerators, -1);
+        relations[ i+retval->domain().relations.size() ] = temp;
     }
 
     return retval;
@@ -1945,8 +1944,8 @@ bool NGroupPresentation::isValid() const
 {
     for (unsigned long i=0; i<relations.size(); i++)
      for (std::list<NGroupExpressionTerm>::const_iterator
-            j=relations[i]->getTerms().begin();
-            j!=relations[i]->getTerms().end(); j++)
+            j=relations[i]->terms().begin();
+            j!=relations[i]->terms().end(); j++)
       if (j->generator >= nGenerators) return false;
     return true;
 }
@@ -1970,10 +1969,10 @@ namespace { // anonymous namespace
     // compute number of letters used
         std::set<unsigned long> usedTermsF, usedTermsS;
         for (std::list<NGroupExpressionTerm>::const_iterator
-                j=first->getTerms().begin();  j!=first->getTerms().end(); j++)
+                j=first->terms().begin();  j!=first->terms().end(); j++)
             usedTermsF.insert( j->generator );
         for (std::list<NGroupExpressionTerm>::const_iterator
-                j=second->getTerms().begin(); j!=second->getTerms().end(); j++)
+                j=second->terms().begin(); j!=second->terms().end(); j++)
             usedTermsS.insert( j->generator );
         if (usedTermsF.size() < usedTermsS.size()) return true;
         if (usedTermsF.size() > usedTermsS.size()) return false;
@@ -1989,8 +1988,8 @@ namespace { // anonymous namespace
     // the two words first and second use exactly the same letters.
         if (first->wordLength() < second->wordLength()) return true;
         if (first->wordLength() > second->wordLength()) return false;
-        if (first->getNumberOfTerms() < second->getNumberOfTerms()) return true;
-        if (first->getNumberOfTerms() > second->getNumberOfTerms()) return false;
+        if (first->countTerms() < second->countTerms()) return true;
+        if (first->countTerms() > second->countTerms()) return false;
     // now we can compare them lexicographically, letter by letter.
     // first we lay them out one letter at a time.
         std::vector< NGroupExpressionTerm > first_word_vec( 0 );
@@ -1998,12 +1997,12 @@ namespace { // anonymous namespace
         first_word_vec.reserve( first->wordLength() );
         second_word_vec.reserve( second->wordLength() );
         std::list<NGroupExpressionTerm>::const_iterator it;
-        for (it = first->getTerms().begin(); it!=first->getTerms().end(); it++) {
+        for (it = first->terms().begin(); it!=first->terms().end(); it++) {
             for (unsigned long I=0; I<std::abs((*it).exponent); I++)
                 first_word_vec.push_back( NGroupExpressionTerm( (*it).generator,
                                           ((*it).exponent>0) ? 1 : -1 ) );
         }
-        for (it = second->getTerms().begin(); it!=second->getTerms().end(); it++) {
+        for (it = second->terms().begin(); it!=second->terms().end(); it++) {
             for (unsigned long I=0; I<std::abs((*it).exponent); I++)
                 second_word_vec.push_back( NGroupExpressionTerm( (*it).generator,
                                            ((*it).exponent>0) ? 1 : -1 ) );
@@ -2046,9 +2045,9 @@ std::unique_ptr<NHomGroupPresentation> NGroupPresentation::prettyRewritingDetail
         reloopFlag=false;
         std::set<unsigned long> newGenDel;
         for ( it = relatorPile.begin(); it != relatorPile.end(); it++ ) {
-            if ((*it)->getNumberOfTerms() == 1)
-                if ( std::abs( (*it)->getTerms().front().exponent ) == 1 ) { // a killer!
-                    newGenDel.insert( (*it)->getTerms().front().generator );
+            if ((*it)->countTerms() == 1)
+                if ( std::abs( (*it)->terms().front().exponent ) == 1 ) { // a killer!
+                    newGenDel.insert( (*it)->terms().front().generator );
                 }
         }
         genToDel.insert( newGenDel.begin(), newGenDel.end() );
@@ -2063,7 +2062,7 @@ std::unique_ptr<NHomGroupPresentation> NGroupPresentation::prettyRewritingDetail
     relations.clear();
     relations.reserve( relatorPile.size() - genToDel.size() );
     for (it = relatorPile.begin(); it!=relatorPile.end(); it++) {
-        if ( (*it)->getNumberOfTerms()>0 )
+        if ( (*it)->countTerms()>0 )
             relations.push_back( *it );
         else delete (*it);
     }
@@ -2113,8 +2112,8 @@ std::unique_ptr<NHomGroupPresentation> NGroupPresentation::prettyRewritingDetail
         // add up signs
         signed int sig(0);
         for (std::list<NGroupExpressionTerm>::iterator
-                j=relations[i]->getTerms().begin();
-                j!=relations[i]->getTerms().end(); j++) sig += j->exponent;
+                j=relations[i]->terms().begin();
+                j!=relations[i]->terms().end(); j++) sig += j->exponent;
         if (sig < 0) relations[i]->invert();
     }
 
@@ -2125,16 +2124,16 @@ std::unique_ptr<NHomGroupPresentation> NGroupPresentation::prettyRewritingDetail
     // step 5: cyclically permute to start with a lexicographically smallest
     //         term
     for (unsigned long i=0; i<relations.size(); i++)
-        if (relations[i]->getNumberOfTerms()>0) {
+        if (relations[i]->countTerms()>0) {
             // form list of all terms involved, find smallest, cyclically permute to
             //  start with that one.
             std::set<unsigned long> usedTerms;
             for (std::list<NGroupExpressionTerm>::iterator
-                    j=relations[i]->getTerms().begin();
-                    j!=relations[i]->getTerms().end(); j++)
+                    j=relations[i]->terms().begin();
+                    j!=relations[i]->terms().end(); j++)
                 usedTerms.insert( j->generator );
             unsigned long smallestGen( *usedTerms.begin() );
-            while ( relations[i]->getTerm(0).generator != smallestGen )
+            while ( relations[i]->term(0).generator != smallestGen )
                 relations[i]->cycleRight();
         }
 
@@ -2158,7 +2157,7 @@ void NGroupPresentation::writeXMLData(std::ostream& out) const {
 
 void NGroupExpression::writeXMLData(std::ostream& out) const {
     out << "<reln> ";
-    for (TermIteratorConst it = terms.begin(); it != terms.end(); it++)
+    for (TermIteratorConst it = terms_.begin(); it != terms_.end(); it++)
         out << (*it).generator << '^' << (*it).exponent << ' ';
     out << "</reln>";
 }
@@ -2166,12 +2165,12 @@ void NGroupExpression::writeXMLData(std::ostream& out) const {
 // group expression output routines
 
 void NGroupExpression::writeText(std::ostream& out, bool shortword) const {
-    if (terms.empty())
+    if (terms_.empty())
         out << '1';
     else {
         std::list<NGroupExpressionTerm>::const_iterator i;
-        for (i = terms.begin(); i!=terms.end(); i++) {
-            if (i != terms.begin())
+        for (i = terms_.begin(); i!=terms_.end(); i++) {
+            if (i != terms_.begin())
                 out << ' ';
             if (shortword)
                 out << char('a' + i->generator);
@@ -2190,11 +2189,11 @@ std::string NGroupExpression::toTeX() const {
 }
 
 void NGroupExpression::writeTeX(std::ostream& out) const {
-    if (terms.empty())
+    if (terms_.empty())
         out << 'e';
     else {
         std::list<NGroupExpressionTerm>::const_iterator i;
-        for (i = terms.begin(); i!=terms.end(); i++) {
+        for (i = terms_.begin(); i!=terms_.end(); i++) {
             out << "g_{" << i->generator << '}';
             if ( i->exponent != 1 )
                 out << "^{" << i->exponent << '}';
@@ -2203,11 +2202,11 @@ void NGroupExpression::writeTeX(std::ostream& out) const {
 }
 
 void NGroupExpression::writeTextShort(std::ostream& out) const {
-    if (terms.empty())
+    if (terms_.empty())
         out << '1';
     else {
-        TermIteratorConst last = --terms.end();
-        copy(terms.begin(), last,
+        TermIteratorConst last = --terms_.end();
+        copy(terms_.begin(), last,
             std::ostream_iterator<NGroupExpressionTerm>(out, " "));
         out << *last;
     }

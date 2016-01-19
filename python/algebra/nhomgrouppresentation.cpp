@@ -60,7 +60,11 @@ void addNHomGroupPresentation() {
             boost::noncopyable>
             ("NHomGroupPresentation", init<const NHomGroupPresentation&>())
         .def(init<const NGroupPresentation&>())
+        .def("domain", &NHomGroupPresentation::domain,
+            return_internal_reference<>())
         .def("getDomain", &NHomGroupPresentation::getDomain,
+            return_internal_reference<>())
+        .def("range", &NHomGroupPresentation::range,
             return_internal_reference<>())
         .def("getRange", &NHomGroupPresentation::getRange,
             return_internal_reference<>())

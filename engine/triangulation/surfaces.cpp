@@ -80,13 +80,13 @@ NNormalSurface* NTriangulation::hasNonTrivialSphereOrDisc() {
         return 0;
 
     // Use combinatorial optimisation if we can.
-    if (isValid() && getNumberOfVertices() == 1) {
+    if (isValid() && countVertices() == 1) {
         // For now, just use the safe arbitrary-precision NInteger type.
         NTreeSingleSoln<LPConstraintEuler> tree(this, NS_STANDARD);
         if (tree.find()) {
             NNormalSurface* s = tree.buildSurface();
             if (! ((! s->hasRealBoundary()) &&
-                    (s->getEulerChar() == 1) && s->isTwoSided()))
+                    (s->eulerChar() == 1) && s->isTwoSided()))
                 return s;
             // Looks like we've found a two-sided projective plane.
             // Fall through to a full enumeration of vertex surfaces.
@@ -104,7 +104,7 @@ NNormalSurface* NTriangulation::hasNonTrivialSphereOrDisc() {
     const NNormalSurface* s;
     NNormalSurface* ans = 0;
     for (size_t i = 0; i < surfaces->size() && ! ans; ++i) {
-        s = surfaces->getSurface(i);
+        s = surfaces->surface(i);
 
         // These are vertex surfaces, so we know they must be connected.
         // Because we are either (i) using standard coordinates, or
@@ -116,10 +116,10 @@ NNormalSurface* NTriangulation::hasNonTrivialSphereOrDisc() {
 
         // Now they are compact, connected and non-vertex-linking.
         // We just need to pick out spheres and discs.
-        if (s->getEulerChar() == 2) {
+        if (s->eulerChar() == 2) {
             // Must be a sphere; no bounded surface has chi=2.
             ans = s->clone();
-        } else if (s->getEulerChar() == 1) {
+        } else if (s->eulerChar() == 1) {
             if (s->hasRealBoundary()) {
                 // Must be a disc.
                 ans = s->clone();
@@ -143,7 +143,7 @@ NNormalSurface* NTriangulation::hasOctagonalAlmostNormalSphere() {
     // This is good for large problems, but for small problems a full
     // enumeration is usually faster.  Still, the big problems are the
     // ones we need to be more fussy about.
-    if (getNumberOfVertices() == 1) {
+    if (countVertices() == 1) {
         // For now, just use the safe arbitrary-precision NInteger type.
         NTreeSingleSoln<LPConstraintEuler> tree(this, NS_AN_STANDARD);
         if (tree.find()) {
@@ -176,7 +176,7 @@ NNormalSurface* NTriangulation::hasOctagonalAlmostNormalSphere() {
     bool found, broken;
     NLargeInteger coord;
     for (size_t i = 0; i < surfaces->size() && ! ans; ++i) {
-        s = surfaces->getSurface(i);
+        s = surfaces->surface(i);
 
         // These are vertex surfaces, so we know they must be connected.
         // Because we are working with a non-ideal triangulation, we know the
@@ -185,13 +185,13 @@ NNormalSurface* NTriangulation::hasOctagonalAlmostNormalSphere() {
         // Hunt for spheres with exactly one octagon.
         // Note that 1-sided projective planes are no good here,
         // since when doubled they give too many octagonal discs.
-        if (s->getEulerChar() == 2) {
+        if (s->eulerChar() == 2) {
             // Euler char = 2 implies no real boundary.
             found = false; // At least one octagon found so far?
             broken = false; // More than one octagon found so far?
             for (tet = 0; tet < simplices_.size() && ! broken; ++tet)
                 for (oct = 0; oct < 3; ++oct) {
-                    coord = s->getOctCoord(tet, oct);
+                    coord = s->octs(tet, oct);
                     if (coord > 1) {
                         broken = true;
                         break;
@@ -257,7 +257,7 @@ bool NTriangulation::hasSplittingSurface() {
     const NNormalSurface* s;
     NLargeInteger chi;
     for (unsigned long i = 0; i < nSurfaces; i++) {
-        s = surfaces->getSurface(i);
+        s = surfaces->surface(i);
 
         if (! splittingSurface_.known())
             if (s->isSplitting())

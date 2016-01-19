@@ -98,23 +98,23 @@ using regina::NTriangle;
 + (unsigned long)numColumns:(regina::NormalCoords)coordSystem tri:(regina::NTriangulation*)tri
 {
     if (coordSystem == regina::NS_STANDARD)
-        return tri->getNumberOfTetrahedra() * 7;
+        return tri->size() * 7;
     else if (coordSystem == regina::NS_AN_STANDARD)
-        return tri->getNumberOfTetrahedra() * 10;
+        return tri->size() * 10;
     else if (coordSystem == regina::NS_AN_LEGACY)
-        return tri->getNumberOfTetrahedra() * 10;
+        return tri->size() * 10;
     else if (coordSystem == regina::NS_QUAD)
-        return tri->getNumberOfTetrahedra() * 3;
+        return tri->size() * 3;
     else if (coordSystem == regina::NS_AN_QUAD_OCT)
-        return tri->getNumberOfTetrahedra() * 6;
+        return tri->size() * 6;
     else if (coordSystem == regina::NS_EDGE_WEIGHT)
-        return tri->getNumberOfEdges();
+        return tri->countEdges();
     else if (coordSystem == regina::NS_TRIANGLE_ARCS)
-        return tri->getNumberOfTriangles() * 3;
+        return tri->countTriangles() * 3;
     else if (coordSystem == regina::NS_ORIENTED)
-        return tri->getNumberOfTetrahedra() * 14;
+        return tri->size() * 14;
     else if (coordSystem == regina::NS_ORIENTED_QUAD)
-        return tri->getNumberOfTetrahedra() * 6;
+        return tri->size() * 6;
     else
         return 0;
 }
@@ -141,12 +141,12 @@ using regina::NTriangle;
         else
             return [NSString stringWithFormat:@"K%ld: %s", (whichCoord / 6), regina::vertexSplitString[(whichCoord % 6) - 3]];
     } else if (coordSystem == regina::NS_EDGE_WEIGHT) {
-        if (! (tri && tri->getEdge(whichCoord)->isBoundary()))
+        if (! (tri && tri->edge(whichCoord)->isBoundary()))
             return [NSString stringWithFormat:@"%ld", whichCoord];
         else
             return [NSString stringWithFormat:@"%ld: ∂", whichCoord];
     } else if (coordSystem == regina::NS_TRIANGLE_ARCS) {
-        if (! (tri && tri->getTriangle(whichCoord / 3)->isBoundary()))
+        if (! (tri && tri->triangle(whichCoord / 3)->isBoundary()))
             return [NSString stringWithFormat:@"%ld: %ld", (whichCoord / 3), (whichCoord % 3)];
         else
             return [NSString stringWithFormat:@"%ld: %ld: ∂", (whichCoord / 3), (whichCoord % 3)];
@@ -162,7 +162,7 @@ using regina::NTriangle;
         } else {
             // "false" orientation.
             if (stdCoord % 7 < 4)
-                return [NSString stringWithFormat:@"%ld: %s", (stdCoord / 7), NTriangle::ordering[stdCoord % 7].trunc3().c_str()];
+                return [NSString stringWithFormat:@"%ld: %s", (stdCoord / 7), NTriangle::ordering(stdCoord % 7).trunc3().c_str()];
             else
                 return [NSString stringWithFormat:@"%ld: %d%d", (stdCoord / 7), regina::vertexSplitDefn[(stdCoord % 7) - 4][2], regina::vertexSplitDefn[(stdCoord % 7) - 4][3]];
         }
@@ -189,22 +189,22 @@ using regina::NTriangle;
         case regina::NS_AN_STANDARD:
         case regina::NS_AN_QUAD_OCT:
         case regina::NS_AN_LEGACY:
-            return [NSString stringWithFormat:@"Q%ld: 00/00", tri->getNumberOfTetrahedra()];
+            return [NSString stringWithFormat:@"Q%ld: 00/00", tri->size()];
         case regina::NS_EDGE_WEIGHT:
             if (tri->hasBoundaryTriangles())
-                return [NSString stringWithFormat:@"%ld: ∂", tri->getNumberOfEdges()];
+                return [NSString stringWithFormat:@"%ld: ∂", tri->countEdges()];
             else
-                return [NSString stringWithFormat:@"%ld", tri->getNumberOfEdges()];
+                return [NSString stringWithFormat:@"%ld", tri->countEdges()];
             break;
         case regina::NS_TRIANGLE_ARCS:
             if (tri->hasBoundaryTriangles())
-                return [NSString stringWithFormat:@"%ld: 0: ∂", tri->getNumberOfTriangles()];
+                return [NSString stringWithFormat:@"%ld: 0: ∂", tri->countTriangles()];
             else
-                return [NSString stringWithFormat:@"%ld: 0", tri->getNumberOfTriangles()];
+                return [NSString stringWithFormat:@"%ld: 0", tri->countTriangles()];
             break;
         case regina::NS_ORIENTED:
         case regina::NS_ORIENTED_QUAD:
-            return [NSString stringWithFormat:@"%ld: 000", tri->getNumberOfTetrahedra()];
+            return [NSString stringWithFormat:@"%ld: 000", tri->size()];
             break;
         case regina::NS_ANGLE:
             // Should never appear.
@@ -217,47 +217,41 @@ using regina::NTriangle;
 {
     if (coordSystem == regina::NS_STANDARD) {
         if (whichCoord % 7 < 4)
-            return surface.getTriangleCoord(
-                whichCoord / 7, whichCoord % 7);
+            return surface.triangles(whichCoord / 7, whichCoord % 7);
         else
-            return surface.getQuadCoord(
-                whichCoord / 7, (whichCoord % 7) - 4);
+            return surface.quads(whichCoord / 7, (whichCoord % 7) - 4);
     } else if (coordSystem == regina::NS_AN_STANDARD ||
             coordSystem == regina::NS_AN_LEGACY) {
         if (whichCoord % 10 < 4)
-            return surface.getTriangleCoord(
-                whichCoord / 10, whichCoord % 10);
+            return surface.triangles(whichCoord / 10, whichCoord % 10);
         else if (whichCoord % 10 < 7)
-            return surface.getQuadCoord(
-                whichCoord / 10, (whichCoord % 10) - 4);
+            return surface.quads(whichCoord / 10, (whichCoord % 10) - 4);
         else
-            return surface.getOctCoord(
-                whichCoord / 10, (whichCoord % 10) - 7);
+            return surface.octs(whichCoord / 10, (whichCoord % 10) - 7);
     } else if (coordSystem == regina::NS_QUAD) {
-        return surface.getQuadCoord(whichCoord / 3, whichCoord % 3);
+        return surface.quads(whichCoord / 3, whichCoord % 3);
     } else if (coordSystem == regina::NS_AN_QUAD_OCT) {
         if (whichCoord % 6 < 3)
-            return surface.getQuadCoord(whichCoord / 6, whichCoord % 6);
+            return surface.quads(whichCoord / 6, whichCoord % 6);
         else
-            return surface.getOctCoord(
-                whichCoord / 6, (whichCoord % 6) - 3);
+            return surface.octs(whichCoord / 6, (whichCoord % 6) - 3);
     } else if (coordSystem == regina::NS_EDGE_WEIGHT) {
-        return surface.getEdgeWeight(whichCoord);
+        return surface.edgeWeight(whichCoord);
     } else if (coordSystem == regina::NS_TRIANGLE_ARCS) {
-        return surface.getTriangleArcs(whichCoord / 3, whichCoord % 3);
+        return surface.arcs(whichCoord / 3, whichCoord % 3);
     } else if (coordSystem == regina::NS_ORIENTED) {
         bool orientation = (whichCoord % 2 == 0);
         whichCoord /= 2;
         if (whichCoord % 7 < 4)
-            return surface.getOrientedTriangleCoord(
+            return surface.orientedTriangles(
                 whichCoord / 7, whichCoord % 7, orientation);
         else
-            return surface.getOrientedQuadCoord(
+            return surface.orientedQuads(
                 whichCoord / 7, (whichCoord % 7) - 4, orientation);
     } else if (coordSystem == regina::NS_ORIENTED_QUAD) {
         bool orientation = (whichCoord % 2 == 0);
         whichCoord /= 2;
-        return surface.getOrientedQuadCoord(
+        return surface.orientedQuads(
             whichCoord / 3, whichCoord % 3, orientation);
     }
 

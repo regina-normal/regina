@@ -85,7 +85,7 @@ void BoundaryComponentChooser::select(regina::NBoundaryComponent* option) {
 
 QString BoundaryComponentChooser::description(
         regina::NBoundaryComponent* option) {
-    if (option->getNumberOfTriangles() == 0) {
+    if (option->countTriangles() == 0) {
         regina::NVertex* v = option->getVertex(0);
         QString desc;
         if (v->getDegree() == 1)
@@ -101,7 +101,7 @@ QString BoundaryComponentChooser::description(
         const regina::NTriangleEmbedding& f0 = option->getTriangle(0)->front();
         const regina::NTriangleEmbedding& f1 = option->getTriangle(1)->front();
         QString desc;
-        if (option->getNumberOfTriangles() == 2)
+        if (option->countTriangles() == 2)
             desc = trUtf8("Real bdry comp %1 — Triangles %2 (%3), %4 (%5)");
         else
             desc = trUtf8("Real bdry comp %1 — Triangles %2 (%3), %4 (%5), ...");
@@ -115,8 +115,8 @@ QString BoundaryComponentChooser::description(
 
 void BoundaryComponentChooser::fill() {
     regina::NTriangulation::BoundaryComponentIterator it;
-    for (it = tri_->getBoundaryComponents().begin();
-            it != tri_->getBoundaryComponents().end(); ++it)
+    for (it = tri_->boundaryComponents().begin();
+            it != tri_->boundaryComponents().end(); ++it)
         if ((! filter_) || (*filter_)(*it)) {
             addItem(description(*it));
             options_.push_back(*it);

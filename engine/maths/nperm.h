@@ -251,6 +251,14 @@ class REGINA_API NPerm {
          *
          * @return the internal code.
          */
+        Code permCode() const;
+        /**
+         * Deprecated routine that returns the internal code representing this
+         * permutation.
+         *
+         * \deprecated This routine has been renamed to permCode().
+         * See the permCode() documentation for further details.
+         */
         Code getPermCode() const;
 
         /**
@@ -280,8 +288,7 @@ class REGINA_API NPerm {
         /**
          * Determines whether the given integer is a valid internal
          * permutation code.  Valid permutation codes can be passed to
-         * setPermCode() or fromPermCode(), and are returned by
-         * getPermCode().
+         * setPermCode() or fromPermCode(), and are returned by permCode().
          *
          * @return \c true if and only if the given code is a valid
          * internal permutation code.
@@ -576,6 +583,11 @@ inline NPerm<n>::NPerm(Code code) : code_(code) {
 }
 
 template <int n>
+inline typename NPerm<n>::Code NPerm<n>::permCode() const {
+    return code_;
+}
+
+template <int n>
 inline typename NPerm<n>::Code NPerm<n>::getPermCode() const {
     return code_;
 }
@@ -681,7 +693,6 @@ inline bool NPerm<n>::isIdentity() const {
 
 template <int n>
 NPerm<n> NPerm<n>::atIndex(Index i) {
-    Code c = idCode_;
     int image[n];
     int p, q;
     for (p = 0; p < n; ++p) {
@@ -717,7 +728,6 @@ template <int n>
 NPerm<n> NPerm<n>::rand() {
     // We can't just call atIndex(rand() % nPerms), since nPerms might
     // be too large to fit into an int (which is what rand() returns).
-    Code c = idCode_;
     int image[n];
     int p, q;
     for (p = 0; p < n; ++p)
@@ -732,7 +742,6 @@ NPerm<n> NPerm<n>::rand() {
 template <int n>
 std::string NPerm<n>::str() const {
     char ans[n + 1];
-    int image;
     for (int i = 0; i < n; ++i)
         ans[i] = regina::digit((code_ >> (imageBits * i)) & imageMask_);
     ans[n] = 0;
@@ -743,7 +752,6 @@ std::string NPerm<n>::str() const {
 template <int n>
 std::string NPerm<n>::trunc(unsigned len) const {
     char ans[n + 1];
-    int image;
     for (int i = 0; i < len; ++i)
         ans[i] = regina::digit((code_ >> (imageBits * i)) & imageMask_);
     ans[len] = 0;

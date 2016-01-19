@@ -66,8 +66,8 @@
     } else {
         // It's connected.  Report the exact manifold.
         if (self.packet->isOrientable()) {
-            long punctures = self.packet->getNumberOfBoundaryComponents();
-            long genus = (2 - self.packet->getEulerChar() - punctures) / 2;
+            long punctures = self.packet->countBoundaryComponents();
+            long genus = (2 - self.packet->eulerChar() - punctures) / 2;
 
             // Special names for surfaces with boundary:
             if (genus == 0 && punctures == 1)
@@ -88,8 +88,8 @@
                     [msg appendFormat:@", %ld punctures", punctures];
             }
         } else {
-            long punctures = self.packet->getNumberOfBoundaryComponents();
-            long genus = (2 - self.packet->getEulerChar() - punctures);
+            long punctures = self.packet->countBoundaryComponents();
+            long genus = (2 - self.packet->eulerChar() - punctures);
 
             // Special names for surfaces with boundary:
             if (genus == 1 && punctures == 1)
@@ -110,7 +110,7 @@
         }
     }
 
-    [msg appendFormat:@" (χ = %ld)", self.packet->getEulerChar()];
+    [msg appendFormat:@" (χ = %ld)", self.packet->eulerChar()];
     header.text = msg;
 }
 

@@ -212,9 +212,9 @@ class NIsomorphismTest : public CppUnit::TestFixture {
             if (! image->isClosed())
                 CPPUNIT_FAIL(msg.str() + "that was not closed.");
 
-            const NAbelianGroup& h1 = image->getHomologyH1();
-            if (h1.getRank() != 1 || h1.getNumberOfInvariantFactors() != 1 ||
-                    h1.getInvariantFactor(0) != 2)
+            const NAbelianGroup& h1 = image->homology();
+            if (h1.rank() != 1 || h1.countInvariantFactors() != 1 ||
+                    h1.invariantFactor(0) != 2)
                 CPPUNIT_FAIL(msg.str() + "that had homology different from "
                     "Z + Z_2.");
             delete image;
@@ -285,8 +285,7 @@ class NIsomorphismTest : public CppUnit::TestFixture {
             isos.clear();
 
             // Some of these tests cannot be run on the standalone tetrahedron.
-            bool standalone = (t.getNumberOfTetrahedra() == 1 &&
-                t.getNumberOfTriangles() == 4);
+            bool standalone = (t.size() == 1 && t.countTriangles() == 4);
 
             // Unglue a face of t2.
             if (! standalone) {

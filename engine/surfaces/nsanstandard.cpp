@@ -40,8 +40,8 @@
 
 namespace regina {
 
-NLargeInteger NNormalSurfaceVectorANStandard::getEdgeWeight(
-        unsigned long edgeIndex, const NTriangulation* triang) const {
+NLargeInteger NNormalSurfaceVectorANStandard::edgeWeight(
+        size_t edgeIndex, const NTriangulation* triang) const {
     // Find a tetrahedron next to the edge in question.
     const NEdgeEmbedding& emb = triang->edge(edgeIndex)->front();
     long tetIndex = triang->tetrahedronIndex(emb.getTetrahedron());
@@ -63,11 +63,10 @@ NLargeInteger NNormalSurfaceVectorANStandard::getEdgeWeight(
     return ans;
 }
 
-NLargeInteger NNormalSurfaceVectorANStandard::getTriangleArcs(
-        unsigned long triIndex, int triVertex, const NTriangulation* triang)
-        const {
+NLargeInteger NNormalSurfaceVectorANStandard::arcs(size_t triIndex,
+        int triVertex, const NTriangulation* triang) const {
     // Find a tetrahedron next to the triangle in question.
-    const NTriangleEmbedding& emb = triang->getTriangles()[triIndex]->
+    const NTriangleEmbedding& emb = triang->triangles()[triIndex]->
         getEmbedding(0);
     long tetIndex = triang->tetrahedronIndex(emb.getTetrahedron());
     int vertex = emb.getVertices()[triVertex];
@@ -88,27 +87,26 @@ NLargeInteger NNormalSurfaceVectorANStandard::getTriangleArcs(
 
 NNormalSurfaceVector* NNormalSurfaceVectorANStandard::makeZeroVector(
         const NTriangulation* triangulation) {
-    return new NNormalSurfaceVectorANStandard(
-        10 * triangulation->getNumberOfTetrahedra());
+    return new NNormalSurfaceVectorANStandard(10 * triangulation->size());
 }
 
 NMatrixInt* NNormalSurfaceVectorANStandard::makeMatchingEquations(
         const NTriangulation* triangulation) {
-    unsigned long nCoords = 10 * triangulation->getNumberOfTetrahedra();
+    size_t nCoords = 10 * triangulation->size();
     // Three equations per non-boundary triangle.
     // F_boundary + 2 F_internal = 4 T
-    long nEquations = 3 * (4 * long(triangulation->getNumberOfTetrahedra()) -
-        long(triangulation->getNumberOfTriangles()));
+    long nEquations = 3 * (4 * long(triangulation->size()) -
+        long(triangulation->countTriangles()));
     NMatrixInt* ans = new NMatrixInt(nEquations, nCoords);
 
     // Run through each internal triangle and add the corresponding three
     // equations.
     unsigned row = 0;
     int i;
-    unsigned long tet0, tet1;
+    size_t tet0, tet1;
     NPerm4 perm0, perm1;
-    for (NTriangulation::TriangleIterator fit = triangulation->getTriangles().begin();
-            fit != triangulation->getTriangles().end(); fit++) {
+    for (auto fit = triangulation->triangles().begin();
+            fit != triangulation->triangles().end(); fit++) {
         if (! (*fit)->isBoundary()) {
             tet0 = triangulation->tetrahedronIndex(
                 (*fit)->getEmbedding(0).getTetrahedron());
@@ -146,7 +144,7 @@ NEnumConstraintList* NNormalSurfaceVectorANStandard::makeEmbeddedConstraints(
     // At most one quad/oct per tetrahedron.
     // Also at most one oct type overall.
     NEnumConstraintList* ans = new NEnumConstraintList(
-        triangulation->getNumberOfTetrahedra() + 1);
+        triangulation->size() + 1);
 
     unsigned base = 0;
     for (unsigned c = 1; c < ans->size(); ++c) {

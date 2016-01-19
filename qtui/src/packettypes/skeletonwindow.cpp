@@ -157,7 +157,7 @@ void SkeletonWindow::packetToBeDestroyed(regina::NPacket*) {
 }
 
 QString VertexModel::caption() const {
-    return tr("Vertices (%1)").arg(tri->getPacketLabel().c_str());
+    return tr("Vertices (%1)").arg(tri->label().c_str());
 }
 
 QString VertexModel::overview() const {
@@ -174,7 +174,7 @@ QString VertexModel::overview() const {
 int VertexModel::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
-    return (parent.isValid() ? 0 : tri->getNumberOfVertices());
+    return (parent.isValid() ? 0 : tri->countVertices());
 }
 
 int VertexModel::columnCount(const QModelIndex& /* unused parent*/) const {
@@ -188,7 +188,7 @@ QVariant VertexModel::data(const QModelIndex& index, int role) const {
             case 0:
                 return index.row();
             case 1: {
-                int link = item->getLink();
+                int link = item->link();
                 if (link == NVertex::SPHERE)
                     return QString();
                 if (link == NVertex::DISC)
@@ -200,10 +200,10 @@ QVariant VertexModel::data(const QModelIndex& index, int role) const {
                 if (link == NVertex::NON_STANDARD_CUSP) {
                     if (item->isLinkOrientable())
                         return tr("Cusp (orbl, genus %1)").arg(
-                            1 - (item->getLinkEulerChar() / 2));
+                            1 - (item->linkEulerChar() / 2));
                     else
                         return tr("Cusp (non-or, genus %1)").arg(
-                            2 - item->getLinkEulerChar());
+                            2 - item->linkEulerChar());
                 }
                 if (link == NVertex::NON_STANDARD_BDRY)
                     return tr("Non-std bdry");
@@ -262,7 +262,7 @@ QString VertexModel::toolTipForCol(int column) {
 }
 
 QString EdgeModel::caption() const {
-    return tr("Edges (%1)").arg(tri->getPacketLabel().c_str());
+    return tr("Edges (%1)").arg(tri->label().c_str());
 }
 
 QString EdgeModel::overview() const {
@@ -279,7 +279,7 @@ QString EdgeModel::overview() const {
 int EdgeModel::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
-    return (parent.isValid() ? 0 : tri->getNumberOfEdges());
+    return (parent.isValid() ? 0 : tri->countEdges());
 }
 
 int EdgeModel::columnCount(const QModelIndex& /* unused parent*/) const {
@@ -351,7 +351,7 @@ QString EdgeModel::toolTipForCol(int column) {
 }
 
 QString TriangleModel::caption() const {
-    return tr("Triangles (%1)").arg(tri->getPacketLabel().c_str());
+    return tr("Triangles (%1)").arg(tri->label().c_str());
 }
 
 QString TriangleModel::overview() const {
@@ -368,7 +368,7 @@ QString TriangleModel::overview() const {
 int TriangleModel::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
-    return (parent.isValid() ? 0 : tri->getNumberOfTriangles());
+    return (parent.isValid() ? 0 : tri->countTriangles());
 }
 
 int TriangleModel::columnCount(const QModelIndex& /* unused parent*/) const {
@@ -386,7 +386,7 @@ QVariant TriangleModel::data(const QModelIndex& index, int role) const {
                 if (item->isBoundary())
                     prefix = tr("(Bdry) ");
 
-                int type = item->getType();
+                int type = item->type();
                 if (type == NTriangle::TRIANGLE)
                     return prefix + tr("Triangle");
                 if (type == NTriangle::SCARF)
@@ -458,7 +458,7 @@ QString TriangleModel::toolTipForCol(int column) {
 }
 
 QString ComponentModel::caption() const {
-    return tr("Components (%1)").arg(tri->getPacketLabel().c_str());
+    return tr("Components (%1)").arg(tri->label().c_str());
 }
 
 QString ComponentModel::overview() const {
@@ -474,7 +474,7 @@ QString ComponentModel::overview() const {
 int ComponentModel::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
-    return (parent.isValid() ? 0 : tri->getNumberOfComponents());
+    return (parent.isValid() ? 0 : tri->countComponents());
 }
 
 int ComponentModel::columnCount(const QModelIndex& /* unused parent*/) const {
@@ -483,7 +483,7 @@ int ComponentModel::columnCount(const QModelIndex& /* unused parent*/) const {
 
 QVariant ComponentModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        NComponent* item = tri->getComponent(index.row());
+        NComponent* item = tri->component(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -491,11 +491,10 @@ QVariant ComponentModel::data(const QModelIndex& index, int role) const {
                 return (item->isIdeal() ? tr("Ideal, ") : tr("Real, ")) +
                     (item->isOrientable() ? tr("Orbl") : tr("Non-orbl"));
             case 2:
-                return static_cast<unsigned>(item->getNumberOfTetrahedra());
+                return static_cast<unsigned>(item->size());
             case 3:
                 QString ans;
-                for (unsigned long i = 0; i < item->getNumberOfTetrahedra();
-                        i++)
+                for (unsigned long i = 0; i < item->size(); i++)
                     appendToList(ans, QString::number(
                         item->getTetrahedron(i)->index()));
                 return ans;
@@ -542,7 +541,7 @@ QString ComponentModel::toolTipForCol(int column) {
 }
 
 QString BoundaryComponentModel::caption() const {
-    return tr("Boundary Components (%1)").arg(tri->getPacketLabel().c_str());
+    return tr("Boundary Components (%1)").arg(tri->label().c_str());
 }
 
 QString BoundaryComponentModel::overview() const {
@@ -563,7 +562,7 @@ QString BoundaryComponentModel::overview() const {
 int BoundaryComponentModel::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
-    return (parent.isValid() ? 0 : tri->getNumberOfBoundaryComponents());
+    return (parent.isValid() ? 0 : tri->countBoundaryComponents());
 }
 
 int BoundaryComponentModel::columnCount(const QModelIndex& /* unused parent*/) const {
@@ -573,7 +572,7 @@ int BoundaryComponentModel::columnCount(const QModelIndex& /* unused parent*/) c
 QVariant BoundaryComponentModel::data(const QModelIndex& index,
         int role) const {
     if (role == Qt::DisplayRole) {
-        NBoundaryComponent* item = tri->getBoundaryComponent(index.row());
+        NBoundaryComponent* item = tri->boundaryComponent(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -584,7 +583,7 @@ QVariant BoundaryComponentModel::data(const QModelIndex& index,
                 // (by a parity argument).
                 return (item->isIdeal() ?
                     tr("Degree %1").arg(item->getVertex(0)->getDegree()) :
-                    tr("%1 triangles").arg(item->getNumberOfTriangles()));
+                    tr("%1 triangles").arg(item->countTriangles()));
             case 3:
                 if (item->isIdeal()) {
                     NVertex* v = item->getVertex(0);
@@ -596,8 +595,7 @@ QVariant BoundaryComponentModel::data(const QModelIndex& index,
                     return tr("Vertex %1 = ").arg(v->index()) + ans;
                 } else {
                     QString ans;
-                    for (unsigned long i = 0;
-                            i < item->getNumberOfTriangles(); ++i) {
+                    for (unsigned long i = 0; i < item->countTriangles(); ++i) {
                         const NTriangleEmbedding& emb =
                             item->getTriangle(i)->front();
                         appendToList(ans, QString("%1 (%2)").
@@ -654,7 +652,7 @@ QString BoundaryComponentModel::toolTipForCol(int column) {
 }
 
 QString Dim2VertexModel::caption() const {
-    return tr("Vertices (%1)").arg(tri->getPacketLabel().c_str());
+    return tr("Vertices (%1)").arg(tri->label().c_str());
 }
 
 QString Dim2VertexModel::overview() const {
@@ -671,7 +669,7 @@ QString Dim2VertexModel::overview() const {
 int Dim2VertexModel::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
-    return (parent.isValid() ? 0 : tri->getNumberOfVertices());
+    return (parent.isValid() ? 0 : tri->countVertices());
 }
 
 int Dim2VertexModel::columnCount(const QModelIndex& /* unused parent*/) const {
@@ -742,7 +740,7 @@ QString Dim2VertexModel::toolTipForCol(int column) {
 }
 
 QString Dim2EdgeModel::caption() const {
-    return tr("Edges (%1)").arg(tri->getPacketLabel().c_str());
+    return tr("Edges (%1)").arg(tri->label().c_str());
 }
 
 QString Dim2EdgeModel::overview() const {
@@ -759,7 +757,7 @@ QString Dim2EdgeModel::overview() const {
 int Dim2EdgeModel::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
-    return (parent.isValid() ? 0 : tri->getNumberOfEdges());
+    return (parent.isValid() ? 0 : tri->countEdges());
 }
 
 int Dim2EdgeModel::columnCount(const QModelIndex& /* unused parent*/) const {
@@ -829,7 +827,7 @@ QString Dim2EdgeModel::toolTipForCol(int column) {
 }
 
 QString Dim2ComponentModel::caption() const {
-    return tr("Components (%1)").arg(tri->getPacketLabel().c_str());
+    return tr("Components (%1)").arg(tri->label().c_str());
 }
 
 QString Dim2ComponentModel::overview() const {
@@ -845,7 +843,7 @@ QString Dim2ComponentModel::overview() const {
 int Dim2ComponentModel::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
-    return (parent.isValid() ? 0 : tri->getNumberOfComponents());
+    return (parent.isValid() ? 0 : tri->countComponents());
 }
 
 int Dim2ComponentModel::columnCount(const QModelIndex& /* unused */) const {
@@ -854,17 +852,17 @@ int Dim2ComponentModel::columnCount(const QModelIndex& /* unused */) const {
 
 QVariant Dim2ComponentModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        Dim2Component* item = tri->getComponent(index.row());
+        Dim2Component* item = tri->component(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
             case 1:
                 return (item->isOrientable() ? tr("Orbl") : tr("Non-orbl"));
             case 2:
-                return static_cast<unsigned>(item->getNumberOfTriangles());
+                return static_cast<unsigned>(item->size());
             case 3:
                 QString ans;
-                for (unsigned long i = 0; i < item->getNumberOfTriangles(); ++i)
+                for (unsigned long i = 0; i < item->size(); ++i)
                     appendToList(ans, QString::number(
                         item->getTriangle(i)->index()));
                 return ans;
@@ -910,7 +908,7 @@ QString Dim2ComponentModel::toolTipForCol(int column) {
 }
 
 QString Dim2BoundaryComponentModel::caption() const {
-    return tr("Boundary Components (%1)").arg(tri->getPacketLabel().c_str());
+    return tr("Boundary Components (%1)").arg(tri->label().c_str());
 }
 
 QString Dim2BoundaryComponentModel::overview() const {
@@ -926,7 +924,7 @@ QString Dim2BoundaryComponentModel::overview() const {
 int Dim2BoundaryComponentModel::rowCount(const QModelIndex& parent) const {
     if (forceEmpty)
         return 0;
-    return (parent.isValid() ? 0 : tri->getNumberOfBoundaryComponents());
+    return (parent.isValid() ? 0 : tri->countBoundaryComponents());
 }
 
 int Dim2BoundaryComponentModel::columnCount(const QModelIndex& /* unused */)
@@ -937,16 +935,16 @@ int Dim2BoundaryComponentModel::columnCount(const QModelIndex& /* unused */)
 QVariant Dim2BoundaryComponentModel::data(const QModelIndex& index,
         int role) const {
     if (role == Qt::DisplayRole) {
-        Dim2BoundaryComponent* item = tri->getBoundaryComponent(index.row());
+        Dim2BoundaryComponent* item = tri->boundaryComponent(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
             case 1:
-                return (item->getNumberOfEdges() == 1 ? tr("1 edge") :
-                    tr("%1 edges").arg(item->getNumberOfEdges()));
+                return (item->countEdges() == 1 ? tr("1 edge") :
+                    tr("%1 edges").arg(item->countEdges()));
             case 2:
                 QString ans;
-                for (unsigned long i = 0; i < item->getNumberOfEdges(); ++i) {
+                for (unsigned long i = 0; i < item->countEdges(); ++i) {
                     const Dim2EdgeEmbedding& emb = item->getEdge(i)->front();
                     appendToList(ans, QString("%1 (%2)").
                         arg(emb.getTriangle()->index()).

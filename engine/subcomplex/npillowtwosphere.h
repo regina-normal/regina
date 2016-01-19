@@ -78,9 +78,9 @@ class REGINA_API NPillowTwoSphere :
         public ShortOutput<NPillowTwoSphere>,
         public boost::noncopyable {
     private:
-        NTriangle* triangle[2];
+        NTriangle* triangle_[2];
             /**< The two triangles whose edges are joined. */
-        NPerm4 triMapping;
+        NPerm4 triMapping_;
             /**< A mapping from vertices (0,1,2) of the first triangle to
                  vertices (0,1,2) of the second triangle describing how the
                  triangle boundaries are joined. */
@@ -100,15 +100,23 @@ class REGINA_API NPillowTwoSphere :
          * this must be either 0 or 1.
          * @return the corresponding triangle.
          */
+        NTriangle* triangle(int index) const;
+        /**
+         * Deprecated routine that returns one of the two triangles whose
+         * boundaries are joined.
+         *
+         * \deprecated This routine has been renamed to triangle().
+         * See the triangle() documentation for further details.
+         */
         NTriangle* getTriangle(int index) const;
         /**
-         * A deprecated alias for getTriangle().
+         * A deprecated alias for triangle().
          *
          * This routine returns one of the two triangles whose boundaries
-         * are joined.  See getTriangle() for further details.
+         * are joined.  See triangle() for further details.
          *
          * \deprecated This routine will be removed in a future version
-         * of Regina.  Please use getTriangle() instead.
+         * of Regina.  Please use triangle() instead.
          *
          * @param index specifies which of the two triangles to return;
          * this must be either 0 or 1.
@@ -127,16 +135,24 @@ class REGINA_API NPillowTwoSphere :
          * @return a permutation describing how the triangle boundaries are
          * joined.
          */
+        NPerm4 triangleMapping() const;
+        /**
+         * Deprecated routine that returns a permutation describing how the
+         * boundaries of the two triangles are joined.
+         *
+         * \deprecated This routine has been renamed to triangleMapping().
+         * See the triangleMapping() documentation for further details.
+         */
         NPerm4 getTriangleMapping() const;
         /**
-         * A deprecated alias for getTriangleMapping().
+         * A deprecated alias for triangleMapping().
          *
          * This routine returns a permutation describing how the boundaries
-         * of the two triangles are joined.  See getTriangleMapping()
+         * of the two triangles are joined.  See triangleMapping()
          * for further details.
          *
          * \deprecated This routine will be removed in a future version
-         * of Regina.  Please use getTriangleMapping() instead.
+         * of Regina.  Please use triangleMapping() instead.
          *
          * @return a permutation describing how the triangle boundaries are
          * joined.
@@ -181,17 +197,23 @@ class REGINA_API NPillowTwoSphere :
 
 inline NPillowTwoSphere::NPillowTwoSphere() {
 }
+inline NTriangle* NPillowTwoSphere::triangle(int index) const {
+    return triangle_[index];
+}
 inline NTriangle* NPillowTwoSphere::getTriangle(int index) const {
-    return triangle[index];
+    return triangle_[index];
 }
 inline NTriangle* NPillowTwoSphere::getFace(int index) const {
-    return triangle[index];
+    return triangle_[index];
+}
+inline NPerm4 NPillowTwoSphere::triangleMapping() const {
+    return triMapping_;
 }
 inline NPerm4 NPillowTwoSphere::getTriangleMapping() const {
-    return triMapping;
+    return triMapping_;
 }
 inline NPerm4 NPillowTwoSphere::getFaceMapping() const {
-    return triMapping;
+    return triMapping_;
 }
 inline void NPillowTwoSphere::writeTextShort(std::ostream& out) const {
     out << "Pillow 2-sphere";

@@ -110,23 +110,23 @@ class NPerm2Test : public CppUnit::TestFixture {
 
         bool looksLikeIdentity(const NPerm2& p) {
             return (p.isIdentity() && p == NPerm2() &&
-                p.getPermCode() == 0 && p.str() == "01");
+                p.permCode() == 0 && p.str() == "01");
         }
 
         bool looksEqual(const NPerm2& p, const NPerm2& q) {
             return (p == q && (! (p != q)) && p.str() == q.str() &&
-                p.getPermCode() == q.getPermCode());
+                p.permCode() == q.permCode());
         }
 
         bool looksEqual(const NPerm2& p, const NPerm2& q,
                 const std::string& qStr) {
             return (p == q && (! (p != q)) && p.str() == q.str() &&
-                p.getPermCode() == q.getPermCode() && p.str() == qStr);
+                p.permCode() == q.permCode() && p.str() == qStr);
         }
 
         bool looksDistinct(const NPerm2& p, const NPerm2& q) {
             return (p != q && (! (p == q)) && p.str() != q.str() &&
-                p.getPermCode() != q.getPermCode());
+                p.permCode() != q.permCode());
         }
 
         int expectedSign(const NPerm2& p) {
@@ -148,7 +148,7 @@ class NPerm2Test : public CppUnit::TestFixture {
             std::ostringstream name;
             name << a << (1-a);
 
-            NPerm2 p1 = NPerm2::fromPermCode(p.getPermCode());
+            NPerm2 p1 = NPerm2::fromPermCode(p.permCode());
             if (! looksEqual(p1, p, name.str())) {
                 std::ostringstream msg;
                 msg << "The internal code constructor fails for "
@@ -204,15 +204,15 @@ class NPerm2Test : public CppUnit::TestFixture {
             }
 
             NPerm2 p5(1, 0);
-            p5.setPermCode(p3.getPermCode());
+            p5.setPermCode(p3.permCode());
             if (! looksEqual(p5, p, name.str())) {
                 std::ostringstream msg;
-                msg << "The setPermCode() / getPermCode() routines fail for "
+                msg << "The setPermCode() / permCode() routines fail for "
                     "the permutation " << name.str() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! NPerm2::isPermCode(p.getPermCode())) {
+            if (! NPerm2::isPermCode(p.permCode())) {
                 std::ostringstream msg;
                 msg << "Routine isPermCode() suggests that the permutation "
                     << name.str() << " has an invalid permutation code.";
@@ -352,7 +352,7 @@ class NPerm2Test : public CppUnit::TestFixture {
             }
 
             // An indirect test (using NPerm4 to verify).
-            int a, b, c, d, e, f;
+            int a, d;
             for (a = 0; a < 2; ++a) {
                 NPerm2 x = NPerm2::S2[a]; // 0 -> a, 1 -> 1-a.
 

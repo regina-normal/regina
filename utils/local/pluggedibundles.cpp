@@ -83,7 +83,7 @@ void usage(const char* progName, const std::string& error = std::string()) {
 }
 
 void process(NTriangulation* t) {
-    std::cout << t->getPacketLabel();
+    std::cout << t->label();
     totTris++;
 
     NStandardTriangulation* s =
@@ -139,11 +139,10 @@ int main(int argc, char* argv[]) {
 
     // Process the packets.
     for (NPacket* p = tree; p; p = p->nextTreePacket())
-        if (p->getPacketType() == NTriangulation::packetType)
+        if (p->type() == PACKET_TRIANGULATION)
             process(static_cast<NTriangulation*>(p));
-        else if (outputContainers &&
-                p->getPacketType() == NContainer::packetType)
-            std::cout << "----- " << p->getPacketLabel() << " -----"
+        else if (outputContainers && p->type() == PACKET_CONTAINER)
+            std::cout << "----- " << p->label() << " -----"
                 << std::endl;
 
     // Write statistics and clean up.

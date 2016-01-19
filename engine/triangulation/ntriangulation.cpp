@@ -57,7 +57,7 @@ Triangulation<3>::Triangulation(const std::string& description) {
         setPacketLabel(description);
     } else if ((attempt = fromSnapPea(description))) {
         cloneFrom(*attempt);
-        setPacketLabel(attempt->getPacketLabel());
+        setPacketLabel(attempt->label());
     }
 
     delete attempt;
@@ -93,9 +93,9 @@ void Triangulation<3>::writeTextLong(std::ostream& out) const {
 
     out << "Size of the skeleton:\n";
     out << "  Tetrahedra: " << simplices_.size() << '\n';
-    out << "  Triangles: " << getNumberOfTriangles() << '\n';
-    out << "  Edges: " << getNumberOfEdges() << '\n';
-    out << "  Vertices: " << getNumberOfVertices() << '\n';
+    out << "  Triangles: " << countTriangles() << '\n';
+    out << "  Edges: " << countEdges() << '\n';
+    out << "  Vertices: " << countVertices() << '\n';
     out << '\n';
 
     NTetrahedron* tet;
@@ -187,7 +187,7 @@ void Triangulation<3>::writeXMLPacketData(std::ostream& out) const {
             if (adjTet) {
                 out << tetrahedronIndex(adjTet) << ' '
                     << static_cast<int>((*it)->
-                        adjacentGluing(face).getPermCode())
+                        adjacentGluing(face).permCode())
                     << ' ';
             } else
                 out << "-1 -1 ";
@@ -347,26 +347,26 @@ NTriangulation* Triangulation<3>::enterTextTriangulation(std::istream& in,
     return triang;
 }
 
-long Triangulation<3>::getEulerCharManifold() const {
+long Triangulation<3>::eulerCharManifold() const {
     // Begin with V - E + F - T.
-    // This call to getEulerCharTri() also ensures that the skeleton has
+    // This call to eulerCharTri() also ensures that the skeleton has
     // been calculated.
-    long ans = getEulerCharTri();
+    long ans = eulerCharTri();
 
     // Truncate any ideal vertices.
     for (BoundaryComponentIterator it = boundaryComponents_.begin();
             it != boundaryComponents_.end(); ++it)
         if ((*it)->isIdeal())
-            ans += (*it)->getEulerChar() - 1;
+            ans += (*it)->eulerChar() - 1;
 
     // If we have an invalid triangulation, we need to locate non-standard
     // boundary vertices and invalid edges, and truncate those unwanted bits
     // also.
     if (! valid_) {
-        for (NVertex* v : getVertices())
-            if (v->getLink() == NVertex::NON_STANDARD_BDRY)
-                ans += v->getLinkEulerChar() - 1;
-        for (NEdge* e : getEdges())
+        for (NVertex* v : vertices())
+            if (v->link() == NVertex::NON_STANDARD_BDRY)
+                ans += v->linkEulerChar() - 1;
+        for (NEdge* e : edges())
             if (! e->isValid())
                 ++ans;
     }
@@ -463,10 +463,10 @@ void Triangulation<3>::snapPea(std::ostream& out) const {
 
     // Write header information.
     out << "% Triangulation\n";
-    if (getPacketLabel().empty())
+    if (label().empty())
         out << "Regina_Triangulation\n";
     else
-        out << stringToToken(getPacketLabel()) << '\n';
+        out << stringToToken(label()) << '\n';
 
     // Write general details.
     out << "not_attempted 0.0\n";
@@ -477,7 +477,7 @@ void Triangulation<3>::snapPea(std::ostream& out) const {
     out << "0 0\n";
 
     // Write tetrahedra.
-    out << getNumberOfTetrahedra() << '\n';
+    out << size() << '\n';
 
     int i, j;
     for (Triangulation<3>::TetrahedronIterator it = getTetrahedra().begin();
@@ -550,7 +550,7 @@ void Triangulation<3>::recogniser(std::ostream& out) const {
     NTriangle* f;
     NTetrahedron* tet;
     NPerm4 vert;
-    for (unsigned i = 0; i < getNumberOfTriangles(); ++i) {
+    for (unsigned i = 0; i < countTriangles(); ++i) {
         f = getTriangle(i);
 
         tet = f->getEmbedding(0).getTetrahedron();
@@ -567,7 +567,7 @@ void Triangulation<3>::recogniser(std::ostream& out) const {
             << ',' << (vert[1] + 1)
             << ',' << (vert[2] + 1) << ')';
 
-        if (i != getNumberOfTriangles() - 1)
+        if (i != countTriangles() - 1)
             out << ',';
         out << std::endl;
     }

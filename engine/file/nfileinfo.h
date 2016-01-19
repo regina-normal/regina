@@ -72,14 +72,14 @@ class REGINA_API NFileInfo :
             /**< Represents a new-style XML data file. */
 
     private:
-        std::string pathname;
+        std::string pathname_;
             /**< The pathname of the data file being described. */
-        int type;
+        int type_;
             /**< The type of data file; this will be one of the file type
                  constants defined in this class. */
-        std::string typeDescription;
+        std::string typeDescription_;
             /**< A human-readable description of the type of data file. */
-        std::string engine;
+        std::string engine_;
             /**< The version of the calculation engine that wrote this file. */
         bool compressed;
             /**< \c true if this file is stored in compressed format,
@@ -100,6 +100,14 @@ class REGINA_API NFileInfo :
          *
          * @return the pathname.
          */
+        const std::string& pathname() const;
+        /**
+         * Deprecated routine that returns the pathname of the data file being
+         * described.
+         *
+         * \deprecated This routine has been renamed to pathname().
+         * See the pathname() routine for further details.
+         */
         const std::string& getPathname() const;
         /**
          * Returns the type of data file.  The type will be given as one
@@ -107,17 +115,40 @@ class REGINA_API NFileInfo :
          *
          * @return the type of data file.
          */
+        int type() const;
+        /**
+         * Deprecated routine that returns the type of data file.
+         *
+         * \deprecated This routine has been renamed to type().
+         * See the type() documentation for further details.
+         */
         int getType() const;
         /**
          * Returns a human-readable description of the type of data file.
          *
          * @return a description of the type of data file.
          */
+        const std::string& typeDescription() const;
+        /**
+         * Deprecated routine that returns a human-readable description of the
+         * type of data file.
+         *
+         * \deprecated This routine has been renamed to typeDescription().
+         * See the typeDescription() documentation for further details.
+         */
         const std::string& getTypeDescription() const;
         /**
          * Returns the version of the calculation engine that wrote this file.
          *
          * @return the engine version for this file.
+         */
+        const std::string& engine() const;
+        /**
+         * Deprecated routine that returns the version of the calculation
+         * engine that wrote this file.
+         *
+         * \deprecated This routine has been renamed to engine().
+         * See the engine() documentation for further details.
          */
         const std::string& getEngine() const;
         /**
@@ -141,7 +172,7 @@ class REGINA_API NFileInfo :
          * \i18n This routine makes no assumptions about the
          * \ref i18n "character encoding" used in the given path \e name,
          * and simply passes it through unchanged to low-level C/C++ file I/O
-         * routines.  If an NFileInfo structure is returned, its getPathname()
+         * routines.  If an NFileInfo structure is returned, its pathname()
          * routine will use the same encoding that is passed here.
          *
          * @param idPathname the pathname of the data file to be examined.
@@ -184,20 +215,36 @@ class REGINA_API NFileInfo :
 inline NFileInfo::NFileInfo() {
 }
 
+inline const std::string& NFileInfo::pathname() const {
+    return pathname_;
+}
+
 inline const std::string& NFileInfo::getPathname() const {
-    return pathname;
+    return pathname_;
+}
+
+inline int NFileInfo::type() const {
+    return type_;
 }
 
 inline int NFileInfo::getType() const {
-    return type;
+    return type_;
+}
+
+inline const std::string& NFileInfo::typeDescription() const {
+    return typeDescription_;
 }
 
 inline const std::string& NFileInfo::getTypeDescription() const {
-    return typeDescription;
+    return typeDescription_;
+}
+
+inline const std::string& NFileInfo::engine() const {
+    return engine_;
 }
 
 inline const std::string& NFileInfo::getEngine() const {
-    return engine;
+    return engine_;
 }
 
 inline bool NFileInfo::isCompressed() const {

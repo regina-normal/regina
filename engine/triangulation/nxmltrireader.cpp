@@ -78,7 +78,7 @@ namespace {
                         continue;
 
                     if (tetIndex < 0 || tetIndex >=
-                            static_cast<int>(tri->getNumberOfTetrahedra()))
+                            static_cast<int>(tri->size()))
                         continue;
                     if (! NPerm4::isPermCode(
                             static_cast<unsigned char>(permCode)))
@@ -125,7 +125,7 @@ namespace {
                     const std::string& subTagName,
                     const regina::xml::XMLPropertyDict&) {
                 if (subTagName == "tet") {
-                    if (readTets < tri->getNumberOfTetrahedra())
+                    if (readTets < tri->size())
                         return new NTetrahedronReader(tri, readTets++);
                     else
                         return new NXMLElementReader();
@@ -162,7 +162,7 @@ namespace {
                 if (subTagName == "abeliangroup") {
                     NAbelianGroup* ans =
                         dynamic_cast<NXMLAbelianGroupReader*>(subReader)->
-                        getGroup();
+                        group();
                     if (ans)
                         prop = ans;
                 }
@@ -198,7 +198,7 @@ namespace {
                 if (subTagName == "group") {
                     NGroupPresentation* ans =
                         dynamic_cast<NXMLGroupPresentationReader*>(subReader)->
-                        getGroup();
+                        group();
                     if (ans)
                         prop = ans;
                 }
@@ -263,7 +263,7 @@ void NXMLTriangulationReader::endContentSubElement(const std::string&,
         NXMLElementReader*) {
 }
 
-NXMLPacketReader* NTriangulation::getXMLReader(NPacket*,
+NXMLPacketReader* NTriangulation::xmlReader(NPacket*,
         NXMLTreeResolver& resolver) {
     return new NXMLTriangulationReader(resolver);
 }

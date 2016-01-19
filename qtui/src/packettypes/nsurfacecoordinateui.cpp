@@ -89,7 +89,7 @@ void SurfaceModel::rebuild(regina::NormalCoords coordSystem,
     else {
         realIndex = new unsigned[surfaces_->size()];
         for (unsigned i = 0; i < surfaces_->size(); ++i)
-            if ((! filter) || filter->accept(*surfaces_->getSurface(i)))
+            if ((! filter) || filter->accept(*surfaces_->surface(i)))
                 realIndex[nFiltered++] = i;
     }
 
@@ -119,23 +119,23 @@ int SurfaceModel::rowCount(const QModelIndex& /* unused parent*/) const {
 
 int SurfaceModel::columnCount(const QModelIndex& /* unused parent*/) const {
     return propertyColCount() +
-        Coordinates::numColumns(coordSystem_, surfaces_->getTriangulation());
+        Coordinates::numColumns(coordSystem_, surfaces_->triangulation());
 }
 
 QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
     unsigned surfaceIndex = realIndex[index.row()];
 
     if (role == Qt::DisplayRole) {
-        const regina::NNormalSurface* s = surfaces_->getSurface(surfaceIndex);
+        const regina::NNormalSurface* s = surfaces_->surface(surfaceIndex);
 
         if (index.column() == 0)
             return tr("%1.").arg(surfaceIndex);
         else if (index.column() == 1)
-            return s->getName().c_str();
+            return s->name().c_str();
         else if (index.column() == 2) {
             if (! s->isCompact())
                 return QVariant();
-            return s->getEulerChar().stringValue().c_str();
+            return s->eulerChar().stringValue().c_str();
         } else if (surfaces_->isEmbeddedOnly() && index.column() == 3) {
             if (! s->isCompact())
                 return QVariant();
@@ -178,18 +178,15 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
 
             if ((v = s->isVertexLink()))
                 return tr("Vertex %1").arg(
-                    surfaces_->getTriangulation()->vertexIndex(v));
+                    surfaces_->triangulation()->vertexIndex(v));
             else if ((e = s->isThinEdgeLink()).first) {
                 if (e.second)
                     return tr("Thin edges %1, %2").
-                        arg(surfaces_->getTriangulation()->edgeIndex(
-                            e.first)).
-                        arg(surfaces_->getTriangulation()->edgeIndex(
-                            e.second));
+                        arg(surfaces_->triangulation()->edgeIndex(e.first)).
+                        arg(surfaces_->triangulation()->edgeIndex(e.second));
                 else
                     return tr("Thin edge %1").
-                        arg(surfaces_->getTriangulation()->edgeIndex(
-                            e.first));
+                        arg(surfaces_->triangulation()->edgeIndex(e.first));
             } else
                 return QVariant();
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 7) ||
@@ -204,12 +201,11 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         } else if (surfaces_->allowsAlmostNormal() &&
                 ((surfaces_->isEmbeddedOnly() && index.column() == 8) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 6))) {
-            regina::NDiscType oct = s->getOctPosition();
+            regina::NDiscType oct = s->octPosition();
             if (oct == regina::NDiscType::NONE)
                 return QVariant();
             else {
-                regina::NLargeInteger tot = s->getOctCoord(
-                    oct.tetIndex, oct.type);
+                regina::NLargeInteger tot = s->octs(oct.tetIndex, oct.type);
                 if (tot == 1) {
                     return tr("K%1: %2 (1 oct)").
                         arg(oct.tetIndex).
@@ -234,7 +230,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         }
     } else if (role == Qt::EditRole) {
         if (index.column() == 1)
-            return surfaces_->getSurface(surfaceIndex)->getName().c_str();
+            return surfaces_->surface(surfaceIndex)->name().c_str();
         else
             return QVariant();
     } else if (role == Qt::ToolTipRole) {
@@ -244,9 +240,9 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
             return propertyColDesc(index.column());
         else
             return Coordinates::columnDesc(coordSystem_,
-                index.column() - propertyCols, this, surfaces_->getTriangulation());
+                index.column() - propertyCols, this, surfaces_->triangulation());
     } else if (role == Qt::ForegroundRole) {
-        const regina::NNormalSurface* s = surfaces_->getSurface(surfaceIndex);
+        const regina::NNormalSurface* s = surfaces_->surface(surfaceIndex);
 
         if (surfaces_->isEmbeddedOnly() && index.column() == 3) {
             if (! s->isCompact())
@@ -275,9 +271,9 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         } else if (surfaces_->allowsAlmostNormal() &&
                 ((surfaces_->isEmbeddedOnly() && index.column() == 8) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 6))) {
-            regina::NDiscType oct = s->getOctPosition();
+            regina::NDiscType oct = s->octPosition();
             if (oct != regina::NDiscType::NONE) {
-                if (s->getOctCoord(oct.tetIndex, oct.type) > 1)
+                if (s->octs(oct.tetIndex, oct.type) > 1)
                     return QColor(Qt::darkRed);
                 else
                     return QColor(Qt::darkGreen);
@@ -321,7 +317,7 @@ QVariant SurfaceModel::headerData(int section, Qt::Orientation orientation,
             return propertyColName(section);
         else
             return Coordinates::columnName(coordSystem_, section - propCols,
-                surfaces_->getTriangulation());
+                surfaces_->triangulation());
     } else if (role == Qt::ToolTipRole) {
         int propertyCols = propertyColCount();
 
@@ -329,7 +325,7 @@ QVariant SurfaceModel::headerData(int section, Qt::Orientation orientation,
             return propertyColDesc(section);
         else
             return Coordinates::columnDesc(coordSystem_, section - propertyCols,
-                this, surfaces_->getTriangulation());
+                this, surfaces_->triangulation());
     } else if (role == Qt::TextAlignmentRole)
         return Qt::AlignCenter;
     else
@@ -351,7 +347,7 @@ bool SurfaceModel::setData(const QModelIndex& index, const QVariant& value,
         // belongs to).  Fire it here instead.
         regina::NPacket::ChangeEventSpan span(surfaces_);
         const_cast<regina::NNormalSurface*>(
-            surfaces_->getSurface(realIndex[index.row()]))->
+            surfaces_->surface(realIndex[index.row()]))->
             setName(value.toString().toUtf8().constData());
         return true;
     } else
@@ -464,7 +460,7 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
     // Set up the filter selector.
     label = new QLabel(tr("Apply filter:"));
     hdrLayout->addWidget(label);
-    filter = new PacketChooser(surfaces->getTreeMatriarch(),
+    filter = new PacketChooser(surfaces->root(),
         new SingleTypeFilter<regina::NSurfaceFilter>(),
         PacketChooser::ROOT_AS_PACKET, true, 0, ui);
     filter->setAutoUpdate(true);
@@ -641,7 +637,7 @@ void NSurfaceCoordinateUI::cutAlong() {
     // Be nice and simplify the triangulation, which could be very large.
     regina::NTriangulation* ans = toCutAlong->cutAlong();
     ans->intelligentSimplify();
-    ans->setPacketLabel(surfaces->getTriangulation()->adornedLabel("Cut"));
+    ans->setPacketLabel(surfaces->triangulation()->adornedLabel("Cut"));
     surfaces->insertChildLast(ans);
 
     enclosingPane->getMainWindow()->packetView(ans, true, true);
@@ -665,7 +661,7 @@ void NSurfaceCoordinateUI::crush() {
 
     // Go ahead and crush it.
     regina::NTriangulation* ans = toCrush->crush();
-    ans->setPacketLabel(surfaces->getTriangulation()->adornedLabel("Crushed"));
+    ans->setPacketLabel(surfaces->triangulation()->adornedLabel("Crushed"));
     surfaces->insertChildLast(ans);
 
     enclosingPane->getMainWindow()->packetView(ans, true, true);

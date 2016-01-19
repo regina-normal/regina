@@ -86,13 +86,13 @@ namespace {
      */
     void writePropData(std::ostream& out, const NNormalSurface* s, int fields) {
         if (fields & surfaceExportName) {
-            if (s->getName().length() > 0)
-                writeCSVQuotedString(out, s->getName().c_str());
+            if (! s->name().empty())
+                writeCSVQuotedString(out, s->name().c_str());
             out << ',';
         }
         if (fields & surfaceExportEuler) {
             if (s->isCompact())
-                out << s->getEulerChar();
+                out << s->eulerChar();
             out << ',';
         }
         if (fields & surfaceExportOrient) {
@@ -128,7 +128,7 @@ namespace {
         if (fields & surfaceExportLink) {
             // Mirror the information that gets shown in the Link column
             // in the GUI.
-            const NTriangulation* t = s->getTriangulation();
+            const NTriangulation* t = s->triangulation();
             const NVertex* v = s->isVertexLink();
             if (v)
                 out << "\"Vertex " << t->vertexIndex(v) << "\"";
@@ -164,7 +164,7 @@ bool NNormalSurfaceList::saveCSVStandard(const char* filename,
     if (! out)
         return false;
 
-    unsigned long n = getTriangulation()->getNumberOfTetrahedra();
+    unsigned long n = triangulation()->size();
 
     unsigned long i, j;
 
@@ -199,18 +199,18 @@ bool NNormalSurfaceList::saveCSVStandard(const char* filename,
     unsigned long tot = size();
     const NNormalSurface* s;
     for (i = 0; i < tot; ++i) {
-        s = getSurface(i);
+        s = surface(i);
 
         writePropData(out, s, additionalFields);
 
         for (j = 0; j < n; ++j) {
-            out << s->getTriangleCoord(j, 0) << ',';
-            out << s->getTriangleCoord(j, 1) << ',';
-            out << s->getTriangleCoord(j, 2) << ',';
-            out << s->getTriangleCoord(j, 3) << ',';
-            out << s->getQuadCoord(j, 0) << ',';
-            out << s->getQuadCoord(j, 1) << ',';
-            out << s->getQuadCoord(j, 2);
+            out << s->triangles(j, 0) << ',';
+            out << s->triangles(j, 1) << ',';
+            out << s->triangles(j, 2) << ',';
+            out << s->triangles(j, 3) << ',';
+            out << s->quads(j, 0) << ',';
+            out << s->quads(j, 1) << ',';
+            out << s->quads(j, 2);
 
             if (! allowsAlmostNormal()) {
                 if (j < n - 1)
@@ -219,9 +219,9 @@ bool NNormalSurfaceList::saveCSVStandard(const char* filename,
             }
             out << ',';
 
-            out << s->getOctCoord(j, 0) << ',';
-            out << s->getOctCoord(j, 1) << ',';
-            out << s->getOctCoord(j, 2);
+            out << s->octs(j, 0) << ',';
+            out << s->octs(j, 1) << ',';
+            out << s->octs(j, 2);
 
             if (j < n - 1)
                 out << ',';
@@ -239,7 +239,7 @@ bool NNormalSurfaceList::saveCSVEdgeWeight(const char* filename,
     if (! out)
         return false;
 
-    unsigned long n = getTriangulation()->getNumberOfEdges();
+    unsigned long n = triangulation()->countEdges();
 
     unsigned long i, j;
 
@@ -257,12 +257,12 @@ bool NNormalSurfaceList::saveCSVEdgeWeight(const char* filename,
     unsigned long tot = size();
     const NNormalSurface* s;
     for (i = 0; i < tot; ++i) {
-        s = getSurface(i);
+        s = surface(i);
 
         writePropData(out, s, additionalFields);
 
         for (j = 0; j < n; ++j) {
-            out << s->getEdgeWeight(j);
+            out << s->edgeWeight(j);
 
             if (j < n - 1)
                 out << ',';

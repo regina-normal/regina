@@ -93,6 +93,14 @@ class REGINA_API Face<3, 1> : public detail::FaceBase<3, 1>,
          * @return the boundary component containing this edge, or 0 if this
          * edge does not lie entirely within the boundary of the triangulation.
          */
+        NBoundaryComponent* boundaryComponent() const;
+        /**
+         * Deprecated routine that returns the boundary component of the
+         * triangulation to which this edge belongs.
+         *
+         * \deprecated This routine has been renamed as boundaryComponent().
+         * See the boundaryComponent() documentation for further details.
+         */
         NBoundaryComponent* getBoundaryComponent() const;
 
         /**
@@ -153,6 +161,10 @@ namespace regina {
 inline Face<3, 1>::Face(NComponent* component) :
         detail::FaceBase<3, 1>(component),
         boundaryComponent_(0) {
+}
+
+inline NBoundaryComponent* Face<3, 1>::boundaryComponent() const {
+    return boundaryComponent_;
 }
 
 inline NBoundaryComponent* Face<3, 1>::getBoundaryComponent() const {

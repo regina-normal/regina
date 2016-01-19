@@ -83,15 +83,14 @@ void dumpNoPacket(std::ostream& out, const std::string& packetLabel,
 void dumpPacketHeader(std::ostream& out, NPacket* p) {
     out << separator << '\n';
     out << "*\n";
-    out << "* Label: " << p->getHumanLabel() << '\n';
-    out << "* Type: " << p->getPacketTypeName() << '\n';
-    out << "* Parent: " << (p->getTreeParent() ?
-        p->getTreeParent()->getHumanLabel() : "(none)") << '\n';
+    out << "* Label: " << p->humanLabel() << '\n';
+    out << "* Type: " << p->typeName() << '\n';
+    out << "* Parent: " << (p->parent() ?
+        p->parent()->humanLabel() : "(none)") << '\n';
     if (p->hasTags()) {
         out << "* Tags: ";
-        const std::set<std::string>& tags = p->getTags();
-        for (std::set<std::string>::const_iterator it = tags.begin();
-                it != tags.end(); it++) {
+        const std::set<std::string>& tags = p->tags();
+        for (auto it = tags.begin(); it != tags.end(); it++) {
             if (it != tags.begin())
                 out << ", ";
             out << *it;
@@ -104,7 +103,7 @@ void dumpPacketHeader(std::ostream& out, NPacket* p) {
 
 void dumpPacket(std::ostream& out, NPacket* p, char dumpOpt) {
     if (dumpOpt == 'l')
-        out << p->getFullName() << '\n';
+        out << p->fullName() << '\n';
     else if (dumpOpt == 'f') {
         dumpPacketHeader(out, p);
         out << '\n';
@@ -195,7 +194,7 @@ int main(int argc, char* argv[]) {
     if (count) {
         if (dumpOpt != 'n')
             out << '\n';
-        out << tree->getTotalTreeSize() << " total packets in file.\n";
+        out << tree->totalTreeSize() << " total packets in file.\n";
     }
 
     delete tree;

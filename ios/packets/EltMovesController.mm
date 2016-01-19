@@ -123,16 +123,16 @@
 - (void)reloadMoves
 {
     self.fVector.text = [NSString stringWithFormat:@"f-vector: (%ld, %ld, %ld, %ld)",
-                         self.packet->getNumberOfFaces<0>(),
-                         self.packet->getNumberOfFaces<1>(),
-                         self.packet->getNumberOfFaces<2>(),
-                         self.packet->getNumberOfFaces<3>()];
+                         self.packet->countFaces<0>(),
+                         self.packet->countFaces<1>(),
+                         self.packet->countFaces<2>(),
+                         self.packet->size()];
 
     unsigned long i;
     int arg;
 
     options32 = [[NSMutableArray alloc] init];
-    for (i = 0; i < self.packet->getNumberOfEdges(); ++i)
+    for (i = 0; i < self.packet->countEdges(); ++i)
         if (self.packet->threeTwoMove(self.packet->getEdge(i), true, false))
             [options32 addObject:@(i)];
     if (options32.count > 0) {
@@ -148,7 +148,7 @@
     }
 
     options23 = [[NSMutableArray alloc] init];
-    for (i = 0; i < self.packet->getNumberOfTriangles(); ++i)
+    for (i = 0; i < self.packet->countTriangles(); ++i)
         if (self.packet->twoThreeMove(self.packet->getTriangle(i), true, false))
             [options23 addObject:@(i)];
     if (options23.count > 0) {
@@ -164,7 +164,7 @@
     }
 
     options14 = [[NSMutableArray alloc] init];
-    for (i = 0; i < self.packet->getNumberOfTetrahedra(); ++i)
+    for (i = 0; i < self.packet->size(); ++i)
         if (self.packet->oneFourMove(self.packet->getTetrahedron(i), true, false))
             [options14 addObject:@(i)];
     if (options14.count > 0) {
@@ -180,7 +180,7 @@
     }
 
     options44 = [[NSMutableArray alloc] init];
-    for (i = 0; i < self.packet->getNumberOfEdges(); ++i)
+    for (i = 0; i < self.packet->countEdges(); ++i)
         for (arg = 0; arg < 2; ++arg)
             if (self.packet->fourFourMove(self.packet->getEdge(i), arg, true, false))
                 [options44 addObject:[[EdgeArg alloc] init:i arg:arg]];
@@ -197,7 +197,7 @@
     }
 
     options20Edge = [[NSMutableArray alloc] init];
-    for (i = 0; i < self.packet->getNumberOfEdges(); ++i)
+    for (i = 0; i < self.packet->countEdges(); ++i)
         if (self.packet->twoZeroMove(self.packet->getEdge(i), true, false))
             [options20Edge addObject:@(i)];
     if (options20Edge.count > 0) {
@@ -213,7 +213,7 @@
     }
 
     options20Vtx = [[NSMutableArray alloc] init];
-    for (i = 0; i < self.packet->getNumberOfVertices(); ++i)
+    for (i = 0; i < self.packet->countVertices(); ++i)
         if (self.packet->twoZeroMove(self.packet->getVertex(i), true, false))
             [options20Vtx addObject:@(i)];
     if (options20Vtx.count > 0) {
@@ -229,7 +229,7 @@
     }
 
     options21 = [[NSMutableArray alloc] init];
-    for (i = 0; i < self.packet->getNumberOfEdges(); ++i)
+    for (i = 0; i < self.packet->countEdges(); ++i)
         for (arg = 0; arg < 2; ++arg)
             if (self.packet->twoOneMove(self.packet->getEdge(i), arg, true, false))
                 [options21 addObject:[[EdgeArg alloc] init:i arg:arg]];
@@ -246,7 +246,7 @@
     }
 
     optionsOpenBook = [[NSMutableArray alloc] init];
-    for (i = 0; i < self.packet->getNumberOfTriangles(); ++i)
+    for (i = 0; i < self.packet->countTriangles(); ++i)
         if (self.packet->openBook(self.packet->getTriangle(i), true, false))
             [optionsOpenBook addObject:@(i)];
     if (optionsOpenBook.count > 0) {
@@ -262,7 +262,7 @@
     }
 
     optionsCloseBook = [[NSMutableArray alloc] init];
-    for (i = 0; i < self.packet->getNumberOfEdges(); ++i)
+    for (i = 0; i < self.packet->countEdges(); ++i)
         if (self.packet->closeBook(self.packet->getEdge(i), true, false))
             [optionsCloseBook addObject:@(i)];
     if (optionsCloseBook.count > 0) {
@@ -278,7 +278,7 @@
     }
 
     optionsShell = [[NSMutableArray alloc] init];
-    for (i = 0; i < self.packet->getNumberOfTetrahedra(); ++i)
+    for (i = 0; i < self.packet->size(); ++i)
         if (self.packet->shellBoundary(self.packet->getTetrahedron(i), true, false))
             [optionsShell addObject:@(i)];
     if (optionsShell.count > 0) {
@@ -294,7 +294,7 @@
     }
 
     optionsCollapseEdge = [[NSMutableArray alloc] init];
-    for (i = 0; i < self.packet->getNumberOfEdges(); ++i)
+    for (i = 0; i < self.packet->countEdges(); ++i)
         if (self.packet->collapseEdge(self.packet->getEdge(i), true, false))
             [optionsCollapseEdge addObject:@(i)];
     if (optionsCollapseEdge.count > 0) {

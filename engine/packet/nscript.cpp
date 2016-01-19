@@ -40,33 +40,33 @@
 
 namespace regina {
 
-const std::string& NScript::getVariableName(unsigned long index) const {
+const std::string& NScript::variableName(size_t index) const {
     std::map<std::string, NPacket*>::const_iterator it = variables.begin();
     advance(it, index);
     return (*it).first;
 }
 
-NPacket* NScript::getVariableValue(unsigned long index) const {
+NPacket* NScript::variableValue(size_t index) const {
     std::map<std::string, NPacket*>::const_iterator it = variables.begin();
     advance(it, index);
     return (*it).second;
 }
 
-NPacket* NScript::getVariableValue(const std::string& name) const {
+NPacket* NScript::variableValue(const std::string& name) const {
     std::map<std::string, NPacket*>::const_iterator it = variables.find(name);
     if (it == variables.end())
         return 0;
     return (*it).second;
 }
 
-long NScript::getVariableIndex(const std::string& name) const {
+long NScript::variableIndex(const std::string& name) const {
     std::map<std::string, NPacket*>::const_iterator it = variables.find(name);
     if (it == variables.end())
         return -1;
     return distance(variables.begin(), it);
 }
 
-void NScript::setVariableName(unsigned long index, const std::string& name) {
+void NScript::setVariableName(size_t index, const std::string& name) {
     std::map<std::string, NPacket*>::iterator it = variables.begin();
     advance(it, index);
 
@@ -80,7 +80,7 @@ void NScript::setVariableName(unsigned long index, const std::string& name) {
     variables.insert(std::make_pair(name, value));
 }
 
-void NScript::setVariableValue(unsigned long index, NPacket* value) {
+void NScript::setVariableValue(size_t index, NPacket* value) {
     std::map<std::string, NPacket*>::iterator it = variables.begin();
     advance(it, index);
 
@@ -108,7 +108,7 @@ void NScript::removeVariable(const std::string& name) {
     variables.erase(it);
 }
 
-void NScript::removeVariable(unsigned long index) {
+void NScript::removeVariable(size_t index) {
     std::map<std::string, NPacket*>::iterator it = variables.begin();
     advance(it, index);
 
@@ -127,17 +127,17 @@ void NScript::writeTextLong(std::ostream& o) const {
                 variables.begin(); vit != variables.end(); vit++) {
             o << "Variable: " << vit->first << " = ";
             if (vit->second)
-                o << vit->second->getPacketLabel() << '\n';
+                o << vit->second->label() << '\n';
             else
                 o << "(null)" << '\n';
         }
     }
-    o << '\n' << text;
+    o << '\n' << text_;
 }
 
 NPacket* NScript::internalClonePacket(NPacket*) const {
     NScript* ans = new NScript();
-    ans->text = text;
+    ans->text_ = text_;
     ans->variables = variables;
     return ans;
 }
@@ -153,11 +153,11 @@ void NScript::writeXMLPacketData(std::ostream& out) const {
             out << vit->second->internalID();
         out << "\" value=\"";
         if (vit->second)
-            out << xmlEncodeSpecialChars(vit->second->getPacketLabel());
+            out << xmlEncodeSpecialChars(vit->second->label());
         out << "\"/>\n";
     }
 
-    out << "  <text>" << xmlEncodeSpecialChars(text) << "</text>\n";
+    out << "  <text>" << xmlEncodeSpecialChars(text_) << "</text>\n";
 }
 
 void NScript::packetWasRenamed(NPacket*) {

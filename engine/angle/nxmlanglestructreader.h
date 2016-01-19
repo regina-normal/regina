@@ -80,7 +80,7 @@ class REGINA_API NXMLAngleStructureReader : public NXMLElementReader {
          * @return the newly allocated angle structure, or 0 if an error
          * occurred.
          */
-        NAngleStructure* getStructure();
+        NAngleStructure* structure();
 
         virtual void startElement(const std::string& tagName,
             const regina::xml::XMLPropertyDict& tagProps,
@@ -119,12 +119,12 @@ class REGINA_API NXMLAngleStructureListReader : public NXMLPacketReader {
         NXMLAngleStructureListReader(NTriangulation* newTri,
             NXMLTreeResolver& resolver);
 
-        virtual NPacket* getPacket();
+        virtual NPacket* packet() override;
         virtual NXMLElementReader* startContentSubElement(
             const std::string& subTagName,
-            const regina::xml::XMLPropertyDict& subTagProps);
+            const regina::xml::XMLPropertyDict& subTagProps) override;
         virtual void endContentSubElement(const std::string& subTagName,
-            NXMLElementReader* subReader);
+            NXMLElementReader* subReader) override;
 };
 
 /*@}*/
@@ -135,7 +135,7 @@ inline NXMLAngleStructureReader::NXMLAngleStructureReader(
         NTriangulation* newTri) : angles(0), tri(newTri), vecLen(-1) {
 }
 
-inline NAngleStructure* NXMLAngleStructureReader::getStructure() {
+inline NAngleStructure* NXMLAngleStructureReader::structure() {
     return angles;
 }
 
@@ -147,7 +147,7 @@ inline NXMLAngleStructureListReader::NXMLAngleStructureListReader(
         list(new NAngleStructureList(false)), tri(newTri) {
 }
 
-inline NPacket* NXMLAngleStructureListReader::getPacket() {
+inline NPacket* NXMLAngleStructureListReader::packet() {
     return list;
 }
 

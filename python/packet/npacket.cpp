@@ -62,7 +62,7 @@ namespace {
 
     void reparent_check(NPacket& child, NPacket* newParent,
             bool first = false) {
-        if (child.getTreeParent())
+        if (child.parent())
             child.reparent(newParent, first);
         else {
             PyErr_SetString(PyExc_AssertionError,
@@ -92,13 +92,10 @@ namespace {
         return subtree;
     }
 
-    boost::python::list getTags_list(const NPacket* p) {
-        const std::set<std::string>& tags = p->getTags();
-        std::set<std::string>::const_iterator it;
-
+    boost::python::list tags_list(const NPacket* p) {
         boost::python::list ans;
-        for (it = tags.begin(); it != tags.end(); it++)
-            ans.append(*it);
+        for (auto& t : p->tags())
+            ans.append(t);
         return ans;
     }
 }
@@ -106,13 +103,19 @@ namespace {
 void addNPacket() {
     class_<NPacket, boost::noncopyable,
             std::auto_ptr<NPacket> >("NPacket", no_init)
+        .def("type", &NPacket::type)
         .def("getPacketType", &NPacket::getPacketType)
+        .def("typeName", &NPacket::typeName)
         .def("getPacketTypeName", &NPacket::getPacketTypeName)
+        .def("label", &NPacket::label,
+            return_value_policy<return_by_value>())
         .def("getPacketLabel", &NPacket::getPacketLabel,
             return_value_policy<return_by_value>())
+        .def("humanLabel", &NPacket::humanLabel)
         .def("getHumanLabel", &NPacket::getHumanLabel)
         .def("adornedLabel", &NPacket::adornedLabel)
         .def("setPacketLabel", &NPacket::setPacketLabel)
+        .def("fullName", &NPacket::fullName)
         .def("getFullName", &NPacket::getFullName)
         .def("makeUniqueLabel", &NPacket::makeUniqueLabel)
         .def("makeUniqueLabels", &NPacket::makeUniqueLabels)
@@ -121,24 +124,40 @@ void addNPacket() {
         .def("addTag", &NPacket::addTag)
         .def("removeTag", &NPacket::removeTag)
         .def("removeAllTags", &NPacket::removeAllTags)
-        .def("getTags", getTags_list)
+        .def("tags", tags_list)
+        .def("getTags", tags_list)
+        .def("parent", &NPacket::parent,
+            return_value_policy<reference_existing_object>())
         .def("getTreeParent", &NPacket::getTreeParent,
+            return_value_policy<reference_existing_object>())
+        .def("firstChild", &NPacket::firstChild,
             return_value_policy<reference_existing_object>())
         .def("getFirstTreeChild", &NPacket::getFirstTreeChild,
             return_value_policy<reference_existing_object>())
+        .def("lastChild", &NPacket::lastChild,
+            return_value_policy<reference_existing_object>())
         .def("getLastTreeChild", &NPacket::getLastTreeChild,
+            return_value_policy<reference_existing_object>())
+        .def("nextSibling", &NPacket::nextSibling,
             return_value_policy<reference_existing_object>())
         .def("getNextTreeSibling", &NPacket::getNextTreeSibling,
             return_value_policy<reference_existing_object>())
+        .def("prevSibling", &NPacket::prevSibling,
+            return_value_policy<reference_existing_object>())
         .def("getPrevTreeSibling", &NPacket::getPrevTreeSibling,
+            return_value_policy<reference_existing_object>())
+        .def("root", &NPacket::root,
             return_value_policy<reference_existing_object>())
         .def("getTreeMatriarch", &NPacket::getTreeMatriarch,
             return_value_policy<reference_existing_object>())
         .def("levelsDownTo", &NPacket::levelsDownTo)
         .def("levelsUpTo", &NPacket::levelsUpTo)
         .def("isGrandparentOf", &NPacket::isGrandparentOf)
+        .def("countChildren", &NPacket::countChildren)
         .def("getNumberOfChildren", &NPacket::getNumberOfChildren)
+        .def("countDescendants", &NPacket::countDescendants)
         .def("getNumberOfDescendants", &NPacket::getNumberOfDescendants)
+        .def("totalTreeSize", &NPacket::totalTreeSize)
         .def("getTotalTreeSize", &NPacket::getTotalTreeSize)
         .def("insertChildFirst", insertChildFirst_own)
         .def("insertChildLast", insertChildLast_own)

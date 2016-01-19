@@ -46,8 +46,11 @@ void addNTriSolidTorus() {
             ("NTriSolidTorus", no_init)
         .def("clone", &NTriSolidTorus::clone,
             return_value_policy<manage_new_object>())
+        .def("tetrahedron", &NTriSolidTorus::tetrahedron,
+            return_value_policy<reference_existing_object>())
         .def("getTetrahedron", &NTriSolidTorus::getTetrahedron,
             return_value_policy<reference_existing_object>())
+        .def("vertexRoles", &NTriSolidTorus::vertexRoles)
         .def("getVertexRoles", &NTriSolidTorus::getVertexRoles)
         .def("isAnnulusSelfIdentified",
             &NTriSolidTorus::isAnnulusSelfIdentified)

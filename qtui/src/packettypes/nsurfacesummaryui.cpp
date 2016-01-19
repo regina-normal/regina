@@ -174,12 +174,12 @@ void NSurfaceSummaryUI::refresh() {
     std::pair<int, int> type;
     unsigned long i;
     for (i = 0; i < n; ++i) {
-        s = surfaces->getSurface(i);
+        s = surfaces->surface(i);
 
         if (! s->isCompact())
             ++spun;
         else if (s->hasRealBoundary()) {
-            euler = s->getEulerChar();
+            euler = s->eulerChar();
             allECsBounded.insert(euler);
 
             type = std::make_pair(boolIndex(s->isTwoSided()),
@@ -189,7 +189,7 @@ void NSurfaceSummaryUI::refresh() {
             ++countBounded[type.first][type.second][euler];
             ++bounded;
         } else {
-            euler = s->getEulerChar();
+            euler = s->eulerChar();
             allECsClosed.insert(euler);
 
             type = std::make_pair(boolIndex(s->isTwoSided()),
@@ -257,7 +257,7 @@ void NSurfaceSummaryUI::refresh() {
         tableClosed->show();
     }
 
-    if (surfaces->getTriangulation()->hasBoundaryTriangles()) {
+    if (surfaces->triangulation()->hasBoundaryTriangles()) {
         tableBounded->clear();
 
         if (bounded == 0) {
@@ -314,8 +314,8 @@ void NSurfaceSummaryUI::refresh() {
     // deal with it).
     // Furthermore, spun normal surfaces are only possible in certain
     // coordinate systems.
-    if ((surfaces->getTriangulation()->isIdeal() ||
-            ! surfaces->getTriangulation()->isValid()) &&
+    if ((surfaces->triangulation()->isIdeal() ||
+            ! surfaces->triangulation()->isValid()) &&
             (surfaces->allowsSpun())) {
         if (spun == 0) {
             totSpun->setText(tr("No spun (non-compact) surfaces."));

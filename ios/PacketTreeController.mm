@@ -94,8 +94,8 @@
 
         // Be helpful to the user and open the placeholder text packet that is
         // created with every new document.
-        if (_node->getFirstTreeChild())
-            ReginaHelper.detail.packet = _node->getFirstTreeChild();
+        if (_node->firstChild())
+            ReginaHelper.detail.packet = _node->firstChild();
     }];
 }
 
@@ -130,8 +130,8 @@
         [self refreshPackets];
 
         // If there is only one packet, open it immediately.
-        if (_node->getFirstTreeChild() && ! _node->getFirstTreeChild()->getNextTreeSibling())
-            ReginaHelper.detail.packet = _node->getFirstTreeChild();
+        if (_node->firstChild() && ! _node->firstChild()->nextSibling())
+            ReginaHelper.detail.packet = _node->firstChild();
     }];
     
     [ReginaHelper detail].doc = doc;
@@ -141,7 +141,7 @@
 {
     _node = p;
     _listener = [PacketListenerIOS listenerWithPacket:_node delegate:self listenChildren:YES];
-    self.title = [NSString stringWithUTF8String:p->getPacketLabel().c_str()];
+    self.title = [NSString stringWithUTF8String:p->label().c_str()];
     [self refreshPackets];
 }
 
@@ -151,7 +151,7 @@
 
     _packets = [NSPointerArray pointerArrayWithOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsOpaquePersonality];
     regina::NPacket* p;
-    for (p = _node->getFirstTreeChild(); p; p = p->getNextTreeSibling())
+    for (p = _node->firstChild(); p; p = p->nextSibling())
         [_packets addPointer:p];
 
     [self.tableView reloadData];
@@ -208,7 +208,7 @@
 }
 
 - (BOOL)selectPacket:(regina::NPacket*)p {
-    if (p->getTreeParent() != self.node)
+    if (p->parent() != self.node)
         return NO;
 
     // This packet should be in our list of immediate children.
@@ -219,7 +219,7 @@
     if (! path)
         return NO;
 
-    if (p->getPacketType() != regina::PACKET_CONTAINER && ! [self.tableView.indexPathForSelectedRow isEqual:path])
+    if (p->type() != regina::PACKET_CONTAINER && ! [self.tableView.indexPathForSelectedRow isEqual:path])
         [self.tableView selectRowAtIndexPath:path animated:NO scrollPosition:UITableViewScrollPositionNone];
 
     [self.tableView scrollToRowAtIndexPath:[self pathForPacket:p] atScrollPosition:UITableViewScrollPositionNone animated:YES];
@@ -239,12 +239,12 @@
     if ((! dest) || dest == self.node)
         return;
     
-    if (dest->getTreeParent() == self.node) {
+    if (dest->parent() == self.node) {
         // This involves a single push.
         PacketTreeController* subtree = [self.storyboard instantiateViewControllerWithIdentifier:@"packetTree"];
         [subtree openSubtree:dest];
         [self.navigationController pushViewController:subtree animated:YES];
-    } else if (self.node->getTreeParent() == dest) {
+    } else if (self.node->parent() == dest) {
         // This involves a single pop.
         [self.navigationController popViewControllerAnimated:YES];
     } else {
@@ -253,9 +253,9 @@
         NSPointerArray* destLeafToRoot = [NSPointerArray pointerArrayWithOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsOpaquePersonality];
 
         regina::NPacket* p;
-        for (p = self.node; p; p = p->getTreeParent())
+        for (p = self.node; p; p = p->parent())
             [myLeafToRoot addPointer:p];
-        for (p = dest; p; p = p->getTreeParent())
+        for (p = dest; p; p = p->parent())
             [destLeafToRoot addPointer:p];
 
         long myIdx = myLeafToRoot.count - 1; // Root.
@@ -316,8 +316,8 @@
     [[ReginaHelper document] setDirty];
     if (packet == self.node) {
         // Refresh the title, but only if this is not the root of the packet tree.
-        if (packet->getTreeParent())
-            self.title = [NSString stringWithUTF8String:packet->getPacketLabel().c_str()];
+        if (packet->parent())
+            self.title = [NSString stringWithUTF8String:packet->label().c_str()];
     } else {
         // Don't animate, since this was most likely a result of the user editing the cell.
         NSIndexPath* path = [self pathForPacket:packet];
@@ -333,7 +333,7 @@
     if (packet == self.node) {
         // We have a new row for our table of children.
         int childIndex;
-        if (! child->getNextTreeSibling()) {
+        if (! child->nextSibling()) {
             // The new row goes on the end of the list.
             childIndex = _packets.count;
             [_packets addPointer:child];
@@ -341,7 +341,7 @@
             // This requires a linear scan to find childIndex, but the good news
             // is that the linear scan only happens if the insertion is *not* at
             // the end of the list.
-            childIndex = [self packetIndexForPacket:child->getNextTreeSibling()];
+            childIndex = [self packetIndexForPacket:child->nextSibling()];
             [_packets insertPointer:child atIndex:childIndex];
         }
 
@@ -350,7 +350,7 @@
         [self.tableView insertRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationAutomatic];
     } else {
         // One of our children needs a new subtitle (which counts *its* children).
-        path = [self pathForPacket:child->getTreeParent()];
+        path = [self pathForPacket:child->parent()];
         if (path)
             [self.tableView reloadRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
@@ -394,7 +394,7 @@
 
 - (NSString *)renameInit:(NSIndexPath *)path
 {
-    return [NSString stringWithUTF8String:[self packetForPath:path]->getPacketLabel().c_str()];
+    return [NSString stringWithUTF8String:[self packetForPath:path]->label().c_str()];
 }
 
 - (void)renameDone:(NSIndexPath *)path result:(NSString *)result
@@ -409,7 +409,7 @@
     _recentPacketIndex = [self packetIndexForPath:self.actionPath];
     regina::NPacket* p = static_cast<regina::NPacket*>([_packets pointerAtIndex:_recentPacketIndex]);
 
-    if (p->getFirstTreeChild())
+    if (p->firstChild())
         return @[@"Clone", @"Clone Subtree"];
     else
         return @[@"Clone"];
@@ -423,7 +423,7 @@
     if (which == 0) {
         /* Clone packet */
         p->clone(false, false);
-    } else if (which == 1 && p->getFirstTreeChild()) {
+    } else if (which == 1 && p->firstChild()) {
         /* Clone subtree */
         p->clone(true, false);
     }
@@ -434,7 +434,7 @@
     _recentPacketIndex = [self packetIndexForPath:path];
     regina::NPacket* p = static_cast<regina::NPacket*>([_packets pointerAtIndex:_recentPacketIndex]);
 
-    unsigned long totalPackets = p->getNumberOfDescendants();
+    unsigned long totalPackets = p->countDescendants();
     if (totalPackets == 0)
         return @"Delete packet";
     else
@@ -477,12 +477,12 @@
     regina::NPacket* p = [self packetForPath:indexPath];
 
     UITableViewCell *cell;
-    if (p->getPacketType() == regina::NContainer::packetType)
+    if (p->type() == regina::PACKET_CONTAINER)
         cell = [tableView dequeueReusableCellWithIdentifier:@"Container" forIndexPath:indexPath];
     else
         cell = [tableView dequeueReusableCellWithIdentifier:@"Packet" forIndexPath:indexPath];
-    cell.textLabel.text = [NSString stringWithUTF8String:p->getPacketLabel().c_str()];
-    unsigned long sub = p->getNumberOfChildren();
+    cell.textLabel.text = [NSString stringWithUTF8String:p->label().c_str()];
+    unsigned long sub = p->countChildren();
     if (sub == 0)
         cell.detailTextLabel.text = @"";
     else if (sub == 1)
@@ -514,7 +514,7 @@
         // The subtree row might need to change.
         NSInteger oldSubtreeRow = _subtreeRow;
 
-        if (p->getPacketType() != regina::NContainer::packetType && p->getFirstTreeChild()) {
+        if (p->type() != regina::PACKET_CONTAINER && p->firstChild()) {
             // The subtree row should appear beneath this packet.
             _subtreeRow = _recentPacketIndex + 1;
             if (oldSubtreeRow == 0) {
@@ -541,7 +541,7 @@
         }
     }
 
-    if (p->getPacketType() != regina::PACKET_CONTAINER)
+    if (p->type() != regina::PACKET_CONTAINER)
         [ReginaHelper detail].packet = p;
 }
 

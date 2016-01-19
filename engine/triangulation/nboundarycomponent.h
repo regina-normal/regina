@@ -82,7 +82,7 @@ typedef Face<3, 2> NTriangle;
  * same boundary component; if not then the offending vertex will be
  * included in all of these boundary components.  Nevertheless, only one
  * of these can be considered the "official" boundary component of the
- * vertex as returned by NVertex::getBoundaryComponent().  This is all a
+ * vertex as returned by NVertex::boundaryComponent().  This is all a
  * bit of a mess, but then again the entire triangulation is invalid and
  * so you almost certainly have bigger problems to deal with.
  *
@@ -106,11 +106,11 @@ class REGINA_API NBoundaryComponent :
             /**< Is this boundary component orientable? */
 
     public:
-
         /**
          * Returns the index of this boundary component in the underlying
          * triangulation.  This is identical to calling
-         * <tt>getTriangulation()->boundaryComponentIndex(this)</tt>.
+         * <tt>boundaryComponentIndex(this)</tt> on the underlying
+         * triangulation.
          *
          * @return the index of this boundary component vertex.
          */
@@ -157,6 +157,14 @@ class REGINA_API NBoundaryComponent :
          *
          * @return the component containing this boundary component.
          */
+        NComponent* component() const;
+        /**
+         * Deprecated routine that returns the component of the triangulation
+         * to which this boundary component belongs.
+         *
+         * \deprecated This routine has been renamed to component().
+         * See the component() documentation for further details.
+         */
         NComponent* getComponent() const;
 
         /**
@@ -166,17 +174,26 @@ class REGINA_API NBoundaryComponent :
          *
          * @return the Euler characteristic.
          */
+        long eulerChar() const;
+
+        /**
+         * Deprecated routine that returns the Euler characteristic of this
+         * boundary component.
+         *
+         * \deprecated This routine has been renamed to eulerChar().
+         * See the eulerChar() documentation for further details.
+         */
         long getEulerChar() const;
 
         /**
-         * A deprecated alias for getEulerChar().
+         * A deprecated alias for eulerChar().
          *
          * Returns the Euler characteristic of this boundary component.
          * If this boundary component is ideal, the Euler characteristic
          * of the link of the corresponding ideal vertex is returned.
          *
          * \deprecated This routine will be removed in a future version of
-         * Regina.  Please use the identical routine getEulerChar() instead.
+         * Regina.  Please use the identical routine eulerChar() instead.
          *
          * @return the Euler characteristic.
          */
@@ -293,19 +310,27 @@ inline NVertex* NBoundaryComponent::face<0>(size_t index) const {
     return vertices_[index];
 }
 
-inline NComponent* NBoundaryComponent::getComponent() const {
+inline NComponent* NBoundaryComponent::component() const {
     // There may be no triangles, but there is always a vertex.
-    return vertices_.front()->getComponent();
+    return vertices_.front()->component();
 }
 
-inline long NBoundaryComponent::getEulerChar() const {
+inline NComponent* NBoundaryComponent::getComponent() const {
+    return vertices_.front()->component();
+}
+
+inline long NBoundaryComponent::eulerChar() const {
     return (isIdeal() ?
-        vertices_.front()->getLinkEulerChar() :
+        vertices_.front()->linkEulerChar() :
         long(vertices_.size()) - long(edges_.size()) + long(triangles_.size()));
 }
 
+inline long NBoundaryComponent::getEulerChar() const {
+    return eulerChar();
+}
+
 inline long NBoundaryComponent::getEulerCharacteristic() const {
-    return getEulerChar();
+    return eulerChar();
 }
 
 inline bool NBoundaryComponent::isIdeal() const {

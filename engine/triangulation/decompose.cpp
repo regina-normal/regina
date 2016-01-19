@@ -57,7 +57,7 @@ unsigned long NTriangulation::splitIntoComponents(NPacket* componentParent,
 
     // Create the new component triangulations.
     // Note that the following line forces a skeletal recalculation.
-    unsigned long nComp = getNumberOfComponents();
+    unsigned long nComp = countComponents();
 
     // Initialise the component triangulations.
     NTriangulation** newTris = new NTriangulation*[nComp];
@@ -76,7 +76,7 @@ unsigned long NTriangulation::splitIntoComponents(NPacket* componentParent,
 
     for (tetPos = 0; tetPos < nTets; tetPos++)
         newTets[tetPos] =
-            newTris[componentIndex(simplices_[tetPos]->getComponent())]->
+            newTris[componentIndex(simplices_[tetPos]->component())]->
             newTetrahedron(simplices_[tetPos]->getDescription());
 
     // Clone the tetrahedron gluings also.
@@ -128,10 +128,10 @@ long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
 
     unsigned long initZ, initZ2, initZ3;
     {
-        const NAbelianGroup& homology = working->getHomologyH1();
-        initZ = homology.getRank();
-        initZ2 = homology.getTorsionRank(2);
-        initZ3 = homology.getTorsionRank(3);
+        const NAbelianGroup& homology = working->homology();
+        initZ = homology.rank();
+        initZ2 = homology.torsionRank(2);
+        initZ3 = homology.torsionRank(3);
     }
 
     // Start crushing normal spheres.
@@ -145,7 +145,7 @@ long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
     NTriangulation* crushed;
     NNormalSurface* sphere;
     while ((processing = static_cast<NTriangulation*>(
-            toProcess.getFirstTreeChild()))) {
+            toProcess.firstChild()))) {
         // INV: Our triangulation is the connected sum of all the
         // children of toProcess, all the elements of primeComponents
         // and possibly some copies of S2xS1, S2x~S1, RP3, and/or L(3,1).
@@ -181,9 +181,9 @@ long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
 
             // Insert each component of the crushed triangulation back
             // into the list to process.
-            if (crushed->getNumberOfComponents() == 0)
+            if (crushed->countComponents() == 0)
                 delete crushed;
-            else if (crushed->getNumberOfComponents() == 1)
+            else if (crushed->countComponents() == 1)
                 toProcess.insertChildLast(crushed);
             else {
                 crushed->splitIntoComponents(&toProcess, false);
@@ -198,7 +198,7 @@ long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
                 primeComponents.push_back(processing);
             } else {
                 // Orientable, and so possibly a sphere.  Test this precisely.
-                if (processing->getNumberOfVertices() > 1) {
+                if (processing->countVertices() > 1) {
                     // Proposition 5.1 of Jaco & Rubinstein's 0-efficiency
                     // paper:  If a closed orientable triangulation T is
                     // 0-efficient then either T has one vertex or T is a
@@ -239,10 +239,10 @@ long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
     unsigned long finalZ = 0, finalZ2 = 0, finalZ3 = 0;
     for (std::list<NTriangulation*>::iterator it = primeComponents.begin();
             it != primeComponents.end(); it++) {
-        const NAbelianGroup& homology = (*it)->getHomologyH1();
-        finalZ += homology.getRank();
-        finalZ2 += homology.getTorsionRank(2);
-        finalZ3 += homology.getTorsionRank(3);
+        const NAbelianGroup& homology = (*it)->homology();
+        finalZ += homology.rank();
+        finalZ2 += homology.torsionRank(2);
+        finalZ3 += homology.torsionRank(3);
     }
 
     while (finalZ++ < initZ) {
@@ -317,7 +317,7 @@ bool NTriangulation::isThreeSphere() const {
 
     // Basic property checks.
     if (! (isValid() && isClosed() && isOrientable() && isConnected() &&
-            getNumberOfTetrahedra() > 0)) {
+            (! isEmpty()))) {
         threeSphere_ = false;
         return false;
     }
@@ -328,7 +328,7 @@ bool NTriangulation::isThreeSphere() const {
     working->intelligentSimplify();
 
     // The Poincare conjecture!
-    if (working->getFundamentalGroup().getNumberOfGenerators() == 0) {
+    if (working->fundamentalGroup().countGenerators() == 0) {
         threeSphere_ = true;
         delete working;
 
@@ -341,7 +341,7 @@ bool NTriangulation::isThreeSphere() const {
 
     // We could still have a trivial group but not know it.
     // At least we can at least check homology precisely.
-    if (! working->getHomologyH1().isTrivial()) {
+    if (! working->homology().isTrivial()) {
         threeSphere_ = false;
         delete working;
         return false;
@@ -354,8 +354,7 @@ bool NTriangulation::isThreeSphere() const {
     NTriangulation* processing;
     NTriangulation* crushed;
     NNormalSurface* sphere;
-    while ((processing = static_cast<NTriangulation*>(
-            toProcess.getLastTreeChild()))) {
+    while ((processing = static_cast<NTriangulation*>(toProcess.lastChild()))) {
         // INV: Our triangulation is the connected sum of all the
         // children of toProcess.  Each of these children has trivial
         // homology (and therefore we have no S2xS1 / RP3 / L(3,1)
@@ -375,9 +374,9 @@ bool NTriangulation::isThreeSphere() const {
 
             // Insert each component of the crushed triangulation in the
             // list to process.
-            if (crushed->getNumberOfComponents() == 0)
+            if (crushed->countComponents() == 0)
                 delete crushed;
-            else if (crushed->getNumberOfComponents() == 1)
+            else if (crushed->countComponents() == 1)
                 toProcess.insertChildLast(crushed);
             else {
                 crushed->splitIntoComponents(&toProcess, false);
@@ -387,7 +386,7 @@ bool NTriangulation::isThreeSphere() const {
             // We have no non-trivial normal 2-spheres!
             // The triangulation is 0-efficient.
             // We can now test directly whether we have a 3-sphere.
-            if (processing->getNumberOfVertices() > 1) {
+            if (processing->countVertices() > 1) {
                 // Proposition 5.1 of Jaco & Rubinstein's 0-efficiency
                 // paper:  If a closed orientable triangulation T is
                 // 0-efficient then either T has one vertex or T is a
@@ -455,7 +454,7 @@ bool NTriangulation::isBall() const {
     // Basic property checks.
     if (! (isValid() && hasBoundaryTriangles() && isOrientable() && isConnected()
             && boundaryComponents_.size() == 1
-            && boundaryComponents_.front()->getEulerChar() == 2)) {
+            && boundaryComponents_.front()->eulerChar() == 2)) {
         threeBall_ = false;
         return false;
     }
@@ -484,7 +483,7 @@ bool NTriangulation::knowsBall() const {
     // Run some very fast prelimiary tests before we give up and say no.
     if (! (isValid() && hasBoundaryTriangles() && isOrientable() && isConnected()
             && boundaryComponents_.size() == 1
-            && boundaryComponents_.front()->getEulerChar() == 2)) {
+            && boundaryComponents_.front()->eulerChar() == 2)) {
         threeBall_ = false;
         return true;
     }
@@ -500,7 +499,7 @@ bool NTriangulation::isSolidTorus() const {
     // Basic property checks.
     if (! (isValid() && isOrientable() && isConnected() &&
             boundaryComponents_.size() == 1 &&
-            boundaryComponents_.front()->getEulerChar() == 0 &&
+            boundaryComponents_.front()->eulerChar() == 0 &&
             boundaryComponents_.front()->isOrientable()))
         return (solidTorus_ = false);
 
@@ -514,7 +513,7 @@ bool NTriangulation::isSolidTorus() const {
     }
 
     // Check homology.
-    if (! (working->getHomologyH1().isZ())) {
+    if (! (working->homology().isZ())) {
         delete working;
         return (solidTorus_ = false);
     }
@@ -535,12 +534,12 @@ bool NTriangulation::isSolidTorus() const {
     NTriangulation* comp;
     while (true) {
         // INVARIANT: working is homeomorphic to our original manifold.
-        if (working->getNumberOfVertices() > 1) {
+        if (working->countVertices() > 1) {
             // Try *really* hard to get to a 1-vertex triangulation,
             // since this will make hasNonTrivialSphereOrDisc() much
             // faster (it will be able to use linear programming).
             working->intelligentSimplify();
-            if (working->getNumberOfVertices() > 1) {
+            if (working->countVertices() > 1) {
                 working->barycentricSubdivision();
                 working->intelligentSimplify();
                 working->intelligentSimplify();
@@ -568,7 +567,7 @@ bool NTriangulation::isSolidTorus() const {
 
         crushed->intelligentSimplify();
         crushed->splitIntoComponents(0, false);
-        for (p = crushed->getFirstTreeChild(); p; p = p->getNextTreeSibling()) {
+        for (p = crushed->firstChild(); p; p = p->nextSibling()) {
             // Examine each connected component after crushing.
             comp = static_cast<NTriangulation*>(p);
             if (comp->isClosed()) {
@@ -578,7 +577,7 @@ bool NTriangulation::isSolidTorus() const {
                     delete crushed;
                     return (solidTorus_ = false);
                 }
-            } else if (comp->getNumberOfBoundaryComponents() > 1) {
+            } else if (comp->countBoundaryComponents() > 1) {
                 // Multiple boundaries on the same component.
                 // This should never happen, since it implies there was
                 // an S2xS1 summand.
@@ -588,7 +587,7 @@ bool NTriangulation::isSolidTorus() const {
                 // At any rate, it means we did not have a solid torus.
                 delete crushed;
                 return (solidTorus_ = false);
-            } else if (comp->getBoundaryComponent(0)->getEulerChar() == 2) {
+            } else if (comp->boundaryComponent(0)->eulerChar() == 2) {
                 // A component with sphere boundary.
                 // Must be a 3-ball, or else we didn't have a solid torus.
                 if (! comp->isBall()) {
@@ -643,7 +642,7 @@ bool NTriangulation::knowsSolidTorus() const {
         return true;
     }
 
-    if (boundaryComponents_.front()->getEulerChar() != 0 ||
+    if (boundaryComponents_.front()->eulerChar() != 0 ||
             (! boundaryComponents_.front()->isOrientable())) {
         solidTorus_ = false;
         return true;
@@ -665,7 +664,7 @@ NPacket* NTriangulation::makeZeroEfficient() {
     } else if (ans == 1) {
         // Prime.
         NTriangulation* newTri = dynamic_cast<NTriangulation*>(
-            connSum->getLastTreeChild());
+            connSum->lastChild());
         if (! isIsomorphicTo(*newTri).get()) {
             removeAllTetrahedra();
             insertTriangulation(*newTri);
@@ -674,7 +673,7 @@ NPacket* NTriangulation::makeZeroEfficient() {
         return 0;
     } else {
         // 3-sphere.
-        if (getNumberOfTetrahedra() > 1) {
+        if (size() > 1) {
             removeAllTetrahedra();
             insertLayeredLensSpace(1,0);
         }
@@ -702,10 +701,10 @@ bool NTriangulation::isIrreducible() const {
 
     unsigned long Z, Z2, Z3;
     {
-        const NAbelianGroup& homology = working->getHomologyH1();
-        Z = homology.getRank();
-        Z2 = homology.getTorsionRank(2);
-        Z3 = homology.getTorsionRank(3);
+        const NAbelianGroup& homology = working->homology();
+        Z = homology.rank();
+        Z2 = homology.torsionRank(2);
+        Z3 = homology.torsionRank(3);
     }
 
     // Start crushing normal spheres.
@@ -716,7 +715,7 @@ bool NTriangulation::isIrreducible() const {
     NTriangulation* crushed;
     NNormalSurface* sphere;
     while ((processing = static_cast<NTriangulation*>(
-            toProcess.getFirstTreeChild()))) {
+            toProcess.firstChild()))) {
         // INV: Our triangulation is the connected sum of all the
         // children of toProcess, all the prime components that we threw away,
         // and possibly some copies of S2xS1, RP3 and/or L(3,1).
@@ -735,9 +734,9 @@ bool NTriangulation::isIrreducible() const {
 
             // Insert each component of the crushed triangulation back
             // into the list to process.
-            if (crushed->getNumberOfComponents() == 0)
+            if (crushed->countComponents() == 0)
                 delete crushed;
-            else if (crushed->getNumberOfComponents() == 1)
+            else if (crushed->countComponents() == 1)
                 toProcess.insertChildLast(crushed);
             else {
                 crushed->splitIntoComponents(&toProcess, false);
@@ -747,7 +746,7 @@ bool NTriangulation::isIrreducible() const {
             // We have no non-trivial normal 2-spheres!
             // The triangulation is 0-efficient (and prime).
             // Is it a 3-sphere?
-            if (processing->getNumberOfVertices() > 1) {
+            if (processing->countVertices() > 1) {
                 // Proposition 5.1 of Jaco & Rubinstein's 0-efficiency
                 // paper:  If a closed orientable triangulation T is
                 // 0-efficient then either T has one vertex or T is a
@@ -790,10 +789,10 @@ bool NTriangulation::isIrreducible() const {
 
                     // Note which parts of our initial homology we have
                     // now accounted for.
-                    const NAbelianGroup& h1 = processing->getHomologyH1();
-                    Z -= h1.getRank();
-                    Z2 -= h1.getTorsionRank(2);
-                    Z3 -= h1.getTorsionRank(3);
+                    const NAbelianGroup& h1 = processing->homology();
+                    Z -= h1.rank();
+                    Z2 -= h1.torsionRank(2);
+                    Z3 -= h1.torsionRank(3);
 
                     // Toss away our prime summand and keep going.
                     delete processing;
@@ -840,8 +839,8 @@ bool NTriangulation::hasCompressingDisc() const {
     long minBdryEuler = 2;
     for (BoundaryComponentIterator it = boundaryComponents_.begin();
             it != boundaryComponents_.end(); ++it) {
-        if ((*it)->getEulerChar() < minBdryEuler)
-            minBdryEuler = (*it)->getEulerChar();
+        if ((*it)->eulerChar() < minBdryEuler)
+            minBdryEuler = (*it)->eulerChar();
     }
     if (minBdryEuler == 2)
         return (compressingDisc_ = false);
@@ -859,7 +858,7 @@ bool NTriangulation::hasCompressingDisc() const {
 
     // Nope.  Decide whether we can use the fast linear programming
     // machinery or whether we need to do a full vertex surface enumeration.
-    if (use->isOrientable() && use->getNumberOfBoundaryComponents() == 1) {
+    if (use->isOrientable() && use->countBoundaryComponents() == 1) {
         NNormalSurface* ans;
         NTriangulation* crush;
         NTriangulation* comp;
@@ -868,11 +867,11 @@ bool NTriangulation::hasCompressingDisc() const {
         while (true) {
             use->intelligentSimplify();
 
-            if (use->getNumberOfVertices() > 1) {
+            if (use->countVertices() > 1) {
                 // Try harder.
                 use->barycentricSubdivision();
                 use->intelligentSimplify();
-                if (use->getNumberOfVertices() > 1) {
+                if (use->countVertices() > 1) {
                     // Fall back to a full vertex enumeration.
                     // This mirrors the code for non-orientable
                     // triangulations; see that later block for details.
@@ -881,7 +880,7 @@ bool NTriangulation::hasCompressingDisc() const {
 
                     unsigned long nSurfaces = q->size();
                     for (unsigned long i = 0; i < nSurfaces; ++i) {
-                        if (q->getSurface(i)->isCompressingDisc(true)) {
+                        if (q->surface(i)->isCompressingDisc(true)) {
                             delete use;
                             return (compressingDisc_ = true);
                         }
@@ -906,17 +905,17 @@ bool NTriangulation::hasCompressingDisc() const {
             delete use;
 
             nComp = crush->splitIntoComponents();
-            comp = static_cast<NTriangulation*>(crush->getFirstTreeChild());
+            comp = static_cast<NTriangulation*>(crush->firstChild());
             while (comp) {
-                if (comp->getNumberOfBoundaryComponents() == 1 &&
-                        comp->getBoundaryComponent(0)->getEulerChar()
+                if (comp->countBoundaryComponents() == 1 &&
+                        comp->boundaryComponent(0)->eulerChar()
                         == minBdryEuler) {
                     // This must be our original manifold.
                     comp->makeOrphan();
                     break;
                 }
 
-                comp = static_cast<NTriangulation*>(comp->getNextTreeSibling());
+                comp = static_cast<NTriangulation*>(comp->nextSibling());
             }
 
             delete crush;
@@ -942,7 +941,7 @@ bool NTriangulation::hasCompressingDisc() const {
         unsigned long nSurfaces = q->size();
         for (unsigned long i = 0; i < nSurfaces; ++i) {
             // Use the fact that all vertex normal surfaces are connected.
-            if (q->getSurface(i)->isCompressingDisc(true)) {
+            if (q->surface(i)->isCompressingDisc(true)) {
                 delete use;
                 return (compressingDisc_ = true);
             }
@@ -961,7 +960,7 @@ bool NTriangulation::knowsCompressingDisc() const {
     // Quickly check for non-spherical boundary components before we give up.
     for (BoundaryComponentIterator it = boundaryComponents_.begin();
             it != boundaryComponents_.end(); ++it) {
-        if ((*it)->getEulerChar() < 2)
+        if ((*it)->eulerChar() < 2)
             return false;
     }
 
@@ -983,11 +982,11 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
     use.intelligentSimplify();
 
     // Check to see whether any component is a one-tetrahedron solid torus.
-    for (ComponentIterator cit = use.getComponents().begin();
-            cit != use.getComponents().end(); ++cit)
-        if ((*cit)->getNumberOfTetrahedra() == 1 &&
-                (*cit)->getNumberOfTriangles() == 3 &&
-                (*cit)->getNumberOfVertices() == 1) {
+    for (ComponentIterator cit = use.components().begin();
+            cit != use.components().end(); ++cit)
+        if ((*cit)->size() == 1 &&
+                (*cit)->countTriangles() == 3 &&
+                (*cit)->countVertices() == 1) {
             // Because we know the triangulation is valid, this rules out
             // all one-tetrahedron triangulations except for LST(1,2,3).
             return (compressingDisc_ = true);
@@ -1012,9 +1011,9 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
     // spheres that might result.
     unsigned long origSphereCount = 0;
     BoundaryComponentIterator bit;
-    for (bit = use.getBoundaryComponents().begin(); bit !=
-            use.getBoundaryComponents().end(); ++bit)
-        if ((*bit)->getEulerChar() == 2)
+    for (bit = use.boundaryComponents().begin(); bit !=
+            use.boundaryComponents().end(); ++bit)
+        if ((*bit)->eulerChar() == 2)
             ++origSphereCount;
 
     // Look for a single internal triangle surrounded by three boundary edges.
@@ -1042,14 +1041,13 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
         // If we don't see a new boundary component, the disc boundary is
         // non-separating in the manifold boundary and is therefore a
         // non-trivial curve.
-        if (cut.getNumberOfBoundaryComponents() ==
-                use.getNumberOfBoundaryComponents())
+        if (cut.countBoundaryComponents() == use.countBoundaryComponents())
             return (compressingDisc_ = true);
 
         newSphereCount = 0;
-        for (bit = cut.getBoundaryComponents().begin(); bit !=
-                cut.getBoundaryComponents().end(); ++bit)
-            if ((*bit)->getEulerChar() == 2)
+        for (bit = cut.boundaryComponents().begin(); bit !=
+                cut.boundaryComponents().end(); ++bit)
+            if ((*bit)->eulerChar() == 2)
                 ++newSphereCount;
 
         // Was the boundary of the disc non-trivial?
@@ -1068,7 +1066,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
         if (! ball)
             continue;
 
-        int equator = ball->getEquatorEdge();
+        int equator = ball->equatorEdge();
         if (! (*tit)->getEdge(equator)->isBoundary()) {
             delete ball;
             continue;
@@ -1079,7 +1077,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
         // We do this by removing the tetrahedron, and then plugging
         // both holes on either side of the disc with new copies of the
         // tetrahedron.
-        int upper = ball->getBoundaryFace(0);
+        int upper = ball->boundaryFace(0);
         delete ball;
 
         NTetrahedron* adj = (*tit)->adjacentTetrahedron(upper);
@@ -1099,14 +1097,13 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
         // If we don't see a new boundary component, the disc boundary is
         // non-separating in the manifold boundary and is therefore a
         // non-trivial curve.
-        if (cut.getNumberOfBoundaryComponents() ==
-                use.getNumberOfBoundaryComponents())
+        if (cut.countBoundaryComponents() == use.countBoundaryComponents())
             return (compressingDisc_ = true);
 
         newSphereCount = 0;
-        for (bit = cut.getBoundaryComponents().begin(); bit !=
-                cut.getBoundaryComponents().end(); ++bit)
-            if ((*bit)->getEulerChar() == 2)
+        for (bit = cut.boundaryComponents().begin(); bit !=
+                cut.boundaryComponents().end(); ++bit)
+            if ((*bit)->eulerChar() == 2)
                 ++newSphereCount;
 
         // Was the boundary of the disc non-trivial?
@@ -1157,7 +1154,7 @@ bool NTriangulation::isHaken() const {
     t.intelligentSimplify();
 
     // First check for an easy answer via homology:
-    if (t.getHomologyH1().getRank() > 0) {
+    if (t.homology().rank() > 0) {
         threeSphere_ = false; // Implied by Hakenness.
         return (haken_ = true);
     }
@@ -1173,13 +1170,13 @@ bool NTriangulation::isHaken() const {
     unsigned i;
     for (i = 0; i < list->size(); ++i) {
         id[i].index = i;
-        id[i].euler = list->getSurface(i)->getEulerChar().longValue();
+        id[i].euler = list->surface(i)->eulerChar().longValue();
     }
     std::sort(id, id + list->size());
 
     for (unsigned i = 0; i < list->size(); ++i) {
         // std::cout << "Testing surface " << i << "..." << std::endl;
-        if (list->getSurface(id[i].index)->isIncompressible()) {
+        if (list->surface(id[i].index)->isIncompressible()) {
             delete[] id;
             threeSphere_ = false; // Implied by Hakenness.
             return (haken_ = true);

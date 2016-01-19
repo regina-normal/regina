@@ -36,13 +36,13 @@
 
 namespace regina {
 
-const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
+const NGroupPresentation& NTriangulation::fundamentalGroup() const {
     if (fundamentalGroup_.known())
         return *fundamentalGroup_.value();
 
     NGroupPresentation* ans = new NGroupPresentation();
 
-    if (getNumberOfTetrahedra() == 0)
+    if (isEmpty())
         return *(fundamentalGroup_ = ans);
 
     // Calculate a maximal forest in the dual 1-skeleton.
@@ -50,14 +50,14 @@ const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
 
     // Each non-boundary not-in-forest triangle is a generator.
     // Each non-boundary edge is a relation.
-    long nGens = getNumberOfTriangles() - countBoundaryFacets()
+    long nGens = countTriangles() - countBoundaryFacets()
         + countComponents() - size();
 
     // Insert the generators.
     ans->addGenerator(nGens);
 
     // Find out which triangle corresponds to which generator.
-    long *genIndex = new long[getNumberOfTriangles()];
+    long *genIndex = new long[countTriangles()];
     long i = 0;
     for (NTriangle* f : getTriangles())
         if (f->isBoundary() || f->inMaximalForest())

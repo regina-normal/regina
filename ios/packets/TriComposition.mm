@@ -127,7 +127,7 @@
     
     regina::NStandardTriangulation* stdTri = regina::NStandardTriangulation::isStandardTriangulation(self.packet);
     if (stdTri)
-        self.standard.text = @(stdTri->getName().c_str());
+        self.standard.text = @(stdTri->name().c_str());
     else
         self.standard.attributedText = [TextHelper dimString:@"Not recognised"];
     delete stdTri;
@@ -181,25 +181,25 @@
 
 - (void)findAugTriSolidTori:(NSMutableString*)details
 {
-    unsigned long nComps = self.packet->getNumberOfComponents();
+    unsigned long nComps = self.packet->countComponents();
     
     regina::NAugTriSolidTorus* aug;
     for (unsigned long i = 0; i < nComps; i++) {
-        aug = regina::NAugTriSolidTorus::isAugTriSolidTorus(self.packet->getComponent(i));
+        aug = regina::NAugTriSolidTorus::isAugTriSolidTorus(self.packet->component(i));
         if (aug) {
-            [details appendFormat:@"Augmented triangular solid torus %s\n", aug->getName().c_str()];
+            [details appendFormat:@"Augmented triangular solid torus %s\n", aug->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
-            
-            const regina::NTriSolidTorus& core = aug->getCore();
+
+            const regina::NTriSolidTorus& core = aug->core();
             [details appendFormat:@INDENT1 "Core: tets %ld, %ld, %ld\n",
              core.getTetrahedron(0)->index(),
              core.getTetrahedron(1)->index(),
              core.getTetrahedron(2)->index()];
-            
+
             if (aug->hasLayeredChain()) {
-                if (aug->getChainType() == regina::NAugTriSolidTorus::CHAIN_MAJOR)
+                if (aug->chainType() == regina::NAugTriSolidTorus::CHAIN_MAJOR)
                     [details appendString:@INDENT1 "Attached: layered chain (major) + layered solid torus]n"];
-                else if (aug->getChainType() == regina::NAugTriSolidTorus::CHAIN_AXIS)
+                else if (aug->chainType() == regina::NAugTriSolidTorus::CHAIN_AXIS)
                     [details appendString:@INDENT1 "Attached: layered chain (axis) + layered solid torus\n"];
                 else
                     [details appendString:@INDENT1 "Attached: layered chain (unknown) + layered solid torus\n"];
@@ -214,16 +214,16 @@
 
 - (void)findL31Pillows:(NSMutableString*)details
 {
-    unsigned long nComps = self.packet->getNumberOfComponents();
+    unsigned long nComps = self.packet->countComponents();
     
     regina::NL31Pillow* pillow;
     for (unsigned long i = 0; i < nComps; i++) {
-        pillow = regina::NL31Pillow::isL31Pillow(self.packet->getComponent(i));
+        pillow = regina::NL31Pillow::isL31Pillow(self.packet->component(i));
         if (pillow) {
-            [details appendFormat:@"L(3,1) pillow %s\n", pillow->getName().c_str()];
+            [details appendFormat:@"L(3,1) pillow %s\n", pillow->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
             [details appendFormat:@INDENT1 "Pillow interior vertex: %ld\n",
-             pillow->getTetrahedron(0)->getVertex(pillow->getInteriorVertex(0))->index()];
+             pillow->tetrahedron(0)->getVertex(pillow->interiorVertex(0))->index()];
             
             [details appendString:@"\n"];
             delete pillow;
@@ -233,17 +233,17 @@
 
 - (void)findLayeredChainPairs:(NSMutableString*)details
 {
-    unsigned long nComps = self.packet->getNumberOfComponents();
+    unsigned long nComps = self.packet->countComponents();
     
     regina::NLayeredChainPair* pair;
     for (unsigned long i = 0; i < nComps; i++) {
-        pair = regina::NLayeredChainPair::isLayeredChainPair(self.packet->getComponent(i));
+        pair = regina::NLayeredChainPair::isLayeredChainPair(self.packet->component(i));
         if (pair) {
-            [details appendFormat:@"Layered chain pair %s\n", pair->getName().c_str()];
+            [details appendFormat:@"Layered chain pair %s\n", pair->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
             [details appendFormat:@INDENT1 "Chain lengths: %ld, %ld\n",
-             pair->getChain(0)->getIndex(),
-             pair->getChain(1)->getIndex()];
+             pair->chain(0)->index(),
+             pair->chain(1)->index()];
             
             [details appendString:@"\n"];
             delete pair;
@@ -253,21 +253,20 @@
 
 - (void)findLayeredLensSpaces:(NSMutableString*)details
 {
-    unsigned long nComps = self.packet->getNumberOfComponents();
+    unsigned long nComps = self.packet->countComponents();
     
     regina::NLayeredLensSpace* lens;
     for (unsigned long i = 0; i < nComps; i++) {
-        lens = regina::NLayeredLensSpace::isLayeredLensSpace(
-                                                             self.packet->getComponent(i));
+        lens = regina::NLayeredLensSpace::isLayeredLensSpace(self.packet->component(i));
         if (lens) {
-            [details appendFormat:@"Layered lens space %s\n", lens->getName().c_str()];
+            [details appendFormat:@"Layered lens space %s\n", lens->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
             
-            const regina::NLayeredSolidTorus& torus(lens->getTorus());
+            const regina::NLayeredSolidTorus& torus(lens->torus());
             [details appendFormat:@INDENT1 "Layered %ld-%ld-%ld solid torus %s\n",
-             torus.getMeridinalCuts(0),
-             torus.getMeridinalCuts(1),
-             torus.getMeridinalCuts(2),
+             torus.meridinalCuts(0),
+             torus.meridinalCuts(1),
+             torus.meridinalCuts(2),
              (lens->isSnapped() ? "snapped shut" : "twisted shut")];
 
             [details appendString:@"\n"];
@@ -278,23 +277,23 @@
 
 - (void)findLayeredLoops:(NSMutableString*)details
 {
-    unsigned long nComps = self.packet->getNumberOfComponents();
+    unsigned long nComps = self.packet->countComponents();
     
     regina::NLayeredLoop* loop;
     for (unsigned long i = 0; i < nComps; i++) {
-        loop = regina::NLayeredLoop::isLayeredLoop(self.packet->getComponent(i));
+        loop = regina::NLayeredLoop::isLayeredLoop(self.packet->component(i));
         if (loop) {
-            [details appendFormat:@"Layered loop %s\n", loop->getName().c_str()];
+            [details appendFormat:@"Layered loop %s\n", loop->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
             
             if (loop->isTwisted()) {
-                [details appendFormat:@INDENT1 "Length %ld, twisted\n", loop->getLength()];
-                [details appendFormat:@INDENT1 "Hinge: edge %ld\n", loop->getHinge(0)->index()];
+                [details appendFormat:@INDENT1 "Length %ld, twisted\n", loop->length()];
+                [details appendFormat:@INDENT1 "Hinge: edge %ld\n", loop->hinge(0)->index()];
             } else {
-                [details appendFormat:@INDENT1 "Length %ld, not twisted\n", loop->getLength()];
+                [details appendFormat:@INDENT1 "Length %ld, not twisted\n", loop->length()];
                 [details appendFormat:@INDENT1 "Hinges: edge %ld, %ld\n",
-                 loop->getHinge(0)->index(),
-                 loop->getHinge(1)->index()];
+                 loop->hinge(0)->index(),
+                 loop->hinge(1)->index()];
             }
             
             [details appendString:@"\n"];
@@ -305,28 +304,28 @@
 
 - (void)findPlugTriSolidTori:(NSMutableString*)details
 {
-    unsigned long nComps = self.packet->getNumberOfComponents();
+    unsigned long nComps = self.packet->countComponents();
     
     regina::NPlugTriSolidTorus* plug;
     const regina::NLayeredChain* chain;
     for (unsigned long i = 0; i < nComps; i++) {
-        plug = regina::NPlugTriSolidTorus::isPlugTriSolidTorus(self.packet->getComponent(i));
+        plug = regina::NPlugTriSolidTorus::isPlugTriSolidTorus(self.packet->component(i));
         if (plug) {
-            [details appendFormat:@"Plugged triangular solid torus %s\n", plug->getName().c_str()];
+            [details appendFormat:@"Plugged triangular solid torus %s\n", plug->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
-            
-            const regina::NTriSolidTorus& core(plug->getCore());
+
+            const regina::NTriSolidTorus& core(plug->core());
             [details appendFormat:@INDENT1 "Core: tets %ld, %ld, %ld\n",
              core.getTetrahedron(0)->index(),
              core.getTetrahedron(1)->index(),
              core.getTetrahedron(2)->index()];
-            
+
             [details appendString:@INDENT1 "Chain lengths: "];
             for (int j = 0; j < 3; j++) {
-                chain = plug->getChain(j);
+                chain = plug->chain(j);
                 if (chain) {
-                    [details appendFormat:@"%ld", chain->getIndex()];
-                    if (plug->getChainType(j) == regina::NPlugTriSolidTorus::CHAIN_MAJOR)
+                    [details appendFormat:@"%ld", chain->index()];
+                    if (plug->chainType(j) == regina::NPlugTriSolidTorus::CHAIN_MAJOR)
                         [details appendString:@" (major)"];
                     else
                         [details appendString:@" (minor)"];
@@ -336,8 +335,8 @@
                     [details appendString:@", "];
             }
             [details appendString:@"\n"];
-            
-            if (plug->getEquatorType() == regina::NPlugTriSolidTorus::EQUATOR_MAJOR)
+
+            if (plug->equatorType() == regina::NPlugTriSolidTorus::EQUATOR_MAJOR)
                 [details appendString:@INDENT1 "Equator type: major\n"];
             else
                 [details appendString:@INDENT1 "Equator type: minor\n"];
@@ -359,7 +358,7 @@
     NSString *thisAnnulus, *adjAnnulus;
     for (b = region.numberOfBlocks() - 1; b >= 0; b--) {
         spec = region.block(b);
-        [details appendFormat:@INDENT2 "Block %ld: %s\n", b, spec.block->getAbbr().c_str()];
+        [details appendFormat:@INDENT2 "Block %ld: %s\n", b, spec.block->abbr().c_str()];
         
         nAnnuli = spec.block->nAnnuli();
         
@@ -493,7 +492,7 @@
          [TriComposition matrixString:bundle->core().parallelReln()]];
         
         [details appendFormat:@INDENT1 "Core T × I triangulation: %s\n",
-         bundle->core().getName().c_str()];
+         bundle->core().name().c_str()];
         
         [details appendString:@"\n"];
         delete bundle;
@@ -510,7 +509,7 @@
          [TriComposition matrixString:pBundle->matchingReln()]];
         
         [details appendFormat:@INDENT1 "Thin I-bundle (T × I): %s\n",
-         pBundle->bundle().getName().c_str()];
+         pBundle->bundle().name().c_str()];
         
         [details appendString:@"\n"];
         delete pBundle;
@@ -519,32 +518,32 @@
 
 - (void)findLayeredSolidTori:(NSMutableString*)details
 {
-    unsigned long nTets = self.packet->getNumberOfTetrahedra();
+    unsigned long nTets = self.packet->size();
     
     regina::NLayeredSolidTorus* torus;
     unsigned long topIndex;
     for (unsigned long i = 0; i < nTets; i++) {
         torus = regina::NLayeredSolidTorus::formsLayeredSolidTorusBase(self.packet->getTetrahedron(i));
         if (torus) {
-            [details appendFormat:@"Layered solid torus %s\n", torus->getName().c_str()];
-            [details appendFormat:@INDENT1 "Base: tet %ld\n", torus->getBase()->index()];
-            topIndex = torus->getTopLevel()->index();
+            [details appendFormat:@"Layered solid torus %s\n", torus->name().c_str()];
+            [details appendFormat:@INDENT1 "Base: tet %ld\n", torus->base()->index()];
+            topIndex = torus->topLevel()->index();
             [details appendFormat:@INDENT1 "Top level: tet %ld\n", topIndex];
             [details appendFormat:@INDENT1 "Weight %ld edge: %@\n",
-             torus->getMeridinalCuts(0),
+             torus->meridinalCuts(0),
              [TriComposition edgeStringForTorus:topIndex
-                                          first:torus->getTopEdge(0, 0)
-                                         second:torus->getTopEdge(0, 1)]];
+                                          first:torus->topEdge(0, 0)
+                                         second:torus->topEdge(0, 1)]];
             [details appendFormat:@INDENT1 "Weight %ld edge: %@\n",
-             torus->getMeridinalCuts(1),
+             torus->meridinalCuts(1),
              [TriComposition edgeStringForTorus:topIndex
-                                          first:torus->getTopEdge(1, 0)
-                                         second:torus->getTopEdge(1, 1)]];
+                                          first:torus->topEdge(1, 0)
+                                         second:torus->topEdge(1, 1)]];
             [details appendFormat:@INDENT1 "Weight %ld edge: %@\n",
-             torus->getMeridinalCuts(2),
+             torus->meridinalCuts(2),
              [TriComposition edgeStringForTorus:topIndex
-                                          first:torus->getTopEdge(2, 0)
-                                         second:torus->getTopEdge(2, 1)]];
+                                          first:torus->topEdge(2, 0)
+                                         second:torus->topEdge(2, 1)]];
             
             [details appendString:@"\n"];
             delete torus;
@@ -554,7 +553,7 @@
 
 - (void)findSpiralSolidTori:(NSMutableString*)details
 {
-    unsigned long nTets = self.packet->getNumberOfTetrahedra();
+    unsigned long nTets = self.packet->size();
     
     regina::NSpiralSolidTorus* spiral;
     regina::NTetrahedron* tet;
@@ -575,13 +574,13 @@
             }
             
             // We've got one!
-            [details appendFormat:@"Spiralled solid torus %s\n", spiral->getName().c_str()];
+            [details appendFormat:@"Spiralled solid torus %s\n", spiral->name().c_str()];
             
-            unsigned long spiralTets = spiral->getNumberOfTetrahedra();
+            unsigned long spiralTets = spiral->size();
             
             unsigned long* tetIndex = new unsigned long[spiralTets];
             for (j = 0; j < spiralTets; j++)
-                tetIndex[j] = self.packet->tetrahedronIndex(spiral->getTetrahedron(j));
+                tetIndex[j] = self.packet->tetrahedronIndex(spiral->tetrahedron(j));
             
             [details appendString:(spiralTets == 1 ? @INDENT1 "Tet: " : @INDENT1 "Tets: ")];
             for (j = 0; j < spiralTets; j++) {
@@ -595,15 +594,15 @@
             for (j = 0; j < spiralTets; j++) {
                 [details appendFormat:@INDENT2 "%@ = %@ = %@",
                  [TriComposition edgeStringForTet:tetIndex[(j + spiralTets - 1) % spiralTets]
-                                            roles:spiral->getVertexRoles((j + spiralTets - 1) % spiralTets)
+                                            roles:spiral->vertexRoles((j + spiralTets - 1) % spiralTets)
                                             start:2
                                               end:3],
                  [TriComposition edgeStringForTet:tetIndex[j]
-                                            roles:spiral->getVertexRoles(j)
+                                            roles:spiral->vertexRoles(j)
                                             start:1
                                               end:2],
                  [TriComposition edgeStringForTet:tetIndex[(j + 1) % spiralTets]
-                                            roles:spiral->getVertexRoles((j + 1) % spiralTets)
+                                            roles:spiral->vertexRoles((j + 1) % spiralTets)
                                             start:0
                                               end:1]];
                 [details appendString:@"\n"];
@@ -613,11 +612,11 @@
             for (j = 0; j < spiralTets; j++) {
                 [details appendFormat:@INDENT2 "%@ = %@",
                  [TriComposition edgeStringForTet:tetIndex[j]
-                                            roles:spiral->getVertexRoles(j)
+                                            roles:spiral->vertexRoles(j)
                                             start:1
                                               end:3],
                  [TriComposition edgeStringForTet:tetIndex[(j + 1) % spiralTets]
-                                            roles:spiral->getVertexRoles((j + 1) % spiralTets)
+                                            roles:spiral->vertexRoles((j + 1) % spiralTets)
                                             start:0
                                               end:2]];
                 [details appendString:@"\n"];
@@ -627,7 +626,7 @@
             for (j = 0; j < spiralTets; j++) {
                 [details appendFormat:@INDENT2 "%@",
                  [TriComposition edgeStringForTet:tetIndex[j]
-                                            roles:spiral->getVertexRoles(j)
+                                            roles:spiral->vertexRoles(j)
                                             start:0
                                               end:3]];
                 [details appendString:@"\n"];
@@ -641,7 +640,7 @@
 
 - (void)findSnappedBalls:(NSMutableString*)details
 {
-    unsigned long nTets = self.packet->getNumberOfTetrahedra();
+    unsigned long nTets = self.packet->size();
     
     regina::NSnappedBall* ball;
     for (unsigned long i = 0; i < nTets; i++) {
@@ -650,8 +649,8 @@
             [details appendString:@"Snapped 3-ball\n"];
             [details appendFormat:@INDENT1 "Tetrahedron %ld\n", i];
             [details appendFormat:@INDENT1 "Equator: edge %d%d\n",
-             ball->getInternalFace(0),
-             ball->getInternalFace(1)];
+             ball->internalFace(0),
+             ball->internalFace(1)];
             
             [details appendString:@"\n"];
             delete ball;
@@ -661,7 +660,7 @@
 
 - (void)findPillowSpheres:(NSMutableString*)details
 {
-    unsigned long nTriangles = self.packet->getNumberOfTriangles();
+    unsigned long nTriangles = self.packet->countTriangles();
     
     unsigned long i, j;
     regina::NTriangle* f1;
@@ -689,7 +688,7 @@
 
 - (void)findSnappedSpheres:(NSMutableString*)details
 {
-    unsigned long nTets = self.packet->getNumberOfTetrahedra();
+    unsigned long nTets = self.packet->size();
     
     unsigned long i, j;
     regina::NTetrahedron* t1;
@@ -704,9 +703,9 @@
                 [details appendString:@"Snapped 2-sphere\n"];
                 [details appendFormat:@INDENT1 "Tetrahedra: %ld, %ld\n", i, j];
                 
-                const regina::NSnappedBall* ball = sphere->getSnappedBall(0);
+                const regina::NSnappedBall* ball = sphere->snappedBall(0);
                 [details appendFormat:@INDENT1 "Equator: edge %ld\n",
-                 ball->getTetrahedron()->getEdge(ball->getEquatorEdge())->index()];
+                 ball->tetrahedron()->getEdge(ball->equatorEdge())->index()];
                 
                 [details appendString:@"\n"];
                 delete sphere;

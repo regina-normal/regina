@@ -151,6 +151,14 @@ class REGINA_API NSurfaceSubset :
          * 
          * @return the triangulation in which these surfaces live.
          */
+        NTriangulation* triangulation() const;
+        /**
+         * Deprecated routine that returns the triangulation in which these
+         * normal surfaces live.
+         *
+         * \deprecated This routine has been renamed to triangulation().
+         * See the triangulation() documentation for further details.
+         */
         NTriangulation* getTriangulation() const;
 
         /**
@@ -158,7 +166,7 @@ class REGINA_API NSurfaceSubset :
          *
          * @return the number of surfaces.
          */
-        unsigned long size() const;
+        size_t size() const;
         /**
          * Deprecated routine to return the number of surfaces
          * stored in this list.
@@ -167,7 +175,7 @@ class REGINA_API NSurfaceSubset :
          *
          * @return the number of surfaces.
          */
-        unsigned long getNumberOfSurfaces() const;
+        size_t getNumberOfSurfaces() const;
         /**
          * Returns the surface at the requested index in this set.
          *
@@ -176,7 +184,15 @@ class REGINA_API NSurfaceSubset :
          *
          * @return the normal surface at the requested index in this set.
          */
-        const NNormalSurface* getSurface(unsigned long index) const;
+        const NNormalSurface* surface(size_t index) const;
+        /**
+         * Deprecated routine that returns the surface at the requested
+         * index in this set.
+         *
+         * \deprecated This routine has been renamed to surface().
+         * See the surface() documentation for further details.
+         */
+        const NNormalSurface* getSurface(size_t index) const;
 
         /**
          * Writes the number of surfaces in this set followed by the
@@ -232,17 +248,22 @@ inline bool NSurfaceSubset::allowsOriented() const {
 inline bool NSurfaceSubset::isEmbeddedOnly() const {
     return source.isEmbeddedOnly();
 }
+inline NTriangulation* NSurfaceSubset::triangulation() const {
+    return source.triangulation();
+}
 inline NTriangulation* NSurfaceSubset::getTriangulation() const {
-    return source.getTriangulation();
+    return source.triangulation();
 }
-inline unsigned long NSurfaceSubset::size() const {
+inline size_t NSurfaceSubset::size() const {
     return surfaces.size();
 }
-inline unsigned long NSurfaceSubset::getNumberOfSurfaces() const {
+inline size_t NSurfaceSubset::getNumberOfSurfaces() const {
     return surfaces.size();
 }
-inline const NNormalSurface* NSurfaceSubset::getSurface(unsigned long index)
-        const {
+inline const NNormalSurface* NSurfaceSubset::surface(size_t index) const {
+    return surfaces[index];
+}
+inline const NNormalSurface* NSurfaceSubset::getSurface(size_t index) const {
     return surfaces[index];
 }
 

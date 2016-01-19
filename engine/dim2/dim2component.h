@@ -125,6 +125,14 @@ class REGINA_API Component<2> : public detail::ComponentBase<2>,
          *
          * @return the number of boundary components.
          */
+        size_t countBoundaryComponents() const;
+
+        /**
+         * Deprecated function that returns the number of boundary
+         * components in this component.
+         *
+         * \deprecated Simply call countBoundaryComponents() instead.
+         */
         size_t getNumberOfBoundaryComponents() const;
 
         /**
@@ -167,11 +175,19 @@ class REGINA_API Component<2> : public detail::ComponentBase<2>,
          *
          * @param index the index of the requested boundary component in
          * this component.  This should be between 0 and
-         * getNumberOfBoundaryComponents()-1 inclusive.
+         * countBoundaryComponents()-1 inclusive.
          * Note that the index of a boundary component in the component
          * need not be the index of the same boundary component in the
          * entire triangulation.
          * @return the requested boundary component.
+         */
+        Dim2BoundaryComponent* boundaryComponent(size_t index) const;
+        /**
+         * Deprecated routine that returns the requested boundary component
+         * of this triangulation.
+         *
+         * \deprecated This routine has been renamed to boundaryComponent().
+         * See the boundaryComponent() documentation for further details.
          */
         Dim2BoundaryComponent* getBoundaryComponent(size_t index) const;
 
@@ -227,6 +243,10 @@ inline const std::vector<Dim2Vertex*>& Component<2>::faces<0>() const {
     return vertices_;
 }
 
+inline size_t Component<2>::countBoundaryComponents() const {
+    return boundaryComponents_.size();
+}
+
 inline size_t Component<2>::getNumberOfBoundaryComponents() const {
     return boundaryComponents_.size();
 }
@@ -239,6 +259,11 @@ inline Dim2Edge* Component<2>::face<1>(size_t index) const {
 template <>
 inline Dim2Vertex* Component<2>::face<0>(size_t index) const {
     return vertices_[index];
+}
+
+inline Dim2BoundaryComponent* Component<2>::boundaryComponent(size_t index)
+        const {
+    return boundaryComponents_[index];
 }
 
 inline Dim2BoundaryComponent* Component<2>::getBoundaryComponent(size_t index)

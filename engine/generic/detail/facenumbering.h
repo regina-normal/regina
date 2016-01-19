@@ -42,7 +42,9 @@
 #define __FACENUMBERING_H_DETAIL
 #endif
 
+#include <algorithm>
 #include "regina-core.h"
+#include <algorithm>
 
 // Permutation headers required for template specialisations.
 #include "maths/nperm2.h"
@@ -57,6 +59,18 @@ namespace detail {
  * \weakgroup detail
  * @{
  */
+
+/**
+ * A lookup table that stores (\a n choose \a k) for all \a n &le; \a 16.
+ *
+ * For all values 0 &le; \a k &le; \a n &le; 16, the value
+ * \a binomSmall_[\a n][\a k] is the binomial coefficient (\a n choose \a k).
+ *
+ * This array is used in the implementation of the function binomSmall().
+ * End users should call binomSmall() instead of referring to this array
+ * directly.
+ */
+extern const int* const binomSmall_[17];
 
 /**
  * Placeholder class that outlines the functions provided by
@@ -90,7 +104,7 @@ namespace detail {
  * \ref stddim "standard dimensions" such as Dim2Edge, NVertex and so on).
  *
  * \tparam dim the dimension of the simplex whose faces are being numbered.
- * This must be at least 1.
+ * This must be between 1 and 15 inclusive.
  * \tparam subdim the dimension of the faces being numbered.
  * This must be between 0 and <i>dim</i>-1 inclusive.
  * \tparam lex \c true if faces are numbered in lexicographical order
@@ -190,7 +204,7 @@ class FaceNumberingAPI {
  * \ref stddim "standard dimensions" such as Dim2Edge, NVertex and so on).
  *
  * \tparam dim the dimension of the simplex whose faces are being numbered.
- * This must be at least 1.
+ * This must be between 1 and 15 inclusive.
  * \tparam subdim the dimension of the faces being numbered.
  * This must be between 0 and <i>dim</i>-1 inclusive.
  * \tparam lex \c true if faces are numbered in lexicographical order
@@ -235,16 +249,106 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             // implementation of ordering() for high-dimensional faces
             // calls this function and reverses the permutation.
 
-            // TODO: Generic implementation for ordering().
-            return NPerm<dim + 1>();
+            // This implementation runs in linear time in dim (TODO: check)
+            int perm[dim + 1];
+            unsigned val;
+
+            // IDEA: use the combinatorial number system which associates 
+            //       numbers face = 0, 1, .... , binom(dim+1,subdim+1)-1 
+            //       to sets of distinct integers 
+            //       dim >= c_(subdim+1) > ... c_1 >= 0
+            //       in lexicographic ordering.
+            // 
+            // ALGORITHM: the last vertex is the maximal number x_(subdim) such 
+            //            that
+            //            y_(subdim) = ( x_(subdim) \choose k ) <= remaining
+            //            the second last vertex is the maximal number 
+            //            x_(subdim-1) such that
+            //            y_(subdim-1) = ( x_(subdim-1) \choose k-1 ) <= 
+            //            remaining - y_(subdim)
+            //
+            // PROBLEM: we need lexicographic ordering 
+            //       0 <= c_1 < ... < c_(subdim+1) <= dim
+            //       so we must reverse the ordering and apply the transformation
+            //       c_i \mapsto d_i = dim-c_i
+
+            // reverse ordering
+            unsigned remaining = binomSmall_[dim+1][subdim+1] - face - 1;
+
+            unsigned k = subdim+1;
+            unsigned max = dim;
+            unsigned done;
+
+            while (remaining > 0) {
+              done = 0;
+              while (done == 0) {
+                if (max < k) {
+                  val = 0;
+                } else {
+                  val = binomSmall_[max][k];
+                }
+                if (val <= remaining) {
+                  k--;
+                  perm[subdim-k] = dim-max;
+                  //printf("new element: %u\n",perm[k]);
+
+                  remaining = remaining - val;
+                  //printf("remaining: %u\n",remaining);
+                  done = 1;
+                }
+                max--;
+              }
+
+            }
+            while (k > 0) {
+              k--;
+              perm[subdim-k]=dim-k;
+            }
+
+            // So far "perm" lists the vertices of the face in increasing order
+            return NPerm<dim + 1>(perm);
         }
 
         static unsigned faceNumber(NPerm<dim + 1> vertices) {
             // We can assume here that we are numbering faces in forward
             // lexicographical order (i.e., the face dimension subdim is small).
 
-            // TODO: Generic implementation for faceNumber().
-            return 0;
+            // This implementation runs in linear time in subdim (TODO: check)
+
+            // IDEA: use the combinatorial number system which associates 
+            //       numbers face = 0, 1, .... , binom(dim+1,subdim+1)-1 
+            //       to sets of distinct integers 
+            //       dim >= c_(subdim+1) > ... c_1 >= 0
+            //       in lexicographic ordering.
+            // 
+            // ALGORITHM: the number N associated to the face vertices 
+            //            is given by 
+            //            N = binom (c_(subdim+1),subdim+1) + 
+            //                binom (c_(subdim),subdim) + 
+            //                ... + 
+            //                binom (c_1,1) 
+            //
+            // PROBLEM: we need lexicographic ordering 
+            //       0 <= c_1 < ... < c_(subdim+1) <= dim
+            //       so we must reverse the ordering and apply the transformation
+            //       c_i \mapsto d_i = dim-c_i
+
+            unsigned i;
+
+            int v[dim + 1];
+            for (i = 0; i <= subdim; ++i)
+                v[i] = vertices[i];
+
+            // Sort the vertices of the face in increasing order.
+            std::sort(v, v + subdim + 1);
+
+            unsigned val = 0;
+            for (i=0; i<=subdim; i++) {
+              if (dim - v[subdim-i] >= i+1) {
+                val += binomSmall_[dim-v[subdim-i]][i+1];
+              }
+            }
+            return binomSmall_[dim+1][subdim+1]-1-val;
         }
 
         static bool containsVertex(unsigned face, unsigned vertex) {

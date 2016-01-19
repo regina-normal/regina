@@ -91,7 +91,7 @@ QModelIndex Dim2GluingsModel::index(int row, int column,
 }
 
 int Dim2GluingsModel::rowCount(const QModelIndex& /* unused parent*/) const {
-    return tri_->getNumberOfSimplices();
+    return tri_->size();
 }
 
 int Dim2GluingsModel::columnCount(const QModelIndex& /* unused parent*/) const {
@@ -191,7 +191,7 @@ bool Dim2GluingsModel::setData(const QModelIndex& index, const QVariant& value,
 
         // Check explicitly for a negative triangle number
         // since isEdgeStringValid() takes an unsigned integer.
-        if (newAdjTri < 0 || newAdjTri >= tri_->getNumberOfSimplices()) {
+        if (newAdjTri < 0 || newAdjTri >= tri_->size()) {
             showError(tr("There is no triangle number %1.").arg(newAdjTri));
             return false;
         }
@@ -242,7 +242,7 @@ bool Dim2GluingsModel::setData(const QModelIndex& index, const QVariant& value,
 QString Dim2GluingsModel::isEdgeStringValid(unsigned long srcTri, int srcEdge,
         unsigned long destTri, const QString& destEdge,
         regina::NPerm3* gluing) {
-    if (destTri >= tri_->getNumberOfSimplices())
+    if (destTri >= tri_->size())
         return tr("There is no triangle number %1.").arg(destTri);
 
     if (! reEdge.exactMatch(destEdge))
@@ -340,8 +340,6 @@ Dim2TriGluingsUI::Dim2TriGluingsUI(regina::Dim2Triangulation* packet,
     ui = edgeTable;
 
     // Set up the triangulation actions.
-    QAction* sep;
-
     actAddTri = new QAction(this);
     actAddTri->setText(tr("&Add Triangle"));
     actAddTri->setIcon(ReginaSupport::regIcon("insert"));
@@ -365,7 +363,7 @@ Dim2TriGluingsUI::Dim2TriGluingsUI(regina::Dim2Triangulation* packet,
         this, SLOT(updateRemoveState()));
     triActionList.append(actRemoveTri);
 
-    //sep = new QAction(this);
+    //QAction* sep = new QAction(this);
     //sep->setSeparator(true);
     //triActionList.append(sep);
 
@@ -471,7 +469,7 @@ void Dim2TriGluingsUI::removeSelectedTris() {
         return;
 
     // Off we go!
-    if (first == 0 && last == tri->getNumberOfSimplices() - 1)
+    if (first == 0 && last == tri->size() - 1)
         tri->removeAllSimplices();
     else {
         regina::NPacket::ChangeEventSpan span(tri);

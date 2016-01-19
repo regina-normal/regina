@@ -88,7 +88,7 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          * of common types.  Here a vertex link is considered only up to its
          * topology (not the combinatorics of its triangulation).
          *
-         * @see getLink
+         * @see link
          */
         enum LinkType {
             SPHERE = 1,
@@ -150,6 +150,14 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          * or 0 if this vertex is not on the boundary of the triangulation
          * as determined by isBoundary().
          */
+        NBoundaryComponent* boundaryComponent() const;
+        /**
+         * Deprecated routine that returns the boundary component of the
+         * triangulation to which this vertex belongs.
+         *
+         * \deprecated This routine has been renamed as boundaryComponent().
+         * See the boundaryComponent() documentation for further details.
+         */
         NBoundaryComponent* getBoundaryComponent() const;
 
         /**
@@ -162,6 +170,14 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          * result of buildLink().
          *
          * @return a broad categorisation of the vertex link.
+         */
+        LinkType link() const;
+        /**
+         * Deprecated routine that returns a broad categorisation of the link
+         * of the vertex.
+         *
+         * \deprecated This routine has been renamed to link().
+         * See the link() documentation for further details.
          */
         LinkType getLink() const;
 
@@ -303,24 +319,32 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          *
          * This routine does not require a full triangulation of the
          * vertex link, and so can be much faster than calling
-         * buildLink().getEulerChar().
+         * buildLink().eulerChar().
          *
          * @return the Euler characteristic of the vertex link.
          */
         REGINA_INLINE_REQUIRED
+        long linkEulerChar() const;
+        /**
+         * Deprecated routine that returns the Euler characteristic of
+         * the vertex link.
+         *
+         * \deprecated This routine has been renamed to linkEulerChar().
+         * See the linkEulerChar() documentation for further details.
+         */
         long getLinkEulerChar() const;
 
         /**
-         * A deprecated alias for getLinkEulerChar().
+         * A deprecated alias for linkEulerChar().
          *
          * Returns the Euler characteristic of the vertex link.
          *
          * This routine does not require a full triangulation of the
          * vertex link, and so can be much faster than calling
-         * buildLink().getEulerChar().
+         * buildLink().eulerChar().
          *
          * \deprecated This routine will be removed in a future version of
-         * Regina.  Please use the identical routine getLinkEulerChar() instead.
+         * Regina.  Please use the identical routine linkEulerChar() instead.
          *
          * @return the Euler characteristic of the vertex link.
          */
@@ -378,8 +402,16 @@ inline Face<3, 0>::Face(NComponent* component) :
         boundaryComponent_(0), linkEulerChar_(0), linkTri_(0) {
 }
 
+inline NBoundaryComponent* Face<3, 0>::boundaryComponent() const {
+    return boundaryComponent_;
+}
+
 inline NBoundaryComponent* Face<3, 0>::getBoundaryComponent() const {
     return boundaryComponent_;
+}
+
+inline NVertex::LinkType Face<3, 0>::link() const {
+    return link_;
 }
 
 inline NVertex::LinkType Face<3, 0>::getLink() const {
@@ -410,6 +442,10 @@ inline bool Face<3, 0>::isBoundary() const {
 
 inline bool Face<3, 0>::isStandard() const {
     return (link_ != NON_STANDARD_CUSP && link_ != NON_STANDARD_BDRY);
+}
+
+inline long Face<3, 0>::linkEulerChar() const {
+    return linkEulerChar_;
 }
 
 inline long Face<3, 0>::getLinkEulerChar() const {

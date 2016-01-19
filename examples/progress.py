@@ -17,7 +17,7 @@ import time
 # triangulation here.
 sig = 'sfLfvQvwwMQQQccjghjkmqlonrnrqpqrnsnksaisnrobocksks'
 tri = NTriangulation(sig)
-print tri.getNumberOfTetrahedra(), 'tetrahedra'
+print tri.size(), 'tetrahedra'
 
 # Create a progress tracker to use during the normal surface enumeration.
 # This will report the state of progress while the enumeration runs in

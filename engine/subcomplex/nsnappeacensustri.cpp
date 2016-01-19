@@ -60,7 +60,7 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
     // Before we do any further checks, make sure the number of
     // tetrahedra is within the supported range.
 
-    if (comp->getNumberOfTetrahedra() > 4)
+    if (comp->size() > 4)
         return 0;
 
     // Start with property checks to see if it has a chance of being
@@ -72,12 +72,12 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
     if (comp->isClosed())
         return 0;
 
-    unsigned long nVertices = comp->getNumberOfVertices();
-    unsigned long nEdges = comp->getNumberOfEdges();
+    unsigned long nVertices = comp->countVertices();
+    unsigned long nEdges = comp->countEdges();
     unsigned long i;
     int link;
     for (i = 0; i < nVertices; i++) {
-        link = comp->getVertex(i)->getLink();
+        link = comp->getVertex(i)->link();
         if (link != NVertex::TORUS && link != NVertex::KLEIN_BOTTLE)
             return 0;
     }
@@ -87,83 +87,83 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
 
     // Now search for specific triangulations.
 
-    if (comp->getNumberOfTetrahedra() == 1) {
+    if (comp->size() == 1) {
         // At this point it must be m000, since there are no others
         // that fit these constraints.  But test orientability
         // anyway just to be safe.
         if (comp->isOrientable())
             return 0;
         return new NSnapPeaCensusTri(SEC_5, 0);
-    } else if (comp->getNumberOfTetrahedra() == 2) {
+    } else if (comp->size() == 2) {
         if (comp->isOrientable()) {
             // Orientable.  Looking for m003 or m004.
-            if (comp->getNumberOfVertices() != 1)
+            if (comp->countVertices() != 1)
                 return 0;
-            if (comp->getNumberOfEdges() != 2)
+            if (comp->countEdges() != 2)
                 return 0;
-            if (comp->getEdge(0)->getDegree() != 6 ||
-                    comp->getEdge(1)->getDegree() != 6)
+            if (comp->getEdge(0)->degree() != 6 ||
+                    comp->getEdge(1)->degree() != 6)
                 return 0;
 
             // Now we know it's either m003 or m004.  We distinguish
             // between them by triangle types, since all of m003's triangles
             // are Mobius bands and all of m004's triangles are horns.
-            if (comp->getTriangle(0)->getType() == NTriangle::MOBIUS)
+            if (comp->triangle(0)->type() == NTriangle::MOBIUS)
                 return new NSnapPeaCensusTri(SEC_5, 3);
             else
                 return new NSnapPeaCensusTri(SEC_5, 4);
         } else {
             // Non-orientable.  Looking for m001 or m002.
-            if (comp->getNumberOfVertices() == 1) {
+            if (comp->countVertices() == 1) {
                 // Looking for m001.
-                if (comp->getNumberOfEdges() != 2)
+                if (comp->countEdges() != 2)
                     return 0;
-                if (! ((comp->getEdge(0)->getDegree() == 4 &&
-                        comp->getEdge(1)->getDegree() == 8) ||
-                       (comp->getEdge(0)->getDegree() == 8 &&
-                        comp->getEdge(1)->getDegree() == 4)))
+                if (! ((comp->getEdge(0)->degree() == 4 &&
+                        comp->getEdge(1)->degree() == 8) ||
+                       (comp->getEdge(0)->degree() == 8 &&
+                        comp->getEdge(1)->degree() == 4)))
                     return 0;
                 // Census says it's m001 if no triangle forms a dunce hat.
                 for (int i = 0; i < 4; i++)
-                    if (comp->getTriangle(i)->getType() == NTriangle::DUNCEHAT)
+                    if (comp->triangle(i)->type() == NTriangle::DUNCEHAT)
                         return 0;
                 return new NSnapPeaCensusTri(SEC_5, 1);
-            } else if (comp->getNumberOfVertices() == 2) {
+            } else if (comp->countVertices() == 2) {
                 // Looking for m002.
-                if (comp->getNumberOfEdges() != 2)
+                if (comp->countEdges() != 2)
                     return 0;
-                if (comp->getEdge(0)->getDegree() != 6 ||
-                        comp->getEdge(1)->getDegree() != 6)
+                if (comp->getEdge(0)->degree() != 6 ||
+                        comp->getEdge(1)->degree() != 6)
                     return 0;
                 // Census says it's m002 if some triangle forms a dunce hat.
                 for (int i = 0; i < 4; i++)
-                    if (comp->getTriangle(i)->getType() == NTriangle::DUNCEHAT)
+                    if (comp->triangle(i)->type() == NTriangle::DUNCEHAT)
                         return new NSnapPeaCensusTri(SEC_5, 2);
                 return 0;
             }
         }
-    } else if (comp->getNumberOfTetrahedra() == 4) {
+    } else if (comp->size() == 4) {
         if (comp->isOrientable()) {
             // Search for the Whitehead link complement.
             // Note that this could be done with a smaller set of tests
             // since some can be deduced from others, but these tests
             // aren't terribly expensive anyway.
-            if (comp->getNumberOfVertices() != 2)
+            if (comp->countVertices() != 2)
                 return 0;
-            if (comp->getNumberOfEdges() != 4)
+            if (comp->countEdges() != 4)
                 return 0;
-            if (comp->getVertex(0)->getLink() != NVertex::TORUS)
+            if (comp->getVertex(0)->link() != NVertex::TORUS)
                 return 0;
-            if (comp->getVertex(1)->getLink() != NVertex::TORUS)
+            if (comp->getVertex(1)->link() != NVertex::TORUS)
                 return 0;
-            if (comp->getVertex(0)->getDegree() != 8)
+            if (comp->getVertex(0)->degree() != 8)
                 return 0;
-            if (comp->getVertex(1)->getDegree() != 8)
+            if (comp->getVertex(1)->degree() != 8)
                 return 0;
             // Census says it's the Whitehead link if some edge has
             // degree 8.
             for (int i = 0; i < 4; i++)
-                if (comp->getEdge(i)->getDegree() == 8)
+                if (comp->getEdge(i)->degree() == 8)
                     return new NSnapPeaCensusTri(SEC_5, 129);
             return 0;
         }
@@ -173,44 +173,44 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
     return 0;
 }
 
-NManifold* NSnapPeaCensusTri::getManifold() const {
-    return new NSnapPeaCensusManifold(section, index);
+NManifold* NSnapPeaCensusTri::manifold() const {
+    return new NSnapPeaCensusManifold(section_, index_);
 }
 
-NAbelianGroup* NSnapPeaCensusTri::getHomologyH1() const {
-    return NSnapPeaCensusManifold(section, index).getHomologyH1();
+NAbelianGroup* NSnapPeaCensusTri::homology() const {
+    return NSnapPeaCensusManifold(section_, index_).homology();
 }
 
 std::ostream& NSnapPeaCensusTri::writeName(std::ostream& out) const {
-    out << "SnapPea " << section;
+    out << "SnapPea " << section_;
 
     // Pad the index with leading zeroes.
     // All sections are written with three-digit indices, except for
     // 7-tetrahedron orientable which uses four-digit indices.
-    if (section == SEC_7_OR && index < 1000)
+    if (section_ == SEC_7_OR && index_ < 1000)
         out << '0';
-    if (index < 100)
+    if (index_ < 100)
         out << '0';
-    if (index < 10)
+    if (index_ < 10)
         out << '0';
-    out << index;
+    out << index_;
 
     return out;
 }
 
 std::ostream& NSnapPeaCensusTri::writeTeXName(std::ostream& out) const {
-    out << section << "_{";
+    out << section_ << "_{";
 
     // Pad the index with leading zeroes.
     // All sections are written with three-digit indices, except for
     // 7-tetrahedron orientable which uses four-digit indices.
-    if (section == SEC_7_OR && index < 1000)
+    if (section_ == SEC_7_OR && index_ < 1000)
         out << '0';
-    if (index < 100)
+    if (index_ < 100)
         out << '0';
-    if (index < 10)
+    if (index_ < 10)
         out << '0';
-    out << index << '}';
+    out << index_ << '}';
 
     return out;
 }

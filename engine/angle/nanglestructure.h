@@ -79,7 +79,7 @@ typedef Triangulation<3> NTriangulation;
  * three elements will be the angle members for the first tetrahedron,
  * the next three for the second tetrahedron and so on.  For each
  * tetraheron, the three individual elements are the angle members
- * for vertex splittings 0, 1 and 2 (see NAngleStructure::getAngle()).
+ * for vertex splittings 0, 1 and 2 (see NAngleStructure::angle()).
  * The final element of the vector is the scaling member as described
  * above.
  *
@@ -136,7 +136,7 @@ class REGINA_API NAngleStructure :
         NAngleStructureVector* vector;
             /**< Stores (indirectly) the individual angles in this angle
              *   structure. */
-        const NTriangulation* triangulation;
+        const NTriangulation* triangulation_;
             /**< The triangulation on which this angle structure is placed. */
 
         mutable unsigned long flags;
@@ -189,7 +189,7 @@ class REGINA_API NAngleStructure :
          *
          * @param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested angle lives; this should
-         * be between 0 and NTriangulation::getNumberOfTetrahedra()-1
+         * be between 0 and NTriangulation::size()-1
          * inclusive.
          * @param edgePair the number of the vertex splitting
          * representing the pair of edges holding the requested angle;
@@ -197,12 +197,28 @@ class REGINA_API NAngleStructure :
          * and regina::vertexSplitDefn for details regarding vertex splittings.
          * @return the requested angle scaled down by <i>pi</i>.
          */
-        NRational getAngle(unsigned long tetIndex, int edgePair) const;
+        NRational angle(size_t tetIndex, int edgePair) const;
+        /**
+         * Deprecated routine that returns the requested angle in this
+         * angle structure.
+         *
+         * \deprecated This routine has been renamed to angle().
+         * See the angle() documentation for further details.
+         */
+        NRational getAngle(size_t tetIndex, int edgePair) const;
 
         /**
          * Returns the triangulation on which this angle structure lies.
          *
          * @return the underlying triangulation.
+         */
+        const NTriangulation* triangulation() const;
+        /**
+         * Deprecated routine that returns the triangulation on which this
+         * angle structure lies.
+         *
+         * \deprecated This routine has been renamed to triangulation().
+         * See the triangulation() documentation for further details.
          */
         const NTriangulation* getTriangulation() const;
 
@@ -323,15 +339,24 @@ inline NAngleStructureVector::NAngleStructureVector(
 
 inline NAngleStructure::NAngleStructure(const NTriangulation* triang,
         NAngleStructureVector* newVector) : vector(newVector),
-        triangulation(triang), flags(0) {
+        triangulation_(triang), flags(0) {
 }
 
 inline NAngleStructure::~NAngleStructure() {
     delete vector;
 }
 
+inline const NTriangulation* NAngleStructure::triangulation() const {
+    return triangulation_;
+}
+
 inline const NTriangulation* NAngleStructure::getTriangulation() const {
-    return triangulation;
+    return triangulation_;
+}
+
+inline NRational NAngleStructure::getAngle(size_t tetIndex, int edgePair)
+        const {
+    return angle(tetIndex, edgePair);
 }
 
 inline bool NAngleStructure::isStrict() const {

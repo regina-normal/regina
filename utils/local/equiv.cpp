@@ -131,7 +131,7 @@ void sameSize(NTriangulation* t) {
     // Hunt for it in the packet tree.
     NTriangulation* found = 0;
     for (NPacket* p = tree; p; p = p->nextTreePacket())
-        if (p->getPacketType() == NTriangulation::packetType)
+        if (p->type() == PACKET_TRIANGULATION)
             if (static_cast<NTriangulation*>(p)->isIsomorphicTo(*t).get()) {
                 found = static_cast<NTriangulation*>(p);
                 break;
@@ -162,9 +162,9 @@ void sameSize(NTriangulation* t) {
 void processAlt(NTriangulation* t) {
     t->intelligentSimplify();
 
-    if (t->getNumberOfTetrahedra() < orig->getNumberOfTetrahedra())
+    if (t->size() < orig->size())
         nonMin = true;
-    else if (t->getNumberOfTetrahedra() == orig->getNumberOfTetrahedra())
+    else if (t->size() == orig->size())
         sameSize(t);
 }
 
@@ -181,7 +181,7 @@ void tryMovesDown(NTriangulation* t, int maxLevels) {
     unsigned i, j;
     bool found = false;
 
-    for (i = 0; i < t->getNumberOfEdges(); i++)
+    for (i = 0; i < t->countEdges(); i++)
         if (t->twoZeroMove(t->getEdge(i), true, false)) {
             alt = new NTriangulation(*t);
             alt->twoZeroMove(alt->getEdge(i));
@@ -193,7 +193,7 @@ void tryMovesDown(NTriangulation* t, int maxLevels) {
                 return;
         }
 
-    for (i = 0; i < t->getNumberOfEdges(); i++)
+    for (i = 0; i < t->countEdges(); i++)
         for (j = 0; j < 2; j++)
             if (t->twoOneMove(t->getEdge(i), j, true, false)) {
                 alt = new NTriangulation(*t);
@@ -208,7 +208,7 @@ void tryMovesDown(NTriangulation* t, int maxLevels) {
 
     // Only try 3-2 moves if nothing better has worked so far.
     if (! found)
-        for (i = 0; i < t->getNumberOfEdges(); i++)
+        for (i = 0; i < t->countEdges(); i++)
             if (t->threeTwoMove(t->getEdge(i), true, false)) {
                 alt = new NTriangulation(*t);
                 alt->threeTwoMove(alt->getEdge(i));
@@ -222,7 +222,7 @@ void tryMovesDown(NTriangulation* t, int maxLevels) {
 
     // Only try 4-4 moves if nothing else has worked.
     if (! found)
-        for (i = 0; i < t->getNumberOfEdges(); i++)
+        for (i = 0; i < t->countEdges(); i++)
             for (j = 0; j < 2; j++)
                 if (t->fourFourMove(t->getEdge(i), j, true, false)) {
                     alt = new NTriangulation(*t);
@@ -251,7 +251,7 @@ void tryMovesAcross(NTriangulation* t, int maxLevels,
     NTriangulation* alt;
 
     if (maxLevels > 0)
-        for (i = 0; i < t->getNumberOfEdges(); i++)
+        for (i = 0; i < t->countEdges(); i++)
             for (j = 0; j < 2; j++)
                 if (t->fourFourMove(t->getEdge(i), j, true, false)) {
                     alt = new NTriangulation(*t);
@@ -286,9 +286,9 @@ void tryMovesUp(NTriangulation* t, int levelsRemaining) {
         tryMovesAcross(alt, argAcross);
         delete alt;
     } else {
-        for (unsigned i = 0; i < t->getNumberOfFaces(); i++) {
+        for (unsigned i = 0; i < t->countTriangles(); i++) {
             alt = new NTriangulation(*t);
-            if (alt->twoThreeMove(alt->getFace(i))) {
+            if (alt->twoThreeMove(alt->getTriangle(i))) {
                 if (levelsRemaining > 1)
                     tryMovesUp(alt, levelsRemaining - 1);
                 else
@@ -309,10 +309,10 @@ void processTree() {
     NTriangulation* t;
 
     for (NPacket* p = tree; p; p = p->nextTreePacket())
-        if (p->getPacketType() == NTriangulation::packetType) {
+        if (p->type() == PACKET_TRIANGULATION) {
             // A triangulation to process.
             t = static_cast<NTriangulation*>(p);
-            fprintf(stderr, "Processing %s ...\n", t->getPacketLabel().c_str());
+            fprintf(stderr, "Processing %s ...\n", t->label().c_str());
             nTris++;
 
             nonMin = false;
@@ -372,7 +372,7 @@ void processTree() {
         printf("NON-MINIMAL TRIANGULATIONS:\n\n");
         for (std::list<NTriangulation*>::const_iterator it = allNonMin.begin();
                 it != allNonMin.end(); it++)
-            printf("    %s\n", (*it)->getPacketLabel().c_str());
+            printf("    %s\n", (*it)->label().c_str());
         printf("\n");
     }
 
@@ -395,7 +395,7 @@ void processTree() {
 
                 std::ostringstream s;
                 s << "Class " << classNum << " : " <<
-                    cit->first->getHomologyH1().str();
+                    cit->first->homology().str();
                 className = s.str();
                 classNum++;
 
@@ -411,10 +411,10 @@ void processTree() {
                 for (cit2 = cit; cit2 != eClass.end(); cit2++)
                     if (cit2->second == c) {
                         printf("    %s\n",
-                            cit2->first->getPacketLabel().c_str());
+                            cit2->first->label().c_str());
                         if (outFile) {
                             t = new NTriangulation(*(cit2->first));
-                            t->setPacketLabel(cit2->first->getPacketLabel());
+                            t->setPacketLabel(cit2->first->label());
                             classCnt->insertChildLast(t);
                         }
 

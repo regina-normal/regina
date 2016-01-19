@@ -73,8 +73,7 @@ int AngleModel::columnCount(const QModelIndex& /* unused parent */) const {
 
 QVariant AngleModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        const regina::NAngleStructure* s =
-            structures_->getStructure(index.row());
+        const regina::NAngleStructure* s = structures_->structure(index.row());
         if (index.column() == 0) {
             if (s->isStrict())
                 return tr("Strict");
@@ -85,7 +84,7 @@ QVariant AngleModel::data(const QModelIndex& index, int role) const {
             else
                 return QVariant();
         } else {
-            regina::NRational angle = s->getAngle((index.column() - 1) / 3,
+            regina::NRational angle = s->angle((index.column() - 1) / 3,
                 (index.column() - 1) % 3);
             if (angle == 0)
                 return QVariant();
@@ -93,16 +92,16 @@ QVariant AngleModel::data(const QModelIndex& index, int role) const {
             static const QString pi(QChar(0x3c0));
             if (angle == 1)
                 return pi;
-            else if (angle.getDenominator() == 1)
-                return QString(angle.getNumerator().stringValue().c_str()) +
+            else if (angle.denominator() == 1)
+                return QString(angle.numerator().stringValue().c_str()) +
                     ' ' + pi;
-            else if (angle.getNumerator() == 1)
+            else if (angle.numerator() == 1)
                 return pi + " / " +
-                    angle.getDenominator().stringValue().c_str();
+                    angle.denominator().stringValue().c_str();
             else
-                return QString(angle.getNumerator().stringValue().c_str()) +
+                return QString(angle.numerator().stringValue().c_str()) +
                     ' ' + pi + " / " +
-                    angle.getDenominator().stringValue().c_str();
+                    angle.denominator().stringValue().c_str();
         }
     } else if (role == Qt::ToolTipRole) {
         if (index.column() == 0)
@@ -208,7 +207,7 @@ NAngleStructureUI::NAngleStructureUI(NAngleStructureList* packet,
 
     // Listen for renaming events on the parent triangulation, since we
     // display its label in the header.
-    packet->getTriangulation()->listen(this);
+    packet->triangulation()->listen(this);
 }
 
 NAngleStructureUI::~NAngleStructureUI() {
@@ -271,13 +270,13 @@ void NAngleStructureUI::refreshHeader() {
         "<qt>%1<br>%2<br>Triangulation: <a href=\"#\">%3</a></qt>").
         arg(count).
         arg(span).
-        arg(QString(model->structures()->getTriangulation()->
-            getHumanLabel().c_str()).toHtmlEscaped()));
+        arg(QString(model->structures()->triangulation()->
+            humanLabel().c_str()).toHtmlEscaped()));
 }
 
 void NAngleStructureUI::viewTriangulation() {
     enclosingPane->getMainWindow()->packetView(
-        model->structures()->getTriangulation(),
+        model->structures()->triangulation(),
         false /* visible in tree */, false /* select in tree */);
 }
 

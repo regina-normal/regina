@@ -45,17 +45,17 @@ using regina::NMatrixInt;
 using regina::NLargeInteger;
 
 namespace {
-    unsigned long (NMarkedAbelianGroup::*getTorsionRank_large)(
+    unsigned long (NMarkedAbelianGroup::*torsionRank_large)(
         const regina::NLargeInteger&) const =
-        &NMarkedAbelianGroup::getTorsionRank;
-    unsigned long (NMarkedAbelianGroup::*getTorsionRank_long)(unsigned long)
-        const = &NMarkedAbelianGroup::getTorsionRank;
+        &NMarkedAbelianGroup::torsionRank;
+    unsigned long (NMarkedAbelianGroup::*torsionRank_long)(unsigned long)
+        const = &NMarkedAbelianGroup::torsionRank;
 
-    boost::python::list getFreeRep_list(
+    boost::python::list freeRep_list(
             const NMarkedAbelianGroup& g, unsigned long index) {
         boost::python::list ans;
 
-        std::vector<regina::NLargeInteger> rep = g.getFreeRep(index);
+        std::vector<regina::NLargeInteger> rep = g.freeRep(index);
         for (std::vector<regina::NLargeInteger>::const_iterator
                 it = rep.begin(); it != rep.end(); ++it) {
             ans.append(*it);
@@ -64,11 +64,11 @@ namespace {
         return ans;
     }
 
-    boost::python::list getTorsionRep_list(
+    boost::python::list torsionRep_list(
             const NMarkedAbelianGroup& g, unsigned long index) {
         boost::python::list ans;
 
-        std::vector<regina::NLargeInteger> rep = g.getTorsionRep(index);
+        std::vector<regina::NLargeInteger> rep = g.torsionRep(index);
         for (std::vector<regina::NLargeInteger>::const_iterator
                 it = rep.begin(); it != rep.end(); ++it) {
             ans.append(*it);
@@ -79,7 +79,7 @@ namespace {
 
     boost::python::list snfRep_list_list(
             const NMarkedAbelianGroup& g, boost::python::list element) {
-        unsigned long needLen = g.getM().columns();
+        unsigned long needLen = g.M().columns();
 
         if (boost::python::len(element) != needLen) {
             PyErr_SetString(PyExc_IndexError,
@@ -145,13 +145,20 @@ void addNMarkedAbelianGroup() {
         .def(init<const NMatrixInt&, const NMatrixInt&, const NLargeInteger&>())
         .def(init<unsigned long, const NLargeInteger&>())
         .def("isChainComplex", &NMarkedAbelianGroup::isChainComplex)
+        .def("rank", &NMarkedAbelianGroup::rank)
         .def("getRank", &NMarkedAbelianGroup::getRank)
-        .def("getTorsionRank", getTorsionRank_large)
-        .def("getTorsionRank", getTorsionRank_long)
+        .def("torsionRank", torsionRank_large)
+        .def("torsionRank", torsionRank_long)
+        .def("getTorsionRank", torsionRank_large)
+        .def("getTorsionRank", torsionRank_long)
         .def("minNumberOfGenerators",
             &NMarkedAbelianGroup::minNumberOfGenerators)
+        .def("countInvariantFactors",
+            &NMarkedAbelianGroup::countInvariantFactors)
         .def("getNumberOfInvariantFactors",
             &NMarkedAbelianGroup::getNumberOfInvariantFactors)
+        .def("invariantFactor", &NMarkedAbelianGroup::invariantFactor,
+            return_value_policy<return_by_value>())
         .def("getInvariantFactor", &NMarkedAbelianGroup::getInvariantFactor,
             return_value_policy<return_by_value>())
         .def("isTrivial", &NMarkedAbelianGroup::isTrivial)
@@ -160,32 +167,58 @@ void addNMarkedAbelianGroup() {
         // TODO: ccRep, ccRep, cycleProjection, cycleProjection
         // TODO: isCycle, boundaryMap, isBoundary, writeAsBoundary
         // TODO: cycleGen
-        .def("getFreeRep", getFreeRep_list)
-        .def("getTorsionRep", getTorsionRep_list)
-        .def("getSNFIsoRep", snfRep_list_list)
+        .def("freeRep", freeRep_list)
+        .def("getFreeRep", freeRep_list)
+        .def("torsionRep", torsionRep_list)
+        .def("getTorsionRep", torsionRep_list)
         .def("snfRep", snfRep_list_list)
+        .def("getSNFIsoRep", snfRep_list_list)
+        .def("rankCC", &NMarkedAbelianGroup::rankCC)
         .def("getRankCC", &NMarkedAbelianGroup::getRankCC)
         .def("minNumberCycleGens", &NMarkedAbelianGroup::minNumberCycleGens)
+        .def("MRB", &NMarkedAbelianGroup::MRB,
+            return_internal_reference<>())
         .def("getMRB", &NMarkedAbelianGroup::getMRB,
+            return_internal_reference<>())
+        .def("MRBi", &NMarkedAbelianGroup::MRBi,
             return_internal_reference<>())
         .def("getMRBi", &NMarkedAbelianGroup::getMRBi,
             return_internal_reference<>())
+        .def("MCB", &NMarkedAbelianGroup::MCB,
+            return_internal_reference<>())
         .def("getMCB", &NMarkedAbelianGroup::getMCB,
+            return_internal_reference<>())
+        .def("MCBi", &NMarkedAbelianGroup::MCBi,
             return_internal_reference<>())
         .def("getMCBi", &NMarkedAbelianGroup::getMCBi,
             return_internal_reference<>())
+        .def("NRB", &NMarkedAbelianGroup::NRB,
+            return_internal_reference<>())
         .def("getNRB", &NMarkedAbelianGroup::getNRB,
+            return_internal_reference<>())
+        .def("NRBi", &NMarkedAbelianGroup::NRBi,
             return_internal_reference<>())
         .def("getNRBi", &NMarkedAbelianGroup::getNRBi,
             return_internal_reference<>())
+        .def("NCB", &NMarkedAbelianGroup::NCB,
+            return_internal_reference<>())
         .def("getNCB", &NMarkedAbelianGroup::getNCB,
+            return_internal_reference<>())
+        .def("NCBi", &NMarkedAbelianGroup::NCBi,
             return_internal_reference<>())
         .def("getNCBi", &NMarkedAbelianGroup::getNCBi,
             return_internal_reference<>())
+        .def("rankM", &NMarkedAbelianGroup::rankM)
         .def("getRankM", &NMarkedAbelianGroup::getRankM)
+        .def("freeLoc", &NMarkedAbelianGroup::freeLoc)
         .def("getFreeLoc", &NMarkedAbelianGroup::getFreeLoc)
+        .def("torsionLoc", &NMarkedAbelianGroup::torsionLoc)
         .def("getTorsionLoc", &NMarkedAbelianGroup::getTorsionLoc)
+        .def("M", &NMarkedAbelianGroup::M,
+            return_internal_reference<>())
         .def("getM", &NMarkedAbelianGroup::getM,
+            return_internal_reference<>())
+        .def("N", &NMarkedAbelianGroup::N,
             return_internal_reference<>())
         .def("getN", &NMarkedAbelianGroup::getN,
             return_internal_reference<>())
@@ -214,17 +247,31 @@ void addNMarkedAbelianGroup() {
         .def("isIsomorphism", &NHomMarkedAbelianGroup::isIsomorphism)
         .def("isIdentity", &NHomMarkedAbelianGroup::isIdentity)
         .def("isZero", &NHomMarkedAbelianGroup::isZero)
+        .def("kernel", &NHomMarkedAbelianGroup::kernel,
+            return_internal_reference<>())
         .def("getKernel", &NHomMarkedAbelianGroup::getKernel,
+            return_internal_reference<>())
+        .def("cokernel", &NHomMarkedAbelianGroup::cokernel,
             return_internal_reference<>())
         .def("getCokernel", &NHomMarkedAbelianGroup::getCokernel,
             return_internal_reference<>())
+        .def("image", &NHomMarkedAbelianGroup::image,
+            return_internal_reference<>())
         .def("getImage", &NHomMarkedAbelianGroup::getImage,
+            return_internal_reference<>())
+        .def("domain", &NHomMarkedAbelianGroup::domain,
             return_internal_reference<>())
         .def("getDomain", &NHomMarkedAbelianGroup::getDomain,
             return_internal_reference<>())
+        .def("range", &NHomMarkedAbelianGroup::range,
+            return_internal_reference<>())
         .def("getRange", &NHomMarkedAbelianGroup::getRange,
             return_internal_reference<>())
+        .def("definingMatrix", &NHomMarkedAbelianGroup::definingMatrix,
+            return_internal_reference<>())
         .def("getDefiningMatrix", &NHomMarkedAbelianGroup::getDefiningMatrix,
+            return_internal_reference<>())
+        .def("reducedMatrix", &NHomMarkedAbelianGroup::reducedMatrix,
             return_internal_reference<>())
         .def("getReducedMatrix", &NHomMarkedAbelianGroup::getReducedMatrix,
             return_internal_reference<>())

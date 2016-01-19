@@ -43,9 +43,9 @@ namespace regina {
 
 NSpiralSolidTorus* NSpiralSolidTorus::clone() const {
     NSpiralSolidTorus* ans = new NSpiralSolidTorus(nTet);
-    for (unsigned long i = 0; i < nTet; i++) {
+    for (size_t i = 0; i < nTet; i++) {
         ans->tet[i] = tet[i];
-        ans->vertexRoles[i] = vertexRoles[i];
+        ans->vertexRoles_[i] = vertexRoles_[i];
     }
     return ans;
 }
@@ -55,37 +55,37 @@ void NSpiralSolidTorus::reverse() {
     NPerm4* newRoles = new NPerm4[nTet];
 
     NPerm4 switchPerm(3, 2, 1, 0);
-    for (unsigned long i = 0; i < nTet; i++) {
+    for (size_t i = 0; i < nTet; i++) {
         newTet[i] = tet[nTet - 1 - i];
-        newRoles[i] = vertexRoles[nTet - 1 - i] * switchPerm;
+        newRoles[i] = vertexRoles_[nTet - 1 - i] * switchPerm;
     }
 
     delete[] tet;
-    delete[] vertexRoles;
+    delete[] vertexRoles_;
     tet = newTet;
-    vertexRoles = newRoles;
+    vertexRoles_ = newRoles;
 }
 
-void NSpiralSolidTorus::cycle(unsigned long k) {
+void NSpiralSolidTorus::cycle(size_t k) {
     NTetrahedron** newTet = new NTetrahedron*[nTet];
     NPerm4* newRoles = new NPerm4[nTet];
 
-    for (unsigned long i = 0; i < nTet; i++) {
+    for (size_t i = 0; i < nTet; i++) {
         newTet[i] = tet[(i + k) % nTet];
-        newRoles[i] = vertexRoles[(i + k) % nTet];
+        newRoles[i] = vertexRoles_[(i + k) % nTet];
     }
 
     delete[] tet;
-    delete[] vertexRoles;
+    delete[] vertexRoles_;
     tet = newTet;
-    vertexRoles = newRoles;
+    vertexRoles_ = newRoles;
 }
 
 bool NSpiralSolidTorus::makeCanonical(const NTriangulation* tri) {
-    unsigned long i, index;
+    size_t i, index;
 
-    unsigned long baseTet = 0;
-    unsigned long baseIndex = tri->tetrahedronIndex(tet[0]);
+    size_t baseTet = 0;
+    size_t baseIndex = tri->tetrahedronIndex(tet[0]);
     for (i = 1; i < nTet; i++) {
         index = tri->tetrahedronIndex(tet[i]);
         if (index < baseIndex) {
@@ -94,7 +94,7 @@ bool NSpiralSolidTorus::makeCanonical(const NTriangulation* tri) {
         }
     }
 
-    bool reverseAlso = (vertexRoles[baseTet][0] > vertexRoles[baseTet][3]);
+    bool reverseAlso = (vertexRoles_[baseTet][0] > vertexRoles_[baseTet][3]);
 
     if (baseTet == 0 && (! reverseAlso))
         return false;
@@ -105,33 +105,33 @@ bool NSpiralSolidTorus::makeCanonical(const NTriangulation* tri) {
     if (reverseAlso) {
         // Make baseTet into tetrahedron 0 and reverse.
         NPerm4 switchPerm(3, 2, 1, 0);
-        for (unsigned long i = 0; i < nTet; i++) {
+        for (size_t i = 0; i < nTet; i++) {
             newTet[i] = tet[(baseTet + nTet - i) % nTet];
-            newRoles[i] = vertexRoles[(baseTet + nTet - i) % nTet] *
+            newRoles[i] = vertexRoles_[(baseTet + nTet - i) % nTet] *
                 switchPerm;
         }
     } else {
         // Make baseTet into tetrahedron 0 but don't reverse.
-        for (unsigned long i = 0; i < nTet; i++) {
+        for (size_t i = 0; i < nTet; i++) {
             newTet[i] = tet[(i + baseTet) % nTet];
-            newRoles[i] = vertexRoles[(i + baseTet) % nTet];
+            newRoles[i] = vertexRoles_[(i + baseTet) % nTet];
         }
     }
 
     delete[] tet;
-    delete[] vertexRoles;
+    delete[] vertexRoles_;
     tet = newTet;
-    vertexRoles = newRoles;
+    vertexRoles_ = newRoles;
 
     return true;
 }
 
 bool NSpiralSolidTorus::isCanonical(const NTriangulation* tri) const {
-    if (vertexRoles[0][0] > vertexRoles[0][3])
+    if (vertexRoles_[0][0] > vertexRoles_[0][3])
         return false;
 
     long baseIndex = tri->tetrahedronIndex(tet[0]);
-    for (unsigned long i = 1; i < nTet; i++)
+    for (size_t i = 1; i < nTet; i++)
         if (tri->tetrahedronIndex(tet[i]) < baseIndex)
             return false;
 
@@ -191,15 +191,15 @@ NSpiralSolidTorus* NSpiralSolidTorus::formsSpiralSolidTorus(NTetrahedron* tet,
     // We've found a spiralled solid torus.
     NSpiralSolidTorus* ans = new NSpiralSolidTorus(tets.size());
     copy(tets.begin(), tets.end(), ans->tet);
-    copy(roles.begin(), roles.end(), ans->vertexRoles);
+    copy(roles.begin(), roles.end(), ans->vertexRoles_);
     return ans;
 }
 
-NManifold* NSpiralSolidTorus::getManifold() const {
+NManifold* NSpiralSolidTorus::manifold() const {
     return new NHandlebody(1, true);
 }
 
-NAbelianGroup* NSpiralSolidTorus::getHomologyH1() const {
+NAbelianGroup* NSpiralSolidTorus::homology() const {
     NAbelianGroup* ans = new NAbelianGroup();
     ans->addRank();
     return ans;

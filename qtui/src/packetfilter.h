@@ -88,7 +88,7 @@ class StandaloneFilter : public PacketFilter {
  *
  * The template argument T must be one of the available packet types.
  * The acceptance test will be performed by calling
- * NPacket::getPacketType() upon each packet being questioned.
+ * NPacket::type() upon each packet being questioned.
  */
 template <class T>
 class SingleTypeFilter : public PacketFilter {
@@ -97,7 +97,7 @@ class SingleTypeFilter : public PacketFilter {
          * PacketFilter overrides.
          */
         virtual bool accept(regina::NPacket* packet) {
-            return (packet->getPacketType() == T::packetType);
+            return (packet->type() == T::packetType);
         }
 };
 
@@ -106,7 +106,7 @@ class SingleTypeFilter : public PacketFilter {
  *
  * The template arguments S and T must each be one of the available packet
  * types.  The acceptance test will be performed by calling
- * NPacket::getPacketType() upon each packet being questioned.
+ * NPacket::type() upon each packet being questioned.
  */
 template <class S, class T>
 class TwoTypeFilter : public PacketFilter {
@@ -115,7 +115,7 @@ class TwoTypeFilter : public PacketFilter {
          * PacketFilter overrides.
          */
         virtual bool accept(regina::NPacket* packet) {
-            int type = packet->getPacketType();
+            int type = packet->type();
             return (type == S::packetType || type == T::packetType);
         }
 };

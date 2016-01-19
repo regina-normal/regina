@@ -62,12 +62,12 @@ NNormalSurface* NNormalSurface::findNonTrivialSphere(NTriangulation* tri) {
     const NNormalSurface* s;
     NLargeInteger chi;
     for (unsigned long i = 0; i < nSurfaces; i++) {
-        s = surfaces->getSurface(i);
+        s = surfaces->surface(i);
 
         // No need to test for connectedness since these are vertex surfaces.
         if (s->isCompact() && (! s->hasRealBoundary()) &&
                 (! s->isVertexLinking())) {
-            chi = s->getEulerChar();
+            chi = s->eulerChar();
             if (chi == 2 || (chi == 1 && ! s->isTwoSided())) {
                 // It's a non-trivial 2-sphere!
                 // Clone the surface for our return value.
@@ -99,7 +99,7 @@ NNormalSurface* NNormalSurface::findVtxOctAlmostNormalSphere(
     NNormalSurfaceList* surfaces = NNormalSurfaceList::enumerate(tri, quadOct ?
         NS_AN_QUAD_OCT : NS_AN_STANDARD);
     unsigned long nSurfaces = surfaces->size();
-    unsigned long nTets = tri->getNumberOfTetrahedra();
+    unsigned long nTets = tri->size();
 
     // Note that our surfaces are guaranteed to be in smallest possible
     // integer coordinates.
@@ -113,17 +113,17 @@ NNormalSurface* NNormalSurface::findVtxOctAlmostNormalSphere(
     int oct;
     NLargeInteger octCoord;
     for (unsigned long i = 0; i < nSurfaces; i++) {
-        s = surfaces->getSurface(i);
+        s = surfaces->surface(i);
 
         // No need to test for connectedness since these are vertex surfaces.
         // No need to test for vertex links since we're about to test
         // for octagons.
         if (s->isCompact() && (! s->hasRealBoundary())) {
-            if (s->getEulerChar() == 2) {
+            if (s->eulerChar() == 2) {
                 // Test for the existence of precisely one octagon.
                 for (tet = 0; tet < nTets; tet++)
                     for (oct = 0; oct < 3; oct++)
-                        if ((octCoord = s->getOctCoord(tet, oct)) > 0) {
+                        if ((octCoord = s->octs(tet, oct)) > 0) {
                             // We found our one and only non-zero
                             // octagonal coordinate.
                             if (octCoord > 1) {

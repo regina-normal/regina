@@ -129,7 +129,7 @@ void NewPacketDialog::slotOk() {
             "the new packet."),
             tr("<qt>The packet <i>%1</i> cannot act as a parent for "
             "the new packet.</qt>").
-            arg(QString(parentPacket->getHumanLabel().c_str()).toHtmlEscaped()));
+            arg(QString(parentPacket->humanLabel().c_str()).toHtmlEscaped()));
         return;
     }
 
@@ -148,7 +148,7 @@ void NewPacketDialog::slotOk() {
 
     // Fix the new packet.
     newPacket->setPacketLabel(std::string(useLabel.toUtf8().constData()));
-    if (! newPacket->getTreeParent())
+    if (! newPacket->parent())
         parentPacket->insertChildLast(newPacket);
 
     accept();

@@ -37,8 +37,10 @@
 #import "surfaces/normalcoords.h"
 
 namespace regina {
+    template <int> class Triangulation;
+    typedef Triangulation<3> NTriangulation;
+
     class NNormalSurface;
-    class NTriangulation;
 }
 
 @interface Coordinates : NSObject

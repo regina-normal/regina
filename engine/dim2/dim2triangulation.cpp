@@ -54,19 +54,19 @@ Triangulation<2>::Triangulation(const std::string& description) {
 
 bool Triangulation<2>::isMinimal() const {
     // 2-sphere:
-    if (getEulerChar() == 2)
+    if (eulerChar() == 2)
         return (simplices_.size() == 2);
 
     // Projective plane and disc:
-    if (getEulerChar() == 1)
+    if (eulerChar() == 1)
         return (simplices_.size() == (isClosed() ? 2 : 1));
 
     // All other closed manifolds:
     if (isClosed())
-        return (getNumberOfVertices() == 1);
+        return (countVertices() == 1);
 
     // All other bounded manifolds:
-    return (getNumberOfVertices() == boundaryComponents_.size());
+    return (countVertices() == boundaryComponents_.size());
 }
 
 void Triangulation<2>::writeTextLong(std::ostream& out) const {
@@ -74,8 +74,8 @@ void Triangulation<2>::writeTextLong(std::ostream& out) const {
 
     out << "Size of the skeleton:\n";
     out << "  Triangles: " << simplices_.size() << '\n';
-    out << "  Edges: " << getNumberOfEdges() << '\n';
-    out << "  Vertices: " << getNumberOfVertices() << '\n';
+    out << "  Edges: " << countEdges() << '\n';
+    out << "  Vertices: " << countVertices() << '\n';
     out << '\n';
 
     Dim2Triangle* tri;
@@ -153,7 +153,7 @@ void Triangulation<2>::writeXMLPacketData(std::ostream& out) const {
             if (adjTri) {
                 out << triangleIndex(adjTri) << ' '
                     << static_cast<int>((*it)->
-                        adjacentGluing(edge).getPermCode()) << ' ';
+                        adjacentGluing(edge).permCode()) << ' ';
             } else
                 out << "-1 -1 ";
         }

@@ -82,41 +82,41 @@ void NXMLNormalSurfaceReader::initialChars(const std::string& chars) {
         return;
     }
 
-    surface = new NNormalSurface(tri, vec);
+    surface_ = new NNormalSurface(tri, vec);
     if (! name.empty())
-        surface->setName(name);
+        surface_->setName(name);
 }
 
 NXMLElementReader* NXMLNormalSurfaceReader::startSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
-    if (! surface)
+    if (! surface_)
         return new NXMLElementReader();
 
     if (subTagName == "euler") {
         NLargeInteger val;
         if (valueOf(props.lookup("value"), val))
-            surface->eulerChar = val;
+            surface_->eulerChar_ = val;
     } else if (subTagName == "orbl") {
         bool val;
         if (valueOf(props.lookup("value"), val))
-            surface->orientable = val;
+            surface_->orientable = val;
     } else if (subTagName == "twosided") {
         bool val;
         if (valueOf(props.lookup("value"), val))
-            surface->twoSided = val;
+            surface_->twoSided = val;
     } else if (subTagName == "connected") {
         bool val;
         if (valueOf(props.lookup("value"), val))
-            surface->connected = val;
+            surface_->connected = val;
     } else if (subTagName == "realbdry") {
         bool val;
         if (valueOf(props.lookup("value"), val))
-            surface->realBoundary = val;
+            surface_->realBoundary = val;
     } else if (subTagName == "compact") {
         bool val;
         if (valueOf(props.lookup("value"), val))
-            surface->compact = val;
+            surface_->compact = val;
     }
     return new NXMLElementReader();
 }
@@ -163,11 +163,11 @@ void NXMLNormalSurfaceListReader::endContentSubElement(
         if (subTagName == "surface")
             if (NNormalSurface* s =
                     dynamic_cast<NXMLNormalSurfaceReader*>(subReader)->
-                    getSurface())
+                    surface())
                 list->surfaces.push_back(s);
 }
 
-NXMLPacketReader* NNormalSurfaceList::getXMLReader(NPacket* parent,
+NXMLPacketReader* NNormalSurfaceList::xmlReader(NPacket* parent,
         NXMLTreeResolver& resolver) {
     return new NXMLNormalSurfaceListReader(
         dynamic_cast<NTriangulation*>(parent), resolver);

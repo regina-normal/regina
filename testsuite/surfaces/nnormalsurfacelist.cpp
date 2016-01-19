@@ -244,7 +244,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 const char* listType, unsigned long expectedSize) {
             std::ostringstream msg;
             msg << "Number of " << listType << " for "
-                << list->getTriangulation()->getPacketLabel()
+                << list->triangulation()->label()
                 << " should be " << expectedSize << ", not "
                 << list->size() << '.';
 
@@ -272,10 +272,10 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 std::ostringstream msg;
                 msg << "Surface [" << surfaceName << "] for " << triName
                     << " should have Euler char. " << euler << ", not "
-                    << surface->getEulerChar() << '.';
+                    << surface->eulerChar() << '.';
 
                 CPPUNIT_ASSERT_MESSAGE(msg.str(),
-                    surface->getEulerChar() == euler);
+                    surface->eulerChar() == euler);
             }
             if (compact) {
                 std::ostringstream msg;
@@ -393,9 +393,9 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
             const NNormalSurface* s;
             for (unsigned long i = 0; i < size; i++) {
-                s = list->getSurface(i);
+                s = list->surface(i);
 
-                if (s->getEulerChar() == euler &&
+                if (s->eulerChar() == euler &&
                         s->isConnected() == connected &&
                         s->isOrientable() == orient &&
                         s->isTwoSided() == twoSided &&
@@ -420,7 +420,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
             std::ostringstream msg;
             msg << "Number of " << surfaceType << " in "
-                    << list->getTriangulation()->getPacketLabel()
+                    << list->triangulation()->label()
                     << " should be " << expectedCount << ", not "
                     << tot << '.';
             CPPUNIT_ASSERT_MESSAGE(msg.str(), expectedCount == tot);
@@ -452,8 +452,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
             unsigned long i;
             for (i = 0; i < n; ++i) {
-                lhsRaw[i] = lhs->getSurface(i)->rawVector();
-                rhsRaw[i] = rhs->getSurface(i)->rawVector();
+                lhsRaw[i] = lhs->surface(i)->rawVector();
+                rhsRaw[i] = rhs->surface(i)->rawVector();
             }
 
             std::sort(lhsRaw, lhsRaw + n, lexLess);
@@ -566,7 +566,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 &gieseking, NS_STANDARD);
 
             testSize(list, "standard normal surfaces", 1);
-            testSurface(list->getSurface(0), "the Gieseking manifold",
+            testSurface(list->surface(0), "the Gieseking manifold",
                 "vertex link",
                 0 /* euler */, true /* connected */,
                 false /* orient */, true /* two-sided */,
@@ -591,7 +591,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 &gieseking, NS_AN_STANDARD);
 
             testSize(list, "standard almost normal surfaces", 1);
-            testSurface(list->getSurface(0), "the Gieseking manifold",
+            testSurface(list->surface(0), "the Gieseking manifold",
                 "vertex link",
                 0 /* euler */, true /* connected */,
                 false /* orient */, true /* two-sided */,
@@ -607,7 +607,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 &figure8, NS_STANDARD);
 
             testSize(list, "standard normal surfaces", 1);
-            testSurface(list->getSurface(0), "the figure eight knot complement",
+            testSurface(list->surface(0), "the figure eight knot complement",
                 "vertex link",
                 0 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
@@ -624,7 +624,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
             testSize(list, "quad normal surfaces", 4);
             for (unsigned long i = 0; i < list->size(); i++)
-                testSurface(list->getSurface(i),
+                testSurface(list->surface(i),
                     "the figure eight knot complement", "spun surface",
                     0 /* euler, N/A */, 0 /* connected, N/A */,
                     0 /* orient, N/A */, 0 /* two-sided, N/A */,
@@ -640,7 +640,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 &figure8, NS_AN_STANDARD);
 
             testSize(list, "standard almost normal surfaces", 1);
-            testSurface(list->getSurface(0), "the figure eight knot complement",
+            testSurface(list->surface(0), "the figure eight knot complement",
                 "vertex link",
                 0 /* euler */, true /* connected */,
                 true /* orient */, true /* two-sided */,
@@ -1526,35 +1526,35 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             std::unique_ptr<NNormalSurfaceList> stdConv(
                 NNormalSurfaceList::enumerate(
                 tri, NS_STANDARD, NS_VERTEX, NS_VERTEX_VIA_REDUCED));
-            if (tri->getNumberOfTetrahedra() > 0 &&
+            if ((! tri->isEmpty()) &&
                     (stdDirect->algorithm().has(NS_VERTEX_VIA_REDUCED) ||
                     ! stdDirect->algorithm().has(NS_VERTEX_STD_DIRECT))) {
                 std::ostringstream msg;
                 msg << "Direct enumeration in standard coordinates gives "
                     "incorrect algorithm flags for "
-                    << tri->getPacketLabel() << '.';
+                    << tri->label() << '.';
                 CPPUNIT_FAIL(msg.str());
             }
             if (tri->isValid() && ! tri->isIdeal()) {
-                if (tri->getNumberOfTetrahedra() > 0 &&
+                if ((! tri->isEmpty()) &&
                         (stdConv->algorithm().has(NS_VERTEX_STD_DIRECT) ||
                         ! stdConv->algorithm().has(NS_VERTEX_VIA_REDUCED))) {
                     std::ostringstream msg;
                     msg << "Quad-to-standard conversion gives "
                         "incorrect algorithm flags for "
-                        << tri->getPacketLabel() << '.';
+                        << tri->label() << '.';
                     CPPUNIT_FAIL(msg.str());
                 }
             } else {
                 // Ideal or invalid triangluations should use the standard
                 // enumeration process regardless of what the user requested.
-                if (tri->getNumberOfTetrahedra() > 0 &&
+                if ((! tri->isEmpty()) &&
                         (stdConv->algorithm().has(NS_VERTEX_VIA_REDUCED) ||
                         ! stdConv->algorithm().has(NS_VERTEX_STD_DIRECT))) {
                     std::ostringstream msg;
                     msg << "Quad-to-standard conversion request was "
                         "incorrectly granted for "
-                        << tri->getPacketLabel() << '.';
+                        << tri->label() << '.';
                     CPPUNIT_FAIL(msg.str());
                 }
             }
@@ -1562,7 +1562,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 std::ostringstream msg;
                 msg << "Direct enumeration vs conversion gives different "
                     "surfaces in standard coordinates for "
-                        << tri->getPacketLabel() << '.';
+                        << tri->label() << '.';
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -1577,7 +1577,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                     std::ostringstream msg;
                     msg << "Direct enumeration vs conversion gives different "
                         "surfaces in quadrilateral coordinates for "
-                            << tri->getPacketLabel() << '.';
+                            << tri->label() << '.';
                     CPPUNIT_FAIL(msg.str());
                 }
             }
@@ -1590,35 +1590,35 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             std::unique_ptr<NNormalSurfaceList> stdConv(
                 NNormalSurfaceList::enumerate(
                 tri, NS_AN_STANDARD, NS_VERTEX, NS_VERTEX_VIA_REDUCED));
-            if (tri->getNumberOfTetrahedra() > 0 &&
+            if ((! tri->isEmpty()) &&
                     (stdDirect->algorithm().has(NS_VERTEX_VIA_REDUCED) ||
                     ! stdDirect->algorithm().has(NS_VERTEX_STD_DIRECT))) {
                 std::ostringstream msg;
                 msg << "Direct enumeration in standard AN coordinates gives "
                     "incorrect algorithm flags for "
-                    << tri->getPacketLabel() << '.';
+                    << tri->label() << '.';
                 CPPUNIT_FAIL(msg.str());
             }
             if (tri->isValid() && ! tri->isIdeal()) {
-                if (tri->getNumberOfTetrahedra() > 0 &&
+                if ((! tri->isEmpty()) &&
                         (stdConv->algorithm().has(NS_VERTEX_STD_DIRECT) ||
                         ! stdConv->algorithm().has(NS_VERTEX_VIA_REDUCED))) {
                     std::ostringstream msg;
                     msg << "Quad-oct-to-standard-AN conversion gives "
                         "incorrect algorithm flags for "
-                        << tri->getPacketLabel() << '.';
+                        << tri->label() << '.';
                     CPPUNIT_FAIL(msg.str());
                 }
             } else {
                 // Ideal or invalid triangluations should use the standard
                 // enumeration process regardless of what the user requested.
-                if (tri->getNumberOfTetrahedra() > 0 &&
+                if ((! tri->isEmpty()) &&
                         (stdConv->algorithm().has(NS_VERTEX_VIA_REDUCED) ||
                         ! stdConv->algorithm().has(NS_VERTEX_STD_DIRECT))) {
                     std::ostringstream msg;
                     msg << "Quad-oct-to-standard-AN conversion request was "
                         "incorrectly granted for "
-                        << tri->getPacketLabel() << '.';
+                        << tri->label() << '.';
                     CPPUNIT_FAIL(msg.str());
                 }
             }
@@ -1626,7 +1626,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 std::ostringstream msg;
                 msg << "Direct enumeration vs conversion gives different "
                     "surfaces in standard almost normal coordinates for "
-                        << tri->getPacketLabel() << '.';
+                        << tri->label() << '.';
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -1641,7 +1641,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                     std::ostringstream msg;
                     msg << "Direct enumeration vs conversion gives different "
                         "surfaces in quadrilateral-octagon coordinates for "
-                            << tri->getPacketLabel() << '.';
+                            << tri->label() << '.';
                     CPPUNIT_FAIL(msg.str());
                 }
             }
@@ -1691,29 +1691,29 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 tri, coords, NS_VERTEX, NS_VERTEX_DD | NS_VERTEX_STD_DIRECT);
             NNormalSurfaceList* tree = NNormalSurfaceList::enumerate(
                 tri, coords, NS_VERTEX, NS_VERTEX_TREE | NS_VERTEX_STD_DIRECT);
-            if (tri->getNumberOfTetrahedra() > 0 &&
+            if ((! tri->isEmpty()) &&
                     (dd->algorithm().has(NS_VERTEX_TREE) ||
                     ! dd->algorithm().has(NS_VERTEX_DD))) {
                 std::ostringstream msg;
                 msg << "Double description enumeration in coordinate system "
                     << coords << " gives incorrect algorithm flags for "
-                    << tri->getPacketLabel() << '.';
+                    << tri->label() << '.';
                 CPPUNIT_FAIL(msg.str());
             }
-            if (tri->getNumberOfTetrahedra() > 0 &&
+            if ((! tri->isEmpty()) &&
                     (tree->algorithm().has(NS_VERTEX_DD) ||
                     ! tree->algorithm().has(NS_VERTEX_TREE))) {
                 std::ostringstream msg;
                 msg << "Tree traversal enumeration in coordinate system "
                     << coords << " gives incorrect algorithm flags for "
-                    << tri->getPacketLabel() << '.';
+                    << tri->label() << '.';
                 CPPUNIT_FAIL(msg.str());
             }
             if (! identical(dd, tree)) {
                 std::ostringstream msg;
                 msg << "Double description vs tree enumeration in "
                     "coordinate system " << coords << " gives different "
-                    "surfaces for " << tri->getPacketLabel() << '.';
+                    "surfaces for " << tri->label() << '.';
                 CPPUNIT_FAIL(msg.str());
             }
             delete dd;
@@ -1734,29 +1734,29 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 tri, coords, NS_FUNDAMENTAL, NS_HILBERT_PRIMAL);
             NNormalSurfaceList* dual = NNormalSurfaceList::enumerate(
                 tri, coords, NS_FUNDAMENTAL, NS_HILBERT_DUAL);
-            if (tri->getNumberOfTetrahedra() > 0 &&
+            if ((! tri->isEmpty()) &&
                     (primal->algorithm().has(NS_HILBERT_DUAL) ||
                     ! primal->algorithm().has(NS_HILBERT_PRIMAL))) {
                 std::ostringstream msg;
                 msg << "Primal Hilbert basis enumeration in coordinate system "
                     << coords << " gives incorrect algorithm flags for "
-                    << tri->getPacketLabel() << '.';
+                    << tri->label() << '.';
                 CPPUNIT_FAIL(msg.str());
             }
-            if (tri->getNumberOfTetrahedra() > 0 &&
+            if ((! tri->isEmpty()) &&
                     (dual->algorithm().has(NS_HILBERT_PRIMAL) ||
                     ! dual->algorithm().has(NS_HILBERT_DUAL))) {
                 std::ostringstream msg;
                 msg << "Dual Hilbert basis enumeration in coordinate system "
                     << coords << " gives incorrect algorithm flags for "
-                    << tri->getPacketLabel() << '.';
+                    << tri->label() << '.';
                 CPPUNIT_FAIL(msg.str());
             }
             if (! identical(primal, dual)) {
                 std::ostringstream msg;
                 msg << "Primal vs dual Hilbert basis enumeration in "
                     "coordinate system " << coords << " gives different "
-                    "surfaces for " << tri->getPacketLabel() << '.';
+                    "surfaces for " << tri->label() << '.';
                 CPPUNIT_FAIL(msg.str());
             }
             delete primal;
@@ -1782,18 +1782,18 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             unsigned long edge;
 
             for (i = 0; i < n; ++i) {
-                s = list->getSurface(i);
+                s = list->surface(i);
 
                 // For some types of surfaces we know exactly what it
                 // should be disjoint from.
                 if (s->isVertexLinking()) {
                     // Vertex links are disjoint from everything.
                     for (j = 0; j < n; ++j) {
-                        t = list->getSurface(j);
+                        t = list->surface(j);
                         if (! s->disjoint(*t)) {
                             std::ostringstream msg;
                             msg << "Surface #" << i << " for "
-                                << tri->getPacketLabel()
+                                << tri->label()
                                 << " is a vertex link "
                                 "and therefore should be disjoint from "
                                 "surface #" << j << ".";
@@ -1812,22 +1812,22 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                         if (j == i)
                             continue;
 
-                        t = list->getSurface(j);
+                        t = list->surface(j);
                         if (t->isVertexLinking()) {
                             if (! s->disjoint(*t)) {
                                 std::ostringstream msg;
                                 msg << "Surface #" << i << " for "
-                                    << tri->getPacketLabel()
+                                    << tri->label()
                                     << " is a thin edge link and therefore "
                                     "should be disjoint from surface #" << j
                                     << ", which is a vertex link.";
                                 CPPUNIT_FAIL(msg.str());
                             }
-                        } else if (t->getEdgeWeight(edge) == 0) {
+                        } else if (t->edgeWeight(edge) == 0) {
                             if (! s->disjoint(*t)) {
                                 std::ostringstream msg;
                                 msg << "Surface #" << i << " for "
-                                    << tri->getPacketLabel()
+                                    << tri->label()
                                     << " is a thin edge link and therefore "
                                     "should be disjoint from surface #" << j
                                     << ", which does not meet the "
@@ -1853,14 +1853,14 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 if (s->isTwoSided() && ! s->disjoint(*s)) {
                     std::ostringstream msg;
                     msg << "Surface #" << i << " for "
-                        << tri->getPacketLabel()
+                        << tri->label()
                         << " is two-sided and therefore should be "
                         "disjoint from itself.";
                     CPPUNIT_FAIL(msg.str());
                 } else if ((! s->isTwoSided()) && s->disjoint(*s)) {
                     std::ostringstream msg;
                     msg << "Surface #" << i << " for "
-                        << tri->getPacketLabel()
+                        << tri->label()
                         << " is one-sided and therefore should not be "
                         "disjoint from itself.";
                     CPPUNIT_FAIL(msg.str());
@@ -1893,7 +1893,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             NNormalSurfaceVector* v =
                 static_cast<NNormalSurfaceVector*>(s->rawVector()->clone());
             (*v) *= 2;
-            return new NNormalSurface(s->getTriangulation(), v);
+            return new NNormalSurface(s->triangulation(), v);
         }
 
         /**
@@ -1901,7 +1901,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
          * links are spheres or discs.
          */
         static bool mightBeTwistedProduct(const NTriangulation* tri) {
-            if (tri->getNumberOfBoundaryComponents() != 1)
+            if (tri->countBoundaryComponents() != 1)
                 return false;
 
             // Check the relationship between H1 and H1Bdry.
@@ -1909,36 +1909,36 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             //  -  H1 = (2g)Z, H1Bdry = (4g-2)Z;
             //  -  H1 = Z_2 + (g-1)Z, H1Bdry = Z_2 + (2g-3)Z;
             //  -  H1 = Z_2 + (g-1)Z, H1Bdry = (2g-2)Z;
-            const NAbelianGroup& h1 = tri->getHomologyH1();
-            const NAbelianGroup& bdry = tri->getHomologyH1Bdry();
+            const NAbelianGroup& h1 = tri->homology();
+            const NAbelianGroup& bdry = tri->homologyBdry();
 
-            if (h1.getNumberOfInvariantFactors() == 0) {
+            if (h1.countInvariantFactors() == 0) {
                 // Must have H1 = (2g)Z.
-                if (bdry.getNumberOfInvariantFactors() != 0)
+                if (bdry.countInvariantFactors() != 0)
                     return false;
-                if (bdry.getRank() != 2 * h1.getRank() - 2)
+                if (bdry.rank() != 2 * h1.rank() - 2)
                     return false;
-            } else if (h1.getNumberOfInvariantFactors() == 1) {
+            } else if (h1.countInvariantFactors() == 1) {
                 // Must have H1 = Z_2 + (g-1)Z.
-                if (h1.getInvariantFactor(0) != 2)
+                if (h1.invariantFactor(0) != 2)
                     return false;
 
-                if (bdry.getNumberOfInvariantFactors() == 0) {
-                    if (bdry.getRank() != 2 * h1.getRank())
+                if (bdry.countInvariantFactors() == 0) {
+                    if (bdry.rank() != 2 * h1.rank())
                         return false;
                 } else {
-                    if (bdry.getNumberOfInvariantFactors() != 1)
+                    if (bdry.countInvariantFactors() != 1)
                         return false;
-                    if (bdry.getInvariantFactor(0) != 2)
+                    if (bdry.invariantFactor(0) != 2)
                         return false;
-                    if (bdry.getRank() != 2 * h1.getRank() - 1)
+                    if (bdry.rank() != 2 * h1.rank() - 1)
                         return false;
                 }
             } else
                 return false;
 
             // Check that H1Rel is just Z_2.
-            if (! tri->getHomologyH1Rel().isZn(2))
+            if (! tri->homologyRel().isZn(2))
                 return false;
 
             return true;
@@ -1949,14 +1949,14 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
          * links are spheres or discs.
          */
         static bool mightBeUntwistedProduct(const NTriangulation* tri) {
-            if (tri->getNumberOfBoundaryComponents() != 2)
+            if (tri->countBoundaryComponents() != 2)
                 return false;
 
             // Check that both boundary components are homeomorphic.
-            NBoundaryComponent* b0 = tri->getBoundaryComponent(0);
-            NBoundaryComponent* b1 = tri->getBoundaryComponent(1);
+            NBoundaryComponent* b0 = tri->boundaryComponent(0);
+            NBoundaryComponent* b1 = tri->boundaryComponent(1);
 
-            if (b0->getEulerChar() != b1->getEulerChar())
+            if (b0->eulerChar() != b1->eulerChar())
                 return false;
             if (b0->isOrientable() && ! b1->isOrientable())
                 return false;
@@ -1965,32 +1965,32 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
             // Check that H1 is of the form (k)Z or Z_2 + (k)Z, and that
             // H1Bdry = 2 H1.
-            const NAbelianGroup& h1 = tri->getHomologyH1();
-            const NAbelianGroup& bdry = tri->getHomologyH1Bdry();
+            const NAbelianGroup& h1 = tri->homology();
+            const NAbelianGroup& bdry = tri->homologyBdry();
 
-            if (h1.getNumberOfInvariantFactors() == 0) {
+            if (h1.countInvariantFactors() == 0) {
                 // Must have H1 = (k)Z.
-                if (bdry.getRank() != 2 * h1.getRank())
+                if (bdry.rank() != 2 * h1.rank())
                     return false;
-                if (bdry.getNumberOfInvariantFactors() != 0)
+                if (bdry.countInvariantFactors() != 0)
                     return false;
-            } else if (h1.getNumberOfInvariantFactors() == 1) {
+            } else if (h1.countInvariantFactors() == 1) {
                 // Must have H1 = Z_2 + (k)Z.
-                if (h1.getInvariantFactor(0) != 2)
+                if (h1.invariantFactor(0) != 2)
                     return false;
-                if (bdry.getRank() != 2 * h1.getRank())
+                if (bdry.rank() != 2 * h1.rank())
                     return false;
-                if (bdry.getNumberOfInvariantFactors() != 2)
+                if (bdry.countInvariantFactors() != 2)
                     return false;
-                if (bdry.getInvariantFactor(0) != 2)
+                if (bdry.invariantFactor(0) != 2)
                     return false;
-                if (bdry.getInvariantFactor(1) != 2)
+                if (bdry.invariantFactor(1) != 2)
                     return false;
             } else
                 return false;
 
             // Check that H1Rel is just Z.
-            if (! tri->getHomologyH1Rel().isZ())
+            if (! tri->homologyRel().isZ())
                 return false;
 
             return true;
@@ -2003,22 +2003,22 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         static void checkBoundaryType(const NNormalSurface* s,
                 const NTriangulation* tri, unsigned& foundS,
                 unsigned& foundTwoCopies, unsigned& foundDoubleCover) {
-            if (tri->getNumberOfBoundaryComponents() == 1) {
-                const NBoundaryComponent* b = tri->getBoundaryComponent(0);
+            if (tri->countBoundaryComponents() == 1) {
+                const NBoundaryComponent* b = tri->boundaryComponent(0);
 
-                if (s->getEulerChar() == b->getEulerChar()
+                if (s->eulerChar() == b->eulerChar()
                         && s->isOrientable() == b->isOrientable())
                     ++foundS;
-                if (s->getEulerChar() * 2 == b->getEulerChar() &&
+                if (s->eulerChar() * 2 == b->eulerChar() &&
                         (b->isOrientable() || ! s->isOrientable()))
                     ++foundDoubleCover;
-            } else if (tri->getNumberOfBoundaryComponents() == 2) {
-                const NBoundaryComponent* b0 = tri->getBoundaryComponent(0);
-                const NBoundaryComponent* b1 = tri->getBoundaryComponent(1);
+            } else if (tri->countBoundaryComponents() == 2) {
+                const NBoundaryComponent* b0 = tri->boundaryComponent(0);
+                const NBoundaryComponent* b1 = tri->boundaryComponent(1);
 
                 if (
-                        s->getEulerChar() == b0->getEulerChar() &&
-                        s->getEulerChar() == b1->getEulerChar() &&
+                        s->eulerChar() == b0->eulerChar() &&
+                        s->eulerChar() == b1->eulerChar() &&
                         s->isOrientable() == b0->isOrientable() &&
                         s->isOrientable() == b1->isOrientable())
                     ++foundTwoCopies;
@@ -2050,7 +2050,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
             // We use the fact that each normal surface is connected.
             for (unsigned long i = 0; i < n; ++i) {
-                s = list->getSurface(i);
+                s = list->surface(i);
                 t.reset(s->cutAlong());
                 t->intelligentSimplify();
                 comp.reset(new NContainer());
@@ -2069,7 +2069,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 if (nComp != expected) {
                     std::ostringstream msg;
                     msg << "Cutting along surface #" << i << " for "
-                        << tri->getPacketLabel()
+                        << tri->label()
                         << " gives " << nComp << " component(s), not "
                         << expected << " as expected.";
                     CPPUNIT_FAIL(msg.str());
@@ -2079,7 +2079,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 if (nCompDouble != expected) {
                     std::ostringstream msg;
                     msg << "Cutting along double surface #" << i
-                        << " for " << tri->getPacketLabel()
+                        << " for " << tri->label()
                         << " gives " << nCompDouble << " component(s), not "
                         << expected << " as expected.";
                     CPPUNIT_FAIL(msg.str());
@@ -2088,14 +2088,14 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 if (! t->isValid()) {
                     std::ostringstream msg;
                     msg << "Cutting along surface #" << i << " for "
-                        << tri->getPacketLabel()
+                        << tri->label()
                         << " gives an invalid triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
                 if (! tDouble->isValid()) {
                     std::ostringstream msg;
                     msg << "Cutting along double surface #" << i
-                        << " for " << tri->getPacketLabel()
+                        << " for " << tri->label()
                         << " gives an invalid triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -2104,7 +2104,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                     std::ostringstream msg;
                     msg << "Cutting along surface #" << i
                         << " for "
-                        << tri->getPacketLabel() << " (which is ideal)"
+                        << tri->label() << " (which is ideal)"
                         << " gives a non-ideal triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -2112,7 +2112,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                     std::ostringstream msg;
                     msg << "Cutting along double surface #" << i
                         << " for "
-                        << tri->getPacketLabel() << " (which is ideal)"
+                        << tri->label() << " (which is ideal)"
                         << " gives a non-ideal triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -2120,7 +2120,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                     std::ostringstream msg;
                     msg << "Cutting along surface #" << i
                         << " for "
-                        << tri->getPacketLabel() << " (which is not ideal)"
+                        << tri->label() << " (which is not ideal)"
                         << " gives an ideal triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -2128,7 +2128,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                     std::ostringstream msg;
                     msg << "Cutting along double surface #" << i
                         << " for "
-                        << tri->getPacketLabel() << " (which is not ideal)"
+                        << tri->label() << " (which is not ideal)"
                         << " gives an ideal triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -2137,7 +2137,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                     std::ostringstream msg;
                     msg << "Cutting along surface #" << i
                         << " for "
-                        << tri->getPacketLabel() << " (which is orientable)"
+                        << tri->label() << " (which is orientable)"
                         << " gives a non-orientable triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -2145,28 +2145,26 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                     std::ostringstream msg;
                     msg << "Cutting along double surface #" << i
                         << " for "
-                        << tri->getPacketLabel() << " (which is orientable)"
+                        << tri->label() << " (which is orientable)"
                         << " gives a non-orientable triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                for (p = comp->getFirstTreeChild(); p;
-                        p = p->getNextTreeSibling())
+                for (p = comp->firstChild(); p; p = p->nextSibling())
                     if (! static_cast<NTriangulation*>(p)->
                             hasBoundaryTriangles()) {
                         std::ostringstream msg;
                         msg << "Cutting along surface #" << i
-                            << " for " << tri->getPacketLabel()
+                            << " for " << tri->label()
                             << " gives a component with no boundary triangles.";
                         CPPUNIT_FAIL(msg.str());
                     }
-                for (p = compDouble->getFirstTreeChild(); p;
-                        p = p->getNextTreeSibling())
+                for (p = compDouble->firstChild(); p; p = p->nextSibling())
                     if (! static_cast<NTriangulation*>(p)->
                             hasBoundaryTriangles()) {
                         std::ostringstream msg;
                         msg << "Cutting along double surface #" << i
-                            << " for " << tri->getPacketLabel()
+                            << " for " << tri->label()
                             << " gives a component with no boundary triangles.";
                         CPPUNIT_FAIL(msg.str());
                     }
@@ -2191,24 +2189,23 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                     expectTwoCopies = 0;
                     expectDoubleCover = 1;
                 }
-                if (t->getNumberOfBoundaryComponents() !=
+                if (t->countBoundaryComponents() !=
                         expectS + 2 * expectTwoCopies + expectDoubleCover) {
                     std::ostringstream msg;
                     msg << "Cutting along surface #" << i << " for "
-                        << tri->getPacketLabel()
+                        << tri->label()
                         << " gives the wrong number of boundary components.";
                     CPPUNIT_FAIL(msg.str());
                 }
                 foundS = foundTwoCopies = foundDoubleCover = 0;
-                for (p = comp->getFirstTreeChild(); p;
-                        p = p->getNextTreeSibling())
+                for (p = comp->firstChild(); p; p = p->nextSibling())
                     checkBoundaryType(s, static_cast<NTriangulation*>(p),
                         foundS, foundTwoCopies, foundDoubleCover);
                 if (foundS < expectS || foundTwoCopies < expectTwoCopies ||
                         foundDoubleCover < expectDoubleCover) {
                     std::ostringstream msg;
                     msg << "Cutting along surface #" << i << " for "
-                        << tri->getPacketLabel()
+                        << tri->label()
                         << " gives boundary components of the wrong type.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -2227,32 +2224,30 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                     expectTwoCopies = 0;
                     expectDoubleCover = 2;
                 }
-                if (tDouble->getNumberOfBoundaryComponents() !=
+                if (tDouble->countBoundaryComponents() !=
                         expectS + 2 * expectTwoCopies + expectDoubleCover) {
                     std::ostringstream msg;
                     msg << "Cutting along double surface #" << i
-                        << " for " << tri->getPacketLabel()
+                        << " for " << tri->label()
                         << " gives the wrong number of boundary components.";
                     CPPUNIT_FAIL(msg.str());
                 }
                 foundS = foundTwoCopies = foundDoubleCover = 0;
-                for (p = compDouble->getFirstTreeChild(); p;
-                        p = p->getNextTreeSibling())
+                for (p = compDouble->firstChild(); p; p = p->nextSibling())
                     checkBoundaryType(s, static_cast<NTriangulation*>(p),
                         foundS, foundTwoCopies, foundDoubleCover);
                 if (foundS < expectS || foundTwoCopies < expectTwoCopies ||
                         foundDoubleCover < expectDoubleCover) {
                     std::ostringstream msg;
                     msg << "Cutting along double surface #" << i
-                        << " for " << tri->getPacketLabel()
+                        << " for " << tri->label()
                         << " gives boundary components of the wrong type.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 // Look for the product piece when cutting along the
                 // double surface.
-                for (p = compDouble->getFirstTreeChild(); p;
-                        p = p->getNextTreeSibling()) {
+                for (p = compDouble->firstChild(); p; p = p->nextSibling()) {
                     if (s->isTwoSided()) {
                         if (mightBeUntwistedProduct(
                                 static_cast<NTriangulation*>(p)))
@@ -2266,7 +2261,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 if (! p) {
                     std::ostringstream msg;
                     msg << "Cutting along double surface #" << i
-                        << " for " << tri->getPacketLabel()
+                        << " for " << tri->label()
                         << " does not yield a product piece as expected.";
                     CPPUNIT_FAIL(msg.str());
                 }

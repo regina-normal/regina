@@ -159,10 +159,14 @@ void addNNormalSurfaceList() {
         .def("allowsSpun", &NNormalSurfaceList::allowsSpun)
         .def("allowsOriented", &NNormalSurfaceList::allowsOriented)
         .def("isEmbeddedOnly", &NNormalSurfaceList::isEmbeddedOnly)
+        .def("triangulation", &NNormalSurfaceList::triangulation,
+            return_value_policy<reference_existing_object>())
         .def("getTriangulation", &NNormalSurfaceList::getTriangulation,
             return_value_policy<reference_existing_object>())
         .def("size", &NNormalSurfaceList::size)
         .def("getNumberOfSurfaces", &NNormalSurfaceList::getNumberOfSurfaces)
+        .def("surface", &NNormalSurfaceList::surface,
+            return_internal_reference<>())
         .def("getSurface", &NNormalSurfaceList::getSurface,
             return_internal_reference<>())
         .def("writeAllSurfaces", writeAllSurfaces_stdio)
@@ -239,7 +243,8 @@ void addNNormalSurfaceList() {
         .staticmethod("enumerateFundCD")
     ;
 
-    s.attr("packetType") = regina::PacketType(NNormalSurfaceList::packetType);
+    s.attr("typeID") = regina::PACKET_NORMALSURFACELIST;
+    s.attr("packetType") = regina::PACKET_NORMALSURFACELIST;
     s.attr("STANDARD") = regina::NS_STANDARD;
     s.attr("AN_STANDARD") = regina::NS_AN_STANDARD;
     s.attr("QUAD") = regina::NS_QUAD;

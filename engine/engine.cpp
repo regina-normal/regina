@@ -38,12 +38,24 @@
 
 namespace regina {
 
+const char* versionString() {
+    return PACKAGE_VERSION;
+}
+
 const char* getVersionString() {
     return PACKAGE_VERSION;
 }
 
+int versionMajor() {
+    return PACKAGE_VERSION_MAJOR;
+}
+
 int getVersionMajor() {
     return PACKAGE_VERSION_MAJOR;
+}
+
+int versionMinor() {
+    return PACKAGE_VERSION_MINOR;
 }
 
 int getVersionMinor() {

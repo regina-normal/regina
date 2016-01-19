@@ -66,7 +66,7 @@ class NNormalSurface;
  * normal surfaces.
  */
 struct REGINA_API NPrismSpec {
-    unsigned long tetIndex;
+    size_t tetIndex;
         /**< The index in the triangulation of the tetrahedron
              containing the prism. */
     int edge;
@@ -84,7 +84,7 @@ struct REGINA_API NPrismSpec {
      * @param newEdge the edge of the tetrahedron that is contained in
      * this prism; this must be between 0 and 5 inclusive.
      */
-    NPrismSpec(unsigned long newTetIndex, int newEdge);
+    NPrismSpec(size_t newTetIndex, int newEdge);
     /**
      * Creates a new prism specifier that is a clone of the given specifier.
      *
@@ -147,10 +147,12 @@ REGINA_API std::ostream& operator << (std::ostream& out,
  * \deprecated This class has essentially been a placeholder for the
  * last 12 years, and was never fleshed out in that time.  It will be
  * removed in a future release.
+ *
+ * \ifacespython Not present.
  */
 class REGINA_API NPrismSetSurface {
     private:
-        signed char* quadType;
+        signed char* quadType_;
             /**< A list of which types of normal quad are contained in which
                  tetrahedra.  Tetrahedra containing no quads at all
                  will have quad type -1 in this array. */
@@ -181,15 +183,22 @@ class REGINA_API NPrismSetSurface {
          *
          * @param tetIndex the index in the triangulation of the
          * tetrahedron in which we are interested; this should be
-         * between 0 and NTriangulation::getNumberOfTetrahedra()-1
-         * inclusive.
+         * between 0 and NTriangulation::size()-1 inclusive.
          * @return the quadrilateral type found within this tetrahedron.
          * This is 0, 1 or 2 and represents the same type parameter as is
-         * used by NNormalSurface::getQuadCoord().  If the underlying surface
+         * used by NNormalSurface::quads().  If the underlying surface
          * does not meet the given tetrahedron in any quadrilateral discs,
          * this routine returns -1.
          */
-        signed char getQuadType(unsigned long tetIndex) const;
+        signed char quadType(size_t tetIndex) const;
+        /**
+         * Deprecated routine that returns the quadrilateral type with which
+         * the underlying normal surface meets the given tetrahedron.
+         *
+         * \deprecated This routine has been renamed to quadType().
+         * See the quadType() documentation for further details.
+         */
+        signed char getQuadType(size_t tetIndex) const;
 };
 
 /*@}*/
@@ -198,7 +207,7 @@ class REGINA_API NPrismSetSurface {
 
 inline NPrismSpec::NPrismSpec() {
 }
-inline NPrismSpec::NPrismSpec(unsigned long newTetIndex, int newEdge) :
+inline NPrismSpec::NPrismSpec(size_t newTetIndex, int newEdge) :
         tetIndex(newTetIndex), edge(newEdge) {
 }
 inline NPrismSpec::NPrismSpec(const NPrismSpec& cloneMe) :
@@ -220,13 +229,16 @@ inline bool NPrismSpec::operator != (const NPrismSpec& other) const {
 // Inline functions for NPrismSetSurface
 
 inline NPrismSetSurface::~NPrismSetSurface() {
-    if (quadType)
-        delete[] quadType;
+    if (quadType_)
+        delete[] quadType_;
 }
 
-inline signed char NPrismSetSurface::getQuadType(unsigned long tetIndex)
-        const {
-    return quadType[tetIndex];
+inline signed char NPrismSetSurface::quadType(size_t tetIndex) const {
+    return quadType_[tetIndex];
+}
+
+inline signed char NPrismSetSurface::getQuadType(size_t tetIndex) const {
+    return quadType_[tetIndex];
 }
 
 } // namespace regina

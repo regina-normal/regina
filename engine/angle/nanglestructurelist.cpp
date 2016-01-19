@@ -51,7 +51,7 @@ void NAngleStructureList::enumerateInternal(NTriangulation* triang,
     // Form the matching equations.
     NMatrixInt* eqns = NAngleStructureVector::makeAngleEquations(triang);
 
-    if (tautOnly_ && triang->getNumberOfTetrahedra() > 0) {
+    if (tautOnly_ && (! triang->isEmpty())) {
         // For now just stick to arbitrary precision arithmetic.
         // TODO: Use native integer types when the angle equation matrix
         // is sufficiently small / simple.
@@ -116,8 +116,7 @@ NAngleStructureList* NAngleStructureList::enumerateTautDD(
     NMatrixInt* eqns = NAngleStructureVector::makeAngleEquations(owner);
 
     // Form the taut constraints.
-    NEnumConstraintList* constraints = new NEnumConstraintList(
-        owner->getNumberOfTetrahedra());
+    NEnumConstraintList* constraints = new NEnumConstraintList(owner->size());
 
     unsigned base = 0;
     for (unsigned c = 0; c < constraints->size(); ++c) {
@@ -138,8 +137,12 @@ NAngleStructureList* NAngleStructureList::enumerateTautDD(
     return ans;
 }
 
+NTriangulation* NAngleStructureList::triangulation() const {
+    return dynamic_cast<NTriangulation*>(parent());
+}
+
 NTriangulation* NAngleStructureList::getTriangulation() const {
-    return dynamic_cast<NTriangulation*>(getTreeParent());
+    return dynamic_cast<NTriangulation*>(parent());
 }
 
 void NAngleStructureList::writeTextShort(std::ostream& o) const {
@@ -200,7 +203,7 @@ void NAngleStructureList::calculateSpanStrict() const {
         return;
     }
 
-    unsigned long nTets = getTriangulation()->getNumberOfTetrahedra();
+    unsigned long nTets = triangulation()->size();
     if (nTets == 0) {
         doesSpanStrict = true;
         return;
@@ -219,7 +222,7 @@ void NAngleStructureList::calculateSpanStrict() const {
     int edges;
     for (tet = 0; tet < nTets; tet++)
         for (edges = 0; edges < 3; edges++) {
-            angle = s->getAngle(tet, edges);
+            angle = s->angle(tet, edges);
             if (angle == NRational::zero || angle == NRational::one) {
                 fixedAngles[3 * tet + edges] = angle;
                 nFixed++;
@@ -241,7 +244,7 @@ void NAngleStructureList::calculateSpanStrict() const {
             for (edges = 0; edges < 3; edges++) {
                 if (fixedAngles[3 * tet + edges] == NRational::undefined)
                     continue;
-                if (s->getAngle(tet, edges) != fixedAngles[3 * tet + edges]) {
+                if (s->angle(tet, edges) != fixedAngles[3 * tet + edges]) {
                     // Here's a bad angle that finally changed.
                     fixedAngles[3 * tet + edges] = NRational::undefined;
                     nFixed--;

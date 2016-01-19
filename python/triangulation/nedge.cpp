@@ -111,6 +111,8 @@ void addNEdge() {
                 return_value_policy<reference_existing_object>())
             .def("getComponent", &NEdge::getComponent,
                 return_value_policy<reference_existing_object>())
+            .def("boundaryComponent", &NEdge::boundaryComponent,
+                return_value_policy<reference_existing_object>())
             .def("getBoundaryComponent", &NEdge::getBoundaryComponent,
                 return_value_policy<reference_existing_object>())
             .def("face", &regina::python::face<NEdge, 1, int>)

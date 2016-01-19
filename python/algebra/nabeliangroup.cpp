@@ -53,10 +53,10 @@ namespace {
         &NAbelianGroup::addGroup;
     void (NAbelianGroup::*addGroup_group)(const NAbelianGroup&) =
         &NAbelianGroup::addGroup;
-    unsigned (NAbelianGroup::*getTorsionRank_large)(
-        const regina::NLargeInteger&) const = &NAbelianGroup::getTorsionRank;
-    unsigned (NAbelianGroup::*getTorsionRank_long)(unsigned long)
-        const = &NAbelianGroup::getTorsionRank;
+    unsigned (NAbelianGroup::*torsionRank_large)(
+        const regina::NLargeInteger&) const = &NAbelianGroup::torsionRank;
+    unsigned (NAbelianGroup::*torsionRank_long)(unsigned long)
+        const = &NAbelianGroup::torsionRank;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addRank,
         NAbelianGroup::addRank, 0, 1);
@@ -109,11 +109,17 @@ void addNAbelianGroup() {
         .def("addTorsionElements", addTorsionElements_dict)
         .def("addGroup", addGroup_matrix)
         .def("addGroup", addGroup_group)
+        .def("rank", &NAbelianGroup::rank)
         .def("getRank", &NAbelianGroup::getRank)
-        .def("getTorsionRank", getTorsionRank_large)
-        .def("getTorsionRank", getTorsionRank_long)
+        .def("torsionRank", torsionRank_large)
+        .def("torsionRank", torsionRank_long)
+        .def("getTorsionRank", torsionRank_large)
+        .def("getTorsionRank", torsionRank_long)
+        .def("countInvariantFactors", &NAbelianGroup::countInvariantFactors)
         .def("getNumberOfInvariantFactors",
             &NAbelianGroup::getNumberOfInvariantFactors)
+        .def("invariantFactor", &NAbelianGroup::invariantFactor,
+            return_value_policy<return_by_value>())
         .def("getInvariantFactor", &NAbelianGroup::getInvariantFactor,
             return_value_policy<return_by_value>())
         .def("isTrivial", &NAbelianGroup::isTrivial)

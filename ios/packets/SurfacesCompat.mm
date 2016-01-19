@@ -108,10 +108,10 @@ static NSArray* typeText = @[@"Do surfaces have compatible quadrilateral and/or 
     
     local = [[NSMutableArray alloc] initWithCapacity:n];
     for (i = 0; i < n; ++i) {
-        s = self.packet->getSurface(i);
+        s = self.packet->surface(i);
         row = [[NSMutableArray alloc] initWithCapacity:n];
         for (j = 0; j < n; ++j)
-            [row addObject:[NSNumber numberWithBool:s->locallyCompatible(*(self.packet->getSurface(j)))]];
+            [row addObject:[NSNumber numberWithBool:s->locallyCompatible(*(self.packet->surface(j)))]];
         [local addObject:row];
     }
 }
@@ -125,18 +125,18 @@ static NSArray* typeText = @[@"Do surfaces have compatible quadrilateral and/or 
     
     usable = [[NSMutableArray alloc] initWithCapacity:n];
     for (i = 0; i < n; ++i) {
-        s = self.packet->getSurface(i);
+        s = self.packet->surface(i);
         [usable addObject:@(BOOL(s->isCompact() && (! s->isEmpty()) && s->isConnected()))];
     }
     
     global = [[NSMutableArray alloc] initWithCapacity:n];
     for (i = 0; i < n; ++i) {
         if ([usable[i] boolValue]) {
-            s = self.packet->getSurface(i);
+            s = self.packet->surface(i);
             row = [[NSMutableArray alloc] initWithCapacity:n];
             for (j = 0; j < n; ++j)
                 if ([usable[j] boolValue])
-                    [row addObject:[NSNumber numberWithBool:s->disjoint(*(self.packet->getSurface(j)))]];
+                    [row addObject:[NSNumber numberWithBool:s->disjoint(*(self.packet->surface(j)))]];
                 else
                     [row addObject:NSNull.null];
             [global addObject:row];

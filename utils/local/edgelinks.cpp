@@ -162,17 +162,17 @@ bool process(const std::string& filename) {
     NNormalSurfaceList* s;
     long n, i, links;
     for (NPacket* p = tree; p; p = p->nextTreePacket())
-        if (p->getPacketType() == NTriangulation::packetType) {
+        if (p->type() == PACKET_TRIANGULATION) {
             t = static_cast<NTriangulation*>(p);
             s = NNormalSurfaceList::enumerate(t, NS_QUAD);
 
             links = 0;
             n = s->size();
             for (i = 0; i < n; ++i)
-                if (s->getSurface(i)->isThinEdgeLink().first)
+                if (s->surface(i)->isThinEdgeLink().first)
                     ++links;
-            out << t->getNumberOfTetrahedra() << ' ' << links << " \""
-                << t->getPacketLabel() << '"' << std::endl;
+            out << t->size() << ' ' << links << " \""
+                << t->label() << '"' << std::endl;
 
             delete s;
         }

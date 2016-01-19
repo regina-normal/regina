@@ -91,32 +91,21 @@ struct SurfaceFilterInfo;
  *
  * This macro provides the class with:
  *
- * - a compile-time constant \a filterType, which is equal to the
+ * - a compile-time constant \a filterTypeID, which is equal to the
  *   corresponding SurfaceFilterType constant;
- * - a deprecated compile-time constant \a filterID, which is
- *   identical to \a filterType;
  * - declarations and implementations of the virtual functions
- *   NSurfaceFilter::getFilterType() and NSurfaceFilter::getFilterTypeName();
- * - declarations and implementations of the deprecated virtual functions
- *   NSurfaceFilter::getFilterID() and NSurfaceFilter::getFilterName().
+ *   NSurfaceFilter::filterType() and NSurfaceFilter::filterTypeName();
  *
  * @param class_ the name of this descendant class of NSurfaceFilter.
  * @param id the corresponding SurfaceFilterType constant.
  */
 #define REGINA_SURFACE_FILTER(class_, id) \
     public: \
-        static constexpr const SurfaceFilterType filterType = id; \
-        static constexpr const SurfaceFilterType filterID = id; \
-        inline virtual SurfaceFilterType getFilterType() const { \
+        static constexpr const SurfaceFilterType filterTypeID = id; \
+        inline virtual SurfaceFilterType filterType() const { \
             return id; \
         } \
-        inline virtual SurfaceFilterType getFilterID() const { \
-            return id; \
-        } \
-        inline virtual std::string getFilterTypeName() const { \
-            return SurfaceFilterInfo<id>::name(); \
-        } \
-        inline virtual std::string getFilterName() const { \
+        inline virtual std::string filterTypeName() const { \
             return SurfaceFilterInfo<id>::name(); \
         }
 
@@ -161,7 +150,7 @@ struct SurfaceFilterInfo<NS_FILTER_DEFAULT> {
  *   writing.</li>
  *   <li>Virtual functions accept(), internalClonePacket(), writeTextLong() and
  *   writeXMLFilterData() must be overridden.</li>
- *   <li>Static function getXMLFilterReader() must be declared and
+ *   <li>Static function xmlFilterReader() must be declared and
  *   implemented as described in the documentation below.</li>
  * </ul>
  *
@@ -209,31 +198,32 @@ class REGINA_API NSurfaceFilter : public NPacket {
          *
          * @return the unique integer filtering method ID.
          */
-        virtual SurfaceFilterType getFilterType() const;
-        /**
-         * A deprecated alias for getFilterType().
-         * This returns the unique integer ID corresponding to the filtering
-         * method that is this particular subclass of NSurfaceFilter.
-         *
-         * @return the unique integer filtering method ID.
-         */
-        virtual SurfaceFilterType getFilterID() const;
+        virtual SurfaceFilterType filterType() const;
         /**
          * Returns a string description of the filtering method that is
          * this particular subclass of NSurfaceFilter.
          *
          * @return a string description of this filtering method.
          */
-        virtual std::string getFilterTypeName() const;
-        /**
-         * A deprecated alias for getFilterTypeName().
-         * This returns a string description of the filtering method that is
-         * this particular subclass of NSurfaceFilter.
-         *
-         * @return a string description of this filtering method.
-         */
-        virtual std::string getFilterName() const;
+        virtual std::string filterTypeName() const;
 #endif
+        /**
+         * Deprecated routine that returns the unique integer ID corresponding
+         * to the filtering method that is this particular subclass of
+         * NSurfaceFilter.
+         *
+         * \deprecated This routine has been renamed to filterType().
+         * See the filterType() documentation for further details.
+         */
+        SurfaceFilterType getFilterType() const;
+        /**
+         * Deprecated routine that returns a string description of the
+         * filtering method that is this particular subclass of NSurfaceFilter.
+         *
+         * \deprecated This routine has been renamed to filterTypeName().
+         * See the filterTypeName() documentation for further details.
+         */
+        std::string getFilterTypeName() const;
 
         /**
          * Returns a newly created XML filter reader that will read the
@@ -248,7 +238,7 @@ class REGINA_API NSurfaceFilter : public NPacket {
          * filter's parent in the tree structure.  This information is
          * for reference only, and need not be used.
          * See the description of parameter \a parent in
-         * NPacket::getXMLReader() for further details.
+         * NPacket::xmlReader() for further details.
          *
          * \ifacespython Not present.
          *
@@ -257,10 +247,10 @@ class REGINA_API NSurfaceFilter : public NPacket {
          * tree matriarch.
          * @return the newly created XML filter reader.
          */
-        static NXMLFilterReader* getXMLFilterReader(NPacket* parent);
+        static NXMLFilterReader* xmlFilterReader(NPacket* parent);
 
         virtual void writeTextShort(std::ostream& out) const;
-        static NXMLPacketReader* getXMLReader(NPacket* parent,
+        static NXMLPacketReader* xmlReader(NPacket* parent,
             NXMLTreeResolver& resolver);
         virtual bool dependsOnParent() const;
 
@@ -296,11 +286,19 @@ inline bool NSurfaceFilter::accept(const NNormalSurface&) const {
     return true;
 }
 
+inline SurfaceFilterType NSurfaceFilter::getFilterType() const {
+    return filterType();
+}
+
+inline std::string NSurfaceFilter::getFilterTypeName() const {
+    return filterTypeName();
+}
+
 inline void NSurfaceFilter::writeXMLFilterData(std::ostream&) const {
 }
 
 inline void NSurfaceFilter::writeTextShort(std::ostream& o) const {
-    o << getFilterTypeName();
+    o << filterTypeName();
 }
 
 inline bool NSurfaceFilter::dependsOnParent() const {

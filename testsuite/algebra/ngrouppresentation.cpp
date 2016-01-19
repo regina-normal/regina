@@ -173,29 +173,29 @@ class NGroupPresentationTest : public CppUnit::TestFixture {
 
         word1.simplify();
         word2.simplify();
-        if (word1.getNumberOfTerms() != 6) 
+        if (word1.countTerms() != 6) 
             CPPUNIT_FAIL("NGroupExpression::number of terms (1). "+word1.str());
-        if (word1.getNumberOfTerms() != 6) 
+        if (word1.countTerms() != 6) 
             CPPUNIT_FAIL("NGroupExpression::number of terms (2). "+word1.str());
         word1.simplify(true);
         word2.simplify(true);
-        if (word1.getNumberOfTerms() != 6) 
+        if (word1.countTerms() != 6) 
             CPPUNIT_FAIL("NGroupExpression::number of terms (3). "+word1.str());
-        if (word1.getNumberOfTerms() != 6) 
+        if (word1.countTerms() != 6) 
             CPPUNIT_FAIL("NGroupExpression::number of terms (4). "+word1.str());
 
         word1.addTermsLast(word2);
         word1.simplify();
-        if (word1.getNumberOfTerms() != 0)
+        if (word1.countTerms() != 0)
             CPPUNIT_FAIL("NGroupExpression::inverse (2). "+word1.str());
 
-        if (word3.getNumberOfTerms() != 11)
+        if (word3.countTerms() != 11)
             CPPUNIT_FAIL("NGroupExpression::number of terms (5). "+word3.str());
         word3.simplify();
-        if (word3.getNumberOfTerms() != 9)
+        if (word3.countTerms() != 9)
             CPPUNIT_FAIL("NGroupExpression::number of terms (6). "+word3.str());
         word3.simplify(true);
-        if (word3.getNumberOfTerms() != 1)
+        if (word3.countTerms() != 1)
             CPPUNIT_FAIL("NGroupExpression::number of terms (7). "+word3.str());
     }
     void presValid_test() {
@@ -228,7 +228,7 @@ class NGroupPresentationTest : public CppUnit::TestFixture {
             NGroupPresentation tPres( *(*i) );
             tPres.homologicalAlignment();
             std::unique_ptr<NMarkedAbelianGroup> mab( tPres.markedAbelianisation() );
-            unsigned long N(mab->getNumberOfInvariantFactors());
+            unsigned long N(mab->countInvariantFactors());
             unsigned long M(mab->minNumberOfGenerators());
             /*
              * If the abelianisation of this group has rank N and M
@@ -240,8 +240,8 @@ class NGroupPresentationTest : public CppUnit::TestFixture {
              * mapped to +-1 in the appropriate factor. All further generators 
              * will be mapped to zero. 
              */
-            for (unsigned long j=0; j<tPres.getNumberOfGenerators(); j++) {
-                std::vector<NLargeInteger> epsilon( tPres.getNumberOfGenerators() );
+            for (unsigned long j=0; j<tPres.countGenerators(); j++) {
+                std::vector<NLargeInteger> epsilon( tPres.countGenerators() );
                 epsilon[j] = 1;
                 std::vector<NLargeInteger> temp( mab->snfRep(epsilon) );
 
@@ -251,16 +251,16 @@ class NGroupPresentationTest : public CppUnit::TestFixture {
                         // check in temp if dj | entry(j) for all j != k
                         // and             GCD(dj,entry(j)) == 1  j == k
                         if (k==j) {
-                            if (temp[k].gcd( mab->getInvariantFactor(k) )!=
+                            if (temp[k].gcd( mab->invariantFactor(k) )!=
                                     NLargeInteger::one)
                                 CPPUNIT_FAIL("NGroupPresentation: homologicalAlignment Error 1.");
                         } else if ( k < N ) {
-                            if ( temp[k] % mab->getInvariantFactor(k) != 
+                            if ( temp[k] % mab->invariantFactor(k) !=
                                     NLargeInteger::zero )
                                 CPPUNIT_FAIL("NGroupPresentation: homologicalAlignment Error 2.");
                         } else if ( temp[k] != NLargeInteger::zero )
                             CPPUNIT_FAIL("NGroupPresentation: homologicalAlignment Error 3.");
-                        // dj divides entry(j) for all j!=k, 
+                        // dj divides entry(j) for all j!=k,
                         // and GCD(dk,entry(k)==1.
                         continue;
                     }
@@ -268,10 +268,10 @@ class NGroupPresentationTest : public CppUnit::TestFixture {
                     // case 2: column should be delta_ij
                     if (j<M) {  // entry
                         if (k==j) {
-                            if (temp[k].abs() != NLargeInteger::one) 
+                            if (temp[k].abs() != NLargeInteger::one)
                                 CPPUNIT_FAIL("NGroupPresentation: homologicalAlignment Error 4.");
                         } else if (k<N) {
-                            if (temp[k] % mab->getInvariantFactor(k) !=
+                            if (temp[k] % mab->invariantFactor(k) !=
                                     NLargeInteger::zero )
                                 CPPUNIT_FAIL("NGroupPresentation: homologicalAlignment Error 5.");
                         } else if (temp[k] != NLargeInteger::zero)
@@ -281,7 +281,7 @@ class NGroupPresentationTest : public CppUnit::TestFixture {
 
                     // case 3: column should be zero (modulo d's)
                     if (k<N) {
-                        if (temp[k] % mab->getInvariantFactor(k) !=
+                        if (temp[k] % mab->invariantFactor(k) !=
                                 NLargeInteger::zero )
                             CPPUNIT_FAIL("NGroupPresentation: homologicalAlignment Error 7.");
                     } else if (temp[k] != NLargeInteger::zero)

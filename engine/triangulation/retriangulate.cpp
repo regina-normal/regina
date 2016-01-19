@@ -103,7 +103,7 @@ namespace {
 
         NTriangulation* t = NTriangulation::fromIsoSig(*it);
         size_t i;
-        for (i = 0; i < t->getNumberOfEdges(); ++i)
+        for (i = 0; i < t->countEdges(); ++i)
             if (t->threeTwoMove(t->getEdge(i), true, false)) {
                 NTriangulation alt(*t);
                 alt.threeTwoMove(alt.getEdge(i), false, true);
@@ -113,8 +113,8 @@ namespace {
                 }
             }
 
-        if (t->getNumberOfTetrahedra() < maxTet_)
-            for (i = 0; i < t->getNumberOfTriangles(); ++i)
+        if (t->size() < maxTet_)
+            for (i = 0; i < t->countTriangles(); ++i)
                 if (t->twoThreeMove(t->getTriangle(i), true, false)) {
                     NTriangulation alt(*t);
                     alt.twoThreeMove(alt.getTriangle(i), false, true);
@@ -131,7 +131,6 @@ namespace {
     template <>
     void TriBFS<false>::processQueue() {
         SigSet::iterator next;
-        size_t i;
         while (! (done_ || process_.empty())) {
             next = process_.front();
             process_.pop();
@@ -245,7 +244,7 @@ namespace {
 
     bool simplifyFound(const NTriangulation& alt,
             NTriangulation& original, size_t minTet) {
-        if (alt.getNumberOfTetrahedra() < minTet) {
+        if (alt.size() < minTet) {
             // TODO: Make t.cloneFrom(alt) public.
             original.removeAllTetrahedra();
             original.insertTriangulation(alt);
@@ -258,7 +257,7 @@ namespace {
 
 bool NTriangulation::simplifyExhaustive(int height, unsigned nThreads) {
     return retriangulate(height, nThreads, &simplifyFound,
-        std::ref(*this), getNumberOfTetrahedra());
+        std::ref(*this), size());
 }
 
 bool NTriangulation::retriangulateInternal(int height, unsigned nThreads,
@@ -267,13 +266,13 @@ bool NTriangulation::retriangulateInternal(int height, unsigned nThreads,
         return false;
 
     if (nThreads <= 1) {
-        TriBFS<false> bfs(getNumberOfTetrahedra() + height, action);
+        TriBFS<false> bfs(size() + height, action);
         if (bfs.seed(*this))
             return true;
         bfs.processQueue();
         return bfs.done();
     } else {
-        TriBFS<true> bfs(getNumberOfTetrahedra() + height, action);
+        TriBFS<true> bfs(size() + height, action);
         if (bfs.seed(*this))
             return true;
         bfs.processQueueParallel(nThreads);

@@ -90,9 +90,9 @@ void usage(const char* progName, const std::string& error = std::string()) {
 
 void insertTri(const NTriangulation& source) {
     NTriangulation* t = new NTriangulation(source);
-    t->setPacketLabel(source.getPacketLabel());
+    t->setPacketLabel(source.label());
 
-    std::string H1 = t->getHomologyH1().str();
+    std::string H1 = t->homology().str();
 
     HomologyMap::iterator it = H1Map.find(H1);
     if (it == H1Map.end()) {
@@ -125,7 +125,7 @@ void process(const char* filename) {
     NTriangulation* t;
 
     for (NPacket* p = tree; p; p = p->nextTreePacket())
-        if (p->getPacketType() == NTriangulation::packetType) {
+        if (p->type() == PACKET_TRIANGULATION) {
             nTris++;
 
             t = static_cast<NTriangulation*>(p);
@@ -134,7 +134,7 @@ void process(const char* filename) {
                 continue;
 
             if (checkZeroEff && t->isOrientable() &&
-                    t->getNumberOfTetrahedra() >= 3 && ! t->isZeroEfficient())
+                    t->size() >= 3 && ! t->isZeroEfficient())
                 continue;
 
             // Looks okay.  Use it.
@@ -196,7 +196,7 @@ int main(int argc, char* argv[]) {
     else
         for (HomologyMap::iterator it = H1Map.begin();
                 it != H1Map.end(); it++) {
-            size = it->second->getNumberOfChildren();
+            size = it->second->countChildren();
             std::cerr << "    " << it->first << " (" << size
                 << (size == 1 ? " triangulation)" : " triangulations)")
                 << std::endl;

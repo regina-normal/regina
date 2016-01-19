@@ -380,7 +380,7 @@ cleanUpFilling:
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 1 + (tableView == self.cusps ? self.packet->countCusps() : self.packet->getNumberOfTetrahedra());
+    return 1 + (tableView == self.cusps ? self.packet->countCusps() : self.packet->size());
 }
 
 @end

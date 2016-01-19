@@ -89,11 +89,11 @@ int main(int argc, char* argv[]) {
         }
 
         for (NPacket* p = tree; p; p = p->nextTreePacket())
-            if (p->getPacketType() == NTriangulation::packetType) {
+            if (p->type() == PACKET_TRIANGULATION) {
                 found = true;
                 dehydration = static_cast<NTriangulation*>(p)->dehydrate();
 
-                std::cout << p->getPacketLabel() << " : ";
+                std::cout << p->label() << " : ";
                 if (dehydration.empty())
                     std::cout << "---";
                 else

@@ -70,11 +70,11 @@ NLayeredTorusBundle* NLayeredTorusBundle::isLayeredTorusBundle(
     // Basic property checks.
     if (! tri->isClosed())
         return 0;
-    if (tri->getNumberOfVertices() > 1)
+    if (tri->countVertices() > 1)
         return 0;
-    if (tri->getNumberOfComponents() > 1)
+    if (tri->countComponents() > 1)
         return 0;
-    if (tri->getNumberOfTetrahedra() < 6)
+    if (tri->size() < 6)
         return 0;
 
     // We have a 1-vertex 1-component closed triangulation with at least
@@ -168,16 +168,16 @@ NLayeredTorusBundle* NLayeredTorusBundle::hunt(NTriangulation* tri,
     return 0;
 }
 
-NManifold* NLayeredTorusBundle::getManifold() const {
-    // Note that this one-liner appears again in getHomologyH1(), where
+NManifold* NLayeredTorusBundle::manifold() const {
+    // Note that this one-liner appears again in homology(), where
     // we use the underlying NTorusBundle for homology calculations.
     return new NTorusBundle(core_.parallelReln() * reln_);
 }
 
-NAbelianGroup* NLayeredTorusBundle::getHomologyH1() const {
+NAbelianGroup* NLayeredTorusBundle::homology() const {
     // It's implemented in NTorusBundle, so ride on that for now.
     // We'll implement it directly here in good time.
-    return NTorusBundle(core_.parallelReln() * reln_).getHomologyH1();
+    return NTorusBundle(core_.parallelReln() * reln_).homology();
 }
 
 std::ostream& NLayeredTorusBundle::writeCommonName(std::ostream& out,

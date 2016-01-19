@@ -106,11 +106,11 @@ class REGINA_API NSnapPeaCensusTri: public NStandardTriangulation {
                  There are 887 triangulations in this section. */
 
     private:
-        char section;
+        char section_;
             /**< The section of the SnapPea census to which this
                  triangulation belongs.  This must be one of the section
                  constants defined in this class. */
-        unsigned long index;
+        unsigned long index_;
             /**< The index within the given section of this specific
                  triangulation.  Note that the first index in each section
                  is zero. */
@@ -130,6 +130,14 @@ class REGINA_API NSnapPeaCensusTri: public NStandardTriangulation {
          *
          * @return the section of the SnapPea census.
          */
+        char section() const;
+        /**
+         * Deprecated routine that returns the section of the SnapPea census to
+         * which this triangulation belongs.
+         *
+         * \deprecated This routine has been renamed to section().
+         * See the section() documentation for further details.
+         */
         char getSection() const;
 
         /**
@@ -138,6 +146,14 @@ class REGINA_API NSnapPeaCensusTri: public NStandardTriangulation {
          * section begin counting at zero.
          *
          * @return the index of this triangulation within its section.
+         */
+        unsigned long index() const;
+        /**
+         * Deprecated routine that returns the index of this triangulation
+         * within its particular section of the SnapPea census.
+         *
+         * \deprecated This routine has been renamed to index().
+         * See the index() documentation for further details.
          */
         unsigned long getIndex() const;
 
@@ -180,8 +196,8 @@ class REGINA_API NSnapPeaCensusTri: public NStandardTriangulation {
         static NSnapPeaCensusTri* isSmallSnapPeaCensusTri(
             const NComponent* comp);
 
-        NManifold* getManifold() const;
-        NAbelianGroup* getHomologyH1() const;
+        NManifold* manifold() const;
+        NAbelianGroup* homology() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
 
@@ -200,30 +216,38 @@ class REGINA_API NSnapPeaCensusTri: public NStandardTriangulation {
 // Inline functions for NSnapPeaCensusTri
 
 inline NSnapPeaCensusTri* NSnapPeaCensusTri::clone() const {
-    return new NSnapPeaCensusTri(section, index);
+    return new NSnapPeaCensusTri(section_, index_);
+}
+
+inline char NSnapPeaCensusTri::section() const {
+    return section_;
 }
 
 inline char NSnapPeaCensusTri::getSection() const {
-    return section;
+    return section_;
+}
+
+inline unsigned long NSnapPeaCensusTri::index() const {
+    return index_;
 }
 
 inline unsigned long NSnapPeaCensusTri::getIndex() const {
-    return index;
+    return index_;
 }
 
 inline bool NSnapPeaCensusTri::operator == (const NSnapPeaCensusTri& compare)
         const {
-    return (section == compare.section && index == compare.index);
+    return (section_ == compare.section_ && index_ == compare.index_);
 }
 
 inline bool NSnapPeaCensusTri::operator != (const NSnapPeaCensusTri& compare)
         const {
-    return (section != compare.section || index != compare.index);
+    return (section_ != compare.section_ || index_ != compare.index_);
 }
 
 inline NSnapPeaCensusTri::NSnapPeaCensusTri(char newSection,
         unsigned long newIndex) :
-        section(newSection), index(newIndex) {
+        section_(newSection), index_(newIndex) {
 }
 
 } // namespace regina

@@ -252,7 +252,7 @@ class REGINA_API NPDF : public NPacket {
         bool savePDF(const char* filename) const;
 
         virtual void writeTextShort(std::ostream& out) const;
-        static NXMLPacketReader* getXMLReader(NPacket* parent,
+        static NXMLPacketReader* xmlReader(NPacket* parent,
             NXMLTreeResolver& resolver);
         virtual bool dependsOnParent() const;
 

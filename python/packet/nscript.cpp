@@ -39,13 +39,12 @@ using namespace boost::python;
 using regina::NScript;
 
 namespace {
-    regina::NPacket* (NScript::*getVariableValue_long)(unsigned long)
-        const = &NScript::getVariableValue;
-    regina::NPacket* (NScript::*getVariableValue_string)(const std::string&)
-        const = &NScript::getVariableValue;
+    regina::NPacket* (NScript::*variableValue_long)(size_t) const =
+        &NScript::variableValue;
+    regina::NPacket* (NScript::*variableValue_string)(const std::string&)
+        const = &NScript::variableValue;
 
-    void (NScript::*removeVariable_long)(unsigned long) =
-        &NScript::removeVariable;
+    void (NScript::*removeVariable_long)(size_t) = &NScript::removeVariable;
     void (NScript::*removeVariable_string)(const std::string&) =
         &NScript::removeVariable;
 }
@@ -53,17 +52,27 @@ namespace {
 void addNScript() {
     scope s = class_<NScript, bases<regina::NPacket>,
             std::auto_ptr<NScript>, boost::noncopyable>("NScript", init<>())
+        .def("text", &NScript::text,
+            return_value_policy<return_by_value>())
         .def("getText", &NScript::getText,
             return_value_policy<return_by_value>())
         .def("setText", &NScript::setText)
         .def("append", &NScript::append)
+        .def("countVariables", &NScript::countVariables)
         .def("getNumberOfVariables", &NScript::getNumberOfVariables)
+        .def("variableName", &NScript::variableName,
+            return_value_policy<return_by_value>())
         .def("getVariableName", &NScript::getVariableName,
             return_value_policy<return_by_value>())
-        .def("getVariableValue", getVariableValue_long,
+        .def("variableValue", variableValue_long,
             return_value_policy<reference_existing_object>())
-        .def("getVariableValue", getVariableValue_string,
+        .def("getVariableValue", variableValue_long,
             return_value_policy<reference_existing_object>())
+        .def("variableValue", variableValue_string,
+            return_value_policy<reference_existing_object>())
+        .def("getVariableValue", variableValue_string,
+            return_value_policy<reference_existing_object>())
+        .def("variableIndex", &NScript::variableIndex)
         .def("getVariableIndex", &NScript::getVariableIndex)
         .def("setVariableName", &NScript::setVariableName)
         .def("setVariableValue", &NScript::setVariableValue)
@@ -73,7 +82,8 @@ void addNScript() {
         .def("removeAllVariables", &NScript::removeAllVariables)
     ;
 
-    s.attr("packetType") = regina::PacketType(NScript::packetType);
+    s.attr("typeID") = regina::PACKET_SCRIPT;
+    s.attr("packetType") = regina::PACKET_SCRIPT;
 
     implicitly_convertible<std::auto_ptr<NScript>,
         std::auto_ptr<regina::NPacket> >();

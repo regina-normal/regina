@@ -55,7 +55,7 @@ NHyperbolicMinSearcher::NHyperbolicMinSearcher(const NFacePairing* pairing,
 }
 
 void NHyperbolicMinSearcher::runSearch(long maxDepth) {
-    unsigned nTets = getNumberOfTetrahedra();
+    unsigned nTets = size();
     if (maxDepth < 0) {
         // Larger than we will ever see (and in fact grossly so).
         maxDepth = nTets * 4 + 1;

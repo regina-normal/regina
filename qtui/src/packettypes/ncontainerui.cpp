@@ -111,8 +111,8 @@ QString NContainerUI::getPacketMenuText() const {
 }
 
 void NContainerUI::refresh() {
-    children->setText(QString::number(container->getNumberOfChildren()));
-    descendants->setText(QString::number(container->getNumberOfDescendants()));
+    children->setText(QString::number(container->countChildren()));
+    descendants->setText(QString::number(container->countDescendants()));
 }
 
 void NContainerUI::childWasAdded(NPacket*, NPacket*) {

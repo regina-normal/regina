@@ -74,7 +74,7 @@ namespace {
 
 QWidget* ScriptValueDelegate::createEditor(QWidget* parent,
         const QStyleOptionViewItem&, const QModelIndex&) const {
-    PacketChooser* e = new PacketChooser(script_->getTreeMatriarch(),
+    PacketChooser* e = new PacketChooser(script_->root(),
         0 /* filter */, PacketChooser::ROOT_AS_SUBTREE,
         true /* allow "none" */, 0 /* initial selection */, parent);
     e->setAutoUpdate(true);
@@ -84,7 +84,7 @@ QWidget* ScriptValueDelegate::createEditor(QWidget* parent,
 void ScriptValueDelegate::setEditorData(QWidget* editor,
         const QModelIndex& index) const {
     PacketChooser* e = static_cast<PacketChooser*>(editor);
-    e->selectPacket(script_->getVariableValue(index.row()));
+    e->selectPacket(script_->variableValue(index.row()));
 }
 
 void ScriptValueDelegate::setModelData(QWidget* editor,
@@ -113,7 +113,7 @@ QModelIndex ScriptVarModel::index(int row, int column,
 }
 
 int ScriptVarModel::rowCount(const QModelIndex&) const {
-    return script_->getNumberOfVariables();
+    return script_->countVariables();
 }
 
 int ScriptVarModel::columnCount(const QModelIndex&) const {
@@ -123,20 +123,20 @@ int ScriptVarModel::columnCount(const QModelIndex&) const {
 QVariant ScriptVarModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
         if (index.column() == 0)
-            return script_->getVariableName(index.row()).c_str();
+            return script_->variableName(index.row()).c_str();
         else if (index.column() == 1) {
-            NPacket* p = script_->getVariableValue(index.row());
+            NPacket* p = script_->variableValue(index.row());
             if (! p)
                 return tr("<None>");
-            else if (p->getPacketLabel().empty())
+            else if (p->label().empty())
                 return tr("(no label)");
             else
-                return p->getPacketLabel().c_str();
+                return p->label().c_str();
         } else
             return QVariant();
     } else if (role == Qt::DecorationRole) {
         if (index.column() == 1) {
-            NPacket* p = script_->getVariableValue(index.row());
+            NPacket* p = script_->variableValue(index.row());
             if (! p)
                 return QIcon();
             else
@@ -145,7 +145,7 @@ QVariant ScriptVarModel::data(const QModelIndex& index, int role) const {
             return QVariant();
     } else if (role == Qt::EditRole) {
         if (index.column() == 0)
-            return script_->getVariableName(index.row()).c_str();
+            return script_->variableName(index.row()).c_str();
         else if (index.column() == 1) {
             // This is handled by the delegate class.
             return QVariant();
@@ -233,11 +233,11 @@ bool ScriptVarModel::setData(const QModelIndex& index, const QVariant& value,
 }
 
 bool ScriptVarModel::nameUsedElsewhere(const QString& name, int exclude) const {
-    int n = script_->getNumberOfVariables();
+    int n = script_->countVariables();
     for (int i = 0; i < n; ++i) {
         if (i == exclude)
             continue;
-        if (name == script_->getVariableName(i).c_str())
+        if (name == script_->variableName(i).c_str())
             return true;
     }
     return false;
@@ -464,14 +464,14 @@ void NScriptUI::addVariable() {
     // Find a suitable variable name.
     QString varName;
 
-    unsigned n = script->getNumberOfVariables();
+    unsigned n = script->countVariables();
     unsigned which = 0;
     unsigned i;
 
     while (true) {
         varName = QString("var") + QString::number(which);
         for (i = 0; i < n; ++i)
-            if (varName == script->getVariableName(i).c_str())
+            if (varName == script->variableName(i).c_str())
                 break;
         if (i == n)
             break;
@@ -483,8 +483,7 @@ void NScriptUI::addVariable() {
     // don't need to fetch it again.
     script->addVariable(varName.toUtf8().constData(), 0);
     varTable->scrollTo(model->index(
-        script->getVariableIndex(varName.toUtf8().constData()),
-        0, QModelIndex()));
+        script->variableIndex(varName.toUtf8().constData()), 0, QModelIndex()));
 }
 
 void NScriptUI::removeSelectedVariables() {
@@ -512,7 +511,7 @@ void NScriptUI::removeSelectedVariables() {
     msgBox.setIcon(QMessageBox::Question);
     if (rows.size() == 1) {
         msgBox.setText(tr("<qt>The variable <tt>%1</tt> will be removed.</qt>").
-            arg(QString(script->getVariableName(*rows.begin()).c_str()).
+            arg(QString(script->variableName(*rows.begin()).c_str()).
                 toHtmlEscaped()));
         msgBox.setInformativeText(tr("Are you sure?"));
     } else {
@@ -536,7 +535,7 @@ void NScriptUI::removeSelectedVariables() {
 void NScriptUI::updateRemoveState() {
     // Are we read-write?
     if (actAdd->isEnabled())
-        actRemove->setEnabled(script->getNumberOfVariables() > 0);
+        actRemove->setEnabled(script->countVariables() > 0);
     else
         actRemove->setEnabled(false);
 }
@@ -563,10 +562,10 @@ void NScriptUI::execute() {
     // Set up the variable list.
     PythonVariableList vars;
 
-    unsigned nVars = script->getNumberOfVariables();
+    unsigned nVars = script->countVariables();
     for (unsigned i = 0; i < nVars; i++)
-        vars.push_back(PythonVariable(script->getVariableName(i).c_str(),
-            script->getVariableValue(i)));
+        vars.push_back(PythonVariable(script->variableName(i).c_str(),
+            script->variableValue(i)));
 
     // Run the script.
     enclosingPane->getMainWindow()->getPythonManager().launchPythonConsole(ui,

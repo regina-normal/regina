@@ -52,8 +52,7 @@ class TriangulationTest : public CppUnit::TestFixture {
             canonical.makeCanonical();
 
             for (int i = 0; i < trials; ++i) {
-                Isomorphism<dim>* iso = Isomorphism<dim>::random(
-                    tri->getNumberOfSimplices());
+                Isomorphism<dim>* iso = Isomorphism<dim>::random(tri->size());
                 Triangulation<dim>* t = iso->apply(tri);
                 delete iso;
 
@@ -62,13 +61,13 @@ class TriangulationTest : public CppUnit::TestFixture {
                 if (! t->isIsomorphicTo(*tri).get()) {
                     std::ostringstream msg;
                     msg << "Canonical form for "
-                        << tri->getPacketLabel() << " is non-isomorphic.";
+                        << tri->label() << " is non-isomorphic.";
                     CPPUNIT_FAIL(msg.str());
                 }
                 if (t->detail() != canonical.detail()) {
                     std::ostringstream msg;
                     msg << "Canonical form for "
-                        << tri->getPacketLabel() << " is inconsistent.";
+                        << tri->label() << " is inconsistent.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
@@ -81,28 +80,28 @@ class TriangulationTest : public CppUnit::TestFixture {
 
             if (sig.empty()) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel()
+                msg << tri->label()
                     << ": Cannot create isomorphism signature.";
                 CPPUNIT_FAIL(msg.str());
             }
 
             size_t sigSize = Triangulation<dim>::isoSigComponentSize(sig);
-            if (tri->getNumberOfSimplices() == 0) {
+            if (tri->isEmpty()) {
                 if (sigSize != 0) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel()
+                    msg << tri->label()
                         << ": isoSigSize() returns incorrect value: "
                         << sigSize << '.';
                     CPPUNIT_FAIL(msg.str());
                 }
             } else {
                 size_t c;
-                for (c = 0; c < tri->getNumberOfComponents(); ++c)
-                    if (sigSize == tri->getComponent(c)->getNumberOfSimplices())
+                for (c = 0; c < tri->countComponents(); ++c)
+                    if (sigSize == tri->component(c)->size())
                         break;
-                if (c == tri->getNumberOfComponents()) {
+                if (c == tri->countComponents()) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel()
+                    msg << tri->label()
                         << ": isoSigSize() returns incorrect value: "
                         << sigSize << '.';
                     CPPUNIT_FAIL(msg.str());
@@ -112,14 +111,14 @@ class TriangulationTest : public CppUnit::TestFixture {
             Triangulation<dim>* rebuild = Triangulation<dim>::fromIsoSig(sig);
             if (! rebuild) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel()
+                msg << tri->label()
                     << ": Cannot reconstruct from isomorphism "
                     "signature \"" << sig << "\".";
                 CPPUNIT_FAIL(msg.str());
             }
             if (! rebuild->isIsomorphicTo(*tri).get()) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel()
+                msg << tri->label()
                     << ": Reconstruction from \"" << sig
                     << "\" is not isomorphic to the original.";
                 CPPUNIT_FAIL(msg.str());
@@ -131,34 +130,33 @@ class TriangulationTest : public CppUnit::TestFixture {
                 std::string("\t " + sig + "\t \n"));
             if (! rebuild) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel()
+                msg << tri->label()
                     << ": Cannot reconstruct from isomorphism "
                     "signature \"" << sig << "\" with whitespace.";
                 CPPUNIT_FAIL(msg.str());
             }
             if (! rebuild->isIsomorphicTo(*tri).get()) {
                 std::ostringstream msg;
-                msg << tri->getPacketLabel()
+                msg << tri->label()
                     << ": Reconstruction from \"" << sig
                     << "\" with whitespace is not isomorphic to the original.";
                 CPPUNIT_FAIL(msg.str());
             }
             delete rebuild;
 
-            if (tri->getNumberOfSimplices() == 0)
+            if (tri->isEmpty())
                 return;
 
             std::string otherSig;
             for (unsigned i = 0; i < 10; ++i) {
-                Isomorphism<dim>* iso = Isomorphism<dim>::random(
-                    tri->getNumberOfSimplices());
+                Isomorphism<dim>* iso = Isomorphism<dim>::random(tri->size());
                 Triangulation<dim>* other = iso->apply(tri);
                 delete iso;
 
                 otherSig = other->isoSig();
                 if (otherSig != sig) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel()
+                    msg << tri->label()
                         << ": Random isomorphism gives different "
                         "signature: " << otherSig << " != " << sig << std::endl;
                     CPPUNIT_FAIL(msg.str());
@@ -167,8 +165,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                 delete other;
             }
             for (unsigned i = 0; i < 10; ++i) {
-                Isomorphism<dim>* iso = Isomorphism<dim>::random(
-                    tri->getNumberOfSimplices());
+                Isomorphism<dim>* iso = Isomorphism<dim>::random(tri->size());
                 Triangulation<dim> other(*tri);
                 iso->applyInPlace(&other);
                 delete iso;
@@ -176,7 +173,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                 otherSig = other.isoSig();
                 if (otherSig != sig) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel()
+                    msg << tri->label()
                         << ": Random in-place isomorphism gives "
                         "different signature: "
                         << otherSig << " != " << sig << std::endl;
@@ -184,7 +181,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                 }
             }
 
-            if (tri->getNumberOfComponents() == 1) {
+            if (tri->countComponents() == 1) {
                 Isomorphism<dim>* relabelling;
                 tri->isoSig(&relabelling);
 
@@ -194,7 +191,7 @@ class TriangulationTest : public CppUnit::TestFixture {
 
                 if (relabel->detail() != rebuild->detail()) {
                     std::ostringstream msg;
-                    msg << tri->getPacketLabel()
+                    msg << tri->label()
                         << ": relabelling returned from "
                         "isoSig() does not recover fromIsoSig(\""
                         << sig << "\")." << std::endl;

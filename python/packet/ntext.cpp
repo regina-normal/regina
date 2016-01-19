@@ -48,13 +48,16 @@ void addNText() {
             std::auto_ptr<NText>, boost::noncopyable>("NText", init<>())
         .def(init<const std::string&>())
         .def(init<const char*>())
+        .def("text", &NText::text,
+            return_value_policy<return_by_value>())
         .def("getText", &NText::getText,
             return_value_policy<return_by_value>())
         .def("setText", setText_string)
         .def("setText", setText_chars)
     ;
 
-    s.attr("packetType") = regina::PacketType(NText::packetType);
+    s.attr("typeID") = regina::PACKET_TEXT;
+    s.attr("packetType") = regina::PACKET_TEXT;
 
     implicitly_convertible<std::auto_ptr<NText>,
         std::auto_ptr<regina::NPacket> >();

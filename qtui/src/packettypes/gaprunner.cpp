@@ -210,7 +210,7 @@ void GAPRunner::processOutput(const QString& output) {
         case GAP_init:
             // Ignore any output.
             sendInput(QString("f := FreeGroup(%1);").arg(
-                origGroup.getNumberOfGenerators()));
+                origGroup.countGenerators()));
             stage = GAP_oldgens;
             status->setText(tr("Constructing original group "
                 "presentation..."));
@@ -318,13 +318,13 @@ void GAPRunner::processOutput(const QString& output) {
 }
 
 QString GAPRunner::origGroupRelns() {
-    unsigned long nRels = origGroup.getNumberOfRelations();
+    unsigned long nRels = origGroup.countRelations();
     bool empty = true;
 
     QString ans = "[ ";
     for (unsigned long i = 0; i < nRels; i++) {
-        const regina::NGroupExpression& reln(origGroup.getRelation(i));
-        if (reln.getTerms().empty())
+        const regina::NGroupExpression& reln(origGroup.relation(i));
+        if (reln.terms().empty())
             continue;
 
         // It's a non-empty relation.  Include it.
@@ -342,7 +342,7 @@ QString GAPRunner::origGroupReln(const regina::NGroupExpression& reln) {
     // Assumes the relation is non-empty.
     QString ans = "";
     std::list<regina::NGroupExpressionTerm>::const_iterator it;
-    for (it = reln.getTerms().begin(); it != reln.getTerms().end(); it++) {
+    for (it = reln.terms().begin(); it != reln.terms().end(); it++) {
         if (! ans.isEmpty())
             ans += " * ";
         ans += QString("f.%1^%2").arg(it->generator + 1).arg(it->exponent);

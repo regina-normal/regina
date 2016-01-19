@@ -40,11 +40,9 @@
 namespace regina {
 
 void NSurfaceFilter::writeXMLPacketData(std::ostream& out) const {
-    SurfaceFilterType id = getFilterType();
-
     out << "  <filter type=\""
-        << regina::xml::xmlEncodeSpecialChars(getFilterTypeName())
-        << "\" typeid=\"" << id << "\">\n";
+        << regina::xml::xmlEncodeSpecialChars(filterTypeName())
+        << "\" typeid=\"" << filterType() << "\">\n";
 
     writeXMLFilterData(out);
 

@@ -71,7 +71,7 @@
 
 - (void)reloadPacket
 {
-    self.script.text = [NSString stringWithUTF8String:self.packet->getText().c_str()];
+    self.script.text = [NSString stringWithUTF8String:self.packet->text().c_str()];
     [self.script scrollRangeToVisible:NSMakeRange(0, 0)];
     [self.variables reloadData];
 }
@@ -86,17 +86,17 @@
     if (indexPath.row == 0)
         return [tableView dequeueReusableCellWithIdentifier:@"Header"];
 
-    if (self.packet->getNumberOfVariables() == 0)
+    if (self.packet->countVariables() == 0)
         return [tableView dequeueReusableCellWithIdentifier:@"Empty"];
 
     ScriptVariableCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Variable" forIndexPath:indexPath];
-    cell.variable.text = [NSString stringWithUTF8String:self.packet->getVariableName(indexPath.row - 1).c_str()];
+    cell.variable.text = [NSString stringWithUTF8String:self.packet->variableName(indexPath.row - 1).c_str()];
 
-    regina::NPacket* value = self.packet->getVariableValue(indexPath.row - 1);
+    regina::NPacket* value = self.packet->variableValue(indexPath.row - 1);
     if (value) {
         cell.icon.image = [PacketManagerIOS iconFor:value];
-        if (value->getTreeParent())
-            cell.value.text = [NSString stringWithUTF8String:value->getPacketLabel().c_str()];
+        if (value->parent())
+            cell.value.text = [NSString stringWithUTF8String:value->label().c_str()];
         else
             cell.value.text = @"⟨Entire tree⟩";
     } else {
@@ -108,7 +108,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    unsigned long nVar = self.packet->getNumberOfVariables();
+    unsigned long nVar = self.packet->countVariables();
     return 1 + (nVar > 0 ? nVar : 1);
 }
 

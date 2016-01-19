@@ -21,7 +21,7 @@ Copyright (c) 1999-2013, The Regina development team
 ... # triangulation here.
 ... sig = 'sfLfvQvwwMQQQccjghjkmqlonrnrqpqrnsnksaisnrobocksks'
 >>> tri = NTriangulation(sig)
->>> print tri.getNumberOfTetrahedra(), 'tetrahedra'
+>>> print tri.size(), 'tetrahedra'
 18 tetrahedra
 >>> 
 >>> # Create a progress tracker to use during the normal surface enumeration.

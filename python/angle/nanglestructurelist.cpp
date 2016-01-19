@@ -62,12 +62,16 @@ void addNAngleStructureList() {
     scope s = class_<NAngleStructureList, bases<regina::NPacket>,
             std::auto_ptr<NAngleStructureList>, boost::noncopyable>
             ("NAngleStructureList", no_init)
+        .def("triangulation", &NAngleStructureList::triangulation,
+            return_value_policy<reference_existing_object>())
         .def("getTriangulation", &NAngleStructureList::getTriangulation,
             return_value_policy<reference_existing_object>())
         .def("isTautOnly", &NAngleStructureList::isTautOnly)
         .def("size", &NAngleStructureList::size)
         .def("getNumberOfStructures",
             &NAngleStructureList::getNumberOfStructures)
+        .def("structure", &NAngleStructureList::structure,
+            return_internal_reference<>())
         .def("getStructure", &NAngleStructureList::getStructure,
             return_internal_reference<>())
         .def("spansStrict", &NAngleStructureList::spansStrict)
@@ -86,7 +90,8 @@ void addNAngleStructureList() {
         .staticmethod("enumerateTautDD")
     ;
 
-    s.attr("packetType") = regina::PacketType(NAngleStructureList::packetType);
+    s.attr("typeID") = regina::PACKET_ANGLESTRUCTURELIST;
+    s.attr("packetType") = regina::PACKET_ANGLESTRUCTURELIST;
 
     implicitly_convertible<std::auto_ptr<NAngleStructureList>,
         std::auto_ptr<regina::NPacket> >();

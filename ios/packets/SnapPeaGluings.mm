@@ -93,7 +93,7 @@
     else
         return [NSString stringWithFormat:@"%ld (%s)",
                 destTet->markedIndex(),
-                (gluing * regina::NTriangle::ordering[srcFace]).trunc3().c_str()];
+                (gluing * regina::NTriangle::ordering(srcFace)).trunc3().c_str()];
 }
 
 - (IBAction)randomise:(id)sender {
@@ -132,7 +132,7 @@
     }
     
     regina::NTriangulation* ans = new regina::NTriangulation(*self.packet);
-    ans->setPacketLabel(self.packet->getPacketLabel());
+    ans->setPacketLabel(self.packet->label());
     self.packet->insertChildLast(ans);
     [ReginaHelper viewPacket:ans];
 }
@@ -141,7 +141,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 1 + self.packet->getNumberOfSimplices();
+    return 1 + self.packet->size();
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

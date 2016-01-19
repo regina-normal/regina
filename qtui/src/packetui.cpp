@@ -101,7 +101,7 @@ DefaultPacketUI::DefaultPacketUI(regina::NPacket* newPacket,
         PacketPane* newEnclosingPane) :
         ErrorPacketUI(newPacket, newEnclosingPane,
         newEnclosingPane->tr("Packets of type %1\nare not yet supported.").arg(
-        newPacket->getPacketTypeName().c_str())) {
+        newPacket->typeName().c_str())) {
 }
 
 PacketPane::PacketPane(ReginaMain* newMainWindow, NPacket* newPacket,
@@ -142,7 +142,7 @@ PacketPane::PacketPane(ReginaMain* newMainWindow, NPacket* newPacket,
 
     headerBox->addSpacing((headerSize / 2 /* shrug */));
 
-    headerTitle = new QLabel(newPacket->getFullName().c_str());
+    headerTitle = new QLabel(newPacket->fullName().c_str());
     headerTitle->setAlignment(Qt::AlignCenter);
     headerTitle->setWhatsThis(tr("This shows the label of the packet "
         "being viewed, as well as its packet type."));
@@ -273,7 +273,7 @@ void PacketPane::packetWasRenamed(regina::NPacket*) {
     refreshHeader();
 
     if (frame)
-        frame->setWindowTitle(getPacket()->getHumanLabel().c_str());
+        frame->setWindowTitle(getPacket()->humanLabel().c_str());
 }
 
 void PacketPane::packetToBeDestroyed(regina::NPacket*) {
@@ -331,7 +331,7 @@ void PacketPane::updateClipboardActions() {
 
 void PacketPane::refreshHeader() {
     regina::NPacket* packet = mainUI->getPacket();
-    headerTitle->setText(packet->getFullName().c_str());
+    headerTitle->setText(packet->fullName().c_str());
     headerIcon->setPixmap(PacketManager::icon(packet, true).
         pixmap(headerSize));
 }

@@ -77,10 +77,10 @@ struct REGINA_API NDiscType {
              negative, to distinguish it from "meaningful" disc types
              in which \a type is always zero or positive. */
 
-    unsigned long tetIndex;
+    size_t tetIndex;
         /**< The index within the triangulation of the tetrahedron
              containing this disc type.  This must be between 0 and
-             NTriangulation::getNumberOfTetrahedra()-1 inclusive. */
+             NTriangulation::size()-1 inclusive. */
     int type;
         /**< Identifies the disc type within the specified tetrahedron.
              The precise meaning of this member is left up to the user,
@@ -99,7 +99,7 @@ struct REGINA_API NDiscType {
      * @param newType the specific disc type within the given
      * tetrahedron; see the class notes for the meaning of this field.
      */
-    NDiscType(unsigned long newTetIndex, int newType);
+    NDiscType(size_t newTetIndex, int newType);
     /**
      * Creates a copy of the given disc type.
      *
@@ -163,7 +163,7 @@ REGINA_API std::ostream& operator << (std::ostream& out, const NDiscType& type);
 inline NDiscType::NDiscType() : tetIndex(0), type(-1) {
 }
 
-inline NDiscType::NDiscType(unsigned long newTetIndex, int newType) :
+inline NDiscType::NDiscType(size_t newTetIndex, int newType) :
         tetIndex(newTetIndex), type(newType) {
 }
 

@@ -51,13 +51,13 @@
 
 namespace regina {
 
-std::string NStandardTriangulation::getName() const {
+std::string NStandardTriangulation::name() const {
     std::ostringstream ans;
     writeName(ans);
     return ans.str();
 }
 
-std::string NStandardTriangulation::getTeXName() const {
+std::string NStandardTriangulation::TeXName() const {
     std::ostringstream ans;
     writeTeXName(ans);
     return ans.str();
@@ -90,12 +90,12 @@ NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
 
 NStandardTriangulation* NStandardTriangulation::isStandardTriangulation(
         NTriangulation* tri) {
-    if (tri->getNumberOfComponents() != 1)
+    if (tri->countComponents() != 1)
         return 0;
 
     // Do what we can through components.
     NStandardTriangulation* ans;
-    if ((ans = isStandardTriangulation(tri->getComponent(0))))
+    if ((ans = isStandardTriangulation(tri->component(0))))
         return ans;
 
     // Run tests that require entire triangulations.
