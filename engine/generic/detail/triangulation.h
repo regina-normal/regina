@@ -137,6 +137,12 @@ struct FaceCalculator {
     static_assert(codim > 2 && subdim > 0,
         "The generic FaceCalculator template cannot be used for "
         "small face dimension or codimension.");
+    /**
+     * Calculates all faces of dimension &le; \a subdim in the given
+     * triangulation.
+     *
+     * @param t the triangulation whose faces should be calculated.
+     */
     static void calculate(TriangulationBase<dim>& t) {
         t.template calculateSkeletonSubdim<subdim>();
         FaceCalculator<dim, subdim - 1, codim + 1>::calculate(t);
