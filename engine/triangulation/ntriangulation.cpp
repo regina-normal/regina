@@ -136,8 +136,7 @@ void Triangulation<3>::writeTextLong(std::ostream& out) const {
         tet = simplices_[tetPos];
         out << "  " << std::setw(3) << tetPos << "  |          ";
         for (vertex=0; vertex<4; vertex++)
-            out << ' ' << std::setw(3) <<
-                vertexIndex(tet->vertex(vertex));
+            out << ' ' << std::setw(3) << tet->vertex(vertex)->index();
         out << '\n';
     }
     out << '\n';
@@ -151,7 +150,7 @@ void Triangulation<3>::writeTextLong(std::ostream& out) const {
         for (start=0; start<4; start++)
             for (end=start+1; end<4; end++)
                 out << ' ' << std::setw(3)
-                    << edgeIndex(tet->edge(NEdge::edgeNumber[start][end]));
+                    << tet->edge(NEdge::edgeNumber[start][end])->index();
         out << '\n';
     }
     out << '\n';
@@ -163,7 +162,7 @@ void Triangulation<3>::writeTextLong(std::ostream& out) const {
         tet = simplices_[tetPos];
         out << "  " << std::setw(3) << tetPos << "  |        ";
         for (face=3; face>=0; face--)
-            out << ' ' << std::setw(3) << triangleIndex(tet->triangle(face));
+            out << ' ' << std::setw(3) << tet->triangle(face)->index();
         out << '\n';
     }
     out << '\n';

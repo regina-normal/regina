@@ -705,12 +705,12 @@ namespace {
             // Does the current value for colour[curr] preserve admissibility?
             admissible = true;
             for (auto& emb : *tri.edge(sortedEdges[curr])) {
-                index1 = tri.edgeIndex(emb.tetrahedron()->edge(
+                index1 = emb.tetrahedron()->edge(
                     NEdge::edgeNumber[emb.vertices()[0]]
-                    [emb.vertices()[2]]));
-                index2 = tri.edgeIndex(emb.tetrahedron()->edge(
+                    [emb.vertices()[2]])->index();
+                index2 = emb.tetrahedron()->edge(
                     NEdge::edgeNumber[emb.vertices()[1]]
-                    [emb.vertices()[2]]));
+                    [emb.vertices()[2]])->index();
                 if (edgePos[index1] <= curr && edgePos[index2] <= curr) {
                     // We've decided upon colours for all three edges of
                     // this triangle containing the current edge.

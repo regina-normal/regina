@@ -1805,7 +1805,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                     // links, and (ii) all surfaces that do not meet the
                     // relevant edge (except the edge link itself, if it
                     // is 1-sided).
-                    edge = tri->edgeIndex(edges.first);
+                    edge = edges.first->index();
 
                     for (j = 0; j < n; ++j) {
                         // Deal with (s, s) later.

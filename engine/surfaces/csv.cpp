@@ -131,15 +131,15 @@ namespace {
             const NTriangulation* t = s->triangulation();
             const NVertex* v = s->isVertexLink();
             if (v)
-                out << "\"Vertex " << t->vertexIndex(v) << "\"";
+                out << "\"Vertex " << v->index() << "\"";
             else {
                 std::pair<const regina::NEdge*, const regina::NEdge*> e =
                     s->isThinEdgeLink();
                 if (e.second)
-                    out << "\"Thin edges " << t->edgeIndex(e.first)
-                        << ", " << t->edgeIndex(e.second) << "\"";
+                    out << "\"Thin edges " << e.first->index()
+                        << ", " << e.second->index() << "\"";
                 else if (e.first)
-                    out << "\"Thin edge " << t->edgeIndex(e.first) << "\"";
+                    out << "\"Thin edge " << e.first->index() << "\"";
             }
             out << ',';
         }

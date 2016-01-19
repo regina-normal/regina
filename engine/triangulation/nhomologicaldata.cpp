@@ -258,10 +258,10 @@ void NHomologicalData::computeChainComplexes() {
     // This fills out matrix A1
     for (i=0;i<tri->countEdges();i++) {
         // these are the standard edges
-        temp=sNIV.index(tri->vertexIndex(tri->edge(i)->vertex(0)));
+        temp=sNIV.index(tri->edge(i)->vertex(0)->index());
         (A1->entry( ((temp==(-1)) ?
             (sNIV.size()+sIEOE.index(2*i)) : temp ), i))-=1;
-        temp=sNIV.index(tri->vertexIndex(tri->edge(i)->vertex(1)));
+        temp=sNIV.index(tri->edge(i)->vertex(1)->index());
         (A1->entry( ((temp==(-1)) ?
             (sNIV.size()+sIEOE.index(2*i+1)) : temp), i))+=1;
     } // ok
@@ -817,9 +817,9 @@ void NHomologicalData::computeChainComplexes() {
     // cols==sBNIE.size()+sIEEOF.size()
     for (i=0;i<sBNIE.size();i++) { // these are the standard boundary edges
         // temp == -1 when the boundary edge end is ideal.
-        temp=sBNIV.index(tri->vertexIndex(tri->edge(sBNIE[i])->vertex(0)));
+        temp=sBNIV.index(tri->edge(sBNIE[i])->vertex(0)->index());
         (Bd1->entry( ((temp==(-1)) ? (sBNIV.size()+2*i) : temp ), i))-=1;
-        temp=sBNIV.index(tri->vertexIndex(tri->edge(sBNIE[i])->vertex(1)));
+        temp=sBNIV.index(tri->edge(sBNIE[i])->vertex(1)->index());
         (Bd1->entry( ((temp==(-1)) ? (sBNIV.size()+2*i+1) : temp), i))+=1;
     } // ok
 

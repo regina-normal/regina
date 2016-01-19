@@ -177,16 +177,15 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
             std::pair<const regina::NEdge*, const regina::NEdge*> e;
 
             if ((v = s->isVertexLink()))
-                return tr("Vertex %1").arg(
-                    surfaces_->triangulation()->vertexIndex(v));
+                return tr("Vertex %1").arg(v->index());
             else if ((e = s->isThinEdgeLink()).first) {
                 if (e.second)
                     return tr("Thin edges %1, %2").
-                        arg(surfaces_->triangulation()->edgeIndex(e.first)).
-                        arg(surfaces_->triangulation()->edgeIndex(e.second));
+                        arg(e.first->index()).
+                        arg(e.second->index());
                 else
                     return tr("Thin edge %1").
-                        arg(surfaces_->triangulation()->edgeIndex(e.first));
+                        arg(e.first->index());
             } else
                 return QVariant();
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 7) ||

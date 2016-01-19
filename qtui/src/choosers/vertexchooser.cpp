@@ -85,26 +85,25 @@ void VertexChooser::select(regina::NVertex* option) {
 QString VertexChooser::description(regina::NVertex* option) {
     if (option->degree() == 1)
         return trUtf8("Vertex %2 — %3 (%4)")
-            .arg(tri_->vertexIndex(option))
-            .arg(tri_->tetrahedronIndex(
-                option->front().tetrahedron()))
+            .arg(option->index())
+            .arg(option->front().tetrahedron()->index())
             .arg(option->front().vertex());
     else {
         const regina::NVertexEmbedding& e0 = option->embedding(0);
         const regina::NVertexEmbedding& e1 = option->embedding(1);
         if (option->degree() == 2)
             return trUtf8("Vertex %1 — %2 (%3), %4 (%5)")
-                .arg(tri_->vertexIndex(option))
-                .arg(tri_->tetrahedronIndex(e0.tetrahedron()))
+                .arg(option->index())
+                .arg(e0.tetrahedron()->index())
                 .arg(e0.vertex())
-                .arg(tri_->tetrahedronIndex(e1.tetrahedron()))
+                .arg(e1.tetrahedron()->index())
                 .arg(e1.vertex());
         else
             return trUtf8("Vertex %1 — %2 (%3), %4 (%5), ...")
-                .arg(tri_->vertexIndex(option))
-                .arg(tri_->tetrahedronIndex(e0.tetrahedron()))
+                .arg(option->index())
+                .arg(e0.tetrahedron()->index())
                 .arg(e0.vertex())
-                .arg(tri_->tetrahedronIndex(e1.tetrahedron()))
+                .arg(e1.tetrahedron()->index())
                 .arg(e1.vertex());
     }
 }

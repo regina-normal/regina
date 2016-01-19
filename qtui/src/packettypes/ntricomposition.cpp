@@ -656,9 +656,8 @@ void NTriCompositionUI::findL31Pillows() {
             details = new QTreeWidgetItem(id, details);
             details->setText(0, 
                 tr("Pillow interior vertex: %1").
-                arg(tri->vertexIndex(
-                    pillow->tetrahedron(0)->getVertex(
-                    pillow->interiorVertex(0)))));
+                arg(pillow->tetrahedron(0)->vertex(pillow->interiorVertex(0))->
+                    index()));
 
             delete pillow;
         }
@@ -747,8 +746,7 @@ void NTriCompositionUI::findLayeredLoops() {
                     "Length %1, twisted").arg(loop->length()));
                 details = new QTreeWidgetItem(id, details);
                 details->setText(0, tr(
-                    "Hinge: edge %1").
-                    arg(tri->edgeIndex(loop->hinge(0))));
+                    "Hinge: edge %1").arg(loop->hinge(0)->index()));
             } else {
                 details = new QTreeWidgetItem(id, details);
                 details->setText(0, tr(
@@ -756,8 +754,8 @@ void NTriCompositionUI::findLayeredLoops() {
                 details = new QTreeWidgetItem(id);
                 details->setText(0, tr(
                     "Hinges: edge %1, %2").
-                    arg(tri->edgeIndex(loop->hinge(0))).
-                    arg(tri->edgeIndex(loop->hinge(1))));
+                    arg(loop->hinge(0)->index()).
+                    arg(loop->hinge(1)->index()));
             }
 
             delete loop;
@@ -834,9 +832,9 @@ void NTriCompositionUI::findPillowSpheres() {
                 details = new QTreeWidgetItem(id, details);
                 details->setText(0, tr(
                     "Equator: edges %1, %2, %3").
-                     arg(tri->edgeIndex(f1->getEdge(0))).
-                     arg(tri->edgeIndex(f1->getEdge(1))).
-                     arg(tri->edgeIndex(f1->getEdge(2))));
+                     arg(f1->getEdge(0)->index()).
+                     arg(f1->getEdge(1)->index()).
+                     arg(f1->getEdge(2)->index()));
 
                 delete pillow;
             }
@@ -947,8 +945,8 @@ void NTriCompositionUI::findSnappedSpheres() {
                 const regina::NSnappedBall* ball = sphere->snappedBall(0);
                 details = new QTreeWidgetItem(id, details);
                 details->setText(0, tr(
-                    "Equator: edge %1").arg(tri->edgeIndex(
-                    ball->tetrahedron()->getEdge(ball->equatorEdge()))));
+                    "Equator: edge %1").arg(
+                    ball->tetrahedron()->edge(ball->equatorEdge())->index()));
 
                 delete sphere;
             }
