@@ -271,8 +271,8 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             //
             // PROBLEM: we need lexicographic ordering 
             //       0 <= c_1 < ... < c_(subdim+1) <= dim
-            //       so we must reverse the ordering and apply the transformation
-            //       c_i \mapsto d_i = dim-c_i
+            //       so we must reverse the ordering and apply the
+            //       transformation c_i \mapsto d_i = dim-c_i
 
             // reverse ordering
             unsigned remaining = binomSmall_[dim+1][subdim+1] - face - 1;
@@ -346,8 +346,8 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             //
             // PROBLEM: we need lexicographic ordering 
             //       0 <= c_1 < ... < c_(subdim+1) <= dim
-            //       so we must reverse the ordering and apply the transformation
-            //       c_i \mapsto d_i = dim-c_i
+            //       so we must reverse the ordering and apply the
+            //       transformation c_i \mapsto d_i = dim-c_i
 
             unsigned i;
 
