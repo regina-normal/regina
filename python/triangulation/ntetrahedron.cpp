@@ -49,6 +49,8 @@ using regina::NTetrahedron;
 void addNTetrahedron() {
     class_<regina::Simplex<3>, std::auto_ptr<regina::Simplex<3>>,
             boost::noncopyable>("Simplex3", no_init)
+        .def("description", &NTetrahedron::description,
+            return_value_policy<return_by_value>())
         .def("getDescription", &NTetrahedron::getDescription,
             return_value_policy<return_by_value>())
         .def("setDescription", &NTetrahedron::setDescription)
