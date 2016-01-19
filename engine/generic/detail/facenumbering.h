@@ -278,7 +278,8 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
 
             unsigned k = subdim+1;
             unsigned max = dim;
-            unsigned done, pos, idx, i;
+            unsigned done, pos, idx;
+            int i;
 
             while (remaining > 0) {
               done = 0;
@@ -324,13 +325,14 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
               idx++;
             }
 
-            printf("%u %u: %u =0? %u =0? %u =%u?\n",dim,subdim,i,pos,idx,dim);
-            for (i=0; i<=dim; i++) {
-              printf("%u ",perm[i]);
-            }
-            printf("\n");
 
-            // So far "perm" lists the vertices of the face in increasing order
+            //printf("%u %u: %i =0? %u =0? %u =%u?\n",dim,subdim,i,pos,idx,dim);
+            //for (i=0; i<=dim; i++) {
+            //  printf("%u ",perm[i]);
+            //}
+            //printf("\n");
+            //fflush(stdout);
+
             return NPerm<dim + 1>(perm);
         }
 
