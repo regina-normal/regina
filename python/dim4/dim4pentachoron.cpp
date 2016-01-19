@@ -49,6 +49,8 @@ using regina::Dim4Pentachoron;
 void addDim4Pentachoron() {
     class_<regina::Simplex<4>, std::auto_ptr<regina::Simplex<4>>,
             boost::noncopyable>("Simplex4", no_init)
+        .def("description", &Dim4Pentachoron::description,
+            return_value_policy<return_by_value>())
         .def("getDescription", &Dim4Pentachoron::getDescription,
             return_value_policy<return_by_value>())
         .def("setDescription", &Dim4Pentachoron::setDescription)
