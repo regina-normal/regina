@@ -32,41 +32,14 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
-#include "triangulation/ntetface.h"
-#include "../helpers.h"
+#include "face-bindings.h"
 
-using namespace boost::python;
-using regina::NTetFace;
-
-namespace {
-    NTetFace tetface_inc_operator(NTetFace& p) {
-        return p++;
-    }
-
-    NTetFace tetface_dec_operator(NTetFace& p) {
-        return p--;
-    }
-}
-
-void addNTetFace() {
-    class_<NTetFace>("NTetFace")
-        .def(init<int, int>())
-        .def(init<const NTetFace&>())
-        .def_readwrite("simp", &NTetFace::simp)
-        .def_readwrite("facet", &NTetFace::facet)
-        .def("isBoundary", &NTetFace::isBoundary)
-        .def("isBeforeStart", &NTetFace::isBeforeStart)
-        .def("isPastEnd", &NTetFace::isPastEnd)
-        .def("setFirst", &NTetFace::setFirst)
-        .def("setBoundary", &NTetFace::setBoundary)
-        .def("setBeforeStart", &NTetFace::setBeforeStart)
-        .def("setPastEnd", &NTetFace::setPastEnd)
-        .def("inc", tetface_inc_operator)
-        .def("dec", tetface_dec_operator)
-        .def(self < self)
-        .def(self <= self)
-        .def(regina::python::add_eq_operators())
-    ;
+void addFace6() {
+    addFace<6, 0>("Face6_0", "FaceEmbedding6_0");
+    addFace<6, 1>("Face6_1", "FaceEmbedding6_1");
+    addFace<6, 2>("Face6_2", "FaceEmbedding6_2");
+    addFace<6, 3>("Face6_3", "FaceEmbedding6_3");
+    addFace<6, 4>("Face6_4", "FaceEmbedding6_4");
+    addFace<6, 5>("Face6_5", "FaceEmbedding6_5");
 }
 

@@ -432,6 +432,9 @@ Version 4.97  [ (under development) ]
             - Renamed addEC(), removeEC() and removeAllECs() to addEulerChar(),
               removeEulerChar() and removeAllEulerChars().  The old names are
               kept but deprecated.
+        Struct NTetFace:
+            - Removed data members tet and face from the python bindings.
+              These were already removed from C++ in 2012.
         Class NTetrahedron:
             - Now just a typedef for the new class Simplex<3>, which has
               the same functionality as the old NTetrahedron.
