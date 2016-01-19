@@ -87,8 +87,8 @@ const NAbelianGroup& Dim4Triangulation::homologyH1() const {
 
         // Put in the relation corresponding to this triangle.
         for (auto& emb : *f) {
-            pent = emb.getPentachoron();
-            facet = emb.getVertices()[3];
+            pent = emb.pentachoron();
+            facet = emb.vertices()[3];
 
             tet = pent->tetrahedron(facet);
             if (tet->inMaximalForest())
@@ -99,8 +99,8 @@ const NAbelianGroup& Dim4Triangulation::homologyH1() const {
             //
             // Test whether we are traversing this dual edge forwards or
             // backwards as we walk around the triangle (*fit).
-            if ((tet->front().getPentachoron() == pent) &&
-                    (tet->front().getTetrahedron() == facet))
+            if ((tet->front().pentachoron() == pent) &&
+                    (tet->front().tetrahedron() == facet))
                 pres.entry(i, genIndex[tet->index()]) += 1;
             else
                 pres.entry(i, genIndex[tet->index()]) -= 1;
@@ -148,7 +148,7 @@ const NAbelianGroup& Dim4Triangulation::homologyH2() const {
     unsigned long nEdgesInternal = 0;
     unsigned long* edgeInternalIndex = new unsigned long[nEdges];
     for (i = 0; i < nEdges; ++i)
-        if (! getEdge(i)->isBoundary())
+        if (! edge(i)->isBoundary())
             edgeInternalIndex[i] = nEdgesInternal++;
 
     // Build a translation table from triangle numbers -> "internal triangle"
@@ -156,13 +156,13 @@ const NAbelianGroup& Dim4Triangulation::homologyH2() const {
     unsigned long nTrianglesInternal = 0;
     unsigned long* triangleInternalIndex = new unsigned long[nTriangles];
     for (i = 0; i < nTriangles; ++i)
-        if (! getTriangle(i)->isBoundary())
+        if (! triangle(i)->isBoundary())
             triangleInternalIndex[i] = nTrianglesInternal++;
 
     // Count the number of internal tetrahedra.
     unsigned long nTetrahedraInternal = 0;
     for (i = 0; i < nTetrahedra; ++i)
-        if (! getTetrahedron(i)->isBoundary())
+        if (! tetrahedron(i)->isBoundary())
             ++nTetrahedraInternal;
 
     // --------------------------------------
@@ -176,18 +176,18 @@ const NAbelianGroup& Dim4Triangulation::homologyH2() const {
     // Build the boundary map, one dual triangle at a time.
     col = 0;
     for (i = 0; i < nTriangles; ++i) {
-        triangle = getTriangle(i);
+        triangle = triangle(i);
         if (triangle->isBoundary())
             continue;
 
         // The dual 2-face surrounding this triangle bounds the dual
         // polyhedron surrounding each of its edges.
-        pent = triangle->getEmbedding(0).getPentachoron();
-        perm = triangle->getEmbedding(0).getVertices();
+        pent = triangle->front().pentachoron();
+        perm = triangle->front().vertices();
 
         for (j = 0; j < 3; ++j) {
             // Edge j of the triangle is opposite vertex j of the triangle.
-            edge = triangle->getEdge(j);
+            edge = triangle->edge(j);
             if (edge->isBoundary())
                 continue;
 
@@ -195,7 +195,7 @@ const NAbelianGroup& Dim4Triangulation::homologyH2() const {
             pentEdge = Dim4Edge::edgeNumber[perm[(j+1) % 3]][perm[(j+2) % 3]];
 
             tmpPerm = NPerm5(2, j) * perm.inverse() *
-                pent->getEdgeMapping(pentEdge);
+                pent->edgeMapping(pentEdge);
             // tmpPerm maps (2,3,4) -> (2,3,4), and maps the dual edge into
             // the dual 2-face with the correct orientation.
             // Force (0,1) to map to (0,1), and then read off the sign.
@@ -218,19 +218,19 @@ const NAbelianGroup& Dim4Triangulation::homologyH2() const {
     // Build the boundary map, one dual edge at a time.
     col = 0;
     for (i = 0; i < nTetrahedra; ++i) {
-        tet = getTetrahedron(i);
+        tet = tetrahedron(i);
         if (tet->isBoundary())
             continue;
 
         // The dual edge running through this tetrahedron bounds the dual 2-face
         // surrounding each of its triangles.
-        pent = tet->getEmbedding(0).getPentachoron();
-        perm = tet->getEmbedding(0).getVertices();
+        pent = tet->front().pentachoron();
+        perm = tet->front().vertices();
 
         for (j = 0; j < 4; ++j) {
             // Triangle j of the tetrahedron is opposite vertex j of the
             // tetrahedron.
-            triangle = tet->getTriangle(j);
+            triangle = tet->triangle(j);
             if (triangle->isBoundary())
                 continue;
 
@@ -238,7 +238,7 @@ const NAbelianGroup& Dim4Triangulation::homologyH2() const {
             pentTriangle = Dim4Triangle::triangleNumber
                 [perm[(j+1) % 4]][perm[(j+2) % 4]][perm[(j+3) % 4]];
             bdry21.entry(row, col) +=
-                (pent->getTriangleMapping(pentTriangle)[4] == perm[4] ? 1 : -1);
+                (pent->triangleMapping(pentTriangle)[4] == perm[4] ? 1 : -1);
         }
 
         ++col;

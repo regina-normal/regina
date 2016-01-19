@@ -142,7 +142,7 @@ void Dim4TriHomologyFundUI::refresh() {
         fgMsg->show();
     } else {
         fgMsg->hide();
-        fgGroup->refresh(&tri->getFundamentalGroup());
+        fgGroup->refresh(&tri->fundamentalGroup());
         fgGroup->show();
     }
 }

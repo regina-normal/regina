@@ -286,7 +286,7 @@ void addDim4Triangulation() {
         .def("isClosed", &Dim4Triangulation::isClosed)
         .def("isOrientable", &Dim4Triangulation::isOrientable)
         .def("isConnected", &Dim4Triangulation::isConnected)
-        .def("getFundamentalGroup", &Dim4Triangulation::getFundamentalGroup,
+        .def("fundamentalGroup", &Dim4Triangulation::fundamentalGroup,
             return_internal_reference<>())
         .def("simplifiedFundamentalGroup", simplifiedFundamentalGroup_own)
         .def("homology", &Dim4Triangulation::homology,

@@ -131,23 +131,23 @@ class REGINA_API Face<4, 1> : public detail::FaceBase<4, 1>,
          * information, then call buildLinkDetail() instead.
          *
          * The triangulation of the edge link is built as follows.
-         * Let \a i lie between 0 and getDegree()-1 inclusive, let
-         * \a pent represent <tt>getEmbedding(i).getPentachoron()</tt>,
-         * and let \a e represent <tt>getEmbedding(i).getEdge()</tt>.
-         * Then <tt>buildLink()->getTriangle(i)</tt> is the triangle
+         * Let \a i lie between 0 and degree()-1 inclusive, let
+         * \a pent represent <tt>embedding(i).pentachoron()</tt>,
+         * and let \a e represent <tt>embedding(i).edge()</tt>.
+         * Then <tt>buildLink()->triangle(i)</tt> is the triangle
          * in the edge link that links edge \a e of pentachoron \a pent.
-         * In other words, <tt>buildLink()->getTriangle(i)</tt> in the edge link
-         * is parallel to triangle <tt>pent->getTriangle(e)</tt> in the
+         * In other words, <tt>buildLink()->triangle(i)</tt> in the edge link
+         * is parallel to triangle <tt>pent->triangle(e)</tt> in the
          * surrounding 4-manifold triangulation.
          *
          * The vertices of each triangle in the edge link are
          * numbered as follows.  Following the discussion above,
-         * suppose that <tt>buildLink()->getTriangle(i)</tt>
+         * suppose that <tt>buildLink()->triangle(i)</tt>
          * sits within \c pent and is parallel to
-         * <tt>pent->getTriangle(e)</tt>.
+         * <tt>pent->triangle(e)</tt>.
          * Then vertices 0,1,2 of the triangle in the link will be
          * parallel to vertices 0,1,2 of the corresponding Dim4Triangle.
-         * The permutation <tt>pent->getTriangleMapping(e)</tt> will map
+         * The permutation <tt>pent->triangleMapping(e)</tt> will map
          * vertices 0,1,2 of the triangle in the link to the
          * corresponding vertices of \c pent (those opposite \c e),
          * and will map 3 and 4 to the vertices of \c e itself.

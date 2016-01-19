@@ -169,8 +169,8 @@ template <>
 bool detail::TriangulationBase<4>::compatible(
         Simplex<4>* src, Simplex<4>* dest, NPerm<5> p) {
     for (int triangle = 0; triangle < 10; triangle++)
-        if (src->getTriangle(triangle)->degree() !=
-                dest->getTriangle(Dim4Triangle::triangleNumber
+        if (src->triangle(triangle)->degree() !=
+                dest->triangle(Dim4Triangle::triangleNumber
                     [p[Dim4Triangle::triangleVertex[triangle][0]]]
                     [p[Dim4Triangle::triangleVertex[triangle][1]]]
                     [p[Dim4Triangle::triangleVertex[triangle][2]]])
@@ -178,16 +178,14 @@ bool detail::TriangulationBase<4>::compatible(
             return false;
 
     for (int edge = 0; edge < 10; edge++)
-        if (src->getEdge(edge)->degree() !=
-                dest->getEdge(Dim4Edge::edgeNumber
+        if (src->edge(edge)->degree() != dest->edge(Dim4Edge::edgeNumber
                     [p[Dim4Edge::edgeVertex[edge][0]]]
                     [p[Dim4Edge::edgeVertex[edge][1]]])
                 ->degree())
             return false;
 
     for (int vertex = 0; vertex < 5; vertex++)
-        if (src->getVertex(vertex)->degree() !=
-                dest->getVertex(p[vertex])->degree())
+        if (src->vertex(vertex)->degree() != dest->vertex(p[vertex])->degree())
             return false;
 
     return true;

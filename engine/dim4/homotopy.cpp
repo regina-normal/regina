@@ -36,7 +36,7 @@
 
 namespace regina {
 
-const NGroupPresentation& Dim4Triangulation::getFundamentalGroup() const {
+const NGroupPresentation& Dim4Triangulation::fundamentalGroup() const {
     if (fundGroup_.known())
         return *fundGroup_.value();
 
@@ -81,8 +81,8 @@ const NGroupPresentation& Dim4Triangulation::getFundamentalGroup() const {
         // Put in the relation corresponding to this triangle.
         rel = new NGroupExpression();
         for (auto& emb : *f) {
-            pent = emb.getPentachoron();
-            facet = emb.getVertices()[3];
+            pent = emb.pentachoron();
+            facet = emb.vertices()[3];
 
             tet = pent->tetrahedron(facet);
             if (tet->inMaximalForest())
@@ -93,8 +93,8 @@ const NGroupPresentation& Dim4Triangulation::getFundamentalGroup() const {
             //
             // Test whether we are traversing this dual edge forwards or
             // backwards as we walk around the triangle (*fit).
-            if ((tet->front().getPentachoron() == pent) &&
-                    (tet->front().getTetrahedron() == facet))
+            if ((tet->front().pentachoron() == pent) &&
+                    (tet->front().tetrahedron() == facet))
                 rel->addTermLast(genIndex[tet->index()], 1);
             else
                 rel->addTermLast(genIndex[tet->index()], -1);

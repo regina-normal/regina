@@ -432,7 +432,7 @@ class REGINA_API Triangulation<4> :
          *
          * For a routine that handles cusps properly (i.e., treats them
          * as 3-manifold boundary components when computing the Euler
-         * characteristic), see getEulerCharManifold() instead.
+         * characteristic), see eulerCharManifold() instead.
          *
          * @return the Euler characteristic of this triangulation.
          */
@@ -456,10 +456,10 @@ class REGINA_API Triangulation<4> :
          *
          * For ideal triangulations, this routine therefore computes the
          * proper Euler characteristic of the manifold (unlike
-         * getEulerCharTri(), which does not).
+         * eulerCharTri(), which does not).
          *
          * For triangulations whose vertex links are all 3-spheres or
-         * 3-balls, this routine and getEulerCharTri() give identical results.
+         * 3-balls, this routine and eulerCharTri() give identical results.
          *
          * This routine does \e not yet handle invalid triangulations
          * correctly.  For this reason, this routine currently insists on
@@ -523,7 +523,7 @@ class REGINA_API Triangulation<4> :
          * Bear in mind that each time the triangulation changes, the
          * fundamental group will be deleted.  Thus the reference that is
          * returned from this routine should not be kept for later use.
-         * Instead, getFundamentalGroup() should be called again; this will
+         * Instead, fundamentalGroup() should be called again; this will
          * be instantaneous if the group has already been calculated.
          *
          * \pre This triangulation is valid.
@@ -531,7 +531,7 @@ class REGINA_API Triangulation<4> :
          *
          * @return the fundamental group.
          */
-        const NGroupPresentation& getFundamentalGroup() const;
+        const NGroupPresentation& fundamentalGroup() const;
         /**
          * Notifies the triangulation that you have simplified the
          * presentation of its fundamental group.  The old group
@@ -549,7 +549,7 @@ class REGINA_API Triangulation<4> :
          * triangulation, this routine will nevertheless take ownership
          * of the new group, under the assumption that you have worked
          * out the group through some other clever means without ever
-         * having needed to call getFundamentalGroup() at all.
+         * having needed to call fundamentalGroup() at all.
          *
          * Note that this routine will not fire a packet change event.
          *
@@ -688,7 +688,7 @@ class REGINA_API Triangulation<4> :
          *
          * See the page on \ref pachner for definitions and terminology
          * relating to Pachner moves.  After the move, the new belt
-         * face will be <tt>getPentachora().back()->getTetrahedron(4)</tt>.
+         * face will be <tt>pentachora().back()->tetrahedron(4)</tt>.
          *
          * \pre If the move is being performed and no check is being run,
          * it must be known in advance that the move is legal.
@@ -723,7 +723,7 @@ class REGINA_API Triangulation<4> :
          *
          * See the page on \ref pachner for definitions and terminology
          * relating to Pachner moves.  After the move, the new belt face will be
-         * <tt>getPentachora().back()->getTriangle(Dim4Triangle::triangleNumber[0][1][2])</tt>.
+         * <tt>pentachora().back()->triangle(Dim4Triangle::triangleNumber[0][1][2])</tt>.
          *
          * \pre If the move is being performed and no check is being run,
          * it must be known in advance that the move is legal.
@@ -758,7 +758,7 @@ class REGINA_API Triangulation<4> :
          *
          * See the page on \ref pachner for definitions and terminology
          * relating to Pachner moves.  After the move, the new belt face will be
-         * <tt>getPentachora().back()->getEdge(Dim4Edge::edgeNumber[0][1])</tt>.
+         * <tt>pentachora().back()->edge(Dim4Edge::edgeNumber[0][1])</tt>.
          *
          * \pre If the move is being performed and no check is being run,
          * it must be known in advance that the move is legal.
@@ -798,7 +798,7 @@ class REGINA_API Triangulation<4> :
          *
          * See the page on \ref pachner for definitions and terminology
          * relating to Pachner moves.  After the move, the new belt face will be
-         * <tt>getPentachora().back()->getVertex(4)</tt>.
+         * <tt>pentachora().back()->vertex(4)</tt>.
          *
          * \pre The given pentachoron is a pentachoron of this triangulation.
          *

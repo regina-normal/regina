@@ -191,7 +191,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::doubleCone(
     for (i = 0; i < n; ++i) {
         pent[i]->joinTo(4, pent[i + n], NPerm5());
 
-        tet = base.getTetrahedron(i);
+        tet = base.tetrahedron(i);
         for (face = 0; face < 4; ++face) {
             adjTet = tet->adjacentTetrahedron(face);
             if (adjTet == 0)
@@ -235,7 +235,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::singleCone(
     for (i = 0; i < n; ++i) {
         pent[i] = ans->newPentachoron();
 
-        tet = base.getTetrahedron(i);
+        tet = base.tetrahedron(i);
         for (face = 0; face < 4; ++face) {
             adjTet = tet->adjacentTetrahedron(face);
             if (adjTet == 0)
@@ -433,7 +433,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::iBundle(
     unsigned face;
     const NTetrahedron *tet, *adj;
     for (i = 0; i < n; ++i) {
-        tet = base.getTetrahedron(i);
+        tet = base.tetrahedron(i);
         for (face = 0; face < 4; ++face) {
             adj = tet->adjacentTetrahedron(face);
             if (! adj)
@@ -465,7 +465,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::s1Bundle(
     unsigned long n = base.size();
     unsigned long i;
     for (i = 0; i < n; ++i)
-        ans->getPentachoron(i)->joinTo(4, ans->getPentachoron(i + n), id);
+        ans->pentachoron(i)->joinTo(4, ans->pentachoron(i + n), id);
 
     return ans;
 }
@@ -480,8 +480,8 @@ Dim4Triangulation* Dim4ExampleTriangulation::bundleWithMonodromy(
     unsigned long n = base.size();
     unsigned long i;
     for (i = 0; i < n; ++i)
-        ans->getPentachoron(i)->joinTo(4,
-            ans->getPentachoron(monodromy.simpImage(i) + n),
+        ans->pentachoron(i)->joinTo(4,
+            ans->pentachoron(monodromy.simpImage(i) + n),
             perm4to5(monodromy.facetPerm(i)));
 
     return ans;

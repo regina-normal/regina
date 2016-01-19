@@ -104,7 +104,7 @@ void Dim4Triangulation::writeTextLong(std::ostream& out) const {
         out << "  " << std::setw(4) << pentPos << "  |          ";
         for (i = 0; i < 5; ++i)
             out << ' ' << std::setw(3) <<
-                vertexIndex(pent->getVertex(i));
+                vertexIndex(pent->vertex(i));
         out << '\n';
     }
     out << '\n';
@@ -118,7 +118,7 @@ void Dim4Triangulation::writeTextLong(std::ostream& out) const {
         for (i = 0; i < 5; ++i)
             for (j = i + 1; j < 5; ++j)
                 out << ' ' << std::setw(3)
-                    << edgeIndex(pent->getEdge(Dim4Edge::edgeNumber[i][j]));
+                    << edgeIndex(pent->edge(Dim4Edge::edgeNumber[i][j]));
         out << '\n';
     }
     out << '\n';
@@ -133,7 +133,7 @@ void Dim4Triangulation::writeTextLong(std::ostream& out) const {
             for (j = i + 1; j < 5; ++j)
                 for (k = j + 1; k < 5; ++k)
                     out << ' ' << std::setw(3)
-                        << triangleIndex(pent->getTriangle(
+                        << triangleIndex(pent->triangle(
                             Dim4Triangle::triangleNumber[i][j][k]));
         out << '\n';
     }
@@ -146,8 +146,7 @@ void Dim4Triangulation::writeTextLong(std::ostream& out) const {
         pent = simplices_[pentPos];
         out << "  " << std::setw(4) << pentPos << "  |         ";
         for (i = 4; i >= 0; --i)
-            out << ' ' << std::setw(4) << tetrahedronIndex(
-                pent->getTetrahedron(i));
+            out << ' ' << std::setw(4) << pent->tetrahedron(i)->index();
         out << '\n';
     }
     out << '\n';
@@ -186,12 +185,12 @@ void Dim4Triangulation::writeXMLPacketData(std::ostream& out) const {
     out << "  <pentachora npent=\"" << simplices_.size() << "\">\n";
     for (it = simplices_.begin(); it != simplices_.end(); ++it) {
         out << "    <pent desc=\"" <<
-            xmlEncodeSpecialChars((*it)->getDescription()) << "\"> ";
+            xmlEncodeSpecialChars((*it)->description()) << "\"> ";
         for (facet = 0; facet < 5; ++facet) {
             adjPent = (*it)->adjacentPentachoron(facet);
             if (adjPent) {
                 out << pentachoronIndex(adjPent) << ' '
-                    << (*it)->adjacentGluing(facet).getPermCode() << ' ';
+                    << (*it)->adjacentGluing(facet).permCode() << ' ';
             } else
                 out << "-1 -1 ";
         }
@@ -223,7 +222,7 @@ void Dim4Triangulation::cloneFrom(const Dim4Triangulation& X) {
 
     PentachoronIterator it;
     for (it = X.simplices_.begin(); it != X.simplices_.end(); ++it)
-        newPentachoron((*it)->getDescription());
+        newPentachoron((*it)->description());
 
     // Make the gluings.
     long pentPos, adjPos;

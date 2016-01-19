@@ -76,10 +76,9 @@ bool Dim4Triangulation::intelligentSimplify() {
             while (true) {
                 // Calculate the list of available 3-3 moves.
                 threeThreeAvailable.clear();
-                // Use getTriangles() to ensure the skeleton has been
-                // calculated.
-                for (fit = use->getTriangles().begin();
-                        fit != use->getTriangles().end(); ++fit) {
+                // Use triangles() to ensure the skeleton has been calculated.
+                for (fit = use->triangles().begin();
+                        fit != use->triangles().end(); ++fit) {
                     triangle = *fit;
                     if (use->threeThreeMove(triangle, true, false))
                         threeThreeAvailable.push_back(triangle);
@@ -136,8 +135,8 @@ bool Dim4Triangulation::intelligentSimplify() {
                 while (openedNow) {
                     openedNow = false;
 
-                    for (tit = use->getTetrahedra().begin();
-                            tit != use->getTetrahedra().end(); ++tit)
+                    for (tit = use->tetrahedra().begin();
+                            tit != use->tetrahedra().end(); ++tit)
                         if (use->openBook(*tit, true, true)) {
                             opened = openedNow = true;
                             break;
@@ -259,8 +258,8 @@ bool Dim4Triangulation::simplifyToLocalMinimum(bool perform) {
                     // for shell boundary moves.
                     nTetrahedra = (*bit)->countTetrahedra();
                     for (iTet = 0; iTet < nTetrahedra; ++iTet) {
-                        if (shellBoundary((*bit)->getTetrahedron(iTet)->
-                                getEmbedding(0).getPentachoron(),
+                        if (shellBoundary((*bit)->tetrahedron(iTet)->
+                                front().pentachoron(),
                                 true, perform)) {
                             changedNow = changed = true;
                             break;

@@ -61,13 +61,13 @@ void Dim4BoundaryComponent::writeTextLong(std::ostream& out) const {
         out << "Vertex: " << v->index() << std::endl;
         out << "Appears as:" << std::endl;
         for (auto& emb : *v)
-            out << "  " << emb.getPentachoron()->index()
-                << " (" << emb.getVertex() << ')' << std::endl;
+            out << "  " << emb.pentachoron()->index()
+                << " (" << emb.vertex() << ')' << std::endl;
     } else {
         out << "Tetrahedra:" << std::endl;
         for (auto tet : tetrahedra_)
-            out << "  " << tet->front().getPentachoron()->index() << " ("
-                << tet->front().getVertices().trunc4() << ')' << std::endl;
+            out << "  " << tet->front().pentachoron()->index() << " ("
+                << tet->front().vertices().trunc4() << ')' << std::endl;
     }
 }
 

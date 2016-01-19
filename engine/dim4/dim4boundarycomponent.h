@@ -198,10 +198,10 @@ class REGINA_API Dim4BoundaryComponent :
          * then the triangulation of this boundary component is as follows.
          * Let \a i lie between 0 and countTetrahedra()-1 inclusive.
          * Then tetrahedron \a i of the boundary 3-manifold triangulation is
-         * a copy of tetrahedron <tt>getTetrahedron(i)</tt> of this 4-manifold
+         * a copy of tetrahedron <tt>tetrahedron(i)</tt> of this 4-manifold
          * boundary component, and its vertices 0,1,2,3 are numbered in the
          * same way.  To relate tetrahedron vertex numbers to pentachoron
-         * vertex numbers, see Dim4Pentachoron::getTetrahedronMapping().
+         * vertex numbers, see Dim4Pentachoron::tetrahedronMapping().
          *
          * If this boundary component consists only of a single vertex
          * (which happens with ideal vertices and also some invalid vertices),

@@ -56,16 +56,14 @@ Dim2Triangulation* Face<4, 1>::buildLinkDetail(bool labels,
         tTri = ans->newTriangle();
         if (labels) {
             std::stringstream s;
-            s << it->getPentachoron()->markedIndex() <<
-                " (" << it->getEdge() << ')';
+            s << it->pentachoron()->index() << " (" << it->edge() << ')';
             tTri->setDescription(s.str());
         }
         if (inclusion) {
-            (*inclusion)->pentImage(i) = it->getPentachoron()->markedIndex();
+            (*inclusion)->pentImage(i) = it->pentachoron()->index();
 
-            perm = it->getPentachoron()->getTriangleMapping(it->getEdge());
-            if (perm[3] ==
-                    it->getPentachoron()->getEdgeMapping(it->getEdge())[0])
+            perm = it->pentachoron()->triangleMapping(it->edge());
+            if (perm[3] == it->pentachoron()->edgeMapping(it->edge())[0])
                 (*inclusion)->facetPerm(i) = perm;
             else
                 (*inclusion)->facetPerm(i) = perm * NPerm5(3, 4);
@@ -79,8 +77,8 @@ Dim2Triangulation* Face<4, 1>::buildLinkDetail(bool labels,
     int adjIndex;
     int adjEdge;
     for (it = begin(), i = 0; it != end(); ++it, ++i) {
-        pent = it->getPentachoron();
-        e = it->getEdge();
+        pent = it->pentachoron();
+        e = it->edge();
 
         for (exitTet = 0; exitTet < 5; ++exitTet) {
             if (exitTet == edgeVertex[e][0] || exitTet == edgeVertex[e][1])
@@ -90,8 +88,8 @@ Dim2Triangulation* Face<4, 1>::buildLinkDetail(bool labels,
             if (! adj)
                 continue;
 
-            edgeInLink = pent->getTriangleMapping(e).preImageOf(exitTet);
-            if (ans->getTriangle(i)->adjacentTriangle(edgeInLink)) {
+            edgeInLink = pent->triangleMapping(e).preImageOf(exitTet);
+            if (ans->triangle(i)->adjacentTriangle(edgeInLink)) {
                 // We've already made this gluing in the vertex link
                 // from the other side.
                 continue;
@@ -108,14 +106,13 @@ Dim2Triangulation* Face<4, 1>::buildLinkDetail(bool labels,
             // made linear(ish) with the right data structure and/or algorithm.
             for (adjIt = begin(), adjIndex = 0;
                     adjIt != end(); ++adjIt, ++adjIndex)
-                if (adjIt->getPentachoron() == adj &&
-                        adjIt->getEdge() == adjEdge)
+                if (adjIt->pentachoron() == adj && adjIt->edge() == adjEdge)
                     break; // Sets adjIndex to the right value.
 
-            ans->getTriangle(i)->joinTo(edgeInLink, ans->getTriangle(adjIndex),
-                perm5to3(adj->getTriangleMapping(adjEdge).inverse() *
+            ans->triangle(i)->joinTo(edgeInLink, ans->triangle(adjIndex),
+                perm5to3(adj->triangleMapping(adjEdge).inverse() *
                     adjGluing *
-                    pent->getTriangleMapping(e)));
+                    pent->triangleMapping(e)));
         }
     }
 

@@ -1111,7 +1111,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
         }
 
         void verifyFundGroup(const Dim4Triangulation& tri, const char* group) {
-            std::string ans = tri.getFundamentalGroup().recogniseGroup();
+            std::string ans = tri.fundamentalGroup().recogniseGroup();
             if (ans != group) {
                 std::string showAns = ans;
                 if (showAns.empty())

@@ -53,7 +53,7 @@ namespace {
 
         public:
             Dim4PentachoronReader(Dim4Triangulation* tri, unsigned whichPent) :
-                    tri_(tri), pent_(tri->getPentachora()[whichPent]) {
+                    tri_(tri), pent_(tri->pentachora()[whichPent]) {
             }
 
             virtual void startElement(const std::string&,
@@ -84,7 +84,7 @@ namespace {
                         continue;
 
                     perm.setPermCode(permCode);
-                    adjPent = tri_->getPentachora()[pentIndex];
+                    adjPent = tri_->pentachora()[pentIndex];
                     adjFacet = perm[k];
                     if (adjPent == pent_ && adjFacet == k)
                         continue;

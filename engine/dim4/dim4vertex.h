@@ -139,24 +139,24 @@ class REGINA_API Face<4, 0> : public detail::FaceBase<4, 0>,
          * then call buildLinkDetail() instead.
          *
          * The triangulation of the vertex link is built as follows.
-         * Let \a i lie between 0 and getDegree()-1 inclusive, let
-         * \a pent represent <tt>getEmbedding(i).getPentachoron()</tt>,
-         * and let \a v represent <tt>getEmbedding(i).getVertex()</tt>.
-         * Then <tt>buildLink()->getTetrahedron(i)</tt> is the tetrahedron
+         * Let \a i lie between 0 and degree()-1 inclusive, let
+         * \a pent represent <tt>embedding(i).pentachoron()</tt>,
+         * and let \a v represent <tt>embedding(i).vertex()</tt>.
+         * Then <tt>buildLink()->tetrahedron(i)</tt> is the tetrahedron
          * in the vertex link that "slices off" vertex \a v from
          * pentachoron \a pent.  In other words,
-         * <tt>buildLink()->getTetrahedron(i)</tt> in the vertex link
-         * is parallel to tetrahedron <tt>pent->getTetrahedron(v)</tt> in the
+         * <tt>buildLink()->tetrahedron(i)</tt> in the vertex link
+         * is parallel to tetrahedron <tt>pent->tetrahedron(v)</tt> in the
          * surrounding 4-manifold triangulation.
          *
          * The vertices of each tetrahedron in the vertex link are
          * numbered as follows.  Following the discussion above,
-         * suppose that <tt>buildLink()->getTetrahedron(i)</tt>
+         * suppose that <tt>buildLink()->tetrahedron(i)</tt>
          * sits within \c pent and is parallel to
-         * <tt>pent->getTetrahedron(v)</tt>.
+         * <tt>pent->tetrahedron(v)</tt>.
          * Then vertices 0,1,2,3 of the tetrahedron in the link will be
          * parallel to vertices 0,1,2,3 of the corresponding Dim4Tetrahedron.
-         * The permutation <tt>pent->getTetrahedronMapping(v)</tt> will map
+         * The permutation <tt>pent->tetrahedronMapping(v)</tt> will map
          * vertices 0,1,2,3 of the tetrahedron in the link to the
          * corresponding vertices of \c pent (those opposite \c v),
          * and will map 4 to \c v itself.

@@ -139,8 +139,8 @@ void Dim4Triangulation::calculateBoundary() {
         while (! queue.empty()) {
             tet = queue.front();
             queue.pop();
-            pent = tet->front().getPentachoron();
-            facet = tet->front().getTetrahedron();
+            pent = tet->front().pentachoron();
+            facet = tet->front().tetrahedron();
 
             bdryTetAll[tet->markedIndex()] = bdryTet =
                 label->boundary_->newTetrahedron();
@@ -184,31 +184,31 @@ void Dim4Triangulation::calculateBoundary() {
                 // boundary tetrahedron is one end of the triangle link; the
                 // *adjacent* boundary tetrahedron must be at the other.
                 triEmb = tri->front();
-                if (triEmb.getPentachoron() == pent &&
-                        triEmb.getVertices()[3] == i &&
-                        triEmb.getVertices()[4] == facet) {
+                if (triEmb.pentachoron() == pent &&
+                        triEmb.vertices()[3] == i &&
+                        triEmb.vertices()[4] == facet) {
                     // We are currently looking at the embedding at the
                     // front of the list.  Take the one at the back.
                     triEmb = tri->back();
 
-                    adjPent = triEmb.getPentachoron();
-                    adjFacet = triEmb.getVertices()[3];
+                    adjPent = triEmb.pentachoron();
+                    adjFacet = triEmb.vertices()[3];
                     adjTet = adjPent->SimplexFaces<4, 3>::face_[adjFacet];
-                    j = triEmb.getVertices()[4];
+                    j = triEmb.vertices()[4];
                 } else {
                     // We must be looking at the embedding at the back
                     // of the list.  Take the one at the front (which is
                     // already stored in triEmb).
-                    adjPent = triEmb.getPentachoron();
-                    adjFacet = triEmb.getVertices()[4];
+                    adjPent = triEmb.pentachoron();
+                    adjFacet = triEmb.vertices()[4];
                     adjTet = adjPent->SimplexFaces<4, 3>::face_[adjFacet];
-                    j = triEmb.getVertices()[3];
+                    j = triEmb.vertices()[3];
 
                     // TODO: Sanity checking; remove this eventually.
                     triEmb = tri->back();
-                    if (! (triEmb.getPentachoron() == pent &&
-                            triEmb.getVertices()[4] == i &&
-                            triEmb.getVertices()[3] == facet)) {
+                    if (! (triEmb.pentachoron() == pent &&
+                            triEmb.vertices()[4] == i &&
+                            triEmb.vertices()[3] == facet)) {
                         std::cerr << "ERROR: Something has gone terribly "
                             "wrong in computeBoundaryComponents()."
                             << std::endl;
@@ -232,8 +232,8 @@ void Dim4Triangulation::calculateBoundary() {
                             [adjFacet].preImageOf(j);
 
                         bdryTet->joinTo(tetTri, adjBdryTet,
-                            perm5to4(adjTet->getTriangleMapping(adjTetTri) *
-                            tet->getTriangleMapping(tetTri).inverse()));
+                            perm5to4(adjTet->triangleMapping(adjTetTri) *
+                            tet->triangleMapping(tetTri).inverse()));
                     }
                 }
 
@@ -253,25 +253,25 @@ void Dim4Triangulation::calculateBoundary() {
         // 3-manifold triangulation and insert the corresponding 4-D
         // objects into the boundary component lists in the *same* order.
         for (NTriangulation::TriangleIterator it =
-                label->boundary_->getTriangles().begin();
-                it != label->boundary_->getTriangles().end(); ++it) {
-            const NTriangleEmbedding& emb = (*it)->getEmbedding(0);
-            tet = label->tetrahedra_[emb.getTetrahedron()->markedIndex()];
-            label->triangles_.push_back(tet->getTriangle(emb.getTriangle()));
+                label->boundary_->triangles().begin();
+                it != label->boundary_->triangles().end(); ++it) {
+            const NTriangleEmbedding& emb = (*it)->front();
+            tet = label->tetrahedra_[emb.tetrahedron()->markedIndex()];
+            label->triangles_.push_back(tet->triangle(emb.triangle()));
         }
         for (NTriangulation::EdgeIterator it =
-                label->boundary_->getEdges().begin();
-                it != label->boundary_->getEdges().end(); ++it) {
-            const NEdgeEmbedding& emb = (*it)->getEmbedding(0);
-            tet = label->tetrahedra_[emb.getTetrahedron()->markedIndex()];
-            label->edges_.push_back(tet->getEdge(emb.getEdge()));
+                label->boundary_->edges().begin();
+                it != label->boundary_->edges().end(); ++it) {
+            const NEdgeEmbedding& emb = (*it)->front();
+            tet = label->tetrahedra_[emb.tetrahedron()->markedIndex()];
+            label->edges_.push_back(tet->edge(emb.edge()));
         }
         for (NTriangulation::VertexIterator it =
-                label->boundary_->getVertices().begin();
-                it != label->boundary_->getVertices().end(); ++it) {
-            const NVertexEmbedding& emb = (*it)->getEmbedding(0);
-            tet = label->tetrahedra_[emb.getTetrahedron()->markedIndex()];
-            label->vertices_.push_back(tet->getVertex(emb.getVertex()));
+                label->boundary_->vertices().begin();
+                it != label->boundary_->vertices().end(); ++it) {
+            const NVertexEmbedding& emb = (*it)->front();
+            tet = label->tetrahedra_[emb.tetrahedron()->markedIndex()];
+            label->vertices_.push_back(tet->vertex(emb.vertex()));
         }
     }
 
@@ -293,7 +293,7 @@ void Dim4Triangulation::calculateVertexLinks() {
     for (Dim4Vertex* vertex : vertices()) {
         vertex->link_ = new NTriangulation();
         for (auto& emb : *vertex)
-            tet[5 * emb.getPentachoron()->index() + emb.getVertex()]
+            tet[5 * emb.pentachoron()->index() + emb.vertex()]
                 = vertex->link_->newTetrahedron();
     }
 
@@ -392,8 +392,8 @@ void Dim4Triangulation::calculateVertexLinks() {
         if (! vertex->isValid()) {
             NTriangulation::VertexIterator linkit;
             int type;
-            for (linkit = vertex->link_->getVertices().begin();
-                    linkit != vertex->link_->getVertices().end(); ++linkit) {
+            for (linkit = vertex->link_->vertices().begin();
+                    linkit != vertex->link_->vertices().end(); ++linkit) {
                 type = (*linkit)->link();
                 if (type != NVertex::SPHERE && type != NVertex::DISC) {
                     // This 3-manifold vertex is at the end of an
@@ -401,24 +401,23 @@ void Dim4Triangulation::calculateVertexLinks() {
 
                     // Find a tetrahedron in the 3-manifold vertex link
                     // containing the bad 3-manifold vertex.
-                    const NVertexEmbedding& linkemb((*linkit)->getEmbedding(0));
+                    const NVertexEmbedding& linkemb((*linkit)->front());
 
                     // Find the corresponding pentachoron in the 4-manifold
                     // triangulation.
-                    const Dim4VertexEmbedding& vemb(vertex->getEmbedding(
-                        vertex->link_->tetrahedronIndex(
-                            linkemb.getTetrahedron())));
+                    const Dim4VertexEmbedding& vemb(vertex->embedding(
+                        linkemb.tetrahedron()->index()));
 
-                    // We have the pentachoron (vemb.getPentachoron())
-                    // and one of the endpoints of the edge (vemb.getVertex()).
+                    // We have the pentachoron (vemb.pentachoron())
+                    // and one of the endpoints of the edge (vemb.vertex()).
                     // Find the other endpoint of the edge.
-                    int otherEnd = vemb.getPentachoron()->
+                    int otherEnd = vemb.pentachoron()->
                         SimplexFaces<4, 3>::mapping_
-                        [vemb.getVertex()][linkemb.getVertex()];
+                        [vemb.vertex()][linkemb.vertex()];
 
                     // Got it!
-                    vemb.getPentachoron()->SimplexFaces<4, 1>::face_[
-                        Dim4Edge::edgeNumber[vemb.getVertex()][otherEnd]
+                    vemb.pentachoron()->SimplexFaces<4, 1>::face_[
+                        Dim4Edge::edgeNumber[vemb.vertex()][otherEnd]
                         ]->markBadLink();
                 }
             }

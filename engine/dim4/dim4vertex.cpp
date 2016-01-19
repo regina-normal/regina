@@ -80,14 +80,14 @@ NTriangulation* Face<4, 0>::buildLinkDetail(bool labels,
         tTet = ans->newTetrahedron();
         if (labels) {
             std::stringstream s;
-            s << it->getPentachoron()->markedIndex() <<
-                " (" << it->getVertex() << ')';
+            s << it->pentachoron()->markedIndex() <<
+                " (" << it->vertex() << ')';
             tTet->setDescription(s.str());
         }
         if (inclusion) {
-            (*inclusion)->pentImage(i) = it->getPentachoron()->markedIndex();
-            (*inclusion)->facetPerm(i) = it->getPentachoron()->
-                getTetrahedronMapping(it->getVertex());
+            (*inclusion)->pentImage(i) = it->pentachoron()->markedIndex();
+            (*inclusion)->facetPerm(i) = it->pentachoron()->
+                tetrahedronMapping(it->vertex());
         }
     }
 
@@ -97,8 +97,8 @@ NTriangulation* Face<4, 0>::buildLinkDetail(bool labels,
     int adjIndex;
     int adjVertex;
     for (it = begin(), i = 0; it != end(); ++it, ++i) {
-        pent = it->getPentachoron();
-        v = it->getVertex();
+        pent = it->pentachoron();
+        v = it->vertex();
 
         for (exitTet = 0; exitTet < 5; ++exitTet) {
             if (exitTet == v)
@@ -108,8 +108,8 @@ NTriangulation* Face<4, 0>::buildLinkDetail(bool labels,
             if (! adj)
                 continue;
 
-            faceInLink = pent->getTetrahedronMapping(v).preImageOf(exitTet);
-            if (ans->getTetrahedron(i)->adjacentTetrahedron(faceInLink)) {
+            faceInLink = pent->tetrahedronMapping(v).preImageOf(exitTet);
+            if (ans->tetrahedron(i)->adjacentTetrahedron(faceInLink)) {
                 // We've already made this gluing in the vertex link
                 // from the other side.
                 continue;
@@ -124,15 +124,14 @@ NTriangulation* Face<4, 0>::buildLinkDetail(bool labels,
             // made linear(ish) with the right data structure and/or algorithm.
             for (adjIt = begin(), adjIndex = 0;
                     adjIt != end(); ++adjIt, ++adjIndex)
-                if (adjIt->getPentachoron() == adj &&
-                        adjIt->getVertex() == adjVertex)
+                if (adjIt->pentachoron() == adj && adjIt->vertex() == adjVertex)
                     break; // Sets adjIndex to the right value.
 
-            ans->getTetrahedron(i)->joinTo(faceInLink,
-                ans->getTetrahedron(adjIndex),
-                perm5to4(adj->getTetrahedronMapping(adjVertex).inverse() *
+            ans->tetrahedron(i)->joinTo(faceInLink,
+                ans->tetrahedron(adjIndex),
+                perm5to4(adj->tetrahedronMapping(adjVertex).inverse() *
                     pent->adjacentGluing(exitTet) *
-                    pent->getTetrahedronMapping(v)));
+                    pent->tetrahedronMapping(v)));
         }
     }
 
