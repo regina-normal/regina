@@ -80,7 +80,13 @@ template <int> class TriangulationBase;
 template <int dim, int subdim>
 class SimplexFaces {
     public:
+        /**
+         * Explicitly disable the copy constructor.
+         */
         SimplexFaces(const SimplexFaces&) = delete;
+        /**
+         * Explicitly disable the assignment operator.
+         */
         SimplexFaces& operator = (const SimplexFaces&) = delete;
 
     protected:
