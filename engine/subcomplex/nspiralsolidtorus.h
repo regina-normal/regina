@@ -220,7 +220,7 @@ class REGINA_API NSpiralSolidTorus : public NStandardTriangulation {
          *
          * Tetrahedron 0 in the spiralled solid torus will be the
          * tetrahedron with the lowest index in the triangulation, and
-         * under permutation <tt>getVertexRoles(0)</tt> the image of 0
+         * under permutation <tt>vertexRoles(0)</tt> the image of 0
          * will be less than the image of 3.
          *
          * @param tri the triangulation in which this solid torus lives.
@@ -253,8 +253,8 @@ class REGINA_API NSpiralSolidTorus : public NStandardTriangulation {
          * @param tet the tetrahedron to examine.
          * @param useVertexRoles a permutation describing the role each
          * tetrahedron vertex must play in the solid torus; this must be
-         * in the same format as the permutation returned by
-         * getVertexRoles().
+         * in the same format as the permutation returned by vertexRoles().
+         *
          * @return a newly created structure containing details of the
          * solid torus with the given tetrahedron as tetrahedron 0, or
          * \c null if the given tetrahedron is not part of a spiralled

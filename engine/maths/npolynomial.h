@@ -94,7 +94,7 @@ class NPolynomial {
         /**
          * Creates the polynomial <tt>x^d</tt> for the given degree \a d.
          *
-         * @param d the degree of the new polynomial.
+         * @param degree the degree of the new polynomial.
          */
         explicit NPolynomial(size_t degree);
 
@@ -156,7 +156,7 @@ class NPolynomial {
          * Sets this to become the polynomial <tt>x^d</tt> for the
          * given degree \a d.
          *
-         * @param d the new degree of this polynomial.
+         * @param degree the new degree of this polynomial.
          */
         void init(size_t degree);
 
@@ -253,7 +253,7 @@ class NPolynomial {
         /**
          * Tests whether this and the given polynomial are equal.
          *
-         * @rhs the polynomial to compare with this.
+         * @param rhs the polynomial to compare with this.
          * @return \c true if and only if this and the given polynomial
          * are equal.
          */
@@ -262,7 +262,7 @@ class NPolynomial {
         /**
          * Tests whether this and the given polynomial are not equal.
          *
-         * @rhs the polynomial to compare with this.
+         * @param rhs the polynomial to compare with this.
          * @return \c true if and only if this and the given polynomial
          * are not equal.
          */
@@ -431,7 +431,7 @@ class NPolynomial {
          * @param divisor the polynomial to divide by this.
          * @param quotient a polynomial whose contents will be destroyed and
          * replaced with the quotient \a q, as described above.
-         * @return remainder a polynomial whose contents will be destroyed
+         * @param remainder a polynomial whose contents will be destroyed
          * and replaced with the remainder \a r, as described above.
          */
         void divisionAlg(const NPolynomial<T>& divisor,

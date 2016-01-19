@@ -71,6 +71,44 @@ template <int dim> class TriangulationBase;
  */
 
 /**
+ * Indicates whether it is possible for a <i>subdim</i>-face of a
+ * <i>dim</i>-dimensional triangulation to be invalid.
+ *
+ * This compile-time constant function is used to determine the first
+ * template argument that should be passed to FaceValidity.
+ *
+ * \ifacespython Not present.
+ *
+ * @param dim the dimension of the underlying triangulations.
+ * @param subdim the dimension of the faces in question.
+ * @return \c true if such faces may be invalid, or \c false if
+ * <i>subdim</i>-faces of <i>dim</i>-dimensional triangluations are
+ * always valid.
+ */
+constexpr bool allowsInvalidFaces(int dim, int subdim) {
+    return (dim >= 3 && subdim <= dim - 2);
+}
+
+/**
+ * Indicates whether it is possible for a <i>subdim</i>-face of a
+ * <i>dim</i>-dimensional triangulation to have a non-orientable link.
+ *
+ * This compile-time constant function is used to determine the
+ * template argument that should be passed to FaceOrientability.
+ *
+ * \ifacespython Not present.
+ *
+ * @param dim the dimension of the underlying triangulations.
+ * @param subdim the dimension of the faces in question.
+ * @return \c true if such faces may have non-orientable links, or \c false if
+ * the links of <i>subdim</i>-faces of <i>dim</i>-dimensional triangluations
+ * are always orientable.
+ */
+constexpr bool allowsNonOrientableLinks(int dim, int subdim) {
+    return (dim >= 3 && subdim <= dim - 3);
+}
+
+/**
  * Helper class that provides core functionality for describing how a
  * <i>subdim</i>-face of a <i>dim</i>-dimensional triangulation appears within
  * each top-dimensional simplex.
@@ -477,8 +515,7 @@ class FaceStorage<dim, 1> {
  * Helper class that stores whether a face is valid.
  * Every class Face<dim, subdim> inherits from this class.
  *
- * See FaceValidity<true>::isValid() for details on what it means for a
- * face to be valid.
+ * See isValid() for details on what it means for a face to be valid.
  *
  * \tparam allowsInvalid \c true when this is used for dimensions
  * (\a dim, \a subdim) in which it is possible for faces to be invalid,
@@ -855,8 +892,8 @@ struct FaceListHolder;
 template <int dim, int subdim>
 class FaceBase :
         public FaceStorage<dim, dim - subdim>,
-        public FaceValidity<dim >= 3 && subdim <= dim - 2, standardDim(dim)>,
-        public FaceOrientability<dim >= 3 && subdim <= dim - 3>,
+        public FaceValidity<allowsInvalidFaces(dim, subdim), standardDim(dim)>,
+        public FaceOrientability<allowsNonOrientableLinks(dim, subdim)>,
         public FaceNumbering<dim, subdim>,
         public NMarkedElement,
         public alias::FaceOfSimplex<FaceBase<dim, subdim>, dim, subdim - 1>,
@@ -1172,6 +1209,9 @@ inline void FaceStorage<dim, codim>::push_back(
     embeddings_.push_back(emb);
 }
 
+// We hid the specialisation FaceStorage<dim, 1> from doxygen, so hide
+// its implementation as well.
+#ifndef __DOXYGEN
 template <int dim>
 inline FaceStorage<dim, 1>::FaceStorage() : nEmb_(0) {
 }
@@ -1185,6 +1225,7 @@ template <int dim>
 inline size_t FaceStorage<dim, 1>::getDegree() const {
     return nEmb_;
 }
+#endif // ! __DOXYGEN
 
 template <int dim>
 inline const FaceEmbedding<dim, dim-1>& FaceStorage<dim, 1>::
@@ -1268,6 +1309,9 @@ inline const FaceEmbedding<dim, dim-2>& FaceStorage<dim, 2>::back() const {
     return embeddings_.back();
 }
 
+// We hid the specialisation FaceStorage<dim, 2> from doxygen, so hide
+// its implementation as well.
+#ifndef __DOXYGEN
 template <int dim>
 inline void FaceStorage<dim, 2>::push_front(
         const FaceEmbedding<dim, dim-2>& emb) {
@@ -1279,9 +1323,14 @@ inline void FaceStorage<dim, 2>::push_back(
         const FaceEmbedding<dim, dim-2>& emb) {
     embeddings_.push_back(emb);
 }
+#endif // ! __DOXYGEN
 
 // Inline functions for FaceValidity
 
+// We hide the specialised FaceValidity<true, true> implementations from
+// doxygen, since doxygen is confused by the fact that it doesn't see a
+// corresponding specialised FaceValidity<true, true> class.
+#ifndef __DOXYGEN
 template <>
 inline FaceValidity<true, true>::FaceValidity() : invalid_(0) {
 }
@@ -1310,6 +1359,7 @@ template <>
 inline void FaceValidity<true, true>::markBadLink() {
     invalid_ |= INVALID_LINK;
 }
+#endif // ! __DOXYGEN
 
 template <bool testLinks>
 inline bool FaceValidity<false, testLinks>::isValid() const {
@@ -1341,6 +1391,10 @@ inline void FaceValidity<true, false>::markBadIdentification() {
 
 // Inline functions for FaceOrientability
 
+// We hide the specialised FaceOrientability<true> implementations from
+// doxygen, since doxygen is confused by the fact that it doesn't see a
+// corresponding specialised FaceOrientability<true> class.
+#ifndef __DOXYGEN
 template <>
 inline FaceOrientability<true>::FaceOrientability() : linkOrientable_(true) {
 }
@@ -1354,6 +1408,7 @@ template <>
 inline void FaceOrientability<true>::markLinkNonorientable() {
     linkOrientable_ = false;
 }
+#endif // ! __DOXYGEN
 
 inline bool FaceOrientability<false>::isLinkOrientable() const {
     return true;

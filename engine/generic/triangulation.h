@@ -92,7 +92,13 @@ class FaceList {
             /**< All <i>subdim</i>-faces of the underlying triangulation. */
 
     public:
+        /**
+         * Explicitly disable the copy constructor.
+         */
         FaceList(const FaceList&) = delete;
+        /**
+         * Explicitly disable the assignment operator.
+         */
         FaceList& operator = (const FaceList&) = delete;
 
         /**

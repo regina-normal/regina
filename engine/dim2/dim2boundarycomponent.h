@@ -188,6 +188,8 @@ inline unsigned long Dim2BoundaryComponent::index() const {
     return markedIndex();
 }
 
+// Hide specialisations from doxygen, since it cannot handle them.
+#ifndef __DOXYGEN
 template <>
 inline size_t Dim2BoundaryComponent::countFaces<1>() const {
     return edges_.size();
@@ -207,6 +209,7 @@ template <>
 inline Dim2Vertex* Dim2BoundaryComponent::face<0>(size_t index) const {
     return vertices_[index];
 }
+#endif // ! __DOXYGEN
 
 inline Dim2Component* Dim2BoundaryComponent::component() const {
     return vertices_.front()->component();

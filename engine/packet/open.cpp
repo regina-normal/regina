@@ -153,7 +153,7 @@ NPacket* open(std::istream& s) {
         char* buf = new char[regChunkSize];
         int chunkRead;
         bool seenFirstChunk = false;
-        while (callback.getState() != NXMLCallback::ABORTED) {
+        while (callback.state() != NXMLCallback::ABORTED) {
             // Read in the next chunk.
             for (chunkRead = 0; chunkRead < regChunkSize; chunkRead++) {
                 buf[chunkRead] = static_cast<char>(in.get());

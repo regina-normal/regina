@@ -92,16 +92,16 @@ QVariant AngleModel::data(const QModelIndex& index, int role) const {
             static const QString pi(QChar(0x3c0));
             if (angle == 1)
                 return pi;
-            else if (angle.getDenominator() == 1)
-                return QString(angle.getNumerator().stringValue().c_str()) +
+            else if (angle.denominator() == 1)
+                return QString(angle.numerator().stringValue().c_str()) +
                     ' ' + pi;
-            else if (angle.getNumerator() == 1)
+            else if (angle.numerator() == 1)
                 return pi + " / " +
-                    angle.getDenominator().stringValue().c_str();
+                    angle.denominator().stringValue().c_str();
             else
-                return QString(angle.getNumerator().stringValue().c_str()) +
+                return QString(angle.numerator().stringValue().c_str()) +
                     ' ' + pi + " / " +
-                    angle.getDenominator().stringValue().c_str();
+                    angle.denominator().stringValue().c_str();
         }
     } else if (role == Qt::ToolTipRole) {
         if (index.column() == 0)

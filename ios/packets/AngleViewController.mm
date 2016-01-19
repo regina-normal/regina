@@ -197,15 +197,15 @@
         return @"";
     if (angle == 1)
         return @"π";
-    if (angle.getDenominator() == 1)
+    if (angle.denominator() == 1)
         return [NSString stringWithFormat:@"%s π",
-                angle.getNumerator().stringValue().c_str()];
-    if (angle.getNumerator() == 1)
+                angle.numerator().stringValue().c_str()];
+    if (angle.numerator() == 1)
         return [NSString stringWithFormat:@"π / %s",
-                angle.getDenominator().stringValue().c_str()];
+                angle.denominator().stringValue().c_str()];
     return [NSString stringWithFormat:@"%s π / %s",
-            angle.getNumerator().stringValue().c_str(),
-            angle.getDenominator().stringValue().c_str()];
+            angle.numerator().stringValue().c_str(),
+            angle.denominator().stringValue().c_str()];
 }
 
 #pragma mark - MDSpreadView delegate

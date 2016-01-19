@@ -55,7 +55,7 @@ namespace {
             const NMarkedAbelianGroup& g, unsigned long index) {
         boost::python::list ans;
 
-        std::vector<regina::NLargeInteger> rep = g.getFreeRep(index);
+        std::vector<regina::NLargeInteger> rep = g.freeRep(index);
         for (std::vector<regina::NLargeInteger>::const_iterator
                 it = rep.begin(); it != rep.end(); ++it) {
             ans.append(*it);
@@ -68,7 +68,7 @@ namespace {
             const NMarkedAbelianGroup& g, unsigned long index) {
         boost::python::list ans;
 
-        std::vector<regina::NLargeInteger> rep = g.getTorsionRep(index);
+        std::vector<regina::NLargeInteger> rep = g.torsionRep(index);
         for (std::vector<regina::NLargeInteger>::const_iterator
                 it = rep.begin(); it != rep.end(); ++it) {
             ans.append(*it);
@@ -145,6 +145,7 @@ void addNMarkedAbelianGroup() {
         .def(init<const NMatrixInt&, const NMatrixInt&, const NLargeInteger&>())
         .def(init<unsigned long, const NLargeInteger&>())
         .def("isChainComplex", &NMarkedAbelianGroup::isChainComplex)
+        .def("rank", &NMarkedAbelianGroup::rank)
         .def("getRank", &NMarkedAbelianGroup::getRank)
         .def("torsionRank", torsionRank_large)
         .def("torsionRank", torsionRank_long)
@@ -166,10 +167,12 @@ void addNMarkedAbelianGroup() {
         // TODO: ccRep, ccRep, cycleProjection, cycleProjection
         // TODO: isCycle, boundaryMap, isBoundary, writeAsBoundary
         // TODO: cycleGen
+        .def("freeRep", freeRep_list)
         .def("getFreeRep", freeRep_list)
+        .def("torsionRep", torsionRep_list)
         .def("getTorsionRep", torsionRep_list)
-        .def("getSNFIsoRep", snfRep_list_list)
         .def("snfRep", snfRep_list_list)
+        .def("getSNFIsoRep", snfRep_list_list)
         .def("rankCC", &NMarkedAbelianGroup::rankCC)
         .def("getRankCC", &NMarkedAbelianGroup::getRankCC)
         .def("minNumberCycleGens", &NMarkedAbelianGroup::minNumberCycleGens)
