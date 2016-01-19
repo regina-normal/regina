@@ -83,7 +83,7 @@ class REGINA_API Isomorphism<2> : public detail::IsomorphismBase<2> {
          *
          * @param copy the isomorphism to copy.
          */
-        Isomorphism(const Isomorphism& copy);
+        Isomorphism(const Isomorphism<2>& copy);
 
         /**
          * A deprecated dimension-specific alias for size().

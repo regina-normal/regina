@@ -239,7 +239,7 @@ class REGINA_API NPerm {
          *
          * @param cloneMe the permutation to clone.
          */
-        NPerm(const NPerm& cloneMe);
+        NPerm(const NPerm<n>& cloneMe);
 
         /**
          * Returns the internal code representing this permutation.

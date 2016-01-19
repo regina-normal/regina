@@ -276,7 +276,7 @@ class TriangulationBase :
          *
          * @param copy the triangulation to copy.
          */
-        TriangulationBase(const TriangulationBase& copy);
+        TriangulationBase(const TriangulationBase<dim>& copy);
         /**
          * Destroys this triangulation.
          *
