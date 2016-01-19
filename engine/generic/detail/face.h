@@ -1282,6 +1282,10 @@ inline void FaceStorage<dim, 2>::push_back(
 
 // Inline functions for FaceValidity
 
+// We hide the specialised FaceValidity<true, true> implementations from
+// doxygen, since doxygen is confused by the fact that it doesn't see a
+// corresponding specialised FaceValidity<true, true> class.
+#ifndef __DOXYGEN
 template <>
 inline FaceValidity<true, true>::FaceValidity() : invalid_(0) {
 }
@@ -1310,6 +1314,7 @@ template <>
 inline void FaceValidity<true, true>::markBadLink() {
     invalid_ |= INVALID_LINK;
 }
+#endif // ! __DOXYGEN
 
 template <bool testLinks>
 inline bool FaceValidity<false, testLinks>::isValid() const {
@@ -1341,6 +1346,10 @@ inline void FaceValidity<true, false>::markBadIdentification() {
 
 // Inline functions for FaceOrientability
 
+// We hide the specialised FaceOrientability<true> implementations from
+// doxygen, since doxygen is confused by the fact that it doesn't see a
+// corresponding specialised FaceOrientability<true> class.
+#ifndef __DOXYGEN
 template <>
 inline FaceOrientability<true>::FaceOrientability() : linkOrientable_(true) {
 }
@@ -1354,6 +1363,7 @@ template <>
 inline void FaceOrientability<true>::markLinkNonorientable() {
     linkOrientable_ = false;
 }
+#endif // ! __DOXYGEN
 
 inline bool FaceOrientability<false>::isLinkOrientable() const {
     return true;

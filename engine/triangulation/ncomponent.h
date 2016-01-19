@@ -241,6 +241,8 @@ typedef Component<3> NComponent;
 inline Component<3>::Component() : detail::ComponentBase<3>(), ideal_(false) {
 }
 
+// Hide specialisations from doxygen, since it cannot handle them.
+#ifndef __DOXYGEN
 template <>
 inline size_t Component<3>::countFaces<2>() const {
     return triangles_.size();
@@ -255,6 +257,7 @@ template <>
 inline size_t Component<3>::countFaces<0>() const {
     return vertices_.size();
 }
+#endif // ! __DOXYGEN
 
 inline size_t Component<3>::countBoundaryComponents() const {
     return boundaryComponents_.size();
@@ -264,6 +267,8 @@ inline size_t Component<3>::getNumberOfBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
+// Hide specialisations from doxygen, since it cannot handle them.
+#ifndef __DOXYGEN
 template <>
 inline const std::vector<NTriangle*>& Component<3>::faces<2>() const {
     return triangles_;
@@ -293,6 +298,7 @@ template <>
 inline NVertex* Component<3>::face<0>(size_t index) const {
     return vertices_[index];
 }
+#endif // ! __DOXYGEN
 
 inline NBoundaryComponent* Component<3>::boundaryComponent(size_t index) const {
     return boundaryComponents_[index];

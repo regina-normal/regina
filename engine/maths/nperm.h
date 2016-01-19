@@ -759,6 +759,9 @@ std::string NPerm<n>::trunc(unsigned len) const {
     return ans;
 }
 
+// Hide this implementation from doxygen, since it cannot seem to handle
+// definitions of templated member functions in template classes.
+#ifndef __DOXYGEN
 template <int n>
 template <int k>
 NPerm<n> NPerm<n>::extend(NPerm<k> p) {
@@ -775,6 +778,7 @@ NPerm<n> NPerm<n>::extend(NPerm<k> p) {
 
     return NPerm<n>(c);
 }
+#endif // ! __DOXYGEN
 
 } // namespace regina
 

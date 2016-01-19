@@ -804,6 +804,8 @@ inline int NPerm<5>::orderedSnIndex() const {
     return orderedS5Index();
 }
 
+// Hide specialisations from doxygen, since it cannot handle them.
+#ifndef __DOXYGEN
 template <>
 inline NPerm<5> NPerm<5>::extend(NPerm<2> p) {
     return NPerm<5>(static_cast<Code>(p.permCode() == 0 ? 18056 : 18049));
@@ -818,6 +820,7 @@ template <>
 inline NPerm<5> NPerm<5>::extend(NPerm<4> p) {
     return NPerm<5>(p[0], p[1], p[2], p[3], 4);
 }
+#endif // ! __DOXYGEN
 
 } // namespace regina
 

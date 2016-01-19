@@ -223,6 +223,8 @@ typedef Component<2> Dim2Component;
 inline Component<2>::Component() : detail::ComponentBase<2>() {
 }
 
+// Hide specialisations from doxygen, since it cannot handle them.
+#ifndef __DOXYGEN
 template <>
 inline size_t Component<2>::countFaces<1>() const {
     return edges_.size();
@@ -242,6 +244,7 @@ template <>
 inline const std::vector<Dim2Vertex*>& Component<2>::faces<0>() const {
     return vertices_;
 }
+#endif // ! __DOXYGEN
 
 inline size_t Component<2>::countBoundaryComponents() const {
     return boundaryComponents_.size();
@@ -251,6 +254,8 @@ inline size_t Component<2>::getNumberOfBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
+// Hide specialisations from doxygen, since it cannot handle them.
+#ifndef __DOXYGEN
 template <>
 inline Dim2Edge* Component<2>::face<1>(size_t index) const {
     return edges_[index];
@@ -260,6 +265,7 @@ template <>
 inline Dim2Vertex* Component<2>::face<0>(size_t index) const {
     return vertices_[index];
 }
+#endif // ! __DOXYGEN
 
 inline Dim2BoundaryComponent* Component<2>::boundaryComponent(size_t index)
         const {
