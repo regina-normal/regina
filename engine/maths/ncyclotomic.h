@@ -389,7 +389,7 @@ class REGINA_API NCyclotomic {
          * This has the effect of multiplying the polynomial representation
          * by a scalar constant.
          *
-         * @param the rational to multiply this by.
+         * @param scalar the rational to multiply this by.
          * @return a reference to this field element.
          */
         NCyclotomic& operator *= (const NRational& scalar);
@@ -402,7 +402,7 @@ class REGINA_API NCyclotomic {
          *
          * \pre The given rational is non-zero.
          *
-         * @param the rational to divide this by.
+         * @param scalar the rational to divide this by.
          * @return a reference to this field element.
          */
         NCyclotomic& operator /= (const NRational& scalar);

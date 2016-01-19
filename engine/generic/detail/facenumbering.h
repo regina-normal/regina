@@ -32,7 +32,7 @@
 
 /* end stub */
 
-/*! \file detail/generic/facenumbering.h
+/*! \file generic/detail/facenumbering.h
  *  \brief Implementation details for describing how <i>subdim</i>-faces
  *  are numbered within a <i>dim</i>-dimensional simplex.
  */

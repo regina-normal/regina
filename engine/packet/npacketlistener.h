@@ -293,6 +293,7 @@ class REGINA_API NPacketListener {
          * The default implementation of this routine is to do nothing.
          *
          * @param packet the packet being listened to.
+         * @param child the child packet to be renamed.
          * @see packetToBeRenamed()
          */
         virtual void childToBeRenamed(NPacket* packet, NPacket* child);
@@ -304,6 +305,7 @@ class REGINA_API NPacketListener {
          * The default implementation of this routine is to do nothing.
          *
          * @param packet the packet being listened to.
+         * @param child the child packet that was renamed.
          * @see packetWasRenamed()
          */
         virtual void childWasRenamed(NPacket* packet, NPacket* child);
