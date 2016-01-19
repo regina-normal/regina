@@ -84,7 +84,7 @@ void runMatches(NPacket* tree1, NPacket* tree2, std::ostream& out) {
     long nMatches = 0;
 
     for (p1 = tree1; p1; p1 = p1->nextTreePacket())
-        if (p1->type() == regina::PACKET_TRIANGULATION)
+        if (p1->type() == regina::PACKET_TRIANGULATION) {
             for (p2 = tree2; p2; p2 = p2->nextTreePacket())
                 if (p2->type() == regina::PACKET_TRIANGULATION)
                     if (compare(static_cast<NTriangulation*>(p1),
