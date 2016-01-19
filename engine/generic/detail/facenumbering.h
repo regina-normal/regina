@@ -271,8 +271,8 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             //
             // PROBLEM: we need lexicographic ordering 
             //       0 <= c_1 < ... < c_(subdim+1) <= dim
-            //       so we must reverse the ordering and apply the transformation
-            //       c_i \mapsto d_i = dim-c_i
+            //       so we must reverse the ordering and apply the
+            //       transformation c_i \mapsto d_i = dim-c_i
 
             // reverse ordering
             unsigned remaining = binomSmall_[dim+1][subdim+1] - face - 1;
@@ -346,8 +346,8 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             //
             // PROBLEM: we need lexicographic ordering 
             //       0 <= c_1 < ... < c_(subdim+1) <= dim
-            //       so we must reverse the ordering and apply the transformation
-            //       c_i \mapsto d_i = dim-c_i
+            //       so we must reverse the ordering and apply the
+            //       transformation c_i \mapsto d_i = dim-c_i
 
             unsigned i;
 
@@ -464,7 +464,16 @@ class FaceNumberingImpl<dim, 0, true> : public FaceNumberingAPI<dim, 0> {
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
         static NPerm<dim + 1> ordering(unsigned face) {
-            return NPerm<dim + 1>(face, 0);
+            int p[dim + 1];
+            p[0] = face;
+
+            int i;
+            for (i = 0; i < face; ++i)
+                p[dim - i] = i;
+            for (i = face + 1; i <= dim; ++i)
+                p[dim - i + 1] = i;
+
+            return NPerm<dim + 1>(p);
         }
 
         static unsigned faceNumber(NPerm<dim + 1> vertices) {
