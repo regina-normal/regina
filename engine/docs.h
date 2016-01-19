@@ -195,7 +195,7 @@
  *  in other dimensions.
  *
  *  Regina's <i>standard dimensions</i> are those for which it offers
- *  rich support (as opposed to very basic support, or none at all).
+ *  rich support (as opposed to basic support).
  *  For the current release, the <b>standard dimensions are 2 and 3</b>.
  *
  *  This list is expected to grow in future releases.
