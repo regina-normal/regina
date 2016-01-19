@@ -116,8 +116,7 @@ void Triangulation<2>::writeTextLong(std::ostream& out) const {
         tri = simplices_[triPos];
         out << "      " << std::setw(4) << triPos << "  |          ";
         for (i = 0; i < 3; ++i)
-            out << ' ' << std::setw(3) <<
-                vertexIndex(tri->getVertex(i));
+            out << ' ' << std::setw(3) << tri->getVertex(i)->index();
         out << '\n';
     }
     out << '\n';
@@ -129,7 +128,7 @@ void Triangulation<2>::writeTextLong(std::ostream& out) const {
         tri = simplices_[triPos];
         out << "      " << std::setw(4) << triPos << "  |        ";
         for (i = 2; i >= 0; --i)
-            out << ' ' << std::setw(3) << edgeIndex(tri->getEdge(i));
+            out << ' ' << std::setw(3) << tri->getEdge(i)->index();
         out << '\n';
     }
     out << '\n';

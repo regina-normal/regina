@@ -482,15 +482,15 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
 
             if ((v = s->isVertexLink()))
                 cell.textLabel.text = [NSString stringWithFormat:@"Vertex %ld",
-                                       self.packet->triangulation()->vertexIndex(v)];
+                                       v->index()];
             else if ((e = s->isThinEdgeLink()).first) {
                 if (e.second)
                     cell.textLabel.text = [NSString stringWithFormat:@"Edges %ld, %ld",
-                                           self.packet->triangulation()->edgeIndex(e.first),
-                                           self.packet->triangulation()->edgeIndex(e.second)];
+                                           e.first->index(),
+                                           e.second->index()];
                 else
                     cell.textLabel.text = [NSString stringWithFormat:@"Edge %ld",
-                                           self.packet->triangulation()->edgeIndex(e.first)];
+                                           e.first->index()];
             } else
                 cell.textLabel.text = @"";
             cell.textLabel.textAlignment = NSTextAlignmentLeft;

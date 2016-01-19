@@ -43,11 +43,14 @@
 
 // There are more #includes below - we need to define FaceList
 // before including generic/detail/triangulation.h.
+#include "packet/npacket.h"
 #include "utilities/nmarkedvector.h"
+#include "utilities/xmlutils.h"
 
 namespace regina {
 
 template <int, int> class Face;
+template <int> class XMLTriangulationReader;
 
 /**
  * \addtogroup generic Generic code
@@ -215,11 +218,38 @@ namespace regina {
  */
 template <int dim>
 class Triangulation :
-        public detail::TriangulationBase<dim>,
-        public Output<Triangulation<dim>> {
+        public NPacket,
+        public detail::TriangulationBase<dim> {
     static_assert(! standardDim(dim),
         "The generic implementation of Triangulation<dim> "
         "should not be used for Regina's standard dimensions.");
+
+    private:
+        /**
+         * Provides implementation details for REGINA_PACKET_FROM.
+         *
+         * We do not provide the specialisation PacketInfo<typeID> in this
+         * header, since this would force an instantiation of every class
+         * Triangulation<dim> every time this header is included.  Instead,
+         * PacketInfo<typeID> is specialised in packet/packetregistry-impl.h.
+         *
+         * As a result, we cannot use REGINA_PACKET (which requires
+         * PacketInfo<typeID> for its implementation details).  Instead we
+         * use REGINA_PACKET_FROM, which allows us to pass our own helper class
+         * for the implementation.  PacketTypeInfo is that helper class.
+         *
+         * See the documentation for REGINA_PACKET_FROM for further details.
+         */
+        struct PacketTypeInfo {
+            static constexpr const PacketType typeID = PacketType(100 + dim);
+            static std::string name() {
+                std::ostringstream s;
+                s << dim << "-Manifold Triangulation";
+                return s.str();
+            }
+        };
+
+    REGINA_PACKET_FROM(Triangulation<dim>, Triangulation<dim>::PacketTypeInfo);
 
     protected:
         using detail::TriangulationBase<dim>::simplices_;
@@ -245,30 +275,22 @@ class Triangulation :
 
         /*@}*/
         /**
-         * \name Output
+         * \name Packet Administration
          */
         /*@{*/
 
-        /**
-         * Writes a short text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextShort(std::ostream& out) const;
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const;
+        virtual void writeTextShort(std::ostream& out) const;
+        virtual void writeTextLong(std::ostream& out) const;
+        virtual bool dependsOnParent() const;
 
         /*@}*/
+
+        static NXMLPacketReader* xmlReader(NPacket* parent,
+                NXMLTreeResolver& resolver);
+
+    protected:
+        virtual NPacket* internalClonePacket(NPacket* parent) const;
+        virtual void writeXMLPacketData(std::ostream& out) const;
 
     private:
         /**
@@ -277,56 +299,6 @@ class Triangulation :
          * triangulation.
          */
         void clearAllProperties();
-
-    public:
-        /**
-         * A do-nothing replacement for NPacket::ChangeEventSpan, for
-         * use with triangulation classes that do not derive from NPacket.
-         *
-         * Any function that modifies a packet must, directly or indirectly,
-         * create an NPacket::ChangeEventSpan object; the constructor
-         * and destructor of this object will in turn fire required events
-         * such as NPacketListener::packetToBeChanged() and
-         * NPacketListener::packetWasChanged().
-         *
-         * However, NPacket::ChangeEventSpan can (of course) only work
-         * with classes derived from NPacket.  This creates problems for
-         * generic functions that modify \e triangulations, since
-         * small-dimensional triangulations (such as Triangulation<3>)
-         * derive from NPacket, whereas the generic Triangulation<dim> class
-         * does not.
-         *
-         * For this reason, the generic Triangulation<dim> class
-         * provides its own ChangeEventSpan type (i.e., this class),
-         * which harmlessly does nothing at all.
-         *
-         * So: Any generic function that modifies a Triangulation<dim>,
-         * regardless of the dimension \a dim, should create a
-         * Triangulation<dim>::ChangeEventSpan object (instead of an
-         * NPacket::ChangeEventSpan object).
-         *
-         * - If Triangulation<dim> does derive from NPacket, then this will
-         *   equate to the inherited type NPacket::ChangeEventSpan,
-         *   and the necessary packet events will be fired correctly.
-         *
-         * - If Triangulation<dim> does not derive from NPacket, then
-         *   this will equate to the do-nothing type defined here.
-         *   The code will harmlessly compile and do nothing (as intended).
-         *
-         * See NPacket::ChangeEventSpan for further detail on how
-         * ChangeEventSpan objects should be used.
-         *
-         * \ifacespython Not present.
-         */
-        class ChangeEventSpan {
-            public:
-                /**
-                 * Constructor that does nothing.
-                 * The argument is ignored.
-                 */
-                inline ChangeEventSpan(detail::TriangulationBase<dim>*) {
-                }
-        };
 
     friend class detail::SimplexBase<dim>;
     friend class detail::TriangulationBase<dim>;
@@ -558,6 +530,48 @@ void Triangulation<dim>::writeTextLong(std::ostream& out) const {
         out << '\n';
     }
     out << '\n';
+}
+
+template <int dim>
+inline bool Triangulation<dim>::dependsOnParent() const {
+    return false;
+}
+
+template <int dim>
+inline NPacket* Triangulation<dim>::internalClonePacket(NPacket* parent) const {
+    return new Triangulation<dim>(*this);
+}
+
+template <int dim>
+void Triangulation<dim>::writeXMLPacketData(std::ostream& out) const {
+    using regina::xml::xmlEncodeSpecialChars;
+    using regina::xml::xmlValueTag;
+
+    // Write the simplex gluings.
+    Simplex<dim>* adj;
+    int facet;
+
+    out << "  <simplices size=\"" << simplices_.size() << "\">\n";
+    for (auto s : simplices_) {
+        out << "    <simplex desc=\"" <<
+            xmlEncodeSpecialChars(s->description()) << "\"> ";
+        for (facet = 0; facet <= dim; ++facet) {
+            adj = s->adjacentSimplex(facet);
+            if (adj) {
+                out << adj->index() << ' ' << static_cast<int>(
+                    s->adjacentGluing(facet).permCode()) << ' ';
+            } else
+                out << "-1 -1 ";
+        }
+        out << "</simplex>\n";
+    }
+    out << "  </simplices>\n";
+}
+
+template <int dim>
+inline NXMLPacketReader* Triangulation<dim>::xmlReader(NPacket*,
+        NXMLTreeResolver& resolver) {
+    return new XMLTriangulationReader<dim>(resolver);
 }
 
 // Inline functions for DegreeLessThan / DegreeGreaterThan

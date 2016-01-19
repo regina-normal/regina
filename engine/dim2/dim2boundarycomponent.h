@@ -91,7 +91,7 @@ class REGINA_API Dim2BoundaryComponent :
          *
          * @return the index of this boundary component vertex.
          */
-        unsigned long index() const;
+        size_t index() const;
 
         /**
          * Returns the number of <i>subdim</i>-faces in this boundary component.
@@ -184,7 +184,7 @@ namespace regina {
 inline Dim2BoundaryComponent::Dim2BoundaryComponent() {
 }
 
-inline unsigned long Dim2BoundaryComponent::index() const {
+inline size_t Dim2BoundaryComponent::index() const {
     return markedIndex();
 }
 

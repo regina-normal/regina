@@ -66,7 +66,10 @@ enum PacketType {
      */
     PACKET_TEXT = 2,
     /**
-     * Represents a 3-manifold triangulation, of class NTriangulation.
+     * Represents a 3-dimensional triangulation, of class Triangulation<3>
+     * (or equivalently, NTriangulation).
+     *
+     * This is identical to the constant PACKET_TRIANGULATION3.
      */
     PACKET_TRIANGULATION = 3,
     /**
@@ -91,7 +94,10 @@ enum PacketType {
      */
     PACKET_PDF = 10,
     /**
-     * Represents a 4-manifold triangulation, of class Dim4Triangulation.
+     * Represents a 4-dimensional triangulation, of class Triangulation<4>
+     * (or equivalently, Dim4Triangulation).
+     *
+     * This is identical to the constant PACKET_TRIANGULATION4.
      */
     PACKET_DIM4TRIANGULATION = 11,
     /**
@@ -99,14 +105,82 @@ enum PacketType {
      */
     PACKET_NORMALHYPERSURFACELIST = 13,
     /**
-     * Represents a 2-manifold triangulation, of class Dim2Triangulation.
+     * Represents a 2-dimensional triangulation, of class Triangulation<2>
+     * (or equivalently, Dim2Triangulation).
+     *
+     * This is identical to the constant PACKET_TRIANGULATION2.
      */
     PACKET_DIM2TRIANGULATION = 15,
     /**
      * Represents a triangulation in the embedded SnapPea kernel, of
      * class NSnapPeaTriangulation.
      */
-    PACKET_SNAPPEATRIANGULATION = 16
+    PACKET_SNAPPEATRIANGULATION = 16,
+    /**
+     * Represents a 2-dimensional triangulation, of class Triangulation<2>
+     * (or equivalently, Dim2Triangulation).
+     *
+     * This is identical to the constant PACKET_DIM2TRIANGULATION.
+     */
+    PACKET_TRIANGULATION2 = 15,
+    /**
+     * Represents a 3-dimensional triangulation, of class Triangulation<3>
+     * (or equivalently, NTriangulation).
+     *
+     * This is identical to the constant PACKET_TRIANGULATION.
+     */
+    PACKET_TRIANGULATION3 = 3,
+    /**
+     * Represents a 4-dimensional triangulation, of class Triangulation<4>
+     * (or equivalently, Dim4Triangulation).
+     *
+     * This is identical to the constant PACKET_DIM4TRIANGULATION.
+     */
+    PACKET_TRIANGULATION4 = 11,
+    /**
+     * Represents a 5-dimensional triangulation, of class Triangulation<5>.
+     */
+    PACKET_TRIANGULATION5 = 105,
+    /**
+     * Represents a 6-dimensional triangulation, of class Triangulation<6>.
+     */
+    PACKET_TRIANGULATION6 = 106,
+    /**
+     * Represents a 7-dimensional triangulation, of class Triangulation<7>.
+     */
+    PACKET_TRIANGULATION7 = 107,
+    /**
+     * Represents a 8-dimensional triangulation, of class Triangulation<8>.
+     */
+    PACKET_TRIANGULATION8 = 108,
+    /**
+     * Represents a 9-dimensional triangulation, of class Triangulation<9>.
+     */
+    PACKET_TRIANGULATION9 = 109,
+    /**
+     * Represents a 10-dimensional triangulation, of class Triangulation<10>.
+     */
+    PACKET_TRIANGULATION10 = 110,
+    /**
+     * Represents a 11-dimensional triangulation, of class Triangulation<11>.
+     */
+    PACKET_TRIANGULATION11 = 111,
+    /**
+     * Represents a 12-dimensional triangulation, of class Triangulation<12>.
+     */
+    PACKET_TRIANGULATION12 = 112,
+    /**
+     * Represents a 13-dimensional triangulation, of class Triangulation<13>.
+     */
+    PACKET_TRIANGULATION13 = 113,
+    /**
+     * Represents a 14-dimensional triangulation, of class Triangulation<14>.
+     */
+    PACKET_TRIANGULATION14 = 114,
+    /**
+     * Represents a 15-dimensional triangulation, of class Triangulation<15>.
+     */
+    PACKET_TRIANGULATION15 = 115
 };
 
 /*@}*/

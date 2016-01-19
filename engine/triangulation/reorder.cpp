@@ -94,7 +94,7 @@ void edge_orientations_on_tet(const NTriangulation &trig,
         // to get the edge orientation on a tetrahedron's edge
         // look it up in edge_orientations
 
-        int orientation = edge_orientations[trig.edgeIndex(tet->getEdge(i))];
+        int orientation = edge_orientations[tet->getEdge(i)->index()];
 
         // a tetrahedron's edge might be identified with the edge in the
         // triangulation in a way that the edge orientation is not consistent

@@ -79,7 +79,7 @@ namespace regina {
  */
 class REGINA_API NMarkedElement {
     private:
-        long marking;
+        size_t marking_;
             /**< The index in the NMarkedVector at which this object is
                  stored.  If the object does not belong to an NMarkedVector,
                  the value of this field is undefined. */
@@ -92,7 +92,7 @@ class REGINA_API NMarkedElement {
          *
          * @return the index at which this object is stored.
          */
-        inline long markedIndex() const;
+        inline size_t markedIndex() const;
 
     template <typename T>
     friend class NMarkedVector;
@@ -187,7 +187,7 @@ class NMarkedVector : private std::vector<T*> {
          * @param item the item to add to this vector.
          */
         inline void push_back(T* item) {
-            item->marking = size();
+            item->marking_ = size();
             std::vector<T*>::push_back(item);
         }
 
@@ -207,7 +207,7 @@ class NMarkedVector : private std::vector<T*> {
                 typename std::vector<T*>::iterator pos) {
             typename std::vector<T*>::iterator it = pos;
             for (++it; it != end(); ++it)
-                --((*it)->marking);
+                --((*it)->marking_);
             return std::vector<T*>::erase(pos);
         }
 
@@ -230,7 +230,7 @@ class NMarkedVector : private std::vector<T*> {
                 typename std::vector<T*>::iterator last) {
             for (typename std::vector<T*>::iterator it = last;
                     it != end(); ++it)
-                (*it)->marking -= (first - last);
+                (*it)->marking_ -= (first - last);
             return std::vector<T*>::erase(first, last);
         }
 
@@ -248,8 +248,8 @@ class NMarkedVector : private std::vector<T*> {
 
 // Inline functions for NMarkedElement
 
-inline long NMarkedElement::markedIndex() const {
-    return marking;
+inline size_t NMarkedElement::markedIndex() const {
+    return marking_;
 }
 
 } // namespace regina

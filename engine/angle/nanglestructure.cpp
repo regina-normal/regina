@@ -201,25 +201,25 @@ void NAngleStructure::calculateType() const {
                     // Edges 0,5 are marked as pi.
                     // For a positively oriented tetrahedron:
                     // Edges 1,4 vs 2,3 are of colour +1 vs -1.
-                    e = triangulation_->edgeIndex(tet->edge(1));
+                    e = tet->edge(1)->index();
                     if (edgeColour[e] == -orient)
                         veering = false;
                     else
                         edgeColour[e] = orient;
 
-                    e = triangulation_->edgeIndex(tet->edge(4));
+                    e = tet->edge(4)->index();
                     if (edgeColour[e] == -orient)
                         veering = false;
                     else
                         edgeColour[e] = orient;
 
-                    e = triangulation_->edgeIndex(tet->edge(2));
+                    e = tet->edge(2)->index();
                     if (edgeColour[e] == orient)
                         veering = false;
                     else
                         edgeColour[e] = -orient;
 
-                    e = triangulation_->edgeIndex(tet->edge(3));
+                    e = tet->edge(3)->index();
                     if (edgeColour[e] == orient)
                         veering = false;
                     else
@@ -228,25 +228,25 @@ void NAngleStructure::calculateType() const {
                     // Edges 1,4 are marked as pi.
                     // For a positively oriented tetrahedron:
                     // Edges 2,3 vs 0,5 are of colour +1 vs -1.
-                    e = triangulation_->edgeIndex(tet->edge(2));
+                    e = tet->edge(2)->index();
                     if (edgeColour[e] == -orient)
                         veering = false;
                     else
                         edgeColour[e] = orient;
 
-                    e = triangulation_->edgeIndex(tet->edge(3));
+                    e = tet->edge(3)->index();
                     if (edgeColour[e] == -orient)
                         veering = false;
                     else
                         edgeColour[e] = orient;
 
-                    e = triangulation_->edgeIndex(tet->edge(0));
+                    e = tet->edge(0)->index();
                     if (edgeColour[e] == orient)
                         veering = false;
                     else
                         edgeColour[e] = -orient;
 
-                    e = triangulation_->edgeIndex(tet->edge(5));
+                    e = tet->edge(5)->index();
                     if (edgeColour[e] == orient)
                         veering = false;
                     else
@@ -255,25 +255,25 @@ void NAngleStructure::calculateType() const {
                     // Edges 2,3 are marked as pi.
                     // For a positively oriented tetrahedron:
                     // Edges 0,5 vs 1,4 are of colour +1 vs -1.
-                    e = triangulation_->edgeIndex(tet->edge(0));
+                    e = tet->edge(0)->index();
                     if (edgeColour[e] == -orient)
                         veering = false;
                     else
                         edgeColour[e] = orient;
 
-                    e = triangulation_->edgeIndex(tet->edge(5));
+                    e = tet->edge(5)->index();
                     if (edgeColour[e] == -orient)
                         veering = false;
                     else
                         edgeColour[e] = orient;
 
-                    e = triangulation_->edgeIndex(tet->edge(1));
+                    e = tet->edge(1)->index();
                     if (edgeColour[e] == orient)
                         veering = false;
                     else
                         edgeColour[e] = -orient;
 
-                    e = triangulation_->edgeIndex(tet->edge(4));
+                    e = tet->edge(4)->index();
                     if (edgeColour[e] == orient)
                         veering = false;
                     else

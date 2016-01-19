@@ -907,10 +907,11 @@ class FaceBase :
          * Returns the index of this face within the underlying
          * triangulation.
          *
-         * This is identical to calling
-         * <tt>triangulation()->faceIndex<subdim>(this)</tt>
-         * (or <tt>triangulation()->vertexIndex(this)</tt> for
-         * faces of dimension \a subdim = 1, and so on).
+         * This is identical to calling the deprecated function
+         * <tt>triangulation()->vertexIndex(this)</tt> for
+         * faces of dimension \a subdim = 1, or
+         * <tt>triangulation()->edgeIndex(this)</tt> for
+         * faces of dimension \a subdim = 2, or so on.
          *
          * @return the index of this face.
          */

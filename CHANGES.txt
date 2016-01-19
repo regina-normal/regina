@@ -598,12 +598,15 @@ Version 4.97  [ (under development) ]
             - The old class names Dim2Triangle and NTetrahedron have
               been kept as typedefs for convenience.
         Class Triangulation, TriangulationBase:
-            - Triangulation<dim> is now a generic class that replaces the old
-              Dim2Triangulation, NTriangulation, etc.  TriangulationBase<dim>
-              is a base class with functionality common to all dimensions,
-              whereas Triangulation<dim> is specialised for dimensions 2, 3, 4.
+            - Triangulation<dim> is now a generic subclass of NPacket that
+              replaces the old Dim2Triangulation, NTriangulation, etc.
+              TriangulationBase<dim> is a base class with functionality common
+              to all dimensions, whereas Triangulation<dim> is specialised for
+              dimensions 2, 3, 4.
             - The old class names Dim2Triangulation and NTriangulation have
               been kept as typedefs for convenience.
+        Class XMLTriReader:
+            - New I/O class for the new generic Triangulation<dim> packet type.
         Routine binomSmall():
             - New constant-time routine to compute (n choose k) for small n.
         Routine bitsRequired():
@@ -630,6 +633,8 @@ Version 4.97  [ (under development) ]
               a filename).
         Routine perm3to4(), perm3to5(), perm4to5():
             - Deprecated.  Use the new routines NPerm<n>::extend() instead.
+        Routine valueOf():
+            - Now overloaded to support short and long long integers also.
         Global arrays edgeNumber[][], edgeStart[], edgeEnd[]:
             - This long-deprecated global arrays have now been removed, and
               the corresponding static arrays in NEdge are now deprecated.

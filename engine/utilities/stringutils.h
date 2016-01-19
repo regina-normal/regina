@@ -99,6 +99,41 @@ REGINA_API bool startsWith(const std::string& str, const std::string& prefix);
 REGINA_API std::string stripWhitespace(const std::string& str);
 
 /**
+ * Converts the entire given string to a short integer and reports whether
+ * this conversion was successful.
+ *
+ * The given string should contain no whitespace or other characters
+ * that are not a part of the integer that the string represents.
+ * If any unexpected characters are encountered, the routine will convert
+ * the string as best it can but \c false will be returned.
+ *
+ * \ifacespython Not present.
+ *
+ * @param str the string to convert.
+ * @param dest the variable in which to store the resulting short integer.
+ * @return \c true if the conversion was completely successful or \c false
+ * otherwise.
+ */
+REGINA_API bool valueOf(const std::string& str, short& dest);
+/**
+ * Converts the entire given string to an unsigned short integer and reports
+ * whether this conversion was successful.
+ *
+ * The given string should contain no whitespace or other characters
+ * that are not a part of the integer that the string represents.
+ * If any unexpected characters are encountered, the routine will convert
+ * the string as best it can but \c false will be returned.
+ *
+ * \ifacespython Not present.
+ *
+ * @param str the string to convert.
+ * @param dest the variable in which to store the resulting unsigned
+ * short integer.
+ * @return \c true if the conversion was completely successful or \c false
+ * otherwise.
+ */
+REGINA_API bool valueOf(const std::string& str, unsigned short& dest);
+/**
  * Converts the entire given string to an integer and reports whether
  * this conversion was successful.
  *
@@ -167,6 +202,41 @@ REGINA_API bool valueOf(const std::string& str, long& dest);
  * otherwise.
  */
 REGINA_API bool valueOf(const std::string& str, unsigned long& dest);
+/**
+ * Converts the entire given string to a long long integer and reports whether
+ * this conversion was successful.
+ *
+ * The given string should contain no whitespace or other characters
+ * that are not a part of the integer that the string represents.
+ * If any unexpected characters are encountered, the routine will convert
+ * the string as best it can but \c false will be returned.
+ *
+ * \ifacespython Not present.
+ *
+ * @param str the string to convert.
+ * @param dest the variable in which to store the resulting long long integer.
+ * @return \c true if the conversion was completely successful or \c false
+ * otherwise.
+ */
+REGINA_API bool valueOf(const std::string& str, long long& dest);
+/**
+ * Converts the entire given string to an unsigned long long integer and reports
+ * whether this conversion was successful.
+ *
+ * The given string should contain no whitespace or other characters
+ * that are not a part of the integer that the string represents.
+ * If any unexpected characters are encountered, the routine will convert
+ * the string as best it can but \c false will be returned.
+ *
+ * \ifacespython Not present.
+ *
+ * @param str the string to convert.
+ * @param dest the variable in which to store the resulting unsigned long long
+ * integer.
+ * @return \c true if the conversion was completely successful or \c false
+ * otherwise.
+ */
+REGINA_API bool valueOf(const std::string& str, unsigned long long& dest);
 /**
  * Converts the entire given string to an arbitrary precision integer and
  * reports whether this conversion was successful.

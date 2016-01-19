@@ -250,7 +250,8 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             // implementation of ordering() for high-dimensional faces
             // calls this function and reverses the permutation.
 
-            // This implementation runs in linear time in dim (TODO: check)
+            // This implementation runs in linear time in dim (assuming binomial
+            // coefficients are precomputed)
             int perm[dim + 1];
             unsigned val;
 
@@ -278,7 +279,8 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
 
             unsigned k = subdim+1;
             unsigned max = dim;
-            unsigned done;
+            unsigned done, pos, idx;
+            int i;
 
             while (remaining > 0) {
               done = 0;
@@ -291,10 +293,7 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
                 if (val <= remaining) {
                   k--;
                   perm[subdim-k] = dim-max;
-                  //printf("new element: %u\n",perm[k]);
-
                   remaining = remaining - val;
-                  //printf("remaining: %u\n",remaining);
                   done = 1;
                 }
                 max--;
@@ -306,7 +305,22 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
               perm[subdim-k]=dim-k;
             }
 
-            // So far "perm" lists the vertices of the face in increasing order
+            pos = subdim;
+            idx = subdim+1;
+            done = 0;
+            for (i=dim; i>=0; i--) {
+              if (done == 0 && perm[pos] == i) {
+                if (pos>0) {
+                  pos--;
+                } else {
+                  done = 1;
+                }
+                continue;
+              }
+              perm[idx] = i;
+              idx++;
+            }
+
             return NPerm<dim + 1>(perm);
         }
 
@@ -314,7 +328,8 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             // We can assume here that we are numbering faces in forward
             // lexicographical order (i.e., the face dimension subdim is small).
 
-            // This implementation runs in linear time in subdim (TODO: check)
+            // This implementation runs in linear time in subdim (assuming 
+            // binomial coefficients are precomputed)
 
             // IDEA: use the combinatorial number system which associates 
             //       numbers face = 0, 1, .... , binom(dim+1,subdim+1)-1 

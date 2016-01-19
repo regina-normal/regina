@@ -294,7 +294,6 @@ void addNTriangulation() {
             &NTriangulation::boundaryComponentIndex)
         .def("vertexIndex", &NTriangulation::vertexIndex)
         .def("edgeIndex", &NTriangulation::edgeIndex)
-        .def("faceIndex", &NTriangulation::triangleIndex)
         .def("triangleIndex", &NTriangulation::triangleIndex)
         .def("isIdenticalTo", &NTriangulation::isIdenticalTo)
         .def("isIsomorphicTo", isIsomorphicTo_ptr,
