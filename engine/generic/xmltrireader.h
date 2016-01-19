@@ -62,6 +62,10 @@ namespace regina {
  */
 template <int dim>
 class REGINA_API XMLTriangulationReader : public NXMLPacketReader {
+    static_assert(! standardDim(dim),
+        "The generic implementation of XMLTriangulationReader<dim> "
+        "should not be used for Regina's standard dimensions.");
+
     private:
         Triangulation<dim>* tri_;
             /**< The triangulation currently being read. */
