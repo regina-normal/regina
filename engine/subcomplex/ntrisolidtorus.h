@@ -179,14 +179,14 @@ class REGINA_API NTriSolidTorus : public NStandardTriangulation {
          * how axis edges, major edges and minor edges map to each other
          * without having to worry about the specific assignment of
          * tetrahedron vertex numbers.  For a discussion of vertex
-         * roles, see getVertexRoles().
+         * roles, see vertexRoles().
          *
          * Note that annulus <tt>index</tt> uses faces
          * from tetrahedra <tt>index+1</tt> and <tt>index+2</tt>.
          * The gluing permutation that maps vertices
          * of tetrahedron <tt>index+1</tt> to vertices of tetrahedron
-         * <tt>index+2</tt> will be <tt>getVertexRoles(index+2) * roleMap *
-         * getVertexRoles(index+1).inverse()</tt>.
+         * <tt>index+2</tt> will be <tt>vertexRoles(index+2) * roleMap *
+         * vertexRoles(index+1).inverse()</tt>.
          *
          * @param index specifies which annulus on the solid torus
          * boundary to examine; this must be 0, 1 or 2.
@@ -276,7 +276,7 @@ class REGINA_API NTriSolidTorus : public NStandardTriangulation {
          * @param useVertexRoles a permutation describing the role each
          * tetrahedron vertex must play in the solid torus; this must be
          * in the same format as the permutation returned by
-         * getVertexRoles().
+         * vertexRoles().
          * @return a newly created structure containing details of the
          * solid torus with the given tetrahedron as tetrahedron 0, or
          * \c null if the given tetrahedron is not part of a triangular

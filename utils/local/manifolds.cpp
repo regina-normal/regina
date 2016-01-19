@@ -179,7 +179,7 @@ bool process(NContainer* c) {
 
         name = mfd->name();
         if (detailedNames) {
-            structure = mfd->getStructure();
+            structure = mfd->structure();
             if ((! structure.empty()) && (structure != name))
                 name = structure;
         }
