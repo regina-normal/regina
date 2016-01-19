@@ -62,6 +62,34 @@ template <int> class Component;
 template <int> class Isomorphism;
 template <int> class Triangulation;
 
+/**
+ * Contains implementation details and common functionality for Regina's
+ * dimension-agnostic classes.
+ *
+ * For most of Regina's dimension-agnostic classes, such as
+ * Triangulation<dim>, Simplex<dim> and Face<dim, subdim>, the bulk of
+ * the implementation is hidden away in the namespace regina::detail.
+ *
+ * Regina's main classes acquire their functionality through inheritance.
+ * For example, the end-user class regina::Triangulation<dim> inherits
+ * most of its functionality from the implementation class
+ * regina::detail::TriangulationBase<dim>.
+ *
+ * Because of this inheritance, there is typically no need for
+ * end users to explicitly refer to the namespace regina::detail.
+ *
+ * Since regina::detail contains implementation details, its
+ * classes are subject to change between releases.  Specifically:
+ *
+ * - All member functions that are inherited and exposed by the end-user
+ *   classes in regina (e.g., Triangulation, Simplex, Face and so on) may be
+ *   considered part of Regina's official API, and will be supported from
+ *   release to release.
+ *
+ * - In constrast, any methods that are not exposed by the end-user classes
+ *   (including the names and inheritance structure of classes within
+ *   regina::detail) might change in subsequent releases without notice.
+ */
 namespace detail {
 
 /**
