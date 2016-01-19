@@ -45,6 +45,11 @@ template class NTreeEnumeration<LPConstraintNone, BanNone, NNativeLong>;
 template class NTautEnumeration<LPConstraintNone, BanNone, NInteger>;
 template class NTautEnumeration<LPConstraintNone, BanNone, NNativeLong>;
 
+template class NTreeTraversal<LPConstraintNone, BanBoundary, NInteger>;
+template class NTreeTraversal<LPConstraintNone, BanBoundary, NNativeLong>;
+template class NTreeEnumeration<LPConstraintNone, BanBoundary, NInteger>;
+template class NTreeEnumeration<LPConstraintNone, BanBoundary, NNativeLong>;
+
 template class NTreeTraversal<LPConstraintEuler, BanNone, NInteger>;
 template class NTreeTraversal<LPConstraintEuler, BanNone, NNativeLong>;
 template class NTreeSingleSoln<LPConstraintEuler, BanNone, NInteger>;
@@ -54,6 +59,9 @@ template class NTreeSingleSoln<LPConstraintEuler, BanNone, NNativeLong>;
 template class NTreeTraversal<LPConstraintNone, BanNone, NNativeInteger<16> >;
 template class NTreeEnumeration<LPConstraintNone, BanNone, NNativeInteger<16> >;
 template class NTautEnumeration<LPConstraintNone, BanNone, NNativeInteger<16> >;
+
+template class NTreeTraversal<LPConstraintNone, BanBoundary, NNativeInteger<16> >;
+template class NTreeEnumeration<LPConstraintNone, BanBoundary, NNativeInteger<16> >;
 
 template class NTreeTraversal<LPConstraintEuler, BanNone, NNativeInteger<16> >;
 template class NTreeSingleSoln<LPConstraintEuler, BanNone, NNativeInteger<16> >;
