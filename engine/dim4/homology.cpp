@@ -134,8 +134,8 @@ const NAbelianGroup& Dim4Triangulation::homologyH2() const {
     unsigned long i, j;
     unsigned long row, col;
     Dim4Pentachoron* pent;
-    Dim4Edge* edge;
-    Dim4Triangle* triangle;
+    Dim4Edge* e;
+    Dim4Triangle* t;
     Dim4Tetrahedron* tet;
     NPerm5 perm, tmpPerm;
     int pentEdge, pentTriangle;
@@ -176,22 +176,22 @@ const NAbelianGroup& Dim4Triangulation::homologyH2() const {
     // Build the boundary map, one dual triangle at a time.
     col = 0;
     for (i = 0; i < nTriangles; ++i) {
-        triangle = triangle(i);
-        if (triangle->isBoundary())
+        t = triangle(i);
+        if (t->isBoundary())
             continue;
 
         // The dual 2-face surrounding this triangle bounds the dual
         // polyhedron surrounding each of its edges.
-        pent = triangle->front().pentachoron();
-        perm = triangle->front().vertices();
+        pent = t->front().pentachoron();
+        perm = t->front().vertices();
 
         for (j = 0; j < 3; ++j) {
             // Edge j of the triangle is opposite vertex j of the triangle.
-            edge = triangle->edge(j);
-            if (edge->isBoundary())
+            e = t->edge(j);
+            if (e->isBoundary())
                 continue;
 
-            row = edgeInternalIndex[edgeIndex(edge)];
+            row = edgeInternalIndex[edgeIndex(e)];
             pentEdge = Dim4Edge::edgeNumber[perm[(j+1) % 3]][perm[(j+2) % 3]];
 
             tmpPerm = NPerm5(2, j) * perm.inverse() *
@@ -230,11 +230,11 @@ const NAbelianGroup& Dim4Triangulation::homologyH2() const {
         for (j = 0; j < 4; ++j) {
             // Triangle j of the tetrahedron is opposite vertex j of the
             // tetrahedron.
-            triangle = tet->triangle(j);
-            if (triangle->isBoundary())
+            t = tet->triangle(j);
+            if (t->isBoundary())
                 continue;
 
-            row = triangleInternalIndex[triangleIndex(triangle)];
+            row = triangleInternalIndex[triangleIndex(t)];
             pentTriangle = Dim4Triangle::triangleNumber
                 [perm[(j+1) % 4]][perm[(j+2) % 4]][perm[(j+3) % 4]];
             bdry21.entry(row, col) +=
