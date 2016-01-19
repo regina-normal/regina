@@ -1025,7 +1025,7 @@ int Dim4VertexModel::columnCount(const QModelIndex& /* unused parent*/) const {
 
 QVariant Dim4VertexModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        Dim4Vertex* item = tri->getVertex(index.row());
+        Dim4Vertex* item = tri->vertex(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -1045,8 +1045,8 @@ QVariant Dim4VertexModel::data(const QModelIndex& index, int role) const {
                 QString ans;
                 for (auto& emb : *item)
                     appendToList(ans, QString("%1 (%2)").
-                        arg(emb.getPentachoron()->index()).
-                        arg(emb.getVertex()));
+                        arg(emb.pentachoron()->index()).
+                        arg(emb.vertex()));
                 return ans;
         }
         return QString();
@@ -1118,7 +1118,7 @@ int Dim4EdgeModel::columnCount(const QModelIndex& /* unused parent*/) const {
 
 QVariant Dim4EdgeModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        Dim4Edge* item = tri->getEdge(index.row());
+        Dim4Edge* item = tri->edge(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -1141,8 +1141,8 @@ QVariant Dim4EdgeModel::data(const QModelIndex& index, int role) const {
                 QString ans;
                 for (auto& emb : *item)
                     appendToList(ans, QString("%1 (%2)").
-                        arg(emb.getPentachoron()->index()).
-                        arg(emb.getVertices().trunc2().c_str()));
+                        arg(emb.pentachoron()->index()).
+                        arg(emb.vertices().trunc2().c_str()));
                 return ans;
         }
         return QString();
@@ -1213,7 +1213,7 @@ int Dim4TriangleModel::columnCount(const QModelIndex& /* unused parent*/) const 
 
 QVariant Dim4TriangleModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        Dim4Triangle* item = tri->getTriangle(index.row());
+        Dim4Triangle* item = tri->triangle(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -1230,8 +1230,8 @@ QVariant Dim4TriangleModel::data(const QModelIndex& index, int role) const {
                 QString ans;
                 for (auto& emb : *item)
                     appendToList(ans, QString("%1 (%2)").
-                        arg(emb.getPentachoron()->index()).
-                        arg(emb.getVertices().trunc3().c_str()));
+                        arg(emb.pentachoron()->index()).
+                        arg(emb.vertices().trunc3().c_str()));
                 return ans;
         }
         return QString();
@@ -1304,7 +1304,7 @@ int Dim4TetrahedronModel::columnCount(const QModelIndex& /* unused parent*/)
 
 QVariant Dim4TetrahedronModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        Dim4Tetrahedron* item = tri->getTetrahedron(index.row());
+        Dim4Tetrahedron* item = tri->tetrahedron(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -1320,8 +1320,8 @@ QVariant Dim4TetrahedronModel::data(const QModelIndex& index, int role) const {
                 QString ans;
                 for (unsigned i = 0; i < item->degree(); i++)
                     appendToList(ans, QString("%1 (%2)").
-                        arg(item->getEmbedding(i).getPentachoron()->index()).
-                        arg(item->getEmbedding(i).getVertices().
+                        arg(item->embedding(i).pentachoron()->index()).
+                        arg(item->embedding(i).vertices().
                             trunc4().c_str()));
                 return ans;
         }
@@ -1494,27 +1494,27 @@ QVariant Dim4BoundaryComponentModel::data(const QModelIndex& index,
                     tr("Real"));
             case 2:
                 return ((item->isIdeal() || item->isInvalidVertex()) ?
-                    tr("Degree %1").arg(item->getVertex(0)->getDegree()):
+                    tr("Degree %1").arg(item->vertex(0)->degree()):
                     item->countTetrahedra() == 1 ? tr("1 tetrahedron") :
                     tr("%1 tetrahedra").arg(item->countTetrahedra()));
             case 3:
                 if (item->isIdeal() || item->isInvalidVertex()) {
-                    Dim4Vertex* v = item->getVertex(0);
+                    Dim4Vertex* v = item->vertex(0);
                     QString ans;
                     for (auto& emb : *v)
                         appendToList(ans, QString("%1 (%2)").
-                            arg(emb.getPentachoron()->index()).
-                            arg(emb.getVertex()));
+                            arg(emb.pentachoron()->index()).
+                            arg(emb.vertex()));
                     return tr("Vertex %1 = ").arg(v->index()) + ans;
                 } else {
                     QString ans;
                     for (unsigned long i = 0;
                             i < item->countTetrahedra(); i++) {
                         const Dim4TetrahedronEmbedding& emb =
-                            item->getTetrahedron(i)->front();
+                            item->tetrahedron(i)->front();
                         appendToList(ans, QString("%1 (%2)").
-                            arg(emb.getPentachoron()->index()).
-                            arg(emb.getVertices().trunc4().c_str()));
+                            arg(emb.pentachoron()->index()).
+                            arg(emb.vertices().trunc4().c_str()));
                     }
                     return ans;
                 }

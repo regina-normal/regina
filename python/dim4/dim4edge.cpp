@@ -56,7 +56,7 @@ namespace {
     GlobalArray2D<int> Dim4Edge_edgeNumber(Dim4Edge::edgeNumber, 5);
     GlobalArray2D<int> Dim4Edge_edgeVertex(Dim4Edge::edgeVertex, 10);
 
-    boost::python::list Dim4Edge_getEmbeddings_list(const Dim4Edge* e) {
+    boost::python::list Dim4Edge_embeddings_list(const Dim4Edge* e) {
         boost::python::list ans;
         for (auto& emb : *e)
             ans.append(emb);
@@ -111,8 +111,8 @@ void addDim4Edge() {
         scope s = class_<Face<4, 1>, std::auto_ptr<Face<4, 1>>,
                 boost::noncopyable>("Face4_1", no_init)
             .def("index", &Dim4Edge::index)
-            .def("embeddings", Dim4Edge_getEmbeddings_list)
-            .def("getEmbeddings", Dim4Edge_getEmbeddings_list)
+            .def("embeddings", Dim4Edge_embeddings_list)
+            .def("getEmbeddings", Dim4Edge_embeddings_list)
             .def("embedding", &Dim4Edge::embedding,
                 return_internal_reference<>())
             .def("getEmbedding", &Dim4Edge::getEmbedding,

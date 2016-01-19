@@ -59,7 +59,7 @@ namespace {
     GlobalArray2D<int> Dim4Triangle_triangleVertex(
         Dim4Triangle::triangleVertex, 10);
 
-    boost::python::list Dim4Triangle_getEmbeddings_list(const Dim4Triangle* t) {
+    boost::python::list Dim4Triangle_embeddings_list(const Dim4Triangle* t) {
         boost::python::list ans;
         for (auto& emb : *t)
             ans.append(emb);
@@ -97,8 +97,8 @@ void addDim4Triangle() {
         scope s = class_<Face<4, 2>, std::auto_ptr<Face<4, 2>>,
                 boost::noncopyable>("Face4_2", no_init)
             .def("index", &Dim4Triangle::index)
-            .def("embeddings", Dim4Triangle_getEmbeddings_list)
-            .def("getEmbeddings", Dim4Triangle_getEmbeddings_list)
+            .def("embeddings", Dim4Triangle_embeddings_list)
+            .def("getEmbeddings", Dim4Triangle_embeddings_list)
             .def("embedding", &Dim4Triangle::embedding,
                 return_internal_reference<>())
             .def("getEmbedding", &Dim4Triangle::getEmbedding,

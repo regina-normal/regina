@@ -362,23 +362,23 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             }
             unsigned long i;
             for (i = 0; i < tri.countVertices(); ++i)
-                if (! tri.getVertex(i)->isValid()) {
+                if (! tri.vertex(i)->isValid()) {
                     std::ostringstream msg;
                     msg << "Vertex " << i << " of triangulation "
                         << tri.label() << " is reported as invalid.";
                     CPPUNIT_FAIL(msg.str());
                 }
             for (i = 0; i < tri.countEdges(); ++i)
-                if ((! tri.getEdge(i)->isValid()) ||
-                        tri.getEdge(i)->hasBadLink() ||
-                        tri.getEdge(i)->hasBadIdentification()) {
+                if ((! tri.edge(i)->isValid()) ||
+                        tri.edge(i)->hasBadLink() ||
+                        tri.edge(i)->hasBadIdentification()) {
                     std::ostringstream msg;
                     msg << "Edge " << i << " of triangulation "
                         << tri.label() << " is reported as invalid.";
                     CPPUNIT_FAIL(msg.str());
                 }
             for (i = 0; i < tri.countTriangles(); ++i)
-                if (! tri.getTriangle(i)->isValid()) {
+                if (! tri.triangle(i)->isValid()) {
                     std::ostringstream msg;
                     msg << "Triangle " << i << " of triangulation "
                         << tri.label() << " is reported as invalid.";
@@ -399,7 +399,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
             found = 0;
             for (i = 0; i < tri.countVertices(); ++i)
-                if (! tri.getVertex(i)->isValid())
+                if (! tri.vertex(i)->isValid())
                     ++found;
             if (found != invalidVertices) {
                 std::ostringstream msg;
@@ -411,7 +411,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
             found = 0;
             for (i = 0; i < tri.countEdges(); ++i)
-                if (! tri.getEdge(i)->isValid())
+                if (! tri.edge(i)->isValid())
                     ++found;
             if (found != invalidEdges) {
                 std::ostringstream msg;
@@ -423,7 +423,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
             found = 0;
             for (i = 0; i < tri.countEdges(); ++i)
-                if (tri.getEdge(i)->hasBadLink())
+                if (tri.edge(i)->hasBadLink())
                     ++found;
             if (found != invalidEdgeLinks) {
                 std::ostringstream msg;
@@ -435,7 +435,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
             found = 0;
             for (i = 0; i < tri.countEdges(); ++i)
-                if (tri.getEdge(i)->hasBadIdentification())
+                if (tri.edge(i)->hasBadIdentification())
                     ++found;
             if (found != invalidEdgeIDs) {
                 std::ostringstream msg;
@@ -447,7 +447,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
             found = 0;
             for (i = 0; i < tri.countTriangles(); ++i)
-                if (! tri.getTriangle(i)->isValid())
+                if (! tri.triangle(i)->isValid())
                     ++found;
             if (found != invalidTriangles) {
                 std::ostringstream msg;
@@ -588,7 +588,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
             found = 0;
             for (i = 0; i < tri.countVertices(); ++i)
-                if (tri.getVertex(i)->isIdeal())
+                if (tri.vertex(i)->isIdeal())
                     ++found;
             if (found != idealVertices) {
                 std::ostringstream msg;
@@ -764,7 +764,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             unsigned long i, j;
             for (i = 0; i < tri->size(); ++i)
                 for (j = 0; j < 5; ++j)
-                    if (! tri->getPentachoron(i)->adjacentPentachoron(j))
+                    if (! tri->pentachoron(i)->adjacentPentachoron(j))
                         ++found;
 
             if (found != tri->countBoundaryFacets()) {
@@ -782,7 +782,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
                 for (i = 0; i < comp->size(); ++i)
                     for (j = 0; j < 5; ++j)
-                        if (! comp->getPentachoron(i)->adjacentPentachoron(j))
+                        if (! comp->pentachoron(i)->adjacentPentachoron(j))
                             ++found;
 
                 if (found != comp->countBoundaryFacets()) {
@@ -815,14 +815,14 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
                 count = bc->countTetrahedra();
                 for (j = 0; j < count; ++j) {
-                    tet4 = bc->getTetrahedron(j);
+                    tet4 = bc->tetrahedron(j);
                     tet3 = bc->triangulation()->tetrahedron(j);
                     for (triangle = 0; triangle < 4; ++triangle) {
                         adj3 = tet3->adjacentTetrahedron(triangle);
                         if (adj3) {
-                            adj4 = bc->getTetrahedron(adj3->markedIndex());
-                            if (tet4->getTriangle(triangle) !=
-                                    adj4->getTriangle(
+                            adj4 = bc->tetrahedron(adj3->markedIndex());
+                            if (tet4->triangle(triangle) !=
+                                    adj4->triangle(
                                     tet3->adjacentFace(triangle))) {
                                 std::ostringstream msg;
                                 msg << "Boundary tetrahedron adjacency "
@@ -858,7 +858,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             verifyLinkCount(tri, nVert);
 
             for (unsigned i = 0; i < nVert; ++i) {
-                NTriangulation t(*(tri.getVertex(i)->link()));
+                NTriangulation t(*(tri.vertex(i)->link()));
                 t.intelligentSimplify();
 
                 std::string link;
@@ -891,7 +891,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             verifyLinkCount(tri, nVert);
 
             for (unsigned i = 0; i < nVert; ++i) {
-                NTriangulation t(*(tri.getVertex(i)->link()));
+                NTriangulation t(*(tri.vertex(i)->link()));
                 t.intelligentSimplify();
 
                 std::string link;
@@ -924,7 +924,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 unsigned whichVertex, const char* manifold) {
             std::string link;
 
-            NTriangulation t(*(tri.getVertex(whichVertex)->link()));
+            NTriangulation t(*(tri.vertex(whichVertex)->link()));
             t.intelligentSimplify();
 
             NStandardTriangulation* std =
@@ -959,7 +959,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
             // Do a barycentric subdivision to turn any invalid edges
             // into proper RP^2 ideal boundaries.
-            NTriangulation t(*(tri.getVertex(whichVertex)->link()));
+            NTriangulation t(*(tri.vertex(whichVertex)->link()));
             t.barycentricSubdivision();
             t.intelligentSimplify();
 
@@ -1266,7 +1266,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             unsigned long n = tri->size();
             for (unsigned long i = 0; i < n; ++i) {
                 Dim4Triangulation large(*tri);
-                large.oneFiveMove(large.getPentachoron(i));
+                large.oneFiveMove(large.pentachoron(i));
 
                 if (large.size() != n + 4) {
                     std::ostringstream msg;
@@ -1336,7 +1336,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 }
 
                 bool res =
-                    large.collapseEdge(large.getPentachoron(n + 3)->getEdge(
+                    large.collapseEdge(large.pentachoron(n + 3)->edge(
                     regina::Dim4Edge::edgeNumber[0][4]), true, true);
 
                 if (! res) {
@@ -1363,13 +1363,13 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
         static void verifyVertexLinks(Dim4Triangulation* tri) {
             for (unsigned long i = 0; i < tri->countVertices(); ++i) {
-                Dim4Vertex* v = tri->getVertex(i);
+                Dim4Vertex* v = tri->vertex(i);
                 Dim4Isomorphism* iso;
 
                 const NTriangulation* link = v->buildLink();
                 NTriangulation* link2 = v->buildLinkDetail(true, &iso);
 
-                if (link->size() != v->getDegree()) {
+                if (link->size() != v->degree()) {
                     std::ostringstream msg;
                     msg << tri->label() << ", vertex " << i << ": "
                         << "link has incorrect number of tetrahedra.";
@@ -1483,20 +1483,20 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 NPerm5 perm;
                 const regina::NTetrahedron *t, *adj;
                 unsigned vNum;
-                for (j = 0; j < v->getDegree(); ++j) {
-                    p = tri->getPentachoron(iso->pentImage(j));
+                for (j = 0; j < v->degree(); ++j) {
+                    p = tri->pentachoron(iso->pentImage(j));
                     perm = iso->facetPerm(j);
                     vNum = perm[4];
-                    if (p->getVertex(vNum) != v) {
+                    if (p->vertex(vNum) != v) {
                         std::ostringstream msg;
                         msg << tri->label() << ", vertex " << i << ": "
                             << "link does not map 4 -> vertex correctly.";
                         CPPUNIT_FAIL(msg.str());
                     }
-                    if (perm[0] != p->getTetrahedronMapping(vNum)[0] ||
-                            perm[1] != p->getTetrahedronMapping(vNum)[1] ||
-                            perm[2] != p->getTetrahedronMapping(vNum)[2] ||
-                            perm[3] != p->getTetrahedronMapping(vNum)[3]) {
+                    if (perm[0] != p->tetrahedronMapping(vNum)[0] ||
+                            perm[1] != p->tetrahedronMapping(vNum)[1] ||
+                            perm[2] != p->tetrahedronMapping(vNum)[2] ||
+                            perm[3] != p->tetrahedronMapping(vNum)[3]) {
                         std::ostringstream msg;
                         msg << tri->label() << ", vertex " << i << ": "
                             << "link does not map 0,1,2,3 -> opposite "
@@ -1504,7 +1504,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                         CPPUNIT_FAIL(msg.str());
                     }
                     for (k = 0; k < 4; ++k) {
-                        t = link->getTetrahedron(j);
+                        t = link->tetrahedron(j);
                         adj = t->adjacentTetrahedron(k);
                         if (adj) {
                             if (! p->adjacentPentachoron(perm[k])) {
@@ -1514,7 +1514,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                                     << "link has extra adjacent tetrahedron.";
                                 CPPUNIT_FAIL(msg.str());
                             } else if (p->adjacentPentachoron(perm[k]) !=
-                                    tri->getPentachoron(iso->pentImage(
+                                    tri->pentachoron(iso->pentImage(
                                     link->tetrahedronIndex(adj)))) {
                                 std::ostringstream msg;
                                 msg << tri->label()
@@ -1557,13 +1557,13 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
         static void verifyEdgeLinks(Dim4Triangulation* tri) {
             for (unsigned long i = 0; i < tri->countEdges(); ++i) {
-                Dim4Edge* e = tri->getEdge(i);
+                Dim4Edge* e = tri->edge(i);
                 Dim4Isomorphism* iso;
 
                 const Dim2Triangulation* link = e->buildLink();
                 Dim2Triangulation* link2 = e->buildLinkDetail(true, &iso);
 
-                if (link->countTriangles() != e->getDegree()) {
+                if (link->countTriangles() != e->degree()) {
                     std::ostringstream msg;
                     msg << tri->label() << ", edge " << i << ": "
                         << "link has incorrect number of triangles.";
@@ -1628,27 +1628,27 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 NPerm5 perm;
                 const NTriangulation* vLink;
                 for (j = 0; j < 2; ++j) {
-                    p = e->front().getPentachoron();
-                    perm = e->front().getVertices();
+                    p = e->front().pentachoron();
+                    perm = e->front().vertices();
 
                     // In the vertex link at the jth end of this edge,
                     // find the vertex that this edge projects down to.
-                    v = p->getVertex(perm[j]);
+                    v = p->vertex(perm[j]);
                     vLink = v->buildLink();
 
-                    for (k = 0; k < v->getDegree(); ++k)
-                        if (v->getEmbedding(k).getPentachoron() == p &&
-                                v->getEmbedding(k).getVertex() == perm[j])
+                    for (k = 0; k < v->degree(); ++k)
+                        if (v->embedding(k).pentachoron() == p &&
+                                v->embedding(k).vertex() == perm[j])
                             break;
-                    if (k == v->getDegree()) {
+                    if (k == v->degree()) {
                         std::ostringstream msg;
                         msg << tri->label() << ", edge " << i << ": "
                             << "misconstructed vertex link.";
                         CPPUNIT_FAIL(msg.str());
                     }
 
-                    NVertex* match = vLink->getTetrahedron(k)->getVertex(
-                        p->getTetrahedronMapping(perm[j]).preImageOf(
+                    NVertex* match = vLink->tetrahedron(k)->vertex(
+                        p->tetrahedronMapping(perm[j]).preImageOf(
                         perm[1-j]));
 
                     if (! e->hasBadIdentification()) {
@@ -1661,7 +1661,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                             CPPUNIT_FAIL(msg.str());
                         }
                     } else {
-                        if (match->getDegree() != 2 * e->getDegree()) {
+                        if (match->degree() != 2 * e->degree()) {
                             std::ostringstream msg;
                             msg << tri->label() << ", edge " << i << ": "
                                 << "mismatched degrees in edge vs vertex links.";
@@ -1675,21 +1675,21 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
                 const regina::Dim2Triangle *t, *adj;
                 unsigned eNum;
-                for (j = 0; j < e->getDegree(); ++j) {
-                    p = tri->getPentachoron(iso->pentImage(j));
+                for (j = 0; j < e->degree(); ++j) {
+                    p = tri->pentachoron(iso->pentImage(j));
                     perm = iso->facetPerm(j);
                     eNum = Dim4Edge::edgeNumber[perm[3]][perm[4]];
-                    if (p->getEdge(eNum) != e ||
-                            p->getEdgeMapping(eNum)[0] != perm[3] ||
-                            p->getEdgeMapping(eNum)[1] != perm[4]) {
+                    if (p->edge(eNum) != e ||
+                            p->edgeMapping(eNum)[0] != perm[3] ||
+                            p->edgeMapping(eNum)[1] != perm[4]) {
                         std::ostringstream msg;
                         msg << tri->label() << ", edge " << i << ": "
                             << "link does not map 3,4 -> edge correctly.";
                         CPPUNIT_FAIL(msg.str());
                     }
-                    if (perm[0] != p->getTriangleMapping(eNum)[0] ||
-                            perm[1] != p->getTriangleMapping(eNum)[1] ||
-                            perm[2] != p->getTriangleMapping(eNum)[2]) {
+                    if (perm[0] != p->triangleMapping(eNum)[0] ||
+                            perm[1] != p->triangleMapping(eNum)[1] ||
+                            perm[2] != p->triangleMapping(eNum)[2]) {
                         std::ostringstream msg;
                         msg << tri->label() << ", edge " << i << ": "
                             << "link does not map 0,1,2 -> opposite "
@@ -1697,7 +1697,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                         CPPUNIT_FAIL(msg.str());
                     }
                     for (k = 0; k < 3; ++k) {
-                        t = link->getTriangle(j);
+                        t = link->triangle(j);
                         adj = t->adjacentTriangle(k);
                         if (adj) {
                             if (! p->adjacentPentachoron(perm[k])) {
@@ -1707,7 +1707,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                                     << "link has extra adjacent triangle.";
                                 CPPUNIT_FAIL(msg.str());
                             } else if (p->adjacentPentachoron(perm[k]) !=
-                                    tri->getPentachoron(iso->pentImage(
+                                    tri->pentachoron(iso->pentImage(
                                     link->triangleIndex(adj)))) {
                                 std::ostringstream msg;
                                 msg << tri->label()
@@ -1760,8 +1760,8 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 // Should not truncate any vertices.
             } else {
                 for (unsigned i = 0; i < tri->countVertices(); ++i)
-                    if (tri->getVertex(i)->isIdeal() ||
-                            ! tri->getVertex(i)->isValid()) {
+                    if (tri->vertex(i)->isIdeal() ||
+                            ! tri->vertex(i)->isValid()) {
                         shouldTruncate = true;
                         break;
                     }

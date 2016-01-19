@@ -49,7 +49,7 @@ using regina::Face;
 using regina::FaceEmbedding;
 
 namespace {
-    boost::python::list Dim4Vertex_getEmbeddings_list(const Dim4Vertex* v) {
+    boost::python::list Dim4Vertex_embeddings_list(const Dim4Vertex* v) {
         boost::python::list ans;
         for (auto& emb : *v)
             ans.append(emb);
@@ -103,8 +103,8 @@ void addDim4Vertex() {
     class_<Face<4, 0>, std::auto_ptr<Face<4, 0>>, boost::noncopyable>
             ("Face4_0", no_init)
         .def("index", &Dim4Vertex::index)
-        .def("embeddings", Dim4Vertex_getEmbeddings_list)
-        .def("getEmbeddings", Dim4Vertex_getEmbeddings_list)
+        .def("embeddings", Dim4Vertex_embeddings_list)
+        .def("getEmbeddings", Dim4Vertex_embeddings_list)
         .def("embedding", &Dim4Vertex::embedding,
             return_internal_reference<>())
         .def("getEmbedding", &Dim4Vertex::getEmbedding,
