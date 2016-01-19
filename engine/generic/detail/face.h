@@ -1209,6 +1209,9 @@ inline void FaceStorage<dim, codim>::push_back(
     embeddings_.push_back(emb);
 }
 
+// We hid the specialisation FaceStorage<dim, 1> from doxygen, so hide
+// its implementation as well.
+#ifndef __DOXYGEN
 template <int dim>
 inline FaceStorage<dim, 1>::FaceStorage() : nEmb_(0) {
 }
@@ -1222,6 +1225,7 @@ template <int dim>
 inline size_t FaceStorage<dim, 1>::getDegree() const {
     return nEmb_;
 }
+#endif // ! __DOXYGEN
 
 template <int dim>
 inline const FaceEmbedding<dim, dim-1>& FaceStorage<dim, 1>::
@@ -1305,6 +1309,9 @@ inline const FaceEmbedding<dim, dim-2>& FaceStorage<dim, 2>::back() const {
     return embeddings_.back();
 }
 
+// We hid the specialisation FaceStorage<dim, 2> from doxygen, so hide
+// its implementation as well.
+#ifndef __DOXYGEN
 template <int dim>
 inline void FaceStorage<dim, 2>::push_front(
         const FaceEmbedding<dim, dim-2>& emb) {
@@ -1316,6 +1323,7 @@ inline void FaceStorage<dim, 2>::push_back(
         const FaceEmbedding<dim, dim-2>& emb) {
     embeddings_.push_back(emb);
 }
+#endif // ! __DOXYGEN
 
 // Inline functions for FaceValidity
 
