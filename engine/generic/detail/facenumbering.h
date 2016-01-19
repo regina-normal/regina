@@ -445,7 +445,16 @@ class FaceNumberingImpl<dim, 0, true> : public FaceNumberingAPI<dim, 0> {
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
         static NPerm<dim + 1> ordering(unsigned face) {
-            return NPerm<dim + 1>(face, 0);
+            int p[dim + 1];
+            p[0] = face;
+
+            int i;
+            for (i = 0; i < face; ++i)
+                p[dim - i] = i;
+            for (i = face + 1; i <= dim; ++i)
+                p[dim - i + 1] = i;
+
+            return NPerm<dim + 1>(p);
         }
 
         static unsigned faceNumber(NPerm<dim + 1> vertices) {
