@@ -250,7 +250,8 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             // implementation of ordering() for high-dimensional faces
             // calls this function and reverses the permutation.
 
-            // This implementation runs in linear time in dim (TODO: check)
+            // This implementation runs in linear time in dim (assuming binomial
+            // coefficients are precomputed)
             int perm[dim + 1];
             unsigned val;
 
@@ -278,7 +279,8 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
 
             unsigned k = subdim+1;
             unsigned max = dim;
-            unsigned done, pos, idx, i;
+            unsigned done, pos, idx;
+            int i;
 
             while (remaining > 0) {
               done = 0;
@@ -291,10 +293,7 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
                 if (val <= remaining) {
                   k--;
                   perm[subdim-k] = dim-max;
-                  //printf("new element: %u\n",perm[k]);
-
                   remaining = remaining - val;
-                  //printf("remaining: %u\n",remaining);
                   done = 1;
                 }
                 max--;
@@ -310,7 +309,6 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             idx = subdim+1;
             done = 0;
             for (i=dim; i>=0; i--) {
-              //printf("%u %u: perm[%u] = %u, pos: %u\n",dim,subdim,idx,i,pos);
               if (done == 0 && perm[pos] == i) {
                 if (pos>0) {
                   pos--;
@@ -319,18 +317,10 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
                 }
                 continue;
               }
-              //printf("pos: %u\n",pos);
               perm[idx] = i;
               idx++;
             }
 
-            printf("%u %u: %u =0? %u =0? %u =%u?\n",dim,subdim,i,pos,idx,dim);
-            for (i=0; i<=dim; i++) {
-              printf("%u ",perm[i]);
-            }
-            printf("\n");
-
-            // So far "perm" lists the vertices of the face in increasing order
             return NPerm<dim + 1>(perm);
         }
 
@@ -338,7 +328,8 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             // We can assume here that we are numbering faces in forward
             // lexicographical order (i.e., the face dimension subdim is small).
 
-            // This implementation runs in linear time in subdim (TODO: check)
+            // This implementation runs in linear time in subdim (assuming 
+            // binomial coefficients are precomputed)
 
             // IDEA: use the combinatorial number system which associates 
             //       numbers face = 0, 1, .... , binom(dim+1,subdim+1)-1 
