@@ -310,7 +310,7 @@ void NMarkedAbelianGroup::writeTextShort(std::ostream& out) const {
  * this routine returns the index-th free generator of the
  * ker(M)/img(N) in Z^l.
  */
-std::vector<NLargeInteger> NMarkedAbelianGroup::getFreeRep(unsigned long index)
+std::vector<NLargeInteger> NMarkedAbelianGroup::freeRep(unsigned long index)
         const {
     static const std::vector<NLargeInteger> nullvec;
     if (index >= snfrank) return nullvec;
@@ -338,7 +338,7 @@ std::vector<NLargeInteger> NMarkedAbelianGroup::getFreeRep(unsigned long index)
  * this routine returns the index-th torsion generator of the
  * ker(M)/img(N) in Z^l.
  */
-std::vector<NLargeInteger> NMarkedAbelianGroup::getTorsionRep(
+std::vector<NLargeInteger> NMarkedAbelianGroup::torsionRep(
         unsigned long index) const {
     static const std::vector<NLargeInteger> nullvec;
     if (index >= ifNum) return nullvec;
@@ -726,7 +726,7 @@ std::unique_ptr<NHomMarkedAbelianGroup> NMarkedAbelianGroup::torsionInclusion()
         const {
     NMatrixInt iM( rankCC(), countInvariantFactors() );
     for (unsigned long j=0; j<iM.columns(); j++) {
-        std::vector<NLargeInteger> jtor( getTorsionRep(j) );
+        std::vector<NLargeInteger> jtor( torsionRep(j) );
         for (unsigned long i=0; i<iM.rows(); i++)
             iM.entry(i,j) = jtor[i];
     }
@@ -874,8 +874,8 @@ void NHomMarkedAbelianGroup::computeReducedMatrix()
     {
      std::vector<NLargeInteger> colV(
       (j<domain_.countInvariantFactors()) ?
-       domain_.getTorsionRep(j) :
-       domain_.getFreeRep(j-domain_.countInvariantFactors()) );
+       domain_.torsionRep(j) :
+       domain_.freeRep(j-domain_.countInvariantFactors()) );
      std::vector<NLargeInteger> icv( matrix.rows(), NLargeInteger::zero);
      for (unsigned long i=0; i<icv.size(); i++) 
       for (unsigned long k=0; k<matrix.columns(); k++)
@@ -1105,7 +1105,7 @@ std::unique_ptr<NHomMarkedAbelianGroup> NHomMarkedAbelianGroup::torsionSubgroup(
     for (unsigned long j=0; j<domain_.countInvariantFactors(); j++) {
         // std::vector<NLargeInteger> in range's snfRep coords
         std::vector<NLargeInteger> temp(range_.snfRep(evalCC(
-            domain_.getTorsionRep(j))));
+            domain_.torsionRep(j))));
         for (unsigned long i=0; i<range_.countInvariantFactors(); i++)
             mat.entry(i,j) = temp[i];
     }

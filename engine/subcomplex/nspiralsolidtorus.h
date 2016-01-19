@@ -101,7 +101,7 @@ class REGINA_API NSpiralSolidTorus : public NStandardTriangulation {
             /**< The number of tetrahedra in this spiralled solid torus. */
         NTetrahedron** tet;
             /**< The tetrahedra that make up this spiralled solid torus. */
-        NPerm4* vertexRoles;
+        NPerm4* vertexRoles_;
             /**< For tetrahedron \a i, <tt>vertexRoles[i]</tt> is a
                  permutation p chosen so that vertices A, B, C and D above
                  correspond to vertices p[0], p[1], p[2] and p[3]. */
@@ -143,6 +143,14 @@ class REGINA_API NSpiralSolidTorus : public NStandardTriangulation {
          * be between 0 and size()-1 inclusive.
          * @return the requested tetrahedron.
          */
+        NTetrahedron* tetrahedron(size_t index) const;
+        /**
+         * Deprecated routine that returns the requested tetrahedron in this
+         * spiralled solid torus.
+         *
+         * \deprecated This routine has been renamed to tetrahedron().
+         * See the tetrahedron() documentation for further details.
+         */
         NTetrahedron* getTetrahedron(size_t index) const;
 
         /**
@@ -168,6 +176,15 @@ class REGINA_API NSpiralSolidTorus : public NStandardTriangulation {
          * to examine; this must be between 0 and size()-1 inclusive.
          * @return a permutation representing the roles of the vertices
          * of the requested tetrahedron.
+         */
+        NPerm4 vertexRoles(size_t index) const;
+        /**
+         * Deprecated routine that returns a permutation represeting the role
+         * that each vertex of the requested tetrahedron plays in the solid
+         * torus.
+         *
+         * \deprecated This routine has been renamed to vertexRoles().
+         * See the vertexRoles() documentation for further details.
          */
         NPerm4 getVertexRoles(size_t index) const;
 
@@ -203,7 +220,7 @@ class REGINA_API NSpiralSolidTorus : public NStandardTriangulation {
          *
          * Tetrahedron 0 in the spiralled solid torus will be the
          * tetrahedron with the lowest index in the triangulation, and
-         * under permutation <tt>getVertexRoles(0)</tt> the image of 0
+         * under permutation <tt>vertexRoles(0)</tt> the image of 0
          * will be less than the image of 3.
          *
          * @param tri the triangulation in which this solid torus lives.
@@ -236,8 +253,8 @@ class REGINA_API NSpiralSolidTorus : public NStandardTriangulation {
          * @param tet the tetrahedron to examine.
          * @param useVertexRoles a permutation describing the role each
          * tetrahedron vertex must play in the solid torus; this must be
-         * in the same format as the permutation returned by
-         * getVertexRoles().
+         * in the same format as the permutation returned by vertexRoles().
+         *
          * @return a newly created structure containing details of the
          * solid torus with the given tetrahedron as tetrahedron 0, or
          * \c null if the given tetrahedron is not part of a spiralled
@@ -246,8 +263,8 @@ class REGINA_API NSpiralSolidTorus : public NStandardTriangulation {
         static NSpiralSolidTorus* formsSpiralSolidTorus(NTetrahedron* tet,
                 NPerm4 useVertexRoles);
 
-        NManifold* getManifold() const;
-        NAbelianGroup* getHomologyH1() const;
+        NManifold* manifold() const;
+        NAbelianGroup* homology() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
@@ -270,12 +287,12 @@ class REGINA_API NSpiralSolidTorus : public NStandardTriangulation {
 
 inline NSpiralSolidTorus::NSpiralSolidTorus(size_t newNTet) :
         nTet(newNTet), tet(new NTetrahedron*[newNTet]),
-        vertexRoles(new NPerm4[newNTet]) {
+        vertexRoles_(new NPerm4[newNTet]) {
 }
 
 inline NSpiralSolidTorus::~NSpiralSolidTorus() {
     delete[] tet;
-    delete[] vertexRoles;
+    delete[] vertexRoles_;
 }
 
 inline size_t NSpiralSolidTorus::size() const {
@@ -286,11 +303,17 @@ inline size_t NSpiralSolidTorus::getNumberOfTetrahedra() const {
     return nTet;
 }
 
+inline NTetrahedron* NSpiralSolidTorus::tetrahedron(size_t index) const {
+    return tet[index];
+}
 inline NTetrahedron* NSpiralSolidTorus::getTetrahedron(size_t index) const {
     return tet[index];
 }
+inline NPerm4 NSpiralSolidTorus::vertexRoles(size_t index) const {
+    return vertexRoles_[index];
+}
 inline NPerm4 NSpiralSolidTorus::getVertexRoles(size_t index) const {
-    return vertexRoles[index];
+    return vertexRoles_[index];
 }
 
 inline std::ostream& NSpiralSolidTorus::writeName(std::ostream& out) const {

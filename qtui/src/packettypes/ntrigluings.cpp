@@ -959,7 +959,7 @@ void NTriGluingsUI::vertexLinks() {
             regina::Dim2Triangulation* ans = new regina::Dim2Triangulation(
                 *chosen->buildLink());
             ans->setPacketLabel(tr("Link of vertex %1").arg(
-                tri->vertexIndex(chosen)).toUtf8().constData());
+                chosen->index()).toUtf8().constData());
             tri->insertChildLast(ans);
             enclosingPane->getMainWindow()->packetView(ans, true, true);
         }

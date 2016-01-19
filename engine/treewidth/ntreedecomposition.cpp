@@ -55,9 +55,9 @@ template REGINA_API NTreeDecomposition::NTreeDecomposition(
 
 // Instantiate templates for common types:
 template REGINA_API NTreeDecomposition::NTreeDecomposition(
-    unsigned, bool const**, TreeDecompositionAlg);
+    unsigned, bool const** const, TreeDecompositionAlg);
 template REGINA_API NTreeDecomposition::NTreeDecomposition(
-    unsigned, int const**, TreeDecompositionAlg);
+    unsigned, int const** const, TreeDecompositionAlg);
 
 bool NTreeBag::contains(int element) const {
     return std::binary_search(elements_, elements_ + size_, element);

@@ -274,7 +274,7 @@ class REGINA_API Triangulation<3> :
          *
          * @param copy the triangulation to copy.
          */
-        Triangulation(const Triangulation& copy);
+        Triangulation(const Triangulation<3>& copy);
         /**
          * "Magic" constructor that tries to find some way to interpret
          * the given string as a triangulation.

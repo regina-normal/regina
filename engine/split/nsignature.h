@@ -202,7 +202,7 @@ class REGINA_API NSignature :
          * cycle or negative to use a reversed cycle.
          * @param relabel1 allows the first cycle to be transformed by
          * relabelling; this parameter must be an array of size at least
-         * <tt>sig1.getOrder()</tt> mapping old labels 0,1,...
+         * <tt>sig1.order()</tt> mapping old labels 0,1,...
          * (representing letters A,B,...) to new labels (which must also be
          * 0,1,..., possibly in a different order).  This parameter may
          * be 0 if no relabelling is to be used.
@@ -220,7 +220,7 @@ class REGINA_API NSignature :
          * cycle or negative to use a reversed cycle.
          * @param relabel2 allows the second cycle to be transformed by
          * relabelling; this parameter must be an array of size at least
-         * <tt>sig2.getOrder()</tt> mapping old labels 0,1,...
+         * <tt>sig2.order()</tt> mapping old labels 0,1,...
          * (representing letters A,B,...) to new labels (which must also be
          * 0,1,..., possibly in a different order).  This parameter may
          * be 0 if no relabelling is to be used.

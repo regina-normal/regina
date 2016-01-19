@@ -81,8 +81,8 @@ const NGroupPresentation& NTriangulation::fundamentalGroup() const {
                 triangle = currTet->getTriangle(currTetFace);
                 triGenIndex = genIndex[triangleIndex(triangle)];
                 if (triGenIndex >= 0) {
-                    if ((triangle->getEmbedding(0).getTetrahedron() == currTet) &&
-                            (triangle->getEmbedding(0).getTriangle() == currTetFace))
+                    if ((triangle->front().tetrahedron() == currTet) &&
+                            (triangle->front().triangle() == currTetFace))
                         rel->addTermLast(triGenIndex, 1);
                     else
                         rel->addTermLast(triGenIndex, -1);

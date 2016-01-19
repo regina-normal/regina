@@ -935,6 +935,8 @@ inline int NPerm<4>::SnIndex() const {
     return S4Index();
 }
 
+// Hide specialisations from doxygen, since it cannot handle them.
+#ifndef __DOXYGEN
 template <>
 inline NPerm<4> NPerm<4>::extend(NPerm<2> p) {
     return NPerm<4>(static_cast<Code>(p.permCode() == 0 ? 0 : 7));
@@ -949,6 +951,7 @@ inline NPerm<4> NPerm<4>::extend(NPerm<3> p) {
         default : return NPerm<4>(static_cast<Code>(3 * p.permCode()));
     }
 }
+#endif // ! __DOXYGEN
 
 } // namespace regina
 

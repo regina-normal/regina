@@ -24,7 +24,7 @@ def process(tri):
 
     manifold = regina.NSnapPeaCensusManifold(section, index)
     con = manifold.construct()
-    hom = manifold.getHomologyH1()
+    hom = manifold.homology()
 
     if con == None:
         print 'ERROR: No construction'

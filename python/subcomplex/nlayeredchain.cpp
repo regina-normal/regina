@@ -45,12 +45,19 @@ void addNLayeredChain() {
             std::auto_ptr<NLayeredChain>, boost::noncopyable>
             ("NLayeredChain", init<regina::NTetrahedron*, regina::NPerm4>())
         .def(init<const NLayeredChain&>())
+        .def("bottom", &NLayeredChain::bottom,
+            return_value_policy<reference_existing_object>())
         .def("getBottom", &NLayeredChain::getBottom,
+            return_value_policy<reference_existing_object>())
+        .def("top", &NLayeredChain::top,
             return_value_policy<reference_existing_object>())
         .def("getTop", &NLayeredChain::getTop,
             return_value_policy<reference_existing_object>())
+        .def("index", &NLayeredChain::index)
         .def("getIndex", &NLayeredChain::getIndex)
+        .def("bottomVertexRoles", &NLayeredChain::bottomVertexRoles)
         .def("getBottomVertexRoles", &NLayeredChain::getBottomVertexRoles)
+        .def("topVertexRoles", &NLayeredChain::topVertexRoles)
         .def("getTopVertexRoles", &NLayeredChain::getTopVertexRoles)
         .def("extendAbove", &NLayeredChain::extendAbove)
         .def("extendBelow", &NLayeredChain::extendBelow)

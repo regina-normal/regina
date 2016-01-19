@@ -46,27 +46,22 @@
  * @{
  */
 
-/*! \page stddim Standard dimensions
- *
- *  Whilst Regina was originally designed for working with 3-manifolds,
- *  it offers varying levels of support for manifolds and triangulations
- *  in other dimensions.
- *
- *  Regina's <i>standard dimensions</i> are those for which it offers
- *  rich support (as opposed to basic support).
- *  For the current release, the <b>standard dimensions are 2 and 3</b>.
- *
- *  This list is expected to grow in future releases.
- */
+namespace regina {
 
 /**
  * Indicates whether the given dimension is one of Regina's
- * \ref stddim "standard dimensions", which offer significantly richer
- * functionality for triangulations than generic dimensions.
+ * \ref stddim "standard dimensions".
+ * Standard dimensions offer significantly richer functionality for
+ * triangulations than generic dimensions.
+ *
+ * @param dim the dimension in question.
+ * @return \c true if and only if \a dim is one of Regina's standard dimensions.
  */
 constexpr bool standardDim(int dim) {
     return (dim == 2 || dim == 3);
 }
+
+} // namespace regina
 
 /**
  * A synonym for \c inline, used in some special cases to avoid

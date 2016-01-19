@@ -1180,12 +1180,12 @@ NTriangulation* NNormalSurface::cutAlong() const {
         if (f->isBoundary())
             continue;
 
-        tet0 = f->getEmbedding(0).tetrahedron()->markedIndex();
-        tet1 = f->getEmbedding(1).tetrahedron()->markedIndex();
-        face0 = f->getEmbedding(0).triangle();
-        face1 = f->getEmbedding(1).triangle();
+        tet0 = f->embedding(0).tetrahedron()->markedIndex();
+        tet1 = f->embedding(1).tetrahedron()->markedIndex();
+        face0 = f->embedding(0).triangle();
+        face1 = f->embedding(1).triangle();
 
-        gluing = f->getEmbedding(0).getTetrahedron()->adjacentGluing(face0);
+        gluing = f->front().getTetrahedron()->adjacentGluing(face0);
 
         for (fromVertex0 = 0; fromVertex0 < 4; ++fromVertex0) {
             if (fromVertex0 == face0)

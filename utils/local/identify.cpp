@@ -94,16 +94,16 @@ void process(NTriangulation* t) {
     NStandardTriangulation* s =
         NStandardTriangulation::isStandardTriangulation(t);
     if (s) {
-        std::cout << s->getName();
+        std::cout << s->name();
         trisOk++;
 
-        NManifold* m = s->getManifold();
+        NManifold* m = s->manifold();
         if (m) {
-            std::string manifold = m->getName();
+            std::string manifold = m->name();
             std::cout << "  ==  " << manifold;
             mfdsOk++;
 
-            std::string structure = m->getStructure();
+            std::string structure = m->structure();
             if ((! structure.empty()) && (structure != manifold))
                 std::cout << "  ==  " << structure;
 

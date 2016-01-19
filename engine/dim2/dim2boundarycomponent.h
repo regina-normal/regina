@@ -91,7 +91,7 @@ class REGINA_API Dim2BoundaryComponent :
          *
          * @return the index of this boundary component vertex.
          */
-        unsigned long index() const;
+        size_t index() const;
 
         /**
          * Returns the number of <i>subdim</i>-faces in this boundary component.
@@ -184,10 +184,12 @@ namespace regina {
 inline Dim2BoundaryComponent::Dim2BoundaryComponent() {
 }
 
-inline unsigned long Dim2BoundaryComponent::index() const {
+inline size_t Dim2BoundaryComponent::index() const {
     return markedIndex();
 }
 
+// Hide specialisations from doxygen, since it cannot handle them.
+#ifndef __DOXYGEN
 template <>
 inline size_t Dim2BoundaryComponent::countFaces<1>() const {
     return edges_.size();
@@ -207,6 +209,7 @@ template <>
 inline Dim2Vertex* Dim2BoundaryComponent::face<0>(size_t index) const {
     return vertices_[index];
 }
+#endif // ! __DOXYGEN
 
 inline Dim2Component* Dim2BoundaryComponent::component() const {
     return vertices_.front()->component();

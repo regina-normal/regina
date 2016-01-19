@@ -32,7 +32,7 @@
 
 /* end stub */
 
-/*! \file detail/generic/simplex.h
+/*! \file generic/detail/simplex.h
  *  \brief Implementation details for top-dimensional simplices in a
  *  triangulation.
  */
@@ -80,7 +80,13 @@ template <int> class TriangulationBase;
 template <int dim, int subdim>
 class SimplexFaces {
     public:
+        /**
+         * Explicitly disable the copy constructor.
+         */
         SimplexFaces(const SimplexFaces&) = delete;
+        /**
+         * Explicitly disable the assignment operator.
+         */
         SimplexFaces& operator = (const SimplexFaces&) = delete;
 
     protected:
@@ -198,6 +204,15 @@ class SimplexBase :
          *
          * @return the description of this simplex, or the empty string
          * if no description is stored.
+         */
+        const std::string& description() const;
+
+        /**
+         * Deprecated routine that returns the description associated with
+         * this simplex.
+         *
+         * \deprecated This routine has been renamed to description().
+         * See the description() documentation for further details.
          */
         const std::string& getDescription() const;
 
@@ -638,6 +653,11 @@ inline SimplexBase<dim>::SimplexBase(const std::string& desc,
         description_(desc), tri_(tri) {
     for (int i = 0; i <= dim; ++i)
         adj_[i] = 0;
+}
+
+template <int dim>
+inline const std::string& SimplexBase<dim>::description() const {
+    return description_;
 }
 
 template <int dim>

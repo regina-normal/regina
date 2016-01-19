@@ -32,7 +32,7 @@
 
 /* end stub */
 
-/*! \file detail/generic/facenumbering.h
+/*! \file generic/detail/facenumbering.h
  *  \brief Implementation details for describing how <i>subdim</i>-faces
  *  are numbered within a <i>dim</i>-dimensional simplex.
  */
@@ -42,6 +42,7 @@
 #define __FACENUMBERING_H_DETAIL
 #endif
 
+#include <algorithm>
 #include "regina-core.h"
 #include <algorithm>
 
@@ -238,6 +239,7 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             FaceNumberingImpl<dim - 1, subdim,
                 (dim >= 2 * (subdim + 1))>::nFaces;
 
+#ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
         static NPerm<dim + 1> ordering(unsigned face) {
             // We can assume here that we are numbering faces in forward
@@ -386,6 +388,7 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
                     return true;
             return false;
         }
+#endif // ! __DOXYGEN
 };
 
 template <int dim, int subdim>
@@ -406,6 +409,7 @@ class FaceNumberingImpl<dim, subdim, false> :
         static constexpr int nFaces =
             FaceNumberingImpl<dim, dim - subdim - 1, true>::nFaces;
 
+#ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
         static NPerm<dim + 1> ordering(unsigned face) {
             return FaceNumberingImpl<dim, dim - subdim - 1, true>::
@@ -421,6 +425,7 @@ class FaceNumberingImpl<dim, subdim, false> :
             return ! FaceNumberingImpl<dim, dim - subdim - 1, true>::
                 containsVertex(face, vertex);
         }
+#endif // ! __DOXYGEN
 };
 
 template <int dim>
@@ -435,6 +440,7 @@ class FaceNumberingImpl<dim, 0, true> : public FaceNumberingAPI<dim, 0> {
          */
         static constexpr int nFaces = dim + 1;
 
+#ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
         static NPerm<dim + 1> ordering(unsigned face) {
             return NPerm<dim + 1>(face, 0);
@@ -447,6 +453,7 @@ class FaceNumberingImpl<dim, 0, true> : public FaceNumberingAPI<dim, 0> {
         static bool containsVertex(unsigned face, unsigned vertex) {
             return (face == vertex);
         }
+#endif // ! __DOXYGEN
 };
 
 template <>
@@ -457,6 +464,7 @@ class FaceNumberingImpl<1, 0, true> : public FaceNumberingAPI<1, 0> {
          */
         static constexpr int nFaces = 2;
 
+#ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
         static NPerm<2> ordering(unsigned face) {
             return NPerm2::fromPermCode(face);
@@ -469,6 +477,7 @@ class FaceNumberingImpl<1, 0, true> : public FaceNumberingAPI<1, 0> {
         static bool containsVertex(unsigned face, unsigned vertex) {
             return (face == vertex);
         }
+#endif // ! __DOXYGEN
 };
 
 template <>
@@ -479,6 +488,7 @@ class FaceNumberingImpl<2, 0, true> : public FaceNumberingAPI<2, 0> {
          */
         static constexpr int nFaces = 3;
 
+#ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
         static NPerm<3> ordering(unsigned face) {
             return NPerm<3>(face, (face + 1) % 3, (face + 2) % 3);
@@ -491,6 +501,7 @@ class FaceNumberingImpl<2, 0, true> : public FaceNumberingAPI<2, 0> {
         static bool containsVertex(unsigned face, unsigned vertex) {
             return (face == vertex);
         }
+#endif // ! __DOXYGEN
 };
 
 template <>
@@ -505,6 +516,7 @@ class FaceNumberingImpl<2, 1, false> : public FaceNumberingAPI<2, 1> {
          */
         static constexpr int nFaces = 3;
 
+#ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
         static NPerm<3> ordering(unsigned face) {
             return ordering_[face];
@@ -517,6 +529,7 @@ class FaceNumberingImpl<2, 1, false> : public FaceNumberingAPI<2, 1> {
         static bool containsVertex(unsigned face, unsigned vertex) {
             return (face != vertex);
         }
+#endif // ! __DOXYGEN
 };
 
 template <>
@@ -527,6 +540,7 @@ class FaceNumberingImpl<3, 0, true> : public FaceNumberingAPI<3, 0> {
          */
         static constexpr int nFaces = 4;
 
+#ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
         static NPerm<4> ordering(unsigned face) {
             return (face % 2 == 0 ?
@@ -541,6 +555,7 @@ class FaceNumberingImpl<3, 0, true> : public FaceNumberingAPI<3, 0> {
         static bool containsVertex(unsigned face, unsigned vertex) {
             return (face == vertex);
         }
+#endif // ! __DOXYGEN
 };
 
 template <>
@@ -591,6 +606,7 @@ class FaceNumberingImpl<3, 1, true> : public FaceNumberingAPI<3, 1> {
          */
         static constexpr int nFaces = 6;
 
+#ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
         static NPerm<4> ordering(unsigned face) {
             return ordering_[face];
@@ -604,6 +620,7 @@ class FaceNumberingImpl<3, 1, true> : public FaceNumberingAPI<3, 1> {
             return (vertex == edgeVertex[face][0] ||
                     vertex == edgeVertex[face][1]);
         }
+#endif // ! __DOXYGEN
 };
 
 template <>
@@ -618,6 +635,7 @@ class FaceNumberingImpl<3, 2, false> : public FaceNumberingAPI<3, 2> {
          */
         static constexpr int nFaces = 4;
 
+#ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
         static NPerm<4> ordering(unsigned face) {
             return ordering_[face];
@@ -630,6 +648,7 @@ class FaceNumberingImpl<3, 2, false> : public FaceNumberingAPI<3, 2> {
         static bool containsVertex(unsigned face, unsigned vertex) {
             return (face != vertex);
         }
+#endif // ! __DOXYGEN
 };
 
 template <>
@@ -640,6 +659,7 @@ class FaceNumberingImpl<4, 0, true> : public FaceNumberingAPI<4, 0> {
          */
         static constexpr int nFaces = 5;
 
+#ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
         static NPerm<5> ordering(unsigned face) {
             return NPerm5(face, (face + 1) % 5, (face + 2) % 5,
@@ -653,6 +673,7 @@ class FaceNumberingImpl<4, 0, true> : public FaceNumberingAPI<4, 0> {
         static bool containsVertex(unsigned face, unsigned vertex) {
             return (face == vertex);
         }
+#endif // ! __DOXYGEN
 };
 
 template <>
@@ -703,6 +724,7 @@ class FaceNumberingImpl<4, 1, true> : public FaceNumberingAPI<4, 1> {
          */
         static constexpr int nFaces = 10;
 
+#ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
         static NPerm<5> ordering(unsigned face) {
             return ordering_[face];
@@ -716,6 +738,7 @@ class FaceNumberingImpl<4, 1, true> : public FaceNumberingAPI<4, 1> {
             return (vertex == edgeVertex[face][0] ||
                     vertex == edgeVertex[face][1]);
         }
+#endif // ! __DOXYGEN
 };
 
 template <>
@@ -767,6 +790,7 @@ class FaceNumberingImpl<4, 2, false> : public FaceNumberingAPI<4, 2> {
          */
         static constexpr int nFaces = 10;
 
+#ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
         static NPerm<5> ordering(unsigned face) {
             return ordering_[face];
@@ -781,6 +805,7 @@ class FaceNumberingImpl<4, 2, false> : public FaceNumberingAPI<4, 2> {
                     vertex == triangleVertex[face][1] ||
                     vertex == triangleVertex[face][2]);
         }
+#endif // ! __DOXYGEN
 };
 
 template <>
@@ -795,6 +820,7 @@ class FaceNumberingImpl<4, 3, false> : public FaceNumberingAPI<4, 3> {
          */
         static constexpr int nFaces = 5;
 
+#ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
         static NPerm<5> ordering(unsigned face) {
             return ordering_[face];
@@ -807,6 +833,7 @@ class FaceNumberingImpl<4, 3, false> : public FaceNumberingAPI<4, 3> {
         static bool containsVertex(unsigned face, unsigned vertex) {
             return (face != vertex);
         }
+#endif // ! __DOXYGEN
 };
 
 } } // namespace regina::detail

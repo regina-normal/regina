@@ -438,6 +438,14 @@ class REGINA_API NRational {
          *
          * @author Ryan Budney
          */
+        std::string TeX() const;
+        /**
+         * Deprecated routine that returns this rational as written using TeX
+         * formatting.
+         *
+         * \deprecated This routine has been renamed to TeX().
+         * See the TeX() documentation for further details.
+         */
         std::string getTeX() const;
 
         /**
@@ -580,6 +588,10 @@ inline NInteger NRational::getNumerator() const {
 
 inline NInteger NRational::getDenominator() const {
     return denominator();
+}
+
+inline std::string NRational::getTeX() const {
+    return TeX();
 }
 
 inline bool NRational::operator <= (const NRational& compare) const {

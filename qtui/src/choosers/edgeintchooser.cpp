@@ -86,38 +86,37 @@ void EdgeIntChooser::select(regina::NEdge* option, int arg) {
 }
 
 QString EdgeIntChooser::description(regina::NEdge* option, int arg) {
-    if (option->getDegree() == 1) {
-        const regina::NEdgeEmbedding& e0 = option->getEmbedding(0);
+    if (option->degree() == 1) {
+        const regina::NEdgeEmbedding& e0 = option->embedding(0);
         return trUtf8("Edge %1 [%2 %3] — %4 (%5)")
-            .arg(tri_->edgeIndex(option))
+            .arg(option->index())
             .arg(argDesc_)
             .arg(arg)
-            .arg(tri_->tetrahedronIndex(e0.getTetrahedron()))
-            .arg(e0.getVertices().trunc2().c_str());
+            .arg(e0.tetrahedron()->index())
+            .arg(e0.vertices().trunc2().c_str());
     } else {
-        const regina::NEdgeEmbedding& e0 = option->getEmbedding(0);
-        const regina::NEdgeEmbedding& e1 = option->getEmbedding(1);
+        const regina::NEdgeEmbedding& e0 = option->embedding(0);
+        const regina::NEdgeEmbedding& e1 = option->embedding(1);
         QString base;
-        if (option->getDegree() == 2)
+        if (option->degree() == 2)
             base = trUtf8("Edge %1 [%2 %3] — %4 (%5), %6 (%7)");
         else
             base = trUtf8("Edge %1 [%2 %3] — %4 (%5), %6 (%7), ...");
         return base
-                .arg(tri_->edgeIndex(option))
+                .arg(option->index())
                 .arg(argDesc_)
                 .arg(arg)
-                .arg(tri_->tetrahedronIndex(e0.getTetrahedron()))
-                .arg(e0.getVertices().trunc2().c_str())
-                .arg(tri_->tetrahedronIndex(e1.getTetrahedron()))
-                .arg(e1.getVertices().trunc2().c_str());
+                .arg(e0.tetrahedron()->index())
+                .arg(e0.vertices().trunc2().c_str())
+                .arg(e1.tetrahedron()->index())
+                .arg(e1.vertices().trunc2().c_str());
     }
 }
 
 void EdgeIntChooser::fill() {
     regina::NTriangulation::EdgeIterator it;
     int i;
-    for (it = tri_->getEdges().begin();
-            it != tri_->getEdges().end(); ++it)
+    for (it = tri_->edges().begin(); it != tri_->edges().end(); ++it)
         for (i = argMin_; i <= argMax_; ++i)
             if ((! filter_) || (*filter_)(*it, i)) {
                 addItem(description(*it, i));

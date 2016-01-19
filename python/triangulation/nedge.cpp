@@ -54,7 +54,7 @@ namespace {
     GlobalArray2D<int> NEdge_edgeNumber(NEdge::edgeNumber, 4);
     GlobalArray2D<int> NEdge_edgeVertex(NEdge::edgeVertex, 6);
 
-    boost::python::list edge_getEmbeddings_list(const NEdge* e) {
+    boost::python::list edge_embeddings_list(const NEdge* e) {
         boost::python::list ans;
         for (auto& emb: *e)
             ans.append(emb);
@@ -93,8 +93,8 @@ void addNEdge() {
         scope s = class_<Face<3, 1>, std::auto_ptr<Face<3, 1>>,
                 boost::noncopyable>("Face3_1", no_init)
             .def("index", &NEdge::index)
-            .def("embeddings", edge_getEmbeddings_list)
-            .def("getEmbeddings", edge_getEmbeddings_list)
+            .def("embeddings", edge_embeddings_list)
+            .def("getEmbeddings", edge_embeddings_list)
             .def("embedding", &NEdge::embedding,
                 return_internal_reference<>())
             .def("getEmbedding", &NEdge::getEmbedding,

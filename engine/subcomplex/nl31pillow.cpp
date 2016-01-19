@@ -61,7 +61,7 @@ NL31Pillow* NL31Pillow::isL31Pillow(const NComponent* comp) {
 
     // Verify that the vertices have degrees 2 and 6.
     int internalVertex;
-    unsigned long deg0 = comp->getVertex(0)->getDegree();
+    unsigned long deg0 = comp->getVertex(0)->degree();
     if (deg0 == 2)
         internalVertex = 0;
     else if (deg0 == 6)
@@ -89,7 +89,7 @@ NL31Pillow* NL31Pillow::isL31Pillow(const NComponent* comp) {
 
     for (int i = 0; i < 2; i++) {
         const NVertexEmbedding& emb = comp->getVertex(internalVertex)->
-            getEmbedding(i);
+            embedding(i);
         if (emb.getTetrahedron() == tet[0])
             ans->interior[0] = emb.getVertex();
         else
@@ -99,11 +99,11 @@ NL31Pillow* NL31Pillow::isL31Pillow(const NComponent* comp) {
     return ans;
 }
 
-NManifold* NL31Pillow::getManifold() const {
+NManifold* NL31Pillow::manifold() const {
     return new NLensSpace(3, 1);
 }
 
-NAbelianGroup* NL31Pillow::getHomologyH1() const {
+NAbelianGroup* NL31Pillow::homology() const {
     NAbelianGroup* ans = new NAbelianGroup();
     ans->addTorsionElement(3);
     return ans;

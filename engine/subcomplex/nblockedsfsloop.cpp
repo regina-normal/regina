@@ -74,7 +74,7 @@ NBlockedSFSLoop::~NBlockedSFSLoop() {
         delete region_;
 }
 
-NManifold* NBlockedSFSLoop::getManifold() const {
+NManifold* NBlockedSFSLoop::manifold() const {
     NSFSpace* sfs = region_->createSFS(false);
     if (! sfs)
         return 0;
@@ -188,10 +188,10 @@ bool NBlockedSFSLoopSearcher::useStarterBlock(NSatBlock* starter) {
     NSatAnnulus layerTop;
     NMatrix2 layerToBdry1;
     while (true) {
-        layerTop.tet[0] = layering.getNewBoundaryTet(0);
-        layerTop.tet[1] = layering.getNewBoundaryTet(1);
-        layerTop.roles[0] = layering.getNewBoundaryRoles(0);
-        layerTop.roles[1] = layering.getNewBoundaryRoles(1);
+        layerTop.tet[0] = layering.newBoundaryTet(0);
+        layerTop.tet[1] = layering.newBoundaryTet(1);
+        layerTop.roles[0] = layering.newBoundaryRoles(0);
+        layerTop.roles[1] = layering.newBoundaryRoles(1);
 
         // Have we reached the second boundary?
         if (bdry1.isJoined(layerTop, layerToBdry1))
@@ -205,9 +205,9 @@ bool NBlockedSFSLoopSearcher::useStarterBlock(NSatBlock* starter) {
             return true;
         }
 
-        if (usedTets.find(layering.getNewBoundaryTet(0)) !=
+        if (usedTets.find(layering.newBoundaryTet(0)) !=
                 usedTets.end() ||
-                usedTets.find(layering.getNewBoundaryTet(1)) !=
+                usedTets.find(layering.newBoundaryTet(1)) !=
                 usedTets.end()) {
             // Gone too far -- we've looped back upon ourselves.
             delete region;
@@ -215,8 +215,8 @@ bool NBlockedSFSLoopSearcher::useStarterBlock(NSatBlock* starter) {
             return true;
         }
 
-        usedTets.insert(layering.getNewBoundaryTet(0));
-        usedTets.insert(layering.getNewBoundaryTet(1));
+        usedTets.insert(layering.newBoundaryTet(0));
+        usedTets.insert(layering.newBoundaryTet(1));
     }
 
     // This is it!  Build the matching matrix and stop searching.

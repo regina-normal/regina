@@ -114,7 +114,7 @@ class REGINA_API NBoundaryComponent :
          *
          * @return the index of this boundary component vertex.
          */
-        unsigned long index() const;
+        size_t index() const;
 
         /**
          * Returns the number of <i>subdim</i>-faces in this boundary component.
@@ -276,10 +276,12 @@ inline NBoundaryComponent::NBoundaryComponent(NVertex* idealVertex) {
     vertices_.push_back(idealVertex);
 }
 
-inline unsigned long NBoundaryComponent::index() const {
+inline size_t NBoundaryComponent::index() const {
     return markedIndex();
 }
 
+// Hide specialisations from doxygen, since it cannot handle them.
+#ifndef __DOXYGEN
 template <>
 inline size_t NBoundaryComponent::countFaces<2>() const {
     return triangles_.size();
@@ -309,6 +311,7 @@ template <>
 inline NVertex* NBoundaryComponent::face<0>(size_t index) const {
     return vertices_[index];
 }
+#endif // ! __DOXYGEN
 
 inline NComponent* NBoundaryComponent::component() const {
     // There may be no triangles, but there is always a vertex.

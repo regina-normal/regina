@@ -91,7 +91,7 @@ NTrivialTri* NTrivialTri::isTrivialTriangulation(const NComponent* comp) {
     unsigned long nEdges = comp->countEdges();
     unsigned long i;
     for (i = 0; i < nEdges; i++)
-        if (! comp->getEdge(i)->isValid())
+        if (! comp->edge(i)->isValid())
             return 0;
 
     // Test for the specific triangulations that we know about.
@@ -122,7 +122,7 @@ NTrivialTri* NTrivialTri::isTrivialTriangulation(const NComponent* comp) {
 
             long degree[4];
             for (i = 0; i < 4; i++)
-                degree[i] = comp->getEdge(i)->getDegree();
+                degree[i] = comp->edge(i)->degree();
             std::sort(degree, degree + 4);
 
             if (degree[0] == 2 && degree[1] == 4 && degree[2] == 6 &&
@@ -141,24 +141,24 @@ NTrivialTri* NTrivialTri::isTrivialTriangulation(const NComponent* comp) {
     return 0;
 }
 
-NManifold* NTrivialTri::getManifold() const {
-    if (type == SPHERE_4_VERTEX)
+NManifold* NTrivialTri::manifold() const {
+    if (type_ == SPHERE_4_VERTEX)
         return new NLensSpace(1, 0);
-    else if (type == BALL_3_VERTEX || type == BALL_4_VERTEX)
+    else if (type_ == BALL_3_VERTEX || type_ == BALL_4_VERTEX)
         return new NHandlebody(0, true);
-    else if (type == N2)
+    else if (type_ == N2)
         return new NSimpleSurfaceBundle(NSimpleSurfaceBundle::S2xS1_TWISTED);
-    else if (type == N3_1 || type == N3_2)
+    else if (type_ == N3_1 || type_ == N3_2)
         return new NSimpleSurfaceBundle(NSimpleSurfaceBundle::RP2xS1);
     return 0;
 }
 
-NAbelianGroup* NTrivialTri::getHomologyH1() const {
+NAbelianGroup* NTrivialTri::homology() const {
     NAbelianGroup* ans = new NAbelianGroup();
 
-    if (type == N2)
+    if (type_ == N2)
         ans->addRank();
-    else if (type == N3_1 || type == N3_2) {
+    else if (type_ == N3_1 || type_ == N3_2) {
         ans->addRank();
         ans->addTorsionElement(2);
     }
@@ -167,47 +167,47 @@ NAbelianGroup* NTrivialTri::getHomologyH1() const {
 }
 
 std::ostream& NTrivialTri::writeName(std::ostream& out) const {
-    if (type == SPHERE_4_VERTEX)
+    if (type_ == SPHERE_4_VERTEX)
         out << "S3 (4-vtx)";
-    else if (type == BALL_3_VERTEX)
+    else if (type_ == BALL_3_VERTEX)
         out << "B3 (3-vtx)";
-    else if (type == BALL_4_VERTEX)
+    else if (type_ == BALL_4_VERTEX)
         out << "B3 (4-vtx)";
-    else if (type == N2)
+    else if (type_ == N2)
         out << "N(2)";
-    else if (type == N3_1)
+    else if (type_ == N3_1)
         out << "N(3,1)";
-    else if (type == N3_2)
+    else if (type_ == N3_2)
         out << "N(3,2)";
     return out;
 }
 std::ostream& NTrivialTri::writeTeXName(std::ostream& out) const {
-    if (type == SPHERE_4_VERTEX)
+    if (type_ == SPHERE_4_VERTEX)
         out << "S^3_{v=4}";
-    else if (type == BALL_3_VERTEX)
+    else if (type_ == BALL_3_VERTEX)
         out << "B^3_{v=3}";
-    else if (type == BALL_4_VERTEX)
+    else if (type_ == BALL_4_VERTEX)
         out << "B^3_{v=4}";
-    else if (type == N2)
+    else if (type_ == N2)
         out << "N_{2}";
-    else if (type == N3_1)
+    else if (type_ == N3_1)
         out << "N_{3,1}";
-    else if (type == N3_2)
+    else if (type_ == N3_2)
         out << "N_{3,2}";
     return out;
 }
 void NTrivialTri::writeTextLong(std::ostream& out) const {
-    if (type == SPHERE_4_VERTEX)
+    if (type_ == SPHERE_4_VERTEX)
         out << "Two-tetrahedron four-vertex 3-sphere";
-    else if (type == BALL_3_VERTEX)
+    else if (type_ == BALL_3_VERTEX)
         out << "One-tetrahedron three-vertex ball";
-    else if (type == BALL_4_VERTEX)
+    else if (type_ == BALL_4_VERTEX)
         out << "One-tetrahedron four-vertex ball";
-    else if (type == N2)
+    else if (type_ == N2)
         out << "Non-orientable triangulation N(2)";
-    else if (type == N3_1)
+    else if (type_ == N3_1)
         out << "Non-orientable triangulation N(3,1)";
-    else if (type == N3_2)
+    else if (type_ == N3_2)
         out << "Non-orientable triangulation N(3,2)";
 }
 

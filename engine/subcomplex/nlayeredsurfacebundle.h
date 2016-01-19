@@ -74,7 +74,7 @@ class NTxICore;
  *
  * Given the parameters of the core <tt>T x I</tt> and the specific
  * layering, the monodromy for this torus bundle over the circle can be
- * calculated.  The getManifold() routine returns details of the
+ * calculated.  The manifold() routine returns details of the
  * corresponding 3-manifold.
  *
  * All optional NStandardTriangulation routines are implemented for this
@@ -215,8 +215,8 @@ class REGINA_API NLayeredTorusBundle : public NStandardTriangulation {
          */
         static NLayeredTorusBundle* isLayeredTorusBundle(NTriangulation* tri);
 
-        NManifold* getManifold() const;
-        NAbelianGroup* getHomologyH1() const;
+        NManifold* manifold() const;
+        NAbelianGroup* homology() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;

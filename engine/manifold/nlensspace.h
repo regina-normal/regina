@@ -150,7 +150,7 @@ class REGINA_API NLensSpace : public NManifold {
         bool operator != (const NLensSpace& compare) const;
 
         NTriangulation* construct() const;
-        NAbelianGroup* homologyH1() const;
+        NAbelianGroup* homology() const;
         bool isHyperbolic() const;
         std::ostream& writeName(std::ostream& out) const;
         std::ostream& writeTeXName(std::ostream& out) const;

@@ -327,10 +327,10 @@ void NTriSurfacesUI::refresh() {
     regina::NStandardTriangulation* std =
         regina::NStandardTriangulation::isStandardTriangulation(tri);
     if (std) {
-        regina::NManifold* mfd = std->getManifold();
+        regina::NManifold* mfd = std->manifold();
         if (mfd) {
             isHyp = mfd->isHyperbolic();
-            name = mfd->getName();
+            name = mfd->name();
             delete mfd;
 
             // If we have the 3-sphere, 3-ball or solid torus, then

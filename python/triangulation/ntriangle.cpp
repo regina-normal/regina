@@ -52,7 +52,7 @@ using regina::NTriangleEmbedding;
 using regina::python::GlobalArray;
 
 namespace {
-    boost::python::list NTriangle_getEmbeddings_list(const NTriangle* t) {
+    boost::python::list NTriangle_embeddings_list(const NTriangle* t) {
         boost::python::list ans;
         for (auto& emb: *t)
             ans.append(emb);
@@ -90,8 +90,8 @@ void addNTriangle() {
         scope s = class_<Face<3, 2>, std::auto_ptr<Face<3, 2>>,
                 boost::noncopyable>("Face3_2", no_init)
             .def("index", &NTriangle::index)
-            .def("embeddings", NTriangle_getEmbeddings_list)
-            .def("getEmbeddings", NTriangle_getEmbeddings_list)
+            .def("embeddings", NTriangle_embeddings_list)
+            .def("getEmbeddings", NTriangle_embeddings_list)
             .def("embedding", &NTriangle::embedding,
                 return_internal_reference<>())
             .def("getEmbedding", &NTriangle::getEmbedding,

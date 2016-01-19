@@ -46,21 +46,21 @@ NLayeredSolidTorus* NLayeredSolidTorus::clone() const {
     NLayeredSolidTorus* ans = new NLayeredSolidTorus();
     int i,j;
     ans->nTetrahedra = nTetrahedra;
-    ans->base = base;
-    ans->topLevel = topLevel;
+    ans->base_ = base_;
+    ans->topLevel_ = topLevel_;
     for (i = 0; i < 6; i++) {
-        ans->baseEdge[i] = baseEdge[i];
-        ans->baseEdgeGroup[i] = baseEdgeGroup[i];
-        ans->topEdgeGroup[i] = topEdgeGroup[i];
+        ans->baseEdge_[i] = baseEdge_[i];
+        ans->baseEdgeGroup_[i] = baseEdgeGroup_[i];
+        ans->topEdgeGroup_[i] = topEdgeGroup_[i];
     }
     for (i = 0; i < 2; i++) {
-        ans->baseFace[i] = baseFace[i];
-        ans->topFace[i] = topFace[i];
+        ans->baseFace_[i] = baseFace_[i];
+        ans->topFace_[i] = topFace_[i];
     }
     for (i = 0; i < 3; i++) {
         for (j = 0; j < 2; j++)
-            ans->topEdge[i][j] = topEdge[i][j];
-        ans->meridinalCuts[i] = meridinalCuts[i];
+            ans->topEdge_[i][j] = topEdge_[i][j];
+        ans->meridinalCuts_[i] = meridinalCuts_[i];
     }
     return ans;
 }
@@ -68,49 +68,49 @@ NLayeredSolidTorus* NLayeredSolidTorus::clone() const {
 void NLayeredSolidTorus::transform(const NTriangulation* originalTri,
         const NIsomorphism* iso, NTriangulation* newTri) {
     unsigned i, j;
-    size_t baseTetID = originalTri->tetrahedronIndex(base);
-    size_t topTetID = originalTri->tetrahedronIndex(topLevel);
+    size_t baseTetID = originalTri->tetrahedronIndex(base_);
+    size_t topTetID = originalTri->tetrahedronIndex(topLevel_);
 
     // Data members nTetrahedra and meridinalCuts remain unchanged.
 
     // Transform edge numbers (note that -1s can also be present for topEdge[]):
     for (i = 0; i < 6; i++)
-        baseEdge[i] = NEdge::edgeNumber
-            [iso->facePerm(baseTetID)[NEdge::edgeVertex[baseEdge[i]][0]]]
-            [iso->facePerm(baseTetID)[NEdge::edgeVertex[baseEdge[i]][1]]];
+        baseEdge_[i] = NEdge::edgeNumber
+            [iso->facePerm(baseTetID)[NEdge::edgeVertex[baseEdge_[i]][0]]]
+            [iso->facePerm(baseTetID)[NEdge::edgeVertex[baseEdge_[i]][1]]];
 
     for (i = 0; i < 3; i++)
         for (j = 0; j < 2; j++) {
-            if (topEdge[i][j] < 0)
+            if (topEdge_[i][j] < 0)
                 continue;
 
-            topEdge[i][j] = NEdge::edgeNumber
-                [iso->facePerm(topTetID)[NEdge::edgeVertex[topEdge[i][j]][0]]]
-                [iso->facePerm(topTetID)[NEdge::edgeVertex[topEdge[i][j]][1]]];
+            topEdge_[i][j] = NEdge::edgeNumber
+                [iso->facePerm(topTetID)[NEdge::edgeVertex[topEdge_[i][j]][0]]]
+                [iso->facePerm(topTetID)[NEdge::edgeVertex[topEdge_[i][j]][1]]];
         }
 
     // Inverse arrays for edge numbers:
     for (i = 0; i < 6; i++)
-        baseEdgeGroup[baseEdge[i]] = (i == 0 ? 1 : i < 3 ? 2 : 3);
+        baseEdgeGroup_[baseEdge_[i]] = (i == 0 ? 1 : i < 3 ? 2 : 3);
 
     unsigned missingEdge = 0 + 1 + 2 + 3 + 4 + 5;
     for (i = 0; i < 3; i++)
         for (j = 0; j < 2; j++)
-            if (topEdge[i][j] != -1) {
-                topEdgeGroup[topEdge[i][j]] = i;
-                missingEdge -= topEdge[i][j];
+            if (topEdge_[i][j] != -1) {
+                topEdgeGroup_[topEdge_[i][j]] = i;
+                missingEdge -= topEdge_[i][j];
             }
-    topEdgeGroup[missingEdge] = -1;
+    topEdgeGroup_[missingEdge] = -1;
 
     // Transform face numbers:
     for (i = 0; i < 2; i++) {
-        baseFace[i] = iso->facePerm(baseTetID)[baseFace[i]];
-        topFace[i] = iso->facePerm(topTetID)[topFace[i]];
+        baseFace_[i] = iso->facePerm(baseTetID)[baseFace_[i]];
+        topFace_[i] = iso->facePerm(topTetID)[topFace_[i]];
     }
 
     // Transform tetrahedra:
-    base = newTri->getTetrahedron(iso->tetImage(baseTetID));
-    topLevel = newTri->getTetrahedron(iso->tetImage(topTetID));
+    base_ = newTri->getTetrahedron(iso->tetImage(baseTetID));
+    topLevel_ = newTri->getTetrahedron(iso->tetImage(topTetID));
 }
 
 NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusBase(
@@ -148,35 +148,35 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusBase(
     // Fill in the details for the bottom layer.
     NLayeredSolidTorus* ans = new NLayeredSolidTorus();
     ans->nTetrahedra = 1;
-    ans->base = tet;
-    ans->baseFace[0] = baseFace1;
-    ans->baseFace[1] = baseFace2;
-    ans->topFace[0] = basePerm[baseFace2];
-    ans->topFace[1] = basePerm[ans->topFace[0]];
-    ans->baseEdge[0] = NEdge::edgeNumber[baseFace1][baseFace2];
-    ans->baseEdge[1] = NEdge::edgeNumber[ans->topFace[1]][baseFace2];
-    ans->baseEdge[2] = NEdge::edgeNumber[ans->topFace[0]][baseFace1];
-    ans->baseEdge[3] = NEdge::edgeNumber[ans->topFace[0]][baseFace2];
-    ans->baseEdge[4] = NEdge::edgeNumber[ans->topFace[0]][ans->topFace[1]];
-    ans->baseEdge[5] = NEdge::edgeNumber[ans->topFace[1]][baseFace1];
+    ans->base_ = tet;
+    ans->baseFace_[0] = baseFace1;
+    ans->baseFace_[1] = baseFace2;
+    ans->topFace_[0] = basePerm[baseFace2];
+    ans->topFace_[1] = basePerm[ans->topFace_[0]];
+    ans->baseEdge_[0] = NEdge::edgeNumber[baseFace1][baseFace2];
+    ans->baseEdge_[1] = NEdge::edgeNumber[ans->topFace_[1]][baseFace2];
+    ans->baseEdge_[2] = NEdge::edgeNumber[ans->topFace_[0]][baseFace1];
+    ans->baseEdge_[3] = NEdge::edgeNumber[ans->topFace_[0]][baseFace2];
+    ans->baseEdge_[4] = NEdge::edgeNumber[ans->topFace_[0]][ans->topFace_[1]];
+    ans->baseEdge_[5] = NEdge::edgeNumber[ans->topFace_[1]][baseFace1];
     for (i = 0; i < 6; i++)
-        ans->baseEdgeGroup[ans->baseEdge[i]] = (i == 0 ? 1 : i < 3 ? 2 : 3);
+        ans->baseEdgeGroup_[ans->baseEdge_[i]] = (i == 0 ? 1 : i < 3 ? 2 : 3);
 
-    ans->topLevel = tet;
-    ans->meridinalCuts[0] = 1;
-    ans->meridinalCuts[1] = 2;
-    ans->meridinalCuts[2] = 3;
-    ans->topEdge[0][0] = ans->baseEdge[5];
-    ans->topEdge[0][1] = ans->baseEdge[3];
-    ans->topEdge[1][0] = ans->baseEdge[1];
-    ans->topEdge[1][1] = ans->baseEdge[2];
-    ans->topEdge[2][0] = ans->baseEdge[0];
-    ans->topEdge[2][1] = -1;
+    ans->topLevel_ = tet;
+    ans->meridinalCuts_[0] = 1;
+    ans->meridinalCuts_[1] = 2;
+    ans->meridinalCuts_[2] = 3;
+    ans->topEdge_[0][0] = ans->baseEdge_[5];
+    ans->topEdge_[0][1] = ans->baseEdge_[3];
+    ans->topEdge_[1][0] = ans->baseEdge_[1];
+    ans->topEdge_[1][1] = ans->baseEdge_[2];
+    ans->topEdge_[2][0] = ans->baseEdge_[0];
+    ans->topEdge_[2][1] = -1;
     for (i = 0; i < 3; i++)
         for (j = 0; j < 2; j++)
-            if (ans->topEdge[i][j] != -1)
-                ans->topEdgeGroup[ans->topEdge[i][j]] = i;
-    ans->topEdgeGroup[ans->baseEdge[4]] = -1;
+            if (ans->topEdge_[i][j] != -1)
+                ans->topEdgeGroup_[ans->topEdge_[i][j]] = i;
+    ans->topEdgeGroup_[ans->baseEdge_[4]] = -1;
 
     // Now run through and look for layers to add to the torus.
     int adjFace[2]; // Faces of adjacent tetrahedron glued to the torus.
@@ -188,22 +188,22 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusBase(
     int layerOnGroup;
     while (true) {
         // Is there a new layer?
-        tet = ans->topLevel->adjacentTetrahedron(ans->topFace[0]);
-        if (tet == 0 || tet == ans->topLevel ||
-                tet != ans->topLevel->adjacentTetrahedron(ans->topFace[1]))
+        tet = ans->topLevel_->adjacentTetrahedron(ans->topFace_[0]);
+        if (tet == 0 || tet == ans->topLevel_ ||
+                tet != ans->topLevel_->adjacentTetrahedron(ans->topFace_[1]))
             break;
 
         // There is a new tetrahedron glued to both torus boundary triangles.
-        adjPerm[0] = ans->topLevel->adjacentGluing(
-            ans->topFace[0]);
-        adjPerm[1] = ans->topLevel->adjacentGluing(
-            ans->topFace[1]);
+        adjPerm[0] = ans->topLevel_->adjacentGluing(
+            ans->topFace_[0]);
+        adjPerm[1] = ans->topLevel_->adjacentGluing(
+            ans->topFace_[1]);
         if (adjPerm[0].sign() != adjPerm[1].sign())
             break;
 
         // See what the new boundary edge would be.
-        adjFace[0] = ans->topLevel->adjacentFace(ans->topFace[0]);
-        adjFace[1] = ans->topLevel->adjacentFace(ans->topFace[1]);
+        adjFace[0] = ans->topLevel_->adjacentFace(ans->topFace_[0]);
+        adjFace[1] = ans->topLevel_->adjacentFace(ans->topFace_[1]);
         newTopEdge = NEdge::edgeNumber[adjFace[0]][adjFace[1]];
         adjEdge = 5 - newTopEdge;
 
@@ -223,75 +223,75 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusBase(
 
         // Before changing anything else, rearrange the topEdge and
         // meridinalCuts arrays.
-        layerOnGroup = ans->topEdgeGroup[layerOnEdge[0]];
+        layerOnGroup = ans->topEdgeGroup_[layerOnEdge[0]];
         switch(layerOnGroup) {
             case 0:
                 // p q r  ->  q r q+r
-                ans->meridinalCuts[0] = ans->meridinalCuts[1];
-                ans->meridinalCuts[1] = ans->meridinalCuts[2];
-                ans->meridinalCuts[2] = ans->meridinalCuts[0] +
-                    ans->meridinalCuts[1];
+                ans->meridinalCuts_[0] = ans->meridinalCuts_[1];
+                ans->meridinalCuts_[1] = ans->meridinalCuts_[2];
+                ans->meridinalCuts_[2] = ans->meridinalCuts_[0] +
+                    ans->meridinalCuts_[1];
                 ans->followEdge(0, 1);
                 ans->followEdge(1, 2);
-                ans->topEdge[2][0] = newTopEdge;
-                ans->topEdge[2][1] = -1;
+                ans->topEdge_[2][0] = newTopEdge;
+                ans->topEdge_[2][1] = -1;
                 break;
             case 1:
                 // p q r  ->  p r p+r
-                ans->meridinalCuts[1] = ans->meridinalCuts[2];
-                ans->meridinalCuts[2] = ans->meridinalCuts[0] +
-                    ans->meridinalCuts[1];
+                ans->meridinalCuts_[1] = ans->meridinalCuts_[2];
+                ans->meridinalCuts_[2] = ans->meridinalCuts_[0] +
+                    ans->meridinalCuts_[1];
                 ans->followEdge(0, 0);
                 ans->followEdge(1, 2);
-                ans->topEdge[2][0] = newTopEdge;
-                ans->topEdge[2][1] = -1;
+                ans->topEdge_[2][0] = newTopEdge;
+                ans->topEdge_[2][1] = -1;
                 break;
             case 2:
-                if (ans->meridinalCuts[1] - ans->meridinalCuts[0] <
-                        ans->meridinalCuts[0]) {
+                if (ans->meridinalCuts_[1] - ans->meridinalCuts_[0] <
+                        ans->meridinalCuts_[0]) {
                     // p q r  ->  q-p p q
-                    ans->meridinalCuts[2] = ans->meridinalCuts[1];
-                    ans->meridinalCuts[1] = ans->meridinalCuts[0];
-                    ans->meridinalCuts[0] = ans->meridinalCuts[2] -
-                        ans->meridinalCuts[1];
+                    ans->meridinalCuts_[2] = ans->meridinalCuts_[1];
+                    ans->meridinalCuts_[1] = ans->meridinalCuts_[0];
+                    ans->meridinalCuts_[0] = ans->meridinalCuts_[2] -
+                        ans->meridinalCuts_[1];
                     ans->followEdge(2, 1);
                     ans->followEdge(1, 0);
-                    ans->topEdge[0][0] = newTopEdge;
-                    ans->topEdge[0][1] = -1;
+                    ans->topEdge_[0][0] = newTopEdge;
+                    ans->topEdge_[0][1] = -1;
                 } else {
                     // p q r  ->  p q-p q
-                    ans->meridinalCuts[2] = ans->meridinalCuts[1];
-                    ans->meridinalCuts[1] = ans->meridinalCuts[2] -
-                        ans->meridinalCuts[0];
+                    ans->meridinalCuts_[2] = ans->meridinalCuts_[1];
+                    ans->meridinalCuts_[1] = ans->meridinalCuts_[2] -
+                        ans->meridinalCuts_[0];
                     ans->followEdge(2, 1);
                     ans->followEdge(0, 0);
-                    ans->topEdge[1][0] = newTopEdge;
-                    ans->topEdge[1][1] = -1;
+                    ans->topEdge_[1][0] = newTopEdge;
+                    ans->topEdge_[1][1] = -1;
                 }
                 break;
         }
 
-        ans->topFace[0] = NEdge::edgeVertex[adjEdge][0];
-        ans->topFace[1] = NEdge::edgeVertex[adjEdge][1];
+        ans->topFace_[0] = NEdge::edgeVertex[adjEdge][0];
+        ans->topFace_[1] = NEdge::edgeVertex[adjEdge][1];
 
         // Massage the indices in topEdge to match topFace.
         for (i = 0; i < 3; i++) {
             // Make sure ans->topEdge[i][0] is in face ans->topFace[0].
-            if (ans->topFace[0] == NEdge::edgeVertex[ans->topEdge[i][0]][0] ||
-                    ans->topFace[0] ==
-                    NEdge::edgeVertex[ans->topEdge[i][0]][1]) {
-                j = ans->topEdge[i][0];
-                ans->topEdge[i][0] = ans->topEdge[i][1];
-                ans->topEdge[i][1] = j;
+            if (ans->topFace_[0] == NEdge::edgeVertex[ans->topEdge_[i][0]][0] ||
+                    ans->topFace_[0] ==
+                    NEdge::edgeVertex[ans->topEdge_[i][0]][1]) {
+                j = ans->topEdge_[i][0];
+                ans->topEdge_[i][0] = ans->topEdge_[i][1];
+                ans->topEdge_[i][1] = j;
             }
         }
 
-        ans->topLevel = tet;
+        ans->topLevel_ = tet;
         for (i = 0; i < 3; i++)
             for (j = 0; j < 2; j++)
-                if (ans->topEdge[i][j] != -1)
-                    ans->topEdgeGroup[ans->topEdge[i][j]] = i;
-        ans->topEdgeGroup[adjEdge] = -1;
+                if (ans->topEdge_[i][j] != -1)
+                    ans->topEdgeGroup_[ans->topEdge_[i][j]] = i;
+        ans->topEdgeGroup_[adjEdge] = -1;
         ans->nTetrahedra++;
     }
 
@@ -375,31 +375,31 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusTop(
             NLayeredSolidTorus* ans = new NLayeredSolidTorus();
             ans->nTetrahedra = nTets;
 
-            ans->base = tet;
-            ans->baseFace[0] = vRoles[3]; // Face vRoles[012]
-            ans->baseFace[1] = vRoles[0]; // Face vRoles[123]
-            ans->baseEdge[0] = NEdge::edgeNumber[vRoles[0]][vRoles[3]];
+            ans->base_ = tet;
+            ans->baseFace_[0] = vRoles[3]; // Face vRoles[012]
+            ans->baseFace_[1] = vRoles[0]; // Face vRoles[123]
+            ans->baseEdge_[0] = NEdge::edgeNumber[vRoles[0]][vRoles[3]];
             if (rotation == 1) {
-                ans->baseEdge[1] = NEdge::edgeNumber[vRoles[0]][vRoles[2]];
-                ans->baseEdge[2] = NEdge::edgeNumber[vRoles[1]][vRoles[3]];
+                ans->baseEdge_[1] = NEdge::edgeNumber[vRoles[0]][vRoles[2]];
+                ans->baseEdge_[2] = NEdge::edgeNumber[vRoles[1]][vRoles[3]];
 
-                ans->baseEdge[3] = NEdge::edgeNumber[vRoles[0]][vRoles[1]];
-                ans->baseEdge[4] = NEdge::edgeNumber[vRoles[1]][vRoles[2]];
-                ans->baseEdge[5] = NEdge::edgeNumber[vRoles[2]][vRoles[3]];
+                ans->baseEdge_[3] = NEdge::edgeNumber[vRoles[0]][vRoles[1]];
+                ans->baseEdge_[4] = NEdge::edgeNumber[vRoles[1]][vRoles[2]];
+                ans->baseEdge_[5] = NEdge::edgeNumber[vRoles[2]][vRoles[3]];
             } else {
-                ans->baseEdge[1] = NEdge::edgeNumber[vRoles[0]][vRoles[1]];
-                ans->baseEdge[2] = NEdge::edgeNumber[vRoles[2]][vRoles[3]];
+                ans->baseEdge_[1] = NEdge::edgeNumber[vRoles[0]][vRoles[1]];
+                ans->baseEdge_[2] = NEdge::edgeNumber[vRoles[2]][vRoles[3]];
 
-                ans->baseEdge[3] = NEdge::edgeNumber[vRoles[0]][vRoles[2]];
-                ans->baseEdge[4] = NEdge::edgeNumber[vRoles[2]][vRoles[1]];
-                ans->baseEdge[5] = NEdge::edgeNumber[vRoles[1]][vRoles[3]];
+                ans->baseEdge_[3] = NEdge::edgeNumber[vRoles[0]][vRoles[2]];
+                ans->baseEdge_[4] = NEdge::edgeNumber[vRoles[2]][vRoles[1]];
+                ans->baseEdge_[5] = NEdge::edgeNumber[vRoles[1]][vRoles[3]];
             }
-            ans->baseEdgeGroup[ans->baseEdge[0]] = 1;
-            ans->baseEdgeGroup[ans->baseEdge[1]] = 2;
-            ans->baseEdgeGroup[ans->baseEdge[2]] = 2;
-            ans->baseEdgeGroup[ans->baseEdge[3]] = 3;
-            ans->baseEdgeGroup[ans->baseEdge[4]] = 3;
-            ans->baseEdgeGroup[ans->baseEdge[5]] = 3;
+            ans->baseEdgeGroup_[ans->baseEdge_[0]] = 1;
+            ans->baseEdgeGroup_[ans->baseEdge_[1]] = 2;
+            ans->baseEdgeGroup_[ans->baseEdge_[2]] = 2;
+            ans->baseEdgeGroup_[ans->baseEdge_[3]] = 3;
+            ans->baseEdgeGroup_[ans->baseEdge_[4]] = 3;
+            ans->baseEdgeGroup_[ans->baseEdge_[5]] = 3;
 
             long cuts01, cuts13, cuts30;
             if (rotation == 1) {
@@ -417,9 +417,9 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusTop(
             if (cuts13 < 0) cuts13 = -cuts13;
             if (cuts30 < 0) cuts30 = -cuts30;
 
-            ans->topLevel = top;
-            ans->topFace[0] = topRoles[2]; // Face topRoles[013]
-            ans->topFace[1] = topRoles[1]; // Face topRoles[023]
+            ans->topLevel_ = top;
+            ans->topFace_[0] = topRoles[2]; // Face topRoles[013]
+            ans->topFace_[1] = topRoles[1]; // Face topRoles[023]
 
             // Run through all six possible orderings.
             int group01, group13, group30;
@@ -448,31 +448,31 @@ NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusTop(
                     group13 = 0; group30 = 1; group01 = 2;
                 }
             }
-            ans->meridinalCuts[group01] = cuts01;
-            ans->meridinalCuts[group13] = cuts13;
-            ans->meridinalCuts[group30] = cuts30;
-            ans->topEdge[group01][0] =
+            ans->meridinalCuts_[group01] = cuts01;
+            ans->meridinalCuts_[group13] = cuts13;
+            ans->meridinalCuts_[group30] = cuts30;
+            ans->topEdge_[group01][0] =
                 NEdge::edgeNumber[topRoles[0]][topRoles[1]];
-            ans->topEdge[group01][1] =
+            ans->topEdge_[group01][1] =
                 NEdge::edgeNumber[topRoles[2]][topRoles[3]];
-            ans->topEdge[group13][0] =
+            ans->topEdge_[group13][0] =
                 NEdge::edgeNumber[topRoles[1]][topRoles[3]];
-            ans->topEdge[group13][1] =
+            ans->topEdge_[group13][1] =
                 NEdge::edgeNumber[topRoles[0]][topRoles[2]];
-            ans->topEdge[group30][0] =
+            ans->topEdge_[group30][0] =
                 NEdge::edgeNumber[topRoles[3]][topRoles[0]];
-            ans->topEdge[group30][1] = -1;
-            ans->topEdgeGroup[NEdge::edgeNumber[topRoles[0]][topRoles[1]]] =
+            ans->topEdge_[group30][1] = -1;
+            ans->topEdgeGroup_[NEdge::edgeNumber[topRoles[0]][topRoles[1]]] =
                 group01;
-            ans->topEdgeGroup[NEdge::edgeNumber[topRoles[2]][topRoles[3]]] =
+            ans->topEdgeGroup_[NEdge::edgeNumber[topRoles[2]][topRoles[3]]] =
                 group01;
-            ans->topEdgeGroup[NEdge::edgeNumber[topRoles[1]][topRoles[3]]] =
+            ans->topEdgeGroup_[NEdge::edgeNumber[topRoles[1]][topRoles[3]]] =
                 group13;
-            ans->topEdgeGroup[NEdge::edgeNumber[topRoles[0]][topRoles[2]]] =
+            ans->topEdgeGroup_[NEdge::edgeNumber[topRoles[0]][topRoles[2]]] =
                 group13;
-            ans->topEdgeGroup[NEdge::edgeNumber[topRoles[3]][topRoles[0]]] =
+            ans->topEdgeGroup_[NEdge::edgeNumber[topRoles[3]][topRoles[0]]] =
                 group30;
-            ans->topEdgeGroup[NEdge::edgeNumber[topRoles[1]][topRoles[2]]] = -1;
+            ans->topEdgeGroup_[NEdge::edgeNumber[topRoles[1]][topRoles[2]]] = -1;
 
             // All done!
             return ans;
@@ -654,19 +654,19 @@ void NLayeredSolidTorus::followEdge(int destGroup, int sourceGroup) {
     int pos;
     NPerm4 adjPerm;
     for (int i = 1; i >= 0; i--) {
-        pos = (topEdge[sourceGroup][i] == -1 ? 0 : i);
-        adjPerm = topLevel->adjacentGluing(topFace[i]);
-        topEdge[destGroup][i] = NEdge::edgeNumber
-            [adjPerm[NEdge::edgeVertex[topEdge[sourceGroup][pos]][0]]]
-            [adjPerm[NEdge::edgeVertex[topEdge[sourceGroup][pos]][1]]];
+        pos = (topEdge_[sourceGroup][i] == -1 ? 0 : i);
+        adjPerm = topLevel_->adjacentGluing(topFace_[i]);
+        topEdge_[destGroup][i] = NEdge::edgeNumber
+            [adjPerm[NEdge::edgeVertex[topEdge_[sourceGroup][pos]][0]]]
+            [adjPerm[NEdge::edgeVertex[topEdge_[sourceGroup][pos]][1]]];
     }
 }
 
-NManifold* NLayeredSolidTorus::getManifold() const {
+NManifold* NLayeredSolidTorus::manifold() const {
     return new NHandlebody(1, true);
 }
 
-NAbelianGroup* NLayeredSolidTorus::getHomologyH1() const {
+NAbelianGroup* NLayeredSolidTorus::homology() const {
     NAbelianGroup* ans = new NAbelianGroup();
     ans->addRank();
     return ans;
@@ -679,15 +679,15 @@ NTriangulation* NLayeredSolidTorus::flatten(const NTriangulation* original,
     NTriangulation* ans = new NTriangulation(*original);
 
     NTetrahedron* newTop = ans->getTetrahedron(
-        original->tetrahedronIndex(topLevel));
+        original->tetrahedronIndex(topLevel_));
     NTetrahedron* newBase = ans->getTetrahedron(
-        original->tetrahedronIndex(base));
+        original->tetrahedronIndex(base_));
 
     NPacket::ChangeEventSpan span(ans);
 
     // Reglue the top faces before deleting the layered solid torus.
-    NTetrahedron* adj0 = newTop->adjacentTetrahedron(topFace[0]);
-    NTetrahedron* adj1 = newTop->adjacentTetrahedron(topFace[1]);
+    NTetrahedron* adj0 = newTop->adjacentTetrahedron(topFace_[0]);
+    NTetrahedron* adj1 = newTop->adjacentTetrahedron(topFace_[1]);
 
     if (adj0 && adj1 && (adj0 != newTop)) {
         // A permutation for each adjacent tetrahedron.
@@ -698,21 +698,21 @@ NTriangulation* NLayeredSolidTorus::flatten(const NTriangulation* original,
 
         // Start by representing vertices of this tetrahedron instead.
         NPerm4 groups0 = NPerm4(
-            6 - NEdge::edgeVertex[topEdge[0][0]][0] -
-                NEdge::edgeVertex[topEdge[0][0]][1] - topFace[0],
-            6 - NEdge::edgeVertex[topEdge[1][0]][0] -
-                NEdge::edgeVertex[topEdge[1][0]][1] - topFace[0],
-            6 - NEdge::edgeVertex[topEdge[2][0]][0] -
-                NEdge::edgeVertex[topEdge[2][0]][1] - topFace[0],
-            topFace[0]);
+            6 - NEdge::edgeVertex[topEdge_[0][0]][0] -
+                NEdge::edgeVertex[topEdge_[0][0]][1] - topFace_[0],
+            6 - NEdge::edgeVertex[topEdge_[1][0]][0] -
+                NEdge::edgeVertex[topEdge_[1][0]][1] - topFace_[0],
+            6 - NEdge::edgeVertex[topEdge_[2][0]][0] -
+                NEdge::edgeVertex[topEdge_[2][0]][1] - topFace_[0],
+            topFace_[0]);
 
-        NFacePair underFaces = NFacePair(topFace[0], topFace[1]).complement();
-        NPerm4 groups1 = NPerm4(topFace[0], topFace[1]) *
+        NFacePair underFaces = NFacePair(topFace_[0], topFace_[1]).complement();
+        NPerm4 groups1 = NPerm4(topFace_[0], topFace_[1]) *
             NPerm4(underFaces.lower(), underFaces.upper()) * groups0;
 
         // Move these to vertices of the adjacent tetrahedra.
-        groups0 = newTop->adjacentGluing(topFace[0]) * groups0;
-        groups1 = newTop->adjacentGluing(topFace[1]) * groups1;
+        groups0 = newTop->adjacentGluing(topFace_[0]) * groups0;
+        groups1 = newTop->adjacentGluing(topFace_[1]) * groups1;
 
         // And do the regluing.
         adj0->unjoin(groups0[3]);
@@ -730,7 +730,7 @@ NTriangulation* NLayeredSolidTorus::flatten(const NTriangulation* original,
     NPerm4 adjPerm;
 
     curr = newBase;
-    currBdryFaces = NFacePair(baseFace[0], baseFace[1]).complement();
+    currBdryFaces = NFacePair(baseFace_[0], baseFace_[1]).complement();
     while (curr) {
         next = curr->adjacentTetrahedron(currBdryFaces.lower());
 

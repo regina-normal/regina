@@ -61,8 +61,7 @@ NLargeInteger NNormalSurfaceVectorStandard::edgeWeight(
 NLargeInteger NNormalSurfaceVectorStandard::arcs(size_t triIndex,
         int triVertex, const NTriangulation* triang) const {
     // Find a tetrahedron next to the triangle in question.
-    const NTriangleEmbedding& emb = triang->getTriangles()[triIndex]->
-        getEmbedding(0);
+    const NTriangleEmbedding& emb = triang->getTriangles()[triIndex]->front();
     long tetIndex = triang->tetrahedronIndex(emb.getTetrahedron());
     int vertex = emb.getVertices()[triVertex];
     int backOfFace = emb.getVertices()[3];
@@ -100,11 +99,11 @@ NMatrixInt* NNormalSurfaceVectorStandard::makeMatchingEquations(
             fit != triangulation->getTriangles().end(); fit++) {
         if (! (*fit)->isBoundary()) {
             tet0 = triangulation->tetrahedronIndex(
-                (*fit)->getEmbedding(0).getTetrahedron());
+                (*fit)->embedding(0).getTetrahedron());
             tet1 = triangulation->tetrahedronIndex(
-                (*fit)->getEmbedding(1).getTetrahedron());
-            perm0 = (*fit)->getEmbedding(0).getVertices();
-            perm1 = (*fit)->getEmbedding(1).getVertices();
+                (*fit)->embedding(1).getTetrahedron());
+            perm0 = (*fit)->embedding(0).getVertices();
+            perm1 = (*fit)->embedding(1).getVertices();
             for (i=0; i<3; i++) {
                 // Triangles:
                 ans->entry(row, 7*tet0 + perm0[i]) += 1;

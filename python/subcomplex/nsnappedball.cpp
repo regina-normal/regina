@@ -46,11 +46,17 @@ void addNSnappedBall() {
             ("NSnappedBall", no_init)
         .def("clone", &NSnappedBall::clone,
             return_value_policy<manage_new_object>())
+        .def("tetrahedron", &NSnappedBall::getTetrahedron,
+            return_value_policy<reference_existing_object>())
         .def("getTetrahedron", &NSnappedBall::getTetrahedron,
             return_value_policy<reference_existing_object>())
+        .def("boundaryFace", &NSnappedBall::boundaryFace)
         .def("getBoundaryFace", &NSnappedBall::getBoundaryFace)
+        .def("internalFace", &NSnappedBall::internalFace)
         .def("getInternalFace", &NSnappedBall::getInternalFace)
+        .def("equatorEdge", &NSnappedBall::equatorEdge)
         .def("getEquatorEdge", &NSnappedBall::getEquatorEdge)
+        .def("internalEdge", &NSnappedBall::internalEdge)
         .def("getInternalEdge", &NSnappedBall::getInternalEdge)
         .def("formsSnappedBall", &NSnappedBall::formsSnappedBall,
             return_value_policy<manage_new_object>())

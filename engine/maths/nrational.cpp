@@ -273,7 +273,7 @@ std::ostream& operator << (std::ostream& out, const NRational& rat) {
     return out;
 }
 
-std::string NRational::getTeX() const {
+std::string NRational::TeX() const {
     std::ostringstream out;
     writeTeX(out);
     return out.str();

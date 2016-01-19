@@ -87,8 +87,8 @@ const NAbelianGroup& NTriangulation::homology() const {
                 triangle = currTet->getTriangle(currTetFace);
                 triGenIndex = genIndex[triangleIndex(triangle)];
                 if (triGenIndex >= 0) {
-                    if ((triangle->getEmbedding(0).getTetrahedron() == currTet) &&
-                            (triangle->getEmbedding(0).getTriangle() == currTetFace))
+                    if ((triangle->front().tetrahedron() == currTet) &&
+                            (triangle->front().triangle() == currTetFace))
                         pres.entry(i, triGenIndex) += 1;
                     else
                         pres.entry(i, triGenIndex) -= 1;
@@ -164,8 +164,8 @@ const NAbelianGroup& NTriangulation::homologyRel() const {
     for (NTriangle* f : getTriangles()) {
         if (! f->isBoundary()) {
             // Put in the relation corresponding to this triangle.
-            currTet = f->getEmbedding(0).getTetrahedron();
-            currTetVertices = f->getEmbedding(0).getVertices();
+            currTet = f->front().tetrahedron();
+            currTetVertices = f->front().vertices();
             for (triEdge = 0; triEdge < 3; triEdge++) {
                 currEdgeStart = currTetVertices[triEdge];
                 currEdgeEnd = currTetVertices[(triEdge + 1) % 3];

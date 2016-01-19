@@ -76,7 +76,7 @@ unsigned long NTriangulation::splitIntoComponents(NPacket* componentParent,
 
     for (tetPos = 0; tetPos < nTets; tetPos++)
         newTets[tetPos] =
-            newTris[componentIndex(simplices_[tetPos]->component())]->
+            newTris[simplices_[tetPos]->component()->index()]->
             newTetrahedron(simplices_[tetPos]->getDescription());
 
     // Clone the tetrahedron gluings also.
@@ -1032,7 +1032,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
 
         // This could be a compressing disc.
         // Cut along the triangle to be sure.
-        const NTriangleEmbedding& emb = (*fit)->getEmbedding(0);
+        const NTriangleEmbedding& emb = (*fit)->front();
 
         NTriangulation cut(use);
         cut.getTetrahedron(emb.getTetrahedron()->markedIndex())->unjoin(
@@ -1066,7 +1066,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
         if (! ball)
             continue;
 
-        int equator = ball->getEquatorEdge();
+        int equator = ball->equatorEdge();
         if (! (*tit)->getEdge(equator)->isBoundary()) {
             delete ball;
             continue;
@@ -1077,7 +1077,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
         // We do this by removing the tetrahedron, and then plugging
         // both holes on either side of the disc with new copies of the
         // tetrahedron.
-        int upper = ball->getBoundaryFace(0);
+        int upper = ball->boundaryFace(0);
         delete ball;
 
         NTetrahedron* adj = (*tit)->adjacentTetrahedron(upper);

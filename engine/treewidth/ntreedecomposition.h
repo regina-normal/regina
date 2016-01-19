@@ -922,6 +922,9 @@ class REGINA_API NTreeDecomposition :
 
 // Help the compiler by noting which explicit instantiations we offer.
 
+// Hide these from doxygen, which seems to have trouble with templated
+// member functions of template classes.
+#ifndef __DOXYGEN
 extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
     const Triangulation<2>&, TreeDecompositionAlg);
 extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
@@ -933,9 +936,10 @@ extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
     const FacetPairing<3>&, TreeDecompositionAlg);
 
 extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
-    unsigned, bool const**, TreeDecompositionAlg);
+    unsigned, bool const** const, TreeDecompositionAlg);
 extern template REGINA_API NTreeDecomposition::NTreeDecomposition(
-    unsigned, int const**, TreeDecompositionAlg);
+    unsigned, int const** const, TreeDecompositionAlg);
+#endif // ! __DOXYGEN
 
 // Inline functions for NTreeBag
 

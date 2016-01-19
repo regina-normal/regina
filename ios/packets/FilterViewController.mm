@@ -93,7 +93,7 @@ static NSMutableCharacterSet* eulerSeparators;
 
 - (void)updateEulerDisplay
 {
-    const std::set<regina::NLargeInteger>& ECs = self.packet->ECs();
+    const std::set<regina::NLargeInteger>& ECs = self.packet->eulerChars();
     if (ECs.empty()) {
         self.euler.text = @"";
         self.eulerExpln.text = @"No restrictions on Euler characteristic.";
@@ -207,7 +207,7 @@ static NSMutableCharacterSet* eulerSeparators;
     }
 
     myEdit = YES;
-    self.packet->setECs(set);
+    self.packet->setEulerChars(set);
     [self updateEulerDisplay];
     myEdit = NO;
 }

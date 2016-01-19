@@ -83,36 +83,35 @@ void EdgeChooser::select(regina::NEdge* option) {
 }
 
 QString EdgeChooser::description(regina::NEdge* option) {
-    if (option->getDegree() == 1) {
-        const regina::NEdgeEmbedding& e0 = option->getEmbedding(0);
+    if (option->degree() == 1) {
+        const regina::NEdgeEmbedding& e0 = option->embedding(0);
         return trUtf8("Edge %1 — %2 (%3)")
-            .arg(tri_->edgeIndex(option))
-            .arg(tri_->tetrahedronIndex(e0.getTetrahedron()))
-            .arg(e0.getVertices().trunc2().c_str());
+            .arg(option->index())
+            .arg(e0.tetrahedron()->index())
+            .arg(e0.vertices().trunc2().c_str());
     } else {
-        const regina::NEdgeEmbedding& e0 = option->getEmbedding(0);
-        const regina::NEdgeEmbedding& e1 = option->getEmbedding(1);
-        if (option->getDegree() == 2)
+        const regina::NEdgeEmbedding& e0 = option->embedding(0);
+        const regina::NEdgeEmbedding& e1 = option->embedding(1);
+        if (option->degree() == 2)
             return trUtf8("Edge %1 — %2 (%3), %4 (%5)")
-                .arg(tri_->edgeIndex(option))
-                .arg(tri_->tetrahedronIndex(e0.getTetrahedron()))
-                .arg(e0.getVertices().trunc2().c_str())
-                .arg(tri_->tetrahedronIndex(e1.getTetrahedron()))
-                .arg(e1.getVertices().trunc2().c_str());
+                .arg(option->index())
+                .arg(e0.tetrahedron()->index())
+                .arg(e0.vertices().trunc2().c_str())
+                .arg(e1.tetrahedron()->index())
+                .arg(e1.vertices().trunc2().c_str());
         else
             return trUtf8("Edge %1 — %2 (%3), %4 (%5), ...")
-                .arg(tri_->edgeIndex(option))
-                .arg(tri_->tetrahedronIndex(e0.getTetrahedron()))
-                .arg(e0.getVertices().trunc2().c_str())
-                .arg(tri_->tetrahedronIndex(e1.getTetrahedron()))
-                .arg(e1.getVertices().trunc2().c_str());
+                .arg(option->index())
+                .arg(e0.tetrahedron()->index())
+                .arg(e0.vertices().trunc2().c_str())
+                .arg(e1.tetrahedron()->index())
+                .arg(e1.vertices().trunc2().c_str());
     }
 }
 
 void EdgeChooser::fill() {
     regina::NTriangulation::EdgeIterator it;
-    for (it = tri_->getEdges().begin();
-            it != tri_->getEdges().end(); ++it)
+    for (it = tri_->edges().begin(); it != tri_->edges().end(); ++it)
         if ((! filter_) || (*filter_)(*it)) {
             addItem(description(*it));
             options_.push_back(*it);

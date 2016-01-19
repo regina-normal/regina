@@ -46,7 +46,7 @@ using regina::FaceEmbedding;
 
 namespace {
     template <int dim, int subdim>
-    boost::python::list Face_getEmbeddings_list(const Face<dim, subdim>* f) {
+    boost::python::list Face_embeddings_list(const Face<dim, subdim>* f) {
         boost::python::list ans;
         for (auto& emb: *f)
             ans.append(emb);
@@ -279,8 +279,8 @@ void addFace(const char* name, const char* embName) {
         .def("isLinkOrientable", &Face<dim, subdim>::isLinkOrientable)
         .def("degree", &Face<dim, subdim>::degree)
         .def("getDegree", &Face<dim, subdim>::getDegree)
-        .def("embeddings", Face_getEmbeddings_list<dim, subdim>)
-        .def("getEmbeddings", Face_getEmbeddings_list<dim, subdim>)
+        .def("embeddings", Face_embeddings_list<dim, subdim>)
+        .def("getEmbeddings", Face_embeddings_list<dim, subdim>)
         .def("embedding", &Face<dim, subdim>::embedding,
             return_internal_reference<>())
         .def("getEmbedding", &Face<dim, subdim>::getEmbedding,

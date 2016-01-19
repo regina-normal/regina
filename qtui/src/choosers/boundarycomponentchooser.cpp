@@ -88,14 +88,14 @@ QString BoundaryComponentChooser::description(
     if (option->countTriangles() == 0) {
         regina::NVertex* v = option->getVertex(0);
         QString desc;
-        if (v->getDegree() == 1)
+        if (v->degree() == 1)
             desc = trUtf8("Ideal bdry comp %1 — Vertex %2 — %3 (%4)");
         else
             desc = trUtf8("Ideal bdry comp %1 — Vertex %2 — %3 (%4), ...");
-        return desc.arg(tri_->boundaryComponentIndex(option))
-                .arg(tri_->vertexIndex(v))
-                .arg(tri_->tetrahedronIndex(v->front().getTetrahedron()))
-                .arg(v->front().getVertex());
+        return desc.arg(option->index())
+                .arg(v->index())
+                .arg(v->front().tetrahedron()->index())
+                .arg(v->front().vertex());
     } else {
         // The number of triangles is always even, and therefore always >1.
         const regina::NTriangleEmbedding& f0 = option->getTriangle(0)->front();
@@ -105,11 +105,11 @@ QString BoundaryComponentChooser::description(
             desc = trUtf8("Real bdry comp %1 — Triangles %2 (%3), %4 (%5)");
         else
             desc = trUtf8("Real bdry comp %1 — Triangles %2 (%3), %4 (%5), ...");
-        return desc.arg(tri_->boundaryComponentIndex(option))
-                .arg(tri_->tetrahedronIndex(f0.getTetrahedron()))
-                .arg(f0.getVertices().trunc3().c_str())
-                .arg(tri_->tetrahedronIndex(f1.getTetrahedron()))
-                .arg(f1.getVertices().trunc3().c_str());
+        return desc.arg(option->index())
+                .arg(f0.tetrahedron()->index())
+                .arg(f0.vertices().trunc3().c_str())
+                .arg(f1.tetrahedron()->index())
+                .arg(f1.vertices().trunc3().c_str());
     }
 }
 

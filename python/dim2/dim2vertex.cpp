@@ -48,7 +48,7 @@ using regina::Face;
 using regina::FaceEmbedding;
 
 namespace {
-    boost::python::list Dim2Vertex_getEmbeddings_list(const Dim2Vertex* v) {
+    boost::python::list Dim2Vertex_embeddings_list(const Dim2Vertex* v) {
         boost::python::list ans;
         for (auto& emb: *v)
             ans.append(emb);
@@ -87,8 +87,8 @@ void addDim2Vertex() {
         .def("index", &Dim2Vertex::index)
         .def("isValid", &Dim2Vertex::isValid)
         .def("isLinkOrientable", &Dim2Vertex::isLinkOrientable)
-        .def("embeddings", Dim2Vertex_getEmbeddings_list)
-        .def("getEmbeddings", Dim2Vertex_getEmbeddings_list)
+        .def("embeddings", Dim2Vertex_embeddings_list)
+        .def("getEmbeddings", Dim2Vertex_embeddings_list)
         .def("embedding", &Dim2Vertex::embedding,
             return_internal_reference<>())
         .def("getEmbedding", &Dim2Vertex::getEmbedding,

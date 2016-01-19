@@ -98,6 +98,7 @@ void addNBoolSet() {
         .def(self & self)
         .def(self ^ self)
         .def(~ self)
+        .def("byteCode", &NBoolSet::byteCode)
         .def("getByteCode", &NBoolSet::getByteCode)
         .def("setByteCode", &NBoolSet::setByteCode)
         .def("fromByteCode", &NBoolSet::fromByteCode)

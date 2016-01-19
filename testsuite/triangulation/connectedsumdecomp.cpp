@@ -121,11 +121,11 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_MESSAGE("The single prime summand of " + triName +
                 " forms an unrecognised triangulation.", stdTri.get() != 0);
 
-            std::unique_ptr<NManifold> stdManifold(stdTri->getManifold());
+            std::unique_ptr<NManifold> stdManifold(stdTri->manifold());
             CPPUNIT_ASSERT_MESSAGE("The single prime summand of " + triName +
                 " forms an unrecognised 3-manifold.", stdManifold.get() != 0);
 
-            std::string stdName = stdManifold->getName();
+            std::string stdName = stdManifold->name();
             CPPUNIT_ASSERT_MESSAGE("The single prime summand of " + triName +
                 " forms " + stdName + ", not " + manifold + ".",
                 stdName == manifold);
@@ -184,17 +184,17 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_MESSAGE("The second prime summand of " + triName +
                 " forms an unrecognised triangulation.", stdTri2.get() != 0);
 
-            std::unique_ptr<NManifold> stdManifold1(stdTri1->getManifold());
+            std::unique_ptr<NManifold> stdManifold1(stdTri1->manifold());
             CPPUNIT_ASSERT_MESSAGE("The first prime summand of " + triName +
                 " forms an unrecognised 3-manifold.", stdManifold1.get() != 0);
 
-            std::unique_ptr<NManifold> stdManifold2(stdTri2->getManifold());
+            std::unique_ptr<NManifold> stdManifold2(stdTri2->manifold());
             CPPUNIT_ASSERT_MESSAGE("The second prime summand of " + triName +
                 " forms an unrecognised 3-manifold.", stdManifold2.get() != 0);
 
             // Obtain the manifold names in lexicographical order.
-            std::string stdName1 = stdManifold1->getName();
-            std::string stdName2 = stdManifold2->getName();
+            std::string stdName1 = stdManifold1->name();
+            std::string stdName2 = stdManifold2->name();
             if (stdName2 < stdName1) {
                 std::string tmp = stdName2;
                 stdName2 = stdName1;
@@ -283,22 +283,22 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_MESSAGE("The third prime summand of " + triName +
                 " forms an unrecognised triangulation.", stdTri3.get() != 0);
 
-            std::unique_ptr<NManifold> stdManifold1(stdTri1->getManifold());
+            std::unique_ptr<NManifold> stdManifold1(stdTri1->manifold());
             CPPUNIT_ASSERT_MESSAGE("The first prime summand of " + triName +
                 " forms an unrecognised 3-manifold.", stdManifold1.get() != 0);
 
-            std::unique_ptr<NManifold> stdManifold2(stdTri2->getManifold());
+            std::unique_ptr<NManifold> stdManifold2(stdTri2->manifold());
             CPPUNIT_ASSERT_MESSAGE("The second prime summand of " + triName +
                 " forms an unrecognised 3-manifold.", stdManifold2.get() != 0);
 
-            std::unique_ptr<NManifold> stdManifold3(stdTri3->getManifold());
+            std::unique_ptr<NManifold> stdManifold3(stdTri3->manifold());
             CPPUNIT_ASSERT_MESSAGE("The third prime summand of " + triName +
                 " forms an unrecognised 3-manifold.", stdManifold3.get() != 0);
 
             // Obtain the manifold names in lexicographical order.
-            std::string stdName1 = stdManifold1->getName();
-            std::string stdName2 = stdManifold2->getName();
-            std::string stdName3 = stdManifold3->getName();
+            std::string stdName1 = stdManifold1->name();
+            std::string stdName2 = stdManifold2->name();
+            std::string stdName3 = stdManifold3->name();
 
             CPPUNIT_ASSERT_MESSAGE("One of the three prime summands of " +
                 triName + " does not form RP3.",

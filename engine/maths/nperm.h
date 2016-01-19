@@ -239,7 +239,7 @@ class REGINA_API NPerm {
          *
          * @param cloneMe the permutation to clone.
          */
-        NPerm(const NPerm& cloneMe);
+        NPerm(const NPerm<n>& cloneMe);
 
         /**
          * Returns the internal code representing this permutation.
@@ -728,7 +728,6 @@ template <int n>
 NPerm<n> NPerm<n>::rand() {
     // We can't just call atIndex(rand() % nPerms), since nPerms might
     // be too large to fit into an int (which is what rand() returns).
-    Code c = idCode_;
     int image[n];
     int p, q;
     for (p = 0; p < n; ++p)
@@ -760,6 +759,9 @@ std::string NPerm<n>::trunc(unsigned len) const {
     return ans;
 }
 
+// Hide this implementation from doxygen, since it cannot seem to handle
+// definitions of templated member functions in template classes.
+#ifndef __DOXYGEN
 template <int n>
 template <int k>
 NPerm<n> NPerm<n>::extend(NPerm<k> p) {
@@ -776,6 +778,7 @@ NPerm<n> NPerm<n>::extend(NPerm<k> p) {
 
     return NPerm<n>(c);
 }
+#endif // ! __DOXYGEN
 
 } // namespace regina
 
