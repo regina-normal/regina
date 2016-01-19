@@ -46,14 +46,22 @@
  * @{
  */
 
+namespace regina {
+
 /**
  * Indicates whether the given dimension is one of Regina's
- * \ref stddim "standard dimensions", which offer significantly richer
- * functionality for triangulations than generic dimensions.
+ * \ref stddim "standard dimensions".
+ * Standard dimensions offer significantly richer functionality for
+ * triangulations than generic dimensions.
+ *
+ * @param dim the dimension in question.
+ * @return \c true if and only if \a dim is one of Regina's standard dimensions.
  */
 constexpr bool standardDim(int dim) {
     return (dim == 2 || dim == 3);
 }
+
+} // namespace regina
 
 /**
  * A synonym for \c inline, used in some special cases to avoid
