@@ -114,7 +114,7 @@ class REGINA_API NBoundaryComponent :
          *
          * @return the index of this boundary component vertex.
          */
-        unsigned long index() const;
+        size_t index() const;
 
         /**
          * Returns the number of <i>subdim</i>-faces in this boundary component.
@@ -276,7 +276,7 @@ inline NBoundaryComponent::NBoundaryComponent(NVertex* idealVertex) {
     vertices_.push_back(idealVertex);
 }
 
-inline unsigned long NBoundaryComponent::index() const {
+inline size_t NBoundaryComponent::index() const {
     return markedIndex();
 }
 
