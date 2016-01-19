@@ -615,6 +615,8 @@ Version 4.97  [ (under development) ]
               a filename).
         Routine perm3to4(), perm3to5(), perm4to5():
             - Deprecated.  Use the new routines NPerm<n>::extend() instead.
+        Routine valueOf():
+            - Now overloaded to support short and long long integers also.
         Global arrays edgeNumber[][], edgeStart[], edgeEnd[]:
             - This long-deprecated global arrays have now been removed, and
               the corresponding static arrays in NEdge are now deprecated.
