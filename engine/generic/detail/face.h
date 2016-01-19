@@ -71,6 +71,44 @@ template <int dim> class TriangulationBase;
  */
 
 /**
+ * Indicates whether it is possible for a <i>subdim</i>-face of a
+ * <i>dim</i>-dimensional triangulation to be invalid.
+ *
+ * This compile-time constant function is used to determine the first
+ * template argument that should be passed to FaceValidity.
+ *
+ * \ifacespython Not present.
+ *
+ * @param dim the dimension of the underlying triangulations.
+ * @param subdim the dimension of the faces in question.
+ * @return \c true if such faces may be invalid, or \c false if
+ * <i>subdim</i>-faces of <i>dim</i>-dimensional triangluations are
+ * always valid.
+ */
+constexpr bool allowsInvalidFaces(int dim, int subdim) {
+    return (dim >= 3 && subdim <= dim - 2);
+}
+
+/**
+ * Indicates whether it is possible for a <i>subdim</i>-face of a
+ * <i>dim</i>-dimensional triangulation to have a non-orientable link.
+ *
+ * This compile-time constant function is used to determine the
+ * template argument that should be passed to FaceOrientability.
+ *
+ * \ifacespython Not present.
+ *
+ * @param dim the dimension of the underlying triangulations.
+ * @param subdim the dimension of the faces in question.
+ * @return \c true if such faces may have non-orientable links, or \c false if
+ * the links of <i>subdim</i>-faces of <i>dim</i>-dimensional triangluations
+ * are always orientable.
+ */
+constexpr bool allowsNonOrientableLinks(int dim, int subdim) {
+    return (dim >= 3 && subdim <= dim - 3);
+}
+
+/**
  * Helper class that provides core functionality for describing how a
  * <i>subdim</i>-face of a <i>dim</i>-dimensional triangulation appears within
  * each top-dimensional simplex.
@@ -477,8 +515,7 @@ class FaceStorage<dim, 1> {
  * Helper class that stores whether a face is valid.
  * Every class Face<dim, subdim> inherits from this class.
  *
- * See FaceValidity<true>::isValid() for details on what it means for a
- * face to be valid.
+ * See isValid() for details on what it means for a face to be valid.
  *
  * \tparam allowsInvalid \c true when this is used for dimensions
  * (\a dim, \a subdim) in which it is possible for faces to be invalid,
@@ -855,8 +892,8 @@ struct FaceListHolder;
 template <int dim, int subdim>
 class FaceBase :
         public FaceStorage<dim, dim - subdim>,
-        public FaceValidity<dim >= 3 && subdim <= dim - 2, standardDim(dim)>,
-        public FaceOrientability<dim >= 3 && subdim <= dim - 3>,
+        public FaceValidity<allowsInvalidFaces(dim, subdim), standardDim(dim)>,
+        public FaceOrientability<allowsNonOrientableLinks(dim, subdim)>,
         public FaceNumbering<dim, subdim>,
         public NMarkedElement,
         public alias::FaceOfSimplex<FaceBase<dim, subdim>, dim, subdim - 1>,
