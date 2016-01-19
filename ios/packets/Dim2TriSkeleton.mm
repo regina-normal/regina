@@ -138,18 +138,18 @@
                 cell.index.text = @"No vertices";
                 cell.data0.text = cell.data1.text = cell.data2.text = @"";
             } else {
-                regina::Dim2Vertex* v = self.packet->getVertex(indexPath.row - 1);
+                regina::Dim2Vertex* v = self.packet->vertex(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Vertex" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
                 cell.data0.text = (v->isBoundary() ? @"Bdry" : @"Internal");
-                cell.data1.text = [NSString stringWithFormat:@"%ld", v->getDegree()];
+                cell.data1.text = [NSString stringWithFormat:@"%ld", v->degree()];
 
                 NSMutableString* pieces = [NSMutableString string];
                 for (auto& emb : *v)
                     [TextHelper appendToList:pieces
                                         item:[NSString stringWithFormat:@"%ld (%d)",
-                                              self.packet->triangleIndex(emb.getTriangle()),
-                                              emb.getVertex()]];
+                                              self.packet->triangleIndex(emb.triangle()),
+                                              emb.vertex()]];
                 cell.data2.text = pieces;
             }
             break;
@@ -159,18 +159,18 @@
                 cell.index.text = @"No edges";
                 cell.data0.text = cell.data1.text = cell.data2.text = @"";
             } else {
-                regina::Dim2Edge* e = self.packet->getEdge(indexPath.row - 1);
+                regina::Dim2Edge* e = self.packet->edge(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Edge" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
                 cell.data0.text = (e->isBoundary() ? @"Bdry" : @"Internal");
-                cell.data1.text = [NSString stringWithFormat:@"%zu", e->getDegree()];
+                cell.data1.text = [NSString stringWithFormat:@"%zu", e->degree()];
 
                 NSMutableString* pieces = [NSMutableString string];
-                for (unsigned i = 0; i < e->getDegree(); i++)
+                for (unsigned i = 0; i < e->degree(); i++)
                     [TextHelper appendToList:pieces
                                         item:[NSString stringWithFormat:@"%ld (%s)",
-                                              self.packet->triangleIndex(e->getEmbedding(i).getTriangle()),
-                                              e->getEmbedding(i).getVertices().trunc2().c_str()]];
+                                              self.packet->triangleIndex(e->embedding(i).triangle()),
+                                              e->embedding(i).vertices().trunc2().c_str()]];
                 cell.data2.text = pieces;
             }
             break;
@@ -180,19 +180,19 @@
                 cell.index.text = @"No triangles";
                 cell.data0.text = cell.data1.text = @"";
             } else {
-                regina::Dim2Triangle *t = self.packet->getTriangle(indexPath.row - 1);
+                regina::Dim2Triangle *t = self.packet->triangle(indexPath.row - 1);
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Triangle" forIndexPath:indexPath];
                 cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
 
                 cell.data0.text = [NSString stringWithFormat:@"%ld, %ld, %ld",
-                                  t->getVertex(0)->markedIndex(),
-                                  t->getVertex(1)->markedIndex(),
-                                  t->getVertex(2)->markedIndex()];
+                                  t->vertex(0)->markedIndex(),
+                                  t->vertex(1)->markedIndex(),
+                                  t->vertex(2)->markedIndex()];
 
                 cell.data1.text = [NSString stringWithFormat:@"%ld, %ld, %ld",
-                                   t->getEdge(2)->markedIndex(),
-                                   t->getEdge(1)->markedIndex(),
-                                   t->getEdge(0)->markedIndex()];
+                                   t->edge(2)->markedIndex(),
+                                   t->edge(1)->markedIndex(),
+                                   t->edge(0)->markedIndex()];
             }
             break;
         case 3: /* components */
@@ -213,7 +213,7 @@
                     for (unsigned long i = 0; i < c->size(); ++i)
                         [TextHelper appendToList:pieces
                                             item:[NSString stringWithFormat:@"%ld",
-                                                  self.packet->triangleIndex(c->getTriangle(i))]];
+                                                  self.packet->triangleIndex(c->triangle(i))]];
                     cell.data2.text = pieces;
                 }
             }
@@ -231,11 +231,11 @@
 
                 NSMutableString* pieces = [NSMutableString string];
                 for (unsigned long i = 0; i < b->countEdges(); ++i) {
-                    const regina::Dim2EdgeEmbedding& emb = b->getEdge(i)->getEmbedding(0);
+                    const regina::Dim2EdgeEmbedding& emb = b->edge(i)->front();
                     [TextHelper appendToList:pieces
                                         item:[NSString stringWithFormat:@"%ld (%s)",
-                                              self.packet->triangleIndex(emb.getTriangle()),
-                                              emb.getVertices().trunc2().c_str()]];
+                                              self.packet->triangleIndex(emb.triangle()),
+                                              emb.vertices().trunc2().c_str()]];
                 }
                 cell.data1.text = pieces;
             }

@@ -61,8 +61,7 @@ NLargeInteger NNormalSurfaceVectorOriented::edgeWeight(
 NLargeInteger NNormalSurfaceVectorOriented::arcs(size_t triIndex,
         int triVertex, const NTriangulation* triang) const {
     // Find a tetrahedron next to the triangle in question.
-    const NTriangleEmbedding& emb = triang->triangles()[triIndex]->
-        getEmbedding(0);
+    const NTriangleEmbedding& emb = triang->triangles()[triIndex]->front();
     long tetIndex = triang->tetrahedronIndex(emb.getTetrahedron());
     int vertex = emb.getVertices()[triVertex];
     int backOfFace = emb.getVertices()[3];
@@ -101,11 +100,11 @@ NMatrixInt* NNormalSurfaceVectorOriented::makeMatchingEquations(
             fit != triangulation->triangles().end(); fit++) {
         if (! (*fit)->isBoundary()) {
             tet0 = triangulation->tetrahedronIndex(
-                (*fit)->getEmbedding(0).getTetrahedron());
+                (*fit)->embedding(0).getTetrahedron());
             tet1 = triangulation->tetrahedronIndex(
-                (*fit)->getEmbedding(1).getTetrahedron());
-            perm0 = (*fit)->getEmbedding(0).getVertices();
-            perm1 = (*fit)->getEmbedding(1).getVertices();
+                (*fit)->embedding(1).getTetrahedron());
+            perm0 = (*fit)->embedding(0).getVertices();
+            perm1 = (*fit)->embedding(1).getVertices();
             for (i=0; i<3; i++) {
                 // row: oriented towards the vertex of the face
                 // row+1: oriented towards the opposite face

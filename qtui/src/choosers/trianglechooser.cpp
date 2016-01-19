@@ -83,28 +83,27 @@ void TriangleChooser::select(regina::NTriangle* option) {
 }
 
 QString TriangleChooser::description(regina::NTriangle* option) {
-    if (option->getDegree() == 1) {
-        const regina::NTriangleEmbedding& e0 = option->getEmbedding(0);
+    if (option->degree() == 1) {
+        const regina::NTriangleEmbedding& e0 = option->embedding(0);
         return trUtf8("Triangle %2 — %3 (%4)")
             .arg(tri_->triangleIndex(option))
-            .arg(tri_->tetrahedronIndex(e0.getTetrahedron()))
+            .arg(tri_->tetrahedronIndex(e0.tetrahedron()))
             .arg(e0.getVertices().trunc3().c_str());
     } else {
-        const regina::NTriangleEmbedding& e0 = option->getEmbedding(0);
-        const regina::NTriangleEmbedding& e1 = option->getEmbedding(1);
+        const regina::NTriangleEmbedding& e0 = option->embedding(0);
+        const regina::NTriangleEmbedding& e1 = option->embedding(1);
         return trUtf8("Triangle %1 — %2 (%3), %4 (%5)")
             .arg(tri_->triangleIndex(option))
-            .arg(tri_->tetrahedronIndex(e0.getTetrahedron()))
+            .arg(tri_->tetrahedronIndex(e0.tetrahedron()))
             .arg(e0.getVertices().trunc3().c_str())
-            .arg(tri_->tetrahedronIndex(e1.getTetrahedron()))
+            .arg(tri_->tetrahedronIndex(e1.tetrahedron()))
             .arg(e1.getVertices().trunc3().c_str());
     }
 }
 
 void TriangleChooser::fill() {
     regina::NTriangulation::TriangleIterator it;
-    for (it = tri_->getTriangles().begin();
-            it != tri_->getTriangles().end(); ++it)
+    for (it = tri_->triangles().begin(); it != tri_->triangles().end(); ++it)
         if ((! filter_) || (*filter_)(*it)) {
             addItem(description(*it));
             options_.push_back(*it);

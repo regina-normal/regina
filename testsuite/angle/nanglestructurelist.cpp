@@ -263,12 +263,12 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
                         continue;
 
                     tot = 0;
-                    for (k = 0; k < e->getDegree(); ++k) {
+                    for (k = 0; k < e->degree(); ++k) {
                         tot += s->angle(
-                            e->getEmbedding(k).getTetrahedron()->markedIndex(),
+                            e->embedding(k).tetrahedron()->index(),
                             regina::vertexSplit[
-                                e->getEmbedding(k).getVertices()[0]][
-                                e->getEmbedding(k).getVertices()[1]]);
+                                e->embedding(k).vertices()[0]][
+                                e->embedding(k).vertices()[1]]);
                     }
                     if (tot != 2) {
                         std::ostringstream msg;

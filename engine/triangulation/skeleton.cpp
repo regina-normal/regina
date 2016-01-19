@@ -258,7 +258,7 @@ void NTriangulation::calculateVertexLinks() {
     for (NVertex* vertex : getVertices()) {
         // Fix the Euler characteristic (subtract f, divide by two).
         vertex->linkEulerChar_ = (vertex->linkEulerChar_
-            - static_cast<long>(vertex->getDegree())) / 2;
+            - static_cast<long>(vertex->degree())) / 2;
 
         if (vertex->isBoundary()) {
             // We haven't added ideal vertices to the boundary list yet,

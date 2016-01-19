@@ -51,7 +51,7 @@ using regina::FaceEmbedding;
 using regina::python::GlobalArray;
 
 namespace {
-    boost::python::list Dim2Edge_getEmbeddings_list(const Dim2Edge* e) {
+    boost::python::list Dim2Edge_embeddings_list(const Dim2Edge* e) {
         boost::python::list ans;
         for (auto& emb: *e)
             ans.append(emb);
@@ -90,8 +90,8 @@ void addDim2Edge() {
         .def("index", &Dim2Edge::index)
         .def("isValid", &Dim2Edge::isValid)
         .def("isLinkOrientable", &Dim2Edge::isLinkOrientable)
-        .def("embeddings", Dim2Edge_getEmbeddings_list)
-        .def("getEmbeddings", Dim2Edge_getEmbeddings_list)
+        .def("embeddings", Dim2Edge_embeddings_list)
+        .def("getEmbeddings", Dim2Edge_embeddings_list)
         .def("degree", &Dim2Edge::degree)
         .def("getDegree", &Dim2Edge::getDegree)
         .def("embedding", &Dim2Edge::embedding,

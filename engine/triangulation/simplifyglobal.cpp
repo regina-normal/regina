@@ -77,9 +77,9 @@ bool NTriangulation::intelligentSimplify() {
             while (true) {
                 // Calculate the list of available 4-4 moves.
                 fourFourAvailable.clear();
-                // Use getEdges() to ensure the skeleton has been calculated.
-                for (eit = use->getEdges().begin();
-                        eit != use->getEdges().end(); eit++) {
+                // Use edges() to ensure the skeleton has been calculated.
+                for (eit = use->edges().begin();
+                        eit != use->edges().end(); eit++) {
                     edge = *eit;
                     for (axis = 0; axis < 2; axis++)
                         if (use->fourFourMove(edge, axis, true, false))
@@ -139,8 +139,8 @@ bool NTriangulation::intelligentSimplify() {
                 while (openedNow) {
                     openedNow = false;
 
-                    for (fit = use->getTriangles().begin();
-                            fit != use->getTriangles().end(); ++fit)
+                    for (fit = use->triangles().begin();
+                            fit != use->triangles().end(); ++fit)
                         if (use->openBook(*fit, true, true)) {
                             opened = openedNow = true;
                             break;
@@ -178,7 +178,7 @@ bool NTriangulation::intelligentSimplify() {
                 bool closed = false;
 
                 EdgeIterator eit;
-                for (eit = getEdges().begin(); eit != getEdges().end(); ++eit)
+                for (eit = edges().begin(); eit != edges().end(); ++eit)
                     if (closeBook(*eit, true, true)) {
                         closed = true;
                         changed = true;
@@ -227,7 +227,7 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
             // Crush edges if we can.
             if (countVertices() > components().size() &&
                     countVertices() > boundaryComponents_.size()) {
-                for (NEdge* edge : getEdges())
+                for (NEdge* edge : edges())
                     if (collapseEdge(edge, true, perform)) {
                         changedNow = changed = true;
                         break;
@@ -241,7 +241,7 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
             }
 
             // Look for internal simplifications.
-            for (NEdge* edge : getEdges()) {
+            for (NEdge* edge : edges()) {
                 if (threeTwoMove(edge, true, perform)) {
                     changedNow = changed = true;
                     break;
@@ -265,7 +265,7 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
                 else
                     return true;
             }
-            for (NVertex* vertex : getVertices())
+            for (NVertex* vertex : vertices())
                 if (twoZeroMove(vertex, true, perform)) {
                     changedNow = changed = true;
                     break;
@@ -285,8 +285,8 @@ bool NTriangulation::simplifyToLocalMinimum(bool perform) {
                     // for shell boundary moves.
                     nTriangles = (*bit)->countTriangles();
                     for (iTriangle = 0; iTriangle < nTriangles; iTriangle++) {
-                        if (shellBoundary((*bit)->getTriangle(iTriangle)->
-                                getEmbedding(0).getTetrahedron(),
+                        if (shellBoundary((*bit)->triangle(iTriangle)->
+                                front().tetrahedron(),
                                 true, perform)) {
                             changedNow = changed = true;
                             break;

@@ -49,7 +49,7 @@ using regina::NVertex;
 using regina::NVertexEmbedding;
 
 namespace {
-    boost::python::list vertex_getEmbeddings_list(const NVertex* v) {
+    boost::python::list vertex_embeddings_list(const NVertex* v) {
         boost::python::list ans;
         for (auto& emb: *v)
             ans.append(emb);
@@ -104,8 +104,8 @@ void addNVertex() {
         scope s = class_<Face<3, 0>, std::auto_ptr<Face<3, 0>>,
                 boost::noncopyable>("Face3_0", no_init)
             .def("index", &NVertex::index)
-            .def("embeddings", vertex_getEmbeddings_list)
-            .def("getEmbeddings", vertex_getEmbeddings_list)
+            .def("embeddings", vertex_embeddings_list)
+            .def("getEmbeddings", vertex_embeddings_list)
             .def("embedding", &NVertex::embedding,
                 return_internal_reference<>())
             .def("getEmbedding", &NVertex::getEmbedding,

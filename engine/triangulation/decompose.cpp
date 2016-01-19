@@ -1032,7 +1032,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
 
         // This could be a compressing disc.
         // Cut along the triangle to be sure.
-        const NTriangleEmbedding& emb = (*fit)->getEmbedding(0);
+        const NTriangleEmbedding& emb = (*fit)->front();
 
         NTriangulation cut(use);
         cut.getTetrahedron(emb.getTetrahedron()->markedIndex())->unjoin(

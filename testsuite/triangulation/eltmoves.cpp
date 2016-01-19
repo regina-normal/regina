@@ -99,7 +99,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
             NEdge* edge;
             for (unsigned long e = 0; e < tri->countEdges(); e++) {
                 edge = tri->getEdge(e);
-                if (edge->getDegree() == 2 && ! edge->isBoundary())
+                if (edge->degree() == 2 && ! edge->isBoundary())
                     found = true;
                 CPPUNIT_ASSERT_MESSAGE(
                     "An illegal 2-0 edge move was allowed for the " +
@@ -162,7 +162,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 NEdge* e = tet->getEdge(NEdge::edgeNumber[0][1]);
                 CPPUNIT_ASSERT_MESSAGE(
                     "Case boundary-loop-tet is malformed.",
-                    (! e->isBoundary()) && e->getDegree() == 1 &&
+                    (! e->isBoundary()) && e->degree() == 1 &&
                         t.isOrientable());
 
                 NTriangulation ball;
@@ -362,7 +362,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                     NEdge::edgeNumber[0][1]);
                 CPPUNIT_ASSERT_MESSAGE(
                     "Case identified-edges-S2 is malformed.",
-                    (! e->isBoundary()) && e->getDegree() == 6 &&
+                    (! e->isBoundary()) && e->degree() == 6 &&
                         t.isOrientable());
 
                 verify20EdgeInvalid(&t, "identified-edges-S2");
@@ -388,7 +388,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                     NEdge::edgeNumber[0][1]);
                 CPPUNIT_ASSERT_MESSAGE(
                     "Case identified-edges-RP2 is malformed.",
-                    (! e->isBoundary()) && e->getDegree() == 6 &&
+                    (! e->isBoundary()) && e->degree() == 6 &&
                         ! t.isOrientable());
 
                 verify20EdgeInvalid(&t, "identified-edges-RP2");
@@ -404,7 +404,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 NEdge* e = tet->getEdge(NEdge::edgeNumber[0][1]);
                 CPPUNIT_ASSERT_MESSAGE(
                     "Case boundary-loop-boundary is malformed.",
-                    (! e->isBoundary()) && e->getDegree() == 1 &&
+                    (! e->isBoundary()) && e->degree() == 1 &&
                         t.isOrientable());
 
                 verify20EdgeInvalid(&t, "boundary-loop-boundary");
@@ -419,7 +419,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                     getEdge(NEdge::edgeNumber[0][1]);
                 CPPUNIT_ASSERT_MESSAGE(
                     "Case boundary-cross-boundary is malformed.",
-                    e->isBoundary() && e->getDegree() == 3 &&
+                    e->isBoundary() && e->degree() == 3 &&
                         ! t.isOrientable());
 
                 verify20EdgeInvalid(&t, "boundary-cross-boundary");
