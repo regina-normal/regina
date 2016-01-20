@@ -66,9 +66,9 @@ def simpToReg(simp):
         ans.newTetrahedron()
     for j in range(n):
         for f in range(4):
-            if ans.getTetrahedron(j).adjacentTetrahedron(f) == None:
-                ans.getTetrahedron(j).joinTo(f,
-                    ans.getTetrahedron(neighbours[j][f]), gluings[j][f])
+            if ans.tetrahedron(j).adjacentTetrahedron(f) == None:
+                ans.tetrahedron(j).joinTo(f,
+                    ans.tetrahedron(neighbours[j][f]), gluings[j][f])
     return ans
 
 print simpToReg(cell).isoSig()

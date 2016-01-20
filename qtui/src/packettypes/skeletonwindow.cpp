@@ -215,7 +215,7 @@ QVariant VertexModel::data(const QModelIndex& index, int role) const {
                 QString ans;
                 for (auto& emb : *item)
                     appendToList(ans, QString("%1 (%2)").
-                        arg(emb.getTetrahedron()->index()).
+                        arg(emb.tetrahedron()->index()).
                         arg(emb.getVertex()));
                 return ans;
         }
@@ -305,7 +305,7 @@ QVariant EdgeModel::data(const QModelIndex& index, int role) const {
                 QString ans;
                 for (auto& emb : *item)
                     appendToList(ans, QString("%1 (%2)").
-                        arg(emb.getTetrahedron()->index()).
+                        arg(emb.tetrahedron()->index()).
                         arg(emb.getVertices().trunc2().c_str()));
                 return ans;
         }
@@ -411,7 +411,7 @@ QVariant TriangleModel::data(const QModelIndex& index, int role) const {
                 QString ans;
                 for (auto& emb : *item)
                     appendToList(ans, QString("%1 (%2)").
-                        arg(emb.getTetrahedron()->index()).
+                        arg(emb.tetrahedron()->index()).
                         arg(emb.getVertices().trunc3().c_str()));
                 return ans;
         }
@@ -496,7 +496,7 @@ QVariant ComponentModel::data(const QModelIndex& index, int role) const {
                 QString ans;
                 for (unsigned long i = 0; i < item->size(); i++)
                     appendToList(ans, QString::number(
-                        item->getTetrahedron(i)->index()));
+                        item->tetrahedron(i)->index()));
                 return ans;
         }
         return QString();
@@ -590,7 +590,7 @@ QVariant BoundaryComponentModel::data(const QModelIndex& index,
                     QString ans;
                     for (auto& emb : *v)
                         appendToList(ans, QString("%1 (%2)").
-                            arg(emb.getTetrahedron()->index()).
+                            arg(emb.tetrahedron()->index()).
                             arg(emb.getVertex()));
                     return tr("Vertex %1 = ").arg(v->index()) + ans;
                 } else {
@@ -599,7 +599,7 @@ QVariant BoundaryComponentModel::data(const QModelIndex& index,
                         const NTriangleEmbedding& emb =
                             item->getTriangle(i)->front();
                         appendToList(ans, QString("%1 (%2)").
-                            arg(emb.getTetrahedron()->index()).
+                            arg(emb.tetrahedron()->index()).
                             arg(emb.getVertices().trunc3().c_str()));
                     }
                     return ans;

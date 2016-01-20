@@ -395,7 +395,7 @@ void NNormalSurface::calculateRealBoundary() const {
     int type, face;
 
     for (index = 0; index < tot; index++) {
-        tet = triangulation_->getTetrahedron(index);
+        tet = triangulation_->tetrahedron(index);
         if (tet->hasBoundary()) {
             // Check for disk types with boundary
             for (type=0; type<3; type++) {

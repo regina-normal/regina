@@ -186,7 +186,7 @@ bool check_consistency_around_edge(const NTriangulation &trig,
 
     for(auto& emb : *trig.getEdge(edge_index))
         if(!check_consistency_on_tet(trig, edge_orientations,
-                                     emb.getTetrahedron(), force_oriented))
+                                     emb.tetrahedron(), force_oriented))
             return false;
 
     return true;
@@ -208,7 +208,7 @@ NIsomorphism* iso_from_edges(const NTriangulation &trig,
 
         if(!check_consistency_on_tet(trig,
                                      edge_orientations,
-                                     trig.getTetrahedron(i),
+                                     trig.tetrahedron(i),
                                      force_oriented))
             reorder_fatal_error("Inconsistent edge orientations in reorder.cpp");
 
@@ -218,7 +218,7 @@ NIsomorphism* iso_from_edges(const NTriangulation &trig,
 
         edge_orientations_on_tet(trig,
                                  edge_orientations,
-                                 trig.getTetrahedron(i),
+                                 trig.tetrahedron(i),
                                  edge_orientations_tet);
 
         // derive the permutation

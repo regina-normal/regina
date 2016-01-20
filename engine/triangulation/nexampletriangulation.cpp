@@ -185,8 +185,8 @@ NTriangulation* NExampleTriangulation::rp2xs1() {
     NTriangulation* ans = solidKleinBottle();
     ans->setPacketLabel("RP2 x S1");
 
-    NTetrahedron* r = ans->getTetrahedron(0);
-    NTetrahedron* t = ans->getTetrahedron(2);
+    NTetrahedron* r = ans->tetrahedron(0);
+    NTetrahedron* t = ans->tetrahedron(2);
     r->joinTo(1, t, NPerm4(2, 3, 0, 1));
     r->joinTo(3, t, NPerm4(2, 3, 0, 1));
 

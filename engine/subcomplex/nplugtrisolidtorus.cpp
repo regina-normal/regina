@@ -193,7 +193,7 @@ NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
                 continue;
 
             core = NTriSolidTorus::formsTriSolidTorus(
-                comp->getTetrahedron(tetIndex), coreRoles[0]);
+                comp->tetrahedron(tetIndex), coreRoles[0]);
             if (! core)
                 continue;
 

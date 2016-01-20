@@ -163,7 +163,7 @@ namespace {
                     if (i % coordsPerTet > 3) {
                         // Not a triangular coordinate.
                         facets_.set(i, true);
-                    } else if (tri->getTetrahedron(i / coordsPerTet)->
+                    } else if (tri->tetrahedron(i / coordsPerTet)->
                             getVertex(i % coordsPerTet)->markedIndex()
                             == whichLink) {
                         // A triangular coordinate in our vertex link.
@@ -412,7 +412,7 @@ void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
 
         for (auto& emb : *owner->getVertex(i))
             link[i]->setElement(Variant::stdPos(
-                emb.getTetrahedron()->markedIndex(), emb.getVertex()), 1);
+                emb.tetrahedron()->markedIndex(), emb.getVertex()), 1);
     }
 
     // Create the initial set of rays:
@@ -469,7 +469,7 @@ void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
                 return;
             }
 
-            tcoord = Variant::stdPos(emb.getTetrahedron()->markedIndex(),
+            tcoord = Variant::stdPos(emb.tetrahedron()->markedIndex(),
                 emb.getVertex());
 
             // Add the inequality v[tcoord] >= 0.

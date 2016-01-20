@@ -75,7 +75,7 @@ print a == b, a != b
 print 'NTetrahedron:'
 t = NTriangulation()
 a = t.newTetrahedron()
-b = t.getTetrahedron(0)
+b = t.tetrahedron(0)
 print a == b, a != b
 
 print 'NAbelianGroup:'

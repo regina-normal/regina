@@ -314,7 +314,7 @@ inline bool Face<3, 2>::isBoundary() const {
 }
 
 inline bool Face<3, 2>::inMaximalForest() const {
-    return front().getTetrahedron()->facetInMaximalForest(
+    return front().tetrahedron()->facetInMaximalForest(
         front().getTriangle());
 }
 

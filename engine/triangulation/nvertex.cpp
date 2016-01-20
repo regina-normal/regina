@@ -81,13 +81,13 @@ Dim2Triangulation* NVertex::buildLinkDetail(bool labels,
         tTri = ans->newTriangle();
         if (labels) {
             std::stringstream s;
-            s << it->getTetrahedron()->markedIndex() <<
+            s << it->tetrahedron()->markedIndex() <<
                 " (" << it->getVertex() << ')';
             tTri->setDescription(s.str());
         }
         if (inclusion) {
-            (*inclusion)->tetImage(i) = it->getTetrahedron()->markedIndex();
-            (*inclusion)->facetPerm(i) = it->getTetrahedron()->
+            (*inclusion)->tetImage(i) = it->tetrahedron()->markedIndex();
+            (*inclusion)->facetPerm(i) = it->tetrahedron()->
                 getTriangleMapping(it->getVertex());
         }
     }
@@ -98,7 +98,7 @@ Dim2Triangulation* NVertex::buildLinkDetail(bool labels,
     int adjIndex;
     int adjVertex;
     for (it = begin(), i = 0; it != end(); ++it, ++i) {
-        tet = it->getTetrahedron();
+        tet = it->tetrahedron();
         v = it->getVertex();
 
         for (exitTri = 0; exitTri < 4; ++exitTri) {
@@ -125,7 +125,7 @@ Dim2Triangulation* NVertex::buildLinkDetail(bool labels,
             // made linear(ish) with the right data structure and/or algorithm.
             for (adjIt = begin(), adjIndex = 0;
                     adjIt != end(); ++adjIt, ++adjIndex)
-                if (adjIt->getTetrahedron() == adj &&
+                if (adjIt->tetrahedron() == adj &&
                         adjIt->getVertex() == adjVertex)
                     break; // Sets adjIndex to the right value.
 

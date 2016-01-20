@@ -76,7 +76,7 @@ const NGroupPresentation& NTriangulation::fundamentalGroup() const {
             // Put in the relation corresponding to this edge.
             rel = new NGroupExpression();
             for (auto& emb : *e) {
-                currTet = emb.getTetrahedron();
+                currTet = emb.tetrahedron();
                 currTetFace = emb.getVertices()[2];
                 triangle = currTet->getTriangle(currTetFace);
                 triGenIndex = genIndex[triangleIndex(triangle)];

@@ -48,7 +48,7 @@ bool LPConstraintEuler::addRows(
         obj[i] = 1;
     for (i = 0; i < tri->countTriangles(); ++i) {
         tet = tri->tetrahedronIndex(
-            tri->getTriangle(i)->front().getTetrahedron());
+            tri->getTriangle(i)->front().tetrahedron());
         p = tri->getTriangle(i)->front().getVertices();
         --obj[7 * tet + p[0]];
         --obj[7 * tet + p[1]];
@@ -59,7 +59,7 @@ bool LPConstraintEuler::addRows(
     }
     for (i = 0; i < tri->countEdges(); ++i) {
         tet = tri->tetrahedronIndex(
-            tri->getEdge(i)->front().getTetrahedron());
+            tri->getEdge(i)->front().tetrahedron());
         p = tri->getEdge(i)->front().getVertices();
         ++obj[7 * tet + p[0]];
         ++obj[7 * tet + p[1]];
@@ -152,7 +152,7 @@ void BanBoundary::init(const int* columnPerm) {
             tet = columnPerm[i] / 7;
 
         for (k = 0; k < 4; ++k)
-            if (! tri_->getTetrahedron(tet)->adjacentTetrahedron(k)) {
+            if (! tri_->tetrahedron(tet)->adjacentTetrahedron(k)) {
                 banned_[i] = true;
                 break;
             }
@@ -167,7 +167,7 @@ void BanBoundary::init(const int* columnPerm) {
 
             for (k = 0; k < 4; ++k)
                 if (k != type &&
-                        ! tri_->getTetrahedron(tet)->
+                        ! tri_->tetrahedron(tet)->
                         adjacentTetrahedron(k)) {
                     banned_[i] = true;
                     break;
@@ -216,7 +216,7 @@ void BanTorusBoundary::init(const int* columnPerm) {
             tet = columnPerm[i] / 7;
 
         for (k = 0; k < 4; ++k)
-            if (banTriangle[tri_->getTetrahedron(tet)->getTriangle(k)->
+            if (banTriangle[tri_->tetrahedron(tet)->getTriangle(k)->
                     markedIndex()]) {
                 banned_[i] = true;
                 break;
@@ -231,13 +231,13 @@ void BanTorusBoundary::init(const int* columnPerm) {
             tet = columnPerm[i] / 7;
             type = columnPerm[i] % 7;
 
-            if (markVtx[tri_->getTetrahedron(tet)->getVertex(type)->
+            if (markVtx[tri_->tetrahedron(tet)->getVertex(type)->
                     markedIndex()])
                 marked_[i] = true;
 
             for (k = 0; k < 4; ++k)
                 if (k != type &&
-                        banTriangle[tri_->getTetrahedron(tet)->getTriangle(k)->
+                        banTriangle[tri_->tetrahedron(tet)->getTriangle(k)->
                         markedIndex()]) {
                     banned_[i] = true;
                     break;

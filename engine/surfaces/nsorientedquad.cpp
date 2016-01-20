@@ -72,7 +72,7 @@ NMatrixInt* NNormalSurfaceVectorOrientedQuad::makeMatchingEquations(
         if (! (*eit)->isBoundary()) {
             for (auto& emb : **eit) {
                 tetIndex = triangulation->tetrahedronIndex(
-                    emb.getTetrahedron());
+                    emb.tetrahedron());
                 perm = emb.getVertices();
 
                 flip = (perm[0] == 0 || perm[2] == 0);
@@ -190,7 +190,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
 
             // Pick some triangular disc and set it to zero.
             const NVertexEmbedding& vemb = (*vit)->front();
-            row = 14 * triang->tetrahedronIndex(vemb.getTetrahedron())
+            row = 14 * triang->tetrahedronIndex(vemb.tetrahedron())
                 + 2 * vemb.getVertex() + orient;
             ans->setElement(row, NLargeInteger::zero);
 
@@ -200,9 +200,9 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
             for (i=0; i<4; i++) {
                 if (i == vemb.getVertex())
                     continue;
-                edge = vemb.getTetrahedron()->getEdge(
+                edge = vemb.tetrahedron()->getEdge(
                     NEdge::edgeNumber[vemb.getVertex()][i]);
-                end = vemb.getTetrahedron()->getEdgeMapping(
+                end = vemb.tetrahedron()->getEdgeMapping(
                     NEdge::edgeNumber[vemb.getVertex()][i])[0] == i ? 1 : 0;
                 if (usedEdges[end].insert(edge).second)
                     examine.push_back(EdgeEnd(edge, end));
@@ -223,7 +223,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
                 endit = current.edge->end();
                 for (eembit = beginit; eembit != endit; eembit++)
                     if (! (*ans)[14 * triang->tetrahedronIndex(
-                            (*eembit).getTetrahedron()) +
+                            (*eembit).tetrahedron()) +
                             2 * (*eembit).getVertices()[current.end] +
                             orient].isInfinite())
                         break;
@@ -233,12 +233,12 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
                 // holes.
                 backupit = eembit;
                 adjPerm = (*eembit).getVertices();
-                adjIndex = triang->tetrahedronIndex((*eembit).getTetrahedron());
+                adjIndex = triang->tetrahedronIndex((*eembit).tetrahedron());
                 while (eembit != beginit) {
                     eembit--;
 
                     // Work out the coordinate for the disc type at eembit.
-                    tet = (*eembit).getTetrahedron();
+                    tet = (*eembit).tetrahedron();
                     tetPerm = (*eembit).getVertices();
                     tetIndex = triang->tetrahedronIndex(tet);
 
@@ -277,10 +277,10 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
                 // matching equations have not been broken.
                 eembit = backupit;
                 adjPerm = (*eembit).getVertices();
-                adjIndex = triang->tetrahedronIndex((*eembit).getTetrahedron());
+                adjIndex = triang->tetrahedronIndex((*eembit).tetrahedron());
                 for (eembit++; eembit != endit; eembit++) {
                     // Work out the coordinate for the disc type at eembit.
-                    tet = (*eembit).getTetrahedron();
+                    tet = (*eembit).tetrahedron();
                     tetPerm = (*eembit).getVertices();
                     tetIndex = triang->tetrahedronIndex(tet);
 
@@ -327,7 +327,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
             // to infinity.  Otherwise subtract min from every coordinate to
             // make the values as small as possible.
             for (auto& emb : **vit) {
-                row = 14 * triang->tetrahedronIndex(emb.getTetrahedron())
+                row = 14 * triang->tetrahedronIndex(emb.tetrahedron())
                     + 2 * emb.getVertex() + orient;
                 if (broken)
                     ans->setElement(row, NLargeInteger::infinity);

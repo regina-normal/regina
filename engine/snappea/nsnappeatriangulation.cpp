@@ -847,7 +847,7 @@ void NSnapPeaTriangulation::sync() {
                 for (j = 0; j < 4; ++j) {
                     c = stet->cusp[j];
                     if (cusp_[c->index].vertex_ == 0)
-                        cusp_[c->index].vertex_ = getTetrahedron(i)->getVertex(j);
+                        cusp_[c->index].vertex_ = tetrahedron(i)->getVertex(j);
                 }
                 stet = stet->next;
             }

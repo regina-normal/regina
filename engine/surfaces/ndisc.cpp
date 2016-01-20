@@ -185,7 +185,7 @@ NDiscSetSurface::~NDiscSetSurface() {
 
 NDiscSpec* NDiscSetSurface::adjacentDisc(const NDiscSpec& disc,
         NPerm4 arc, NPerm4& adjArc) const {
-    const NTetrahedron* tet = triangulation->getTetrahedron(disc.tetIndex);
+    const NTetrahedron* tet = triangulation->tetrahedron(disc.tetIndex);
     int arcFace = arc[3];
     if (tet->adjacentTetrahedron(arcFace) == 0)
         return 0;

@@ -58,7 +58,7 @@ void NTriangulation::stretchBoundaryForestFromVertex(NVertex* from,
     NEdge* edge;
     int vertex, yourVertex;
     for (auto& emb : *from) {
-        tet = emb.getTetrahedron();
+        tet = emb.tetrahedron();
         vertex = emb.getVertex();
         for (yourVertex = 0; yourVertex < 4; yourVertex++) {
             if (vertex == yourVertex)
@@ -111,7 +111,7 @@ bool NTriangulation::stretchForestFromVertex(NVertex* from,
     int vertex, yourVertex;
     bool madeLink = false;
     for (auto& emb : *from) {
-        tet = emb.getTetrahedron();
+        tet = emb.tetrahedron();
         vertex = emb.getVertex();
         for (yourVertex = 0; yourVertex < 4; yourVertex++) {
             if (vertex == yourVertex)

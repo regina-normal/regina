@@ -46,7 +46,7 @@ void addNSnappedBall() {
             ("NSnappedBall", no_init)
         .def("clone", &NSnappedBall::clone,
             return_value_policy<manage_new_object>())
-        .def("tetrahedron", &NSnappedBall::getTetrahedron,
+        .def("tetrahedron", &NSnappedBall::tetrahedron,
             return_value_policy<reference_existing_object>())
         .def("getTetrahedron", &NSnappedBall::getTetrahedron,
             return_value_policy<reference_existing_object>())

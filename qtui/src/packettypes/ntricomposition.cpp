@@ -399,9 +399,9 @@ void NTriCompositionUI::findAugTriSolidTori() {
             const regina::NTriSolidTorus& core = aug->core();
             details = new QTreeWidgetItem(id, details);
             details->setText(0,tr("Core: tets %1, %2, %3").
-                arg(tri->tetrahedronIndex(core.getTetrahedron(0))).
-                arg(tri->tetrahedronIndex(core.getTetrahedron(1))).
-                arg(tri->tetrahedronIndex(core.getTetrahedron(2))));
+                arg(tri->tetrahedronIndex(core.tetrahedron(0))).
+                arg(tri->tetrahedronIndex(core.tetrahedron(1))).
+                arg(tri->tetrahedronIndex(core.tetrahedron(2))));
 
             if (aug->hasLayeredChain()) {
                 QString chainType;
@@ -773,7 +773,7 @@ void NTriCompositionUI::findLayeredSolidTori() {
     unsigned long topIndex;
     for (unsigned long i = 0; i < nTets; i++) {
         torus = regina::NLayeredSolidTorus::formsLayeredSolidTorusBase(
-            tri->getTetrahedron(i));
+            tri->tetrahedron(i));
         if (torus) {
             id = addComponentSection(tr("Layered solid torus ") +
                 torus->name().c_str());
@@ -864,9 +864,9 @@ void NTriCompositionUI::findPlugTriSolidTori() {
             details = new QTreeWidgetItem(id, details);
             details->setText(0,
                 tr("Core: tets %1, %2, %3").
-                arg(tri->tetrahedronIndex(core.getTetrahedron(0))).
-                arg(tri->tetrahedronIndex(core.getTetrahedron(1))).
-                arg(tri->tetrahedronIndex(core.getTetrahedron(2))));
+                arg(tri->tetrahedronIndex(core.tetrahedron(0))).
+                arg(tri->tetrahedronIndex(core.tetrahedron(1))).
+                arg(tri->tetrahedronIndex(core.tetrahedron(2))));
 
             QString lengths(tr("Chain lengths: "));
             for (int j = 0; j < 3; j++) {
@@ -904,7 +904,7 @@ void NTriCompositionUI::findSnappedBalls() {
     regina::NSnappedBall* ball;
     for (unsigned long i = 0; i < nTets; i++) {
         ball = regina::NSnappedBall::formsSnappedBall(
-            tri->getTetrahedron(i));
+            tri->tetrahedron(i));
         if (ball) {
             id = addComponentSection(tr("Snapped 3-ball"));
 
@@ -931,9 +931,9 @@ void NTriCompositionUI::findSnappedSpheres() {
     regina::NTetrahedron* t2;
     regina::NSnappedTwoSphere* sphere;
     for (i = 0; i < nTets; i++) {
-        t1 = tri->getTetrahedron(i);
+        t1 = tri->tetrahedron(i);
         for (j = i + 1; j < nTets; j++) {
-            t2 = tri->getTetrahedron(j);
+            t2 = tri->tetrahedron(j);
             sphere = regina::NSnappedTwoSphere::formsSnappedTwoSphere(t1, t2);
             if (sphere) {
                 id = addComponentSection(tr("Snapped 2-sphere"));
@@ -965,7 +965,7 @@ void NTriCompositionUI::findSpiralSolidTori() {
     int whichPerm;
     unsigned long i, j;
     for (i = 0; i < nTets; i++) {
-        tet = tri->getTetrahedron(i);
+        tet = tri->tetrahedron(i);
         for (whichPerm = 0; whichPerm < 24 /* size of S4 */; ++whichPerm) {
             if (NPerm4::S4[whichPerm][0] > NPerm4::S4[whichPerm][3])
                 continue;

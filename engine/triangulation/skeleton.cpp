@@ -129,7 +129,7 @@ void NTriangulation::labelBoundaryTriangle(NTriangle* firstTriangle,
     const NTriangleEmbedding& emb = firstTriangle->front();
     firstTriangle->boundaryComponent_ = label;
     label->triangles_.push_back(firstTriangle);
-    emb.getTetrahedron()->tmpOrientation_[emb.getTriangle()] = 1;
+    emb.tetrahedron()->tmpOrientation_[emb.getTriangle()] = 1;
     triangleQueue.push(firstTriangle);
 
     NTetrahedron* tet;
@@ -153,7 +153,7 @@ void NTriangulation::labelBoundaryTriangle(NTriangle* firstTriangle,
         triangleQueue.pop();
 
         // Run through the edges and vertices on this triangle.
-        tet = triangle->front().getTetrahedron();
+        tet = triangle->front().tetrahedron();
         tetFace = triangle->front().getTriangle();
         tetVertices = tet->regina::detail::SimplexFaces<3, 2>::mapping_[tetFace];
 
@@ -233,7 +233,7 @@ void NTriangulation::calculateVertexLinks() {
         // without calling e->getVertex() which will recursively try to
         // recompute the skeleton.
         const NEdgeEmbedding& emb = e->front();
-        tet = emb.getTetrahedron();
+        tet = emb.tetrahedron();
         end0 = tet->regina::detail::SimplexFaces<3, 0>::face_[tet->regina::detail::SimplexFaces<3, 1>::mapping_
             [emb.getEdge()][0]];
         end1 = tet->regina::detail::SimplexFaces<3, 0>::face_[tet->regina::detail::SimplexFaces<3, 1>::mapping_

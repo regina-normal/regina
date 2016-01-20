@@ -217,7 +217,7 @@ void NSatAnnulus::transform(const NTriangulation* originalTri,
     unsigned long tetID;
     for (which = 0; which < 2; which++) {
         tetID = originalTri->tetrahedronIndex(tet[which]);
-        tet[which] = newTri->getTetrahedron(iso->tetImage(tetID));
+        tet[which] = newTri->tetrahedron(iso->tetImage(tetID));
         roles[which] = iso->facePerm(tetID) * roles[which];
     }
 }

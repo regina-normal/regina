@@ -109,8 +109,8 @@ void NLayeredSolidTorus::transform(const NTriangulation* originalTri,
     }
 
     // Transform tetrahedra:
-    base_ = newTri->getTetrahedron(iso->tetImage(baseTetID));
-    topLevel_ = newTri->getTetrahedron(iso->tetImage(topTetID));
+    base_ = newTri->tetrahedron(iso->tetImage(baseTetID));
+    topLevel_ = newTri->tetrahedron(iso->tetImage(topTetID));
 }
 
 NLayeredSolidTorus* NLayeredSolidTorus::formsLayeredSolidTorusBase(
@@ -600,8 +600,8 @@ NLayeredSolidTorus* NLayeredSolidTorus::isLayeredSolidTorus(NComponent* comp) {
     NTriangleEmbedding f1 = comp->boundaryComponent(0)->triangle(1)->
         embedding(0);
 
-    NTetrahedron* top = f0.getTetrahedron();
-    if (f1.getTetrahedron() != top)
+    NTetrahedron* top = f0.tetrahedron();
+    if (f1.tetrahedron() != top)
         return 0;
 
     // We have precisely one boundary component, which consists of two
@@ -678,9 +678,9 @@ NTriangulation* NLayeredSolidTorus::flatten(const NTriangulation* original,
     // base tetrahedra.
     NTriangulation* ans = new NTriangulation(*original);
 
-    NTetrahedron* newTop = ans->getTetrahedron(
+    NTetrahedron* newTop = ans->tetrahedron(
         original->tetrahedronIndex(topLevel_));
-    NTetrahedron* newBase = ans->getTetrahedron(
+    NTetrahedron* newBase = ans->tetrahedron(
         original->tetrahedronIndex(base_));
 
     NPacket::ChangeEventSpan span(ans);

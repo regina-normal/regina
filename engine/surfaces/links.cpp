@@ -86,7 +86,7 @@ const NVertex* NNormalSurfaceVector::isVertexLink(const NTriangulation* triang)
     NLargeInteger coord;
 
     for (tet = 0; tet < nTets; tet++) {
-        t = triang->getTetrahedron(tet);
+        t = triang->tetrahedron(tet);
         for (type = 0; type < 4; type++) {
             v = t->vertex(type);
             coord = triangles(tet, type, triang);
@@ -158,7 +158,7 @@ std::pair<const NEdge*, const NEdge*> NNormalSurfaceVector::isThinEdgeLink(
     int i;
 
     for (tet = 0; tet < nTets; tet++) {
-        t = triang->getTetrahedron(tet);
+        t = triang->tetrahedron(tet);
         for (type = 0; type < 3; type++) {
             coord = quads(tet, type, triang);
             e[0] = t->edge(NEdge::edgeNumber[vertexSplitDefn[type][0]]
@@ -267,7 +267,7 @@ std::pair<const NEdge*, const NEdge*> NNormalSurfaceVector::isThinEdgeLink(
     bool expectZero[2];
     int j;
     for (tet = 0; tet < nTets; tet++) {
-        t = triang->getTetrahedron(tet);
+        t = triang->tetrahedron(tet);
         for (type = 0; type < 4; type++) {
             v = t->vertex(type);
             coord = triangles(tet, type, triang);

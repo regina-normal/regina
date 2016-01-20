@@ -1035,7 +1035,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
         const NTriangleEmbedding& emb = (*fit)->front();
 
         NTriangulation cut(use);
-        cut.getTetrahedron(emb.getTetrahedron()->markedIndex())->unjoin(
+        cut.tetrahedron(emb.tetrahedron()->markedIndex())->unjoin(
             emb.getTriangle());
 
         // If we don't see a new boundary component, the disc boundary is
@@ -1087,11 +1087,11 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
         }
 
         NTriangulation cut(use);
-        cut.getTetrahedron((*tit)->markedIndex())->unjoin(upper);
+        cut.tetrahedron((*tit)->markedIndex())->unjoin(upper);
         NTetrahedron* tet = cut.newTetrahedron();
         tet->joinTo(NEdge::edgeVertex[equator][0], tet, NPerm4(
             NEdge::edgeVertex[equator][0], NEdge::edgeVertex[equator][1]));
-        tet->joinTo(upper, cut.getTetrahedron(adj->markedIndex()),
+        tet->joinTo(upper, cut.tetrahedron(adj->markedIndex()),
             (*tit)->adjacentGluing(upper));
 
         // If we don't see a new boundary component, the disc boundary is
