@@ -306,7 +306,7 @@ QVariant EdgeModel::data(const QModelIndex& index, int role) const {
                 for (auto& emb : *item)
                     appendToList(ans, QString("%1 (%2)").
                         arg(emb.tetrahedron()->index()).
-                        arg(emb.getVertices().trunc2().c_str()));
+                        arg(emb.vertices().trunc2().c_str()));
                 return ans;
         }
         return QString();
@@ -412,7 +412,7 @@ QVariant TriangleModel::data(const QModelIndex& index, int role) const {
                 for (auto& emb : *item)
                     appendToList(ans, QString("%1 (%2)").
                         arg(emb.tetrahedron()->index()).
-                        arg(emb.getVertices().trunc3().c_str()));
+                        arg(emb.vertices().trunc3().c_str()));
                 return ans;
         }
         return QString();
@@ -600,7 +600,7 @@ QVariant BoundaryComponentModel::data(const QModelIndex& index,
                             item->triangle(i)->front();
                         appendToList(ans, QString("%1 (%2)").
                             arg(emb.tetrahedron()->index()).
-                            arg(emb.getVertices().trunc3().c_str()));
+                            arg(emb.vertices().trunc3().c_str()));
                     }
                     return ans;
                 }
@@ -782,7 +782,7 @@ QVariant Dim2EdgeModel::data(const QModelIndex& index, int role) const {
                 for (auto& emb : *item)
                     appendToList(ans, QString("%1 (%2)").
                         arg(emb.triangle()->index()).
-                        arg(emb.getVertices().trunc2().c_str()));
+                        arg(emb.vertices().trunc2().c_str()));
                 return ans;
         }
         return QString();
@@ -948,7 +948,7 @@ QVariant Dim2BoundaryComponentModel::data(const QModelIndex& index,
                     const Dim2EdgeEmbedding& emb = item->getEdge(i)->front();
                     appendToList(ans, QString("%1 (%2)").
                         arg(emb.triangle()->index()).
-                        arg(emb.getVertices().trunc2().c_str()));
+                        arg(emb.vertices().trunc2().c_str()));
                 }
                 return ans;
         }

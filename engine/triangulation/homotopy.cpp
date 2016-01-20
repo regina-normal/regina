@@ -77,7 +77,7 @@ const NGroupPresentation& NTriangulation::fundamentalGroup() const {
             rel = new NGroupExpression();
             for (auto& emb : *e) {
                 currTet = emb.tetrahedron();
-                currTetFace = emb.getVertices()[2];
+                currTetFace = emb.vertices()[2];
                 triangle = currTet->triangle(currTetFace);
                 triGenIndex = genIndex[triangleIndex(triangle)];
                 if (triGenIndex >= 0) {

@@ -255,7 +255,7 @@ void NTriangulation::calculateVertexLinks() {
     // Run through each vertex and finalise Euler characteristic, link
     // and more.
 
-    for (NVertex* vertex : getVertices()) {
+    for (NVertex* vertex : vertices()) {
         // Fix the Euler characteristic (subtract f, divide by two).
         vertex->linkEulerChar_ = (vertex->linkEulerChar_
             - static_cast<long>(vertex->degree())) / 2;

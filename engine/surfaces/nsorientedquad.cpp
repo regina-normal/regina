@@ -73,7 +73,7 @@ NMatrixInt* NNormalSurfaceVectorOrientedQuad::makeMatchingEquations(
             for (auto& emb : **eit) {
                 tetIndex = triangulation->tetrahedronIndex(
                     emb.tetrahedron());
-                perm = emb.getVertices();
+                perm = emb.vertices();
 
                 flip = (perm[0] == 0 || perm[2] == 0);
                 ans->entry(row, 6 * tetIndex +
@@ -182,8 +182,8 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
         NPerm4 tetPerm, adjPerm;
         size_t tetIndex, adjIndex;
         NLargeInteger expect;
-        for (NTriangulation::VertexIterator vit = triang->getVertices().begin();
-                vit != triang->getVertices().end(); vit++) {
+        for (NTriangulation::VertexIterator vit = triang->vertices().begin();
+                vit != triang->vertices().end(); vit++) {
             usedEdges[0].clear(); usedEdges[1].clear();
             examine.clear();
             broken = false;
@@ -224,7 +224,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
                 for (eembit = beginit; eembit != endit; eembit++)
                     if (! (*ans)[14 * triang->tetrahedronIndex(
                             (*eembit).tetrahedron()) +
-                            2 * (*eembit).getVertices()[current.end] +
+                            2 * (*eembit).vertices()[current.end] +
                             orient].isInfinite())
                         break;
 
@@ -232,14 +232,14 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
                 // vertex.  Run backwards from here and fill in all the
                 // holes.
                 backupit = eembit;
-                adjPerm = (*eembit).getVertices();
+                adjPerm = (*eembit).vertices();
                 adjIndex = triang->tetrahedronIndex((*eembit).tetrahedron());
                 while (eembit != beginit) {
                     eembit--;
 
                     // Work out the coordinate for the disc type at eembit.
                     tet = (*eembit).tetrahedron();
-                    tetPerm = (*eembit).getVertices();
+                    tetPerm = (*eembit).vertices();
                     tetIndex = triang->tetrahedronIndex(tet);
 
                     expect =
@@ -276,12 +276,12 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
                 // always checking to ensure the
                 // matching equations have not been broken.
                 eembit = backupit;
-                adjPerm = (*eembit).getVertices();
+                adjPerm = (*eembit).vertices();
                 adjIndex = triang->tetrahedronIndex((*eembit).tetrahedron());
                 for (eembit++; eembit != endit; eembit++) {
                     // Work out the coordinate for the disc type at eembit.
                     tet = (*eembit).tetrahedron();
-                    tetPerm = (*eembit).getVertices();
+                    tetPerm = (*eembit).vertices();
                     tetIndex = triang->tetrahedronIndex(tet);
 
                     expect =

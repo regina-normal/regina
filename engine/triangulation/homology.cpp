@@ -83,7 +83,7 @@ const NAbelianGroup& NTriangulation::homology() const {
             // Put in the relation corresponding to this edge.
             for (auto& emb : *e) {
                 currTet = emb.tetrahedron();
-                currTetFace = emb.getVertices()[2];
+                currTetFace = emb.vertices()[2];
                 triangle = currTet->triangle(currTetFace);
                 triGenIndex = genIndex[triangleIndex(triangle)];
                 if (triGenIndex >= 0) {

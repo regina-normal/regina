@@ -87,11 +87,11 @@ bool detail::TriangulationBase<3>::compatible(
             map2.clear();
         }
         {
-            for (auto v : me->getVertices()) {
+            for (auto v : me->vertices()) {
                 mapIt = map1.insert(std::make_pair(v->degree(), 0)).first;
                 (*mapIt).second++;
             }
-            for (auto v : other.getVertices()) {
+            for (auto v : other.vertices()) {
                 mapIt = map2.insert(std::make_pair(v->degree(), 0)).first;
                 (*mapIt).second++;
             }

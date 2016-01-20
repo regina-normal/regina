@@ -88,7 +88,7 @@ void NTriangulation::maximalForestInSkeleton(std::set<NEdge*>& edgeSet,
     else
         maximalForestInBoundary(edgeSet, vertexSet);
 
-    for (NVertex* v : getVertices())
+    for (NVertex* v : vertices())
         if (! (vertexSet.count(v))) {
             stretchForestFromVertex(v, edgeSet, vertexSet, thisBranch);
             thisBranch.clear();

@@ -55,7 +55,7 @@ void Triangulation<2>::calculateSkeleton() {
         // - all Dim2BoundaryComponent members
 
     // Flesh out the details of each component.
-    for (auto v : getVertices())
+    for (auto v : vertices())
         v->component()->vertices_.push_back(v);
     for (auto e : getEdges())
         e->component()->edges_.push_back(e);
@@ -89,7 +89,7 @@ void Triangulation<2>::calculateBoundary() {
 
         tri = edge->front().triangle();
         edgeId = edge->front().getEdge();
-        vertexId = edge->front().getVertices()[0];
+        vertexId = edge->front().vertices()[0];
         vertex = tri->regina::detail::SimplexFaces<2, 0>::face_[vertexId];
         while (true) {
             if (! edge->boundaryComponent_) {
@@ -110,30 +110,30 @@ void Triangulation<2>::calculateBoundary() {
             // *adjacent* boundary edge must be at the other.
             vertexEmb = vertex->front();
             if (vertexEmb.triangle() == tri &&
-                    vertexEmb.getVertices()[0] == vertexId &&
-                    vertexEmb.getVertices()[2] == edgeId) {
+                    vertexEmb.vertices()[0] == vertexId &&
+                    vertexEmb.vertices()[2] == edgeId) {
                 // We are currently looking at the embedding at the
                 // front of the list.  Take the one at the back.
                 vertexEmb = vertex->back();
 
                 adjTri = vertexEmb.triangle();
-                adjEdgeId = vertexEmb.getVertices()[1];
+                adjEdgeId = vertexEmb.vertices()[1];
                 adjEdge = adjTri->regina::detail::SimplexFaces<2, 1>::face_[adjEdgeId];
-                adjVertexId = vertexEmb.getVertices()[2];
+                adjVertexId = vertexEmb.vertices()[2];
             } else {
                 // We must be looking at the embedding at the back
                 // of the list.  Take the one at the front (which is
                 // already stored in vertexEmb).
                 adjTri = vertexEmb.triangle();
-                adjEdgeId = vertexEmb.getVertices()[2];
+                adjEdgeId = vertexEmb.vertices()[2];
                 adjEdge = adjTri->regina::detail::SimplexFaces<2, 1>::face_[adjEdgeId];
-                adjVertexId = vertexEmb.getVertices()[1];
+                adjVertexId = vertexEmb.vertices()[1];
 
                 // TODO: Sanity checking; remove this eventually.
                 vertexEmb = vertex->back();
                 if (! (vertexEmb.triangle() == tri &&
-                        vertexEmb.getVertices()[0] == vertexId &&
-                        vertexEmb.getVertices()[1] == edgeId)) {
+                        vertexEmb.vertices()[0] == vertexId &&
+                        vertexEmb.vertices()[1] == edgeId)) {
                     std::cerr << "ERROR: Something has gone terribly "
                         "wrong in computeBoundaryComponents()."
                         << std::endl;

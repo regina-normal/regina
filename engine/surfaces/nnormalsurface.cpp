@@ -440,8 +440,8 @@ NMatrixInt* NNormalSurface::boundaryIntersections() const {
         return 0;
     if (vector->allowsAlmostNormal())
         return 0;
-    for (NTriangulation::VertexIterator it = snapPea->getVertices().begin();
-            it != snapPea->getVertices().end(); ++it) {
+    for (NTriangulation::VertexIterator it = snapPea->vertices().begin();
+            it != snapPea->vertices().end(); ++it) {
         if (! (*it)->isIdeal())
             return 0;
         if (! (*it)->isLinkOrientable())

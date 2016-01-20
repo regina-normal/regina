@@ -45,8 +45,8 @@ NLargeInteger NNormalSurfaceVectorANStandard::edgeWeight(
     // Find a tetrahedron next to the edge in question.
     const NEdgeEmbedding& emb = triang->edge(edgeIndex)->front();
     long tetIndex = triang->tetrahedronIndex(emb.tetrahedron());
-    int start = emb.getVertices()[0];
-    int end = emb.getVertices()[1];
+    int start = emb.vertices()[0];
+    int end = emb.vertices()[1];
 
     // Add up the triangles, quads and octagons meeting that edge.
     // Triangles:
@@ -68,8 +68,8 @@ NLargeInteger NNormalSurfaceVectorANStandard::arcs(size_t triIndex,
     // Find a tetrahedron next to the triangle in question.
     const NTriangleEmbedding& emb = triang->triangles()[triIndex]->front();
     long tetIndex = triang->tetrahedronIndex(emb.tetrahedron());
-    int vertex = emb.getVertices()[triVertex];
-    int backOfFace = emb.getVertices()[3];
+    int vertex = emb.vertices()[triVertex];
+    int backOfFace = emb.vertices()[3];
 
     // Add up the discs meeting that triangle in that required arc.
     // Triangles:
@@ -111,8 +111,8 @@ NMatrixInt* NNormalSurfaceVectorANStandard::makeMatchingEquations(
                 (*fit)->embedding(0).tetrahedron());
             tet1 = triangulation->tetrahedronIndex(
                 (*fit)->embedding(1).tetrahedron());
-            perm0 = (*fit)->embedding(0).getVertices();
-            perm1 = (*fit)->embedding(1).getVertices();
+            perm0 = (*fit)->embedding(0).vertices();
+            perm1 = (*fit)->embedding(1).vertices();
             for (i=0; i<3; i++) {
                 // Triangles:
                 ans->entry(row, 10*tet0 + perm0[i]) += 1;

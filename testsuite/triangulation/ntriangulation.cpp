@@ -3255,8 +3255,8 @@ class NTriangulationTest : public TriangulationTest<3> {
 
             // Are there any invalid vertices remaining?
             for (NTriangulation::VertexIterator vit =
-                    finite.getVertices().begin(); vit !=
-                    finite.getVertices().end(); ++vit)
+                    finite.vertices().begin(); vit !=
+                    finite.vertices().end(); ++vit)
                 if ((*vit)->isBoundary() && ! (*vit)->isStandard()) {
                     std::ostringstream msg;
                     msg << tri->label()

@@ -51,7 +51,7 @@ void NBoundaryComponent::writeTextLong(std::ostream& out) const {
         out << "Triangles:" << std::endl;
         for (auto t : triangles_) {
             out << "  " << t->front().tetrahedron()->index() << " ("
-                << t->front().getVertices().trunc3() << ')' << std::endl;
+                << t->front().vertices().trunc3() << ')' << std::endl;
         }
     }
 }
