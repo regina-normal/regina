@@ -619,14 +619,17 @@
 
   <refnamediv>
    <refname>tricensus</refname>
-   <refpurpose>Form a census of 3-manifold triangulations</refpurpose>
+   <refpurpose>Form a census of triangulations</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
    <cmdsynopsis>
     <command>tricensus</command>
     <arg><option>-t, --tetrahedra=</option><replaceable>tetrahedra</replaceable></arg>
-    <arg><option>-2, --dim2</option></arg>
+    <group>
+     <arg><option>-2, --dim2</option></arg>
+     <arg><option>-4, --dim4</option></arg>
+    </group>
     <group>
      <arg><option>-b, --boundary</option></arg>
      <arg><option>-i, --internal</option></arg>
@@ -665,23 +668,25 @@
   <refsect1>
    <title>Description</title>
    <para>
-    Forms a census of all 3-manifold or 2-manifold triangulations that satisfy
+    Forms a census of all 2-, 3- or 4-manifold triangulations that satisfy
     some set of conditions.
    </para>
    <para>
     These conditions are specified using various command-line arguments.
     The only condition that you <emphasis>must</emphasis> provide is
-    the number of tetrahedra, but there are many other options available.
+    the number of top-dimensional simplices (e.g., the number of tetrahedra
+    for 3-manifolds), but there are many other options available.
    </para>
    <para>
     The default behaviour is to enumerate 3-manifold triangulations.
-    If you wish to enumerate 2-manifold triangulations instead, you must
-    pass <option>--dim2</option>.
+    If you wish to enumerate 2-manifold or 4-manifold triangulations instead,
+    you must pass <option>--dim2</option> or <option>--dim4</option>
+    respectively.
    </para>
    <para>
     Each triangulation will be output precisely once up to combinatorial
-    isomorphism.  Invalid 3-manifold triangulations
-    (i.e., triangulations with edges
+    isomorphism.  Invalid triangulations
+    (for 3-manifolds, this means triangulations with edges
     identified to themselves in reverse, or vertices whose links
     have boundary but are not discs) will not be output at all.
    </para>
@@ -700,10 +705,10 @@
    </para>
    <caution>
     <para>
-     A census with even a small number of tetrahedra can
+     A census with even a small number of top-dimensional simplices can
      take an incredibly long time to run, and can chew up massive amounts of
      memory.  It is recommended that you try very small censuses to begin
-     with (such as 3 or 4 tetrahedra), and work upwards to establish the
+     with (such as 3 or 4 simplices), and work upwards to establish the
      limits of your machine.
     </para>
     <para>
@@ -722,11 +727,10 @@
       --tetrahedra=</option><replaceable>tetrahedra</replaceable></term>
      <listitem>
       <para>
-       Specifies the number of tetrahedra used to build the triangulations.
-      </para>
-      <para>
-       If <option>--dim2</option> is passed, this same option must
-       be used to specify the number of triangles instead.
+       Specifies the number of top-dimensional simplices used to build the
+       triangulations.
+       For 2-manifolds, 3-manifolds and 4-manifolds, this specifies the
+       number of triangles, tetrahedra or pentachora respectively.
       </para>
      </listitem>
     </varlistentry>
@@ -743,6 +747,27 @@
        See each individual option for details on how it interacts with
        <option>--dim2</option>.
       </para>
+      <para>
+       This option cannot be used with <option>--dim4</option>.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-4, --dim4</option></term>
+     <listitem>
+      <para>
+       Build a census of 4-manifold triangulations, not 3-manifold
+       triangulations.
+      </para>
+      <para>
+       This is incompatible with several options; for other options it
+       simply translates the relevant constraint into four dimensions.
+       See each individual option for details on how it interacts with
+       <option>--dim4</option>.
+      </para>
+      <para>
+       This option cannot be used with <option>--dim2</option>.
+      </para>
      </listitem>
     </varlistentry>
     <varlistentry>
@@ -752,8 +777,8 @@
        Only produce triangulations with at least one boundary triangle.
       </para>
       <para>
-       If <option>--dim2</option> is passed, this specifies at least one
-       boundary edge.
+       For 2-manifolds or 4-manifolds, this option ensures at least one
+       boundary edge or boundary tetrahedron respectively.
       </para>
      </listitem>
     </varlistentry>
@@ -765,8 +790,8 @@
        boundary triangles).
       </para>
       <para>
-       If <option>--dim2</option> is passed, this indicates that all
-       edges must be internal.
+       For 2-manifolds or 4-manifolds, this option ensures that all
+       edges or tetrahedra respectively are internal.
       </para>
      </listitem>
     </varlistentry>
@@ -779,8 +804,8 @@
        triangles specified.
       </para>
       <para>
-       If <option>--dim2</option> is passed, this specifies the number
-       of boundary edges.
+       For 2-manifolds or 4-manifolds, this specifies the number of
+       boundary edges or boundary tetrahedra respectively.
       </para>
      </listitem>
     </varlistentry>
@@ -837,6 +862,9 @@
        If &regina; cannot quickly tell whether a triangulation is
        non-minimal, it will place the triangulation in the census regardless.
       </para>
+      <para>
+       This option cannot be used with <option>--dim4</option>.
+      </para>
      </listitem>
     </varlistentry>
     <varlistentry>
@@ -858,7 +886,8 @@
        triangulation in the census regardless.
       </para>
       <para>
-       This option cannot be used with <option>--dim2</option>.
+       This option cannot be used with <option>--dim2</option>
+       or <option>--dim4</option>.
       </para>
      </listitem>
     </varlistentry>
@@ -882,7 +911,8 @@
        the triangulation in the census regardless.
       </para>
       <para>
-       This option cannot be used with <option>--dim2</option>.
+       This option cannot be used with <option>--dim2</option>
+       or <option>--dim4</option>.
       </para>
      </listitem>
     </varlistentry>
@@ -911,7 +941,8 @@
        (so, for instance, combining it with
        <option>--finite</option> or <option>--boundary</option>
        will produce an error message).
-       This option also cannot be used with <option>--dim2</option>.
+       This option also cannot be used with <option>--dim2</option>
+       or <option>--dim4</option>.
       </para>
      </listitem>
     </varlistentry>
@@ -944,10 +975,14 @@
      <term><option>-c, --subcontainers</option></term>
      <listitem>
       <para>
-       For each face pairing, a new container will be created, and
+       For each facet pairing, a new container will be created, and
        resultant triangulations will be placed into these containers.
-       These containers will be created even if the face pairing results
+       These containers will be created even if the facet pairing results
        in no triangulations.
+      </para>
+      <para>
+       See <option>--genpairs</option> below for further information on
+       facet pairings.
       </para>
       <para>
        This option cannot be used with <option>--sigs</option>.
@@ -958,33 +993,39 @@
      <term><option>-p, --genpairs</option></term>
      <listitem>
       <para>
-       Only generate face pairings, not triangulations.
+       Only generate facet pairings, not triangulations.
+       A facet pairing stores which facets of top-dimension simplices
+       are glued to which others, but it does not store the precise
+       rotations and/or reflections that are used for each gluing.
+       For 3-manifolds a facet pairing represents a pairing of tetrahedron
+       faces, for 2-manifolds it represents a pairing of triangle edges, and
+       for 4-manifolds it represents a pairing of pentachoron facets.
       </para>
       <para>
        The outermost layer of the census code involves pairing off the
-       faces of individual tetrahedra without determining
-       the corresponding gluing permutations.  For each face pairing that is
-       produced, &regina; will try many different sets of gluing permutations
-       and generated the corresponding triangulations.
+       facets of individual top-dimensional simplices without determining
+       the corresponding gluing permutations.  For each such facet pairing
+       that is produced, &regina; will try many different sets of gluing
+       permutations and generated the corresponding triangulations.
       </para>
       <para>
-       Face pairing generation consumes a very small fraction of the
+       Facet pairing generation consumes a very small fraction of the
        total census runtime, and effectively divides the census into
        multiple pieces.  This option allows you to quickly generate
-       a complete list of possible face pairings, so that you can feed subsets
+       a complete list of possible facet pairings, so that you can feed subsets
        of this list to different machines to work on simultaneously.  You
        can coordinate this manually, or you can use
        <link linkend="man-tricensus-mpi"><command>tricensus-mpi</command></link>
        to coordinate it for you on a high-performance cluster.
       </para>
       <para>
-       The list of all face pairings will be written to the given output
+       The list of all facet pairings will be written to the given output
        file in text format (though you may omit the output file from the
-       command line, in which case the face pairings will be written to
+       command line, in which case the facet pairings will be written to
        standard output).
        If you are coordinating your sub-censuses manually, you can use
        the option <option>--usepairs</option> to generate triangulations
-       from a subset of these face pairings.
+       from a subset of these facet pairings.
       </para>
       <para>
        Options for orientability, finiteness or minimality cannot be
@@ -998,26 +1039,22 @@
        You can always track the state of progress by counting lines in
        the output file.
       </para>
-      <para>
-       If <option>--dim2</option> is passed, this generates edge
-       pairings accordingly.
-      </para>
      </listitem>
     </varlistentry>
     <varlistentry>
      <term><option>-P, --usepairs</option></term>
      <listitem>
       <para>
-       Use only the given subset of face pairings to build the triangulations.
+       Use only the given subset of facet pairings to build the triangulations.
       </para>
       <para>
-       Each face pairing that is processed must be
+       Each facet pairing that is processed must be
        in canonical form, i.e., must be a minimal representative of its
-       isomorphism class.  All face pairings generated using
+       isomorphism class.  All facet pairings generated using
        <option>--genpairs</option> are guaranteed to satisfy this condition.
       </para>
       <para>
-       Face pairings should be supplied on standard input, one per line.
+       Facet pairings should be supplied on standard input, one per line.
        They should be listed in the format produced by the option
        <option>--genpairs</option>.
       </para>
@@ -1031,14 +1068,13 @@
        high-performance cluster.
       </para>
       <para>
-       Options for tetrahedra or boundary triangles cannot be used with
-       <option>--usepairs</option>; instead you should pass them earlier
+       Options for the number of top-dimensional simplices
+       (i.e., <option>--tetrahedra</option>) or boundary facets
+       (i.e., <option>--boundary</option> or <option>--bdryfaces</option>)
+       cannot be used with <option>--usepairs</option>.
+       Instead you should pass these options earlier
        along with <option>--genpairs</option> when you split the original
        census into pieces.
-      </para>
-      <para>
-       If <option>--dim2</option> is passed, this takes a list of edge
-       pairings accordingly.
       </para>
      </listitem>
     </varlistentry>
@@ -1050,7 +1086,7 @@
 
    <para>
     The following command forms a census of all 3-tetrahedron closed
-    non-orientable triangulations and puts the results in the file
+    non-orientable 3-manifold triangulations, and puts the results in the file
     <filename>results.rga</filename>.  To ensure that triangulations are
     closed we use the options <option>-i</option> (no boundary triangles)
     and <option>-f</option> (no ideal vertices).
@@ -1070,7 +1106,7 @@
 
    <para>
     The following command forms a census of 4-tetrahedron closed
-    orientable triangulations, where the census creation is optimised
+    orientable 3-manifold triangulations, where the census creation is optimised
     for prime minimal triangulations.  Although all prime minimal
     triangulations will be included, there may be some non-prime or
     non-minimal triangulations in the census also.
@@ -1090,7 +1126,8 @@
 
    <para>
     The following command generates all face pairings for a
-    5-tetrahedron census in which all triangulations have precisely two
+    5-tetrahedron census of 3-manifold triangulation in which all
+    triangulations have precisely two
     boundary triangles.  The face pairings will be written to
     <filename>pairings.txt</filename>, whereupon they can be broken up
     and distributed for processing at a later date.
@@ -1186,7 +1223,10 @@
     <command>tricensus-mpi</command>
     <arg><option>-D, --depth=</option><replaceable>levels</replaceable></arg>
     <arg><option>-x, --dryrun</option></arg>
-    <arg><option>-2, --dim2</option></arg>
+    <group>
+     <arg><option>-2, --dim2</option></arg>
+     <arg><option>-4, --dim4</option></arg>
+    </group>
     <group>
      <arg><option>-o, --orientable</option></arg>
      <arg><option>-n, --nonorientable</option></arg>
@@ -1212,31 +1252,34 @@
    <para>
     Allows multiple processes, possibly running on a cluster of
     different machines, to
-    collaborate in forming a census of 3-manifold or 2-manifold triangulations.
+    collaborate in forming a census of 2-, 3- or 4-manifold triangulations.
     Coordination is done through &mpi; (the Message Passing Interface),
     and the entire census is run as a single &mpi; job.
     This program is well suited for high-performance clusters.
    </para>
    <para>
     The default behaviour is to enumerate 3-manifold triangulations.
-    If you wish to enumerate 2-manifold triangulations instead, you must
-    pass <option>--dim2</option>.
+    If you wish to enumerate 2-manifold or 4-manifold triangulations instead,
+    you must pass <option>--dim2</option> or <option>--dim4</option>
+    respectively.
    </para>
    <para>
     To prepare a census for distribution amongst several processes or
     machines, the census must be split into smaller pieces.
     Running <link linkend="man-tricensus"><command>tricensus</command></link>
     with option <option>--genpairs</option> (which is very fast) will create
-    a list of face pairings, each of which must be analysed in order to
-    complete the census.
+    a list of facet pairings
+    (e.g., tetrahedron face pairings for 3-manifold triangulations,
+    triangle edge pairings for 2-manifold triangulations, and so on).
+    Each facet pairing must be analysed in order to complete the census.
    </para>
    <para>
-    The full list of face pairings should be stored in a single file,
+    The full list of facet pairings should be stored in a single file,
     which is passed on the command-line as
     <replaceable>pairs-file</replaceable>.
-    This file must contain one face pairing per line, and each of these
-    face pairings must be in canonical form (i.e., must be a
-    minimal representative of its isomorphism class).  The face
+    This file must contain one facet pairing per line, and each of these
+    facet pairings must be in canonical form (i.e., must be a
+    minimal representative of its isomorphism class).  The facet
     pairings generated by
     <link linkend="man-tricensus"><userinput>tricensus
     --genpairs</userinput></link> are guaranteed to satisfy these conditions.
@@ -1249,7 +1292,7 @@
    </para>
    <para>
     In both modes, one &mpi; process acts as the controller and the remaining
-    processes all act as slaves.  The controller reads the list of face
+    processes all act as slaves.  The controller reads the list of facet
     pairings from <replaceable>pairs-file</replaceable>, constructs a
     series of tasks based on these, and farms these tasks
     out to the slaves for processing.  Each slave processes one task
@@ -1266,9 +1309,9 @@
     in subsearch mode.
     Here <replaceable>output-file-prefix</replaceable> is passed on the
     command line, <replaceable>p</replaceable> is the number
-    of the face pairing being processed, and <replaceable>s</replaceable>
-    is the number of the subsearch within that face pairing
-    (both face pairings and subsearches are numbered from 1 upwards).
+    of the facet pairing being processed, and <replaceable>s</replaceable>
+    is the number of the subsearch within that facet pairing
+    (both facet pairings and subsearches are numbered from 1 upwards).
     If no triangulations were found then the slave will not write
     any output file at all.
    </para>
@@ -1311,14 +1354,14 @@
    <itemizedlist>
     <listitem><para>
      In <emphasis>default mode</emphasis>, the controller simply
-     reads the list of face pairings and gives each pairing
+     reads the list of facet pairings and gives each pairing
      to a slave for processing, one after another.
     </para></listitem>
     <listitem><para>
      In <emphasis>subsearch mode</emphasis>, more work is pushed to
      the controller and the slave tasks are shorter.  Here the
-     controller reads one face pairing at a time and begins processing
-     that face pairing.  A fixed depth is supplied in the argument
+     controller reads one facet pairing at a time and begins processing
+     that facet pairing.  A fixed depth is supplied in the argument
      <option>--depth</option>; each time that depth is reached in the
      search tree, the
      subsearch from that point on is given as a task to the next idle slave.
@@ -1329,7 +1372,7 @@
    </itemizedlist>
    <para>
     The modes can be visualised as follows.
-    For each face pairing, consider the corresponding recursive search
+    For each facet pairing, consider the corresponding recursive search
     as a large search tree.  In default mode, the entire tree is
     processed at once as a single slave task.  In subsearch mode, each
     subtree rooted at the given depth is processed as a separate slave
@@ -1365,7 +1408,7 @@
     in subsearch mode and at what depth.  Be aware of the option
     <option>--dryrun</option>, which can give a quick overview of the
     search space (and in particular, show how many subsearches are
-    required for each face pairing at any given depth).
+    required for each facet pairing at any given depth).
    </para>
   </refsect1>
 
@@ -1381,7 +1424,7 @@
    <para>
     Some options from <command>tricensus</command> are not
     available here (e.g., tetrahedra and boundary options), since these must
-    be supplied earlier on when generating the initial list of face pairings.
+    be supplied earlier on when generating the initial list of facet pairings.
    </para>
    <para>
     There are new options specific to <command>tricensus-mpi</command>,
@@ -1422,10 +1465,10 @@
       </para>
       <para>
        The result will be an empty census.  The benefit of a dry run is
-       the log file it produces, which will show precisely how face pairings
+       the log file it produces, which will show precisely how facet pairings
        would be divided into subsearches in a real census run.
        In particular, the log file will show how
-       many subsearches each face pairing produces (the utility
+       many subsearches each facet pairing produces (the utility
        <link linkend="man-tricensus-mpi-status"><command>tricensus-mpi-status</command></link>
        can help extract this information from the log).
       </para>
@@ -1449,7 +1492,7 @@
    <title>Examples</title>
    <para>
     Suppose we wish to form a census of all 6-tetrahedron closed
-    non-orientable triangulations, optimised for
+    non-orientable 3-manifold triangulations, optimised for
     prime minimal P2-irreducible triangulations (so some
     non-prime, non-minimal or non-P2-irreducible triangulations may be omitted).
    </para>
@@ -1678,6 +1721,14 @@
     This utility can also do subcomplex testing instead of full
     isomorphism testing.  See the option <option>-s</option> for
     details.
+   </para>
+   <para>
+    This utility compares both 3-manifold and 4-manifold triangulations
+    (but no other dimensions at present).
+    However, it will only compare triangulations of the same
+    dimension&mdash;it will not test whether some 3-manifold triangulation
+    appears as a subcomplex of some other 4-manifold triangulation.
+   </para>
    </para>
   </refsect1>
 
