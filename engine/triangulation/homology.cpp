@@ -85,7 +85,7 @@ const NAbelianGroup& NTriangulation::homology() const {
                 currTet = emb.tetrahedron();
                 currTetFace = emb.vertices()[2];
                 triangle = currTet->triangle(currTetFace);
-                triGenIndex = genIndex[triangleIndex(triangle)];
+                triGenIndex = genIndex[triangle->index()];
                 if (triGenIndex >= 0) {
                     if ((triangle->front().tetrahedron() == currTet) &&
                             (triangle->front().triangle() == currTetFace))
@@ -172,8 +172,7 @@ const NAbelianGroup& NTriangulation::homologyRel() const {
                 // Examine the edge from vertex edgeStart to edgeEnd
                 // in tetrahedron currTet.
                 currEdge = NEdge::edgeNumber[currEdgeStart][currEdgeEnd];
-                edgeGenIndex = genIndex[edgeIndex(
-                    currTet->edge(currEdge))];
+                edgeGenIndex = genIndex[currTet->edge(currEdge)->index()];
                 if (edgeGenIndex >= 0) {
                     if (currTet->edgeMapping(currEdge)[0] == currEdgeStart)
                         pres.entry(i, edgeGenIndex) += 1;

@@ -67,7 +67,7 @@ NMatrixInt* NAngleStructureVector::makeAngleEquations(
         if ((*eit)->isBoundary())
             continue;
         for (auto& emb : **eit) {
-            index = tri->tetrahedronIndex(emb.tetrahedron());
+            index = emb.tetrahedron()->index();
             perm = emb.vertices();
             eqns->entry(row, 3 * index + vertexSplit[perm[0]][perm[1]]) += 1;
         }

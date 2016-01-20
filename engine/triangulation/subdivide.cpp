@@ -100,8 +100,7 @@ void NTriangulation::barycentricSubdivision() {
 
             glue = oldTet->adjacentGluing(perm[0]);
             newTet[24 * tet + permIdx]->joinTo(perm[0],
-                newTet[24 * tetrahedronIndex(
-                    oldTet->adjacentTetrahedron(perm[0])) +
+                newTet[24 * oldTet->adjacentTetrahedron(perm[0])->index() +
                     (glue * perm).S4Index()],
                 glue);
         }
@@ -129,7 +128,7 @@ void NTriangulation::drillEdge(NEdge* e) {
     // equals the edge number from the original tetrahedron.
 
     int edgeNum = e->front().edge();
-    long tetNum = tetrahedronIndex(e->front().tetrahedron());
+    long tetNum = e->front().tetrahedron()->index();
 
     int oldToNew[2]; // Identifies two of the 24 tetrahedra in a subdivision
                      // that contain the two corresponding half-edges.
@@ -161,7 +160,7 @@ void NTriangulation::drillEdge(NEdge* e) {
                 finalVertex = simplices_[finalTet]->edge(edgeNum)->
                     vertex(k);
                 for (auto& emb : *finalVertex)
-                    toRemove.insert(tetrahedronIndex(emb.tetrahedron()));
+                    toRemove.insert(emb.tetrahedron()->index());
             }
         }
 
@@ -248,7 +247,7 @@ bool NTriangulation::idealToFinite() {
         ot = tetrahedron(i);
         for (j=0; j<4; j++)
             if (ot->adjacentTetrahedron(j)) {
-                 oppTet = tetrahedronIndex(ot->adjacentTetrahedron(j));
+                 oppTet = ot->adjacentTetrahedron(j)->index();
                  p = ot->adjacentGluing(j);
 
                  // First deal with the tip tetrahedra.

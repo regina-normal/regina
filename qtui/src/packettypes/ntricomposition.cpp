@@ -399,9 +399,9 @@ void NTriCompositionUI::findAugTriSolidTori() {
             const regina::NTriSolidTorus& core = aug->core();
             details = new QTreeWidgetItem(id, details);
             details->setText(0,tr("Core: tets %1, %2, %3").
-                arg(tri->tetrahedronIndex(core.tetrahedron(0))).
-                arg(tri->tetrahedronIndex(core.tetrahedron(1))).
-                arg(tri->tetrahedronIndex(core.tetrahedron(2))));
+                arg(core.tetrahedron(0)->index()).
+                arg(core.tetrahedron(1)->index()).
+                arg(core.tetrahedron(2)->index()));
 
             if (aug->hasLayeredChain()) {
                 QString chainType;
@@ -495,11 +495,11 @@ void NTriCompositionUI::describeSatRegion(const NSatRegion& region,
             (new QTreeWidgetItem(annuli))->setText(0,
                 tr("%1 : Tet %2 (%3%4%5), Tet %6 (%7%8%9)").
                 arg(thisAnnulus).
-                arg(tri->tetrahedronIndex(ann.tet[0])).
+                arg(ann.tet[0]->index()).
                 arg(ann.roles[0][0]).
                 arg(ann.roles[0][1]).
                 arg(ann.roles[0][2]).
-                arg(tri->tetrahedronIndex(ann.tet[1])).
+                arg(ann.tet[1]->index()).
                 arg(ann.roles[1][0]).
                 arg(ann.roles[1][1]).
                 arg(ann.roles[1][2]));
@@ -779,9 +779,8 @@ void NTriCompositionUI::findLayeredSolidTori() {
                 torus->name().c_str());
 
             details = new QTreeWidgetItem(id);
-            details->setText(0, tr("Base: tet %1").arg(
-                tri->tetrahedronIndex(torus->base())));
-            topIndex = tri->tetrahedronIndex(torus->topLevel());
+            details->setText(0, tr("Base: tet %1").arg(torus->base()->index()));
+            topIndex = torus->topLevel()->index();
             details = new QTreeWidgetItem(id, details);
             details->setText(0, tr("Top level: tet %1").
                 arg(topIndex));
@@ -864,9 +863,9 @@ void NTriCompositionUI::findPlugTriSolidTori() {
             details = new QTreeWidgetItem(id, details);
             details->setText(0,
                 tr("Core: tets %1, %2, %3").
-                arg(tri->tetrahedronIndex(core.tetrahedron(0))).
-                arg(tri->tetrahedronIndex(core.tetrahedron(1))).
-                arg(tri->tetrahedronIndex(core.tetrahedron(2))));
+                arg(core.tetrahedron(0)->index()).
+                arg(core.tetrahedron(1)->index()).
+                arg(core.tetrahedron(2)->index()));
 
             QString lengths(tr("Chain lengths: "));
             for (int j = 0; j < 3; j++) {
@@ -987,7 +986,7 @@ void NTriCompositionUI::findSpiralSolidTori() {
 
             unsigned long* tetIndex = new unsigned long[spiralTets];
             for (j = 0; j < spiralTets; j++)
-                tetIndex[j] = tri->tetrahedronIndex(spiral->tetrahedron(j));
+                tetIndex[j] = spiral->tetrahedron(j)->index();
 
             QString tetSet(spiralTets == 1 ? tr("Tet: ") : tr("Tets: "));
             for (j = 0; j < spiralTets; j++) {

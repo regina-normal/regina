@@ -71,8 +71,7 @@ NMatrixInt* NNormalSurfaceVectorOrientedQuad::makeMatchingEquations(
             eit != triangulation->edges().end(); eit++) {
         if (! (*eit)->isBoundary()) {
             for (auto& emb : **eit) {
-                tetIndex = triangulation->tetrahedronIndex(
-                    emb.tetrahedron());
+                tetIndex = emb.tetrahedron()->index();
                 perm = emb.vertices();
 
                 flip = (perm[0] == 0 || perm[2] == 0);
@@ -190,8 +189,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
 
             // Pick some triangular disc and set it to zero.
             const NVertexEmbedding& vemb = (*vit)->front();
-            row = 14 * triang->tetrahedronIndex(vemb.tetrahedron())
-                + 2 * vemb.vertex() + orient;
+            row = 14 * vemb.tetrahedron()->index() + 2 * vemb.vertex() + orient;
             ans->setElement(row, NLargeInteger::zero);
 
             min = NLargeInteger::zero;
@@ -222,8 +220,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
                 beginit = current.edge->begin();
                 endit = current.edge->end();
                 for (eembit = beginit; eembit != endit; eembit++)
-                    if (! (*ans)[14 * triang->tetrahedronIndex(
-                            (*eembit).tetrahedron()) +
+                    if (! (*ans)[14 * (*eembit).tetrahedron()->index() +
                             2 * (*eembit).vertices()[current.end] +
                             orient].isInfinite())
                         break;
@@ -233,14 +230,14 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
                 // holes.
                 backupit = eembit;
                 adjPerm = (*eembit).vertices();
-                adjIndex = triang->tetrahedronIndex((*eembit).tetrahedron());
+                adjIndex = (*eembit).tetrahedron()->index();
                 while (eembit != beginit) {
                     eembit--;
 
                     // Work out the coordinate for the disc type at eembit.
                     tet = (*eembit).tetrahedron();
                     tetPerm = (*eembit).vertices();
-                    tetIndex = triang->tetrahedronIndex(tet);
+                    tetIndex = tet->index();
 
                     expect =
                         (*ans)[14 * adjIndex + 2 * adjPerm[current.end] +
@@ -277,12 +274,12 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
                 // matching equations have not been broken.
                 eembit = backupit;
                 adjPerm = (*eembit).vertices();
-                adjIndex = triang->tetrahedronIndex((*eembit).tetrahedron());
+                adjIndex = (*eembit).tetrahedron()->index();
                 for (eembit++; eembit != endit; eembit++) {
                     // Work out the coordinate for the disc type at eembit.
                     tet = (*eembit).tetrahedron();
                     tetPerm = (*eembit).vertices();
-                    tetIndex = triang->tetrahedronIndex(tet);
+                    tetIndex = tet->index();
 
                     expect =
                         (*ans)[14 * adjIndex + 2 * adjPerm[current.end] +
@@ -327,7 +324,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
             // to infinity.  Otherwise subtract min from every coordinate to
             // make the values as small as possible.
             for (auto& emb : **vit) {
-                row = 14 * triang->tetrahedronIndex(emb.tetrahedron())
+                row = 14 * emb.tetrahedron()->index()
                     + 2 * emb.vertex() + orient;
                 if (broken)
                     ans->setElement(row, NLargeInteger::infinity);

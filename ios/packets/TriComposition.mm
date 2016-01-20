@@ -580,7 +580,7 @@
             
             unsigned long* tetIndex = new unsigned long[spiralTets];
             for (j = 0; j < spiralTets; j++)
-                tetIndex[j] = self.packet->tetrahedronIndex(spiral->tetrahedron(j));
+                tetIndex[j] = spiral->tetrahedron(j)->index();
             
             [details appendString:(spiralTets == 1 ? @INDENT1 "Tet: " : @INDENT1 "Tets: ")];
             for (j = 0; j < spiralTets; j++) {
