@@ -175,7 +175,7 @@ const NAbelianGroup& NTriangulation::homologyRel() const {
                 edgeGenIndex = genIndex[edgeIndex(
                     currTet->edge(currEdge))];
                 if (edgeGenIndex >= 0) {
-                    if (currTet->getEdgeMapping(currEdge)[0] == currEdgeStart)
+                    if (currTet->edgeMapping(currEdge)[0] == currEdgeStart)
                         pres.entry(i, edgeGenIndex) += 1;
                     else
                         pres.entry(i, edgeGenIndex) -= 1;

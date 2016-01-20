@@ -193,9 +193,9 @@ bool NSatAnnulus::isTwoSidedTorus() const {
         }
 
         // Get mappings from tetrahedron edge roles to annulus vertex roles.
-        map0 = roles[0].inverse() * tet[0]->getEdgeMapping(
+        map0 = roles[0].inverse() * tet[0]->edgeMapping(
             NEdge::edgeNumber[roles[0][a]][roles[0][b]]);
-        map1 = roles[1].inverse() * tet[1]->getEdgeMapping(
+        map1 = roles[1].inverse() * tet[1]->edgeMapping(
             NEdge::edgeNumber[roles[1][a]][roles[1][b]]);
 
         // We should have {a,b} -> {a,b} and {x,y} -> {x,y} for each map.
