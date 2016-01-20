@@ -23,7 +23,7 @@ Copyright (c) 1999-2013, The Regina development team
 ... # The triangulations are all children of the "census" container.
 ... tri = census.getFirstTreeChild()
 >>> while tri != None:
-...     print tri.getPacketLabel() + ":", tri.getHomologyH1()
+...     print tri.getPacketLabel() + ":", tri.homology()
 ...     tri = tri.getNextTreeSibling()
 ... 
 Item 1: Z_7
@@ -47,7 +47,7 @@ Item 16: Z_2
 ... tri = census.getFirstTreeChild()
 >>> while tri != None:
 ...     next = tri.getNextTreeSibling()
-...     hom = tri.getHomologyH1()
+...     hom = tri.homology()
 ...     if hom.isTrivial():
 ...         tri.makeOrphan()
 ...     tri = next
@@ -62,7 +62,7 @@ Item 16: Z_2
 >>> # Print the homology of each remaining triangulation.
 ... tri = census.getFirstTreeChild()
 >>> while tri != None:
-...     print tri.getPacketLabel() + ":", tri.getHomologyH1()
+...     print tri.getPacketLabel() + ":", tri.homology()
 ...     tri = tri.getNextTreeSibling()
 ... 
 Item 1: Z_7

@@ -77,7 +77,7 @@ def vitalStats(tri):
 	print
 	print "Fundamental group:", tri.getFundamentalGroup().recogniseGroup()
 	print tri.getFundamentalGroup().detail()
-	print "H1:", tri.getHomologyH1()
+	print "H1:", tri.homology()
 	if tri.isValid():
 		print "H1Bdry:", tri.getHomologyH1Bdry()
 		print "H1Rel:", tri.getHomologyH1Rel()

@@ -61,7 +61,7 @@ Triangles:
 
 >>> 
 >>> # Calculate some algebraic properties of the triangulation.
-... print t.getHomologyH1()
+... print t.homology()
 Z
 >>> print t.getHomologyH1Bdry()
 2 Z

@@ -35,7 +35,7 @@ def process(tri):
     if hom == None:
         print 'ERROR: No homology'
         sys.exit(1)
-    elif not hom == tri.getHomologyH1():
+    elif not hom == tri.homology():
         print 'ERROR: Non-isomorphic homology'
         sys.exit(1)
 

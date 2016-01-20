@@ -20,7 +20,7 @@ print t
 print t.detail()
 
 # Calculate some algebraic properties of the triangulation.
-print t.getHomologyH1()
+print t.homology()
 print t.getHomologyH1Bdry()
 
 # Test for 0-efficiency, which asks Regina to search for certain types

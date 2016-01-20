@@ -80,8 +80,8 @@ print a == b, a != b
 
 print 'NAbelianGroup:'
 t = NExampleTriangulation.lens8_3()
-a = t.getHomologyH1()
-b = t.getHomologyH1()
+a = t.homology()
+b = t.homology()
 print a == b, a != b
 
 print 'NGroupPresentation:'

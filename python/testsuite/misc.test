@@ -38,7 +38,7 @@ print regina.testEngine(3)
 # Some slightly less trivial tests.
 t = regina.NTriangulation()
 t.insertLayeredLensSpace(5,1)
-print t.getHomologyH1()
+print t.homology()
 
 # Does equality work correctly?
 a = NPerm4(2,3)

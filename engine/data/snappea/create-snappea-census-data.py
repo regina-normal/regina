@@ -45,7 +45,7 @@ def process(tri):
     if dehydration == '':
         print 'ERROR: No dehydration'
         sys.exit(1)
-    print dehydration + ' ' + grouprep(tri.getHomologyH1())
+    print dehydration + ' ' + grouprep(tri.homology())
     sys.stdout.flush()
 
 p = tree
