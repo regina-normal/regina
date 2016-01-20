@@ -69,23 +69,23 @@ print a == b, a != b
 
 print 'NTriangulation:'
 a = NTriangulation()
-b = a.getTreeMatriarch()
+b = a.root()
 print a == b, a != b
 
 print 'NTetrahedron:'
 t = NTriangulation()
 a = t.newTetrahedron()
-b = t.getTetrahedron(0)
+b = t.tetrahedron(0)
 print a == b, a != b
 
 print 'NAbelianGroup:'
 t = NExampleTriangulation.lens8_3()
-a = t.getHomologyH1()
-b = t.getHomologyH1()
+a = t.homology()
+b = t.homology()
 print a == b, a != b
 
 print 'NGroupPresentation:'
 t = NExampleTriangulation.lens8_3()
-a = t.getFundamentalGroup()
-b = t.getFundamentalGroup()
+a = t.fundamentalGroup()
+b = t.fundamentalGroup()
 print a == b, a != b

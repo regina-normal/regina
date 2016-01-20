@@ -67,7 +67,7 @@ NLayeredChainPair* NLayeredChainPair::isLayeredChainPair(
     // a component).
 
     // Start with tetrahedron 0.  This must belong to *some* chain.
-    NTetrahedron* base = comp->getTetrahedron(0);
+    NTetrahedron* base = comp->tetrahedron(0);
 
     NLayeredChain* first;
     NLayeredChain* second;

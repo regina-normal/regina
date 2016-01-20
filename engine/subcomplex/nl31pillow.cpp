@@ -61,7 +61,7 @@ NL31Pillow* NL31Pillow::isL31Pillow(const NComponent* comp) {
 
     // Verify that the vertices have degrees 2 and 6.
     int internalVertex;
-    unsigned long deg0 = comp->getVertex(0)->degree();
+    unsigned long deg0 = comp->vertex(0)->degree();
     if (deg0 == 2)
         internalVertex = 0;
     else if (deg0 == 6)
@@ -71,8 +71,8 @@ NL31Pillow* NL31Pillow::isL31Pillow(const NComponent* comp) {
 
     // Verify that all four faces of one tetrahedron join to the other.
     NTetrahedron* tet[2];
-    tet[0] = comp->getTetrahedron(0);
-    tet[1] = comp->getTetrahedron(1);
+    tet[0] = comp->tetrahedron(0);
+    tet[1] = comp->tetrahedron(1);
 
     if (tet[0]->adjacentTetrahedron(0) != tet[1] ||
             tet[0]->adjacentTetrahedron(1) != tet[1] ||
@@ -88,12 +88,12 @@ NL31Pillow* NL31Pillow::isL31Pillow(const NComponent* comp) {
     ans->tet[1] = tet[1];
 
     for (int i = 0; i < 2; i++) {
-        const NVertexEmbedding& emb = comp->getVertex(internalVertex)->
+        const NVertexEmbedding& emb = comp->vertex(internalVertex)->
             embedding(i);
-        if (emb.getTetrahedron() == tet[0])
-            ans->interior[0] = emb.getVertex();
+        if (emb.tetrahedron() == tet[0])
+            ans->interior[0] = emb.vertex();
         else
-            ans->interior[1] = emb.getVertex();
+            ans->interior[1] = emb.vertex();
     }
 
     return ans;

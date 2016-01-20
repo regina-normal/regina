@@ -38,7 +38,7 @@ print regina.testEngine(3)
 # Some slightly less trivial tests.
 t = regina.NTriangulation()
 t.insertLayeredLensSpace(5,1)
-print t.getHomologyH1()
+print t.homology()
 
 # Does equality work correctly?
 a = NPerm4(2,3)
@@ -48,8 +48,8 @@ print a == c, a == b, b == c
 print a != c, a != b, b != c
 
 t = regina.NExampleTriangulation.poincareHomologySphere()
-a = t.getTetrahedron(0)
-b = t.getTetrahedron(1)
-c = t.getTetrahedron(0)
+a = t.tetrahedron(0)
+b = t.tetrahedron(1)
+c = t.tetrahedron(0)
 print a == c, a == b, b == c
 print a != c, a != b, b != c

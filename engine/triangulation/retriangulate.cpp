@@ -104,9 +104,9 @@ namespace {
         NTriangulation* t = NTriangulation::fromIsoSig(*it);
         size_t i;
         for (i = 0; i < t->countEdges(); ++i)
-            if (t->threeTwoMove(t->getEdge(i), true, false)) {
+            if (t->threeTwoMove(t->edge(i), true, false)) {
                 NTriangulation alt(*t);
-                alt.threeTwoMove(alt.getEdge(i), false, true);
+                alt.threeTwoMove(alt.edge(i), false, true);
                 if (candidate(alt)) {
                     delete t;
                     return;
@@ -115,9 +115,9 @@ namespace {
 
         if (t->size() < maxTet_)
             for (i = 0; i < t->countTriangles(); ++i)
-                if (t->twoThreeMove(t->getTriangle(i), true, false)) {
+                if (t->twoThreeMove(t->triangle(i), true, false)) {
                     NTriangulation alt(*t);
-                    alt.twoThreeMove(alt.getTriangle(i), false, true);
+                    alt.twoThreeMove(alt.triangle(i), false, true);
                     if (candidate(alt)) {
                         delete t;
                         return;

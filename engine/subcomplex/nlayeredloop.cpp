@@ -83,7 +83,7 @@ NLayeredLoop* NLayeredLoop::isLayeredLoop(const NComponent* comp) {
     // a component).
 
     // Pick our base tetrahedron.
-    NTetrahedron* base = comp->getTetrahedron(0);
+    NTetrahedron* base = comp->tetrahedron(0);
 
     NTetrahedron* tet = base;
     NTetrahedron* next;
@@ -115,14 +115,14 @@ NLayeredLoop* NLayeredLoop::isLayeredLoop(const NComponent* comp) {
             hinge0 = NEdge::edgeNumber[baseTop0][baseBottom0];
             hinge1 = NEdge::edgeNumber[baseTop1][baseBottom1];
             if (twisted) {
-                if (base->getEdge(hinge0) != base->getEdge(hinge1))
+                if (base->edge(hinge0) != base->edge(hinge1))
                     continue;
-                if (base->getEdge(hinge0)->degree() != 2 * nTet)
+                if (base->edge(hinge0)->degree() != 2 * nTet)
                     continue;
             } else {
-                if (base->getEdge(hinge0)->degree() != nTet)
+                if (base->edge(hinge0)->degree() != nTet)
                     continue;
-                if (base->getEdge(hinge1)->degree() != nTet)
+                if (base->edge(hinge1)->degree() != nTet)
                     continue;
             }
 
@@ -193,8 +193,8 @@ NLayeredLoop* NLayeredLoop::isLayeredLoop(const NComponent* comp) {
                 // We have a solution!
                 NLayeredLoop* ans = new NLayeredLoop();
                 ans->length_ = nTet;
-                ans->hinge_[0] = base->getEdge(hinge0);
-                ans->hinge_[1] = (twisted ? 0 : base->getEdge(hinge1));
+                ans->hinge_[0] = base->edge(hinge0);
+                ans->hinge_[1] = (twisted ? 0 : base->edge(hinge1));
                 return ans;
             }
         }

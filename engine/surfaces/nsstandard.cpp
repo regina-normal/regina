@@ -44,9 +44,9 @@ NLargeInteger NNormalSurfaceVectorStandard::edgeWeight(
         size_t edgeIndex, const NTriangulation* triang) const {
     // Find a tetrahedron next to the edge in question.
     const NEdgeEmbedding& emb = triang->edge(edgeIndex)->front();
-    long tetIndex = triang->tetrahedronIndex(emb.getTetrahedron());
-    int start = emb.getVertices()[0];
-    int end = emb.getVertices()[1];
+    long tetIndex = triang->tetrahedronIndex(emb.tetrahedron());
+    int start = emb.vertices()[0];
+    int end = emb.vertices()[1];
 
     // Add up the triangles and quads meeting that edge.
     // Triangles:
@@ -61,10 +61,10 @@ NLargeInteger NNormalSurfaceVectorStandard::edgeWeight(
 NLargeInteger NNormalSurfaceVectorStandard::arcs(size_t triIndex,
         int triVertex, const NTriangulation* triang) const {
     // Find a tetrahedron next to the triangle in question.
-    const NTriangleEmbedding& emb = triang->getTriangles()[triIndex]->front();
-    long tetIndex = triang->tetrahedronIndex(emb.getTetrahedron());
-    int vertex = emb.getVertices()[triVertex];
-    int backOfFace = emb.getVertices()[3];
+    const NTriangleEmbedding& emb = triang->triangles()[triIndex]->front();
+    long tetIndex = triang->tetrahedronIndex(emb.tetrahedron());
+    int vertex = emb.vertices()[triVertex];
+    int backOfFace = emb.vertices()[3];
 
     // Add up the triangles and quads meeting that triangle in the required arc.
     // Triangles:
@@ -95,15 +95,15 @@ NMatrixInt* NNormalSurfaceVectorStandard::makeMatchingEquations(
     int i;
     size_t tet0, tet1;
     NPerm4 perm0, perm1;
-    for (NTriangulation::TriangleIterator fit = triangulation->getTriangles().begin();
-            fit != triangulation->getTriangles().end(); fit++) {
+    for (NTriangulation::TriangleIterator fit = triangulation->triangles().begin();
+            fit != triangulation->triangles().end(); fit++) {
         if (! (*fit)->isBoundary()) {
             tet0 = triangulation->tetrahedronIndex(
-                (*fit)->embedding(0).getTetrahedron());
+                (*fit)->embedding(0).tetrahedron());
             tet1 = triangulation->tetrahedronIndex(
-                (*fit)->embedding(1).getTetrahedron());
-            perm0 = (*fit)->embedding(0).getVertices();
-            perm1 = (*fit)->embedding(1).getVertices();
+                (*fit)->embedding(1).tetrahedron());
+            perm0 = (*fit)->embedding(0).vertices();
+            perm1 = (*fit)->embedding(1).vertices();
             for (i=0; i<3; i++) {
                 // Triangles:
                 ans->entry(row, 7*tet0 + perm0[i]) += 1;

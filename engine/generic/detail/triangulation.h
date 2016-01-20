@@ -805,7 +805,7 @@ class TriangulationBase :
          * vertices, see isIsomorphicTo() instead.
          *
          * This test does \e not examine the textual simplex descriptions,
-         * as seen in Simplex<dim>::getDescription(); these may still differ.
+         * as seen in Simplex<dim>::description(); these may still differ.
          * It also does not test whether lower-dimensional faces are
          * numbered identically (vertices, edges and so on); this routine
          * is only concerned with top-dimensional simplices.
@@ -1551,7 +1551,7 @@ TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& copy) :
 
     SimplexIterator me, you;
     for (you = copy.simplices_.begin(); you != copy.simplices_.end(); ++you)
-        simplices_.push_back(new Simplex<dim>((*you)->getDescription(),
+        simplices_.push_back(new Simplex<dim>((*you)->description(),
             static_cast<Triangulation<dim>*>(this)));
 
     // Copy the internal simplex data, including gluings.

@@ -389,8 +389,8 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
                                        whichCoord:coord
                                               tri:self.packet->triangulation()];
 
-    if ((viewCoords == regina::NS_EDGE_WEIGHT && self.packet->triangulation()->getEdge(coord)->isBoundary()) ||
-            (viewCoords == regina::NS_TRIANGLE_ARCS && self.packet->triangulation()->getTriangle(coord / 3)->isBoundary()))
+    if ((viewCoords == regina::NS_EDGE_WEIGHT && self.packet->triangulation()->edge(coord)->isBoundary()) ||
+            (viewCoords == regina::NS_TRIANGLE_ARCS && self.packet->triangulation()->triangle(coord / 3)->isBoundary()))
         cell.textLabel.textColor = headerBdry;
 
     return cell;

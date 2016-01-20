@@ -42,11 +42,11 @@ NTetrahedron* NTriangulation::layerOn(NEdge* edge) {
     // Locate the two boundary triangles.
     // Note that our preconditions ensure they exist and are distinct;
     // we won't test this again here.
-    NTetrahedron* tet1 = edge->front().getTetrahedron();
-    NTetrahedron* tet2 = edge->back().getTetrahedron();
+    NTetrahedron* tet1 = edge->front().tetrahedron();
+    NTetrahedron* tet2 = edge->back().tetrahedron();
 
-    NPerm4 roles1 = edge->front().getVertices();
-    NPerm4 roles2 = edge->back().getVertices();
+    NPerm4 roles1 = edge->front().vertices();
+    NPerm4 roles2 = edge->back().vertices();
 
     // At this stage, roles1 maps (0,1,2) to the tet1 tetrahedron vertices
     // for the first boundary triangle, and roles2 maps (0,1,3) to the tet2

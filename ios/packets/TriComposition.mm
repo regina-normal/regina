@@ -192,9 +192,9 @@
 
             const regina::NTriSolidTorus& core = aug->core();
             [details appendFormat:@INDENT1 "Core: tets %ld, %ld, %ld\n",
-             core.getTetrahedron(0)->index(),
-             core.getTetrahedron(1)->index(),
-             core.getTetrahedron(2)->index()];
+             core.tetrahedron(0)->index(),
+             core.tetrahedron(1)->index(),
+             core.tetrahedron(2)->index()];
 
             if (aug->hasLayeredChain()) {
                 if (aug->chainType() == regina::NAugTriSolidTorus::CHAIN_MAJOR)
@@ -223,7 +223,7 @@
             [details appendFormat:@"L(3,1) pillow %s\n", pillow->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
             [details appendFormat:@INDENT1 "Pillow interior vertex: %ld\n",
-             pillow->tetrahedron(0)->getVertex(pillow->interiorVertex(0))->index()];
+             pillow->tetrahedron(0)->vertex(pillow->interiorVertex(0))->index()];
             
             [details appendString:@"\n"];
             delete pillow;
@@ -316,9 +316,9 @@
 
             const regina::NTriSolidTorus& core(plug->core());
             [details appendFormat:@INDENT1 "Core: tets %ld, %ld, %ld\n",
-             core.getTetrahedron(0)->index(),
-             core.getTetrahedron(1)->index(),
-             core.getTetrahedron(2)->index()];
+             core.tetrahedron(0)->index(),
+             core.tetrahedron(1)->index(),
+             core.tetrahedron(2)->index()];
 
             [details appendString:@INDENT1 "Chain lengths: "];
             for (int j = 0; j < 3; j++) {
@@ -523,7 +523,7 @@
     regina::NLayeredSolidTorus* torus;
     unsigned long topIndex;
     for (unsigned long i = 0; i < nTets; i++) {
-        torus = regina::NLayeredSolidTorus::formsLayeredSolidTorusBase(self.packet->getTetrahedron(i));
+        torus = regina::NLayeredSolidTorus::formsLayeredSolidTorusBase(self.packet->tetrahedron(i));
         if (torus) {
             [details appendFormat:@"Layered solid torus %s\n", torus->name().c_str()];
             [details appendFormat:@INDENT1 "Base: tet %ld\n", torus->base()->index()];
@@ -560,7 +560,7 @@
     int whichPerm;
     unsigned long i, j;
     for (i = 0; i < nTets; i++) {
-        tet = self.packet->getTetrahedron(i);
+        tet = self.packet->tetrahedron(i);
         for (whichPerm = 0; whichPerm < 24 ; ++whichPerm) {
             if (regina::NPerm4::S4[whichPerm][0] > regina::NPerm4::S4[whichPerm][3])
                 continue;
@@ -644,7 +644,7 @@
     
     regina::NSnappedBall* ball;
     for (unsigned long i = 0; i < nTets; i++) {
-        ball = regina::NSnappedBall::formsSnappedBall(self.packet->getTetrahedron(i));
+        ball = regina::NSnappedBall::formsSnappedBall(self.packet->tetrahedron(i));
         if (ball) {
             [details appendString:@"Snapped 3-ball\n"];
             [details appendFormat:@INDENT1 "Tetrahedron %ld\n", i];
@@ -667,17 +667,17 @@
     regina::NTriangle* f2;
     regina::NPillowTwoSphere* pillow;
     for (i = 0; i < nTriangles; i++) {
-        f1 = self.packet->getTriangle(i);
+        f1 = self.packet->triangle(i);
         for (j = i + 1; j < nTriangles; j++) {
-            f2 = self.packet->getTriangle(j);
+            f2 = self.packet->triangle(j);
             pillow = regina::NPillowTwoSphere::formsPillowTwoSphere(f1, f2);
             if (pillow) {
                 [details appendString:@"Pillow 2-sphere\n"];
                 [details appendFormat:@INDENT1 "Triangles: %ld, %ld\n", i, j];
                 [details appendFormat:@INDENT1 "Equator: edges %ld, %ld, %ld\n",
-                 f1->getEdge(0)->index(),
-                 f1->getEdge(1)->index(),
-                 f1->getEdge(2)->index()];
+                 f1->edge(0)->index(),
+                 f1->edge(1)->index(),
+                 f1->edge(2)->index()];
                 
                 [details appendString:@"\n"];
                 delete pillow;
@@ -695,9 +695,9 @@
     regina::NTetrahedron* t2;
     regina::NSnappedTwoSphere* sphere;
     for (i = 0; i < nTets; i++) {
-        t1 = self.packet->getTetrahedron(i);
+        t1 = self.packet->tetrahedron(i);
         for (j = i + 1; j < nTets; j++) {
-            t2 = self.packet->getTetrahedron(j);
+            t2 = self.packet->tetrahedron(j);
             sphere = regina::NSnappedTwoSphere::formsSnappedTwoSphere(t1, t2);
             if (sphere) {
                 [details appendString:@"Snapped 2-sphere\n"];
@@ -705,7 +705,7 @@
                 
                 const regina::NSnappedBall* ball = sphere->snappedBall(0);
                 [details appendFormat:@INDENT1 "Equator: edge %ld\n",
-                 ball->tetrahedron()->getEdge(ball->equatorEdge())->index()];
+                 ball->tetrahedron()->edge(ball->equatorEdge())->index()];
                 
                 [details appendString:@"\n"];
                 delete sphere;

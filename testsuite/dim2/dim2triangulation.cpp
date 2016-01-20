@@ -176,7 +176,7 @@ class Dim2TriangulationTest : public TriangulationTest<2> {
             unsigned long n = tri->size();
             for (unsigned long i = 0; i < n; ++i) {
                 Dim2Triangulation large(*tri);
-                large.oneThreeMove(large.getTriangle(i));
+                large.oneThreeMove(large.triangle(i));
 
                 if (large.size() != n + 2) {
                     std::ostringstream msg;

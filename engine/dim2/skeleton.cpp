@@ -55,9 +55,9 @@ void Triangulation<2>::calculateSkeleton() {
         // - all Dim2BoundaryComponent members
 
     // Flesh out the details of each component.
-    for (auto v : getVertices())
+    for (auto v : vertices())
         v->component()->vertices_.push_back(v);
-    for (auto e : getEdges())
+    for (auto e : edges())
         e->component()->edges_.push_back(e);
 }
 
@@ -75,7 +75,7 @@ void Triangulation<2>::calculateBoundary() {
     Dim2Vertex* vertex;
     Dim2VertexEmbedding vertexEmb;
 
-    for (Dim2Edge* edge : getEdges()) {
+    for (Dim2Edge* edge : edges()) {
         // We only care about boundary edges that we haven't yet seen..
         if (edge->degree() == 2 || edge->boundaryComponent_)
             continue;
@@ -87,9 +87,9 @@ void Triangulation<2>::calculateBoundary() {
         // Loop around from this boundary edge to
         // completely enumerate all edges in this boundary component.
 
-        tri = edge->front().getTriangle();
-        edgeId = edge->front().getEdge();
-        vertexId = edge->front().getVertices()[0];
+        tri = edge->front().triangle();
+        edgeId = edge->front().edge();
+        vertexId = edge->front().vertices()[0];
         vertex = tri->regina::detail::SimplexFaces<2, 0>::face_[vertexId];
         while (true) {
             if (! edge->boundaryComponent_) {
@@ -109,31 +109,31 @@ void Triangulation<2>::calculateBoundary() {
             // boundary edge is one end of the vertex link; the
             // *adjacent* boundary edge must be at the other.
             vertexEmb = vertex->front();
-            if (vertexEmb.getTriangle() == tri &&
-                    vertexEmb.getVertices()[0] == vertexId &&
-                    vertexEmb.getVertices()[2] == edgeId) {
+            if (vertexEmb.triangle() == tri &&
+                    vertexEmb.vertices()[0] == vertexId &&
+                    vertexEmb.vertices()[2] == edgeId) {
                 // We are currently looking at the embedding at the
                 // front of the list.  Take the one at the back.
                 vertexEmb = vertex->back();
 
-                adjTri = vertexEmb.getTriangle();
-                adjEdgeId = vertexEmb.getVertices()[1];
+                adjTri = vertexEmb.triangle();
+                adjEdgeId = vertexEmb.vertices()[1];
                 adjEdge = adjTri->regina::detail::SimplexFaces<2, 1>::face_[adjEdgeId];
-                adjVertexId = vertexEmb.getVertices()[2];
+                adjVertexId = vertexEmb.vertices()[2];
             } else {
                 // We must be looking at the embedding at the back
                 // of the list.  Take the one at the front (which is
                 // already stored in vertexEmb).
-                adjTri = vertexEmb.getTriangle();
-                adjEdgeId = vertexEmb.getVertices()[2];
+                adjTri = vertexEmb.triangle();
+                adjEdgeId = vertexEmb.vertices()[2];
                 adjEdge = adjTri->regina::detail::SimplexFaces<2, 1>::face_[adjEdgeId];
-                adjVertexId = vertexEmb.getVertices()[1];
+                adjVertexId = vertexEmb.vertices()[1];
 
                 // TODO: Sanity checking; remove this eventually.
                 vertexEmb = vertex->back();
-                if (! (vertexEmb.getTriangle() == tri &&
-                        vertexEmb.getVertices()[0] == vertexId &&
-                        vertexEmb.getVertices()[1] == edgeId)) {
+                if (! (vertexEmb.triangle() == tri &&
+                        vertexEmb.vertices()[0] == vertexId &&
+                        vertexEmb.vertices()[1] == edgeId)) {
                     std::cerr << "ERROR: Something has gone terribly "
                         "wrong in computeBoundaryComponents()."
                         << std::endl;

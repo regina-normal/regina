@@ -165,15 +165,15 @@ bool NSatAnnulus::isJoined(const NSatAnnulus& other, NMatrix2& matching) const {
 bool NSatAnnulus::isTwoSidedTorus() const {
     // Check that the edges are identified in opposite pairs and that we
     // have no duplicates.
-    NEdge* e01 = tet[0]->getEdge(NEdge::edgeNumber[roles[0][0]][roles[0][1]]);
-    NEdge* e02 = tet[0]->getEdge(NEdge::edgeNumber[roles[0][0]][roles[0][2]]);
-    NEdge* e12 = tet[0]->getEdge(NEdge::edgeNumber[roles[0][1]][roles[0][2]]);
+    NEdge* e01 = tet[0]->edge(NEdge::edgeNumber[roles[0][0]][roles[0][1]]);
+    NEdge* e02 = tet[0]->edge(NEdge::edgeNumber[roles[0][0]][roles[0][2]]);
+    NEdge* e12 = tet[0]->edge(NEdge::edgeNumber[roles[0][1]][roles[0][2]]);
 
-    if (e01 != tet[1]->getEdge(NEdge::edgeNumber[roles[1][0]][roles[1][1]]))
+    if (e01 != tet[1]->edge(NEdge::edgeNumber[roles[1][0]][roles[1][1]]))
         return false;
-    if (e02 != tet[1]->getEdge(NEdge::edgeNumber[roles[1][0]][roles[1][2]]))
+    if (e02 != tet[1]->edge(NEdge::edgeNumber[roles[1][0]][roles[1][2]]))
         return false;
-    if (e12 != tet[1]->getEdge(NEdge::edgeNumber[roles[1][1]][roles[1][2]]))
+    if (e12 != tet[1]->edge(NEdge::edgeNumber[roles[1][1]][roles[1][2]]))
         return false;
 
     if (e01 == e02 || e02 == e12 || e12 == e01)
@@ -193,9 +193,9 @@ bool NSatAnnulus::isTwoSidedTorus() const {
         }
 
         // Get mappings from tetrahedron edge roles to annulus vertex roles.
-        map0 = roles[0].inverse() * tet[0]->getEdgeMapping(
+        map0 = roles[0].inverse() * tet[0]->edgeMapping(
             NEdge::edgeNumber[roles[0][a]][roles[0][b]]);
-        map1 = roles[1].inverse() * tet[1]->getEdgeMapping(
+        map1 = roles[1].inverse() * tet[1]->edgeMapping(
             NEdge::edgeNumber[roles[1][a]][roles[1][b]]);
 
         // We should have {a,b} -> {a,b} and {x,y} -> {x,y} for each map.
@@ -217,7 +217,7 @@ void NSatAnnulus::transform(const NTriangulation* originalTri,
     unsigned long tetID;
     for (which = 0; which < 2; which++) {
         tetID = originalTri->tetrahedronIndex(tet[which]);
-        tet[which] = newTri->getTetrahedron(iso->tetImage(tetID));
+        tet[which] = newTri->tetrahedron(iso->tetImage(tetID));
         roles[which] = iso->facePerm(tetID) * roles[which];
     }
 }

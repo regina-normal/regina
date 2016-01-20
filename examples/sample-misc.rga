@@ -1311,10 +1311,10 @@ CS_unknown
 # See the Regina handbook for more elaborate sample Python sessions.
 
 # Output the homology of each triangulation.
-t = tri.getFirstTreeChild()
+t = tri.firstChild()
 while t != None:
-	print t.getPacketLabel() + &quot;:&quot;, t.getHomologyH1()
-	t = t.getNextTreeSibling()
+	print t.label() + &quot;:&quot;, t.homology()
+	t = t.nextSibling()
 </text>
 </packet> <!-- Python Script (Script) -->
 </packet> <!-- Sample Data File (Container) -->

@@ -21,7 +21,7 @@ Copyright (c) 1999-2013, The Regina development team
 ... # triangulation here.
 ... sig = 'sfLfvQvwwMQQQccjghjkmqlonrnrqpqrnsnksaisnrobocksks'
 &gt;&gt;&gt; tri = NTriangulation(sig)
-&gt;&gt;&gt; print tri.getNumberOfTetrahedra(), 'tetrahedra'
+&gt;&gt;&gt; print tri.countTetrahedra(), 'tetrahedra'
 18 tetrahedra
 &gt;&gt;&gt; 
 &gt;&gt;&gt; # Create a progress tracker to use during the normal surface enumeration.
@@ -50,6 +50,6 @@ Progress: 79.1180419922 %
 Progress: 90.4166666667 %
 &gt;&gt;&gt; 
 &gt;&gt;&gt; # The surface enumeration is now complete.
-... print surfaces.getNumberOfSurfaces(), 'normal surfaces'
+... print surfaces.countSurfaces(), 'normal surfaces'
 2319 normal surfaces
 &gt;&gt;&gt;

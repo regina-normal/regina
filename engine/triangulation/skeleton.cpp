@@ -110,7 +110,7 @@ void NTriangulation::calculateBoundary() {
     //     NComponent.boundaryComponents
     NBoundaryComponent* label;
 
-    for (NTriangle* triangle : getTriangles()) {
+    for (NTriangle* triangle : triangles()) {
         if (triangle->degree() < 2)
             if (triangle->boundaryComponent_ == 0) {
                 label = new NBoundaryComponent();
@@ -129,7 +129,7 @@ void NTriangulation::labelBoundaryTriangle(NTriangle* firstTriangle,
     const NTriangleEmbedding& emb = firstTriangle->front();
     firstTriangle->boundaryComponent_ = label;
     label->triangles_.push_back(firstTriangle);
-    emb.getTetrahedron()->tmpOrientation_[emb.getTriangle()] = 1;
+    emb.tetrahedron()->tmpOrientation_[emb.triangle()] = 1;
     triangleQueue.push(firstTriangle);
 
     NTetrahedron* tet;
@@ -153,8 +153,8 @@ void NTriangulation::labelBoundaryTriangle(NTriangle* firstTriangle,
         triangleQueue.pop();
 
         // Run through the edges and vertices on this triangle.
-        tet = triangle->front().getTetrahedron();
-        tetFace = triangle->front().getTriangle();
+        tet = triangle->front().tetrahedron();
+        tetFace = triangle->front().triangle();
         tetVertices = tet->regina::detail::SimplexFaces<3, 2>::mapping_[tetFace];
 
         // Run through the vertices.
@@ -228,16 +228,16 @@ void NTriangulation::calculateVertexLinks() {
     NVertex* end0;
     NVertex* end1;
     NTetrahedron* tet;
-    for (NEdge* e : getEdges()) {
-        // Try to compute e->getVertex(0) and e->getVertex(1), but
-        // without calling e->getVertex() which will recursively try to
+    for (NEdge* e : edges()) {
+        // Try to compute e->vertex(0) and e->vertex(1), but
+        // without calling e->vertex() which will recursively try to
         // recompute the skeleton.
         const NEdgeEmbedding& emb = e->front();
-        tet = emb.getTetrahedron();
+        tet = emb.tetrahedron();
         end0 = tet->regina::detail::SimplexFaces<3, 0>::face_[tet->regina::detail::SimplexFaces<3, 1>::mapping_
-            [emb.getEdge()][0]];
+            [emb.edge()][0]];
         end1 = tet->regina::detail::SimplexFaces<3, 0>::face_[tet->regina::detail::SimplexFaces<3, 1>::mapping_
-            [emb.getEdge()][1]];
+            [emb.edge()][1]];
 
         if (e->isBoundary()) {
             // Contribute to v_bdry.
@@ -255,7 +255,7 @@ void NTriangulation::calculateVertexLinks() {
     // Run through each vertex and finalise Euler characteristic, link
     // and more.
 
-    for (NVertex* vertex : getVertices()) {
+    for (NVertex* vertex : vertices()) {
         // Fix the Euler characteristic (subtract f, divide by two).
         vertex->linkEulerChar_ = (vertex->linkEulerChar_
             - static_cast<long>(vertex->degree())) / 2;

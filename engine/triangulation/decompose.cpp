@@ -77,7 +77,7 @@ unsigned long NTriangulation::splitIntoComponents(NPacket* componentParent,
     for (tetPos = 0; tetPos < nTets; tetPos++)
         newTets[tetPos] =
             newTris[simplices_[tetPos]->component()->index()]->
-            newTetrahedron(simplices_[tetPos]->getDescription());
+            newTetrahedron(simplices_[tetPos]->description());
 
     // Clone the tetrahedron gluings also.
     for (tetPos = 0; tetPos < nTets; tetPos++) {
@@ -998,7 +998,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
     bool opened = true;
     while (opened) {
         opened = false;
-        for (fit = use.getTriangles().begin(); fit != use.getTriangles().end(); ++fit)
+        for (fit = use.triangles().begin(); fit != use.triangles().end(); ++fit)
             if (use.openBook(*fit, true, true)) {
                 opened = true;
                 break;
@@ -1020,13 +1020,13 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
     // It doesn't matter whether the edges and/or vertices are distinct.
     NEdge *e0, *e1, *e2;
     unsigned long newSphereCount;
-    for (fit = use.getTriangles().begin(); fit != use.getTriangles().end(); ++fit) {
+    for (fit = use.triangles().begin(); fit != use.triangles().end(); ++fit) {
         if ((*fit)->isBoundary())
             continue;
 
-        e0 = (*fit)->getEdge(0);
-        e1 = (*fit)->getEdge(1);
-        e2 = (*fit)->getEdge(2);
+        e0 = (*fit)->edge(0);
+        e1 = (*fit)->edge(1);
+        e2 = (*fit)->edge(2);
         if (! (e0->isBoundary() && e1->isBoundary() && e2->isBoundary()))
             continue;
 
@@ -1035,8 +1035,8 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
         const NTriangleEmbedding& emb = (*fit)->front();
 
         NTriangulation cut(use);
-        cut.getTetrahedron(emb.getTetrahedron()->markedIndex())->unjoin(
-            emb.getTriangle());
+        cut.tetrahedron(emb.tetrahedron()->markedIndex())->unjoin(
+            emb.triangle());
 
         // If we don't see a new boundary component, the disc boundary is
         // non-separating in the manifold boundary and is therefore a
@@ -1067,7 +1067,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
             continue;
 
         int equator = ball->equatorEdge();
-        if (! (*tit)->getEdge(equator)->isBoundary()) {
+        if (! (*tit)->edge(equator)->isBoundary()) {
             delete ball;
             continue;
         }
@@ -1087,11 +1087,11 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
         }
 
         NTriangulation cut(use);
-        cut.getTetrahedron((*tit)->markedIndex())->unjoin(upper);
+        cut.tetrahedron((*tit)->markedIndex())->unjoin(upper);
         NTetrahedron* tet = cut.newTetrahedron();
         tet->joinTo(NEdge::edgeVertex[equator][0], tet, NPerm4(
             NEdge::edgeVertex[equator][0], NEdge::edgeVertex[equator][1]));
-        tet->joinTo(upper, cut.getTetrahedron(adj->markedIndex()),
+        tet->joinTo(upper, cut.tetrahedron(adj->markedIndex()),
             (*tit)->adjacentGluing(upper));
 
         // If we don't see a new boundary component, the disc boundary is

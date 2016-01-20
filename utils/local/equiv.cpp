@@ -182,9 +182,9 @@ void tryMovesDown(NTriangulation* t, int maxLevels) {
     bool found = false;
 
     for (i = 0; i < t->countEdges(); i++)
-        if (t->twoZeroMove(t->getEdge(i), true, false)) {
+        if (t->twoZeroMove(t->edge(i), true, false)) {
             alt = new NTriangulation(*t);
-            alt->twoZeroMove(alt->getEdge(i));
+            alt->twoZeroMove(alt->edge(i));
             tryMovesDown(alt, maxLevels - 1);
             found = true;
             delete alt;
@@ -195,9 +195,9 @@ void tryMovesDown(NTriangulation* t, int maxLevels) {
 
     for (i = 0; i < t->countEdges(); i++)
         for (j = 0; j < 2; j++)
-            if (t->twoOneMove(t->getEdge(i), j, true, false)) {
+            if (t->twoOneMove(t->edge(i), j, true, false)) {
                 alt = new NTriangulation(*t);
-                alt->twoOneMove(alt->getEdge(i), j);
+                alt->twoOneMove(alt->edge(i), j);
                 tryMovesDown(alt, maxLevels - 1);
                 found = true;
                 delete alt;
@@ -209,9 +209,9 @@ void tryMovesDown(NTriangulation* t, int maxLevels) {
     // Only try 3-2 moves if nothing better has worked so far.
     if (! found)
         for (i = 0; i < t->countEdges(); i++)
-            if (t->threeTwoMove(t->getEdge(i), true, false)) {
+            if (t->threeTwoMove(t->edge(i), true, false)) {
                 alt = new NTriangulation(*t);
-                alt->threeTwoMove(alt->getEdge(i));
+                alt->threeTwoMove(alt->edge(i));
                 tryMovesDown(alt, maxLevels - 1);
                 found = true;
                 delete alt;
@@ -224,9 +224,9 @@ void tryMovesDown(NTriangulation* t, int maxLevels) {
     if (! found)
         for (i = 0; i < t->countEdges(); i++)
             for (j = 0; j < 2; j++)
-                if (t->fourFourMove(t->getEdge(i), j, true, false)) {
+                if (t->fourFourMove(t->edge(i), j, true, false)) {
                     alt = new NTriangulation(*t);
-                    alt->fourFourMove(alt->getEdge(i), j);
+                    alt->fourFourMove(alt->edge(i), j);
                     tryMovesDown(alt, maxLevels - 1);
                     found = true;
                     delete alt;
@@ -253,9 +253,9 @@ void tryMovesAcross(NTriangulation* t, int maxLevels,
     if (maxLevels > 0)
         for (i = 0; i < t->countEdges(); i++)
             for (j = 0; j < 2; j++)
-                if (t->fourFourMove(t->getEdge(i), j, true, false)) {
+                if (t->fourFourMove(t->edge(i), j, true, false)) {
                     alt = new NTriangulation(*t);
-                    alt->fourFourMove(alt->getEdge(i), j);
+                    alt->fourFourMove(alt->edge(i), j);
                     if (prev && alt->isIsomorphicTo(*prev).get()) {
                         // Ignore, reversion.
                     } else if (prev2 && alt->isIsomorphicTo(*prev2).get()) {
@@ -288,7 +288,7 @@ void tryMovesUp(NTriangulation* t, int levelsRemaining) {
     } else {
         for (unsigned i = 0; i < t->countTriangles(); i++) {
             alt = new NTriangulation(*t);
-            if (alt->twoThreeMove(alt->getTriangle(i))) {
+            if (alt->twoThreeMove(alt->triangle(i))) {
                 if (levelsRemaining > 1)
                     tryMovesUp(alt, levelsRemaining - 1);
                 else

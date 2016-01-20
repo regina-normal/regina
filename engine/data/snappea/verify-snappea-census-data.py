@@ -16,7 +16,7 @@ if not tree:
     sys.exit(1)
 
 def process(tri):
-    label = tri.getPacketLabel()
+    label = tri.label()
     print label
 
     section = label[0]
@@ -35,13 +35,13 @@ def process(tri):
     if hom == None:
         print 'ERROR: No homology'
         sys.exit(1)
-    elif not hom == tri.getHomologyH1():
+    elif not hom == tri.homology():
         print 'ERROR: Non-isomorphic homology'
         sys.exit(1)
 
 p = tree
 while p != None:
-    if p.getPacketType() == regina.NTriangulation.packetType:
+    if p.type() == regina.NTriangulation.packetType:
         process(p)
     p = p.nextTreePacket()
 
