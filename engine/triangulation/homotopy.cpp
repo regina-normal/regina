@@ -79,7 +79,7 @@ const NGroupPresentation& NTriangulation::fundamentalGroup() const {
                 currTet = emb.tetrahedron();
                 currTetFace = emb.vertices()[2];
                 triangle = currTet->triangle(currTetFace);
-                triGenIndex = genIndex[triangleIndex(triangle)];
+                triGenIndex = genIndex[triangle->index()];
                 if (triGenIndex >= 0) {
                     if ((triangle->front().tetrahedron() == currTet) &&
                             (triangle->front().triangle() == currTetFace))

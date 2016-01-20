@@ -100,7 +100,7 @@ void NTriangulation::makeDoubleCover() {
                     lowerAdjOrientation = (gluing.sign() == 1 ?
                         -lowerTet->orientation_ : lowerTet->orientation_);
 
-                    upperAdj = tetrahedronIndex(lowerAdj);
+                    upperAdj = lowerAdj->index();
                     if (lowerAdj->orientation_ == 0) {
                         // We haven't seen the adjacent tetrahedron yet.
                         lowerAdj->orientation_ = lowerAdjOrientation;

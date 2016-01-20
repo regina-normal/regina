@@ -448,7 +448,7 @@ class REGINA_API Triangulation<3> :
          * @return the index of the specified boundary component,
          * where 0 is the first boundary component, 1 is the second and so on. 
          */
-        long boundaryComponentIndex(const NBoundaryComponent* bc) const;
+        size_t boundaryComponentIndex(const NBoundaryComponent* bc) const;
         /**
          * Deprecated routine that returns the index of the given vertex
          * in the triangulation.
@@ -463,7 +463,7 @@ class REGINA_API Triangulation<3> :
          * @return the index of the specified vertex, where 0 is the first
          * vertex, 1 is the second and so on.
          */
-        long vertexIndex(const NVertex* vertex) const;
+        size_t vertexIndex(const NVertex* vertex) const;
         /**
          * Deprecated routine that returns the index of the given edge
          * in the triangulation.
@@ -478,7 +478,7 @@ class REGINA_API Triangulation<3> :
          * @return the index of the specified edge, where 0 is the first
          * edge, 1 is the second and so on.
          */
-        long edgeIndex(const NEdge* edge) const;
+        size_t edgeIndex(const NEdge* edge) const;
         /**
          * Deprecated routine that returns the index of the given triangle
          * in the triangulation.
@@ -493,7 +493,7 @@ class REGINA_API Triangulation<3> :
          * @return the index of the specified triangle, where 0 is the first
          * triangle, 1 is the second and so on.
          */
-        long triangleIndex(const NTriangle* triangle) const;
+        size_t triangleIndex(const NTriangle* triangle) const;
 
         /**
          * Determines if this triangulation contains any two-sphere
@@ -3359,20 +3359,20 @@ inline NBoundaryComponent* Triangulation<3>::getBoundaryComponent(
     return boundaryComponents_[index];
 }
 
-inline long Triangulation<3>::boundaryComponentIndex(
+inline size_t Triangulation<3>::boundaryComponentIndex(
         const NBoundaryComponent* boundaryComponent) const {
-    return boundaryComponent->markedIndex();
+    return boundaryComponent->index();
 }
 
-inline long Triangulation<3>::vertexIndex(const NVertex* vertex) const {
+inline size_t Triangulation<3>::vertexIndex(const NVertex* vertex) const {
     return vertex->index();
 }
 
-inline long Triangulation<3>::edgeIndex(const NEdge* edge) const {
+inline size_t Triangulation<3>::edgeIndex(const NEdge* edge) const {
     return edge->index();
 }
 
-inline long Triangulation<3>::triangleIndex(const NTriangle* tri) const {
+inline size_t Triangulation<3>::triangleIndex(const NTriangle* tri) const {
     return tri->index();
 }
 

@@ -148,7 +148,7 @@
                 for (auto& emb : *v)
                     [TextHelper appendToList:pieces
                                         item:[NSString stringWithFormat:@"%ld (%d)",
-                                              self.packet->triangleIndex(emb.triangle()),
+                                              emb.triangle()->index(),
                                               emb.vertex()]];
                 cell.data2.text = pieces;
             }
@@ -169,7 +169,7 @@
                 for (unsigned i = 0; i < e->degree(); i++)
                     [TextHelper appendToList:pieces
                                         item:[NSString stringWithFormat:@"%ld (%s)",
-                                              self.packet->triangleIndex(e->embedding(i).triangle()),
+                                              e->embedding(i).triangle()->index(),
                                               e->embedding(i).vertices().trunc2().c_str()]];
                 cell.data2.text = pieces;
             }
@@ -213,7 +213,7 @@
                     for (unsigned long i = 0; i < c->size(); ++i)
                         [TextHelper appendToList:pieces
                                             item:[NSString stringWithFormat:@"%ld",
-                                                  self.packet->triangleIndex(c->triangle(i))]];
+                                                  c->triangle(i)->index()]];
                     cell.data2.text = pieces;
                 }
             }
@@ -234,7 +234,7 @@
                     const regina::Dim2EdgeEmbedding& emb = b->edge(i)->front();
                     [TextHelper appendToList:pieces
                                         item:[NSString stringWithFormat:@"%ld (%s)",
-                                              self.packet->triangleIndex(emb.triangle()),
+                                              emb.triangle()->index(),
                                               emb.vertices().trunc2().c_str()]];
                 }
                 cell.data1.text = pieces;

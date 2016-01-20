@@ -85,9 +85,9 @@ bool NSpiralSolidTorus::makeCanonical(const NTriangulation* tri) {
     size_t i, index;
 
     size_t baseTet = 0;
-    size_t baseIndex = tri->tetrahedronIndex(tet[0]);
+    size_t baseIndex = tet[0]->index();
     for (i = 1; i < nTet; i++) {
-        index = tri->tetrahedronIndex(tet[i]);
+        index = tet[i]->index();
         if (index < baseIndex) {
             baseIndex = index;
             baseTet = i;
@@ -130,9 +130,9 @@ bool NSpiralSolidTorus::isCanonical(const NTriangulation* tri) const {
     if (vertexRoles_[0][0] > vertexRoles_[0][3])
         return false;
 
-    long baseIndex = tri->tetrahedronIndex(tet[0]);
+    long baseIndex = tet[0]->index();
     for (size_t i = 1; i < nTet; i++)
-        if (tri->tetrahedronIndex(tet[i]) < baseIndex)
+        if (tet[i]->index() < baseIndex)
             return false;
 
     return true;

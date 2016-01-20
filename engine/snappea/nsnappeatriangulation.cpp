@@ -153,7 +153,7 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(const NTriangulation& tri, bool) :
     for (tet = 0; tet < tData.num_tetrahedra; tet++) {
         for (face = 0; face < 4; face++) {
             tData.tetrahedron_data[tet].neighbor_index[face] = static_cast<int>(
-                tri.tetrahedronIndex((*it)->adjacentTetrahedron(face)));
+                (*it)->adjacentTetrahedron(face)->index());
             for (i = 0; i < 4; i++)
                 tData.tetrahedron_data[tet].gluing[face][i] =
                     (*it)->adjacentGluing(face)[i];
@@ -651,7 +651,7 @@ bool NSnapPeaTriangulation::verifyTriangulation(const NTriangulation& tri)
     for (tet = 0; tet < tData->num_tetrahedra; tet++) {
         for (face = 0; face < 4; face++) {
             if (tData->tetrahedron_data[tet].neighbor_index[face] !=
-                    tri.tetrahedronIndex((*it)->adjacentTetrahedron(face))) {
+                    (*it)->adjacentTetrahedron(face)->index()) {
                 free_triangulation_data(tData);
                 return false;
             }

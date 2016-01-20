@@ -1557,14 +1557,14 @@ class NTriangulationTest : public TriangulationTest<3> {
                                 CPPUNIT_FAIL(msg.str());
                             } else if (tet->adjacentTetrahedron(perm[k]) !=
                                     tri->tetrahedron(iso->tetImage(
-                                    link->triangleIndex(adj)))) {
+                                    adj->index()))) {
                                 std::ostringstream msg;
                                 msg << tri->label()
                                     << ", vertex " << i << ": "
                                     << "link has wrong adjacent triangle.";
                                 CPPUNIT_FAIL(msg.str());
                             } else if (tet->adjacentGluing(perm[k]) !=
-                                    iso->facetPerm(link->triangleIndex(adj)) *
+                                    iso->facetPerm(adj->index()) *
                                     perm3to4(t->adjacentGluing(k)) *
                                     perm.inverse()) {
                                 std::ostringstream msg;

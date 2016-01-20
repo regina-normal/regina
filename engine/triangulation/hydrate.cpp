@@ -276,8 +276,7 @@ std::string NTriangulation::dehydrate() const {
             //   all filled in.
             // These invariants are preserved because the triangulation is
             // connected.  They break when tet == nTets.
-            dest = tetrahedronIndex(
-                simplices_[tet]->adjacentTetrahedron(face));
+            dest = simplices_[tet]->adjacentTetrahedron(face)->index();
 
             // Is it a gluing we've already seen from the other side?
             if (image[dest] >= 0)

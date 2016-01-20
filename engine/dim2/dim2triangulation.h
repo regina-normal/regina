@@ -311,7 +311,7 @@ class REGINA_API Triangulation<2> :
          * @return the index of the specified boundary component,
          * where 0 is the first boundary component, 1 is the second and so on. 
          */
-        long boundaryComponentIndex(const Dim2BoundaryComponent* bc) const;
+        size_t boundaryComponentIndex(const Dim2BoundaryComponent* bc) const;
         /**
          * Deprecated routine that returns the index of the given vertex
          * in the triangulation.
@@ -325,7 +325,7 @@ class REGINA_API Triangulation<2> :
          * @return the index of the specified vertex, where 0 is the first
          * vertex, 1 is the second and so on.
          */
-        long vertexIndex(const Dim2Vertex* vertex) const;
+        size_t vertexIndex(const Dim2Vertex* vertex) const;
         /**
          * Deprecated routine that returns the index of the given edge
          * in the triangulation.
@@ -339,7 +339,7 @@ class REGINA_API Triangulation<2> :
          * @return the index of the specified edge, where 0 is the first
          * edge, 1 is the second and so on.
          */
-        long edgeIndex(const Dim2Edge* edge) const;
+        size_t edgeIndex(const Dim2Edge* edge) const;
 
         /*@}*/
         /**
@@ -600,16 +600,16 @@ inline Dim2BoundaryComponent* Triangulation<2>::getBoundaryComponent(
     return boundaryComponents_[index];
 }
 
-inline long Triangulation<2>::boundaryComponentIndex(
+inline size_t Triangulation<2>::boundaryComponentIndex(
         const Dim2BoundaryComponent* boundaryComponent) const {
     return boundaryComponent->markedIndex();
 }
 
-inline long Triangulation<2>::vertexIndex(const Dim2Vertex* vertex) const {
+inline size_t Triangulation<2>::vertexIndex(const Dim2Vertex* vertex) const {
     return vertex->index();
 }
 
-inline long Triangulation<2>::edgeIndex(const Dim2Edge* edge) const {
+inline size_t Triangulation<2>::edgeIndex(const Dim2Edge* edge) const {
     return edge->index();
 }
 

@@ -47,8 +47,7 @@ bool LPConstraintEuler::addRows(
     for (i = 0; i < 7 * tri->size(); ++i)
         obj[i] = 1;
     for (i = 0; i < tri->countTriangles(); ++i) {
-        tet = tri->tetrahedronIndex(
-            tri->triangle(i)->front().tetrahedron());
+        tet = tri->triangle(i)->front().tetrahedron()->index();
         p = tri->triangle(i)->front().vertices();
         --obj[7 * tet + p[0]];
         --obj[7 * tet + p[1]];
@@ -58,8 +57,7 @@ bool LPConstraintEuler::addRows(
         --obj[7 * tet + 6];
     }
     for (i = 0; i < tri->countEdges(); ++i) {
-        tet = tri->tetrahedronIndex(
-            tri->edge(i)->front().tetrahedron());
+        tet = tri->edge(i)->front().tetrahedron()->index();
         p = tri->edge(i)->front().vertices();
         ++obj[7 * tet + p[0]];
         ++obj[7 * tet + p[1]];

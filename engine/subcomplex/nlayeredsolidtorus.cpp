@@ -68,8 +68,8 @@ NLayeredSolidTorus* NLayeredSolidTorus::clone() const {
 void NLayeredSolidTorus::transform(const NTriangulation* originalTri,
         const NIsomorphism* iso, NTriangulation* newTri) {
     unsigned i, j;
-    size_t baseTetID = originalTri->tetrahedronIndex(base_);
-    size_t topTetID = originalTri->tetrahedronIndex(topLevel_);
+    size_t baseTetID = base_->index();
+    size_t topTetID = topLevel_->index();
 
     // Data members nTetrahedra and meridinalCuts remain unchanged.
 
@@ -678,10 +678,8 @@ NTriangulation* NLayeredSolidTorus::flatten(const NTriangulation* original,
     // base tetrahedra.
     NTriangulation* ans = new NTriangulation(*original);
 
-    NTetrahedron* newTop = ans->tetrahedron(
-        original->tetrahedronIndex(topLevel_));
-    NTetrahedron* newBase = ans->tetrahedron(
-        original->tetrahedronIndex(base_));
+    NTetrahedron* newTop = ans->tetrahedron(topLevel_->index());
+    NTetrahedron* newBase = ans->tetrahedron(base_->index());
 
     NPacket::ChangeEventSpan span(ans);
 

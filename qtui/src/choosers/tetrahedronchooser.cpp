@@ -83,7 +83,7 @@ void TetrahedronChooser::select(regina::NTetrahedron* option) {
 }
 
 QString TetrahedronChooser::description(regina::NTetrahedron* option) {
-    return tr("Tetrahedron %2").arg(tri_->tetrahedronIndex(option));
+    return tr("Tetrahedron %2").arg(option->index());
 }
 
 void TetrahedronChooser::fill() {

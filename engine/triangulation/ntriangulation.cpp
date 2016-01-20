@@ -117,7 +117,7 @@ void Triangulation<3>::writeTextLong(std::ostream& out) const {
                 out << " boundary";
             else {
                 adjPerm = tet->adjacentGluing(face);
-                out << std::setw(3) << tetrahedronIndex(adjTet) << " (";
+                out << std::setw(3) << adjTet->index() << " (";
                 for (vertex=0; vertex<4; vertex++) {
                     if (vertex == face) continue;
                     out << adjPerm[vertex];
@@ -184,7 +184,7 @@ void Triangulation<3>::writeXMLPacketData(std::ostream& out) const {
         for (face = 0; face < 4; face++) {
             adjTet = (*it)->adjacentTetrahedron(face);
             if (adjTet) {
-                out << tetrahedronIndex(adjTet) << ' '
+                out << adjTet->index() << ' '
                     << static_cast<int>((*it)->
                         adjacentGluing(face).permCode())
                     << ' ';
@@ -402,7 +402,7 @@ void Triangulation<3>::cloneFrom(const NTriangulation& X) {
         for (face=0; face<4; face++) {
             adjTet = tet->adjacentTetrahedron(face);
             if (adjTet) {
-                adjPos = X.tetrahedronIndex(adjTet);
+                adjPos = adjTet->index();
                 adjPerm = tet->adjacentGluing(face);
                 if (adjPos > tetPos ||
                         (adjPos == tetPos && adjPerm[face] > face)) {
@@ -484,11 +484,10 @@ void Triangulation<3>::snapPea(std::ostream& out) const {
         // Although our precondition states that there are no boundary
         // triangles, we test for this anyway.  If somebody makes a mistake and
         // calls this routine with a bounded triangulation, we don't want
-        // to wind up calling tetrahedronIndex(0) and crashing.
+        // to wind up calling nullptr->index() and crashing.
         for (i = 0; i < 4; i++)
             if ((*it)->adjacentTetrahedron(i))
-                out << "   " << tetrahedronIndex(
-                    (*it)->adjacentTetrahedron(i)) << ' ';
+                out << "   " << (*it)->adjacentTetrahedron(i)->index() << ' ';
             else
                 out << "   -1 ";
         out << '\n';
@@ -554,14 +553,14 @@ void Triangulation<3>::recogniser(std::ostream& out) const {
 
         tet = f->embedding(0).tetrahedron();
         vert = f->embedding(0).vertices();
-        out << 't' << (tetrahedronIndex(tet) + 1)
+        out << 't' << (tet->index() + 1)
             << '(' << (vert[0] + 1)
             << ',' << (vert[1] + 1)
             << ',' << (vert[2] + 1) << ") - ";
 
         tet = f->embedding(1).tetrahedron();
         vert = f->embedding(1).vertices();
-        out << 't' << (tetrahedronIndex(tet) + 1)
+        out << 't' << (tet->index() + 1)
             << '(' << (vert[0] + 1)
             << ',' << (vert[1] + 1)
             << ',' << (vert[2] + 1) << ')';

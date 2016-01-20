@@ -257,7 +257,7 @@
                 for (auto& emb : *v)
                     [TextHelper appendToList:pieces
                                         item:[NSString stringWithFormat:@"%ld (%d)",
-                                              self.packet->tetrahedronIndex(emb.tetrahedron()),
+                                              emb.tetrahedron()->index(),
                                               emb.vertex()]];
                 cell.data2.text = pieces;
             }
@@ -284,7 +284,7 @@
                 for (auto& emb : *e)
                     [TextHelper appendToList:pieces
                                         item:[NSString stringWithFormat:@"%ld (%s)",
-                                              self.packet->tetrahedronIndex(emb.tetrahedron()),
+                                              emb.tetrahedron()->index(),
                                               emb.vertices().trunc2().c_str()]];
                 cell.data2.text = pieces;
             }
@@ -335,7 +335,7 @@
                 for (unsigned i = 0; i < t->degree(); i++)
                     [TextHelper appendToList:pieces
                                         item:[NSString stringWithFormat:@"%ld (%s)",
-                                              self.packet->tetrahedronIndex(t->embedding(i).tetrahedron()),
+                                              t->embedding(i).tetrahedron()->index(),
                                               t->embedding(i).vertices().trunc3().c_str()]];
                 cell.data2.text = pieces;
             }
@@ -393,7 +393,7 @@
                     for (unsigned long i = 0; i < c->countTriangles(); ++i)
                         [TextHelper appendToList:pieces
                                             item:[NSString stringWithFormat:@"%ld",
-                                                  self.packet->tetrahedronIndex(c->tetrahedron(i))]];
+                                                  c->tetrahedron(i)->index()]];
                     cell.data2.text = pieces;
                 }
             }
@@ -419,7 +419,7 @@
                     for (auto& emb : *v)
                         [TextHelper appendToList:pieces
                                             item:[NSString stringWithFormat:@"%ld (%d)",
-                                                  self.packet->tetrahedronIndex(emb.tetrahedron()),
+                                                  emb.tetrahedron()->index(),
                                                   emb.vertex()]];
                     cell.data2.text = [NSString stringWithFormat:@"Vertices %@", pieces];
                     // Parity says #vertices >= 2, so always use plural form.
@@ -428,7 +428,7 @@
                         const regina::NTriangleEmbedding& emb = b->triangle(i)->front();
                         [TextHelper appendToList:pieces
                                             item:[NSString stringWithFormat:@"%ld (%s)",
-                                                  self.packet->tetrahedronIndex(emb.tetrahedron()),
+                                                  emb.tetrahedron()->index(),
                                                   emb.vertices().trunc3().c_str()]];
                     }
                     cell.data2.text = [NSString stringWithFormat:@"Faces %@", pieces];

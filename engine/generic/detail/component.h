@@ -96,11 +96,14 @@ class ComponentBase :
 
     public:
         /**
-         * Returns the index of this component in the underlying
-         * triangulation.  <tt>t->componentIndex(this)</tt>, where
+         * Returns the index of this component within the underlying
+         * triangulation.
+         *
+         * This is identical to calling the deprecated function
+         * <tt>t->componentIndex(this)</tt>, where
          * \a t represents the underlying triangulation.
          *
-         * @return the index of this component vertex.
+         * @return the index of this component.
          */
         size_t index() const;
 

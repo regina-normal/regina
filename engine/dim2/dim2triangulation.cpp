@@ -97,7 +97,7 @@ void Triangulation<2>::writeTextLong(std::ostream& out) const {
                 out << "boundary";
             else {
                 adjPerm = tri->adjacentGluing(i);
-                out << std::setw(3) << triangleIndex(adjTri) << " (";
+                out << std::setw(3) << adjTri->index() << " (";
                 for (j = 0; j < 3; ++j) {
                     if (j == i) continue;
                     out << adjPerm[j];
@@ -150,7 +150,7 @@ void Triangulation<2>::writeXMLPacketData(std::ostream& out) const {
         for (edge = 0; edge < 3; ++edge) {
             adjTri = (*it)->adjacentTriangle(edge);
             if (adjTri) {
-                out << triangleIndex(adjTri) << ' '
+                out << adjTri->index() << ' '
                     << static_cast<int>((*it)->
                         adjacentGluing(edge).permCode()) << ' ';
             } else
@@ -182,7 +182,7 @@ void Triangulation<2>::cloneFrom(const Dim2Triangulation& X) {
         for (edge = 0; edge < 3; ++edge) {
             adjTri = tri->adjacentTriangle(edge);
             if (adjTri) {
-                adjPos = X.triangleIndex(adjTri);
+                adjPos = adjTri->index();
                 adjPerm = tri->adjacentGluing(edge);
                 if (adjPos > triPos ||
                         (adjPos == triPos && adjPerm[edge] > edge)) {
