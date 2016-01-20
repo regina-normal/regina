@@ -38,6 +38,7 @@
 #include <boost/iostreams/filtering_stream.hpp>
 #include <boost/iostreams/filter/gzip.hpp>
 #include "engine.h"
+#include "generic/xmltrireader.h"
 #include "packet/ncontainer.h"
 #include "packet/nxmlpacketreader.h"
 #include "packet/nxmltreeresolver.h"

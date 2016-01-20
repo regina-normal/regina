@@ -61,8 +61,114 @@
 #include "packet/npdf.h"
 #include "dim2/dim2triangulation.h"
 #include "snappea/nsnappeatriangulation.h"
+#include "generic/triangulation.h"
 
 namespace regina {
+
+// ----------------------------------------------------------------------
+// Specialisations of PacketInfo<> for templated packet classes
+// ----------------------------------------------------------------------
+//
+// These specialisations are not defined in the usual packet class headers,
+// since this would have the undesirable side-effect of generating all
+// possible instantiations of these templated packet classes every time the
+// corresponding packet headers were included.
+//
+// By "quarantining" the specialisations of PacketInfo here in
+// packetregistry-impl.h, we at least limit this flood of instantiations
+// to those sections of code that genuinely need to iterate through all
+// possible packet types.
+
+#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
+template <>
+struct PacketInfo<PACKET_TRIANGULATION4> {
+    typedef Triangulation<4> Class;
+    inline static const char* name() {
+        return "4-Manifold Triangulation";
+    }
+};
+template <>
+struct PacketInfo<PACKET_TRIANGULATION5> {
+    typedef Triangulation<5> Class;
+    inline static const char* name() {
+        return "5-Manifold Triangulation";
+    }
+};
+template <>
+struct PacketInfo<PACKET_TRIANGULATION6> {
+    typedef Triangulation<6> Class;
+    inline static const char* name() {
+        return "6-Manifold Triangulation";
+    }
+};
+template <>
+struct PacketInfo<PACKET_TRIANGULATION7> {
+    typedef Triangulation<7> Class;
+    inline static const char* name() {
+        return "7-Manifold Triangulation";
+    }
+};
+template <>
+struct PacketInfo<PACKET_TRIANGULATION8> {
+    typedef Triangulation<8> Class;
+    inline static const char* name() {
+        return "8-Manifold Triangulation";
+    }
+};
+template <>
+struct PacketInfo<PACKET_TRIANGULATION9> {
+    typedef Triangulation<9> Class;
+    inline static const char* name() {
+        return "9-Manifold Triangulation";
+    }
+};
+template <>
+struct PacketInfo<PACKET_TRIANGULATION10> {
+    typedef Triangulation<10> Class;
+    inline static const char* name() {
+        return "10-Manifold Triangulation";
+    }
+};
+template <>
+struct PacketInfo<PACKET_TRIANGULATION11> {
+    typedef Triangulation<11> Class;
+    inline static const char* name() {
+        return "11-Manifold Triangulation";
+    }
+};
+template <>
+struct PacketInfo<PACKET_TRIANGULATION12> {
+    typedef Triangulation<12> Class;
+    inline static const char* name() {
+        return "12-Manifold Triangulation";
+    }
+};
+template <>
+struct PacketInfo<PACKET_TRIANGULATION13> {
+    typedef Triangulation<13> Class;
+    inline static const char* name() {
+        return "13-Manifold Triangulation";
+    }
+};
+template <>
+struct PacketInfo<PACKET_TRIANGULATION14> {
+    typedef Triangulation<14> Class;
+    inline static const char* name() {
+        return "14-Manifold Triangulation";
+    }
+};
+template <>
+struct PacketInfo<PACKET_TRIANGULATION15> {
+    typedef Triangulation<15> Class;
+    inline static const char* name() {
+        return "15-Manifold Triangulation";
+    }
+};
+#endif
+
+// ----------------------------------------------------------------------
+// Implementations of forPacket()
+// ----------------------------------------------------------------------
 
 template <typename FunctionObject, typename... Args>
 inline typename ReturnsTraits<FunctionObject>::ReturnType
@@ -99,6 +205,42 @@ forPacket(PacketType packetType, FunctionObject&& func,
             std::forward<Args>(args)...);
         case PACKET_SNAPPEATRIANGULATION : return
             func.template operator()<PacketInfo<PACKET_SNAPPEATRIANGULATION>>(
+            std::forward<Args>(args)...);
+        case PACKET_TRIANGULATION4 : return
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION4>>(
+            std::forward<Args>(args)...);
+        case PACKET_TRIANGULATION5 : return
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION5>>(
+            std::forward<Args>(args)...);
+        case PACKET_TRIANGULATION6 : return
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION6>>(
+            std::forward<Args>(args)...);
+        case PACKET_TRIANGULATION7 : return
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION7>>(
+            std::forward<Args>(args)...);
+        case PACKET_TRIANGULATION8 : return
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION8>>(
+            std::forward<Args>(args)...);
+        case PACKET_TRIANGULATION9 : return
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION9>>(
+            std::forward<Args>(args)...);
+        case PACKET_TRIANGULATION10 : return
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION10>>(
+            std::forward<Args>(args)...);
+        case PACKET_TRIANGULATION11 : return
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION11>>(
+            std::forward<Args>(args)...);
+        case PACKET_TRIANGULATION12 : return
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION12>>(
+            std::forward<Args>(args)...);
+        case PACKET_TRIANGULATION13 : return
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION13>>(
+            std::forward<Args>(args)...);
+        case PACKET_TRIANGULATION14 : return
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION14>>(
+            std::forward<Args>(args)...);
+        case PACKET_TRIANGULATION15 : return
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION15>>(
             std::forward<Args>(args)...);
         default: return defaultReturn;
     }
@@ -137,6 +279,42 @@ forPacket(PacketType packetType, FunctionObject&& func, Args&&... args) {
             std::forward<Args>(args)...); break;
         case PACKET_SNAPPEATRIANGULATION :
             func.template operator()<PacketInfo<PACKET_SNAPPEATRIANGULATION>>(
+            std::forward<Args>(args)...); break;
+        case PACKET_TRIANGULATION4 :
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION4>>(
+            std::forward<Args>(args)...); break;
+        case PACKET_TRIANGULATION5 :
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION5>>(
+            std::forward<Args>(args)...); break;
+        case PACKET_TRIANGULATION6 :
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION6>>(
+            std::forward<Args>(args)...); break;
+        case PACKET_TRIANGULATION7 :
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION7>>(
+            std::forward<Args>(args)...); break;
+        case PACKET_TRIANGULATION8 :
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION8>>(
+            std::forward<Args>(args)...); break;
+        case PACKET_TRIANGULATION9 :
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION9>>(
+            std::forward<Args>(args)...); break;
+        case PACKET_TRIANGULATION10 :
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION10>>(
+            std::forward<Args>(args)...); break;
+        case PACKET_TRIANGULATION11 :
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION11>>(
+            std::forward<Args>(args)...); break;
+        case PACKET_TRIANGULATION12 :
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION12>>(
+            std::forward<Args>(args)...); break;
+        case PACKET_TRIANGULATION13 :
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION13>>(
+            std::forward<Args>(args)...); break;
+        case PACKET_TRIANGULATION14 :
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION14>>(
+            std::forward<Args>(args)...); break;
+        case PACKET_TRIANGULATION15 :
+            func.template operator()<PacketInfo<PACKET_TRIANGULATION15>>(
             std::forward<Args>(args)...); break;
         default: break;
     }

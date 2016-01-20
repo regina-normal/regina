@@ -26,5 +26,6 @@ if (${REGINA_INSTALL_DEV})
     nfacetspec.h
     simplex.h
     triangulation.h
+    xmltrireader.h
     DESTINATION ${INCLUDEDIR}/generic COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

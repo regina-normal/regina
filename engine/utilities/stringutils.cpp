@@ -34,6 +34,7 @@
 
 #include <cstdlib>
 #include <cctype>
+#include <climits>
 #include "maths/ninteger.h"
 #include "utilities/stringutils.h"
 #include "utilities/nbooleans.h"
@@ -69,6 +70,20 @@ std::string stripWhitespace(const std::string& str) {
     return str.substr(start, end - start);
 }
 
+bool valueOf(const std::string& str, short& dest) {
+    // TODO: Check errno, and check for overflow when casting back to int.
+    char* endPtr;
+    dest = static_cast<short>(strtol(str.c_str(), &endPtr, 10));
+    return ((! str.empty()) && (*endPtr == 0));
+}
+
+bool valueOf(const std::string& str, unsigned short& dest) {
+    // TODO: Check errno, and check for overflow when casting back to unsigned.
+    char* endPtr;
+    dest = static_cast<unsigned short>(strtoul(str.c_str(), &endPtr, 10));
+    return ((! str.empty()) && (*endPtr == 0));
+}
+
 bool valueOf(const std::string& str, int& dest) {
     // TODO: Check errno, and check for overflow when casting back to int.
     char* endPtr;
@@ -92,6 +107,18 @@ bool valueOf(const std::string& str, long& dest) {
 bool valueOf(const std::string& str, unsigned long& dest) {
     char* endPtr;
     dest = strtoul(str.c_str(), &endPtr, 10);
+    return ((! str.empty()) && (*endPtr == 0));
+}
+
+bool valueOf(const std::string& str, long long& dest) {
+    char* endPtr;
+    dest = strtoll(str.c_str(), &endPtr, 10);
+    return ((! str.empty()) && (*endPtr == 0));
+}
+
+bool valueOf(const std::string& str, unsigned long long& dest) {
+    char* endPtr;
+    dest = strtoull(str.c_str(), &endPtr, 10);
     return ((! str.empty()) && (*endPtr == 0));
 }
 
