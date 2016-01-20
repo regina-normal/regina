@@ -16,7 +16,7 @@ if not tree:
     sys.exit(1)
 
 def process(tri):
-    label = tri.getPacketLabel()
+    label = tri.label()
     print label
 
     section = label[0]

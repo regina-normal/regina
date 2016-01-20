@@ -35,7 +35,7 @@ import string
 
 def dumpSurfaces(name, slist):
 	print "-------------------------------"
-	print slist.getTriangulation().getPacketLabel()
+	print slist.getTriangulation().label()
 	print name
 	print "-------------------------------"
 	print

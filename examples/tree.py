@@ -18,7 +18,7 @@ NCensus.formCensus(census, 2, NBoolSet.sTrue,
 # The triangulations are all children of the "census" container.
 tri = census.getFirstTreeChild()
 while tri != None:
-    print tri.getPacketLabel() + ":", tri.homology()
+    print tri.label() + ":", tri.homology()
     tri = tri.getNextTreeSibling()
 
 
@@ -35,6 +35,6 @@ while tri != None:
 # Print the homology of each remaining triangulation.
 tri = census.getFirstTreeChild()
 while tri != None:
-    print tri.getPacketLabel() + ":", tri.homology()
+    print tri.label() + ":", tri.homology()
     tri = tri.getNextTreeSibling()
 

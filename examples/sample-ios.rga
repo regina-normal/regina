@@ -1287,7 +1287,7 @@ CS_unknown
 # Output the homology of each triangulation.
 t = tri.getFirstTreeChild()
 while t != None:
-	print t.getPacketLabel() + &quot;:&quot;, t.homology()
+	print t.label() + &quot;:&quot;, t.homology()
 	t = t.getNextTreeSibling()
 </text>
 </packet> <!-- Python Script (Script) -->

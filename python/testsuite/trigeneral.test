@@ -54,7 +54,7 @@ def vitalStats(tri):
 	old = tri.detail()
 
 	print "-------------------------------"
-	print tri.getPacketLabel()
+	print tri.label()
 	print "-------------------------------"
 	print
 	print tri.detail()
