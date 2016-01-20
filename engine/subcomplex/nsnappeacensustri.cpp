@@ -77,7 +77,7 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
     unsigned long i;
     int link;
     for (i = 0; i < nVertices; i++) {
-        link = comp->getVertex(i)->link();
+        link = comp->vertex(i)->link();
         if (link != NVertex::TORUS && link != NVertex::KLEIN_BOTTLE)
             return 0;
     }
@@ -152,13 +152,13 @@ NSnapPeaCensusTri* NSnapPeaCensusTri::isSmallSnapPeaCensusTri(
                 return 0;
             if (comp->countEdges() != 4)
                 return 0;
-            if (comp->getVertex(0)->link() != NVertex::TORUS)
+            if (comp->vertex(0)->link() != NVertex::TORUS)
                 return 0;
-            if (comp->getVertex(1)->link() != NVertex::TORUS)
+            if (comp->vertex(1)->link() != NVertex::TORUS)
                 return 0;
-            if (comp->getVertex(0)->degree() != 8)
+            if (comp->vertex(0)->degree() != 8)
                 return 0;
-            if (comp->getVertex(1)->degree() != 8)
+            if (comp->vertex(1)->degree() != 8)
                 return 0;
             // Census says it's the Whitehead link if some edge has
             // degree 8.

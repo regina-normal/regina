@@ -133,8 +133,8 @@ template <>
 bool detail::TriangulationBase<2>::compatible(
         Simplex<2>* src, Simplex<2>* dest, NPerm<3> p) {
     for (int vertex = 0; vertex < 3; vertex++)
-        if (src->getVertex(vertex)->degree() !=
-                dest->getVertex(p[vertex])->degree())
+        if (src->vertex(vertex)->degree() !=
+                dest->vertex(p[vertex])->degree())
             return false;
 
     return true;

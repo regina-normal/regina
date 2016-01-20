@@ -229,8 +229,8 @@ void NTriangulation::calculateVertexLinks() {
     NVertex* end1;
     NTetrahedron* tet;
     for (NEdge* e : getEdges()) {
-        // Try to compute e->getVertex(0) and e->getVertex(1), but
-        // without calling e->getVertex() which will recursively try to
+        // Try to compute e->vertex(0) and e->vertex(1), but
+        // without calling e->vertex() which will recursively try to
         // recompute the skeleton.
         const NEdgeEmbedding& emb = e->front();
         tet = emb.tetrahedron();

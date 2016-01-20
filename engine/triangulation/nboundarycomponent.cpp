@@ -46,7 +46,7 @@ void NBoundaryComponent::writeTextLong(std::ostream& out) const {
         out << "Appears as:" << std::endl;
         for (auto& emb : *v)
             out << "  " << emb.tetrahedron()->index()
-                << " (" << emb.getVertex() << ')' << std::endl;
+                << " (" << emb.vertex() << ')' << std::endl;
     } else {
         out << "Triangles:" << std::endl;
         for (auto t : triangles_) {

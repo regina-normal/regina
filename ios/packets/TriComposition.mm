@@ -223,7 +223,7 @@
             [details appendFormat:@"L(3,1) pillow %s\n", pillow->name().c_str()];
             [details appendFormat:@INDENT1 "Component %ld\n", i];
             [details appendFormat:@INDENT1 "Pillow interior vertex: %ld\n",
-             pillow->tetrahedron(0)->getVertex(pillow->interiorVertex(0))->index()];
+             pillow->tetrahedron(0)->vertex(pillow->interiorVertex(0))->index()];
             
             [details appendString:@"\n"];
             delete pillow;

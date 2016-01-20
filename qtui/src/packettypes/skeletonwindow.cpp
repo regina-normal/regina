@@ -183,7 +183,7 @@ int VertexModel::columnCount(const QModelIndex& /* unused parent*/) const {
 
 QVariant VertexModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        NVertex* item = tri->getVertex(index.row());
+        NVertex* item = tri->vertex(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -216,7 +216,7 @@ QVariant VertexModel::data(const QModelIndex& index, int role) const {
                 for (auto& emb : *item)
                     appendToList(ans, QString("%1 (%2)").
                         arg(emb.tetrahedron()->index()).
-                        arg(emb.getVertex()));
+                        arg(emb.vertex()));
                 return ans;
         }
         return QString();
@@ -582,16 +582,16 @@ QVariant BoundaryComponentModel::data(const QModelIndex& index,
                 // Note that we can't have just one triangle
                 // (by a parity argument).
                 return (item->isIdeal() ?
-                    tr("Degree %1").arg(item->getVertex(0)->degree()) :
+                    tr("Degree %1").arg(item->vertex(0)->degree()) :
                     tr("%1 triangles").arg(item->countTriangles()));
             case 3:
                 if (item->isIdeal()) {
-                    NVertex* v = item->getVertex(0);
+                    NVertex* v = item->vertex(0);
                     QString ans;
                     for (auto& emb : *v)
                         appendToList(ans, QString("%1 (%2)").
                             arg(emb.tetrahedron()->index()).
-                            arg(emb.getVertex()));
+                            arg(emb.vertex()));
                     return tr("Vertex %1 = ").arg(v->index()) + ans;
                 } else {
                     QString ans;
@@ -678,7 +678,7 @@ int Dim2VertexModel::columnCount(const QModelIndex& /* unused parent*/) const {
 
 QVariant Dim2VertexModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        Dim2Vertex* item = tri->getVertex(index.row());
+        Dim2Vertex* item = tri->vertex(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -694,7 +694,7 @@ QVariant Dim2VertexModel::data(const QModelIndex& index, int role) const {
                 for (auto& emb : *item)
                     appendToList(ans, QString("%1 (%2)").
                         arg(emb.triangle()->index()).
-                        arg(emb.getVertex()));
+                        arg(emb.vertex()));
                 return ans;
         }
         return QString();

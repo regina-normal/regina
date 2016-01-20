@@ -279,8 +279,8 @@ std::pair<const NEdge*, const NEdge*> NNormalSurfaceVector::isThinEdgeLink(
 
                 // If the candidate edge does not touch this vertex, the
                 // triangular coordinate should be 0.
-                expectZero[i] = (v != ans[i]->getVertex(0) &&
-                    v != ans[i]->getVertex(1));
+                expectZero[i] = (v != ans[i]->vertex(0) &&
+                    v != ans[i]->vertex(1));
 
                 // If this triangular disc type intersects the candidate
                 // edge, the coordinate should also be 0.

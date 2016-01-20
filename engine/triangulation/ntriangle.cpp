@@ -48,7 +48,7 @@ NTriangle::Type NTriangle::type() {
     NEdge* e[3];
     int i;
     for (i = 0; i < 3; i++) {
-        v[i] = getVertex(i);
+        v[i] = vertex(i);
         e[i] = getEdge(i);
     }
 

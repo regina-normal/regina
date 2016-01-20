@@ -88,9 +88,9 @@ bool LPConstraintNonSpun::addRows(
     // For the time being we insist on one vertex, which must be
     // ideal with torus link.
     if (tri->countVertices() != 1 ||
-            (! tri->getVertex(0)->isIdeal()) ||
-            (! tri->getVertex(0)->isLinkOrientable()) ||
-            tri->getVertex(0)->linkEulerChar() != 0)
+            (! tri->vertex(0)->isIdeal()) ||
+            (! tri->vertex(0)->isLinkOrientable()) ||
+            tri->vertex(0)->linkEulerChar() != 0)
         return false;
 
     // Compute the two slope equations for the torus cusp, if we can.
@@ -198,7 +198,7 @@ void BanTorusBoundary::init(const int* columnPerm) {
             for (k = 0; k < bc->countTriangles(); ++k)
                 banTriangle[bc->triangle(k)->markedIndex()] = true;
             for (k = 0; k < bc->countVertices(); ++k)
-                markVtx[bc->getVertex(k)->markedIndex()] = true;
+                markVtx[bc->vertex(k)->markedIndex()] = true;
         }
     }
 
@@ -231,7 +231,7 @@ void BanTorusBoundary::init(const int* columnPerm) {
             tet = columnPerm[i] / 7;
             type = columnPerm[i] % 7;
 
-            if (markVtx[tri_->tetrahedron(tet)->getVertex(type)->
+            if (markVtx[tri_->tetrahedron(tet)->vertex(type)->
                     markedIndex()])
                 marked_[i] = true;
 

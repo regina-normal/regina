@@ -845,7 +845,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NVertex* v = tri.getVertex(vertex);
+            NVertex* v = tri.vertex(vertex);
 
             if (v->link() != NVertex::DISC) {
                 std::ostringstream msg;
@@ -902,7 +902,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NVertex* v = tri.getVertex(vertex);
+            NVertex* v = tri.vertex(vertex);
 
             if (v->link() != NVertex::SPHERE) {
                 std::ostringstream msg;
@@ -959,7 +959,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NVertex* v = tri.getVertex(vertex);
+            NVertex* v = tri.vertex(vertex);
 
             if (v->link() != NVertex::TORUS) {
                 std::ostringstream msg;
@@ -1016,7 +1016,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NVertex* v = tri.getVertex(vertex);
+            NVertex* v = tri.vertex(vertex);
 
             if (v->link() != NVertex::KLEIN_BOTTLE) {
                 std::ostringstream msg;
@@ -1073,7 +1073,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NVertex* v = tri.getVertex(vertex);
+            NVertex* v = tri.vertex(vertex);
 
             if (v->link() != NVertex::NON_STANDARD_CUSP) {
                 std::ostringstream msg;
@@ -1130,7 +1130,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NVertex* v = tri.getVertex(vertex);
+            NVertex* v = tri.vertex(vertex);
 
             if (v->link() != NVertex::NON_STANDARD_CUSP) {
                 std::ostringstream msg;
@@ -1187,7 +1187,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NVertex* v = tri.getVertex(vertex);
+            NVertex* v = tri.vertex(vertex);
 
             if (v->link() != NVertex::NON_STANDARD_BDRY) {
                 std::ostringstream msg;
@@ -1244,7 +1244,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NVertex* v = tri.getVertex(vertex);
+            NVertex* v = tri.vertex(vertex);
 
             if (v->link() != NVertex::NON_STANDARD_BDRY) {
                 std::ostringstream msg;
@@ -1445,7 +1445,7 @@ class NTriangulationTest : public TriangulationTest<3> {
 
         static void verifyVertexLinks(NTriangulation* tri) {
             for (unsigned long i = 0; i < tri->countVertices(); ++i) {
-                NVertex* v = tri->getVertex(i);
+                NVertex* v = tri->vertex(i);
                 NIsomorphism* iso;
 
                 const Dim2Triangulation* link = v->buildLink();
@@ -1530,7 +1530,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                     tet = tri->tetrahedron(iso->tetImage(j));
                     perm = iso->facePerm(j);
                     vNum = perm[3];
-                    if (tet->getVertex(vNum) != v) {
+                    if (tet->vertex(vNum) != v) {
                         std::ostringstream msg;
                         msg << tri->label() << ", vertex " << i << ": "
                             << "link does not map 3 -> vertex correctly.";
@@ -3607,12 +3607,12 @@ class NTriangulationTest : public TriangulationTest<3> {
                         << "puncture gives wrong S^2 Euler characteristic.";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if (punc.tetrahedron(nPunc - 1)->getVertex(1) !=
-                        punc.tetrahedron(nPunc - 2)->getVertex(1) ||
-                        punc.tetrahedron(nPunc - 1)->getVertex(2) !=
-                        punc.tetrahedron(nPunc - 2)->getVertex(3) ||
-                        punc.tetrahedron(nPunc - 1)->getVertex(3) !=
-                        punc.tetrahedron(nPunc - 2)->getVertex(2)) {
+                if (punc.tetrahedron(nPunc - 1)->vertex(1) !=
+                        punc.tetrahedron(nPunc - 2)->vertex(1) ||
+                        punc.tetrahedron(nPunc - 1)->vertex(2) !=
+                        punc.tetrahedron(nPunc - 2)->vertex(3) ||
+                        punc.tetrahedron(nPunc - 1)->vertex(3) !=
+                        punc.tetrahedron(nPunc - 2)->vertex(2)) {
                     std::ostringstream msg;
                     msg << tri->label() << ", tet " << i << ": "
                         << "puncture gives wrong S^2 vertex labels.";

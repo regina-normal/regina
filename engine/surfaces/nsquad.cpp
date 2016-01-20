@@ -169,19 +169,19 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
         // Pick some triangular disc and set it to zero.
         const NVertexEmbedding& vemb = (*vit)->front();
         row = 7 * triang->tetrahedronIndex(vemb.tetrahedron())
-            + vemb.getVertex();
+            + vemb.vertex();
         ans->setElement(row, NLargeInteger::zero);
 
         min = NLargeInteger::zero;
 
         // Mark the three surrounding edge ends for examination.
         for (i=0; i<4; i++) {
-            if (i == vemb.getVertex())
+            if (i == vemb.vertex())
                 continue;
             edge = vemb.tetrahedron()->getEdge(
-                NEdge::edgeNumber[vemb.getVertex()][i]);
+                NEdge::edgeNumber[vemb.vertex()][i]);
             end = vemb.tetrahedron()->getEdgeMapping(
-                NEdge::edgeNumber[vemb.getVertex()][i])[0] == i ? 1 : 0;
+                NEdge::edgeNumber[vemb.vertex()][i])[0] == i ? 1 : 0;
             if (usedEdges[end].insert(edge).second)
                 examine.push_back(EdgeEnd(edge, end));
         }
@@ -294,7 +294,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
         // make the values as small as possible.
         for (auto& emb : **vit) {
             row = 7 * triang->tetrahedronIndex(emb.tetrahedron())
-                + emb.getVertex();
+                + emb.vertex();
             if (broken)
                 ans->setElement(row, NLargeInteger::infinity);
             else

@@ -158,11 +158,11 @@ bool detail::TriangulationBase<3>::compatible(
     }
 
     for (int vertex = 0; vertex < 4; vertex++) {
-        if (src->getVertex(vertex)->degree() !=
-                dest->getVertex(p[vertex])->degree())
+        if (src->vertex(vertex)->degree() !=
+                dest->vertex(p[vertex])->degree())
             return false;
-        if (src->getVertex(vertex)->link() !=
-                dest->getVertex(p[vertex])->link())
+        if (src->vertex(vertex)->link() !=
+                dest->vertex(p[vertex])->link())
             return false;
     }
 

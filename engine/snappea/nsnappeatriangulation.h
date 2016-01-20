@@ -150,7 +150,7 @@ class REGINA_API NCusp :
          *
          * Note that cusp and vertex indexing might not be in sync; that is,
          * SnapPea's <tt>cusp(i)</tt> need not correspond to Regina's
-         * <tt>getVertex(i)</tt>.
+         * <tt>vertex(i)</tt>.
          *
          * This routine can be used to detect if/when cusp numbering
          * and vertex numbering fall out of sync, and to translate

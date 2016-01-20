@@ -82,13 +82,13 @@ Dim2Triangulation* NVertex::buildLinkDetail(bool labels,
         if (labels) {
             std::stringstream s;
             s << it->tetrahedron()->markedIndex() <<
-                " (" << it->getVertex() << ')';
+                " (" << it->vertex() << ')';
             tTri->setDescription(s.str());
         }
         if (inclusion) {
             (*inclusion)->tetImage(i) = it->tetrahedron()->markedIndex();
             (*inclusion)->facetPerm(i) = it->tetrahedron()->
-                getTriangleMapping(it->getVertex());
+                getTriangleMapping(it->vertex());
         }
     }
 
@@ -99,7 +99,7 @@ Dim2Triangulation* NVertex::buildLinkDetail(bool labels,
     int adjVertex;
     for (it = begin(), i = 0; it != end(); ++it, ++i) {
         tet = it->tetrahedron();
-        v = it->getVertex();
+        v = it->vertex();
 
         for (exitTri = 0; exitTri < 4; ++exitTri) {
             if (exitTri == v)
@@ -126,7 +126,7 @@ Dim2Triangulation* NVertex::buildLinkDetail(bool labels,
             for (adjIt = begin(), adjIndex = 0;
                     adjIt != end(); ++adjIt, ++adjIndex)
                 if (adjIt->tetrahedron() == adj &&
-                        adjIt->getVertex() == adjVertex)
+                        adjIt->vertex() == adjVertex)
                     break; // Sets adjIndex to the right value.
 
             ans->triangle(i)->joinTo(edgeInLink, ans->triangle(adjIndex),

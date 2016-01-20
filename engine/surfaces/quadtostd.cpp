@@ -164,7 +164,7 @@ namespace {
                         // Not a triangular coordinate.
                         facets_.set(i, true);
                     } else if (tri->tetrahedron(i / coordsPerTet)->
-                            getVertex(i % coordsPerTet)->markedIndex()
+                            vertex(i % coordsPerTet)->markedIndex()
                             == whichLink) {
                         // A triangular coordinate in our vertex link.
                         elements[i] = -1;
@@ -410,9 +410,9 @@ void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
     for (i = 0; i < llen; ++i) {
         link[i] = new typename Variant::StandardVector(slen);
 
-        for (auto& emb : *owner->getVertex(i))
+        for (auto& emb : *owner->vertex(i))
             link[i]->setElement(Variant::stdPos(
-                emb.tetrahedron()->markedIndex(), emb.getVertex()), 1);
+                emb.tetrahedron()->markedIndex(), emb.vertex()), 1);
     }
 
     // Create the initial set of rays:
@@ -460,7 +460,7 @@ void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
         list[workingList].push_back(new RaySpec<BitmaskType>(owner, vtx,
             Variant::totalPerTet));
 
-        for (auto& emb : *owner->getVertex(vtx)) {
+        for (auto& emb : *owner->vertex(vtx)) {
             // Update the state of progress and test for cancellation.
             if (tracker && ! tracker->setPercent(25.0 * slices++ / n)) {
                 for (it = list[workingList].begin();
@@ -470,7 +470,7 @@ void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
             }
 
             tcoord = Variant::stdPos(emb.tetrahedron()->markedIndex(),
-                emb.getVertex());
+                emb.vertex());
 
             // Add the inequality v[tcoord] >= 0.
             for (it = list[workingList].begin(); it != list[workingList].end();

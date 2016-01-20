@@ -44,7 +44,7 @@ void NTriangulation::maximalForestInBoundary(std::set<NEdge*>& edgeSet,
     edgeSet.clear();
     for (BoundaryComponentIterator bit = boundaryComponents_.begin();
             bit != boundaryComponents_.end(); bit++)
-        stretchBoundaryForestFromVertex((*bit)->getVertex(0),
+        stretchBoundaryForestFromVertex((*bit)->vertex(0),
             edgeSet, vertexSet);
 }
 
@@ -59,14 +59,14 @@ void NTriangulation::stretchBoundaryForestFromVertex(NVertex* from,
     int vertex, yourVertex;
     for (auto& emb : *from) {
         tet = emb.tetrahedron();
-        vertex = emb.getVertex();
+        vertex = emb.vertex();
         for (yourVertex = 0; yourVertex < 4; yourVertex++) {
             if (vertex == yourVertex)
                 continue;
             edge = tet->getEdge(NEdge::edgeNumber[vertex][yourVertex]);
             if (! (edge->isBoundary()))
                 continue;
-            otherVertex = tet->getVertex(yourVertex);
+            otherVertex = tet->vertex(yourVertex);
             if (! vertexSet.count(otherVertex)) {
                 edgeSet.insert(edge);
                 stretchBoundaryForestFromVertex(otherVertex, edgeSet,
@@ -112,11 +112,11 @@ bool NTriangulation::stretchForestFromVertex(NVertex* from,
     bool madeLink = false;
     for (auto& emb : *from) {
         tet = emb.tetrahedron();
-        vertex = emb.getVertex();
+        vertex = emb.vertex();
         for (yourVertex = 0; yourVertex < 4; yourVertex++) {
             if (vertex == yourVertex)
                 continue;
-            otherVertex = tet->getVertex(yourVertex);
+            otherVertex = tet->vertex(yourVertex);
             if (thisStretch.count(otherVertex))
                 continue;
             madeLink = vertexSet.count(otherVertex);
