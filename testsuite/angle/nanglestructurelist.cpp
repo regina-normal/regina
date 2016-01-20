@@ -258,7 +258,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
                 }
 
                 for (j = 0; j < tri->countEdges(); ++j) {
-                    e = tri->getEdge(j);
+                    e = tri->edge(j);
                     if (e->isBoundary())
                         continue;
 

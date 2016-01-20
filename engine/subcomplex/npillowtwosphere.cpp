@@ -52,8 +52,8 @@ NPillowTwoSphere* NPillowTwoSphere::formsPillowTwoSphere(
     NEdge* edge[2][3];
     int i;
     for (i = 0; i < 3; i++) {
-        edge[0][i] = tri1->getEdge(i);
-        edge[1][i] = tri2->getEdge(i);
+        edge[0][i] = tri1->edge(i);
+        edge[1][i] = tri2->edge(i);
     }
     if (edge[0][0] == edge[0][1] || edge[0][0] == edge[0][2] ||
             edge[0][1] == edge[0][2])

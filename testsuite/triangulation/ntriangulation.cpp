@@ -3408,19 +3408,19 @@ class NTriangulationTest : public TriangulationTest<3> {
                 tet->joinTo(2, tet, NPerm4(2, 3));
 
                 NTriangulation tmp0(snap);
-                tmp0.drillEdge(tmp0.getEdge(0));
+                tmp0.drillEdge(tmp0.edge(0));
                 if (! tmp0.isSolidTorus())
                     CPPUNIT_FAIL("Snapped 3-sphere: drilling edge 0 "
                         "does not give a solid torus.");
 
                 NTriangulation tmp1(snap);
-                tmp1.drillEdge(tmp1.getEdge(1));
+                tmp1.drillEdge(tmp1.edge(1));
                 if (! tmp1.isBall())
                     CPPUNIT_FAIL("Snapped 3-sphere: drilling edge 1 "
                         "does not give a 3-ball.");
 
                 NTriangulation tmp2(snap);
-                tmp2.drillEdge(tmp2.getEdge(2));
+                tmp2.drillEdge(tmp2.edge(2));
                 if (! tmp2.isSolidTorus())
                     CPPUNIT_FAIL("Snapped 3-sphere: drilling edge 2 "
                         "does not give a solid torus.");
@@ -3436,7 +3436,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 tet->joinTo(2, tet, NPerm4(2, 3));
 
                 NTriangulation tmp0(layer);
-                tmp0.drillEdge(tmp0.getEdge(0));
+                tmp0.drillEdge(tmp0.edge(0));
                 if (! (tmp0.isValid() && (! tmp0.isIdeal()) &&
                         (tmp0.countBoundaryComponents() == 1) &&
                         (tmp0.homology().isZ()) &&
@@ -3447,7 +3447,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                         "does not give a non-trivial knot complement.");
 
                 NTriangulation tmp1(layer);
-                tmp1.drillEdge(tmp1.getEdge(1));
+                tmp1.drillEdge(tmp1.edge(1));
                 if (! tmp1.isSolidTorus())
                     CPPUNIT_FAIL("Layered 3-sphere: drilling edge 1 "
                         "does not give a solid torus.");
@@ -3461,19 +3461,19 @@ class NTriangulationTest : public TriangulationTest<3> {
                 lst.insertLayeredSolidTorus(1, 2);
 
                 NTriangulation tmp0(lst);
-                tmp0.drillEdge(tmp0.getEdge(0));
+                tmp0.drillEdge(tmp0.edge(0));
                 if (! tmp0.isSolidTorus())
                     CPPUNIT_FAIL("LST(1,2,3): drilling edge 0 "
                         "does not give a solid torus.");
 
                 NTriangulation tmp1(lst);
-                tmp1.drillEdge(tmp1.getEdge(1));
+                tmp1.drillEdge(tmp1.edge(1));
                 if (! tmp1.isSolidTorus())
                     CPPUNIT_FAIL("LST(1,2,3): drilling edge 1 "
                         "does not give a solid torus.");
 
                 NTriangulation tmp2(lst);
-                tmp2.drillEdge(tmp2.getEdge(2));
+                tmp2.drillEdge(tmp2.edge(2));
                 if (! tmp2.isSolidTorus())
                     CPPUNIT_FAIL("LST(1,2,3): drilling edge 2 "
                         "does not give a solid torus.");
@@ -3490,7 +3490,7 @@ class NTriangulationTest : public TriangulationTest<3> {
 
                 // The internal edge joins vertices 2-3.
                 NTriangulation tmp(ball);
-                tmp.drillEdge(tmp.tetrahedron(0)->getEdge(5));
+                tmp.drillEdge(tmp.tetrahedron(0)->edge(5));
                 if (! tmp.isSolidTorus())
                     CPPUNIT_FAIL("2-tetrahedron ball: drilling the "
                         "internal edge does not give a solid torus.");
@@ -3910,7 +3910,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             if (tri->size() != 1)
                 CPPUNIT_FAIL("Custom invalid triangulation did not simplify "
                     "to 1 tetrahedron.");
-            if (tri->isValid() || tri->getEdge(0)->isValid())
+            if (tri->isValid() || tri->edge(0)->isValid())
                 CPPUNIT_FAIL("Custom invalid triangulation did not simplify "
                     "to an invalid triangulation with an invalid edge.");
             delete tri;
@@ -4166,7 +4166,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 }
 
                 bool res =
-                    large.collapseEdge(large.tetrahedron(n + 2)->getEdge(
+                    large.collapseEdge(large.tetrahedron(n + 2)->edge(
                     regina::NEdge::edgeNumber[0][3]), true, true);
 
                 if (! res) {

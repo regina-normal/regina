@@ -879,7 +879,7 @@ void NTriGluingsUI::drillEdge() {
                 "Please be patient."), ui));
 
             regina::NTriangulation* ans = new regina::NTriangulation(*tri);
-            ans->drillEdge(ans->getEdge(chosen->index()));
+            ans->drillEdge(ans->edge(chosen->index()));
             ans->setPacketLabel(tri->adornedLabel("Drilled"));
             tri->insertChildLast(ans);
             enclosingPane->getMainWindow()->packetView(ans, true, true);

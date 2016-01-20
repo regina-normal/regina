@@ -832,9 +832,9 @@ void NTriCompositionUI::findPillowSpheres() {
                 details = new QTreeWidgetItem(id, details);
                 details->setText(0, tr(
                     "Equator: edges %1, %2, %3").
-                     arg(f1->getEdge(0)->index()).
-                     arg(f1->getEdge(1)->index()).
-                     arg(f1->getEdge(2)->index()));
+                     arg(f1->edge(0)->index()).
+                     arg(f1->edge(1)->index()).
+                     arg(f1->edge(2)->index()));
 
                 delete pillow;
             }

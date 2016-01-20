@@ -63,7 +63,7 @@ void NTriangulation::stretchBoundaryForestFromVertex(NVertex* from,
         for (yourVertex = 0; yourVertex < 4; yourVertex++) {
             if (vertex == yourVertex)
                 continue;
-            edge = tet->getEdge(NEdge::edgeNumber[vertex][yourVertex]);
+            edge = tet->edge(NEdge::edgeNumber[vertex][yourVertex]);
             if (! (edge->isBoundary()))
                 continue;
             otherVertex = tet->vertex(yourVertex);
@@ -120,7 +120,7 @@ bool NTriangulation::stretchForestFromVertex(NVertex* from,
             if (thisStretch.count(otherVertex))
                 continue;
             madeLink = vertexSet.count(otherVertex);
-            edgeSet.insert(tet->getEdge(NEdge::edgeNumber[vertex][yourVertex]));
+            edgeSet.insert(tet->edge(NEdge::edgeNumber[vertex][yourVertex]));
             if (! madeLink)
                 madeLink =
                     stretchForestFromVertex(otherVertex, edgeSet, vertexSet,

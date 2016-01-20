@@ -84,7 +84,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
 
         void verify20Edge(NTriangulation* tri, long whichEdge,
                 NTriangulation* result, const std::string& caseName) {
-            bool done = tri->twoZeroMove(tri->getEdge(whichEdge));
+            bool done = tri->twoZeroMove(tri->edge(whichEdge));
             CPPUNIT_ASSERT_MESSAGE(
                 "A 2-0 edge move was incorrectly disallowed for the " +
                 caseName + " case", done);
@@ -98,13 +98,13 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
             bool found = false;
             NEdge* edge;
             for (unsigned long e = 0; e < tri->countEdges(); e++) {
-                edge = tri->getEdge(e);
+                edge = tri->edge(e);
                 if (edge->degree() == 2 && ! edge->isBoundary())
                     found = true;
                 CPPUNIT_ASSERT_MESSAGE(
                     "An illegal 2-0 edge move was allowed for the " +
                     caseName + " case",
-                    ! tri->twoZeroMove(tri->getEdge(e)));
+                    ! tri->twoZeroMove(tri->edge(e)));
             }
             CPPUNIT_ASSERT_MESSAGE(
                 "No degree two edge was found for the " + caseName + " case.",
@@ -159,7 +159,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 NTetrahedron* tet2 = t.newTetrahedron();
                 t.tetrahedron(1)->joinTo(2, tet2, NPerm4());
 
-                NEdge* e = tet->getEdge(NEdge::edgeNumber[0][1]);
+                NEdge* e = tet->edge(NEdge::edgeNumber[0][1]);
                 CPPUNIT_ASSERT_MESSAGE(
                     "Case boundary-loop-tet is malformed.",
                     (! e->isBoundary()) && e->degree() == 1 &&
@@ -358,7 +358,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 p->joinTo(3, r, NPerm4());
                 q->joinTo(2, s, NPerm4());
 
-                NEdge* e = t.tetrahedron(0)->getEdge(
+                NEdge* e = t.tetrahedron(0)->edge(
                     NEdge::edgeNumber[0][1]);
                 CPPUNIT_ASSERT_MESSAGE(
                     "Case identified-edges-S2 is malformed.",
@@ -384,7 +384,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 p->joinTo(3, r, NPerm4(0, 1));
                 q->joinTo(2, s, NPerm4(0, 1));
 
-                NEdge* e = t.tetrahedron(0)->getEdge(
+                NEdge* e = t.tetrahedron(0)->edge(
                     NEdge::edgeNumber[0][1]);
                 CPPUNIT_ASSERT_MESSAGE(
                     "Case identified-edges-RP2 is malformed.",
@@ -401,7 +401,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 NTetrahedron* tet = t.tetrahedron(0);
                 tet->joinTo(2, tet, NPerm4(2, 3));
 
-                NEdge* e = tet->getEdge(NEdge::edgeNumber[0][1]);
+                NEdge* e = tet->edge(NEdge::edgeNumber[0][1]);
                 CPPUNIT_ASSERT_MESSAGE(
                     "Case boundary-loop-boundary is malformed.",
                     (! e->isBoundary()) && e->degree() == 1 &&
@@ -416,7 +416,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 t.insertTriangulation(baseKB);
 
                 NEdge* e = t.tetrahedron(0)->
-                    getEdge(NEdge::edgeNumber[0][1]);
+                    edge(NEdge::edgeNumber[0][1]);
                 CPPUNIT_ASSERT_MESSAGE(
                     "Case boundary-cross-boundary is malformed.",
                     e->isBoundary() && e->degree() == 3 &&

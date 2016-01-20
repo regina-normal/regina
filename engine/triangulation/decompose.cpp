@@ -1024,9 +1024,9 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
         if ((*fit)->isBoundary())
             continue;
 
-        e0 = (*fit)->getEdge(0);
-        e1 = (*fit)->getEdge(1);
-        e2 = (*fit)->getEdge(2);
+        e0 = (*fit)->edge(0);
+        e1 = (*fit)->edge(1);
+        e2 = (*fit)->edge(2);
         if (! (e0->isBoundary() && e1->isBoundary() && e2->isBoundary()))
             continue;
 
@@ -1067,7 +1067,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
             continue;
 
         int equator = ball->equatorEdge();
-        if (! (*tit)->getEdge(equator)->isBoundary()) {
+        if (! (*tit)->edge(equator)->isBoundary()) {
             delete ball;
             continue;
         }

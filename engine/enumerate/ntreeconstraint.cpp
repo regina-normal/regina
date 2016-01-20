@@ -59,8 +59,8 @@ bool LPConstraintEuler::addRows(
     }
     for (i = 0; i < tri->countEdges(); ++i) {
         tet = tri->tetrahedronIndex(
-            tri->getEdge(i)->front().tetrahedron());
-        p = tri->getEdge(i)->front().vertices();
+            tri->edge(i)->front().tetrahedron());
+        p = tri->edge(i)->front().vertices();
         ++obj[7 * tet + p[0]];
         ++obj[7 * tet + p[1]];
         ++obj[7 * tet + 4 + vertexSplitMeeting[p[0]][p[1]][0]];

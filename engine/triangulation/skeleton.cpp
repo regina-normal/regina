@@ -235,9 +235,9 @@ void NTriangulation::calculateVertexLinks() {
         const NEdgeEmbedding& emb = e->front();
         tet = emb.tetrahedron();
         end0 = tet->regina::detail::SimplexFaces<3, 0>::face_[tet->regina::detail::SimplexFaces<3, 1>::mapping_
-            [emb.getEdge()][0]];
+            [emb.edge()][0]];
         end1 = tet->regina::detail::SimplexFaces<3, 0>::face_[tet->regina::detail::SimplexFaces<3, 1>::mapping_
-            [emb.getEdge()][1]];
+            [emb.edge()][1]];
 
         if (e->isBoundary()) {
             // Contribute to v_bdry.

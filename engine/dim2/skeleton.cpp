@@ -88,7 +88,7 @@ void Triangulation<2>::calculateBoundary() {
         // completely enumerate all edges in this boundary component.
 
         tri = edge->front().triangle();
-        edgeId = edge->front().getEdge();
+        edgeId = edge->front().edge();
         vertexId = edge->front().vertices()[0];
         vertex = tri->regina::detail::SimplexFaces<2, 0>::face_[vertexId];
         while (true) {

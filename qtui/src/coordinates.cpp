@@ -149,7 +149,7 @@ namespace Coordinates {
                 return QString("K%1: %2").arg(whichCoord / 6).
                     arg(regina::vertexSplitString[(whichCoord % 6) - 3]);
         } else if (coordSystem == regina::NS_EDGE_WEIGHT) {
-            if (! (tri && tri->getEdge(whichCoord)->isBoundary()))
+            if (! (tri && tri->edge(whichCoord)->isBoundary()))
                 return QString::number(whichCoord);
             else
                 return QString("%1 [B]").arg(whichCoord);
@@ -234,7 +234,7 @@ namespace Coordinates {
                     arg(regina::vertexSplitString[(whichCoord % 6) - 3]);
         } else if (coordSystem == regina::NS_EDGE_WEIGHT) {
             if (tri) {
-                if (tri->getEdge(whichCoord)->isBoundary())
+                if (tri->edge(whichCoord)->isBoundary())
                     return context->tr("Weight of (boundary) edge %1").
                         arg(whichCoord);
                 else

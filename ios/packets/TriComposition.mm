@@ -675,9 +675,9 @@
                 [details appendString:@"Pillow 2-sphere\n"];
                 [details appendFormat:@INDENT1 "Triangles: %ld, %ld\n", i, j];
                 [details appendFormat:@INDENT1 "Equator: edges %ld, %ld, %ld\n",
-                 f1->getEdge(0)->index(),
-                 f1->getEdge(1)->index(),
-                 f1->getEdge(2)->index()];
+                 f1->edge(0)->index(),
+                 f1->edge(1)->index(),
+                 f1->edge(2)->index()];
                 
                 [details appendString:@"\n"];
                 delete pillow;
@@ -705,7 +705,7 @@
                 
                 const regina::NSnappedBall* ball = sphere->snappedBall(0);
                 [details appendFormat:@INDENT1 "Equator: edge %ld\n",
-                 ball->tetrahedron()->getEdge(ball->equatorEdge())->index()];
+                 ball->tetrahedron()->edge(ball->equatorEdge())->index()];
                 
                 [details appendString:@"\n"];
                 delete sphere;

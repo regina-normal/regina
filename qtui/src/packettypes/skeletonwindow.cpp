@@ -288,7 +288,7 @@ int EdgeModel::columnCount(const QModelIndex& /* unused parent*/) const {
 
 QVariant EdgeModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        NEdge* item = tri->getEdge(index.row());
+        NEdge* item = tri->edge(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -766,7 +766,7 @@ int Dim2EdgeModel::columnCount(const QModelIndex& /* unused parent*/) const {
 
 QVariant Dim2EdgeModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        Dim2Edge* item = tri->getEdge(index.row());
+        Dim2Edge* item = tri->edge(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -945,7 +945,7 @@ QVariant Dim2BoundaryComponentModel::data(const QModelIndex& index,
             case 2:
                 QString ans;
                 for (unsigned long i = 0; i < item->countEdges(); ++i) {
-                    const Dim2EdgeEmbedding& emb = item->getEdge(i)->front();
+                    const Dim2EdgeEmbedding& emb = item->edge(i)->front();
                     appendToList(ans, QString("%1 (%2)").
                         arg(emb.triangle()->index()).
                         arg(emb.vertices().trunc2().c_str()));

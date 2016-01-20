@@ -49,7 +49,7 @@ NTriangle::Type NTriangle::type() {
     int i;
     for (i = 0; i < 3; i++) {
         v[i] = vertex(i);
-        e[i] = getEdge(i);
+        e[i] = edge(i);
     }
 
     if (e[0] != e[1] && e[1] != e[2] && e[2] != e[0]) {

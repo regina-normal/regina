@@ -151,8 +151,8 @@ template <>
 bool detail::TriangulationBase<3>::compatible(
         Simplex<3>* src, Simplex<3>* dest, NPerm<4> p) {
     for (int edge = 0; edge < 6; edge++) {
-        if (src->getEdge(edge)->degree() !=
-                dest->getEdge(NEdge::edgeNumber[p[NEdge::edgeVertex[edge][0]]]
+        if (src->edge(edge)->degree() !=
+                dest->edge(NEdge::edgeNumber[p[NEdge::edgeVertex[edge][0]]]
                     [p[NEdge::edgeVertex[edge][1]]])->degree())
             return false;
     }

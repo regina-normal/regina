@@ -54,8 +54,8 @@ NSnappedTwoSphere* NSnappedTwoSphere::formsSnappedTwoSphere(
         delete ball[0];
         return 0;
     }
-    if (tet1->getEdge(ball[0]->equatorEdge()) !=
-            tet2->getEdge(ball[1]->equatorEdge())) {
+    if (tet1->edge(ball[0]->equatorEdge()) !=
+            tet2->edge(ball[1]->equatorEdge())) {
         delete ball[0];
         delete ball[1];
         return 0;
@@ -70,8 +70,8 @@ NSnappedTwoSphere* NSnappedTwoSphere::formsSnappedTwoSphere(
 
 NSnappedTwoSphere* NSnappedTwoSphere::formsSnappedTwoSphere(
         NSnappedBall* ball1, NSnappedBall* ball2) {
-    if (ball1->tetrahedron()->getEdge(ball1->equatorEdge()) !=
-            ball2->tetrahedron()->getEdge(ball2->equatorEdge()))
+    if (ball1->tetrahedron()->edge(ball1->equatorEdge()) !=
+            ball2->tetrahedron()->edge(ball2->equatorEdge()))
         return 0;
 
     // This is it.

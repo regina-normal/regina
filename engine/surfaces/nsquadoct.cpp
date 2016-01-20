@@ -192,7 +192,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuadOct::makeMirror(
         for (i=0; i<4; i++) {
             if (i == vemb.vertex())
                 continue;
-            edge = vemb.tetrahedron()->getEdge(
+            edge = vemb.tetrahedron()->edge(
                 NEdge::edgeNumber[vemb.vertex()][i]);
             end = vemb.tetrahedron()->getEdgeMapping(
                 NEdge::edgeNumber[vemb.vertex()][i])[0] == i ? 1 : 0;
@@ -251,7 +251,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuadOct::makeMirror(
                     min = expect;
 
                 // Remember to examine the new edge end if appropriate.
-                edge = tet->getEdge(
+                edge = tet->edge(
                     NEdge::edgeNumber[tetPerm[2]][tetPerm[current.end]]);
                 end = tet->getEdgeMapping(
                     NEdge::edgeNumber[tetPerm[2]][tetPerm[current.end]])[0]
@@ -296,7 +296,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuadOct::makeMirror(
                         min = expect;
 
                     // Remember to examine the new edge end if appropriate.
-                    edge = tet->getEdge(
+                    edge = tet->edge(
                         NEdge::edgeNumber[tetPerm[3]][tetPerm[current.end]]);
                     end = tet->getEdgeMapping(
                         NEdge::edgeNumber[tetPerm[3]][tetPerm[current.end]])[0]
