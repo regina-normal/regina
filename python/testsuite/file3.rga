@@ -20,12 +20,12 @@
   </tetrahedra>
 </packet> <!-- 3_D (3_Manifold Triangulation) -->
 <packet label="4-D"
-	type="4-Manifold Triangulation" typeid="104"
+	type="4-Manifold Triangulation" typeid="11"
 	parent="Root">
-  <simplices size="2">
-    <simplex desc=""> 1 13380 -1 -1 -1 -1 -1 -1 1 2257 </simplex>
-    <simplex desc=""> 0 13380 -1 -1 -1 -1 -1 -1 0 2257 </simplex>
-  </simplices>
+  <pentachora npent="2">
+    <pent desc=""> 1 13380 -1 -1 -1 -1 -1 -1 1 2257 </pent>
+    <pent desc=""> 0 13380 -1 -1 -1 -1 -1 -1 0 2257 </pent>
+  </pentachora>
 </packet> <!-- 4_D (4_Manifold Triangulation) -->
 <packet label="5-D"
 	type="5-Manifold Triangulation" typeid="105"
