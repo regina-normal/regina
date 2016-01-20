@@ -12,6 +12,7 @@
    "Copyright &copy; &copyrightyears;, &copyrightholder;">
 
   <!ENTITY ascii "<acronym>ASCII</acronym>">
+  <!ENTITY cpp "<application>C++</application>">
   <!ENTITY latin1 "<acronym>LATIN1</acronym>">
   <!ENTITY pdf "<acronym>PDF</acronym>">
   <!ENTITY python "<application>Python</application>">

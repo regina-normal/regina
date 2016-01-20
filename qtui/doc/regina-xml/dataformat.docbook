@@ -54,6 +54,8 @@
  &data-orbl-surface;
  &data-packet;
  &data-packet-dim2triangulation;
+ &data-packet-dim3triangulation;
+ &data-packet-dim4triangulation;
  &data-packet-triangulation;
  &data-packet-anglestructurelist;
  &data-packet-container;
@@ -64,11 +66,15 @@
  &data-packet-surfacefilter;
  &data-packet-text;
  &data-params;
+ &data-pent;
+ &data-pentachora;
  &data-pdf;
  &data-realbdry-filter;
  &data-realbdry-surface;
  &data-reginadata;
  &data-reln;
+ &data-simplex;
+ &data-simplices;
  &data-snappea;
  &data-solidtorus;
  &data-spanstrict;

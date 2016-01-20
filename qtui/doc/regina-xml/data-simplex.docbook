@@ -1,0 +1,167 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<refentry id="data-simplex">
+ <refmeta>
+  <refentrytitle>simplex</refentrytitle>
+  <manvolnum>5reg</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>simplex</refname>
+  <refpurpose>A single top-dimensional simplex in a
+   <replaceable>dim</replaceable>-dimensional triangulation</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <informaltable frame="all">
+   <tgroup cols="2">
+    <colspec colname="c1"/>
+    <colspec colname="c2"/>
+    <tbody>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Content Model</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+<synopsis>
+simplex ::= (#PCDATA)</synopsis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Attributes</emphasis>
+     </entry></row>
+     <row>
+      <entry><emphasis role="bold">Name</emphasis></entry>
+      <entry><emphasis role="bold">Type</emphasis></entry>
+     </row>
+     <row>
+      <entry><sgmltag>desc</sgmltag></entry>
+      <entry><type>CDATA</type></entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   A &xml-simplex; element stores a single top-dimensional simplex in a
+   <replaceable>dim</replaceable>-dimensional triangulation, along with its
+   associated facet gluings, for dimensions
+   5 &le; <replaceable>dim</replaceable> &le; 15.
+  </para>
+  <para>
+   The character data of this &xml; element should be a
+   whitespace-separated list of <replaceable>dim</replaceable>+1
+   integer pairs, representing the gluings of facets
+   0, 1, ..., <replaceable>dim</replaceable> of this simplex.  Note that
+   facet <replaceable>i</replaceable> is always opposite vertex
+   <replaceable>i</replaceable> in a top-dimensional simplex.
+  </para>
+  <para>
+   For each pair, the first integer represents the other top-dimensional
+   simplex to which the facet is glued (note that simplices in a triangulation
+   are numbered 0, 1, 2, etc.).  The second integer represents the
+   permutation of vertices from this simplex to the other simplex
+   describing precisely how this gluing takes place.  This permutation
+   will take the current facet number of this simplex to the corresponding
+   facet number of the adjacent simplex, and the other
+   <replaceable>dim</replaceable> vertex numbers of this simplex
+   to the corresponding <replaceable>dim</replaceable> vertex numbers on
+   the adjacent simplex to which they are identified by this gluing.
+  </para>
+  <para>
+   A permutation is represented as an integer as follows.
+   If the permutation maps 0, 1, ..., <replaceable>dim</replaceable> to
+   <replaceable>a0</replaceable>, <replaceable>a1</replaceable>, ...,
+   <replaceable>aDim</replaceable> respectively (where
+   <replaceable>a0</replaceable>, <replaceable>a1</replaceable>, ...,
+   <replaceable>aDim</replaceable> are 0, 1, ..., <replaceable>dim</replaceable>
+   in some order), then the corresponding integer is
+   (<replaceable>a0</replaceable> +
+   <replaceable>B</replaceable>&nbsp;<replaceable>a1</replaceable> +
+   <replaceable>B</replaceable><superscript>2</superscript>&nbsp;<replaceable>a2</replaceable> +
+   ... +
+   <replaceable>B</replaceable><superscript><replaceable>dim</replaceable></superscript>&nbsp;<replaceable>aDim</replaceable>).
+   Here the &ldquo;base&rdquo; <replaceable>B</replaceable> is
+   <replaceable>B</replaceable> = 8 for dimensions
+   <replaceable>dim</replaceable> = 5..7, and
+   <replaceable>B</replaceable> = 16 for dimensions
+   <replaceable>dim</replaceable> = 8..15.
+   As an example, the identity permutation for dimension
+   <replaceable>dim</replaceable> = 8 which maps (0, 1, ..., 8) to
+   (0, 1, ..., 8) is represented by the integer
+   (0 + 1&times;16 + 2&times;256 + ... + 8&times;4294967296),
+   which is 36344967696.
+  </para>
+  <para>
+   If a facet is a boundary facet (i.e., it is not glued to anything), the
+   two corresponding integers stored in the &xml; character data should
+   be -1 and -1.
+  </para>
+  <warning><para>
+   For dimensions <replaceable>dim</replaceable> = 5..7,
+   permutations are represented by 32-bit integers.
+   In contrast, for dimensions <replaceable>dim</replaceable> = 8..15,
+   permutations are represented by 64-bit integers.
+   If you are writing code that reads &regina; data files, you may need
+   to use a large integer type
+   (such as <literal>long&nbsp;long</literal> in &cpp;) accordingly.
+  </para></warning>
+  <note><para>
+   The &xml-simplex; element is only for use in higher dimensions
+   5 &le; <replaceable>dim</replaceable> &le; 15.
+   For the smaller dimensions 2, 3 and 4, the specialised tags
+   &xml-triangle;, &xml-tet; and &xml-pent; should be used instead.
+  </para></note>
+
+  <refsect2>
+   <title>Parents</title>
+   <para>
+    The following elements contain <sgmltag>simplex</sgmltag>:
+    <simplelist type="inline">
+     <member>&xml-simplices;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+
+  <refsect2>
+   <title>Children</title>
+   <para>
+    Element <sgmltag>simplex</sgmltag> has no children.
+   </para>
+  </refsect2>
+ </refsect1>
+
+ <refsect1>
+  <title>Attributes</title>
+  <variablelist>
+   <varlistentry>
+    <term><sgmltag>desc</sgmltag></term>
+    <listitem>
+     <para>
+      A human-readable description of the role that this top-dimensional
+      simplex plays in the overall triangulation.
+     </para>
+    </listitem>
+   </varlistentry>
+  </variablelist>
+ </refsect1>
+
+ <refsect1>
+  <title>Example</title>
+  <para>
+   The following &xml; snippet represents simplex number 0 in a
+   6-dimensional triangulation.
+   Facet 0 of this simplex is glued to facet 6 of simplex number 1,
+   with a gluing permutation that maps (0,1,2,3,4,5,6) to (6,0,1,2,3,4,5).
+   Facet 6 of this simplex is glued to facet 0 of simplex number 1,
+   with a gluing permutation that maps (0,1,2,3,4,5,6) to (1,2,3,4,5,6,0).
+   The remaining facets 1,...,5 of this simplex are all boundary facets.
+  </para>
+  <programlisting>
+&lt;simplex&gt; 1 14038087 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 2054353 &lt;/simplex&gt;
+  </programlisting>
+ </refsect1>
+</refentry>

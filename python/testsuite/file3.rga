@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<reginadata engine="5.0">
+<packet label="Root"
+	type="Container" typeid="1"
+	parent="">
+<packet label="2-D"
+	type="2-Manifold Triangulation" typeid="15"
+	parent="Root">
+  <triangles ntriangles="2">
+    <triangle desc=""> 1 4 -1 -1 1 2 </triangle>
+    <triangle desc=""> 0 4 -1 -1 0 2 </triangle>
+  </triangles>
+</packet> <!-- 2_D (2_Manifold Triangulation) -->
+<packet label="3-D"
+	type="3-Manifold Triangulation" typeid="3"
+	parent="Root">
+  <tetrahedra ntet="2">
+    <tet desc=""> 1 147 -1 -1 -1 -1 1 57 </tet>
+    <tet desc=""> 0 147 -1 -1 -1 -1 0 57 </tet>
+  </tetrahedra>
+</packet> <!-- 3_D (3_Manifold Triangulation) -->
+<packet label="4-D"
+	type="4-Manifold Triangulation" typeid="11"
+	parent="Root">
+  <pentachora npent="2">
+    <pent desc=""> 1 13380 -1 -1 -1 -1 -1 -1 1 2257 </pent>
+    <pent desc=""> 0 13380 -1 -1 -1 -1 -1 -1 0 2257 </pent>
+  </pentachora>
+</packet> <!-- 4_D (4_Manifold Triangulation) -->
+<packet label="5-D"
+	type="5-Manifold Triangulation" typeid="105"
+	parent="Root">
+  <simplices size="2">
+    <simplex desc=""> 1 144453 -1 -1 -1 -1 -1 -1 -1 -1 1 22737 </simplex>
+    <simplex desc=""> 0 144453 -1 -1 -1 -1 -1 -1 -1 -1 0 22737 </simplex>
+  </simplices>
+</packet> <!-- 5_D (5_Manifold Triangulation) -->
+<packet label="6-D"
+	type="6-Manifold Triangulation" typeid="106"
+	parent="Root">
+  <simplices size="2">
+    <simplex desc=""> 1 1455174 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 219345 </simplex>
+    <simplex desc=""> 0 1455174 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 0 219345 </simplex>
+  </simplices>
+</packet> <!-- 6_D (6_Manifold Triangulation) -->
+<packet label="7-D"
+	type="7-Manifold Triangulation" typeid="107"
+	parent="Root">
+  <simplices size="2">
+    <simplex desc=""> 1 14038087 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 2054353 </simplex>
+    <simplex desc=""> 0 14038087 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 0 2054353 </simplex>
+  </simplices>
+</packet> <!-- 7_D (7_Manifold Triangulation) -->
+<packet label="8-D"
+	type="8-Manifold Triangulation" typeid="108"
+	parent="Root">
+  <simplices size="2">
+    <simplex desc=""> 1 31763669256 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 2271560481 </simplex>
+    <simplex desc=""> 0 31763669256 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 0 2271560481 </simplex>
+  </simplices>
+</packet> <!-- 8_D (8_Manifold Triangulation) -->
+<packet label="9-D"
+	type="9-Manifold Triangulation" typeid="109"
+	parent="Root">
+  <simplices size="2">
+    <simplex desc=""> 1 581519483145 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 40926266145 </simplex>
+    <simplex desc=""> 0 581519483145 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 0 40926266145 </simplex>
+  </simplices>
+</packet> <!-- 9_D (9_Manifold Triangulation) -->
+<packet label="10-D"
+	type="10-Manifold Triangulation" typeid="110"
+	parent="Root">
+  <simplices size="2">
+    <simplex desc=""> 1 10477124133130 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 728121033505 </simplex>
+    <simplex desc=""> 0 10477124133130 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 0 728121033505 </simplex>
+  </simplices>
+</packet> <!-- 10_D (10_Manifold Triangulation) -->
+<packet label="11-D"
+	type="11-Manifold Triangulation" typeid="111"
+	parent="Root">
+  <simplices size="2">
+    <simplex desc=""> 1 186398984577291 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 12822748939041 </simplex>
+    <simplex desc=""> 0 186398984577291 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 0 12822748939041 </simplex>
+  </simplices>
+</packet> <!-- 11_D (11_Manifold Triangulation) -->
+<packet label="12-D"
+	type="12-Manifold Triangulation" typeid="112"
+	parent="Root">
+  <simplices size="2">
+    <simplex desc=""> 1 3282623728394508 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 223928981472033 </simplex>
+    <simplex desc=""> 0 3282623728394508 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 0 223928981472033 </simplex>
+  </simplices>
+</packet> <!-- 12_D (12_Manifold Triangulation) -->
+<packet label="13-D"
+	type="13-Manifold Triangulation" typeid="113"
+	parent="Root">
+  <simplices size="2">
+    <simplex desc=""> 1 57325819256840461 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 3883103678710561 </simplex>
+    <simplex desc=""> 0 57325819256840461 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 0 3883103678710561 </simplex>
+  </simplices>
+</packet> <!-- 13_D (13_Manifold Triangulation) -->
+<packet label="14-D"
+	type="14-Manifold Triangulation" typeid="114"
+	parent="Root">
+  <simplices size="2">
+    <simplex desc=""> 1 994074541749903630 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 66933498461897505 </simplex>
+    <simplex desc=""> 0 994074541749903630 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 0 66933498461897505 </simplex>
+  </simplices>
+</packet> <!-- 14_D (14_Manifold Triangulation) -->
+<packet label="15-D"
+	type="15-Manifold Triangulation" typeid="115"
+	parent="Root">
+  <simplices size="2">
+    <simplex desc=""> 1 17134975606245761295 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 1147797409030816545 </simplex>
+    <simplex desc=""> 0 17134975606245761295 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 0 1147797409030816545 </simplex>
+  </simplices>
+</packet> <!-- 15_D (15_Manifold Triangulation) -->
+</packet> <!-- Root (Container) -->
+</reginadata>

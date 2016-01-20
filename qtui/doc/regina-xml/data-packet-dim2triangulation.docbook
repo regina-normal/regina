@@ -4,13 +4,13 @@
 
 <refentry id="data-packet-dim2triangulation">
  <refmeta>
-  <refentrytitle>packet (2-manifold triangulation)</refentrytitle>
+  <refentrytitle>packet (2-dimensional triangulation)</refentrytitle>
   <manvolnum>5reg</manvolnum>
  </refmeta>
 
  <refnamediv>
-  <refname>packet (2-manifold triangulation)</refname>
-  <refpurpose>A 2-manifold triangulation packet</refpurpose>
+  <refname>packet (2-dimensional triangulation)</refname>
+  <refpurpose>A 2-dimensional triangulation packet</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -41,8 +41,9 @@ packet ::= (&xml-triangles;,
  <refsect1>
   <title>Description</title>
   <para>
-   A <emphasis>triangulation</emphasis>
-   packet stores a 2-manifold triangulation.
+   This type of <emphasis>triangulation</emphasis>
+   packet stores a 2-dimensional triangulation (i.e., a triangulation of
+   a 2-manifold).
   </para>
   <para>
    The triangles forming this triangulation and their corresponding
@@ -52,6 +53,11 @@ packet ::= (&xml-triangles;,
    The roles played by the child &xml-tag; and &xml-packet; elements are
    described in the general &xml-packet; element documentation.
   </para>
+  <note><para>
+   &regina; supports triangulations in many dimensions.
+   See also the elements &xml-packet-dim3triangulation;,
+   &xml-packet-dim4triangulation;, and &xml-packet-triangulation;.
+  </para></note>
 
   <refsect2>
    <title>Parents</title>
@@ -68,7 +74,7 @@ packet ::= (&xml-triangles;,
    <title>Children</title>
    <para>
     The following elements occur in <sgmltag>packet</sgmltag> for
-    a 2-manifold triangulation packet:
+    a 2-dimensional triangulation packet:
     <simplelist type="inline">
      <member>&xml-packet;</member>
      <member>&xml-tag;</member>
