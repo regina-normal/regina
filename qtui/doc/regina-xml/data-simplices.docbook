@@ -105,14 +105,16 @@ simplices ::= (&xml-simplex;*)</synopsis>
  <refsect1>
   <title>Example</title>
   <para>
-   The following &xml; snippet represents a 5-dimensional triangulation of a
-   two-tetrahedron (1, 1, 2) layered solid torus.
+   The following &xml; snippet represents a 6-dimensional triangulation
+   of the product
+   B<superscript>5</superscript>&times;S<superscript>1</superscript>,
+   formed from two 6-simplices.
   </para>
   <programlisting>
-&lt;tetrahedra ntet=&quot;2&quot;&gt;
-  &lt;tet&gt; 1 78 1 78 -1 -1 -1 -1 &lt;/tet&gt;
-  &lt;tet&gt; 1 57 1 147 0 78 0 78 &lt;/tet&gt;
-&lt;/tetrahedra&gt;
+&lt;simplices size="2"&gt;
+  &lt;simplex&gt; 1 14038087 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 2054353 &lt;/simplex&gt;
+  &lt;simplex&gt; 0 14038087 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 0 2054353 &lt;/simplex&gt;
+&lt;/simplices&gt;
   </programlisting>
  </refsect1>
 </refentry>

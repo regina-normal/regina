@@ -126,15 +126,16 @@ pent ::= (#PCDATA)</synopsis>
  <refsect1>
   <title>Example</title>
   <para>
-   The following &xml; snippet represents tetrahedron 0 in a
-   triangulation.  Its faces 0 and 1 are both glued to tetrahedron 1
-   with a gluing permutation that maps (0, 1, 2, 3) to (2, 3, 0, 1);
-   in particular, its face 0 is glued to face 2 of tetrahedron 1 and
-   its face 1 is glued to face 3 of tetrahedron 1.
-   Its faces 2 and 3 are each boundary faces.
+   The following &xml; snippet represents pentachoron number 0 in a
+   4-dimensional triangulation.
+   Facet 0 of this pentachoron is glued to facet 4 of pentachoron number 1,
+   with a gluing permutation that maps (0,1,2,3,4) to (4,0,1,2,3).
+   Facet 4 of this pentachoron is glued to facet 0 of pentachoron number 1,
+   with a gluing permutation that maps (0,1,2,3,4) to (1,2,3,4,0).
+   The remaining facets 1,2,3 of this pentachoron are all boundary facets.
   </para>
   <programlisting>
-&lt;tet&gt; 1 78 1 78 -1 -1 -1 -1 &lt;/tet&gt;
+&lt;pent&gt; 1 14038087 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 1 2054353 &lt;/pent&gt;
   </programlisting>
  </refsect1>
 </refentry>
