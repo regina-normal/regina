@@ -157,6 +157,8 @@ Version 5.0  [ (under development) ]
             - Removed getEmbeddings() for C++, but kept it for Python.
             - Removed the old routine getNumberOfEmbeddings().  Just use
               the equivalent routine getDegree() instead.
+        Class Dim4GluingPerms, Dim4GluingPermSearcher:
+            - New classes for building a census of 4-manifold triangulations.
         Class Dim4Triangulation, Dim4BoundaryComponent, Dim4Component,
                 Dim4Vertex, Dim4Edge, Dim4Triangle, Dim4Tetrahedron,
                 Dim4Pentachoron, Dim4Isomorphism, Dim4ExampleTriangulation,
