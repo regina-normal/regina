@@ -1280,6 +1280,7 @@
 		0591E8571C4F77A400793A9C /* dim4triangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8531C4F779B00793A9C /* dim4triangulation.cpp */; };
 		0591E8581C4F77A400793A9C /* dim4triangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8531C4F779B00793A9C /* dim4triangulation.cpp */; };
 		0591E8591C4F832B00793A9C /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
+		0591E85B1C50527100793A9C /* xmltrireader.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E85A1C50527100793A9C /* xmltrireader.h */; };
 		05937A9A19CEC20900160F9A /* AngleViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05937A9919CEC20900160F9A /* AngleViewController.mm */; };
 		05937AD119CECF4300160F9A /* MDSpreadView.m in Sources */ = {isa = PBXBuildFile; fileRef = 05937A9E19CECF4300160F9A /* MDSpreadView.m */; };
 		05937AD219CECF4300160F9A /* MDSpreadViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 05937AA019CECF4300160F9A /* MDSpreadViewCell.m */; };
@@ -2964,6 +2965,7 @@
 		0591E8521C4F779B00793A9C /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		0591E8531C4F779B00793A9C /* dim4triangulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim4triangulation.cpp; sourceTree = "<group>"; };
 		0591E8541C4F779B00793A9C /* testdim4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testdim4.h; sourceTree = "<group>"; };
+		0591E85A1C50527100793A9C /* xmltrireader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltrireader.h; sourceTree = "<group>"; };
 		05937A9819CEC20900160F9A /* AngleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AngleViewController.h; sourceTree = "<group>"; };
 		05937A9919CEC20900160F9A /* AngleViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AngleViewController.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		05937A9D19CECF4300160F9A /* MDSpreadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDSpreadView.h; sourceTree = "<group>"; };
@@ -4690,6 +4692,7 @@
 				05431F1D1C40F260009BC072 /* isosig-impl.h */,
 				05431F1E1C40F260009BC072 /* simplex.h */,
 				05431F1F1C40F260009BC072 /* triangulation.h */,
+				0591E85A1C50527100793A9C /* xmltrireader.h */,
 			);
 			path = detail;
 			sourceTree = "<group>";
@@ -5512,6 +5515,7 @@
 				052F9FED180600FB00FAE4DF /* nblockedsfspair.h in Headers */,
 				052F9F33180600FB00FAE4DF /* nsnappeacensusmfd.h in Headers */,
 				052F9F20180600FB00FAE4DF /* ngraphloop.h in Headers */,
+				0591E85B1C50527100793A9C /* xmltrireader.h in Headers */,
 				052FA058180600FB00FAE4DF /* dimtraits.h in Headers */,
 				052FA050180600FB00FAE4DF /* sfcombination.h in Headers */,
 				052FA019180600FB00FAE4DF /* nstandardtri.h in Headers */,

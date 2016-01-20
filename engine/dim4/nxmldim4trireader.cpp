@@ -32,10 +32,10 @@
 
 /* end stub */
 
-#include <vector>
 #include "algebra/nxmlalgebrareader.h"
+#include "dim4/dim4triangulation.h"
 #include "dim4/nxmldim4trireader.h"
-#include "utilities/stringutils.h"
+#include "utilities/nproperty.h"
 
 namespace regina {
 
@@ -43,96 +43,6 @@ namespace regina {
  * A unique namespace containing various specific-task packet readers.
  */
 namespace {
-    /**
-     * Reads a single pentachoron and its name and gluings.
-     */
-    class Dim4PentachoronReader : public NXMLElementReader {
-        private:
-            Dim4Triangulation* tri_;
-            Dim4Pentachoron* pent_;
-
-        public:
-            Dim4PentachoronReader(Dim4Triangulation* tri, unsigned whichPent) :
-                    tri_(tri), pent_(tri->pentachora()[whichPent]) {
-            }
-
-            virtual void startElement(const std::string&,
-                    const regina::xml::XMLPropertyDict& props,
-                    NXMLElementReader*) {
-                pent_->setDescription(props.lookup("desc"));
-            }
-
-            virtual void initialChars(const std::string& chars) {
-                std::vector<std::string> tokens;
-                if (basicTokenise(back_inserter(tokens), chars) != 10)
-                    return;
-
-                long pentIndex, permCode;
-                NPerm5 perm;
-                Dim4Pentachoron* adjPent;
-                int adjFacet;
-                for (int k = 0; k < 5; ++k) {
-                    if (! valueOf(tokens[2 * k], pentIndex))
-                        continue;
-                    if (! valueOf(tokens[2 * k + 1], permCode))
-                        continue;
-
-                    if (pentIndex < 0 || pentIndex >=
-                            static_cast<int>(tri_->size()))
-                        continue;
-                    if (! NPerm5::isPermCode(permCode))
-                        continue;
-
-                    perm.setPermCode(permCode);
-                    adjPent = tri_->pentachora()[pentIndex];
-                    adjFacet = perm[k];
-                    if (adjPent == pent_ && adjFacet == k)
-                        continue;
-                    if (pent_->adjacentPentachoron(k))
-                        continue;
-                    if (adjPent->adjacentPentachoron(adjFacet))
-                        continue;
-
-                    pent_->joinTo(k, adjPent, perm);
-                }
-            }
-    };
-
-    /**
-     * Reads an entire set of pentachora with their names and gluings.
-     */
-    class Dim4PentachoraReader : public NXMLElementReader {
-        private:
-            Dim4Triangulation* tri_;
-            unsigned readPents_;
-
-        public:
-            Dim4PentachoraReader(Dim4Triangulation* tri) : tri_(tri),
-                    readPents_(0) {
-            }
-
-            virtual void startElement(const std::string& /* tagName */,
-                    const regina::xml::XMLPropertyDict& props,
-                    NXMLElementReader*) {
-                long nPents;
-                if (valueOf(props.lookup("npent"), nPents))
-                    for ( ; nPents > 0; --nPents)
-                        tri_->newPentachoron();
-            }
-
-            virtual NXMLElementReader* startSubElement(
-                    const std::string& subTagName,
-                    const regina::xml::XMLPropertyDict&) {
-                if (subTagName == "pent") {
-                    if (readPents_ < tri_->size())
-                        return new Dim4PentachoronReader(tri_, readPents_++);
-                    else
-                        return new NXMLElementReader();
-                } else
-                    return new NXMLElementReader();
-            }
-    };
-
     /**
      * Reads an abelian group property.
      */
@@ -204,12 +114,10 @@ namespace {
     };
 }
 
-NXMLElementReader* NXMLDim4TriangulationReader::startContentSubElement(
+NXMLElementReader* XMLTriangulationReader<4>::startPropertySubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict&) {
-    if (subTagName == "pentachora")
-        return new Dim4PentachoraReader(tri_);
-    else if (subTagName == "H1")
+    if (subTagName == "H1")
         return new NAbelianGroupPropertyReader(tri_->H1_);
     else if (subTagName == "H2")
         return new NAbelianGroupPropertyReader(tri_->H2_);
@@ -218,11 +126,7 @@ NXMLElementReader* NXMLDim4TriangulationReader::startContentSubElement(
     return new NXMLElementReader();
 }
 
-void NXMLDim4TriangulationReader::endContentSubElement(const std::string&,
-        NXMLElementReader*) {
-}
-
-NXMLPacketReader* Dim4Triangulation::xmlReader(NPacket*,
+NXMLPacketReader* Triangulation<4>::xmlReader(NPacket*,
         NXMLTreeResolver& resolver) {
     return new NXMLDim4TriangulationReader(resolver);
 }

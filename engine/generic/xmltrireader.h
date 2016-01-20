@@ -41,11 +41,7 @@
 #define __XMLTRIREADER_H
 #endif
 
-#include "regina-core.h"
-#include "packet/nxmlpacketreader.h"
-#include "generic/triangulation.h"
-#include "utilities/stringutils.h"
-#include <vector>
+#include "generic/detail/xmltrireader.h"
 
 namespace regina {
 
@@ -58,17 +54,22 @@ namespace regina {
  * An XML packet reader that reads a single <i>dim</i>-dimensional
  * triangulation.
  *
+ * In some dimensions this template is specialised so that it can read in
+ * additional properties of the triangulation.  In order to use these
+ * specialised classes, you will need to include the corresponding headers
+ * (e.g., triangulation/nxmltrireader.h for \a dim = 3).
+ *
  * \ifacespython Not present.
+ *
+ * \tparam dim The dimension of the triangulation being read.
+ * This must be at least 2.
  */
 template <int dim>
-class REGINA_API XMLTriangulationReader : public NXMLPacketReader {
+class REGINA_API XMLTriangulationReader :
+        public detail::XMLTriangulationReaderBase<dim> {
     static_assert(! standardDim(dim),
         "The generic implementation of XMLTriangulationReader<dim> "
         "should not be used for Regina's standard dimensions.");
-
-    private:
-        Triangulation<dim>* tri_;
-            /**< The triangulation currently being read. */
 
     public:
         /**
@@ -79,107 +80,35 @@ class REGINA_API XMLTriangulationReader : public NXMLPacketReader {
          */
         XMLTriangulationReader(NXMLTreeResolver& resolver);
 
-        virtual NPacket* packet() override;
-        virtual NXMLElementReader* startContentSubElement(
+        /**
+         * Returns an XML element reader for the given optional property of a
+         * <i>dim</i>-dimensional triangulation.
+         *
+         * If \a subTagName names an XML element that describes an optional
+         * property of a triangulation (such as \c H1 or \c fundgroup for
+         * 3-manifold triangulations), then this function should return
+         * a corresponding element reader.
+         *
+         * Otherwise this function should return a new NXMLElementReader,
+         * which will cause the XML element to be ignored.
+         *
+         * @param subTagName the name of the XML subelement opening tag.
+         * @param subTagProps the properties associated with the
+         * subelement opening tag.
+         * @return a newly created element reader that will be used to
+         * parse the subelement.  This class should not take care of the
+         * new reader's destruction; that will be done by the parser.
+         */
+        NXMLElementReader* startPropertySubElement(
             const std::string& subTagName,
-            const regina::xml::XMLPropertyDict& subTagProps) override;
-        virtual void endContentSubElement(const std::string& subTagName,
-            NXMLElementReader* subReader) override;
-
-    private:
-        /**
-         * Reads a single top-dimensional simplex with its name and gluings.
-         */
-        class SimplexReader : public NXMLElementReader {
-            private:
-                Triangulation<dim>* tri_;
-                Simplex<dim>* simplex_;
-
-            public:
-                SimplexReader(Triangulation<dim>* tri, size_t whichSimplex) :
-                        tri_(tri), simplex_(tri->simplices()[whichSimplex]) {
-                }
-
-                virtual void startElement(const std::string&,
-                        const regina::xml::XMLPropertyDict& props,
-                        NXMLElementReader*) {
-                    simplex_->setDescription(props.lookup("desc"));
-                }
-
-                virtual void initialChars(const std::string& chars) {
-                    std::vector<std::string> tokens;
-                    if (basicTokenise(back_inserter(tokens), chars) !=
-                            2 * (dim + 1))
-                        return;
-
-                    long simpIndex;
-                    typename NPerm<dim + 1>::Code permCode;
-                    NPerm<dim + 1> perm;
-                    Simplex<dim>* adjSimp;
-                    int adjFacet;
-                    for (int k = 0; k <= dim; ++k) {
-                        if (! valueOf(tokens[2 * k], simpIndex))
-                            continue;
-                        if (! valueOf(tokens[2 * k + 1], permCode))
-                            continue;
-
-                        if (simpIndex < 0 || simpIndex >=
-                                static_cast<long>(tri_->size()))
-                            continue;
-                        if (! NPerm<dim + 1>::isPermCode(permCode))
-                            continue;
-
-                        perm.setPermCode(permCode);
-                        adjSimp = tri_->simplices()[simpIndex];
-                        adjFacet = perm[k];
-                        if (adjSimp == simplex_ && adjFacet == k)
-                            continue;
-                        if (simplex_->adjacentSimplex(k))
-                            continue;
-                        if (adjSimp->adjacentSimplex(adjFacet))
-                            continue;
-
-                        simplex_->joinTo(k, adjSimp, perm);
-                    }
-                }
-        };
-
-        /**
-         * Reads an entire set of top-dimensional simplices with their names
-         * and gluings.
-         */
-        class SimplicesReader : public NXMLElementReader {
-            private:
-                Triangulation<dim>* tri_;
-                size_t readSimplices_;
-
-            public:
-                SimplicesReader(Triangulation<dim>* tri) :
-                        tri_(tri), readSimplices_(0) {
-                }
-
-                virtual void startElement(const std::string& /* tagName */,
-                        const regina::xml::XMLPropertyDict& props,
-                        NXMLElementReader*) {
-                    long nSimplices;
-                    if (valueOf(props.lookup("size"), nSimplices))
-                        for ( ; nSimplices > 0; --nSimplices)
-                            tri_->newSimplex();
-                }
-
-                virtual NXMLElementReader* startSubElement(
-                        const std::string& subTagName,
-                        const regina::xml::XMLPropertyDict&) {
-                    if (subTagName == "simplex") {
-                        if (readSimplices_ < tri_->size())
-                            return new SimplexReader(tri_, readSimplices_++);
-                        else
-                            return new NXMLElementReader();
-                    } else
-                        return new NXMLElementReader();
-                }
-        };
+            const regina::xml::XMLPropertyDict& subTagProps);
 };
+
+// Note that some of our classes are specialised elsewhere.
+// Do not explicitly drag in the specialised headers for now.
+template <> class XMLTriangulationReader<2>;
+template <> class XMLTriangulationReader<3>;
+template <> class XMLTriangulationReader<4>;
 
 /*@}*/
 
@@ -188,26 +117,13 @@ class REGINA_API XMLTriangulationReader : public NXMLPacketReader {
 template <int dim>
 inline XMLTriangulationReader<dim>::XMLTriangulationReader(
         NXMLTreeResolver& resolver) :
-        NXMLPacketReader(resolver), tri_(new Triangulation<dim>()) {
+        detail::XMLTriangulationReaderBase<dim>(resolver) {
 }
 
 template <int dim>
-inline NPacket* XMLTriangulationReader<dim>::packet() {
-    return tri_;
-}
-
-template <int dim>
-NXMLElementReader* XMLTriangulationReader<dim>::startContentSubElement(
-        const std::string& subTagName,
-        const regina::xml::XMLPropertyDict&) {
-    if (subTagName == "simplices")
-        return new SimplicesReader(tri_);
+inline NXMLElementReader* XMLTriangulationReader<dim>::startPropertySubElement(
+        const std::string&, const regina::xml::XMLPropertyDict&) {
     return new NXMLElementReader();
-}
-
-template <int dim>
-inline void XMLTriangulationReader<dim>::endContentSubElement(
-        const std::string&, NXMLElementReader*) {
 }
 
 } // namespace regina

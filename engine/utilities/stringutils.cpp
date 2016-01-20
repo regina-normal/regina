@@ -70,6 +70,20 @@ std::string stripWhitespace(const std::string& str) {
     return str.substr(start, end - start);
 }
 
+bool valueOf(const std::string& str, int8_t& dest) {
+    // TODO: Check errno, and check for overflow when casting back to int.
+    char* endPtr;
+    dest = static_cast<int8_t>(strtol(str.c_str(), &endPtr, 10));
+    return ((! str.empty()) && (*endPtr == 0));
+}
+
+bool valueOf(const std::string& str, uint8_t& dest) {
+    // TODO: Check errno, and check for overflow when casting back to unsigned.
+    char* endPtr;
+    dest = static_cast<uint8_t>(strtoul(str.c_str(), &endPtr, 10));
+    return ((! str.empty()) && (*endPtr == 0));
+}
+
 bool valueOf(const std::string& str, short& dest) {
     // TODO: Check errno, and check for overflow when casting back to int.
     char* endPtr;

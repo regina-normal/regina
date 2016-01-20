@@ -11,5 +11,6 @@ if (${REGINA_INSTALL_DEV})
     isosig-impl.h
     simplex.h
     triangulation.h
+    xmltrireader.h
     DESTINATION ${INCLUDEDIR}/generic/detail COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

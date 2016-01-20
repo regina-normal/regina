@@ -32,10 +32,9 @@
 
 /* end stub */
 
-#include <vector>
 #include "algebra/nxmlalgebrareader.h"
+#include "triangulation/ntriangulation.h"
 #include "triangulation/nxmltrireader.h"
-#include "utilities/stringutils.h"
 
 namespace regina {
 
@@ -43,97 +42,6 @@ namespace regina {
  * A unique namespace containing various specific-task packet readers.
  */
 namespace {
-    /**
-     * Reads a single tetrahedron and its name and gluings.
-     */
-    class NTetrahedronReader : public NXMLElementReader {
-        private:
-            NTriangulation* tri;
-            NTetrahedron* tet;
-
-        public:
-            NTetrahedronReader(NTriangulation* newTri, unsigned whichTet) :
-                    tri(newTri), tet(tri->tetrahedra()[whichTet]) {
-            }
-
-            virtual void startElement(const std::string&,
-                    const regina::xml::XMLPropertyDict& props,
-                    NXMLElementReader*) {
-                tet->setDescription(props.lookup("desc"));
-            }
-
-            virtual void initialChars(const std::string& chars) {
-                std::vector<std::string> tokens;
-                if (basicTokenise(back_inserter(tokens), chars) != 8)
-                    return;
-
-                long tetIndex, permCode;
-                NPerm4 perm;
-                NTetrahedron* adjTet;
-                int adjFace;
-                for (int k = 0; k < 4; k ++) {
-                    if (! valueOf(tokens[2 * k], tetIndex))
-                        continue;
-                    if (! valueOf(tokens[2 * k + 1], permCode))
-                        continue;
-
-                    if (tetIndex < 0 || tetIndex >=
-                            static_cast<int>(tri->size()))
-                        continue;
-                    if (! NPerm4::isPermCode(
-                            static_cast<unsigned char>(permCode)))
-                        continue;
-
-                    perm.setPermCode(static_cast<unsigned char>(permCode));
-                    adjTet = tri->tetrahedra()[tetIndex];
-                    adjFace = perm[k];
-                    if (adjTet == tet && adjFace == k)
-                        continue;
-                    if (tet->adjacentTetrahedron(k))
-                        continue;
-                    if (adjTet->adjacentTetrahedron(adjFace))
-                        continue;
-
-                    tet->joinTo(k, adjTet, perm);
-                }
-            }
-    };
-
-    /**
-     * Reads an entire set of tetrahedra with their names and gluings.
-     */
-    class NTetrahedraReader : public NXMLElementReader {
-        private:
-            NTriangulation* tri;
-            unsigned readTets;
-
-        public:
-            NTetrahedraReader(NTriangulation* newTri) : tri(newTri),
-                    readTets(0) {
-            }
-
-            virtual void startElement(const std::string& /* tagName */,
-                    const regina::xml::XMLPropertyDict& props,
-                    NXMLElementReader*) {
-                long nTets;
-                if (valueOf(props.lookup("ntet"), nTets))
-                    for ( ; nTets > 0; nTets--)
-                        tri->newTetrahedron();
-            }
-
-            virtual NXMLElementReader* startSubElement(
-                    const std::string& subTagName,
-                    const regina::xml::XMLPropertyDict&) {
-                if (subTagName == "tet") {
-                    if (readTets < tri->size())
-                        return new NTetrahedronReader(tri, readTets++);
-                    else
-                        return new NXMLElementReader();
-                } else
-                    return new NXMLElementReader();
-            }
-    };
-
     /**
      * Reads an abelian group property.
      */
@@ -206,61 +114,54 @@ namespace {
     };
 }
 
-NXMLElementReader* NXMLTriangulationReader::startContentSubElement(
+NXMLElementReader* XMLTriangulationReader<3>::startPropertySubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
     // We don't read boundary component properties since they're stored
-    // across multiple property tags and they're easy to calculate
-    // anyway.
-    if (subTagName == "tetrahedra")
-        return new NTetrahedraReader(tri);
-    else if (subTagName == "zeroeff") {
+    // across multiple property tags and they're easy to calculate anyway.
+    if (subTagName == "zeroeff") {
         bool b;
         if (valueOf(props.lookup("value"), b))
-            tri->zeroEfficient_ = b;
+            tri_->zeroEfficient_ = b;
     } else if (subTagName == "splitsfce") {
         bool b;
         if (valueOf(props.lookup("value"), b))
-            tri->splittingSurface_ = b;
+            tri_->splittingSurface_ = b;
     } else if (subTagName == "threesphere") {
         bool b;
         if (valueOf(props.lookup("value"), b))
-            tri->threeSphere_ = b;
+            tri_->threeSphere_ = b;
     } else if (subTagName == "threeball") {
         bool b;
         if (valueOf(props.lookup("value"), b))
-            tri->threeBall_ = b;
+            tri_->threeBall_ = b;
     } else if (subTagName == "solidtorus") {
         bool b;
         if (valueOf(props.lookup("value"), b))
-            tri->solidTorus_ = b;
+            tri_->solidTorus_ = b;
     } else if (subTagName == "irreducible") {
         bool b;
         if (valueOf(props.lookup("value"), b))
-            tri->irreducible_ = b;
+            tri_->irreducible_ = b;
     } else if (subTagName == "compressingdisc") {
         bool b;
         if (valueOf(props.lookup("compressingdisc"), b))
-            tri->compressingDisc_ = b;
+            tri_->compressingDisc_ = b;
     } else if (subTagName == "haken") {
         bool b;
         if (valueOf(props.lookup("haken"), b))
-            tri->haken_ = b;
+            tri_->haken_ = b;
     } else if (subTagName == "H1")
-        return new NAbelianGroupPropertyReader(tri->H1_);
+        return new NAbelianGroupPropertyReader(tri_->H1_);
     else if (subTagName == "H1Rel")
-        return new NAbelianGroupPropertyReader(tri->H1Rel_);
+        return new NAbelianGroupPropertyReader(tri_->H1Rel_);
     else if (subTagName == "H1Bdry")
-        return new NAbelianGroupPropertyReader(tri->H1Bdry_);
+        return new NAbelianGroupPropertyReader(tri_->H1Bdry_);
     else if (subTagName == "H2")
-        return new NAbelianGroupPropertyReader(tri->H2_);
+        return new NAbelianGroupPropertyReader(tri_->H2_);
     else if (subTagName == "fundgroup")
-        return new NGroupPresentationPropertyReader(tri->fundamentalGroup_);
+        return new NGroupPresentationPropertyReader(tri_->fundamentalGroup_);
     return new NXMLElementReader();
-}
-
-void NXMLTriangulationReader::endContentSubElement(const std::string&,
-        NXMLElementReader*) {
 }
 
 NXMLPacketReader* NTriangulation::xmlReader(NPacket*,

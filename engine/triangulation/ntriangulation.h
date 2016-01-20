@@ -71,12 +71,12 @@ class NBoundaryComponent;
 class NGroupPresentation;
 class NNormalSurface;
 class NXMLPacketReader;
-class NXMLTriangulationReader;
 
 template <int> class Component;
 template <int> class Isomorphism;
 template <int> class SimplexBase;
 template <int> class Simplex;
+template <int> class XMLTriangulationReader;
 template <int, int> class Face;
 typedef Isomorphism<3> NIsomorphism;
 typedef Simplex<3> NTetrahedron;
@@ -3243,7 +3243,7 @@ class REGINA_API Triangulation<3> :
     friend class regina::Simplex<3>;
     friend class regina::detail::SimplexBase<3>;
     friend class regina::detail::TriangulationBase<3>;
-    friend class regina::NXMLTriangulationReader;
+    friend class regina::XMLTriangulationReader<3>;
 };
 
 /**

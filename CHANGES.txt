@@ -585,6 +585,8 @@ Version 5.0  [ (under development) ]
         Class NXML...:
             - Renamed routines of the form getFoo() to foo() across all of
               these internal XML I/O classes, removing the old names completely.
+            - NXMLDim2TriangulationReader and NXMLTriangulationReader are now
+              just typedefs for the new class XMLTriangulationReader<dim>.
         Class Output, ShortOutput:
             - New classes that provide consistent APIs for objects to provide
               short and detailed string output.  These have been introduced as
@@ -614,8 +616,17 @@ Version 5.0  [ (under development) ]
               whereas Triangulation<dim> is specialised for dimensions 2, 3, 4.
             - The old class names Dim2Triangulation and NTriangulation have
               been kept as typedefs for convenience.
-        Class XMLTriReader:
-            - New I/O class for the new generic Triangulation<dim> packet type.
+        Class XMLTriangulationReader, XMLTriangulationReaderBase,
+                XMLTriangulationTags, XMLSimplexReader, XMLSimplicesReader:
+            - XMLTriangulationReader<dim> is now a generic class that replaces
+              the old NXMLDim2TriangulationReader and NXMLTriangulationReader.
+              XMLTriangulationReaderBase<...>, XMLTriangulationTags<...>,
+              XMLSimplexReader<...> and XMLSimplicesReader<...> provide the
+              implementation details, including functionality common to all
+              dimensions, and XMLTriangulationReader<dim> itself is
+              specialised for dimensions 2, 3 and 4.
+            - The old class names NXMLDim2TriangulationReader and
+              NXMLTriangulationReader have been kept as typedefs.
         Routine binomSmall():
             - New constant-time routine to compute (n choose k) for small n.
         Routine bitsRequired():
@@ -645,7 +656,7 @@ Version 5.0  [ (under development) ]
         Routine readIsoSigList():
             - Now supports both 3-manifold and 4-manifold triangulations.
         Routine valueOf():
-            - Now overloaded to support short and long long integers also.
+            - Now overloaded to support 8-bit, short and long long integers.
         Global arrays edgeNumber[][], edgeStart[], edgeEnd[]:
             - This long-deprecated global arrays have now been removed, and
               the corresponding static arrays in NEdge are now deprecated.

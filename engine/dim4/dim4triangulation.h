@@ -61,13 +61,13 @@
 namespace regina {
 
 class Dim4BoundaryComponent;
-class NXMLDim4TriangulationReader;
 class NXMLPacketReader;
 
 template <int> class Component;
 template <int> class Isomorphism;
 template <int> class SimplexBase;
 template <int> class Simplex;
+template <int> class XMLTriangulationReader;
 template <int, int> class Face;
 typedef Component<4> Dim4Component;
 typedef Isomorphism<4> Dim4Isomorphism;
@@ -1110,7 +1110,7 @@ class REGINA_API Triangulation<4> :
     friend class regina::Simplex<4>;
     friend class regina::detail::SimplexBase<4>;
     friend class regina::detail::TriangulationBase<4>;
-    friend class regina::NXMLDim4TriangulationReader;
+    friend class regina::XMLTriangulationReader<4>;
 };
 
 /**

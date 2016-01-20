@@ -58,7 +58,6 @@
 namespace regina {
 
 class Dim2BoundaryComponent;
-class NXMLDim2TriangulationReader;
 class NXMLPacketReader;
 
 template <int> class Component;
@@ -502,7 +501,6 @@ class REGINA_API Triangulation<2> :
     friend class regina::Simplex<2>;
     friend class regina::detail::SimplexBase<2>;
     friend class regina::detail::TriangulationBase<2>;
-    friend class regina::NXMLDim2TriangulationReader;
 };
 
 /**
