@@ -67,4 +67,5 @@ def dump(tree):
 # Load and dump some files created by different versions of regina.
 dump(regina.readFileMagic(testpath + '/file1.rga'))
 dump(regina.readFileMagic(testpath + '/file2.rga'))
+dump(regina.readFileMagic(testpath + '/file3.rga'))
 
