@@ -790,7 +790,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             unsigned long i, j;
             for (i = 0; i < tri->size(); ++i)
                 for (j = 0; j < 4; ++j)
-                    if (! tri->getTetrahedron(i)->adjacentTetrahedron(j))
+                    if (! tri->tetrahedron(i)->adjacentTetrahedron(j))
                         ++found;
 
             if (found != tri->countBoundaryTriangles()) {
@@ -808,7 +808,7 @@ class NTriangulationTest : public TriangulationTest<3> {
 
                 for (i = 0; i < comp->size(); ++i)
                     for (j = 0; j < 4; ++j)
-                        if (! comp->getTetrahedron(i)->adjacentTetrahedron(j))
+                        if (! comp->tetrahedron(i)->adjacentTetrahedron(j))
                             ++found;
 
                 if (found != comp->countBoundaryTriangles()) {
@@ -845,7 +845,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NVertex* v = tri.getVertex(vertex);
+            NVertex* v = tri.vertex(vertex);
 
             if (v->link() != NVertex::DISC) {
                 std::ostringstream msg;
@@ -902,7 +902,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NVertex* v = tri.getVertex(vertex);
+            NVertex* v = tri.vertex(vertex);
 
             if (v->link() != NVertex::SPHERE) {
                 std::ostringstream msg;
@@ -959,7 +959,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NVertex* v = tri.getVertex(vertex);
+            NVertex* v = tri.vertex(vertex);
 
             if (v->link() != NVertex::TORUS) {
                 std::ostringstream msg;
@@ -1016,7 +1016,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NVertex* v = tri.getVertex(vertex);
+            NVertex* v = tri.vertex(vertex);
 
             if (v->link() != NVertex::KLEIN_BOTTLE) {
                 std::ostringstream msg;
@@ -1073,7 +1073,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NVertex* v = tri.getVertex(vertex);
+            NVertex* v = tri.vertex(vertex);
 
             if (v->link() != NVertex::NON_STANDARD_CUSP) {
                 std::ostringstream msg;
@@ -1130,7 +1130,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NVertex* v = tri.getVertex(vertex);
+            NVertex* v = tri.vertex(vertex);
 
             if (v->link() != NVertex::NON_STANDARD_CUSP) {
                 std::ostringstream msg;
@@ -1187,7 +1187,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NVertex* v = tri.getVertex(vertex);
+            NVertex* v = tri.vertex(vertex);
 
             if (v->link() != NVertex::NON_STANDARD_BDRY) {
                 std::ostringstream msg;
@@ -1244,7 +1244,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NVertex* v = tri.getVertex(vertex);
+            NVertex* v = tri.vertex(vertex);
 
             if (v->link() != NVertex::NON_STANDARD_BDRY) {
                 std::ostringstream msg;
@@ -1445,7 +1445,7 @@ class NTriangulationTest : public TriangulationTest<3> {
 
         static void verifyVertexLinks(NTriangulation* tri) {
             for (unsigned long i = 0; i < tri->countVertices(); ++i) {
-                NVertex* v = tri->getVertex(i);
+                NVertex* v = tri->vertex(i);
                 NIsomorphism* iso;
 
                 const Dim2Triangulation* link = v->buildLink();
@@ -1527,18 +1527,18 @@ class NTriangulationTest : public TriangulationTest<3> {
                 const regina::Dim2Triangle *t, *adj;
                 unsigned vNum;
                 for (j = 0; j < v->degree(); ++j) {
-                    tet = tri->getTetrahedron(iso->tetImage(j));
+                    tet = tri->tetrahedron(iso->tetImage(j));
                     perm = iso->facePerm(j);
                     vNum = perm[3];
-                    if (tet->getVertex(vNum) != v) {
+                    if (tet->vertex(vNum) != v) {
                         std::ostringstream msg;
                         msg << tri->label() << ", vertex " << i << ": "
                             << "link does not map 3 -> vertex correctly.";
                         CPPUNIT_FAIL(msg.str());
                     }
-                    if (perm[0] != tet->getTriangleMapping(vNum)[0] ||
-                            perm[1] != tet->getTriangleMapping(vNum)[1] ||
-                            perm[2] != tet->getTriangleMapping(vNum)[2]) {
+                    if (perm[0] != tet->triangleMapping(vNum)[0] ||
+                            perm[1] != tet->triangleMapping(vNum)[1] ||
+                            perm[2] != tet->triangleMapping(vNum)[2]) {
                         std::ostringstream msg;
                         msg << tri->label() << ", vertex " << i << ": "
                             << "link does not map 0,1,2 -> opposite "
@@ -1546,7 +1546,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                         CPPUNIT_FAIL(msg.str());
                     }
                     for (k = 0; k < 3; ++k) {
-                        t = link->getTriangle(j);
+                        t = link->triangle(j);
                         adj = t->adjacentTriangle(k);
                         if (adj) {
                             if (! tet->adjacentTetrahedron(perm[k])) {
@@ -1556,7 +1556,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                                     << "link has extra adjacent triangle.";
                                 CPPUNIT_FAIL(msg.str());
                             } else if (tet->adjacentTetrahedron(perm[k]) !=
-                                    tri->getTetrahedron(iso->tetImage(
+                                    tri->tetrahedron(iso->tetImage(
                                     link->triangleIndex(adj)))) {
                                 std::ostringstream msg;
                                 msg << tri->label()
@@ -3255,8 +3255,8 @@ class NTriangulationTest : public TriangulationTest<3> {
 
             // Are there any invalid vertices remaining?
             for (NTriangulation::VertexIterator vit =
-                    finite.getVertices().begin(); vit !=
-                    finite.getVertices().end(); ++vit)
+                    finite.vertices().begin(); vit !=
+                    finite.vertices().end(); ++vit)
                 if ((*vit)->isBoundary() && ! (*vit)->isStandard()) {
                     std::ostringstream msg;
                     msg << tri->label()
@@ -3268,12 +3268,12 @@ class NTriangulationTest : public TriangulationTest<3> {
             // Make sure the invalid edges are left alone.
             unsigned oldInvEdges = 0, newInvEdges = 0;
             NTriangulation::EdgeIterator eit;
-            for (eit = tri->getEdges().begin();
-                    eit != tri->getEdges().end(); ++eit)
+            for (eit = tri->edges().begin();
+                    eit != tri->edges().end(); ++eit)
                 if (! (*eit)->isValid())
                     ++oldInvEdges;
-            for (eit = finite.getEdges().begin();
-                    eit != finite.getEdges().end(); ++eit)
+            for (eit = finite.edges().begin();
+                    eit != finite.edges().end(); ++eit)
                 if (! (*eit)->isValid())
                     ++newInvEdges;
             if (oldInvEdges != newInvEdges) {
@@ -3343,12 +3343,12 @@ class NTriangulationTest : public TriangulationTest<3> {
             // Make sure the invalid edges are left alone.
             unsigned oldInvEdges = 0, newInvEdges = 0;
             NTriangulation::EdgeIterator eit;
-            for (eit = tri->getEdges().begin();
-                    eit != tri->getEdges().end(); ++eit)
+            for (eit = tri->edges().begin();
+                    eit != tri->edges().end(); ++eit)
                 if (! (*eit)->isValid())
                     ++oldInvEdges;
-            for (eit = ideal.getEdges().begin();
-                    eit != ideal.getEdges().end(); ++eit)
+            for (eit = ideal.edges().begin();
+                    eit != ideal.edges().end(); ++eit)
                 if (! (*eit)->isValid())
                     ++newInvEdges;
             if (oldInvEdges != newInvEdges) {
@@ -3408,19 +3408,19 @@ class NTriangulationTest : public TriangulationTest<3> {
                 tet->joinTo(2, tet, NPerm4(2, 3));
 
                 NTriangulation tmp0(snap);
-                tmp0.drillEdge(tmp0.getEdge(0));
+                tmp0.drillEdge(tmp0.edge(0));
                 if (! tmp0.isSolidTorus())
                     CPPUNIT_FAIL("Snapped 3-sphere: drilling edge 0 "
                         "does not give a solid torus.");
 
                 NTriangulation tmp1(snap);
-                tmp1.drillEdge(tmp1.getEdge(1));
+                tmp1.drillEdge(tmp1.edge(1));
                 if (! tmp1.isBall())
                     CPPUNIT_FAIL("Snapped 3-sphere: drilling edge 1 "
                         "does not give a 3-ball.");
 
                 NTriangulation tmp2(snap);
-                tmp2.drillEdge(tmp2.getEdge(2));
+                tmp2.drillEdge(tmp2.edge(2));
                 if (! tmp2.isSolidTorus())
                     CPPUNIT_FAIL("Snapped 3-sphere: drilling edge 2 "
                         "does not give a solid torus.");
@@ -3436,7 +3436,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 tet->joinTo(2, tet, NPerm4(2, 3));
 
                 NTriangulation tmp0(layer);
-                tmp0.drillEdge(tmp0.getEdge(0));
+                tmp0.drillEdge(tmp0.edge(0));
                 if (! (tmp0.isValid() && (! tmp0.isIdeal()) &&
                         (tmp0.countBoundaryComponents() == 1) &&
                         (tmp0.homology().isZ()) &&
@@ -3447,7 +3447,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                         "does not give a non-trivial knot complement.");
 
                 NTriangulation tmp1(layer);
-                tmp1.drillEdge(tmp1.getEdge(1));
+                tmp1.drillEdge(tmp1.edge(1));
                 if (! tmp1.isSolidTorus())
                     CPPUNIT_FAIL("Layered 3-sphere: drilling edge 1 "
                         "does not give a solid torus.");
@@ -3461,19 +3461,19 @@ class NTriangulationTest : public TriangulationTest<3> {
                 lst.insertLayeredSolidTorus(1, 2);
 
                 NTriangulation tmp0(lst);
-                tmp0.drillEdge(tmp0.getEdge(0));
+                tmp0.drillEdge(tmp0.edge(0));
                 if (! tmp0.isSolidTorus())
                     CPPUNIT_FAIL("LST(1,2,3): drilling edge 0 "
                         "does not give a solid torus.");
 
                 NTriangulation tmp1(lst);
-                tmp1.drillEdge(tmp1.getEdge(1));
+                tmp1.drillEdge(tmp1.edge(1));
                 if (! tmp1.isSolidTorus())
                     CPPUNIT_FAIL("LST(1,2,3): drilling edge 1 "
                         "does not give a solid torus.");
 
                 NTriangulation tmp2(lst);
-                tmp2.drillEdge(tmp2.getEdge(2));
+                tmp2.drillEdge(tmp2.edge(2));
                 if (! tmp2.isSolidTorus())
                     CPPUNIT_FAIL("LST(1,2,3): drilling edge 2 "
                         "does not give a solid torus.");
@@ -3490,7 +3490,7 @@ class NTriangulationTest : public TriangulationTest<3> {
 
                 // The internal edge joins vertices 2-3.
                 NTriangulation tmp(ball);
-                tmp.drillEdge(tmp.getTetrahedron(0)->getEdge(5));
+                tmp.drillEdge(tmp.tetrahedron(0)->edge(5));
                 if (! tmp.isSolidTorus())
                     CPPUNIT_FAIL("2-tetrahedron ball: drilling the "
                         "internal edge does not give a solid torus.");
@@ -3506,11 +3506,11 @@ class NTriangulationTest : public TriangulationTest<3> {
                 NTriangulation punc(*tri);
                 NTetrahedron* origTet;
                 if (i == n) {
-                    origTet = tri->getTetrahedron(0);
+                    origTet = tri->tetrahedron(0);
                     punc.puncture();
                 } else {
-                    origTet = tri->getTetrahedron(i);
-                    punc.puncture(punc.getTetrahedron(i));
+                    origTet = tri->tetrahedron(i);
+                    punc.puncture(punc.tetrahedron(i));
                 }
 
                 if (punc.size() != n + 6) {
@@ -3586,10 +3586,10 @@ class NTriangulationTest : public TriangulationTest<3> {
                 }
 
                 unsigned long nPunc = punc.size();
-                NBoundaryComponent* bc = punc.getTetrahedron(nPunc - 1)->
-                    getTriangle(0)->boundaryComponent();
-                if (bc == 0 || bc != punc.getTetrahedron(nPunc - 2)->
-                        getTriangle(0)->boundaryComponent()) {
+                NBoundaryComponent* bc = punc.tetrahedron(nPunc - 1)->
+                    triangle(0)->boundaryComponent();
+                if (bc == 0 || bc != punc.tetrahedron(nPunc - 2)->
+                        triangle(0)->boundaryComponent()) {
                     std::ostringstream msg;
                     msg << tri->label() << ", tet " << i << ": "
                         << "puncture gives wrong boundary triangles.";
@@ -3607,12 +3607,12 @@ class NTriangulationTest : public TriangulationTest<3> {
                         << "puncture gives wrong S^2 Euler characteristic.";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if (punc.getTetrahedron(nPunc - 1)->getVertex(1) !=
-                        punc.getTetrahedron(nPunc - 2)->getVertex(1) ||
-                        punc.getTetrahedron(nPunc - 1)->getVertex(2) !=
-                        punc.getTetrahedron(nPunc - 2)->getVertex(3) ||
-                        punc.getTetrahedron(nPunc - 1)->getVertex(3) !=
-                        punc.getTetrahedron(nPunc - 2)->getVertex(2)) {
+                if (punc.tetrahedron(nPunc - 1)->vertex(1) !=
+                        punc.tetrahedron(nPunc - 2)->vertex(1) ||
+                        punc.tetrahedron(nPunc - 1)->vertex(2) !=
+                        punc.tetrahedron(nPunc - 2)->vertex(3) ||
+                        punc.tetrahedron(nPunc - 1)->vertex(3) !=
+                        punc.tetrahedron(nPunc - 2)->vertex(2)) {
                     std::ostringstream msg;
                     msg << tri->label() << ", tet " << i << ": "
                         << "puncture gives wrong S^2 vertex labels.";
@@ -3910,7 +3910,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             if (tri->size() != 1)
                 CPPUNIT_FAIL("Custom invalid triangulation did not simplify "
                     "to 1 tetrahedron.");
-            if (tri->isValid() || tri->getEdge(0)->isValid())
+            if (tri->isValid() || tri->edge(0)->isValid())
                 CPPUNIT_FAIL("Custom invalid triangulation did not simplify "
                     "to an invalid triangulation with an invalid edge.");
             delete tri;
@@ -4074,7 +4074,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 t.hasTwoSphereBoundaryComponents());
 
             // Glue the tetrahedron to itself to form a solid torus.
-            t.getTetrahedron(0)->joinTo(0, t.getTetrahedron(0),
+            t.tetrahedron(0)->joinTo(0, t.tetrahedron(0),
                 NPerm4(1, 2, 3, 0));
 
             verifyGroup(t.homology(),
@@ -4083,7 +4083,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 "Boundary H1(LST(1,2,3))", 2);
 
             // Glue the remaining two faces in a non-orientable fashion.
-            t.getTetrahedron(0)->joinTo(2, t.getTetrahedron(0),
+            t.tetrahedron(0)->joinTo(2, t.tetrahedron(0),
                 NPerm4(1, 0, 3, 2));
 
             CPPUNIT_ASSERT_MESSAGE("A bad 1-tetrahedron triangulation "
@@ -4096,7 +4096,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             unsigned long n = tri->size();
             for (unsigned long i = 0; i < n; ++i) {
                 NTriangulation large(*tri);
-                large.oneFourMove(large.getTetrahedron(i));
+                large.oneFourMove(large.tetrahedron(i));
 
                 if (large.size() != n + 3) {
                     std::ostringstream msg;
@@ -4166,7 +4166,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 }
 
                 bool res =
-                    large.collapseEdge(large.getTetrahedron(n + 2)->getEdge(
+                    large.collapseEdge(large.tetrahedron(n + 2)->edge(
                     regina::NEdge::edgeNumber[0][3]), true, true);
 
                 if (! res) {

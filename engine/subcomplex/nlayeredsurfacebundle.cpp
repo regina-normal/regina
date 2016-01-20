@@ -133,16 +133,16 @@ NLayeredTorusBundle* NLayeredTorusBundle::hunt(NTriangulation* tri,
         // Apply the layering to the lower boundary and see if it
         // matches nicely with the upper.
         NLayering layering(
-            tri->getTetrahedron((*it)->tetImage(core.bdryTet(1,0))),
+            tri->tetrahedron((*it)->tetImage(core.bdryTet(1,0))),
             (*it)->facePerm(core.bdryTet(1,0)) * core.bdryRoles(1,0),
-            tri->getTetrahedron((*it)->tetImage(core.bdryTet(1,1))),
+            tri->tetrahedron((*it)->tetImage(core.bdryTet(1,1))),
             (*it)->facePerm(core.bdryTet(1,1)) * core.bdryRoles(1,1));
         layering.extend();
 
         if (layering.matchesTop(
-                tri->getTetrahedron((*it)->tetImage(core.bdryTet(0,0))),
+                tri->tetrahedron((*it)->tetImage(core.bdryTet(0,0))),
                 (*it)->facePerm(core.bdryTet(0,0)) * core.bdryRoles(0,0),
-                tri->getTetrahedron((*it)->tetImage(core.bdryTet(0,1))),
+                tri->tetrahedron((*it)->tetImage(core.bdryTet(0,1))),
                 (*it)->facePerm(core.bdryTet(0,1)) * core.bdryRoles(0,1),
                 matchReln)) {
             // It's a match!

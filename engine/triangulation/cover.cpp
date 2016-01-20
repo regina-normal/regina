@@ -48,7 +48,7 @@ void NTriangulation::makeDoubleCover() {
     NTetrahedron** upper = new NTetrahedron*[sheetSize];
     unsigned long i;
     for (i = 0; i < sheetSize; i++)
-        upper[i] = newTetrahedron(simplices_[i]->getDescription());
+        upper[i] = newTetrahedron(simplices_[i]->description());
 
     // Reset each tetrahedron orientation.
     TetrahedronIterator tit = simplices_.begin();

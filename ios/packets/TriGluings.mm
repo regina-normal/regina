@@ -177,7 +177,7 @@
         editField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
         editField.textAlignment = NSTextAlignmentRight;
     } else {
-        editField.text = @(self.packet->getSimplex(simplex)->getDescription().c_str());
+        editField.text = @(self.packet->getSimplex(simplex)->description().c_str());
         editField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
         editField.keyboardType = UIKeyboardTypeDefault;
         editField.textAlignment = NSTextAlignmentLeft;
@@ -636,7 +636,7 @@ cleanUpGluing:
     
     TriGluingCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Tetrahedron" forIndexPath:indexPath];
     regina::NTetrahedron* t = self.packet->getSimplex(indexPath.row - 1);
-    cell.index.text = [NSString stringWithFormat:@"%zd. %s", indexPath.row - 1, t->getDescription().c_str()];
+    cell.index.text = [NSString stringWithFormat:@"%zd. %s", indexPath.row - 1, t->description().c_str()];
     cell.face0.text = [TriGluings destStringFromFacet:0 dest:t->adjacentSimplex(0) gluing:t->adjacentGluing(0)];
     cell.face1.text = [TriGluings destStringFromFacet:1 dest:t->adjacentSimplex(1) gluing:t->adjacentGluing(1)];
     cell.face2.text = [TriGluings destStringFromFacet:2 dest:t->adjacentSimplex(2) gluing:t->adjacentGluing(2)];

@@ -33,22 +33,22 @@
 
 t = NExampleTriangulation.weberSeifert()
 print t.detail()
-for v in t.getVertices():
+for v in t.vertices():
 	print 'Vertex', v.index()
 	print v.detail()
-for e in t.getEdges():
+for e in t.edges():
 	print 'Edge', e.index()
 	print e.detail()
-for f in t.getTriangles():
+for f in t.triangles():
 	print 'Triangle', f.index()
 	print f.detail()
 
 t = Dim2ExampleTriangulation.nonOrientable(3, 1)
 print t.detail()
-for v in t.getVertices():
+for v in t.vertices():
 	print 'Vertex', v.index()
 	print v.detail()
-for e in t.getEdges():
+for e in t.edges():
 	print 'Edge', e.index()
 	print e.detail()
 

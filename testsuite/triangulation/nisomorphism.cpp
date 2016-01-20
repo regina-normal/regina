@@ -289,7 +289,7 @@ class NIsomorphismTest : public CppUnit::TestFixture {
 
             // Unglue a face of t2.
             if (! standalone) {
-                t2.getTetrahedron(0)->unjoin(2);
+                t2.tetrahedron(0)->unjoin(2);
                 if (! t2.isContainedIn(t).get()) {
                     std::ostringstream msg;
                     msg << "Unjoining a face of " << name <<

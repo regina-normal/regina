@@ -50,12 +50,12 @@ def dump(tree):
 	while p != None:
 		print '************************************************************'
 		print '*'
-		print '* Label: ' + p.getPacketLabel()
+		print '* Label: ' + p.label()
 		print '* Type: ' + p.getPacketTypeName()
 		if p.getTreeParent() == None:
 			print '* Parent: (none)'
 		else:
-			print '* Parent: ' + p.getTreeParent().getPacketLabel()
+			print '* Parent: ' + p.getTreeParent().label()
 		print '*'
 		print '************************************************************'
 		print

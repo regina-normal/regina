@@ -81,14 +81,14 @@ Dim2Triangulation* NVertex::buildLinkDetail(bool labels,
         tTri = ans->newTriangle();
         if (labels) {
             std::stringstream s;
-            s << it->getTetrahedron()->markedIndex() <<
-                " (" << it->getVertex() << ')';
+            s << it->tetrahedron()->markedIndex() <<
+                " (" << it->vertex() << ')';
             tTri->setDescription(s.str());
         }
         if (inclusion) {
-            (*inclusion)->tetImage(i) = it->getTetrahedron()->markedIndex();
-            (*inclusion)->facetPerm(i) = it->getTetrahedron()->
-                getTriangleMapping(it->getVertex());
+            (*inclusion)->tetImage(i) = it->tetrahedron()->markedIndex();
+            (*inclusion)->facetPerm(i) = it->tetrahedron()->
+                triangleMapping(it->vertex());
         }
     }
 
@@ -98,8 +98,8 @@ Dim2Triangulation* NVertex::buildLinkDetail(bool labels,
     int adjIndex;
     int adjVertex;
     for (it = begin(), i = 0; it != end(); ++it, ++i) {
-        tet = it->getTetrahedron();
-        v = it->getVertex();
+        tet = it->tetrahedron();
+        v = it->vertex();
 
         for (exitTri = 0; exitTri < 4; ++exitTri) {
             if (exitTri == v)
@@ -109,8 +109,8 @@ Dim2Triangulation* NVertex::buildLinkDetail(bool labels,
             if (! adj)
                 continue;
 
-            edgeInLink = tet->getTriangleMapping(v).preImageOf(exitTri);
-            if (ans->getTriangle(i)->adjacentTriangle(edgeInLink)) {
+            edgeInLink = tet->triangleMapping(v).preImageOf(exitTri);
+            if (ans->triangle(i)->adjacentTriangle(edgeInLink)) {
                 // We've already made this gluing in the vertex link
                 // from the other side.
                 continue;
@@ -125,14 +125,14 @@ Dim2Triangulation* NVertex::buildLinkDetail(bool labels,
             // made linear(ish) with the right data structure and/or algorithm.
             for (adjIt = begin(), adjIndex = 0;
                     adjIt != end(); ++adjIt, ++adjIndex)
-                if (adjIt->getTetrahedron() == adj &&
-                        adjIt->getVertex() == adjVertex)
+                if (adjIt->tetrahedron() == adj &&
+                        adjIt->vertex() == adjVertex)
                     break; // Sets adjIndex to the right value.
 
-            ans->getTriangle(i)->joinTo(edgeInLink, ans->getTriangle(adjIndex),
-                perm4to3(adj->getTriangleMapping(adjVertex).inverse() *
+            ans->triangle(i)->joinTo(edgeInLink, ans->triangle(adjIndex),
+                perm4to3(adj->triangleMapping(adjVertex).inverse() *
                     tet->adjacentGluing(exitTri) *
-                    tet->getTriangleMapping(v)));
+                    tet->triangleMapping(v)));
         }
     }
 

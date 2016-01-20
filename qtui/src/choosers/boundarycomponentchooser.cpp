@@ -86,7 +86,7 @@ void BoundaryComponentChooser::select(regina::NBoundaryComponent* option) {
 QString BoundaryComponentChooser::description(
         regina::NBoundaryComponent* option) {
     if (option->countTriangles() == 0) {
-        regina::NVertex* v = option->getVertex(0);
+        regina::NVertex* v = option->vertex(0);
         QString desc;
         if (v->degree() == 1)
             desc = trUtf8("Ideal bdry comp %1 — Vertex %2 — %3 (%4)");
@@ -98,8 +98,8 @@ QString BoundaryComponentChooser::description(
                 .arg(v->front().vertex());
     } else {
         // The number of triangles is always even, and therefore always >1.
-        const regina::NTriangleEmbedding& f0 = option->getTriangle(0)->front();
-        const regina::NTriangleEmbedding& f1 = option->getTriangle(1)->front();
+        const regina::NTriangleEmbedding& f0 = option->triangle(0)->front();
+        const regina::NTriangleEmbedding& f1 = option->triangle(1)->front();
         QString desc;
         if (option->countTriangles() == 2)
             desc = trUtf8("Real bdry comp %1 — Triangles %2 (%3), %4 (%5)");

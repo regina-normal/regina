@@ -149,7 +149,7 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(const NTriangulation& tri, bool) :
     tData.tetrahedron_data = new regina::snappea::TetrahedronData[
         tData.num_tetrahedra];
     int tet, face, i, j, k, l;
-    NTriangulation::TetrahedronIterator it = tri.getTetrahedra().begin();
+    NTriangulation::TetrahedronIterator it = tri.tetrahedra().begin();
     for (tet = 0; tet < tData.num_tetrahedra; tet++) {
         for (face = 0; face < 4; face++) {
             tData.tetrahedron_data[tet].neighbor_index[face] = static_cast<int>(
@@ -647,7 +647,7 @@ bool NSnapPeaTriangulation::verifyTriangulation(const NTriangulation& tri)
         return false;
     }
 
-    NTriangulation::TetrahedronIterator it = tri.getTetrahedra().begin();
+    NTriangulation::TetrahedronIterator it = tri.tetrahedra().begin();
     for (tet = 0; tet < tData->num_tetrahedra; tet++) {
         for (face = 0; face < 4; face++) {
             if (tData->tetrahedron_data[tet].neighbor_index[face] !=
@@ -847,7 +847,7 @@ void NSnapPeaTriangulation::sync() {
                 for (j = 0; j < 4; ++j) {
                     c = stet->cusp[j];
                     if (cusp_[c->index].vertex_ == 0)
-                        cusp_[c->index].vertex_ = getTetrahedron(i)->getVertex(j);
+                        cusp_[c->index].vertex_ = tetrahedron(i)->vertex(j);
                 }
                 stet = stet->next;
             }

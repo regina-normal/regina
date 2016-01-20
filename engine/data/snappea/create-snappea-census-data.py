@@ -36,7 +36,7 @@ def encode(i):
 
 def grouprep(g):
     ans = encode(g.rank())
-    for i in range(g.getNumberOfInvariantFactors()):
+    for i in range(g.countInvariantFactors()):
         ans = ans + encode(g.invariantFactor(i).longValue())
     return ans
 
@@ -45,12 +45,12 @@ def process(tri):
     if dehydration == '':
         print 'ERROR: No dehydration'
         sys.exit(1)
-    print dehydration + ' ' + grouprep(tri.getHomologyH1())
+    print dehydration + ' ' + grouprep(tri.homology())
     sys.stdout.flush()
 
 p = tree
 while p != None:
-    if p.getPacketType() == regina.NTriangulation.packetType:
+    if p.type() == regina.NTriangulation.packetType:
         process(p)
     p = p.nextTreePacket()
 

@@ -71,13 +71,13 @@ bool detail::TriangulationBase<3>::compatible(
         std::map<unsigned long, unsigned long>::iterator mapIt;
 
         {
-            for (auto e : me->getEdges()) {
+            for (auto e : me->edges()) {
                 // Find this degree, or insert it with frequency 0 if it's
                 // not already present.
                 mapIt = map1.insert(std::make_pair(e->degree(), 0)).first;
                 (*mapIt).second++;
             }
-            for (auto e : other.getEdges()) {
+            for (auto e : other.edges()) {
                 mapIt = map2.insert(std::make_pair(e->degree(), 0)).first;
                 (*mapIt).second++;
             }
@@ -87,11 +87,11 @@ bool detail::TriangulationBase<3>::compatible(
             map2.clear();
         }
         {
-            for (auto v : me->getVertices()) {
+            for (auto v : me->vertices()) {
                 mapIt = map1.insert(std::make_pair(v->degree(), 0)).first;
                 (*mapIt).second++;
             }
-            for (auto v : other.getVertices()) {
+            for (auto v : other.vertices()) {
                 mapIt = map2.insert(std::make_pair(v->degree(), 0)).first;
                 (*mapIt).second++;
             }
@@ -151,18 +151,18 @@ template <>
 bool detail::TriangulationBase<3>::compatible(
         Simplex<3>* src, Simplex<3>* dest, NPerm<4> p) {
     for (int edge = 0; edge < 6; edge++) {
-        if (src->getEdge(edge)->degree() !=
-                dest->getEdge(NEdge::edgeNumber[p[NEdge::edgeVertex[edge][0]]]
+        if (src->edge(edge)->degree() !=
+                dest->edge(NEdge::edgeNumber[p[NEdge::edgeVertex[edge][0]]]
                     [p[NEdge::edgeVertex[edge][1]]])->degree())
             return false;
     }
 
     for (int vertex = 0; vertex < 4; vertex++) {
-        if (src->getVertex(vertex)->degree() !=
-                dest->getVertex(p[vertex])->degree())
+        if (src->vertex(vertex)->degree() !=
+                dest->vertex(p[vertex])->degree())
             return false;
-        if (src->getVertex(vertex)->link() !=
-                dest->getVertex(p[vertex])->link())
+        if (src->vertex(vertex)->link() !=
+                dest->vertex(p[vertex])->link())
             return false;
     }
 

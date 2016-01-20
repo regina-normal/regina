@@ -88,16 +88,16 @@ QString TriangleChooser::description(regina::NTriangle* option) {
         return trUtf8("Triangle %2 — %3 (%4)")
             .arg(tri_->triangleIndex(option))
             .arg(tri_->tetrahedronIndex(e0.tetrahedron()))
-            .arg(e0.getVertices().trunc3().c_str());
+            .arg(e0.vertices().trunc3().c_str());
     } else {
         const regina::NTriangleEmbedding& e0 = option->embedding(0);
         const regina::NTriangleEmbedding& e1 = option->embedding(1);
         return trUtf8("Triangle %1 — %2 (%3), %4 (%5)")
             .arg(tri_->triangleIndex(option))
             .arg(tri_->tetrahedronIndex(e0.tetrahedron()))
-            .arg(e0.getVertices().trunc3().c_str())
+            .arg(e0.vertices().trunc3().c_str())
             .arg(tri_->tetrahedronIndex(e1.tetrahedron()))
-            .arg(e1.getVertices().trunc3().c_str());
+            .arg(e1.vertices().trunc3().c_str());
     }
 }
 

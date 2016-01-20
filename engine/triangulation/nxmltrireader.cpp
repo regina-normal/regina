@@ -53,7 +53,7 @@ namespace {
 
         public:
             NTetrahedronReader(NTriangulation* newTri, unsigned whichTet) :
-                    tri(newTri), tet(tri->getTetrahedra()[whichTet]) {
+                    tri(newTri), tet(tri->tetrahedra()[whichTet]) {
             }
 
             virtual void startElement(const std::string&,
@@ -85,7 +85,7 @@ namespace {
                         continue;
 
                     perm.setPermCode(static_cast<unsigned char>(permCode));
-                    adjTet = tri->getTetrahedra()[tetIndex];
+                    adjTet = tri->tetrahedra()[tetIndex];
                     adjFace = perm[k];
                     if (adjTet == tet && adjFace == k)
                         continue;

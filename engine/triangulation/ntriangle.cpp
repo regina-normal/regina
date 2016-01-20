@@ -48,8 +48,8 @@ NTriangle::Type NTriangle::type() {
     NEdge* e[3];
     int i;
     for (i = 0; i < 3; i++) {
-        v[i] = getVertex(i);
-        e[i] = getEdge(i);
+        v[i] = vertex(i);
+        e[i] = edge(i);
     }
 
     if (e[0] != e[1] && e[1] != e[2] && e[2] != e[0]) {
@@ -66,13 +66,13 @@ NTriangle::Type NTriangle::type() {
 
     if (e[0] == e[1] && e[1] == e[2]) {
         // All edges identified.
-        if (getEdgeMapping(0).sign() == getEdgeMapping(1).sign() &&
-                getEdgeMapping(1).sign() == getEdgeMapping(2).sign())
+        if (edgeMapping(0).sign() == edgeMapping(1).sign() &&
+                edgeMapping(1).sign() == edgeMapping(2).sign())
             return (type_ = L31);
 
         for (i = 0; i < 3; i++)
-            if (getEdgeMapping((i+1)%3).sign() ==
-                    getEdgeMapping((i+2)%3).sign()) {
+            if (edgeMapping((i+1)%3).sign() ==
+                    edgeMapping((i+2)%3).sign()) {
                 subtype_ = i;
                 return (type_ = DUNCEHAT);
             }
@@ -83,8 +83,8 @@ NTriangle::Type NTriangle::type() {
         if (e[(i+1)%3] == e[(i+2)%3]) {
             subtype_ = i;
 
-            if (getEdgeMapping((i+1)%3).sign() ==
-                    getEdgeMapping((i+2)%3).sign())
+            if (edgeMapping((i+1)%3).sign() ==
+                    edgeMapping((i+2)%3).sign())
                 return (type_ = MOBIUS);
 
             if (v[0] == v[1] && v[1] == v[2])

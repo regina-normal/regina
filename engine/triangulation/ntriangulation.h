@@ -1715,7 +1715,7 @@ class REGINA_API Triangulation<3> :
          * which the second tetrahedron (to be merged) is joined.
          * The end is 0 or 1, corresponding to the labelling (0,1) of
          * the vertices of the edge as described in
-         * NEdgeEmbedding::getVertices().
+         * NEdgeEmbedding::vertices().
          * @param check \c true if we are to check whether the move is
          * allowed (defaults to \c true).
          * @param perform \c true if we are to perform the move

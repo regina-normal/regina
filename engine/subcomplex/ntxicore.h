@@ -130,7 +130,7 @@ class REGINA_API NTxICore :
          *
          * What is returned is the index number of the tetrahedron
          * within the triangulation.  To access the tetrahedron itself,
-         * you may call <tt>core().getTetrahedron(bdryTet(...))</tt>.
+         * you may call <tt>core().tetrahedron(bdryTet(...))</tt>.
          *
          * Note that the same tetrahedron may provide more than one
          * boundary triangle.

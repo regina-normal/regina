@@ -116,7 +116,7 @@ void Triangulation<2>::writeTextLong(std::ostream& out) const {
         tri = simplices_[triPos];
         out << "      " << std::setw(4) << triPos << "  |          ";
         for (i = 0; i < 3; ++i)
-            out << ' ' << std::setw(3) << tri->getVertex(i)->index();
+            out << ' ' << std::setw(3) << tri->vertex(i)->index();
         out << '\n';
     }
     out << '\n';
@@ -128,7 +128,7 @@ void Triangulation<2>::writeTextLong(std::ostream& out) const {
         tri = simplices_[triPos];
         out << "      " << std::setw(4) << triPos << "  |        ";
         for (i = 2; i >= 0; --i)
-            out << ' ' << std::setw(3) << tri->getEdge(i)->index();
+            out << ' ' << std::setw(3) << tri->edge(i)->index();
         out << '\n';
     }
     out << '\n';
@@ -146,7 +146,7 @@ void Triangulation<2>::writeXMLPacketData(std::ostream& out) const {
     out << "  <triangles ntriangles=\"" << simplices_.size() << "\">\n";
     for (it = simplices_.begin(); it != simplices_.end(); ++it) {
         out << "    <triangle desc=\"" <<
-            xmlEncodeSpecialChars((*it)->getDescription()) << "\"> ";
+            xmlEncodeSpecialChars((*it)->description()) << "\"> ";
         for (edge = 0; edge < 3; ++edge) {
             adjTri = (*it)->adjacentTriangle(edge);
             if (adjTri) {
@@ -168,7 +168,7 @@ void Triangulation<2>::cloneFrom(const Dim2Triangulation& X) {
 
     TriangleIterator it;
     for (it = X.simplices_.begin(); it != X.simplices_.end(); ++it)
-        newTriangle((*it)->getDescription());
+        newTriangle((*it)->description());
 
     // Make the gluings.
     long triPos, adjPos;

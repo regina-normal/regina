@@ -50,6 +50,6 @@ Progress: 79.1180419922 %
 Progress: 90.4166666667 %
 >>> 
 >>> # The surface enumeration is now complete.
-... print surfaces.getNumberOfSurfaces(), 'normal surfaces'
+... print surfaces.countSurfaces(), 'normal surfaces'
 2319 normal surfaces
 >>>

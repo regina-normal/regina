@@ -130,7 +130,7 @@ void NSatBlockStarterSearcher::findStarterBlocks(NTriangulation* tri) {
             // Create an initial blacklist of tetrahedra consisting of
             // those in the isomorphic image of the initial starting block.
             for (i = 0; i < (*it)->triangulation().size(); i++)
-                usedTets.insert(tri->getTetrahedron((*isoIt)->tetImage(i)));
+                usedTets.insert(tri->tetrahedron((*isoIt)->tetImage(i)));
 
             // And process!
             // Note that useStarterBlock() passes ownership of the starter

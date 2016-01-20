@@ -183,7 +183,7 @@ int VertexModel::columnCount(const QModelIndex& /* unused parent*/) const {
 
 QVariant VertexModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        NVertex* item = tri->getVertex(index.row());
+        NVertex* item = tri->vertex(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -215,8 +215,8 @@ QVariant VertexModel::data(const QModelIndex& index, int role) const {
                 QString ans;
                 for (auto& emb : *item)
                     appendToList(ans, QString("%1 (%2)").
-                        arg(emb.getTetrahedron()->index()).
-                        arg(emb.getVertex()));
+                        arg(emb.tetrahedron()->index()).
+                        arg(emb.vertex()));
                 return ans;
         }
         return QString();
@@ -288,7 +288,7 @@ int EdgeModel::columnCount(const QModelIndex& /* unused parent*/) const {
 
 QVariant EdgeModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        NEdge* item = tri->getEdge(index.row());
+        NEdge* item = tri->edge(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -305,8 +305,8 @@ QVariant EdgeModel::data(const QModelIndex& index, int role) const {
                 QString ans;
                 for (auto& emb : *item)
                     appendToList(ans, QString("%1 (%2)").
-                        arg(emb.getTetrahedron()->index()).
-                        arg(emb.getVertices().trunc2().c_str()));
+                        arg(emb.tetrahedron()->index()).
+                        arg(emb.vertices().trunc2().c_str()));
                 return ans;
         }
         return QString();
@@ -377,7 +377,7 @@ int TriangleModel::columnCount(const QModelIndex& /* unused parent*/) const {
 
 QVariant TriangleModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        NTriangle* item = tri->getTriangle(index.row());
+        NTriangle* item = tri->triangle(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -411,8 +411,8 @@ QVariant TriangleModel::data(const QModelIndex& index, int role) const {
                 QString ans;
                 for (auto& emb : *item)
                     appendToList(ans, QString("%1 (%2)").
-                        arg(emb.getTetrahedron()->index()).
-                        arg(emb.getVertices().trunc3().c_str()));
+                        arg(emb.tetrahedron()->index()).
+                        arg(emb.vertices().trunc3().c_str()));
                 return ans;
         }
         return QString();
@@ -496,7 +496,7 @@ QVariant ComponentModel::data(const QModelIndex& index, int role) const {
                 QString ans;
                 for (unsigned long i = 0; i < item->size(); i++)
                     appendToList(ans, QString::number(
-                        item->getTetrahedron(i)->index()));
+                        item->tetrahedron(i)->index()));
                 return ans;
         }
         return QString();
@@ -582,25 +582,25 @@ QVariant BoundaryComponentModel::data(const QModelIndex& index,
                 // Note that we can't have just one triangle
                 // (by a parity argument).
                 return (item->isIdeal() ?
-                    tr("Degree %1").arg(item->getVertex(0)->degree()) :
+                    tr("Degree %1").arg(item->vertex(0)->degree()) :
                     tr("%1 triangles").arg(item->countTriangles()));
             case 3:
                 if (item->isIdeal()) {
-                    NVertex* v = item->getVertex(0);
+                    NVertex* v = item->vertex(0);
                     QString ans;
                     for (auto& emb : *v)
                         appendToList(ans, QString("%1 (%2)").
-                            arg(emb.getTetrahedron()->index()).
-                            arg(emb.getVertex()));
+                            arg(emb.tetrahedron()->index()).
+                            arg(emb.vertex()));
                     return tr("Vertex %1 = ").arg(v->index()) + ans;
                 } else {
                     QString ans;
                     for (unsigned long i = 0; i < item->countTriangles(); ++i) {
                         const NTriangleEmbedding& emb =
-                            item->getTriangle(i)->front();
+                            item->triangle(i)->front();
                         appendToList(ans, QString("%1 (%2)").
-                            arg(emb.getTetrahedron()->index()).
-                            arg(emb.getVertices().trunc3().c_str()));
+                            arg(emb.tetrahedron()->index()).
+                            arg(emb.vertices().trunc3().c_str()));
                     }
                     return ans;
                 }
@@ -678,7 +678,7 @@ int Dim2VertexModel::columnCount(const QModelIndex& /* unused parent*/) const {
 
 QVariant Dim2VertexModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        Dim2Vertex* item = tri->getVertex(index.row());
+        Dim2Vertex* item = tri->vertex(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -693,8 +693,8 @@ QVariant Dim2VertexModel::data(const QModelIndex& index, int role) const {
                 QString ans;
                 for (auto& emb : *item)
                     appendToList(ans, QString("%1 (%2)").
-                        arg(emb.getTriangle()->index()).
-                        arg(emb.getVertex()));
+                        arg(emb.triangle()->index()).
+                        arg(emb.vertex()));
                 return ans;
         }
         return QString();
@@ -766,7 +766,7 @@ int Dim2EdgeModel::columnCount(const QModelIndex& /* unused parent*/) const {
 
 QVariant Dim2EdgeModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        Dim2Edge* item = tri->getEdge(index.row());
+        Dim2Edge* item = tri->edge(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -781,8 +781,8 @@ QVariant Dim2EdgeModel::data(const QModelIndex& index, int role) const {
                 QString ans;
                 for (auto& emb : *item)
                     appendToList(ans, QString("%1 (%2)").
-                        arg(emb.getTriangle()->index()).
-                        arg(emb.getVertices().trunc2().c_str()));
+                        arg(emb.triangle()->index()).
+                        arg(emb.vertices().trunc2().c_str()));
                 return ans;
         }
         return QString();
@@ -864,7 +864,7 @@ QVariant Dim2ComponentModel::data(const QModelIndex& index, int role) const {
                 QString ans;
                 for (unsigned long i = 0; i < item->size(); ++i)
                     appendToList(ans, QString::number(
-                        item->getTriangle(i)->index()));
+                        item->triangle(i)->index()));
                 return ans;
         }
         return QString();
@@ -945,10 +945,10 @@ QVariant Dim2BoundaryComponentModel::data(const QModelIndex& index,
             case 2:
                 QString ans;
                 for (unsigned long i = 0; i < item->countEdges(); ++i) {
-                    const Dim2EdgeEmbedding& emb = item->getEdge(i)->front();
+                    const Dim2EdgeEmbedding& emb = item->edge(i)->front();
                     appendToList(ans, QString("%1 (%2)").
-                        arg(emb.getTriangle()->index()).
-                        arg(emb.getVertices().trunc2().c_str()));
+                        arg(emb.triangle()->index()).
+                        arg(emb.vertices().trunc2().c_str()));
                 }
                 return ans;
         }

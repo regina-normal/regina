@@ -180,7 +180,7 @@ void Triangulation<3>::writeXMLPacketData(std::ostream& out) const {
     out << "  <tetrahedra ntet=\"" << simplices_.size() << "\">\n";
     for (it = simplices_.begin(); it != simplices_.end(); it++) {
         out << "    <tet desc=\"" <<
-            xmlEncodeSpecialChars((*it)->getDescription()) << "\"> ";
+            xmlEncodeSpecialChars((*it)->description()) << "\"> ";
         for (face = 0; face < 4; face++) {
             adjTet = (*it)->adjacentTetrahedron(face);
             if (adjTet) {
@@ -388,7 +388,7 @@ void Triangulation<3>::cloneFrom(const NTriangulation& X) {
 
     TetrahedronIterator it;
     for (it = X.simplices_.begin(); it != X.simplices_.end(); it++)
-        newTetrahedron((*it)->getDescription());
+        newTetrahedron((*it)->description());
 
     // Make the gluings.
     long tetPos, adjPos;

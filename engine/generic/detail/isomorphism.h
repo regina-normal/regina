@@ -431,7 +431,7 @@ Triangulation<dim>* IsomorphismBase<dim>::apply(
 
     for (t = 0; t < nSimplices_; t++)
         tet[simpImage_[t]]->setDescription(
-            original->getSimplex(t)->getDescription());
+            original->getSimplex(t)->description());
 
     const Simplex<dim> *myTet, *adjTet;
     unsigned long adjTetIndex;

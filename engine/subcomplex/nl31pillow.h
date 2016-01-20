@@ -111,7 +111,7 @@ class REGINA_API NL31Pillow : public NStandardTriangulation {
          *
          * The specific tetrahedron to examine is determined by the
          * argument \a whichTet; this will be the tetrahedron
-         * <tt>getTetrahedron(whichTet)</tt>.
+         * <tt>tetrahedron(whichTet)</tt>.
          *
          * @param whichTet specifies which tetrahedron to examine;
          * this must be either 0 or 1.

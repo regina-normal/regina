@@ -128,8 +128,8 @@ class REGINA_API NPillowTwoSphere :
          * triangles are joined.
          *
          * The permutation will map vertices (0,1,2) of
-         * <tt>getTriangle(0)</tt> to vertices (0,1,2) of
-         * <tt>getTriangle(1)</tt>.  The map will represent how the vertices
+         * <tt>triangle(0)</tt> to vertices (0,1,2) of
+         * <tt>triangle(1)</tt>.  The map will represent how the vertices
          * of the triangles are identified by the three edge gluings.
          *
          * @return a permutation describing how the triangle boundaries are

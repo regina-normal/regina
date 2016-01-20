@@ -131,7 +131,7 @@ NTrivialTri* NTrivialTri::isTrivialTriangulation(const NComponent* comp) {
                 // Search for Mobius band triangles.
                 unsigned long nTriangles = comp->countTriangles();
                 for (i = 0; i < nTriangles; i++)
-                    if (comp->getTriangle(i)->isMobiusBand())
+                    if (comp->triangle(i)->isMobiusBand())
                         return new NTrivialTri(N3_2);
                 return new NTrivialTri(N3_1);
             }

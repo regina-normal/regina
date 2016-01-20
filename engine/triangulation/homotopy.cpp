@@ -59,7 +59,7 @@ const NGroupPresentation& NTriangulation::fundamentalGroup() const {
     // Find out which triangle corresponds to which generator.
     long *genIndex = new long[countTriangles()];
     long i = 0;
-    for (NTriangle* f : getTriangles())
+    for (NTriangle* f : triangles())
         if (f->isBoundary() || f->inMaximalForest())
             genIndex[f->index()] = -1;
         else
@@ -71,14 +71,14 @@ const NGroupPresentation& NTriangulation::fundamentalGroup() const {
     int currTetFace;
     long triGenIndex;
     NGroupExpression* rel;
-    for (NEdge* e : getEdges())
+    for (NEdge* e : edges())
         if (! e->isBoundary()) {
             // Put in the relation corresponding to this edge.
             rel = new NGroupExpression();
             for (auto& emb : *e) {
-                currTet = emb.getTetrahedron();
-                currTetFace = emb.getVertices()[2];
-                triangle = currTet->getTriangle(currTetFace);
+                currTet = emb.tetrahedron();
+                currTetFace = emb.vertices()[2];
+                triangle = currTet->triangle(currTetFace);
                 triGenIndex = genIndex[triangleIndex(triangle)];
                 if (triGenIndex >= 0) {
                     if ((triangle->front().tetrahedron() == currTet) &&

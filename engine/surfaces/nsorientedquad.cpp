@@ -67,13 +67,13 @@ NMatrixInt* NNormalSurfaceVectorOrientedQuad::makeMatchingEquations(
     NPerm4 perm;
     size_t tetIndex;
     bool flip;
-    for (NTriangulation::EdgeIterator eit = triangulation->getEdges().begin();
-            eit != triangulation->getEdges().end(); eit++) {
+    for (NTriangulation::EdgeIterator eit = triangulation->edges().begin();
+            eit != triangulation->edges().end(); eit++) {
         if (! (*eit)->isBoundary()) {
             for (auto& emb : **eit) {
                 tetIndex = triangulation->tetrahedronIndex(
-                    emb.getTetrahedron());
-                perm = emb.getVertices();
+                    emb.tetrahedron());
+                perm = emb.vertices();
 
                 flip = (perm[0] == 0 || perm[2] == 0);
                 ans->entry(row, 6 * tetIndex +
@@ -182,28 +182,28 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
         NPerm4 tetPerm, adjPerm;
         size_t tetIndex, adjIndex;
         NLargeInteger expect;
-        for (NTriangulation::VertexIterator vit = triang->getVertices().begin();
-                vit != triang->getVertices().end(); vit++) {
+        for (NTriangulation::VertexIterator vit = triang->vertices().begin();
+                vit != triang->vertices().end(); vit++) {
             usedEdges[0].clear(); usedEdges[1].clear();
             examine.clear();
             broken = false;
 
             // Pick some triangular disc and set it to zero.
             const NVertexEmbedding& vemb = (*vit)->front();
-            row = 14 * triang->tetrahedronIndex(vemb.getTetrahedron())
-                + 2 * vemb.getVertex() + orient;
+            row = 14 * triang->tetrahedronIndex(vemb.tetrahedron())
+                + 2 * vemb.vertex() + orient;
             ans->setElement(row, NLargeInteger::zero);
 
             min = NLargeInteger::zero;
 
             // Mark the three surrounding edge ends for examination.
             for (i=0; i<4; i++) {
-                if (i == vemb.getVertex())
+                if (i == vemb.vertex())
                     continue;
-                edge = vemb.getTetrahedron()->getEdge(
-                    NEdge::edgeNumber[vemb.getVertex()][i]);
-                end = vemb.getTetrahedron()->getEdgeMapping(
-                    NEdge::edgeNumber[vemb.getVertex()][i])[0] == i ? 1 : 0;
+                edge = vemb.tetrahedron()->edge(
+                    NEdge::edgeNumber[vemb.vertex()][i]);
+                end = vemb.tetrahedron()->edgeMapping(
+                    NEdge::edgeNumber[vemb.vertex()][i])[0] == i ? 1 : 0;
                 if (usedEdges[end].insert(edge).second)
                     examine.push_back(EdgeEnd(edge, end));
             }
@@ -223,8 +223,8 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
                 endit = current.edge->end();
                 for (eembit = beginit; eembit != endit; eembit++)
                     if (! (*ans)[14 * triang->tetrahedronIndex(
-                            (*eembit).getTetrahedron()) +
-                            2 * (*eembit).getVertices()[current.end] +
+                            (*eembit).tetrahedron()) +
+                            2 * (*eembit).vertices()[current.end] +
                             orient].isInfinite())
                         break;
 
@@ -232,14 +232,14 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
                 // vertex.  Run backwards from here and fill in all the
                 // holes.
                 backupit = eembit;
-                adjPerm = (*eembit).getVertices();
-                adjIndex = triang->tetrahedronIndex((*eembit).getTetrahedron());
+                adjPerm = (*eembit).vertices();
+                adjIndex = triang->tetrahedronIndex((*eembit).tetrahedron());
                 while (eembit != beginit) {
                     eembit--;
 
                     // Work out the coordinate for the disc type at eembit.
-                    tet = (*eembit).getTetrahedron();
-                    tetPerm = (*eembit).getVertices();
+                    tet = (*eembit).tetrahedron();
+                    tetPerm = (*eembit).vertices();
                     tetIndex = triang->tetrahedronIndex(tet);
 
                     expect =
@@ -259,9 +259,9 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
                         min = expect;
 
                     // Remember to examine the new edge end if appropriate.
-                    edge = tet->getEdge(
+                    edge = tet->edge(
                         NEdge::edgeNumber[tetPerm[2]][tetPerm[current.end]]);
-                    end = tet->getEdgeMapping(
+                    end = tet->edgeMapping(
                         NEdge::edgeNumber[tetPerm[2]][tetPerm[current.end]])[0]
                         == tetPerm[2] ? 1 : 0;
                     if (usedEdges[end].insert(edge).second)
@@ -276,12 +276,12 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
                 // always checking to ensure the
                 // matching equations have not been broken.
                 eembit = backupit;
-                adjPerm = (*eembit).getVertices();
-                adjIndex = triang->tetrahedronIndex((*eembit).getTetrahedron());
+                adjPerm = (*eembit).vertices();
+                adjIndex = triang->tetrahedronIndex((*eembit).tetrahedron());
                 for (eembit++; eembit != endit; eembit++) {
                     // Work out the coordinate for the disc type at eembit.
-                    tet = (*eembit).getTetrahedron();
-                    tetPerm = (*eembit).getVertices();
+                    tet = (*eembit).tetrahedron();
+                    tetPerm = (*eembit).vertices();
                     tetIndex = triang->tetrahedronIndex(tet);
 
                     expect =
@@ -302,9 +302,9 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
                             min = expect;
 
                         // Remember to examine the new edge end if appropriate.
-                        edge = tet->getEdge(
+                        edge = tet->edge(
                             NEdge::edgeNumber[tetPerm[3]][tetPerm[current.end]]);
-                        end = tet->getEdgeMapping(
+                        end = tet->edgeMapping(
                             NEdge::edgeNumber[tetPerm[3]][tetPerm[current.end]])[0]
                             == tetPerm[3] ? 1 : 0;
                         if (usedEdges[end].insert(edge).second)
@@ -327,8 +327,8 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
             // to infinity.  Otherwise subtract min from every coordinate to
             // make the values as small as possible.
             for (auto& emb : **vit) {
-                row = 14 * triang->tetrahedronIndex(emb.getTetrahedron())
-                    + 2 * emb.getVertex() + orient;
+                row = 14 * triang->tetrahedronIndex(emb.tetrahedron())
+                    + 2 * emb.vertex() + orient;
                 if (broken)
                     ans->setElement(row, NLargeInteger::infinity);
                 else

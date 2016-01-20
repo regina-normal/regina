@@ -410,10 +410,10 @@ Variable: tri = Triangulations
 # See the Regina handbook for more elaborate sample Python sessions.
 
 # Output the homology of each triangulation.
-t = tri.getFirstTreeChild()
+t = tri.firstChild()
 while t != None:
-	print t.getPacketLabel() + ":", t.getHomologyH1()
-	t = t.getNextTreeSibling()
+	print t.label() + ":", t.homology()
+	t = t.nextSibling()
 
 
 ************************************************************
@@ -1036,10 +1036,10 @@ Variable: tri = 3-Manifolds
 # See the Regina handbook for more elaborate sample Python sessions.
 
 # Output the homology of each triangulation.
-t = tri.getFirstTreeChild()
+t = tri.firstChild()
 while t != None:
-	print t.getPacketLabel() + ":", t.getHomologyH1()
-	t = t.getNextTreeSibling()
+	print t.label() + ":", t.homology()
+	t = t.nextSibling()
 
 
 ************************************************************

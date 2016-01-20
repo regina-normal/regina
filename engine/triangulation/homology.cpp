@@ -63,7 +63,7 @@ const NAbelianGroup& NTriangulation::homology() const {
     // Find out which triangle corresponds to which generator.
     long* genIndex = new long[countTriangles()];
     long i = 0;
-    for (NTriangle* f : getTriangles()) {
+    for (NTriangle* f : triangles()) {
         if (f->isBoundary() || f->inMaximalForest())
             genIndex[f->index()] = -1;
         else {
@@ -78,13 +78,13 @@ const NAbelianGroup& NTriangulation::homology() const {
     int currTetFace;
     long triGenIndex;
     i = 0;
-    for (NEdge* e : getEdges()) {
+    for (NEdge* e : edges()) {
         if (! e->isBoundary()) {
             // Put in the relation corresponding to this edge.
             for (auto& emb : *e) {
-                currTet = emb.getTetrahedron();
-                currTetFace = emb.getVertices()[2];
-                triangle = currTet->getTriangle(currTetFace);
+                currTet = emb.tetrahedron();
+                currTetFace = emb.vertices()[2];
+                triangle = currTet->triangle(currTetFace);
                 triGenIndex = genIndex[triangleIndex(triangle)];
                 if (triGenIndex >= 0) {
                     if ((triangle->front().tetrahedron() == currTet) &&
@@ -144,7 +144,7 @@ const NAbelianGroup& NTriangulation::homologyRel() const {
     // Find out which edge corresponds to which generator.
     long* genIndex = new long[countEdges()];
     long i = 0;
-    for (NEdge* e : getEdges()) {
+    for (NEdge* e : edges()) {
         if (e->isBoundary())
             genIndex[e->index()] = -1;
         else if (forest.count(e))
@@ -161,7 +161,7 @@ const NAbelianGroup& NTriangulation::homologyRel() const {
     long edgeGenIndex;
     i = 0;
     int triEdge, currEdgeStart, currEdgeEnd, currEdge;
-    for (NTriangle* f : getTriangles()) {
+    for (NTriangle* f : triangles()) {
         if (! f->isBoundary()) {
             // Put in the relation corresponding to this triangle.
             currTet = f->front().tetrahedron();
@@ -173,9 +173,9 @@ const NAbelianGroup& NTriangulation::homologyRel() const {
                 // in tetrahedron currTet.
                 currEdge = NEdge::edgeNumber[currEdgeStart][currEdgeEnd];
                 edgeGenIndex = genIndex[edgeIndex(
-                    currTet->getEdge(currEdge))];
+                    currTet->edge(currEdge))];
                 if (edgeGenIndex >= 0) {
-                    if (currTet->getEdgeMapping(currEdge)[0] == currEdgeStart)
+                    if (currTet->edgeMapping(currEdge)[0] == currEdgeStart)
                         pres.entry(i, edgeGenIndex) += 1;
                     else
                         pres.entry(i, edgeGenIndex) -= 1;

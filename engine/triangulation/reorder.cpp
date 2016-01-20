@@ -94,12 +94,12 @@ void edge_orientations_on_tet(const NTriangulation &trig,
         // to get the edge orientation on a tetrahedron's edge
         // look it up in edge_orientations
 
-        int orientation = edge_orientations[tet->getEdge(i)->index()];
+        int orientation = edge_orientations[tet->edge(i)->index()];
 
         // a tetrahedron's edge might be identified with the edge in the
         // triangulation in a way that the edge orientation is not consistent
 
-        NPerm4 perm = tet->getEdgeMapping(i);
+        NPerm4 perm = tet->edgeMapping(i);
         if(perm[0] > perm[1])
             orientation = - orientation;
         edge_orientations_tet[i] = orientation;
@@ -184,9 +184,9 @@ bool check_consistency_around_edge(const NTriangulation &trig,
 {
     // iterate through all tetrahedra around an edge
 
-    for(auto& emb : *trig.getEdge(edge_index))
+    for(auto& emb : *trig.edge(edge_index))
         if(!check_consistency_on_tet(trig, edge_orientations,
-                                     emb.getTetrahedron(), force_oriented))
+                                     emb.tetrahedron(), force_oriented))
             return false;
 
     return true;
@@ -208,7 +208,7 @@ NIsomorphism* iso_from_edges(const NTriangulation &trig,
 
         if(!check_consistency_on_tet(trig,
                                      edge_orientations,
-                                     trig.getTetrahedron(i),
+                                     trig.tetrahedron(i),
                                      force_oriented))
             reorder_fatal_error("Inconsistent edge orientations in reorder.cpp");
 
@@ -218,7 +218,7 @@ NIsomorphism* iso_from_edges(const NTriangulation &trig,
 
         edge_orientations_on_tet(trig,
                                  edge_orientations,
-                                 trig.getTetrahedron(i),
+                                 trig.tetrahedron(i),
                                  edge_orientations_tet);
 
         // derive the permutation

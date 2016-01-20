@@ -335,10 +335,10 @@
     # sessions.
 
     # Output the homology of each triangulation.
-    t = tri.getFirstTreeChild()
+    t = tri.firstChild()
     while t != None:
-        print t.getPacketLabel() + ":", t.getHomologyH1()
-        t = t.getNextTreeSibling()
+        print t.label() + ":", t.homology()
+        t = t.nextSibling()
    </programlisting>
    <para>
     The comment block must appear at the very beginning

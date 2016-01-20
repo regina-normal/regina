@@ -21,10 +21,10 @@ Copyright (c) 1999-2013, The Regina development team
 &gt;&gt;&gt; 
 &gt;&gt;&gt; # Calculate the homology of each triangulation in the census.
 ... # The triangulations are all children of the "census" container.
-... tri = census.getFirstTreeChild()
+... tri = census.firstChild()
 &gt;&gt;&gt; while tri != None:
-...     print tri.getPacketLabel() + ":", tri.getHomologyH1()
-...     tri = tri.getNextTreeSibling()
+...     print tri.label() + ":", tri.homology()
+...     tri = tri.nextSibling()
 ... 
 Item 1: Z_7
 Item 2: Z_5
@@ -44,10 +44,10 @@ Item 15: 2 Z_2
 Item 16: Z_2
 &gt;&gt;&gt; 
 &gt;&gt;&gt; # Remove all triangulations with trivial homology from the tree.
-... tri = census.getFirstTreeChild()
+... tri = census.firstChild()
 &gt;&gt;&gt; while tri != None:
-...     next = tri.getNextTreeSibling()
-...     hom = tri.getHomologyH1()
+...     next = tri.nextSibling()
+...     hom = tri.homology()
 ...     if hom.isTrivial():
 ...         tri.makeOrphan()
 ...     tri = next
@@ -60,10 +60,10 @@ Item 16: Z_2
 &lt;regina.engine.NTriangulation object at 0x108839670&gt;
 &gt;&gt;&gt; 
 &gt;&gt;&gt; # Print the homology of each remaining triangulation.
-... tri = census.getFirstTreeChild()
+... tri = census.firstChild()
 &gt;&gt;&gt; while tri != None:
-...     print tri.getPacketLabel() + ":", tri.getHomologyH1()
-...     tri = tri.getNextTreeSibling()
+...     print tri.label() + ":", tri.homology()
+...     tri = tri.nextSibling()
 ... 
 Item 1: Z_7
 Item 2: Z_5

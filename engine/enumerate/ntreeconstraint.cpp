@@ -48,8 +48,8 @@ bool LPConstraintEuler::addRows(
         obj[i] = 1;
     for (i = 0; i < tri->countTriangles(); ++i) {
         tet = tri->tetrahedronIndex(
-            tri->getTriangle(i)->front().getTetrahedron());
-        p = tri->getTriangle(i)->front().getVertices();
+            tri->triangle(i)->front().tetrahedron());
+        p = tri->triangle(i)->front().vertices();
         --obj[7 * tet + p[0]];
         --obj[7 * tet + p[1]];
         --obj[7 * tet + p[2]];
@@ -59,8 +59,8 @@ bool LPConstraintEuler::addRows(
     }
     for (i = 0; i < tri->countEdges(); ++i) {
         tet = tri->tetrahedronIndex(
-            tri->getEdge(i)->front().getTetrahedron());
-        p = tri->getEdge(i)->front().getVertices();
+            tri->edge(i)->front().tetrahedron());
+        p = tri->edge(i)->front().vertices();
         ++obj[7 * tet + p[0]];
         ++obj[7 * tet + p[1]];
         ++obj[7 * tet + 4 + vertexSplitMeeting[p[0]][p[1]][0]];
@@ -88,9 +88,9 @@ bool LPConstraintNonSpun::addRows(
     // For the time being we insist on one vertex, which must be
     // ideal with torus link.
     if (tri->countVertices() != 1 ||
-            (! tri->getVertex(0)->isIdeal()) ||
-            (! tri->getVertex(0)->isLinkOrientable()) ||
-            tri->getVertex(0)->linkEulerChar() != 0)
+            (! tri->vertex(0)->isIdeal()) ||
+            (! tri->vertex(0)->isLinkOrientable()) ||
+            tri->vertex(0)->linkEulerChar() != 0)
         return false;
 
     // Compute the two slope equations for the torus cusp, if we can.
@@ -152,7 +152,7 @@ void BanBoundary::init(const int* columnPerm) {
             tet = columnPerm[i] / 7;
 
         for (k = 0; k < 4; ++k)
-            if (! tri_->getTetrahedron(tet)->adjacentTetrahedron(k)) {
+            if (! tri_->tetrahedron(tet)->adjacentTetrahedron(k)) {
                 banned_[i] = true;
                 break;
             }
@@ -167,7 +167,7 @@ void BanBoundary::init(const int* columnPerm) {
 
             for (k = 0; k < 4; ++k)
                 if (k != type &&
-                        ! tri_->getTetrahedron(tet)->
+                        ! tri_->tetrahedron(tet)->
                         adjacentTetrahedron(k)) {
                     banned_[i] = true;
                     break;
@@ -196,9 +196,9 @@ void BanTorusBoundary::init(const int* columnPerm) {
                 bc->eulerChar() == 0) {
             // We've found a real torus boundary.
             for (k = 0; k < bc->countTriangles(); ++k)
-                banTriangle[bc->getTriangle(k)->markedIndex()] = true;
+                banTriangle[bc->triangle(k)->markedIndex()] = true;
             for (k = 0; k < bc->countVertices(); ++k)
-                markVtx[bc->getVertex(k)->markedIndex()] = true;
+                markVtx[bc->vertex(k)->markedIndex()] = true;
         }
     }
 
@@ -216,7 +216,7 @@ void BanTorusBoundary::init(const int* columnPerm) {
             tet = columnPerm[i] / 7;
 
         for (k = 0; k < 4; ++k)
-            if (banTriangle[tri_->getTetrahedron(tet)->getTriangle(k)->
+            if (banTriangle[tri_->tetrahedron(tet)->triangle(k)->
                     markedIndex()]) {
                 banned_[i] = true;
                 break;
@@ -231,13 +231,13 @@ void BanTorusBoundary::init(const int* columnPerm) {
             tet = columnPerm[i] / 7;
             type = columnPerm[i] % 7;
 
-            if (markVtx[tri_->getTetrahedron(tet)->getVertex(type)->
+            if (markVtx[tri_->tetrahedron(tet)->vertex(type)->
                     markedIndex()])
                 marked_[i] = true;
 
             for (k = 0; k < 4; ++k)
                 if (k != type &&
-                        banTriangle[tri_->getTetrahedron(tet)->getTriangle(k)->
+                        banTriangle[tri_->tetrahedron(tet)->triangle(k)->
                         markedIndex()]) {
                     banned_[i] = true;
                     break;

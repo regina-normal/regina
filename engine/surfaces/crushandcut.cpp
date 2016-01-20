@@ -1029,7 +1029,7 @@ namespace {
             quadType_ = -1;
         }
 
-        const NTetrahedron* tet = s->triangulation()->getTetrahedron(tetIndex);
+        const NTetrahedron* tet = s->triangulation()->tetrahedron(tetIndex);
 
         // Build the blocks.
         // Note in all of this that we insert an extra "fake" triangle at each
@@ -1185,7 +1185,7 @@ NTriangulation* NNormalSurface::cutAlong() const {
         face0 = f->embedding(0).triangle();
         face1 = f->embedding(1).triangle();
 
-        gluing = f->front().getTetrahedron()->adjacentGluing(face0);
+        gluing = f->front().tetrahedron()->adjacentGluing(face0);
 
         for (fromVertex0 = 0; fromVertex0 < 4; ++fromVertex0) {
             if (fromVertex0 == face0)
@@ -1246,7 +1246,7 @@ NTriangulation* NNormalSurface::crush() const {
         if (quadTypes[whichTet] == -1) {
             // We want to keep this tetrahedron, so make sure it's glued
             // up correctly.
-            tet = ans->getTetrahedron(whichTet);
+            tet = ans->tetrahedron(whichTet);
             for (face = 0; face < 4; face++) {
                 adj = tet->adjacentTetrahedron(face);
                 if (! adj)

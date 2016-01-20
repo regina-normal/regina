@@ -370,7 +370,7 @@ did not match C++ signature:
    </para>
    <programlisting>
 ...
-&lt;&lt;&lt; p = root.getLastTreeChild()
+&lt;&lt;&lt; p = root.lastChild()
 &lt;&lt;&lt; print p
 Triangulation with 0 tetrahedra.
 </programlisting>

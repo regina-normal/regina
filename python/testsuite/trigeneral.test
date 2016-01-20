@@ -54,16 +54,16 @@ def vitalStats(tri):
 	old = tri.detail()
 
 	print "-------------------------------"
-	print tri.getPacketLabel()
+	print tri.label()
 	print "-------------------------------"
 	print
 	print tri.detail()
-	print tri.getNumberOfComponents(), "components"
-	print tri.getNumberOfBoundaryComponents(), "boundary components"
-	print tri.getNumberOfTetrahedra(), "tetrahedra"
-	print tri.getNumberOfTriangles(), "triangles"
-	print tri.getNumberOfEdges(), "edges"
-	print tri.getNumberOfVertices(), "vertices"
+	print tri.countComponents(), "components"
+	print tri.countBoundaryComponents(), "boundary components"
+	print tri.countTetrahedra(), "tetrahedra"
+	print tri.countTriangles(), "triangles"
+	print tri.countEdges(), "edges"
+	print tri.countVertices(), "vertices"
 	print "2-sphere boundaries:", tri.hasTwoSphereBoundaryComponents()
 	print "Negative ideal boundaries:", tri.hasNegativeIdealBoundaryComponents()
 	print "EC:", tri.getEulerCharTri()
@@ -75,15 +75,15 @@ def vitalStats(tri):
 	print "Orientable:", tri.isOrientable()
 	print "Connected:", tri.isConnected()
 	print
-	print "Fundamental group:", tri.getFundamentalGroup().recogniseGroup()
-	print tri.getFundamentalGroup().detail()
-	print "H1:", tri.getHomologyH1()
+	print "Fundamental group:", tri.fundamentalGroup().recogniseGroup()
+	print tri.fundamentalGroup().detail()
+	print "H1:", tri.homology()
 	if tri.isValid():
-		print "H1Bdry:", tri.getHomologyH1Bdry()
-		print "H1Rel:", tri.getHomologyH1Rel()
-		print "H2:", tri.getHomologyH2()
-		print "H2Z2:", tri.getHomologyH2Z2(), "Z_2"
-	if tri.isValid() and tri.isClosed() and tri.getNumberOfTetrahedra() > 0:
+		print "H1Bdry:", tri.homologyH1Bdry()
+		print "H1Rel:", tri.homologyH1Rel()
+		print "H2:", tri.homologyH2()
+		print "H2Z2:", tri.homologyH2Z2(), "Z_2"
+	if tri.isValid() and tri.isClosed() and tri.countTetrahedra() > 0:
 		print "TV(5, 3) =", tri.turaevViro(5, 3)
 
 		tv = tri.turaevViroApprox(5, 3)
@@ -100,7 +100,7 @@ def vitalStats(tri):
 
 	# Normal surface computations should only be run on sufficiently
 	# small triangulations, so as to keep the tests relatively fast.
-	if tri.getNumberOfTetrahedra() < 7:
+	if tri.countTetrahedra() < 7:
 		print "0-efficient:", tri.isZeroEfficient()
 		if tri.isConnected():
 			print "Splitting surface:", tri.hasSplittingSurface()

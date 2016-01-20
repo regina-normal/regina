@@ -69,11 +69,11 @@ bool detail::TriangulationBase<2>::compatible(
         std::map<size_t, size_t>::iterator mapIt;
 
         {
-            for (auto v : me->getVertices()) {
+            for (auto v : me->vertices()) {
                 mapIt = map1.insert(std::make_pair(v->degree(), 0)).first;
                 (*mapIt).second++;
             }
-            for (auto v : other.getVertices()) {
+            for (auto v : other.vertices()) {
                 mapIt = map2.insert(std::make_pair(v->degree(), 0)).first;
                 (*mapIt).second++;
             }
@@ -133,8 +133,8 @@ template <>
 bool detail::TriangulationBase<2>::compatible(
         Simplex<2>* src, Simplex<2>* dest, NPerm<3> p) {
     for (int vertex = 0; vertex < 3; vertex++)
-        if (src->getVertex(vertex)->degree() !=
-                dest->getVertex(p[vertex])->degree())
+        if (src->vertex(vertex)->degree() !=
+                dest->vertex(p[vertex])->degree())
             return false;
 
     return true;

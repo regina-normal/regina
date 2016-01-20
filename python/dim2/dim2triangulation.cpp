@@ -55,7 +55,7 @@ namespace {
 
     boost::python::list Dim2_getTriangles_list(Dim2Triangulation& t) {
         boost::python::list ans;
-        for (auto s : t.getTriangles())
+        for (auto s : t.triangles())
             ans.append(boost::python::ptr(s));
         return ans;
     }

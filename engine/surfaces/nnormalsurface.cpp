@@ -395,7 +395,7 @@ void NNormalSurface::calculateRealBoundary() const {
     int type, face;
 
     for (index = 0; index < tot; index++) {
-        tet = triangulation_->getTetrahedron(index);
+        tet = triangulation_->tetrahedron(index);
         if (tet->hasBoundary()) {
             // Check for disk types with boundary
             for (type=0; type<3; type++) {
@@ -440,8 +440,8 @@ NMatrixInt* NNormalSurface::boundaryIntersections() const {
         return 0;
     if (vector->allowsAlmostNormal())
         return 0;
-    for (NTriangulation::VertexIterator it = snapPea->getVertices().begin();
-            it != snapPea->getVertices().end(); ++it) {
+    for (NTriangulation::VertexIterator it = snapPea->vertices().begin();
+            it != snapPea->vertices().end(); ++it) {
         if (! (*it)->isIdeal())
             return 0;
         if (! (*it)->isLinkOrientable())
