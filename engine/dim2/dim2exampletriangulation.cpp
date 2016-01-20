@@ -50,11 +50,11 @@ Dim2Triangulation* Dim2ExampleTriangulation::orientable(
         for (i = 0; i < n; ++i)
             ans->newTriangle();
         for (i = 0; i < n - 1; ++i)
-            ans->getTriangle(i)->joinTo(1, ans->getTriangle(i + 1),
+            ans->triangle(i)->joinTo(1, ans->triangle(i + 1),
                 NPerm3(1, 2));
-        ans->getTriangle(0)->joinTo(0, ans->getTriangle(n - 1), NPerm3(0, 1));
+        ans->triangle(0)->joinTo(0, ans->triangle(n - 1), NPerm3(0, 1));
         for (i = 1; i < punctures; ++i)
-            ans->getTriangle(3 * i - 2)->joinTo(0, ans->getTriangle(3 * i),
+            ans->triangle(3 * i - 2)->joinTo(0, ans->triangle(3 * i),
                 NPerm3(1, 2));
     } else {
         unsigned n = 4 * genus + 3 * punctures - 2;
@@ -62,19 +62,19 @@ Dim2Triangulation* Dim2ExampleTriangulation::orientable(
         for (i = 0; i < n; ++i)
             ans->newTriangle();
         for (i = 0; i < n - 1; ++i)
-            ans->getTriangle(i)->joinTo(1, ans->getTriangle(i + 1),
+            ans->triangle(i)->joinTo(1, ans->triangle(i + 1),
                 NPerm3(1, 2));
-        ans->getTriangle(0)->joinTo(2, ans->getTriangle(n - 1), NPerm3(0, 2));
-        ans->getTriangle(0)->joinTo(0, ans->getTriangle(n - 1), NPerm3(0, 1));
+        ans->triangle(0)->joinTo(2, ans->triangle(n - 1), NPerm3(0, 2));
+        ans->triangle(0)->joinTo(0, ans->triangle(n - 1), NPerm3(0, 1));
         for (i = 1; i < genus; ++i) {
-            ans->getTriangle(4 * i - 3)->joinTo(0, ans->getTriangle(4 * i - 1),
+            ans->triangle(4 * i - 3)->joinTo(0, ans->triangle(4 * i - 1),
                 NPerm3(1, 2));
-            ans->getTriangle(4 * i - 2)->joinTo(0, ans->getTriangle(4 * i),
+            ans->triangle(4 * i - 2)->joinTo(0, ans->triangle(4 * i),
                 NPerm3(1, 2));
         }
         for (i = 0; i < punctures; ++i)
-            ans->getTriangle(4 * genus + 3 * i - 3)->joinTo(
-                0, ans->getTriangle(4 * genus + 3 * i - 1), NPerm3(1, 2));
+            ans->triangle(4 * genus + 3 * i - 3)->joinTo(
+                0, ans->triangle(4 * genus + 3 * i - 1), NPerm3(1, 2));
     }
 
     return ans;
@@ -94,15 +94,15 @@ Dim2Triangulation* Dim2ExampleTriangulation::nonOrientable(
     for (i = 0; i < n; ++i)
         ans->newTriangle();
     for (i = 0; i < n - 1; ++i)
-        ans->getTriangle(i)->joinTo(1, ans->getTriangle(i + 1),
+        ans->triangle(i)->joinTo(1, ans->triangle(i + 1),
             NPerm3(1, 2));
-    ans->getTriangle(0)->joinTo(2, ans->getTriangle(n - 1), NPerm3(2, 0, 1));
+    ans->triangle(0)->joinTo(2, ans->triangle(n - 1), NPerm3(2, 0, 1));
     for (i = 1; i < genus; ++i)
-        ans->getTriangle(2 * i - 2)->joinTo(0, ans->getTriangle(2 * i - 1),
+        ans->triangle(2 * i - 2)->joinTo(0, ans->triangle(2 * i - 1),
             NPerm3());
     for (i = 0; i < punctures; ++i)
-        ans->getTriangle(2 * genus + 3 * i - 2)->joinTo(
-            0, ans->getTriangle(2 * genus + 3 * i), NPerm3(1, 2));
+        ans->triangle(2 * genus + 3 * i - 2)->joinTo(
+            0, ans->triangle(2 * genus + 3 * i), NPerm3(1, 2));
 
     return ans;
 }

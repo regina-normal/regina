@@ -110,7 +110,7 @@ Dim2Triangulation* NVertex::buildLinkDetail(bool labels,
                 continue;
 
             edgeInLink = tet->getTriangleMapping(v).preImageOf(exitTri);
-            if (ans->getTriangle(i)->adjacentTriangle(edgeInLink)) {
+            if (ans->triangle(i)->adjacentTriangle(edgeInLink)) {
                 // We've already made this gluing in the vertex link
                 // from the other side.
                 continue;
@@ -129,7 +129,7 @@ Dim2Triangulation* NVertex::buildLinkDetail(bool labels,
                         adjIt->getVertex() == adjVertex)
                     break; // Sets adjIndex to the right value.
 
-            ans->getTriangle(i)->joinTo(edgeInLink, ans->getTriangle(adjIndex),
+            ans->triangle(i)->joinTo(edgeInLink, ans->triangle(adjIndex),
                 perm4to3(adj->getTriangleMapping(adjVertex).inverse() *
                     tet->adjacentGluing(exitTri) *
                     tet->getTriangleMapping(v)));

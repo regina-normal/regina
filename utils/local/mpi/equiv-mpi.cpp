@@ -854,7 +854,7 @@ void slaveTryMovesUp(NTriangulation* t, int levelsRemaining) {
     } else {
         for (unsigned i = 0; i < t->countTriangles(); i++) {
             alt = new NTriangulation(*t);
-            if (alt->twoThreeMove(alt->getTriangle(i))) {
+            if (alt->twoThreeMove(alt->triangle(i))) {
                 if (levelsRemaining > 1)
                     slaveTryMovesUp(alt, levelsRemaining - 1);
                 else

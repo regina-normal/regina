@@ -84,7 +84,7 @@ const NAbelianGroup& NTriangulation::homology() const {
             for (auto& emb : *e) {
                 currTet = emb.tetrahedron();
                 currTetFace = emb.getVertices()[2];
-                triangle = currTet->getTriangle(currTetFace);
+                triangle = currTet->triangle(currTetFace);
                 triGenIndex = genIndex[triangleIndex(triangle)];
                 if (triGenIndex >= 0) {
                     if ((triangle->front().tetrahedron() == currTet) &&

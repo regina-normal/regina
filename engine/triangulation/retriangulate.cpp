@@ -115,9 +115,9 @@ namespace {
 
         if (t->size() < maxTet_)
             for (i = 0; i < t->countTriangles(); ++i)
-                if (t->twoThreeMove(t->getTriangle(i), true, false)) {
+                if (t->twoThreeMove(t->triangle(i), true, false)) {
                     NTriangulation alt(*t);
-                    alt.twoThreeMove(alt.getTriangle(i), false, true);
+                    alt.twoThreeMove(alt.triangle(i), false, true);
                     if (candidate(alt)) {
                         delete t;
                         return;

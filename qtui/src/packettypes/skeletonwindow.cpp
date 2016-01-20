@@ -377,7 +377,7 @@ int TriangleModel::columnCount(const QModelIndex& /* unused parent*/) const {
 
 QVariant TriangleModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        NTriangle* item = tri->getTriangle(index.row());
+        NTriangle* item = tri->triangle(index.row());
         switch (index.column()) {
             case 0:
                 return index.row();
@@ -597,7 +597,7 @@ QVariant BoundaryComponentModel::data(const QModelIndex& index,
                     QString ans;
                     for (unsigned long i = 0; i < item->countTriangles(); ++i) {
                         const NTriangleEmbedding& emb =
-                            item->getTriangle(i)->front();
+                            item->triangle(i)->front();
                         appendToList(ans, QString("%1 (%2)").
                             arg(emb.tetrahedron()->index()).
                             arg(emb.getVertices().trunc3().c_str()));
@@ -693,7 +693,7 @@ QVariant Dim2VertexModel::data(const QModelIndex& index, int role) const {
                 QString ans;
                 for (auto& emb : *item)
                     appendToList(ans, QString("%1 (%2)").
-                        arg(emb.getTriangle()->index()).
+                        arg(emb.triangle()->index()).
                         arg(emb.getVertex()));
                 return ans;
         }
@@ -781,7 +781,7 @@ QVariant Dim2EdgeModel::data(const QModelIndex& index, int role) const {
                 QString ans;
                 for (auto& emb : *item)
                     appendToList(ans, QString("%1 (%2)").
-                        arg(emb.getTriangle()->index()).
+                        arg(emb.triangle()->index()).
                         arg(emb.getVertices().trunc2().c_str()));
                 return ans;
         }
@@ -864,7 +864,7 @@ QVariant Dim2ComponentModel::data(const QModelIndex& index, int role) const {
                 QString ans;
                 for (unsigned long i = 0; i < item->size(); ++i)
                     appendToList(ans, QString::number(
-                        item->getTriangle(i)->index()));
+                        item->triangle(i)->index()));
                 return ans;
         }
         return QString();
@@ -947,7 +947,7 @@ QVariant Dim2BoundaryComponentModel::data(const QModelIndex& index,
                 for (unsigned long i = 0; i < item->countEdges(); ++i) {
                     const Dim2EdgeEmbedding& emb = item->getEdge(i)->front();
                     appendToList(ans, QString("%1 (%2)").
-                        arg(emb.getTriangle()->index()).
+                        arg(emb.triangle()->index()).
                         arg(emb.getVertices().trunc2().c_str()));
                 }
                 return ans;

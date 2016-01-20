@@ -45,7 +45,7 @@ void Dim2BoundaryComponent::writeTextLong(std::ostream& out) const {
     std::vector<Dim2Edge*>::const_iterator it;
     for (it = edges_.begin(); it != edges_.end(); ++it) {
         const Dim2EdgeEmbedding& emb((*it)->front());
-        out << "  " << emb.getTriangle()->markedIndex() << " ("
+        out << "  " << emb.triangle()->markedIndex() << " ("
             << emb.getVertices().trunc2() << ')' << std::endl;
     }
 }

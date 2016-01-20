@@ -1546,7 +1546,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                         CPPUNIT_FAIL(msg.str());
                     }
                     for (k = 0; k < 3; ++k) {
-                        t = link->getTriangle(j);
+                        t = link->triangle(j);
                         adj = t->adjacentTriangle(k);
                         if (adj) {
                             if (! tet->adjacentTetrahedron(perm[k])) {
@@ -3587,9 +3587,9 @@ class NTriangulationTest : public TriangulationTest<3> {
 
                 unsigned long nPunc = punc.size();
                 NBoundaryComponent* bc = punc.tetrahedron(nPunc - 1)->
-                    getTriangle(0)->boundaryComponent();
+                    triangle(0)->boundaryComponent();
                 if (bc == 0 || bc != punc.tetrahedron(nPunc - 2)->
-                        getTriangle(0)->boundaryComponent()) {
+                        triangle(0)->boundaryComponent()) {
                     std::ostringstream msg;
                     msg << tri->label() << ", tet " << i << ": "
                         << "puncture gives wrong boundary triangles.";

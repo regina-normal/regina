@@ -818,9 +818,9 @@ void NTriCompositionUI::findPillowSpheres() {
     regina::NTriangle* f2;
     regina::NPillowTwoSphere* pillow;
     for (i = 0; i < nTriangles; i++) {
-        f1 = tri->getTriangle(i);
+        f1 = tri->triangle(i);
         for (j = i + 1; j < nTriangles; j++) {
-            f2 = tri->getTriangle(j);
+            f2 = tri->triangle(j);
             pillow = regina::NPillowTwoSphere::formsPillowTwoSphere(f1, f2);
             if (pillow) {
                 id = addComponentSection(tr("Pillow 2-sphere"));

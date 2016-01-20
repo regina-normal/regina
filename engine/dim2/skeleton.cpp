@@ -87,7 +87,7 @@ void Triangulation<2>::calculateBoundary() {
         // Loop around from this boundary edge to
         // completely enumerate all edges in this boundary component.
 
-        tri = edge->front().getTriangle();
+        tri = edge->front().triangle();
         edgeId = edge->front().getEdge();
         vertexId = edge->front().getVertices()[0];
         vertex = tri->regina::detail::SimplexFaces<2, 0>::face_[vertexId];
@@ -109,14 +109,14 @@ void Triangulation<2>::calculateBoundary() {
             // boundary edge is one end of the vertex link; the
             // *adjacent* boundary edge must be at the other.
             vertexEmb = vertex->front();
-            if (vertexEmb.getTriangle() == tri &&
+            if (vertexEmb.triangle() == tri &&
                     vertexEmb.getVertices()[0] == vertexId &&
                     vertexEmb.getVertices()[2] == edgeId) {
                 // We are currently looking at the embedding at the
                 // front of the list.  Take the one at the back.
                 vertexEmb = vertex->back();
 
-                adjTri = vertexEmb.getTriangle();
+                adjTri = vertexEmb.triangle();
                 adjEdgeId = vertexEmb.getVertices()[1];
                 adjEdge = adjTri->regina::detail::SimplexFaces<2, 1>::face_[adjEdgeId];
                 adjVertexId = vertexEmb.getVertices()[2];
@@ -124,14 +124,14 @@ void Triangulation<2>::calculateBoundary() {
                 // We must be looking at the embedding at the back
                 // of the list.  Take the one at the front (which is
                 // already stored in vertexEmb).
-                adjTri = vertexEmb.getTriangle();
+                adjTri = vertexEmb.triangle();
                 adjEdgeId = vertexEmb.getVertices()[2];
                 adjEdge = adjTri->regina::detail::SimplexFaces<2, 1>::face_[adjEdgeId];
                 adjVertexId = vertexEmb.getVertices()[1];
 
                 // TODO: Sanity checking; remove this eventually.
                 vertexEmb = vertex->back();
-                if (! (vertexEmb.getTriangle() == tri &&
+                if (! (vertexEmb.triangle() == tri &&
                         vertexEmb.getVertices()[0] == vertexId &&
                         vertexEmb.getVertices()[1] == edgeId)) {
                     std::cerr << "ERROR: Something has gone terribly "

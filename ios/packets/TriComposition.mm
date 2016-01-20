@@ -667,9 +667,9 @@
     regina::NTriangle* f2;
     regina::NPillowTwoSphere* pillow;
     for (i = 0; i < nTriangles; i++) {
-        f1 = self.packet->getTriangle(i);
+        f1 = self.packet->triangle(i);
         for (j = i + 1; j < nTriangles; j++) {
-            f2 = self.packet->getTriangle(j);
+            f2 = self.packet->triangle(j);
             pillow = regina::NPillowTwoSphere::formsPillowTwoSphere(f1, f2);
             if (pillow) {
                 [details appendString:@"Pillow 2-sphere\n"];
