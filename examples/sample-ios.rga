@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<reginadata engine="4.96">
+<reginadata engine="5.0">
 <packet label="Sample Data File"
 	type="Container" typeid="1"
 	parent="">
@@ -1211,6 +1211,32 @@ CS_unknown
 </packet> <!-- Angle Structures (Angle Structure List) -->
 </packet> <!-- Figure 8 Knot Complement (SnapPea Triangulation) -->
 </packet> <!-- 3_Manifolds (Container) -->
+<packet label="4-Manifolds"
+	type="Container" typeid="1"
+	parent="Sample Data File">
+<packet label="Cappell-Shaneson Knot Complement"
+	type="4-Manifold Triangulation" typeid="11"
+	parent="4-Manifolds">
+  <pentachora npent="2">
+    <pent desc=""> 0 17475 1 17496 1 17937 0 16593 1 10440 </pent>
+    <pent desc=""> 0 17986 1 13408 0 13576 0 17104 1 6352 </pent>
+  </pentachora>
+  <fundgroup>
+<group generators="2">
+  <reln> 0^1 1^2 0^-2 1^-3 </reln>
+  <reln> 1^2 0^3 1^-1 0^-2 </reln>
+</group>
+  </fundgroup>
+</packet> <!-- Cappell_Shaneson Knot Complement (4_Manifold Triangulation) -->
+<packet label="Twisted S3 x~ S1"
+	type="4-Manifold Triangulation" typeid="11"
+	parent="4-Manifolds">
+  <pentachora npent="2">
+    <pent desc=""> 0 13380 1 18056 1 18056 1 18056 0 2257 </pent>
+    <pent desc=""> 1 13380 0 18056 0 18056 0 18056 1 2257 </pent>
+  </pentachora>
+</packet> <!-- Twisted S3 x~ S1 (4_Manifold Triangulation) -->
+</packet> <!-- 4_Manifolds (Container) -->
 <packet label="2-Manifolds"
 	type="Container" typeid="1"
 	parent="Sample Data File">
