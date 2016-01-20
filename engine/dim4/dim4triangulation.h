@@ -356,7 +356,7 @@ class REGINA_API Triangulation<4> :
          * @return the index of the specified boundary component,
          * where 0 is the first boundary component, 1 is the second and so on.
          */
-        long boundaryComponentIndex(const Dim4BoundaryComponent* bc) const;
+        size_t boundaryComponentIndex(const Dim4BoundaryComponent* bc) const;
         /**
          * Deprecated routine that returns the index of the given vertex
          * in the triangulation.
@@ -370,7 +370,7 @@ class REGINA_API Triangulation<4> :
          * @return the index of the specified vertex, where 0 is the first
          * vertex, 1 is the second and so on.
          */
-        long vertexIndex(const Dim4Vertex* vertex) const;
+        size_t vertexIndex(const Dim4Vertex* vertex) const;
         /**
          * Deprecated routine that returns the index of the given edge
          * in the triangulation.
@@ -384,7 +384,7 @@ class REGINA_API Triangulation<4> :
          * @return the index of the specified edge, where 0 is the first
          * edge, 1 is the second and so on.
          */
-        long edgeIndex(const Dim4Edge* edge) const;
+        size_t edgeIndex(const Dim4Edge* edge) const;
         /**
          * Deprecated routine that returns the index of the given triangle
          * in the triangulation.
@@ -398,7 +398,7 @@ class REGINA_API Triangulation<4> :
          * @return the index of the specified triangle, where 0 is the first
          * triangle, 1 is the second and so on.
          */
-        long triangleIndex(const Dim4Triangle* tri) const;
+        size_t triangleIndex(const Dim4Triangle* tri) const;
         /**
          * Deprecated routine that returns the index of the given tetrahedron
          * in the triangulation.
@@ -412,7 +412,7 @@ class REGINA_API Triangulation<4> :
          * @return the index of the specified tetrahedron, where 0 is the
          * first tetrahedron, 1 is the second and so on.
          */
-        long tetrahedronIndex(const Dim4Tetrahedron* tet) const;
+        size_t tetrahedronIndex(const Dim4Tetrahedron* tet) const;
 
         /*@}*/
         /**
@@ -1213,24 +1213,24 @@ inline Dim4BoundaryComponent* Triangulation<4>::getBoundaryComponent(
     return boundaryComponents_[index];
 }
 
-inline long Triangulation<4>::boundaryComponentIndex(
+inline size_t Triangulation<4>::boundaryComponentIndex(
         const Dim4BoundaryComponent* boundaryComponent) const {
     return boundaryComponent->index();
 }
 
-inline long Triangulation<4>::vertexIndex(const Dim4Vertex* vertex) const {
+inline size_t Triangulation<4>::vertexIndex(const Dim4Vertex* vertex) const {
     return vertex->index();
 }
 
-inline long Triangulation<4>::edgeIndex(const Dim4Edge* edge) const {
+inline size_t Triangulation<4>::edgeIndex(const Dim4Edge* edge) const {
     return edge->index();
 }
 
-inline long Triangulation<4>::triangleIndex(const Dim4Triangle* tri) const {
+inline size_t Triangulation<4>::triangleIndex(const Dim4Triangle* tri) const {
     return tri->index();
 }
 
-inline long Triangulation<4>::tetrahedronIndex(const Dim4Tetrahedron* tet)
+inline size_t Triangulation<4>::tetrahedronIndex(const Dim4Tetrahedron* tet)
         const {
     return tet->index();
 }

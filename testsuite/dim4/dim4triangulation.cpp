@@ -1515,15 +1515,14 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                                 CPPUNIT_FAIL(msg.str());
                             } else if (p->adjacentPentachoron(perm[k]) !=
                                     tri->pentachoron(iso->pentImage(
-                                    link->tetrahedronIndex(adj)))) {
+                                    adj->index()))) {
                                 std::ostringstream msg;
                                 msg << tri->label()
                                     << ", vertex " << i << ": "
                                     << "link has wrong adjacent tetrahedron.";
                                 CPPUNIT_FAIL(msg.str());
                             } else if (p->adjacentGluing(perm[k]) !=
-                                    iso->facetPerm(
-                                        link->tetrahedronIndex(adj)) *
+                                    iso->facetPerm(adj->index()) *
                                     perm4to5(t->adjacentGluing(k)) *
                                     perm.inverse()) {
                                 std::ostringstream msg;
@@ -1708,7 +1707,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                                 CPPUNIT_FAIL(msg.str());
                             } else if (p->adjacentPentachoron(perm[k]) !=
                                     tri->pentachoron(iso->pentImage(
-                                    link->triangleIndex(adj)))) {
+                                    adj->index()))) {
                                 std::ostringstream msg;
                                 msg << tri->label()
                                     << ", edge " << i << ": "
@@ -1716,7 +1715,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                                 CPPUNIT_FAIL(msg.str());
                             } else if ((! e->hasBadIdentification()) &&
                                     p->adjacentGluing(perm[k]) !=
-                                    iso->facetPerm(link->triangleIndex(adj)) *
+                                    iso->facetPerm(adj->index()) *
                                     perm3to5(t->adjacentGluing(k)) *
                                     perm.inverse()) {
                                 // Note: we expect broken gluings with

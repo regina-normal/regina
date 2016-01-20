@@ -97,8 +97,7 @@ void Dim4Triangulation::barycentricSubdivision() {
 
             glue = oldPent->adjacentGluing(perm[0]);
             newPent[120 * pent + permIdx]->joinTo(perm[0],
-                newPent[120 * pentachoronIndex(
-                    oldPent->adjacentPentachoron(perm[0])) +
+                newPent[120 * oldPent->adjacentPentachoron(perm[0])->index() +
                     (glue * perm).S5Index()],
                 glue);
         }
@@ -285,8 +284,8 @@ bool Dim4Triangulation::idealToFinite() {
                     break;
                 }
             if (!TIv) { // decide between _OP (1) and _CT (2) for these
-                subDivNot p0( _OP, pentachoronIndex( tEmb0.pentachoron() ) );
-                subDivNot p1( _OP, pentachoronIndex( tEmb1.pentachoron() ) );
+                subDivNot p0( _OP, tEmb0.pentachoron()->index() );
+                subDivNot p1( _OP, tEmb1.pentachoron()->index() );
                 if (shouldTruncate(tEmb0.pentachoron()->vertex( 
                     tEmb0.tetrahedron() ))) {
                     p0.penType = _CT;
@@ -324,10 +323,8 @@ bool Dim4Triangulation::idealToFinite() {
                         break;
                     }
                 {
-                    subDivNot p0( _CCt, pentachoronIndex(
-                                      tEmb0.pentachoron() ) ); 
-                    subDivNot p1( _CCt, pentachoronIndex(
-                                      tEmb1.pentachoron() ) ); 
+                    subDivNot p0( _CCt, tEmb0.pentachoron()->index() ); 
+                    subDivNot p1( _CCt, tEmb1.pentachoron()->index() ); 
                     p0.tetIdx = tEmb0.tetrahedron();
                     p1.tetIdx = tEmb1.tetrahedron();
                     p0.triIdx = j;
@@ -367,10 +364,8 @@ bool Dim4Triangulation::idealToFinite() {
                         }
                 }
                 if (shouldTruncate(aTet->vertex(j))) { // we have a _CCit
-                    subDivNot p0( _CCit, pentachoronIndex( 
-                        tEmb0.pentachoron() ) );
-                    subDivNot p1( _CCit, pentachoronIndex(
-                        tEmb1.pentachoron() ) );
+                    subDivNot p0( _CCit, tEmb0.pentachoron()->index() );
+                    subDivNot p1( _CCit, tEmb1.pentachoron()->index() );
                     p0.tetIdx = tEmb0.tetrahedron();
                     p1.tetIdx = tEmb1.tetrahedron();
                     p0.triIdx = j;

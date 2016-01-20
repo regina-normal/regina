@@ -100,7 +100,7 @@ const Dim4Vertex* NNormalHypersurfaceVector::isVertexLink(
     // of pieces of each type is the same.
     for (size_t e = 0; e < ans->degree(); ++e)
         if (ansMult != tetrahedra(
-                triang->pentachoronIndex(ans->embedding(e).pentachoron()),
+                ans->embedding(e).pentachoron()->index(),
                 ans->embedding(e).vertex(), triang))
             return 0;
 
@@ -149,7 +149,7 @@ const Dim4Edge* NNormalHypersurfaceVector::isThinEdgeLink(
     // each appear with the same multiple.
     for (size_t e = 0; e < ans->degree(); ++e)
         if (ansMult != prisms(
-                triang->pentachoronIndex(ans->embedding(e).pentachoron()),
+                ans->embedding(e).pentachoron()->index(),
                 ans->embedding(e).edge(), triang))
             return 0;
 

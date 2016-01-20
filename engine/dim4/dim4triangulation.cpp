@@ -84,7 +84,7 @@ void Dim4Triangulation::writeTextLong(std::ostream& out) const {
                 out << "  boundary";
             else {
                 adjPerm = pent->adjacentGluing(i);
-                out << std::setw(3) << pentachoronIndex(adjPent) << " (";
+                out << std::setw(3) << adjPent->index() << " (";
                 for (j = 0; j < 5; ++j) {
                     if (j == i) continue;
                     out << adjPerm[j];
@@ -103,8 +103,7 @@ void Dim4Triangulation::writeTextLong(std::ostream& out) const {
         pent = simplices_[pentPos];
         out << "  " << std::setw(4) << pentPos << "  |          ";
         for (i = 0; i < 5; ++i)
-            out << ' ' << std::setw(3) <<
-                vertexIndex(pent->vertex(i));
+            out << ' ' << std::setw(3) << pent->vertex(i)->index();
         out << '\n';
     }
     out << '\n';
@@ -118,7 +117,7 @@ void Dim4Triangulation::writeTextLong(std::ostream& out) const {
         for (i = 0; i < 5; ++i)
             for (j = i + 1; j < 5; ++j)
                 out << ' ' << std::setw(3)
-                    << edgeIndex(pent->edge(Dim4Edge::edgeNumber[i][j]));
+                    << pent->edge(Dim4Edge::edgeNumber[i][j])->index();
         out << '\n';
     }
     out << '\n';
@@ -133,8 +132,8 @@ void Dim4Triangulation::writeTextLong(std::ostream& out) const {
             for (j = i + 1; j < 5; ++j)
                 for (k = j + 1; k < 5; ++k)
                     out << ' ' << std::setw(3)
-                        << triangleIndex(pent->triangle(
-                            Dim4Triangle::triangleNumber[i][j][k]));
+                        << pent->triangle(
+                            Dim4Triangle::triangleNumber[i][j][k])->index();
         out << '\n';
     }
     out << '\n';
@@ -189,7 +188,7 @@ void Dim4Triangulation::writeXMLPacketData(std::ostream& out) const {
         for (facet = 0; facet < 5; ++facet) {
             adjPent = (*it)->adjacentPentachoron(facet);
             if (adjPent) {
-                out << pentachoronIndex(adjPent) << ' '
+                out << adjPent->index() << ' '
                     << (*it)->adjacentGluing(facet).permCode() << ' ';
             } else
                 out << "-1 -1 ";
@@ -236,7 +235,7 @@ void Dim4Triangulation::cloneFrom(const Dim4Triangulation& X) {
         for (facet = 0; facet < 5; ++facet) {
             adjPent = pent->adjacentPentachoron(facet);
             if (adjPent) {
-                adjPos = X.pentachoronIndex(adjPent);
+                adjPos = adjPent->index();
                 adjPerm = pent->adjacentGluing(facet);
                 if (adjPos > pentPos ||
                         (adjPos == pentPos && adjPerm[facet] > facet)) {

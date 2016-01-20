@@ -197,7 +197,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::doubleCone(
             if (adjTet == 0)
                 continue;
 
-            adjIndex = base.tetrahedronIndex(adjTet);
+            adjIndex = adjTet->index();
             if (adjIndex > i)
                 continue;
 
@@ -241,7 +241,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::singleCone(
             if (adjTet == 0)
                 continue;
 
-            adjIndex = base.tetrahedronIndex(adjTet);
+            adjIndex = adjTet->index();
             if (adjIndex > i)
                 continue;
 

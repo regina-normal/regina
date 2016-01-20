@@ -249,7 +249,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
         outerTet = outer->tetrahedron(tet);
         outerPent = outerTet->front().pentachoron();
         outerTetEmb = outerTet->front().vertices();
-        pent = outer->pentachoronIndex(outerPent);
+        pent = outerPent->index();
 
         tetData[tet] = new TetData(
             tetrahedra(pent, outerTetEmb[0]).longValue() +
@@ -320,7 +320,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                     outerTet = outerPent->tetrahedron(facet);
                     outerTetEmb = outerPent->tetrahedronMapping(facet);
 
-                    outerTetDisc.tetIndex = outer->tetrahedronIndex(outerTet);
+                    outerTetDisc.tetIndex = outerTet->index();
                     outerTetDisc.type = outerTetEmb.preImageOf(type);
                     outerTetDisc.number = pieceNumber;
 
@@ -369,7 +369,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
 
                 outerTet = outerPent->tetrahedron(facet);
                 outerTetEmb = outerPent->tetrahedronMapping(facet);
-                outerTetDisc.tetIndex = outer->tetrahedronIndex(outerTet);
+                outerTetDisc.tetIndex = outerTet->index();
                 outerTetDisc.type = outerTetEmb.preImageOf(e1);
                 outerTetDisc.number = pieceNumber +
                     tetrahedra(pent, e1).longValue();
@@ -391,7 +391,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
 
                 outerTet = outerPent->tetrahedron(facet);
                 outerTetEmb = outerPent->tetrahedronMapping(facet);
-                outerTetDisc.tetIndex = outer->tetrahedronIndex(outerTet);
+                outerTetDisc.tetIndex = outerTet->index();
                 outerTetDisc.type = outerTetEmb.preImageOf(e0);
                 outerTetDisc.number = pieceNumber +
                     tetrahedra(pent, e0).longValue();
@@ -416,7 +416,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
 
                 outerTet = outerPent->tetrahedron(facet);
                 outerTetEmb = outerPent->tetrahedronMapping(facet);
-                outerTetDisc.tetIndex = outer->tetrahedronIndex(outerTet);
+                outerTetDisc.tetIndex = outerTet->index();
                 outerTetDisc.type = 4 + vertexSplit
                     [outerTetEmb.preImageOf(e0)][outerTetEmb.preImageOf(e1)];
                 // Quadrilaterals are numbered away from vertex 0 of the
@@ -467,7 +467,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
 
                 outerTet = outerPent->tetrahedron(facet);
                 outerTetEmb = outerPent->tetrahedronMapping(facet);
-                outerTetDisc.tetIndex = outer->tetrahedronIndex(outerTet);
+                outerTetDisc.tetIndex = outerTet->index();
                 outerTetDisc.type = 4 + vertexSplit
                     [outerTetEmb.preImageOf(e0)][outerTetEmb.preImageOf(e1)];
                 // Quadrilaterals are numbered away from vertex 0 of the
@@ -517,7 +517,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
 
                 outerTet = outerPent->tetrahedron(facet);
                 outerTetEmb = outerPent->tetrahedronMapping(facet);
-                outerTetDisc.tetIndex = outer->tetrahedronIndex(outerTet);
+                outerTetDisc.tetIndex = outerTet->index();
                 outerTetDisc.type = 4 + vertexSplit
                     [outerTetEmb.preImageOf(e0)][outerTetEmb.preImageOf(e1)];
                 // Quadrilaterals are numbered away from vertex 0 of the

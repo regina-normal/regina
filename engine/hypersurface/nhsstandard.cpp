@@ -90,10 +90,8 @@ NMatrixInt* NNormalHypersurfaceVectorStandard::makeMatchingEquations(
             triangulation->tetrahedra().begin();
             tit != triangulation->tetrahedra().end(); tit++) {
         if (! (*tit)->isBoundary()) {
-            pent0 = triangulation->pentachoronIndex(
-                (*tit)->embedding(0).pentachoron());
-            pent1 = triangulation->pentachoronIndex(
-                (*tit)->embedding(1).pentachoron());
+            pent0 = (*tit)->embedding(0).pentachoron()->index();
+            pent1 = (*tit)->embedding(1).pentachoron()->index();
             perm0 = (*tit)->embedding(0).vertices();
             perm1 = (*tit)->embedding(1).vertices();
 

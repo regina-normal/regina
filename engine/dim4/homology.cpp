@@ -191,7 +191,7 @@ const NAbelianGroup& Dim4Triangulation::homologyH2() const {
             if (e->isBoundary())
                 continue;
 
-            row = edgeInternalIndex[edgeIndex(e)];
+            row = edgeInternalIndex[e->index()];
             pentEdge = Dim4Edge::edgeNumber[perm[(j+1) % 3]][perm[(j+2) % 3]];
 
             tmpPerm = NPerm5(2, j) * perm.inverse() *
@@ -234,7 +234,7 @@ const NAbelianGroup& Dim4Triangulation::homologyH2() const {
             if (t->isBoundary())
                 continue;
 
-            row = triangleInternalIndex[triangleIndex(t)];
+            row = triangleInternalIndex[t->index()];
             pentTriangle = Dim4Triangle::triangleNumber
                 [perm[(j+1) % 4]][perm[(j+2) % 4]][perm[(j+3) % 4]];
             bdry21.entry(row, col) +=

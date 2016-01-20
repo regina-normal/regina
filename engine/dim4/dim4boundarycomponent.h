@@ -124,13 +124,15 @@ class REGINA_API Dim4BoundaryComponent :
 
         /**
          * Returns the index of this boundary component in the underlying
-         * triangulation.  This is identical to calling
+         * triangulation.
+         *
+         * This is identical to calling the deprecated function
          * <tt>boundaryComponentIndex(this)</tt> on the underlying
          * triangulation.
          *
-         * @return the index of this boundary component tetrahedron.
+         * @return the index of this boundary component.
          */
-        unsigned long index() const;
+        size_t index() const;
 
         /**
          * Returns the number of <i>subdim</i>-faces in this boundary component.
@@ -317,7 +319,7 @@ inline Dim4BoundaryComponent::Dim4BoundaryComponent(Dim4Vertex* vertex) :
     vertices_.push_back(vertex);
 }
 
-inline unsigned long Dim4BoundaryComponent::index() const {
+inline size_t Dim4BoundaryComponent::index() const {
     return markedIndex();
 }
 
