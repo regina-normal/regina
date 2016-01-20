@@ -59,7 +59,7 @@ const NGroupPresentation& NTriangulation::fundamentalGroup() const {
     // Find out which triangle corresponds to which generator.
     long *genIndex = new long[countTriangles()];
     long i = 0;
-    for (NTriangle* f : getTriangles())
+    for (NTriangle* f : triangles())
         if (f->isBoundary() || f->inMaximalForest())
             genIndex[f->index()] = -1;
         else

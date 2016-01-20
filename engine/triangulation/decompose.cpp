@@ -998,7 +998,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
     bool opened = true;
     while (opened) {
         opened = false;
-        for (fit = use.getTriangles().begin(); fit != use.getTriangles().end(); ++fit)
+        for (fit = use.triangles().begin(); fit != use.triangles().end(); ++fit)
             if (use.openBook(*fit, true, true)) {
                 opened = true;
                 break;
@@ -1020,7 +1020,7 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
     // It doesn't matter whether the edges and/or vertices are distinct.
     NEdge *e0, *e1, *e2;
     unsigned long newSphereCount;
-    for (fit = use.getTriangles().begin(); fit != use.getTriangles().end(); ++fit) {
+    for (fit = use.triangles().begin(); fit != use.triangles().end(); ++fit) {
         if ((*fit)->isBoundary())
             continue;
 

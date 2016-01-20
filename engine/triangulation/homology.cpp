@@ -63,7 +63,7 @@ const NAbelianGroup& NTriangulation::homology() const {
     // Find out which triangle corresponds to which generator.
     long* genIndex = new long[countTriangles()];
     long i = 0;
-    for (NTriangle* f : getTriangles()) {
+    for (NTriangle* f : triangles()) {
         if (f->isBoundary() || f->inMaximalForest())
             genIndex[f->index()] = -1;
         else {
@@ -161,7 +161,7 @@ const NAbelianGroup& NTriangulation::homologyRel() const {
     long edgeGenIndex;
     i = 0;
     int triEdge, currEdgeStart, currEdgeEnd, currEdge;
-    for (NTriangle* f : getTriangles()) {
+    for (NTriangle* f : triangles()) {
         if (! f->isBoundary()) {
             // Put in the relation corresponding to this triangle.
             currTet = f->front().tetrahedron();

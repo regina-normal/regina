@@ -53,7 +53,7 @@ namespace {
 
         public:
             Dim2TriangleReader(Dim2Triangulation* tri, unsigned whichTri) :
-                    tri_(tri), triangle_(tri->getTriangles()[whichTri]) {
+                    tri_(tri), triangle_(tri->triangles()[whichTri]) {
             }
 
             virtual void startElement(const std::string&,
@@ -84,7 +84,7 @@ namespace {
                         continue;
 
                     perm.setPermCode(permCode);
-                    adjTri = tri_->getTriangles()[triIndex];
+                    adjTri = tri_->triangles()[triIndex];
                     adjEdge = perm[k];
                     if (adjTri == triangle_ && adjEdge == k)
                         continue;

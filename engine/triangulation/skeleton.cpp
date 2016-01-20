@@ -110,7 +110,7 @@ void NTriangulation::calculateBoundary() {
     //     NComponent.boundaryComponents
     NBoundaryComponent* label;
 
-    for (NTriangle* triangle : getTriangles()) {
+    for (NTriangle* triangle : triangles()) {
         if (triangle->degree() < 2)
             if (triangle->boundaryComponent_ == 0) {
                 label = new NBoundaryComponent();

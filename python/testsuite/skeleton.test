@@ -39,7 +39,7 @@ for v in t.vertices():
 for e in t.edges():
 	print 'Edge', e.index()
 	print e.detail()
-for f in t.getTriangles():
+for f in t.triangles():
 	print 'Triangle', f.index()
 	print f.detail()
 
