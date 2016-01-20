@@ -28,6 +28,9 @@ Version 5.0  [ (under development) ]
 Version 4.97  [ (under development) ]
 
     GENERAL:
+        - Now supports triangulations of all dimensions 2,...,15.
+          Dimension 4 (like dimensions 3 and 2) has rich functionality;
+          dimensions 5,...,15 have more basic support.
         - Now uses aspects of C++11, which your compiler will need to support.
         - Merged sources for the iPad version into the main source tree.
         - Updated the bundled copy of Normaliz to version 3.0.0 (28 Sep 2015).
@@ -172,6 +175,11 @@ Version 4.97  [ (under development) ]
             - Removed getEmbeddings() for C++, but kept it for Python.
             - Removed the old routine getNumberOfEmbeddings().  Just use
               the equivalent routine getDegree() instead.
+        Class Dim4Triangulation, Dim4BoundaryComponent, Dim4Component,
+                Dim4Vertex, Dim4Edge, Dim4Triangle, Dim4Tetrahedron,
+                Dim4Pentachoron, Dim4Isomorphism, Dim4ExampleTriangulation,
+                NXMLDim4TriangulationReader:
+            - New suite of classes to support 4-dimensional triangulations.
         Class DimTraits:
             - Removed entirely.  For the typedefs that it used to provide
               (e.g., Triangulation, Simplex, FacetPairing, etc.), just use
@@ -343,6 +351,12 @@ Version 4.97  [ (under development) ]
               output routines.
         Class NMutex:
             - Deprecated; just use std::mutex and related classes instead.
+        Class NNormalHypersurface, NNormalHypersurfaceList,
+                NNormalHypersurfaceVector, NNormalHypersurfaceVectorMirrored,
+                NNormalHypersurfaceVectorStandard,
+                NXMLNormalHypersurfaceReader, NXMLNormalHypersurfaceListReader:
+            - New suite of classes to support normal hypersurfaces in
+              4-manifold triangulations.
         Class NNormalSurface:
             - New convenience routines normal() and embedded().
             - Renamed getTriangleCoord(), getQuadCoord(), getOctCoord(),
