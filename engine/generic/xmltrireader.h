@@ -86,7 +86,7 @@ class REGINA_API XMLTriangulationReader : public NXMLPacketReader {
         virtual void endContentSubElement(const std::string& subTagName,
             NXMLElementReader* subReader) override;
 
-    protected:
+    private:
         /**
          * Reads a single top-dimensional simplex with its name and gluings.
          */
