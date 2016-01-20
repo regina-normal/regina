@@ -46,7 +46,7 @@ triangle ::= (#PCDATA)</synopsis>
   <title>Description</title>
   <para>
    A &xml-triangle; element stores a single triangle in a 2-manifold
-   triangulation with its associated edge gluings.
+   triangulation, along with its associated edge gluings.
   </para>
   <para>
    The character data of this &xml; element should be a
@@ -59,12 +59,12 @@ triangle ::= (#PCDATA)</synopsis>
    For each pair, the first integer represents the triangle to which
    the edge is glued (note that triangles in a triangulation are
    numbered 0, 1, 2, etc.).  The second integer represents the
-   permutation of vertices from this triangle to the other
+   permutation of vertices from this triangle to the other triangle
    describing precisely how this gluing takes place.  This permutation
-   will take the current edge number to the corresponding edge number of
-   the adjacent triangle, and the other two vertex numbers to the
-   corresponding two vertex numbers on the adjacent triangle to
-   which they are identified by this gluing.
+   will take the current edge number of this triangle to the corresponding
+   edge number of the adjacent triangle, and the other two vertex numbers
+   of this triangle to the corresponding two vertex numbers on the
+   adjacent triangle to which they are identified by this gluing.
   </para>
   <para>
    A permutation is represented as an integer between 0 and 5 inclusive,

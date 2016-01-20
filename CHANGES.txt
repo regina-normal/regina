@@ -176,12 +176,14 @@ Version 4.97  [ (under development) ]
             - Removed entirely.  For the typedefs that it used to provide
               (e.g., Triangulation, Simplex, FacetPairing, etc.), just use
               Triangulation<dim>, Simplex<dim>, FacetPairing<dim>, and so on.
-        Class Face, FaceEmbedding, FaceBase, FaceEmbeddingBase, FaceStorage:
+        Class Face, FaceEmbedding, FaceBase, FaceEmbeddingBase, FaceStorage,
+                FaceValidity, FaceOrientability:
             - Face<dim, subdim> is now a generic class that replaces the
               old face classes Dim2Vertex, Dim2Edge, NVertex, NEdge, NTriangle.
-              FaceBase<dim, subdim> and FaceStorage<dim, codim> are base
-              classes with functionality common to all dimensions, whereas
-              Face<dim, subdim> is specialised for dimensions dim = 2, 3 and 4.
+              FaceBase<...>, FaceStorage<...>, FaceValidity<...> and
+              FaceOrientability<...> are base classes with functionality
+              common to all dimensions, whereas Face<dim, subdim> is
+              specialised for dimensions dim = 2, 3 and 4.
             - Likewise, FaceEmbedding<dim, subdim> is a generic class
               that replaces Dim2VertexEmbedding, ..., NTriangleEmbedding.
               Again, FaceEmbeddingBase<dim, subdim> is a base class with
@@ -190,6 +192,14 @@ Version 4.97  [ (under development) ]
             - The old class names (Dim2Vertex, ..., NTriangle and
               Dim2VertexEmbedding, ..., NTriangleEmbedding) have been kept
               as typedefs for convenience.
+        Class FaceNumbering, FaceNumberingImpl, FaceNumberingAPI:
+            - FaceNumbering<dim, subdim> is a new class that offers various
+              ways to query the numbering scheme for subdim-faces in a
+              dim-dimensional simplex.  FaceNumberingImpl<...> is a base
+              class that provides the implementation, and FaceNumberingAPI<...>
+              is a base class used to help with documentation.
+            - FaceNumbering<dim, subdim> is a base class of Face<dim, subdim>,
+              so end users can access its routines directly from Face<...>.
         Class FacetPairing, FacetPairingBase:
             - FacetPairing<dim> is now a generic class that replaces the old
               Dim2EdgePairing, NFacePairing and so on.  FacetPairingBase<dim>
@@ -590,19 +600,20 @@ Version 4.97  [ (under development) ]
               objects that are mirrored in external interfaces (e.g., python).
             - The string output routines str() and detail() are now provided
               by the Output template class instead.
-        Class Simplex, SimplexBase:
+        Class Simplex, SimplexBase, SimplexFaces, SimplexFacesSuite:
             - Simplex<dim> is now a generic class that replaces the old
-              Dim2Triangle, NTetrahedron and so on.  SimplexBase<dim> is a
-              base class with functionality common to all dimensions,
-              whereas Simplex<dim> is specialised for dimensions 2, 3 and 4.
+              Dim2Triangle, NTetrahedron and so on.  SimplexBase<...>,
+              SimplexFaces<...> and SimplexFacesSuite<...> are base classes
+              with functionality common to all dimensions, whereas Simplex<dim>
+              is specialised for dimensions 2, 3 and 4.
             - The old class names Dim2Triangle and NTetrahedron have
               been kept as typedefs for convenience.
-        Class Triangulation, TriangulationBase:
+        Class Triangulation, TriangulationBase, FaceList, FaceListSuite:
             - Triangulation<dim> is now a generic subclass of NPacket that
               replaces the old Dim2Triangulation, NTriangulation, etc.
-              TriangulationBase<dim> is a base class with functionality common
-              to all dimensions, whereas Triangulation<dim> is specialised for
-              dimensions 2, 3, 4.
+              TriangulationBase<...>, FaceList<...> and FaceListSuite<...>
+              are base classes with functionality common to all dimensions,
+              whereas Triangulation<dim> is specialised for dimensions 2, 3, 4.
             - The old class names Dim2Triangulation and NTriangulation have
               been kept as typedefs for convenience.
         Class XMLTriReader:

@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>tet</refname>
-  <refpurpose>A single tetrahedron in a 3-manifold triangulation</refpurpose>
+  <refpurpose>A single tetrahedron in a 3-dimensional triangulation</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -45,8 +45,8 @@ tet ::= (#PCDATA)</synopsis>
  <refsect1>
   <title>Description</title>
   <para>
-   A &xml-tet; element stores a single tetrahedron in a 3-manifold
-   triangulation with its associated face gluings.
+   A &xml-tet; element stores a single tetrahedron in a 3-dimensional
+   triangulation, along with its associated face gluings.
   </para>
   <para>
    The character data of this &xml; element should be a
@@ -59,12 +59,12 @@ tet ::= (#PCDATA)</synopsis>
    For each pair, the first integer represents the tetrahedron to which
    the face is glued (note that tetrahedra in a triangulation are
    numbered 0, 1, 2, etc.).  The second integer represents the
-   permutation of vertices from this tetrahedron to the other
+   permutation of vertices from this tetrahedron to the other tetrahedron
    describing precisely how this gluing takes place.  This permutation
-   will take the current face number to the corresponding face number of
-   the adjacent tetrahedron, and the other three vertex numbers to the
-   corresponding three vertex numbers on the adjacent tetrahedron to
-   which they are identified by this gluing.
+   will take the current face number of this tetrahedron to the corresponding
+   face number of the adjacent tetrahedron, and the other three vertex numbers
+   of this tetrahedron to the corresponding three vertex numbers on the
+   adjacent tetrahedron to which they are identified by this gluing.
   </para>
   <para>
    A permutation is represented as a one-byte integer as follows.

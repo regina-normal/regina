@@ -2,15 +2,15 @@
 <!-- Regina data file format documentation.
      See ../regina.sgml for further details. -->
 
-<refentry id="data-packet-triangulation">
+<refentry id="data-packet-dim3triangulation">
  <refmeta>
-  <refentrytitle>packet (<replaceable>dim</replaceable>-dimensional triangulation)</refentrytitle>
+  <refentrytitle>packet (3-dimensional triangulation)</refentrytitle>
   <manvolnum>5reg</manvolnum>
  </refmeta>
 
  <refnamediv>
-  <refname>packet (<replaceable>dim</replaceable>-dimensional triangulation)</refname>
-  <refpurpose>A <replaceable>dim</replaceable>-dimensional triangulation packet</refpurpose>
+  <refname>packet (3-dimensional triangulation)</refname>
+  <refpurpose>A 3-dimensional triangulation packet</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -24,7 +24,12 @@
      </entry></row>
      <row><entry namest="c1" nameend="c2">
 <synopsis>
-packet ::= (&xml-simplices;,
+packet ::= (&xml-tetrahedra;,
+            &xml-fundgroup;?, &xml-H1;?, &xml-H1Bdry;?, &xml-H1Rel;?, &xml-H2;?,
+            &xml-splitsfce;?, &xml-zeroeff;?,
+            &xml-threesphere;?, &xml-threeball;?, &xml-solidtorus;?,
+            &xml-irreducible;?, &xml-compressingdisc;?, &xml-haken;?,
+            &xml-turaevviro;*,
             &xml-tag;*, &xml-packet;*)</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
@@ -42,14 +47,14 @@ packet ::= (&xml-simplices;,
   <title>Description</title>
   <para>
    This type of <emphasis>triangulation</emphasis>
-   packet stores a <replaceable>dim</replaceable>-dimensional triangulation,
-   for dimensions
-   5 &le; <replaceable>dim</replaceable> &le; 15.
+   packet stores a 3-dimensional triangulation
+   (typically of a 3-manifold).
   </para>
   <para>
-   The top-dimensional simplices that form this triangulation and their
-   corresponding facet gluings are specified by the child &xml-simplices;
-   element.
+   The tetrahedra forming this triangulation and their corresponding
+   face gluings are specified by the child &xml-tetrahedra; element.
+   Other optional child elements may store precalculated properties of
+   this triangulation.
   </para>
   <para>
    The roles played by the child &xml-tag; and &xml-packet; elements are
@@ -58,8 +63,17 @@ packet ::= (&xml-simplices;,
   <note><para>
    &regina; supports triangulations in many dimensions.
    See also the elements &xml-packet-dim2triangulation;,
-   &xml-packet-dim3triangulation;, and &xml-packet-dim4triangulation;.
+   &xml-packet-dim4triangulation;, and &xml-packet-triangulation;.
   </para></note>
+
+  <refsect2>
+   <title>Deprecated Data</title>
+   <para>
+    The child &xml-turaevviro; element is deprecated, and should not be used.
+    This element will not be written by the latest version of &regina;,
+    and will be ignored when reading older data files.
+   </para>
+  </refsect2>
 
   <refsect2>
    <title>Parents</title>
@@ -76,11 +90,25 @@ packet ::= (&xml-simplices;,
    <title>Children</title>
    <para>
     The following elements occur in <sgmltag>packet</sgmltag> for
-    a <replaceable>dim</replaceable>-dimensional triangulation packet:
+    a 3-dimensional triangulation packet:
     <simplelist type="inline">
+     <member>&xml-compressingdisc;</member>
+     <member>&xml-fundgroup;</member>
+     <member>&xml-H1;</member>
+     <member>&xml-H1Bdry;</member>
+     <member>&xml-H1Rel;</member>
+     <member>&xml-H2;</member>
+     <member>&xml-haken;</member>
+     <member>&xml-irreducible;</member>
      <member>&xml-packet;</member>
+     <member>&xml-splitsfce;</member>
+     <member>&xml-solidtorus;</member>
      <member>&xml-tag;</member>
-     <member>&xml-simplices;</member>
+     <member>&xml-tetrahedra;</member>
+     <member>&xml-threeball;</member>
+     <member>&xml-threesphere;</member>
+     <member>&xml-turaevviro;</member>
+     <member>&xml-zeroeff;</member>
     </simplelist>.
    </para>
   </refsect2>

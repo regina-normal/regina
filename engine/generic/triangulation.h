@@ -46,6 +46,7 @@
 #include "packet/npacket.h"
 #include "utilities/nmarkedvector.h"
 #include "utilities/xmlutils.h"
+#include <type_traits>
 
 namespace regina {
 
@@ -551,6 +552,15 @@ void Triangulation<dim>::writeXMLPacketData(std::ostream& out) const {
     Simplex<dim>* adj;
     int facet;
 
+    // We will send permutation codes directly to the output stream.
+    // This requires them to be numeric types (not character types).
+    static_assert(! (
+            std::is_same<typename NPerm<dim + 1>::Code, char>::value ||
+            std::is_same<typename NPerm<dim + 1>::Code, unsigned char>::value
+        ),
+        "The generic implementation of Triangulation<dim>::writeXMLPacketData "
+        "requires permutation codes to be numeric types.");
+
     out << "  <simplices size=\"" << simplices_.size() << "\">\n";
     for (auto s : simplices_) {
         out << "    <simplex desc=\"" <<
@@ -558,8 +568,8 @@ void Triangulation<dim>::writeXMLPacketData(std::ostream& out) const {
         for (facet = 0; facet <= dim; ++facet) {
             adj = s->adjacentSimplex(facet);
             if (adj) {
-                out << adj->index() << ' ' << static_cast<int>(
-                    s->adjacentGluing(facet).permCode()) << ' ';
+                out << adj->index() << ' '
+                    << s->adjacentGluing(facet).permCode() << ' ';
             } else
                 out << "-1 -1 ";
         }
