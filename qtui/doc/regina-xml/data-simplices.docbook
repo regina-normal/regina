@@ -2,15 +2,16 @@
 <!-- Regina data file format documentation.
      See ../regina.sgml for further details. -->
 
-<refentry id="data-tetrahedra">
+<refentry id="data-simplices">
  <refmeta>
-  <refentrytitle>tetrahedra</refentrytitle>
+  <refentrytitle>simplices</refentrytitle>
   <manvolnum>5reg</manvolnum>
  </refmeta>
 
  <refnamediv>
-  <refname>tetrahedra</refname>
-  <refpurpose>The tetrahedra forming a 3-dimensional triangulation</refpurpose>
+  <refname>simplices</refname>
+  <refpurpose>The top-dimeinsional simplices that form a
+  <replaceable>dim</replaceable>-dimensional triangulation</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -24,7 +25,7 @@
      </entry></row>
      <row><entry namest="c1" nameend="c2">
 <synopsis>
-tetrahedra ::= (&xml-tet;*)</synopsis>
+simplices ::= (&xml-simplex;*)</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
       <emphasis role="bold">Attributes</emphasis>
@@ -34,7 +35,7 @@ tetrahedra ::= (&xml-tet;*)</synopsis>
       <entry><emphasis role="bold">Type</emphasis></entry>
      </row>
      <row>
-      <entry><sgmltag>ntet</sgmltag></entry>
+      <entry><sgmltag>size</sgmltag></entry>
       <entry><type>NUMBER</type> (required)</entry>
      </row>
     </tbody>
@@ -45,23 +46,32 @@ tetrahedra ::= (&xml-tet;*)</synopsis>
  <refsect1>
   <title>Description</title>
   <para>
-   A &xml-tetrahedra; element stores the entire set of tetrahedra forming a
-   3-dimensional triangulation.
+   A &xml-simplices; element stores the entire set of top-dimensional
+   simplices that form a <replaceable>dim</replaceable>-dimensional
+   triangulation, for dimensions
+   5 &le; <replaceable>dim</replaceable> &le; 15.
   </para>
   <para>
-   The total number of tetrahedra must be specified by the
-   <sgmltag>ntet</sgmltag> attribute.  The individual tetrahedra are
-   numbered 0, 1, 2, etc., and their face gluings are described by the
-   corresponding child &xml-tet; elements.  There must be precisely
-   <replaceable>ntet</replaceable> child &xml-tet; elements in total.
+   The total number of simplices must be specified by the
+   <sgmltag>size</sgmltag> attribute.  The individual simplices are
+   numbered 0, 1, 2, etc., and their facet gluings are described by the
+   corresponding child &xml-simplex; elements.  There must be precisely
+   <replaceable>size</replaceable> child &xml-simplex; elements in total.
   </para>
+  <note><para>
+   The &xml-simplices; element is only for use in higher dimensions
+   5 &le; <replaceable>dim</replaceable> &le; 15.
+   For the smaller dimensions 2, 3 and 4, the specialised tags
+   &xml-triangles;, &xml-tetrahedra; and &xml-pentachora;
+   should be used instead.
+  </para></note>
 
   <refsect2>
    <title>Parents</title>
    <para>
-    The following elements contain <sgmltag>tetrahedra</sgmltag>:
+    The following elements contain <sgmltag>simplices</sgmltag>:
     <simplelist type="inline">
-     <member>&xml-packet-dim3triangulation;</member>
+     <member>&xml-packet-triangulation;</member>
     </simplelist>.
    </para>
   </refsect2>
@@ -69,9 +79,9 @@ tetrahedra ::= (&xml-tet;*)</synopsis>
   <refsect2>
    <title>Children</title>
    <para>
-    The following elements occur in <sgmltag>tetrahedra</sgmltag>:
+    The following elements occur in <sgmltag>simplices</sgmltag>:
     <simplelist type="inline">
-     <member>&xml-tet;</member>
+     <member>&xml-simplex;</member>
     </simplelist>.
    </para>
   </refsect2>
@@ -81,11 +91,11 @@ tetrahedra ::= (&xml-tet;*)</synopsis>
   <title>Attributes</title>
   <variablelist>
    <varlistentry>
-    <term><sgmltag>ntet</sgmltag></term>
+    <term><sgmltag>size</sgmltag></term>
     <listitem>
      <para>
-      The total number of tetrahedra in this set.  Note that there must
-      be precisely this many child &xml-tet; elements.
+      The total number of top-dimensional simplices in this set.
+      Note that there must be precisely this many child &xml-simplex; elements.
      </para>
     </listitem>
    </varlistentry>
@@ -95,7 +105,7 @@ tetrahedra ::= (&xml-tet;*)</synopsis>
  <refsect1>
   <title>Example</title>
   <para>
-   The following &xml; snippet represents a triangulation of a
+   The following &xml; snippet represents a 5-dimensional triangulation of a
    two-tetrahedron (1, 1, 2) layered solid torus.
   </para>
   <programlisting>

@@ -32,6 +32,8 @@
 <!ENTITY data-packet-anglestructurelist SYSTEM "data-packet-anglestructurelist.docbook">
 <!ENTITY data-packet-container SYSTEM "data-packet-container.docbook">
 <!ENTITY data-packet-dim2triangulation SYSTEM "data-packet-dim2triangulation.docbook">
+<!ENTITY data-packet-dim3triangulation SYSTEM "data-packet-dim3triangulation.docbook">
+<!ENTITY data-packet-dim4triangulation SYSTEM "data-packet-dim4triangulation.docbook">
 <!ENTITY data-packet-normalsurfacelist SYSTEM "data-packet-normalsurfacelist.docbook">
 <!ENTITY data-packet-pdf SYSTEM "data-packet-pdf.docbook">
 <!ENTITY data-packet-script SYSTEM "data-packet-script.docbook">
@@ -40,11 +42,15 @@
 <!ENTITY data-packet-text SYSTEM "data-packet-text.docbook">
 <!ENTITY data-packet-triangulation SYSTEM "data-packet-triangulation.docbook">
 <!ENTITY data-params SYSTEM "data-params.docbook">
+<!ENTITY data-pent SYSTEM "data-pent.docbook">
+<!ENTITY data-pentachora SYSTEM "data-pentachora.docbook">
 <!ENTITY data-pdf SYSTEM "data-pdf.docbook">
 <!ENTITY data-realbdry-filter SYSTEM "data-realbdry-filter.docbook">
 <!ENTITY data-realbdry-surface SYSTEM "data-realbdry-surface.docbook">
 <!ENTITY data-reginadata SYSTEM "data-reginadata.docbook">
 <!ENTITY data-reln SYSTEM "data-reln.docbook">
+<!ENTITY data-simplex SYSTEM "data-simplex.docbook">
+<!ENTITY data-simplices SYSTEM "data-simplices.docbook">
 <!ENTITY data-snappea SYSTEM "data-snappea.docbook">
 <!ENTITY data-solidtorus SYSTEM "data-solidtorus.docbook">
 <!ENTITY data-spanstrict SYSTEM "data-spanstrict.docbook">
@@ -81,11 +87,6 @@
  '<link linkend="data-compressingdisc"><sgmltag>compressingdisc</sgmltag></link>'>
 <!ENTITY xml-connected
  '<link linkend="data-connected"><sgmltag>connected</sgmltag></link>'>
-<!ENTITY xml-packet-dim2triangulation
- '<link linkend="data-packet-dim2triangulation"><sgmltag>packet</sgmltag>
- (2-manifold triangulation)</link>'>
-<!ENTITY xml-packet-dim3triangulation
- '<link linkend="data-packet-triangulation"><sgmltag>packet</sgmltag> (3-manifold triangulation)</link>'>
 <!ENTITY xml-euler-filter
  '<link linkend="data-euler-filter"><sgmltag>euler</sgmltag> (filter)</link>'>
 <!ENTITY xml-euler-surface
@@ -128,6 +129,14 @@
  '<link linkend="data-packet-anglestructurelist"><sgmltag>packet</sgmltag> (angle structure list)</link>'>
 <!ENTITY xml-packet-container
  '<link linkend="data-packet-container"><sgmltag>packet</sgmltag> (container)</link>'>
+<!ENTITY xml-packet-dim2triangulation
+ '<link linkend="data-packet-dim2triangulation"><sgmltag>packet</sgmltag> (2-dimensional triangulation)</link>'>
+<!ENTITY xml-packet-dim3triangulation
+ '<link linkend="data-packet-dim3triangulation"><sgmltag>packet</sgmltag> (3-dimensional triangulation)</link>'>
+<!ENTITY xml-packet-dim4triangulation
+ '<link linkend="data-packet-dim4triangulation"><sgmltag>packet</sgmltag> (4-dimensional triangulation)</link>'>
+<!ENTITY xml-packet-triangulation
+ '<link linkend="data-packet-triangulation"><sgmltag>packet</sgmltag> (<replaceable>dim</replaceable>-dimensional triangulation)</link>'>
 <!ENTITY xml-packet-normalsurfacelist
  '<link linkend="data-packet-normalsurfacelist"><sgmltag>packet</sgmltag> (normal surface list)</link>'>
 <!ENTITY xml-packet-pdf
@@ -142,6 +151,10 @@
  '<link linkend="data-packet-text"><sgmltag>packet</sgmltag> (text)</link>'>
 <!ENTITY xml-params
  '<link linkend="data-params"><sgmltag>params</sgmltag></link>'>
+<!ENTITY xml-pent
+ '<link linkend="data-pent"><sgmltag>pent</sgmltag></link>'>
+<!ENTITY xml-pentachora
+ '<link linkend="data-pentachora"><sgmltag>pentachora</sgmltag></link>'>
 <!ENTITY xml-pdf
  '<link linkend="data-pdf"><sgmltag>pdf</sgmltag></link>'>
 <!ENTITY xml-realbdry-filter
@@ -152,6 +165,10 @@
  '<link linkend="data-reginadata"><sgmltag>reginadata</sgmltag></link>'>
 <!ENTITY xml-reln
  '<link linkend="data-reln"><sgmltag>reln</sgmltag></link>'>
+<!ENTITY xml-simplex
+ '<link linkend="data-simplex"><sgmltag>simplex</sgmltag></link>'>
+<!ENTITY xml-simplices
+ '<link linkend="data-simplices"><sgmltag>simplices</sgmltag></link>'>
 <!ENTITY xml-snappea
  '<link linkend="data-snappea"><sgmltag>snappea</sgmltag></link>'>
 <!ENTITY xml-solidtorus

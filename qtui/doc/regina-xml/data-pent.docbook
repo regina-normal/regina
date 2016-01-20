@@ -2,15 +2,15 @@
 <!-- Regina data file format documentation.
      See ../regina.sgml for further details. -->
 
-<refentry id="data-tet">
+<refentry id="data-pent">
  <refmeta>
-  <refentrytitle>tet</refentrytitle>
+  <refentrytitle>pent</refentrytitle>
   <manvolnum>5reg</manvolnum>
  </refmeta>
 
  <refnamediv>
-  <refname>tet</refname>
-  <refpurpose>A single tetrahedron in a 3-dimensional triangulation</refpurpose>
+  <refname>pent</refname>
+  <refpurpose>A single pentachoron in a 4-dimensional triangulation</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -24,7 +24,7 @@
      </entry></row>
      <row><entry namest="c1" nameend="c2">
 <synopsis>
-tet ::= (#PCDATA)</synopsis>
+pent ::= (#PCDATA)</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
       <emphasis role="bold">Attributes</emphasis>
@@ -45,45 +45,47 @@ tet ::= (#PCDATA)</synopsis>
  <refsect1>
   <title>Description</title>
   <para>
-   A &xml-tet; element stores a single tetrahedron in a 3-dimensional
-   triangulation, along with its associated face gluings.
+   A &xml-pent; element stores a single pentachoron in a 4-dimensional
+   triangulation, along with its associated facet gluings.
   </para>
   <para>
    The character data of this &xml; element should be a
-   whitespace-separated list of four integer pairs, representing the
-   gluings of faces 0, 1, 2 and 3 of this tetrahedron.  Note that
-   face <replaceable>i</replaceable> is always opposite vertex
-   <replaceable>i</replaceable> in a tetrahedron.
+   whitespace-separated list of five integer pairs, representing the
+   gluings of facets 0, 1, 2, 3 and 4 of this pentachoron.  Note that
+   facet <replaceable>i</replaceable> is always opposite vertex
+   <replaceable>i</replaceable> in a pentachoron.
   </para>
   <para>
-   For each pair, the first integer represents the tetrahedron to which
-   the face is glued (note that tetrahedra in a triangulation are
+   For each pair, the first integer represents the pentachoron to which
+   the facet is glued (note that pentachora in a triangulation are
    numbered 0, 1, 2, etc.).  The second integer represents the
-   permutation of vertices from this tetrahedron to the other tetrahedron
+   permutation of vertices from this pentachoron to the other pentachoron
    describing precisely how this gluing takes place.  This permutation
-   will take the current face number of this tetrahedron to the corresponding
-   face number of the adjacent tetrahedron, and the other three vertex numbers
-   of this tetrahedron to the corresponding three vertex numbers on the
-   adjacent tetrahedron to which they are identified by this gluing.
+   will take the current facet number of this pentachoron
+   to the corresponding facet number of the adjacent pentachoron,
+   and the other four vertex numbers of this pentachoron to the
+   corresponding four vertex numbers on the adjacent pentachoron to
+   which they are identified by this gluing.
   </para>
   <para>
-   A permutation is represented as a one-byte integer as follows.
-   If the permutation maps 0, 1, 2 and 3 to
+   A permutation is represented as a two-byte integer as follows.
+   If the permutation maps 0, 1, 2, 3 and 4 to
    <replaceable>a</replaceable>, <replaceable>b</replaceable>,
-   <replaceable>c</replaceable> and <replaceable>d</replaceable>
-   respectively (where
+   <replaceable>c</replaceable>, <replaceable>d</replaceable> and
+   <replaceable>e</replaceable> respectively (where
    <replaceable>a</replaceable>, <replaceable>b</replaceable>,
-   <replaceable>c</replaceable> and <replaceable>d</replaceable> are
-   0, 1, 2 and 3 in some order), the corresponding one-byte integer
-   is
-   (<replaceable>a</replaceable> + 4<replaceable>b</replaceable> +
-   16<replaceable>c</replaceable> + 64<replaceable>d</replaceable>).
+   <replaceable>c</replaceable>, <replaceable>d</replaceable> and
+   <replaceable>e</replaceable> are
+   0, 1, 2, 3 and 4 in some order), then the corresponding two-byte integer is
+   (<replaceable>a</replaceable> + 8<replaceable>b</replaceable> +
+   64<replaceable>c</replaceable> + 512<replaceable>d</replaceable> +
+   4096<replaceable>e</replaceable>).
    For example, the identity permutation which maps (0, 1, 2, 3) to
-   (0, 1, 2, 3) is represented by the one-byte integer
-   (0 + 4 + 32 + 192), which is 228 (or -28 if the byte is signed).
+   (0, 1, 2, 3) is represented by the two-byte integer
+   (0 + 8 + 128 + 1536 + 16384), which is 18056.
   </para>
   <para>
-   If a face is a boundary face (i.e., it is not glued to anything), the
+   If a facet is a boundary facet (i.e., it is not glued to anything), the
    two corresponding integers stored in the &xml; character data should
    be -1 and -1.
   </para>
@@ -91,9 +93,9 @@ tet ::= (#PCDATA)</synopsis>
   <refsect2>
    <title>Parents</title>
    <para>
-    The following elements contain <sgmltag>tet</sgmltag>:
+    The following elements contain <sgmltag>pent</sgmltag>:
     <simplelist type="inline">
-     <member>&xml-tetrahedra;</member>
+     <member>&xml-pentachora;</member>
     </simplelist>.
    </para>
   </refsect2>
@@ -101,7 +103,7 @@ tet ::= (#PCDATA)</synopsis>
   <refsect2>
    <title>Children</title>
    <para>
-    Element <sgmltag>tet</sgmltag> has no children.
+    Element <sgmltag>pent</sgmltag> has no children.
    </para>
   </refsect2>
  </refsect1>
@@ -113,7 +115,7 @@ tet ::= (#PCDATA)</synopsis>
     <term><sgmltag>desc</sgmltag></term>
     <listitem>
      <para>
-      A human-readable description of the role that this tetrahedron plays
+      A human-readable description of the role that this pentachoron plays
       in the overall triangulation.
      </para>
     </listitem>

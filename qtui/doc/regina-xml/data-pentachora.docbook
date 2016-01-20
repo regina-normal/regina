@@ -2,15 +2,15 @@
 <!-- Regina data file format documentation.
      See ../regina.sgml for further details. -->
 
-<refentry id="data-tetrahedra">
+<refentry id="data-pentachora">
  <refmeta>
-  <refentrytitle>tetrahedra</refentrytitle>
+  <refentrytitle>pentachora</refentrytitle>
   <manvolnum>5reg</manvolnum>
  </refmeta>
 
  <refnamediv>
-  <refname>tetrahedra</refname>
-  <refpurpose>The tetrahedra forming a 3-dimensional triangulation</refpurpose>
+  <refname>pentachora</refname>
+  <refpurpose>The pentachora forming a 4-dimensional triangulation</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -24,7 +24,7 @@
      </entry></row>
      <row><entry namest="c1" nameend="c2">
 <synopsis>
-tetrahedra ::= (&xml-tet;*)</synopsis>
+pentachora ::= (&xml-pent;*)</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
       <emphasis role="bold">Attributes</emphasis>
@@ -34,7 +34,7 @@ tetrahedra ::= (&xml-tet;*)</synopsis>
       <entry><emphasis role="bold">Type</emphasis></entry>
      </row>
      <row>
-      <entry><sgmltag>ntet</sgmltag></entry>
+      <entry><sgmltag>npent</sgmltag></entry>
       <entry><type>NUMBER</type> (required)</entry>
      </row>
     </tbody>
@@ -45,23 +45,23 @@ tetrahedra ::= (&xml-tet;*)</synopsis>
  <refsect1>
   <title>Description</title>
   <para>
-   A &xml-tetrahedra; element stores the entire set of tetrahedra forming a
-   3-dimensional triangulation.
+   A &xml-pentachora; element stores the entire set of pentachora that
+   form a 4-dimensional triangulation.
   </para>
   <para>
-   The total number of tetrahedra must be specified by the
-   <sgmltag>ntet</sgmltag> attribute.  The individual tetrahedra are
-   numbered 0, 1, 2, etc., and their face gluings are described by the
-   corresponding child &xml-tet; elements.  There must be precisely
-   <replaceable>ntet</replaceable> child &xml-tet; elements in total.
+   The total number of pentachora must be specified by the
+   <sgmltag>npent</sgmltag> attribute.  The individual pentachora are
+   numbered 0, 1, 2, etc., and their facet gluings are described by the
+   corresponding child &xml-pent; elements.  There must be precisely
+   <replaceable>npent</replaceable> child &xml-pent; elements in total.
   </para>
 
   <refsect2>
    <title>Parents</title>
    <para>
-    The following elements contain <sgmltag>tetrahedra</sgmltag>:
+    The following elements contain <sgmltag>pentachora</sgmltag>:
     <simplelist type="inline">
-     <member>&xml-packet-dim3triangulation;</member>
+     <member>&xml-packet-dim4triangulation;</member>
     </simplelist>.
    </para>
   </refsect2>
@@ -69,9 +69,9 @@ tetrahedra ::= (&xml-tet;*)</synopsis>
   <refsect2>
    <title>Children</title>
    <para>
-    The following elements occur in <sgmltag>tetrahedra</sgmltag>:
+    The following elements occur in <sgmltag>pentachora</sgmltag>:
     <simplelist type="inline">
-     <member>&xml-tet;</member>
+     <member>&xml-pent;</member>
     </simplelist>.
    </para>
   </refsect2>
@@ -81,11 +81,11 @@ tetrahedra ::= (&xml-tet;*)</synopsis>
   <title>Attributes</title>
   <variablelist>
    <varlistentry>
-    <term><sgmltag>ntet</sgmltag></term>
+    <term><sgmltag>npent</sgmltag></term>
     <listitem>
      <para>
-      The total number of tetrahedra in this set.  Note that there must
-      be precisely this many child &xml-tet; elements.
+      The total number of pentachora in this set.  Note that there must
+      be precisely this many child &xml-pent; elements.
      </para>
     </listitem>
    </varlistentry>
