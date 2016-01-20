@@ -21,7 +21,7 @@ print t.detail()
 
 # Calculate some algebraic properties of the triangulation.
 print t.homology()
-print t.getHomologyH1Bdry()
+print t.homologyH1Bdry()
 
 # Test for 0-efficiency, which asks Regina to search for certain types
 # of normal surfaces.
@@ -43,15 +43,15 @@ else:
 print surfaces.detail()
 
 # Print the Euler characteristic and orientability of each surface.
-for i in range(surfaces.getNumberOfSurfaces()):
-    s = surfaces.getSurface(i)
-    print "Chi =", s.getEulerChar(), "; Or =", s.isOrientable()
+for i in range(surfaces.countSurfaces()):
+    s = surfaces.surface(i)
+    print "Chi =", s.eulerChar(), "; Or =", s.isOrientable()
 
 
 # List all surfaces with more than one quad in the first tetrahedron.
-for i in range(surfaces.getNumberOfSurfaces()):
-    s = surfaces.getSurface(i)
-    if s.getQuadCoord(0,0) + s.getQuadCoord(0,1) + s.getQuadCoord(0,2) > 1:
+for i in range(surfaces.countSurfaces()):
+    s = surfaces.surface(i)
+    if s.quads(0,0) + s.quads(0,1) + s.quads(0,2) > 1:
         print s
 
 

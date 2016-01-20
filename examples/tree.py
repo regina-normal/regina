@@ -16,16 +16,16 @@ NCensus.formCensus(census, 2, NBoolSet.sTrue,
 
 # Calculate the homology of each triangulation in the census.
 # The triangulations are all children of the "census" container.
-tri = census.getFirstTreeChild()
+tri = census.firstChild()
 while tri != None:
     print tri.label() + ":", tri.homology()
-    tri = tri.getNextTreeSibling()
+    tri = tri.nextSibling()
 
 
 # Remove all triangulations with trivial homology from the tree.
-tri = census.getFirstTreeChild()
+tri = census.firstChild()
 while tri != None:
-    next = tri.getNextTreeSibling()
+    next = tri.nextSibling()
     hom = tri.homology()
     if hom.isTrivial():
         tri.makeOrphan()
@@ -33,8 +33,8 @@ while tri != None:
 
 
 # Print the homology of each remaining triangulation.
-tri = census.getFirstTreeChild()
+tri = census.firstChild()
 while tri != None:
     print tri.label() + ":", tri.homology()
-    tri = tri.getNextTreeSibling()
+    tri = tri.nextSibling()
 

@@ -232,7 +232,7 @@ namespace regina {
  *  - Most of Regina's classes and functions have the same interface
  *    in both C++ and Python, but occasionally there are differences.
  *    Again, you will see a bold <b>Python:</b> note indicating this.
- *    See for instance the method NTriangulation::getTetrahedra(),
+ *    See for instance the method NTriangulation::tetrahedra(),
  *    or the global function writeResUsage().
  *
  *  <h3>Testing equality</h3>

@@ -103,9 +103,9 @@ QVariant Dim2GluingsModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
         // Triangle name?
         if (index.column() == 0)
-            return (t->getDescription().empty() ? QString::number(index.row()) :
+            return (t->description().empty() ? QString::number(index.row()) :
                 (QString::number(index.row()) + " (" +
-                t->getDescription().c_str() + ')'));
+                t->description().c_str() + ')'));
 
         // Edge gluing?
         int edge = 3 - index.column();
@@ -117,7 +117,7 @@ QVariant Dim2GluingsModel::data(const QModelIndex& index, int role) const {
     } else if (role == Qt::EditRole) {
         // Triangle name?
         if (index.column() == 0)
-            return t->getDescription().c_str();
+            return t->description().c_str();
 
         // Edge gluing?
         int edge = 3 - index.column();
@@ -158,7 +158,7 @@ bool Dim2GluingsModel::setData(const QModelIndex& index, const QVariant& value,
     regina::Dim2Triangle* t = tri_->getSimplex(index.row());
     if (index.column() == 0) {
         QString newName = value.toString().trimmed();
-        if (newName == t->getDescription().c_str())
+        if (newName == t->description().c_str())
             return false;
 
         t->setDescription(newName.toUtf8().constData());

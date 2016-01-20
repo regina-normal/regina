@@ -77,7 +77,7 @@ unsigned long NTriangulation::splitIntoComponents(NPacket* componentParent,
     for (tetPos = 0; tetPos < nTets; tetPos++)
         newTets[tetPos] =
             newTris[simplices_[tetPos]->component()->index()]->
-            newTetrahedron(simplices_[tetPos]->getDescription());
+            newTetrahedron(simplices_[tetPos]->description());
 
     // Clone the tetrahedron gluings also.
     for (tetPos = 0; tetPos < nTets; tetPos++) {

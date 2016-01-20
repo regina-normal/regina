@@ -65,10 +65,10 @@ def groupStats(g):
 
 	print 'Free generators:'
 	for i in range(g.rank()):
-		print str(i) + ':', vecToString(g.getFreeRep(i))
+		print str(i) + ':', vecToString(g.freeRep(i))
 	print 'Torsion generators:'
-	for i in range(g.getNumberOfInvariantFactors()):
-		print str(i) + ':', vecToString(g.getTorsionRep(i))
+	for i in range(g.countInvariantFactors()):
+		print str(i) + ':', vecToString(g.torsionRep(i))
 
 	# Nothing else to say.
 	print

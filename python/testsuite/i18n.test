@@ -88,5 +88,5 @@ if subscriptImport != None:
 # triangulation.
 subscriptLoad = regina.readFileMagic(testpath + '/O2_1.rga')
 if subscriptLoad != None:
-	print subscriptLoad.getFirstTreeChild().label()
+	print subscriptLoad.firstChild().label()
 

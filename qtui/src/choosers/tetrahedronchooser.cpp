@@ -88,8 +88,8 @@ QString TetrahedronChooser::description(regina::NTetrahedron* option) {
 
 void TetrahedronChooser::fill() {
     regina::NTriangulation::TetrahedronIterator it;
-    for (it = tri_->getTetrahedra().begin();
-            it != tri_->getTetrahedra().end(); ++it)
+    for (it = tri_->tetrahedra().begin();
+            it != tri_->tetrahedra().end(); ++it)
         if ((! filter_) || (*filter_)(*it)) {
             addItem(description(*it));
             options_.push_back(*it);

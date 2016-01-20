@@ -1536,9 +1536,9 @@ class NTriangulationTest : public TriangulationTest<3> {
                             << "link does not map 3 -> vertex correctly.";
                         CPPUNIT_FAIL(msg.str());
                     }
-                    if (perm[0] != tet->getTriangleMapping(vNum)[0] ||
-                            perm[1] != tet->getTriangleMapping(vNum)[1] ||
-                            perm[2] != tet->getTriangleMapping(vNum)[2]) {
+                    if (perm[0] != tet->triangleMapping(vNum)[0] ||
+                            perm[1] != tet->triangleMapping(vNum)[1] ||
+                            perm[2] != tet->triangleMapping(vNum)[2]) {
                         std::ostringstream msg;
                         msg << tri->label() << ", vertex " << i << ": "
                             << "link does not map 0,1,2 -> opposite "

@@ -36,7 +36,7 @@ def encode(i):
 
 def grouprep(g):
     ans = encode(g.rank())
-    for i in range(g.getNumberOfInvariantFactors()):
+    for i in range(g.countInvariantFactors()):
         ans = ans + encode(g.invariantFactor(i).longValue())
     return ans
 

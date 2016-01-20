@@ -156,7 +156,7 @@ def loadCensusInternal(baseFilename, minTet, maxTet):
         next = p.nextTreePacket()
 
         if p.type() == regina.NTriangulation.packetType:
-            nTets = p.getNumberOfTetrahedra()
+            nTets = p.countTetrahedra()
             if nTets >= minTet and nTets <= maxTet:
                 # We want this triangulation.
                 if sizes.has_key(nTets):
@@ -174,7 +174,7 @@ def loadCensusInternal(baseFilename, minTet, maxTet):
                 # Remove parent containers if we have made them empty also.
                 # Never go as far as removing the top-level container.
                 while parent != data and parent != None and \
-                        parent.getNumberOfChildren() == 0:
+                        parent.countChildren() == 0:
                     tmp = parent
                     parent = parent.getTreeParent()
                     tmp.makeOrphan()

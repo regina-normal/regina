@@ -164,7 +164,7 @@
         editField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
         editField.textAlignment = NSTextAlignmentRight;
     } else {
-        editField.text = @(self.packet->getSimplex(simplex)->getDescription().c_str());
+        editField.text = @(self.packet->getSimplex(simplex)->description().c_str());
         editField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
         editField.keyboardType = UIKeyboardTypeDefault;
         editField.textAlignment = NSTextAlignmentLeft;
@@ -385,7 +385,7 @@ cleanUpGluing:
 
     Dim2GluingCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Triangle" forIndexPath:indexPath];
     regina::Dim2Triangle* t = self.packet->getSimplex(indexPath.row - 1);
-    cell.index.text = [NSString stringWithFormat:@"%d. %s", indexPath.row - 1, t->getDescription().c_str()];
+    cell.index.text = [NSString stringWithFormat:@"%d. %s", indexPath.row - 1, t->description().c_str()];
     cell.edge0.text = [Dim2TriGluings destStringFromEdge:0 dest:t->adjacentSimplex(0) gluing:t->adjacentGluing(0)];
     cell.edge1.text = [Dim2TriGluings destStringFromEdge:1 dest:t->adjacentSimplex(1) gluing:t->adjacentGluing(1)];
     cell.edge2.text = [Dim2TriGluings destStringFromEdge:2 dest:t->adjacentSimplex(2) gluing:t->adjacentGluing(2)];
