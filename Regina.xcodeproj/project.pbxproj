@@ -982,6 +982,7 @@
 		0543AEC61811E12A002758F8 /* shortrunner.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5F61811D920002CC2AE /* shortrunner.h */; };
 		054535B919D8EA7100BED767 /* TextPopover.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054535B819D8EA7100BED767 /* TextPopover.mm */; };
 		054535BC19D90C3A00BED767 /* Skeleton.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054535BB19D90C3A00BED767 /* Skeleton.mm */; };
+		0547FCB51C4F60A200BF1AD9 /* xmltrireader.h in Headers */ = {isa = PBXBuildFile; fileRef = 0547FCB41C4F60A100BF1AD9 /* xmltrireader.h */; };
 		054BC4C319B4A726005E01A0 /* closed-hyp-census-full.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABE9E19B499DC00044C1B /* closed-hyp-census-full.zsig */; };
 		054BC4C419B4A726005E01A0 /* closed-nor-census-11.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABE9F19B499DC00044C1B /* closed-nor-census-11.zsig */; };
 		054BC4C519B4A726005E01A0 /* closed-or-census-11.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABEA019B499DC00044C1B /* closed-or-census-11.zsig */; };
@@ -2474,6 +2475,7 @@
 		054535B819D8EA7100BED767 /* TextPopover.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TextPopover.mm; sourceTree = "<group>"; };
 		054535BA19D90C3A00BED767 /* Skeleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skeleton.h; sourceTree = "<group>"; };
 		054535BB19D90C3A00BED767 /* Skeleton.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Skeleton.mm; sourceTree = "<group>"; };
+		0547FCB41C4F60A100BF1AD9 /* xmltrireader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltrireader.h; sourceTree = "<group>"; };
 		054F7E27180B93770090B1F3 /* WelcomePopupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomePopupController.h; sourceTree = "<group>"; };
 		054F7E28180B93770090B1F3 /* WelcomePopupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WelcomePopupController.m; sourceTree = "<group>"; };
 		054F7E2A180B96AC0090B1F3 /* welcome.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = welcome.html; sourceTree = "<group>"; };
@@ -3708,18 +3710,19 @@
 			isa = PBXGroup;
 			children = (
 				05431F051C40F209009BC072 /* alias */,
+				052F9CB8180600FA00FAE4DF /* CMakeLists.txt */,
 				05431EF31C40F1F6009BC072 /* component.h */,
 				05431F061C40F213009BC072 /* detail */,
+				052F9CB9180600FA00FAE4DF /* dimtraits.h */,
 				05431EF41C40F1F6009BC072 /* face.h */,
 				05431EF51C40F1F6009BC072 /* facenumbering.cpp */,
 				05431EF61C40F1F6009BC072 /* facenumbering.h */,
 				05431EF71C40F1F6009BC072 /* facetpairing.h */,
 				05431EF81C40F1F6009BC072 /* isomorphism.h */,
+				052F9CBB180600FA00FAE4DF /* nfacetspec.h */,
 				05431EF91C40F1F6009BC072 /* simplex.h */,
 				05431EFA1C40F1F6009BC072 /* triangulation.h */,
-				052F9CB8180600FA00FAE4DF /* CMakeLists.txt */,
-				052F9CB9180600FA00FAE4DF /* dimtraits.h */,
-				052F9CBB180600FA00FAE4DF /* nfacetspec.h */,
+				0547FCB41C4F60A100BF1AD9 /* xmltrireader.h */,
 			);
 			path = generic;
 			sourceTree = "<group>";
@@ -5189,6 +5192,7 @@
 				052F9EA0180600FB00FAE4DF /* nfacepairing.h in Headers */,
 				052F9E9A180600FB00FAE4DF /* dim2gluingperms.h in Headers */,
 				052FA005180600FB00FAE4DF /* nplugtrisolidtorus.h in Headers */,
+				0547FCB51C4F60A200BF1AD9 /* xmltrireader.h in Headers */,
 				052F9EB1180600FB00FAE4DF /* dim2exampletriangulation.h in Headers */,
 				052F9F01180600FB00FAE4DF /* nfileinfo.h in Headers */,
 				0583656518DB8876008B08D9 /* real_type.h in Headers */,
