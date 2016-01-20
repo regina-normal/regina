@@ -271,8 +271,8 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             //
             // PROBLEM: we need lexicographic ordering 
             //       0 <= c_1 < ... < c_(subdim+1) <= dim
-            //       so we must reverse the ordering and apply the transformation
-            //       c_i \mapsto d_i = dim-c_i
+            //       so we must reverse the ordering and apply the
+            //       transformation c_i \mapsto d_i = dim-c_i
 
             // reverse ordering
             unsigned remaining = binomSmall_[dim+1][subdim+1] - face - 1;
@@ -328,7 +328,7 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             // We can assume here that we are numbering faces in forward
             // lexicographical order (i.e., the face dimension subdim is small).
 
-            // This implementation runs in linear time in subdim (assuming 
+            // This implementation runs in linear time in dim (assuming 
             // binomial coefficients are precomputed)
 
             // IDEA: use the combinatorial number system which associates 
@@ -346,8 +346,8 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             //
             // PROBLEM: we need lexicographic ordering 
             //       0 <= c_1 < ... < c_(subdim+1) <= dim
-            //       so we must reverse the ordering and apply the transformation
-            //       c_i \mapsto d_i = dim-c_i
+            //       so we must reverse the ordering and apply the
+            //       transformation c_i \mapsto d_i = dim-c_i
 
             unsigned i;
 
@@ -373,10 +373,40 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
 
             // TODO: Make this more efficient - we should be able to
             // implement it "directly", without calling ordering().
-            NPerm<dim + 1> o = ordering(face);
-            for (unsigned i = 0; i <= subdim; ++i)
-                if (o[i] == vertex)
-                    return true;
+
+            // This implementation runs in linear time in subdim (assuming 
+            // binomial coefficients are precomputed)
+
+
+            unsigned remaining = binomSmall_[dim+1][subdim+1] - face - 1;
+
+            unsigned k = subdim+1;
+            unsigned max = dim;
+            unsigned done,val;
+
+            while (remaining > 0) {
+              done = 0;
+              while (done == 0) {
+                if (max < k) {
+                  val = 0;
+                } else {
+                  val = binomSmall_[max][k];
+                }
+                if (val <= remaining) {
+                  k--;
+                  if (vertex == dim-max) return true;
+                  remaining = remaining - val;
+                  done = 1;
+                }
+                max--;
+              }
+
+            }
+            while (k > 0) {
+              k--;
+              if (vertex == dim-k) return true;
+            }
+
             return false;
         }
 #endif // ! __DOXYGEN
@@ -434,7 +464,16 @@ class FaceNumberingImpl<dim, 0, true> : public FaceNumberingAPI<dim, 0> {
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
         static NPerm<dim + 1> ordering(unsigned face) {
-            return NPerm<dim + 1>(face, 0);
+            int p[dim + 1];
+            p[0] = face;
+
+            int i;
+            for (i = 0; i < face; ++i)
+                p[dim - i] = i;
+            for (i = face + 1; i <= dim; ++i)
+                p[dim - i + 1] = i;
+
+            return NPerm<dim + 1>(p);
         }
 
         static unsigned faceNumber(NPerm<dim + 1> vertices) {
