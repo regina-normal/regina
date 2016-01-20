@@ -66,8 +66,8 @@ NMatrixInt* NNormalSurfaceVectorQuadOct::makeMatchingEquations(
     // equation.
     NPerm4 perm;
     unsigned long tetIndex;
-    for (NTriangulation::EdgeIterator eit = triangulation->getEdges().begin();
-            eit != triangulation->getEdges().end(); eit++) {
+    for (NTriangulation::EdgeIterator eit = triangulation->edges().begin();
+            eit != triangulation->edges().end(); eit++) {
         if (! (*eit)->isBoundary()) {
             for (auto& emb : **eit) {
                 tetIndex = triangulation->tetrahedronIndex(

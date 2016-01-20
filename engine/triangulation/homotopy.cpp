@@ -71,7 +71,7 @@ const NGroupPresentation& NTriangulation::fundamentalGroup() const {
     int currTetFace;
     long triGenIndex;
     NGroupExpression* rel;
-    for (NEdge* e : getEdges())
+    for (NEdge* e : edges())
         if (! e->isBoundary()) {
             // Put in the relation corresponding to this edge.
             rel = new NGroupExpression();

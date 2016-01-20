@@ -228,7 +228,7 @@ void NTriangulation::calculateVertexLinks() {
     NVertex* end0;
     NVertex* end1;
     NTetrahedron* tet;
-    for (NEdge* e : getEdges()) {
+    for (NEdge* e : edges()) {
         // Try to compute e->vertex(0) and e->vertex(1), but
         // without calling e->vertex() which will recursively try to
         // recompute the skeleton.

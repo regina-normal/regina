@@ -57,7 +57,7 @@ void Triangulation<2>::calculateSkeleton() {
     // Flesh out the details of each component.
     for (auto v : vertices())
         v->component()->vertices_.push_back(v);
-    for (auto e : getEdges())
+    for (auto e : edges())
         e->component()->edges_.push_back(e);
 }
 
@@ -75,7 +75,7 @@ void Triangulation<2>::calculateBoundary() {
     Dim2Vertex* vertex;
     Dim2VertexEmbedding vertexEmb;
 
-    for (Dim2Edge* edge : getEdges()) {
+    for (Dim2Edge* edge : edges()) {
         // We only care about boundary edges that we haven't yet seen..
         if (edge->degree() == 2 || edge->boundaryComponent_)
             continue;

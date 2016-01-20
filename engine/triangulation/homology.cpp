@@ -78,7 +78,7 @@ const NAbelianGroup& NTriangulation::homology() const {
     int currTetFace;
     long triGenIndex;
     i = 0;
-    for (NEdge* e : getEdges()) {
+    for (NEdge* e : edges()) {
         if (! e->isBoundary()) {
             // Put in the relation corresponding to this edge.
             for (auto& emb : *e) {
@@ -144,7 +144,7 @@ const NAbelianGroup& NTriangulation::homologyRel() const {
     // Find out which edge corresponds to which generator.
     long* genIndex = new long[countEdges()];
     long i = 0;
-    for (NEdge* e : getEdges()) {
+    for (NEdge* e : edges()) {
         if (e->isBoundary())
             genIndex[e->index()] = -1;
         else if (forest.count(e))

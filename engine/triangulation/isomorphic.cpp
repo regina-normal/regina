@@ -71,13 +71,13 @@ bool detail::TriangulationBase<3>::compatible(
         std::map<unsigned long, unsigned long>::iterator mapIt;
 
         {
-            for (auto e : me->getEdges()) {
+            for (auto e : me->edges()) {
                 // Find this degree, or insert it with frequency 0 if it's
                 // not already present.
                 mapIt = map1.insert(std::make_pair(e->degree(), 0)).first;
                 (*mapIt).second++;
             }
-            for (auto e : other.getEdges()) {
+            for (auto e : other.edges()) {
                 mapIt = map2.insert(std::make_pair(e->degree(), 0)).first;
                 (*mapIt).second++;
             }

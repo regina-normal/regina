@@ -3268,12 +3268,12 @@ class NTriangulationTest : public TriangulationTest<3> {
             // Make sure the invalid edges are left alone.
             unsigned oldInvEdges = 0, newInvEdges = 0;
             NTriangulation::EdgeIterator eit;
-            for (eit = tri->getEdges().begin();
-                    eit != tri->getEdges().end(); ++eit)
+            for (eit = tri->edges().begin();
+                    eit != tri->edges().end(); ++eit)
                 if (! (*eit)->isValid())
                     ++oldInvEdges;
-            for (eit = finite.getEdges().begin();
-                    eit != finite.getEdges().end(); ++eit)
+            for (eit = finite.edges().begin();
+                    eit != finite.edges().end(); ++eit)
                 if (! (*eit)->isValid())
                     ++newInvEdges;
             if (oldInvEdges != newInvEdges) {
@@ -3343,12 +3343,12 @@ class NTriangulationTest : public TriangulationTest<3> {
             // Make sure the invalid edges are left alone.
             unsigned oldInvEdges = 0, newInvEdges = 0;
             NTriangulation::EdgeIterator eit;
-            for (eit = tri->getEdges().begin();
-                    eit != tri->getEdges().end(); ++eit)
+            for (eit = tri->edges().begin();
+                    eit != tri->edges().end(); ++eit)
                 if (! (*eit)->isValid())
                     ++oldInvEdges;
-            for (eit = ideal.getEdges().begin();
-                    eit != ideal.getEdges().end(); ++eit)
+            for (eit = ideal.edges().begin();
+                    eit != ideal.edges().end(); ++eit)
                 if (! (*eit)->isValid())
                     ++newInvEdges;
             if (oldInvEdges != newInvEdges) {
