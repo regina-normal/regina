@@ -54,47 +54,47 @@ def isAngleStructureList(packet):
     Is the given packet an angle structure list?
     Returns 1 for true, or 0 for false.
     """
-    return (packet.getPacketType() == regina.NAngleStructureList.packetType)
+    return (packet.type() == regina.NAngleStructureList.packetType)
 
 def isContainer(packet):
     """
     Is the given packet a container?
     Returns 1 for true, or 0 for false.
     """
-    return (packet.getPacketType() == regina.NContainer.packetType)
+    return (packet.type() == regina.NContainer.packetType)
 
 def isScript(packet):
     """
     Is the given packet a python script?
     Returns 1 for true, or 0 for false.
     """
-    return (packet.getPacketType() == regina.NScript.packetType)
+    return (packet.type() == regina.NScript.packetType)
 
 def isSurfaceFilter(packet):
     """
     Is the given packet a normal surface filter?
     Returns 1 for true, or 0 for false.
     """
-    return (packet.getPacketType() == regina.NSurfaceFilter.packetType)
+    return (packet.type() == regina.NSurfaceFilter.packetType)
 
 def isSurfaceList(packet):
     """
     Is the given packet a list of normal surfaces?
     Returns 1 for true, or 0 for false.
     """
-    return (packet.getPacketType() == regina.NNormalSurfaceList.packetType)
+    return (packet.type() == regina.NNormalSurfaceList.packetType)
 
 def isText(packet):
     """
     Is the given packet a text packet?
     Returns 1 for true, or 0 for false.
     """
-    return (packet.getPacketType() == regina.NText.packetType)
+    return (packet.type() == regina.NText.packetType)
 
 def isTriangulation(packet):
     """
     Is the given packet a 3-manifold triangulation?
     Returns 1 for true, or 0 for false.
     """
-    return (packet.getPacketType() == regina.NTriangulation.packetType)
+    return (packet.type() == regina.NTriangulation.packetType)
 

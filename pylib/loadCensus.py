@@ -155,7 +155,7 @@ def loadCensusInternal(baseFilename, minTet, maxTet):
     while p != None:
         next = p.nextTreePacket()
 
-        if p.getPacketType() == regina.NTriangulation.packetType:
+        if p.type() == regina.NTriangulation.packetType:
             nTets = p.getNumberOfTetrahedra()
             if nTets >= minTet and nTets <= maxTet:
                 # We want this triangulation.
