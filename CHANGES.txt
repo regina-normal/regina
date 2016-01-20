@@ -9,24 +9,6 @@ Regina - A Normal Surface Theory Calculator
 
 Version 5.0  [ (under development) ]
 
-    TODO:
-        - When we merge into master, update this file with what's new.
-          Determine exactly what is new by looking at the diff.
-    ENGINE:
-        Routine readIsoSigList():
-            - Now supports both 3-manifold and 4-manifold triangulations.
-    UTILITIES:
-        tricensus, tricensus-mpi:
-            - Can now run a census of 4-manifold triangulations (rather than
-              3-manifold triangulations) by passing the argument -4 / --dim4.
-        trisetcmp:
-            - Now runs through both 3-manifold and 4-manifold triangulations.
-              However, subcomplexes must be of the same dimension (i.e.,
-              it does not identify when a 3-manifold triangulation
-              appears as a subcomplex of a 4-manifold triangulation).
-
-Version 4.97  [ (under development) ]
-
     GENERAL:
         - Now supports triangulations of all dimensions 2,...,15.
           Dimension 4 (like dimensions 3 and 2) has rich functionality;
@@ -658,6 +640,8 @@ Version 4.97  [ (under development) ]
               a filename).
         Routine perm3to4(), perm3to5(), perm4to5():
             - Deprecated.  Use the new routines NPerm<n>::extend() instead.
+        Routine readIsoSigList():
+            - Now supports both 3-manifold and 4-manifold triangulations.
         Routine valueOf():
             - Now overloaded to support short and long long integers also.
         Global arrays edgeNumber[][], edgeStart[], edgeEnd[]:
@@ -688,6 +672,15 @@ Version 4.97  [ (under development) ]
         - Puncturing a triangulation, making it ideal or truncating ideal
           vertices now automatically simplify the resulting triangulation.
         - Now links against Graphviz instead of running it externally.
+    UTILITIES:
+        tricensus, tricensus-mpi:
+            - Can now run a census of 4-manifold triangulations (rather than
+              3-manifold triangulations) by passing the argument -4 / --dim4.
+        trisetcmp:
+            - Now runs through both 3-manifold and 4-manifold triangulations.
+              However, subcomplexes must be of the same dimension (i.e.,
+              it does not identify when a 3-manifold triangulation
+              appears as a subcomplex of a 4-manifold triangulation).
     PYTHON:
         - For all classes, writeTextShort() and writeTextLong() are no
           longer exposed to Python.  Simply use str() and detail() instead.
