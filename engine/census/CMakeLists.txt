@@ -6,7 +6,6 @@ SET ( FILES
   compact
   dim2census
   dim2gluingpermsearcher
-  dim4gluingperms
   dim4gluingpermsearcher
   euler
   hyperbolic

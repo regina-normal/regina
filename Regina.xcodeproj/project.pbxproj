@@ -1244,11 +1244,9 @@
 		0591E7EA1C4F751B00793A9C /* nnormalhypersurfacelist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D41C4F750200793A9C /* nnormalhypersurfacelist.cpp */; };
 		0591E7EB1C4F751B00793A9C /* nxmlhypersurfacereader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D61C4F750200793A9C /* nxmlhypersurfacereader.cpp */; };
 		0591E7EC1C4F751B00793A9C /* triangulate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D81C4F750200793A9C /* triangulate.cpp */; };
-		0591E7F11C4F75C300793A9C /* dim4gluingperms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7ED1C4F75C300793A9C /* dim4gluingperms.cpp */; };
 		0591E7F21C4F75C300793A9C /* dim4gluingperms.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7EE1C4F75C300793A9C /* dim4gluingperms.h */; };
 		0591E7F31C4F75C300793A9C /* dim4gluingpermsearcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7EF1C4F75C300793A9C /* dim4gluingpermsearcher.cpp */; };
 		0591E7F41C4F75C300793A9C /* dim4gluingpermsearcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7F01C4F75C300793A9C /* dim4gluingpermsearcher.h */; };
-		0591E7F51C4F75CE00793A9C /* dim4gluingperms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7ED1C4F75C300793A9C /* dim4gluingperms.cpp */; };
 		0591E7F61C4F75CE00793A9C /* dim4gluingpermsearcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7EF1C4F75C300793A9C /* dim4gluingpermsearcher.cpp */; };
 		0591E8121C4F763B00793A9C /* dim4boundarycomponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7FA1C4F763600793A9C /* dim4boundarycomponent.cpp */; };
 		0591E8131C4F763B00793A9C /* dim4component.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7FB1C4F763600793A9C /* dim4component.cpp */; };
@@ -2930,7 +2928,6 @@
 		0591E7D61C4F750200793A9C /* nxmlhypersurfacereader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nxmlhypersurfacereader.cpp; sourceTree = "<group>"; };
 		0591E7D71C4F750200793A9C /* nxmlhypersurfacereader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nxmlhypersurfacereader.h; sourceTree = "<group>"; };
 		0591E7D81C4F750200793A9C /* triangulate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulate.cpp; sourceTree = "<group>"; };
-		0591E7ED1C4F75C300793A9C /* dim4gluingperms.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim4gluingperms.cpp; sourceTree = "<group>"; };
 		0591E7EE1C4F75C300793A9C /* dim4gluingperms.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim4gluingperms.h; sourceTree = "<group>"; };
 		0591E7EF1C4F75C300793A9C /* dim4gluingpermsearcher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim4gluingpermsearcher.cpp; sourceTree = "<group>"; };
 		0591E7F01C4F75C300793A9C /* dim4gluingpermsearcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim4gluingpermsearcher.h; sourceTree = "<group>"; };
@@ -3760,7 +3757,6 @@
 				052F9C1B180600FA00FAE4DF /* dim2gluingperms.h */,
 				052F9C1C180600FA00FAE4DF /* dim2gluingpermsearcher.cpp */,
 				052F9C1D180600FA00FAE4DF /* dim2gluingpermsearcher.h */,
-				0591E7ED1C4F75C300793A9C /* dim4gluingperms.cpp */,
 				0591E7EE1C4F75C300793A9C /* dim4gluingperms.h */,
 				0591E7EF1C4F75C300793A9C /* dim4gluingpermsearcher.cpp */,
 				0591E7F01C4F75C300793A9C /* dim4gluingpermsearcher.h */,
@@ -6229,7 +6225,6 @@
 				05A73CA319B2EF5A0099C617 /* matrix_generators.c in Sources */,
 				05B7708419C92A5000E2E558 /* ScriptViewController.mm in Sources */,
 				05F23E1319C1305A005B53B5 /* NewAnglesController.mm in Sources */,
-				0591E7F51C4F75CE00793A9C /* dim4gluingperms.cpp in Sources */,
 				050AFC5A19DCB9B100835ED6 /* SnapPeaAlgebra.mm in Sources */,
 				052FA1931806129B00FAE4DF /* nmanifold.cpp in Sources */,
 				052FA1E31806129B00FAE4DF /* nsstandard.cpp in Sources */,
@@ -6792,7 +6787,6 @@
 				052F9FFE180600FB00FAE4DF /* nlayering.cpp in Sources */,
 				05A73C8C19B2EF130099C617 /* homology.cpp in Sources */,
 				052FA080180600FB00FAE4DF /* surfaces.cpp in Sources */,
-				0591E7F11C4F75C300793A9C /* dim4gluingperms.cpp in Sources */,
 				05431F8A1C40F40D009BC072 /* HilbertSeries.cpp in Sources */,
 				052FA062180600FB00FAE4DF /* nexampletriangulation.cpp in Sources */,
 				052F9F5F180600FB00FAE4DF /* nxmlpacketreader.cpp in Sources */,
