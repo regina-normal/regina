@@ -88,7 +88,7 @@ Dim2Triangulation* NVertex::buildLinkDetail(bool labels,
         if (inclusion) {
             (*inclusion)->tetImage(i) = it->tetrahedron()->markedIndex();
             (*inclusion)->facetPerm(i) = it->tetrahedron()->
-                getTriangleMapping(it->vertex());
+                triangleMapping(it->vertex());
         }
     }
 
@@ -109,7 +109,7 @@ Dim2Triangulation* NVertex::buildLinkDetail(bool labels,
             if (! adj)
                 continue;
 
-            edgeInLink = tet->getTriangleMapping(v).preImageOf(exitTri);
+            edgeInLink = tet->triangleMapping(v).preImageOf(exitTri);
             if (ans->triangle(i)->adjacentTriangle(edgeInLink)) {
                 // We've already made this gluing in the vertex link
                 // from the other side.
@@ -130,9 +130,9 @@ Dim2Triangulation* NVertex::buildLinkDetail(bool labels,
                     break; // Sets adjIndex to the right value.
 
             ans->triangle(i)->joinTo(edgeInLink, ans->triangle(adjIndex),
-                perm4to3(adj->getTriangleMapping(adjVertex).inverse() *
+                perm4to3(adj->triangleMapping(adjVertex).inverse() *
                     tet->adjacentGluing(exitTri) *
-                    tet->getTriangleMapping(v)));
+                    tet->triangleMapping(v)));
         }
     }
 
