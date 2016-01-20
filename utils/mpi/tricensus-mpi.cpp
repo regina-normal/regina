@@ -32,8 +32,6 @@
 
 /* end stub */
 
-#define SUPPORT_DIM4 1
-
 #include "mpi.h"
 
 #include <cctype>
@@ -44,14 +42,10 @@
 #include <sstream>
 #include <popt.h>
 #include "census/dim2gluingpermsearcher.h"
-#if SUPPORT_DIM4
 #include "census/dim4gluingpermsearcher.h"
-#endif
 #include "census/ngluingpermsearcher.h"
 #include "dim2/dim2triangulation.h"
-#if SUPPORT_DIM4
 #include "dim4/dim4triangulation.h"
-#endif
 #include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 #include "packet/ntext.h"
@@ -137,7 +131,6 @@ struct Dim3Params {
     }
 };
 
-#if SUPPORT_DIM4
 struct Dim4Params {
     typedef regina::Dim4FacetPairing Pairing;
     typedef regina::Dim4GluingPermSearcher GluingPermSearcher;
@@ -165,7 +158,6 @@ struct Dim4Params {
         return s->facetPairing();
     }
 };
-#endif
 
 // Census parameters.
 regina::NBoolSet
@@ -245,11 +237,9 @@ int parseCmdLine(int argc, const char* argv[], bool isController) {
         { "dim2", '2', POPT_ARG_NONE, &dim2, 0,
             "Run a census of 2-manifold triangulations, "
             "not 3-manifold triangulations.", 0 },
-#if SUPPORT_DIM4
         { "dim4", '4', POPT_ARG_NONE, &dim4, 0,
             "Run a census of 4-manifold triangulations, "
             "not 3-manifold triangulations.", 0 },
-#endif
         { "sigs", 's', POPT_ARG_NONE, &sigs, 0,
             "Write isomorphism signatures only, not full Regina data files.",
             0 },
@@ -1147,10 +1137,8 @@ int main(int argc, char* argv[]) {
                 nSlaves = size - 1;
                 if (dim2)
                     retVal = mainController<Dim2Params>();
-#if SUPPORT_DIM4
                 else if (dim4)
                     retVal = mainController<Dim4Params>();
-#endif
                 else
                     retVal = mainController<Dim3Params>();
             }
@@ -1158,10 +1146,8 @@ int main(int argc, char* argv[]) {
             // We're one of many slaves.
             if (dim2)
                 retVal = mainSlave<Dim2Params>();
-#if SUPPORT_DIM4
             else if (dim4)
                 retVal = mainSlave<Dim4Params>();
-#endif
             else
                 retVal = mainSlave<Dim3Params>();
         }

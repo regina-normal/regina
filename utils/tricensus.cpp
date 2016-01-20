@@ -32,8 +32,6 @@
 
 /* end stub */
 
-#define SUPPORT_DIM4 1
-
 #include <cctype>
 #include <fstream>
 #include <memory>
@@ -41,16 +39,12 @@
 #include <popt.h>
 #include <unistd.h>
 #include "census/dim2gluingpermsearcher.h"
-#if SUPPORT_DIM4
 #include "census/dim4gluingpermsearcher.h"
-#endif
 #include "census/ngluingpermsearcher.h"
 #include "dim2/dim2edgepairing.h"
 #include "dim2/dim2triangulation.h"
-#if SUPPORT_DIM4
 #include "dim4/dim4facetpairing.h"
 #include "dim4/dim4triangulation.h"
-#endif
 #include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 #include "packet/ntext.h"
@@ -147,7 +141,6 @@ struct Dim3Params {
     }
 };
 
-#if SUPPORT_DIM4
 struct Dim4Params {
     typedef regina::Dim4FacetPairing Pairing;
     typedef regina::Dim4GluingPermSearcher GluingPermSearcher;
@@ -169,7 +162,6 @@ struct Dim4Params {
         return s->facetPairing();
     }
 };
-#endif
 
 /**
  * What to do with each complete triangulation that is generated.
@@ -370,12 +362,10 @@ int main(int argc, const char* argv[]) {
             "Run a census of 2-manifold triangulations, "
             "not 3-manifold triangulations.  Here --tetrahedra counts "
             "triangles, and --bdryfaces counts boundary edges.", 0 },
-#if SUPPORT_DIM4
         { "dim4", '4', POPT_ARG_NONE, &dim4, 0,
             "Run a census of 4-manifold triangulations, "
             "not 3-manifold triangulations.  Here --tetrahedra counts "
             "pentachora, and --bdryfaces counts boundary facets.", 0 },
-#endif
         { "sigs", 's', POPT_ARG_NONE, &sigs, 0,
             "Write isomorphism signatures only, not full Regina data files.",
             0 },
@@ -574,10 +564,8 @@ int main(int argc, const char* argv[]) {
     // And off we go!
     if (dim2)
         return runCensus<Dim2Params>();
-#if SUPPORT_DIM4
     else if (dim4)
         return runCensus<Dim4Params>();
-#endif
     else
         return runCensus<Dim3Params>();
 }
