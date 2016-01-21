@@ -35,7 +35,7 @@ import string
 
 def dumpSurfaces(name, slist):
 	print "-------------------------------"
-	print slist.getTriangulation().label()
+	print slist.triangulation().label()
 	print name
 	print "-------------------------------"
 	print

@@ -468,7 +468,7 @@ void NNormalSurfaceList::Enumerator::fillFundamentalCD() {
 template <typename Coords>
 void NNormalSurfaceList::Enumerator::fillFundamentalPrimal() {
     // We will not set algorithm_ until after the extremal ray
-    // enumeration has finished (since we might want pass additional flags
+    // enumeration has finished (since we might want to pass additional flags
     // to and/or from that routine).
 
     if (tracker_)
