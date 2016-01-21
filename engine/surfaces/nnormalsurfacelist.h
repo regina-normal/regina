@@ -160,8 +160,7 @@ struct PacketInfo<PACKET_NORMALSURFACELIST> {
  * See the NNormalSurfaceVector class notes for details of what to do
  * when introducing a new coordinate system.
  *
- * Normal surface lists should be created using the routine enumerate(),
- * which is new as of Regina 3.95.
+ * Normal surface lists should be created using the routine enumerate().
  *
  * \todo \feature Allow custom matching equations.
  * \todo \feature Allow enumeration with some coordinates explicitly set
@@ -608,7 +607,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * within the underlying triangulation.
          *
          * This may not be the same NormalList that was passed to
-         * enumerate().  In particular, default values will have be
+         * enumerate().  In particular, default values will have been
          * explicitly filled in (such as NS_VERTEX and/or NS_EMBEDDED_ONLY),
          * and invalid and/or redundant values will have been removed.
          *
@@ -620,7 +619,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * this list.
          *
          * These may not be the same NormalAlg flags that were passed to
-         * enumerate().  In particular, default values will have be
+         * enumerate().  In particular, default values will have been
          * explicitly filled in, invalid and/or redundant values will have
          * been removed, and unavailable and/or unsupported combinations
          * of algorithm flags will be replaced with whatever algorithm was
@@ -1297,8 +1296,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
              * this iterator will be initialised according to the
              * parameters passed to this constructor.
              *
-             * @param newList the list into which surfaces will be
-             * inserted.
+             * @param newList the list into which surfaces will be inserted.
              * @param newOwner the triangulation in which the surfaces
              * to be inserted are contained.
              */
@@ -1564,7 +1562,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * It does not make any adjustments to the structure of
                  * the packet tree.
                  *
-                 * If \a tracker_ is non-null, this routine declare and
+                 * If \a tracker_ is non-null, this routine will declare and
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
                  * call NProgressTracker::setFinished().
@@ -1585,7 +1583,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * It does not make any adjustments to the structure of
                  * the packet tree.
                  *
-                 * If \a tracker_ is non-null, this routine declare and
+                 * If \a tracker_ is non-null, this routine will declare and
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
                  * call NProgressTracker::setFinished().
@@ -1653,7 +1651,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * This routine assumes nothing about the state of the
                  * \a algorithm_ flag set, and sets it appropriately.
                  *
-                 * If \a tracker_ is non-null, this routine declare and
+                 * If \a tracker_ is non-null, this routine will declare and
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
                  * call NProgressTracker::setFinished().
@@ -1671,7 +1669,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * This routine assumes nothing about the state of the
                  * \a algorithm_ flag set, and sets it appropriately.
                  *
-                 * If \a tracker_ is non-null, this routine declare and
+                 * If \a tracker_ is non-null, this routine will declare and
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
                  * call NProgressTracker::setFinished().
@@ -1689,7 +1687,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * This routine assumes nothing about the state of the
                  * \a algorithm_ flag set, and sets it appropriately.
                  *
-                 * If \a tracker_ is non-null, this routine declare and
+                 * If \a tracker_ is non-null, this routine will declare and
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
                  * call NProgressTracker::setFinished().
@@ -1707,7 +1705,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * This routine assumes nothing about the state of the
                  * \a algorithm_ flag set, and sets it appropriately.
                  *
-                 * If \a tracker_ is non-null, this routine declare and
+                 * If \a tracker_ is non-null, this routine will declare and
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
                  * call NProgressTracker::setFinished().
@@ -1790,7 +1788,7 @@ inline NormalCoords NNormalSurfaceList::flavour() const {
 inline NormalCoords NNormalSurfaceList::coords() const {
     return coords_;
 }
-    
+
 inline NormalList NNormalSurfaceList::which() const {
     return which_;
 }

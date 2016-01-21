@@ -904,8 +904,7 @@ class REGINA_API NNormalSurface :
 
         /**
          * Destroys this normal surface.
-         * The underlying vector of coordinates will also be
-         * deallocated.
+         * The underlying vector of coordinates will also be deallocated.
          */
         ~NNormalSurface();
 
@@ -1227,8 +1226,7 @@ class REGINA_API NNormalSurface :
          */
         size_t getNumberOfCoords() const;
         /**
-         * Returns the triangulation in which this normal surface
-         * resides.
+         * Returns the triangulation in which this normal surface resides.
          *
          * @return the underlying triangulation.
          */

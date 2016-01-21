@@ -53,7 +53,7 @@ namespace regina {
 
 /**
  * Represents different lists of normal surfaces that might be constructed
- * for a given triangulation.
+ * for a given 3-manifold triangulation.
  *
  * The NormalList enumeration refers to the \e contents of the list,
  * whereas the NormalAlgFlags enumeration refers to the \e algorithm
@@ -151,11 +151,11 @@ inline NormalList operator | (NormalListFlags lhs, NormalListFlags rhs) {
 
 /**
  * Represents options and variants of algorithms for enumerating various
- * types of normal surfaces.
+ * types of normal surfaces in 3-manifold triangulations.
  *
  * These options are typically combined in a bitwise fashion using the
- * NormalAlgs type, and then passed to enumeration routines such as
- * NNormalSurfaceList::vertex().
+ * NormalAlg type, and then passed to enumeration routines such as
+ * NNormalSurfaceList::enumerate().
  *
  * \ifacespython The values in this enumeration type are present, but
  * they are treated by Python as NormalList objects (and they can be
