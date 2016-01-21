@@ -33,6 +33,7 @@ my @packetIcons = qw/
     angles
     container
     dim2triangulation
+    dim4triangulation
     filter
     filter_comb
     filter_prop
