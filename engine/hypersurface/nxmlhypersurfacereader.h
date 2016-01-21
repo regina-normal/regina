@@ -119,6 +119,8 @@ class REGINA_API NXMLNormalHypersurfaceListReader : public NXMLPacketReader {
          *
          * @param tri the triangulation in which these normal hypersurfaces
          * live.
+         * @param resolver the master resolver that will be used to fix
+         * dangling packet references after the entire XML file has been read.
          */
         NXMLNormalHypersurfaceListReader(const Dim4Triangulation* tri,
             NXMLTreeResolver& resolver);
