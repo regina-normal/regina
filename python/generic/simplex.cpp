@@ -168,9 +168,7 @@ void addSimplex(const char* name) {
         .def("getComponent", &Simplex<dim>::getComponent,
             return_value_policy<reference_existing_object>())
         .def("face", &regina::python::face<Simplex<dim>, dim, int>)
-        .def("getFace", &regina::python::face<Simplex<dim>, dim, int>)
         .def("faceMapping", &regina::python::faceMapping<Simplex<dim>, dim>)
-        .def("getFaceMapping", &regina::python::faceMapping<Simplex<dim>, dim>)
         .def(face_aliases<dim, dim - 1>())
         .def("orientation", &Simplex<dim>::orientation)
         .def("facetInMaximalForest", &Simplex<dim>::facetInMaximalForest)

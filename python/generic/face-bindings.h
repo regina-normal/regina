@@ -299,10 +299,7 @@ void addFace(const char* name, const char* embName) {
         .def("getComponent", &Face<dim, subdim>::getComponent,
             return_value_policy<reference_existing_object>())
         .def("face", &regina::python::face<Face<dim, subdim>, subdim, int>)
-        .def("getFace", &regina::python::face<Face<dim, subdim>, subdim, int>)
         .def("faceMapping",
-            &regina::python::faceMapping<Face<dim, subdim>, subdim, dim + 1>)
-        .def("getFaceMapping",
             &regina::python::faceMapping<Face<dim, subdim>, subdim, dim + 1>)
         .def(subface_aliases<dim, subdim, subdim - 1>())
         .def("str", &Face<dim, subdim>::str)

@@ -77,7 +77,6 @@ void addNTetrahedron() {
         .def("getComponent", &NTetrahedron::getComponent,
             return_value_policy<reference_existing_object>())
         .def("face", &regina::python::face<NTetrahedron, 3, int>)
-        .def("getFace", &regina::python::face<NTetrahedron, 3, int>)
         .def("vertex", &NTetrahedron::vertex,
             return_value_policy<reference_existing_object>())
         .def("getVertex", &NTetrahedron::getVertex,
@@ -91,7 +90,6 @@ void addNTetrahedron() {
         .def("getTriangle", &NTetrahedron::getTriangle,
             return_value_policy<reference_existing_object>())
         .def("faceMapping", &regina::python::faceMapping<NTetrahedron, 3>)
-        .def("getFaceMapping", &regina::python::faceMapping<NTetrahedron, 3>)
         .def("vertexMapping", &NTetrahedron::vertexMapping)
         .def("getVertexMapping", &NTetrahedron::getVertexMapping)
         .def("edgeMapping", &NTetrahedron::edgeMapping)

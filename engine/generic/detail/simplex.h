@@ -98,7 +98,7 @@ class SimplexFaces {
             /**< For each <i>subdim</i>-face of this simplex, maps vertices
                  (0,1,...,\a subdim) of the underlying <i>subdim</i>-face of
                  the triangulation to the corresponding vertices of this
-                 simplex, as described by getFaceMapping(). */
+                 simplex, as described by faceMapping(). */
     protected:
         SimplexFaces() = default;
 
@@ -437,18 +437,6 @@ class SimplexBase :
         Face<dim, subdim>* face(int face) const;
 
         /**
-         * Deprecated alias for face(), which returns the <i>subdim</i>-face
-         * of the underlying triangulation that appears as the given
-         * <i>subdim</i>-face of this simplex.
-         *
-         * \deprecated Simply call face() instead.
-         *
-         * See face() for further details.
-         */
-        template <int subdim>
-        Face<dim, subdim>* getFace(int face) const;
-
-        /**
          * Examines the given <i>subdim</i>-face of this simplex, and
          * returns the mapping between the underlying <i>subdim</i>-face
          * of the triangulation and the individual vertices of this simplex.
@@ -526,19 +514,6 @@ class SimplexBase :
          */
         template <int subdim>
         NPerm<dim + 1> faceMapping(int face) const;
-
-        /**
-         * Deprecated alias for faceMapping(), which examines the given
-         * <i>subdim</i>-face of this simplex, and returns the mapping
-         * between the underlying <i>subdim</i>-face of the triangulation and
-         * the individual vertices of this simplex.
-         *
-         * \deprecated Simply call faceMapping() instead.
-         *
-         * See faceMapping() for further details.
-         */
-        template <int subdim>
-        NPerm<dim + 1> getFaceMapping(int face) const;
 
         /**
          * Returns the orientation of this simplex in the
@@ -721,21 +696,7 @@ inline Face<dim, subdim>* SimplexBase<dim>::face(int face) const {
 
 template <int dim>
 template <int subdim>
-inline Face<dim, subdim>* SimplexBase<dim>::getFace(int face) const {
-    triangulation()->ensureSkeleton();
-    return SimplexFaces<dim, subdim>::face_[face];
-}
-
-template <int dim>
-template <int subdim>
 inline NPerm<dim + 1> SimplexBase<dim>::faceMapping(int face) const {
-    triangulation()->ensureSkeleton();
-    return SimplexFaces<dim, subdim>::mapping_[face];
-}
-
-template <int dim>
-template <int subdim>
-inline NPerm<dim + 1> SimplexBase<dim>::getFaceMapping(int face) const {
     triangulation()->ensureSkeleton();
     return SimplexFaces<dim, subdim>::mapping_[face];
 }

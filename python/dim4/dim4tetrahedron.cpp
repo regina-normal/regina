@@ -116,7 +116,6 @@ void addDim4Tetrahedron() {
         .def("getBoundaryComponent", &Dim4Tetrahedron::getBoundaryComponent,
             return_value_policy<reference_existing_object>())
         .def("face", &regina::python::face<Dim4Tetrahedron, 3, int>)
-        .def("getFace", &regina::python::face<Dim4Tetrahedron, 3, int>)
         .def("vertex", &Dim4Tetrahedron::vertex,
             return_value_policy<reference_existing_object>())
         .def("getVertex", &Dim4Tetrahedron::getVertex,
@@ -130,8 +129,6 @@ void addDim4Tetrahedron() {
         .def("getTriangle", &Dim4Tetrahedron::getTriangle,
             return_value_policy<reference_existing_object>())
         .def("faceMapping", &regina::python::faceMapping<Dim4Tetrahedron, 3, 5>)
-        .def("getFaceMapping",
-            &regina::python::faceMapping<Dim4Tetrahedron, 3, 5>)
         .def("vertexMapping", &Dim4Tetrahedron::vertexMapping)
         .def("getVertexMapping", &Dim4Tetrahedron::getVertexMapping)
         .def("edgeMapping", &Dim4Tetrahedron::edgeMapping)

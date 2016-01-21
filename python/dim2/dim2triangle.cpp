@@ -75,7 +75,6 @@ void addDim2Triangle() {
         .def("getComponent", &Dim2Triangle::getComponent,
             return_value_policy<reference_existing_object>())
         .def("face", &regina::python::face<Dim2Triangle, 2, int>)
-        .def("getFace", &regina::python::face<Dim2Triangle, 2, int>)
         .def("vertex", &Dim2Triangle::vertex,
             return_value_policy<reference_existing_object>())
         .def("getVertex", &Dim2Triangle::getVertex,
@@ -85,7 +84,6 @@ void addDim2Triangle() {
         .def("getEdge", &Dim2Triangle::getEdge,
             return_value_policy<reference_existing_object>())
         .def("faceMapping", &regina::python::faceMapping<Dim2Triangle, 2>)
-        .def("getFaceMapping", &regina::python::faceMapping<Dim2Triangle, 2>)
         .def("vertexMapping", &Dim2Triangle::vertexMapping)
         .def("getVertexMapping", &Dim2Triangle::getVertexMapping)
         .def("edgeMapping", &Dim2Triangle::edgeMapping)

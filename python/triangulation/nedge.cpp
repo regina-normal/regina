@@ -116,13 +116,11 @@ void addNEdge() {
             .def("getBoundaryComponent", &NEdge::getBoundaryComponent,
                 return_value_policy<reference_existing_object>())
             .def("face", &regina::python::face<NEdge, 1, int>)
-            .def("getFace", &regina::python::face<NEdge, 1, int>)
             .def("vertex", &NEdge::vertex,
                 return_value_policy<reference_existing_object>())
             .def("getVertex", &NEdge::getVertex,
                 return_value_policy<reference_existing_object>())
             .def("faceMapping", &regina::python::faceMapping<NEdge, 1, 4>)
-            .def("getFaceMapping", &regina::python::faceMapping<NEdge, 1, 4>)
             .def("vertexMapping", &NEdge::vertexMapping)
             .def("getVertexMapping", &NEdge::getVertexMapping)
             .def("degree", &NEdge::degree)

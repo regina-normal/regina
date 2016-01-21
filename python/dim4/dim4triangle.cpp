@@ -120,7 +120,6 @@ void addDim4Triangle() {
             .def("getBoundaryComponent", &Dim4Triangle::getBoundaryComponent,
                 return_value_policy<reference_existing_object>())
             .def("face", &regina::python::face<Dim4Triangle, 2, int>)
-            .def("getFace", &regina::python::face<Dim4Triangle, 2, int>)
             .def("vertex", &Dim4Triangle::vertex,
                 return_value_policy<reference_existing_object>())
             .def("getVertex", &Dim4Triangle::getVertex,
@@ -130,8 +129,6 @@ void addDim4Triangle() {
             .def("getEdge", &Dim4Triangle::getEdge,
                 return_value_policy<reference_existing_object>())
             .def("faceMapping",
-                &regina::python::faceMapping<Dim4Triangle, 2, 5>)
-            .def("getFaceMapping",
                 &regina::python::faceMapping<Dim4Triangle, 2, 5>)
             .def("vertexMapping", &Dim4Triangle::vertexMapping)
             .def("getVertexMapping", &Dim4Triangle::getVertexMapping)

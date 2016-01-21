@@ -226,8 +226,8 @@ class FaceEmbeddingBase :
          * FaceEmbedding objects for the same underlying <i>subdim</i>-face.
          *
          * This routine returns the same permutation as
-         * <tt>simplex().getFaceMapping<subdim>(face())</tt>.
-         * See Simplex<dim>::getFaceMapping() for details.
+         * <tt>simplex().faceMapping<subdim>(face())</tt>.
+         * See Simplex<dim>::faceMapping() for details.
          *
          * @return a mapping from the vertices of the underlying
          * <i>subdim</i>-face to the corresponding vertices of simplex().
@@ -978,18 +978,6 @@ class FaceBase :
         Face<dim, lowerdim>* face(int face) const;
 
         /**
-         * Deprecated alias for face(), which returns the <i>lowerdim</i>-face
-         * of the underlying triangulation that appears as the given
-         * <i>lowerdim</i>-dimensional subface of this face.
-         *
-         * \deprecated Simply call face() instead.
-         *
-         * See face() for further details.
-         */
-        template <int lowerdim>
-        Face<dim, lowerdim>* getFace(int face) const;
-
-        /**
          * Examines the given <i>lowerdim</i>-dimensional subface of this face,
          * and returns the mapping between the underlying <i>lowerdim</i>-face
          * of the triangulation and the individual vertices of this face.
@@ -1045,19 +1033,6 @@ class FaceBase :
          */
         template <int lowerdim>
         NPerm<dim + 1> faceMapping(int face) const;
-
-        /**
-         * Deprecated alias for faceMapping(), which examines the given
-         * <i>lowerdim</i>-dimensional subface of this face, and returns the
-         * mapping between the underlying <i>lowerdim</i>-face of the
-         * triangulation and the individual vertices of this face.
-         *
-         * \deprecated Simply call faceMapping() instead.
-         *
-         * See faceMapping() for further details.
-         */
-        template <int lowerdim>
-        NPerm<dim + 1> getFaceMapping(int face) const;
 
     protected:
         /**
@@ -1123,7 +1098,7 @@ inline int FaceEmbeddingBase<dim, subdim>::getFace() const {
 
 template <int dim, int subdim>
 inline NPerm<dim+1> FaceEmbeddingBase<dim, subdim>::vertices() const {
-    return simplex_->template getFaceMapping<subdim>(face_);
+    return simplex_->template faceMapping<subdim>(face_);
 }
 
 template <int dim, int subdim>
@@ -1466,12 +1441,6 @@ inline Face<dim, lowerdim>* FaceBase<dim, subdim>::face(int f) const {
 
 template <int dim, int subdim>
 template <int lowerdim>
-inline Face<dim, lowerdim>* FaceBase<dim, subdim>::getFace(int f) const {
-    return face(f);
-}
-
-template <int dim, int subdim>
-template <int lowerdim>
 NPerm<dim + 1> FaceBase<dim, subdim>::faceMapping(int f) const {
     // Let S be the dim-simplex corresponding to the first embedding,
     // i.e., this->front().
@@ -1506,12 +1475,6 @@ NPerm<dim + 1> FaceBase<dim, subdim>::faceMapping(int f) const {
         }
 
     return p;
-}
-
-template <int dim, int subdim>
-template <int lowerdim>
-inline NPerm<dim + 1> FaceBase<dim, subdim>::getFaceMapping(int f) const {
-    return faceMapping(f);
 }
 
 template <int dim, int subdim>

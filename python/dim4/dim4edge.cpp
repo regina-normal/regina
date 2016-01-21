@@ -134,13 +134,11 @@ void addDim4Edge() {
             .def("getBoundaryComponent", &Dim4Edge::getBoundaryComponent,
                 return_value_policy<reference_existing_object>())
             .def("face", &regina::python::face<Dim4Edge, 1, int>)
-            .def("getFace", &regina::python::face<Dim4Edge, 1, int>)
             .def("vertex", &Dim4Edge::vertex,
                 return_value_policy<reference_existing_object>())
             .def("getVertex", &Dim4Edge::getVertex,
                 return_value_policy<reference_existing_object>())
             .def("faceMapping", &regina::python::faceMapping<Dim4Edge, 1, 5>)
-            .def("getFaceMapping", &regina::python::faceMapping<Dim4Edge, 1, 5>)
             .def("vertexMapping", &Dim4Edge::vertexMapping)
             .def("getVertexMapping", &Dim4Edge::getVertexMapping)
             .def("degree", &Dim4Edge::degree)
