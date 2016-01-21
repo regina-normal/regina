@@ -367,9 +367,18 @@ class REGINA_API NPacket :
          * \pre No other packet in the overall tree
          * structure has the same label.
          *
-         * @param newLabel the new label to give this packet.
+         * @param label the new label to give this packet.
          */
-        void setPacketLabel(const std::string& newLabel);
+        void setLabel(const std::string& label);
+
+        /**
+         * Deprecated routine that sets the label associated with this
+         * individual packet.
+         *
+         * \deprecated This routine has been renamed to setLabel().
+         * See the setLabel() documentation for further details.
+         */
+        void setPacketLabel(const std::string& label);
 
         /**
          * Returns a descriptive text string for the packet.
@@ -1626,6 +1635,10 @@ inline std::string NPacket::getHumanLabel() const {
 
 inline std::string NPacket::getFullName() const {
     return fullName();
+}
+
+inline void NPacket::setPacketLabel(const std::string& label) {
+    setLabel(label);
 }
 
 inline bool NPacket::hasTag(const std::string& tag) const {
