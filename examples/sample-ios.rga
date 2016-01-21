@@ -1235,6 +1235,17 @@ CS_unknown
     <pent desc=""> 0 13380 1 18056 1 18056 1 18056 0 2257 </pent>
     <pent desc=""> 1 13380 0 18056 0 18056 0 18056 1 2257 </pent>
   </pentachora>
+<packet label="Normal Hypersurfaces"
+	type="Normal Hypersurface List" typeid="13"
+	parent="Twisted S3 x~ S1">
+  <params type="5" algorithm="32" flavourid="0"
+	flavour="Standard normal (tet-prism)"/>
+  <hypersurface len="30" name=""> 10 1 25 1 </hypersurface>
+  <hypersurface len="30" name=""> 2 1 7 1 11 1 17 1 22 1 26 1 </hypersurface>
+  <hypersurface len="30" name=""> 1 1 2 1 3 1 8 1 16 1 17 1 18 1 23 1 </hypersurface>
+  <hypersurface len="30" name=""> 0 1 4 1 5 1 14 1 15 1 19 1 20 1 29 1 </hypersurface>
+  <hypersurface len="30" name=""> 0 1 1 1 2 1 3 1 4 1 15 1 16 1 17 1 18 1 19 1 </hypersurface>
+</packet> <!-- Normal Hypersurfaces (Normal Hypersurface List) -->
 </packet> <!-- Twisted S3 x~ S1 (4_Manifold Triangulation) -->
 </packet> <!-- 4_Manifolds (Container) -->
 <packet label="2-Manifolds"
