@@ -224,24 +224,6 @@ class REGINA_API Face<4, 0> : public detail::FaceBase<4, 0>,
             Dim4Isomorphism** inclusion = 0) const;
 
         /**
-         * A synonym for buildLink().  This is provided for consistency
-         * with the 3-dimensional analogue Triangulation<3>::link().
-         *
-         * See buildLink() for further details.
-         *
-         * @return the read-only triangulated link of this vertex.
-         */
-        const Triangulation<3>* link() const;
-
-        /**
-         * Deprecated synonym for buildLink().
-         *
-         * \deprecated This routine has been renamed to link().
-         * See the link() documentation for further details.
-         */
-        const Triangulation<3>* getLink() const;
-
-        /**
          * Determines if this vertex is an ideal vertex.
          * To be an ideal, a vertex must (i) be valid, and (ii) have
          * a closed vertex link that is not a 3-sphere.
@@ -332,14 +314,6 @@ inline Dim4BoundaryComponent* Face<4, 0>::getBoundaryComponent() const {
 }
 
 inline const Triangulation<3>* Face<4, 0>::buildLink() const {
-    return link_;
-}
-
-inline const Triangulation<3>* Face<4, 0>::link() const {
-    return link_;
-}
-
-inline const Triangulation<3>* Face<4, 0>::getLink() const {
     return link_;
 }
 

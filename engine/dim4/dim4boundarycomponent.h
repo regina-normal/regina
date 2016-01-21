@@ -219,15 +219,6 @@ class REGINA_API Dim4BoundaryComponent :
         const NTriangulation* triangulation() const;
 
         /**
-         * Deprecated routine that returns the full 3-manifold triangulation
-         * of this boundary component.
-         *
-         * \deprecated This routine has been renamed to triangulation().
-         * See the triangulation() documentation for further details.
-         */
-        const NTriangulation* getTriangulation() const;
-
-        /**
          * Determines if this boundary component is ideal.
          * This is the case if and only if it consists of a single
          * ideal vertex and no tetrahedra.
@@ -376,11 +367,7 @@ inline Dim4Component* Dim4BoundaryComponent::getComponent() const {
 }
 
 inline const NTriangulation* Dim4BoundaryComponent::triangulation() const {
-    return (boundary_ ? boundary_ : vertices_.front()->link());
-}
-
-inline const NTriangulation* Dim4BoundaryComponent::getTriangulation() const {
-    return (boundary_ ? boundary_ : vertices_.front()->link());
+    return (boundary_ ? boundary_ : vertices_.front()->buildLink());
 }
 
 inline void Dim4BoundaryComponent::writeTextShort(std::ostream& out) const {
