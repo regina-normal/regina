@@ -394,7 +394,7 @@ void Dim4Triangulation::calculateVertexLinks() {
             int type;
             for (linkit = vertex->link_->vertices().begin();
                     linkit != vertex->link_->vertices().end(); ++linkit) {
-                type = (*linkit)->buildLink();
+                type = (*linkit)->link();
                 if (type != NVertex::SPHERE && type != NVertex::DISC) {
                     // This 3-manifold vertex is at the end of an
                     // invalid 4-manifold edge.
