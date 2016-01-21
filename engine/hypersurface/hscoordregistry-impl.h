@@ -43,6 +43,9 @@
  *  - add a corresponding case to each implementation of forCoords().
  *
  *  See hscoordregistry.h for how other routines can use this registry.
+ *
+ *  This file is automatically included from hscoordregistry.h; there is
+ *  no need for end users to include it explicitly.
  */
 
 #ifndef __HSFLAVOURREGISTRY_IMPL_H
