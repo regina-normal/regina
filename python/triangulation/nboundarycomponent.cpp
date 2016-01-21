@@ -48,8 +48,6 @@ void addNBoundaryComponent() {
             boost::noncopyable> ("NBoundaryComponent", no_init)
         .def("index", &NBoundaryComponent::index)
         .def("countFaces", &regina::python::countFaces<NBoundaryComponent, 3>)
-        .def("getNumberOfFaces",
-            &regina::python::countFaces<NBoundaryComponent, 3>)
         .def("countTriangles", &NBoundaryComponent::countTriangles)
         .def("getNumberOfTriangles", &NBoundaryComponent::getNumberOfTriangles)
         .def("countEdges", &NBoundaryComponent::countEdges)
@@ -57,7 +55,6 @@ void addNBoundaryComponent() {
         .def("countVertices", &NBoundaryComponent::countVertices)
         .def("getNumberOfVertices", &NBoundaryComponent::getNumberOfVertices)
         .def("face", &regina::python::face<NBoundaryComponent, 3, size_t>)
-        .def("getFace", &regina::python::face<NBoundaryComponent, 3, size_t>)
         .def("triangle", &NBoundaryComponent::triangle,
             return_value_policy<reference_existing_object>())
         .def("getTriangle", &NBoundaryComponent::getTriangle,
