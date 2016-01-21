@@ -663,6 +663,13 @@ Version 5.0  [ (under development) ]
             - This long-deprecated global arrays have now been removed, and
               the corresponding static arrays in NEdge are now deprecated.
               Instead, use NEdge::edgeNumber[][] and/or NEdge::edgeVertex[][].
+        Global arrays vertexSplit...:
+            - Renamed global arrays vertexSplit[][], vertexSplitMeeting[][][],
+              vertexSplitPartner[][], vertexSplitString[][] to quadSeparating,
+              quadMeeting, quadPartner, quadString respectively.
+            - Deprecated array vertexSplitDefn[][].  Simply use
+              NEdge::ordering() instead (with the caveat that NEdge::ordering()
+              might switch the images of 2 and 3).
         Header dim2edgepairing.h, nfacepairing.h:
             - Relocated from census/ into dim2/ and triangulation/ respectively.
               Deprecated headers have been kept in the old census/ folder.

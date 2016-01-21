@@ -42,11 +42,25 @@
 
 namespace regina {
 
+const int quadSeparating[4][4] = {
+    { -1, 0, 1, 2 },
+    {  0,-1, 2, 1 },
+    {  1, 2,-1, 0 },
+    {  2, 1, 0,-1 }
+};
+
 const int vertexSplit[4][4] = {
     { -1, 0, 1, 2 },
     {  0,-1, 2, 1 },
     {  1, 2,-1, 0 },
     {  2, 1, 0,-1 }
+};
+
+const int quadMeeting[4][4][2] = {
+    { {-1,-1}, { 1, 2}, { 0, 2}, { 0, 1} },
+    { { 1, 2}, {-1,-1}, { 0, 1}, { 0, 2} },
+    { { 0, 2}, { 0, 1}, {-1,-1}, { 1, 2} },
+    { { 0, 1}, { 0, 2}, { 1, 2}, {-1,-1} }
 };
 
 const int vertexSplitMeeting[4][4][2] = {
@@ -62,11 +76,19 @@ const int vertexSplitDefn[3][4] = {
     { 0, 3, 1, 2 }
 };
 
+const int quadPartner[3][4] = {
+    { 1, 0, 3, 2},
+    { 2, 3, 0, 1},
+    { 3, 2, 1, 0}
+};
+
 const int vertexSplitPartner[3][4] = {
     { 1, 0, 3, 2},
     { 2, 3, 0, 1},
     { 3, 2, 1, 0}
 };
+
+const char quadString[3][6] = { "01/23", "02/13", "03/12" };
 
 const char vertexSplitString[3][6] = { "01/23", "02/13", "03/12" };
 

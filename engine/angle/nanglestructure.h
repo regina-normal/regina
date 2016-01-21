@@ -77,11 +77,11 @@ typedef Triangulation<3> NTriangulation;
  * If there are \a t tetrahedra in the underlying triangulation, there
  * will be precisely 3<i>t</i>+1 elements in this vector.  The first
  * three elements will be the angle members for the first tetrahedron,
- * the next three for the second tetrahedron and so on.  For each
- * tetraheron, the three individual elements are the angle members
- * for vertex splittings 0, 1 and 2 (see NAngleStructure::angle()).
- * The final element of the vector is the scaling member as described
- * above.
+ * the next three for the second tetrahedron and so on.  For each tetraheron,
+ * the three individual elements are the angle members corresponding to
+ * edges 0, 1 and 2 of the tetrahedron (and also their opposite edges
+ * 5, 4 and 3 respectively).
+ * The final element of the vector is the scaling member as described above.
  *
  * \ifacespython Not present.
  */
@@ -187,14 +187,16 @@ class REGINA_API NAngleStructure :
          * The angle returned will be scaled down; the actual angle is
          * the returned value multiplied by <i>pi</i>.
          *
+         * Within a tetrahedron, the three angles are indexed 0, 1 and 2.
+         * Angle \a i appears on edge \a i of the tetrahedron as well as
+         * its opposite edge (5-\a i).
+         *
          * @param tetIndex the index in the triangulation of the
          * tetrahedron in which the requested angle lives; this should
          * be between 0 and NTriangulation::size()-1
          * inclusive.
-         * @param edgePair the number of the vertex splitting
-         * representing the pair of edges holding the requested angle;
-         * this should be between 0 and 2 inclusive.  See regina::vertexSplit
-         * and regina::vertexSplitDefn for details regarding vertex splittings.
+         * @param edgePair the number representing the pair of edges holding
+         * the requested angle, as described above; this should be 0, 1 or 2.
          * @return the requested angle scaled down by <i>pi</i>.
          */
         NRational angle(size_t tetIndex, int edgePair) const;

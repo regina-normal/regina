@@ -34,7 +34,6 @@
 
 #include "angle/nanglestructure.h"
 #include "maths/nmatrixint.h"
-#include "surfaces/nnormalsurface.h" // For vertexSplit.
 #include "triangulation/ntriangulation.h"
 #include "utilities/xmlutils.h"
 
@@ -60,7 +59,6 @@ NMatrixInt* NAngleStructureVector::makeAngleEquations(
     NMatrixInt* eqns = new NMatrixInt(rows, cols);
     size_t row = 0;
 
-    NPerm4 perm;
     size_t index;
     for (NTriangulation::EdgeIterator eit = tri->edges().begin();
             eit != tri->edges().end(); eit++) {
@@ -68,8 +66,10 @@ NMatrixInt* NAngleStructureVector::makeAngleEquations(
             continue;
         for (auto& emb : **eit) {
             index = emb.tetrahedron()->index();
-            perm = emb.vertices();
-            eqns->entry(row, 3 * index + vertexSplit[perm[0]][perm[1]]) += 1;
+            if (emb.edge() < 3)
+                eqns->entry(row, 3 * index + emb.edge()) += 1;
+            else
+                eqns->entry(row, 3 * index + 5 - emb.edge()) += 1;
         }
         eqns->entry(row, cols - 1) = -2;
         ++row;

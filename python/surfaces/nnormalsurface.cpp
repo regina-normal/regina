@@ -48,17 +48,17 @@ using regina::python::GlobalArray2D;
 using regina::python::GlobalArray3D;
 
 namespace {
-    const char* const vertexSplitString_1D[3] = {
-        regina::vertexSplitString[0],
-        regina::vertexSplitString[1],
-        regina::vertexSplitString[2]
+    const char* const quadString_1D[3] = {
+        regina::quadString[0],
+        regina::quadString[1],
+        regina::quadString[2]
     };
 
-    GlobalArray2D<int> vertexSplit_arr(regina::vertexSplit, 4);
-    GlobalArray3D<int> vertexSplitMeeting_arr(regina::vertexSplitMeeting, 4);
+    GlobalArray2D<int> quadSeparating_arr(regina::quadSeparating, 4);
+    GlobalArray3D<int> quadMeeting_arr(regina::quadMeeting, 4);
     GlobalArray2D<int> vertexSplitDefn_arr(regina::vertexSplitDefn, 3);
-    GlobalArray2D<int> vertexSplitPartner_arr(regina::vertexSplitPartner, 3);
-    GlobalArray<const char*> vertexSplitString_arr(vertexSplitString_1D, 3);
+    GlobalArray2D<int> quadPartner_arr(regina::quadPartner, 3);
+    GlobalArray<const char*> quadString_arr(quadString_1D, 3);
     GlobalArray2D<regina::NPerm4> triDiscArcs_arr(regina::__triDiscArcs, 4, 3);
     GlobalArray2D<regina::NPerm4> quadDiscArcs_arr(regina::__quadDiscArcs, 3, 4);
     GlobalArray2D<regina::NPerm4> octDiscArcs_arr(regina::__octDiscArcs, 3, 8);
@@ -211,11 +211,15 @@ void addNNormalSurface() {
     ;
 
     // Global arrays:
-    scope().attr("vertexSplit") = &vertexSplit_arr;
-    scope().attr("vertexSplitMeeting") = &vertexSplitMeeting_arr;
+    scope().attr("quadSeparating") = &quadSeparating_arr;
+    scope().attr("vertexSplit") = &quadSeparating_arr;
+    scope().attr("quadMeeting") = &quadMeeting_arr;
+    scope().attr("vertexSplitMeeting") = &quadMeeting_arr;
     scope().attr("vertexSplitDefn") = &vertexSplitDefn_arr;
-    scope().attr("vertexSplitPartner") = &vertexSplitPartner_arr;
-    scope().attr("vertexSplitString") = &vertexSplitString_arr;
+    scope().attr("quadPartner") = &quadPartner_arr;
+    scope().attr("vertexSplitPartner") = &quadPartner_arr;
+    scope().attr("quadString") = &quadString_arr;
+    scope().attr("vertexSplitString") = &quadString_arr;
     scope().attr("triDiscArcs") = &triDiscArcs_arr;
     scope().attr("quadDiscArcs") = &quadDiscArcs_arr;
     scope().attr("octDiscArcs") = &octDiscArcs_arr;
