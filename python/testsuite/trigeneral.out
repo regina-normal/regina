@@ -43,10 +43,6 @@ Orientable: True
 Connected: True
 
 Fundamental group: 0
-Generators: (none)
-Relations:
-    (none)
-
 H1: 0
 H1Bdry: 0
 H1Rel: 0
@@ -117,10 +113,6 @@ Orientable: True
 Connected: True
 
 Fundamental group: 0
-Generators: (none)
-Relations:
-    (none)
-
 H1: 0
 H1Bdry: 0
 H1Rel: 0
@@ -197,10 +189,6 @@ Orientable: True
 Connected: True
 
 Fundamental group: Z
-Generators: a
-Relations:
-    (none)
-
 H1: Z
 H1Bdry: 0
 H1Rel: Z
@@ -281,11 +269,6 @@ Orientable: False
 Connected: True
 
 Fundamental group: Z + Z_2
-Generators: a, b
-Relations:
-    a^2 b^-2
-    a b^-1 a^-1 b
-
 H1: Z + Z_2
 H1Bdry: 0
 H1Rel: Z + Z_2
@@ -370,11 +353,6 @@ Orientable: True
 Connected: True
 
 Fundamental group: FreeProduct( Z_2, Z_2 )
-Generators: a, b
-Relations:
-    a^2
-    b^2
-
 H1: 2 Z_2
 H1Bdry: 0
 H1Rel: 2 Z_2
@@ -451,10 +429,6 @@ Orientable: True
 Connected: True
 
 Fundamental group: Z_8
-Generators: a
-Relations:
-    a^8
-
 H1: Z_8
 H1Bdry: 0
 H1Rel: Z_8
@@ -543,11 +517,6 @@ Orientable: True
 Connected: True
 
 Fundamental group: 
-Generators: a, b
-Relations:
-    a^-1 b^-1 a^-1 b a b
-    a b^-2 a b a^-1 b
-
 H1: 0
 H1Bdry: 0
 H1Rel: 0
@@ -652,11 +621,6 @@ Orientable: True
 Connected: True
 
 Fundamental group: 
-Generators: a, b
-Relations:
-    a b a b^2 a^-2 b^2
-    a^2 b a b a^2 b^-2
-
 H1: 2 Z_5
 H1Bdry: 0
 H1Rel: 2 Z_5
@@ -767,11 +731,6 @@ Orientable: False
 Connected: True
 
 Fundamental group: 
-Generators: a, b
-Relations:
-    a^-1 b^2 a b^2 a^-2 b^-2 a b^-1
-    a b^2 a^-1 b^2 a^-1 b^-2 a b^-2 a^-1 b
-
 H1: Z
 H1Bdry: 0
 H1Rel: Z
@@ -850,10 +809,6 @@ Orientable: True
 Connected: True
 
 Fundamental group: Z
-Generators: a
-Relations:
-    (none)
-
 H1: Z
 H1Bdry: 2 Z
 H1Rel: 0
@@ -932,10 +887,6 @@ Orientable: False
 Connected: True
 
 Fundamental group: Z
-Generators: a
-Relations:
-    (none)
-
 H1: Z
 H1Bdry: Z + Z_2
 H1Rel: 0
@@ -1010,10 +961,6 @@ Orientable: True
 Connected: True
 
 Fundamental group: Z~Free(2) w/monodromy a ↦ b, b ↦ b a^-1 b^2
-Generators: a, b
-Relations:
-    a b a b^-1 a^-1 b^2 a^-1 b^-1
-
 H1: Z
 H1Bdry: 2 Z
 H1Rel: 0
@@ -1096,10 +1043,6 @@ Orientable: True
 Connected: True
 
 Fundamental group: 
-Generators: a, b
-Relations:
-    a b a^-1 b a^2 b a^-1 b^-1 a b^-1 a^-2 b^-1
-
 H1: 2 Z
 H1Bdry: 4 Z
 H1Rel: Z
@@ -1170,10 +1113,6 @@ Orientable: False
 Connected: True
 
 Fundamental group: Z~Free(2) w/monodromy a ↦ b, b ↦ b^-1 a
-Generators: a, b
-Relations:
-    a^-1 b^-1 a^2 b^2
-
 H1: Z
 H1Bdry: Z + Z_2
 H1Rel: 0
@@ -1280,10 +1219,6 @@ Orientable: True
 Connected: True
 
 Fundamental group: Free(2)
-Generators: a, b
-Relations:
-    (none)
-
 H1: 2 Z
 H1Bdry: 4 Z
 H1Rel: 0

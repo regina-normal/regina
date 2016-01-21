@@ -76,7 +76,9 @@ def vitalStats(tri):
 	print "Connected:", tri.isConnected()
 	print
 	print "Fundamental group:", tri.fundamentalGroup().recogniseGroup()
-	print tri.fundamentalGroup().detail()
+	# Don't print the full generators and relations for now, since this
+	# is not unique and can therefore lead to spurious test failures.
+	# print tri.fundamentalGroup().detail()
 	print "H1:", tri.homology()
 	if tri.isValid():
 		print "H1Bdry:", tri.homologyBdry()
