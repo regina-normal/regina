@@ -306,9 +306,9 @@ class REGINA_API NNormalHypersurfaceVector : public NRay {
          * @param pentIndex the index in the triangulation of the
          * pentachoron in which the requested prism pieces reside;
          * this should be between 0 and Dim4Triangulation::size()-1 inclusive.
-         * @param prismType the number of the vertex splitting that this
-         * prism type represents; this should be between 0 and 9
-         * inclusive.
+         * @param prismType specifies the edge of the given pentachoron that
+         * this prism separates from the opposite triangle;
+         * this should be between 0 and 9 inclusive.
          * @param triang the triangulation in which this normal hypersurface
          * lives.
          * @return the number of prism pieces of the given type.
@@ -504,8 +504,8 @@ class REGINA_API NNormalHypersurface :
          * in this normal hypersurface.
          * A prism piece type is identified by specifying a
          * pentachoron and an edge of that pentachoron; prisms of this
-         * type will then separate the given edge from the remaining three
-         * pentachoron vertices.
+         * type will then separate edge \a i of the pentachoron from
+         * triangle \a i of the pentachoron.
          *
          * If you are using a coordinate system that adorns pieces with
          * additional information (such as orientation), this routine
@@ -516,7 +516,7 @@ class REGINA_API NNormalHypersurface :
          * pentachoron in which the requested prisms reside;
          * this should be between 0 and Dim4Triangulation::size()-1 inclusive.
          * @param prismType specifies the edge of the given pentachoron that
-         * this prism separates from the remaining three vertices;
+         * this prism separates from the opposite triangle;
          * this should be between 0 and 9 inclusive.
          * @return the number of prism pieces of the given type.
          */
