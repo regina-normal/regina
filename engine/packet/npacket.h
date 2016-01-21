@@ -200,7 +200,7 @@ class REGINA_API NPacket :
         public boost::noncopyable {
     private:
         std::string label_;
-            /**< The unique label for this individual packet of information. */
+            /**< The label for this individual packet of information. */
 
         NPacket* treeParent_;
             /**< Parent packet in the tree structure (0 if none). */
@@ -297,8 +297,6 @@ class REGINA_API NPacket :
         /**
          * Returns the label associated with this individual packet.
          * An example is \c MyTriangulation.
-         * Each individual packet in the overall tree structure must
-         * have a unique label.
          *
          * @return this individual packet's label.
          */
@@ -363,9 +361,6 @@ class REGINA_API NPacket :
 
         /**
          * Sets the label associated with this individual packet.
-         *
-         * \pre No other packet in the overall tree
-         * structure has the same label.
          *
          * @param label the new label to give this packet.
          */
