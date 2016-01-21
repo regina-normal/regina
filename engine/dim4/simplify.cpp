@@ -818,8 +818,6 @@ bool Dim4Triangulation::openBook(Dim4Tetrahedron* t, bool check, bool perform) {
             if (! t->triangle(i)->isValid())
                 return false;
 
-        NPerm5 vertices = emb.vertices();
-
         int nBdry = 0;
         int bdryTriangle[4];
 
@@ -958,7 +956,6 @@ bool Dim4Triangulation::shellBoundary(Dim4Pentachoron* p,
 
 bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
     // Find the pentachora to remove.
-    Dim4Pentachoron* pent = 0;
     NPerm5 p;
 
     if (check) {

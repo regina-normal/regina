@@ -383,8 +383,7 @@ class NPerm2Test : public CppUnit::TestFixture {
 
             // Test all possible permutations.
             int tested = 0;
-            int a, b;
-            for (a = 0; a < 2; ++a) {
+            for (int a = 0; a < 2; ++a) {
                 testPerm(a);
                 ++tested;
             }

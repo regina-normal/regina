@@ -514,8 +514,6 @@ bool Dim4Triangulation::idealToFinite() {
                     subDivNot p1( _CCit, i, j, k ); // modify later
                     for (unsigned long l=1; l<4; l++) {
                         p0.triIdx = (k+l) % 4;
-                        const Dim4Triangle* aTri( 
-                            aTet->triangle( (k+l) % 4 ) );
                         NPerm5 triInc( aTet->triangleMapping( (k+l) % 4 ) );
                         p0.vtxIdx = triInc.preImageOf( k );
                         // figure out gluing map, would seem to depend on 
@@ -657,7 +655,6 @@ bool Dim4Triangulation::idealToFinite() {
                 subDivNot p1( _CCit, i );   // uses tet coords.
                 for (unsigned long k=1; k<5; k++) { // gluing for tet j+k % 5.
                     NPerm5 tetInc( aPen->tetrahedronMapping( (j+k) % 5 ) );
-                    const Dim4Tetrahedron* aTet( aPen->tetrahedron( (j+k) % 5 ) );
                     p1.tetIdx = (j+k) % 5;
                     p1.triIdx = tetInc.preImageOf( j ); // the ideal triangle
 #ifdef DEBUG // test to check if p0 and p1 exist 
@@ -689,10 +686,6 @@ bool Dim4Triangulation::idealToFinite() {
             NPerm5 tet1inc( aPen->tetrahedronMapping( triInc[4] ) );
             unsigned long tri0idx( tet0inc.preImageOf( triInc[4] ) );
             unsigned long tri1idx( tet1inc.preImageOf( triInc[3] ) );
-            const Dim4Tetrahedron* tet0( aPen->tetrahedron( triInc[3] ) );
-            const Dim4Tetrahedron* tet1( aPen->tetrahedron( triInc[4] ) );
-            NPerm5 tri0inc( tet0->triangleMapping( tri0idx ) );
-            NPerm5 tri1inc( tet1->triangleMapping( tri1idx ) );
             // check if the triangle has any ideal vertices
             bool tIv(false);
             for (unsigned long k=0; k<3; k++)

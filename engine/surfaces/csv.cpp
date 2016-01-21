@@ -128,7 +128,6 @@ namespace {
         if (fields & surfaceExportLink) {
             // Mirror the information that gets shown in the Link column
             // in the GUI.
-            const NTriangulation* t = s->triangulation();
             const NVertex* v = s->isVertexLink();
             if (v)
                 out << "\"Vertex " << v->index() << "\"";
