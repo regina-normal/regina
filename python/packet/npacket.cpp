@@ -114,6 +114,7 @@ void addNPacket() {
         .def("humanLabel", &NPacket::humanLabel)
         .def("getHumanLabel", &NPacket::getHumanLabel)
         .def("adornedLabel", &NPacket::adornedLabel)
+        .def("setLabel", &NPacket::setLabel)
         .def("setPacketLabel", &NPacket::setPacketLabel)
         .def("fullName", &NPacket::fullName)
         .def("getFullName", &NPacket::getFullName)
