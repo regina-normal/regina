@@ -88,7 +88,6 @@ void addNComponent() {
         .def("getSimplex", &NComponent::getSimplex,
             return_value_policy<reference_existing_object>())
         .def("faces", &regina::python::faces<NComponent, 3>)
-        .def("getFaces", &regina::python::faces<NComponent, 3>)
         .def("triangles", regina::python::faces_list<NComponent, 3, 2>)
         .def("getTriangles", regina::python::faces_list<NComponent, 3, 2>)
         .def("edges", regina::python::faces_list<NComponent, 3, 1>)
@@ -96,7 +95,6 @@ void addNComponent() {
         .def("vertices", regina::python::faces_list<NComponent, 3, 0>)
         .def("getVertices", regina::python::faces_list<NComponent, 3, 0>)
         .def("face", &regina::python::face<NComponent, 3, size_t>)
-        .def("getFace", &regina::python::face<NComponent, 3, size_t>)
         .def("triangle", &NComponent::triangle,
             return_value_policy<reference_existing_object>())
         .def("getTriangle", &NComponent::getTriangle,

@@ -83,7 +83,6 @@ void addDim4Component() {
         .def("pentachora", getSimplices_list)
         .def("getPentachora", getSimplices_list)
         .def("faces", &regina::python::faces<Dim4Component, 4>)
-        .def("getFaces", &regina::python::faces<Dim4Component, 4>)
         .def("vertices", regina::python::faces_list<Dim4Component, 4, 0>)
         .def("getVertices", regina::python::faces_list<Dim4Component, 4, 0>)
         .def("edges", regina::python::faces_list<Dim4Component, 4, 1>)
@@ -101,7 +100,6 @@ void addDim4Component() {
         .def("getSimplex", &Dim4Component::getSimplex,
             return_value_policy<reference_existing_object>())
         .def("face", &regina::python::face<Dim4Component, 4, size_t>)
-        .def("getFace", &regina::python::face<Dim4Component, 4, size_t>)
         .def("tetrahedron", &Dim4Component::tetrahedron,
             return_value_policy<reference_existing_object>())
         .def("getTetrahedron", &Dim4Component::getTetrahedron,

@@ -75,7 +75,6 @@ void addDim2Component() {
         .def("triangles", triangles_list)
         .def("getTriangles", triangles_list)
         .def("faces", &regina::python::faces<Dim2Component, 2>)
-        .def("getFaces", &regina::python::faces<Dim2Component, 2>)
         .def("edges", regina::python::faces_list<Dim2Component, 2, 1>)
         .def("getEdges", regina::python::faces_list<Dim2Component, 2, 1>)
         .def("vertices", regina::python::faces_list<Dim2Component, 2, 0>)
@@ -89,7 +88,6 @@ void addDim2Component() {
         .def("getSimplex", &Dim2Component::getSimplex,
             return_value_policy<reference_existing_object>())
         .def("face", &regina::python::face<Dim2Component, 2, size_t>)
-        .def("getFace", &regina::python::face<Dim2Component, 2, size_t>)
         .def("edge", &Dim2Component::edge,
             return_value_policy<reference_existing_object>())
         .def("getEdge", &Dim2Component::getEdge,
