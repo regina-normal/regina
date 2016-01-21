@@ -858,7 +858,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             verifyLinkCount(tri, nVert);
 
             for (unsigned i = 0; i < nVert; ++i) {
-                NTriangulation t(*(tri.vertex(i)->link()));
+                NTriangulation t(*(tri.vertex(i)->buildLink()));
                 t.intelligentSimplify();
 
                 std::string link;
@@ -891,7 +891,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             verifyLinkCount(tri, nVert);
 
             for (unsigned i = 0; i < nVert; ++i) {
-                NTriangulation t(*(tri.vertex(i)->link()));
+                NTriangulation t(*(tri.vertex(i)->buildLink()));
                 t.intelligentSimplify();
 
                 std::string link;
@@ -924,7 +924,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 unsigned whichVertex, const char* manifold) {
             std::string link;
 
-            NTriangulation t(*(tri.vertex(whichVertex)->link()));
+            NTriangulation t(*(tri.vertex(whichVertex)->buildLink()));
             t.intelligentSimplify();
 
             NStandardTriangulation* std =
@@ -959,7 +959,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
             // Do a barycentric subdivision to turn any invalid edges
             // into proper RP^2 ideal boundaries.
-            NTriangulation t(*(tri.vertex(whichVertex)->link()));
+            NTriangulation t(*(tri.vertex(whichVertex)->buildLink()));
             t.barycentricSubdivision();
             t.intelligentSimplify();
 
