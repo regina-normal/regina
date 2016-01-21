@@ -87,6 +87,14 @@ class REGINA_API Face<4, 3> : public detail::FaceBase<4, 3>,
 
     public:
         /**
+         * Determines if this tetrahedron lies entirely on the boundary of the
+         * triangulation.
+         *
+         * @return \c true if and only if this tetrahedron lies on the boundary.
+         */
+        bool isBoundary() const;
+
+        /**
          * Returns the boundary component of the triangulation to which
          * this tetrahedron belongs.
          *
@@ -103,14 +111,6 @@ class REGINA_API Face<4, 3> : public detail::FaceBase<4, 3>,
          * See the boundaryComponent() documentation for further details.
          */
         Dim4BoundaryComponent* getBoundaryComponent() const;
-
-        /**
-         * Determines if this tetrahedron lies entirely on the boundary of the
-         * triangulation.
-         *
-         * @return \c true if and only if this tetrahedron lies on the boundary.
-         */
-        bool isBoundary() const;
 
         /**
          * Determines whether this tetrahedron represents a dual edge in the

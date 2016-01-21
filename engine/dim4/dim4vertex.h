@@ -110,7 +110,8 @@ class REGINA_API Face<4, 0> : public detail::FaceBase<4, 0>,
          *
          * An invalid vertex will be given its own individual boundary
          * component if (and only if) it does not already belong to some
-         * larger boundary component.
+         * larger boundary component (for instance, if its link is an
+         * ideal 3-manifold triangulation).
          *
          * @return the boundary component containing this vertex,
          * or 0 if this vertex is not on the boundary of the triangulation
@@ -256,9 +257,10 @@ class REGINA_API Face<4, 0> : public detail::FaceBase<4, 0>,
          * Ideal vertices form their own boundary components, and are
          * therefore considered to be on the boundary.
          *
-         * Invalid vertices are always considered to be on the boundary;
-         * if an invalid vertex is not already part of some larger boundary
-         * component then it is given its own boundary component (much
+         * Invalid vertices are always considered to be on the boundary.
+         * If an invalid vertex is not already part of some larger boundary
+         * component (for instance, if its link is an ideal 3-manifold
+         * triangulation) then it is given its own boundary component (much
          * like an ideal vertex).
          *
          * As a matter of fact, the only vertices that are \e not

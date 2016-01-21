@@ -164,6 +164,9 @@ Version 5.0  [ (under development) ]
                 Dim4Pentachoron, Dim4Isomorphism, Dim4ExampleTriangulation,
                 NXMLDim4TriangulationReader:
             - New suite of classes to support 4-dimensional triangulations.
+            - Note that some member functions of these new classes are
+              deprecated already (these are for consistency with older
+              deprecated functions for 3-manifolds).
         Class DimTraits:
             - Removed entirely.  For the typedefs that it used to provide
               (e.g., Triangulation, Simplex, FacetPairing, etc.), just use

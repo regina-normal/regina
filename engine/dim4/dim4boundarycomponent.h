@@ -73,7 +73,8 @@ typedef Face<4, 0> Dim4Vertex;
  * own - it consists of one vertex, no edges, no triangles, and no tetrahedra.
  * Likewise, an invalid vertex is placed in its own boundary
  * component if it does not already belong to some larger boundary
- * component.  See Dim4Vertex::isBoundary() for details.
+ * component (for instance, if its link is an ideal 3-manifold triangulation).
+ * See Dim4Vertex::isBoundary() for details.
  *
  * We can encounter some interesting cases with invalid triangulations.
  * Consider some vertex in a 4-manifold triangulation.  If the link of
@@ -246,7 +247,8 @@ class REGINA_API Dim4BoundaryComponent :
          * must contain no tetrahedra at all.
          *
          * An invalid vertex is only placed in its own boundary component if
-         * it does not already belong to some larger boundary component.
+         * it does not already belong to some larger boundary component
+         * (for instance, if its link is an ideal 3-manifold triangulation).
          * This means that, for a boundary component consisting of one or
          * more tetrahedra, this routine will return \c false even if the
          * boundary tetrahedra include one or more invalid vertices.

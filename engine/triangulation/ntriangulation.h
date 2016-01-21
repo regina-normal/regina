@@ -458,8 +458,7 @@ class REGINA_API Triangulation<3> :
          *
          * \pre The given vertex belongs to this triangulation.
          *
-         * @param vertex specifies which vertex to find in the
-         * triangulation.
+         * @param vertex specifies which vertex to find in the triangulation.
          * @return the index of the specified vertex, where 0 is the first
          * vertex, 1 is the second and so on.
          */
@@ -473,8 +472,7 @@ class REGINA_API Triangulation<3> :
          *
          * \pre The given edge belongs to this triangulation.
          *
-         * @param edge specifies which edge to find in the
-         * triangulation.
+         * @param edge specifies which edge to find in the triangulation.
          * @return the index of the specified edge, where 0 is the first
          * edge, 1 is the second and so on.
          */
@@ -488,12 +486,11 @@ class REGINA_API Triangulation<3> :
          *
          * \pre The given triangle belongs to this triangulation.
          *
-         * @param triangle specifies which triangle to find in the
-         * triangulation.
+         * @param tri specifies which triangle to find in the triangulation.
          * @return the index of the specified triangle, where 0 is the first
          * triangle, 1 is the second and so on.
          */
-        size_t triangleIndex(const NTriangle* triangle) const;
+        size_t triangleIndex(const NTriangle* tri) const;
 
         /**
          * Determines if this triangulation contains any two-sphere
@@ -693,9 +690,8 @@ class REGINA_API Triangulation<3> :
         /**
          * Notifies the triangulation that you have simplified the
          * presentation of its fundamental group.  The old group
-         * presentation will be destroyed, and this triangulation will
-         * take ownership of the new (hopefully simpler) group that is
-         * passed.
+         * presentation will be destroyed, and this triangulation will take
+         * ownership of the new (hopefully simpler) group that is passed.
          *
          * This routine is useful for situations in which some external
          * body (such as GAP) has simplified the group presentation
@@ -3195,27 +3191,26 @@ class REGINA_API Triangulation<3> :
         void deleteSkeleton();
         void calculateSkeleton();
         /**
-         * Calculates the triangulation boundary components and
-         * properties of these boundary components.
-         *
-         * \warning This should only be called from within
-         * calculateSkeleton().
+         * Internal to calculateSkeleton().  See the comments within
+         * calculateSkeleton() for precisely what this routine does.
          */
         void calculateBoundary();
-        void labelBoundaryTriangle(NTriangle*, NBoundaryComponent*);
-            /**< Internal to calculateBoundary(). */
+
         /**
-         * Calculates the triangulation vertex links and associated
-         * properties.
-         *
-         * \warning This should only be called from within
-         * calculateSkeleton().
+         * Internal to calculateSkeleton().  See the comments within
+         * calculateSkeleton() for precisely what this routine does.
+         */
+        void labelBoundaryTriangle(NTriangle*, NBoundaryComponent*);
+
+        /**
+         * Internal to calculateSkeleton().  See the comments within
+         * calculateSkeleton() for precisely what this routine does.
          */
         void calculateVertexLinks();
 
         /**
-         * Calculates all properties of the triangulation relating to
-         * its boundary components.
+         * Internal to calculateSkeleton().  See the comments within
+         * calculateSkeleton() for precisely what this routine does.
          */
         void calculateBoundaryProperties() const;
 

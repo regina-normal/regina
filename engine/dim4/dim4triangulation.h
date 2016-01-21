@@ -641,16 +641,17 @@ class REGINA_API Triangulation<4> :
         /**
          * Uses all known simplification moves to reduce the triangulation
          * monotonically to some local minimum number of pentachora.
-         * Note that this will probably not give a globally minimal
-         * triangulation; see intelligentSimplify() for further
-         * assistance in achieving this goal.
          *
-         * The moves used currently include collapsing edges, 4-2 moves,
+         * End users will probably not want to call this routine.
+         * You should call intelligentSimplify() if you want a fast
+         * method of simplifying a triangulation.
+         *
+         * The moves used by this routine include collapsing edges, 4-2 moves,
          * and boundary shelling moves.
          *
-         * Note that moves that do not reduce the number of pentachora
-         * (such as book opening moves) are not used in this routine.
-         * Such moves do however feature in intelligentSimplify().
+         * Moves that do not reduce the number of pentachora
+         * (such as 3-3 moves or book opening moves) are not used in this
+         * routine.  Such moves do however feature in intelligentSimplify().
          *
          * \warning The specific behaviour of this routine will almost
          * certainly change between releases.  At present,

@@ -65,8 +65,7 @@ typedef Triangulation<4> Dim4Triangulation;
  * At the present time only a handful of triangulations are available
  * (in contrast to the 3-dimensional NExampleTriangulation, which offers
  * many interesting examples).  The authors hope to expand this list
- * of 4-dimensional examples as they become more familiar with 4-manifold
- * triangulations.
+ * of 4-dimensional examples in future releases of Regina.
  *
  * The sample triangulations offered here may prove especially useful in
  * Regina's scripting interface, where working with pre-existing files
