@@ -72,9 +72,9 @@ NMatrixInt* NNormalSurfaceVectorQuad::makeMatchingEquations(
             for (auto& emb : **eit) {
                 tetIndex = emb.tetrahedron()->index();
                 perm = emb.vertices();
-                ans->entry(row, 3 * tetIndex + vertexSplit[perm[0]][perm[2]])
+                ans->entry(row, 3 * tetIndex + quadSeparating[perm[0]][perm[2]])
                     += 1;
-                ans->entry(row, 3 * tetIndex + vertexSplit[perm[0]][perm[3]])
+                ans->entry(row, 3 * tetIndex + quadSeparating[perm[0]][perm[3]])
                     -= 1;
             }
             row++;
@@ -219,9 +219,9 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
                 expect =
                     (*ans)[7 * adjIndex + adjPerm[current.end]] +
                     (*ans)[7 * adjIndex + 4 +
-                        vertexSplit[adjPerm[3]][adjPerm[current.end]]] -
+                        quadSeparating[adjPerm[3]][adjPerm[current.end]]] -
                     (*ans)[7 * tetIndex + 4 +
-                        vertexSplit[tetPerm[2]][tetPerm[current.end]]];
+                        quadSeparating[tetPerm[2]][tetPerm[current.end]]];
                 ans->setElement(7 * tetIndex + tetPerm[current.end], expect);
                 if (expect < min)
                     min = expect;
@@ -255,9 +255,9 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuad::makeMirror(
                 expect =
                     (*ans)[7 * adjIndex + adjPerm[current.end]] +
                     (*ans)[7 * adjIndex + 4 +
-                        vertexSplit[adjPerm[2]][adjPerm[current.end]]] -
+                        quadSeparating[adjPerm[2]][adjPerm[current.end]]] -
                     (*ans)[7 * tetIndex + 4 +
-                        vertexSplit[tetPerm[3]][tetPerm[current.end]]];
+                        quadSeparating[tetPerm[3]][tetPerm[current.end]]];
                 row = 7 * tetIndex + tetPerm[current.end];
                 if ((*ans)[row].isInfinite()) {
                     ans->setElement(row, expect);

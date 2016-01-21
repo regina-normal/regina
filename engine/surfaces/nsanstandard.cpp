@@ -53,13 +53,13 @@ NLargeInteger NNormalSurfaceVectorANStandard::edgeWeight(
     NLargeInteger ans((*this)[10 * tetIndex + start]);
     ans += (*this)[10 * tetIndex + end];
     // Quads:
-    ans += (*this)[10 * tetIndex + 4 + vertexSplitMeeting[start][end][0]];
-    ans += (*this)[10 * tetIndex + 4 + vertexSplitMeeting[start][end][1]];
+    ans += (*this)[10 * tetIndex + 4 + quadMeeting[start][end][0]];
+    ans += (*this)[10 * tetIndex + 4 + quadMeeting[start][end][1]];
     // Octagons:
     ans += (*this)[10 * tetIndex + 7];
     ans += (*this)[10 * tetIndex + 8];
     ans += (*this)[10 * tetIndex + 9];
-    ans += (*this)[10 * tetIndex + 7 + vertexSplit[start][end]];
+    ans += (*this)[10 * tetIndex + 7 + quadSeparating[start][end]];
     return ans;
 }
 
@@ -75,12 +75,10 @@ NLargeInteger NNormalSurfaceVectorANStandard::arcs(size_t triIndex,
     // Triangles:
     NLargeInteger ans((*this)[10 * tetIndex + vertex]);
     // Quads:
-    ans += (*this)[10 * tetIndex + 4 + vertexSplit[vertex][backOfFace]];
+    ans += (*this)[10 * tetIndex + 4 + quadSeparating[vertex][backOfFace]];
     // Octagons:
-    ans += (*this)[10 * tetIndex + 7 +
-        vertexSplitMeeting[vertex][backOfFace][0]];
-    ans += (*this)[10 * tetIndex + 7 +
-        vertexSplitMeeting[vertex][backOfFace][1]];
+    ans += (*this)[10 * tetIndex + 7 + quadMeeting[vertex][backOfFace][0]];
+    ans += (*this)[10 * tetIndex + 7 + quadMeeting[vertex][backOfFace][1]];
     return ans;
 }
 
@@ -117,18 +115,18 @@ NMatrixInt* NNormalSurfaceVectorANStandard::makeMatchingEquations(
                 ans->entry(row, 10*tet1 + perm1[i]) -= 1;
                 // Quads:
                 ans->entry(row, 10*tet0 + 4 +
-                    vertexSplit[perm0[i]][perm0[3]]) += 1;
+                    quadSeparating[perm0[i]][perm0[3]]) += 1;
                 ans->entry(row, 10*tet1 + 4 +
-                    vertexSplit[perm1[i]][perm1[3]]) -= 1;
+                    quadSeparating[perm1[i]][perm1[3]]) -= 1;
                 // Octagons:
                 ans->entry(row, 10*tet0 + 7 +
-                    vertexSplitMeeting[perm0[i]][perm0[3]][0]) += 1;
+                    quadMeeting[perm0[i]][perm0[3]][0]) += 1;
                 ans->entry(row, 10*tet1 + 7 +
-                    vertexSplitMeeting[perm1[i]][perm1[3]][0]) -= 1;
+                    quadMeeting[perm1[i]][perm1[3]][0]) -= 1;
                 ans->entry(row, 10*tet0 + 7 +
-                    vertexSplitMeeting[perm0[i]][perm0[3]][1]) += 1;
+                    quadMeeting[perm0[i]][perm0[3]][1]) += 1;
                 ans->entry(row, 10*tet1 + 7 +
-                    vertexSplitMeeting[perm1[i]][perm1[3]][1]) -= 1;
+                    quadMeeting[perm1[i]][perm1[3]][1]) -= 1;
                 row++;
             }
         }

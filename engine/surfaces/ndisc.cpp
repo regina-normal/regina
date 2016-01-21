@@ -46,8 +46,7 @@ std::ostream& operator << (std::ostream& out, const NDiscSpec& spec) {
 bool numberDiscsAwayFromVertex(int discType, int vertex) {
     if (discType < 4)
         return (vertex == discType);
-    return (vertex == 0 || vertex ==
-        vertexSplitPartner[(discType - 1) % 3][0]);
+    return (vertex == 0 || vertex == quadPartner[(discType - 1) % 3][0]);
 }
 
 bool discOrientationFollowsEdge(int discType, int vertex, int edgeStart,
@@ -117,8 +116,7 @@ unsigned long NDiscSetTet::arcFromDisc(int /* arcFace */, int arcVertex,
     // It's a quad or an octagon.
     // Note that there is at most one octagonal or quad type present
     // (since the surface must be embedded), so this must be it.
-    if (arcVertex == 0 || arcVertex ==
-            vertexSplitPartner[(discType - 1) % 3][0])
+    if (arcVertex == 0 || arcVertex == quadPartner[(discType - 1) % 3][0])
         return internalNDiscs[arcVertex] + discNumber;
     else
         return internalNDiscs[arcVertex] + internalNDiscs[discType]
@@ -138,15 +136,14 @@ void NDiscSetTet::discFromArc(int arcFace, int arcVertex,
     // It's a quad or an octagon.
     // Note that there is at most one octagonal or quad type present
     // (since the surface must be embedded), so this must be it.
-    if (internalNDiscs[vertexSplit[arcVertex][arcFace] + 4] > 0)
-        discType = vertexSplit[arcVertex][arcFace] + 4;
-    else if (internalNDiscs[vertexSplitMeeting[arcVertex][arcFace][0] + 7] > 0)
-        discType = vertexSplitMeeting[arcVertex][arcFace][0] + 7;
+    if (internalNDiscs[quadSeparating[arcVertex][arcFace] + 4] > 0)
+        discType = quadSeparating[arcVertex][arcFace] + 4;
+    else if (internalNDiscs[quadMeeting[arcVertex][arcFace][0] + 7] > 0)
+        discType = quadMeeting[arcVertex][arcFace][0] + 7;
     else
-        discType = vertexSplitMeeting[arcVertex][arcFace][1] + 7;
+        discType = quadMeeting[arcVertex][arcFace][1] + 7;
 
-    if (arcVertex == 0 || arcVertex ==
-            vertexSplitPartner[(discType - 1) % 3][0])
+    if (arcVertex == 0 || arcVertex == quadPartner[(discType - 1) % 3][0])
         discNumber = arcNumber - internalNDiscs[arcVertex];
     else
         discNumber = internalNDiscs[discType] -

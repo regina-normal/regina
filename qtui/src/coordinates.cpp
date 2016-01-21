@@ -126,7 +126,7 @@ namespace Coordinates {
                     arg(whichCoord % 7);
             else
                 return QString("%1: %2").arg(whichCoord / 7).
-                    arg(regina::vertexSplitString[(whichCoord % 7) - 4]);
+                    arg(regina::quadString[(whichCoord % 7) - 4]);
         } else if (coordSystem == regina::NS_AN_STANDARD ||
                 coordSystem == regina::NS_AN_LEGACY) {
             if (whichCoord % 10 < 4)
@@ -134,20 +134,20 @@ namespace Coordinates {
                     arg(whichCoord % 10);
             else if (whichCoord % 10 < 7)
                 return QString("Q%1: %2").arg(whichCoord / 10).
-                    arg(regina::vertexSplitString[(whichCoord % 10) - 4]);
+                    arg(regina::quadString[(whichCoord % 10) - 4]);
             else
                 return QString("K%1: %2").arg(whichCoord / 10).
-                    arg(regina::vertexSplitString[(whichCoord % 10) - 7]);
+                    arg(regina::quadString[(whichCoord % 10) - 7]);
         } else if (coordSystem == regina::NS_QUAD) {
             return QString("%1: %2").arg(whichCoord / 3).
-                arg(regina::vertexSplitString[whichCoord % 3]);
+                arg(regina::quadString[whichCoord % 3]);
         } else if (coordSystem == regina::NS_AN_QUAD_OCT) {
             if (whichCoord % 6 < 3)
                 return QString("Q%1: %2").arg(whichCoord / 6).
-                    arg(regina::vertexSplitString[whichCoord % 6]);
+                    arg(regina::quadString[whichCoord % 6]);
             else
                 return QString("K%1: %2").arg(whichCoord / 6).
-                    arg(regina::vertexSplitString[(whichCoord % 6) - 3]);
+                    arg(regina::quadString[(whichCoord % 6) - 3]);
         } else if (coordSystem == regina::NS_EDGE_WEIGHT) {
             if (! (tri && tri->edge(whichCoord)->isBoundary()))
                 return QString::number(whichCoord);
@@ -205,7 +205,7 @@ namespace Coordinates {
             else
                 return context->tr("Tetrahedron %1, quad splitting vertices %2").
                     arg(whichCoord / 7).
-                    arg(regina::vertexSplitString[(whichCoord % 7) - 4]);
+                    arg(regina::quadString[(whichCoord % 7) - 4]);
         } else if (coordSystem == regina::NS_AN_STANDARD ||
                 coordSystem == regina::NS_AN_LEGACY) {
             if (whichCoord % 10 < 4)
@@ -214,24 +214,24 @@ namespace Coordinates {
             else if (whichCoord % 10 < 7)
                 return context->tr("Tetrahedron %1, quad splitting vertices %2").
                     arg(whichCoord / 10).
-                    arg(regina::vertexSplitString[(whichCoord % 10) - 4]);
+                    arg(regina::quadString[(whichCoord % 10) - 4]);
             else
                 return context->tr("Tetrahedron %1, oct partitioning vertices %2").
                     arg(whichCoord / 10).
-                    arg(regina::vertexSplitString[(whichCoord % 10) - 7]);
+                    arg(regina::quadString[(whichCoord % 10) - 7]);
         } else if (coordSystem == regina::NS_QUAD) {
             return context->tr("Tetrahedron %1, quad splitting vertices %2").
                 arg(whichCoord / 3).
-                arg(regina::vertexSplitString[whichCoord % 3]);
+                arg(regina::quadString[whichCoord % 3]);
         } else if (coordSystem == regina::NS_AN_QUAD_OCT) {
             if (whichCoord % 6 < 3)
                 return context->tr("Tetrahedron %1, quad splitting vertices %2").
                     arg(whichCoord / 6).
-                    arg(regina::vertexSplitString[whichCoord % 6]);
+                    arg(regina::quadString[whichCoord % 6]);
             else
                 return context->tr("Tetrahedron %1, oct partitioning vertices %2").
                     arg(whichCoord / 6).
-                    arg(regina::vertexSplitString[(whichCoord % 6) - 3]);
+                    arg(regina::quadString[(whichCoord % 6) - 3]);
         } else if (coordSystem == regina::NS_EDGE_WEIGHT) {
             if (tri) {
                 if (tri->edge(whichCoord)->isBoundary())

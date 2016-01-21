@@ -49,12 +49,7 @@ const int quadSeparating[4][4] = {
     {  2, 1, 0,-1 }
 };
 
-const int vertexSplit[4][4] = {
-    { -1, 0, 1, 2 },
-    {  0,-1, 2, 1 },
-    {  1, 2,-1, 0 },
-    {  2, 1, 0,-1 }
-};
+const int (*vertexSplit)[4] = quadSeparating;
 
 const int quadMeeting[4][4][2] = {
     { {-1,-1}, { 1, 2}, { 0, 2}, { 0, 1} },
@@ -63,12 +58,7 @@ const int quadMeeting[4][4][2] = {
     { { 0, 1}, { 0, 2}, { 1, 2}, {-1,-1} }
 };
 
-const int vertexSplitMeeting[4][4][2] = {
-    { {-1,-1}, { 1, 2}, { 0, 2}, { 0, 1} },
-    { { 1, 2}, {-1,-1}, { 0, 1}, { 0, 2} },
-    { { 0, 2}, { 0, 1}, {-1,-1}, { 1, 2} },
-    { { 0, 1}, { 0, 2}, { 1, 2}, {-1,-1} }
-};
+const int (*vertexSplitMeeting)[4][2] = quadMeeting;
 
 const int vertexSplitDefn[3][4] = {
     { 0, 1, 2, 3 },
@@ -82,15 +72,11 @@ const int quadPartner[3][4] = {
     { 3, 2, 1, 0}
 };
 
-const int vertexSplitPartner[3][4] = {
-    { 1, 0, 3, 2},
-    { 2, 3, 0, 1},
-    { 3, 2, 1, 0}
-};
+const int (*vertexSplitPartner)[4] = quadPartner;
 
 const char quadString[3][6] = { "01/23", "02/13", "03/12" };
 
-const char vertexSplitString[3][6] = { "01/23", "02/13", "03/12" };
+const char (*vertexSplitString)[6] = quadString;
 
 // The following three arrays cannot be made 2-D because of a g++-2.95 bug.
 
@@ -484,13 +470,13 @@ NMatrixInt* NNormalSurface::boundaryIntersections() const {
         NLargeInteger longitude; // constructor sets this to 0
         for(unsigned int j=0; j < numTet; j++) {
             meridian += 
-                equations->entry(2*i, 3*j)*quads(j,vertexSplit[0][1]) +
-                equations->entry(2*i, 3*j+1)*quads(j,vertexSplit[0][2]) +
-                equations->entry(2*i, 3*j+2)*quads(j,vertexSplit[0][3]); 
+                equations->entry(2*i, 3*j)*quads(j, quadSeparating[0][1]) +
+                equations->entry(2*i, 3*j+1)*quads(j, quadSeparating[0][2]) +
+                equations->entry(2*i, 3*j+2)*quads(j, quadSeparating[0][3]); 
             longitude += 
-                equations->entry(2*i+1, 3*j)*quads(j,vertexSplit[0][1]) +
-                equations->entry(2*i+1, 3*j+1)*quads(j,vertexSplit[0][2]) +
-                equations->entry(2*i+1, 3*j+2)*quads(j,vertexSplit[0][3]); 
+                equations->entry(2*i+1, 3*j)*quads(j, quadSeparating[0][1]) +
+                equations->entry(2*i+1, 3*j+1)*quads(j, quadSeparating[0][2]) +
+                equations->entry(2*i+1, 3*j+2)*quads(j, quadSeparating[0][3]); 
         }
         slopes->entry(i,0) = meridian;
         slopes->entry(i,1) = longitude;

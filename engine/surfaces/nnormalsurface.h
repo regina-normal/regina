@@ -67,7 +67,7 @@ namespace regina {
  * As outlined in NNormalSurface::quads(), there are three quadrilateral types
  * in a tetrahedron, numbered 0, 1 and 2.  Each quadrilateral type separates
  * the four tetrahedron vertices 0,1,2,3 into two pairs.
- * <tt>vertexSplit[i][j]</tt> is the number of the quadrilateral type that
+ * <tt>quadSeparating[i][j]</tt> is the number of the quadrilateral type that
  * keeps vertices <tt>i</tt> and <tt>j</tt> together.
  *
  * It is guaranteed that quadrilateral type \a i will keep the vertices of
@@ -81,13 +81,13 @@ REGINA_API extern const int quadSeparating[4][4];
  * \deprecated This array has been renamed to regina::quadSeparating.
  * See the regina::quadSeparating documentation for further details.
  */
-REGINA_API extern const int vertexSplit[4][4];
+REGINA_API extern const int (*vertexSplit)[4];
 /**
  * Lists which quadrilateral types meet which edges in a tetrahedron.
- * See regina::vertexSplit and NNormalSurface::quads() for more
+ * See regina::quadSeparating and NNormalSurface::quads() for more
  * information on quadrilateral types.
  *
- * <tt>vertexSplitMeeting[i][j][0,1]</tt> are the numbers of the two
+ * <tt>quadMeeting[i][j][0,1]</tt> are the numbers of the two
  * quadrilateral types that meet the edge joining tetrahedron vertices
  * <tt>i</tt> and <tt>j</tt>.
  */
@@ -98,12 +98,12 @@ REGINA_API extern const int quadMeeting[4][4][2];
  * \deprecated This array has been renamed to regina::quadMeeting.
  * See the regina::quadMeeting documentation for further details.
  */
-REGINA_API extern const int vertexSplitMeeting[4][4][2];
+REGINA_API extern const int (*vertexSplitMeeting)[4][2];
 
 /**
  * Deprecated array that lists the vertices which each quadrilateral type
  * separates within a tetrahedron.
- * See regina::vertexSplit and NNormalSurface::quads() for more
+ * See regina::quadSeparating and NNormalSurface::quads() for more
  * information on quadrilateral types.
  *
  * Quadrilateral type \c i splits the vertex pairs
@@ -129,11 +129,11 @@ REGINA_API extern const int vertexSplitDefn[3][4];
 /**
  * Lists the second vertex with which each vertex is paired under each
  * quadrilateral type in a tetrahedron.
- * See regina::vertexSplit and NNormalSurface::quads() for more
+ * See regina::quadSeparating and NNormalSurface::quads() for more
  * information on quadrilateral types.
  *
  * Quadrilateral type \c i pairs vertex \c v with
- * vertex <tt>vertexSplitPartner[i][v]</tt>.
+ * vertex <tt>quadPartner[i][v]</tt>.
  */
 REGINA_API extern const int quadPartner[3][4];
 /**
@@ -142,18 +142,17 @@ REGINA_API extern const int quadPartner[3][4];
  * \deprecated This array has been renamed to regina::quadPartner.
  * See the regina::quadPartner documentation for further details.
  */
-REGINA_API extern const int vertexSplitPartner[3][4];
+REGINA_API extern const int (*vertexSplitPartner)[4];
 
 /**
  * Contains strings describing which vertices each quadrilateral type splits
  * in a tetrahedron.
- * See regina::vertexSplit and NNormalSurface::quads() for more
+ * See regina::quadSeparating and NNormalSurface::quads() for more
  * information on quadrilateral types.
  *
- * The string describing quadrilateral type \c i is
- * <tt>vertexSplitString[i]</tt> and is of the form <tt>02/13</tt>,
- * which in this case is the quadrilateral type that splits vertices 0,2 from
- * vertices 1,3.
+ * The string describing quadrilateral type \c i is <tt>quadString[i]</tt> and
+ * is of the form <tt>02/13</tt>, which in this case is the quadrilateral type
+ * that splits vertices 0,2 from vertices 1,3.
  */
 REGINA_API extern const char quadString[3][6];
 /**
@@ -162,7 +161,7 @@ REGINA_API extern const char quadString[3][6];
  * \deprecated This array has been renamed to regina::quadString.
  * See the regina::quadString documentation for further details.
  */
-REGINA_API extern const char vertexSplitString[3][6];
+REGINA_API extern const char (*vertexSplitString)[6];
 
 /**
  * Lists in consecutive order the directed normal arcs that form the

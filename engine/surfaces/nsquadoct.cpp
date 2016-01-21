@@ -73,13 +73,13 @@ NMatrixInt* NNormalSurfaceVectorQuadOct::makeMatchingEquations(
                 tetIndex = emb.tetrahedron()->index();
                 perm = emb.vertices();
                 ans->entry(row, 6 * tetIndex +
-                    vertexSplit[perm[0]][perm[2]]) += 1;
+                    quadSeparating[perm[0]][perm[2]]) += 1;
                 ans->entry(row, 6 * tetIndex +
-                    vertexSplit[perm[0]][perm[3]]) -= 1;
+                    quadSeparating[perm[0]][perm[3]]) -= 1;
                 ans->entry(row, 6 * tetIndex + 3 +
-                    vertexSplit[perm[0]][perm[2]]) -= 1;
+                    quadSeparating[perm[0]][perm[2]]) -= 1;
                 ans->entry(row, 6 * tetIndex + 3 +
-                    vertexSplit[perm[0]][perm[3]]) += 1;
+                    quadSeparating[perm[0]][perm[3]]) += 1;
             }
             row++;
         }
@@ -231,17 +231,17 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuadOct::makeMirror(
                 tetIndex = tet->index();
 
                 expect = (*ans)[10 * adjIndex + adjPerm[current.end]]
-                    + (*ans)[10 * adjIndex + 4 + vertexSplit
+                    + (*ans)[10 * adjIndex + 4 + quadSeparating
                         [adjPerm[3]][adjPerm[current.end]]]
-                    + (*ans)[10 * adjIndex + 7 + vertexSplitMeeting
+                    + (*ans)[10 * adjIndex + 7 + quadMeeting
                         [adjPerm[3]][adjPerm[current.end]][0]]
-                    + (*ans)[10 * adjIndex + 7 + vertexSplitMeeting
+                    + (*ans)[10 * adjIndex + 7 + quadMeeting
                         [adjPerm[3]][adjPerm[current.end]][1]]
-                    - (*ans)[10 * tetIndex + 4 + vertexSplit
+                    - (*ans)[10 * tetIndex + 4 + quadSeparating
                         [tetPerm[2]][tetPerm[current.end]]]
-                    - (*ans)[10 * tetIndex + 7 + vertexSplitMeeting
+                    - (*ans)[10 * tetIndex + 7 + quadMeeting
                         [tetPerm[2]][tetPerm[current.end]][0]]
-                    - (*ans)[10 * tetIndex + 7 + vertexSplitMeeting
+                    - (*ans)[10 * tetIndex + 7 + quadMeeting
                         [tetPerm[2]][tetPerm[current.end]][1]];
                 ans->setElement(10 * tetIndex + tetPerm[current.end], expect);
                 if (expect < min)
@@ -274,17 +274,17 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuadOct::makeMirror(
                 tetIndex = tet->index();
 
                 expect = (*ans)[10 * adjIndex + adjPerm[current.end]]
-                    + (*ans)[10 * adjIndex + 4 + vertexSplit
+                    + (*ans)[10 * adjIndex + 4 + quadSeparating
                         [adjPerm[2]][adjPerm[current.end]]]
-                    + (*ans)[10 * adjIndex + 7 + vertexSplitMeeting
+                    + (*ans)[10 * adjIndex + 7 + quadMeeting
                         [adjPerm[2]][adjPerm[current.end]][0]]
-                    + (*ans)[10 * adjIndex + 7 + vertexSplitMeeting
+                    + (*ans)[10 * adjIndex + 7 + quadMeeting
                         [adjPerm[2]][adjPerm[current.end]][1]]
-                    - (*ans)[10 * tetIndex + 4 + vertexSplit
+                    - (*ans)[10 * tetIndex + 4 + quadSeparating
                         [tetPerm[3]][tetPerm[current.end]]]
-                    - (*ans)[10 * tetIndex + 7 + vertexSplitMeeting
+                    - (*ans)[10 * tetIndex + 7 + quadMeeting
                         [tetPerm[3]][tetPerm[current.end]][0]]
-                    - (*ans)[10 * tetIndex + 7 + vertexSplitMeeting
+                    - (*ans)[10 * tetIndex + 7 + quadMeeting
                         [tetPerm[3]][tetPerm[current.end]][1]];
                 row = 10 * tetIndex + tetPerm[current.end];
                 if ((*ans)[row].isInfinite()) {

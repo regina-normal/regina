@@ -1105,7 +1105,7 @@ namespace {
         // We see all triangular discs surrounding fromVertex.
         unsigned long ans = triCount_[fromVertex];
 
-        if (quadType_ == regina::vertexSplit[face][fromVertex]) {
+        if (quadType_ == regina::quadSeparating[face][fromVertex]) {
             // We also see the quadrilateral discs.
             ans += quadCount_;
         }
@@ -1260,8 +1260,7 @@ NTriangulation* NNormalSurface::crush() const {
                 adjPerm = tet->adjacentGluing(face);
                 adjFace = adjPerm[face];
                 while (adj && (adjQuads >= 0)) {
-                    swap = NPerm4(adjFace,
-                        vertexSplitPartner[adjQuads][adjFace]);
+                    swap = NPerm4(adjFace, quadPartner[adjQuads][adjFace]);
 
                     adjFace = swap[adjFace];
                     adjPerm = adj->adjacentGluing(adjFace) *

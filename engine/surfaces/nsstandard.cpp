@@ -53,8 +53,8 @@ NLargeInteger NNormalSurfaceVectorStandard::edgeWeight(
     NLargeInteger ans((*this)[7 * tetIndex + start]);
     ans += (*this)[7 * tetIndex + end];
     // Quads:
-    ans += (*this)[7 * tetIndex + 4 + vertexSplitMeeting[start][end][0]];
-    ans += (*this)[7 * tetIndex + 4 + vertexSplitMeeting[start][end][1]];
+    ans += (*this)[7 * tetIndex + 4 + quadMeeting[start][end][0]];
+    ans += (*this)[7 * tetIndex + 4 + quadMeeting[start][end][1]];
     return ans;
 }
 
@@ -70,7 +70,7 @@ NLargeInteger NNormalSurfaceVectorStandard::arcs(size_t triIndex,
     // Triangles:
     NLargeInteger ans((*this)[7 * tetIndex + vertex]);
     // Quads:
-    ans += (*this)[7 * tetIndex + 4 + vertexSplit[vertex][backOfFace]];
+    ans += (*this)[7 * tetIndex + 4 + quadSeparating[vertex][backOfFace]];
     return ans;
 }
 
@@ -95,7 +95,7 @@ NMatrixInt* NNormalSurfaceVectorStandard::makeMatchingEquations(
     int i;
     size_t tet0, tet1;
     NPerm4 perm0, perm1;
-    for (NTriangulation::TriangleIterator fit = triangulation->triangles().begin();
+    for (auto fit = triangulation->triangles().begin();
             fit != triangulation->triangles().end(); fit++) {
         if (! (*fit)->isBoundary()) {
             tet0 = (*fit)->embedding(0).tetrahedron()->index();
@@ -108,9 +108,9 @@ NMatrixInt* NNormalSurfaceVectorStandard::makeMatchingEquations(
                 ans->entry(row, 7*tet1 + perm1[i]) -= 1;
                 // Quads:
                 ans->entry(row, 7*tet0 + 4 +
-                    vertexSplit[perm0[i]][perm0[3]]) += 1;
+                    quadSeparating[perm0[i]][perm0[3]]) += 1;
                 ans->entry(row, 7*tet1 + 4 +
-                    vertexSplit[perm1[i]][perm1[3]]) -= 1;
+                    quadSeparating[perm1[i]][perm1[3]]) -= 1;
                 row++;
             }
         }

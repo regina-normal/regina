@@ -522,12 +522,12 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
             if (tot == 1) {
                 cell.textLabel.attributedText = [TextHelper yesNoString:[NSString stringWithFormat:@"K%ld: %s (1 oct)",
                                                                          oct.tetIndex,
-                                                                         regina::vertexSplitString[oct.type]]
+                                                                         regina::quadString[oct.type]]
                                                                   yesNo:YES];
             } else {
                 cell.textLabel.attributedText = [TextHelper yesNoString:[NSString stringWithFormat:@"K%ld: %s (%s octs)",
                                                                          oct.tetIndex,
-                                                                         regina::vertexSplitString[oct.type],
+                                                                         regina::quadString[oct.type],
                                                                          tot.stringValue().c_str()]
                                                                   yesNo:NO];
             }

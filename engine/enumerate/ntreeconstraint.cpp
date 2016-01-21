@@ -61,8 +61,8 @@ bool LPConstraintEuler::addRows(
         p = tri->edge(i)->front().vertices();
         ++obj[7 * tet + p[0]];
         ++obj[7 * tet + p[1]];
-        ++obj[7 * tet + 4 + vertexSplitMeeting[p[0]][p[1]][0]];
-        ++obj[7 * tet + 4 + vertexSplitMeeting[p[0]][p[1]][1]];
+        ++obj[7 * tet + 4 + quadMeeting[p[0]][p[1]][0]];
+        ++obj[7 * tet + 4 + quadMeeting[p[0]][p[1]][1]];
     }
 
     for (i = 0; i < 7 * tri->size(); ++i)

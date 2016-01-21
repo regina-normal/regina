@@ -53,8 +53,8 @@ NLargeInteger NNormalSurfaceVectorOriented::edgeWeight(
     NLargeInteger ans(triangles(tetIndex,start,triang));
     ans += triangles(tetIndex,end,triang);
     // Quads:
-    ans += quads(tetIndex,vertexSplitMeeting[start][end][0],triang);
-    ans += quads(tetIndex,vertexSplitMeeting[start][end][1],triang);
+    ans += quads(tetIndex, quadMeeting[start][end][0],triang);
+    ans += quads(tetIndex, quadMeeting[start][end][1],triang);
     return ans;
 }
 
@@ -70,7 +70,7 @@ NLargeInteger NNormalSurfaceVectorOriented::arcs(size_t triIndex,
     // Triangles:
     NLargeInteger ans(triangles(tetIndex,vertex,triang));
     // Quads:
-    ans += quads(tetIndex,vertexSplit[vertex][backOfFace],triang);
+    ans += quads(tetIndex, quadSeparating[vertex][backOfFace],triang);
     return ans;
 }
 
@@ -117,18 +117,18 @@ NMatrixInt* NNormalSurfaceVectorOriented::makeMatchingEquations(
                 // Quads:
                 natural = (perm0[i] == 0 || perm0[3] == 0);
                 ans->entry(row, 14*tet0 + 8 +
-                    2*vertexSplit[perm0[i]][perm0[3]] +
+                    2*quadSeparating[perm0[i]][perm0[3]] +
                         (natural ? 0 : 1)) += 1;
                 ans->entry(row+1, 14*tet0 + 8 +
-                    2*vertexSplit[perm0[i]][perm0[3]] +
+                    2*quadSeparating[perm0[i]][perm0[3]] +
                         (natural ? 1 : 0)) += 1;
 
                 natural = (perm1[i] == 0 || perm1[3] == 0);
                 ans->entry(row, 14*tet1 + 8 +
-                    2*vertexSplit[perm1[i]][perm1[3]] +
+                    2*quadSeparating[perm1[i]][perm1[3]] +
                         (natural ? 0 : 1)) -= 1;
                 ans->entry(row+1, 14*tet1 + 8 +
-                    2*vertexSplit[perm1[i]][perm1[3]] +
+                    2*quadSeparating[perm1[i]][perm1[3]] +
                         (natural ? 1 : 0)) -= 1;
 
                 row+=2;

@@ -125,21 +125,21 @@ using regina::NTriangle;
         if (whichCoord % 7 < 4)
             return [NSString stringWithFormat:@"%ld: %ld", (whichCoord / 7), (whichCoord % 7)];
         else
-            return [NSString stringWithFormat:@"%ld: %s", (whichCoord / 7), regina::vertexSplitString[(whichCoord % 7) - 4]];
+            return [NSString stringWithFormat:@"%ld: %s", (whichCoord / 7), regina::quadString[(whichCoord % 7) - 4]];
     } else if (coordSystem == regina::NS_AN_STANDARD || coordSystem == regina::NS_AN_LEGACY) {
         if (whichCoord % 10 < 4)
             return [NSString stringWithFormat:@"T%ld: %ld", (whichCoord / 10), (whichCoord % 10)];
         else if (whichCoord % 10 < 7)
-            return [NSString stringWithFormat:@"Q%ld: %s", (whichCoord / 10), regina::vertexSplitString[(whichCoord % 10) - 4]];
+            return [NSString stringWithFormat:@"Q%ld: %s", (whichCoord / 10), regina::quadString[(whichCoord % 10) - 4]];
         else
-            return [NSString stringWithFormat:@"K%ld: %s", (whichCoord / 10), regina::vertexSplitString[(whichCoord % 10) - 7]];
+            return [NSString stringWithFormat:@"K%ld: %s", (whichCoord / 10), regina::quadString[(whichCoord % 10) - 7]];
     } else if (coordSystem == regina::NS_QUAD) {
-        return [NSString stringWithFormat:@"%ld: %s", (whichCoord / 3), regina::vertexSplitString[whichCoord % 3]];
+        return [NSString stringWithFormat:@"%ld: %s", (whichCoord / 3), regina::quadString[whichCoord % 3]];
     } else if (coordSystem == regina::NS_AN_QUAD_OCT) {
         if (whichCoord % 6 < 3)
-            return [NSString stringWithFormat:@"Q%ld: %s", (whichCoord / 6), regina::vertexSplitString[whichCoord % 6]];
+            return [NSString stringWithFormat:@"Q%ld: %s", (whichCoord / 6), regina::quadString[whichCoord % 6]];
         else
-            return [NSString stringWithFormat:@"K%ld: %s", (whichCoord / 6), regina::vertexSplitString[(whichCoord % 6) - 3]];
+            return [NSString stringWithFormat:@"K%ld: %s", (whichCoord / 6), regina::quadString[(whichCoord % 6) - 3]];
     } else if (coordSystem == regina::NS_EDGE_WEIGHT) {
         if (! (tri && tri->edge(whichCoord)->isBoundary()))
             return [NSString stringWithFormat:@"%ld", whichCoord];

@@ -76,15 +76,15 @@ NMatrixInt* NNormalSurfaceVectorOrientedQuad::makeMatchingEquations(
 
                 flip = (perm[0] == 0 || perm[2] == 0);
                 ans->entry(row, 6 * tetIndex +
-                    2*vertexSplit[perm[0]][perm[2]] + (flip ? 0 : 1)) += 1;
+                    2*quadSeparating[perm[0]][perm[2]] + (flip ? 0 : 1)) += 1;
                 ans->entry(row+1, 6 * tetIndex +
-                    2*vertexSplit[perm[0]][perm[2]] + (flip ? 1 : 0)) += 1;
+                    2*quadSeparating[perm[0]][perm[2]] + (flip ? 1 : 0)) += 1;
 
                 flip = (perm[0] == 0 || perm[3] == 0);
                 ans->entry(row, 6 * tetIndex +
-                    2*vertexSplit[perm[0]][perm[3]] + (flip ? 0 : 1)) -= 1;
+                    2*quadSeparating[perm[0]][perm[3]] + (flip ? 0 : 1)) -= 1;
                 ans->entry(row+1, 6 * tetIndex +
-                    2*vertexSplit[perm[0]][perm[3]] + (flip ? 1 : 0)) -= 1;
+                    2*quadSeparating[perm[0]][perm[3]] + (flip ? 1 : 0)) -= 1;
             }
             row+=2;
         }
@@ -243,11 +243,11 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
                         (*ans)[14 * adjIndex + 2 * adjPerm[current.end] +
                             orient] +
                         (*ans)[14 * adjIndex + 8 +
-                            2 * vertexSplit[adjPerm[3]][adjPerm[current.end]] +
+                            2 * quadSeparating[adjPerm[3]][adjPerm[current.end]] +
                             ((adjPerm[current.end] == 0 || adjPerm[3] == 0) ?
                                 orient : (1 - orient))] -
                         (*ans)[14 * tetIndex + 8 +
-                            2 * vertexSplit[tetPerm[2]][tetPerm[current.end]] +
+                            2 * quadSeparating[tetPerm[2]][tetPerm[current.end]] +
                             ((tetPerm[current.end] == 0 || tetPerm[2] == 0) ?
                                 orient : (1 - orient))];
                     ans->setElement(14 * tetIndex + 2 * tetPerm[current.end] +
@@ -285,11 +285,11 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
                         (*ans)[14 * adjIndex + 2 * adjPerm[current.end] +
                             orient] +
                         (*ans)[14 * adjIndex + 8 +
-                            2 * vertexSplit[adjPerm[2]][adjPerm[current.end]] +
+                            2 * quadSeparating[adjPerm[2]][adjPerm[current.end]] +
                             ((adjPerm[current.end] == 0 || adjPerm[2] == 0) ?
                                 orient : (1 - orient))] -
                         (*ans)[14 * tetIndex + 8 +
-                            2 * vertexSplit[tetPerm[3]][tetPerm[current.end]] +
+                            2 * quadSeparating[tetPerm[3]][tetPerm[current.end]] +
                             ((tetPerm[current.end] == 0 || tetPerm[3] == 0) ?
                                 orient : (1 - orient))];
                     row = 14 * tetIndex + 2 * tetPerm[current.end] + orient;
