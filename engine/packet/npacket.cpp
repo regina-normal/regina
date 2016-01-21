@@ -83,12 +83,12 @@ std::string NPacket::adornedLabel(const std::string& adornment) const {
     return ans;
 }
 
-void NPacket::setPacketLabel(const std::string& newLabel) {
+void NPacket::setLabel(const std::string& label) {
     fireEvent(&NPacketListener::packetToBeRenamed);
     if (treeParent_)
         treeParent_->fireEvent(&NPacketListener::childToBeRenamed, this);
 
-    label_ = newLabel;
+    label_ = label;
 
     fireEvent(&NPacketListener::packetWasRenamed);
     if (treeParent_)

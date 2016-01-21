@@ -79,8 +79,8 @@ def vitalStats(tri):
 	print tri.fundamentalGroup().detail()
 	print "H1:", tri.homology()
 	if tri.isValid():
-		print "H1Bdry:", tri.homologyH1Bdry()
-		print "H1Rel:", tri.homologyH1Rel()
+		print "H1Bdry:", tri.homologyBdry()
+		print "H1Rel:", tri.homologyRel()
 		print "H2:", tri.homologyH2()
 		print "H2Z2:", tri.homologyH2Z2(), "Z_2"
 	if tri.isValid() and tri.isClosed() and tri.countTetrahedra() > 0:

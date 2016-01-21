@@ -200,7 +200,7 @@ class REGINA_API NPacket :
         public boost::noncopyable {
     private:
         std::string label_;
-            /**< The unique label for this individual packet of information. */
+            /**< The label for this individual packet of information. */
 
         NPacket* treeParent_;
             /**< Parent packet in the tree structure (0 if none). */
@@ -297,8 +297,6 @@ class REGINA_API NPacket :
         /**
          * Returns the label associated with this individual packet.
          * An example is \c MyTriangulation.
-         * Each individual packet in the overall tree structure must
-         * have a unique label.
          *
          * @return this individual packet's label.
          */
@@ -364,12 +362,18 @@ class REGINA_API NPacket :
         /**
          * Sets the label associated with this individual packet.
          *
-         * \pre No other packet in the overall tree
-         * structure has the same label.
-         *
-         * @param newLabel the new label to give this packet.
+         * @param label the new label to give this packet.
          */
-        void setPacketLabel(const std::string& newLabel);
+        void setLabel(const std::string& label);
+
+        /**
+         * Deprecated routine that sets the label associated with this
+         * individual packet.
+         *
+         * \deprecated This routine has been renamed to setLabel().
+         * See the setLabel() documentation for further details.
+         */
+        void setPacketLabel(const std::string& label);
 
         /**
          * Returns a descriptive text string for the packet.
@@ -1626,6 +1630,10 @@ inline std::string NPacket::getHumanLabel() const {
 
 inline std::string NPacket::getFullName() const {
     return fullName();
+}
+
+inline void NPacket::setPacketLabel(const std::string& label) {
+    setLabel(label);
 }
 
 inline bool NPacket::hasTag(const std::string& tag) const {

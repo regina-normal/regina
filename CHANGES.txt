@@ -372,9 +372,9 @@ Version 5.0  [ (under development) ]
             - The subclass constant packetType is renamed to typeID, and is
               now a constant of type PacketType, not an anonymous enum type.
               The old name is kept but deprecated.
-            - Renamed getPacketLabel(), getPacketType() and getPacketTypeName()
-              to label(), type() and typeName().  The old names are kept
-              but deprecated.
+            - Renamed getPacketLabel(), setPacketLabel(), getPacketType() and
+              getPacketTypeName() to label(), setLabel(), type() and typeName().
+              The old names are kept but deprecated.
             - Renamed getTreeParent(), getFirstTreeChild(), getLastTreeChild(),
               getNextTreeSibling(), getPrevTreeSibling() and getMatriarch() to
               parent(), firstChild(), lastChild(), nextSibling(), prevSibling()
