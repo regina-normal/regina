@@ -2,6 +2,7 @@
 
 # Files to compile
 SET ( FILES
+  enumerate
   links
   nhsstandard
   nnormalhypersurface
@@ -23,6 +24,7 @@ if (${REGINA_INSTALL_DEV})
     hscoordregistry.h
     hscoordregistry-impl.h
     hypercoords.h
+    hyperflags.h
     nhsmirrored.h
     nhsstandard.h
     nnormalhypersurface.h

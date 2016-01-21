@@ -35,6 +35,7 @@
 #include <boost/python.hpp>
 #include "dim4/dim4triangulation.h"
 #include "hypersurface/nnormalhypersurface.h"
+#include "hypersurface/nnormalhypersurfacelist.h" // for makeZeroVector()
 #include "triangulation/ntriangulation.h"
 #include "../helpers.h"
 
@@ -43,17 +44,59 @@ using regina::NNormalHypersurface;
 using regina::Dim4Triangulation;
 
 namespace {
-    void writeTextShort_stdio(const NNormalHypersurface& s) {
-        s.writeTextShort(std::cout);
-    }
     void writeRawVector_stdio(const NNormalHypersurface& s) {
         s.writeRawVector(std::cout);
+    }
+
+    /**
+     * A python-only constructor that lets users build a normal hypersurface
+     * from a hand-crafted list of integers.
+     */
+    NNormalHypersurface* fromCoordinates(Dim4Triangulation* t,
+            regina::HyperCoords coords, boost::python::list values) {
+        regina::NNormalHypersurfaceVector* v =
+            regina::makeZeroVector(t, coords);
+
+        long len = boost::python::len(values);
+        if (len != v->size()) {
+            delete v;
+
+            PyErr_SetString(PyExc_ValueError,
+                "Incorrect number of normal coordinates");
+            ::boost::python::throw_error_already_set();
+        }
+
+        for (long i = 0; i < len; i++) {
+            // Accept any type that we know how to convert to a large
+            // integer.
+            extract<regina::NLargeInteger&> x_large(values[i]);
+            if (x_large.check()) {
+                v->setElement(i, x_large());
+                continue;
+            }
+            extract<long> x_long(values[i]);
+            if (x_long.check()) {
+                v->setElement(i, x_long());
+                continue;
+            }
+            extract<const char*> x_str(values[i]);
+            if (x_str.check()) {
+                v->setElement(i, x_str());
+                continue;
+            }
+
+            // Throw an exception.
+            x_large();
+        }
+
+        return new NNormalHypersurface(t, v);
     }
 }
 
 void addNNormalHypersurface() {
     class_<NNormalHypersurface, std::auto_ptr<NNormalHypersurface>,
             boost::noncopyable>("NNormalHypersurface", no_init)
+        .def("__init__", make_constructor(fromCoordinates))
         .def("clone", &NNormalHypersurface::clone,
             return_value_policy<manage_new_object>())
         .def("tetrahedra", &NNormalHypersurface::tetrahedra)
@@ -65,7 +108,6 @@ void addNNormalHypersurface() {
         .def("name", &NNormalHypersurface::name,
             return_value_policy<return_by_value>())
         .def("setName", &NNormalHypersurface::setName)
-        .def("writeTextShort", writeTextShort_stdio)
         .def("writeRawVector", writeRawVector_stdio)
         .def("isEmpty", &NNormalHypersurface::isEmpty)
         .def("isCompact", &NNormalHypersurface::isCompact)

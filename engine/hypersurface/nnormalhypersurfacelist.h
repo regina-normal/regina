@@ -43,11 +43,11 @@
 #endif
 
 #include <algorithm>
-#include <iostream>
 #include <iterator>
 #include <vector>
 #include "regina-core.h"
 #include "hypersurface/hypercoords.h"
+#include "hypersurface/hyperflags.h"
 #include "hypersurface/nnormalhypersurface.h"
 #include "packet/npacket.h"
 #include "utilities/memutils.h"
@@ -62,6 +62,9 @@ class NXMLNormalHypersurfaceListReader;
 class NXMLPacketReader;
 
 template <int> class Triangulation;
+// We *must* declare the specialisation here; otherwise this header has
+// the side-effect of instantiating Trianglation<3> using the generic template.
+template <> class Triangulation<4>;
 typedef Triangulation<4> Dim4Triangulation;
 
 /**
@@ -101,10 +104,16 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
             /**< Contains the normal hypersurfaces stored in this packet. */
         HyperCoords coords_;
             /**< Stores which coordinate system is being
-             *   used by the normal hypersurfaces in this packet. */
-        bool embedded_;
-            /**< Stores whether we are only interested in embedded
-             *   normal hypersurfaces. */
+                 used by the normal hypersurfaces in this packet. */
+        HyperList which_;
+            /**< Indicates which normal hypersurfaces these represent
+                 within the underlying triangulation. */
+        HyperAlg algorithm_;
+            /**< Stores the details of the enumeration algorithm that
+                 was used to generate this list.  This might not be the
+                 same as the \a algorithmHints flag passed to the
+                 corresponding enumeration routine (e.g., if invalid or
+                 inappropriate flags were passed). */
 
     public:
         /**
@@ -157,135 +166,10 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          * returns 0 (and no normal hypersurface list is created).
          */
         static NNormalHypersurfaceList* enumerate(Dim4Triangulation* owner,
-            HyperCoords coords, bool embeddedOnly = true,
-            NProgressTracker* tracker = 0);
-
-        /**
-         * Enumerates all fundamental normal hypersurfaces in the given
-         * triangulation using the given coordinate system,
-         * using the primal Hilbert basis algorithm.
-         * These fundamental normal hypersurfaces will be stored in a new normal
-         * hypersurface list.  The option is offered to find only embedded
-         * normal hypersurfaces or to also include immersed and singular
-         * normal hypersurfaces.
-         *
-         * The primal algorithm is the recommended method for
-         * enumerating fundamental normal hypersurfaces, although other
-         * algorithms are made available in this class also.
-         * The procedure is the 4-dimensional analogue to the process
-         * described in "Fundamental normal surfaces and the enumeration
-         * of Hilbert bases", Burton, arXiv:1111.7055, Nov 2011.
-         *
-         * The normal hypersurface list that is created will be inserted as the
-         * last child of the given triangulation.  This triangulation \b must
-         * remain the parent of this normal hypersurface list, and must not
-         * change while this normal hypersurface list remains in existence.
-         *
-         * The first step of the primal algorithm is to enumerate all
-         * vertex normal hypersurfaces.  If you have already done this, you
-         * may pass the list of vertex normal hypersurfaces as the (optional)
-         * parameter \a vtxSurfaces.
-         *
-         * If a progress tracker is passed, the normal hypersurface
-         * enumeration will take place in a new thread and this routine
-         * will return immediately.  If the user cancels the operation
-         * from another thread, then the normal hypersurface list will \e not
-         * be inserted into the packet tree (but the caller of this
-         * routine will still need to delete it).  Regarding progress
-         * tracking, this routine will declare and work through a series
-         * of stages whose combined weights sum to 1; typically this
-         * means that the given tracker must not have been used before.
-         *
-         * If no progress tracker is passed, the enumeration will run
-         * in the current thread and this routine will return only when
-         * the enumeration is complete.  Note that this enumeration can
-         * be extremely slow for larger triangulations.
-         *
-         * \pre If non-zero, the argument \a vtxSurfaces is precisely the set
-         * of all vertex normal hypersurfaces in the given triangulation,
-         * enumerated using the same coordinate system and embedded-only
-         * constraints as given here.
-         *
-         * @param owner the triangulation upon which this list of normal
-         * hypersurfaces will be based.
-         * @param coords the coordinate system to be used.
-         * @param embeddedOnly \c true if only embedded normal hypersurfaces
-         * are to be produced, or \c false if immersed and singular
-         * normal hypersurfaces are also to be produced; this defaults to
-         * \c true.
-         * @param vtxSurfaces the set of all \e vertex normal hypersurfaces
-         * as enumerated under the same coordinate system and
-         * constraints as given here; this may be 0 if unknown.
-         * @param tracker a progress tracker through which progress will
-         * be reported, or 0 if no progress reporting is required.
-         * @return the newly created normal hypersurface list.  Note that if
-         * a progress tracker is passed then this list may not be completely
-         * filled when this routine returns.  If a progress tracker is
-         * passed and a new thread could not be started, this routine
-         * returns 0 (and no normal hypersurface list is created).
-         */
-        static NNormalHypersurfaceList* enumerateFundPrimal(
-            Dim4Triangulation* owner, HyperCoords coords,
-            bool embeddedOnly = true,
-            NNormalHypersurfaceList* vtxSurfaces = 0,
-            NProgressTracker* tracker = 0);
-
-        /**
-         * Enumerates all fundamental normal hypersurfaces in the given
-         * triangulation using the given coordinate system,
-         * using the dual Hilbert basis algorithm.
-         * These fundamental normal hypersurfaces will be stored in a new normal
-         * hypersurface list.  The option is offered to find only embedded
-         * normal hypersurfaces or to also include immersed and singular
-         * normal hypersurfaces.
-         *
-         * The dual algorithm is fast but its performance is highly variable;
-         * for this reason the primal algorithm is recommended instead.
-         * For full details of both procedures, see
-         * "Fundamental normal surfaces and the enumeration of Hilbert bases",
-         * Burton, arXiv:1111.7055, Nov 2011 (this paper describes the
-         * process for normal surfaces in 3-manifold triangulations, but
-         * the ideas are essentially the same).
-         *
-         * The normal hypersurface list that is created will be inserted as the
-         * last child of the given triangulation.  This triangulation \b must
-         * remain the parent of this normal hypersurface list, and must not
-         * change while this normal hypersurface list remains in existence.
-         *
-         * If a progress tracker is passed, the normal hypersurface
-         * enumeration will take place in a new thread and this routine
-         * will return immediately.  If the user cancels the operation
-         * from another thread, then the normal hypersurface list will \e not
-         * be inserted into the packet tree (but the caller of this
-         * routine will still need to delete it).  Regarding progress
-         * tracking, this routine will declare and work through a series
-         * of stages whose combined weights sum to 1; typically this
-         * means that the given tracker must not have been used before.
-         *
-         * If no progress tracker is passed, the enumeration will run
-         * in the current thread and this routine will return only when
-         * the enumeration is complete.  Note that this enumeration can
-         * be extremely slow for larger triangulations.
-         *
-         * @param owner the triangulation upon which this list of normal
-         * hypersurfaces will be based.
-         * @param coords the coordinate system to be used.
-         * @param embeddedOnly \c true if only embedded normal hypersurfaces
-         * are to be produced, or \c false if immersed and singular
-         * normal hypersurfaces are also to be produced; this defaults to
-         * \c true.
-         * @param tracker a progress tracker through which progress will
-         * be reported, or 0 if no progress reporting is required.
-         * @return the newly created normal hypersurface list.  Note that if
-         * a progress tracker is passed then this list may not be completely
-         * filled when this routine returns.  If a progress tracker is
-         * passed and a new thread could not be started, this routine
-         * returns 0 (and no normal hypersurface list is created).
-         */
-        static NNormalHypersurfaceList* enumerateFundDual(
-            Dim4Triangulation* owner, HyperCoords coords,
-            bool embeddedOnly = true,
-            NProgressTracker* tracker = 0);
+            HyperCoords coords,
+            HyperList which = HS_LIST_DEFAULT,
+            HyperAlg algHints = HS_ALG_DEFAULT,
+            NProgressTracker* tracker = 0); // TODO
 
         /**
          * Returns the coordinate system being used by the
@@ -295,16 +179,42 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          */
         HyperCoords coords() const;
         /**
+         * Returns details of which normal hypersurfaces this list represents
+         * within the underlying triangulation.
+         *
+         * This may not be the same HyperList that was passed to enumerate().
+         * In particular, default values will have been explicitly
+         * filled in (such as HS_VERTEX and/or HS_EMBEDDED_ONLY), and
+         * invalid and/or redundant values will have been removed.
+         *
+         * @return details of what this list represents.
+         */
+        HyperList which() const;
+        /**
+         * Returns details of the algorithm that was used to enumerate
+         * this list.
+         *
+         * These may not be the same HyperAlg flags that were passed to
+         * enumerate().  In particular, default values will have been
+         * explicitly filled in, invalid and/or redundant values will have
+         * been removed, and unavailable and/or unsupported combinations
+         * of algorithm flags will be replaced with whatever algorithm
+         * was actually used.
+         *
+         * @return details of the algorithm used to enumerate this list.
+         */
+        HyperAlg algorithm() const;
+        /**
          * Returns whether this set is known to contain only embedded normal
          * hypersurfaces.
          *
-         * If it is possible that there are non-embedded hypersurfaces in this
-         * set but it is not known whether any are actually present or
-         * not, this routine will return \c false.
+         * If this returns \c false, it does not guarantee that immersed
+         * and/or singular hypersurfaces are present; it merely indicates
+         * that they were not deliberately excluded (for instance, the
+         * prism constraints were not enforced).
          *
-         * @return \c true if it is known that only embedded normal
-         * hypersurfaces exist in this list, or \c false if immersed
-         * and/or singular normal hypersurfaces might be present.
+         * @return \c true if this list was constructed to contain only
+         * properly embedded hypersurfaces, or \c false otherwise.
          */
         bool isEmbeddedOnly() const;
         /**
@@ -483,10 +393,18 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
 
     protected:
         /**
-         * Creates a new normal hypersurface list performing no initialisation
-         * whatsoever other than property initialisation.
+         * Creates an empty list of normal hypersurfaces with the given
+         * parameters.
+         *
+         * @param coords the coordinate system to be used for filling
+         * this list.
+         * @param which indicates which normal hypersurfaces these will
+         * represent within the underlying triangulation.
+         * @param algorithm details of the enumeration algorithm that
+         * will be used to fill this list.
          */
-        NNormalHypersurfaceList();
+        NNormalHypersurfaceList(HyperCoords coords, HyperList which,
+            HyperAlg algorithm);
 
         virtual NPacket* internalClonePacket(NPacket* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
@@ -508,13 +426,6 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
                 /**< The triangulation in which the hypersurfaces to be
                  *   inserted are contained. */
 
-            /**
-             * Creates a new uninitialised output iterator.
-             *
-             * \warning This iterator must not be used until its
-             * hypersurface list and triangulation have been initialised.
-             */
-            HypersurfaceInserter();
             /**
              * Creates a new output iterator.  The member variables of
              * this iterator will be initialised according to the
@@ -593,111 +504,145 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
 
     private:
         /**
-         * Creates an empty list of normal hypersurfaces with the given
-         * parameters.
-         *
-         * @param coords the coordinate system to be used
-         * for filling this list.
-         * @param embeddedOnly \c true if only embedded normal hypersurfaces
-         * are to be produced, or \c false if immersed and singular
-         * normal hypersurfaces are also to be produced.
+         * A functor that performs all normal hypersurface enumeration.
          */
-        NNormalHypersurfaceList(HyperCoords coords, bool embeddedOnly);
+        class Enumerator {
+            private:
+                NNormalHypersurfaceList* list_;
+                    /**< The hypersurface list to be filled. */
+                Dim4Triangulation* triang_;
+                    /**< The triangulation in which these hypersurfaces lie. */
+                NProgressTracker* tracker_;
+                    /**< The progress tracker through which progress is
+                         reported and cancellation requests are accepted,
+                         or 0 if no progress tracker is in use. */
 
-        /**
-         * A functor that performs the vertex normal hypersurface enumeration.
-         */
-        struct VertexEnumerator {
-            /**
-             * Performs the real enumeration work, in a setting
-             * where the underlying coordinate system is
-             * a compile-time constant.
-             *
-             * We assume here that neither list_->which_ nor
-             * list_->algorithm_ have been sanity-checked.
-             *
-             * This routine fills \a list_ with surfaces, and then once
-             * this is finished it inserts \a list_ into the packet
-             * tree as a child of \a triang_.
-             *
-             * \tparam Coords an instance of the HyperInfo<> template class.
-             *
-             * @param list the normal hypersurface list to be filled.
-             * @param triang the triangulation upon which this
-             * normal hypersurface list will be based.
-             * @param tracker the progress tracker to use for
-             * progress reporting and cancellation polling, or 0 if
-             * these capabilities are not required.
-             */
-            template <typename Coords>
-            void operator() (NNormalHypersurfaceList* list,
-                Dim4Triangulation* triang, NProgressTracker* tracker);
-        };
+            public:
+                /**
+                 * Creates a new functor with the given parameters.
+                 *
+                 * @param list the hypersurface list to be filled.
+                 * @param triang the triangulation in which these
+                 * hypersurfaces lie.
+                 * @param tracker the progress tracker to use for
+                 * progress reporting and cancellation polling, or 0 if
+                 * these capabilities are not required.
+                 */
+                Enumerator(NNormalHypersurfaceList* list,
+                    Dim4Triangulation* triang, NProgressTracker* tracker);
 
-        /**
-         * A functor that performs fundamental normal hypersurface
-         * enumeration using the primal Hilbert basis algorithm.
-         */
-        struct FundPrimalEnumerator {
-            /**
-             * Performs the real enumeration work, in a setting
-             * where the underlying coordinate system is
-             * a compile-time constant.
-             *
-             * We assume here that neither list_->which_ nor
-             * list_->algorithm_ have been sanity-checked.
-             *
-             * This routine fills \a list_ with surfaces, and then once
-             * this is finished it inserts \a list_ into the packet
-             * tree as a child of \a triang_.
-             *
-             * \tparam Coords an instance of the HyperInfo<> template class.
-             *
-             * @param list the normal hypersurface list to be filled.
-             * @param triang the triangulation upon which this
-             * normal hypersurface list will be based.
-             * @param vtxSurfaces the vertex normal hypersurfaces in
-             * \a triang, or 0 if this information is not known.
-             * @param tracker the progress tracker to use for
-             * progress reporting and cancellation polling, or 0 if
-             * these capabilities are not required.
-             */
-            template <typename Coords>
-            void operator() (NNormalHypersurfaceList* list,
-                Dim4Triangulation* triang,
-                NNormalHypersurfaceList* vtxSurfaces,
-                NProgressTracker* tracker);
-        };
+                /**
+                 * Performs the real enumeration work, in a setting
+                 * where the underlying coordinate system is
+                 * a compile-time constant.
+                 *
+                 * We assume here that neither list_->which_ nor
+                 * list_->algorithm_ have been sanity-checked.
+                 *
+                 * This routine fills \a list_ with surfaces, and then once
+                 * this is finished it inserts \a list_ into the packet
+                 * tree as a child of \a triang_.
+                 *
+                 * \tparam Coords an instance of the HyperInfo<> template class.
+                 */
+                template <typename Coords>
+                void operator() ();
 
-        /**
-         * A functor that performs fundamental normal hypersurface
-         * enumeration using the dual Hilbert basis algorithm.
-         */
-        struct FundDualEnumerator {
-            /**
-             * Performs the real enumeration work, in a setting
-             * where the underlying coordinate system is
-             * a compile-time constant.
-             *
-             * We assume here that neither list_->which_ nor
-             * list_->algorithm_ have been sanity-checked.
-             *
-             * This routine fills \a list_ with surfaces, and then once
-             * this is finished it inserts \a list_ into the packet
-             * tree as a child of \a triang_.
-             *
-             * \tparam Coords an instance of the HyperInfo<> template class.
-             *
-             * @param list the normal hypersurface list to be filled.
-             * @param triang the triangulation upon which this
-             * normal hypersurface list will be based.
-             * @param tracker the progress tracker to use for
-             * progress reporting and cancellation polling, or 0 if
-             * these capabilities are not required.
-             */
-            template <typename Coords>
-            void operator() (NNormalHypersurfaceList* list,
-                Dim4Triangulation* triang, NProgressTracker* tracker);
+            private:
+                /**
+                 * The enumeration code for enumerating vertex hypersurfaces.
+                 * This is internal to operator().
+                 *
+                 * We assume that the flag set which_ is set correctly,
+                 * and we do not alter it here.
+                 * We make no assumptions about the state of algorithm_,
+                 * and we set this during the course of this routine.
+                 *
+                 * This routine only fills \a list_ with hypersurfaces.
+                 * It does not make any adjustments to the structure of
+                 * the packet tree.
+                 *
+                 * If \a tracker_ is non-null, this routine will declare and
+                 * work through a series of tracker stages whose
+                 * combined weights sum to 1.  It will not, however,
+                 * call NProgressTracker::setFinished().
+                 */
+                template <typename Coords>
+                void fillVertex();
+
+                /**
+                 * The enumeration code for enumerating fundamental
+                 * hypersurfaces.  This is internal to operator().
+                 *
+                 * We assume that the flag set which_ is set correctly,
+                 * and we do not alter it here.
+                 * We make no assumptions about the state of algorithm_,
+                 * and we set this during the course of this routine.
+                 *
+                 * This routine only fills \a list_ with surfaces.
+                 * It does not make any adjustments to the structure of
+                 * the packet tree.
+                 *
+                 * If \a tracker_ is non-null, this routine declare and
+                 * work through a series of tracker stages whose
+                 * combined weights sum to 1.  It will not, however,
+                 * call NProgressTracker::setFinished().
+                 */
+                template <typename Coords>
+                void fillFundamental();
+
+                /**
+                 * The enumeration code for enumerating vertex surfaces
+                 * using the double description method.
+                 * This is internal to fillVertex().
+                 *
+                 * This routine assumes that \a algorithm_ has been set
+                 * correctly, and does not alter it.
+                 *
+                 * If \a tracker_ is non-null, this routine assumes that
+                 * an appropriate tracker stage has already been
+                 * declared, and works through that stage only.
+                 *
+                 * \pre The underlying triangulation is non-empty.
+                 */
+                template <typename Coords>
+                void fillVertexDD();
+
+                /**
+                 * The enumeration code for enumerating fundamental surfaces
+                 * using the primal method.
+                 * This is internal to fillFundamental().
+                 *
+                 * This routine assumes nothing about the state of the
+                 * \a algorithm_ flag set, and sets it appropriately.
+                 *
+                 * If \a tracker_ is non-null, this routine will declare and
+                 * work through a series of tracker stages whose
+                 * combined weights sum to 1.  It will not, however,
+                 * call NProgressTracker::setFinished().
+                 *
+                 * \pre The underlying triangulation is non-empty.
+                 */
+                template <typename Coords>
+                void fillFundamentalPrimal();
+
+                /**
+                 * The enumeration code for enumerating fundamental surfaces
+                 * using the dual method.
+                 * This is internal to fillFundamental().
+                 *
+                 * This routine assumes nothing about the state of the
+                 * \a algorithm_ flag set, and sets it appropriately.
+                 *
+                 * If \a tracker_ is non-null, this routine will declare and
+                 * work through a series of tracker stages whose
+                 * combined weights sum to 1.  It will not, however,
+                 * call NProgressTracker::setFinished().
+                 *
+                 * \pre The underlying triangulation is non-empty.
+                 */
+                template <typename Coords>
+                void fillFundamentalDual();
         };
 
     friend class regina::NXMLNormalHypersurfaceListReader;
@@ -763,9 +708,6 @@ REGINA_API NEnumConstraintList* makeEmbeddedConstraints(
 
 // Inline functions for NNormalHypersurfaceList
 
-inline NNormalHypersurfaceList::NNormalHypersurfaceList() {
-}
-
 inline NNormalHypersurfaceList::~NNormalHypersurfaceList() {
     for_each(surfaces_.begin(), surfaces_.end(),
         FuncDelete<NNormalHypersurface>());
@@ -775,8 +717,16 @@ inline HyperCoords NNormalHypersurfaceList::coords() const {
     return coords_;
 }
 
+inline HyperList NNormalHypersurfaceList::which() const {
+    return which_;
+}
+
+inline HyperAlg NNormalHypersurfaceList::algorithm() const {
+    return algorithm_;
+}
+
 inline bool NNormalHypersurfaceList::isEmbeddedOnly() const {
-    return embedded_;
+    return which_.has(HS_EMBEDDED_ONLY);
 }
 
 inline size_t NNormalHypersurfaceList::size() const {
@@ -862,10 +812,6 @@ inline NNormalHypersurfaceList::VectorIterator
     return VectorIterator(surfaces_.end());
 }
 
-inline NNormalHypersurfaceList::HypersurfaceInserter::HypersurfaceInserter() :
-        list_(0), owner_(0) {
-}
-
 inline NNormalHypersurfaceList::HypersurfaceInserter::HypersurfaceInserter(
         NNormalHypersurfaceList& list, Dim4Triangulation* owner) :
         list_(&list), owner_(owner) {
@@ -915,7 +861,14 @@ inline NNormalHypersurfaceList::HypersurfaceInserter&
 }
 
 inline NNormalHypersurfaceList::NNormalHypersurfaceList(HyperCoords coords,
-        bool embeddedOnly) : coords_(coords), embedded_(embeddedOnly) {
+        HyperList which, HyperAlg algorithm) :
+        coords_(coords), which_(which), algorithm_(algorithm) {
+}
+
+inline NNormalHypersurfaceList::Enumerator::Enumerator(
+        NNormalHypersurfaceList* list, Dim4Triangulation* triang,
+        NProgressTracker* tracker) :
+        list_(list), triang_(triang), tracker_(tracker) {
 }
 
 } // namespace regina

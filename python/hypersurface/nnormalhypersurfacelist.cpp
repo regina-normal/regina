@@ -44,60 +44,25 @@ using regina::NNormalHypersurfaceList;
 
 namespace {
     // Write manual overload wrappers since these are static member functions.
-    NNormalHypersurfaceList* enumerate_2(regina::Dim4Triangulation* owner,
-            HyperCoords coords) {
+    NNormalHypersurfaceList* unified_2(regina::Dim4Triangulation* owner,
+            regina::HyperCoords coords) {
         return NNormalHypersurfaceList::enumerate(owner, coords);
     }
-    NNormalHypersurfaceList* enumerate_3(regina::Dim4Triangulation* owner,
-            HyperCoords coords, bool embedded) {
-        return NNormalHypersurfaceList::enumerate(owner, coords, embedded);
+    NNormalHypersurfaceList* unified_3(regina::Dim4Triangulation* owner,
+            regina::HyperCoords coords, regina::HyperList which) {
+        return NNormalHypersurfaceList::enumerate(owner, coords, which);
     }
-    NNormalHypersurfaceList* enumerate_4(regina::Dim4Triangulation* owner,
-            HyperCoords coords, bool embedded,
-            regina::NProgressTracker* tracker) {
-        return NNormalHypersurfaceList::enumerate(owner, coords, embedded,
-            tracker);
+    NNormalHypersurfaceList* unified_4(regina::Dim4Triangulation* owner,
+            regina::HyperCoords coords, regina::HyperList which,
+            regina::HyperAlg algHints) {
+        return NNormalHypersurfaceList::enumerate(owner, coords, which,
+            algHints);
     }
-
-    NNormalHypersurfaceList* enumerateFundPrimal_2(
-            regina::Dim4Triangulation* owner, HyperCoords coords) {
-        return NNormalHypersurfaceList::enumerateFundPrimal(owner, coords);
-    }
-    NNormalHypersurfaceList* enumerateFundPrimal_3(
-            regina::Dim4Triangulation* owner, HyperCoords coords,
-            bool embedded) {
-        return NNormalHypersurfaceList::enumerateFundPrimal(owner, coords,
-            embedded);
-    }
-    NNormalHypersurfaceList* enumerateFundPrimal_4(
-            regina::Dim4Triangulation* owner, HyperCoords coords,
-            bool embedded, regina::NNormalHypersurfaceList* vtxSurfaces) {
-        return NNormalHypersurfaceList::enumerateFundPrimal(owner, coords,
-            embedded, vtxSurfaces);
-    }
-    NNormalHypersurfaceList* enumerateFundPrimal_5(
-            regina::Dim4Triangulation* owner, HyperCoords coords,
-            bool embedded, regina::NNormalHypersurfaceList* vtxSurfaces,
-            regina::NProgressTracker* tracker) {
-        return NNormalHypersurfaceList::enumerateFundPrimal(owner, coords,
-            embedded, vtxSurfaces, tracker);
-    }
-
-    NNormalHypersurfaceList* enumerateFundDual_2(
-            regina::Dim4Triangulation* owner, HyperCoords coords) {
-        return NNormalHypersurfaceList::enumerateFundDual(owner, coords);
-    }
-    NNormalHypersurfaceList* enumerateFundDual_3(
-            regina::Dim4Triangulation* owner, HyperCoords coords,
-            bool embedded) {
-        return NNormalHypersurfaceList::enumerateFundDual(owner, coords,
-            embedded);
-    }
-    NNormalHypersurfaceList* enumerateFundDual_4(
-            regina::Dim4Triangulation* owner, HyperCoords coords,
-            bool embedded, regina::NProgressTracker* tracker) {
-        return NNormalHypersurfaceList::enumerateFundDual(owner, coords,
-            embedded, tracker);
+    NNormalHypersurfaceList* unified_5(regina::Dim4Triangulation* owner,
+            regina::HyperCoords coords, regina::HyperList which,
+            regina::HyperAlg algHints, regina::NProgressTracker* tracker) {
+        return NNormalHypersurfaceList::enumerate(owner, coords, which,
+            algHints, tracker);
     }
 }
 
@@ -109,30 +74,20 @@ void addNNormalHypersurfaceList() {
     scope s = class_<NNormalHypersurfaceList, bases<regina::NPacket>,
             std::auto_ptr<NNormalHypersurfaceList>, boost::noncopyable>
             ("NNormalHypersurfaceList", no_init)
-        .def("enumerate", enumerate_2,
+        .def("enumerate", unified_2,
             return_value_policy<reference_existing_object>())
-        .def("enumerate", enumerate_3,
+        .def("enumerate", unified_3,
             return_value_policy<reference_existing_object>())
-        .def("enumerate", enumerate_4,
+        .def("enumerate", unified_4,
             return_value_policy<reference_existing_object>())
-        .def("enumerateFundPrimal", enumerateFundPrimal_2,
-            return_value_policy<reference_existing_object>())
-        .def("enumerateFundPrimal", enumerateFundPrimal_3,
-            return_value_policy<reference_existing_object>())
-        .def("enumerateFundPrimal", enumerateFundPrimal_4,
-            return_value_policy<reference_existing_object>())
-        .def("enumerateFundPrimal", enumerateFundPrimal_5,
-            return_value_policy<reference_existing_object>())
-        .def("enumerateFundDual", enumerateFundDual_2,
-            return_value_policy<reference_existing_object>())
-        .def("enumerateFundDual", enumerateFundDual_3,
-            return_value_policy<reference_existing_object>())
-        .def("enumerateFundDual", enumerateFundDual_4,
+        .def("enumerate", unified_5,
             return_value_policy<reference_existing_object>())
         .def("recreateMatchingEquations",
             &NNormalHypersurfaceList::recreateMatchingEquations,
             return_value_policy<manage_new_object>())
         .def("coords", &NNormalHypersurfaceList::coords)
+        .def("which", &NNormalHypersurfaceList::which)
+        .def("algorithm", &NNormalHypersurfaceList::algorithm)
         .def("isEmbeddedOnly", &NNormalHypersurfaceList::isEmbeddedOnly)
         .def("triangulation", &NNormalHypersurfaceList::triangulation,
             return_value_policy<reference_existing_object>())
@@ -140,8 +95,6 @@ void addNNormalHypersurfaceList() {
         .def("hypersurface", &NNormalHypersurfaceList::hypersurface,
             return_internal_reference<>())
         .staticmethod("enumerate")
-        .staticmethod("enumerateFundPrimal")
-        .staticmethod("enumerateFundDual")
     ;
 
     s.attr("typeID") = regina::PACKET_NORMALHYPERSURFACELIST;

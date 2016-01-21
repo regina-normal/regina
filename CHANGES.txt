@@ -338,6 +338,7 @@ Version 5.0  [ (under development) ]
         Class NMutex:
             - Deprecated; just use std::mutex and related classes instead.
         Class NNormalHypersurface, NNormalHypersurfaceList,
+                HyperCoords, HyperList, HyperListFlags, HyperAlg, HyperAlgFlags,
                 NNormalHypersurfaceVector, NNormalHypersurfaceVectorMirrored,
                 NNormalHypersurfaceVectorStandard,
                 NXMLNormalHypersurfaceReader, NXMLNormalHypersurfaceListReader:

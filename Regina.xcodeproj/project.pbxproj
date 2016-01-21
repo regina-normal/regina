@@ -1281,6 +1281,10 @@
 		0591E8581C4F77A400793A9C /* dim4triangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8531C4F779B00793A9C /* dim4triangulation.cpp */; };
 		0591E8591C4F832B00793A9C /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
 		0591E85B1C50527100793A9C /* xmltrireader.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E85A1C50527100793A9C /* xmltrireader.h */; };
+		0591E85E1C50D28700793A9C /* enumerate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E85C1C50D28700793A9C /* enumerate.cpp */; };
+		0591E85F1C50D28700793A9C /* hyperflags.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E85D1C50D28700793A9C /* hyperflags.h */; };
+		0591E8601C50D28D00793A9C /* enumerate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E85C1C50D28700793A9C /* enumerate.cpp */; };
+		0591E8631C50D2B000793A9C /* hyperflags.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8611C50D2A900793A9C /* hyperflags.cpp */; };
 		05937A9A19CEC20900160F9A /* AngleViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05937A9919CEC20900160F9A /* AngleViewController.mm */; };
 		05937AD119CECF4300160F9A /* MDSpreadView.m in Sources */ = {isa = PBXBuildFile; fileRef = 05937A9E19CECF4300160F9A /* MDSpreadView.m */; };
 		05937AD219CECF4300160F9A /* MDSpreadViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 05937AA019CECF4300160F9A /* MDSpreadViewCell.m */; };
@@ -2966,6 +2970,9 @@
 		0591E8531C4F779B00793A9C /* dim4triangulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim4triangulation.cpp; sourceTree = "<group>"; };
 		0591E8541C4F779B00793A9C /* testdim4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testdim4.h; sourceTree = "<group>"; };
 		0591E85A1C50527100793A9C /* xmltrireader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltrireader.h; sourceTree = "<group>"; };
+		0591E85C1C50D28700793A9C /* enumerate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = enumerate.cpp; sourceTree = "<group>"; };
+		0591E85D1C50D28700793A9C /* hyperflags.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hyperflags.h; sourceTree = "<group>"; };
+		0591E8611C50D2A900793A9C /* hyperflags.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hyperflags.cpp; sourceTree = "<group>"; };
 		05937A9819CEC20900160F9A /* AngleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AngleViewController.h; sourceTree = "<group>"; };
 		05937A9919CEC20900160F9A /* AngleViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AngleViewController.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		05937A9D19CECF4300160F9A /* MDSpreadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDSpreadView.h; sourceTree = "<group>"; };
@@ -5180,9 +5187,11 @@
 			isa = PBXGroup;
 			children = (
 				0591E7CA1C4F750200793A9C /* CMakeLists.txt */,
+				0591E85C1C50D28700793A9C /* enumerate.cpp */,
 				0591E7CB1C4F750200793A9C /* hscoordregistry-impl.h */,
 				0591E7CC1C4F750200793A9C /* hscoordregistry.h */,
 				0591E7CD1C4F750200793A9C /* hypercoords.h */,
+				0591E85D1C50D28700793A9C /* hyperflags.h */,
 				0591E7CE1C4F750200793A9C /* links.cpp */,
 				0591E7CF1C4F750200793A9C /* nhsmirrored.h */,
 				0591E7D01C4F750200793A9C /* nhsstandard.cpp */,
@@ -5223,6 +5232,7 @@
 			children = (
 				0591E81E1C4F764800793A9C /* CMakeLists.txt */,
 				0591E81F1C4F764800793A9C /* hypercoords.cpp */,
+				0591E8611C50D2A900793A9C /* hyperflags.cpp */,
 				0591E8201C4F764800793A9C /* nnormalhypersurface.cpp */,
 				0591E8211C4F764800793A9C /* nnormalhypersurfacelist.cpp */,
 				0591E8221C4F764800793A9C /* pyhypersurface.cpp */,
@@ -5618,6 +5628,7 @@
 				052F9FF9180600FB00FAE4DF /* nlayeredloop.h in Headers */,
 				05431F771C40F3C9009BC072 /* list_operations.h in Headers */,
 				052FA064180600FB00FAE4DF /* nface.h in Headers */,
+				0591E85F1C50D28700793A9C /* hyperflags.h in Headers */,
 				052F9EAD180600FB00FAE4DF /* dim2component.h in Headers */,
 				052F9FE9180600FB00FAE4DF /* nblockedsfs.h in Headers */,
 				052FA003180600FB00FAE4DF /* npluggedtorusbundle.h in Headers */,
@@ -5957,6 +5968,7 @@
 				050F5DF31B9BAB9C00C1F681 /* ntorusbundle.cpp in Sources */,
 				050F5E081B9BAB9C00C1F681 /* nscript.cpp in Sources */,
 				0591E8191C4F763B00793A9C /* dim4tetrahedron.cpp in Sources */,
+				0591E8631C50D2B000793A9C /* hyperflags.cpp in Sources */,
 				050F5E601B9BAB9C00C1F681 /* snappea.cpp in Sources */,
 				05CAFB531C4CEA160001C253 /* face15.cpp in Sources */,
 				0591E8281C4F764F00793A9C /* nnormalhypersurface.cpp in Sources */,
@@ -6202,6 +6214,7 @@
 				052FA1361806103000FAE4DF /* main.m in Sources */,
 				052FA1AD1806129B00FAE4DF /* nxmlpacketreaders.cpp in Sources */,
 				052FA233180612DD00FAE4DF /* simplify_triangulation.c in Sources */,
+				0591E8601C50D28D00793A9C /* enumerate.cpp in Sources */,
 				052FA1D01806129B00FAE4DF /* ntrivialtri.cpp in Sources */,
 				05937AD619CECF4300160F9A /* MDSpreadViewCellRowHeaderBackground.m in Sources */,
 				052FA214180612DD00FAE4DF /* canonize_result.c in Sources */,
@@ -6872,6 +6885,7 @@
 				052F9FA1180600FB00FAE4DF /* tet_shapes.c in Sources */,
 				052FA06A180600FB00FAE4DF /* nhomologicaldata.cpp in Sources */,
 				055B7311181D7CF800449D14 /* dim2boundarycomponent.cpp in Sources */,
+				0591E85E1C50D28700793A9C /* enumerate.cpp in Sources */,
 				052FA00E180600FB00FAE4DF /* nsatregion.cpp in Sources */,
 				052F9EA9180600FB00FAE4DF /* ngluingpermsearcher.cpp in Sources */,
 				05A73CAD19B2EFF90099C617 /* open.cpp in Sources */,

@@ -33,11 +33,13 @@
 /* end stub */
 
 void addHyperCoords();
+void addHyperFlags();
 void addNNormalHypersurface();
 void addNNormalHypersurfaceList();
 
 void addHypersurface() {
     addHyperCoords();
+    addHyperFlags();
     addNNormalHypersurface();
     addNNormalHypersurfaceList();
 }

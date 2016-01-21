@@ -113,14 +113,25 @@ NXMLElementReader* NXMLNormalHypersurfaceListReader::startContentSubElement(
         // The hypersurface list has not yet been created.
         if (subTagName == "params") {
             long coords;
+            int listType, algorithm;
             bool embedded;
-            if (valueOf(props.lookup("flavourid"), coords))
-                if (valueOf(props.lookup("embedded"), embedded)) {
+            if (valueOf(props.lookup("flavourid"), coords)) {
+                if (valueOf(props.lookup("type"), listType) &&
+                        valueOf(props.lookup("algorithm"), algorithm)) {
                     // Parameters look sane; create the empty list.
-                    list_ = new NNormalHypersurfaceList();
-                    list_->coords_ = static_cast<HyperCoords>(coords);
-                    list_->embedded_ = embedded;
+                    list_ = new NNormalHypersurfaceList(
+                        static_cast<HyperCoords>(coords),
+                        HyperList::fromInt(listType),
+                        HyperAlg::fromInt(algorithm));
+                } else if (valueOf(props.lookup("embedded"), embedded)) {
+                    // Parameters look sane but use the old prerelease format.
+                    list_ = new NNormalHypersurfaceList(
+                        static_cast<HyperCoords>(coords),
+                        HS_LEGACY | (embedded ?
+                            HS_EMBEDDED_ONLY : HS_IMMERSED_SINGULAR),
+                        HS_ALG_LEGACY);
                 }
+            }
         }
     }
     return new NXMLElementReader();

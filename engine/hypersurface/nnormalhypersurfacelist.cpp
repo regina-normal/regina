@@ -89,161 +89,6 @@ NEnumConstraintList* makeEmbeddedConstraints(
     return forCoords(coords, EmbeddedConstraints(), 0, triangulation);
 }
 
-template <typename Coords>
-void NNormalHypersurfaceList::VertexEnumerator::operator() (
-        NNormalHypersurfaceList* list, Dim4Triangulation* triang,
-        NProgressTracker* tracker) {
-    if (tracker)
-        tracker->newStage("Enumerating vertex hypersurfaces");
-
-    // Fetch any necessary validity constraints.
-    NEnumConstraintList* constraints = 0;
-    if (list->embedded_)
-        constraints = makeEmbeddedConstraints(triang, list->coords_);
-
-    // Form the matching equations and starting cone.
-    NMatrixInt* eqns = makeMatchingEquations(triang, list->coords_);
-
-    // Find the normal hypersurfaces.
-    NDoubleDescription::enumerateExtremalRays<typename Coords::Class>(
-        HypersurfaceInserter(*list, triang), *eqns, constraints, tracker);
-
-    delete eqns;
-    delete constraints;
-
-    // All done!
-    if (! (tracker && tracker->isCancelled()))
-        triang->insertChildLast(list);
-
-    if (tracker)
-        tracker->setFinished();
-}
-
-template <typename Coords>
-void NNormalHypersurfaceList::FundPrimalEnumerator::operator() (
-        NNormalHypersurfaceList* list, Dim4Triangulation* triang,
-        NNormalHypersurfaceList* vtxSurfaces, NProgressTracker* tracker) {
-    if (tracker)
-        tracker->newStage("Initialising Hilbert basis enumeration", 0.1);
-
-    // Fetch any necessary validity constraints.
-    NEnumConstraintList* constraints = 0;
-    if (list->embedded_)
-        constraints = makeEmbeddedConstraints(triang, list->coords_);
-
-    if (tracker)
-        tracker->newStage("Enumerating extremal rays", 0.4);
-
-    NNormalHypersurfaceList* useVtxSurfaces = vtxSurfaces;
-    if (! vtxSurfaces) {
-        // Enumerate all vertex normal hypersurfaces using the default
-        // (and hopefully best possible) algorithm.
-        useVtxSurfaces = new NNormalHypersurfaceList(list->coords_,
-            list->embedded_);
-        VertexEnumerator().operator()<Coords>(useVtxSurfaces, triang, 0);
-    }
-
-    if (tracker)
-        tracker->newStage("Expanding to Hilbert basis", 0.5);
-
-    // Find the normal hypersurfaces.
-    NHilbertPrimal::enumerateHilbertBasis<typename Coords::Class>(
-        HypersurfaceInserter(*list, triang),
-        useVtxSurfaces->beginVectors(), useVtxSurfaces->endVectors(),
-        constraints, tracker);
-
-    delete constraints;
-    if (! vtxSurfaces)
-        delete useVtxSurfaces;
-
-    // All done!
-    if (! (tracker && tracker->isCancelled()))
-        triang->insertChildLast(list);
-
-    if (tracker)
-        tracker->setFinished();
-}
-
-template <typename Coords>
-void NNormalHypersurfaceList::FundDualEnumerator::operator() (
-        NNormalHypersurfaceList* list, Dim4Triangulation* triang,
-        NProgressTracker* tracker) {
-    if (tracker)
-        tracker->newStage("Enumerating Hilbert basis\n(dual method)");
-
-    // Fetch any necessary validity constraints.
-    NEnumConstraintList* constraints = 0;
-    if (list->embedded_)
-        constraints = makeEmbeddedConstraints(triang, list->coords_);
-
-    // Form the matching equations and starting cone.
-    NMatrixInt* eqns = makeMatchingEquations(triang, list->coords_);
-
-    // Find the normal hypersurfaces.
-    NHilbertDual::enumerateHilbertBasis<typename Coords::Class>(
-        HypersurfaceInserter(*list, triang), *eqns, constraints, tracker);
-
-    delete eqns;
-    delete constraints;
-
-    // All done!
-    if (! (tracker && tracker->isCancelled()))
-        triang->insertChildLast(list);
-
-    if (tracker)
-        tracker->setFinished();
-}
-
-NNormalHypersurfaceList* NNormalHypersurfaceList::enumerate(
-        Dim4Triangulation* owner, HyperCoords coords, bool embeddedOnly,
-        NProgressTracker* tracker) {
-    NNormalHypersurfaceList* ans = new NNormalHypersurfaceList(
-        coords, embeddedOnly);
-
-    if (tracker)
-        std::thread(&forCoords<VertexEnumerator, NNormalHypersurfaceList*,
-                Dim4Triangulation*, NProgressTracker*>,
-            coords, VertexEnumerator(), ans, owner, tracker)
-            .detach();
-    else
-        forCoords(coords, VertexEnumerator(), ans, owner, tracker);
-    return ans;
-}
-
-NNormalHypersurfaceList* NNormalHypersurfaceList::enumerateFundPrimal(
-        Dim4Triangulation* owner, HyperCoords coords, bool embeddedOnly,
-        NNormalHypersurfaceList* vtxSurfaces, NProgressTracker* tracker) {
-    NNormalHypersurfaceList* ans = new NNormalHypersurfaceList(
-        coords, embeddedOnly);
-
-    if (tracker)
-        std::thread(forCoords<FundPrimalEnumerator, NNormalHypersurfaceList*,
-                Dim4Triangulation*, NNormalHypersurfaceList*,
-                NProgressTracker*>,
-            coords, FundPrimalEnumerator(), ans, owner, vtxSurfaces, tracker)
-            .detach();
-    else
-        forCoords(coords, FundPrimalEnumerator(), ans, owner, vtxSurfaces,
-            tracker);
-    return ans;
-}
-
-NNormalHypersurfaceList* NNormalHypersurfaceList::enumerateFundDual(
-        Dim4Triangulation* owner, HyperCoords coords, bool embeddedOnly,
-        NProgressTracker* tracker) {
-    NNormalHypersurfaceList* ans = new NNormalHypersurfaceList(
-        coords, embeddedOnly);
-
-    if (tracker)
-        std::thread(forCoords<FundDualEnumerator, NNormalHypersurfaceList*,
-                Dim4Triangulation*, NProgressTracker*>,
-            coords, FundDualEnumerator(), ans, owner, tracker)
-            .detach();
-    else
-        forCoords(coords, FundDualEnumerator(), ans, owner, tracker);
-    return ans;
-}
-
 Dim4Triangulation* NNormalHypersurfaceList::triangulation() const {
     return dynamic_cast<Dim4Triangulation*>(parent());
 }
@@ -255,34 +100,71 @@ namespace {
     };
 }
 
-void NNormalHypersurfaceList::writeTextShort(std::ostream& o) const {
-    o << surfaces_.size() << " vertex normal hypersurface";
+void NNormalHypersurfaceList::writeTextShort(std::ostream& out) const {
+    out << surfaces_.size();
+
+    if (which_.has(regina::HS_EMBEDDED_ONLY))
+        out << " embedded,";
+    else if (which_.has(regina::HS_IMMERSED_SINGULAR))
+        out << " embedded / immersed / singular,";
+    else
+        out << " unknown,";
+
+    if (which_.has(regina::HS_VERTEX))
+        out << " vertex";
+    else if (which_.has(regina::HS_FUNDAMENTAL))
+        out << " fundamental";
+    else if (which_.has(regina::HS_CUSTOM))
+        out << " custom";
+    else if (which_.has(regina::HS_LEGACY))
+        out << " legacy";
+    else
+        out << " unknown";
+
+    out << " hypersurface";
     if (surfaces_.size() != 1)
-        o << 's';
-    o << " (" << forCoords(coords_, NameFunction(), "Unknown") << ')';
+        out << 's';
+    out << " (" << forCoords(coords_, NameFunction(), "Unknown") << ')';
 }
 
-void NNormalHypersurfaceList::writeTextLong(std::ostream& o) const {
-    if (embedded_)
-        o << "Embedded ";
+void NNormalHypersurfaceList::writeTextLong(std::ostream& out) const {
+    if (which_.has(regina::HS_EMBEDDED_ONLY))
+        out << "Embedded,";
+    else if (which_.has(regina::HS_IMMERSED_SINGULAR))
+        out << "Embedded / immersed / singular,";
     else
-        o << "Embedded, immersed & singular ";
-    o << "vertex normal hypersurfaces\n";
-    o << "Coordinates: " << forCoords(coords_, NameFunction(), "Unknown")
+        out << "Unknown,";
+
+    if (which_.has(regina::HS_VERTEX))
+        out << " vertex";
+    else if (which_.has(regina::HS_FUNDAMENTAL))
+        out << " fundamental";
+    else if (which_.has(regina::HS_CUSTOM))
+        out << " custom";
+    else if (which_.has(regina::HS_LEGACY))
+        out << " legacy";
+    else
+        out << " unknown";
+
+    out << " hypersurfaces\n";
+
+    out << "Coordinates: " << forCoords(coords_, NameFunction(), "Unknown")
         << '\n';
 
-    size_t n = size();
-    o << "Number of hypersurfaces is " << n << '\n';
-    for (size_t i = 0; i < n; i++) {
-        hypersurface(i)->writeTextShort(o);
-        o << '\n';
+    size_t n = surfaces_.size();
+    out << "Number of hypersurfaces is " << n << '\n';
+    for (auto s : surfaces_) {
+        s->writeTextShort(out);
+        out << '\n';
     }
 }
 
 void NNormalHypersurfaceList::writeXMLPacketData(std::ostream& out) const {
     // Write the surface list parameters.
-    out << "  <params embedded=\"" << (embedded_ ? 'T' : 'F')
-        << "\" flavourid=\"" << coords_ << "\"\n";
+    out << "  <params "
+        << "type=\"" << which_.intValue() << "\" "
+        << "algorithm=\"" << algorithm_.intValue() << "\" "
+        << "flavourid=\"" << coords_ << "\"\n";
     out << "\tflavour=\""
         << regina::xml::xmlEncodeSpecialChars(forCoords(
            coords_, NameFunction(), "Unknown")) << "\"/>\n";
@@ -295,9 +177,8 @@ void NNormalHypersurfaceList::writeXMLPacketData(std::ostream& out) const {
 
 NPacket* NNormalHypersurfaceList::internalClonePacket(NPacket* /* parent */)
         const {
-    NNormalHypersurfaceList* ans = new NNormalHypersurfaceList();
-    ans->coords_ = coords_;
-    ans->embedded_ = embedded_;
+    NNormalHypersurfaceList* ans = new NNormalHypersurfaceList(
+        coords_, which_, algorithm_);
     transform(surfaces_.begin(), surfaces_.end(), back_inserter(ans->surfaces_),
         FuncNewClonePtr<NNormalHypersurface>());
     return ans;

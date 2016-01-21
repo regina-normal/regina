@@ -107,7 +107,7 @@ struct HyperInfo;
  *
  * This macro provides the class with:
  *
- * - a compile-time enum constant \a coordType, which is equal to the
+ * - a compile-time enum constant \a coordsID, which is equal to the
  *   corresponding HyperCoords constant;
  * - a typedef \a Info, which refers to the corresponding specialisation 
  *   of the HyperInfo<> tempate;
@@ -120,7 +120,7 @@ struct HyperInfo;
 #define REGINA_NORMAL_HYPERSURFACE_FLAVOUR(class_, id) \
     public: \
         typedef HyperInfo<id> Info; \
-        enum { coordType = id }; \
+        static constexpr const HyperCoords coordsID = id; \
         inline virtual NNormalHypersurfaceVector* clone() const { \
             return new class_(*this); \
         }
@@ -173,11 +173,10 @@ struct HyperInfo;
  *   corresponding superclass constructors.</li>
  *   <li>All abstract functions must be implemented, except for those
  *   already provided by REGINA_NORMAL_HYPERSURFACE_FLAVOUR.
- *   Note that coordinate functions such as tetrahedra() must return
- *   the \e total number of pieces of the requested type; if your new
- *   coordinate system adorns pieces with extra information (such as
- *   orientation) then your implementation must compute the appropriate
- *   sum.</li>
+ *   Note that coordinate functions such as tetrahedra() must return the
+ *   \e total number of pieces of the requested type; if your new coordinate
+ *   system adorns pieces with extra information (such as orientation) then
+ *   your implementation must compute the appropriate sum.</li>
  *   <li>Static public functions <tt>void
  *   makeZeroVector(const Dim4Triangulation*)</tt>,
  *   <tt>NMatrixInt* makeMatchingEquations(const Dim4Triangulation*)</tt> and
@@ -420,6 +419,10 @@ class REGINA_API NNormalHypersurface :
          * Creates a new normal hypersurface inside the given triangulation
          * with the given coordinate vector.
          *
+         * This normal hypersurface will claim ownership of the given vector
+         * (i.e., you should not change or delete the vector yourself
+         * afterwards).
+         *
          * \pre The given coordinate vector represents a
          * normal hypersurface inside the given triangulation.
          * \pre The given coordinate vector cannot be the null pointer.
@@ -433,6 +436,32 @@ class REGINA_API NNormalHypersurface :
          */
         NNormalHypersurface(const Dim4Triangulation* triangulation,
             NNormalHypersurfaceVector* vector);
+        /**
+         * A Python-only routine that creates a new normal hypersurface
+         * inside the given triangulation with the given coordinate vector.
+         *
+         * \pre The given coordinate system is one in which Regina is
+         * able to enumerate and store normal hypersurfaces (not a system
+         * like regina::HS_EDGE_WEIGHT, which is for viewing purposes only).
+         * \pre The given coordinate vector represents a normal hypersurface
+         * inside the given triangulation (in particular, it satisfies the
+         * relevant system of matching equations).  This will not be checked,
+         * and things \e will go wrong if you break it.
+         *
+         * \ifacescpp Not available; this routine is for Python only.
+         *
+         * @param triang the triangulation in which this normal hypersurface
+         * resides.
+         * @param coordSystem the coordinate system used by this normal
+         * hypersurface.
+         * @param allCoords the corresponding vector of normal coordinates,
+         * expressed as a Python list.  The list elements will be
+         * converted internally to NLargeInteger objects.
+         */
+        #ifdef __DOXYGEN
+        NNormalHypersurface(const Dim4Triangulation* triang,
+            HyperCoords coordSystem, List allCoords);
+        #endif
         /**
          * Destroys this normal hypersurface.
          * The underlying vector of coordinates will also be deallocated.
@@ -587,7 +616,7 @@ class REGINA_API NNormalHypersurface :
         bool isCompact() const;
         /**
          * Determines if this hypersurface has any real boundary, that is,
-         * whether it meets any boundary facets of the triangulation.
+         * whether it meets any boundary tetrahedra of the triangulation.
          *
          * This routine caches its results, which means that once it has
          * been called for a particular surface, subsequent calls return
@@ -731,8 +760,7 @@ class REGINA_API NNormalHypersurface :
          * coordinate system its raw vector uses.  Unless you already know
          * the coordinate system in advance (i.e., you created the hypersurface
          * yourself), it is best to keep to the coordinate-system-agnostic
-         * access functions such as
-         * NNormalHypersurfaceVector::tetrahedra() and
+         * access functions such as NNormalHypersurfaceVector::tetrahedra() and
          * NNormalHypersurfaceVector::prisms().
          *
          * \ifacespython Not present.

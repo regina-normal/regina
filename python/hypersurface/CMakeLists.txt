@@ -3,6 +3,7 @@
 # Files to compile
 SET ( FILES
   hypercoords
+  hyperflags
   nnormalhypersurface
   nnormalhypersurfacelist
   pyhypersurface
