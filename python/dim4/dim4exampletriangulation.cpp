@@ -45,6 +45,9 @@ void addDim4ExampleTriangulation() {
     class_<Dim4ExampleTriangulation>("Dim4ExampleTriangulation", no_init)
         .def("fourSphere", &Dim4ExampleTriangulation::fourSphere,
             return_value_policy<manage_new_object>())
+        .def("simplicialFourSphere",
+            &Dim4ExampleTriangulation::simplicialFourSphere,
+            return_value_policy<manage_new_object>())
         .def("rp4", &Dim4ExampleTriangulation::rp4,
             return_value_policy<manage_new_object>())
         .def("s3xs1", &Dim4ExampleTriangulation::s3xs1,
@@ -66,6 +69,7 @@ void addDim4ExampleTriangulation() {
             return_value_policy<manage_new_object>())
         .def(regina::python::no_eq_operators())
         .staticmethod("fourSphere")
+        .staticmethod("simplicialFourSphere")
         .staticmethod("rp4")
         .staticmethod("s3xs1")
         .staticmethod("s3xs1Twisted")
