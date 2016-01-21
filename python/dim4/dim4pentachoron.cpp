@@ -102,6 +102,7 @@ void addDim4Pentachoron() {
         .def("tetrahedronMapping", &Dim4Pentachoron::tetrahedronMapping)
         .def("getTetrahedronMapping", &Dim4Pentachoron::getTetrahedronMapping)
         .def("orientation", &Dim4Pentachoron::orientation)
+        .def("facetInMaximalForest", &Dim4Pentachoron::facetInMaximalForest)
         .def("str", &Dim4Pentachoron::str)
         .def("toString", &Dim4Pentachoron::toString)
         .def("detail", &Dim4Pentachoron::detail)
