@@ -62,30 +62,37 @@ namespace regina {
  */
 
 /**
- * Lists which vertex splits separate which pairs of vertices.
- * There are three vertex splits, numbered 0,1,2.  Each vertex
- * split separates the four tetrahedron vertices 0,1,2,3 into two pairs.
- * <tt>vertexSplit[i][j]</tt> is the number of the vertex split that
+ * Lists which quadrilateral types separate which pairs of vertices in a
+ * tetrahedron.
+ * As outlined in NNormalSurface::quads(), there are three quadrilateral types
+ * in a tetrahedron, numbered 0, 1 and 2.  Each quadrilateral type separates
+ * the four tetrahedron vertices 0,1,2,3 into two pairs.
+ * <tt>vertexSplit[i][j]</tt> is the number of the quadrilateral type that
  * keeps vertices <tt>i</tt> and <tt>j</tt> together.
  *
- * It is guaranteed that vertex split \a i will keep the vertices of
+ * It is guaranteed that quadrilateral type \a i will keep the vertices of
  * edge \a i together (and will therefore also keep the vertices of edge
  * \a 5-i together).
  */
 REGINA_API extern const int vertexSplit[4][4];
 /**
- * Lists which vertex splits meet which edges.
- * See regina::vertexSplit for details on what a vertex split is.
+ * Lists which quadrilateral types meet which edges in a tetrahedron.
+ * See regina::vertexSplit and NNormalSurface::quads() for more
+ * information on quadrilateral types.
+ *
  * <tt>vertexSplitMeeting[i][j][0,1]</tt> are the numbers of the two
- * vertex splits that meet the edge joining tetrahedron vertices
+ * quadrilateral types that meet the edge joining tetrahedron vertices
  * <tt>i</tt> and <tt>j</tt>.
  */
 REGINA_API extern const int vertexSplitMeeting[4][4][2];
 
 /**
- * Lists the vertices which each vertex split splits.
- * See regina::vertexSplit for details on what a vertex split is.
- * Vertex split number \c i splits the vertex pairs
+ * Lists the vertices which each quadrilateral type separates within a
+ * tetrahedron.
+ * See regina::vertexSplit and NNormalSurface::quads() for more
+ * information on quadrilateral types.
+ *
+ * Quadrilateral type \c i splits the vertex pairs
  * <tt>vertexSplitDefn[i][0,1]</tt> and
  * <tt>vertexSplitDefn[i][2,3]</tt>.
  *
@@ -101,19 +108,24 @@ REGINA_API extern const int vertexSplitDefn[3][4];
 
 /**
  * Lists the second vertex with which each vertex is paired under each
- * vertex split.
- * See regina::vertexSplit for details on what a vertex split is.
- * Vertex split number \c i pairs vertex \c v with
+ * quadrilateral type in a tetrahedron.
+ * See regina::vertexSplit and NNormalSurface::quads() for more
+ * information on quadrilateral types.
+ *
+ * Quadrilateral type \c i pairs vertex \c v with
  * vertex <tt>vertexSplitPartner[i][v]</tt>.
  */
 REGINA_API extern const int vertexSplitPartner[3][4];
 
 /**
- * Contains strings describing which vertices each vertex split splits.
- * See regina::vertexSplit for details on what a vertex split is.
- * The string describing vertex split number \c i is
+ * Contains strings describing which vertices each quadrilateral type splits
+ * in a tetrahedron.
+ * See regina::vertexSplit and NNormalSurface::quads() for more
+ * information on quadrilateral types.
+ *
+ * The string describing quadrilateral type \c i is
  * <tt>vertexSplitString[i]</tt> and is of the form <tt>02/13</tt>,
- * which in this case is the vertex split that splits vertices 0,2 from
+ * which in this case is the quadrilateral type that splits vertices 0,2 from
  * vertices 1,3.
  */
 REGINA_API extern const char vertexSplitString[3][6];
@@ -603,9 +615,8 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * tetrahedron in which the requested quadrilaterals reside;
          * this should be between 0 and
          * NTriangulation::size()-1 inclusive.
-         * @param quadType the number of the vertex splitting that this
-         * quad type represents; this should be between 0 and 2
-         * inclusive.
+         * @param quadType the type of this quadrilateral in the given
+         * tetrahedron; this should be 0, 1 or 2.
          * @param triang the triangulation in which this normal surface lives.
          * @return the number of quadrilateral discs of the given type.
          */
@@ -634,9 +645,8 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * tetrahedron in which the requested quadrilaterals reside;
          * this should be between 0 and
          * NTriangulation::size()-1 inclusive.
-         * @param quadType the number of the vertex splitting that this
-         * quad type represents; this should be between 0 and 2
-         * inclusive.
+         * @param quadType the type of this quadrilateral in the given
+         * tetrahedron; this should be 0, 1 or 2.
          * @param triang the triangulation in which this normal surface lives.
          * @param orientation the orientation of the normal discs.
          * @return the number of quadrilateral discs of the given type.
@@ -661,9 +671,8 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * tetrahedron in which the requested octagons reside;
          * this should be between 0 and
          * NTriangulation::size()-1 inclusive.
-         * @param octType the number of the vertex splitting that this
-         * octagon type represents; this should be between 0 and 2
-         * inclusive.
+         * @param octType the type of this octagon in the given tetrahedron;
+         * this should be 0, 1 or 2.
          * @param triang the triangulation in which this normal surface lives.
          * @return the number of octagonal discs of the given type.
          */
@@ -1003,16 +1012,13 @@ class REGINA_API NNormalSurface :
          *
          * In each tetrahedron, there are three types of quadrilaterals,
          * defined by how they separate the four tetrahedron vertices into
-         * two pairs.  These types are labelled 0, 1 and 2, and they
-         * correspond exactly to the three vertex splittings described
-         * by regina::vertexSplit.  Specifically:
+         * two pairs.  Quadrilateral type \a i (for \a i = 0, 1 or 2)
+         * is defined to separate edge \a i of the tetrahedron from edge
+         * (5-\a i).  That is:
          *
          * - type 0 separates vertices 0,1 of the tetrahedron from vertices 2,3;
          * - type 1 separates vertices 0,2 of the tetrahedron from vertices 1,3;
          * - type 2 separates vertices 0,3 of the tetrahedron from vertices 1,2.
-         *
-         * A quadrilateral disc type is identified by specifying a
-         * tetrahedron and a vertex splitting 0, 1 or 2 as described above.
          *
          * If you are using a coordinate system that adorns discs with
          * additional information (such as orientation), this routine
@@ -1023,9 +1029,8 @@ class REGINA_API NNormalSurface :
          * tetrahedron in which the requested quadrilaterals reside;
          * this should be between 0 and
          * NTriangulation::size()-1 inclusive.
-         * @param quadType the number of the vertex splitting that this
-         * quad type represents, as described above;
-         * this should be between 0 and 2 inclusive.
+         * @param quadType the type of this quadrilateral in the given
+         * tetrahedron; this should be 0, 1 or 2, as described above.
          * @return the number of quadrilateral discs of the given type.
          */
         NLargeInteger quads(size_t tetIndex, int quadType) const;
@@ -1046,9 +1051,9 @@ class REGINA_API NNormalSurface :
          * "The Thurston norm via normal surfaces", Stephan Tillmann and
          * Daryl Cooper, Pacific Journal of Mathematics 239 (2009), 1-15.
          *
-         * An oriented quadrilateral disc type is identified by specifying a
-         * tetrahedron, a vertex splitting of that tetrahedron as
-         * described in quads(), and a boolean orientation.
+         * An oriented quadrilateral disc type is identified by specifying
+         * a tetrahedron, a quadrilateral type (0, 1 or 2) as described
+         * in quads(), and a boolean orientation.
          * The \c true orientation indicates a transverse orientation
          * pointing to the edge containing vertex 0 of the tetrahedron,
          * and the \c false orientation indicates a transverse
@@ -1061,9 +1066,8 @@ class REGINA_API NNormalSurface :
          * tetrahedron in which the requested quadrilaterals reside;
          * this should be between 0 and
          * NTriangulation::size()-1 inclusive.
-         * @param quadType the number of the vertex splitting that this
-         * quad type represents; this should be between 0 and 2
-         * inclusive.
+         * @param quadType the type of this quadrilateral in the given
+         * tetrahedron; this should be 0, 1 or 2, as described above.
          * @param orientation the orientation of the quadrilateral disc 
          * @return the number of quadrilateral discs of the given type.
          */
@@ -1084,16 +1088,13 @@ class REGINA_API NNormalSurface :
          *
          * In each tetrahedron, there are three types of octagons,
          * defined by how they separate the four tetrahedron vertices into
-         * two pairs.  These types are labelled 0, 1 and 2, and they
-         * correspond exactly to the three vertex splittings described
-         * by regina::vertexSplit.  Specifically:
+         * two pairs.  Octagon type \a i (for \a i = 0, 1 or 2) is defined to
+         * intersect edges \a i and (5-\a i) of the tetrahedron twice each,
+         * and to intersect the remaining edges once each.  This means:
          *
          * - type 0 separates vertices 0,1 of the tetrahedron from vertices 2,3;
          * - type 1 separates vertices 0,2 of the tetrahedron from vertices 1,3;
          * - type 2 separates vertices 0,3 of the tetrahedron from vertices 1,2.
-         *
-         * An octagonal disc type is identified by specifying a
-         * tetrahedron and a vertex splitting 0, 1 or 2 as described above.
          *
          * If you are using a coordinate system that adorns discs with
          * additional information (such as orientation), this routine
@@ -1104,9 +1105,8 @@ class REGINA_API NNormalSurface :
          * tetrahedron in which the requested octagons reside;
          * this should be between 0 and
          * NTriangulation::size()-1 inclusive.
-         * @param octType the number of the vertex splitting that this
-         * octagon type represents, as described above;
-         * this should be between 0 and 2 inclusive.
+         * @param octType the type of this octagon in the given tetrahedron;
+         * this should be 0, 1 or 2, as described above.
          * @return the number of octagonal discs of the given type.
          */
         NLargeInteger octs(size_t tetIndex, int octType) const;
