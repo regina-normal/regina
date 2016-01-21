@@ -619,17 +619,6 @@ class TriangulationBase :
         const FaceList<dim, subdim>& faces() const;
 
         /**
-         * Deprecated routine that allows iteration through and random
-         * access to all <i>subdim</i>-faces of this triangulation.
-         *
-         * \deprecated Simply call faces() instead.
-         *
-         * See faces() for further details.
-         */
-        template <int subdim>
-        const FaceList<dim, subdim>& getFaces() const;
-
-        /**
          * Returns the requested connected component of this triangulation.
          *
          * Note that each time the triangulation changes, all component
@@ -669,17 +658,6 @@ class TriangulationBase :
          */
         template <int subdim>
         Face<dim, subdim>* face(size_t index) const;
-
-        /**
-         * Deprecated routine that returns the requested <i>subdim</i>-face
-         * of this triangulation.
-         *
-         * \deprecated Simply call face() instead.
-         *
-         * See face() for further details.
-         */
-        template <int subdim>
-        Face<dim, subdim>* getFace(size_t index) const;
 
         /**
          * Deprecated routine that returns the index of the given
@@ -1769,13 +1747,6 @@ inline const FaceList<dim, subdim>& TriangulationBase<dim>::faces() const {
 }
 
 template <int dim>
-template <int subdim>
-inline const FaceList<dim, subdim>& TriangulationBase<dim>::getFaces() const {
-    ensureSkeleton();
-    return *this;
-}
-
-template <int dim>
 inline Component<dim>* TriangulationBase<dim>::component(size_t index) const {
     ensureSkeleton();
     return components_[index];
@@ -1791,13 +1762,6 @@ inline Component<dim>* TriangulationBase<dim>::getComponent(size_t index)
 template <int dim>
 template <int subdim>
 inline Face<dim, subdim>* TriangulationBase<dim>::face(size_t index) const {
-    ensureSkeleton();
-    return FaceList<dim, subdim>::operator [](index);
-}
-
-template <int dim>
-template <int subdim>
-inline Face<dim, subdim>* TriangulationBase<dim>::getFace(size_t index) const {
     ensureSkeleton();
     return FaceList<dim, subdim>::operator [](index);
 }

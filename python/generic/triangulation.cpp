@@ -158,13 +158,11 @@ void addTriangulation(const char* name) {
         .def("components", PyTriHelper<dim>::components_list)
         .def("getComponents", PyTriHelper<dim>::components_list)
         .def("faces", &regina::python::faces<Triangulation<dim>, dim>)
-        .def("getFaces", &regina::python::faces<Triangulation<dim>, dim>)
         .def("component", &Triangulation<dim>::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Triangulation<dim>::getComponent,
             return_internal_reference<>())
         .def("face", &regina::python::face<Triangulation<dim>, dim, size_t>)
-        .def("getFace", &regina::python::face<Triangulation<dim>, dim, size_t>)
         .def("componentIndex", &Triangulation<dim>::componentIndex)
         .def("countVertices", &Triangulation<dim>::countVertices)
         .def("getNumberOfVertices", &Triangulation<dim>::getNumberOfVertices)

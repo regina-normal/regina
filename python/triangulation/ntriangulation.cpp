@@ -260,7 +260,6 @@ void addNTriangulation() {
         .def("boundaryComponents", boundaryComponents_list)
         .def("getBoundaryComponents", boundaryComponents_list)
         .def("faces", &regina::python::faces<NTriangulation, 3>)
-        .def("getFaces", &regina::python::faces<NTriangulation, 3>)
         .def("vertices", regina::python::faces_list<NTriangulation, 3, 0>)
         .def("getVertices", regina::python::faces_list<NTriangulation, 3, 0>)
         .def("edges", regina::python::faces_list<NTriangulation, 3, 1>)
@@ -276,7 +275,6 @@ void addNTriangulation() {
         .def("getBoundaryComponent", &NTriangulation::getBoundaryComponent,
             return_internal_reference<>())
         .def("face", &regina::python::face<NTriangulation, 3, size_t>)
-        .def("getFace", &regina::python::face<NTriangulation, 3, size_t>)
         .def("vertex", &NTriangulation::vertex,
             return_internal_reference<>())
         .def("getVertex", &NTriangulation::getVertex,
