@@ -90,7 +90,7 @@ class REGINA_API NNormalHypersurfaceVectorStandard :
          *
          * @param length the number of elements in the new vector.
          */
-        NNormalHypersurfaceVectorStandard(unsigned length);
+        NNormalHypersurfaceVectorStandard(size_t length);
         /**
          * Creates a new vector that is a clone of the given vector.
          *
@@ -119,7 +119,7 @@ class REGINA_API NNormalHypersurfaceVectorStandard :
 // Inline functions for NNormalHypersurfaceVectorStandard
 
 inline NNormalHypersurfaceVectorStandard::NNormalHypersurfaceVectorStandard(
-        unsigned length) : NNormalHypersurfaceVector(length) {
+        size_t length) : NNormalHypersurfaceVector(length) {
 }
 inline NNormalHypersurfaceVectorStandard::NNormalHypersurfaceVectorStandard(
         const NVector<NLargeInteger>& cloneMe) :

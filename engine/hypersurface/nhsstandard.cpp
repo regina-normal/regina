@@ -82,7 +82,7 @@ NMatrixInt* NNormalHypersurfaceVectorStandard::makeMatchingEquations(
 
     // Run through each internal facet and add the corresponding seven
     // equations.
-    unsigned row = 0;
+    size_t row = 0;
     int i;
     size_t pent0, pent1;
     NPerm5 perm0, perm1;
@@ -136,10 +136,11 @@ NEnumConstraintList* NNormalHypersurfaceVectorStandard::makeEmbeddedConstraints(
     NEnumConstraintList* ans = new NEnumConstraintList(
         30 * triangulation->size());
 
-    unsigned base = 5;
+    size_t base = 5;
     unsigned edge1, edge2;
-    unsigned c = 0;
-    unsigned pent, i;
+    size_t c = 0;
+    size_t pent;
+    unsigned i;
     for (pent = 0; pent < triangulation->size(); ++pent) {
         for (edge1 = 0; edge1 < 10; ++edge1)
             for (i = 0; i < 3; ++i) {

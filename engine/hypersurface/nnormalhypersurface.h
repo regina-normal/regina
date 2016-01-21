@@ -167,7 +167,7 @@ struct HyperInfo;
  *   the beginning of the new vector subclass.  This will declare and
  *   define various constants, typedefs and virtual functions (see the
  *   REGINA_NORMAL_HYPERSURFACE_FLAVOUR macro documentation for details).</li>
- *   <li>Constructors <tt>class(unsigned length)</tt> and
+ *   <li>Constructors <tt>class(size_t length)</tt> and
  *   <tt>class(const NVector<NLargeInteger>& cloneMe)</tt> must be
  *   declared and implemented; these will usually just call the
  *   corresponding superclass constructors.</li>
@@ -195,7 +195,7 @@ class REGINA_API NNormalHypersurfaceVector : public NRay {
          *
          * @param length the number of elements in the new vector.
          */
-        NNormalHypersurfaceVector(unsigned length);
+        NNormalHypersurfaceVector(size_t length);
         /**
          * Creates a new vector that is a clone of the given vector.
          *
@@ -755,7 +755,7 @@ class REGINA_API NNormalHypersurface :
 
 // Inline functions for NNormalHypersurfaceVector
 
-inline NNormalHypersurfaceVector::NNormalHypersurfaceVector(unsigned length) :
+inline NNormalHypersurfaceVector::NNormalHypersurfaceVector(size_t length) :
         NRay(length) {
 }
 inline NNormalHypersurfaceVector::NNormalHypersurfaceVector(
