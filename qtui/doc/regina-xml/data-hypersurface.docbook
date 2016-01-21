@@ -2,15 +2,15 @@
 <!-- Regina data file format documentation.
      See ../regina.sgml for further details. -->
 
-<refentry id="data-surface">
+<refentry id="data-hypersurface">
  <refmeta>
-  <refentrytitle>surface</refentrytitle>
+  <refentrytitle>hypersurface</refentrytitle>
   <manvolnum>5reg</manvolnum>
  </refmeta>
 
  <refnamediv>
-  <refname>surface</refname>
-  <refpurpose>A single normal surface in a 3-manifold triangulation</refpurpose>
+  <refname>hypersurface</refname>
+  <refpurpose>A single normal hypersurface in a 4-manifold triangulation</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -24,11 +24,8 @@
      </entry></row>
      <row><entry namest="c1" nameend="c2">
 <synopsis>
-surface ::= (#PCDATA,
-             &xml-compact-surface;?,
-             &xml-connected;?, &xml-euler-surface;?,
-             &xml-orbl-surface;?, &xml-realbdry-surface;?,
-             &xml-twosided;?)</synopsis>
+hypersurface ::= (#PCDATA,
+             &xml-compact-surface;?, &xml-realbdry-surface;?)</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
       <emphasis role="bold">Attributes</emphasis>
@@ -53,23 +50,22 @@ surface ::= (#PCDATA,
  <refsect1>
   <title>Description</title>
   <para>
-   A &xml-surface; element stores a single normal surface in a
-   3-manifold triangulation.
+   A &xml-hypersurface; element stores a single normal hypersurface in a
+   4-manifold triangulation.
   </para>
   <para>
-   A normal surface in a <replaceable>T</replaceable>-tetrahedron
+   A normal hypersurface in a <replaceable>P</replaceable>-pentachoron
    triangulation is traditionally represented by a vector of integers, whose
    length depends upon the underlying coordinate system.  For instance, under
-   standard tri-quad coordinates the vector will have length
-   7<replaceable>T</replaceable>, and under quad coordinates it will
-   have length 3<replaceable>T</replaceable>.  The underlying coordinate
+   standard tetrahedron-prism coordinates the vector will have length
+   15<replaceable>P</replaceable>.  The underlying coordinate
    system is specified in the &xml-params; element of the parent
-   &xml-packet-normalsurfacelist;.
+   &xml-packet-normalhypersurfacelist;.
   </para>
   <para>
-   The normal surface vector is stored as the character data of this
+   The normal hypersurface vector is stored as the character data of this
    &xml; element as follows.
-   Since a normal surface vector will generally contain many zeroes,
+   Since a normal hypersurface vector will generally contain many zeroes,
    only the non-zero elements are listed.  The character data should
    thus consist of a whitespace-separated sequence of integer pairs.
    Each integer pair represents a non-zero coordinate in the vector; the
@@ -81,9 +77,9 @@ surface ::= (#PCDATA,
   <refsect2>
    <title>Parents</title>
    <para>
-    The following elements contain <sgmltag>surface</sgmltag>:
+    The following elements contain <sgmltag>hypersurface</sgmltag>:
     <simplelist type="inline">
-     <member>&xml-packet-normalsurfacelist;</member>
+     <member>&xml-packet-normalhypersurfacelist;</member>
     </simplelist>.
    </para>
   </refsect2>
@@ -91,14 +87,10 @@ surface ::= (#PCDATA,
   <refsect2>
    <title>Children</title>
    <para>
-    The following elements occur in <sgmltag>surface</sgmltag>:
+    The following elements occur in <sgmltag>hypersurface</sgmltag>:
     <simplelist type="inline">
      <member>&xml-compact-surface;</member>
-     <member>&xml-connected;</member>
-     <member>&xml-euler-surface;</member>
-     <member>&xml-orbl-surface;</member>
      <member>&xml-realbdry-surface;</member>
-     <member>&xml-twosided;</member>
     </simplelist>.
    </para>
   </refsect2>
@@ -111,9 +103,9 @@ surface ::= (#PCDATA,
     <term><sgmltag>len</sgmltag></term>
     <listitem>
      <para>
-      The length of the underlying normal surface vector.
+      The length of the underlying normal hypersurface vector.
       This depends upon the coordinate system in which the normal
-      surface was originally generated.
+      hypersurface was originally generated.
      </para>
     </listitem>
    </varlistentry>
@@ -121,8 +113,8 @@ surface ::= (#PCDATA,
     <term><sgmltag>name</sgmltag></term>
     <listitem>
      <para>
-      A human-readable name given to this surface.  Surface names need
-      not be distinct and exist merely for the convenience of the user.
+      A human-readable name given to this hypersurface.  Hypersurface names
+      need not be distinct and exist merely for the convenience of the user.
      </para>
     </listitem>
    </varlistentry>
@@ -132,27 +124,22 @@ surface ::= (#PCDATA,
  <refsect1>
   <title>Example</title>
   <para>
-   The following &xml; snippet represents a normal surface in a
-   4-tetrahedron triangulation.  The normal surface vector is:
+   The following &xml; snippet represents a normal hypersurface in a
+   4-pentachoron triangulation.  The normal hypersurface vector is:
    <programlisting>
-(0, 0, 0, 0, 0, 2, 0,
- 0, 0, 1, 1, 1, 0, 0,
- 1, 1, 0, 0, 1, 0, 0,
- 0, 0, 0, 0, 0, 2, 0)</programlisting>
+(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
+ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
+ 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+ 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0)</programlisting>
   </para>
   <para>
    The child elements of this normal surface indicate that the
-   surface has Euler characteristic -2 and real boundary, and is
-   compact, connected, orientable and two-sided.
+   surface is compact and has no real boundary.
   </para>
   <programlisting>
-&lt;surface len=&quot;28&quot;&gt; 5 2 9 1 10 1 11 1 14 1 15 1 18 1 26 2
-    &lt;euler value=&quot;-2&quot;/&gt;
-    &lt;realbdry value=&quot;T&quot;/&gt;
-    &lt;compact value=&quot;T&quot;/&gt;
-    &lt;connected value=&quot;1&quot;/&gt;
-    &lt;orbl value=&quot;1&quot;/&gt;
-    &lt;twosided value=&quot;1&quot;/&gt; &lt;/surface&gt;
+&lt;hypersurface len="60"&gt; 10 1 25 1 36 1 51 1
+    &lt;realbdry value="F"/&gt;
+    &lt;compact value="T"/&gt; &lt;/hypersurface&gt;
   </programlisting>
  </refsect1>
 </refentry>

@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>realbdry (surface)</refname>
-  <refpurpose>Does a normal surface have real boundary?</refpurpose>
+  <refpurpose>Does a normal surface/hypersurface have real boundary?</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -45,8 +45,9 @@ realbdry ::=</synopsis>
  <refsect1>
   <title>Description</title>
   <para>
-   A &xml-realbdry-surface; element stores whether or not a normal surface has
-   real boundary, that is, whether it meets any boundary faces of the
+   A &xml-realbdry-surface; element stores whether or not a normal surface
+   or hypersurface has
+   real boundary, that is, whether it meets any boundary facets of the
    triangulation.
   </para>
 
@@ -54,8 +55,9 @@ realbdry ::=</synopsis>
    <title>Parents</title>
    <para>
     The following elements contain <sgmltag>realbdry</sgmltag> (in the
-    context of the boundary of a normal surface):
+    context of the boundary of a normal surface/hypersurface):
     <simplelist type="inline">
+     <member>&xml-hypersurface;</member>
      <member>&xml-surface;</member>
     </simplelist>.
    </para>
@@ -65,7 +67,7 @@ realbdry ::=</synopsis>
    <title>Children</title>
    <para>
     Element <sgmltag>realbdry</sgmltag> (in the context of the boundary
-    of a normal surface) has no children.
+    of a normal surface/hypersurface) has no children.
    </para>
   </refsect2>
  </refsect1>
@@ -78,7 +80,7 @@ realbdry ::=</synopsis>
     <listitem>
      <para>
       Either <literal>T</literal> or <literal>F</literal>, according to
-      whether the parent surface does or does not have real boundary.
+      whether the parent (hyper)surface does or does not have real boundary.
      </para>
     </listitem>
    </varlistentry>

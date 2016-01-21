@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>params</refname>
-  <refpurpose>Parameters for a normal surface enumeration</refpurpose>
+  <refpurpose>Parameters for a normal surface/hypersurface enumeration</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -34,8 +34,12 @@ params ::=</synopsis>
       <entry><emphasis role="bold">Type</emphasis></entry>
      </row>
      <row>
-      <entry><sgmltag>embedded</sgmltag></entry>
+      <entry><sgmltag>algorithm</sgmltag></entry>
       <entry><type>CDATA</type> (required)</entry>
+     </row>
+     <row>
+      <entry><sgmltag>embedded</sgmltag></entry>
+      <entry><type>CDATA</type> (deprecated)</entry>
      </row>
      <row>
       <entry><sgmltag>flavour</sgmltag></entry>
@@ -43,6 +47,10 @@ params ::=</synopsis>
      </row>
      <row>
       <entry><sgmltag>flavourid</sgmltag></entry>
+      <entry><type>NUMBER</type> (required)</entry>
+     </row>
+     <row>
+      <entry><sgmltag>type</sgmltag></entry>
       <entry><type>NUMBER</type> (required)</entry>
      </row>
     </tbody>
@@ -54,8 +62,9 @@ params ::=</synopsis>
   <title>Description</title>
   <para>
    A &xml-params; element stores the parameters used in an enumeration
-   of vertex normal surfaces.  Typically these parameters are supplied
-   by the user when a new normal surface list is created.
+   of vertex normal surfaces or hypersurfaces.
+   Typically these parameters are supplied
+   by the user when a new normal surface/hypersurface list is created.
   </para>
 
   <refsect2>
@@ -63,6 +72,7 @@ params ::=</synopsis>
    <para>
     The following elements contain <sgmltag>param</sgmltag>:
     <simplelist type="inline">
+     <member>&xml-packet-normalhypersurfacelist;</member>
      <member>&xml-packet-normalsurfacelist;</member>
     </simplelist>.
    </para>
@@ -80,12 +90,45 @@ params ::=</synopsis>
   <title>Attributes</title>
   <variablelist>
    <varlistentry>
+    <term><sgmltag>algorithm</sgmltag></term>
+    <listitem>
+     <para>
+      Specifies the algorithm that was used to enumerate these normal
+      surfaces/hypersurfaces.
+     </para>
+     <para>
+      This must be an integer, formed as a bitwise OR combination of
+      constants from &regina;'s calculation engine.
+      For normal surfaces in a 3-manifold triangulation, these constants
+      are taken from the <classname>NormalAlgFlags</classname> enumeration;
+      for normal hypersurfaces in a 4-manifold triangulation, they
+      are taken from the <classname>HyperAlgFlags</classname> enumeration.
+     </para>
+     <para>
+      An example of such an integer might be 17, which combines the
+      3-dimensional <classname>NormalAlgFlags</classname> constants
+      <literal>NS_VERTEX_VIA_REDUCED</literal> (1) and
+      <literal>NS_TREE</literal> (16).
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
     <term><sgmltag>embedded</sgmltag></term>
     <listitem>
      <para>
-      Either <literal>T</literal> if only embedded normal surfaces are
-      enumerated, or <literal>F</literal> if all (embedded, immersed
-      and singular) normal surfaces are enumerated.
+      Deprecated.  This should be <literal>T</literal> if only
+      embedded normal surfaces were enumerated to form this list,
+      or <literal>F</literal> if all (embedded, immersed
+      and singular) normal surfaces were enumerated.
+     </para>
+     <para>
+      You should write this tag if you want your file to be read by
+      &regina;&nbsp;4.93 or earlier.  Later versions of &regina; can
+      also read it; however, they prefer the new
+      <sgmltag>type</sgmltag> and <sgmltag>algorithm</sgmltag> tags,
+      which contain richer information.
+      If both <sgmltag>type</sgmltag> and <sgmltag>algorithm</sgmltag>
+      are present then this <sgmltag>embedded</sgmltag> tag will be ignored.
      </para>
     </listitem>
    </varlistentry>
@@ -93,7 +136,7 @@ params ::=</synopsis>
     <term><sgmltag>flavour</sgmltag></term>
     <listitem>
      <para>
-      The flavour of coordinate system used in the normal surface
+      The flavour of coordinate system used in the normal surface/hypersurface
       enumeration, expressed as a human-readable string.  Example
       flavours are <literal>Quad normal</literal> and
       <literal>Standard almost normal (tri-quad-oct)</literal>.
@@ -104,9 +147,47 @@ params ::=</synopsis>
     <term><sgmltag>flavourid</sgmltag></term>
     <listitem>
      <para>
-      The flavour of coordinate system used in the normal surface
-      numeration, expressed as an internal identification code.  This
-      will be a non-negative integer.
+      The flavour of coordinate system used in the normal surface/hypersurface
+      enumeration, expressed as an internal identification code.  This
+      must be a non-negative integer that matches one of the
+      coordinate system constants in &regina;'s calculation engine.
+      For normal surfaces in a 3-manifold triangulation, this constant
+      is taken from the <classname>NormalCoords</classname> enumeration;
+      for normal hypersurfaces in a 4-manifold triangulation, it
+      is taken from the <classname>HyperCoords</classname> enumeration.
+     </para>
+     <para>
+      An example of such an integer might be 102, which is the
+      3-dimensional constant <literal>NS_AN_QUAD_OCT</literal>
+      that represents standard coordinates for octagonal almost normal
+      surfaces.
+     </para>
+    </listitem>
+   </varlistentry>
+   <varlistentry>
+    <term><sgmltag>type</sgmltag></term>
+    <listitem>
+     <para>
+      Specifies exactly which normal surfaces/hypersurfaces this list contains.
+      In particular, this flag indicates whether the list contains all
+      vertex surfaces, all fundamental surfaces, or some other
+      customised list.  It also indicates whether the list is
+      restricted to properly embedded surfaces (thereby replacing the
+      obsolete <sgmltag>embedded</sgmltag> tag described above).
+     </para>
+     <para>
+      This must be an integer, formed as a bitwise OR combination of
+      constants from &regina;'s calculation engine.
+      For normal surfaces in a 3-manifold triangulation, these constants
+      are taken from the <classname>NormalListFlags</classname> enumeration;
+      for normal hypersurfaces in a 4-manifold triangulation, they
+      are taken from the <classname>HyperListFlags</classname> enumeration.
+     </para>
+     <para>
+      An example of such an integer might be 5, which combines the
+      3-dimensional <classname>NormalListFlags</classname> constants
+      <literal>NS_EMBEDDED_ONLY</literal> (1) and
+      <literal>NS_VERTEX</literal> (4).
      </para>
     </listitem>
    </varlistentry>

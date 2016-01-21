@@ -47,6 +47,7 @@
  &data-H1Rel;
  &data-H2;
  &data-haken;
+ &data-hypersurface;
  &data-irreducible;
  &data-line;
  &data-op;
@@ -60,6 +61,7 @@
  &data-packet-anglestructurelist;
  &data-packet-container;
  &data-packet-normalsurfacelist;
+ &data-packet-normalhypersurfacelist;
  &data-packet-pdf;
  &data-packet-script;
  &data-packet-snappea;

@@ -23,6 +23,7 @@
 <!ENTITY data-H1Rel SYSTEM "data-H1Rel.docbook">
 <!ENTITY data-H2 SYSTEM "data-H2.docbook">
 <!ENTITY data-haken SYSTEM "data-haken.docbook">
+<!ENTITY data-hypersurface SYSTEM "data-hypersurface.docbook">
 <!ENTITY data-irreducible SYSTEM "data-irreducible.docbook">
 <!ENTITY data-line SYSTEM "data-line.docbook">
 <!ENTITY data-op SYSTEM "data-op.docbook">
@@ -35,6 +36,7 @@
 <!ENTITY data-packet-dim3triangulation SYSTEM "data-packet-dim3triangulation.docbook">
 <!ENTITY data-packet-dim4triangulation SYSTEM "data-packet-dim4triangulation.docbook">
 <!ENTITY data-packet-normalsurfacelist SYSTEM "data-packet-normalsurfacelist.docbook">
+<!ENTITY data-packet-normalhypersurfacelist SYSTEM "data-packet-normalhypersurfacelist.docbook">
 <!ENTITY data-packet-pdf SYSTEM "data-packet-pdf.docbook">
 <!ENTITY data-packet-script SYSTEM "data-packet-script.docbook">
 <!ENTITY data-packet-snappea SYSTEM "data-packet-snappea.docbook">
@@ -113,6 +115,8 @@
  '<link linkend="data-H2"><sgmltag>H2</sgmltag></link>'>
 <!ENTITY xml-haken
  '<link linkend="data-haken"><sgmltag>haken</sgmltag></link>'>
+<!ENTITY xml-hypersurface
+ '<link linkend="data-hypersurface"><sgmltag>hypersurface</sgmltag></link>'>
 <!ENTITY xml-irreducible
  '<link linkend="data-irreducible"><sgmltag>irreducible</sgmltag></link>'>
 <!ENTITY xml-line
@@ -139,6 +143,8 @@
  '<link linkend="data-packet-triangulation"><sgmltag>packet</sgmltag> (<replaceable>dim</replaceable>-dimensional triangulation)</link>'>
 <!ENTITY xml-packet-normalsurfacelist
  '<link linkend="data-packet-normalsurfacelist"><sgmltag>packet</sgmltag> (normal surface list)</link>'>
+<!ENTITY xml-packet-normalhypersurfacelist
+ '<link linkend="data-packet-normalhypersurfacelist"><sgmltag>packet</sgmltag> (normal hypersurface list)</link>'>
 <!ENTITY xml-packet-pdf
  '<link linkend="data-packet-pdf"><sgmltag>packet</sgmltag> (&pdf;)</link>'>
 <!ENTITY xml-packet-script

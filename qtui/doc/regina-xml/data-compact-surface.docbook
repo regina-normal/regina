@@ -10,7 +10,7 @@
 
  <refnamediv>
   <refname>compact (surface)</refname>
-  <refpurpose>Is a normal surface compact?</refpurpose>
+  <refpurpose>Is a normal surface/hypersurface compact?</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -45,16 +45,22 @@ compact ::=</synopsis>
  <refsect1>
   <title>Description</title>
   <para>
-   A &xml-compact-surface; element stores whether or not a normal surface is
-   compact, that is, whether it has finitely many normal discs.
+   A &xml-compact-surface; element stores whether or not a normal surface
+   or hypersurface is compact.
+   Here <firstterm>compact</firstterm> has the following meaning:
+   a normal surface in a 3-manifold triangulation is compact if it
+   contains finitely many normal discs,
+   and a normal hypersurface in a 4-manifold triangulation is compact if it
+   contains finitely many normal pieces.
   </para>
 
   <refsect2>
    <title>Parents</title>
    <para>
     The following elements contain <sgmltag>compact</sgmltag> (in the
-    context of the compactness of a normal surface):
+    context of the compactness of a normal surface/hypersurface):
     <simplelist type="inline">
+     <member>&xml-hypersurface;</member>
      <member>&xml-surface;</member>
     </simplelist>.
    </para>
@@ -64,7 +70,7 @@ compact ::=</synopsis>
    <title>Children</title>
    <para>
     Element <sgmltag>compact</sgmltag> (in the context of the
-    compactness of a normal surface) has no children.
+    compactness of a normal surface/hypersurface) has no children.
    </para>
   </refsect2>
  </refsect1>
@@ -77,7 +83,7 @@ compact ::=</synopsis>
     <listitem>
      <para>
       Either <literal>T</literal> or <literal>F</literal>, according to
-      whether the parent surface is or is not compact.
+      whether the parent (hyper)surface is or is not compact.
      </para>
     </listitem>
    </varlistentry>

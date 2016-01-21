@@ -2,15 +2,15 @@
 <!-- Regina data file format documentation.
      See ../regina.sgml for further details. -->
 
-<refentry id="data-packet-normalsurfacelist">
+<refentry id="data-packet-normalhypersurfacelist">
  <refmeta>
-  <refentrytitle>packet (normal surface list)</refentrytitle>
+  <refentrytitle>packet (normal hypersurface list)</refentrytitle>
   <manvolnum>5reg</manvolnum>
  </refmeta>
 
  <refnamediv>
-  <refname>packet (normal surface list)</refname>
-  <refpurpose>A normal surface list packet</refpurpose>
+  <refname>packet (normal hypersurface list)</refname>
+  <refpurpose>A normal hypersurface list packet</refpurpose>
  </refnamediv>
 
  <refsynopsisdiv>
@@ -24,7 +24,7 @@
      </entry></row>
      <row><entry namest="c1" nameend="c2">
 <synopsis>
-packet ::= (&xml-params;, &xml-surface;*,
+packet ::= (&xml-params;, &xml-hypersurface;*,
             &xml-tag;*, &xml-packet;*)</synopsis>
      </entry></row>
      <row><entry namest="c1" nameend="c2">
@@ -41,22 +41,22 @@ packet ::= (&xml-params;, &xml-surface;*,
  <refsect1>
   <title>Description</title>
   <para>
-   A <emphasis>normal surface list</emphasis>
-   packet stores a list of normal surfaces in a particular
-   3-manifold triangulation.  This list will often contain the vertex
-   surfaces whose convex span is the set of all normal surfaces in
+   A <emphasis>normal hypersurface list</emphasis>
+   packet stores a list of normal hypersurfaces in a particular
+   4-manifold triangulation.  This list will often contain the vertex
+   hypersurfaces whose convex span is the set of all normal hypersurfaces in
    the triangulation that satisfy certain constraints, though
-   other lists (such as fundamental surfaces, or other customised lists)
+   other lists (such as fundamental hypersurfaces, or other customised lists)
    can be stored also.
   </para>
   <para>
-   The parent element of this normal surface list must be the
-   triangulation in which the normal surfaces lie.  The individual
-   normal surfaces in this list are contained in the child &xml-surface;
-   elements.
+   The parent element of this normal hypersurface list must be the
+   triangulation in which the normal hypersurfaces lie.  The individual
+   normal hypersurfaces in this list are contained in the child
+   &xml-hypersurface; elements.
   </para>
   <para>
-   The parameters of the normal surface enumeration that created this
+   The parameters of the normal hypersurface enumeration that created this
    list are stored in the child &xml-params; element.
   </para>
   <para>
@@ -68,9 +68,9 @@ packet ::= (&xml-params;, &xml-surface;*,
    <title>Parents</title>
    <para>
     The following elements contain <sgmltag>packet</sgmltag> for
-    a normal surface list packet:
+    a normal hypersurface list packet:
     <simplelist type="inline">
-     <member>&xml-packet-dim3triangulation;</member>
+     <member>&xml-packet-dim4triangulation;</member>
     </simplelist>.
    </para>
   </refsect2>
@@ -79,11 +79,11 @@ packet ::= (&xml-params;, &xml-surface;*,
    <title>Children</title>
    <para>
     The following elements occur in <sgmltag>packet</sgmltag> for
-    a normal surface list packet:
+    a normal hypersurface list packet:
     <simplelist type="inline">
      <member>&xml-packet;</member>
      <member>&xml-params;</member>
-     <member>&xml-surface;</member>
+     <member>&xml-hypersurface;</member>
      <member>&xml-tag;</member>
     </simplelist>.
    </para>
