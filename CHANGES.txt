@@ -119,8 +119,7 @@ Version 5.0  [ (under development) ]
               the same functionality as the old Dim2Triangle.
             - New routine facetInMaximalForest(), for examining a
               precomputed maximal forest in the dual 1-skeleton.
-            - New dimension-agnostic face<subdim>(), getFace<subdim>(),
-              faceMapping<subdim>() and getFaceMapping<subdim>()
+            - New dimension-agnostic face<subdim>() and faceMapping<subdim>()
               template functions.
             - You can now safely call unjoin() on a boundary edge.
             - Routine joinTo() has been renamed to join().  The old name
@@ -128,8 +127,8 @@ Version 5.0  [ (under development) ]
         Class Dim2Triangulation:
             - Now just a typedef for the new class Triangulation<2>, which has
               the same functionality as the old Dim2Triangulation.
-            - New dimension-agnostic face<subdim>(), getFace<subdim>(),
-              faces<subdim>() and getFaces<subdim>() template functions.
+            - New dimension-agnostic face<subdim>() and faces<subdim>()
+              template functions.
             - New dimension-agnostic function hasBoundaryFacets().
             - Reconstruction from isomorphism signatures now allows
               leading and/or trailing whitespace.
@@ -469,8 +468,7 @@ Version 5.0  [ (under development) ]
               the same functionality as the old NTetrahedron.
             - New routine facetInMaximalForest(), for examining a
               precomputed maximal forest in the dual 1-skeleton.
-            - New dimension-agnostic face<subdim>(), getFace<subdim>(),
-              faceMapping<subdim>() and getFaceMapping<subdim>()
+            - New dimension-agnostic face<subdim>() and faceMapping<subdim>()
               template functions.
             - Removed the old deprecated public constructors.  The only way
               to construct a new tetrahedron is via the triangulation, using
@@ -531,8 +529,8 @@ Version 5.0  [ (under development) ]
             - Removed the optional boolean argument (forceDivision) from
               idealToFinite().
             - New dimension-agnostic function hasBoundaryFacets().
-            - New dimension-agnostic face<subdim>(), getFace<subdim>(),
-              faces<subdim>() and getFaces<subdim>() template functions.
+            - New dimension-agnostic face<subdim>() and faces<subdim>()
+              template functions.
             - New routine niceTreeDecomposition() for constructing and
               caching a nice tree decomposition of the face pairing graph.
             - New routines retriangulate() and simplifyExhaustive() for
