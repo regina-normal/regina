@@ -916,6 +916,12 @@ Equality type : BY_REFERENCE
 GlobalArray_unsigned : class
 Equality type : BY_REFERENCE
 
+HyperAlg : class
+Equality type : BY_VALUE
+
+HyperList : class
+Equality type : BY_VALUE
+
 Isomorphism10 : class
 Equality type : BY_REFERENCE
 
