@@ -139,7 +139,7 @@
     }
     
     regina::Dim2Triangulation* ans = new regina::Dim2Triangulation(*self.packet->vertex(seln.row - 1)->buildLink());
-    ans->setPacketLabel([NSString stringWithFormat:@"Link of vertex %zd", seln.row - 1].UTF8String);
+    ans->setLabel([NSString stringWithFormat:@"Link of vertex %zd", seln.row - 1].UTF8String);
     self.packet->insertChildLast(ans);
     [ReginaHelper viewPacket:ans];
 }
@@ -163,7 +163,7 @@
     [ReginaHelper runWithHUD:@"Drilling…"
                         code:^{
                             ans->drillEdge(ans->edge(seln.row - 1));
-                            ans->setPacketLabel(self.packet->adornedLabel("Drilled"));
+                            ans->setLabel(self.packet->adornedLabel("Drilled"));
                         }
                      cleanup:^{
                          self.packet->insertChildLast(ans);

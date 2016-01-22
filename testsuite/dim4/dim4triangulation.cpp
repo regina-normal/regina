@@ -182,13 +182,13 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
         void copyAndDelete(Dim4Triangulation& dest, Dim4Triangulation* source,
                 const char* name) {
             dest.insertTriangulation(*source);
-            dest.setPacketLabel(name);
+            dest.setLabel(name);
             delete source;
         }
 
         void setUp() {
             // The empty triangulation needs no initialisation whatsoever.
-            empty.setPacketLabel("Empty triangulation");
+            empty.setLabel("Empty triangulation");
 
             // We can pull some of our triangulations straight out of the can
             // via Dim4ExampleTriangulation.
@@ -238,11 +238,11 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             Dim4Pentachoron* p[2];
 
             ball_singlePent.newPentachoron();
-            ball_singlePent.setPacketLabel("D^4 (single pentachoron)");
+            ball_singlePent.setLabel("D^4 (single pentachoron)");
 
             p[0] = ball_foldedPent.newPentachoron();
             p[0]->joinTo(2, p[0], NPerm5(2, 4));
-            ball_foldedPent.setPacketLabel("Folded pentachoron");
+            ball_foldedPent.setLabel("Folded pentachoron");
 
             p[0] = ball_layerAndFold.newPentachoron();
             p[1] = ball_layerAndFold.newPentachoron();
@@ -250,7 +250,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             p[0]->joinTo(1, p[1], NPerm5());
             p[0]->joinTo(2, p[1], NPerm5());
             p[0]->joinTo(3, p[0], NPerm5(3, 4));
-            ball_layerAndFold.setPacketLabel("Layered and folded ball");
+            ball_layerAndFold.setLabel("Layered and folded ball");
 
             p[0] = pillow_twoCycle.newPentachoron();
             p[1] = pillow_twoCycle.newPentachoron();
@@ -259,7 +259,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             p[0]->joinTo(2, p[1], NPerm5());
             p[0]->joinTo(3, p[1], NPerm5());
             p[0]->joinTo(4, p[1], NPerm5(1, 2));
-            pillow_twoCycle.setPacketLabel("Invalid 2-cycle pillow");
+            pillow_twoCycle.setLabel("Invalid 2-cycle pillow");
 
             p[0] = pillow_threeCycle.newPentachoron();
             p[1] = pillow_threeCycle.newPentachoron();
@@ -268,7 +268,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             p[0]->joinTo(2, p[1], NPerm5());
             p[0]->joinTo(3, p[1], NPerm5());
             p[0]->joinTo(4, p[1], NPerm5(2, 0, 1, 3, 4));
-            pillow_threeCycle.setPacketLabel("Invalid 3-cycle pillow");
+            pillow_threeCycle.setLabel("Invalid 3-cycle pillow");
 
             p[0] = pillow_fourCycle.newPentachoron();
             p[1] = pillow_fourCycle.newPentachoron();
@@ -277,18 +277,18 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             p[0]->joinTo(2, p[1], NPerm5());
             p[0]->joinTo(3, p[1], NPerm5());
             p[0]->joinTo(4, p[1], NPerm5(3, 2, 0, 1, 4));
-            pillow_fourCycle.setPacketLabel("Invalid 4-cycle pillow");
+            pillow_fourCycle.setLabel("Invalid 4-cycle pillow");
 
             // Build disconnected triangulations from others that we
             // already have.
             disjoint2.insertTriangulation(s3xs1);
             disjoint2.insertTriangulation(ball_layerAndFold);
-            disjoint2.setPacketLabel("Disjoint union of two triangulations");
+            disjoint2.setLabel("Disjoint union of two triangulations");
 
             disjoint3.insertTriangulation(rp4);
             disjoint3.insertTriangulation(ball_layerAndFold);
             disjoint3.insertTriangulation(idealPoincareProduct);
-            disjoint3.setPacketLabel("Disjoint union of three triangulations");
+            disjoint3.setLabel("Disjoint union of three triangulations");
         }
 
         void tearDown() {
@@ -2157,7 +2157,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             t0->joinTo(1, t1, regina::NPerm4(1,2,3,0));
             t0->joinTo(2, t1, regina::NPerm4(1,2,3,0));
             t0->joinTo(3, t1, regina::NPerm4(1,2,3,0));
-            tri.setPacketLabel("Hand-coded L(3,1)");
+            tri.setLabel("Hand-coded L(3,1)");
             verifyBundleWithMonodromy(&tri);
         }
 };

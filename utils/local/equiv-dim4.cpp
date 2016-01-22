@@ -142,7 +142,7 @@ void sameSize(Dim4Triangulation* t) {
 
     if (! found) {
         found = new Dim4Triangulation(*t);
-        found->setPacketLabel(orig->makeUniqueLabel(orig->label() + " - New"));
+        found->setLabel(orig->makeUniqueLabel(orig->label() + " - New"));
         orig->insertChildLast(found);
         nNew++;
     }
@@ -356,7 +356,7 @@ void processTree() {
 
         if (outFile) {
             newTree = new NContainer();
-            newTree->setPacketLabel("Equivalence Classes");
+            newTree->setLabel("Equivalence Classes");
         }
 
         int classNum = 1;
@@ -378,7 +378,7 @@ void processTree() {
                 printf("%s\n\n", className.c_str());
                 if (outFile) {
                     classCnt = new NContainer();
-                    classCnt->setPacketLabel(className);
+                    classCnt->setLabel(className);
                     newTree->insertChildLast(classCnt);
                 }
 
@@ -390,7 +390,7 @@ void processTree() {
                             cit2->first->label().c_str());
                         if (outFile) {
                             t = new Dim4Triangulation(*(cit2->first));
-                            t->setPacketLabel(cit2->first->label());
+                            t->setLabel(cit2->first->label());
                             classCnt->insertChildLast(t);
                         }
 

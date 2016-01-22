@@ -107,7 +107,7 @@ inline NContainer::NContainer() {
 }
 
 inline NContainer::NContainer(const std::string& label) {
-    setPacketLabel(label);
+    setLabel(label);
 }
 
 inline void NContainer::writeTextShort(std::ostream& o) const {

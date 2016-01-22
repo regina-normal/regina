@@ -94,7 +94,7 @@ NTriangulation* readSnapPea(std::istream& in) {
 
     // Create the new tetrahedra.
     NTriangulation* triang = new NTriangulation();
-    triang->setPacketLabel(name);
+    triang->setLabel(name);
 
     unsigned numTet;
     in >> numTet;

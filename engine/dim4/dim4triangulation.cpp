@@ -48,7 +48,7 @@ Dim4Triangulation::Triangulation(const std::string& description) :
 
     if ((attempt = fromIsoSig(description))) {
         cloneFrom(*attempt);
-        setPacketLabel(description);
+        setLabel(description);
     }
 
     delete attempt;

@@ -448,7 +448,7 @@ void NSnapPeaShapesUI::vertexLinks() {
         if (chosen) {
             regina::Dim2Triangulation* ans = new regina::Dim2Triangulation(
                 *chosen->buildLink());
-            ans->setPacketLabel(tr("Link of vertex %1").arg(chosen->index()).
+            ans->setLabel(tr("Link of vertex %1").arg(chosen->index()).
                 toUtf8().constData());
             tri->insertChildLast(ans);
             enclosingPane->getMainWindow()->packetView(ans, true, true);
@@ -465,7 +465,7 @@ void NSnapPeaShapesUI::toRegina() {
             "triangulation for me to convert."));
     else {
         regina::NTriangulation* ans = new regina::NTriangulation(*tri);
-        ans->setPacketLabel(tri->label());
+        ans->setLabel(tri->label());
         tri->insertChildLast(ans);
         enclosingPane->getMainWindow()->packetView(ans, true, true);
     }
@@ -506,7 +506,7 @@ void NSnapPeaShapesUI::fill() {
                     "triangulation."),
                 tr("Please report this to the Regina developers."));
         } else {
-            ans->setPacketLabel(tri->adornedLabel("Filled"));
+            ans->setLabel(tri->adornedLabel("Filled"));
             tri->insertChildLast(ans);
             enclosingPane->getMainWindow()->packetView(ans, true, true);
         }
@@ -534,7 +534,7 @@ void NSnapPeaShapesUI::canonise() {
                 "canonical retriangulation of the "
                 "canonical cell decomposition."));
         } else {
-            ans->setPacketLabel(tr("Canonical retriangulation").
+            ans->setLabel(tr("Canonical retriangulation").
                 toUtf8().constData());
             tri->insertChildLast(ans);
             enclosingPane->getMainWindow()->packetView(ans, true, true);

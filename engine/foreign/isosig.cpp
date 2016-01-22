@@ -102,19 +102,19 @@ NContainer* readIsoSigList(const char *filename, unsigned dimension,
             // Process this isomorphism signature.
             if (dimension == 2) {
                 if ((tri2 = Dim2Triangulation::fromIsoSig(isoSig))) {
-                    tri2->setPacketLabel(label.empty() ? isoSig : label);
+                    tri2->setLabel(label.empty() ? isoSig : label);
                     ans->insertChildLast(tri2);
                 } else
                     errStrings = errStrings + '\n' + isoSig;
             } else if (dimension == 3) {
                 if ((tri3 = NTriangulation::fromIsoSig(isoSig))) {
-                    tri3->setPacketLabel(label.empty() ? isoSig : label);
+                    tri3->setLabel(label.empty() ? isoSig : label);
                     ans->insertChildLast(tri3);
                 } else
                     errStrings = errStrings + '\n' + isoSig;
             } else if (dimension == 4) {
                 if ((tri4 = Dim4Triangulation::fromIsoSig(isoSig))) {
-                    tri4->setPacketLabel(label.empty() ? isoSig : label);
+                    tri4->setLabel(label.empty() ? isoSig : label);
                     ans->insertChildLast(tri4);
                 } else
                     errStrings = errStrings + '\n' + isoSig;
@@ -129,7 +129,7 @@ NContainer* readIsoSigList(const char *filename, unsigned dimension,
         msg << "The following isomorphism string(s) could not be interpreted "
             "as " << dimension << "-manifold triangulations:\n" << errStrings;
         NText* errPkt = new NText(msg.str());
-        errPkt->setPacketLabel("Errors");
+        errPkt->setLabel("Errors");
         ans->insertChildLast(errPkt);
     }
 

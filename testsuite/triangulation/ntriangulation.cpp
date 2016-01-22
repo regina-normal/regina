@@ -225,7 +225,7 @@ class NTriangulationTest : public TriangulationTest<3> {
     public:
         void copyAndDelete(NTriangulation& dest, NTriangulation* source) {
             dest.insertTriangulation(*source);
-            dest.setPacketLabel(source->label());
+            dest.setLabel(source->label());
             delete source;
         }
 
@@ -240,7 +240,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 return;
 
             tri.insertTriangulation(*triNew);
-            tri.setPacketLabel(sigStr);
+            tri.setLabel(sigStr);
             delete triNew;
         }
 
@@ -253,7 +253,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             if (! triNew)
                 return 0;
 
-            triNew->setPacketLabel(sigStr);
+            triNew->setLabel(sigStr);
             delete sig;
             return triNew;
         }
@@ -261,89 +261,89 @@ class NTriangulationTest : public TriangulationTest<3> {
         void setUp() {
             // Begin with trivial cases.
             // The empty triangulation needs no initialisation whatsoever.
-            empty.setPacketLabel("Empty triangulation");
+            empty.setLabel("Empty triangulation");
 
             singleTet.newTetrahedron();
-            singleTet.setPacketLabel("Single tetrahedron");
+            singleTet.setLabel("Single tetrahedron");
 
             // Some of our triangulations can be constructed automatically.
             s3.insertLayeredLensSpace(1, 0);
-            s3.setPacketLabel("S^3");
+            s3.setLabel("S^3");
 
             s2xs1.insertLayeredLensSpace(0, 1);
-            s2xs1.setPacketLabel("S^2 x S^1");
+            s2xs1.setLabel("S^2 x S^1");
 
             rp3_1.insertLayeredLensSpace(2, 1);
-            rp3_1.setPacketLabel("RP^3 (1 vtx)");
+            rp3_1.setLabel("RP^3 (1 vtx)");
 
             rp3_2.insertLayeredLoop(2, false);
-            rp3_2.setPacketLabel("RP^3 (2 vtx)");
+            rp3_2.setLabel("RP^3 (2 vtx)");
 
             lens8_3.insertLayeredLensSpace(8, 3);
-            lens8_3.setPacketLabel("L(8,3)");
+            lens8_3.setLabel("L(8,3)");
 
             lens100_1.insertLayeredLensSpace(100, 1);
-            lens100_1.setPacketLabel("L(100,1)");
+            lens100_1.setLabel("L(100,1)");
 
             lst3_4_7.insertLayeredSolidTorus(3, 4);
-            lst3_4_7.setPacketLabel("LST(3,4,7)");
+            lst3_4_7.setLabel("LST(3,4,7)");
 
             q28.insertLayeredLoop(7, true);
-            q28.setPacketLabel("S^3 / Q_28");
+            q28.setLabel("S^3 / Q_28");
 
             lens7_1_loop.insertLayeredLoop(7, false);
-            lens7_1_loop.setPacketLabel("Layered loop L(7,1)");
+            lens7_1_loop.setLabel("Layered loop L(7,1)");
 
             // Some of our triangulations can be generated from
             // splitting surfaces.
             generateFromSig(rp3rp3, "aabccd.b.d");
-            rp3rp3.setPacketLabel("RP^3 # RP^3");
+            rp3rp3.setLabel("RP^3 # RP^3");
 
             generateFromSig(q32xz3, "aabcdb.cedfef");
-            q32xz3.setPacketLabel("S^3 / Q_32 x Z_3");
+            q32xz3.setLabel("S^3 / Q_32 x Z_3");
 
             generateFromSig(s3_large, "abc.abd.cef.de.fg.g");
-            s3_large.setPacketLabel("Large S^3");
+            s3_large.setLabel("Large S^3");
 
             generateFromSig(lens8_3_large, "aabcb.cd.d");
-            lens8_3_large.setPacketLabel("Large L(8,3)");
+            lens8_3_large.setLabel("Large L(8,3)");
 
             generateFromSig(rp3_large, "aabcdedcfb.fg.e.g");
-            rp3_large.setPacketLabel("Large RP^3");
+            rp3_large.setLabel("Large RP^3");
 
             generateFromSig(q20_large, "abcdeabcdef.fg.g");
-            q20_large.setPacketLabel("Large S^3 / Q_20");
+            q20_large.setLabel("Large S^3 / Q_20");
 
             // Some are hard-coded in the calculation engine as sample
             // triangulations.
             copyAndDelete(weberSeifert, NExampleTriangulation::weberSeifert());
-            weberSeifert.setPacketLabel("Weber-Seifert");
+            weberSeifert.setLabel("Weber-Seifert");
 
             copyAndDelete(figure8,
                 NExampleTriangulation::figureEight());
-            figure8.setPacketLabel("Figure 8 knot complement");
+            figure8.setLabel("Figure 8 knot complement");
 
             copyAndDelete(solidKB, NExampleTriangulation::solidKleinBottle());
-            solidKB.setPacketLabel("Solid Klein bottle");
+            solidKB.setLabel("Solid Klein bottle");
 
             copyAndDelete(rp2xs1, NExampleTriangulation::rp2xs1());
-            rp2xs1.setPacketLabel("RP^2 x S^1");
+            rp2xs1.setLabel("RP^2 x S^1");
 
             copyAndDelete(gieseking, NExampleTriangulation::gieseking());
-            gieseking.setPacketLabel("Gieseking manifold");
+            gieseking.setLabel("Gieseking manifold");
 
             copyAndDelete(cuspedGenusTwoTorus,
                 NExampleTriangulation::cuspedGenusTwoTorus());
-            cuspedGenusTwoTorus.setPacketLabel("Cusped solid genus 2 torus");
+            cuspedGenusTwoTorus.setLabel("Cusped solid genus 2 torus");
 
             singleTet_bary.newTetrahedron();
             singleTet_bary.barycentricSubdivision();
-            singleTet_bary.setPacketLabel("Subdivided tetrahedron");
+            singleTet_bary.setLabel("Subdivided tetrahedron");
 
             copyAndDelete(fig8_bary,
                 NExampleTriangulation::figureEight());
             fig8_bary.barycentricSubdivision();
-            fig8_bary.setPacketLabel("Subdivided figure 8 knot complement");
+            fig8_bary.setLabel("Subdivided figure 8 knot complement");
 
             // The rest alas must be done manually.
             NTetrahedron* r;
@@ -359,7 +359,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             r->joinTo(1, s, NPerm4());
             r->joinTo(2, s, NPerm4());
             r->joinTo(3, s, NPerm4());
-            lens3_1.setPacketLabel("L(3,1)");
+            lens3_1.setLabel("L(3,1)");
 
             // For a triangulation with invalid edges, we simply fold
             // the faces of a tetrahedron together in pairs (as in a
@@ -367,11 +367,11 @@ class NTriangulationTest : public TriangulationTest<3> {
             r = invalidEdges.newTetrahedron();
             r->joinTo(0, r, NPerm4(1, 0, 3, 2));
             r->joinTo(2, r, NPerm4(1, 0, 3, 2));
-            invalidEdges.setPacketLabel("Triangulation with invalid edges");
+            invalidEdges.setLabel("Triangulation with invalid edges");
 
             twoProjPlaneCusps.insertTriangulation(invalidEdges);
             twoProjPlaneCusps.barycentricSubdivision();
-            twoProjPlaneCusps.setPacketLabel("Triangulation with RP^2 cusps");
+            twoProjPlaneCusps.setLabel("Triangulation with RP^2 cusps");
 
             // To construct a solid torus with a pinched longitude, we
             // identify two opposite faces of a square pyramid.
@@ -379,7 +379,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             s = pinchedSolidTorus.newTetrahedron();
             r->joinTo(3, s, NPerm4(0, 1, 2, 3));
             r->joinTo(2, s, NPerm4(0, 3, 1, 2));
-            pinchedSolidTorus.setPacketLabel("Pinched solid torus");
+            pinchedSolidTorus.setLabel("Pinched solid torus");
 
             // The pinched solid Klein bottle is much the same, except
             // for a twist before the opposite faces are identified.
@@ -387,7 +387,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             s = pinchedSolidKB.newTetrahedron();
             r->joinTo(3, s, NPerm4(0, 1, 2, 3));
             r->joinTo(2, s, NPerm4(0, 2, 1, 3));
-            pinchedSolidKB.setPacketLabel("Pinched solid Klein bottle");
+            pinchedSolidKB.setLabel("Pinched solid Klein bottle");
 
             // This ball used to cause a crash once upon a time.
             // Throw it into the test suite for good measure.
@@ -401,7 +401,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             s->joinTo(1, t, NPerm4(2,0,1,3));
             t->joinTo(1, u, NPerm4(2,0,1,3));
             u->joinTo(2, u, NPerm4(1,2));
-            ball_large.setPacketLabel("4-tetrahedron ball");
+            ball_large.setLabel("4-tetrahedron ball");
 
             // Make two triangular pillows, then join them together.
             // This crashed with 2-0 vertex moves once upon a time.
@@ -416,7 +416,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             t->joinTo(1, u, NPerm4());
             t->joinTo(2, u, NPerm4());
             r->joinTo(3, t, NPerm4());
-            ball_large_pillows.setPacketLabel("4-tetrahedron pillow ball");
+            ball_large_pillows.setLabel("4-tetrahedron pillow ball");
 
             // Make three snapped balls and join them together.
             r = ball_large_snapped.newTetrahedron();
@@ -427,18 +427,18 @@ class NTriangulationTest : public TriangulationTest<3> {
             t->joinTo(2, t, NPerm4(2, 1));
             r->joinTo(1, s, NPerm4());
             s->joinTo(0, t, NPerm4());
-            ball_large_snapped.setPacketLabel("3-tetrahedron snapped ball");
+            ball_large_snapped.setLabel("3-tetrahedron snapped ball");
 
             // Build disconnected triangulations from others that we
             // already have.
             disjoint2.insertTriangulation(gieseking);
             disjoint2.insertTriangulation(cuspedGenusTwoTorus);
-            disjoint2.setPacketLabel("Gieseking U (cusped genus 2 torus)");
+            disjoint2.setLabel("Gieseking U (cusped genus 2 torus)");
 
             disjoint3.insertTriangulation(s2xs1);
             disjoint3.insertTriangulation(ball_large_pillows);
             disjoint3.insertTriangulation(figure8);
-            disjoint3.setPacketLabel("(S^2 x S^1) U (B^3) U "
+            disjoint3.setLabel("(S^2 x S^1) U (B^3) U "
                 "(Figure eight knot complement)");
         }
 
@@ -2185,7 +2185,7 @@ class NTriangulationTest : public TriangulationTest<3> {
         NTriangulation* verifyThreeSphere(NTriangulation* tri,
                 const char* name = 0) {
             if (name)
-                tri->setPacketLabel(name);
+                tri->setLabel(name);
 
             if (! tri->isThreeSphere()) {
                 CPPUNIT_FAIL(("The 3-sphere " + tri->label() +
@@ -2219,7 +2219,7 @@ class NTriangulationTest : public TriangulationTest<3> {
         NTriangulation* verifyNotThreeSphere(NTriangulation* tri,
                 const char* name = 0) {
             if (name)
-                tri->setPacketLabel(name);
+                tri->setLabel(name);
 
             if (tri->isThreeSphere()) {
                 CPPUNIT_FAIL(("The non-3-sphere " + tri->label() +
@@ -2261,13 +2261,13 @@ class NTriangulationTest : public TriangulationTest<3> {
 
         void verifyIsoSigThreeSphere(const std::string& sigStr) {
             NTriangulation* t = NTriangulation::fromIsoSig(sigStr);
-            t->setPacketLabel(sigStr);
+            t->setLabel(sigStr);
             delete verifyThreeSphere(t);
         }
 
         void verifyIsoSigNotThreeSphere(const std::string& sigStr) {
             NTriangulation* t = NTriangulation::fromIsoSig(sigStr);
-            t->setPacketLabel(sigStr);
+            t->setLabel(sigStr);
             delete verifyNotThreeSphere(t);
         }
 
@@ -2343,7 +2343,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             // 3-spheres obtained as Lens spaces:
             tri = new NTriangulation();
             tri->insertLayeredLensSpace(1,0);
-            tri->setPacketLabel("L(1,0)");
+            tri->setLabel("L(1,0)");
             delete verifyThreeSphere(tri);
 
             // Non-3-spheres obtained from splitting surface signatures:
@@ -2478,7 +2478,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             tri = new NTriangulation();
             tri->insertLayeredLensSpace(1,0);
             tri->insertLayeredLensSpace(1,0);
-            tri->setPacketLabel("S^3 U S^3");
+            tri->setLabel("S^3 U S^3");
             delete verifyNotThreeSphere(tri);
 
             // An exhaustive census run:
@@ -2683,7 +2683,7 @@ class NTriangulationTest : public TriangulationTest<3> {
         NTriangulation* verifySolidTorus(NTriangulation* tri,
                 const char* triName = 0) {
             if (triName)
-                tri->setPacketLabel(triName);
+                tri->setLabel(triName);
 
             NTriangulation bounded(*tri);
             if (bounded.isIdeal())
@@ -2722,7 +2722,7 @@ class NTriangulationTest : public TriangulationTest<3> {
         NTriangulation* verifyNotSolidTorus(NTriangulation* tri,
                 const char* triName = 0) {
             if (triName)
-                tri->setPacketLabel(triName);
+                tri->setLabel(triName);
 
             NTriangulation bounded(*tri);
             if (bounded.isIdeal())
@@ -2760,13 +2760,13 @@ class NTriangulationTest : public TriangulationTest<3> {
 
         void verifyIsoSigSolidTorus(const std::string& sigStr) {
             NTriangulation* t = NTriangulation::fromIsoSig(sigStr);
-            t->setPacketLabel(sigStr);
+            t->setLabel(sigStr);
             delete verifySolidTorus(t);
         }
 
         void verifyIsoSigNotSolidTorus(const std::string& sigStr) {
             NTriangulation* t = NTriangulation::fromIsoSig(sigStr);
-            t->setPacketLabel(sigStr);
+            t->setLabel(sigStr);
             delete verifyNotSolidTorus(t);
         }
 

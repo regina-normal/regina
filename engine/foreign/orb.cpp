@@ -347,7 +347,7 @@ NTriangulation *readTriangulation( std::istream &ts) {
     NTriangulation* manifold = cassonToNTriangulation( cf );
     freeCassonFormat( cf );
 
-    manifold->setPacketLabel(file_id);
+    manifold->setLabel(file_id);
     return manifold;
 }
 

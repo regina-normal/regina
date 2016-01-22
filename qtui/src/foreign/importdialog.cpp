@@ -148,7 +148,7 @@ void ImportDialog::slotOk() {
     }
 
     // Insert the imported data into the packet tree.
-    newTree->setPacketLabel(ascii.constData());
+    newTree->setLabel(ascii.constData());
     parentPacket->insertChildLast(newTree);
 
     accept();

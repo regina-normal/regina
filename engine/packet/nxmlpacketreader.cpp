@@ -107,7 +107,7 @@ void NXMLPacketReader::endSubElement(const std::string& subTagName,
         if (child) {
             NPacket* me = packet();
             if (me) {
-                child->setPacketLabel(childLabel);
+                child->setLabel(childLabel);
                 if (! childID.empty())
                     resolver_.storeID(childID, child);
                 if (! child->parent())

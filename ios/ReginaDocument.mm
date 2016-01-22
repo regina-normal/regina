@@ -153,7 +153,7 @@ enum DocError {
 "To delete a packet, swipe it to the left in the list of packets.  "
 "If you like, you can delete this packet now.");
 
-        text->setPacketLabel("Read me");
+        text->setLabel("Read me");
         _tree->insertChildLast(text);
         _type = DOC_NATIVE;
         
@@ -224,7 +224,7 @@ enum DocError {
             return NO;
         }
         _tree = new regina::NContainer();
-        _tree->setPacketLabel("SnapPea import");
+        _tree->setLabel("SnapPea import");
         _tree->insertChildLast(tri);
         
         _type = DOC_FOREIGN;

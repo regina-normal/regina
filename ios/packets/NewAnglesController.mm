@@ -130,7 +130,7 @@ static NSArray* whichText;
                                                       otherButtonTitles:nil];
                 [alert show];
             } else {
-                ans->setPacketLabel("Angle structures");
+                ans->setLabel("Angle structures");
                 [self.spec created:ans];
             }
             [self dismissViewControllerAnimated:YES completion:nil];

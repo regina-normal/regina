@@ -200,7 +200,7 @@ bool process(NContainer* c) {
 
         if (renameMfds)
             if (c->label() != name) {
-                c->setPacketLabel(name);
+                c->setLabel(name);
                 totMfdsRenamed++;
 
                 if (sortMfds)

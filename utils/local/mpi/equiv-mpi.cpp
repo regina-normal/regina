@@ -528,7 +528,7 @@ int mainController() {
 
         if (outFile) {
             newTree = new NContainer();
-            newTree->setPacketLabel("Equivalence Classes");
+            newTree->setLabel("Equivalence Classes");
         }
 
         int classNum = 1;
@@ -551,7 +551,7 @@ int mainController() {
                 printf("%s\n\n", className.c_str());
                 if (outFile) {
                     classCnt = new NContainer();
-                    classCnt->setPacketLabel(className);
+                    classCnt->setLabel(className);
                     newTree->insertChildLast(classCnt);
                 }
 
@@ -563,7 +563,7 @@ int mainController() {
                             cit2->first->label().c_str());
                         if (outFile) {
                             t = new NTriangulation(*(cit2->first));
-                            t->setPacketLabel(cit2->first->label());
+                            t->setLabel(cit2->first->label());
                             classCnt->insertChildLast(t);
                         }
 

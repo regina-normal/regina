@@ -636,7 +636,7 @@ void NSurfaceCoordinateUI::cutAlong() {
     // Be nice and simplify the triangulation, which could be very large.
     regina::NTriangulation* ans = toCutAlong->cutAlong();
     ans->intelligentSimplify();
-    ans->setPacketLabel(surfaces->triangulation()->adornedLabel("Cut"));
+    ans->setLabel(surfaces->triangulation()->adornedLabel("Cut"));
     surfaces->insertChildLast(ans);
 
     enclosingPane->getMainWindow()->packetView(ans, true, true);
@@ -660,7 +660,7 @@ void NSurfaceCoordinateUI::crush() {
 
     // Go ahead and crush it.
     regina::NTriangulation* ans = toCrush->crush();
-    ans->setPacketLabel(surfaces->triangulation()->adornedLabel("Crushed"));
+    ans->setLabel(surfaces->triangulation()->adornedLabel("Crushed"));
     surfaces->insertChildLast(ans);
 
     enclosingPane->getMainWindow()->packetView(ans, true, true);

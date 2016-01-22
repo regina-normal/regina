@@ -51,13 +51,13 @@ Triangulation<3>::Triangulation(const std::string& description) {
 
     if ((attempt = fromIsoSig(description))) {
         cloneFrom(*attempt);
-        setPacketLabel(description);
+        setLabel(description);
     } else if ((attempt = rehydrate(description))) {
         cloneFrom(*attempt);
-        setPacketLabel(description);
+        setLabel(description);
     } else if ((attempt = fromSnapPea(description))) {
         cloneFrom(*attempt);
-        setPacketLabel(attempt->label());
+        setLabel(attempt->label());
     }
 
     delete attempt;

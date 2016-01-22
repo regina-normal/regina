@@ -198,7 +198,7 @@ static NSArray* embText;
                                                       otherButtonTitles:nil];
                 [alert show];
             } else {
-                ans->setPacketLabel("Normal surfaces");
+                ans->setLabel("Normal surfaces");
                 [self.spec created:ans];
             }
             [self dismissViewControllerAnimated:YES completion:nil];

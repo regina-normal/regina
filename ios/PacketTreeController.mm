@@ -401,7 +401,7 @@
 {
     _recentPacketIndex = [self packetIndexForPath:path];
     regina::NPacket* p = static_cast<regina::NPacket*>([_packets pointerAtIndex:_recentPacketIndex]);
-    p->setPacketLabel([[result stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] UTF8String]);
+    p->setLabel([[result stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] UTF8String]);
 }
 
 - (NSArray *)otherActionLabels

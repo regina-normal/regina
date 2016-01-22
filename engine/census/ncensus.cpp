@@ -244,7 +244,7 @@ void NCensus::foundGluingPerms(const NGluingPermSearcher* perms, void* census) {
             // by a factor of #triangulations.
             std::ostringstream out;
             out << "Item " << realCensus->whichSoln;
-            tri->setPacketLabel(out.str());
+            tri->setLabel(out.str());
             realCensus->parent->insertChildLast(tri);
             realCensus->whichSoln++;
         } else {

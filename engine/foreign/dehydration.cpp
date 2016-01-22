@@ -98,7 +98,7 @@ NContainer* readDehydrationList(const char *filename,
             // Process this dehydration string.
             tri = new NTriangulation();
             if (tri->insertRehydration(dehydration)) {
-                tri->setPacketLabel(label.empty() ? dehydration : label);
+                tri->setLabel(label.empty() ? dehydration : label);
                 ans->insertChildLast(tri);
             } else {
                 errStrings = errStrings + '\n' + dehydration;
@@ -112,7 +112,7 @@ NContainer* readDehydrationList(const char *filename,
         NText* errPkt = new NText(std::string(
             "The following dehydration string(s) could not be rehydrated:\n") +
             errStrings);
-        errPkt->setPacketLabel("Errors");
+        errPkt->setLabel("Errors");
         ans->insertChildLast(errPkt);
     }
 

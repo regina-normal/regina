@@ -70,7 +70,7 @@ regina::NPacket* PythonHandler::importData(const QString& fileName,
     in.setCodec(ReginaPrefSet::importExportCodec());
 
     regina::NScript* ans = new regina::NScript();
-    ans->setPacketLabel(QObject::tr("Imported Script").toUtf8().constData());
+    ans->setLabel(QObject::tr("Imported Script").toUtf8().constData());
 
     // Read in the script.
     bool readingMetadata = true;
@@ -89,7 +89,7 @@ regina::NPacket* PythonHandler::importData(const QString& fileName,
                 metadata = metadata.mid(scriptMarker.length()).
                     trimmed();
                 if (! metadata.isEmpty())
-                    ans->setPacketLabel(metadata.toUtf8().constData());
+                    ans->setLabel(metadata.toUtf8().constData());
             } else if (metadata.startsWith(varMarker)) {
                 // A script variable.
                 metadata = metadata.mid(varMarker.length()).trimmed();

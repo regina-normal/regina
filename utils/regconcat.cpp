@@ -87,7 +87,7 @@ int main(int argc, char* argv[]) {
 
     // Read the input files one by one.
     regina::NPacket* ans = new regina::NContainer();
-    ans->setPacketLabel("Combined Data");
+    ans->setLabel("Combined Data");
 
     bool error = false;
     regina::NPacket* data;

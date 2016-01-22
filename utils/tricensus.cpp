@@ -203,7 +203,7 @@ void foundGluingPerms(const typename CensusType::GluingPermSearcher* perms,
 
                 std::ostringstream out;
                 out << "Item " << (nSolns + 1);
-                tri->setPacketLabel(out.str());
+                tri->setLabel(out.str());
 
                 dest->insertChildLast(tri);
             }
@@ -228,7 +228,7 @@ void foundFacePairing(const typename CensusType::Pairing* pairing,
         // pairing in a different container.
         if (subContainers) {
             subContainer = new regina::NContainer();
-            subContainer->setPacketLabel(pairing->str());
+            subContainer->setLabel(pairing->str());
             static_cast<regina::NPacket*>(container)->insertChildLast(subContainer);
         } else {
             subContainer = static_cast<regina::NPacket*>(container);
@@ -259,7 +259,7 @@ void dumpPairing(const typename CensusType::Pairing* pair,
  */
 regina::NText* parameterPacket() {
     regina::NText* desc = new regina::NText();
-    desc->setPacketLabel("Parameters");
+    desc->setLabel("Parameters");
     std::ostringstream descStream;
 
     if (dim4)
@@ -609,14 +609,14 @@ int runCensus() {
     } else {
         parent = new regina::NContainer();
         if (usePairs)
-            parent->setPacketLabel("Partial command-line census");
+            parent->setLabel("Partial command-line census");
         else
-            parent->setPacketLabel("Command-line census");
+            parent->setLabel("Command-line census");
 
         desc = parameterPacket();
 
         census = new regina::NContainer();
-        census->setPacketLabel("Triangulations");
+        census->setLabel("Triangulations");
 
         parent->insertChildLast(desc);
         parent->insertChildLast(census);
@@ -675,7 +675,7 @@ int runCensus() {
         // Store the face pairings used with the census.
         if (! sigs) {
             regina::NText* pairingPacket = new regina::NText(pairingList);
-            pairingPacket->setPacketLabel(
+            pairingPacket->setLabel(
                 dim4 ? "Facet Pairings" : dim2 ? "Edge Pairings" :
                 "Face Pairings");
             parent->insertChildAfter(pairingPacket, desc);

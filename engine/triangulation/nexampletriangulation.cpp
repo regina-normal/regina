@@ -148,7 +148,7 @@ namespace regina {
 
 NTriangulation* NExampleTriangulation::threeSphere() {
     NTriangulation* ans = new NTriangulation();
-    ans->setPacketLabel("3-sphere");
+    ans->setLabel("3-sphere");
 
     ans->insertLayeredLensSpace(1, 0);
 
@@ -157,7 +157,7 @@ NTriangulation* NExampleTriangulation::threeSphere() {
 
 NTriangulation* NExampleTriangulation::bingsHouse() {
     NTriangulation* ans = new NTriangulation();
-    ans->setPacketLabel("Bing's house with two rooms");
+    ans->setLabel("Bing's house with two rooms");
 
     NTetrahedron* r = ans->newTetrahedron();
     NTetrahedron* s = ans->newTetrahedron();
@@ -171,7 +171,7 @@ NTriangulation* NExampleTriangulation::bingsHouse() {
 
 NTriangulation* NExampleTriangulation::s2xs1() {
     NTriangulation* ans = new NTriangulation();
-    ans->setPacketLabel("S2 x S1");
+    ans->setLabel("S2 x S1");
 
     ans->insertLayeredLensSpace(0, 1);
 
@@ -183,7 +183,7 @@ NTriangulation* NExampleTriangulation::rp2xs1() {
     // construct RP^2 x S^1 by identifying the boundary triangles of a
     // solid Klein bottle.
     NTriangulation* ans = solidKleinBottle();
-    ans->setPacketLabel("RP2 x S1");
+    ans->setLabel("RP2 x S1");
 
     NTetrahedron* r = ans->tetrahedron(0);
     NTetrahedron* t = ans->tetrahedron(2);
@@ -198,7 +198,7 @@ NTriangulation* NExampleTriangulation::rp3rp3() {
     // surface, as described in chapter 4 of Benjamin Burton's PhD thesis.
     NSignature* sig = NSignature::parse("aabccd.b.d");
     NTriangulation* ans = sig->triangulate();
-    ans->setPacketLabel("RP3 # RP3");
+    ans->setLabel("RP3 # RP3");
     delete sig;
 
     return ans;
@@ -206,7 +206,7 @@ NTriangulation* NExampleTriangulation::rp3rp3() {
 
 NTriangulation* NExampleTriangulation::lens8_3() {
     NTriangulation* ans = new NTriangulation();
-    ans->setPacketLabel("L(8,3)");
+    ans->setLabel("L(8,3)");
 
     ans->insertLayeredLensSpace(8, 3);
 
@@ -215,7 +215,7 @@ NTriangulation* NExampleTriangulation::lens8_3() {
 
 NTriangulation* NExampleTriangulation::poincareHomologySphere() {
     NTriangulation* ans = new NTriangulation();
-    ans->setPacketLabel("Poincar\u00E9 homology sphere");
+    ans->setLabel("Poincar\u00E9 homology sphere");
 
     ans->insertConstruction(5, poincareAdj, poincareGluings);
 
@@ -224,7 +224,7 @@ NTriangulation* NExampleTriangulation::poincareHomologySphere() {
 
 NTriangulation* NExampleTriangulation::weeks() {
     NTriangulation* ans = new NTriangulation();
-    ans->setPacketLabel("Weeks manifold");
+    ans->setLabel("Weeks manifold");
 
     ans->insertConstruction(9, weeksAdj, weeksGluings);
 
@@ -233,7 +233,7 @@ NTriangulation* NExampleTriangulation::weeks() {
 
 NTriangulation* NExampleTriangulation::weberSeifert() {
     NTriangulation* ans = new NTriangulation();
-    ans->setPacketLabel("Weber-Seifert dodecahedral space");
+    ans->setLabel("Weber-Seifert dodecahedral space");
 
     // Bah.  Dehydration strings are somewhat impenetrable,
     // but the alternative is 23 lines of hard-coded tetrahedron gluings.
@@ -252,13 +252,13 @@ NTriangulation* NExampleTriangulation::seifertWeber() {
     // Kept for backward compatibility.
     // Use the old name in the packet label.
     NTriangulation* ans = weberSeifert();
-    ans->setPacketLabel("Seifert-Weber dodecahedral space");
+    ans->setLabel("Seifert-Weber dodecahedral space");
     return ans;
 }
 
 NTriangulation* NExampleTriangulation::smallClosedOrblHyperbolic() {
     NTriangulation* ans = new NTriangulation();
-    ans->setPacketLabel("Closed orientable hyperbolic 3-manifold");
+    ans->setLabel("Closed orientable hyperbolic 3-manifold");
 
     ans->insertConstruction(9, closedOrHypAdj, closedOrHypGluings);
 
@@ -267,7 +267,7 @@ NTriangulation* NExampleTriangulation::smallClosedOrblHyperbolic() {
 
 NTriangulation* NExampleTriangulation::smallClosedNonOrblHyperbolic() {
     NTriangulation* ans = new NTriangulation();
-    ans->setPacketLabel("Closed non-orientable hyperbolic 3-manifold");
+    ans->setLabel("Closed non-orientable hyperbolic 3-manifold");
 
     ans->insertConstruction(11, closedNorHypAdj, closedNorHypGluings);
 
@@ -280,13 +280,13 @@ NTriangulation* NExampleTriangulation::sphere600() {
     NTriangulation* ans = NTriangulation::fromIsoSig("-cyjvvvvvzzzvzzvvwvLLvLvPPvLvPzAPvzAMPzwLvzPvLPzwwMzvPzMzLwzMzMvALMLzvzMPwzwMALMvvMALzMPvAwvzwzMzAwvwwwwMAzMzQLMvzMPAwzzzMLPzvMzMMwwwwMzAwPMzvwzMzAwPMvAzMzAQLLvQzwwzPMvAzQMwwPzwLwPzLMAPPvQAvAMvzQLPwPAwPAMAMvPPzLMQvPzwMAwPAMwALMQwPzwPQwPAMwALMvwzQQAQzALMvMzvAMvwPAMwzvQMQvMzMzQMzzLPQzzMPzPAMMQMLzAwQAPPQPzvLPQzLzPQzLLQMzvMMPQzzPQPvLPzPPQPvzAwAPPQAzPQQLAQQAQPwvLPQPAPwvvzwvvLQMAQLLQQQQLLQQQQQLQQQQQAMMQMQAQialaoamapaqatavawazaPaBaRaCaFaTaHaVa3aIa6aLaXaNaZa7aOa+aebgbSanbWaqbrb0aubybAb2anb5aFbrb9aHbMbObabcbTbfbVbybYbObibkb4bmb6b9bpbGbtbIbecgcwbUbzbWbmcgcCb5bEb7btcycAcXbKbNbEcycZb8bQbSbLc+bPcScPcVc1b-b3bZcac4c7c4c+ccdlcccDcfcfdAcncscicKckclducScpdpcvc1crctdwc7cxdBdzcFcgdCcMcmdVcLdHcNcJcOdOc3c+cTdWdRcWcqdUc0cudKd2cYcRdcd-dbe6c-cyd9cddCdSdedbdYdaedepdLdidndkdteodwdxdTdzeKdvdsdweBd-dIeSdDdAdBeaeKeFdIdQdHdSeJdveVeNdPdTeWd4ebeVdXdWe5ede3d0d7d2dcf4dEeff6d8d0edfkf+dcegfjfiefemehetfNejewfle9eneufBfpemfqexfAfseueUezeJfIeyeAeXeKfKeDeFeFfefTfHeJehfSfMeMfOevf2fQeVfReyf1fVe4eJf5eKfZeifRf1eGfag3e6ebglf8e0fzfNf+eigafdgbfjgCfffkfTfjfSfagbgofxgWfpf4fDfrfhgsfygmgEfwfBf2fAf1figjgxgygNgIfLfOgUfVgPfQgQfWg3fNgOg4gYfUgZf5gZg5fVgWg4g5g7f8fcgPg+fch-fkgXgPgfgkhdhggfhlglhXgkhlhogpgtg0grgthsgzg6g0gvgwhAguhwgnh6gnhCgDgHg8gFgGgEhLgah8gJgMgHhKgFhshahshSgQhehTgghYgRhQhRh2gxh7gvh3gThTh+gbhIh-gGhYhYh9h+h9h+hihyhjhzhmh-h-hphqhJhrhKhbibilimilimininiBhChLhDhMhpipiviwiviwixixiziziOhZhPh0hShdiaiaiVhWh5hXh6hiicicirioioi2h3h7h4h8htiqiqiBiyiyiDiAiAirifigijihikisisiuiBiCiCiEiDiEiGiHiJiIiKiLiLiMiNiNiOiOiQiRiTiSiUiWiViVihjYiXiXiijYi0i1i3i2i4i6i5i5ijj8i7i7ikjnj8ioj+ibj-icjajejdjdjljgjfjfjmjpjgjqjrjsjijkjtjmjujvjojtjqjujwjsjvjwjxjxjxjgovcfbcfboivlbgmvpifdgtoulcepdbifdlcepdbavpaoupdfvlgtalacoigmivnospdvkgwlaojgripdsfgtarncgmwleauckoisidaplsfbgtgrncbgmwouckfoisvplgwqgrxceckoisvfdloshojxhncqbdpvnhvkqhsfxqxccckoisvfflgncqbcpgsfxoxckfoistlojxbdovkqqcncbgmwupgrexdvnhhsfbgtprugdwqeoeshhojwbdovkrqcgresdvnjhgdwneoeskhbcmoigklwxpvnhngijqruoeshsffqgmxigtirmrgmwqiwccxgtqlhppvnhnuoeshsxitgmwqiwqlhpvnjpoeskuagtirmrqahpvkrlgdwntagijqrlaaojwigresmagklwxiaagtcrorqhpggjfrlagkgwciatqhpgvwgntagrosgmauhqluaojgwoiaphxipalagvwgnovggrosgvoggvoojgwovgogovogvcojgwocgfffgcbbojgwocgffgcbojgwovgologvibgrosgvogpgovmdfigvwgnovgugvotecldpbficlpvpoudgtldla");
 
     ans->orient();
-    ans->setPacketLabel("600-cell");
+    ans->setLabel("600-cell");
     return ans;
 }
 
 NTriangulation* NExampleTriangulation::lst3_4_7() {
     NTriangulation* ans = new NTriangulation();
-    ans->setPacketLabel("Layered solid torus");
+    ans->setLabel("Layered solid torus");
 
     ans->insertLayeredSolidTorus(3, 4);
 
@@ -295,7 +295,7 @@ NTriangulation* NExampleTriangulation::lst3_4_7() {
 
 NTriangulation* NExampleTriangulation::solidKleinBottle() {
     NTriangulation* ans = new NTriangulation();
-    ans->setPacketLabel("Solid Klein bottle");
+    ans->setLabel("Solid Klein bottle");
 
     // A three-tetrahedron solid Klein bottle is described in section
     // 3.5.1 of Benjamin Burton's PhD thesis.
@@ -312,7 +312,7 @@ NTriangulation* NExampleTriangulation::solidKleinBottle() {
 
 NTriangulation* NExampleTriangulation::figureEight() {
     NTriangulation* ans = new NTriangulation();
-    ans->setPacketLabel("Figure eight knot complement");
+    ans->setLabel("Figure eight knot complement");
 
     // The two-tetrahedron figure eight knot complement is described at
     // the beginning of chapter 8 of Richard Rannard's PhD thesis.
@@ -328,7 +328,7 @@ NTriangulation* NExampleTriangulation::figureEight() {
 
 NTriangulation* NExampleTriangulation::trefoil() {
     NTriangulation* ans = new NTriangulation();
-    ans->setPacketLabel("Trefoil knot complement");
+    ans->setLabel("Trefoil knot complement");
 
     NTetrahedron* r = ans->newTetrahedron();
     NTetrahedron* s = ans->newTetrahedron();
@@ -342,7 +342,7 @@ NTriangulation* NExampleTriangulation::trefoil() {
 
 NTriangulation* NExampleTriangulation::whiteheadLink() {
     NTriangulation* ans = new NTriangulation();
-    ans->setPacketLabel("Whitehead link complement");
+    ans->setLabel("Whitehead link complement");
 
     ans->insertConstruction(4, whiteheadAdj, whiteheadGluings);
 
@@ -351,7 +351,7 @@ NTriangulation* NExampleTriangulation::whiteheadLink() {
 
 NTriangulation* NExampleTriangulation::gieseking() {
     NTriangulation* ans = new NTriangulation();
-    ans->setPacketLabel("Gieseking manifold");
+    ans->setLabel("Gieseking manifold");
 
     NTetrahedron* r = ans->newTetrahedron();
     r->joinTo(0, r, NPerm4(1, 2, 0, 3));
@@ -362,7 +362,7 @@ NTriangulation* NExampleTriangulation::gieseking() {
 
 NTriangulation* NExampleTriangulation::cuspedGenusTwoTorus() {
     NTriangulation* ans = new NTriangulation();
-    ans->setPacketLabel("Cusped genus two solid torus");
+    ans->setLabel("Cusped genus two solid torus");
 
     // We create this by first constructing an ordinary solid genus two
     // torus and then converting the real boundary to an ideal vertex.

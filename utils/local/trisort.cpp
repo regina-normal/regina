@@ -168,7 +168,7 @@ void process(NContainer* c) {
         if (it->isTri) {
             std::ostringstream s;
             s << c->label() << " : #" << (which++);
-            it->packet->setPacketLabel(s.str());
+            it->packet->setLabel(s.str());
         }
     }
 }

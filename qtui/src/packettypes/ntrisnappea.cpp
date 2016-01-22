@@ -224,7 +224,7 @@ void NTriSnapPeaUI::toSnapPea() {
             "For peripheral curves, I have attempted to install the "
             "(shortest, second shortest) basis on each cusp.</qt>"));
 
-    ans->setPacketLabel(reginaTri->label());
+    ans->setLabel(reginaTri->label());
     reginaTri->insertChildLast(ans);
     enclosingPane->getMainWindow()->packetView(ans, true, true);
 }

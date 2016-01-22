@@ -139,30 +139,30 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             NTetrahedron* s;
 
             m2_1.insertRehydration("cabbbbaei");
-            m2_1.setPacketLabel("M 2_1");
+            m2_1.setLabel("M 2_1");
             m2_2.insertRehydration("cabbbbapt");
-            m2_2.setPacketLabel("M 2_2");
+            m2_2.setLabel("M 2_2");
             m3_9.insertRehydration("dagacccfwkn");
-            m3_9.setPacketLabel("M 3_9");
+            m3_9.setLabel("M 3_9");
             m4_52.insertRehydration("ebdbcdddaqhie");
-            m4_52.setPacketLabel("M 4_52");
+            m4_52.setLabel("M 4_52");
             m4_1_2.insertRehydration("eahbcdddhsssj");
-            m4_1_2.setPacketLabel("M 4_1^2");
+            m4_1_2.setLabel("M 4_1^2");
             m4_4_2.insertRehydration("ebdbcdddddddx");
-            m4_4_2.setPacketLabel("M 4_4^2");
+            m4_4_2.setLabel("M 4_4^2");
 
             n1_1.insertRehydration("baaaade");
-            n1_1.setPacketLabel("N 1_1");
+            n1_1.setLabel("N 1_1");
             n2_1.insertRehydration("cabbbbabw");
-            n2_1.setPacketLabel("N 2_1");
+            n2_1.setLabel("N 2_1");
             n2_1_2.insertRehydration("cabbbbcdw");
-            n2_1_2.setPacketLabel("N 2_1^2");
+            n2_1_2.setLabel("N 2_1^2");
             n4_14.insertRehydration("eahdccddakfhq");
-            n4_14.setPacketLabel("N 4_14");
+            n4_14.setLabel("N 4_14");
             n4_9_2.insertRehydration("ebdbcdddcemre");
-            n4_9_2.setPacketLabel("N 4_9^2");
+            n4_9_2.setLabel("N 4_9^2");
             n4_1_2_1.insertRehydration("eahbcdddjxxxj");
-            n4_1_2_1.setPacketLabel("N 4_1^2,1");
+            n4_1_2_1.setLabel("N 4_1^2,1");
 
             // Note: the non-orientable manifold below is the same as
             // NExampleTriangulation::smallClosedNonOrblHyperbolic()),
@@ -173,14 +173,14 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             // (non_geometric) solution instead.
             copyAndDelete(closedHypOr,
                 NExampleTriangulation::smallClosedOrblHyperbolic());
-            closedHypOr.setPacketLabel("or_0.94270736");
+            closedHypOr.setLabel("or_0.94270736");
             copyAndDelete(closedHypNor, NTriangulation::fromIsoSig(
                 "lLLLALAQccegffiijkikkkknawmhvwcls"));
-            closedHypNor.setPacketLabel("nor_2.02988321");
+            closedHypNor.setLabel("nor_2.02988321");
 
             copyAndDelete(weberSeifert,
                 NExampleTriangulation::weberSeifert());
-            weberSeifert.setPacketLabel("Weber-Seifert");
+            weberSeifert.setLabel("Weber-Seifert");
 
             t = flatOr.newTetrahedron();
             s = flatOr.newTetrahedron();

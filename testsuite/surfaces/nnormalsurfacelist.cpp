@@ -188,36 +188,36 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             NTetrahedron* t;
 
             // Some triangulations have no face identifications at all.
-            empty.setPacketLabel("Empty");
+            empty.setLabel("Empty");
 
             oneTet.newTetrahedron();
-            oneTet.setPacketLabel("Lone tetrahedron");
+            oneTet.setLabel("Lone tetrahedron");
 
             // Use pre-coded triangulations where we can.
             copyAndDelete(figure8,
                 NExampleTriangulation::figureEight());
-            figure8.setPacketLabel("Figure eight knot complement");
+            figure8.setLabel("Figure eight knot complement");
 
             copyAndDelete(gieseking, NExampleTriangulation::gieseking());
-            gieseking.setPacketLabel("Gieseking manifold");
+            gieseking.setLabel("Gieseking manifold");
 
             // Layered loops can be constructed automatically.
             S3.insertLayeredLoop(1, false);
-            S3.setPacketLabel("S3");
+            S3.setLabel("S3");
 
             loopC2.insertLayeredLoop(2, false);
-            loopC2.setPacketLabel("C(2)");
+            loopC2.setLabel("C(2)");
 
             loopCtw3.insertLayeredLoop(3, true);
-            loopCtw3.setPacketLabel("C~(3)");
+            loopCtw3.setLabel("C~(3)");
 
             // Some non-minimal triangulations can be generated from
             // splitting surfaces.
             generateFromSig(largeS3, "abcd.abe.c.d.e");
-            largeS3.setPacketLabel("Large S3");
+            largeS3.setLabel("Large S3");
 
             generateFromSig(largeRP3, "aabcd.be.c.d.e");
-            largeRP3.setPacketLabel("Large RP3");
+            largeRP3.setLabel("Large RP3");
 
             // A 3-tetrahedron non-orientable twisted I-bundle over the
             // Klein bottle is described in Chapter 3 of Burton's PhD thesis.
@@ -229,12 +229,12 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             r->joinTo(2, t, NPerm4(1, 3, 2, 0));
             s->joinTo(1, t, NPerm4(0, 3, 2, 1));
             s->joinTo(2, t, NPerm4(3, 1, 0, 2));
-            twistedKxI.setPacketLabel("Twisted KxI");
+            twistedKxI.setLabel("Twisted KxI");
 
             // Build the 9-tetrahedron SFS from its dehydration string;
             // obscure but painless at least.
             norSFS.insertRehydration("jnnafaabcfighhihimgbpqpepbr");
-            norSFS.setPacketLabel("SFS [RP2: (2,1) (2,1) (2,1)]");
+            norSFS.setLabel("SFS [RP2: (2,1) (2,1) (2,1)]");
         }
 
         void tearDown() {
@@ -1393,7 +1393,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
             std::ostringstream name;
             name << "the twisted layered loop C~(" << len << ")";
-            loop.setPacketLabel(name.str());
+            loop.setLabel(name.str());
 
             // For standard normal and almost normal coordinates we just
             // count the surfaces (as opposed to in quad space, where we can
@@ -1429,7 +1429,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
             std::ostringstream name;
             name << "the twisted layered loop C~(" << len << ")";
-            loop.setPacketLabel(name.str());
+            loop.setLabel(name.str());
 
             // It is easy to prove in general that C~(len) has precisely
             // (len + 1) vertex surfaces, as described by the following tests.
@@ -1458,7 +1458,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
             std::ostringstream name;
             name << "the twisted layered loop C~(" << len << ")";
-            loop.setPacketLabel(name.str());
+            loop.setLabel(name.str());
 
             // For standard normal and almost normal coordinates we just
             // count the surfaces (as opposed to in quad space, where we can

@@ -130,7 +130,7 @@ void Dim2Census::foundGluingPerms(const Dim2GluingPermSearcher* perms,
             // by a factor of #triangulations.
             std::ostringstream out;
             out << "Item " << realCensus->whichSoln_;
-            tri->setPacketLabel(out.str());
+            tri->setLabel(out.str());
             realCensus->parent_->insertChildLast(tri);
             realCensus->whichSoln_++;
         } else {

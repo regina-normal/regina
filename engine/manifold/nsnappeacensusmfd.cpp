@@ -67,7 +67,7 @@ NTriangulation* NSnapPeaCensusManifold::construct() const {
     if (section_ == SEC_5) {
         if (index_ == 0) {
             ans = NExampleTriangulation::gieseking();
-            ans->setPacketLabel("");
+            ans->setLabel("");
         } else if (index_ == 1) {
             ans = new NTriangulation();
             NTetrahedron* r = ans->newTetrahedron();
@@ -94,10 +94,10 @@ NTriangulation* NSnapPeaCensusManifold::construct() const {
             r->joinTo(3, s, NPerm4(1, 0, 2, 3));
         } else if (index_ == 4) {
             ans = NExampleTriangulation::figureEight();
-            ans->setPacketLabel("");
+            ans->setLabel("");
         } else if (index_ == 129) {
             ans = NExampleTriangulation::whiteheadLink();
-            ans->setPacketLabel("");
+            ans->setLabel("");
         }
     }
     if (ans)

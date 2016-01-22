@@ -109,7 +109,7 @@ Dim2Triangulation* Dim2ExampleTriangulation::nonOrientable(
 
 Dim2Triangulation* Dim2ExampleTriangulation::sphere() {
     Dim2Triangulation* ans = new Dim2Triangulation();
-    ans->setPacketLabel("Sphere");
+    ans->setLabel("Sphere");
 
     Dim2Triangle* r = ans->newTriangle();
     Dim2Triangle* s = ans->newTriangle();
@@ -122,7 +122,7 @@ Dim2Triangulation* Dim2ExampleTriangulation::sphere() {
 
 Dim2Triangulation* Dim2ExampleTriangulation::sphereTetrahedron() {
     Dim2Triangulation* ans = new Dim2Triangulation();
-    ans->setPacketLabel("Sphere (tetrahedron boundary)");
+    ans->setLabel("Sphere (tetrahedron boundary)");
 
     Dim2Triangle* r = ans->newTriangle();
     Dim2Triangle* s = ans->newTriangle();
@@ -140,7 +140,7 @@ Dim2Triangulation* Dim2ExampleTriangulation::sphereTetrahedron() {
 
 Dim2Triangulation* Dim2ExampleTriangulation::sphereOctahedron() {
     Dim2Triangulation* ans = new Dim2Triangulation();
-    ans->setPacketLabel("Sphere (octahedron boundary)");
+    ans->setLabel("Sphere (octahedron boundary)");
 
     Dim2Triangle* r = ans->newTriangle();
     Dim2Triangle* s = ans->newTriangle();
@@ -168,7 +168,7 @@ Dim2Triangulation* Dim2ExampleTriangulation::sphereOctahedron() {
 
 Dim2Triangulation* Dim2ExampleTriangulation::disc() {
     Dim2Triangulation* ans = new Dim2Triangulation();
-    ans->setPacketLabel("Disc");
+    ans->setLabel("Disc");
 
     ans->newTriangle();
 
@@ -177,7 +177,7 @@ Dim2Triangulation* Dim2ExampleTriangulation::disc() {
 
 Dim2Triangulation* Dim2ExampleTriangulation::annulus() {
     Dim2Triangulation* ans = new Dim2Triangulation();
-    ans->setPacketLabel("Annulus");
+    ans->setLabel("Annulus");
 
     Dim2Triangle* r = ans->newTriangle();
     Dim2Triangle* s = ans->newTriangle();
@@ -189,7 +189,7 @@ Dim2Triangulation* Dim2ExampleTriangulation::annulus() {
 
 Dim2Triangulation* Dim2ExampleTriangulation::mobius() {
     Dim2Triangulation* ans = new Dim2Triangulation();
-    ans->setPacketLabel("Mobius band");
+    ans->setLabel("Mobius band");
 
     Dim2Triangle* r = ans->newTriangle();
     r->joinTo(0, r, NPerm3(2, 0, 1));
@@ -199,7 +199,7 @@ Dim2Triangulation* Dim2ExampleTriangulation::mobius() {
 
 Dim2Triangulation* Dim2ExampleTriangulation::torus() {
     Dim2Triangulation* ans = new Dim2Triangulation();
-    ans->setPacketLabel("Torus");
+    ans->setLabel("Torus");
 
     Dim2Triangle* r = ans->newTriangle();
     Dim2Triangle* s = ans->newTriangle();
@@ -212,7 +212,7 @@ Dim2Triangulation* Dim2ExampleTriangulation::torus() {
 
 Dim2Triangulation* Dim2ExampleTriangulation::rp2() {
     Dim2Triangulation* ans = new Dim2Triangulation();
-    ans->setPacketLabel("Projective plane");
+    ans->setLabel("Projective plane");
 
     Dim2Triangle* r = ans->newTriangle();
     Dim2Triangle* s = ans->newTriangle();
@@ -225,7 +225,7 @@ Dim2Triangulation* Dim2ExampleTriangulation::rp2() {
 
 Dim2Triangulation* Dim2ExampleTriangulation::kb() {
     Dim2Triangulation* ans = new Dim2Triangulation();
-    ans->setPacketLabel("Klein bottle");
+    ans->setLabel("Klein bottle");
 
     Dim2Triangle* r = ans->newTriangle();
     Dim2Triangle* s = ans->newTriangle();

@@ -76,7 +76,7 @@
 - (regina::NPacket*)create
 {
     regina::NPacket* ans = new regina::Dim4Triangulation();
-    ans->setPacketLabel("4-D Triangulation");
+    ans->setLabel("4-D Triangulation");
     return ans;
 }
 
@@ -114,7 +114,7 @@ typedef regina::Dim4Triangulation* (*Dim4TriangulationCreator)();
 - (regina::Dim4Triangulation *)create
 {
     regina::Dim4Triangulation* ans = (*self.creator)();
-    ans->setPacketLabel(self.name.UTF8String);
+    ans->setLabel(self.name.UTF8String);
     return ans;
 }
 

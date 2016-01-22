@@ -321,7 +321,7 @@
     if (self.packet->firstChild()) {
         base = new regina::NContainer();
         self.packet->insertChildLast(base);
-        base->setPacketLabel(self.packet->adornedLabel("Components"));
+        base->setLabel(self.packet->adornedLabel("Components"));
     } else
         base = self.packet;
 

@@ -43,7 +43,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::fourSphere() {
     // Take two pentachora and join their entire boundaries according to
     // the identity map.
     Dim4Triangulation* ans = new Dim4Triangulation();
-    ans->setPacketLabel("4-sphere");
+    ans->setLabel("4-sphere");
 
     Dim4Pentachoron* p = ans->newPentachoron();
     Dim4Pentachoron* q = ans->newPentachoron();
@@ -58,7 +58,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::fourSphere() {
 
 Dim4Triangulation* Dim4ExampleTriangulation::simplicialFourSphere() {
     Dim4Triangulation* ans = new Dim4Triangulation();
-    ans->setPacketLabel("Standard simplicial 4-sphere");
+    ans->setLabel("Standard simplicial 4-sphere");
 
     Dim4Pentachoron* penList[6];
         // one pentachoron for every vertex of the 5-simplex
@@ -85,7 +85,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::simplicialFourSphere() {
 
 Dim4Triangulation* Dim4ExampleTriangulation::rp4() {
     Dim4Triangulation* ans = new Dim4Triangulation();
-    ans->setPacketLabel("Real projective 4-space");
+    ans->setLabel("Real projective 4-space");
 
     // Thanks Ryan, you rock. :)
     Dim4Pentachoron* p = ans->newPentachoron();
@@ -111,7 +111,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::s3xs1() {
     // to the identity map.  Only facets 0123 and 1234 of each
     // pentachoron remain.
     Dim4Triangulation* ans = new Dim4Triangulation();
-    ans->setPacketLabel("S3 x S1");
+    ans->setLabel("S3 x S1");
 
     Dim4Pentachoron* p = ans->newPentachoron();
     Dim4Pentachoron* q = ans->newPentachoron();
@@ -133,7 +133,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::s3xs1Twisted() {
     // to the identity map.  Only facets 0123 and 1234 of each
     // pentachoron remain.
     Dim4Triangulation* ans = new Dim4Triangulation();
-    ans->setPacketLabel("S3 x~ S1");
+    ans->setLabel("S3 x~ S1");
 
     Dim4Pentachoron* p = ans->newPentachoron();
     Dim4Pentachoron* q = ans->newPentachoron();
@@ -153,7 +153,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::s3xs1Twisted() {
 Dim4Triangulation* Dim4ExampleTriangulation::cappellShaneson() {
     // Use the gluings described in arXiv:1109.3899.
     Dim4Triangulation* ans = new Dim4Triangulation();
-    ans->setPacketLabel("Cappell-Shaneson knot complement");
+    ans->setLabel("Cappell-Shaneson knot complement");
 
     Dim4Pentachoron* p = ans->newPentachoron();
     Dim4Pentachoron* q = ans->newPentachoron();
@@ -170,7 +170,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::doubleCone(
         const NTriangulation& base) {
     Dim4Triangulation* ans = new Dim4Triangulation();
     NPacket::ChangeEventSpan span(ans);
-    ans->setPacketLabel("Double cone over " + base.label());
+    ans->setLabel("Double cone over " + base.label());
 
     unsigned long n = base.size();
     if (n == 0)
@@ -218,7 +218,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::singleCone(
         const NTriangulation& base) {
     Dim4Triangulation* ans = new Dim4Triangulation();
     NPacket::ChangeEventSpan span(ans);
-    ans->setPacketLabel("Single cone over " + base.label());
+    ans->setLabel("Single cone over " + base.label());
 
     unsigned long n = base.size();
     if (n == 0)
@@ -405,7 +405,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::iBundle(
         const NTriangulation& base) {
     Dim4Triangulation* ans = new Dim4Triangulation();
     NPacket::ChangeEventSpan span(ans);
-    ans->setPacketLabel(base.label() + " x I");
+    ans->setLabel(base.label() + " x I");
 
     unsigned long n = base.size();
     if (n == 0)
@@ -459,7 +459,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::s1Bundle(
         const NTriangulation& base) {
     Dim4Triangulation* ans = iBundle(base);
     NPacket::ChangeEventSpan span(ans);
-    ans->setPacketLabel(base.label() + " x S1");
+    ans->setLabel(base.label() + " x S1");
 
     NPerm5 id;
     unsigned long n = base.size();
@@ -474,7 +474,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::bundleWithMonodromy(
         const NTriangulation& base, const NIsomorphism& monodromy) {
     Dim4Triangulation* ans = iBundle(base);
     NPacket::ChangeEventSpan span(ans);
-    ans->setPacketLabel(base.label() + " x I / ~");
+    ans->setLabel(base.label() + " x I / ~");
 
     NPerm5 id;
     unsigned long n = base.size();

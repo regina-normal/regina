@@ -563,7 +563,7 @@ NPacket* NPacket::clone(bool cloneDescendants, bool end) const {
     if (treeParent_ == 0)
         return 0;
     NPacket* ans = internalClonePacket(treeParent_);
-    ans->setPacketLabel(adornedLabel("Clone"));
+    ans->setLabel(adornedLabel("Clone"));
     if (end)
         treeParent_->insertChildLast(ans);
     else
@@ -603,7 +603,7 @@ void NPacket::internalCloneDescendants(NPacket* parent) const {
     NPacket* clone;
     while (child) {
         clone = child->internalClonePacket(parent);
-        clone->setPacketLabel(child->label_);
+        clone->setLabel(child->label_);
         parent->insertChildLast(clone);
         child->internalCloneDescendants(clone);
         child = child->nextTreeSibling_;
@@ -662,7 +662,7 @@ bool NPacket::makeUniqueLabels(NPacket* reference) {
                     newLabel = label + out.str();
                 } while (! labels.insert(newLabel).second);
 
-                p->setPacketLabel(newLabel);
+                p->setLabel(newLabel);
                 changed = true;
             }
         }

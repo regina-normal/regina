@@ -96,7 +96,7 @@ namespace {
             if (tri->isValid() &&
                     (! (h->finite_ == NBoolSet::sTrue && tri->isIdeal())) &&
                     (! (h->finite_ == NBoolSet::sFalse && ! tri->isIdeal()))) {
-                tri->setPacketLabel(tri->isoSig());
+                tri->setLabel(tri->isoSig());
                 (*(h->f_))(tri);
             }
             delete tri;
@@ -133,7 +133,7 @@ namespace {
             if (tri->isValid() &&
                     (! (h->finite_ == NBoolSet::sTrue && tri->isIdeal())) &&
                     (! (h->finite_ == NBoolSet::sFalse && ! tri->isIdeal()))) {
-                tri->setPacketLabel(tri->isoSig());
+                tri->setLabel(tri->isoSig());
                 (*(h->f_))(tri);
             }
             delete tri;

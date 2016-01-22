@@ -393,7 +393,7 @@
                                  // The only closed prime manifolds with
                                  // H_1 = Z and <= 2 tetrahedra are S2xS1 and S2x~S1.
                                  if (small->isOrientable()) {
-                                     small->setPacketLabel("S² × S¹ (Minimal)");
+                                     small->setLabel("S² × S¹ (Minimal)");
                                      UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"S² × S¹"
                                                                                      message:@"This is the prime manifold S² × S¹.  I have constructed a new minimal (but not 0-efficient) triangulation."
                                                                                     delegate:nil
@@ -401,7 +401,7 @@
                                                                            otherButtonTitles:nil];
                                      [alert show];
                                  } else {
-                                     small->setPacketLabel("S² × ~S¹ (Minimal)");
+                                     small->setLabel("S² × ~S¹ (Minimal)");
                                      UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"S² × ~S¹"
                                                                                      message:@"This is the prime manifold S² × ~S¹ (the non-orientable twisted product).  I have constructed a new minimal (but not 0-efficient) triangulation."
                                                                                     delegate:nil
@@ -412,7 +412,7 @@
                              } else if (small->size() <= 2 && small->homology().isZn(2)) {
                                  // The only closed prime orientable manifold with
                                  // H_1 = Z_2 and <= 2 tetrahedra is RP3.
-                                 small->setPacketLabel("ℝP³ (Minimal)");
+                                 small->setLabel("ℝP³ (Minimal)");
                                  UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"ℝP³"
                                                                                  message:@"This is the prime manifold ℝP³.  I have constructed a new minimal (but not 0-efficient) triangulation."
                                                                                 delegate:nil
@@ -420,7 +420,7 @@
                                                                        otherButtonTitles:nil];
                                  [alert show];
                              } else {
-                                 small->setPacketLabel(self.packet->adornedLabel("0-efficient"));
+                                 small->setLabel(self.packet->adornedLabel("0-efficient"));
                                  UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Prime 3-Manifold"
                                                                                  message:@"This is a prime 3-manifold.  I have constructed a new 0-efficient triangulation."
                                                                                 delegate:nil
@@ -443,7 +443,7 @@
                              if (self.packet->firstChild()) {
                                  // This packet already has children.
                                  // Insert the summands at a deeper level.
-                                 base->setPacketLabel(self.packet->adornedLabel("Summands"));
+                                 base->setLabel(self.packet->adornedLabel("Summands"));
                                  self.packet->insertChildLast(base);
                                  [ReginaHelper viewChildren:base];
                              } else {
@@ -485,7 +485,7 @@
         return;
     }
     
-    ans->setPacketLabel(self.packet->adornedLabel("Canonical"));
+    ans->setLabel(self.packet->adornedLabel("Canonical"));
     self.packet->insertChildLast(ans);
     [ReginaHelper viewPacket:ans];
 }

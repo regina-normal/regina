@@ -137,7 +137,7 @@
         [alert show];
     }
 
-    ans->setPacketLabel(tri->label());
+    ans->setLabel(tri->label());
     return ans;
 }
 
@@ -175,7 +175,7 @@ typedef regina::NSnapPeaTriangulation* (*SnapPeaCreator)();
 - (regina::NSnapPeaTriangulation *)create
 {
     regina::NSnapPeaTriangulation* ans = (*self.creator)();
-    ans->setPacketLabel(self.name.UTF8String);
+    ans->setLabel(self.name.UTF8String);
     return ans;
 }
 

@@ -95,51 +95,51 @@ class Dim2TriangulationTest : public TriangulationTest<2> {
     public:
         void copyAndDelete(Dim2Triangulation& dest, Dim2Triangulation* source) {
             dest.insertTriangulation(*source);
-            dest.setPacketLabel(source->label());
+            dest.setLabel(source->label());
             delete source;
         }
 
         void setUp() {
-            empty.setPacketLabel("Empty triangulation");
+            empty.setLabel("Empty triangulation");
 
             copyAndDelete(s2, Dim2ExampleTriangulation::sphere());
-            s2.setPacketLabel("S^2");
+            s2.setLabel("S^2");
 
             copyAndDelete(s2Tet, Dim2ExampleTriangulation::sphereTetrahedron());
-            s2Tet.setPacketLabel("Tetrahedron boundary");
+            s2Tet.setLabel("Tetrahedron boundary");
 
             copyAndDelete(s2Oct, Dim2ExampleTriangulation::sphereOctahedron());
-            s2Oct.setPacketLabel("Octahedron boundary");
+            s2Oct.setLabel("Octahedron boundary");
 
             copyAndDelete(torus, Dim2ExampleTriangulation::torus());
-            torus.setPacketLabel("Torus");
+            torus.setLabel("Torus");
 
             copyAndDelete(torus2, Dim2ExampleTriangulation::orientable(2, 0));
-            torus2.setPacketLabel("Genus 2 torus");
+            torus2.setLabel("Genus 2 torus");
 
             copyAndDelete(rp2, Dim2ExampleTriangulation::rp2());
-            rp2.setPacketLabel("RP^2");
+            rp2.setLabel("RP^2");
 
             copyAndDelete(kb, Dim2ExampleTriangulation::kb());
-            kb.setPacketLabel("KB");
+            kb.setLabel("KB");
 
             copyAndDelete(disc, Dim2ExampleTriangulation::disc());
-            disc.setPacketLabel("Disc");
+            disc.setLabel("Disc");
 
             copyAndDelete(annulus, Dim2ExampleTriangulation::annulus());
-            annulus.setPacketLabel("Annulus");
+            annulus.setLabel("Annulus");
 
             copyAndDelete(mobius, Dim2ExampleTriangulation::mobius());
-            mobius.setPacketLabel("Mobius band");
+            mobius.setLabel("Mobius band");
 
             disjoint2.insertTriangulation(torus);
             disjoint2.insertTriangulation(mobius);
-            disjoint2.setPacketLabel("Torus U Mobius");
+            disjoint2.setLabel("Torus U Mobius");
 
             disjoint3.insertTriangulation(kb);
             disjoint3.insertTriangulation(annulus);
             disjoint3.insertTriangulation(s2);
-            disjoint3.setPacketLabel("KB U Annulus U S^2");
+            disjoint3.setLabel("KB U Annulus U S^2");
         }
 
         void tearDown() {

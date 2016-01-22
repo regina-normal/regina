@@ -75,11 +75,11 @@ static NSArray* whichText;
     switch (self.whichControl.selectedSegmentIndex) {
         case 0:
             ans = new regina::NSurfaceFilterProperties;
-            ans->setPacketLabel("Filter");
+            ans->setLabel("Filter");
             break;
         case 1:
             ans = new regina::NSurfaceFilterCombination;
-            ans->setPacketLabel("Combination filter");
+            ans->setLabel("Combination filter");
             break;
         default:
             return;

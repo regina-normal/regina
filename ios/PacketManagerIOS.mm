@@ -129,7 +129,7 @@
         {
             // We can do this immediately, no input required.
             regina::NContainer* c = new regina::NContainer();
-            c->setPacketLabel("Container");
+            c->setLabel("Container");
             spec.parent->insertChildLast(c);
             [spec created:c];
             break;
@@ -138,7 +138,7 @@
         {
             // We can do this immediately, no input required.
             regina::NText* t = new regina::NText();
-            t->setPacketLabel("Text");
+            t->setLabel("Text");
             t->setText("Type your text here.");
             spec.parent->insertChildLast(t);
             [spec created:t];

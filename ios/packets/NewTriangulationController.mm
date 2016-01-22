@@ -76,7 +76,7 @@
 - (regina::NPacket*)create
 {
     regina::NPacket* ans = new regina::NTriangulation();
-    ans->setPacketLabel("Triangulation");
+    ans->setLabel("Triangulation");
     return ans;
 }
 
@@ -114,7 +114,7 @@ typedef regina::NTriangulation* (*TriangulationCreator)();
 - (regina::NTriangulation *)create
 {
     regina::NTriangulation* ans = (*self.creator)();
-    ans->setPacketLabel(self.name.UTF8String);
+    ans->setLabel(self.name.UTF8String);
     return ans;
 }
 
@@ -222,7 +222,7 @@ typedef regina::NTriangulation* (*TriangulationCreator)();
         return 0;
     }
     
-    t->setPacketLabel(sig);
+    t->setLabel(sig);
     return t;
 }
 

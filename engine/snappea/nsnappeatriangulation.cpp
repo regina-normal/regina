@@ -82,7 +82,7 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(
                 fileNameOrContents.c_str());
 
         if (data_) {
-            setPacketLabel(get_triangulation_name(data_));
+            setLabel(get_triangulation_name(data_));
             sync();
         }
     } catch (regina::SnapPeaFatalError& err) {
@@ -421,7 +421,7 @@ NSnapPeaTriangulation* NSnapPeaTriangulation::protoCanonize() const {
     }
 
     NSnapPeaTriangulation* ans = new NSnapPeaTriangulation();
-    ans->setPacketLabel(get_triangulation_name(data_));
+    ans->setLabel(get_triangulation_name(data_));
     ans->reset(tmp);
     return ans;
 }
@@ -439,7 +439,7 @@ NTriangulation* NSnapPeaTriangulation::canonize() const {
     }
 
     NTriangulation* ans = new NTriangulation();
-    ans->setPacketLabel(get_triangulation_name(data_));
+    ans->setLabel(get_triangulation_name(data_));
     fillRegina(tmp, *ans);
     regina::snappea::free_triangulation(tmp);
     return ans;
@@ -775,7 +775,7 @@ void NSnapPeaTriangulation::writeXMLPacketData(std::ostream& out) const {
 NTriangulation* NSnapPeaTriangulation::toRegina() const {
     if (data_) {
         NTriangulation* ans = new NTriangulation(*this);
-        ans->setPacketLabel(get_triangulation_name(data_));
+        ans->setLabel(get_triangulation_name(data_));
         return ans;
     } else
         return 0;

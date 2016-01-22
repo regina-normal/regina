@@ -722,7 +722,7 @@ void slaveFoundGluingPerms(const typename CensusType::GluingPermSearcher* perms,
 
                 std::ostringstream out;
                 out << "Item " << (nSolns + 1);
-                tri->setPacketLabel(out.str());
+                tri->setLabel(out.str());
 
                 dest->insertChildLast(tri);
             }
@@ -791,11 +791,11 @@ regina::NPacket* slaveSkeletonTree(
         const char* searchRep) {
     // Create the overall parent packet.
     regina::NContainer* parent = new regina::NContainer();
-    parent->setPacketLabel("Partial MPI census");
+    parent->setLabel("Partial MPI census");
 
     // Create a child packet that describes the census parameters.
     regina::NText* desc = new regina::NText();
-    desc->setPacketLabel("Parameters");
+    desc->setLabel("Parameters");
     std::ostringstream descStream;
 
     descStream << "Processed a " << WORD_face << " pairing subsearch.\n\n"
@@ -826,11 +826,11 @@ regina::NPacket* slaveSkeletonTree(
         const typename CensusType::Pairing* pairing) {
     // Create the overall parent packet.
     regina::NContainer* parent = new regina::NContainer();
-    parent->setPacketLabel("Partial MPI census");
+    parent->setLabel("Partial MPI census");
 
     // Create a child packet that describes the census parameters.
     regina::NText* desc = new regina::NText();
-    desc->setPacketLabel("Parameters");
+    desc->setLabel("Parameters");
     std::ostringstream descStream;
 
     descStream << "Processed a single " << WORD_face << " pairing:\n"
@@ -928,7 +928,7 @@ void slaveProcessPartialSearch() {
     regina::NPacket* dest = 0;
     if (! sigs) {
         dest = new regina::NContainer();
-        dest->setPacketLabel("Triangulations");
+        dest->setLabel("Triangulations");
     }
 
     typename CensusType::GluingPermSearcher* search;
@@ -1041,7 +1041,7 @@ void slaveProcessPairing() {
     } else {
         parent = slaveSkeletonTree<CensusType>(pairing);
         dest = new regina::NContainer();
-        dest->setPacketLabel("Triangulations");
+        dest->setLabel("Triangulations");
         parent->insertChildLast(dest);
     }
 

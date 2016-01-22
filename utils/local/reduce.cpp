@@ -103,7 +103,7 @@ void processAlt(NTriangulation* t) {
     nonMin = true;
 
     NTriangulation* final = new NTriangulation(*t);
-    final->setPacketLabel(orig->adornedLabel("Reduced"));
+    final->setLabel(orig->adornedLabel("Reduced"));
 
     // Insert as the first child so it doesn't get processed.
     orig->insertChildFirst(final);

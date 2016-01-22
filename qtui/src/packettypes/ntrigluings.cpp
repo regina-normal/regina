@@ -880,7 +880,7 @@ void NTriGluingsUI::drillEdge() {
 
             regina::NTriangulation* ans = new regina::NTriangulation(*tri);
             ans->drillEdge(ans->edge(chosen->index()));
-            ans->setPacketLabel(tri->adornedLabel("Drilled"));
+            ans->setLabel(tri->adornedLabel("Drilled"));
             tri->insertChildLast(ans);
             enclosingPane->getMainWindow()->packetView(ans, true, true);
         }
@@ -958,7 +958,7 @@ void NTriGluingsUI::vertexLinks() {
         if (chosen) {
             regina::Dim2Triangulation* ans = new regina::Dim2Triangulation(
                 *chosen->buildLink());
-            ans->setPacketLabel(tr("Link of vertex %1").arg(
+            ans->setLabel(tr("Link of vertex %1").arg(
                 chosen->index()).toUtf8().constData());
             tri->insertChildLast(ans);
             enclosingPane->getMainWindow()->packetView(ans, true, true);
@@ -984,7 +984,7 @@ void NTriGluingsUI::splitIntoComponents() {
         if (tri->firstChild()) {
             base = new regina::NContainer();
             tri->insertChildLast(base);
-            base->setPacketLabel(tri->adornedLabel("Components"));
+            base->setLabel(tri->adornedLabel("Components"));
         } else
             base = tri;
 
@@ -1024,7 +1024,7 @@ void NTriGluingsUI::connectedSumDecomposition() {
         if (tri->firstChild()) {
             base = new regina::NContainer();
             tri->insertChildLast(base);
-            base->setPacketLabel(tri->adornedLabel("Summands"));
+            base->setLabel(tri->adornedLabel("Summands"));
         } else
             base = tri;
 
@@ -1244,7 +1244,7 @@ void NTriGluingsUI::toSnapPea() {
             "For peripheral curves, I have attempted to install the "
             "(shortest, second shortest) basis on each cusp.</qt>"));
 
-    ans->setPacketLabel(tri->label());
+    ans->setLabel(tri->label());
     tri->insertChildLast(ans);
     enclosingPane->getMainWindow()->packetView(ans, true, true);
 }

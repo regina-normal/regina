@@ -76,7 +76,7 @@
 - (regina::NPacket*)create
 {
     regina::NPacket* ans = new regina::Dim2Triangulation();
-    ans->setPacketLabel("2-D Triangulation");
+    ans->setLabel("2-D Triangulation");
     return ans;
 }
 
@@ -114,7 +114,7 @@ typedef regina::Dim2Triangulation* (*Dim2TriangulationCreator)();
 - (regina::Dim2Triangulation *)create
 {
     regina::Dim2Triangulation* ans = (*self.creator)();
-    ans->setPacketLabel(self.name.UTF8String);
+    ans->setLabel(self.name.UTF8String);
     return ans;
 }
 
@@ -306,7 +306,7 @@ typedef regina::Dim2Triangulation* (*Dim2TriangulationCreator)();
         else
             label = [NSString stringWithFormat:@"Non-orientable, genus %d, %d punctures", useGenus, usePunctures];
     }
-    ans->setPacketLabel(label.UTF8String);
+    ans->setLabel(label.UTF8String);
     return ans;
 }
 
@@ -351,7 +351,7 @@ typedef regina::Dim2Triangulation* (*Dim2TriangulationCreator)();
         return 0;
     }
     
-    t->setPacketLabel(sig);
+    t->setLabel(sig);
     return t;
 }
 

@@ -90,14 +90,14 @@ void usage(const char* progName, const std::string& error = std::string()) {
 
 void insertTri(const NTriangulation& source) {
     NTriangulation* t = new NTriangulation(source);
-    t->setPacketLabel(source.label());
+    t->setLabel(source.label());
 
     std::string H1 = t->homology().str();
 
     HomologyMap::iterator it = H1Map.find(H1);
     if (it == H1Map.end()) {
         NPacket* p = new NContainer();
-        p->setPacketLabel(H1);
+        p->setLabel(H1);
         p->insertChildLast(t);
 
         H1Map.insert(std::make_pair(H1, p));
@@ -107,7 +107,7 @@ void insertTri(const NTriangulation& source) {
 
     if (makeSurfaces)
         NNormalSurfaceList::enumerate(t, NS_STANDARD)->
-            setPacketLabel(t->adornedLabel("Surfaces"));
+            setLabel(t->adornedLabel("Surfaces"));
 }
 
 void process(const char* filename) {
@@ -186,7 +186,7 @@ int main(int argc, char* argv[]) {
 
     // Insert each homology container into the overall container.
     all = new NContainer();
-    all->setPacketLabel("All");
+    all->setLabel("All");
 
     long size;
     std::cerr << std::endl;
