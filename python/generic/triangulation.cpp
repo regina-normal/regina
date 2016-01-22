@@ -159,7 +159,7 @@ void addTriangulation(const char* name) {
         .def("getComponents", PyTriHelper<dim>::components_list)
         .def("faces", &regina::python::faces<Triangulation<dim>, dim>)
         .def("component", &Triangulation<dim>::component,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("getComponent", &Triangulation<dim>::getComponent,
             return_internal_reference<>())
         .def("face", &regina::python::face<Triangulation<dim>, dim, size_t>)

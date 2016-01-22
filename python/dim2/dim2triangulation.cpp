@@ -193,7 +193,7 @@ void addDim2Triangulation() {
         .def("edges", regina::python::faces_list<Dim2Triangulation, 2, 1>)
         .def("getEdges", regina::python::faces_list<Dim2Triangulation, 2, 1>)
         .def("component", &Dim2Triangulation::component,
-            return_value_policy<reference_existing_object>())
+            return_internal_component<>())
         .def("getComponent", &Dim2Triangulation::getComponent,
             return_internal_reference<>())
         .def("boundaryComponent", &Dim2Triangulation::boundaryComponent,

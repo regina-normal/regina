@@ -228,7 +228,7 @@ void addDim4Triangulation() {
         .def("getTetrahedra",
             regina::python::faces_list<Dim4Triangulation, 4, 3>)
         .def("component", &Dim4Triangulation::component,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("getComponent", &Dim4Triangulation::getComponent,
             return_internal_reference<>())
         .def("boundaryComponent", &Dim4Triangulation::boundaryComponent,

@@ -267,7 +267,7 @@ void addNTriangulation() {
         .def("triangles", regina::python::faces_list<NTriangulation, 3, 2>)
         .def("getTriangles", regina::python::faces_list<NTriangulation, 3, 2>)
         .def("component", &NTriangulation::component,
-            return_value_policy<reference_existing_object>())
+            return_internal_reference<>())
         .def("getComponent", &NTriangulation::getComponent,
             return_internal_reference<>())
         .def("boundaryComponent", &NTriangulation::boundaryComponent,
