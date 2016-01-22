@@ -70,6 +70,28 @@
             return [UIImage imageNamed:@"Text"];
         case regina::PACKET_TRIANGULATION:
             return [UIImage imageNamed:@"Triangulation"];
+        case regina::PACKET_TRIANGULATION5:
+            return [UIImage imageNamed:@"Triangulation5"];
+        case regina::PACKET_TRIANGULATION6:
+            return [UIImage imageNamed:@"Triangulation6"];
+        case regina::PACKET_TRIANGULATION7:
+            return [UIImage imageNamed:@"Triangulation7"];
+        case regina::PACKET_TRIANGULATION8:
+            return [UIImage imageNamed:@"Triangulation8"];
+        case regina::PACKET_TRIANGULATION9:
+            return [UIImage imageNamed:@"Triangulation9"];
+        case regina::PACKET_TRIANGULATION10:
+            return [UIImage imageNamed:@"Triangulation10"];
+        case regina::PACKET_TRIANGULATION11:
+            return [UIImage imageNamed:@"Triangulation11"];
+        case regina::PACKET_TRIANGULATION12:
+            return [UIImage imageNamed:@"Triangulation12"];
+        case regina::PACKET_TRIANGULATION13:
+            return [UIImage imageNamed:@"Triangulation13"];
+        case regina::PACKET_TRIANGULATION14:
+            return [UIImage imageNamed:@"Triangulation14"];
+        case regina::PACKET_TRIANGULATION15:
+            return [UIImage imageNamed:@"Triangulation15"];
         default:
             return nil;
     }

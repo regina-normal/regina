@@ -61,39 +61,77 @@ using namespace regina;
 QIcon PacketManager::icon(NPacket* packet, bool allowLock) {
     IconCache::IconID id;
 
-    if (packet->type() == PACKET_ANGLESTRUCTURELIST)
-        id = IconCache::packet_angles;
-    else if (packet->type() == PACKET_CONTAINER)
-        id = (packet->parent() ? IconCache::packet_container :
-            IconCache::regina);
-    else if (packet->type() == PACKET_DIM2TRIANGULATION)
-        id = IconCache::packet_dim2triangulation;
-    else if (packet->type() == PACKET_DIM4TRIANGULATION)
-        id = IconCache::packet_dim4triangulation;
-    else if (packet->type() == PACKET_PDF)
-        id = IconCache::packet_pdf;
-    else if (packet->type() == PACKET_SURFACEFILTER) {
-        if (((NSurfaceFilter*)packet)->filterType() == NS_FILTER_COMBINATION)
-            id = IconCache::filter_comb;
-        else if (((NSurfaceFilter*)packet)->filterType() ==
-                NS_FILTER_PROPERTIES)
-            id = IconCache::filter_prop;
-        else
-            id = IconCache::packet_filter;
-    }
-    else if (packet->type() == PACKET_SCRIPT)
-        id = IconCache::packet_script;
-    else if (packet->type() == PACKET_SNAPPEATRIANGULATION)
-        id = IconCache::packet_snappea;
-    else if (packet->type() == PACKET_NORMALSURFACELIST)
-        id = IconCache::packet_surfaces;
-    else if (packet->type() == PACKET_TEXT)
-        id = IconCache::packet_text;
-    else if (packet->type() == PACKET_TRIANGULATION)
-        id = IconCache::packet_triangulation;
-    else {
-        // Unknown packet type.
-        return QIcon();
+    switch (packet->type()) {
+        case PACKET_ANGLESTRUCTURELIST :
+            id = IconCache::packet_angles;
+            break;
+        case PACKET_CONTAINER :
+            id = (packet->parent() ? IconCache::packet_container :
+                IconCache::regina);
+            break;
+        case PACKET_DIM2TRIANGULATION :
+            id = IconCache::packet_dim2triangulation;
+            break;
+        case PACKET_DIM4TRIANGULATION :
+            id = IconCache::packet_dim4triangulation;
+            break;
+        case PACKET_PDF :
+            id = IconCache::packet_pdf;
+            break;
+        case PACKET_SURFACEFILTER :
+            switch (((NSurfaceFilter*)packet)->filterType()) {
+                case NS_FILTER_COMBINATION :
+                    id = IconCache::filter_comb;
+                    break;
+                case NS_FILTER_PROPERTIES :
+                    id = IconCache::filter_prop;
+                    break;
+                default:
+                    id = IconCache::packet_filter;
+                    break;
+                }
+            break;
+        case PACKET_SCRIPT :
+            id = IconCache::packet_script;
+            break;
+        case PACKET_SNAPPEATRIANGULATION :
+            id = IconCache::packet_snappea;
+            break;
+        case PACKET_NORMALSURFACELIST :
+            id = IconCache::packet_surfaces;
+            break;
+        case PACKET_TEXT :
+            id = IconCache::packet_text;
+            break;
+        case PACKET_TRIANGULATION :
+            id = IconCache::packet_triangulation;
+            break;
+        // For generic dimensions, we don't cache the icons.
+        case PACKET_TRIANGULATION5 :
+            return ReginaSupport::regIcon("packet_triangulation5");
+        case PACKET_TRIANGULATION6 :
+            return ReginaSupport::regIcon("packet_triangulation6");
+        case PACKET_TRIANGULATION7 :
+            return ReginaSupport::regIcon("packet_triangulation7");
+        case PACKET_TRIANGULATION8 :
+            return ReginaSupport::regIcon("packet_triangulation8");
+        case PACKET_TRIANGULATION9 :
+            return ReginaSupport::regIcon("packet_triangulation9");
+        case PACKET_TRIANGULATION10 :
+            return ReginaSupport::regIcon("packet_triangulation10");
+        case PACKET_TRIANGULATION11 :
+            return ReginaSupport::regIcon("packet_triangulation11");
+        case PACKET_TRIANGULATION12 :
+            return ReginaSupport::regIcon("packet_triangulation12");
+        case PACKET_TRIANGULATION13 :
+            return ReginaSupport::regIcon("packet_triangulation13");
+        case PACKET_TRIANGULATION14 :
+            return ReginaSupport::regIcon("packet_triangulation14");
+        case PACKET_TRIANGULATION15 :
+            return ReginaSupport::regIcon("packet_triangulation15");
+        default:
+            // Unknown packet type.
+            return QIcon();
     }
 
     if (allowLock && ! packet->isPacketEditable())

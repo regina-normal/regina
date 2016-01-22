@@ -31,6 +31,17 @@ set (IMGS
   packet_surfaces
   packet_text
   packet_triangulation
+  packet_triangulation5
+  packet_triangulation6
+  packet_triangulation7
+  packet_triangulation8
+  packet_triangulation9
+  packet_triangulation10
+  packet_triangulation11
+  packet_triangulation12
+  packet_triangulation13
+  packet_triangulation14
+  packet_triangulation15
   packet_view
   puncture
   randomise
