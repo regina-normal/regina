@@ -162,9 +162,8 @@
         case regina::PACKET_SURFACEFILTER:
             [PacketManagerIOS newPacket:spec formSheet:@"newFilter"];
             break;
-        case regina::PACKET_PDF:
-        case regina::PACKET_SCRIPT:
-            // We don't create these in the iOS version of Regina.
+        default:
+            // We don't create other packet types in the iOS version of Regina.
             break;
     }
 }
