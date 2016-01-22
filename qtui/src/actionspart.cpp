@@ -760,15 +760,21 @@ void ReginaMain::setupActions() {
 
     toolBarPacket = addToolBar(tr("New Packets"));
     toolBarPacket->addAction(actContainer);
+    toolBarPacket->addSeparator();
     toolBarPacket->addAction(actDim2Triangulation);
     toolBarPacket->addAction(actTriangulation);
     toolBarPacket->addAction(actDim4Triangulation);
+    toolBarPacket->addAction(actSnapPeaTriangulation);
+    toolBarPacket->addSeparator();
     toolBarPacket->addAction(actSurfaces);
     toolBarPacket->addAction(actAngleStructure);
-    toolBarPacket->addAction(actSnapPeaTriangulation);
     toolBarPacket->addAction(actFilter);
+    toolBarPacket->addSeparator();
     toolBarPacket->addAction(actText);
     toolBarPacket->addAction(actScript);
-    toolBarPacket->addAction(actPDF);
+
+    // Leave some packets out of the toolbar (they are still available
+    // through the menus).
+    // toolBarPacket->addAction(actPDF);
 }
 
