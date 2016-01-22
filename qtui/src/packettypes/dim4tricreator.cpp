@@ -156,7 +156,7 @@ Dim4TriangulationCreator::Dim4TriangulationCreator() {
     exampleWhich->insertItem(2, QObject::trUtf8("RP⁴"));
     exampleWhich->insertItem(3, QObject::trUtf8("Product S³ x S¹"));
     exampleWhich->insertItem(4, QObject::trUtf8("Twisted product S³ x S¹"));
-    exampleWhich->insertItem(5, QObject::tr("Cappell-Shaneson knot complement"));
+    exampleWhich->insertItem(5, QObject::tr("Cappell-Shaneson 2-knot complement"));
     exampleWhich->setCurrentIndex(0);
     exampleWhich->setWhatsThis(expln);
     hLayout->addWidget(exampleWhich, 1);
