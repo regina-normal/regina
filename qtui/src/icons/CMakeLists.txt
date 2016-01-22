@@ -25,6 +25,7 @@ set (IMGS
   packet_dim2triangulation
   packet_dim4triangulation
   packet_filter
+  packet_hypersurfaces
   packet_pdf
   packet_script
   packet_snappea

@@ -59,6 +59,9 @@ void IconCache::load(IconID id) {
         case packet_filter:
             cache_[id] = ReginaSupport::regIcon("packet_filter");
             return;
+        case packet_hypersurfaces:
+            cache_[id] = ReginaSupport::regIcon("packet_hypersurfaces");
+            return;
         case packet_pdf:
             cache_[id] = ReginaSupport::regIcon("packet_pdf");
             return;

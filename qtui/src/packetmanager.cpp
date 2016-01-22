@@ -100,6 +100,9 @@ QIcon PacketManager::icon(NPacket* packet, bool allowLock) {
         case PACKET_NORMALSURFACELIST :
             id = IconCache::packet_surfaces;
             break;
+        case PACKET_NORMALHYPERSURFACELIST :
+            id = IconCache::packet_hypersurfaces;
+            break;
         case PACKET_TEXT :
             id = IconCache::packet_text;
             break;

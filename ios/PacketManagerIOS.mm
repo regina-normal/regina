@@ -54,10 +54,14 @@
             return [UIImage imageNamed:@"Container"];
         case regina::PACKET_DIM2TRIANGULATION:
             return [UIImage imageNamed:@"Dim2Triangulation"];
+        case regina::PACKET_TRIANGULATION:
+            return [UIImage imageNamed:@"Triangulation"];
         case regina::PACKET_DIM4TRIANGULATION:
             return [UIImage imageNamed:@"Dim4Triangulation"];
         case regina::PACKET_NORMALSURFACELIST:
             return [UIImage imageNamed:@"Surfaces"];
+        case regina::PACKET_NORMALHYPERSURFACELIST:
+            return [UIImage imageNamed:@"Hypersurfaces"];
         case regina::PACKET_PDF:
             return [UIImage imageNamed:@"PDF"];
         case regina::PACKET_SCRIPT:
@@ -68,8 +72,6 @@
             return [UIImage imageNamed:@"Filter"];
         case regina::PACKET_TEXT:
             return [UIImage imageNamed:@"Text"];
-        case regina::PACKET_TRIANGULATION:
-            return [UIImage imageNamed:@"Triangulation"];
         case regina::PACKET_TRIANGULATION5:
             return [UIImage imageNamed:@"Triangulation5"];
         case regina::PACKET_TRIANGULATION6:
