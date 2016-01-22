@@ -142,13 +142,14 @@ NTriangulationCreator::NTriangulationCreator() {
     // box must correspond precisely to the type IDs defined at the head
     // of this file.
     QWidget* hArea;
+    QBoxLayout* hLayout;
 
     type->insertItem(TRI_EMPTY,QObject::tr("Empty"));
     details->addWidget(new QWidget());
 
     type->insertItem(TRI_LAYERED_LENS_SPACE,QObject::tr("Layered lens space"));
     hArea = new QWidget();
-    QHBoxLayout* hLayout = new QHBoxLayout();
+    hLayout = new QHBoxLayout();
     hLayout->setContentsMargins(0, 0, 0, 0);
     hArea->setLayout(hLayout);
     expln = QObject::tr("<qt>The (p,q) parameters of the new "
@@ -332,8 +333,8 @@ NTriangulationCreator::NTriangulationCreator() {
     hLayout = new QHBoxLayout();
     hLayout->setContentsMargins(0, 0, 0, 0);
     hArea->setLayout(hLayout);
-    expln = QObject::tr("<qt>Specifies which particular example triangulation to "
-        "create.<p>"
+    expln = QObject::tr(
+        "<qt>Specifies which particular example triangulation to create.<p>"
         "A selection of ready-made 3-manifold triangulations is offered "
         "here to help you experiment and see how Regina works.</qt>");
     label = new QLabel(QObject::tr("Example:"));
@@ -343,13 +344,13 @@ NTriangulationCreator::NTriangulationCreator() {
     exampleWhich->insertItem(0, QObject::tr("3-sphere (1 tetrahedron)"));
     exampleWhich->insertItem(1, QObject::tr("3-sphere (dual to Bing's house)"));
     exampleWhich->insertItem(2, QObject::tr("3-sphere (600-cell)"));
-    exampleWhich->insertItem(3, QObject::tr("Connected sum RP3 # RP3"));
+    exampleWhich->insertItem(3, QObject::trUtf8("Connected sum RP³ # RP³"));
     exampleWhich->insertItem(4, QObject::tr("Figure eight knot complement"));
     exampleWhich->insertItem(5, QObject::tr("Gieseking manifold"));
     exampleWhich->insertItem(6, QObject::tr("Lens space L(8,3)"));
     exampleWhich->insertItem(7, QObject::trUtf8("Poincaré homology sphere"));
-    exampleWhich->insertItem(8, QObject::tr("Product RP2 x S1"));
-    exampleWhich->insertItem(9, QObject::tr("Product S2 x S1"));
+    exampleWhich->insertItem(8, QObject::trUtf8("Product RP² x S¹"));
+    exampleWhich->insertItem(9, QObject::trUtf8("Product S² x S¹"));
     exampleWhich->insertItem(10, QObject::tr("Solid Klein bottle"));
     exampleWhich->insertItem(11, QObject::tr("Trefoil knot complement"));
     exampleWhich->insertItem(12, QObject::tr("Weeks manifold"));

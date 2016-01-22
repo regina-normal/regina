@@ -59,6 +59,7 @@ namespace {
      */
     enum {
         TRI_EMPTY,
+        TRI_ISOSIG,
         TRI_EXAMPLE
     };
 
@@ -68,11 +69,17 @@ namespace {
      */
     enum {
         EXAMPLE_S4,
+        EXAMPLE_SIMPLICIAL_S4,
         EXAMPLE_RP4,
         EXAMPLE_S3xS1,
         EXAMPLE_S3xS1TWISTED,
         EXAMPLE_CAPPELL_SHANESON
     };
+
+    /**
+     * Regular expressions describing different sets of parameters.
+     */
+    QRegExp reIsoSig("^([A-Za-z0-9+-]+)$");
 }
 
 Dim4TriangulationCreator::Dim4TriangulationCreator() {
@@ -106,25 +113,50 @@ Dim4TriangulationCreator::Dim4TriangulationCreator() {
     type->insertItem(type->count(), QObject::tr("Empty"));
     details->addWidget(new QWidget());
 
+    type->insertItem(TRI_ISOSIG, QObject::tr("From isomorphism signature"));
+    hArea = new QWidget();
+    hLayout = new QHBoxLayout();
+    hLayout->setContentsMargins(0, 0, 0, 0);
+    hArea->setLayout(hLayout);
+    expln = QObject::tr("<qt>The isomorphism signature "
+        "from which the new triangulation will be created.  An example "
+        "isomorphism signature is <i>cMkabbb+aAa3blb</i>.<p>"
+        "Isomorphism signatures identify triangulations uniquely "
+        "up to combinatorial isomorphism.  "
+        "3-dimensional isomorphism signatures are described in "
+        "detail in <i>Simplification paths in the Pachner graphs "
+        "of closed orientable 3-manifold triangulations</i>, "
+        "Burton, 2011, <tt>arXiv:1110.6080</tt>.  "
+        "4-dimensional isomorphism signatures (as used here) follow an "
+        "analogous scheme.</qt>");
+    label = new QLabel(QObject::tr("Isomorphism signature:"));
+    label->setWhatsThis(expln);
+    hLayout->addWidget(label);
+    isoSig = new QLineEdit();
+    isoSig->setValidator(new QRegExpValidator(reIsoSig, hArea));
+    isoSig->setWhatsThis(expln);
+    hLayout->addWidget(isoSig, 1);
+    details->addWidget(hArea);
+
     type->insertItem(type->count(), QObject::tr("Example triangulation"));
     hArea = new QWidget();
     hLayout = new QHBoxLayout();
     hLayout->setContentsMargins(0, 0, 0, 0);
     hArea->setLayout(hLayout);
     expln = QObject::tr(
-        "<qt>Specifies which particular example triangulation to "
-        "create.<p>"
+        "<qt>Specifies which particular example triangulation to create.<p>"
         "A selection of ready-made 4-manifold triangulations is offered "
         "here to help you experiment and see how Regina works.</qt>");
     label = new QLabel(QObject::tr("Example:"));
     label->setWhatsThis(expln);
     hLayout->addWidget(label);
     exampleWhich = new QComboBox(hArea);
-    exampleWhich->insertItem(0, QObject::tr("4-sphere"));
-    exampleWhich->insertItem(1, QObject::tr("RP4"));
-    exampleWhich->insertItem(2, QObject::tr("Product S3 x S1"));
-    exampleWhich->insertItem(3, QObject::tr("Twisted product S3 x S1"));
-    exampleWhich->insertItem(4, QObject::tr("Cappell-Shaneson knot complement"));
+    exampleWhich->insertItem(0, QObject::tr("Minimal 4-sphere (2 pentachora)"));
+    exampleWhich->insertItem(1, QObject::tr("Simplicial 4-sphere (6 pentachora)"));
+    exampleWhich->insertItem(2, QObject::trUtf8("RP⁴"));
+    exampleWhich->insertItem(3, QObject::trUtf8("Product S³ x S¹"));
+    exampleWhich->insertItem(4, QObject::trUtf8("Twisted product S³ x S¹"));
+    exampleWhich->insertItem(5, QObject::tr("Cappell-Shaneson knot complement"));
     exampleWhich->setCurrentIndex(0);
     exampleWhich->setWhatsThis(expln);
     hLayout->addWidget(exampleWhich, 1);
@@ -147,10 +179,44 @@ regina::NPacket* Dim4TriangulationCreator::createPacket(regina::NPacket*,
     int typeId = type->currentIndex();
     if (typeId == TRI_EMPTY)
         return new Dim4Triangulation();
-    else if (typeId == TRI_EXAMPLE) {
+    else if (typeId == TRI_ISOSIG) {
+        if (! reIsoSig.exactMatch(isoSig->text())) {
+            ReginaSupport::sorry(parentWidget,
+                QObject::tr("The isomorphism signature is not valid."),
+                QObject::tr("<qt>An isomorphism "
+                "signature must be a sequence of symbols, which may include "
+                "letters, digits, plus and/or minus but nothing else.  "
+                "An example isomorphism signature is <i>cMkabbb+aAa3blb</i>.<p>"
+                "3-dimensional isomorphism signatures are described in "
+                "detail in <i>Simplification paths in the Pachner graphs "
+                "of closed orientable 3-manifold triangulations</i>, "
+                "Burton, 2011, <tt>arXiv:1110.6080</tt>.  "
+                "4-dimensional isomorphism signatures (as used here) follow an "
+                "analogous scheme.</qt>"));
+            return 0;
+        }
+
+        Dim4Triangulation* ans = Dim4Triangulation::fromIsoSig(
+            reIsoSig.cap(1).toUtf8().constData());
+        if (ans)
+            return ans;
+        ReginaSupport::sorry(parentWidget,
+            QObject::tr("I could not interpret the given "
+            "isomorphism signature."),
+            QObject::tr("<qt>3-dimensional isomorphism signatures are "
+            "described in detail in "
+            "<i>Simplification paths in the Pachner graphs "
+            "of closed orientable 3-manifold triangulations</i>, "
+            "Burton, 2011, <tt>arXiv:1110.6080</tt>.  "
+            "4-dimensional isomorphism signatures (as used here) follow an "
+            "analogous scheme.</qt>"));
+        return 0;
+    } else if (typeId == TRI_EXAMPLE) {
         switch (exampleWhich->currentIndex()) {
             case EXAMPLE_S4:
                 return Dim4ExampleTriangulation::fourSphere();
+            case EXAMPLE_SIMPLICIAL_S4:
+                return Dim4ExampleTriangulation::simplicialFourSphere();
             case EXAMPLE_RP4:
                 return Dim4ExampleTriangulation::rp4();
             case EXAMPLE_S3xS1:

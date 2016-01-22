@@ -62,6 +62,7 @@ class Dim4TriangulationCreator : public PacketCreator {
         /**
          * Details for specific triangulation types
          */
+        QLineEdit* isoSig;
         QComboBox* exampleWhich;
 
     public:

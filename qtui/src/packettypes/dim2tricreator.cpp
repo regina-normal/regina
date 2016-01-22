@@ -183,10 +183,13 @@ Dim2TriangulationCreator::Dim2TriangulationCreator() {
         "from which the new triangulation will be created.  An example "
         "isomorphism signature is <i>cPbbde</i>.<p>"
         "Isomorphism signatures identify triangulations uniquely "
-        "up to combinatorial isomorphism.  Their 3-dimensional equivalents are "
-        "described in detail in <i>Simplification paths in the Pachner graphs "
-        "of closed orientable 3-manifold triangulations</i>, Burton, "
-        "preprint, <tt>arXiv:1110.6080</tt>, October 2011.</qt>");
+        "up to combinatorial isomorphism.  "
+        "3-dimensional isomorphism signatures are described in "
+        "detail in <i>Simplification paths in the Pachner graphs "
+        "of closed orientable 3-manifold triangulations</i>, "
+        "Burton, 2011, <tt>arXiv:1110.6080</tt>.  "
+        "2-dimensional isomorphism signatures (as used here) follow an "
+        "analogous scheme.</qt>");
     label = new QLabel(QObject::tr("Isomorphism signature:"));
     label->setWhatsThis(expln);
     hLayout->addWidget(label);
@@ -262,11 +265,13 @@ regina::NPacket* Dim2TriangulationCreator::createPacket(regina::NPacket*,
                 "signature must be a sequence of symbols, which may include "
                 "letters, digits, plus and/or minus but nothing else.  "
                 "An example isomorphism signature is <i>cPbbde</i>.<p>"
-                "The 3-dimensional equivalents of isomorphism signatures "
-                "are described in detail in "
-                "<i>Simplification paths in the Pachner graphs "
+                "3-dimensional isomorphism signatures are described in "
+                "detail in <i>Simplification paths in the Pachner graphs "
                 "of closed orientable 3-manifold triangulations</i>, "
-                "Burton, 2011, <tt>arXiv:1110.6080</tt>.</qt>"));
+                "Burton, 2011, <tt>arXiv:1110.6080</tt>.  "
+                "2-dimensional isomorphism signatures (as used here) follow an "
+                "analogous scheme.</qt>"));
+
             return 0;
         }
 
@@ -277,11 +282,13 @@ regina::NPacket* Dim2TriangulationCreator::createPacket(regina::NPacket*,
         ReginaSupport::sorry(parentWidget,
             QObject::tr("I could not interpret the given "
             "isomorphism signature."),
-            QObject::tr("<qt>The 3-dimensional equivalents of "
-            "isomorphism signatures are described in detail in "
+            QObject::tr("<qt>3-dimensional isomorphism signatures are "
+            "described in detail in "
             "<i>Simplification paths in the Pachner graphs "
             "of closed orientable 3-manifold triangulations</i>, "
-            "Burton, 2011, <tt>arXiv:1110.6080</tt>.</qt>"));
+            "Burton, 2011, <tt>arXiv:1110.6080</tt>.  "
+            "2-dimensional isomorphism signatures (as used here) follow an "
+            "analogous scheme.</qt>"));
         return 0;
     } else if (typeId == TRI_EXAMPLE) {
         switch (exampleWhich->currentIndex()) {
