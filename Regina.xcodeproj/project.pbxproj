@@ -1445,6 +1445,7 @@
 		05F23E1619C13432005B53B5 /* NewFilterController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F23E1519C13432005B53B5 /* NewFilterController.mm */; };
 		05F23E1919C1418A005B53B5 /* NewSnapPeaController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F23E1819C1418A005B53B5 /* NewSnapPeaController.mm */; };
 		05F4947C19BDDD5E00CD887C /* DBChooser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05F4947B19BDDD5D00CD887C /* DBChooser.framework */; };
+		05F6D3B91C52CD5F007307F0 /* NewDim4TriangulationController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F6D3B61C52CB9B007307F0 /* NewDim4TriangulationController.mm */; };
 		05F9561319B53E7900377BEC /* TriRecognition.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F9561219B53E7900377BEC /* TriRecognition.mm */; };
 		05F96C131809F59600C99F96 /* PacketTreeController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F96C121809F59600C99F96 /* PacketTreeController.mm */; };
 		05F96C17180A153A00C99F96 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 05F96C16180A153A00C99F96 /* MBProgressHUD.m */; };
@@ -3132,6 +3133,8 @@
 		05F23E1719C1418A005B53B5 /* NewSnapPeaController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewSnapPeaController.h; sourceTree = "<group>"; };
 		05F23E1819C1418A005B53B5 /* NewSnapPeaController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewSnapPeaController.mm; sourceTree = "<group>"; };
 		05F4947B19BDDD5D00CD887C /* DBChooser.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DBChooser.framework; path = ../../Library/Frameworks/DBChooser.framework; sourceTree = "<group>"; };
+		05F6D3B51C52CB9B007307F0 /* NewDim4TriangulationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewDim4TriangulationController.h; sourceTree = "<group>"; };
+		05F6D3B61C52CB9B007307F0 /* NewDim4TriangulationController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewDim4TriangulationController.mm; sourceTree = "<group>"; };
 		05F9561119B53E7900377BEC /* TriRecognition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriRecognition.h; sourceTree = "<group>"; };
 		05F9561219B53E7900377BEC /* TriRecognition.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TriRecognition.mm; sourceTree = "<group>"; };
 		05F96C111809F59600C99F96 /* PacketTreeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketTreeController.h; sourceTree = "<group>"; };
@@ -3255,6 +3258,8 @@
 				05F23E1219C1305A005B53B5 /* NewAnglesController.mm */,
 				055FF38619C044FB0057462A /* NewDim2TriangulationController.h */,
 				055FF38719C044FB0057462A /* NewDim2TriangulationController.mm */,
+				05F6D3B51C52CB9B007307F0 /* NewDim4TriangulationController.h */,
+				05F6D3B61C52CB9B007307F0 /* NewDim4TriangulationController.mm */,
 				05F23E1419C13432005B53B5 /* NewFilterController.h */,
 				05F23E1519C13432005B53B5 /* NewFilterController.mm */,
 				05F23E1719C1418A005B53B5 /* NewSnapPeaController.h */,
@@ -6206,6 +6211,7 @@
 				0541AF4E1B8BE30B002E166B /* ncyclotomic.cpp in Sources */,
 				05583A6219B8041F00076187 /* ReginaDocument.mm in Sources */,
 				052FA22B180612DD00FAE4DF /* intersection_numbers.c in Sources */,
+				05F6D3B91C52CD5F007307F0 /* NewDim4TriangulationController.mm in Sources */,
 				052FA1EE1806129B00FAE4DF /* stdtoquad.cpp in Sources */,
 				05937A9A19CEC20900160F9A /* AngleViewController.mm in Sources */,
 				052FA227180612DD00FAE4DF /* holonomy.c in Sources */,

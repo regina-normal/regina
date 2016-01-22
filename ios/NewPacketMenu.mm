@@ -80,6 +80,9 @@ static NSArray* _allRows;
                     [NewPacketRow rowWithType:regina::PACKET_TRIANGULATION
                                         label:@"3-D triangulation"
                                          icon:@"Triangulation"],
+                    [NewPacketRow rowWithType:regina::PACKET_DIM4TRIANGULATION
+                                        label:@"4-D triangulation"
+                                         icon:@"Dim4Triangulation"],
                     [NewPacketRow rowWithType:regina::PACKET_NORMALSURFACELIST
                                         label:@"Normal surfaces"
                                          icon:@"Surfaces"],

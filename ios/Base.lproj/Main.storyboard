@@ -877,7 +877,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9Ec-eG-cfa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3871" y="-2128"/>
+            <point key="canvasLocation" x="3871" y="-2988"/>
         </scene>
         <!--New Triangulation Controller-->
         <scene sceneID="qsA-fH-Xxt">
@@ -1671,7 +1671,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZBM-Ge-xge" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4532" y="-2128"/>
+            <point key="canvasLocation" x="4532" y="-2988"/>
         </scene>
         <!--New Packet Page View Controller-->
         <scene sceneID="SMR-V2-vxC">
@@ -1755,7 +1755,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Wjm-wY-O4Q" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5196" y="-2128"/>
+            <point key="canvasLocation" x="5196" y="-2988"/>
         </scene>
         <!--New Triangulation Empty Page-->
         <scene sceneID="1kD-xj-l48">
@@ -8621,6 +8621,220 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="li6-CR-lFg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2009.5" y="5963"/>
+        </scene>
+        <!--New Dim4 Triangulation Controller-->
+        <scene sceneID="Suf-EV-zRc">
+            <objects>
+                <viewController storyboardIdentifier="newDim4Triangulation" modalPresentationStyle="formSheet" id="XKb-Sl-cnR" customClass="NewDim4TriangulationController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="26h-Hi-Xmc"/>
+                        <viewControllerLayoutGuide type="bottom" id="Rh4-jR-Ynt"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="g4c-gp-yAx">
+                        <rect key="frame" x="0.0" y="0.0" width="540" height="620"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LXy-Sd-LEX">
+                                <rect key="frame" x="0.0" y="0.0" width="540" height="44"/>
+                                <items>
+                                    <navigationItem title="New 4-D triangulation" id="PU0-YJ-vZ7">
+                                        <barButtonItem key="rightBarButtonItem" systemItem="cancel" id="TiH-13-rsO">
+                                            <connections>
+                                                <action selector="cancel:" destination="XKb-Sl-cnR" id="H81-eu-ATb"/>
+                                            </connections>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iGc-a2-2rb">
+                                <rect key="frame" x="0.0" y="576" width="540" height="44"/>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="J6w-ZX-cgI"/>
+                                    <barButtonItem title="Create" id="wKc-iL-uWp">
+                                        <connections>
+                                            <action selector="create:" destination="XKb-Sl-cnR" id="Vzl-V0-mvY"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="3HQ-KB-heD"/>
+                                </items>
+                            </toolbar>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Hws-07-J4P">
+                                <rect key="frame" x="40" y="84" width="461" height="29"/>
+                                <segments>
+                                    <segment title="Empty"/>
+                                    <segment title="Example"/>
+                                    <segment title="Isomorphism signature"/>
+                                </segments>
+                            </segmentedControl>
+                            <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FVF-Hd-Wjq">
+                                <rect key="frame" x="0.0" y="132" width="540" height="436"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <connections>
+                                    <segue destination="WLT-O2-cXr" kind="embed" id="aZU-av-dZi"/>
+                                </connections>
+                            </containerView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="LXy-Sd-LEX" firstAttribute="leading" secondItem="g4c-gp-yAx" secondAttribute="leading" id="7cf-Ap-0k3"/>
+                            <constraint firstItem="iGc-a2-2rb" firstAttribute="top" secondItem="FVF-Hd-Wjq" secondAttribute="bottom" constant="8" id="9Xh-0X-M1d"/>
+                            <constraint firstItem="FVF-Hd-Wjq" firstAttribute="top" secondItem="Hws-07-J4P" secondAttribute="bottom" constant="20" id="DXd-ax-qcC"/>
+                            <constraint firstItem="Rh4-jR-Ynt" firstAttribute="top" secondItem="iGc-a2-2rb" secondAttribute="bottom" id="I84-SG-JXH"/>
+                            <constraint firstItem="iGc-a2-2rb" firstAttribute="leading" secondItem="g4c-gp-yAx" secondAttribute="leading" id="JO8-aH-HfU"/>
+                            <constraint firstAttribute="trailing" secondItem="LXy-Sd-LEX" secondAttribute="trailing" id="N8j-O0-Sib"/>
+                            <constraint firstAttribute="trailing" secondItem="FVF-Hd-Wjq" secondAttribute="trailing" id="NN2-XM-oT7"/>
+                            <constraint firstItem="Hws-07-J4P" firstAttribute="top" secondItem="LXy-Sd-LEX" secondAttribute="bottom" constant="40" id="blf-P6-hb6"/>
+                            <constraint firstAttribute="centerX" secondItem="Hws-07-J4P" secondAttribute="centerX" id="gPx-fN-da5"/>
+                            <constraint firstItem="FVF-Hd-Wjq" firstAttribute="leading" secondItem="g4c-gp-yAx" secondAttribute="leading" id="hZg-b7-mSa"/>
+                            <constraint firstAttribute="trailing" secondItem="iGc-a2-2rb" secondAttribute="trailing" id="n6U-90-paR"/>
+                            <constraint firstItem="LXy-Sd-LEX" firstAttribute="top" secondItem="26h-Hi-Xmc" secondAttribute="bottom" id="qpN-bn-qqn"/>
+                        </constraints>
+                    </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <modalFormSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <connections>
+                        <outlet property="container" destination="FVF-Hd-Wjq" id="MZ4-nG-OJu"/>
+                        <outlet property="types" destination="Hws-07-J4P" id="Wz3-ap-jKh"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="yZw-9g-O67" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3871" y="-2159"/>
+        </scene>
+        <!--New Packet Page View Controller-->
+        <scene sceneID="zEX-Xj-oR8">
+            <objects>
+                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="WLT-O2-cXr" customClass="NewPacketPageViewController" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8HC-zc-LTn" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4532" y="-2067"/>
+        </scene>
+        <!--New Dim4 Triangulation Empty Page-->
+        <scene sceneID="pBu-m8-gap">
+            <objects>
+                <viewController storyboardIdentifier="newDim4TriEmpty" id="kk1-D3-3Sq" customClass="NewDim4TriangulationEmptyPage" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="VbR-vl-KdJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="xyB-jz-h88"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="H9a-Zo-KGx">
+                        <rect key="frame" x="0.0" y="0.0" width="540" height="448"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" editable="NO" text="I will create an empty triangulation.  Afterwards, you can manually add pentachora and enter facet gluings." selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dPF-cx-9C5">
+                                <rect key="frame" x="20" y="20" width="500" height="408"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="xyB-jz-h88" firstAttribute="top" secondItem="dPF-cx-9C5" secondAttribute="bottom" constant="20" id="7bd-Ll-7Jo"/>
+                            <constraint firstItem="dPF-cx-9C5" firstAttribute="top" secondItem="VbR-vl-KdJ" secondAttribute="bottom" constant="20" id="ZQu-EK-Yfh"/>
+                            <constraint firstItem="dPF-cx-9C5" firstAttribute="leading" secondItem="H9a-Zo-KGx" secondAttribute="leading" constant="20" id="gqK-YD-gFA"/>
+                            <constraint firstAttribute="trailing" secondItem="dPF-cx-9C5" secondAttribute="trailing" constant="20" id="teQ-CF-f93"/>
+                        </constraints>
+                    </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="540" height="448"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="XwS-hn-XQ0" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5196" y="-2073"/>
+        </scene>
+        <!--New Dim4 Triangulation Example Page-->
+        <scene sceneID="vRb-Af-VmX">
+            <objects>
+                <viewController storyboardIdentifier="newDim4TriExample" id="Hwn-8U-SLf" customClass="NewDim4TriangulationExamplePage" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="1E4-CJ-bom"/>
+                        <viewControllerLayoutGuide type="bottom" id="0BI-PG-YUc"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="pOK-7u-6J8">
+                        <rect key="frame" x="0.0" y="0.0" width="540" height="448"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VdB-vH-YBP">
+                                <rect key="frame" x="20" y="20" width="500" height="216"/>
+                            </pickerView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="VdB-vH-YBP" secondAttribute="trailing" constant="20" id="dAc-7M-1J7"/>
+                            <constraint firstItem="VdB-vH-YBP" firstAttribute="leading" secondItem="pOK-7u-6J8" secondAttribute="leading" constant="20" id="oFJ-Yd-2I0"/>
+                            <constraint firstItem="VdB-vH-YBP" firstAttribute="top" secondItem="1E4-CJ-bom" secondAttribute="bottom" constant="20" id="ywU-3o-SYK"/>
+                        </constraints>
+                    </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="540" height="448"/>
+                    <connections>
+                        <outlet property="example" destination="VdB-vH-YBP" id="wTR-uH-CmY"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="n6k-SY-RrY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5861" y="-2073"/>
+        </scene>
+        <!--New Dim4 Triangulation Isosig Page-->
+        <scene sceneID="p2I-ta-2GP">
+            <objects>
+                <viewController storyboardIdentifier="newDim4TriIsosig" id="Ito-oo-gR2" customClass="NewDim4TriangulationIsosigPage" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="PeU-N2-Ge5"/>
+                        <viewControllerLayoutGuide type="bottom" id="9JB-sk-4qo"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="XEq-kG-ddF">
+                        <rect key="frame" x="0.0" y="0.0" width="540" height="448"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Isomorphism signature:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yKQ-T6-LEF">
+                                <rect key="frame" x="20" y="20" width="180" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1d1-Xj-aqS">
+                                <rect key="frame" x="20" y="49" width="500" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="go" enablesReturnKeyAutomatically="YES"/>
+                                <connections>
+                                    <action selector="editingEnded:" destination="Ito-oo-gR2" eventType="editingDidEndOnExit" id="vLY-jv-LfD"/>
+                                </connections>
+                            </textField>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hio-fa-2px">
+                                <rect key="frame" x="20" y="119" width="500" height="309"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <mutableString key="text">Isomorphism signatures are small pieces of text that represent a triangulation, up to relabelling.  An example is cMkabbb+aAa3blb, which represents a a Cappell-Shaneson 2-knot complement.  Note that isomorphisms signatures are case-sensitive.  To learn more about isomorphism signatures, see arXiv:1110.6080.</mutableString>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="hio-fa-2px" secondAttribute="trailing" constant="20" id="6aw-Et-3Q4"/>
+                            <constraint firstAttribute="trailing" secondItem="1d1-Xj-aqS" secondAttribute="trailing" constant="20" id="FZ2-dr-8Ns"/>
+                            <constraint firstItem="1d1-Xj-aqS" firstAttribute="top" secondItem="yKQ-T6-LEF" secondAttribute="bottom" constant="8" id="LJK-Dt-h5p"/>
+                            <constraint firstItem="1d1-Xj-aqS" firstAttribute="leading" secondItem="XEq-kG-ddF" secondAttribute="leading" constant="20" id="LwM-Tc-eDm"/>
+                            <constraint firstItem="hio-fa-2px" firstAttribute="top" secondItem="1d1-Xj-aqS" secondAttribute="bottom" constant="40" id="Xpf-TW-yB8"/>
+                            <constraint firstItem="hio-fa-2px" firstAttribute="leading" secondItem="XEq-kG-ddF" secondAttribute="leading" constant="20" id="eAb-B0-vSI"/>
+                            <constraint firstItem="yKQ-T6-LEF" firstAttribute="top" secondItem="PeU-N2-Ge5" secondAttribute="bottom" constant="20" id="gZt-M5-dPE"/>
+                            <constraint firstItem="yKQ-T6-LEF" firstAttribute="leading" secondItem="XEq-kG-ddF" secondAttribute="leading" constant="20" id="w6z-Va-LBx"/>
+                            <constraint firstItem="9JB-sk-4qo" firstAttribute="top" secondItem="hio-fa-2px" secondAttribute="bottom" constant="20" id="yha-SY-f2C"/>
+                        </constraints>
+                    </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="540" height="448"/>
+                    <connections>
+                        <outlet property="isosig" destination="1d1-Xj-aqS" id="QeR-WP-fNx"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Lua-cg-QA6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="6520" y="-2073"/>
         </scene>
     </scenes>
     <resources>

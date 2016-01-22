@@ -150,6 +150,9 @@
         case regina::PACKET_DIM2TRIANGULATION:
             [PacketManagerIOS newPacket:spec formSheet:@"newDim2Triangulation"];
             break;
+        case regina::PACKET_DIM4TRIANGULATION:
+            [PacketManagerIOS newPacket:spec formSheet:@"newDim4Triangulation"];
+            break;
         case regina::PACKET_NORMALSURFACELIST:
             [PacketManagerIOS newPacket:spec formSheet:@"newSurfaces"];
             break;
