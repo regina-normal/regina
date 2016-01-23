@@ -36,12 +36,14 @@
 #include "dim4/dim4triangulation.h"
 #include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
+#include "triangulation/ntriangulation.h"
 
 // UI includes:
 #include "dim4trigluings.h"
 #include "edittableview.h"
 #include "reginamain.h"
 #include "reginasupport.h"
+#include "choosers/vertexchooser.h"
 
 #include <memory>
 #include <QAction>
@@ -479,6 +481,20 @@ Dim4TriGluingsUI::Dim4TriGluingsUI(regina::Dim4Triangulation* packet,
         SLOT(boundaryComponents()));
     */
 
+    QAction* actVertexLinks = new QAction(this);
+    actVertexLinks->setText(tr("&Vertex Links..."));
+    actVertexLinks->setIcon(ReginaSupport::regIcon("vtxlinks"));
+    actVertexLinks->setToolTip(tr(
+        "Build a 3-manifold triangulation from a vertex link"));
+    actVertexLinks->setWhatsThis(tr("<qt>Build a 3-manifold triangulation "
+        "from the link of a vertex of this triangulation.<p>"
+        "If <i>V</i> is a vertex, then the <i>link</i> of <i>V</i> is the "
+        "frontier of a small regular neighbourhood of <i>V</i>.  "
+        "The tetrahedra that make up this link sit inside "
+        "the pentachoron corners that meet together at <i>V</i>.</qt>"));
+    triActionList.append(actVertexLinks);
+    connect(actVertexLinks, SIGNAL(triggered()), this, SLOT(vertexLinks()));
+
     QAction* actSplitIntoComponents = new QAction(this);
     actSplitIntoComponents->setText(tr("E&xtract Components"));
     actSplitIntoComponents->setIcon(ReginaSupport::regIcon("components"));
@@ -673,6 +689,36 @@ void Dim4TriGluingsUI::doubleCover() {
 
 void Dim4TriGluingsUI::boundaryComponents() {
     // TODO
+}
+
+void Dim4TriGluingsUI::vertexLinks() {
+    endEdit();
+
+    if (tri->countVertices() == 0)
+        ReginaSupport::sorry(ui,
+            tr("This triangulation does not have any vertices."));
+    else {
+        regina::Dim4Vertex* chosen =
+            VertexDialog<4>::choose(ui, tri, 0 /* filter */,
+            tr("Vertex Links"),
+            tr("Triangulate the link of which vertex?"),
+            tr("<qt>Regina will triangulate the link of whichever "
+                "vertex you choose.<p>"
+                "If <i>V</i> is a vertex, then the <i>link</i> of "
+                "<i>V</i> is the "
+                "frontier of a small regular neighbourhood of <i>V</i>.  "
+                "The tetrahedra that make up this link sit inside "
+                "the pentachoron corners that meet together at "
+                "<i>V</i>.</qt>"));
+        if (chosen) {
+            regina::NTriangulation* ans = new regina::NTriangulation(
+                *chosen->buildLink());
+            ans->setLabel(tr("Link of vertex %1").arg(
+                chosen->index()).toUtf8().constData());
+            tri->insertChildLast(ans);
+            enclosingPane->getMainWindow()->packetView(ans, true, true);
+        }
+    }
 }
 
 void Dim4TriGluingsUI::splitIntoComponents() {

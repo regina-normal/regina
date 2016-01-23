@@ -210,6 +210,7 @@ class Dim4TriGluingsUI : public QObject, public PacketEditorTab {
         void idealToFinite();
         void doubleCover();
         void boundaryComponents();
+        void vertexLinks();
         void splitIntoComponents();
 
         /**
