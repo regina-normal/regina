@@ -263,7 +263,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
     layout->addWidget(box20e, 4, 1);
-    box20v = new VertexChooser(tri, &has20v, this, false);
+    box20v = new VertexChooser<3>(tri, &has20v, this, false);
     box20v->setWhatsThis( tr("<qt>Select the degree two vertex about "
         "which the 2-0 vertex move will be performed.  The vertex numbers "
         "in this list correspond to the vertex numbers seen when viewing the "

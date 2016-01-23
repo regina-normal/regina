@@ -45,81 +45,9 @@
 
 using regina::NVertex;
 
-VertexChooser::VertexChooser(
-        regina::NTriangulation* tri,
-        VertexFilterFunc filter, QWidget* parent,
-        bool autoUpdate) :
-        QComboBox(parent), tri_(tri), filter_(filter) {
-    setMinimumContentsLength(30);
-    setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLength);
-    if (autoUpdate)
-        tri_->listen(this);
-    fill();
-}
-
-NVertex* VertexChooser::selected() {
-    if (count() == 0)
-        return 0;
-    int curr = currentIndex();
-    return (curr < 0 ? 0 : options_[curr]);
-}
-
-void VertexChooser::select(regina::NVertex* option) {
-    int index = 0;
-    std::vector<regina::NVertex*>::const_iterator it = options_.begin();
-    while (it != options_.end()) {
-        if ((*it) == option) {
-            setCurrentIndex(index);
-            return;
-        }
-        ++it;
-        ++index;
-    }
-
-    // Not found.
-    if (! options_.empty())
-        setCurrentIndex(0);
-    return;
-}
-
-QString VertexChooser::description(regina::NVertex* option) {
-    if (option->degree() == 1)
-        return trUtf8("Vertex %2 — %3 (%4)")
-            .arg(option->index())
-            .arg(option->front().tetrahedron()->index())
-            .arg(option->front().vertex());
-    else {
-        const regina::NVertexEmbedding& e0 = option->embedding(0);
-        const regina::NVertexEmbedding& e1 = option->embedding(1);
-        if (option->degree() == 2)
-            return trUtf8("Vertex %1 — %2 (%3), %4 (%5)")
-                .arg(option->index())
-                .arg(e0.tetrahedron()->index())
-                .arg(e0.vertex())
-                .arg(e1.tetrahedron()->index())
-                .arg(e1.vertex());
-        else
-            return trUtf8("Vertex %1 — %2 (%3), %4 (%5), ...")
-                .arg(option->index())
-                .arg(e0.tetrahedron()->index())
-                .arg(e0.vertex())
-                .arg(e1.tetrahedron()->index())
-                .arg(e1.vertex());
-    }
-}
-
-void VertexChooser::fill() {
-    regina::NTriangulation::VertexIterator it;
-    for (it = tri_->vertices().begin(); it != tri_->vertices().end(); ++it)
-        if ((! filter_) || (*filter_)(*it)) {
-            addItem(description(*it));
-            options_.push_back(*it);
-        }
-}
-
 VertexDialog::VertexDialog(QWidget* parent,
         regina::NTriangulation* tri,
-        VertexFilterFunc filter,
+        VertexChooser<3>::FilterFunc filter,
         const QString& title,
         const QString& message,
         const QString& whatsThis) :
@@ -131,7 +59,7 @@ VertexDialog::VertexDialog(QWidget* parent,
     QLabel* label = new QLabel(message);
     layout->addWidget(label);
 
-    chooser = new VertexChooser(tri, filter, this);
+    chooser = new VertexChooser<3>(tri, filter, this);
     layout->addWidget(chooser);
 
     QDialogButtonBox* buttonBox = new QDialogButtonBox(
@@ -144,7 +72,7 @@ VertexDialog::VertexDialog(QWidget* parent,
 
 regina::NVertex* VertexDialog::choose(QWidget* parent,
         regina::NTriangulation* tri,
-        VertexFilterFunc filter,
+        VertexChooser<3>::FilterFunc filter,
         const QString& title,
         const QString& message,
         const QString& whatsThis) {

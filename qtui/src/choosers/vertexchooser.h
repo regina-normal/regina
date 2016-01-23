@@ -33,8 +33,7 @@
 /* end stub */
 
 /*! \file vertexchooser.h
- *  \brief Provides a widget for selecting a single vertex
- *  of a 3-manifold triangulation.
+ *  \brief Provides a widget for selecting a single vertex of a triangulation.
  */
 
 #ifndef __VERTEXCHOOSER_H
@@ -49,15 +48,8 @@
 namespace regina {
     template <int> class Triangulation;
     template <int, int> class Face;
-    typedef Triangulation<3> NTriangulation;
-    typedef Face<3, 0> NVertex;
+    template <int, int> class FaceEmbedding;
 };
-
-/**
- * A filter function, used to determine whether a given vertex
- * should appear in the list.
- */
-typedef bool (*VertexFilterFunc)(regina::NVertex*);
 
 /**
  * A widget through which a single vertex of some triangulation
@@ -66,21 +58,24 @@ typedef bool (*VertexFilterFunc)(regina::NVertex*);
  *
  * The contents of this chooser will be updated in real time if the
  * triangulation is externally modified.
- *
- * These chooser classes would be *much* better using templates, but my
- * understanding is that templates don't play well with Q_OBJECT and moc.
  */
+template <int dim>
 class VertexChooser : public QComboBox, public regina::NPacketListener {
-    Q_OBJECT
+    public:
+        /**
+         * A filter function, used to determine whether a given vertex
+         * should appear in the list.
+         */
+        typedef bool (*FilterFunc)(regina::Face<dim, 0>*);
+
 
     private:
-        regina::NTriangulation* tri_;
-            /**< The triangulation whose vertices we are
-                 choosing from. */
-        VertexFilterFunc filter_;
+        regina::Triangulation<dim>* tri_;
+            /**< The triangulation whose vertices we are choosing from. */
+        FilterFunc filter_;
             /**< A filter to restrict the available selections, or
                  0 if no filter is necessary. */
-        std::vector<regina::NVertex*> options_;
+        std::vector<regina::Face<dim, 0>*> options_;
             /**< A list of the available options to choose from. */
 
     public:
@@ -99,8 +94,8 @@ class VertexChooser : public QComboBox, public regina::NPacketListener {
          * The given filter may be 0, in which case every vertex
          * will be offered.
          */
-        VertexChooser(regina::NTriangulation* tri,
-                VertexFilterFunc filter, QWidget* parent,
+        VertexChooser(regina::Triangulation<dim>* tri,
+                FilterFunc filter, QWidget* parent,
                 bool autoUpdate = true);
 
         /**
@@ -109,7 +104,7 @@ class VertexChooser : public QComboBox, public regina::NPacketListener {
          * If there are no available vertices to choose from,
          * this routine will return 0.
          */
-        regina::NVertex* selected();
+        regina::Face<dim, 0>* selected();
 
         /**
          * Changes the selection to the given vertex.
@@ -120,7 +115,7 @@ class VertexChooser : public QComboBox, public regina::NPacketListener {
          *
          * The activated() signal will \e not be emitted.
          */
-        void select(regina::NVertex* option);
+        void select(regina::Face<dim, 0>* option);
 
         /**
          * Forces a manual refresh of the contents of this chooser.
@@ -140,7 +135,7 @@ class VertexChooser : public QComboBox, public regina::NPacketListener {
         /**
          * The text to be displayed for a given option.
          */
-        QString description(regina::NVertex* option);
+        QString description(regina::Face<dim, 0>* option);
 
         /**
          * Fills the chooser with the set of allowable options.
@@ -158,7 +153,7 @@ class VertexDialog : public QDialog {
         /**
          * Internal components:
          */
-        VertexChooser* chooser;
+        VertexChooser<3>* chooser;
 
     public:
         /**
@@ -166,36 +161,114 @@ class VertexDialog : public QDialog {
          */
         VertexDialog(QWidget* parent,
             regina::NTriangulation* tri,
-            VertexFilterFunc filter,
+            VertexChooser<3>::FilterFunc filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 
-        static regina::NVertex* choose(QWidget* parent,
+        static regina::Face<3, 0>* choose(QWidget* parent,
             regina::NTriangulation* tri,
-            VertexFilterFunc filter,
+            VertexChooser<3>::FilterFunc filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 };
 
-inline bool VertexChooser::refresh() {
+template <int dim>
+VertexChooser<dim>::VertexChooser(regina::Triangulation<dim>* tri,
+        FilterFunc filter, QWidget* parent, bool autoUpdate) :
+        QComboBox(parent), tri_(tri), filter_(filter) {
+    setMinimumContentsLength(30);
+    setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLength);
+    if (autoUpdate)
+        tri_->listen(this);
+    fill();
+}
+
+template <int dim>
+regina::Face<dim, 0>* VertexChooser<dim>::selected() {
+    if (count() == 0)
+        return 0;
+    int curr = currentIndex();
+    return (curr < 0 ? 0 : options_[curr]);
+}
+
+template <int dim>
+QString VertexChooser<dim>::description(regina::Face<dim, 0>* option) {
+    if (option->degree() == 1)
+        return trUtf8("Vertex %2 — %3 (%4)")
+            .arg(option->index())
+            .arg(option->front().tetrahedron()->index())
+            .arg(option->front().vertex());
+    else {
+        const regina::FaceEmbedding<dim, 0>& e0 = option->embedding(0);
+        const regina::FaceEmbedding<dim, 0>& e1 = option->embedding(1);
+        if (option->degree() == 2)
+            return trUtf8("Vertex %1 — %2 (%3), %4 (%5)")
+                .arg(option->index())
+                .arg(e0.tetrahedron()->index())
+                .arg(e0.vertex())
+                .arg(e1.tetrahedron()->index())
+                .arg(e1.vertex());
+        else
+            return trUtf8("Vertex %1 — %2 (%3), %4 (%5), ...")
+                .arg(option->index())
+                .arg(e0.tetrahedron()->index())
+                .arg(e0.vertex())
+                .arg(e1.tetrahedron()->index())
+                .arg(e1.vertex());
+    }
+}
+
+template <int dim>
+void VertexChooser<dim>::fill() {
+    for (auto v : tri_->vertices())
+        if ((! filter_) || (*filter_)(v)) {
+            addItem(description(v));
+            options_.push_back(v);
+        }
+}
+
+template <int dim>
+void VertexChooser<dim>::select(regina::Face<dim, 0>* option) {
+    int index = 0;
+    auto it = options_.begin();
+    while (it != options_.end()) {
+        if ((*it) == option) {
+            setCurrentIndex(index);
+            return;
+        }
+        ++it;
+        ++index;
+    }
+
+    // Not found.
+    if (! options_.empty())
+        setCurrentIndex(0);
+    return;
+}
+
+template <int dim>
+inline bool VertexChooser<dim>::refresh() {
     clear();
     options_.clear();
     fill();
     return (count() > 0);
 }
 
-inline void VertexChooser::packetToBeChanged(regina::NPacket*) {
+template <int dim>
+inline void VertexChooser<dim>::packetToBeChanged(regina::NPacket*) {
     clear();
     options_.clear();
 }
 
-inline void VertexChooser::packetWasChanged(regina::NPacket*) {
+template <int dim>
+inline void VertexChooser<dim>::packetWasChanged(regina::NPacket*) {
     fill();
 }
 
-inline void VertexChooser::packetToBeDestroyed(regina::NPacket*) {
+template <int dim>
+inline void VertexChooser<dim>::packetToBeDestroyed(regina::NPacket*) {
     clear();
     options_.clear();
 }

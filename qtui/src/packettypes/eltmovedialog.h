@@ -54,7 +54,7 @@ class TetrahedronChooser;
 class TriangleChooser;
 class EdgeChooser;
 class EdgeIntChooser;
-class VertexChooser;
+template <int> class VertexChooser;
 
 namespace regina {
     template <int> class Triangulation;
@@ -80,7 +80,7 @@ class EltMoveDialog : public QDialog, public regina::NPacketListener {
         TetrahedronChooser* box14;
         EdgeIntChooser* box44;
         EdgeChooser* box20e;
-        VertexChooser* box20v;
+        VertexChooser<3>* box20v;
         EdgeIntChooser* box21;
         TriangleChooser* boxOpenBook;
         EdgeChooser* boxCloseBook;
