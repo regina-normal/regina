@@ -132,8 +132,14 @@ QString Dim4TriHeaderUI::summaryInfo(regina::Dim4Triangulation* tri) {
             msg += QObject::tr("Real Bdry, ");
     }
 
-    msg += (tri->isOrientable() ? QObject::tr("orientable, ") :
-        QObject::tr("non-orientable, "));
+    if (tri->isOrientable()) {
+        if (tri->isOriented())
+            msg += QObject::tr("orientable and oriented, ");
+        else
+            msg += QObject::tr("orientable but not oriented, ");
+    } else
+        msg += QObject::tr("non-orientable, ");
+
     msg += (tri->isConnected() ? QObject::tr("connected") :
         QObject::tr("disconnected"));
 

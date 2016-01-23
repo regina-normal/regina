@@ -35,6 +35,7 @@
 // Regina core includes:
 #include "dim4/dim4triangulation.h"
 #include "file/nxmlfile.h"
+#include "packet/ncontainer.h"
 
 // UI includes:
 #include "dim4trigluings.h"
@@ -390,6 +391,110 @@ Dim4TriGluingsUI::Dim4TriGluingsUI(regina::Dim4Triangulation* packet,
     enableWhenWritable.append(actSimplify);
     triActionList.append(actSimplify);
 
+    sep = new QAction(this);
+    sep->setSeparator(true);
+    triActionList.append(sep);
+
+    actOrient = new QAction(this);
+    actOrient->setText(tr("&Orient"));
+    actOrient->setIcon(ReginaSupport::regIcon("orient"));
+    actOrient->setToolTip(tr(
+        "Relabel vertices of pentachora for consistent orientation"));
+    actOrient->setEnabled(readWrite);
+    actOrient->setWhatsThis(tr("<qt>Relabel the vertices of each pentachoron "
+        "so that all pentachora are oriented consistently, i.e., "
+        "so that orientation is preserved across adjacent facets.<p>"
+        "If this triangulation includes both orientable and non-orientable "
+        "components, only the orientable components will be relabelled.</qt>"));
+    triActionList.append(actOrient);
+    connect(actOrient, SIGNAL(triggered()), this, SLOT(orient()));
+
+    QAction* actBarycentricSubdivide = new QAction(this);
+    actBarycentricSubdivide->setText(tr("&Barycentric Subdivision"));
+    actBarycentricSubdivide->setIcon(ReginaSupport::regIcon("barycentric"));
+    actBarycentricSubdivide->setToolTip(tr(
+        "Perform a barycentric subdivision"));
+    actBarycentricSubdivide->setEnabled(readWrite);
+    actBarycentricSubdivide->setWhatsThis(tr("Perform a barycentric "
+        "subdivision on this triangulation.  The triangulation will be "
+        "changed directly.<p>"
+        "This operation involves subdividing each pentachoron into "
+        "120 smaller pentachora."));
+    enableWhenWritable.append(actBarycentricSubdivide);
+    triActionList.append(actBarycentricSubdivide);
+    connect(actBarycentricSubdivide, SIGNAL(triggered()), this,
+        SLOT(barycentricSubdivide()));
+
+    QAction* actIdealToFinite = new QAction(this);
+    actIdealToFinite->setText(tr("&Truncate Ideal Vertices"));
+    actIdealToFinite->setIcon(ReginaSupport::regIcon("finite"));
+
+    actIdealToFinite->setToolTip(tr(
+        "Truncate any ideal vertices"));
+    actIdealToFinite->setEnabled(readWrite);
+    actIdealToFinite->setWhatsThis(tr("Convert this from an ideal "
+        "triangulation to a finite triangulation.  Any vertices whose "
+        "links are neither 3-spheres nor 3-balls "
+        "will be truncated and converted into boundary tetrahedra.<p>"
+        "This triangulation will be modified directly.  If there are no "
+        "vertices of this type to truncate, this operation will have no "
+        "effect."));
+    enableWhenWritable.append(actIdealToFinite);
+    triActionList.append(actIdealToFinite);
+    connect(actIdealToFinite, SIGNAL(triggered()), this, SLOT(idealToFinite()));
+
+    QAction* actDoubleCover = new QAction(this);
+    actDoubleCover->setText(tr("&Double Cover"));
+    actDoubleCover->setIcon(ReginaSupport::regIcon("doublecover"));
+    actDoubleCover->setToolTip(tr(
+        "Convert the triangulation to its orientable double cover"));
+    actDoubleCover->setEnabled(readWrite);
+    actDoubleCover->setWhatsThis(tr("Convert a non-orientable "
+        "triangulation into an orientable double cover.  This triangulation "
+        "will be modified directly.<p>"
+        "If this triangulation is already orientable, it will simply be "
+        "duplicated, resulting in a disconnected triangulation."));
+    enableWhenWritable.append(actDoubleCover);
+    triActionList.append(actDoubleCover);
+    connect(actDoubleCover, SIGNAL(triggered()), this, SLOT(doubleCover()));
+
+    sep = new QAction(this);
+    sep->setSeparator(true);
+    triActionList.append(sep);
+
+    actBoundaryComponents = new QAction(this);
+    actBoundaryComponents->setText(tr("Boundar&y Components..."));
+    actBoundaryComponents->setToolTip(tr(
+        "Build a 3-manifold triangulation from a boundary component"));
+    actBoundaryComponents->setWhatsThis(tr("<qt>Build a 3-manifold "
+        "triangulation from a boundary component of this triangulation.<p>"
+        "If you select a real boundary component, this will construct "
+        "a 3-manifold triangulation from its boundary tetrahedra.  "
+        "If you select an ideal boundary component, this will construct "
+        "a 3-manifold triangulation from the corresponding vertex link.</qt>"));
+    /*
+    // TODO: Wait until it's actually implemented.
+    triActionList.append(actBoundaryComponents);
+    connect(actBoundaryComponents, SIGNAL(triggered()), this,
+        SLOT(boundaryComponents()));
+    */
+
+    QAction* actSplitIntoComponents = new QAction(this);
+    actSplitIntoComponents->setText(tr("E&xtract Components"));
+    actSplitIntoComponents->setIcon(ReginaSupport::regIcon("components"));
+    actSplitIntoComponents->setToolTip(tr(
+        "Form a new triangulation for each disconnected component"));
+    actSplitIntoComponents->setWhatsThis(tr("<qt>Split a disconnected "
+        "triangulation into its individual connected components.  This "
+        "triangulation will not be changed &ndash; each "
+        "connected component will be added as a new triangulation beneath "
+        "it in the packet tree.<p>"
+        "If this triangulation is already connected, this operation will "
+        "do nothing.</qt>"));
+    triActionList.append(actSplitIntoComponents);
+    connect(actSplitIntoComponents, SIGNAL(triggered()), this,
+        SLOT(splitIntoComponents()));
+
     // Tidy up.
 
     refresh();
@@ -410,6 +515,7 @@ void Dim4TriGluingsUI::fillToolBar(QToolBar* bar) {
     bar->addAction(actRemovePent);
     bar->addSeparator();
     bar->addAction(actSimplify);
+    bar->addAction(actOrient);
 }
 
 regina::NPacket* Dim4TriGluingsUI::getPacket() {
@@ -422,6 +528,7 @@ QWidget* Dim4TriGluingsUI::getInterface() {
 
 void Dim4TriGluingsUI::refresh() {
     model->rebuild();
+    updateActionStates();
 }
 
 void Dim4TriGluingsUI::endEdit() {
@@ -444,6 +551,7 @@ void Dim4TriGluingsUI::setReadWrite(bool readWrite) {
         (it.next())->setEnabled(readWrite);
 
     updateRemoveState();
+    updateActionStates();
 }
 
 void Dim4TriGluingsUI::addPent() {
@@ -513,6 +621,94 @@ void Dim4TriGluingsUI::simplify() {
             "simply means that I could not find a way of reducing it."));
 }
 
+void Dim4TriGluingsUI::orient() {
+    endEdit();
+
+    if (tri->isOriented()) {
+        ReginaSupport::info(ui, tr("This triangulation is already oriented."));
+        return;
+    }
+
+    bool hasOr = false;
+    for (auto c : tri->components())
+        if (c->isOrientable()) {
+            hasOr = true;
+            break;
+        }
+    if (! hasOr) {
+        ReginaSupport::info(ui,
+            tr("This triangulation has no orientable components."),
+            tr("Non-orientable components cannot be oriented."));
+        return;
+    }
+
+    tri->orient();
+}
+
+void Dim4TriGluingsUI::barycentricSubdivide() {
+    endEdit();
+
+    tri->barycentricSubdivision();
+}
+
+void Dim4TriGluingsUI::idealToFinite() {
+    endEdit();
+
+    if (tri->isValid() && ! tri->isIdeal())
+        ReginaSupport::info(ui,
+            tr("This triangulation has no ideal vertices."),
+            tr("Only ideal vertices can be truncated."));
+    else {
+        regina::NPacket::ChangeEventSpan span(tri);
+        tri->idealToFinite();
+        tri->intelligentSimplify();
+    }
+}
+
+void Dim4TriGluingsUI::doubleCover() {
+    endEdit();
+
+    tri->makeDoubleCover();
+}
+
+void Dim4TriGluingsUI::boundaryComponents() {
+    // TODO
+}
+
+void Dim4TriGluingsUI::splitIntoComponents() {
+    endEdit();
+
+    if (tri->countComponents() == 0)
+        ReginaSupport::info(ui,
+            tr("This triangulation is empty."),
+            tr("It has no components."));
+    else if (tri->countComponents() == 1)
+        ReginaSupport::info(ui,
+            tr("This triangulation is connected."),
+            tr("It has only one component."));
+    else {
+        // If there are already children of this triangulation, insert
+        // the new triangulations at a deeper level.
+        NPacket* base;
+        if (tri->firstChild()) {
+            base = new regina::NContainer();
+            tri->insertChildLast(base);
+            base->setLabel(tri->adornedLabel("Components"));
+        } else
+            base = tri;
+
+        // Make the split.
+        size_t nComps = tri->splitIntoComponents(base);
+
+        // Make sure the new components are visible.
+        enclosingPane->getMainWindow()->ensureVisibleInTree(base->firstChild());
+
+        // Tell the user what happened.
+        ReginaSupport::info(ui,
+            tr("%1 components were extracted.").arg(nComps));
+    }
+}
+
 void Dim4TriGluingsUI::updateRemoveState() {
     // Are we read-write?
     if (model->isReadWrite())
@@ -520,5 +716,16 @@ void Dim4TriGluingsUI::updateRemoveState() {
             ! facetTable->selectionModel()->selectedIndexes().empty());
     else
         actRemovePent->setEnabled(false);
+}
+
+void Dim4TriGluingsUI::updateActionStates() {
+    if (! model->isReadWrite())
+        actOrient->setEnabled(false);
+    else if (! tri->isOrientable())
+        actOrient->setEnabled(false);
+    else
+        actOrient->setEnabled(! tri->isOriented());
+
+    actBoundaryComponents->setEnabled(! tri->boundaryComponents().empty());
 }
 

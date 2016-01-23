@@ -162,6 +162,8 @@ class Dim4TriGluingsUI : public QObject, public PacketEditorTab {
         QAction* actAddPent;
         QAction* actRemovePent;
         QAction* actSimplify;
+        QAction* actOrient;
+        QAction* actBoundaryComponents;
         QLinkedList<QAction*> triActionList;
         QLinkedList<QAction*> enableWhenWritable;
 
@@ -203,11 +205,18 @@ class Dim4TriGluingsUI : public QObject, public PacketEditorTab {
          * Triangulation actions.
          */
         void simplify();
+        void orient();
+        void barycentricSubdivide();
+        void idealToFinite();
+        void doubleCover();
+        void boundaryComponents();
+        void splitIntoComponents();
 
         /**
          * Update the states of internal components.
          */
         void updateRemoveState();
+        void updateActionStates();
 };
 
 inline bool Dim4GluingsModel::isReadWrite() const {
