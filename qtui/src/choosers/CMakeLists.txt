@@ -2,7 +2,6 @@ SET ( FILES
   boundarycomponentchooser
   cuspchooser
   edgeintchooser
-  tetrahedronchooser
   )
 
 FOREACH( FILE ${FILES} )

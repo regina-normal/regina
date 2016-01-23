@@ -32,55 +32,53 @@
 
 /* end stub */
 
-/*! \file tetrahedronchooser.h
- *  \brief Provides a widget for selecting a single tetrahedron
- *  of a 3-manifold triangulation.
+/*! \file simplexchooser.h
+ *  \brief Provides a widget for selecting a single top-dimensional simplex
+ *  of a triangulation.
  */
 
-#ifndef __TETRAHEDRONCHOOSER_H
-#define __TETRAHEDRONCHOOSER_H
+#ifndef __SIMPLEXCHOOSER_H
+#define __SIMPLEXCHOOSER_H
 
+#include "choosers/facename.h"
 #include "packet/npacketlistener.h"
 
+#include <QBoxLayout>
 #include <QDialog>
+#include <QDialogButtonBox>
 #include <QComboBox>
+#include <QLabel>
 #include <vector>
 
 namespace regina {
     template <int> class Simplex;
     template <int> class Triangulation;
-    typedef regina::Simplex<3> NTetrahedron;
-    typedef Triangulation<3> NTriangulation;
 };
 
 /**
- * A filter function, used to determine whether a given tetrahedron
- * should appear in the list.
- */
-typedef bool (*TetrahedronFilterFunc)(regina::NTetrahedron*);
-
-/**
- * A widget through which a single tetrahedron of some triangulation
+ * A widget through which a single top-dimensional simplex of some triangulation
  * can be selected.  An optional filter may be applied to restrict the
  * available selections.
  *
  * The contents of this chooser will be updated in real time if the
  * triangulation is externally modified.
- *
- * These chooser classes would be *much* better using templates, but my
- * understanding is that templates don't play well with Q_OBJECT and moc.
  */
-class TetrahedronChooser : public QComboBox, public regina::NPacketListener {
-    Q_OBJECT
+template <int dim>
+class SimplexChooser : public QComboBox, public regina::NPacketListener {
+    public:
+        /**
+         * A filter function, used to determine whether a given simplex
+         * should appear in the list.
+         */
+        typedef bool (*FilterFunc)(regina::Simplex<dim>*);
 
     private:
-        regina::NTriangulation* tri_;
-            /**< The triangulation whose tetrahedra we are
-                 choosing from. */
-        TetrahedronFilterFunc filter_;
+        regina::Triangulation<dim>* tri_;
+            /**< The triangulation whose simplices we are choosing from. */
+        FilterFunc filter_;
             /**< A filter to restrict the available selections, or
                  0 if no filter is necessary. */
-        std::vector<regina::NTetrahedron*> options_;
+        std::vector<regina::Simplex<dim>*> options_;
             /**< A list of the available options to choose from. */
 
     public:
@@ -96,31 +94,31 @@ class TetrahedronChooser : public QComboBox, public regina::NPacketListener {
          * but the chooser is \e not refreshed, then selected() may end
          * up returning an invalid pointer.
          *
-         * The given filter may be 0, in which case every tetrahedron
+         * The given filter may be 0, in which case every simplex
          * will be offered.
          */
-        TetrahedronChooser(regina::NTriangulation* tri,
-                TetrahedronFilterFunc filter, QWidget* parent,
+        SimplexChooser(regina::Triangulation<dim>* tri,
+                FilterFunc filter, QWidget* parent,
                 bool autoUpdate = true);
 
         /**
-         * Returns the currently selected tetrahedron.
+         * Returns the currently selected simplex.
          *
-         * If there are no available tetrahedra to choose from,
+         * If there are no available simplices to choose from,
          * this routine will return 0.
          */
-        regina::NTetrahedron* selected();
+        regina::Simplex<dim>* selected();
 
         /**
-         * Changes the selection to the given tetrahedron.
+         * Changes the selection to the given simplex.
          *
-         * If the given tetrahedron is not one of the options in this
+         * If the given simplex is not one of the options in this
          * chooser, or if the given pointer is 0, then the first entry
          * in the chooser will be selected.
          *
          * The activated() signal will \e not be emitted.
          */
-        void select(regina::NTetrahedron* option);
+        void select(regina::Simplex<dim>* option);
 
         /**
          * Forces a manual refresh of the contents of this chooser.
@@ -140,7 +138,7 @@ class TetrahedronChooser : public QComboBox, public regina::NPacketListener {
         /**
          * The text to be displayed for a given option.
          */
-        QString description(regina::NTetrahedron* option);
+        QString description(regina::Simplex<dim>* option);
 
         /**
          * Fills the chooser with the set of allowable options.
@@ -149,55 +147,152 @@ class TetrahedronChooser : public QComboBox, public regina::NPacketListener {
 };
 
 /**
- * A dialog used to select a single tetrahedron of a given triangulation.
+ * A dialog used to select a single simplex of a given triangulation.
  */
-class TetrahedronDialog : public QDialog {
-    Q_OBJECT
-
+template <int dim>
+class SimplexDialog : public QDialog {
     private:
         /**
          * Internal components:
          */
-        TetrahedronChooser* chooser;
+        SimplexChooser<dim>* chooser;
 
     public:
         /**
          * Constructor and destructor.
          */
-        TetrahedronDialog(QWidget* parent,
-            regina::NTriangulation* tri,
-            TetrahedronFilterFunc filter,
+        SimplexDialog(QWidget* parent,
+            regina::Triangulation<dim>* tri,
+            typename SimplexChooser<dim>::FilterFunc filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 
-        static regina::NTetrahedron* choose(QWidget* parent,
-            regina::NTriangulation* tri,
-            TetrahedronFilterFunc filter,
+        static regina::Simplex<dim>* choose(QWidget* parent,
+            regina::Triangulation<dim>* tri,
+            typename SimplexChooser<dim>::FilterFunc filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 };
 
-inline bool TetrahedronChooser::refresh() {
+template <int dim>
+inline bool SimplexChooser<dim>::refresh() {
     clear();
     options_.clear();
     fill();
     return (count() > 0);
 }
 
-inline void TetrahedronChooser::packetToBeChanged(regina::NPacket*) {
+template <int dim>
+inline void SimplexChooser<dim>::packetToBeChanged(regina::NPacket*) {
     clear();
     options_.clear();
 }
 
-inline void TetrahedronChooser::packetWasChanged(regina::NPacket*) {
+template <int dim>
+inline void SimplexChooser<dim>::packetWasChanged(regina::NPacket*) {
     fill();
 }
 
-inline void TetrahedronChooser::packetToBeDestroyed(regina::NPacket*) {
+template <int dim>
+inline void SimplexChooser<dim>::packetToBeDestroyed(regina::NPacket*) {
     clear();
     options_.clear();
+}
+
+template <int dim>
+SimplexChooser<dim>::SimplexChooser(
+        regina::Triangulation<dim>* tri,
+        FilterFunc filter, QWidget* parent,
+        bool autoUpdate) :
+        QComboBox(parent), tri_(tri), filter_(filter) {
+    setMinimumContentsLength(30);
+    setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLength);
+    if (autoUpdate)
+        tri_->listen(this);
+    fill();
+}
+
+template <int dim>
+regina::Simplex<dim>* SimplexChooser<dim>::selected() {
+    if (count() == 0)
+        return 0;
+    int curr = currentIndex();
+    return (curr < 0 ? 0 : options_[curr]);
+}
+
+template <int dim>
+void SimplexChooser<dim>::select(regina::Simplex<dim>* option) {
+    int index = 0;
+    auto it = options_.begin();
+    while (it != options_.end()) {
+        if ((*it) == option) {
+            setCurrentIndex(index);
+            return;
+        }
+        ++it;
+        ++index;
+    }
+
+    // Not found.
+    if (! options_.empty())
+        setCurrentIndex(0);
+    return;
+}
+
+template <int dim>
+QString SimplexChooser<dim>::description(regina::Simplex<dim>* option) {
+    return tr("%1 %2").arg(FaceName<dim>::upper()).arg(option->index());
+}
+
+template <int dim>
+void SimplexChooser<dim>::fill() {
+    for (auto s : tri_->simplices())
+        if ((! filter_) || (*filter_)(s)) {
+            addItem(description(s));
+            options_.push_back(s);
+        }
+}
+
+template <int dim>
+SimplexDialog<dim>::SimplexDialog(QWidget* parent,
+        regina::Triangulation<dim>* tri,
+        typename SimplexChooser<dim>::FilterFunc filter,
+        const QString& title,
+        const QString& message,
+        const QString& whatsThis) :
+        QDialog(parent) {
+    setWindowTitle(title);
+    setWhatsThis(whatsThis);
+    QVBoxLayout* layout = new QVBoxLayout(this);
+
+    QLabel* label = new QLabel(message);
+    layout->addWidget(label);
+
+    chooser = new SimplexChooser<dim>(tri, filter, this);
+    layout->addWidget(chooser);
+
+    QDialogButtonBox* buttonBox = new QDialogButtonBox(
+        QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    layout->addWidget(buttonBox);
+
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+}
+
+template <int dim>
+regina::Simplex<dim>* SimplexDialog<dim>::choose(QWidget* parent,
+        regina::Triangulation<dim>* tri,
+        typename SimplexChooser<dim>::FilterFunc filter,
+        const QString& title,
+        const QString& message,
+        const QString& whatsThis) {
+    SimplexDialog<dim> dlg(parent, tri, filter, title, message, whatsThis);
+    if (dlg.exec())
+        return dlg.chooser->selected();
+    else
+        return 0;
 }
 
 #endif

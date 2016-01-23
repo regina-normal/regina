@@ -38,7 +38,7 @@
 #include "reginasupport.h"
 #include "choosers/edgeintchooser.h"
 #include "choosers/facechooser.h"
-#include "choosers/tetrahedronchooser.h"
+#include "choosers/simplexchooser.h"
 
 #include <QButtonGroup>
 #include <QComboBox>
@@ -237,7 +237,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
     layout->addWidget(box23, 1, 1);
-    box14 = new TetrahedronChooser(tri, 0, this, false);
+    box14 = new SimplexChooser<3>(tri, 0, this, false);
     box14->setWhatsThis( tr("<qt>Select the tetrahedron upon which "
         "the 1-4 move will be performed.<p>"
         "All tetrahedra are offered here, since "
@@ -295,7 +295,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
     layout->addWidget(boxCloseBook, 8, 1);
-    boxShellBdry = new TetrahedronChooser(tri, &hasShellBoundary, this, false);
+    boxShellBdry = new SimplexChooser<3>(tri, &hasShellBoundary, this, false);
     boxShellBdry->setWhatsThis( tr("<qt>Select the boundary tetrahedron "
         "that should be removed.  The tetrahedron numbers in this list "
         "are the usual tetrahedron numbers seen in the gluings editor.<p>"

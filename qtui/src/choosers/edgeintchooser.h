@@ -72,9 +72,6 @@ typedef bool (*EdgeIntFilterFunc)(regina::NEdge*, int);
  *
  * The contents of this chooser will be updated in real time if the
  * triangulation is externally modified.
- *
- * These chooser classes would be *much* better using templates, but my
- * understanding is that templates don't play well with Q_OBJECT and moc.
  */
 class EdgeIntChooser : public QComboBox, public regina::NPacketListener {
     Q_OBJECT
