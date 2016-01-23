@@ -82,6 +82,8 @@ class NTriSkelCompUI : public QObject, public PacketViewerTab {
         QLabel* nTets;
         QLabel* nComps;
         QLabel* nBdryComps;
+        QLabel* eulerTri;
+        QLabel* eulerManifold;
 
         /**
          * Skeleton viewers

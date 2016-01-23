@@ -82,6 +82,7 @@ class Dim2TriSkelCompUI : public QObject, public PacketViewerTab {
         QLabel* nTriangles;
         QLabel* nComps;
         QLabel* nBdryComps;
+        QLabel* eulerTri;
 
         /**
          * Skeleton viewers

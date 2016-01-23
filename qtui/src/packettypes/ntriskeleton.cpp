@@ -108,6 +108,15 @@ NTriSkelCompUI::NTriSkelCompUI(regina::NTriangulation* packet,
     label->setWhatsThis(msg);
     nTriangles->setWhatsThis(msg);
 
+    label = new QLabel(tr("Tetrahedra:"), ui);
+    grid->addWidget(label, 3, 1);
+    nTets = new QLabel(ui);
+    nTets->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    grid->addWidget(nTets, 3, 3);
+    msg = tr("The total number of tetrahedra in this triangulation.");
+    label->setWhatsThis(msg);
+    nTets->setWhatsThis(msg);
+
     label = new QLabel(tr("Components:"), ui);
     grid->addWidget(label, 0, 7);
     nComps = new QLabel(ui);
@@ -129,14 +138,28 @@ NTriSkelCompUI::NTriSkelCompUI(regina::NTriangulation* packet,
     label->setWhatsThis(msg);
     nBdryComps->setWhatsThis(msg);
 
-    label = new QLabel(tr("Tetrahedra:"), ui);
+    label = new QLabel(trUtf8("χ (Triangulation):"), ui);
     grid->addWidget(label, 2, 7);
-    nTets = new QLabel(ui);
-    nTets->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    grid->addWidget(nTets, 2, 9);
-    msg = tr("The total number of tetrahedra in this triangulation.");
+    eulerTri = new QLabel(ui);
+    eulerTri->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    grid->addWidget(eulerTri, 2, 9);
+    msg = tr("The Euler characteristic of the triangulation.  "
+        "This is computed precisely as "
+        "(vertices - edges + triangles - tetrahedra).");
     label->setWhatsThis(msg);
-    nTets->setWhatsThis(msg);
+    eulerTri->setWhatsThis(msg);
+
+    label = new QLabel(trUtf8("χ (Manifold):"), ui);
+    grid->addWidget(label, 3, 7);
+    eulerManifold = new QLabel(ui);
+    eulerManifold->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    grid->addWidget(eulerManifold, 3, 9);
+    msg = tr("The Euler characteristic of the underlying compact 3-manifold.  "
+        "This is computed as though we had truncated (i) all ideal vertices, "
+        "(ii) all invalid vertices, and (iii) the projective plane cusps "
+        "at the midpoints of all invalid edges.");
+    label->setWhatsThis(msg);
+    eulerManifold->setWhatsThis(msg);
 
     btn = new QPushButton(ReginaSupport::regIcon("packet_view"),
         tr("View..."), ui);
@@ -203,7 +226,10 @@ void NTriSkelCompUI::refresh() {
     nTets->setText(QString::number(tri->size()));
     nComps->setText(QString::number(tri->countComponents()));
     nBdryComps->setText(QString::number(tri->countBoundaryComponents()));
-    
+
+    eulerTri->setText(QString::number(tri->eulerCharTri()));
+    eulerManifold->setText(QString::number(tri->eulerCharManifold()));
+
     QLinkedListIterator<SkeletonWindow*> it(viewers);
     while( it.hasNext())
         (it.next())->refresh();

@@ -127,6 +127,16 @@ Dim2TriSkelCompUI::Dim2TriSkelCompUI(regina::Dim2Triangulation* packet,
     label->setWhatsThis(msg);
     nBdryComps->setWhatsThis(msg);
 
+    label = new QLabel(trUtf8("χ:"), ui);
+    grid->addWidget(label, 2, 7);
+    eulerTri = new QLabel(ui);
+    eulerTri->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    grid->addWidget(eulerTri, 2, 9);
+    msg = tr("The Euler characteristic of the triangulation.  "
+        "This is computed precisely as (vertices - edges + triangles).");
+    label->setWhatsThis(msg);
+    eulerTri->setWhatsThis(msg);
+
     btn = new QPushButton(ReginaSupport::regIcon("packet_view"),
         tr("View..."), ui);
     // btn->setFlat(true);
@@ -180,6 +190,8 @@ void Dim2TriSkelCompUI::refresh() {
     nTriangles->setText(QString::number(tri->size()));
     nComps->setText(QString::number(tri->countComponents()));
     nBdryComps->setText(QString::number(tri->countBoundaryComponents()));
+
+    eulerTri->setText(QString::number(tri->eulerChar()));
 
     QLinkedListIterator<SkeletonWindow*> it(viewers);
     while( it.hasNext())
