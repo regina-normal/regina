@@ -989,7 +989,7 @@ void NTriGluingsUI::splitIntoComponents() {
             base = tri;
 
         // Make the split.
-        unsigned long nComps = tri->splitIntoComponents(base);
+        size_t nComps = tri->splitIntoComponents(base);
 
         // Make sure the new components are visible.
         enclosingPane->getMainWindow()->ensureVisibleInTree(base->firstChild());

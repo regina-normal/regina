@@ -3,7 +3,6 @@
 # Files to compile
 SET ( FILES
   angle
-  cover
   crushtri
   decompose
   homology

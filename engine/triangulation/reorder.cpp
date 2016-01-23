@@ -270,40 +270,6 @@ NIsomorphism* ordering_iso(const NTriangulation &trig, bool force_oriented)
 
 } // End anonymous namespace
 
-bool NTriangulation::isOriented() const {
-    TetrahedronIterator it;
-
-    // Calling isOrientable() will force a skeletal calculation if this
-    // has not been done already.
-    if(!isOrientable())
-        return false;
-
-    for(it = simplices_.begin(); it != simplices_.end(); ++it)
-        if( (*it) -> orientation() != 1)
-            return false;
-
-    return true;
-}
-
-void NTriangulation::orient() {
-    ensureSkeleton();
-
-    NIsomorphism flip_tets_iso(size());
-
-    TetrahedronIterator it;
-    int t;
-    for (t = 0, it = simplices_.begin(); it != simplices_.end(); ++it, ++t) {
-        flip_tets_iso.tetImage(t) = t;
-        if ((*it)->orientation() == 1 ||
-                ! (*it)->component()->isOrientable())
-            flip_tets_iso.facePerm(t) = NPerm4(); // Identity
-        else
-            flip_tets_iso.facePerm(t) = NPerm4(2,3);
-    }
-
-    flip_tets_iso.applyInPlace(this);
-}
-
 bool NTriangulation::isOrdered() const {
     TetrahedronIterator it;
 

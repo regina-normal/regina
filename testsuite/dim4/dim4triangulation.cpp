@@ -44,6 +44,7 @@
 #include "dim4/dim4triangulation.h"
 #include "manifold/nmanifold.h"
 #include "maths/permconv.h"
+#include "packet/ncontainer.h"
 #include "subcomplex/nstandardtri.h"
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntetrahedron.h"
@@ -91,6 +92,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
     CPPUNIT_TEST(eulerChar);
     CPPUNIT_TEST(homologyH1);
     CPPUNIT_TEST(fundGroup);
+    CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(barycentricSubdivision);
     CPPUNIT_TEST(eltMove15);
     CPPUNIT_TEST(vertexLinks);
@@ -1146,6 +1148,129 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b a^-1 b^2");
             verifyFundGroup(mixedFigEightProduct,
                 "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b a^-1 b^2");
+        }
+
+        static void verifyDoubleCover(Dim4Triangulation* tri) {
+            // PRE: tri is either empty or connected.
+            if (! tri->isConnected())
+                return;
+
+            Dim4Triangulation cover(*tri);
+            cover.makeDoubleCover();
+
+            if (tri->isEmpty()) {
+                if (! cover.isEmpty())
+                    CPPUNIT_FAIL("Empty triangulation: "
+                        "Double cover is non-empty.");
+                return;
+            }
+
+            // We have a non-empty connected triangulation.
+            if (tri->isOrientable()) {
+                // We should simply come away with two identical copies of tri.
+                regina::NContainer parent;
+                if (cover.splitIntoComponents(&parent) != 2) {
+                    std::ostringstream msg;
+                    msg << tri->label()
+                        << ": Orientable double cover does not "
+                        "contain precisely two components.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                Dim4Triangulation* child = static_cast<Dim4Triangulation*>(
+                    parent.firstChild());
+                while (child) {
+                    if (! tri->isIsomorphicTo(*child).get()) {
+                        std::ostringstream msg;
+                        msg << tri->label()
+                            << ": Orientable double cover "
+                            "contains a component not isomorphic to the "
+                            "original.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+
+                    child = static_cast<Dim4Triangulation*>(child->nextSibling());
+                }
+            } else {
+                // We should come away with a proper connected double cover.
+                if (cover.countComponents() != 1) {
+                    std::ostringstream msg;
+                    msg << tri->label()
+                        << ": Orientable double cover does not "
+                        "contain precisely one component.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (! cover.isOrientable()) {
+                    std::ostringstream msg;
+                    msg << tri->label()
+                        << ": Orientable double cover is not "
+                        "orientable.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (cover.size() != 2 * tri->size()) {
+                    std::ostringstream msg;
+                    msg << tri->label()
+                        << ": Orientable double cover does not "
+                        "contain precisely twice as many tetrahedra.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (cover.countTetrahedra() != 2 * tri->countTetrahedra()) {
+                    std::ostringstream msg;
+                    msg << tri->label()
+                        << ": Orientable double cover does not "
+                        "contain precisely twice as many tetrahedra.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (cover.countTriangles() != 2 * tri->countTriangles()) {
+                    std::ostringstream msg;
+                    msg << tri->label()
+                        << ": Orientable double cover does not "
+                        "contain precisely twice as many triangles.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (tri->isValid() && cover.countEdges() !=
+                        2 * tri->countEdges()) {
+                    std::ostringstream msg;
+                    msg << tri->label()
+                        << ": Orientable double cover does not "
+                        "contain precisely twice as many edges.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (tri->isValid() && (! tri->isIdeal()) &&
+                        cover.countVertices() != 2 * tri->countVertices()) {
+                    std::ostringstream msg;
+                    msg << tri->label()
+                        << ": Orientable double cover does not "
+                        "contain precisely twice as many vertices.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                // We expect the first homology group to be identical,
+                // or to be missing a copy of Z_2.
+                if (! (tri->homology() == cover.homology())) {
+                    NAbelianGroup hCover(cover.homology());
+                    hCover.addTorsionElement(2);
+                    if (! (tri->homology() == hCover)) {
+                        std::ostringstream msg;
+                        msg << tri->label()
+                            << ": Orientable double cover has H1 = "
+                            << cover.homology().str()
+                            << ", which does not match the original H1 = "
+                            << tri->homology().str() << '.';
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            }
+        }
+
+        void doubleCover() {
+            testManualAll(verifyDoubleCover);
         }
 
         static void verifyBary(Dim4Triangulation* tri) {

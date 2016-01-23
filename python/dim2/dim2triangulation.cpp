@@ -52,6 +52,8 @@ namespace {
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_oneThreeMove,
         Dim2Triangulation::oneThreeMove, 1, 3);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_splitIntoComponents,
+        Dim2Triangulation::splitIntoComponents, 0, 2);
 
     boost::python::list Dim2_getTriangles_list(Dim2Triangulation& t) {
         boost::python::list ans;
@@ -235,11 +237,16 @@ void addDim2Triangulation() {
         .def("getNumberOfBoundaryEdges",
             &Dim2Triangulation::getNumberOfBoundaryEdges)
         .def("isOrientable", &Dim2Triangulation::isOrientable)
+        .def("isOriented", &Dim2Triangulation::isOriented)
         .def("isIdeal", &Dim2Triangulation::isIdeal)
         .def("isConnected", &Dim2Triangulation::isConnected)
         .def("isMinimal", &Dim2Triangulation::isMinimal)
+        .def("orient", &Dim2Triangulation::orient)
+        .def("splitIntoComponents", &Dim2Triangulation::splitIntoComponents,
+            OL_splitIntoComponents())
         .def("oneThreeMove", &Dim2Triangulation::oneThreeMove,
             OL_oneThreeMove())
+        .def("makeDoubleCover", &Dim2Triangulation::makeDoubleCover)
         .def("insertTriangulation", &Dim2Triangulation::insertTriangulation)
         .def("isoSig", isoSig_void)
         .def("isoSigDetail", isoSig_relabelling)

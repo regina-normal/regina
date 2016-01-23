@@ -301,7 +301,7 @@ bool NTriangulation::finiteToIdeal() {
 
     // Make a list of all boundary triangles, indexed by triangle number,
     // and create the corresponding new tetrahedra.
-    unsigned long nTriangles = countTriangles();
+    size_t nTriangles = countTriangles();
 
     NTriangulation staging;
     NTetrahedron** bdry = new NTetrahedron*[nTriangles];
@@ -332,7 +332,7 @@ bool NTriangulation::finiteToIdeal() {
 
     // Glue the new tetrahedra to each other.
     NEdge* edge;
-    unsigned long tetTriangle1, tetTriangle2;
+    size_t tetTriangle1, tetTriangle2;
     NPerm4 t1Perm, t2Perm;
     for (bit = boundaryComponents_.begin();
             bit != boundaryComponents_.end(); bit++)

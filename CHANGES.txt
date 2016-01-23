@@ -135,6 +135,9 @@ Version 5.0  [ (under development) ]
             - Routine getNumberOfSimplices() has been renamed to size().
               The old name is deprecated but kept for backward compatibility.
             - New dimension-agnostic routine countBoundaryFacets().
+            - New routines isOriented(), orient(), makeDoubleCover() and
+              splitIntoComponents(), inherited from the generic
+              TriangulationBase<dim> template.
             - Routines getVertices() and getEdges() no longer return a
               reference to a std::vector.  Instead they return a FaceList
               structure, which also supports C++11 range-based for loops and

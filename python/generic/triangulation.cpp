@@ -119,6 +119,9 @@ namespace {
                     typename boost::python::manage_new_object::
                     apply<typename regina::Isomorphism<dim>*>::type()(iso))));
         }
+
+        BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_splitIntoComponents,
+            Triangulation<dim>::splitIntoComponents, 0, 2);
     };
 }
 
@@ -218,7 +221,12 @@ void addTriangulation(const char* name) {
         .def("hasBoundaryFacets", &Triangulation<dim>::hasBoundaryFacets)
         .def("countBoundaryFacets", &Triangulation<dim>::countBoundaryFacets)
         .def("isOrientable", &Triangulation<dim>::isOrientable)
+        .def("isOriented", &Triangulation<dim>::isOriented)
         .def("isConnected", &Triangulation<dim>::isConnected)
+        .def("orient", &Triangulation<dim>::orient)
+        .def("splitIntoComponents", &Triangulation<dim>::splitIntoComponents,
+            typename PyTriHelper<dim>::OL_splitIntoComponents())
+        .def("makeDoubleCover", &Triangulation<dim>::makeDoubleCover)
         .def("isIdenticalTo", &Triangulation<dim>::isIdenticalTo)
         .def("isIsomorphicTo", PyTriHelper<dim>::isIsomorphicTo,
             return_value_policy<manage_new_object>())

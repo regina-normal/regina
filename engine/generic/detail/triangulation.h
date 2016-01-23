@@ -51,6 +51,7 @@
 #include "output.h"
 #include "generic/component.h"
 #include "generic/face.h"
+#include "generic/isomorphism.h"
 #include "generic/simplex.h"
 #include "generic/alias/face.h"
 #include "generic/alias/simplex.h"
@@ -762,6 +763,100 @@ class TriangulationBase :
          */
         bool isConnected() const;
 
+        /**
+         * Determines if this triangulation is oriented; that is, if the
+         * vertices of its top-dimensional simplices are labelled in a way
+         * that preserves orientation across adjacent facets.
+         * Specifically, this routine returns \c true if and only if every
+         * gluing permutation has negative sign.
+         *
+         * Note that \e orientable triangulations are not always \e oriented
+         * by default.  You can call orient() if you need the top-dimensional
+         * simplices to be oriented consistently as described above.
+         *
+         * A non-orientable triangulation can never be oriented.
+         *
+         * @return \c true if and only if all top-dimensional simplices are
+         * oriented consistently.
+         *
+         * @author Matthias Goerner
+         */
+        bool isOriented() const;
+
+        /*@}*/
+        /**
+         * \name Skeletal Transformations
+         */
+        /*@{*/
+
+        /**
+         * Relabels the vertices of top-dimensional simplices in this
+         * triangulation so that all simplices are oriented consistently,
+         * if possible.
+         *
+         * This routine works by flipping vertices (\a dim - 1) and \a dim
+         * of each top-dimensional simplices that has negative orientation.
+         * The result will be a triangulation where the top-dimensional
+         * simplices have their vertices labelled in a way that preserves
+         * orientation across adjacent facets.
+         * In particular, every gluing permutation will have negative sign.
+         *
+         * If this triangulation includes both orientable and
+         * non-orientable components, the orientable components will be
+         * oriented as described above and the non-orientable
+         * components will be left untouched.
+         *
+         * @author Matthias Goerner
+         */
+        void orient();
+
+        /*@}*/
+        /**
+         * \name Subdivisions, Extensions and Covers
+         */
+        /*@{*/
+
+        /**
+         * Converts this triangulation into its double cover.
+         * Each orientable component will be duplicated, and each
+         * non-orientable component will be converted into its
+         * orientable double cover.
+         */
+        void makeDoubleCover();
+
+        /*@}*/
+        /**
+         * \name Decompositions
+         */
+        /*@{*/
+
+        /**
+         * Splits a disconnected triangulation into many smaller triangulations,
+         * one for each component.  The new component triangulations will be
+         * inserted as children of the given parent packet.  The original
+         * triangulation (i.e., this triangulation) will be left unchanged.
+         *
+         * If the given parent packet is 0, the new component triangulations
+         * will be inserted as children of this triangulation.
+         *
+         * By default, this routine will assign sensible packet labels to each
+         * of the new component triangulations.  If these component
+         * triangulations are only temporary objects used as part of some
+         * larger algorithm, then labels are unnecessary - in this case
+         * you can pass \a setLabels as \c false to avoid the (small) overhead
+         * that these packet labels incur.
+         *
+         * @param componentParent the packet beneath which the new
+         * component triangulations will be inserted, or 0 if they
+         * should be inserted directly beneath this triangulation.
+         * @param setLabels \c true if the new component triangulations
+         * should be assigned sensible packet labels, or \c false if
+         * they should be left without labels at all.
+         * @return the number of new component triangulations constructed.
+         */
+        size_t splitIntoComponents(NPacket* componentParent = 0,
+            bool setLabels = true);
+
         /*@}*/
         /**
          * \name Isomorphism Testing
@@ -1393,7 +1488,7 @@ class TriangulationBase :
          * isomorphism may be boundary incomplete and may or may not be
          * onto.  That is, this triangulation must appear as a
          * subcomplex of the given triangulation, possibly with some
-         * original boundary triangles joined to new tetrahedra.
+         * original boundary facets joined to new top-dimensional simplices.
          *
          * See the Isomorphism class notes for further details
          * regarding boundary complete and boundary incomplete
@@ -2052,7 +2147,7 @@ inline void TriangulationBase<dim>::ensureSkeleton() const {
 
 template <int dim>
 void TriangulationBase<dim>::calculateSkeleton() {
-    // Set this now so that any tetrahedron query routines do not try to
+    // Set this now so that any simplex query routines do not try to
     // recursively recompute the skeleton again.
     calculatedSkeleton_ = true;
 
@@ -2396,6 +2491,201 @@ inline void TriangulationBase<dim>::deleteSkeleton() {
 template <int dim>
 inline bool TriangulationBase<dim>::calculatedSkeleton() const {
     return calculatedSkeleton_;
+}
+
+template <int dim>
+bool TriangulationBase<dim>::isOriented() const {
+    // Calling isOrientable() will force a skeletal calculation if this
+    // has not been done already.
+    if (! isOrientable())
+        return false;
+
+    for (auto s : simplices_)
+        if (s->orientation() != 1)
+            return false;
+
+    return true;
+}
+
+template <int dim>
+void TriangulationBase<dim>::orient() {
+    ensureSkeleton();
+
+    Isomorphism<dim> flips(size());
+
+    SimplexIterator it;
+    size_t s;
+    for (s = 0, it = simplices_.begin(); it != simplices_.end(); ++it, ++s) {
+        flips.simpImage(s) = s;
+        if ((*it)->orientation() == 1 || ! (*it)->component()->isOrientable())
+            flips.facetPerm(s) = NPerm<dim + 1>(); // Identity
+        else
+            flips.facetPerm(s) = NPerm<dim + 1>(dim - 1, dim);
+    }
+
+    flips.applyInPlace(static_cast<Triangulation<dim>*>(this));
+}
+
+template <int dim>
+void TriangulationBase<dim>::makeDoubleCover() {
+    size_t sheetSize = simplices_.size();
+    if (sheetSize == 0)
+        return;
+
+    typename Triangulation<dim>::ChangeEventSpan span(
+        static_cast<Triangulation<dim>*>(this));
+
+    // Create a second sheet of simplices.
+    Simplex<dim>** upper = new Simplex<dim>*[sheetSize];
+    size_t i;
+    for (i = 0; i < sheetSize; i++)
+        upper[i] = newSimplex(simplices_[i]->description());
+
+    // Reset each simplex orientation.
+    SimplexIterator sit = simplices_.begin();
+    for (i = 0; i < sheetSize; i++) {
+        (*sit++)->orientation_ = 0;
+        upper[i]->orientation_ = 0;
+    }
+
+    // Run through the upper sheet and recreate the gluings as we
+    // propagate simplex orientations through components.
+    //
+    // We use a breadth-first search to propagate orientations.
+    // The underlying queue is implemented using a plain C array - since each
+    // simplex is processed only once, an array of size sheetSize is enough.
+    size_t* queue = new size_t[sheetSize];
+    size_t queueStart = 0, queueEnd = 0;
+
+    int facet;
+    size_t upperSimp;
+    Simplex<dim>* lowerSimp;
+    size_t upperAdj;
+    Simplex<dim>* lowerAdj;
+    int lowerAdjOrientation;
+    NPerm<dim + 1> gluing;
+    for (i = 0; i < sheetSize; i++)
+        if (upper[i]->orientation_ == 0) {
+            // We've found a new component.
+            // Completely recreate the gluings for this component.
+            upper[i]->orientation_ = 1;
+            simplices_[i]->orientation_ = -1;
+            queue[queueEnd++] = i;
+
+            while (queueStart < queueEnd) {
+                upperSimp = queue[queueStart++];
+                lowerSimp = simplices_[upperSimp];
+
+                for (facet = 0; facet <= dim; ++facet) {
+                    lowerAdj = lowerSimp->adjacentSimplex(facet);
+
+                    // See if this simplex is glued to something in the
+                    // lower sheet.
+                    if (! lowerAdj)
+                        continue;
+
+                    // Make sure we haven't already fixed this gluing in
+                    // the upper sheet.
+                    if (upper[upperSimp]->adjacentSimplex(facet))
+                        continue;
+
+                    // Determine the expected orientation of the
+                    // adjacent simplex in the lower sheet.
+                    gluing = lowerSimp->adjacentGluing(facet);
+                    lowerAdjOrientation = (gluing.sign() == 1 ?
+                        -lowerSimp->orientation_ : lowerSimp->orientation_);
+
+                    upperAdj = lowerAdj->index();
+                    if (lowerAdj->orientation_ == 0) {
+                        // We haven't seen the adjacent simplex yet.
+                        lowerAdj->orientation_ = lowerAdjOrientation;
+                        upper[upperAdj]->orientation_ = -lowerAdjOrientation;
+                        upper[upperSimp]->join(facet, upper[upperAdj], gluing);
+                        queue[queueEnd++] = upperAdj;
+                    } else if (lowerAdj->orientation_ == lowerAdjOrientation) {
+                        // The adjacent simplex already has the
+                        // correct orientation.
+                        upper[upperSimp]->join(facet, upper[upperAdj], gluing);
+                    } else {
+                        // The adjacent simplex already has the
+                        // incorrect orientation.  Make a cross between
+                        // the two sheets.
+                        lowerSimp->unjoin(facet);
+                        lowerSimp->join(facet, upper[upperAdj], gluing);
+                        upper[upperSimp]->join(facet, lowerAdj, gluing);
+                    }
+                }
+            }
+        }
+
+    // Tidy up.
+    delete[] upper;
+    delete[] queue;
+}
+
+template <int dim>
+size_t TriangulationBase<dim>::splitIntoComponents(NPacket* componentParent,
+        bool setLabels) {
+    // Knock off the empty triangulation first.
+    if (simplices_.empty())
+        return 0;
+
+    if (! componentParent)
+        componentParent = static_cast<Triangulation<dim>*>(this);
+
+    // Create the new component triangulations.
+    // Note that the following line forces a skeletal recalculation.
+    size_t nComp = countComponents();
+
+    // Initialise the component triangulations.
+    Triangulation<dim>** newTris = new Triangulation<dim>*[nComp];
+    size_t whichComp;
+    for (whichComp = 0; whichComp < nComp; ++whichComp)
+        newTris[whichComp] = new Triangulation<dim>();
+
+    // Clone the simplices, sorting them into the new components.
+    Simplex<dim>** newSimp = new Simplex<dim>*[size()];
+    Simplex<dim> *simp, *adj;
+    size_t simpPos, adjPos;
+    NPerm<dim + 1> adjPerm;
+    int facet;
+
+    for (simpPos = 0; simpPos < size(); ++simpPos)
+        newSimp[simpPos] = newTris[simplices_[simpPos]->component()->index()]->
+            newSimplex(simplices_[simpPos]->description());
+
+    // Clone the simplex gluings also.
+    for (simpPos = 0; simpPos < size(); ++simpPos) {
+        simp = simplices_[simpPos];
+        for (facet = 0; facet <= dim; ++facet) {
+            adj = simp->adjacentSimplex(facet);
+            if (adj) {
+                adjPos = adj->index();
+                adjPerm = simp->adjacentGluing(facet);
+                if (adjPos > simpPos ||
+                        (adjPos == simpPos && adjPerm[facet] > facet))
+                    newSimp[simpPos]->joinTo(facet, newSimp[adjPos], adjPerm);
+            }
+        }
+    }
+
+    // Insert the component triangulations into the packet tree and clean up.
+    for (whichComp = 0; whichComp < nComp; ++whichComp) {
+        componentParent->insertChildLast(newTris[whichComp]);
+
+        if (setLabels) {
+            std::ostringstream label;
+            label << "Component #" << (whichComp + 1);
+            newTris[whichComp]->setLabel(
+                static_cast<Triangulation<dim>*>(this)->
+                adornedLabel(label.str()));
+        }
+    }
+
+    delete[] newSimp;
+    delete[] newTris;
+
+    return whichComp;
 }
 
 } } // namespace regina::detail

@@ -72,6 +72,8 @@ namespace {
         Dim4Triangulation::shellBoundary, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_collapseEdge,
         Dim4Triangulation::collapseEdge, 1, 3);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_splitIntoComponents,
+        Dim4Triangulation::splitIntoComponents, 0, 2);
 
     boost::python::list Dim4_getPentachora_list(Dim4Triangulation& t) {
         boost::python::list ans;
@@ -283,6 +285,7 @@ void addDim4Triangulation() {
             &Dim4Triangulation::getNumberOfBoundaryTetrahedra)
         .def("isClosed", &Dim4Triangulation::isClosed)
         .def("isOrientable", &Dim4Triangulation::isOrientable)
+        .def("isOriented", &Dim4Triangulation::isOriented)
         .def("isConnected", &Dim4Triangulation::isConnected)
         .def("fundamentalGroup", &Dim4Triangulation::fundamentalGroup,
             return_internal_reference<>())
@@ -293,6 +296,9 @@ void addDim4Triangulation() {
             return_internal_reference<>())
         .def("homologyH2", &Dim4Triangulation::homologyH2,
             return_internal_reference<>())
+        .def("orient", &Dim4Triangulation::orient)
+        .def("splitIntoComponents", &Dim4Triangulation::splitIntoComponents,
+            OL_splitIntoComponents())
         .def("intelligentSimplify", &Dim4Triangulation::intelligentSimplify)
         .def("simplifyToLocalMinimum",
             &Dim4Triangulation::simplifyToLocalMinimum,
@@ -309,6 +315,7 @@ void addDim4Triangulation() {
             OL_shellBoundary())
         .def("collapseEdge", &Dim4Triangulation::collapseEdge,
             OL_collapseEdge())
+        .def("makeDoubleCover", &Dim4Triangulation::makeDoubleCover)
         .def("barycentricSubdivision",
             &Dim4Triangulation::barycentricSubdivision)
         .def("idealToFinite", &Dim4Triangulation::idealToFinite)

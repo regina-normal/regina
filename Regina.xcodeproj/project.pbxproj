@@ -524,7 +524,6 @@
 		052FA052180600FB00FAE4DF /* sfproperties.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E2C180600FB00FAE4DF /* sfproperties.h */; };
 		052FA053180600FB00FAE4DF /* spheres.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E2D180600FB00FAE4DF /* spheres.cpp */; };
 		052FA054180600FB00FAE4DF /* stdtoquad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E2E180600FB00FAE4DF /* stdtoquad.cpp */; };
-		052FA055180600FB00FAE4DF /* cover.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E31180600FB00FAE4DF /* cover.cpp */; };
 		052FA056180600FB00FAE4DF /* crushtri.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E32180600FB00FAE4DF /* crushtri.cpp */; };
 		052FA057180600FB00FAE4DF /* decompose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E33180600FB00FAE4DF /* decompose.cpp */; };
 		052FA058180600FB00FAE4DF /* dimtraits.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E34180600FB00FAE4DF /* dimtraits.h */; };
@@ -756,7 +755,6 @@
 		052FA1EC1806129B00FAE4DF /* sfproperties.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E2B180600FB00FAE4DF /* sfproperties.cpp */; };
 		052FA1ED1806129B00FAE4DF /* spheres.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E2D180600FB00FAE4DF /* spheres.cpp */; };
 		052FA1EE1806129B00FAE4DF /* stdtoquad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E2E180600FB00FAE4DF /* stdtoquad.cpp */; };
-		052FA1EF1806129B00FAE4DF /* cover.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E31180600FB00FAE4DF /* cover.cpp */; };
 		052FA1F01806129B00FAE4DF /* crushtri.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E32180600FB00FAE4DF /* crushtri.cpp */; };
 		052FA1F11806129B00FAE4DF /* decompose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E33180600FB00FAE4DF /* decompose.cpp */; };
 		052FA1F21806129B00FAE4DF /* homology.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E35180600FB00FAE4DF /* homology.cpp */; };
@@ -2328,7 +2326,6 @@
 		052F9E2D180600FB00FAE4DF /* spheres.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = spheres.cpp; sourceTree = "<group>"; };
 		052F9E2E180600FB00FAE4DF /* stdtoquad.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = stdtoquad.cpp; sourceTree = "<group>"; };
 		052F9E30180600FB00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		052F9E31180600FB00FAE4DF /* cover.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cover.cpp; sourceTree = "<group>"; };
 		052F9E32180600FB00FAE4DF /* crushtri.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = crushtri.cpp; sourceTree = "<group>"; };
 		052F9E33180600FB00FAE4DF /* decompose.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = decompose.cpp; sourceTree = "<group>"; };
 		052F9E34180600FB00FAE4DF /* dimtraits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dimtraits.h; sourceTree = "<group>"; };
@@ -4332,7 +4329,6 @@
 				05A73C8119B2EEA20099C617 /* 600cell.py */,
 				052F9E30180600FB00FAE4DF /* CMakeLists.txt */,
 				05A73C7E19B2EE680099C617 /* angle.cpp */,
-				052F9E31180600FB00FAE4DF /* cover.cpp */,
 				052F9E32180600FB00FAE4DF /* crushtri.cpp */,
 				052F9E33180600FB00FAE4DF /* decompose.cpp */,
 				052F9E34180600FB00FAE4DF /* dimtraits.h */,
@@ -6436,7 +6432,6 @@
 				052FA222180612DD00FAE4DF /* filling.c in Sources */,
 				05D1174819EE01AA003BEC55 /* ngrouppresentation.cpp in Sources */,
 				052FA1E81806129B00FAE4DF /* nxmlsurfacereader.cpp in Sources */,
-				052FA1EF1806129B00FAE4DF /* cover.cpp in Sources */,
 				052FA18F1806129B00FAE4DF /* ngraphpair.cpp in Sources */,
 				05D1173A19EE0197003BEC55 /* ninteger.cpp in Sources */,
 				052FA220180612DD00FAE4DF /* Dehn_coefficients.c in Sources */,
@@ -6763,7 +6758,6 @@
 				052F9F37180600FB00FAE4DF /* approx.cpp in Sources */,
 				052F9F52180600FB00FAE4DF /* seedprimes.cpp in Sources */,
 				05A73C8419B2EEC50099C617 /* csv.cpp in Sources */,
-				052FA055180600FB00FAE4DF /* cover.cpp in Sources */,
 				0541AF4B1B8BE2F5002E166B /* ncyclotomic.cpp in Sources */,
 				052FA00C180600FB00FAE4DF /* nsatblocktypes.cpp in Sources */,
 				052F9F1F180600FB00FAE4DF /* ngraphloop.cpp in Sources */,

@@ -602,26 +602,6 @@ class REGINA_API Triangulation<3> :
         bool isClosed() const;
 
         /**
-         * Determines if this triangulation is oriented; that is, if
-         * tetrahedron vertices are labelled in a way that preserves
-         * orientation across adjacent tetrahedron faces.  Specifically, this
-         * routine returns \c true if and only if every gluing permutation
-         * has negative sign.
-         *
-         * Note that \e orientable triangulations are not always \e oriented
-         * by default.  You can call orient() if you need the tetrahedra
-         * to be oriented consistently as described above.
-         *
-         * A non-orientable triangulation can never be oriented.
-         *
-         * @return \c true if and only if all tetrahedra are oriented
-         * consistently.
-         *
-         * @author Matthias Goerner
-         */
-        bool isOriented() const;
-
-        /**
          * Determines if this triangulation is ordered; that is, if
          * tetrahedron vertices are labelled so that all gluing
          * permutations are order-preserving on the tetrahedron faces.
@@ -1918,25 +1898,6 @@ class REGINA_API Triangulation<3> :
         void reorderTetrahedraBFS(bool reverse = false);
 
         /**
-         * Relabels tetrahedron vertices in this triangulation so that
-         * all tetrahedra are oriented consistently, if possible.
-         *
-         * This routine works by flipping vertices 2 and 3 of each
-         * tetrahedron with negative orientation.  The result will be a
-         * triangulation where the tetrahedron vertices are labelled in
-         * a way that preserves orientation across adjacent tetrahedron faces.
-         * In particular, every gluing permutation will have negative sign.
-         *
-         * If this triangulation includes both orientable and
-         * non-orientable components, the orientable components will be
-         * oriented as described above and the non-orientable
-         * components will be left untouched.
-         *
-         * @author Matthias Goerner
-         */
-        void orient();
-
-        /**
          * Relabels tetrahedron vertices in this triangulation to give
          * an ordered triangulation, if possible.
          *
@@ -1972,35 +1933,6 @@ class REGINA_API Triangulation<3> :
          */
         /*@{*/
 
-        /**
-         * Splits a disconnected triangulation into many smaller
-         * triangulations, one for each component.  The new component
-         * triangulations will be inserted as children of the given
-         * parent packet.  The original triangulation will be left
-         * unchanged.
-         *
-         * If the given parent packet is 0, the new component
-         * triangulations will be inserted as children of this
-         * triangulation.
-         *
-         * This routine can optionally assign unique (and sensible)
-         * packet labels to each of the new component triangulations.
-         * Note however that uniqueness testing may be slow, so this
-         * assignment of labels should be disabled if the component
-         * triangulations are only temporary objects used as part
-         * of a larger routine.
-         *
-         * @param componentParent the packet beneath which the new
-         * component triangulations will be inserted, or 0 if they
-         * should be inserted directly beneath this triangulation.
-         * @param setLabels \c true if the new component triangulations
-         * should be assigned unique packet labels, or \c false if
-         * they should be left without labels at all.
-         * @return the number of new component triangulations
-         * constructed.
-         */
-        unsigned long splitIntoComponents(NPacket* componentParent = 0,
-            bool setLabels = true);
         /**
          * Splits this triangulation into its connected sum
          * decomposition.  The individual prime 3-manifold triangulations
@@ -2476,14 +2408,6 @@ class REGINA_API Triangulation<3> :
          * \name Subdivisions, Extensions and Covers
          */
         /*@{*/
-
-        /**
-         * Converts this triangulation into its double cover.
-         * Each orientable component will be duplicated, and each
-         * non-orientable component will be converted into its
-         * orientable double cover.
-         */
-        void makeDoubleCover();
 
         /**
          * Converts an ideal triangulation into a finite triangulation.
