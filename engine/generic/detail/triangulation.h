@@ -2664,7 +2664,7 @@ size_t TriangulationBase<dim>::splitIntoComponents(NPacket* componentParent,
                 adjPerm = simp->adjacentGluing(facet);
                 if (adjPos > simpPos ||
                         (adjPos == simpPos && adjPerm[facet] > facet))
-                    newSimp[simpPos]->joinTo(facet, newSimp[adjPos], adjPerm);
+                    newSimp[simpPos]->join(facet, newSimp[adjPos], adjPerm);
             }
         }
     }
