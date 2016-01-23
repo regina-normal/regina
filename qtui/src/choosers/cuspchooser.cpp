@@ -38,7 +38,6 @@
 // UI includes:
 #include "cuspchooser.h"
 
-#include <algorithm>
 #include <QBoxLayout>
 #include <QDialogButtonBox>
 #include <QLabel>
