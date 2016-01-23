@@ -41,8 +41,11 @@
 
 #include "packet/npacketlistener.h"
 
+#include <QBoxLayout>
 #include <QDialog>
+#include <QDialogButtonBox>
 #include <QComboBox>
+#include <QLabel>
 #include <vector>
 
 namespace regina {
@@ -146,29 +149,28 @@ class VertexChooser : public QComboBox, public regina::NPacketListener {
 /**
  * A dialog used to select a single vertex of a given triangulation.
  */
+template <int dim>
 class VertexDialog : public QDialog {
-    Q_OBJECT
-
     private:
         /**
          * Internal components:
          */
-        VertexChooser<3>* chooser;
+        VertexChooser<dim>* chooser;
 
     public:
         /**
          * Constructor and destructor.
          */
         VertexDialog(QWidget* parent,
-            regina::NTriangulation* tri,
-            VertexChooser<3>::FilterFunc filter,
+            regina::Triangulation<dim>* tri,
+            typename VertexChooser<dim>::FilterFunc filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 
-        static regina::Face<3, 0>* choose(QWidget* parent,
-            regina::NTriangulation* tri,
-            VertexChooser<3>::FilterFunc filter,
+        static regina::Face<dim, 0>* choose(QWidget* parent,
+            regina::Triangulation<dim>* tri,
+            typename VertexChooser<dim>::FilterFunc filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
@@ -271,6 +273,46 @@ template <int dim>
 inline void VertexChooser<dim>::packetToBeDestroyed(regina::NPacket*) {
     clear();
     options_.clear();
+}
+
+template <int dim>
+VertexDialog<dim>::VertexDialog(QWidget* parent,
+        regina::Triangulation<dim>* tri,
+        typename VertexChooser<dim>::FilterFunc filter,
+        const QString& title,
+        const QString& message,
+        const QString& whatsThis) :
+        QDialog(parent) {
+    setWindowTitle(title);
+    setWhatsThis(whatsThis);
+    QVBoxLayout* layout = new QVBoxLayout(this);
+
+    QLabel* label = new QLabel(message);
+    layout->addWidget(label);
+
+    chooser = new VertexChooser<dim>(tri, filter, this);
+    layout->addWidget(chooser);
+
+    QDialogButtonBox* buttonBox = new QDialogButtonBox(
+        QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    layout->addWidget(buttonBox);
+
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+}
+
+template <int dim>
+regina::Face<dim, 0>* VertexDialog<dim>::choose(QWidget* parent,
+        regina::Triangulation<dim>* tri,
+        typename VertexChooser<dim>::FilterFunc filter,
+        const QString& title,
+        const QString& message,
+        const QString& whatsThis) {
+    VertexDialog dlg(parent, tri, filter, title, message, whatsThis);
+    if (dlg.exec())
+        return dlg.chooser->selected();
+    else
+        return 0;
 }
 
 #endif

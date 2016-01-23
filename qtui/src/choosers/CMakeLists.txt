@@ -5,7 +5,6 @@ SET ( FILES
   edgeintchooser
   tetrahedronchooser
   trianglechooser
-  vertexchooser
   )
 
 FOREACH( FILE ${FILES} )

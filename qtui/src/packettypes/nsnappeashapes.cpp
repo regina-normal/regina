@@ -434,7 +434,7 @@ void NSnapPeaShapesUI::vertexLinks() {
             tr("This triangulation does not have any vertices."));
     else {
         regina::NVertex* chosen =
-            VertexDialog::choose(ui, tri, 0 /* filter */,
+            VertexDialog<3>::choose(ui, tri, 0 /* filter */,
             tr("Vertex Links"),
             tr("Triangulate the link of which vertex?"),
             tr("<qt>Regina will triangulate the link of whichever "
