@@ -811,7 +811,7 @@ void NTriGluingsUI::idealToFinite() {
     if (tri->isValid() && ! tri->isIdeal())
         ReginaSupport::info(ui,
             tr("This triangulation has no ideal vertices."),
-            tr("Only ideal vertices will be truncated."));
+            tr("Only ideal vertices can be truncated."));
     else {
         regina::NPacket::ChangeEventSpan span(tri);
         tri->idealToFinite();
