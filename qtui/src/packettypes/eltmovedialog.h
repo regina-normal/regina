@@ -51,10 +51,8 @@ class QDialogButtonBox;
 class QLabel;
 class QRadioButton;
 class TetrahedronChooser;
-class TriangleChooser;
-class EdgeChooser;
 class EdgeIntChooser;
-template <int> class VertexChooser;
+template <int, int> class FaceChooser;
 
 namespace regina {
     template <int> class Triangulation;
@@ -75,17 +73,17 @@ class EltMoveDialog : public QDialog, public regina::NPacketListener {
         QLabel* name;
         QLabel* overview;
 
-        EdgeChooser* box32;
-        TriangleChooser* box23;
+        FaceChooser<3, 1>* box32;
+        FaceChooser<3, 2>* box23;
         TetrahedronChooser* box14;
         EdgeIntChooser* box44;
-        EdgeChooser* box20e;
-        VertexChooser<3>* box20v;
+        FaceChooser<3, 1>* box20e;
+        FaceChooser<3, 0>* box20v;
         EdgeIntChooser* box21;
-        TriangleChooser* boxOpenBook;
-        EdgeChooser* boxCloseBook;
+        FaceChooser<3, 2>* boxOpenBook;
+        FaceChooser<3, 1>* boxCloseBook;
         TetrahedronChooser* boxShellBdry;
-        EdgeChooser* boxCollapseEdge;
+        FaceChooser<3, 1>* boxCollapseEdge;
         QRadioButton* use32;
         QRadioButton* use23;
         QRadioButton* use14;

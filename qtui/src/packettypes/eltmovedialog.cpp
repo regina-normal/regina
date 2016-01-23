@@ -36,11 +36,9 @@
 
 #include "eltmovedialog.h"
 #include "reginasupport.h"
-#include "choosers/edgechooser.h"
 #include "choosers/edgeintchooser.h"
+#include "choosers/facechooser.h"
 #include "choosers/tetrahedronchooser.h"
-#include "choosers/trianglechooser.h"
-#include "choosers/vertexchooser.h"
 
 #include <QButtonGroup>
 #include <QComboBox>
@@ -223,7 +221,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "offered in the adjacent drop-down list.</qt>"));
     layout->addWidget(useCollapseEdge, 10, 0);
 
-    box32 = new EdgeChooser(tri, &has32, this, false);
+    box32 = new FaceChooser<3, 1>(tri, &has32, this, false);
     box32->setWhatsThis( tr("<qt>Select the degree three edge about which "
         "the 3-2 move will be performed.  The edge numbers in this list "
         "correspond to the edge numbers seen when viewing the "
@@ -231,7 +229,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
     layout->addWidget(box32, 0, 1);
-    box23 = new TriangleChooser(tri, &has23, this, false);
+    box23 = new FaceChooser<3, 2>(tri, &has23, this, false);
     box23->setWhatsThis( tr("<qt>Select the triangle about which "
         "the 2-3 move will be performed.  The triangle numbers in this list "
         "correspond to the triangle numbers seen when viewing the "
@@ -255,7 +253,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
     layout->addWidget(box44, 3, 1);
-    box20e = new EdgeChooser(tri, &has20e, this, false);
+    box20e = new FaceChooser<3, 1>(tri, &has20e, this, false);
     box20e->setWhatsThis( tr("<qt>Select the degree two edge about which "
         "the 2-0 edge move will be performed.  The edge numbers in this list "
         "correspond to the edge numbers seen when viewing the "
@@ -263,7 +261,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
     layout->addWidget(box20e, 4, 1);
-    box20v = new VertexChooser<3>(tri, &has20v, this, false);
+    box20v = new FaceChooser<3, 0>(tri, &has20v, this, false);
     box20v->setWhatsThis( tr("<qt>Select the degree two vertex about "
         "which the 2-0 vertex move will be performed.  The vertex numbers "
         "in this list correspond to the vertex numbers seen when viewing the "
@@ -281,7 +279,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
     layout->addWidget(box21, 6, 1);
-    boxOpenBook = new TriangleChooser(tri, &hasOpenBook, this, false);
+    boxOpenBook = new FaceChooser<3, 2>(tri, &hasOpenBook, this, false);
     boxOpenBook->setWhatsThis( tr("<qt>Select the internal triangle "
         "that should be opened out.  The triangle numbers in this list "
         "correspond to the triangle numbers seen when viewing the "
@@ -289,7 +287,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
     layout->addWidget(boxOpenBook, 7, 1);
-    boxCloseBook = new EdgeChooser(tri, &hasCloseBook, this, false);
+    boxCloseBook = new FaceChooser<3, 1>(tri, &hasCloseBook, this, false);
     boxCloseBook->setWhatsThis( tr("<qt>Select the boundary edge "
         "around which the book will be closed.  The edge numbers in this list "
         "correspond to the edge numbers seen when viewing the "
@@ -304,7 +302,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "Only moves that do not change the underlying 3-manifold are "
         "offered.</qt>"));
     layout->addWidget(boxShellBdry, 9, 1);
-    boxCollapseEdge = new EdgeChooser(tri, &hasCollapseEdge, this, false);
+    boxCollapseEdge = new FaceChooser<3, 1>(tri, &hasCollapseEdge, this, false);
     boxCollapseEdge->setWhatsThis( tr("<qt>Select the edge joining "
         "two distinct vertices that should be collapsed.  "
         "The edge numbers in this list correspond to the edge numbers seen "

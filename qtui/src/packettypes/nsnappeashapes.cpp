@@ -43,7 +43,7 @@
 #include "reginamain.h"
 #include "reginasupport.h"
 #include "choosers/cuspchooser.h"
-#include "choosers/vertexchooser.h"
+#include "choosers/facechooser.h"
 
 #include <QAction>
 #include <QHeaderView>
@@ -434,7 +434,7 @@ void NSnapPeaShapesUI::vertexLinks() {
             tr("This triangulation does not have any vertices."));
     else {
         regina::NVertex* chosen =
-            VertexDialog<3>::choose(ui, tri, 0 /* filter */,
+            FaceDialog<3, 0>::choose(ui, tri, 0 /* filter */,
             tr("Vertex Links"),
             tr("Triangulate the link of which vertex?"),
             tr("<qt>Regina will triangulate the link of whichever "

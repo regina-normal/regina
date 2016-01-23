@@ -32,13 +32,14 @@
 
 /* end stub */
 
-/*! \file vertexchooser.h
- *  \brief Provides a widget for selecting a single vertex of a triangulation.
+/*! \file facechooser.h
+ *  \brief Provides a widget for selecting a single face of a triangulation.
  */
 
-#ifndef __VERTEXCHOOSER_H
-#define __VERTEXCHOOSER_H
+#ifndef __FACECHOOSER_H
+#define __FACECHOOSER_H
 
+#include "choosers/facename.h"
 #include "packet/npacketlistener.h"
 
 #include <QBoxLayout>
@@ -55,30 +56,30 @@ namespace regina {
 };
 
 /**
- * A widget through which a single vertex of some triangulation
+ * A widget through which a single subdim-face of some triangulation
  * can be selected.  An optional filter may be applied to restrict the
  * available selections.
  *
  * The contents of this chooser will be updated in real time if the
  * triangulation is externally modified.
  */
-template <int dim>
-class VertexChooser : public QComboBox, public regina::NPacketListener {
+template <int dim, int subdim>
+class FaceChooser : public QComboBox, public regina::NPacketListener {
     public:
         /**
-         * A filter function, used to determine whether a given vertex
+         * A filter function, used to determine whether a given face
          * should appear in the list.
          */
-        typedef bool (*FilterFunc)(regina::Face<dim, 0>*);
+        typedef bool (*FilterFunc)(regina::Face<dim, subdim>*);
 
 
     private:
         regina::Triangulation<dim>* tri_;
-            /**< The triangulation whose vertices we are choosing from. */
+            /**< The triangulation whose faces we are choosing from. */
         FilterFunc filter_;
             /**< A filter to restrict the available selections, or
                  0 if no filter is necessary. */
-        std::vector<regina::Face<dim, 0>*> options_;
+        std::vector<regina::Face<dim, subdim>*> options_;
             /**< A list of the available options to choose from. */
 
     public:
@@ -94,31 +95,31 @@ class VertexChooser : public QComboBox, public regina::NPacketListener {
          * but the chooser is \e not refreshed, then selected() may end
          * up returning an invalid pointer.
          *
-         * The given filter may be 0, in which case every vertex
+         * The given filter may be 0, in which case every subdim-face
          * will be offered.
          */
-        VertexChooser(regina::Triangulation<dim>* tri,
+        FaceChooser(regina::Triangulation<dim>* tri,
                 FilterFunc filter, QWidget* parent,
                 bool autoUpdate = true);
 
         /**
-         * Returns the currently selected vertex.
+         * Returns the currently selected face.
          *
-         * If there are no available vertices to choose from,
+         * If there are no available faces to choose from,
          * this routine will return 0.
          */
-        regina::Face<dim, 0>* selected();
+        regina::Face<dim, subdim>* selected();
 
         /**
-         * Changes the selection to the given vertex.
+         * Changes the selection to the given face.
          *
-         * If the given vertex is not one of the options in this
+         * If the given face is not one of the options in this
          * chooser, or if the given pointer is 0, then the first entry
          * in the chooser will be selected.
          *
          * The activated() signal will \e not be emitted.
          */
-        void select(regina::Face<dim, 0>* option);
+        void select(regina::Face<dim, subdim>* option);
 
         /**
          * Forces a manual refresh of the contents of this chooser.
@@ -138,7 +139,7 @@ class VertexChooser : public QComboBox, public regina::NPacketListener {
         /**
          * The text to be displayed for a given option.
          */
-        QString description(regina::Face<dim, 0>* option);
+        QString description(regina::Face<dim, subdim>* option);
 
         /**
          * Fills the chooser with the set of allowable options.
@@ -147,37 +148,37 @@ class VertexChooser : public QComboBox, public regina::NPacketListener {
 };
 
 /**
- * A dialog used to select a single vertex of a given triangulation.
+ * A dialog used to select a single subdim-face of a given triangulation.
  */
-template <int dim>
-class VertexDialog : public QDialog {
+template <int dim, int subdim>
+class FaceDialog : public QDialog {
     private:
         /**
          * Internal components:
          */
-        VertexChooser<dim>* chooser;
+        FaceChooser<dim, subdim>* chooser;
 
     public:
         /**
          * Constructor and destructor.
          */
-        VertexDialog(QWidget* parent,
+        FaceDialog(QWidget* parent,
             regina::Triangulation<dim>* tri,
-            typename VertexChooser<dim>::FilterFunc filter,
+            typename FaceChooser<dim, subdim>::FilterFunc filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 
-        static regina::Face<dim, 0>* choose(QWidget* parent,
+        static regina::Face<dim, subdim>* choose(QWidget* parent,
             regina::Triangulation<dim>* tri,
-            typename VertexChooser<dim>::FilterFunc filter,
+            typename FaceChooser<dim, subdim>::FilterFunc filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 };
 
-template <int dim>
-VertexChooser<dim>::VertexChooser(regina::Triangulation<dim>* tri,
+template <int dim, int subdim>
+FaceChooser<dim, subdim>::FaceChooser(regina::Triangulation<dim>* tri,
         FilterFunc filter, QWidget* parent, bool autoUpdate) :
         QComboBox(parent), tri_(tri), filter_(filter) {
     setMinimumContentsLength(30);
@@ -187,52 +188,61 @@ VertexChooser<dim>::VertexChooser(regina::Triangulation<dim>* tri,
     fill();
 }
 
-template <int dim>
-regina::Face<dim, 0>* VertexChooser<dim>::selected() {
+template <int dim, int subdim>
+regina::Face<dim, subdim>* FaceChooser<dim, subdim>::selected() {
     if (count() == 0)
         return 0;
     int curr = currentIndex();
     return (curr < 0 ? 0 : options_[curr]);
 }
 
-template <int dim>
-QString VertexChooser<dim>::description(regina::Face<dim, 0>* option) {
+template <int dim, int subdim>
+QString FaceChooser<dim, subdim>::description(
+        regina::Face<dim, subdim>* option) {
+    // This could be optimised for:
+    // - dimension 0, where vertices().trunc(...).c_str() can become vertex();
+    // - codimension 1, where there is no need to test for degree > 2.
+    // However, it seems unlikely that this routine is a bottleneck, and
+    // so we leave the code in its generic form for now.
     if (option->degree() == 1)
-        return trUtf8("Vertex %2 — %3 (%4)")
+        return trUtf8("%1 %2 — %3 (%4)")
+            .arg(FaceName<subdim>::upper())
             .arg(option->index())
             .arg(option->front().simplex()->index())
-            .arg(option->front().vertex());
+            .arg(option->front().vertices().trunc(subdim + 1).c_str());
     else {
-        const regina::FaceEmbedding<dim, 0>& e0 = option->embedding(0);
-        const regina::FaceEmbedding<dim, 0>& e1 = option->embedding(1);
+        const regina::FaceEmbedding<dim, subdim>& e0 = option->embedding(0);
+        const regina::FaceEmbedding<dim, subdim>& e1 = option->embedding(1);
         if (option->degree() == 2)
-            return trUtf8("Vertex %1 — %2 (%3), %4 (%5)")
+            return trUtf8("%1 %2 — %3 (%4), %5 (%6)")
+                .arg(FaceName<subdim>::upper())
                 .arg(option->index())
                 .arg(e0.simplex()->index())
-                .arg(e0.vertex())
+                .arg(e0.vertices().trunc(subdim + 1).c_str())
                 .arg(e1.simplex()->index())
-                .arg(e1.vertex());
+                .arg(e1.vertices().trunc(subdim + 1).c_str());
         else
-            return trUtf8("Vertex %1 — %2 (%3), %4 (%5), ...")
+            return trUtf8("%1 %2 — %3 (%4), %5 (%6), ...")
+                .arg(FaceName<subdim>::upper())
                 .arg(option->index())
                 .arg(e0.simplex()->index())
-                .arg(e0.vertex())
+                .arg(e0.vertices().trunc(subdim + 1).c_str())
                 .arg(e1.simplex()->index())
-                .arg(e1.vertex());
+                .arg(e1.vertices().trunc(subdim + 1).c_str());
     }
 }
 
-template <int dim>
-void VertexChooser<dim>::fill() {
-    for (auto v : tri_->vertices())
-        if ((! filter_) || (*filter_)(v)) {
-            addItem(description(v));
-            options_.push_back(v);
+template <int dim, int subdim>
+void FaceChooser<dim, subdim>::fill() {
+    for (auto f : tri_->template faces<subdim>())
+        if ((! filter_) || (*filter_)(f)) {
+            addItem(description(f));
+            options_.push_back(f);
         }
 }
 
-template <int dim>
-void VertexChooser<dim>::select(regina::Face<dim, 0>* option) {
+template <int dim, int subdim>
+void FaceChooser<dim, subdim>::select(regina::Face<dim, subdim>* option) {
     int index = 0;
     auto it = options_.begin();
     while (it != options_.end()) {
@@ -250,35 +260,35 @@ void VertexChooser<dim>::select(regina::Face<dim, 0>* option) {
     return;
 }
 
-template <int dim>
-inline bool VertexChooser<dim>::refresh() {
+template <int dim, int subdim>
+inline bool FaceChooser<dim, subdim>::refresh() {
     clear();
     options_.clear();
     fill();
     return (count() > 0);
 }
 
-template <int dim>
-inline void VertexChooser<dim>::packetToBeChanged(regina::NPacket*) {
+template <int dim, int subdim>
+inline void FaceChooser<dim, subdim>::packetToBeChanged(regina::NPacket*) {
     clear();
     options_.clear();
 }
 
-template <int dim>
-inline void VertexChooser<dim>::packetWasChanged(regina::NPacket*) {
+template <int dim, int subdim>
+inline void FaceChooser<dim, subdim>::packetWasChanged(regina::NPacket*) {
     fill();
 }
 
-template <int dim>
-inline void VertexChooser<dim>::packetToBeDestroyed(regina::NPacket*) {
+template <int dim, int subdim>
+inline void FaceChooser<dim, subdim>::packetToBeDestroyed(regina::NPacket*) {
     clear();
     options_.clear();
 }
 
-template <int dim>
-VertexDialog<dim>::VertexDialog(QWidget* parent,
+template <int dim, int subdim>
+FaceDialog<dim, subdim>::FaceDialog(QWidget* parent,
         regina::Triangulation<dim>* tri,
-        typename VertexChooser<dim>::FilterFunc filter,
+        typename FaceChooser<dim, subdim>::FilterFunc filter,
         const QString& title,
         const QString& message,
         const QString& whatsThis) :
@@ -290,7 +300,7 @@ VertexDialog<dim>::VertexDialog(QWidget* parent,
     QLabel* label = new QLabel(message);
     layout->addWidget(label);
 
-    chooser = new VertexChooser<dim>(tri, filter, this);
+    chooser = new FaceChooser<dim, subdim>(tri, filter, this);
     layout->addWidget(chooser);
 
     QDialogButtonBox* buttonBox = new QDialogButtonBox(
@@ -301,14 +311,14 @@ VertexDialog<dim>::VertexDialog(QWidget* parent,
     connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
 }
 
-template <int dim>
-regina::Face<dim, 0>* VertexDialog<dim>::choose(QWidget* parent,
+template <int dim, int subdim>
+regina::Face<dim, subdim>* FaceDialog<dim, subdim>::choose(QWidget* parent,
         regina::Triangulation<dim>* tri,
-        typename VertexChooser<dim>::FilterFunc filter,
+        typename FaceChooser<dim, subdim>::FilterFunc filter,
         const QString& title,
         const QString& message,
         const QString& whatsThis) {
-    VertexDialog dlg(parent, tri, filter, title, message, whatsThis);
+    FaceDialog dlg(parent, tri, filter, title, message, whatsThis);
     if (dlg.exec())
         return dlg.chooser->selected();
     else

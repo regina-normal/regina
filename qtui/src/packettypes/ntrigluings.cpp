@@ -52,8 +52,7 @@
 #include "reginaprefset.h"
 #include "reginasupport.h"
 #include "choosers/boundarycomponentchooser.h"
-#include "choosers/edgechooser.h"
-#include "choosers/vertexchooser.h"
+#include "choosers/facechooser.h"
 
 #include <memory>
 #include <QAction>
@@ -867,7 +866,7 @@ void NTriGluingsUI::drillEdge() {
             tr("This triangulation does not have any edges."));
     else {
         regina::NEdge* chosen =
-            EdgeDialog::choose(ui, tri, 0 /* filter */,
+            FaceDialog<3, 1>::choose(ui, tri, 0 /* filter */,
             tr("Drill Edge"),
             tr("Drill out a regular neighbourhood of which edge?"),
             tr("Regina will drill out a regular neighbourhood around whichever "
@@ -944,7 +943,7 @@ void NTriGluingsUI::vertexLinks() {
             tr("This triangulation does not have any vertices."));
     else {
         regina::NVertex* chosen =
-            VertexDialog<3>::choose(ui, tri, 0 /* filter */,
+            FaceDialog<3, 0>::choose(ui, tri, 0 /* filter */,
             tr("Vertex Links"),
             tr("Triangulate the link of which vertex?"),
             tr("<qt>Regina will triangulate the link of whichever "

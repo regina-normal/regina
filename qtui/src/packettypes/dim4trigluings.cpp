@@ -43,7 +43,7 @@
 #include "edittableview.h"
 #include "reginamain.h"
 #include "reginasupport.h"
-#include "choosers/vertexchooser.h"
+#include "choosers/facechooser.h"
 
 #include <memory>
 #include <QAction>
@@ -699,7 +699,7 @@ void Dim4TriGluingsUI::vertexLinks() {
             tr("This triangulation does not have any vertices."));
     else {
         regina::Dim4Vertex* chosen =
-            VertexDialog<4>::choose(ui, tri, 0 /* filter */,
+            FaceDialog<4, 0>::choose(ui, tri, 0 /* filter */,
             tr("Vertex Links"),
             tr("Triangulate the link of which vertex?"),
             tr("<qt>Regina will triangulate the link of whichever "

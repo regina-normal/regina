@@ -927,11 +927,8 @@
 		05431FCF1C40F663009BC072 /* intutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431FCD1C40F65D009BC072 /* intutils.cpp */; };
 		0543AE911811DE79002758F8 /* packetui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5CB1811D920002CC2AE /* packetui.h */; };
 		0543AE931811E12A002758F8 /* boundarycomponentchooser.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A40E1811D91E002CC2AE /* boundarycomponentchooser.h */; };
-		0543AE941811E12A002758F8 /* edgechooser.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4111811D91E002CC2AE /* edgechooser.h */; };
 		0543AE951811E12A002758F8 /* edgeintchooser.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4131811D91E002CC2AE /* edgeintchooser.h */; };
 		0543AE961811E12A002758F8 /* tetrahedronchooser.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4151811D91E002CC2AE /* tetrahedronchooser.h */; };
-		0543AE971811E12A002758F8 /* trianglechooser.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4171811D91E002CC2AE /* trianglechooser.h */; };
-		0543AE981811E12A002758F8 /* vertexchooser.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4191811D91E002CC2AE /* vertexchooser.h */; };
 		0543AE991811E12A002758F8 /* coordinatechooser.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A41E1811D91E002CC2AE /* coordinatechooser.h */; };
 		0543AE9A1811E12A002758F8 /* examplesaction.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4231811D91E002CC2AE /* examplesaction.h */; };
 		0543AE9B1811E12A002758F8 /* exportdialog.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A42C1811D91E002CC2AE /* exportdialog.h */; };
@@ -1035,10 +1032,8 @@
 		0564A7F81811D921002CC2AE /* actionspart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4091811D91E002CC2AE /* actionspart.cpp */; };
 		0564A7F91811D921002CC2AE /* bigwidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A40A1811D91E002CC2AE /* bigwidget.cpp */; };
 		0564A7FA1811D921002CC2AE /* boundarycomponentchooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A40D1811D91E002CC2AE /* boundarycomponentchooser.cpp */; };
-		0564A7FC1811D921002CC2AE /* edgechooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4101811D91E002CC2AE /* edgechooser.cpp */; };
 		0564A7FD1811D921002CC2AE /* edgeintchooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4121811D91E002CC2AE /* edgeintchooser.cpp */; };
 		0564A7FE1811D921002CC2AE /* tetrahedronchooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4141811D91E002CC2AE /* tetrahedronchooser.cpp */; };
-		0564A7FF1811D921002CC2AE /* trianglechooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4161811D91E002CC2AE /* trianglechooser.cpp */; };
 		0564A8021811D921002CC2AE /* codecchooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A41B1811D91E002CC2AE /* codecchooser.cpp */; };
 		0564A8031811D921002CC2AE /* coordinatechooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A41D1811D91E002CC2AE /* coordinatechooser.cpp */; };
 		0564A8041811D921002CC2AE /* coordinates.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A41F1811D91E002CC2AE /* coordinates.cpp */; };
@@ -2619,15 +2614,10 @@
 		0564A40D1811D91E002CC2AE /* boundarycomponentchooser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boundarycomponentchooser.cpp; sourceTree = "<group>"; };
 		0564A40E1811D91E002CC2AE /* boundarycomponentchooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = boundarycomponentchooser.h; sourceTree = "<group>"; };
 		0564A40F1811D91E002CC2AE /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		0564A4101811D91E002CC2AE /* edgechooser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = edgechooser.cpp; sourceTree = "<group>"; };
-		0564A4111811D91E002CC2AE /* edgechooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = edgechooser.h; sourceTree = "<group>"; };
 		0564A4121811D91E002CC2AE /* edgeintchooser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = edgeintchooser.cpp; sourceTree = "<group>"; };
 		0564A4131811D91E002CC2AE /* edgeintchooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = edgeintchooser.h; sourceTree = "<group>"; };
 		0564A4141811D91E002CC2AE /* tetrahedronchooser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tetrahedronchooser.cpp; sourceTree = "<group>"; };
 		0564A4151811D91E002CC2AE /* tetrahedronchooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tetrahedronchooser.h; sourceTree = "<group>"; };
-		0564A4161811D91E002CC2AE /* trianglechooser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = trianglechooser.cpp; sourceTree = "<group>"; };
-		0564A4171811D91E002CC2AE /* trianglechooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trianglechooser.h; sourceTree = "<group>"; };
-		0564A4191811D91E002CC2AE /* vertexchooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vertexchooser.h; sourceTree = "<group>"; };
 		0564A41A1811D91E002CC2AE /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		0564A41B1811D91E002CC2AE /* codecchooser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = codecchooser.cpp; sourceTree = "<group>"; };
 		0564A41C1811D91E002CC2AE /* codecchooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = codecchooser.h; sourceTree = "<group>"; };
@@ -2995,6 +2985,8 @@
 		05998ECF19F9360200855238 /* cusped-hyp-or-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cusped-hyp-or-census.rga"; sourceTree = "<group>"; };
 		05998ED019F9360200855238 /* hyp-knot-link-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "hyp-knot-link-census.rga"; sourceTree = "<group>"; };
 		05998ED119F9360200855238 /* sample.rga */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = sample.rga; sourceTree = "<group>"; };
+		059AF9881C53BE4000FB1A14 /* facechooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facechooser.h; sourceTree = "<group>"; };
+		059AF9891C53BE4000FB1A14 /* facename.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facename.h; sourceTree = "<group>"; };
 		05A47F971809CB7600F86BFD /* closed-hyp-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-hyp-census.rga"; sourceTree = "<group>"; };
 		05A47F981809CB7600F86BFD /* closed-nor-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-nor-census.rga"; sourceTree = "<group>"; };
 		05A47F9A1809CB7600F86BFD /* closed-or-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-or-census.rga"; sourceTree = "<group>"; };
@@ -4918,15 +4910,12 @@
 				0564A40F1811D91E002CC2AE /* CMakeLists.txt */,
 				05A73CD619B2F2180099C617 /* cuspchooser.cpp */,
 				05A73CD719B2F2180099C617 /* cuspchooser.h */,
-				0564A4101811D91E002CC2AE /* edgechooser.cpp */,
-				0564A4111811D91E002CC2AE /* edgechooser.h */,
 				0564A4121811D91E002CC2AE /* edgeintchooser.cpp */,
 				0564A4131811D91E002CC2AE /* edgeintchooser.h */,
+				059AF9881C53BE4000FB1A14 /* facechooser.h */,
+				059AF9891C53BE4000FB1A14 /* facename.h */,
 				0564A4141811D91E002CC2AE /* tetrahedronchooser.cpp */,
 				0564A4151811D91E002CC2AE /* tetrahedronchooser.h */,
-				0564A4161811D91E002CC2AE /* trianglechooser.cpp */,
-				0564A4171811D91E002CC2AE /* trianglechooser.h */,
-				0564A4191811D91E002CC2AE /* vertexchooser.h */,
 			);
 			path = choosers;
 			sourceTree = "<group>";
@@ -6550,11 +6539,8 @@
 				050F5E8B1B9BD9C100C1F681 /* pythonconsole.h in Sources */,
 				0543AE931811E12A002758F8 /* boundarycomponentchooser.h in Sources */,
 				05A73CE119B2F97B0099C617 /* cuspchooser.h in Sources */,
-				0543AE941811E12A002758F8 /* edgechooser.h in Sources */,
 				0543AE951811E12A002758F8 /* edgeintchooser.h in Sources */,
 				0543AE961811E12A002758F8 /* tetrahedronchooser.h in Sources */,
-				0543AE971811E12A002758F8 /* trianglechooser.h in Sources */,
-				0543AE981811E12A002758F8 /* vertexchooser.h in Sources */,
 				0543AE991811E12A002758F8 /* coordinatechooser.h in Sources */,
 				0543AE9A1811E12A002758F8 /* examplesaction.h in Sources */,
 				0591E83F1C4F769100793A9C /* dim4trialgebra.cpp in Sources */,
@@ -6620,7 +6606,6 @@
 				0564A95F1811D921002CC2AE /* nsurfacefiltercreator.cpp in Sources */,
 				0564A9561811D921002CC2AE /* ncompatcanvas.cpp in Sources */,
 				0564A9401811D921002CC2AE /* introdialog.cpp in Sources */,
-				0564A7FF1811D921002CC2AE /* trianglechooser.cpp in Sources */,
 				0564A9611811D921002CC2AE /* nsurfacematchingui.cpp in Sources */,
 				0564A8101811D921002CC2AE /* recogniserhandler.cpp in Sources */,
 				0564A9681811D921002CC2AE /* ntrigluings.cpp in Sources */,
@@ -6628,7 +6613,6 @@
 				0564A96C1811D921002CC2AE /* skeletonwindow.cpp in Sources */,
 				0564A8111811D921002CC2AE /* reginahandler.cpp in Sources */,
 				0564A8081811D921002CC2AE /* csvsurfacehandler.cpp in Sources */,
-				0564A7FC1811D921002CC2AE /* edgechooser.cpp in Sources */,
 				0564A9811811D921002CC2AE /* reginapref.cpp in Sources */,
 				0564A80A1811D921002CC2AE /* exportdialog.cpp in Sources */,
 				0564A9671811D921002CC2AE /* ntricomposition.cpp in Sources */,
