@@ -926,8 +926,6 @@
 		05431FCC1C40F653009BC072 /* nfacepairing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431FCA1C40F641009BC072 /* nfacepairing.cpp */; };
 		05431FCF1C40F663009BC072 /* intutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431FCD1C40F65D009BC072 /* intutils.cpp */; };
 		0543AE911811DE79002758F8 /* packetui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5CB1811D920002CC2AE /* packetui.h */; };
-		0543AE931811E12A002758F8 /* boundarycomponentchooser.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A40E1811D91E002CC2AE /* boundarycomponentchooser.h */; };
-		0543AE951811E12A002758F8 /* edgeintchooser.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4131811D91E002CC2AE /* edgeintchooser.h */; };
 		0543AE991811E12A002758F8 /* coordinatechooser.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A41E1811D91E002CC2AE /* coordinatechooser.h */; };
 		0543AE9A1811E12A002758F8 /* examplesaction.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4231811D91E002CC2AE /* examplesaction.h */; };
 		0543AE9B1811E12A002758F8 /* exportdialog.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A42C1811D91E002CC2AE /* exportdialog.h */; };
@@ -1335,7 +1333,6 @@
 		05A73CD019B2F1AB0099C617 /* nsnappeaui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CC819B2F1AB0099C617 /* nsnappeaui.cpp */; };
 		05A73CD519B2F2040099C617 /* columnlayout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CD119B2F2040099C617 /* columnlayout.cpp */; };
 		05A73CD819B2F2180099C617 /* cuspchooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CD619B2F2180099C617 /* cuspchooser.cpp */; };
-		05A73CE119B2F97B0099C617 /* cuspchooser.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CD719B2F2180099C617 /* cuspchooser.h */; };
 		05A73CE219B2F99B0099C617 /* groupwidget.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CBD19B2F1AB0099C617 /* groupwidget.h */; };
 		05A73CE319B2F9DC0099C617 /* nsnappeafile.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CC319B2F1AB0099C617 /* nsnappeafile.h */; };
 		05A73CE419B2F9DC0099C617 /* nsnappeagluings.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CC519B2F1AB0099C617 /* nsnappeagluings.h */; };
@@ -1374,6 +1371,7 @@
 		05B14EB519B4240D002138C0 /* mkcensusdb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B14EB419B4240D002138C0 /* mkcensusdb.cpp */; };
 		05B14EB719B424D8002138C0 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A51806047E00FAE4DF /* libz.dylib */; };
 		05B14EB919B424F9002138C0 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 053E5B5519B3D79100166778 /* libbz2.dylib */; };
+		05B1EF181C54299C008E7B49 /* dim4boundarycomponentchooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B1EF141C542991008E7B49 /* dim4boundarycomponentchooser.cpp */; };
 		05B62166180B9D7300CCB90B /* title.png in Resources */ = {isa = PBXBuildFile; fileRef = 05B62165180B9D7300CCB90B /* title.png */; };
 		05B7708419C92A5000E2E558 /* ScriptViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B7708319C92A5000E2E558 /* ScriptViewController.mm */; };
 		05B7708719CA4FF100E2E558 /* FilterViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B7708619CA4FF100E2E558 /* FilterViewController.mm */; };
@@ -3074,6 +3072,8 @@
 		05B14EA319B423A0002138C0 /* mkcensusdb */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mkcensusdb; sourceTree = BUILT_PRODUCTS_DIR; };
 		05B14EB019B4240D002138C0 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		05B14EB419B4240D002138C0 /* mkcensusdb.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mkcensusdb.cpp; sourceTree = "<group>"; };
+		05B1EF141C542991008E7B49 /* dim4boundarycomponentchooser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim4boundarycomponentchooser.cpp; sourceTree = "<group>"; };
+		05B1EF151C542991008E7B49 /* dim4boundarycomponentchooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim4boundarycomponentchooser.h; sourceTree = "<group>"; };
 		05B62165180B9D7300CCB90B /* title.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = title.png; sourceTree = "<group>"; };
 		05B7708219C92A5000E2E558 /* ScriptViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScriptViewController.h; sourceTree = "<group>"; };
 		05B7708319C92A5000E2E558 /* ScriptViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ScriptViewController.mm; sourceTree = "<group>"; };
@@ -4907,6 +4907,8 @@
 				0564A40F1811D91E002CC2AE /* CMakeLists.txt */,
 				05A73CD619B2F2180099C617 /* cuspchooser.cpp */,
 				05A73CD719B2F2180099C617 /* cuspchooser.h */,
+				05B1EF141C542991008E7B49 /* dim4boundarycomponentchooser.cpp */,
+				05B1EF151C542991008E7B49 /* dim4boundarycomponentchooser.h */,
 				0564A4121811D91E002CC2AE /* edgeintchooser.cpp */,
 				0564A4131811D91E002CC2AE /* edgeintchooser.h */,
 				059AF9881C53BE4000FB1A14 /* facechooser.h */,
@@ -6533,9 +6535,6 @@
 				055ABEBB19B49F6800044C1B /* hyp-knot-link-census.zsig in Sources */,
 				050F5E8A1B9BD9C100C1F681 /* commandedit.h in Sources */,
 				050F5E8B1B9BD9C100C1F681 /* pythonconsole.h in Sources */,
-				0543AE931811E12A002758F8 /* boundarycomponentchooser.h in Sources */,
-				05A73CE119B2F97B0099C617 /* cuspchooser.h in Sources */,
-				0543AE951811E12A002758F8 /* edgeintchooser.h in Sources */,
 				0543AE991811E12A002758F8 /* coordinatechooser.h in Sources */,
 				0543AE9A1811E12A002758F8 /* examplesaction.h in Sources */,
 				0591E83F1C4F769100793A9C /* dim4trialgebra.cpp in Sources */,
@@ -6574,6 +6573,7 @@
 				0543AEB01811E12A002758F8 /* nsurfacefilterprop.h in Sources */,
 				0543AEB11811E12A002758F8 /* nsurfacematchingui.h in Sources */,
 				0543AEB21811E12A002758F8 /* nsurfacesummaryui.h in Sources */,
+				05B1EF181C54299C008E7B49 /* dim4boundarycomponentchooser.cpp in Sources */,
 				0543AEB31811E12A002758F8 /* ntextui.h in Sources */,
 				0543AEB41811E12A002758F8 /* ntrialgebra.h in Sources */,
 				0543AEB51811E12A002758F8 /* ntriangulationui.h in Sources */,
