@@ -315,6 +315,7 @@ void addDim4Triangulation() {
             OL_shellBoundary())
         .def("collapseEdge", &Dim4Triangulation::collapseEdge,
             OL_collapseEdge())
+        .def("finiteToIdeal", &Dim4Triangulation::finiteToIdeal)
         .def("makeDoubleCover", &Dim4Triangulation::makeDoubleCover)
         .def("barycentricSubdivision",
             &Dim4Triangulation::barycentricSubdivision)

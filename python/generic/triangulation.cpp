@@ -226,6 +226,7 @@ void addTriangulation(const char* name) {
         .def("orient", &Triangulation<dim>::orient)
         .def("splitIntoComponents", &Triangulation<dim>::splitIntoComponents,
             typename PyTriHelper<dim>::OL_splitIntoComponents())
+        .def("finiteToIdeal", &Triangulation<dim>::finiteToIdeal)
         .def("makeDoubleCover", &Triangulation<dim>::makeDoubleCover)
         .def("isIdenticalTo", &Triangulation<dim>::isIdenticalTo)
         .def("isIsomorphicTo", PyTriHelper<dim>::isIsomorphicTo,

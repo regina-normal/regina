@@ -824,6 +824,38 @@ class TriangulationBase :
          */
         void makeDoubleCover();
 
+        /**
+         * Converts each real boundary component into a cusp (i.e., an
+         * ideal vertex).  Only boundary components formed from real
+         * (<i>dim</i>-1)-faces will be affected; ideal boundary components
+         * are already cusps and so will not be changed.
+         *
+         * One side-effect of this operation is that all spherical
+         * boundary components will be filled in with balls.
+         *
+         * This operation is performed by attaching a new <i>dim</i>-simplex to
+         * each boundary (<i>dim</i>-1)-face, and then gluing these new
+         * simplices together in a way that mirrors the adjacencies of the
+         * underlying boundary facets.  Each boundary component will
+         * thereby be pushed up through the new simplices and converted
+         * into a cusp formed using vertices of these new simplices.
+         *
+         * In Regina's \ref stddef "standard dimensions", where triangulations
+         * also support an idealToFinite() operation, this routine is a loose
+         * converse of that operation.
+         *
+         * In dimension 2, every boundary component is spherical and so
+         * this routine simply fills all the punctures in the underlying
+         * surface.  (In dimension 2, triangulations cannot have cusps).
+         *
+         * \warning If a real boundary component contains vertices whose
+         * links are not discs, this operation may have unexpected results.
+         *
+         * @return \c true if changes were made, or \c false if the
+         * original triangulation contained no real boundary components.
+         */
+        bool finiteToIdeal();
+
         /*@}*/
         /**
          * \name Decompositions
@@ -2621,6 +2653,79 @@ void TriangulationBase<dim>::makeDoubleCover() {
     // Tidy up.
     delete[] upper;
     delete[] queue;
+}
+
+template <int dim>
+bool TriangulationBase<dim>::finiteToIdeal() {
+    if (! hasBoundaryFacets())
+        return false;
+
+    // Make a list of all boundary facets, indexed by (dim-1)-face number,
+    // and create the corresponding new simplices.
+    // We put these new simplices in a new "staging" triangulation for
+    // the time being, since we will still need to iterate through
+    // (dim-2)-faces of the original triangulation.
+
+    size_t nFaces = countFaces<dim - 1>();
+
+    Simplex<dim>** bdry = new Simplex<dim>*[nFaces];
+    NPerm<dim + 1>* bdryPerm = new NPerm<dim + 1>[nFaces];
+    Simplex<dim>** cone = new Simplex<dim>*[nFaces];
+
+    Triangulation<dim> staging;
+    typename Triangulation<dim>::ChangeEventSpan span1(&staging);
+
+    for (Face<dim, dim - 1>* f : faces<dim - 1>()) {
+        if (f->degree() > 1) {
+            // Not a boundary facet.
+            bdry[f->index()] = cone[f->index()] = 0;
+            continue;
+        }
+
+        bdry[f->index()] = f->front().simplex();
+        bdryPerm[f->index()] = f->front().vertices();
+        cone[f->index()] = staging.newSimplex();
+    }
+
+    // Glue the new simplices to each other.
+    Face<dim, dim - 1> *facet1, *facet2;
+    NPerm<dim + 1> f1Perm, f2Perm;
+    for (auto ridge : faces<dim - 2>()) {
+        // Is this (dim-2)-face on a real boundary component?
+        // Look for the boundary facets at either end.
+        const FaceEmbedding<dim, dim - 2>& e1 = ridge->front();
+        facet1 = e1.simplex()->template face<dim - 1>(e1.vertices()[dim]);
+        if (facet1->degree() > 1)
+            continue;
+
+        // Yes!  We're on a real boundary component.
+        const FaceEmbedding<dim, dim - 2>& e2 = ridge->back();
+        facet2 = e2.simplex()->template face<dim - 1>(e2.vertices()[dim - 1]);
+
+        f1Perm = bdryPerm[facet1->index()].inverse() * e1.vertices();
+        f2Perm = bdryPerm[facet2->index()].inverse() * e2.vertices() *
+            NPerm<dim + 1>(dim - 1, dim);
+
+        cone[facet1->index()]->joinTo(f1Perm[dim - 1],
+            cone[facet2->index()], f2Perm * f1Perm.inverse());
+    }
+
+    // Now join the new simplices to the boundary facets of the original
+    // triangulation.
+    typename Triangulation<dim>::ChangeEventSpan span2(
+        static_cast<Triangulation<dim>*>(this));
+
+    staging.moveContentsTo(static_cast<Triangulation<dim>&>(*this));
+
+    for (size_t i = 0; i < nFaces; ++i)
+        if (cone[i])
+            cone[i]->join(dim, bdry[i], bdryPerm[i]);
+
+    // Clean up and return.
+    delete[] cone;
+    delete[] bdryPerm;
+    delete[] bdry;
+    return true;
 }
 
 template <int dim>

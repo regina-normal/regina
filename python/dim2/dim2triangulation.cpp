@@ -246,6 +246,7 @@ void addDim2Triangulation() {
             OL_splitIntoComponents())
         .def("oneThreeMove", &Dim2Triangulation::oneThreeMove,
             OL_oneThreeMove())
+        .def("finiteToIdeal", &Dim2Triangulation::finiteToIdeal)
         .def("makeDoubleCover", &Dim2Triangulation::makeDoubleCover)
         .def("insertTriangulation", &Dim2Triangulation::insertTriangulation)
         .def("isoSig", isoSig_void)

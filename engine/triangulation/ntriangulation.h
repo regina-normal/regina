@@ -2436,32 +2436,6 @@ class REGINA_API Triangulation<3> :
         bool idealToFinite();
 
         /**
-         * Converts each real boundary component into a cusp (i.e., an ideal
-         * vertex).  Only boundary components formed from real
-         * tetrahedron faces will be affected; ideal boundary components
-         * are already cusps and so will not be changed.
-         *
-         * One side-effect of this operation is that all spherical
-         * boundary components will be filled in with balls.
-         *
-         * This operation is performed by attaching a new tetrahedron to
-         * each boundary triangle and then gluing these new tetrahedra
-         * together in a way that mirrors the adjacencies of the
-         * underlying boundary triangles.  Each boundary component will
-         * thereby be pushed up through the new tetrahedra and converted
-         * into a cusp formed using vertices of these new tetrahedra.
-         *
-         * Note that this operation is a loose converse of idealToFinite().
-         *
-         * \warning If a real boundary component contains vertices whose
-         * links are not discs, this operation may have unexpected results.
-         *
-         * @return \c true if changes were made, or \c false if the
-         * original triangulation contained no real boundary components.
-         */
-        bool finiteToIdeal();
-
-        /**
          * Does a barycentric subdivision of the triangulation.
          * Each tetrahedron is divided into 24 tetrahedra by placing
          * an extra vertex at the centroid of each tetrahedron, the

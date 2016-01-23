@@ -445,6 +445,24 @@ Dim4TriGluingsUI::Dim4TriGluingsUI(regina::Dim4Triangulation* packet,
     triActionList.append(actIdealToFinite);
     connect(actIdealToFinite, SIGNAL(triggered()), this, SLOT(idealToFinite()));
 
+    QAction* actFiniteToIdeal = new QAction(this);
+    actFiniteToIdeal->setText(tr("Make &Ideal"));
+    actFiniteToIdeal->setIcon(ReginaSupport::regIcon("cone"));
+    actFiniteToIdeal->setToolTip(tr(
+        "Convert real boundary components into ideal vertices"));
+    actFiniteToIdeal->setEnabled(readWrite);
+    actFiniteToIdeal->setWhatsThis(tr("Convert this from a finite "
+        "triangulation to an ideal triangulation.  Each real boundary "
+        "component (formed from one or more boundary tetrahedra) will be "
+        "converted into a single ideal vertex.<p>"
+        "A side-effect of this operation is that any spherical boundary "
+        "components will be filled in with balls.<p>"
+        "This triangulation will be modified directly.  If there are no "
+        "real boundary components, this operation will have no effect."));
+    enableWhenWritable.append(actFiniteToIdeal);
+    triActionList.append(actFiniteToIdeal);
+    connect(actFiniteToIdeal, SIGNAL(triggered()), this, SLOT(finiteToIdeal()));
+
     QAction* actDoubleCover = new QAction(this);
     actDoubleCover->setText(tr("&Double Cover"));
     actDoubleCover->setIcon(ReginaSupport::regIcon("doublecover"));
@@ -677,6 +695,21 @@ void Dim4TriGluingsUI::idealToFinite() {
     else {
         regina::NPacket::ChangeEventSpan span(tri);
         tri->idealToFinite();
+        tri->intelligentSimplify();
+    }
+}
+
+void Dim4TriGluingsUI::finiteToIdeal() {
+    endEdit();
+
+    if (! tri->hasBoundaryFacets())
+        ReginaSupport::info(ui,
+            tr("This triangulation has no real boundary components."),
+            tr("Only real boundary components will be converted into "
+            "ideal vertices."));
+    else {
+        regina::NPacket::ChangeEventSpan span(tri);
+        tri->finiteToIdeal();
         tri->intelligentSimplify();
     }
 }
