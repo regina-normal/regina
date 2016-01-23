@@ -406,7 +406,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     enableWhenWritable.append(actSimplify);
     triActionList.append(actSimplify);
 
-    QAction* actEltMove = new QAction(this); 
+    QAction* actEltMove = new QAction(this);
     actEltMove->setText(tr("&Elementary Move..."));
     actEltMove->setToolTip(tr(
         "Select an elementary move with which to modify the triangulation"));
@@ -458,7 +458,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     QAction* actIdealToFinite = new QAction(this);
     actIdealToFinite->setText(tr("&Truncate Ideal Vertices"));
     actIdealToFinite->setIcon(ReginaSupport::regIcon("finite"));
-      
+
     actIdealToFinite->setToolTip(tr(
         "Truncate any ideal vertices"));
     actIdealToFinite->setEnabled(readWrite);
@@ -491,8 +491,8 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     enableWhenWritable.append(actFiniteToIdeal);
     triActionList.append(actFiniteToIdeal);
     connect(actFiniteToIdeal, SIGNAL(triggered()), this, SLOT(finiteToIdeal()));
-    
-    QAction* actDoubleCover = new QAction(this); 
+
+    QAction* actDoubleCover = new QAction(this);
     actDoubleCover->setText(tr("&Double Cover"));
     actDoubleCover->setIcon(ReginaSupport::regIcon("doublecover"));
     actDoubleCover->setToolTip(tr(
@@ -610,7 +610,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "summands will be added as new triangulations beneath it in "
         "the packet tree."));
     triActionList.append(actConnectedSumDecomposition);
-    connect(actConnectedSumDecomposition, SIGNAL(triggered()), this, 
+    connect(actConnectedSumDecomposition, SIGNAL(triggered()), this,
         SLOT(connectedSumDecomposition()));
 
     QAction* actZeroEff = new QAction(this);
