@@ -84,7 +84,7 @@ void BoundaryComponentChooser::select(regina::NBoundaryComponent* option) {
 
 QString BoundaryComponentChooser::description(
         regina::NBoundaryComponent* option) {
-    if (option->countTriangles() == 0) {
+    if (option->isIdeal()) {
         regina::NVertex* v = option->vertex(0);
         QString desc;
         if (v->degree() == 1)
@@ -93,7 +93,7 @@ QString BoundaryComponentChooser::description(
             desc = trUtf8("Ideal bdry comp %1 — Vertex %2 — %3 (%4), ...");
         return desc.arg(option->index())
                 .arg(v->index())
-                .arg(v->front().tetrahedron()->index())
+                .arg(v->front().simplex()->index())
                 .arg(v->front().vertex());
     } else {
         // The number of triangles is always even, and therefore always >1.
@@ -105,9 +105,9 @@ QString BoundaryComponentChooser::description(
         else
             desc = trUtf8("Real bdry comp %1 — Triangles %2 (%3), %4 (%5), ...");
         return desc.arg(option->index())
-                .arg(f0.tetrahedron()->index())
+                .arg(f0.simplex()->index())
                 .arg(f0.vertices().trunc3().c_str())
-                .arg(f1.tetrahedron()->index())
+                .arg(f1.simplex()->index())
                 .arg(f1.vertices().trunc3().c_str());
     }
 }
