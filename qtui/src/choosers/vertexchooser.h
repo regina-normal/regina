@@ -200,7 +200,7 @@ QString VertexChooser<dim>::description(regina::Face<dim, 0>* option) {
     if (option->degree() == 1)
         return trUtf8("Vertex %2 — %3 (%4)")
             .arg(option->index())
-            .arg(option->front().tetrahedron()->index())
+            .arg(option->front().simplex()->index())
             .arg(option->front().vertex());
     else {
         const regina::FaceEmbedding<dim, 0>& e0 = option->embedding(0);
@@ -208,16 +208,16 @@ QString VertexChooser<dim>::description(regina::Face<dim, 0>* option) {
         if (option->degree() == 2)
             return trUtf8("Vertex %1 — %2 (%3), %4 (%5)")
                 .arg(option->index())
-                .arg(e0.tetrahedron()->index())
+                .arg(e0.simplex()->index())
                 .arg(e0.vertex())
-                .arg(e1.tetrahedron()->index())
+                .arg(e1.simplex()->index())
                 .arg(e1.vertex());
         else
             return trUtf8("Vertex %1 — %2 (%3), %4 (%5), ...")
                 .arg(option->index())
-                .arg(e0.tetrahedron()->index())
+                .arg(e0.simplex()->index())
                 .arg(e0.vertex())
-                .arg(e1.tetrahedron()->index())
+                .arg(e1.simplex()->index())
                 .arg(e1.vertex());
     }
 }

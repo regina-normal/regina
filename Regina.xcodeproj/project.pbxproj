@@ -1039,7 +1039,6 @@
 		0564A7FD1811D921002CC2AE /* edgeintchooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4121811D91E002CC2AE /* edgeintchooser.cpp */; };
 		0564A7FE1811D921002CC2AE /* tetrahedronchooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4141811D91E002CC2AE /* tetrahedronchooser.cpp */; };
 		0564A7FF1811D921002CC2AE /* trianglechooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4161811D91E002CC2AE /* trianglechooser.cpp */; };
-		0564A8001811D921002CC2AE /* vertexchooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4181811D91E002CC2AE /* vertexchooser.cpp */; };
 		0564A8021811D921002CC2AE /* codecchooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A41B1811D91E002CC2AE /* codecchooser.cpp */; };
 		0564A8031811D921002CC2AE /* coordinatechooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A41D1811D91E002CC2AE /* coordinatechooser.cpp */; };
 		0564A8041811D921002CC2AE /* coordinates.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A41F1811D91E002CC2AE /* coordinates.cpp */; };
@@ -2628,7 +2627,6 @@
 		0564A4151811D91E002CC2AE /* tetrahedronchooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tetrahedronchooser.h; sourceTree = "<group>"; };
 		0564A4161811D91E002CC2AE /* trianglechooser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = trianglechooser.cpp; sourceTree = "<group>"; };
 		0564A4171811D91E002CC2AE /* trianglechooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trianglechooser.h; sourceTree = "<group>"; };
-		0564A4181811D91E002CC2AE /* vertexchooser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vertexchooser.cpp; sourceTree = "<group>"; };
 		0564A4191811D91E002CC2AE /* vertexchooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vertexchooser.h; sourceTree = "<group>"; };
 		0564A41A1811D91E002CC2AE /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		0564A41B1811D91E002CC2AE /* codecchooser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = codecchooser.cpp; sourceTree = "<group>"; };
@@ -4928,7 +4926,6 @@
 				0564A4151811D91E002CC2AE /* tetrahedronchooser.h */,
 				0564A4161811D91E002CC2AE /* trianglechooser.cpp */,
 				0564A4171811D91E002CC2AE /* trianglechooser.h */,
-				0564A4181811D91E002CC2AE /* vertexchooser.cpp */,
 				0564A4191811D91E002CC2AE /* vertexchooser.h */,
 			);
 			path = choosers;
@@ -6657,7 +6654,6 @@
 				0564A7FA1811D921002CC2AE /* boundarycomponentchooser.cpp in Sources */,
 				0564A95C1811D921002CC2AE /* nsurfacecompatui.cpp in Sources */,
 				0564A94A1811D921002CC2AE /* packettabui.cpp in Sources */,
-				0564A8001811D921002CC2AE /* vertexchooser.cpp in Sources */,
 				0564A8141811D921002CC2AE /* iconcache.cpp in Sources */,
 				0564A9521811D921002CC2AE /* facetgraphtab.cpp in Sources */,
 				0564A9851811D921002CC2AE /* shortrunner.cpp in Sources */,
