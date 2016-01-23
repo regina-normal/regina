@@ -16,6 +16,8 @@
 		05062FB618169F06008A20A5 /* nboundarycomponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05062FB418169F06008A20A5 /* nboundarycomponent.cpp */; };
 		05062FB718169F06008A20A5 /* nboundarycomponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05062FB418169F06008A20A5 /* nboundarycomponent.cpp */; };
 		0506EC1D19F65B43003E455B /* iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0506EC1C19F65B43003E455B /* iPhone.storyboard */; };
+		0507C5A71C54495D00D1C86C /* dim4eltmovedialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0507C5A31C54494E00D1C86C /* dim4eltmovedialog.cpp */; };
+		0507C5A81C54497200D1C86C /* dim4eltmovedialog.h in Sources */ = {isa = PBXBuildFile; fileRef = 0507C5A41C54494E00D1C86C /* dim4eltmovedialog.h */; };
 		050AFC5319DCB90E00835ED6 /* SnapPeaCusps.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050AFC5219DCB90E00835ED6 /* SnapPeaCusps.mm */; };
 		050AFC5A19DCB9B100835ED6 /* SnapPeaAlgebra.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050AFC5519DCB9B100835ED6 /* SnapPeaAlgebra.mm */; };
 		050AFC5C19DCB9B200835ED6 /* SnapPeaGluings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050AFC5919DCB9B100835ED6 /* SnapPeaGluings.mm */; };
@@ -1681,6 +1683,8 @@
 		0503DCDA19B7E4F10085F3CC /* CensusListController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CensusListController.mm; sourceTree = "<group>"; };
 		05062FB418169F06008A20A5 /* nboundarycomponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nboundarycomponent.cpp; sourceTree = "<group>"; };
 		0506EC1C19F65B43003E455B /* iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = iPhone.storyboard; sourceTree = "<group>"; };
+		0507C5A31C54494E00D1C86C /* dim4eltmovedialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim4eltmovedialog.cpp; sourceTree = "<group>"; };
+		0507C5A41C54494E00D1C86C /* dim4eltmovedialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim4eltmovedialog.h; sourceTree = "<group>"; };
 		050AFC5119DCB90E00835ED6 /* SnapPeaCusps.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaCusps.h; sourceTree = "<group>"; };
 		050AFC5219DCB90E00835ED6 /* SnapPeaCusps.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapPeaCusps.mm; sourceTree = "<group>"; };
 		050AFC5419DCB9B100835ED6 /* SnapPeaAlgebra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaAlgebra.h; sourceTree = "<group>"; };
@@ -4964,6 +4968,8 @@
 				0564A58D1811D920002CC2AE /* dim2triskeleton.h */,
 				0564A58E1811D920002CC2AE /* dim2triui.cpp */,
 				0564A58F1811D920002CC2AE /* dim2triui.h */,
+				0507C5A31C54494E00D1C86C /* dim4eltmovedialog.cpp */,
+				0507C5A41C54494E00D1C86C /* dim4eltmovedialog.h */,
 				0591E82B1C4F767300793A9C /* dim4trialgebra.cpp */,
 				0591E82C1C4F767300793A9C /* dim4trialgebra.h */,
 				0591E82D1C4F767300793A9C /* dim4tricreator.cpp */,
@@ -6542,6 +6548,7 @@
 				0591E8461C4F773500793A9C /* dim4trigluings.h in Sources */,
 				0591E8471C4F773800793A9C /* dim4triskeleton.h in Sources */,
 				0591E8481C4F773C00793A9C /* dim4triui.h in Sources */,
+				0507C5A81C54497200D1C86C /* dim4eltmovedialog.h in Sources */,
 				0543AE9B1811E12A002758F8 /* exportdialog.h in Sources */,
 				05A73CCF19B2F1AB0099C617 /* nsnappeashapes.cpp in Sources */,
 				0543AE9C1811E12A002758F8 /* importdialog.h in Sources */,
@@ -6604,6 +6611,7 @@
 				0564A9611811D921002CC2AE /* nsurfacematchingui.cpp in Sources */,
 				0564A8101811D921002CC2AE /* recogniserhandler.cpp in Sources */,
 				0564A9681811D921002CC2AE /* ntrigluings.cpp in Sources */,
+				0507C5A71C54495D00D1C86C /* dim4eltmovedialog.cpp in Sources */,
 				0564A9501811D921002CC2AE /* dim2triui.cpp in Sources */,
 				0564A96C1811D921002CC2AE /* skeletonwindow.cpp in Sources */,
 				0564A8111811D921002CC2AE /* reginahandler.cpp in Sources */,

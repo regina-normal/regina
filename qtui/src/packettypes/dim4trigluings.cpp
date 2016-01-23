@@ -39,6 +39,7 @@
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
+#include "dim4eltmovedialog.h"
 #include "dim4trigluings.h"
 #include "edittableview.h"
 #include "reginamain.h"
@@ -394,6 +395,21 @@ Dim4TriGluingsUI::Dim4TriGluingsUI(regina::Dim4Triangulation* packet,
     enableWhenWritable.append(actSimplify);
     triActionList.append(actSimplify);
 
+    QAction* actEltMove = new QAction(this);
+    actEltMove->setText(tr("&Elementary Move..."));
+    actEltMove->setToolTip(tr(
+        "Select an elementary move with which to modify the triangulation"));
+    actEltMove->setEnabled(readWrite);
+    actEltMove->setWhatsThis(tr("<qt>Perform an elementary move upon this "
+        "triangulation.  <i>Elementary moves</i> are modifications local to "
+        "a small number of pentachora that do not change the underlying "
+        "4-manifold.<p>"
+        "A dialog will be presented in which you can select the precise "
+        "elementary move to apply.</qt>"));
+    enableWhenWritable.append(actEltMove);
+    triActionList.append(actEltMove);
+    connect(actEltMove, SIGNAL(triggered()), this, SLOT(elementaryMove()));
+
     sep = new QAction(this);
     sep->setSeparator(true);
     triActionList.append(sep);
@@ -710,6 +726,12 @@ void Dim4TriGluingsUI::finiteToIdeal() {
         tri->finiteToIdeal();
         tri->intelligentSimplify();
     }
+}
+
+void Dim4TriGluingsUI::elementaryMove() {
+    endEdit();
+
+    (new Dim4EltMoveDialog(ui, tri))->show();
 }
 
 void Dim4TriGluingsUI::doubleCover() {

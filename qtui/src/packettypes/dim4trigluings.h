@@ -209,6 +209,7 @@ class Dim4TriGluingsUI : public QObject, public PacketEditorTab {
         void barycentricSubdivide();
         void idealToFinite();
         void finiteToIdeal();
+        void elementaryMove();
         void doubleCover();
         void boundaryComponents();
         void vertexLinks();

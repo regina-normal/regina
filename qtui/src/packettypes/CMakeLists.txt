@@ -3,6 +3,7 @@ SET ( FILES
   dim2trigluings
   dim2triskeleton
   dim2triui
+  dim4eltmovedialog
   dim4trialgebra
   dim4tricreator
   dim4trigluings
