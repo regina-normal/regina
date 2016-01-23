@@ -550,6 +550,9 @@ Version 5.0  [ (under development) ]
               longer return a reference to a std::vector.  Instead they return
               a FaceList structure, which also supports C++11 range-based for
               loops and operator [] (amongst other things).
+            - Routine finiteToIdeal() now inserts its new tetrahedra in
+              a different order (though the isomorphism type of the resulting
+              triangulation has not changed).
             - Routines simplexIndex(), vertexIndex(), edgeIndex(),
               triangleIndex(), tetrahedronIndex(), componentIndex() and
               boundaryComponentIndex() are all deprecated.  Just call
