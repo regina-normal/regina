@@ -43,6 +43,7 @@
 #include "edittableview.h"
 #include "reginamain.h"
 #include "reginasupport.h"
+#include "choosers/dim4boundarycomponentchooser.h"
 #include "choosers/facechooser.h"
 
 #include <memory>
@@ -492,12 +493,9 @@ Dim4TriGluingsUI::Dim4TriGluingsUI(regina::Dim4Triangulation* packet,
         "a 3-manifold triangulation from its boundary tetrahedra.  "
         "If you select an ideal boundary component, this will construct "
         "a 3-manifold triangulation from the corresponding vertex link.</qt>"));
-    /*
-    // TODO: Wait until it's actually implemented.
     triActionList.append(actBoundaryComponents);
     connect(actBoundaryComponents, SIGNAL(triggered()), this,
         SLOT(boundaryComponents()));
-    */
 
     QAction* actVertexLinks = new QAction(this);
     actVertexLinks->setText(tr("&Vertex Links..."));
@@ -721,7 +719,32 @@ void Dim4TriGluingsUI::doubleCover() {
 }
 
 void Dim4TriGluingsUI::boundaryComponents() {
-    // TODO
+    endEdit();
+
+    if (tri->countBoundaryComponents() == 0)
+        ReginaSupport::sorry(ui,
+            tr("This triangulation does not have any boundary components."));
+    else {
+        regina::Dim4BoundaryComponent* chosen =
+            Dim4BoundaryComponentDialog::choose(ui, tri, 0 /* filter */,
+            tr("Boundary Components"),
+            tr("Triangulate which boundary component?"),
+            tr("<qt>Regina will triangulate whichever "
+                "boundary component you choose.<p>"
+                "If you select a real boundary component, this will construct "
+                "a 3-manifold triangulation from its boundary tetrahedra.  "
+                "If you select an ideal boundary component, this will "
+                "construct a 3-manifold triangulation from the corresponding "
+                "vertex link.</qt>"));
+        if (chosen) {
+            regina::NTriangulation* ans = new regina::NTriangulation(
+                *chosen->triangulation());
+            ans->setLabel(tr("Boundary component %1").arg(
+                chosen->index()).toUtf8().constData());
+            tri->insertChildLast(ans);
+            enclosingPane->getMainWindow()->packetView(ans, true, true);
+        }
+    }
 }
 
 void Dim4TriGluingsUI::vertexLinks() {
