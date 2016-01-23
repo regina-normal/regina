@@ -62,6 +62,11 @@ namespace regina {
  *
  * The contents of this chooser will be updated in real time if the
  * triangulation is externally modified.
+ *
+ * Note that we do *not* use Q_OBJECT with the chooser classes.
+ * This is because many of the chooser classes are templatised, and
+ * Q_OBJECT does not play well with template classes.  Since the chooser
+ * classes do not use slots or signals, I believe this is okay.
  */
 template <int dim>
 class SimplexChooser : public QComboBox, public regina::NPacketListener {
@@ -148,6 +153,11 @@ class SimplexChooser : public QComboBox, public regina::NPacketListener {
 
 /**
  * A dialog used to select a single simplex of a given triangulation.
+ *
+ * Note that we do *not* use Q_OBJECT with the chooser dialog classes.
+ * This is because many of the chooser dialog classes are templatised, and
+ * Q_OBJECT does not play well with template classes.  Since the chooser
+ * dialog classes do not use slots or signals, I believe this is okay.
  */
 template <int dim>
 class SimplexDialog : public QDialog {
