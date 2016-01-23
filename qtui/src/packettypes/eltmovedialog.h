@@ -33,8 +33,8 @@
 /* end stub */
 
 /*! \file eltmovedialog.h
- *  \brief Provides a dialog through which the user can select and
- *  perform an elementary move.
+ *  \brief Provides a dialog through which the user can perform
+ *  elementary moves on a 3-manifold triangulation.
  */
 
 #ifndef __ELTMOVEDIALOG_H
@@ -61,7 +61,7 @@ namespace regina {
 
 /**
  * A dialog used to select and perform an elementary move on a
- * triangulation.
+ * 3-manifold triangulation.
  */
 class EltMoveDialog : public QDialog, public regina::NPacketListener {
     Q_OBJECT

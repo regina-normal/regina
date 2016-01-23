@@ -185,7 +185,7 @@ EltMoveDialog::EltMoveDialog(QWidget* parent, regina::NTriangulation* useTri) :
         "move on this triangulation.<p>"
         "A <i>book opening move</i> involves taking an internal triangle that "
         "meets the boundary of the triangulation along at least one edge "
-        "and ungluing the tetrahedra along that triangle, "
+        "and ungluing the tetrahedra on either side of that triangle, "
         "thereby &quot;opening "
         "out&quot; that triangle and exposing two more tetrahedron faces to "
         "the boundary.<p>"
