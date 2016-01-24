@@ -8851,7 +8851,7 @@
                             <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Row-KF-fe1">
                                 <rect key="frame" x="0.0" y="0.0" width="540" height="44"/>
                                 <items>
-                                    <navigationItem title="Enumerate normal surfaces" id="XUr-d0-rhP">
+                                    <navigationItem title="Enumerate normal hypersurfaces" id="XUr-d0-rhP">
                                         <barButtonItem key="rightBarButtonItem" systemItem="cancel" id="46c-ps-YJs">
                                             <connections>
                                                 <action selector="cancel:" destination="dcc-MF-xMO" id="6FK-7v-9KT"/>
