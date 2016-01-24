@@ -145,7 +145,7 @@ REGINA_API extern const int quadPartner[3][4];
 REGINA_API extern const int (*vertexSplitPartner)[4];
 
 /**
- * Contains strings describing which vertices each quadrilateral type splits
+ * Contains strings that can be used to represent each quadrilateral type
  * in a tetrahedron.
  * See regina::quadSeparating and NNormalSurface::quads() for more
  * information on quadrilateral types.
