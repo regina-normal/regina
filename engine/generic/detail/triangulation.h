@@ -51,7 +51,6 @@
 #include "output.h"
 #include "generic/component.h"
 #include "generic/face.h"
-#include "generic/isomorphism.h"
 #include "generic/simplex.h"
 #include "generic/alias/face.h"
 #include "generic/alias/simplex.h"
@@ -805,8 +804,6 @@ class TriangulationBase :
          * non-orientable components, the orientable components will be
          * oriented as described above and the non-orientable
          * components will be left untouched.
-         *
-         * @author Matthias Goerner
          */
         void orient();
 
@@ -2543,19 +2540,38 @@ template <int dim>
 void TriangulationBase<dim>::orient() {
     ensureSkeleton();
 
-    Isomorphism<dim> flips(size());
+    typename Triangulation<dim>::ChangeEventSpan span(
+        static_cast<Triangulation<dim>*>(this));
 
-    SimplexIterator it;
-    size_t s;
-    for (s = 0, it = simplices_.begin(); it != simplices_.end(); ++it, ++s) {
-        flips.simpImage(s) = s;
-        if ((*it)->orientation() == 1 || ! (*it)->component()->isOrientable())
-            flips.facetPerm(s) = NPerm<dim + 1>(); // Identity
-        else
-            flips.facetPerm(s) = NPerm<dim + 1>(dim - 1, dim);
-    }
+    int f;
+    for (auto s : simplices_)
+        if (s->orientation_ == -1 && s->component_->isOrientable()) {
+            // Flip vertices (dim - 1) and dim of s.
+            std::swap(s->adj_[dim - 1], s->adj_[dim]);
+            std::swap(s->gluing_[dim - 1], s->gluing_[dim]);
 
-    flips.applyInPlace(static_cast<Triangulation<dim>*>(this));
+            for (f = 0; f <= dim; ++f)
+                if (s->adj_[f]) {
+                    if (s->adj_[f]->orientation_ == -1) {
+                        // The adjacent simplex is also being flipped.
+                        // Fix the gluing from this side now, and fix it from
+                        // the other side when we process the other simplex.
+                        s->gluing_[f] = NPerm<dim + 1>(dim - 1, dim) *
+                            s->gluing_[f] * NPerm<dim + 1>(dim - 1, dim);
+                    } else {
+                        // The adjacent simplex will be left intact.
+                        // Fix the gluing from both sides now.
+                        s->gluing_[f] = s->gluing_[f] *
+                            NPerm<dim + 1>(dim - 1, dim);
+                        s->adj_[f]->gluing_[s->gluing_[f][f]] =
+                            s->gluing_[f].inverse();
+                    }
+                }
+        }
+
+    // Don't forget to call clearAllProperties(), since we are manipulating
+    // the gluing-related data members of Simplex<dim> directly.
+    static_cast<Triangulation<dim>*>(this)->clearAllProperties();
 }
 
 template <int dim>
