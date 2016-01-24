@@ -76,7 +76,7 @@
 - (regina::NPacket*)create
 {
     regina::NPacket* ans = new regina::NTriangulation();
-    ans->setLabel("3-D Triangulation");
+    ans->setLabel("3-D triangulation");
     return ans;
 }
 
