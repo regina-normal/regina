@@ -143,11 +143,6 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-new-aug">augmented triangular solid
-   torus, creation</link></primaryie>
- </indexentry>
-
- <indexentry>
   <primaryie><link linkend="options-python">auto-indent</link></primaryie>
  </indexentry>
 
@@ -860,11 +855,6 @@
 
  <indexentry>
   <primaryie><link linkend="tri-new-lens">layered lens space,
-   creation</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-new-loop">layered loop,
    creation</link></primaryie>
  </indexentry>
 

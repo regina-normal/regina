@@ -43,7 +43,6 @@
 
 #include <QStackedWidget>
 
-class QCheckBox;
 class QComboBox;
 class QLineEdit;
 
@@ -64,9 +63,6 @@ class NTriangulationCreator : public PacketCreator {
          */
         QLineEdit* lstParams;
         QLineEdit* lensParams;
-        QLineEdit* loopLen;
-        QCheckBox* loopTwisted;
-        QLineEdit* augParams;
         QLineEdit* sfsParams;
         QLineEdit* isoSig;
         QLineEdit* dehydrationString;

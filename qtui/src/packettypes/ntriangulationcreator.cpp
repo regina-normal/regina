@@ -67,8 +67,6 @@ namespace {
         TRI_LAYERED_LENS_SPACE,
         TRI_SFS_SPHERE,
         TRI_LAYERED_SOLID_TORUS,
-        TRI_LAYERED_LOOP,
-        TRI_AUG_TRI_SOLID_TORUS,
         TRI_ISOSIG,
         TRI_DEHYDRATION,
         TRI_SPLITTING_SURFACE,
@@ -217,54 +215,6 @@ NTriangulationCreator::NTriangulationCreator() {
     hLayout->addWidget(lstParams, 1);
     details->addWidget(hArea);//, TRI_LAYERED_SOLID_TORUS);
 
-    type->insertItem(TRI_LAYERED_LOOP,QObject::tr("Layered loop"));
-    hArea = new QWidget();
-    hLayout = new QHBoxLayout();
-    hLayout->setContentsMargins(0, 0, 0, 0);
-    hArea->setLayout(hLayout);
-    expln = QObject::tr("The number of tetrahedra in the new layered loop.");
-    label = new QLabel(QObject::tr("Length:"));
-    label->setWhatsThis(expln);
-    hLayout->addWidget(label);
-    loopLen = new QLineEdit();
-    QIntValidator* val = new QIntValidator(hArea);
-    val->setBottom(1);
-    loopLen->setValidator(val);
-    loopLen->setWhatsThis(expln);
-    hLayout->addWidget(loopLen, 1);
-    loopTwisted = new QCheckBox(QObject::tr("Twisted"));
-    loopTwisted->setChecked(true);
-    loopTwisted->setWhatsThis(QObject::tr("Specifies whether or not the "
-        "new layered loop is twisted."));
-    hLayout->addWidget(loopTwisted);
-    details->addWidget(hArea);//, TRI_LAYERED_LOOP);
-
-    type->insertItem(TRI_AUG_TRI_SOLID_TORUS,
-        QObject::tr("Augmented triangular solid torus"));
-    hArea = new QWidget();
-    hLayout = new QHBoxLayout();
-    hLayout->setContentsMargins(0, 0, 0, 0);
-    hArea->setLayout(hLayout);
-    expln = QObject::tr("<qt>The six parameters "
-        "(<i>a<sub>1</sub></i>,<i>b<sub>1</sub></i>) "
-        "(<i>a<sub>2</sub></i>,<i>b<sub>2</sub></i>) "
-        "(<i>a<sub>3</sub></i>,<i>b<sub>3</sub></i>) "
-        "of the new augmented triangular solid torus.  The two integers "
-        "in each pair must be relatively prime, and both "
-        "positive and negative integers are allowed.<p>"
-        "Example parameters are <i>(2,1) (3,-2) (5,-4)</i>.</qt>");
-    label = new QLabel(QObject::tr("<qt>Parameters "
-        "(<i>a</i><sub>1</sub>,<i>b</i><sub>1</sub>) "
-        "(<i>a</i><sub>2</sub>,<i>b</i><sub>2</sub>) "
-        "(<i>a</i><sub>3</sub>,<i>b</i><sub>3</sub>):</qt>"));
-    label->setWhatsThis(expln);
-    hLayout->addWidget(label);
-    augParams = new QLineEdit();
-    augParams->setValidator(new QRegExpValidator(reSFS3Params, hArea));
-    augParams->setWhatsThis(expln);
-    hLayout->addWidget(augParams, 1);
-    details->addWidget(hArea);//, TRI_AUG_TRI_SOLID_TORUS);
-
     type->insertItem(TRI_ISOSIG,QObject::tr("From isomorphism signature"));
     hArea = new QWidget();
     hLayout = new QHBoxLayout();
@@ -411,18 +361,6 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
         }
 
         return NExampleTriangulation::lens(p, q);
-    } else if (typeId == TRI_LAYERED_LOOP) {
-        unsigned long len = loopLen->text().toULong();
-        if (len == 0) {
-            ReginaSupport::sorry(parentWidget,
-                QObject::tr("The layered loop length "
-                "must be a positive integer."));
-            return 0;
-        }
-
-        NTriangulation* ans = new NTriangulation();
-        ans->insertLayeredLoop(len, loopTwisted->isChecked());
-        return ans;
     } else if (typeId == TRI_LAYERED_SOLID_TORUS) {
         if (! reLSTParams.exactMatch(lstParams->text())) {
             ReginaSupport::sorry(parentWidget,
@@ -539,61 +477,6 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
 
         NTriangulation* ans = sfs.construct();
         ans->setLabel(sfs.structure());
-        return ans;
-    } else if (typeId == TRI_AUG_TRI_SOLID_TORUS) {
-        if (! reSFS3Params.exactMatch(augParams->text())) {
-            ReginaSupport::sorry(parentWidget,
-                QObject::tr("The augmented triangular solid torus parameters "
-                "are not valid."),
-                QObject::tr("<qt>All six integer "
-                "parameters (<i>a<sub>1</sub></i>,<i>b<sub>1</sub></i>) "
-                "(<i>a<sub>2</sub></i>,<i>b<sub>2</sub></i>) "
-                "(<i>a<sub>3</sub></i>,<i>b<sub>3</sub></i>) "
-                "must be supplied.  The two integers "
-                "in each pair must be relatively prime, and both "
-                "positive and negative integers are allowed.<p>"
-                "Example parameters are <i>(2,1) (3,-2) (5,-4)</i>.</qt>"));
-            return 0;
-        }
-
-        long a1 = reSFS3Params.cap(1).toLong();
-        long b1 = reSFS3Params.cap(2).toLong();
-        long a2 = reSFS3Params.cap(3).toLong();
-        long b2 = reSFS3Params.cap(4).toLong();
-        long a3 = reSFS3Params.cap(5).toLong();
-        long b3 = reSFS3Params.cap(6).toLong();
-
-        // For gcd calculations, use gcdWithCoeffs() which can cope with
-        // negatives.
-        long d, u, v;
-        d = regina::gcdWithCoeffs(a1, b1, u, v);
-        if (d != 1 && d != -1) {
-            ReginaSupport::sorry(parentWidget,
-                QObject::tr("<qt>The two parameters "
-                "<i>a<sub>1</sub></i> and <i>b<sub>1</sub></i> must be "
-                "relatively prime.</qt>"));
-            return 0;
-        }
-        d = regina::gcdWithCoeffs(a2, b2, u, v);
-        if (d != 1 && d != -1) {
-            ReginaSupport::sorry(parentWidget,
-                QObject::tr("<qt>The two parameters "
-                "<i>a<sub>2</sub></i> and <i>b<sub>2</sub></i> must be "
-                "relatively prime.</qt>"));
-            return 0;
-        }
-        d = regina::gcdWithCoeffs(a3, b3, u, v);
-        if (d != 1 && d != -1) {
-            ReginaSupport::sorry(parentWidget,
-                QObject::tr("<qt>The two parameters "
-                "<i>a<sub>3</sub></i> and <i>b<sub>3</sub></i> must be "
-                "relatively prime.</qt>"));
-            return 0;
-        }
-
-        // All okay.
-        NTriangulation* ans = new NTriangulation();
-        ans->insertAugTriSolidTorus(a1, b1, a2, b2, a3, b3);
         return ans;
     } else if (typeId == TRI_ISOSIG) {
         if (! reIsoSig.exactMatch(isoSig->text())) {

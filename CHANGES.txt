@@ -701,6 +701,7 @@ Version 5.0  [ (under development) ]
           to modifying the current triangulation.
         - Puncturing a triangulation, making it ideal or truncating ideal
           vertices now automatically simplify the resulting triangulation.
+        - Removed some of the more exotic 3-D triangulation constructions.
         - Now links against Graphviz instead of running it externally.
     UTILITIES:
         tricensus, tricensus-mpi:
