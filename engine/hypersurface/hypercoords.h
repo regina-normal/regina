@@ -67,6 +67,17 @@ enum HyperCoords {
     HS_STANDARD = 0,
 
     /**
+     * Represents prism coordinates for normal hypersurfaces.
+     *
+     * For now, this coordinate system is for representation only;
+     * hypersurface vectors and lists cannot be created in this
+     * coordinate system.  This will likely change in a future release
+     * of Regina, when prism coordinates will be supported for creation
+     * as well as viewing.
+     */
+    HS_PRISM = 1,
+
+    /**
      * Represents edge weight coordinates for normal hypersurfaces.
      * This coordinate system is for representation only; hypersurface
      * vectors and lists cannot be created in this coordinate system.
