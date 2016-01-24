@@ -53,33 +53,33 @@
 void ReginaMain::newAngleStructures() {
     newPacket(new NAngleStructureCreator(),
         new SubclassFilter<regina::NTriangulation>(),
-        tr("New Angle Structure Solutions"), tr("Angle Structures"));
+        tr("New Angle Structure Solutions"));
 }
 
 void ReginaMain::newContainer() {
     newPacket(new BasicPacketCreator<regina::NContainer>(), 0,
-        tr("New Container"), tr("Container"));
+        tr("New Container"));
 }
 
 void ReginaMain::newDim2Triangulation() {
     newPacket(new Dim2TriangulationCreator(), 0,
-        tr("New 2-Manifold Triangulation"), tr("2-Manifold Triangulation"));
+        tr("New 2-Manifold Triangulation"));
 }
 
 void ReginaMain::newDim4Triangulation() {
     newPacket(new Dim4TriangulationCreator(), 0,
-        tr("New 4-Manifold Triangulation"), tr("4-Manifold Triangulation"));
+        tr("New 4-Manifold Triangulation"));
 }
 
 void ReginaMain::newFilter() {
     newPacket(new NSurfaceFilterCreator(), 0,
-        tr("New Normal Surface Filter"), tr("Surface Filter"));
+        tr("New Normal Surface Filter"));
 }
 
 void ReginaMain::newNormalSurfaces() {
     newPacket(new NNormalSurfaceCreator(),
         new SubclassFilter<regina::NTriangulation>(),
-        tr("New Normal Surface List"), tr("Normal Surfaces"));
+        tr("New Normal Surface List"));
 }
 
 void ReginaMain::newPDF() {
@@ -89,28 +89,28 @@ void ReginaMain::newPDF() {
 
 void ReginaMain::newScript() {
     newPacket(new BasicPacketCreator<regina::NScript>(), 0,
-        tr("New Script"), tr("Script"));
+        tr("New Script"));
 }
 
 void ReginaMain::newSnapPeaTriangulation() {
     newPacket(new NSnapPeaTriangulationCreator(this), 0,
-        tr("New SnapPea Triangulation"), tr("SnapPea Triangulation"));
+        tr("New SnapPea Triangulation"));
 }
 
 void ReginaMain::newText() {
     newPacket(new BasicPacketCreator<regina::NText>(), 0,
-        tr("New Text Packet"), tr("Text"));
+        tr("New Text Packet"));
 }
 
 void ReginaMain::newTriangulation() {
     newPacket(new NTriangulationCreator(), 0,
-        tr("New 3-Manifold Triangulation"), tr("3-Manifold Triangulation"));
+        tr("New 3-Manifold Triangulation"));
 }
 
 void ReginaMain::newPacket(PacketCreator* creator, PacketFilter* parentFilter,
-        const QString& dialogTitle, const QString& suggestedLabel) {
+        const QString& dialogTitle) {
     NewPacketDialog dlg(this, creator, packetTree,
-        treeView->selectedPacket(), parentFilter, dialogTitle, suggestedLabel);
+        treeView->selectedPacket(), parentFilter, dialogTitle);
     if (dlg.validate() && dlg.exec() == QDialog::Accepted) {
         regina::NPacket* newPacket = dlg.createdPacket();
         if (newPacket) {

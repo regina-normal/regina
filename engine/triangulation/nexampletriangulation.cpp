@@ -213,6 +213,17 @@ NTriangulation* NExampleTriangulation::lens8_3() {
     return ans;
 }
 
+NTriangulation* NExampleTriangulation::lens(size_t p, size_t q) {
+    NTriangulation* ans = new NTriangulation();
+    ans->insertLayeredLensSpace(p, q);
+
+    std::ostringstream s;
+    s << "L(" << p << ',' << q << ')';
+    ans->setLabel(s.str());
+
+    return ans;
+}
+
 NTriangulation* NExampleTriangulation::poincareHomologySphere() {
     NTriangulation* ans = new NTriangulation();
     ans->setLabel("Poincar\u00E9 homology sphere");
@@ -289,6 +300,20 @@ NTriangulation* NExampleTriangulation::lst3_4_7() {
     ans->setLabel("Layered solid torus");
 
     ans->insertLayeredSolidTorus(3, 4);
+
+    return ans;
+}
+
+NTriangulation* NExampleTriangulation::lst(size_t a, size_t b) {
+    if (a > b)
+        std::swap(a, b);
+
+    NTriangulation* ans = new NTriangulation();
+    ans->insertLayeredSolidTorus(a, b);
+
+    std::ostringstream s;
+    s << "LST(" << a << ',' << b << ',' << (a + b) << ')';
+    ans->setLabel(s.str());
 
     return ans;
 }

@@ -376,9 +376,11 @@ QWidget* NTriangulationCreator::getInterface() {
 regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
         QWidget* parentWidget) {
     int typeId = type->currentIndex();
-    if (typeId == TRI_EMPTY)
-        return new NTriangulation();
-    else if (typeId == TRI_LAYERED_LENS_SPACE) {
+    if (typeId == TRI_EMPTY) {
+        NTriangulation* ans = new NTriangulation();
+        ans->setLabel("3-D triangulation");
+        return ans;
+    } else if (typeId == TRI_LAYERED_LENS_SPACE) {
         if (! reLensParams.exactMatch(lensParams->text())) {
             ReginaSupport::sorry(parentWidget, 
                 QObject::tr("<qt>The lens space "
@@ -392,13 +394,7 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
         unsigned long p = reLensParams.cap(1).toULong();
         unsigned long q = reLensParams.cap(2).toULong();
 
-        if (p == 0 && q == 0) {
-            ReginaSupport::sorry(parentWidget,
-                QObject::tr("At least one of the "
-                "lens space parameters must be strictly positive."));
-            return 0;
-        }
-        if (p < q && ! (p == 0 && q == 1)) {
+        if (p <= q && ! (p == 0 && q == 1)) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("The second lens space "
                 "parameter must be smaller than the first."),
@@ -414,9 +410,7 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
             return 0;
         }
 
-        NTriangulation* ans = new NTriangulation();
-        ans->insertLayeredLensSpace(p, q);
-        return ans;
+        return NExampleTriangulation::lens(p, q);
     } else if (typeId == TRI_LAYERED_LOOP) {
         unsigned long len = loopLen->text().toULong();
         if (len == 0) {
@@ -457,28 +451,13 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
             return 0;
         }
 
-        if (a + b == c) {
-            NTriangulation* ans = new NTriangulation();
-            if (a <= b)
-                ans->insertLayeredSolidTorus(a, b);
-            else
-                ans->insertLayeredSolidTorus(b, a);
-            return ans;
-        } else if (a + c == b) {
-            NTriangulation* ans = new NTriangulation();
-            if (a <= c)
-                ans->insertLayeredSolidTorus(a, c);
-            else
-                ans->insertLayeredSolidTorus(c, a);
-            return ans;
-        } else if (b + c == a) {
-            NTriangulation* ans = new NTriangulation();
-            if (b <= c)
-                ans->insertLayeredSolidTorus(b, c);
-            else
-                ans->insertLayeredSolidTorus(c, b);
-            return ans;
-        } else {
+        if (a + b == c)
+            return NExampleTriangulation::lst(a, b);
+        else if (a + c == b)
+            return NExampleTriangulation::lst(a, c);
+        else if (b + c == a)
+            return NExampleTriangulation::lst(b, c);
+        else {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("Two of the layered "
                 "solid torus parameters must add to give the third."),
@@ -559,6 +538,7 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
         }
 
         NTriangulation* ans = sfs.construct();
+        ans->setLabel(sfs.structure());
         return ans;
     } else if (typeId == TRI_AUG_TRI_SOLID_TORUS) {
         if (! reSFS3Params.exactMatch(augParams->text())) {
@@ -630,10 +610,12 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
             return 0;
         }
 
-        NTriangulation* ans = NTriangulation::fromIsoSig(
-            reIsoSig.cap(1).toUtf8().constData());
-        if (ans)
+        std::string sig = reIsoSig.cap(1).toUtf8().constData();
+        NTriangulation* ans = NTriangulation::fromIsoSig(sig);
+        if (ans) {
+            ans->setLabel(sig);
             return ans;
+        }
         ReginaSupport::sorry(parentWidget,
             QObject::tr("I could not interpret the given "
             "isomorphism signature."),
@@ -657,8 +639,8 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
         }
 
         NTriangulation* ans = new NTriangulation();
-        if (! ans->insertRehydration(
-                reDehydration.cap(1).toUtf8().constData())) {
+        std::string dehydString = reDehydration.cap(1).toUtf8().constData();
+        if (! ans->insertRehydration(dehydString)) {
             delete ans;
             ReginaSupport::sorry(parentWidget, 
                 QObject::tr("I could not interpret the given "
@@ -670,6 +652,7 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
                 "<i>Mathematics of Computation</i> <b>68</b>, 1999.</qt>"));
             return 0;
         }
+        ans->setLabel(dehydString);
         return ans;
     } else if (typeId == TRI_SPLITTING_SURFACE) {
         if (! reSignature.exactMatch(splittingSignature->text())) {
@@ -687,8 +670,8 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
             return 0;
         }
 
-        regina::NSignature* sig = regina::NSignature::parse(
-            reSignature.cap(1).toUtf8().constData());
+        std::string sigString = reSignature.cap(1).toUtf8().constData();
+        regina::NSignature* sig = regina::NSignature::parse(sigString);
         if (! sig) {
             ReginaSupport::sorry(parentWidget, 
                 QObject::tr("I could not interpret the given "
@@ -701,6 +684,7 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
         }
         NTriangulation* ans = sig->triangulate();
         delete sig;
+        ans->setLabel(sigString);
         return ans;
     } else if (typeId == TRI_EXAMPLE) {
         switch (exampleWhich->currentIndex()) {

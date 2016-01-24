@@ -55,6 +55,8 @@ void addNExampleTriangulation() {
             return_value_policy<manage_new_object>())
         .def("lens8_3", &NExampleTriangulation::lens8_3,
             return_value_policy<manage_new_object>())
+        .def("lens", &NExampleTriangulation::lens,
+            return_value_policy<manage_new_object>())
         .def("poincareHomologySphere",
             &NExampleTriangulation::poincareHomologySphere,
             return_value_policy<manage_new_object>())
@@ -75,6 +77,8 @@ void addNExampleTriangulation() {
         .def("sphere600", &NExampleTriangulation::sphere600,
             return_value_policy<manage_new_object>())
         .def("lst3_4_7", &NExampleTriangulation::lst3_4_7,
+            return_value_policy<manage_new_object>())
+        .def("lst", &NExampleTriangulation::lst,
             return_value_policy<manage_new_object>())
         .def("solidKleinBottle", &NExampleTriangulation::solidKleinBottle,
             return_value_policy<manage_new_object>())
@@ -105,6 +109,7 @@ void addNExampleTriangulation() {
         .staticmethod("rp2xs1")
         .staticmethod("rp3rp3")
         .staticmethod("lens8_3")
+        .staticmethod("lens")
         .staticmethod("poincareHomologySphere")
         .staticmethod("weeks")
         .staticmethod("seifertWeber")
@@ -113,6 +118,7 @@ void addNExampleTriangulation() {
         .staticmethod("smallClosedNonOrblHyperbolic")
         .staticmethod("sphere600")
         .staticmethod("lst3_4_7")
+        .staticmethod("lst")
         .staticmethod("solidKleinBottle")
         .staticmethod("figureEight")
         .staticmethod("figureEightKnotComplement")

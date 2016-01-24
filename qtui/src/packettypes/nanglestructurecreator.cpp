@@ -98,9 +98,13 @@ regina::NPacket* NAngleStructureCreator::createPacket(
             dynamic_cast<regina::NTriangulation*>(parentPacket),
             tautOnly->isChecked(), &tracker);
 
-    if (dlg.run())
+    if (dlg.run()) {
+        if (tautOnly->isChecked())
+            ans->setLabel("Taut angle structures");
+        else
+            ans->setLabel("Vertex angle structures");
         return ans;
-    else {
+    } else {
         delete ans;
         ReginaSupport::info(parentWidget,
             ui->tr("The angle structure enumeration was cancelled."));

@@ -288,25 +288,10 @@ typedef regina::Dim2Triangulation* (*Dim2TriangulationCreator)();
     }
 
     regina::NPacket* ans;
-    NSString* label;
-    if (useOrbl) {
+    if (useOrbl)
         ans = regina::Dim2ExampleTriangulation::orientable(useGenus, usePunctures);
-        if (usePunctures == 0)
-            label = [NSString stringWithFormat:@"Orientable, genus %d", useGenus];
-        else if (usePunctures == 1)
-            label = [NSString stringWithFormat:@"Orientable, genus %d, 1 puncture", useGenus];
-        else
-            label = [NSString stringWithFormat:@"Orientable, genus %d, %d punctures", useGenus, usePunctures];
-    } else {
+    else
         ans = regina::Dim2ExampleTriangulation::nonOrientable(useGenus, usePunctures);
-        if (usePunctures == 0)
-            label = [NSString stringWithFormat:@"Non-orientable, genus %d", useGenus];
-        else if (usePunctures == 1)
-            label = [NSString stringWithFormat:@"Non-orientable, genus %d, 1 puncture", useGenus];
-        else
-            label = [NSString stringWithFormat:@"Non-orientable, genus %d, %d punctures", useGenus, usePunctures];
-    }
-    ans->setLabel(label.UTF8String);
     return ans;
 }
 

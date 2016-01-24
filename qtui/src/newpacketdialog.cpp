@@ -49,8 +49,7 @@
 
 NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
         regina::NPacket* packetTree, regina::NPacket* defaultParent,
-        PacketFilter* useFilter, const QString& dialogTitle,
-        const QString& suggestedLabel) :
+        PacketFilter* useFilter, const QString& dialogTitle) :
         QDialog(parent), //dialogTitle, Ok|Cancel, Ok, parent),
         creator(newCreator), tree(packetTree), newPacket(0) {
     setWindowTitle(dialogTitle);
@@ -72,16 +71,6 @@ NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
         PacketChooser::ROOT_AS_INSERTION_POINT, false, defaultParent);
     chooser->setWhatsThis(expln);
     parentStrip->addWidget(chooser, 1);
-
-    QHBoxLayout* labelStrip = new QHBoxLayout();
-    layout->addLayout(labelStrip);
-    expln = tr("The label that will be assigned to the new packet.");
-    QLabel* newlabel = new QLabel(tr("Label:"));
-    newlabel->setWhatsThis(expln);
-    labelStrip->addWidget(newlabel);
-    label = new QLineEdit(suggestedLabel);
-    label->setWhatsThis(expln);
-    labelStrip->addWidget(label, 1);
 
     QWidget* mainUI = creator->getInterface();
     if (mainUI) {
@@ -133,21 +122,14 @@ void NewPacketDialog::slotOk() {
         return;
     }
 
-    // Check the label.
-    QString useLabel = label->text().simplified();
-    if (useLabel.isEmpty()) {
-        ReginaSupport::info(this,
-            tr("Please enter a label for the new packet."));
-        return;
-    }
-
     // Create the new packet.  Hide ourselves since this could take a while.
     newPacket = creator->createPacket(parentPacket, this);
     if (! newPacket)
         return;
 
     // Fix the new packet.
-    newPacket->setLabel(std::string(useLabel.toUtf8().constData()));
+    if (newPacket->label().empty())
+        newPacket->setLabel(newPacket->typeName());
     if (! newPacket->parent())
         parentPacket->insertChildLast(newPacket);
 

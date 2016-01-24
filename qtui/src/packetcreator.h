@@ -39,13 +39,10 @@
 #ifndef __PACKETCREATOR_H
 #define __PACKETCREATOR_H
 
+#include "packet/npacket.h"
 #include <qstring.h>
 
 class QWidget;
-
-namespace regina {
-    class NPacket;
-};
 
 /**
  * An interface component for creating a packet.  Such interface
@@ -128,7 +125,9 @@ class BasicPacketCreator : public PacketCreator {
          * PacketCreator overrides.
          */
         regina::NPacket* createPacket(regina::NPacket*, QWidget*) {
-            return new T();
+            regina::NPacket* ans = new T();
+            ans->setLabel(ans->typeName());
+            return ans;
         }
 };
 

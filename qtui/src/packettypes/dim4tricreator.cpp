@@ -177,9 +177,11 @@ QWidget* Dim4TriangulationCreator::getInterface() {
 regina::NPacket* Dim4TriangulationCreator::createPacket(regina::NPacket*,
         QWidget* parentWidget) {
     int typeId = type->currentIndex();
-    if (typeId == TRI_EMPTY)
-        return new Dim4Triangulation();
-    else if (typeId == TRI_ISOSIG) {
+    if (typeId == TRI_EMPTY) {
+        Dim4Triangulation* ans = new Dim4Triangulation();
+        ans->setLabel("4-D triangulation");
+        return ans;
+    } else if (typeId == TRI_ISOSIG) {
         if (! reIsoSig.exactMatch(isoSig->text())) {
             ReginaSupport::sorry(parentWidget,
                 QObject::tr("The isomorphism signature is not valid."),
@@ -196,10 +198,12 @@ regina::NPacket* Dim4TriangulationCreator::createPacket(regina::NPacket*,
             return 0;
         }
 
-        Dim4Triangulation* ans = Dim4Triangulation::fromIsoSig(
-            reIsoSig.cap(1).toUtf8().constData());
-        if (ans)
+        std::string sig = reIsoSig.cap(1).toUtf8().constData();
+        Dim4Triangulation* ans = Dim4Triangulation::fromIsoSig(sig);
+        if (ans) {
+            ans->setLabel(sig);
             return ans;
+        }
         ReginaSupport::sorry(parentWidget,
             QObject::tr("I could not interpret the given "
             "isomorphism signature."),

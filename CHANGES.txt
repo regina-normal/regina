@@ -273,6 +273,8 @@ Version 5.0  [ (under development) ]
         Class NExampleSnapPeaTriangulation:
             - New class for building ready-made SnapPea examples.
         Class NExampleTriangulation:
+            - New parameterised routines lens() and lst().
+              The old hard-coded lens8_3() and lst3_4_7() are now deprecated.
             - Renamed figureEightKnotComplement(), trefoilKnotComplement()
               and whiteheadLinkComplement() to figureEight(), trefoil()
               and whiteheadLink() respectively.  The old names are kept

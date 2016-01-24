@@ -242,7 +242,9 @@ regina::NPacket* Dim2TriangulationCreator::createPacket(regina::NPacket*,
         QWidget* parentWidget) {
     int typeId = type->currentIndex();
     if (typeId == TRI_EMPTY) {
-        return new Dim2Triangulation();
+        Dim2Triangulation* ans = new Dim2Triangulation();
+        ans->setLabel("2-D triangulation");
+        return ans;
     } else if (typeId == TRI_OR) {
         unsigned long genus = orGenus->text().toULong();
         unsigned long punctures = orPunctures->text().toULong();
@@ -275,10 +277,12 @@ regina::NPacket* Dim2TriangulationCreator::createPacket(regina::NPacket*,
             return 0;
         }
 
-        Dim2Triangulation* ans = Dim2Triangulation::fromIsoSig(
-            reIsoSig.cap(1).toUtf8().constData());
-        if (ans)
+        std::string sig = reIsoSig.cap(1).toUtf8().constData();
+        Dim2Triangulation* ans = Dim2Triangulation::fromIsoSig(sig);
+        if (ans) {
+            ans->setLabel(sig);
             return ans;
+        }
         ReginaSupport::sorry(parentWidget,
             QObject::tr("I could not interpret the given "
             "isomorphism signature."),

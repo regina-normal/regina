@@ -110,9 +110,13 @@ QWidget* NSurfaceFilterCreator::getInterface() {
 
 regina::NPacket* NSurfaceFilterCreator::createPacket(regina::NPacket*,
         QWidget*) {
+    regina::NPacket* ans;
     if (group->checkedId() == ID_COMB)
-        return new regina::NSurfaceFilterCombination();
+        ans = new regina::NSurfaceFilterCombination();
     else
-        return new regina::NSurfaceFilterProperties();
+        ans = new regina::NSurfaceFilterProperties();
+
+    ans->setLabel("Surface filter");
+    return ans;
 }
 

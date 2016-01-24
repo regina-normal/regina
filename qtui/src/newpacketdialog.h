@@ -67,7 +67,6 @@ class NewPacketDialog : public QDialog {
          */
         PacketCreator* creator;
         PacketChooser* chooser;
-        QLineEdit* label;
 
         /**
          * Packet tree structure:
@@ -88,8 +87,7 @@ class NewPacketDialog : public QDialog {
          */
         NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
             regina::NPacket* packetTree, regina::NPacket* defaultParent,
-            PacketFilter* useFilter, const QString& dialogTitle,
-            const QString& suggestedLabel);
+            PacketFilter* useFilter, const QString& dialogTitle);
         virtual ~NewPacketDialog();
 
         /**

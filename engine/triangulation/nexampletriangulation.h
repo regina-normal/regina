@@ -63,6 +63,9 @@ typedef Triangulation<3> NTriangulation;
  * Regina's scripting interface, where working with pre-existing files
  * is more complicated than in the GUI.
  *
+ * All of the methods in this class will assign an appropriate packet label
+ * to the triangulation that they return.
+ *
  * Note that each of these routines constructs a new triangulation from
  * scratch.  It is up to the caller of each routine to destroy the
  * triangulation that is returned.
@@ -119,13 +122,34 @@ class REGINA_API NExampleTriangulation {
         static NTriangulation* rp3rp3();
 
         /**
-         * Returns the minimal triangulation of the lens space
-         * <tt>L(8,3)</tt>.
+         * Deprecated routine that returns the minimal triangulation of the
+         * lens space <tt>L(8,3)</tt>.
+         *
+         * \deprecated This is identical to calling
+         * NExampleTriangulation::lens(8, 3).  This hard-coded lens8_3()
+         * routine will be removed in a future release of Regina.
          *
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
         static NTriangulation* lens8_3();
+
+        /**
+         * Returns a triangulation of the lens space <tt>L(p,q)</tt>.
+         *
+         * The triangulation uses a layered lens space, which is
+         * conjectured (but not proven in all cases) to be the
+         * triangulation requiring the fewest tetrahedra.
+         *
+         * \pre \a p \> \a q \>= 0 unless (<i>p</i>,<i>q</i>) = (0,1).
+         * \pre gcd(\a p, \a q) = 1.
+         *
+         * @param p a parameter of the desired lens space.
+         * @param q a parameter of the desired lens space.
+         * @return a newly constructed triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
+        static NTriangulation* lens(size_t p, size_t q);
 
         /**
          * Returns the five-tetrahedron triangulation of the
@@ -217,13 +241,38 @@ class REGINA_API NExampleTriangulation {
         /*@{*/
 
         /**
-         * Returns the three-tetrahedron layered solid torus
-         * <tt>LST(3,4,7)</tt>.
+         * Deprecated routine that returns the three-tetrahedron
+         * layered solid torus <tt>LST(3,4,7)</tt>.
+         *
+         * \deprecated This is identical to calling
+         * NExampleTriangulation::lst(3, 4).  This hard-coded lst3_4_7()
+         * routine will be removed in a future release of Regina.
          *
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
         static NTriangulation* lst3_4_7();
+
+        /**
+         * Returns the layered solid torus <tt>LST(a,b,c)</tt>.
+         *
+         * This is a parameterised triangulation of the solid torus.
+         * It has two boundary triangles and three boundary edges,
+         * and the meridional disc of the solid torus cuts these
+         * boundary edges \a a, \a b and \a c times respectively.
+         *
+         * Only the parameters \a a and \a b are passed as arguments to
+         * this routine.  The third parameter \a c will be deduced
+         * automatically as \a c = (\a a + \a b).
+         *
+         * \pre gcd(\a a, \a b) = 1.
+         *
+         * @param a the first parameter of the layered solid torus.
+         * @param b the second parameter of the layered solid torus.
+         * @return a newly constructed triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
+        static NTriangulation* lst(size_t a, size_t b);
 
         /**
          * Returns a triangulation of the solid Klein bottle.

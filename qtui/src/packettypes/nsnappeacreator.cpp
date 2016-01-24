@@ -217,7 +217,10 @@ regina::NPacket* NSnapPeaTriangulationCreator::createPacket(regina::NPacket*,
                         "instead."));
                 return 0;
             }
-            return new NSnapPeaTriangulation(*fromSnapPea);
+            NSnapPeaTriangulation* ans =
+                new NSnapPeaTriangulation(*fromSnapPea);
+            ans->setLabel(from->label());
+            return ans;
         }
 
         if (from->isEmpty()) {
@@ -256,6 +259,7 @@ regina::NPacket* NSnapPeaTriangulationCreator::createPacket(regina::NPacket*,
                     "fix this problem.</qt>"));
             return 0;
         }
+        ans->setLabel(from->label());
         return ans;
     } else if (typeId == TRI_FILE) {
         NSnapPeaTriangulation* ans = new NSnapPeaTriangulation(

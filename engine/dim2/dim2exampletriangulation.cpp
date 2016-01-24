@@ -34,6 +34,7 @@
 
 #include "dim2/dim2exampletriangulation.h"
 #include "dim2/dim2triangulation.h"
+#include <sstream>
 
 namespace regina {
 
@@ -77,6 +78,15 @@ Dim2Triangulation* Dim2ExampleTriangulation::orientable(
                 0, ans->triangle(4 * genus + 3 * i - 1), NPerm3(1, 2));
     }
 
+    // Set an appropriate packet label.
+    std::ostringstream s;
+    s << "Orientable, genus " << genus;
+    if (punctures == 1)
+        s << ", 1 puncture";
+    else if (punctures > 1)
+        s << ", " << punctures << " punctures";
+    ans->setLabel(s.str());
+
     return ans;
 }
 
@@ -103,6 +113,15 @@ Dim2Triangulation* Dim2ExampleTriangulation::nonOrientable(
     for (i = 0; i < punctures; ++i)
         ans->triangle(2 * genus + 3 * i - 2)->joinTo(
             0, ans->triangle(2 * genus + 3 * i), NPerm3(1, 2));
+
+    // Set an appropriate packet label.
+    std::ostringstream s;
+    s << "Non-orientable, genus " << genus;
+    if (punctures == 1)
+        s << ", 1 puncture";
+    else if (punctures > 1)
+        s << ", " << punctures << " punctures";
+    ans->setLabel(s.str());
 
     return ans;
 }
@@ -189,7 +208,7 @@ Dim2Triangulation* Dim2ExampleTriangulation::annulus() {
 
 Dim2Triangulation* Dim2ExampleTriangulation::mobius() {
     Dim2Triangulation* ans = new Dim2Triangulation();
-    ans->setLabel("Mobius band");
+    ans->setLabel("M\u00F6bius band");
 
     Dim2Triangle* r = ans->newTriangle();
     r->joinTo(0, r, NPerm3(2, 0, 1));

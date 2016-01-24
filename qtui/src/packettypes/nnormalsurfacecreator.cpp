@@ -193,9 +193,10 @@ regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
                 regina::NS_EMBEDDED_ONLY : regina::NS_IMMERSED_SINGULAR),
             regina::NS_ALG_DEFAULT, &tracker);
 
-        if (dlg.run())
+        if (dlg.run()) {
+            ans->setLabel("Vertex normal surfaces");
             return ans;
-        else {
+        } else {
             delete ans;
             ReginaSupport::info(parentWidget,
                 ui->tr("The normal surface enumeration was cancelled."));
@@ -214,9 +215,10 @@ regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
                 regina::NS_EMBEDDED_ONLY : regina::NS_IMMERSED_SINGULAR),
             regina::NS_ALG_DEFAULT, &tracker);
 
-        if (dlg.run())
+        if (dlg.run()) {
+            ans->setLabel("Fundamental normal surfaces");
             return ans;
-        else {
+        } else {
             delete ans;
             ReginaSupport::info(parentWidget,
                 ui->tr("The normal surface enumeration was cancelled."));
