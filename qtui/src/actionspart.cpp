@@ -393,7 +393,7 @@ void ReginaMain::setupActions() {
     treeMenu->addAction(actDim4Triangulation);
 
     QAction* actSurfaces = new QAction(this);
-    actSurfaces->setText(tr("New &Normal Surface List"));
+    actSurfaces->setText(tr("New &Normal Surface List (3-D)"));
     actSurfaces->setIcon(IconCache::icon(IconCache::packet_surfaces));
     actSurfaces->setShortcut(tr("Alt+n"));
     actSurfaces->setToolTip(tr("New normal surface list"));
@@ -404,7 +404,7 @@ void ReginaMain::setupActions() {
     treeMenu->addAction(actSurfaces);
 
     QAction* actHypersurfaces = new QAction(this);
-    actHypersurfaces->setText(tr("New Normal &Hypersurface List"));
+    actHypersurfaces->setText(tr("New Normal &Hypersurface List (4-D)"));
     actHypersurfaces->setIcon(IconCache::icon(IconCache::packet_hypersurfaces));
     actHypersurfaces->setShortcut(tr("Alt+h"));
     actHypersurfaces->setToolTip(tr("New normal hypersurface list"));
