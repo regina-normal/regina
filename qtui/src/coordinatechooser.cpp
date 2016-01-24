@@ -93,3 +93,26 @@ void CoordinateChooser::setCurrentSystem(regina::NormalCoords newSystem) {
         setCurrentIndex(it - systems.begin());
 }
 
+void HyperCoordinateChooser::insertSystem(regina::HyperCoords coordSystem) {
+    addItem(tr(Coordinates::name(coordSystem)));
+    systems.push_back(coordSystem);
+}
+
+void HyperCoordinateChooser::insertAllCreators() {
+    insertSystem(regina::HS_STANDARD);
+}
+
+void HyperCoordinateChooser::insertAllViewers(
+        regina::NNormalHypersurfaceList*) {
+    insertSystem(regina::HS_STANDARD);
+    insertSystem(regina::HS_EDGE_WEIGHT);
+}
+
+void HyperCoordinateChooser::setCurrentSystem(regina::HyperCoords newSystem) {
+    std::vector<regina::HyperCoords>::const_iterator it =
+        std::find(systems.begin(), systems.end(), newSystem);
+
+    if (it != systems.end())
+        setCurrentIndex(it - systems.begin());
+}
+

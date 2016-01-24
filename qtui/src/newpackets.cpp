@@ -32,6 +32,7 @@
 
 /* end stub */
 
+#include "dim4/dim4triangulation.h"
 #include "packet/ncontainer.h"
 #include "packet/nscript.h"
 #include "packet/ntext.h"
@@ -45,6 +46,7 @@
 #include "packettypes/dim2tricreator.h"
 #include "packettypes/dim4tricreator.h"
 #include "packettypes/nanglestructurecreator.h"
+#include "packettypes/nhypersurfacecreator.h"
 #include "packettypes/nnormalsurfacecreator.h"
 #include "packettypes/nsurfacefiltercreator.h"
 #include "packettypes/ntriangulationcreator.h"
@@ -80,6 +82,12 @@ void ReginaMain::newNormalSurfaces() {
     newPacket(new NNormalSurfaceCreator(),
         new SubclassFilter<regina::NTriangulation>(),
         tr("New Normal Surface List"));
+}
+
+void ReginaMain::newNormalHypersurfaces() {
+    newPacket(new NHypersurfaceCreator(),
+        new SubclassFilter<regina::Dim4Triangulation>(),
+        tr("New Normal Hypersurface List"));
 }
 
 void ReginaMain::newPDF() {

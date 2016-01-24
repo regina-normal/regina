@@ -33,14 +33,14 @@
 /* end stub */
 
 // Regina core includes:
+#include "dim4/dim4triangulation.h"
 #include "progress/nprogresstracker.h"
-#include "surfaces/nnormalsurfacelist.h"
-#include "triangulation/ntriangulation.h"
+#include "hypersurface/nnormalhypersurfacelist.h"
 
 // UI includes:
 #include "coordinatechooser.h"
 #include "coordinates.h"
-#include "nnormalsurfacecreator.h"
+#include "nhypersurfacecreator.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"
 #include "../progressdialogs.h"
@@ -51,7 +51,7 @@
 #include <QMessageBox>
 #include <QWhatsThis>
 
-using regina::NNormalSurfaceList;
+using regina::NNormalHypersurfaceList;
 
 namespace {
     /**
@@ -63,7 +63,7 @@ namespace {
     };
 }
 
-NNormalSurfaceCreator::NNormalSurfaceCreator() {
+NHypersurfaceCreator::NHypersurfaceCreator() {
     // Set up the basic layout.
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
@@ -71,20 +71,21 @@ NNormalSurfaceCreator::NNormalSurfaceCreator() {
     QBoxLayout* coordArea = new QHBoxLayout();
     layout->addLayout(coordArea);
     QString expln = ui->tr("Specifies the coordinate system in which the "
-        "normal surfaces will be enumerated.");
+        "normal hypersurfaces will be enumerated.");
     QLabel* label = new QLabel(ui->tr("Coordinate system:"), ui);
     label->setWhatsThis(expln);
     coordArea->addWidget(label);
-    coords = new CoordinateChooser();
+    coords = new HyperCoordinateChooser();
     coords->insertAllCreators();
-    coords->setCurrentSystem(ReginaPrefSet::global().surfacesCreationCoords);
+    coords->setCurrentSystem(
+        ReginaPrefSet::global().hypersurfacesCreationCoords);
     coords->setWhatsThis(expln);
     coordArea->addWidget(coords, 1);
 
     QBoxLayout* basisArea = new QHBoxLayout();
     layout->addLayout(basisArea);
-    expln = ui->tr("<qt>Specifies whether to enumerate "
-        "only vertex surfaces (at extremal rays of the normal surface "
+    expln = ui->tr("<qt>Specifies whether to enumerate only "
+        "vertex hypersurfaces (at extremal rays of the normal hypersurface "
         "solution cone), or all fundamental surfaces (which form a Hilbert "
         "basis for the solution cone).<p>Fundamental surfaces are "
         "more numerous, and can be significantly slower to enumerate.</qt>");
@@ -94,76 +95,64 @@ NNormalSurfaceCreator::NNormalSurfaceCreator() {
     basis = new QComboBox(ui);
     // These insertions MUST happen in the same order in which the
     // BASIS_... constants are defined at the top of this file.
-    basis->insertItem(BASIS_VERTEX, ui->tr("Vertex surfaces"));
-    basis->insertItem(BASIS_FUND, ui->tr("Fundamental surfaces"));
-    basis->setCurrentIndex(ReginaPrefSet::global().surfacesCreationList.has(
-        regina::NS_FUNDAMENTAL) ? BASIS_FUND : BASIS_VERTEX);
+    basis->insertItem(BASIS_VERTEX, ui->tr("Vertex hypersurfaces"));
+    basis->insertItem(BASIS_FUND, ui->tr("Fundamental hypersurfaces"));
+    basis->setCurrentIndex(
+        ReginaPrefSet::global().hypersurfacesCreationList.has(
+        regina::HS_FUNDAMENTAL) ? BASIS_FUND : BASIS_VERTEX);
     basis->setWhatsThis(expln);
     basisArea->addWidget(basis, 1);
 
-    embedded = new QCheckBox(ui->tr("Embedded surfaces only"), ui);
-    embedded->setChecked(! ReginaPrefSet::global().surfacesCreationList.has(
-        regina::NS_IMMERSED_SINGULAR));
+    embedded = new QCheckBox(ui->tr("Embedded hypersurfaces only"), ui);
+    embedded->setChecked(
+        ! ReginaPrefSet::global().hypersurfacesCreationList.has(
+        regina::HS_IMMERSED_SINGULAR));
     embedded->setWhatsThis(ui->tr("Specifies whether only embedded "
-        "normal surfaces should be enumerated, or whether all normal "
-        "surfaces (embedded, immersed and singular) should be enumerated."));
+        "normal hypersurfaces should be enumerated, or whether all normal "
+        "hypersurfaces (embedded, immersed and singular) should be "
+        "enumerated."));
     layout->addWidget(embedded);
 }
 
-QWidget* NNormalSurfaceCreator::getInterface() {
+QWidget* NHypersurfaceCreator::getInterface() {
     return ui;
 }
 
-QString NNormalSurfaceCreator::parentPrompt() {
+QString NHypersurfaceCreator::parentPrompt() {
     return ui->tr("Triangulation:");
 }
 
-QString NNormalSurfaceCreator::parentWhatsThis() {
-    return ui->tr("The triangulation that will contain your normal surfaces.");
+QString NHypersurfaceCreator::parentWhatsThis() {
+    return ui->tr("The triangulation that will contain your "
+        "normal hypersurfaces.");
 }
 
-regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
+regina::NPacket* NHypersurfaceCreator::createPacket(regina::NPacket* parent,
         QWidget* parentWidget) {
-    // Note that parent may be either NTriangulation or NSnapPeaTriangulation.
-    if (! dynamic_cast<regina::NTriangulation*>(parent)) {
+    if (! dynamic_cast<regina::Dim4Triangulation*>(parent)) {
         ReginaSupport::sorry(ui,
-            ui->tr("The selected parent is not a 3-manifold triangulation."),
-            ui->tr("Normal surfaces must live within a 3-manifold "
+            ui->tr("The selected parent is not a 4-manifold triangulation."),
+            ui->tr("Normal hypersurfaces must live within a 4-manifold "
             "triangulation.  Please select the corresponding triangulation "
-            "as the location in the tree for your new normal surface list."));
+            "as the location in the tree for your new normal hypersurface list."));
         return 0;
     }
 
-    regina::NormalCoords coordSystem = coords->getCurrentSystem();
+    regina::HyperCoords coordSystem = coords->getCurrentSystem();
 
     int basisId = basis->currentIndex();
 
     // Sanity check for immersed and/or singular surfaces.
     if (! embedded->isChecked()) {
-        if (Coordinates::generatesAlmostNormal(coordSystem)) {
-            ReginaSupport::sorry(parentWidget,
-                ui->tr("This combination of options is not yet supported."),
-                ui->tr(
-                "<qt>You have selected an almost normal coordinate "
-                "system, but you have unchecked the box for embedded "
-                "surfaces only.<p>"
-                "At present, immersed and singular surfaces can only "
-                "be used with <i>normal</i> coordinate systems, not "
-                "<i>almost normal</i> coordinate systems.<p>"
-                "Please check the box for embedded surfaces only, or "
-                "else select a different coordinate system.</qt>"));
-            return 0;
-        }
-
         if (ReginaPrefSet::global().warnOnNonEmbedded) {
             QMessageBox msg(QMessageBox::Information,
                 ui->tr("Warning"),
                 ui->tr("You have unchecked the box for embedded "
-                    "surfaces only."),
+                    "hypersurfaces only."),
                 QMessageBox::Yes | QMessageBox::Cancel, parentWidget);
             msg.setInformativeText(
                 ui->tr("<qt>This means that immersed "
-                "and singular surfaces will also be "
+                "and singular hypersurfaces will also be "
                 "enumerated, which could be much slower "
                 "and give far more solutions. "
                 "Are you sure you wish to continue?</qt>"));
@@ -174,63 +163,63 @@ regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
     }
 
     // Remember our selections for next time.
-    ReginaPrefSet::global().surfacesCreationCoords = coordSystem;
-    ReginaPrefSet::global().surfacesCreationList =
-        (embedded->isChecked() ? regina::NS_EMBEDDED_ONLY :
-            regina::NS_IMMERSED_SINGULAR) |
-        (basisId == BASIS_VERTEX ? regina::NS_VERTEX : regina::NS_FUNDAMENTAL);
+    ReginaPrefSet::global().hypersurfacesCreationCoords = coordSystem;
+    ReginaPrefSet::global().hypersurfacesCreationList =
+        (embedded->isChecked() ? regina::HS_EMBEDDED_ONLY :
+            regina::HS_IMMERSED_SINGULAR) |
+        (basisId == BASIS_VERTEX ? regina::HS_VERTEX : regina::HS_FUNDAMENTAL);
 
     if (basisId == BASIS_VERTEX) {
         regina::NProgressTracker tracker;
         ProgressDialogNumeric dlg(&tracker,
-            ui->tr("Enumerating vertex normal surfaces"),
+            ui->tr("Enumerating vertex normal hypersurfaces"),
             parentWidget);
 
-        NNormalSurfaceList* ans = NNormalSurfaceList::enumerate(
-            dynamic_cast<regina::NTriangulation*>(parent),
+        NNormalHypersurfaceList* ans = NNormalHypersurfaceList::enumerate(
+            dynamic_cast<regina::Dim4Triangulation*>(parent),
             coordSystem,
-            regina::NS_VERTEX | (embedded->isChecked() ?
-                regina::NS_EMBEDDED_ONLY : regina::NS_IMMERSED_SINGULAR),
-            regina::NS_ALG_DEFAULT, &tracker);
+            regina::HS_VERTEX | (embedded->isChecked() ?
+                regina::HS_EMBEDDED_ONLY : regina::HS_IMMERSED_SINGULAR),
+            regina::HS_ALG_DEFAULT, &tracker);
 
         if (dlg.run()) {
-            ans->setLabel("Vertex normal surfaces");
+            ans->setLabel("Vertex normal hypersurfaces");
             return ans;
         } else {
             delete ans;
             ReginaSupport::info(parentWidget,
-                ui->tr("The normal surface enumeration was cancelled."));
+                ui->tr("The normal hypersurface enumeration was cancelled."));
             return 0;
         }
     } else {
         regina::NProgressTracker tracker;
         ProgressDialogMessage dlg(&tracker,
-            ui->tr("Enumerating fundamental normal surfaces"),
+            ui->tr("Enumerating fundamental normal hypersurfaces"),
             parentWidget);
 
-        NNormalSurfaceList* ans = NNormalSurfaceList::enumerate(
-            dynamic_cast<regina::NTriangulation*>(parent),
+        NNormalHypersurfaceList* ans = NNormalHypersurfaceList::enumerate(
+            dynamic_cast<regina::Dim4Triangulation*>(parent),
             coordSystem,
-            regina::NS_FUNDAMENTAL | (embedded->isChecked() ?
-                regina::NS_EMBEDDED_ONLY : regina::NS_IMMERSED_SINGULAR),
-            regina::NS_ALG_DEFAULT, &tracker);
+            regina::HS_FUNDAMENTAL | (embedded->isChecked() ?
+                regina::HS_EMBEDDED_ONLY : regina::HS_IMMERSED_SINGULAR),
+            regina::HS_ALG_DEFAULT, &tracker);
 
         if (dlg.run()) {
-            ans->setLabel("Fundamental normal surfaces");
+            ans->setLabel("Fundamental normal hypersurfaces");
             return ans;
         } else {
             delete ans;
             ReginaSupport::info(parentWidget,
-                ui->tr("The normal surface enumeration was cancelled."));
+                ui->tr("The normal hypersurface enumeration was cancelled."));
             return 0;
         }
     }
 }
 
-void NNormalSurfaceCreator::explainNoParents() {
+void NHypersurfaceCreator::explainNoParents() {
     ReginaSupport::sorry(ui,
         ui->tr("There are no triangulations to work with."),
-        ui->tr("Normal surfaces must live within a 3-manifold "
+        ui->tr("Normal hypersurfaces must live within a 4-manifold "
         "triangulation.  Please add some triangulations to your file and "
         "try again."));
 }

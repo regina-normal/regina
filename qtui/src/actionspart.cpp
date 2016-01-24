@@ -397,11 +397,23 @@ void ReginaMain::setupActions() {
     actSurfaces->setIcon(IconCache::icon(IconCache::packet_surfaces));
     actSurfaces->setShortcut(tr("Alt+n"));
     actSurfaces->setToolTip(tr("New normal surface list"));
-    actSurfaces->setWhatsThis(tr("Create a new list of vertex normal surfaces "
-        "for a triangulation."));
+    actSurfaces->setWhatsThis(tr("Create a new list of normal surfaces "
+        "within a 3-manifold triangulation."));
     connect(actSurfaces, SIGNAL(triggered()), this, SLOT(newNormalSurfaces()) );
     treeGeneralEditActions.append(actSurfaces);
     treeMenu->addAction(actSurfaces);
+
+    QAction* actHypersurfaces = new QAction(this);
+    actHypersurfaces->setText(tr("New Normal &Hypersurface List"));
+    actHypersurfaces->setIcon(IconCache::icon(IconCache::packet_hypersurfaces));
+    actHypersurfaces->setShortcut(tr("Alt+h"));
+    actHypersurfaces->setToolTip(tr("New normal hypersurface list"));
+    actHypersurfaces->setWhatsThis(tr("Create a new list of "
+        "normal hypersurfaces within a 4-manifold triangulation."));
+    connect(actHypersurfaces, SIGNAL(triggered()), this,
+        SLOT(newNormalHypersurfaces()) );
+    treeGeneralEditActions.append(actHypersurfaces);
+    treeMenu->addAction(actHypersurfaces);
 
     QAction *actAngleStructure = new QAction(this);
     actAngleStructure->setText(tr("New &Angle Structure Solutions"));
@@ -767,6 +779,7 @@ void ReginaMain::setupActions() {
     toolBarPacket->addAction(actSnapPeaTriangulation);
     toolBarPacket->addSeparator();
     toolBarPacket->addAction(actSurfaces);
+    toolBarPacket->addAction(actHypersurfaces);
     toolBarPacket->addAction(actAngleStructure);
     toolBarPacket->addAction(actFilter);
     toolBarPacket->addSeparator();

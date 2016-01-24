@@ -137,6 +137,8 @@ ReginaPrefSet::ReginaPrefSet() :
         displayTagsInTree(false),
         fileImportExportCodec("UTF-8"),
         helpIntroOnStartup(true),
+        hypersurfacesCreationCoords(regina::HS_STANDARD),
+        hypersurfacesCreationList(regina::HS_LIST_DEFAULT),
         pythonAutoIndent(true),
         pythonSpacesPerTab(4),
         pythonWordWrap(false),
@@ -359,6 +361,12 @@ void ReginaPrefSet::readInternal() {
     helpIntroOnStartup = settings.value("IntroOnStartup", true).toBool();
     settings.endGroup();
 
+    settings.beginGroup("Hypersurfaces");
+    hypersurfacesCreationCoords = static_cast<regina::HyperCoords>(
+        settings.value("CreationCoordinates", regina::HS_STANDARD).toInt());
+    hypersurfacesCreationList = regina::HyperList::fromInt(settings.value(
+        "CreationList", regina::HS_LIST_DEFAULT).toInt());
+
     settings.beginGroup("Python");
     pythonAutoIndent = settings.value("AutoIndent", true).toBool();
     pythonSpacesPerTab = settings.value("SpacesPerTab", 4).toInt();
@@ -457,6 +465,10 @@ void ReginaPrefSet::saveInternal() const {
     settings.beginGroup("Help");
     settings.setValue("IntroOnStartup", helpIntroOnStartup);
     settings.endGroup();
+
+    settings.beginGroup("Hypersurfaces");
+    settings.setValue("CreationCoordinates", hypersurfacesCreationCoords);
+    settings.setValue("CreationList", hypersurfacesCreationList.intValue());
 
     settings.beginGroup("Python");
     settings.setValue("AutoIndent", pythonAutoIndent);

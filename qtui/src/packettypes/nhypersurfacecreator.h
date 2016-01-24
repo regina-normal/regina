@@ -32,30 +32,31 @@
 
 /* end stub */
 
-/*! \file nnormalsurfacecreator.h
- *  \brief Allows the creation of normal surface lists in 3-manifold
- *  triangulations.
+/*! \file nhypersurfacecreator.h
+ *  \brief Allows the creation of normal hypersurface lists in
+ *  4-manifold triangulations.
  */
 
-#ifndef __NNORMALSURFACECREATOR_H
-#define __NNORMALSURFACECREATOR_H
+#ifndef __NHYPERSURFACECREATOR_H
+#define __NHYPERSURFACECREATOR_H
 
 #include "../packetcreator.h"
 
-class CoordinateChooser;
+class HyperCoordinateChooser;
 class QCheckBox;
 class QComboBox;
 
 /**
- * An interface for creating normal surface lists in 3-manifold triangulations.
+ * An interface for creating normal hypersurface lists in 4-manifold
+ * triangulations.
  */
-class NNormalSurfaceCreator : public PacketCreator {
+class NHypersurfaceCreator : public PacketCreator {
     private:
         /**
          * Internal components
          */
         QWidget* ui;
-        CoordinateChooser* coords;
+        HyperCoordinateChooser* coords;
         QComboBox* basis;
         QCheckBox* embedded;
 
@@ -63,7 +64,7 @@ class NNormalSurfaceCreator : public PacketCreator {
         /**
          * Constructor.
          */
-        NNormalSurfaceCreator();
+        NHypersurfaceCreator();
 
         /**
          * PacketCreator overrides.

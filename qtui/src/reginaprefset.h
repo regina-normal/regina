@@ -39,6 +39,8 @@
 #ifndef __REGINAPREFSET_H
 #define __REGINAPREFSET_H
 
+#include "hypersurface/hypercoords.h"
+#include "hypersurface/hyperflags.h"
 #include "surfaces/normalcoords.h"
 #include "surfaces/normalflags.h"
 #include <qmutex.h>
@@ -222,6 +224,12 @@ class ReginaPrefSet : public QObject {
             /**< The codec to use for imports and exports. */
         bool helpIntroOnStartup;
             /**< Should we display introductory help on startup? */
+        regina::HyperCoords hypersurfacesCreationCoords;
+            /**< The default coordinate system for normal hypersurface
+                 creation in a 4-manifold triangulation. */
+        regina::HyperList hypersurfacesCreationList;
+            /**< The default options for which normal hypersurfaces to
+                 enumerate in a 4-manifold triangulation. */
         QString pdfExternalViewer;
             /**< The external program used to view PDFs.
                  This string may contain
@@ -242,15 +250,18 @@ class ReginaPrefSet : public QObject {
             /**< The maximum number of normal surfaces in a list for which the
                  compatibility matrices will be automatically calculated. */
         regina::NormalCoords surfacesCreationCoords;
-            /**< The default coordinate system for normal surface creation. */
+            /**< The default coordinate system for normal surface creation
+                 in a 3-manifold triangulation. */
         regina::NormalList surfacesCreationList;
-            /**< The default options for which normal surfaces to enumerate. */
+            /**< The default options for which normal surfaces to enumerate
+                 in a 3-manifold triangulation. */
         SurfacesCompatMatrix surfacesInitialCompat;
-            /**< The matrix first shown when the compatibility tab is
-                 opened for a normal surface list. */
+            /**< The matrix first shown when the compatibility tab is opened
+                 for a normal surface list in a 3-manifold triangulation. */
         bool surfacesSupportOriented;
-            /**< Should we offer support for transversely oriented
-                 normal surfaces?  This is still highly experimental. */
+            /**< Should we offer support for transversely oriented normal
+                 surfaces in 3-manifold triangulations?  This is still
+                 highly experimental. */
         unsigned tabDim2Tri;
             /**< The index of the initial tab to open in a 2-manifold
                  triangulation viewer. */

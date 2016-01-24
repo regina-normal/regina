@@ -32,6 +32,7 @@
 
 /* end stub */
 
+#include "hypersurface/hypercoords.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/ntriangle.h"
 #include "triangulation/ntriangulation.h"
@@ -39,6 +40,7 @@
 #include <QObject>
 #include <QString>
 
+using regina::HyperCoords;
 using regina::NNormalSurfaceList;
 using regina::NormalCoords;
 using regina::NTriangle;
@@ -84,6 +86,22 @@ namespace Coordinates {
                 return QT_TR_NOOP("transversely oriented normal");
             if (coordSystem == regina::NS_ORIENTED_QUAD)
                 return QT_TR_NOOP("transversely oriented quad normal");
+            return QT_TR_NOOP("unknown");
+        }
+    }
+
+    const char* name(HyperCoords coordSystem, bool capitalise) {
+        if (capitalise) {
+            if (coordSystem == regina::HS_STANDARD)
+                return QT_TR_NOOP("Standard normal (tet-prism)");
+            if (coordSystem == regina::HS_EDGE_WEIGHT)
+                return QT_TR_NOOP("Edge weight");
+            return QT_TR_NOOP("Unknown");
+        } else {
+            if (coordSystem == regina::HS_STANDARD)
+                return QT_TR_NOOP("standard normal (tet-prism)");
+            if (coordSystem == regina::HS_EDGE_WEIGHT)
+                return QT_TR_NOOP("edge weight");
             return QT_TR_NOOP("unknown");
         }
     }

@@ -280,6 +280,7 @@ class ReginaMain : public QMainWindow {
         void newDim4Triangulation();
         void newFilter();
         void newNormalSurfaces();
+        void newNormalHypersurfaces();
         void newPDF();
         void newSnapPeaTriangulation();
         void newScript();

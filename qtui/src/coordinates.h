@@ -33,12 +33,14 @@
 /* end stub */
 
 /*! \file coordinates.h
- *  \brief Assists working in different normal surface coordinate systems.
+ *  \brief Assists working in different normal surface/hypersurface
+ *  coordinate systems.
  */
 
 #ifndef __COORDINATES_H
 #define __COORDINATES_H
 
+#include "hypersurface/hypercoords.h"
 #include "maths/ninteger.h"
 #include "surfaces/normalcoords.h"
 
@@ -56,6 +58,12 @@ namespace Coordinates {
      * Return a human-readable name for the given coordinate system.
      */
     const char* name(regina::NormalCoords coordSystem,
+        bool capitalise = true);
+
+    /**
+     * Return a human-readable name for the given coordinate system.
+     */
+    const char* name(regina::HyperCoords coordSystem,
         bool capitalise = true);
 
     /**

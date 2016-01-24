@@ -42,14 +42,17 @@
 
 #include <QComboBox>
 #include <vector>
+#include "hypersurface/hypercoords.h"
 #include "surfaces/normalcoords.h"
 
 namespace regina {
+    class NNormalHypersurfaceList;
     class NNormalSurfaceList;
 }
 
 /**
- * A widget through which a normal surface coordinate system can be selected.
+ * A widget through which the user can select a normal surface
+ * coordinate system in a 3-manifold triangulation.
  */
 class CoordinateChooser : public QComboBox {
     Q_OBJECT
@@ -79,10 +82,49 @@ class CoordinateChooser : public QComboBox {
         regina::NormalCoords getCurrentSystem();
 };
 
+/**
+ * A widget through which the user can select a normal hypersurface
+ * coordinate system in a 4-manifold triangulation.
+ */
+class HyperCoordinateChooser : public QComboBox {
+    Q_OBJECT
+
+    private:
+        std::vector<regina::HyperCoords> systems;
+            /**< A list of the coordinate systems corresponding to the
+                 available entries in the combo box. */
+
+    public:
+        /**
+         * Constructor that creates an empty combo box.
+         */
+        HyperCoordinateChooser();
+
+        /**
+         * Used to fill the combo box with coordinate systems.
+         */
+        void insertSystem(regina::HyperCoords coordSystem);
+        void insertAllCreators();
+        void insertAllViewers(regina::NNormalHypersurfaceList* surfaces);
+
+        /**
+         * Get and set the currently selected coordinate system.
+         */
+        void setCurrentSystem(regina::HyperCoords newSystem);
+        regina::HyperCoords getCurrentSystem();
+};
+
 inline CoordinateChooser::CoordinateChooser() : QComboBox() {
 }
 
 inline regina::NormalCoords CoordinateChooser::getCurrentSystem() {
+    return systems[currentIndex()];
+}
+
+inline HyperCoordinateChooser::HyperCoordinateChooser() : QComboBox() {
+}
+
+inline regina::HyperCoords HyperCoordinateChooser::getCurrentSystem() {
     return systems[currentIndex()];
 }
 
