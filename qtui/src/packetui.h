@@ -226,9 +226,11 @@ class PacketReadOnlyUI : public PacketUI {
 };
 
 /**
- * A packet interface that simply displays a given error message.
+ * A packet interface that should be used for unknown packet types.
+ * A simple message is displayed indicating that the packet cannot be
+ * viewed.
  */
-class ErrorPacketUI : public PacketReadOnlyUI {
+class DefaultPacketUI : public PacketReadOnlyUI {
     private:
         regina::NPacket* packet;
         QLabel* label;
@@ -237,8 +239,8 @@ class ErrorPacketUI : public PacketReadOnlyUI {
         /**
          * Constructor.
          */
-        ErrorPacketUI(regina::NPacket* newPacket,
-            PacketPane* newEnclosingPane, const QString& errorMessage);
+        DefaultPacketUI(regina::NPacket* newPacket,
+            PacketPane* newEnclosingPane);
 
         /**
          * Implementations of PacketUI virtual functions.
@@ -247,20 +249,6 @@ class ErrorPacketUI : public PacketReadOnlyUI {
         virtual QWidget* getInterface();
         virtual QString getPacketMenuText() const;
         virtual void refresh();
-};
-
-/**
- * A packet interface that should be used for unknown packet types.
- * A simple message is displayed indicating that the packet cannot be
- * viewed.
- */
-class DefaultPacketUI : public ErrorPacketUI {
-    public:
-        /**
-         * Constructor.
-         */
-        DefaultPacketUI(regina::NPacket* newPacket,
-            PacketPane* newEnclosingPane);
 };
 
 /**

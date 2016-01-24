@@ -70,38 +70,34 @@ namespace {
 
 QLinkedList<QAction*> PacketUI::noActions;
 
-ErrorPacketUI::ErrorPacketUI(regina::NPacket* newPacket,
-        PacketPane* newEnclosingPane, const QString& errorMessage) :
+DefaultPacketUI::DefaultPacketUI(regina::NPacket* newPacket,
+        PacketPane* newEnclosingPane) :
         PacketReadOnlyUI(newEnclosingPane), packet(newPacket) {
-    QString msg = errorMessage;
-    msg += "\n\nPlease mail\n";
-    msg += PACKAGE_BUGREPORT;
-    msg += "\nfor further assistance.";
+    QString msg = newEnclosingPane->tr(
+        "<qt>I am not able to show packets of type<br><i>%1</i><br>"
+        "here in the graphical user interface.<p>"
+        "You can, however, work with this packet<br>"
+        "through Regina's Python interface instead.</qt>")
+        .arg(newPacket->typeName().c_str());
 
     label = new QLabel(msg, 0);
     label->setAlignment(Qt::AlignCenter);
+    label->setContentsMargins(20, 20, 20, 20);
 }
 
-regina::NPacket* ErrorPacketUI::getPacket() {
+regina::NPacket* DefaultPacketUI::getPacket() {
     return packet;
 }
 
-QWidget* ErrorPacketUI::getInterface() {
+QWidget* DefaultPacketUI::getInterface() {
     return label;
 }
 
-QString ErrorPacketUI::getPacketMenuText() const {
-    return QObject::tr("&Unknown Packet");
+QString DefaultPacketUI::getPacketMenuText() const {
+    return packet->typeName().c_str();
 }
 
-void ErrorPacketUI::refresh() {
-}
-
-DefaultPacketUI::DefaultPacketUI(regina::NPacket* newPacket,
-        PacketPane* newEnclosingPane) :
-        ErrorPacketUI(newPacket, newEnclosingPane,
-        newEnclosingPane->tr("Packets of type %1\nare not yet supported.").arg(
-        newPacket->typeName().c_str())) {
+void DefaultPacketUI::refresh() {
 }
 
 PacketPane::PacketPane(ReginaMain* newMainWindow, NPacket* newPacket,
