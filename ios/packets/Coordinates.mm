@@ -33,10 +33,15 @@
 /* end stub */
 
 #import "Coordinates.h"
+#import "dim4/dim4triangulation.h"
+#import "generic/facenumbering.h"
+#import "hypersurface/nnormalhypersurfacelist.h"
 #import "surfaces/nnormalsurfacelist.h"
 #import "triangulation/ntriangle.h"
 #import "triangulation/ntriangulation.h"
 
+using regina::HyperCoords;
+using regina::NNormalHypersurfaceList;
 using regina::NNormalSurfaceList;
 using regina::NormalCoords;
 using regina::NTriangle;
@@ -253,6 +258,99 @@ using regina::NTriangle;
         whichCoord /= 2;
         return surface.orientedQuads(
             whichCoord / 3, whichCoord % 3, orientation);
+    }
+
+    return (long)0;
+}
+
+@end
+
+@implementation HyperCoordinates
+
++ (NSString*)name:(regina::HyperCoords)coordSystem capitalise:(BOOL)capitalise
+{
+    if (capitalise) {
+        if (coordSystem == regina::HS_STANDARD)
+            return @"Standard normal (tet-prism)";
+        if (coordSystem == regina::HS_PRISM)
+            return @"Prism normal";
+        if (coordSystem == regina::HS_EDGE_WEIGHT)
+            return @"Edge weight";
+        return @"Unknown";
+    } else {
+        if (coordSystem == regina::HS_STANDARD)
+            return @"standard normal (tet-prism)";
+        if (coordSystem == regina::HS_PRISM)
+            return @"prism normal";
+        if (coordSystem == regina::HS_EDGE_WEIGHT)
+            return @"edge weight";
+        return @"unknown";
+    }
+}
+
++ (size_t)numColumns:(regina::HyperCoords)coordSystem tri:(regina::Dim4Triangulation*)tri
+{
+    if (coordSystem == regina::HS_STANDARD)
+        return tri->size() * 15;
+    else if (coordSystem == regina::HS_PRISM)
+        return tri->size() * 10;
+    else if (coordSystem == regina::HS_EDGE_WEIGHT)
+        return tri->countEdges();
+    else
+        return 0;
+}
+
++ (NSString*)columnName:(regina::HyperCoords)coordSystem whichCoord:(size_t)whichCoord tri:(regina::Dim4Triangulation*)tri
+{
+    if (coordSystem == regina::HS_STANDARD) {
+        if (whichCoord % 15 < 5)
+            return [NSString stringWithFormat:@"%ld: %ld", (whichCoord / 15), (whichCoord % 15)];
+        else
+            return [NSString stringWithFormat:@"%ld: %d%d", (whichCoord / 15),
+                    regina::FaceNumbering<4, 1>::edgeVertex[(whichCoord % 15) - 5][0],
+                    regina::FaceNumbering<4, 1>::edgeVertex[(whichCoord % 15) - 5][1]];
+    } else if (coordSystem == regina::HS_PRISM) {
+        return [NSString stringWithFormat:@"%ld: %d%d", (whichCoord / 10),
+                regina::FaceNumbering<4, 1>::edgeVertex[whichCoord % 10][0],
+                regina::FaceNumbering<4, 1>::edgeVertex[whichCoord % 10][1]];
+    } else if (coordSystem == regina::HS_EDGE_WEIGHT) {
+        if (! (tri && tri->edge(whichCoord)->isBoundary()))
+            return [NSString stringWithFormat:@"%ld", whichCoord];
+        else
+            return [NSString stringWithFormat:@"%ld: ∂", whichCoord];
+    }
+
+    return @"Unknown";
+}
+
++ (NSString*)longestColumnName:(regina::HyperCoords)coordSystem tri:(regina::Dim4Triangulation*)tri
+{
+    switch (coordSystem) {
+        case regina::HS_STANDARD:
+        case regina::HS_PRISM:
+            return [NSString stringWithFormat:@"P%ld: 00", tri->size()];
+        case regina::HS_EDGE_WEIGHT:
+            if (tri->hasBoundaryFacets())
+                return [NSString stringWithFormat:@"%ld: ∂", tri->countEdges()];
+            else
+                return [NSString stringWithFormat:@"%ld", tri->countEdges()];
+            break;
+        default:
+            return @"";
+    }
+}
+
++ (regina::NLargeInteger)getCoordinate:(regina::HyperCoords)coordSystem surface:(const regina::NNormalHypersurface&)surface whichCoord:(size_t)whichCoord
+{
+    if (coordSystem == regina::HS_STANDARD) {
+        if (whichCoord % 15 < 5)
+            return surface.tetrahedra(whichCoord / 15, whichCoord % 15);
+        else
+            return surface.prisms(whichCoord / 15, (whichCoord % 15) - 10);
+    } else if (coordSystem == regina::HS_PRISM) {
+        return surface.prisms(whichCoord / 10, whichCoord % 10);
+    } else if (coordSystem == regina::HS_EDGE_WEIGHT) {
+        return surface.edgeWeight(whichCoord);
     }
 
     return (long)0;
