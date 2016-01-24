@@ -82,6 +82,7 @@ class NTriangulationTest : public TriangulationTest<3> {
     // Generic tests:
     CPPUNIT_TEST(makeCanonical);
     CPPUNIT_TEST(isomorphismSignature);
+    CPPUNIT_TEST(orient);
 
     // Dimension-specific tests:
     CPPUNIT_TEST(validity);
@@ -500,6 +501,10 @@ class NTriangulationTest : public TriangulationTest<3> {
 
         void isomorphismSignature() {
             testManualAll(verifyIsomorphismSignature);
+        }
+
+        void orient() {
+            testManualAll(verifyOrient);
         }
 
         void validity() {

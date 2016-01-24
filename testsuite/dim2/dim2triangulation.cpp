@@ -49,6 +49,7 @@ class Dim2TriangulationTest : public TriangulationTest<2> {
     // Generic tests:
     CPPUNIT_TEST(makeCanonical);
     CPPUNIT_TEST(isomorphismSignature);
+    CPPUNIT_TEST(orient);
 
     // Dimension-specific tests:
     CPPUNIT_TEST(eltMove13);
@@ -170,6 +171,10 @@ class Dim2TriangulationTest : public TriangulationTest<2> {
 
         void isomorphismSignature() {
             testManualAll(verifyIsomorphismSignature);
+        }
+
+        void orient() {
+            testManualAll(verifyOrient);
         }
 
         static void verifyEltMove13(Dim2Triangulation* tri) {

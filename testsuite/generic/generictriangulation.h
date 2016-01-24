@@ -40,6 +40,47 @@ using regina::Triangulation;
 template <int dim>
 class TriangulationTest : public CppUnit::TestFixture {
     public:
+        static void verifyOrient(const Triangulation<dim>* original,
+                const Triangulation<dim>* oriented) {
+            if (original->isOrientable() != oriented->isOrientable()) {
+                std::ostringstream msg;
+                msg << "Oriented version of " << original->label()
+                    << " has different orientability.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (original->isOrientable() && ! oriented->isOriented()) {
+                std::ostringstream msg;
+                msg << "Oriented version of " << original->label()
+                    << " is not seen to be oriented.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! oriented->isIsomorphicTo(*original).get()) {
+                std::ostringstream msg;
+                msg << "Oriented version of " << original->label()
+                    << " is not isomorphic to the original.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        static void verifyOrient(Triangulation<dim>* tri) {
+            const int trials = 10;
+
+            Triangulation<dim>* oriented = new Triangulation<dim>(*tri);
+            oriented->orient();
+            verifyOrient(tri, oriented);
+            delete oriented;
+
+            for (int i = 0; i < trials; ++i) {
+                Isomorphism<dim>* iso = Isomorphism<dim>::random(tri->size());
+                Triangulation<dim>* t = iso->apply(tri);
+                delete iso;
+
+                t->orient();
+                verifyOrient(tri, t);
+                delete t;
+            }
+        }
+
         static void verifyMakeCanonical(Triangulation<dim>* tri) {
             // Currently makeCanonical() insists on connected
             // triangulations only.

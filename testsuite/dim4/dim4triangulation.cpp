@@ -79,6 +79,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
     // Generic tests:
     CPPUNIT_TEST(makeCanonical);
     CPPUNIT_TEST(isomorphismSignature);
+    CPPUNIT_TEST(orient);
 
     // Dimension-specific tests:
     CPPUNIT_TEST(validity);
@@ -355,6 +356,10 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
         void isomorphismSignature() {
             testManualAll(verifyIsomorphismSignature);
+        }
+
+        void orient() {
+            testManualAll(verifyOrient);
         }
 
         void verifyValid(const Dim4Triangulation& tri) {
