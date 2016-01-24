@@ -55,6 +55,13 @@
                 _parent = tree.node;
             else
                 _parent = 0;
+        } else if (type == regina::PACKET_NORMALHYPERSURFACELIST) {
+            if (viewing && viewing->type() == regina::PACKET_DIM4TRIANGULATION)
+                _parent = viewing;
+            else if (tree.node->type() == regina::PACKET_DIM4TRIANGULATION)
+                _parent = tree.node;
+            else
+                _parent = 0;
         } else
             _parent = tree.node;
     }
@@ -91,10 +98,13 @@
     NSString* msg;
     switch (self.type) {
         case regina::PACKET_NORMALSURFACELIST:
-            msg = @"Please select the triangulation in which I should enumerate normal surfaces.";
+            msg = @"Please select the 3-D triangulation in which I should enumerate normal surfaces.";
+            break;
+        case regina::PACKET_NORMALHYPERSURFACELIST:
+            msg = @"Please select the 4-D triangulation in which I should enumerate normal hypersurfaces.";
             break;
         case regina::PACKET_ANGLESTRUCTURELIST:
-            msg = @"Please select the triangulation in which I should enumerate angle structures.";
+            msg = @"Please select the 3-D triangulation in which I should enumerate angle structures.";
             break;
         default:
             msg = nil;

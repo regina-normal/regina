@@ -176,6 +176,8 @@
 		051806D4181202BD008EBB01 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = 051806D3181202BD008EBB01 /* icons */; };
 		051806D6181202E0008EBB01 /* examples in Resources */ = {isa = PBXBuildFile; fileRef = 051806D5181202E0008EBB01 /* examples */; };
 		0523D88A180B54850094DAAD /* PacketManagerIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0523D889180B54850094DAAD /* PacketManagerIOS.mm */; };
+		052774141C55744300140918 /* nhypersurfacecreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052774101C55743E00140918 /* nhypersurfacecreator.cpp */; };
+		052774191C55761D00140918 /* NewHypersurfacesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 052774161C55760B00140918 /* NewHypersurfacesController.mm */; };
 		052F9E83180600FB00FAE4DF /* nabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C00180600FA00FAE4DF /* nabeliangroup.cpp */; };
 		052F9E84180600FB00FAE4DF /* nabeliangroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C01180600FA00FAE4DF /* nabeliangroup.h */; };
 		052F9E85180600FB00FAE4DF /* ngrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C02180600FA00FAE4DF /* ngrouppresentation.cpp */; };
@@ -1900,6 +1902,10 @@
 		051806D5181202E0008EBB01 /* examples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = examples; sourceTree = SOURCE_ROOT; };
 		0523D888180B54850094DAAD /* PacketManagerIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketManagerIOS.h; sourceTree = "<group>"; };
 		0523D889180B54850094DAAD /* PacketManagerIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketManagerIOS.mm; sourceTree = "<group>"; };
+		052774101C55743E00140918 /* nhypersurfacecreator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nhypersurfacecreator.cpp; sourceTree = "<group>"; };
+		052774111C55743E00140918 /* nhypersurfacecreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhypersurfacecreator.h; sourceTree = "<group>"; };
+		052774151C55760B00140918 /* NewHypersurfacesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewHypersurfacesController.h; sourceTree = "<group>"; };
+		052774161C55760B00140918 /* NewHypersurfacesController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewHypersurfacesController.mm; sourceTree = "<group>"; };
 		052F9BFF180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052F9C00180600FA00FAE4DF /* nabeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nabeliangroup.cpp; sourceTree = "<group>"; };
 		052F9C01180600FA00FAE4DF /* nabeliangroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nabeliangroup.h; sourceTree = "<group>"; };
@@ -3250,6 +3256,8 @@
 				05F6D3B61C52CB9B007307F0 /* NewDim4TriangulationController.mm */,
 				05F23E1419C13432005B53B5 /* NewFilterController.h */,
 				05F23E1519C13432005B53B5 /* NewFilterController.mm */,
+				052774151C55760B00140918 /* NewHypersurfacesController.h */,
+				052774161C55760B00140918 /* NewHypersurfacesController.mm */,
 				05F23E1719C1418A005B53B5 /* NewSnapPeaController.h */,
 				05F23E1819C1418A005B53B5 /* NewSnapPeaController.mm */,
 				0591011C181364BB000A8D16 /* NewSurfacesController.h */,
@@ -4997,6 +5005,8 @@
 				0564A59B1811D920002CC2AE /* ncompatcanvas.h */,
 				0564A59C1811D920002CC2AE /* ncontainerui.cpp */,
 				0564A59D1811D920002CC2AE /* ncontainerui.h */,
+				052774101C55743E00140918 /* nhypersurfacecreator.cpp */,
+				052774111C55743E00140918 /* nhypersurfacecreator.h */,
 				0564A59E1811D920002CC2AE /* nnormalsurfacecreator.cpp */,
 				0564A59F1811D920002CC2AE /* nnormalsurfacecreator.h */,
 				0564A5A01811D920002CC2AE /* nnormalsurfaceui.cpp */,
@@ -6251,6 +6261,7 @@
 				052FA1E01806129B00FAE4DF /* nsorientedquad.cpp in Sources */,
 				052FA1E21806129B00FAE4DF /* nsquadoct.cpp in Sources */,
 				052FA1C01806129B00FAE4DF /* nlayeredsurfacebundle.cpp in Sources */,
+				052774191C55761D00140918 /* NewHypersurfacesController.mm in Sources */,
 				052FA1901806129B00FAE4DF /* ngraphtriple.cpp in Sources */,
 				05D1173F19EE0197003BEC55 /* nrational.cpp in Sources */,
 				052FA23D180612DD00FAE4DF /* volume.c in Sources */,
@@ -6572,6 +6583,7 @@
 				0543AEAC1811E12A002758F8 /* nscriptui.h in Sources */,
 				05A73CE319B2F9DC0099C617 /* nsnappeafile.h in Sources */,
 				05A73CE419B2F9DC0099C617 /* nsnappeagluings.h in Sources */,
+				052774141C55744300140918 /* nhypersurfacecreator.cpp in Sources */,
 				05A73CE519B2F9DC0099C617 /* nsnappeashapes.h in Sources */,
 				05A73CE619B2F9DC0099C617 /* nsnappeaui.h in Sources */,
 				0543AEAD1811E12A002758F8 /* nsurfacecompatui.h in Sources */,

@@ -158,6 +158,9 @@
         case regina::PACKET_NORMALSURFACELIST:
             [PacketManagerIOS newPacket:spec formSheet:@"newSurfaces"];
             break;
+        case regina::PACKET_NORMALHYPERSURFACELIST:
+            [PacketManagerIOS newPacket:spec formSheet:@"newHypersurfaces"];
+            break;
         case regina::PACKET_ANGLESTRUCTURELIST:
             [PacketManagerIOS newPacket:spec formSheet:@"newAngles"];
             break;
