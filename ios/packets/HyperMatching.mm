@@ -39,7 +39,7 @@
 #import "hypersurface/nnormalhypersurfacelist.h"
 #import "maths/nmatrixint.h"
 
-#define KEY_HYPERSURFACES_MATCHING_COMPACT @"HypersurfacesMatchingCompact"
+#define KEY_HYPER_MATCHING_COMPACT @"HypersurfacesMatchingCompact"
 
 static NSString *compactCellID = @"_ReginaCompactSpreadCell";
 static NSString *regularCellID = @"_ReginaRegularSpreadCell";
@@ -59,7 +59,7 @@ static NSString *regularCellID = @"_ReginaRegularSpreadCell";
 {
     [super viewWillAppear:animated];
 
-    self.compact.on = [[NSUserDefaults standardUserDefaults] boolForKey:KEY_HYPERSURFACES_MATCHING_COMPACT];
+    self.compact.on = [[NSUserDefaults standardUserDefaults] boolForKey:KEY_HYPER_MATCHING_COMPACT];
 
     self.grid.defaultHeaderColumnCellClass = [RegularSpreadHeaderCellRight class];
     self.grid.defaultHeaderRowCellClass = [RegularSpreadHeaderCellCentre class];
@@ -101,7 +101,7 @@ static NSString *regularCellID = @"_ReginaRegularSpreadCell";
 }
 
 - (IBAction)compactChanged:(id)sender {
-    [[NSUserDefaults standardUserDefaults] setBool:self.compact.on forKey:KEY_HYPERSURFACES_MATCHING_COMPACT];
+    [[NSUserDefaults standardUserDefaults] setBool:self.compact.on forKey:KEY_HYPER_MATCHING_COMPACT];
 
     [self initMetrics];
     [self.grid reloadData];

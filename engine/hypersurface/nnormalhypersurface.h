@@ -638,7 +638,7 @@ class REGINA_API NNormalHypersurface :
          * been called for a particular surface, subsequent calls return
          * the answer immediately.
          *
-         * \pre This normal hypersurface is compact (has finitely many pieces).
+         * \pre This normal hypersurface is compact and embedded.
          *
          * \warning This routine explicitly builds the normal pieces,
          * and so may run out of memory if the normal coordinates
@@ -655,7 +655,7 @@ class REGINA_API NNormalHypersurface :
          * been called for a particular surface, subsequent calls return
          * the answer immediately.
          *
-         * \pre This normal hypersurface is compact (has finitely many pieces).
+         * \pre This normal hypersurface is compact and embedded.
          *
          * \warning This routine explicitly builds the normal pieces,
          * and so may run out of memory if the normal coordinates
@@ -672,7 +672,7 @@ class REGINA_API NNormalHypersurface :
          * been called for a particular surface, subsequent calls return
          * the answer immediately.
          *
-         * \pre This normal hypersurface is compact (has finitely many pieces).
+         * \pre This normal hypersurface is compact and embedded.
          *
          * \warning This routine explicitly builds the normal pieces,
          * and so may run out of memory if the normal coordinates
@@ -751,7 +751,7 @@ class REGINA_API NNormalHypersurface :
          * been called for a particular surface, subsequent calls return
          * the answer immediately.
          *
-         * \pre This normal hypersurface is compact (has finitely many pieces).
+         * \pre This normal hypersurface is compact and embedded.
          *
          * \warning This routine explicitly builds the normal pieces,
          * and so may run out of memory if the normal coordinates
@@ -777,7 +777,7 @@ class REGINA_API NNormalHypersurface :
          * \todo \prob Check for absurdly large numbers of pieces and
          * return 0 accordingly.
          *
-         * \pre This normal hypersurface is compact (has finitely many pieces).
+         * \pre This normal hypersurface is compact and embedded.
          *
          * @return a triangulation of this normal hypersurface.
          */

@@ -8993,7 +8993,7 @@
         <!--Coordinates-->
         <scene sceneID="jaw-jR-Ec1">
             <objects>
-                <viewController id="s0f-yO-QxG" customClass="SurfacesCoords" sceneMemberID="viewController">
+                <viewController id="s0f-yO-QxG" customClass="HypersurfacesCoords" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="DWx-WH-FVv"/>
                         <viewControllerLayoutGuide type="bottom" id="9zU-VV-VeT"/>
@@ -9076,7 +9076,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="cutAlong:" destination="s0f-yO-QxG" eventType="touchUpInside" id="hLI-Fy-WT9"/>
+                                    <action selector="triangulate:" destination="s0f-yO-QxG" eventType="touchUpInside" id="v7d-kF-MS6"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tpc-pd-6hr">
@@ -9136,11 +9136,11 @@
                     <connections>
                         <outlet property="compact" destination="KuS-g2-RWn" id="W8x-Be-LQT"/>
                         <outlet property="coords" destination="Bma-RQ-iCK" id="r61-kQ-sWk"/>
-                        <outlet property="cutAlongButton" destination="eAs-oc-S2j" id="VCI-7i-CKc"/>
                         <outlet property="grid" destination="jvQ-DN-QpS" id="j7j-v9-pIP"/>
                         <outlet property="header" destination="fOr-fH-uol" id="pMR-Ae-MQU"/>
                         <outlet property="selectCoords" destination="xRw-az-1B0" id="c6n-MC-zaB"/>
                         <outlet property="tri" destination="Ok7-s6-5Bu" id="ucw-Zz-xPB"/>
+                        <outlet property="triangulateButton" destination="eAs-oc-S2j" id="iJi-sb-3tW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NAW-wV-S5X" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -9363,7 +9363,7 @@
         <!--Summary-->
         <scene sceneID="W5p-HA-qpV">
             <objects>
-                <viewController id="nGf-zL-6NK" customClass="SurfacesSummary" sceneMemberID="viewController">
+                <viewController id="nGf-zL-6NK" customClass="HypersurfacesSummary" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="rIz-nf-2ai"/>
                         <viewControllerLayoutGuide type="bottom" id="qkN-3A-Soe"/>
@@ -9383,13 +9383,13 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Triangulation:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Whz-gJ-FPS">
-                                <rect key="frame" x="280" y="77" width="104" height="20.5"/>
+                                <rect key="frame" x="280.5" y="77" width="104" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZRr-MU-2js">
-                                <rect key="frame" x="392" y="71" width="30" height="33"/>
+                                <rect key="frame" x="392.5" y="71.5" width="30" height="33"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title=" ">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -9406,14 +9406,14 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hmV-6A-JVV">
-                                <rect key="frame" x="430" y="83" width="252.5" height="10"/>
+                                <rect key="frame" x="430.5" y="83" width="252.5" height="10"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="10" id="M8j-v2-0GU"/>
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="1sV-RL-Xxx">
-                                <rect key="frame" x="20" y="124" width="663" height="595"/>
+                                <rect key="frame" x="20" y="124.5" width="663" height="594.5"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Header" id="EPQ-8b-vSO" customClass="SurfacesSummaryTableCell">
@@ -9485,7 +9485,7 @@
                                             <outlet property="count3" destination="GPl-PU-fuF" id="6R2-pM-exS"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Count" id="5co-iy-Gq6" customClass="SurfacesSummaryTableCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Count" id="5co-iy-Gq6" customClass="HypersurfacesSummaryTableCell">
                                         <rect key="frame" x="0.0" y="66" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5co-iy-Gq6" id="TAy-HK-bZz">
@@ -9552,7 +9552,7 @@
                                             <outlet property="count1" destination="bcB-UP-CQD" id="Hp8-Dv-8Uv"/>
                                             <outlet property="count2" destination="hvU-N6-PHv" id="PhT-Ga-PL2"/>
                                             <outlet property="count3" destination="3HE-xR-FIC" id="4Os-sn-Ody"/>
-                                            <outlet property="euler" destination="kXk-zZ-eEn" id="ZAf-3t-DGy"/>
+                                            <outlet property="homology" destination="kXk-zZ-eEn" id="UvR-k2-yMa"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -9608,7 +9608,7 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </tabBar>
                     <connections>
-                        <segue destination="nGf-zL-6NK" kind="relationship" relationship="viewControllers" id="kG4-iY-TpA"/>
+                        <segue destination="nGf-zL-6NK" kind="relationship" relationship="viewControllers" id="ocY-cb-O4C"/>
                         <segue destination="s0f-yO-QxG" kind="relationship" relationship="viewControllers" id="XRZ-Ik-BG5"/>
                         <segue destination="zaq-jo-y0n" kind="relationship" relationship="viewControllers" id="j9B-qB-fmv"/>
                         <segue destination="Cb9-RC-s6G" kind="relationship" relationship="viewControllers" id="ZJd-Pf-qHn"/>

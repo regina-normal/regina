@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#import "HypersurfacesViewController.h"
+#import "HyperViewController.h"
 
 @interface HypersurfacesCoords : HypersurfacesTab
 @end

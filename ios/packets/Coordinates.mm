@@ -346,7 +346,7 @@ using regina::NTriangle;
         if (whichCoord % 15 < 5)
             return surface.tetrahedra(whichCoord / 15, whichCoord % 15);
         else
-            return surface.prisms(whichCoord / 15, (whichCoord % 15) - 10);
+            return surface.prisms(whichCoord / 15, (whichCoord % 15) - 5);
     } else if (coordSystem == regina::HS_PRISM) {
         return surface.prisms(whichCoord / 10, whichCoord % 10);
     } else if (coordSystem == regina::HS_EDGE_WEIGHT) {
