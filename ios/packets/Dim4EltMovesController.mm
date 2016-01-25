@@ -390,7 +390,7 @@
      e0.vertices().trunc4().c_str()];
 
     if (tetrahedron->degree() > 1) {
-        const regina::Dim4TriangleEmbedding& e1 = tetrahedron->embedding(1);
+        const regina::Dim4TetrahedronEmbedding& e1 = tetrahedron->embedding(1);
         [text appendFormat:@", %ld (%s)",
          e1.pentachoron()->index(),
          e1.vertices().trunc4().c_str()];
