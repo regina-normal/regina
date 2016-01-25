@@ -463,7 +463,7 @@ Isomorphism<dim> IsomorphismBase<dim>::operator*(
             rhs.facetPerm(simp);
         result.simpImage_[simp] = this->simpImage(rhs.simpImage(simp));
     }
-    return result;
+    return std::move(result);
 }
 
 template <int dim>
