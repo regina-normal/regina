@@ -97,10 +97,30 @@ class REGINA_API CollapsedChainSearcher : public NGluingPermSearcher {
                  added back in first. Then the isomorphism can be applied, and
                  lastly the chains can be rebuilt. */
         std::list<NIsomorphism*> automorphs;
+        std::list<NIsomorphism*> stabilizers;
+        struct IsoComp {
+            bool operator()(const NIsomorphism* lhs, const NIsomorphism* rhs)
+                const {
+                if (lhs->size() != rhs->size())
+                    return lhs->size() < rhs->size();
+                for(int simp=0; simp < lhs->size(); ++simp) {
+                    if (lhs->simpImage(simp) != rhs->simpImage(simp))
+                        return lhs->simpImage(simp) < rhs->simpImage(simp);
+                    if (lhs->facetPerm(simp) != rhs->facetPerm(simp))
+                        return lhs->facetPerm(simp) < rhs->facetPerm(simp);
+                }
+                return false; // are identical
+            }
+        };
+
+
+        std::set<NIsomorphism*,IsoComp> automorphsDone;
+        NTetFace *chainEnds;
         enum EdgeType { EDGE_CHAIN_END, EDGE_CHAIN_INTERNAL_FIRST,
             EDGE_CHAIN_INTERNAL_SECOND };
         EdgeType *orderType;
         int *chainNo;
+        int numChains;
         bool *chainSym;
         bool *shortChain;
         bool collapse;

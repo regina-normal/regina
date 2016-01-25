@@ -106,8 +106,9 @@ CollapsedChainSearcher::CollapsedChainSearcher(const NFacePairing* pairing,
     chainPermIndices = new int[4 * nTets];
     orderType = new EdgeType[2 * nTets];
 
-    int numChains = 0;
+    numChains = 0;
     shortChain = new bool [nTets] {false};
+    chainEnds = new NTetFace [nTets];
     collapse = true;
     empty = false;
     NTetFace face;
@@ -157,10 +158,12 @@ CollapsedChainSearcher::~CollapsedChainSearcher() {
     delete[] orderType;
     delete[] chainPermIndices;
     delete[] shortChain;
-    if (!automorphs.empty()) {
-        std::for_each(automorphs.begin(), automorphs.end(),
-                FuncDelete<NIsomorphism>());
-    }
+    delete[] chainEnds;
+    for (auto a: automorphs)
+        delete a;
+    for (auto a: automorphsDone)
+        delete a;
+
 }
 
 void CollapsedChainSearcher::runSearch(long maxDepth) {
@@ -183,9 +186,29 @@ void CollapsedChainSearcher::runSearch(long maxDepth) {
     }
 
     if (collapse) {
-        // TODO remove loops that will be replaced from modified, to cut down
-        // number of automorphisms.
         modified->findAutomorphisms(automorphs);
+        // Find stabilizers
+        for(auto automorph: automorphs) {
+            NIsomorphism &aut = *automorph;
+            bool stab = true;
+            // While this automorphism stabilizes the chain ends
+            for(int i=0; stab && i < numChains; i++) {
+                // Mapping both ends to themselves is ok
+                if (( aut[chainEnds[i]] == chainEnds[i] ) &&
+                    (aut[chainEnds[i+1]] == chainEnds[i+1] ))
+                    continue;
+                // Swapping the two ends is ok
+                //if (( aut[chainEnds[i]] == chainEnds[i+1] ) &&
+                //    (aut[chainEnds[i+1]] == chainEnds[i] ))
+                //    continue;
+                stab = false;
+            }
+            if (stab) {
+                stabilizers.push_back(automorph);
+            }
+        }
+//        std::cout << "|aut| = " << automorphs.size() << "\t|stab| = " <<
+//            stabilizers.size() << std::endl;
         if (enumDB) {
             std::list<NTriangulation*> results = enumDB->lookup(*modified);
             for(auto tri: results)
@@ -228,7 +251,15 @@ void CollapsedChainSearcher::extendTri(const NTriangulation *tri) {
     // copy pairing_ and apply reverse of iso
     // Note that iso is the isomorphism from this to s
 
+    // Delete memory used by each completed automorphism
+    for (auto a: automorphsDone)
+        delete a;
+    // And remove the pointers
+    automorphsDone.clear();
+
     for (auto automorph : automorphs) {
+        if (automorphsDone.count(automorph) > 0)
+            continue;
         orderElt = 0;
         // f will be a facet of tri.
         for (NTetFace f(0,0); ! f.isPastEnd(tri->getNumberOfTetrahedra(), true); f++) {
@@ -298,6 +329,11 @@ void CollapsedChainSearcher::extendTri(const NTriangulation *tri) {
             permIndex(myAdj) = gluingToIndex(myAdj, gluing.inverse());
         }
         buildUp(); // Builds actual triangulation
+
+        for(auto stab: stabilizers) {
+            NIsomorphism *i = new NIsomorphism((*stab)*(*automorph));
+            automorphsDone.insert(i);
+        }
     }
     delete newInv;
     delete newIso;
@@ -307,8 +343,16 @@ void CollapsedChainSearcher::extendTri(const NGluingPermSearcher *s) {
     // For each triangulation found.
     // copy pairing_ and apply reverse of iso
     // Note that iso is the isomorphism from this to s
+    // Delete memory used by each completed automorphism
+    for (auto a: automorphsDone)
+        delete a;
+    // And remove the pointers
+    automorphsDone.clear();
 
     for (auto automorph : automorphs) {
+        if (automorphsDone.count(automorph) > 0) {
+            continue;
+        }
         orderElt = 0;
         // f will be a facet of s.
         for (NTetFace f(0,0); ! f.isPastEnd(s->size(), true); f++) {
@@ -472,10 +516,9 @@ bool CollapsedChainSearcher::collapseChain(NFacePair faces, int tet) {
                 comp.lower(), faces.lower()));
     orderType[orderElt] = EDGE_CHAIN_END;
     orderElt+=1;
-    faces = faces.complement();
     NTetFace dest1, dest2;
-    dest1 = modified->dest(tet, faces.lower());
-    dest2 = modified->dest(tet, faces.upper());
+    dest1 = modified->dest(tet, comp.lower());
+    dest2 = modified->dest(tet, comp.upper());
     if (dest1.simp != dest2.simp) {
         // Short chain here. Bail early, reset things.
         shortChain[tet] = true;
@@ -484,6 +527,9 @@ bool CollapsedChainSearcher::collapseChain(NFacePair faces, int tet) {
         // no need to reset them.
         return false;
     }
+    chainEnds[numChains] = NTetFace(tet, faces.upper());
+    chainEnds[numChains+1] = NTetFace(tet, faces.lower());
+    faces = faces.complement();
     // Currently tet and faces refer to the two faces of the base
     // tetrahedron that are pointing outwards.
     while (dest1.simp == dest2.simp && dest1.simp != tet) {
