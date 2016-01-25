@@ -9175,7 +9175,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CKK-fD-zWg">
-                                <rect key="frame" x="392.5" y="71" width="30" height="33"/>
+                                <rect key="frame" x="392" y="71" width="30" height="33"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title=" ">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -9193,22 +9193,28 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R5J-xG-xjS">
-                                <rect key="frame" x="430.5" y="83" width="252.5" height="10"/>
+                                <rect key="frame" x="430" y="83" width="252.5" height="10"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="10" id="Ny3-Q4-JjY"/>
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Do hypersurfaces have compatible prism types? " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LRV-h8-KRw">
-                                <rect key="frame" x="20" y="144" width="663" height="20.5"/>
+                                <rect key="frame" x="20" y="184" width="663" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DJ9-Le-Wgs" customClass="HyperCompatGrid">
-                                <rect key="frame" x="0.0" y="164" width="703" height="555"/>
+                                <rect key="frame" x="0.0" y="204" width="703" height="515"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Local compatibility" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V8g-ut-13X">
+                                <rect key="frame" x="20" y="144.5" width="663" height="19.5"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -9216,21 +9222,24 @@
                             <constraint firstItem="JdP-KF-YXe" firstAttribute="top" secondItem="7wo-5y-USx" secondAttribute="top" constant="20" symbolic="YES" id="3wW-6j-xp9"/>
                             <constraint firstItem="DJ9-Le-Wgs" firstAttribute="leading" secondItem="7wo-5y-USx" secondAttribute="leading" id="5ro-DQ-dZ7"/>
                             <constraint firstItem="R5J-xG-xjS" firstAttribute="centerY" secondItem="07o-wP-SCD" secondAttribute="centerY" id="6LK-pk-k4t"/>
+                            <constraint firstItem="LRV-h8-KRw" firstAttribute="top" secondItem="V8g-ut-13X" secondAttribute="bottom" constant="20" id="7zl-WM-Rgc"/>
                             <constraint firstAttribute="trailing" secondItem="DJ9-Le-Wgs" secondAttribute="trailing" id="B3m-mm-Pje"/>
                             <constraint firstItem="q6r-b9-cmf" firstAttribute="top" secondItem="Ead-YN-2dj" secondAttribute="bottom" constant="8" id="Bdv-Jr-ih1"/>
+                            <constraint firstItem="V8g-ut-13X" firstAttribute="leading" secondItem="7wo-5y-USx" secondAttribute="leading" constant="20" id="F5O-LH-Btn"/>
                             <constraint firstItem="JdP-KF-YXe" firstAttribute="leading" secondItem="7wo-5y-USx" secondAttribute="leading" constant="20" id="HSd-KV-AcX"/>
                             <constraint firstItem="Ead-YN-2dj" firstAttribute="top" secondItem="JdP-KF-YXe" secondAttribute="bottom" constant="8" id="HxQ-ih-Y38"/>
+                            <constraint firstAttribute="trailing" secondItem="V8g-ut-13X" secondAttribute="trailing" constant="20" id="Ic2-sF-LbE"/>
                             <constraint firstItem="R5J-xG-xjS" firstAttribute="leading" secondItem="CKK-fD-zWg" secondAttribute="trailing" constant="8" id="Kdu-c6-qRT"/>
                             <constraint firstItem="LRV-h8-KRw" firstAttribute="leading" secondItem="7wo-5y-USx" secondAttribute="leading" constant="20" id="LfR-2v-0i2"/>
                             <constraint firstItem="R5J-xG-xjS" firstAttribute="width" secondItem="07o-wP-SCD" secondAttribute="width" id="PGr-qS-EA4"/>
                             <constraint firstItem="DJ9-Le-Wgs" firstAttribute="top" secondItem="LRV-h8-KRw" secondAttribute="bottom" id="RGg-2A-N17"/>
                             <constraint firstItem="07o-wP-SCD" firstAttribute="leading" secondItem="7wo-5y-USx" secondAttribute="leading" constant="20" id="RPL-Te-DTs"/>
+                            <constraint firstItem="V8g-ut-13X" firstAttribute="top" secondItem="CKK-fD-zWg" secondAttribute="bottom" constant="40" id="RZ1-D9-S6R"/>
                             <constraint firstAttribute="trailing" secondItem="LRV-h8-KRw" secondAttribute="trailing" constant="20" id="SZ2-cZ-ste"/>
                             <constraint firstItem="R5J-xG-xjS" firstAttribute="centerY" secondItem="q6r-b9-cmf" secondAttribute="centerY" id="Uhf-nq-YA4"/>
                             <constraint firstItem="sUu-HQ-9c0" firstAttribute="top" secondItem="DJ9-Le-Wgs" secondAttribute="bottom" id="YOt-uJ-6OQ"/>
                             <constraint firstItem="CKK-fD-zWg" firstAttribute="baseline" secondItem="q6r-b9-cmf" secondAttribute="baseline" id="ZAN-22-teb"/>
                             <constraint firstAttribute="trailing" secondItem="Ead-YN-2dj" secondAttribute="trailing" constant="20" id="ath-cs-H9u"/>
-                            <constraint firstItem="LRV-h8-KRw" firstAttribute="top" secondItem="CKK-fD-zWg" secondAttribute="bottom" constant="40" id="cdz-C2-m2V"/>
                             <constraint firstItem="Ead-YN-2dj" firstAttribute="leading" secondItem="7wo-5y-USx" secondAttribute="leading" constant="20" id="giY-yK-8h0"/>
                             <constraint firstAttribute="trailing" secondItem="JdP-KF-YXe" secondAttribute="trailing" constant="20" id="jWp-yY-94i"/>
                             <constraint firstItem="CKK-fD-zWg" firstAttribute="leading" secondItem="q6r-b9-cmf" secondAttribute="trailing" constant="8" id="xWr-a0-u6P"/>
@@ -11569,8 +11578,8 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="Q3I-Ip-1gF"/>
+        <segue reference="G8y-vN-7pv"/>
         <segue reference="sZ3-q9-8Px"/>
-        <segue reference="iPv-1V-ozc"/>
+        <segue reference="Q3I-Ip-1gF"/>
     </inferredMetricsTieBreakers>
 </document>
