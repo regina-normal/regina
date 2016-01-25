@@ -9013,13 +9013,13 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Triangulation:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jjd-EH-UcQ">
-                                <rect key="frame" x="280" y="77" width="104" height="20.5"/>
+                                <rect key="frame" x="280.5" y="77" width="104" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ok7-s6-5Bu">
-                                <rect key="frame" x="392" y="71.5" width="30" height="33"/>
+                                <rect key="frame" x="392.5" y="71.5" width="30" height="33"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title=" ">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -9037,14 +9037,14 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3xs-k5-eiD">
-                                <rect key="frame" x="430" y="83" width="252.5" height="10"/>
+                                <rect key="frame" x="430.5" y="83" width="252.5" height="10"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="10" id="JyG-bc-GH9"/>
                                 </constraints>
                             </view>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jvQ-DN-QpS" customClass="MDSpreadView">
-                                <rect key="frame" x="20" y="163.5" width="683" height="485"/>
+                                <rect key="frame" x="20" y="164" width="683" height="484.5"/>
                             </scrollView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Compact view" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zXW-JG-MWM">
                                 <rect key="frame" x="534" y="131.5" width="92" height="17"/>
@@ -9080,14 +9080,14 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tpc-pd-6hr">
-                                <rect key="frame" x="20" y="679" width="257" height="10"/>
+                                <rect key="frame" x="20" y="679" width="257.5" height="10"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="10" id="IBV-60-hq3"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xt2-Fg-Xj1">
-                                <rect key="frame" x="426" y="679" width="256.5" height="10"/>
+                                <rect key="frame" x="426" y="679" width="257" height="10"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="10" id="Nec-q7-f0J"/>
@@ -9378,18 +9378,18 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zQz-Qp-Deq">
-                                <rect key="frame" x="20" y="48.5" width="663" height="20.5"/>
+                                <rect key="frame" x="20" y="48" width="663" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Triangulation:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Whz-gJ-FPS">
-                                <rect key="frame" x="281" y="77" width="104" height="20.5"/>
+                                <rect key="frame" x="280" y="77" width="104" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZRr-MU-2js">
-                                <rect key="frame" x="393" y="71" width="30" height="33"/>
+                                <rect key="frame" x="392" y="71" width="30" height="33"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title=" ">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -9399,14 +9399,14 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZVX-Uq-Tc7">
-                                <rect key="frame" x="20" y="83" width="253" height="10"/>
+                                <rect key="frame" x="20" y="83" width="252.5" height="10"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="10" id="K6e-7M-oTq"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hmV-6A-JVV">
-                                <rect key="frame" x="431" y="83" width="252" height="10"/>
+                                <rect key="frame" x="430" y="83" width="252.5" height="10"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="10" id="M8j-v2-0GU"/>
@@ -9608,8 +9608,8 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </tabBar>
                     <connections>
-                        <segue destination="nGf-zL-6NK" kind="relationship" relationship="viewControllers" id="P0N-q4-1AI"/>
-                        <segue destination="s0f-yO-QxG" kind="relationship" relationship="viewControllers" id="3hZ-OW-bHm"/>
+                        <segue destination="nGf-zL-6NK" kind="relationship" relationship="viewControllers" id="kG4-iY-TpA"/>
+                        <segue destination="s0f-yO-QxG" kind="relationship" relationship="viewControllers" id="XRZ-Ik-BG5"/>
                         <segue destination="zaq-jo-y0n" kind="relationship" relationship="viewControllers" id="j9B-qB-fmv"/>
                         <segue destination="Cb9-RC-s6G" kind="relationship" relationship="viewControllers" id="ZJd-Pf-qHn"/>
                     </connections>
