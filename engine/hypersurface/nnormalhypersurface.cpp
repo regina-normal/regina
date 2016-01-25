@@ -36,6 +36,7 @@
 #include "dim4/dim4edge.h"
 #include "dim4/dim4triangulation.h"
 #include "hypersurface/nnormalhypersurface.h"
+#include "triangulation/ntriangulation.h"
 #include "utilities/xmlutils.h"
 
 // Property IDs:
@@ -78,9 +79,9 @@ NNormalHypersurface* NNormalHypersurface::clone() const {
 
 NNormalHypersurface* NNormalHypersurface::doubleHypersurface() const {
     NNormalHypersurface* ans = new NNormalHypersurface(triangulation_,
-        dynamic_cast<NNormalHypersurfaceVector*>(vector->clone()));
+        dynamic_cast<NNormalHypersurfaceVector*>(vector_->clone()));
 
-    (*(ans->vector)) *= 2;
+    (*(ans->vector_)) *= 2;
 
     // Some properties can be copied straight across.
     ans->realBoundary_ = realBoundary_;
@@ -264,6 +265,26 @@ void NNormalHypersurface::calculateRealBoundary() const {
         }
     }
     realBoundary_ = false;
+}
+
+void NNormalHypersurface::calculateFromTriangulation() const {
+    orientable_.clear();
+    twoSided_.clear();
+    connected_.clear();
+    H1_.clear();
+
+    NTriangulation* me = triangulate();
+    orientable_ = me->isOrientable();
+    connected_ = me->isConnected();
+    H1_ = new NAbelianGroup(me->homology());
+    size_t nComp = me->countComponents();
+    delete me;
+
+    NNormalHypersurface* twice = doubleHypersurface();
+    NTriangulation* cover = twice->triangulate();
+    twoSided_ = (cover->countComponents() == 2 * nComp);
+    delete cover;
+    delete twice;
 }
 
 } // namespace regina

@@ -45,6 +45,7 @@
 #include <utility>
 #include "regina-core.h"
 #include "output.h"
+#include "algebra/nabeliangroup.h"
 #include "hypersurface/hypercoords.h"
 #include "maths/nperm5.h"
 #include "maths/nray.h"
@@ -407,12 +408,20 @@ class REGINA_API NNormalHypersurface :
         std::string name_;
             /**< An optional name associated with this hypersurface. */
 
+        mutable NProperty<bool> orientable_;
+            /**< Is this hypersurface orientable? */
+        mutable NProperty<bool> twoSided_;
+            /**< Is this hypersurface two-sided? */
+        mutable NProperty<bool> connected_;
+            /**< Is this hypersurface connected? */
         mutable NProperty<bool> realBoundary_;
             /**< Does this hypersurface have real boundary (i.e. does it meet
-             *   any boundary facets)? */
+                 any boundary facets)? */
         mutable NProperty<bool> compact_;
             /**< Is this hypersurface compact (i.e., does it only
-             *   contain finitely many pieces)? */
+                 contain finitely many pieces)? */
+        mutable NProperty<NAbelianGroup, StoreManagedPtr> H1_;
+            /**< First homology group of the hypersurface. */
 
     public:
         /**
@@ -623,6 +632,57 @@ class REGINA_API NNormalHypersurface :
          */
         bool isCompact() const;
         /**
+         * Returns whether or not this hypersurface is orientable.
+         *·
+         * This routine caches its results, which means that once it has
+         * been called for a particular surface, subsequent calls return
+         * the answer immediately.
+         *
+         * \pre This normal hypersurface is compact (has finitely many pieces).
+         *
+         * \warning This routine explicitly builds the normal pieces,
+         * and so may run out of memory if the normal coordinates
+         * are extremely large.
+         *
+         * @return \c true if this hypersurface is orientable, or \c false if
+         * this hypersurface is non-orientable.
+         */
+        bool isOrientable() const;
+        /**
+         * Returns whether or not this hypersurface is two-sided.
+         *
+         * This routine caches its results, which means that once it has
+         * been called for a particular surface, subsequent calls return
+         * the answer immediately.
+         *
+         * \pre This normal hypersurface is compact (has finitely many pieces).
+         *
+         * \warning This routine explicitly builds the normal pieces,
+         * and so may run out of memory if the normal coordinates
+         * are extremely large.
+         *
+         * @return \c true if this hypersurface is two-sided, or \c false if
+         * this hypersurface is one-sided.
+         */
+        bool isTwoSided() const;
+        /**
+         * Returns whether or not this hypersurface is connected.
+         *
+         * This routine caches its results, which means that once it has
+         * been called for a particular surface, subsequent calls return
+         * the answer immediately.
+         *
+         * \pre This normal hypersurface is compact (has finitely many pieces).
+         *
+         * \warning This routine explicitly builds the normal pieces,
+         * and so may run out of memory if the normal coordinates
+         * are extremely large.
+         *
+         * @return \c true if this hypersurface is connected, or \c false if
+         * this hypersurface is disconnected.
+         */
+        bool isConnected() const;
+        /**
          * Determines if this hypersurface has any real boundary, that is,
          * whether it meets any boundary tetrahedra of the triangulation.
          *
@@ -676,6 +736,32 @@ class REGINA_API NNormalHypersurface :
         const Dim4Edge* isThinEdgeLink() const;
 
         /**
+         * Returns the first homology group of this hypersurface.
+         *
+         * There is an important caveat regarding invalid 4-manifold
+         * triangulations.  If the underlying triangulation has edge
+         * links that are not spheres, then it is possible that this
+         * normal hypersurface is not a compact 3-manifold.  In such a
+         * case, this routine will compute homology in the same way as
+         * NTriangulation::homology() - that is, by effectively truncating
+         * ideal points of the hypersurface (which may arise where the
+         * hypersurface meets an invalid edge).
+         *
+         * This routine caches its results, which means that once it has
+         * been called for a particular surface, subsequent calls return
+         * the answer immediately.
+         *
+         * \pre This normal hypersurface is compact (has finitely many pieces).
+         *
+         * \warning This routine explicitly builds the normal pieces,
+         * and so may run out of memory if the normal coordinates
+         * are extremely large.
+         *
+         * @return the first homology group.
+         */
+        const NAbelianGroup& homology() const;
+
+        /**
          * Returns a 3-manifold triangulation describing this normal
          * hypersurface.
          *
@@ -690,6 +776,8 @@ class REGINA_API NNormalHypersurface :
          *
          * \todo \prob Check for absurdly large numbers of pieces and
          * return 0 accordingly.
+         *
+         * \pre This normal hypersurface is compact (has finitely many pieces).
          *
          * @return a triangulation of this normal hypersurface.
          */
@@ -783,6 +871,11 @@ class REGINA_API NNormalHypersurface :
          * stores the result as a property.
          */
         void calculateRealBoundary() const;
+        /**
+         * Calculate and store all properties that we derive from the
+         * 3-manifold triangulation of this hypersurface.
+         */
+        void calculateFromTriangulation() const;
 
     friend class regina::NXMLNormalHypersurfaceReader;
 };
@@ -842,10 +935,34 @@ inline bool NNormalHypersurface::isCompact() const {
     return compact_.value();
 }
 
+inline bool NNormalHypersurface::isOrientable() const {
+    if (! orientable_.known())
+        calculateFromTriangulation();
+    return orientable_.value();
+}
+
+inline bool NNormalHypersurface::isTwoSided() const {
+    if (! twoSided_.known())
+        calculateFromTriangulation();
+    return twoSided_.value();
+}
+
+inline bool NNormalHypersurface::isConnected() const {
+    if (! connected_.known())
+        calculateFromTriangulation();
+    return connected_.value();
+}
+
 inline bool NNormalHypersurface::hasRealBoundary() const {
     if (! realBoundary_.known())
         calculateRealBoundary();
     return realBoundary_.value();
+}
+
+inline const NAbelianGroup& NNormalHypersurface::homology() const {
+    if (! H1_.known())
+        calculateFromTriangulation();
+    return *H1_.value();
 }
 
 inline bool NNormalHypersurface::isVertexLinking() const {

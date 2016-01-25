@@ -113,12 +113,17 @@ void addNNormalHypersurface() {
         .def("writeRawVector", writeRawVector_stdio)
         .def("isEmpty", &NNormalHypersurface::isEmpty)
         .def("isCompact", &NNormalHypersurface::isCompact)
+        .def("isOrientable", &NNormalHypersurface::isOrientable)
+        .def("isTwoSided", &NNormalHypersurface::isTwoSided)
+        .def("isConnected", &NNormalHypersurface::isConnected)
         .def("hasRealBoundary", &NNormalHypersurface::hasRealBoundary)
         .def("isVertexLinking", &NNormalHypersurface::isVertexLinking)
         .def("isVertexLink", &NNormalHypersurface::isVertexLink,
             return_value_policy<reference_existing_object>())
         .def("isThinEdgeLink", &NNormalHypersurface::isThinEdgeLink,
             return_value_policy<reference_existing_object>())
+        .def("homology", &NNormalHypersurface::homology,
+            return_internal_reference<>())
         .def("triangulate", &NNormalHypersurface::triangulate,
             return_value_policy<manage_new_object>())
         .def("sameSurface", &NNormalHypersurface::sameSurface)
