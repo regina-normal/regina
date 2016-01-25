@@ -356,15 +356,24 @@
     if (! [self checkEditable])
         return;
 
-    // TODO: Manage invalid vertices correctly.
-    if (self.packet->isValid() && ! self.packet->isIdeal()) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Ideal Vertices"
-                                                        message:@"This operation truncates ideal (or invalid) vertices to produce real boundary components."
-                                                       delegate:nil
-                                              cancelButtonTitle:@"Close"
-                                              otherButtonTitles:nil];
-        [alert show];
-        return;
+    // Make sure there are in fact vertices to truncate.
+    if (! self.packet->isIdeal()) {
+        bool hasInvalidVertices = false;
+        if (! self.packet->isValid())
+            for (auto v : self.packet->vertices())
+                if (! v->isValid()) {
+                    hasInvalidVertices = true;
+                    break;
+                }
+        if (! hasInvalidVertices) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Ideal Vertices"
+                                                            message:@"This operation truncates ideal (or invalid) vertices to produce real boundary components."
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Close"
+                                                  otherButtonTitles:nil];
+            [alert show];
+            return;
+        }
     }
     
     regina::NPacket::ChangeEventSpan span(self.packet);
