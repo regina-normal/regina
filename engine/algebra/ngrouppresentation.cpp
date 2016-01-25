@@ -217,7 +217,7 @@ NGroupPresentation::NGroupPresentation(const NGroupPresentation& cloneMe) :
 //       Also need to recognise circle bundles over surfaces.
 //       Free products with amalgamation. Currently intelligentSimplify()
 //       isn't smart enough for this.
-std::string NGroupPresentation::recogniseGroup() const {
+std::string NGroupPresentation::recogniseGroup(bool moreUtf8) const {
     std::ostringstream out;
 
     // Run through cases.
@@ -229,7 +229,10 @@ std::string NGroupPresentation::recogniseGroup() const {
 
     // abelian test
     if (identifyAbelian()) {
-        out << ab.get()->str();
+        if (moreUtf8)
+            ab.get()->writeUtf8(out);
+        else
+            ab.get()->writeTextShort(out);
         return out.str();
     }
 
@@ -249,9 +252,14 @@ std::string NGroupPresentation::recogniseGroup() const {
             presCopy.identifyExtensionOverZ() );
         if (AUT.get() != nullptr) {
             // Let's try to identify the fibre.
-            std::string domStr( AUT.get()->domain().recogniseGroup() );
-            if (domStr.length()>0) {
-                out<<"Z~"<<domStr<<" w/monodromy ";
+            std::string domStr( AUT.get()->domain().recogniseGroup(moreUtf8) );
+            if (domStr.length()>0) { {
+                if (moreUtf8)
+                    out << "\u2124~"; // unicode blackboard bold Z
+                else
+                    out << "Z~";
+                out << domStr << " w/monodromy ";
+            }
             unsigned long numGen(
                 AUT.get()->domain().countGenerators() );
             for (unsigned long i=0; i<numGen; i++) {
@@ -259,7 +267,7 @@ std::string NGroupPresentation::recogniseGroup() const {
               if (numGen<27) out<<( (char) (i+97) );
               else out<<"g"<<i;
               out<<" \u21A6 "; // mapsto symbol in unicode
-              AUT.get()->evaluate(i).writeText(out, (numGen<27) ? true : false);
+              AUT.get()->evaluate(i).writeText(out, (numGen<27), moreUtf8);
               }
              return out.str();
             } // domain not recognised, but it is an extension
@@ -272,7 +280,7 @@ std::string NGroupPresentation::recogniseGroup() const {
       out<<"FreeProduct( ";
       for (std::list< NGroupPresentation* >::iterator i=fpDecomp.begin();
             i!=fpDecomp.end(); i++) {
-        std::string facStr( (*i)->recogniseGroup() );
+        std::string facStr( (*i)->recogniseGroup(moreUtf8) );
         if (facStr.length()>0) {
          if (i!=fpDecomp.begin()) out<<", ";
          out<<facStr;

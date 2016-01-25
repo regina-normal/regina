@@ -123,7 +123,7 @@
 
 + (void)reloadGroup:(const regina::NGroupPresentation &)group name:(UILabel *)name gens:(UILabel *)gens rels:(UILabel *)rels details:(UITextView *)details
 {
-    std::string groupName = group.recogniseGroup();
+    std::string groupName = group.recogniseGroup(true);
     if (groupName.length()) {
         name.text = [@(groupName.c_str()) stringByReplacingOccurrencesOfString:@"↦" withString:@"→"];
     } else {
@@ -202,20 +202,20 @@
     regina::NTriangulation t(*self.packet);
     t.intelligentSimplify();
 
-    self.h1.text = @(t.homology().str().c_str());
+    self.h1.text = @(t.homology().utf8().c_str());
 
     if (self.packet->isValid()) {
-        self.h1Rel.text = @(t.homologyRel().str().c_str());
-        self.h1Bdry.text = @(t.homologyBdry().str().c_str());
-        self.h2.text = @(t.homologyH2().str().c_str());
+        self.h1Rel.text = @(t.homologyRel().utf8().c_str());
+        self.h1Bdry.text = @(t.homologyBdry().utf8().c_str());
+        self.h2.text = @(t.homologyH2().utf8().c_str());
 
         unsigned long coeffZ2 = t.homologyH2Z2();
         if (coeffZ2 == 0)
             self.h2z2.text = @"0";
         else if (coeffZ2 == 1)
-            self.h2z2.text = @"Z_2";
+            self.h2z2.text = @"ℤ₂";
         else
-            self.h2z2.text = [NSString stringWithFormat:@"%ld Z_2", coeffZ2];
+            self.h2z2.text = [NSString stringWithFormat:@"%ld ℤ₂", coeffZ2];
     } else {
         self.h1Rel.text = self.h1Bdry.text = self.h2.text = self.h2z2.text = @"Invalid";
     }

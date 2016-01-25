@@ -98,7 +98,7 @@
 
         const regina::NAbelianGroup* h1 = self.packet->homologyFilled();
         if (h1)
-            self.filledHomology.text = @(h1->str().c_str());
+            self.filledHomology.text = @(h1->utf8().c_str());
         else
             self.filledHomology.attributedText = [TextHelper dimString:@"Could not compute"];
 
@@ -132,7 +132,7 @@
         self.unfilledFundRels.hidden = NO;
         self.unfilledFundDetails.hidden = NO;
 
-        self.unfilledHomology.text = @(self.packet->homology().str().c_str());
+        self.unfilledHomology.text = @(self.packet->homology().utf8().c_str());
         [TriAlgebra reloadGroup:self.packet->fundamentalGroup()
                            name:self.unfilledFundName
                            gens:self.unfilledFundGens

@@ -997,12 +997,19 @@ class REGINA_API NGroupPresentation :
          * presentation.  This routine is much more likely to be
          * successful if you have already called intelligentSimplify().
          *
-         * Currently, if successful the only groups this routine
-         * recognises is: the trivial group, abelian groups, free groups,
+         * Currently, the groups this routine recognises include:
+         * the trivial group, abelian groups, free groups,
          * extensions over the integers, and free products of any group
          * the algorithm can recognise (inductively).
          *
-         * Return strings have the form:
+         * The string returned from this routine may use some unicode
+         * characters, which will be encoding using UTF-8.  If \a moreUtf8
+         * is passed as \c false then unicode will be used sparingly;
+         * if \a moreUtf8 is \c true then unicode will be use more liberally,
+         * resulting in strings that look nicer but require more complex
+         * fonts to be available on the user's machine.
+         *
+         * Examples of the format of the returned string are:
          *
          * - <tt>0</tt> for the trivial group;
          * - <tt>Z_n</tt> for cyclic groups with \a n > 1;
@@ -1023,7 +1030,7 @@ class REGINA_API NGroupPresentation :
          * recognised, or an empty string if the group is not
          * recognised.
          */
-        std::string recogniseGroup() const;
+        std::string recogniseGroup(bool moreUtf8 = false) const;
 
         /**
          * Writes a chunk of XML containing this group presentation.

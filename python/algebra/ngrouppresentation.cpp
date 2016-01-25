@@ -66,6 +66,8 @@ namespace {
         NGroupPresentation::addGenerator, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_nielsenCombine,
         NGroupPresentation::nielsenCombine, 3, 4);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_recogniseGroup,
+        NGroupExpression::recogniseGroup, 0, 1);
 
     std::auto_ptr<NGroupExpression> newExpression_str(
             const std::string& str) {
@@ -210,7 +212,8 @@ void addNGroupPresentation() {
             &NGroupPresentation::prettyRewritingDetail)
         .def("identifySimplyIsomorphicTo",
             &NGroupPresentation::identifySimplyIsomorphicTo)
-        .def("recogniseGroup", &NGroupPresentation::recogniseGroup)
+        .def("recogniseGroup", &NGroupPresentation::recogniseGroup,
+            OL_recogniseGroup())
         .def("relatorLength", &NGroupPresentation::relatorLength)
         .def("abelianisation", &NGroupPresentation::abelianisation)
         .def("markedAbelianisation", &NGroupPresentation::markedAbelianisation)

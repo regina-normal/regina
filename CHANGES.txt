@@ -319,6 +319,9 @@ Version 5.0  [ (under development) ]
               which signals that the directory should not be changed.
         Class NGroupExpression, NGroupExpressionTerm:
             - Added != operators to complement the existing == operators.
+        Class NGroupPresentation:
+            - Routine recogniseGroup() now takes an optional moreUtf8
+              argument for prettier printing.
         Class NHandlebody, NLensSpace:
             - Added != operator to complement the existing == operator.
         Class NIsomorphism:
