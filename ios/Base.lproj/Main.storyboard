@@ -9620,7 +9620,7 @@
         <!--Graph-->
         <scene sceneID="eJv-Q0-l8I">
             <objects>
-                <viewController id="YKa-Ao-uYC" customClass="TriGraph" sceneMemberID="viewController">
+                <viewController id="YKa-Ao-uYC" customClass="Dim4TriGraph" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="otS-NC-Wwn"/>
                         <viewControllerLayoutGuide type="bottom" id="fND-qw-wgf"/>
@@ -10775,8 +10775,6 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="face2" destination="Ove-y3-X99" id="VHD-nx-ffM"/>
-                                            <outlet property="face3" destination="Y2m-De-vRG" id="64q-mh-55R"/>
                                             <outlet property="facet0" destination="ccL-hi-l6p" id="LXU-M1-0IJ"/>
                                             <outlet property="facet1" destination="GJQ-Jw-Z0r" id="TFS-Xd-PNO"/>
                                             <outlet property="facet2" destination="0PS-lI-dio" id="7RW-vz-Wko"/>
@@ -11616,7 +11614,7 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="tSn-Mx-szy"/>
+        <segue reference="Ngy-UB-Auf"/>
         <segue reference="sZ3-q9-8Px"/>
         <segue reference="iPv-1V-ozc"/>
     </inferredMetricsTieBreakers>
