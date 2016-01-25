@@ -555,6 +555,16 @@ class REGINA_API NPerm<4> {
         int compareWith(const NPerm<4>& other) const;
 
         /**
+         * Lexicographically compares the images of (0,1,2,3) under this
+         * and the given permutation.
+         *
+         * @param other the permutation with which to compare this.
+         * @return true if this permutation produces a smaller image, false
+         * otherwise.
+         */
+        bool operator<(const NPerm<4>& other) const;
+
+        /**
          * Determines if this is the identity permutation.
          * This is true if and only if each of 0, 1, 2 and 3 is
          * mapped to itself.
@@ -870,6 +880,10 @@ inline int NPerm<4>::operator[](int source) const {
 
 inline int NPerm<4>::preImageOf(int image) const {
     return imageTable[invS4[code_]][image];
+}
+
+inline bool NPerm<4>::operator<(const NPerm<4>& other) const {
+    return orderedS4Index() < other.orderedS4Index();
 }
 
 inline int NPerm<4>::compareWith(const NPerm<4>& other) const {
