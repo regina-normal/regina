@@ -6878,7 +6878,6 @@
                                 </state>
                                 <connections>
                                     <action selector="actions:" destination="qRa-sB-Dvt" eventType="touchUpInside" id="TOn-Rd-d9q"/>
-                                    <action selector="drillEdge:" destination="e7R-Ek-ug0" eventType="touchUpInside" id="TE1-Y5-rAY"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ILK-AI-J3x">
@@ -11619,6 +11618,6 @@
     <inferredMetricsTieBreakers>
         <segue reference="tSn-Mx-szy"/>
         <segue reference="sZ3-q9-8Px"/>
-        <segue reference="QoR-Tt-bF3"/>
+        <segue reference="iPv-1V-ozc"/>
     </inferredMetricsTieBreakers>
 </document>
