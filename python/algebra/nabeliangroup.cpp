@@ -126,6 +126,7 @@ void addNAbelianGroup() {
         .def("isZ", &NAbelianGroup::isZ)
         .def("isZn", &NAbelianGroup::isZn)
         .def("str", &NAbelianGroup::str)
+        .def("utf8", &NAbelianGroup::utf8)
         .def("toString", &NAbelianGroup::toString)
         .def("detail", &NAbelianGroup::detail)
         .def("toStringLong", &NAbelianGroup::toStringLong)

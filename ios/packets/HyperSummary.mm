@@ -183,7 +183,7 @@ struct HyperCountSet {
         if (! s->isCompact())
             ++nSpun;
         else {
-            homology = s->homology().str();
+            homology = s->homology().utf8();
             if (s->hasRealBoundary()) {
                 nBounded.append(s);
                 homologyBounded[homology].append(s);
@@ -290,7 +290,8 @@ struct HyperCountSet {
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Count" forIndexPath:indexPath];
                 auto it = homologyClosed.begin();
                 advance(it, indexPath.row - 1);
-                cell.homology.text = [NSString stringWithFormat:@"H₁ = %s", it->first.c_str()];
+                // UTF-8 strings need to be converted to NSStrings first via @(...).
+                cell.homology.text = [NSString stringWithFormat:@"H₁ = %@", @(it->first.c_str())];
                 cell.count0.text = it->second.fieldString(nClosed.mask, 0);
                 cell.count1.text = it->second.fieldString(nClosed.mask, 1);
                 cell.count2.text = it->second.fieldString(nClosed.mask, 2);
@@ -300,7 +301,7 @@ struct HyperCountSet {
         }
         --section;
     }
-    
+
     if (nBounded.tot) {
         if (section == 0) {
             if (indexPath.row == 0) {
@@ -313,7 +314,8 @@ struct HyperCountSet {
                 cell = [tableView dequeueReusableCellWithIdentifier:@"Count" forIndexPath:indexPath];
                 auto it = homologyBounded.begin();
                 advance(it, indexPath.row - 1);
-                cell.homology.text = [NSString stringWithFormat:@"H₁ = %s", it->first.c_str()];
+                // UTF-8 strings need to be converted to NSStrings first via @(...).
+                cell.homology.text = [NSString stringWithFormat:@"H₁ = %@", @(it->first.c_str())];
                 cell.count0.text = it->second.fieldString(nBounded.mask, 0);
                 cell.count1.text = it->second.fieldString(nBounded.mask, 1);
                 cell.count2.text = it->second.fieldString(nBounded.mask, 2);
@@ -346,7 +348,7 @@ struct HyperCountSet {
     } else {
         if (cellHeight == 0) {
             HypersurfacesSummaryTableCell* cell = [self.table dequeueReusableCellWithIdentifier:@"Count"];
-            cell.homology.text = @"H₁ = 0 Z_0 + 0 Z_0";
+            cell.homology.text = @"H₁ = 0 Z₉₉ + 0 Z₉₉";
             [cell layoutIfNeeded];
             CGSize size = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
             cellHeight = size.height;

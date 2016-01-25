@@ -43,8 +43,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self setSelectedImages:@[// @"Tab-Summary-Bold",
-                              // @"Tab-Coords-Bold",
+    [self setSelectedImages:@[@"Tab-Summary-Bold",
+                              @"Tab-Coords-Bold",
                               @"Tab-Compat-Bold",
                               @"Tab-Matching-Bold"]];
     [self registerDefaultKey:@"ViewHypersurfacesTab"];

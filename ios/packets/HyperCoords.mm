@@ -128,7 +128,7 @@ static NSArray* nonEmbProps = @[@PROP_BDRY, @PROP_LINK];
                 tmp = [RegularSpreadViewCell cellSizeFor:@"Name"].width;
                 break;
             case PROP_HOMOLOGY:
-                tmp = [RegularSpreadViewCell cellSizeFor:@"0 Z_0 + 0 Z_0"].width;
+                tmp = [RegularSpreadViewCell cellSizeFor:@"0 Z₉₉ + 0 Z₉₉"].width;
                 break;
             case PROP_ORBL:
                 tmp = [RegularSpreadViewCell cellSizeFor:(self.compact.on ? @"✓" : @"Non-or.")].width;
@@ -340,7 +340,7 @@ static NSArray* nonEmbProps = @[@PROP_BDRY, @PROP_LINK];
             return cell;
         case PROP_HOMOLOGY:
             if (s->isCompact())
-                cell.textLabel.text = @(s->homology().str().c_str());
+                cell.textLabel.text = @(s->homology().utf8().c_str());
             else
                 cell.textLabel.text = @"";
             cell.textLabel.textAlignment = NSTextAlignmentLeft;

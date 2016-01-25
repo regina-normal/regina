@@ -216,6 +216,63 @@ void NAbelianGroup::writeTextShort(std::ostream& out) const {
         out << '0';
 }
 
+void NAbelianGroup::writeUtf8(std::ostream& out) const {
+    bool writtenSomething = false;
+
+    if (rank_ > 0) {
+        if (rank_ > 1)
+            out << rank_ << ' ';
+        out << "\u2124";
+        writtenSomething = true;
+    }
+
+    std::multiset<NLargeInteger>::const_iterator it =
+        invariantFactors.begin();
+    NLargeInteger currDegree;
+    unsigned currMult = 0;
+    std::string s;
+    while(true) {
+        if (it != invariantFactors.end()) {
+            if ((*it) == currDegree) {
+                currMult++;
+                it++;
+                continue;
+            }
+        }
+        if (currMult > 0) {
+            if (writtenSomething)
+                out << " + ";
+            if (currMult > 1)
+                out << currMult << ' ';
+            out << "\u2124";
+            s = currDegree.stringValue();
+            for (auto c : s)
+                switch (c) {
+                    case '0': out << "\u2080"; break;
+                    case '1': out << "\u2081"; break;
+                    case '2': out << "\u2082"; break;
+                    case '3': out << "\u2083"; break;
+                    case '4': out << "\u2084"; break;
+                    case '5': out << "\u2085"; break;
+                    case '6': out << "\u2086"; break;
+                    case '7': out << "\u2087"; break;
+                    case '8': out << "\u2088"; break;
+                    case '9': out << "\u2089"; break;
+                    default: out << '?'; break;
+                }
+            writtenSomething = true;
+        }
+        if (it == invariantFactors.end())
+            break;
+        currDegree = *it;
+        currMult = 1;
+        it++;
+    }
+
+    if (! writtenSomething)
+        out << '0';
+}
+
 void NAbelianGroup::replaceTorsion(const NMatrixInt& matrix) {
     // Delete any preexisting torsion.
     invariantFactors.clear();

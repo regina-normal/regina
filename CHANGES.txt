@@ -219,6 +219,8 @@ Version 5.0  [ (under development) ]
               been kept as typedefs for convenience.
         Class LightweightSequence:
             - New lightweight class for storing an array of objects.
+        Class NAbelianGroup:
+            - New routine utf8(), which is a prettier variant of str().
         Class NAngleStructureList:
             - Renamed getNumberOfStructures() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
