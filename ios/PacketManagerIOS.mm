@@ -103,6 +103,7 @@
     switch (p->type()) {
         case regina::PACKET_ANGLESTRUCTURELIST: return @"viewAngles";
         case regina::PACKET_DIM2TRIANGULATION: return @"viewDim2Triangulation";
+        case regina::PACKET_DIM4TRIANGULATION: return @"viewDim4Triangulation";
         case regina::PACKET_NORMALSURFACELIST: return @"viewSurfaces";
         case regina::PACKET_NORMALHYPERSURFACELIST: return @"viewHypersurfaces";
         case regina::PACKET_SCRIPT: return @"viewScript";

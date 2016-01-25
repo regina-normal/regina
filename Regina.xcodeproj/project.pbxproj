@@ -1387,6 +1387,10 @@
 		05C0644F1C55A5C1006E6483 /* HyperCompat.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05C0644D1C55A5BE006E6483 /* HyperCompat.mm */; };
 		05C064521C55C568006E6483 /* HyperCoords.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05C064501C55C560006E6483 /* HyperCoords.mm */; };
 		05C064551C55C811006E6483 /* HyperSummary.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05C064531C55C80B006E6483 /* HyperSummary.mm */; };
+		05C0645E1C56B1F7006E6483 /* Dim4TriangulationViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05C064571C56B1E9006E6483 /* Dim4TriangulationViewController.mm */; };
+		05C0645F1C56B1F7006E6483 /* Dim4TriGluings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05C064591C56B1E9006E6483 /* Dim4TriGluings.mm */; };
+		05C064621C56BC4A006E6483 /* Dim4EltMovesController.h in Headers */ = {isa = PBXBuildFile; fileRef = 05C064601C56BC4A006E6483 /* Dim4EltMovesController.h */; };
+		05C064631C56BC4A006E6483 /* Dim4EltMovesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05C064611C56BC4A006E6483 /* Dim4EltMovesController.mm */; };
 		05CA99E618078466006161DC /* registryutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 05CA99E518078465006161DC /* registryutils.h */; };
 		05CAFB4E1C4CEA160001C253 /* face10.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB411C4CEA020001C253 /* face10.cpp */; };
 		05CAFB4F1C4CEA160001C253 /* face11.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB421C4CEA020001C253 /* face11.cpp */; };
@@ -3107,6 +3111,12 @@
 		05C0644D1C55A5BE006E6483 /* HyperCompat.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HyperCompat.mm; sourceTree = "<group>"; };
 		05C064501C55C560006E6483 /* HyperCoords.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HyperCoords.mm; sourceTree = "<group>"; };
 		05C064531C55C80B006E6483 /* HyperSummary.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HyperSummary.mm; sourceTree = "<group>"; };
+		05C064561C56B1E9006E6483 /* Dim4TriangulationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Dim4TriangulationViewController.h; sourceTree = "<group>"; };
+		05C064571C56B1E9006E6483 /* Dim4TriangulationViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Dim4TriangulationViewController.mm; sourceTree = "<group>"; };
+		05C064581C56B1E9006E6483 /* Dim4TriGluings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Dim4TriGluings.h; sourceTree = "<group>"; };
+		05C064591C56B1E9006E6483 /* Dim4TriGluings.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Dim4TriGluings.mm; sourceTree = "<group>"; };
+		05C064601C56BC4A006E6483 /* Dim4EltMovesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Dim4EltMovesController.h; sourceTree = "<group>"; };
+		05C064611C56BC4A006E6483 /* Dim4EltMovesController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Dim4EltMovesController.mm; sourceTree = "<group>"; };
 		05CA99E518078465006161DC /* registryutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = registryutils.h; sourceTree = "<group>"; };
 		05CAFB401C4CEA020001C253 /* face-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "face-bindings.h"; sourceTree = "<group>"; };
 		05CAFB411C4CEA020001C253 /* face10.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face10.cpp; sourceTree = "<group>"; };
@@ -3259,6 +3269,12 @@
 				058FADAD19D3C3640001B5B5 /* Dim2TriGluings.mm */,
 				058FADAF19D3C37D0001B5B5 /* Dim2TriSkeleton.h */,
 				058FADB019D3C37D0001B5B5 /* Dim2TriSkeleton.mm */,
+				05C064601C56BC4A006E6483 /* Dim4EltMovesController.h */,
+				05C064611C56BC4A006E6483 /* Dim4EltMovesController.mm */,
+				05C064561C56B1E9006E6483 /* Dim4TriangulationViewController.h */,
+				05C064571C56B1E9006E6483 /* Dim4TriangulationViewController.mm */,
+				05C064581C56B1E9006E6483 /* Dim4TriGluings.h */,
+				05C064591C56B1E9006E6483 /* Dim4TriGluings.mm */,
 				05EA195519F30A0100D37501 /* EltMovesController.h */,
 				05EA195619F30A0100D37501 /* EltMovesController.mm */,
 				05B7708519CA4FF100E2E558 /* FilterViewController.h */,
@@ -5476,6 +5492,7 @@
 				052F9EC6180600FB00FAE4DF /* nhilbertcd-impl.h in Headers */,
 				052F9EFB180600FB00FAE4DF /* ntreetraversal.h in Headers */,
 				052F9FA4180600FB00FAE4DF /* triangulation.h in Headers */,
+				05C064621C56BC4A006E6483 /* Dim4EltMovesController.h in Headers */,
 				052F9ECC180600FB00FAE4DF /* nhilbertprimal-impl.h in Headers */,
 				05431F271C40F260009BC072 /* isosig-impl.h in Headers */,
 				052FA074180600FB00FAE4DF /* ntriangle.h in Headers */,
@@ -6355,6 +6372,7 @@
 				05431F8F1C40F40E009BC072 /* HilbertSeries.cpp in Sources */,
 				052FA2001806129B00FAE4DF /* nxmltrireader.cpp in Sources */,
 				05431F9A1C40F528009BC072 /* nperm2.cpp in Sources */,
+				05C0645F1C56B1F7006E6483 /* Dim4TriGluings.mm in Sources */,
 				05D1173519EE018A003BEC55 /* incompressible.cpp in Sources */,
 				05D1172D19EE0172003BEC55 /* connectedsumdecomp.cpp in Sources */,
 				054535B919D8EA7100BED767 /* TextPopover.mm in Sources */,
@@ -6561,6 +6579,7 @@
 				052FA1B61806129B00FAE4DF /* nblockedsfs.cpp in Sources */,
 				05D1172C19EE0169003BEC55 /* base64.cpp in Sources */,
 				052FA1AA1806129B00FAE4DF /* nscript.cpp in Sources */,
+				05C0645E1C56B1F7006E6483 /* Dim4TriangulationViewController.mm in Sources */,
 				05F96C131809F59600C99F96 /* PacketTreeController.mm in Sources */,
 				058FADC319D508070001B5B5 /* SurfacesSummary.mm in Sources */,
 				052FA20B1806129B00FAE4DF /* nthread.cpp in Sources */,
@@ -6992,6 +7011,7 @@
 				052FA03C180600FB00FAE4DF /* nsorientedquad.cpp in Sources */,
 				05A73C7A19B2EDFC0099C617 /* nxmlcallback.cpp in Sources */,
 				052F9F0E180600FB00FAE4DF /* isosig.cpp in Sources */,
+				05C064631C56BC4A006E6483 /* Dim4EltMovesController.mm in Sources */,
 				052FA087180600FB00FAE4DF /* i18nutils.cpp in Sources */,
 				052FA042180600FB00FAE4DF /* nsstandard.cpp in Sources */,
 				052FA048180600FB00FAE4DF /* nxmlfilterreader.cpp in Sources */,

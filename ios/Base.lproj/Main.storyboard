@@ -10614,7 +10614,7 @@
         <!--Gluings-->
         <scene sceneID="092-pM-GuM">
             <objects>
-                <viewController id="j9V-zB-RPW" customClass="TriGluings" sceneMemberID="viewController">
+                <viewController id="j9V-zB-RPW" customClass="Dim4TriGluings" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="wR0-LY-MZl"/>
                         <viewControllerLayoutGuide type="bottom" id="A7M-da-pFM"/>
@@ -10676,7 +10676,7 @@
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Facet 0234" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ndU-EM-2cB">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Facet 1234" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ndU-EM-2cB">
                                                     <rect key="frame" x="560" y="13" width="100" height="17"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -10706,7 +10706,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Tetrahedron" id="oTG-00-gZt" customClass="TriGluingCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Pentachoron" id="oTG-00-gZt" customClass="Dim4TriGluingCell">
                                         <rect key="frame" x="0.0" y="66" width="663" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="oTG-00-gZt" id="1li-uf-jkC">
@@ -10776,10 +10776,13 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="face0" destination="GJQ-Jw-Z0r" id="J1m-QQ-utV"/>
-                                            <outlet property="face1" destination="0PS-lI-dio" id="vDE-Cd-FYQ"/>
                                             <outlet property="face2" destination="Ove-y3-X99" id="VHD-nx-ffM"/>
                                             <outlet property="face3" destination="Y2m-De-vRG" id="64q-mh-55R"/>
+                                            <outlet property="facet0" destination="ccL-hi-l6p" id="LXU-M1-0IJ"/>
+                                            <outlet property="facet1" destination="GJQ-Jw-Z0r" id="TFS-Xd-PNO"/>
+                                            <outlet property="facet2" destination="0PS-lI-dio" id="7RW-vz-Wko"/>
+                                            <outlet property="facet3" destination="Ove-y3-X99" id="YzA-io-kXj"/>
+                                            <outlet property="facet4" destination="Y2m-De-vRG" id="tQj-JP-lkb"/>
                                             <outlet property="index" destination="oqG-92-k9I" id="gdi-em-vcy"/>
                                         </connections>
                                     </tableViewCell>
@@ -10842,7 +10845,6 @@
                                 </state>
                                 <connections>
                                     <action selector="actions:" destination="j9V-zB-RPW" eventType="touchUpInside" id="t1R-6k-41e"/>
-                                    <action selector="drillEdge:" destination="iLS-ZM-wJb" eventType="touchUpInside" id="XpN-vc-w2k"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PhS-Iz-Yi2">
@@ -10936,17 +10938,17 @@
                         <outlet property="lockIcon" destination="gzn-SR-VJt" id="cV6-0I-1z8"/>
                         <outlet property="orientButton" destination="mBP-da-epq" id="l0T-K8-xlF"/>
                         <outlet property="orientIcon" destination="Mzd-kx-u0N" id="ApR-Ru-N2a"/>
-                        <outlet property="tetrahedra" destination="Jwa-K2-mZd" id="0Wl-an-ghG"/>
+                        <outlet property="pentachora" destination="Jwa-K2-mZd" id="m9q-lX-Kz0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aZ1-ZE-c9v" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="10113.5" y="1764"/>
         </scene>
-        <!--Triangulation View Controller-->
+        <!--Dim4 Triangulation View Controller-->
         <scene sceneID="7wm-rA-aEF">
             <objects>
-                <tabBarController storyboardIdentifier="viewDim4Triangulation" id="gYN-D5-bw3" customClass="TriangulationViewController" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="viewDim4Triangulation" id="gYN-D5-bw3" customClass="Dim4TriangulationViewController" sceneMemberID="viewController">
                     <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
@@ -11205,10 +11207,10 @@
             </objects>
             <point key="canvasLocation" x="11016.5" y="1763"/>
         </scene>
-        <!--Elt Moves Controller-->
+        <!--Dim4 Elt Moves Controller-->
         <scene sceneID="xIG-G1-oc8">
             <objects>
-                <viewController storyboardIdentifier="Dim4EltMoves" modalPresentationStyle="formSheet" id="qvR-uh-EGh" customClass="EltMovesController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Dim4EltMoves" modalPresentationStyle="formSheet" id="qvR-uh-EGh" customClass="Dim4EltMovesController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Kkt-K0-Sg8"/>
                         <viewControllerLayoutGuide type="bottom" id="tsK-Gu-DNI"/>
@@ -11247,7 +11249,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="do23:" destination="qvR-uh-EGh" eventType="touchUpInside" id="wGB-jj-Mgi"/>
+                                    <action selector="do33:" destination="qvR-uh-EGh" eventType="touchUpInside" id="wPV-kV-2dh"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UcM-lg-Vvi">
@@ -11256,7 +11258,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="do44:" destination="qvR-uh-EGh" eventType="touchUpInside" id="7HO-9v-d0G"/>
+                                    <action selector="do15:" destination="qvR-uh-EGh" eventType="touchUpInside" id="KAO-Nn-QwI"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zhv-tu-2yZ">
@@ -11292,7 +11294,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="do20Vtx:" destination="qvR-uh-EGh" eventType="touchUpInside" id="lDo-8R-6iH"/>
+                                    <action selector="do20Edge:" destination="qvR-uh-EGh" eventType="touchUpInside" id="i83-aH-vYN"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8OR-2e-ZQm">
@@ -11301,7 +11303,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="do20Edge:" destination="qvR-uh-EGh" eventType="touchUpInside" id="6MO-g8-ond"/>
+                                    <action selector="do20Triangle:" destination="qvR-uh-EGh" eventType="touchUpInside" id="NQ0-sB-Dly"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M7P-yJ-Nlc">
@@ -11310,7 +11312,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="do14:" destination="qvR-uh-EGh" eventType="touchUpInside" id="Tth-VM-ueF"/>
+                                    <action selector="do24:" destination="qvR-uh-EGh" eventType="touchUpInside" id="30C-o8-Zi7"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UiQ-fb-v6b">
@@ -11319,43 +11321,43 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="do32:" destination="qvR-uh-EGh" eventType="touchUpInside" id="fB5-ht-xFi"/>
+                                    <action selector="do42:" destination="qvR-uh-EGh" eventType="touchUpInside" id="wgD-go-fUq"/>
                                 </connections>
                             </button>
                             <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="sBS-85-HS6">
                                 <rect key="frame" x="143" y="124" width="94" height="29"/>
                                 <connections>
-                                    <action selector="changed32:" destination="qvR-uh-EGh" eventType="valueChanged" id="WsM-GG-QUh"/>
+                                    <action selector="changed42:" destination="qvR-uh-EGh" eventType="valueChanged" id="hmG-Bu-I8j"/>
                                 </connections>
                             </stepper>
                             <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="96C-jx-JYe">
                                 <rect key="frame" x="143" y="161" width="94" height="29"/>
                                 <connections>
-                                    <action selector="changed23:" destination="qvR-uh-EGh" eventType="valueChanged" id="0Ht-q4-odM"/>
+                                    <action selector="changed33:" destination="qvR-uh-EGh" eventType="valueChanged" id="bin-G0-kyP"/>
                                 </connections>
                             </stepper>
                             <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="tkv-qr-rkX">
                                 <rect key="frame" x="143" y="198" width="94" height="29"/>
                                 <connections>
-                                    <action selector="changed14:" destination="qvR-uh-EGh" eventType="valueChanged" id="C5b-ZW-XsW"/>
+                                    <action selector="changed24:" destination="qvR-uh-EGh" eventType="valueChanged" id="cs6-Hp-Vzy"/>
                                 </connections>
                             </stepper>
                             <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="I2i-aT-eem">
                                 <rect key="frame" x="143" y="235" width="94" height="29"/>
                                 <connections>
-                                    <action selector="changed44:" destination="qvR-uh-EGh" eventType="valueChanged" id="hJE-Hz-eff"/>
+                                    <action selector="changed15:" destination="qvR-uh-EGh" eventType="valueChanged" id="CbT-hB-jUx"/>
                                 </connections>
                             </stepper>
                             <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="r6V-o0-RGn">
                                 <rect key="frame" x="143" y="272" width="94" height="29"/>
                                 <connections>
-                                    <action selector="changed20Edge:" destination="qvR-uh-EGh" eventType="valueChanged" id="bAX-zr-kFS"/>
+                                    <action selector="changed20Triangle:" destination="qvR-uh-EGh" eventType="valueChanged" id="5Fx-NW-jRy"/>
                                 </connections>
                             </stepper>
                             <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="8kL-6M-m8Q">
                                 <rect key="frame" x="143" y="309" width="94" height="29"/>
                                 <connections>
-                                    <action selector="changed20Vtx:" destination="qvR-uh-EGh" eventType="valueChanged" id="GRq-X0-wZh"/>
+                                    <action selector="changed20Edge:" destination="qvR-uh-EGh" eventType="valueChanged" id="rlk-sO-gUt"/>
                                 </connections>
                             </stepper>
                             <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="gWQ-4o-OVi">
@@ -11509,31 +11511,31 @@
                     <nil key="simulatedStatusBarMetrics"/>
                     <modalFormSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
-                        <outlet property="button14" destination="M7P-yJ-Nlc" id="KSD-zk-uJT"/>
-                        <outlet property="button20Edge" destination="8OR-2e-ZQm" id="2ta-02-VUe"/>
-                        <outlet property="button20Vtx" destination="vcn-iF-azE" id="t2k-rR-x2X"/>
-                        <outlet property="button23" destination="XxF-hQ-Z5C" id="tNh-15-Ef3"/>
-                        <outlet property="button32" destination="UiQ-fb-v6b" id="nup-CN-Lkh"/>
-                        <outlet property="button44" destination="UcM-lg-Vvi" id="DPI-2F-ttK"/>
+                        <outlet property="button15" destination="UcM-lg-Vvi" id="wOg-yv-wvc"/>
+                        <outlet property="button20Edge" destination="vcn-iF-azE" id="rHK-AK-fcg"/>
+                        <outlet property="button20Triangle" destination="8OR-2e-ZQm" id="nJk-wt-WLP"/>
+                        <outlet property="button24" destination="M7P-yJ-Nlc" id="bag-Ms-tYW"/>
+                        <outlet property="button33" destination="XxF-hQ-Z5C" id="cVi-3p-BaL"/>
+                        <outlet property="button42" destination="UiQ-fb-v6b" id="sd8-13-Hp3"/>
                         <outlet property="buttonCollapseEdge" destination="nGi-Pd-jjf" id="fWF-JU-URb"/>
                         <outlet property="buttonOpenBook" destination="zhv-tu-2yZ" id="Wp1-zk-4hC"/>
                         <outlet property="buttonShell" destination="j6V-QZ-mDq" id="VAg-sj-dTY"/>
-                        <outlet property="detail14" destination="DvS-0l-Xq3" id="q38-Nq-zLw"/>
-                        <outlet property="detail20Edge" destination="zGg-nW-u4j" id="Dob-YZ-28U"/>
-                        <outlet property="detail20Vtx" destination="t9I-bu-sDr" id="k0v-jk-Ihs"/>
-                        <outlet property="detail23" destination="Xjc-tc-DJe" id="gQw-ze-cDX"/>
-                        <outlet property="detail32" destination="ltC-2y-48t" id="sfT-hi-WkH"/>
-                        <outlet property="detail44" destination="aQl-WI-VNn" id="XzY-Xy-Keg"/>
+                        <outlet property="detail15" destination="aQl-WI-VNn" id="F9W-Lq-52s"/>
+                        <outlet property="detail20Edge" destination="t9I-bu-sDr" id="ZhR-rq-4Ny"/>
+                        <outlet property="detail20Triangle" destination="zGg-nW-u4j" id="fBP-ki-hFj"/>
+                        <outlet property="detail24" destination="DvS-0l-Xq3" id="5Ci-Pj-ecP"/>
+                        <outlet property="detail33" destination="Xjc-tc-DJe" id="t2W-I4-MfJ"/>
+                        <outlet property="detail42" destination="ltC-2y-48t" id="Fy3-Av-cOa"/>
                         <outlet property="detailCollapseEdge" destination="CYM-9N-6le" id="c4H-aB-wYU"/>
                         <outlet property="detailOpenBook" destination="CNM-H6-RQT" id="GjT-Vt-7C6"/>
                         <outlet property="detailShell" destination="qnU-FA-kTj" id="XwZ-Hd-9tI"/>
                         <outlet property="fVector" destination="w1U-ic-luh" id="cvt-NR-Uu6"/>
-                        <outlet property="stepper14" destination="tkv-qr-rkX" id="RwC-gf-iCV"/>
-                        <outlet property="stepper20Edge" destination="r6V-o0-RGn" id="JOI-J4-UTH"/>
-                        <outlet property="stepper20Vtx" destination="8kL-6M-m8Q" id="nQr-R3-gC0"/>
-                        <outlet property="stepper23" destination="96C-jx-JYe" id="lbg-dN-bwZ"/>
-                        <outlet property="stepper32" destination="sBS-85-HS6" id="dI6-Qb-eDg"/>
-                        <outlet property="stepper44" destination="I2i-aT-eem" id="jJW-mr-Wje"/>
+                        <outlet property="stepper15" destination="I2i-aT-eem" id="EwA-zp-XSn"/>
+                        <outlet property="stepper20Edge" destination="8kL-6M-m8Q" id="aNk-dg-Yct"/>
+                        <outlet property="stepper20Triangle" destination="r6V-o0-RGn" id="Oph-Sa-ubP"/>
+                        <outlet property="stepper24" destination="tkv-qr-rkX" id="MW6-gs-j55"/>
+                        <outlet property="stepper33" destination="96C-jx-JYe" id="vsu-Dj-CXW"/>
+                        <outlet property="stepper42" destination="sBS-85-HS6" id="fZ4-H2-ahi"/>
                         <outlet property="stepperCollapseEdge" destination="qoh-Ro-Dl4" id="ueK-xI-Tst"/>
                         <outlet property="stepperOpenBook" destination="gWQ-4o-OVi" id="xru-yg-DLC"/>
                         <outlet property="stepperShell" destination="q9B-Mj-rOK" id="dvf-qY-VUs"/>
@@ -11615,8 +11617,8 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="tSn-Mx-szy"/>
         <segue reference="sZ3-q9-8Px"/>
         <segue reference="QoR-Tt-bF3"/>
-        <segue reference="Ngy-UB-Auf"/>
     </inferredMetricsTieBreakers>
 </document>
