@@ -10994,7 +10994,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="More algebraic invariants are coming in future releases of Regina!" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="On2-FF-M0D">
-                                        <rect key="frame" x="20" y="99.5" width="311" height="41"/>
+                                        <rect key="frame" x="20" y="79.5" width="311" height="41"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
@@ -11002,7 +11002,7 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstItem="On2-FF-M0D" firstAttribute="top" secondItem="RaH-4c-VfR" secondAttribute="bottom" constant="40" id="3OC-AO-uxG"/>
+                                    <constraint firstItem="On2-FF-M0D" firstAttribute="top" secondItem="RaH-4c-VfR" secondAttribute="bottom" constant="20" id="3OC-AO-uxG"/>
                                     <constraint firstItem="On2-FF-M0D" firstAttribute="leading" secondItem="qgK-d0-7xb" secondAttribute="leading" constant="20" id="DAo-6x-jtu"/>
                                     <constraint firstItem="RaH-4c-VfR" firstAttribute="top" secondItem="qgK-d0-7xb" secondAttribute="top" constant="40" id="PlX-uQ-8HO"/>
                                     <constraint firstAttribute="trailing" secondItem="On2-FF-M0D" secondAttribute="trailing" constant="20" id="haF-L3-Bzr"/>
