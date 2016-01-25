@@ -479,6 +479,14 @@ class REGINA_API NNormalHypersurface :
         NNormalHypersurface* clone() const;
 
         /**
+         * Creates a newly allocated hypersurface that is the double of this
+         * hypersurface.
+         *
+         * @return the double of this normal hypersurface.
+         */
+        NNormalHypersurface* doubleHypersurface() const;
+
+        /**
          * Returns the number of tetrahedron pieces of the given type in
          * this normal hypersurface.
          * A tetrahedron piece type is identified by specifying a

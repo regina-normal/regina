@@ -99,6 +99,8 @@ void addNNormalHypersurface() {
         .def("__init__", make_constructor(fromCoordinates))
         .def("clone", &NNormalHypersurface::clone,
             return_value_policy<manage_new_object>())
+        .def("doubleHypersurface", &NNormalHypersurface::doubleHypersurface,
+            return_value_policy<manage_new_object>())
         .def("tetrahedra", &NNormalHypersurface::tetrahedra)
         .def("prisms", &NNormalHypersurface::prisms)
         .def("edgeWeight", &NNormalHypersurface::edgeWeight)

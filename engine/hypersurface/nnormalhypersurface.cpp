@@ -76,6 +76,20 @@ NNormalHypersurface* NNormalHypersurface::clone() const {
     return ans;
 }
 
+NNormalHypersurface* NNormalHypersurface::doubleHypersurface() const {
+    NNormalHypersurface* ans = new NNormalHypersurface(triangulation_,
+        dynamic_cast<NNormalHypersurfaceVector*>(vector->clone()));
+
+    (*(ans->vector)) *= 2;
+
+    // Some properties can be copied straight across.
+    ans->realBoundary_ = realBoundary_;
+    ans->compact_ = compact_;
+
+    // And some other properties are best left recalculated.
+    return ans;
+}
+
 void NNormalHypersurface::writeTextShort(std::ostream& out) const {
     size_t nPents = triangulation_->size();
     size_t pent;
