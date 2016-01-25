@@ -384,7 +384,7 @@
     NSMutableString* text = [[NSMutableString alloc] init];
 
     const regina::Dim4TetrahedronEmbedding& e0 = tetrahedron->embedding(0);
-    [text appendFormat:@"Tetrahedron %ld — %ld (%s)",
+    [text appendFormat:@"Tet %ld — %ld (%s)",
      tetrahedron->index(),
      e0.pentachoron()->index(),
      e0.vertices().trunc4().c_str()];
