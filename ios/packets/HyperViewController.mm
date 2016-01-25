@@ -32,7 +32,7 @@
 
 #import "Coordinates.h"
 #import "ReginaHelper.h"
-#import "HypersurfacesViewController.h"
+#import "HyperViewController.h"
 #import "dim4/dim4triangulation.h"
 #import "hypersurface/nnormalhypersurfacelist.h"
 
@@ -43,8 +43,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self setSelectedImages:@[@"Tab-Summary-Bold",
-                              @"Tab-Coords-Bold",
+    [self setSelectedImages:@[// @"Tab-Summary-Bold",
+                              // @"Tab-Coords-Bold",
                               @"Tab-Compat-Bold",
                               @"Tab-Matching-Bold"]];
     [self registerDefaultKey:@"ViewHypersurfacesTab"];
@@ -82,7 +82,7 @@
         summary.text = [NSString stringWithFormat:@"%ld %@, %@ hypersurfaces",
                         self.packet->size(), sType, sEmb];
 
-    coords.text = [NSString stringWithFormat:@"Enumerated in %@ coordinates", [Coordinates name:self.packet->coords() capitalise:NO]];
+    coords.text = [NSString stringWithFormat:@"Enumerated in %@ coordinates", [HyperCoordinates name:self.packet->coords() capitalise:NO]];
     [self updateTriangulationButton:tri];
 }
 

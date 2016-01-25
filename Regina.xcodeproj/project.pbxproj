@@ -1383,6 +1383,8 @@
 		05B9EC1C18245F2100DCACF3 /* euler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B9EC1A18245F2100DCACF3 /* euler.cpp */; };
 		05BEB0C119CCE0B0006AB2C8 /* UIView+Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = 05BEB0C019CCE0B0006AB2C8 /* UIView+Toast.m */; };
 		05C064411C55922A006E6483 /* HyperViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05C0643E1C55921E006E6483 /* HyperViewController.mm */; };
+		05C0644C1C55A2E6006E6483 /* HyperMatching.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05C0644A1C55A2E4006E6483 /* HyperMatching.mm */; };
+		05C0644F1C55A5C1006E6483 /* HyperCompat.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05C0644D1C55A5BE006E6483 /* HyperCompat.mm */; };
 		05CA99E618078466006161DC /* registryutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 05CA99E518078465006161DC /* registryutils.h */; };
 		05CAFB4E1C4CEA160001C253 /* face10.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB411C4CEA020001C253 /* face10.cpp */; };
 		05CAFB4F1C4CEA160001C253 /* face11.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB421C4CEA020001C253 /* face11.cpp */; };
@@ -3099,6 +3101,8 @@
 		05C064431C55925B006E6483 /* HyperCoords.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HyperCoords.h; sourceTree = "<group>"; };
 		05C064441C55925B006E6483 /* HyperMatching.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HyperMatching.h; sourceTree = "<group>"; };
 		05C064451C55925B006E6483 /* HyperSummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HyperSummary.h; sourceTree = "<group>"; };
+		05C0644A1C55A2E4006E6483 /* HyperMatching.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HyperMatching.mm; sourceTree = "<group>"; };
+		05C0644D1C55A5BE006E6483 /* HyperCompat.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = HyperCompat.mm; sourceTree = "<group>"; };
 		05CA99E518078465006161DC /* registryutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = registryutils.h; sourceTree = "<group>"; };
 		05CAFB401C4CEA020001C253 /* face-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "face-bindings.h"; sourceTree = "<group>"; };
 		05CAFB411C4CEA020001C253 /* face10.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face10.cpp; sourceTree = "<group>"; };
@@ -3256,8 +3260,10 @@
 				05B7708519CA4FF100E2E558 /* FilterViewController.h */,
 				05B7708619CA4FF100E2E558 /* FilterViewController.mm */,
 				05C064421C55925B006E6483 /* HyperCompat.h */,
+				05C0644D1C55A5BE006E6483 /* HyperCompat.mm */,
 				05C064431C55925B006E6483 /* HyperCoords.h */,
 				05C064441C55925B006E6483 /* HyperMatching.h */,
+				05C0644A1C55A2E4006E6483 /* HyperMatching.mm */,
 				05C064451C55925B006E6483 /* HyperSummary.h */,
 				05C0643D1C55921E006E6483 /* HyperViewController.h */,
 				05C0643E1C55921E006E6483 /* HyperViewController.mm */,
@@ -6186,6 +6192,7 @@
 			files = (
 				054BC4C319B4A726005E01A0 /* closed-hyp-census-full.zsig in Sources */,
 				054BC4C419B4A726005E01A0 /* closed-nor-census-11.zsig in Sources */,
+				05C0644F1C55A5C1006E6483 /* HyperCompat.mm in Sources */,
 				05431F8D1C40F40E009BC072 /* bottom.cpp in Sources */,
 				054BC4C519B4A726005E01A0 /* closed-or-census-11.zsig in Sources */,
 				054BC4C619B4A726005E01A0 /* cusped-hyp-nor-census-9.zsig in Sources */,
@@ -6235,6 +6242,7 @@
 				052FA214180612DD00FAE4DF /* canonize_result.c in Sources */,
 				05A73C8519B2EEC50099C617 /* csv.cpp in Sources */,
 				05D1172B19EE0166003BEC55 /* nbitmask.cpp in Sources */,
+				05C0644C1C55A2E6006E6483 /* HyperMatching.mm in Sources */,
 				052FA1701806129B00FAE4DF /* ngluingpermsearcher.cpp in Sources */,
 				052FA21C180612DD00FAE4DF /* cusp_cross_sections.c in Sources */,
 				052FA1801806129B00FAE4DF /* ntreetraversal.cpp in Sources */,

@@ -9150,8 +9150,7 @@
         <!--Compatibility-->
         <scene sceneID="SSZ-5q-BjK">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dqW-cM-F6w" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <viewController id="zaq-jo-y0n" customClass="SurfacesCompat" sceneMemberID="viewController">
+                <viewController id="zaq-jo-y0n" customClass="HypersurfacesCompat" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="UQO-g8-SYp"/>
                         <viewControllerLayoutGuide type="bottom" id="sUu-HQ-9c0"/>
@@ -9245,16 +9244,16 @@
                         <outlet property="grid" destination="DJ9-Le-Wgs" id="URE-Zo-3OD"/>
                         <outlet property="header" destination="JdP-KF-YXe" id="6iu-Rd-zFG"/>
                         <outlet property="tri" destination="CKK-fD-zWg" id="I9M-mj-rOT"/>
-                        <outlet property="typeExpln" destination="LRV-h8-KRw" id="YZ2-Ny-ypa"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dqW-cM-F6w" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="6728.5" y="6711"/>
         </scene>
         <!--Matching Equations-->
         <scene sceneID="PHT-5W-RGs">
             <objects>
-                <viewController id="Cb9-RC-s6G" customClass="SurfacesMatching" sceneMemberID="viewController">
+                <viewController id="Cb9-RC-s6G" customClass="HypersurfacesMatching" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="YcN-CF-aOe"/>
                         <viewControllerLayoutGuide type="bottom" id="HKm-h7-gSR"/>
@@ -9595,10 +9594,10 @@
             </objects>
             <point key="canvasLocation" x="5825.5" y="6711"/>
         </scene>
-        <!--Surfaces View Controller-->
+        <!--Hypersurfaces View Controller-->
         <scene sceneID="VxI-sL-vSl">
             <objects>
-                <tabBarController storyboardIdentifier="viewHypersurfaces" id="27x-gW-mDg" customClass="SurfacesViewController" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="viewHypersurfaces" id="27x-gW-mDg" customClass="HypersurfacesViewController" sceneMemberID="viewController">
                     <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
