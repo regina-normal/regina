@@ -54,6 +54,117 @@
 
 namespace regina {
 
+const std::string EnumerationDB::tetTag = std::string("tetrahedra");
+const std::string EnumerationDB::orientationTag = std::string("orientation");
+const std::string EnumerationDB::hyperbolicTag = std::string("hyperbolic");
+
+EnumerationDB::EnumerationDB(const char* filename) :
+        filename_(filename) {
+        valid_ = true;
+#ifdef QDBM_AS_TOKYOCABINET
+        VILLA* db;
+        if (! (db = vlopen(filename_.c_str(), VL_OREADER, VL_CMPLEX))) {
+            std::cerr << "ERROR: Could not open QDBM database: "
+                << filename_ << std::endl;
+            valid_ = false;
+            return;
+        }
+
+        CBLIST* records = vlgetlist(db, tetTag.c_str(), tetTag.length());
+        if (records) {
+            const char *flag = cblistval(records, 0, 0);
+            maxTetrahedra_ = atoi(flag);
+            cblistclose(records);
+            if (maxTetrahedra == 0)
+                valid_ = false;
+        } else {
+            valid_ = false;
+        records = vlgetlist(db, orientationTag.c_str(), orientationTag.length());
+        if (records) {
+            const char *flag = cblistval(records, 0, 0);
+            switch(flag[0]) {
+                case 'o':
+                    orientation_ = Orientable;
+                    break;
+                case 'n':
+                    orientation_ = NonOrientable;
+                    break;
+                case 'a':
+                    orientation_ = Any;
+                    break;
+                default:
+                    valid_ = false;
+            }
+            cblistclose(records);
+        } else valid_ = false;
+        records = vlgetlist(db, hyperbolicTag.c_str(), hyperbolicTag.length());
+        if (records) {
+            const char *flag = cblistval(records, 0, 0);
+            if (flag[0] == 'y')
+                hyperbolic_ = true;
+            else if (flag[0] == 'n')
+                hyperbolic_ = false;
+            else
+                valid_ = false;
+            cblistclose(records);
+        } else
+            valid_ = false;
+        vlclose(db);
+#else
+        TCBDB* db = tcbdbnew();
+        if (! tcbdbopen(db, filename_.c_str(), BDBOREADER)) {
+            std::cerr << "ERROR: Could not open Tokyo Cabinet database: "
+                << filename_ << std::endl;
+            return;
+        }
+        TCLIST* records = tcbdbget4(db, tetTag.c_str(), tetTag.length());
+        if (records) {
+            const char *flag = tclistval2(records, 0);
+            maxTetrahedra_ = atoi(flag);
+            if (maxTetrahedra_ == 0)
+                valid_ = false;
+            tclistdel(records);
+        } else
+            valid_ = false;
+        records = tcbdbget4(db, orientationTag.c_str(), orientationTag.length());
+        if (records) {
+            const char *flag = tclistval2(records, 0);
+            switch(flag[0]) {
+                case 'o':
+                    orientation_ = Orientable;
+                    break;
+                case 'n':
+                    orientation_ = NonOrientable;
+                    break;
+                case 'a':
+                    orientation_ = Any;
+                    break;
+                default:
+                    valid_ = false;
+            }
+            tclistdel(records);
+        }
+        else
+            valid_ = false;
+        records = tcbdbget4(db, hyperbolicTag.c_str(), hyperbolicTag.length());
+        if (records) {
+            const char *flag = tclistval2(records, 0);
+            if (flag[0] == 'y')
+                hyperbolic_ = true;
+            else if (flag[0] == 'n')
+                hyperbolic_ = false;
+            else
+                valid_ = false;
+            tclistdel(records);
+        } else
+            valid_ = false;
+
+        tcbdbclose(db);
+        tcbdbdel(db);
+#endif
+
+}
+
 bool EnumerationDB::lookup(const std::string& fpg,
         std::list<NTriangulation*> **result) {
     try {
@@ -106,6 +217,16 @@ bool EnumerationDB::lookup(const std::string& fpg,
         store[fpg] = **result;
     }
     return true;
+}
+
+EnumerationDB::~EnumerationDB() {
+    for (auto& kv: store) {
+        for (auto& tri: kv.second) {
+            delete tri;
+        }
+        kv.second.clear();
+    }
+    store.clear();
 }
 
 std::list<NTriangulation*> EnumerationDB::lookup(const NFacePairing& fp) {

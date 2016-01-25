@@ -54,9 +54,46 @@ CollapsedChainSearcher::CollapsedChainSearcher(const NFacePairing* pairing,
             use, useArgs), maxOrder(0) {
 
     // Create enumeration database if the file path is given, else mark the
-    // database as not present.
-    if (enumDBfile)
+    // database as not present. If the database is opened, check that it suits
+    // our requirements.
+    if (enumDBfile) {
+        bool valid = true;
         enumDB = new EnumerationDB(enumDBfile);
+        if (! enumDB->valid()) {
+            // Don't print anything, the constructor will have spat out an
+            // error message.
+            valid = false;
+        }
+        if (valid && (pairing->size() > (enumDB->maxTetrahedra())+1)) {
+            std::cerr << "The provided enumeration database only stores "
+                "triangulations on " << enumDB->maxTetrahedra() <<
+                " tetrahedra but this face pairing has " << pairing->size() <<
+                " tetrahedra and so requires all triangulations on " <<
+                (pairing->size()+1) << " tetrahedra in the database" <<
+                std::endl;
+            valid = false;
+        }
+        if (valid && (orientableOnly && enumDB->orientations() ==
+                    EnumerationDB::NonOrientable)) {
+            std::cerr << "The provided enumeration database only stores "
+                "non-orientable triangulations yet you want to find orientable "
+                "triangulations." << std::endl;
+            valid = false;
+        }
+        if (valid && enumDB->hyperbolic()) {
+            std::cerr << "The provided enumeration database only stores "
+                "hyperbolic triangulations." << std::endl;
+            valid = false;
+        }
+        if (! valid) {
+            // TODO Should we bail completely? Or just leave this warning here?
+            std::cerr << "Since an invalid enumeration database has been "
+                "provided, it will be not be used. Instead this program will "
+                "enumerate all smaller triangulations internally." << std::endl;
+            delete enumDB;
+            enumDB = 0;
+        }
+    }
     else
         enumDB = 0;
     // Preconditions:

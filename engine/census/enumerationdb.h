@@ -63,10 +63,29 @@ namespace regina {
  * a new census.
  */
 class EnumerationDB {
+    // Expose the enum to users of the database.
+    public:
+        enum Orientations { Orientable, NonOrientable, Any };
+
+
     private:
         std::string filename_;
             /**< The name of the file (including full path) which stores the
              * on-disk database. */
+
+        bool valid_;
+            /**< Is this database valid (i.e. can it be opened). */
+
+        int maxTetrahedra_;
+            /**< For how many tetrahedra does this database contain complete
+             * results. */
+
+        enum Orientations orientation_;
+            /**< For which orientation(s) does this database contain complete
+             * results. */
+
+        bool hyperbolic_;
+            /**< Are we considering hyperbolic triangulations. */
 
     private:
         /**
@@ -83,9 +102,8 @@ class EnumerationDB {
         /**
          * Creates a new reference to one of Regina's enumeration databases.
          *
-         * This constructor will not run any checks (e.g., it will not
-         * verify that the database exists, or that it is stored in the correct
-         * format).  Note that even if the database does not exist, the
+         * This constructor will attempt to open the database to check certain
+         * details.  Note that even if the database does not exist, the
          * lookup() routine will fail gracefully.
          *
          * @param filename the full path and filename of the database to access
@@ -100,10 +118,34 @@ class EnumerationDB {
         /**
          * Returns the full name and path of the database.
          *
-         *
          * @return the database path and filename.
          */
         const std::string& filename() const;
+
+        /**
+         * Returns maxTet such that all triangulations on <= maxTet tetrahedra
+         * are contained in this database.
+         *
+         * @return maxTet as described above
+         */
+        const int maxTetrahedra() const;
+
+        /**
+         * Returns true if this database was opened and initialised
+         * successfully, false otherwise.
+         */
+        const bool valid() const;
+
+        /**
+         * Returns the orientations of triangulations in this database.
+         */
+        const Orientations orientations() const;
+        /**
+         * Returns true if this database stores hyperbolic triangulations,
+         * false otherwise.
+         */
+        const bool hyperbolic() const;
+
 
         /**
          * Searches for the given face pairing graph in this database.
@@ -129,6 +171,11 @@ class EnumerationDB {
          * above for more details.
          */
         std::list<NTriangulation*> lookup(const NFacePairing& facePairing);
+
+    public:
+        static const std::string tetTag;
+        static const std::string orientationTag;
+        static const std::string hyperbolicTag;
 };
 
 
@@ -136,12 +183,24 @@ class EnumerationDB {
 
 // Inline functions for EnumerationDB:
 
-inline EnumerationDB::EnumerationDB(const char* filename) :
-        filename_(filename) {
-}
-
 inline const std::string& EnumerationDB::filename() const {
     return filename_;
+}
+
+inline const bool EnumerationDB::valid() const {
+    return valid_;
+}
+
+inline const int EnumerationDB::maxTetrahedra() const {
+    return maxTetrahedra_;
+}
+
+inline const EnumerationDB::Orientations EnumerationDB::orientations() const {
+    return orientation_;
+}
+
+inline const bool EnumerationDB::hyperbolic() const {
+    return hyperbolic_;
 }
 
 } // namespace regina
