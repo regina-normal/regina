@@ -67,7 +67,7 @@ namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_nielsenCombine,
         NGroupPresentation::nielsenCombine, 3, 4);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_recogniseGroup,
-        NGroupExpression::recogniseGroup, 0, 1);
+        NGroupPresentation::recogniseGroup, 0, 1);
 
     std::auto_ptr<NGroupExpression> newExpression_str(
             const std::string& str) {
@@ -82,8 +82,9 @@ namespace {
         return ans;
     }
 
-    void expressionWriteText(const NGroupExpression& e, bool sw = false) {
-        e.writeText(std::cout, sw);
+    void expressionWriteText(const NGroupExpression& e,
+            bool sw = false, bool utf8 = false) {
+        e.writeText(std::cout, sw, utf8);
     }
 
     void expressionWriteTeX(const NGroupExpression& e) {
@@ -91,7 +92,7 @@ namespace {
     }
 
     BOOST_PYTHON_FUNCTION_OVERLOADS(OL_expressionWriteText,
-        expressionWriteText, 1, 2);
+        expressionWriteText, 1, 3);
 
     void addRelation_own(NGroupPresentation& p,
             std::auto_ptr<NGroupExpression> e) {

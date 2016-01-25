@@ -319,6 +319,8 @@ Version 5.0  [ (under development) ]
               which signals that the directory should not be changed.
         Class NGroupExpression, NGroupExpressionTerm:
             - Added != operators to complement the existing == operators.
+            - Added optional utf8 argument to NGroupExpression::writeText()
+              to replace gen^exp notation with unicode subscript characters.
         Class NGroupPresentation:
             - Routine recogniseGroup() now takes an optional moreUtf8
               argument for prettier printing.
@@ -670,6 +672,9 @@ Version 5.0  [ (under development) ]
             - Deprecated.  Use the new routines NPerm<n>::extend() instead.
         Routine readIsoSigList():
             - Now supports both 3-manifold and 4-manifold triangulations.
+        Routine subscript(), superscript():
+            - New routines that convert integers to UTF-8 subscript and
+              superscript strings.
         Routine valueOf():
             - Now overloaded to support 8-bit, short and long long integers.
         Global arrays edgeNumber[][], edgeStart[], edgeEnd[]:

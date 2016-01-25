@@ -36,6 +36,7 @@
 #import "TriAlgebra.h"
 #import "maths/numbertheory.h"
 #import "triangulation/ntriangulation.h"
+#import "utilities/stringutils.h"
 
 #define TV_WARN_LARGE_R 15
 
@@ -172,7 +173,7 @@
                     else {
                         [rel appendFormat:@"%c", char('a' + it->generator)];
                         if (it->exponent != 1)
-                            [rel appendFormat:@"^%ld", it->exponent];
+                            [rel appendString:@(regina::superscript(it->exponent).c_str())];
                     }
                 }
             }

@@ -34,6 +34,7 @@
 
 #include "algebra/nabeliangroup.h"
 #include "maths/matrixops.h"
+#include "utilities/stringutils.h"
 
 namespace regina {
 
@@ -244,22 +245,7 @@ void NAbelianGroup::writeUtf8(std::ostream& out) const {
                 out << " + ";
             if (currMult > 1)
                 out << currMult << ' ';
-            out << "\u2124";
-            s = currDegree.stringValue();
-            for (auto c : s)
-                switch (c) {
-                    case '0': out << "\u2080"; break;
-                    case '1': out << "\u2081"; break;
-                    case '2': out << "\u2082"; break;
-                    case '3': out << "\u2083"; break;
-                    case '4': out << "\u2084"; break;
-                    case '5': out << "\u2085"; break;
-                    case '6': out << "\u2086"; break;
-                    case '7': out << "\u2087"; break;
-                    case '8': out << "\u2088"; break;
-                    case '9': out << "\u2089"; break;
-                    default: out << '?'; break;
-                }
+            out << "\u2124" << regina::subscript(currDegree);
             writtenSomething = true;
         }
         if (it == invariantFactors.end())

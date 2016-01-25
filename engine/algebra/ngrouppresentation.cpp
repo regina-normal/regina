@@ -45,6 +45,7 @@
 #include "algebra/nabeliangroup.h"
 #include "maths/numbertheory.h"
 #include "maths/matrixops.h"
+#include "utilities/stringutils.h"
 
 namespace regina {
 
@@ -2172,7 +2173,8 @@ void NGroupExpression::writeXMLData(std::ostream& out) const {
 
 // group expression output routines
 
-void NGroupExpression::writeText(std::ostream& out, bool shortword) const {
+void NGroupExpression::writeText(std::ostream& out, bool shortword,
+        bool utf8) const {
     if (terms_.empty())
         out << '1';
     else {
@@ -2184,8 +2186,12 @@ void NGroupExpression::writeText(std::ostream& out, bool shortword) const {
                 out << char('a' + i->generator);
             else
                 out << "g_" << i->generator;
-            if ( i->exponent != 1 )
-                out << '^' << i->exponent;
+            if (i->exponent != 1) {
+                if (utf8)
+                    out << regina::superscript(i->exponent);
+                else
+                    out << '^' << i->exponent;
+            }
         }
     }
 }

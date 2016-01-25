@@ -90,6 +90,98 @@ unsigned basicTokenise(OutputIterator results, const std::string& str) {
     return static_cast<unsigned>(total);
 }
 
+template <typename T>
+std::string superscript(T value) {
+    std::string s = std::to_string(value);
+    std::string ans;
+    for (auto c : s)
+        switch (c) {
+            case '0': ans += "\u2070"; break;
+            case '1': ans += "\u00B9"; break;
+            case '2': ans += "\u00B2"; break;
+            case '3': ans += "\u00B3"; break;
+            case '4': ans += "\u2074"; break;
+            case '5': ans += "\u2075"; break;
+            case '6': ans += "\u2076"; break;
+            case '7': ans += "\u2077"; break;
+            case '8': ans += "\u2078"; break;
+            case '9': ans += "\u2079"; break;
+            case '+': ans += "\u207A"; break;
+            case '-': ans += "\u207B"; break;
+            default: ans += "?"; break;
+        }
+    return ans;
+}
+
+template <bool supportInfinity>
+std::string superscript(const NIntegerBase<supportInfinity>& value) {
+    std::string s = value.stringValue();
+    std::string ans;
+    for (auto c : s)
+        switch (c) {
+            case '0': ans += "\u2070"; break;
+            case '1': ans += "\u00B9"; break;
+            case '2': ans += "\u00B2"; break;
+            case '3': ans += "\u00B3"; break;
+            case '4': ans += "\u2074"; break;
+            case '5': ans += "\u2075"; break;
+            case '6': ans += "\u2076"; break;
+            case '7': ans += "\u2077"; break;
+            case '8': ans += "\u2078"; break;
+            case '9': ans += "\u2079"; break;
+            case '+': ans += "\u207A"; break;
+            case '-': ans += "\u207B"; break;
+            default: ans += "?"; break;
+        }
+    return ans;
+}
+
+template <typename T>
+std::string subscript(T value) {
+    std::string s = std::to_string(value);
+    std::string ans;
+    for (auto c : s)
+        switch (c) {
+            case '0': ans += "\u2080"; break;
+            case '1': ans += "\u2081"; break;
+            case '2': ans += "\u2082"; break;
+            case '3': ans += "\u2083"; break;
+            case '4': ans += "\u2084"; break;
+            case '5': ans += "\u2085"; break;
+            case '6': ans += "\u2086"; break;
+            case '7': ans += "\u2087"; break;
+            case '8': ans += "\u2088"; break;
+            case '9': ans += "\u2089"; break;
+            case '+': ans += "\u208A"; break;
+            case '-': ans += "\u208B"; break;
+            default: ans += "?"; break;
+        }
+    return ans;
+}
+
+template <bool supportInfinity>
+std::string subscript(const NIntegerBase<supportInfinity>& value) {
+    std::string s = value.stringValue();
+    std::string ans;
+    for (auto c : s)
+        switch (c) {
+            case '0': ans += "\u2080"; break;
+            case '1': ans += "\u2081"; break;
+            case '2': ans += "\u2082"; break;
+            case '3': ans += "\u2083"; break;
+            case '4': ans += "\u2084"; break;
+            case '5': ans += "\u2085"; break;
+            case '6': ans += "\u2086"; break;
+            case '7': ans += "\u2087"; break;
+            case '8': ans += "\u2088"; break;
+            case '9': ans += "\u2089"; break;
+            case '+': ans += "\u208A"; break;
+            case '-': ans += "\u208B"; break;
+            default: ans += "?"; break;
+        }
+    return ans;
+}
+
 } // namespace regina
 
 #endif

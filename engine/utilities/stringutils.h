@@ -401,6 +401,36 @@ REGINA_API std::string stringToToken(const char* str);
  */
 REGINA_API std::string stringToToken(const std::string& str);
 
+/**
+ * Converts the given native C++ integer into a unicode superscript string.
+ *
+ * The resulting string will be encoded using UTF-8.
+ *
+ * \pre The template argument \a T is either (i) a native C++ integer type,
+ * for which the standard C++11 library routine std::to_string(T) is defined;
+ * or (ii) a const reference to NInteger or NLargeInteger.
+ *
+ * \ifacespython This template function is instantiated in Python for types
+ * \a T = \c long, as well as const references to NInteger and NLargeInteger.
+ */
+template <typename T>
+std::string superscript(T value);
+
+/**
+ * Converts the given native C++ integer into a unicode subscript string.
+ *
+ * The resulting string will be encoded using UTF-8.
+ *
+ * \pre The template argument \a T is either (i) a native C++ integer type,
+ * for which the standard C++11 library routine std::to_string(T) is defined;
+ * or (ii) a const reference to NInteger or NLargeInteger.
+ *
+ * \ifacespython This template function is instantiated in Python for types
+ * \a T = \c long, as well as const references to NInteger and NLargeInteger.
+ */
+template <typename T>
+std::string subscript(T value);
+
 /*@}*/
 
 } // namespace regina

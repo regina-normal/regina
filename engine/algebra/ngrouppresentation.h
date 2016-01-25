@@ -672,10 +672,11 @@ class REGINA_API NGroupExpression :
          * alphabetic generators.
          *
          * The text representation will be of the form
-         * <tt>g2^4 g13^-5 g4</tt>. If the shortword flag is
-         * true, it will assume your word is in an alphabet of
-         * no more than 26 letters, and will write the word using
-         * lower-case ASCII, i.e. <tt>c^4 n^-5 e</tt>.
+         * <tt>g2^4 g13^-5 g4</tt>. If the \a shortword flag is \c true, it
+         * will assume your word is in an alphabet of no more than 26 letters,
+         * and will write the word using lower-case ASCII, i.e.,
+         * <tt>c^4 n^-5 e</tt>.  If the \a utf8 flag is \c true, all exponents
+         * will be written using superscript characters encoded in UTF-8.
          *
          * \pre If \a shortword is \c true, the number of generators in
          * the corresponding group must be 26 or fewer.
@@ -686,8 +687,12 @@ class REGINA_API NGroupExpression :
          * @param out the output stream to which to write.
          * @param shortword indicates whether to use numbered or
          * alphabetic generators, as described above.
+         * @param utf8 \c true if exponents should be written using
+         * unicode superscript characters, or \c false if they should be
+         * written using a caret (^) symbol.
          */
-        void writeText(std::ostream& out, bool shortword=false) const;
+        void writeText(std::ostream& out, bool shortword = false,
+            bool utf8 = false) const;
 
         /**
          * Writes a short text representation of this object to the
