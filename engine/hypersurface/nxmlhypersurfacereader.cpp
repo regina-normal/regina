@@ -107,7 +107,7 @@ NXMLElementReader* NXMLNormalHypersurfaceListReader::startContentSubElement(
         const regina::xml::XMLPropertyDict& props) {
     if (list_) {
         // The hypersurface list has already been created.
-        if (subTagName == "surface")
+        if (subTagName == "hypersurface")
             return new NXMLNormalHypersurfaceReader(tri_, list_->coords_);
     } else {
         // The hypersurface list has not yet been created.
@@ -141,7 +141,7 @@ void NXMLNormalHypersurfaceListReader::endContentSubElement(
         const std::string& subTagName,
         NXMLElementReader* subReader) {
     if (list_)
-        if (subTagName == "surface")
+        if (subTagName == "hypersurface")
             if (NNormalHypersurface* s =
                     dynamic_cast<NXMLNormalHypersurfaceReader*>(subReader)->
                     hypersurface())
