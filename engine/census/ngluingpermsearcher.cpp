@@ -34,6 +34,7 @@
 
 #include <algorithm>
 #include <sstream>
+#include "census/collapsedchain.h"
 #include "census/ngluingpermsearcher.h"
 #include "maths/nperm3.h" // for NPerm3::invS3
 #include "triangulation/ntriangulation.h"
@@ -104,7 +105,7 @@ NGluingPermSearcher* NGluingPermSearcher::bestSearcher(
                 // Closed prime minimal P2-irreducible triangulations with >= 3
                 // tetrahedra.
                 if (collapse) {
-                    return new NCollapsedChainSearcher(pairing, autos,
+                    return new CollapsedChainSearcher(pairing, autos,
                             orientableOnly, enumDB, use, useArgs);
                 } else {
                     return new NClosedPrimeMinSearcher(pairing, autos, orientableOnly, use, useArgs);

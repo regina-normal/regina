@@ -56,7 +56,7 @@ template <int> class FacetPairing;
 template <int> class Isomorphism;
 template <int> class Triangulation;
 
-class NCollapsedChainSearcher;
+class CollapsedChainSearcher;
 
 namespace detail {
 
@@ -754,8 +754,8 @@ class FacetPairingBase :
         void enumerateInternal(NBoolSet boundary, int nBdryFacets,
             Use use, void* useArgs);
 
-    // NCollapseChainSearcher needs to manipulate facet pairings
-    friend class regina::NCollapsedChainSearcher;
+    // CollapseChainSearcher needs to manipulate facet pairings
+    friend class regina::CollapsedChainSearcher;
 };
 
 /*@}*/

@@ -36,7 +36,7 @@
 #include <cassert>
 #include <sstream>
 #include "census/enumerationdb.h"
-#include "census/ngluingpermsearcher.h"
+#include "census/collapsedchain.h"
 #include "triangulation/nedge.h"
 #include "triangulation/nfacepair.h"
 #include "triangulation/ntriangulation.h"
@@ -44,9 +44,9 @@
 
 namespace regina {
 
-const char NCollapsedChainSearcher::dataTag_ = 'h';
+const char CollapsedChainSearcher::dataTag_ = 'h';
 
-NCollapsedChainSearcher::NCollapsedChainSearcher(const NFacePairing* pairing,
+CollapsedChainSearcher::CollapsedChainSearcher(const NFacePairing* pairing,
         const NFacePairing::IsoList* autos, bool orientableOnly,
         char* enumDBfile, UseGluingPerms use, void* useArgs) :
         NGluingPermSearcher(pairing, autos, orientableOnly, true, // finiteOnly
@@ -111,7 +111,7 @@ NCollapsedChainSearcher::NCollapsedChainSearcher(const NFacePairing* pairing,
     }
 }
 
-NCollapsedChainSearcher::~NCollapsedChainSearcher() {
+CollapsedChainSearcher::~CollapsedChainSearcher() {
     if (iso)
         delete iso;
     if (isoInv)
@@ -126,7 +126,7 @@ NCollapsedChainSearcher::~NCollapsedChainSearcher() {
     }
 }
 
-void NCollapsedChainSearcher::runSearch(long maxDepth) {
+void CollapsedChainSearcher::runSearch(long maxDepth) {
     // Preconditions:
     //     Only closed prime minimal P2-irreducible triangulations are needed.
     //     The given face pairing is closed with order >= 3
@@ -154,7 +154,7 @@ void NCollapsedChainSearcher::runSearch(long maxDepth) {
             for(auto tri: results)
                 extendTri(tri);
         } else {
-            UseGluingPerms func = &NCollapsedChainSearcher::extendTriHelper;
+            UseGluingPerms func = &CollapsedChainSearcher::extendTriHelper;
             NClosedPrimeMinSearcher s(modified, NULL, orientableOnly_, func,
                     this);
             s.runSearch();
@@ -167,7 +167,7 @@ void NCollapsedChainSearcher::runSearch(long maxDepth) {
     }
 }
 
-void NCollapsedChainSearcher::extendTriHelper(const NGluingPermSearcher *s, void *
+void CollapsedChainSearcher::extendTriHelper(const NGluingPermSearcher *s, void *
         useArgs) {
     // End of search
     // Note that we can't call use_ here as this function is static.
@@ -175,11 +175,11 @@ void NCollapsedChainSearcher::extendTriHelper(const NGluingPermSearcher *s, void
         return;
     }
 
-    NCollapsedChainSearcher *c = static_cast<NCollapsedChainSearcher*>(useArgs);
+    CollapsedChainSearcher *c = static_cast<CollapsedChainSearcher*>(useArgs);
     c->extendTri(s);
 }
 
-void NCollapsedChainSearcher::extendTri(const NTriangulation *tri) {
+void CollapsedChainSearcher::extendTri(const NTriangulation *tri) {
     // tri's face pairing is probably not canonical.
     NFacePairing fpg(*tri);
     // We don't need fpg to be canonical, strictly speaking, but we do need the
@@ -266,7 +266,7 @@ void NCollapsedChainSearcher::extendTri(const NTriangulation *tri) {
     delete newIso;
 }
 
-void NCollapsedChainSearcher::extendTri(const NGluingPermSearcher *s) {
+void CollapsedChainSearcher::extendTri(const NGluingPermSearcher *s) {
     // For each triangulation found.
     // copy pairing_ and apply reverse of iso
     // Note that iso is the isomorphism from this to s
@@ -365,7 +365,7 @@ void NCollapsedChainSearcher::buildUp() {
 }
 
 
-void NCollapsedChainSearcher::dumpData(std::ostream& out) const {
+void CollapsedChainSearcher::dumpData(std::ostream& out) const {
     NGluingPermSearcher::dumpData(out);
 //
 //    int i;
@@ -387,7 +387,7 @@ void NCollapsedChainSearcher::dumpData(std::ostream& out) const {
 //    }
 }
 
-NCollapsedChainSearcher::NCollapsedChainSearcher(std::istream& in,
+CollapsedChainSearcher::CollapsedChainSearcher(std::istream& in,
         UseGluingPerms use, void* useArgs) :
         NGluingPermSearcher(in, use, useArgs)  {
 //    if (inputError_)
@@ -420,7 +420,7 @@ NCollapsedChainSearcher::NCollapsedChainSearcher(std::istream& in,
 //        inputError_ = true;
 }
 
-bool NCollapsedChainSearcher::collapseChain(NFacePair faces, int tet) {
+bool CollapsedChainSearcher::collapseChain(NFacePair faces, int tet) {
     NFacePair comp = faces.complement();
     order[orderElt] = NTetFace(tet, faces.lower());
     chainPermIndices[2 * orderElt] = gluingToIndex(order[orderElt],

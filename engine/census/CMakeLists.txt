@@ -4,7 +4,7 @@
 SET ( FILES
   closedprimemin
   compact
-  collapsechain
+  collapsedchain
   dim2census
   dim2gluingpermsearcher
   enumerationdb
