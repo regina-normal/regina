@@ -163,7 +163,7 @@
     [ReginaHelper runWithHUD:@"Drilling…"
                         code:^{
                             ans->drillEdge(ans->edge(seln.row - 1));
-                            ans->setLabel(self.packet->adornedLabel("Drilled"));
+                            ans->setLabel(self.packet->adornedLabel("Drilled #") + std::to_string(seln.row - 1));
                         }
                      cleanup:^{
                          self.packet->insertChildLast(ans);
