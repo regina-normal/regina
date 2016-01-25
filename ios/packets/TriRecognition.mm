@@ -402,8 +402,8 @@
                                      [alert show];
                                  } else {
                                      small->setLabel("S² ×~ S¹ (Minimal)");
-                                     UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"S² × ~S¹"
-                                                                                     message:@"This is the prime manifold S² × ~S¹ (the non-orientable twisted product).  I have constructed a new minimal (but not 0-efficient) triangulation."
+                                     UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"S² ×~ S¹"
+                                                                                     message:@"This is the prime manifold S² ×~ S¹ (the non-orientable twisted product).  I have constructed a new minimal (but not 0-efficient) triangulation."
                                                                                     delegate:nil
                                                                            cancelButtonTitle:@"Close"
                                                                            otherButtonTitles:nil];
