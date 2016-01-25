@@ -269,7 +269,7 @@ void CollapsedChainSearcher::extendTri(const NTriangulation *tri) {
             // adj is adjacent (i.e. glued to) f in tri
             NTetFace adj(adjSimp,adjFacet);
             if ((f.simp == adj.simp) &&
-                    (!shortChain[newInv->simpImage(iso->simpImage(f.simp))])) {
+                    (!shortChain[isoInv->simpImage(newIso->simpImage(f.simp))])) {
                 continue;
             }
 
@@ -397,10 +397,14 @@ void CollapsedChainSearcher::extendTri(const NGluingPermSearcher *s) {
             permIndex(myAdj) = gluingToIndex(myAdj, gluing.inverse());
         }
         buildUp(); // Builds actual triangulation
+        for(auto stab: stabilizers) {
+            NIsomorphism *i = new NIsomorphism((*automorph)*(*stab));
+            automorphsDone.insert(i);
+        }
     }
 }
 
-void NCollapsedChainSearcher::buildUp() {
+void CollapsedChainSearcher::buildUp() {
     orderElt = 0;
     while (orderElt >= 0) {
         if (orderElt >= maxOrder) {
@@ -410,25 +414,40 @@ void NCollapsedChainSearcher::buildUp() {
         }
         NTetFace face = order[orderElt];
         NTetFace adj = (*pairing_)[face];
-        if (orderType[orderElt] == EDGE_CHAIN_INTERNAL_SECOND) {
+        if (orderType[orderElt] == EDGE_CHAIN_INTERNAL_FIRST) {
             if (permIndex(face) < 0) {
-                if (permIndex(order[orderElt - 1]) ==
-                        chainPermIndices[2 * orderElt - 2])
-                    permIndex(face) = chainPermIndices[2 * orderElt];
-                else
-                    permIndex(face) = chainPermIndices[2 * orderElt + 1];
+                permIndex(face) = chainPermIndices[2*orderElt];
+            } else if (permIndex(face) == chainPermIndices[2*orderElt]) {
+                permIndex(face) = chainPermIndices[2*orderElt+1];
             } else {
-                permIndex(face) = -1;
                 permIndex(face) = -1;
                 permIndex(adj) = -1;
                 orderElt--;
                 continue;
             }
-        } else { // EGE_CHAIN_END or EDGE_CHAIN_INTERNAL_FIRST
+        } else { // EGE_CHAIN_END or EDGE_CHAIN_INTERNAL_SECOND
+            // Both of these are 'fixed', possibly by earlier choices
             if (permIndex(face) < 0) {
-                permIndex(face) = chainPermIndices[2*orderElt];
-            } else if (permIndex(face) == chainPermIndices[2*orderElt]) {
-                permIndex(face) = chainPermIndices[2*orderElt+1];
+                // Chain end is not fixed TODO
+                if (orderType[orderElt] == EDGE_CHAIN_END) {
+                    if (permIndex(face) < 0) {
+                        permIndex(face) = chainPermIndices[2 * orderElt];
+                    } else if (permIndex(face) == chainPermIndices[2 *
+                            orderElt]) {
+                        permIndex(face) = chainPermIndices[2 * orderElt + 1];
+                    } else{
+                        permIndex(face) = -1;
+                        permIndex(adj) = -1;
+                        orderElt--;
+                        continue;
+                    }
+                } else {
+                    if (permIndex(order[orderElt - 1]) ==
+                            chainPermIndices[2 * orderElt - 2])
+                        permIndex(face) = chainPermIndices[2 * orderElt];
+                    else
+                        permIndex(face) = chainPermIndices[2 * orderElt + 1];
+                }
             } else {
                 permIndex(face) = -1;
                 permIndex(adj) = -1;
