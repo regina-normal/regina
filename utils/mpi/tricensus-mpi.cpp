@@ -202,7 +202,6 @@ bool controllerError = false;
 
 struct Task {
     long pairing, subtask;
-    time_t start;
 };
 Task* slaveTask;
 int nSlaves, nRunningSlaves;
@@ -480,13 +479,13 @@ int ctrlWaitForSlave(bool runningSlavesOnly = false) {
     }
 
     // All slaves are currently working.  Wait for the next one to finish.
-    long results[3];
+    long results[4];
     MPI_Status status;
-    MPI_Recv(results, 3, MPI_LONG, MPI_ANY_SOURCE, TAG_RESULT, MPI_COMM_WORLD,
+    MPI_Recv(results, 4, MPI_LONG, MPI_ANY_SOURCE, TAG_RESULT, MPI_COMM_WORLD,
         &status);
 
     int slave = status.MPI_SOURCE;
-    time_t totSec = time(0) - slaveTask[slave].start;
+    long totSec = results[3];
 
     if (results[0] != slaveTask[slave].pairing ||
             results[1] != slaveTask[slave].subtask) {
@@ -541,7 +540,6 @@ void ctrlFarmPairing(const std::string& pairingRep) {
 
     slaveTask[slave].pairing = taskID[0];
     slaveTask[slave].subtask = -1;
-    slaveTask[slave].start = time(0);
 
     MPI_Send(taskID, 3, MPI_LONG, slave, TAG_REQUEST_TASK, MPI_COMM_WORLD);
     MPI_Send(const_cast<char*>(pairingRep.c_str()), taskID[2] + 1, MPI_CHAR,
@@ -579,7 +577,6 @@ void ctrlFarmPartialSearch(
 
     slaveTask[slave].pairing = taskID[0];
     slaveTask[slave].subtask = taskID[1];
-    slaveTask[slave].start = time(0);
 
     MPI_Send(taskID, 3, MPI_LONG, slave, TAG_REQUEST_TASK, MPI_COMM_WORLD);
     MPI_Send(const_cast<char*>(searchRep.str().c_str()), taskID[2] + 1,
@@ -884,9 +881,9 @@ void slaveMakeTaskFilename(std::string& result, const char* suffix) {
  *
  * Inform the controller that the current task was successfully completed.
  */
-void slaveSendResult(long nTriangulations) {
-    long data[3] = { taskID[0], taskID[1], nTriangulations };
-    MPI_Send(data, 3, MPI_LONG, 0, TAG_RESULT, MPI_COMM_WORLD);
+void slaveSendResult(long nTriangulations, long time = 0) {
+    long data[4] = { taskID[0], taskID[1], nTriangulations, time};
+    MPI_Send(data, 4, MPI_LONG, 0, TAG_RESULT, MPI_COMM_WORLD);
 }
 
 /**
@@ -969,8 +966,13 @@ void slaveProcessPartialSearch() {
 
     // Run the partial census.
     nSolns = 0;
-    if (! dryRun)
+    long timeTaken = 0;
+    if (! dryRun) {
+        clock_t tics = clock();
         search->runSearch();
+        timeTaken = (clock() - tics)/CLOCKS_PER_SEC;
+    }
+
 
     if (nSolns > 0) {
         // Write the completed census to file.
@@ -980,19 +982,19 @@ void slaveProcessPartialSearch() {
             if (sigStreamErr)
                 slaveBail("Signature file could not be written.");
             else
-                slaveSendResult(nSolns);
+                slaveSendResult(nSolns, timeTaken);
         } else {
             std::string outFile;
             slaveMakeTaskFilename(outFile, ".rga");
 
             if (parent->save(outFile.c_str()))
-                slaveSendResult(nSolns);
+                slaveSendResult(nSolns, timeTaken);
             else
                 slaveBail("Output file could not be written.");
         }
     } else {
         // No triangulations.  Just inform the controller.
-        slaveSendResult(0);
+        slaveSendResult(0, timeTaken);
     }
 
     delete parent;
@@ -1060,9 +1062,13 @@ void slaveProcessPairing() {
     }
 
     nSolns = 0;
-    if (! dryRun)
+    long timeTaken = 0;
+    if (! dryRun) {
+        clock_t tics = clock();
         CensusType::findAllPerms(pairing, ! orientability.hasFalse(),
             ! finiteness.hasFalse(), whichPurge, dest);
+        timeTaken = (clock() - tics)/CLOCKS_PER_SEC;
+    }
 
     if (nSolns > 0) {
         // Write the completed census to file.
@@ -1072,19 +1078,19 @@ void slaveProcessPairing() {
             if (sigStreamErr)
                 slaveBail("Signature file could not be written.");
             else
-                slaveSendResult(nSolns);
+                slaveSendResult(nSolns, timeTaken);
         } else {
             std::string outFile;
             slaveMakeTaskFilename(outFile, ".rga");
 
             if (parent->save(outFile.c_str()))
-                slaveSendResult(nSolns);
+                slaveSendResult(nSolns, timeTaken);
             else
                 slaveBail("Output file could not be written.");
         }
     } else {
         // No triangulations.  Just inform the controller.
-        slaveSendResult(0);
+        slaveSendResult(0, timeTaken);
     }
 
     delete parent;
