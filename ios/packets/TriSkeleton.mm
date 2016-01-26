@@ -390,7 +390,7 @@
                     cell.data2.text = @"All tetrahedra";
                 } else {
                     NSMutableString* pieces = [NSMutableString string];
-                    for (unsigned long i = 0; i < c->countTriangles(); ++i)
+                    for (unsigned long i = 0; i < c->size(); ++i)
                         [TextHelper appendToList:pieces
                                             item:[NSString stringWithFormat:@"%ld",
                                                   c->tetrahedron(i)->index()]];
