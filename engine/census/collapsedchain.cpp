@@ -141,6 +141,13 @@ CollapsedChainSearcher::CollapsedChainSearcher(const NFacePairing* pairing,
                 collapse = false;
             if (modified->size() < 3)
                 collapse = false;
+            // Move "chainEnds" to the modified setting, so that when we look
+            // at automorphisms of modified we can track which automorphisms
+            // fix these ends
+            for(int i=0; i < numChains; i++) {
+                chainEnds[i] = (*iso)[chainEnds[i]];
+                chainEnds[i+1] = (*iso)[chainEnds[i+1]];
+            }
         } else {
             collapse = false;
             iso = NULL;
@@ -197,10 +204,6 @@ void CollapsedChainSearcher::runSearch(long maxDepth) {
                 if (( aut[chainEnds[i]] == chainEnds[i] ) &&
                     (aut[chainEnds[i+1]] == chainEnds[i+1] ))
                     continue;
-                // Swapping the two ends is ok
-                //if (( aut[chainEnds[i]] == chainEnds[i+1] ) &&
-                //    (aut[chainEnds[i+1]] == chainEnds[i] ))
-                //    continue;
                 stab = false;
             }
             if (stab) {
@@ -546,8 +549,6 @@ bool CollapsedChainSearcher::collapseChain(NFacePair faces, int tet) {
         // no need to reset them.
         return false;
     }
-    chainEnds[numChains] = NTetFace(tet, faces.upper());
-    chainEnds[numChains+1] = NTetFace(tet, faces.lower());
     faces = faces.complement();
     // Currently tet and faces refer to the two faces of the base
     // tetrahedron that are pointing outwards.
@@ -630,6 +631,8 @@ bool CollapsedChainSearcher::collapseChain(NFacePair faces, int tet) {
         dest2 = NTetFace(tet, faces.upper());
         modified->unMatch(dest1);
         modified->unMatch(dest2);
+        chainEnds[numChains] = dest1;
+        chainEnds[numChains+1] = dest2;
         modified->match(dest1, dest2); // Add back the original loop.
     }
     return true;
