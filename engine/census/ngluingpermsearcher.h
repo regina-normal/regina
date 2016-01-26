@@ -454,6 +454,13 @@ class REGINA_API NGluingPermSearcher : public NGluingPerms {
                 char* enumerationDB, int whichPurge, UseGluingPerms use,
                 void* useArgs = 0);
 
+        // As above, but actual database handed in.
+        static void findAllPerms(const NFacePairing* pairing,
+                const NFacePairing::IsoList* autos,
+                bool orientableOnly, bool finiteOnly, bool collapse,
+                EnumerationDB* enumDB, int whichPurge, UseGluingPerms use,
+                void* useArgs = 0);
+
         /**
          * Constructs a search manager of the best possible class for the
          * given search parameters.  Different subclasses of

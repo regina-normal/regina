@@ -134,6 +134,16 @@ void NGluingPermSearcher::findAllPerms(const NFacePairing* pairing,
     delete searcher;
 }
 
+void NGluingPermSearcher::findAllPerms(const NFacePairing* pairing,
+        const NFacePairing::IsoList* autos, bool orientableOnly,
+        bool finiteOnly, bool collapse, EnumerationDB *enumDB, int whichPurge,
+        UseGluingPerms use, void* useArgs) {
+    NGluingPermSearcher* searcher = new CollapsedChainSearcher(pairing, autos,
+        orientableOnly, enumDB, use, useArgs);
+    searcher->runSearch();
+    delete searcher;
+}
+
 void NGluingPermSearcher::runSearch(long maxDepth) {
     // In this generation algorithm, each orientation is simply +/-1.
 

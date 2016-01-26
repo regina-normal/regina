@@ -47,6 +47,8 @@
 #if SUPPORT_DIM4
 #include "census/dim4gluingpermsearcher.h"
 #endif
+#include "census/collapsedchain.h"
+#include "census/enumerationdb.h"
 #include "census/ngluingpermsearcher.h"
 #include "dim2/dim2triangulation.h"
 #if SUPPORT_DIM4
@@ -71,6 +73,12 @@
 #define MIN_SEC 60
 #define HOUR_SEC (60 * MIN_SEC)
 #define DAY_SEC (24 * HOUR_SEC)
+
+
+// Need these parameters for templates
+int collapse = 0;
+char *enumDBfile = 0;
+regina::EnumerationDB* enumDB;
 
 // Forward declarations required for the templates below:
 template <class CensusType>
@@ -126,8 +134,8 @@ struct Dim3Params {
     inline static void findAllPerms(Pairing* p, bool orientableOnly,
             bool finiteOnly, int whichPurge, regina::NPacket* dest) {
         GluingPermSearcher::findAllPerms(p, 0,
-            orientableOnly, finiteOnly, false, // collapse
-            0, // TODO enumDB
+            orientableOnly, finiteOnly, collapse,
+            enumDB, // TODO enumDB
             whichPurge,
             slaveFoundGluingPerms<Dim3Params>, dest);
     }
@@ -245,6 +253,10 @@ int parseCmdLine(int argc, const char* argv[], bool isController) {
             "Ignore triangulations that are obviously not minimal ideal "
             "triangulations of cusped finite-volume hyperbolic 3-manifolds.  "
             "Implies --ideal.", 0 },
+        { "collapse", 'C', POPT_ARG_NONE, &collapse, 0,
+            "Collapse chains before running census.", 0 },
+        { "enumerationDB", 'E', POPT_ARG_STRING, &enumDBfile, 0,
+            "Full path and file name of an enumeration database.", "<filename>" },
         { "dim2", '2', POPT_ARG_NONE, &dim2, 0,
             "Run a census of 2-manifold triangulations, "
             "not 3-manifold triangulations.", 0 },
@@ -1103,6 +1115,15 @@ void slaveProcessPairing() {
  */
 template <class CensusType>
 int mainSlave() {
+    // Create enumeration database
+    if (collapse && (enumDBfile != 0)) {
+        enumDB = new regina::EnumerationDB(enumDBfile);
+        if (!(enumDB && enumDB->valid())) {
+            enumDB = 0;
+        }
+    } else {
+        enumDB = 0;
+    }
     // Keep fetching and processing tasks until there are no more.
     MPI_Status status;
     while (true) {

@@ -172,6 +172,20 @@ class REGINA_API CollapsedChainSearcher : public NGluingPermSearcher {
                 char* enumDBPath, UseGluingPerms use, void* useArgs = 0);
 
         /**
+         * Creates a new search manager. This constructor differs from
+         * CollapsedChainSearcher::CollapsedChainSearcher(const NFacePairing, const
+         * NFacePairing::IsoList, bool, char*, UseGluingPerms, void*) in that
+         * instead of passing the filename of the enumeration database, a
+         * pointer to the enumeration database is passed in instead.
+         * All other parameters are the same as for
+         * CollapsedChainSearcher::CollapsedChainSearcher(const NFacePairing, const
+         * NFacePairing::IsoList, bool, char*, UseGluingPerms, void*).
+         */
+        CollapsedChainSearcher(const NFacePairing* pairing,
+                const NFacePairing::IsoList* autos, bool orientableOnly,
+                EnumerationDB* enumDB, UseGluingPerms use, void* useArgs = 0);
+
+        /**
          * Initialises a new search manager based on data read from the
          * given input stream.  This may be a new search or a partially
          * completed search.
@@ -232,6 +246,11 @@ class REGINA_API CollapsedChainSearcher : public NGluingPermSearcher {
          * due to finding a short chain).
          */
         bool collapseChain(NFacePair pair, int tet);
+
+        // Internal-only function to check database is appropriate, and to set
+        // up various data structures. This is essentially the bits which are
+        // common to all constructors and thus factored out.
+        void initialise();
 
 };
 

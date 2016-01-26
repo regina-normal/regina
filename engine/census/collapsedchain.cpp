@@ -53,27 +53,44 @@ CollapsedChainSearcher::CollapsedChainSearcher(const NFacePairing* pairing,
             PURGE_NON_MINIMAL_PRIME | PURGE_P2_REDUCIBLE,
             use, useArgs), maxOrder(0) {
 
-    // Create enumeration database if the file path is given, else mark the
-    // database as not present. If the database is opened, check that it suits
-    // our requirements.
-    if (enumDBfile) {
-        bool valid = true;
+    // Create enumeration database if the file path is given.
+    if (enumDBfile)
         enumDB = new EnumerationDB(enumDBfile);
+    else
+        enumDB = 0;
+    // Check that the database suits our requirements.
+    initialise();
+}
+CollapsedChainSearcher::CollapsedChainSearcher(const NFacePairing* pairing,
+        const NFacePairing::IsoList* autos, bool orientableOnly,
+        EnumerationDB* enumDB_, UseGluingPerms use, void* useArgs) :
+        NGluingPermSearcher(pairing, autos, orientableOnly, true, // finiteOnly
+            PURGE_NON_MINIMAL_PRIME | PURGE_P2_REDUCIBLE,
+            use, useArgs), maxOrder(0), enumDB(enumDB_) {
+
+    // Check that the database suits our requirements.
+    initialise();
+}
+
+void CollapsedChainSearcher::initialise() {
+    // Check database settings (if given one)
+    if (enumDB) {
+        bool valid = true;
         if (! enumDB->valid()) {
             // Don't print anything, the constructor will have spat out an
             // error message.
             valid = false;
         }
-        if (valid && (pairing->size() > (enumDB->maxTetrahedra())+1)) {
+        if (valid && (pairing_->size() > (enumDB->maxTetrahedra())+1)) {
             std::cerr << "The provided enumeration database only stores "
                 "triangulations on " << enumDB->maxTetrahedra() <<
-                " tetrahedra but this face pairing has " << pairing->size() <<
+                " tetrahedra but this face pairing has " << pairing_->size() <<
                 " tetrahedra and so requires all triangulations on " <<
-                (pairing->size()+1) << " tetrahedra in the database" <<
+                (pairing_->size()+1) << " tetrahedra in the database" <<
                 std::endl;
             valid = false;
         }
-        if (valid && (orientableOnly && enumDB->orientations() ==
+        if (valid && (orientableOnly_ && enumDB->orientations() ==
                     EnumerationDB::NonOrientable)) {
             std::cerr << "The provided enumeration database only stores "
                 "non-orientable triangulations yet you want to find orientable "
@@ -94,15 +111,14 @@ CollapsedChainSearcher::CollapsedChainSearcher(const NFacePairing* pairing,
             enumDB = 0;
         }
     }
-    else
-        enumDB = 0;
+
     // Preconditions:
     //     Only closed prime minimal P2-irreducible triangulations are needed.
     //     The given face pairing is closed with order >= 3.
 
     unsigned nTets = getNumberOfTetrahedra();
 
-    modified = new NFacePairing(*pairing);
+    modified = new NFacePairing(*pairing_);
     chainPermIndices = new int[4 * nTets];
     orderType = new EdgeType[2 * nTets];
 

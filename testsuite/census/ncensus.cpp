@@ -265,7 +265,7 @@ class NCensusTest : public CppUnit::TestFixture {
                 NGluingPermSearcher::findAllPerms(pairing, autos,
                     ! s->orbl_.hasFalse(), ! s->finite_.hasFalse(),
                     false, // collapse
-                    0,
+                    (char*)0, // enumDB
                     s->purge_,
                     foundPerms, spec);
             }

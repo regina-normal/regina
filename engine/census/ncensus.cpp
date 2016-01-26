@@ -186,7 +186,7 @@ unsigned long NCensus::formPartialCensus(const NFacePairing* pairing,
     NGluingPermSearcher::findAllPerms(pairing, &autos,
         ! census.orientability.hasFalse(), ! census.finiteness.hasFalse(),
         false, // TODO collapse?
-        0, // TODO enumeration db path
+        (char*)0, // TODO enumeration db path
         census.whichPurge, NCensus::foundGluingPerms, &census);
 
     // Clean up.
@@ -213,7 +213,7 @@ void NCensus::foundFacePairing(const NFacePairing* pairing,
             ! realCensus->orientability.hasFalse(),
             ! realCensus->finiteness.hasFalse(),
             false, // TODO collapse?
-            0, // TODO enumeration db path
+            (char*)0, // TODO enumeration db path
             realCensus->whichPurge, NCensus::foundGluingPerms, census);
     } else {
         // Census generation has finished.
