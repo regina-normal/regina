@@ -102,6 +102,7 @@
             case 1: objectType = @"Edge"; break;
             case 2: objectType = @"Triangle"; break;
             case 3: objectType = @"Tetrahedron"; break;
+            case 4: objectType = @"Pentachoron"; break;
             case -1: objectType = @"Component"; break;
             case -2: objectType = @"Boundary component"; break;
             default: objectType = @"Unknown"; break;
@@ -123,6 +124,12 @@
         if (header.data2) {
             [detail appendAttributedString:[SkeletonViewer titleFromHeaderField:header.data2]];
             [detail appendAttributedString:[[NSAttributedString alloc] initWithString:cell.data2.text]];
+            [detail appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
+        }
+
+        if (header.data3) {
+            [detail appendAttributedString:[SkeletonViewer titleFromHeaderField:header.data3]];
+            [detail appendAttributedString:[[NSAttributedString alloc] initWithString:cell.data3.text]];
             [detail appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n"]];
         }
 

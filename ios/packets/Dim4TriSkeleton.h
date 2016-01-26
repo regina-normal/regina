@@ -31,23 +31,9 @@
  **************************************************************************/
 
 #import <UIKit/UIKit.h>
+#import "PacketViewer.h"
+#import "Skeleton.h"
 
-@interface SkeletonHeaderCell : UITableViewCell
-@property (weak, nonatomic) IBOutlet UILabel *index;
-@property (weak, nonatomic) IBOutlet UILabel *data0;
-@property (weak, nonatomic) IBOutlet UILabel *data1;
-@property (weak, nonatomic) IBOutlet UILabel *data2;
-@property (weak, nonatomic) IBOutlet UILabel *data3;
-@end
+@interface Dim4TriSkeleton : SkeletonViewer <PacketViewer>
 
-@interface SkeletonCell : UITableViewCell
-@property (weak, nonatomic) IBOutlet UILabel *index;
-@property (weak, nonatomic) IBOutlet UILabel *data0;
-@property (weak, nonatomic) IBOutlet UILabel *data1;
-@property (weak, nonatomic) IBOutlet UILabel *data2;
-@property (weak, nonatomic) IBOutlet UILabel *data3;
-@end
-
-@interface SkeletonViewer : UIViewController
-@property (weak, nonatomic) IBOutlet UITableView *details;
 @end
