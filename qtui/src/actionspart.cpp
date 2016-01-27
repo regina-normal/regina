@@ -163,7 +163,7 @@ void ReginaMain::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&Isomorphism Signature List (4-D)"));
-    act->setIcon(ReginaSupport::themeIcon("document-sign"));
+    act->setIcon(ReginaSupport::regIcon("signature-4d"));
     act->setToolTip(tr("Import an isomorphism signature list "
         "for 4-manifold triangulations"));
     act->setWhatsThis(tr("Import an external text file containing "

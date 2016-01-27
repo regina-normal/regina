@@ -49,6 +49,7 @@ set (IMGS
   regina
   signature-2d
   signature-3d
+  signature-4d
   simplify
   snappea
   vtxlinks
