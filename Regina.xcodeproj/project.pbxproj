@@ -999,6 +999,8 @@
 		0550010B1C4D9EF900501C24 /* face7.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055001011C4D9EEB00501C24 /* face7.cpp */; };
 		0550010C1C4D9EF900501C24 /* face8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055001021C4D9EEB00501C24 /* face8.cpp */; };
 		0550010D1C4D9EF900501C24 /* face9.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055001031C4D9EEB00501C24 /* face9.cpp */; };
+		0554CA7A1C5983870053461B /* generictriui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA761C5983730053461B /* generictriui.cpp */; };
+		0554CA7B1C5983B00053461B /* generictriui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA771C5983730053461B /* generictriui.h */; };
 		05583A6219B8041F00076187 /* ReginaDocument.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05583A6119B8041F00076187 /* ReginaDocument.mm */; };
 		055ABEA519B49C1900044C1B /* closed-hyp-census-full.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABE9E19B499DC00044C1B /* closed-hyp-census-full.zsig */; };
 		055ABEA619B49C1900044C1B /* closed-nor-census-11.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABE9F19B499DC00044C1B /* closed-nor-census-11.zsig */; };
@@ -2598,6 +2600,8 @@
 		055001011C4D9EEB00501C24 /* face7.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face7.cpp; sourceTree = "<group>"; };
 		055001021C4D9EEB00501C24 /* face8.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face8.cpp; sourceTree = "<group>"; };
 		055001031C4D9EEB00501C24 /* face9.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face9.cpp; sourceTree = "<group>"; };
+		0554CA761C5983730053461B /* generictriui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = generictriui.cpp; sourceTree = "<group>"; };
+		0554CA771C5983730053461B /* generictriui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = generictriui.h; sourceTree = "<group>"; };
 		05561D181811F27A00FD6E2E /* regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = regina.icns; path = src/regina.icns; sourceTree = "<group>"; };
 		05561D191811F27A00FD6E2E /* x-regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "x-regina.icns"; path = "src/x-regina.icns"; sourceTree = "<group>"; };
 		05583A6019B8041F00076187 /* ReginaDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReginaDocument.h; sourceTree = "<group>"; };
@@ -5055,6 +5059,8 @@
 				0564A5931811D920002CC2AE /* facetgraphtab.h */,
 				0564A5941811D920002CC2AE /* gaprunner.cpp */,
 				0564A5951811D920002CC2AE /* gaprunner.h */,
+				0554CA761C5983730053461B /* generictriui.cpp */,
+				0554CA771C5983730053461B /* generictriui.h */,
 				05A73CBC19B2F1AB0099C617 /* groupwidget.cpp */,
 				05A73CBD19B2F1AB0099C617 /* groupwidget.h */,
 				0564A5961811D920002CC2AE /* nanglestructurecreator.cpp */,
@@ -6648,6 +6654,7 @@
 				0543AEA61811E12A002758F8 /* eltmovedialog.h in Sources */,
 				0543AEA71811E12A002758F8 /* facetgraphtab.h in Sources */,
 				0543AEA81811E12A002758F8 /* gaprunner.h in Sources */,
+				0554CA7B1C5983B00053461B /* generictriui.h in Sources */,
 				05A73CE219B2F99B0099C617 /* groupwidget.h in Sources */,
 				0543AEA91811E12A002758F8 /* nanglestructureui.h in Sources */,
 				0543AEAA1811E12A002758F8 /* ncompatcanvas.h in Sources */,
@@ -6680,6 +6687,7 @@
 				05A73CD019B2F1AB0099C617 /* nsnappeaui.cpp in Sources */,
 				05A73CCD19B2F1AB0099C617 /* nsnappeafile.cpp in Sources */,
 				0543AEBE1811E12A002758F8 /* patiencedialog.h in Sources */,
+				0554CA7A1C5983870053461B /* generictriui.cpp in Sources */,
 				0543AEBF1811E12A002758F8 /* progressdialogs.h in Sources */,
 				0543AEC01811E12A002758F8 /* recentfilesaction.h in Sources */,
 				0591E8411C4F769100793A9C /* dim4trigluings.cpp in Sources */,

@@ -12,6 +12,7 @@ SET ( FILES
   eltmovedialog
   facetgraphtab
   gaprunner
+  generictriui
   groupwidget
   nanglestructurecreator
   nanglestructureui

@@ -43,6 +43,7 @@
 #include "reginasupport.h"
 #include "packettypes/dim2triui.h"
 #include "packettypes/dim4triui.h"
+#include "packettypes/generictriui.h"
 #include "packettypes/nanglestructureui.h"
 #include "packettypes/ncontainerui.h"
 #include "packettypes/nnormalsurfaceui.h"
@@ -145,46 +146,83 @@ QIcon PacketManager::icon(NPacket* packet, bool allowLock) {
 
 PacketUI* PacketManager::createUI(regina::NPacket* packet,
         PacketPane* enclosingPane) {
-    if (packet->type() == PACKET_ANGLESTRUCTURELIST)
-        return new NAngleStructureUI(dynamic_cast<NAngleStructureList*>(packet),
-            enclosingPane);
-    if (packet->type() == PACKET_CONTAINER)
-        return new NContainerUI(dynamic_cast<NContainer*>(packet),
-            enclosingPane);
-    if (packet->type() == PACKET_DIM2TRIANGULATION)
-        return new Dim2TriangulationUI(dynamic_cast<Dim2Triangulation*>(packet),
-            enclosingPane);
-    if (packet->type() == PACKET_DIM4TRIANGULATION)
-        return new Dim4TriangulationUI(dynamic_cast<Dim4Triangulation*>(packet),
-            enclosingPane);
-    if (packet->type() == PACKET_NORMALSURFACELIST)
-        return new NNormalSurfaceUI(dynamic_cast<NNormalSurfaceList*>(packet),
-            enclosingPane);
-    if (packet->type() == PACKET_SCRIPT) {
-        return new NScriptUI(dynamic_cast<NScript*>(packet), enclosingPane);
+    switch (packet->type()) {
+        case PACKET_ANGLESTRUCTURELIST:
+            return new NAngleStructureUI(
+                dynamic_cast<NAngleStructureList*>(packet), enclosingPane);
+        case PACKET_CONTAINER:
+            return new NContainerUI(
+                dynamic_cast<NContainer*>(packet), enclosingPane);
+        case PACKET_DIM2TRIANGULATION:
+            return new Dim2TriangulationUI(
+                dynamic_cast<Dim2Triangulation*>(packet), enclosingPane);
+        case PACKET_DIM4TRIANGULATION:
+            return new Dim4TriangulationUI(
+                dynamic_cast<Dim4Triangulation*>(packet), enclosingPane);
+        case PACKET_NORMALSURFACELIST:
+            return new NNormalSurfaceUI(
+                dynamic_cast<NNormalSurfaceList*>(packet), enclosingPane);
+        case PACKET_SCRIPT:
+            return new NScriptUI(
+                dynamic_cast<NScript*>(packet), enclosingPane);
+        case PACKET_SNAPPEATRIANGULATION:
+            return new NSnapPeaUI(
+                dynamic_cast<NSnapPeaTriangulation*>(packet), enclosingPane);
+        case PACKET_SURFACEFILTER:
+            switch (((NSurfaceFilter*)packet)->filterType()) {
+                case NS_FILTER_COMBINATION:
+                    return new NSurfaceFilterCombUI(
+                        dynamic_cast<NSurfaceFilterCombination*>(packet),
+                        enclosingPane);
+                case NS_FILTER_PROPERTIES:
+                    return new NSurfaceFilterPropUI(
+                        dynamic_cast<NSurfaceFilterProperties*>(packet),
+                        enclosingPane);
+                default:
+                    return new DefaultPacketUI(packet, enclosingPane);
+            }
+        case PACKET_TEXT:
+            return new NTextUI(
+                dynamic_cast<NText*>(packet), enclosingPane);
+        case PACKET_TRIANGULATION:
+            return new NTriangulationUI(
+                dynamic_cast<NTriangulation*>(packet), enclosingPane);
+        case PACKET_TRIANGULATION5:
+            return new GenericTriangulationUI<5>(
+                dynamic_cast<Triangulation<5>*>(packet), enclosingPane);
+        case PACKET_TRIANGULATION6:
+            return new GenericTriangulationUI<6>(
+                dynamic_cast<Triangulation<6>*>(packet), enclosingPane);
+        case PACKET_TRIANGULATION7:
+            return new GenericTriangulationUI<7>(
+                dynamic_cast<Triangulation<7>*>(packet), enclosingPane);
+        case PACKET_TRIANGULATION8:
+            return new GenericTriangulationUI<8>(
+                dynamic_cast<Triangulation<8>*>(packet), enclosingPane);
+        case PACKET_TRIANGULATION9:
+            return new GenericTriangulationUI<9>(
+                dynamic_cast<Triangulation<9>*>(packet), enclosingPane);
+        case PACKET_TRIANGULATION10:
+            return new GenericTriangulationUI<10>(
+                dynamic_cast<Triangulation<10>*>(packet), enclosingPane);
+        case PACKET_TRIANGULATION11:
+            return new GenericTriangulationUI<11>(
+                dynamic_cast<Triangulation<11>*>(packet), enclosingPane);
+        case PACKET_TRIANGULATION12:
+            return new GenericTriangulationUI<12>(
+                dynamic_cast<Triangulation<12>*>(packet), enclosingPane);
+        case PACKET_TRIANGULATION13:
+            return new GenericTriangulationUI<13>(
+                dynamic_cast<Triangulation<13>*>(packet), enclosingPane);
+        case PACKET_TRIANGULATION14:
+            return new GenericTriangulationUI<14>(
+                dynamic_cast<Triangulation<14>*>(packet), enclosingPane);
+        case PACKET_TRIANGULATION15:
+            return new GenericTriangulationUI<15>(
+                dynamic_cast<Triangulation<15>*>(packet), enclosingPane);
+        default:
+            return new DefaultPacketUI(packet, enclosingPane);
     }
-    if (packet->type() == PACKET_SNAPPEATRIANGULATION) {
-        return new NSnapPeaUI(dynamic_cast<NSnapPeaTriangulation*>(packet),
-            enclosingPane);
-    }
-    if (packet->type() == PACKET_SURFACEFILTER) {
-        if (((NSurfaceFilter*)packet)->filterType() == NS_FILTER_COMBINATION)
-            return new NSurfaceFilterCombUI(
-                dynamic_cast<NSurfaceFilterCombination*>(packet),
-                enclosingPane);
-        if (((NSurfaceFilter*)packet)->filterType() == NS_FILTER_PROPERTIES)
-            return new NSurfaceFilterPropUI(
-                dynamic_cast<NSurfaceFilterProperties*>(packet),
-                enclosingPane);
-        return new DefaultPacketUI(packet, enclosingPane);
-    }
-    if (packet->type() == PACKET_TEXT) {
-        return new NTextUI(dynamic_cast<NText*>(packet), enclosingPane);
-    }
-    if (packet->type() == PACKET_TRIANGULATION)
-        return new NTriangulationUI(dynamic_cast<NTriangulation*>(packet),
-            enclosingPane);
-    return new DefaultPacketUI(packet, enclosingPane);
 }
 
 PacketExternalViewer PacketManager::externalViewer(regina::NPacket* packet) {
