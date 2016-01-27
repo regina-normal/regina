@@ -86,18 +86,24 @@ GenericTriangulationUI<dim>::GenericTriangulationUI(Triangulation<dim>* packet,
 
     type = new QLabel();
     type->setAlignment(Qt::AlignCenter);
-    // type->setWhatsThis(TODO);
+    type->setWhatsThis(QObject::tr("Displays a few basic properties "
+        "of this triangulation, such as orientability and connectedness."));
     layout->addWidget(type);
 
     fVector = new QLabel();
     fVector->setAlignment(Qt::AlignCenter);
     fVector->setWordWrap(true);
-    // fVector->setWhatsThis(TODO);
+    fVector->setWhatsThis(QObject::trUtf8("<qt>Displays the f-vector "
+        "of this triangulation.  "
+        "The f-vector is (f<sub>0</sub>, f<sub>1</sub>, …, f<sub>%1</sub>), "
+        "where f<sub><i>k</i></sub> gives the number of <i>k</i>-faces.</qt>")
+        .arg(dim));
     layout->addWidget(fVector);
 
     boundary = new QLabel();
     boundary->setAlignment(Qt::AlignCenter);
-    // boundary->setWhatsThis(TODO);
+    boundary->setWhatsThis(QObject::tr("Displays the number of "
+        "boundary %1-faces of this triangulation.").arg(dim - 1));
     layout->addWidget(boundary);
 
     // Add a central divider.
