@@ -89,7 +89,7 @@ NSurfaceHeaderUI::NSurfaceHeaderUI(regina::NNormalSurfaceList* packet,
     header->setAlignment(Qt::AlignCenter);
     header->setMargin(10);
     header->setWhatsThis(header->tr("Displays the parameters of the "
-        "vertex enumeration that created this list of surfaces, including "
+        "enumeration that created this list of surfaces, including "
         "the specific coordinate system that was originally used.  Also "
         "displays the total number of surfaces in this list."));
     header->setTextInteractionFlags(Qt::TextBrowserInteraction);
