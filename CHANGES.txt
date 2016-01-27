@@ -139,6 +139,7 @@ Version 5.0  [ (under development) ]
             - New routines isOriented(), orient(), makeDoubleCover(),
               finiteToIdeal() and splitIntoComponents(), inherited from the
               generic TriangulationBase<dim> template.
+            - New routine fVector().
             - Routines getVertices() and getEdges() no longer return a
               reference to a std::vector.  Instead they return a FaceList
               structure, which also supports C++11 range-based for loops and
@@ -546,6 +547,7 @@ Version 5.0  [ (under development) ]
             - New dimension-agnostic function hasBoundaryFacets().
             - New dimension-agnostic face<subdim>() and faces<subdim>()
               template functions.
+            - New routine fVector().
             - New routine niceTreeDecomposition() for constructing and
               caching a nice tree decomposition of the face pairing graph.
             - New routines retriangulate() and simplifyExhaustive() for
