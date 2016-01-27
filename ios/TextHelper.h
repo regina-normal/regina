@@ -75,6 +75,8 @@
  * according to whether or not \a count is 1.
  *
  * Example: <tt>[TextHelper countString:n singular:"tetrahedra" plural:"tetrahedra"]</tt>
+ *
+ * The arguments \a singular and \a plural must both be plain ASCII.
  */
 + (NSString*)countString:(long)count singular:(const char*)singular plural:(const char*)plural;
 
