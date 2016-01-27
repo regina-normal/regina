@@ -501,6 +501,7 @@ Dim4TriGluingsUI::Dim4TriGluingsUI(regina::Dim4Triangulation* packet,
 
     actBoundaryComponents = new QAction(this);
     actBoundaryComponents->setText(tr("Boundar&y Components..."));
+    actBoundaryComponents->setIcon(ReginaSupport::regIcon("boundaries"));
     actBoundaryComponents->setToolTip(tr(
         "Build a 3-manifold triangulation from a boundary component"));
     actBoundaryComponents->setWhatsThis(tr("<qt>Build a 3-manifold "

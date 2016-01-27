@@ -2,6 +2,7 @@ set (IMG_FILES )
 
 set (IMGS
   barycentric
+  boundaries
   canonical
   components
   cone

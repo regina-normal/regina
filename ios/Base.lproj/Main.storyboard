@@ -10648,7 +10648,7 @@
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xbg-hI-Cmx">
                                 <rect key="frame" x="407.5" y="668" width="32" height="32"/>
-                                <state key="normal" image="Triangulation">
+                                <state key="normal" image="Action-Boundaries">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -11762,6 +11762,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Action-Boundaries" width="32" height="32"/>
         <image name="Action-Canonical" width="32" height="32"/>
         <image name="Action-ConnectedSum" width="32" height="32"/>
         <image name="Action-DrillEdge" width="32" height="32"/>
@@ -11796,7 +11797,7 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="Ngy-UB-Auf"/>
+        <segue reference="tSn-Mx-szy"/>
         <segue reference="o8i-Re-a8F"/>
         <segue reference="sZ3-q9-8Px"/>
     </inferredMetricsTieBreakers>

@@ -552,6 +552,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
 
     actBoundaryComponents = new QAction(this);
     actBoundaryComponents->setText(tr("Boundar&y Components..."));
+    actBoundaryComponents->setIcon(ReginaSupport::regIcon("boundaries"));
     actBoundaryComponents->setToolTip(tr(
         "Build a 2-manifold triangulation from a boundary component"));
     actBoundaryComponents->setWhatsThis(tr("<qt>Build a 2-manifold "
