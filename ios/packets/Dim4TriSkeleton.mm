@@ -84,10 +84,27 @@
     [self.viewWhich setTitle:[TextHelper countString:self.packet->countFaces<0>() singular:"vertex" plural:"vertices"] forSegmentAtIndex:0];
     [self.viewWhich setTitle:[TextHelper countString:self.packet->countFaces<1>() singular:"edge" plural:"edges"] forSegmentAtIndex:1];
     [self.viewWhich setTitle:[TextHelper countString:self.packet->countFaces<2>() singular:"triangle" plural:"triangles"] forSegmentAtIndex:2];
-    [self.viewWhich setTitle:[TextHelper countString:self.packet->countFaces<3>() singular:"tetrahedron" plural:"tetrahedra"] forSegmentAtIndex:3];
-    [self.viewWhich setTitle:[TextHelper countString:self.packet->size() singular:"pentachoron" plural:"pentachora"] forSegmentAtIndex:4];
-    [self.viewWhich setTitle:[TextHelper countString:self.packet->countComponents() singular:"component" plural:"components"] forSegmentAtIndex:5];
-    [self.viewWhich setTitle:[TextHelper countString:self.packet->countBoundaryComponents() singular:"boundary" plural:"boundaries"] forSegmentAtIndex:6];
+
+    // We run out of horizontal space when some counts grow large.
+    if (self.packet->countFaces<3>() < 10)
+        [self.viewWhich setTitle:[TextHelper countString:self.packet->countFaces<3>() singular:"tetrahedron" plural:"tetrahedra"] forSegmentAtIndex:3];
+    else
+        [self.viewWhich setTitle:[NSString stringWithFormat:@"%ld tetra…", self.packet->countFaces<3>()] forSegmentAtIndex:3];
+
+    if (self.packet->size() < 10)
+        [self.viewWhich setTitle:[TextHelper countString:self.packet->size() singular:"pentachoron" plural:"pentachora"] forSegmentAtIndex:4];
+    else
+        [self.viewWhich setTitle:[NSString stringWithFormat:@"%ld penta…", self.packet->size()] forSegmentAtIndex:4];
+
+    if (self.packet->countComponents() <= 1)
+        [self.viewWhich setTitle:[TextHelper countString:self.packet->countComponents() singular:"component" plural:"components"] forSegmentAtIndex:5];
+    else
+        [self.viewWhich setTitle:[NSString stringWithFormat:@"%ld comp…", self.packet->countComponents()] forSegmentAtIndex:5];
+
+    if (self.packet->countBoundaryComponents() < 10)
+        [self.viewWhich setTitle:[TextHelper countString:self.packet->countBoundaryComponents() singular:"boundary" plural:"boundaries"] forSegmentAtIndex:6];
+    else
+        [self.viewWhich setTitle:[NSString stringWithFormat:@"%ld bound…", self.packet->countBoundaryComponents()] forSegmentAtIndex:6];
 
     self.viewWhich.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:KEY_LAST_DIM4TRI_SKELETON_TYPE];
 
