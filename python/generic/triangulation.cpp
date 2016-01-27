@@ -67,6 +67,13 @@ namespace {
             return ans;
         }
 
+        static boost::python::list fVector_list(const Triangulation<dim>& t) {
+            boost::python::list ans;
+            for (auto i : t.fVector())
+                ans.append(i);
+            return ans;
+        }
+
         static regina::Isomorphism<dim>* isIsomorphicTo(
                 const Triangulation<dim>& t, const Triangulation<dim>& s) {
             return t.isIsomorphicTo(s).release();
@@ -158,6 +165,7 @@ void addTriangulation(const char* name) {
         .def("countFaces", &regina::python::countFaces<Triangulation<dim>, dim>)
         .def("getNumberOfFaces",
             &regina::python::countFaces<Triangulation<dim>, dim>)
+        .def("fVector", PyTriHelper<dim>::fVector_list)
         .def("components", PyTriHelper<dim>::components_list)
         .def("getComponents", PyTriHelper<dim>::components_list)
         .def("faces", &regina::python::faces<Triangulation<dim>, dim>)

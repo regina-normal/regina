@@ -116,6 +116,18 @@ class FaceListSuite :
          * clears the lists that contain them.
          */
         void deleteFaces();
+        /**
+         * Fills the given vector with the first (\a subdim + 1)
+         * elements of the f-vector.
+         *
+         * Specifically, this routine pushes the values
+         * \a f[0], ..., \a f[\a subdim] onto the end of the given vector,
+         * where \a f[\a k] denotes the number of <i>k</i>-faces that
+         * this object stores.
+         *
+         * @param result the vector in which the results will be placed.
+         */
+        void fillFVector(std::vector<size_t>& result) const;
 };
 
 #ifndef __DOXYGEN
@@ -124,6 +136,7 @@ template <int dim>
 class FaceListSuite<dim, 0> : protected FaceList<dim, 0> {
     protected:
         void deleteFaces();
+        void fillFVector(std::vector<size_t>& result) const;
 };
 
 #endif // __DOXYGEN
@@ -566,6 +579,23 @@ class TriangulationBase :
          */
         template <int subdim>
         size_t getNumberOfFaces() const;
+
+        /**
+         * Returns the f-vector of this triangulation, which counts the
+         * number of faces of all dimensions.
+         *
+         * The vector that is returned will have length <i>dim</i>+1.
+         * If this vector is \a f, then \a f[\a k] will be the number of
+         * <i>k</i>-faces for each 0 &le; \a k &le; \a dim.
+         *
+         * This routine is significantly more heavyweight than countFaces().
+         * Its advantage is that, unlike the templatised countFaces(),
+         * it allows you to count faces whose dimensions are not known
+         * until runtime.
+         *
+         * @return the f-vector of this triangulation.
+         */
+        std::vector<size_t> fVector() const;
 
         /**
          * Returns all connected components of this triangulation.
@@ -1636,6 +1666,19 @@ inline void FaceListSuite<dim, 0>::deleteFaces() {
     FaceList<dim, 0>::destroy();
 }
 
+template <int dim, int subdim>
+inline void FaceListSuite<dim, subdim>::fillFVector(
+        std::vector<size_t>& result) const {
+    FaceListSuite<dim, subdim - 1>::fillFVector(result);
+    result.push_back(FaceList<dim, subdim>::size());
+}
+
+template <int dim>
+inline void FaceListSuite<dim, 0>::fillFVector(
+        std::vector<size_t>& result) const {
+    result.push_back(FaceList<dim, 0>::size());
+}
+
 // Inline functions for TriangulationBase
 
 template <int dim>
@@ -1847,6 +1890,14 @@ template <int subdim>
 inline size_t TriangulationBase<dim>::getNumberOfFaces() const {
     ensureSkeleton();
     return FaceList<dim, subdim>::size();
+}
+
+template <int dim>
+inline std::vector<size_t> TriangulationBase<dim>::fVector() const {
+    std::vector<size_t> ans;
+    FaceListSuite<dim, dim - 1>::fillFVector(ans);
+    ans.push_back(size());
+    return ans;
 }
 
 template <int dim>

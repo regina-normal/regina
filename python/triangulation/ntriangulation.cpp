@@ -131,6 +131,13 @@ namespace {
         return ans;
     }
 
+    boost::python::list fVector_list(const NTriangulation& t) {
+        boost::python::list ans;
+        for (auto i : t.fVector())
+            ans.append(i);
+        return ans;
+    }
+
     boost::python::list findAllIsomorphisms_list(
         const NTriangulation& t, const NTriangulation& other) {
         boost::python::list ans;
@@ -255,6 +262,7 @@ void addNTriangulation() {
         .def("getNumberOfEdges", &NTriangulation::getNumberOfEdges)
         .def("countTriangles", &NTriangulation::countTriangles)
         .def("getNumberOfTriangles", &NTriangulation::getNumberOfTriangles)
+        .def("fVector", fVector_list)
         .def("components", components_list)
         .def("getComponents", components_list)
         .def("boundaryComponents", boundaryComponents_list)

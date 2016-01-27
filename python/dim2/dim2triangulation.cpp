@@ -76,6 +76,13 @@ namespace {
         return ans;
     }
 
+    boost::python::list fVector_list(const Dim2Triangulation& t) {
+        boost::python::list ans;
+        for (auto i : t.fVector())
+            ans.append(i);
+        return ans;
+    }
+
     regina::Dim2Isomorphism* isIsomorphicTo_ptr(const Dim2Triangulation& t,
             const Dim2Triangulation& s) {
         return t.isIsomorphicTo(s).release();
@@ -185,6 +192,7 @@ void addDim2Triangulation() {
         .def("getNumberOfVertices", &Dim2Triangulation::getNumberOfVertices)
         .def("countEdges", &Dim2Triangulation::countEdges)
         .def("getNumberOfEdges", &Dim2Triangulation::getNumberOfEdges)
+        .def("fVector", fVector_list)
         .def("components", Dim2_components_list)
         .def("getComponents", Dim2_components_list)
         .def("boundaryComponents", Dim2_boundaryComponents_list)

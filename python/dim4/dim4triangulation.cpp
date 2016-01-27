@@ -96,6 +96,13 @@ namespace {
         return ans;
     }
 
+    boost::python::list fVector_list(const Dim4Triangulation& t) {
+        boost::python::list ans;
+        for (auto i : t.fVector())
+            ans.append(i);
+        return ans;
+    }
+
     regina::Dim4Isomorphism* isIsomorphicTo_ptr(const Dim4Triangulation& t,
             const Dim4Triangulation& s) {
         return t.isIsomorphicTo(s).release();
@@ -214,6 +221,7 @@ void addDim4Triangulation() {
         .def("getNumberOfTriangles", &Dim4Triangulation::getNumberOfTriangles)
         .def("countTetrahedra", &Dim4Triangulation::countTetrahedra)
         .def("getNumberOfTetrahedra", &Dim4Triangulation::getNumberOfTetrahedra)
+        .def("fVector", fVector_list)
         .def("components", Dim4_components_list)
         .def("getComponents", Dim4_components_list)
         .def("boundaryComponents", Dim4_boundaryComponents_list)
