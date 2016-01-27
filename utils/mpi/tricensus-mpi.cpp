@@ -497,7 +497,7 @@ int ctrlWaitForSlave(bool runningSlavesOnly = false) {
         &status);
 
     int slave = status.MPI_SOURCE;
-    long totSec = results[3];
+    double totSec = ((double)results[3])/CLOCKS_PER_SEC;
 
     if (results[0] != slaveTask[slave].pairing ||
             results[1] != slaveTask[slave].subtask) {
@@ -982,7 +982,7 @@ void slaveProcessPartialSearch() {
     if (! dryRun) {
         clock_t tics = clock();
         search->runSearch();
-        timeTaken = (clock() - tics)/CLOCKS_PER_SEC;
+        timeTaken = (clock() - tics);
     }
 
 
@@ -1079,7 +1079,7 @@ void slaveProcessPairing() {
         clock_t tics = clock();
         CensusType::findAllPerms(pairing, ! orientability.hasFalse(),
             ! finiteness.hasFalse(), whichPurge, dest);
-        timeTaken = (clock() - tics)/CLOCKS_PER_SEC;
+        timeTaken = (clock() - tics);//CLOCKS_PER_SEC;
     }
 
     if (nSolns > 0) {
