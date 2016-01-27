@@ -67,6 +67,7 @@ void addComponent(const char* name) {
             return_value_policy<reference_existing_object>())
         .def("getSimplex", &Component<dim>::getSimplex,
             return_value_policy<reference_existing_object>())
+        .def("isValid", &Component<dim>::isValid)
         .def("isOrientable", &Component<dim>::isOrientable)
         .def("hasBoundaryFacets", &Component<dim>::hasBoundaryFacets)
         .def("countBoundaryFacets", &Component<dim>::countBoundaryFacets)

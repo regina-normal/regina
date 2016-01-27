@@ -100,6 +100,7 @@ void addDim2Component() {
             return_value_policy<reference_existing_object>())
         .def("getBoundaryComponent", &Dim2Component::getBoundaryComponent,
             return_value_policy<reference_existing_object>())
+        .def("isValid", &Dim2Component::isValid)
         .def("isOrientable", &Dim2Component::isOrientable)
         .def("isClosed", &Dim2Component::isClosed)
         .def("hasBoundaryFacets", &Dim2Component::hasBoundaryFacets)

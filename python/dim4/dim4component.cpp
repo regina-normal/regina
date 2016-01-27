@@ -121,6 +121,7 @@ void addDim4Component() {
         .def("getBoundaryComponent", &Dim4Component::getBoundaryComponent,
             return_value_policy<reference_existing_object>())
         .def("isIdeal", &Dim4Component::isIdeal)
+        .def("isValid", &Dim4Component::isValid)
         .def("isOrientable", &Dim4Component::isOrientable)
         .def("isClosed", &Dim4Component::isClosed)
         .def("hasBoundaryFacets", &Dim4Component::hasBoundaryFacets)

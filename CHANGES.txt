@@ -84,6 +84,7 @@ Version 5.0  [ (under development) ]
             - New routine getNumberOfBoundaryFacets(), which is identical to
               the dimension-specific getNumberOfBoundaryEdges().
             - New routine hasBoundaryFacets() and alias hasBoundaryEdges().
+            - New routine isValid().
             - New dimension-agnostic routines countFaces<subdim>(),
               faces<subdim>() and face<subdim>().
             - Routine getNumberOfSimplices() has been renamed to size().
@@ -235,6 +236,7 @@ Version 5.0  [ (under development) ]
             - New routine getNumberOfBoundaryFacets(), which is identical to
               the dimension-specific getNumberOfBoundaryTriangles().
             - New routine hasBoundaryFacets() and alias hasBoundaryTriangles().
+            - New routine isValid().
             - New dimension-agnostic routines countFaces<subdim>(),
               faces<subdim>() and face<subdim>().
             - New routines vertices(), edges(), triangles() and tetrahedra().

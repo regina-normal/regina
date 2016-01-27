@@ -378,8 +378,8 @@
                 cell.data1.text = [TextHelper countString:c->size() singular:"pentachoron" plural:"pentachora"];
 
                 cell.data0.text = [NSString stringWithFormat:@"%s %s",
-                                  (c->isIdeal() ? "Ideal, " : "Real, "),
-                                  (c->isOrientable() ? "orbl" : "non-orbl")];
+                                   ((! c->isValid()) ? "Invalid, " : c->isIdeal() ? "Ideal, " : "Real, "),
+                                   (c->isOrientable() ? "orbl" : "non-orbl")];
 
                 if (self.packet->countComponents() == 1) {
                     cell.data2.text = @"All pentachora";

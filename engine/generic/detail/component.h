@@ -89,6 +89,12 @@ class ComponentBase :
         std::vector<Simplex<dim>*> simplices_;
             /**< List of triangles in the component. */
 
+    protected:
+        bool valid_;
+            /**< Is this component valid?  See Triangulation<dim>::isValid()
+             for details on what this means. */
+
+    private:
         size_t boundaryFacets_;
             /**< The number of boundary facets. */
         bool orientable_;
@@ -169,6 +175,20 @@ class ComponentBase :
         Simplex<dim>* getSimplex(size_t index) const;
 
         /**
+         * Determines if this component is valid.
+         *
+         * This uses the same criteria as Triangulation<dim>::isValid();
+         * see the Triangulation<dim>::isValid() documentation for details.
+         *
+         * As with Triangulation<dim>, this tests for bad self-identifications
+         * in all dimensions, but only tests for bad links in Regina's
+         * \stddef "standard dimensions".
+         *
+         * @return \c true if and only if this component is valid.
+         */
+        bool isValid() const;
+
+        /**
          * Determines if this component is orientable.
          *
          * This routine runs in constant time (since orientability is
@@ -247,7 +267,7 @@ class ComponentBase :
 
 template <int dim>
 inline ComponentBase<dim>::ComponentBase() :
-        orientable_(true), boundaryFacets_(0) {
+        valid_(true), orientable_(true), boundaryFacets_(0) {
 }
 
 template <int dim>
@@ -284,6 +304,11 @@ inline Simplex<dim>* ComponentBase<dim>::simplex(size_t index) const {
 template <int dim>
 inline Simplex<dim>* ComponentBase<dim>::getSimplex(size_t index) const {
     return simplices_[index];
+}
+
+template <int dim>
+inline bool ComponentBase<dim>::isValid() const {
+    return valid_;
 }
 
 template <int dim>

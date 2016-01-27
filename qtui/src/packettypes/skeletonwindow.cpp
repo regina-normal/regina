@@ -496,7 +496,8 @@ QVariant ComponentModel::data(const QModelIndex& index, int role) const {
             case 0:
                 return index.row();
             case 1:
-                return (item->isIdeal() ? tr("Ideal, ") : tr("Real, ")) +
+                return ((! item->isValid()) ? tr("Invalid, ") :
+                        item->isIdeal() ? tr("Ideal, ") : tr("Real, ")) +
                     (item->isOrientable() ? tr("Orbl") : tr("Non-orbl"));
             case 2:
                 return static_cast<unsigned>(item->size());
@@ -1398,7 +1399,8 @@ QVariant Dim4ComponentModel::data(const QModelIndex& index, int role) const {
             case 0:
                 return index.row();
             case 1:
-                return (item->isIdeal() ? tr("Ideal, ") : tr("Real, ")) +
+                return ((! item->isValid()) ? tr("Invalid, ") :
+                        item->isIdeal() ? tr("Ideal, ") : tr("Real, ")) +
                     (item->isOrientable() ? tr("Orbl") : tr("Non-orbl"));
             case 2:
                 return static_cast<unsigned>(item->size());

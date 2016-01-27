@@ -268,7 +268,7 @@ void NTriangulation::calculateVertexLinks() {
             else {
                 vertex->link_ = NVertex::NON_STANDARD_BDRY;
                 vertex->markBadLink();
-                valid_ = false;
+                valid_ = vertex->component_->valid_ = false;
                 standard_ = false;
             }
         } else {

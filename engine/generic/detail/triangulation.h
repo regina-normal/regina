@@ -2364,7 +2364,7 @@ void TriangulationBase<dim>::calculateSkeletonCodim2() {
                                     adjFace] != adjMap) {
                                 // You have chosen unwisely, my son.
                                 f->markBadIdentification();
-                                valid_ = false;
+                                valid_ = s->component_->valid_ = false;
                             }
                         }
                         break;
@@ -2474,7 +2474,7 @@ void TriangulationBase<dim>::calculateSkeletonSubdim() {
                                             mapping_[adjFace][pos] !=
                                             adjMap[pos]) {
                                         f->markBadIdentification();
-                                        valid_ = false;
+                                        valid_ = s->component_->valid_ = false;
                                         break;
                                     }
                             }

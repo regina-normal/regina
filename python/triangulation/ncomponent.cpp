@@ -112,6 +112,7 @@ void addNComponent() {
         .def("getBoundaryComponent", &NComponent::getBoundaryComponent,
             return_value_policy<reference_existing_object>())
         .def("isIdeal", &NComponent::isIdeal)
+        .def("isValid", &NComponent::isValid)
         .def("isOrientable", &NComponent::isOrientable)
         .def("isClosed", &NComponent::isClosed)
         .def("hasBoundaryFacets", &NComponent::hasBoundaryFacets)

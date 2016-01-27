@@ -347,7 +347,7 @@ void Dim4Triangulation::calculateVertexLinks() {
         if (vertex->link_->hasBoundaryTriangles()) {
             // It's a 3-ball or nothing.
             if ((! knownSimpleLinks_) && ! vertex->link_->isBall()) {
-                valid_ = false;
+                valid_ = vertex->component_->valid_ =  false;
                 vertex->markBadLink();
                 foundNonSimpleLink = true;
                 // The vertex belongs to some pentachoron with boundary
@@ -359,7 +359,7 @@ void Dim4Triangulation::calculateVertexLinks() {
             // Let's see what we've got.
             if ((! vertex->link_->isValid()) || vertex->link_->isIdeal()) {
                 // Bapow.
-                valid_ = false;
+                valid_ = vertex->component_->valid_ =  false;
                 vertex->markBadLink();
                 foundNonSimpleLink = true;
                 boundaryComponents_.push_back(
