@@ -116,6 +116,18 @@
             }
         case regina::PACKET_TEXT: return @"viewText";
         case regina::PACKET_TRIANGULATION: return @"viewTriangulation";
+        case regina::PACKET_TRIANGULATION5:
+        case regina::PACKET_TRIANGULATION6:
+        case regina::PACKET_TRIANGULATION7:
+        case regina::PACKET_TRIANGULATION8:
+        case regina::PACKET_TRIANGULATION9:
+        case regina::PACKET_TRIANGULATION10:
+        case regina::PACKET_TRIANGULATION11:
+        case regina::PACKET_TRIANGULATION12:
+        case regina::PACKET_TRIANGULATION13:
+        case regina::PACKET_TRIANGULATION14:
+        case regina::PACKET_TRIANGULATION15:
+            return @"viewGenericTriangulation";
         default: return @"viewDefault";
     }
 }

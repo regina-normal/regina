@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  iOS User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2014, Ben Burton                                   *
+ *  Copyright (c) 1999-2013, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -30,59 +30,10 @@
  *                                                                        *
  **************************************************************************/
 
-#import <Foundation/Foundation.h>
+#import "PacketViewer.h"
 
 /**
- * Miscellaneous helper routines for manipulating strings.
+ * The controller for viewing and editing high-dimensional triangulations.
  */
-@interface TextHelper : NSObject
-
-/**
- * Renders the given text in a green "yes" or a red "no" font.
- */
-+ (NSAttributedString*)yesNoString:(NSString*)text yesNo:(BOOL)yesNo;
-
-/**
- * According to the given boolean, renders either the text \a yes in a
- * green font, or the text \a no in a red font.
- */
-+ (NSAttributedString*)yesNoString:(BOOL)yesNo yes:(NSString*)yes no:(NSString*)no;
-
-/**
- * Renders the given text in a brown font.
- */
-+ (NSAttributedString*)markedString:(NSString*)text;
-
-/**
- * Renders the given text in a dark red colour.
- */
-+ (NSAttributedString*)badString:(NSString*)text;
-
-/**
- * Renders the given text in a dim grey colour.
- */
-+ (NSAttributedString*)dimString:(NSString*)text;
-
-/**
- * Renders the given text in one of two alternating colours, for use with long lists.
- */
-+ (NSAttributedString*)altString:(NSString*)text parity:(BOOL)parity;
-
-/**
- * Appends \a item to \a str.
- * If \a str is non-empty then the new text \a item will be
- * separated from the existing text by a comma and a space.
- */
-+ (void)appendToList:(NSMutableString*)str item:(NSString*)item;
-
-/**
- * Returns either "\a count \a singular" or "\a count \a plural"
- * according to whether or not \a count is 1.
- *
- * Example: <tt>[TextHelper countString:n singular:"tetrahedra" plural:"tetrahedra"]</tt>
- *
- * The arguments \a singular and \a plural must both be plain ASCII.
- */
-+ (NSString*)countString:(long)count singular:(const char*)singular plural:(const char*)plural;
-
+@interface GenericTriangulationViewController : UIViewController <PacketViewer>
 @end

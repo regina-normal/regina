@@ -1393,6 +1393,7 @@
 		05C064691C56C2ED006E6483 /* Dim4EltMovesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05C064611C56BC4A006E6483 /* Dim4EltMovesController.mm */; };
 		05C0646E1C56C9E0006E6483 /* Dim4TriAlgebra.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05C0646B1C56C9D0006E6483 /* Dim4TriAlgebra.mm */; };
 		05C064731C56E460006E6483 /* Dim4TriSkeleton.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05C064701C56E456006E6483 /* Dim4TriSkeleton.mm */; };
+		05C064781C585628006E6483 /* GenericTriangulationViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05C064751C585619006E6483 /* GenericTriangulationViewController.mm */; };
 		05CA99E618078466006161DC /* registryutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 05CA99E518078465006161DC /* registryutils.h */; };
 		05CAFB4E1C4CEA160001C253 /* face10.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB411C4CEA020001C253 /* face10.cpp */; };
 		05CAFB4F1C4CEA160001C253 /* face11.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB421C4CEA020001C253 /* face11.cpp */; };
@@ -3125,6 +3126,8 @@
 		05C0646B1C56C9D0006E6483 /* Dim4TriAlgebra.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Dim4TriAlgebra.mm; sourceTree = "<group>"; };
 		05C0646F1C56E456006E6483 /* Dim4TriSkeleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Dim4TriSkeleton.h; sourceTree = "<group>"; };
 		05C064701C56E456006E6483 /* Dim4TriSkeleton.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Dim4TriSkeleton.mm; sourceTree = "<group>"; };
+		05C064741C585619006E6483 /* GenericTriangulationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenericTriangulationViewController.h; sourceTree = "<group>"; };
+		05C064751C585619006E6483 /* GenericTriangulationViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GenericTriangulationViewController.mm; sourceTree = "<group>"; };
 		05CA99E518078465006161DC /* registryutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = registryutils.h; sourceTree = "<group>"; };
 		05CAFB401C4CEA020001C253 /* face-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "face-bindings.h"; sourceTree = "<group>"; };
 		05CAFB411C4CEA020001C253 /* face10.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face10.cpp; sourceTree = "<group>"; };
@@ -3293,6 +3296,8 @@
 				05EA195619F30A0100D37501 /* EltMovesController.mm */,
 				05B7708519CA4FF100E2E558 /* FilterViewController.h */,
 				05B7708619CA4FF100E2E558 /* FilterViewController.mm */,
+				05C064741C585619006E6483 /* GenericTriangulationViewController.h */,
+				05C064751C585619006E6483 /* GenericTriangulationViewController.mm */,
 				05C064421C55925B006E6483 /* HyperCompat.h */,
 				05C0644D1C55A5BE006E6483 /* HyperCompat.mm */,
 				05C064431C55925B006E6483 /* HyperCoords.h */,
@@ -6439,6 +6444,7 @@
 				0586426B19D92D550019E056 /* SurfacesMatching.mm in Sources */,
 				052FA23B180612DD00FAE4DF /* unix_file_io.c in Sources */,
 				05D1174519EE01A1003BEC55 /* ncensus.cpp in Sources */,
+				05C064781C585628006E6483 /* GenericTriangulationViewController.mm in Sources */,
 				05D1174219EE019D003BEC55 /* dim2triangulation.cpp in Sources */,
 				052FA1D41806129B00FAE4DF /* enumerator.cpp in Sources */,
 				05A73C8F19B2EF130099C617 /* nxmlsnappeareader.cpp in Sources */,

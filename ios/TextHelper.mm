@@ -38,6 +38,10 @@ static UIColor* yesColour = [UIColor colorWithRed:0.0 green:0.5 blue:0.0 alpha:1
 static UIColor* noColour = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha:1.0];
 static UIColor* badColour = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha:1.0];
 static UIColor* dimColour = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1.0];
+static UIColor* altColour1 = [UIColor colorWithRed:(0x2B / 256.0) green:(0x54 / 256.0) blue:(0x7E / 256.0) alpha:1.0]; // Blue jay: 2B547E
+// static UIColor* altColour1 = [UIColor colorWithRed:(0x15 / 256.0) green:(0x1B / 256.0) blue:(0x54 / 256.0) alpha:1.0]; // Midnight blue: 151B54
+static UIColor* altColour2 = [UIColor colorWithRed:(0x73 / 256.0) green:(0x7C / 256.0) blue:(0xA1 / 256.0) alpha:1.0]; // Slate blue: 737CA1
+// static UIColor* altColour2 = [UIColor colorWithRed:(0x48 / 256.0) green:(0x63 / 256.0) blue:(0xA0 / 256.0) alpha:1.0]; // Steel blue: 4863A0
 
 @implementation TextHelper
 
@@ -66,6 +70,11 @@ static UIColor* dimColour = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1
 + (NSAttributedString *)dimString:(NSString *)text
 {
     return [[NSAttributedString alloc] initWithString:text attributes:@{NSForegroundColorAttributeName: dimColour}];
+}
+
++ (NSAttributedString*)altString:(NSString*)text parity:(BOOL)parity
+{
+    return [[NSAttributedString alloc] initWithString:text attributes:@{NSForegroundColorAttributeName: (parity ? altColour1 : altColour2)}];
 }
 
 + (void)appendToList:(NSMutableString*)str item:(NSString*)item
