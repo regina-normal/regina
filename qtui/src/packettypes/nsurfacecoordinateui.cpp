@@ -486,7 +486,7 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
         "surfaces in this list.<p>"
         "Each row represents a single normal (or almost normal) surface.  "
         "As well as various properties of the surface, each row contains "
-        "a detailed representation the surface in the currently selected "
+        "a detailed representation of the surface in the currently selected "
         "coordinate system.<p>"
         "For details on what each property means or what each coordinate "
         "represents, hover the mouse over the column header (or refer "
@@ -628,7 +628,8 @@ void NSurfaceCoordinateUI::cutAlong() {
     if (! toCutAlong->isCompact()) {
         ReginaSupport::info(ui,
             tr("I can only cut along compact surfaces."),
-            tr("The surface you have selected is non-compact."));
+            tr("The surface you have selected is non-compact "
+                "(i.e., has infinitely many normal discs)."));
         return;
     }
 
@@ -636,7 +637,8 @@ void NSurfaceCoordinateUI::cutAlong() {
     // Be nice and simplify the triangulation, which could be very large.
     regina::NTriangulation* ans = toCutAlong->cutAlong();
     ans->intelligentSimplify();
-    ans->setLabel(surfaces->triangulation()->adornedLabel("Cut"));
+    ans->setLabel(surfaces->triangulation()->adornedLabel(
+        "Cut #" + std::to_string(whichSurface)));
     surfaces->insertChildLast(ans);
 
     enclosingPane->getMainWindow()->packetView(ans, true, true);
@@ -654,13 +656,15 @@ void NSurfaceCoordinateUI::crush() {
     if (! toCrush->isCompact()) {
         ReginaSupport::info(ui,
             tr("I can only crush compact surfaces."),
-            tr("The surface you have selected is non-compact."));
+            tr("The surface you have selected is non-compact "
+                "(i.e., has infinitely many normal discs)."));
         return;
     }
 
     // Go ahead and crush it.
     regina::NTriangulation* ans = toCrush->crush();
-    ans->setLabel(surfaces->triangulation()->adornedLabel("Crushed"));
+    ans->setLabel(surfaces->triangulation()->adornedLabel(
+        "Crushed #" + std::to_string(whichSurface)));
     surfaces->insertChildLast(ans);
 
     enclosingPane->getMainWindow()->packetView(ans, true, true);

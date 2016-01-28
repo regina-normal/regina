@@ -110,7 +110,7 @@ NSurfaceMatchingUI::NSurfaceMatchingUI(regina::NNormalSurfaceList* packet,
     table->header()->setStretchLastSection(false);
     table->setSelectionMode(QAbstractItemView::NoSelection);
     table->setWhatsThis(tr("<qt>Displays the normal surface matching "
-        "equations that were used in the vertex enumeration when this "
+        "equations that were used in the enumeration process when this "
         "list was originally created.<p>"
         "Each row represents a single equation.  Each equation involves "
         "setting a linear combination of normal surface coordinates to "
