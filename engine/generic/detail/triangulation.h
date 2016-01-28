@@ -1894,6 +1894,8 @@ inline size_t TriangulationBase<dim>::getNumberOfFaces() const {
 
 template <int dim>
 inline std::vector<size_t> TriangulationBase<dim>::fVector() const {
+    ensureSkeleton();
+
     std::vector<size_t> ans;
     FaceListSuite<dim, dim - 1>::fillFVector(ans);
     ans.push_back(size());

@@ -489,10 +489,19 @@ void Triangulation<dim>::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
     out << "\n\n";
 
+    out << "f-vector: ";
+    int i;
+    {
+        std::vector<size_t> f = detail::TriangulationBase<dim>::fVector();
+        for (i = 0; i < dim; ++i)
+            out << f[i] << ", ";
+        out << f[dim] << "\n\n";
+    }
+
     Simplex<dim>* simp;
     Simplex<dim>* adj;
     size_t pos;
-    int i, j;
+    int j;
     NPerm<dim+1> gluing;
 
     out << "  Simplex  |  glued to:";
