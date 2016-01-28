@@ -32,62 +32,106 @@
 
 /* end stub */
 
-/*! \file ncompatcanvas.h
- *  \brief Provides a canvas for displaying a surface/hypersurface
- *  compatibility matrix.
+/*! \file nhypercompatui.h
+ *  \brief Provides a viewer for pairwise compatibility of normal hypersurfaces.
  */
 
-#ifndef __NCOMPATCANVAS_H
-#define __NCOMPATCANVAS_H
+#ifndef __NHYPERCOMPATUI_H
+#define __NHYPERCOMPATUI_H
 
-#include <QGraphicsScene>
+#include "packet/npacketlistener.h"
+
+#include "../packettabui.h"
+
+class MessageLayer;
+class NCompatCanvas;
+class QPushButton;
+class QGraphicsView;
+class QComboBox;
+class QStackedWidget;
 
 namespace regina {
+    class NPacket;
     class NNormalHypersurfaceList;
-    class NNormalSurfaceList;
 };
 
 /**
- * A canvas for displaying a compatibility matrix for a list of
- * normal surfaces or hypersurfaces.
+ * A normal surface page for viewing surface coordinates.
  */
-class NCompatCanvas : public QGraphicsScene {
+class NHyperCompatibilityUI : public QObject, public PacketViewerTab,
+        public regina::NPacketListener {
     Q_OBJECT
 
     private:
         /**
-         * Matrix size and state
+         * Constants for the various "computer says no" messages that can be
+         * displayed.
          */
-        unsigned nSurfaces;
-        bool filled;
+        enum MessageIndex { TOO_LARGE, NON_EMBEDDED, EMPTY_LIST };
+
+        /**
+         * Packet details
+         */
+        regina::NNormalHypersurfaceList* surfaces;
+
+        /**
+         * Compatibility matrices
+         *
+         * These are null if there are too many surfaces, or real objects
+         * if we aim to display the matrices.  Note that, even if these
+         * are real objects, we do not \e fill the canvases with data
+         * points until the user actually tries to display them.
+         */
+        NCompatCanvas* matrixLocal;
+        QGraphicsView* layerLocal;
 
         /**
          * Internal components
          */
-        unsigned cellSize;
-        unsigned gridX;
-        unsigned gridY;
-        unsigned gridSize;
+        QWidget* ui;
+        QStackedWidget* stack;
+        MessageLayer* layerNone;
+        QComboBox* chooseMatrix;
+        QPushButton* btnCalculate;
+
+        /**
+         * Properties
+         */
+        bool requestedCalculation;
 
     public:
         /**
          * Constructor and destructor.
          */
-        NCompatCanvas(unsigned useNumSurfaces);
-        ~NCompatCanvas();
+        NHyperCompatibilityUI(regina::NNormalHypersurfaceList* packet,
+            PacketTabbedUI* useParentUI);
+        ~NHyperCompatibilityUI();
 
         /**
-         * Fill the canvas with data.
-         *
-         * These routines will do nothing if the canvas has already been
-         * filled.
-         *
-         * \pre The given list is non-empty and contains only embedded
-         * surfaces/hypersurfaces.
+         * PacketViewerTab overrides.
          */
-        void fillLocal(const regina::NNormalSurfaceList& surfaces);
-        void fillLocal(const regina::NNormalHypersurfaceList& surfaces);
-        void fillGlobal(const regina::NNormalSurfaceList& surfaces);
+        regina::NPacket* getPacket();
+        QWidget* getInterface();
+        void refresh();
+
+    public slots:
+        /**
+         * Notify that preferences have changed.
+         */
+        void updatePreferences();
+
+    private:
+        /**
+         * Change the display to show the given message.
+         */
+        void setMessage(MessageIndex msg);
+
+    private slots:
+        /**
+         * Compute or change matrices.
+         */
+        void changeLayer(int index);
+        void calculate();
 };
 
 #endif

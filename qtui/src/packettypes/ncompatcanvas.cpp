@@ -33,6 +33,8 @@
 /* end stub */
 
 // Regina core includes:
+#include "hypersurface/nnormalhypersurface.h"
+#include "hypersurface/nnormalhypersurfacelist.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nnormalsurfacelist.h"
 
@@ -51,6 +53,8 @@
 #include <qcolor.h>
 #include <QGraphicsSimpleTextItem>
 
+using regina::NNormalHypersurface;
+using regina::NNormalHypersurfaceList;
 using regina::NNormalSurface;
 using regina::NNormalSurfaceList;
 
@@ -264,6 +268,50 @@ void NCompatCanvas::fillLocal(const NNormalSurfaceList& surfaces) {
 
         for (j = i; j < nSurfaces; ++j) {
             t = surfaces.surface(j);
+
+            if (s->locallyCompatible(*t)) {
+                box = new QGraphicsRectItem(
+                    gridX + i * cellSize, gridY + j * cellSize,
+                    cellSize, cellSize);
+                addItem(box);
+                box->setPen(border);
+                box->setBrush(fill);
+                box->setZValue(8);
+                box->show();
+
+                if (i != j) {
+                    box = new QGraphicsRectItem(
+                        gridX + j * cellSize, gridY + i * cellSize,
+                        cellSize, cellSize);
+                    addItem(box);
+                    box->setPen(border);
+                    box->setBrush(fill);
+                    box->setZValue(8);
+                    box->show();
+                }
+            }
+        }
+    }
+
+    filled = true;
+    update();
+}
+
+void NCompatCanvas::fillLocal(const NNormalHypersurfaceList& surfaces) {
+    if (filled)
+        return;
+
+    QGraphicsRectItem* box;
+    QPen border(Qt::NoPen);
+    QBrush fill(Qt::darkCyan);
+
+    unsigned i, j;
+    const NNormalHypersurface *s, *t;
+    for (i = 0; i < nSurfaces; ++i) {
+        s = surfaces.hypersurface(i);
+
+        for (j = i; j < nSurfaces; ++j) {
+            t = surfaces.hypersurface(j);
 
             if (s->locallyCompatible(*t)) {
                 box = new QGraphicsRectItem(

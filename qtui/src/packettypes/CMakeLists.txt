@@ -18,6 +18,7 @@ SET ( FILES
   nanglestructureui
   ncompatcanvas
   ncontainerui
+  nhypercompatui
   nhypercoordinateui
   nhypermatchingui
   nhypersurfacecreator

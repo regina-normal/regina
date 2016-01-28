@@ -40,7 +40,7 @@
 #include "coordinates.h"
 #include "dim4triui.h"
 #include "nhypersurfaceui.h"
-//#include "nhypercompatui.h"
+#include "nhypercompatui.h"
 #include "nhypercoordinateui.h"
 #include "nhypermatchingui.h"
 #include "nhypersummaryui.h"
@@ -70,10 +70,8 @@ NHyperSurfaceUI::NHyperSurfaceUI(regina::NNormalHypersurfaceList* packet,
 
     addTab(new NHyperMatchingUI(packet, this), tr("&Matching Equations"));
 
-/*
     compat = new NHyperCompatibilityUI(packet, this);
     addTab(compat, tr("Com&patibility"));
-*/
 }
 
 const QLinkedList<QAction*>& NHyperSurfaceUI::getPacketTypeActions() {
