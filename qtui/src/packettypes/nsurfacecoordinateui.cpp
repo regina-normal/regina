@@ -623,8 +623,10 @@ void NSurfaceCoordinateUI::cutAlong() {
         return;
     }
 
+    size_t whichSurface = model->surfaceIndex(
+        table->selectionModel()->selectedIndexes().front());
     const regina::NNormalSurface* toCutAlong =
-        model->surface(table->selectionModel()->selectedIndexes().front());
+        model->surfaces()->surface(whichSurface);
     if (! toCutAlong->isCompact()) {
         ReginaSupport::info(ui,
             tr("I can only cut along compact surfaces."),
@@ -651,8 +653,10 @@ void NSurfaceCoordinateUI::crush() {
         return;
     }
 
+    size_t whichSurface = model->surfaceIndex(
+        table->selectionModel()->selectedIndexes().front());
     const regina::NNormalSurface* toCrush =
-        model->surface(table->selectionModel()->selectedIndexes().front());
+        model->surfaces()->surface(whichSurface);
     if (! toCrush->isCompact()) {
         ReginaSupport::info(ui,
             tr("I can only crush compact surfaces."),

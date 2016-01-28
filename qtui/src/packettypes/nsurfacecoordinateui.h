@@ -90,6 +90,7 @@ class SurfaceModel : public QAbstractItemModel {
          */
         regina::NNormalSurfaceList* surfaces() const;
         const regina::NNormalSurface* surface(const QModelIndex& index) const;
+        size_t surfaceIndex(const QModelIndex& index) const;
         regina::NormalCoords coordSystem() const;
 
         /**
@@ -218,6 +219,10 @@ inline regina::NNormalSurfaceList* SurfaceModel::surfaces() const {
 inline const regina::NNormalSurface* SurfaceModel::surface(
         const QModelIndex& index) const {
     return surfaces_->surface(realIndex[index.row()]);
+}
+
+inline size_t SurfaceModel::surfaceIndex(const QModelIndex& index) const {
+    return realIndex[index.row()];
 }
 
 inline regina::NormalCoords SurfaceModel::coordSystem() const {
