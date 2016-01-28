@@ -63,7 +63,7 @@ class NXMLPacketReader;
 
 template <int> class Triangulation;
 // We *must* declare the specialisation here; otherwise this header has
-// the side-effect of instantiating Trianglation<3> using the generic template.
+// the side-effect of instantiating Trianglation<4> using the generic template.
 template <> class Triangulation<4>;
 typedef Triangulation<4> Dim4Triangulation;
 
