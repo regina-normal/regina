@@ -304,7 +304,7 @@ void XMLSimplexReader<dim>::initialChars(const std::string& chars) {
         if (adjSimp->adjacentSimplex(adjFacet))
             continue;
 
-        simplex_->joinTo(k, adjSimp, perm);
+        simplex_->join(k, adjSimp, perm);
     }
 }
 

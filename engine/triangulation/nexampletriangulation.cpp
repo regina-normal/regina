@@ -161,10 +161,10 @@ NTriangulation* NExampleTriangulation::bingsHouse() {
 
     NTetrahedron* r = ans->newTetrahedron();
     NTetrahedron* s = ans->newTetrahedron();
-    r->joinTo(0, r, NPerm4(0, 1));
-    s->joinTo(0, s, NPerm4(0, 1));
-    r->joinTo(2, s, NPerm4(3, 1, 2, 0));
-    s->joinTo(3, r, NPerm4(2, 1, 0, 3));
+    r->join(0, r, NPerm4(0, 1));
+    s->join(0, s, NPerm4(0, 1));
+    r->join(2, s, NPerm4(3, 1, 2, 0));
+    s->join(3, r, NPerm4(2, 1, 0, 3));
 
     return ans;
 }
@@ -187,8 +187,8 @@ NTriangulation* NExampleTriangulation::rp2xs1() {
 
     NTetrahedron* r = ans->tetrahedron(0);
     NTetrahedron* t = ans->tetrahedron(2);
-    r->joinTo(1, t, NPerm4(2, 3, 0, 1));
-    r->joinTo(3, t, NPerm4(2, 3, 0, 1));
+    r->join(1, t, NPerm4(2, 3, 0, 1));
+    r->join(3, t, NPerm4(2, 3, 0, 1));
 
     return ans;
 }
@@ -327,10 +327,10 @@ NTriangulation* NExampleTriangulation::solidKleinBottle() {
     NTetrahedron* r = ans->newTetrahedron();
     NTetrahedron* s = ans->newTetrahedron();
     NTetrahedron* t = ans->newTetrahedron();
-    s->joinTo(0, r, NPerm4(0, 1, 2, 3));
-    s->joinTo(3, r, NPerm4(3, 0, 1, 2));
-    s->joinTo(1, t, NPerm4(3, 0, 1, 2));
-    s->joinTo(2, t, NPerm4(0, 1, 2, 3));
+    s->join(0, r, NPerm4(0, 1, 2, 3));
+    s->join(3, r, NPerm4(3, 0, 1, 2));
+    s->join(1, t, NPerm4(3, 0, 1, 2));
+    s->join(2, t, NPerm4(0, 1, 2, 3));
 
     return ans;
 }
@@ -343,10 +343,10 @@ NTriangulation* NExampleTriangulation::figureEight() {
     // the beginning of chapter 8 of Richard Rannard's PhD thesis.
     NTetrahedron* r = ans->newTetrahedron();
     NTetrahedron* s = ans->newTetrahedron();
-    r->joinTo(0, s, NPerm4(1, 3, 0, 2));
-    r->joinTo(1, s, NPerm4(2, 0, 3, 1));
-    r->joinTo(2, s, NPerm4(0, 3, 2, 1));
-    r->joinTo(3, s, NPerm4(2, 1, 0, 3));
+    r->join(0, s, NPerm4(1, 3, 0, 2));
+    r->join(1, s, NPerm4(2, 0, 3, 1));
+    r->join(2, s, NPerm4(0, 3, 2, 1));
+    r->join(3, s, NPerm4(2, 1, 0, 3));
 
     return ans;
 }
@@ -357,10 +357,10 @@ NTriangulation* NExampleTriangulation::trefoil() {
 
     NTetrahedron* r = ans->newTetrahedron();
     NTetrahedron* s = ans->newTetrahedron();
-    r->joinTo(0, s, NPerm4(2, 3));
-    r->joinTo(1, s, NPerm4(2, 3));
-    r->joinTo(2, s, NPerm4(1, 3));
-    r->joinTo(3, s, NPerm4(0, 2));
+    r->join(0, s, NPerm4(2, 3));
+    r->join(1, s, NPerm4(2, 3));
+    r->join(2, s, NPerm4(1, 3));
+    r->join(3, s, NPerm4(0, 2));
 
     return ans;
 }
@@ -379,8 +379,8 @@ NTriangulation* NExampleTriangulation::gieseking() {
     ans->setLabel("Gieseking manifold");
 
     NTetrahedron* r = ans->newTetrahedron();
-    r->joinTo(0, r, NPerm4(1, 2, 0, 3));
-    r->joinTo(2, r, NPerm4(0, 2, 3, 1));
+    r->join(0, r, NPerm4(1, 2, 0, 3));
+    r->join(2, r, NPerm4(0, 2, 3, 1));
 
     return ans;
 }
@@ -395,11 +395,11 @@ NTriangulation* NExampleTriangulation::cuspedGenusTwoTorus() {
     NTetrahedron* s = ans->newTetrahedron();
     NTetrahedron* t = ans->newTetrahedron();
     NTetrahedron* u = ans->newTetrahedron();
-    r->joinTo(0, s, NPerm4());
-    r->joinTo(1, t, NPerm4(1, 2, 3, 0));
-    r->joinTo(2, u, NPerm4(1, 0, 3, 2));
-    s->joinTo(3, t, NPerm4());
-    t->joinTo(1, u, NPerm4());
+    r->join(0, s, NPerm4());
+    r->join(1, t, NPerm4(1, 2, 3, 0));
+    r->join(2, u, NPerm4(1, 0, 3, 2));
+    s->join(3, t, NPerm4());
+    t->join(1, u, NPerm4());
     ans->finiteToIdeal();
 
     return ans;

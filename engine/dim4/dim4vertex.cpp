@@ -127,7 +127,7 @@ NTriangulation* Face<4, 0>::buildLinkDetail(bool labels,
                 if (adjIt->pentachoron() == adj && adjIt->vertex() == adjVertex)
                     break; // Sets adjIndex to the right value.
 
-            ans->tetrahedron(i)->joinTo(faceInLink,
+            ans->tetrahedron(i)->join(faceInLink,
                 ans->tetrahedron(adjIndex),
                 perm5to4(adj->tetrahedronMapping(adjVertex).inverse() *
                     pent->adjacentGluing(exitTet) *

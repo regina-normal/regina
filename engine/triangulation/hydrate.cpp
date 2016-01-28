@@ -147,7 +147,7 @@ bool NTriangulation::insertRehydration(const std::string& dehydration) {
         if (newTetGluings[gluingsMade]) {
             // Glue to tetrahedron tetsUsed.
             if (tetsUsed < nTet) {
-                tet[currTet]->joinTo(currFace, tet[tetsUsed], identity);
+                tet[currTet]->join(currFace, tet[tetsUsed], identity);
                 tetsUsed++;
             } else {
                 broken = true;
@@ -176,7 +176,7 @@ bool NTriangulation::insertRehydration(const std::string& dehydration) {
                 break;
             }
 
-            tet[currTet]->joinTo(currFace, tet[adjTet], adjPerm);
+            tet[currTet]->join(currFace, tet[adjTet], adjPerm);
 
             specsUsed++;
         }

@@ -2775,7 +2775,7 @@ bool TriangulationBase<dim>::finiteToIdeal() {
         f2Perm = bdryPerm[facet2->index()].inverse() * e2.vertices() *
             NPerm<dim + 1>(dim - 1, dim);
 
-        cone[facet1->index()]->joinTo(f1Perm[dim - 1],
+        cone[facet1->index()]->join(f1Perm[dim - 1],
             cone[facet2->index()], f2Perm * f1Perm.inverse());
     }
 

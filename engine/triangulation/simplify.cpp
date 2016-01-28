@@ -202,10 +202,10 @@ bool NTriangulation::threeTwoMove(NEdge* e, bool check, bool perform) {
     for (oldPos = 0; oldPos < 3; oldPos++)
         for (newPos = 0; newPos < 2; newPos++)
             if (adjTet[newPos][oldPos])
-                newTet[newPos]->joinTo(oldPos, adjTet[newPos][oldPos],
+                newTet[newPos]->join(oldPos, adjTet[newPos][oldPos],
                     gluings[newPos][oldPos] *
                     threeTwoVertices[oldPos].inverse());
-    newTet[0]->joinTo(3, newTet[1], NPerm4());
+    newTet[0]->join(3, newTet[1], NPerm4());
 
     // Done!.
     return true;
@@ -320,13 +320,13 @@ bool NTriangulation::twoThreeMove(NTriangle* f, bool check, bool perform) {
     for (oldPos = 0; oldPos < 2; oldPos++)
         for (newPos = 0; newPos < 3; newPos++)
             if (adjTet[newPos][oldPos])
-                newTet[newPos]->joinTo(oldPos, adjTet[newPos][oldPos],
+                newTet[newPos]->join(oldPos, adjTet[newPos][oldPos],
                     gluings[newPos][oldPos] *
                     twoThreeVertices[oldPos].inverse());
     NPerm4 internalPerm = NPerm4(0,1,3,2);
-    newTet[0]->joinTo(2, newTet[1], internalPerm);
-    newTet[1]->joinTo(2, newTet[2], internalPerm);
-    newTet[2]->joinTo(2, newTet[0], internalPerm);
+    newTet[0]->join(2, newTet[1], internalPerm);
+    newTet[1]->join(2, newTet[2], internalPerm);
+    newTet[2]->join(2, newTet[0], internalPerm);
 
     // Done!
     return true;
@@ -364,7 +364,7 @@ bool NTriangulation::oneFourMove(NTetrahedron* tet, bool /* check */,
     // Glue the new tetrahedra to each other internally.
     for (i = 0; i < 4; ++i)
         for (j = i + 1; j < 4; ++j)
-            newTet[i]->joinTo(j, newTet[j], NPerm4(i, j));
+            newTet[i]->join(j, newTet[j], NPerm4(i, j));
 
     // Attach the new tetrahedra to the old triangulation.
     for (i = 0; i < 4; ++i) {
@@ -376,10 +376,10 @@ bool NTriangulation::oneFourMove(NTetrahedron* tet, bool /* check */,
                 continue;
 
             // Nope, do it now.
-            newTet[i]->joinTo(i, newTet[adjGlue[i][i]], adjGlue[i]);
+            newTet[i]->join(i, newTet[adjGlue[i][i]], adjGlue[i]);
         } else if (adjTet[i]) {
             // The old tetrahedron was glued elsewhere.
-            newTet[i]->joinTo(i, adjTet[i], adjGlue[i]);
+            newTet[i]->join(i, adjTet[i], adjGlue[i]);
         }
     }
 
@@ -515,7 +515,7 @@ bool NTriangulation::twoZeroMove(NEdge* e, bool check, bool perform) {
                 crossover * top->adjacentGluing(topFace);
             tet[0]->unjoin(perm[0][i]);
             tet[1]->unjoin(perm[1][i]);
-            top->joinTo(topFace, bottom, gluing);
+            top->join(topFace, bottom, gluing);
         }
     }
 
@@ -597,7 +597,7 @@ bool NTriangulation::twoZeroMove(NVertex* v, bool check, bool perform) {
             crossover * top->adjacentGluing(topFace);
         tet[0]->unjoin(vertex[0]);
         tet[1]->unjoin(vertex[1]);
-        top->joinTo(topFace, bottom, gluing);
+        top->join(topFace, bottom, gluing);
     }
 
     // Finally remove and dispose of the tetrahedra.
@@ -685,12 +685,12 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
             * adjTet[0]->adjacentGluing(adjFace[0]);
         top->unjoin(topGlued[0]);
         top->unjoin(topGlued[1]);
-        adjTet[0]->joinTo(adjFace[0], adjTet[1], gluing);
+        adjTet[0]->join(adjFace[0], adjTet[1], gluing);
     }
 
     // Now make the new tetrahedron and glue it to itself.
     NTetrahedron* newTet = newTetrahedron();
-    newTet->joinTo(2, newTet, NPerm4(2,3));
+    newTet->join(2, newTet, NPerm4(2,3));
 
     // Glue the new tetrahedron into the remaining structure.
     if (oldTet->adjacentTetrahedron(oldVertices[otherEdgeEnd]) == top) {
@@ -702,7 +702,7 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
             top->adjacentGluing(topFace) * bottomToTop *
             bottomFacePerm * NPerm4(0,1);
         top->unjoin(topFace);
-        newTet->joinTo(0, newTet, gluing);
+        newTet->join(0, newTet, gluing);
     } else {
         int bottomFace = oldVertices[otherEdgeEnd];
         int topFace = bottomToTop[bottomFace];
@@ -716,13 +716,13 @@ bool NTriangulation::twoOneMove(NEdge* e, int edgeEnd,
             NPerm4 topGluing = top->adjacentGluing(topFace) *
                 bottomToTop * bottomFacePerm * NPerm4(0,1);
             top->unjoin(topFace);
-            newTet->joinTo(0, adjTop, topGluing);
+            newTet->join(0, adjTop, topGluing);
         }
         if (adjBottom) {
             NPerm4 bottomGluing = oldTet->adjacentGluing(bottomFace) *
                 bottomFacePerm;
             oldTet->unjoin(bottomFace);
-            newTet->joinTo(1, adjBottom, bottomGluing);
+            newTet->join(1, adjBottom, bottomGluing);
         }
     }
 
@@ -825,7 +825,7 @@ bool NTriangulation::closeBook(NEdge* e, bool check, bool perform) {
     // Actually perform the move.
     // Don't bother with a block since this is so simple.
 
-    t0->joinTo(p0[3], t1, p1 * NPerm4(2, 3) * p0.inverse());
+    t0->join(p0[3], t1, p1 * NPerm4(2, 3) * p0.inverse());
     return true;
 }
 
@@ -1131,7 +1131,7 @@ bool NTriangulation::collapseEdge(NEdge* e, bool check, bool perform) {
 
         embTet[i]->isolate();
         if (top && bot)
-            top->joinTo(topPerm[embVertices[i][0]], bot,
+            top->join(topPerm[embVertices[i][0]], bot,
                 botPerm * NPerm4(embVertices[i][0], embVertices[i][1]) *
                 topPerm.inverse());
 

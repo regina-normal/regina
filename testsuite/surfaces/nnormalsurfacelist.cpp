@@ -224,11 +224,11 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             r = twistedKxI.newTetrahedron();
             s = twistedKxI.newTetrahedron();
             t = twistedKxI.newTetrahedron();
-            r->joinTo(0, s, NPerm4(0, 1, 2, 3));
-            r->joinTo(1, t, NPerm4(2, 1, 0, 3));
-            r->joinTo(2, t, NPerm4(1, 3, 2, 0));
-            s->joinTo(1, t, NPerm4(0, 3, 2, 1));
-            s->joinTo(2, t, NPerm4(3, 1, 0, 2));
+            r->join(0, s, NPerm4(0, 1, 2, 3));
+            r->join(1, t, NPerm4(2, 1, 0, 3));
+            r->join(2, t, NPerm4(1, 3, 2, 0));
+            s->join(1, t, NPerm4(0, 3, 2, 1));
+            s->join(2, t, NPerm4(3, 1, 0, 2));
             twistedKxI.setLabel("Twisted KxI");
 
             // Build the 9-tetrahedron SFS from its dehydration string;

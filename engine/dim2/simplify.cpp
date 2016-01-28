@@ -68,7 +68,7 @@ bool Triangulation<2>::oneThreeMove(Dim2Triangle* tri, bool /* check */,
     // Glue the new triangles to each other internally.
     for (i = 0; i < 3; ++i)
         for (j = i + 1; j < 3; ++j)
-            newTri[i]->joinTo(j, newTri[j], NPerm3(i, j));
+            newTri[i]->join(j, newTri[j], NPerm3(i, j));
 
     // Attach the new triangles to the old triangulation.
     for (i = 0; i < 3; ++i) {
@@ -80,10 +80,10 @@ bool Triangulation<2>::oneThreeMove(Dim2Triangle* tri, bool /* check */,
                 continue;
 
             // Nope, do it now.
-            newTri[i]->joinTo(i, newTri[adjGlue[i][i]], adjGlue[i]);
+            newTri[i]->join(i, newTri[adjGlue[i][i]], adjGlue[i]);
         } else if (adjTri[i]) {
             // The old triangle was glued elsewhere.
-            newTri[i]->joinTo(i, adjTri[i], adjGlue[i]);
+            newTri[i]->join(i, adjTri[i], adjGlue[i]);
         }
     }
 

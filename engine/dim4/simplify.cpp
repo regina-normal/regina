@@ -257,8 +257,8 @@ bool Dim4Triangulation::fourTwoMove(Dim4Edge* e, bool check, bool perform) {
     for (i = 0; i < 2; ++i)
         for (j = 0; j < 4; ++j)
             if (adjPent[i][j])
-                newPent[i]->joinTo(j, adjPent[i][j], adjGluing[i][j]);
-    newPent[0]->joinTo(4, newPent[1], NPerm5());
+                newPent[i]->join(j, adjPent[i][j], adjGluing[i][j]);
+    newPent[0]->join(4, newPent[1], NPerm5());
 
     // Delete the old pentachora and insert the new.
     for (i = 0; i < 4; ++i)
@@ -353,10 +353,10 @@ bool Dim4Triangulation::threeThreeMove(Dim4Triangle* f, bool check,
     for (i = 0; i < 3; ++i)
         for (j = 0; j < 3; ++j)
             if (adjPent[i][j])
-                newPent[i]->joinTo(j, adjPent[i][j], adjGluing[i][j]);
-    newPent[0]->joinTo(3, newPent[1], NPerm5(3, 4));
-    newPent[1]->joinTo(3, newPent[2], NPerm5(3, 4));
-    newPent[2]->joinTo(3, newPent[0], NPerm5(3, 4));
+                newPent[i]->join(j, adjPent[i][j], adjGluing[i][j]);
+    newPent[0]->join(3, newPent[1], NPerm5(3, 4));
+    newPent[1]->join(3, newPent[2], NPerm5(3, 4));
+    newPent[2]->join(3, newPent[0], NPerm5(3, 4));
 
     // Delete the old pentachora and insert the new.
     for (i = 0; i < 3; ++i)
@@ -448,13 +448,13 @@ bool Dim4Triangulation::twoFourMove(Dim4Tetrahedron* f, bool check,
     for (i = 0; i < 4; ++i)
         for (j = 0; j < 2; ++j)
             if (adjPent[i][j])
-                newPent[i]->joinTo(j, adjPent[i][j], adjGluing[i][j]);
-    newPent[0]->joinTo(2, newPent[1], NPerm5(3, 4));
-    newPent[0]->joinTo(3, newPent[2], NPerm5(2, 4));
-    newPent[0]->joinTo(4, newPent[3], NPerm5(2, 3));
-    newPent[1]->joinTo(4, newPent[2], NPerm5(2, 3));
-    newPent[1]->joinTo(3, newPent[3], NPerm5(2, 4));
-    newPent[2]->joinTo(2, newPent[3], NPerm5(3, 4));
+                newPent[i]->join(j, adjPent[i][j], adjGluing[i][j]);
+    newPent[0]->join(2, newPent[1], NPerm5(3, 4));
+    newPent[0]->join(3, newPent[2], NPerm5(2, 4));
+    newPent[0]->join(4, newPent[3], NPerm5(2, 3));
+    newPent[1]->join(4, newPent[2], NPerm5(2, 3));
+    newPent[1]->join(3, newPent[3], NPerm5(2, 4));
+    newPent[2]->join(2, newPent[3], NPerm5(3, 4));
 
     // Delete the old pentachora and insert the new.
     for (i = 0; i < 2; ++i)
@@ -499,7 +499,7 @@ bool Dim4Triangulation::oneFiveMove(Dim4Pentachoron* pen, bool /* check */,
     // Glue the new pentachora to each other internally.
     for (i = 0; i < 5; ++i)
         for (j = i + 1; j < 5; ++j)
-            newPen[i]->joinTo(j, newPen[j], NPerm5(i, j));
+            newPen[i]->join(j, newPen[j], NPerm5(i, j));
 
     // Attach the new pentachora to the old triangulation.
     for (i = 0; i < 5; ++i) {
@@ -511,10 +511,10 @@ bool Dim4Triangulation::oneFiveMove(Dim4Pentachoron* pen, bool /* check */,
                 continue;
 
             // Nope, do it now.
-            newPen[i]->joinTo(i, newPen[adjGlue[i][i]], adjGlue[i]);
+            newPen[i]->join(i, newPen[adjGlue[i][i]], adjGlue[i]);
         } else if (adjPen[i]) {
             // The old pentachoron was glued elsewhere.
-            newPen[i]->joinTo(i, adjPen[i], adjGlue[i]);
+            newPen[i]->join(i, adjPen[i], adjGlue[i]);
         }
     }
 
@@ -687,7 +687,7 @@ bool Dim4Triangulation::twoZeroMove(Dim4Triangle* t, bool check, bool perform) {
                 crossover * top->adjacentGluing(topFacet);
             pent[0]->unjoin(perm[0][i]);
             pent[1]->unjoin(perm[1][i]);
-            top->joinTo(topFacet, bottom, gluing);
+            top->join(topFacet, bottom, gluing);
         }
     }
 
@@ -788,7 +788,7 @@ bool Dim4Triangulation::twoZeroMove(Dim4Edge* e, bool check, bool perform) {
                 crossover * top->adjacentGluing(topFacet);
             pent[0]->unjoin(perm[0][i]);
             pent[1]->unjoin(perm[1][i]);
-            top->joinTo(topFacet, bottom, gluing);
+            top->join(topFacet, bottom, gluing);
         }
     }
 
@@ -1325,7 +1325,7 @@ bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
 
         embPent[i]->isolate();
         if (top && bot)
-            top->joinTo(topPerm[embVert[i][0]], bot,
+            top->join(topPerm[embVert[i][0]], bot,
                 botPerm * NPerm5(embVert[i][0], embVert[i][1]) *
                 topPerm.inverse());
 

@@ -406,16 +406,16 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             int i;
             for (i = 0; i < 5; i++)
                 tet[i] = tri->newTetrahedron();
-            tet[0]->joinTo(0, tet[4], NPerm4(1,0,2,3));
-            tet[0]->joinTo(1, tet[3], NPerm4(0,2,3,1));
-            tet[0]->joinTo(2, tet[1], NPerm4(0,1,3,2));
-            tet[0]->joinTo(3, tet[2], NPerm4(2,1,3,0));
-            tet[1]->joinTo(0, tet[3], NPerm4(1,3,2,0));
-            tet[1]->joinTo(1, tet[2], NPerm4(0,2,3,1));
-            tet[1]->joinTo(2, tet[4], NPerm4(2,1,0,3));
-            tet[2]->joinTo(1, tet[4], NPerm4(0,2,3,1));
-            tet[2]->joinTo(3, tet[3], NPerm4(3,1,2,0));
-            tet[3]->joinTo(3, tet[4], NPerm4(0,1,2,3));
+            tet[0]->join(0, tet[4], NPerm4(1,0,2,3));
+            tet[0]->join(1, tet[3], NPerm4(0,2,3,1));
+            tet[0]->join(2, tet[1], NPerm4(0,1,3,2));
+            tet[0]->join(3, tet[2], NPerm4(2,1,3,0));
+            tet[1]->join(0, tet[3], NPerm4(1,3,2,0));
+            tet[1]->join(1, tet[2], NPerm4(0,2,3,1));
+            tet[1]->join(2, tet[4], NPerm4(2,1,0,3));
+            tet[2]->join(1, tet[4], NPerm4(0,2,3,1));
+            tet[2]->join(3, tet[3], NPerm4(3,1,2,0));
+            tet[3]->join(3, tet[4], NPerm4(0,1,2,3));
             delete verifyPrime(tri, "the Poincare homology sphere (plugged)",
                 "S3/P120");
 

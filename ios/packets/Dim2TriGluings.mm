@@ -335,7 +335,7 @@
                     }
                     
                     // Glue the two edges together.
-                    t->joinTo(editEdge, adj, destGluing);
+                    t->join(editEdge, adj, destGluing);
                     NSIndexPath* path = [NSIndexPath indexPathForRow:destSimplex+1 inSection:0];
                     if ([toReload indexOfObject:path] == NSNotFound)
                         [toReload addObject:path];

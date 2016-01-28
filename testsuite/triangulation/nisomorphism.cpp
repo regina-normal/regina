@@ -336,7 +336,7 @@ class NIsomorphismTest : public CppUnit::TestFixture {
 
             // Make it no longer a subcomplex.
             // Do this by joining things together in a wacky invalid way.
-            tet->joinTo(0, tet, regina::NPerm4(3, 2, 1, 0));
+            tet->join(0, tet, regina::NPerm4(3, 2, 1, 0));
             if (t2.isContainedIn(t).get()) {
                 std::ostringstream msg;
                 msg << "Making a tetrahedron of " << name <<

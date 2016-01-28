@@ -79,15 +79,15 @@ void NTriangulation::barycentricSubdivision() {
             // (0, 1, 2, 3) -> (face, edge, vtx, corner)
 
             // Internal gluings within the old tetrahedron:
-            newTet[24 * tet + permIdx]->joinTo(perm[3],
+            newTet[24 * tet + permIdx]->join(perm[3],
                 newTet[24 * tet + (perm * NPerm4(3, 2)).S4Index()],
                 NPerm4(perm[3], perm[2]));
 
-            newTet[24 * tet + permIdx]->joinTo(perm[2],
+            newTet[24 * tet + permIdx]->join(perm[2],
                 newTet[24 * tet + (perm * NPerm4(2, 1)).S4Index()],
                 NPerm4(perm[2], perm[1]));
 
-            newTet[24 * tet + permIdx]->joinTo(perm[1],
+            newTet[24 * tet + permIdx]->join(perm[1],
                 newTet[24 * tet + (perm * NPerm4(1, 0)).S4Index()],
                 NPerm4(perm[1], perm[0]));
 
@@ -99,7 +99,7 @@ void NTriangulation::barycentricSubdivision() {
                 continue; // We've already done this gluing from the other side.
 
             glue = oldTet->adjacentGluing(perm[0]);
-            newTet[24 * tet + permIdx]->joinTo(perm[0],
+            newTet[24 * tet + permIdx]->join(perm[0],
                 newTet[24 * oldTet->adjacentTetrahedron(perm[0])->index() +
                     (glue * perm).S4Index()],
                 glue);
@@ -213,14 +213,14 @@ bool NTriangulation::idealToFinite() {
     for (i=0; i<numOldTet; i++) {
         // Glue the tip tetrahedra to the others.
         for (j=0; j<4; j++)
-            newTet[tip[j] + i * nDiv]->joinTo(j,
+            newTet[tip[j] + i * nDiv]->join(j,
                 newTet[interior[j] + i * nDiv], NPerm4());
 
         // Glue the interior tetrahedra to the others.
         for (j=0; j<4; j++) {
             for (k=0; k<4; k++)
                 if (j != k) {
-                    newTet[interior[j] + i * nDiv]->joinTo(k,
+                    newTet[interior[j] + i * nDiv]->join(k,
                         newTet[vertex[k][j] + i * nDiv], NPerm4());
                 }
         }
@@ -229,12 +229,12 @@ bool NTriangulation::idealToFinite() {
         for (j=0; j<4; j++)
             for (k=0; k<4; k++)
                 if (j != k) {
-                    newTet[edge[j][k] + i * nDiv]->joinTo(j,
+                    newTet[edge[j][k] + i * nDiv]->join(j,
                         newTet[edge[k][j] + i * nDiv], NPerm4(j,k));
 
                     for (l=0; l<4; l++)
                         if ( (l != j) && (l != k) )
-                            newTet[edge[j][k] + i * nDiv]->joinTo(l,
+                            newTet[edge[j][k] + i * nDiv]->join(l,
                                 newTet[vertex[j][l] + i * nDiv], NPerm4(k,l));
                 }
     }
@@ -253,19 +253,19 @@ bool NTriangulation::idealToFinite() {
                  // First deal with the tip tetrahedra.
                  for (k=0; k<4; k++)
                      if (j != k)
-                          newTet[tip[k] + i * nDiv]->joinTo(j,
+                          newTet[tip[k] + i * nDiv]->join(j,
                               newTet[tip[p[k]] + oppTet * nDiv], p);
 
                  // Next the edge tetrahedra.
                  for (k=0; k<4; k++)
                      if (j != k)
-                         newTet[edge[j][k] + i * nDiv]->joinTo(k,
+                         newTet[edge[j][k] + i * nDiv]->join(k,
                              newTet[edge[p[j]][p[k]] + oppTet * nDiv], p);
 
                  // Finally, the vertex tetrahedra.
                  for (k=0; k<4; k++)
                      if (j != k)
-                         newTet[vertex[j][k] + i * nDiv]->joinTo(k,
+                         newTet[vertex[j][k] + i * nDiv]->join(k,
                              newTet[vertex[p[j]][p[k]] + oppTet * nDiv], p);
 
             }
@@ -318,27 +318,27 @@ void NTriangulation::puncture(NTetrahedron* tet) {
         for (i = 0; i < 2; ++i)
             prism[i][j] = newTetrahedron();
 
-    prism[0][0]->joinTo(0, prism[0][1], NPerm4(3,0,1,2));
-    prism[0][1]->joinTo(0, prism[0][2], NPerm4(3,0,1,2));
+    prism[0][0]->join(0, prism[0][1], NPerm4(3,0,1,2));
+    prism[0][1]->join(0, prism[0][2], NPerm4(3,0,1,2));
 
-    prism[1][0]->joinTo(1, prism[1][1], NPerm4(3,0,1,2));
-    prism[1][1]->joinTo(1, prism[1][2], NPerm4(3,2,0,1));
+    prism[1][0]->join(1, prism[1][1], NPerm4(3,0,1,2));
+    prism[1][1]->join(1, prism[1][2], NPerm4(3,2,0,1));
 
-    prism[0][0]->joinTo(1, prism[1][0], NPerm4(1,2,3,0));
-    prism[0][0]->joinTo(2, prism[1][0], NPerm4(1,2,3,0));
-    prism[0][1]->joinTo(1, prism[1][1], NPerm4(1,2,3,0));
-    prism[0][1]->joinTo(2, prism[1][1], NPerm4(1,2,3,0));
-    prism[0][2]->joinTo(1, prism[1][2], NPerm4(0,1,3,2));
-    prism[0][2]->joinTo(2, prism[1][2], NPerm4(0,1,3,2));
+    prism[0][0]->join(1, prism[1][0], NPerm4(1,2,3,0));
+    prism[0][0]->join(2, prism[1][0], NPerm4(1,2,3,0));
+    prism[0][1]->join(1, prism[1][1], NPerm4(1,2,3,0));
+    prism[0][1]->join(2, prism[1][1], NPerm4(1,2,3,0));
+    prism[0][2]->join(1, prism[1][2], NPerm4(0,1,3,2));
+    prism[0][2]->join(2, prism[1][2], NPerm4(0,1,3,2));
 
     NTetrahedron* adj = tet->adjacentTetrahedron(0);
     if (adj) {
         NPerm4 gluing = tet->adjacentGluing(0);
         tet->unjoin(0);
-        prism[1][0]->joinTo(0, adj, gluing);
+        prism[1][0]->join(0, adj, gluing);
     }
 
-    tet->joinTo(0, prism[0][0], NPerm4(3,0,1,2));
+    tet->join(0, prism[0][0], NPerm4(3,0,1,2));
 }
 
 void NTriangulation::connectedSumWith(const NTriangulation& other) {
@@ -367,8 +367,8 @@ void NTriangulation::connectedSumWith(const NTriangulation& other) {
     bdry[1][0] = simplices_[simplices_.size() - 2];
     bdry[1][1] = simplices_[simplices_.size() - 1];
 
-    bdry[0][0]->joinTo(0, bdry[1][0], NPerm4(2, 3));
-    bdry[0][1]->joinTo(0, bdry[1][1], NPerm4(2, 3));
+    bdry[0][0]->join(0, bdry[1][0], NPerm4(2, 3));
+    bdry[0][1]->join(0, bdry[1][1], NPerm4(2, 3));
 }
 
 } // namespace regina

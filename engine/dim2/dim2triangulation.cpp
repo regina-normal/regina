@@ -186,7 +186,7 @@ void Triangulation<2>::cloneFrom(const Dim2Triangulation& X) {
                 adjPerm = tri->adjacentGluing(edge);
                 if (adjPos > triPos ||
                         (adjPos == triPos && adjPerm[edge] > edge)) {
-                    simplices_[triPos]->joinTo(edge,
+                    simplices_[triPos]->join(edge,
                         simplices_[adjPos], adjPerm);
                 }
             }

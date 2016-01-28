@@ -231,7 +231,7 @@ void Dim4Triangulation::calculateBoundary() {
                         adjTetTri = adjPent->SimplexFaces<4, 3>::mapping_
                             [adjFacet].preImageOf(j);
 
-                        bdryTet->joinTo(tetTri, adjBdryTet,
+                        bdryTet->join(tetTri, adjBdryTet,
                             perm5to4(adjTet->triangleMapping(adjTetTri) *
                             tet->triangleMapping(tetTri).inverse()));
                     }
@@ -328,7 +328,7 @@ void Dim4Triangulation::calculateVertexLinks() {
                 // This tetrahedron is adjacent to a previously-seen
                 // tetrahedron.  Make the gluing.
                 adjVertexIdx = pent->adjacentGluing(exitFacet)[vertexIdx];
-                tet[index]->joinTo(
+                tet[index]->join(
                     pent->SimplexFaces<4, 3>::mapping_[vertexIdx].
                         preImageOf(exitFacet),
                     tet[5 * adjPentIdx + adjVertexIdx],

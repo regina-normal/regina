@@ -184,31 +184,31 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
 
             t = flatOr.newTetrahedron();
             s = flatOr.newTetrahedron();
-            t->joinTo(0, s, NPerm4(0,1,2,3));
-            t->joinTo(1, s, NPerm4(0,1,2,3));
-            t->joinTo(2, s, NPerm4(1,3,2,0));
-            t->joinTo(3, s, NPerm4(1,2,0,3));
+            t->join(0, s, NPerm4(0,1,2,3));
+            t->join(1, s, NPerm4(0,1,2,3));
+            t->join(2, s, NPerm4(1,3,2,0));
+            t->join(3, s, NPerm4(1,2,0,3));
 
             t = flatNor.newTetrahedron();
             s = flatNor.newTetrahedron();
-            t->joinTo(0, s, NPerm4(0,1,2,3));
-            t->joinTo(1, s, NPerm4(2,1,0,3));
-            t->joinTo(2, s, NPerm4(1,3,2,0));
-            t->joinTo(3, s, NPerm4(2,1,0,3));
+            t->join(0, s, NPerm4(0,1,2,3));
+            t->join(1, s, NPerm4(2,1,0,3));
+            t->join(2, s, NPerm4(1,3,2,0));
+            t->join(3, s, NPerm4(2,1,0,3));
 
             t = degenerateOr.newTetrahedron();
             s = degenerateOr.newTetrahedron();
-            t->joinTo(0, t, NPerm4(1,0,2,3));
-            t->joinTo(2, s, NPerm4(1,2,0,3));
-            t->joinTo(3, s, NPerm4(0,2,3,1));
-            s->joinTo(2, s, NPerm4(1,2,3,0));
+            t->join(0, t, NPerm4(1,0,2,3));
+            t->join(2, s, NPerm4(1,2,0,3));
+            t->join(3, s, NPerm4(0,2,3,1));
+            s->join(2, s, NPerm4(1,2,3,0));
 
             t = degenerateNor.newTetrahedron();
             s = degenerateNor.newTetrahedron();
-            t->joinTo(0, t, NPerm4(1,0,2,3));
-            t->joinTo(2, s, NPerm4(1,2,0,3));
-            t->joinTo(3, s, NPerm4(0,3,2,1));
-            s->joinTo(2, s, NPerm4(0,2,3,1));
+            t->join(0, t, NPerm4(1,0,2,3));
+            t->join(2, s, NPerm4(1,2,0,3));
+            t->join(3, s, NPerm4(0,3,2,1));
+            s->join(2, s, NPerm4(0,2,3,1));
 
             lst123.insertLayeredSolidTorus(1, 2);
             m2_1_m2_1.insertRehydration("cabbbbaei");
@@ -216,31 +216,31 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
 
             t = genusTwoTorusCusp.newTetrahedron();
             s = genusTwoTorusCusp.newTetrahedron();
-            t->joinTo(0, s, NPerm4(0,2,3,1));
-            t->joinTo(1, s, NPerm4(2,1,3,0));
-            t->joinTo(2, s, NPerm4(1,3,2,0));
-            t->joinTo(3, s, NPerm4(2,0,1,3));
+            t->join(0, s, NPerm4(0,2,3,1));
+            t->join(1, s, NPerm4(2,1,3,0));
+            t->join(2, s, NPerm4(1,3,2,0));
+            t->join(3, s, NPerm4(2,0,1,3));
 
             t = projPlaneCusps.newTetrahedron();
             s = projPlaneCusps.newTetrahedron();
-            t->joinTo(0, t, NPerm4(1,0,2,3));
-            t->joinTo(2, s, NPerm4(1,2,0,3));
-            t->joinTo(3, s, NPerm4(3,2,0,1));
-            s->joinTo(2, s, NPerm4(0,2,3,1));
+            t->join(0, t, NPerm4(1,0,2,3));
+            t->join(2, s, NPerm4(1,2,0,3));
+            t->join(3, s, NPerm4(3,2,0,1));
+            s->join(2, s, NPerm4(0,2,3,1));
 
             t = genusFourNonOrCusp.newTetrahedron();
             s = genusFourNonOrCusp.newTetrahedron();
-            t->joinTo(0, t, NPerm4(1,2,0,3));
-            t->joinTo(2, s, NPerm4(1,2,0,3));
-            t->joinTo(3, s, NPerm4(0,2,3,1));
-            s->joinTo(2, s, NPerm4(0,2,3,1));
+            t->join(0, t, NPerm4(1,2,0,3));
+            t->join(2, s, NPerm4(1,2,0,3));
+            t->join(3, s, NPerm4(0,2,3,1));
+            s->join(2, s, NPerm4(0,2,3,1));
 
             cuspedTorus.insertLayeredSolidTorus(1, 2);
             cuspedTorus.finiteToIdeal();
 
             t = edgeInvalid.newTetrahedron();
-            t->joinTo(0, t, NPerm4(1,0,3,2));
-            t->joinTo(2, t, NPerm4(1,0,3,2));
+            t->join(0, t, NPerm4(1,0,3,2));
+            t->join(2, t, NPerm4(1,0,3,2));
         }
 
         void tearDown() {

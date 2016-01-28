@@ -109,7 +109,7 @@ Dim2Triangulation* Face<4, 1>::buildLinkDetail(bool labels,
                 if (adjIt->pentachoron() == adj && adjIt->edge() == adjEdge)
                     break; // Sets adjIndex to the right value.
 
-            ans->triangle(i)->joinTo(edgeInLink, ans->triangle(adjIndex),
+            ans->triangle(i)->join(edgeInLink, ans->triangle(adjIndex),
                 perm5to3(adj->triangleMapping(adjEdge).inverse() *
                     adjGluing *
                     pent->triangleMapping(e)));

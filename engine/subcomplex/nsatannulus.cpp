@@ -236,7 +236,7 @@ void NSatAnnulus::attachLST(NTriangulation* tri, long alpha, long beta) const {
 
     // Pull out the degenerate case.
     if (alpha == 2 && beta == 1) {
-        tet[0]->joinTo(roles[0][3], tet[1],
+        tet[0]->join(roles[0][3], tet[1],
             roles[1] * NPerm4(0, 1) * roles[0].inverse());
         return;
     }
@@ -313,11 +313,11 @@ void NSatAnnulus::attachLST(NTriangulation* tri, long alpha, long beta) const {
     // cases (0,1,1) and (1,1,2); see the insertLayeredSolidTorus()
     // documentation for details.
     if (cuts1 == 1) {
-        lst->joinTo(3, tet[0], roles[0] * cutsToRoles * NPerm4(1, 2, 0, 3));
-        lst->joinTo(2, tet[1], roles[1] * cutsToRoles * NPerm4(2, 1, 3, 0));
+        lst->join(3, tet[0], roles[0] * cutsToRoles * NPerm4(1, 2, 0, 3));
+        lst->join(2, tet[1], roles[1] * cutsToRoles * NPerm4(2, 1, 3, 0));
     } else {
-        lst->joinTo(3, tet[0], roles[0] * cutsToRoles * NPerm4(0, 1, 2, 3));
-        lst->joinTo(2, tet[1], roles[1] * cutsToRoles * NPerm4(1, 0, 3, 2));
+        lst->join(3, tet[0], roles[0] * cutsToRoles * NPerm4(0, 1, 2, 3));
+        lst->join(2, tet[1], roles[1] * cutsToRoles * NPerm4(1, 0, 3, 2));
     }
 }
 

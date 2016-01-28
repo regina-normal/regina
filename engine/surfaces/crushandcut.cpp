@@ -181,7 +181,7 @@ namespace {
              * be) to the corresponding quadrilateral or hexagon of the
              * adjacent block.
              */
-            void joinTo(int face, Block* other);
+            void join(int face, Block* other);
 
             /**
              * Creates a new inner tetrahedron within this block.
@@ -376,7 +376,7 @@ namespace {
              * boundary are the same shape (i.e., both quadrilaterals or
              * both hexagons).
              */
-            virtual void joinTo(Bdry* other) = 0; /* PRE: other is same shape */
+            virtual void join(Bdry* other) = 0; /* PRE: other is same shape */
 
         protected:
             /**
@@ -407,9 +407,9 @@ namespace {
 
         public:
             /**
-             * See Bdry::joinTo() for details.
+             * See Bdry::join() for details.
              */
-            virtual void joinTo(Bdry* other);
+            virtual void join(Bdry* other);
 
         private:
             /**
@@ -454,9 +454,9 @@ namespace {
 
         public:
             /**
-             * See Bdry::joinTo() for details.
+             * See Bdry::join() for details.
              */
-            virtual void joinTo(Bdry* other);
+            virtual void join(Bdry* other);
 
         private:
             /**
@@ -642,8 +642,8 @@ namespace {
         return outerTet_;
     }
 
-    inline void Block::joinTo(int face, Block* other) {
-        bdry_[face]->joinTo(other->bdry_[outerTet_->adjacentFace(face)]);
+    inline void Block::join(int face, Block* other) {
+        bdry_[face]->join(other->bdry_[outerTet_->adjacentFace(face)]);
     }
 
     inline NTetrahedron* Block::layeringTetrahedron() {
@@ -652,7 +652,7 @@ namespace {
     }
 
     inline void Block::attachVertexNbd(NTetrahedron* nbd, int vertex) {
-        link_[vertex]->joinTo(linkVertices_[vertex].preImageOf(vertex),
+        link_[vertex]->join(linkVertices_[vertex].preImageOf(vertex),
             nbd, linkVertices_[vertex]);
     }
 
@@ -670,8 +670,8 @@ namespace {
     TriPrism::TriPrism(const NTetrahedron *outerTet, int type,
             NTriangulation* insertInto) :
             Block(outerTet, 3, 3, insertInto) {
-        innerTet_[1]->joinTo(1, innerTet_[0], NPerm4());
-        innerTet_[1]->joinTo(3, innerTet_[2], NPerm4());
+        innerTet_[1]->join(1, innerTet_[0], NPerm4());
+        innerTet_[1]->join(3, innerTet_[2], NPerm4());
 
         NPerm4 vertices = NPerm4(0, type);
 
@@ -707,10 +707,10 @@ namespace {
     QuadPrism::QuadPrism(const NTetrahedron *outerTet, int type,
             NTriangulation* insertInto) :
             Block(outerTet, 5, 4, insertInto) {
-        innerTet_[4]->joinTo(2, innerTet_[0], NPerm4());
-        innerTet_[4]->joinTo(3, innerTet_[1], NPerm4());
-        innerTet_[4]->joinTo(0, innerTet_[2], NPerm4());
-        innerTet_[4]->joinTo(1, innerTet_[3], NPerm4());
+        innerTet_[4]->join(2, innerTet_[0], NPerm4());
+        innerTet_[4]->join(3, innerTet_[1], NPerm4());
+        innerTet_[4]->join(0, innerTet_[2], NPerm4());
+        innerTet_[4]->join(1, innerTet_[3], NPerm4());
 
         NPerm4 vertices(
             regina::vertexSplitDefn[type][0],
@@ -752,14 +752,14 @@ namespace {
     TruncHalfTet::TruncHalfTet(const NTetrahedron *outerTet, int type,
             NTriangulation* insertInto):
             Block(outerTet, 8, 10, insertInto) {
-        innerTet_[1]->joinTo(2, innerTet_[0], NPerm4());
-        innerTet_[1]->joinTo(1, innerTet_[2], NPerm4());
-        innerTet_[1]->joinTo(0, innerTet_[3], NPerm4());
-        innerTet_[2]->joinTo(0, innerTet_[4], NPerm4());
-        innerTet_[3]->joinTo(1, innerTet_[4], NPerm4());
-        innerTet_[3]->joinTo(3, innerTet_[5], NPerm4());
-        innerTet_[5]->joinTo(2, innerTet_[6], NPerm4());
-        innerTet_[4]->joinTo(2, innerTet_[7], NPerm4());
+        innerTet_[1]->join(2, innerTet_[0], NPerm4());
+        innerTet_[1]->join(1, innerTet_[2], NPerm4());
+        innerTet_[1]->join(0, innerTet_[3], NPerm4());
+        innerTet_[2]->join(0, innerTet_[4], NPerm4());
+        innerTet_[3]->join(1, innerTet_[4], NPerm4());
+        innerTet_[3]->join(3, innerTet_[5], NPerm4());
+        innerTet_[5]->join(2, innerTet_[6], NPerm4());
+        innerTet_[4]->join(2, innerTet_[7], NPerm4());
 
         NPerm4 vertices(
             NEdge::edgeVertex[type][0],
@@ -815,18 +815,18 @@ namespace {
 
     TruncTet::TruncTet(const NTetrahedron *outerTet, NTriangulation* insertInto) :
             Block(outerTet, 11, 16, insertInto) {
-        innerTet_[0]->joinTo(2, innerTet_[4], NPerm4());
-        innerTet_[1]->joinTo(3, innerTet_[7], NPerm4());
-        innerTet_[2]->joinTo(0, innerTet_[6], NPerm4());
-        innerTet_[3]->joinTo(1, innerTet_[9], NPerm4());
-        innerTet_[5]->joinTo(3, innerTet_[4], NPerm4());
-        innerTet_[5]->joinTo(1, innerTet_[6], NPerm4());
-        innerTet_[8]->joinTo(0, innerTet_[7], NPerm4());
-        innerTet_[8]->joinTo(2, innerTet_[9], NPerm4());
-        innerTet_[4]->joinTo(1, innerTet_[10], NPerm4());
-        innerTet_[6]->joinTo(3, innerTet_[10], NPerm4());
-        innerTet_[7]->joinTo(2, innerTet_[10], NPerm4());
-        innerTet_[9]->joinTo(0, innerTet_[10], NPerm4());
+        innerTet_[0]->join(2, innerTet_[4], NPerm4());
+        innerTet_[1]->join(3, innerTet_[7], NPerm4());
+        innerTet_[2]->join(0, innerTet_[6], NPerm4());
+        innerTet_[3]->join(1, innerTet_[9], NPerm4());
+        innerTet_[5]->join(3, innerTet_[4], NPerm4());
+        innerTet_[5]->join(1, innerTet_[6], NPerm4());
+        innerTet_[8]->join(0, innerTet_[7], NPerm4());
+        innerTet_[8]->join(2, innerTet_[9], NPerm4());
+        innerTet_[4]->join(1, innerTet_[10], NPerm4());
+        innerTet_[6]->join(3, innerTet_[10], NPerm4());
+        innerTet_[7]->join(2, innerTet_[10], NPerm4());
+        innerTet_[9]->join(0, innerTet_[10], NPerm4());
 
         BdryHex* h;
 
@@ -895,7 +895,7 @@ namespace {
             block_(block), outerVertices_(outerVertices) {
     }
 
-    void BdryQuad::joinTo(Bdry* other) {
+    void BdryQuad::join(Bdry* other) {
         // Assume other is a BdryQuad.
         BdryQuad* dest = static_cast<BdryQuad*>(other);
 
@@ -916,7 +916,7 @@ namespace {
 
         // Now we match up perfectly.
         for (int i = 0; i < 2; ++i)
-            innerTet_[i]->joinTo(innerVertices_[i][3], dest->innerTet_[i],
+            innerTet_[i]->join(innerVertices_[i][3], dest->innerTet_[i],
                 dest->innerVertices_[i] * innerVertices_[i].inverse());
     }
 
@@ -927,9 +927,9 @@ namespace {
     void BdryQuad::reflect() {
         NTetrahedron* layering = block_->layeringTetrahedron();
 
-        layering->joinTo(0, innerTet_[1],
+        layering->join(0, innerTet_[1],
             innerVertices_[1] * NPerm4(3, 2, 1, 0));
-        layering->joinTo(2, innerTet_[0],
+        layering->join(2, innerTet_[0],
             innerVertices_[0] * NPerm4(1, 0, 3, 2));
 
         innerTet_[0] = innerTet_[1] = layering;
@@ -939,7 +939,7 @@ namespace {
         outerVertices_ = outerVertices_ * NPerm4(1, 2);
     }
 
-    void BdryHex::joinTo(Bdry* other) {
+    void BdryHex::join(Bdry* other) {
         // Assume other is a BdryQuad.
         BdryHex* dest = static_cast<BdryHex*>(other);
 
@@ -955,7 +955,7 @@ namespace {
 
         // Now we match up perfectly.
         for (int i = 0; i < 4; ++i)
-            innerTet_[i]->joinTo(innerVertices_[i][3], dest->innerTet_[i],
+            innerTet_[i]->join(innerVertices_[i][3], dest->innerTet_[i],
                 dest->innerVertices_[i] * innerVertices_[i].inverse());
     }
 
@@ -969,16 +969,16 @@ namespace {
         NTetrahedron* layering2 = block_->layeringTetrahedron();
         NTetrahedron* layering3 = block_->layeringTetrahedron();
 
-        layering0->joinTo(1, innerTet_[3], innerVertices_[3] * NPerm4(1, 3));
-        layering0->joinTo(2, innerTet_[2], innerVertices_[2] * NPerm4(2, 3));
-        layering1->joinTo(3, layering0, NPerm4());
-        layering1->joinTo(1, innerTet_[1],
+        layering0->join(1, innerTet_[3], innerVertices_[3] * NPerm4(1, 3));
+        layering0->join(2, innerTet_[2], innerVertices_[2] * NPerm4(2, 3));
+        layering1->join(3, layering0, NPerm4());
+        layering1->join(1, innerTet_[1],
             innerVertices_[1] * NPerm4(2, 3, 0, 1));
-        layering2->joinTo(0, layering0, NPerm4());
-        layering2->joinTo(1, innerTet_[0],
+        layering2->join(0, layering0, NPerm4());
+        layering2->join(1, innerTet_[0],
             innerVertices_[0] * NPerm4(1, 3, 2, 0));
-        layering3->joinTo(0, layering1, NPerm4());
-        layering3->joinTo(3, layering2, NPerm4());
+        layering3->join(0, layering1, NPerm4());
+        layering3->join(3, layering2, NPerm4());
 
         innerTet_[0] = layering2;
         innerTet_[1] = layering1;
@@ -1194,13 +1194,13 @@ NTriangulation* NNormalSurface::cutAlong() const {
 
             quadBlocks = sets[tet0]->numQuadBlocks(face0, fromVertex0);
             for (i = 0; i < quadBlocks; ++i)
-                sets[tet0]->quadBlock(fromVertex0, i)->joinTo(
+                sets[tet0]->quadBlock(fromVertex0, i)->join(
                     face0, sets[tet1]->quadBlock(fromVertex1, i));
 
-            sets[tet0]->vertexNbd(fromVertex0)->joinTo(
+            sets[tet0]->vertexNbd(fromVertex0)->join(
                 face0, sets[tet1]->vertexNbd(fromVertex1), gluing);
         }
-        sets[tet0]->hexBlock(face0)->joinTo(face0, sets[tet1]->hexBlock(face1));
+        sets[tet0]->hexBlock(face0)->join(face0, sets[tet1]->hexBlock(face1));
     }
 
     // All done!  Clean up.
@@ -1280,7 +1280,7 @@ NTriangulation* NNormalSurface::crush() const {
                 // We haven't yet unglued the face of adj since there is
                 // at least one bad tetrahedron between tet and adj.
                 adj->unjoin(adjFace);
-                tet->joinTo(face, adj, adjPerm);
+                tet->join(face, adj, adjPerm);
             }
         }
 

@@ -237,7 +237,7 @@ bool Dim4GluingsModel::setData(const QModelIndex& index, const QVariant& value,
         adj->unjoin(newAdjFacet);
 
     // Glue the two facets together.
-    p->joinTo(facet, adj, newAdjPerm);
+    p->join(facet, adj, newAdjPerm);
     return true;
 }
 
