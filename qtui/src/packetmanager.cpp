@@ -46,6 +46,7 @@
 #include "packettypes/generictriui.h"
 #include "packettypes/nanglestructureui.h"
 #include "packettypes/ncontainerui.h"
+#include "packettypes/nhypersurfaceui.h"
 #include "packettypes/nnormalsurfaceui.h"
 #include "packettypes/npdfui.h"
 #include "packettypes/nscriptui.h"
@@ -162,6 +163,9 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
         case PACKET_NORMALSURFACELIST:
             return new NNormalSurfaceUI(
                 dynamic_cast<NNormalSurfaceList*>(packet), enclosingPane);
+        case PACKET_NORMALHYPERSURFACELIST:
+            return new NHyperSurfaceUI(
+                dynamic_cast<NNormalHypersurfaceList*>(packet), enclosingPane);
         case PACKET_SCRIPT:
             return new NScriptUI(
                 dynamic_cast<NScript*>(packet), enclosingPane);

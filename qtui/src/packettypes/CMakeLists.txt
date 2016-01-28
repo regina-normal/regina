@@ -18,7 +18,11 @@ SET ( FILES
   nanglestructureui
   ncompatcanvas
   ncontainerui
+  nhypercoordinateui
+  nhypermatchingui
   nhypersurfacecreator
+  nhypersummaryui
+  nhypersurfaceui
   nnormalsurfacecreator
   nnormalsurfaceui
   npdfui
