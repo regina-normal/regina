@@ -173,6 +173,16 @@
 		050F5E8B1B9BD9C100C1F681 /* pythonconsole.h in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E771B9BD6F400C1F681 /* pythonconsole.h */; };
 		0513753D1809B8D3002E525B /* coordregistry-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0513753B1809B8D2002E525B /* coordregistry-impl.h */; };
 		0513753E1809B8D3002E525B /* coordregistry.h in Headers */ = {isa = PBXBuildFile; fileRef = 0513753C1809B8D2002E525B /* coordregistry.h */; };
+		051691B71C5AD5AC00DC69EC /* nhypercompatui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051691A31C5AD59000DC69EC /* nhypercompatui.cpp */; };
+		051691B81C5AD5AC00DC69EC /* nhypercoordinateui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051691A51C5AD59000DC69EC /* nhypercoordinateui.cpp */; };
+		051691B91C5AD5AC00DC69EC /* nhypermatchingui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051691A71C5AD59000DC69EC /* nhypermatchingui.cpp */; };
+		051691BA1C5AD5AC00DC69EC /* nhypersummaryui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051691A91C5AD59000DC69EC /* nhypersummaryui.cpp */; };
+		051691BB1C5AD5AC00DC69EC /* nhypersurfaceui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051691AB1C5AD59000DC69EC /* nhypersurfaceui.cpp */; };
+		051691BC1C5AD60100DC69EC /* nhypercompatui.h in Sources */ = {isa = PBXBuildFile; fileRef = 051691A41C5AD59000DC69EC /* nhypercompatui.h */; };
+		051691BD1C5AD60600DC69EC /* nhypercoordinateui.h in Sources */ = {isa = PBXBuildFile; fileRef = 051691A61C5AD59000DC69EC /* nhypercoordinateui.h */; };
+		051691BE1C5AD60A00DC69EC /* nhypermatchingui.h in Sources */ = {isa = PBXBuildFile; fileRef = 051691A81C5AD59000DC69EC /* nhypermatchingui.h */; };
+		051691BF1C5AD60D00DC69EC /* nhypersummaryui.h in Sources */ = {isa = PBXBuildFile; fileRef = 051691AA1C5AD59000DC69EC /* nhypersummaryui.h */; };
+		051691C01C5AD61200DC69EC /* nhypersurfaceui.h in Sources */ = {isa = PBXBuildFile; fileRef = 051691AC1C5AD59000DC69EC /* nhypersurfaceui.h */; };
 		051806D4181202BD008EBB01 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = 051806D3181202BD008EBB01 /* icons */; };
 		051806D6181202E0008EBB01 /* examples in Resources */ = {isa = PBXBuildFile; fileRef = 051806D5181202E0008EBB01 /* examples */; };
 		0523D88A180B54850094DAAD /* PacketManagerIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0523D889180B54850094DAAD /* PacketManagerIOS.mm */; };
@@ -1912,6 +1922,16 @@
 		050F5E851B9BD7EF00C1F681 /* libpython2.7.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpython2.7.dylib; path = usr/lib/libpython2.7.dylib; sourceTree = SDKROOT; };
 		0513753B1809B8D2002E525B /* coordregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "coordregistry-impl.h"; sourceTree = "<group>"; };
 		0513753C1809B8D2002E525B /* coordregistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = coordregistry.h; sourceTree = "<group>"; };
+		051691A31C5AD59000DC69EC /* nhypercompatui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nhypercompatui.cpp; sourceTree = "<group>"; };
+		051691A41C5AD59000DC69EC /* nhypercompatui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhypercompatui.h; sourceTree = "<group>"; };
+		051691A51C5AD59000DC69EC /* nhypercoordinateui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nhypercoordinateui.cpp; sourceTree = "<group>"; };
+		051691A61C5AD59000DC69EC /* nhypercoordinateui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhypercoordinateui.h; sourceTree = "<group>"; };
+		051691A71C5AD59000DC69EC /* nhypermatchingui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nhypermatchingui.cpp; sourceTree = "<group>"; };
+		051691A81C5AD59000DC69EC /* nhypermatchingui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhypermatchingui.h; sourceTree = "<group>"; };
+		051691A91C5AD59000DC69EC /* nhypersummaryui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nhypersummaryui.cpp; sourceTree = "<group>"; };
+		051691AA1C5AD59000DC69EC /* nhypersummaryui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhypersummaryui.h; sourceTree = "<group>"; };
+		051691AB1C5AD59000DC69EC /* nhypersurfaceui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nhypersurfaceui.cpp; sourceTree = "<group>"; };
+		051691AC1C5AD59000DC69EC /* nhypersurfaceui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhypersurfaceui.h; sourceTree = "<group>"; };
 		051806D3181202BD008EBB01 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = src/icons; sourceTree = "<group>"; };
 		051806D5181202E0008EBB01 /* examples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = examples; sourceTree = SOURCE_ROOT; };
 		0523D888180B54850094DAAD /* PacketManagerIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketManagerIOS.h; sourceTree = "<group>"; };
@@ -5071,8 +5091,18 @@
 				0564A59B1811D920002CC2AE /* ncompatcanvas.h */,
 				0564A59C1811D920002CC2AE /* ncontainerui.cpp */,
 				0564A59D1811D920002CC2AE /* ncontainerui.h */,
+				051691A31C5AD59000DC69EC /* nhypercompatui.cpp */,
+				051691A41C5AD59000DC69EC /* nhypercompatui.h */,
+				051691A51C5AD59000DC69EC /* nhypercoordinateui.cpp */,
+				051691A61C5AD59000DC69EC /* nhypercoordinateui.h */,
+				051691A71C5AD59000DC69EC /* nhypermatchingui.cpp */,
+				051691A81C5AD59000DC69EC /* nhypermatchingui.h */,
+				051691A91C5AD59000DC69EC /* nhypersummaryui.cpp */,
+				051691AA1C5AD59000DC69EC /* nhypersummaryui.h */,
 				052774101C55743E00140918 /* nhypersurfacecreator.cpp */,
 				052774111C55743E00140918 /* nhypersurfacecreator.h */,
+				051691AB1C5AD59000DC69EC /* nhypersurfaceui.cpp */,
+				051691AC1C5AD59000DC69EC /* nhypersurfaceui.h */,
 				0564A59E1811D920002CC2AE /* nnormalsurfacecreator.cpp */,
 				0564A59F1811D920002CC2AE /* nnormalsurfacecreator.h */,
 				0564A5A01811D920002CC2AE /* nnormalsurfaceui.cpp */,
@@ -6624,6 +6654,7 @@
 				055ABEB619B49F6800044C1B /* closed-hyp-census-full.zsig in Sources */,
 				055ABEB719B49F6800044C1B /* closed-nor-census-11.zsig in Sources */,
 				055ABEB819B49F6800044C1B /* closed-or-census-11.zsig in Sources */,
+				051691B81C5AD5AC00DC69EC /* nhypercoordinateui.cpp in Sources */,
 				055ABEB919B49F6800044C1B /* cusped-hyp-nor-census-9.zsig in Sources */,
 				055ABEBA19B49F6800044C1B /* cusped-hyp-or-census-9.zsig in Sources */,
 				050F5E7E1B9BD6F400C1F681 /* pythonconsole.cpp in Sources */,
@@ -6647,6 +6678,7 @@
 				0543AEA01811E12A002758F8 /* packeteditiface.h in Sources */,
 				0543AEA11811E12A002758F8 /* packettabui.h in Sources */,
 				0543AEA21811E12A002758F8 /* packettreeview.h in Sources */,
+				051691BB1C5AD5AC00DC69EC /* nhypersurfaceui.cpp in Sources */,
 				050F5E7D1B9BD6F400C1F681 /* commandedit.cpp in Sources */,
 				0543AEA31811E12A002758F8 /* dim2trigluings.h in Sources */,
 				0543AEA41811E12A002758F8 /* dim2triskeleton.h in Sources */,
@@ -6658,6 +6690,11 @@
 				05A73CE219B2F99B0099C617 /* groupwidget.h in Sources */,
 				0543AEA91811E12A002758F8 /* nanglestructureui.h in Sources */,
 				0543AEAA1811E12A002758F8 /* ncompatcanvas.h in Sources */,
+				051691BC1C5AD60100DC69EC /* nhypercompatui.h in Sources */,
+				051691BD1C5AD60600DC69EC /* nhypercoordinateui.h in Sources */,
+				051691BE1C5AD60A00DC69EC /* nhypermatchingui.h in Sources */,
+				051691BF1C5AD60D00DC69EC /* nhypersummaryui.h in Sources */,
+				051691C01C5AD61200DC69EC /* nhypersurfaceui.h in Sources */,
 				0543AEAB1811E12A002758F8 /* nnormalsurfaceui.h in Sources */,
 				0543AEAC1811E12A002758F8 /* nscriptui.h in Sources */,
 				05A73CE319B2F9DC0099C617 /* nsnappeafile.h in Sources */,
@@ -6684,6 +6721,7 @@
 				0543AEBC1811E12A002758F8 /* snappeacomponents.h in Sources */,
 				0543AE911811DE79002758F8 /* packetui.h in Sources */,
 				0543AEBD1811E12A002758F8 /* packetwindow.h in Sources */,
+				051691BA1C5AD5AC00DC69EC /* nhypersummaryui.cpp in Sources */,
 				05A73CD019B2F1AB0099C617 /* nsnappeaui.cpp in Sources */,
 				05A73CCD19B2F1AB0099C617 /* nsnappeafile.cpp in Sources */,
 				0543AEBE1811E12A002758F8 /* patiencedialog.h in Sources */,
@@ -6703,6 +6741,7 @@
 				0564A9611811D921002CC2AE /* nsurfacematchingui.cpp in Sources */,
 				0564A8101811D921002CC2AE /* recogniserhandler.cpp in Sources */,
 				0564A9681811D921002CC2AE /* ntrigluings.cpp in Sources */,
+				051691B91C5AD5AC00DC69EC /* nhypermatchingui.cpp in Sources */,
 				0507C5A71C54495D00D1C86C /* dim4eltmovedialog.cpp in Sources */,
 				0564A9501811D921002CC2AE /* dim2triui.cpp in Sources */,
 				0564A96C1811D921002CC2AE /* skeletonwindow.cpp in Sources */,
@@ -6715,6 +6754,7 @@
 				0564A9571811D921002CC2AE /* ncontainerui.cpp in Sources */,
 				0564A95D1811D921002CC2AE /* nsurfacecoordinateui.cpp in Sources */,
 				0564A8061811D921002CC2AE /* exports.cpp in Sources */,
+				051691B71C5AD5AC00DC69EC /* nhypercompatui.cpp in Sources */,
 				0564A9541811D921002CC2AE /* nanglestructurecreator.cpp in Sources */,
 				0564A9831811D921002CC2AE /* reginasupport.cpp in Sources */,
 				0564A8041811D921002CC2AE /* coordinates.cpp in Sources */,
