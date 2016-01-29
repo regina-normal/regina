@@ -81,8 +81,15 @@ namespace Coordinates {
      * Return the number of coordinate columns in the given coordinate
      * system.
      */
-    unsigned long numColumns(regina::NormalCoords coordSystem,
+    size_t numColumns(regina::NormalCoords coordSystem,
         regina::NTriangulation* tri);
+
+    /**
+     * Return the number of coordinate columns in the given coordinate
+     * system.
+     */
+    size_t numColumns(regina::HyperCoords coordSystem,
+        regina::Dim4Triangulation* tri);
 
     /**
      * Return a column header for the given coordinate of the given
@@ -93,8 +100,18 @@ namespace Coordinates {
      * well without it.
      */
     QString columnName(regina::NormalCoords coordSystem,
-        unsigned long whichCoord,
-        regina::NTriangulation* tri = 0);
+        size_t whichCoord, regina::NTriangulation* tri = 0);
+
+    /**
+     * Return a column header for the given coordinate of the given
+     * coordinate system.
+     *
+     * The associated triangulation may be passed so that more precise
+     * information can be returned, though this routine will behave
+     * well without it.
+     */
+    QString columnName(regina::HyperCoords coordSystem,
+        size_t whichCoord, regina::Dim4Triangulation* tri = 0);
 
     /**
      * Return a column description for the given coordinate of the given
@@ -104,16 +121,33 @@ namespace Coordinates {
      * information can be returned, though this routine will behave
      * well without it.
      */
-    QString columnDesc(regina::NormalCoords coordSystem,
-        unsigned long whichCoord,
+    QString columnDesc(regina::NormalCoords coordSystem, size_t whichCoord,
         const QObject *context, regina::NTriangulation* tri = 0);
+
+    /**
+     * Return a column description for the given coordinate of the given
+     * coordinate system.
+     *
+     * The associated triangulation may be passed so that more precise
+     * information can be returned, though this routine will behave
+     * well without it.
+     */
+    QString columnDesc(regina::HyperCoords coordSystem, size_t whichCoord,
+        const QObject *context, regina::Dim4Triangulation* tri = 0);
 
     /**
      * Return a particular coordinate of a normal surface in the given
      * coordinate system.
      */
     regina::NLargeInteger getCoordinate(regina::NormalCoords coordSystem,
-        const regina::NNormalSurface& surface, unsigned long whichCoord);
+        const regina::NNormalSurface& surface, size_t whichCoord);
+
+    /**
+     * Return a particular coordinate of a normal hypersurface in the given
+     * coordinate system.
+     */
+    regina::NLargeInteger getCoordinate(regina::HyperCoords coordSystem,
+        const regina::NNormalHypersurface& surface, size_t whichCoord);
 };
 
 #endif

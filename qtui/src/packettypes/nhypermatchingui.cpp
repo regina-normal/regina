@@ -34,35 +34,35 @@
 
 // Regina core includes:
 #include "maths/nmatrixint.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "hypersurface/nnormalhypersurfacelist.h"
 
 // UI includes:
 #include "coordinates.h"
-#include "nsurfacematchingui.h"
+#include "nhypermatchingui.h"
 
 #include <QHeaderView>
 #include <QTreeView>
 
 #define DEFAULT_MATCHING_COLUMN_WIDTH 40
 
-using regina::NNormalSurfaceList;
+using regina::NNormalHypersurfaceList;
 using regina::NPacket;
 
-void MatchingModel::rebuild() {
+void HyperMatchingModel::rebuild() {
     beginResetModel();
     eqns_.reset(surfaces_->recreateMatchingEquations());
     endResetModel();
 }
 
-int MatchingModel::rowCount(const QModelIndex& /* unused parent */) const {
+int HyperMatchingModel::rowCount(const QModelIndex& /* unused parent */) const {
     return (eqns_.get() ? eqns_->rows() : 0);
 }
 
-int MatchingModel::columnCount(const QModelIndex& /* unused parent */) const {
+int HyperMatchingModel::columnCount(const QModelIndex& /* unused parent */) const {
     return (eqns_.get() ? eqns_->columns() : 0);
 }
 
-QVariant MatchingModel::data(const QModelIndex& index, int role) const {
+QVariant HyperMatchingModel::data(const QModelIndex& index, int role) const {
     if (! eqns_.get())
         return QVariant();
 
@@ -81,8 +81,8 @@ QVariant MatchingModel::data(const QModelIndex& index, int role) const {
         return QVariant();
 }
 
-QVariant MatchingModel::headerData(int section, Qt::Orientation orientation,
-        int role) const {
+QVariant HyperMatchingModel::headerData(int section,
+        Qt::Orientation orientation, int role) const {
     if (orientation != Qt::Horizontal)
         return QVariant();
 
@@ -98,10 +98,10 @@ QVariant MatchingModel::headerData(int section, Qt::Orientation orientation,
         return QVariant();
 }
 
-NSurfaceMatchingUI::NSurfaceMatchingUI(regina::NNormalSurfaceList* packet,
+NHyperMatchingUI::NHyperMatchingUI(regina::NNormalHypersurfaceList* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         currentlyAutoResizing(false), everRefreshed(false) {
-    model = new MatchingModel(packet);
+    model = new HyperMatchingModel(packet);
 
     table = new QTreeView();
     table->setItemsExpandable(false);
@@ -109,11 +109,11 @@ NSurfaceMatchingUI::NSurfaceMatchingUI(regina::NNormalSurfaceList* packet,
     table->setAlternatingRowColors(true);
     table->header()->setStretchLastSection(false);
     table->setSelectionMode(QAbstractItemView::NoSelection);
-    table->setWhatsThis(tr("<qt>Displays the normal surface matching "
+    table->setWhatsThis(tr("<qt>Displays the normal hypersurface matching "
         "equations that were used in the enumeration process when this "
         "list was originally created.<p>"
         "Each row represents a single equation.  Each equation involves "
-        "setting a linear combination of normal surface coordinates to "
+        "setting a linear combination of normal hypersurface coordinates to "
         "zero.  The columns of this table represent the different "
         "coordinates, and the entries in each row are the coefficients "
         "in each linear combination.<p>"
@@ -136,19 +136,19 @@ NSurfaceMatchingUI::NSurfaceMatchingUI(regina::NNormalSurfaceList* packet,
     ui = table;
 }
 
-NSurfaceMatchingUI::~NSurfaceMatchingUI() {
+NHyperMatchingUI::~NHyperMatchingUI() {
     delete model;
 }
 
-regina::NPacket* NSurfaceMatchingUI::getPacket() {
+regina::NPacket* NHyperMatchingUI::getPacket() {
     return model->surfaces();
 }
 
-QWidget* NSurfaceMatchingUI::getInterface() {
+QWidget* NHyperMatchingUI::getInterface() {
     return ui;
 }
 
-void NSurfaceMatchingUI::refresh() {
+void NHyperMatchingUI::refresh() {
     // Regenerate the equations.
     model->rebuild();
 
@@ -163,7 +163,7 @@ void NSurfaceMatchingUI::refresh() {
     everRefreshed = true;
 }
 
-void NSurfaceMatchingUI::columnResized(int, int, int newSize) {
+void NHyperMatchingUI::columnResized(int, int, int newSize) {
     if (currentlyAutoResizing)
         return;
 

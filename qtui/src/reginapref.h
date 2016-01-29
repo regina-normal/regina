@@ -101,6 +101,7 @@ class ReginaPrefGeneral : public QWidget {
 
     private:
         // QCheckBox* cbDisplayTagsInTree;
+        QCheckBox* cbUnicode;
         QCheckBox* cbWarnOnNonEmbedded;
         QCheckBox* cbSupportOriented;
         QCheckBox* cbGraphvizLabels;

@@ -32,62 +32,96 @@
 
 /* end stub */
 
-/*! \file ncompatcanvas.h
- *  \brief Provides a canvas for displaying a surface/hypersurface
- *  compatibility matrix.
+/*! \file nhypersurfaceui.h
+ *  \brief Provides an interface for viewing normal hypersurface lists.
  */
 
-#ifndef __NCOMPATCANVAS_H
-#define __NCOMPATCANVAS_H
+#ifndef __NHYPERSURFACEUI_H
+#define __NHYPERSURFACEUI_H
 
-#include <QGraphicsScene>
+#include "packettabui.h"
+#include "reginamain.h"
+
+#include <QLinkedList>
+
+class NHyperCompatibilityUI;
+class NHyperCoordinateUI;
+class QLabel;
 
 namespace regina {
     class NNormalHypersurfaceList;
-    class NNormalSurfaceList;
 };
 
 /**
- * A canvas for displaying a compatibility matrix for a list of
- * normal surfaces or hypersurfaces.
+ * A packet interface for viewing normal surface lists.
  */
-class NCompatCanvas : public QGraphicsScene {
+class NHyperSurfaceUI : public PacketTabbedUI {
     Q_OBJECT
 
     private:
         /**
-         * Matrix size and state
+         * Internal components
          */
-        unsigned nSurfaces;
-        bool filled;
+        NHyperCoordinateUI* coords;
+        NHyperCompatibilityUI* compat;
+
+    public:
+        /**
+         * Constructor.
+         */
+        NHyperSurfaceUI(regina::NNormalHypersurfaceList* packet,
+            PacketPane* newEnclosingPane);
+
+        /**
+         * PacketUI overrides.
+         */
+        const QLinkedList<QAction*>& getPacketTypeActions();
+        QString getPacketMenuText() const;
+};
+
+/**
+ * A header for the normal surface list viewer.
+ */
+class NHyperHeaderUI : public QObject, public PacketViewerTab,
+        public regina::NPacketListener {
+    Q_OBJECT
+
+    private:
+        /**
+         * Packet details
+         */
+        regina::NNormalHypersurfaceList* surfaces;
 
         /**
          * Internal components
          */
-        unsigned cellSize;
-        unsigned gridX;
-        unsigned gridY;
-        unsigned gridSize;
+        QWidget* ui;
+        QLabel* header;
 
     public:
         /**
-         * Constructor and destructor.
+         * Constructor.
          */
-        NCompatCanvas(unsigned useNumSurfaces);
-        ~NCompatCanvas();
+        NHyperHeaderUI(regina::NNormalHypersurfaceList* packet,
+                PacketTabbedUI* useParentUI);
 
         /**
-         * Fill the canvas with data.
-         *
-         * These routines will do nothing if the canvas has already been
-         * filled.
-         *
-         * \pre The given list is non-empty and contains only embedded
-         * surfaces/hypersurfaces.
+         * PacketViewerTab overrides.
          */
-        void fillLocal(const regina::NNormalSurfaceList& surfaces);
-        void fillLocal(const regina::NNormalHypersurfaceList& surfaces);
-        void fillGlobal(const regina::NNormalSurfaceList& surfaces);
+        regina::NPacket* getPacket();
+        QWidget* getInterface();
+        void refresh();
+
+        /**
+         * NPacketListener overrides.
+         */
+        void packetWasRenamed(regina::NPacket* packet);
+
+    private slots:
+        /**
+         * View the underlying triangulation.
+         */
+        void viewTriangulation();
 };
 
 #endif

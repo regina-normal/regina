@@ -220,6 +220,8 @@ class ReginaPrefSet : public QObject {
                  structures option be enabled by default? */
         bool displayTagsInTree;
             /**< Should we display packet tags in the visual tree? */
+        bool displayUnicode;
+            /**< Should we use unicode liberally throughout the GUI? */
         QByteArray fileImportExportCodec;
             /**< The codec to use for imports and exports. */
         bool helpIntroOnStartup;
@@ -286,6 +288,9 @@ class ReginaPrefSet : public QObject {
         unsigned tabDim4TriSkeleton;
             /**< The index of the initial sub-tab to open in a 4-manifold
                  triangulation skeleton viewer. */
+        unsigned tabHypersurfaceList;
+            /**< The index of the initial sub-tab to open in a normal
+                 hypersurface list viewer. */
         unsigned tabSnapPeaTri;
             /**< The index of the initial tab to open in a SnapPea
                  triangulation viewer. */

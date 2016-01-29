@@ -45,6 +45,7 @@
 #include "packetchooser.h"
 #include "packetfilter.h"
 #include "reginamain.h"
+#include "reginaprefset.h"
 
 #include <QHeaderView>
 #include <QLabel>
@@ -94,6 +95,14 @@ void SurfaceModel::rebuild(regina::NormalCoords coordSystem,
     }
 
     endResetModel();
+}
+
+void SurfaceModel::rebuildUnicode() {
+    // Only the edge weight / triangle arc headers need change here.
+    if (coordSystem_ == regina::NS_EDGE_WEIGHT ||
+            coordSystem_ == regina::NS_TRIANGLE_ARCS)
+        emit headerDataChanged(Qt::Horizontal, propertyColCount(),
+            columnCount(QModelIndex()) - 1);
 }
 
 void SurfaceModel::setReadWrite(bool readWrite) {
@@ -317,6 +326,17 @@ QVariant SurfaceModel::headerData(int section, Qt::Orientation orientation,
         else
             return Coordinates::columnName(coordSystem_, section - propCols,
                 surfaces_->triangulation());
+    } else if (role == Qt::ForegroundRole) {
+        if (coordSystem_ == regina::NS_EDGE_WEIGHT) {
+            if (section >= propertyColCount() && surfaces_->triangulation()->
+                    edge(section - propertyColCount())->isBoundary())
+                return QColor(Qt::darkYellow);
+        } else if (coordSystem_ == regina::NS_TRIANGLE_ARCS) {
+            if (section >= propertyColCount() && surfaces_->triangulation()->
+                    triangle((section - propertyColCount()) / 3)->isBoundary())
+                return QColor(Qt::darkYellow);
+        }
+        return QVariant();
     } else if (role == Qt::ToolTipRole) {
         int propertyCols = propertyColCount();
 
@@ -486,7 +506,7 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
         "surfaces in this list.<p>"
         "Each row represents a single normal (or almost normal) surface.  "
         "As well as various properties of the surface, each row contains "
-        "a detailed representation the surface in the currently selected "
+        "a detailed representation of the surface in the currently selected "
         "coordinate system.<p>"
         "For details on what each property means or what each coordinate "
         "represents, hover the mouse over the column header (or refer "
@@ -550,6 +570,9 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
     connect(table->selectionModel(),
         SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
         this, SLOT(updateActionStates()));
+
+    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
+        this, SLOT(updatePreferences()));
 }
 
 NSurfaceCoordinateUI::~NSurfaceCoordinateUI() {
@@ -623,12 +646,15 @@ void NSurfaceCoordinateUI::cutAlong() {
         return;
     }
 
+    size_t whichSurface = model->surfaceIndex(
+        table->selectionModel()->selectedIndexes().front());
     const regina::NNormalSurface* toCutAlong =
-        model->surface(table->selectionModel()->selectedIndexes().front());
+        model->surfaces()->surface(whichSurface);
     if (! toCutAlong->isCompact()) {
         ReginaSupport::info(ui,
             tr("I can only cut along compact surfaces."),
-            tr("The surface you have selected is non-compact."));
+            tr("The surface you have selected is non-compact "
+                "(i.e., has infinitely many normal discs)."));
         return;
     }
 
@@ -636,7 +662,8 @@ void NSurfaceCoordinateUI::cutAlong() {
     // Be nice and simplify the triangulation, which could be very large.
     regina::NTriangulation* ans = toCutAlong->cutAlong();
     ans->intelligentSimplify();
-    ans->setLabel(surfaces->triangulation()->adornedLabel("Cut"));
+    ans->setLabel(surfaces->triangulation()->adornedLabel(
+        "Cut #" + std::to_string(whichSurface)));
     surfaces->insertChildLast(ans);
 
     enclosingPane->getMainWindow()->packetView(ans, true, true);
@@ -649,18 +676,22 @@ void NSurfaceCoordinateUI::crush() {
         return;
     }
 
+    size_t whichSurface = model->surfaceIndex(
+        table->selectionModel()->selectedIndexes().front());
     const regina::NNormalSurface* toCrush =
-        model->surface(table->selectionModel()->selectedIndexes().front());
+        model->surfaces()->surface(whichSurface);
     if (! toCrush->isCompact()) {
         ReginaSupport::info(ui,
             tr("I can only crush compact surfaces."),
-            tr("The surface you have selected is non-compact."));
+            tr("The surface you have selected is non-compact "
+                "(i.e., has infinitely many normal discs)."));
         return;
     }
 
     // Go ahead and crush it.
     regina::NTriangulation* ans = toCrush->crush();
-    ans->setLabel(surfaces->triangulation()->adornedLabel("Crushed"));
+    ans->setLabel(surfaces->triangulation()->adornedLabel(
+        "Crushed #" + std::to_string(whichSurface)));
     surfaces->insertChildLast(ans);
 
     enclosingPane->getMainWindow()->packetView(ans, true, true);
@@ -686,5 +717,10 @@ void NSurfaceCoordinateUI::columnResized(int section, int, int newSize) {
     for (int i = nNonCoordSections; i < model->columnCount(QModelIndex()); i++)
         table->setColumnWidth(i, newSize);
     currentlyResizing = false;
+}
+
+void NSurfaceCoordinateUI::updatePreferences() {
+    // If we've changed the unicode setting, then we may need some redrawing.
+    model->rebuildUnicode();
 }
 

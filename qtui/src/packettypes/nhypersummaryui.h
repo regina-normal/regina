@@ -32,62 +32,69 @@
 
 /* end stub */
 
-/*! \file ncompatcanvas.h
- *  \brief Provides a canvas for displaying a surface/hypersurface
- *  compatibility matrix.
+/*! \file nhypersummaryui.h
+ *  \brief Provides a tab that summarises all normal hypersurfaces in a list.
  */
 
-#ifndef __NCOMPATCANVAS_H
-#define __NCOMPATCANVAS_H
+#ifndef __NHYPERSUMMARYUI_H
+#define __NHYPERSUMMARYUI_H
 
-#include <QGraphicsScene>
+#include "packet/npacketlistener.h"
+
+#include "../packettabui.h"
 
 namespace regina {
+    class NPacket;
     class NNormalHypersurfaceList;
-    class NNormalSurfaceList;
 };
 
+class QTreeWidget;
+
 /**
- * A canvas for displaying a compatibility matrix for a list of
- * normal surfaces or hypersurfaces.
+ * A normal surface page for viewing surface coordinates.
  */
-class NCompatCanvas : public QGraphicsScene {
+class NHyperSummaryUI : public QObject, public PacketViewerTab,
+        public regina::NPacketListener {
     Q_OBJECT
 
     private:
         /**
-         * Matrix size and state
+         * Packet details
          */
-        unsigned nSurfaces;
-        bool filled;
+        regina::NNormalHypersurfaceList* surfaces;
 
         /**
          * Internal components
          */
-        unsigned cellSize;
-        unsigned gridX;
-        unsigned gridY;
-        unsigned gridSize;
+        QWidget* ui;
+        QWidget* pane;
+        QLabel* tot;
+        QLabel* totClosed;
+        QLabel* totBounded;
+        QLabel* totSpun;
+        QTreeWidget* tableClosed;
+        QTreeWidget* tableBounded;
 
     public:
         /**
          * Constructor and destructor.
          */
-        NCompatCanvas(unsigned useNumSurfaces);
-        ~NCompatCanvas();
+        NHyperSummaryUI(regina::NNormalHypersurfaceList* packet,
+            PacketTabbedUI* useParentUI);
+        ~NHyperSummaryUI();
 
         /**
-         * Fill the canvas with data.
-         *
-         * These routines will do nothing if the canvas has already been
-         * filled.
-         *
-         * \pre The given list is non-empty and contains only embedded
-         * surfaces/hypersurfaces.
+         * PacketViewerTab overrides.
          */
-        void fillLocal(const regina::NNormalSurfaceList& surfaces);
-        void fillLocal(const regina::NNormalHypersurfaceList& surfaces);
-        void fillGlobal(const regina::NNormalSurfaceList& surfaces);
+        regina::NPacket* getPacket();
+        QWidget* getInterface();
+        void refresh();
+
+    public slots:
+        /**
+         * Notify that preferences have changed.
+         */
+        void updatePreferences();
 };
 
 #endif

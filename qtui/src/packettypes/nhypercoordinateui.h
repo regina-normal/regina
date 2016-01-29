@@ -32,15 +32,15 @@
 
 /* end stub */
 
-/*! \file nsurfacecoordinateui.h
- *  \brief Provides a normal surface coordinate viewer.
+/*! \file nhypercoordinateui.h
+ *  \brief Provides a normal hypersurface coordinate viewer.
  */
 
-#ifndef __NSURFACECOODINATEUI_H
-#define __NSURFACECOODINATEUI_H
+#ifndef __NHYPERCOODINATEUI_H
+#define __NHYPERCOODINATEUI_H
 
-#include "packet/npacketlistener.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "dim4/dim4triangulation.h" // To avoid generic Triangulation<4>.
+#include "hypersurface/nnormalhypersurfacelist.h"
 
 #include "../packettabui.h"
 #include "coordinates.h"
@@ -48,30 +48,22 @@
 #include <QAbstractItemModel>
 #include <QAction>
 
-class CoordinateChooser;
+class HyperCoordinateChooser;
 class PacketChooser;
 class QTreeView;
 
 namespace regina {
     class NPacket;
-    class NNormalSurfaceList;
-    class NSurfaceFilter;
+    class NNormalHypersurfaceList;
 };
 
-class SurfaceModel : public QAbstractItemModel {
+class HyperModel : public QAbstractItemModel {
     protected:
         /**
-         * Details of the normal surfaces being displayed
+         * Details of the normal hypersurfaces being displayed
          */
-        regina::NNormalSurfaceList* surfaces_;
-        regina::NormalCoords coordSystem_;
-
-        /**
-         * A mapping from table indices to surface indices, for use with
-         * filtered lists.
-         */
-        unsigned* realIndex;
-        unsigned nFiltered;
+        regina::NNormalHypersurfaceList* surfaces_;
+        regina::HyperCoords coordSystem_;
 
         /**
          * Internal status
@@ -82,23 +74,18 @@ class SurfaceModel : public QAbstractItemModel {
         /**
          * Constructor and destructor.
          */
-        SurfaceModel(regina::NNormalSurfaceList* surfaces, bool readWrite);
-        ~SurfaceModel();
+        HyperModel(regina::NNormalHypersurfaceList* surfaces, bool readWrite);
 
         /**
          * Data retrieval.
          */
-        regina::NNormalSurfaceList* surfaces() const;
-        const regina::NNormalSurface* surface(const QModelIndex& index) const;
-        size_t surfaceIndex(const QModelIndex& index) const;
-        regina::NormalCoords coordSystem() const;
+        regina::NNormalHypersurfaceList* surfaces() const;
+        regina::HyperCoords coordSystem() const;
 
         /**
          * Rebuild all or some of the model from scratch.
          */
-        void rebuild(regina::NormalCoords coordSystem_);
-        void rebuild(regina::NormalCoords coordSystem_,
-            regina::NSurfaceFilter* filter);
+        void rebuild(regina::HyperCoords coordSystem_);
         void rebuildUnicode();
 
         /**
@@ -131,31 +118,27 @@ class SurfaceModel : public QAbstractItemModel {
 /**
  * A normal surface page for viewing surface coordinates.
  */
-class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
-        public regina::NPacketListener {
+class NHyperCoordinateUI : public QObject, public PacketEditorTab {
     Q_OBJECT
 
     private:
         /**
          * Packet details
          */
-        SurfaceModel* model;
-        regina::NNormalSurfaceList* surfaces;
-        regina::NSurfaceFilter* appliedFilter;
+        HyperModel* model;
+        regina::NNormalHypersurfaceList* surfaces;
 
         /**
          * Internal components
          */
         QWidget* ui;
-        CoordinateChooser* coords;
-        PacketChooser* filter;
+        HyperCoordinateChooser* coords;
         QTreeView* table;
 
         /**
-         * Surface list actions
+         * Hypersurface list actions
          */
-        QAction* actCutAlong;
-        QAction* actCrush;
+        QAction* actTriangulate;
         QLinkedList<QAction*> surfaceActionList;
 
         /**
@@ -168,9 +151,9 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
         /**
          * Constructor and destructor.
          */
-        NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
+        NHyperCoordinateUI(regina::NNormalHypersurfaceList* packet,
             PacketTabbedUI* useParentUI, bool readWrite);
-        ~NSurfaceCoordinateUI();
+        ~NHyperCoordinateUI();
 
         /**
          * PacketEditorTab overrides.
@@ -181,11 +164,6 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
         const QLinkedList<QAction*>& getPacketTypeActions();
         void setReadWrite(bool readWrite);
 
-        /**
-         * NPacketListener overrides.
-         */
-        void packetToBeDestroyed(regina::NPacket* packet);
-
     public slots:
         /**
          * More PacketEditorTab overrides.
@@ -193,10 +171,9 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
         void refresh();
 
         /**
-         * Surface list actions.
+         * Hypersurface list actions.
          */
-        void cutAlong();
-        void crush();
+        void triangulate();
 
         /**
          * Update the states of internal components.
@@ -214,28 +191,22 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
         void updatePreferences();
 };
 
-inline SurfaceModel::~SurfaceModel() {
-    delete[] realIndex;
+inline HyperModel::HyperModel(regina::NNormalHypersurfaceList* surfaces,
+        bool readWrite) :
+        surfaces_(surfaces),
+        coordSystem_(surfaces->coords()),
+        isReadWrite(readWrite) {
 }
 
-inline regina::NNormalSurfaceList* SurfaceModel::surfaces() const {
+inline regina::NNormalHypersurfaceList* HyperModel::surfaces() const {
     return surfaces_;
 }
 
-inline const regina::NNormalSurface* SurfaceModel::surface(
-        const QModelIndex& index) const {
-    return surfaces_->surface(realIndex[index.row()]);
-}
-
-inline size_t SurfaceModel::surfaceIndex(const QModelIndex& index) const {
-    return realIndex[index.row()];
-}
-
-inline regina::NormalCoords SurfaceModel::coordSystem() const {
+inline regina::HyperCoords HyperModel::coordSystem() const {
     return coordSystem_;
 }
 
-inline QModelIndex SurfaceModel::parent(const QModelIndex& /* unused index*/) const {
+inline QModelIndex HyperModel::parent(const QModelIndex& /* unused index*/) const {
     // All items are top-level.
     return QModelIndex();
 }
