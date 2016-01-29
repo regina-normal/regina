@@ -397,6 +397,7 @@ void ReginaPrefSet::readInternal() {
         surfacesInitialCompat = ReginaPrefSet::LocalCompat; /* default */
 
     surfacesSupportOriented = settings.value("SupportOriented", false).toBool();
+    warnOnNonEmbedded = settings.value("WarnOnNonEmbedded", true).toBool();
     settings.endGroup();
 
     settings.beginGroup("Tree");
@@ -501,6 +502,7 @@ void ReginaPrefSet::saveInternal() const {
     }
 
     settings.setValue("SupportOriented", surfacesSupportOriented);
+    settings.setValue("WarnOnNonEmbedded", warnOnNonEmbedded);
     settings.endGroup();
 
     settings.beginGroup("Tabs");
