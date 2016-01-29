@@ -236,6 +236,12 @@ QVariant HyperModel::headerData(int section, Qt::Orientation orientation,
         else
             return Coordinates::columnName(coordSystem_, section - propCols,
                 surfaces_->triangulation());
+    } else if (role == Qt::ForegroundRole) {
+        if (coordSystem_ == regina::HS_EDGE_WEIGHT)
+            if (section >= propertyColCount() && surfaces_->triangulation()->
+                    edge(section - propertyColCount())->isBoundary())
+                return QColor(Qt::darkYellow);
+        return QVariant();
     } else if (role == Qt::ToolTipRole) {
         int propertyCols = propertyColCount();
 

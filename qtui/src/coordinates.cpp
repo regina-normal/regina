@@ -189,9 +189,17 @@ namespace Coordinates {
             else if (ReginaPrefSet::global().displayUnicode)
                 return QString("%1: \u2202").arg(whichCoord);
             else
-                return QString("%1 [B]").arg(whichCoord);
+                return QString("%1 (B)").arg(whichCoord);
         } else if (coordSystem == regina::NS_TRIANGLE_ARCS) {
-            return QString("%1: %2").arg(whichCoord / 3).arg(whichCoord % 3);
+            if (! (tri && tri->triangle(whichCoord / 3)->isBoundary()))
+                return QString("%1: %2").
+                    arg(whichCoord / 3).arg(whichCoord % 3);
+            else if (ReginaPrefSet::global().displayUnicode)
+                return QString("\u2202 %1: %2").
+                    arg(whichCoord / 3).arg(whichCoord % 3);
+            else
+                return QString("B %1: %2").
+                    arg(whichCoord / 3).arg(whichCoord % 3);
         } else if (coordSystem == regina::NS_ORIENTED) {
             size_t stdCoord = whichCoord / 2;
             if (whichCoord % 2 == 0) {
@@ -257,7 +265,7 @@ namespace Coordinates {
             else if (ReginaPrefSet::global().displayUnicode)
                 return QString("%1: \u2202").arg(whichCoord);
             else
-                return QString("%1 [B]").arg(whichCoord);
+                return QString("%1 (B)").arg(whichCoord);
         }
 
         return QString("Unknown");
@@ -310,9 +318,14 @@ namespace Coordinates {
             } else
                 return context->tr("Weight of edge %1").arg(whichCoord);
         } else if (coordSystem == regina::NS_TRIANGLE_ARCS) {
-            return context->tr(
-                "Arcs on triangle %1 crossing triangle vertex %2").
-                arg(whichCoord / 3).arg(whichCoord % 3);
+            if (! (tri && tri->triangle(whichCoord / 3)->isBoundary()))
+                return context->tr(
+                    "Arcs on (internal) triangle %1 crossing triangle vertex %2").
+                    arg(whichCoord / 3).arg(whichCoord % 3);
+            else
+                return context->tr(
+                    "Arcs on (boundary) triangle %1 crossing triangle vertex %2").
+                    arg(whichCoord / 3).arg(whichCoord % 3);
         } else if (coordSystem == regina::NS_ORIENTED) {
             size_t stdCoord = whichCoord / 2;
             if (whichCoord % 2 == 0) {

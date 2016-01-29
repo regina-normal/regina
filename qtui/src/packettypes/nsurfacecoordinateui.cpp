@@ -98,8 +98,9 @@ void SurfaceModel::rebuild(regina::NormalCoords coordSystem,
 }
 
 void SurfaceModel::rebuildUnicode() {
-    // Only the edge weight headers need change here.
-    if (coordSystem_ == regina::NS_EDGE_WEIGHT)
+    // Only the edge weight / triangle arc headers need change here.
+    if (coordSystem_ == regina::NS_EDGE_WEIGHT ||
+            coordSystem_ == regina::NS_TRIANGLE_ARCS)
         emit headerDataChanged(Qt::Horizontal, propertyColCount(),
             columnCount(QModelIndex()) - 1);
 }
@@ -325,6 +326,17 @@ QVariant SurfaceModel::headerData(int section, Qt::Orientation orientation,
         else
             return Coordinates::columnName(coordSystem_, section - propCols,
                 surfaces_->triangulation());
+    } else if (role == Qt::ForegroundRole) {
+        if (coordSystem_ == regina::NS_EDGE_WEIGHT) {
+            if (section >= propertyColCount() && surfaces_->triangulation()->
+                    edge(section - propertyColCount())->isBoundary())
+                return QColor(Qt::darkYellow);
+        } else if (coordSystem_ == regina::NS_TRIANGLE_ARCS) {
+            if (section >= propertyColCount() && surfaces_->triangulation()->
+                    triangle((section - propertyColCount()) / 3)->isBoundary())
+                return QColor(Qt::darkYellow);
+        }
+        return QVariant();
     } else if (role == Qt::ToolTipRole) {
         int propertyCols = propertyColCount();
 
