@@ -34,6 +34,7 @@
 
 #include "algebra/nmarkedabeliangroup.h"
 #include "maths/matrixops.h"
+#include "utilities/stringutils.h"
 #include <iostream>
 
 namespace regina {
@@ -290,6 +291,47 @@ void NMarkedAbelianGroup::writeTextShort(std::ostream& out) const {
             if (currMult > 1)
                 out << currMult << ' ';
             out << "Z_" << currDegree.stringValue();
+            writtenSomething = true;
+        }
+        if (it == InvFacList.end())
+            break;
+        currDegree = *it;
+        currMult = 1;
+        it++;
+    }
+
+    if (! writtenSomething)
+        out << '0';
+}
+
+void NMarkedAbelianGroup::writeUtf8(std::ostream& out) const {
+    bool writtenSomething = false;
+
+    if (snfrank > 0) {
+        if (snfrank > 1)
+            out << snfrank << ' ';
+        out << "\u2124";
+        writtenSomething = true;
+    }
+
+    std::vector<NLargeInteger>::const_iterator it = InvFacList.begin();
+    NLargeInteger currDegree;
+    unsigned currMult = 0;
+    std::string s;
+    while(true) {
+        if (it != InvFacList.end()) {
+            if ((*it) == currDegree) {
+                currMult++;
+                it++;
+                continue;
+            }
+        }
+        if (currMult > 0) {
+            if (writtenSomething)
+                out << " + ";
+            if (currMult > 1)
+                out << currMult << ' ';
+            out << "\u2124" << regina::subscript(currDegree);
             writtenSomething = true;
         }
         if (it == InvFacList.end())

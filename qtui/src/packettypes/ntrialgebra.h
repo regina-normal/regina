@@ -82,6 +82,11 @@ class NTriHomologyFundUI : public QObject, public PacketViewerTab {
          * Internal components
          */
         QWidget* ui;
+        QLabel* labelH1;
+        QLabel* labelH1Rel;
+        QLabel* labelH1Bdry;
+        QLabel* labelH2;
+        QLabel* labelH2Z2;
         QLabel* H1;
         QLabel* H1Rel;
         QLabel* H1Bdry;
@@ -109,6 +114,16 @@ class NTriHomologyFundUI : public QObject, public PacketViewerTab {
          * Notify us that the presentation has been simplified.
          */
         void fundGroupSimplified();
+        /**
+         * Note that preferences have changed.
+         */
+        void updatePreferences();
+
+    private:
+        /**
+         * Update the static labels according to current unicode preferences.
+         */
+        void refreshLabels();
 };
 
 /**
@@ -158,7 +173,9 @@ class NTriTuraevViroUI : public QObject, public PacketViewerTab {
  *
  * \author Ryan Budney
  */
-class NTriCellularInfoUI: public PacketViewerTab {
+class NTriCellularInfoUI: public QObject, public PacketViewerTab {
+    Q_OBJECT
+
     private:
         /**
          * Packet details
@@ -169,6 +186,7 @@ class NTriCellularInfoUI: public PacketViewerTab {
          * Internal components
          */
         QWidget* ui;
+        QLabel* labelBdryMap;
         QLabel* Cells;
         QLabel* DualCells;
         QLabel* EulerChar;
@@ -194,6 +212,18 @@ class NTriCellularInfoUI: public PacketViewerTab {
         regina::NPacket* getPacket();
         QWidget* getInterface();
         void refresh();
+
+    public slots:
+        /**
+         * Note that preferences have changed.
+         */
+        void updatePreferences();
+
+    private:
+        /**
+         * Update the static labels according to current unicode preferences.
+         */
+        void refreshLabels();
 };
 
 #endif

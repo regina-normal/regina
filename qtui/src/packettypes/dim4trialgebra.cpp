@@ -74,23 +74,28 @@ Dim4TriHomologyFundUI::Dim4TriHomologyFundUI(regina::Dim4Triangulation* packet,
     homologyGrid->setColumnStretch(3, 1);
 
     QString msg;
-    QLabel* label;
 
-    label = new QLabel(QObject::tr("H1(M):"));
-    homologyGrid->addWidget(label, 1, 1);
+    // The text for the following labels differs according to whether or
+    // not unicode is enabled.  We therefore set the label texts in
+    // refreshLabels(), which is called a little further down.
+
+    labelH1 = new QLabel();
+    homologyGrid->addWidget(labelH1, 1, 1);
     H1 = new QLabel(ui);
     homologyGrid->addWidget(H1, 1, 2);
     msg = QObject::tr("The first homology group of this triangulation.");
-    label->setWhatsThis(msg);
+    labelH1->setWhatsThis(msg);
     H1->setWhatsThis(msg);
 
-    label = new QLabel(QObject::tr("H2(M):"));
-    homologyGrid->addWidget(label, 2, 1);
+    labelH2 = new QLabel();
+    homologyGrid->addWidget(labelH2, 2, 1);
     H2 = new QLabel(ui);
     homologyGrid->addWidget(H2, 2, 2);
     msg = QObject::tr("The second homology group of this triangulation.");
-    label->setWhatsThis(msg);
+    labelH2->setWhatsThis(msg);
     H2->setWhatsThis(msg);
+
+    refreshLabels();
 
     master->addLayout(homologyGrid, tr("Homology"));
 
@@ -110,6 +115,9 @@ Dim4TriHomologyFundUI::Dim4TriHomologyFundUI(regina::Dim4Triangulation* packet,
     fundLayout->addWidget(fgGroup, 1);
 
     master->addLayout(fundLayout, tr("Fundamental Group"));
+
+    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
+        this, SLOT(updatePreferences()));
 }
 
 regina::NPacket* Dim4TriHomologyFundUI::getPacket() {
@@ -122,8 +130,13 @@ QWidget* Dim4TriHomologyFundUI::getInterface() {
 
 void Dim4TriHomologyFundUI::refresh() {
     if (tri->isValid()) {
-        H1->setText(tri->homologyH1().str().c_str());
-        H2->setText(tri->homologyH2().str().c_str());
+        if (ReginaPrefSet::global().displayUnicode) {
+            H1->setText(tri->homologyH1().utf8().c_str());
+            H2->setText(tri->homologyH2().utf8().c_str());
+        } else {
+            H1->setText(tri->homologyH1().str().c_str());
+            H2->setText(tri->homologyH2().str().c_str());
+        }
     } else {
         QString msg(QObject::tr("Invalid Triangulation"));
         H1->setText(msg);
@@ -153,3 +166,18 @@ void Dim4TriHomologyFundUI::fundGroupSimplified() {
         tri->simplifiedFundamentalGroup(simp);
 }
 
+void Dim4TriHomologyFundUI::refreshLabels() {
+    if (ReginaPrefSet::global().displayUnicode) {
+        labelH1->setText(QObject::trUtf8("H\u2081(M):"));
+        labelH2->setText(QObject::trUtf8("H\u2082(M):"));
+    } else {
+        labelH1->setText(QObject::tr("H1(M):"));
+        labelH2->setText(QObject::tr("H2(M):"));
+    }
+}
+
+void Dim4TriHomologyFundUI::updatePreferences() {
+    // If we've changed the unicode setting, then we may need some redrawing.
+    refreshLabels();
+    refresh();
+}

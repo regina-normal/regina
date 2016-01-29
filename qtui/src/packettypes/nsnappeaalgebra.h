@@ -53,6 +53,8 @@ namespace regina {
  * A triangulation page for viewing algebraic properties.
  */
 class NSnapPeaAlgebraUI : public QObject, public PacketViewerTab {
+    Q_OBJECT
+
     private:
         /**
          * Packet details
@@ -87,6 +89,12 @@ class NSnapPeaAlgebraUI : public QObject, public PacketViewerTab {
         regina::NPacket* getPacket();
         QWidget* getInterface();
         void refresh();
+
+    public slots:
+        /**
+         * Note that preferences have changed.
+         */
+        void updatePreferences();
 };
 
 #endif

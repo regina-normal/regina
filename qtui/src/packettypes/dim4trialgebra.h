@@ -79,6 +79,8 @@ class Dim4TriHomologyFundUI : public QObject, public PacketViewerTab {
          * Internal components
          */
         QWidget* ui;
+        QLabel* labelH1;
+        QLabel* labelH2;
         QLabel* H1;
         QLabel* H2;
         QLabel* fgMsg;
@@ -103,6 +105,16 @@ class Dim4TriHomologyFundUI : public QObject, public PacketViewerTab {
          * Notify us that the presentation has been simplified.
          */
         void fundGroupSimplified();
+        /**
+         * Note that preferences have changed.
+         */
+        void updatePreferences();
+
+    private:
+        /**
+         * Update the static labels according to current unicode preferences.
+         */
+        void refreshLabels();
 };
 
 #endif

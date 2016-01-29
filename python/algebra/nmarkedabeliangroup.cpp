@@ -226,6 +226,7 @@ void addNMarkedAbelianGroup() {
             return_value_policy<return_by_value>())
         .def("torsionSubgroup", &NMarkedAbelianGroup::torsionSubgroup)
         .def("torsionInclusion", &NMarkedAbelianGroup::torsionInclusion)
+        .def("utf8", &NMarkedAbelianGroup::utf8)
         .def("str", &NMarkedAbelianGroup::str)
         .def("toString", &NMarkedAbelianGroup::toString)
         .def("detail", &NMarkedAbelianGroup::detail)

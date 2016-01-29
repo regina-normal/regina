@@ -345,6 +345,7 @@ Version 5.0  [ (under development) ]
               addition, homology() has a new alias homologyH1().  The old names
               are kept but deprecated.
         Class NMarkedAbelianGroup:
+            - New routine utf8(), which is a prettier variant of str().
             - Added != operator to complement the existing == operator.
         Class NMatrix:
             - The destructor and writeMatrix() are no longer virtual.

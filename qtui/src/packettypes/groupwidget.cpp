@@ -34,6 +34,7 @@
 
 // Regina core includes:
 #include "algebra/ngrouppresentation.h"
+#include "utilities/stringutils.h"
 
 // UI includes:
 #include "gaprunner.h"
@@ -144,7 +145,9 @@ GroupWidget::~GroupWidget() {
 void GroupWidget::refresh(const regina::NGroupPresentation* group) {
     group_ = group;
 
-    std::string name = group_->recogniseGroup();
+    bool unicode = ReginaPrefSet::global().displayUnicode;
+
+    std::string name = group_->recogniseGroup(unicode);
     if (name.length()) {
         fundName_->setText(tr("Name: %1").arg(name.c_str()));
         fundName_->show();
@@ -196,8 +199,13 @@ void GroupWidget::refresh(const regina::NGroupPresentation* group) {
                         rel += '1';
                     else {
                         rel += char('a' + it->generator);
-                        if (it->exponent != 1)
-                            rel += QString("^%1").arg(it->exponent);
+                        if (it->exponent != 1) {
+                            if (unicode)
+                                rel += regina::superscript(it->exponent).
+                                    c_str();
+                            else
+                                rel += QString("^%1").arg(it->exponent);
+                        }
                     }
                 }
             }

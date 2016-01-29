@@ -138,52 +138,55 @@ NTriHomologyFundUI::NTriHomologyFundUI(regina::NTriangulation* packet,
     homologyGrid->setColumnStretch(3, 1);
 
     QString msg;
-    QLabel* label;
 
-    label = new QLabel(QObject::tr("H1(M):"));
-    homologyGrid->addWidget(label, 1, 1);
+    // The text for the following labels differs according to whether or
+    // not unicode is enabled.  We therefore set the label texts in
+    // refreshLabels(), which is called a little further down.
+
+    labelH1 = new QLabel();
+    homologyGrid->addWidget(labelH1, 1, 1);
     H1 = new QLabel(ui);
     homologyGrid->addWidget(H1, 1, 2);
     msg = QObject::tr("The first homology group of this triangulation.");
-    label->setWhatsThis(msg);
+    labelH1->setWhatsThis(msg);
     H1->setWhatsThis(msg);
 
-    label = new QLabel(QObject::tr("H1(M, %1M):").arg(QChar(0x2202 /* bdry */)));
-    homologyGrid->addWidget(label, 2, 1);
+    labelH1Rel = new QLabel();
+    homologyGrid->addWidget(labelH1Rel, 2, 1);
     H1Rel = new QLabel(ui);
     homologyGrid->addWidget(H1Rel, 2, 2);
     msg = QObject::tr("The relative first homology group of this triangulation "
         "with respect to the boundary.");
-    label->setWhatsThis(msg);
+    labelH1Rel->setWhatsThis(msg);
     H1Rel->setWhatsThis(msg);
 
-    label = new QLabel(QObject::tr("H1(%1M):").arg(QChar(0x2202 /* bdry */)));
-    homologyGrid->addWidget(label, 3, 1);
+    labelH1Bdry = new QLabel();
+    homologyGrid->addWidget(labelH1Bdry, 3, 1);
     H1Bdry = new QLabel(ui);
     homologyGrid->addWidget(H1Bdry, 3, 2);
     msg = QObject::tr("The first homology group of the boundary of this "
         "triangulation.");
-    label->setWhatsThis(msg);
+    labelH1Bdry->setWhatsThis(msg);
     H1Bdry->setWhatsThis(msg);
 
-    label = new QLabel(QObject::tr("H2(M):"));
-    homologyGrid->addWidget(label, 4, 1);
+    labelH2 = new QLabel();
+    homologyGrid->addWidget(labelH2, 4, 1);
     H2 = new QLabel(ui);
     homologyGrid->addWidget(H2, 4, 2);
     msg = QObject::tr("The second homology group of this triangulation.");
-    label->setWhatsThis(msg);
+    labelH2->setWhatsThis(msg);
     H2->setWhatsThis(msg);
 
-    label = new QLabel(QObject::tr("H2(M ; Z_2):"));
-    //label = new QLabel(QObject::tr("H2(M ; %1%2):").arg(QChar(0x2124 /* Z */)).
-    //    arg(QChar(0x2082 /* sub 2 */)));
-    homologyGrid->addWidget(label, 5, 1);
+    labelH2Z2 = new QLabel();
+    homologyGrid->addWidget(labelH2Z2, 5, 1);
     H2Z2 = new QLabel(ui);
     homologyGrid->addWidget(H2Z2, 5, 2);
     msg = QObject::tr("<qt>The second homology group of this triangulation "
         "with coefficients in Z<sub>2</sub>.</qt>");
-    label->setWhatsThis(msg);
+    labelH2Z2->setWhatsThis(msg);
     H2Z2->setWhatsThis(msg);
+
+    refreshLabels();
 
     master->addLayout(homologyGrid, tr("Homology"));
 
@@ -203,6 +206,9 @@ NTriHomologyFundUI::NTriHomologyFundUI(regina::NTriangulation* packet,
     fundLayout->addWidget(fgGroup, 1);
 
     master->addLayout(fundLayout, tr("Fundamental Group"));
+
+    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
+        this, SLOT(updatePreferences()));
 }
 
 regina::NPacket* NTriHomologyFundUI::getPacket() {
@@ -214,20 +220,39 @@ QWidget* NTriHomologyFundUI::getInterface() {
 }
 
 void NTriHomologyFundUI::refresh() {
-    H1->setText(tri->homology().str().c_str());
+    bool unicode = ReginaPrefSet::global().displayUnicode;
+
+    if (unicode)
+        H1->setText(tri->homology().utf8().c_str());
+    else
+        H1->setText(tri->homology().str().c_str());
 
     if (tri->isValid()) {
-        H1Rel->setText(tri->homologyRel().str().c_str());
-        H1Bdry->setText(tri->homologyBdry().str().c_str());
-        H2->setText(tri->homologyH2().str().c_str());
-
         unsigned long coeffZ2 = tri->homologyH2Z2();
-        if (coeffZ2 == 0)
-            H2Z2->setText("0");
-        else if (coeffZ2 == 1)
-            H2Z2->setText("Z_2");
-        else
-            H2Z2->setText(QString::number(coeffZ2) + " Z_2");
+
+        if (unicode) {
+            H1Rel->setText(tri->homologyRel().utf8().c_str());
+            H1Bdry->setText(tri->homologyBdry().utf8().c_str());
+            H2->setText(tri->homologyH2().utf8().c_str());
+
+            if (coeffZ2 == 0)
+                H2Z2->setText("0");
+            else if (coeffZ2 == 1)
+                H2Z2->setText("\u2124\u2082");
+            else
+                H2Z2->setText(QString::number(coeffZ2) + " \u2124\u2082");
+        } else {
+            H1Rel->setText(tri->homologyRel().str().c_str());
+            H1Bdry->setText(tri->homologyBdry().str().c_str());
+            H2->setText(tri->homologyH2().str().c_str());
+
+            if (coeffZ2 == 0)
+                H2Z2->setText("0");
+            else if (coeffZ2 == 1)
+                H2Z2->setText("Z_2");
+            else
+                H2Z2->setText(QString::number(coeffZ2) + " Z_2");
+        }
     } else {
         QString msg(QObject::tr("Invalid Triangulation"));
         H1Rel->setText(msg);
@@ -252,6 +277,28 @@ void NTriHomologyFundUI::fundGroupSimplified() {
     regina::NGroupPresentation* simp = fgGroup->takeSimplifiedGroup();
     if (simp)
         tri->simplifiedFundamentalGroup(simp);
+}
+
+void NTriHomologyFundUI::refreshLabels() {
+    if (ReginaPrefSet::global().displayUnicode) {
+        labelH1->setText(QObject::trUtf8("H\u2081(M):"));
+        labelH1Rel->setText(QObject::trUtf8("H\u2081(M, \u2202M):"));
+        labelH1Bdry->setText(QObject::trUtf8("H\u2081(\u2202M):"));
+        labelH2->setText(QObject::trUtf8("H\u2082(M):"));
+        labelH2Z2->setText(QObject::trUtf8("H\u2082(M ; \u2124\u2082):"));
+    } else {
+        labelH1->setText(QObject::tr("H1(M):"));
+        labelH1Rel->setText(QObject::tr("H1(M, bdry M):"));
+        labelH1Bdry->setText(QObject::tr("H1(bdry M):"));
+        labelH2->setText(QObject::tr("H2(M):"));
+        labelH2Z2->setText(QObject::tr("H2(M ; Z_2):"));
+    }
+}
+
+void NTriHomologyFundUI::updatePreferences() {
+    // If we've changed the unicode setting, then we may need some redrawing.
+    refreshLabels();
+    refresh();
 }
 
 NTriTuraevViroUI::NTriTuraevViroUI(regina::NTriangulation* packet,
@@ -467,6 +514,8 @@ void NTriTuraevViroUI::calculateInvariant() {
 
 void NTriCellularInfoUI::refresh() {
     if (tri->isValid()) {
+        bool unicode = ReginaPrefSet::global().displayUnicode;
+
         regina::NHomologicalData minfo(*tri);
 
         Cells->setText(QObject::tr("%1, %2, %3, %4").
@@ -483,16 +532,32 @@ void NTriCellularInfoUI::refresh() {
 
         EulerChar->setText(QString::number(minfo.eulerChar()));
 
-        H0H1H2H3->setText(QObject::tr("H0 = %1,  H1 = %2,  H2 = %3,  H3 = %4").
-            arg(minfo.homology(0).str().c_str()).
-            arg(minfo.homology(1).str().c_str()).
-            arg(minfo.homology(2).str().c_str()).
-            arg(minfo.homology(3).str().c_str()));
+        if (unicode) {
+            H0H1H2H3->setText(QObject::trUtf8("H\u2080 = %1,  H\u2081 = %2,  "
+                    "H\u2082 = %3,  H\u2083 = %4").
+                arg(minfo.homology(0).utf8().c_str()).
+                arg(minfo.homology(1).utf8().c_str()).
+                arg(minfo.homology(2).utf8().c_str()).
+                arg(minfo.homology(3).utf8().c_str()));
 
-        HBdry->setText(QObject::tr("H0 = %1,  H1 = %2,  H2 = %3").
-            arg(minfo.bdryHomology(0).str().c_str()).
-            arg(minfo.bdryHomology(1).str().c_str()).
-            arg(minfo.bdryHomology(2).str().c_str()));
+            HBdry->setText(
+                QObject::tr("H\u2080 = %1,  H\u2081 = %2,  H\u2082 = %3").
+                arg(minfo.bdryHomology(0).utf8().c_str()).
+                arg(minfo.bdryHomology(1).utf8().c_str()).
+                arg(minfo.bdryHomology(2).utf8().c_str()));
+        } else {
+            H0H1H2H3->setText(
+                QObject::tr("H0 = %1,  H1 = %2,  H2 = %3,  H3 = %4").
+                arg(minfo.homology(0).str().c_str()).
+                arg(minfo.homology(1).str().c_str()).
+                arg(minfo.homology(2).str().c_str()).
+                arg(minfo.homology(3).str().c_str()));
+
+            HBdry->setText(QObject::tr("H0 = %1,  H1 = %2,  H2 = %3").
+                arg(minfo.bdryHomology(0).str().c_str()).
+                arg(minfo.bdryHomology(1).str().c_str()).
+                arg(minfo.bdryHomology(2).str().c_str()));
+        }
 
         BdryMap->setText(minfo.bdryHomologyMap(1).str().c_str());
 
@@ -621,16 +686,19 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
     label->setWhatsThis(msg);
     HBdry->setWhatsThis(msg);
 
-    label = new QLabel(QObject::tr("<qt>H1(%1M &rarr; M): </qt>").
-        arg(QChar(0x2202 /* bdry */)), grid);
-    homologyGrid->addWidget(label, 6, 1);
+    // The text for the next label differs according to whether or
+    // not unicode is enabled.  We therefore set the label text in
+    // refreshLabels(), which is called a little further down.
+
+    labelBdryMap = new QLabel(grid);
+    homologyGrid->addWidget(labelBdryMap, 6, 1);
     BdryMap = new QLabel(grid);
     homologyGrid->addWidget(BdryMap, 6, 2);
     msg = QObject::tr("<qt>The boundary is a submanifold of the original "
                 "manifold.  This item describes some properties of "
                 "the induced map on H<sub>1</sub>.</qt>"
                 );
-    label->setWhatsThis(msg);
+    labelBdryMap->setWhatsThis(msg);
     BdryMap->setWhatsThis(msg);
 
     label = new QLabel(QObject::tr("Torsion form rank vector: "), grid);
@@ -699,6 +767,11 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
                 );
     label->setWhatsThis(msg);
     EmbeddingComments->setWhatsThis(msg);
+
+    refreshLabels();
+
+    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
+        this, SLOT(updatePreferences()));
 }
 
 
@@ -708,5 +781,19 @@ regina::NPacket* NTriCellularInfoUI::getPacket() {
 
 QWidget* NTriCellularInfoUI::getInterface() {
     return ui;
+}
+
+void NTriCellularInfoUI::refreshLabels() {
+    if (ReginaPrefSet::global().displayUnicode)
+        labelBdryMap->setText(QObject::trUtf8(
+            "<qt>H\u2081(\u2202M &rarr; M): </qt>"));
+    else
+        labelBdryMap->setText(QObject::tr("<qt>H1(bdry M &rarr; M): </qt>"));
+}
+
+void NTriCellularInfoUI::updatePreferences() {
+    // If we've changed the unicode setting, then we may need some redrawing.
+    refreshLabels();
+    refresh();
 }
 

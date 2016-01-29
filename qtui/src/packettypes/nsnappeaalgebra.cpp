@@ -42,6 +42,7 @@
 #include "columnlayout.h"
 #include "groupwidget.h"
 #include "nsnappeaalgebra.h"
+#include "reginaprefset.h"
 
 #include <QLabel>
 
@@ -114,6 +115,9 @@ NSnapPeaAlgebraUI::NSnapPeaAlgebraUI(regina::NSnapPeaTriangulation* packet,
     layout->addWidget(unfilledFundGroup, 8);
 
     master->addLayout(layout, tr("Unfilled manifold"));
+
+    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
+        this, SLOT(updatePreferences()));
 }
 
 regina::NPacket* NSnapPeaAlgebraUI::getPacket() {
@@ -125,6 +129,8 @@ QWidget* NSnapPeaAlgebraUI::getInterface() {
 }
 
 void NSnapPeaAlgebraUI::refresh() {
+    bool unicode = ReginaPrefSet::global().displayUnicode;
+
     if (tri->isNull()) {
         filledH1Title->hide();
         filledH1->hide();
@@ -143,7 +149,10 @@ void NSnapPeaAlgebraUI::refresh() {
         filledFundGroupTitle->hide();
         filledFundGroup->hide();
     } else {
-        filledH1->setText(tri->homologyFilled()->str().c_str());
+        if (unicode)
+            filledH1->setText(tri->homologyFilled()->utf8().c_str());
+        else
+            filledH1->setText(tri->homologyFilled()->str().c_str());
         filledFundGroup->refresh(tri->fundamentalGroupFilled());
 
         filledH1Title->show();
@@ -152,11 +161,19 @@ void NSnapPeaAlgebraUI::refresh() {
         filledFundGroup->show();
     }
 
-    unfilledH1->setText(tri->homology().str().c_str());
+    if (unicode)
+        unfilledH1->setText(tri->homology().utf8().c_str());
+    else
+        unfilledH1->setText(tri->homology().str().c_str());
     unfilledFundGroup->refresh(&tri->fundamentalGroup());
 
     unfilledH1Title->show();
     unfilledH1->show();
     unfilledFundGroupTitle->show();
     unfilledFundGroup->show();
+}
+
+void NSnapPeaAlgebraUI::updatePreferences() {
+    // If we've changed the unicode setting, then we may need some redrawing.
+    refresh();
 }
