@@ -32,12 +32,15 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
 #include "split/nsignature.h"
 #include "triangulation/ntriangulation.h"
 #include "../helpers.h"
+#include "../safeheldtype.h"
+
+#include <boost/python.hpp>
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::NSignature;
 
 namespace {
@@ -55,7 +58,7 @@ void addNSignature() {
         .def("parse", &NSignature::parse,
             return_value_policy<manage_new_object>())
         .def("triangulate", &NSignature::triangulate,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("writeCycles", &writeCycles)
         .def("str", &NSignature::str)
         .def("toString", &NSignature::toString)

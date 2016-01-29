@@ -45,6 +45,9 @@ if (${REGINA_INSTALL_DEV})
     osutils.h
     ptrutils.h
     registryutils.h
+    safepointeebase.h
+    safeptr.h
+    saferemnant.h
     sequence.h
     stringutils.h
     stringutils-impl.h

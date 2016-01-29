@@ -32,12 +32,14 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
 #include "angle/nanglestructurelist.h"
 #include "progress/nprogresstracker.h"
 #include "triangulation/ntriangulation.h"
+#include "../safeheldtype.h"
+#include <boost/python.hpp>
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::NAngleStructureList;
 
 namespace {
@@ -60,12 +62,12 @@ void addNAngleStructureList() {
         return_value_policy<manage_new_object>());
 
     scope s = class_<NAngleStructureList, bases<regina::NPacket>,
-            std::auto_ptr<NAngleStructureList>, boost::noncopyable>
+            SafeHeldType<NAngleStructureList>, boost::noncopyable>
             ("NAngleStructureList", no_init)
         .def("triangulation", &NAngleStructureList::triangulation,
             return_value_policy<reference_existing_object>())
         .def("getTriangulation", &NAngleStructureList::getTriangulation,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("isTautOnly", &NAngleStructureList::isTautOnly)
         .def("size", &NAngleStructureList::size)
         .def("getNumberOfStructures",
@@ -79,13 +81,13 @@ void addNAngleStructureList() {
         .def("allowsStrict", &NAngleStructureList::allowsStrict)
         .def("allowsTaut", &NAngleStructureList::allowsTaut)
         .def("enumerate", enumerate_1,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("enumerate", enumerate_2,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("enumerate", enumerate_3,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("enumerateTautDD", &NAngleStructureList::enumerateTautDD,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .staticmethod("enumerate")
         .staticmethod("enumerateTautDD")
     ;
@@ -93,7 +95,7 @@ void addNAngleStructureList() {
     s.attr("typeID") = regina::PACKET_ANGLESTRUCTURELIST;
     s.attr("packetType") = regina::PACKET_ANGLESTRUCTURELIST;
 
-    implicitly_convertible<std::auto_ptr<NAngleStructureList>,
-        std::auto_ptr<regina::NPacket> >();
+    implicitly_convertible<SafeHeldType<NAngleStructureList>,
+        SafeHeldType<regina::NPacket> >();
 }
 

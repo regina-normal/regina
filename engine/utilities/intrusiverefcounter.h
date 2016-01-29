@@ -2,9 +2,9 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2014, Ben Burton                                   *
+ *  Copyright (c) 1999-2015, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -32,43 +32,47 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
-#include "angle/nanglestructure.h"
-#include "triangulation/ntriangulation.h"
-#include "../helpers.h"
-#include "../safeheldtype.h"
+/*! \file utilities/intrusiverefcounter.h
+ *  \brief Provides a temporary replacement for boost::intrusive_ref_counter.
+ */
 
-using namespace boost::python;
-using namespace regina::python;
-using regina::NAngleStructure;
-using regina::NTriangulation;
+#ifndef __INTRUSIVEREFCOUNTER_H
+#ifndef __DOXYGEN
+#define __INTRUSIVEREFCOUNTER_H
+#endif
 
-namespace {
-    NTriangulation* triangulation_nonconst(const NAngleStructure &s) {
-        return const_cast<NTriangulation*>(s.triangulation());
+namespace regina {
+namespace temporary {
+
+/**
+ * A crude replacement for boost::intrusive_ref_counter so that the code
+ * compiles against versions of boost prior 1.55. It is only a stop-gap
+ * measure.
+ */
+
+template<typename T> class IntrusiveRefCounter {
+public:
+    IntrusiveRefCounter() : refCounter(0) { }
+    mutable int refCounter;
+};
+
+} } // namespace regina::temporary
+
+namespace boost {
+
+template<typename T>
+inline void intrusive_ptr_add_ref(const ::regina::temporary::IntrusiveRefCounter<T>* p) {
+    p->refCounter++;
+}
+
+template<typename T>
+inline void intrusive_ptr_release(const ::regina::temporary::IntrusiveRefCounter<T>* p) {
+    p->refCounter--;
+    if (p->refCounter == 0) {
+        delete static_cast<const T*>(p);
     }
 }
 
-void addNAngleStructure() {
-    class_<NAngleStructure, std::auto_ptr<NAngleStructure>, boost::noncopyable>
-            ("NAngleStructure", no_init)
-        .def("clone", &NAngleStructure::clone,
-            return_value_policy<manage_new_object>())
-        .def("angle", &NAngleStructure::angle)
-        .def("getAngle", &NAngleStructure::getAngle)
-        .def("triangulation", &triangulation_nonconst,
-            return_value_policy<to_held_type<> >())
-        .def("getTriangulation", &triangulation_nonconst,
-            return_value_policy<to_held_type<> >())
-        .def("isStrict", &NAngleStructure::isStrict)
-        .def("isTaut", &NAngleStructure::isTaut)
-        .def("isVeering", &NAngleStructure::isVeering)
-        .def("str", &NAngleStructure::str)
-        .def("toString", &NAngleStructure::toString)
-        .def("detail", &NAngleStructure::detail)
-        .def("toStringLong", &NAngleStructure::toStringLong)
-        .def("__str__", &NAngleStructure::str)
-        .def(regina::python::add_eq_operators())
-    ;
-}
+} // namespace boost
 
+#endif

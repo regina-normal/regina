@@ -37,8 +37,10 @@
 #include "manifold/nmanifold.h"
 #include "triangulation/ntriangulation.h"
 #include "../helpers.h"
+#include "../safeheldtype.h"
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::NManifold;
 
 namespace {
@@ -63,7 +65,7 @@ void addNManifold() {
         .def("structure", &NManifold::structure)
         .def("getStructure", &NManifold::getStructure)
         .def("construct", &NManifold::construct,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("homology", &NManifold::homology,
             return_value_policy<manage_new_object>())
         .def("homologyH1", &NManifold::homologyH1,

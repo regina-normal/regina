@@ -32,10 +32,13 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
 #include "packet/npdf.h"
+#include "../safeheldtype.h"
+
+#include <boost/python.hpp>
 
 using namespace boost::python;
+using regina::python::SafeHeldType;
 using regina::NPDF;
 
 namespace {
@@ -44,7 +47,7 @@ namespace {
 
 void addNPDF() {
     scope s = class_<NPDF, bases<regina::NPacket>,
-            std::auto_ptr<NPDF>, boost::noncopyable>("NPDF", init<>())
+            SafeHeldType<NPDF>, boost::noncopyable>("NPDF", init<>())
         .def(init<const char*>())
         .def("isNull", &NPDF::isNull)
         .def("size", &NPDF::size)
@@ -55,7 +58,7 @@ void addNPDF() {
     s.attr("typeID") = regina::PACKET_PDF;
     s.attr("packetType") = regina::PACKET_PDF;
 
-    implicitly_convertible<std::auto_ptr<NPDF>,
-        std::auto_ptr<regina::NPacket> >();
+    implicitly_convertible<SafeHeldType<NPDF>,
+        SafeHeldType<regina::NPacket> >();
 }
 

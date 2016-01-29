@@ -32,39 +32,42 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
 #include "dim2/dim2exampletriangulation.h"
 #include "dim2/dim2triangulation.h"
 #include "../helpers.h"
+#include "../safeheldtype.h"
+
+#include <boost/python.hpp>
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::Dim2ExampleTriangulation;
 using regina::Dim2Triangulation;
 
 void addDim2ExampleTriangulation() {
     class_<Dim2ExampleTriangulation>("Dim2ExampleTriangulation", no_init)
         .def("orientable", &Dim2ExampleTriangulation::orientable,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("nonOrientable", &Dim2ExampleTriangulation::nonOrientable,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("sphere", &Dim2ExampleTriangulation::sphere,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("sphereTetrahedron", &Dim2ExampleTriangulation::sphereTetrahedron,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("sphereOctahedron", &Dim2ExampleTriangulation::sphereOctahedron,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("disc", &Dim2ExampleTriangulation::disc,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("annulus", &Dim2ExampleTriangulation::annulus,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("mobius", &Dim2ExampleTriangulation::mobius,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("torus", &Dim2ExampleTriangulation::torus,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("rp2", &Dim2ExampleTriangulation::rp2,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("kb", &Dim2ExampleTriangulation::kb,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def(regina::python::no_eq_operators())
         .staticmethod("orientable")
         .staticmethod("nonOrientable")

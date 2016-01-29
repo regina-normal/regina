@@ -32,15 +32,19 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
 #include "algebra/ngrouppresentation.h"
 #include "angle/nanglestructure.h"
 #include "surfaces/nnormalsurface.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
+#include "../safeheldtype.h"
 #include "../generic/facehelper.h"
 
+// Held type must be declared before boost/python.hpp
+#include <boost/python.hpp>
+
 using namespace boost::python;
+using namespace regina::python;
 using regina::NTriangulation;
 using regina::Triangulation;
 
@@ -210,7 +214,7 @@ void addNTriangulation() {
     global.attr("TV_NAIVE") = regina::TV_NAIVE;
 
     scope s = class_<Triangulation<3>, bases<regina::NPacket>,
-            std::auto_ptr<Triangulation<3>>,
+            SafeHeldType<Triangulation<3>>,
             boost::noncopyable>("Triangulation3")
         .def(init<const NTriangulation&>())
         .def(init<const std::string&>())
@@ -440,11 +444,11 @@ void addNTriangulation() {
         .def("insertRehydration", &NTriangulation::insertRehydration)
         .def("dehydrate", &NTriangulation::dehydrate)
         .def("rehydrate", &NTriangulation::rehydrate,
-            return_value_policy<manage_new_object>())
+             return_value_policy<to_held_type<> >())
         .def("isoSig", isoSig_void)
         .def("isoSigDetail", isoSig_relabelling)
         .def("fromIsoSig", &NTriangulation::fromIsoSig,
-            return_value_policy<manage_new_object>())
+             return_value_policy<to_held_type<> >())
         .def("isoSigComponentSize", &NTriangulation::isoSigComponentSize)
         .def("dumpConstruction", &NTriangulation::dumpConstruction)
         .def("snapPea", snapPea_void)
@@ -454,9 +458,9 @@ void addNTriangulation() {
         .def("saveRecogniser", &NTriangulation::saveRecogniser)
         .def("saveRecognizer", &NTriangulation::saveRecognizer)
         .def("fromSnapPea", &NTriangulation::fromSnapPea,
-            return_value_policy<manage_new_object>())
+             return_value_policy<to_held_type<> >())
         .def("enterTextTriangulation", enterTextTriangulation_stdio,
-            return_value_policy<manage_new_object>())
+             return_value_policy<to_held_type<> >())
         .staticmethod("rehydrate")
         .staticmethod("fromIsoSig")
         .staticmethod("isoSigComponentSize")
@@ -467,9 +471,8 @@ void addNTriangulation() {
     s.attr("typeID") = regina::PACKET_TRIANGULATION;
     s.attr("packetType") = regina::PACKET_TRIANGULATION;
 
-    implicitly_convertible<std::auto_ptr<NTriangulation>,
-        std::auto_ptr<regina::NPacket> >();
-
+    implicitly_convertible<SafeHeldType<NTriangulation>,
+                           SafeHeldType<regina::NPacket> >();
     }
 
     scope().attr("NTriangulation") = scope().attr("Triangulation3");

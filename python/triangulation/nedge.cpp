@@ -41,9 +41,11 @@
 #include "triangulation/nvertex.h"
 #include "../globalarray.h"
 #include "../helpers.h"
+#include "../safeheldtype.h"
 #include "../generic/facehelper.h"
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::NEdge;
 using regina::NEdgeEmbedding;
 using regina::Face;
@@ -104,9 +106,9 @@ void addNEdge() {
             .def("back", &NEdge::back,
                 return_internal_reference<>())
             .def("triangulation", &NEdge::triangulation,
-                return_value_policy<reference_existing_object>())
+                return_value_policy<to_held_type<> >())
             .def("getTriangulation", &NEdge::getTriangulation,
-                return_value_policy<reference_existing_object>())
+                return_value_policy<to_held_type<> >())
             .def("component", &NEdge::component,
                 return_value_policy<reference_existing_object>())
             .def("getComponent", &NEdge::getComponent,

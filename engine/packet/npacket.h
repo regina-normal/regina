@@ -50,6 +50,7 @@
 #include "output.h"
 #include "packet/npacketlistener.h"
 #include "packet/packettype.h"
+#include "utilities/safepointeebase.h"
 #include <boost/noncopyable.hpp>
 
 namespace regina {
@@ -197,6 +198,7 @@ struct PacketInfo;
  */
 class REGINA_API NPacket :
         public Output<NPacket>,
+        public SafePointeeBase<NPacket>,
         public boost::noncopyable {
     private:
         std::string label_;
@@ -1542,6 +1544,16 @@ class REGINA_API NPacket :
          */
          virtual void writeTextLong(std::ostream& out) const;
 
+        /**
+         * Indicates whether some other object in the calculation engine
+         * is responsible for ultimately destroying this object.
+         *
+         * For packets, this returns \c true if and only if this packet
+         * has a parent in the packet tree (i.e., is not the root).
+         *
+         * @return \c true if and only if some other object owns this object.
+         */
+        bool hasOwner() const;
 };
 
 /**
@@ -1732,6 +1744,10 @@ inline size_t NPacket::getNumberOfDescendants() const {
 
 inline size_t NPacket::getTotalTreeSize() const {
     return totalTreeSize();
+}
+
+inline bool NPacket::hasOwner() const {
+    return treeParent;
 }
 
 inline NPacket::ChangeEventSpan::ChangeEventSpan(NPacket* packet) :

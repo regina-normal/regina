@@ -32,13 +32,16 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
 #include "maths/nmatrixint.h"
 #include "progress/nprogresstracker.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/ntriangulation.h"
+#include "../safeheldtype.h"
+
+#include <boost/python.hpp>
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::NNormalSurfaceList;
 
 namespace {
@@ -148,7 +151,7 @@ void addNNormalSurfaceList() {
 
     scope s = class_<NNormalSurfaceList,
             bases<regina::NPacket>,
-            std::auto_ptr<NNormalSurfaceList>, boost::noncopyable>
+            SafeHeldType<NNormalSurfaceList>, boost::noncopyable>
             ("NNormalSurfaceList", no_init)
         .def("getFlavour", &NNormalSurfaceList::getFlavour)
         .def("flavour", &NNormalSurfaceList::flavour)
@@ -162,7 +165,7 @@ void addNNormalSurfaceList() {
         .def("triangulation", &NNormalSurfaceList::triangulation,
             return_value_policy<reference_existing_object>())
         .def("getTriangulation", &NNormalSurfaceList::getTriangulation,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("size", &NNormalSurfaceList::size)
         .def("getNumberOfSurfaces", &NNormalSurfaceList::getNumberOfSurfaces)
         .def("surface", &NNormalSurfaceList::surface,
@@ -171,62 +174,62 @@ void addNNormalSurfaceList() {
             return_internal_reference<>())
         .def("writeAllSurfaces", writeAllSurfaces_stdio)
         .def("enumerate", unified_2,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("enumerate", unified_3,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("enumerate", unified_4,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("enumerate", unified_5,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("enumerate", enumerate_3,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("enumerate", enumerate_4,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("enumerateFundPrimal", enumerateFundPrimal_2,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("enumerateFundPrimal", enumerateFundPrimal_3,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("enumerateFundPrimal", enumerateFundPrimal_4,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("enumerateFundPrimal", enumerateFundPrimal_5,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("enumerateFundDual", enumerateFundDual_2,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("enumerateFundDual", enumerateFundDual_3,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("enumerateFundDual", enumerateFundDual_4,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("enumerateFundFullCone", enumerateFundFullCone_2,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("enumerateFundFullCone", enumerateFundFullCone_3,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("enumerateFundCD", enumerateFundCD_2,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("enumerateFundCD", enumerateFundCD_3,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("enumerateStandardDirect",
             &NNormalSurfaceList::enumerateStandardDirect,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("enumerateStandardANDirect",
             &NNormalSurfaceList::enumerateStandardANDirect,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("quadToStandard", &NNormalSurfaceList::quadToStandard,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("quadOctToStandardAN", &NNormalSurfaceList::quadOctToStandardAN,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("standardToQuad", &NNormalSurfaceList::standardToQuad,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("standardANToQuadOct", &NNormalSurfaceList::standardANToQuadOct,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("filterForLocallyCompatiblePairs",
             &NNormalSurfaceList::filterForLocallyCompatiblePairs,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("filterForDisjointPairs",
             &NNormalSurfaceList::filterForDisjointPairs,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("filterForPotentiallyIncompressible",
             &NNormalSurfaceList::filterForPotentiallyIncompressible,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("recreateMatchingEquations",
             &NNormalSurfaceList::recreateMatchingEquations,
             return_value_policy<manage_new_object>())
@@ -255,7 +258,7 @@ void addNNormalSurfaceList() {
     s.attr("ORIENTED") = regina::NS_ORIENTED;
     s.attr("ORIENTED_QUAD") = regina::NS_ORIENTED_QUAD;
 
-    implicitly_convertible<std::auto_ptr<NNormalSurfaceList>,
-        std::auto_ptr<regina::NPacket> >();
+    implicitly_convertible<SafeHeldType<NNormalSurfaceList>,
+        SafeHeldType<regina::NPacket> >();
 }
 

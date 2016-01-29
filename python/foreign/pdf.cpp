@@ -35,11 +35,13 @@
 #include <boost/python.hpp>
 #include "foreign/pdf.h"
 #include "packet/npdf.h"
+#include "../safeheldtype.h"
 
 using namespace boost::python;
+using namespace regina::python;
 
 void addForeignPDF() {
-    def("readPDF", regina::readPDF, return_value_policy<manage_new_object>());
+    def("readPDF", regina::readPDF, return_value_policy<to_held_type<> >());
     def("writePDF", regina::writePDF);
 }
 

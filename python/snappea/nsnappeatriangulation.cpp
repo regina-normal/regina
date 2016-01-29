@@ -32,12 +32,15 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
 #include "maths/nmatrixint.h"
 #include "snappea/nsnappeatriangulation.h"
 #include "../helpers.h"
+#include "../safeheldtype.h"
+
+#include <boost/python.hpp>
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::NCusp;
 using regina::NSnapPeaTriangulation;
 using regina::NTriangulation;
@@ -85,7 +88,7 @@ void addNSnapPeaTriangulation() {
     ;
 
     scope s = class_<NSnapPeaTriangulation, bases<regina::NTriangulation>,
-            std::auto_ptr<NSnapPeaTriangulation>, boost::noncopyable>
+            SafeHeldType<NSnapPeaTriangulation>, boost::noncopyable>
             ("NSnapPeaTriangulation", init<>())
         .def(init<const std::string&>())
         .def(init<const NSnapPeaTriangulation&>())
@@ -111,9 +114,9 @@ void addNSnapPeaTriangulation() {
         .def("fill", &NSnapPeaTriangulation::fill, OL_fill())
         .def("unfill", &NSnapPeaTriangulation::unfill, OL_unfill())
         .def("filledTriangulation", filledTriangulation_void,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("filledTriangulation", filledTriangulation_unsigned,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("slopeEquations", &NSnapPeaTriangulation::slopeEquations,
             return_value_policy<manage_new_object>())
         .def("fundamentalGroupFilled",
@@ -127,15 +130,15 @@ void addNSnapPeaTriangulation() {
             return_internal_reference<>())
         .def("verifyTriangulation", &NSnapPeaTriangulation::verifyTriangulation)
         .def("toRegina", &NSnapPeaTriangulation::toRegina,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("protoCanonize", &NSnapPeaTriangulation::protoCanonize,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("protoCanonise", &NSnapPeaTriangulation::protoCanonise,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("canonize", &NSnapPeaTriangulation::canonize,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("canonise", &NSnapPeaTriangulation::canonise,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("randomize", &NSnapPeaTriangulation::randomize)
         .def("randomise", &NSnapPeaTriangulation::randomise)
         .def("dump", &NSnapPeaTriangulation::dump)
@@ -167,7 +170,7 @@ void addNSnapPeaTriangulation() {
     s.attr("typeID") = regina::PACKET_SNAPPEATRIANGULATION;
     s.attr("packetType") = regina::PACKET_SNAPPEATRIANGULATION;
 
-    implicitly_convertible<std::auto_ptr<NSnapPeaTriangulation>,
-        std::auto_ptr<regina::NTriangulation> >();
+    implicitly_convertible<SafeHeldType<NSnapPeaTriangulation>,
+        SafeHeldType<regina::NTriangulation> >();
 }
 

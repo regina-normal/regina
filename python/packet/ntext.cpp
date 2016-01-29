@@ -32,10 +32,15 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
+
 #include "packet/ntext.h"
+#include "../safeheldtype.h"
+
+// Held type must be declared before boost/python.hpp
+#include <boost/python.hpp>
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::NText;
 
 namespace {
@@ -44,8 +49,10 @@ namespace {
 }
 
 void addNText() {
-    scope s = class_<NText, bases<regina::NPacket>,
-            std::auto_ptr<NText>, boost::noncopyable>("NText", init<>())
+    scope s = class_<
+        NText, bases<regina::NPacket>, SafeHeldType<NText>,
+        boost::noncopyable>(
+            "NText", init<>())
         .def(init<const std::string&>())
         .def(init<const char*>())
         .def("text", &NText::text,
@@ -59,7 +66,7 @@ void addNText() {
     s.attr("typeID") = regina::PACKET_TEXT;
     s.attr("packetType") = regina::PACKET_TEXT;
 
-    implicitly_convertible<std::auto_ptr<NText>,
-        std::auto_ptr<regina::NPacket> >();
+    implicitly_convertible<SafeHeldType<NText>,
+                           SafeHeldType<regina::NPacket> >();
 }
 

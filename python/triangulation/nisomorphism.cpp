@@ -36,8 +36,10 @@
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
 #include "../helpers.h"
+#include "../safeheldtype.h"
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::Isomorphism;
 using regina::NIsomorphism;
 
@@ -66,7 +68,7 @@ void addNIsomorphism() {
         .def("__getitem__", iso_getItem)
         .def("isIdentity", &NIsomorphism::isIdentity)
         .def("apply", &NIsomorphism::apply,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("applyInPlace", &NIsomorphism::applyInPlace)
         .def("random", &NIsomorphism::random,
             return_value_policy<manage_new_object>())

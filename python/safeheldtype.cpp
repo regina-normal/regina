@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2014, Ben Burton                                   *
+ *  Copyright (c) 1999-2015, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -32,43 +32,36 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
-#include "angle/nanglestructure.h"
-#include "triangulation/ntriangulation.h"
-#include "../helpers.h"
-#include "../safeheldtype.h"
+#include <Python.h>
 
-using namespace boost::python;
-using namespace regina::python;
-using regina::NAngleStructure;
-using regina::NTriangulation;
+#include "safeheldtype.h"
 
-namespace {
-    NTriangulation* triangulation_nonconst(const NAngleStructure &s) {
-        return const_cast<NTriangulation*>(s.triangulation());
-    }
+
+#include <boost/version.hpp>
+#if BOOST_VERSION >= 105600
+#define USE_BOOST_DEMANGLE
+#endif
+#ifdef USE_BOOST_DEMANGLE
+#include <boost/core/demangle.hpp>
+#endif
+
+
+
+namespace regina {
+namespace python {
+
+void raiseExpiredException(const std::type_info& info)
+{
+    #ifdef USE_BOOST_DEMANGLE
+    const std::string typeName = boost::core::demangle(info.name());
+    #else
+    const std::string typeName = info.name();
+    #endif
+
+    const std::string msg =
+        "Python reference to object of type " + typeName + " expired.";
+    
+    PyErr_SetString(PyExc_RuntimeError, msg.c_str());
 }
 
-void addNAngleStructure() {
-    class_<NAngleStructure, std::auto_ptr<NAngleStructure>, boost::noncopyable>
-            ("NAngleStructure", no_init)
-        .def("clone", &NAngleStructure::clone,
-            return_value_policy<manage_new_object>())
-        .def("angle", &NAngleStructure::angle)
-        .def("getAngle", &NAngleStructure::getAngle)
-        .def("triangulation", &triangulation_nonconst,
-            return_value_policy<to_held_type<> >())
-        .def("getTriangulation", &triangulation_nonconst,
-            return_value_policy<to_held_type<> >())
-        .def("isStrict", &NAngleStructure::isStrict)
-        .def("isTaut", &NAngleStructure::isTaut)
-        .def("isVeering", &NAngleStructure::isVeering)
-        .def("str", &NAngleStructure::str)
-        .def("toString", &NAngleStructure::toString)
-        .def("detail", &NAngleStructure::detail)
-        .def("toStringLong", &NAngleStructure::toStringLong)
-        .def("__str__", &NAngleStructure::str)
-        .def(regina::python::add_eq_operators())
-    ;
-}
-
+} } // regina::python

@@ -32,16 +32,19 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
 #include "dim2/dim2component.h"
 #include "dim2/dim2edge.h"
 #include "dim2/dim2triangle.h"
 #include "dim2/dim2triangulation.h"
 #include "dim2/dim2vertex.h"
 #include "../helpers.h"
+#include "../safeheldtype.h"
 #include "../generic/facehelper.h"
 
+#include <boost/python.hpp>
+
 using namespace boost::python;
+using namespace regina::python;
 using regina::Dim2Triangle;
 
 void addDim2Triangle() {
@@ -67,9 +70,9 @@ void addDim2Triangle() {
             return_value_policy<reference_existing_object>())
         .def("isolate", &Dim2Triangle::isolate)
         .def("triangulation", &Dim2Triangle::triangulation,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("getTriangulation", &Dim2Triangle::getTriangulation,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("component", &Dim2Triangle::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim2Triangle::getComponent,

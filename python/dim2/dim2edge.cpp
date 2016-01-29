@@ -32,7 +32,6 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
 #include "dim2/dim2boundarycomponent.h"
 #include "dim2/dim2component.h"
 #include "dim2/dim2edge.h"
@@ -41,9 +40,13 @@
 #include "dim2/dim2vertex.h"
 #include "../globalarray.h"
 #include "../helpers.h"
+#include "../safeheldtype.h"
 #include "../generic/facehelper.h"
 
+#include <boost/python.hpp>
+
 using namespace boost::python;
+using namespace regina::python;
 using regina::Dim2Edge;
 using regina::Dim2EdgeEmbedding;
 using regina::Face;
@@ -103,9 +106,9 @@ void addDim2Edge() {
         .def("back", &Dim2Edge::back,
             return_internal_reference<>())
         .def("triangulation", &Dim2Edge::triangulation,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("getTriangulation", &Dim2Edge::getTriangulation,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("component", &Dim2Edge::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim2Edge::getComponent,

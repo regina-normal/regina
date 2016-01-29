@@ -41,8 +41,10 @@
 #include "triangulation/nvertex.h"
 #include "../globalarray.h"
 #include "../helpers.h"
+#include "../safeheldtype.h"
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::Face;
 using regina::FaceEmbedding;
 using regina::NVertex;
@@ -115,9 +117,9 @@ void addNVertex() {
             .def("back", &NVertex::back,
                 return_internal_reference<>())
             .def("triangulation", &NVertex::triangulation,
-                return_value_policy<reference_existing_object>())
+                return_value_policy<to_held_type<> >())
             .def("getTriangulation", &NVertex::getTriangulation,
-                return_value_policy<reference_existing_object>())
+                return_value_policy<to_held_type<> >())
             .def("component", &NVertex::component,
                 return_value_policy<reference_existing_object>())
             .def("getComponent", &NVertex::getComponent,

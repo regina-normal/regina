@@ -41,9 +41,11 @@
 #include "triangulation/nvertex.h"
 #include "../globalarray.h"
 #include "../helpers.h"
+#include "../safeheldtype.h"
 #include "../generic/facehelper.h"
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::NTetrahedron;
 
 void addNTetrahedron() {
@@ -67,11 +69,11 @@ void addNTetrahedron() {
         .def("join", &NTetrahedron::join)
         .def("unjoin", &NTetrahedron::unjoin,
             return_value_policy<reference_existing_object>())
-        .def("triangulation", &NTetrahedron::triangulation,
-            return_value_policy<reference_existing_object>())
         .def("isolate", &NTetrahedron::isolate)
+        .def("triangulation", &NTetrahedron::triangulation,
+            return_value_policy<to_held_type<> >())
         .def("getTriangulation", &NTetrahedron::getTriangulation,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("component", &NTetrahedron::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &NTetrahedron::getComponent,

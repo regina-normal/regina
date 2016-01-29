@@ -32,11 +32,15 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
 #include "packet/npacket.h"
 #include "../helpers.h"
+#include "../safeheldtype.h"
+
+// Held type must be declared before boost/python.hpp
+#include <boost/python.hpp>
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::NPacket;
 
 namespace {
@@ -73,20 +77,6 @@ namespace {
 
     BOOST_PYTHON_FUNCTION_OVERLOADS(OL_reparent, reparent_check, 2, 3);
 
-    void insertChildFirst_own(NPacket& parent, std::auto_ptr<NPacket> child) {
-        parent.insertChildFirst(child.get());
-        child.release();
-    }
-    void insertChildLast_own(NPacket& parent, std::auto_ptr<NPacket> child) {
-        parent.insertChildLast(child.get());
-        child.release();
-    }
-    void insertChildAfter_own(NPacket& parent, std::auto_ptr<NPacket> child,
-            NPacket* prevChild) {
-        parent.insertChildAfter(child.get(), prevChild);
-        child.release();
-    }
-
     NPacket* makeOrphan_return(NPacket* subtree) {
         subtree->makeOrphan();
         return subtree;
@@ -102,8 +92,9 @@ namespace {
 
 void addNPacket() {
     class_<NPacket, boost::noncopyable,
-            std::auto_ptr<NPacket> >("NPacket", no_init)
+            SafeHeldType<NPacket> >("NPacket", no_init)
         .def("type", &NPacket::type)
+
         .def("getPacketType", &NPacket::getPacketType)
         .def("typeName", &NPacket::typeName)
         .def("getPacketTypeName", &NPacket::getPacketTypeName)
@@ -128,29 +119,29 @@ void addNPacket() {
         .def("tags", tags_list)
         .def("getTags", tags_list)
         .def("parent", &NPacket::parent,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("getTreeParent", &NPacket::getTreeParent,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("firstChild", &NPacket::firstChild,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("getFirstTreeChild", &NPacket::getFirstTreeChild,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("lastChild", &NPacket::lastChild,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("getLastTreeChild", &NPacket::getLastTreeChild,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("nextSibling", &NPacket::nextSibling,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("getNextTreeSibling", &NPacket::getNextTreeSibling,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("prevSibling", &NPacket::prevSibling,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("getPrevTreeSibling", &NPacket::getPrevTreeSibling,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("root", &NPacket::root,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("getTreeMatriarch", &NPacket::getTreeMatriarch,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("levelsDownTo", &NPacket::levelsDownTo)
         .def("levelsUpTo", &NPacket::levelsUpTo)
         .def("isGrandparentOf", &NPacket::isGrandparentOf)
@@ -160,11 +151,11 @@ void addNPacket() {
         .def("getNumberOfDescendants", &NPacket::getNumberOfDescendants)
         .def("totalTreeSize", &NPacket::totalTreeSize)
         .def("getTotalTreeSize", &NPacket::getTotalTreeSize)
-        .def("insertChildFirst", insertChildFirst_own)
-        .def("insertChildLast", insertChildLast_own)
-        .def("insertChildAfter", insertChildAfter_own)
+        .def("insertChildFirst", &NPacket::insertChildFirst)
+        .def("insertChildLast", &NPacket::insertChildLast)
+        .def("insertChildAfter", &NPacket::insertChildAfter)
         .def("makeOrphan", makeOrphan_return,
-            return_value_policy<manage_new_object>())
+             return_value_policy<to_held_type<> >())
         .def("reparent", reparent_check, OL_reparent())
         .def("transferChildren", &NPacket::transferChildren)
         .def("swapWithNextSibling", &NPacket::swapWithNextSibling)
@@ -174,15 +165,17 @@ void addNPacket() {
         .def("moveToLast", &NPacket::moveToLast)
         .def("sortChildren", &NPacket::sortChildren)
         .def("nextTreePacket", nextTreePacket_non_const, OL_nextTreePacket()
-            [return_value_policy<reference_existing_object>()])
+             [return_value_policy<to_held_type<> >()])
         .def("firstTreePacket", firstTreePacket_non_const,
-            return_value_policy<reference_existing_object>())
+             return_value_policy<to_held_type<> >())
+        .def("firstTreePacket", firstTreePacket_non_const,
+             return_value_policy<to_held_type<> >())
         .def("findPacketLabel", findPacketLabel_non_const,
-            return_value_policy<reference_existing_object>())
+             return_value_policy<to_held_type<> >())
         .def("dependsOnParent", &NPacket::dependsOnParent)
         .def("isPacketEditable", &NPacket::isPacketEditable)
-        .def("clone", &NPacket::clone, OL_clone()[
-            return_value_policy<reference_existing_object>()])
+        .def("clone", &NPacket::clone,
+             OL_clone()[return_value_policy<to_held_type<> >()])
         .def("save", save_filename, OL_save())
         .def("internalID", &NPacket::internalID)
         .def("str", &NPacket::str)
@@ -193,6 +186,7 @@ void addNPacket() {
         .def(regina::python::add_eq_operators())
     ;
 
-    def("open", open_filename, return_value_policy<manage_new_object>());
+    def("open", open_filename, return_value_policy<to_held_type<> >());
+
 }
 

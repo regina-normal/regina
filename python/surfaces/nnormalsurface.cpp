@@ -32,15 +32,18 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
 #include "maths/nmatrixint.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nnormalsurfacelist.h" // for makeZeroVector()
 #include "triangulation/ntriangulation.h"
 #include "../globalarray.h"
 #include "../helpers.h"
+#include "../safeheldtype.h"
+
+#include <boost/python.hpp>
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::NNormalSurface;
 using regina::NTriangulation;
 using regina::python::GlobalArray;
@@ -125,6 +128,10 @@ namespace {
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_isCompressingDisc,
         NNormalSurface::isCompressingDisc, 0, 1);
+
+    NTriangulation* getTriangulation_nonconst(const NNormalSurface &surface) {
+        return const_cast<NTriangulation*>(surface.getTriangulation());
+    }
 }
 
 void addNNormalSurface() {
@@ -156,9 +163,9 @@ void addNNormalSurface() {
         .def("countCoords", &NNormalSurface::countCoords)
         .def("getNumberOfCoords", &NNormalSurface::getNumberOfCoords)
         .def("triangulation", &NNormalSurface::triangulation,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("getTriangulation", &NNormalSurface::getTriangulation,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("name", &NNormalSurface::name,
             return_value_policy<return_by_value>())
         .def("getName", &NNormalSurface::getName,
@@ -184,9 +191,9 @@ void addNNormalSurface() {
             OL_isCompressingDisc())
         .def("isIncompressible", &NNormalSurface::isIncompressible)
         .def("cutAlong", &NNormalSurface::cutAlong,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("crush", &NNormalSurface::crush,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<> >())
         .def("sameSurface", &NNormalSurface::sameSurface)
         .def("normal", &NNormalSurface::normal)
         .def("embedded", &NNormalSurface::embedded)

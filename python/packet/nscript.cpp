@@ -32,10 +32,14 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
 #include "packet/nscript.h"
+#include "../safeheldtype.h"
+
+// Held type must be declared before boost/python.hpp
+#include <boost/python.hpp>
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::NScript;
 
 namespace {
@@ -51,7 +55,7 @@ namespace {
 
 void addNScript() {
     scope s = class_<NScript, bases<regina::NPacket>,
-            std::auto_ptr<NScript>, boost::noncopyable>("NScript", init<>())
+            SafeHeldType<NScript>, boost::noncopyable>("NScript", init<>())
         .def("text", &NScript::text,
             return_value_policy<return_by_value>())
         .def("getText", &NScript::getText,
@@ -85,7 +89,7 @@ void addNScript() {
     s.attr("typeID") = regina::PACKET_SCRIPT;
     s.attr("packetType") = regina::PACKET_SCRIPT;
 
-    implicitly_convertible<std::auto_ptr<NScript>,
-        std::auto_ptr<regina::NPacket> >();
+    implicitly_convertible<SafeHeldType<NScript>,
+                           SafeHeldType<regina::NPacket> >();
 }
 
