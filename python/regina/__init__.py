@@ -30,7 +30,8 @@ import sys, os
 from .engine import *
 
 def reginaSetup(quiet = False, readline = True, banner = False,
-                snappyPath = True, libs = True, namespace = None):
+                snappyPath = True, libs = True, namespace = None,
+                builtinOpen = True):
     """
     Initialise a Regina python session.
 
@@ -51,6 +52,13 @@ def reginaSetup(quiet = False, readline = True, banner = False,
         namespace  : The global namespace in which the start-up library scripts
                      (if any) will be executed.  This may be None, in which
                      case the caller's global namespace will be used.
+        builtinOpen: If true, sets "open" in the given namespace to Python's
+                     builtin open() function.  This is used to work around the
+                     problem whereby "from regina import *", overrides Python's
+                     open() function with Regina's.  You will still be able to
+                     access Regina's open() function by calling regina.open().
+                     If the namespace argument above is None, then this option
+                     has no effect.
     """
 
     if readline:
@@ -110,6 +118,9 @@ def reginaSetup(quiet = False, readline = True, banner = False,
     if banner:
         print engine.welcome()
 
+    if builtinOpen and namespace:
+        namespace['open'] = __builtins__['open']
+
 def __execLibs(namespace = None, quiet = False):
     """
     For internal use by this module.
@@ -130,7 +141,7 @@ def __execLibs(namespace = None, quiet = False):
     libConfig = os.path.expanduser('~/.regina-libs')
 
     try:
-        f = open(libConfig, 'r')
+        f = __builtins__['open'](libConfig, 'r')
     except:
         # No configuration file.  Silently do nothing.
         return

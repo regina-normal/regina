@@ -728,6 +728,9 @@ Version 5.0  [ (under development) ]
               it does not identify when a 3-manifold triangulation
               appears as a subcomplex of a 4-manifold triangulation).
     PYTHON:
+        - No longer clobbers Python's own builtin open() function in the
+          global namespace.  You can still access Regina's open() function
+          by calling regina.open().
         - For all classes, writeTextShort() and writeTextLong() are no
           longer exposed to Python.  Simply use str() and detail() instead.
         - The behaviour of == and != under python has been formalised.

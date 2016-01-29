@@ -1558,6 +1558,12 @@ class REGINA_API NPacket :
  * \ref i18n "character encoding" used in the given file \e name, and simply
  * passes it through unchanged to low-level C/C++ file I/O routines.
  *
+ * \ifacespython This function is not automatically imported into the
+ * global namespace when running regina-python or when opening a Python
+ * console in the graphical user interface.  This is to avoid overriding
+ * Python's own built-in open() function.  You can access Regina's open()
+ * function by calling <tt>regina.open()</tt>.
+ *
  * @param filename the pathname of the file to read from.
  * @return the packet tree read from file, or 0 on error (as explained above).
  */
