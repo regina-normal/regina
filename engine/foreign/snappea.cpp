@@ -135,7 +135,7 @@ NTriangulation* readSnapPea(std::istream& in) {
 
         // Perform the gluings.
         for (j=0; j<4; j++)
-            tet[i]->joinTo(j, tet[g[j]],
+            tet[i]->join(j, tet[g[j]],
                 NPerm4(p[j][0], p[j][1], p[j][2], p[j][3]));
 
         // Read in junk.

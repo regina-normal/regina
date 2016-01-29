@@ -129,7 +129,7 @@ Dim2Triangulation* NVertex::buildLinkDetail(bool labels,
                         adjIt->vertex() == adjVertex)
                     break; // Sets adjIndex to the right value.
 
-            ans->triangle(i)->joinTo(edgeInLink, ans->triangle(adjIndex),
+            ans->triangle(i)->join(edgeInLink, ans->triangle(adjIndex),
                 perm4to3(adj->triangleMapping(adjVertex).inverse() *
                     tet->adjacentGluing(exitTri) *
                     tet->triangleMapping(v)));

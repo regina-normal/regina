@@ -239,7 +239,7 @@ void Dim4Triangulation::cloneFrom(const Dim4Triangulation& X) {
                 adjPerm = pent->adjacentGluing(facet);
                 if (adjPos > pentPos ||
                         (adjPos == pentPos && adjPerm[facet] > facet)) {
-                    simplices_[pentPos]->joinTo(facet,
+                    simplices_[pentPos]->join(facet,
                         simplices_[adjPos], adjPerm);
                 }
             }

@@ -52,22 +52,22 @@ NTriangulation* NSimpleSurfaceBundle::construct() const {
         NTetrahedron* r = ans->newTetrahedron();
         NTetrahedron* s = ans->newTetrahedron();
 
-        r->joinTo(1, s, NPerm4());
-        r->joinTo(3, s, NPerm4());
-        r->joinTo(2, s, NPerm4(3, 2, 0, 1));
-        s->joinTo(2, r, NPerm4(3, 2, 0, 1));
+        r->join(1, s, NPerm4());
+        r->join(3, s, NPerm4());
+        r->join(2, s, NPerm4(3, 2, 0, 1));
+        s->join(2, r, NPerm4(3, 2, 0, 1));
     } else if (type_ == RP2xS1) {
         // Taken from section 3.5.1 of Ben Burton's PhD thesis.
         NTetrahedron* r = ans->newTetrahedron();
         NTetrahedron* s = ans->newTetrahedron();
         NTetrahedron* t = ans->newTetrahedron();
 
-        s->joinTo(0, r, NPerm4(0, 1, 2, 3));
-        s->joinTo(3, r, NPerm4(3, 0, 1, 2));
-        s->joinTo(1, t, NPerm4(3, 0, 1, 2));
-        s->joinTo(2, t, NPerm4(0, 1, 2, 3));
-        r->joinTo(1, t, NPerm4(2, 3, 0, 1));
-        r->joinTo(3, t, NPerm4(2, 3, 0, 1));
+        s->join(0, r, NPerm4(0, 1, 2, 3));
+        s->join(3, r, NPerm4(3, 0, 1, 2));
+        s->join(1, t, NPerm4(3, 0, 1, 2));
+        s->join(2, t, NPerm4(0, 1, 2, 3));
+        r->join(1, t, NPerm4(2, 3, 0, 1));
+        r->join(3, t, NPerm4(2, 3, 0, 1));
     }
 
     return ans;

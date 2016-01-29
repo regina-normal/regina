@@ -248,7 +248,7 @@ bool GluingsModel::setData(const QModelIndex& index, const QVariant& value,
         adj->unjoin(newAdjFace);
 
     // Glue the two faces together.
-    t->joinTo(face, adj, newAdjPerm);
+    t->join(face, adj, newAdjPerm);
     return true;
 }
 

@@ -925,7 +925,7 @@ void NSnapPeaTriangulation::fillRegina(regina::snappea::Triangulation* src,
     for (i = 0; i < tData->num_tetrahedra; ++i)
         for (j = 0; j < 4; ++j)
             if (! tet[i]->adjacentTetrahedron(j))
-                tet[i]->joinTo(j,
+                tet[i]->join(j,
                     tet[tData->tetrahedron_data[i].neighbor_index[j]],
                     NPerm4(tData->tetrahedron_data[i].gluing[j]));
 

@@ -235,7 +235,7 @@ bool Dim2GluingsModel::setData(const QModelIndex& index, const QVariant& value,
         adj->unjoin(newAdjEdge);
 
     // Glue the two edges together.
-    t->joinTo(edge, adj, newAdjPerm);
+    t->join(edge, adj, newAdjPerm);
     return true;
 }
 

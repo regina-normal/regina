@@ -72,19 +72,19 @@ void Dim4Triangulation::barycentricSubdivision() {
             // (0, 1, 2, 3, 4) -> (tet, triangle, edge, vtx, corner)
 
             // Internal gluings within the old pentachoron:
-            newPent[120 * pent + permIdx]->joinTo(perm[4],
+            newPent[120 * pent + permIdx]->join(perm[4],
                 newPent[120 * pent + (perm * NPerm5(4, 3)).S5Index()],
                 NPerm5(perm[4], perm[3]));
 
-            newPent[120 * pent + permIdx]->joinTo(perm[3],
+            newPent[120 * pent + permIdx]->join(perm[3],
                 newPent[120 * pent + (perm * NPerm5(3, 2)).S5Index()],
                 NPerm5(perm[3], perm[2]));
 
-            newPent[120 * pent + permIdx]->joinTo(perm[2],
+            newPent[120 * pent + permIdx]->join(perm[2],
                 newPent[120 * pent + (perm * NPerm5(2, 1)).S5Index()],
                 NPerm5(perm[2], perm[1]));
 
-            newPent[120 * pent + permIdx]->joinTo(perm[1],
+            newPent[120 * pent + permIdx]->join(perm[1],
                 newPent[120 * pent + (perm * NPerm5(1, 0)).S5Index()],
                 NPerm5(perm[1], perm[0]));
 
@@ -96,7 +96,7 @@ void Dim4Triangulation::barycentricSubdivision() {
                 continue; // We've already done this gluing from the other side.
 
             glue = oldPent->adjacentGluing(perm[0]);
-            newPent[120 * pent + permIdx]->joinTo(perm[0],
+            newPent[120 * pent + permIdx]->join(perm[0],
                 newPent[120 * oldPent->adjacentPentachoron(perm[0])->index() +
                     (glue * perm).S5Index()],
                 glue);
@@ -308,7 +308,7 @@ bool Dim4Triangulation::idealToFinite() {
                     !=NULL)
                     std::cerr<<"idealToFinite (1) p1 GLUED";
 #endif // and if gluings previously set. 
-                newPens[ p0 ]->joinTo( tEmb0.tetrahedron(), newPens[ p1 ],
+                newPens[ p0 ]->join( tEmb0.tetrahedron(), newPens[ p1 ],
                  tEmb0.pentachoron()->adjacentGluing( tEmb0.tetrahedron() ) );
                 continue;
             }
@@ -339,7 +339,7 @@ bool Dim4Triangulation::idealToFinite() {
                     if (newPens[p1]->adjacentPentachoron( 4 )!=NULL)
                         std::cerr<<"idealToFinite (2) p1 GLUED";
 #endif // and if gluings previously set. 
-                    newPens[ p0 ]->joinTo( 4, newPens[ p1 ], NPerm5() );
+                    newPens[ p0 ]->join( 4, newPens[ p1 ], NPerm5() );
                     if (!tIV) continue;
 
                     const Dim4Triangle* aTri(aTet->triangle(j) );
@@ -360,7 +360,7 @@ bool Dim4Triangulation::idealToFinite() {
                             if (newPens[p1]->adjacentPentachoron( 4 )!=NULL)
                                 std::cerr<<"idealToFinite (3) p1 GLUED";
 #endif // and if gluings previously set. 
-                            newPens[ p0 ]->joinTo( 4, newPens[ p1 ], NPerm5() );
+                            newPens[ p0 ]->join( 4, newPens[ p1 ], NPerm5() );
                         }
                 }
                 if (shouldTruncate(aTet->vertex(j))) { // we have a _CCit
@@ -380,7 +380,7 @@ bool Dim4Triangulation::idealToFinite() {
                     if (newPens[p1]->adjacentPentachoron( 4 )!=NULL)
                         std::cerr<<"idealToFinite (4) p1 GLUED";
 #endif // and if gluings previously set. 
-                    newPens[ p0 ]->joinTo( 4, newPens[ p1 ], NPerm5() );
+                    newPens[ p0 ]->join( 4, newPens[ p1 ], NPerm5() );
                 }
             } // end loop through tet vertices
         } // end look through tets.
@@ -427,7 +427,7 @@ bool Dim4Triangulation::idealToFinite() {
                     if (newPens[p1]->adjacentPentachoron( triInc[2] )!=NULL)
                         std::cerr<<"idealToFinite (4) p1 GLUED";
 #endif // and if gluings previously set. 
-                    newPens[ p0 ]->joinTo( 1, newPens[ p1 ],
+                    newPens[ p0 ]->join( 1, newPens[ p1 ],
                      NPerm5(triInc[0], triInc[2], triInc[1], 
                             triInc[3], triInc[4] ) );
                 }
@@ -445,7 +445,7 @@ bool Dim4Triangulation::idealToFinite() {
                     if (newPens[p1]->adjacentPentachoron( triInc[1] )!=NULL)
                         std::cerr<<"idealToFinite (5) p1 GLUED";
 #endif // and if gluings previously set. 
-                    newPens[ p0 ]->joinTo( 2, newPens[ p1 ],
+                    newPens[ p0 ]->join( 2, newPens[ p1 ],
                      NPerm5( triInc[0], triInc[2], triInc[1], 
                              triInc[3], triInc[4] ) );
                 }
@@ -465,7 +465,7 @@ bool Dim4Triangulation::idealToFinite() {
                     if (newPens[p1]->adjacentPentachoron( 2 )!=NULL)
                         std::cerr<<"idealToFinite (6) p1 GLUED";
 #endif // and if gluings previously set. 
-                    newPens[ p0 ]->joinTo( 1, newPens[ p1 ], 
+                    newPens[ p0 ]->join( 1, newPens[ p1 ], 
                         NPerm5(0, 2, 1, 3, 4) );
                 }
                 if (shouldTruncate(aTri->vertex(0))
@@ -484,7 +484,7 @@ bool Dim4Triangulation::idealToFinite() {
                     if (newPens[p1]->adjacentPentachoron( triInc[1] )!=NULL)
                         std::cerr<<"idealToFinite (7) p1 GLUED";
 #endif // and if gluings previously set. 
-                    newPens[ p0 ]->joinTo( 2, newPens[ p1 ],
+                    newPens[ p0 ]->join( 2, newPens[ p1 ],
                       NPerm5( triInc[0], triInc[2], triInc[1], 
                               triInc[3], triInc[4] ) );
                 }
@@ -537,7 +537,7 @@ bool Dim4Triangulation::idealToFinite() {
                             (p0.vtxIdx==0) ? B : A )!=NULL)
                             std::cerr<<"idealToFinite (8) p1 GLUED";
 #endif // and if gluings previously set. 
-                        newPens[ p0 ]->joinTo( (p0.vtxIdx==0) ? 1 : 0, 
+                        newPens[ p0 ]->join( (p0.vtxIdx==0) ? 1 : 0, 
                             newPens[ p1 ], NPerm5( A, B, C, k, 4 ) );
                     }
                 }
@@ -641,7 +641,7 @@ bool Dim4Triangulation::idealToFinite() {
                         [incPerm0[glueT]]] )!=NULL)
                     std::cerr<<"idealToFinite (9) p1 GLUED";
 #endif // and if gluings previously set. 
-                newPens[ p0 ]->joinTo( glueT, newPens[ p1 ],
+                newPens[ p0 ]->join( glueT, newPens[ p1 ],
                    incPerm1.inverse()*NPerm5(eMap[2], eMap[3])*incPerm0 );
             }
         }
@@ -668,7 +668,7 @@ bool Dim4Triangulation::idealToFinite() {
                             tetInc.inverse()[j] )!=NULL)
                         std::cerr<<"idealToFinite (10) p1 GLUED";
 #endif // and if gluings previously set. 
-                    newPens[ p0 ]->joinTo( (j+k)%5, newPens[ p1 ], 
+                    newPens[ p0 ]->join( (j+k)%5, newPens[ p1 ], 
                         tetInc.inverse()*NPerm5(j, (j+k)%5) );
                 }
             }
@@ -715,7 +715,7 @@ bool Dim4Triangulation::idealToFinite() {
                                                 )!=NULL)
                 std::cerr<<"idealToFinite (11) p1 GLUED";
 #endif // and if gluings previously set. 
-            newPens[ p0 ]->joinTo( s0it ? tri0idx : triInc[4] , newPens[ p1 ],
+            newPens[ p0 ]->join( s0it ? tri0idx : triInc[4] , newPens[ p1 ],
                        (s1it ? tet1inc : NPerm5()).inverse()*NPerm5(triInc[3],
                                       triInc[4])*(s0it ? tet0inc : NPerm5()));
             if (!tIv) continue;
@@ -736,7 +736,7 @@ bool Dim4Triangulation::idealToFinite() {
                     if (newPens[p1]->adjacentPentachoron( 3 )!=NULL)
                         std::cerr<<"idealToFinite (12) p1 GLUED";
 #endif // and if gluings previously set. 
-                    newPens[ p0 ]->joinTo( 3, newPens[ p1 ], NPerm5() );
+                    newPens[ p0 ]->join( 3, newPens[ p1 ], NPerm5() );
                 }
         } // j loop -- edges
     }

@@ -586,7 +586,7 @@
                     }
                     
                     // Glue the two facets together.
-                    t->joinTo(editFacet, adj, destGluing);
+                    t->join(editFacet, adj, destGluing);
                     NSIndexPath* path = [NSIndexPath indexPathForRow:destSimplex+1 inSection:0];
                     if ([toReload indexOfObject:path] == NSNotFound)
                         [toReload addObject:path];

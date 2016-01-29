@@ -208,7 +208,7 @@ NTriangulation* NSignature::triangulate() const {
         myFacePerm = exitFace(first[label[pos]] == pos, ! labelInv[pos]);
         yourFacePerm = exitFace(first[label[adjPos]] == adjPos,
             labelInv[adjPos]);
-        tet[label[pos]]->joinTo(myFacePerm[3], tet[label[adjPos]],
+        tet[label[pos]]->join(myFacePerm[3], tet[label[adjPos]],
             yourFacePerm * myFacePerm.inverse());
     }
 

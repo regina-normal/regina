@@ -473,9 +473,9 @@ NSatTriPrism* NSatTriPrism::insertBlock(NTriangulation& tri, bool major) {
     NTetrahedron* a = tri.newTetrahedron();
     NTetrahedron* b = tri.newTetrahedron();
     NTetrahedron* c = tri.newTetrahedron();
-    a->joinTo(1, c, NPerm4(2, 0, 3, 1));
-    b->joinTo(1, a, NPerm4(2, 0, 3, 1));
-    c->joinTo(1, b, NPerm4(2, 0, 3, 1));
+    a->join(1, c, NPerm4(2, 0, 3, 1));
+    b->join(1, a, NPerm4(2, 0, 3, 1));
+    c->join(1, b, NPerm4(2, 0, 3, 1));
 
     NSatTriPrism* ans = new NSatTriPrism(major);
 
@@ -613,14 +613,14 @@ NSatCube* NSatCube::insertBlock(NTriangulation& tri) {
     NTetrahedron* central1 = tri.newTetrahedron();
 
     const NPerm4 id;
-    bdry0->joinTo(1, central0, id);
-    bdry0->joinTo(0, central1, NPerm4(0, 1));
-    bdry1->joinTo(2, central0, NPerm4(2, 1, 3, 0));
-    bdry1->joinTo(0, central1, NPerm4(0, 3));
-    bdry2->joinTo(0, central0, id);
-    bdry2->joinTo(1, central1, NPerm4(0, 1));
-    bdry3->joinTo(3, central0, NPerm4(0, 3, 1, 2));
-    bdry3->joinTo(1, central1, NPerm4(1, 2));
+    bdry0->join(1, central0, id);
+    bdry0->join(0, central1, NPerm4(0, 1));
+    bdry1->join(2, central0, NPerm4(2, 1, 3, 0));
+    bdry1->join(0, central1, NPerm4(0, 3));
+    bdry2->join(0, central0, id);
+    bdry2->join(1, central1, NPerm4(0, 1));
+    bdry3->join(3, central0, NPerm4(0, 3, 1, 2));
+    bdry3->join(1, central1, NPerm4(1, 2));
 
     NSatCube* ans = new NSatCube();
 
@@ -843,15 +843,15 @@ NSatReflectorStrip* NSatReflectorStrip::insertBlock(NTriangulation& tri,
         lower = tri.newTetrahedron();
         middle = tri.newTetrahedron();
 
-        upper->joinTo(0, middle, NPerm4(2, 1, 3, 0));
-        lower->joinTo(0, middle, NPerm4(0, 3, 1, 2));
-        upper->joinTo(1, middle, NPerm4(1, 3));
-        lower->joinTo(1, middle, NPerm4(0, 2));
+        upper->join(0, middle, NPerm4(2, 1, 3, 0));
+        lower->join(0, middle, NPerm4(0, 3, 1, 2));
+        upper->join(1, middle, NPerm4(1, 3));
+        lower->join(1, middle, NPerm4(0, 2));
 
         if (i == 0)
             firstLeft = upper;
         else
-            upper->joinTo(2, prevRight, NPerm4(0, 1));
+            upper->join(2, prevRight, NPerm4(0, 1));
 
         prevRight = lower;
 
@@ -862,9 +862,9 @@ NSatReflectorStrip* NSatReflectorStrip::insertBlock(NTriangulation& tri,
     }
 
     if (twisted)
-        firstLeft->joinTo(2, prevRight, id);
+        firstLeft->join(2, prevRight, id);
     else
-        firstLeft->joinTo(2, prevRight, NPerm4(0, 1));
+        firstLeft->join(2, prevRight, NPerm4(0, 1));
 
     return ans;
 }

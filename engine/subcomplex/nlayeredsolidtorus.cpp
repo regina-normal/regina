@@ -716,7 +716,7 @@ NTriangulation* NLayeredSolidTorus::flatten(const NTriangulation* original,
         adj0->unjoin(groups0[3]);
         adj1->unjoin(groups1[3]);
 
-        adj0->joinTo(groups0[3], adj1, groups1 *
+        adj0->join(groups0[3], adj1, groups1 *
             NPerm4((mobiusBandBdry + 1) % 3, (mobiusBandBdry + 2) % 3) *
             groups0.inverse());
     }

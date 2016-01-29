@@ -149,8 +149,8 @@ namespace {
             // Reflect A,B.
             // This requires a layering.
             NTetrahedron* tet = tri->newTetrahedron();
-            tet->joinTo(1, oldd0, oldv0 * NPerm4(1,3));
-            tet->joinTo(3, oldd1, oldv1);
+            tet->join(1, oldd0, oldv0 * NPerm4(1,3));
+            tet->join(3, oldd1, oldv1);
 
             map0.dest = map1.dest = tet;
             map0.vertexMap = NPerm4(1,2,3,0);
@@ -162,8 +162,8 @@ namespace {
             // Reflect C,D.
             // This again requires a layering.
             NTetrahedron* tet = tri->newTetrahedron();
-            tet->joinTo(1, oldd0, oldv0 * NPerm4(1,3));
-            tet->joinTo(3, oldd1, oldv1);
+            tet->join(1, oldd0, oldv0 * NPerm4(1,3));
+            tet->join(3, oldd1, oldv1);
 
             map0.dest = map1.dest = tet;
             map0.vertexMap = NPerm4(3,0,1,2);
@@ -193,8 +193,8 @@ namespace {
             // Rotate the quadrilateral.
             // This requires a layering.
             NTetrahedron* tet = tri->newTetrahedron();
-            tet->joinTo(1, oldd0, oldv0 * NPerm4(1,3));
-            tet->joinTo(3, oldd1, oldv1);
+            tet->join(1, oldd0, oldv0 * NPerm4(1,3));
+            tet->join(3, oldd1, oldv1);
 
             map0.dest = map1.dest = tet;
             map0.vertexMap = NPerm4(1,0,3,2);
@@ -206,8 +206,8 @@ namespace {
             // Rotate the quadrilateral in the other direction.
             // This also requires a layering.
             NTetrahedron* tet = tri->newTetrahedron();
-            tet->joinTo(1, oldd0, oldv0 * NPerm4(1,3));
-            tet->joinTo(3, oldd1, oldv1);
+            tet->join(1, oldd0, oldv0 * NPerm4(1,3));
+            tet->join(3, oldd1, oldv1);
 
             map0.dest = map1.dest = tet;
             map0.vertexMap = NPerm4(3,2,1,0);
@@ -359,8 +359,8 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                 innerTet[0] = inner->newTetrahedron();
                 innerTet[1] = inner->newTetrahedron();
                 innerTet[2] = inner->newTetrahedron();
-                innerTet[0]->joinTo(0, innerTet[1], NPerm4());
-                innerTet[2]->joinTo(1, innerTet[1], NPerm4());
+                innerTet[0]->join(0, innerTet[1], NPerm4());
+                innerTet[2]->join(1, innerTet[1], NPerm4());
 
                 // First pick off the triangles at the ends of the prism.
 
@@ -579,7 +579,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                     triData = discData->data + which;
                     assert(triData->nMaps == 1 || triData->nMaps == 2);
                     if (triData->nMaps > 1) {
-                        triData->map[0].dest->joinTo(
+                        triData->map[0].dest->join(
                             triData->map[0].vertexMap[3],
                             triData->map[1].dest,
                             triData->map[1].vertexMap *

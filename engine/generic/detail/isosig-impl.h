@@ -543,7 +543,7 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
                         delete[] simp;
                         return 0;
                     }
-                    simp[pos]->joinTo(j, simp[nextUnused++], NPerm<dim+1>());
+                    simp[pos]->join(j, simp[nextUnused++], NPerm<dim+1>());
                 } else {
                     // Join to existing simplex.
                     gluing = NPerm<dim+1>::atIndex(joinGluing[joinPos]);
@@ -556,7 +556,7 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
                         delete[] simp;
                         return 0;
                     }
-                    simp[pos]->joinTo(j, simp[joinDest[joinPos]], gluing);
+                    simp[pos]->join(j, simp[joinDest[joinPos]], gluing);
                     ++joinPos;
                 }
 

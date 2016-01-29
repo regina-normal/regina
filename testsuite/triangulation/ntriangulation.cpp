@@ -356,18 +356,18 @@ class NTriangulationTest : public TriangulationTest<3> {
             // construct using a vertex of degree two.
             r = lens3_1.newTetrahedron();
             s = lens3_1.newTetrahedron();
-            r->joinTo(0, s, NPerm4(0, 2, 3, 1));
-            r->joinTo(1, s, NPerm4());
-            r->joinTo(2, s, NPerm4());
-            r->joinTo(3, s, NPerm4());
+            r->join(0, s, NPerm4(0, 2, 3, 1));
+            r->join(1, s, NPerm4());
+            r->join(2, s, NPerm4());
+            r->join(3, s, NPerm4());
             lens3_1.setLabel("L(3,1)");
 
             // For a triangulation with invalid edges, we simply fold
             // the faces of a tetrahedron together in pairs (as in a
             // 3-sphere triangulation) but apply a reflection to each fold.
             r = invalidEdges.newTetrahedron();
-            r->joinTo(0, r, NPerm4(1, 0, 3, 2));
-            r->joinTo(2, r, NPerm4(1, 0, 3, 2));
+            r->join(0, r, NPerm4(1, 0, 3, 2));
+            r->join(2, r, NPerm4(1, 0, 3, 2));
             invalidEdges.setLabel("Triangulation with invalid edges");
 
             twoProjPlaneCusps.insertTriangulation(invalidEdges);
@@ -378,16 +378,16 @@ class NTriangulationTest : public TriangulationTest<3> {
             // identify two opposite faces of a square pyramid.
             r = pinchedSolidTorus.newTetrahedron();
             s = pinchedSolidTorus.newTetrahedron();
-            r->joinTo(3, s, NPerm4(0, 1, 2, 3));
-            r->joinTo(2, s, NPerm4(0, 3, 1, 2));
+            r->join(3, s, NPerm4(0, 1, 2, 3));
+            r->join(2, s, NPerm4(0, 3, 1, 2));
             pinchedSolidTorus.setLabel("Pinched solid torus");
 
             // The pinched solid Klein bottle is much the same, except
             // for a twist before the opposite faces are identified.
             r = pinchedSolidKB.newTetrahedron();
             s = pinchedSolidKB.newTetrahedron();
-            r->joinTo(3, s, NPerm4(0, 1, 2, 3));
-            r->joinTo(2, s, NPerm4(0, 2, 1, 3));
+            r->join(3, s, NPerm4(0, 1, 2, 3));
+            r->join(2, s, NPerm4(0, 2, 1, 3));
             pinchedSolidKB.setLabel("Pinched solid Klein bottle");
 
             // This ball used to cause a crash once upon a time.
@@ -396,12 +396,12 @@ class NTriangulationTest : public TriangulationTest<3> {
             s = ball_large.newTetrahedron();
             t = ball_large.newTetrahedron();
             u = ball_large.newTetrahedron();
-            r->joinTo(2, r, NPerm4(0,2));
-            r->joinTo(1, s, NPerm4(2,0,1,3));
-            s->joinTo(2, t, NPerm4());
-            s->joinTo(1, t, NPerm4(2,0,1,3));
-            t->joinTo(1, u, NPerm4(2,0,1,3));
-            u->joinTo(2, u, NPerm4(1,2));
+            r->join(2, r, NPerm4(0,2));
+            r->join(1, s, NPerm4(2,0,1,3));
+            s->join(2, t, NPerm4());
+            s->join(1, t, NPerm4(2,0,1,3));
+            t->join(1, u, NPerm4(2,0,1,3));
+            u->join(2, u, NPerm4(1,2));
             ball_large.setLabel("4-tetrahedron ball");
 
             // Make two triangular pillows, then join them together.
@@ -410,24 +410,24 @@ class NTriangulationTest : public TriangulationTest<3> {
             s = ball_large_pillows.newTetrahedron();
             t = ball_large_pillows.newTetrahedron();
             u = ball_large_pillows.newTetrahedron();
-            r->joinTo(0, s, NPerm4());
-            r->joinTo(1, s, NPerm4());
-            r->joinTo(2, s, NPerm4());
-            t->joinTo(0, u, NPerm4());
-            t->joinTo(1, u, NPerm4());
-            t->joinTo(2, u, NPerm4());
-            r->joinTo(3, t, NPerm4());
+            r->join(0, s, NPerm4());
+            r->join(1, s, NPerm4());
+            r->join(2, s, NPerm4());
+            t->join(0, u, NPerm4());
+            t->join(1, u, NPerm4());
+            t->join(2, u, NPerm4());
+            r->join(3, t, NPerm4());
             ball_large_pillows.setLabel("4-tetrahedron pillow ball");
 
             // Make three snapped balls and join them together.
             r = ball_large_snapped.newTetrahedron();
             s = ball_large_snapped.newTetrahedron();
             t = ball_large_snapped.newTetrahedron();
-            r->joinTo(2, r, NPerm4(2, 3));
-            s->joinTo(2, s, NPerm4(2, 3));
-            t->joinTo(2, t, NPerm4(2, 1));
-            r->joinTo(1, s, NPerm4());
-            s->joinTo(0, t, NPerm4());
+            r->join(2, r, NPerm4(2, 3));
+            s->join(2, s, NPerm4(2, 3));
+            t->join(2, t, NPerm4(2, 1));
+            r->join(1, s, NPerm4());
+            s->join(0, t, NPerm4());
             ball_large_snapped.setLabel("3-tetrahedron snapped ball");
 
             // Build disconnected triangulations from others that we
@@ -1570,7 +1570,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                                 CPPUNIT_FAIL(msg.str());
                             } else if (tet->adjacentGluing(perm[k]) !=
                                     iso->facetPerm(adj->index()) *
-                                    perm3to4(t->adjacentGluing(k)) *
+                                    NPerm4::extend(t->adjacentGluing(k)) *
                                     perm.inverse()) {
                                 std::ostringstream msg;
                                 msg << tri->label()
@@ -2428,16 +2428,16 @@ class NTriangulationTest : public TriangulationTest<3> {
             int i;
             for (i = 0; i < 5; i++)
                 tet[i] = tri->newTetrahedron();
-            tet[0]->joinTo(0, tet[4], NPerm4(1,0,2,3));
-            tet[0]->joinTo(1, tet[3], NPerm4(0,2,3,1));
-            tet[0]->joinTo(2, tet[1], NPerm4(0,1,3,2));
-            tet[0]->joinTo(3, tet[2], NPerm4(2,1,3,0));
-            tet[1]->joinTo(0, tet[3], NPerm4(1,3,2,0));
-            tet[1]->joinTo(1, tet[2], NPerm4(0,2,3,1));
-            tet[1]->joinTo(2, tet[4], NPerm4(2,1,0,3));
-            tet[2]->joinTo(1, tet[4], NPerm4(0,2,3,1));
-            tet[2]->joinTo(3, tet[3], NPerm4(3,1,2,0));
-            tet[3]->joinTo(3, tet[4], NPerm4(0,1,2,3));
+            tet[0]->join(0, tet[4], NPerm4(1,0,2,3));
+            tet[0]->join(1, tet[3], NPerm4(0,2,3,1));
+            tet[0]->join(2, tet[1], NPerm4(0,1,3,2));
+            tet[0]->join(3, tet[2], NPerm4(2,1,3,0));
+            tet[1]->join(0, tet[3], NPerm4(1,3,2,0));
+            tet[1]->join(1, tet[2], NPerm4(0,2,3,1));
+            tet[1]->join(2, tet[4], NPerm4(2,1,0,3));
+            tet[2]->join(1, tet[4], NPerm4(0,2,3,1));
+            tet[2]->join(3, tet[3], NPerm4(3,1,2,0));
+            tet[3]->join(3, tet[4], NPerm4(0,1,2,3));
             delete verifyNotThreeSphere(tri,
                 "Poincare homology sphere (plugged)");
 
@@ -2462,7 +2462,7 @@ class NTriangulationTest : public TriangulationTest<3> {
 
             tri = new NTriangulation();
             tet[0] = tri->newTetrahedron();
-            tet[0]->joinTo(0, tet[0], NPerm4(3, 1, 2, 0));
+            tet[0]->join(0, tet[0], NPerm4(3, 1, 2, 0));
             delete verifyNotThreeSphere(tri, "Snapped tetrahedron");
 
             tri = new NTriangulation();
@@ -2581,15 +2581,15 @@ class NTriangulationTest : public TriangulationTest<3> {
 
             tri = new NTriangulation();
             tet[0] = tri->newTetrahedron();
-            tet[0]->joinTo(0, tet[0], NPerm4(3, 1, 2, 0));
+            tet[0]->join(0, tet[0], NPerm4(3, 1, 2, 0));
             delete verifyThreeBall(tri, "Snapped tetrahedron");
 
             tri = new NTriangulation();
             tet[0] = tri->newTetrahedron();
             tet[1] = tri->newTetrahedron();
-            tet[0]->joinTo(0, tet[1], NPerm4());
-            tet[0]->joinTo(1, tet[1], NPerm4());
-            tet[0]->joinTo(2, tet[1], NPerm4());
+            tet[0]->join(0, tet[1], NPerm4());
+            tet[0]->join(1, tet[1], NPerm4());
+            tet[0]->join(2, tet[1], NPerm4());
             delete verifyThreeBall(tri, "Triangular pillow");
 
             // This ball used to crash the simplification routines once
@@ -2599,12 +2599,12 @@ class NTriangulationTest : public TriangulationTest<3> {
             tet[1] = tri->newTetrahedron();
             tet[2] = tri->newTetrahedron();
             tet[3] = tri->newTetrahedron();
-            tet[0]->joinTo(2, tet[0], NPerm4(0,2));
-            tet[0]->joinTo(1, tet[1], NPerm4(2,0,1,3));
-            tet[1]->joinTo(2, tet[2], NPerm4());
-            tet[1]->joinTo(1, tet[2], NPerm4(2,0,1,3));
-            tet[2]->joinTo(1, tet[3], NPerm4(2,0,1,3));
-            tet[3]->joinTo(2, tet[3], NPerm4(1,2));
+            tet[0]->join(2, tet[0], NPerm4(0,2));
+            tet[0]->join(1, tet[1], NPerm4(2,0,1,3));
+            tet[1]->join(2, tet[2], NPerm4());
+            tet[1]->join(1, tet[2], NPerm4(2,0,1,3));
+            tet[2]->join(1, tet[3], NPerm4(2,0,1,3));
+            tet[3]->join(2, tet[3], NPerm4(1,2));
             delete verifyThreeBall(tri, "4-tetrahedron ball");
 
             // Non-balls:
@@ -2787,7 +2787,7 @@ class NTriangulationTest : public TriangulationTest<3> {
 
             tri = new NTriangulation();
             NTetrahedron* tet = tri->newTetrahedron();
-            tet->joinTo(0, tet, NPerm4(3, 1, 2, 0));
+            tet->join(0, tet, NPerm4(3, 1, 2, 0));
             delete verifyNotSolidTorus(tri, "Snapped tetrahedron");
 
             tri = new NTriangulation();
@@ -3409,8 +3409,8 @@ class NTriangulationTest : public TriangulationTest<3> {
             {
                 NTriangulation snap;
                 NTetrahedron* tet = snap.newTetrahedron();
-                tet->joinTo(0, tet, NPerm4(0, 1));
-                tet->joinTo(2, tet, NPerm4(2, 3));
+                tet->join(0, tet, NPerm4(0, 1));
+                tet->join(2, tet, NPerm4(2, 3));
 
                 NTriangulation tmp0(snap);
                 tmp0.drillEdge(tmp0.edge(0));
@@ -3437,8 +3437,8 @@ class NTriangulationTest : public TriangulationTest<3> {
             {
                 NTriangulation layer;
                 NTetrahedron* tet = layer.newTetrahedron();
-                tet->joinTo(0, tet, NPerm4(1, 2, 3, 0));
-                tet->joinTo(2, tet, NPerm4(2, 3));
+                tet->join(0, tet, NPerm4(1, 2, 3, 0));
+                tet->join(2, tet, NPerm4(2, 3));
 
                 NTriangulation tmp0(layer);
                 tmp0.drillEdge(tmp0.edge(0));
@@ -3490,8 +3490,8 @@ class NTriangulationTest : public TriangulationTest<3> {
                 NTriangulation ball;
                 NTetrahedron* a = ball.newTetrahedron();
                 NTetrahedron* b = ball.newTetrahedron();
-                a->joinTo(0, b, NPerm4());
-                a->joinTo(1, b, NPerm4());
+                a->join(0, b, NPerm4());
+                a->join(1, b, NPerm4());
 
                 // The internal edge joins vertices 2-3.
                 NTriangulation tmp(ball);
@@ -3903,10 +3903,10 @@ class NTriangulationTest : public TriangulationTest<3> {
             tet[1] = tri->newTetrahedron();
             tet[2] = tri->newTetrahedron();
             tet[3] = tri->newTetrahedron();
-            tet[0]->joinTo(3, tet[2], NPerm4());
-            tet[0]->joinTo(2, tet[1], NPerm4(2, 3));
-            tet[3]->joinTo(3, tet[2], NPerm4(2, 3));
-            tet[3]->joinTo(2, tet[1], NPerm4(1, 0));
+            tet[0]->join(3, tet[2], NPerm4());
+            tet[0]->join(2, tet[1], NPerm4(2, 3));
+            tet[3]->join(3, tet[2], NPerm4(2, 3));
+            tet[3]->join(2, tet[1], NPerm4(1, 0));
             if (tri->isValid())
                 CPPUNIT_FAIL("Custom invalid triangulation was not built "
                     "properly.");
@@ -3926,11 +3926,11 @@ class NTriangulationTest : public TriangulationTest<3> {
             tet[0] = tri->newTetrahedron();
             tet[1] = tri->newTetrahedron();
             tet[2] = tri->newTetrahedron();
-            tet[2]->joinTo(3, tet[2], NPerm4(2, 3));
-            tet[2]->joinTo(1, tet[1], NPerm4(0, 2, 3, 1));
-            tet[2]->joinTo(0, tet[0], NPerm4(3, 0, 1, 2));
-            tet[1]->joinTo(3, tet[0], NPerm4(0, 3, 1, 2));
-            tet[1]->joinTo(1, tet[0], NPerm4());
+            tet[2]->join(3, tet[2], NPerm4(2, 3));
+            tet[2]->join(1, tet[1], NPerm4(0, 2, 3, 1));
+            tet[2]->join(0, tet[0], NPerm4(3, 0, 1, 2));
+            tet[1]->join(3, tet[0], NPerm4(0, 3, 1, 2));
+            tet[1]->join(1, tet[0], NPerm4());
             if (tri->homology().str() != "Z")
                 CPPUNIT_FAIL("Custom solid torus has incorrect H1.");
             tri->intelligentSimplify();
@@ -4079,7 +4079,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 t.hasTwoSphereBoundaryComponents());
 
             // Glue the tetrahedron to itself to form a solid torus.
-            t.tetrahedron(0)->joinTo(0, t.tetrahedron(0),
+            t.tetrahedron(0)->join(0, t.tetrahedron(0),
                 NPerm4(1, 2, 3, 0));
 
             verifyGroup(t.homology(),
@@ -4088,7 +4088,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 "Boundary H1(LST(1,2,3))", 2);
 
             // Glue the remaining two faces in a non-orientable fashion.
-            t.tetrahedron(0)->joinTo(2, t.tetrahedron(0),
+            t.tetrahedron(0)->join(2, t.tetrahedron(0),
                 NPerm4(1, 0, 3, 2));
 
             CPPUNIT_ASSERT_MESSAGE("A bad 1-tetrahedron triangulation "

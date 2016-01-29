@@ -189,10 +189,10 @@ long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
             // Build S2 x~ S1.
             NTetrahedron* t0 = working->newTetrahedron();
             NTetrahedron* t1 = working->newTetrahedron();
-            t0->joinTo(0, t1, NPerm4(0, 1, 3, 2));
-            t0->joinTo(1, t1, NPerm4(0, 1, 3, 2));
-            t0->joinTo(2, t1, NPerm4(1, 3, 2, 0));
-            t0->joinTo(3, t1, NPerm4(2, 0, 1, 3));
+            t0->join(0, t1, NPerm4(0, 1, 3, 2));
+            t0->join(1, t1, NPerm4(0, 1, 3, 2));
+            t0->join(2, t1, NPerm4(1, 3, 2, 0));
+            t0->join(3, t1, NPerm4(2, 0, 1, 3));
         }
         primeComponents.push_back(working);
         irreducible_ = false; // Implied by the S2xS1 or S2x~S1 summand.
@@ -1024,9 +1024,9 @@ bool NTriangulation::hasSimpleCompressingDisc() const {
         NTriangulation cut(use);
         cut.tetrahedron((*tit)->markedIndex())->unjoin(upper);
         NTetrahedron* tet = cut.newTetrahedron();
-        tet->joinTo(NEdge::edgeVertex[equator][0], tet, NPerm4(
+        tet->join(NEdge::edgeVertex[equator][0], tet, NPerm4(
             NEdge::edgeVertex[equator][0], NEdge::edgeVertex[equator][1]));
-        tet->joinTo(upper, cut.tetrahedron(adj->markedIndex()),
+        tet->join(upper, cut.tetrahedron(adj->markedIndex()),
             (*tit)->adjacentGluing(upper));
 
         // If we don't see a new boundary component, the disc boundary is

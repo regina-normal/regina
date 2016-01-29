@@ -332,7 +332,7 @@ NTriangulation* Triangulation<3>::enterTextTriangulation(std::istream& in,
             continue;
         }
 
-        tet->joinTo(face, altTet,
+        tet->join(face, altTet,
             NPerm4(vertices[0], vertices[3], vertices[1], vertices[4],
                 vertices[2], vertices[5], face, altFace));
         out << '\n';
@@ -406,7 +406,7 @@ void Triangulation<3>::cloneFrom(const NTriangulation& X) {
                 adjPerm = tet->adjacentGluing(face);
                 if (adjPos > tetPos ||
                         (adjPos == tetPos && adjPerm[face] > face)) {
-                    simplices_[tetPos]->joinTo(face,
+                    simplices_[tetPos]->join(face,
                         simplices_[adjPos], adjPerm);
                 }
             }

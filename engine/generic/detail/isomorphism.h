@@ -447,7 +447,7 @@ Triangulation<dim>* IsomorphismBase<dim>::apply(
                 // Make the gluing from one side only.
                 if (adjTetIndex > t || (adjTetIndex == t &&
                         gluingPerm[f] > f))
-                    tet[simpImage_[t]]->joinTo(facetPerm_[t][f],
+                    tet[simpImage_[t]]->join(facetPerm_[t][f],
                         tet[simpImage_[adjTetIndex]],
                         facetPerm_[adjTetIndex] * gluingPerm *
                             facetPerm_[t].inverse());

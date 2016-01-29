@@ -77,7 +77,7 @@ Triangulation<dim>* NGenericGluingPerms<dim>::triangulate() const {
         for (facet = 0; facet <= dim; ++facet)
             if ((! pairing_->isUnmatched(t, facet)) &&
                     (! simp[t]->adjacentSimplex(facet)))
-                simp[t]->joinTo(facet, simp[pairing_->dest(t, facet).simp],
+                simp[t]->join(facet, simp[pairing_->dest(t, facet).simp],
                     gluingPerm(t, facet));
 
     delete[] simp;
