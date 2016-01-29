@@ -135,6 +135,7 @@ ReginaPrefSet::ReginaPrefSet() :
         anglesCreationTaut(false),
         fileRecentMax(10),
         displayTagsInTree(false),
+        displayUnicode(true),
         fileImportExportCodec("UTF-8"),
         helpIntroOnStartup(true),
         hypersurfacesCreationCoords(regina::HS_STANDARD),
@@ -351,6 +352,7 @@ void ReginaPrefSet::readInternal() {
 
     settings.beginGroup("Display");
     displayTagsInTree = settings.value("DisplayTagsInTree", false).toBool();
+    displayUnicode = settings.value("DisplayUnicode", true).toBool();
     settings.endGroup();
 
     settings.beginGroup("File");
@@ -459,6 +461,7 @@ void ReginaPrefSet::saveInternal() const {
 
     settings.beginGroup("Display");
     settings.setValue("DisplayTagsInTree", displayTagsInTree);
+    settings.setValue("DisplayUnicode", displayUnicode);
     settings.endGroup();
 
     settings.beginGroup("File");

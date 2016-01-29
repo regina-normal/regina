@@ -39,6 +39,7 @@
 
 // UI includes:
 #include "nhypersummaryui.h"
+#include "reginaprefset.h"
 
 #include <QLabel>
 #include <QLayout>
@@ -146,6 +147,9 @@ NHyperSummaryUI::NHyperSummaryUI(
 
     // Add some space at the end.
     paneLayout->addStretch(1);
+
+    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
+        this, SLOT(updatePreferences()));
 }
 
 NHyperSummaryUI::~NHyperSummaryUI() {
@@ -161,6 +165,7 @@ QWidget* NHyperSummaryUI::getInterface() {
 
 void NHyperSummaryUI::refresh() {
     size_t n = surfaces->size();
+    bool unicode = ReginaPrefSet::global().displayUnicode;
 
     size_t spun = 0;
     size_t bounded = 0;
@@ -179,7 +184,10 @@ void NHyperSummaryUI::refresh() {
         if (! s->isCompact())
             ++spun;
         else {
-            homology = s->homology().str();
+            if (unicode)
+                homology = s->homology().utf8();
+            else
+                homology = s->homology().str();
             if (s->hasRealBoundary()) {
                 allHomBounded.insert(homology);
 
@@ -190,7 +198,6 @@ void NHyperSummaryUI::refresh() {
                 ++countBounded[type.first][type.second][homology];
                 ++bounded;
             } else {
-                homology = s->homology().str();
                 allHomClosed.insert(homology);
 
                 type = std::make_pair(boolIndex(s->isTwoSided()),
@@ -237,7 +244,10 @@ void NHyperSummaryUI::refresh() {
 
         for (const std::string& hom : allHomClosed) {
             row = new QTreeWidgetItem();
-            row->setText(0, tr("H1 = %1").arg(hom.c_str()));
+            if (unicode)
+                row->setText(0, trUtf8("H\u2081 = %1").arg(hom.c_str()));
+            else
+                row->setText(0, tr("H1 = %1").arg(hom.c_str()));
             row->setTextAlignment(0, Qt::AlignLeft);
             for (typeIt = allTypesClosed.begin(), col = 1;
                     typeIt != allTypesClosed.end(); ++typeIt, ++col) {
@@ -280,7 +290,10 @@ void NHyperSummaryUI::refresh() {
 
             for (const std::string& hom : allHomBounded) {
                 row = new QTreeWidgetItem();
-                row->setText(0, tr("H1 = %1").arg(hom.c_str()));
+                if (unicode)
+                    row->setText(0, trUtf8("H\u2081 = %1").arg(hom.c_str()));
+                else
+                    row->setText(0, tr("H1 = %1").arg(hom.c_str()));
                 row->setTextAlignment(0, Qt::AlignLeft);
                 for (typeIt = allTypesBounded.begin(), col = 1;
                         typeIt != allTypesBounded.end(); ++typeIt, ++col) {
@@ -330,4 +343,9 @@ void NHyperSummaryUI::refresh() {
 #endif
 }
 
+void NHyperSummaryUI::updatePreferences() {
+    // It's possible that the unicode flag has changed.
+    // Redraw everything.
+    refresh();
+}
 

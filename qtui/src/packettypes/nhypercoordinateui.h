@@ -83,9 +83,10 @@ class HyperModel : public QAbstractItemModel {
         regina::HyperCoords coordSystem() const;
 
         /**
-         * Rebuild the model from scratch.
+         * Rebuild all or some of the model from scratch.
          */
         void rebuild(regina::HyperCoords coordSystem_);
+        void rebuildUnicode();
 
         /**
          * Updating read/write status.
@@ -183,6 +184,11 @@ class NHyperCoordinateUI : public QObject, public PacketEditorTab {
          * Provides auto-resizing of columns.
          */
         void columnResized(int section, int oldSize, int newSize);
+
+        /**
+         * Note that preferences have changed.
+         */
+        void updatePreferences();
 };
 
 inline HyperModel::HyperModel(regina::NNormalHypersurfaceList* surfaces,

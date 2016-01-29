@@ -40,6 +40,7 @@
 // UI includes:
 #include "coordinatechooser.h"
 #include "nhypercoordinateui.h"
+#include "reginaprefset.h"
 #include "reginasupport.h"
 #include "reginamain.h"
 
@@ -56,6 +57,17 @@ void HyperModel::rebuild(regina::HyperCoords coordSystem) {
     beginResetModel();
     coordSystem_ = coordSystem;
     endResetModel();
+}
+
+void HyperModel::rebuildUnicode() {
+    // Only the homology column and/or the edge weight headers need change here.
+    if (surfaces_->isEmbeddedOnly())
+        emit dataChanged(index(0, 2, QModelIndex()),
+            index(surfaces_->size() - 1, 2, QModelIndex()));
+
+    if (coordSystem_ == regina::HS_EDGE_WEIGHT)
+        emit headerDataChanged(Qt::Horizontal, propertyColCount(),
+            columnCount(QModelIndex()) - 1);
 }
 
 void HyperModel::setReadWrite(bool readWrite) {
@@ -96,7 +108,10 @@ QVariant HyperModel::data(const QModelIndex& index, int role) const {
         else if (surfaces_->isEmbeddedOnly() && index.column() == 2) {
             if (! s->isCompact())
                 return QVariant();
-            return s->homology().str().c_str();
+            if (ReginaPrefSet::global().displayUnicode)
+                return s->homology().utf8().c_str();
+            else
+                return s->homology().str().c_str();
         } else if (surfaces_->isEmbeddedOnly() && index.column() == 3) {
             if (! s->isCompact())
                 return QVariant();
@@ -291,7 +306,11 @@ QString HyperModel::propertyColDesc(int whichCol) const {
                 "overall list (hypersurfaces are numbered 0,1,2,...)");
             case 1: return tr("Name (this has no special meaning and "
                 "can be edited)");
-            case 2: return tr("First homology (H1)");
+            case 2:
+                if (ReginaPrefSet::global().displayUnicode)
+                    return tr("First homology group (H\u2081)");
+                else
+                    return tr("First homology (H1)");
             case 3: return tr("Is this hypersurface orientable?");
             case 4: return tr("1-sided or 2-sided");
             case 5: return tr("What kind of boundary does this "
@@ -401,6 +420,9 @@ NHyperCoordinateUI::NHyperCoordinateUI(regina::NNormalHypersurfaceList* packet,
     connect(table->selectionModel(),
         SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
         this, SLOT(updateActionStates()));
+
+    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
+        this, SLOT(updatePreferences()));
 }
 
 NHyperCoordinateUI::~NHyperCoordinateUI() {
@@ -490,5 +512,10 @@ void NHyperCoordinateUI::columnResized(int section, int, int newSize) {
     for (int i = nNonCoordSections; i < model->columnCount(QModelIndex()); i++)
         table->setColumnWidth(i, newSize);
     currentlyResizing = false;
+}
+
+void NHyperCoordinateUI::updatePreferences() {
+    // If we've changed the unicode setting, then we may need some redrawing.
+    model->rebuildUnicode();
 }
 

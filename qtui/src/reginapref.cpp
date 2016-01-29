@@ -155,6 +155,7 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
 
     // Read the current preferences from the main window.
     // generalPrefs->cbDisplayTagsInTree->setChecked(prefSet.displayTagsInTree);
+    generalPrefs->cbUnicode->setChecked(prefSet.displayUnicode);
     generalPrefs->editTreeJumpSize->setText(
         QString::number(prefSet.treeJumpSize));
     generalPrefs->cbGraphvizLabels->setChecked(prefSet.triGraphvizLabels);
@@ -224,6 +225,7 @@ void ReginaPreferences::slotApply() {
     QString strVal;
 
     // prefSet.displayTagsInTree = generalPrefs->cbDisplayTagsInTree->isChecked();
+    prefSet.displayUnicode = generalPrefs->cbUnicode->isChecked();
     //KTipDialog::setShowOnStart(generalPrefs->cbTipOfDay->isChecked());
     prefSet.helpIntroOnStartup = generalPrefs->cbIntroOnStartup->isChecked();
 
@@ -361,6 +363,13 @@ void ReginaPreferences::slotApply() {
 
 ReginaPrefGeneral::ReginaPrefGeneral(QWidget* parent) : QWidget(parent) {
     QBoxLayout* layout = new QVBoxLayout(this);
+
+    cbUnicode = new QCheckBox(tr("Use unicode for mathematical symbols"));
+    cbUnicode->setEnabled(true);
+    cbUnicode->setWhatsThis(tr("Use unicode for mathematical symbols.  "
+        "This requires you to have a font that supports such symbols "
+        "(which most modern systems have)."));
+    layout->addWidget(cbUnicode);
 
     /*
     cbDisplayTagsInTree = new QCheckBox(tr("Display tags in packet tree"));

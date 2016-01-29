@@ -38,6 +38,8 @@
 #include "triangulation/ntriangle.h"
 #include "triangulation/ntriangulation.h"
 
+#include "reginaprefset.h"
+
 #include <QObject>
 #include <QString>
 
@@ -184,6 +186,8 @@ namespace Coordinates {
         } else if (coordSystem == regina::NS_EDGE_WEIGHT) {
             if (! (tri && tri->edge(whichCoord)->isBoundary()))
                 return QString::number(whichCoord);
+            else if (ReginaPrefSet::global().displayUnicode)
+                return QString("%1: \u2202").arg(whichCoord);
             else
                 return QString("%1 [B]").arg(whichCoord);
         } else if (coordSystem == regina::NS_TRIANGLE_ARCS) {
@@ -250,6 +254,8 @@ namespace Coordinates {
         } else if (coordSystem == regina::HS_EDGE_WEIGHT) {
             if (! (tri && tri->edge(whichCoord)->isBoundary()))
                 return QString::number(whichCoord);
+            else if (ReginaPrefSet::global().displayUnicode)
+                return QString("%1: \u2202").arg(whichCoord);
             else
                 return QString("%1 [B]").arg(whichCoord);
         }

@@ -45,6 +45,7 @@
 #include "packetchooser.h"
 #include "packetfilter.h"
 #include "reginamain.h"
+#include "reginaprefset.h"
 
 #include <QHeaderView>
 #include <QLabel>
@@ -94,6 +95,13 @@ void SurfaceModel::rebuild(regina::NormalCoords coordSystem,
     }
 
     endResetModel();
+}
+
+void SurfaceModel::rebuildUnicode() {
+    // Only the edge weight headers need change here.
+    if (coordSystem_ == regina::NS_EDGE_WEIGHT)
+        emit headerDataChanged(Qt::Horizontal, propertyColCount(),
+            columnCount(QModelIndex()) - 1);
 }
 
 void SurfaceModel::setReadWrite(bool readWrite) {
@@ -550,6 +558,9 @@ NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
     connect(table->selectionModel(),
         SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
         this, SLOT(updateActionStates()));
+
+    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
+        this, SLOT(updatePreferences()));
 }
 
 NSurfaceCoordinateUI::~NSurfaceCoordinateUI() {
@@ -694,5 +705,10 @@ void NSurfaceCoordinateUI::columnResized(int section, int, int newSize) {
     for (int i = nNonCoordSections; i < model->columnCount(QModelIndex()); i++)
         table->setColumnWidth(i, newSize);
     currentlyResizing = false;
+}
+
+void NSurfaceCoordinateUI::updatePreferences() {
+    // If we've changed the unicode setting, then we may need some redrawing.
+    model->rebuildUnicode();
 }
 

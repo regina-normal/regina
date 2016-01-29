@@ -89,6 +89,12 @@ class NHyperSummaryUI : public QObject, public PacketViewerTab,
         regina::NPacket* getPacket();
         QWidget* getInterface();
         void refresh();
+
+    public slots:
+        /**
+         * Notify that preferences have changed.
+         */
+        void updatePreferences();
 };
 
 #endif

@@ -220,6 +220,8 @@ class ReginaPrefSet : public QObject {
                  structures option be enabled by default? */
         bool displayTagsInTree;
             /**< Should we display packet tags in the visual tree? */
+        bool displayUnicode;
+            /**< Should we use unicode liberally throughout the GUI? */
         QByteArray fileImportExportCodec;
             /**< The codec to use for imports and exports. */
         bool helpIntroOnStartup;
