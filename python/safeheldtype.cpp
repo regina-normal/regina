@@ -32,10 +32,9 @@
 
 /* end stub */
 
-#include <Python.h>
-
 #include "safeheldtype.h"
 
+#include <boost/python/object.hpp>
 
 #include <boost/version.hpp>
 #if BOOST_VERSION >= 105600
@@ -62,6 +61,12 @@ void raiseExpiredException(const std::type_info& info)
         "Python reference to object of type " + typeName + " expired.";
     
     PyErr_SetString(PyExc_RuntimeError, msg.c_str());
+}
+
+PyObject* getNoneObject()
+{
+    ::boost::python::object pyNone;
+    return ::boost::python::incref(pyNone.ptr());
 }
 
 } } // regina::python

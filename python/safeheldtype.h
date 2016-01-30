@@ -42,6 +42,7 @@
 #endif
 
 #include "utilities/safeptr.h"
+#include "Python.h"
 
 #include <typeinfo>
 
@@ -72,6 +73,8 @@ public:
     T* get() const;
 };
 
+PyObject* getNoneObject();
+
 /**
  * An implementation of boost::python's ResultConverter concept that takes a
  * raw pointer of an object derived from \c SafePointeeBase and casts it to the
@@ -83,8 +86,14 @@ struct to_held_type_result_converter : Base {
     // - HeldType is, e.g., a smart pointer to the class we try to wrap
     // - T is a raw pointer to the class we try to wrap
     // - Base is an existing result converter taking the HeldType
-    to_held_type_result_converter() {}
-    to_held_type_result_converter(T t) : Base(HeldType(t)) {}
+
+    PyObject* operator()(const T& t) const {
+        if (t == 0) {
+            // If we get a null-pointer, return None
+            return getNoneObject();
+        }
+        return Base()(HeldType(t));
+    }
 };
 
 /**
