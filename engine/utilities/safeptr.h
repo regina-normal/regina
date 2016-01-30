@@ -158,7 +158,7 @@ inline SafePtr<T>::SafePtr(T* object) {
 
 template<class T>
 template<class Y>
-inline SafePtr<T>::SafePtr(const SafePtr<Y> &other) : remnant_(other.remnant_) {
+inline SafePtr<T>::SafePtr(const SafePtr<Y> &other) : SafePtr(other.get()) {
 }
 
 // By virtue of how \c SafePtr's are constructed, get() always holds
