@@ -58,117 +58,117 @@ namespace detail {
 }
 
 /**
- * Base class for \c SafePtr. Users should always use \c SafePtr.
+ * A reference counted smart pointer that supports alternate models of
+ * ownership.  Specifically, there are two models of ownership for the
+ * pointee (of type \a T):
+ *
+ * 1. The pointee may be owned by the smart pointer(s), in which
+ *    case it will be destroyed when the last smart pointer to it is destroyed.
+ * 2. Alternatively, the pointee may be owned by some other C++ object not
+ *    using this smart pointer class.  In this case, even when the last smart
+ *    point to it is destroyed, the pointee itself will not be destroyed.
+ *
+ * The pointee can indicate at runtime which model of ownership is in effect,
+ * through the return value of the function T::hasOwner().
+ *
+ * The requirements for the pointee type \a T are as follows:
+ *
+ * - \a T must subclass from \c SafePointeeBase<T>.
+ * - \a T must implement a member function <tt>bool hasOwner()</tt>,
+ *   which returns \c true if and only if some other C++ object (which is
+ *   not a SafePtr) owns the pointee.
+ *
+ * Destruction works as follows:
+ *
+ * - If a pointee's destructor is called, all SafePtr pointers that point to it
+ *   will become expired.  These SafePtr pointers are still safe to use, but
+ *   get() will return \c null.
+ * - If a pointee has one or more SafePtr pointers to it, then when the last
+ *   of these safe pointers is destroyed, the pointee itself will be destroyed
+ *   if and only if the pointee's hasOwner() returns \c false.
+ *
+ * Under the hood, SafePtr uses SafeRemnant to achieve this.
  *
  * @author Matthias Goerner
  */
-template <class T>
-class SafePtrBase {
+template<class T>
+class SafePtr {
 public:
-    ~SafePtrBase();
+    /**
+     * The pointee type.  This typedef is used by the boost infrastructure.
+     */
+    typedef T element_type;
 
-private:
-    SafePtrBase();
+    /**
+     * Constructs a new safe pointer that points to the given object.
+     *
+     * @param object the pointee.  This may be \c null.
+     */
+    SafePtr(T* object);
+    /**
+     * Copy constructor.  This constructor can also be used to cast a
+     * SafePtr for a derived class \a Y to a SafePtr for a base class \a T.
+     *
+     * \pre the class \a T (whose constructor is called) is a base class
+     * of \a Y.
+     *
+     * @param other the pointer to copy.
+     */
+    template<class Y> SafePtr(const SafePtr<Y>& other);
+    /**
+     * Returns a raw pointer to the pointee, or \c null if the pointee
+     * has already been destroyed.
+     *
+     * @return the pointee.
+     */
+    T* get() const;
 
-protected:
-    // Create a \c SafePtr with given pointee \p object.
-    SafePtrBase(T* object);
-    SafePtrBase(const SafePtrBase &);
-    // Get the pointee.
-    T* getBase_() const;
 private:
     boost::intrusive_ptr<detail::SafeRemnant<typename T::SafePointeeType>>
         remnant_;
     /**< The remnant that points to the pointee. */
 };
 
-/**
- * A reference counted smart pointer that allows its pointee to indicate that it
- * cannot be destroyed because some other C++ class not using this smart pointer
- * owns it:
- *
- * - A pointee must subclass from \c SafePointeeBase and implement hasOwner
- *   to indicate whether it is not safe to destroy it because some other
- *   object is having a non-SafePtr pointing to the pointee.
- * - If a pointee's destructor is called, all \c SafePtr pointing to it
- *   will be expired and become non-dereferencable (get() returning 0).
- * - \c SafePtr will destroy a pointee if the last \c SafePtr pointing
- *   to the pointee goes out of scope and if the pointee's hasOwner
- *   returns false.
- *
- * Under the hood, \c SafePtr is using \c SafeRemnant to achieve this.
- *
- * @author Matthias Goerner
- */
-
-template<class T>
-class SafePtr : protected SafePtrBase<T>
-{
-public:
-    // For the boost infrastructure.
-    typedef T element_type;
-
-    /**
-     * Constructs a \c SafePtr pointing at the given pointee \p object.
-     */
-    SafePtr(T* object);
-    /**
-     * \c SafePtr's can be cast to \c SafePtr's for a base class.
-     */
-    template<class Y> SafePtr(const SafePtr<Y> &);
-    /**
-     * Return a raw pointer to the pointee, zero if pointee was destroyed.
-     */
-    T* get() const;
-};
-
 } // namespace regina
 
 namespace boost {
-// Dereferencable concept for \c SafePtr's.
-template<class T> T* get_pointer(
-        regina::SafePtr<T> const& ptr) {
+/**
+ * Extracts a raw pointer from the given safe pointer.
+ *
+ * This is required for SafePtr to support the boost dereferencable concept.
+ *
+ * @param ptr a safe pointer.  This may be \c null.
+ * @return the corresponding raw pointer.
+ */
+template<class T>
+inline T* get_pointer(regina::SafePtr<T> const& ptr) {
     return ptr.get();
 }
 } // namespace boost
 
 namespace regina {
 
-template <class T>
-SafePtrBase<T>::SafePtrBase(const SafePtrBase& other)
-    : remnant_(other.remnant_) { }
-
-template <class T>
-SafePtrBase<T>::SafePtrBase(T* object) {
+template<class T>
+inline SafePtr<T>::SafePtr(T* object) {
     if (object) {
-        remnant_.reset(detail::SafeRemnant<typename T::SafePointeeType>::getOrCreate(object));
+        remnant_.reset(detail::SafeRemnant<typename T::SafePointeeType>::
+            getOrCreate(object));
     }
 }
-    
-template <class T>
-SafePtrBase<T>::~SafePtrBase() { }
 
-template <class T>
-T* SafePtrBase<T>::getBase_() const {
+template<class T>
+template<class Y>
+inline SafePtr<T>::SafePtr(const SafePtr<Y> &other) : remnant_(other.remnant_) {
+}
+
+// By virtue of how \c SafePtr's are constructed, get() always holds
+// a pointer to T or a dervied class of T.
+template<class T>
+inline T* SafePtr<T>::get() const {
     if (not remnant_) {
         return 0;
     }
     return static_cast<T*>(remnant_->get());
-}
-
-template<class T> SafePtr<T>::SafePtr(T* object)
-    : SafePtrBase<T>(object) { }
-
-// This template can only be instantiated if T (whose constructor is called)
-// is a base class of Y (returned by other.get()).
-template<class T> template<class Y>
-SafePtr<T>::SafePtr(const SafePtr<Y> &other)
-    : SafePtr(other.get()) { }
-
-// By virtue of how \c SafePtr's are constructed, getBase_() always holds
-// a pointer to T or a dervied class of T.
-template<class T> T* SafePtr<T>::get() const {
-    return static_cast<T*>(SafePtrBase<T>::getBase_());
 }
 
 } // namespace regina

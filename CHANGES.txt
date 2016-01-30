@@ -617,10 +617,10 @@ Version 5.0  [ (under development) ]
               any object derived from Output to be written to an output stream.
         Class ReturnsTraits:
             - Helper class for compile-time analysis of function objects.
-        Class SafePtr, SafePtrBase, SafePointeeBase, SafeRemnant:
+        Class SafePtr, SafePointeeBase, SafeRemnant:
             - New classes that provide a smart pointer that can never be
               dangling.  SafePtr and SafePointeeBase are the end-user classes;
-              SafePtrBase and SafeRemnant provide implementation details.
+              SafeRemnant provides implementation details.
         Class ShareableObject:
             - Removed entirely.  This is no longer needed as a base class for
               objects that are mirrored in external interfaces (e.g., python).
