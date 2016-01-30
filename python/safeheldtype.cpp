@@ -63,10 +63,4 @@ void raiseExpiredException(const std::type_info& info)
     PyErr_SetString(PyExc_RuntimeError, msg.c_str());
 }
 
-PyObject* getNoneObject()
-{
-    ::boost::python::object pyNone;
-    return ::boost::python::incref(pyNone.ptr());
-}
-
 } } // regina::python

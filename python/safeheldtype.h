@@ -73,8 +73,6 @@ public:
     T* get() const;
 };
 
-PyObject* getNoneObject();
-
 /**
  * An implementation of boost::python's ResultConverter concept that takes a
  * raw pointer of an object derived from \c SafePointeeBase and casts it to the
@@ -89,7 +87,8 @@ struct to_held_type_result_converter : Base {
     PyObject* operator()(const T* t) const {
         if (t == 0) {
             // If we get a null-pointer, return None
-            return getNoneObject();
+            ::boost::python::object pyNone;
+            return ::boost::python::incref(pyNone.ptr());
         }
         return Base()(HeldType(const_cast<T*>(t)));
     }
