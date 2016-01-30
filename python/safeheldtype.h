@@ -46,7 +46,13 @@
 
 #include <typeinfo>
 #include <type_traits>
-#include <boost/python/object.hpp>
+
+// We also need to include boost/python/object.hpp, but this must come *after*
+// the declaration of SafeHeldType and friends.  Otherwise boost::get_pointer()
+// falls back to the implementation for SafePtr<T>, not the override for
+// SafeHeldType<T>.
+//
+// The extra include appears a little further down in this file.
 
 namespace boost {
 namespace python {
@@ -73,6 +79,40 @@ public:
     template<class Y> SafeHeldType(const SafeHeldType<Y>&);
     T* get() const;
 };
+
+} } // namespace regina::python
+
+namespace boost {
+
+/**
+ * Let boost infrastructure know that \c SafeHeldType is dereferencable.
+ * Note that get() is not virtual, so we need to overwrite the earlier
+ * get_pointer for the base class \c SafePtr.
+ */
+template<class T>
+T* get_pointer(regina::python::SafeHeldType<T> const &ptr) {
+    return ptr.get();
+}
+
+namespace python {
+
+/**
+ * Let boost::python infrastructure know.
+ */
+template<class T> struct pointee<regina::python::SafeHeldType<T> > {
+    typedef T type;
+};
+
+} } // namespace boost::python
+
+// All includes that use boost.python must appear *after* the declaration
+// of get_pointer(SafeHeldType const&).  See the discussion at the top of
+// this header.
+
+#include <boost/python/object.hpp>
+
+namespace regina {
+namespace python {
 
 /**
  * An implementation of boost::python's ResultConverter concept that takes a
@@ -137,29 +177,6 @@ struct to_held_type {
 void raiseExpiredException(const std::type_info&);
 
 } } // namespace regina::python
-
-namespace boost {
-
-/**
- * Let boost infrastructure know that \c SafeHeldType is dereferencable.
- * Note that get() is not virtual, so we need to overwrite the earlier
- * get_pointer for the base class \c SafePtr.
- */
-template<class T>
-T* get_pointer(regina::python::SafeHeldType<T> const &ptr) {
-    return ptr.get();
-}
-
-namespace python {
-
-/**
- * Let boost::python infrastructure know.
- */
-template<class T> struct pointee<regina::python::SafeHeldType<T> > {
-    typedef T type;
-};
-
-} } // namespace boost::python
 
 namespace regina {
 namespace python {
