@@ -53,3 +53,6 @@ b = t.tetrahedron(1)
 c = t.tetrahedron(0)
 print a == c, a == b, b == c
 print a != c, a != b, b != c
+
+# Have we clobbered python's builtin open() function?
+print open
