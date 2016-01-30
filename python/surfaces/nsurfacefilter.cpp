@@ -32,16 +32,20 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nsurfacefilter.h"
+#include "../safeheldtype.h"
+
+// Held type must be declared before boost/python.hpp
+#include <boost/python.hpp>
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::NSurfaceFilter;
 
 void addNSurfaceFilter() {
     scope s = class_<NSurfaceFilter, bases<regina::NPacket>,
-            std::auto_ptr<NSurfaceFilter>, boost::noncopyable>
+            SafeHeldType<NSurfaceFilter>, boost::noncopyable>
             ("NSurfaceFilter")
         .def(init<const NSurfaceFilter&>())
         .def("accept", &NSurfaceFilter::accept)
@@ -55,7 +59,7 @@ void addNSurfaceFilter() {
     s.attr("packetType") = regina::PACKET_SURFACEFILTER;
     s.attr("filterTypeID") = regina::NS_FILTER_DEFAULT;
 
-    implicitly_convertible<std::auto_ptr<NSurfaceFilter>,
-        std::auto_ptr<regina::NPacket> >();
+    implicitly_convertible<SafeHeldType<NSurfaceFilter>,
+        SafeHeldType<regina::NPacket> >();
 }
 

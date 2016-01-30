@@ -32,10 +32,14 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
 #include "surfaces/sfproperties.h"
+#include "../safeheldtype.h"
+
+// Held type must be declared before boost/python.hpp
+#include <boost/python.hpp>
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::NSurfaceFilterProperties;
 
 namespace {
@@ -49,7 +53,7 @@ namespace {
 
 void addNSurfaceFilterProperties() {
     scope s = class_<NSurfaceFilterProperties, bases<regina::NSurfaceFilter>,
-            std::auto_ptr<NSurfaceFilterProperties>, boost::noncopyable>
+            SafeHeldType<NSurfaceFilterProperties>, boost::noncopyable>
             ("NSurfaceFilterProperties")
         .def(init<const NSurfaceFilterProperties&>())
         .def("eulerChars", eulerChars_list)
@@ -78,7 +82,7 @@ void addNSurfaceFilterProperties() {
 
     s.attr("filterTypeID") = regina::NS_FILTER_PROPERTIES;
 
-    implicitly_convertible<std::auto_ptr<NSurfaceFilterProperties>,
-        std::auto_ptr<regina::NSurfaceFilter> >();
+    implicitly_convertible<SafeHeldType<NSurfaceFilterProperties>,
+        SafeHeldType<regina::NSurfaceFilter> >();
 }
 

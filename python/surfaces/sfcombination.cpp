@@ -32,15 +32,19 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
 #include "surfaces/sfcombination.h"
+#include "../safeheldtype.h"
+
+// Held type must be declared before boost/python.hpp
+#include <boost/python.hpp>
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::NSurfaceFilterCombination;
 
 void addNSurfaceFilterCombination() {
     scope s = class_<NSurfaceFilterCombination, bases<regina::NSurfaceFilter>,
-            std::auto_ptr<NSurfaceFilterCombination>, boost::noncopyable>
+            SafeHeldType<NSurfaceFilterCombination>, boost::noncopyable>
             ("NSurfaceFilterCombination")
         .def(init<const NSurfaceFilterCombination&>())
         .def("usesAnd", &NSurfaceFilterCombination::usesAnd)
@@ -50,7 +54,7 @@ void addNSurfaceFilterCombination() {
 
     s.attr("filterTypeID") = regina::NS_FILTER_COMBINATION;
 
-    implicitly_convertible<std::auto_ptr<NSurfaceFilterCombination>,
-        std::auto_ptr<regina::NSurfaceFilter> >();
+    implicitly_convertible<SafeHeldType<NSurfaceFilterCombination>,
+        SafeHeldType<regina::NSurfaceFilter> >();
 }
 
