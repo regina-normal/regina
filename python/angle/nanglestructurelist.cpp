@@ -65,7 +65,7 @@ void addNAngleStructureList() {
             SafeHeldType<NAngleStructureList>, boost::noncopyable>
             ("NAngleStructureList", no_init)
         .def("triangulation", &NAngleStructureList::triangulation,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("getTriangulation", &NAngleStructureList::getTriangulation,
             return_value_policy<to_held_type<> >())
         .def("isTautOnly", &NAngleStructureList::isTautOnly)

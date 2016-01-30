@@ -163,7 +163,7 @@ void addNNormalSurfaceList() {
         .def("allowsOriented", &NNormalSurfaceList::allowsOriented)
         .def("isEmbeddedOnly", &NNormalSurfaceList::isEmbeddedOnly)
         .def("triangulation", &NNormalSurfaceList::triangulation,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<> >())
         .def("getTriangulation", &NNormalSurfaceList::getTriangulation,
             return_value_policy<to_held_type<> >())
         .def("size", &NNormalSurfaceList::size)
