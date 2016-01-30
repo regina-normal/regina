@@ -51,47 +51,77 @@
 namespace regina {
 
 /**
- * A base class for objects to be referenceable by a \c SafePtr (referred
- * to as pointee's of \c SafePtr). Every derived class needs to implement
- * hasOwner to indicate whether any non-SafePtr claims ownership of
- * it. Details of ownership semantics are explained in \c SafePtr.
+ * A base class for objects of type \a T to be referenceable by a SafePtr.
+ * Such objects are referred to as pointees of SafePtr.
  *
- * The overhead introduced by subclassing from \c SafePointeeBase without using
- * the features of the accompanying smart pointer \c SafePtr are minimal:
- * one extra pointer that needs to be zero'd upon construction.
+ * The class \a T must derive from SafePointeeBase<T>, and must implement
+ * hasOwner() to indicate whether any non-SafePtr claims ownership of it.
+ * Details of ownership semantics (and in particular, the requirements for
+ * hasOwner()) are explained in the documentation for SafePtr.
  *
- * Most classes subclass from \c SafePointeeBase for python wrapping.
+ * The overhead introduced by subclassing from SafePointeeBase without using
+ * the features of the accompanying smart pointer SafePtr are minimal:
+ * one extra pointer that needs to be zeroed upon construction.
+ *
+ * Regina's classes that derive from SafePointeeBase do so to help with
+ * python wrapping.
+ *
+ * \tparam T the type of object being pointed to.  This must derive from
+ * SafePointeeBase<T>.
+ *
+ * @author Matthias Goerner
  */
 template <class T>
 class SafePointeeBase {
 public:
+    /**
+     * Destructor.
+     *
+     * Once this destructor is called, any SafePtr that points to this object
+     * will be aware that the object has expired and that the pointer cannot
+     * be dereferenced any longer.
+     */
     ~SafePointeeBase();
 
+    /**
+     * The type of object being pointed to.
+     */
     typedef T SafePointeeType;
 
 protected:
     /**
      * Default constructor.
      */
-    SafePointeeBase() : remnant_(0) { }
+    SafePointeeBase();
 
 private:
-    // Prevent derived classes from accidentally calling copy constructor.
-    // A derived classes copy constructor by default calls the above default
-    // constructor, which it should because it sets the remnant_ to zero on
-    // the copied object.
+    /**
+     * Prevent derived classes from accidentally calling the copy constructor.
+     * A derived class' copy constructor by default calls the above default
+     * constructor, which it should because it sets the remnant_ to zero on
+     * the copied object.
+     */
     SafePointeeBase(const SafePointeeBase &);
 
-    // Similarly, for operator=
+    /**
+     * Prevent derived classes from accidentally calling the assignment
+     * operator.
+     */
     SafePointeeBase & operator=(const SafePointeeBase &);
-    
-    friend class SafeRemnant<T>;
-    SafeRemnant<T> *remnant_;
-    /**< Points to the corresponding persistent object. */
+
+    friend class detail::SafeRemnant<T>;
+    detail::SafeRemnant<T> *remnant_;
+        /**< Points to the corresponding persistent object. */
 };
 
+// Inline functions for SafePointeeBase
+
 template <class T>
-SafePointeeBase<T>::~SafePointeeBase() {
+inline SafePointeeBase<T>::SafePointeeBase() : remnant_(0) {
+}
+
+template <class T>
+inline SafePointeeBase<T>::~SafePointeeBase() {
     // If existing, expire the remnant. Thus, all SafePtr's pointing to
     // this object know that they cannot be dereferenced anylonger.
     if (remnant_) {

@@ -1236,8 +1236,6 @@
   <primaryie>scripting</primaryie>
   <secondaryie><link linkend="python-access">accessing &regina; objects,
    classes and methods</link></secondaryie>
-  <secondaryie><link linkend="trouble-python-sigerror"><exceptionname>Boost.Python.ArgumentError</exceptionname>,
-   resolving</link></secondaryie>
   <secondaryie><link linkend="python-caveats">caveats and
    traps</link></secondaryie>
   <secondaryie><link linkend="man-regina-python">command-line scripting
@@ -1253,14 +1251,10 @@
    &python; scripts</link></secondaryie>
   <secondaryie><link linkend="python-starting">invoking in the
    &gui;</link></secondaryie>
-  <secondaryie><link linkend="python-ownership">ownership of
-   objects</link></secondaryie>
   <secondaryie><link linkend="python-libraries">&python;
    libraries</link></secondaryie>
   <secondaryie><link linkend="packet-script">script
    packets</link></secondaryie>
-  <secondaryie><link linkend="trouble-python-typeerror"><exceptionname>TypeError</exceptionname>,
-   resolving</link></secondaryie>
  </indexentry>
 
  <indexentry>

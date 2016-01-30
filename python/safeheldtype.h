@@ -46,6 +46,7 @@
 
 #include <typeinfo>
 #include <type_traits>
+#include <boost/python/object.hpp>
 
 namespace boost {
 namespace python {

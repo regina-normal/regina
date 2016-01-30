@@ -617,6 +617,10 @@ Version 5.0  [ (under development) ]
               any object derived from Output to be written to an output stream.
         Class ReturnsTraits:
             - Helper class for compile-time analysis of function objects.
+        Class SafePtr, SafePtrBase, SafePointeeBase, SafeRemnant:
+            - New classes that provide a smart pointer that can never be
+              dangling.  SafePtr and SafePointeeBase are the end-user classes;
+              SafePtrBase and SafeRemnant provide implementation details.
         Class ShareableObject:
             - Removed entirely.  This is no longer needed as a base class for
               objects that are mirrored in external interfaces (e.g., python).
@@ -741,6 +745,9 @@ Version 5.0  [ (under development) ]
           Every wrapped C++ class has an equalityType attribute in
           python to indicate which behaviour it uses.
           Thanks to Matthias Goerner for his help with this.
+        - Memory management for packets is now more sensible - in particular,
+          when one packet is inserted beneath another the python reference
+          is no longer invalidated.  Thanks again to Matthias Goerner.
 
 Version 4.96  [ 29 August, 2014 ]
 

@@ -33,7 +33,7 @@
 /* end stub */
 
 /*! \file utilities/saferemnant.h
- *  \brief Provides a helpers used in implemenation of safe pointers.
+ *  \brief Implementation details for safe pointers.
  */
 
 #ifndef __SAFEREMNANT_H
@@ -58,17 +58,33 @@
  */
 
 namespace regina {
+namespace detail {
 
 /**
- * A helper class for \c SafePtr. The dereferencing of a \c SafePtr
- * is indirected through this class, i.e., \c SafePtr is pointing to this
- * class, which is pointing to the pointee, an object deriving from
- * \c SafePointeeBase.
- * The life time of an object of this class is tied to the existence of
- * \c SafePtr's pointing to it (through reference counting), not to that of
- * the corresponding pointee.
+ * A helper class for SafePtr.
+ *
+ * The dereferencing of a SafePtr is indirected through this class,
+ * i.e., SafePtr is pointing to this class, which is pointing to the pointee.
+ * The pointee in turn derives from SafePointeeBase.
+ *
+ * Each remnant is associated with at most one pointee, and each pointee
+ * is associated with at most one remnant.  However, both relationships
+ * are optional:
+ *
+ * - a remnant will have no corresponding pointee if its original pointee
+ *   has since been destroyed;
+ *
+ * - a pointee will have no corresponding remnant if there are no SafePtr
+ *   pointers that point to it.
+ *
+ * The lifetime of a remnant is tied to the existence of SafePtr objects
+ * that point to it (through reference counting), not to that of the
+ * corresponding pointee.
+ *
+ * \tparam T the pointee type.  This must derive from SafePointeeBase<T>.
+ *
+ * @author Matthias Goerner
  */
-
 template <class T>
 class SafeRemnant :
 #ifdef USE_BOOST_INTRUSIVE_REF_COUNTER
@@ -79,26 +95,58 @@ class SafeRemnant :
 
 public:
     /**
-     * Given an \p object deriving from \c SafePointeeBase, find or create the
-     * remnant corresponding the object.
+     * Given an object deriving from SafePointeeBase, find or create the
+     * remnant corresponding to the object.
+     *
+     * Each pointee \p object has at most one remnant. If it already exists,
+     * this routine returns it.  If not, this routine creates a new one.
+     *
+     * @param object the object deriving from SafePointeeBase.
+     * @return the corresponding remnant.
      */
     static SafeRemnant<T>* getOrCreate(T* object);
+    /**
+     * Destroys this remnant.
+     * If the remnant is associated with a pointee, then:
+     *
+     * - if no other C++ object claims ownership of the pointee
+     *   (as determined by T::hasOwner()), then the pointee will be deleted;
+     *
+     * - if some other C++ object does claim ownership of the pointee
+     *   then the pointee will be left intact, but its reference to this
+     *   remnant will be cleared.
+     */
     ~SafeRemnant();
     /**
-     * Dereference, i.e., find the pointee corresponding to the remnant.
+     * Dereference this remnant.
+     *
+     * @return the pointee corresponding to this remnant, or 0 if the
+     * original pointee has since been destroyed.
      */
     T* get() const;
     /**
-     * Expire the remnant so that it can no longer be dereferenced, i.e.,
-     * get will return 0. Called by the pointee's destructor.
+     * Expire the remnant so that it can no longer be dereferenced.
+     * Any subsequent call to get() will return 0.
+     *
+     * This routine is called by the pointee's destructor.
      */
     void expire();
 
 private:
+    /**
+     * Associates this remnant with the given pointee.
+     * This is so that the pointee can expire this remnant upon its
+     * destruction.
+     *
+     * @param object the pointee associated with this remnant.
+     */
     SafeRemnant(T* object);
+
     T* object_;
-    /**< The pointee. */
+        /**< The pointee. */
 };
+
+// Implementation details for SafePointeeBase
 
 template <class T>
 inline T* SafeRemnant<T>::get() const {
@@ -113,19 +161,14 @@ inline void SafeRemnant<T>::expire() {
 template <class T>
 SafeRemnant<T>*
 SafeRemnant<T>::getOrCreate(T* object) {
-    // Each pointee \p object has at most one remnant. If it already exists,
-    // ust it.
     if (object and object->remnant_) {
         return object->remnant_;
     }
-    // Otherwise, create a new one associated with the pointee.
     return new SafeRemnant<T>(object);
 }
 
 template <class T>
 SafeRemnant<T>::SafeRemnant(T* object) : object_(object) {
-    // Associate this remnant with the pointee.
-    // This is so that the pointee can expire this remnant upon its destruction.
     if (object) {
         object->remnant_ = this;
     }
@@ -145,6 +188,6 @@ SafeRemnant<T>::~SafeRemnant() {
     }
 }
 
-} // namespace regina
+} } // namespace regina::detail
 
 #endif

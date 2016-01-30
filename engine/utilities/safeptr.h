@@ -33,7 +33,8 @@
 /* end stub */
 
 /*! \file utilities/safeptr.h
- *  \brief Provides a smart pointer safe in that it cannot be dangling.
+ *  \brief Provides a smart pointer that is safe in the sense that it
+ *  cannot be dangling.
  */
 
 #ifndef __SAFEPTR_H
@@ -51,9 +52,16 @@
 namespace regina {
 
 template <class> class SafePointeeBase;
-template <class> class SafeRemnant;
 
-// Base class for \c SafePtr. Users should always use \c SafePtr.
+namespace detail {
+    template <class> class SafeRemnant;
+}
+
+/**
+ * Base class for \c SafePtr. Users should always use \c SafePtr.
+ *
+ * @author Matthias Goerner
+ */
 template <class T>
 class SafePtrBase {
 public:
@@ -69,7 +77,8 @@ protected:
     // Get the pointee.
     T* getBase_() const;
 private:
-    boost::intrusive_ptr<SafeRemnant<typename T::SafePointeeType>> remnant_;
+    boost::intrusive_ptr<detail::SafeRemnant<typename T::SafePointeeType>>
+        remnant_;
     /**< The remnant that points to the pointee. */
 };
 
@@ -88,6 +97,8 @@ private:
  *   returns false.
  *
  * Under the hood, \c SafePtr is using \c SafeRemnant to achieve this.
+ *
+ * @author Matthias Goerner
  */
 
 template<class T>
@@ -130,7 +141,7 @@ SafePtrBase<T>::SafePtrBase(const SafePtrBase& other)
 template <class T>
 SafePtrBase<T>::SafePtrBase(T* object) {
     if (object) {
-        remnant_.reset(SafeRemnant<typename T::SafePointeeType>::getOrCreate(object));
+        remnant_.reset(detail::SafeRemnant<typename T::SafePointeeType>::getOrCreate(object));
     }
 }
     
