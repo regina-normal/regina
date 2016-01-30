@@ -44,9 +44,8 @@ using regina::python::SafeHeldType;
 using regina::NContainer;
 
 void addNContainer() {
-    scope s = class_<
-        NContainer, bases<regina::NPacket>, SafeHeldType<NContainer>,
-        boost::noncopyable>(
+    scope s = class_<NContainer, bases<regina::NPacket>,
+            SafeHeldType<NContainer>, boost::noncopyable>(
             "NContainer", init<>())
         .def(init<const std::string&>())
     ;
@@ -55,6 +54,6 @@ void addNContainer() {
     s.attr("packetType") = regina::PACKET_CONTAINER;
 
     implicitly_convertible<SafeHeldType<NContainer>,
-                           SafeHeldType<regina::NPacket>>();
+        SafeHeldType<regina::NPacket>>();
 }
 

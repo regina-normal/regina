@@ -444,11 +444,11 @@ void addNTriangulation() {
         .def("insertRehydration", &NTriangulation::insertRehydration)
         .def("dehydrate", &NTriangulation::dehydrate)
         .def("rehydrate", &NTriangulation::rehydrate,
-             return_value_policy<to_held_type<> >())
+            return_value_policy<to_held_type<> >())
         .def("isoSig", isoSig_void)
         .def("isoSigDetail", isoSig_relabelling)
         .def("fromIsoSig", &NTriangulation::fromIsoSig,
-             return_value_policy<to_held_type<> >())
+            return_value_policy<to_held_type<> >())
         .def("isoSigComponentSize", &NTriangulation::isoSigComponentSize)
         .def("dumpConstruction", &NTriangulation::dumpConstruction)
         .def("snapPea", snapPea_void)
@@ -458,9 +458,9 @@ void addNTriangulation() {
         .def("saveRecogniser", &NTriangulation::saveRecogniser)
         .def("saveRecognizer", &NTriangulation::saveRecognizer)
         .def("fromSnapPea", &NTriangulation::fromSnapPea,
-             return_value_policy<to_held_type<> >())
+            return_value_policy<to_held_type<> >())
         .def("enterTextTriangulation", enterTextTriangulation_stdio,
-             return_value_policy<to_held_type<> >())
+            return_value_policy<to_held_type<> >())
         .staticmethod("rehydrate")
         .staticmethod("fromIsoSig")
         .staticmethod("isoSigComponentSize")
@@ -472,7 +472,7 @@ void addNTriangulation() {
     s.attr("packetType") = regina::PACKET_TRIANGULATION;
 
     implicitly_convertible<SafeHeldType<NTriangulation>,
-                           SafeHeldType<regina::NPacket> >();
+        SafeHeldType<regina::NPacket> >();
     }
 
     scope().attr("NTriangulation") = scope().attr("Triangulation3");

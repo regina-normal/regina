@@ -90,6 +90,6 @@ void addNScript() {
     s.attr("packetType") = regina::PACKET_SCRIPT;
 
     implicitly_convertible<SafeHeldType<NScript>,
-                           SafeHeldType<regina::NPacket> >();
+        SafeHeldType<regina::NPacket> >();
 }
 

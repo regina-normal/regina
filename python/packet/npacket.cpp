@@ -94,7 +94,6 @@ void addNPacket() {
     class_<NPacket, boost::noncopyable,
             SafeHeldType<NPacket> >("NPacket", no_init)
         .def("type", &NPacket::type)
-
         .def("getPacketType", &NPacket::getPacketType)
         .def("typeName", &NPacket::typeName)
         .def("getPacketTypeName", &NPacket::getPacketTypeName)
@@ -155,7 +154,7 @@ void addNPacket() {
         .def("insertChildLast", &NPacket::insertChildLast)
         .def("insertChildAfter", &NPacket::insertChildAfter)
         .def("makeOrphan", makeOrphan_return,
-             return_value_policy<to_held_type<> >())
+            return_value_policy<to_held_type<> >())
         .def("reparent", reparent_check, OL_reparent())
         .def("transferChildren", &NPacket::transferChildren)
         .def("swapWithNextSibling", &NPacket::swapWithNextSibling)
@@ -165,17 +164,15 @@ void addNPacket() {
         .def("moveToLast", &NPacket::moveToLast)
         .def("sortChildren", &NPacket::sortChildren)
         .def("nextTreePacket", nextTreePacket_non_const, OL_nextTreePacket()
-             [return_value_policy<to_held_type<> >()])
+            [return_value_policy<to_held_type<> >()])
         .def("firstTreePacket", firstTreePacket_non_const,
-             return_value_policy<to_held_type<> >())
-        .def("firstTreePacket", firstTreePacket_non_const,
-             return_value_policy<to_held_type<> >())
+            return_value_policy<to_held_type<> >())
         .def("findPacketLabel", findPacketLabel_non_const,
-             return_value_policy<to_held_type<> >())
+            return_value_policy<to_held_type<> >())
         .def("dependsOnParent", &NPacket::dependsOnParent)
         .def("isPacketEditable", &NPacket::isPacketEditable)
         .def("clone", &NPacket::clone,
-             OL_clone()[return_value_policy<to_held_type<> >()])
+            OL_clone()[return_value_policy<to_held_type<> >()])
         .def("save", save_filename, OL_save())
         .def("internalID", &NPacket::internalID)
         .def("str", &NPacket::str)

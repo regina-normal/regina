@@ -49,10 +49,8 @@ namespace {
 }
 
 void addNText() {
-    scope s = class_<
-        NText, bases<regina::NPacket>, SafeHeldType<NText>,
-        boost::noncopyable>(
-            "NText", init<>())
+    scope s = class_<NText, bases<regina::NPacket>,
+            SafeHeldType<NText>, boost::noncopyable>("NText", init<>())
         .def(init<const std::string&>())
         .def(init<const char*>())
         .def("text", &NText::text,
@@ -67,6 +65,6 @@ void addNText() {
     s.attr("packetType") = regina::PACKET_TEXT;
 
     implicitly_convertible<SafeHeldType<NText>,
-                           SafeHeldType<regina::NPacket> >();
+        SafeHeldType<regina::NPacket> >();
 }
 
