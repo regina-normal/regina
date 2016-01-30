@@ -69,13 +69,13 @@ void addNScript() {
         .def("getVariableName", &NScript::getVariableName,
             return_value_policy<return_by_value>())
         .def("variableValue", variableValue_long,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<>>())
         .def("getVariableValue", variableValue_long,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<>>())
         .def("variableValue", variableValue_string,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<>>())
         .def("getVariableValue", variableValue_string,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<>>())
         .def("variableIndex", &NScript::variableIndex)
         .def("getVariableIndex", &NScript::getVariableIndex)
         .def("setVariableName", &NScript::setVariableName)

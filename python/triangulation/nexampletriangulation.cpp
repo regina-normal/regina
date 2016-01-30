@@ -64,11 +64,9 @@ void addNExampleTriangulation() {
             return_value_policy<to_held_type<> >())
         .def("weeks", &NExampleTriangulation::weeks,
             return_value_policy<to_held_type<> >())
-        .def("seifertWeber",
-            &NExampleTriangulation::seifertWeber,
+        .def("seifertWeber", &NExampleTriangulation::seifertWeber,
             return_value_policy<to_held_type<> >())
-        .def("weberSeifert",
-            &NExampleTriangulation::weberSeifert,
+        .def("weberSeifert", &NExampleTriangulation::weberSeifert,
             return_value_policy<to_held_type<> >())
         .def("smallClosedOrblHyperbolic",
             &NExampleTriangulation::smallClosedOrblHyperbolic,

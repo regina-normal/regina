@@ -36,26 +36,25 @@
 #include "snappea/nexamplesnappeatriangulation.h"
 #include "snappea/nsnappeatriangulation.h"
 #include "../helpers.h"
+#include "../safeheldtype.h"
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::NExampleSnapPeaTriangulation;
 
 void addNExampleSnapPeaTriangulation() {
     class_<NExampleSnapPeaTriangulation>("NExampleSnapPeaTriangulation",
             no_init)
-        .def("figureEight",
-            &NExampleSnapPeaTriangulation::figureEight,
-            return_value_policy<manage_new_object>())
-        .def("trefoil",
-            &NExampleSnapPeaTriangulation::trefoil,
-            return_value_policy<manage_new_object>())
-        .def("whiteheadLink",
-            &NExampleSnapPeaTriangulation::whiteheadLink,
-            return_value_policy<manage_new_object>())
+        .def("figureEight", &NExampleSnapPeaTriangulation::figureEight,
+            return_value_policy<to_held_type<>>())
+        .def("trefoil", &NExampleSnapPeaTriangulation::trefoil,
+            return_value_policy<to_held_type<>>())
+        .def("whiteheadLink", &NExampleSnapPeaTriangulation::whiteheadLink,
+            return_value_policy<to_held_type<>>())
         .def("gieseking", &NExampleSnapPeaTriangulation::gieseking,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<>>())
         .def("x101", &NExampleSnapPeaTriangulation::x101,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<>>())
         .def(regina::python::no_eq_operators())
         .staticmethod("figureEight")
         .staticmethod("trefoil")

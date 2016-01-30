@@ -64,7 +64,7 @@ namespace {
         regina::Dim2Triangulation* link = v->buildLinkDetail(labels, &iso);
         return make_tuple(
             boost::python::object(boost::python::handle<>(
-                boost::python::manage_new_object::
+                regina::python::to_held_type<>::
                 apply<regina::Dim2Triangulation*>::type()(link))),
             boost::python::object(boost::python::handle<>(
                 boost::python::manage_new_object::
@@ -133,7 +133,7 @@ void addNVertex() {
             .def("link", &NVertex::link)
             .def("getLink", &NVertex::getLink)
             .def("buildLink", &NVertex::buildLink,
-                return_value_policy<reference_existing_object>())
+                return_value_policy<to_held_type<>>())
             .def("buildLinkDetail", vertex_buildLinkDetail_void)
             .def("buildLinkDetail", vertex_buildLinkDetail_bool)
             .def("isLinkClosed", &NVertex::isLinkClosed)
