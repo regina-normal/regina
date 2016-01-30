@@ -49,7 +49,7 @@
 #ifdef USE_BOOST_INTRUSIVE_REF_COUNTER
 #include <boost/smart_ptr/intrusive_ref_counter.hpp>
 #else
-#include "utilities/nintrusiverefcounter.h"
+#include "utilities/intrusiverefcounter.h"
 #endif
 
 /**
@@ -74,7 +74,7 @@ class SafeRemnant :
 #ifdef USE_BOOST_INTRUSIVE_REF_COUNTER
     public boost::intrusive_ref_counter<SafeRemnant<T>> {
 #else
-    public regina::temporary::NIntrusiveRefCounter<SafeRemnant<T>> {
+    public regina::temporary::IntrusiveRefCounter<SafeRemnant<T>> {
 #endif
 
 public:
