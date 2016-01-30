@@ -403,6 +403,9 @@ Version 5.0  [ (under development) ]
               and root() respectively.  The old names are kept but deprecated.
             - Renamed getXMLReader() to xmlReader().  The old name has
               been removed completely.
+            - In python, makeOrphan() returns void again, making it consistent
+              once more with the C++ API.  Memory leaks are avoided thanks to
+              the new safe pointer machinery.
         Class NPacketListener:
             - New events childToBeRenamed(), childWasRenamed().
         Class NPerm:

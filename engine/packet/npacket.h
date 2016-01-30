@@ -884,13 +884,11 @@ class REGINA_API NPacket :
          * \pre This packet does not depend on its parent; see
          * dependsOnParent() for details.
          *
-         * \ifacespython As of Regina 4.6.1, this routine returns the packet
-         * itself, and the ownership of this packet becomes the responsibility
-         * of whoever takes this return value.  In particular, if you call
-         * makeOrphan() and ignore the return value then the entire
-         * packet subtree is automatically destroyed.  The reason for
-         * this behaviour is to avoid memory leaks where subtrees are
-         * orphaned and then silently forgotten.
+         * \ifacespython After makeOrphan() is called, this packet will
+         * become the root of a new packet tree that is owned by Python.
+         * In particular, if you call makeOrphan() and then delete all Python
+         * references to this packet, the entire packet subtree will be
+         * automatically destroyed.
          */
         void makeOrphan();
 

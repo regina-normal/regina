@@ -142,3 +142,32 @@ try:
     print t3
 except RuntimeError:
     print "Got exception"
+
+print
+print "Make orphan:"
+print "-----------------------------------------------------------"
+print
+
+d1 = NTriangulation(); d1.newTetrahedron()
+d2 = NTriangulation(); d2.newTetrahedron(); d2.newTetrahedron()
+d3 = NTriangulation(); d3.newTetrahedron(); d3.newTetrahedron(); d3.newTetrahedron()
+d1.insertChildLast(d2)
+d2.insertChildLast(d3)
+
+print d1
+print d2
+print d3
+
+d2.makeOrphan()
+print d1
+print d2
+print d3
+
+try:
+    d2 = None
+    print d1
+    print d2
+    print d3
+except RuntimeError:
+    print "Got exception"
+

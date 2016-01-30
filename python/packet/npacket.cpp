@@ -77,11 +77,6 @@ namespace {
 
     BOOST_PYTHON_FUNCTION_OVERLOADS(OL_reparent, reparent_check, 2, 3);
 
-    NPacket* makeOrphan_return(NPacket* subtree) {
-        subtree->makeOrphan();
-        return subtree;
-    }
-
     boost::python::list tags_list(const NPacket* p) {
         boost::python::list ans;
         for (auto& t : p->tags())
@@ -154,8 +149,7 @@ void addNPacket() {
         .def("insertChildFirst", &NPacket::insertChildFirst)
         .def("insertChildLast", &NPacket::insertChildLast)
         .def("insertChildAfter", &NPacket::insertChildAfter)
-        .def("makeOrphan", makeOrphan_return,
-            return_value_policy<to_held_type<> >())
+        .def("makeOrphan", &NPacket::makeOrphan)
         .def("reparent", reparent_check, OL_reparent())
         .def("transferChildren", &NPacket::transferChildren)
         .def("swapWithNextSibling", &NPacket::swapWithNextSibling)
