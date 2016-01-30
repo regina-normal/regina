@@ -57,7 +57,6 @@ struct default_call_policies;
 } } // namespace boost::python
 
 namespace regina {
-    
 namespace python {
 
 /**
@@ -80,14 +79,13 @@ PyObject* getNoneObject();
  * An implementation of boost::python's ResultConverter concept that takes a
  * raw pointer of an object derived from \c SafePointeeBase and casts it to the
  * HeldType before converting it to a PyObject using the Base result converter.
+ *
+ * \tparam HeldType e.g., a smart pointer to the class we try to wrap
+ * \tparam T a raw pointer to the class we try to wrap
+ * \tparam Base an existing result converter taking the HeldType
  */
-
 template<class HeldType, typename T, class Base>
 struct to_held_type_result_converter : Base {
-    // - HeldType is, e.g., a smart pointer to the class we try to wrap
-    // - T is a raw pointer to the class we try to wrap
-    // - Base is an existing result converter taking the HeldType
-
     PyObject* operator()(const T* t) const {
         if (t == 0) {
             // If we get a null-pointer, return None
@@ -100,24 +98,23 @@ struct to_held_type_result_converter : Base {
 /**
  * An implementation of boost::python's ResultConverterGenerator that uses the
  * \c to_held_type_result_converter.
+ *
+ * \tparam U the class we try to wrap
+ * \tparam HeldType e.g., a smart pointer to that class
+ * \tparam Base a call policy. This used to get a result converter which is
+ * used by to_held_type_result_converter:
+ * to_held_type_result_converter first converts a raw pointer to the
+ * HeldType and then applies the Base's result converter to obtain a
+ * PyObject.
  */
-
 template<template<class U> class HeldType = regina::python::SafeHeldType,
          class Base = boost::python::default_call_policies>
 struct to_held_type {
-    // - U is the class we try to wrap
-    // - HeldType is, e.g., a smart pointer to that class
-    // - Base is a call policy. This used to get a result converter which is
-    //   used by to_held_type_result_converter:
-    //   to_held_type_result_converter first converts a raw pointer to the
-    //   HeldType and then applies the Base's result converter to obtain a
-    //   PyObject.
-    
     // Result converter generator from Base
     typedef typename Base::result_converter base_generator;
     template<class T> struct apply {
         // - T is a raw pointer to the class we try to wrap.
-        
+
         // The potentially const type of the class we try to wrap.
         typedef typename boost::python::pointee<T>::type pointee_type;
         // The non-const type of the class we trt to wrap.
@@ -143,17 +140,21 @@ void raiseExpiredException(const std::type_info&);
 
 namespace boost {
 
-// Let boost infrastructure know that \c SafeHeldType is derefrencable.
-// Note that get() is not virtual, so we need to overwrite the earlier
-// get_pointer for the base class \c SafePtr.
+/**
+ * Let boost infrastructure know that \c SafeHeldType is dereferencable.
+ * Note that get() is not virtual, so we need to overwrite the earlier
+ * get_pointer for the base class \c SafePtr.
+ */
 template<class T>
 T* get_pointer(regina::python::SafeHeldType<T> const &ptr) {
     return ptr.get();
 }
-    
+
 namespace python {
 
-// Let boost::python infrastructure know.
+/**
+ * Let boost::python infrastructure know.
+ */
 template<class T> struct pointee<regina::python::SafeHeldType<T> > {
     typedef T type;
 };
@@ -165,7 +166,7 @@ namespace python {
 
 template<class T> SafeHeldType<T>::SafeHeldType(T* t)
     : regina::SafePtr<T>(t) { }
-        
+
 template<class T> template<class Y>
 SafeHeldType<T>::SafeHeldType(const SafeHeldType<Y> &other)
     : regina::SafePtr<T>(other) { }
