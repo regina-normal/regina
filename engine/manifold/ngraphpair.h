@@ -122,6 +122,9 @@ class REGINA_API NGraphPair : public NManifold {
          * corresponding to a single untwisted puncture in the base orbifold.
          * \pre The given matching matrix has determinant +1 or -1.
          *
+         * \ifacespython In Python, this constructor clones its NSFSpace
+         * arguments instead of claiming ownership of them.
+         *
          * @param sfs0 the first Seifert fibred space.
          * @param sfs1 the second Seifert fibred space.
          * @param mat00 the (0,0) element of the matching matrix.
@@ -143,6 +146,9 @@ class REGINA_API NGraphPair : public NManifold {
          * \pre Each Seifert fibred space has a single torus boundary,
          * corresponding to a single untwisted puncture in the base orbifold.
          * \pre The given matching matrix has determinant +1 or -1.
+         *
+         * \ifacespython In Python, this constructor clones its NSFSpace
+         * arguments instead of claiming ownership of them.
          *
          * @param sfs0 the first Seifert fibred space.
          * @param sfs1 the second Seifert fibred space.

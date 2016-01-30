@@ -147,9 +147,9 @@ namespace {
         return ans;
     }
 
-    void simplifiedFundamentalGroup_own(Dim4Triangulation& tri,
-            std::auto_ptr<regina::NGroupPresentation> group) {
-        tri.simplifiedFundamentalGroup(group.release());
+    void simplifiedFundamentalGroup_clone(Dim4Triangulation& tri,
+            const regina::NGroupPresentation& group) {
+        tri.simplifiedFundamentalGroup(new regina::NGroupPresentation(group));
     }
 
     std::string isoSig_void(const Dim4Triangulation& t) {
@@ -301,7 +301,7 @@ void addDim4Triangulation() {
         .def("isConnected", &Dim4Triangulation::isConnected)
         .def("fundamentalGroup", &Dim4Triangulation::fundamentalGroup,
             return_internal_reference<>())
-        .def("simplifiedFundamentalGroup", simplifiedFundamentalGroup_own)
+        .def("simplifiedFundamentalGroup", simplifiedFundamentalGroup_clone)
         .def("homology", &Dim4Triangulation::homology,
             return_internal_reference<>())
         .def("homologyH1", &Dim4Triangulation::homologyH1,

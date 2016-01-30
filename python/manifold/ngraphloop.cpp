@@ -43,18 +43,13 @@ using regina::NMatrix2;
 using regina::NSFSpace;
 
 namespace {
-    NGraphLoop* createNGraphLoop_longs(std::auto_ptr<NSFSpace> s,
+    NGraphLoop* createNGraphLoop_longs(const NSFSpace& s,
             long a, long b, long c, long d) {
-        NGraphLoop* ans = new NGraphLoop(s.get(), a, b, c, d);
-        s.release();
-        return ans;
+        return new NGraphLoop(new NSFSpace(s), a, b, c, d);
     }
 
-    NGraphLoop* createNGraphLoop_matrix(std::auto_ptr<NSFSpace> s,
-            const NMatrix2& m) {
-        NGraphLoop* ans = new NGraphLoop(s.get(), m);
-        s.release();
-        return ans;
+    NGraphLoop* createNGraphLoop_matrix(const NSFSpace& s, const NMatrix2& m) {
+        return new NGraphLoop(new NSFSpace(s), m);
     }
 }
 

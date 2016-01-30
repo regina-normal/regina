@@ -173,6 +173,9 @@ class REGINA_API NGraphTriple : public NManifold {
          * corresponding to two untwisted punctures in the base orbifold.
          * \pre Each of the given matrices has determinant +1 or -1.
          *
+         * \ifacespython In Python, this constructor clones its NSFSpace
+         * arguments instead of claiming ownership of them.
+         *
          * @param end0 the first end space, as described in the class notes.
          * @param centre the central space, as described in the class notes.
          * @param end1 the second end space, as described in the class notes.

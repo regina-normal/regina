@@ -810,10 +810,8 @@ class REGINA_API NGroupPresentation :
          * words, it does not stop you from using generators beyond the
          * countGenerators() bound.
          *
-         * \ifacespython Since this group presentation takes ownership
-         * of the given expression, the python object containing the
-         * given expression becomes a null object and should no longer
-         * be used.
+         * \ifacespython In Python, this routine clones its argument
+         * instead of claiming ownership of it.
          *
          * @param rel the expression that the relation sets to 1; for
          * instance, if the relation is <tt>g1^2 g2 = 1</tt> then this

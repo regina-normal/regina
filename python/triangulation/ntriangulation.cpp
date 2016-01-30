@@ -105,9 +105,9 @@ namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_turaevViroApprox,
         NTriangulation::turaevViroApprox, 1, 3);
 
-    void simplifiedFundamentalGroup_own(NTriangulation& tri,
-            std::auto_ptr<regina::NGroupPresentation> group) {
-        tri.simplifiedFundamentalGroup(group.release());
+    void simplifiedFundamentalGroup_clone(NTriangulation& tri,
+            const regina::NGroupPresentation& group) {
+        tri.simplifiedFundamentalGroup(new regina::NGroupPresentation(group));
     }
 
     NTriangulation* enterTextTriangulation_stdio() {
@@ -340,7 +340,7 @@ void addNTriangulation() {
             return_internal_reference<>())
         .def("getFundamentalGroup", &NTriangulation::getFundamentalGroup,
             return_internal_reference<>())
-        .def("simplifiedFundamentalGroup", simplifiedFundamentalGroup_own)
+        .def("simplifiedFundamentalGroup", simplifiedFundamentalGroup_clone)
         .def("homology", &NTriangulation::homology,
             return_internal_reference<>())
         .def("homologyH1", &NTriangulation::homologyH1,

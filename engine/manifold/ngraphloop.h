@@ -122,6 +122,9 @@ class REGINA_API NGraphLoop : public NManifold {
          * base orbifold.
          * \pre The given matching matrix has determinant +1 or -1.
          *
+         * \ifacespython In Python, this constructor clones its NSFSpace
+         * argument instead of claiming ownership of it.
+         *
          * @param sfs the bounded Seifert fibred space.
          * @param mat00 the (0,0) element of the matching matrix.
          * @param mat01 the (0,1) element of the matching matrix.
@@ -142,6 +145,9 @@ class REGINA_API NGraphLoop : public NManifold {
          * \pre The given Seifert fibred space has precisely two torus
          * boundaries, corresponding to two punctures in the base orbifold.
          * \pre The given matching matrix has determinant +1 or -1.
+         *
+         * \ifacespython In Python, this constructor clones its NSFSpace
+         * argument instead of claiming ownership of it.
          *
          * @param sfs the bounded Seifert fibred space.
          * @param matchingReln the 2-by-2 matching matrix.

@@ -320,6 +320,9 @@ Version 5.0  [ (under development) ]
               routine, and set through an optional third argument to setDirs().
             - The homeDir argument to setDirs() may now be the empty string,
               which signals that the directory should not be changed.
+        Class NGraphLoop, NGraphPair, NGraphTriple:
+            - In python, the constructors now clone their NSFSpace arguments
+              (as opposed to claiming ownership of them).
         Class NGroupExpression, NGroupExpressionTerm:
             - Added != operators to complement the existing == operators.
             - Added optional utf8 argument to NGroupExpression::writeText()
@@ -327,6 +330,8 @@ Version 5.0  [ (under development) ]
         Class NGroupPresentation:
             - Routine recogniseGroup() now takes an optional moreUtf8
               argument for prettier printing.
+            - In python, addRelation() now clones its argument (as
+              opposed to claiming ownership of it).
         Class NHandlebody, NLensSpace:
             - Added != operator to complement the existing == operator.
         Class NIsomorphism:
@@ -589,6 +594,8 @@ Version 5.0  [ (under development) ]
               getFaces(), getNumberOfFaces() and hasBoundaryFaces(), all of
               which were deprecated.  Instead use the names that replace
               "face" with "triangle".
+            - In python, simplifiedFundamentalGroup() now clones its argument
+              (as opposed to claiming ownership of it).
         Class NVertex:
             - Now just typedefs for the new classes Face<3, 0> and
               FaceEmbedding<3, 0>, which have the same functionality as

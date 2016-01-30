@@ -94,10 +94,8 @@ namespace {
     BOOST_PYTHON_FUNCTION_OVERLOADS(OL_expressionWriteText,
         expressionWriteText, 1, 3);
 
-    void addRelation_own(NGroupPresentation& p,
-            std::auto_ptr<NGroupExpression> e) {
-        p.addRelation(e.get());
-        e.release();
+    void addRelation_clone(NGroupPresentation& p, const NGroupExpression& e) {
+        p.addRelation(new regina::NGroupExpression(e));
     }
 
     void presentationWriteTeX(const NGroupPresentation& p) {
@@ -177,7 +175,7 @@ void addNGroupPresentation() {
         .def(init<const NGroupPresentation&>())
         .def("addGenerator", &NGroupPresentation::addGenerator,
             OL_addGenerator())
-        .def("addRelation", addRelation_own)
+        .def("addRelation", addRelation_clone)
         .def("countGenerators", &NGroupPresentation::countGenerators)
         .def("getNumberOfGenerators",
             &NGroupPresentation::getNumberOfGenerators)

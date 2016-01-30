@@ -43,22 +43,14 @@ using regina::NMatrix2;
 using regina::NSFSpace;
 
 namespace {
-    NGraphPair* createNGraphPair_longs(
-            std::auto_ptr<NSFSpace> s1, std::auto_ptr<NSFSpace> s2,
+    NGraphPair* createNGraphPair_longs(const NSFSpace& s1, const NSFSpace& s2,
             long a, long b, long c, long d) {
-        NGraphPair* ans = new NGraphPair(s1.get(), s2.get(), a, b, c, d);
-        s1.release();
-        s2.release();
-        return ans;
+        return new NGraphPair(new NSFSpace(s1), new NSFSpace(s2), a, b, c, d);
     }
 
-    NGraphPair* createNGraphPair_matrix(
-            std::auto_ptr<NSFSpace> s1, std::auto_ptr<NSFSpace> s2,
+    NGraphPair* createNGraphPair_matrix(const NSFSpace& s1, const NSFSpace& s2,
             const NMatrix2& m) {
-        NGraphPair* ans = new NGraphPair(s1.get(), s2.get(), m);
-        s1.release();
-        s2.release();
-        return ans;
+        return new NGraphPair(new NSFSpace(s1), new NSFSpace(s2), m);
     }
 }
 
