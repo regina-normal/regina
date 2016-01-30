@@ -193,6 +193,7 @@
 		052942D31C5CDC8B0011C1E6 /* safeptr.h in Headers */ = {isa = PBXBuildFile; fileRef = 052942CF1C5CDC8B0011C1E6 /* safeptr.h */; };
 		052942D41C5CDC8B0011C1E6 /* saferemnant.h in Headers */ = {isa = PBXBuildFile; fileRef = 052942D01C5CDC8B0011C1E6 /* saferemnant.h */; };
 		052942D91C5CDCCB0011C1E6 /* safeheldtype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052942D51C5CDCBF0011C1E6 /* safeheldtype.cpp */; };
+		052942DA1C5CDFBE0011C1E6 /* nsnappeaalgebra.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CBF19B2F1AB0099C617 /* nsnappeaalgebra.h */; };
 		052F9E83180600FB00FAE4DF /* nabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C00180600FA00FAE4DF /* nabeliangroup.cpp */; };
 		052F9E84180600FB00FAE4DF /* nabeliangroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C01180600FA00FAE4DF /* nabeliangroup.h */; };
 		052F9E85180600FB00FAE4DF /* ngrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C02180600FA00FAE4DF /* ngrouppresentation.cpp */; };
@@ -6719,6 +6720,7 @@
 				051691C01C5AD61200DC69EC /* nhypersurfaceui.h in Sources */,
 				0543AEAB1811E12A002758F8 /* nnormalsurfaceui.h in Sources */,
 				0543AEAC1811E12A002758F8 /* nscriptui.h in Sources */,
+				052942DA1C5CDFBE0011C1E6 /* nsnappeaalgebra.h in Sources */,
 				05A73CE319B2F9DC0099C617 /* nsnappeafile.h in Sources */,
 				05A73CE419B2F9DC0099C617 /* nsnappeagluings.h in Sources */,
 				052774141C55744300140918 /* nhypersurfacecreator.cpp in Sources */,
