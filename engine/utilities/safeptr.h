@@ -43,6 +43,11 @@
 
 #include <boost/intrusive_ptr.hpp>
 
+/**
+ * \weakgroup utilities
+ * @{
+ */
+
 namespace regina {
 
 template <class> class SafePointeeBase;

@@ -52,6 +52,11 @@
 #include "utilities/nintrusiverefcounter.h"
 #endif
 
+/**
+ * \weakgroup utilities
+ * @{
+ */
+
 namespace regina {
 
 /**

@@ -43,6 +43,11 @@
 
 #include "utilities/saferemnant.h"
 
+/**
+ * \weakgroup utilities
+ * @{
+ */
+
 namespace regina {
 
 /**
