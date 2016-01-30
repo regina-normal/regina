@@ -41,15 +41,25 @@
 #define __INTRUSIVEREFCOUNTER_H
 #endif
 
+#ifndef __DOXYGEN
+// Since this class is just a band-aid for older versions of boost, we
+// hide it from doxygen completely.
+
 namespace regina {
 namespace temporary {
 
 /**
- * A crude replacement for boost::intrusive_ref_counter so that the code
- * compiles against versions of boost prior 1.55. It is only a stop-gap
- * measure.
+ * Deprecated replacement for boost::intrusive_ref_counter.
+ *
+ * See boost::intrusive_ref_counter for details on how this class is
+ * intended to behave.
+ *
+ * \deprecated This class is a crude replacement for
+ * boost::intrusive_ref_counter, designed so that Regina can build against
+ * versions of boost prior to 1.55.  This is just a stop-gap measure:
+ * at some point in the future Regina will insist on a newer version of boost,
+ * at which point this class will be removed.
  */
-
 template<typename T> class IntrusiveRefCounter {
 public:
     IntrusiveRefCounter() : refCounter(0) { }
@@ -61,18 +71,22 @@ public:
 namespace boost {
 
 template<typename T>
-inline void intrusive_ptr_add_ref(const ::regina::temporary::IntrusiveRefCounter<T>* p) {
-    p->refCounter++;
+inline void intrusive_ptr_add_ref(
+        const ::regina::temporary::IntrusiveRefCounter<T>* p) {
+    ++p->refCounter;
 }
 
 template<typename T>
-inline void intrusive_ptr_release(const ::regina::temporary::IntrusiveRefCounter<T>* p) {
-    p->refCounter--;
+inline void intrusive_ptr_release(
+        const ::regina::temporary::IntrusiveRefCounter<T>* p) {
+    --p->refCounter;
     if (p->refCounter == 0) {
         delete static_cast<const T*>(p);
     }
 }
 
 } // namespace boost
+
+#endif // __DOXYGEN
 
 #endif
