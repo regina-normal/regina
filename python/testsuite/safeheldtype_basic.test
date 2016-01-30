@@ -53,10 +53,10 @@ print "Deleting matriarch:"
     
 c  = NContainer()
 c.insertChildFirst(NContainer())
-c.getFirstTreeChild().insertChildFirst(NContainer())
+c.firstChild().insertChildFirst(NContainer())
 
-c1 = c.getFirstTreeChild()
-c2 = c.getFirstTreeChild().getFirstTreeChild()
+c1 = c.firstChild()
+c2 = c.firstChild().firstChild()
 
 c  = None
 
@@ -88,13 +88,13 @@ c1 = None
 print c
 print c2
 
-d = c2.getTreeMatriarch()
+d = c2.root()
 
 c = None
 
 print c2
 
-e = c2.getTreeMatriarch()
+e = c2.root()
 
 print c2
 

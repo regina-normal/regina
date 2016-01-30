@@ -38,7 +38,7 @@ print
 
 print NExampleTriangulation.poincareHomologySphere().isoSig()
 print NText("Hello World")
-print NText("Hello World").getText()
+print NText("Hello World").text()
 
 print
 print "-----------------------------------------------------------"
@@ -55,19 +55,19 @@ t = NText()
 c = NContainer()
 c.insertChildFirst(t1)
 
-print c.getNumberOfChildren()
+print c.countChildren()
 
 print t1.isoSig()
 t1.newTetrahedron()
 
-print c.getFirstTreeChild()
-print c.getFirstTreeChild().isoSig()
+print c.firstChild()
+print c.firstChild().isoSig()
 
 t1 = None
 
-print c.getFirstTreeChild().isoSig()
+print c.firstChild().isoSig()
 
-temp = c.getLastTreeChild()
+temp = c.lastChild()
 
 temp.newTetrahedron()
 
@@ -95,20 +95,20 @@ t2.insertChildFirst(p)
 p.insertChildLast(t)
 t.setText("Hello World")
 
-print t.getText()
+print t.text()
 
-p.getLastTreeChild().setText("Text set")
+p.lastChild().setText("Text set")
 
-l = p.getFirstTreeChild()
+l = p.firstChild()
 
-print l.getText()
+print l.text()
 
 t2.insertChildAfter(NText("New"), t3)
 
-print t2.getNumberOfChildren()
-print t2.getNumberOfDescendants()
+print t2.countChildren()
+print t2.countDescendants()
 
-m = l.getTreeMatriarch()
+m = l.root()
 
 print m == t2
 
@@ -118,7 +118,7 @@ m = None
 
 print p.isNull()
 
-print p.getTotalTreeSize()
+print p.totalTreeSize()
 
 it = t2
 
