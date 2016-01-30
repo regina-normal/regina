@@ -45,6 +45,7 @@
 #include "Python.h"
 
 #include <typeinfo>
+#include <type_traits>
 
 namespace boost {
 namespace python {
@@ -87,12 +88,12 @@ struct to_held_type_result_converter : Base {
     // - T is a raw pointer to the class we try to wrap
     // - Base is an existing result converter taking the HeldType
 
-    PyObject* operator()(const T& t) const {
+    PyObject* operator()(const T* t) const {
         if (t == 0) {
             // If we get a null-pointer, return None
             return getNoneObject();
         }
-        return Base()(HeldType(t));
+        return Base()(HeldType(const_cast<T*>(t)));
     }
 };
 
@@ -108,7 +109,7 @@ struct to_held_type {
     // - HeldType is, e.g., a smart pointer to that class
     // - Base is a call policy. This used to get a result converter which is
     //   used by to_held_type_result_converter:
-    //   to_held_type_result_converter first converts a row pointer to the
+    //   to_held_type_result_converter first converts a raw pointer to the
     //   HeldType and then applies the Base's result converter to obtain a
     //   PyObject.
     
@@ -117,15 +118,19 @@ struct to_held_type {
     template<class T> struct apply {
         // - T is a raw pointer to the class we try to wrap.
         
-        // The type of the class we try to wrap.
+        // The potentially const type of the class we try to wrap.
         typedef typename boost::python::pointee<T>::type pointee_type;
+        // The non-const type of the class we trt to wrap.
+        typedef typename std::remove_const<pointee_type>::type
+            non_const_pointee_type;
         // The type for holding that class
-        typedef HeldType<pointee_type> HeldTypeT;
+        typedef HeldType<non_const_pointee_type> HeldTypeT;
         // The result converter from the Base call policy.
         typedef typename base_generator::template apply<HeldTypeT>::type
             base_converter;
         // And finally, our result converter.
-        typedef to_held_type_result_converter<HeldTypeT, T, base_converter>
+        typedef to_held_type_result_converter<
+                              HeldTypeT, non_const_pointee_type, base_converter>
             type;
     };
 };

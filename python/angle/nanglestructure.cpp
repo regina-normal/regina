@@ -43,12 +43,6 @@ using namespace regina::python;
 using regina::NAngleStructure;
 using regina::NTriangulation;
 
-namespace {
-    NTriangulation* triangulation_nonconst(const NAngleStructure &s) {
-        return const_cast<NTriangulation*>(s.triangulation());
-    }
-}
-
 void addNAngleStructure() {
     class_<NAngleStructure, std::auto_ptr<NAngleStructure>, boost::noncopyable>
             ("NAngleStructure", no_init)
@@ -56,9 +50,9 @@ void addNAngleStructure() {
             return_value_policy<manage_new_object>())
         .def("angle", &NAngleStructure::angle)
         .def("getAngle", &NAngleStructure::getAngle)
-        .def("triangulation", &triangulation_nonconst,
+        .def("triangulation", &NAngleStructure::triangulation,
             return_value_policy<to_held_type<> >())
-        .def("getTriangulation", &triangulation_nonconst,
+        .def("getTriangulation", &NAngleStructure::triangulation,
             return_value_policy<to_held_type<> >())
         .def("isStrict", &NAngleStructure::isStrict)
         .def("isTaut", &NAngleStructure::isTaut)

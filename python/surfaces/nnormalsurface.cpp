@@ -128,10 +128,6 @@ namespace {
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_isCompressingDisc,
         NNormalSurface::isCompressingDisc, 0, 1);
-
-    NTriangulation* triangulation_nonconst(const NNormalSurface &surface) {
-        return const_cast<NTriangulation*>(surface.triangulation());
-    }
 }
 
 void addNNormalSurface() {
@@ -162,9 +158,9 @@ void addNNormalSurface() {
         .def("getOctPosition", &NNormalSurface::getOctPosition)
         .def("countCoords", &NNormalSurface::countCoords)
         .def("getNumberOfCoords", &NNormalSurface::getNumberOfCoords)
-        .def("triangulation", &triangulation_nonconst,
+        .def("triangulation", &NNormalSurface::triangulation,
             return_value_policy<to_held_type<> >())
-        .def("getTriangulation", &triangulation_nonconst,
+        .def("getTriangulation", &NNormalSurface::triangulation,
             return_value_policy<to_held_type<> >())
         .def("name", &NNormalSurface::name,
             return_value_policy<return_by_value>())
