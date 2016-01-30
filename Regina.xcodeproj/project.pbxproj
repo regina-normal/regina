@@ -188,6 +188,11 @@
 		0523D88A180B54850094DAAD /* PacketManagerIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0523D889180B54850094DAAD /* PacketManagerIOS.mm */; };
 		052774141C55744300140918 /* nhypersurfacecreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052774101C55743E00140918 /* nhypersurfacecreator.cpp */; };
 		052774191C55761D00140918 /* NewHypersurfacesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 052774161C55760B00140918 /* NewHypersurfacesController.mm */; };
+		052942D11C5CDC8B0011C1E6 /* intrusiverefcounter.h in Headers */ = {isa = PBXBuildFile; fileRef = 052942CD1C5CDC8B0011C1E6 /* intrusiverefcounter.h */; };
+		052942D21C5CDC8B0011C1E6 /* safepointeebase.h in Headers */ = {isa = PBXBuildFile; fileRef = 052942CE1C5CDC8B0011C1E6 /* safepointeebase.h */; };
+		052942D31C5CDC8B0011C1E6 /* safeptr.h in Headers */ = {isa = PBXBuildFile; fileRef = 052942CF1C5CDC8B0011C1E6 /* safeptr.h */; };
+		052942D41C5CDC8B0011C1E6 /* saferemnant.h in Headers */ = {isa = PBXBuildFile; fileRef = 052942D01C5CDC8B0011C1E6 /* saferemnant.h */; };
+		052942D91C5CDCCB0011C1E6 /* safeheldtype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052942D51C5CDCBF0011C1E6 /* safeheldtype.cpp */; };
 		052F9E83180600FB00FAE4DF /* nabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C00180600FA00FAE4DF /* nabeliangroup.cpp */; };
 		052F9E84180600FB00FAE4DF /* nabeliangroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C01180600FA00FAE4DF /* nabeliangroup.h */; };
 		052F9E85180600FB00FAE4DF /* ngrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C02180600FA00FAE4DF /* ngrouppresentation.cpp */; };
@@ -1940,6 +1945,12 @@
 		052774111C55743E00140918 /* nhypersurfacecreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhypersurfacecreator.h; sourceTree = "<group>"; };
 		052774151C55760B00140918 /* NewHypersurfacesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewHypersurfacesController.h; sourceTree = "<group>"; };
 		052774161C55760B00140918 /* NewHypersurfacesController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewHypersurfacesController.mm; sourceTree = "<group>"; };
+		052942CD1C5CDC8B0011C1E6 /* intrusiverefcounter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = intrusiverefcounter.h; sourceTree = "<group>"; };
+		052942CE1C5CDC8B0011C1E6 /* safepointeebase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = safepointeebase.h; sourceTree = "<group>"; };
+		052942CF1C5CDC8B0011C1E6 /* safeptr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = safeptr.h; sourceTree = "<group>"; };
+		052942D01C5CDC8B0011C1E6 /* saferemnant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = saferemnant.h; sourceTree = "<group>"; };
+		052942D51C5CDCBF0011C1E6 /* safeheldtype.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = safeheldtype.cpp; sourceTree = "<group>"; };
+		052942D61C5CDCBF0011C1E6 /* safeheldtype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = safeheldtype.h; sourceTree = "<group>"; };
 		052F9BFF180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052F9C00180600FA00FAE4DF /* nabeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nabeliangroup.cpp; sourceTree = "<group>"; };
 		052F9C01180600FA00FAE4DF /* nabeliangroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nabeliangroup.h; sourceTree = "<group>"; };
@@ -3415,6 +3426,8 @@
 				050F5D3D1B9BAB9C00C1F681 /* modulemain.cpp */,
 				050F5D3E1B9BAB9C00C1F681 /* packet */,
 				050F5D471B9BAB9C00C1F681 /* progress */,
+				052942D51C5CDCBF0011C1E6 /* safeheldtype.cpp */,
+				052942D61C5CDCBF0011C1E6 /* safeheldtype.h */,
 				050F5D4D1B9BAB9C00C1F681 /* snappea */,
 				050F5D521B9BAB9C00C1F681 /* split */,
 				050F5D561B9BAB9C00C1F681 /* subcomplex */,
@@ -4471,6 +4484,7 @@
 				052F9E64180600FB00FAE4DF /* flags.h */,
 				052F9E65180600FB00FAE4DF /* i18nutils.cpp */,
 				052F9E66180600FB00FAE4DF /* i18nutils.h */,
+				052942CD1C5CDC8B0011C1E6 /* intrusiverefcounter.h */,
 				052F9E67180600FB00FAE4DF /* intutils.h */,
 				052F9E68180600FB00FAE4DF /* memutils.h */,
 				052F9E69180600FB00FAE4DF /* nbitmask.h */,
@@ -4494,6 +4508,9 @@
 				052F9E78180600FB00FAE4DF /* osutils.h */,
 				052F9E79180600FB00FAE4DF /* ptrutils.h */,
 				05CA99E518078465006161DC /* registryutils.h */,
+				052942CE1C5CDC8B0011C1E6 /* safepointeebase.h */,
+				052942CF1C5CDC8B0011C1E6 /* safeptr.h */,
+				052942D01C5CDC8B0011C1E6 /* saferemnant.h */,
 				0541AF511B8BE386002E166B /* sequence.h */,
 				052F9E7B180600FB00FAE4DF /* stringutils-impl.h */,
 				052F9E7C180600FB00FAE4DF /* stringutils.cpp */,
@@ -5511,6 +5528,7 @@
 				052F9E9C180600FB00FAE4DF /* dim2gluingpermsearcher.h in Headers */,
 				052F9FF1180600FB00FAE4DF /* nl31pillow.h in Headers */,
 				052FA096180600FB00FAE4DF /* nthread.h in Headers */,
+				052942D31C5CDC8B0011C1E6 /* safeptr.h in Headers */,
 				052FA033180600FB00FAE4DF /* normalspec-impl.h in Headers */,
 				052F9F4D180600FB00FAE4DF /* nray.h in Headers */,
 				052F9F3E180600FB00FAE4DF /* nmatrix.h in Headers */,
@@ -5758,6 +5776,7 @@
 				05431F871C40F3C9009BC072 /* version.h in Headers */,
 				052FA084180600FB00FAE4DF /* bitmanip.h in Headers */,
 				052F9FDA180600FB00FAE4DF /* winged_edge.h in Headers */,
+				052942D41C5CDC8B0011C1E6 /* saferemnant.h in Headers */,
 				052FA097180600FB00FAE4DF /* ntrieset.h in Headers */,
 				052FA007180600FB00FAE4DF /* nsatannulus.h in Headers */,
 				052F9F28180600FB00FAE4DF /* nlensspace.h in Headers */,
@@ -5795,9 +5814,11 @@
 				052FA08E180600FB00FAE4DF /* nlistoncall.h in Headers */,
 				052FA00D180600FB00FAE4DF /* nsatblocktypes.h in Headers */,
 				052F9F1A180600FB00FAE4DF /* nfacetspec.h in Headers */,
+				052942D21C5CDC8B0011C1E6 /* safepointeebase.h in Headers */,
 				052F9EC0180600FB00FAE4DF /* ndoubledescription-impl.h in Headers */,
 				052FA092180600FB00FAE4DF /* nproperty.h in Headers */,
 				052F9ECF180600FB00FAE4DF /* nmaxadmissible-impl.h in Headers */,
+				052942D11C5CDC8B0011C1E6 /* intrusiverefcounter.h in Headers */,
 				052F9F15180600FB00FAE4DF /* recogniser.h in Headers */,
 				052F9FF3180600FB00FAE4DF /* nlayeredchain.h in Headers */,
 				052F9E86180600FB00FAE4DF /* ngrouppresentation.h in Headers */,
@@ -6186,6 +6207,7 @@
 				050F5E481B9BAB9C00C1F681 /* ntetface.cpp in Sources */,
 				050F5E3F1B9BAB9C00C1F681 /* ntreedecomposition.cpp in Sources */,
 				050F5E5A1B9BAB9C00C1F681 /* dehydration.cpp in Sources */,
+				052942D91C5CDCCB0011C1E6 /* safeheldtype.cpp in Sources */,
 				050F5DFF1B9BAB9C00C1F681 /* nprimes.cpp in Sources */,
 				050F5E3C1B9BAB9C00C1F681 /* sfcombination.cpp in Sources */,
 				050F5E4E1B9BAB9C00C1F681 /* i18nutils.cpp in Sources */,
