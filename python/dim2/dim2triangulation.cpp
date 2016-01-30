@@ -38,6 +38,7 @@
 #include "../safeheldtype.h"
 #include "../generic/facehelper.h"
 
+// Held type must be declared before boost/python.hpp
 #include <boost/python.hpp>
 
 using namespace boost::python;

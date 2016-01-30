@@ -34,9 +34,10 @@
 
 #include "maths/nmatrixint.h"
 #include "snappea/nsnappeatriangulation.h"
-#include "../helpers.h"
 #include "../safeheldtype.h"
+#include "../helpers.h"
 
+// Held type must be declared before boost/python.hpp
 #include <boost/python.hpp>
 
 using namespace boost::python;

@@ -36,6 +36,8 @@
 #include "progress/nprogresstracker.h"
 #include "triangulation/ntriangulation.h"
 #include "../safeheldtype.h"
+
+// Held type must be declared before boost/python.hpp
 #include <boost/python.hpp>
 
 using namespace boost::python;
