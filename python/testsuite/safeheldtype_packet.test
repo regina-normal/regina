@@ -1,0 +1,144 @@
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite Component
+#
+# Copyright (c) 2015, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Provides tests for the wrapping of NPacket subclasses through SafeHeldType
+#
+# This file is a single component of Regina's python test suite.  To run
+# the python test suite, move to the main python directory in the source
+# tree and run "make check".
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+print
+print "-----------------------------------------------------------"
+print "Basic:"
+print
+
+print NExampleTriangulation.poincareHomologySphere().isoSig()
+print NText("Hello World")
+print NText("Hello World").getText()
+
+print
+print "-----------------------------------------------------------"
+print "Basic container tests:"
+print
+
+t1 = NTriangulation()
+t2 = NExampleTriangulation.poincareHomologySphere()
+t3 = NExampleTriangulation.figureEightKnotComplement()
+p = NPDF()
+
+t = NText()
+
+c = NContainer()
+c.insertChildFirst(t1)
+
+print c.getNumberOfChildren()
+
+print t1.isoSig()
+t1.newTetrahedron()
+
+print c.getFirstTreeChild()
+print c.getFirstTreeChild().isoSig()
+
+t1 = None
+
+print c.getFirstTreeChild().isoSig()
+
+temp = c.getLastTreeChild()
+
+temp.newTetrahedron()
+
+print temp.isoSig()
+
+print
+print "-----------------------------------------------------------"
+print "Erasing container:"
+print
+
+c = None
+
+try:
+    print temp.isoSig()
+except RuntimeError:
+    print "Got exception"
+
+print
+print "-----------------------------------------------------------"
+print "Nested tests:"
+print
+
+t2.insertChildFirst(t3)
+t2.insertChildFirst(p)
+p.insertChildLast(t)
+t.setText("Hello World")
+
+print t.getText()
+
+p.getLastTreeChild().setText("Text set")
+
+l = p.getFirstTreeChild()
+
+print l.getText()
+
+t2.insertChildAfter(NText("New"), t3)
+
+print t2.getNumberOfChildren()
+print t2.getNumberOfDescendants()
+
+m = l.getTreeMatriarch()
+
+print m == t2
+
+print m.isoSig()
+
+m = None
+
+print p.isNull()
+
+print p.getTotalTreeSize()
+
+it = t2
+
+while it:
+    print it
+    it = it.nextTreePacket()
+
+t2 = None
+
+print
+print "Erase nested:"
+print "-----------------------------------------------------------"
+print
+
+try:
+    print l
+except RuntimeError:
+    print "Got exception"
+
+try:
+    print t3
+except RuntimeError:
+    print "Got exception"

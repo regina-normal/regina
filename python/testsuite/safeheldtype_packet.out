@@ -1,0 +1,45 @@
+
+-----------------------------------------------------------
+Basic:
+
+fvPQcdecedekrsnrs
+Text packet
+Hello World
+
+-----------------------------------------------------------
+Basic container tests:
+
+1
+a
+Triangulation with 1 tetrahedron
+baa
+baa
+baabaa
+
+-----------------------------------------------------------
+Erasing container:
+
+Got exception
+
+-----------------------------------------------------------
+Nested tests:
+
+Hello World
+Text set
+3
+4
+True
+fvPQcdecedekrsnrs
+True
+2
+Triangulation with 5 tetrahedra
+PDF packet (0 bytes)
+Text packet
+Triangulation with 2 tetrahedra
+Text packet
+
+Erase nested:
+-----------------------------------------------------------
+
+Got exception
+Got exception
