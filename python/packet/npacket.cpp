@@ -141,6 +141,7 @@ void addNPacket() {
             return_value_policy<to_held_type<> >())
         .def("getTreeMatriarch", &NPacket::getTreeMatriarch,
             return_value_policy<to_held_type<> >())
+        .def("hasOwner", &NPacket::hasOwner)
         .def("levelsDownTo", &NPacket::levelsDownTo)
         .def("levelsUpTo", &NPacket::levelsUpTo)
         .def("isGrandparentOf", &NPacket::isGrandparentOf)
