@@ -196,26 +196,28 @@ QVariant VertexModel::data(const QModelIndex& index, int role) const {
             case 0:
                 return index.row();
             case 1: {
-                int link = item->link();
-                if (link == NVertex::SPHERE)
-                    return QString();
-                if (link == NVertex::DISC)
-                    return tr("Bdry");
-                if (link == NVertex::TORUS)
-                    return tr("Cusp (torus)");
-                if (link == NVertex::KLEIN_BOTTLE)
-                    return tr("Cusp (Klein bottle)");
-                if (link == NVertex::NON_STANDARD_CUSP) {
-                    if (item->isLinkOrientable())
-                        return tr("Cusp (orbl, genus %1)").arg(
-                            1 - (item->linkEulerChar() / 2));
-                    else
-                        return tr("Cusp (non-or, genus %1)").arg(
-                            2 - item->linkEulerChar());
+                switch (item->link()) {
+                    case NVertex::SPHERE:
+                        return QString();
+                    case NVertex::DISC:
+                        return tr("Bdry");
+                    case NVertex::TORUS:
+                        return tr("Ideal: Torus");
+                    case NVertex::KLEIN_BOTTLE:
+                        return tr("Ideal: Klein bottle");
+                    case NVertex::NON_STANDARD_CUSP: {
+                        if (item->isLinkOrientable())
+                            return tr("Ideal: Genus %1 orbl").arg(
+                                1 - (item->linkEulerChar() / 2));
+                        else
+                            return tr("Ideal: Genus %1 non-orbl").arg(
+                                2 - item->linkEulerChar());
+                    }
+                    case NVertex::NON_STANDARD_BDRY:
+                        return tr("Invalid");
+                    default:
+                        return tr("Unknown");
                 }
-                if (link == NVertex::NON_STANDARD_BDRY)
-                    return tr("Non-std bdry");
-                return QString();
             }
             case 2:
                 return static_cast<unsigned>(item->degree());
