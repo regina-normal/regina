@@ -1747,7 +1747,7 @@ inline size_t NPacket::getTotalTreeSize() const {
 }
 
 inline bool NPacket::hasOwner() const {
-    return treeParent;
+    return treeParent_;
 }
 
 inline NPacket::ChangeEventSpan::ChangeEventSpan(NPacket* packet) :
