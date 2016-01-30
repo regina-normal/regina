@@ -219,6 +219,10 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          * that is returned.  If you wish to edit the triangulation, you
          * should make a new clone and edit the clone instead.
          *
+         * \ifacespython Since Python does not distinguish between const and
+         * non-const, this routine will make a deep copy of the vertex link.
+         * You are free to modify the triangulation that is returned.
+         *
          * @return the read-only triangulated link of the vertex.
          */
         const Dim2Triangulation* buildLink() const;
@@ -270,6 +274,10 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          * Instead this routine returns a pair (triangulation, isomorphism).
          * As a side-effect, the isomorphism will always be constructed
          * (i.e., it is not optional).
+         *
+         * \ifacespython Since Python does not distinguish between const and
+         * non-const, this routine will make a deep copy of the vertex link.
+         * You are free to modify the triangulation that is returned.
          *
          * @return a newly constructed triangulation of the link of this vertex.
          */

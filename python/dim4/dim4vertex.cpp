@@ -58,10 +58,15 @@ namespace {
         return ans;
     }
 
+    regina::NTriangulation* vertex_buildLink(const Dim4Vertex* v) {
+        return new regina::NTriangulation(*(v->buildLink()));
+    }
+
     boost::python::tuple vertex_buildLinkDetail_bool(const Dim4Vertex* v,
             bool labels = true) {
         regina::Dim4Isomorphism* iso;
-        regina::NTriangulation* link = v->buildLinkDetail(labels, &iso);
+        regina::NTriangulation* link = new regina::NTriangulation(
+            *(v->buildLinkDetail(labels, &iso)));
         return make_tuple(
             boost::python::object(boost::python::handle<>(
                 regina::python::to_held_type<>::
@@ -129,7 +134,7 @@ void addDim4Vertex() {
             return_value_policy<reference_existing_object>())
         .def("degree", &Dim4Vertex::degree)
         .def("getDegree", &Dim4Vertex::getDegree)
-        .def("buildLink", &Dim4Vertex::buildLink,
+        .def("buildLink", &vertex_buildLink,
             return_value_policy<to_held_type<>>())
         .def("buildLinkDetail", vertex_buildLinkDetail_void)
         .def("buildLinkDetail", vertex_buildLinkDetail_bool)
