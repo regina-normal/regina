@@ -37,9 +37,11 @@
 #include "generic/triangulation.h"
 #include "maths/nperm5.h" // Specialisation needed for 4-D case.
 #include "../helpers.h"
+#include "../safeheldtype.h"
 #include "../generic/facehelper.h"
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::Simplex;
 
 namespace {
@@ -160,9 +162,9 @@ void addSimplex(const char* name) {
             return_value_policy<reference_existing_object>())
         .def("isolate", &Simplex<dim>::isolate)
         .def("triangulation", &Simplex<dim>::triangulation,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<>>())
         .def("getTriangulation", &Simplex<dim>::getTriangulation,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<>>())
         .def("component", &Simplex<dim>::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Simplex<dim>::getComponent,

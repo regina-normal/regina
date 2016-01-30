@@ -32,13 +32,17 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
 #include "dim4/dim4triangulation.h"
 #include "hypersurface/nnormalhypersurfacelist.h"
 #include "maths/nmatrixint.h"
 #include "progress/nprogresstracker.h"
+#include "../safeheldtype.h"
+
+// Held type must be declared before boost/python.hpp
+#include <boost/python.hpp>
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::HyperCoords;
 using regina::NNormalHypersurfaceList;
 
@@ -72,16 +76,16 @@ void addNNormalHypersurfaceList() {
         return_value_policy<manage_new_object>());
 
     scope s = class_<NNormalHypersurfaceList, bases<regina::NPacket>,
-            std::auto_ptr<NNormalHypersurfaceList>, boost::noncopyable>
+            SafeHeldType<NNormalHypersurfaceList>, boost::noncopyable>
             ("NNormalHypersurfaceList", no_init)
         .def("enumerate", unified_2,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<>>())
         .def("enumerate", unified_3,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<>>())
         .def("enumerate", unified_4,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<>>())
         .def("enumerate", unified_5,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<>>())
         .def("recreateMatchingEquations",
             &NNormalHypersurfaceList::recreateMatchingEquations,
             return_value_policy<manage_new_object>())
@@ -90,7 +94,7 @@ void addNNormalHypersurfaceList() {
         .def("algorithm", &NNormalHypersurfaceList::algorithm)
         .def("isEmbeddedOnly", &NNormalHypersurfaceList::isEmbeddedOnly)
         .def("triangulation", &NNormalHypersurfaceList::triangulation,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<>>())
         .def("size", &NNormalHypersurfaceList::size)
         .def("hypersurface", &NNormalHypersurfaceList::hypersurface,
             return_internal_reference<>())
@@ -100,7 +104,7 @@ void addNNormalHypersurfaceList() {
     s.attr("typeID") = regina::PACKET_NORMALHYPERSURFACELIST;
     s.attr("packetType") = regina::PACKET_NORMALHYPERSURFACELIST;
 
-    implicitly_convertible<std::auto_ptr<NNormalHypersurfaceList>,
-        std::auto_ptr<regina::NPacket> >();
+    implicitly_convertible<SafeHeldType<NNormalHypersurfaceList>,
+        SafeHeldType<regina::NPacket> >();
 }
 

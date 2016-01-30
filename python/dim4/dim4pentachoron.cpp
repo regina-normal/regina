@@ -41,9 +41,11 @@
 #include "dim4/dim4triangulation.h"
 #include "dim4/dim4vertex.h"
 #include "../helpers.h"
+#include "../safeheldtype.h"
 #include "../generic/facehelper.h"
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::Dim4Pentachoron;
 
 void addDim4Pentachoron() {
@@ -68,9 +70,9 @@ void addDim4Pentachoron() {
             return_value_policy<reference_existing_object>())
         .def("isolate", &Dim4Pentachoron::isolate)
         .def("triangulation", &Dim4Pentachoron::triangulation,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<>>())
         .def("getTriangulation", &Dim4Pentachoron::getTriangulation,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<>>())
         .def("component", &Dim4Pentachoron::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim4Pentachoron::getComponent,

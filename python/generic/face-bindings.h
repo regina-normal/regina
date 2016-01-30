@@ -38,9 +38,11 @@
 #include "generic/simplex.h"
 #include "generic/triangulation.h"
 #include "../helpers.h"
+#include "../safeheldtype.h"
 #include "../generic/facehelper.h"
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::Face;
 using regina::FaceEmbedding;
 
@@ -291,9 +293,9 @@ void addFace(const char* name, const char* embName) {
             return_internal_reference<>())
         .def("index", &Face<dim, subdim>::index)
         .def("triangulation", &Face<dim, subdim>::triangulation,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<regina::python::to_held_type<>>())
         .def("getTriangulation", &Face<dim, subdim>::getTriangulation,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<regina::python::to_held_type<>>())
         .def("component", &Face<dim, subdim>::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Face<dim, subdim>::getComponent,

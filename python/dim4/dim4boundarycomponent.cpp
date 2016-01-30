@@ -40,9 +40,11 @@
 #include "dim4/dim4vertex.h"
 #include "triangulation/ntriangulation.h"
 #include "../helpers.h"
+#include "../safeheldtype.h"
 #include "../generic/facehelper.h"
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::Dim4BoundaryComponent;
 
 void addDim4BoundaryComponent() {
@@ -84,7 +86,7 @@ void addDim4BoundaryComponent() {
         .def("getComponent", &Dim4BoundaryComponent::getComponent,
             return_value_policy<reference_existing_object>())
         .def("triangulation", &Dim4BoundaryComponent::triangulation,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<>>())
         .def("isIdeal", &Dim4BoundaryComponent::isIdeal)
         .def("isInvalidVertex", &Dim4BoundaryComponent::isInvalidVertex)
         .def("str", &Dim4BoundaryComponent::str)

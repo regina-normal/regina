@@ -42,9 +42,11 @@
 #include "dim4/dim4vertex.h"
 #include "../globalarray.h"
 #include "../helpers.h"
+#include "../safeheldtype.h"
 #include "../generic/facehelper.h"
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::Dim4Edge;
 using regina::Dim4EdgeEmbedding;
 using regina::Face;
@@ -69,7 +71,7 @@ namespace {
         regina::Dim2Triangulation* link = e->buildLinkDetail(labels, &iso);
         return make_tuple(
             boost::python::object(boost::python::handle<>(
-                boost::python::manage_new_object::
+                regina::python::to_held_type<>::
                 apply<regina::Dim2Triangulation*>::type()(link))),
             boost::python::object(boost::python::handle<>(
                 boost::python::manage_new_object::
@@ -122,9 +124,9 @@ void addDim4Edge() {
             .def("back", &Dim4Edge::back,
                 return_internal_reference<>())
             .def("triangulation", &Dim4Edge::triangulation,
-                return_value_policy<reference_existing_object>())
+                return_value_policy<to_held_type<>>())
             .def("getTriangulation", &Dim4Edge::getTriangulation,
-                return_value_policy<reference_existing_object>())
+                return_value_policy<to_held_type<>>())
             .def("component", &Dim4Edge::component,
                 return_value_policy<reference_existing_object>())
             .def("getComponent", &Dim4Edge::getComponent,
@@ -149,7 +151,7 @@ void addDim4Edge() {
             .def("hasBadIdentification", &Dim4Edge::hasBadIdentification)
             .def("hasBadLink", &Dim4Edge::hasBadLink)
             .def("buildLink", &Dim4Edge::buildLink,
-                return_value_policy<reference_existing_object>())
+                return_value_policy<to_held_type<>>())
             .def("buildLinkDetail", edge_buildLinkDetail_void)
             .def("buildLinkDetail", edge_buildLinkDetail_bool)
             .def("str", &Dim4Edge::str)

@@ -36,8 +36,10 @@
 #include "dim4/dim4isomorphism.h"
 #include "dim4/dim4triangulation.h"
 #include "../helpers.h"
+#include "../safeheldtype.h"
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::Dim4Isomorphism;
 using regina::Isomorphism;
 
@@ -64,7 +66,7 @@ void addDim4Isomorphism() {
         .def("__getitem__", Dim4iso_getItem)
         .def("isIdentity", &Dim4Isomorphism::isIdentity)
         .def("apply", &Dim4Isomorphism::apply,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<>>())
         .def("applyInPlace", &Dim4Isomorphism::applyInPlace)
         .def("random", &Dim4Isomorphism::random,
             return_value_policy<manage_new_object>())

@@ -42,9 +42,11 @@
 #include "dim4/dim4vertex.h"
 #include "../globalarray.h"
 #include "../helpers.h"
+#include "../safeheldtype.h"
 #include "../generic/facehelper.h"
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::Dim4Triangle;
 using regina::Dim4TriangleEmbedding;
 using regina::Face;
@@ -108,9 +110,9 @@ void addDim4Triangle() {
             .def("back", &Dim4Triangle::back,
                 return_internal_reference<>())
             .def("triangulation", &Dim4Triangle::triangulation,
-                return_value_policy<reference_existing_object>())
+                return_value_policy<to_held_type<>>())
             .def("getTriangulation", &Dim4Triangle::getTriangulation,
-                return_value_policy<reference_existing_object>())
+                return_value_policy<to_held_type<>>())
             .def("component", &Dim4Triangle::component,
                 return_value_policy<reference_existing_object>())
             .def("getComponent", &Dim4Triangle::getComponent,

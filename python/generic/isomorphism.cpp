@@ -37,8 +37,10 @@
 #include "generic/triangulation.h"
 #include "maths/nperm5.h" // Specialisation needed for 4-D case.
 #include "../helpers.h"
+#include "../safeheldtype.h"
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::Isomorphism;
 
 namespace {
@@ -69,7 +71,7 @@ void addIsomorphism(const char* name) {
         .def("__getitem__", PyIsoHelper<dim>::iso_getItem)
         .def("isIdentity", &Isomorphism<dim>::isIdentity)
         .def("apply", &Isomorphism<dim>::apply,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<>>())
         .def("applyInPlace", &Isomorphism<dim>::applyInPlace)
         .def("random", &Isomorphism<dim>::random,
             return_value_policy<manage_new_object>())

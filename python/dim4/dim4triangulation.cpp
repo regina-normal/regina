@@ -32,13 +32,17 @@
 
 /* end stub */
 
-#include <boost/python.hpp>
 #include "algebra/ngrouppresentation.h"
 #include "dim4/dim4isomorphism.h"
 #include "dim4/dim4triangulation.h"
+#include "../safeheldtype.h"
 #include "../generic/facehelper.h"
 
+// Held type must be declared before boost/python.hpp
+#include <boost/python.hpp>
+
 using namespace boost::python;
+using namespace regina::python;
 using regina::Dim4Triangulation;
 using regina::Triangulation;
 
@@ -166,7 +170,7 @@ namespace {
 void addDim4Triangulation() {
     {
     scope s = class_<Triangulation<4>, bases<regina::NPacket>,
-            std::auto_ptr<Triangulation<4>>,
+            SafeHeldType<Triangulation<4>>,
             boost::noncopyable>("Triangulation4")
         .def(init<const Dim4Triangulation&>())
         .def(init<const std::string&>())
@@ -332,7 +336,7 @@ void addDim4Triangulation() {
         .def("isoSig", isoSig_void)
         .def("isoSigDetail", isoSig_relabelling)
         .def("fromIsoSig", &Dim4Triangulation::fromIsoSig,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<>>())
         .def("isoSigComponentSize", &Dim4Triangulation::isoSigComponentSize)
         .def("dumpConstruction", &Dim4Triangulation::dumpConstruction)
         .staticmethod("fromIsoSig")
@@ -342,8 +346,8 @@ void addDim4Triangulation() {
     s.attr("typeID") = regina::PACKET_DIM4TRIANGULATION;
     s.attr("packetType") = regina::PACKET_DIM4TRIANGULATION;
 
-    implicitly_convertible<std::auto_ptr<Dim4Triangulation>,
-        std::auto_ptr<regina::NPacket> >();
+    implicitly_convertible<SafeHeldType<Dim4Triangulation>,
+        SafeHeldType<regina::NPacket> >();
     }
 
     scope().attr("Dim4Triangulation") = scope().attr("Triangulation4");

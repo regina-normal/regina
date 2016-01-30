@@ -43,9 +43,11 @@
 #include "dim4/dim4vertex.h"
 #include "../globalarray.h"
 #include "../helpers.h"
+#include "../safeheldtype.h"
 #include "../generic/facehelper.h"
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::Dim4Tetrahedron;
 using regina::Dim4TetrahedronEmbedding;
 using regina::Face;
@@ -104,9 +106,9 @@ void addDim4Tetrahedron() {
         .def("back", &Dim4Tetrahedron::back,
             return_internal_reference<>())
         .def("triangulation", &Dim4Tetrahedron::triangulation,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<>>())
         .def("getTriangulation", &Dim4Tetrahedron::getTriangulation,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<>>())
         .def("component", &Dim4Tetrahedron::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim4Tetrahedron::getComponent,

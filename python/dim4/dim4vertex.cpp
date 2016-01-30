@@ -41,8 +41,10 @@
 #include "triangulation/ntriangulation.h"
 #include "../globalarray.h"
 #include "../helpers.h"
+#include "../safeheldtype.h"
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::Dim4Vertex;
 using regina::Dim4VertexEmbedding;
 using regina::Face;
@@ -62,7 +64,7 @@ namespace {
         regina::NTriangulation* link = v->buildLinkDetail(labels, &iso);
         return make_tuple(
             boost::python::object(boost::python::handle<>(
-                boost::python::manage_new_object::
+                regina::python::to_held_type<>::
                 apply<regina::NTriangulation*>::type()(link))),
             boost::python::object(boost::python::handle<>(
                 boost::python::manage_new_object::
@@ -114,9 +116,9 @@ void addDim4Vertex() {
         .def("back", &Dim4Vertex::back,
             return_internal_reference<>())
         .def("triangulation", &Dim4Vertex::triangulation,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<>>())
         .def("getTriangulation", &Dim4Vertex::getTriangulation,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<>>())
         .def("component", &Dim4Vertex::component,
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim4Vertex::getComponent,
@@ -128,7 +130,7 @@ void addDim4Vertex() {
         .def("degree", &Dim4Vertex::degree)
         .def("getDegree", &Dim4Vertex::getDegree)
         .def("buildLink", &Dim4Vertex::buildLink,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<>>())
         .def("buildLinkDetail", vertex_buildLinkDetail_void)
         .def("buildLinkDetail", vertex_buildLinkDetail_bool)
         .def("isLinkOrientable", &Dim4Vertex::isLinkOrientable)

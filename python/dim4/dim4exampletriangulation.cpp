@@ -37,36 +37,38 @@
 #include "dim4/dim4triangulation.h"
 #include "triangulation/ntriangulation.h"
 #include "../helpers.h"
+#include "../safeheldtype.h"
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::Dim4ExampleTriangulation;
 
 void addDim4ExampleTriangulation() {
     class_<Dim4ExampleTriangulation>("Dim4ExampleTriangulation", no_init)
         .def("fourSphere", &Dim4ExampleTriangulation::fourSphere,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<>>())
         .def("simplicialFourSphere",
             &Dim4ExampleTriangulation::simplicialFourSphere,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<>>())
         .def("rp4", &Dim4ExampleTriangulation::rp4,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<>>())
         .def("s3xs1", &Dim4ExampleTriangulation::s3xs1,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<>>())
         .def("s3xs1Twisted", &Dim4ExampleTriangulation::s3xs1Twisted,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<>>())
         .def("cappellShaneson", &Dim4ExampleTriangulation::cappellShaneson,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<>>())
         .def("doubleCone", &Dim4ExampleTriangulation::doubleCone,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<>>())
         .def("singleCone", &Dim4ExampleTriangulation::singleCone,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<>>())
         .def("iBundle", &Dim4ExampleTriangulation::iBundle,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<>>())
         .def("s1Bundle", &Dim4ExampleTriangulation::s1Bundle,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<>>())
         .def("bundleWithMonodromy",
             &Dim4ExampleTriangulation::bundleWithMonodromy,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<>>())
         .def(regina::python::no_eq_operators())
         .staticmethod("fourSphere")
         .staticmethod("simplicialFourSphere")

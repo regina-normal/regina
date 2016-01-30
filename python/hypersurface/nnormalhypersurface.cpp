@@ -38,8 +38,10 @@
 #include "hypersurface/nnormalhypersurfacelist.h" // for makeZeroVector()
 #include "triangulation/ntriangulation.h"
 #include "../helpers.h"
+#include "../safeheldtype.h"
 
 using namespace boost::python;
+using namespace regina::python;
 using regina::NNormalHypersurface;
 using regina::Dim4Triangulation;
 
@@ -106,7 +108,7 @@ void addNNormalHypersurface() {
         .def("edgeWeight", &NNormalHypersurface::edgeWeight)
         .def("countCoords", &NNormalHypersurface::countCoords)
         .def("triangulation", &NNormalHypersurface::triangulation,
-            return_value_policy<reference_existing_object>())
+            return_value_policy<to_held_type<>>())
         .def("name", &NNormalHypersurface::name,
             return_value_policy<return_by_value>())
         .def("setName", &NNormalHypersurface::setName)
@@ -125,7 +127,7 @@ void addNNormalHypersurface() {
         .def("homology", &NNormalHypersurface::homology,
             return_internal_reference<>())
         .def("triangulate", &NNormalHypersurface::triangulate,
-            return_value_policy<manage_new_object>())
+            return_value_policy<to_held_type<>>())
         .def("sameSurface", &NNormalHypersurface::sameSurface)
         .def("embedded", &NNormalHypersurface::embedded)
         .def("locallyCompatible", &NNormalHypersurface::locallyCompatible)
