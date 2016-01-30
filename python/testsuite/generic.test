@@ -1,0 +1,79 @@
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite Component
+#
+# Copyright (c) 2015, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Provides tests for high-dimensional triangulations.
+#
+# This file is a single component of Regina's python test suite.  To run
+# the python test suite, move to the main python directory in the source
+# tree and run "make check".
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+
+def product1(triClass, dim, permClass):
+    tri = triClass()
+    tri.setLabel(str(dim) + '-D product #1')
+    s = tri.newSimplex()
+    s.joinTo(dim, s, permClass(range(1, dim+1) + [0]))
+    return tri
+
+def product2(triClass, dim, permClass):
+    tri = triClass()
+    tri.setLabel(str(dim) + '-D product #2')
+    s = tri.newSimplex()
+    t = tri.newSimplex()
+    s.joinTo(dim, t, permClass(range(1, dim+1) + [0]))
+    t.joinTo(dim, s, permClass(range(1, dim+1) + [0]))
+    return tri
+
+def dump(tri):
+    print 'Triangulation:', tri.label()
+    print
+    print 'Connected:', tri.isConnected()
+    print 'Orientable:', tri.isOrientable()
+    print 'Oriented:', tri.isOrientable()
+    print 'Boundary facets:', tri.countBoundaryFacets()
+    print
+    print tri.detail()
+
+def testDim(triClass, dim, permClass):
+    dump(product1(triClass, dim, permClass))
+    dump(product2(triClass, dim, permClass))
+
+#testDim(Triangulation2, 2, NPerm3)
+#testDim(Triangulation3, 3, NPerm4)
+#testDim(Triangulation4, 4, NPerm5)
+testDim(Triangulation5, 5, NPerm6)
+testDim(Triangulation6, 6, NPerm7)
+testDim(Triangulation7, 7, NPerm8)
+testDim(Triangulation8, 8, NPerm9)
+testDim(Triangulation9, 9, NPerm10)
+testDim(Triangulation10, 10, NPerm11)
+testDim(Triangulation11, 11, NPerm12)
+testDim(Triangulation12, 12, NPerm13)
+testDim(Triangulation13, 13, NPerm14)
+testDim(Triangulation14, 14, NPerm15)
+testDim(Triangulation15, 15, NPerm16)
+

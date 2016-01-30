@@ -1,0 +1,363 @@
+Triangulation: 5-D product #1
+
+Connected: True
+Orientable: True
+Oriented: True
+Boundary facets: 4
+
+Triangulation with 1 5-simplex
+
+f-vector: 1, 5, 10, 10, 5, 1
+
+  Simplex  |  glued to:     (01234)     (01235)     (01245)     (01345)     (02345)     (12345)
+  ---------+-----------------------------------------------------------------------------------
+        0  |              0 (12345)    boundary    boundary    boundary    boundary   0 (01234)
+
+
+Triangulation: 5-D product #2
+
+Connected: True
+Orientable: True
+Oriented: True
+Boundary facets: 8
+
+Triangulation with 2 5-simplices
+
+f-vector: 2, 10, 20, 20, 10, 2
+
+  Simplex  |  glued to:     (01234)     (01235)     (01245)     (01345)     (02345)     (12345)
+  ---------+-----------------------------------------------------------------------------------
+        0  |              1 (12345)    boundary    boundary    boundary    boundary   1 (01234)
+        1  |              0 (12345)    boundary    boundary    boundary    boundary   0 (01234)
+
+
+Triangulation: 6-D product #1
+
+Connected: True
+Orientable: False
+Oriented: False
+Boundary facets: 5
+
+Triangulation with 1 6-simplex
+
+f-vector: 1, 6, 15, 20, 15, 6, 1
+
+  Simplex  |  glued to:     (012345)     (012346)     (012356)     (012456)     (013456)     (023456)     (123456)
+  ---------+------------------------------------------------------------------------------------------------------
+        0  |              0 (123456)     boundary     boundary     boundary     boundary     boundary   0 (012345)
+
+
+Triangulation: 6-D product #2
+
+Connected: True
+Orientable: True
+Oriented: True
+Boundary facets: 10
+
+Triangulation with 2 6-simplices
+
+f-vector: 2, 12, 30, 40, 30, 12, 2
+
+  Simplex  |  glued to:     (012345)     (012346)     (012356)     (012456)     (013456)     (023456)     (123456)
+  ---------+------------------------------------------------------------------------------------------------------
+        0  |              1 (123456)     boundary     boundary     boundary     boundary     boundary   1 (012345)
+        1  |              0 (123456)     boundary     boundary     boundary     boundary     boundary   0 (012345)
+
+
+Triangulation: 7-D product #1
+
+Connected: True
+Orientable: True
+Oriented: True
+Boundary facets: 6
+
+Triangulation with 1 7-simplex
+
+f-vector: 1, 7, 21, 35, 35, 21, 7, 1
+
+  Simplex  |  glued to:     (0123456)     (0123457)     (0123467)     (0123567)     (0124567)     (0134567)     (0234567)     (1234567)
+  ---------+---------------------------------------------------------------------------------------------------------------------------
+        0  |              0 (1234567)      boundary      boundary      boundary      boundary      boundary      boundary   0 (0123456)
+
+
+Triangulation: 7-D product #2
+
+Connected: True
+Orientable: True
+Oriented: True
+Boundary facets: 12
+
+Triangulation with 2 7-simplices
+
+f-vector: 2, 14, 42, 70, 70, 42, 14, 2
+
+  Simplex  |  glued to:     (0123456)     (0123457)     (0123467)     (0123567)     (0124567)     (0134567)     (0234567)     (1234567)
+  ---------+---------------------------------------------------------------------------------------------------------------------------
+        0  |              1 (1234567)      boundary      boundary      boundary      boundary      boundary      boundary   1 (0123456)
+        1  |              0 (1234567)      boundary      boundary      boundary      boundary      boundary      boundary   0 (0123456)
+
+
+Triangulation: 8-D product #1
+
+Connected: True
+Orientable: False
+Oriented: False
+Boundary facets: 7
+
+Triangulation with 1 8-simplex
+
+f-vector: 1, 8, 28, 56, 70, 56, 28, 8, 1
+
+  Simplex  |  glued to:     (01234567)     (01234568)     (01234578)     (01234678)     (01235678)     (01245678)     (01345678)     (02345678)     (12345678)
+  ---------+--------------------------------------------------------------------------------------------------------------------------------------------------
+        0  |              0 (12345678)       boundary       boundary       boundary       boundary       boundary       boundary       boundary   0 (01234567)
+
+
+Triangulation: 8-D product #2
+
+Connected: True
+Orientable: True
+Oriented: True
+Boundary facets: 14
+
+Triangulation with 2 8-simplices
+
+f-vector: 2, 16, 56, 112, 140, 112, 56, 16, 2
+
+  Simplex  |  glued to:     (01234567)     (01234568)     (01234578)     (01234678)     (01235678)     (01245678)     (01345678)     (02345678)     (12345678)
+  ---------+--------------------------------------------------------------------------------------------------------------------------------------------------
+        0  |              1 (12345678)       boundary       boundary       boundary       boundary       boundary       boundary       boundary   1 (01234567)
+        1  |              0 (12345678)       boundary       boundary       boundary       boundary       boundary       boundary       boundary   0 (01234567)
+
+
+Triangulation: 9-D product #1
+
+Connected: True
+Orientable: True
+Oriented: True
+Boundary facets: 8
+
+Triangulation with 1 9-simplex
+
+f-vector: 1, 9, 36, 84, 126, 126, 84, 36, 9, 1
+
+  Simplex  |  glued to:     (012345678)     (012345679)     (012345689)     (012345789)     (012346789)     (012356789)     (012456789)     (013456789)     (023456789)     (123456789)
+  ---------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        0  |              0 (123456789)        boundary        boundary        boundary        boundary        boundary        boundary        boundary        boundary   0 (012345678)
+
+
+Triangulation: 9-D product #2
+
+Connected: True
+Orientable: True
+Oriented: True
+Boundary facets: 16
+
+Triangulation with 2 9-simplices
+
+f-vector: 2, 18, 72, 168, 252, 252, 168, 72, 18, 2
+
+  Simplex  |  glued to:     (012345678)     (012345679)     (012345689)     (012345789)     (012346789)     (012356789)     (012456789)     (013456789)     (023456789)     (123456789)
+  ---------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        0  |              1 (123456789)        boundary        boundary        boundary        boundary        boundary        boundary        boundary        boundary   1 (012345678)
+        1  |              0 (123456789)        boundary        boundary        boundary        boundary        boundary        boundary        boundary        boundary   0 (012345678)
+
+
+Triangulation: 10-D product #1
+
+Connected: True
+Orientable: False
+Oriented: False
+Boundary facets: 9
+
+Triangulation with 1 10-simplex
+
+f-vector: 1, 10, 45, 120, 210, 252, 210, 120, 45, 10, 1
+
+  Simplex  |  glued to:     (0123456789)     (012345678a)     (012345679a)     (012345689a)     (012345789a)     (012346789a)     (012356789a)     (012456789a)     (013456789a)     (023456789a)     (123456789a)
+  ---------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        0  |              0 (123456789a)         boundary         boundary         boundary         boundary         boundary         boundary         boundary         boundary         boundary   0 (0123456789)
+
+
+Triangulation: 10-D product #2
+
+Connected: True
+Orientable: True
+Oriented: True
+Boundary facets: 18
+
+Triangulation with 2 10-simplices
+
+f-vector: 2, 20, 90, 240, 420, 504, 420, 240, 90, 20, 2
+
+  Simplex  |  glued to:     (0123456789)     (012345678a)     (012345679a)     (012345689a)     (012345789a)     (012346789a)     (012356789a)     (012456789a)     (013456789a)     (023456789a)     (123456789a)
+  ---------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        0  |              1 (123456789a)         boundary         boundary         boundary         boundary         boundary         boundary         boundary         boundary         boundary   1 (0123456789)
+        1  |              0 (123456789a)         boundary         boundary         boundary         boundary         boundary         boundary         boundary         boundary         boundary   0 (0123456789)
+
+
+Triangulation: 11-D product #1
+
+Connected: True
+Orientable: True
+Oriented: True
+Boundary facets: 10
+
+Triangulation with 1 11-simplex
+
+f-vector: 1, 11, 55, 165, 330, 462, 462, 330, 165, 55, 11, 1
+
+  Simplex  |  glued to:     (0123456789a)     (0123456789b)     (012345678ab)     (012345679ab)     (012345689ab)     (012345789ab)     (012346789ab)     (012356789ab)     (012456789ab)     (013456789ab)     (023456789ab)     (123456789ab)
+  ---------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        0  |              0 (123456789ab)          boundary          boundary          boundary          boundary          boundary          boundary          boundary          boundary          boundary          boundary   0 (0123456789a)
+
+
+Triangulation: 11-D product #2
+
+Connected: True
+Orientable: True
+Oriented: True
+Boundary facets: 20
+
+Triangulation with 2 11-simplices
+
+f-vector: 2, 22, 110, 330, 660, 924, 924, 660, 330, 110, 22, 2
+
+  Simplex  |  glued to:     (0123456789a)     (0123456789b)     (012345678ab)     (012345679ab)     (012345689ab)     (012345789ab)     (012346789ab)     (012356789ab)     (012456789ab)     (013456789ab)     (023456789ab)     (123456789ab)
+  ---------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        0  |              1 (123456789ab)          boundary          boundary          boundary          boundary          boundary          boundary          boundary          boundary          boundary          boundary   1 (0123456789a)
+        1  |              0 (123456789ab)          boundary          boundary          boundary          boundary          boundary          boundary          boundary          boundary          boundary          boundary   0 (0123456789a)
+
+
+Triangulation: 12-D product #1
+
+Connected: True
+Orientable: False
+Oriented: False
+Boundary facets: 11
+
+Triangulation with 1 12-simplex
+
+f-vector: 1, 12, 66, 220, 495, 792, 924, 792, 495, 220, 66, 12, 1
+
+  Simplex  |  glued to:     (0123456789ab)     (0123456789ac)     (0123456789bc)     (012345678abc)     (012345679abc)     (012345689abc)     (012345789abc)     (012346789abc)     (012356789abc)     (012456789abc)     (013456789abc)     (023456789abc)     (123456789abc)
+  ---------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        0  |              0 (123456789abc)           boundary           boundary           boundary           boundary           boundary           boundary           boundary           boundary           boundary           boundary           boundary   0 (0123456789ab)
+
+
+Triangulation: 12-D product #2
+
+Connected: True
+Orientable: True
+Oriented: True
+Boundary facets: 22
+
+Triangulation with 2 12-simplices
+
+f-vector: 2, 24, 132, 440, 990, 1584, 1848, 1584, 990, 440, 132, 24, 2
+
+  Simplex  |  glued to:     (0123456789ab)     (0123456789ac)     (0123456789bc)     (012345678abc)     (012345679abc)     (012345689abc)     (012345789abc)     (012346789abc)     (012356789abc)     (012456789abc)     (013456789abc)     (023456789abc)     (123456789abc)
+  ---------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        0  |              1 (123456789abc)           boundary           boundary           boundary           boundary           boundary           boundary           boundary           boundary           boundary           boundary           boundary   1 (0123456789ab)
+        1  |              0 (123456789abc)           boundary           boundary           boundary           boundary           boundary           boundary           boundary           boundary           boundary           boundary           boundary   0 (0123456789ab)
+
+
+Triangulation: 13-D product #1
+
+Connected: True
+Orientable: True
+Oriented: True
+Boundary facets: 12
+
+Triangulation with 1 13-simplex
+
+f-vector: 1, 13, 78, 286, 715, 1287, 1716, 1716, 1287, 715, 286, 78, 13, 1
+
+  Simplex  |  glued to:     (0123456789abc)     (0123456789abd)     (0123456789acd)     (0123456789bcd)     (012345678abcd)     (012345679abcd)     (012345689abcd)     (012345789abcd)     (012346789abcd)     (012356789abcd)     (012456789abcd)     (013456789abcd)     (023456789abcd)     (123456789abcd)
+  ---------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        0  |              0 (123456789abcd)            boundary            boundary            boundary            boundary            boundary            boundary            boundary            boundary            boundary            boundary            boundary            boundary   0 (0123456789abc)
+
+
+Triangulation: 13-D product #2
+
+Connected: True
+Orientable: True
+Oriented: True
+Boundary facets: 24
+
+Triangulation with 2 13-simplices
+
+f-vector: 2, 26, 156, 572, 1430, 2574, 3432, 3432, 2574, 1430, 572, 156, 26, 2
+
+  Simplex  |  glued to:     (0123456789abc)     (0123456789abd)     (0123456789acd)     (0123456789bcd)     (012345678abcd)     (012345679abcd)     (012345689abcd)     (012345789abcd)     (012346789abcd)     (012356789abcd)     (012456789abcd)     (013456789abcd)     (023456789abcd)     (123456789abcd)
+  ---------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        0  |              1 (123456789abcd)            boundary            boundary            boundary            boundary            boundary            boundary            boundary            boundary            boundary            boundary            boundary            boundary   1 (0123456789abc)
+        1  |              0 (123456789abcd)            boundary            boundary            boundary            boundary            boundary            boundary            boundary            boundary            boundary            boundary            boundary            boundary   0 (0123456789abc)
+
+
+Triangulation: 14-D product #1
+
+Connected: True
+Orientable: False
+Oriented: False
+Boundary facets: 13
+
+Triangulation with 1 14-simplex
+
+f-vector: 1, 14, 91, 364, 1001, 2002, 3003, 3432, 3003, 2002, 1001, 364, 91, 14, 1
+
+  Simplex  |  glued to:     (0123456789abcd)     (0123456789abce)     (0123456789abde)     (0123456789acde)     (0123456789bcde)     (012345678abcde)     (012345679abcde)     (012345689abcde)     (012345789abcde)     (012346789abcde)     (012356789abcde)     (012456789abcde)     (013456789abcde)     (023456789abcde)     (123456789abcde)
+  ---------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        0  |              0 (123456789abcde)             boundary             boundary             boundary             boundary             boundary             boundary             boundary             boundary             boundary             boundary             boundary             boundary             boundary   0 (0123456789abcd)
+
+
+Triangulation: 14-D product #2
+
+Connected: True
+Orientable: True
+Oriented: True
+Boundary facets: 26
+
+Triangulation with 2 14-simplices
+
+f-vector: 2, 28, 182, 728, 2002, 4004, 6006, 6864, 6006, 4004, 2002, 728, 182, 28, 2
+
+  Simplex  |  glued to:     (0123456789abcd)     (0123456789abce)     (0123456789abde)     (0123456789acde)     (0123456789bcde)     (012345678abcde)     (012345679abcde)     (012345689abcde)     (012345789abcde)     (012346789abcde)     (012356789abcde)     (012456789abcde)     (013456789abcde)     (023456789abcde)     (123456789abcde)
+  ---------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        0  |              1 (123456789abcde)             boundary             boundary             boundary             boundary             boundary             boundary             boundary             boundary             boundary             boundary             boundary             boundary             boundary   1 (0123456789abcd)
+        1  |              0 (123456789abcde)             boundary             boundary             boundary             boundary             boundary             boundary             boundary             boundary             boundary             boundary             boundary             boundary             boundary   0 (0123456789abcd)
+
+
+Triangulation: 15-D product #1
+
+Connected: True
+Orientable: True
+Oriented: True
+Boundary facets: 14
+
+Triangulation with 1 15-simplex
+
+f-vector: 1, 15, 105, 455, 1365, 3003, 5005, 6435, 6435, 5005, 3003, 1365, 455, 105, 15, 1
+
+  Simplex  |  glued to:     (0123456789abcde)     (0123456789abcdf)     (0123456789abcef)     (0123456789abdef)     (0123456789acdef)     (0123456789bcdef)     (012345678abcdef)     (012345679abcdef)     (012345689abcdef)     (012345789abcdef)     (012346789abcdef)     (012356789abcdef)     (012456789abcdef)     (013456789abcdef)     (023456789abcdef)     (123456789abcdef)
+  ---------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        0  |              0 (123456789abcdef)              boundary              boundary              boundary              boundary              boundary              boundary              boundary              boundary              boundary              boundary              boundary              boundary              boundary              boundary   0 (0123456789abcde)
+
+
+Triangulation: 15-D product #2
+
+Connected: True
+Orientable: True
+Oriented: True
+Boundary facets: 28
+
+Triangulation with 2 15-simplices
+
+f-vector: 2, 30, 210, 910, 2730, 6006, 10010, 12870, 12870, 10010, 6006, 2730, 910, 210, 30, 2
+
+  Simplex  |  glued to:     (0123456789abcde)     (0123456789abcdf)     (0123456789abcef)     (0123456789abdef)     (0123456789acdef)     (0123456789bcdef)     (012345678abcdef)     (012345679abcdef)     (012345689abcdef)     (012345789abcdef)     (012346789abcdef)     (012356789abcdef)     (012456789abcdef)     (013456789abcdef)     (023456789abcdef)     (123456789abcdef)
+  ---------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        0  |              1 (123456789abcdef)              boundary              boundary              boundary              boundary              boundary              boundary              boundary              boundary              boundary              boundary              boundary              boundary              boundary              boundary   1 (0123456789abcde)
+        1  |              0 (123456789abcdef)              boundary              boundary              boundary              boundary              boundary              boundary              boundary              boundary              boundary              boundary              boundary              boundary              boundary              boundary   0 (0123456789abcde)
+
+
