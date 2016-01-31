@@ -181,14 +181,18 @@ void raiseExpiredException(const std::type_info&);
 namespace regina {
 namespace python {
 
-template<class T> SafeHeldType<T>::SafeHeldType(T* t)
-    : regina::SafePtr<T>(t) { }
+template<class T>
+inline SafeHeldType<T>::SafeHeldType(T* t) : regina::SafePtr<T>(t) {
+}
 
-template<class T> template<class Y>
-SafeHeldType<T>::SafeHeldType(const SafeHeldType<Y> &other)
-    : regina::SafePtr<T>(other) { }
+template<class T>
+template<class Y>
+inline SafeHeldType<T>::SafeHeldType(const SafeHeldType<Y> &other)
+    : regina::SafePtr<T>(other) {
+}
 
-template<class T> T* SafeHeldType<T>::get() const {
+template<class T>
+inline T* SafeHeldType<T>::get() const {
     T* t = regina::SafePtr<T>::get();
     if (t == 0) {
         raiseExpiredException(typeid(T));
