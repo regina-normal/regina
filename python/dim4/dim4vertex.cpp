@@ -67,7 +67,7 @@ namespace {
         regina::Dim4Isomorphism* iso;
         regina::NTriangulation* link = new regina::NTriangulation(
             *(v->buildLinkDetail(labels, &iso)));
-        return make_tuple(
+        return boost::python::make_tuple(
             boost::python::object(boost::python::handle<>(
                 regina::python::to_held_type<>::
                 apply<regina::NTriangulation*>::type()(link))),

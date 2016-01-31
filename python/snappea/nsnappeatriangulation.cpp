@@ -57,7 +57,7 @@ namespace {
     boost::python::tuple volume_precision(const NSnapPeaTriangulation& t) {
         int precision;
         double volume = t.volume(precision);
-        return make_tuple(volume, precision);
+        return boost::python::make_tuple(volume, precision);
     }
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_fundamentalGroupFilled,

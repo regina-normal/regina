@@ -70,7 +70,7 @@ namespace {
         boost::python::list ans;
         for (std::vector<std::pair<NLargeInteger, unsigned long> >::
                 const_iterator it = factors.begin(); it != factors.end(); ++it)
-            ans.append(make_tuple(it->first, it->second));
+            ans.append(boost::python::make_tuple(it->first, it->second));
         return ans;
     }
 
@@ -81,7 +81,8 @@ namespace {
         boost::python::list ans;
         for (std::vector<std::pair<NLargeInteger, unsigned long> >::
                 const_iterator it = factors.begin(); it != factors.end(); ++it)
-            ans.append(make_tuple(it->first.longValue(), it->second));
+            ans.append(boost::python::make_tuple(
+                it->first.longValue(), it->second));
         return ans;
     }
 }

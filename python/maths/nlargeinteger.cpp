@@ -56,7 +56,7 @@ namespace {
             const NLargeInteger& divisor) {
         NLargeInteger remainder;
         NLargeInteger quotient = n.divisionAlg(divisor, remainder);
-        return make_tuple(quotient, remainder);
+        return boost::python::make_tuple(quotient, remainder);
     }
 }
 

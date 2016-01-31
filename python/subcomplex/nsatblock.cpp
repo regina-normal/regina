@@ -53,7 +53,8 @@ namespace {
         b.nextBoundaryAnnulus(a, nextBlock, nextAnnulus, refVert, refHoriz,
             fromPrev);
 
-        return make_tuple(ptr(nextBlock), nextAnnulus, refVert, refHoriz);
+        return boost::python::make_tuple(
+            ptr(nextBlock), nextAnnulus, refVert, refHoriz);
     }
     void writeAbbr_stdio(const NSatBlock& b, bool tex = false) {
         b.writeAbbr(std::cout, tex);

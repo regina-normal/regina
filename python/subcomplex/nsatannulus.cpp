@@ -67,7 +67,7 @@ namespace {
         bool refHoriz = false;
         bool ans = a.isAdjacent(other, &refVert, &refHoriz);
 
-        return make_tuple(ans, refVert, refHoriz);
+        return boost::python::make_tuple(ans, refVert, refHoriz);
     }
 }
 

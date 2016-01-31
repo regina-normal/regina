@@ -115,7 +115,7 @@ namespace {
     boost::python::tuple isThinEdgeLink_tuple(const NNormalSurface& s) {
         std::pair<const regina::NEdge*, const regina::NEdge*> ans =
             s.isThinEdgeLink();
-        return make_tuple(boost::python::ptr(ans.first),
+        return boost::python::make_tuple(boost::python::ptr(ans.first),
             boost::python::ptr(ans.second));
     }
 

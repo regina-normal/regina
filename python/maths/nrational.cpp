@@ -48,7 +48,7 @@ namespace {
     boost::python::tuple doubleApprox_bool(const NRational& r) {
         bool inRange;
         double ans = r.doubleApprox(&inRange);
-        return make_tuple(ans, inRange);
+        return boost::python::make_tuple(ans, inRange);
     }
 
     void writeTeX_stdio(const NRational& r) {

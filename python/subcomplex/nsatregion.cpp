@@ -52,7 +52,8 @@ namespace {
 
         r.boundaryAnnulus(which, block, annulus, blockRefVert, blockRefHoriz);
 
-        return make_tuple(ptr(block), annulus, blockRefVert, blockRefHoriz);
+        return boost::python::make_tuple(
+            ptr(block), annulus, blockRefVert, blockRefHoriz);
     }
 
     regina::NSFSpace* (NSatRegion::*createSFS_bool)(bool) const =
