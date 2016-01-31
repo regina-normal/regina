@@ -1,7 +1,7 @@
 example$ regina-python
-Regina 4.95
-Software for 3-manifold topology and normal surface theory
-Copyright (c) 1999-2013, The Regina development team
+Regina 5.0
+Software for 3-manifolds, 4-manifolds and normal surface theory
+Copyright (c) 1999-2015, The Regina development team
 &gt;&gt;&gt; ################################
 ... #
 ... #  Sample Python Script
@@ -21,7 +21,7 @@ Copyright (c) 1999-2013, The Regina development team
 ... # triangulation here.
 ... sig = 'sfLfvQvwwMQQQccjghjkmqlonrnrqpqrnsnksaisnrobocksks'
 &gt;&gt;&gt; tri = NTriangulation(sig)
-&gt;&gt;&gt; print tri.countTetrahedra(), 'tetrahedra'
+&gt;&gt;&gt; print tri.size(), 'tetrahedra'
 18 tetrahedra
 &gt;&gt;&gt; 
 &gt;&gt;&gt; # Create a progress tracker to use during the normal surface enumeration.
@@ -42,14 +42,11 @@ Copyright (c) 1999-2013, The Regina development team
 ...     print 'Progress:', tracker.percent(), '%'
 ...     time.sleep(0.5)
 ... 
-Progress: 0.0 %
-Progress: 31.8218994141 %
-Progress: 44.7033691406 %
-Progress: 59.3591308594 %
-Progress: 79.1180419922 %
-Progress: 90.4166666667 %
+Progress: 0.774536132812 %
+Progress: 51.85546875 %
+Progress: 89.0057373047 %
 &gt;&gt;&gt; 
 &gt;&gt;&gt; # The surface enumeration is now complete.
-... print surfaces.countSurfaces(), 'normal surfaces'
+... print surfaces.size(), 'normal surfaces'
 2319 normal surfaces
 &gt;&gt;&gt;

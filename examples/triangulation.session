@@ -1,7 +1,7 @@
 example$ regina-python
-Regina 4.96
-Software for 3-manifold topology and normal surface theory
-Copyright (c) 1999-2013, The Regina development team
+Regina 5.0
+Software for 3-manifolds, 4-manifolds and normal surface theory
+Copyright (c) 1999-2015, The Regina development team
 >>> ################################
 ... #
 ... #  Sample Python Script
@@ -18,7 +18,7 @@ Copyright (c) 1999-2013, The Regina development team
 ... # triangulation of a solid torus.
 ... t = NTriangulation()
 >>> t.insertLayeredSolidTorus(3,4)
-<regina.engine.NTetrahedron object at 0x10c5221a0>
+<regina.engine.Simplex3 object at 0x11396e6e0>
 >>> print t
 Triangulation with 3 tetrahedra
 >>> 
@@ -63,7 +63,7 @@ Triangles:
 >>> # Calculate some algebraic properties of the triangulation.
 ... print t.homology()
 Z
->>> print t.homologyH1Bdry()
+>>> print t.homologyBdry()
 2 Z
 >>> 
 >>> # Test for 0-efficiency, which asks Regina to search for certain types
@@ -101,7 +101,7 @@ Number of surfaces is 9
 
 >>> 
 >>> # Print the Euler characteristic and orientability of each surface.
-... for i in range(surfaces.countSurfaces()):
+... for i in range(surfaces.size()):
 ...     s = surfaces.surface(i)
 ...     print "Chi =", s.eulerChar(), "; Or =", s.isOrientable()
 ... 
@@ -116,8 +116,8 @@ Chi = -1 ; Or = False
 Chi = 1 ; Or = True
 >>> 
 >>> # List all surfaces with more than one quad in the first tetrahedron.
-... for i in range(surfaces.countSurfaces()):
-...     s = surfaces.urface(i)
+... for i in range(surfaces.size()):
+...     s = surfaces.surface(i)
 ...     if s.quads(0,0) + s.quads(0,1) + s.quads(0,2) > 1:
 ...         print s
 ... 

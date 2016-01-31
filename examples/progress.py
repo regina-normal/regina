@@ -39,5 +39,5 @@ while not tracker.isFinished():
 
 
 # The surface enumeration is now complete.
-print surfaces.countSurfaces(), 'normal surfaces'
+print surfaces.size(), 'normal surfaces'
 

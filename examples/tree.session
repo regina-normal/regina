@@ -1,7 +1,7 @@
 example$ regina-python
-Regina 4.95
-Software for 3-manifold topology and normal surface theory
-Copyright (c) 1999-2013, The Regina development team
+Regina 5.0
+Software for 3-manifolds, 4-manifolds and normal surface theory
+Copyright (c) 1999-2015, The Regina development team
 >>> ################################
 ... #
 ... #  Sample Python Script
@@ -52,12 +52,6 @@ Item 16: Z_2
 ...         tri.makeOrphan()
 ...     tri = next
 ... 
-<regina.engine.NTriangulation object at 0x1088396e0>
-<regina.engine.NTriangulation object at 0x108839670>
-<regina.engine.NTriangulation object at 0x1088397c0>
-<regina.engine.NTriangulation object at 0x108839520>
-<regina.engine.NTriangulation object at 0x108839750>
-<regina.engine.NTriangulation object at 0x108839670>
 >>> 
 >>> # Print the homology of each remaining triangulation.
 ... tri = census.firstChild()
@@ -75,5 +69,4 @@ Item 12: Z_3
 Item 14: Z_3
 Item 15: 2 Z_2
 Item 16: Z_2
->>> 
-
+>>>
