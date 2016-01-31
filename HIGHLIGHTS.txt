@@ -6,7 +6,7 @@ Regina - A Normal Surface Theory Calculator
     For a full list of changes, including all changes to the C++/Python API,
     see the file CHANGES.txt.
 
-Version 4.97  [ (under development) ]
+Version 5.0  [ (under development) ]
 
     Features:
         - Supports high-resolution displays (e.g., Macs with retina displays).

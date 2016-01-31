@@ -3,7 +3,7 @@
   <!ENTITY regina "<application>Regina</application>">
   <!ENTITY kappname "&regina;">
 
-  <!ENTITY regversion "4.97">
+  <!ENTITY regversion "5.0">
   <!ENTITY regdate "29 August 2014">
   <!ENTITY copyrightyears "1999&ndash;2014">
   <!ENTITY copyrightholder "The Regina development team">
@@ -203,7 +203,7 @@
   </legalnotice>
 
   <date>2014-08-29</date>
-  <releaseinfo>4.97</releaseinfo>
+  <releaseinfo>5.0</releaseinfo>
 
   <abstract>
    &regabstract;

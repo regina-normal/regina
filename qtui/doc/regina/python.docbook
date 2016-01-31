@@ -428,7 +428,7 @@
   </para>
   <programlisting>
 bab@ember:~$ regina-python 
-Regina 4.97
+Regina 5.0
 Software for 3-manifold topology and normal surface theory
 Copyright (c) 1999-2015, The Regina development team
 &gt;&gt;&gt; import snappy
