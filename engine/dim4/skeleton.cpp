@@ -148,7 +148,7 @@ void Dim4Triangulation::calculateBoundary() {
             // Run through the vertices and edges on this tetrahedron.
             for (i = 0; i < 5; ++i)
                 if (i != facet) {
-                    vertex = pent->SimplexFaces<4, 0>::face_[i];
+                    vertex = pent->regina::detail::SimplexFaces<4, 0>::face_[i];
                     if (vertex->boundaryComponent_ != label)
                         vertex->boundaryComponent_ = label;
                 }
@@ -160,7 +160,7 @@ void Dim4Triangulation::calculateBoundary() {
                     if (j == facet)
                         continue;
 
-                    edge = pent->SimplexFaces<4, 1>::face_[
+                    edge = pent->regina::detail::SimplexFaces<4, 1>::face_[
                         Dim4Edge::edgeNumber[i][j]];
                     if (edge->boundaryComponent_ != label)
                         edge->boundaryComponent_ = label;
@@ -175,7 +175,7 @@ void Dim4Triangulation::calculateBoundary() {
 
                 // Examine the triangle opposite vertices (i, facet).  This is
                 // the triangle opposite the edge joining vertices (i, facet).
-                tri = pent->SimplexFaces<4, 2>::face_[
+                tri = pent->regina::detail::SimplexFaces<4, 2>::face_[
                     Dim4Edge::edgeNumber[i][facet]];
                 if (! tri->boundaryComponent_)
                     tri->boundaryComponent_ = label;
@@ -193,7 +193,7 @@ void Dim4Triangulation::calculateBoundary() {
 
                     adjPent = triEmb.pentachoron();
                     adjFacet = triEmb.vertices()[3];
-                    adjTet = adjPent->SimplexFaces<4, 3>::face_[adjFacet];
+                    adjTet = adjPent->regina::detail::SimplexFaces<4, 3>::face_[adjFacet];
                     j = triEmb.vertices()[4];
                 } else {
                     // We must be looking at the embedding at the back
@@ -201,7 +201,7 @@ void Dim4Triangulation::calculateBoundary() {
                     // already stored in triEmb).
                     adjPent = triEmb.pentachoron();
                     adjFacet = triEmb.vertices()[4];
-                    adjTet = adjPent->SimplexFaces<4, 3>::face_[adjFacet];
+                    adjTet = adjPent->regina::detail::SimplexFaces<4, 3>::face_[adjFacet];
                     j = triEmb.vertices()[3];
 
                     // TODO: Sanity checking; remove this eventually.
@@ -223,12 +223,12 @@ void Dim4Triangulation::calculateBoundary() {
                     // We might have the same tetrahedron joined to
                     // itself; make sure we only glue in one direction.
                     if (! bdryTet->adjacentTetrahedron(
-                            pent->SimplexFaces<4, 3>::mapping_[facet].
+                            pent->regina::detail::SimplexFaces<4, 3>::mapping_[facet].
                             preImageOf(i))) {
                         // Glue away.
-                        tetTri = pent->SimplexFaces<4, 3>::mapping_[facet].
+                        tetTri = pent->regina::detail::SimplexFaces<4, 3>::mapping_[facet].
                             preImageOf(i);
-                        adjTetTri = adjPent->SimplexFaces<4, 3>::mapping_
+                        adjTetTri = adjPent->regina::detail::SimplexFaces<4, 3>::mapping_
                             [adjFacet].preImageOf(j);
 
                         bdryTet->join(tetTri, adjBdryTet,
@@ -329,13 +329,13 @@ void Dim4Triangulation::calculateVertexLinks() {
                 // tetrahedron.  Make the gluing.
                 adjVertexIdx = pent->adjacentGluing(exitFacet)[vertexIdx];
                 tet[index]->join(
-                    pent->SimplexFaces<4, 3>::mapping_[vertexIdx].
+                    pent->regina::detail::SimplexFaces<4, 3>::mapping_[vertexIdx].
                         preImageOf(exitFacet),
                     tet[5 * adjPentIdx + adjVertexIdx],
-                    perm5to4(adjPent->SimplexFaces<4, 3>::mapping_
+                    perm5to4(adjPent->regina::detail::SimplexFaces<4, 3>::mapping_
                             [adjVertexIdx].inverse() *
                         pent->adjacentGluing(exitFacet) *
-                        pent->SimplexFaces<4, 3>::mapping_[vertexIdx]));
+                        pent->regina::detail::SimplexFaces<4, 3>::mapping_[vertexIdx]));
             }
             ++index;
         }
@@ -412,11 +412,11 @@ void Dim4Triangulation::calculateVertexLinks() {
                     // and one of the endpoints of the edge (vemb.vertex()).
                     // Find the other endpoint of the edge.
                     int otherEnd = vemb.pentachoron()->
-                        SimplexFaces<4, 3>::mapping_
+                        regina::detail::SimplexFaces<4, 3>::mapping_
                         [vemb.vertex()][linkemb.vertex()];
 
                     // Got it!
-                    vemb.pentachoron()->SimplexFaces<4, 1>::face_[
+                    vemb.pentachoron()->regina::detail::SimplexFaces<4, 1>::face_[
                         Dim4Edge::edgeNumber[vemb.vertex()][otherEnd]
                         ]->markBadLink();
                 }
