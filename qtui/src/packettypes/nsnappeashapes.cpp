@@ -378,6 +378,9 @@ void NSnapPeaShapesUI::refresh() {
     header->setText(0, tr("Tet #"));
     header->setText(1, tr("Real"));
     header->setText(2, tr("Imag"));
+    header->setToolTip(0, tr("The tetrahedron number"));
+    header->setToolTip(1, tr("The real part of the complex shape parameter"));
+    header->setToolTip(2, tr("The imaginary part of the complex shape parameter"));
     header->setTextAlignment(0, Qt::AlignCenter);
     header->setTextAlignment(1, Qt::AlignCenter);
     header->setTextAlignment(2, Qt::AlignCenter);
