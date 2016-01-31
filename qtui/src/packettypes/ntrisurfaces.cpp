@@ -54,6 +54,11 @@
 #define HAKEN_AUTO_CALC_ADJUSTMENT 2
 #define STRICT_AUTO_CALC_THRESHOLD 50
 
+// Currently the largest isosig in the census tables starts with 'G'.
+// This represents 32 tetrahedra.
+// We will be more conservative here.
+#define MAX_CENSUS_TRIANGULATION_SIZE 50
+
 using regina::NPacket;
 using regina::NTriangulation;
 
@@ -648,24 +653,30 @@ void NTriSurfacesUI::refresh() {
             "Not recognised</qt>"));
     }
 
-    regina::NCensusHits* hits = regina::NCensus::lookup(tri->isoSig());
-    if (hits->empty()) {
-        census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;Not found</qt>"));
-    } else if (hits->count() == 1) {
-        census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;%1</qt>")
-            .arg(QString(hits->first()->name().c_str()).toHtmlEscaped()));
-    } else {
-        QString ans = tr("<qt><b>Census:</b>&nbsp;&nbsp;%1 matches")
-            .arg(hits->count());
-        const regina::NCensusHit* hit = hits->first();
-        for ( ; hit; hit = hit->next()) {
-            ans += "<br>";
-            ans += QString(hit->name().c_str()).toHtmlEscaped();
+    if (tri->size() <= MAX_CENSUS_TRIANGULATION_SIZE) {
+        regina::NCensusHits* hits = regina::NCensus::lookup(tri->isoSig());
+        if (hits->empty()) {
+            census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;Not found</qt>"));
+        } else if (hits->count() == 1) {
+            census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;%1</qt>")
+                .arg(QString(hits->first()->name().c_str()).toHtmlEscaped()));
+        } else {
+            QString ans = tr("<qt><b>Census:</b>&nbsp;&nbsp;%1 matches")
+                .arg(hits->count());
+            const regina::NCensusHit* hit = hits->first();
+            for ( ; hit; hit = hit->next()) {
+                ans += "<br>";
+                ans += QString(hit->name().c_str()).toHtmlEscaped();
+            }
+            ans += "</qt>";
+            census->setText(ans);
         }
-        ans += "</qt>";
-        census->setText(ans);
+        delete hits;
+    } else {
+        // The triangulation is too large to be found in the census.
+        // Avoid the overhead of calling isoSig().
+        census->setText(tr("<qt><b>Census:</b>&nbsp;&nbsp;Not found</qt>"));
     }
-    delete hits;
 }
 
 void NTriSurfacesUI::calculateZeroEff() {
