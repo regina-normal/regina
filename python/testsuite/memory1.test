@@ -1,0 +1,129 @@
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite Component
+#
+# Copyright (c) 2015, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Tests the lifetime management of packets.
+#
+# This file is a single component of Regina's python test suite.  To run
+# the python test suite, move to the main python directory in the source
+# tree and run "make check".
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+def watcher(p):
+    # Returns a packet that can be used as a proxy for testing
+    # whether or not p has been destroyed.
+    c = NContainer()
+    p.insertChildLast(c)
+    return c
+
+def ensureAlive(watcher):
+    try:
+        watcher.label()
+    except:
+        print 'ERROR: ensureAlive failed'
+
+def ensureDestroyed(watcher):
+    try:
+        watcher.label()
+        print 'ERROR: ensureDestroyed failed'
+    except:
+        pass
+
+
+
+print 'Insertion case'
+c = NContainer(); cw = watcher(c)
+t = NTriangulation(); t.newTetrahedron(); tw = watcher(t)
+c.insertChildLast(t)
+ensureAlive(cw); ensureAlive(tw)
+t = None
+ensureAlive(cw); ensureAlive(tw)
+c = None
+ensureDestroyed(cw); ensureDestroyed(tw)
+
+print 'Root destruction case'
+a = NContainer(); aw = watcher(a)
+b = NTriangulation(); bw = watcher(b)
+a.insertChildLast(b)
+ensureAlive(aw); ensureAlive(bw)
+a = None
+try:
+    print b
+except:
+    pass
+ensureDestroyed(aw); ensureDestroyed(bw)
+
+print 'Orphan case'
+p = NContainer(); pw = watcher(p)
+q = NTriangulation(); qw = watcher(q)
+p.insertChildLast(q)
+ensureAlive(pw); ensureAlive(qw)
+
+q.makeOrphan()
+ensureAlive(pw); ensureAlive(qw)
+
+p = None
+ensureDestroyed(pw); ensureAlive(qw)
+
+q = None
+ensureDestroyed(qw)
+
+# An example of makeOrphan where we never held the reference to the
+# child in the first place.
+print 'Multiple orphan case'
+x = NExampleTriangulation.lens8_3(); xw = watcher(x)
+x.connectedSumDecomposition()
+y = x.lastChild(); yw = watcher(y)
+ensureAlive(xw); ensureAlive(yw)
+
+y.makeOrphan()
+ensureAlive(xw); ensureAlive(yw)
+
+x = None
+ensureDestroyed(xw); ensureAlive(yw)
+
+y = None
+ensureDestroyed(xw); ensureDestroyed(yw)
+
+# An example like above, but where we hold many references to the same
+# child packet.
+f = NExampleTriangulation.lens8_3(); fw = watcher(f)
+f.connectedSumDecomposition()
+g = f.lastChild(); gw = watcher(g)
+h = f.lastChild(); hw = watcher(h)
+ensureAlive(fw); ensureAlive(gw); ensureAlive(hw)
+
+g.makeOrphan()
+ensureAlive(fw); ensureAlive(gw); ensureAlive(hw)
+
+f = None
+ensureDestroyed(fw); ensureAlive(gw); ensureAlive(hw)
+
+g = None
+ensureDestroyed(fw); ensureAlive(gw); ensureAlive(hw)
+
+h = None
+ensureDestroyed(fw); ensureDestroyed(gw); ensureDestroyed(hw)
+
