@@ -59,3 +59,6 @@
 /* Minor version number of the package. */
 #define PACKAGE_VERSION_MINOR 0
 
+/* Define to the version of SnapPy that is bundled with Regina. */
+#define SNAPPY_VERSION "2.2"
+

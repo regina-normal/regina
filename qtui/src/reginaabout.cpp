@@ -33,6 +33,7 @@
 /* end stub */
 
 #include "regina-config.h"
+#include "libnormaliz/version.h"
 
 #include "iconcache.h"
 #include "reginaabout.h"
@@ -51,6 +52,9 @@
 #include <QTextEdit>
 #include <QVBoxLayout>
 
+#define REGINA_XSTR(s) REGINA_STR(s)
+#define REGINA_STR(s) #s
+#define NMZ_VERSION_STRING REGINA_XSTR(NMZ_VERSION)
 
 const QString ReginaAbout::regCopyright(
     tr("Copyright (c) 1999-2014, The Regina development team"));
@@ -139,6 +143,12 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
         "http://rybu.org/");
     authors << AuthorInfo("William Pettersson",
         "william.pettersson@gmail.com", "http://ewpettersson.se/");
+
+    // Bundled software:
+    bundled << SoftwareInfo("Normaliz", NMZ_VERSION_STRING,
+        "http://www.home.uni-osnabrueck.de/wbruns/normaliz/");
+    bundled << SoftwareInfo("SnapPy", SNAPPY_VERSION,
+        "http://snappy.computop.org/");
 
     // Credits:
     thanksCode << "Matthias Goerner";
@@ -252,6 +262,24 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
     authorPage->setPalette(transparent);
     authorPage->setOpenExternalLinks(true);
     tabs->addTab(authorPage, tr("A&uthors"));
+
+    QString bundledText = tr("<p style=\"margin: 0px;\">"
+        "Mathematical libraries that are built into Regina:</p>");
+    bundledText += "<p style=\"margin: 0px;\">&nbsp;</p>";
+    foreach (const SoftwareInfo& info, bundled) {
+        bundledText += QString("<p style=\"margin: 0px; margin-left: 15px;\">"
+            "%1 %2</p>").arg(info.name).arg(info.version);
+        bundledText += QString("<p style=\"margin: 0px; margin-left: 15px;\">"
+            "<a href=\"%1\">%1</a></p>").arg(info.website);
+        bundledText += "<p style=\"margin: 0px;\">&nbsp;</p>";
+    }
+
+    QTextBrowser* softwarePage = new QTextBrowser;
+    softwarePage->setFrameStyle(QFrame::NoFrame);
+    softwarePage->setHtml(bundledText);
+    softwarePage->setPalette(transparent);
+    softwarePage->setOpenExternalLinks(true);
+    tabs->addTab(softwarePage, tr("&Libraries"));
 
     QString thanksText;
     thanksText = tr("<p style=\"margin: 0px;\">"

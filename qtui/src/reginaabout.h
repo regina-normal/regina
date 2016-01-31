@@ -73,7 +73,19 @@ class ReginaAbout : public QDialog {
             AuthorInfo(const QString& name_, const QString& email_,
                     const QString& website_) :
                     name(name_), email(email_), website(website_) {
-                    }
+            }
+        };
+
+        /**
+         * Full details for a bundled library.
+         */
+        struct SoftwareInfo {
+            QString name, version, website;
+
+            SoftwareInfo(const QString& name_, const QString& version_,
+                    const QString& website_) :
+                    name(name_), version(version_), website(website_) {
+            }
         };
 
         QList<AuthorInfo> authors;
@@ -84,7 +96,9 @@ class ReginaAbout : public QDialog {
             /**< Stores a list of additional people to thank for expertise. */
         QList<QString> thanksInstitutions;
             /**< Stores a list of institions to thank. */
-        
+        QList<SoftwareInfo> bundled;
+            /**< Stores a list of bundled software with version details. */
+
     private slots:
         void showLicense();
             /**< Shows the license text in a new dialog. */

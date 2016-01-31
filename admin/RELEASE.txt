@@ -32,7 +32,7 @@ Full license details:
     www/index.html
 
 SnapPy version:
-    engine/snappea/nsnappeatriangulation.h (class docs)
+    CMakeLists.txt (SNAPPY_VERSION)
     qtui/doc/regina/trouble.docbook (SnapPy multiple interpreters)
     engine/snappea/kernel/README.txt
     engine/snappea/snappy/README.txt
