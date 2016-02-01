@@ -232,7 +232,7 @@ void Dim4Triangulation::calculateBoundary() {
                             [adjFacet].preImageOf(j);
 
                         bdryTet->join(tetTri, adjBdryTet,
-                            perm5to4(adjTet->triangleMapping(adjTetTri) *
+                            NPerm4::contract(adjTet->triangleMapping(adjTetTri) *
                             tet->triangleMapping(tetTri).inverse()));
                     }
                 }
@@ -332,8 +332,9 @@ void Dim4Triangulation::calculateVertexLinks() {
                     pent->regina::detail::SimplexFaces<4, 3>::mapping_[vertexIdx].
                         preImageOf(exitFacet),
                     tet[5 * adjPentIdx + adjVertexIdx],
-                    perm5to4(adjPent->regina::detail::SimplexFaces<4, 3>::mapping_
-                            [adjVertexIdx].inverse() *
+                    NPerm4::contract(
+                            adjPent->regina::detail::SimplexFaces<4, 3>::
+                            mapping_[adjVertexIdx].inverse() *
                         pent->adjacentGluing(exitFacet) *
                         pent->regina::detail::SimplexFaces<4, 3>::mapping_[vertexIdx]));
             }

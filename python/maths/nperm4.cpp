@@ -57,6 +57,28 @@ namespace {
     int perm_getItem(const NPerm4& p, int index) {
         return p[index];
     }
+
+    template <int k>
+    struct NPerm4_contract : boost::python::def_visitor<NPerm4_contract<k>> {
+        friend class boost::python::def_visitor_access;
+
+        template <typename Class>
+        void visit(Class& c) const {
+            c.def("contract", &NPerm4::contract<k>);
+            c.def(NPerm4_contract<k+1>());
+        }
+    };
+
+    template <>
+    struct NPerm4_contract<16> :
+            boost::python::def_visitor<NPerm4_contract<16>> {
+        friend class boost::python::def_visitor_access;
+
+        template <typename Class>
+        void visit(Class& c) const {
+            c.def("contract", &NPerm4::contract<16>);
+        }
+    };
 }
 
 void addNPerm4() {
@@ -95,6 +117,7 @@ void addNPerm4() {
         .def("orderedSnIndex", &NPerm4::orderedS4Index)
         .def("extend", &NPerm4::extend<2>)
         .def("extend", &NPerm4::extend<3>)
+        .def(NPerm4_contract<5>())
         .def("__str__", &NPerm4::str)
         .def("__repr__", &NPerm4::str)
         .def(regina::python::add_eq_operators())
@@ -105,6 +128,7 @@ void addNPerm4() {
         .staticmethod("atIndex")
         .staticmethod("rand")
         .staticmethod("extend")
+        .staticmethod("contract")
     ;
 
     s.attr("nPerms") = NPerm4::nPerms;

@@ -57,6 +57,28 @@ namespace {
     int perm5_getItem(const NPerm5& p, int index) {
         return p[index];
     }
+
+    template <int k>
+    struct NPerm5_contract : boost::python::def_visitor<NPerm5_contract<k>> {
+        friend class boost::python::def_visitor_access;
+
+        template <typename Class>
+        void visit(Class& c) const {
+            c.def("contract", &NPerm5::contract<k>);
+            c.def(NPerm5_contract<k+1>());
+        }
+    };
+
+    template <>
+    struct NPerm5_contract<16> :
+            boost::python::def_visitor<NPerm5_contract<16>> {
+        friend class boost::python::def_visitor_access;
+
+        template <typename Class>
+        void visit(Class& c) const {
+            c.def("contract", &NPerm5::contract<16>);
+        }
+    };
 }
 
 void addNPerm5() {
@@ -92,6 +114,7 @@ void addNPerm5() {
         .def("extend", &NPerm5::extend<2>)
         .def("extend", &NPerm5::extend<3>)
         .def("extend", &NPerm5::extend<4>)
+        .def(NPerm5_contract<6>())
         .def("__str__", &NPerm5::str)
         .def("__repr__", &NPerm5::str)
         .def(regina::python::add_eq_operators())
@@ -100,6 +123,7 @@ void addNPerm5() {
         .staticmethod("atIndex")
         .staticmethod("rand")
         .staticmethod("extend")
+        .staticmethod("contract")
     ;
 
     s.attr("imageBits") = NPerm5::imageBits;

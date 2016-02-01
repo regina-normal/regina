@@ -329,7 +329,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
 
                     triData = discData->data; // Only one triangle.
                     triData->map[triData->nMaps].dest = innerTet[0];
-                    triData->map[triData->nMaps].vertexMap = perm5to4(
+                    triData->map[triData->nMaps].vertexMap = NPerm4::contract(
                         NPerm5(4, type) *
                         outerTetEmb *
                         NPerm5(3, outerTetDisc.type) *
@@ -379,7 +379,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
 
                 triData = discData->data; // Only one triangle.
                 triData->map[triData->nMaps].dest = innerTet[0];
-                triData->map[triData->nMaps].vertexMap = perm5to4(
+                triData->map[triData->nMaps].vertexMap = NPerm4::contract(
                         NPerm5(f0, f1, f2, e1, e0).inverse() *
                         outerTetEmb *
                         NPerm5(3, outerTetDisc.type));
@@ -401,7 +401,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
 
                 triData = discData->data; // Only one triangle.
                 triData->map[triData->nMaps].dest = innerTet[2];
-                triData->map[triData->nMaps].vertexMap = perm5to4(
+                triData->map[triData->nMaps].vertexMap = NPerm4::contract(
                         NPerm5(f1, f2, e0, f0, e1).inverse() *
                         outerTetEmb *
                         NPerm5(3, outerTetDisc.type));
@@ -459,7 +459,8 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                 adjustQuadMaps(
                     discData->data[0].map[discData->data[0].nMaps - 1],
                     discData->data[1].map[discData->data[1].nMaps - 1],
-                    perm5to4(NPerm5(e0, e1, f1, f2, f0).inverse() * roles),
+                    NPerm4::contract(
+                        NPerm5(e0, e1, f1, f2, f0).inverse() * roles),
                     inner);
 
                 // Quadrilateral #2:
@@ -509,7 +510,8 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                 adjustQuadMaps(
                     discData->data[0].map[discData->data[0].nMaps - 1],
                     discData->data[1].map[discData->data[1].nMaps - 1],
-                    perm5to4(NPerm5(e0, e1, f0, f2, f1).inverse() * roles),
+                    NPerm4::contract(
+                        NPerm5(e0, e1, f0, f2, f1).inverse() * roles),
                     inner);
 
                 // Quadrilateral #3:
@@ -560,7 +562,8 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                 adjustQuadMaps(
                     discData->data[0].map[discData->data[0].nMaps - 1],
                     discData->data[1].map[discData->data[1].nMaps - 1],
-                    perm5to4(NPerm5(e0, e1, f0, f1, f2).inverse() * roles),
+                    NPerm4::contract(
+                        NPerm5(e0, e1, f0, f1, f2).inverse() * roles),
                     inner);
             }
         }

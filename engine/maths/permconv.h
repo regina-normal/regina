@@ -70,12 +70,17 @@ namespace regina {
 REGINA_API NPerm5 perm4to5(const NPerm4& p);
 
 /**
- * Expresses the given 5-element permutation as a 4-element permutation.
+ * Deprecated routine that expresses the given 5-element permutation as a
+ * 4-element permutation.
+ *
  * The resulting 4-element permutation will map 0, 1, 2 and 3 to their
  * respective images under \a p.  It is assumed that the image of 4 is 4
  * under \a p; otherwise this conversion cannot be performed.
  *
  * \pre The given permutation maps 4 to 4.
+ *
+ * \deprecated This routine will be removed from some future release of
+ * Regina.  You should instead call NPerm4::contract(\a p).
  *
  * @param p the given 5-element permutation.
  * @return the permutation \a p expressed as a permutation of four
@@ -100,12 +105,17 @@ REGINA_API NPerm4 perm5to4(const NPerm5& p);
 REGINA_API NPerm4 perm3to4(const NPerm3& p);
 
 /**
- * Expresses the given 4-element permutation as a 3-element permutation.
+ * Deprecated routine that expresses the given 4-element permutation as a
+ * 3-element permutation.
+ *
  * The resulting 3-element permutation will map 0, 1 and 2 to their
  * respective images under \a p.  It is assumed that the image of 3 is 3
  * under \a p; otherwise this conversion cannot be performed.
  *
  * \pre The given permutation maps 3 to 3.
+ *
+ * \deprecated This routine will be removed from some future release of
+ * Regina.  You should instead call NPerm3::contract(\a p).
  *
  * @param p the given 4-element permutation.
  * @return the permutation \a p expressed as a permutation of three
@@ -130,13 +140,18 @@ REGINA_API NPerm3 perm4to3(const NPerm4& p);
 REGINA_API NPerm5 perm3to5(const NPerm3& p);
 
 /**
- * Expresses the given 5-element permutation as a 3-element permutation.
+ * Deprecated routine that expresses the given 5-element permutation as a
+ * 3-element permutation.
+ *
  * The resulting 3-element permutation will map 0, 1 and 2 to their
  * respective images under \a p.  It is assumed that \p maps 3,4 to 3,4
  * (but it may do so in either order); otherwise this conversion cannot
  * be performed.
  *
  * \pre The given permutation maps 3,4 to 3,4 in some order.
+ *
+ * \deprecated This routine will be removed from some future release of
+ * Regina.  You should instead call NPerm3::contract(\a p).
  *
  * @param p the given 5-element permutation.
  * @return the permutation \a p expressed as a permutation of three
@@ -153,9 +168,7 @@ inline NPerm5 perm4to5(const NPerm4& p) {
 }
 
 inline NPerm4 perm5to4(const NPerm5& p) {
-    unsigned code = p.permCode();
-    return NPerm4(code & 0x03, (code >> 3) & 0x03,
-        (code >> 6) & 0x03, (code >> 9) & 0x03);
+    return NPerm4::contract(p);
 }
 
 inline NPerm4 perm3to4(const NPerm3& p) {
@@ -163,9 +176,7 @@ inline NPerm4 perm3to4(const NPerm3& p) {
 }
 
 inline NPerm3 perm4to3(const NPerm4& p) {
-    // Code map: 0,3,8,7,12,15 -> 0,1,2,3,4,5.
-    unsigned char c = p.permCode2();
-    return NPerm3::fromPermCode(c == 8 ? 2 : c == 7 ? 3 : c / 3);
+    return NPerm3::contract(p);
 }
 
 inline NPerm5 perm3to5(const NPerm3& p) {
@@ -173,8 +184,7 @@ inline NPerm5 perm3to5(const NPerm3& p) {
 }
 
 inline NPerm3 perm5to3(const NPerm5& p) {
-    // This can probably be streamlined...
-    return NPerm3(p[0], p[1], p[2]);
+    return NPerm3::contract(p);
 }
 
 } // namespace regina

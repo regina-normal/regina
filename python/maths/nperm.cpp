@@ -92,6 +92,41 @@ namespace {
         template <typename Class>
         void visit(Class& c) const {
             c.def("extend", &NPerm<n>::template extend<2>);
+            c.staticmethod("extend");
+        }
+    };
+
+    template <int n, int k>
+    struct NPerm_contract : boost::python::def_visitor<NPerm_contract<n, k>> {
+        friend class boost::python::def_visitor_access;
+
+        template <typename Class>
+        void visit(Class& c) const {
+            c.def("contract", &NPerm<n>::template contract<k>);
+            c.def(NPerm_contract<n, k+1>());
+        }
+    };
+
+    template <int n>
+    struct NPerm_contract<n, 16> :
+            boost::python::def_visitor<NPerm_contract<n, 16>> {
+        friend class boost::python::def_visitor_access;
+
+        template <typename Class>
+        void visit(Class& c) const {
+            c.def("contract", &NPerm<n>::template contract<16>);
+            c.staticmethod("contract");
+        }
+    };
+
+    template <int n>
+    struct NPerm_contract<n, 17> :
+            boost::python::def_visitor<NPerm_contract<n, 17>> {
+        friend class boost::python::def_visitor_access;
+
+        template <typename Class>
+        void visit(Class& c) const {
+            // Only called for NPerm16, which has no contract() methods at all.
         }
     };
 }
@@ -123,12 +158,12 @@ void addNPerm(const char* name) {
         .def("__str__", &NPerm<n>::str)
         .def("__repr__", &NPerm<n>::str)
         .def(NPerm_extend<n, n-1>())
+        .def(NPerm_contract<n, n+1>())
         .def(regina::python::add_eq_operators())
         .staticmethod("fromPermCode")
         .staticmethod("isPermCode")
         .staticmethod("atIndex")
         .staticmethod("rand")
-        .staticmethod("extend");
     ;
 
     s.attr("nPerms") = NPerm<n>::nPerms;

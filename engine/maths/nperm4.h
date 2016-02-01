@@ -36,6 +36,10 @@
  *  \brief Deals with permutations of {0,1,2,3}.
  */
 
+// We include nperm.h before the header guard, to ensure that the
+// various nperm*.h headers are processed in exactly the right order.
+#include "maths/nperm.h"
+
 #ifndef __NPERM4_H
 #ifndef __DOXYGEN
 #define __NPERM4_H
@@ -44,9 +48,6 @@
 #include <cstdlib>
 #include <string>
 #include "regina-core.h"
-#include "maths/nperm.h"
-#include "maths/nperm2.h"
-#include "maths/nperm3.h"
 
 namespace regina {
 
@@ -684,7 +685,8 @@ class REGINA_API NPerm<4> {
         int orderedSnIndex() const;
 
         /**
-         * Extends a <i>k</i>-element permutation to a 4-element permutation.
+         * Extends a <i>k</i>-element permutation to a 4-element permutation,
+         * where 2 &le; \a k &lt; 4.
          *
          * The resulting permutation will map 0,...,<i>k</i>-1 to their
          * respective images under \a p, and will map the "unused" elements
@@ -699,6 +701,26 @@ class REGINA_API NPerm<4> {
          */
         template <int k>
         static NPerm<4> extend(NPerm<k> p);
+
+        /**
+         * Restricts a <i>k</i>-element permutation to an 4-element
+         * permutation, where \a k &gt; 4.
+         *
+         * The resulting permutation will map 0,...,3 to their
+         * respective images under \a p, and will ignore the "unused" images
+         * \a p[4],...,\a p[<i>k</i>-1].
+         *
+         * \pre The given permutation maps 0,...,3 to 0,...,3 in some order.
+         *
+         * \tparam k the number of elements for the input permutation;
+         * this must be strictly greater than 4.
+         *
+         * @param p a permutation on \a k elements.
+         * @return the same permutation restricted to a permutation on
+         * 4 elements.
+         */
+        template <int k>
+        static NPerm<4> contract(NPerm<k> p);
 
     private:
         /**
@@ -935,25 +957,9 @@ inline int NPerm<4>::SnIndex() const {
     return S4Index();
 }
 
-// Hide specialisations from doxygen, since it cannot handle them.
-#ifndef __DOXYGEN
-template <>
-inline NPerm<4> NPerm<4>::extend(NPerm<2> p) {
-    return NPerm<4>(static_cast<Code>(p.permCode() == 0 ? 0 : 7));
-}
-
-template <>
-inline NPerm<4> NPerm<4>::extend(NPerm<3> p) {
-    // Code map: 0,1,2,3,4,5 -> 0,3,8,7,12,15.
-    switch (p.permCode()) {
-        case 2 : return NPerm<4>(static_cast<Code>(8));
-        case 3 : return NPerm<4>(static_cast<Code>(7));
-        default : return NPerm<4>(static_cast<Code>(3 * p.permCode()));
-    }
-}
-#endif // ! __DOXYGEN
-
 } // namespace regina
+
+#include "maths/nperm-impl.h"
 
 #endif
 

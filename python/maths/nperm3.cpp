@@ -53,6 +53,28 @@ namespace {
     int perm3_getItem(const NPerm3& p, int index) {
         return p[index];
     }
+
+    template <int k>
+    struct NPerm3_contract : boost::python::def_visitor<NPerm3_contract<k>> {
+        friend class boost::python::def_visitor_access;
+
+        template <typename Class>
+        void visit(Class& c) const {
+            c.def("contract", &NPerm3::contract<k>);
+            c.def(NPerm3_contract<k+1>());
+        }
+    };
+
+    template <>
+    struct NPerm3_contract<16> :
+            boost::python::def_visitor<NPerm3_contract<16>> {
+        friend class boost::python::def_visitor_access;
+
+        template <typename Class>
+        void visit(Class& c) const {
+            c.def("contract", &NPerm3::contract<16>);
+        }
+    };
 }
 
 void addNPerm3() {
@@ -82,7 +104,8 @@ void addNPerm3() {
         .def("S3Index", &NPerm3::S3Index)
         .def("orderedS3Index", &NPerm3::orderedS3Index)
         .def("orderedSnIndex", &NPerm3::orderedS3Index)
-        .def("extend", &NPerm3::extend)
+        .def("extend", &NPerm3::extend<2>)
+        .def(NPerm3_contract<4>())
         .def("__str__", &NPerm3::str)
         .def("__repr__", &NPerm3::str)
         .def(regina::python::add_eq_operators())
@@ -91,6 +114,7 @@ void addNPerm3() {
         .staticmethod("atIndex")
         .staticmethod("rand")
         .staticmethod("extend")
+        .staticmethod("contract")
     ;
 
     s.attr("nPerms") = NPerm3::nPerms;

@@ -36,6 +36,10 @@
  *  \brief Deals with permutations of {0,1}.
  */
 
+// We include nperm.h before the header guard, to ensure that the
+// various nperm*.h headers are processed in exactly the right order.
+#include "maths/nperm.h"
+
 #ifndef __NPERM2_H
 #ifndef __DOXYGEN
 #define __NPERM2_H
@@ -44,7 +48,6 @@
 #include <cstdlib>
 #include <string>
 #include "regina-core.h"
-#include "nperm.h"
 
 namespace regina {
 
@@ -502,6 +505,26 @@ class REGINA_API NPerm<2> {
          */
         int orderedSnIndex() const;
 
+        /**
+         * Restricts a <i>k</i>-element permutation to an 2-element
+         * permutation, where \a k &gt; 2.
+         *
+         * The resulting permutation will map 0,1 to their
+         * respective images under \a p, and will ignore the "unused" images
+         * \a p[2],...,\a p[<i>k</i>-1].
+         *
+         * \pre The given permutation maps 0,1 to 0,1 in some order.
+         *
+         * \tparam k the number of elements for the input permutation;
+         * this must be strictly greater than 2.
+         *
+         * @param p a permutation on \a k elements.
+         * @return the same permutation restricted to a permutation on
+         * 2 elements.
+         */
+        template <int k>
+        static NPerm<2> contract(NPerm<k> p);
+
     private:
         /**
          * Creates a permutation from the given internal code.
@@ -654,6 +677,8 @@ inline int NPerm<2>::orderedSnIndex() const {
 }
 
 } // namespace regina
+
+#include "maths/nperm-impl.h"
 
 #endif
 

@@ -52,6 +52,28 @@ namespace {
     int perm2_getItem(const NPerm2& p, int index) {
         return p[index];
     }
+
+    template <int k>
+    struct NPerm2_contract : boost::python::def_visitor<NPerm2_contract<k>> {
+        friend class boost::python::def_visitor_access;
+
+        template <typename Class>
+        void visit(Class& c) const {
+            c.def("contract", &NPerm2::contract<k>);
+            c.def(NPerm2_contract<k+1>());
+        }
+    };
+
+    template <>
+    struct NPerm2_contract<16> :
+            boost::python::def_visitor<NPerm2_contract<16>> {
+        friend class boost::python::def_visitor_access;
+
+        template <typename Class>
+        void visit(Class& c) const {
+            c.def("contract", &NPerm2::contract<16>);
+        }
+    };
 }
 
 void addNPerm2() {
@@ -79,6 +101,7 @@ void addNPerm2() {
         .def("S2Index", &NPerm2::S2Index)
         .def("orderedS2Index", &NPerm2::orderedS2Index)
         .def("orderedSnIndex", &NPerm2::orderedS2Index)
+        .def(NPerm2_contract<3>())
         .def("__str__", &NPerm2::str)
         .def("__repr__", &NPerm2::str)
         .def(regina::python::add_eq_operators())
@@ -86,6 +109,7 @@ void addNPerm2() {
         .staticmethod("isPermCode")
         .staticmethod("atIndex")
         .staticmethod("rand")
+        .staticmethod("contract")
     ;
 
     s.attr("nPerms") = NPerm2::nPerms;

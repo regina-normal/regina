@@ -36,6 +36,10 @@
  *  \brief Deals with permutations of {0,1,2}.
  */
 
+// We include nperm.h before the header guard, to ensure that the
+// various nperm*.h headers are processed in exactly the right order.
+#include "maths/nperm.h"
+
 #ifndef __NPERM3_H
 #ifndef __DOXYGEN
 #define __NPERM3_H
@@ -44,8 +48,6 @@
 #include <cstdlib>
 #include <string>
 #include "regina-core.h"
-#include "maths/nperm.h"
-#include "maths/nperm2.h"
 
 namespace regina {
 
@@ -563,16 +565,43 @@ class REGINA_API NPerm<3> {
         int orderedSnIndex() const;
 
         /**
-         * Extends a 2-element permutation to an 3-element permutation.
+         * Extends a <i>k</i>-element permutation to an 3-element permutation.
+         * where 2 &le; \a k &lt; 3.  The only possible value of \a k is 2, but
+         * this routine is kept as a template function for consistency
+         * with the other classes' NPerm<n>::extend() routines.
          *
          * The resulting permutation will map 0,1 to their respective images
          * under \a p, and will map the "unused" element 3 to itself.
+         *
+         * \tparam k the number of elements for the input permutation;
+         * this must be exactly 2.
          *
          * @param p a permutation on two elements.
          * @return the same permutation expressed as a permutation on
          * three elements.
          */
-        static NPerm<3> extend(NPerm<2> p);
+        template <int k>
+        static NPerm<3> extend(NPerm<k> p);
+
+        /**
+         * Restricts a <i>k</i>-element permutation to an 3-element
+         * permutation, where \a k &gt; 3.
+         *
+         * The resulting permutation will map 0,1,2 to their
+         * respective images under \a p, and will ignore the "unused" images
+         * \a p[3],...,\a p[<i>k</i>-1].
+         *
+         * \pre The given permutation maps 0,1,2 to 0,1,2 in some order.
+         *
+         * \tparam k the number of elements for the input permutation;
+         * this must be strictly greater than 3.
+         *
+         * @param p a permutation on \a k elements.
+         * @return the same permutation restricted to a permutation on
+         * 3 elements.
+         */
+        template <int k>
+        static NPerm<3> contract(NPerm<k> p);
 
     private:
         /**
@@ -762,12 +791,9 @@ inline int NPerm<3>::orderedSnIndex() const {
     return orderedS3Index();
 }
 
-inline NPerm<3> NPerm<3>::extend(NPerm<2> p) {
-    return NPerm<3>(static_cast<Code>(
-        p.permCode() == 0 ? code012 : code102));
-}
-
 } // namespace regina
+
+#include "maths/nperm-impl.h"
 
 #endif
 

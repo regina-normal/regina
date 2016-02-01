@@ -466,7 +466,7 @@ class REGINA_API NPerm {
 
         /**
          * Extends a <i>k</i>-element permutation to an <i>n</i>-element
-         * permutation.
+         * permutation, where 2 &le; \a k &lt; \a n.
          *
          * The resulting permutation will map 0,...,<i>k</i>-1 to their
          * respective images under \a p, and will map the "unused" elements
@@ -481,6 +481,27 @@ class REGINA_API NPerm {
          */
         template <int k>
         static NPerm extend(NPerm<k> p);
+
+        /**
+         * Restricts a <i>k</i>-element permutation to an <i>n</i>-element
+         * permutation, where \a k &gt; \a n.
+         *
+         * The resulting permutation will map 0,...,<i>n</i>-1 to their
+         * respective images under \a p, and will ignore the "unused" images
+         * \a p[\a n],...,\a p[<i>k</i>-1].
+         *
+         * \pre The given permutation maps 0,...,<i>n</i>-1 to 0,...,<i>n</i>-1
+         * in some order.
+         *
+         * \tparam k the number of elements for the input permutation;
+         * this must be strictly greater than \a n.
+         *
+         * @param p a permutation on \a k elements.
+         * @return the same permutation restricted to a permutation on
+         * \a n elements.
+         */
+        template <int k>
+        static NPerm contract(NPerm<k> p);
 
     private:
         /**
@@ -759,28 +780,9 @@ std::string NPerm<n>::trunc(unsigned len) const {
     return ans;
 }
 
-// Hide this implementation from doxygen, since it cannot seem to handle
-// definitions of templated member functions in template classes.
-#ifndef __DOXYGEN
-template <int n>
-template <int k>
-NPerm<n> NPerm<n>::extend(NPerm<k> p) {
-    // TODO: Reimplement this to replace the first loop with a direct
-    // copy of p's code, in the case where NPerm<k> and NPerm<n> use the
-    // same style of code with the same value of imageBits.
-
-    Code c = 0;
-    int i = 0;
-    for ( ; i < k; ++i)
-        c |= (static_cast<Code>(p[i]) << (imageBits * i));
-    for ( ; i < n; ++i)
-        c |= (static_cast<Code>(i) << (imageBits * i));
-
-    return NPerm<n>(c);
-}
-#endif // ! __DOXYGEN
-
 } // namespace regina
+
+#include "maths/nperm-impl.h"
 
 #endif
 

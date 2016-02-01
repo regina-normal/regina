@@ -35,6 +35,7 @@ if (${REGINA_INSTALL_DEV})
     nmatrix2.h
     nmatrixint.h
     nperm.h
+    nperm-impl.h
     nperm2.h
     nperm3.h
     nperm4.h

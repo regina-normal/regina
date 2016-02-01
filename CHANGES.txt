@@ -429,7 +429,8 @@ Version 5.0  [ (under development) ]
             - New constructors that take two arrays.
             - New static rand() routine for generating a random permutation.
             - New routine reverse() for reversing a permutation.
-            - New extend() routine for converting from smaller permutations.
+            - New extend() and contract() routines for converting from
+              different sized permutations.
             - Removed deprecated toString() and setPerm() routines.
             - Removed deprecated arrays from NPerm4::invS3 and NPerm4::invS2.
             - Removed deprecated global arrays from nperm4.h, including
@@ -689,6 +690,8 @@ Version 5.0  [ (under development) ]
               a filename).
         Routine perm3to4(), perm3to5(), perm4to5():
             - Deprecated.  Use the new routines NPerm<n>::extend() instead.
+        Routine perm4to3(), perm5to3(), perm5to4():
+            - Deprecated.  Use the new routines NPerm<n>::contract() instead.
         Routine readIsoSigList():
             - Now supports both 3-manifold and 4-manifold triangulations.
         Routine subscript(), superscript():
