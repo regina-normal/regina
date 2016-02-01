@@ -143,23 +143,3 @@ void addFacetPairing(const char* name) {
     ;
 }
 
-void addFacetPairing() {
-    addFacetPairing<2>("FacetPairing2");
-    scope().attr("Dim2EdgePairing") = scope().attr("FacetPairing2");
-
-    addFacetPairing<4>("FacetPairing4");
-    scope().attr("Dim4FacetPairing") = scope().attr("FacetPairing4");
-
-    addFacetPairing<5>("FacetPairing5");
-    addFacetPairing<6>("FacetPairing6");
-    addFacetPairing<7>("FacetPairing7");
-    addFacetPairing<8>("FacetPairing8");
-    addFacetPairing<9>("FacetPairing9");
-    addFacetPairing<10>("FacetPairing10");
-    addFacetPairing<11>("FacetPairing11");
-    addFacetPairing<12>("FacetPairing12");
-    addFacetPairing<13>("FacetPairing13");
-    addFacetPairing<14>("FacetPairing14");
-    addFacetPairing<15>("FacetPairing15");
-}
-

@@ -32,65 +32,9 @@
 
 /* end stub */
 
-void addComponent();
-void addFacetPairing2();
-void addFacetPairing4();
-void addFacetPairing5();
-void addFacetPairing6();
-void addFacetPairing7();
-void addFacetPairing8();
-void addFacetPairing9();
-void addFacetPairing10();
-void addFacetPairing11();
-void addFacetPairing12();
-void addFacetPairing13();
-void addFacetPairing14();
-void addFacetPairing15();
-void addIsomorphism();
-void addFace();
-void addFace5();
-void addFace6();
-void addFace7();
-void addFace8();
-void addFace9();
-void addFace10();
-void addFace11();
-void addFace12();
-void addFace13();
-void addFace14();
-void addFace15();
-void addSimplex();
-void addTriangulations();
+#include "facetpairing-bindings.h"
 
-void addGeneric() {
-    addComponent();
-    addFacetPairing2();
-    addFacetPairing4();
-    addFacetPairing5();
-    addFacetPairing6();
-    addFacetPairing7();
-    addFacetPairing8();
-    addFacetPairing9();
-    addFacetPairing10();
-    addFacetPairing11();
-    addFacetPairing12();
-    addFacetPairing13();
-    addFacetPairing14();
-    addFacetPairing15();
-    addIsomorphism();
-    addFace();
-    addFace5();
-    addFace6();
-    addFace7();
-    addFace8();
-    addFace9();
-    addFace10();
-    addFace11();
-    addFace12();
-    addFace13();
-    addFace14();
-    addFace15();
-    addSimplex();
-    addTriangulations();
+void addFacetPairing10() {
+    addFacetPairing<10>("FacetPairing10");
 }
 

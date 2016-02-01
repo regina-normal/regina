@@ -14,7 +14,19 @@ SET ( FILES
   face14
   face15
   facehelper
-  facetpairing
+  facetpairing2
+  facetpairing4
+  facetpairing5
+  facetpairing6
+  facetpairing7
+  facetpairing8
+  facetpairing9
+  facetpairing10
+  facetpairing11
+  facetpairing12
+  facetpairing13
+  facetpairing14
+  facetpairing15
   isomorphism
   simplex
   pygeneric
