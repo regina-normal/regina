@@ -183,17 +183,3 @@ void addSimplex(const char* name) {
     ;
 }
 
-void addSimplex() {
-    addSimplex<5>("Simplex5");
-    addSimplex<6>("Simplex6");
-    addSimplex<7>("Simplex7");
-    addSimplex<8>("Simplex8");
-    addSimplex<9>("Simplex9");
-    addSimplex<10>("Simplex10");
-    addSimplex<11>("Simplex11");
-    addSimplex<12>("Simplex12");
-    addSimplex<13>("Simplex13");
-    addSimplex<14>("Simplex14");
-    addSimplex<15>("Simplex15");
-}
-

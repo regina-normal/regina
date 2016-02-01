@@ -82,16 +82,3 @@ void addComponent(const char* name) {
     ;
 }
 
-void addComponent() {
-    addComponent<5>("Component5");
-    addComponent<6>("Component6");
-    addComponent<7>("Component7");
-    addComponent<8>("Component8");
-    addComponent<9>("Component9");
-    addComponent<10>("Component10");
-    addComponent<11>("Component11");
-    addComponent<12>("Component12");
-    addComponent<13>("Component13");
-    addComponent<14>("Component14");
-    addComponent<15>("Component15");
-}
