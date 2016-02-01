@@ -57,7 +57,7 @@ namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_oneThreeMove,
         Dim2Triangulation::oneThreeMove, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_splitIntoComponents,
-        Dim2Triangulation::splitIntoComponents, 0, 2);
+        regina::detail::TriangulationBase<2>::splitIntoComponents, 0, 2);
 
     boost::python::list Dim2_getTriangles_list(Dim2Triangulation& t) {
         boost::python::list ans;

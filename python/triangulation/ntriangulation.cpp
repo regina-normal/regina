@@ -95,7 +95,7 @@ namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_order,
         NTriangulation::order, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_splitIntoComponents,
-        NTriangulation::splitIntoComponents, 0, 2);
+        regina::detail::TriangulationBase<3>::splitIntoComponents, 0, 2);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_connectedSumDecomposition,
         NTriangulation::connectedSumDecomposition, 0, 2);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_puncture,
