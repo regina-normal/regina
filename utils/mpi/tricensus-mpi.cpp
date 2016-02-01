@@ -676,13 +676,9 @@ int mainController() {
         }
     }
 
-    // Wait for everyone else to finish their tasks.
+    // Wait for everyone else to finish their tasks, stopping as we go
     while (nRunningSlaves > 0)
-        ctrlWaitForSlave(true);
-
-    // Stop all the slaves and finish!
-    for (slave = 1; slave <= nSlaves; slave++)
-        ctrlStopSlave(slave);
+        ctrlStopSlave(ctrlWaitForSlave(true));
 
     delete[] slaveTask;
 
