@@ -45,6 +45,7 @@ using namespace boost::python;
 using namespace regina::python;
 using regina::Dim4Triangulation;
 using regina::Triangulation;
+using regina::detail::TriangulationBase;
 
 namespace {
     regina::Dim4Pentachoron* (Dim4Triangulation::*newPentachoron_void)() =
@@ -77,7 +78,7 @@ namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_collapseEdge,
         Dim4Triangulation::collapseEdge, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_splitIntoComponents,
-        regina::detail::TriangulationBase<4>::splitIntoComponents, 0, 2);
+        TriangulationBase<4>::splitIntoComponents, 0, 2);
 
     boost::python::list Dim4_getPentachora_list(Dim4Triangulation& t) {
         boost::python::list ans;

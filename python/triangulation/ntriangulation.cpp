@@ -47,6 +47,7 @@ using namespace boost::python;
 using namespace regina::python;
 using regina::NTriangulation;
 using regina::Triangulation;
+using regina::detail::TriangulationBase;
 
 namespace {
     regina::NTetrahedron* (NTriangulation::*newTetrahedron_void)() =
@@ -95,7 +96,7 @@ namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_order,
         NTriangulation::order, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_splitIntoComponents,
-        regina::detail::TriangulationBase<3>::splitIntoComponents, 0, 2);
+        TriangulationBase<3>::splitIntoComponents, 0, 2);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_connectedSumDecomposition,
         NTriangulation::connectedSumDecomposition, 0, 2);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_puncture,

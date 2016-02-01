@@ -46,6 +46,7 @@
 using namespace boost::python;
 using namespace regina::python;
 using regina::Triangulation;
+using regina::detail::TriangulationBase;
 
 namespace {
     template <int dim>
@@ -132,7 +133,7 @@ namespace {
         }
 
         BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_splitIntoComponents,
-            regina::detail::TriangulationBase<dim>::splitIntoComponents, 0, 2);
+            TriangulationBase<dim>::splitIntoComponents, 0, 2);
     };
 }
 

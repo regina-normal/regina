@@ -45,6 +45,7 @@ using namespace boost::python;
 using namespace regina::python;
 using regina::Dim2Triangulation;
 using regina::Triangulation;
+using regina::detail::TriangulationBase;
 
 namespace {
     regina::Dim2Triangle* (Dim2Triangulation::*newTriangle_void)() =
@@ -57,7 +58,7 @@ namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_oneThreeMove,
         Dim2Triangulation::oneThreeMove, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_splitIntoComponents,
-        regina::detail::TriangulationBase<2>::splitIntoComponents, 0, 2);
+        TriangulationBase<2>::splitIntoComponents, 0, 2);
 
     boost::python::list Dim2_getTriangles_list(Dim2Triangulation& t) {
         boost::python::list ans;
