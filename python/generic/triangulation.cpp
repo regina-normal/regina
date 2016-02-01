@@ -132,7 +132,7 @@ namespace {
         }
 
         BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_splitIntoComponents,
-            Triangulation<dim>::splitIntoComponents, 0, 2);
+            regina::detail::TriangulationBase<dim>::splitIntoComponents, 0, 2);
     };
 }
 

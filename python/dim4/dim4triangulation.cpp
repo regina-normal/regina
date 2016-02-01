@@ -77,7 +77,7 @@ namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_collapseEdge,
         Dim4Triangulation::collapseEdge, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_splitIntoComponents,
-        Dim4Triangulation::splitIntoComponents, 0, 2);
+        regina::detail::TriangulationBase<4>::splitIntoComponents, 0, 2);
 
     boost::python::list Dim4_getPentachora_list(Dim4Triangulation& t) {
         boost::python::list ans;
