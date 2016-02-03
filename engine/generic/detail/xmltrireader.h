@@ -68,7 +68,7 @@ namespace detail {
  * \tparam dim The dimension of the triangulation in question.
  */
 template <int dim>
-struct REGINA_API XMLTriangulationTags {
+struct XMLTriangulationTags {
     constexpr static const char* simplices();
         /**< The XML tag that stores the set of all top-dimensional
              simplices for a <i>dim</i>-dimensional triangulation. */
@@ -181,7 +181,7 @@ class XMLSimplicesReader : public NXMLElementReader {
  * \tparam dim The dimension of the triangulation being read.
  */
 template <int dim>
-class REGINA_API XMLTriangulationReaderBase : public NXMLPacketReader {
+class XMLTriangulationReaderBase : public NXMLPacketReader {
     protected:
         Triangulation<dim>* tri_;
             /**< The triangulation currently being read. */

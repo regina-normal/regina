@@ -65,7 +65,7 @@ namespace regina {
  * This must be at least 2.
  */
 template <int dim>
-class REGINA_API XMLTriangulationReader :
+class XMLTriangulationReader :
         public detail::XMLTriangulationReaderBase<dim> {
     static_assert(! standardDim(dim),
         "The generic implementation of XMLTriangulationReader<dim> "
