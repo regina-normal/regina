@@ -9,7 +9,6 @@ SET ( FILES
   homotopy
   hydrate
   insertlayered
-  isomorphic
   nboundarycomponent
   nedge
   nexampletriangulation

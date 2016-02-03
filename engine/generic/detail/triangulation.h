@@ -128,6 +128,33 @@ class FaceListSuite :
          * @param result the vector in which the results will be placed.
          */
         void fillFVector(std::vector<size_t>& result) const;
+        /**
+         * Tests whether this and the given triangulation have the same
+         * number of <i>k</i>-faces, for each facial dimension
+         * \a k &le; \a subdim.
+         *
+         * @param other the triangulation to compare against this.
+         * @return \c true if and only if the face counts considered are
+         * identical for both triangluations.
+         */
+        bool sameFVector(const FaceListSuite<dim, subdim>& other) const;
+        /**
+         * Tests whether this and the given triangulation have the same
+         * <i>k</i>-face degree sequences, for each facial dimension
+         * \a k &le; \a subdim.
+         *
+         * For the purposes of this routine, degree sequences are
+         * considered to be unordered.
+         *
+         * \pre This and the given triangulation are known to have the
+         * same number of <i>k</i>-faces as each other, for each facial
+         * dimension \a k &le; \a subdim.
+         *
+         * @param other the triangulation to compare against this.
+         * @return \c true if and only if all degree sequences considered
+         * are equal.
+         */
+        bool sameDegrees(const FaceListSuite<dim, subdim>& other) const;
 };
 
 #ifndef __DOXYGEN
@@ -137,6 +164,8 @@ class FaceListSuite<dim, 0> : protected FaceList<dim, 0> {
     protected:
         void deleteFaces();
         void fillFVector(std::vector<size_t>& result) const;
+        bool sameFVector(const FaceListSuite<dim, 0>& other) const;
+        bool sameDegrees(const FaceListSuite<dim, 0>& other) const;
 };
 
 #endif // __DOXYGEN
@@ -1590,10 +1619,9 @@ class TriangulationBase :
          * find any immediate evidence that there can be no isomorphic copy
          * of this triangulation within the given triangulation.
          *
-         * The generic implementation of this routine tests basic
-         * properties such as orientability and the sizes of the components.
-         * Specialisations for \ref stddim "standard dimensions" may examine
-         * properties of the vertices, edges and so on.
+         * This routine tests basic properties such as orientability and
+         * the sizes of the components, as well as degrees of the faces
+         * of each dimension.
          *
          * \pre The skeleton of both this and the given triangulation
          * have been computed.
@@ -1610,46 +1638,8 @@ class TriangulationBase :
          */
         bool compatible(const Triangulation<dim>& other, bool complete) const;
 
-        /**
-         * Internal to findIsomorphisms().
-         *
-         * Examines properties of the given top-dimensional simplices to find
-         * any immediate evidence that \a src cannot map to \a dest in a
-         * boundary complete isomorphism for which the vertices of \a src
-         * map to the vertices of \a dest according to the permutation \a p.
-         *
-         * The generic implementation of this routine simply returns \c true,
-         * indicating that no such evidence was found.  Specialisations
-         * for \ref stddim "standard dimensions" may examine properties
-         * of the vertices, edges and so on.
-         *
-         * @param src the first of the two simplices to examine.
-         * @param dest the second of the two simplices to examine.
-         * @param p the permutation under which the vertices of \a src
-         * must map to the vertices of \a dest.
-         * @return \c true if no immediate incompatibilities between the
-         * simplices were found, or \c false if evidence was found that
-         * \a src cannot map to \a dest.
-         */
-        static bool compatible(Simplex<dim>* src, Simplex<dim>* dest,
-                NPerm<dim+1> p);
-
     template <int, int, int> friend struct FaceCalculator;
 };
-
-// Note that some of our routines are specialised for standard dimensions.
-template <>
-bool TriangulationBase<2>::compatible(const Triangulation<2>&, bool) const;
-template <>
-bool TriangulationBase<3>::compatible(const Triangulation<3>&, bool) const;
-template <>
-bool TriangulationBase<4>::compatible(const Triangulation<4>&, bool) const;
-template <>
-bool TriangulationBase<2>::compatible(Simplex<2>*, Simplex<2>* dest, NPerm<3>);
-template <>
-bool TriangulationBase<3>::compatible(Simplex<3>*, Simplex<3>* dest, NPerm<4>);
-template <>
-bool TriangulationBase<4>::compatible(Simplex<4>*, Simplex<4>* dest, NPerm<5>);
 
 /*@}*/
 
@@ -1677,6 +1667,32 @@ template <int dim>
 inline void FaceListSuite<dim, 0>::fillFVector(
         std::vector<size_t>& result) const {
     result.push_back(FaceList<dim, 0>::size());
+}
+
+template <int dim, int subdim>
+inline bool FaceListSuite<dim, subdim>::sameFVector(
+        const FaceListSuite<dim, subdim>& other) const {
+    return FaceListSuite<dim, subdim - 1>::sameFVector(other) &&
+        (FaceList<dim, subdim>::size() == other.FaceList<dim, subdim>::size());
+}
+
+template <int dim>
+inline bool FaceListSuite<dim, 0>::sameFVector(
+        const FaceListSuite<dim, 0>& other) const {
+    return (FaceList<dim, 0>::size() == other.FaceList<dim, 0>::size());
+}
+
+template <int dim, int subdim>
+inline bool FaceListSuite<dim, subdim>::sameDegrees(
+        const FaceListSuite<dim, subdim>& other) const {
+    return FaceListSuite<dim, subdim - 1>::sameDegrees(other) &&
+        FaceList<dim, subdim>::sameDegrees(other);
+}
+
+template <int dim>
+inline bool FaceListSuite<dim, 0>::sameDegrees(
+        const FaceListSuite<dim, 0>& other) const {
+    return FaceList<dim, 0>::sameDegrees(other);
 }
 
 // Inline functions for TriangulationBase

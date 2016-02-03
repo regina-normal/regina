@@ -7,7 +7,6 @@ SET ( FILES
   dim2exampletriangulation
   dim2triangulation
   dim2vertex
-  isomorphic
   nxmldim2trireader
   skeleton
   simplify

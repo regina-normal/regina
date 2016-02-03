@@ -109,6 +109,20 @@ class SimplexFaces {
          * permutations are not touched.
          */
         void clear();
+
+        /**
+         * Tests whether the <i>subdim</i>-face degrees of this and the
+         * given simplex are identical, under the given relabelling.
+         *
+         * @param other the simplex to compare against this.
+         * @param p a mapping from the vertices of this simplex to the
+         * vertices of \a other.
+         * @return \c true if and only if, for every \a i,
+         * <i>subdim</i>-face number \a i of this simplex has the same degree
+         * as its image in \a other under the relabelling \a p.
+         */
+        bool sameDegrees(const SimplexFaces<dim, subdim>& other,
+            NPerm<dim + 1> p) const;
 };
 
 /**
@@ -123,12 +137,31 @@ template <int dim, int subdim>
 class SimplexFacesSuite :
         protected SimplexFacesSuite<dim, subdim - 1>,
         protected SimplexFaces<dim, subdim> {
+    protected:
+        /**
+         * Tests whether the <i>k</i>-face degrees of this and the
+         * given simplex are identical, under the given relabelling,
+         * for all faces of all dimensions \a k &le; \a subdim.
+         *
+         * @param other the simplex to compare against this.
+         * @param p a mapping from the vertices of this simplex to the
+         * vertices of \a other.
+         * @return \c true if and only if, for every \a i and every
+         * facial dimension \a k &le; \a subdim, <i>k</i>-face number \a i of
+         * this simplex has the same degree as its image in \a other under
+         * the relabelling \a p.
+         */
+        bool sameDegrees(const SimplexFacesSuite<dim, subdim>& other,
+            NPerm<dim + 1> p) const;
 };
 
 #ifndef __DOXYGEN
 
 template <int dim>
 class SimplexFacesSuite<dim, 0> : protected SimplexFaces<dim, 0> {
+    protected:
+        bool sameDegrees(const SimplexFacesSuite<dim, 0>& other,
+            NPerm<dim + 1> p) const;
 };
 
 #endif // __DOXYGEN
@@ -612,6 +645,32 @@ class SimplexBase :
 template <int dim, int subdim>
 inline void SimplexFaces<dim, subdim>::clear() {
     std::fill(face_, face_ + FaceNumbering<dim, subdim>::nFaces, nullptr);
+}
+
+template <int dim, int subdim>
+bool SimplexFaces<dim, subdim>::sameDegrees(
+        const SimplexFaces<dim, subdim>& other, NPerm<dim + 1> p) const {
+    for (size_t i = 0; i < FaceNumbering<dim, subdim>::nFaces; ++i)
+        if (face_[i]->degree() != other.face_[
+                FaceNumbering<dim, subdim>::faceNumber(
+                p * FaceNumbering<dim, subdim>::ordering(i))]->degree())
+            return false;
+    return true;
+}
+
+// Inline functions for SimplexFacesSuite
+
+template <int dim, int subdim>
+inline bool SimplexFacesSuite<dim, subdim>::sameDegrees(
+        const SimplexFacesSuite<dim, subdim>& other, NPerm<dim + 1> p) const {
+    return SimplexFacesSuite<dim, subdim - 1>::sameDegrees(other, p) &&
+        SimplexFaces<dim, subdim>::sameDegrees(other, p);
+}
+
+template <int dim>
+inline bool SimplexFacesSuite<dim, 0>::sameDegrees(
+        const SimplexFacesSuite<dim, 0>& other, NPerm<dim + 1> p) const {
+    return SimplexFaces<dim, 0>::sameDegrees(other, p);
 }
 
 // Inline functions for SimplexBase

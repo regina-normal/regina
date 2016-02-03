@@ -401,7 +401,9 @@ size_t TriangulationBase<dim>::findIsomorphisms(
 
             // If we are after a complete isomorphism, test whether the
             // simplices are a potential match.
-            if (complete && ! compatible(tri, destSimp, myPerm)) {
+            if (complete &&
+                    ! tri->SimplexFacesSuite<dim, dim - 2>::sameDegrees(
+                    *destSimp, myPerm)) {
                 broken = true;
                 break;
             }
@@ -492,14 +494,6 @@ size_t TriangulationBase<dim>::findIsomorphisms(
 template <int dim>
 bool TriangulationBase<dim>::compatible(const Triangulation<dim>& other,
         bool complete) const {
-    // Specialised implementations in standard dimensions can be
-    // more sophisticated.
-    static_assert(! standardDim(dim),
-        "The generic implementation of TriangulationBase<dim>::compatible() "
-        "should not be used for Regina's standard dimensions.");
-
-    // Unfortunately, if we allow boundary incomplete isomorphisms then
-    // we can't test that many properties.
     if (complete) {
         // Must be boundary complete, 1-to-1 and onto.
         // That is, combinatorially the two triangulations must be
@@ -509,6 +503,14 @@ bool TriangulationBase<dim>::compatible(const Triangulation<dim>& other,
         if (components().size() != other.components().size())
             return false;
         if (isOrientable() ^ other.isOrientable())
+            return false;
+        if (! FaceListSuite<dim, dim - 1>::sameFVector(other))
+            return false;
+
+        // TODO: Count boundary components and their sizes, once we have them.
+
+        // Test degree sequences and the like.
+        if (! FaceListSuite<dim, dim - 2>::sameDegrees(other))
             return false;
 
         // Test component sizes.
@@ -543,18 +545,6 @@ bool TriangulationBase<dim>::compatible(const Triangulation<dim>& other,
         if ((! isOrientable()) && other.isOrientable())
             return false;
     }
-
-    return true;
-}
-
-template <int dim>
-inline bool TriangulationBase<dim>::compatible(
-        Simplex<dim>* src, Simplex<dim>* dest, NPerm<dim+1> p) {
-    // Specialised implementations in standard dimensions can be
-    // more sophisticated.
-    static_assert(! standardDim(dim),
-        "The generic implementation of TriangulationBase<dim>::compatible() "
-        "should not be used for Regina's standard dimensions.");
 
     return true;
 }

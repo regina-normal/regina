@@ -11,7 +11,6 @@ SET ( FILES
   dim4vertex
   homology
   homotopy
-  isomorphic
   nxmldim4trireader
   simplify
   simplifyglobal
