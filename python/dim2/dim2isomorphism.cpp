@@ -49,11 +49,6 @@ namespace {
         &Dim2Isomorphism::simpImage;
     regina::NPerm3 (Dim2Isomorphism::*facetPerm_const)(unsigned) const =
         &Dim2Isomorphism::facetPerm;
-
-    regina::Dim2TriangleEdge Dim2iso_getItem(const Dim2Isomorphism& iso,
-            const regina::Dim2TriangleEdge& e) {
-        return iso[e];
-    }
 }
 
 void addDim2Isomorphism() {
@@ -66,7 +61,7 @@ void addDim2Isomorphism() {
         .def("triImage", simpImage_const)
         .def("facetPerm", facetPerm_const)
         .def("edgePerm", facetPerm_const)
-        .def("__getitem__", Dim2iso_getItem)
+        .def("__getitem__", &Dim2Isomorphism::operator[])
         .def("isIdentity", &Dim2Isomorphism::isIdentity)
         .def("apply", &Dim2Isomorphism::apply,
             return_value_policy<to_held_type<> >())

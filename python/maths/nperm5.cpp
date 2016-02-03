@@ -54,10 +54,6 @@ namespace {
     GlobalArray<NPerm5> NPerm5_orderedS3_arr(NPerm5::orderedS3, 6);
     GlobalArray<NPerm5> NPerm5_S2_arr(NPerm5::S2, 2);
 
-    int perm5_getItem(const NPerm5& p, int index) {
-        return p[index];
-    }
-
     template <int k>
     struct NPerm5_contract : boost::python::def_visitor<NPerm5_contract<k>> {
         friend class boost::python::def_visitor_access;
@@ -96,7 +92,7 @@ void addNPerm5() {
         .def("inverse", &NPerm5::inverse)
         .def("reverse", &NPerm5::reverse)
         .def("sign", &NPerm5::sign)
-        .def("__getitem__", perm5_getItem)
+        .def("__getitem__", &NPerm5::operator[])
         .def("preImageOf", &NPerm5::preImageOf)
         .def("compareWith", &NPerm5::compareWith)
         .def("isIdentity", &NPerm5::isIdentity)

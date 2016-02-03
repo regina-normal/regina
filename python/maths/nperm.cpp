@@ -48,11 +48,6 @@ using regina::NPerm;
 
 namespace {
     template <int n>
-    int perm_getItem(const NPerm<n>& p, int index) {
-        return p[index];
-    }
-
-    template <int n>
     boost::shared_ptr<NPerm<n>> fromList(boost::python::list l) {
         long len = boost::python::len(l);
         if ( len != n ) {
@@ -146,7 +141,7 @@ void addNPerm(const char* name) {
         .def("inverse", &NPerm<n>::inverse)
         .def("reverse", &NPerm<n>::reverse)
         .def("sign", &NPerm<n>::sign)
-        .def("__getitem__", perm_getItem<n>)
+        .def("__getitem__", &NPerm<n>::operator[])
         .def("preImageOf", &NPerm<n>::preImageOf)
         .def("compareWith", &NPerm<n>::compareWith)
         .def("isIdentity", &NPerm<n>::isIdentity)
