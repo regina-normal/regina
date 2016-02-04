@@ -722,7 +722,7 @@ void NPacket::writeXMLFile(std::ostream& out) const {
     out << "<?xml version=\"1.0\"?>\n";
 
     // Write the regina data opening tag including engine version.
-    out << "<reginadata engine=\"" << regina::getVersionString() << "\">\n";
+    out << "<reginadata engine=\"" << regina::versionString() << "\">\n";
 
     // Write the packet tree.
     writeXMLPacketTree(out);
