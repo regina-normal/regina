@@ -1230,7 +1230,8 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (cover.countTriangles() != 2 * tri->countTriangles()) {
+                if (tri->isValid() && cover.countTriangles() !=
+                        2 * tri->countTriangles()) {
                     std::ostringstream msg;
                     msg << tri->label()
                         << ": Orientable double cover does not "
@@ -1258,10 +1259,10 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
                 // We expect the first homology group to be identical,
                 // or to be missing a copy of Z_2.
-                if (! (tri->homology() == cover.homology())) {
+                if (tri->isValid() && (tri->homology() != cover.homology())) {
                     NAbelianGroup hCover(cover.homology());
                     hCover.addTorsionElement(2);
-                    if (! (tri->homology() == hCover)) {
+                    if (tri->homology() != hCover) {
                         std::ostringstream msg;
                         msg << tri->label()
                             << ": Orientable double cover has H1 = "
