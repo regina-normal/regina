@@ -206,6 +206,7 @@ class REGINA_API NSnapPeaCensusTri: public NStandardTriangulation {
          * Creates a new SnapPea census triangulation with the given
          * parameters.
          */
+        REGINA_INLINE_REQUIRED
         NSnapPeaCensusTri(char newSection, unsigned long newIndex);
 
     friend class NSnapPeaCensusManifold;

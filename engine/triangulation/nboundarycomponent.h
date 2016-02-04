@@ -116,6 +116,7 @@ class REGINA_API NBoundaryComponent :
          *
          * @return the index of this boundary component.
          */
+        REGINA_INLINE_REQUIRED
         size_t index() const;
 
         /**

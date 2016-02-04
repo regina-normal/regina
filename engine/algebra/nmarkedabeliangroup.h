@@ -1331,7 +1331,6 @@ class REGINA_API NHomMarkedAbelianGroup :
          * \deprecated This routine has been renamed to kernel().
          * See the kernel() documentation for further details.
          */
-        REGINA_INLINE_REQUIRED
         const NMarkedAbelianGroup& getKernel() const;
         /**
          * Returns the cokernel of this homomorphism.
@@ -1346,7 +1345,6 @@ class REGINA_API NHomMarkedAbelianGroup :
          * \deprecated This routine has been renamed to cokernel().
          * See the cokernel() documentation for further details.
          */
-        REGINA_INLINE_REQUIRED
         const NMarkedAbelianGroup& getCokernel() const;
         /**
          * Returns the image of this homomorphism.
@@ -1361,7 +1359,6 @@ class REGINA_API NHomMarkedAbelianGroup :
          * \deprecated This routine has been renamed to image().
          * See the image() documentation for further details.
          */
-        REGINA_INLINE_REQUIRED
         const NMarkedAbelianGroup& getImage() const;
 
         /**

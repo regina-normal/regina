@@ -654,7 +654,6 @@ class REGINA_API NPerm<4> {
          * @return the index \a i for which this permutation is equal to
          * NPerm<4>::S4[i].  This will be between 0 and 23 inclusive.
          */
-        REGINA_INLINE_REQUIRED
         int S4Index() const;
 
         /**

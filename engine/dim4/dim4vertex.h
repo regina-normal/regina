@@ -172,6 +172,7 @@ class REGINA_API Face<4, 0> : public detail::FaceBase<4, 0>,
          *
          * @return the read-only triangulated link of this vertex.
          */
+        REGINA_INLINE_REQUIRED
         const Triangulation<3>* buildLink() const;
 
         /**

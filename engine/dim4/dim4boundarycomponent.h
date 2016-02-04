@@ -133,6 +133,7 @@ class REGINA_API Dim4BoundaryComponent :
          *
          * @return the index of this boundary component.
          */
+        REGINA_INLINE_REQUIRED
         size_t index() const;
 
         /**
