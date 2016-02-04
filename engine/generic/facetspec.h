@@ -78,7 +78,7 @@ namespace regina {
  * Regina's \ref stddef "standard dimensions".
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be at least 2.
+ * This must be between 2 and 15 inclusive.
  */
 template <int dim>
 struct FacetSpec {

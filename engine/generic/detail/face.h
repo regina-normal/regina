@@ -123,7 +123,7 @@ constexpr bool allowsNonOrientableLinks(int dim, int subdim) {
  * FaceEmbedding<dim, subdim> is.
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be at least 2.
+ * This must be between 2 and 15 inclusive.
  * \tparam subdim the dimension of the faces of the underlying triangulation.
  * This must be between 0 and <i>dim</i>-1 inclusive.
  */
@@ -301,7 +301,7 @@ class FaceEmbeddingBase :
  * Face<dim, subdim> is.
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be at least 2.
+ * This must be between 2 and 15 inclusive.
  * \tparam codim the codimension of the faces of the underlying triangulation.
  * This must be between 1 and \a dim inclusive.
  */
@@ -885,7 +885,7 @@ struct FaceListHolder;
  * Face<dim, subdim> is.
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be at least 2.
+ * This must be between 2 and 15 inclusive.
  * \tparam subdim the dimension of the faces that this class represents.
  * This must be between 0 and <i>dim</i>-1 inclusive.
  */

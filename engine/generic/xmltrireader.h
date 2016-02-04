@@ -62,7 +62,7 @@ namespace regina {
  * \ifacespython Not present.
  *
  * \tparam dim The dimension of the triangulation being read.
- * This must be at least 2.
+ * This must be between 2 and 15 inclusive.
  */
 template <int dim>
 class XMLTriangulationReader :

@@ -76,7 +76,7 @@ namespace detail {
  * Isomorphism<dim> is.
  *
  * \tparam dim the dimension of the triangulations that this isomorphism
- * class works with.  This must be at least 2.
+ * class works with.  This must be between 2 and 15 inclusive.
  */
 template <int dim>
 class IsomorphismBase :

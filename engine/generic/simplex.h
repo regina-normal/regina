@@ -78,15 +78,14 @@ namespace regina {
  * for \a dim = 3).  For convenience, there are typedefs available for these
  * specialised classes (such as Dim2Triangle and NTetrahedron respectively).
  *
- * \ifacespython Python does not support templates.  For standard dimensions
+ * \ifacespython Python does not support templates.  Instead
  * this class can be used by appending the dimension as a suffix
  * (e.g., Simplex2 and Simplex3 for dimensions 2 and 3).
- * The typedefs mentioned above (e.g., Dim2Triangle and NTetrahedron)
- * are also available.  Higher-dimensional classes are not available
- * in Python for the time being.
+ * The typedefs mentioned above for standard dimensions
+ * (e.g., Dim2Triangle and NTetrahedron) are also available.
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be at least 2.
+ * This must be between 2 and 15 inclusive.
  */
 template <int dim>
 class Simplex : public detail::SimplexBase<dim> {

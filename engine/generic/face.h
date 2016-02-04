@@ -69,15 +69,14 @@ namespace regina {
  * for these specialised classes (such as Dim2EdgeEmbedding and
  * NVertexEmbedding respectively).
  *
- * \ifacespython Python does not support templates.  For standard dimensions
+ * \ifacespython Python does not support templates.  Instead
  * this class can be used by appending dimensions \a dim and \a subdim as
  * suffices (e.g., FaceEmbedding2_1 and FaceEmbedding3_0 for the two examples
- * above).  The typedefs mentioned above (e.g., Dim2EdgeEmbedding and
- * NVertexEmbedding) are also available.  Higher-dimensional classes are
- * not available in Python for the time being.
+ * above).  The typedefs mentioned above for standard dimensions
+ * (e.g., Dim2EdgeEmbedding and NVertexEmbedding) are also available.
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be at least 2.
+ * This must be between 2 and 15 inclusive.
  * \tparam subdim the dimension of the faces of the underlying triangulation.
  * This must be between 0 and <i>dim</i>-1 inclusive.
  */
@@ -139,14 +138,14 @@ class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
  * (\a dim, \a subdim) = (3, 0)).  For convenience, there are typedefs
  * for these specialised classes (such as Dim2Edge and NVertex respectively).
  *
- * \ifacespython Python does not support templates.  For standard dimensions
+ * \ifacespython Python does not support templates.  Instead
  * this class can be used by appending dimensions \a dim and \a subdim as
  * suffices (e.g., Face2_1 and Face3_0 for the two examples above).  The 
- * typedefs mentioned above (e.g., Dim2Edge and NVertex) are also available.
- * Higher-dimensional classes are not available in Python for the time being.
+ * typedefs mentioned above for standard dimensions
+ * (e.g., Dim2Edge and NVertex) are also available.
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be at least 2.
+ * This must be between 2 and 15 inclusive.
  * \tparam subdim the dimension of the faces that this class represents.
  * This must be between 0 and <i>dim</i>-1 inclusive.
  */

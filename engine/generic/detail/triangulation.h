@@ -290,7 +290,8 @@ struct FaceCalculator<dim, 0, 2> {
  * \ifacespython This base class is not present, but the "end user" class
  * Triangulation<dim> is.
  *
- * \tparam dim the dimension of the triangulation.  This must be at least 2.
+ * \tparam dim the dimension of the triangulation.
+ * This must be between 2 and 15 inclusive.
  */
 template <int dim>
 class TriangulationBase :

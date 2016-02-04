@@ -181,7 +181,7 @@ class SimplexFacesSuite<dim, 0> : protected SimplexFaces<dim, 0> {
  * Simplex<dim> is.
  *
  * \tparam dim the dimension of the underlying triangulation.
- * This must be at least 2.
+ * This must be between 2 and 15 inclusive.
  */
 template <int dim>
 class SimplexBase :
