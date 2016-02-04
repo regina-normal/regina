@@ -223,7 +223,7 @@ std::string TriangulationBase<dim>::isoSigFrom(size_t simp,
     // exhausted a single connected component of the triangulation.
     for (simpImg = 0; simpImg < nSimp && preImage[simpImg] >= 0; ++simpImg) {
         simpSrc = preImage[simpImg];
-        s = getSimplex(simpSrc);
+        s = simplex(simpSrc);
 
         for (facetImg = 0; facetImg <= dim; ++facetImg) {
             facetSrc = vertexMap[simpSrc].preImageOf(facetImg);
@@ -242,7 +242,7 @@ std::string TriangulationBase<dim>::isoSigFrom(size_t simp,
 
             // We have a real gluing.  Is it a gluing we've already seen
             // from the other side?
-            dest = simplexIndex(s->adjacentSimplex(facetSrc));
+            dest = s->adjacentSimplex(facetSrc)->index();
 
             if (image[dest] >= 0)
                 if (image[dest] < image[simpSrc] ||

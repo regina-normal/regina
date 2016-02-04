@@ -431,13 +431,13 @@ Triangulation<dim>* IsomorphismBase<dim>::apply(
 
     for (t = 0; t < nSimplices_; t++)
         tet[simpImage_[t]]->setDescription(
-            original->getSimplex(t)->description());
+            original->simplex(t)->description());
 
     const Simplex<dim> *myTet, *adjTet;
     unsigned long adjTetIndex;
     NPerm<dim+1> gluingPerm;
     for (t = 0; t < nSimplices_; t++) {
-        myTet = original->getSimplex(t);
+        myTet = original->simplex(t);
         for (f = 0; f <= dim; f++)
             if ((adjTet = myTet->adjacentSimplex(f))) {
                 // We have an adjacent simplex.

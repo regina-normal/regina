@@ -98,7 +98,7 @@ bool LPConstraintNonSpun::addRows(
         return false;
 
     // Check that SnapPea hasn't changed the triangulation on us.
-    if (! snapPea.verifyTriangulation(*tri)) {
+    if (! snapPea.isIdenticalTo(*tri)) {
         delete coeffs;
         return false;
     }

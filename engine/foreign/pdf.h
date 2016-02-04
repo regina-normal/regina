@@ -33,7 +33,7 @@
 /* end stub */
 
 /*! \file foreign/pdf.h
- *  \brief Allows reading and writing PDF documents.
+ *  \brief Deprecated header that allows reading and writing PDF documents.
  *
  *  \deprecated All global functions that were once declared in this file have
  *  now been renamed to member functions of NPDF.

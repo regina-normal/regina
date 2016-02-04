@@ -33,7 +33,8 @@
 /* end stub */
 
 /*! \file foreign/csvsurfacelist.h
- *  \brief Exports normal surface lists to plain text CSV files.
+ *  \brief Deprecated header that exports normal surface lists to plain text
+ *  CSV files.
  *
  *  \deprecated The enumeration type SurfaceExportFields (which was once
  *  declared in this file) is now declared in surfaces/nnormalsurfacelist.h.

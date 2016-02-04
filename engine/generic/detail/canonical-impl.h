@@ -107,11 +107,10 @@ struct CanonicalHelper {
 
                 // Check out the adjacency along simplex/facet.
                 adjTri = tri->getSimplex(origTri)->adjacentSimplex(origFacet);
-                adjTriIndex = (adjTri ? tri->simplexIndex(adjTri) : nSimp);
+                adjTriIndex = (adjTri ? adjTri->index() : nSimp);
                 adjTriBest = tri->getSimplex(origTriBest)->
                     adjacentSimplex(origFacetBest);
-                adjTriIndexBest = (adjTriBest ?
-                    tri->simplexIndex(adjTriBest) : nSimp);
+                adjTriIndexBest = (adjTriBest ? adjTriBest->index() : nSimp);
 
                 justAssigned = false;
                 if (adjTri && current.simpImage(adjTriIndex) < 0) {
@@ -383,7 +382,7 @@ size_t TriangulationBase<dim>::findIsomorphisms(
         // image of its first source simplex.
         // Note that there is only one way of doing this (as seen by
         // following adjacent simplex gluings).  It either works or it doesn't.
-        myIndex = simplexIndex(component(comp)->simplex(0));
+        myIndex = component(comp)->simplex(0)->index();
 
         whichComp[startSimp[comp]] = comp;
         iso.simpImage(myIndex) = startSimp[comp];
@@ -419,8 +418,8 @@ size_t TriangulationBase<dim>::findIsomorphisms(
                         break;
                     }
                     // Work out what the isomorphism *should* say.
-                    adjIndex = simplexIndex(adj);
-                    destAdjIndex = other.simplexIndex(destAdj);
+                    adjIndex = adj->index();
+                    destAdjIndex = destAdj->index();
                     adjPerm =
                         destSimp->adjacentGluing(myPerm[facet]) * myPerm *
                         tri->adjacentGluing(facet).inverse();
