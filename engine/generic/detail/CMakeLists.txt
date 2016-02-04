@@ -5,6 +5,7 @@ if (${REGINA_INSTALL_DEV})
     canonical-impl.h
     component.h
     face.h
+    facenumbering.h
     facetpairing.h
     facetpairing-impl.h
     isomorphism.h

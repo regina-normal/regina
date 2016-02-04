@@ -21,7 +21,9 @@ if (${REGINA_INSTALL_DEV})
     component.h
     dimtraits.h
     face.h
+    facenumbering.h
     facetpairing.h
+    facetspec.h
     isomorphism.h
     nfacetspec.h
     simplex.h
