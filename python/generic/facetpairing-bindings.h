@@ -58,11 +58,6 @@ namespace {
         typedef bool (FacetPairing<dim>::*isUnmatched_unsigned_type)(
             size_t, unsigned) const;
 
-        static const NFacetSpec<dim>& getItem(const FacetPairing<dim>& p,
-                const NFacetSpec<dim>& index) {
-            return p[index];
-        }
-
         static void writeDot_stdout(const FacetPairing<dim>& p,
                 const char* prefix = 0, bool subgraph = false,
                 bool labels = false) {
@@ -110,7 +105,9 @@ void addFacetPairing(const char* name) {
         .def("dest", typename PyFacetPairingHelper<dim>::dest_unsigned_type(
             &FacetPairing<dim>::dest),
             return_value_policy<reference_existing_object>())
-        .def("__getitem__", PyFacetPairingHelper<dim>::getItem,
+        .def("__getitem__",
+            static_cast<const NFacetSpec<dim>& (FacetPairing<dim>::*)(
+                const NFacetSpec<dim>&) const>(&FacetPairing<dim>::operator[]),
             return_value_policy<reference_existing_object>())
         .def("isUnmatched",
             typename PyFacetPairingHelper<dim>::isUnmatched_facet_type(

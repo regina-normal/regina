@@ -48,11 +48,6 @@ namespace {
         &NIsomorphism::simpImage;
     regina::NPerm4 (NIsomorphism::*facetPerm_const)(unsigned) const =
         &NIsomorphism::facetPerm;
-
-    regina::NTetFace iso_getItem(const NIsomorphism& iso,
-            const regina::NTetFace& f) {
-        return iso[f];
-    }
 }
 
 void addNIsomorphism() {
@@ -65,7 +60,7 @@ void addNIsomorphism() {
         .def("tetImage", simpImage_const)
         .def("facetPerm", facetPerm_const)
         .def("facePerm", facetPerm_const)
-        .def("__getitem__", iso_getItem)
+        .def("__getitem__", &NIsomorphism::operator[])
         .def("isIdentity", &NIsomorphism::isIdentity)
         .def("apply", &NIsomorphism::apply,
             return_value_policy<to_held_type<> >())

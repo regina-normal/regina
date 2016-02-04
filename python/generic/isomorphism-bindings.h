@@ -50,11 +50,6 @@ namespace {
 
         typedef regina::NPerm<dim+1> (Isomorphism<dim>::*facetPerm_const_type)(
             unsigned) const;
-
-        static regina::NFacetSpec<dim> iso_getItem(const Isomorphism<dim>& iso,
-                const regina::NFacetSpec<dim>& f) {
-            return iso[f];
-        }
     };
 }
 
@@ -68,7 +63,7 @@ void addIsomorphism(const char* name) {
             &Isomorphism<dim>::simpImage))
         .def("facetPerm", typename PyIsoHelper<dim>::facetPerm_const_type(
             &Isomorphism<dim>::facetPerm))
-        .def("__getitem__", PyIsoHelper<dim>::iso_getItem)
+        .def("__getitem__", &Isomorphism<dim>::operator[])
         .def("isIdentity", &Isomorphism<dim>::isIdentity)
         .def("apply", &Isomorphism<dim>::apply,
             return_value_policy<to_held_type<>>())

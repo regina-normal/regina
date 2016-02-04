@@ -64,10 +64,6 @@ namespace {
     bool (NFacePairing::*query_toec)() const =
         &NFacePairing::hasTripleOneEndedChain;
 
-    const NTetFace& getItem(const NFacePairing& p, const NTetFace& index) {
-        return p[index];
-    }
-
     void writeDot_stdout(const NFacePairing& p, const char* prefix = 0,
             bool subgraph = false, bool labels = false) {
         p.writeDot(std::cout, prefix, subgraph, labels);
@@ -108,7 +104,9 @@ void addNFacePairing() {
             return_value_policy<reference_existing_object>())
         .def("dest", dest_unsigned,
             return_value_policy<reference_existing_object>())
-        .def("__getitem__", getItem,
+        .def("__getitem__",
+            static_cast<const NTetFace& (NFacePairing::*)(
+                const NTetFace&) const>(&NFacePairing::operator[]),
             return_value_policy<reference_existing_object>())
         .def("isUnmatched", isUnmatched_face)
         .def("isUnmatched", isUnmatched_unsigned)

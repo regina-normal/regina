@@ -48,11 +48,6 @@ namespace {
         &Dim4Isomorphism::simpImage;
     regina::NPerm5 (Dim4Isomorphism::*facetPerm_const)(unsigned) const =
         &Dim4Isomorphism::facetPerm;
-
-    regina::Dim4PentFacet Dim4iso_getItem(const Dim4Isomorphism& iso,
-            const regina::Dim4PentFacet& f) {
-        return iso[f];
-    }
 }
 
 void addDim4Isomorphism() {
@@ -63,7 +58,7 @@ void addDim4Isomorphism() {
         .def("simpImage", simpImage_const)
         .def("pentImage", simpImage_const)
         .def("facetPerm", facetPerm_const)
-        .def("__getitem__", Dim4iso_getItem)
+        .def("__getitem__", &Dim4Isomorphism::operator[])
         .def("isIdentity", &Dim4Isomorphism::isIdentity)
         .def("apply", &Dim4Isomorphism::apply,
             return_value_policy<to_held_type<>>())

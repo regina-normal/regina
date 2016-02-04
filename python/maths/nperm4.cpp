@@ -54,10 +54,6 @@ namespace {
 
     int (NPerm4::*S4Index_void)() const = &NPerm4::S4Index;
 
-    int perm_getItem(const NPerm4& p, int index) {
-        return p[index];
-    }
-
     template <int k>
     struct NPerm4_contract : boost::python::def_visitor<NPerm4_contract<k>> {
         friend class boost::python::def_visitor_access;
@@ -101,7 +97,7 @@ void addNPerm4() {
         .def("inverse", &NPerm4::inverse)
         .def("reverse", &NPerm4::reverse)
         .def("sign", &NPerm4::sign)
-        .def("__getitem__", perm_getItem)
+        .def("__getitem__", &NPerm4::operator[])
         .def("preImageOf", &NPerm4::preImageOf)
         .def("compareWith", &NPerm4::compareWith)
         .def("isIdentity", &NPerm4::isIdentity)
