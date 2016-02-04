@@ -70,7 +70,7 @@ namespace detail {
  * End users should call binomSmall() instead of referring to this array
  * directly.
  */
-extern const int* const binomSmall_[17];
+REGINA_API extern const int* const binomSmall_[17];
 
 /**
  * Placeholder class that outlines the functions provided by
@@ -487,7 +487,7 @@ class FaceNumberingImpl<dim, 0, true> : public FaceNumberingAPI<dim, 0> {
 };
 
 template <>
-class FaceNumberingImpl<1, 0, true> : public FaceNumberingAPI<1, 0> {
+class REGINA_API FaceNumberingImpl<1, 0, true> : public FaceNumberingAPI<1, 0> {
     public:
         /**
          * The total number of vertices in each edge.
@@ -511,7 +511,7 @@ class FaceNumberingImpl<1, 0, true> : public FaceNumberingAPI<1, 0> {
 };
 
 template <>
-class FaceNumberingImpl<2, 0, true> : public FaceNumberingAPI<2, 0> {
+class REGINA_API FaceNumberingImpl<2, 0, true> : public FaceNumberingAPI<2, 0> {
     public:
         /**
          * The total number of vertices in each triangle.
@@ -535,7 +535,7 @@ class FaceNumberingImpl<2, 0, true> : public FaceNumberingAPI<2, 0> {
 };
 
 template <>
-class FaceNumberingImpl<2, 1, false> : public FaceNumberingAPI<2, 1> {
+class REGINA_API FaceNumberingImpl<2, 1, false> : public FaceNumberingAPI<2, 1> {
     private:
         static const NPerm<3> ordering_[3];
             /**< A hard-coded list of all return values for ordering(). */
@@ -563,7 +563,7 @@ class FaceNumberingImpl<2, 1, false> : public FaceNumberingAPI<2, 1> {
 };
 
 template <>
-class FaceNumberingImpl<3, 0, true> : public FaceNumberingAPI<3, 0> {
+class REGINA_API FaceNumberingImpl<3, 0, true> : public FaceNumberingAPI<3, 0> {
     public:
         /**
          * The total number of vertices in each tetrahedron.
@@ -589,7 +589,7 @@ class FaceNumberingImpl<3, 0, true> : public FaceNumberingAPI<3, 0> {
 };
 
 template <>
-class FaceNumberingImpl<3, 1, true> : public FaceNumberingAPI<3, 1> {
+class REGINA_API FaceNumberingImpl<3, 1, true> : public FaceNumberingAPI<3, 1> {
     public:
         /**
          * A table that maps vertices of a tetrahedron to edge numbers.
@@ -654,7 +654,7 @@ class FaceNumberingImpl<3, 1, true> : public FaceNumberingAPI<3, 1> {
 };
 
 template <>
-class FaceNumberingImpl<3, 2, false> : public FaceNumberingAPI<3, 2> {
+class REGINA_API FaceNumberingImpl<3, 2, false> : public FaceNumberingAPI<3, 2> {
     private:
         static const NPerm<4> ordering_[4];
             /**< A hard-coded list of all return values for ordering(). */
@@ -682,7 +682,7 @@ class FaceNumberingImpl<3, 2, false> : public FaceNumberingAPI<3, 2> {
 };
 
 template <>
-class FaceNumberingImpl<4, 0, true> : public FaceNumberingAPI<4, 0> {
+class REGINA_API FaceNumberingImpl<4, 0, true> : public FaceNumberingAPI<4, 0> {
     public:
         /**
          * The total number of vertices in each pentachoron.
@@ -707,7 +707,7 @@ class FaceNumberingImpl<4, 0, true> : public FaceNumberingAPI<4, 0> {
 };
 
 template <>
-class FaceNumberingImpl<4, 1, true> : public FaceNumberingAPI<4, 1> {
+class REGINA_API FaceNumberingImpl<4, 1, true> : public FaceNumberingAPI<4, 1> {
     public:
         /**
          * A table that maps vertices of a pentachoron to edge numbers.
@@ -772,7 +772,7 @@ class FaceNumberingImpl<4, 1, true> : public FaceNumberingAPI<4, 1> {
 };
 
 template <>
-class FaceNumberingImpl<4, 2, false> : public FaceNumberingAPI<4, 2> {
+class REGINA_API FaceNumberingImpl<4, 2, false> : public FaceNumberingAPI<4, 2> {
     public:
         /**
          * A table that maps vertices of a pentachoron to triangle numbers.
@@ -839,7 +839,7 @@ class FaceNumberingImpl<4, 2, false> : public FaceNumberingAPI<4, 2> {
 };
 
 template <>
-class FaceNumberingImpl<4, 3, false> : public FaceNumberingAPI<4, 3> {
+class REGINA_API FaceNumberingImpl<4, 3, false> : public FaceNumberingAPI<4, 3> {
     private:
         static const NPerm<5> ordering_[5];
             /**< A hard-coded list of all return values for ordering(). */

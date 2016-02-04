@@ -53,7 +53,7 @@ namespace {
     regina::Dim4Pentachoron* (Dim4Triangulation::*newPentachoron_string)(
         const std::string&) = &Dim4Triangulation::newPentachoron;
     regina::Dim4Pentachoron* (Dim4Triangulation::*pentachoron_non_const)(
-        unsigned long) = &Dim4Triangulation::pentachoron;
+        size_t) = &Dim4Triangulation::pentachoron;
     bool (Dim4Triangulation::*twoZeroMove_triangle)(regina::Dim4Triangle*,
         bool, bool) = &Dim4Triangulation::twoZeroMove;
     bool (Dim4Triangulation::*twoZeroMove_edge)(regina::Dim4Edge*,
