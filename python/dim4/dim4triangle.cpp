@@ -70,7 +70,7 @@ namespace {
 }
 
 void addDim4Triangle() {
-    class_<FaceEmbedding<4, 2>, boost::noncopyable>("FaceEmbedding4_2",
+    class_<FaceEmbedding<4, 2>>("FaceEmbedding4_2",
             init<regina::Dim4Pentachoron*, int>())
         .def(init<const Dim4TriangleEmbedding&>())
         .def("simplex", &Dim4TriangleEmbedding::simplex,

@@ -65,8 +65,8 @@ namespace {
 }
 
 void addDim4Tetrahedron() {
-    class_<FaceEmbedding<4, 3>, boost::noncopyable>
-            ("FaceEmbedding4_3", init<regina::Dim4Pentachoron*, int>())
+    class_<FaceEmbedding<4, 3>>("FaceEmbedding4_3",
+            init<regina::Dim4Pentachoron*, int>())
         .def(init<const Dim4TetrahedronEmbedding&>())
         .def("simplex", &Dim4TetrahedronEmbedding::simplex,
             return_value_policy<reference_existing_object>())

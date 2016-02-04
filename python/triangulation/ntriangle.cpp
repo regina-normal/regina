@@ -63,7 +63,7 @@ namespace {
 }
 
 void addNTriangle() {
-    class_<FaceEmbedding<3, 2>, boost::noncopyable>("FaceEmbedding3_2",
+    class_<FaceEmbedding<3, 2>>("FaceEmbedding3_2",
             init<regina::NTetrahedron*, int>())
         .def(init<const NTriangleEmbedding&>())
         .def("simplex", &NTriangleEmbedding::simplex,
