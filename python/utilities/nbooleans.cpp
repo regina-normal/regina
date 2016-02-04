@@ -38,40 +38,6 @@
 
 using namespace boost::python;
 using regina::NBoolSet;
-using regina::NTriBool;
-
-void addNTriBool() {
-    scope s = class_<NTriBool>("NTriBool")
-        .def(init<bool>())
-        .def(init<const NTriBool&>())
-        .def("isTrue", &NTriBool::isTrue)
-        .def("isFalse", &NTriBool::isFalse)
-        .def("isUnknown", &NTriBool::isUnknown)
-        .def("isKnown", &NTriBool::isKnown)
-        .def("setTrue", &NTriBool::setTrue)
-        .def("setFalse", &NTriBool::setFalse)
-        .def("setUnknown", &NTriBool::setUnknown)
-        // .def(self == bool())
-        // .def(self != bool())
-        .def(self |= self)
-        // .def(self |= bool())
-        .def(self &= self)
-        // .def(self &= bool())
-        .def(self | self)
-        // .def(self | bool())
-        .def(self & self)
-        // .def(self & bool())
-        .def(~ self)
-        .def(self_ns::str(self))
-        .def(regina::python::add_eq_operators())
-    ;
-
-    // Apparently there is no way in python to make a module attribute
-    // read-only.
-    s.attr("True") = NTriBool::True;
-    s.attr("False") = NTriBool::False;
-    s.attr("Unknown") = NTriBool::Unknown;
-}
 
 void addNBoolSet() {
     scope s = class_<NBoolSet>("NBoolSet")

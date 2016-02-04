@@ -1375,9 +1375,6 @@ Equality type : BY_REFERENCE
 NTreeDecomposition : class
 Equality type : BY_REFERENCE
 
-NTriBool : class
-Equality type : BY_VALUE
-
 NTriSolidTorus : class
 Equality type : BY_REFERENCE
 

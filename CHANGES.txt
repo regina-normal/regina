@@ -50,6 +50,8 @@ Version 5.0  [ (under development) ]
             * Global arrays edgeNumber[][], edgeStart[] and edgeEnd[] have
               been deprecated since 2009; this are now removed.  Use the
               arrays NEdge::edgeNumber[][] and NEdge::edgeVertex[][] instead.
+            * The class NTriBool has been deprecated since 2012, and has now
+              been removed entirely.  Regina no longer supports 3-way booleans.
             * Some of the internal XML file I/O functions have been renamed,
               though this should not affect end users.
         - The function NEdge::ordering(), which replaces the old array
