@@ -66,7 +66,7 @@ typedef Triangulation<3> NTriangulation;
  * provided for backward compatibility, but will be removed in some
  * future version of Regina.
  */
-typedef std::list<NIsomorphism*> NFacePairingIsoList;
+REGINA_DEPRECATED typedef std::list<NIsomorphism*> NFacePairingIsoList;
 
 /**
  * A deprecated typedef provided for backward compatibility only.
@@ -76,7 +76,7 @@ typedef std::list<NIsomorphism*> NFacePairingIsoList;
  * provided for backward compatibility, but will be removed in some
  * future version of Regina.
  */
-typedef void (*UseFacePairing)(const FacetPairing<3>*,
+REGINA_DEPRECATED typedef void (*UseFacePairing)(const FacetPairing<3>*,
     const NFacePairingIsoList*, void*);
 
 /**
@@ -126,7 +126,7 @@ class REGINA_API FacetPairing<3> : public detail::FacetPairingBase<3> {
          *
          * @return the number of tetrahedra under consideration.
          */
-        size_t getNumberOfTetrahedra() const;
+        REGINA_DEPRECATED size_t getNumberOfTetrahedra() const;
 
         /**
          * Follows a chain as far as possible from the given point.

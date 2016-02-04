@@ -132,7 +132,7 @@ class REGINA_API NExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static NTriangulation* lens8_3();
+        REGINA_DEPRECATED static NTriangulation* lens8_3();
 
         /**
          * Returns a triangulation of the lens space <tt>L(p,q)</tt>.
@@ -200,7 +200,7 @@ class REGINA_API NExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static NTriangulation* seifertWeber();
+        REGINA_DEPRECATED static NTriangulation* seifertWeber();
 
         /**
          * Returns the nine-tetrahedron closed orientable hyperbolic
@@ -251,7 +251,7 @@ class REGINA_API NExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static NTriangulation* lst3_4_7();
+        REGINA_DEPRECATED static NTriangulation* lst3_4_7();
 
         /**
          * Returns the layered solid torus <tt>LST(a,b,c)</tt>.
@@ -306,7 +306,7 @@ class REGINA_API NExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static NTriangulation* figureEightKnotComplement();
+        REGINA_DEPRECATED static NTriangulation* figureEightKnotComplement();
 
         /**
          * Returns a two-tetrahedron ideal triangulation of the trefoil
@@ -326,7 +326,7 @@ class REGINA_API NExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static NTriangulation* trefoilKnotComplement();
+        REGINA_DEPRECATED static NTriangulation* trefoilKnotComplement();
 
         /**
          * Returns a four-tetrahedron ideal triangulation of the
@@ -346,7 +346,7 @@ class REGINA_API NExampleTriangulation {
          * @return a newly constructed triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static NTriangulation* whiteheadLinkComplement();
+        REGINA_DEPRECATED static NTriangulation* whiteheadLinkComplement();
 
         /**
          * Returns the one-tetrahedron ideal triangulation of the

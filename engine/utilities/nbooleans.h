@@ -316,7 +316,7 @@ class REGINA_API NBoolSet {
          * \deprecated This routine has been renamed to byteCode().
          * See the byteCode() documentation for further details.
          */
-        unsigned char getByteCode() const;
+        REGINA_DEPRECATED unsigned char getByteCode() const;
         /**
          * Sets this boolean set to that represented by the given byte
          * code.  See byteCode() for more information on byte codes.

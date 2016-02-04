@@ -186,7 +186,7 @@ class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2>,
          * \deprecated This routine has been renamed to type().
          * See the type() documentation for further details.
          */
-        Type getType();
+        REGINA_DEPRECATED Type getType();
 
         /**
          * Return the triangle vertex or triangle edge that plays a special role
@@ -207,7 +207,7 @@ class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2>,
          * \deprecated This routine has been renamed to subtype().
          * See the subtype() documentation for further details.
          */
-        int getSubtype();
+        REGINA_DEPRECATED int getSubtype();
 
         /**
          * Determines whether this triangle is wrapped up to form a Mobius band.
@@ -247,7 +247,7 @@ class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2>,
          * \deprecated This routine has been renamed as boundaryComponent().
          * See the boundaryComponent() documentation for further details.
          */
-        NBoundaryComponent* getBoundaryComponent() const;
+        REGINA_DEPRECATED NBoundaryComponent* getBoundaryComponent() const;
 
         /**
          * Writes a short text representation of this object to the

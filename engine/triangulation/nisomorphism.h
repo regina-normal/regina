@@ -91,7 +91,7 @@ class REGINA_API Isomorphism<3> : public detail::IsomorphismBase<3> {
          *
          * See size() for further information.
          */
-        unsigned getSourceTetrahedra() const;
+        REGINA_DEPRECATED unsigned getSourceTetrahedra() const;
 
         /**
          * A dimension-specific alias for simpImage().

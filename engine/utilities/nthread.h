@@ -75,7 +75,7 @@ namespace regina {
  * \deprecated NThread and NMutex are deprecated; new code should use
  * the C++11 std::thread, std::mutex and std::lock_guard classes instead.
  */
-class REGINA_API NMutex {
+class REGINA_API REGINA_DEPRECATED NMutex {
     private:
         pthread_mutex_t mutex;
             /**< The C mutex used by internal function calls. */
@@ -186,7 +186,7 @@ typedef pthread_t NThreadID;
  * \deprecated NThread and NMutex are deprecated; new code should use
  * the C++11 std::thread, std::mutex and std::lock_guard classes instead.
  */
-class REGINA_API NThread {
+class REGINA_API REGINA_DEPRECATED NThread {
     private:
         NThreadID id_;
             /**< The system ID of the running thread, or undefined if this
@@ -255,7 +255,7 @@ class REGINA_API NThread {
          * @return \c true if and only if the new thread was
          * successfully started.
          */
-        static bool start(void* (*routine)(void*), void* args,
+        REGINA_DEPRECATED static bool start(void* (*routine)(void*), void* args,
             NThreadID* id);
 
         /**
@@ -266,7 +266,7 @@ class REGINA_API NThread {
          * \deprecated Use of this routine within Regina is not advised,
          * and this routine will be removed in some future release.
          */
-        static void yield();
+        REGINA_DEPRECATED static void yield();
 
         /**
          * The routine to run in the new thread

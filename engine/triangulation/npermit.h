@@ -61,7 +61,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NPermItS4 {
+class REGINA_API REGINA_DEPRECATED NPermItS4 {
     private:
         int permIndex;
 

@@ -72,7 +72,7 @@ REGINA_API const char* versionString();
  *
  * \deprecated Simply call versionString() instead.
  */
-REGINA_API const char* getVersionString();
+REGINA_DEPRECATED REGINA_API const char* getVersionString();
 
 /**
  * Returns the major version number of this calculation engine.
@@ -88,7 +88,7 @@ REGINA_API int versionMajor();
  *
  * \deprecated Simply call versionMajor() instead.
  */
-REGINA_API int getVersionMajor();
+REGINA_DEPRECATED REGINA_API int getVersionMajor();
 
 /**
  * Returns the minor version number of this calculation engine.
@@ -104,7 +104,7 @@ REGINA_API int versionMinor();
  *
  * \deprecated Simply call versionMinor() instead.
  */
-REGINA_API int getVersionMinor();
+REGINA_DEPRECATED REGINA_API int getVersionMinor();
 
 /**
  * Did the given version of Regina consistently use UTF-8 in its data

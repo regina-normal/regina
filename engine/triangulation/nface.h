@@ -47,7 +47,7 @@
  * This typedef is provided for backward compatibility, and will be removed
  * in some future version of Regina.
  */
-typedef NTriangle NFace;
+REGINA_DEPRECATED typedef NTriangle NFace;
 
 /**
  * A legacy typedef provided for backward compatibility only.
@@ -56,5 +56,5 @@ typedef NTriangle NFace;
  * NTriangleEmbedding.  This typedef is provided for backward compatibility,
  * and will be removed in some future version of Regina.
  */
-typedef NTriangleEmbedding NFaceEmbedding;
+REGINA_DEPRECATED typedef NTriangleEmbedding NFaceEmbedding;
 

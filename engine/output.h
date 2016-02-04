@@ -128,7 +128,7 @@ struct Output {
      *
      * @return a short text representation of this object.
      */
-    std::string toString() const;
+    REGINA_DEPRECATED std::string toString() const;
     /**
      * A deprecated alias for detail().
      *
@@ -137,7 +137,7 @@ struct Output {
      *
      * @return a long text representation of this object.
      */
-    std::string toStringLong() const;
+    REGINA_DEPRECATED std::string toStringLong() const;
 };
 
 /**

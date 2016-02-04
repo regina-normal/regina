@@ -335,7 +335,7 @@ class REGINA_API Triangulation<3> :
          *
          * See simplexIndex() for further information.
          */
-        long tetrahedronIndex(const NTetrahedron* tet) const;
+        REGINA_DEPRECATED long tetrahedronIndex(const NTetrahedron* tet) const;
         /**
          * A dimension-specific alias for newSimplex().
          *
@@ -387,7 +387,7 @@ class REGINA_API Triangulation<3> :
          *
          * \deprecated Simply call countBoundaryComponents() instead.
          */
-        size_t getNumberOfBoundaryComponents() const;
+        REGINA_DEPRECATED size_t getNumberOfBoundaryComponents() const;
 
         /**
          * Returns all boundary components of this triangulation.
@@ -413,7 +413,8 @@ class REGINA_API Triangulation<3> :
          * \deprecated This routine has been renamed to boundaryComponents().
          * See the boundaryComponents() documentation for further details.
          */
-        const std::vector<NBoundaryComponent*>& getBoundaryComponents() const;
+        REGINA_DEPRECATED const std::vector<NBoundaryComponent*>&
+            getBoundaryComponents() const;
         /**
          * Returns the requested triangulation boundary component.
          *
@@ -433,7 +434,8 @@ class REGINA_API Triangulation<3> :
          * \deprecated This routine has been renamed to boundaryComponent().
          * See the boundaryComponent() documentation for further details.
          */
-        NBoundaryComponent* getBoundaryComponent(size_t index) const;
+        REGINA_DEPRECATED NBoundaryComponent* getBoundaryComponent(size_t index)
+            const;
         /**
          * Deprecated routine that returns the index of the given
          * boundary component in the triangulation.
@@ -448,7 +450,8 @@ class REGINA_API Triangulation<3> :
          * @return the index of the specified boundary component,
          * where 0 is the first boundary component, 1 is the second and so on. 
          */
-        size_t boundaryComponentIndex(const NBoundaryComponent* bc) const;
+        REGINA_DEPRECATED size_t boundaryComponentIndex(
+            const NBoundaryComponent* bc) const;
         /**
          * Deprecated routine that returns the index of the given vertex
          * in the triangulation.
@@ -462,7 +465,7 @@ class REGINA_API Triangulation<3> :
          * @return the index of the specified vertex, where 0 is the first
          * vertex, 1 is the second and so on.
          */
-        size_t vertexIndex(const NVertex* vertex) const;
+        REGINA_DEPRECATED size_t vertexIndex(const NVertex* vertex) const;
         /**
          * Deprecated routine that returns the index of the given edge
          * in the triangulation.
@@ -476,7 +479,7 @@ class REGINA_API Triangulation<3> :
          * @return the index of the specified edge, where 0 is the first
          * edge, 1 is the second and so on.
          */
-        size_t edgeIndex(const NEdge* edge) const;
+        REGINA_DEPRECATED size_t edgeIndex(const NEdge* edge) const;
         /**
          * Deprecated routine that returns the index of the given triangle
          * in the triangulation.
@@ -490,7 +493,7 @@ class REGINA_API Triangulation<3> :
          * @return the index of the specified triangle, where 0 is the first
          * triangle, 1 is the second and so on.
          */
-        size_t triangleIndex(const NTriangle* tri) const;
+        REGINA_DEPRECATED size_t triangleIndex(const NTriangle* tri) const;
 
         /**
          * Determines if this triangulation contains any two-sphere
@@ -539,7 +542,7 @@ class REGINA_API Triangulation<3> :
          * \deprecated This routine has been renamed to eulerCharTri().
          * See the eulerCharTri() documentation for further details.
          */
-        long getEulerCharTri() const;
+        REGINA_DEPRECATED long getEulerCharTri() const;
 
         /**
          * Returns the Euler characteristic of the corresponding compact
@@ -572,7 +575,7 @@ class REGINA_API Triangulation<3> :
          * \deprecated This routine has been renamed to eulerCharManifold().
          * See the eulerCharManifold() documentation for further details.
          */
-        long getEulerCharManifold() const;
+        REGINA_DEPRECATED long getEulerCharManifold() const;
 
         /**
          * Determines if this triangulation is ideal.
@@ -666,7 +669,7 @@ class REGINA_API Triangulation<3> :
          * \deprecated This routine has been renamed to fundamentalGroup().
          * See the fundamentalGroup() documentation for further details.
          */
-        const NGroupPresentation& getFundamentalGroup() const;
+        REGINA_DEPRECATED const NGroupPresentation& getFundamentalGroup() const;
         /**
          * Notifies the triangulation that you have simplified the
          * presentation of its fundamental group.  The old group
@@ -765,7 +768,7 @@ class REGINA_API Triangulation<3> :
          * \deprecated This routine has been renamed to homology().
          * See the homology() documentation for further details.
          */
-        const NAbelianGroup& getHomologyH1() const;
+        REGINA_DEPRECATED const NAbelianGroup& getHomologyH1() const;
         /**
          * Returns the relative first homology group with
          * respect to the boundary for this triangulation.
@@ -790,7 +793,7 @@ class REGINA_API Triangulation<3> :
          * \deprecated This routine has been renamed to homologyRel().
          * See the homologyRel() documentation for further details.
          */
-        const NAbelianGroup& getHomologyH1Rel() const;
+        REGINA_DEPRECATED const NAbelianGroup& getHomologyH1Rel() const;
         /**
          * Returns the first homology group of the
          * boundary for this triangulation.
@@ -818,7 +821,7 @@ class REGINA_API Triangulation<3> :
          * \deprecated This routine has been renamed to homologyBdry().
          * See the homologyBdry() documentation for further details.
          */
-        const NAbelianGroup& getHomologyH1Bdry() const;
+        REGINA_DEPRECATED const NAbelianGroup& getHomologyH1Bdry() const;
         /**
          * Returns the second homology group for this triangulation.
          * If this triangulation contains any ideal vertices,
@@ -846,7 +849,7 @@ class REGINA_API Triangulation<3> :
          * \deprecated This routine has been renamed to homologyH2().
          * See the homologyH2() documentation for further details.
          */
-        const NAbelianGroup& getHomologyH2() const;
+        REGINA_DEPRECATED const NAbelianGroup& getHomologyH2() const;
         /**
          * Returns the second homology group with coefficients in Z_2
          * for this triangulation.
@@ -873,7 +876,7 @@ class REGINA_API Triangulation<3> :
          * \deprecated This routine has been renamed to homologyH2Z2().
          * See the homologyH2Z2() documentation for further details.
          */
-        unsigned long getHomologyH2Z2() const;
+        REGINA_DEPRECATED unsigned long getHomologyH2Z2() const;
         /**
          * Computes the given Turaev-Viro state sum invariant of this
          * 3-manifold using exact arithmetic.

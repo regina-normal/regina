@@ -158,7 +158,7 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          * \deprecated This routine has been renamed as boundaryComponent().
          * See the boundaryComponent() documentation for further details.
          */
-        NBoundaryComponent* getBoundaryComponent() const;
+        REGINA_DEPRECATED NBoundaryComponent* getBoundaryComponent() const;
 
         /**
          * Returns a broad categorisation of the link of the vertex.
@@ -179,7 +179,7 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          * \deprecated This routine has been renamed to link().
          * See the link() documentation for further details.
          */
-        LinkType getLink() const;
+        REGINA_DEPRECATED LinkType getLink() const;
 
         /**
          * Returns a full 2-manifold triangulation describing
@@ -340,7 +340,7 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          * \deprecated This routine has been renamed to linkEulerChar().
          * See the linkEulerChar() documentation for further details.
          */
-        long getLinkEulerChar() const;
+        REGINA_DEPRECATED long getLinkEulerChar() const;
 
         /**
          * A deprecated alias for linkEulerChar().
@@ -356,7 +356,7 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          *
          * @return the Euler characteristic of the vertex link.
          */
-        long getLinkEulerCharacteristic() const;
+        REGINA_DEPRECATED long getLinkEulerCharacteristic() const;
 
         /**
          * Writes a short text representation of this object to the

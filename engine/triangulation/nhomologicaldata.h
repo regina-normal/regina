@@ -512,7 +512,7 @@ public:
      * \deprecated This routine has been renamed to homology().
      * See the homology() documentation for further details.
      */
-    const NMarkedAbelianGroup& getHomology(unsigned q);
+    REGINA_DEPRECATED const NMarkedAbelianGroup& getHomology(unsigned q);
     /**
      * This routine gives access to the homology of the boundary
      * of the manifold, computed with the regular CW-decomposition.
@@ -529,7 +529,7 @@ public:
      * \deprecated This routine has been renamed to bdryHomology().
      * See the bdryHomology() documentation for further details.
      */
-    const NMarkedAbelianGroup& getBdryHomology(unsigned q);
+    REGINA_DEPRECATED const NMarkedAbelianGroup& getBdryHomology(unsigned q);
 
     /**
      * This routine gives access to the homomorphism from the
@@ -547,7 +547,8 @@ public:
      * \deprecated This routine has been renamed to bdryHomologyMap().
      * See the bdryHomologyMap() documentation for further details.
      */
-    const NHomMarkedAbelianGroup& getBdryHomologyMap(unsigned q);
+    REGINA_DEPRECATED const NHomMarkedAbelianGroup& getBdryHomologyMap(
+        unsigned q);
 
     /**
      * This routine gives access to the manifold's homology computed
@@ -571,7 +572,7 @@ public:
      * \deprecated This routine has been renamed to dualHomology().
      * See the dualHomology() documentation for further details.
      */
-    const NMarkedAbelianGroup& getDualHomology(unsigned q);
+    REGINA_DEPRECATED const NMarkedAbelianGroup& getDualHomology(unsigned q);
 
     /**
      * Returns the isomorphism from dualHomology(1) to homology(1)
@@ -590,7 +591,7 @@ public:
      * \deprecated This routine has been renamed to h1CellAp().
      * See the h1CellAp() documentation for further details.
      */
-    const NHomMarkedAbelianGroup& getH1CellAp();
+    REGINA_DEPRECATED const NHomMarkedAbelianGroup& getH1CellAp();
 
     /**
      * Returns the number of cells of the given dimension
@@ -618,7 +619,7 @@ public:
      * \deprecated This routine has been renamed to countStandardCells().
      * See the countStandardCells() documentation for further details.
      */
-    unsigned long getNumStandardCells(unsigned dimension);
+    REGINA_DEPRECATED unsigned long getNumStandardCells(unsigned dimension);
     /**
      * Returns the number of cells of the given dimension
      * in the dual CW-decomposition of the manifold. This is typically
@@ -637,7 +638,7 @@ public:
      * \deprecated This routine has been renamed to countDualCells().
      * See the countDualCells() documentation for further details.
      */
-    unsigned long getNumDualCells(unsigned dimension);
+    REGINA_DEPRECATED unsigned long getNumDualCells(unsigned dimension);
     /**
      * Returns the number of cells of the given dimension in the
      * standard CW-decomposition of the boundary of the manifold.
@@ -657,7 +658,7 @@ public:
      * \deprecated This routine has been renamed to countBdryCells().
      * See the countBdryCells() documentation for further details.
      */
-    unsigned long getNumBdryCells(unsigned dimension);
+    REGINA_DEPRECATED unsigned long getNumBdryCells(unsigned dimension);
     /**
      * The proper Euler characteristic of the manifold, computed from
      * the dual CW-decomposition.
@@ -687,7 +688,7 @@ public:
      * \deprecated This routine has been renamed to eulerChar().
      * See the eulerChar() documentation for further details.
      */
-    long getEulerChar();
+    REGINA_DEPRECATED long getEulerChar();
 
     /**
      * Returns the torsion form rank vector. This is the first of
@@ -717,7 +718,7 @@ public:
      * \deprecated This routine has been renamed to torsionRankVector().
      * See the torsionRankVector() documentation for further details.
      */
-    const std::vector< std::pair< NLargeInteger,
+    REGINA_DEPRECATED const std::vector< std::pair< NLargeInteger,
         std::vector< unsigned long > > >& getTorsionRankVector();
     /**
      * Same as torsionRankVector() but returns as a human-readable string.
@@ -735,7 +736,7 @@ public:
      * \deprecated This routine has been renamed to torsionRankVectorString().
      * See the torsionRankVectorString() documentation for further details.
      */
-    const std::string& getTorsionRankVectorString();
+    REGINA_DEPRECATED const std::string& getTorsionRankVectorString();
     /**
      * Returns the 2-torsion sigma vector. This is the second of the three
      * Kawauchi-Kojima invariants. It is orientation-sensitive.
@@ -758,7 +759,7 @@ public:
      * \deprecated This routine has been renamed to torsionSigmaVector().
      * See the torsionSigmaVector() documentation for further details.
      */
-    const std::vector<NLargeInteger>& getTorsionSigmaVector();
+    REGINA_DEPRECATED const std::vector<NLargeInteger>& getTorsionSigmaVector();
     /**
      * Same as torsionSigmaVector() but returns as a human-readable string.
      * This is an orientation-sensitive invariant.
@@ -775,7 +776,7 @@ public:
      * \deprecated This routine has been renamed to torsionSigmaVectorString().
      * See the torsionSigmaVectorString() documentation for further details.
      */
-    const std::string& getTorsionSigmaVectorString();
+    REGINA_DEPRECATED const std::string& getTorsionSigmaVectorString();
 
     /**
      * Returns the odd p-torsion Legendre symbol vector. This is the
@@ -802,7 +803,8 @@ public:
      * torsionLegendreSymbolVector().  See the torsionLegendreSymbolVector()
      * documentation for further details.
      */
-    const std::vector< std::pair< NLargeInteger, std::vector< int > > >&
+    REGINA_DEPRECATED const
+        std::vector< std::pair< NLargeInteger, std::vector< int > > >&
         getTorsionLegendreSymbolVector();
     /**
      * Same as torsionLegendreSymbolVector() but returns as a
@@ -821,7 +823,7 @@ public:
      * torsionLegendreSymbolVectorString().  See the
      * torsionLegendreSymbolVectorString() documentation for further details.
      */
-    const std::string& getTorsionLegendreSymbolVectorString();
+    REGINA_DEPRECATED const std::string& getTorsionLegendreSymbolVectorString();
 
     /**
      * Returns true iff torsion linking form is `hyperbolic' in
@@ -892,7 +894,7 @@ public:
      * \deprecated This routine has been renamed to embeddabilityComment().
      * See the embeddabilityComment() documentation for further details.
      */
-    const std::string& getEmbeddabilityComment();
+    REGINA_DEPRECATED const std::string& getEmbeddabilityComment();
 };
 
 /*@}*/

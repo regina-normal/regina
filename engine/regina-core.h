@@ -88,6 +88,22 @@ constexpr bool standardDim(int dim) {
  */
 #define REGINA_INLINE_REQUIRED inline
 
+/**
+ * Any deprecated class, function or typedef in Regina's API must be
+ * declared with REGINA_DEPRECATED.
+ *
+ * Where possible, this expands to an attribute that the compiler can
+ * recognise (such as the C++14 attribute <tt>[[deprecated]]</tt>, which
+ * some compilers already support for C++11).
+ *
+ * If a function is declared as both REGINA_API and REGINA_DEPRECATED, the
+ * REGINA_DEPRECATED attribute should be listed first.
+ *
+ * Conversely, if a class is declared as both REGINA_API and REGINA_DEPRECATED,
+ * the REGINA_API attribute should be listed first.
+ */
+#define REGINA_DEPRECATED [[deprecated]]
+
 #ifdef __DOXYGEN
   // Fake definitions just for doxygen.
 

@@ -168,7 +168,7 @@ class REGINA_API NBoundaryComponent :
          * \deprecated This routine has been renamed to component().
          * See the component() documentation for further details.
          */
-        NComponent* getComponent() const;
+        REGINA_DEPRECATED NComponent* getComponent() const;
 
         /**
          * Returns the Euler characteristic of this boundary component.
@@ -186,7 +186,7 @@ class REGINA_API NBoundaryComponent :
          * \deprecated This routine has been renamed to eulerChar().
          * See the eulerChar() documentation for further details.
          */
-        long getEulerChar() const;
+        REGINA_DEPRECATED long getEulerChar() const;
 
         /**
          * A deprecated alias for eulerChar().
@@ -200,7 +200,7 @@ class REGINA_API NBoundaryComponent :
          *
          * @return the Euler characteristic.
          */
-        long getEulerCharacteristic() const;
+        REGINA_DEPRECATED long getEulerCharacteristic() const;
 
         /**
          * Determines if this boundary component is ideal.

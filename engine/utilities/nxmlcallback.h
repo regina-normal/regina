@@ -125,7 +125,7 @@ class REGINA_API NXMLCallback : public regina::xml::XMLParserCallback {
          * \deprecated This routine has been renamed to state().
          * See the state() documentation for further details.
          */
-        int getState() const;
+        REGINA_DEPRECATED int getState() const;
 
         /**
          * Aborts processing of the XML file completely.  The XMLParser

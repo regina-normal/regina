@@ -214,7 +214,7 @@ struct NewFunction : public Returns<Base*> {
  * \ifacespython Not present.
  */
 template <class Base, typename Arg>
-struct NewFunction1 : public Returns<Base*> {
+struct REGINA_DEPRECATED NewFunction1 : public Returns<Base*> {
     size_t arg_;
         /**< The length of the new vector to create. */
 

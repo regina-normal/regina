@@ -101,7 +101,7 @@ class REGINA_API Face<3, 1> : public detail::FaceBase<3, 1>,
          * \deprecated This routine has been renamed as boundaryComponent().
          * See the boundaryComponent() documentation for further details.
          */
-        NBoundaryComponent* getBoundaryComponent() const;
+        REGINA_DEPRECATED NBoundaryComponent* getBoundaryComponent() const;
 
         /**
          * Determines if this edge lies entirely on the boundary of the
