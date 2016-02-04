@@ -42,8 +42,8 @@
 #include <cabin.h>
 #include <villa.h>
 #else
-#include <stdbool.h> // cstdbool only works for c++11
-#include <stdint.h> // cstdint only works for c++11
+#include <cstdbool>
+#include <cstdint>
 #include <tcbdb.h>
 #include <tcutil.h>
 #endif
