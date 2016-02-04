@@ -164,7 +164,7 @@ void Dim4GluingPermSearcher::PentTriangleState::dumpData(std::ostream& out)
     // but which should be written as an int.
     out << parent << ' ' << rank << ' ' << size << ' '
         << (bounded ? 1 : 0) << ' '
-        << static_cast<unsigned int>(twistUp.getPermCode()) << ' '
+        << static_cast<unsigned int>(twistUp.permCode()) << ' '
         << (hadEqualRank ? 1 : 0);
 }
 

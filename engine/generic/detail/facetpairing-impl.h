@@ -76,11 +76,11 @@ FacetPairingBase<dim>::FacetPairingBase(const Triangulation<dim>& tri) :
     unsigned f;
     const Simplex<dim> *simp, *adj;
     for (index = 0, p = 0; p < size_; ++p) {
-        simp = tri.getSimplex(p);
+        simp = tri.simplex(p);
         for (f = 0; f <= dim; ++f) {
             adj = simp->adjacentSimplex(f);
             if (adj) {
-                pairs_[index].simp = tri.simplexIndex(adj);
+                pairs_[index].simp = adj->index();
                 pairs_[index].facet = simp->adjacentFacet(f);
             } else
                 pairs_[index].setBoundary(size_);

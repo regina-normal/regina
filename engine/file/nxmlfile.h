@@ -33,8 +33,8 @@
 /* end stub */
 
 /*! \file file/nxmlfile.h
- *  \brief Deals with storing program data (including packet trees)
- *  in XML data files.
+ *  \brief Deprecated header that deals with storing program data
+ *  (including packet trees) in XML data files.
  *
  *  \deprecated The global functions that were once declared in this file have
  *  been renamed, and are now declared in npacket.h.

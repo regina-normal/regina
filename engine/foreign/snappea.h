@@ -33,7 +33,7 @@
 /* end stub */
 
 /*! \file foreign/snappea.h
- *  \brief Allows reading and writing SnapPea files.
+ *  \brief Deprecated header that allows reading and writing SnapPea files.
  *
  *  \deprecated All global functions that were once declared in this
  *  file have now been renamed to member functions of NSnapPeaTriangulation.

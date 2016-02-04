@@ -33,7 +33,8 @@
 /* end stub */
 
 /*! \file foreign/recogniser.h
- *  \brief Allows exports to Matveev's 3-manifold recogniser.
+ *  \brief Deprecated header that allows exports to Matveev's 3-manifold
+ *  recogniser.
  *
  *  \deprecated All global functions that were once declared in this file have
  *  now been renamed to member functions of NTriangulation.
