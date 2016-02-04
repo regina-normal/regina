@@ -102,7 +102,18 @@ constexpr bool standardDim(int dim) {
  * Conversely, if a class is declared as both REGINA_API and REGINA_DEPRECATED,
  * the REGINA_API attribute should be listed first.
  */
-#define REGINA_DEPRECATED [[deprecated]]
+#if __llvm__
+    #define REGINA_DEPRECATED [[deprecated]]
+    #define REGINA_DEPRECATED_ENUM [[deprecated]]
+#else
+    #if __GNUC__
+        #define REGINA_DEPRECATED __attribute__((deprecated))
+        #define REGINA_DEPRECATED_ENUM
+    #else
+        #define REGINA_DEPRECATED
+        #define REGINA_DEPRECATED_ENUM
+    #endif
+#endif
 
 #ifdef __DOXYGEN
   // Fake definitions just for doxygen.

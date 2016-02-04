@@ -116,7 +116,7 @@ enum NormalCoords {
      * \deprecated This constant will be removed in a future version
      * of Regina.  Please use NS_TRIANGLE_ARCS instead.
      */
-    NS_FACE_ARCS REGINA_DEPRECATED = 201,
+    NS_FACE_ARCS REGINA_DEPRECATED_ENUM = 201,
     /**
      * Represents standard triangle-quadrilateral coordinates for
      * transversely oriented normal surfaces.
