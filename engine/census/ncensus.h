@@ -731,10 +731,17 @@ class REGINA_API NCensus {
          * Creates a new structure to hold the given information.
          * All parameters not explained are taken directly from
          * formCensus().
+         *
+         * \deprecated The NCensus enumeration facilities are on their
+         * way out of Regina, and in the future the NCensus class will be
+         * used purely for census lookups.  If you wish to build a census
+         * yourself, you should call NFacePairing::findAllPairings() and
+         * NGluingPermSearcher::findAllPerms() directly.
          */
-        NCensus(NPacket* newParent, const NBoolSet& newFiniteness,
-            const NBoolSet& newOrientability, int newWhichPurge,
-            AcceptTriangulation newSieve, void* newSieveArgs);
+        REGINA_DEPRECATED NCensus(NPacket* newParent,
+            const NBoolSet& newFiniteness, const NBoolSet& newOrientability,
+            int newWhichPurge, AcceptTriangulation newSieve,
+            void* newSieveArgs);
 
         /**
          * Called when a particular tetrahedron face pairing has been

@@ -273,8 +273,14 @@ class REGINA_API Dim2Census {
          * Creates a new structure to hold the given information.
          * All parameters not explained are taken directly from
          * formCensus().
+         *
+         * \deprecated The Dim2Census enumeration facilities are on their
+         * way out of Regina, and in the future the Dim2Census class will be
+         * used purely for census lookups.  If you wish to build a census
+         * yourself, you should call Dim2EdgePairing::findAllPairings() and
+         * Dim2GluingPermSearcher::findAllPerms() directly.
          */
-        Dim2Census(NPacket* parent,
+        REGINA_DEPRECATED Dim2Census(NPacket* parent,
             const NBoolSet& orientability,
             AcceptTriangulation sieve, void* sieveArgs);
 
