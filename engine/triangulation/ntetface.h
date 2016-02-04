@@ -33,7 +33,7 @@
 /* end stub */
 
 /*! \file triangulation/ntetface.h
- *  \brief Deprecated header; please use nfacetspec.h instead.
+ *  \brief Deprecated header.
  */
 
 #ifndef __NTETFACE_H
@@ -41,7 +41,9 @@
 #define __NTETFACE_H
 #endif
 
-#include "generic/nfacetspec.h"
+#warning This header is deprecated; please use generic/facetspec.h instead.
+
+#include "generic/facetspec.h"
 
 #endif
 

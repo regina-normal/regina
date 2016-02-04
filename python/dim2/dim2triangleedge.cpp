@@ -33,7 +33,7 @@
 /* end stub */
 
 #include <boost/python.hpp>
-#include "generic/nfacetspec.h"
+#include "generic/facetspec.h"
 #include "../helpers.h"
 
 using namespace boost::python;

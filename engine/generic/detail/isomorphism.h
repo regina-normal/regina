@@ -44,7 +44,7 @@
 
 #include "regina-core.h"
 #include "output.h"
-#include "generic/nfacetspec.h"
+#include "generic/facetspec.h"
 #include "maths/nperm.h"
 #include <algorithm>
 #include <boost/noncopyable.hpp>

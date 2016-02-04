@@ -42,7 +42,7 @@
 #endif
 
 #include "regina-core.h"
-#include "generic/nfacetspec.h"
+#include "generic/facetspec.h"
 #include "generic/isomorphism.h"
 #include "maths/nperm3.h"
 

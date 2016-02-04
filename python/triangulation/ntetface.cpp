@@ -33,7 +33,7 @@
 /* end stub */
 
 #include <boost/python.hpp>
-#include "triangulation/ntetface.h"
+#include "generic/facetspec.h"
 #include "../helpers.h"
 
 using namespace boost::python;

@@ -36,7 +36,7 @@
  *  \brief Deprecated header.
  */
 
-#warning This header is deprecated; please use generic/nfacetspec.h instead.
+#warning This header is deprecated; please use generic/facetspec.h instead.
 
-#include "generic/nfacetspec.h"
+#include "generic/facetspec.h"
 

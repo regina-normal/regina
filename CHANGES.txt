@@ -715,6 +715,8 @@ Version 5.0  [ (under development) ]
               Deprecated headers have been kept in the old census/ folder.
         Header dimtraits.h:
             - Deprecated, since this header is now empty.
+        Header nfacetspec.h:
+            - Renamed to facetspec.h.  The old header is kept but deprecated.
         Header ngenericfacetpairing.h, ngenericfacetpairing-impl.h:
             - Moved to generic/facetpairing.h and generic/facetpairing-impl.h.
               The old headers are kept but deprecated.
