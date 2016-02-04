@@ -186,7 +186,7 @@ class REGINA_API NLayering : public boost::noncopyable {
          * \deprecated This routine has been renamed to size().
          * See the size() documentation for further details.
          */
-        unsigned long getSize() const;
+        REGINA_DEPRECATED unsigned long getSize() const;
 
         /**
          * Returns the tetrahedra that provide the old boundary triangles.
@@ -208,7 +208,7 @@ class REGINA_API NLayering : public boost::noncopyable {
          * \deprecated This routine has been renamed to oldBoundaryTet().
          * See the oldBoundaryTet() documentation for further details.
          */
-        NTetrahedron* getOldBoundaryTet(unsigned which) const;
+        REGINA_DEPRECATED NTetrahedron* getOldBoundaryTet(unsigned which) const;
         /**
          * Returns the permutations that describe the old boundary triangles.
          * These refer to the original boundary before any layerings
@@ -229,7 +229,7 @@ class REGINA_API NLayering : public boost::noncopyable {
          * \deprecated This routine has been renamed to oldBoundaryRoles().
          * See the oldBoundaryRoles() documentation for further details.
          */
-        NPerm4 getOldBoundaryRoles(unsigned which) const;
+        REGINA_DEPRECATED NPerm4 getOldBoundaryRoles(unsigned which) const;
         /**
          * Returns the tetrahedra that provide the new boundary triangles.
          * These belong to the final boundary after layerings have been
@@ -250,7 +250,7 @@ class REGINA_API NLayering : public boost::noncopyable {
          * \deprecated This routine has been renamed to newBoundaryTet().
          * See the newBoundaryTet() documentation for further details.
          */
-        NTetrahedron* getNewBoundaryTet(unsigned which) const;
+        REGINA_DEPRECATED NTetrahedron* getNewBoundaryTet(unsigned which) const;
         /**
          * Returns the permutations that describe the new boundary triangles.
          * These refer to the final boundary after layerings have been
@@ -271,7 +271,7 @@ class REGINA_API NLayering : public boost::noncopyable {
          * \deprecated This routine has been renamed to newBoundaryRoles().
          * See the newBoundaryRoles() documentation for further details.
          */
-        NPerm4 getNewBoundaryRoles(unsigned which) const;
+        REGINA_DEPRECATED NPerm4 getNewBoundaryRoles(unsigned which) const;
 
         /**
          * Returns a 2-by-2 matrix describing the relationship between

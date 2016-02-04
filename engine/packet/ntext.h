@@ -106,7 +106,7 @@ class REGINA_API NText : public NPacket {
          * \deprecated This routine has been renamed to text().
          * See the text() documentation for further details.
          */
-        const std::string& getText() const;
+        REGINA_DEPRECATED const std::string& getText() const;
 
         /**
          * Sets the packet data to the given string.

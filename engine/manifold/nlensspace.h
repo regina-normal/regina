@@ -109,7 +109,7 @@ class REGINA_API NLensSpace : public NManifold {
          * \deprecated This routine has been renamed to p().
          * See the p() documentation for further details.
          */
-        unsigned long getP() const;
+        REGINA_DEPRECATED unsigned long getP() const;
         /**
          * Returns the second parameter \a q of this lens space L(p,q).
          * See the class notes for details.
@@ -127,7 +127,7 @@ class REGINA_API NLensSpace : public NManifold {
          * \deprecated This routine has been renamed to q().
          * See the q() documentation for further details.
          */
-        unsigned long getQ() const;
+        REGINA_DEPRECATED unsigned long getQ() const;
         /**
          * Determines whether this and the given lens space are
          * homeomorphic 3-manifolds.  Note that this may be true

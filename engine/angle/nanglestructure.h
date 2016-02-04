@@ -207,7 +207,8 @@ class REGINA_API NAngleStructure :
          * \deprecated This routine has been renamed to angle().
          * See the angle() documentation for further details.
          */
-        NRational getAngle(size_t tetIndex, int edgePair) const;
+        REGINA_DEPRECATED NRational getAngle(size_t tetIndex, int edgePair)
+            const;
 
         /**
          * Returns the triangulation on which this angle structure lies.
@@ -222,7 +223,7 @@ class REGINA_API NAngleStructure :
          * \deprecated This routine has been renamed to triangulation().
          * See the triangulation() documentation for further details.
          */
-        const NTriangulation* getTriangulation() const;
+        REGINA_DEPRECATED const NTriangulation* getTriangulation() const;
 
         /**
          * Determines whether this is a strict angle structure.

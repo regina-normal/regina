@@ -343,7 +343,7 @@ class REGINA_API NPerm<4> {
          * \deprecated This routine has been renamed to permCode().
          * See the permCode() documentation for further details.
          */
-        Code getPermCode() const;
+        REGINA_DEPRECATED Code getPermCode() const;
 
         /**
          * Returns the second-generation code representing this permutation.
@@ -365,7 +365,7 @@ class REGINA_API NPerm<4> {
          * \deprecated This routine has been renamed to permCode2().
          * See the permCode2() documentation for further details.
          */
-        Code getPermCode2() const;
+        REGINA_DEPRECATED Code getPermCode2() const;
 
         /**
          * Sets this permutation to that represented by the given

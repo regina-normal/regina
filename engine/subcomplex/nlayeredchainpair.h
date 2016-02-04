@@ -116,7 +116,7 @@ class REGINA_API NLayeredChainPair : public NStandardTriangulation {
          * \deprecated This routine has been renamed to chain().
          * See the chain() documentation for further details.
          */
-        const NLayeredChain* getChain(int which) const;
+        REGINA_DEPRECATED const NLayeredChain* getChain(int which) const;
 
         /**
          * Determines if the given triangulation component is a layered

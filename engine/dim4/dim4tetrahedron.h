@@ -110,7 +110,7 @@ class REGINA_API Face<4, 3> : public detail::FaceBase<4, 3>,
          * \deprecated This routine has been renamed as boundaryComponent().
          * See the boundaryComponent() documentation for further details.
          */
-        Dim4BoundaryComponent* getBoundaryComponent() const;
+        REGINA_DEPRECATED Dim4BoundaryComponent* getBoundaryComponent() const;
 
         /**
          * Determines whether this tetrahedron represents a dual edge in the

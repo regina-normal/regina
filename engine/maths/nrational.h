@@ -225,7 +225,7 @@ class REGINA_API NRational {
          * \deprecated This routine has been renamed to numerator().
          * See the numeration() documentation for further details.
          */
-        NInteger getNumerator() const;
+        REGINA_DEPRECATED NInteger getNumerator() const;
         /**
          * Returns the denominator of this rational.
          * Note that rationals are always stored in lowest terms with
@@ -240,7 +240,7 @@ class REGINA_API NRational {
          * \deprecated This routine has been renamed to denominator().
          * See the denominator() documentation for further details.
          */
-        NInteger getDenominator() const;
+        REGINA_DEPRECATED NInteger getDenominator() const;
 
         /**
          * Calculates the product of two rationals.
@@ -446,7 +446,7 @@ class REGINA_API NRational {
          * \deprecated This routine has been renamed to TeX().
          * See the TeX() documentation for further details.
          */
-        std::string getTeX() const;
+        REGINA_DEPRECATED std::string getTeX() const;
 
         /**
          * Writes this rational in TeX format to the given output stream.

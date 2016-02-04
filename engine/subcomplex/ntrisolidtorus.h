@@ -128,7 +128,7 @@ class REGINA_API NTriSolidTorus : public NStandardTriangulation {
          * \deprecated This routine has been renamed to tetrahedron().
          * See the tetrahedron() documentation for further details.
          */
-        NTetrahedron* getTetrahedron(int index) const;
+        REGINA_DEPRECATED NTetrahedron* getTetrahedron(int index) const;
 
         /**
          * Returns a permutation represeting the role that each vertex
@@ -167,7 +167,7 @@ class REGINA_API NTriSolidTorus : public NStandardTriangulation {
          * \deprecated This routine has been renamed to vertexRoles().
          * See the vertexRoles() documentation for further details.
          */
-        NPerm4 getVertexRoles(int index) const;
+        REGINA_DEPRECATED NPerm4 getVertexRoles(int index) const;
 
         /**
          * Determines whether the two triangles of the requested annulus are

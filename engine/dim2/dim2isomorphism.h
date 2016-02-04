@@ -92,7 +92,7 @@ class REGINA_API Isomorphism<2> : public detail::IsomorphismBase<2> {
          *
          * See size() for further information.
          */
-        unsigned getSourceTriangles() const;
+        REGINA_DEPRECATED unsigned getSourceTriangles() const;
 
         /**
          * A dimension-specific alias for simpImage().

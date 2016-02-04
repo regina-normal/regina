@@ -236,7 +236,8 @@ class REGINA_API Triangulation<4> :
          *
          * See simplexIndex() for further information.
          */
-        long pentachoronIndex(const Dim4Pentachoron* pent) const;
+        REGINA_DEPRECATED long pentachoronIndex(const Dim4Pentachoron* pent)
+            const;
         /**
          * A dimension-specific alias for newSimplex().
          *
@@ -291,7 +292,7 @@ class REGINA_API Triangulation<4> :
          *
          * \deprecated Simply call countBoundaryComponents() instead.
          */
-        size_t getNumberOfBoundaryComponents() const;
+        REGINA_DEPRECATED size_t getNumberOfBoundaryComponents() const;
 
         /**
          * Returns all boundary components of this triangulation.
@@ -320,8 +321,8 @@ class REGINA_API Triangulation<4> :
          * \deprecated This routine has been renamed to boundaryComponents().
          * See the boundaryComponents() documentation for further details.
          */
-        const std::vector<Dim4BoundaryComponent*>& getBoundaryComponents()
-            const;
+        REGINA_DEPRECATED const std::vector<Dim4BoundaryComponent*>&
+            getBoundaryComponents() const;
         /**
          * Returns the requested boundary component of this triangulation.
          *
@@ -341,7 +342,8 @@ class REGINA_API Triangulation<4> :
          * \deprecated This routine has been renamed to boundaryComponent().
          * See the boundaryComponent() documentation for further details.
          */
-        Dim4BoundaryComponent* getBoundaryComponent(size_t index) const;
+        REGINA_DEPRECATED Dim4BoundaryComponent* getBoundaryComponent(
+            size_t index) const;
         /**
          * Deprecated routine that returns the index of the given
          * boundary component in the triangulation.
@@ -356,7 +358,8 @@ class REGINA_API Triangulation<4> :
          * @return the index of the specified boundary component,
          * where 0 is the first boundary component, 1 is the second and so on.
          */
-        size_t boundaryComponentIndex(const Dim4BoundaryComponent* bc) const;
+        REGINA_DEPRECATED size_t boundaryComponentIndex(
+            const Dim4BoundaryComponent* bc) const;
         /**
          * Deprecated routine that returns the index of the given vertex
          * in the triangulation.
@@ -370,7 +373,7 @@ class REGINA_API Triangulation<4> :
          * @return the index of the specified vertex, where 0 is the first
          * vertex, 1 is the second and so on.
          */
-        size_t vertexIndex(const Dim4Vertex* vertex) const;
+        REGINA_DEPRECATED size_t vertexIndex(const Dim4Vertex* vertex) const;
         /**
          * Deprecated routine that returns the index of the given edge
          * in the triangulation.
@@ -384,7 +387,7 @@ class REGINA_API Triangulation<4> :
          * @return the index of the specified edge, where 0 is the first
          * edge, 1 is the second and so on.
          */
-        size_t edgeIndex(const Dim4Edge* edge) const;
+        REGINA_DEPRECATED size_t edgeIndex(const Dim4Edge* edge) const;
         /**
          * Deprecated routine that returns the index of the given triangle
          * in the triangulation.
@@ -398,7 +401,7 @@ class REGINA_API Triangulation<4> :
          * @return the index of the specified triangle, where 0 is the first
          * triangle, 1 is the second and so on.
          */
-        size_t triangleIndex(const Dim4Triangle* tri) const;
+        REGINA_DEPRECATED size_t triangleIndex(const Dim4Triangle* tri) const;
         /**
          * Deprecated routine that returns the index of the given tetrahedron
          * in the triangulation.
@@ -412,7 +415,8 @@ class REGINA_API Triangulation<4> :
          * @return the index of the specified tetrahedron, where 0 is the
          * first tetrahedron, 1 is the second and so on.
          */
-        size_t tetrahedronIndex(const Dim4Tetrahedron* tet) const;
+        REGINA_DEPRECATED size_t tetrahedronIndex(const Dim4Tetrahedron* tet)
+            const;
 
         /*@}*/
         /**
@@ -444,7 +448,7 @@ class REGINA_API Triangulation<4> :
          * \deprecated This routine has been renamed to eulerCharTri().
          * See the eulerCharTri() documentation for further details.
          */
-        long getEulerCharTri() const;
+        REGINA_DEPRECATED long getEulerCharTri() const;
 
         /**
          * Returns the Euler characteristic of the corresponding compact
@@ -478,7 +482,7 @@ class REGINA_API Triangulation<4> :
          * \deprecated This routine has been renamed to eulerCharManifold().
          * See the eulerCharManifold() documentation for further details.
          */
-        long getEulerCharManifold() const;
+        REGINA_DEPRECATED long getEulerCharManifold() const;
 
         /**
          * Determines if this triangulation is ideal.

@@ -146,7 +146,7 @@ class REGINA_API NLayeredChain : public NStandardTriangulation {
          * \deprecated This routine has been renamed to bottom().
          * See the bottom() documentation for further details.
          */
-        NTetrahedron* getBottom() const;
+        REGINA_DEPRECATED NTetrahedron* getBottom() const;
         /**
          * Returns the top tetrahedron of this layered chain.
          *
@@ -160,7 +160,7 @@ class REGINA_API NLayeredChain : public NStandardTriangulation {
          * \deprecated This routine has been renamed to top().
          * See the top() documentation for further details.
          */
-        NTetrahedron* getTop() const;
+        REGINA_DEPRECATED NTetrahedron* getTop() const;
         /**
          * Returns the number of tetrahedra in this layered chain.
          *
@@ -174,7 +174,7 @@ class REGINA_API NLayeredChain : public NStandardTriangulation {
          * \deprecated This routine has been renamed to index().
          * See the index() documentation for further details.
          */
-        unsigned long getIndex() const;
+        REGINA_DEPRECATED unsigned long getIndex() const;
 
         /**
          * Returns a permutation represeting the role that each vertex
@@ -201,7 +201,7 @@ class REGINA_API NLayeredChain : public NStandardTriangulation {
          * \deprecated This routine has been renamed to bottomVertexRoles().
          * See the bottomVertexRoles() documentation for further details.
          */
-        NPerm4 getBottomVertexRoles() const;
+        REGINA_DEPRECATED NPerm4 getBottomVertexRoles() const;
 
         /**
          * Returns a permutation represeting the role that each vertex
@@ -227,7 +227,7 @@ class REGINA_API NLayeredChain : public NStandardTriangulation {
          * \deprecated This routine has been renamed to topVertexRoles().
          * See the topVertexRoles() documentation for further details.
          */
-        NPerm4 getTopVertexRoles() const;
+        REGINA_DEPRECATED NPerm4 getTopVertexRoles() const;
 
         /**
          * Checks to see whether this layered chain can be extended to

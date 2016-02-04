@@ -113,7 +113,7 @@ class Simplices<Derived, 2> {
          *
          * \deprecated Simply call countTriangles() instead.
          */
-        size_t getNumberOfTriangles() const {
+        REGINA_DEPRECATED size_t getNumberOfTriangles() const {
             return static_cast<const Derived*>(this)->size();
         }
 
@@ -131,7 +131,7 @@ class Simplices<Derived, 2> {
          *
          * \deprecated Simply call triangles() instead.
          */
-        const std::vector<Simplex<2>*>& getTriangles() const {
+        REGINA_DEPRECATED const std::vector<Simplex<2>*>& getTriangles() const {
             return static_cast<const Derived*>(this)->simplices();
         }
 
@@ -158,7 +158,7 @@ class Simplices<Derived, 2> {
          *
          * \deprecated Simply call countBoundaryEdges() instead.
          */
-        size_t getNumberOfBoundaryEdges() const {
+        REGINA_DEPRECATED size_t getNumberOfBoundaryEdges() const {
             return static_cast<const Derived*>(this)->countBoundaryFacets();
         }
 };
@@ -191,7 +191,7 @@ class Simplices<Derived, 3> {
          *
          * \deprecated Simply call countTetrahedra() instead.
          */
-        size_t getNumberOfTetrahedra() const {
+        REGINA_DEPRECATED size_t getNumberOfTetrahedra() const {
             return static_cast<const Derived*>(this)->size();
         }
 
@@ -209,7 +209,8 @@ class Simplices<Derived, 3> {
          *
          * \deprecated Simply call tetrahedra() instead.
          */
-        const std::vector<Simplex<3>*>& getTetrahedra() const {
+        REGINA_DEPRECATED const std::vector<Simplex<3>*>& getTetrahedra()
+                const {
             return static_cast<const Derived*>(this)->simplices();
         }
 
@@ -236,7 +237,7 @@ class Simplices<Derived, 3> {
          *
          * \deprecated Simply call countBoundaryTriangles() instead.
          */
-        size_t getNumberOfBoundaryTriangles() const {
+        REGINA_DEPRECATED size_t getNumberOfBoundaryTriangles() const {
             return static_cast<const Derived*>(this)->countBoundaryFacets();
         }
 };
@@ -269,7 +270,7 @@ class Simplices<Derived, 4> {
          *
          * \deprecated Simply call countPentachora() instead.
          */
-        size_t getNumberOfPentachora() const {
+        REGINA_DEPRECATED size_t getNumberOfPentachora() const {
             return static_cast<const Derived*>(this)->size();
         }
 
@@ -287,7 +288,8 @@ class Simplices<Derived, 4> {
          *
          * \deprecated Simply call pentachora() instead.
          */
-        const std::vector<Simplex<4>*>& getPentachora() const {
+        REGINA_DEPRECATED const std::vector<Simplex<4>*>& getPentachora()
+                const {
             return static_cast<const Derived*>(this)->simplices();
         }
 
@@ -314,7 +316,7 @@ class Simplices<Derived, 4> {
          *
          * \deprecated Simply call countBoundaryTetrahedra() instead.
          */
-        size_t getNumberOfBoundaryTetrahedra() const {
+        REGINA_DEPRECATED size_t getNumberOfBoundaryTetrahedra() const {
             return static_cast<const Derived*>(this)->countBoundaryFacets();
         }
 };
@@ -362,7 +364,7 @@ class SimplexAt<Derived, 2, false> {
          *
          * \deprecated Simply call triangle() instead.
          */
-        regina::Simplex<2>* getTriangle(size_t index) const {
+        REGINA_DEPRECATED regina::Simplex<2>* getTriangle(size_t index) const {
             return static_cast<const Derived*>(this)->simplex(index);
         }
 };
@@ -400,7 +402,7 @@ class SimplexAt<Derived, 2, true> {
          *
          * \deprecated Simply call triangle() instead.
          */
-        regina::Simplex<2>* getTriangle(size_t index) {
+        REGINA_DEPRECATED regina::Simplex<2>* getTriangle(size_t index) {
             return static_cast<Derived*>(this)->simplex(index);
         }
 
@@ -409,7 +411,8 @@ class SimplexAt<Derived, 2, true> {
          *
          * \deprecated Simply call triangle() instead.
          */
-        const regina::Simplex<2>* getTriangle(size_t index) const {
+        REGINA_DEPRECATED const regina::Simplex<2>* getTriangle(size_t index)
+                const {
             return static_cast<const Derived*>(this)->simplex(index);
         }
 };
@@ -437,7 +440,8 @@ class SimplexAt<Derived, 3, false> {
          *
          * \deprecated Simply call tetrahedron() instead.
          */
-        regina::Simplex<3>* getTetrahedron(size_t index) const {
+        REGINA_DEPRECATED regina::Simplex<3>* getTetrahedron(size_t index)
+                const {
             return static_cast<const Derived*>(this)->simplex(index);
         }
 };
@@ -475,7 +479,7 @@ class SimplexAt<Derived, 3, true> {
          *
          * \deprecated Simply call tetrahedron() instead.
          */
-        regina::Simplex<3>* getTetrahedron(size_t index) {
+        REGINA_DEPRECATED regina::Simplex<3>* getTetrahedron(size_t index) {
             return static_cast<Derived*>(this)->simplex(index);
         }
 
@@ -484,7 +488,8 @@ class SimplexAt<Derived, 3, true> {
          *
          * \deprecated Simply call tetrahedron() instead.
          */
-        const regina::Simplex<3>* getTetrahedron(size_t index) const {
+        REGINA_DEPRECATED const regina::Simplex<3>* getTetrahedron(size_t index)
+            const {
             return static_cast<const Derived*>(this)->simplex(index);
         }
 };
@@ -512,7 +517,8 @@ class SimplexAt<Derived, 4, false> {
          *
          * \deprecated Simply call pentachoron() instead.
          */
-        regina::Simplex<4>* getPentachoron(size_t index) const {
+        REGINA_DEPRECATED regina::Simplex<4>* getPentachoron(size_t index)
+                const {
             return static_cast<const Derived*>(this)->simplex(index);
         }
 };
@@ -550,7 +556,7 @@ class SimplexAt<Derived, 4, true> {
          *
          * \deprecated Simply call pentachoron() instead.
          */
-        regina::Simplex<4>* getPentachoron(size_t index) {
+        REGINA_DEPRECATED regina::Simplex<4>* getPentachoron(size_t index) {
             return static_cast<Derived*>(this)->simplex(index);
         }
 
@@ -559,7 +565,8 @@ class SimplexAt<Derived, 4, true> {
          *
          * \deprecated Simply call pentachoron() instead.
          */
-        const regina::Simplex<4>* getPentachoron(size_t index) const {
+        REGINA_DEPRECATED const regina::Simplex<4>* getPentachoron(size_t index)
+            const {
             return static_cast<const Derived*>(this)->simplex(index);
         }
 };
@@ -602,7 +609,7 @@ class SimplexVoid<Derived, 2> {
          *
          * \deprecated Simply call triangle() instead.
          */
-        regina::Simplex<2>* getTriangle() const {
+        REGINA_DEPRECATED regina::Simplex<2>* getTriangle() const {
             return static_cast<const Derived*>(this)->simplex();
         }
 };
@@ -630,7 +637,7 @@ class SimplexVoid<Derived, 3> {
          *
          * \deprecated Simply call tetrahedron() instead.
          */
-        regina::Simplex<3>* getTetrahedron() const {
+        REGINA_DEPRECATED regina::Simplex<3>* getTetrahedron() const {
             return static_cast<const Derived*>(this)->simplex();
         }
 };
@@ -658,7 +665,7 @@ class SimplexVoid<Derived, 4> {
          *
          * \deprecated Simply call pentachoron() instead.
          */
-        regina::Simplex<4>* getPentachoron() const {
+        REGINA_DEPRECATED regina::Simplex<4>* getPentachoron() const {
             return static_cast<const Derived*>(this)->simplex();
         }
 };

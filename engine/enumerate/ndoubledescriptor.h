@@ -64,7 +64,7 @@ namespace regina {
  * provided for backward compatibility, and will be removed in some
  * future version of Regina.
  */
-typedef NDoubleDescription NDoubleDescriptor;
+REGINA_DEPRECATED typedef NDoubleDescription NDoubleDescriptor;
 
 /*@}*/
 

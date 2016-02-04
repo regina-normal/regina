@@ -85,7 +85,7 @@ class REGINA_API NXMLAbelianGroupReader : public NXMLElementReader {
          * \deprecated This routine has been renamed to group().
          * See the group() documentation for further details.
          */
-        virtual NAbelianGroup* getGroup();
+        REGINA_DEPRECATED virtual NAbelianGroup* getGroup();
 
         virtual void startElement(const std::string& tagName,
             const regina::xml::XMLPropertyDict& tagProps,
@@ -125,7 +125,7 @@ class REGINA_API NXMLGroupPresentationReader : public NXMLElementReader {
          * \deprecated This routine has been renamed to group().
          * See the group() documentation for further details.
          */
-        virtual NGroupPresentation* getGroup();
+        REGINA_DEPRECATED virtual NGroupPresentation* getGroup();
 
         virtual void startElement(const std::string& tagName,
             const regina::xml::XMLPropertyDict& tagProps,

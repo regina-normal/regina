@@ -91,7 +91,7 @@ class REGINA_API NSnappedBall : public NStandardTriangulation {
          * \deprecated This routine has been renamed to tetrahedron().
          * See the tetrahedron() documentation for further details.
          */
-        NTetrahedron* getTetrahedron() const;
+        REGINA_DEPRECATED NTetrahedron* getTetrahedron() const;
 
         /**
          * Returns one of the two tetrahedron faces that forms the boundary
@@ -112,7 +112,7 @@ class REGINA_API NSnappedBall : public NStandardTriangulation {
          * \deprecated This routine has been renamed to boundaryFace().
          * See the boundaryFace() documentation for further details.
          */
-        int getBoundaryFace(int index) const;
+        REGINA_DEPRECATED int getBoundaryFace(int index) const;
         /**
          * Returns one of the two tetrahedron faces internal to this snapped
          * ball.
@@ -132,7 +132,7 @@ class REGINA_API NSnappedBall : public NStandardTriangulation {
          * \deprecated This routine has been renamed to internalFace().
          * See the internalFace() documentation for further details.
          */
-        int getInternalFace(int index) const;
+        REGINA_DEPRECATED int getInternalFace(int index) const;
         /**
          * Returns the edge that forms the equator of the boundary sphere
          * of this ball.
@@ -147,7 +147,7 @@ class REGINA_API NSnappedBall : public NStandardTriangulation {
          * \deprecated This routine has been renamed to equatoryEdge().
          * See the equatorEdge() documentation for further details.
          */
-        int getEquatorEdge() const;
+        REGINA_DEPRECATED int getEquatorEdge() const;
         /**
          * Returns the edge internal to this snapped ball.
          *
@@ -162,7 +162,7 @@ class REGINA_API NSnappedBall : public NStandardTriangulation {
          * \deprecated This routine has been renamed to internalEdge().
          * See the internalEdge() documentation for further details.
          */
-        int getInternalEdge() const;
+        REGINA_DEPRECATED int getInternalEdge() const;
 
         /**
          * Determines if the given tetrahedron forms a snapped 3-ball

@@ -135,7 +135,7 @@ class IsomorphismBase :
          *
          * @return the number of simplices in the source triangulation.
          */
-        unsigned getSourceSimplices() const;
+        REGINA_DEPRECATED unsigned getSourceSimplices() const;
 
         /**
          * Determines the image of the given source simplex under

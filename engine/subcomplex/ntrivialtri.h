@@ -122,7 +122,7 @@ class REGINA_API NTrivialTri : public NStandardTriangulation {
          * \deprecated This routine has been renamed to type().
          * See the type() documentation for further details.
          */
-        int getType() const;
+        REGINA_DEPRECATED int getType() const;
 
         /**
          * Determines if the given triangulation component is one of the

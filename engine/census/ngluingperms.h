@@ -108,7 +108,7 @@ class REGINA_API NGluingPerms : public NGenericGluingPerms<3> {
          *
          * @return the number of tetrahedra under consideration.
          */
-        unsigned getNumberOfTetrahedra() const;
+        REGINA_DEPRECATED unsigned getNumberOfTetrahedra() const;
 
         /**
          * Returns the specific pairing of tetrahedron faces that this
@@ -120,7 +120,7 @@ class REGINA_API NGluingPerms : public NGenericGluingPerms<3> {
          *
          * @return the corresponding tetrahedron face pairing.
          */
-        const NFacePairing* getFacePairing() const;
+        REGINA_DEPRECATED const NFacePairing* getFacePairing() const;
 
     protected:
         /**

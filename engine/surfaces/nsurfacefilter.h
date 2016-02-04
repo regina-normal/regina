@@ -215,7 +215,7 @@ class REGINA_API NSurfaceFilter : public NPacket {
          * \deprecated This routine has been renamed to filterType().
          * See the filterType() documentation for further details.
          */
-        SurfaceFilterType getFilterType() const;
+        REGINA_DEPRECATED SurfaceFilterType getFilterType() const;
         /**
          * Deprecated routine that returns a string description of the
          * filtering method that is this particular subclass of NSurfaceFilter.
@@ -223,7 +223,7 @@ class REGINA_API NSurfaceFilter : public NPacket {
          * \deprecated This routine has been renamed to filterTypeName().
          * See the filterTypeName() documentation for further details.
          */
-        std::string getFilterTypeName() const;
+        REGINA_DEPRECATED std::string getFilterTypeName() const;
 
         /**
          * Returns a newly created XML filter reader that will read the

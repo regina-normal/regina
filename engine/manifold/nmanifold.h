@@ -90,7 +90,7 @@ class REGINA_API NManifold :
          * \deprecated This routine has been renamed to name().
          * See the name() documentation for further details.
          */
-        std::string getName() const;
+        REGINA_DEPRECATED std::string getName() const;
         /**
          * Returns the common name of this 3-manifold in TeX format.
          * No leading or trailing dollar signs will be included.
@@ -109,7 +109,7 @@ class REGINA_API NManifold :
          * \deprecated This routine has been renamed to TeXName().
          * See the TeXName() documentation for further details.
          */
-        std::string getTeXName() const;
+        REGINA_DEPRECATED std::string getTeXName() const;
         /**
          * Returns details of the structure of this 3-manifold that
          * might not be evident from its common name.  For instance, for
@@ -129,7 +129,7 @@ class REGINA_API NManifold :
          * \deprecated This routine has been renamed to structure().
          * See the structure() documentation for further details.
          */
-        std::string getStructure() const;
+        REGINA_DEPRECATED std::string getStructure() const;
         /**
          * Returns a triangulation of this 3-manifold, if such a
          * construction has been implemented.  If no construction routine
@@ -193,7 +193,7 @@ class REGINA_API NManifold :
          * \deprecated This routine has been renamed to homology().
          * See the homology() documentation for further details.
          */
-        NAbelianGroup* getHomologyH1() const;
+        REGINA_DEPRECATED NAbelianGroup* getHomologyH1() const;
 
         /**
          * Returns whether or not this is a finite-volume hyperbolic manifold.

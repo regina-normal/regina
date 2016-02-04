@@ -111,7 +111,7 @@ class REGINA_API NSnappedTwoSphere :
          * \deprecated This routine has been renamed to snappedBall().
          * See the snappedBall() documentation for further details.
          */
-        const NSnappedBall* getSnappedBall(int index) const;
+        REGINA_DEPRECATED const NSnappedBall* getSnappedBall(int index) const;
 
         /**
          * Determines if the two given tetrahedra together form a snapped

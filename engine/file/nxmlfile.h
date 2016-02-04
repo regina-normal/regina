@@ -66,8 +66,8 @@ class NPacket;
  * \deprecated This routine has been renamed as NPacket::save().
  * See the documentation of NPacket::save() for further details.
  */
-REGINA_API bool writeXMLFile(const char* filename, NPacket* subtree,
-    bool compressed = true);
+REGINA_DEPRECATED REGINA_API bool writeXMLFile(const char* filename,
+    NPacket* subtree, bool compressed = true);
 
 /**
  * Deprecated routine that reads a packet tree from the given Regina
@@ -77,7 +77,7 @@ REGINA_API bool writeXMLFile(const char* filename, NPacket* subtree,
  * now declared in npacket.h.  See the documentation for regina::open()
  * for further details.
  */
-REGINA_API NPacket* readXMLFile(const char* filename);
+REGINA_DEPRECATED REGINA_API NPacket* readXMLFile(const char* filename);
 
 /**
  * Deprecated routine that reads a packet tree from the given Regina
@@ -87,7 +87,8 @@ REGINA_API NPacket* readXMLFile(const char* filename);
  * now declared in npacket.h.  See the documentation for regina::open()
  * for further details.
  */
-REGINA_API NPacket* readFileMagic(const std::string& filename);
+REGINA_DEPRECATED REGINA_API NPacket* readFileMagic(
+    const std::string& filename);
 
 /*@}*/
 

@@ -97,7 +97,7 @@ class REGINA_API NHandlebody : public NManifold {
          * \deprecated This routine has been renamed to handles().
          * See the handles() documentation for further details.
          */
-        unsigned long getHandles() const;
+        REGINA_DEPRECATED unsigned long getHandles() const;
         /**
          * Returns whether this handlebody is orientable.
          *

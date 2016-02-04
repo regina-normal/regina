@@ -131,7 +131,7 @@ class REGINA_API NSpiralSolidTorus : public NStandardTriangulation {
          *
          * \deprecated Simply call size() instead.
          */
-        size_t getNumberOfTetrahedra() const;
+        REGINA_DEPRECATED size_t getNumberOfTetrahedra() const;
 
         /**
          * Returns the requested tetrahedron in this spiralled solid torus.
@@ -151,7 +151,7 @@ class REGINA_API NSpiralSolidTorus : public NStandardTriangulation {
          * \deprecated This routine has been renamed to tetrahedron().
          * See the tetrahedron() documentation for further details.
          */
-        NTetrahedron* getTetrahedron(size_t index) const;
+        REGINA_DEPRECATED NTetrahedron* getTetrahedron(size_t index) const;
 
         /**
          * Returns a permutation represeting the role that each vertex
@@ -186,7 +186,7 @@ class REGINA_API NSpiralSolidTorus : public NStandardTriangulation {
          * \deprecated This routine has been renamed to vertexRoles().
          * See the vertexRoles() documentation for further details.
          */
-        NPerm4 getVertexRoles(size_t index) const;
+        REGINA_DEPRECATED NPerm4 getVertexRoles(size_t index) const;
 
         /**
          * Reverses this spiralled solid torus.

@@ -115,7 +115,7 @@ class REGINA_API NLayeredLoop : public NStandardTriangulation {
          * \deprecated This routine has been renamed to length().
          * See the length() documentation for further details.
          */
-        unsigned long getLength() const;
+        REGINA_DEPRECATED unsigned long getLength() const;
         /**
          * Returns the length of this layered loop.
          * See the general class notes for further details.
@@ -125,7 +125,7 @@ class REGINA_API NLayeredLoop : public NStandardTriangulation {
          *
          * @return the length of this layered loop.
          */
-        unsigned long getIndex() const;
+        REGINA_DEPRECATED unsigned long getIndex() const;
         /**
          * Determines if this layered loop contains a twist.
          * See the general class notes for further details.
@@ -152,7 +152,7 @@ class REGINA_API NLayeredLoop : public NStandardTriangulation {
          * \deprecated This routine has been renamed to hinge().
          * See the hinge() documentation for further details.
          */
-        NEdge* getHinge(int which) const;
+        REGINA_DEPRECATED NEdge* getHinge(int which) const;
 
         /**
          * Determines if the given triangulation component is a layered

@@ -485,7 +485,7 @@ class REGINA_API NSatRegion :
          * @return the newly created structure of the underlying Seifert
          * fibred space.
          */
-        NSFSpace* createSFS(long, bool reflect) const;
+        REGINA_DEPRECATED NSFSpace* createSFS(long, bool reflect) const;
 
         /**
          * Expands this region as far as possible within the overall

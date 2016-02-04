@@ -190,7 +190,7 @@ class REGINA_API Dim4BoundaryComponent :
          * \deprecated This routine has been renamed to component().
          * See the component() documentation for further details.
          */
-        Dim4Component* getComponent() const;
+        REGINA_DEPRECATED Dim4Component* getComponent() const;
 
         /**
          * Returns the full 3-manifold triangulation of this boundary

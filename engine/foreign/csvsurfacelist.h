@@ -69,7 +69,7 @@ class NNormalSurfaceList;
  * NNormalSurfaceList::saveCSVStandard().  See the documentation for
  * NNormalSurfaceList::saveCSVStandard() for further details.
  */
-REGINA_API bool writeCSVStandard(const char* filename,
+REGINA_DEPRECATED REGINA_API bool writeCSVStandard(const char* filename,
     NNormalSurfaceList& surfaces, int additionalFields = surfaceExportAll);
 
 /**
@@ -80,7 +80,7 @@ REGINA_API bool writeCSVStandard(const char* filename,
  * NNormalSurfaceList::saveCSVEdgeWeight().  See the documentation for
  * NNormalSurfaceList::saveCSVEdgeWeight() for further details.
  */
-REGINA_API bool writeCSVEdgeWeight(const char* filename,
+REGINA_DEPRECATED REGINA_API bool writeCSVEdgeWeight(const char* filename,
     NNormalSurfaceList& surfaces, int additionalFields = surfaceExportAll);
 
 /*@}*/

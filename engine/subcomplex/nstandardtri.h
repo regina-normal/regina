@@ -102,7 +102,7 @@ class REGINA_API NStandardTriangulation :
          * \deprecated This routine has been renamed to name().
          * See the name() documentation for further details.
          */
-        std::string getName() const;
+        REGINA_DEPRECATED std::string getName() const;
         /**
          * Returns the name of this specific triangulation in TeX
          * format.  No leading or trailing dollar signs will be included.
@@ -121,7 +121,7 @@ class REGINA_API NStandardTriangulation :
          * \deprecated This routine has been renamed to TeXName().
          * See the TeXName() documentation for further details.
          */
-        std::string getTeXName() const;
+        REGINA_DEPRECATED std::string getTeXName() const;
         /**
          * Returns the 3-manifold represented by this triangulation, if
          * such a recognition routine has been implemented.  If the
@@ -149,7 +149,7 @@ class REGINA_API NStandardTriangulation :
          * \deprecated This routine has been renamed to manifold().
          * See the manifold() documentation for further details.
          */
-        NManifold* getManifold() const;
+        REGINA_DEPRECATED NManifold* getManifold() const;
         /**
          * Returns the expected first homology group of this triangulation,
          * if such a routine has been implemented.  If the calculation of
@@ -219,7 +219,7 @@ class REGINA_API NStandardTriangulation :
          * \deprecated This routine has been renamed to homology().
          * See the homology() documentation for further details.
          */
-        NAbelianGroup* getHomologyH1() const;
+        REGINA_DEPRECATED NAbelianGroup* getHomologyH1() const;
 
         /**
          * Writes the name of this triangulation as a human-readable

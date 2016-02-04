@@ -100,7 +100,7 @@ class REGINA_API Face<2, 0> : public detail::FaceBase<2, 0>,
          * \deprecated This routine has been renamed as boundaryComponent().
          * See the boundaryComponent() documentation for further details.
          */
-        Dim2BoundaryComponent* getBoundaryComponent() const;
+        REGINA_DEPRECATED Dim2BoundaryComponent* getBoundaryComponent() const;
 
         /**
          * Determines if this vertex lies on the boundary of the

@@ -308,7 +308,7 @@ class REGINA_API NDoubleDescription {
          * NPosOrder.  This typedef is offered for backward compatibility,
          * and will be removed in a future version of Regina.
          */
-        typedef NPosOrder LexComp;
+        REGINA_DEPRECATED typedef NPosOrder LexComp;
 
         /**
          * Private constructor to ensure that objects of this class are

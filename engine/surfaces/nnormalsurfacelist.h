@@ -180,7 +180,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * \deprecated Instead of this class constant, you should use
          * the NormalCoords enum value NS_STANDARD directly.
          */
-        static const NormalCoords STANDARD;
+        REGINA_DEPRECATED static const NormalCoords STANDARD;
         /**
          * Represents standard triangle-quadrilateral-octagon coordinates
          * for octagonal almost normal surfaces.
@@ -188,7 +188,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * \deprecated Instead of this class constant, you should use
          * the NormalCoords enum value NS_AN_STANDARD directly.
          */
-        static const NormalCoords AN_STANDARD;
+        REGINA_DEPRECATED static const NormalCoords AN_STANDARD;
         /**
          * Represents quadrilateral coordinates for normal surfaces.
          * For details, see "Normal surface Q-theory", Jeffrey L. Tollefson,
@@ -197,7 +197,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * \deprecated Instead of this class constant, you should use
          * the NormalCoords enum value NS_QUAD directly.
          */
-        static const NormalCoords QUAD;
+        REGINA_DEPRECATED static const NormalCoords QUAD;
         /**
          * Represents quadrilateral-octagon coordinates for octagonal
          * almost normal surfaces.  For details, see
@@ -207,7 +207,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * \deprecated Instead of this class constant, you should use
          * the NormalCoords enum value NS_AN_QUAD_OCT directly.
          */
-        static const NormalCoords AN_QUAD_OCT;
+        REGINA_DEPRECATED static const NormalCoords AN_QUAD_OCT;
 
         /**
          * Represents edge weight coordinates for normal surfaces.
@@ -217,7 +217,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * \deprecated Instead of this class constant, you should use
          * the NormalCoords enum value NS_EDGE_WEIGHT directly.
          */
-        static const NormalCoords EDGE_WEIGHT;
+        REGINA_DEPRECATED static const NormalCoords EDGE_WEIGHT;
         /**
          * Represents triangle arc coordinates for normal surfaces.
          * This coordinate system is for representation only; surface
@@ -226,7 +226,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * \deprecated Instead of this class constant, you should use
          * the NormalCoords enum value NS_TRIANGLE_ARCS.
          */
-        static const NormalCoords FACE_ARCS;
+        REGINA_DEPRECATED static const NormalCoords FACE_ARCS;
         /**
          * Indicates that a list of almost normal surfaces was created
          * using Regina 4.5.1 or earlier, where surfaces with more than
@@ -243,7 +243,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * \deprecated Instead of this class constant, you should use
          * the NormalCoords enum value NS_AN_LEGACY directly.
          */
-        static const NormalCoords AN_LEGACY;
+        REGINA_DEPRECATED static const NormalCoords AN_LEGACY;
         /**
          * Represents standard triangle-quadrilateral coordinates for
          * transversely oriented normal surfaces.
@@ -251,7 +251,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * \deprecated Instead of this class constant, you should use
          * the NormalCoords enum value NS_ORIENTED directly.
          */
-        static const NormalCoords ORIENTED;
+        REGINA_DEPRECATED static const NormalCoords ORIENTED;
         /**
          * Represents quadrilateral coordinates for transversely oriented 
          * normal surfaces.
@@ -259,7 +259,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * \deprecated Instead of this class constant, you should use
          * the NormalCoords enum value NS_ORIENTED_QUAD directly.
          */
-        static const NormalCoords ORIENTED_QUAD;
+        REGINA_DEPRECATED static const NormalCoords ORIENTED_QUAD;
 
         class VectorIterator;
 
@@ -370,8 +370,8 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * <tt>enumerate(owner, coords, NS_IMMERSED_SINGULAR,
          * NS_ALG_DEFAULT, tracker)</tt> if \a embeddedOnly is \c false.
          */
-        static NNormalSurfaceList* enumerate(NTriangulation* owner,
-            NormalCoords coords, bool embeddedOnly,
+        REGINA_DEPRECATED static NNormalSurfaceList* enumerate(
+            NTriangulation* owner, NormalCoords coords, bool embeddedOnly,
             NProgressTracker* tracker = 0);
 
         /**
@@ -396,7 +396,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * surfaces will be based.
          * @return the newly created normal surface list.
          */
-        static NNormalSurfaceList* enumerateStandardDirect(
+        REGINA_DEPRECATED static NNormalSurfaceList* enumerateStandardDirect(
             NTriangulation* owner);
 
         /**
@@ -421,7 +421,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * surfaces will be based.
          * @return the newly created normal surface list.
          */
-        static NNormalSurfaceList* enumerateStandardANDirect(
+        REGINA_DEPRECATED static NNormalSurfaceList* enumerateStandardANDirect(
             NTriangulation* owner);
 
         /**
@@ -465,7 +465,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * passed and a new thread could not be started, this routine
          * returns 0 (and no normal surface list is created).
          */
-        static NNormalSurfaceList* enumerateFundPrimal(
+        REGINA_DEPRECATED static NNormalSurfaceList* enumerateFundPrimal(
             NTriangulation* owner, NormalCoords coords,
             bool embeddedOnly = true,
             NNormalSurfaceList* vtxSurfaces = 0,
@@ -504,7 +504,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * passed and a new thread could not be started, this routine
          * returns 0 (and no normal surface list is created).
          */
-        static NNormalSurfaceList* enumerateFundDual(
+        REGINA_DEPRECATED static NNormalSurfaceList* enumerateFundDual(
             NTriangulation* owner, NormalCoords coords,
             bool embeddedOnly = true,
             NProgressTracker* tracker = 0);
@@ -538,7 +538,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * normal surfaces are also to be produced; this defaults to \c true.
          * @return the newly created normal surface list.
          */
-        static NNormalSurfaceList* enumerateFundFullCone(
+        REGINA_DEPRECATED static NNormalSurfaceList* enumerateFundFullCone(
             NTriangulation* owner, NormalCoords coords,
             bool embeddedOnly = true);
 
@@ -571,7 +571,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * normal surfaces are also to be produced; this defaults to \c true.
          * @return the newly created normal surface list.
          */
-        static NNormalSurfaceList* enumerateFundCD(
+        REGINA_DEPRECATED static NNormalSurfaceList* enumerateFundCD(
             NTriangulation* owner, NormalCoords coords,
             bool embeddedOnly = true);
 
@@ -584,7 +584,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          *
          * @return the coordinate system used.
          */
-        NormalCoords getFlavour() const;
+        REGINA_DEPRECATED NormalCoords getFlavour() const;
         /**
          * Deprecated routine to return the coordinate system being used by the
          * surfaces stored in this set.
@@ -594,7 +594,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          *
          * @return the coordinate system used.
          */
-        NormalCoords flavour() const;
+        REGINA_DEPRECATED NormalCoords flavour() const;
         /**
          * Returns the coordinate system being used by the
          * surfaces stored in this set.
@@ -679,7 +679,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * \deprecated This routine has been renamed to triangulation().
          * See the triangulation() documentation for further details.
          */
-        NTriangulation* getTriangulation() const;
+        REGINA_DEPRECATED NTriangulation* getTriangulation() const;
         /**
          * Returns the number of surfaces stored in this list.
          *
@@ -694,7 +694,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          *
          * @return the number of surfaces.
          */
-        size_t getNumberOfSurfaces() const;
+        REGINA_DEPRECATED size_t getNumberOfSurfaces() const;
         /**
          * Returns the surface at the requested index in this set.
          *
@@ -711,7 +711,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * \deprecated This routine has been renamed to surface().
          * See the surface() documentation for further details.
          */
-        const NNormalSurface* getSurface(size_t index) const;
+        REGINA_DEPRECATED const NNormalSurface* getSurface(size_t index) const;
         /**
          * Writes the number of surfaces in this set followed by the
          * details of each surface to the given output stream.  Output

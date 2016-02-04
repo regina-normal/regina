@@ -293,7 +293,7 @@ class REGINA_API NGroupExpression :
          * \deprecated This routine has been renamed to terms().
          * See the terms() documentation for further details.
          */
-        std::list<NGroupExpressionTerm>& getTerms();
+        REGINA_DEPRECATED std::list<NGroupExpressionTerm>& getTerms();
         /**
          * Deprecated routine that returns a constant reference to the list of
          * terms in this expression.
@@ -301,7 +301,8 @@ class REGINA_API NGroupExpression :
          * \deprecated This routine has been renamed to terms().
          * See the terms() documentation for further details.
          */
-        const std::list<NGroupExpressionTerm>& getTerms() const;
+        REGINA_DEPRECATED const std::list<NGroupExpressionTerm>& getTerms()
+            const;
         /**
          * Returns the number of terms in this expression.
          *
@@ -318,7 +319,7 @@ class REGINA_API NGroupExpression :
          * \deprecated This routine has been renamed to countTerms().
          * See the countTerms() documentation for further details.
          */
-        size_t getNumberOfTerms() const;
+        REGINA_DEPRECATED size_t getNumberOfTerms() const;
         /**
          * Returns the length of the word, i.e. the number of letters
          * with exponent +1 or -1 for which this word is expressable as a
@@ -386,7 +387,7 @@ class REGINA_API NGroupExpression :
          * \deprecated This routine has been renamed to term().
          * See the term() documentation for further details.
          */
-        NGroupExpressionTerm& getTerm(size_t index);
+        REGINA_DEPRECATED NGroupExpressionTerm& getTerm(size_t index);
         /**
          * Deprecated routine that returns a constant reference to the term at
          * the given index in this expression.
@@ -394,7 +395,8 @@ class REGINA_API NGroupExpression :
          * \deprecated This routine has been renamed to term(size_t) const.
          * See the term(size_t) const documentation for further details.
          */
-        const NGroupExpressionTerm& getTerm(size_t index) const;
+        REGINA_DEPRECATED const NGroupExpressionTerm& getTerm(size_t index)
+            const;
         /**
          * Returns the generator corresonding to the
          * term at the given index in this expression.
@@ -416,7 +418,7 @@ class REGINA_API NGroupExpression :
          * \deprecated This routine has been renamed to generator().
          * See the generator() documentation for further details.
          */
-        unsigned long getGenerator(size_t index) const;
+        REGINA_DEPRECATED unsigned long getGenerator(size_t index) const;
         /**
          * Returns the exponent corresonding to the
          * term at the given index in this expression.
@@ -438,7 +440,7 @@ class REGINA_API NGroupExpression :
          * \deprecated This routine has been renamed to exponent().
          * See the exponent() documentation for further details.
          */
-        long getExponent(size_t index) const;
+        REGINA_DEPRECATED long getExponent(size_t index) const;
 
         /**
          * Adds the given term to the beginning of this expression.
@@ -832,7 +834,7 @@ class REGINA_API NGroupPresentation :
          * \deprecated This routine has been renamed to countGenerators().
          * See the countGenerators() documentation for further details.
          */
-        unsigned long getNumberOfGenerators() const;
+        REGINA_DEPRECATED unsigned long getNumberOfGenerators() const;
         /**
          * Returns the number of relations in this group presentation.
          *
@@ -846,7 +848,7 @@ class REGINA_API NGroupPresentation :
          * \deprecated This routine has been renamed to countRelations().
          * See the countRelations() documentation for further details.
          */
-        size_t getNumberOfRelations() const;
+        REGINA_DEPRECATED size_t getNumberOfRelations() const;
         /**
          * Returns the relation at the given index in this group
          * presentation.  The relation will be of the form <tt>expresson
@@ -867,7 +869,8 @@ class REGINA_API NGroupPresentation :
          * \deprecated This routine has been renamed to relation().
          * See the relation() documentation for further details.
          */
-        const NGroupExpression& getRelation(size_t index) const;
+        REGINA_DEPRECATED const NGroupExpression& getRelation(size_t index)
+            const;
 
         /**
          * Tests whether all of the relations for the group are indeed words
@@ -1321,7 +1324,7 @@ class REGINA_API NGroupPresentation :
          *
          * @return a compact representation of this group presentation.
          */
-        std::string toStringCompact() const;
+        REGINA_DEPRECATED std::string toStringCompact() const;
 
         /**
          * Returns a compact one-line representation of this group presentation,

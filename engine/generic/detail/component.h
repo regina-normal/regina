@@ -128,7 +128,7 @@ class ComponentBase :
          *
          * @return the number of top-dimensional simplices.
          */
-        size_t getNumberOfSimplices() const;
+        REGINA_DEPRECATED size_t getNumberOfSimplices() const;
         /**
          * Returns all top-dimensional simplices in this component.
          *
@@ -151,7 +151,8 @@ class ComponentBase :
          *
          * See simplices() for further details.
          */
-        const std::vector<Simplex<dim>*>& getSimplices() const;
+        REGINA_DEPRECATED const std::vector<Simplex<dim>*>& getSimplices()
+            const;
         /**
          * Returns the top-dimensional simplex at the given index in
          * this component.
@@ -172,7 +173,7 @@ class ComponentBase :
          *
          * See simplices() for further details.
          */
-        Simplex<dim>* getSimplex(size_t index) const;
+        REGINA_DEPRECATED Simplex<dim>* getSimplex(size_t index) const;
 
         /**
          * Determines if this component is valid.
@@ -229,7 +230,7 @@ class ComponentBase :
          *
          * See countBoundaryFacets() for further details.
          */
-        size_t getNumberOfBoundaryFacets() const;
+        REGINA_DEPRECATED size_t getNumberOfBoundaryFacets() const;
 
         /**
          * Writes a short text representation of this object to the

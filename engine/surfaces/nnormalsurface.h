@@ -81,7 +81,7 @@ REGINA_API extern const int quadSeparating[4][4];
  * \deprecated This array has been renamed to regina::quadSeparating.
  * See the regina::quadSeparating documentation for further details.
  */
-REGINA_API extern const int (*vertexSplit)[4];
+REGINA_DEPRECATED REGINA_API extern const int (*vertexSplit)[4];
 /**
  * Lists which quadrilateral types meet which edges in a tetrahedron.
  * See regina::quadSeparating and NNormalSurface::quads() for more
@@ -98,7 +98,7 @@ REGINA_API extern const int quadMeeting[4][4][2];
  * \deprecated This array has been renamed to regina::quadMeeting.
  * See the regina::quadMeeting documentation for further details.
  */
-REGINA_API extern const int (*vertexSplitMeeting)[4][2];
+REGINA_DEPRECATED REGINA_API extern const int (*vertexSplitMeeting)[4][2];
 
 /**
  * Deprecated array that lists the vertices which each quadrilateral type
@@ -124,7 +124,7 @@ REGINA_API extern const int (*vertexSplitMeeting)[4][2];
  * Be aware however that NEdge::ordering() might reorder the images
  * NEdge::ordering(\a i)[2] and NEdge::ordering(\a i)[3].
  */
-REGINA_API extern const int vertexSplitDefn[3][4];
+REGINA_DEPRECATED REGINA_API extern const int vertexSplitDefn[3][4];
 
 /**
  * Lists the second vertex with which each vertex is paired under each
@@ -142,7 +142,7 @@ REGINA_API extern const int quadPartner[3][4];
  * \deprecated This array has been renamed to regina::quadPartner.
  * See the regina::quadPartner documentation for further details.
  */
-REGINA_API extern const int (*vertexSplitPartner)[4];
+REGINA_DEPRECATED REGINA_API extern const int (*vertexSplitPartner)[4];
 
 /**
  * Contains strings that can be used to represent each quadrilateral type
@@ -161,7 +161,7 @@ REGINA_API extern const char quadString[3][6];
  * \deprecated This array has been renamed to regina::quadString.
  * See the regina::quadString documentation for further details.
  */
-REGINA_API extern const char (*vertexSplitString)[6];
+REGINA_DEPRECATED REGINA_API extern const char (*vertexSplitString)[6];
 
 /**
  * Lists in consecutive order the directed normal arcs that form the
@@ -305,7 +305,7 @@ struct NormalInfo;
     public: \
         typedef NormalInfo<id> Info; \
         static constexpr const NormalCoords coordsID = id; \
-        static constexpr const NormalCoords coordType = id; \
+        REGINA_DEPRECATED static constexpr const NormalCoords coordType = id; \
         inline virtual NNormalSurfaceVector* clone() const { \
             return new class_(*this); \
         } \
@@ -604,7 +604,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * \deprecated This routine has been renamed to triangles().
          * See the triangles() documentation for further details.
          */
-        NLargeInteger getTriangleCoord(size_t tetIndex,
+        REGINA_DEPRECATED NLargeInteger getTriangleCoord(size_t tetIndex,
             int vertex, const NTriangulation* triang) const;
 
         /**
@@ -636,8 +636,9 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * \deprecated This routine has been renamed to orientedTriangles().
          * See the orientedTriangles() documentation for further details.
          */
-        NLargeInteger getOrientedTriangleCoord(size_t tetIndex,
-            int vertex, const NTriangulation* triang, bool orientation) const;
+        REGINA_DEPRECATED NLargeInteger getOrientedTriangleCoord(
+            size_t tetIndex, int vertex, const NTriangulation* triang,
+            bool orientation) const;
 
         /**
          * Returns the number of quadrilateral discs of the given type
@@ -662,7 +663,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * \deprecated This routine has been renamed to quads().
          * See the quads() documentation for further details.
          */
-        NLargeInteger getQuadCoord(size_t tetIndex,
+        REGINA_DEPRECATED NLargeInteger getQuadCoord(size_t tetIndex,
             int quadType, const NTriangulation* triang) const;
 
         /**
@@ -693,7 +694,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * \deprecated This routine has been renamed to orientedQuads().
          * See the orientedQuads() documentation for further details.
          */
-        NLargeInteger getOrientedQuadCoord(size_t tetIndex,
+        REGINA_DEPRECATED NLargeInteger getOrientedQuadCoord(size_t tetIndex,
             int quadType, const NTriangulation* triang, bool orientation) const;
         /**
          * Returns the number of octagonal discs of the given type
@@ -718,7 +719,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * \deprecated This routine has been renamed to octs().
          * See the octs() documentation for further details.
          */
-        NLargeInteger getOctCoord(size_t tetIndex,
+        REGINA_DEPRECATED NLargeInteger getOctCoord(size_t tetIndex,
             int octType, const NTriangulation* triang) const;
         /**
          * Returns the number of times this normal surface crosses the
@@ -741,7 +742,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * \deprecated This routine has been renamed to edgeWeight().
          * See the edgeWeight() documentation for further details.
          */
-        NLargeInteger getEdgeWeight(size_t edgeIndex,
+        REGINA_DEPRECATED NLargeInteger getEdgeWeight(size_t edgeIndex,
             const NTriangulation* triang) const;
         /**
          * Returns the number of arcs in which this normal surface
@@ -767,7 +768,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * \deprecated This routine has been renamed to arcs().
          * See the arcs() documentation for further details.
          */
-        NLargeInteger getTriangleArcs(size_t triIndex,
+        REGINA_DEPRECATED NLargeInteger getTriangleArcs(size_t triIndex,
             int triVertex, const NTriangulation* triang) const;
         /**
          * A deprecated alias for arcs().
@@ -792,7 +793,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @return the number of times this normal surface intersect the
          * given triangle with the given arc type.
          */
-        NLargeInteger getFaceArcs(size_t triIndex,
+        REGINA_DEPRECATED NLargeInteger getFaceArcs(size_t triIndex,
             int triVertex, const NTriangulation* triang) const;
 
         /**
@@ -997,7 +998,8 @@ class REGINA_API NNormalSurface :
          * \deprecated This routine has been renamed to triangles().
          * See the triangles() documentation for further details.
          */
-        NLargeInteger getTriangleCoord(size_t tetIndex, int vertex) const;
+        REGINA_DEPRECATED NLargeInteger getTriangleCoord(size_t tetIndex,
+            int vertex) const;
 
         /**
          * Returns the number of oriented triangular discs of the given type 
@@ -1037,8 +1039,8 @@ class REGINA_API NNormalSurface :
          * \deprecated This routine has been renamed to orientedTriangles().
          * See the orientedTriangles() documentation for further details.
          */
-        NLargeInteger getOrientedTriangleCoord(size_t tetIndex,
-            int vertex, bool orientation) const;
+        REGINA_DEPRECATED NLargeInteger getOrientedTriangleCoord(
+            size_t tetIndex, int vertex, bool orientation) const;
         /**
          * Returns the number of quadrilateral discs of the given
          * type in this normal surface.
@@ -1074,7 +1076,8 @@ class REGINA_API NNormalSurface :
          * \deprecated This routine has been renamed to quads().
          * See the quads() documentation for further details.
          */
-        NLargeInteger getQuadCoord(size_t tetIndex, int quadType) const;
+        REGINA_DEPRECATED NLargeInteger getQuadCoord(size_t tetIndex,
+            int quadType) const;
         /**
          * Returns the number of oriented quadrilateral discs of the given type
          * in this normal surface.
@@ -1113,7 +1116,7 @@ class REGINA_API NNormalSurface :
          * \deprecated This routine has been renamed to orientedQuads().
          * See the orientedQuads() documentation for further details.
          */
-        NLargeInteger getOrientedQuadCoord(size_t tetIndex,
+        REGINA_DEPRECATED NLargeInteger getOrientedQuadCoord(size_t tetIndex,
             int quadType, bool orientation) const;
         /**
          * Returns the number of octagonal discs of the given type
@@ -1150,7 +1153,8 @@ class REGINA_API NNormalSurface :
          * \deprecated This routine has been renamed to octs().
          * See the octs() documentation for further details.
          */
-        NLargeInteger getOctCoord(size_t tetIndex, int octType) const;
+        REGINA_DEPRECATED NLargeInteger getOctCoord(size_t tetIndex,
+            int octType) const;
         /**
          * Returns the number of times this normal surface crosses the
          * given edge.
@@ -1169,7 +1173,7 @@ class REGINA_API NNormalSurface :
          * \deprecated This routine has been renamed to edgeWeight().
          * See the edgeWeight() documentation for further details.
          */
-        NLargeInteger getEdgeWeight(size_t edgeIndex) const;
+        REGINA_DEPRECATED NLargeInteger getEdgeWeight(size_t edgeIndex) const;
         /**
          * Returns the number of arcs in which this normal surface
          * intersects the given triangle in the given direction.
@@ -1191,7 +1195,8 @@ class REGINA_API NNormalSurface :
          * \deprecated This routine has been renamed to arcs().
          * See the arcs() documentation for further details.
          */
-        NLargeInteger getTriangleArcs(size_t triIndex, int triVertex) const;
+        REGINA_DEPRECATED NLargeInteger getTriangleArcs(size_t triIndex,
+            int triVertex) const;
         /**
          * A deprecated alias for arcs().
          *
@@ -1211,7 +1216,8 @@ class REGINA_API NNormalSurface :
          * @return the number of times this normal surface intersect the
          * given triangle with the given arc type.
          */
-        NLargeInteger getFaceArcs(size_t triIndex, int triVertex) const;
+        REGINA_DEPRECATED NLargeInteger getFaceArcs(size_t triIndex,
+            int triVertex) const;
 
         /**
          * Determines the first coordinate position at which this surface
@@ -1241,7 +1247,7 @@ class REGINA_API NNormalSurface :
          * \deprecated This routine has been renamed to octPosition().
          * See the octPosition() documentation for further details.
          */
-        NDiscType getOctPosition() const;
+        REGINA_DEPRECATED NDiscType getOctPosition() const;
 
         /**
          * Returns the number of coordinates in the specific underlying
@@ -1257,7 +1263,7 @@ class REGINA_API NNormalSurface :
          * \deprecated This routine has been renamed to countCoords().
          * See the countCoords() documentation for further details.
          */
-        size_t getNumberOfCoords() const;
+        REGINA_DEPRECATED size_t getNumberOfCoords() const;
         /**
          * Returns the triangulation in which this normal surface resides.
          *
@@ -1271,7 +1277,7 @@ class REGINA_API NNormalSurface :
          * \deprecated This routine has been renamed to triangulation().
          * See the triangulation() documentation for further details.
          */
-        const NTriangulation* getTriangulation() const;
+        REGINA_DEPRECATED const NTriangulation* getTriangulation() const;
 
         /**
          * Returns the name associated with this normal surface.
@@ -1288,7 +1294,7 @@ class REGINA_API NNormalSurface :
          * \deprecated This routine has been renamed to name().
          * See the name() documentation for further details.
          */
-        const std::string& getName() const;
+        REGINA_DEPRECATED const std::string& getName() const;
         /**
          * Sets the name associated with this normal surface.
          * Names are optional and need not be unique.
@@ -1369,7 +1375,7 @@ class REGINA_API NNormalSurface :
          * \deprecated This routine has been renamed to eulerChar().
          * See the eulerChar() documentation for further details.
          */
-        NLargeInteger getEulerChar() const;
+        REGINA_DEPRECATED NLargeInteger getEulerChar() const;
         /**
          * A deprecated alias for eulerChar().
          *
@@ -1386,7 +1392,7 @@ class REGINA_API NNormalSurface :
          *
          * @return the Euler characteristic.
          */
-        NLargeInteger getEulerCharacteristic() const;
+        REGINA_DEPRECATED NLargeInteger getEulerCharacteristic() const;
         /**
          * Returns whether or not this surface is orientable.
          * 
@@ -1878,7 +1884,8 @@ class REGINA_API NNormalSurface :
          * @return a newly allocated non-vertex-linking normal sphere
          * within the given triangulation, or 0 if no such sphere exists.
          */
-        static NNormalSurface* findNonTrivialSphere(NTriangulation* tri);
+        REGINA_DEPRECATED static NNormalSurface* findNonTrivialSphere(
+            NTriangulation* tri);
 
         /**
          * Searches the list of vertex octagonal almost normal surfaces for
@@ -1922,7 +1929,7 @@ class REGINA_API NNormalSurface :
          * @return a newly allocated vertex octagonal almost normal sphere
          * within the given triangulation, or 0 if no such sphere exists.
          */
-        static NNormalSurface* findVtxOctAlmostNormalSphere(
+        REGINA_DEPRECATED static NNormalSurface* findVtxOctAlmostNormalSphere(
             NTriangulation* tri, bool quadOct = false);
 
     protected:

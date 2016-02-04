@@ -198,7 +198,7 @@ class REGINA_API Triangulation<2> :
          *
          * See simplexIndex() for further information.
          */
-        long triangleIndex(const Dim2Triangle* tri) const;
+        REGINA_DEPRECATED long triangleIndex(const Dim2Triangle* tri) const;
         /**
          * A dimension-specific alias for newSimplex().
          *
@@ -249,7 +249,7 @@ class REGINA_API Triangulation<2> :
          *
          * \deprecated Simply call countBoundaryComponents() instead.
          */
-        size_t getNumberOfBoundaryComponents() const;
+        REGINA_DEPRECATED size_t getNumberOfBoundaryComponents() const;
 
         /**
          * Returns all boundary components of this triangulation.
@@ -274,8 +274,8 @@ class REGINA_API Triangulation<2> :
          * \deprecated This routine has been renamed to boundaryComponents().
          * See the boundaryComponents() documentation for further details.
          */
-        const std::vector<Dim2BoundaryComponent*>& getBoundaryComponents()
-            const;
+        REGINA_DEPRECATED const std::vector<Dim2BoundaryComponent*>&
+            getBoundaryComponents() const;
         /**
          * Returns the requested triangulation boundary component.
          *
@@ -295,7 +295,8 @@ class REGINA_API Triangulation<2> :
          * \deprecated This routine has been renamed to boundaryComponent().
          * See the boundaryComponent() documentation for further details.
          */
-        Dim2BoundaryComponent* getBoundaryComponent(size_t index) const;
+        REGINA_DEPRECATED Dim2BoundaryComponent* getBoundaryComponent(
+            size_t index) const;
         /**
          * Deprecated routine that returns the index of the given
          * boundary component in the triangulation.
@@ -310,7 +311,8 @@ class REGINA_API Triangulation<2> :
          * @return the index of the specified boundary component,
          * where 0 is the first boundary component, 1 is the second and so on. 
          */
-        size_t boundaryComponentIndex(const Dim2BoundaryComponent* bc) const;
+        REGINA_DEPRECATED size_t boundaryComponentIndex(
+            const Dim2BoundaryComponent* bc) const;
         /**
          * Deprecated routine that returns the index of the given vertex
          * in the triangulation.
@@ -324,7 +326,7 @@ class REGINA_API Triangulation<2> :
          * @return the index of the specified vertex, where 0 is the first
          * vertex, 1 is the second and so on.
          */
-        size_t vertexIndex(const Dim2Vertex* vertex) const;
+        REGINA_DEPRECATED size_t vertexIndex(const Dim2Vertex* vertex) const;
         /**
          * Deprecated routine that returns the index of the given edge
          * in the triangulation.
@@ -338,7 +340,7 @@ class REGINA_API Triangulation<2> :
          * @return the index of the specified edge, where 0 is the first
          * edge, 1 is the second and so on.
          */
-        size_t edgeIndex(const Dim2Edge* edge) const;
+        REGINA_DEPRECATED size_t edgeIndex(const Dim2Edge* edge) const;
 
         /*@}*/
         /**
@@ -374,7 +376,7 @@ class REGINA_API Triangulation<2> :
          * \deprecated This routine has been renamed to eulerChar().
          * See the eulerChar() documentation for further details.
          */
-        long getEulerChar() const;
+        REGINA_DEPRECATED long getEulerChar() const;
         /**
          * Determines if this triangulation is closed.
          * This is the case if and only if it has no boundary components.

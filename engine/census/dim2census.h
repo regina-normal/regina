@@ -85,7 +85,8 @@ class REGINA_API Dim2Census {
          * yourself, you should call Dim2EdgePairing::findAllPairings() and
          * Dim2GluingPermSearcher::findAllPerms() directly.
          */
-        typedef bool (*AcceptTriangulation)(Dim2Triangulation*, void*);
+        REGINA_DEPRECATED typedef bool (*AcceptTriangulation)(
+            Dim2Triangulation*, void*);
 
     private:
         NPacket* parent_;
@@ -181,8 +182,8 @@ class REGINA_API Dim2Census {
          * will be ignored.
          * @return the number of triangulations produced in the census.
          */
-        static unsigned long formCensus(NPacket* parent, unsigned nTriangles,
-            NBoolSet orientability, NBoolSet boundary,
+        REGINA_DEPRECATED static unsigned long formCensus(NPacket* parent,
+            unsigned nTriangles, NBoolSet orientability, NBoolSet boundary,
             int nBdryEdges, AcceptTriangulation sieve = 0,
             void* sieveArgs = 0);
 
@@ -262,9 +263,10 @@ class REGINA_API Dim2Census {
          * will be ignored.
          * @return the number of triangulations produced in the partial census.
          */
-        static unsigned long formPartialCensus(const Dim2EdgePairing* pairing,
-            NPacket* parent, NBoolSet orientability,
-            AcceptTriangulation sieve = 0, void* sieveArgs = 0);
+        REGINA_DEPRECATED static unsigned long formPartialCensus(
+            const Dim2EdgePairing* pairing, NPacket* parent,
+            NBoolSet orientability, AcceptTriangulation sieve = 0,
+            void* sieveArgs = 0);
 
     private:
         /**

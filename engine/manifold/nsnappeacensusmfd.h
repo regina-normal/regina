@@ -153,7 +153,7 @@ class REGINA_API NSnapPeaCensusManifold : public NManifold {
          * \deprecated This routine has been renamed to section().
          * See the section() documentation for further details.
          */
-        char getSection() const;
+        REGINA_DEPRECATED char getSection() const;
         /**
          * Returns the index of this manifold within its particular
          * section of the SnapPea census.  Note that indices for each
@@ -169,7 +169,7 @@ class REGINA_API NSnapPeaCensusManifold : public NManifold {
          * \deprecated This routine has been renamed to index().
          * See the index() documentation for further details.
          */
-        unsigned long getIndex() const;
+        REGINA_DEPRECATED unsigned long getIndex() const;
         /**
          * Determines whether this and the given structure represent
          * the same 3-manifold from the SnapPea census.

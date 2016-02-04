@@ -150,7 +150,7 @@ class REGINA_API NSignature :
          * \deprecated This routine has been renamed to order().
          * See the order() documentation for further details.
          */
-        unsigned getOrder() const;
+        REGINA_DEPRECATED unsigned getOrder() const;
 
         /**
          * Parses the given signature string.

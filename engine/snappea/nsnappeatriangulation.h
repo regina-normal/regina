@@ -1281,7 +1281,8 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * isIdenticalTo() will consider a null SnapPea triangulation
          * identical to an empty Regina triangulation).
          */
-        bool verifyTriangulation(const NTriangulation& triangulation) const;
+        REGINA_DEPRECATED bool verifyTriangulation(
+            const NTriangulation& triangulation) const;
 
         /**
          * Deprecated routine to create a new Regina triangulation that
@@ -1298,7 +1299,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * constructor (since NSnapPeaTriangulation is a subclass of
          * NTriangulation).
          */
-        NTriangulation* toRegina() const;
+        REGINA_DEPRECATED NTriangulation* toRegina() const;
 
         /**
          * Deprecated routine that dumps the full internal SnapPea data to
@@ -1316,7 +1317,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * Regina.  Instead you should simply print the string returned from
          * snapPea().
          */
-        void dump() const;
+        REGINA_DEPRECATED void dump() const;
 
         /**
          * Deprecated routine that saves the underlying triangulation as
@@ -1329,7 +1330,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * the old routine), you can simply print the string returned from
          * snapPea().  See the saveSnapPea() documentation for further details.
          */
-        void saveAsSnapPea(const char* filename) const;
+        REGINA_DEPRECATED void saveAsSnapPea(const char* filename) const;
 
         /*@}*/
         /**

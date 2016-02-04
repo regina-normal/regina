@@ -109,7 +109,7 @@ class REGINA_API NSimpleSurfaceBundle : public NManifold {
          * \deprecated This routine has been renamed to type().
          * See the type() documentation for further details.
          */
-        int getType() const;
+        REGINA_DEPRECATED int getType() const;
         /**
          * Determines whether this and the given surface bundle represent
          * the same 3-manifold.

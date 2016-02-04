@@ -230,7 +230,7 @@ class REGINA_API NAbelianGroup :
          * \deprecated This routine has been renamed to rank().
          * See the rank() documentation for further details.
          */
-        unsigned getRank() const;
+        REGINA_DEPRECATED unsigned getRank() const;
         /**
          * Returns the rank in the group of the torsion term of given degree.
          * If the given degree is <i>d</i>, this routine will return the
@@ -273,7 +273,8 @@ class REGINA_API NAbelianGroup :
          * torsionRank(const NLargeInteger&).  See the
          * torsionRank(const NLargeInteger&) documentation for further details.
          */
-        unsigned getTorsionRank(const NLargeInteger& degree) const;
+        REGINA_DEPRECATED unsigned getTorsionRank(const NLargeInteger& degree)
+            const;
         /**
          * Deprecated routine that returns the rank in the group of the torsion
          * term of given degree.
@@ -282,7 +283,7 @@ class REGINA_API NAbelianGroup :
          * torsionRank(unsigned long).  See the torsionRank(unsigned long)
          * documentation for further details.
          */
-        unsigned getTorsionRank(unsigned long degree) const;
+        REGINA_DEPRECATED unsigned getTorsionRank(unsigned long degree) const;
         /**
          * Returns the number of invariant factors that describe the
          * torsion elements of this group.
@@ -298,7 +299,7 @@ class REGINA_API NAbelianGroup :
          * \deprecated This routine has been renamed as countInvariantFactors().
          * See the countInvariantFactors() documentation for further details.
          */
-        size_t getNumberOfInvariantFactors() const;
+        REGINA_DEPRECATED size_t getNumberOfInvariantFactors() const;
         /**
          * Returns the given invariant factor describing the torsion
          * elements of this group.
@@ -320,7 +321,8 @@ class REGINA_API NAbelianGroup :
          * \deprecated This routine has been renamed as invariantFactor().
          * See the invariantFactor() documentation for further details.
          */
-        const NLargeInteger& getInvariantFactor(size_t index) const;
+        REGINA_DEPRECATED const NLargeInteger& getInvariantFactor(size_t index)
+            const;
 
         /**
          * Determines whether this is the trivial (zero) group.

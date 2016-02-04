@@ -270,7 +270,7 @@ class REGINA_API NPerm<2> {
          * \deprecated This routine has been renamed to permCode().
          * See the permCode() documentation for further details.
          */
-        Code getPermCode() const;
+        REGINA_DEPRECATED Code getPermCode() const;
 
         /**
          * Sets this permutation to that represented by the given

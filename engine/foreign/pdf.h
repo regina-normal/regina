@@ -69,7 +69,7 @@ class NPDF;
  * NPDF::isNull() returns \c true).  See the NPDF constructor for further
  * details.
  */
-REGINA_API NPDF* readPDF(const char *filename);
+REGINA_DEPRECATED REGINA_API NPDF* readPDF(const char *filename);
 
 /**
  * Deprecated function that writes the given PDF document to the given file.
@@ -80,7 +80,8 @@ REGINA_API NPDF* readPDF(const char *filename);
  * it no longer creates an empty file, but instead does nothing and returns
  * \c false.  See NPDF::savePDF() for further details.
  */
-REGINA_API bool writePDF(const char* filename, const NPDF& pdf);
+REGINA_DEPRECATED REGINA_API bool writePDF(const char* filename,
+    const NPDF& pdf);
 
 /*@}*/
 

@@ -247,7 +247,7 @@ class SimplexBase :
          * \deprecated This routine has been renamed to description().
          * See the description() documentation for further details.
          */
-        const std::string& getDescription() const;
+        REGINA_DEPRECATED const std::string& getDescription() const;
 
         /**
          * Sets the description associated with this simplex.
@@ -382,7 +382,8 @@ class SimplexBase :
          *
          * See join() for further details.
          */
-        void joinTo(int myFacet, Simplex<dim>* you, NPerm<dim+1> gluing);
+        REGINA_DEPRECATED void joinTo(int myFacet, Simplex<dim>* you,
+            NPerm<dim+1> gluing);
         /**
          * Unglues the given facet of this simplex from whatever it is
          * joined to.  As a result, the given facet of this simplex
@@ -429,7 +430,7 @@ class SimplexBase :
          *
          * See triangulation() for further details.
          */
-        Triangulation<dim>* getTriangulation() const;
+        REGINA_DEPRECATED Triangulation<dim>* getTriangulation() const;
 
         /**
          * Returns the connected component of the triangulation to
@@ -447,7 +448,7 @@ class SimplexBase :
          *
          * See component() for further details.
          */
-        Component<dim>* getComponent() const;
+        REGINA_DEPRECATED Component<dim>* getComponent() const;
 
         /**
          * Returns the <i>subdim</i>-face of the underlying triangulation

@@ -111,7 +111,7 @@ class REGINA_API NSurfaceFilterCombination : public NSurfaceFilter {
          * \deprecated This routine has been renamed to usesAnd().
          * See the usesAnd() documentation for further details.
          */
-        bool getUsesAnd() const;
+        REGINA_DEPRECATED bool getUsesAnd() const;
         /**
          * Sets whether this is an \a and or an \a or combination.
          *

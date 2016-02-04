@@ -102,7 +102,7 @@ class REGINA_API NL31Pillow : public NStandardTriangulation {
          * \deprecated This routine has been renamed to tetrahedron().
          * See the tetrahedron() documentation for further details.
          */
-        NTetrahedron* getTetrahedron(int whichTet) const;
+        REGINA_DEPRECATED NTetrahedron* getTetrahedron(int whichTet) const;
         /**
          * Returns the vertex number of the given tetrahedron
          * corresponding to the degree three vertex in the interior of
@@ -128,7 +128,7 @@ class REGINA_API NL31Pillow : public NStandardTriangulation {
          * \deprecated This routine has been renamed to interiorVertex().
          * See the interiorVertex() documentation for further details.
          */
-        unsigned getInteriorVertex(int whichTet) const;
+        REGINA_DEPRECATED unsigned getInteriorVertex(int whichTet) const;
 
         /**
          * Determines if the given triangulation component is a

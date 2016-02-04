@@ -501,7 +501,7 @@ class REGINA_API NSatBlock :
          * \deprecated This routine has been renamed to abbr().
          * See the abbr() documentation for further details.
          */
-        std::string getAbbr(bool tex = false) const;
+        REGINA_DEPRECATED std::string getAbbr(bool tex = false) const;
 
         /**
          * Writes an abbreviated name or symbol for this block to the

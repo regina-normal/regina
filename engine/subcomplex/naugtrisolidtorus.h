@@ -156,7 +156,7 @@ class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
          * \deprecated This routine has been renamed to core().
          * See the core() documentation for further details.
          */
-        const NTriSolidTorus& getCore() const;
+        REGINA_DEPRECATED const NTriSolidTorus& getCore() const;
         /**
          * Returns the layered solid torus attached to the requested
          * annulus on the boundary of the core triangular solid torus.
@@ -177,7 +177,8 @@ class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
          * \deprecated This routine has been renamed to augTorus().
          * See the augTorus() documentation for further details.
          */
-        const NLayeredSolidTorus* getAugTorus(int annulus) const;
+        REGINA_DEPRECATED const NLayeredSolidTorus* getAugTorus(int annulus)
+            const;
 
         /**
          * Returns a permutation describing the role played by each top
@@ -210,7 +211,7 @@ class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
          * \deprecated This routine has been renamed to edgeGroupRoles().
          * See the edgeGroupRoles() documentation for further details.
          */
-        NPerm4 getEdgeGroupRoles(int annulus) const;
+        REGINA_DEPRECATED NPerm4 getEdgeGroupRoles(int annulus) const;
 
         /**
          * Returns the number of tetrahedra in the layered chain linking
@@ -230,7 +231,7 @@ class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
          * \deprecated This routine has been renamed to chainLength().
          * See the chainLength() documentation for further details.
          */
-        unsigned long getChainLength() const;
+        REGINA_DEPRECATED unsigned long getChainLength() const;
 
         /**
          * Returns the way in which a layered chain links
@@ -249,7 +250,7 @@ class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
          * \deprecated This routine has been renamed to chainType().
          * See the chainType() documentation for further details.
          */
-        int getChainType() const;
+        REGINA_DEPRECATED int getChainType() const;
 
         /**
          * Returns the single boundary annulus of the core triangular
@@ -274,7 +275,7 @@ class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
          * \deprecated This routine has been renamed to torusAnnulus().
          * See the torusAnnulus() documentation for further details.
          */
-        int getTorusAnnulus() const;
+        REGINA_DEPRECATED int getTorusAnnulus() const;
 
         /**
          * Determines whether the core triangular solid torus has two of

@@ -164,7 +164,8 @@ REGINA_API unsigned long modularInverse(unsigned long n, unsigned long k);
  * @param n the integer to factorise.
  * @param factors the list into which prime factors will be inserted.
  */
-REGINA_API void factorise(unsigned long n, std::list<unsigned long>& factors);
+REGINA_DEPRECATED REGINA_API void factorise(
+    unsigned long n, std::list<unsigned long>& factors);
 
 /**
  * Determines all primes up to and including the given upper bound.
@@ -184,7 +185,7 @@ REGINA_API void factorise(unsigned long n, std::list<unsigned long>& factors);
  * @param roof the upper bound up to which primes will be found.
  * @param primes the list into which the primes will be inserted.
  */
-REGINA_API void primesUpTo(const NLargeInteger& roof,
+REGINA_DEPRECATED REGINA_API void primesUpTo(const NLargeInteger& roof,
     std::list<NLargeInteger>& primes);
 
 /*@}*/

@@ -67,7 +67,7 @@ namespace regina {
  * @return the permutation \a p expressed as a permutation of five
  * elements, not four.
  */
-REGINA_API NPerm5 perm4to5(const NPerm4& p);
+REGINA_DEPRECATED REGINA_API NPerm5 perm4to5(const NPerm4& p);
 
 /**
  * Deprecated routine that expresses the given 5-element permutation as a
@@ -86,7 +86,7 @@ REGINA_API NPerm5 perm4to5(const NPerm4& p);
  * @return the permutation \a p expressed as a permutation of four
  * elements, not five.
  */
-REGINA_API NPerm4 perm5to4(const NPerm5& p);
+REGINA_DEPRECATED REGINA_API NPerm4 perm5to4(const NPerm5& p);
 
 /**
  * Deprecated routine that converts a 3-element permutation to a
@@ -102,7 +102,7 @@ REGINA_API NPerm4 perm5to4(const NPerm5& p);
  * @return the permutation \a p expressed as a permutation of four
  * elements, not three.
  */
-REGINA_API NPerm4 perm3to4(const NPerm3& p);
+REGINA_DEPRECATED REGINA_API NPerm4 perm3to4(const NPerm3& p);
 
 /**
  * Deprecated routine that expresses the given 4-element permutation as a
@@ -121,7 +121,7 @@ REGINA_API NPerm4 perm3to4(const NPerm3& p);
  * @return the permutation \a p expressed as a permutation of three
  * elements, not four.
  */
-REGINA_API NPerm3 perm4to3(const NPerm4& p);
+REGINA_DEPRECATED REGINA_API NPerm3 perm4to3(const NPerm4& p);
 
 /**
  * Deprecated routine that converts a 3-element permutation to a
@@ -137,7 +137,7 @@ REGINA_API NPerm3 perm4to3(const NPerm4& p);
  * @return the permutation \a p expressed as a permutation of five
  * elements, not three.
  */
-REGINA_API NPerm5 perm3to5(const NPerm3& p);
+REGINA_DEPRECATED REGINA_API NPerm5 perm3to5(const NPerm3& p);
 
 /**
  * Deprecated routine that expresses the given 5-element permutation as a
@@ -157,7 +157,7 @@ REGINA_API NPerm5 perm3to5(const NPerm3& p);
  * @return the permutation \a p expressed as a permutation of three
  * elements, not five.
  */
-REGINA_API NPerm3 perm5to3(const NPerm5& p);
+REGINA_DEPRECATED REGINA_API NPerm3 perm5to3(const NPerm5& p);
 
 /*@}*/
 

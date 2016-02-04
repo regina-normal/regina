@@ -176,7 +176,7 @@ class NGenericGluingPerms {
          * \deprecated This routine has been renamed to facetPairing().
          * See the facetPairing() documentation for further details.
          */
-        const FacetPairing<dim>* getFacetPairing() const;
+        REGINA_DEPRECATED const FacetPairing<dim>* getFacetPairing() const;
 
         /**
          * Returns the gluing permutation associated with the given

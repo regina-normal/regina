@@ -191,7 +191,7 @@ class FaceEmbeddingBase :
          *
          * See simplex() for further details.
          */
-        Simplex<dim>* getSimplex() const;
+        REGINA_DEPRECATED Simplex<dim>* getSimplex() const;
 
         /**
          * Returns the corresponding face number of simplex().
@@ -212,7 +212,7 @@ class FaceEmbeddingBase :
          *
          * See face() for further details.
          */
-        int getFace() const;
+        REGINA_DEPRECATED int getFace() const;
 
         /**
          * Maps vertices (0,...,\a subdim) of the underlying <i>subdim</i>-face
@@ -242,7 +242,7 @@ class FaceEmbeddingBase :
          *
          * See vertices() for further details.
          */
-        NPerm<dim+1> getVertices() const;
+        REGINA_DEPRECATED NPerm<dim+1> getVertices() const;
 
         /**
          * Tests whether this and the given object are identical.
@@ -337,7 +337,7 @@ class FaceStorage {
          *
          * See degree() for further details.
          */
-        size_t getDegree() const;
+        REGINA_DEPRECATED size_t getDegree() const;
         /**
          * Returns one of the ways in which this face appears within a
          * top-dimensional simplex of the underlying triangluation.
@@ -364,7 +364,8 @@ class FaceStorage {
          *
          * See embedding() for further details.
          */
-        const FaceEmbedding<dim, dim - codim>& getEmbedding(size_t index) const;
+        REGINA_DEPRECATED const FaceEmbedding<dim, dim - codim>& getEmbedding(
+            size_t index) const;
 
         /**
          * A begin function for iterating through all appearances of
@@ -930,7 +931,7 @@ class FaceBase :
          *
          * See triangulation() for further details.
          */
-        Triangulation<dim>* getTriangulation() const;
+        REGINA_DEPRECATED Triangulation<dim>* getTriangulation() const;
         /**
          * Returns the component of the triangulation to which this
          * face belongs.
@@ -946,7 +947,7 @@ class FaceBase :
          *
          * See component() for further details.
          */
-        Component<dim>* getComponent() const;
+        REGINA_DEPRECATED Component<dim>* getComponent() const;
 
         /**
          * Returns the <i>lowerdim</i>-face of the underlying triangulation

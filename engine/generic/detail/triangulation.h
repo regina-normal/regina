@@ -376,7 +376,7 @@ class TriangulationBase :
          *
          * @return the number of top-dimensional simplices.
          */
-        size_t getNumberOfSimplices() const;
+        REGINA_DEPRECATED size_t getNumberOfSimplices() const;
         /**
          * Returns all top-dimensional simplices in the triangulation.
          *
@@ -398,7 +398,8 @@ class TriangulationBase :
          *
          * See simplices() for further details.
          */
-        const std::vector<Simplex<dim>*>& getSimplices() const;
+        REGINA_DEPRECATED const std::vector<Simplex<dim>*>& getSimplices()
+            const;
         /**
          * Returns the top-dimensional simplex at the given index in the
          * triangulation.
@@ -419,7 +420,7 @@ class TriangulationBase :
          *
          * See simplex() for further details.
          */
-        Simplex<dim>* getSimplex(size_t index);
+        REGINA_DEPRECATED Simplex<dim>* getSimplex(size_t index);
         /**
          * Returns the top-dimensional simplex at the given index in the
          * triangulation.
@@ -440,7 +441,7 @@ class TriangulationBase :
          *
          * See simplex() for further details.
          */
-        const Simplex<dim>* getSimplex(size_t index) const;
+        REGINA_DEPRECATED const Simplex<dim>* getSimplex(size_t index) const;
         /**
          * Deprecated routine that returns the index of the given
          * top-dimensional simplex in the triangulation.
@@ -463,7 +464,8 @@ class TriangulationBase :
          * @return the index of the specified simplex; this will be an
          * integer between 0 and size()-1 inclusive.
          */
-        size_t simplexIndex(const Simplex<dim>* simplex) const;
+        REGINA_DEPRECATED size_t simplexIndex(const Simplex<dim>* simplex)
+            const;
         /**
          * Creates a new top-dimensional simplex and adds it to this
          * triangulation.
@@ -581,7 +583,7 @@ class TriangulationBase :
          *
          * See countComponents() for further details.
          */
-        size_t getNumberOfComponents() const;
+        REGINA_DEPRECATED size_t getNumberOfComponents() const;
 
         /**
          * Returns the number of <i>subdim</i>-faces in this triangulation.
@@ -608,7 +610,7 @@ class TriangulationBase :
          * See countFaces() for further details.
          */
         template <int subdim>
-        size_t getNumberOfFaces() const;
+        REGINA_DEPRECATED size_t getNumberOfFaces() const;
 
         /**
          * Returns the f-vector of this triangulation, which counts the
@@ -653,7 +655,8 @@ class TriangulationBase :
          *
          * See components() for further details.
          */
-        const std::vector<Component<dim>*>& getComponents() const;
+        REGINA_DEPRECATED const std::vector<Component<dim>*>& getComponents()
+            const;
 
         /**
          * Returns an object that allows iteration through and random access
@@ -699,7 +702,7 @@ class TriangulationBase :
          *
          * See component() for further details.
          */
-        Component<dim>* getComponent(size_t index) const;
+        REGINA_DEPRECATED Component<dim>* getComponent(size_t index) const;
 
         /**
          * Returns the requested <i>subdim</i>-face of this triangulation.
@@ -733,7 +736,8 @@ class TriangulationBase :
          * @return the index of the specified component; this will be an
          * integer between 0 and countComponents()-1 inclusive.
          */
-        size_t componentIndex(const Component<dim>* component) const;
+        REGINA_DEPRECATED size_t componentIndex(const Component<dim>* component)
+            const;
 
         /*@}*/
         /**

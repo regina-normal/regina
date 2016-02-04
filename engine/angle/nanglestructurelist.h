@@ -122,7 +122,7 @@ class REGINA_API NAngleStructureList : public NPacket {
          * \deprecated This routine has been renamed to triangulation().
          * See the triangulation() documentation for further details.
          */
-        NTriangulation* getTriangulation() const;
+        REGINA_DEPRECATED NTriangulation* getTriangulation() const;
 
         /**
          * Returns whether this list was produced by enumerating taut angle
@@ -148,7 +148,7 @@ class REGINA_API NAngleStructureList : public NPacket {
          *
          * @return the number of angle structures.
          */
-        size_t getNumberOfStructures() const;
+        REGINA_DEPRECATED size_t getNumberOfStructures() const;
         /**
          * Returns the angle structure at the requested index in this
          * list.
@@ -165,7 +165,8 @@ class REGINA_API NAngleStructureList : public NPacket {
          * \deprecated This routine has been renamed to structure().
          * See the structure() documentation for further details.
          */
-        const NAngleStructure* getStructure(size_t index) const;
+        REGINA_DEPRECATED const NAngleStructure* getStructure(size_t index)
+            const;
 
         /**
          * Determines whether any convex combination of the angle
@@ -202,7 +203,7 @@ class REGINA_API NAngleStructureList : public NPacket {
          * @return \c true if and only if a strict angle structure can
          * be produced.
          */
-        bool allowsStrict() const;
+        REGINA_DEPRECATED bool allowsStrict() const;
 
         /**
          * Determines whether any angle structure in this list is a
@@ -215,7 +216,7 @@ class REGINA_API NAngleStructureList : public NPacket {
          * @return \c true if and only if a taut angle structure can
          * be produced.
          */
-        bool allowsTaut() const;
+        REGINA_DEPRECATED bool allowsTaut() const;
 
         /**
          * Enumerates all angle structures on the given triangulation.

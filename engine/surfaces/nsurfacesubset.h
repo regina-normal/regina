@@ -100,7 +100,7 @@ class REGINA_API NSurfaceSubset :
          *
          * @return the coordinate system used.
          */
-        NormalCoords getFlavour() const;
+        REGINA_DEPRECATED NormalCoords getFlavour() const;
         /**
          * Returns the coordinate system being used by the
          * surfaces stored in this set.
@@ -159,7 +159,7 @@ class REGINA_API NSurfaceSubset :
          * \deprecated This routine has been renamed to triangulation().
          * See the triangulation() documentation for further details.
          */
-        NTriangulation* getTriangulation() const;
+        REGINA_DEPRECATED NTriangulation* getTriangulation() const;
 
         /**
          * Returns the number of surfaces stored in this list.
@@ -175,7 +175,7 @@ class REGINA_API NSurfaceSubset :
          *
          * @return the number of surfaces.
          */
-        size_t getNumberOfSurfaces() const;
+        REGINA_DEPRECATED size_t getNumberOfSurfaces() const;
         /**
          * Returns the surface at the requested index in this set.
          *
@@ -192,7 +192,7 @@ class REGINA_API NSurfaceSubset :
          * \deprecated This routine has been renamed to surface().
          * See the surface() documentation for further details.
          */
-        const NNormalSurface* getSurface(size_t index) const;
+        REGINA_DEPRECATED const NNormalSurface* getSurface(size_t index) const;
 
         /**
          * Writes the number of surfaces in this set followed by the

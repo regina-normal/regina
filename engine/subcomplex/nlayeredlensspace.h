@@ -103,7 +103,7 @@ class REGINA_API NLayeredLensSpace : public NStandardTriangulation {
          * \deprecated This routine has been renamed to p().
          * See the p() documentation for further details.
          */
-        unsigned long getP() const;
+        REGINA_DEPRECATED unsigned long getP() const;
         /**
          * Returns the second parameter \a q of this lens space L(p,q).
          *
@@ -117,7 +117,7 @@ class REGINA_API NLayeredLensSpace : public NStandardTriangulation {
          * \deprecated This routine has been renamed to q().
          * See the q() documentation for further details.
          */
-        unsigned long getQ() const;
+        REGINA_DEPRECATED unsigned long getQ() const;
 
         /**
          * Returns the layered solid torus to which the mobius strip is
@@ -133,7 +133,7 @@ class REGINA_API NLayeredLensSpace : public NStandardTriangulation {
          * \deprecated This routine has been renamed to torus().
          * See the torus() documentation for further details.
          */
-        const NLayeredSolidTorus& getTorus() const;
+        REGINA_DEPRECATED const NLayeredSolidTorus& getTorus() const;
         /**
          * Determines which edge of the layered solid torus is glued to
          * the boundary of the mobius strip (i.e., the weight 2 edge
@@ -154,7 +154,7 @@ class REGINA_API NLayeredLensSpace : public NStandardTriangulation {
          * \deprecated This routine has been renamed to mobiusBoundaryGroup().
          * See the mobiousBoundaryGroup() documentation for further details.
          */
-        int getMobiusBoundaryGroup() const;
+        REGINA_DEPRECATED int getMobiusBoundaryGroup() const;
         /**
          * Determines if the layered solid torus that forms the basis for
          * this lens space is snapped shut (folded closed without a twist).

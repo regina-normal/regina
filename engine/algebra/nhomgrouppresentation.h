@@ -169,7 +169,7 @@ class REGINA_API NHomGroupPresentation :
          * \deprecated This routine has been renamed to domain().
          * See the domain() documentation for further details.
          */
-        const NGroupPresentation& getDomain() const;
+        REGINA_DEPRECATED const NGroupPresentation& getDomain() const;
         /**
          * The range of the map.
          *
@@ -182,7 +182,7 @@ class REGINA_API NHomGroupPresentation :
          * \deprecated This routine has been renamed to range().
          * See the range() documentation for further details.
          */
-        const NGroupPresentation& getRange() const;
+        REGINA_DEPRECATED const NGroupPresentation& getRange() const;
 
         /**
          * Returns whether or not this is a declared isomorphism.

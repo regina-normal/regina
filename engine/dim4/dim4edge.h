@@ -108,7 +108,7 @@ class REGINA_API Face<4, 1> : public detail::FaceBase<4, 1>,
          * \deprecated This routine has been renamed as boundaryComponent().
          * See the boundaryComponent() documentation for further details.
          */
-        Dim4BoundaryComponent* getBoundaryComponent() const;
+        REGINA_DEPRECATED Dim4BoundaryComponent* getBoundaryComponent() const;
 
         /**
          * Determines if this edge lies entirely on the boundary of the

@@ -126,7 +126,7 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
          * \deprecated This routine has been renamed to eulerChars().
          * See the eulerChars() documentation for further details.
          */
-        const std::set<NLargeInteger>& getECs() const;
+        REGINA_DEPRECATED const std::set<NLargeInteger>& getECs() const;
         /**
          * Returns the number of allowable Euler characteristics.
          * See eulerChars() for further details.
@@ -141,7 +141,7 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
          * \deprecated This routine has been renamed to countEulerChars().
          * See the countEulerChars() documentation for further details.
          */
-        size_t getNumberOfECs() const;
+        REGINA_DEPRECATED size_t getNumberOfECs() const;
         /**
          * Returns the allowable Euler characteristic at the given index
          * in the set.  See eulerChars() for further details.
@@ -159,7 +159,7 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
          * \deprecated This routine has been renamed to eulerChar().
          * See the eulerChar() documentation for further details.
          */
-        NLargeInteger getEC(size_t index) const;
+        REGINA_DEPRECATED NLargeInteger getEC(size_t index) const;
         /**
          * Returns the set of allowable orientabilities.  Note that this
          * is a subset of <tt>{ true, false }</tt>.
@@ -175,7 +175,7 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
          * \deprecated This routine has been renamed to orientability().
          * See the orientability() documentation for further details.
          */
-        NBoolSet getOrientability() const;
+        REGINA_DEPRECATED NBoolSet getOrientability() const;
         /**
          * Returns the set of allowable compactness properties.
          * Note that this is a subset of <tt>{ true, false }</tt>.
@@ -192,7 +192,7 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
          * \deprecated This routine has been renamed to compactness().
          * See the compactness() documentation for further details.
          */
-        NBoolSet getCompactness() const;
+        REGINA_DEPRECATED NBoolSet getCompactness() const;
         /**
          * Returns the set of allowable has-real-boundary properties.
          * Note that this is a subset of <tt>{ true, false }</tt>.
@@ -209,7 +209,7 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
          * \deprecated This routine has been renamed to realBoundary().
          * See the realBoundary() documentation for further details.
          */
-        NBoolSet getRealBoundary() const;
+        REGINA_DEPRECATED NBoolSet getRealBoundary() const;
 
         /**
          * Sets the allowable Euler characteristics to the given set.
@@ -235,7 +235,7 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
          * \deprecated This routine has been renamed to addEulerChar().
          * See the addEulerChar() documentation for further details.
          */
-        void addEC(const NLargeInteger& ec);
+        REGINA_DEPRECATED void addEC(const NLargeInteger& ec);
         /**
          * Removes the given Euler characteristic from the set of allowable
          * Euler characteristics.  See eulerChars() for further details.
@@ -256,7 +256,7 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
          * \deprecated This routine has been renamed to removeEulerChar().
          * See the removeEulerChar() documentation for further details.
          */
-        void removeEC(const NLargeInteger& ec);
+        REGINA_DEPRECATED void removeEC(const NLargeInteger& ec);
         /**
          * Empties the set of allowable Euler characteristics.  See
          * eulerChars() for further details.
@@ -272,7 +272,7 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
          * \deprecated This routine has been renamed to removeAllEulerChars().
          * See the removeAllEulerChars() documentation for further details.
          */
-        void removeAllECs();
+        REGINA_DEPRECATED void removeAllECs();
         /**
          * Sets the set of allowable orientabilities.
          * See orientability() for further details.

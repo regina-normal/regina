@@ -81,7 +81,7 @@ typedef Triangulation<3> NTriangulation;
  * constructor instead (as described above), since this will return an
  * NSnapPeaTriangulation object that preserves SnapPea's additional data.
  */
-REGINA_API NTriangulation* readSnapPea(const char *filename);
+REGINA_DEPRECATED REGINA_API NTriangulation* readSnapPea(const char *filename);
 
 /**
  * Deprecated function that reads the contents of a SnapPea data file from
@@ -109,7 +109,7 @@ REGINA_API NTriangulation* readSnapPea(const char *filename);
  *
  * \ifacespython Not present.
  */
-REGINA_API NTriangulation* readSnapPea(std::istream& in);
+REGINA_DEPRECATED REGINA_API NTriangulation* readSnapPea(std::istream& in);
 
 /**
  * Deprecated function that writes the given triangulation to the given file
@@ -118,7 +118,8 @@ REGINA_API NTriangulation* readSnapPea(std::istream& in);
  * \deprecated This routine has been renamed as NTriangulation::saveSnapPea().
  * See the documentation of NTriangulation::saveSnapPea() for further details.
  */
-REGINA_API bool writeSnapPea(const char* filename, const NTriangulation& tri);
+REGINA_DEPRECATED REGINA_API bool writeSnapPea(const char* filename,
+    const NTriangulation& tri);
 
 /**
  * Deprecated function that writes the given triangulation to the
@@ -130,7 +131,8 @@ REGINA_API bool writeSnapPea(const char* filename, const NTriangulation& tri);
  *
  * \ifacespython Not present.
  */
-REGINA_API void writeSnapPea(std::ostream& out, const NTriangulation& tri);
+REGINA_DEPRECATED REGINA_API void writeSnapPea(std::ostream& out,
+    const NTriangulation& tri);
 
 /*@}*/
 

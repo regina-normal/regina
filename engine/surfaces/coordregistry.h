@@ -179,14 +179,15 @@ forCoords(NormalCoords coords, FunctionObject&& func, Args&&... args);
  * header registryutils.h.  This typedef is provided for backward
  * compatibility, and will be removed in some future version of Regina.
  */
-typedef NewFunction1<NNormalSurfaceVector, size_t> NewNormalSurfaceVector;
+REGINA_DEPRECATED typedef NewFunction1<NNormalSurfaceVector, size_t>
+    NewNormalSurfaceVector;
 
 /**
  * A deprecated alias for the registry-based template function forCoords().
  * See forCoords() for further details.
  */
 template <typename FunctionObject>
-inline typename FunctionObject::ReturnType forFlavour(
+REGINA_DEPRECATED inline typename FunctionObject::ReturnType forFlavour(
         NormalCoords coords, FunctionObject func,
         typename FunctionObject::ReturnType defaultReturn) {
     return forCoords<FunctionObject>(coords, func, defaultReturn);
@@ -197,7 +198,8 @@ inline typename FunctionObject::ReturnType forFlavour(
  * See forCoords() for further details.
  */
 template <typename VoidFunctionObject>
-inline void forFlavour(NormalCoords coords, VoidFunctionObject func) {
+REGINA_DEPRECATED inline void forFlavour(NormalCoords coords,
+        VoidFunctionObject func) {
     forCoords<VoidFunctionObject>(coords, func);
 }
 

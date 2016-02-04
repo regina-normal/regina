@@ -118,7 +118,7 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
          * \deprecated This routine has been renamed to text().
          * See the text() documentation for further details.
          */
-        const std::string& getText() const;
+        REGINA_DEPRECATED const std::string& getText() const;
 
         /**
          * Replaces the complete text of this script with the given
@@ -150,7 +150,7 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
          *
          * \deprecated Simply call countVariables() instead.
          */
-        size_t getNumberOfVariables() const;
+        REGINA_DEPRECATED size_t getNumberOfVariables() const;
         /**
          * Returns the name of the requested variable associated with
          * this script.
@@ -167,7 +167,8 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
          * \deprecated This routine has been renamed to variableName().
          * See the variableName() documentation for further details.
          */
-        const std::string& getVariableName(size_t index) const;
+        REGINA_DEPRECATED const std::string& getVariableName(size_t index)
+            const;
         /**
          * Returns the index of the variable stored with the given name.
          *
@@ -185,7 +186,7 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
          * \deprecated This routine has been renamed to variableIndex().
          * See the variableIndex() documentation for further details.
          */
-        long getVariableIndex(const std::string& name) const;
+        REGINA_DEPRECATED long getVariableIndex(const std::string& name) const;
         /**
          * Returns the value of the requested variable associated with
          * this script.  Variables may take the value \c null.
@@ -202,7 +203,7 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
          * \deprecated This routine has been renamed to variableValue(size_t).
          * See the variableValue(size_t) documentation for further details.
          */
-        NPacket* getVariableValue(size_t index) const;
+        REGINA_DEPRECATED NPacket* getVariableValue(size_t index) const;
         /**
          * Returns the value of the variable stored with the given
          * name.  Variables may take the value \c null.
@@ -223,7 +224,8 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
          * variableValue(const std::string&).  See the
          * variableValue(const std::string&) documentation for further details.
          */
-        NPacket* getVariableValue(const std::string& name) const;
+        REGINA_DEPRECATED NPacket* getVariableValue(const std::string& name)
+            const;
 
         /**
          * Changes the name of an existing variable associated with

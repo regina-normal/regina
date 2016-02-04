@@ -141,7 +141,7 @@ class REGINA_API NTorusBundle : public NManifold {
          * \deprecated This routine has been renamed to monodromy().
          * See the monodromy() documentation for further details.
          */
-        const NMatrix2& getMonodromy() const;
+        REGINA_DEPRECATED const NMatrix2& getMonodromy() const;
 
         NAbelianGroup* homology() const;
         bool isHyperbolic() const;

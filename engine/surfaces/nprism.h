@@ -150,7 +150,7 @@ REGINA_API std::ostream& operator << (std::ostream& out,
  *
  * \ifacespython Not present.
  */
-class REGINA_API NPrismSetSurface {
+class REGINA_API REGINA_DEPRECATED NPrismSetSurface {
     private:
         signed char* quadType_;
             /**< A list of which types of normal quad are contained in which
@@ -198,7 +198,7 @@ class REGINA_API NPrismSetSurface {
          * \deprecated This routine has been renamed to quadType().
          * See the quadType() documentation for further details.
          */
-        signed char getQuadType(size_t tetIndex) const;
+        REGINA_DEPRECATED signed char getQuadType(size_t tetIndex) const;
 };
 
 /*@}*/

@@ -70,7 +70,8 @@ typedef Triangulation<3> NTriangulation;
  * NTriangulation::recogniser() and simply print the resulting string.
  * See the NTriangulation::saveRecogniser() documentation for further details.
  */
-REGINA_API bool writeRecogniser(const char* filename, NTriangulation& tri);
+REGINA_DEPRECATED REGINA_API bool writeRecogniser(const char* filename,
+    NTriangulation& tri);
 
 /**
  * Deprecated function that writes the given triangulation to the given file
@@ -84,7 +85,8 @@ REGINA_API bool writeRecogniser(const char* filename, NTriangulation& tri);
  * NTriangulation::recogniser() and simply print the resulting string.
  * See the NTriangulation::saveRecogniser() documentation for further details.
  */
-REGINA_API bool writeRecognizer(const char* filename, NTriangulation& tri);
+REGINA_DEPRECATED REGINA_API bool writeRecognizer(const char* filename,
+    NTriangulation& tri);
 
 /*@}*/
 

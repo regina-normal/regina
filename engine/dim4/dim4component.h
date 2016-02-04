@@ -143,7 +143,7 @@ class REGINA_API Component<4> : public detail::ComponentBase<4>,
          *
          * \deprecated Simply call countBoundaryComponents() instead.
          */
-        size_t getNumberOfBoundaryComponents() const;
+        REGINA_DEPRECATED size_t getNumberOfBoundaryComponents() const;
 
         /**
          * Returns a reference to the list of all <i>subdim</i>-faces in
@@ -199,7 +199,8 @@ class REGINA_API Component<4> : public detail::ComponentBase<4>,
          * \deprecated This routine has been renamed to boundaryComponent().
          * See the boundaryComponent() documentation for further details.
          */
-        Dim4BoundaryComponent* getBoundaryComponent(size_t index) const;
+        REGINA_DEPRECATED Dim4BoundaryComponent* getBoundaryComponent(
+            size_t index) const;
 
         /**
          * Determines if this component is ideal.

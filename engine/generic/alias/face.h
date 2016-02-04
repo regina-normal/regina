@@ -114,7 +114,7 @@ class FaceOfSimplex<Derived, dim, 0> {
          *
          * \deprecated Simply call vertex() instead.
          */
-        Face<dim, 0>* getVertex(int i) const {
+        REGINA_DEPRECATED Face<dim, 0>* getVertex(int i) const {
             return static_cast<const Derived*>(this)->template face<0>(i);
         }
 
@@ -133,7 +133,7 @@ class FaceOfSimplex<Derived, dim, 0> {
          *
          * \deprecated Simply call vertexMapping() instead.
          */
-        NPerm<dim + 1> getVertexMapping(int i) const {
+        REGINA_DEPRECATED NPerm<dim + 1> getVertexMapping(int i) const {
             return static_cast<const Derived*>(this)->
                 template faceMapping<0>(i);
         }
@@ -165,7 +165,7 @@ class FaceOfSimplex<Derived, dim, 1> : public FaceOfSimplex<Derived, dim, 0> {
          *
          * \deprecated Simply call edge() instead.
          */
-        Face<dim, 1>* getEdge(int i) const {
+        REGINA_DEPRECATED Face<dim, 1>* getEdge(int i) const {
             return static_cast<const Derived*>(this)->template face<1>(i);
         }
 
@@ -184,7 +184,7 @@ class FaceOfSimplex<Derived, dim, 1> : public FaceOfSimplex<Derived, dim, 0> {
          *
          * \deprecated Simply call edgeMapping() instead.
          */
-        NPerm<dim + 1> getEdgeMapping(int i) const {
+        REGINA_DEPRECATED NPerm<dim + 1> getEdgeMapping(int i) const {
             return static_cast<const Derived*>(this)->
                 template faceMapping<1>(i);
         }
@@ -216,7 +216,7 @@ class FaceOfSimplex<Derived, dim, 2> : public FaceOfSimplex<Derived, dim, 1> {
          *
          * \deprecated Simply call triangle() instead.
          */
-        Face<dim, 2>* getTriangle(int i) const {
+        REGINA_DEPRECATED Face<dim, 2>* getTriangle(int i) const {
             return static_cast<const Derived*>(this)->template face<2>(i);
         }
 
@@ -235,7 +235,7 @@ class FaceOfSimplex<Derived, dim, 2> : public FaceOfSimplex<Derived, dim, 1> {
          *
          * \deprecated Simply call triangleMapping() instead.
          */
-        NPerm<dim + 1> getTriangleMapping(int i) const {
+        REGINA_DEPRECATED NPerm<dim + 1> getTriangleMapping(int i) const {
             return static_cast<const Derived*>(this)->
                 template faceMapping<2>(i);
         }
@@ -267,7 +267,7 @@ class FaceOfSimplex<Derived, dim, 3> : public FaceOfSimplex<Derived, dim, 2> {
          *
          * \deprecated Simply call tetrahedron() instead.
          */
-        Face<dim, 3>* getTetrahedron(int i) const {
+        REGINA_DEPRECATED Face<dim, 3>* getTetrahedron(int i) const {
             return static_cast<const Derived*>(this)->template face<3>(i);
         }
 
@@ -286,7 +286,7 @@ class FaceOfSimplex<Derived, dim, 3> : public FaceOfSimplex<Derived, dim, 2> {
          *
          * \deprecated Simply call tetrahedronMapping() instead.
          */
-        NPerm<dim + 1> getTetrahedronMapping(int i) const {
+        REGINA_DEPRECATED NPerm<dim + 1> getTetrahedronMapping(int i) const {
             return static_cast<const Derived*>(this)->
                 template faceMapping<3>(i);
         }
@@ -318,7 +318,7 @@ class FaceOfSimplex<Derived, dim, 4> : public FaceOfSimplex<Derived, dim, 3> {
          *
          * \deprecated Simply call pentachoron() instead.
          */
-        Face<dim, 4>* getPentachoron(int i) const {
+        REGINA_DEPRECATED Face<dim, 4>* getPentachoron(int i) const {
             return static_cast<const Derived*>(this)->template face<4>(i);
         }
 
@@ -337,7 +337,7 @@ class FaceOfSimplex<Derived, dim, 4> : public FaceOfSimplex<Derived, dim, 3> {
          *
          * \deprecated Simply call pentachoronMapping() instead.
          */
-        NPerm<dim + 1> getPentachoronMapping(int i) const {
+        REGINA_DEPRECATED NPerm<dim + 1> getPentachoronMapping(int i) const {
             return static_cast<const Derived*>(this)->
                 template faceMapping<4>(i);
         }
@@ -387,7 +387,7 @@ class FaceOfTriangulation<Derived, dim, 0> {
          *
          * \deprecated Simply call countVertices() instead.
          */
-        size_t getNumberOfVertices() const {
+        REGINA_DEPRECATED size_t getNumberOfVertices() const {
             return static_cast<const Derived*>(this)->template countFaces<0>();
         }
 
@@ -405,7 +405,7 @@ class FaceOfTriangulation<Derived, dim, 0> {
          *
          * \deprecated Simply call vertex() instead.
          */
-        Face<dim, 0>* getVertex(size_t i) const {
+        REGINA_DEPRECATED Face<dim, 0>* getVertex(size_t i) const {
             return static_cast<const Derived*>(this)->template face<0>(i);
         }
 };
@@ -437,7 +437,7 @@ class FaceOfTriangulation<Derived, dim, 1> :
          *
          * \deprecated Simply call countEdges() instead.
          */
-        size_t getNumberOfEdges() const {
+        REGINA_DEPRECATED size_t getNumberOfEdges() const {
             return static_cast<const Derived*>(this)->template countFaces<1>();
         }
 
@@ -455,7 +455,7 @@ class FaceOfTriangulation<Derived, dim, 1> :
          *
          * \deprecated Simply call edge() instead.
          */
-        Face<dim, 1>* getEdge(size_t i) const {
+        REGINA_DEPRECATED Face<dim, 1>* getEdge(size_t i) const {
             return static_cast<const Derived*>(this)->template face<1>(i);
         }
 };
@@ -487,7 +487,7 @@ class FaceOfTriangulation<Derived, dim, 2> :
          *
          * \deprecated Simply call countTriangles() instead.
          */
-        size_t getNumberOfTriangles() const {
+        REGINA_DEPRECATED size_t getNumberOfTriangles() const {
             return static_cast<const Derived*>(this)->template countFaces<2>();
         }
 
@@ -505,7 +505,7 @@ class FaceOfTriangulation<Derived, dim, 2> :
          *
          * \deprecated Simply call triangle() instead.
          */
-        Face<dim, 2>* getTriangle(size_t i) const {
+        REGINA_DEPRECATED Face<dim, 2>* getTriangle(size_t i) const {
             return static_cast<const Derived*>(this)->template face<2>(i);
         }
 };
@@ -537,7 +537,7 @@ class FaceOfTriangulation<Derived, dim, 3> :
          *
          * \deprecated Simply call countTetrahedra() instead.
          */
-        size_t getNumberOfTetrahedra() const {
+        REGINA_DEPRECATED size_t getNumberOfTetrahedra() const {
             return static_cast<const Derived*>(this)->template countFaces<3>();
         }
 
@@ -555,7 +555,7 @@ class FaceOfTriangulation<Derived, dim, 3> :
          *
          * \deprecated Simply call tetrahedron() instead.
          */
-        Face<dim, 3>* getTetrahedron(size_t i) const {
+        REGINA_DEPRECATED Face<dim, 3>* getTetrahedron(size_t i) const {
             return static_cast<const Derived*>(this)->template face<3>(i);
         }
 };
@@ -587,7 +587,7 @@ class FaceOfTriangulation<Derived, dim, 4> :
          *
          * \deprecated Simply call countPentachora() instead.
          */
-        size_t getNumberOfPentachora() const {
+        REGINA_DEPRECATED size_t getNumberOfPentachora() const {
             return static_cast<const Derived*>(this)->template countFaces<4>();
         }
 
@@ -605,7 +605,7 @@ class FaceOfTriangulation<Derived, dim, 4> :
          *
          * \deprecated Simply call pentachoron() instead.
          */
-        Face<dim, 4>* getPentachoron(size_t i) const {
+        REGINA_DEPRECATED Face<dim, 4>* getPentachoron(size_t i) const {
             return static_cast<const Derived*>(this)->template face<4>(i);
         }
 };
@@ -659,8 +659,9 @@ class FacesOfTriangulation<Derived, dim, 0> {
          *
          * \deprecated Simply call vertices() instead.
          */
-        const typename detail::FaceListHolder<Derived, 0>::Holder&
-                getVertices() const {
+        REGINA_DEPRECATED const typename
+                detail::FaceListHolder<Derived, 0>::Holder& getVertices()
+                const {
             return static_cast<const Derived*>(this)->template faces<0>();
         }
 };
@@ -695,8 +696,8 @@ class FacesOfTriangulation<Derived, dim, 1> :
          *
          * \deprecated Simply call edges() instead.
          */
-        const typename detail::FaceListHolder<Derived, 1>::Holder&
-                getEdges() const {
+        REGINA_DEPRECATED const typename
+                detail::FaceListHolder<Derived, 1>::Holder& getEdges() const {
             return static_cast<const Derived*>(this)->template faces<1>();
         }
 };
@@ -731,8 +732,9 @@ class FacesOfTriangulation<Derived, dim, 2> :
          *
          * \deprecated Simply call triangles() instead.
          */
-        const typename detail::FaceListHolder<Derived, 2>::Holder&
-                getTriangles() const {
+        REGINA_DEPRECATED const typename
+                detail::FaceListHolder<Derived, 2>::Holder& getTriangles()
+                const {
             return static_cast<const Derived*>(this)->template faces<2>();
         }
 };
@@ -767,8 +769,9 @@ class FacesOfTriangulation<Derived, dim, 3> :
          *
          * \deprecated Simply call tetrahedra() instead.
          */
-        const typename detail::FaceListHolder<Derived, 3>::Holder&
-                getTetrahedra() const {
+        REGINA_DEPRECATED const typename
+                detail::FaceListHolder<Derived, 3>::Holder& getTetrahedra()
+                const {
             return static_cast<const Derived*>(this)->template faces<3>();
         }
 };
@@ -803,8 +806,9 @@ class FacesOfTriangulation<Derived, dim, 4> :
          *
          * \deprecated Simply call pentachora() instead.
          */
-        const typename detail::FaceListHolder<Derived, 4>::Holder&
-                getPentachora() const {
+        REGINA_DEPRECATED const typename
+                detail::FaceListHolder<Derived, 4>::Holder& getPentachora()
+                const {
             return static_cast<const Derived*>(this)->template faces<4>();
         }
 };

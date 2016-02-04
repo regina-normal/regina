@@ -75,7 +75,7 @@ typedef Triangulation<3> NTriangulation;
  * yourself, you should call NFacePairing::findAllPairings() and
  * NGluingPermSearcher::findAllPerms() directly.
  */
-typedef bool (*AcceptTriangulation)(NTriangulation*, void*);
+REGINA_DEPRECATED typedef bool (*AcceptTriangulation)(NTriangulation*, void*);
 
 /**
  * Stores the location and description of one of Regina's in-built census
@@ -300,7 +300,7 @@ class REGINA_API NCensus {
          * \deprecated This constant is deprecated; please use
          * NGluingPermSearcher::PURGE_NON_MINIMAL instead.
          */
-        static const int PURGE_NON_MINIMAL;
+        REGINA_DEPRECATED static const int PURGE_NON_MINIMAL;
         /**
          * This constant indicates that any triangulation that is not
          * prime (i.e., can be written as a non-trivial connected sum)
@@ -310,7 +310,7 @@ class REGINA_API NCensus {
          * \deprecated This constant is deprecated; please use
          * NGluingPermSearcher::PURGE_NON_PRIME instead.
          */
-        static const int PURGE_NON_PRIME;
+        REGINA_DEPRECATED static const int PURGE_NON_PRIME;
         /**
          * This constant indicates that any triangulation that is not
          * prime (i.e., can be written as a non-trivial connected sum),
@@ -322,7 +322,7 @@ class REGINA_API NCensus {
          * \deprecated This constant is deprecated; please use
          * NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME instead.
          */
-        static const int PURGE_NON_MINIMAL_PRIME;
+        REGINA_DEPRECATED static const int PURGE_NON_MINIMAL_PRIME;
         /**
          * This constant indicates that any triangulation containing an
          * embedded two-sided projective plane may be ignored.
@@ -330,7 +330,7 @@ class REGINA_API NCensus {
          * \deprecated This constant is deprecated; please use
          * NGluingPermSearcher::PURGE_NON_MINIMAL instead.
          */
-        static const int PURGE_P2_REDUCIBLE;
+        REGINA_DEPRECATED static const int PURGE_P2_REDUCIBLE;
 
         /**
          * A routine used to determine whether a particular triangulation
@@ -351,7 +351,8 @@ class REGINA_API NCensus {
          * yourself, you should call NFacePairing::findAllPairings() and
          * NGluingPermSearcher::findAllPerms() directly.
          */
-        typedef bool (*AcceptTriangulation)(NTriangulation*, void*);
+        REGINA_DEPRECATED typedef bool (*AcceptTriangulation)(
+            NTriangulation*, void*);
 
     private:
         static NCensusDB* closedOr_;
@@ -566,10 +567,10 @@ class REGINA_API NCensus {
          * will be ignored.
          * @return the number of triangulations produced in the census.
          */
-        static unsigned long formCensus(NPacket* parent, unsigned nTetrahedra,
-            NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary,
-            int nBdryTris, int whichPurge, AcceptTriangulation sieve = 0,
-            void* sieveArgs = 0);
+        REGINA_DEPRECATED static unsigned long formCensus(NPacket* parent,
+            unsigned nTetrahedra, NBoolSet finiteness, NBoolSet orientability,
+            NBoolSet boundary, int nBdryTris, int whichPurge,
+            AcceptTriangulation sieve = 0, void* sieveArgs = 0);
 
         /**
          * Deprecated routine that fills the given packet with all
@@ -676,9 +677,10 @@ class REGINA_API NCensus {
          * will be ignored.
          * @return the number of triangulations produced in the partial census.
          */
-        static unsigned long formPartialCensus(const NFacePairing* pairing,
-            NPacket* parent, NBoolSet finiteness, NBoolSet orientability,
-            int whichPurge, AcceptTriangulation sieve = 0, void* sieveArgs = 0);
+        REGINA_DEPRECATED static unsigned long formPartialCensus(
+            const NFacePairing* pairing, NPacket* parent, NBoolSet finiteness,
+            NBoolSet orientability, int whichPurge,
+            AcceptTriangulation sieve = 0, void* sieveArgs = 0);
 
         /**
          * Deprecated routine to determine whether the given triangulation
@@ -708,7 +710,8 @@ class REGINA_API NCensus {
          * non-minimal, or \c true if minimality of the given
          * triangulation has not been determined.
          */
-        static bool mightBeMinimal(NTriangulation* tri, void* ignore = 0);
+        REGINA_DEPRECATED static bool mightBeMinimal(NTriangulation* tri,
+            void* ignore = 0);
 
     private:
         /**

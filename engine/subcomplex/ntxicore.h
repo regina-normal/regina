@@ -256,7 +256,7 @@ class REGINA_API NTxICore :
          * \deprecated This routine has been renamed to name().
          * See the name() documentation for further details.
          */
-        std::string getName() const;
+        REGINA_DEPRECATED std::string getName() const;
         /**
          * Returns the name of this specific triangulation of
          * <tt>T x I</tt> in TeX format.  No leading or trailing dollar
@@ -272,7 +272,7 @@ class REGINA_API NTxICore :
          * \deprecated This routine has been renamed to TeXName().
          * See the TeXName() documentation for further details.
          */
-        std::string getTeXName() const;
+        REGINA_DEPRECATED std::string getTeXName() const;
 
         /**
          * Writes the name of this specific triangulation of

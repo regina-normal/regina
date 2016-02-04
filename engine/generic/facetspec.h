@@ -303,7 +303,7 @@ typedef FacetSpec<4> Dim4PentFacet;
  * documentation for details.
  */
 template <int dim>
-using NFacetSpec = FacetSpec<dim>;
+using NFacetSpec REGINA_DEPRECATED = FacetSpec<dim>;
 
 /*@}*/
 

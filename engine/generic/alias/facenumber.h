@@ -89,7 +89,7 @@ class FaceNumber<Derived, 0> {
          *
          * \deprecated Simply call vertex() instead.
          */
-        int getVertex() const {
+        REGINA_DEPRECATED int getVertex() const {
             return static_cast<const Derived*>(this)->face();
         }
 };
@@ -117,7 +117,7 @@ class FaceNumber<Derived, 1> {
          *
          * \deprecated Simply call edge() instead.
          */
-        int getEdge() const {
+        REGINA_DEPRECATED int getEdge() const {
             return static_cast<const Derived*>(this)->face();
         }
 };
@@ -145,7 +145,7 @@ class FaceNumber<Derived, 2> {
          *
          * \deprecated Simply call triangle() instead.
          */
-        int getTriangle() const {
+        REGINA_DEPRECATED int getTriangle() const {
             return static_cast<const Derived*>(this)->face();
         }
 };
@@ -173,7 +173,7 @@ class FaceNumber<Derived, 3> {
          *
          * \deprecated Simply call tetrahedron() instead.
          */
-        int getTetrahedron() const {
+        REGINA_DEPRECATED int getTetrahedron() const {
             return static_cast<const Derived*>(this)->face();
         }
 };
@@ -201,7 +201,7 @@ class FaceNumber<Derived, 4> {
          *
          * \deprecated Simply call pentachoron() instead.
          */
-        int getPentachoron() const {
+        REGINA_DEPRECATED int getPentachoron() const {
             return static_cast<const Derived*>(this)->face();
         }
 };

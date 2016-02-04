@@ -144,7 +144,7 @@ class REGINA_API Dim2BoundaryComponent :
          * \deprecated This routine has been renamed to component().
          * See the component() documentation for further details.
          */
-        Dim2Component* getComponent() const;
+        REGINA_DEPRECATED Dim2Component* getComponent() const;
 
         /**
          * Writes a short text representation of this object to the
