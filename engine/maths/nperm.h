@@ -123,7 +123,7 @@ inline constexpr int64_t factorial(int n) {
  * This must be between 2 and 16 inclusive.
  */
 template <int n>
-class REGINA_API NPerm {
+class NPerm {
     static_assert(n >= 5 && n <= 16,
         "The generic NPerm<n> template is only available for 5 <= n <= 16.");
     public:
@@ -529,8 +529,7 @@ class REGINA_API NPerm {
  * This must be between 3 and 16 inclusive.
  */
 template <int n>
-inline REGINA_API std::ostream& operator << (std::ostream& out,
-        const NPerm<n>& p) {
+inline std::ostream& operator << (std::ostream& out, const NPerm<n>& p) {
     return (out << p.str());
 }
 
