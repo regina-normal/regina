@@ -880,6 +880,48 @@ Equality type : BY_REFERENCE
 FacetPairing9 : class
 Equality type : BY_REFERENCE
 
+FacetSpec10 : class
+Equality type : BY_VALUE
+
+FacetSpec11 : class
+Equality type : BY_VALUE
+
+FacetSpec12 : class
+Equality type : BY_VALUE
+
+FacetSpec13 : class
+Equality type : BY_VALUE
+
+FacetSpec14 : class
+Equality type : BY_VALUE
+
+FacetSpec15 : class
+Equality type : BY_VALUE
+
+FacetSpec2 : class
+Equality type : BY_VALUE
+
+FacetSpec3 : class
+Equality type : BY_VALUE
+
+FacetSpec4 : class
+Equality type : BY_VALUE
+
+FacetSpec5 : class
+Equality type : BY_VALUE
+
+FacetSpec6 : class
+Equality type : BY_VALUE
+
+FacetSpec7 : class
+Equality type : BY_VALUE
+
+FacetSpec8 : class
+Equality type : BY_VALUE
+
+FacetSpec9 : class
+Equality type : BY_VALUE
+
 GlobalArray2D_NPerm4 : class
 Equality type : BY_REFERENCE
 
