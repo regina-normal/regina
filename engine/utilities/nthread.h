@@ -276,6 +276,33 @@ class REGINA_API NThread {
          * @return the return value will be ignored.
          */
         virtual void* run(void* args) = 0;
+
+    private:
+        /**
+         * The low-level function that is executed by this thread.
+         * This is the function that we pass to pthread_create().
+         */
+        static void* runtime(void* runtimeArgs);
+
+        /**
+         * A helper struct for passing information into the main routine
+         * for a new thread.
+         */
+        struct RuntimeArgs {
+            NThread* thread;
+                /**< The object corresponding to the new thread. */
+            void* args;
+                /**< The arguments that were passed to NThread::start(). */
+            bool deleteAfterwards;
+                /**< Whether to delete the thread object once execution
+                     has finished. */
+
+            /**
+             * Create a new struct containing the given information.
+             */
+            RuntimeArgs(NThread* newThread, void* newArgs,
+                    bool newDeleteAfterwards);
+        };
 };
 
 /*@}*/
@@ -321,6 +348,11 @@ inline void NThread::yield() {
 
 inline void NThread::join() {
     pthread_join(id_, 0);
+}
+
+inline NThread::RuntimeArgs::RuntimeArgs(NThread* newThread, void* newArgs,
+        bool newDeleteAfterwards) : thread(newThread), args(newArgs),
+        deleteAfterwards(newDeleteAfterwards) {
 }
 
 } // namespace regina

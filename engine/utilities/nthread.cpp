@@ -36,38 +36,25 @@
 
 namespace regina {
 
-namespace {
-    struct NThreadRuntimeArgs {
-        NThread* thread;
-        void* args;
-        bool deleteAfterwards;
+void* NThread::runtime(void* runtimeArgs) {
+    // Get the arguments.
+    NThread* thread =
+        static_cast<RuntimeArgs*>(runtimeArgs)->thread;
+    void* args = static_cast<RuntimeArgs*>(runtimeArgs)->args;
+    bool deleteAfterwards =
+        static_cast<RuntimeArgs*>(runtimeArgs)->deleteAfterwards;
+    delete static_cast<RuntimeArgs*>(runtimeArgs);
 
-        NThreadRuntimeArgs(NThread* newThread, void* newArgs,
-                bool newDeleteAfterwards) : thread(newThread), args(newArgs),
-                deleteAfterwards(newDeleteAfterwards) {
-        }
-    };
-
-    void* NThreadRuntime(void* runtimeArgs) {
-        // Get the arguments.
-        NThread* thread =
-            static_cast<NThreadRuntimeArgs*>(runtimeArgs)->thread;
-        void* args = static_cast<NThreadRuntimeArgs*>(runtimeArgs)->args;
-        bool deleteAfterwards =
-            static_cast<NThreadRuntimeArgs*>(runtimeArgs)->deleteAfterwards;
-        delete static_cast<NThreadRuntimeArgs*>(runtimeArgs);
-
-        // Do the work.
-        void* ans = thread->run(args);
-        if (deleteAfterwards)
-            delete thread;
-        return ans;
-    }
+    // Do the work.
+    void* ans = thread->run(args);
+    if (deleteAfterwards)
+        delete thread;
+    return ans;
 }
 
 bool NThread::start(void* args, bool deleteAfterwards) {
-    return (pthread_create(&id_, 0, NThreadRuntime,
-        new NThreadRuntimeArgs(this, args, deleteAfterwards)) == 0);
+    return (pthread_create(&id_, 0, NThread::runtime,
+        new RuntimeArgs(this, args, deleteAfterwards)) == 0);
 }
 
 bool NThread::start(void* (*routine)(void*), void* args, NThreadID* id) {
