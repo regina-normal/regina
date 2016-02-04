@@ -38,7 +38,6 @@ void addDim2Edge();
 void addDim2ExampleTriangulation();
 void addDim2Isomorphism();
 void addDim2Triangle();
-void addDim2TriangleEdge();
 void addDim2Triangulation();
 void addDim2Vertex();
 
@@ -49,7 +48,6 @@ void addDim2() {
     addDim2ExampleTriangulation();
     addDim2Isomorphism();
     addDim2Triangle();
-    addDim2TriangleEdge();
     addDim2Triangulation();
     addDim2Vertex();
 }

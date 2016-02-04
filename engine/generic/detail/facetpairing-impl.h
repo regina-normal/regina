@@ -64,14 +64,14 @@ template <int dim>
 FacetPairingBase<dim>::FacetPairingBase(
         const FacetPairingBase<dim>& cloneMe) :
         size_(cloneMe.size_),
-        pairs_(new NFacetSpec<dim>[cloneMe.size_ * (dim + 1)]) {
+        pairs_(new FacetSpec<dim>[cloneMe.size_ * (dim + 1)]) {
     std::copy(cloneMe.pairs_, cloneMe.pairs_ + (size_ * (dim + 1)), pairs_);
 }
 
 template <int dim>
 FacetPairingBase<dim>::FacetPairingBase(const Triangulation<dim>& tri) :
         size_(tri.size()),
-        pairs_(new NFacetSpec<dim>[tri.size() * (dim + 1)]) {
+        pairs_(new FacetSpec<dim>[tri.size() * (dim + 1)]) {
     size_t p, index;
     unsigned f;
     const Simplex<dim> *simp, *adj;
@@ -92,7 +92,7 @@ FacetPairingBase<dim>::FacetPairingBase(const Triangulation<dim>& tri) :
 
 template <int dim>
 bool FacetPairingBase<dim>::isClosed() const {
-    for (NFacetSpec<dim> f(0, 0); ! f.isPastEnd(size_, true); ++f)
+    for (FacetSpec<dim> f(0, 0); ! f.isPastEnd(size_, true); ++f)
         if (isUnmatched(f))
             return false;
     return true;
@@ -100,7 +100,7 @@ bool FacetPairingBase<dim>::isClosed() const {
 
 template <int dim>
 void FacetPairingBase<dim>::writeTextShort(std::ostream& out) const {
-    for (NFacetSpec<dim> f(0, 0); ! f.isPastEnd(size_, true); ++f) {
+    for (FacetSpec<dim> f(0, 0); ! f.isPastEnd(size_, true); ++f) {
         if (f.facet == 0 && f.simp > 0)
             out << " | ";
         else if (f.simp || f.facet)
@@ -167,7 +167,7 @@ void FacetPairingBase<dim>::writeDot(std::ostream& out,
     }
 
     int f;
-    NFacetSpec<dim> adj;
+    FacetSpec<dim> adj;
     for (p = 0; p < size_; ++p)
         for (f = 0; f < (dim + 1); ++f) {
             adj = dest(p, f);
@@ -186,7 +186,7 @@ template <int dim>
 std::string FacetPairingBase<dim>::toTextRep() const {
     std::ostringstream ans;
 
-    for (NFacetSpec<dim> f(0, 0); ! f.isPastEnd(size_, true); ++f) {
+    for (FacetSpec<dim> f(0, 0); ! f.isPastEnd(size_, true); ++f) {
         if (f.simp || f.facet)
             ans << ' ';
         ans << dest(f).simp << ' ' << dest(f).facet;
@@ -232,9 +232,9 @@ FacetPairing<dim>* FacetPairingBase<dim>::fromTextRep(const std::string& rep) {
     }
 
     // Run a sanity check.
-    NFacetSpec<dim> destFacet;
+    FacetSpec<dim> destFacet;
     bool broken = false;
-    for (NFacetSpec<dim> f(0, 0); ! f.isPastEnd(nSimp, true); ++f) {
+    for (FacetSpec<dim> f(0, 0); ! f.isPastEnd(nSimp, true); ++f) {
         destFacet = ans->dest(f);
         if (destFacet.simp == nSimp && destFacet.facet != 0)
             broken = true;
@@ -262,7 +262,7 @@ bool FacetPairingBase<dim>::isCanonical() const {
     for (simp = 0; simp < size_; ++simp) {
         for (facet = 0; facet < dim; ++facet)
             if (dest(simp, facet + 1) < dest(simp, facet))
-                if (! (dest(simp, facet + 1) == NFacetSpec<dim>(simp, facet)))
+                if (! (dest(simp, facet + 1) == FacetSpec<dim>(simp, facet)))
                     return false;
         if (simp > 0)
             if (dest(simp, 0).simp >= static_cast<int>(simp))
@@ -300,9 +300,9 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
 
     // Now we know that facet 0 of simplex 0 is glued to something.
 
-    NFacetSpec<dim>* image = new NFacetSpec<dim>[size_ * (dim + 1)];
+    FacetSpec<dim>* image = new FacetSpec<dim>[size_ * (dim + 1)];
         /**< The automorphism currently under construction. */
-    NFacetSpec<dim>* preImage = new NFacetSpec<dim>[size_ * (dim + 1)];
+    FacetSpec<dim>* preImage = new FacetSpec<dim>[size_ * (dim + 1)];
         /**< The inverse of this automorphism. */
 
     size_t i, j;
@@ -314,11 +314,11 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
     // Note that we know size_ >= 1.
     // For the preimage of facet 0 of simplex 0 we simply cycle
     // through all possibilities.
-    const NFacetSpec<dim> firstFace(0, 0);
-    const NFacetSpec<dim> firstFaceDest(dest(firstFace));
-    NFacetSpec<dim> firstDestPre;
-    NFacetSpec<dim> trying;
-    NFacetSpec<dim> fImg, fPre;
+    const FacetSpec<dim> firstFace(0, 0);
+    const FacetSpec<dim> firstFaceDest(dest(firstFace));
+    FacetSpec<dim> firstDestPre;
+    FacetSpec<dim> trying;
+    FacetSpec<dim> fImg, fPre;
     bool stepDown;
     int simp, facet;
     int permImg[dim + 1];
@@ -368,7 +368,7 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
             // will be automatically derived.
 
             stepDown = false;
-            NFacetSpec<dim>& pre =
+            FacetSpec<dim>& pre =
                 preImage[trying.simp * (dim + 1) + trying.facet];
 
             if (trying.isPastEnd(size_, true)) {
@@ -575,11 +575,11 @@ void FacetPairingBase<dim>::enumerateInternal(NBoolSet boundary,
     }
 
     // Initialise the pairings to unspecified (i.e., facet -> itself).
-    for (NFacetSpec<dim> f(0,0); f.simp < static_cast<int>(size_); ++f)
+    for (FacetSpec<dim> f(0,0); f.simp < static_cast<int>(size_); ++f)
         dest(f) = f;
 
     // Note that we have at least one simplex.
-    NFacetSpec<dim> trying(0, 0);
+    FacetSpec<dim> trying(0, 0);
         /**< The facet we're currently trying to match. */
     int boundaryFacets = 0;
         /**< How many (deliberately) unmatched facets do we currently have? */
@@ -591,7 +591,7 @@ void FacetPairingBase<dim>::enumerateInternal(NBoolSet boundary,
              and it is cleared immediately after use() is called. */
 
     // Run through and find all possible matchings.
-    NFacetSpec<dim> oldTrying, tmpFacet;
+    FacetSpec<dim> oldTrying, tmpFacet;
     while (true) {
         // TODO: Check for cancellation,
 

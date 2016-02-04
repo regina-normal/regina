@@ -203,7 +203,7 @@ class IsomorphismBase :
          * @return the image of the source simplex facet under this
          * isomorphism.
          */
-        NFacetSpec<dim> operator [] (const NFacetSpec<dim>& source) const;
+        FacetSpec<dim> operator [] (const FacetSpec<dim>& source) const;
 
         /**
          * Determines whether or not this is an identity isomorphism.
@@ -394,9 +394,9 @@ inline NPerm<dim+1> IsomorphismBase<dim>::facetPerm(unsigned sourceSimp) const {
 }
 
 template <int dim>
-inline NFacetSpec<dim> IsomorphismBase<dim>::operator [] (
-        const NFacetSpec<dim>& source) const {
-    return NFacetSpec<dim>(simpImage_[source.simp],
+inline FacetSpec<dim> IsomorphismBase<dim>::operator [] (
+        const FacetSpec<dim>& source) const {
+    return FacetSpec<dim>(simpImage_[source.simp],
         facetPerm_[source.simp][source.facet]);
 }
 

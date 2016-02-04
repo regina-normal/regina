@@ -36,7 +36,6 @@
 		050F5DDE1B9BAB9C00C1F681 /* dim2exampletriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D111B9BAB9C00C1F681 /* dim2exampletriangulation.cpp */; };
 		050F5DDF1B9BAB9C00C1F681 /* dim2isomorphism.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D121B9BAB9C00C1F681 /* dim2isomorphism.cpp */; };
 		050F5DE01B9BAB9C00C1F681 /* dim2triangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D131B9BAB9C00C1F681 /* dim2triangle.cpp */; };
-		050F5DE11B9BAB9C00C1F681 /* dim2triangleedge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D141B9BAB9C00C1F681 /* dim2triangleedge.cpp */; };
 		050F5DE21B9BAB9C00C1F681 /* dim2triangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D151B9BAB9C00C1F681 /* dim2triangulation.cpp */; };
 		050F5DE31B9BAB9C00C1F681 /* dim2vertex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D161B9BAB9C00C1F681 /* dim2vertex.cpp */; };
 		050F5DE41B9BAB9C00C1F681 /* pydim2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D171B9BAB9C00C1F681 /* pydim2.cpp */; };
@@ -136,7 +135,6 @@
 		050F5E451B9BAB9C00C1F681 /* nfacepair.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DB01B9BAB9C00C1F681 /* nfacepair.cpp */; };
 		050F5E461B9BAB9C00C1F681 /* nhomologicaldata.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DB11B9BAB9C00C1F681 /* nhomologicaldata.cpp */; };
 		050F5E471B9BAB9C00C1F681 /* nisomorphism.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DB21B9BAB9C00C1F681 /* nisomorphism.cpp */; };
-		050F5E481B9BAB9C00C1F681 /* ntetface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DB31B9BAB9C00C1F681 /* ntetface.cpp */; };
 		050F5E491B9BAB9C00C1F681 /* ntetrahedron.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DB41B9BAB9C00C1F681 /* ntetrahedron.cpp */; };
 		050F5E4A1B9BAB9C00C1F681 /* ntriangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DB51B9BAB9C00C1F681 /* ntriangle.cpp */; };
 		050F5E4B1B9BAB9C00C1F681 /* ntriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DB61B9BAB9C00C1F681 /* ntriangulation.cpp */; };
@@ -194,6 +192,8 @@
 		052942D41C5CDC8B0011C1E6 /* saferemnant.h in Headers */ = {isa = PBXBuildFile; fileRef = 052942D01C5CDC8B0011C1E6 /* saferemnant.h */; };
 		052942D91C5CDCCB0011C1E6 /* safeheldtype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052942D51C5CDCBF0011C1E6 /* safeheldtype.cpp */; };
 		052942DA1C5CDFBE0011C1E6 /* nsnappeaalgebra.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CBF19B2F1AB0099C617 /* nsnappeaalgebra.h */; };
+		052AB7101C6304A800C44D54 /* facetspec.h in Headers */ = {isa = PBXBuildFile; fileRef = 052AB70F1C6304A800C44D54 /* facetspec.h */; };
+		052AB7131C6304C900C44D54 /* facetspec.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052AB7111C6304C500C44D54 /* facetspec.cpp */; };
 		052F9E83180600FB00FAE4DF /* nabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C00180600FA00FAE4DF /* nabeliangroup.cpp */; };
 		052F9E84180600FB00FAE4DF /* nabeliangroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C01180600FA00FAE4DF /* nabeliangroup.h */; };
 		052F9E85180600FB00FAE4DF /* ngrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C02180600FA00FAE4DF /* ngrouppresentation.cpp */; };
@@ -1311,7 +1311,6 @@
 		0591E8151C4F763B00793A9C /* dim4exampletriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7FD1C4F763600793A9C /* dim4exampletriangulation.cpp */; };
 		0591E8161C4F763B00793A9C /* dim4isomorphism.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7FE1C4F763600793A9C /* dim4isomorphism.cpp */; };
 		0591E8171C4F763B00793A9C /* dim4pentachoron.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7FF1C4F763600793A9C /* dim4pentachoron.cpp */; };
-		0591E8181C4F763B00793A9C /* dim4pentfacet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8001C4F763600793A9C /* dim4pentfacet.cpp */; };
 		0591E8191C4F763B00793A9C /* dim4tetrahedron.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8011C4F763600793A9C /* dim4tetrahedron.cpp */; };
 		0591E81A1C4F763B00793A9C /* dim4triangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8021C4F763600793A9C /* dim4triangle.cpp */; };
 		0591E81B1C4F763B00793A9C /* dim4triangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8031C4F763600793A9C /* dim4triangulation.cpp */; };
@@ -1790,7 +1789,6 @@
 		050F5D111B9BAB9C00C1F681 /* dim2exampletriangulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim2exampletriangulation.cpp; sourceTree = "<group>"; };
 		050F5D121B9BAB9C00C1F681 /* dim2isomorphism.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim2isomorphism.cpp; sourceTree = "<group>"; };
 		050F5D131B9BAB9C00C1F681 /* dim2triangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim2triangle.cpp; sourceTree = "<group>"; };
-		050F5D141B9BAB9C00C1F681 /* dim2triangleedge.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim2triangleedge.cpp; sourceTree = "<group>"; };
 		050F5D151B9BAB9C00C1F681 /* dim2triangulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim2triangulation.cpp; sourceTree = "<group>"; };
 		050F5D161B9BAB9C00C1F681 /* dim2vertex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim2vertex.cpp; sourceTree = "<group>"; };
 		050F5D171B9BAB9C00C1F681 /* pydim2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pydim2.cpp; sourceTree = "<group>"; };
@@ -1935,7 +1933,6 @@
 		050F5DB01B9BAB9C00C1F681 /* nfacepair.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nfacepair.cpp; sourceTree = "<group>"; };
 		050F5DB11B9BAB9C00C1F681 /* nhomologicaldata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nhomologicaldata.cpp; sourceTree = "<group>"; };
 		050F5DB21B9BAB9C00C1F681 /* nisomorphism.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nisomorphism.cpp; sourceTree = "<group>"; };
-		050F5DB31B9BAB9C00C1F681 /* ntetface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ntetface.cpp; sourceTree = "<group>"; };
 		050F5DB41B9BAB9C00C1F681 /* ntetrahedron.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ntetrahedron.cpp; sourceTree = "<group>"; };
 		050F5DB51B9BAB9C00C1F681 /* ntriangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ntriangle.cpp; sourceTree = "<group>"; };
 		050F5DB61B9BAB9C00C1F681 /* ntriangulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ntriangulation.cpp; sourceTree = "<group>"; };
@@ -1999,6 +1996,8 @@
 		052942D01C5CDC8B0011C1E6 /* saferemnant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = saferemnant.h; sourceTree = "<group>"; };
 		052942D51C5CDCBF0011C1E6 /* safeheldtype.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = safeheldtype.cpp; sourceTree = "<group>"; };
 		052942D61C5CDCBF0011C1E6 /* safeheldtype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = safeheldtype.h; sourceTree = "<group>"; };
+		052AB70F1C6304A800C44D54 /* facetspec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetspec.h; sourceTree = "<group>"; };
+		052AB7111C6304C500C44D54 /* facetspec.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetspec.cpp; sourceTree = "<group>"; };
 		052F9BFF180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052F9C00180600FA00FAE4DF /* nabeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nabeliangroup.cpp; sourceTree = "<group>"; };
 		052F9C01180600FA00FAE4DF /* nabeliangroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nabeliangroup.h; sourceTree = "<group>"; };
@@ -3083,7 +3082,6 @@
 		0591E7FD1C4F763600793A9C /* dim4exampletriangulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim4exampletriangulation.cpp; sourceTree = "<group>"; };
 		0591E7FE1C4F763600793A9C /* dim4isomorphism.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim4isomorphism.cpp; sourceTree = "<group>"; };
 		0591E7FF1C4F763600793A9C /* dim4pentachoron.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim4pentachoron.cpp; sourceTree = "<group>"; };
-		0591E8001C4F763600793A9C /* dim4pentfacet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim4pentfacet.cpp; sourceTree = "<group>"; };
 		0591E8011C4F763600793A9C /* dim4tetrahedron.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim4tetrahedron.cpp; sourceTree = "<group>"; };
 		0591E8021C4F763600793A9C /* dim4triangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim4triangle.cpp; sourceTree = "<group>"; };
 		0591E8031C4F763600793A9C /* dim4triangulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim4triangulation.cpp; sourceTree = "<group>"; };
@@ -3578,7 +3576,6 @@
 				050F5D111B9BAB9C00C1F681 /* dim2exampletriangulation.cpp */,
 				050F5D121B9BAB9C00C1F681 /* dim2isomorphism.cpp */,
 				050F5D131B9BAB9C00C1F681 /* dim2triangle.cpp */,
-				050F5D141B9BAB9C00C1F681 /* dim2triangleedge.cpp */,
 				050F5D151B9BAB9C00C1F681 /* dim2triangulation.cpp */,
 				050F5D161B9BAB9C00C1F681 /* dim2vertex.cpp */,
 				050F5D171B9BAB9C00C1F681 /* pydim2.cpp */,
@@ -3814,7 +3811,6 @@
 				05431FCA1C40F641009BC072 /* nfacepairing.cpp */,
 				050F5DB11B9BAB9C00C1F681 /* nhomologicaldata.cpp */,
 				050F5DB21B9BAB9C00C1F681 /* nisomorphism.cpp */,
-				050F5DB31B9BAB9C00C1F681 /* ntetface.cpp */,
 				050F5DB41B9BAB9C00C1F681 /* ntetrahedron.cpp */,
 				050F5DB51B9BAB9C00C1F681 /* ntriangle.cpp */,
 				050F5DB61B9BAB9C00C1F681 /* ntriangulation.cpp */,
@@ -4112,6 +4108,7 @@
 				05431EF51C40F1F6009BC072 /* facenumbering.cpp */,
 				05431EF61C40F1F6009BC072 /* facenumbering.h */,
 				05431EF71C40F1F6009BC072 /* facetpairing.h */,
+				052AB70F1C6304A800C44D54 /* facetspec.h */,
 				05431EF81C40F1F6009BC072 /* isomorphism.h */,
 				052F9CBB180600FA00FAE4DF /* nfacetspec.h */,
 				05431EF91C40F1F6009BC072 /* simplex.h */,
@@ -5000,6 +4997,7 @@
 				057EE46B1C600A1B00C4D155 /* facetpairing13.cpp */,
 				057EE46C1C600A1B00C4D155 /* facetpairing14.cpp */,
 				057EE46D1C600A1B00C4D155 /* facetpairing15.cpp */,
+				052AB7111C6304C500C44D54 /* facetspec.cpp */,
 				057EE4431C6009E600C4D155 /* isomorphism-bindings.h */,
 				057EE47B1C600A2400C4D155 /* isomorphism5.cpp */,
 				057EE47C1C600A2400C4D155 /* isomorphism6.cpp */,
@@ -5489,7 +5487,6 @@
 				0591E7FD1C4F763600793A9C /* dim4exampletriangulation.cpp */,
 				0591E7FE1C4F763600793A9C /* dim4isomorphism.cpp */,
 				0591E7FF1C4F763600793A9C /* dim4pentachoron.cpp */,
-				0591E8001C4F763600793A9C /* dim4pentfacet.cpp */,
 				0591E8011C4F763600793A9C /* dim4tetrahedron.cpp */,
 				0591E8021C4F763600793A9C /* dim4triangle.cpp */,
 				0591E8031C4F763600793A9C /* dim4triangulation.cpp */,
@@ -5692,6 +5689,7 @@
 				052F9F3E180600FB00FAE4DF /* nmatrix.h in Headers */,
 				052F9F47180600FB00FAE4DF /* nperm5.h in Headers */,
 				052F9E8C180600FB00FAE4DF /* nxmlalgebrareader.h in Headers */,
+				052AB7101C6304A800C44D54 /* facetspec.h in Headers */,
 				0583656218DB8876008B08D9 /* double_SnapPy.h in Headers */,
 				052F9F2F180600FB00FAE4DF /* nsfsaltset.h in Headers */,
 				052F9F0B180600FB00FAE4DF /* csvsurfacelist.h in Headers */,
@@ -6245,7 +6243,6 @@
 				057EE4DE1C600A3600C4D155 /* facetpairing2.cpp in Sources */,
 				050F5E1F1B9BAB9C00C1F681 /* nlayeredsolidtorus.cpp in Sources */,
 				050F5E4B1B9BAB9C00C1F681 /* ntriangulation.cpp in Sources */,
-				0591E8181C4F763B00793A9C /* dim4pentfacet.cpp in Sources */,
 				050F5E191B9BAB9C00C1F681 /* nblockedsfstriple.cpp in Sources */,
 				057EE45F1C6009F300C4D155 /* component14.cpp in Sources */,
 				050F5DDB1B9BAB9C00C1F681 /* dim2boundarycomponent.cpp in Sources */,
@@ -6359,6 +6356,7 @@
 				0591E81D1C4F763B00793A9C /* pydim4.cpp in Sources */,
 				057EE4C21C600A3600C4D155 /* simplex10.cpp in Sources */,
 				057EE4E31C600A3600C4D155 /* facetpairing8.cpp in Sources */,
+				052AB7131C6304C900C44D54 /* facetspec.cpp in Sources */,
 				050F5DEB1B9BAB9C00C1F681 /* ngraphpair.cpp in Sources */,
 				057EE4DD1C600A3600C4D155 /* isomorphism15.cpp in Sources */,
 				050F5E201B9BAB9C00C1F681 /* nlayeredsurfacebundle.cpp in Sources */,
@@ -6372,7 +6370,6 @@
 				057EE4C61C600A3600C4D155 /* simplex14.cpp in Sources */,
 				050F5DF21B9BAB9C00C1F681 /* nsnappeacensusmfd.cpp in Sources */,
 				050F5E121B9BAB9C00C1F681 /* pysnappea.cpp in Sources */,
-				050F5DE11B9BAB9C00C1F681 /* dim2triangleedge.cpp in Sources */,
 				050F5E031B9BAB9C00C1F681 /* pymaths.cpp in Sources */,
 				057EE4DB1C600A3600C4D155 /* isomorphism13.cpp in Sources */,
 				057EE4571C6009F300C4D155 /* component6.cpp in Sources */,
@@ -6405,7 +6402,6 @@
 				057EE4E01C600A3600C4D155 /* facetpairing5.cpp in Sources */,
 				050F5E091B9BAB9C00C1F681 /* ntext.cpp in Sources */,
 				050F5DEC1B9BAB9C00C1F681 /* ngraphtriple.cpp in Sources */,
-				050F5E481B9BAB9C00C1F681 /* ntetface.cpp in Sources */,
 				050F5E3F1B9BAB9C00C1F681 /* ntreedecomposition.cpp in Sources */,
 				057EE4CC1C600A3600C4D155 /* triangulation9.cpp in Sources */,
 				050F5E5A1B9BAB9C00C1F681 /* dehydration.cpp in Sources */,

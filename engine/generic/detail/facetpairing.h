@@ -120,11 +120,11 @@ class FacetPairingBase :
         size_t size_;
             /**< The number of simplices under consideration. */
 
-        NFacetSpec<dim>* pairs_;
+        FacetSpec<dim>* pairs_;
             /**< The other facet to which each simplex facet is paired.
                  If a simplex facet is left unmatched, the corresponding
                  element of this array will be boundary (as returned by
-                 NFacetSpec<dim>::isBoundary()).
+                 FacetSpec<dim>::isBoundary()).
                  If the destination for a particular facet has not yet been
                  decided, the facet will be paired to itself. */
 
@@ -178,7 +178,7 @@ class FacetPairingBase :
          * Returns the other facet to which the given simplex facet is
          * paired.  If the given facet is left deliberately unmatched,
          * the value returned will be boundary (as returned by
-         * NFacetSpec<dim>::isBoundary()).
+         * FacetSpec<dim>::isBoundary()).
          *
          * \pre The given facet is a real simplex facet (not boundary,
          * before-the-start or past-the-end).
@@ -186,13 +186,13 @@ class FacetPairingBase :
          * @param source the facet under investigation.
          * @return the other facet to which the given facet is paired.
          */
-        const NFacetSpec<dim>& dest(const NFacetSpec<dim>& source) const;
+        const FacetSpec<dim>& dest(const FacetSpec<dim>& source) const;
 
         /**
          * Returns the other facet to which the given simplex facet is
          * paired.  If the given facet is left deliberately unmatched,
          * the value returned will be boundary (as returned by
-         * NFacetSpec<dim>::isBoundary()).
+         * FacetSpec<dim>::isBoundary()).
          *
          * @param simp the simplex under investigation (this must be
          * strictly less than the total number of simplices under
@@ -201,16 +201,16 @@ class FacetPairingBase :
          * investigation (between 0 and \a dim inclusive).
          * @return the other facet to which the given facet is paired.
          */
-        const NFacetSpec<dim>& dest(size_t simp, unsigned facet) const;
+        const FacetSpec<dim>& dest(size_t simp, unsigned facet) const;
 
         /**
          * Returns the other facet to which the given simplex facet is
          * paired.  This is a convenience operator whose behaviour is
-         * identical to that of dest(const NFacetSpec<dim>&).
+         * identical to that of dest(const FacetSpec<dim>&).
          *
          * If the given facet is left deliberately unmatched, the value
          * returned will be boundary (as returned by
-         * NFacetSpec<dim>::isBoundary()).
+         * FacetSpec<dim>::isBoundary()).
          *
          * \pre The given facet is a real simplex facet (not boundary,
          * before-the-start or past-the-end).
@@ -218,7 +218,7 @@ class FacetPairingBase :
          * @param source the facet under investigation.
          * @return the other facet to which the given facet is paired.
          */
-        const NFacetSpec<dim>& operator [](const NFacetSpec<dim>& source) const;
+        const FacetSpec<dim>& operator [](const FacetSpec<dim>& source) const;
 
         /**
          * Determines whether the given simplex facet has been left
@@ -231,7 +231,7 @@ class FacetPairingBase :
          * @return \c true if the given facet has been left unmatched, or
          * \c false if the given facet is paired with some other facet.
          */
-        bool isUnmatched(const NFacetSpec<dim>& source) const;
+        bool isUnmatched(const FacetSpec<dim>& source) const;
 
         /**
          * Determines whether the given simplex facet has been left
@@ -570,7 +570,7 @@ class FacetPairingBase :
          * Returns the other facet to which the given simplex facet is
          * paired.  If the given facet is left deliberately unmatched, the
          * value returned will be boundary (as returned by
-         * NFacetSpec<dim>::isBoundary()).
+         * FacetSpec<dim>::isBoundary()).
          *
          * \pre The given facet is a real simplex facet (not boundary,
          * before-the-start or past-the-end).
@@ -578,13 +578,13 @@ class FacetPairingBase :
          * @param source the facet under investigation.
          * @return the other facet to which the given facet is paired.
          */
-        NFacetSpec<dim>& dest(const NFacetSpec<dim>& source);
+        FacetSpec<dim>& dest(const FacetSpec<dim>& source);
 
         /**
          * Returns the other facet to which the given simplex facet is
          * paired.  If the given facet is left deliberately unmatched, the
          * value returned will be boundary (as returned by
-         * NFacetSpec<dim>::isBoundary()).
+         * FacetSpec<dim>::isBoundary()).
          *
          * @param simp the simplex under investigation (this must be
          * strictly less than the total number of simplices under
@@ -593,16 +593,16 @@ class FacetPairingBase :
          * investigation (between 0 and \a dim inclusive).
          * @return the other facet to which the given facet is paired.
          */
-        NFacetSpec<dim>& dest(size_t simp, unsigned facet);
+        FacetSpec<dim>& dest(size_t simp, unsigned facet);
 
         /**
          * Returns the other facet to which the given simplex facet is
          * paired.  This is a convenience operator whose behaviour is
-         * identical to that of dest(const NFacetSpec<dim>&).
+         * identical to that of dest(const FacetSpec<dim>&).
          *
          * If the given facet is left deliberately unmatched, the value
          * returned will be boundary (as returned by
-         * NFacetSpec<dim>::isBoundary()).
+         * FacetSpec<dim>::isBoundary()).
          *
          * \pre The given facet is a real simplex facet (not boundary,
          * before-the-start or past-the-end).
@@ -610,7 +610,7 @@ class FacetPairingBase :
          * @param source the facet under investigation.
          * @return the other facet to which the given facet is paired.
          */
-        NFacetSpec<dim>& operator [](const NFacetSpec<dim>& source);
+        FacetSpec<dim>& operator [](const FacetSpec<dim>& source);
 
         /**
          * Determines whether the matching for the given simplex facet
@@ -624,7 +624,7 @@ class FacetPairingBase :
          * @return \c true if the matching for the given facet has not yet
          * been determined, or \c false otherwise.
          */
-        bool noDest(const NFacetSpec<dim>& source) const;
+        bool noDest(const FacetSpec<dim>& source) const;
 
         /**
          * Determines whether the matching for the given simplex facet
@@ -689,7 +689,7 @@ class FacetPairingBase :
 
 template <int dim>
 inline FacetPairingBase<dim>::FacetPairingBase(size_t size) :
-        size_(size), pairs_(new NFacetSpec<dim>[size * (dim + 1)]) {
+        size_(size), pairs_(new FacetSpec<dim>[size * (dim + 1)]) {
 }
 
 template <int dim>
@@ -703,26 +703,26 @@ inline size_t FacetPairingBase<dim>::size() const {
 }
 
 template <int dim>
-inline const NFacetSpec<dim>& FacetPairingBase<dim>::dest(
-        const NFacetSpec<dim>& source) const {
+inline const FacetSpec<dim>& FacetPairingBase<dim>::dest(
+        const FacetSpec<dim>& source) const {
     return pairs_[(dim + 1) * source.simp + source.facet];
 }
 
 template <int dim>
-inline const NFacetSpec<dim>& FacetPairingBase<dim>::dest(
+inline const FacetSpec<dim>& FacetPairingBase<dim>::dest(
         size_t simp, unsigned facet) const {
     return pairs_[(dim + 1) * simp + facet];
 }
 
 template <int dim>
-inline const NFacetSpec<dim>& FacetPairingBase<dim>::operator [](
-        const NFacetSpec<dim>& source) const {
+inline const FacetSpec<dim>& FacetPairingBase<dim>::operator [](
+        const FacetSpec<dim>& source) const {
     return pairs_[(dim + 1) * source.simp + source.facet];
 }
 
 template <int dim>
 inline bool FacetPairingBase<dim>::isUnmatched(
-        const NFacetSpec<dim>& source) const {
+        const FacetSpec<dim>& source) const {
     return pairs_[(dim + 1) * source.simp + source.facet].isBoundary(size_);
 }
 
@@ -733,33 +733,33 @@ inline bool FacetPairingBase<dim>::isUnmatched(
 }
 
 template <int dim>
-inline NFacetSpec<dim>& FacetPairingBase<dim>::dest(
-        const NFacetSpec<dim>& source) {
+inline FacetSpec<dim>& FacetPairingBase<dim>::dest(
+        const FacetSpec<dim>& source) {
     return pairs_[(dim + 1) * source.simp + source.facet];
 }
 
 template <int dim>
-inline NFacetSpec<dim>& FacetPairingBase<dim>::dest(
+inline FacetSpec<dim>& FacetPairingBase<dim>::dest(
         size_t simp, unsigned facet) {
     return pairs_[(dim + 1) * simp + facet];
 }
 
 template <int dim>
-inline NFacetSpec<dim>& FacetPairingBase<dim>::operator [](
-        const NFacetSpec<dim>& source) {
+inline FacetSpec<dim>& FacetPairingBase<dim>::operator [](
+        const FacetSpec<dim>& source) {
     return pairs_[(dim + 1) * source.simp + source.facet];
 }
 
 template <int dim>
 inline bool FacetPairingBase<dim>::noDest(
-        const NFacetSpec<dim>& source) const {
+        const FacetSpec<dim>& source) const {
     return dest(source) == source;
 }
 
 template <int dim>
 inline bool FacetPairingBase<dim>::noDest(
         size_t simp, unsigned facet) const {
-    NFacetSpec<dim>& f = pairs_[(dim + 1) * simp + facet];
+    FacetSpec<dim>& f = pairs_[(dim + 1) * simp + facet];
     return (f.simp == static_cast<int>(simp) &&
         f.facet == static_cast<int>(facet));
 }

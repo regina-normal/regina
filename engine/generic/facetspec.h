@@ -53,13 +53,9 @@ namespace regina {
  */
 
 /**
- * A lightweight class used to refer to a particular facet of a
- * particular simplex in a triangulation.  Only the simplex index
- * and the facet number are stored.
- *
- * The template parameter gives the dimension of the triangulation
- * (so for dimension three, this class describes a face of a tetrahedron,
- * and for dimension four it describes a facet of a pentachoron).
+ * A lightweight class used to refer to a particular facet of a particular
+ * top-dimensional simplex in a <i>dim</i>-dimensional triangulation.
+ * Only the simplex index and the facet number are stored.
  *
  * Facilities are provided for iterating through simplex facets.
  * With this in mind, it is also possible to represent the overall
@@ -75,13 +71,17 @@ namespace regina {
  * as simplex \a n, facet 1, and the before-the-start value will be
  * represented as simplex -1, facet \a dim.
  *
- * \ifacespython The generic template NFacetSpec is not available to
- * Python users, although the special 3-dimensional case NTetFace is.
- * All Python notes in this class refer to the special case
- * NTetFace only.
+ * \ifacespython Python does not support templates.  Instead this class
+ * can be used by appending the dimension as a suffix (e.g., FacetSpec2
+ * and FacetSpec3 for dimensions 2 and 3).  The typedefs
+ * Dim2TriangleEdge, NTetFace and Dim4PentFacet can also be used in
+ * Regina's \ref stddef "standard dimensions".
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ * This must be at least 2.
  */
 template <int dim>
-struct NFacetSpec {
+struct FacetSpec {
     int simp;
         /**< The simplex referred to.  Simplex numbering begins
          *   at 0. */
@@ -93,7 +93,7 @@ struct NFacetSpec {
      * Creates a new specifier with no initialisation.  This
      * specifier must be initialised before it is used.
      */
-    NFacetSpec();
+    FacetSpec();
     /**
      * Creates a new specifier referring to the given facet of the given
      * simplex.
@@ -103,14 +103,14 @@ struct NFacetSpec {
      * @param newFacet the given facet; this should be between 0 and
      * \a dim inclusive.
      */
-    NFacetSpec(int newSimp, int newFacet);
+    FacetSpec(int newSimp, int newFacet);
     /**
      * Creates a new specifier referring to the same simplex facet as
      * the given specifier.
      *
      * @param cloneMe the specifier to clone.
      */
-    NFacetSpec(const NFacetSpec<dim>& cloneMe);
+    FacetSpec(const FacetSpec<dim>& cloneMe);
 
     /**
      * Determines if this specifier represents the overall boundary.
@@ -174,7 +174,7 @@ struct NFacetSpec {
      * @param other the given specifier.
      * @return a reference to this specifier.
      */
-    NFacetSpec& operator = (const NFacetSpec<dim>& other);
+    FacetSpec& operator = (const FacetSpec<dim>& other);
     /**
      * Increments this specifier.  It will be changed to point to the
      * next simplex facet.
@@ -189,7 +189,7 @@ struct NFacetSpec {
      *
      * @return A copy of this specifier after it has been incremented.
      */
-    NFacetSpec operator ++ ();
+    FacetSpec operator ++ ();
     /**
      * Increments this specifier.  It will be changed to point to the
      * next simplex facet.
@@ -204,7 +204,7 @@ struct NFacetSpec {
      *
      * @return A copy of this specifier before it was incremented.
      */
-    NFacetSpec operator ++ (int);
+    FacetSpec operator ++ (int);
     /**
      * Decrements this specifier.  It will be changed to point to the
      * previous simplex facet.
@@ -219,7 +219,7 @@ struct NFacetSpec {
      *
      * @return A copy of this specifier after it has been decremented.
      */
-    NFacetSpec operator -- ();
+    FacetSpec operator -- ();
     /**
      * Decrements this specifier.  It will be changed to point to the
      * previous simplex facet.
@@ -234,7 +234,7 @@ struct NFacetSpec {
      *
      * @return A copy of this specifier before it was decremented.
      */
-    NFacetSpec operator -- (int);
+    FacetSpec operator -- (int);
 
     /**
      * Determines if this and the given specifier are identical.
@@ -243,7 +243,7 @@ struct NFacetSpec {
      * @return \c true if and only if this and the given specifier are
      * equal.
      */
-    bool operator == (const NFacetSpec<dim>& other) const;
+    bool operator == (const FacetSpec<dim>& other) const;
     /**
      * Determines if this and the given specifier are not identical.
      *
@@ -251,7 +251,7 @@ struct NFacetSpec {
      * @return \c true if and only if this and the given specifier are
      * not equal.
      */
-    bool operator != (const NFacetSpec<dim>& other) const;
+    bool operator != (const FacetSpec<dim>& other) const;
     /**
      * Determines if this is less than the given specifier.
      *
@@ -259,7 +259,7 @@ struct NFacetSpec {
      * @return \c true if and only if this is less than the given
      * specifier.
      */
-    bool operator < (const NFacetSpec<dim>& other) const;
+    bool operator < (const FacetSpec<dim>& other) const;
     /**
      * Determines if this is less than or equal to the given specifier.
      *
@@ -267,107 +267,145 @@ struct NFacetSpec {
      * @return \c true if and only if this is less than or equal to
      * the given specifier.
      */
-    bool operator <= (const NFacetSpec<dim>& other) const;
+    bool operator <= (const FacetSpec<dim>& other) const;
 };
 
 /**
  * A lightweight class used to refer to a particular edge of a
  * particular triangle in a 2-manifold triangulation.  This is a
- * convenience typedef for the template instance NFacetSpec<2>.
- *
- * \ifacespython The specific class Dim2TriangleEdge is available through
- * Python, even though the generic template NFacetSpec is not.
+ * convenience typedef for the template instance FacetSpec<2>.
  */
-typedef NFacetSpec<2> Dim2TriangleEdge;
+typedef FacetSpec<2> Dim2TriangleEdge;
 
 /**
  * A lightweight class used to refer to a particular face of a
  * particular tetrahedron in a 3-manifold triangulation.  This is a
- * convenience typedef for the template instance NFacetSpec<3>.
- *
- * \ifacespython The specific class NTetFace is available through Python,
- * even though the generic template NFacetSpec is not.
+ * convenience typedef for the template instance FacetSpec<3>.
  */
-typedef NFacetSpec<3> NTetFace;
+typedef FacetSpec<3> NTetFace;
 
 /**
  * A lightweight class used to refer to a particular facet of a
  * particular pentachoron in a 4-manifold triangulation.  This is a
- * convenience typedef for the template instance NFacetSpec<4>.
- *
- * \ifacespython The specific class Dim4PentFacet is available through Python,
- * even though the generic template NFacetSpec is not.
+ * convenience typedef for the template instance FacetSpec<4>.
  */
-typedef NFacetSpec<4> Dim4PentFacet;
+typedef FacetSpec<4> Dim4PentFacet;
+
+/**
+ * Deprecated alias for FacetSpec<dim>.
+ *
+ * \deprecated The old NFacetSpec<dim> class has been renamed to FacetSpec<dim>.
+ * This NFacetSpec<dim> class has been kept for backward compatibility,
+ * and will be removed from a future version of Regina.  (Since this is
+ * a template class, the alias NFacetSpec is a trivial subclass, not a typedef).
+ *
+ * \ifacespython This deprecated class is not available through Python,
+ * though the renamed class FacetSpec<dim> is.  See the FacetSpec
+ * documentation for details.
+ */
+template <int dim>
+struct NFacetSpec : public FacetSpec<dim> {
+    /**
+     * Creates a new specifier with no initialisation.  This
+     * specifier must be initialised before it is used.
+     *
+     * \deprecated Use the class FacetSpec<dim>, and call the
+     * corresponding FacetSpec constructor instead.
+     */
+    NFacetSpec();
+    /**
+     * Creates a new specifier referring to the given facet of the given
+     * simplex.
+     *
+     * \deprecated Use the class FacetSpec<dim>, and call the
+     * corresponding FacetSpec constructor instead.
+     *
+     * @param newSimp the given simplex; see the FacetSpec class notes for
+     * allowable values of this parameter.
+     * @param newFacet the given facet; this should be between 0 and
+     * \a dim inclusive.
+     */
+    NFacetSpec(int newSimp, int newFacet);
+    /**
+     * Creates a new specifier referring to the same simplex facet as
+     * the given specifier.
+     *
+     * \deprecated Use the class FacetSpec<dim>, and call the
+     * corresponding FacetSpec constructor instead.
+     *
+     * @param cloneMe the specifier to clone.
+     */
+    NFacetSpec(const FacetSpec<dim>& cloneMe);
+};
 
 /*@}*/
 
-// Inline functions for NFacetSpec
+// Inline functions for FacetSpec
 
 template <int dim>
-inline NFacetSpec<dim>::NFacetSpec() {
+inline FacetSpec<dim>::FacetSpec() {
 }
 
 template <int dim>
-inline NFacetSpec<dim>::NFacetSpec(int newSimp, int newFacet) :
+inline FacetSpec<dim>::FacetSpec(int newSimp, int newFacet) :
         simp(newSimp), facet(newFacet) {
 }
 
 template <int dim>
-inline NFacetSpec<dim>::NFacetSpec(const NFacetSpec& cloneMe) :
+inline FacetSpec<dim>::FacetSpec(const FacetSpec& cloneMe) :
         simp(cloneMe.simp), facet(cloneMe.facet) {
 }
 
 template <int dim>
-inline bool NFacetSpec<dim>::isBoundary(size_t nSimplices) const {
+inline bool FacetSpec<dim>::isBoundary(size_t nSimplices) const {
     return (simp == static_cast<int>(nSimplices) && facet == 0);
 }
 
 template <int dim>
-inline bool NFacetSpec<dim>::isBeforeStart() const {
+inline bool FacetSpec<dim>::isBeforeStart() const {
     return (simp < 0);
 }
 
 template <int dim>
-inline bool NFacetSpec<dim>::isPastEnd(size_t nSimplices, bool boundaryAlso)
+inline bool FacetSpec<dim>::isPastEnd(size_t nSimplices, bool boundaryAlso)
         const {
     return (simp == static_cast<int>(nSimplices) &&
         (boundaryAlso || facet > 0));
 }
 
 template <int dim>
-inline void NFacetSpec<dim>::setFirst() {
+inline void FacetSpec<dim>::setFirst() {
     simp = facet = 0;
 }
 
 template <int dim>
-inline void NFacetSpec<dim>::setBoundary(size_t nSimplices) {
+inline void FacetSpec<dim>::setBoundary(size_t nSimplices) {
     simp = nSimplices;
     facet = 0;
 }
 
 template <int dim>
-inline void NFacetSpec<dim>::setBeforeStart() {
+inline void FacetSpec<dim>::setBeforeStart() {
     simp = -1;
     facet = dim;
 }
 
 template <int dim>
-inline void NFacetSpec<dim>::setPastEnd(size_t nSimplices) {
+inline void FacetSpec<dim>::setPastEnd(size_t nSimplices) {
     simp = nSimplices;
     facet = 1;
 }
 
 template <int dim>
-inline NFacetSpec<dim>& NFacetSpec<dim>::operator = (
-        const NFacetSpec<dim>& other) {
+inline FacetSpec<dim>& FacetSpec<dim>::operator = (
+        const FacetSpec<dim>& other) {
     simp = other.simp;
     facet = other.facet;
     return *this;
 }
 
 template <int dim>
-inline NFacetSpec<dim> NFacetSpec<dim>::operator ++ () {
+inline FacetSpec<dim> FacetSpec<dim>::operator ++ () {
     if (++facet > dim) {
         facet = 0;
         ++simp;
@@ -376,8 +414,8 @@ inline NFacetSpec<dim> NFacetSpec<dim>::operator ++ () {
 }
 
 template <int dim>
-inline NFacetSpec<dim> NFacetSpec<dim>::operator ++ (int) {
-    NFacetSpec<dim> ans(*this);
+inline FacetSpec<dim> FacetSpec<dim>::operator ++ (int) {
+    FacetSpec<dim> ans(*this);
     if (++facet > dim) {
         facet = 0;
         ++simp;
@@ -386,7 +424,7 @@ inline NFacetSpec<dim> NFacetSpec<dim>::operator ++ (int) {
 }
 
 template <int dim>
-inline NFacetSpec<dim> NFacetSpec<dim>::operator -- () {
+inline FacetSpec<dim> FacetSpec<dim>::operator -- () {
     if (--facet < 0) {
         facet = dim;
         --simp;
@@ -395,8 +433,8 @@ inline NFacetSpec<dim> NFacetSpec<dim>::operator -- () {
 }
 
 template <int dim>
-inline NFacetSpec<dim> NFacetSpec<dim>::operator -- (int) {
-    NFacetSpec<dim> ans(*this);
+inline FacetSpec<dim> FacetSpec<dim>::operator -- (int) {
+    FacetSpec<dim> ans(*this);
     if (--facet < 0) {
         facet = dim;
         --simp;
@@ -405,23 +443,39 @@ inline NFacetSpec<dim> NFacetSpec<dim>::operator -- (int) {
 }
 
 template <int dim>
-inline bool NFacetSpec<dim>::operator == (const NFacetSpec<dim>& other) const {
+inline bool FacetSpec<dim>::operator == (const FacetSpec<dim>& other) const {
     return (simp == other.simp && facet == other.facet);
 }
 
 template <int dim>
-inline bool NFacetSpec<dim>::operator != (const NFacetSpec<dim>& other) const {
+inline bool FacetSpec<dim>::operator != (const FacetSpec<dim>& other) const {
     return (simp != other.simp || facet != other.facet);
 }
 
 template <int dim>
-inline bool NFacetSpec<dim>::operator < (const NFacetSpec<dim>& other) const {
+inline bool FacetSpec<dim>::operator < (const FacetSpec<dim>& other) const {
     return (simp < other.simp || (simp == other.simp && facet < other.facet));
 }
 
 template <int dim>
-inline bool NFacetSpec<dim>::operator <= (const NFacetSpec<dim>& other) const {
+inline bool FacetSpec<dim>::operator <= (const FacetSpec<dim>& other) const {
     return (simp < other.simp || (simp == other.simp && facet <= other.facet));
+}
+
+// Inline functions for FacetSpec
+
+template <int dim>
+inline NFacetSpec<dim>::NFacetSpec() : FacetSpec<dim>() {
+}
+
+template <int dim>
+inline NFacetSpec<dim>::NFacetSpec(int newSimp, int newFacet) :
+        FacetSpec<dim>(newSimp, newFacet) {
+}
+
+template <int dim>
+inline NFacetSpec<dim>::NFacetSpec(const FacetSpec<dim>& cloneMe) :
+        FacetSpec<dim>(cloneMe) {
 }
 
 } // namespace regina

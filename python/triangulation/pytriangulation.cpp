@@ -40,7 +40,6 @@ void addNFacePair();
 void addNFacePairing();
 void addNHomologicalData();
 void addNIsomorphism();
-void addNTetFace();
 void addNTetrahedron();
 void addNTriangle();
 void addNTriangulation();
@@ -55,7 +54,6 @@ void addTriangulation() {
     addNFacePairing();
     addNHomologicalData();
     addNIsomorphism();
-    addNTetFace();
     addNTetrahedron();
     addNTriangle();
     addNTriangulation();

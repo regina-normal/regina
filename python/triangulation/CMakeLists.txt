@@ -10,7 +10,6 @@ SET ( FILES
   nfacepairing
   nhomologicaldata
   nisomorphism
-  ntetface
   ntetrahedron
   ntriangle
   ntriangulation

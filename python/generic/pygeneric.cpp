@@ -56,6 +56,7 @@ void addFacetPairing12();
 void addFacetPairing13();
 void addFacetPairing14();
 void addFacetPairing15();
+void addFacetSpec();
 void addIsomorphism5();
 void addIsomorphism6();
 void addIsomorphism7();
@@ -103,6 +104,7 @@ void addTriangulations14();
 void addTriangulations15();
 
 void addGeneric() {
+    addFacetSpec();
     addComponent5();
     addComponent6();
     addComponent7();

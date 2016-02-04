@@ -37,6 +37,7 @@ SET ( FILES
   facetpairing13
   facetpairing14
   facetpairing15
+  facetspec
   isomorphism5
   isomorphism6
   isomorphism7

@@ -85,7 +85,7 @@ Triangulation<dim>* NGenericGluingPerms<dim>::triangulate() const {
 }
 
 template <int dim>
-int NGenericGluingPerms<dim>::gluingToIndex(const NFacetSpec<dim>& source,
+int NGenericGluingPerms<dim>::gluingToIndex(const FacetSpec<dim>& source,
         const NPerm<dim+1>& gluing) const {
     NPerm<dim+1> permSn_1 = NPerm<dim+1>(pairing_->dest(source).facet, dim)
         * gluing * NPerm<dim+1>(source.facet, dim);

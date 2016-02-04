@@ -190,7 +190,7 @@ class NGenericGluingPerms {
          * @param source the simplex facet under investigation.
          * @return the associated gluing permutation.
          */
-        NPerm<dim+1> gluingPerm(const NFacetSpec<dim>& source) const;
+        NPerm<dim+1> gluingPerm(const FacetSpec<dim>& source) const;
 
         /**
          * Returns the gluing permutation associated with the given
@@ -279,7 +279,7 @@ class NGenericGluingPerms {
          * @param source the simplex facet under investigation.
          * @return a reference to the corresponding array index.
          */
-        int& permIndex(const NFacetSpec<dim>& source);
+        int& permIndex(const FacetSpec<dim>& source);
 
         /**
          * Returns the index into array NPerm<dim+1>::Sn_1 describing how the
@@ -312,7 +312,7 @@ class NGenericGluingPerms {
          * @param source the simplex facet under investigation.
          * @return a reference to the corresponding array index.
          */
-        const int& permIndex(const NFacetSpec<dim>& source) const;
+        const int& permIndex(const FacetSpec<dim>& source) const;
 
         /**
          * Returns the index into array NPerm<dim+1>::Sn_1 describing how the
@@ -355,7 +355,7 @@ class NGenericGluingPerms {
          * given gluing permutation; this will be between 0 and \a dim!-1
          * inclusive.
          */
-        int gluingToIndex(const NFacetSpec<dim>& source,
+        int gluingToIndex(const FacetSpec<dim>& source,
             const NPerm<dim+1>& gluing) const;
 
         /**
@@ -413,7 +413,7 @@ class NGenericGluingPerms {
          * @return the gluing permutation corresponding to the given
          * index into NPerm<dim+1>::Sn_1.
          */
-        NPerm<dim+1> indexToGluing(const NFacetSpec<dim>& source, int index)
+        NPerm<dim+1> indexToGluing(const FacetSpec<dim>& source, int index)
             const;
 
         /**
@@ -494,7 +494,7 @@ inline const FacetPairing<dim>* NGenericGluingPerms<dim>::getFacetPairing()
 
 template <int dim>
 inline NPerm<dim+1> NGenericGluingPerms<dim>::gluingPerm(
-        const NFacetSpec<dim>& source) const {
+        const FacetSpec<dim>& source) const {
     return indexToGluing(source, permIndex(source));
 }
 
@@ -505,7 +505,7 @@ inline NPerm<dim+1> NGenericGluingPerms<dim>::gluingPerm(
 }
 
 template <int dim>
-inline int& NGenericGluingPerms<dim>::permIndex(const NFacetSpec<dim>& source) {
+inline int& NGenericGluingPerms<dim>::permIndex(const FacetSpec<dim>& source) {
     return permIndices_[(dim + 1) * source.simp + source.facet];
 }
 
@@ -516,7 +516,7 @@ inline int& NGenericGluingPerms<dim>::permIndex(unsigned simp, unsigned facet) {
 
 template <int dim>
 inline const int& NGenericGluingPerms<dim>::permIndex(
-        const NFacetSpec<dim>& source) const {
+        const FacetSpec<dim>& source) const {
     return permIndices_[(dim + 1) * source.simp + source.facet];
 }
 
@@ -528,7 +528,7 @@ inline const int& NGenericGluingPerms<dim>::permIndex(
 
 template <int dim>
 inline NPerm<dim+1> NGenericGluingPerms<dim>::indexToGluing(
-        const NFacetSpec<dim>& source, int index) const {
+        const FacetSpec<dim>& source, int index) const {
     return NPerm<dim+1>(pairing_->dest(source).facet, dim) *
         NPerm<dim+1>::Sn_1[index] * NPerm<dim+1>(source.facet, dim);
 }

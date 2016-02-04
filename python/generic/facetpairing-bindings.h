@@ -43,18 +43,18 @@
 
 using namespace boost::python;
 using regina::FacetPairing;
-using regina::NFacetSpec;
+using regina::FacetSpec;
 using regina::Triangulation;
 
 namespace {
     template <int dim>
     struct PyFacetPairingHelper {
-        typedef const NFacetSpec<dim>& (FacetPairing<dim>::*dest_facet_type)(
-            const NFacetSpec<dim>&) const;
-        typedef const NFacetSpec<dim>& (FacetPairing<dim>::*dest_unsigned_type)(
+        typedef const FacetSpec<dim>& (FacetPairing<dim>::*dest_facet_type)(
+            const FacetSpec<dim>&) const;
+        typedef const FacetSpec<dim>& (FacetPairing<dim>::*dest_unsigned_type)(
             size_t, unsigned) const;
         typedef bool (FacetPairing<dim>::*isUnmatched_facet_type)(
-            const NFacetSpec<dim>&) const;
+            const FacetSpec<dim>&) const;
         typedef bool (FacetPairing<dim>::*isUnmatched_unsigned_type)(
             size_t, unsigned) const;
 
@@ -106,8 +106,8 @@ void addFacetPairing(const char* name) {
             &FacetPairing<dim>::dest),
             return_value_policy<reference_existing_object>())
         .def("__getitem__",
-            static_cast<const NFacetSpec<dim>& (FacetPairing<dim>::*)(
-                const NFacetSpec<dim>&) const>(&FacetPairing<dim>::operator[]),
+            static_cast<const FacetSpec<dim>& (FacetPairing<dim>::*)(
+                const FacetSpec<dim>&) const>(&FacetPairing<dim>::operator[]),
             return_value_policy<reference_existing_object>())
         .def("isUnmatched",
             typename PyFacetPairingHelper<dim>::isUnmatched_facet_type(

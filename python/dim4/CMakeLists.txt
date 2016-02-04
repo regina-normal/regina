@@ -9,7 +9,6 @@ SET ( FILES
   dim4triangle
   dim4isomorphism
   dim4pentachoron
-  dim4pentfacet
   dim4tetrahedron
   dim4triangulation
   dim4vertex
