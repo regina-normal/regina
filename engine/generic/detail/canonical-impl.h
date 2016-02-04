@@ -106,9 +106,9 @@ struct CanonicalHelper {
                 origFacetBest = best.facetPerm(origTriBest).preImageOf(facet);
 
                 // Check out the adjacency along simplex/facet.
-                adjTri = tri->getSimplex(origTri)->adjacentSimplex(origFacet);
+                adjTri = tri->simplex(origTri)->adjacentSimplex(origFacet);
                 adjTriIndex = (adjTri ? adjTri->index() : nSimp);
-                adjTriBest = tri->getSimplex(origTriBest)->
+                adjTriBest = tri->simplex(origTriBest)->
                     adjacentSimplex(origFacetBest);
                 adjTriIndexBest = (adjTriBest ? adjTriBest->index() : nSimp);
 
@@ -136,9 +136,8 @@ struct CanonicalHelper {
                 if (! adjTri)
                     continue;
 
-                gluingPerm = tri->getSimplex(origTri)->adjacentGluing(
-                    origFacet);
-                gluingPermBest = tri->getSimplex(origTriBest)->
+                gluingPerm = tri->simplex(origTri)->adjacentGluing(origFacet);
+                gluingPermBest = tri->simplex(origTriBest)->
                     adjacentGluing(origFacetBest);
 
                 if (justAssigned) {

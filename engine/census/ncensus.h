@@ -391,9 +391,10 @@ class REGINA_API NCensus {
         int whichPurge;
             /**< The argument passed to formCensus(). */
 
-        AcceptTriangulation sieve;
+        bool (*sieve)(NTriangulation*, void*);
             /**< The arbitrary constraint function to run triangulations
-                 through. */
+                 through.  This is of type AcceptTriangulation, but because
+                 that typedef is deprecated we do not use it here. */
         void* sieveArgs;
             /**< The second argument to pass to function \a sieve. */
 

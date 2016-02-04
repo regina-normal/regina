@@ -47,14 +47,16 @@ const PDFHandler PDFHandler::instance;
 
 regina::NPacket* PDFHandler::importData(const QString& fileName,
         ReginaMain* parentWidget) const {
-    regina::NPacket* ans = regina::readPDF(
+    regina::NPDF* ans = new regina::NPDF(
         static_cast<const char*>(QFile::encodeName(fileName)));
-    if (! ans)
+    if (ans->isNull()) {
+        delete ans;
         ReginaSupport::sorry(parentWidget,
             QObject::tr("The import failed."),
             QObject::tr("<qt>Please check that the file <tt>%1</tt> "
             "is readable and in PDF format.</qt>").arg(fileName.toHtmlEscaped()));
-    else
+        return 0;
+    } else
         ans->setLabel(QObject::tr("PDF document").toUtf8().constData());
     return ans;
 }

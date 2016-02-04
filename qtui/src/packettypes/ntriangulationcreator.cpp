@@ -584,7 +584,7 @@ regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
             case EXAMPLE_GIESEKING:
                 return NExampleTriangulation::gieseking();
             case EXAMPLE_LENS8_3:
-                return NExampleTriangulation::lens8_3();
+                return NExampleTriangulation::lens(8, 3);
             case EXAMPLE_POINCARE:
                 return NExampleTriangulation::poincareHomologySphere();
             case EXAMPLE_RP2xS1:
