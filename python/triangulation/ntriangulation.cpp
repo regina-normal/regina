@@ -173,16 +173,6 @@ namespace {
         return ans;
     }
 
-    regina::NIsomorphism* isIsomorphicTo_ptr(const NTriangulation& t,
-            const NTriangulation& s) {
-        return t.isIsomorphicTo(s).release();
-    }
-
-    regina::NIsomorphism* isContainedIn_ptr(const NTriangulation& t,
-            const NTriangulation& s) {
-        return t.isContainedIn(s).release();
-    }
-
     std::string isoSig_void(const NTriangulation& t) {
         return t.isoSig();
     }
@@ -307,12 +297,16 @@ void addNTriangulation() {
         .def("edgeIndex", &NTriangulation::edgeIndex)
         .def("triangleIndex", &NTriangulation::triangleIndex)
         .def("isIdenticalTo", &NTriangulation::isIdenticalTo)
-        .def("isIsomorphicTo", isIsomorphicTo_ptr,
+        .def("isIsomorphicTo",
+            +[](const NTriangulation& t, const NTriangulation& s) {
+                return t.isIsomorphicTo(s).release(); },
             return_value_policy<manage_new_object>())
         .def("findAllIsomorphisms", findAllIsomorphisms_list)
         .def("findAllSubcomplexesIn", findAllSubcomplexesIn_list)
         .def("makeCanonical", &NTriangulation::makeCanonical)
-        .def("isContainedIn", isContainedIn_ptr,
+        .def("isContainedIn",
+            +[](const NTriangulation& t, const NTriangulation& s) {
+                return t.isContainedIn(s).release(); },
             return_value_policy<manage_new_object>())
         .def("hasTwoSphereBoundaryComponents",
             &NTriangulation::hasTwoSphereBoundaryComponents)

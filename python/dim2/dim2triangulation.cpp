@@ -88,16 +88,6 @@ namespace {
         return ans;
     }
 
-    regina::Dim2Isomorphism* isIsomorphicTo_ptr(const Dim2Triangulation& t,
-            const Dim2Triangulation& s) {
-        return t.isIsomorphicTo(s).release();
-    }
-
-    regina::Dim2Isomorphism* isContainedIn_ptr(const Dim2Triangulation& t,
-            const Dim2Triangulation& s) {
-        return t.isContainedIn(s).release();
-    }
-
     boost::python::list findAllIsomorphisms_list(
         const Dim2Triangulation& t, const Dim2Triangulation& other) {
         boost::python::list ans;
@@ -230,11 +220,15 @@ void addDim2Triangulation() {
         .def("vertexIndex", &Dim2Triangulation::vertexIndex)
         .def("edgeIndex", &Dim2Triangulation::edgeIndex)
         .def("isIdenticalTo", &Dim2Triangulation::isIdenticalTo)
-        .def("isIsomorphicTo", isIsomorphicTo_ptr,
+        .def("isIsomorphicTo",
+            +[](const Dim2Triangulation& t, const Dim2Triangulation& s) {
+                return t.isIsomorphicTo(s).release(); },
             return_value_policy<manage_new_object>())
         .def("findAllIsomorphisms", findAllIsomorphisms_list)
         .def("makeCanonical", &Dim2Triangulation::makeCanonical)
-        .def("isContainedIn", isContainedIn_ptr,
+        .def("isContainedIn",
+            +[](const Dim2Triangulation& t, const Dim2Triangulation& s) {
+                return t.isContainedIn(s).release(); },
             return_value_policy<manage_new_object>())
         .def("findAllIsomorphisms", findAllIsomorphisms_list)
         .def("findAllSubcomplexesIn", findAllSubcomplexesIn_list)

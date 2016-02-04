@@ -108,16 +108,6 @@ namespace {
         return ans;
     }
 
-    regina::Dim4Isomorphism* isIsomorphicTo_ptr(const Dim4Triangulation& t,
-            const Dim4Triangulation& s) {
-        return t.isIsomorphicTo(s).release();
-    }
-
-    regina::Dim4Isomorphism* isContainedIn_ptr(const Dim4Triangulation& t,
-            const Dim4Triangulation& s) {
-        return t.isContainedIn(s).release();
-    }
-
     boost::python::list findAllIsomorphisms_list(
         const Dim4Triangulation& t, const Dim4Triangulation& other) {
         boost::python::list ans;
@@ -275,10 +265,14 @@ void addDim4Triangulation() {
         .def("triangleIndex", &Dim4Triangulation::triangleIndex)
         .def("tetrahedronIndex", &Dim4Triangulation::tetrahedronIndex)
         .def("isIdenticalTo", &Dim4Triangulation::isIdenticalTo)
-        .def("isIsomorphicTo", isIsomorphicTo_ptr,
+        .def("isIsomorphicTo",
+            +[](const Dim4Triangulation& t, const Dim4Triangulation& s) {
+                return t.isIsomorphicTo(s).release(); },
             return_value_policy<manage_new_object>())
         .def("makeCanonical", &Dim4Triangulation::makeCanonical)
-        .def("isContainedIn", isContainedIn_ptr,
+        .def("isContainedIn",
+            +[](const Dim4Triangulation& t, const Dim4Triangulation& s) {
+                return t.isContainedIn(s).release(); },
             return_value_policy<manage_new_object>())
         .def("findAllIsomorphisms", findAllIsomorphisms_list)
         .def("findAllSubcomplexesIn", findAllSubcomplexesIn_list)

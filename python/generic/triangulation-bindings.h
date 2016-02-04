@@ -79,16 +79,6 @@ namespace {
             return ans;
         }
 
-        static regina::Isomorphism<dim>* isIsomorphicTo(
-                const Triangulation<dim>& t, const Triangulation<dim>& s) {
-            return t.isIsomorphicTo(s).release();
-        }
-
-        static regina::Isomorphism<dim>* isContainedIn(
-                const Triangulation<dim>& t, const Triangulation<dim>& s) {
-            return t.isContainedIn(s).release();
-        }
-
         static boost::python::list findAllIsomorphisms(
             const Triangulation<dim>& t, const Triangulation<dim>& other) {
             boost::python::list ans;
@@ -242,9 +232,13 @@ void addTriangulation(const char* name) {
         .def("finiteToIdeal", &Triangulation<dim>::finiteToIdeal)
         .def("makeDoubleCover", &Triangulation<dim>::makeDoubleCover)
         .def("isIdenticalTo", &Triangulation<dim>::isIdenticalTo)
-        .def("isIsomorphicTo", PyTriHelper<dim>::isIsomorphicTo,
+        .def("isIsomorphicTo",
+            +[](const Triangulation<dim>& t, const Triangulation<dim>& s) {
+                return t.isIsomorphicTo(s).release(); },
             return_value_policy<manage_new_object>())
-        .def("isContainedIn", PyTriHelper<dim>::isContainedIn,
+        .def("isContainedIn",
+            +[](const Triangulation<dim>& t, const Triangulation<dim>& s) {
+                return t.isContainedIn(s).release(); },
             return_value_policy<manage_new_object>())
         .def("findAllIsomorphisms", PyTriHelper<dim>::findAllIsomorphisms)
         .def("findAllSubcomplexesIn", PyTriHelper<dim>::findAllSubcomplexesIn)
