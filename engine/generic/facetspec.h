@@ -295,48 +295,15 @@ typedef FacetSpec<4> Dim4PentFacet;
  * Deprecated alias for FacetSpec<dim>.
  *
  * \deprecated The old NFacetSpec<dim> class has been renamed to FacetSpec<dim>.
- * This NFacetSpec<dim> class has been kept for backward compatibility,
- * and will be removed from a future version of Regina.  (Since this is
- * a template class, the alias NFacetSpec is a trivial subclass, not a typedef).
+ * This NFacetSpec<dim> alias has been kept for backward compatibility,
+ * and will be removed from a future version of Regina.
  *
- * \ifacespython This deprecated class is not available through Python,
+ * \ifacespython This deprecated alias is not available through Python,
  * though the renamed class FacetSpec<dim> is.  See the FacetSpec
  * documentation for details.
  */
 template <int dim>
-struct NFacetSpec : public FacetSpec<dim> {
-    /**
-     * Creates a new specifier with no initialisation.  This
-     * specifier must be initialised before it is used.
-     *
-     * \deprecated Use the class FacetSpec<dim>, and call the
-     * corresponding FacetSpec constructor instead.
-     */
-    NFacetSpec();
-    /**
-     * Creates a new specifier referring to the given facet of the given
-     * simplex.
-     *
-     * \deprecated Use the class FacetSpec<dim>, and call the
-     * corresponding FacetSpec constructor instead.
-     *
-     * @param newSimp the given simplex; see the FacetSpec class notes for
-     * allowable values of this parameter.
-     * @param newFacet the given facet; this should be between 0 and
-     * \a dim inclusive.
-     */
-    NFacetSpec(int newSimp, int newFacet);
-    /**
-     * Creates a new specifier referring to the same simplex facet as
-     * the given specifier.
-     *
-     * \deprecated Use the class FacetSpec<dim>, and call the
-     * corresponding FacetSpec constructor instead.
-     *
-     * @param cloneMe the specifier to clone.
-     */
-    NFacetSpec(const FacetSpec<dim>& cloneMe);
-};
+using NFacetSpec = FacetSpec<dim>;
 
 /*@}*/
 
@@ -460,22 +427,6 @@ inline bool FacetSpec<dim>::operator < (const FacetSpec<dim>& other) const {
 template <int dim>
 inline bool FacetSpec<dim>::operator <= (const FacetSpec<dim>& other) const {
     return (simp < other.simp || (simp == other.simp && facet <= other.facet));
-}
-
-// Inline functions for FacetSpec
-
-template <int dim>
-inline NFacetSpec<dim>::NFacetSpec() : FacetSpec<dim>() {
-}
-
-template <int dim>
-inline NFacetSpec<dim>::NFacetSpec(int newSimp, int newFacet) :
-        FacetSpec<dim>(newSimp, newFacet) {
-}
-
-template <int dim>
-inline NFacetSpec<dim>::NFacetSpec(const FacetSpec<dim>& cloneMe) :
-        FacetSpec<dim>(cloneMe) {
 }
 
 } // namespace regina

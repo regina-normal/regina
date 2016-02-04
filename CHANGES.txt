@@ -286,7 +286,7 @@ Version 5.0  [ (under development) ]
               but deprecated.
         Struct NFacetSpec:
             - Renamed to FacetSpec.  The old NFacetSpec<dim> is deprecated
-              but has been kept as trivial subclass for backward compatibility.
+              but has been kept as a type alias for backward compatibility.
             - Added != operators to complement the existing == operators.
         Class NGenericFacetPairing, NFacePairing, Dim2EdgePairing:
             - The template base class NGenericFacetPairing<dim> has been
