@@ -144,8 +144,8 @@ void addNNormalSurfaceList() {
             bases<regina::NPacket>,
             SafeHeldType<NNormalSurfaceList>, boost::noncopyable>
             ("NNormalSurfaceList", no_init)
-        .def("getFlavour", &NNormalSurfaceList::getFlavour)
-        .def("flavour", &NNormalSurfaceList::flavour)
+        .def("getFlavour", &NNormalSurfaceList::coords)
+        .def("flavour", &NNormalSurfaceList::coords)
         .def("coords", &NNormalSurfaceList::coords)
         .def("which", &NNormalSurfaceList::which)
         .def("algorithm", &NNormalSurfaceList::algorithm)
@@ -155,13 +155,13 @@ void addNNormalSurfaceList() {
         .def("isEmbeddedOnly", &NNormalSurfaceList::isEmbeddedOnly)
         .def("triangulation", &NNormalSurfaceList::triangulation,
             return_value_policy<to_held_type<> >())
-        .def("getTriangulation", &NNormalSurfaceList::getTriangulation,
+        .def("getTriangulation", &NNormalSurfaceList::triangulation,
             return_value_policy<to_held_type<> >())
         .def("size", &NNormalSurfaceList::size)
-        .def("getNumberOfSurfaces", &NNormalSurfaceList::getNumberOfSurfaces)
+        .def("getNumberOfSurfaces", &NNormalSurfaceList::size)
         .def("surface", &NNormalSurfaceList::surface,
             return_internal_reference<>())
-        .def("getSurface", &NNormalSurfaceList::getSurface,
+        .def("getSurface", &NNormalSurfaceList::surface,
             return_internal_reference<>())
         .def("writeAllSurfaces", writeAllSurfaces_stdio)
         .def("enumerate", unified_2,

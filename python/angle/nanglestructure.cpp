@@ -49,7 +49,7 @@ void addNAngleStructure() {
         .def("clone", &NAngleStructure::clone,
             return_value_policy<manage_new_object>())
         .def("angle", &NAngleStructure::angle)
-        .def("getAngle", &NAngleStructure::getAngle)
+        .def("getAngle", &NAngleStructure::angle)
         .def("triangulation", &NAngleStructure::triangulation,
             return_value_policy<to_held_type<> >())
         .def("getTriangulation", &NAngleStructure::triangulation,
@@ -58,9 +58,9 @@ void addNAngleStructure() {
         .def("isTaut", &NAngleStructure::isTaut)
         .def("isVeering", &NAngleStructure::isVeering)
         .def("str", &NAngleStructure::str)
-        .def("toString", &NAngleStructure::toString)
+        .def("toString", &NAngleStructure::str)
         .def("detail", &NAngleStructure::detail)
-        .def("toStringLong", &NAngleStructure::toStringLong)
+        .def("toStringLong", &NAngleStructure::detail)
         .def("__str__", &NAngleStructure::str)
         .def(regina::python::add_eq_operators())
     ;

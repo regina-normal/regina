@@ -54,7 +54,7 @@ void addNSurfaceSubset() {
             boost::noncopyable>("NSurfaceSubset",
             init<const regina::NNormalSurfaceList&,
                 const regina::NSurfaceFilter&>())
-        .def("getFlavour", &NSurfaceSubset::getFlavour)
+        .def("getFlavour", &NSurfaceSubset::coords)
         .def("coords", &NSurfaceSubset::coords)
         .def("allowsAlmostNormal", &NSurfaceSubset::allowsAlmostNormal)
         .def("allowsSpun", &NSurfaceSubset::allowsSpun)
@@ -62,13 +62,13 @@ void addNSurfaceSubset() {
         .def("isEmbeddedOnly", &NSurfaceSubset::isEmbeddedOnly)
         .def("triangulation", &NSurfaceSubset::triangulation,
             return_value_policy<to_held_type<> >())
-        .def("getTriangulation", &NSurfaceSubset::getTriangulation,
+        .def("getTriangulation", &NSurfaceSubset::triangulation,
             return_value_policy<to_held_type<> >())
         .def("size", &NSurfaceSubset::size)
-        .def("getNumberOfSurfaces", &NSurfaceSubset::getNumberOfSurfaces)
+        .def("getNumberOfSurfaces", &NSurfaceSubset::size)
         .def("surface", &NSurfaceSubset::surface,
             return_internal_reference<>())
-        .def("getSurface", &NSurfaceSubset::getSurface,
+        .def("getSurface", &NSurfaceSubset::surface,
             return_internal_reference<>())
         .def("writeAllSurfaces", writeAllSurfaces_stdio)
         .def("str", &NSurfaceSubset::str)

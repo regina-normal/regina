@@ -53,7 +53,7 @@ void addNTetrahedron() {
             boost::noncopyable>("Simplex3", no_init)
         .def("description", &NTetrahedron::description,
             return_value_policy<return_by_value>())
-        .def("getDescription", &NTetrahedron::getDescription,
+        .def("getDescription", &NTetrahedron::description,
             return_value_policy<return_by_value>())
         .def("setDescription", &NTetrahedron::setDescription)
         .def("index", &NTetrahedron::index)
@@ -72,32 +72,32 @@ void addNTetrahedron() {
         .def("isolate", &NTetrahedron::isolate)
         .def("triangulation", &NTetrahedron::triangulation,
             return_value_policy<to_held_type<> >())
-        .def("getTriangulation", &NTetrahedron::getTriangulation,
+        .def("getTriangulation", &NTetrahedron::triangulation,
             return_value_policy<to_held_type<> >())
         .def("component", &NTetrahedron::component,
             return_value_policy<reference_existing_object>())
-        .def("getComponent", &NTetrahedron::getComponent,
+        .def("getComponent", &NTetrahedron::component,
             return_value_policy<reference_existing_object>())
         .def("face", &regina::python::face<NTetrahedron, 3, int>)
         .def("vertex", &NTetrahedron::vertex,
             return_value_policy<reference_existing_object>())
-        .def("getVertex", &NTetrahedron::getVertex,
+        .def("getVertex", &NTetrahedron::vertex,
             return_value_policy<reference_existing_object>())
         .def("edge", &NTetrahedron::edge,
             return_value_policy<reference_existing_object>())
-        .def("getEdge", &NTetrahedron::getEdge,
+        .def("getEdge", &NTetrahedron::edge,
             return_value_policy<reference_existing_object>())
         .def("triangle", &NTetrahedron::triangle,
             return_value_policy<reference_existing_object>())
-        .def("getTriangle", &NTetrahedron::getTriangle,
+        .def("getTriangle", &NTetrahedron::triangle,
             return_value_policy<reference_existing_object>())
         .def("faceMapping", &regina::python::faceMapping<NTetrahedron, 3>)
         .def("vertexMapping", &NTetrahedron::vertexMapping)
-        .def("getVertexMapping", &NTetrahedron::getVertexMapping)
+        .def("getVertexMapping", &NTetrahedron::vertexMapping)
         .def("edgeMapping", &NTetrahedron::edgeMapping)
-        .def("getEdgeMapping", &NTetrahedron::getEdgeMapping)
+        .def("getEdgeMapping", &NTetrahedron::edgeMapping)
         .def("triangleMapping", &NTetrahedron::triangleMapping)
-        .def("getTriangleMapping", &NTetrahedron::getTriangleMapping)
+        .def("getTriangleMapping", &NTetrahedron::triangleMapping)
         .def("orientation", &NTetrahedron::orientation)
         .def("facetInMaximalForest", &NTetrahedron::facetInMaximalForest)
         .def("str", &NTetrahedron::str)

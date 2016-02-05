@@ -58,15 +58,15 @@ void addNScript() {
             SafeHeldType<NScript>, boost::noncopyable>("NScript", init<>())
         .def("text", &NScript::text,
             return_value_policy<return_by_value>())
-        .def("getText", &NScript::getText,
+        .def("getText", &NScript::text,
             return_value_policy<return_by_value>())
         .def("setText", &NScript::setText)
         .def("append", &NScript::append)
         .def("countVariables", &NScript::countVariables)
-        .def("getNumberOfVariables", &NScript::getNumberOfVariables)
+        .def("getNumberOfVariables", &NScript::countVariables)
         .def("variableName", &NScript::variableName,
             return_value_policy<return_by_value>())
-        .def("getVariableName", &NScript::getVariableName,
+        .def("getVariableName", &NScript::variableName,
             return_value_policy<return_by_value>())
         .def("variableValue", variableValue_long,
             return_value_policy<to_held_type<>>())
@@ -77,7 +77,7 @@ void addNScript() {
         .def("getVariableValue", variableValue_string,
             return_value_policy<to_held_type<>>())
         .def("variableIndex", &NScript::variableIndex)
-        .def("getVariableIndex", &NScript::getVariableIndex)
+        .def("getVariableIndex", &NScript::variableIndex)
         .def("setVariableName", &NScript::setVariableName)
         .def("setVariableValue", &NScript::setVariableValue)
         .def("addVariable", &NScript::addVariable)

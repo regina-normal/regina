@@ -87,18 +87,18 @@ void addNVertex() {
         .def(init<const NVertexEmbedding&>())
         .def("simplex", &NVertexEmbedding::simplex,
             return_value_policy<reference_existing_object>())
-        .def("getSimplex", &NVertexEmbedding::getSimplex,
+        .def("getSimplex", &NVertexEmbedding::simplex,
             return_value_policy<reference_existing_object>())
         .def("tetrahedron", &NVertexEmbedding::tetrahedron,
             return_value_policy<reference_existing_object>())
-        .def("getTetrahedron", &NVertexEmbedding::getTetrahedron,
+        .def("getTetrahedron", &NVertexEmbedding::tetrahedron,
             return_value_policy<reference_existing_object>())
         .def("face", &NVertexEmbedding::face)
-        .def("getFace", &NVertexEmbedding::getFace)
+        .def("getFace", &NVertexEmbedding::face)
         .def("vertex", &NVertexEmbedding::vertex)
-        .def("getVertex", &NVertexEmbedding::getVertex)
+        .def("getVertex", &NVertexEmbedding::vertex)
         .def("vertices", &NVertexEmbedding::vertices)
-        .def("getVertices", &NVertexEmbedding::getVertices)
+        .def("getVertices", &NVertexEmbedding::vertices)
         .def("str", &NVertexEmbedding::str)
         .def("toString", &NVertexEmbedding::toString)
         .def("detail", &NVertexEmbedding::detail)
@@ -115,7 +115,7 @@ void addNVertex() {
             .def("getEmbeddings", vertex_embeddings_list)
             .def("embedding", &NVertex::embedding,
                 return_internal_reference<>())
-            .def("getEmbedding", &NVertex::getEmbedding,
+            .def("getEmbedding", &NVertex::embedding,
                 return_internal_reference<>())
             .def("front", &NVertex::front,
                 return_internal_reference<>())
@@ -123,20 +123,20 @@ void addNVertex() {
                 return_internal_reference<>())
             .def("triangulation", &NVertex::triangulation,
                 return_value_policy<to_held_type<> >())
-            .def("getTriangulation", &NVertex::getTriangulation,
+            .def("getTriangulation", &NVertex::triangulation,
                 return_value_policy<to_held_type<> >())
             .def("component", &NVertex::component,
                 return_value_policy<reference_existing_object>())
-            .def("getComponent", &NVertex::getComponent,
+            .def("getComponent", &NVertex::component,
                 return_value_policy<reference_existing_object>())
             .def("boundaryComponent", &NVertex::boundaryComponent,
                 return_value_policy<reference_existing_object>())
-            .def("getBoundaryComponent", &NVertex::getBoundaryComponent,
+            .def("getBoundaryComponent", &NVertex::boundaryComponent,
                 return_value_policy<reference_existing_object>())
             .def("degree", &NVertex::degree)
-            .def("getDegree", &NVertex::getDegree)
+            .def("getDegree", &NVertex::degree)
             .def("link", &NVertex::link)
-            .def("getLink", &NVertex::getLink)
+            .def("getLink", &NVertex::link)
             .def("buildLink", &vertex_buildLink,
                 return_value_policy<to_held_type<>>())
             .def("buildLinkDetail", vertex_buildLinkDetail_void)
@@ -150,9 +150,8 @@ void addNVertex() {
             .def("hasBadLink", &NVertex::hasBadLink)
             .def("isLinkOrientable", &NVertex::isLinkOrientable)
             .def("linkEulerChar", &NVertex::linkEulerChar)
-            .def("getLinkEulerChar", &NVertex::getLinkEulerChar)
-            .def("getLinkEulerCharacteristic",
-                &NVertex::getLinkEulerCharacteristic)
+            .def("getLinkEulerChar", &NVertex::linkEulerChar)
+            .def("getLinkEulerCharacteristic", &NVertex::linkEulerChar)
             .def("str", &NVertex::str)
             .def("toString", &NVertex::toString)
             .def("detail", &NVertex::detail)

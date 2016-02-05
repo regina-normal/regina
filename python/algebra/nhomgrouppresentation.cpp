@@ -62,11 +62,11 @@ void addNHomGroupPresentation() {
         .def(init<const NGroupPresentation&>())
         .def("domain", &NHomGroupPresentation::domain,
             return_internal_reference<>())
-        .def("getDomain", &NHomGroupPresentation::getDomain,
+        .def("getDomain", &NHomGroupPresentation::domain,
             return_internal_reference<>())
         .def("range", &NHomGroupPresentation::range,
             return_internal_reference<>())
-        .def("getRange", &NHomGroupPresentation::getRange,
+        .def("getRange", &NHomGroupPresentation::range,
             return_internal_reference<>())
         .def("knowsInverse", &NHomGroupPresentation::knowsInverse)
         .def("evaluate", evaluate_exp)
@@ -87,9 +87,9 @@ void addNHomGroupPresentation() {
         .def("markedAbelianisation",
             &NHomGroupPresentation::markedAbelianisation)
         .def("str", &NHomGroupPresentation::str)
-        .def("toString", &NHomGroupPresentation::toString)
+        .def("toString", &NHomGroupPresentation::str)
         .def("detail", &NHomGroupPresentation::detail)
-        .def("toStringLong", &NHomGroupPresentation::toStringLong)
+        .def("toStringLong", &NHomGroupPresentation::detail)
         .def("__str__", &NHomGroupPresentation::str)
         .def(regina::python::add_eq_operators())
     ;

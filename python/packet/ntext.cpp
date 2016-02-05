@@ -55,7 +55,7 @@ void addNText() {
         .def(init<const char*>())
         .def("text", &NText::text,
             return_value_policy<return_by_value>())
-        .def("getText", &NText::getText,
+        .def("getText", &NText::text,
             return_value_policy<return_by_value>())
         .def("setText", setText_string)
         .def("setText", setText_chars)

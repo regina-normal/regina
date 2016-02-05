@@ -47,49 +47,49 @@ void addNHomologicalData() {
         .def(init<const NHomologicalData&>())
         .def("homology", &NHomologicalData::homology,
             return_internal_reference<>())
-        .def("getHomology", &NHomologicalData::getHomology,
+        .def("getHomology", &NHomologicalData::homology,
             return_internal_reference<>())
         .def("bdryHomology", &NHomologicalData::bdryHomology,
             return_internal_reference<>())
-        .def("getBdryHomology", &NHomologicalData::getBdryHomology,
+        .def("getBdryHomology", &NHomologicalData::bdryHomology,
             return_internal_reference<>())
         .def("bdryHomologyMap", &NHomologicalData::bdryHomologyMap,
             return_internal_reference<>())
-        .def("getBdryHomologyMap", &NHomologicalData::getBdryHomologyMap,
+        .def("getBdryHomologyMap", &NHomologicalData::bdryHomologyMap,
             return_internal_reference<>())
         .def("dualHomology", &NHomologicalData::dualHomology,
             return_internal_reference<>())
-        .def("getDualHomology", &NHomologicalData::getDualHomology,
+        .def("getDualHomology", &NHomologicalData::dualHomology,
             return_internal_reference<>())
         .def("h1CellAp", &NHomologicalData::h1CellAp,
             return_internal_reference<>())
-        .def("getH1CellAp", &NHomologicalData::getH1CellAp,
+        .def("getH1CellAp", &NHomologicalData::h1CellAp,
             return_internal_reference<>())
         .def("countStandardCells", &NHomologicalData::countStandardCells)
-        .def("getNumStandardCells", &NHomologicalData::getNumStandardCells)
+        .def("getNumStandardCells", &NHomologicalData::countStandardCells)
         .def("countDualCells", &NHomologicalData::countDualCells)
-        .def("getNumDualCells", &NHomologicalData::getNumDualCells)
+        .def("getNumDualCells", &NHomologicalData::countDualCells)
         .def("countBdryCells", &NHomologicalData::countBdryCells)
-        .def("getNumBdryCells", &NHomologicalData::getNumBdryCells)
+        .def("getNumBdryCells", &NHomologicalData::countBdryCells)
         .def("eulerChar", &NHomologicalData::eulerChar)
-        .def("getEulerChar", &NHomologicalData::getEulerChar)
+        .def("getEulerChar", &NHomologicalData::eulerChar)
         .def("torsionRankVectorString",
             &NHomologicalData::torsionRankVectorString,
             return_value_policy<copy_const_reference>())
         .def("getTorsionRankVectorString",
-            &NHomologicalData::getTorsionRankVectorString,
+            &NHomologicalData::torsionRankVectorString,
             return_value_policy<copy_const_reference>())
         .def("torsionSigmaVectorString",
             &NHomologicalData::torsionSigmaVectorString,
             return_value_policy<copy_const_reference>())
         .def("getTorsionSigmaVectorString",
-            &NHomologicalData::getTorsionSigmaVectorString,
+            &NHomologicalData::torsionSigmaVectorString,
             return_value_policy<copy_const_reference>())
         .def("torsionLegendreSymbolVectorString",
             &NHomologicalData::torsionLegendreSymbolVectorString,
             return_value_policy<copy_const_reference>())
         .def("getTorsionLegendreSymbolVectorString",
-            &NHomologicalData::getTorsionLegendreSymbolVectorString,
+            &NHomologicalData::torsionLegendreSymbolVectorString,
             return_value_policy<copy_const_reference>())
         .def("formIsHyperbolic", &NHomologicalData::formIsHyperbolic)
         .def("formIsSplit", &NHomologicalData::formIsSplit)
@@ -98,7 +98,7 @@ void addNHomologicalData() {
             &NHomologicalData::embeddabilityComment,
             return_value_policy<copy_const_reference>())
         .def("getEmbeddabilityComment",
-            &NHomologicalData::getEmbeddabilityComment,
+            &NHomologicalData::embeddabilityComment,
             return_value_policy<copy_const_reference>())
         .def("str", &NHomologicalData::str)
         .def("toString", &NHomologicalData::toString)

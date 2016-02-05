@@ -133,7 +133,7 @@ void addNPerm(const char* name) {
         .def(init<const NPerm<n>&>())
         .def("__init__", make_constructor(fromList<n>))
         .def("permCode", &NPerm<n>::permCode)
-        .def("getPermCode", &NPerm<n>::getPermCode)
+        .def("getPermCode", &NPerm<n>::permCode)
         .def("setPermCode", &NPerm<n>::setPermCode)
         .def("fromPermCode", &NPerm<n>::fromPermCode)
         .def("isPermCode", &NPerm<n>::isPermCode)

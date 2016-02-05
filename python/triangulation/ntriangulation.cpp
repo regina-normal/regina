@@ -211,8 +211,8 @@ void addNTriangulation() {
         .def(init<const std::string&>())
         .def("size", &NTriangulation::size)
         .def("countTetrahedra", &NTriangulation::countTetrahedra)
-        .def("getNumberOfTetrahedra", &NTriangulation::getNumberOfTetrahedra)
-        .def("getNumberOfSimplices", &NTriangulation::getNumberOfSimplices)
+        .def("getNumberOfTetrahedra", &NTriangulation::countTetrahedra)
+        .def("getNumberOfSimplices", &NTriangulation::size)
         .def("getTetrahedra", tetrahedra_list)
         .def("tetrahedra", tetrahedra_list)
         .def("getSimplices", tetrahedra_list)
@@ -244,19 +244,19 @@ void addNTriangulation() {
         .def("swapContents", &NTriangulation::swapContents)
         .def("moveContentsTo", &NTriangulation::moveContentsTo)
         .def("countComponents", &NTriangulation::countComponents)
-        .def("getNumberOfComponents", &NTriangulation::getNumberOfComponents)
+        .def("getNumberOfComponents", &NTriangulation::countComponents)
         .def("countBoundaryComponents",
             &NTriangulation::countBoundaryComponents)
         .def("getNumberOfBoundaryComponents",
-            &NTriangulation::getNumberOfBoundaryComponents)
+            &NTriangulation::countBoundaryComponents)
         .def("countFaces", &regina::python::countFaces<NTriangulation, 3>)
         .def("getNumberOfFaces", &regina::python::countFaces<NTriangulation, 3>)
         .def("countVertices", &NTriangulation::countVertices)
-        .def("getNumberOfVertices", &NTriangulation::getNumberOfVertices)
+        .def("getNumberOfVertices", &NTriangulation::countVertices)
         .def("countEdges", &NTriangulation::countEdges)
-        .def("getNumberOfEdges", &NTriangulation::getNumberOfEdges)
+        .def("getNumberOfEdges", &NTriangulation::countEdges)
         .def("countTriangles", &NTriangulation::countTriangles)
-        .def("getNumberOfTriangles", &NTriangulation::getNumberOfTriangles)
+        .def("getNumberOfTriangles", &NTriangulation::countTriangles)
         .def("fVector", fVector_list)
         .def("components", components_list)
         .def("getComponents", components_list)
@@ -271,24 +271,24 @@ void addNTriangulation() {
         .def("getTriangles", regina::python::faces_list<NTriangulation, 3, 2>)
         .def("component", &NTriangulation::component,
             return_internal_reference<>())
-        .def("getComponent", &NTriangulation::getComponent,
+        .def("getComponent", &NTriangulation::component,
             return_internal_reference<>())
         .def("boundaryComponent", &NTriangulation::boundaryComponent,
             return_internal_reference<>())
-        .def("getBoundaryComponent", &NTriangulation::getBoundaryComponent,
+        .def("getBoundaryComponent", &NTriangulation::boundaryComponent,
             return_internal_reference<>())
         .def("face", &regina::python::face<NTriangulation, 3, size_t>)
         .def("vertex", &NTriangulation::vertex,
             return_internal_reference<>())
-        .def("getVertex", &NTriangulation::getVertex,
+        .def("getVertex", &NTriangulation::vertex,
             return_internal_reference<>())
         .def("edge", &NTriangulation::edge,
             return_internal_reference<>())
-        .def("getEdge", &NTriangulation::getEdge,
+        .def("getEdge", &NTriangulation::edge,
             return_internal_reference<>())
         .def("triangle", &NTriangulation::triangle,
             return_internal_reference<>())
-        .def("getTriangle", &NTriangulation::getTriangle,
+        .def("getTriangle", &NTriangulation::triangle,
             return_internal_reference<>())
         .def("componentIndex", &NTriangulation::componentIndex)
         .def("boundaryComponentIndex",
@@ -314,9 +314,9 @@ void addNTriangulation() {
             &NTriangulation::hasNegativeIdealBoundaryComponents)
         .def("isEmpty", &NTriangulation::isEmpty)
         .def("eulerCharTri", &NTriangulation::eulerCharTri)
-        .def("getEulerCharTri", &NTriangulation::getEulerCharTri)
+        .def("getEulerCharTri", &NTriangulation::eulerCharTri)
         .def("eulerCharManifold", &NTriangulation::eulerCharManifold)
-        .def("getEulerCharManifold", &NTriangulation::getEulerCharManifold)
+        .def("getEulerCharManifold", &NTriangulation::eulerCharManifold)
         .def("isValid", &NTriangulation::isValid)
         .def("isIdeal", &NTriangulation::isIdeal)
         .def("isStandard", &NTriangulation::isStandard)
@@ -325,7 +325,7 @@ void addNTriangulation() {
         .def("countBoundaryFacets", &NTriangulation::countBoundaryFacets)
         .def("countBoundaryTriangles", &NTriangulation::countBoundaryTriangles)
         .def("getNumberOfBoundaryTriangles",
-            &NTriangulation::getNumberOfBoundaryTriangles)
+            &NTriangulation::countBoundaryTriangles)
         .def("isClosed", &NTriangulation::isClosed)
         .def("isOrientable", &NTriangulation::isOrientable)
         .def("isOriented", &NTriangulation::isOriented)
@@ -333,29 +333,29 @@ void addNTriangulation() {
         .def("isConnected", &NTriangulation::isConnected)
         .def("fundamentalGroup", &NTriangulation::fundamentalGroup,
             return_internal_reference<>())
-        .def("getFundamentalGroup", &NTriangulation::getFundamentalGroup,
+        .def("getFundamentalGroup", &NTriangulation::fundamentalGroup,
             return_internal_reference<>())
         .def("simplifiedFundamentalGroup", simplifiedFundamentalGroup_clone)
         .def("homology", &NTriangulation::homology,
             return_internal_reference<>())
         .def("homologyH1", &NTriangulation::homologyH1,
             return_internal_reference<>())
-        .def("getHomologyH1", &NTriangulation::getHomologyH1,
+        .def("getHomologyH1", &NTriangulation::homologyH1,
             return_internal_reference<>())
         .def("homologyRel", &NTriangulation::homologyRel,
             return_internal_reference<>())
-        .def("getHomologyH1Rel", &NTriangulation::getHomologyH1Rel,
+        .def("getHomologyH1Rel", &NTriangulation::homologyRel,
             return_internal_reference<>())
         .def("homologyBdry", &NTriangulation::homologyBdry,
             return_internal_reference<>())
-        .def("getHomologyH1Bdry", &NTriangulation::getHomologyH1Bdry,
+        .def("getHomologyH1Bdry", &NTriangulation::homologyBdry,
             return_internal_reference<>())
         .def("homologyH2", &NTriangulation::homologyH2,
             return_internal_reference<>())
-        .def("getHomologyH2", &NTriangulation::getHomologyH2,
+        .def("getHomologyH2", &NTriangulation::homologyH2,
             return_internal_reference<>())
         .def("homologyH2Z2", &NTriangulation::homologyH2Z2)
-        .def("getHomologyH2Z2", &NTriangulation::getHomologyH2Z2)
+        .def("getHomologyH2Z2", &NTriangulation::homologyH2Z2)
         .def("turaevViro", &NTriangulation::turaevViro, OL_turaevViro())
         .def("turaevViroApprox", &NTriangulation::turaevViroApprox,
             OL_turaevViroApprox())

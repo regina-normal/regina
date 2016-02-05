@@ -62,19 +62,19 @@ void addNComponent() {
         .def("index", &NComponent::index)
         .def("size", &NComponent::size)
         .def("countTetrahedra", &NComponent::countTetrahedra)
-        .def("getNumberOfTetrahedra", &NComponent::getNumberOfTetrahedra)
-        .def("getNumberOfSimplices", &NComponent::getNumberOfSimplices)
+        .def("getNumberOfTetrahedra", &NComponent::countTetrahedra)
+        .def("getNumberOfSimplices", &NComponent::size)
         .def("countFaces", &regina::python::countFaces<NComponent, 3>)
         .def("getNumberOfFaces", &regina::python::countFaces<NComponent, 3>)
         .def("countTriangles", &NComponent::countTriangles)
-        .def("getNumberOfTriangles", &NComponent::getNumberOfTriangles)
+        .def("getNumberOfTriangles", &NComponent::countTriangles)
         .def("countEdges", &NComponent::countEdges)
-        .def("getNumberOfEdges", &NComponent::getNumberOfEdges)
+        .def("getNumberOfEdges", &NComponent::countEdges)
         .def("countVertices", &NComponent::countVertices)
-        .def("getNumberOfVertices", &NComponent::getNumberOfVertices)
+        .def("getNumberOfVertices", &NComponent::countVertices)
         .def("countBoundaryComponents", &NComponent::countBoundaryComponents)
         .def("getNumberOfBoundaryComponents",
-            &NComponent::getNumberOfBoundaryComponents)
+            &NComponent::countBoundaryComponents)
         .def("simplices", simplices_list)
         .def("getSimplices", simplices_list)
         .def("tetrahedra", simplices_list)
@@ -83,9 +83,9 @@ void addNComponent() {
             return_value_policy<reference_existing_object>())
         .def("tetrahedron", &NComponent::tetrahedron,
             return_value_policy<reference_existing_object>())
-        .def("getTetrahedron", &NComponent::getTetrahedron,
+        .def("getTetrahedron", &NComponent::tetrahedron,
             return_value_policy<reference_existing_object>())
-        .def("getSimplex", &NComponent::getSimplex,
+        .def("getSimplex", &NComponent::simplex,
             return_value_policy<reference_existing_object>())
         .def("faces", &regina::python::faces<NComponent, 3>)
         .def("triangles", regina::python::faces_list<NComponent, 3, 2>)
@@ -97,19 +97,19 @@ void addNComponent() {
         .def("face", &regina::python::face<NComponent, 3, size_t>)
         .def("triangle", &NComponent::triangle,
             return_value_policy<reference_existing_object>())
-        .def("getTriangle", &NComponent::getTriangle,
+        .def("getTriangle", &NComponent::triangle,
             return_value_policy<reference_existing_object>())
         .def("edge", &NComponent::edge,
             return_value_policy<reference_existing_object>())
-        .def("getEdge", &NComponent::getEdge,
+        .def("getEdge", &NComponent::edge,
             return_value_policy<reference_existing_object>())
         .def("vertex", &NComponent::vertex,
             return_value_policy<reference_existing_object>())
-        .def("getVertex", &NComponent::getVertex,
+        .def("getVertex", &NComponent::vertex,
             return_value_policy<reference_existing_object>())
         .def("boundaryComponent", &NComponent::boundaryComponent,
             return_value_policy<reference_existing_object>())
-        .def("getBoundaryComponent", &NComponent::getBoundaryComponent,
+        .def("getBoundaryComponent", &NComponent::boundaryComponent,
             return_value_policy<reference_existing_object>())
         .def("isIdeal", &NComponent::isIdeal)
         .def("isValid", &NComponent::isValid)
@@ -119,10 +119,10 @@ void addNComponent() {
         .def("hasBoundaryTriangles", &NComponent::hasBoundaryTriangles)
         .def("countBoundaryFacets", &NComponent::countBoundaryFacets)
         .def("getNumberOfBoundaryFacets",
-            &NComponent::getNumberOfBoundaryFacets)
+            &NComponent::countBoundaryFacets)
         .def("countBoundaryTriangles", &NComponent::countBoundaryTriangles)
         .def("getNumberOfBoundaryTriangles",
-            &NComponent::getNumberOfBoundaryTriangles)
+            &NComponent::countBoundaryTriangles)
         .def("str", &NComponent::str)
         .def("toString", &NComponent::toString)
         .def("detail", &NComponent::detail)

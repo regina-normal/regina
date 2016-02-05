@@ -89,20 +89,20 @@ void addNPacket() {
     class_<NPacket, boost::noncopyable,
             SafeHeldType<NPacket> >("NPacket", no_init)
         .def("type", &NPacket::type)
-        .def("getPacketType", &NPacket::getPacketType)
+        .def("getPacketType", &NPacket::type)
         .def("typeName", &NPacket::typeName)
-        .def("getPacketTypeName", &NPacket::getPacketTypeName)
+        .def("getPacketTypeName", &NPacket::typeName)
         .def("label", &NPacket::label,
             return_value_policy<return_by_value>())
-        .def("getPacketLabel", &NPacket::getPacketLabel,
+        .def("getPacketLabel", &NPacket::label,
             return_value_policy<return_by_value>())
         .def("humanLabel", &NPacket::humanLabel)
-        .def("getHumanLabel", &NPacket::getHumanLabel)
+        .def("getHumanLabel", &NPacket::humanLabel)
         .def("adornedLabel", &NPacket::adornedLabel)
         .def("setLabel", &NPacket::setLabel)
         .def("setPacketLabel", &NPacket::setPacketLabel)
         .def("fullName", &NPacket::fullName)
-        .def("getFullName", &NPacket::getFullName)
+        .def("getFullName", &NPacket::fullName)
         .def("makeUniqueLabel", &NPacket::makeUniqueLabel)
         .def("makeUniqueLabels", &NPacket::makeUniqueLabels)
         .def("hasTag", &NPacket::hasTag)
@@ -114,38 +114,38 @@ void addNPacket() {
         .def("getTags", tags_list)
         .def("parent", &NPacket::parent,
             return_value_policy<to_held_type<> >())
-        .def("getTreeParent", &NPacket::getTreeParent,
+        .def("getTreeParent", &NPacket::parent,
             return_value_policy<to_held_type<> >())
         .def("firstChild", &NPacket::firstChild,
             return_value_policy<to_held_type<> >())
-        .def("getFirstTreeChild", &NPacket::getFirstTreeChild,
+        .def("getFirstTreeChild", &NPacket::firstChild,
             return_value_policy<to_held_type<> >())
         .def("lastChild", &NPacket::lastChild,
             return_value_policy<to_held_type<> >())
-        .def("getLastTreeChild", &NPacket::getLastTreeChild,
+        .def("getLastTreeChild", &NPacket::lastChild,
             return_value_policy<to_held_type<> >())
         .def("nextSibling", &NPacket::nextSibling,
             return_value_policy<to_held_type<> >())
-        .def("getNextTreeSibling", &NPacket::getNextTreeSibling,
+        .def("getNextTreeSibling", &NPacket::nextSibling,
             return_value_policy<to_held_type<> >())
         .def("prevSibling", &NPacket::prevSibling,
             return_value_policy<to_held_type<> >())
-        .def("getPrevTreeSibling", &NPacket::getPrevTreeSibling,
+        .def("getPrevTreeSibling", &NPacket::prevSibling,
             return_value_policy<to_held_type<> >())
         .def("root", &NPacket::root,
             return_value_policy<to_held_type<> >())
-        .def("getTreeMatriarch", &NPacket::getTreeMatriarch,
+        .def("getTreeMatriarch", &NPacket::root,
             return_value_policy<to_held_type<> >())
         .def("hasOwner", &NPacket::hasOwner)
         .def("levelsDownTo", &NPacket::levelsDownTo)
         .def("levelsUpTo", &NPacket::levelsUpTo)
         .def("isGrandparentOf", &NPacket::isGrandparentOf)
         .def("countChildren", &NPacket::countChildren)
-        .def("getNumberOfChildren", &NPacket::getNumberOfChildren)
+        .def("getNumberOfChildren", &NPacket::countChildren)
         .def("countDescendants", &NPacket::countDescendants)
-        .def("getNumberOfDescendants", &NPacket::getNumberOfDescendants)
+        .def("getNumberOfDescendants", &NPacket::countDescendants)
         .def("totalTreeSize", &NPacket::totalTreeSize)
-        .def("getTotalTreeSize", &NPacket::getTotalTreeSize)
+        .def("getTotalTreeSize", &NPacket::totalTreeSize)
         .def("insertChildFirst", &NPacket::insertChildFirst)
         .def("insertChildLast", &NPacket::insertChildLast)
         .def("insertChildAfter", &NPacket::insertChildAfter)

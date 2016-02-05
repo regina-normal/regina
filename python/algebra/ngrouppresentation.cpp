@@ -53,8 +53,6 @@ namespace {
         &NGroupExpression::addTermLast;
     void (NGroupExpression::*addTermLast_pair)(unsigned long, long) =
         &NGroupExpression::addTermLast;
-    NGroupExpressionTerm& (NGroupExpression::*getTerm_non_const)(
-        size_t) = &NGroupExpression::getTerm;
     NGroupExpressionTerm& (NGroupExpression::*term_non_const)(
         size_t) = &NGroupExpression::term;
 
@@ -131,16 +129,16 @@ void addNGroupPresentation() {
         .def("terms", terms_list)
         .def("getTerms", terms_list)
         .def("countTerms", &NGroupExpression::countTerms)
-        .def("getNumberOfTerms", &NGroupExpression::getNumberOfTerms)
+        .def("getNumberOfTerms", &NGroupExpression::countTerms)
         .def("wordLength", &NGroupExpression::wordLength)
         .def("isTrivial", &NGroupExpression::isTrivial)
         .def("erase", &NGroupExpression::erase)
-        .def("getTerm", getTerm_non_const, return_internal_reference<>())
+        .def("getTerm", term_non_const, return_internal_reference<>())
         .def("term", term_non_const, return_internal_reference<>())
         .def("generator", &NGroupExpression::generator)
-        .def("getGenerator", &NGroupExpression::getGenerator)
+        .def("getGenerator", &NGroupExpression::generator)
         .def("exponent", &NGroupExpression::exponent)
-        .def("getExponent", &NGroupExpression::getExponent)
+        .def("getExponent", &NGroupExpression::exponent)
         .def("addTermFirst", addTermFirst_term)
         .def("addTermFirst", addTermFirst_pair)
         .def("addTermLast", addTermLast_term)
@@ -162,9 +160,9 @@ void addNGroupPresentation() {
         .def("writeText", expressionWriteText, OL_expressionWriteText())
         .def("writeTeX", expressionWriteTeX)
         .def("str", &NGroupExpression::str)
-        .def("toString", &NGroupExpression::toString)
+        .def("toString", &NGroupExpression::str)
         .def("detail", &NGroupExpression::detail)
-        .def("toStringLong", &NGroupExpression::toStringLong)
+        .def("toStringLong", &NGroupExpression::detail)
         .def("__str__", &NGroupExpression::str)
         .def(regina::python::add_eq_operators())
     ;
@@ -177,13 +175,12 @@ void addNGroupPresentation() {
             OL_addGenerator())
         .def("addRelation", addRelation_clone)
         .def("countGenerators", &NGroupPresentation::countGenerators)
-        .def("getNumberOfGenerators",
-            &NGroupPresentation::getNumberOfGenerators)
+        .def("getNumberOfGenerators", &NGroupPresentation::countGenerators)
         .def("countRelations", &NGroupPresentation::countRelations)
-        .def("getNumberOfRelations", &NGroupPresentation::getNumberOfRelations)
+        .def("getNumberOfRelations", &NGroupPresentation::countRelations)
         .def("relation", &NGroupPresentation::relation,
             return_internal_reference<>())
-        .def("getRelation", &NGroupPresentation::getRelation,
+        .def("getRelation", &NGroupPresentation::relation,
             return_internal_reference<>())
         .def("isValid", &NGroupPresentation::isValid)
         .def("intelligentSimplify", &NGroupPresentation::intelligentSimplify)
@@ -217,14 +214,14 @@ void addNGroupPresentation() {
         .def("abelianisation", &NGroupPresentation::abelianisation)
         .def("markedAbelianisation", &NGroupPresentation::markedAbelianisation)
         .def("toTeX", &NGroupPresentation::toTeX)
-        .def("toStringCompact", &NGroupPresentation::toStringCompact)
+        .def("toStringCompact", &NGroupPresentation::compact)
         .def("compact", &NGroupPresentation::compact)
         .def("writeTeX", presentationWriteTeX)
         .def("writeTextCompact", presentationWriteTextCompact)
         .def("str", &NGroupPresentation::str)
-        .def("toString", &NGroupPresentation::toString)
+        .def("toString", &NGroupPresentation::str)
         .def("detail", &NGroupPresentation::detail)
-        .def("toStringLong", &NGroupPresentation::toStringLong)
+        .def("toStringLong", &NGroupPresentation::detail)
         .def("__str__", &NGroupPresentation::str)
         .def(regina::python::add_eq_operators())
     ;

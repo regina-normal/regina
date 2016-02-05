@@ -68,18 +68,18 @@ void addNTriangle() {
         .def(init<const NTriangleEmbedding&>())
         .def("simplex", &NTriangleEmbedding::simplex,
             return_value_policy<reference_existing_object>())
-        .def("getSimplex", &NTriangleEmbedding::getSimplex,
+        .def("getSimplex", &NTriangleEmbedding::simplex,
             return_value_policy<reference_existing_object>())
         .def("tetrahedron", &NTriangleEmbedding::tetrahedron,
             return_value_policy<reference_existing_object>())
-        .def("getTetrahedron", &NTriangleEmbedding::getTetrahedron,
+        .def("getTetrahedron", &NTriangleEmbedding::tetrahedron,
             return_value_policy<reference_existing_object>())
         .def("face", &NTriangleEmbedding::face)
-        .def("getFace", &NTriangleEmbedding::getFace)
+        .def("getFace", &NTriangleEmbedding::face)
         .def("triangle", &NTriangleEmbedding::triangle)
-        .def("getTriangle", &NTriangleEmbedding::getTriangle)
+        .def("getTriangle", &NTriangleEmbedding::triangle)
         .def("vertices", &NTriangleEmbedding::vertices)
-        .def("getVertices", &NTriangleEmbedding::getVertices)
+        .def("getVertices", &NTriangleEmbedding::vertices)
         .def("str", &NTriangleEmbedding::str)
         .def("toString", &NTriangleEmbedding::toString)
         .def("detail", &NTriangleEmbedding::detail)
@@ -96,50 +96,50 @@ void addNTriangle() {
             .def("getEmbeddings", NTriangle_embeddings_list)
             .def("embedding", &NTriangle::embedding,
                 return_internal_reference<>())
-            .def("getEmbedding", &NTriangle::getEmbedding,
+            .def("getEmbedding", &NTriangle::embedding,
                 return_internal_reference<>())
             .def("isBoundary", &NTriangle::isBoundary)
             .def("inMaximalForest", &NTriangle::inMaximalForest)
             .def("type", &NTriangle::type)
-            .def("getType", &NTriangle::getType)
+            .def("getType", &NTriangle::type)
             .def("subtype", &NTriangle::subtype)
-            .def("getSubtype", &NTriangle::getSubtype)
+            .def("getSubtype", &NTriangle::subtype)
             .def("isMobiusBand", &NTriangle::isMobiusBand)
             .def("isCone", &NTriangle::isCone)
             .def("isValid", &NTriangle::isValid)
             .def("isLinkOrientable", &NTriangle::isLinkOrientable)
             .def("degree", &NTriangle::degree)
-            .def("getDegree", &NTriangle::getDegree)
+            .def("getDegree", &NTriangle::degree)
             .def("front", &NTriangle::front,
                 return_internal_reference<>())
             .def("back", &NTriangle::back,
                 return_internal_reference<>())
             .def("triangulation", &NTriangle::triangulation,
                 return_value_policy<to_held_type<> >())
-            .def("getTriangulation", &NTriangle::getTriangulation,
+            .def("getTriangulation", &NTriangle::triangulation,
                 return_value_policy<to_held_type<> >())
             .def("component", &NTriangle::component,
                 return_value_policy<reference_existing_object>())
-            .def("getComponent", &NTriangle::getComponent,
+            .def("getComponent", &NTriangle::component,
                 return_value_policy<reference_existing_object>())
             .def("boundaryComponent", &NTriangle::boundaryComponent,
                 return_value_policy<reference_existing_object>())
-            .def("getBoundaryComponent", &NTriangle::getBoundaryComponent,
+            .def("getBoundaryComponent", &NTriangle::boundaryComponent,
                 return_value_policy<reference_existing_object>())
             .def("face", &regina::python::face<NTriangle, 2, int>)
             .def("vertex", &NTriangle::vertex,
                 return_value_policy<reference_existing_object>())
-            .def("getVertex", &NTriangle::getVertex,
+            .def("getVertex", &NTriangle::vertex,
                 return_value_policy<reference_existing_object>())
             .def("edge", &NTriangle::edge,
                 return_value_policy<reference_existing_object>())
-            .def("getEdge", &NTriangle::getEdge,
+            .def("getEdge", &NTriangle::edge,
                 return_value_policy<reference_existing_object>())
             .def("faceMapping", &regina::python::faceMapping<NTriangle, 2, 4>)
             .def("vertexMapping", &NTriangle::vertexMapping)
-            .def("getVertexMapping", &NTriangle::getVertexMapping)
+            .def("getVertexMapping", &NTriangle::vertexMapping)
             .def("edgeMapping", &NTriangle::edgeMapping)
-            .def("getEdgeMapping", &NTriangle::getEdgeMapping)
+            .def("getEdgeMapping", &NTriangle::edgeMapping)
             .def("str", &NTriangle::str)
             .def("toString", &NTriangle::toString)
             .def("detail", &NTriangle::detail)

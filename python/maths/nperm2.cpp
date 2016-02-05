@@ -77,7 +77,7 @@ void addNPerm2() {
         .def(init<int, int>())
         .def(init<const NPerm2&>())
         .def("permCode", &NPerm2::permCode)
-        .def("getPermCode", &NPerm2::getPermCode)
+        .def("getPermCode", &NPerm2::permCode)
         .def("setPermCode", &NPerm2::setPermCode)
         .def("fromPermCode", &NPerm2::fromPermCode)
         .def("isPermCode", &NPerm2::isPermCode)

@@ -110,26 +110,26 @@ void addNAbelianGroup() {
         .def("addGroup", addGroup_matrix)
         .def("addGroup", addGroup_group)
         .def("rank", &NAbelianGroup::rank)
-        .def("getRank", &NAbelianGroup::getRank)
+        .def("getRank", &NAbelianGroup::rank)
         .def("torsionRank", torsionRank_large)
         .def("torsionRank", torsionRank_long)
         .def("getTorsionRank", torsionRank_large)
         .def("getTorsionRank", torsionRank_long)
         .def("countInvariantFactors", &NAbelianGroup::countInvariantFactors)
         .def("getNumberOfInvariantFactors",
-            &NAbelianGroup::getNumberOfInvariantFactors)
+            &NAbelianGroup::countInvariantFactors)
         .def("invariantFactor", &NAbelianGroup::invariantFactor,
             return_value_policy<return_by_value>())
-        .def("getInvariantFactor", &NAbelianGroup::getInvariantFactor,
+        .def("getInvariantFactor", &NAbelianGroup::invariantFactor,
             return_value_policy<return_by_value>())
         .def("isTrivial", &NAbelianGroup::isTrivial)
         .def("isZ", &NAbelianGroup::isZ)
         .def("isZn", &NAbelianGroup::isZn)
         .def("str", &NAbelianGroup::str)
         .def("utf8", &NAbelianGroup::utf8)
-        .def("toString", &NAbelianGroup::toString)
+        .def("toString", &NAbelianGroup::str)
         .def("detail", &NAbelianGroup::detail)
-        .def("toStringLong", &NAbelianGroup::toStringLong)
+        .def("toStringLong", &NAbelianGroup::detail)
         .def("__str__", &NAbelianGroup::str)
         .def(regina::python::add_eq_operators())
     ;
