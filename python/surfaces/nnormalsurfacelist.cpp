@@ -76,16 +76,6 @@ namespace {
             tracker);
     }
 
-    NNormalSurfaceList* enumerate_3(regina::NTriangulation* owner,
-            regina::NormalCoords coords, bool embedded) {
-        return NNormalSurfaceList::enumerate(owner, coords, embedded);
-    }
-    NNormalSurfaceList* enumerate_4(regina::NTriangulation* owner,
-            regina::NormalCoords coords, bool embedded,
-            regina::NProgressTracker* tracker) {
-        return NNormalSurfaceList::enumerate(owner, coords, embedded, tracker);
-    }
-
     NNormalSurfaceList* enumerateFundPrimal_2(regina::NTriangulation* owner,
             regina::NormalCoords coords) {
         return NNormalSurfaceList::enumerateFundPrimal(owner, coords);
@@ -181,10 +171,6 @@ void addNNormalSurfaceList() {
         .def("enumerate", unified_4,
             return_value_policy<to_held_type<> >())
         .def("enumerate", unified_5,
-            return_value_policy<to_held_type<> >())
-        .def("enumerate", enumerate_3,
-            return_value_policy<to_held_type<> >())
-        .def("enumerate", enumerate_4,
             return_value_policy<to_held_type<> >())
         .def("enumerateFundPrimal", enumerateFundPrimal_2,
             return_value_policy<to_held_type<> >())
