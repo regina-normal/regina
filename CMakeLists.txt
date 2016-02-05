@@ -215,6 +215,19 @@ IF (NOT DISABLE_RPATH)
   endif (APPLE)
 ENDIF (NOT DISABLE_RPATH)
 
+# Deprecation warnings.
+IF(NOT STRICT_MODE)
+  SET (STRICT_MODE OFF CACHE STRING
+    "Compiles Regina with -DREGINA_STRICT, which (for supported compilers) issues warnings whenever deprecated code is used."
+    FORCE)
+ENDIF(NOT STRICT_MODE)
+IF(STRICT_MODE)
+  SET (CONFIG_STRICT_FLAGS "-DREGINA_STRICT")
+  SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CONFIG_STRICT_FLAGS}")
+ELSE(STRICT_MODE)
+  SET (CONFIG_STRICT_FLAGS "")
+ENDIF(STRICT_MODE)
+
 # i18n checks.
 CHECK_CXX_SOURCE_COMPILES("
   #include \"langinfo.h\"
