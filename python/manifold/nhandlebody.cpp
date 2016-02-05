@@ -45,7 +45,7 @@ void addNHandlebody() {
             ("NHandlebody", init<unsigned long, bool>())
         .def(init<const NHandlebody&>())
         .def("handles", &NHandlebody::handles)
-        .def("getHandles", &NHandlebody::getHandles)
+        .def("getHandles", &NHandlebody::handles)
         .def("isOrientable", &NHandlebody::isOrientable)
         .def(regina::python::add_eq_operators())
     ;

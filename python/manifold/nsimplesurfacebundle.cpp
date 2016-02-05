@@ -45,7 +45,7 @@ void addNSimpleSurfaceBundle() {
             ("NSimpleSurfaceBundle", init<int>())
         .def(init<const NSimpleSurfaceBundle&>())
         .def("type", &NSimpleSurfaceBundle::type)
-        .def("getType", &NSimpleSurfaceBundle::getType)
+        .def("getType", &NSimpleSurfaceBundle::type)
         .def(regina::python::add_eq_operators())
     ;
 

@@ -94,18 +94,18 @@ void addDim4Edge() {
         .def(init<const Dim4EdgeEmbedding&>())
         .def("simplex", &Dim4EdgeEmbedding::simplex,
             return_value_policy<reference_existing_object>())
-        .def("getSimplex", &Dim4EdgeEmbedding::getSimplex,
+        .def("getSimplex", &Dim4EdgeEmbedding::simplex,
             return_value_policy<reference_existing_object>())
         .def("pentachoron", &Dim4EdgeEmbedding::pentachoron,
             return_value_policy<reference_existing_object>())
-        .def("getPentachoron", &Dim4EdgeEmbedding::getPentachoron,
+        .def("getPentachoron", &Dim4EdgeEmbedding::pentachoron,
             return_value_policy<reference_existing_object>())
         .def("face", &Dim4EdgeEmbedding::face)
-        .def("getFace", &Dim4EdgeEmbedding::getFace)
+        .def("getFace", &Dim4EdgeEmbedding::face)
         .def("edge", &Dim4EdgeEmbedding::edge)
-        .def("getEdge", &Dim4EdgeEmbedding::getEdge)
+        .def("getEdge", &Dim4EdgeEmbedding::edge)
         .def("vertices", &Dim4EdgeEmbedding::vertices)
-        .def("getVertices", &Dim4EdgeEmbedding::getVertices)
+        .def("getVertices", &Dim4EdgeEmbedding::vertices)
         .def("str", &Dim4EdgeEmbedding::str)
         .def("toString", &Dim4EdgeEmbedding::str)
         .def("detail", &Dim4EdgeEmbedding::detail)
@@ -122,7 +122,7 @@ void addDim4Edge() {
             .def("getEmbeddings", Dim4Edge_embeddings_list)
             .def("embedding", &Dim4Edge::embedding,
                 return_internal_reference<>())
-            .def("getEmbedding", &Dim4Edge::getEmbedding,
+            .def("getEmbedding", &Dim4Edge::embedding,
                 return_internal_reference<>())
             .def("front", &Dim4Edge::front,
                 return_internal_reference<>())
@@ -130,26 +130,26 @@ void addDim4Edge() {
                 return_internal_reference<>())
             .def("triangulation", &Dim4Edge::triangulation,
                 return_value_policy<to_held_type<>>())
-            .def("getTriangulation", &Dim4Edge::getTriangulation,
+            .def("getTriangulation", &Dim4Edge::triangulation,
                 return_value_policy<to_held_type<>>())
             .def("component", &Dim4Edge::component,
                 return_value_policy<reference_existing_object>())
-            .def("getComponent", &Dim4Edge::getComponent,
+            .def("getComponent", &Dim4Edge::component,
                 return_value_policy<reference_existing_object>())
             .def("boundaryComponent", &Dim4Edge::boundaryComponent,
                 return_value_policy<reference_existing_object>())
-            .def("getBoundaryComponent", &Dim4Edge::getBoundaryComponent,
+            .def("getBoundaryComponent", &Dim4Edge::boundaryComponent,
                 return_value_policy<reference_existing_object>())
             .def("face", &regina::python::face<Dim4Edge, 1, int>)
             .def("vertex", &Dim4Edge::vertex,
                 return_value_policy<reference_existing_object>())
-            .def("getVertex", &Dim4Edge::getVertex,
+            .def("getVertex", &Dim4Edge::vertex,
                 return_value_policy<reference_existing_object>())
             .def("faceMapping", &regina::python::faceMapping<Dim4Edge, 1, 5>)
             .def("vertexMapping", &Dim4Edge::vertexMapping)
-            .def("getVertexMapping", &Dim4Edge::getVertexMapping)
+            .def("getVertexMapping", &Dim4Edge::vertexMapping)
             .def("degree", &Dim4Edge::degree)
-            .def("getDegree", &Dim4Edge::getDegree)
+            .def("getDegree", &Dim4Edge::degree)
             .def("isBoundary", &Dim4Edge::isBoundary)
             .def("isLinkOrientable", &Dim4Edge::isLinkOrientable)
             .def("isValid", &Dim4Edge::isValid)

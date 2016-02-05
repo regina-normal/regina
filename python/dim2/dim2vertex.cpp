@@ -64,18 +64,18 @@ void addDim2Vertex() {
         .def(init<const Dim2VertexEmbedding&>())
         .def("simplex", &Dim2VertexEmbedding::simplex,
             return_value_policy<reference_existing_object>())
-        .def("getSimplex", &Dim2VertexEmbedding::getSimplex,
+        .def("getSimplex", &Dim2VertexEmbedding::simplex,
             return_value_policy<reference_existing_object>())
         .def("triangle", &Dim2VertexEmbedding::triangle,
             return_value_policy<reference_existing_object>())
-        .def("getTriangle", &Dim2VertexEmbedding::getTriangle,
+        .def("getTriangle", &Dim2VertexEmbedding::triangle,
             return_value_policy<reference_existing_object>())
         .def("face", &Dim2VertexEmbedding::face)
-        .def("getFace", &Dim2VertexEmbedding::getFace)
+        .def("getFace", &Dim2VertexEmbedding::face)
         .def("vertex", &Dim2VertexEmbedding::vertex)
-        .def("getVertex", &Dim2VertexEmbedding::getVertex)
+        .def("getVertex", &Dim2VertexEmbedding::vertex)
         .def("vertices", &Dim2VertexEmbedding::vertices)
-        .def("getVertices", &Dim2VertexEmbedding::getVertices)
+        .def("getVertices", &Dim2VertexEmbedding::vertices)
         .def("str", &Dim2VertexEmbedding::str)
         .def("toString", &Dim2VertexEmbedding::str)
         .def("detail", &Dim2VertexEmbedding::detail)
@@ -93,7 +93,7 @@ void addDim2Vertex() {
         .def("getEmbeddings", Dim2Vertex_embeddings_list)
         .def("embedding", &Dim2Vertex::embedding,
             return_internal_reference<>())
-        .def("getEmbedding", &Dim2Vertex::getEmbedding,
+        .def("getEmbedding", &Dim2Vertex::embedding,
             return_internal_reference<>())
         .def("front", &Dim2Vertex::front,
             return_internal_reference<>())
@@ -101,18 +101,18 @@ void addDim2Vertex() {
             return_internal_reference<>())
         .def("triangulation", &Dim2Vertex::triangulation,
             return_value_policy<to_held_type<> >())
-        .def("getTriangulation", &Dim2Vertex::getTriangulation,
+        .def("getTriangulation", &Dim2Vertex::triangulation,
             return_value_policy<to_held_type<> >())
         .def("component", &Dim2Vertex::component,
             return_value_policy<reference_existing_object>())
-        .def("getComponent", &Dim2Vertex::getComponent,
+        .def("getComponent", &Dim2Vertex::component,
             return_value_policy<reference_existing_object>())
         .def("boundaryComponent", &Dim2Vertex::boundaryComponent,
             return_value_policy<reference_existing_object>())
-        .def("getBoundaryComponent", &Dim2Vertex::getBoundaryComponent,
+        .def("getBoundaryComponent", &Dim2Vertex::boundaryComponent,
             return_value_policy<reference_existing_object>())
         .def("degree", &Dim2Vertex::degree)
-        .def("getDegree", &Dim2Vertex::getDegree)
+        .def("getDegree", &Dim2Vertex::degree)
         .def("isBoundary", &Dim2Vertex::isBoundary)
         .def("str", &Dim2Vertex::str)
         .def("toString", &Dim2Vertex::str)

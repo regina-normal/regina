@@ -47,7 +47,7 @@ void addNTrivialTri() {
         .def("clone", &NTrivialTri::clone,
             return_value_policy<manage_new_object>())
         .def("type", &NTrivialTri::type)
-        .def("getType", &NTrivialTri::getType)
+        .def("getType", &NTrivialTri::type)
         .def("isTrivialTriangulation", &NTrivialTri::isTrivialTriangulation,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_eq_operators())

@@ -121,7 +121,7 @@ class REGINA_API NLayeredLoop : public NStandardTriangulation {
          * See the general class notes for further details.
          *
          * \deprecated The preferred way of accessing the length of a
-         * layered loop is through getLength().
+         * layered loop is through length().
          *
          * @return the length of this layered loop.
          */

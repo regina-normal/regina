@@ -49,7 +49,7 @@ void addNTorusBundle() {
         .def(init<const NTorusBundle&>())
         .def("monodromy", &NTorusBundle::monodromy,
             return_internal_reference<>())
-        .def("getMonodromy", &NTorusBundle::getMonodromy,
+        .def("getMonodromy", &NTorusBundle::monodromy,
             return_internal_reference<>())
         .def(regina::python::add_eq_operators())
     ;

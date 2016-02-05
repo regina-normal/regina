@@ -65,7 +65,7 @@ void addNTetrahedron() {
         .def("adjacentFace", &NTetrahedron::adjacentFace)
         .def("adjacentFacet", &NTetrahedron::adjacentFacet)
         .def("hasBoundary", &NTetrahedron::hasBoundary)
-        .def("joinTo", &NTetrahedron::joinTo)
+        .def("joinTo", &NTetrahedron::join)
         .def("join", &NTetrahedron::join)
         .def("unjoin", &NTetrahedron::unjoin,
             return_value_policy<reference_existing_object>())

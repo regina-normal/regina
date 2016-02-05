@@ -34,6 +34,7 @@
 
 #include <boost/python.hpp>
 #include "census/ncensus.h"
+#include "census/ngluingpermsearcher.h"
 #include "triangulation/ntriangulation.h"
 #include "../helpers.h"
 
@@ -42,6 +43,7 @@ using regina::NCensus;
 using regina::NCensusDB;
 using regina::NCensusHit;
 using regina::NCensusHits;
+using regina::NGluingPermSearcher;
 using regina::NTriangulation;
 
 namespace {
@@ -109,9 +111,10 @@ void addNCensus() {
         .staticmethod("mightBeMinimal")
     ;
 
-    s.attr("PURGE_NON_MINIMAL") = NCensus::PURGE_NON_MINIMAL;
-    s.attr("PURGE_NON_PRIME") = NCensus::PURGE_NON_PRIME;
-    s.attr("PURGE_NON_MINIMAL_PRIME") = NCensus::PURGE_NON_MINIMAL_PRIME;
-    s.attr("PURGE_P2_REDUCIBLE") = NCensus::PURGE_P2_REDUCIBLE;
+    s.attr("PURGE_NON_MINIMAL") = NGluingPermSearcher::PURGE_NON_MINIMAL;
+    s.attr("PURGE_NON_PRIME") = NGluingPermSearcher::PURGE_NON_PRIME;
+    s.attr("PURGE_NON_MINIMAL_PRIME") =
+        NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME;
+    s.attr("PURGE_P2_REDUCIBLE") = NGluingPermSearcher::PURGE_P2_REDUCIBLE;
 }
 

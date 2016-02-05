@@ -100,7 +100,7 @@ void addNPacket() {
         .def("getHumanLabel", &NPacket::humanLabel)
         .def("adornedLabel", &NPacket::adornedLabel)
         .def("setLabel", &NPacket::setLabel)
-        .def("setPacketLabel", &NPacket::setPacketLabel)
+        .def("setPacketLabel", &NPacket::setLabel)
         .def("fullName", &NPacket::fullName)
         .def("getFullName", &NPacket::fullName)
         .def("makeUniqueLabel", &NPacket::makeUniqueLabel)

@@ -55,35 +55,33 @@ void addDim4BoundaryComponent() {
             &regina::python::countFaces<Dim4BoundaryComponent, 4>)
         .def("countTetrahedra",
             &Dim4BoundaryComponent::countTetrahedra)
-        .def("getNumberOfTetrahedra",
-            &Dim4BoundaryComponent::getNumberOfTetrahedra)
+        .def("getNumberOfTetrahedra", &Dim4BoundaryComponent::countTetrahedra)
         .def("countTriangles", &Dim4BoundaryComponent::countTriangles)
-        .def("getNumberOfTriangles",
-            &Dim4BoundaryComponent::getNumberOfTriangles)
+        .def("getNumberOfTriangles", &Dim4BoundaryComponent::countTriangles)
         .def("countEdges", &Dim4BoundaryComponent::countEdges)
-        .def("getNumberOfEdges", &Dim4BoundaryComponent::getNumberOfEdges)
+        .def("getNumberOfEdges", &Dim4BoundaryComponent::countEdges)
         .def("countVertices", &Dim4BoundaryComponent::countVertices)
-        .def("getNumberOfVertices", &Dim4BoundaryComponent::getNumberOfVertices)
+        .def("getNumberOfVertices", &Dim4BoundaryComponent::countVertices)
         .def("face", &regina::python::face<Dim4BoundaryComponent, 4, size_t>)
         .def("tetrahedron", &Dim4BoundaryComponent::tetrahedron,
             return_value_policy<reference_existing_object>())
-        .def("getTetrahedron", &Dim4BoundaryComponent::getTetrahedron,
+        .def("getTetrahedron", &Dim4BoundaryComponent::tetrahedron,
             return_value_policy<reference_existing_object>())
         .def("triangle", &Dim4BoundaryComponent::triangle,
             return_value_policy<reference_existing_object>())
-        .def("getTriangle", &Dim4BoundaryComponent::getTriangle,
+        .def("getTriangle", &Dim4BoundaryComponent::triangle,
             return_value_policy<reference_existing_object>())
         .def("edge", &Dim4BoundaryComponent::edge,
             return_value_policy<reference_existing_object>())
-        .def("getEdge", &Dim4BoundaryComponent::getEdge,
+        .def("getEdge", &Dim4BoundaryComponent::edge,
             return_value_policy<reference_existing_object>())
         .def("vertex", &Dim4BoundaryComponent::vertex,
             return_value_policy<reference_existing_object>())
-        .def("getVertex", &Dim4BoundaryComponent::getVertex,
+        .def("getVertex", &Dim4BoundaryComponent::vertex,
             return_value_policy<reference_existing_object>())
         .def("component", &Dim4BoundaryComponent::component,
             return_value_policy<reference_existing_object>())
-        .def("getComponent", &Dim4BoundaryComponent::getComponent,
+        .def("getComponent", &Dim4BoundaryComponent::component,
             return_value_policy<reference_existing_object>())
         .def("triangulation", &Dim4BoundaryComponent::triangulation,
             return_value_policy<to_held_type<>>())

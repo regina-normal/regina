@@ -60,19 +60,19 @@ void addComponent(const char* name) {
             (name, no_init)
         .def("index", &Component<dim>::index)
         .def("size", &Component<dim>::size)
-        .def("getNumberOfSimplices", &Component<dim>::getNumberOfSimplices)
+        .def("getNumberOfSimplices", &Component<dim>::size)
         .def("simplices", &PyComponentHelper<dim>::simplices_list)
         .def("getSimplices", &PyComponentHelper<dim>::simplices_list)
         .def("simplex", &Component<dim>::simplex,
             return_value_policy<reference_existing_object>())
-        .def("getSimplex", &Component<dim>::getSimplex,
+        .def("getSimplex", &Component<dim>::simplex,
             return_value_policy<reference_existing_object>())
         .def("isValid", &Component<dim>::isValid)
         .def("isOrientable", &Component<dim>::isOrientable)
         .def("hasBoundaryFacets", &Component<dim>::hasBoundaryFacets)
         .def("countBoundaryFacets", &Component<dim>::countBoundaryFacets)
         .def("getNumberOfBoundaryFacets",
-            &Component<dim>::getNumberOfBoundaryFacets)
+            &Component<dim>::countBoundaryFacets)
         .def("str", &Component<dim>::str)
         .def("toString", &Component<dim>::str)
         .def("detail", &Component<dim>::detail)

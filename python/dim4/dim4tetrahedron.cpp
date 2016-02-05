@@ -70,18 +70,18 @@ void addDim4Tetrahedron() {
         .def(init<const Dim4TetrahedronEmbedding&>())
         .def("simplex", &Dim4TetrahedronEmbedding::simplex,
             return_value_policy<reference_existing_object>())
-        .def("getSimplex", &Dim4TetrahedronEmbedding::getSimplex,
+        .def("getSimplex", &Dim4TetrahedronEmbedding::simplex,
             return_value_policy<reference_existing_object>())
         .def("pentachoron", &Dim4TetrahedronEmbedding::pentachoron,
             return_value_policy<reference_existing_object>())
-        .def("getPentachoron", &Dim4TetrahedronEmbedding::getPentachoron,
+        .def("getPentachoron", &Dim4TetrahedronEmbedding::pentachoron,
             return_value_policy<reference_existing_object>())
         .def("face", &Dim4TetrahedronEmbedding::face)
-        .def("getFace", &Dim4TetrahedronEmbedding::getFace)
+        .def("getFace", &Dim4TetrahedronEmbedding::face)
         .def("tetrahedron", &Dim4TetrahedronEmbedding::tetrahedron)
-        .def("getTetrahedron", &Dim4TetrahedronEmbedding::getTetrahedron)
+        .def("getTetrahedron", &Dim4TetrahedronEmbedding::tetrahedron)
         .def("vertices", &Dim4TetrahedronEmbedding::vertices)
-        .def("getVertices", &Dim4TetrahedronEmbedding::getVertices)
+        .def("getVertices", &Dim4TetrahedronEmbedding::vertices)
         .def("str", &Dim4TetrahedronEmbedding::str)
         .def("toString", &Dim4TetrahedronEmbedding::str)
         .def("detail", &Dim4TetrahedronEmbedding::detail)
@@ -94,12 +94,12 @@ void addDim4Tetrahedron() {
             boost::noncopyable>("Face4_3", no_init)
         .def("index", &Dim4Tetrahedron::index)
         .def("degree", &Dim4Tetrahedron::degree)
-        .def("getDegree", &Dim4Tetrahedron::getDegree)
+        .def("getDegree", &Dim4Tetrahedron::degree)
         .def("embeddings", Dim4Tetrahedron_embeddings_list)
         .def("getEmbeddings", Dim4Tetrahedron_embeddings_list)
         .def("embedding", &Dim4Tetrahedron::embedding,
             return_internal_reference<>())
-        .def("getEmbedding", &Dim4Tetrahedron::getEmbedding,
+        .def("getEmbedding", &Dim4Tetrahedron::embedding,
             return_internal_reference<>())
         .def("front", &Dim4Tetrahedron::front,
             return_internal_reference<>())
@@ -107,36 +107,36 @@ void addDim4Tetrahedron() {
             return_internal_reference<>())
         .def("triangulation", &Dim4Tetrahedron::triangulation,
             return_value_policy<to_held_type<>>())
-        .def("getTriangulation", &Dim4Tetrahedron::getTriangulation,
+        .def("getTriangulation", &Dim4Tetrahedron::triangulation,
             return_value_policy<to_held_type<>>())
         .def("component", &Dim4Tetrahedron::component,
             return_value_policy<reference_existing_object>())
-        .def("getComponent", &Dim4Tetrahedron::getComponent,
+        .def("getComponent", &Dim4Tetrahedron::component,
             return_value_policy<reference_existing_object>())
         .def("boundaryComponent", &Dim4Tetrahedron::boundaryComponent,
             return_value_policy<reference_existing_object>())
-        .def("getBoundaryComponent", &Dim4Tetrahedron::getBoundaryComponent,
+        .def("getBoundaryComponent", &Dim4Tetrahedron::boundaryComponent,
             return_value_policy<reference_existing_object>())
         .def("face", &regina::python::face<Dim4Tetrahedron, 3, int>)
         .def("vertex", &Dim4Tetrahedron::vertex,
             return_value_policy<reference_existing_object>())
-        .def("getVertex", &Dim4Tetrahedron::getVertex,
+        .def("getVertex", &Dim4Tetrahedron::vertex,
             return_value_policy<reference_existing_object>())
         .def("edge", &Dim4Tetrahedron::edge,
             return_value_policy<reference_existing_object>())
-        .def("getEdge", &Dim4Tetrahedron::getEdge,
+        .def("getEdge", &Dim4Tetrahedron::edge,
             return_value_policy<reference_existing_object>())
         .def("triangle", &Dim4Tetrahedron::triangle,
             return_value_policy<reference_existing_object>())
-        .def("getTriangle", &Dim4Tetrahedron::getTriangle,
+        .def("getTriangle", &Dim4Tetrahedron::triangle,
             return_value_policy<reference_existing_object>())
         .def("faceMapping", &regina::python::faceMapping<Dim4Tetrahedron, 3, 5>)
         .def("vertexMapping", &Dim4Tetrahedron::vertexMapping)
-        .def("getVertexMapping", &Dim4Tetrahedron::getVertexMapping)
+        .def("getVertexMapping", &Dim4Tetrahedron::vertexMapping)
         .def("edgeMapping", &Dim4Tetrahedron::edgeMapping)
-        .def("getEdgeMapping", &Dim4Tetrahedron::getEdgeMapping)
+        .def("getEdgeMapping", &Dim4Tetrahedron::edgeMapping)
         .def("triangleMapping", &Dim4Tetrahedron::triangleMapping)
-        .def("getTriangleMapping", &Dim4Tetrahedron::getTriangleMapping)
+        .def("getTriangleMapping", &Dim4Tetrahedron::triangleMapping)
         .def("isValid", &Dim4Tetrahedron::isValid)
         .def("isLinkOrientable", &Dim4Tetrahedron::isLinkOrientable)
         .def("isBoundary", &Dim4Tetrahedron::isBoundary)

@@ -58,7 +58,7 @@ void addNSnappedTwoSphere() {
             return_value_policy<manage_new_object>())
         .def("snappedBall", &NSnappedTwoSphere::snappedBall,
             return_internal_reference<>())
-        .def("getSnappedBall", &NSnappedTwoSphere::getSnappedBall,
+        .def("getSnappedBall", &NSnappedTwoSphere::snappedBall,
             return_internal_reference<>())
         .def("formsSnappedTwoSphere", formsStructure_tets,
             return_value_policy<manage_new_object>())

@@ -32,13 +32,13 @@
 
 /* end stub */
 
-void addNCensus();
 void addNGluingPermSearcher();
+void addNCensus();
 void addDim2Census();
 
 void addCensus() {
-    addNCensus();
     addNGluingPermSearcher();
+    addNCensus();
     addDim2Census();
 }
 

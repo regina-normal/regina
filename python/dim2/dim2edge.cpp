@@ -68,18 +68,18 @@ void addDim2Edge() {
         .def(init<const Dim2EdgeEmbedding&>())
         .def("simplex", &Dim2EdgeEmbedding::simplex,
             return_value_policy<reference_existing_object>())
-        .def("getSimplex", &Dim2EdgeEmbedding::getSimplex,
+        .def("getSimplex", &Dim2EdgeEmbedding::simplex,
             return_value_policy<reference_existing_object>())
         .def("triangle", &Dim2EdgeEmbedding::triangle,
             return_value_policy<reference_existing_object>())
-        .def("getTriangle", &Dim2EdgeEmbedding::getTriangle,
+        .def("getTriangle", &Dim2EdgeEmbedding::triangle,
             return_value_policy<reference_existing_object>())
         .def("face", &Dim2EdgeEmbedding::face)
-        .def("getFace", &Dim2EdgeEmbedding::getFace)
+        .def("getFace", &Dim2EdgeEmbedding::face)
         .def("edge", &Dim2EdgeEmbedding::edge)
-        .def("getEdge", &Dim2EdgeEmbedding::getEdge)
+        .def("getEdge", &Dim2EdgeEmbedding::edge)
         .def("vertices", &Dim2EdgeEmbedding::vertices)
-        .def("getVertices", &Dim2EdgeEmbedding::getVertices)
+        .def("getVertices", &Dim2EdgeEmbedding::vertices)
         .def("str", &Dim2EdgeEmbedding::str)
         .def("toString", &Dim2EdgeEmbedding::str)
         .def("detail", &Dim2EdgeEmbedding::detail)
@@ -96,10 +96,10 @@ void addDim2Edge() {
         .def("embeddings", Dim2Edge_embeddings_list)
         .def("getEmbeddings", Dim2Edge_embeddings_list)
         .def("degree", &Dim2Edge::degree)
-        .def("getDegree", &Dim2Edge::getDegree)
+        .def("getDegree", &Dim2Edge::degree)
         .def("embedding", &Dim2Edge::embedding,
             return_internal_reference<>())
-        .def("getEmbedding", &Dim2Edge::getEmbedding,
+        .def("getEmbedding", &Dim2Edge::embedding,
             return_internal_reference<>())
         .def("front", &Dim2Edge::front,
             return_internal_reference<>())
@@ -107,24 +107,24 @@ void addDim2Edge() {
             return_internal_reference<>())
         .def("triangulation", &Dim2Edge::triangulation,
             return_value_policy<to_held_type<> >())
-        .def("getTriangulation", &Dim2Edge::getTriangulation,
+        .def("getTriangulation", &Dim2Edge::triangulation,
             return_value_policy<to_held_type<> >())
         .def("component", &Dim2Edge::component,
             return_value_policy<reference_existing_object>())
-        .def("getComponent", &Dim2Edge::getComponent,
+        .def("getComponent", &Dim2Edge::component,
             return_value_policy<reference_existing_object>())
         .def("boundaryComponent", &Dim2Edge::boundaryComponent,
             return_value_policy<reference_existing_object>())
-        .def("getBoundaryComponent", &Dim2Edge::getBoundaryComponent,
+        .def("getBoundaryComponent", &Dim2Edge::boundaryComponent,
             return_value_policy<reference_existing_object>())
         .def("face", &regina::python::face<Dim2Edge, 1, int>)
         .def("vertex", &Dim2Edge::vertex,
             return_value_policy<reference_existing_object>())
-        .def("getVertex", &Dim2Edge::getVertex,
+        .def("getVertex", &Dim2Edge::vertex,
             return_value_policy<reference_existing_object>())
         .def("faceMapping", &regina::python::faceMapping<Dim2Edge, 1, 3>)
         .def("vertexMapping", &Dim2Edge::vertexMapping)
-        .def("getVertexMapping", &Dim2Edge::getVertexMapping)
+        .def("getVertexMapping", &Dim2Edge::vertexMapping)
         .def("isBoundary", &Dim2Edge::isBoundary)
         .def("inMaximalForest", &Dim2Edge::inMaximalForest)
         .def("str", &Dim2Edge::str)

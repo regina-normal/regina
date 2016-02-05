@@ -68,20 +68,19 @@ void addNAngleStructureList() {
             ("NAngleStructureList", no_init)
         .def("triangulation", &NAngleStructureList::triangulation,
             return_value_policy<to_held_type<> >())
-        .def("getTriangulation", &NAngleStructureList::getTriangulation,
+        .def("getTriangulation", &NAngleStructureList::triangulation,
             return_value_policy<to_held_type<> >())
         .def("isTautOnly", &NAngleStructureList::isTautOnly)
         .def("size", &NAngleStructureList::size)
-        .def("getNumberOfStructures",
-            &NAngleStructureList::getNumberOfStructures)
+        .def("getNumberOfStructures", &NAngleStructureList::size)
         .def("structure", &NAngleStructureList::structure,
             return_internal_reference<>())
-        .def("getStructure", &NAngleStructureList::getStructure,
+        .def("getStructure", &NAngleStructureList::structure,
             return_internal_reference<>())
         .def("spansStrict", &NAngleStructureList::spansStrict)
         .def("spansTaut", &NAngleStructureList::spansTaut)
-        .def("allowsStrict", &NAngleStructureList::allowsStrict)
-        .def("allowsTaut", &NAngleStructureList::allowsTaut)
+        .def("allowsStrict", &NAngleStructureList::spansStrict)
+        .def("allowsTaut", &NAngleStructureList::spansTaut)
         .def("enumerate", enumerate_1,
             return_value_policy<to_held_type<> >())
         .def("enumerate", enumerate_2,

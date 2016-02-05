@@ -87,18 +87,18 @@ void addDim4Vertex() {
         .def(init<const Dim4VertexEmbedding&>())
         .def("simplex", &Dim4VertexEmbedding::simplex,
             return_value_policy<reference_existing_object>())
-        .def("getSimplex", &Dim4VertexEmbedding::getSimplex,
+        .def("getSimplex", &Dim4VertexEmbedding::simplex,
             return_value_policy<reference_existing_object>())
         .def("pentachoron", &Dim4VertexEmbedding::pentachoron,
             return_value_policy<reference_existing_object>())
-        .def("getPentachoron", &Dim4VertexEmbedding::getPentachoron,
+        .def("getPentachoron", &Dim4VertexEmbedding::pentachoron,
             return_value_policy<reference_existing_object>())
         .def("face", &Dim4VertexEmbedding::face)
-        .def("getFace", &Dim4VertexEmbedding::getFace)
+        .def("getFace", &Dim4VertexEmbedding::face)
         .def("vertex", &Dim4VertexEmbedding::vertex)
-        .def("getVertex", &Dim4VertexEmbedding::getVertex)
+        .def("getVertex", &Dim4VertexEmbedding::vertex)
         .def("vertices", &Dim4VertexEmbedding::vertices)
-        .def("getVertices", &Dim4VertexEmbedding::getVertices)
+        .def("getVertices", &Dim4VertexEmbedding::vertices)
         .def("str", &Dim4VertexEmbedding::str)
         .def("toString", &Dim4VertexEmbedding::str)
         .def("detail", &Dim4VertexEmbedding::detail)
@@ -114,7 +114,7 @@ void addDim4Vertex() {
         .def("getEmbeddings", Dim4Vertex_embeddings_list)
         .def("embedding", &Dim4Vertex::embedding,
             return_internal_reference<>())
-        .def("getEmbedding", &Dim4Vertex::getEmbedding,
+        .def("getEmbedding", &Dim4Vertex::embedding,
             return_internal_reference<>())
         .def("front", &Dim4Vertex::front,
             return_internal_reference<>())
@@ -122,18 +122,18 @@ void addDim4Vertex() {
             return_internal_reference<>())
         .def("triangulation", &Dim4Vertex::triangulation,
             return_value_policy<to_held_type<>>())
-        .def("getTriangulation", &Dim4Vertex::getTriangulation,
+        .def("getTriangulation", &Dim4Vertex::triangulation,
             return_value_policy<to_held_type<>>())
         .def("component", &Dim4Vertex::component,
             return_value_policy<reference_existing_object>())
-        .def("getComponent", &Dim4Vertex::getComponent,
+        .def("getComponent", &Dim4Vertex::component,
             return_value_policy<reference_existing_object>())
         .def("boundaryComponent", &Dim4Vertex::boundaryComponent,
             return_value_policy<reference_existing_object>())
-        .def("getBoundaryComponent", &Dim4Vertex::getBoundaryComponent,
+        .def("getBoundaryComponent", &Dim4Vertex::boundaryComponent,
             return_value_policy<reference_existing_object>())
         .def("degree", &Dim4Vertex::degree)
-        .def("getDegree", &Dim4Vertex::getDegree)
+        .def("getDegree", &Dim4Vertex::degree)
         .def("buildLink", &vertex_buildLink,
             return_value_policy<to_held_type<>>())
         .def("buildLinkDetail", vertex_buildLinkDetail_void)

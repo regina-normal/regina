@@ -68,9 +68,6 @@ namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_abbr,
         NSatBlock::abbr, 0, 1);
 
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_getAbbr,
-        NSatBlock::getAbbr, 0, 1);
-
     BOOST_PYTHON_FUNCTION_OVERLOADS(OL_writeAbbr,
         writeAbbr_stdio, 1, 2);
 }
@@ -95,7 +92,7 @@ void addNSatBlock() {
         .def("transform", &NSatBlock::transform)
         .def("nextBoundaryAnnulus", nextBoundaryAnnulus_tuple)
         .def("abbr", &NSatBlock::abbr, OL_abbr())
-        .def("getAbbr", &NSatBlock::getAbbr, OL_getAbbr())
+        .def("getAbbr", &NSatBlock::abbr, OL_abbr())
         .def("writeAbbr", writeAbbr_stdio, OL_writeAbbr())
         .def(self < self)
         .def("isBlock", isBlock_nolist,

@@ -142,8 +142,8 @@ void addDim2Triangulation() {
         .def(init<const std::string&>())
         .def("size", &Dim2Triangulation::size)
         .def("countTriangles", &Dim2Triangulation::countTriangles)
-        .def("getNumberOfTriangles", &Dim2Triangulation::getNumberOfTriangles)
-        .def("getNumberOfSimplices", &Dim2Triangulation::getNumberOfSimplices)
+        .def("getNumberOfTriangles", &Dim2Triangulation::countTriangles)
+        .def("getNumberOfSimplices", &Dim2Triangulation::size)
         .def("getTriangles", Dim2_getTriangles_list)
         .def("triangles", Dim2_getTriangles_list)
         .def("getSimplices", Dim2_getTriangles_list)
@@ -175,18 +175,18 @@ void addDim2Triangulation() {
         .def("swapContents", &Dim2Triangulation::swapContents)
         .def("moveContentsTo", &Dim2Triangulation::moveContentsTo)
         .def("countComponents", &Dim2Triangulation::countComponents)
-        .def("getNumberOfComponents", &Dim2Triangulation::getNumberOfComponents)
+        .def("getNumberOfComponents", &Dim2Triangulation::countComponents)
         .def("countBoundaryComponents",
             &Dim2Triangulation::countBoundaryComponents)
         .def("getNumberOfBoundaryComponents",
-            &Dim2Triangulation::getNumberOfBoundaryComponents)
+            &Dim2Triangulation::countBoundaryComponents)
         .def("countFaces", &regina::python::countFaces<Dim2Triangulation, 2>)
         .def("getNumberOfFaces",
             &regina::python::countFaces<Dim2Triangulation, 2>)
         .def("countVertices", &Dim2Triangulation::countVertices)
-        .def("getNumberOfVertices", &Dim2Triangulation::getNumberOfVertices)
+        .def("getNumberOfVertices", &Dim2Triangulation::countVertices)
         .def("countEdges", &Dim2Triangulation::countEdges)
-        .def("getNumberOfEdges", &Dim2Triangulation::getNumberOfEdges)
+        .def("getNumberOfEdges", &Dim2Triangulation::countEdges)
         .def("fVector", fVector_list)
         .def("components", Dim2_components_list)
         .def("getComponents", Dim2_components_list)
@@ -199,20 +199,20 @@ void addDim2Triangulation() {
         .def("getEdges", regina::python::faces_list<Dim2Triangulation, 2, 1>)
         .def("component", &Dim2Triangulation::component,
             return_internal_reference<>())
-        .def("getComponent", &Dim2Triangulation::getComponent,
+        .def("getComponent", &Dim2Triangulation::component,
             return_internal_reference<>())
         .def("boundaryComponent", &Dim2Triangulation::boundaryComponent,
             return_internal_reference<>())
-        .def("getBoundaryComponent", &Dim2Triangulation::getBoundaryComponent,
+        .def("getBoundaryComponent", &Dim2Triangulation::boundaryComponent,
             return_internal_reference<>())
         .def("face", &regina::python::face<Dim2Triangulation, 2, size_t>)
         .def("vertex", &Dim2Triangulation::vertex,
             return_internal_reference<>())
-        .def("getVertex", &Dim2Triangulation::getVertex,
+        .def("getVertex", &Dim2Triangulation::vertex,
             return_internal_reference<>())
         .def("edge", &Dim2Triangulation::edge,
             return_internal_reference<>())
-        .def("getEdge", &Dim2Triangulation::getEdge,
+        .def("getEdge", &Dim2Triangulation::edge,
             return_internal_reference<>())
         .def("componentIndex", &Dim2Triangulation::componentIndex)
         .def("boundaryComponentIndex",
@@ -235,14 +235,14 @@ void addDim2Triangulation() {
         .def("isEmpty", &Dim2Triangulation::isEmpty)
         .def("isValid", &Dim2Triangulation::isValid)
         .def("eulerChar", &Dim2Triangulation::eulerChar)
-        .def("getEulerChar", &Dim2Triangulation::getEulerChar)
+        .def("getEulerChar", &Dim2Triangulation::eulerChar)
         .def("isClosed", &Dim2Triangulation::isClosed)
         .def("hasBoundaryFacets", &Dim2Triangulation::hasBoundaryFacets)
         .def("hasBoundaryEdges", &Dim2Triangulation::hasBoundaryEdges)
         .def("countBoundaryFacets", &Dim2Triangulation::countBoundaryFacets)
         .def("countBoundaryEdges", &Dim2Triangulation::countBoundaryEdges)
         .def("getNumberOfBoundaryEdges",
-            &Dim2Triangulation::getNumberOfBoundaryEdges)
+            &Dim2Triangulation::countBoundaryEdges)
         .def("isOrientable", &Dim2Triangulation::isOrientable)
         .def("isOriented", &Dim2Triangulation::isOriented)
         .def("isIdeal", &Dim2Triangulation::isIdeal)

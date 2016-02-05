@@ -64,7 +64,7 @@ void addNExampleTriangulation() {
             return_value_policy<to_held_type<> >())
         .def("weeks", &NExampleTriangulation::weeks,
             return_value_policy<to_held_type<> >())
-        .def("seifertWeber", &NExampleTriangulation::seifertWeber,
+        .def("seifertWeber", &NExampleTriangulation::weberSeifert,
             return_value_policy<to_held_type<> >())
         .def("weberSeifert", &NExampleTriangulation::weberSeifert,
             return_value_policy<to_held_type<> >())
@@ -85,17 +85,17 @@ void addNExampleTriangulation() {
         .def("figureEight", &NExampleTriangulation::figureEight,
             return_value_policy<to_held_type<> >())
         .def("figureEightKnotComplement",
-            &NExampleTriangulation::figureEightKnotComplement,
+            &NExampleTriangulation::figureEight,
             return_value_policy<to_held_type<> >())
         .def("trefoil", &NExampleTriangulation::trefoil,
             return_value_policy<to_held_type<> >())
         .def("trefoilKnotComplement",
-            &NExampleTriangulation::trefoilKnotComplement,
+            &NExampleTriangulation::trefoil,
             return_value_policy<to_held_type<> >())
         .def("whiteheadLink", &NExampleTriangulation::whiteheadLink,
             return_value_policy<to_held_type<> >())
         .def("whiteheadLinkComplement",
-            &NExampleTriangulation::whiteheadLinkComplement,
+            &NExampleTriangulation::whiteheadLink,
             return_value_policy<to_held_type<> >())
         .def("gieseking", &NExampleTriangulation::gieseking,
             return_value_policy<to_held_type<> >())

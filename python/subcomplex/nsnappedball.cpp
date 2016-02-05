@@ -48,16 +48,16 @@ void addNSnappedBall() {
             return_value_policy<manage_new_object>())
         .def("tetrahedron", &NSnappedBall::tetrahedron,
             return_value_policy<reference_existing_object>())
-        .def("getTetrahedron", &NSnappedBall::getTetrahedron,
+        .def("getTetrahedron", &NSnappedBall::tetrahedron,
             return_value_policy<reference_existing_object>())
         .def("boundaryFace", &NSnappedBall::boundaryFace)
-        .def("getBoundaryFace", &NSnappedBall::getBoundaryFace)
+        .def("getBoundaryFace", &NSnappedBall::boundaryFace)
         .def("internalFace", &NSnappedBall::internalFace)
-        .def("getInternalFace", &NSnappedBall::getInternalFace)
+        .def("getInternalFace", &NSnappedBall::internalFace)
         .def("equatorEdge", &NSnappedBall::equatorEdge)
-        .def("getEquatorEdge", &NSnappedBall::getEquatorEdge)
+        .def("getEquatorEdge", &NSnappedBall::equatorEdge)
         .def("internalEdge", &NSnappedBall::internalEdge)
-        .def("getInternalEdge", &NSnappedBall::getInternalEdge)
+        .def("getInternalEdge", &NSnappedBall::internalEdge)
         .def("formsSnappedBall", &NSnappedBall::formsSnappedBall,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_eq_operators())
