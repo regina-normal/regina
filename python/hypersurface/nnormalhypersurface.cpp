@@ -132,9 +132,9 @@ void addNNormalHypersurface() {
         .def("embedded", &NNormalHypersurface::embedded)
         .def("locallyCompatible", &NNormalHypersurface::locallyCompatible)
         .def("str", &NNormalHypersurface::str)
-        .def("toString", &NNormalHypersurface::toString)
+        .def("toString", &NNormalHypersurface::str)
         .def("detail", &NNormalHypersurface::detail)
-        .def("toStringLong", &NNormalHypersurface::toStringLong)
+        .def("toStringLong", &NNormalHypersurface::detail)
         .def("__str__", &NNormalHypersurface::str)
         .def(regina::python::add_eq_operators())
     ;

@@ -72,9 +72,9 @@ void addNSurfaceSubset() {
             return_internal_reference<>())
         .def("writeAllSurfaces", writeAllSurfaces_stdio)
         .def("str", &NSurfaceSubset::str)
-        .def("toString", &NSurfaceSubset::toString)
+        .def("toString", &NSurfaceSubset::str)
         .def("detail", &NSurfaceSubset::detail)
-        .def("toStringLong", &NSurfaceSubset::toStringLong)
+        .def("toStringLong", &NSurfaceSubset::detail)
         .def("__str__", &NSurfaceSubset::str)
         .def(regina::python::add_eq_operators())
     ;

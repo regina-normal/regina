@@ -71,9 +71,9 @@ void addDim2Isomorphism() {
         .def("identity", &Dim2Isomorphism::identity,
             return_value_policy<manage_new_object>())
         .def("str", &Dim2Isomorphism::str)
-        .def("toString", &Dim2Isomorphism::toString)
+        .def("toString", &Dim2Isomorphism::str)
         .def("detail", &Dim2Isomorphism::detail)
-        .def("toStringLong", &Dim2Isomorphism::toStringLong)
+        .def("toStringLong", &Dim2Isomorphism::detail)
         .def("__str__", &Dim2Isomorphism::str)
         .def(regina::python::add_eq_operators())
         .staticmethod("random")

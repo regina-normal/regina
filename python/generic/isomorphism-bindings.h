@@ -73,9 +73,9 @@ void addIsomorphism(const char* name) {
         .def("identity", &Isomorphism<dim>::identity,
             return_value_policy<manage_new_object>())
         .def("str", &Isomorphism<dim>::str)
-        .def("toString", &Isomorphism<dim>::toString)
+        .def("toString", &Isomorphism<dim>::str)
         .def("detail", &Isomorphism<dim>::detail)
-        .def("toStringLong", &Isomorphism<dim>::toStringLong)
+        .def("toStringLong", &Isomorphism<dim>::detail)
         .def("__str__", &Isomorphism<dim>::str)
         .def(regina::python::add_eq_operators())
         .staticmethod("random")

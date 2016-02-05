@@ -101,9 +101,9 @@ void addNSatBlock() {
         .def("isBlock", isBlock_nolist,
             return_value_policy<manage_new_object>())
         .def("str", &NSatBlock::str)
-        .def("toString", &NSatBlock::toString)
+        .def("toString", &NSatBlock::str)
         .def("detail", &NSatBlock::detail)
-        .def("toStringLong", &NSatBlock::toStringLong)
+        .def("toStringLong", &NSatBlock::detail)
         .def("__str__", &NSatBlock::str)
         .def(regina::python::add_eq_operators())
         .staticmethod("isBlock")

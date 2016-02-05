@@ -175,9 +175,9 @@ void addSimplex(const char* name) {
         .def("orientation", &Simplex<dim>::orientation)
         .def("facetInMaximalForest", &Simplex<dim>::facetInMaximalForest)
         .def("str", &Simplex<dim>::str)
-        .def("toString", &Simplex<dim>::toString)
+        .def("toString", &Simplex<dim>::str)
         .def("detail", &Simplex<dim>::detail)
-        .def("toStringLong", &Simplex<dim>::toStringLong)
+        .def("toStringLong", &Simplex<dim>::detail)
         .def("__str__", &Simplex<dim>::str)
         .def(regina::python::add_eq_operators())
     ;

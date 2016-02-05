@@ -61,9 +61,9 @@ void addNFileInfo() {
         .def("identify", &NFileInfo::identify,
             return_value_policy<manage_new_object>())
         .def("str", &NFileInfo::str)
-        .def("toString", &NFileInfo::toString)
+        .def("toString", &NFileInfo::str)
         .def("detail", &NFileInfo::detail)
-        .def("toStringLong", &NFileInfo::toStringLong)
+        .def("toStringLong", &NFileInfo::detail)
         .def("__str__", &NFileInfo::str)
         .def(regina::python::add_eq_operators())
         .staticmethod("identify")

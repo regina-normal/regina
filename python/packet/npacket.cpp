@@ -171,9 +171,9 @@ void addNPacket() {
         .def("save", save_filename, OL_save())
         .def("internalID", &NPacket::internalID)
         .def("str", &NPacket::str)
-        .def("toString", &NPacket::toString)
+        .def("toString", &NPacket::str)
         .def("detail", &NPacket::detail)
-        .def("toStringLong", &NPacket::toStringLong)
+        .def("toStringLong", &NPacket::detail)
         .def("__str__", &NPacket::str)
         .def(regina::python::add_eq_operators())
     ;

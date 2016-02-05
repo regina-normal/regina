@@ -77,9 +77,9 @@ void addNBoundaryComponent() {
         .def("isIdeal", &NBoundaryComponent::isIdeal)
         .def("isOrientable", &NBoundaryComponent::isOrientable)
         .def("str", &NBoundaryComponent::str)
-        .def("toString", &NBoundaryComponent::toString)
+        .def("toString", &NBoundaryComponent::str)
         .def("detail", &NBoundaryComponent::detail)
-        .def("toStringLong", &NBoundaryComponent::toStringLong)
+        .def("toStringLong", &NBoundaryComponent::detail)
         .def("__str__", &NBoundaryComponent::str)
         .def(regina::python::add_eq_operators())
     ;

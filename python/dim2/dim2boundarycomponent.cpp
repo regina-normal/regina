@@ -66,9 +66,9 @@ void addDim2BoundaryComponent() {
         .def("getComponent", &Dim2BoundaryComponent::getComponent,
             return_value_policy<reference_existing_object>())
         .def("str", &Dim2BoundaryComponent::str)
-        .def("toString", &Dim2BoundaryComponent::toString)
+        .def("toString", &Dim2BoundaryComponent::str)
         .def("detail", &Dim2BoundaryComponent::detail)
-        .def("toStringLong", &Dim2BoundaryComponent::toStringLong)
+        .def("toStringLong", &Dim2BoundaryComponent::detail)
         .def("__str__", &Dim2BoundaryComponent::str)
         .def(regina::python::add_eq_operators())
     ;

@@ -90,9 +90,9 @@ void addDim4BoundaryComponent() {
         .def("isIdeal", &Dim4BoundaryComponent::isIdeal)
         .def("isInvalidVertex", &Dim4BoundaryComponent::isInvalidVertex)
         .def("str", &Dim4BoundaryComponent::str)
-        .def("toString", &Dim4BoundaryComponent::toString)
+        .def("toString", &Dim4BoundaryComponent::str)
         .def("detail", &Dim4BoundaryComponent::detail)
-        .def("toStringLong", &Dim4BoundaryComponent::toStringLong)
+        .def("toStringLong", &Dim4BoundaryComponent::detail)
         .def("__str__", &Dim4BoundaryComponent::str)
         .def(regina::python::add_eq_operators())
     ;

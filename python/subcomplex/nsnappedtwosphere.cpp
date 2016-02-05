@@ -65,9 +65,9 @@ void addNSnappedTwoSphere() {
         .def("formsSnappedTwoSphere", formsStructure_balls,
             return_value_policy<manage_new_object>())
         .def("str", &NSnappedTwoSphere::str)
-        .def("toString", &NSnappedTwoSphere::toString)
+        .def("toString", &NSnappedTwoSphere::str)
         .def("detail", &NSnappedTwoSphere::detail)
-        .def("toStringLong", &NSnappedTwoSphere::toStringLong)
+        .def("toStringLong", &NSnappedTwoSphere::detail)
         .def("__str__", &NSnappedTwoSphere::str)
         .def(regina::python::add_eq_operators())
         .staticmethod("formsSnappedTwoSphere")

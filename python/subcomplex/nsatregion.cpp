@@ -104,9 +104,9 @@ void addNSatRegion() {
         .def("writeBlockAbbrs", writeBlockAbbrs_stdio, OL_writeBlockAbbrs())
         .def("writeDetail", writeDetail_stdio)
         .def("str", &NSatRegion::str)
-        .def("toString", &NSatRegion::toString)
+        .def("toString", &NSatRegion::str)
         .def("detail", &NSatRegion::detail)
-        .def("toStringLong", &NSatRegion::toStringLong)
+        .def("toStringLong", &NSatRegion::detail)
         .def("__str__", &NSatRegion::str)
         .def(regina::python::add_eq_operators())
     ;

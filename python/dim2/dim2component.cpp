@@ -112,9 +112,9 @@ void addDim2Component() {
         .def("getNumberOfBoundaryEdges",
             &Dim2Component::getNumberOfBoundaryEdges)
         .def("str", &Dim2Component::str)
-        .def("toString", &Dim2Component::toString)
+        .def("toString", &Dim2Component::str)
         .def("detail", &Dim2Component::detail)
-        .def("toStringLong", &Dim2Component::toStringLong)
+        .def("toStringLong", &Dim2Component::detail)
         .def("__str__", &Dim2Component::str)
         .def(regina::python::add_eq_operators())
     ;

@@ -106,9 +106,9 @@ void addDim4Pentachoron() {
         .def("orientation", &Dim4Pentachoron::orientation)
         .def("facetInMaximalForest", &Dim4Pentachoron::facetInMaximalForest)
         .def("str", &Dim4Pentachoron::str)
-        .def("toString", &Dim4Pentachoron::toString)
+        .def("toString", &Dim4Pentachoron::str)
         .def("detail", &Dim4Pentachoron::detail)
-        .def("toStringLong", &Dim4Pentachoron::toStringLong)
+        .def("toStringLong", &Dim4Pentachoron::detail)
         .def("__str__", &Dim4Pentachoron::str)
         .def(regina::python::add_eq_operators())
     ;

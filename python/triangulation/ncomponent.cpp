@@ -124,9 +124,9 @@ void addNComponent() {
         .def("getNumberOfBoundaryTriangles",
             &NComponent::countBoundaryTriangles)
         .def("str", &NComponent::str)
-        .def("toString", &NComponent::toString)
+        .def("toString", &NComponent::str)
         .def("detail", &NComponent::detail)
-        .def("toStringLong", &NComponent::toStringLong)
+        .def("toStringLong", &NComponent::detail)
         .def("__str__", &NComponent::str)
         .def(regina::python::add_eq_operators())
     ;

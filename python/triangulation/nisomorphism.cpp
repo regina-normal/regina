@@ -70,9 +70,9 @@ void addNIsomorphism() {
         .def("identity", &NIsomorphism::identity,
             return_value_policy<manage_new_object>())
         .def("str", &NIsomorphism::str)
-        .def("toString", &NIsomorphism::toString)
+        .def("toString", &NIsomorphism::str)
         .def("detail", &NIsomorphism::detail)
-        .def("toStringLong", &NIsomorphism::toStringLong)
+        .def("toStringLong", &NIsomorphism::detail)
         .def("__str__", &NIsomorphism::str)
         .def(regina::python::add_eq_operators())
         .staticmethod("random")

@@ -59,9 +59,9 @@ void addNPillowTwoSphere() {
         .def("formsPillowTwoSphere", &NPillowTwoSphere::formsPillowTwoSphere,
             return_value_policy<manage_new_object>())
         .def("str", &NPillowTwoSphere::str)
-        .def("toString", &NPillowTwoSphere::toString)
+        .def("toString", &NPillowTwoSphere::str)
         .def("detail", &NPillowTwoSphere::detail)
-        .def("toStringLong", &NPillowTwoSphere::toStringLong)
+        .def("toStringLong", &NPillowTwoSphere::detail)
         .def("__str__", &NPillowTwoSphere::str)
         .def(regina::python::add_eq_operators())
         .staticmethod("formsPillowTwoSphere")

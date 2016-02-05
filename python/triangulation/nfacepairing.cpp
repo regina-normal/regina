@@ -111,7 +111,7 @@ void addNFacePairing() {
         .def("isUnmatched", isUnmatched_face)
         .def("isUnmatched", isUnmatched_unsigned)
         .def("isCanonical", &NFacePairing::isCanonical)
-        .def("toString", &NFacePairing::toString)
+        .def("toString", &NFacePairing::str)
         .def("str", &NFacePairing::str)
         .def("toTextRep", &NFacePairing::toTextRep)
         .def("fromTextRep", &NFacePairing::fromTextRep,
