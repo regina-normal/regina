@@ -120,15 +120,19 @@ constexpr bool standardDim(int dim) {
    * Any deprecated class, function, typedef or constant in Regina's API must
    * be declared with REGINA_DEPRECATED.
    *
-   * Where possible, this expands to an attribute that the compiler can
-   * recognise (such as the C++14 attribute <tt>[[deprecated]]</tt>, which
-   * some compilers already support for C++11).
+   * If the user passes the compile flag <tt>-DREGINA_STRICT</tt>, then
+   * this macro attempts to declare the <tt>deprecated</tt> attribute.
+   * If it cannot work out how to declare such an attribute under the
+   * current compiler, then this macro expands to nothing instead.
    *
    * If a function or constant is declared as both REGINA_API and
    * REGINA_DEPRECATED, the REGINA_DEPRECATED attribute should be listed first.
    *
    * Conversely, if a class or struct is declared as both REGINA_API and
    * REGINA_DEPRECATED, the REGINA_API attribute should be listed first.
+   *
+   * If/when Regina moves to C++14, this macro can be replaced with
+   * <tt>[[deprecated]]</tt> instead.
    */
   #define REGINA_DEPRECATED
 
@@ -136,9 +140,9 @@ constexpr bool standardDim(int dim) {
    * Any deprecated enumeration constant in Regina's API must be
    * declared with REGINA_DEPRECATED_ENUM.
    *
-   * This macro plays a similar role to REGINA_DEPRECATED, but it is
-   * defined separately since some compilers support the deprecated
-   * attribute on classes and functions but not on enumeration constants.
+   * This macro plays a similar role to REGINA_DEPRECATED.  It is defined
+   * separately because some compilers support the deprecated attribute on
+   * classes and functions, but not on enumeration constants.
    *
    * See the REGINA_DEPRECATED macro for further details.
    */
@@ -171,23 +175,29 @@ constexpr bool standardDim(int dim) {
   #endif
   #define REGINA_LOCAL REGINA_HELPER_DLL_LOCAL
 
-  // We assume that, if we are using LLVM or GCC, then the compiler is
-  // new enough to know about the deprecated attribute.
-  #if __llvm__
-    #define REGINA_DEPRECATED [[deprecated]]
-    #define REGINA_DEPRECATED_ENUM [[deprecated]]
-  #else
-    #if __GNUC__
-      #define REGINA_DEPRECATED __attribute__((deprecated))
-      #if __GNUC__ >= 6
-        #define REGINA_DEPRECATED_ENUM __attribute__((deprecated))
+  #if defined REGINA_STRICT
+    // Try to find deprecated attributes that the compiler understands.
+    #if __llvm__
+      #define REGINA_DEPRECATED [[deprecated]]
+      #define REGINA_DEPRECATED_ENUM [[deprecated]]
+    #else
+      #if __GNUC__
+        #define REGINA_DEPRECATED __attribute__((deprecated))
+        #if __GNUC__ >= 6
+          #define REGINA_DEPRECATED_ENUM __attribute__((deprecated))
+        #else
+          #define REGINA_DEPRECATED_ENUM
+        #endif
       #else
+        // We don't know this compiler.
+        #define REGINA_DEPRECATED
         #define REGINA_DEPRECATED_ENUM
       #endif
-    #else
-      #define REGINA_DEPRECATED
-      #define REGINA_DEPRECATED_ENUM
     #endif
+  #else
+    // The user doesn't want deprecation warnings.
+    #define REGINA_DEPRECATED
+    #define REGINA_DEPRECATED_ENUM
   #endif
 #endif // doxygen
 
