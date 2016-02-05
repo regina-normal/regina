@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file foreign/csvsurfacelist.h
  *  \brief Deprecated header that exports normal surface lists to plain text
  *  CSV files.

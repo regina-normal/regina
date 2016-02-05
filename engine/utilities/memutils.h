@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file utilities/memutils.h
  *  \brief Provides object creation and deletion functions for use with
  *  the Standard Template Library.

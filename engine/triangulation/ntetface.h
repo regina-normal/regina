@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file triangulation/ntetface.h
  *  \brief Deprecated header.
  */

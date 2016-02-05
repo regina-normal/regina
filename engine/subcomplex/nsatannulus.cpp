@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "maths/nmatrix2.h"
 #include "subcomplex/nsatannulus.h"
 #include "triangulation/nedge.h"

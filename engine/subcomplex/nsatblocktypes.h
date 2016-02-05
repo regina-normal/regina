@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file subcomplex/nsatblocktypes.h
  *  \brief Describes several types of saturated blocks within Seifert fibred
  *  space triangulations.

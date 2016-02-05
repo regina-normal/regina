@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file surfaces/nsurfacesubset.h
  *  \brief Provides subsets of normal surface sets.
  */

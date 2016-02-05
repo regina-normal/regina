@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file surfaces/ndisc.h
  *  \brief Deals with individual normal discs and sets of normal discs
  *  in a normal surface.

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file split/nsigcensus.h
  *  \brief Deals with forming a census of splitting surface signatures.
  */

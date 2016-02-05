@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #ifndef __NPOLYNOMIAL_H
 #ifndef __DOXYGEN
 #define __NPOLYNOMIAL_H

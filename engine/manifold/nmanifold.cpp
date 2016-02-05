@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <sstream>
 #include "manifold/nmanifold.h"
 

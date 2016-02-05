@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file manifold/nhandlebody.h
  *  \brief Deals with arbitrary handlebodies.
  */

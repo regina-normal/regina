@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "manifold/ngraphpair.h"
 #include "manifold/nsfs.h"
 #include "subcomplex/nblockedsfspair.h"

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file split/nsigisomorphism.h
  *  \brief Deals with full and partial isomorphisms of splitting surface
  *  signatures.

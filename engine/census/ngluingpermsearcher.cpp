@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <algorithm>
 #include <sstream>
 #include "census/ngluingpermsearcher.h"

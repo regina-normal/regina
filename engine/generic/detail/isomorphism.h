@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file generic/detail/isomorphism.h
  *  \brief Implementation details for combinatorial isomorphisms between
  *  triangulations.

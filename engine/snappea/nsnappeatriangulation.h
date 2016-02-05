@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file snappea/nsnappeatriangulation.h
  *  \brief Provides access to the SnapPea kernel.
  */

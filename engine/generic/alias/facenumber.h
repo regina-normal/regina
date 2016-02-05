@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file generic/alias/facenumber.h
  *  \brief Provides dimension-specific aliases for dimension-agnostic routines.
  */

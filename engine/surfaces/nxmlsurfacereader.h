@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file surfaces/nxmlsurfacereader.h
  *  \brief Deals with parsing XML data for normal surface lists.
  */

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #ifndef __LEGACY_NXMLCALLBACK_H
 #ifndef __DOXYGEN
 #define __LEGACY_NXMLCALLBACK_H

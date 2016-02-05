@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file subcomplex/nplugtrisolidtorus.h
  *  \brief Deals with plugged triangular solid torus components of a
  *  triangulation.

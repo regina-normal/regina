@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file census/nfacepairing.h
  *  \brief Deprecated header.
  */

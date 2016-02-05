@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file utilities/safepointeebase.h
  *  \brief Provides a base class for objects pointable by SafePtr.
  */

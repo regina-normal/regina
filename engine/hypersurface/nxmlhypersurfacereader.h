@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file hypersurface/nxmlhypersurfacereader.h
  *  \brief Deals with parsing XML data for normal hypersurface lists.
  */

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file enumerate/ntreeconstraint.h
  *  \brief Constraint classes for use with tree traversal enumeration methods.
  */

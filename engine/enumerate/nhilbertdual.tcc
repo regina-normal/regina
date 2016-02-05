@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file enumerate/nhilbertdual.tcc
  *  \brief Deprecated header.
  */

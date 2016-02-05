@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <cstdarg>
 #include <iostream>
 #include <libxml/parserInternals.h>

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file packet/ncontainer.h
  *  \brief Contains a packet whose entire life purpose is to contain
  *  other packets.

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file surfaces/surfacefiltertype.h
  *  \brief Defines constants for normal surface filter types.
  */

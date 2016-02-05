@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "subcomplex/nsatblockstarter.h"
 #include "subcomplex/nsatblocktypes.h"
 

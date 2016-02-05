@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "dim2/dim2triangulation.h"
 #include "maths/permconv.h"
 #include "triangulation/nisomorphism.h"

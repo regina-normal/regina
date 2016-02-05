@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file manifold/ngraphpair.h
  *  \brief Deals with graph manifolds formed from pairs of Seifert fibred
  *  spaces.

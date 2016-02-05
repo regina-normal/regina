@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "manifold/nsfs.h"
 #include "subcomplex/nblockedsfs.h"
 #include "subcomplex/nlayeredsolidtorus.h"

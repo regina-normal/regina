@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <iterator>
 #include <sstream>
 #include "algebra/ngrouppresentation.h"

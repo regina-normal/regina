@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #ifndef __NPRIMES_H
 #ifndef __DOXYGEN
 #define __NPRIMES_H

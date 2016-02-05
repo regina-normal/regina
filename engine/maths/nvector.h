@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file maths/nvector.h
  *  \brief Provides a fast and generic vector class.
  */

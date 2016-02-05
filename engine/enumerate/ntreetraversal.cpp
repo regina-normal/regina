@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "enumerate/ntreetraversal-impl.h"
 
 namespace regina {

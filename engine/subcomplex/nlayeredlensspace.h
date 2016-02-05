@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file subcomplex/nlayeredlensspace.h
  *  \brief Deals with layered lens space components of a triangulation.
  */

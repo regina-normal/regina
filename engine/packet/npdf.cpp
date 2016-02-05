@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <cstdio>
 #include <sys/stat.h>
 #include "packet/npdf.h"

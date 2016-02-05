@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file surfaces/normalflags.h
  *  \brief Defines constants and flags for normal surface enumeration.
  */

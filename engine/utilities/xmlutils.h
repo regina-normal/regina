@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file utilities/xmlutils.h
  *  \brief Various classes and routines for XML manipulation, some taken
  *  or modified from the libxml++ library.  The libxml2 library is used

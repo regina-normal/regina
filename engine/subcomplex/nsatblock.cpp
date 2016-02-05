@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "subcomplex/nsatblock.h"
 #include <sstream>
 

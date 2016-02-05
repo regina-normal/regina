@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file utilities/base64.h
  *  \brief Routines for base64 encoding and decoding taken and modified
  *  from the \a Base64 project at base64.sourceforge.net.

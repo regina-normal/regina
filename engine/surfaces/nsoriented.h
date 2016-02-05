@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file surfaces/nsoriented.h
  *  \brief Implements normal surface vectors using transversly oriented 
  *  normal surface coordinates.*/

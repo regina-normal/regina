@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file utilities/nmarkedvector.h
  *  \brief Provides space-efficient arrays with fast object-to-index lookup.
  */

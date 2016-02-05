@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "manifold/ntorusbundle.h"
 #include "subcomplex/nlayeredsurfacebundle.h"
 #include "subcomplex/nlayering.h"

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file census/ngluingperms.h
  *  \brief Deals with selecting gluing permutations to complement a
  *  particular pairing of tetrahedron faces.

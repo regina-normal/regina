@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "census/ngenericgluingperms-impl.h"
 
 // Headers required for our template instantiations:

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file enumerate/nhilbertprimal.h
  *  \brief Provides a modified primal algorithm for Hilbert basis enumeration.
  */

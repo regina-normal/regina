@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file census/ngenericgluingperms.tcc
  *  \brief Deprecated header.
  */

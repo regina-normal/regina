@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file surfaces/nnormalsurface.h
  *  \brief Deals with an individual normal surface in a 3-manifold
  *  triangulation.

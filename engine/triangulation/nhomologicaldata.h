@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file triangulation/nhomologicaldata.h
  *  \brief Deals with all the details of the cellular homology of a manifold.
  */

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "subcomplex/npillowtwosphere.h"
 #include "triangulation/ntriangle.h"
 

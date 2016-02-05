@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file maths/nlargeinteger.h
  *  \brief A deprecated header for dealing with arbitrary precision integers.
  */

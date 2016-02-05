@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file foreign/pdf.h
  *  \brief Deprecated header that allows reading and writing PDF documents.
  *

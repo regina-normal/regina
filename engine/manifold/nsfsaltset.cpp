@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "manifold/nsfs.h"
 #include "manifold/nsfsaltset.h"
 

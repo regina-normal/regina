@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file triangulation/npermit.h
  *  \brief Provides utilities for iterating through permutations.
  */

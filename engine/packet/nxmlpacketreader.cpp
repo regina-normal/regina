@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "generic/xmltrireader.h"
 #include "packet/npacket.h"
 #include "packet/nxmlpacketreader.h"

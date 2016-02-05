@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "algebra/nabeliangroup.h"
 #include "maths/matrixops.h"
 #include "utilities/stringutils.h"

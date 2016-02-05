@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file dim2/dim2vertex.h
  *  \brief Deals with vertices in a 2-manifold triangulation.
  */

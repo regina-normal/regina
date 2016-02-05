@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #ifndef __NFACEPAIRING_H
 #ifndef __DOXYGEN
 #define __NFACEPAIRING_H

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "angle/nanglestructure.h"
 #include "enumerate/ntreeconstraint.h"
 #include "enumerate/ntreelp.h"

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file surfaces/nsquadoct.h
  *  \brief Implements almost normal surface vectors using quad-oct coordinates.
  */

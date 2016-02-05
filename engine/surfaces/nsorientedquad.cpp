@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <deque>
 #include <set>
 #include "enumerate/nenumconstraint.h"

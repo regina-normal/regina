@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <iomanip>
 #include "utilities/nxmlcallback.h"
 

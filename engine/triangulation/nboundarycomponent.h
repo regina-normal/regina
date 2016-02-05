@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #ifndef __NBOUNDARYCOMPONENT_H
 #ifndef __DOXYGEN
 #define __NBOUNDARYCOMPONENT_H

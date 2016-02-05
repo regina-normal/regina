@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <iterator>
 #include "packet/nscript.h"
 #include "utilities/xmlutils.h"

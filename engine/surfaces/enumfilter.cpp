@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <vector>
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/ntriangulation.h"

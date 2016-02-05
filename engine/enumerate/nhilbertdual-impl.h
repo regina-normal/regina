@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file enumerate/nhilbertdual-impl.h
  *  \brief Contains implementations of template functions from nhilbertdual.h.
  *

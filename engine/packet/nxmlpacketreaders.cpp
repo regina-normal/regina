@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "packet/nxmlpacketreaders.h"
 #include "packet/nxmltreeresolver.h"
 #include "utilities/base64.h"

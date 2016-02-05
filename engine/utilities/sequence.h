@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file utilities/sequence.h
  *  \brief Support for temporary lightweight sequences.
  */

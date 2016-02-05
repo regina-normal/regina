@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file dim4/dim4edge.h
  *  \brief Deals with edges in a 4-manifold triangulation.
  */

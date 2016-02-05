@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file subcomplex/nsatregion.h
  *  \brief Supports connected regions of saturated blocks in triangulations
  *  of Seifert fibred spaces.

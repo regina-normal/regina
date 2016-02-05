@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file packet/npacketlistener.h
  *  \brief Deals with objects that can listen for packet events.
  */

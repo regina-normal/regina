@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "algebra/nxmlalgebrareader.h"
 #include "utilities/stringutils.h"
 

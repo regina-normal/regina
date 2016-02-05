@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file maths/nray.h
  *  \brief Provides a fast class for rational rays rooted at the origin.
  */

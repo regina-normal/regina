@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <vector>
 #include "surfaces/coordregistry.h"
 #include "surfaces/nxmlsurfacereader.h"

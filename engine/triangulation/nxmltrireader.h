@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file triangulation/nxmltrireader.h
  *  \brief Deals with parsing XML data for 3-dimensional triangulation packets.
  */

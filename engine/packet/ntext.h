@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file packet/ntext.h
  *  \brief Contains a packet representing a text string.
  */

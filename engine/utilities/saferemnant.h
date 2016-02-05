@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file utilities/saferemnant.h
  *  \brief Implementation details for safe pointers.
  */

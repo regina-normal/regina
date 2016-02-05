@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file hypersurface/hypercoords.h
  *  \brief Defines constants for normal hypersurface coordinate systems.
  */

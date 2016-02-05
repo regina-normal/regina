@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "triangulation/ntetrahedron.h"
 #include "subcomplex/nsnappedtwosphere.h"
 #include "subcomplex/nsnappedball.h"

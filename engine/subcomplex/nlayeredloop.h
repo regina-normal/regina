@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file subcomplex/nlayeredloop.h
  *  \brief Deals with layered loop components of a triangulation.
  */

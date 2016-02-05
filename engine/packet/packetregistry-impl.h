@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file packet/packetregistry-impl.h
  *  \brief Contains the registry of all packet types known to Regina.
  *

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "algebra/nabeliangroup.h"
 #include "manifold/nsimplesurfacebundle.h"
 #include "triangulation/ntriangulation.h"

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file triangulation/ntriangulation.h
  *  \brief Deals with 3-dimensional triangulations.
  */

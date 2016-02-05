@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file foreign/orb.h
  *  \brief Allows reading Orb / Casson triangulation files.
  */

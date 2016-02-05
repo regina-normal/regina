@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "enumerate/ntreeconstraint.h"
 #include "enumerate/ntreelp-impl.h"
 

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "maths/nrational.h"
 #include <cfloat>
 #include <sstream>

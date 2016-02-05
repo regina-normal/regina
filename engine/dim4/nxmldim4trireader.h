@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file dim4/nxmldim4trireader.h
  *  \brief Deals with parsing XML data for 4-dimensional triangulation packets.
  */

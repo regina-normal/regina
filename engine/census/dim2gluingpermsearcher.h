@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file census/dim2gluingpermsearcher.h
  *  \brief Supports searching through all possible sets of triangle
  *  gluing permutations for a given triangle edge pairing.

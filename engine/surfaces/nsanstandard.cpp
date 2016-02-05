@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "enumerate/nenumconstraint.h"
 #include "surfaces/nsanstandard.h"
 #include "maths/nmatrixint.h"

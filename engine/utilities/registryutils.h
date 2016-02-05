@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file utilities/registryutils.h
  *  \brief Miscellaneous utility classes for working with registries of
  *  packet types, normal coordinate systems, and so on.

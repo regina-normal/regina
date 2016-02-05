@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file generic/detail/xmltrireader.h
  *  \brief Implementation details for parsing XML data for triangulation
  *  packets.

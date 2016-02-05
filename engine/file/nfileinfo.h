@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file file/nfileinfo.h
  *  \brief Deals with determining information about Regina data files.
  */

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <boost/next_prior.hpp>
 #include <sstream>
 #include "census/ngluingpermsearcher.h"

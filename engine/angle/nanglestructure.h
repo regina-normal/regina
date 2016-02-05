@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file angle/nanglestructure.h
  *  \brief Deals with angle structures on triangulations.
  */

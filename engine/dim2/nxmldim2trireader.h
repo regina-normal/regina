@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file dim2/nxmldim2trireader.h
  *  \brief Deals with parsing XML data for 2-dimensional triangulation packets.
  */

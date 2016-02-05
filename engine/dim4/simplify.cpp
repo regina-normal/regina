@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "dim4/dim4triangulation.h"
 #include "maths/nperm3.h"
 #include "triangulation/nedge.h"

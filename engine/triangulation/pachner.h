@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file triangulation/pachner.h
  *  \brief Explains terminology used with Pachner moves on triangulations.
  */

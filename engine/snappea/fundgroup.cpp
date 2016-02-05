@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "snappea/nsnappeatriangulation.h"
 #include "snappea/kernel/SnapPea.h"
 

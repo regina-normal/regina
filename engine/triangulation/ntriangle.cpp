@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "triangulation/nedge.h"
 #include "triangulation/ntriangle.h"
 

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <cerrno>
 #include <cstdlib>
 #include <mutex>

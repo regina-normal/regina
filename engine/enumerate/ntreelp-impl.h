@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file enumerate/ntreelp-impl.h
  *  \brief Contains implementation details for the various linear programming
  *  class templates.

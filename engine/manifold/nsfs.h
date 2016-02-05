@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file manifold/nsfs.h
  *  \brief Deals with general Seifert fibred spaces.
  */

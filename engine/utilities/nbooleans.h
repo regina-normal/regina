@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file utilities/nbooleans.h
  *  \brief Provides various types that extend the standard boolean.
  */

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file census/ngenericgluingperms-impl.h
  *  \brief Contains implementation details for the NGenericGluingPerms
  *  class template.

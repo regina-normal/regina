@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "triangulation/nboundarycomponent.h"
 
 namespace regina {

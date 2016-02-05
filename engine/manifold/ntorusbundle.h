@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file manifold/ntorusbundle.h
  *  \brief Deals with torus bundles over the circle.
  */

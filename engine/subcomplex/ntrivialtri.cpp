@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <algorithm>
 #include "algebra/nabeliangroup.h"
 #include "manifold/nhandlebody.h"

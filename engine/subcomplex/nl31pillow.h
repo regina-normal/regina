@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file subcomplex/nl31pillow.h
  *  \brief Deals with triangular pillow L(3,1) components of a triangulation.
  */

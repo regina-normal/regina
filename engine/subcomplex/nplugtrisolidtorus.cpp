@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <algorithm>
 #include "manifold/nsfs.h"
 #include "triangulation/ntriangulation.h"

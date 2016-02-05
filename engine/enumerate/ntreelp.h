@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file enumerate/ntreelp.h
  *  \brief Linear programming code for tree traversal enumeration methods.
  */

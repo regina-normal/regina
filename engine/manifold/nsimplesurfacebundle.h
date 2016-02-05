@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file manifold/nsimplesurfacebundle.h
  *  \brief Deals with simple closed surface bundles.
  */

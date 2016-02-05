@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file census/dim4gluingperms.h
  *  \brief Deals with selecting gluing permutations to complement a
  *  particular pairing of pentachoron facets.

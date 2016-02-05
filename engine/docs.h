@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file docs.h
  *  \brief Contains miscellaneous documentation.
  */

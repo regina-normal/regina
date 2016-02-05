@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "subcomplex/ntxicore.h"
 #include <sstream>
 

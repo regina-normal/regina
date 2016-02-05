@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file enumerate/ntreetraversal-impl.h
  *  \brief Contains implementation details for the various tree traversal
  *  class templates.

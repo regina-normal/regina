@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "surfaces/nsurfacesubset.h"
 #include "surfaces/nsurfacefilter.h"
 

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "packet/npacket.h"
 #include "packet/npacketlistener.h"
 

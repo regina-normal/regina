@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "algebra/nabeliangroup.h"
 #include "manifold/nsfs.h"
 #include "maths/nmatrixint.h"

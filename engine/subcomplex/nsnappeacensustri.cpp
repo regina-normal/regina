@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "algebra/nabeliangroup.h"
 #include "manifold/nsnappeacensusmfd.h"
 #include "subcomplex/nsnappeacensustri.h"

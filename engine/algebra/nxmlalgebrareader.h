@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file algebra/nxmlalgebrareader.h
  *  \brief Deals with parsing XML data for various algebraic structures.
  */

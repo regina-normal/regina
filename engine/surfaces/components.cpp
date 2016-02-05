@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <queue>
 #include "surfaces/ndisc.h"
 #include "surfaces/nsstandard.h"

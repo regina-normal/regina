@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file maths/permconv.h
  *  \brief Conversions between various permutation classes.
  */

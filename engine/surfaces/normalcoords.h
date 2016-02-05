@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file surfaces/normalcoords.h
  *  \brief Defines constants for normal surface coordinate systems.
  */

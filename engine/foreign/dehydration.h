@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file foreign/dehydration.h
  *  \brief Allows reading lists of dehydrated triangulations.
  */

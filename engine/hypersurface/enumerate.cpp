@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <thread>
 #include "dim4/dim4triangulation.h"
 #include "enumerate/ndoubledescription.h"

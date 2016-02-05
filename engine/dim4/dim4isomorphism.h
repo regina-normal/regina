@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file dim4/dim4isomorphism.h
  *  \brief Deals with combinatorial isomorphisms of 4-manifold triangulations.
  */

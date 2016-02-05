@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "utilities/nbooleans.h"
 
 #include <iostream>

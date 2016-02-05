@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <vector>
 #include "dim4/dim4triangulation.h"
 #include "hypersurface/nxmlhypersurfacereader.h"

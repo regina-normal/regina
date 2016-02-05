@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file enumerate/nenumconstraint.h
  *  \brief Deals with validity constraints in polytope vertex enumeration.
  */

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #ifndef __COMPONENT_H_DETAIL
 #ifndef __DOXYGEN
 #define __COMPONENT_H_DETAIL

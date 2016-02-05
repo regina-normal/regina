@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #ifndef __LEGACY_NMPI_H
 #ifndef __DOXYGEN
 #define __LEGACY_NMPI_H

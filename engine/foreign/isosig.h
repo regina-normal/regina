@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file foreign/isosig.h
  *  \brief Allows reading lists of isomorphism signatures.
  */

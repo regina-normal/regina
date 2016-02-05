@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file triangulation/ntriangle.h
  *  \brief Deals with triangles in a triangulation.
  */

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file surfaces/flavourregistry.h
  *  \brief Deprecated header.
  */

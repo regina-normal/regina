@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file snappea/nxmlsnappeareader.h
  *  \brief Deals with parsing XML data for SnapPea triangulations.
  */

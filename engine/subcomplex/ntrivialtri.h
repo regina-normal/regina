@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file subcomplex/ntrivialtri.h
  *  \brief Deals with a few specific hard-coded trivial triangulations.
  */

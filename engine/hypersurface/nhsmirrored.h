@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file hypersurface/nhsmirrored.h
  *  \brief Provides a normal hypersurface vector that is mirrored in another
  *  coordinate system to avoid frequent lengthy calculations.

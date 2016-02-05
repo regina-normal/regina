@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #ifndef __DIM2EDGEPAIRING_H
 #ifndef __DOXYGEN
 #define __DIM2EDGEPAIRING_H

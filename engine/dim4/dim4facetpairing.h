@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #ifndef __DIM4FACETPAIRING_H
 #ifndef __DOXYGEN
 #define __DIM4FACETPAIRING_H

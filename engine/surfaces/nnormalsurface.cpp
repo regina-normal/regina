@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <algorithm>
 #include "maths/nmatrixint.h"
 #include "snappea/nsnappeatriangulation.h"

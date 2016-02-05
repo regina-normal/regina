@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file surfaces/coordregistry.h
  *  \brief Provides access to a registry of all normal coordinate systems
  *  that can be used to create and store normal surfaces in 3-manifold

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file dim4/dim4triangulation.h
  *  \brief Deals with 4-dimensional triangulations.
  */

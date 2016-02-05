@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file maths/nmatrix.h
  *  \brief Deals with matrices of elements of various types.
  */

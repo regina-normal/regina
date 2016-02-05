@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file triangulation/nfacetspec.h
  *  \brief Deprecated header.
  */

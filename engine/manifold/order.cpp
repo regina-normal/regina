@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <manifold/ngraphloop.h>
 #include <manifold/ngraphpair.h>
 #include <manifold/ngraphtriple.h>

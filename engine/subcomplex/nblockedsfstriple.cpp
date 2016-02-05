@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "manifold/ngraphtriple.h"
 #include "manifold/nsfs.h"
 #include "subcomplex/nblockedsfstriple.h"

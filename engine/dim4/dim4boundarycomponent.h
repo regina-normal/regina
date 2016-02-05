@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #ifndef __DIM4BOUNDARYCOMPONENT_H
 #ifndef __DOXYGEN
 #define __DIM4BOUNDARYCOMPONENT_H

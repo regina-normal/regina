@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file algebra/ngrouppresentation.h
  *  \brief Deals with finite presentations of groups.
  */

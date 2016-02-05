@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "dim2/nxmldim2trireader.h"
 #include "dim2/dim2triangulation.h"
 

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file enumerate/nmaxadmissible.h
  *  \brief Provides an algorithm for enumerating maximal faces of a
  *  polyhedral cone that satisfy a set of admissibility constraints.

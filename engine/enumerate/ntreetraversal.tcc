@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file enumerate/ntreetraversal.tcc
  *  \brief Deprecated header.
  */

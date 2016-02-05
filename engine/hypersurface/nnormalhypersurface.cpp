@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <algorithm>
 #include "dim4/dim4edge.h"
 #include "dim4/dim4triangulation.h"

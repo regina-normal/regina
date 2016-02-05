@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file surfaces/nsanstandard.h
  *  \brief Implements almost normal surface vectors using standard
  *  triangle-quad-oct coordinates.

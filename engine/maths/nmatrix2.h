@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #ifndef __NMATRIX2_H
 #ifndef __DOXYGEN
 #define __NMATRIX2_H

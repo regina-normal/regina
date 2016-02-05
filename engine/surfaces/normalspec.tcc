@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file surfaces/normalspec.tcc
  *  \brief Deprecated header.
  */

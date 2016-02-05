@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "surfaces/sfproperties.h"
 #include "surfaces/nnormalsurface.h"
 #include "utilities/xmlutils.h"

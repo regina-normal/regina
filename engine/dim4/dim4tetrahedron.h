@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file dim4/dim4tetrahedron.h
  *  \brief Deals with tetrahedra in the 3-skeleton of a 4-manifold
  *  triangulation.

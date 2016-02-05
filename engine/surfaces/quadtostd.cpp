@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "regina-config.h"
 #include "enumerate/ndoubledescription.h"
 #include "maths/nmatrixint.h"

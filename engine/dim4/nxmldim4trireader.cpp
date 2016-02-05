@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "algebra/nxmlalgebrareader.h"
 #include "dim4/dim4triangulation.h"
 #include "dim4/nxmldim4trireader.h"

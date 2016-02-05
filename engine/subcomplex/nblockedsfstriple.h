@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file subcomplex/nblockedsfstriple.h
  *  \brief Supports joined sequences of three Seifert fibred spaces that
  *  are triangulated using saturated blocks.

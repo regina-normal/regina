@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/ndisc.h"
 

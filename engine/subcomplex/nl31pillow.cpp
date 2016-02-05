@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "algebra/nabeliangroup.h"
 #include "manifold/nlensspace.h"
 #include "triangulation/ncomponent.h"

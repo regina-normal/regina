@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file manifold/nmanifold.h
  *  \brief Deals with the underlying 3-manifolds of triangulations.
  */

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file census/ncensus.h
  *  \brief Provides facilities for looking up 3-manifold triangulations in
  *  Regina's in-built census databases.

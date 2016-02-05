@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file dim4/dim4pentachoron.h
  *  \brief Deals with 4-dimensional simplices in a 4-manifold triangulation.
  */

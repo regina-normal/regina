@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file dim2/dim2exampletriangulation.h
  *  \brief Offers several example 2-manifold triangulations as starting
  *  points for testing code or getting used to Regina.

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "enumerate/ntreeconstraint.h"
 #include "snappea/nsnappeatriangulation.h"
 #include "triangulation/ntriangulation.h"

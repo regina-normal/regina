@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <list>
 #include "surfaces/nxmlfilterreader.h"
 #include "surfaces/sfcombination.h"

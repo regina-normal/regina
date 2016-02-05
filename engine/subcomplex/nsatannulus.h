@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file subcomplex/nsatannulus.h
  *  \brief Deals with saturated two-triangle annuli within a
  *  Seifert fibred space.

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file census/ngenericfacetpairing-impl.h
  *  \brief Deprecated header.
  */

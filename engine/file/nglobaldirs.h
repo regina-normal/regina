@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file file/nglobaldirs.h
  *  \brief Gives information about system installation directories.
  */

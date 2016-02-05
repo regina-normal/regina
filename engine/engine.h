@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file engine.h
  *  \brief Provides global routines for interfacing with the Regina
  *  calculation engine.

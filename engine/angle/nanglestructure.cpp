@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "angle/nanglestructure.h"
 #include "maths/nmatrixint.h"
 #include "triangulation/ntriangulation.h"

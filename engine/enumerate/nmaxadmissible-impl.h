@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file enumerate/nmaxadmissible-impl.h
  *  \brief Contains implementations of template functions from nmaxadmissible.h.
  *

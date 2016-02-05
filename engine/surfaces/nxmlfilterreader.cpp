@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "surfaces/nxmlfilterreader.h"
 #include "surfaces/filterregistry.h"
 #include "utilities/stringutils.h"

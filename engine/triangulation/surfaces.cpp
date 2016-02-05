@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "enumerate/ntreetraversal.h"
 #include "triangulation/ntriangulation.h"
 #include "surfaces/nnormalsurfacelist.h"

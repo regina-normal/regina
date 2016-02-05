@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file census/ngenericgluingperms.h
  *  \brief Deals with selecting gluing permutations to complement a
  *  particular pairing of facets of simplices in an n-manifold triangulation.

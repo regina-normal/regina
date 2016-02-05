@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file surfaces/sfcombination.h
  *  \brief Contains a normal surface filter that simply combines other
  *  filters.

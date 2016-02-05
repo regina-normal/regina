@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file triangulation/nvertex.h
  *  \brief Deals with vertices in a triangulation.
  */

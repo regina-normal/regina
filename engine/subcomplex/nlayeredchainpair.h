@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file subcomplex/nlayeredchainpair.h
  *  \brief Deals with layered chain pair components of a triangulation.
  */

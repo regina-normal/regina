@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <sstream>
 #include "subcomplex/naugtrisolidtorus.h"
 #include "subcomplex/nblockedsfs.h"

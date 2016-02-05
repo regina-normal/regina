@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "maths/matrixops.h"
 #include "maths/nprimes.h"
 #include "triangulation/nhomologicaldata.h"

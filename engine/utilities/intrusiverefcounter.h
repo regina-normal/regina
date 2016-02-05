@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file utilities/intrusiverefcounter.h
  *  \brief Provides a temporary replacement for boost::intrusive_ref_counter.
  */

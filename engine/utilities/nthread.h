@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file utilities/nthread.h
  *  \brief Provides very basic thread handling.
  */

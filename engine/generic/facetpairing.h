@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #ifndef __FACETPAIRING_H
 #ifndef __DOXYGEN
 #define __FACETPAIRING_H

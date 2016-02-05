@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file enumerate/ordering.h
  *  \brief Provides different ways of sorting hyperplanes (or matching
  *  equations) when performing normal surface enumeration.

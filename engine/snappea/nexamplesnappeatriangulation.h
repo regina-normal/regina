@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file snappea/nexamplesnappeatriangulation.h
  *  \brief Offers several ready-made example SnapPea triangulations.
  */

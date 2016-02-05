@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file enumerate/nmaxadmissible.tcc
  *  \brief Deprecated header.
  */

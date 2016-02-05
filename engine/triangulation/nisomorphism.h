@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file triangulation/nisomorphism.h
  *  \brief Deals with combinatorial isomorphisms of 3-manifold triangulations.
  */

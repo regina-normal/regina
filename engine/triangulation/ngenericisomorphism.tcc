@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file triangulation/ngenericisomorphism.tcc
  *  \brief Deprecated header.
  */

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file surfaces/nsquad.h
  *  \brief Implements normal surface vectors using quad coordinates.
  */

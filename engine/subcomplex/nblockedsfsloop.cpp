@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "manifold/ngraphloop.h"
 #include "manifold/nsfs.h"
 #include "subcomplex/nblockedsfsloop.h"

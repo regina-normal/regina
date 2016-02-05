@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file triangulation/nexampletriangulation.h
  *  \brief Offers several example 3-manifold triangulations as starting
  *  points for testing code or getting used to Regina.

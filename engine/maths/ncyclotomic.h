@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #ifndef __NCYCLOTOMIC_H
 #ifndef __DOXYGEN
 #define __NCYCLOTOMIC_H

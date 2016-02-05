@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file triangulation/nedge.h
  *  \brief Deals with edges in a triangulation.
  */

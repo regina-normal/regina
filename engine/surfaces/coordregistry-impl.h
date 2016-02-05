@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file surfaces/coordregistry-impl.h
  *  \brief Contains the registry of all normal coordinate systems that can
  *  be used to create and store normal surfaces in 3-manifold triangulations.

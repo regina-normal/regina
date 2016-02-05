@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /**
  * Thanks to Ryan Budney and Damien Heard for providing the bulk of the
  * code in this file.

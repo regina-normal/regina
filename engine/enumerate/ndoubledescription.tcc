@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file enumerate/ndoubledescription.tcc
  *  \brief Deprecated header.
  */

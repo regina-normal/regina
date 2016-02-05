@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <cassert>
 #include <iomanip>
 #include <iostream>

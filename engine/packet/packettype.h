@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file packet/packettype.h
  *  \brief Defines constants for the various packet types known to Regina.
  */

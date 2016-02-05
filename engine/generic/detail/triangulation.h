@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file generic/detail/triangulation.h
  *  \brief Implementation details for triangulations of arbitrary dimension.
  */

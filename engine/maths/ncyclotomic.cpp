@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #define _USE_MATH_DEFINES // for M_PI, which is non-standard
 
 #include "maths/ncyclotomic.h"

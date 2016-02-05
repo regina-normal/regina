@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file enumerate/nhilbertdual.h
  *  \brief Provides a modified dual algorithm for Hilbert basis enumeration.
  */

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file output.h
  *  \brief Provides a common interface for human-readable text output.
  */

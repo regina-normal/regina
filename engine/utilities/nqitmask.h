@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file utilities/nqitmask.h
  *  \brief Provides optimised "base 4 bitmasks" of fixed length.
  */

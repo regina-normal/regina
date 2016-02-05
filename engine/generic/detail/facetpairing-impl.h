@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file generic/detail/facetpairing-impl.h
  *  \brief Contains some of the implementation details for the generic
  *  FacetPairing class template.

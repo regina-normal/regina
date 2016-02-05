@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <cctype>
 
 #include "triangulation/ntriangulation.h"

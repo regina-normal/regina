@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file maths/nperm-impl.h
  *  \brief Contains some of the implementation details for the various
  *  NPerm class templates.

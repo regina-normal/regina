@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "snappea/nsnappeatriangulation.h"
 #include "snappea/nxmlsnappeareader.h"
 #include "snappea/kernel/unix_file_io.h"

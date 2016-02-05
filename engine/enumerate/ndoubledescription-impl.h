@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file enumerate/ndoubledescription-impl.h
  *  \brief Contains implementations of template functions from
  *  ndoubledescription.h.

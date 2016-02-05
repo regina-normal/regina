@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file subcomplex/nlayeredchain.h
  *  \brief Deals with layered chains in a triangulation.
  */

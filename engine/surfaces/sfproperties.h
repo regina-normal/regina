@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file surfaces/sfproperties.h
  *  \brief Contains a normal surface filter that filters by basic
  *  properties.

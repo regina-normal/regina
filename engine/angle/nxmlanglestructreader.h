@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file angle/nxmlanglestructreader.h
  *  \brief Deals with parsing XML data for angle structure lists.
  */

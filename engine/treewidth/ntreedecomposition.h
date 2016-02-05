@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file treewidth/ntreedecomposition.h
  *  \brief Deals with treewidth and tree decompositions, in particular
  *  for facet pairing graphs.

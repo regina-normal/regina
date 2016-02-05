@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file enumerate/nhilbertprimal-impl.h
  *  \brief Contains implementations of template functions from nhilbertprimal.h.
  *

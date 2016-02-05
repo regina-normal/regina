@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <queue>
 #include "maths/nrational.h"
 #include "triangulation/ntriangulation.h"

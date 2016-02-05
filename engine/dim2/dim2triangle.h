@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file dim2/dim2triangle.h
  *  \brief Deals with triangular faces in a 2-manifold triangulation.
  */

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file angle/nanglestructurelist.h
  *  \brief Contains a packet representing a collection of angle
  *  structures on a triangulation.

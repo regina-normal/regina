@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file census/dim2edgepairing.h
  *  \brief Deprecated header.
  */

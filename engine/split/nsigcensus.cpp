@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <algorithm>
 #include "split/nsigcensus.h"
 #include "utilities/memutils.h"

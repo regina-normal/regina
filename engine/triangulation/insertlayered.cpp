@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "manifold/nlensspace.h"
 #include "manifold/nsfs.h"
 #include "triangulation/ntriangulation.h"

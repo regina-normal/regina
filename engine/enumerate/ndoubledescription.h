@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file enumerate/ndoubledescription.h
  *  \brief Provides a modified double description method for polytope
  *  vertex enumeration.

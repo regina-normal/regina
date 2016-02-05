@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file treewidth/ntreedecomposition-impl.h
  *  \brief Contains implementations of template member functions in the
  *  NTreeDecomposition class.

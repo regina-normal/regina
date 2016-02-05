@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <vector>
 #include "angle/nxmlanglestructreader.h"
 #include "triangulation/ntriangulation.h"

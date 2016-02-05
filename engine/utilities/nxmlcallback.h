@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file utilities/nxmlcallback.h
  *  \brief Deals with parsing XML program data at the file level.
  */

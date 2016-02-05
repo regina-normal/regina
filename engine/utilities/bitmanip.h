@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file utilities/bitmanip.h
  *  \brief Optimised classes for bitwise analysis and manipulation of
  *  native data types.

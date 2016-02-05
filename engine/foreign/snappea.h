@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file foreign/snappea.h
  *  \brief Deprecated header that allows reading and writing SnapPea files.
  *

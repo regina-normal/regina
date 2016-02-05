@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "enumerate/ntypetrie.h"
 
 // Instantiate templates for standard cases.

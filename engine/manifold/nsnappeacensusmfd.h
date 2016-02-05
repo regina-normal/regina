@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file manifold/nsnappeacensusmfd.h
  *  \brief Deals with 3-manifolds from the SnapPea census.
  */

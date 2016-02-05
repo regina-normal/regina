@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file foreign/recogniser.h
  *  \brief Deprecated header that allows exports to Matveev's 3-manifold
  *  recogniser.

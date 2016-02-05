@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file manifold/nsfsaltset.h
  *  \brief Assists with providing different representations of the same
  *  Seifert fibred space.

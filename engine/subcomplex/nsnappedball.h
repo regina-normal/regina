@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file subcomplex/nsnappedball.h
  *  \brief Deals with snapped 3-balls in a triangulation.
  */

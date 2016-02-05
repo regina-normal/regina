@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "angle/nanglestructurelist.h"
 #include "enumerate/ndoubledescription.h"
 #include "enumerate/ntreetraversal.h"

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file triangulation/ntetrahedron.h
  *  \brief Deals with tetrahedra in a triangulation.
  */

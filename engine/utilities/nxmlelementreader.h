@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file utilities/nxmlelementreader.h
  *  \brief Deals with parsing XML program data at the tag level.
  */

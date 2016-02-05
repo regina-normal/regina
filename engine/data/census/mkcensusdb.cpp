@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "regina-config.h" // For QDBM-related macros
 
 #include <cctype>

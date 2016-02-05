@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file utilities/stringutils-impl.h
  *  \brief Contains implementations of template functions from stringutils.h.
  *

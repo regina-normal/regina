@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file hypersurface/nnormalhypersurface.h
  *  \brief Deals with an individual normal hypersurface in a 4-manifold
  *  triangulation.

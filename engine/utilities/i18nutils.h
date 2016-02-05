@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file utilities/i18nutils.h
  *  \brief Various classes and routines for working with internationalisation
  *  and character encodings.

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file manifold/ngraphtriple.h
  *  \brief Deals with graph manifolds formed from sequences of three Seifert
  *  fibred spaces.

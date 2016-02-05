@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file packet/nxmlpacketreader.h
  *  \brief Deals with parsing XML data for individual packets.
  */

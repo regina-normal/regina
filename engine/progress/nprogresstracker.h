@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file progress/nprogresstracker.h
  *  \brief Facilitates progress tracking and cancellation for long operations.
  */

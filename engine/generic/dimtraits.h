@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file generic/dimtraits.h
  *  \brief Deprecated header.
  */

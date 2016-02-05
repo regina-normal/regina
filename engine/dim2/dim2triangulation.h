@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file dim2/dim2triangulation.h
  *  \brief Deals with 2-dimensional triangulations.
  */

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file census/dim2census.h
  *  \brief Deals with forming a census of all 2-manifold triangulations
  *  of a given size.

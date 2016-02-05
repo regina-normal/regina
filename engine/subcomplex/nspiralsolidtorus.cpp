@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <set>
 #include <vector>
 #include "algebra/nabeliangroup.h"

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file utilities/ntrieset.h
  *  \brief Provides a trie-like structure for storing sets.
  */

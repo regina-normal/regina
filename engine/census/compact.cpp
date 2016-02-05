@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <sstream>
 #include "census/ngluingpermsearcher.h"
 #include "maths/nperm3.h" // for NPerm3::invS3

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file dim4/dim4vertex.h
  *  \brief Deals with vertices in a 4-manifold triangulation.
  */

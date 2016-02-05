@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file subcomplex/npillowtwosphere.h
  *  \brief Deals with 2-spheres made from two triangles glued along their
  *  three edges.

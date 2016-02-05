@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file surfaces/nsorientedquad.h
  *  \brief Implements normal surface vectors using
  *  transversely oriented quad coordinates.

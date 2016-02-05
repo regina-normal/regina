@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file dim2/dim2isomorphism.h
  *  \brief Deals with combinatorial isomorphisms of 2-manifold triangulations.
  */

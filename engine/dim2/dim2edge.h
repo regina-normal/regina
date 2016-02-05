@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file dim2/dim2edge.h
  *  \brief Deals with edges in the 1-skeleton of a 2-manifold triangulation.
  */

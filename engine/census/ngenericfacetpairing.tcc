@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file census/ngenericfacetpairing.tcc
  *  \brief Deprecated header.
  */

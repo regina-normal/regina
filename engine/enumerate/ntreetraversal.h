@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file enumerate/ntreetraversal.h
  *  \brief Tree traversal methods for normal surface and angle structure
  *  enumeration and optimisation.

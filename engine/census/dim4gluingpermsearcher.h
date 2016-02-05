@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file census/dim4gluingpermsearcher.h
  *  \brief Supports searching through all possible sets of pentachoron
  *  gluing permutations for a given pentachoron facet pairing.

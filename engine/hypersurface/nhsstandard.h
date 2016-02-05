@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file hypersurface/nhsstandard.h
  *  \brief Implements normal hypersurface vectors using standard
  *  tetrahedron-prism coordinates.

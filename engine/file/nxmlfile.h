@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file file/nxmlfile.h
  *  \brief Deprecated header that deals with storing program data
  *  (including packet trees) in XML data files.

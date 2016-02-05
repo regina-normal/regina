@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file surfaces/nsurfacefilter.h
  *  \brief Contains a packet that filters through normal surfaces.
  */

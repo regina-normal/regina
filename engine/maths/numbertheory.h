@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #ifndef __NUMBERTHEORY_H
 #ifndef __DOXYGEN
 #define __NUMBERTHEORY_H

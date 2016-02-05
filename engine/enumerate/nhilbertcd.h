@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file enumerate/nhilbertcd.h
  *  \brief Provides a modified Contejean-Devie algorithm for Hilbert basis
  * enumeration.

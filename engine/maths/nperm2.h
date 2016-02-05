@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file maths/nperm2.h
  *  \brief Deals with permutations of {0,1}.
  */

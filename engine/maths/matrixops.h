@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #ifndef __MATRIXOPS_H
 #ifndef __DOXYGEN
 #define __MATRIXOPS_H

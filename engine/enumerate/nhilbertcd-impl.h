@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file enumerate/nhilbertcd-impl.h
  *  \brief Contains implementations of template functions from nhilbertcd.h.
  *

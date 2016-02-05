@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #ifndef __NINTEGER_H
 #ifndef __DOXYGEN
 #define __NINTEGER_H

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file utilities/nproperty.h
  *  \brief Deals with calculable properties of individual objects.
  */

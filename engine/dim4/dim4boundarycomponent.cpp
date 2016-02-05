@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "dim4/dim4boundarycomponent.h"
 #include "dim4/dim4vertex.h"
 #include "triangulation/ntriangulation.h"

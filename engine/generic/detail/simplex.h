@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file generic/detail/simplex.h
  *  \brief Implementation details for top-dimensional simplices in a
  *  triangulation.

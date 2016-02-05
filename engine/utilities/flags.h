@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file utilities/flags.h
  *  \brief A template class for handling bitwise combinations of enum flags.
  */

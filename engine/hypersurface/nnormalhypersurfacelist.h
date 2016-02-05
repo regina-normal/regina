@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file hypersurface/nnormalhypersurfacelist.h
  *  \brief Contains a packet representing a collection of normal
  *  hypersurfaces in a 4-manifold triangulation.

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file surfaces/ndisctype.h
  *  \brief Deals with normal and almost normal disc types.
  */

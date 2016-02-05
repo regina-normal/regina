@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file manifold/nlensspace.h
  *  \brief Deals with general lens spaces.
  */

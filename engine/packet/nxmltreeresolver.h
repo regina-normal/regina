@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file packet/nxmltreeresolver.h
  *  \brief Support for resolving dangling packet references after a
  *  complete packet tree has been read from file.

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file generic/nfacetspec.h
  *  \brief Deprecated header.
  */

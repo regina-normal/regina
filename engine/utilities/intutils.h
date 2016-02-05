@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file utilities/intutils.h
  *  \brief Miscellaneous utility classes for analysing the built-in
  *  integer types at compile time.

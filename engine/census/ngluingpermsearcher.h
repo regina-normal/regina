@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file census/ngluingpermsearcher.h
  *  \brief Supports searching through all possible sets of tetrahedron
  *  gluing permutations for a given tetrahedron face pairing.

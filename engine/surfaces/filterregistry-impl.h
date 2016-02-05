@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file surfaces/filterregistry-impl.h
  *  \brief Contains the registry of all normal surface filter classes that can
  *  be used to filter lists of normal surfaces in 3-manifold triangulations.

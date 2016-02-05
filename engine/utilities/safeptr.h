@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file utilities/safeptr.h
  *  \brief Provides a smart pointer that is safe in the sense that it
  *  cannot be dangling.

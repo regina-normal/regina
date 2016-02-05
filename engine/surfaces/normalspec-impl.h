@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file utilities/normalspec-impl.h
  *  \brief Contains implementations of template classes from
  *  nnormalsurfacelist.h.

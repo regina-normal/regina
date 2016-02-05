@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file manifold/ngraphloop.h
  *  \brief Deals with graph manifolds formed from self-identified Seifert
  *  fibred spaces.

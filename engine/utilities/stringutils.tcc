@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file utilities/stringutils.tcc
  *  \brief Deprecated header.
  */

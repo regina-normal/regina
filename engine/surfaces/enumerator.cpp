@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <iterator>
 #include <thread>
 #include "enumerate/ndoubledescription.h"

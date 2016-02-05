@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file subcomplex/nsatblockstarter.h
  *  \brief Provides a hard-coded list of saturated blocks to use as starting
  *  points for recognising larger Seifert fibred spaces.

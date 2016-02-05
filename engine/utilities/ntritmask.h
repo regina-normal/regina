@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file utilities/ntritmask.h
  *  \brief Provides optimised "ternary bitmasks" of fixed length.
  */

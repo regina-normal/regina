@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file subcomplex/nlayeredsurfacebundle.h
  *  \brief Deals with layered surface bundle triangulations.
  */

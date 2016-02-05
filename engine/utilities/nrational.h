@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #ifndef __LEGACY_NRATIONAL_H
 #ifndef __DOXYGEN
 #define __LEGACY_NRATIONAL_H

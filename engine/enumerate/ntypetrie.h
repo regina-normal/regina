@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file enumerate/ntypetrie.h
  *  \brief A supporting data structure for tree traversal enumeration methods.
  */

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file generic/detail/canonical-impl.h
  *  \brief Contains some of the implementation details for the generic
  *  Triangulation class template.

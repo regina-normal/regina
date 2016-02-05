@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file generic/detail/face.h
  *  \brief Implementation details for lower-dimensional faces of triangulations.
  */

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "packet/ntext.h"
 #include "utilities/xmlutils.h"
 

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file surfaces/hscoordregistry-impl.h
  *  \brief Contains the registry of all coordinate systems that can be used
  *  to create and store normal hypersurfaces in 4-manifold triangulations.

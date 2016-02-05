@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file regina-core.h
  *  \brief Core definitions that must be included in every Regina header file.
  */

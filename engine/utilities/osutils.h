@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file utilities/osutils.h
  *  \brief Provides miscellaneous helper routines that are specific to
  *  particular operating systems.
