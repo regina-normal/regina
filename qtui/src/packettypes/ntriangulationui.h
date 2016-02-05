@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file ntriangulationui.h
  *  \brief Provides an interface for viewing 3-manifold triangulations.
  */

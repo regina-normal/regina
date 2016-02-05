@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file patiencedialog.h
  *  \brief Provides a dialog that warns the user that they might have a
  *  bit of a wait on their hands.

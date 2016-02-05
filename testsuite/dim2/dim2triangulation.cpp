@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <cppunit/extensions/HelperMacros.h>
 #include "dim2/dim2exampletriangulation.h"
 #include "dim2/dim2triangulation.h"

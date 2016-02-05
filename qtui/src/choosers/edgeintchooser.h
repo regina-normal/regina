@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file edgeintchooser.h
  *  \brief Provides a widget for selecting a single edge
  *  of a 3-manifold triangulation along with an integer argumet.

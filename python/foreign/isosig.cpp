@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <boost/python.hpp>
 #include "foreign/isosig.h"
 #include "packet/ncontainer.h"

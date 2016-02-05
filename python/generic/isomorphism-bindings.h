@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <boost/python.hpp>
 #include "generic/isomorphism.h"
 #include "generic/triangulation.h"

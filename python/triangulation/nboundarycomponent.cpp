@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <boost/python.hpp>
 #include "triangulation/nboundarycomponent.h"
 #include "triangulation/nedge.h"

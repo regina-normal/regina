@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file facetgraphtab.h
  *  \brief Provides a tab for viewing the facet pairing graph of
  *  triangulations of arbitrary dimension.

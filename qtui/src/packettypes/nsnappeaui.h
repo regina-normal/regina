@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file nsnappeaui.h
  *  \brief Provides an interface for viewing SnapPea triangulations.
  */

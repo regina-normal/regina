@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file sourcehandler.h
  *  \brief Allows exporting triangulations to C++ source files.
  */

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file ntriskeleton.h
  *  \brief Provides a skeletal properties viewer for 3-manifold triangulations.
  */

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /**
  * Reads the given data file (passed on the command line), and measures the
  * performance of normal surface enumeration for the ith triangulation in

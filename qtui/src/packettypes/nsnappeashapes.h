@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file nsnappeashapes.h
  *  \brief Provides access to tetrahedron shapes and cusp data for
  *  SnapPea triangulations.

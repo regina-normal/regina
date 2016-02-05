@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 // Regina core includes:
 #include "regina-config.h" // for LIBGVC_FOUND
 #include "dim2/dim2edgepairing.h"

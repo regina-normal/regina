@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file nsnappeafile.h
  *  \brief Provides access to the SnapPea data file for SnapPea triangulations.
  */

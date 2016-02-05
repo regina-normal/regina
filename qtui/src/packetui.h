@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file packetui.h
  *  \brief Provides a basic infrastructure for packet interface components.
  */

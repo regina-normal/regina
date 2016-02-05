@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file packettreeview.h
  *  \brief Provides a visual representation of a Regina packet tree.
  */

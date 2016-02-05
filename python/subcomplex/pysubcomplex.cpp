@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 void addNAugTriSolidTorus();
 void addNBlockedSFS();
 void addNBlockedSFSLoop();

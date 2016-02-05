@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 void addNProgressTracker();
 
 void addProgress() {

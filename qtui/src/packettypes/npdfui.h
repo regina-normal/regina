@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file npdfui.h
  *  \brief Provides an interface for viewing PDF packets.
  */

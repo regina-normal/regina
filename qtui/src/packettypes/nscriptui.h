@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file nscriptui.h
  *  \brief Provides an interface for viewing script packets.
  */

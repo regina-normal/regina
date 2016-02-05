@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file isosighandler.h
  *  \brief Allows interaction with isomorphism signature lists.
  */

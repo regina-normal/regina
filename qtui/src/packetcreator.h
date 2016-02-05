@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file packetcreator.h
  *  \brief Provides a basic infrastructure for packet creation.
  */

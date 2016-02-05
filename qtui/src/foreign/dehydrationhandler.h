@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file dehydrationhandler.h
  *  \brief Allows interaction with dehydrated triangulation lists.
  */

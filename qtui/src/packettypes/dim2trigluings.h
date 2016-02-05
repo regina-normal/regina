@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file dim2trigluings.h
  *  \brief Provides an edge gluing editor for 2-manifold triangulations.
  */

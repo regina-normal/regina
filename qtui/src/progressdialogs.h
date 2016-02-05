@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file progressdialogs.h
  *  \brief Provides progress dialogs that interact with different types
  *  of calculation engine progress watchers.

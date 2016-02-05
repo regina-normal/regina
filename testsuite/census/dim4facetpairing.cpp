@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "dim4/dim4facetpairing.h"

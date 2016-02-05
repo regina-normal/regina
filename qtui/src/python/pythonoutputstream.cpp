@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "pythonoutputstream.h"
 
 void PythonOutputStream::write(const std::string& data) {

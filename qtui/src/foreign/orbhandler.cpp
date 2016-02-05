@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "foreign/orb.h"
 #include "triangulation/ntriangulation.h"
 

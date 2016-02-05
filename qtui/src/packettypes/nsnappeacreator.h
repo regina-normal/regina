@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file snappeacreator.h
  *  \brief Allows the creation of SnapPea triangulations.
  */

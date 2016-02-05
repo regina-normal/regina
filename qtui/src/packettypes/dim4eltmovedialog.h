@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file eltmovedialog.h
  *  \brief Provides a dialog through which the user can perform
  *  elementary moves on a 4-manifold triangulation.

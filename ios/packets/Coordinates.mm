@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #import "Coordinates.h"
 #import "dim4/dim4triangulation.h"
 #import "generic/facenumbering.h"

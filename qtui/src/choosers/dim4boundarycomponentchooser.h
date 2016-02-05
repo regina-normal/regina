@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file dim4boundarycomponentchooser.h
  *  \brief Provides a widget for selecting a single boundary component
  *  of a 4-manifold triangulation.

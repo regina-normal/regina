@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "foreign/csvsurfacelist.h"
 #include "surfaces/nnormalsurfacelist.h"
 

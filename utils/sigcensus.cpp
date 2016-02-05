@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <cstdlib>
 #include "split/nsigcensus.h"
 #include "utilities/stringutils.h"

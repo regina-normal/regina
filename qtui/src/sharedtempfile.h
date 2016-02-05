@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file sharedtempfile.h
  *  \brief Provides temporary files that can be shared between Regina
  *  and other applications.

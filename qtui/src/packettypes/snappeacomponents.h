@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file snappeacomponents.h
  *  \brief Provides GUI components for use with SnapPea calculations.
  */

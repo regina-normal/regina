@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file packeteditiface.h
  *  \brief Provides a means by which packet interfaces can interact with
  *  standard edit and clipboard actions.

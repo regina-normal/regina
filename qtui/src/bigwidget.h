@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file bigwidget.h
  *  \brief Provides a widget whose size hint is larger than just the sum
  *  of its parts.

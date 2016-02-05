@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <boost/python.hpp>
 #include "foreign/recogniser.h"
 #include "triangulation/ntriangulation.h"

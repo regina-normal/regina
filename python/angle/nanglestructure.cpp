@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <boost/python.hpp>
 #include "angle/nanglestructure.h"
 #include "triangulation/ntriangulation.h"

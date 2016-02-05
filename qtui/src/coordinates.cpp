@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "dim4/dim4triangulation.h"
 #include "hypersurface/nnormalhypersurfacelist.h"
 #include "surfaces/nnormalsurfacelist.h"

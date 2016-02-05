@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <boost/python.hpp>
 #include "subcomplex/nl31pillow.h"
 #include "triangulation/ncomponent.h"

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file codec.h
  *  \brief Provides a widget for selecting a codec to use for text encodings.
  */

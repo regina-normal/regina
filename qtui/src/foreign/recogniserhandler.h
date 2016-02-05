@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file recogniserhandler.h
  *  \brief Allows interaction with data files for Matveev's
  *  3-manifold recogniser.

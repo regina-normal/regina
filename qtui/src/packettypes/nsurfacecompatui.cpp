@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 // Regina core includes:
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nnormalsurfacelist.h"

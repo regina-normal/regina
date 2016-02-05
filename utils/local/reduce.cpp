@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /**
  * The given topology data file is read, and an attempt is made to
  * reduce the size of each triangulation found within it (specifically,

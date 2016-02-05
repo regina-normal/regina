@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <boost/python.hpp>
 #include "subcomplex/nsnappedball.h"
 #include "triangulation/ntetrahedron.h"

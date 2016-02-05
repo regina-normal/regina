@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file dim4triangulationcreator.h
  *  \brief Allows the creation of 4-manifold triangulations.
  */

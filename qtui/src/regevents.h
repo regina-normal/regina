@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file regevents.h
  *  \brief Provides customised Qt events for Regina.
  */

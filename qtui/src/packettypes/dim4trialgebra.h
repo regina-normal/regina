@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file dim4trialgebra.h
  *  \brief Provides an algebra viewer for 4-manifold triangulations.
  */

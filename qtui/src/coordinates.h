@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file coordinates.h
  *  \brief Assists working in different normal surface/hypersurface
  *  coordinate systems.

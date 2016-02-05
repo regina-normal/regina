@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <cstdlib>
 #include <list>
 #include "file/nxmlfile.h"

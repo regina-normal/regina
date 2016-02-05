@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file introdialog.h
  *  \brief Provides getting-started information for users new to Regina.
  */

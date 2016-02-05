@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file commandedit.h
  *  \brief Provides a line edit designed for entering python commands.
  */

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file simplexchooser.h
  *  \brief Provides a widget for selecting a single top-dimensional simplex
  *  of a triangulation.

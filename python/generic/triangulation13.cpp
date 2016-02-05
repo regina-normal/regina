@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "triangulation-bindings.h"
 
 void addTriangulations13() {

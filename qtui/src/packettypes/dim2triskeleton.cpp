@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 // Regina core includes:
 #include "dim2/dim2edgepairing.h"
 #include "dim2/dim2triangulation.h"

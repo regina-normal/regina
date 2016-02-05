@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 // Regina core includes:
 #include "regina-config.h"
 #include "packet/npacket.h"

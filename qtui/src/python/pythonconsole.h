@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file pythonconsole.h
  *  \brief Provides a console window containing an embedded python
  *  interpreter.

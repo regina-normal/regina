@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /**
  * Much of the ExamplesAction code is based on the KRecentFilesAction
  * sources, written by Michael Koch and released under the GNU LGPL v2.

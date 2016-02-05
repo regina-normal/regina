@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 void addDim4BoundaryComponent();
 void addDim4Component();
 void addDim4Edge();

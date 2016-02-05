@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file nanglestructurecreator.h
  *  \brief Allows the creation of angle structure lists.
  */

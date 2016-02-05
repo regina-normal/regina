@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file packetimporter.h
  *  \brief Provides a basic infrastructure for importing packet trees
  *  from foreign file formats.

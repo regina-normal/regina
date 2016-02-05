@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <boost/python.hpp>
 #include "manifold/nsnappeacensusmfd.h"
 #include "../helpers.h"

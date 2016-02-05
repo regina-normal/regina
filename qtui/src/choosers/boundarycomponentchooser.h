@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file boundarycomponentchooser.h
  *  \brief Provides a widget for selecting a single boundary component
  *  of a 3-manifold triangulation.

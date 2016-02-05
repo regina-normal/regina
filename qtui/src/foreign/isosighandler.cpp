@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "foreign/isosig.h"
 #include "packet/ncontainer.h"
 #include "packet/ntext.h"

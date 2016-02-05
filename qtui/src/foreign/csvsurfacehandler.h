@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file csvsurfacehandler.h
  *  \brief Supports exporting normal surface lists to CSV text files.
  */

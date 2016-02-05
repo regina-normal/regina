@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file ntrisurfaces.h
  *  \brief Provides a normal surface properties viewer for triangulations.
  */

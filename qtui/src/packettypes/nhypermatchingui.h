@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file nhypermatchingui.h
  *  \brief Provides a matching equation viewer for normal hypersurface lists.
  */

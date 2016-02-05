@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file dim2triui.h
  *  \brief Provides an interface for viewing 2-manifold triangulations.
  */

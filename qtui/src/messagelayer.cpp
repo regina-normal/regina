@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "messagelayer.h"
 #include "reginasupport.h"
 

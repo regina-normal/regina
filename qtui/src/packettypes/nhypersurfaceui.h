@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file nhypersurfaceui.h
  *  \brief Provides an interface for viewing normal hypersurface lists.
  */

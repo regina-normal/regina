@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "shortrunner.h"
 
 QString ShortRunner::run(bool mergeStderr) {

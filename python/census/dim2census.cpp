@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <boost/python.hpp>
 #include "census/dim2census.h"
 #include "dim2/dim2triangulation.h"

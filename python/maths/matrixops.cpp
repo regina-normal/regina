@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <boost/python.hpp>
 #include "maths/matrixops.h"
 #include <boost/python/detail/api_placeholder.hpp> // For len().

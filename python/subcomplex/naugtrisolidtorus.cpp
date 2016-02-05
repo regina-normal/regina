@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <boost/python.hpp>
 #include "manifold/nsfs.h"
 #include "subcomplex/naugtrisolidtorus.h"

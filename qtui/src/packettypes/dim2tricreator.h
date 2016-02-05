@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file dim2tricreator.h
  *  \brief Allows the creation of 2-manifold triangulations.
  */

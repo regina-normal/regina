@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file gaprunner.h
  *  \brief Provides a dialog that handles communications with GAP.
  */

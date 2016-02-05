@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "regina-config.h"
 #include "file/nglobaldirs.h"
 #include "snappea/nsnappeatriangulation.h"

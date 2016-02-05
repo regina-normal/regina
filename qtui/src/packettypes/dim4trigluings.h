@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file dim4trigluings.h
  *  \brief Provides a facet gluing editor for 4-manifold triangulations.
  */

@@ -30,9 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
-
 #include "packet/ncontainer.h"
 #include "../safeheldtype.h"
 

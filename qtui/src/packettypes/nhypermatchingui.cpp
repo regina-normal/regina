@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 // Regina core includes:
 #include "maths/nmatrixint.h"
 #include "hypersurface/nnormalhypersurfacelist.h"

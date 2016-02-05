@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 void addNContainer();
 void addNPacket();
 void addNPDF();

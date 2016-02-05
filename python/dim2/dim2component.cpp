@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <boost/python.hpp>
 #include "dim2/dim2boundarycomponent.h"
 #include "dim2/dim2component.h"

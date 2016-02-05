@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file ntextui.h
  *  \brief Provides an interface for viewing text packets.
  */

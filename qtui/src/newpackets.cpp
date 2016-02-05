@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "dim4/dim4triangulation.h"
 #include "packet/ncontainer.h"
 #include "packet/nscript.h"

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /**
  * It is assumed that the user is interested in finding minimal
  * triangulations of 4-manifolds.  With this in mind, the given topology

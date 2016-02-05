@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file nhypersurfacecreator.h
  *  \brief Allows the creation of normal hypersurface lists in
  *  4-manifold triangulations.

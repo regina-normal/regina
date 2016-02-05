@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "foreign/dehydration.h"
 #include "packet/ncontainer.h"
 #include "packet/ntext.h"

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file exportdialog.h
  *  \brief Provides a dialog through which the user can select a packet
  *  or packet subtree to export.

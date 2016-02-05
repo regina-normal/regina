@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <boost/python.hpp>
 #include "subcomplex/nblockedsfstriple.h"
 #include "subcomplex/nsatregion.h"

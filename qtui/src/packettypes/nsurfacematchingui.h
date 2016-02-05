@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file nsurfacematchingui.h
  *  \brief Provides a matching equation viewer for normal surface lists.
  */

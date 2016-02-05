@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file reginaabout.h
  *  \brief Provides general application information.
  */

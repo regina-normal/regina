@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file edittreeview.h
  *  \brief A subclass of QTreeView with enhancements for use in packet editors.
  */

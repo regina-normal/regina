@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <cstdlib>
 #include "dim4/dim4triangulation.h"
 #include "file/nxmlfile.h"

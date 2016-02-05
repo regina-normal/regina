@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file packettabui.h
  *  \brief Provides an infrastructure for packet interface components
  *  consisting of several tabbed pages.

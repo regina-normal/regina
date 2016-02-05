@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "split/nsignature.h"
 #include "triangulation/ntriangulation.h"
 #include "../helpers.h"

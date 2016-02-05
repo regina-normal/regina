@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <boost/python.hpp>
 #include "subcomplex/nlayeredloop.h"
 #include "triangulation/ncomponent.h"

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <boost/python.hpp>
 #include "subcomplex/nspiralsolidtorus.h"
 #include "triangulation/ntetrahedron.h"

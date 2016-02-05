@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 // Regina core includes:
 #include "progress/nprogresstracker.h"
 #include "surfaces/nnormalsurfacelist.h"

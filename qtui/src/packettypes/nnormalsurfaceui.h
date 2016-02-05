@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file nnormalsurfaceui.h
  *  \brief Provides an interface for viewing normal surface lists.
  */

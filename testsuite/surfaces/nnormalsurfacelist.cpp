@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <algorithm>
 #include <cppunit/extensions/HelperMacros.h>
 #include <memory>

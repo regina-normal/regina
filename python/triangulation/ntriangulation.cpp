@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "algebra/ngrouppresentation.h"
 #include "angle/nanglestructure.h"
 #include "surfaces/nnormalsurface.h"

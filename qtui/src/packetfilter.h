@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file packetfilter.h
  *  \brief Provides a means of filtering desirable packets from a group.
  */

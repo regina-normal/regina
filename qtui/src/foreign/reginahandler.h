@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file reginahandler.h
  *  \brief Allows interaction with other Regina data files.
  */

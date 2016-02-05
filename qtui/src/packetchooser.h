@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file packetchooser.h
  *  \brief Provides a widget for selecting a single packet.
  */

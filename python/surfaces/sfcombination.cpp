@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "surfaces/sfcombination.h"
 #include "../safeheldtype.h"
 

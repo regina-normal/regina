@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file packetexporter.h
  *  \brief Provides a basic infrastructure for exporting packets or
  *  packet subtrees to foreign file formats.

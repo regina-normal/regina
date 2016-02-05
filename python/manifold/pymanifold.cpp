@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 void addNGraphLoop();
 void addNGraphPair();
 void addNGraphTriple();

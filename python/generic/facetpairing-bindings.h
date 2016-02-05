@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <boost/python.hpp>
 #include "dim2/dim2triangulation.h"
 #include "dim4/dim4triangulation.h"

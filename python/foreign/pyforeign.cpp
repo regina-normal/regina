@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 void addForeignCSVSurfaceList();
 void addForeignDehydration();
 void addForeignIsoSig();

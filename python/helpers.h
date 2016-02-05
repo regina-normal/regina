@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file python/helpers.h
  *  \brief Various tools to assist with Python bindings for Regina.
  */

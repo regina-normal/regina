@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file pythonoutputstream.h
  *  \brief Provides an infrastructure for custom python output streams.
  */

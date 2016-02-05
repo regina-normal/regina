@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <boost/python.hpp>
 #include "foreign/orb.h"
 #include "triangulation/ntriangulation.h"

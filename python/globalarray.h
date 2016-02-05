@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file python/globalarray.h
  *  \brief Allows global C++ arrays to be wrapped neatly in Python.
  */

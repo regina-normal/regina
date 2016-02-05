@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <list>
 #include "generic/isomorphism.h"
 #include "generic/triangulation.h"

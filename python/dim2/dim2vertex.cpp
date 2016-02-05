@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "dim2/dim2boundarycomponent.h"
 #include "dim2/dim2component.h"
 #include "dim2/dim2triangle.h"

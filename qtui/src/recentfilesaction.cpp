@@ -29,8 +29,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /**
  *  This code was originally derived from KRecentFilesAction, as
  *  taken from KDE 4.4.1.  This KDE code is licensed as follows:

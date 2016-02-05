@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "file/nxmlfile.h"
 
 #include "reginahandler.h"

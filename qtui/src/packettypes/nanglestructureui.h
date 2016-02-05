@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file nanglestructureui.h
  *  \brief Provides an interface for viewing angle structure lists.
  */

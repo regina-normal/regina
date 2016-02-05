@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file facechooser.h
  *  \brief Provides a widget for selecting a single face of a triangulation.
  */

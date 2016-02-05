@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /**
  * This file allows all tests from this directory to be added to
  * the overall test runner, without requiring any further inclusion

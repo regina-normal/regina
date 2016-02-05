@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file ncompatcanvas.h
  *  \brief Provides a canvas for displaying a surface/hypersurface
  *  compatibility matrix.

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "census/dim2gluingpermsearcher.h"

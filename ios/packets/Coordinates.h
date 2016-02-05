@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #import <Foundation/Foundation.h>
 #import "hypersurface/hypercoords.h"
 #import "maths/ninteger.h"

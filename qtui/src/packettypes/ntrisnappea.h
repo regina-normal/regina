@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file ntrisurfaces.h
  *  \brief Provides access to SnapPea calculations for triangulations.
  */

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file python/safeheldtype.h
  *  \brief Provides held type and policies for wrapping C++ classes in Python.
  */

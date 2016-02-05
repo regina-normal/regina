@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <boost/python.hpp>
 #include "algebra/nmarkedabeliangroup.h"
 #include "maths/nmatrixint.h"

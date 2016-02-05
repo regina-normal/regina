@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file shortrunner.h
  *  \brief Provides a means for running a process and collecting output
  *  with a timeout for safety.

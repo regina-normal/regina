@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <boost/python.hpp>
 #include "maths/nmatrix2.h"
 #include "subcomplex/nsatannulus.h"

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 // Regina core includes:
 #include "triangulation/nfacepairing.h"
 #include "triangulation/ntriangulation.h"

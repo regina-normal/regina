@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <cppunit/extensions/HelperMacros.h>
 #include "angle/nanglestructurelist.h"
 #include "surfaces/nnormalsurface.h"

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file nnormalsurfacecreator.h
  *  \brief Allows the creation of normal surface lists in 3-manifold
  *  triangulations.

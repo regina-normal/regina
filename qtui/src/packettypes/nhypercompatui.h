@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file nhypercompatui.h
  *  \brief Provides a viewer for pairwise compatibility of normal hypersurfaces.
  */

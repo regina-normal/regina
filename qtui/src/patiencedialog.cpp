@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "patiencedialog.h"
 #include "reginasupport.h"
 

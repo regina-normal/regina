@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file reginaprefset.h
  *  \brief Provides a single data structure for all Regina preferences.
  */

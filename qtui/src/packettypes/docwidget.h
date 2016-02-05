@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file docregistry.h
  *  \brief Provides a way for multiple viewers of a text-based packet to use
  *  the same underlying QTextDocument.

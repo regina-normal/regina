@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file pdfhandler.h
  *  \brief Allows interaction with PDF documents.
  */

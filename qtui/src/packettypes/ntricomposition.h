@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file ntricomposition.h
  *  \brief Provides a combinatorial composition viewer for triangulations.
  */

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file dim2triskeleton.h
  *  \brief Provides a skeletal properties viewer for 2-manifold triangulations.
  */

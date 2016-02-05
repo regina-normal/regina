@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file cuspchooser.h
  *  \brief Provides a widget for selecting a single cusp
  *  of a SnapPea triangulation.

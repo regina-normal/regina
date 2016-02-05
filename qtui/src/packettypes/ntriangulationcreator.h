@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file ntriangulationcreator.h
  *  \brief Allows the creation of 3-manifold triangulations.
  */

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "newpacketdialog.h"
 #include "packetchooser.h"
 #include "packetcreator.h"

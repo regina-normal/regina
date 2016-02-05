@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file reginasupport.h
  *  \brief Miscellaneous support routines for Regina.
  */

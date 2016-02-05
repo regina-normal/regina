@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file nsurfacecoordinateui.h
  *  \brief Provides a normal surface coordinate viewer.
  */

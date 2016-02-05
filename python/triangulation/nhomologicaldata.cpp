@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <boost/python.hpp>
 #include "triangulation/nhomologicaldata.h"
 #include "../helpers.h"

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file nsurfacefiltercomb.h
  *  \brief Provides an interface for working with combination surface filters.
  */

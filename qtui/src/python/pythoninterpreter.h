@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file pythoninterpreter.h
  *  \brief Provides an interface to the python interpreter and
  *  subinterpreters.

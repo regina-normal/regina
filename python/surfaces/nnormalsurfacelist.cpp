@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "maths/nmatrixint.h"
 #include "progress/nprogresstracker.h"
 #include "surfaces/nnormalsurfacelist.h"

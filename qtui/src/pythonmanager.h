@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file pythonmanager.h
  *  \brief Provides management for python consoles.
  *

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <boost/python.hpp>
 #include "surfaces/ndisc.h"
 #include "surfaces/nnormalsurface.h"

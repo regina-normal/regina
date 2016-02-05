@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file edittableview.h
  *  \brief A subclass of QTableView with enhancements for use in packet editors.
  */

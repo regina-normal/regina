@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file importdialog.h
  *  \brief Provides a dialog through which the user can insert
  *  already-imported data into the packet tree.

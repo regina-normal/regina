@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "angle/nanglestructurelist.h"
 #include "progress/nprogresstracker.h"
 #include "triangulation/ntriangulation.h"

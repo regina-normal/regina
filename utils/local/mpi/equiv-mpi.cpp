@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /**
  * This utility is a parallelised version of equiv.cpp, found in the
  * parent directory.  See the notes at the beginning of equiv.cpp for

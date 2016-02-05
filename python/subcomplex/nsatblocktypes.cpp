@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <boost/python.hpp>
 #include "subcomplex/nlayeredsolidtorus.h"
 #include "subcomplex/nsatblocktypes.h"

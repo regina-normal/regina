@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <boost/python.hpp>
 #include "census/ngluingpermsearcher.h"
 #include "triangulation/ntriangulation.h"

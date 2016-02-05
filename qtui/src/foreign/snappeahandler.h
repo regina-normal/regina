@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file snappeahandler.h
  *  \brief Allows interaction with SnapPea data files.
  */

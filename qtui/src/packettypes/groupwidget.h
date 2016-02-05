@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file ntrialgebra.h
  *  \brief Provides an algebra viewer for triangulations.
  */

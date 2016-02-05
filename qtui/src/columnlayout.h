@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file columnlayout.h
  *  \brief Provides a layout that visibly divides a region into evenly
  *  spaced columns.

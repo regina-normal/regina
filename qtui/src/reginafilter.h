@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file reginafilter.h
  *  \brief A variety of filename filters for use with KFileDialog.
  */

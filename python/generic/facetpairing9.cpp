@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "facetpairing-bindings.h"
 
 void addFacetPairing9() {

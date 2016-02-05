@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 void addNAbelianGroup();
 void addNGroupPresentation();
 void addNHomGroupPresentation();

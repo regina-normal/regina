@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /**
  * Combines the functions of tricensus-mpi and normal-mpi, but only
  * outputs frequency tables.

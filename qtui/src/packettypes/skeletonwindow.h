@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file skeletonwindow.h
  *  \brief Provides a viewer for all skeletal objects of a particular
  *  type.

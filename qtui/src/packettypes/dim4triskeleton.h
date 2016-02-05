@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file dim4triskeleton.h
  *  \brief Provides a skeletal properties viewer for 4-manifold triangulations.
  */

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file recentfilesaction.h
  *  \brief Provides an action class that offers access to recently-opened files.
  */

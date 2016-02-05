@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "isomorphism-bindings.h"
 
 void addIsomorphism11() {

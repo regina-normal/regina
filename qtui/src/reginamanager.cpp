@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "reginamain.h"
 #include "reginamanager.h"
 

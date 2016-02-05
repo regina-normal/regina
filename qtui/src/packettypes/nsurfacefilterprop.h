@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file nsurfacefilterprop.h
  *  \brief Provides an interface for working with property-based surface
  *  filters.

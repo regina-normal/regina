@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 // Regina core includes:
 #include "dim4/dim4facetpairing.h"
 #include "dim4/dim4triangulation.h"

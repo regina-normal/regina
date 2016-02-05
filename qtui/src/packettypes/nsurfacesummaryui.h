@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file nsurfacesummaryui.h
  *  \brief Provides a tab that summarises all normal surfaces in a list.
  */

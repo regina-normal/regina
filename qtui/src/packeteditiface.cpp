@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 // UI includes:
 #include "packeteditiface.h"
 #include "packettabui.h"

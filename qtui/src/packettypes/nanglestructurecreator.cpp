@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 // Regina core includes:
 #include "angle/nanglestructurelist.h"
 #include "progress/nprogresstracker.h"

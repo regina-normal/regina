@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file orbhandler.h
  *  \brief Allows interaction with Orb / Casson data files.
  */

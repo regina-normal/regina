@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file messagelayer.h
  *  \brief Provides a widget for displaying a simple text message to the user.
  */

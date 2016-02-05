@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 // Regina core includes:
 #include "hypersurface/nnormalhypersurface.h"
 #include "hypersurface/nnormalhypersurfacelist.h"

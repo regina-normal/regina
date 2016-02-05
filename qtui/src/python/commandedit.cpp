@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "commandedit.h"
 #include "pythonconsole.h"
 

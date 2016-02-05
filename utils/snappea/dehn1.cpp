@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <SnapPea.h>
 #include <unix_cusped_census.h>
 #include <unix_file_io.h>

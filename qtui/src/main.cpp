@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "file/nglobaldirs.h"
 
 #include "iconcache.h"

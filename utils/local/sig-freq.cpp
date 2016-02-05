@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /**
  * Like normal-mpi, but inputs isomorphism signatures and outputs frequency
  * tables.

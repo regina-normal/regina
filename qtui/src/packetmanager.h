@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file packetmanager.h
  *  \brief Creates interfaces for packets based on their specific
  *  packet types.

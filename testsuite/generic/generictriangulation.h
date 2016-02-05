@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <cppunit/extensions/HelperMacros.h>
 
 using regina::Isomorphism;

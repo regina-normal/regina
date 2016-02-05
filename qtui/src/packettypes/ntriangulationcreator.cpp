@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 // Regina core includes:
 #include "manifold/nsfs.h"
 #include "maths/numbertheory.h"

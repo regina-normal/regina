@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file iconcache.h
  *  \brief Caches frequently-used icons for performance.
  */

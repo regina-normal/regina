@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file generictriui.h
  *  \brief Provides a very basic interface for viewing generic triangulations.
  */

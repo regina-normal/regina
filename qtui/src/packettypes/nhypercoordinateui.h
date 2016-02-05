@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file nhypercoordinateui.h
  *  \brief Provides a normal hypersurface coordinate viewer.
  */

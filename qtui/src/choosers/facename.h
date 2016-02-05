@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file facename.h
  *  \brief Provides dimension-specific English names for faces in triangulations.
  */

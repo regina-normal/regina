@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 void addHyperCoords();
 void addHyperFlags();
 void addNNormalHypersurface();

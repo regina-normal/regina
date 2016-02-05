@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file packetwindow.h
  *  \brief Provides the frames surrounding floating packet panes.
  */

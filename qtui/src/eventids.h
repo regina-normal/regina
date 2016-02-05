@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file eventids.h
  *  \brief Provides numeric IDs for custom Qt events used by Regina.
  */

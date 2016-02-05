@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file nhypersummaryui.h
  *  \brief Provides a tab that summarises all normal hypersurfaces in a list.
  */

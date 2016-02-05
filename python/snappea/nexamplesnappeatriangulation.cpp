@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <boost/python.hpp>
 #include "snappea/nexamplesnappeatriangulation.h"
 #include "snappea/nsnappeatriangulation.h"

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /**
  * Reads all files *.rga in the current directory.
  * For each file we computes the number of normal surfaces for each

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 void addNTreeDecomposition();
 
 void addTreewidth() {

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file ncontainerui.h
  *  \brief Provides an interface for viewing container packets.
  */

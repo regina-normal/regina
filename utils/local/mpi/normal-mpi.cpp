@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /**
  * Reads all files *.rga in the current directory.
  * Each file is passed to a slave, which computes the number of normal

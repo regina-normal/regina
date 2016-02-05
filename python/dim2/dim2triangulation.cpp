@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "algebra/ngrouppresentation.h"
 #include "dim2/dim2isomorphism.h"
 #include "dim2/dim2triangulation.h"

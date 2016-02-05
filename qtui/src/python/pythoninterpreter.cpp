@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 // Put this before any Qt/KDE stuff so Python 2.3 "slots" doesn't clash.
 #include "pythoninterpreter.h"
 

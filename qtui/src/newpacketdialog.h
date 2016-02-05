@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file newpacketdialog.h
  *  \brief Provides a dialog through which the user can create a new
  *  packet.

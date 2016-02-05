@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "file/nfileinfo.h"
 #include <cstdlib>
 #include <iostream>

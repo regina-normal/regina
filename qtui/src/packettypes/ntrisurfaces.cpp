@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 // Regina core includes:
 #include "census/ncensus.h"
 #include "manifold/nmanifold.h"

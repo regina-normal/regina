@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file reginamanager.h
  *  \brief The main application class for Regina.
  */

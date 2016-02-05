@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "maths/nmatrixint.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nnormalsurfacelist.h" // for makeZeroVector()

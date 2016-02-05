@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file reginapref.h
  *  \brief Handles configuration of the user interface.
  */

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "packet/nscript.h"
 #include "utilities/stringutils.h"
 

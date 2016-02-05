@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file dim4triui.h
  *  \brief Provides an interface for viewing 4-manifold triangulations.
  */

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file ntrigluings.h
  *  \brief Provides a face gluing editor for 3-manifold triangulations.
  */

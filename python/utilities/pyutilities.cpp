@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 void addIntUtils();
 void addLocale();
 void addNBoolSet();

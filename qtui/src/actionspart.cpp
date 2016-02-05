@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "iconcache.h"
 #include "reginamain.h"
 #include "reginamanager.h"

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 void addComponent5();
 void addComponent6();
 void addComponent7();

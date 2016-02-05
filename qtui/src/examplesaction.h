@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file examplesaction.h
  *  \brief Provides an action class that offers access to sample data files.
  */

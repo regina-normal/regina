@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 void addMatrixOps();
 void addNCyclotomic();
 void addNInteger();

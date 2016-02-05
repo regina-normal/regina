@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file nsurfacefiltercreator.h
  *  \brief Allows the creation of normal surface filters.
  */

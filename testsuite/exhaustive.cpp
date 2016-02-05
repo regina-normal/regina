@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include "exhaustive.h"
 #include "census/dim4gluingpermsearcher.h"
 #include "census/ncensus.h"

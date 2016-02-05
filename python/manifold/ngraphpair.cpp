@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 #include <boost/python.hpp>
 #include "manifold/ngraphpair.h"
 #include "manifold/nsfs.h"

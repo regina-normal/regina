@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 // Regina core includes:
 #include "snappea/nexamplesnappeatriangulation.h"
 #include "snappea/nsnappeatriangulation.h"

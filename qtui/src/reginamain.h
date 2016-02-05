@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file reginamain.h
  *  \brief Provides a main window for Regina.
  */

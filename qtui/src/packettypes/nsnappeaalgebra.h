@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file nsnappeaalgebra.h
  *  \brief Provides an algebra viewer for SnapPea triangulations.
  */

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file coordinatechooser.h
  *  \brief Provides a widget for selecting a normal surface coordinate
  *  system.

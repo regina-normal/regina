@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 void addNGluingPermSearcher();
 void addNCensus();
 void addDim2Census();

@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 void addNFileInfo();
 void addNGlobalDirs();
 void addNXMLFile();

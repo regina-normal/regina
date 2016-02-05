@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 void addNExampleSnapPeaTriangulation();
 void addNSnapPeaTriangulation();
 

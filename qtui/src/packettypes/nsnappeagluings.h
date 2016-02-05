@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 /*! \file nsnappeagluings.h
  *  \brief Provides a face gluing viewer for SnapPea triangulations.
  */

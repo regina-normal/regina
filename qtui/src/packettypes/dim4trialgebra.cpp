@@ -30,8 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-/* end stub */
-
 // Regina core includes:
 #include "algebra/ngrouppresentation.h"
 #include "algebra/nmarkedabeliangroup.h"
