@@ -110,7 +110,7 @@ int GluingsModel::columnCount(const QModelIndex& /* unused parent*/) const {
 }
 
 QVariant GluingsModel::data(const QModelIndex& index, int role) const {
-    regina::NTetrahedron* t = tri_->getSimplex(index.row());
+    regina::NTetrahedron* t = tri_->simplex(index.row());
     if (role == Qt::DisplayRole) {
         // Tetrahedron name?
         if (index.column() == 0)
@@ -167,7 +167,7 @@ Qt::ItemFlags GluingsModel::flags(const QModelIndex& /* unused index*/) const {
 
 bool GluingsModel::setData(const QModelIndex& index, const QVariant& value,
         int /* unused role*/) {
-    regina::NTetrahedron* t = tri_->getSimplex(index.row());
+    regina::NTetrahedron* t = tri_->simplex(index.row());
     if (index.column() == 0) {
         QString newName = value.toString().trimmed();
         if (newName == t->description().c_str())
@@ -243,7 +243,7 @@ bool GluingsModel::setData(const QModelIndex& index, const QVariant& value,
 
     // Does this new partner already have its own partner?
     // If so, better unglue it.
-    regina::NTetrahedron* adj = tri_->getSimplex(newAdjTet);
+    regina::NTetrahedron* adj = tri_->simplex(newAdjTet);
     if (adj->adjacentSimplex(newAdjFace))
         adj->unjoin(newAdjFace);
 

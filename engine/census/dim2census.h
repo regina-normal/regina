@@ -94,9 +94,10 @@ class REGINA_API Dim2Census {
         NBoolSet orientability_;
             /**< The argument passed to formCensus(). */
 
-        AcceptTriangulation sieve_;
+        bool (*sieve_)(Dim2Triangulation*, void*);
             /**< The arbitrary constraint function to run triangulations
-                 through. */
+                 through.  This is of type AcceptTriangulation, but because
+                 that typedef is deprecated we do not use it here. */
         void* sieveArgs_;
             /**< The second argument to pass to function \a sieve. */
 

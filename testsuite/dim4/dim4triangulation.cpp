@@ -228,7 +228,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 "(S^3 / P_120) x I (single cone)");
             delete base;
 
-            base = NExampleTriangulation::figureEightKnotComplement();
+            base = NExampleTriangulation::figureEight();
             copyAndDelete(idealFigEightProduct,
                 Dim4ExampleTriangulation::doubleCone(*base),
                 "Fig_8 x I (double cone)");
@@ -668,11 +668,11 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             if (! std)
                 ans = "<unrecognised triangulation>";
             else {
-                regina::NManifold* mfd = std->getManifold();
+                regina::NManifold* mfd = std->manifold();
                 if (! mfd)
                     ans = "<unrecognised manifold>";
                 else {
-                    ans = mfd->getName();
+                    ans = mfd->name();
                     delete mfd;
                 }
                 delete std;
@@ -874,11 +874,11 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 if (! std)
                     link = "<unrecognised triangulation>";
                 else {
-                    regina::NManifold* mfd = std->getManifold();
+                    regina::NManifold* mfd = std->manifold();
                     if (! mfd)
                         link = "<unrecognised manifold>";
                     else {
-                        link = mfd->getName();
+                        link = mfd->name();
                         delete mfd;
                     }
                     delete std;
@@ -907,11 +907,11 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 if (! std)
                     link = "<unrecognised triangulation>";
                 else {
-                    regina::NManifold* mfd = std->getManifold();
+                    regina::NManifold* mfd = std->manifold();
                     if (! mfd)
                         link = "<unrecognised manifold>";
                     else {
-                        link = mfd->getName();
+                        link = mfd->name();
                         delete mfd;
                     }
                     delete std;
@@ -939,11 +939,11 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             if (! std)
                 link = "<unrecognised triangulation>";
             else {
-                regina::NManifold* mfd = std->getManifold();
+                regina::NManifold* mfd = std->manifold();
                 if (! mfd)
                     link = "<unrecognised manifold>";
                 else {
-                    link = mfd->getName();
+                    link = mfd->name();
                     delete mfd;
                 }
                 delete std;

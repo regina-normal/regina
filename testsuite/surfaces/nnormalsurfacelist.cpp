@@ -78,6 +78,7 @@ using regina::NS_HILBERT_PRIMAL;
 class NNormalSurfaceListTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NNormalSurfaceListTest);
 
+    CPPUNIT_TEST(defaultArgs);
     CPPUNIT_TEST(standardEmpty);
     CPPUNIT_TEST(standardOneTet);
     CPPUNIT_TEST(standardGieseking);
@@ -238,6 +239,36 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void tearDown() {
+        }
+
+        void defaultArgs() {
+            NTriangulation t(oneTet);
+            NNormalSurfaceList* l;
+
+            // Make sure that calls to enumerate() using default arguments
+            // fall through to the new enumerate() that takes NormalFlags
+            // and NormalAlg, not the deprecated version that takes a
+            // bool (embeddedOnly).
+
+            l = NNormalSurfaceList::enumerate(&t, regina::NS_QUAD);
+            if (l->which() != (regina::NS_VERTEX | regina::NS_EMBEDDED_ONLY)) {
+                std::ostringstream msg;
+                msg << "Enumeration with default (flags, algorithm) gave "
+                    "incorrect flags " << l->which().intValue() << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+            delete l;
+
+            l = NNormalSurfaceList::enumerate(&t, regina::NS_QUAD,
+                regina::NS_IMMERSED_SINGULAR);
+            if (l->which() !=
+                    (regina::NS_VERTEX | regina::NS_IMMERSED_SINGULAR)) {
+                std::ostringstream msg;
+                msg << "Enumeration with default algorithm gave "
+                    "incorrect flags " << l->which().intValue() << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+            delete l;
         }
 
         void testSize(NNormalSurfaceList* list,

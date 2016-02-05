@@ -355,26 +355,6 @@ class REGINA_API NNormalSurfaceList : public NPacket {
             NProgressTracker* tracker = 0);
 
         /**
-         * Deprecated method for enumerating all vertex normal surfaces
-         * using the given coordinate system.
-         *
-         * Users should now call enumerate(NTriangulation*, NormalCoords,
-         * NormalList, NormalAlg, NProgressTracker*) instead.
-         * See the documentation for that routine for further details,
-         * including all arguments, returns values, preconditions and
-         * postconditions.
-         *
-         * \deprecated The correct way to access this procedure is to call
-         * <tt>enumerate(owner, coords, NS_EMBEDDED_ONLY,
-         * NS_ALG_DEFAULT, tracker)</tt> if \a embeddedOnly is \c true, or
-         * <tt>enumerate(owner, coords, NS_IMMERSED_SINGULAR,
-         * NS_ALG_DEFAULT, tracker)</tt> if \a embeddedOnly is \c false.
-         */
-        REGINA_DEPRECATED static NNormalSurfaceList* enumerate(
-            NTriangulation* owner, NormalCoords coords, bool embeddedOnly,
-            NProgressTracker* tracker = 0);
-
-        /**
          * Deprecated method that uses a slow-but-direct procedure to
          * enumerate all embedded vertex normal surfaces in standard
          * coordinates, without using the faster procedure that works
@@ -1819,14 +1799,6 @@ inline const NNormalSurface* NNormalSurfaceList::getSurface(
 
 inline bool NNormalSurfaceList::dependsOnParent() const {
     return true;
-}
-
-inline NNormalSurfaceList* NNormalSurfaceList::enumerate(
-        NTriangulation* owner, NormalCoords coords,
-        bool embeddedOnly, NProgressTracker* tracker) {
-    return enumerate(owner, coords,
-        NS_VERTEX | (embeddedOnly ? NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
-        NS_ALG_DEFAULT, tracker);
 }
 
 inline NNormalSurfaceList* NNormalSurfaceList::enumerateStandardDirect(

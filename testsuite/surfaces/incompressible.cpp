@@ -75,7 +75,7 @@ class IncompressibleTest : public CppUnit::TestFixture {
         NTriangulation* verifyAllNotIncompressible(NTriangulation* tri,
                 const std::string& triName) {
             NNormalSurfaceList* s = NNormalSurfaceList::enumerate(tri,
-                regina::NS_STANDARD, true);
+                regina::NS_STANDARD, regina::NS_EMBEDDED_ONLY);
             for (unsigned i = 0; i < s->size(); ++i)
                 verifyNotIncompressible(s->surface(i), triName);
             delete s;
@@ -85,7 +85,7 @@ class IncompressibleTest : public CppUnit::TestFixture {
         NTriangulation* verifyHasIncompressible(NTriangulation* tri,
                 const std::string& triName) {
             NNormalSurfaceList* s = NNormalSurfaceList::enumerate(tri,
-                regina::NS_STANDARD, true);
+                regina::NS_STANDARD, regina::NS_EMBEDDED_ONLY);
             for (unsigned i = 0; i < s->size(); ++i)
                 if (s->surface(i)->isIncompressible()) {
                     delete s;

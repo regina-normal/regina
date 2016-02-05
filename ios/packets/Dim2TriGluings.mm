@@ -155,7 +155,7 @@
     editField.returnKeyType = UIReturnKeyDone;
     editField.autocorrectionType = UITextAutocorrectionTypeNo;
     if (editEdge >= 0) {
-        regina::Dim2Triangle* t = self.packet->getSimplex(editSimplex);
+        regina::Dim2Triangle* t = self.packet->simplex(editSimplex);
         editField.text = [[Dim2TriGluings destStringFromEdge:editEdge
                                                         dest:t->adjacentSimplex(editEdge)
                                                       gluing:t->adjacentGluing(editEdge)]
@@ -164,7 +164,7 @@
         editField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
         editField.textAlignment = NSTextAlignmentRight;
     } else {
-        editField.text = @(self.packet->getSimplex(simplex)->description().c_str());
+        editField.text = @(self.packet->simplex(simplex)->description().c_str());
         editField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
         editField.keyboardType = UIKeyboardTypeDefault;
         editField.textAlignment = NSTextAlignmentLeft;
@@ -241,7 +241,7 @@
         return;
     }
     
-    regina::Dim2Triangle* t = self.packet->getSimplex(editSimplex);
+    regina::Dim2Triangle* t = self.packet->simplex(editSimplex);
     
     NSMutableArray* toReload = [[NSMutableArray alloc] init];
     if (editEdge >= 0) {
@@ -308,7 +308,7 @@
                 goto cleanUpGluing;
             }
             
-            if (t->adjacentSimplex(editEdge) != self.packet->getSimplex(destSimplex) || destGluing != t->adjacentGluing(editEdge)) {
+            if (t->adjacentSimplex(editEdge) != self.packet->simplex(destSimplex) || destGluing != t->adjacentGluing(editEdge)) {
                 // We are making a change, and it's a valid one.
                 // Do it.
                 myEdit = YES;
@@ -326,7 +326,7 @@
                     
                     // Does this new partner already have its own partner?
                     // If so, better unglue it.
-                    regina::Dim2Triangle* adj = self.packet->getSimplex(destSimplex);
+                    regina::Dim2Triangle* adj = self.packet->simplex(destSimplex);
                     if (adj->adjacentSimplex(destEdge)) {
                         NSIndexPath* path = [NSIndexPath indexPathForRow:adj->adjacentSimplex(destEdge)->markedIndex()+1 inSection:0];
                         if ([toReload indexOfObject:path] == NSNotFound)
@@ -384,7 +384,7 @@ cleanUpGluing:
         return [tableView dequeueReusableCellWithIdentifier:@"Add"];
 
     Dim2GluingCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Triangle" forIndexPath:indexPath];
-    regina::Dim2Triangle* t = self.packet->getSimplex(indexPath.row - 1);
+    regina::Dim2Triangle* t = self.packet->simplex(indexPath.row - 1);
     cell.index.text = [NSString stringWithFormat:@"%d. %s", indexPath.row - 1, t->description().c_str()];
     cell.edge0.text = [Dim2TriGluings destStringFromEdge:0 dest:t->adjacentSimplex(0) gluing:t->adjacentGluing(0)];
     cell.edge1.text = [Dim2TriGluings destStringFromEdge:1 dest:t->adjacentSimplex(1) gluing:t->adjacentGluing(1)];

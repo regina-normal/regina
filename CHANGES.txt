@@ -380,6 +380,9 @@ Version 5.0  [ (under development) ]
             - Renamed getNumberOfSurfaces() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
             - Now uses C++11 std::thread internally instead of the old NThread.
+            - Removed the deprecated enumerate(..., bool embeddedOnly, ...),
+              since this was (incorrectly) taking precedence over the new
+              enumerate() in certain scenarios.  See TODO for details.
         Class NNormalSurfaceSubset:
             - Renamed getNumberOfSurfaces() to size().  The old name is
               deprecated, but has been kept for backward compatibility.

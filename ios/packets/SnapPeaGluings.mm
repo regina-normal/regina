@@ -150,7 +150,7 @@
         return [tableView dequeueReusableCellWithIdentifier:@"Header"];
     
     SnapPeaGluingCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Tetrahedron" forIndexPath:indexPath];
-    regina::NTetrahedron* t = self.packet->getSimplex(indexPath.row - 1);
+    regina::NTetrahedron* t = self.packet->simplex(indexPath.row - 1);
     cell.index.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
     cell.face0.text = [SnapPeaGluings destStringFromFace:0 dest:t->adjacentSimplex(0) gluing:t->adjacentGluing(0)];
     cell.face1.text = [SnapPeaGluings destStringFromFace:1 dest:t->adjacentSimplex(1) gluing:t->adjacentGluing(1)];

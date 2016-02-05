@@ -441,7 +441,7 @@ Triangulation<dim>* IsomorphismBase<dim>::apply(
         for (f = 0; f <= dim; f++)
             if ((adjTet = myTet->adjacentSimplex(f))) {
                 // We have an adjacent simplex.
-                adjTetIndex = original->simplexIndex(adjTet);
+                adjTetIndex = adjTet->index();
                 gluingPerm = myTet->adjacentGluing(f);
 
                 // Make the gluing from one side only.

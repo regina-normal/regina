@@ -98,13 +98,13 @@ int Dim4GluingsModel::columnCount(const QModelIndex& parent) const {
 }
 
 QVariant Dim4GluingsModel::data(const QModelIndex& index, int role) const {
-    regina::Dim4Pentachoron* p = tri_->getSimplex(index.row());
+    regina::Dim4Pentachoron* p = tri_->simplex(index.row());
     if (role == Qt::DisplayRole) {
         // Pentachoron name?
         if (index.column() == 0)
-            return (p->getDescription().empty() ? QString::number(index.row()) :
+            return (p->description().empty() ? QString::number(index.row()) :
                 (QString::number(index.row()) + " (" +
-                p->getDescription().c_str() + ')'));
+                p->description().c_str() + ')'));
 
         // Facet gluing?
         int facet = 5 - index.column();
@@ -116,7 +116,7 @@ QVariant Dim4GluingsModel::data(const QModelIndex& index, int role) const {
     } else if (role == Qt::EditRole) {
         // Pentachoron name?
         if (index.column() == 0)
-            return p->getDescription().c_str();
+            return p->description().c_str();
 
         // Facet gluing?
         int facet = 5 - index.column();
@@ -156,10 +156,10 @@ Qt::ItemFlags Dim4GluingsModel::flags(const QModelIndex& index) const {
 
 bool Dim4GluingsModel::setData(const QModelIndex& index, const QVariant& value,
         int role) {
-    regina::Dim4Pentachoron* p = tri_->getSimplex(index.row());
+    regina::Dim4Pentachoron* p = tri_->simplex(index.row());
     if (index.column() == 0) {
         QString newName = value.toString().trimmed();
-        if (newName == p->getDescription().c_str())
+        if (newName == p->description().c_str())
             return false;
 
         p->setDescription(newName.toUtf8().constData());
@@ -232,7 +232,7 @@ bool Dim4GluingsModel::setData(const QModelIndex& index, const QVariant& value,
 
     // Does this new partner already have its own partner?
     // If so, better unglue it.
-    regina::Dim4Pentachoron* adj = tri_->getSimplex(newAdjPent);
+    regina::Dim4Pentachoron* adj = tri_->simplex(newAdjPent);
     if (adj->adjacentSimplex(newAdjFacet))
         adj->unjoin(newAdjFacet);
 

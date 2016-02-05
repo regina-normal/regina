@@ -168,7 +168,7 @@
     editField.returnKeyType = UIReturnKeyDone;
     editField.autocorrectionType = UITextAutocorrectionTypeNo;
     if (editFacet >= 0) {
-        regina::NTetrahedron* t = self.packet->getSimplex(editSimplex);
+        regina::NTetrahedron* t = self.packet->simplex(editSimplex);
         editField.text = [[TriGluings destStringFromFacet:editFacet
                                                      dest:t->adjacentSimplex(editFacet)
                                                    gluing:t->adjacentGluing(editFacet)]
@@ -177,7 +177,7 @@
         editField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
         editField.textAlignment = NSTextAlignmentRight;
     } else {
-        editField.text = @(self.packet->getSimplex(simplex)->description().c_str());
+        editField.text = @(self.packet->simplex(simplex)->description().c_str());
         editField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
         editField.keyboardType = UIKeyboardTypeDefault;
         editField.textAlignment = NSTextAlignmentLeft;
@@ -491,7 +491,7 @@
         return;
     }
     
-    regina::NTetrahedron* t = self.packet->getSimplex(editSimplex);
+    regina::NTetrahedron* t = self.packet->simplex(editSimplex);
     
     NSMutableArray* toReload = [[NSMutableArray alloc] init];
     if (editFacet >= 0) {
@@ -559,7 +559,7 @@
                 goto cleanUpGluing;
             }
             
-            if (t->adjacentSimplex(editFacet) != self.packet->getSimplex(destSimplex) || destGluing != t->adjacentGluing(editFacet)) {
+            if (t->adjacentSimplex(editFacet) != self.packet->simplex(destSimplex) || destGluing != t->adjacentGluing(editFacet)) {
                 // We are making a change, and it's a valid one.
                 // Do it.
                 myEdit = YES;
@@ -577,7 +577,7 @@
                     
                     // Does this new partner already have its own partner?
                     // If so, better unglue it.
-                    regina::NTetrahedron* adj = self.packet->getSimplex(destSimplex);
+                    regina::NTetrahedron* adj = self.packet->simplex(destSimplex);
                     if (adj->adjacentSimplex(destFacet)) {
                         NSIndexPath* path = [NSIndexPath indexPathForRow:adj->adjacentSimplex(destFacet)->markedIndex()+1 inSection:0];
                         if ([toReload indexOfObject:path] == NSNotFound)
@@ -635,7 +635,7 @@ cleanUpGluing:
         return [tableView dequeueReusableCellWithIdentifier:@"Add"];
     
     TriGluingCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Tetrahedron" forIndexPath:indexPath];
-    regina::NTetrahedron* t = self.packet->getSimplex(indexPath.row - 1);
+    regina::NTetrahedron* t = self.packet->simplex(indexPath.row - 1);
     cell.index.text = [NSString stringWithFormat:@"%zd. %s", indexPath.row - 1, t->description().c_str()];
     cell.face0.text = [TriGluings destStringFromFacet:0 dest:t->adjacentSimplex(0) gluing:t->adjacentGluing(0)];
     cell.face1.text = [TriGluings destStringFromFacet:1 dest:t->adjacentSimplex(1) gluing:t->adjacentGluing(1)];
