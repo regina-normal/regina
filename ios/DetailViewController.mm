@@ -268,7 +268,7 @@
         [hud setLabelText:@"Saving"];
 
         [self.doc saveToURL:self.doc.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success){
-            [MBProgressHUD hideHUDForView:rootView animated:NO];
+            [hud hide:NO];
             if (success)
                 [_interact presentOptionsMenuFromBarButtonItem:self.shareButton animated:YES];
             else {

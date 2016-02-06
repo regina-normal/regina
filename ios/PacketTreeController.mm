@@ -109,7 +109,7 @@
     [hud setLabelText:@"Loading"];
     
     [doc openWithCompletionHandler:^(BOOL success) {
-        [MBProgressHUD hideHUDForView:rootView animated:YES];
+        [hud hide:YES];
         if (! success) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could Not Open Document"
                                                             message:@"I can read Regina's own data files, as well as SnapPea/SnapPy triangulation files.  Please ensure that your document uses one of these file formats."

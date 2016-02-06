@@ -521,7 +521,7 @@ enum DocSource {
     ReginaDocument* doc = [ReginaDocument documentWithInboxURL:location preferredName:downloadTask.currentRequest.URL];
 
     dispatch_async(dispatch_get_main_queue(), ^{
-        [MBProgressHUD hideHUDForView:rootView animated:NO];
+        [dropboxHUD hide:NO];
         dropboxHUD = nil;
 
         if (doc)
@@ -552,7 +552,7 @@ enum DocSource {
     if (error) {
         NSLog(@"Download error.");
         dispatch_async(dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideHUDForView:rootView animated:NO];
+            [dropboxHUD hide:NO];
             dropboxHUD = nil;
 
             UIAlertView* alert = [[UIAlertView alloc]
