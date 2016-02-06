@@ -123,12 +123,8 @@ void addNAbelianGroup() {
         .def("isTrivial", &NAbelianGroup::isTrivial)
         .def("isZ", &NAbelianGroup::isZ)
         .def("isZn", &NAbelianGroup::isZn)
-        .def("str", &NAbelianGroup::str)
         .def("utf8", &NAbelianGroup::utf8)
-        .def("toString", &NAbelianGroup::str)
-        .def("detail", &NAbelianGroup::detail)
-        .def("toStringLong", &NAbelianGroup::detail)
-        .def("__str__", &NAbelianGroup::str)
+        .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
 }

@@ -78,11 +78,7 @@ void addNSnapPeaTriangulation() {
         .def("complete", &NCusp::complete)
         .def("m", &NCusp::m)
         .def("l", &NCusp::l)
-        .def("str", &NCusp::str)
-        .def("toString", &NCusp::str)
-        .def("detail", &NCusp::detail)
-        .def("toStringLong", &NCusp::detail)
-        .def("__str__", &NCusp::str)
+        .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
 

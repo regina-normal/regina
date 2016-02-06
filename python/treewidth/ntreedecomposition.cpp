@@ -160,11 +160,7 @@ void addNTreeDecomposition() {
         .def("sibling", &NTreeBag::sibling,
             return_value_policy<reference_existing_object>())
         .def("isLeaf", &NTreeBag::isLeaf)
-        .def("str", &NTreeBag::str)
-        .def("toString", &NTreeBag::str)
-        .def("detail", &NTreeBag::detail)
-        .def("toStringLong", &NTreeBag::detail)
-        .def("__str__", &NTreeBag::str)
+        .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
 
@@ -200,11 +196,7 @@ void addNTreeDecomposition() {
             return_value_policy<reference_existing_object>())
         .def("compress", &NTreeDecomposition::compress)
         .def("makeNice", &NTreeDecomposition::makeNice)
-        .def("str", &NTreeDecomposition::str)
-        .def("toString", &NTreeDecomposition::str)
-        .def("detail", &NTreeDecomposition::detail)
-        .def("toStringLong", &NTreeDecomposition::detail)
-        .def("__str__", &NTreeDecomposition::str)
+        .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
 }

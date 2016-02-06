@@ -71,11 +71,7 @@ void addComponent(const char* name) {
         .def("countBoundaryFacets", &Component<dim>::countBoundaryFacets)
         .def("getNumberOfBoundaryFacets",
             &Component<dim>::countBoundaryFacets)
-        .def("str", &Component<dim>::str)
-        .def("toString", &Component<dim>::str)
-        .def("detail", &Component<dim>::detail)
-        .def("toStringLong", &Component<dim>::detail)
-        .def("__str__", &Component<dim>::str)
+        .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
 }

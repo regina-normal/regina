@@ -84,11 +84,7 @@ void addNHomGroupPresentation() {
         .def("verifyIsomorphism", &NHomGroupPresentation::verifyIsomorphism)
         .def("markedAbelianisation",
             &NHomGroupPresentation::markedAbelianisation)
-        .def("str", &NHomGroupPresentation::str)
-        .def("toString", &NHomGroupPresentation::str)
-        .def("detail", &NHomGroupPresentation::detail)
-        .def("toStringLong", &NHomGroupPresentation::detail)
-        .def("__str__", &NHomGroupPresentation::str)
+        .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
 }

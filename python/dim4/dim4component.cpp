@@ -129,11 +129,7 @@ void addDim4Component() {
         .def("countBoundaryTetrahedra", &Dim4Component::countBoundaryTetrahedra)
         .def("getNumberOfBoundaryTetrahedra",
             &Dim4Component::countBoundaryTetrahedra)
-        .def("str", &Dim4Component::str)
-        .def("toString", &Dim4Component::str)
-        .def("detail", &Dim4Component::detail)
-        .def("toStringLong", &Dim4Component::detail)
-        .def("__str__", &Dim4Component::str)
+        .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
 

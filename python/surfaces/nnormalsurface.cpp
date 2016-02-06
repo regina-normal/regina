@@ -200,11 +200,7 @@ void addNNormalSurface() {
             return_value_policy<manage_new_object>())
         .def("findVtxOctAlmostNormalSphere", findVtxOctAlmostNormalSphere2,
             return_value_policy<manage_new_object>())
-        .def("str", &NNormalSurface::str)
-        .def("toString", &NNormalSurface::str)
-        .def("detail", &NNormalSurface::detail)
-        .def("toStringLong", &NNormalSurface::detail)
-        .def("__str__", &NNormalSurface::str)
+        .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
         .staticmethod("findNonTrivialSphere")
         .staticmethod("findVtxOctAlmostNormalSphere")

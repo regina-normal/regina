@@ -130,11 +130,7 @@ void addNMatrixInt() {
         .def("reduceRow", &NMatrixInt::reduceRow)
         .def("reduceCol", &NMatrixInt::reduceCol)
         .def("__mul__", multiply)
-        .def("str", &NMatrixInt::str)
-        .def("toString", &NMatrixInt::str)
-        .def("detail", &NMatrixInt::detail)
-        .def("toStringLong", &NMatrixInt::detail)
-        .def("__str__", &NMatrixInt::str)
+        .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
 

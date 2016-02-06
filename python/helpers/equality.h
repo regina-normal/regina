@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file python/equality.h
+/*! \file python/helpers/equality.h
  *  \brief Assists with wrapping == and != operators in Python.
  */
 

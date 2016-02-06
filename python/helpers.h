@@ -39,7 +39,7 @@
 #define __HELPERS_H
 #endif
 
-// Tools for wrapping == and != operators correctly:
 #include "helpers/equality.h"
+#include "helpers/output.h"
 
 #endif

@@ -78,11 +78,7 @@ void addNStandardTriangulation() {
             return_value_policy<manage_new_object>())
         .def("isStandardTriangulation", isStandardTri_tri,
             return_value_policy<manage_new_object>())
-        .def("str", &NStandardTriangulation::str)
-        .def("toString", &NStandardTriangulation::str)
-        .def("detail", &NStandardTriangulation::detail)
-        .def("toStringLong", &NStandardTriangulation::detail)
-        .def("__str__", &NStandardTriangulation::str)
+        .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
         .staticmethod("isStandardTriangulation")
     ;

@@ -157,11 +157,7 @@ void addNGroupPresentation() {
         .def("toTeX", &NGroupExpression::toTeX)
         .def("writeText", expressionWriteText, OL_expressionWriteText())
         .def("writeTeX", expressionWriteTeX)
-        .def("str", &NGroupExpression::str)
-        .def("toString", &NGroupExpression::str)
-        .def("detail", &NGroupExpression::detail)
-        .def("toStringLong", &NGroupExpression::detail)
-        .def("__str__", &NGroupExpression::str)
+        .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
 
@@ -216,11 +212,7 @@ void addNGroupPresentation() {
         .def("compact", &NGroupPresentation::compact)
         .def("writeTeX", presentationWriteTeX)
         .def("writeTextCompact", presentationWriteTextCompact)
-        .def("str", &NGroupPresentation::str)
-        .def("toString", &NGroupPresentation::str)
-        .def("detail", &NGroupPresentation::detail)
-        .def("toStringLong", &NGroupPresentation::detail)
-        .def("__str__", &NGroupPresentation::str)
+        .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
 }

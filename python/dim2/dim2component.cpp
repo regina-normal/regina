@@ -107,11 +107,7 @@ void addDim2Component() {
         .def("getNumberOfBoundaryFacets", &Dim2Component::countBoundaryFacets)
         .def("countBoundaryEdges", &Dim2Component::countBoundaryEdges)
         .def("getNumberOfBoundaryEdges", &Dim2Component::countBoundaryEdges)
-        .def("str", &Dim2Component::str)
-        .def("toString", &Dim2Component::str)
-        .def("detail", &Dim2Component::detail)
-        .def("toStringLong", &Dim2Component::detail)
-        .def("__str__", &Dim2Component::str)
+        .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
 

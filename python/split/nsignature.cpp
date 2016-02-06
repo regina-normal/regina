@@ -58,11 +58,7 @@ void addNSignature() {
         .def("triangulate", &NSignature::triangulate,
             return_value_policy<to_held_type<> >())
         .def("writeCycles", &writeCycles)
-        .def("str", &NSignature::str)
-        .def("toString", &NSignature::str)
-        .def("detail", &NSignature::detail)
-        .def("toStringLong", &NSignature::detail)
-        .def("__str__", &NSignature::str)
+        .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
         .staticmethod("parse")
     ;

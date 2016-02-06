@@ -65,11 +65,7 @@ void addNTxICore() {
         .def("getTeXName", &NTxICore::TeXName)
         .def("writeName", writeName_stdio)
         .def("writeTeXName", writeTeXName_stdio)
-        .def("str", &NTxICore::str)
-        .def("toString", &NTxICore::str)
-        .def("detail", &NTxICore::detail)
-        .def("toStringLong", &NTxICore::detail)
-        .def("__str__", &NTxICore::str)
+        .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
 

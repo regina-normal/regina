@@ -115,10 +115,6 @@ void addFacetPairing(const char* name) {
             &FacetPairing<dim>::isUnmatched))
         .def("isClosed", &FacetPairing<dim>::isClosed)
         .def("isCanonical", &FacetPairing<dim>::isCanonical)
-        .def("toString", &FacetPairing<dim>::str)
-        .def("toStringLong", &FacetPairing<dim>::detail)
-        .def("str", &FacetPairing<dim>::str)
-        .def("detail", &FacetPairing<dim>::detail)
         .def("toTextRep", &FacetPairing<dim>::toTextRep)
         .def("fromTextRep", &FacetPairing<dim>::fromTextRep,
             return_value_policy<manage_new_object>())
@@ -130,7 +126,7 @@ void addFacetPairing(const char* name) {
             typename PyFacetPairingHelper<dim>::OL_writeDotHeader())
         .def("dotHeader", PyFacetPairingHelper<dim>::dotHeader_standalone,
             typename PyFacetPairingHelper<dim>::OL_dotHeader())
-        .def("__str__", &FacetPairing<dim>::str)
+        .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
         .staticmethod("fromTextRep")
         .staticmethod("writeDotHeader")

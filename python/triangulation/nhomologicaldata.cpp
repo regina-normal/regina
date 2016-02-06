@@ -98,11 +98,7 @@ void addNHomologicalData() {
         .def("getEmbeddabilityComment",
             &NHomologicalData::embeddabilityComment,
             return_value_policy<copy_const_reference>())
-        .def("str", &NHomologicalData::str)
-        .def("toString", &NHomologicalData::str)
-        .def("detail", &NHomologicalData::detail)
-        .def("toStringLong", &NHomologicalData::detail)
-        .def("__str__", &NHomologicalData::str)
+        .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
 }

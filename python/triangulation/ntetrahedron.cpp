@@ -98,11 +98,7 @@ void addNTetrahedron() {
         .def("getTriangleMapping", &NTetrahedron::triangleMapping)
         .def("orientation", &NTetrahedron::orientation)
         .def("facetInMaximalForest", &NTetrahedron::facetInMaximalForest)
-        .def("str", &NTetrahedron::str)
-        .def("toString", &NTetrahedron::str)
-        .def("detail", &NTetrahedron::detail)
-        .def("toStringLong", &NTetrahedron::detail)
-        .def("__str__", &NTetrahedron::str)
+        .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
 

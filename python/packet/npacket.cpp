@@ -168,11 +168,7 @@ void addNPacket() {
             OL_clone()[return_value_policy<to_held_type<> >()])
         .def("save", save_filename, OL_save())
         .def("internalID", &NPacket::internalID)
-        .def("str", &NPacket::str)
-        .def("toString", &NPacket::str)
-        .def("detail", &NPacket::detail)
-        .def("toStringLong", &NPacket::detail)
-        .def("__str__", &NPacket::str)
+        .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
 

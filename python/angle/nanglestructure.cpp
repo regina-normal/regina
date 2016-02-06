@@ -55,11 +55,7 @@ void addNAngleStructure() {
         .def("isStrict", &NAngleStructure::isStrict)
         .def("isTaut", &NAngleStructure::isTaut)
         .def("isVeering", &NAngleStructure::isVeering)
-        .def("str", &NAngleStructure::str)
-        .def("toString", &NAngleStructure::str)
-        .def("detail", &NAngleStructure::detail)
-        .def("toStringLong", &NAngleStructure::detail)
-        .def("__str__", &NAngleStructure::str)
+        .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
 }

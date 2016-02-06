@@ -74,11 +74,7 @@ void addNBoundaryComponent() {
         .def("getEulerCharacteristic", &NBoundaryComponent::eulerChar)
         .def("isIdeal", &NBoundaryComponent::isIdeal)
         .def("isOrientable", &NBoundaryComponent::isOrientable)
-        .def("str", &NBoundaryComponent::str)
-        .def("toString", &NBoundaryComponent::str)
-        .def("detail", &NBoundaryComponent::detail)
-        .def("toStringLong", &NBoundaryComponent::detail)
-        .def("__str__", &NBoundaryComponent::str)
+        .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
 }

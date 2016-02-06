@@ -91,11 +91,7 @@ void addDim2Triangle() {
         .def("getEdgeMapping", &Dim2Triangle::edgeMapping)
         .def("orientation", &Dim2Triangle::orientation)
         .def("facetInMaximalForest", &Dim2Triangle::facetInMaximalForest)
-        .def("str", &Dim2Triangle::str)
-        .def("toString", &Dim2Triangle::str)
-        .def("detail", &Dim2Triangle::detail)
-        .def("toStringLong", &Dim2Triangle::detail)
-        .def("__str__", &Dim2Triangle::str)
+        .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
 

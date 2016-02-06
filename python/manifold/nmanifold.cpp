@@ -75,11 +75,7 @@ void addNManifold() {
         .def("writeTeXName", writeTeXName_stdio)
         .def("writeStructure", writeStructure_stdio)
         .def(self < self)
-        .def("str", &NManifold::str)
-        .def("toString", &NManifold::str)
-        .def("detail", &NManifold::detail)
-        .def("toStringLong", &NManifold::detail)
-        .def("__str__", &NManifold::str)
+        .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
 }

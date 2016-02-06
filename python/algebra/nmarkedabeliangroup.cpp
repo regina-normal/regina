@@ -225,11 +225,7 @@ void addNMarkedAbelianGroup() {
         .def("torsionSubgroup", &NMarkedAbelianGroup::torsionSubgroup)
         .def("torsionInclusion", &NMarkedAbelianGroup::torsionInclusion)
         .def("utf8", &NMarkedAbelianGroup::utf8)
-        .def("str", &NMarkedAbelianGroup::str)
-        .def("toString", &NMarkedAbelianGroup::str)
-        .def("detail", &NMarkedAbelianGroup::detail)
-        .def("toStringLong", &NMarkedAbelianGroup::detail)
-        .def("__str__", &NMarkedAbelianGroup::str)
+        .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
 
@@ -279,11 +275,7 @@ void addNMarkedAbelianGroup() {
         // TODO: evalCC, evalSNF
         .def("inverseHom", &NHomMarkedAbelianGroup::inverseHom)
         .def("__mul__", multiplyHom)
-        .def("str", &NHomMarkedAbelianGroup::str)
-        .def("toString", &NHomMarkedAbelianGroup::str)
-        .def("detail", &NHomMarkedAbelianGroup::detail)
-        .def("toStringLong", &NHomMarkedAbelianGroup::detail)
-        .def("__str__", &NHomMarkedAbelianGroup::str)
+        .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
 }

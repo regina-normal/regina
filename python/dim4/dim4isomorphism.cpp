@@ -65,11 +65,7 @@ void addDim4Isomorphism() {
             return_value_policy<manage_new_object>())
         .def("identity", &Dim4Isomorphism::identity,
             return_value_policy<manage_new_object>())
-        .def("str", &Dim4Isomorphism::str)
-        .def("toString", &Dim4Isomorphism::str)
-        .def("detail", &Dim4Isomorphism::detail)
-        .def("toStringLong", &Dim4Isomorphism::detail)
-        .def("__str__", &Dim4Isomorphism::str)
+        .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
         .staticmethod("random")
         .staticmethod("identity")

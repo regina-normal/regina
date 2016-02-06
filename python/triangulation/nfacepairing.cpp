@@ -109,8 +109,6 @@ void addNFacePairing() {
         .def("isUnmatched", isUnmatched_face)
         .def("isUnmatched", isUnmatched_unsigned)
         .def("isCanonical", &NFacePairing::isCanonical)
-        .def("toString", &NFacePairing::str)
-        .def("str", &NFacePairing::str)
         .def("toTextRep", &NFacePairing::toTextRep)
         .def("fromTextRep", &NFacePairing::fromTextRep,
             return_value_policy<manage_new_object>())
@@ -134,7 +132,7 @@ void addNFacePairing() {
         .def("hasSingleStar", &NFacePairing::hasSingleStar)
         .def("hasDoubleStar", &NFacePairing::hasDoubleStar)
         .def("hasDoubleSquare", &NFacePairing::hasDoubleSquare)
-        .def("__str__", &NFacePairing::str)
+        .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
         .staticmethod("fromTextRep")
         .staticmethod("writeDotHeader")
