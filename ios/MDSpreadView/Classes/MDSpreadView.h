@@ -175,8 +175,8 @@ extern NSString *MDSpreadViewSelectionDidChangeNotification __attribute__((unava
     NSMutableArray *columnSections;
     NSMutableArray *rowSections;
     
-    UIView *dummyView;
-    UIView *dummyViewB;
+//    UIView *dummyView;
+//    UIView *dummyViewB;
     
     CGSize dequeuedCellSizeHint;
     MDIndexPath *dequeuedCellRowIndexHint;
@@ -187,19 +187,6 @@ extern NSString *MDSpreadViewSelectionDidChangeNotification __attribute__((unava
     MDSortDescriptor *_currentSortDescriptor;
     
     // Done with new algorithm
-    
-    NSMutableArray *visibleCells; // array of array
-    MDIndexPath *_visibleRowIndexPath;
-    MDIndexPath *_visibleColumnIndexPath;
-    CGRect visibleBounds;
-    
-    NSMutableArray *_headerRowCells;
-    NSMutableArray *_headerColumnCells;
-    MDSpreadViewCell *_headerCornerCell;
-    CGRect _headerBounds;
-    
-    MDIndexPath *_headerRowIndexPath;
-    MDIndexPath *_headerColumnIndexPath;
     
     NSMutableArray *_rowSections;
     NSMutableArray *_columnSections;
@@ -295,7 +282,7 @@ extern NSString *MDSpreadViewSelectionDidChangeNotification __attribute__((unava
 //- (MDIndexPath *)indexPathForCell:(UITableViewCell *)cell;                      // returns nil if cell is not visible
 //- (NSArray *)indexPathsForRowsInRect:(CGRect)rect;                              // returns nil if rect not valid 
 
-//- (UITableViewCell *)cellForRowAtIndexPath:(MDIndexPath *)indexPath;            // returns nil if cell is not visible or index path is out of range
+- (MDSpreadViewCell *)cellForRowAtIndexPath:(MDIndexPath *)rowPath forColumnAtIndexPath:(MDIndexPath *)columnPath;            // returns nil if cell is not visible or index path is out of range
 //- (NSArray *)visibleCells;
 //- (NSArray *)indexPathsForVisibleRows;
 
