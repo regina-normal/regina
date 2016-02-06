@@ -3,33 +3,35 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "TRICENSUS" "1" "23 August 2014" "" "The Regina Handbook"
+.TH "TRICENSUS" "1" "06 February 2016" "" "The Regina Handbook"
 
 .SH NAME
-tricensus \- Form a census of 3-manifold triangulations
+tricensus \- Form a census of triangulations
 .SH SYNOPSIS
 
-\fBtricensus\fR [ \fB-t, --tetrahedra=\fItetrahedra\fB\fR ] [ \fB-2, --dim2\fR ] [ \fB-b, --boundary\fR | \fB-i, --internal\fR | \fB-B, --bdryfaces=\fItriangles\fB\fR ] [ \fB-o, --orientable\fR | \fB-n, --nonorientable\fR ] [ \fB-f, --finite\fR | \fB-d, --ideal\fR ] [ \fB-m, --minimal\fR | \fB-M, --minprime\fR | \fB-N, --minprimep2\fR | \fB-h, --minhyp\fR ] [ \fB-s, --sigs\fR | \fB-c, --subcontainers\fR ] [ \fB-p, --genpairs\fR | \fB-P, --usepairs\fR ] \fB\fIoutput-file\fB\fR
+\fBtricensus\fR [ \fB-t, --tetrahedra=\fItetrahedra\fB\fR ] [ \fB-2, --dim2\fR | \fB-4, --dim4\fR ] [ \fB-b, --boundary\fR | \fB-i, --internal\fR | \fB-B, --bdryfaces=\fItriangles\fB\fR ] [ \fB-o, --orientable\fR | \fB-n, --nonorientable\fR ] [ \fB-f, --finite\fR | \fB-d, --ideal\fR ] [ \fB-m, --minimal\fR | \fB-M, --minprime\fR | \fB-N, --minprimep2\fR | \fB-h, --minhyp\fR ] [ \fB-s, --sigs\fR | \fB-c, --subcontainers\fR ] [ \fB-p, --genpairs\fR | \fB-P, --usepairs\fR ] \fB\fIoutput-file\fB\fR
 
 
 \fBtricensus\fR \fB--help\fR
 
 .SH "DESCRIPTION"
 .PP
-Forms a census of all 3-manifold or 2-manifold triangulations that satisfy
+Forms a census of all 2-, 3- or 4-manifold triangulations that satisfy
 some set of conditions.
 .PP
 These conditions are specified using various command-line arguments.
 The only condition that you \fBmust\fR provide is
-the number of tetrahedra, but there are many other options available.
+the number of top-dimensional simplices (e.g., the number of tetrahedra
+for 3-manifolds), but there are many other options available.
 .PP
 The default behaviour is to enumerate 3-manifold triangulations.
-If you wish to enumerate 2-manifold triangulations instead, you must
-pass \fB--dim2\fR\&.
+If you wish to enumerate 2-manifold or 4-manifold triangulations instead,
+you must pass \fB--dim2\fR or \fB--dim4\fR
+respectively.
 .PP
 Each triangulation will be output precisely once up to combinatorial
-isomorphism.  Invalid 3-manifold triangulations
-(i.e., triangulations with edges
+isomorphism.  Invalid triangulations
+(for 3-manifolds, this means triangulations with edges
 identified to themselves in reverse, or vertices whose links
 have boundary but are not discs) will not be output at all.
 .PP
@@ -47,10 +49,10 @@ across a high-performance computing cluster.
 .RS
 .B "Caution:"
 .PP
-A census with even a small number of tetrahedra can
+A census with even a small number of top-dimensional simplices can
 take an incredibly long time to run, and can chew up massive amounts of
 memory.  It is recommended that you try very small censuses to begin
-with (such as 3 or 4 tetrahedra), and work upwards to establish the
+with (such as 3 or 4 simplices), and work upwards to establish the
 limits of your machine.
 .PP
 For very large census runs, it is \fBhighly recommended\fR
@@ -60,10 +62,10 @@ the output file small and significantly reduce the memory footprint.
 .SH "OPTIONS"
 .TP
 \fB-t, --tetrahedra=\fItetrahedra\fB\fR
-Specifies the number of tetrahedra used to build the triangulations.
-
-If \fB--dim2\fR is passed, this same option must
-be used to specify the number of triangles instead.
+Specifies the number of top-dimensional simplices used to build the
+triangulations.
+For 2-manifolds, 3-manifolds and 4-manifolds, this specifies the
+number of triangles, tetrahedra or pentachora respectively.
 .TP
 \fB-2, --dim2\fR
 Build a census of 2-manifold triangulations, not 3-manifold
@@ -73,26 +75,39 @@ This is incompatible with several options; for other options it
 simply translates the relevant constraint into two dimensions.
 See each individual option for details on how it interacts with
 \fB--dim2\fR\&.
+
+This option cannot be used with \fB--dim4\fR\&.
+.TP
+\fB-4, --dim4\fR
+Build a census of 4-manifold triangulations, not 3-manifold
+triangulations.
+
+This is incompatible with several options; for other options it
+simply translates the relevant constraint into four dimensions.
+See each individual option for details on how it interacts with
+\fB--dim4\fR\&.
+
+This option cannot be used with \fB--dim2\fR\&.
 .TP
 \fB-b, --boundary\fR
 Only produce triangulations with at least one boundary triangle.
 
-If \fB--dim2\fR is passed, this specifies at least one
-boundary edge.
+For 2-manifolds or 4-manifolds, this option ensures at least one
+boundary edge or boundary tetrahedron respectively.
 .TP
 \fB-i, --internal\fR
 Only produce triangulations with all triangles internal (i.e., with no
 boundary triangles).
 
-If \fB--dim2\fR is passed, this indicates that all
-edges must be internal.
+For 2-manifolds or 4-manifolds, this option ensures that all
+edges or tetrahedra respectively are internal.
 .TP
 \fB-B, --bdryfaces=\fItriangles\fB\fR
 Only produce triangulations with the precise number of boundary
 triangles specified.
 
-If \fB--dim2\fR is passed, this specifies the number
-of boundary edges.
+For 2-manifolds or 4-manifolds, this specifies the number of
+boundary edges or boundary tetrahedra respectively.
 .TP
 \fB-o, --orientable\fR
 Only produce orientable triangulations.
@@ -120,6 +135,8 @@ This option uses a series of fast tests that try to eliminate
 non-minimal triangulations, but that are not always conclusive.
 If Regina cannot quickly tell whether a triangulation is
 non-minimal, it will place the triangulation in the census regardless.
+
+This option cannot be used with \fB--dim4\fR\&.
 .TP
 \fB-M, --minprime\fR
 Do not include triangulations that are obviously non-minimal,
@@ -134,7 +151,8 @@ If Regina cannot quickly tell whether a triangulation is
 non-minimal, non-prime or disc-reducible, it will place the
 triangulation in the census regardless.
 
-This option cannot be used with \fB--dim2\fR\&.
+This option cannot be used with \fB--dim2\fR
+or \fB--dim4\fR\&.
 .TP
 \fB-N, --minprimep2\fR
 Do not include triangulations that are obviously non-minimal,
@@ -150,7 +168,8 @@ If Regina cannot quickly tell whether a triangulation is
 non-minimal, non-prime, P2-reducible or disc-reducible, it will place
 the triangulation in the census regardless.
 
-This option cannot be used with \fB--dim2\fR\&.
+This option cannot be used with \fB--dim2\fR
+or \fB--dim4\fR\&.
 .TP
 \fB-h, --minhyp\fR
 Do not include triangulations that are obviously not
@@ -171,7 +190,8 @@ This option is designed for use with ideal triangulations only
 (so, for instance, combining it with
 \fB--finite\fR or \fB--boundary\fR
 will produce an error message).
-This option also cannot be used with \fB--dim2\fR\&.
+This option also cannot be used with \fB--dim2\fR
+or \fB--dim4\fR\&.
 .TP
 \fB-s, --sigs\fR
 Instead of writing a full Regina data file, just output a list
@@ -192,38 +212,47 @@ immediately, instead of being kept in memory to construct a final
 Regina data file.
 .TP
 \fB-c, --subcontainers\fR
-For each face pairing, a new container will be created, and
+For each facet pairing, a new container will be created, and
 resultant triangulations will be placed into these containers.
-These containers will be created even if the face pairing results
+These containers will be created even if the facet pairing results
 in no triangulations.
+
+See \fB--genpairs\fR below for further information on
+facet pairings.
 
 This option cannot be used with \fB--sigs\fR\&.
 .TP
 \fB-p, --genpairs\fR
-Only generate face pairings, not triangulations.
+Only generate facet pairings, not triangulations.
+A facet pairing stores which facets of top-dimension simplices
+are glued to which others, but it does not store the precise
+rotations and/or reflections that are used for each gluing.
+For 3-manifolds a facet pairing represents a pairing of tetrahedron
+faces, for 2-manifolds it represents a pairing of triangle edges, and
+for 4-manifolds it represents a pairing of pentachoron facets.
 
 The outermost layer of the census code involves pairing off the
-faces of individual tetrahedra without determining
-the corresponding gluing permutations.  For each face pairing that is
-produced, Regina will try many different sets of gluing permutations
-and generated the corresponding triangulations.
+facets of individual top-dimensional simplices without determining
+the corresponding gluing permutations.  For each such facet pairing
+that is produced, Regina will try many different sets of gluing
+permutations and generated the corresponding triangulations.
 
-Face pairing generation consumes a very small fraction of the
+Facet pairing generation consumes a very small fraction of the
 total census runtime, and effectively divides the census into
 multiple pieces.  This option allows you to quickly generate
-a complete list of possible face pairings, so that you can feed subsets
+a complete list of possible facet pairings, so that you can feed subsets
 of this list to different machines to work on simultaneously.  You
 can coordinate this manually, or you can use
 \fBtricensus-mpi\fR
 to coordinate it for you on a high-performance cluster.
 
-The list of all face pairings will be written to the given output
+The list of all facet pairings will be written to the given output
 file in text format (though you may omit the output file from the
-command line, in which case the face pairings will be written to
+command line, in which case the facet pairings will be written to
 standard output).
 If you are coordinating your sub-censuses manually, you can use
 the option \fB--usepairs\fR to generate triangulations
-from a subset of these face pairings.
+from a subset of these facet pairings.
 
 Options for orientability, finiteness or minimality cannot be
 used with \fB--genpairs\fR; instead you should use them
@@ -234,19 +263,16 @@ This option does not come with progress reporting, though
 typically it runs fast enough that this does not matter.
 You can always track the state of progress by counting lines in
 the output file.
-
-If \fB--dim2\fR is passed, this generates edge
-pairings accordingly.
 .TP
 \fB-P, --usepairs\fR
-Use only the given subset of face pairings to build the triangulations.
+Use only the given subset of facet pairings to build the triangulations.
 
-Each face pairing that is processed must be
+Each facet pairing that is processed must be
 in canonical form, i.e., must be a minimal representative of its
-isomorphism class.  All face pairings generated using
+isomorphism class.  All facet pairings generated using
 \fB--genpairs\fR are guaranteed to satisfy this condition.
 
-Face pairings should be supplied on standard input, one per line.
+Facet pairings should be supplied on standard input, one per line.
 They should be listed in the format produced by the option
 \fB--genpairs\fR\&.
 
@@ -258,17 +284,17 @@ or
 which can coordinate this process using MPI on a
 high-performance cluster.
 
-Options for tetrahedra or boundary triangles cannot be used with
-\fB--usepairs\fR; instead you should pass them earlier
+Options for the number of top-dimensional simplices
+(i.e., \fB--tetrahedra\fR) or boundary facets
+(i.e., \fB--boundary\fR or \fB--bdryfaces\fR)
+cannot be used with \fB--usepairs\fR\&.
+Instead you should pass these options earlier
 along with \fB--genpairs\fR when you split the original
 census into pieces.
-
-If \fB--dim2\fR is passed, this takes a list of edge
-pairings accordingly.
 .SH "EXAMPLES"
 .PP
 The following command forms a census of all 3-tetrahedron closed
-non-orientable triangulations and puts the results in the file
+non-orientable 3-manifold triangulations, and puts the results in the file
 \fIresults.rga\fR\&.  To ensure that triangulations are
 closed we use the options \fB-i\fR (no boundary triangles)
 and \fB-f\fR (no ideal vertices).
@@ -286,7 +312,7 @@ and \fB-f\fR (no ideal vertices).
 .fi
 .PP
 The following command forms a census of 4-tetrahedron closed
-orientable triangulations, where the census creation is optimised
+orientable 3-manifold triangulations, where the census creation is optimised
 for prime minimal triangulations.  Although all prime minimal
 triangulations will be included, there may be some non-prime or
 non-minimal triangulations in the census also.
@@ -304,7 +330,8 @@ non-minimal triangulations in the census also.
 .fi
 .PP
 The following command generates all face pairings for a
-5-tetrahedron census in which all triangulations have precisely two
+5-tetrahedron census of 3-manifold triangulation in which all
+triangulations have precisely two
 boundary triangles.  The face pairings will be written to
 \fIpairings.txt\fR, whereupon they can be broken up
 and distributed for processing at a later date.

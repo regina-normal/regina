@@ -3,7 +3,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Source Stub Year Update Utility
 #
-# Copyright (c) 1999-2014, Ben Burton
+# Copyright (c) 1999-2016, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Usage: updateyear <old_year> <new_year> [ <text-file> ... ]

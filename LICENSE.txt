@@ -1,6 +1,6 @@
 
      Regina - Software for 3-manifold topology and normal surface theory
-            Copyright (c) 1999-2014, The Regina development team
+            Copyright (c) 1999-2016, The Regina development team
 
 
 CITATION:
@@ -10,7 +10,7 @@ you would any other paper that you use.  A suggested form of reference is:
 
   Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,
   "Regina: Software for 3-manifold topology and normal surface theory",
-  http://regina.sourceforge.net/, 1999-2014.
+  http://regina.sourceforge.net/, 1999-2016.
 
 
 AUTHORS:

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2014, Ben Burton                                   *
+ *  Copyright (c) 1999-2016, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -39,7 +39,7 @@
  *  <center><b>
  *  Regina<br>
  *  Software for 3-manifold topology and normal surface theory<br>
- *  Copyright &copy; 1999-2014, The Regina development team
+ *  Copyright &copy; 1999-2016, The Regina development team
  *  </b></center>
  *
  *  This documentation describes the functions, classes and related
@@ -65,7 +65,7 @@
  *
  *  Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,
  *  "Regina: Software for 3-manifold topology and normal surface theory",
- *  http://regina.sourceforge.net/ , 1999-2014.
+ *  http://regina.sourceforge.net/ , 1999-2016.
  *
  *  <h3>Authors</h3>
  *
