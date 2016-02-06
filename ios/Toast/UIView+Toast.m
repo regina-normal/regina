@@ -28,6 +28,7 @@
 #import <objc/runtime.h>
 
 NSString * CSToastPositionTop       = @"CSToastPositionTop";
+NSString * CSToastPositionTopRight  = @"CSToastPositionTopRight";
 NSString * CSToastPositionCenter    = @"CSToastPositionCenter";
 NSString * CSToastPositionBottom    = @"CSToastPositionBottom";
 
@@ -396,8 +397,16 @@ static const NSTimeInterval CSToastFadeDuration     = 0.2;
     CSToastStyle *style = [CSToastManager sharedStyle];
     
     if([point isKindOfClass:[NSString class]]) {
+        CGSize statusBarFrame = UIApplication.sharedApplication.statusBarFrame.size;
+        // Note: whether we want width or height seems to depend on *both* (i) portrait vs landscape, and (ii) ios7 vs ios8.
+        // Just take the min, which is safe.
+        CGFloat statusBarHeight = MIN(statusBarFrame.width, statusBarFrame.height);
+
         if([point caseInsensitiveCompare:CSToastPositionTop] == NSOrderedSame) {
-            return CGPointMake(self.bounds.size.width/2, (toast.frame.size.height / 2) + style.verticalPadding);
+            return CGPointMake(self.bounds.size.width/2, (toast.frame.size.height / 2) + style.verticalPadding + statusBarHeight);
+        } else if([point caseInsensitiveCompare:CSToastPositionTopRight] == NSOrderedSame) {
+            return CGPointMake((self.bounds.size.width - (toast.frame.size.width / 2)) - style.horizontalPadding - statusBarHeight,
+                               (toast.frame.size.height / 2) + style.verticalPadding + statusBarHeight);
         } else if([point caseInsensitiveCompare:CSToastPositionCenter] == NSOrderedSame) {
             return CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
         }

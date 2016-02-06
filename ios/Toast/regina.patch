@@ -1,22 +1,42 @@
+diff --git a/ios/Toast/UIView+Toast.h b/ios/Toast/UIView+Toast.h
+index 85084dc..a8749c8 100644
+--- a/ios/Toast/UIView+Toast.h
++++ b/ios/Toast/UIView+Toast.h
+@@ -26,6 +26,7 @@
+ #import <UIKit/UIKit.h>
+ 
+ extern const NSString * CSToastPositionTop;
++extern const NSString * CSToastPositionTopRight;
+ extern const NSString * CSToastPositionCenter;
+ extern const NSString * CSToastPositionBottom;
+ 
 diff --git a/ios/Toast/UIView+Toast.m b/ios/Toast/UIView+Toast.m
-index 00408d5..73510c5 100644
+index 6fc8f05..a7e83ab 100644
 --- a/ios/Toast/UIView+Toast.m
 +++ b/ios/Toast/UIView+Toast.m
-@@ -209,8 +209,16 @@ static const NSString * CSToastActivityViewKey  = @"CSToastActivityViewKey";
- - (CGPoint)centerPointForPosition:(id)point withToast:(UIView *)toast {
+@@ -28,6 +28,7 @@
+ #import <objc/runtime.h>
+ 
+ NSString * CSToastPositionTop       = @"CSToastPositionTop";
++NSString * CSToastPositionTopRight  = @"CSToastPositionTopRight";
+ NSString * CSToastPositionCenter    = @"CSToastPositionCenter";
+ NSString * CSToastPositionBottom    = @"CSToastPositionBottom";
+ 
+@@ -396,8 +397,16 @@ static const NSTimeInterval CSToastFadeDuration     = 0.2;
+     CSToastStyle *style = [CSToastManager sharedStyle];
+     
      if([point isKindOfClass:[NSString class]]) {
-         // convert string literals @"top", @"bottom", @"center", or any point wrapped in an NSValue object into a CGPoint
 +        CGSize statusBarFrame = UIApplication.sharedApplication.statusBarFrame.size;
 +        // Note: whether we want width or height seems to depend on *both* (i) portrait vs landscape, and (ii) ios7 vs ios8.
 +        // Just take the min, which is safe.
 +        CGFloat statusBarHeight = MIN(statusBarFrame.width, statusBarFrame.height);
-         if([point caseInsensitiveCompare:@"top"] == NSOrderedSame) {
--            return CGPointMake(self.bounds.size.width/2, (toast.frame.size.height / 2) + CSToastVerticalPadding);
-+            return CGPointMake(self.bounds.size.width/2,
-+                               (toast.frame.size.height / 2) + CSToastVerticalPadding + statusBarHeight);
-+        } else if ([point caseInsensitiveCompare:@"topright"] == NSOrderedSame) {
-+            return CGPointMake((self.bounds.size.width - (toast.frame.size.width / 2)) - CSToastHorizontalPadding - statusBarHeight,
-+                               (toast.frame.size.height / 2) + CSToastVerticalPadding + statusBarHeight);
-         } else if([point caseInsensitiveCompare:@"bottom"] == NSOrderedSame) {
-             return CGPointMake(self.bounds.size.width/2, (self.bounds.size.height - (toast.frame.size.height / 2)) - CSToastVerticalPadding);
-         } else if([point caseInsensitiveCompare:@"center"] == NSOrderedSame) {
++
+         if([point caseInsensitiveCompare:CSToastPositionTop] == NSOrderedSame) {
+-            return CGPointMake(self.bounds.size.width/2, (toast.frame.size.height / 2) + style.verticalPadding);
++            return CGPointMake(self.bounds.size.width/2, (toast.frame.size.height / 2) + style.verticalPadding + statusBarHeight);
++        } else if([point caseInsensitiveCompare:CSToastPositionTopRight] == NSOrderedSame) {
++            return CGPointMake((self.bounds.size.width - (toast.frame.size.width / 2)) - style.horizontalPadding - statusBarHeight,
++                               (toast.frame.size.height / 2) + style.verticalPadding + statusBarHeight);
+         } else if([point caseInsensitiveCompare:CSToastPositionCenter] == NSOrderedSame) {
+             return CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
+         }

@@ -26,6 +26,7 @@
 #import <UIKit/UIKit.h>
 
 extern const NSString * CSToastPositionTop;
+extern const NSString * CSToastPositionTopRight;
 extern const NSString * CSToastPositionCenter;
 extern const NSString * CSToastPositionBottom;
 

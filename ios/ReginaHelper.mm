@@ -128,9 +128,9 @@ BOOL ios8;
 
     // In portrait, display the banner in the top right corner so it is not obscured by
     // the master view controller.
-    NSString* position = (UIInterfaceOrientationIsPortrait(split.interfaceOrientation) ? @"topright" : @"top");
+    const NSString* position = (UIInterfaceOrientationIsPortrait(split.interfaceOrientation) ? CSToastPositionTopRight : CSToastPositionTop);
     if (detail)
-        [split.view makeToast:detail duration:3.0 position:position title:message];
+        [split.view makeToast:detail duration:3.0 position:position title:message image:nil style:nil completion:nil];
     else
         [split.view makeToast:message duration:3.0 position:position];
 
