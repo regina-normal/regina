@@ -30,6 +30,10 @@
  *                                                                        *
  **************************************************************************/
 
+// Explicitly making Python.h the first included file here to make it work
+// with old versions of Mac OS X (see https://bugs.python.org/issue10910)
+#include "Python.h"
+
 #include "safeheldtype.h"
 
 #include <boost/python/object.hpp>
