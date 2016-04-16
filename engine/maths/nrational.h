@@ -221,7 +221,7 @@ class REGINA_API NRational {
          * Deprecated routine that returns the numerator of this rational.
          *
          * \deprecated This routine has been renamed to numerator().
-         * See the numeration() documentation for further details.
+         * See the numerator() documentation for further details.
          */
         REGINA_DEPRECATED NInteger getNumerator() const;
         /**
