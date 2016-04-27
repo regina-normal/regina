@@ -127,7 +127,7 @@ fi
 # Make a list of files in the git source tree.
 echo "Analysing git source tree..."
 
-if ! find "$gittree" -type f | sed -e 's%^[^/]*/%%' | \
+if ! find "$gittree" | sed -e 's%^[^/]*/%%' | \
     grep -v "$grep_builddirs" | \
     grep -v '^\.' | \
     grep -v '/\.' | \
