@@ -65,8 +65,12 @@ namespace regina {
  * infinity is the largest.  Undefined is always equal to itself, and
  * infinity is always equal to itself.
  *
- * Rationals will always be stored in lowest terms (i.e., with relatively
- * prime numerator and denominator), and with a non-negative denominator.
+ * When performing computations on rationals, the results will always be
+ * stored in lowest terms (i.e., with relatively prime numerator and
+ * denominator), and with a non-negative denominator.
+ * However, when constructing a rational number from scratch (e.g., by
+ * supplying the numerator and denominator separately), it is your
+ * responsibility to ensure that the rational is in lowest terms.
  */
 class REGINA_API NRational {
     public:
