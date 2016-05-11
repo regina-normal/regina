@@ -63,6 +63,7 @@ void addNLargeInteger() {
         .def(init<long>())
         .def(init<const NLargeInteger&>())
         .def(init<const regina::NInteger&>())
+        .def(init<double>())
         .def(init<const char*, optional<int> >())
         .def("isNative", &NLargeInteger::isNative)
         .def("isZero", &NLargeInteger::isZero)
