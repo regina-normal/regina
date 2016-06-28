@@ -30,94 +30,32 @@
  *                                                                        *
  **************************************************************************/
 
+#include "link/link.h"
+#include "../safeheldtype.h"
+
+// Held type must be declared before boost/python.hpp
 #include <boost/python.hpp>
 
-#include "regina-config.h"
-#include "engine.h"
-#include "helpers.h"
-
-void addGlobalArray();
-
-void addAlgebra();
-void addAngle();
-void addCensus();
-void addDim2();
-void addDim4();
-void addFile();
-void addForeign();
-void addGeneric();
-void addHypersurface();
-void addLinkDir();
-void addManifold();
-void addMaths();
-void addPacket();
-void addProgress();
-void addSnapPea();
-void addSplit();
-void addSubcomplex();
-void addSurfaces();
-void addTreewidth();
-void addTriangulation();
-void addUtilities();
-
-using boost::python::self;
+using namespace boost::python;
+using namespace regina::python;
+using regina::Link;
 
 namespace {
-    std::string welcome() {
-        return std::string(PACKAGE_STRING) +
-            "\nSoftware for 3-manifolds, 4-manifolds and normal surface theory" +
-            "\nCopyright (c) 1999-2016, The Regina development team";
-    }
+    Link* (*fromJenkins_str)(const std::string&) = &Link::fromJenkins;
 }
 
-BOOST_PYTHON_MODULE(engine) {
-    // Welcome string:
+void addLink() {
+    scope s = class_<Link, bases<regina::NPacket>, SafeHeldType<Link>,
+            boost::noncopyable>("Link", no_init)
+        .def("fromJenkins", fromJenkins_str,
+            return_value_policy<to_held_type<>>())
+        .def("reflect", &Link::reflect)
+        .def("rotate", &Link::rotate)
+        .staticmethod("fromJenkins")
+    ;
 
-    boost::python::def("welcome", welcome);
+    s.attr("typeID") = regina::PACKET_LINK;
+    s.attr("packetType") = regina::PACKET_LINK;
 
-    // Wrappers for regina::python helpers:
-
-    boost::python::enum_<regina::python::EqualityType>("EqualityType")
-        .value("BY_VALUE", regina::python::BY_VALUE)
-        .value("BY_REFERENCE", regina::python::BY_REFERENCE)
-        .value("NEVER_INSTANTIATED", regina::python::NEVER_INSTANTIATED)
-        ;
-
-    addGlobalArray();
-
-    // Core engine routines:
-
-    boost::python::def("versionString", regina::versionString);
-    boost::python::def("getVersionString", regina::versionString);
-    boost::python::def("versionMajor", regina::versionMajor);
-    boost::python::def("getVersionMajor", regina::versionMajor);
-    boost::python::def("versionMinor", regina::versionMinor);
-    boost::python::def("getVersionMinor", regina::versionMinor);
-    boost::python::def("versionUsesUTF8", regina::versionUsesUTF8);
-    boost::python::def("testEngine", regina::testEngine);
-
-    // Components from subdirectories (in approximate dependency order):
-
-    addUtilities();
-    addProgress();
-    addMaths();
-    addAlgebra();
-    addPacket();
-    addTriangulation();
-    addCensus();
-    addDim4();
-    addFile();
-    addForeign();
-    addSplit();
-    addSnapPea();
-    addSubcomplex();
-    addManifold();
-    addAngle();
-    addSurfaces();
-    addHypersurface();
-    addDim2();
-    addGeneric();
-    addTreewidth();
-    addLinkDir();
+    implicitly_convertible<SafeHeldType<Link>, SafeHeldType<regina::NPacket>>();
 }
-

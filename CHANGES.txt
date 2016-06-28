@@ -13,6 +13,7 @@ Version 5.0  [ (under development) ]
         - Now supports triangulations of all dimensions 2,...,15.
           Dimension 4 (like dimensions 3 and 2) has rich functionality;
           dimensions 5,...,15 have more basic support.
+        - Now supports knots and links.
         - Now uses aspects of C++11, which your compiler will need to support.
         - Merged sources for the iPad version into the main source tree.
         - Updated the bundled copy of Normaliz to version 3.0.0 (28 Sep 2015).
@@ -75,6 +76,8 @@ Version 5.0  [ (under development) ]
         Class CompressionBuffer, CompressionStream, DecompressionBuffer,
                 DecompressionStream, ZBuffer:
             - Removed entirely.  Regina now uses boost::iostreams instead.
+        Class Crossing, CrossingStrand:
+            - Supporting classes for the new Link packet class.
         Class DegreeLessThan, DegreeGreaterThan:
             - New template-based helper classes for sorting subfaces of
               a triangulation by degree.
@@ -223,6 +226,8 @@ Version 5.0  [ (under development) ]
               been kept as typedefs for convenience.
         Class LightweightSequence:
             - New lightweight class for storing an array of objects.
+        Class Link:
+            - New packet class for knots and links in the 3-sphere.
         Class NAbelianGroup:
             - New routine utf8(), which is a prettier variant of str().
         Class NAngleStructureList:

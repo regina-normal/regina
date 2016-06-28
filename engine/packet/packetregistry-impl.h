@@ -61,6 +61,7 @@
 #include "dim4/dim4triangulation.h"
 #include "hypersurface/nnormalhypersurfacelist.h"
 #include "snappea/nsnappeatriangulation.h"
+#include "link/link.h"
 #include "generic/triangulation.h"
 
 namespace regina {
@@ -205,6 +206,9 @@ forPacket(PacketType packetType, FunctionObject&& func,
         case PACKET_SNAPPEATRIANGULATION : return
             func.template operator()<PacketInfo<PACKET_SNAPPEATRIANGULATION>>(
             std::forward<Args>(args)...);
+        case PACKET_LINK : return
+            func.template operator()<PacketInfo<PACKET_LINK>>(
+            std::forward<Args>(args)...);
         case PACKET_TRIANGULATION5 : return
             func.template operator()<PacketInfo<PACKET_TRIANGULATION5>>(
             std::forward<Args>(args)...);
@@ -281,6 +285,9 @@ forPacket(PacketType packetType, FunctionObject&& func, Args&&... args) {
             std::forward<Args>(args)...); break;
         case PACKET_SNAPPEATRIANGULATION :
             func.template operator()<PacketInfo<PACKET_SNAPPEATRIANGULATION>>(
+            std::forward<Args>(args)...); break;
+        case PACKET_LINK :
+            func.template operator()<PacketInfo<PACKET_LINK>>(
             std::forward<Args>(args)...); break;
         case PACKET_TRIANGULATION5 :
             func.template operator()<PacketInfo<PACKET_TRIANGULATION5>>(

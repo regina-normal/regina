@@ -115,6 +115,10 @@ enum PacketType {
      */
     PACKET_SNAPPEATRIANGULATION = 16,
     /**
+     * Represents a knot or link in the 3-sphere, of class Link.
+     */
+    PACKET_LINK = 17,
+    /**
      * Represents a 2-dimensional triangulation, of class Triangulation<2>
      * (or equivalently, Dim2Triangulation).
      *
