@@ -90,9 +90,13 @@ class REGINA_API CrossingStrand {
         bool operator != (const CrossingStrand& rhs) const;
         CrossingStrand& operator = (const CrossingStrand& rhs);
 
+        // Python: inc()
         CrossingStrand& operator ++ ();
+        // Python: n/a
         CrossingStrand operator ++ (int);
+        // Python: dec()
         CrossingStrand& operator -- ();
+        // Python: n/a
         CrossingStrand operator -- (int);
 
         CrossingStrand next() const;
@@ -113,7 +117,7 @@ std::ostream& operator << (std::ostream& out, const CrossingStrand& s);
  * Negative crossing: -/-, both pointing right
  */
 class REGINA_API Crossing : public NMarkedElement,
-        public ShortOutput<Crossing>, public boost::noncopyable {
+        public Output<Crossing>, public boost::noncopyable {
     private:
         int sign_; // +1 or -1
         CrossingStrand next_[2]; // 0,1 = under, over strands
@@ -134,6 +138,7 @@ class REGINA_API Crossing : public NMarkedElement,
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
+        void writeTextLong(std::ostream& out) const;
 
     private:
         // next, prev initialised to (0,0).
@@ -144,6 +149,8 @@ class REGINA_API Crossing : public NMarkedElement,
         Crossing(int sign);
 
     friend class Link;
+    friend class XMLLinkCrossingsReader;
+    friend class XMLLinkConnectionsReader;
 };
 
 #ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
@@ -171,6 +178,21 @@ class REGINA_API Link : public NPacket {
         Link(const Link& cloneMe);
 
         ~Link();
+
+        /**
+         * Returns the number of crossings in this link.
+         *
+         * @return the number of crossings.
+         */
+        size_t size() const;
+
+        /**
+         * Returns the number of components in this link.
+         */
+        size_t countComponents() const;
+
+        Crossing* crossing(size_t index);
+        const Crossing* crossing(size_t index) const;
 
         /**
          * Builds a link from the text representation described by
@@ -230,6 +252,16 @@ class REGINA_API Link : public NPacket {
     protected:
         virtual NPacket* internalClonePacket(NPacket* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
+
+    private:
+        /**
+         * Translates a crossing strand from some other link to the
+         * corresponding strand of this link.
+         */
+        CrossingStrand translate(const CrossingStrand& other) const;
+
+    friend class XMLLinkCrossingsReader;
+    friend class XMLLinkComponentsReader;
 };
 
 /*@}*/
@@ -302,7 +334,7 @@ inline CrossingStrand::operator bool() const {
 }
 
 inline std::ostream& operator << (std::ostream& out, const CrossingStrand& s) {
-    return out << s.crossing()->index() << (s.strand() == 1 ? '^' : '_');
+    return out << (s.strand() == 1 ? '^' : '_') << s.crossing()->index();
 }
 
 // Inline functions for Crossing
@@ -331,6 +363,30 @@ inline void Crossing::writeTextShort(std::ostream& out) const {
         out << " (-)";
 }
 
+inline void Crossing::writeTextLong(std::ostream& out) const {
+    out << "Crossing " << index();
+    if (sign_ == 1)
+        out << " (+)";
+    else
+        out << " (-)";
+    out << '\n';
+
+    /*
+    if (sign_ == 1) {
+        out << "--\ /-->  " << next_[0] << '\n';
+        out << "   \\n"
+        out << "--/ \-->  " << next_[1] << std::endl;
+    } else {
+        out << "--\ /-->  " << next_[1] << '\n';
+        out << "   /\n"
+        out << "--/ \-->  " << next_[0] << std::endl;
+    }
+    */
+
+    out << prev_[1] << "  ->  over  ->  " << next_[1] << '\n';
+    out << prev_[0] << "  ->  under  ->  " << next_[0] << std::endl;
+}
+
 inline Crossing::Crossing() {
 }
 
@@ -347,12 +403,33 @@ inline Link::~Link() {
         delete c;
 }
 
+inline size_t Link::size() const {
+    return crossings_.size();
+}
+
+inline size_t Link::countComponents() const {
+    return components_.size();
+}
+
+inline Crossing* Link::crossing(size_t index) {
+    return crossings_[index];
+}
+
+inline const Crossing* Link::crossing(size_t index) const {
+    return crossings_[index];
+}
+
 inline bool Link::dependsOnParent() const {
     return false;
 }
 
 inline NPacket* Link::internalClonePacket(NPacket*) const {
     return new Link(*this);
+}
+
+inline CrossingStrand Link::translate(const CrossingStrand& other) const {
+    return CrossingStrand(crossings_[other.crossing()->index()],
+        other.strand());
 }
 
 } // namespace regina

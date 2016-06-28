@@ -36,7 +36,20 @@
 namespace regina {
 
 Link::Link(const Link& cloneMe) {
-    // TODO: Clone.
+    for (Crossing* c : cloneMe.crossings_)
+        crossings_.push_back(new Crossing(c->sign()));
+
+    auto it = cloneMe.crossings_.begin();
+    for (Crossing* c : crossings_) {
+        for (int i = 0; i < 2; ++i) {
+            c->next_[i] = translate((*it)->next_[i]);
+            c->prev_[i] = translate((*it)->prev_[i]);
+        }
+        ++it;
+    }
+
+    for (const CrossingStrand& comp : cloneMe.components_)
+        components_.push_back(translate(comp));
 }
 
 void Link::writeTextShort(std::ostream& out) const {
@@ -79,7 +92,7 @@ void Link::writeTextLong(std::ostream& out) const {
 
     out << "\nCrossings:";
     for (Crossing* c : crossings_)
-        out << ' ' << c->index() << (c->sign() > 0 ? '+' : '-');
+        out << ' ' << (c->sign() > 0 ? '+' : '-') << c->index();
     out << std::endl;
 }
 
@@ -230,11 +243,14 @@ Link* Link::fromJenkins(const std::string& str) {
 }
 
 void Link::reflect() {
+    ChangeEventSpan span(this);
     for (Crossing* cross : crossings_)
         cross->sign_ = -cross->sign_;
 }
 
 void Link::rotate() {
+    ChangeEventSpan span(this);
+
     for (CrossingStrand& s : components_)
         s.strand_ ^= 1;
 
@@ -249,7 +265,20 @@ void Link::rotate() {
 }
 
 void Link::writeXMLPacketData(std::ostream& out) const {
-    // TODO
+    CrossingStrand s;
+
+    out << "  <crossings size=\"" << crossings_.size() << "\">\n ";
+    for (const Crossing* c : crossings_)
+        out << ' ' << (c->sign() == 1 ? '+' : '-');
+    out << "\n  </crossings>\n";
+    out << "  <connections>\n";
+    for (const Crossing* c : crossings_)
+        out << "  " << c->next_[1] << ' ' << c->next_[0] << '\n';
+    out << "  </connections>\n";
+    out << "  <components size=\"" << components_.size() << "\">\n ";
+    for (const CrossingStrand& s : components_)
+        out << ' ' << s;
+    out << "\n  </components>\n";
 }
 
 } // namespace regina
