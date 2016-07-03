@@ -356,6 +356,8 @@ Version 5.0  [ (under development) ]
         Class NLayeredSolidTorus:
             - Renamed getNumberOfTetrahedra() to size().  The old name
               is deprecated but kept for backward compatibility.
+        Class NLaurent:
+            - New class for Laurent polynomials.
         Class NManifold:
             - Renamed first homology routine getHomologyH1() to homology().  In
               addition, homology() has a new alias homologyH1().  The old names

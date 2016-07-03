@@ -31,6 +31,7 @@ if (${REGINA_INSTALL_DEV})
     ncyclotomic.h
     ninteger.h
     nlargeinteger.h
+    nlaurent.h
     nmatrix.h
     nmatrix2.h
     nmatrixint.h

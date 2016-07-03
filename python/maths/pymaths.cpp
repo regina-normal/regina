@@ -34,6 +34,7 @@ void addMatrixOps();
 void addNCyclotomic();
 void addNInteger();
 void addNLargeInteger();
+void addNLaurent();
 void addNMatrix2();
 void addNMatrixInt();
 void addNPerm2();
@@ -52,6 +53,7 @@ void addMaths() {
     addNCyclotomic();
     addNInteger();
     addNLargeInteger();
+    addNLaurent();
     addNMatrix2();
     addNMatrixInt();
     addNPerm2();

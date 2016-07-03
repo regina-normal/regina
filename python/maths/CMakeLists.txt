@@ -6,6 +6,7 @@ SET ( FILES
   ncyclotomic
   ninteger
   nlargeinteger
+  nlaurent
   nmatrixint
   nmatrix2
   nperm
