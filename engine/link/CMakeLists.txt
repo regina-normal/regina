@@ -3,6 +3,7 @@
 # Files to compile
 SET ( FILES
   link
+  jones
   xmllinkreader
   )
 

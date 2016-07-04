@@ -43,6 +43,7 @@
 #include <boost/noncopyable.hpp>
 #include "regina-core.h"
 #include "packet/npacket.h"
+#include "maths/ninteger.h"
 #include "utilities/nmarkedvector.h"
 
 namespace regina {
@@ -55,6 +56,7 @@ namespace regina {
 
 class Crossing;
 class Link;
+template <typename T> class NLaurent;
 
 /**
  * TODO: Document this class.
@@ -243,6 +245,21 @@ class REGINA_API Link : public NPacket {
         // Corresponds to a 3-D rotation about some axis in the plane.
         void rotate();
 
+        // Positive crossings - negative crossings.
+        long writhe() const;
+
+        // The Kauffman bracket polynomial.
+        // Currently a naive implementation with running time 2^c,
+        // which returns 0 if there are too many crossings.
+        // Returns the zero polynomial for the empty link.
+        NLaurent<NInteger>* bracket() const;
+
+        // Currently a naive implementation with running time 2^c,
+        // which returns 0 if there are too many crossings.
+        // This implementation returns a polynomial in sqrt(t).
+        // Returns the zero polynomial for the empty link.
+        NLaurent<NInteger>* jones() const;
+
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
         static NXMLPacketReader* xmlReader(NPacket* parent,
@@ -417,6 +434,13 @@ inline Crossing* Link::crossing(size_t index) {
 
 inline const Crossing* Link::crossing(size_t index) const {
     return crossings_[index];
+}
+
+inline long Link::writhe() const {
+    long ans = 0;
+    for (const Crossing* c : crossings_)
+        ans += c->sign();
+    return ans;
 }
 
 inline bool Link::dependsOnParent() const {

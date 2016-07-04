@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "link/link.h"
+#include "maths/nlaurent.h"
 #include "../helpers.h"
 #include "../safeheldtype.h"
 
@@ -92,6 +93,11 @@ void addLink() {
             return_value_policy<to_held_type<>>())
         .def("reflect", &Link::reflect)
         .def("rotate", &Link::rotate)
+        .def("writhe", &Link::writhe)
+        .def("bracket", &Link::bracket,
+            return_value_policy<manage_new_object>())
+        .def("jones", &Link::jones,
+            return_value_policy<manage_new_object>())
         .staticmethod("fromJenkins")
     ;
 
