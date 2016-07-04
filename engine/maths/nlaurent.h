@@ -320,6 +320,11 @@ class NLaurent {
         void shift(long s);
 
         /**
+         * Negates this polynomial.
+         */
+        void negate();
+
+        /**
          * Multiplies this polynomial by the given constant.
          *
          * @param scalar the scalar factor to multiply by.
@@ -648,6 +653,13 @@ inline void NLaurent<T>::shift(long s) {
     base_ += s;
     minExp_ += s;
     maxExp_ += s;
+}
+
+template <typename T>
+inline void NLaurent<T>::negate() {
+    for (long exp = minExp_; exp <= maxExp_; ++exp)
+        if (coeff_[exp - base_] != 0)
+            coeff_[exp - base_] = -coeff_[exp - base_];
 }
 
 template <typename T>
