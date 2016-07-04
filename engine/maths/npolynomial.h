@@ -673,6 +673,11 @@ template <typename T>
 inline NPolynomial<T>& NPolynomial<T>::operator /= (const T& scalar) {
     for (size_t i = 0; i <= degree_; ++i)
         coeff_[i] /= scalar;
+
+    // For integer division, we could have zeroed out some coefficients.
+    while (degree_ > 0 && coeff_[degree_] == 0)
+        --degree_;
+
     return *this;
 }
 
