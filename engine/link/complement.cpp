@@ -31,9 +31,34 @@
  **************************************************************************/
 
 #include "link/link.h"
+#include "packet/ncontainer.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
+
+namespace {
+    // The following gluings describe a punctured ideal unknot complement.
+    // The real 2-sphere boundary is a triangular pillow, formed from
+    // faces 5 (013) and 5 (213).
+
+    const int puncturedUnknotAdjacencies[6][4] = {
+        { 1, 1, 1, 3},
+        { 0, 0, 3, 0},
+        { 2, 2, 5, 3},
+        { 0, 1, 2, 4},
+        { 4, 3, 5, 4},
+        { -1, 2, -1, 4}
+    };
+
+    const int puncturedUnknotGluings[6][4][4] = {
+        { { 1, 3, 0, 2 }, { 3, 0, 1, 2 }, { 0, 1, 3, 2 }, { 1, 2, 3, 0 } },
+        { { 1, 2, 3, 0 }, { 2, 0, 3, 1 }, { 0, 2, 1, 3 }, { 0, 1, 3, 2 } },
+        { { 1, 0, 2, 3 }, { 1, 0, 2, 3 }, { 0, 2, 1, 3 }, { 0, 1, 3, 2 } },
+        { { 3, 0, 1, 2 }, { 0, 2, 1, 3 }, { 0, 1, 3, 2 }, { 0, 3, 2, 1 } },
+        { { 3, 1, 2, 0 }, { 0, 3, 2, 1 }, { 0, 1, 3, 2 }, { 3, 1, 2, 0 } },
+        { { 0, 0, 0, 0 }, { 0, 2, 1, 3 }, { 0, 0, 0, 0 }, { 0, 1, 3, 2 } }
+    };
+}
 
 Triangulation<3>* Link::complement(bool simplify) const {
     // This implementation produces an oriented triangluation.
@@ -163,8 +188,71 @@ Triangulation<3>* Link::complement(bool simplify) const {
     // disconnected triangluations, as discussed in the comments at the
     // beginning of this routine.
 
-    // TODO: Fix missing unknots / disconnectedness.
+    if (ans->isEmpty()) {
+        // We seem to have lost all our components (which therefore means
+        // our link is a k-component unlink for some k).
+        // Build a 3-sphere for now; we will pick up the missing unknot
+        // components shortly.
+        NTetrahedron* t = ans->newTetrahedron();
+        t->join(0, t, NPerm4(0,1));
+        t->join(2, t, NPerm4(2,3));
+    }
 
+    if (! ans->isConnected()) {
+        // Replace ans with the connected sum of its components.
+        NContainer parent;
+        ans->splitIntoComponents(&parent, false /* setLabels */);
+
+        // Use the first component to form the connected sum.
+        NTriangulation* newAns = static_cast<NTriangulation*>(
+            parent.firstChild());
+
+        NTriangulation* comp = static_cast<NTriangulation*>(
+            newAns->nextSibling());
+        while (comp) {
+            newAns->connectedSumWith(*comp);
+            comp = static_cast<NTriangulation*>(comp->nextSibling());
+        }
+
+        newAns->makeOrphan();
+        delete ans;
+        ans = newAns;
+
+        // The remaining components will be destroyed when parent goes
+        // out of scope (i.e., now).
+    }
+
+    size_t idealVertices = 0;
+    for (auto v : ans->vertices())
+        if (v->isIdeal())
+            ++idealVertices;
+
+    while (idealVertices != components_.size()) {
+        // We're still missing one or more unknot complements.
+
+        // Connect sum with an unknot complement.
+        // We do this by prying open a face and inserting a punctured
+        // unknot complement with a triangular pillow boundary.
+
+        NTriangle* f = ans->triangle(0);
+        NTetrahedron* tet0 = f->embedding(0).simplex();
+        NPerm4 vert0 = f->embedding(0).vertices();
+        NTetrahedron* tet1 = f->embedding(1).simplex();
+        NPerm4 vert1 = f->embedding(1).vertices();
+
+        ans->insertConstruction(6, puncturedUnknotAdjacencies,
+            puncturedUnknotGluings);
+        NTetrahedron* unknotBdry = ans->tetrahedra().back();
+        // Boundary triangles are 013 and 213.
+
+        tet0->unjoin(vert0[3]);
+        unknotBdry->join(2, tet0, vert0 * NPerm4(3,2));
+        unknotBdry->join(0, tet1, vert1 * NPerm4(3,1,0,2));
+
+        ++idealVertices;
+    }
+
+    // Done!
     if (simplify)
         ans->intelligentSimplify();
     return ans;
