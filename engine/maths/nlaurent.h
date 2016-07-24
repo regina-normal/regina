@@ -320,6 +320,34 @@ class NLaurent {
         void shift(long s);
 
         /**
+         * Multiplies all exponents in this polynomial by \a k for some
+         * integer \a k.  This is equivalent to replacing the variable
+         * \a x of the polynomial with <i>x</i><sup><i>k</i></sup>.
+         *
+         * Both positive and negative scaling factors \a k are allowed.
+         *
+         * \pre \a k is non-zero.
+         *
+         * @param k the scaling factor to multiply exponents by.
+         */
+        void scaleUp(long k);
+
+        /**
+         * Divides all exponents in this polynomial by \a k for some
+         * integer \a k.  This is equivalent to replacing the variable
+         * \a x of the polynomial with <i>x</i><sup>1/<i>k</i></sup>.
+         *
+         * Both positive and negative scaling factors \a k are allowed.
+         *
+         * \pre \a k is non-zero.
+         * \pre All exponents in this polynomial with non-zero coefficients
+         * are multiples of \a k.
+         *
+         * @param k the scaling factor to divide exponents by.
+         */
+        void scaleDown(long k);
+
+        /**
          * Negates this polynomial.
          */
         void negate();
@@ -653,6 +681,72 @@ inline void NLaurent<T>::shift(long s) {
     base_ += s;
     minExp_ += s;
     maxExp_ += s;
+}
+
+template <typename T>
+void NLaurent<T>::scaleUp(long k) {
+    if (k == 1)
+        return;
+
+    if (minExp_ == maxExp_ && base_ == minExp_) {
+        minExp_ *= k;
+        maxExp_ *= k;
+        base_ *= k;
+        return;
+    }
+
+    T* newCoeff;
+    if (k > 0) {
+        newCoeff = new T[k * (maxExp_ - minExp_) + 1];
+        for (long i = 0; i <= maxExp_ - minExp_; ++i)
+            newCoeff[k * i] = coeff_[minExp_ - base_ + i];
+        minExp_ *= k;
+        maxExp_ *= k;
+    } else {
+        newCoeff = new T[k * (minExp_ - maxExp_) + 1];
+        for (long i = maxExp_ - minExp_; i >= 0; --i)
+            newCoeff[(-k) * i] = coeff_[maxExp_ - base_ - i];
+        minExp_ *= k;
+        maxExp_ *= k;
+        std::swap(minExp_, maxExp_);
+    }
+
+    base_ = minExp_;
+    delete[] coeff_;
+    coeff_ = newCoeff;
+}
+
+template <typename T>
+void NLaurent<T>::scaleDown(long k) {
+    if (k == 1)
+        return;
+
+    if (minExp_ == maxExp_ && base_ == minExp_) {
+        minExp_ /= k;
+        maxExp_ /= k;
+        base_ /= k;
+        return;
+    }
+
+    T* newCoeff;
+    if (k > 0) {
+        newCoeff = new T[(maxExp_ - minExp_) / k + 1];
+        for (long i = 0; i <= (maxExp_ - minExp_) / k; ++i)
+            newCoeff[i] = coeff_[minExp_ - base_ + k * i];
+        minExp_ /= k;
+        maxExp_ /= k;
+    } else {
+        newCoeff = new T[(minExp_ - maxExp_) / k + 1];
+        for (long i = (minExp_ - maxExp_) / k; i >= 0; --i)
+            newCoeff[i] = coeff_[maxExp_ - base_ + k * i];
+        minExp_ /= k;
+        maxExp_ /= k;
+        std::swap(minExp_, maxExp_);
+    }
+
+    base_ = minExp_;
+    delete[] coeff_;
+    coeff_ = newCoeff;
 }
 
 template <typename T>

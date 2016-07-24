@@ -120,6 +120,8 @@ void addNLaurent() {
         .def("set", &NLaurent<NInteger>::set)
         .def("swap", &NLaurent<NInteger>::swap)
         .def("shift", &NLaurent<NInteger>::shift)
+        .def("scaleUp", &NLaurent<NInteger>::scaleUp)
+        .def("scaleDown", &NLaurent<NInteger>::scaleDown)
         .def("negate", &NLaurent<NInteger>::negate)
         .def(self *= NInteger())
         .def(self /= NInteger())

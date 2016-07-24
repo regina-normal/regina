@@ -180,7 +180,9 @@ NLaurent<NInteger>* Link::jones() const {
     if (w % 2)
         ans->negate();
 
-    // TODO: Multiply all exponents by -1/4.
+    // We only scale exponents by -1/2, since we are returning a Laurent
+    // polynomial in sqrt(t).
+    ans->scaleDown(-2);
     return ans;
 }
 
