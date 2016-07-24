@@ -51,6 +51,12 @@ NLaurent<NInteger>* Link::bracket() const {
     // It is guaranteed that we have at least one strand, though we
     // might have zero crossings.
 
+    // How many zero-crossing components do we start with?
+    size_t initLoops = 0;
+    for (StrandRef s : components_)
+        if (! s)
+            ++initLoops;
+
     size_t n = crossings_.size();
     if (n >= sizeof(long) * 8)
         return nullptr;
@@ -66,12 +72,12 @@ NLaurent<NInteger>* Link::bracket() const {
     size_t loops;
     size_t pos;
     int end;
-    CrossingStrand s;
+    StrandRef s;
     int dirInit, dir;
     long shift;
     bool* found = new bool[2 * n];
     for (mask = 0; mask != (1 << n); ++mask) {
-        loops = 0;
+        loops = initLoops;
 
         // found[0..n-1] : seen exiting the crossing on the upper strand
         // found[n..2n-1] : seen entering the crossing on the upper strand
@@ -87,7 +93,7 @@ NLaurent<NInteger>* Link::bracket() const {
                     //std::cerr << "LOOP\n";
                     ++loops;
 
-                    s = CrossingStrand(crossings_[pos], 1);
+                    s = crossings_[pos]->upper();
                     dir = dirInit;
 
                     do {

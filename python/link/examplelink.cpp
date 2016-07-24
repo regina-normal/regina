@@ -30,11 +30,47 @@
  *                                                                        *
  **************************************************************************/
 
-void addExampleLink();
-void addLink();
+#include <boost/python.hpp>
+#include "link/examplelink.h"
+#include "link/link.h"
+#include "../helpers.h"
+#include "../safeheldtype.h"
 
-void addLinkDir() {
-    addExampleLink();
-    addLink();
+using namespace boost::python;
+using namespace regina::python;
+using regina::ExampleLink;
+using regina::Link;
+
+void addExampleLink() {
+    class_<ExampleLink>("ExampleLink", no_init)
+        .def("unknot", &ExampleLink::unknot,
+            return_value_policy<to_held_type<> >())
+        .def("gordian", &ExampleLink::gordian,
+            return_value_policy<to_held_type<> >())
+        .def("trefoilLeft", &ExampleLink::trefoilLeft,
+            return_value_policy<to_held_type<> >())
+        .def("trefoilRight", &ExampleLink::trefoilRight,
+            return_value_policy<to_held_type<> >())
+        .def("trefoil", &ExampleLink::trefoil,
+            return_value_policy<to_held_type<> >())
+        .def("figureEight", &ExampleLink::figureEight,
+            return_value_policy<to_held_type<> >())
+        .def("hopf", &ExampleLink::hopf,
+            return_value_policy<to_held_type<> >())
+        .def("whitehead", &ExampleLink::whitehead,
+            return_value_policy<to_held_type<> >())
+        .def("borromean", &ExampleLink::borromean,
+            return_value_policy<to_held_type<> >())
+        .def(regina::python::no_eq_operators())
+        .staticmethod("unknot")
+        .staticmethod("gordian")
+        .staticmethod("trefoilLeft")
+        .staticmethod("trefoilRight")
+        .staticmethod("trefoil")
+        .staticmethod("figureEight")
+        .staticmethod("hopf")
+        .staticmethod("whitehead")
+        .staticmethod("borromean")
+    ;
 }
 

@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2016, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,11 +30,66 @@
  *                                                                        *
  **************************************************************************/
 
-void addExampleLink();
-void addLink();
+#include "link/link.h"
+#include "utilities/stringutils.h"
+#include <iterator>
 
-void addLinkDir() {
-    addExampleLink();
-    addLink();
+namespace regina {
+
+Link* Link::fromOrientedGauss(const std::string& s) {
+    std::vector<std::string> terms;
+    basicTokenise(std::back_inserter(terms), s);
+    return fromOrientedGauss(terms.begin(), terms.end());
 }
+
+bool Link::parseOrientedGaussTerm(const std::string& s,
+        size_t nCross, size_t& crossing, int& strand, int& sign) {
+    if (s.length() < 3)
+        return false;
+
+    if (s[0] == '+')
+        strand = 1;
+    else if (s[0] == '-')
+        strand = 0;
+    else
+        return false;
+
+    if (s[1] == '<')
+        sign = (strand == 1 ? 1 : -1);
+    else if (s[1] == '>')
+        sign = (strand == 1 ? -1 : 1);
+    else
+        return false;
+
+    if (! valueOf(s.substr(2), crossing))
+        return false;
+
+    return (crossing > 0 && crossing <= nCross);
+}
+
+bool Link::parseOrientedGaussTerm(const char* s,
+        size_t nCross, size_t& crossing, int& strand, int& sign) {
+    if (! (s[0] && s[1] && s[2]))
+        return false;
+
+    if (s[0] == '+')
+        strand = 1;
+    else if (s[0] == '-')
+        strand = 0;
+    else
+        return false;
+
+    if (s[1] == '<')
+        sign = (strand == 1 ? 1 : -1);
+    else if (s[1] == '>')
+        sign = (strand == 1 ? -1 : 1);
+    else
+        return false;
+
+    char* endPtr;
+    crossing = static_cast<size_t>(strtol(s + 2, &endPtr, 10));
+    return (*endPtr == 0 && crossing > 0 && crossing <= nCross);
+}
+
+} // namespace regina
 

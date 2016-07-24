@@ -2,8 +2,12 @@
 
 # Files to compile
 SET ( FILES
-  link
+  complement
+  examplelink
+  gauss
+  jenkins
   jones
+  link
   xmllinkreader
   )
 
@@ -17,6 +21,9 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
+    data-impl.h
+    examplelink.h
+    gauss-impl.h
     link.h
     xmllinkreader.h
     DESTINATION ${INCLUDEDIR}/link COMPONENT Development)

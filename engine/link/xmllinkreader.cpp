@@ -108,8 +108,8 @@ void XMLLinkConnectionsReader::initialChars(const std::string& chars) {
                 link_ = 0;
                 return;
             }
-            link_->crossing(read)->next_[side] = CrossingStrand(adj, adjSide);
-            adj->prev_[adjSide] = CrossingStrand(link_->crossing(read), side);
+            link_->crossing(read)->next_[side] = adj->strand(adjSide);
+            adj->prev_[adjSide] = link_->crossing(read)->strand(side);
         }
 }
 
@@ -148,8 +148,7 @@ void XMLLinkComponentsReader::initialChars(const std::string& chars) {
             return;
         }
 
-        link_->components_.push_back(CrossingStrand(
-            link_->crossing(crossing), strand));
+        link_->components_.push_back(link_->crossing(crossing)->strand(strand));
     }
 }
 

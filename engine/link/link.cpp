@@ -48,7 +48,7 @@ Link::Link(const Link& cloneMe) {
         ++it;
     }
 
-    for (const CrossingStrand& comp : cloneMe.components_)
+    for (const StrandRef& comp : cloneMe.components_)
         components_.push_back(translate(comp));
 }
 
@@ -76,11 +76,11 @@ void Link::writeTextLong(std::ostream& out) const {
     out << "\n\n";
 
     int comp = 0;
-    CrossingStrand s;
-    for (CrossingStrand start : components_) {
+    StrandRef s;
+    for (StrandRef start : components_) {
         out << "Component " << comp++ << ": ";
         if (! start) {
-            out << "no crossings (separated unknot)" << std::endl;
+            out << "no crossings (separate unknot)" << std::endl;
             continue;
         }
         s = start;
@@ -96,152 +96,6 @@ void Link::writeTextLong(std::ostream& out) const {
     out << std::endl;
 }
 
-Link* Link::fromJenkins(std::istream& in) {
-    int nComp;
-    in >> nComp;
-    if (! in)
-        return 0;
-
-    if (nComp == 0)
-        return new Link;
-
-    Link* ans = new Link;
-    ans->components_.resize(nComp);
-
-    // We need to allocate the crossings first.
-    // Alas, these appear last in the input.
-    // Skip through (and remember) the link components, which appear first.
-    int* compLen = new int[nComp];
-    int** compInput = new int*[nComp];
-    unsigned c, i;
-    unsigned foundCrossings = 0;
-
-    for (c = 0; c < nComp; ++c) {
-        in >> compLen[c];
-        if ((! in) || (compLen[c] < 0)) {
-            // Invalid input.
-            for (i = 0; i < c; ++i)
-                delete[] compInput[i];
-            delete[] compInput;
-            delete[] compLen;
-            delete ans;
-            return 0;
-        }
-
-        compInput[c] = new int[2 * compLen[c]];
-        for (i = 0; i < compLen[c]; ++i) {
-            in >> compInput[c][2 * i] >> compInput[c][2 * i + 1];
-            if ((! in) || compInput[c][2 * i] < 0 ||
-                    (compInput[c][2 * i + 1] != 1 &&
-                     compInput[c][2 * i + 1] != -1)) {
-                // Invalid input.
-                for (i = 0; i <= c; ++i)
-                    delete[] compInput[i];
-                delete[] compInput;
-                delete[] compLen;
-                delete ans;
-                return 0;
-            }
-        }
-
-        foundCrossings += compLen[c];
-    }
-
-    // *Now* we have the number of crossings.
-    if (foundCrossings % 2 != 0) {
-        // Invalid input.
-        for (i = 0; i < nComp; ++i)
-            delete[] compInput[i];
-        delete[] compInput;
-        delete[] compLen;
-        delete ans;
-        return 0;
-    }
-    unsigned nCross = foundCrossings / 2;
-
-    Crossing** tmpCross = new Crossing*[nCross];
-    std::fill(tmpCross, tmpCross + nCross, nullptr);
-
-    int label, sign;
-    for (i = 0; i < nCross; ++i) {
-        in >> label >> sign;
-        if ((! in) || (sign != 1 && sign != -1) ||
-                label < 0 || label >= nCross || tmpCross[label]) {
-            // Invalid input.
-            for (i = 0; i < nCross; ++i)
-                delete tmpCross[i];
-            delete[] tmpCross;
-            for (i = 0; i < nComp; ++i)
-                delete[] compInput[i];
-            delete[] compInput;
-            delete[] compLen;
-            delete ans;
-            return 0;
-        }
-
-        tmpCross[label] = new Crossing(sign);
-    }
-
-    for (i = 0; i < nCross; ++i)
-        ans->crossings_.push_back(tmpCross[i]);
-    delete[] tmpCross;
-
-    // Finally, we can connect the crossings together by following the
-    // individual link components.
-    unsigned startCross, endCross;
-    unsigned startStrand, endStrand;
-    bool broken = false;
-    for (c = 0; c < nComp && ! broken; ++c) {
-        for (i = 0; i < compLen[c]; ++i) {
-            startCross = compInput[c][2 * i];
-            startStrand = (compInput[c][2 * i + 1] > 0 ? 1 : 0);
-            endCross = compInput[c][i == compLen[c] - 1 ? 0 : 2 * i + 2];
-            endStrand = (compInput[c][i == compLen[c] - 1 ? 1 : 2 * i + 3] > 0 ?
-                1 : 0);
-
-            if (ans->crossings_[startCross]->next_[startStrand]) {
-                broken = true;
-                break;
-            }
-            ans->crossings_[startCross]->next_[startStrand] =
-                CrossingStrand(ans->crossings_[endCross], endStrand);
-        }
-
-        ans->components_[c] = CrossingStrand(ans->crossings_[compInput[c][0]],
-            (compInput[c][1] > 0 ? 1 : 0));
-    }
-
-    // Start cleaning up.
-    for (i = 0; i < nComp; ++i)
-        delete[] compInput[i];
-    delete[] compInput;
-    delete[] compLen;
-
-    if (broken) {
-        // Invalid input.
-        delete ans;
-        return 0;
-    }
-
-    // Set up prev links to match next links.
-    CrossingStrand next;
-    for (Crossing* cross : ans->crossings_) {
-        next = cross->next_[0];
-        next.crossing()->prev_[next.strand()] = CrossingStrand(cross, 0);
-
-        next = cross->next_[1];
-        next.crossing()->prev_[next.strand()] = CrossingStrand(cross, 1);
-    }
-
-    // All done!
-    return ans;
-}
-
-Link* Link::fromJenkins(const std::string& str) {
-    std::istringstream in(str);
-    return fromJenkins(in);
-}
-
 void Link::reflect() {
     ChangeEventSpan span(this);
     for (Crossing* cross : crossings_)
@@ -251,7 +105,7 @@ void Link::reflect() {
 void Link::rotate() {
     ChangeEventSpan span(this);
 
-    for (CrossingStrand& s : components_)
+    for (StrandRef& s : components_)
         s.strand_ ^= 1;
 
     for (Crossing* cross : crossings_) {
@@ -265,7 +119,7 @@ void Link::rotate() {
 }
 
 void Link::writeXMLPacketData(std::ostream& out) const {
-    CrossingStrand s;
+    StrandRef s;
 
     out << "  <crossings size=\"" << crossings_.size() << "\">\n ";
     for (const Crossing* c : crossings_)
@@ -276,7 +130,7 @@ void Link::writeXMLPacketData(std::ostream& out) const {
         out << "  " << c->next_[1] << ' ' << c->next_[0] << '\n';
     out << "  </connections>\n";
     out << "  <components size=\"" << components_.size() << "\">\n ";
-    for (const CrossingStrand& s : components_)
+    for (const StrandRef& s : components_)
         out << ' ' << s;
     out << "\n  </components>\n";
 }

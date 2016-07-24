@@ -32,6 +32,7 @@
 
 #include "link/link.h"
 #include "maths/nlaurent.h"
+#include "triangulation/ntriangulation.h"
 #include "../helpers.h"
 #include "../safeheldtype.h"
 
@@ -41,34 +42,57 @@
 using namespace boost::python;
 using namespace regina::python;
 using regina::Crossing;
-using regina::CrossingStrand;
+using regina::StrandRef;
 using regina::Link;
 
 namespace {
     regina::Crossing* (Link::*crossing_nonconst)(size_t) = &Link::crossing;
+    Link* (*fromOrientedGauss_str)(const std::string&) =
+        &Link::fromOrientedGauss;
     Link* (*fromJenkins_str)(const std::string&) = &Link::fromJenkins;
 
-    void strand_inc_operator(CrossingStrand& s) {
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_complement, Link::complement,
+        0, 1);
+
+    Link* fromOrientedGauss_list(boost::python::list terms) {
+        long len = boost::python::len(terms);
+
+        std::string* s = new std::string[len];
+        for (long i = 0; i < len; ++i) {
+            extract<std::string> val(terms[i]);
+            if (! val.check()) {
+                // Throw an exception.
+                delete[] s;
+                val();
+            }
+            s[i] = val();
+        }
+
+        Link* ans = Link::fromOrientedGauss(s, s + len);
+        delete[] s;
+        return ans;
+    }
+
+    void strand_inc_operator(StrandRef& s) {
        ++s;
     }
 
-    void strand_dec_operator(CrossingStrand& s) {
+    void strand_dec_operator(StrandRef& s) {
        --s;
     }
 }
 
 void addLink() {
-    class_<CrossingStrand>("CrossingStrand", init<>())
+    class_<StrandRef>("StrandRef", init<>())
         .def(init<Crossing*, int>())
-        .def(init<const CrossingStrand&>())
-        .def("crossing", &CrossingStrand::crossing,
+        .def(init<const StrandRef&>())
+        .def("crossing", &StrandRef::crossing,
             return_value_policy<reference_existing_object>())
-        .def("strand", &CrossingStrand::strand)
+        .def("strand", &StrandRef::strand)
         .def("inc", strand_inc_operator)
         .def("dec", strand_dec_operator)
-        // TODO: bool()
-        .def("next", &CrossingStrand::next)
-        .def("prev", &CrossingStrand::prev)
+        .def("next", &StrandRef::next)
+        .def("prev", &StrandRef::prev)
         .def(regina::python::add_eq_operators())
     ;
 
@@ -76,6 +100,11 @@ void addLink() {
             ("Crossing", no_init)
         .def("index", &Crossing::index)
         .def("sign", &Crossing::sign)
+        .def("upper", &Crossing::upper)
+        .def("lower", &Crossing::lower)
+        .def("over", &Crossing::over)
+        .def("under", &Crossing::under)
+        .def("strand", &Crossing::strand)
         .def("next", &Crossing::next)
         .def("prev", &Crossing::prev)
         .def(regina::python::add_output())
@@ -84,20 +113,29 @@ void addLink() {
 
     scope s = class_<Link, bases<regina::NPacket>, SafeHeldType<Link>,
             boost::noncopyable>("Link", init<>())
+        .def(init<size_t>())
         .def(init<const Link&>())
         .def("size", &Link::size)
         .def("countComponents", &Link::countComponents)
         .def("crossing", crossing_nonconst,
             return_internal_reference<>())
+        .def("component", &Link::component)
+        .def("fromOrientedGauss", fromOrientedGauss_list,
+            return_value_policy<to_held_type<>>())
+        .def("fromOrientedGauss", fromOrientedGauss_str,
+            return_value_policy<to_held_type<>>())
         .def("fromJenkins", fromJenkins_str,
             return_value_policy<to_held_type<>>())
         .def("reflect", &Link::reflect)
         .def("rotate", &Link::rotate)
         .def("writhe", &Link::writhe)
+        .def("complement", &Link::complement,
+            return_value_policy<to_held_type<>>(), OL_complement())
         .def("bracket", &Link::bracket,
             return_value_policy<manage_new_object>())
         .def("jones", &Link::jones,
             return_value_policy<manage_new_object>())
+        .staticmethod("fromOrientedGauss")
         .staticmethod("fromJenkins")
     ;
 
