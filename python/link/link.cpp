@@ -130,7 +130,7 @@ void addLink() {
         .def("rotate", &Link::rotate)
         .def("writhe", &Link::writhe)
         .def("complement", &Link::complement,
-            return_value_policy<to_held_type<>>(), OL_complement())
+            OL_complement()[return_value_policy<to_held_type<>>()])
         .def("bracket", &Link::bracket,
             return_value_policy<manage_new_object>())
         .def("jones", &Link::jones,
