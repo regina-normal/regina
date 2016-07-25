@@ -84,7 +84,7 @@ class LinkTest : public CppUnit::TestFixture {
             unknot1 = Link::fromData({ 1 }, { 1, -1 });
             unknot1->setLabel("Unknot (1 crossing)");
 
-            unknot3 = Link::fromData({ 1, 1, -1 }, { 1, -2, 3, -1, 2, -3 });
+            unknot3 = Link::fromData({ 1, 1, -1 }, { 1, -2, -3, -1, 2, 3 });
             unknot3->setLabel("Unknot (3 crossings)");
 
             unknotGordian = ExampleLink::gordian();

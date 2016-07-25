@@ -227,7 +227,12 @@ Triangulation<3>* Link::complement(bool simplify) const {
         if (v->isIdeal())
             ++idealVertices;
 
-    while (idealVertices != components_.size()) {
+    if (idealVertices > components_.size())
+        std::cerr << "ERROR: The complement of this link contains "
+            "too many ideal vertices.\nThis usually means that the "
+            "knot diagram has no planar embedding." << std::endl;
+
+    while (idealVertices < components_.size()) {
         // We're still missing one or more unknot complements.
 
         // Connect sum with an unknot complement.
