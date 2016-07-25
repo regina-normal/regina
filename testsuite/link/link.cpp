@@ -218,9 +218,93 @@ class LinkTest : public CppUnit::TestFixture {
             testJones(trefoil_unknot_overlap, "x^9 - x^5 - x^3 - x");
         }
 
+        void testComplementBasic(Link* l) {
+            NTriangulation* c = l->complement();
+
+            if (c->countComponents() != 1) {
+                std::ostringstream msg;
+                msg << l->label() << " complement: expected 1 component, "
+                    "found " << c->countComponents() << ".";
+                delete c;
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            size_t ideal = 0;
+            for (auto v : c->vertices()) {
+                regina::NVertex::LinkType t = v->link();
+                if (t == regina::NVertex::TORUS)
+                    ++ideal;
+                else if (t != regina::NVertex::SPHERE) {
+                    std::ostringstream msg;
+                    msg << l->label() << " complement: "
+                        "contains a vertex with unexpected link type.";
+                    delete c;
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            if (ideal != l->countComponents()) {
+                std::ostringstream msg;
+                msg << l->label() << " complement: expected "
+                    << l->countComponents() << " ideal vertices, "
+                    "found " << ideal << ".";
+                delete c;
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            delete c;
+        }
+
+        void testComplementS3(Link* l) {
+            NTriangulation* c = l->complement();
+            if (! c->isThreeSphere()) {
+                std::ostringstream msg;
+                msg << l->label() << " complement: not a 3-sphere "
+                    "as expected.";
+                delete c;
+                CPPUNIT_FAIL(msg.str());
+            }
+            delete c;
+        }
+
+        void testComplementUnknot(Link* l) {
+            NTriangulation* c = l->complement();
+            if (! c->isSolidTorus()) {
+                std::ostringstream msg;
+                msg << l->label() << " complement: not a solid torus "
+                    "as expected.";
+                delete c;
+                CPPUNIT_FAIL(msg.str());
+            }
+            delete c;
+        }
+
         void complement() {
-            // TODO: Test # ideal vertices.
-            // TODO: Run solid torus recognition on the unknots.
+            testComplementBasic(empty);
+            testComplementBasic(unknot0);
+            testComplementBasic(unknot1);
+            testComplementBasic(unknot3);
+            testComplementBasic(unknotGordian);
+            testComplementBasic(trefoilLeft);
+            testComplementBasic(trefoilRight);
+            testComplementBasic(figureEight);
+            testComplementBasic(unlink2_0);
+            testComplementBasic(unlink3_0);
+            testComplementBasic(unlink2_r2);
+            testComplementBasic(unlink2_r1r1);
+            testComplementBasic(hopf);
+            testComplementBasic(whitehead);
+            testComplementBasic(borromean);
+            testComplementBasic(trefoil_unknot0);
+            testComplementBasic(trefoil_unknot1);
+            testComplementBasic(trefoil_unknot_overlap);
+
+            testComplementS3(empty);
+            testComplementUnknot(unknot0);
+            testComplementUnknot(unknot1);
+            testComplementUnknot(unknot3);
+            // Too large! - testComplementUnknot(unknotGordian);
+
             // TODO: Test hyperbolicity for Whitehead & Borromean.
             // TODO: Algebraic tests for the separable links.
         }
