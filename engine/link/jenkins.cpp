@@ -140,6 +140,11 @@ Link* Link::fromJenkins(std::istream& in) {
     unsigned startStrand, endStrand;
     bool broken = false;
     for (c = 0; c < nComp && ! broken; ++c) {
+        if (compLen[c] == 0) {
+            // The StrandRef() constructor already gives us a null reference.
+            continue;
+        }
+
         for (i = 0; i < compLen[c]; ++i) {
             startCross = compInput[c][2 * i];
             startStrand = (compInput[c][2 * i + 1] > 0 ? 1 : 0);
