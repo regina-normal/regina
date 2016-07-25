@@ -210,8 +210,9 @@ class LinkTest : public CppUnit::TestFixture {
             testJones(unlink2_r2, "-x - x^-1");
             testJones(unlink2_r1r1, "-x - x^-1");
             testJones(hopf, "-x^5 - x");
-            // TODO: Check real answer: testJones(whitehead, 2);
-            // TODO: Check real answer: testJones(borromean, 3);
+            testJones(whitehead, "-x^3 + x - 2 x^-1 + x^-3 - 2 x^-5 + x^-7");
+            testJones(borromean,
+                "-x^6 + 3 x^4 - 2 x^2 + 4 - 2 x^-2 + 3 x^-4 - x^-6");
             testJones(trefoil_unknot0, "x^9 - x^5 - x^3 - x");
             testJones(trefoil_unknot1, "x^9 - x^5 - x^3 - x");
             testJones(trefoil_unknot_overlap, "x^9 - x^5 - x^3 - x");
