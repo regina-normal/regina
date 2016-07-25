@@ -44,6 +44,7 @@
 #include "testsuite/dim2/testdim2.h"
 #include "testsuite/dim4/testdim4.h"
 #include "testsuite/generic/testgeneric.h"
+#include "testsuite/link/testlink.h"
 #include "testsuite/maths/testmaths.h"
 #include "testsuite/snappea/testsnappea.h"
 #include "testsuite/subcomplex/testsubcomplex.h"
@@ -159,5 +160,8 @@ void populateTests(CppUnit::TextTestRunner& runner) {
 
     // SnapPea:
     addNSnapPeaTriangulation(runner);
+
+    // Knots and links:
+    addLink(runner);
 }
 
