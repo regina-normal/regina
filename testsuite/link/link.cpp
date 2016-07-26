@@ -33,9 +33,13 @@
 #include <cmath>
 #include <iomanip>
 #include <cppunit/extensions/HelperMacros.h>
+#include "census/ncensus.h"
 #include "link/examplelink.h"
 #include "link/link.h"
 #include "maths/nlaurent.h"
+#include "packet/ncontainer.h"
+#include "surfaces/nnormalsurface.h"
+#include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/ntriangulation.h"
 
 #include "testsuite/link/testlink.h"
@@ -43,6 +47,11 @@
 using regina::ExampleLink;
 using regina::Link;
 using regina::NTriangulation;
+
+// Isomorphism signatures for various knot/link complements that regina's
+// simplification heuristics are found to reduce to in practice.
+#define TREFOIL_SIGS { "cPcbbbadh", "cPcbbbadu", "dLQbcbcdlcj" }
+#define FIG8_SIGS { "cPcbbbiht" }
 
 class LinkTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(LinkTest);
@@ -218,6 +227,14 @@ class LinkTest : public CppUnit::TestFixture {
             testJones(trefoil_unknot_overlap, "x^9 - x^5 - x^3 - x");
         }
 
+        bool sigMatches(const std::string& sig,
+                std::initializer_list<const char*> expected) {
+            for (auto e : expected)
+                if (sig == e)
+                    return true;
+            return false;
+        }
+
         void testComplementBasic(Link* l) {
             NTriangulation* c = l->complement();
 
@@ -279,6 +296,138 @@ class LinkTest : public CppUnit::TestFixture {
             delete c;
         }
 
+        void testComplementSig(Link* l,
+                std::initializer_list<const char*> expected) {
+            NTriangulation* c = l->complement();
+            std::string sig = c->isoSig();
+            delete c;
+
+            for (auto e : expected)
+                if (sig == e)
+                    return;
+
+            std::ostringstream msg;
+            msg << l->label() << " complement: isosig is " << sig << ", not ";
+            auto e = expected.begin();
+            msg << *e;
+            for (++e; e != expected.end(); ++e)
+                msg << " / " << *e;
+            msg << " as expected.";
+            CPPUNIT_FAIL(msg.str());
+        }
+
+        void testComplementCensus(Link* l, std::string prefix) {
+            NTriangulation* c = l->complement();
+            std::string sig = c->isoSig();
+            delete c;
+
+            regina::NCensusHits* hits = regina::NCensus::lookup(sig);
+            const regina::NCensusHit* hit = hits->first();
+            while (hit) {
+                if (hit->name().substr(0, prefix.size()) == prefix) {
+                    delete hits;
+                    return;
+                }
+                hit = hit->next();
+            }
+
+            delete hits;
+
+            std::ostringstream msg;
+            msg << l->label() << " complement: isosig " << sig
+                << " was not identified in the census as " << prefix
+                << "... .";
+            CPPUNIT_FAIL(msg.str());
+        }
+
+        void testComplementFree(Link* l, unsigned nGen) {
+            NTriangulation* c = l->complement();
+            const regina::NGroupPresentation& fg = c->fundamentalGroup();
+            if (fg.countGenerators() != nGen || fg.countRelations() != 0) {
+                std::ostringstream msg;
+                msg << l->label() << " complement: fundamental group is "
+                    "not recognised as free on " << nGen
+                    << " generators as expected.";
+                delete c;
+                CPPUNIT_FAIL(msg.str());
+            }
+            delete c;
+        }
+
+        void testComplementFreeAbelian(Link* l, unsigned nGen) {
+            std::ostringstream expected;
+            expected << nGen << " Z";
+
+            NTriangulation* c = l->complement();
+            const regina::NGroupPresentation& fg = c->fundamentalGroup();
+            if (fg.recogniseGroup() != expected.str()) {
+                std::ostringstream msg;
+                msg << l->label() << " complement: fundamental group is "
+                    "not recognised as free abelian on " << nGen
+                    << " generators as expected.";
+                delete c;
+                CPPUNIT_FAIL(msg.str());
+            }
+            delete c;
+        }
+
+        void testComplementTrefoilUnknot(Link* l) {
+            NTriangulation* c = l->complement();
+
+            // Find a separating sphere.
+            regina::NNormalSurfaceList* vtx =
+                regina::NNormalSurfaceList::enumerate(c, regina::NS_STANDARD);
+            const regina::NNormalSurface* s;
+            for (size_t i = 0; i < vtx->size(); ++i) {
+                s = vtx->surface(i);
+                if (s->eulerChar() != 2)
+                    continue;
+                // s must be a 2-sphere.
+
+                NTriangulation* cut = s->cutAlong();
+                cut->finiteToIdeal(); // Fills the sphere boundaries with balls.
+                if (cut->isConnected()) {
+                    // Should never happen...
+                    delete cut;
+                    delete c;
+                    std::ostringstream msg;
+                    msg << l->label() << " complement contains a "
+                        "non-separating 2-sphere.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                regina::NContainer parent;
+                cut->intelligentSimplify();
+                cut->splitIntoComponents(&parent);
+
+                NTriangulation* c1 = static_cast<NTriangulation*>(
+                    parent.firstChild());
+                NTriangulation* c2 = static_cast<NTriangulation*>(
+                    parent.lastChild());
+
+                if ((sigMatches(c1->isoSig(), TREFOIL_SIGS) &&
+                         c2->isSolidTorus()) ||
+                        (sigMatches(c2->isoSig(), TREFOIL_SIGS) &&
+                         c1->isSolidTorus())) {
+                    // We have the correct manifold!
+                    delete cut;
+                    delete c;
+                    return;
+                }
+
+                // c1 and c2 will be deleted automatically as parent goes out
+                // of scope.
+                delete cut;
+            }
+
+            // Note: vtx will be deleted automatically with c.
+            delete c;
+            std::ostringstream msg;
+            msg << l->label() << " complement could not be recognised "
+                "as coming from (trefoil U unknot).";
+            CPPUNIT_FAIL(msg.str());
+        }
+
         void complement() {
             testComplementBasic(empty);
             testComplementBasic(unknot0);
@@ -305,8 +454,33 @@ class LinkTest : public CppUnit::TestFixture {
             testComplementUnknot(unknot3);
             // Too large! - testComplementUnknot(unknotGordian);
 
-            // TODO: Test hyperbolicity for Whitehead & Borromean.
-            // TODO: Algebraic tests for the separable links.
+            // For some knots and links, it is reasonable to assume that
+            // intelligentSimplify() will reach a minimal triangulation.
+            //
+            // In some cases there are too many minimal triangulations
+            // to list here, and so we use a census lookup.
+            // cPcbbbadh 
+            testComplementSig(trefoilLeft, TREFOIL_SIGS);
+            testComplementSig(trefoilRight, TREFOIL_SIGS);
+            testComplementSig(figureEight, FIG8_SIGS);
+            testComplementCensus(whitehead, "m129 :");
+            testComplementCensus(borromean, "t12067 :");
+
+            // For unlink complements, we can test that the fundamental
+            // group is free.
+            testComplementFree(unlink2_0, 2);
+            testComplementFree(unlink3_0, 3);
+            testComplementFree(unlink2_r2, 2);
+            testComplementFree(unlink2_r1r1, 2);
+
+            // For the Hopf link, we can test that the fundamental group
+            // is free abelian.
+            testComplementFreeAbelian(hopf, 2);
+
+            // A specialised test for the complement of (trefoil U unknot).
+            testComplementTrefoilUnknot(trefoil_unknot0);
+            testComplementTrefoilUnknot(trefoil_unknot1);
+            testComplementTrefoilUnknot(trefoil_unknot_overlap);
         }
 };
 
