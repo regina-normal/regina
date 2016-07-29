@@ -224,9 +224,10 @@ class NLaurent {
 
         /**
          * Returns the given coefficient of this polynomial.
+         * There are no restrictions on the exponent \a exp.
          *
          * @param exp the exponent of the term whose coefficient should
-         * be returned.  This must be between minExp() and mapExp() inclusive.
+         * be returned.
          * @return the coefficient of the given term.
          */
         const T& operator [] (long exp) const;
@@ -234,16 +235,17 @@ class NLaurent {
         /**
          * Changes the given coefficient of this polynomial.
          *
-         * It is fine to set the coefficient of the smallest or largest
-         * exponent term to zero, though note that minExp() or maxExp()
-         * respectively will now return a different value.
+         * There are no restrictions on the exponent \a exp, and the
+         * new coefficient \a value may be zero.
          *
-         * It is also fine to set a coefficient whose exponent is larger
-         * than maxExp() or smaller than minExp(); again this will
-         * change the result of maxExp() or minExp() (unless the given
-         * coefficient is zero).  Such an operation is expensive, however,
-         * since it may require deallocating and reallocating the full list
-         * of coefficients.
+         * Note, however, that it is expensive to set a non-zero coefficient
+         * whose exponent is larger than maxExp() or smaller than minExp(),
+         * since this will typically require deallocating and reallocating
+         * the full list of coefficients.
+         *
+         * In contrast, setting a zero coefficient for the exponent
+         * maxExp() or minExp() is cheap, even though the range of
+         * non-zero coefficients changes as a result.
          *
          * \ifacespython This set() routine is available, but you can
          * also set coefficients directly using syntax of the form
@@ -550,7 +552,10 @@ inline bool NLaurent<T>::isZero() const {
 
 template <typename T>
 inline const T& NLaurent<T>::operator [] (long exp) const {
-    return coeff_[exp - base_];
+    if (exp < minExp_ || exp > maxExp_)
+        return 0;
+    else
+        return coeff_[exp - base_];
 }
 
 template <typename T>
