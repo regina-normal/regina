@@ -92,6 +92,9 @@ class NLaurent {
                  stores the coefficient of <tt>x^(base_ + i)</tt>.
                  This array has length at least (\a maxExp_ - \a base_ + 1). */
 
+        static const T zero_;
+            /**< A zero coefficient that we can safely make references to. */
+
     public:
         /**
          * Creates the zero polynomial.
@@ -479,6 +482,9 @@ std::ostream& operator << (std::ostream& out, const NLaurent<T>& p);
 /*@}*/
 
 template <typename T>
+const T NLaurent<T>::zero_(0);
+
+template <typename T>
 inline NLaurent<T>::NLaurent() : minExp_(0), maxExp_(0), base_(0),
         coeff_(new T[1]) {
     // The default constructor for T already initialises coeff_[0] to zero.
@@ -584,7 +590,7 @@ inline bool NLaurent<T>::isZero() const {
 template <typename T>
 inline const T& NLaurent<T>::operator [] (long exp) const {
     if (exp < minExp_ || exp > maxExp_)
-        return 0;
+        return zero_;
     else
         return coeff_[exp - base_];
 }
