@@ -41,6 +41,7 @@
 
 #include "regina-core.h"
 #include <iostream>
+#include <sstream>
 
 namespace regina {
 
@@ -407,6 +408,33 @@ class NLaurent {
          */
         NLaurent& operator *= (const NLaurent<T>& other);
 
+        /**
+         * Writes this polynomial to the given output stream, using the
+         * given variable name.
+         *
+         * \ifacespython The parameter \a out does not exist; instead
+         * standard output will always be used.  Moreover, this routine
+         * returns \c None.
+         *
+         * @param out the output stream to which to write.
+         * @param variable the symbol to use for the variable in this
+         * polynomial.  This may be \c null, in which case the default
+         * variable \c x will be used.
+         * @return a reference to the given output stream.
+         */
+        std::ostream& write(std::ostream& out, const char* variable = 0) const;
+
+        /**
+         * Returns this polynomial as a human-readable string, using the
+         * given variable name.
+         *
+         * @param variable the symbol to use for the variable in this
+         * polynomial.  This may be \c null, in which case the default
+         * variable \c x will be used.
+         * @return this polynomial as a human-readable string.
+         */
+        std::string str(const char* variable = 0) const;
+
     private:
         /**
          * Expands the array of coefficients if necessary so that
@@ -437,6 +465,9 @@ class NLaurent {
 /**
  * Writes the given polynomial to the given output stream in
  * human-readable form.
+ *
+ * The variable will be called \a x.  To write the given polynomial using a
+ * different variable name, you can call NLaurent::write() instead.
  *
  * @param out the output stream to which to write.
  * @param p the polynomial to write.
@@ -839,18 +870,19 @@ NLaurent<T>& NLaurent<T>::operator *= (const NLaurent<T>& other) {
 }
 
 template <typename T>
-std::ostream& operator << (std::ostream& out, const NLaurent<T>& p) {
-    if (p.isZero())
+std::ostream& NLaurent<T>::write(std::ostream& out, const char* variable)
+        const {
+    if (isZero())
         return out << '0';
 
     // Both minExp_ and maxExp_ have non-zero coefficients (though
     // minExp_ and maxExp_ might be the same exponent).
-    for (long exp = p.maxExp(); exp >= p.minExp(); --exp) {
-        if (p[exp] == 0)
+    for (long exp = maxExp(); exp >= minExp(); --exp) {
+        if ((*this)[exp] == 0)
             continue;
 
-        T writeCoeff = p[exp];
-        if (exp == p.maxExp()) {
+        T writeCoeff = (*this)[exp];
+        if (exp == maxExp()) {
             // This is the first term being output.
             if (writeCoeff < 0) {
                 out << '-';
@@ -870,14 +902,23 @@ std::ostream& operator << (std::ostream& out, const NLaurent<T>& p) {
         else {
             if (writeCoeff != 1)
                 out << writeCoeff << ' ';
-            if (exp == 1)
-                out << 'x';
+            if (variable)
+                out << variable;
             else
-                out << "x^" << exp;
+                out << 'x';
+            if (exp != 1)
+                out << '^' << exp;
         }
     }
 
     return out;
+}
+
+template <typename T>
+inline std::string NLaurent<T>::str(const char* variable) const {
+    std::ostringstream out;
+    write(out, variable);
+    return out.str();
 }
 
 template <typename T>
@@ -952,6 +993,11 @@ void NLaurent<T>::fixDegrees() {
         base_ -= minExp_;
         minExp_ = maxExp_ = 0;
     }
+}
+
+template <typename T>
+inline std::ostream& operator << (std::ostream& out, const NLaurent<T>& p) {
+    return p.write(out);
 }
 
 } // namespace regina

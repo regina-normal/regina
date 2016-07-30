@@ -526,6 +526,21 @@ class REGINA_API Link : public NPacket {
 
     public:
         /**
+         * The name of the variable used in the Jones polynomial, as returned
+         * by jones().  This is provided to help with pretty-printing
+         * Jones polynomials for human consumption.
+         *
+         * Since jones() returns a Laurent polynomial in the square root
+         * of \a t, this string is just a human-readable representation
+         * of the square root of \a t.
+         *
+         * To pretty-print the Jones polynomial for human consumption,
+         * you can therefore call <tt>jones()->str(Link::jonesVar)</tt>.
+         */
+        static const char* jonesVar;
+
+    public:
+        /**
          * \name Constructors and Destructors
          */
         /*@{*/

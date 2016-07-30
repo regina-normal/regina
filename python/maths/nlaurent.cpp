@@ -40,8 +40,7 @@ using regina::NLaurent;
 using regina::NInteger;
 
 namespace {
-    const regina::NInteger& getItem(const NLaurent<NInteger>& p,
-            long exp) {
+    const regina::NInteger& getItem(const NLaurent<NInteger>& p, long exp) {
         return p[exp];
     }
     void setItem(NLaurent<NInteger>& p, long exp,
@@ -96,10 +95,18 @@ namespace {
         }
     }
 
+    void write_stdio(const NLaurent<NInteger>& l, const char* variable = 0) {
+        l.write(std::cout, variable);
+    }
+
     void (NLaurent<NInteger>::*init_void)() =
         &NLaurent<NInteger>::init;
     void (NLaurent<NInteger>::*init_degree)(long) =
         &NLaurent<NInteger>::init;
+
+    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_write_stdio, write_stdio, 1, 2);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_str, NLaurent<NInteger>::str,
+        0, 1);
 }
 
 void addNLaurent() {
@@ -123,6 +130,8 @@ void addNLaurent() {
         .def("scaleUp", &NLaurent<NInteger>::scaleUp)
         .def("scaleDown", &NLaurent<NInteger>::scaleDown)
         .def("negate", &NLaurent<NInteger>::negate)
+        .def("write", write_stdio, OL_write_stdio())
+        .def("str", &NLaurent<NInteger>::str, OL_str())
         .def(self *= NInteger())
         .def(self /= NInteger())
         .def(self += self)

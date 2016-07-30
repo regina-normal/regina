@@ -141,6 +141,7 @@ void addLink() {
 
     s.attr("typeID") = regina::PACKET_LINK;
     s.attr("packetType") = regina::PACKET_LINK;
+    s.attr("jonesVar") = Link::jonesVar;
 
     implicitly_convertible<SafeHeldType<Link>, SafeHeldType<regina::NPacket>>();
 }
