@@ -7,6 +7,7 @@ SET ( FILES
   ninteger
   nlargeinteger
   nlaurent
+  nlaurent2
   nmatrixint
   nmatrix2
   nperm

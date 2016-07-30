@@ -32,6 +32,7 @@ if (${REGINA_INSTALL_DEV})
     ninteger.h
     nlargeinteger.h
     nlaurent.h
+    nlaurent2.h
     nmatrix.h
     nmatrix2.h
     nmatrixint.h

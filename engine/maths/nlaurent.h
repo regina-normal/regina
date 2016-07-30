@@ -71,6 +71,9 @@ namespace regina {
  * The underlying storage method for this class is dense (i.e., all
  * coefficients are explicitly stored, including zero coefficients).
  *
+ * See also the class NLaurent2, which describes Laurent polynomials in
+ * two variables.
+ *
  * \ifacespython In Python, the class NLaurent refers to the specific
  * template class NLaurent<NInteger>.
  */
