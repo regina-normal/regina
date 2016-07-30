@@ -230,6 +230,11 @@ class NLaurent {
          * Returns the given coefficient of this polynomial.
          * There are no restrictions on the exponent \a exp.
          *
+         * \ifacespython Python users can also use this operator to \e set
+         * cofficients; that is, you can write <tt>poly[exp] = value</tt>.
+         * In contrast, C++ users must use the separate routine set(), due to
+         * the fact that in C++ this square bracket operator is const.
+         *
          * @param exp the exponent of the term whose coefficient should
          * be returned.
          * @return the coefficient of the given term.
