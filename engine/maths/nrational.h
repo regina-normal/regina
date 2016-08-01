@@ -455,7 +455,8 @@ class REGINA_API NRational {
          * No leading or trailing dollar signs will be included.
          *
          * \ifacespython The parameter \a out does not exist; instead
-         * standard output will be used.
+         * standard output will always be used.  Moreover, this routine
+         * returns \c None.
          *
          * @param out the output stream to which to write.
          * @return a reference to the given output stream.
