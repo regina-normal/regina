@@ -5,6 +5,7 @@ SET ( FILES
   complement
   examplelink
   gauss
+  homfly
   jenkins
   jones
   link

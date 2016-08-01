@@ -32,6 +32,7 @@
 
 #include "link/link.h"
 #include "maths/nlaurent.h"
+#include "maths/nlaurent2.h"
 #include "triangulation/ntriangulation.h"
 #include "../helpers.h"
 #include "../safeheldtype.h"
@@ -134,6 +135,8 @@ void addLink() {
         .def("bracket", &Link::bracket,
             return_value_policy<manage_new_object>())
         .def("jones", &Link::jones,
+            return_value_policy<manage_new_object>())
+        .def("homfly", &Link::homfly,
             return_value_policy<manage_new_object>())
         .staticmethod("fromOrientedGauss")
         .staticmethod("fromJenkins")

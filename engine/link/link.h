@@ -57,6 +57,7 @@ namespace regina {
 class Crossing;
 class Link;
 template <typename T> class NLaurent;
+template <typename T> class NLaurent2;
 template <int> class Triangulation;
 
 /**
@@ -535,9 +536,35 @@ class REGINA_API Link : public NPacket {
          * of the square root of \a t.
          *
          * To pretty-print the Jones polynomial for human consumption,
-         * you can therefore call <tt>jones()->str(Link::jonesVar)</tt>.
+         * you can call <tt>NLaurent::str(Link::jonesVar)</tt>.
          */
         static const char* jonesVar;
+
+        /**
+         * The name of the first variable used in the HOMFLY polynomial,
+         * as returned by homfly().  This is provided to help with
+         * pretty-printing HOMFLY polynomials for human consumption.
+         *
+         * Since homfly() returns a Laurent polynomial in \a z and \a alpha,
+         * this string just contains the single character \a z.
+         *
+         * To pretty-print the HOMFLY polynomial for human consumption, you
+         * can call <tt>NLaurent2::str(Link::homflyVarX, Link::homflyVarY)</tt>.
+         */
+        static const char* homflyVarX;
+
+        /**
+         * The name of the second variable used in the HOMFLY polynomial,
+         * as returned by homfly().  This is provided to help with
+         * pretty-printing HOMFLY polynomials for human consumption.
+         *
+         * Since homfly() returns a Laurent polynomial in \a z and \a alpha,
+         * this string just contains the mathematical symbol \a alpha.
+         *
+         * To pretty-print the HOMFLY polynomial for human consumption, you
+         * can call <tt>NLaurent2::str(Link::homflyVarX, Link::homflyVarY)</tt>.
+         */
+        static const char* homflyVarY;
 
     public:
         /**
@@ -774,6 +801,8 @@ class REGINA_API Link : public NPacket {
          *
          * The polynomial that is returned will be newly created, and it
          * is the responsibility of the caller of this routine to destroy it.
+         * To pretty-print this polynomial for human consumption, you can
+         * call <tt>NLaurent::str(Link::jonesVar)</tt>.
          *
          * \warning If there are too many crossings for the algorithm to
          * handle, then this routine will return \c null.  Currently this
@@ -790,6 +819,32 @@ class REGINA_API Link : public NPacket {
          * @return the Jones polynomial, as a newly-created object.
          */
         NLaurent<NInteger>* jones() const;
+
+        /**
+         * Returns the HOMFLY polynomial of this link.
+         *
+         * This returns a Laurent polynomial in the two variables
+         * \a z and \a alpha (which are represented by \a x and \a y
+         * respectively in the class NLaurent2).
+         *
+         * If this is the empty link, then this routine will return the zero
+         * polynomial.
+         *
+         * The polynomial that is returned will be newly created, and it
+         * is the responsibility of the caller of this routine to destroy it.
+         * To pretty-print this polynomial for human consumption, you can call
+         * <tt>NLaurent2::str(Link::homflyVarX, Link::homflyVarY)</tt>.
+         *
+         * The current implementation uses Kauffman's skein-template algorithm;
+         * see L. H. Kauffman, "State models for link polynomials",
+         * L'enseignement mathematique 36 (1990), 1-37, or for a more recent
+         * summary see G. Gouesbet et al., "Computer evaluation of Homfly
+         * polynomials by using Gauss codes, with a skein-template algorithm",
+         * Applied Mathematics and Computation 105 (1999), 271-289.
+         *
+         * @return the HOMFLY polynomial, as a newly-created object.
+         */
+        NLaurent2<NInteger>* homfly() const;
 
         /*@}*/
         /**
