@@ -159,9 +159,8 @@ NLaurent<NInteger>* Link::bracket() const {
     for (loops = 0; loops < maxLoops; ++loops) {
         // std::cerr << "count[" << loops << "] = " << count[loops] << std::endl;
         if (! count[loops].isZero()) {
-            NLaurent<NInteger> term(loopPow);
-            term *= count[loops];
-            (*ans) += term;
+            count[loops] *= loopPow;
+            (*ans) += count[loops];
         }
 
         loopPow *= loopPoly;
