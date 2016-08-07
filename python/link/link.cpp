@@ -94,6 +94,7 @@ void addLink() {
         .def("dec", strand_dec_operator)
         .def("next", &StrandRef::next)
         .def("prev", &StrandRef::prev)
+        .def("jump", &StrandRef::jump)
         .def(regina::python::add_eq_operators())
     ;
 
@@ -145,6 +146,8 @@ void addLink() {
     s.attr("typeID") = regina::PACKET_LINK;
     s.attr("packetType") = regina::PACKET_LINK;
     s.attr("jonesVar") = Link::jonesVar;
+    s.attr("homflyVarX") = Link::homflyVarX;
+    s.attr("homflyVarY") = Link::homflyVarY;
 
     implicitly_convertible<SafeHeldType<Link>, SafeHeldType<regina::NPacket>>();
 }

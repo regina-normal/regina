@@ -275,6 +275,15 @@ class REGINA_API StrandRef {
         StrandRef prev() const;
 
         /**
+         * Jumps to the other strand at the same crossing.
+         *
+         * This reference will be changed directly.  The crossing will
+         * remain the same, but the strand will switch from lower to
+         * upper or vice versa.
+         */
+        void jump();
+
+        /**
          * Tests whether this is a non-null reference.
          *
          * \ifacespython This is not available to python users.
@@ -1336,6 +1345,10 @@ inline StrandRef StrandRef::next() const {
 
 inline StrandRef StrandRef::prev() const {
     return crossing_->prev(strand_);
+}
+
+inline void StrandRef::jump() {
+    strand_ ^= 1;
 }
 
 inline StrandRef::operator bool() const {
