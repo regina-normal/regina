@@ -39,7 +39,7 @@
  *  \brief Implements Laurent polynomials in two variables over arbitrary rings.
  */
 
-#include "regina-core.h"
+#include "utilities/stringutils.h"
 #include <iostream>
 #include <map>
 #include <sstream>
@@ -306,6 +306,11 @@ class NLaurent2 {
          * Writes this polynomial to the given output stream, using the
          * given variable names instead of \c x and \c y.
          *
+         * If \a utf8 is passed as \c true then unicode superscript characters
+         * will be used for exponents; these will be encoded using UTF-8.
+         * This will make the output nicer, but will require more complex
+         * fonts to be available on the user's machine.
+         *
          * \ifacespython The parameter \a out does not exist; instead
          * standard output will always be used.  Moreover, this routine
          * returns \c None.
@@ -315,22 +320,30 @@ class NLaurent2 {
          * \c null, in which case the default symbol <tt>'x'</tt> will be used.
          * @param varY the symbol to use for the variable \a y.  This may be
          * \c null, in which case the default symbol <tt>'y'</tt> will be used.
+         * @param utf8 \c true if unicode superscript characters may be used.
          * @return a reference to the given output stream.
          */
         std::ostream& write(std::ostream& out, const char* varX = 0,
-            const char* varY = 0) const;
+            const char* varY = 0, bool utf8 = false) const;
 
         /**
          * Returns this polynomial as a human-readable string, using the
          * given variable names instead of \c x and \c y.
          *
+         * If \a utf8 is passed as \c true then unicode superscript characters
+         * will be used for exponents; these will be encoded using UTF-8.
+         * This will make the output nicer, but will require more complex
+         * fonts to be available on the user's machine.
+         *
          * @param varX the symbol to use for the variable \a x.  This may be
          * \c null, in which case the default symbol <tt>'x'</tt> will be used.
          * @param varY the symbol to use for the variable \a y.  This may be
          * \c null, in which case the default symbol <tt>'y'</tt> will be used.
+         * @param utf8 \c true if unicode superscript characters may be used.
          * @return this polynomial as a human-readable string.
          */
-        std::string str(const char* varX = 0, const char* varY = 0) const;
+        std::string str(const char* varX = 0, const char* varY = 0,
+            bool utf8 = false) const;
 
     private:
         /**
@@ -530,7 +543,7 @@ NLaurent2<T>& NLaurent2<T>::operator *= (const NLaurent2<T>& other) {
 
 template <typename T>
 std::ostream& NLaurent2<T>::write(std::ostream& out,
-        const char* varX, const char* varY) const {
+        const char* varX, const char* varY, bool utf8) const {
     if (isZero())
         return out << '0';
 
@@ -563,8 +576,12 @@ std::ostream& NLaurent2<T>::write(std::ostream& out,
                 out << varX;
             else
                 out << 'x';
-            if (it->first.first != 1)
-                out << '^' << it->first.first;
+            if (it->first.first != 1) {
+                if (utf8)
+                    out << regina::superscript(it->first.first);
+                else
+                    out << '^' << it->first.first;
+            }
             if (it->first.second != 0)
                 out << ' ';
         }
@@ -573,8 +590,12 @@ std::ostream& NLaurent2<T>::write(std::ostream& out,
                 out << varY;
             else
                 out << 'y';
-            if (it->first.second != 1)
-                out << '^' << it->first.second;
+            if (it->first.second != 1) {
+                if (utf8)
+                    out << regina::superscript(it->first.second);
+                else
+                    out << '^' << it->first.second;
+            }
         }
     }
 
@@ -582,9 +603,10 @@ std::ostream& NLaurent2<T>::write(std::ostream& out,
 }
 
 template <typename T>
-inline std::string NLaurent2<T>::str(const char* varX, const char* varY) const {
+inline std::string NLaurent2<T>::str(const char* varX, const char* varY,
+        bool utf8) const {
     std::ostringstream out;
-    write(out, varX, varY);
+    write(out, varX, varY, utf8);
     return out.str();
 }
 

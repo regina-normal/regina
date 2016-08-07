@@ -39,7 +39,7 @@
  *  \brief Implements single variable Laurent polynomials over arbitrary rings.
  */
 
-#include "regina-core.h"
+#include "utilities/stringutils.h"
 #include <iostream>
 #include <sstream>
 
@@ -423,6 +423,11 @@ class NLaurent {
          * Writes this polynomial to the given output stream, using the
          * given variable name.
          *
+         * If \a utf8 is passed as \c true then unicode superscript characters
+         * will be used for exponents; these will be encoded using UTF-8.
+         * This will make the output nicer, but will require more complex
+         * fonts to be available on the user's machine.
+         *
          * \ifacespython The parameter \a out does not exist; instead
          * standard output will always be used.  Moreover, this routine
          * returns \c None.
@@ -431,20 +436,28 @@ class NLaurent {
          * @param variable the symbol to use for the variable in this
          * polynomial.  This may be \c null, in which case the default
          * variable \c x will be used.
+         * @param utf8 \c true if unicode superscript characters may be used.
          * @return a reference to the given output stream.
          */
-        std::ostream& write(std::ostream& out, const char* variable = 0) const;
+        std::ostream& write(std::ostream& out, const char* variable = 0,
+            bool utf8 = false) const;
 
         /**
          * Returns this polynomial as a human-readable string, using the
          * given variable name.
          *
+         * If \a utf8 is passed as \c true then unicode superscript characters
+         * will be used for exponents; these will be encoded using UTF-8.
+         * This will make the output nicer, but will require more complex
+         * fonts to be available on the user's machine.
+         *
          * @param variable the symbol to use for the variable in this
          * polynomial.  This may be \c null, in which case the default
          * variable \c x will be used.
+         * @param utf8 \c true if unicode superscript characters may be used.
          * @return this polynomial as a human-readable string.
          */
-        std::string str(const char* variable = 0) const;
+        std::string str(const char* variable = 0, bool utf8 = false) const;
 
     private:
         /**
@@ -884,8 +897,8 @@ NLaurent<T>& NLaurent<T>::operator *= (const NLaurent<T>& other) {
 }
 
 template <typename T>
-std::ostream& NLaurent<T>::write(std::ostream& out, const char* variable)
-        const {
+std::ostream& NLaurent<T>::write(std::ostream& out, const char* variable,
+        bool utf8) const {
     if (isZero())
         return out << '0';
 
@@ -920,8 +933,12 @@ std::ostream& NLaurent<T>::write(std::ostream& out, const char* variable)
                 out << variable;
             else
                 out << 'x';
-            if (exp != 1)
-                out << '^' << exp;
+            if (exp != 1) {
+                if (utf8)
+                    out << regina::superscript(exp);
+                else
+                    out << '^' << exp;
+            }
         }
     }
 
@@ -929,9 +946,9 @@ std::ostream& NLaurent<T>::write(std::ostream& out, const char* variable)
 }
 
 template <typename T>
-inline std::string NLaurent<T>::str(const char* variable) const {
+inline std::string NLaurent<T>::str(const char* variable, bool utf8) const {
     std::ostringstream out;
-    write(out, variable);
+    write(out, variable, utf8);
     return out.str();
 }
 

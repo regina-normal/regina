@@ -1030,6 +1030,8 @@ class REGINA_API NGroupPresentation :
          *
          * \todo \featurelong Make this recognition more effective.
          *
+         * @param moreUtf8 \c true if we allow more liberal use of
+         * unicode characters.
          * @return a simple string representation of the group if it is
          * recognised, or an empty string if the group is not
          * recognised.

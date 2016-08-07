@@ -104,9 +104,9 @@ namespace {
     void (NLaurent<NInteger>::*init_degree)(long) =
         &NLaurent<NInteger>::init;
 
-    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_write_stdio, write_stdio, 1, 2);
+    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_write_stdio, write_stdio, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_str, NLaurent<NInteger>::str,
-        0, 1);
+        0, 2);
 }
 
 void addNLaurent() {

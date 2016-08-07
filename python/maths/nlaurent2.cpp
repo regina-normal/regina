@@ -76,9 +76,9 @@ namespace {
     void (NLaurent2<NInteger>::*init_degrees)(long, long) =
         &NLaurent2<NInteger>::init;
 
-    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_write_stdio, write_stdio, 1, 3);
+    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_write_stdio, write_stdio, 1, 4);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_str, NLaurent2<NInteger>::str,
-        0, 2);
+        0, 3);
 }
 
 void addNLaurent2() {
