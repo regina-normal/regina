@@ -350,6 +350,10 @@ class NLaurent2 {
          * Removes all entries from coeff_ whose coefficients are zero.
          */
         void removeZeroes();
+
+    // For the time being, allow HOMFLY calculations to do low-level
+    // operations on these polynomials.
+    friend class Link;
 };
 
 /**

@@ -550,29 +550,73 @@ class REGINA_API Link : public NPacket {
         static const char* jonesVar;
 
         /**
-         * The name of the first variable used in the HOMFLY polynomial,
-         * as returned by homfly().  This is provided to help with
-         * pretty-printing HOMFLY polynomials for human consumption.
+         * The name of the first variable used in the variant of the
+         * HOMFLY polynomial as returned by homflyAZ().  This is provided to
+         * help with pretty-printing HOMFLY polynomials for human consumption.
          *
-         * Since homfly() returns a Laurent polynomial in \a alpha and \a z,
+         * Since homflyAZ() returns a Laurent polynomial in \a alpha and \a z,
          * this string just contains the mathematical symbol \a alpha
          * (encoded in UTF-8).
          *
-         * To pretty-print the HOMFLY polynomial for human consumption, you
-         * can call <tt>NLaurent2::str(Link::homflyVarX, Link::homflyVarY)</tt>.
+         * To pretty-print this HOMFLY polynomial for human consumption, you can
+         * call <tt>NLaurent2::str(Link::homflyAZVarX, Link::homflyAZVarY)</tt>.
+         */
+        static const char* homflyAZVarX;
+
+        /**
+         * The name of the second variable used in the variant of the
+         * HOMFLY polynomial as returned by homflyAZ().  This is provided to
+         * help with pretty-printing HOMFLY polynomials for human consumption.
+         *
+         * Since homflyAZ() returns a Laurent polynomial in \a alpha and \a z,
+         * this string just contains the single character \a z.
+         *
+         * To pretty-print this HOMFLY polynomial for human consumption, you can
+         * call <tt>NLaurent2::str(Link::homflyAZVarX, Link::homflyAZVarY)</tt>.
+         */
+        static const char* homflyAZVarY;
+
+        /**
+         * The name of the first variable used in the variant of the
+         * HOMFLY polynomial as returned by homflyLM().  This is provided to
+         * help with pretty-printing HOMFLY polynomials for human consumption.
+         *
+         * Since homflyLM() returns a Laurent polynomial in \a l and \a m,
+         * this string just contains the single character \a l.
+         *
+         * To pretty-print this HOMFLY polynomial for human consumption, you can
+         * call <tt>NLaurent2::str(Link::homflyLMVarX, Link::homflyLMVarY)</tt>.
+         */
+        static const char* homflyLMVarX;
+
+        /**
+         * The name of the second variable used in the variant of the
+         * HOMFLY polynomial as returned by homflyLM().  This is provided to
+         * help with pretty-printing HOMFLY polynomials for human consumption.
+         *
+         * Since homflyLM() returns a Laurent polynomial in \a l and \a m,
+         * this string just contains the single character \a m.
+         *
+         * To pretty-print this HOMFLY polynomial for human consumption, you can
+         * call <tt>NLaurent2::str(Link::homflyLMVarX, Link::homflyLMVarY)</tt>.
+         */
+        static const char* homflyLMVarY;
+
+        /**
+         * The name of the first variable used in the variant of the
+         * HOMFLY polynomial as returned by homfly().
+         *
+         * This is simply an alias for homflyAZVarX.  See the documentation
+         * for homflyAZVarX for further details.
          */
         static const char* homflyVarX;
 
         /**
-         * The name of the second variable used in the HOMFLY polynomial,
-         * as returned by homfly().  This is provided to help with
-         * pretty-printing HOMFLY polynomials for human consumption.
+         * The name of the second variable used in the variant of the
+         * HOMFLY polynomial as returned by homfly().
          *
-         * Since homfly() returns a Laurent polynomial in \a alpha and \a z,
-         * this string just contains the single character \a z.
-         *
-         * To pretty-print the HOMFLY polynomial for human consumption, you
-         * can call <tt>NLaurent2::str(Link::homflyVarX, Link::homflyVarY)</tt>.
+         * This is simply an alias for homflyAZVarY.  See the documentation
+         * for homflyAZVarY for further details.
          */
         static const char* homflyVarY;
 
@@ -831,9 +875,20 @@ class REGINA_API Link : public NPacket {
         NLaurent<NInteger>* jones() const;
 
         /**
-         * Returns the HOMFLY polynomial of this link.
+         * Returns the HOMFLY polynomial of this link, as a polynomial
+         * in \a alpha and \a z.
          *
-         * This returns a Laurent polynomial in the two variables
+         * This variant of the HOMFLY polynomial is described (amongst other
+         * places) in G. Gouesbet et al., "Computer evaluation of Homfly
+         * polynomials by using Gauss codes, with a skein-template algorithm",
+         * Applied Mathematics and Computation 105 (1999), 271-289.
+         *
+         * The (\a alpha, \a z) and (\a l, \a m) variants of the HOMFLY
+         * polynomial are related by a simple transformation:
+         * \a alpha = \a l \a i and \a z = -\a m \a i,
+         * where \a i represents (as usual) a square root of -1.
+         *
+         * This routine returns a Laurent polynomial in the two variables
          * \a alpha and \a z (which are represented by \a x and \a y
          * respectively in the class NLaurent2).
          *
@@ -843,7 +898,7 @@ class REGINA_API Link : public NPacket {
          * The polynomial that is returned will be newly created, and it
          * is the responsibility of the caller of this routine to destroy it.
          * To pretty-print this polynomial for human consumption, you can call
-         * <tt>NLaurent2::str(Link::homflyVarX, Link::homflyVarY)</tt>.
+         * <tt>NLaurent2::str(Link::homflyAZVarX, Link::homflyAZVarY)</tt>.
          *
          * The current implementation uses Kauffman's skein-template algorithm;
          * see L. H. Kauffman, "State models for link polynomials",
@@ -851,6 +906,57 @@ class REGINA_API Link : public NPacket {
          * summary see G. Gouesbet et al., "Computer evaluation of Homfly
          * polynomials by using Gauss codes, with a skein-template algorithm",
          * Applied Mathematics and Computation 105 (1999), 271-289.
+         *
+         * @return the HOMFLY polynomial, as a newly-created object.
+         */
+        NLaurent2<NInteger>* homflyAZ() const;
+
+        /**
+         * Returns the HOMFLY polynomial of this link, as a polynomial
+         * in \a l and \a m.
+         *
+         * This variant of the HOMFLY polynomial is described (amongst other
+         * places) in C. C. Adams, "The knot book", W. H. Freeman & Co., 1994.
+         *
+         * The (\a alpha, \a z) and (\a l, \a m) variants of the HOMFLY
+         * polynomial are related by a simple transformation:
+         * \a alpha = \a l \a i and \a z = -\a m \a i,
+         * where \a i represents (as usual) a square root of -1.
+         *
+         * This routine returns a Laurent polynomial in the two variables
+         * \a l and \a m (which are represented by \a x and \a y
+         * respectively in the class NLaurent2).
+         *
+         * If this is the empty link, then this routine will return the zero
+         * polynomial.
+         *
+         * The polynomial that is returned will be newly created, and it
+         * is the responsibility of the caller of this routine to destroy it.
+         * To pretty-print this polynomial for human consumption, you can call
+         * <tt>NLaurent2::str(Link::homflyLMVarX, Link::homflyLMVarY)</tt>.
+         *
+         * The current implementation uses Kauffman's skein-template algorithm;
+         * see L. H. Kauffman, "State models for link polynomials",
+         * L'enseignement mathematique 36 (1990), 1-37, or for a more recent
+         * summary see G. Gouesbet et al., "Computer evaluation of Homfly
+         * polynomials by using Gauss codes, with a skein-template algorithm",
+         * Applied Mathematics and Computation 105 (1999), 271-289.
+         *
+         * @return the HOMFLY polynomial, as a newly-created object.
+         */
+        NLaurent2<NInteger>* homflyLM() const;
+
+        /**
+         * Returns the HOMFLY polynomial of this link, as a polynomial
+         * in \a alpha and \a z.
+         *
+         * This routine is simply an alias for homflyAZ().  See the
+         * documentation for homflyAZ() for further details.
+         *
+         * The polynomial that is returned will be newly created, and it
+         * is the responsibility of the caller of this routine to destroy it.
+         * To pretty-print this polynomial for human consumption, you can call
+         * <tt>NLaurent2::str(Link::homflyVarX, Link::homflyVarY)</tt>.
          *
          * @return the HOMFLY polynomial, as a newly-created object.
          */
@@ -1476,6 +1582,10 @@ inline long Link::writhe() const {
     for (const Crossing* c : crossings_)
         ans += c->sign();
     return ans;
+}
+
+inline NLaurent2<NInteger>* Link::homfly() const {
+    return homflyAZ();
 }
 
 inline bool Link::dependsOnParent() const {

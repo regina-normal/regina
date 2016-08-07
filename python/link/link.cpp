@@ -139,6 +139,10 @@ void addLink() {
             return_value_policy<manage_new_object>())
         .def("homfly", &Link::homfly,
             return_value_policy<manage_new_object>())
+        .def("homflyAZ", &Link::homflyAZ,
+            return_value_policy<manage_new_object>())
+        .def("homflyLM", &Link::homflyLM,
+            return_value_policy<manage_new_object>())
         .staticmethod("fromOrientedGauss")
         .staticmethod("fromJenkins")
     ;
@@ -148,6 +152,10 @@ void addLink() {
     s.attr("jonesVar") = Link::jonesVar;
     s.attr("homflyVarX") = Link::homflyVarX;
     s.attr("homflyVarY") = Link::homflyVarY;
+    s.attr("homflyAZVarX") = Link::homflyAZVarX;
+    s.attr("homflyAZVarY") = Link::homflyAZVarY;
+    s.attr("homflyLMVarX") = Link::homflyLMVarX;
+    s.attr("homflyLMVarY") = Link::homflyLMVarY;
 
     implicitly_convertible<SafeHeldType<Link>, SafeHeldType<regina::NPacket>>();
 }

@@ -38,8 +38,14 @@
 
 namespace regina {
 
-const char* Link::homflyVarX = "\u03B1"; // alpha
-const char* Link::homflyVarY = "z";
+const char* Link::homflyAZVarX = "\u03B1"; // alpha
+const char* Link::homflyAZVarY = "z";
+
+const char* Link::homflyLMVarX = "l";
+const char* Link::homflyLMVarY = "m";
+
+const char* Link::homflyVarX = homflyAZVarX;
+const char* Link::homflyVarY = homflyAZVarY;
 
 // Possible states of crossings:
 
@@ -94,7 +100,7 @@ enum CrossingState {
     CROSSING_SPLICE_2 = 7
 };
 
-NLaurent2<NInteger>* Link::homfly() const {
+NLaurent2<NInteger>* Link::homflyAZ() const {
     // Throughout this code, delta = (alpha - alpha^-1) / z.
 
     size_t n = crossings_.size();
@@ -371,6 +377,19 @@ NLaurent2<NInteger>* Link::homfly() const {
     }
 
     delete[] coeff;
+    return ans;
+}
+
+NLaurent2<NInteger>* Link::homflyLM() const {
+    NLaurent2<NInteger>* ans = homflyAZ();
+
+    // Negate all coefficients for a^i z^j where i-j == 2 (mod 4).
+    // Note that i-j should always be 0 or 2 (mod 4), never odd.
+    for (auto& term : ans->coeff_) {
+        if ((term.first.first - term.first.second) % 4 != 0)
+            term.second.negate();
+    }
+
     return ans;
 }
 
