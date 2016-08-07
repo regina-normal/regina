@@ -542,7 +542,7 @@ class REGINA_API Link : public NPacket {
          *
          * Since jones() returns a Laurent polynomial in the square root
          * of \a t, this string is just a human-readable representation
-         * of the square root of \a t.
+         * of the square root of \a t (encoded in UTF-8).
          *
          * To pretty-print the Jones polynomial for human consumption,
          * you can call <tt>NLaurent::str(Link::jonesVar)</tt>.
@@ -554,8 +554,9 @@ class REGINA_API Link : public NPacket {
          * as returned by homfly().  This is provided to help with
          * pretty-printing HOMFLY polynomials for human consumption.
          *
-         * Since homfly() returns a Laurent polynomial in \a z and \a alpha,
-         * this string just contains the single character \a z.
+         * Since homfly() returns a Laurent polynomial in \a alpha and \a z,
+         * this string just contains the mathematical symbol \a alpha
+         * (encoded in UTF-8).
          *
          * To pretty-print the HOMFLY polynomial for human consumption, you
          * can call <tt>NLaurent2::str(Link::homflyVarX, Link::homflyVarY)</tt>.
@@ -567,8 +568,8 @@ class REGINA_API Link : public NPacket {
          * as returned by homfly().  This is provided to help with
          * pretty-printing HOMFLY polynomials for human consumption.
          *
-         * Since homfly() returns a Laurent polynomial in \a z and \a alpha,
-         * this string just contains the mathematical symbol \a alpha.
+         * Since homfly() returns a Laurent polynomial in \a alpha and \a z,
+         * this string just contains the single character \a z.
          *
          * To pretty-print the HOMFLY polynomial for human consumption, you
          * can call <tt>NLaurent2::str(Link::homflyVarX, Link::homflyVarY)</tt>.
@@ -833,7 +834,7 @@ class REGINA_API Link : public NPacket {
          * Returns the HOMFLY polynomial of this link.
          *
          * This returns a Laurent polynomial in the two variables
-         * \a z and \a alpha (which are represented by \a x and \a y
+         * \a alpha and \a z (which are represented by \a x and \a y
          * respectively in the class NLaurent2).
          *
          * If this is the empty link, then this routine will return the zero

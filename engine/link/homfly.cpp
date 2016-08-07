@@ -38,8 +38,8 @@
 
 namespace regina {
 
-const char* Link::homflyVarX = "z";
-const char* Link::homflyVarY = "\u03B1"; // alpha
+const char* Link::homflyVarX = "\u03B1"; // alpha
+const char* Link::homflyVarY = "z";
 
 // Possible states of crossings:
 
@@ -104,7 +104,7 @@ NLaurent2<NInteger>* Link::homfly() const {
 
         // We have an unlink with no crossings.
         // The HOMFLY polynomial is delta^(#components - 1).
-        NLaurent2<NInteger> delta(-1, 1);
+        NLaurent2<NInteger> delta(1, -1);
         delta.set(-1, -1, -1);
 
         // The following constructor initialises ans to 1.
@@ -192,7 +192,7 @@ NLaurent2<NInteger>* Link::homfly() const {
                 //     delta^(#components-1).
                 // Note that delta^(#components-1) will be computed later;
                 // here we just store the rest of the term in coeff[comp-1].
-                term.init(splices, writheAdj);
+                term.init(writheAdj, splices);
                 if (splicesNeg % 2)
                     term.negate();
 
@@ -356,7 +356,7 @@ NLaurent2<NInteger>* Link::homfly() const {
 
     NLaurent2<NInteger>* ans = new NLaurent2<NInteger>;
 
-    NLaurent2<NInteger> delta(-1, 1);
+    NLaurent2<NInteger> delta(1, -1);
     delta.set(-1, -1, -1);
 
     NLaurent2<NInteger> deltaPow(0, 0); // Initialises to delta^0 == 1.
