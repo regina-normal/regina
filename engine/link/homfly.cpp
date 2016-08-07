@@ -129,7 +129,7 @@ NLaurent2<NInteger>* Link::homfly() const {
     long comp = 0;
     long splices = 0;
     long splicesNeg = 0;
-    long writheAdj = writhe();
+    long writheAdj = 0;
 
     // Count the number of 0-crossing unknot components separately.
     size_t unknots = 0;
