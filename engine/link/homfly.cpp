@@ -165,7 +165,8 @@ NLaurent2<NInteger>* Link::homfly() const {
         // We prepare to follow the (pos)th arc.
 
 #ifdef DUMP_STATES
-        std::cerr << "=> " << pos << ", " << s << ", " << comp << " : ";
+        std::cerr << "=> " << pos << ", s" << s << ", c" << comp
+            << ", w" << writheAdj << " : ";
         for (size_t i = 0; i < n; ++i)
             std::cerr << (int)state[i];
         std::cerr << ' ';
@@ -174,6 +175,8 @@ NLaurent2<NInteger>* Link::homfly() const {
         std::cerr << ' ';
         for (size_t i = 0; i < 2*n; ++i)
             std::cerr << (seen[i] ? 'X' : '_');
+        if (pos == 2 * n)
+            std::cerr << "  ***";
         std::cerr << std::endl;
 #endif
 
@@ -202,8 +205,8 @@ NLaurent2<NInteger>* Link::homfly() const {
                 --comp;
                 while (backtrack) {
 #ifdef DUMP_STATES
-                    std::cerr << "<- " << pos << ", " << s << ", " << comp
-                        << " : ";
+                    std::cerr << "<- " << pos << ", s" << s << ", c" << comp
+                        << ", w" << writheAdj << " : ";
                     for (size_t i = 0; i < n; ++i)
                         std::cerr << (int)state[i];
                     std::cerr << ' ';
