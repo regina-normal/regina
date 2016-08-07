@@ -95,8 +95,9 @@ namespace {
         }
     }
 
-    void write_stdio(const NLaurent<NInteger>& l, const char* variable = 0) {
-        l.write(std::cout, variable);
+    void write_stdio(const NLaurent<NInteger>& l, const char* variable = 0,
+            bool utf8 = false) {
+        l.write(std::cout, variable, utf8);
     }
 
     void (NLaurent<NInteger>::*init_void)() =

@@ -67,8 +67,8 @@ namespace {
     }
 
     void write_stdio(const NLaurent2<NInteger>& l, const char* varX = 0,
-            const char* varY = 0) {
-        l.write(std::cout, varX, varY);
+            const char* varY = 0, bool utf8 = false) {
+        l.write(std::cout, varX, varY, utf8);
     }
 
     void (NLaurent2<NInteger>::*init_void)() =
