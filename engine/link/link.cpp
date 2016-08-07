@@ -35,8 +35,6 @@
 
 namespace regina {
 
-const char* Link::jonesVar = "\u221At"; // \u221A = square root
-
 Link::Link(const Link& cloneMe) {
     for (Crossing* c : cloneMe.crossings_)
         crossings_.push_back(new Crossing(c->sign()));

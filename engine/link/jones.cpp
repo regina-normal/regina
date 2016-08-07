@@ -36,6 +36,8 @@
 
 namespace regina {
 
+const char* Link::jonesVar = "\u221At"; // \u221A = square root
+
 NLaurent<NInteger>* Link::bracket() const {
     /**
      * \ /         \ /            \_/
