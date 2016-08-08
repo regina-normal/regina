@@ -120,6 +120,7 @@ class REGINA_API ExampleLink {
 
         /**
          * Returns a two-crossing diagram of the Hopf link.
+         * This is the variant in which both crossings are positive.
          *
          * @return a newly constructed link, which must be
          * destroyed by the caller of this routine.
