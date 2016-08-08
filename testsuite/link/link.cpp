@@ -296,6 +296,12 @@ class LinkTest : public CppUnit::TestFixture {
                 "x y - x^-1 y^3 + x^-1 y + 2 x^-3 y - x^-3 y^-1 - x^-5 y^-1");
 
             // TODO: fig8, hopf, whitehead, borromean
+
+            // TODO: Verify that # of links means * for HOMFLY/Jones
+
+            // TODO: Verify that HOMFLY gives Jones by:
+            //   * l = it^-1, m = i(t^-1/2 - t^1/2)
+            //   * a = t^-1, z = t^1/2 - t^-1/2
         }
 
         bool sigMatches(const std::string& sig,
