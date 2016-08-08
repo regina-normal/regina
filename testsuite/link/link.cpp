@@ -283,6 +283,9 @@ class LinkTest : public CppUnit::TestFixture {
             testHomflyLM(trefoilRight, "x^-2 y^2 - 2 x^-2 - x^-4");
             testHomflyAZ(trefoilRight, "x^-2 y^2 + 2 x^-2 - x^-4");
 
+            testHomflyLM(figureEight, "-x^2 + y^2 - 1 - x^-2");
+            testHomflyLM(hopf, "-x^-1 y + x^-1 y^-1 + x^-3 y^-1");
+
             testHomflyLM(trefoil_unknot0,
                 "-x^-1 y + 2 x^-1 y^-1 - x^-3 y + 3 x^-3 y^-1 + x^-5 y^-1");
             testHomflyLM(trefoil_unknot1,
@@ -290,14 +293,16 @@ class LinkTest : public CppUnit::TestFixture {
             testHomflyLM(trefoil_unknot_overlap,
                 "-x^-1 y + 2 x^-1 y^-1 - x^-3 y + 3 x^-3 y^-1 + x^-5 y^-1");
 
-            // TODO: Check!  This is different from what Adams claims.
-            // But Adams does get his arithmetic wrong elsewhere...
+            // This is different from Adams' claim regarding the HOMFLY
+            // polynomial of this link.  But... Adams does get his arithmetic
+            // wrong elsewhere, and a calculation by hand using the Skein
+            // relation agrees with the polynomial below.
             testHomflyLM(adams6_28,
                 "x y - x^-1 y^3 + x^-1 y + 2 x^-3 y - x^-3 y^-1 - x^-5 y^-1");
 
-            // TODO: fig8, hopf, whitehead, borromean
+            // TODO: whitehead, borromean
 
-            // TODO: Verify that # of links means * for HOMFLY/Jones
+            // TODO: Verify that L # M means * for HOMFLY/Jones
 
             // TODO: Verify that HOMFLY gives Jones by:
             //   * l = it^-1, m = i(t^-1/2 - t^1/2)
