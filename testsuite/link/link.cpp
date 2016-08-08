@@ -37,6 +37,7 @@
 #include "link/examplelink.h"
 #include "link/link.h"
 #include "maths/nlaurent.h"
+#include "maths/nlaurent2.h"
 #include "packet/ncontainer.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nnormalsurfacelist.h"
@@ -58,6 +59,7 @@ class LinkTest : public CppUnit::TestFixture {
 
     CPPUNIT_TEST(components);
     CPPUNIT_TEST(jones);
+    CPPUNIT_TEST(homfly);
     CPPUNIT_TEST(complement);
 
     CPPUNIT_TEST_SUITE_END();
@@ -81,6 +83,7 @@ class LinkTest : public CppUnit::TestFixture {
         Link *unlink2_r2, *unlink2_r1r1;
         Link *hopf, *whitehead, *borromean;
         Link *trefoil_unknot0, *trefoil_unknot1, *trefoil_unknot_overlap;
+        Link *adams6_28; // Figure 6.28 from Adams
 
     public:
         void setUp() {
@@ -138,6 +141,10 @@ class LinkTest : public CppUnit::TestFixture {
                 { -1, +1, +1, +1, +1 }, { 2, -3, -4, -1, 5, -2, 3, -5 },
                 { 4, 1 });
             trefoil_unknot_overlap->setLabel("Trefoil U unknot (with R2)");
+
+            adams6_28 = Link::fromData({ +1, +1, -1, -1, +1, +1 },
+                { -2, 1, -5, 6 }, { 2, -3, 4, -6, 5, -4, 3, -1 });
+            adams6_28->setLabel("Adams, Figure 6.28");
         }
 
         void tearDown() {
@@ -225,6 +232,70 @@ class LinkTest : public CppUnit::TestFixture {
             testJones(trefoil_unknot0, "x^9 - x^5 - x^3 - x");
             testJones(trefoil_unknot1, "x^9 - x^5 - x^3 - x");
             testJones(trefoil_unknot_overlap, "x^9 - x^5 - x^3 - x");
+        }
+
+        void testHomflyAZ(Link* l, const char* expected) {
+            std::ostringstream s;
+            regina::NLaurent2<regina::NInteger>* found = l->homflyAZ();
+            s << *found;
+            delete found;
+
+            if (s.str() != expected) {
+                std::ostringstream msg;
+                msg << l->label() << ": expected homflyAZ(link) = " << expected
+                    << ", found " << s.str() << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void testHomflyLM(Link* l, const char* expected) {
+            std::ostringstream s;
+            regina::NLaurent2<regina::NInteger>* found = l->homflyLM();
+            s << *found;
+            delete found;
+
+            if (s.str() != expected) {
+                std::ostringstream msg;
+                msg << l->label() << ": expected homflyLM(link) = " << expected
+                    << ", found " << s.str() << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void homfly() {
+            testHomflyAZ(empty, "0");
+            testHomflyLM(empty, "0");
+
+            testHomflyAZ(unknot0, "1");
+            testHomflyLM(unknot0, "1");
+            testHomflyAZ(unknot1, "1");
+            testHomflyLM(unknot1, "1");
+            testHomflyAZ(unknot3, "1");
+            testHomflyLM(unknot3, "1");
+            // The Gordian unknot is surely too large for this.
+
+            testHomflyLM(unlink2_0, "-x y^-1 - x^-1 y^-1");
+            testHomflyLM(unlink3_0, "x^2 y^-2 + 2 y^-2 + x^-2 y^-2");
+            testHomflyLM(unlink2_r2, "-x y^-1 - x^-1 y^-1");
+            testHomflyLM(unlink2_r1r1, "-x y^-1 - x^-1 y^-1");
+
+            testHomflyLM(trefoilLeft, "-x^4 + x^2 y^2 - 2 x^2");
+            testHomflyLM(trefoilRight, "x^-2 y^2 - 2 x^-2 - x^-4");
+            testHomflyAZ(trefoilRight, "x^-2 y^2 + 2 x^-2 - x^-4");
+
+            testHomflyLM(trefoil_unknot0,
+                "-x^-1 y + 2 x^-1 y^-1 - x^-3 y + 3 x^-3 y^-1 + x^-5 y^-1");
+            testHomflyLM(trefoil_unknot1,
+                "-x^-1 y + 2 x^-1 y^-1 - x^-3 y + 3 x^-3 y^-1 + x^-5 y^-1");
+            testHomflyLM(trefoil_unknot_overlap,
+                "-x^-1 y + 2 x^-1 y^-1 - x^-3 y + 3 x^-3 y^-1 + x^-5 y^-1");
+
+            // TODO: Check!  This is different from what Adams claims.
+            // But Adams does get his arithmetic wrong elsewhere...
+            testHomflyLM(adams6_28,
+                "x y - x^-1 y^3 + x^-1 y + 2 x^-3 y - x^-3 y^-1 - x^-5 y^-1");
+
+            // TODO: fig8, hopf, whitehead, borromean
         }
 
         bool sigMatches(const std::string& sig,
