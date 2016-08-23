@@ -64,6 +64,8 @@ namespace {
         &NTriangulation::recogniser;
     std::string (NTriangulation::*recognizer_void)() const =
         &NTriangulation::recognizer;
+    size_t (NTriangulation::*splitIntoComponents)(regina::NPacket*, bool) =
+        &NTriangulation::splitIntoComponents;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyToLocalMinimum,
         NTriangulation::simplifyToLocalMinimum, 0, 1);
@@ -94,7 +96,7 @@ namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_order,
         NTriangulation::order, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_splitIntoComponents,
-        TriangulationBase<3>::splitIntoComponents, 0, 2);
+        NTriangulation::splitIntoComponents, 0, 2);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_connectedSumDecomposition,
         NTriangulation::connectedSumDecomposition, 0, 2);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_puncture,
@@ -395,8 +397,9 @@ void addNTriangulation() {
             OL_reorderTetrahedraBFS())
         .def("orient", &NTriangulation::orient)
         .def("order", &NTriangulation::order, OL_order(args("force_oriented")))
-        .def("splitIntoComponents", &NTriangulation::splitIntoComponents,
-            OL_splitIntoComponents())
+        .def("splitIntoComponents",
+             splitIntoComponents,
+             OL_splitIntoComponents(args("componentParent", "setLabels")))
         .def("connectedSumDecomposition",
             &NTriangulation::connectedSumDecomposition,
             OL_connectedSumDecomposition())
