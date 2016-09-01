@@ -9,6 +9,7 @@ SET ( FILES
   jenkins
   jones
   link
+  reidemeister
   xmllinkreader
   )
 

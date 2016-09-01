@@ -810,6 +810,11 @@ class REGINA_API Link : public NPacket {
          * \c true, and therefore (ii) this routine will do nothing and return
          * \c false.
          *
+         * \warning A side-effect of this move is that, because one crossing
+         * is being removed, the other crossings in the link may be reindexed.
+         * However, no crossings other than the one involved in this move
+         * will be destroyed.
+         *
          * \pre If \a perform is \c true but \a check is \c false, then
          * it must be known in advance that this move can be performed
          * at the given location.
@@ -868,6 +873,9 @@ class REGINA_API Link : public NPacket {
          * in which it \e cannot be performed is if \a arc is a null reference
          * but this link contains no zero-crossing components, as discussed
          * above.
+         *
+         * The existing crossings in this link will keep the same indices,
+         * and the new crossing will be given the next index that is available.
          *
          * \pre If \a perform is \c true but \a check is \c false, then
          * it must be known in advance that this move can be performed
@@ -928,6 +936,11 @@ class REGINA_API Link : public NPacket {
          * the move cannot be performed, which means (i) \a check must be
          * \c true, and therefore (ii) this routine will do nothing and return
          * \c false.
+         *
+         * \warning A side-effect of this move is that, because two crossings
+         * are being removed, the other crossings in the link may be reindexed.
+         * However, no crossings other than the two involved in this move
+         * will be destroyed.
          *
          * \pre If \a perform is \c true but \a check is \c false, then
          * it must be known in advance that this move can be performed
@@ -999,6 +1012,10 @@ class REGINA_API Link : public NPacket {
          * unknot component, but in this case you can achieve the same
          * effect by adding two twists as described above.
          *
+         * The existing crossings in this link will keep the same indices,
+         * and the two new crossings will be given the next two indices
+         * that are available.
+         *
          * \pre If \a perform is \c true but \a check is \c false, then
          * it must be known in advance that this move can be performed
          * at the given location.
@@ -1063,6 +1080,11 @@ class REGINA_API Link : public NPacket {
          * the move cannot be performed, which means (i) \a check must be
          * \c true, and therefore (ii) this routine will do nothing and return
          * \c false.
+         *
+         * All crossings in this link will keep the same indices, and
+         * no crossings will be created or destroyed.  Instead, the three
+         * crossings involved in this move will simply be reordered
+         * along the various segments of the link.
          *
          * \pre If \a perform is \c true but \a check is \c false, then
          * it must be known in advance that this move can be performed
