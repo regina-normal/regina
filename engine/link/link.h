@@ -69,9 +69,28 @@ template <int> class Triangulation;
  * to the upper strand (which passes over the crossing) or the lower strand
  * (which passes under the crossing).
  *
+ * A "null reference" is one whose crossing is the null pointer.
+ *
  * These references are small enough to pass around by value.
  *
- * A "null reference" is one whose crossing is the null pointer.
+ * This class can also be used to refer to an \e arc of a link; that is,
+ * a section of the link that runs from one crossing to the next.
+ * When used in this way:
+ *
+ * - The arc referred to is the arc beginning at the given strand of the
+ *   given crossing, and moving forwards along the orientation of the link
+ *   to the next crossing.
+ *
+ * - A null reference is used to refer to an entire zero-crossing unknot
+ *   component (as opposed to a typical arc which has well-defined start
+ *   and end points).  Of course the link in question may not have such a
+ *   component, or may have many such components; the behaviour of the
+ *   code in such circumstances is documented in the individual routines
+ *   that take arc references as arguments.
+ *
+ * - The increment and decrement operators, as well as next() and prev(),
+ *   behave as expected: they follow the link forward and backward
+ *   respectively along its orientation.
  */
 class REGINA_API StrandRef {
     private:
@@ -299,7 +318,7 @@ class REGINA_API StrandRef {
 };
 
 /**
- * Writes a depiction of the given reference to the given output stream.
+ * Writes a depiction of the given strand reference to the given output stream.
  *
  * The reference will be written in the form <tt>^n</tt> or <tt>_n</tt>,
  * denoting the upper or lower strand at crossing \a n respectively.
@@ -1463,7 +1482,10 @@ inline StrandRef::operator bool() const {
 }
 
 inline std::ostream& operator << (std::ostream& out, const StrandRef& s) {
-    return out << (s.strand() == 1 ? '^' : '_') << s.crossing()->index();
+    if (s.crossing())
+        return out << (s.strand() == 1 ? '^' : '_') << s.crossing()->index();
+    else
+        return out << "(null)";
 }
 
 // Inline functions for Crossing
