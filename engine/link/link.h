@@ -776,6 +776,316 @@ class REGINA_API Link : public NPacket {
          */
         void rotate();
 
+        /**
+         * Tests for and/or performs a type I Reidemeister move to remove a
+         * crossing.
+         *
+         * There are two boolean arguments that control the behaviour of
+         * this routine: \a check and \a perform.
+         *
+         * - If \a check and \a perform are both \c true (the default), then
+         *   this routine will first check whether this move can be performed
+         *   at the given location.  If so, it will perform the move and
+         *   return \c true.  If not, it will do nothing and return \c false.
+         *
+         * - If \a check is \c true but \a perform is \c false, then this
+         *   routine will simply check whether this move can be performed at
+         *   the given location and return \c true or \c false accordingly.
+         *
+         * - If \a check is \c false but \a perform is \c true, then this
+         *   routine will perform the move without any prior checks, and will
+         *   always return \c true.  In this case, it must be known in advance
+         *   that the move can be performed at the given location.
+         *
+         * - If \a check and \a perform are both \c false, then this
+         *   routine does nothing and just returns \c true.  (There is
+         *   no reason to use this combination of arguments.)
+         *
+         * The location of this move is specified by the argument \a crossing,
+         * which indicates the crossing that will be removed.  Specifically,
+         * this move involves undoing a trivial twist at the given crossing.
+         *
+         * You may pass a null pointer for \a crossing.  However, in this case
+         * the move cannot be performed, which means (i) \a check must be
+         * \c true, and therefore (ii) this routine will do nothing and return
+         * \c false.
+         *
+         * \pre If \a perform is \c true but \a check is \c false, then
+         * it must be known in advance that this move can be performed
+         * at the given location.
+         * \pre The given crossing is either a null pointer, or else some
+         * crossing in this link.
+         *
+         * @param crossing identifies the crossing to be removed.
+         * @param check \c true if we are to check whether the move can
+         * be performed at the given location.
+         * @param perform \c true if we should actually perform the move.
+         * @return If \a check is \c true, this function returns \c true
+         * if and only if the move can be performed.  If \a check is \c false,
+         * this function always returns \c true.
+         */
+        bool r1(Crossing* crossing, bool check = true, bool perform = true);
+        /**
+         * Tests for and/or performs a type I Reidemeister move to add a
+         * new crossing.
+         *
+         * There are two boolean arguments that control the behaviour of
+         * this routine: \a check and \a perform.
+         *
+         * - If \a check and \a perform are both \c true (the default), then
+         *   this routine will first check whether this move can be performed
+         *   at the given location.  If so, it will perform the move and
+         *   return \c true.  If not, it will do nothing and return \c false.
+         *
+         * - If \a check is \c true but \a perform is \c false, then this
+         *   routine will simply check whether this move can be performed at
+         *   the given location and return \c true or \c false accordingly.
+         *
+         * - If \a check is \c false but \a perform is \c true, then this
+         *   routine will perform the move without any prior checks, and will
+         *   always return \c true.  In this case, it must be known in advance
+         *   that the move can be performed at the given location.
+         *
+         * - If \a check and \a perform are both \c false, then this
+         *   routine does nothing and just returns \c true.  (There is
+         *   no reason to use this combination of arguments.)
+         *
+         * The location of this move is specified by the argument \a arc.
+         * Specifically, this move involves adding a trivial twist to the
+         * given arc; the arguments \a side and \a sign indicate on which side
+         * of the arc and with which orientation the new twist will be made.
+         * See the StrandRef documentation for the convention on how arcs
+         * are represented using StrandRef objects.
+         *
+         * If \a arc is a null reference, then the new twist will be
+         * added to a zero-crossing unknot component; it will be assumed
+         * that this unknot component is oriented clockwise.  If \a arc
+         * is null but there is no zero-crossing component then the move cannot
+         * be performed, and if \a arc is null but there are multiple
+         * zero-crossing components then the first such component will be used.
+         *
+         * This move is almost always able to be performed: the only situation
+         * in which it \e cannot be performed is if \a arc is a null reference
+         * but this link contains no zero-crossing components, as discussed
+         * above.
+         *
+         * \pre If \a perform is \c true but \a check is \c false, then
+         * it must be known in advance that this move can be performed
+         * at the given location.
+         * \pre The given strand reference is either a null reference,
+         * or else refers to some strand of some crossing in this link.
+         *
+         * @param arc identifies the arc of the link in which the new
+         * twist will be introduced, as described above.
+         * @param side 0 if the twist should be introduced on the left
+         * of the arc (when walking along the arc in the forward direction),
+         * or 1 if the twist should be introduced on the right of the arc.
+         * @param sign the sign of the new crossing that will be
+         * introduced as part of the twist; this must be +1 or -1.
+         * @param check \c true if we are to check whether the move can
+         * be performed at the given location.
+         * @param perform \c true if we should actually perform the move.
+         * @return If \a check is \c true, this function returns \c true
+         * if and only if the move can be performed.  If \a check is \c false,
+         * this function always returns \c true.
+         */
+        bool r1(StrandRef arc, int side, int sign,
+            bool check = true, bool perform = true);
+        /**
+         * Tests for and/or performs a type II Reidemeister move to remove
+         * two crossings.
+         *
+         * There are two boolean arguments that control the behaviour of
+         * this routine: \a check and \a perform.
+         *
+         * - If \a check and \a perform are both \c true (the default), then
+         *   this routine will first check whether this move can be performed
+         *   at the given location.  If so, it will perform the move and
+         *   return \c true.  If not, it will do nothing and return \c false.
+         *
+         * - If \a check is \c true but \a perform is \c false, then this
+         *   routine will simply check whether this move can be performed at
+         *   the given location and return \c true or \c false accordingly.
+         *
+         * - If \a check is \c false but \a perform is \c true, then this
+         *   routine will perform the move without any prior checks, and will
+         *   always return \c true.  In this case, it must be known in advance
+         *   that the move can be performed at the given location.
+         *
+         * - If \a check and \a perform are both \c false, then this
+         *   routine does nothing and just returns \c true.  (There is
+         *   no reason to use this combination of arguments.)
+         *
+         * The location of this move is specified by the argument \a crossing,
+         * which indicates the first of the two crossings that will be removed.
+         * Specifically: this move involves pulling apart two arcs of
+         * the link that both run between the same pair of crossings.
+         * One of these arcs will be the arc starting from the upper strand of
+         * \a crossing and moving forwards to the next crossing.  If the move
+         * is able to be performed, then the other arc can then be deduced.
+         *
+         * You may pass a null pointer for \a crossing.  However, in this case
+         * the move cannot be performed, which means (i) \a check must be
+         * \c true, and therefore (ii) this routine will do nothing and return
+         * \c false.
+         *
+         * \pre If \a perform is \c true but \a check is \c false, then
+         * it must be known in advance that this move can be performed
+         * at the given location.
+         * \pre The given crossing is either a null pointer, or else some
+         * crossing in this link.
+         *
+         * @param crossing identifies the crossing at the beginning of
+         * the "upper" arc that features in this move, as described above.
+         * @param check \c true if we are to check whether the move is legal.
+         * @param perform \c true if we should actually perform the move.
+         * @return If \a check is \c true, this function returns \c true
+         * if and only if the requested move is legal.  If \a check is \c false,
+         * this function always returns \c true.
+         */
+        bool r2(Crossing* crossing, bool check = true, bool perform = true);
+        /**
+         * Tests for and/or performs a type II Reidemeister move to add
+         * two new crossings.
+         *
+         * There are two boolean arguments that control the behaviour of
+         * this routine: \a check and \a perform.
+         *
+         * - If \a check and \a perform are both \c true (the default), then
+         *   this routine will first check whether this move can be performed
+         *   at the given location.  If so, it will perform the move and
+         *   return \c true.  If not, it will do nothing and return \c false.
+         *
+         * - If \a check is \c true but \a perform is \c false, then this
+         *   routine will simply check whether this move can be performed at
+         *   the given location and return \c true or \c false accordingly.
+         *
+         * - If \a check is \c false but \a perform is \c true, then this
+         *   routine will perform the move without any prior checks, and will
+         *   always return \c true.  In this case, it must be known in advance
+         *   that the move can be performed at the given location.
+         *
+         * - If \a check and \a perform are both \c false, then this
+         *   routine does nothing and just returns \c true.  (There is
+         *   no reason to use this combination of arguments.)
+         *
+         * The location of this move is specified by the arguments \a upperArc,
+         * \a upperSide, \a lowerArc and \a lowerSide.  Specifically, this
+         * move involves taking the arc \a upperArc and pushing it over
+         * \a lowerArc so that the two arcs overlap.  The arguments
+         * \a upperSide and \a lowerSide indicate on which side of each arc
+         * the overlap takes place.  See the StrandRef documentation for the
+         * convention on how arcs are represented using StrandRef objects.
+         *
+         * It is allowed to have \a upperArc and \a lowerArc represent
+         * the same arc (though the same effect can be achieved by performing
+         * two type I Reidemeister moves, i.e., adding two twists).
+         *
+         * If either \a upperArc or \a lowerArc is a null reference, then
+         * the move will be performed upon a zero-crossing unknot component;
+         * it will be assumed that this unknot component is oriented clockwise.
+         * If one of these arguments is a null reference but there is no
+         * zero-crossing component then the move cannot be performed,
+         * and if there are multiple zero-crossing components then the first
+         * such component will be used.
+         *
+         * Likewise, if \e both arcs are null references, then the move
+         * will be performed upon two \e different zero-crossing unknot
+         * components.  In this case, if there are fewer than two such
+         * components then the move cannot be performed, and otherwise
+         * \a upperArc will be the first such component and \a lowerArc
+         * will be the second.  There is currently no way to have
+         * \a upperArc and \a lowerArc represent the \e same zero-crossing
+         * unknot component, but in this case you can achieve the same
+         * effect by adding two twists as described above.
+         *
+         * \pre If \a perform is \c true but \a check is \c false, then
+         * it must be known in advance that this move can be performed
+         * at the given location.
+         * \pre Each of the given strand references is either a null reference,
+         * or else refers to some strand of some crossing in this link.
+         *
+         * @param upperArc identifies the arc of the link which will be
+         * passed over the other, as described above.
+         * @param upperSide 0 if the new overlap should take place on the left
+         * of \a upperArc (when walking along \a upperArc in the forward
+         * direction), or 1 if the new overlap should take place on the right
+         * of \a upperArc.
+         * @param lowerArc identifies the arc of the link which will be
+         * passed beneath the other, as described above.
+         * @param lowerSide 0 if the new overlap should take place on the left
+         * of \a lowerArc (when walking along \a lowerArc in the forward
+         * direction), or 1 if the new overlap should take place on the right
+         * of \a lowerArc.
+         * @param check \c true if we are to check whether the move can
+         * be performed at the given location.
+         * @param perform \c true if we should actually perform the move.
+         * @return If \a check is \c true, this function returns \c true
+         * if and only if the move can be performed.  If \a check is \c false,
+         * this function always returns \c true.
+         */
+        bool r2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
+            int lowerSide, bool check = true, bool perform = true);
+        /**
+         * Tests for and/or performs a type III Reidemeister move.
+         *
+         * There are two boolean arguments that control the behaviour of
+         * this routine: \a check and \a perform.
+         *
+         * - If \a check and \a perform are both \c true (the default), then
+         *   this routine will first check whether this move can be performed
+         *   at the given location.  If so, it will perform the move and
+         *   return \c true.  If not, it will do nothing and return \c false.
+         *
+         * - If \a check is \c true but \a perform is \c false, then this
+         *   routine will simply check whether this move can be performed at
+         *   the given location and return \c true or \c false accordingly.
+         *
+         * - If \a check is \c false but \a perform is \c true, then this
+         *   routine will perform the move without any prior checks, and will
+         *   always return \c true.  In this case, it must be known in advance
+         *   that the move can be performed at the given location.
+         *
+         * - If \a check and \a perform are both \c false, then this
+         *   routine does nothing and just returns \c true.  (There is
+         *   no reason to use this combination of arguments.)
+         *
+         * The location of this move is specified by the arguments \a arc
+         * and \a side.  Specifically, this move takes place around a
+         * triangle; the given arc must be the uppermost arc of this
+         * triangle (i.e., both ends of the arc are the upper strands of
+         * their respective crossings).  The argument \a side indicates
+         * on which side of the arc the third crossing is located.
+         * See the StrandRef documentation for the convention on how arcs
+         * are represented using StrandRef objects.
+         *
+         * You may pass a null reference for \a arc.  However, in this case
+         * the move cannot be performed, which means (i) \a check must be
+         * \c true, and therefore (ii) this routine will do nothing and return
+         * \c false.
+         *
+         * \pre If \a perform is \c true but \a check is \c false, then
+         * it must be known in advance that this move can be performed
+         * at the given location.
+         * \pre The given strand reference is either a null reference,
+         * or else refers to some strand of some crossing in this link.
+         *
+         * @param arc identifies the uppermost arc of the triangle about
+         * which the move will be performed, as described above.
+         * @param side 0 if the third crossing of the triangle is located to
+         * the left of the arc (when walking along the arc in the forward
+         * direction), or 1 if the third crossing is located on the right of
+         * the arc.
+         * @param check \c true if we are to check whether the move can
+         * be performed at the given location.
+         * @param perform \c true if we should actually perform the move.
+         * @return If \a check is \c true, this function returns \c true
+         * if and only if the move can be performed.  If \a check is \c false,
+         * this function always returns \c true.
+         */
+        bool r3(StrandRef arc, int side, bool check = true,
+            bool perform = true);
+
         /*@}*/
         /**
          * \name Invariants and Related Properties
