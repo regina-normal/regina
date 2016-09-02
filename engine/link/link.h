@@ -750,6 +750,32 @@ class REGINA_API Link : public NPacket {
          */
         StrandRef component(size_t index) const;
 
+        /**
+         * Determines whether the two given crossings are connected in the
+         * underlying 4-valent graph of the link diagram.
+         *
+         * Here "the underlying 4-valent graph" means the multigraph
+         * whose vertices are the crossings and whose edges are the arcs
+         * between crossings.  In particular
+         *
+         * - two crossings may be connected even if they involve
+         *   entirely different components of the link;
+         *
+         * - if two crossings are not connected then the underlying link
+         *   must be splittable (though this need not happen in the
+         *   other direction: one can have a diagram of a splittable
+         *   link in which all crossings are connected with each other).
+         *
+         * \warning This routine is slow (linear time), since it may
+         * need to perform a depth-first search through the graph.
+         *
+         * @param a the first of the two crossings to examine.
+         * @param b the second of the two crossings to examine.
+         * @return \c true if and only if the two given crossings are
+         * connected.
+         */
+        bool connected(const Crossing* a, const Crossing* b) const;
+
         /*@}*/
         /**
          * \name Editing

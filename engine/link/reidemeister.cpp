@@ -461,7 +461,13 @@ bool Link::r2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
             // never both.
             if (arc == upperArc) {
                 // We completed the cycle and never found lowerArc.
-                return false;
+                // The move is still legal, however, if and only if upperArc
+                // and lowerArc are in different connected components of the
+                // underlying 4-valent graph.
+                if (connected(upperArc.crossing(), lowerArc.crossing()))
+                    return false;
+                else
+                    break;
             }
             if (arc == lowerArc) {
                 // We found lowerArc, but make sure we're on the correct side.

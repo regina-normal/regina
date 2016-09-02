@@ -52,6 +52,49 @@ Link::Link(const Link& cloneMe) {
         components_.push_back(translate(comp));
 }
 
+bool Link::connected(const Crossing* a, const Crossing* b) const {
+    if (components_.size() <= 1)
+        return true;
+
+    // Do a depth-first search.
+    size_t n = crossings_.size();
+
+    bool* visited = new bool[n];
+    Crossing const** stack = new Crossing const*[n];
+
+    std::fill(visited, visited + n, false);
+
+    size_t stackSize = 1;
+    stack[0] = a;
+    visited[a->index()] = true;
+
+    const Crossing *curr, *adj;
+    int i;
+    while (stackSize > 0 && ! visited[b->index()]) {
+        curr = stack[--stackSize];
+
+        for (i = 0; i < 2; ++i) {
+            adj = curr->next_[i].crossing();
+            if (! visited[adj->index()]) {
+                visited[adj->index()] = true;
+                stack[stackSize++] = adj;
+            }
+
+            adj = curr->prev_[i].crossing();
+            if (! visited[adj->index()]) {
+                visited[adj->index()] = true;
+                stack[stackSize++] = adj;
+            }
+        }
+    }
+
+    bool ans = visited[b->index()];
+
+    delete[] stack;
+    delete[] visited;
+    return ans;
+}
+
 void Link::writeTextShort(std::ostream& out) const {
     if (components_.empty())
         out << "empty link";
