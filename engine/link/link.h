@@ -903,6 +903,76 @@ class REGINA_API Link : public NPacket {
          * Tests for and/or performs a type II Reidemeister move to remove
          * two crossings.
          *
+         * There are two variants of this routine: one that takes an
+         * arc, and one that takes a crossing.  This variant, which takes
+         * an arc, is more flexible (since either of the two arcs involved in
+         * this move can be passed).  The other variant, which takes a
+         * crossing, offers a canonical way of performing the move (since for
+         * each move there is exactly one crossing that describes it).
+         *
+         * There are two boolean arguments that control the behaviour of
+         * this routine: \a check and \a perform.
+         *
+         * - If \a check and \a perform are both \c true (the default), then
+         *   this routine will first check whether this move can be performed
+         *   at the given location.  If so, it will perform the move and
+         *   return \c true.  If not, it will do nothing and return \c false.
+         *
+         * - If \a check is \c true but \a perform is \c false, then this
+         *   routine will simply check whether this move can be performed at
+         *   the given location and return \c true or \c false accordingly.
+         *
+         * - If \a check is \c false but \a perform is \c true, then this
+         *   routine will perform the move without any prior checks, and will
+         *   always return \c true.  In this case, it must be known in advance
+         *   that the move can be performed at the given location.
+         *
+         * - If \a check and \a perform are both \c false, then this
+         *   routine does nothing and just returns \c true.  (There is
+         *   no reason to use this combination of arguments.)
+         *
+         * The location of this move is specified by the argument \a arc.
+         * Specifically, this move involves pulling apart two arcs of
+         * the link that surround a bigon; the given arc must be one of
+         * these two arcs.  See the StrandRef documentation for the
+         * convention on how arcs are represented using StrandRef objects.
+         *
+         * You may pass a null reference for \a arc.  However, in this case
+         * the move cannot be performed, which means (i) \a check must be
+         * \c true, and therefore (ii) this routine will do nothing and return
+         * \c false.
+         *
+         * \warning A side-effect of this move is that, because two crossings
+         * are being removed, the other crossings in the link may be reindexed.
+         * However, no crossings other than the two involved in this move
+         * will be destroyed.
+         *
+         * \pre If \a perform is \c true but \a check is \c false, then
+         * it must be known in advance that this move can be performed
+         * at the given location.
+         * \pre The given strand reference is either a null reference,
+         * or else refers to some strand of some crossing in this link.
+         *
+         * @param arc identifies one of the arcs of the bigon about
+         * which the move will be performed, as described above.
+         * @param check \c true if we are to check whether the move is legal.
+         * @param perform \c true if we should actually perform the move.
+         * @return If \a check is \c true, this function returns \c true
+         * if and only if the requested move is legal.  If \a check is \c false,
+         * this function always returns \c true.
+         */
+        bool r2(StrandRef arc, bool check = true, bool perform = true);
+        /**
+         * Tests for and/or performs a type II Reidemeister move to remove
+         * two crossings.
+         *
+         * There are two variants of this routine: one that takes an
+         * arc, and one that takes a crossing.  The other variant, which takes
+         * an arc, is more flexible (since either of the two arcs involved in
+         * this move can be passed).  This variant, which takes a
+         * crossing, offers a canonical way of performing the move (since for
+         * each move there is exactly one crossing that describes it).
+         *
          * There are two boolean arguments that control the behaviour of
          * this routine: \a check and \a perform.
          *
@@ -925,12 +995,13 @@ class REGINA_API Link : public NPacket {
          *   no reason to use this combination of arguments.)
          *
          * The location of this move is specified by the argument \a crossing,
-         * which indicates the first of the two crossings that will be removed.
-         * Specifically: this move involves pulling apart two arcs of
-         * the link that both run between the same pair of crossings.
-         * One of these arcs will be the arc starting from the upper strand of
-         * \a crossing and moving forwards to the next crossing.  If the move
-         * is able to be performed, then the other arc can then be deduced.
+         * Specifically, this move involves pulling apart two arcs of the link
+         * (one upper, one lower) that both run between the same pair of
+         * crossings.  When following the upper arc along the orientation of
+         * the link, \a crossing should be the first of the two crossings that
+         * we encounter (i.e., the start point of the upper arc).  Note
+         * that \a crossing is one of the two crossings that will be removed
+         * by this move.
          *
          * You may pass a null pointer for \a crossing.  However, in this case
          * the move cannot be performed, which means (i) \a check must be
@@ -1022,6 +1093,10 @@ class REGINA_API Link : public NPacket {
          * \pre Each of the given strand references is either a null reference,
          * or else refers to some strand of some crossing in this link.
          *
+         * \warning The check for this move is expensive (linear time),
+         * since it includes testing whether both sides-of-arcs belong
+         * to the same 2-cell of the knot diagram.
+         *
          * @param upperArc identifies the arc of the link which will be
          * passed over the other, as described above.
          * @param upperSide 0 if the new overlap should take place on the left
@@ -1069,12 +1144,11 @@ class REGINA_API Link : public NPacket {
          *
          * The location of this move is specified by the arguments \a arc
          * and \a side.  Specifically, this move takes place around a
-         * triangle; the given arc must be the uppermost arc of this
-         * triangle (i.e., both ends of the arc are the upper strands of
-         * their respective crossings).  The argument \a side indicates
-         * on which side of the arc the third crossing is located.
-         * See the StrandRef documentation for the convention on how arcs
-         * are represented using StrandRef objects.
+         * triangle; the given arc must form one of the three edges of this
+         * triangle.  The argument \a side indicates on which side of the arc
+         * the third crossing is located.  See the StrandRef documentation
+         * for the convention on how arcs are represented using StrandRef
+         * objects.
          *
          * You may pass a null reference for \a arc.  However, in this case
          * the move cannot be performed, which means (i) \a check must be
@@ -1092,7 +1166,7 @@ class REGINA_API Link : public NPacket {
          * \pre The given strand reference is either a null reference,
          * or else refers to some strand of some crossing in this link.
          *
-         * @param arc identifies the uppermost arc of the triangle about
+         * @param arc identifies one of the arcs of the triangle about
          * which the move will be performed, as described above.
          * @param side 0 if the third crossing of the triangle is located to
          * the left of the arc (when walking along the arc in the forward
