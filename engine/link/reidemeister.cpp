@@ -348,8 +348,212 @@ bool Link::r2(StrandRef arc, bool check, bool perform) {
 
 bool Link::r2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
         int lowerSide, bool check, bool perform) {
-    // TODO: Implement r2
-    return false;
+    std::vector<StrandRef>::iterator upperUnknot, lowerUnknot;
+
+    if (! (upperArc && lowerArc)) {
+        // We have references to one or two zero-crossing components.
+        // Find them.
+        std::vector<StrandRef>::iterator it = components_.begin();
+
+        if (! upperArc) {
+            for ( ; it != components_.end(); ++it)
+                if (! it->crossing()) {
+                    upperUnknot = it;
+                    break;
+                }
+            if (it == components_.end()) {
+                return ! check;
+            }
+
+            // Step forwards so we can search for lowerUnknot if need be.
+            ++it;
+        }
+
+        if (! lowerArc) {
+            for ( ; it != components_.end(); ++it)
+                if (! it->crossing()) {
+                    lowerUnknot = it;
+                    break;
+                }
+            if (it == components_.end()) {
+                return ! check;
+            }
+        }
+    }
+
+    // Carry out any remaining checks.
+    if (check && upperArc && lowerArc) {
+        // Ensure that the two given sides-of-arcs belong to the
+        // same 2-cell in the knot diagram.
+
+        // We walk around the 2-cell from upperArc, ensuring that we
+        // always turn left.
+        //
+        // At each stage we consider an edge of this 2-cell:
+        //
+        // - ref points to the strand of the crossing at the beginning
+        //   of the edge, with respect to the direction in which we are
+        //   walking around the 2-cell;
+        // - arc points to the strand of the crossing at the beginning
+        //   of the edge, with respect to the orientation of the link.
+        // - forward indicates whether these two directions are the same.
+        //
+        // Note that we don't actually set arc until we get to the test at the
+        // end of the while loop.
+        //
+        StrandRef ref = upperArc;
+        bool forward;
+        if (upperSide == 0) {
+            forward = true;
+        } else {
+            // Since we are traversing the arc backwards, we need to
+            // jump to the other endpoint.
+            ref = ref.next();
+            forward = false;
+        }
+
+        StrandRef arc;
+        while (true) {
+            // Move to the next edge of the boundary of this 2-cell.
+            if (forward) {
+                ref = ref.next();
+                ref.jump();
+
+                // forward remains true for (sign, strand):
+                // +, 0
+                // -, 1
+                if (ref.crossing()->sign() > 0)
+                    forward = (0 == ref.strand());
+                else
+                    forward = (0 != ref.strand());
+            } else {
+                ref = ref.prev();
+                ref.jump();
+
+                // forward becomes true for (sign, strand):
+                // -, 0
+                // +, 1
+                if (ref.crossing()->sign() > 0)
+                    forward = (0 != ref.strand());
+                else
+                    forward = (0 == ref.strand());
+            }
+
+            arc = (forward ? ref : ref.prev());
+
+            // By planarity, the 2-cell can meet one side of an arc, but
+            // never both.
+            if (arc == upperArc) {
+                // We completed the cycle and never found lowerArc.
+                return false;
+            }
+            if (arc == lowerArc) {
+                // We found lowerArc, but make sure we're on the correct side.
+                if (forward) {
+                    if (lowerSide == 0)
+                        break;
+                    else
+                        return false;
+                } else {
+                    if (lowerSide != 0)
+                        break;
+                    else
+                        return false;
+                }
+            }
+        }
+        // If we made it out of the while loop, then we found the
+        // correct side of lowerArc on our 2-cell.
+    }
+
+    // The move can be performed!
+    if (! perform)
+        return true;
+
+    Crossing* pos = new Crossing(1);
+    Crossing* neg = new Crossing(-1);
+
+    StrandRef to;
+
+    // Graft the new crossings into the upper arc.
+    if (lowerSide == 0) {
+        // Upper strand: pos -> neg
+        pos->next_[1] = neg->strand(1);
+        neg->prev_[1] = pos->strand(1);
+
+        if (upperArc) {
+            to = upperArc.next();
+            upperArc.crossing()->next_[upperArc.strand()] = pos->strand(1);
+            pos->prev_[1] = upperArc;
+            to.crossing()->prev_[to.strand()] = neg->strand(1);
+            neg->next_[1] = to;
+        } else {
+            // Complete the new 2-crossing cycle.
+            neg->next_[1] = pos->strand(1);
+            pos->prev_[1] = neg->strand(1);
+            *upperUnknot = pos->strand(1);
+        }
+    } else {
+        // Upper strand: neg -> pos
+        neg->next_[1] = pos->strand(1);
+        pos->prev_[1] = neg->strand(1);
+
+        if (upperArc) {
+            to = upperArc.next();
+            upperArc.crossing()->next_[upperArc.strand()] = neg->strand(1);
+            neg->prev_[1] = upperArc;
+            to.crossing()->prev_[to.strand()] = pos->strand(1);
+            pos->next_[1] = to;
+        } else {
+            // Complete the new 2-crossing cycle.
+            pos->next_[1] = neg->strand(1);
+            neg->prev_[1] = pos->strand(1);
+            *upperUnknot = pos->strand(1);
+        }
+    }
+
+    // Graft the new crossings into the lower arc.
+    if (upperSide == 1) {
+        // Lower strand: pos -> neg
+        pos->next_[0] = neg->strand(0);
+        neg->prev_[0] = pos->strand(0);
+
+        if (lowerArc) {
+            to = lowerArc.next();
+            lowerArc.crossing()->next_[lowerArc.strand()] = pos->strand(0);
+            pos->prev_[0] = lowerArc;
+            to.crossing()->prev_[to.strand()] = neg->strand(0);
+            neg->next_[0] = to;
+        } else {
+            // Complete the new 2-crossing cycle.
+            neg->next_[0] = pos->strand(0);
+            pos->prev_[0] = neg->strand(0);
+            *lowerUnknot = pos->strand(0);
+        }
+    } else {
+        // Lower strand: neg -> pos
+        neg->next_[0] = pos->strand(0);
+        pos->prev_[0] = neg->strand(0);
+
+        if (lowerArc) {
+            to = lowerArc.next();
+            lowerArc.crossing()->next_[lowerArc.strand()] = neg->strand(0);
+            neg->prev_[0] = lowerArc;
+            to.crossing()->prev_[to.strand()] = pos->strand(0);
+            pos->next_[0] = to;
+        } else {
+            // Complete the new 2-crossing cycle.
+            pos->next_[0] = neg->strand(0);
+            neg->prev_[0] = pos->strand(0);
+            *lowerUnknot = pos->strand(0);
+        }
+    }
+
+    // Clean up.
+    crossings_.push_back(pos);
+    crossings_.push_back(neg);
+
+    return true;
 }
 
 bool Link::r3(StrandRef arc, int side, bool check, bool perform) {
