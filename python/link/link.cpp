@@ -57,6 +57,8 @@ namespace {
     bool (Link::*r2a)(Crossing*, bool, bool) = &Link::r2;
     bool (Link::*r2b)(StrandRef, bool, bool) = &Link::r2;
     bool (Link::*r2c)(StrandRef, int, StrandRef, int, bool, bool) = &Link::r2;
+    bool (Link::*r3a)(Crossing*, int, bool, bool) = &Link::r3;
+    bool (Link::*r3b)(StrandRef, int, bool, bool) = &Link::r3;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_complement, Link::complement,
         0, 1);
@@ -65,7 +67,8 @@ namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_r2a, Link::r2, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_r2b, Link::r2, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_r2c, Link::r2, 4, 6);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_r3, Link::r3, 2, 4);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_r3a, Link::r3, 2, 4);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_r3b, Link::r3, 2, 4);
 
     Link* fromOrientedGauss_list(boost::python::list terms) {
         long len = boost::python::len(terms);
@@ -162,7 +165,8 @@ void addLink() {
         .def("r2", r2a, OL_r2a())
         .def("r2", r2b, OL_r2b())
         .def("r2", r2c, OL_r2c())
-        .def("r3", &Link::r3, OL_r3())
+        .def("r3", r3a, OL_r3a())
+        .def("r3", r3b, OL_r3b())
         .staticmethod("fromOrientedGauss")
         .staticmethod("fromJenkins")
     ;

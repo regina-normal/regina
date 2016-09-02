@@ -997,11 +997,11 @@ class REGINA_API Link : public NPacket {
          * The location of this move is specified by the argument \a crossing,
          * Specifically, this move involves pulling apart two arcs of the link
          * (one upper, one lower) that both run between the same pair of
-         * crossings.  When following the upper arc along the orientation of
-         * the link, \a crossing should be the first of the two crossings that
-         * we encounter (i.e., the start point of the upper arc).  Note
-         * that \a crossing is one of the two crossings that will be removed
-         * by this move.
+         * crossings.  The given crossing should be the start point of the
+         * upper arc; that is, when following the upper arc forwards,
+         * \a crossing should be the first of the two crossings that we
+         * encounter.  Note that \a crossing is one of the two crossings that
+         * will be removed by this move.
          *
          * You may pass a null pointer for \a crossing.  However, in this case
          * the move cannot be performed, which means (i) \a check must be
@@ -1121,6 +1121,13 @@ class REGINA_API Link : public NPacket {
         /**
          * Tests for and/or performs a type III Reidemeister move.
          *
+         * There are two variants of this routine: one that takes an
+         * arc, and one that takes a crossing.  This variant, which takes
+         * an arc, is more flexible (since any of the three arcs involved in
+         * this move can be passed).  The other variant, which takes a
+         * crossing, offers a canonical way of performing the move (since for
+         * each move there is exactly one crossing that describes it).
+         *
          * There are two boolean arguments that control the behaviour of
          * this routine: \a check and \a perform.
          *
@@ -1180,6 +1187,78 @@ class REGINA_API Link : public NPacket {
          * this function always returns \c true.
          */
         bool r3(StrandRef arc, int side, bool check = true,
+            bool perform = true);
+        /**
+         * Tests for and/or performs a type III Reidemeister move.
+         *
+         * There are two variants of this routine: one that takes an
+         * arc, and one that takes a crossing.  The other variant, which takes
+         * an arc, is more flexible (since any of the three arcs involved in
+         * this move can be passed).  This variant, which takes a
+         * crossing, offers a canonical way of performing the move (since for
+         * each move there is exactly one crossing that describes it).
+         *
+         * There are two boolean arguments that control the behaviour of
+         * this routine: \a check and \a perform.
+         *
+         * - If \a check and \a perform are both \c true (the default), then
+         *   this routine will first check whether this move can be performed
+         *   at the given location.  If so, it will perform the move and
+         *   return \c true.  If not, it will do nothing and return \c false.
+         *
+         * - If \a check is \c true but \a perform is \c false, then this
+         *   routine will simply check whether this move can be performed at
+         *   the given location and return \c true or \c false accordingly.
+         *
+         * - If \a check is \c false but \a perform is \c true, then this
+         *   routine will perform the move without any prior checks, and will
+         *   always return \c true.  In this case, it must be known in advance
+         *   that the move can be performed at the given location.
+         *
+         * - If \a check and \a perform are both \c false, then this
+         *   routine does nothing and just returns \c true.  (There is
+         *   no reason to use this combination of arguments.)
+         *
+         * The location of this move is specified by the arguments \a crossing
+         * and \a side.  Specifically, this move takes place around a
+         * triangle, and one of the arcs of this triangle is \e uppermost (in
+         * that it passes above the other two arcs).  The given crossing
+         * should be the start point of this uppermost arc; that is, when
+         * following the arc forwards, \a crossing should be the first of the
+         * two crossings that we encounter.  The additional argument \a side
+         * indicates on which side of the uppermost arc the third crossing is
+         * located.
+         *
+         * You may pass a null pointer for \a crossing.  However, in this case
+         * the move cannot be performed, which means (i) \a check must be
+         * \c true, and therefore (ii) this routine will do nothing and return
+         * \c false.
+         *
+         * All crossings in this link will keep the same indices, and
+         * no crossings will be created or destroyed.  Instead, the three
+         * crossings involved in this move will simply be reordered
+         * along the various segments of the link.
+         *
+         * \pre If \a perform is \c true but \a check is \c false, then
+         * it must be known in advance that this move can be performed
+         * at the given location.
+         * \pre The given crossing is either a null pointer, or else some
+         * crossing in this link.
+         *
+         * @param crossing identifies the crossing at the beginning of
+         * the "uppermost" arc that features in this move, as described above.
+         * @param side 0 if the third crossing of the triangle is located to
+         * the left of the uppermost arc (when walking along the arc in the
+         * forward direction), or 1 if the third crossing is located on the
+         * right of the uppermost arc.
+         * @param check \c true if we are to check whether the move can
+         * be performed at the given location.
+         * @param perform \c true if we should actually perform the move.
+         * @return If \a check is \c true, this function returns \c true
+         * if and only if the move can be performed.  If \a check is \c false,
+         * this function always returns \c true.
+         */
+        bool r3(Crossing* crossing, int side, bool check = true,
             bool perform = true);
 
         /*@}*/
@@ -2017,7 +2096,17 @@ inline NLaurent2<NInteger>* Link::homfly() const {
 }
 
 inline bool Link::r2(Crossing* crossing, bool check, bool perform) {
-    return r2(StrandRef(crossing, 1));
+    return r2(StrandRef(crossing, 1), check, perform);
+}
+
+inline bool Link::r3(Crossing* crossing, int side, bool check, bool perform) {
+    StrandRef s(crossing, 1);
+
+    // If we are testing, then make sure this is an uppermost arc.
+    if (check && s.next().strand() != 1)
+        return false;
+
+    return r3(s, side, check, perform);
 }
 
 inline bool Link::dependsOnParent() const {
