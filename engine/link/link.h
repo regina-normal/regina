@@ -1061,10 +1061,6 @@ class REGINA_API Link : public NPacket {
          * the overlap takes place.  See the StrandRef documentation for the
          * convention on how arcs are represented using StrandRef objects.
          *
-         * It is allowed to have \a upperArc and \a lowerArc represent
-         * the same arc (though the same effect can be achieved by performing
-         * two type I Reidemeister moves, i.e., adding two twists).
-         *
          * If either \a upperArc or \a lowerArc is a null reference, then
          * the move will be performed upon a zero-crossing unknot component;
          * it will be assumed that this unknot component is oriented clockwise.
@@ -1078,10 +1074,13 @@ class REGINA_API Link : public NPacket {
          * components.  In this case, if there are fewer than two such
          * components then the move cannot be performed, and otherwise
          * \a upperArc will be the first such component and \a lowerArc
-         * will be the second.  There is currently no way to have
-         * \a upperArc and \a lowerArc represent the \e same zero-crossing
-         * unknot component, but in this case you can achieve the same
-         * effect by adding two twists as described above.
+         * will be the second.
+         *
+         * Currently, Regina cannot perform the move when \a upperArc and
+         * \a lowerArc represent the same arc (or the same zero-crossing unknot
+         * component).  In this case there is a workaround: you can achieve
+         * the same effect by performing two type I Reidemeister moves
+         * (i.e., by adding two twists).
          *
          * The existing crossings in this link will keep the same indices,
          * and the two new crossings will be given the next two indices
