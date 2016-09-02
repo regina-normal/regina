@@ -2016,6 +2016,10 @@ inline NLaurent2<NInteger>* Link::homfly() const {
     return homflyAZ();
 }
 
+inline bool Link::r2(Crossing* crossing, bool check, bool perform) {
+    return r2(StrandRef(crossing, 1));
+}
+
 inline bool Link::dependsOnParent() const {
     return false;
 }
