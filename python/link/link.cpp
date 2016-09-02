@@ -107,6 +107,8 @@ void addLink() {
         .def("next", &StrandRef::next)
         .def("prev", &StrandRef::prev)
         .def("jump", &StrandRef::jump)
+        .def(self_ns::str(self))
+        .def(self_ns::repr(self))
         .def(regina::python::add_eq_operators())
     ;
 
