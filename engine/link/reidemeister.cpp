@@ -49,6 +49,8 @@ bool Link::r1(Crossing* crossing, bool check, bool perform) {
         if (! perform)
             return true;
 
+        ChangeEventSpan span(this);
+
         if (crossing->prev(1).crossing() == crossing) {
             // This is a 1-crossing component, and we will convert it to a
             // zero-crossing unknot component.
@@ -72,10 +74,17 @@ bool Link::r1(Crossing* crossing, bool check, bool perform) {
                     break;
                 }
         }
+
+        // Destroy the crossing entirely.
+        // This has to happen before the ChangeEventSpan goes out of scope.
+        crossings_.erase(crossings_.begin() + crossing->index());
+        delete crossing;
     } else if (crossing->prev(1).crossing() == crossing) {
         // The move is legal.
         if (! perform)
             return true;
+
+        ChangeEventSpan span(this);
 
         // The twist runs from the lower strand to the upper.
         StrandRef from = crossing->prev_[0];
@@ -89,14 +98,15 @@ bool Link::r1(Crossing* crossing, bool check, bool perform) {
                 *it = to;
                 break;
             }
+
+        // Destroy the crossing entirely.
+        // This has to happen before the ChangeEventSpan goes out of scope.
+        crossings_.erase(crossings_.begin() + crossing->index());
+        delete crossing;
     } else {
         // The move cannot be performed.
         return ! check;
     }
-
-    // Destroy the crossing entirely.
-    crossings_.erase(crossings_.begin() + crossing->index());
-    delete crossing;
 
     return true;
 }
@@ -108,6 +118,8 @@ bool Link::r1(StrandRef arc, int side, int sign, bool check, bool perform) {
             if (! *it) {
                 // Found it!
                 if (perform) {
+                    ChangeEventSpan span(this);
+
                     Crossing* c = new Crossing(sign);
                     c->next_[0] = c->prev_[0] = StrandRef(c, 1);
                     c->next_[1] = c->prev_[1] = StrandRef(c, 0);
@@ -128,6 +140,8 @@ bool Link::r1(StrandRef arc, int side, int sign, bool check, bool perform) {
     // We have an actual arc, which means the move is always legal.
     if (! perform)
         return true;
+
+    ChangeEventSpan span(this);
 
     // Insert the twist.
     Crossing* c = new Crossing(sign);
@@ -182,6 +196,8 @@ bool Link::r2(StrandRef arc, bool check, bool perform) {
     // The move can be performed!
     if (! perform)
         return true;
+
+    ChangeEventSpan span(this);
 
     // The situation: (arc, arc2) represent opposite strands of one crossing,
     // and (to, to2) represent opposite strands of another crossing.
@@ -470,6 +486,8 @@ bool Link::r2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
     if (! perform)
         return true;
 
+    ChangeEventSpan span(this);
+
     Crossing* pos = new Crossing(1);
     Crossing* neg = new Crossing(-1);
 
@@ -616,6 +634,8 @@ bool Link::r3(StrandRef arc, int side, bool check, bool perform) {
 
     if (! perform)
         return true;
+
+    ChangeEventSpan span(this);
 
     // Reorder the two crossings on each of the three edges.
     StrandRef x, first, second, y;
