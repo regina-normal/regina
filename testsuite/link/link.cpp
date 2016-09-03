@@ -66,6 +66,7 @@ class LinkTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(r1Count);
     CPPUNIT_TEST(r2Count);
     CPPUNIT_TEST(r3Count);
+    CPPUNIT_TEST(r123Perform);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -171,6 +172,22 @@ class LinkTest : public CppUnit::TestFixture {
             delete trefoil_unknot0;
             delete trefoil_unknot1;
             delete trefoil_unknot_overlap;
+        }
+
+        void sanity(Link* l) {
+            Crossing* c;
+            for (size_t i = 0; i < l->size(); ++i) {
+                c = l->crossing(i);
+
+                StrandRef lower(c, 0);
+                StrandRef upper(c, 1);
+                if (lower.next().prev() != lower ||
+                        upper.next().prev() != upper) {
+                    std::ostringstream msg;
+                    msg << l->label() << ": inconsistent next/prev links.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
         }
 
         void testComponents(Link* l, size_t expected) {
@@ -872,6 +889,252 @@ class LinkTest : public CppUnit::TestFixture {
             verifyCountR3(trefoil_unknot1, 0);
             verifyCountR3(trefoil_unknot_overlap, 0);
             verifyCountR3(adams6_28, 0);
+        }
+
+        void verifyR1Down(const Link* l, int crossing,
+                const char* briefResult) {
+            Link clone(*l);
+            clone.setLabel(l->label());
+
+            if (! clone.r1(clone.crossing(crossing))) {
+                std::ostringstream msg;
+                msg << l->label() << ": R1(" << crossing << ") is "
+                    "not allowed.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            sanity(&clone);
+
+            if (clone.brief() != briefResult) {
+                std::ostringstream msg;
+                msg << l->label() << ": R1(" << crossing << ") gives "
+                    << clone.brief() << ", not " << briefResult
+                    << " as expected.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void verifyR2Down(const Link* l, int crossing,
+                const char* briefResult) {
+            Link clone(*l);
+            clone.setLabel(l->label());
+
+            if (! clone.r2(clone.crossing(crossing))) {
+                std::ostringstream msg;
+                msg << l->label() << ": R2(" << crossing << ") is "
+                    "not allowed.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            sanity(&clone);
+
+            if (clone.brief() != briefResult) {
+                std::ostringstream msg;
+                msg << l->label() << ": R2(" << crossing << ") gives "
+                    << clone.brief() << ", not " << briefResult
+                    << " as expected.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void verifyR2Down(const Link* l, int crossing, int strand,
+                const char* briefResult) {
+            Link clone(*l);
+            clone.setLabel(l->label());
+
+            if (! clone.r2(clone.crossing(crossing)->strand(strand))) {
+                std::ostringstream msg;
+                msg << l->label() << ": R2("
+                    << (strand ? '^' : '_') << crossing
+                    << ") is not allowed.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            sanity(&clone);
+
+            if (clone.brief() != briefResult) {
+                std::ostringstream msg;
+                msg << l->label() << ": R2("
+                    << (strand ? '^' : '_') << crossing << ") gives "
+                    << clone.brief() << ", not " << briefResult
+                    << " as expected.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void verifyR3(const Link* l, int crossing, int side,
+                const char* briefResult) {
+            Link clone(*l);
+            clone.setLabel(l->label());
+
+            if (! clone.r3(clone.crossing(crossing), side)) {
+                std::ostringstream msg;
+                msg << l->label() << ": R3(" << crossing << ", "
+                    << side << ") is not allowed.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            sanity(&clone);
+
+            if (clone.brief() != briefResult) {
+                std::ostringstream msg;
+                msg << l->label() << ": R3(" << crossing << ", "
+                    << side << ") gives "
+                    << clone.brief() << ", not " << briefResult
+                    << " as expected.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void verifyR3(const Link* l, int crossing, int strand, int side,
+                const char* briefResult) {
+            Link clone(*l);
+            clone.setLabel(l->label());
+
+            if (! clone.r3(clone.crossing(crossing)->strand(strand), side)) {
+                std::ostringstream msg;
+                msg << l->label() << ": R3("
+                    << (strand ? '^' : '_') << crossing << ", " << side
+                    << ") is not allowed.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            sanity(&clone);
+
+            if (clone.brief() != briefResult) {
+                std::ostringstream msg;
+                msg << l->label() << ": R3(" << (strand ? '^' : '_')
+                    << crossing << ", " << side << ") gives "
+                    << clone.brief() << ", not " << briefResult
+                    << " as expected.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void r123Perform() {
+            Link* l;
+
+            l = Link::fromData({ -1 }, { 1, -1 });
+            l->setLabel("One twist");
+            verifyR1Down(l, 0, "( )");
+            delete l;
+
+            l = Link::fromData({ 1, -1 }, { -1, 1, 2, -2 });
+            l->setLabel("Two twists (a)");
+            verifyR1Down(l, 0, "- ( ^0 _0 )");
+            verifyR2Down(l, 0, "( )");
+            verifyR2Down(l, 0, 1, "( )");
+            verifyR2Down(l, 1, 0, "( )");
+            delete l;
+
+            l = Link::fromData({ 1, -1 }, { 1, 2, -2, -1 });
+            l->setLabel("Two twists (b)");
+            verifyR1Down(l, 0, "- ( ^0 _0 )");
+            verifyR2Down(l, 0, "( )");
+            verifyR2Down(l, 0, 1, "( )");
+            verifyR2Down(l, 1, 0, "( )");
+            delete l;
+
+            l = Link::fromData({ 1, -1 }, { 2, -2, -1, 1 });
+            l->setLabel("Two twists (c)");
+            verifyR1Down(l, 0, "- ( ^0 _0 )");
+            verifyR2Down(l, 0, "( )");
+            verifyR2Down(l, 0, 1, "( )");
+            verifyR2Down(l, 1, 0, "( )");
+            delete l;
+
+            l = Link::fromData({ 1, -1 }, { -2, -1, 1, 2 });
+            l->setLabel("Two twists (d)");
+            verifyR1Down(l, 0, "- ( _0 ^0 )");
+            verifyR2Down(l, 0, "( )");
+            verifyR2Down(l, 0, 1, "( )");
+            verifyR2Down(l, 1, 0, "( )");
+            delete l;
+
+            l = Link::fromData({ 1, -1 }, { 1, 2 }, { -2, -1 });
+            l->setLabel("Overlapping loops");
+            verifyR2Down(l, 0, "( ) ( )");
+            verifyR2Down(l, 1, "( ) ( )");
+            verifyR2Down(l, 0, 0, "( ) ( )");
+            verifyR2Down(l, 0, 1, "( ) ( )");
+            verifyR2Down(l, 1, 0, "( ) ( )");
+            verifyR2Down(l, 1, 1, "( ) ( )");
+            delete l;
+
+            l = Link::fromData({ -1, 1, -1 }, { -1, 1, 3, 2 }, { -2, -3 });
+            l->setLabel("Loop overlapping twist (a)");
+            verifyR2Down(l, 2, "- ( _0 ^0 ) ( )");
+            verifyR2Down(l, 2, 1, "- ( _0 ^0 ) ( )");
+            verifyR2Down(l, 1, 0, "- ( _0 ^0 ) ( )");
+            verifyR2Down(l, 2, 0, "- ( _0 ^0 ) ( )");
+            verifyR3(l, 0, 0, "-+- ( _0 ^1 ^2 ^0 ) ( _1 _2 )");
+            verifyR3(l, 0, 1, 0, "-+- ( _0 ^1 ^2 ^0 ) ( _1 _2 )");
+            verifyR3(l, 1, 1, 0, "-+- ( _0 ^1 ^2 ^0 ) ( _1 _2 )");
+            verifyR3(l, 1, 0, 1, "-+- ( _0 ^1 ^2 ^0 ) ( _1 _2 )");
+            delete l;
+
+            l = Link::fromData({ -1, 1, -1 }, { 3, 2, -1, 1 }, { -2, -3 });
+            l->setLabel("Loop overlapping twist (b)");
+            verifyR2Down(l, 2, "- ( _0 ^0 ) ( )");
+            verifyR2Down(l, 2, 1, "- ( _0 ^0 ) ( )");
+            verifyR2Down(l, 1, 0, "- ( _0 ^0 ) ( )");
+            verifyR2Down(l, 2, 0, "- ( _0 ^0 ) ( )");
+            verifyR3(l, 0, 0, "-+- ( ^2 ^0 _0 ^1 ) ( _1 _2 )");
+            verifyR3(l, 0, 1, 0, "-+- ( ^2 ^0 _0 ^1 ) ( _1 _2 )");
+            verifyR3(l, 1, 1, 0, "-+- ( ^2 ^0 _0 ^1 ) ( _1 _2 )");
+            verifyR3(l, 1, 0, 1, "-+- ( ^2 ^0 _0 ^1 ) ( _1 _2 )");
+            delete l;
+
+            l = Link::fromData({ -1, 1, -1 }, { 2, -1, 1, 3 }, { -2, -3 });
+            l->setLabel("Loop overlapping twist (c)");
+            verifyR2Down(l, 2, "- ( _0 ^0 ) ( )");
+            verifyR2Down(l, 2, 1, "- ( _0 ^0 ) ( )");
+            verifyR2Down(l, 1, 0, "- ( _0 ^0 ) ( )");
+            verifyR2Down(l, 2, 0, "- ( _0 ^0 ) ( )");
+            verifyR3(l, 0, 0, "-+- ( ^1 ^2 ^0 _0 ) ( _1 _2 )");
+            verifyR3(l, 0, 1, 0, "-+- ( ^1 ^2 ^0 _0 ) ( _1 _2 )");
+            verifyR3(l, 1, 1, 0, "-+- ( ^1 ^2 ^0 _0 ) ( _1 _2 )");
+            verifyR3(l, 1, 0, 1, "-+- ( ^1 ^2 ^0 _0 ) ( _1 _2 )");
+            delete l;
+
+            l = Link::fromData({ 1, -1, 1 }, { 1, -1, -3, -2 }, { 2, 3 });
+            l->setLabel("Loop overlapping twist (d)");
+            verifyR2Down(l, 1, "+ ( ^0 _0 ) ( )");
+            verifyR2Down(l, 2, "+ ( ^0 _0 ) ( )");
+            verifyR2Down(l, 2, 0, "+ ( ^0 _0 ) ( )");
+            verifyR2Down(l, 1, 1, "+ ( ^0 _0 ) ( )");
+            verifyR2Down(l, 2, 1, "+ ( ^0 _0 ) ( )");
+            verifyR3(l, 1, 1, "+-+ ( ^0 _1 _2 _0 ) ( ^1 ^2 )");
+            verifyR3(l, 0, 0, 0, "+-+ ( ^0 _1 _2 _0 ) ( ^1 ^2 )");
+            verifyR3(l, 1, 0, 0, "+-+ ( ^0 _1 _2 _0 ) ( ^1 ^2 )");
+            verifyR3(l, 1, 1, 1, "+-+ ( ^0 _1 _2 _0 ) ( ^1 ^2 )");
+            delete l;
+
+            l = Link::fromData({ 1, -1, 1 }, { -3, -2, 1, -1 }, { 2, 3 });
+            l->setLabel("Loop overlapping twist (e)");
+            verifyR2Down(l, 1, "+ ( ^0 _0 ) ( )");
+            verifyR2Down(l, 2, "+ ( ^0 _0 ) ( )");
+            verifyR2Down(l, 2, 0, "+ ( ^0 _0 ) ( )");
+            verifyR2Down(l, 1, 1, "+ ( ^0 _0 ) ( )");
+            verifyR2Down(l, 2, 1, "+ ( ^0 _0 ) ( )");
+            verifyR3(l, 1, 1, "+-+ ( _2 _0 ^0 _1 ) ( ^1 ^2 )");
+            verifyR3(l, 0, 0, 0, "+-+ ( _2 _0 ^0 _1 ) ( ^1 ^2 )");
+            verifyR3(l, 1, 0, 0, "+-+ ( _2 _0 ^0 _1 ) ( ^1 ^2 )");
+            verifyR3(l, 1, 1, 1, "+-+ ( _2 _0 ^0 _1 ) ( ^1 ^2 )");
+            delete l;
+
+            l = Link::fromData({ 1, -1, 1 }, { -2, 1, -1, -3 }, { 2, 3 });
+            l->setLabel("Loop overlapping twist (f)");
+            verifyR2Down(l, 1, "+ ( ^0 _0 ) ( )");
+            verifyR2Down(l, 2, "+ ( ^0 _0 ) ( )");
+            verifyR2Down(l, 2, 0, "+ ( ^0 _0 ) ( )");
+            verifyR2Down(l, 1, 1, "+ ( ^0 _0 ) ( )");
+            verifyR2Down(l, 2, 1, "+ ( ^0 _0 ) ( )");
+            verifyR3(l, 1, 1, "+-+ ( _1 _2 _0 ^0 ) ( ^1 ^2 )");
+            verifyR3(l, 0, 0, 0, "+-+ ( _1 _2 _0 ^0 ) ( ^1 ^2 )");
+            verifyR3(l, 1, 0, 0, "+-+ ( _1 _2 _0 ^0 ) ( ^1 ^2 )");
+            verifyR3(l, 1, 1, 1, "+-+ ( _1 _2 _0 ^0 ) ( ^1 ^2 )");
+            delete l;
         }
 };
 
