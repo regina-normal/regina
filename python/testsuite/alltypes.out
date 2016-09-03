@@ -40,6 +40,9 @@ Equality type : BY_REFERENCE
 Component9 : class
 Equality type : BY_REFERENCE
 
+Crossing : class
+Equality type : BY_REFERENCE
+
 Dim2BoundaryComponent : class
 Equality type : BY_REFERENCE
 
@@ -126,6 +129,9 @@ Equality type : BY_REFERENCE
 
 Dim4VertexEmbedding : class
 Equality type : BY_VALUE
+
+ExampleLink : class
+Equality type : NEVER_INSTANTIATED
 
 Face10_0 : class
 Equality type : BY_REFERENCE
@@ -1006,6 +1012,9 @@ Equality type : BY_REFERENCE
 Isomorphism9 : class
 Equality type : BY_REFERENCE
 
+Link : class
+Equality type : BY_REFERENCE
+
 Locale : class
 Equality type : NEVER_INSTANTIATED
 
@@ -1151,6 +1160,12 @@ NL31Pillow : class
 Equality type : BY_REFERENCE
 
 NLargeInteger : class
+Equality type : BY_VALUE
+
+NLaurent : class
+Equality type : BY_VALUE
+
+NLaurent2 : class
 Equality type : BY_VALUE
 
 NLayeredChain : class
@@ -1452,6 +1467,9 @@ Equality type : BY_REFERENCE
 
 Simplex9 : class
 Equality type : BY_REFERENCE
+
+StrandRef : class
+Equality type : BY_VALUE
 
 Triangulation10 : class
 Equality type : BY_REFERENCE
