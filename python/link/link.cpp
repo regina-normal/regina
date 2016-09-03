@@ -48,6 +48,7 @@ using regina::Link;
 
 namespace {
     regina::Crossing* (Link::*crossing_nonconst)(size_t) = &Link::crossing;
+    std::string (Link::*jenkins_str)() const = &Link::jenkins;
     Link* (*fromOrientedGauss_str)(const std::string&) =
         &Link::fromOrientedGauss;
     Link* (*fromJenkins_str)(const std::string&) = &Link::fromJenkins;
@@ -161,6 +162,9 @@ void addLink() {
             return_value_policy<manage_new_object>())
         .def("homflyLM", &Link::homflyLM,
             return_value_policy<manage_new_object>())
+        .def("brief", &Link::brief)
+        .def("jenkins", jenkins_str)
+        .def("dumpConstruction", &Link::dumpConstruction)
         .def("r1", r1a, OL_r1a())
         .def("r1", r1b, OL_r1b())
         .def("r2", r2a, OL_r2a())

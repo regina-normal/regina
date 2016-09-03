@@ -198,5 +198,48 @@ Link* Link::fromJenkins(const std::string& str) {
     return fromJenkins(in);
 }
 
+std::string Link::jenkins() const {
+    std::ostringstream out;
+    jenkins(out);
+    return out.str();
+}
+
+void Link::jenkins(std::ostream& out) const {
+    out << components_.size() << std::endl;
+
+    StrandRef s;
+    size_t len;
+    for (StrandRef start : components_) {
+        if (! start)
+            out << '0';
+        else {
+            // Get the length of the component.
+            s = start;
+            len = 0;
+            do {
+                ++s; ++len;
+            } while (s != start);
+
+            // Output the component.
+            // Note that s == start at this point.
+            out << len;
+            do {
+                out << "   " << s.crossing()->index()
+                    << ' ' << (s.strand() == 1 ? 1 : -1);
+                ++s;
+            } while (s != start);
+        }
+        out << std::endl;
+    }
+
+    if (! crossings_.empty()) {
+        auto c = crossings_.begin();
+        out << (*c)->index() << ' ' << (*c)->sign();
+        for (++c; c != crossings_.end(); ++c)
+            out << "   " << (*c)->index() << ' ' << (*c)->sign();
+        out << std::endl;
+    }
+}
+
 } // namespace regina
 

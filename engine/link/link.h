@@ -1503,6 +1503,113 @@ class REGINA_API Link : public NPacket {
 
         /*@}*/
         /**
+         * \name Exporting Links
+         */
+        /*@{*/
+
+        /**
+         * Outputs this link in Regina's own brief format.
+         * This format is concise, but contains enough information to
+         * reconstruct the link.
+         *
+         * This format cannot (yet) be used to read links back into Regina,
+         * and so it is not good for external storage, or for passing links
+         * between different programs (or even different instances of Regina).
+         * It was originally designed for use with the test suite, where it
+         * was used to ensure that links with being created and/or manipulated
+         * correctly.
+         *
+         * The output will contains the following elements, separated by
+         * single spaces:
+         *
+         * - a sequence of signs (<tt>+</tt> or <tt>-</tt>), concatenated
+         *   together, giving the signs of the crossings in order from
+         *   crossing 0 to crossing size()-1;
+         *
+         * - a description of each component of the link, in order from
+         *   component 0 to component countComponents()-1.  Each component
+         *   will be written in the form <tt>( a b c ... )</tt>, indicating
+         *   the crossings that are encountered as we follow the component
+         *   in the forward direction from its starting strand.  Each element
+         *   \a a, \a b, \a c and so on will be written in the format used by
+         *   the StrandRef class: either <tt>^n</tt> when passing over
+         *   crossing \a n, or <tt>_n</tt> when passing under crossing \a n.
+         *
+         * For example, the Whitehead link as returned by
+         * ExampleLink.whitehead() will give the following brief output:
+         *
+           \verbatim
+           --++- ( ^0 _1 ^4 _3 ^2 _4 ) ( _0 ^1 _2 ^3 )
+           \endverbatim
+         *
+         * As a special case, if the link contains no crossings, then
+         * the format will not begin with a space; instead it will
+         * simply be a sequence of the form <tt>( ) ( ) ... ( )</tt>.
+         *
+         * The string will not end in a newline.
+         *
+         * @return a description of this link in Regina's brief format.
+         */
+        std::string brief() const;
+
+        /**
+         * Exports this link as a string using the text representation
+         * described by Bob Jenkins.  Jenkins uses this representation in his
+         * HOMFLY polynomial software, which is available online from
+         * <http://burtleburtle.net/bob/knot/homfly.html>.
+         *
+         * Jenkins' text format uses a sequence of integers separated by
+         * whitespace.  For details of this format, see the documentation for
+         * fromJenkins(const std::string&), which imports links in this format.
+         *
+         * The string will contain multiple lines, and will end in a newline.
+         *
+         * \note There is another variant of this routine that, instead
+         * of returning a string, writes directly to an output stream.
+         *
+         * @return a description of this link using Jenkins' text format.
+         */
+        std::string jenkins() const;
+
+        /**
+         * Exports this link to the given output stream using the text
+         * representation described by Bob Jenkins.  Jenkins uses this
+         * representation in his HOMFLY polynomial software, which is available
+         * online from <http://burtleburtle.net/bob/knot/homfly.html>.
+         *
+         * Jenkins' text format uses a sequence of integers separated by
+         * whitespace.  For details of this format, see the documentation
+         * from fromJenkins(), which imports links using this format.
+         *
+         * The output will contain multiple lines, and will end in a newline.
+         *
+         * \note There is another variant of this routine that, instead
+         * of using an output stream, simply returns a string.
+         *
+         * \ifacespython This routine is not available in Python.  Instead,
+         * Python users can use the variant jenkins(), which takes no
+         * arguments and returns the output as a string.
+         *
+         * @param out the output stream to which to write.
+         */
+        void jenkins(std::ostream& out) const;
+
+        /**
+         * Returns C++ code that can be used to reconstruct this link.
+         *
+         * This code will use the Link constructor that takes a series of
+         * hard-coded C++11 initialiser lists.
+         *
+         * The main purpose of this routine is to generate these hard-coded
+         * initialiser lists, which can be tedious and error-prone to write
+         * by hand.
+         *
+         * @return the C++ code that was generated.
+         */
+        std::string dumpConstruction() const;
+
+        /*@}*/
+        /**
          * \name Building Links
          */
         /*@{*/
@@ -1554,6 +1661,10 @@ class REGINA_API Link : public NPacket {
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
+         *
+         * \note If you have an existing link that you would like to
+         * hard-code, the routine dumpConstruction() will output C++ code
+         * that can reconstruct the link by calling this constructor.
          *
          * \ifacespython Not available.
          *
@@ -1764,6 +1875,9 @@ class REGINA_API Link : public NPacket {
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
+         *
+         * \note You can export an existing link in Jenkins' format by
+         * calling the routine jenkins().
          *
          * @param str a string containing a sequence of integers
          * separated by whitespace that describes a link, as detailed above.
