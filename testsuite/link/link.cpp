@@ -1135,6 +1135,182 @@ class LinkTest : public CppUnit::TestFixture {
             verifyR3(l, 1, 0, 0, "+-+ ( _1 _2 _0 ^0 ) ( ^1 ^2 )");
             verifyR3(l, 1, 1, 1, "+-+ ( _1 _2 _0 ^0 ) ( ^1 ^2 )");
             delete l;
+
+            l = Link::fromData({ 1, -1, 1, -1, 1, -1 }, { 5, 4 },
+                { 6, -6, -5, -3, 1, -1, -2, 2, 3, -4 });
+            l->setLabel("Three triangles (a)");
+            verifyR3(l, 4, 1,
+                "+-+-+- ( ^4 ^3 ) ( ^5 _3 _4 _5 _2 ^0 _0 _1 ^1 ^2 )");
+            verifyR3(l, 4, 1, 1,
+                "+-+-+- ( ^4 ^3 ) ( ^5 _3 _4 _5 _2 ^0 _0 _1 ^1 ^2 )");
+            verifyR3(l, 5, 0, 1,
+                "+-+-+- ( ^4 ^3 ) ( ^5 _3 _4 _5 _2 ^0 _0 _1 ^1 ^2 )");
+            verifyR3(l, 3, 0, 1,
+                "+-+-+- ( ^4 ^3 ) ( ^5 _3 _4 _5 _2 ^0 _0 _1 ^1 ^2 )");
+            verifyR3(l, 4, 0,
+                "+-+-+- ( ^4 ^3 ) ( ^5 _5 _2 _4 ^0 _0 _1 ^1 _3 ^2 )");
+            verifyR3(l, 4, 1, 0,
+                "+-+-+- ( ^4 ^3 ) ( ^5 _5 _2 _4 ^0 _0 _1 ^1 _3 ^2 )");
+            verifyR3(l, 4, 0, 1,
+                "+-+-+- ( ^4 ^3 ) ( ^5 _5 _2 _4 ^0 _0 _1 ^1 _3 ^2 )");
+            verifyR3(l, 2, 1, 1,
+                "+-+-+- ( ^4 ^3 ) ( ^5 _5 _2 _4 ^0 _0 _1 ^1 _3 ^2 )");
+            verifyR3(l, 1, 0,
+                "+-+-+- ( ^4 ^3 ) ( ^5 _5 _4 ^0 _2 _1 _0 ^2 ^1 _3 )");
+            verifyR3(l, 1, 1, 0,
+                "+-+-+- ( ^4 ^3 ) ( ^5 _5 _4 ^0 _2 _1 _0 ^2 ^1 _3 )");
+            verifyR3(l, 2, 0, 0,
+                "+-+-+- ( ^4 ^3 ) ( ^5 _5 _4 ^0 _2 _1 _0 ^2 ^1 _3 )");
+            verifyR3(l, 0, 0, 0,
+                "+-+-+- ( ^4 ^3 ) ( ^5 _5 _4 ^0 _2 _1 _0 ^2 ^1 _3 )");
+            delete l;
+
+            l = Link::fromData({ -1, +1, -1, +1, -1, +1 }, { -5, -4 },
+                { -6, 6, 5, 3, -1, 1, 2, -2, -3, 4 });
+            l->setLabel("Three triangles (b)");
+            verifyR3(l, 5, 1,
+                "-+-+-+ ( _4 _3 ) ( _5 ^3 ^4 ^5 ^2 _0 ^0 ^1 _1 _2 )");
+            verifyR3(l, 4, 0, 1,
+                "-+-+-+ ( _4 _3 ) ( _5 ^3 ^4 ^5 ^2 _0 ^0 ^1 _1 _2 )");
+            verifyR3(l, 5, 1, 1,
+                "-+-+-+ ( _4 _3 ) ( _5 ^3 ^4 ^5 ^2 _0 ^0 ^1 _1 _2 )");
+            verifyR3(l, 3, 1, 1,
+                "-+-+-+ ( _4 _3 ) ( _5 ^3 ^4 ^5 ^2 _0 ^0 ^1 _1 _2 )");
+            verifyR3(l, 4, 1,
+                "-+-+-+ ( _4 _3 ) ( _5 ^5 ^2 ^4 _0 ^0 ^1 _1 ^3 _2 )");
+            verifyR3(l, 4, 0, 0,
+                "-+-+-+ ( _4 _3 ) ( _5 ^5 ^2 ^4 _0 ^0 ^1 _1 ^3 _2 )");
+            verifyR3(l, 4, 1, 1,
+                "-+-+-+ ( _4 _3 ) ( _5 ^5 ^2 ^4 _0 ^0 ^1 _1 ^3 _2 )");
+            verifyR3(l, 2, 0, 1,
+                "-+-+-+ ( _4 _3 ) ( _5 ^5 ^2 ^4 _0 ^0 ^1 _1 ^3 _2 )");
+            verifyR3(l, 0, 0,
+                "-+-+-+ ( _4 _3 ) ( _5 ^5 ^4 _0 ^2 ^1 ^0 _2 _1 ^3 )");
+            verifyR3(l, 1, 0, 0,
+                "-+-+-+ ( _4 _3 ) ( _5 ^5 ^4 _0 ^2 ^1 ^0 _2 _1 ^3 )");
+            verifyR3(l, 2, 1, 0,
+                "-+-+-+ ( _4 _3 ) ( _5 ^5 ^4 _0 ^2 ^1 ^0 _2 _1 ^3 )");
+            verifyR3(l, 0, 1, 0,
+                "-+-+-+ ( _4 _3 ) ( _5 ^5 ^4 _0 ^2 ^1 ^0 _2 _1 ^3 )");
+            delete l;
+
+            l = Link::fromData({ 1, 1, -1 }, { 1, -2, -3, -1, 2, 3 });
+            l->setLabel("Bad trefoil (a)");
+            verifyR2Down(l, 2, "+ ( _0 ^0 )");
+            verifyR2Down(l, 2, 1, "+ ( _0 ^0 )");
+            verifyR2Down(l, 2, 0, "+ ( _0 ^0 )");
+            verifyR3(l, 1, 1, "++- ( ^0 _0 _2 ^2 ^1 _1 )");
+            verifyR3(l, 1, 1, 1, "++- ( ^0 _0 _2 ^2 ^1 _1 )");
+            verifyR3(l, 2, 0, 1, "++- ( ^0 _0 _2 ^2 ^1 _1 )");
+            verifyR3(l, 0, 1, 1, "++- ( ^0 _0 _2 ^2 ^1 _1 )");
+            delete l;
+
+            l = Link::fromData({ 1, 1, -1 }, { -3, -1, 2, 3, 1, -2 });
+            l->setLabel("Bad trefoil (b)");
+            verifyR2Down(l, 2, "+ ( ^0 _0 )");
+            verifyR2Down(l, 2, 1, "+ ( ^0 _0 )");
+            verifyR2Down(l, 2, 0, "+ ( ^0 _0 )");
+            verifyR3(l, 1, 1, "++- ( _2 ^2 ^1 _1 ^0 _0 )");
+            verifyR3(l, 1, 1, 1, "++- ( _2 ^2 ^1 _1 ^0 _0 )");
+            verifyR3(l, 2, 0, 1, "++- ( _2 ^2 ^1 _1 ^0 _0 )");
+            verifyR3(l, 0, 1, 1, "++- ( _2 ^2 ^1 _1 ^0 _0 )");
+            delete l;
+
+            l = Link::fromData({ -1, -1, 1 }, { 1, -2, -3, -1, 2, 3 });
+            l->setLabel("Bad trefoil (c)");
+            verifyR2Down(l, 2, "- ( _0 ^0 )");
+            verifyR2Down(l, 2, 1, "- ( _0 ^0 )");
+            verifyR2Down(l, 2, 0, "- ( _0 ^0 )");
+            verifyR3(l, 1, 0, "--+ ( ^0 _0 _2 ^2 ^1 _1 )");
+            verifyR3(l, 1, 1, 0, "--+ ( ^0 _0 _2 ^2 ^1 _1 )");
+            verifyR3(l, 2, 0, 0, "--+ ( ^0 _0 _2 ^2 ^1 _1 )");
+            verifyR3(l, 0, 1, 0, "--+ ( ^0 _0 _2 ^2 ^1 _1 )");
+            delete l;
+
+            l = Link::fromData({ -1, -1, 1 }, { -3, -1, 2, 3, 1, -2 });
+            l->setLabel("Bad trefoil (d)");
+            verifyR2Down(l, 2, "- ( ^0 _0 )");
+            verifyR2Down(l, 2, 1, "- ( ^0 _0 )");
+            verifyR2Down(l, 2, 0, "- ( ^0 _0 )");
+            verifyR3(l, 1, 0, "--+ ( _2 ^2 ^1 _1 ^0 _0 )");
+            verifyR3(l, 1, 1, 0, "--+ ( _2 ^2 ^1 _1 ^0 _0 )");
+            verifyR3(l, 2, 0, 0, "--+ ( _2 ^2 ^1 _1 ^0 _0 )");
+            verifyR3(l, 0, 1, 0, "--+ ( _2 ^2 ^1 _1 ^0 _0 )");
+            delete l;
+
+            l = Link::fromData({ -1, 1, 1, -1}, { 1, 2, -4, -3, -2, -1, 3, 4 });
+            l->setLabel("Bad figure eight (a)");
+            verifyR2Down(l, 0, "+- ( _1 _0 ^0 ^1 )");
+            verifyR2Down(l, 0, 1, "+- ( _1 _0 ^0 ^1 )");
+            verifyR2Down(l, 1, 0, "+- ( _1 _0 ^0 ^1 )");
+            verifyR2Down(l, 2, "-+ ( ^0 ^1 _1 _0 )");
+            verifyR2Down(l, 2, 1, "-+ ( ^0 ^1 _1 _0 )");
+            verifyR2Down(l, 3, 0, "-+ ( ^0 ^1 _1 _0 )");
+            verifyR3(l, 0, 1, "-++- ( ^0 _3 _1 _2 ^2 _0 ^3 ^1 )");
+            verifyR3(l, 0, 1, 1, "-++- ( ^0 _3 _1 _2 ^2 _0 ^3 ^1 )");
+            verifyR3(l, 0, 0, 0, "-++- ( ^0 _3 _1 _2 ^2 _0 ^3 ^1 )");
+            verifyR3(l, 2, 0, 0, "-++- ( ^0 _3 _1 _2 ^2 _0 ^3 ^1 )");
+            delete l;
+
+            l = Link::fromData({ -1, 1, 1, -1}, { 2, -4, -3, -2, -1, 3, 4, 1 });
+            l->setLabel("Bad figure eight (b)");
+            verifyR2Down(l, 0, "+- ( _1 _0 ^0 ^1 )");
+            verifyR2Down(l, 0, 1, "+- ( _1 _0 ^0 ^1 )");
+            verifyR2Down(l, 1, 0, "+- ( _1 _0 ^0 ^1 )");
+            delete l;
+
+            l = Link::fromData({ -1, 1, 1, -1}, { -2, -1, 3, 4, 1, 2, -4, -3 });
+            l->setLabel("Bad figure eight (c)");
+            verifyR2Down(l, 0, "+- ( ^0 ^1 _1 _0 )");
+            verifyR2Down(l, 0, 1, "+- ( ^0 ^1 _1 _0 )");
+            verifyR2Down(l, 1, 0, "+- ( ^0 ^1 _1 _0 )");
+            delete l;
+
+            l = Link::fromData({ -1, 1, 1, -1}, { -1, 3, 4, 1, 2, -4, -3, -2 });
+            l->setLabel("Bad figure eight (d)");
+            verifyR2Down(l, 0, "+- ( ^0 ^1 _1 _0 )");
+            verifyR2Down(l, 0, 1, "+- ( ^0 ^1 _1 _0 )");
+            verifyR2Down(l, 1, 0, "+- ( ^0 ^1 _1 _0 )");
+            delete l;
+
+            l = Link::fromData({ 1, -1, -1, 1}, { -1, -2, 4, 3, 2, 1, -3, -4 });
+            l->setLabel("Bad figure eight (e)");
+            verifyR2Down(l, 1, "-+ ( ^1 ^0 _0 _1 )");
+            verifyR2Down(l, 0, 0, "-+ ( ^1 ^0 _0 _1 )");
+            verifyR2Down(l, 1, 1, "-+ ( ^1 ^0 _0 _1 )");
+            verifyR2Down(l, 3, "+- ( _0 _1 ^1 ^0 )");
+            verifyR2Down(l, 2, 0, "+- ( _0 _1 ^1 ^0 )");
+            verifyR2Down(l, 3, 1, "+- ( _0 _1 ^1 ^0 )");
+            verifyR3(l, 2, 0, "+--+ ( _0 ^3 ^1 ^2 _2 ^0 _3 _1 )");
+            verifyR3(l, 0, 0, 1, "+--+ ( _0 ^3 ^1 ^2 _2 ^0 _3 _1 )");
+            verifyR3(l, 0, 1, 0, "+--+ ( _0 ^3 ^1 ^2 _2 ^0 _3 _1 )");
+            verifyR3(l, 2, 1, 0, "+--+ ( _0 ^3 ^1 ^2 _2 ^0 _3 _1 )");
+            delete l;
+
+            l = Link::fromData({ 1, -1, -1, 1}, { -2, 4, 3, 2, 1, -3, -4, -1 });
+            l->setLabel("Bad figure eight (f)");
+            verifyR2Down(l, 1, "-+ ( ^1 ^0 _0 _1 )");
+            verifyR2Down(l, 0, 0, "-+ ( ^1 ^0 _0 _1 )");
+            verifyR2Down(l, 1, 1, "-+ ( ^1 ^0 _0 _1 )");
+            delete l;
+
+            l = Link::fromData({ 1, -1, -1, 1}, { 2, 1, -3, -4, -1, -2, 4, 3 });
+            l->setLabel("Bad figure eight (g)");
+            verifyR2Down(l, 1, "-+ ( _0 _1 ^1 ^0 )");
+            verifyR2Down(l, 0, 0, "-+ ( _0 _1 ^1 ^0 )");
+            verifyR2Down(l, 1, 1, "-+ ( _0 _1 ^1 ^0 )");
+            delete l;
+
+            l = Link::fromData({ 1, -1, -1, 1}, { 1, -3, -4, -1, -2, 4, 3, 2 });
+            l->setLabel("Bad figure eight (h)");
+            verifyR2Down(l, 1, "-+ ( _0 _1 ^1 ^0 )");
+            verifyR2Down(l, 0, 0, "-+ ( _0 _1 ^1 ^0 )");
+            verifyR2Down(l, 1, 1, "-+ ( _0 _1 ^1 ^0 )");
+            delete l;
+
+            // TODO: Dangling twists
+
+            // TODO: Tests for R1, R2 that add crossings!
         }
 };
 
