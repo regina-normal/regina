@@ -45,9 +45,11 @@
 
 #include "testsuite/link/testlink.h"
 
+using regina::Crossing;
 using regina::ExampleLink;
 using regina::Link;
 using regina::NTriangulation;
+using regina::StrandRef;
 
 // Isomorphism signatures for various knot/link complements that regina's
 // simplification heuristics are found to reduce to in practice.
@@ -61,6 +63,9 @@ class LinkTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(jones);
     CPPUNIT_TEST(homfly);
     CPPUNIT_TEST(complement);
+    CPPUNIT_TEST(r1Count);
+    CPPUNIT_TEST(r2Count);
+    CPPUNIT_TEST(r3Count);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -117,7 +122,7 @@ class LinkTest : public CppUnit::TestFixture {
             unlink2_r2->setLabel("Unlink (2 components via R2)");
 
             unlink2_r1r1 = Link::fromData({ -1, 1 }, { 1, -1 }, { -2, 2 });
-            unlink2_r2->setLabel("Unlink (2 components via R1+R1)");
+            unlink2_r1r1->setLabel("Unlink (2 components via R1+R1)");
 
             hopf = ExampleLink::hopf();
 
@@ -563,6 +568,310 @@ class LinkTest : public CppUnit::TestFixture {
             testComplementTrefoilUnknot(trefoil_unknot0);
             testComplementTrefoilUnknot(trefoil_unknot1);
             testComplementTrefoilUnknot(trefoil_unknot_overlap);
+        }
+
+        void verifyCountR1Up(Link* link, size_t expected) {
+            size_t total = 0;
+
+            int cr, strand, side, sign;
+            for (side = 0; side < 2; ++side)
+                for (sign = -1; sign <= 1; sign += 2) {
+                    if (link->r1(StrandRef(), side, sign, 1, 0))
+                        ++total;
+
+                    for (cr = 0; cr < link->size(); ++cr)
+                        for (strand = 0; strand < 2; ++strand)
+                            if (link->r1(link->crossing(cr)->strand(strand),
+                                    side, sign, 1, 0))
+                                ++total;
+                }
+
+            if (total != expected) {
+                std::ostringstream msg;
+                msg << link->label() << " offers " << total << " R1 moves "
+                    "up, not " << expected << " as expected.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void verifyCountR1Down(Link* link, size_t expected) {
+            size_t total = 0;
+
+            if (link->r1(nullptr, 1, 0))
+                ++total;
+
+            int cr;
+            for (cr = 0; cr < link->size(); ++cr)
+                if (link->r1(link->crossing(cr), 1, 0))
+                    ++total;
+
+            if (total != expected) {
+                std::ostringstream msg;
+                msg << link->label() << " offers " << total << " R1 moves "
+                    "down, not " << expected << " as expected.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void verifyCountR2Up(Link* link, size_t expected) {
+            size_t total = 0;
+
+            int cr1, cr2, str1, str2, side1, side2;
+            for (side1 = 0; side1 < 2; ++side1)
+                for (side2 = 0; side2 < 2; ++side2) {
+                    if (link->r2(StrandRef(), side1, StrandRef(), side2, 1, 0))
+                        ++total;
+
+                    for (cr1 = 0; cr1 < link->size(); ++cr1)
+                        for (str1 = 0; str1 < 2; ++str1) {
+                            if (link->r2(StrandRef(), side1,
+                                    link->crossing(cr1)->strand(str1), side2,
+                                    1, 0))
+                                ++total;
+                            if (link->r2(link->crossing(cr1)->strand(str1),
+                                    side1, StrandRef(), side2,
+                                    1, 0))
+                                ++total;
+
+                            for (cr2 = 0; cr2 < link->size(); ++cr2)
+                                for (str2 = 0; str2 < 2; ++str2)
+                                    if (link->r2(
+                                            link->crossing(cr1)->strand(str1),
+                                            side1,
+                                            link->crossing(cr2)->strand(str2),
+                                            side2, 1, 0))
+                                        ++total;
+                        }
+                }
+
+            if (total != expected) {
+                std::ostringstream msg;
+                msg << link->label() << " offers " << total << " R2 moves "
+                    "up, not " << expected << " as expected.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void verifyCountR2Down(Link* link, size_t expected) {
+            verifyCountR2Down(link, expected, 2 * expected);
+        }
+
+        void verifyCountR2Down(Link* link, size_t expectedCr,
+                size_t expectedStr) {
+            // Most of the time, expectedStr == expectedCr * 2.
+            //
+            // However, this can differ in the case of an unknotted loop
+            // placed on top of another strand - here there are 2 moves
+            // by crossing, but only 3 moves by strand (all of which
+            // produce identical results).
+
+            int cr, strand;
+
+            size_t total = 0;
+
+            if (link->r2(nullptr, 1, 0))
+                ++total;
+
+            for (cr = 0; cr < link->size(); ++cr)
+                if (link->r2(link->crossing(cr), 1, 0))
+                    ++total;
+
+            if (total != expectedCr) {
+                std::ostringstream msg;
+                msg << link->label() << " offers " << total << " R2 moves "
+                    "down by crossing, not " << expectedCr << " as expected.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            total = 0;
+
+            if (link->r2(StrandRef(), 1, 0))
+                ++total;
+
+            for (cr = 0; cr < link->size(); ++cr)
+                for (strand = 0; strand < 2; ++strand)
+                    if (link->r2(link->crossing(cr)->strand(strand), 1, 0))
+                        ++total;
+
+            if (total != expectedStr) {
+                std::ostringstream msg;
+                msg << link->label() << " offers " << total << " R2 moves "
+                    "down by strand, not " << expectedStr << " as expected.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void verifyCountR3(Link* link, size_t expected) {
+            int cr, strand, side;
+
+            size_t total = 0;
+            for (side = 0; side < 2; ++side) {
+                if (link->r3(nullptr, side, 1, 0))
+                    ++total;
+
+                for (cr = 0; cr < link->size(); ++cr)
+                    if (link->r3(link->crossing(cr), side, 1, 0))
+                        ++total;
+            }
+
+            if (total != expected) {
+                std::ostringstream msg;
+                msg << link->label() << " offers " << total << " R3 moves "
+                    "by crossing, not " << expected << " as expected.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            total = 0;
+            for (side = 0; side < 2; ++side) {
+                if (link->r3(StrandRef(), side, 1, 0))
+                    ++total;
+
+                for (cr = 0; cr < link->size(); ++cr)
+                    for (strand = 0; strand < 2; ++strand)
+                        if (link->r3(link->crossing(cr)->strand(strand),
+                                side, 1, 0))
+                            ++total;
+            }
+
+            if (total != expected * 3) {
+                std::ostringstream msg;
+                msg << link->label() << " offers " << total << " R3 moves "
+                    "by strand, not " << expected << " as expected.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void r1Count() {
+            verifyCountR1Up(empty, 0);
+            verifyCountR1Down(empty, 0);
+
+            verifyCountR1Up(unknot0, 4);
+            verifyCountR1Down(unknot0, 0);
+
+            verifyCountR1Up(unknot1, 8);
+            verifyCountR1Down(unknot1, 1);
+
+            verifyCountR1Up(unknot3, 24);
+            verifyCountR1Down(unknot3, 0);
+
+            verifyCountR1Up(trefoilLeft, 24);
+            verifyCountR1Down(trefoilLeft, 0);
+
+            verifyCountR1Up(trefoilRight, 24);
+            verifyCountR1Down(trefoilRight, 0);
+
+            verifyCountR1Up(figureEight, 32);
+            verifyCountR1Down(figureEight, 0);
+
+            verifyCountR1Up(unlink2_0, 4);
+            verifyCountR1Down(unlink2_0, 0);
+
+            verifyCountR1Up(unlink3_0, 4);
+            verifyCountR1Down(unlink3_0, 0);
+
+            verifyCountR1Up(unlink2_r2, 16);
+            verifyCountR1Down(unlink2_r2, 0);
+
+            verifyCountR1Up(unlink2_r1r1, 16);
+            verifyCountR1Down(unlink2_r1r1, 2);
+
+            verifyCountR1Up(hopf, 16);
+            verifyCountR1Down(hopf, 0);
+
+            verifyCountR1Up(whitehead, 40);
+            verifyCountR1Down(whitehead, 0);
+
+            verifyCountR1Up(borromean, 48);
+            verifyCountR1Down(borromean, 0);
+
+            verifyCountR1Up(trefoil_unknot0, 28);
+            verifyCountR1Down(trefoil_unknot0, 0);
+
+            verifyCountR1Up(trefoil_unknot1, 32);
+            verifyCountR1Down(trefoil_unknot1, 1);
+
+            verifyCountR1Up(trefoil_unknot_overlap, 40);
+            verifyCountR1Down(trefoil_unknot_overlap, 0);
+
+            verifyCountR1Up(adams6_28, 48);
+            verifyCountR1Down(adams6_28, 0);
+        }
+
+        void r2Count() {
+            verifyCountR2Up(empty, 0);
+            verifyCountR2Down(empty, 0);
+
+            verifyCountR2Up(unknot0, 0);
+            verifyCountR2Down(unknot0, 0);
+
+            verifyCountR2Up(unknot1, 2);
+            verifyCountR2Down(unknot1, 0);
+
+            verifyCountR2Up(unknot3, 18);
+            verifyCountR2Down(unknot3, 2);
+
+            verifyCountR2Up(trefoilLeft, 18);
+            verifyCountR2Down(trefoilLeft, 0);
+
+            verifyCountR2Up(trefoilRight, 18);
+            verifyCountR2Down(trefoilRight, 0);
+
+            verifyCountR2Up(figureEight, 28);
+            verifyCountR2Down(figureEight, 0);
+
+            verifyCountR2Up(unlink2_0, 4);
+            verifyCountR2Down(unlink2_0, 0);
+
+            verifyCountR2Up(unlink3_0, 4);
+            verifyCountR2Down(unlink3_0, 0);
+
+            verifyCountR2Up(unlink2_r2, 8);
+            verifyCountR2Down(unlink2_r2, 2);
+
+            verifyCountR2Up(unlink2_r1r1, 36);
+            verifyCountR2Down(unlink2_r1r1, 0);
+
+            verifyCountR2Up(hopf, 8);
+            verifyCountR2Down(hopf, 0);
+
+            verifyCountR2Up(whitehead, 40);
+            verifyCountR2Down(whitehead, 0);
+
+            verifyCountR2Up(borromean, 48);
+            verifyCountR2Down(borromean, 0);
+
+            verifyCountR2Up(trefoil_unknot0, 66);
+            verifyCountR2Down(trefoil_unknot0, 0);
+
+            verifyCountR2Up(trefoil_unknot1, 116);
+            verifyCountR2Down(trefoil_unknot1, 0);
+
+            verifyCountR2Up(trefoil_unknot_overlap, 46);
+            verifyCountR2Down(trefoil_unknot_overlap, 2, 3);
+
+            verifyCountR2Up(adams6_28, 54);
+            verifyCountR2Down(adams6_28, 0);
+        }
+
+        void r3Count() {
+            verifyCountR3(empty, 0);
+            verifyCountR3(unknot0, 0);
+            verifyCountR3(unknot1, 0);
+            verifyCountR3(unknot3, 2);
+            verifyCountR3(trefoilLeft, 0);
+            verifyCountR3(trefoilRight, 0);
+            verifyCountR3(figureEight, 0);
+            verifyCountR3(unlink2_0, 0);
+            verifyCountR3(unlink3_0, 0);
+            verifyCountR3(unlink2_r2, 0);
+            verifyCountR3(unlink2_r1r1, 0);
+            verifyCountR3(hopf, 0);
+            verifyCountR3(whitehead, 0);
+            verifyCountR3(borromean, 0);
+            verifyCountR3(trefoil_unknot0, 0);
+            verifyCountR3(trefoil_unknot1, 0);
+            verifyCountR3(trefoil_unknot_overlap, 0);
+            verifyCountR3(adams6_28, 0);
         }
 };
 
