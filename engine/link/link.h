@@ -2242,8 +2242,12 @@ inline bool Link::r3(Crossing* crossing, int side, bool check, bool perform) {
     StrandRef s(crossing, 1);
 
     // If we are testing, then make sure this is an uppermost arc.
-    if (check && s.next().strand() != 1)
-        return false;
+    if (check) {
+        // We already know the start of the arc is an over-crossing, by
+        // construction; we only need to check the end.
+        if ((! crossing) || (s.next().strand() != 1))
+            return false;
+    }
 
     return r3(s, side, check, perform);
 }
