@@ -655,9 +655,9 @@ bool Link::r3(StrandRef arc, int side, bool check, bool perform) {
         }
 
         x = first.prev();
-        if (x.crossing() == second.crossing()) {
-            // By planarity, this means that (first, second) is a
-            // 2-crossing cycle.  Swapping the crossings will have no effect.
+        if (x == second) {
+            // This means that (first, second) is a 2-crossing cycle.
+            // Swapping the crossings will have no effect.
             continue;
         }
         y = second.next();
