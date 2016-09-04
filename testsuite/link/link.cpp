@@ -989,6 +989,38 @@ class LinkTest : public CppUnit::TestFixture {
             }
         }
 
+        void verifyR2Up(const Link* l, int upperCrossing, int upperStrand,
+                int upperSide, int lowerCrossing, int lowerStrand,
+                int lowerSide, const char* briefResult) {
+            Link clone(*l);
+            clone.setLabel(l->label());
+
+            StrandRef upper, lower;
+            if (upperCrossing >= 0)
+                upper = clone.crossing(upperCrossing)->strand(upperStrand);
+            if (lowerCrossing >= 0)
+                lower = clone.crossing(lowerCrossing)->strand(lowerStrand);
+
+            if (! clone.r2(upper, upperSide, lower, lowerSide)) {
+                std::ostringstream msg;
+                msg << l->label() << ": R2(" << upper << ", " << upperSide
+                    << ", " << lower << ", " << lowerSide
+                    << ") is not allowed.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            sanity(&clone);
+
+            if (clone.brief() != briefResult) {
+                std::ostringstream msg;
+                msg << l->label() << ": R2(" << upper << ", " << upperSide
+                    << ", " << lower << ", " << lowerSide << ") gives "
+                    << clone.brief() << ", not " << briefResult
+                    << " as expected.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
         void verifyR3(const Link* l, int crossing, int side,
                 const char* briefResult) {
             Link clone(*l);
@@ -1489,7 +1521,44 @@ class LinkTest : public CppUnit::TestFixture {
                 "++---- ( ) ( _0 ^1 _3 ^2 _1 _5 ^5 ^0 _2 ^3 ^4 _4 ) ( ) ( )");
             verifyR1Up(l, 1, 0, 1, 1,
                 "++---+ ( ) ( _0 ^1 _3 ^2 _1 ^5 _5 ^0 _2 ^3 ^4 _4 ) ( ) ( )");
-            // TODO: R2up tests!
+            // Note: for R2, the implementation always adds the two new
+            // crossings in the order (+, -).
+            verifyR2Up(l, -1, 0, 0, -1, 0, 0, "++---+- "
+                "( ^5 ^6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( _6 _5 ) ( )");
+            verifyR2Up(l, -1, 0, 0, -1, 0, 1, "++---+- "
+                "( ^6 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( _6 _5 ) ( )");
+            verifyR2Up(l, -1, 0, 1, -1, 0, 0, "++---+- "
+                "( ^5 ^6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( _5 _6 ) ( )");
+            verifyR2Up(l, -1, 0, 1, -1, 0, 1, "++---+- "
+                "( ^6 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( _5 _6 ) ( )");
+            verifyR2Up(l, -1, 0, 0, 4, 0, 0, "++---+- "
+                "( ^5 ^6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 _6 _5 ) ( ) ( )");
+            verifyR2Up(l, -1, 0, 1, 4, 0, 0, "++---+- "
+                "( ^5 ^6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 _5 _6 ) ( ) ( )");
+            verifyR2Up(l, 4, 0, 0, -1, 0, 0, "++---+- "
+                "( _6 _5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ^5 ^6 ) ( ) ( )");
+            verifyR2Up(l, 4, 0, 0, -1, 0, 1, "++---+- "
+                "( _6 _5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ^6 ^5 ) ( ) ( )");
+            verifyR2Up(l, -1, 0, 0, 4, 1, 1, "++---+- "
+                "( ^6 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _6 _5 _4 ) ( ) ( )");
+            verifyR2Up(l, -1, 0, 1, 4, 1, 1, "++---+- "
+                "( ^6 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _5 _6 _4 ) ( ) ( )");
+            verifyR2Up(l, 4, 1, 1, -1, 0, 0, "++---+- "
+                "( _5 _6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 ^5 ^6 _4 ) ( ) ( )");
+            verifyR2Up(l, 4, 1, 1, -1, 0, 1, "++---+- "
+                "( _5 _6 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 ^6 ^5 _4 ) ( ) ( )");
+            verifyR2Up(l, 4, 0, 0, 3, 1, 0, "++---+- "
+                "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 _6 _5 ^4 _4 ^5 ^6 ) ( ) ( )");
+            verifyR2Up(l, 3, 1, 0, 4, 0, 0, "++---+- "
+                "( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^5 ^6 ^4 _4 _6 _5 ) ( ) ( )");
+            verifyR2Up(l, 4, 1, 1, 1, 0, 1, "++---+- "
+                "( ) ( _0 ^1 _3 ^2 _1 _5 _6 ^0 _2 ^3 ^4 ^6 ^5 _4 ) ( ) ( )");
+            verifyR2Up(l, 1, 0, 1, 4, 1, 1, "++---+- "
+                "( ) ( _0 ^1 _3 ^2 _1 ^6 ^5 ^0 _2 ^3 ^4 _5 _6 _4 ) ( ) ( )");
+            verifyR2Up(l, 2, 0, 0, 1, 1, 1, "++---+- "
+                "( ) ( _0 ^1 _6 _5 _3 ^2 _1 ^0 _2 ^6 ^5 ^3 ^4 _4 ) ( ) ( )");
+            verifyR2Up(l, 1, 1, 1, 2, 0, 0, "++---+- "
+                "( ) ( _0 ^1 ^5 ^6 _3 ^2 _1 ^0 _2 _5 _6 ^3 ^4 _4 ) ( ) ( )");
             delete l;
         }
 };

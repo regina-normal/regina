@@ -540,7 +540,7 @@ bool Link::r2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
             // Complete the new 2-crossing cycle.
             pos->next_[1] = neg->strand(1);
             neg->prev_[1] = pos->strand(1);
-            *upperUnknot = pos->strand(1);
+            *upperUnknot = neg->strand(1);
         }
     }
 
@@ -577,7 +577,7 @@ bool Link::r2(StrandRef upperArc, int upperSide, StrandRef lowerArc,
             // Complete the new 2-crossing cycle.
             pos->next_[0] = neg->strand(0);
             neg->prev_[0] = pos->strand(0);
-            *lowerUnknot = pos->strand(0);
+            *lowerUnknot = neg->strand(0);
         }
     }
 
