@@ -914,6 +914,33 @@ class LinkTest : public CppUnit::TestFixture {
             }
         }
 
+        void verifyR1Up(const Link* l, int crossing, int strand,
+                int side, int sign, const char* briefResult) {
+            Link clone(*l);
+            clone.setLabel(l->label());
+
+            StrandRef s;
+            if (crossing >= 0)
+                s = clone.crossing(crossing)->strand(strand);
+
+            if (! clone.r1(s, side, sign)) {
+                std::ostringstream msg;
+                msg << l->label() << ": R1(" << s << ", " << side << ", "
+                    << sign << ") is not allowed.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            sanity(&clone);
+
+            if (clone.brief() != briefResult) {
+                std::ostringstream msg;
+                msg << l->label() << ": R1(" << s << ", " << side << ", "
+                    << sign << ") gives " << clone.brief() << ", not "
+                    << briefResult << " as expected.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
         void verifyR2Down(const Link* l, int crossing,
                 const char* briefResult) {
             Link clone(*l);
@@ -1430,7 +1457,40 @@ class LinkTest : public CppUnit::TestFixture {
                 "-+-+++ ( ^2 ^3 ) ( _3 _2 ^4 _5 ^5 _1 _0 ^0 ^1 _4 )");
             delete l;
 
-            // TODO: Tests for R1, R2 that add crossings!
+            l = Link::fromJenkins(
+                "4 "
+                "0 "
+                "10  0 -1  1 1  3 -1  2 1  1 -1  0 1  2 -1  3 1  4 1  4 -1 "
+                "0 "
+                "0 "
+                "0 1   1 1   2 -1   3 -1   4 -1");
+            l->setLabel("Figure eight with twist and three unknots");
+            verifyR1Up(l, -1, 0, 0, -1,
+                "++---- ( ^5 _5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( ) ( )");
+            verifyR1Up(l, -1, 0, 0, 1,
+                "++---+ ( _5 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( ) ( )");
+            verifyR1Up(l, -1, 0, 1, -1,
+                "++---- ( _5 ^5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( ) ( )");
+            verifyR1Up(l, -1, 0, 1, 1,
+                "++---+ ( ^5 _5 ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _4 ) ( ) ( )");
+            verifyR1Up(l, 4, 1, 0, -1,
+                "++---- ( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 ^5 _5 _4 ) ( ) ( )");
+            verifyR1Up(l, 4, 1, 0, 1,
+                "++---+ ( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _5 ^5 _4 ) ( ) ( )");
+            verifyR1Up(l, 4, 1, 1, -1,
+                "++---- ( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 _5 ^5 _4 ) ( ) ( )");
+            verifyR1Up(l, 4, 1, 1, 1,
+                "++---+ ( ) ( _0 ^1 _3 ^2 _1 ^0 _2 ^3 ^4 ^5 _5 _4 ) ( ) ( )");
+            verifyR1Up(l, 1, 0, 0, -1,
+                "++---- ( ) ( _0 ^1 _3 ^2 _1 ^5 _5 ^0 _2 ^3 ^4 _4 ) ( ) ( )");
+            verifyR1Up(l, 1, 0, 0, 1,
+                "++---+ ( ) ( _0 ^1 _3 ^2 _1 _5 ^5 ^0 _2 ^3 ^4 _4 ) ( ) ( )");
+            verifyR1Up(l, 1, 0, 1, -1,
+                "++---- ( ) ( _0 ^1 _3 ^2 _1 _5 ^5 ^0 _2 ^3 ^4 _4 ) ( ) ( )");
+            verifyR1Up(l, 1, 0, 1, 1,
+                "++---+ ( ) ( _0 ^1 _3 ^2 _1 ^5 _5 ^0 _2 ^3 ^4 _4 ) ( ) ( )");
+            // TODO: R2up tests!
+            delete l;
         }
 };
 

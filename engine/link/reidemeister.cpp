@@ -125,7 +125,15 @@ bool Link::r1(StrandRef arc, int side, int sign, bool check, bool perform) {
                     c->next_[1] = c->prev_[1] = StrandRef(c, 0);
 
                     crossings_.push_back(c);
-                    *it = StrandRef(c, 1);
+
+                    // We can start the component at either strand of c.
+                    // However, it is perhaps nice to not break up the
+                    // R1 twist (as opposed to the remaining part of the
+                    // unknot, which also becomes a twist in its own right).
+                    if ((side == 0 && sign < 0) || (side == 1 && sign > 0))
+                        *it = StrandRef(c, 1);
+                    else
+                        *it = StrandRef(c, 0);
                 }
 
                 return true;
