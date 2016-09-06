@@ -397,9 +397,8 @@ void addNTriangulation() {
             OL_reorderTetrahedraBFS())
         .def("orient", &NTriangulation::orient)
         .def("order", &NTriangulation::order, OL_order(args("force_oriented")))
-        .def("splitIntoComponents",
-             splitIntoComponents,
-             OL_splitIntoComponents(args("componentParent", "setLabels")))
+        .def("splitIntoComponents", splitIntoComponents,
+            OL_splitIntoComponents())
         .def("connectedSumDecomposition",
             &NTriangulation::connectedSumDecomposition,
             OL_connectedSumDecomposition())

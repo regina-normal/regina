@@ -137,8 +137,7 @@ def vitalStats(tri):
 
 	print "Dehydration:", tri.dehydrate()
 	print "Isomorphism signature:", tri.isoSig()
-
-        print "Result of splitIntoComponents:", tri.splitIntoComponents()
+	print "Result of splitIntoComponents:", tri.splitIntoComponents()
 
 	if tri.detail() != old:
 		print "ERROR: Original triangulation has changed!"
