@@ -87,7 +87,7 @@ for i in `find "$testdir" -name "*.test" | sort`; do
 	# Run test
 	# Since we have "set -e", we need "&& dummy=" to prevent this line to just
 	# exit the bash script when the test has non-zero exit code
-	"$executable" -n "$i" "$testdir" > "$testout" 2>&1 && dummy=
+	TERM= "$executable" -n "$i" "$testdir" > "$testout" 2>&1 && dummy=
 
 	# Catch exitcode
 	exitcode=$?
