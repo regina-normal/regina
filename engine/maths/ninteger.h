@@ -256,6 +256,13 @@ class REGINA_API NIntegerBase : private InfinityBase<supportInfinity> {
         template <int bytes>
         explicit NIntegerBase(const NNativeInteger<bytes>& value);
         /**
+         * Initialises this integer to the truncation of the given
+         * real number.
+         *
+         * @param value the real number to be truncated.
+         */
+        NIntegerBase(double value);
+        /**
          * Initialises this integer to the given value which is
          * represented as a string of digits in a given base.
          *
@@ -2327,6 +2334,18 @@ inline NIntegerBase<supportInfinity>::NIntegerBase(
                 value.nativeValue() >> ((blocks - i) * 8 * sizeof(long))));
         }
     }
+}
+
+template <bool supportInfinity>
+inline NIntegerBase<supportInfinity>::NIntegerBase(double value) :
+        small_(value), large_(0) {
+    // We start with a large representation, since we want to use GMP's
+    // double-to-integer conversion.
+    large_ = new __mpz_struct[1];
+    mpz_init_set_d(large_, value);
+
+    // Now switch to a small representation if we can.
+    tryReduce();
 }
 
 template <bool supportInfinity>

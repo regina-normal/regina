@@ -338,6 +338,8 @@ Version 5.0  [ (under development) ]
               opposed to claiming ownership of it).
         Class NHandlebody, NLensSpace:
             - Added != operator to complement the existing == operator.
+        Class NInteger, NLargeInteger:
+            - Added a floating-point constructor (which truncates).
         Class NIsomorphism:
             - Now just a typedef for the new class Isomorphism<3>, which has
               the same functionality as the old NIsomorphism.
