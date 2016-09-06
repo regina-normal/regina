@@ -87,10 +87,16 @@ for i in `find "$testdir" -name "*.test" | sort`; do
 	echo -n "Running $testname ... "
 
 	# Run the test.
+	#
 	# Since we have "set -e", we need "&& dummy=" to prevent this line to just
 	# exit the bash script when the test has non-zero exit code.
 	# We use && as opposed to || in order to preserve the exit code from
 	# the first command.
+	#
+	# The code that unsets TERM fixes an issue seen some years ago on
+	# Fedora, where (as a result of a more exotic TERM setting) unprintable
+	# characters were being dumped at the beginning of the python output.
+	#
 	TERM= "$executable" -n "$i" "$testdir" > "$testout" 2>&1 && dummy=
 
 	# Catch exitcode.
