@@ -86,16 +86,18 @@ for i in `find "$testdir" -name "*.test" | sort`; do
 	testout="$testoutdir/${testname/.test/.out}"
 	echo -n "Running $testname ... "
 
-	# Run test
+	# Run the test.
 	# Since we have "set -e", we need "&& dummy=" to prevent this line to just
-	# exit the bash script when the test has non-zero exit code
+	# exit the bash script when the test has non-zero exit code.
+	# We use && as opposed to || in order to preserve the exit code from
+	# the first command.
 	TERM= "$executable" -n "$i" "$testdir" > "$testout" 2>&1 && dummy=
 
-	# Catch exitcode
+	# Catch exitcode.
 	exitcode=$?
 
-	# Branch based on exit code
-	if [ $exitcode -ne 0 ];  then
+	# Branch based on exit code.
+	if [ "$exitcode" -ne 0 ];  then
 		echo "FAILED (exit code $exitcode)"
 		if [ "$verbose" -eq 1 ]; then
 			echo "    Command was:"
