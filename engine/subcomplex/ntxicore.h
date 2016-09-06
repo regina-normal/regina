@@ -277,8 +277,9 @@ class REGINA_API NTxICore :
          * <tt>T x I</tt> to the given output stream.  The name will be
          * written as a human-readable string.
          *
-         * \ifacespython The argument \a out is missing, and is always
-         * assumed to be standard output.
+         * \ifacespython The parameter \a out does not exist; instead
+         * standard output will always be used.  Moreover, this routine
+         * returns \c None.
          *
          * @param out the output stream to which to write.
          * @return a reference to the given output stream.
@@ -289,8 +290,9 @@ class REGINA_API NTxICore :
          * <tt>T x I</tt> in TeX format to the given output stream.
          * No leading or trailing dollar signs will be written.
          *
-         * \ifacespython The argument \a out is missing, and is always
-         * assumed to be standard output.
+         * \ifacespython The parameter \a out does not exist; instead
+         * standard output will always be used.  Moreover, this routine
+         * returns \c None.
          *
          * @param out the output stream to which to write.
          * @return a reference to the given output stream.

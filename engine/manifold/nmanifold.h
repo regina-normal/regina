@@ -233,8 +233,9 @@ class REGINA_API NManifold :
          * Writes the common name of this 3-manifold as a
          * human-readable string to the given output stream.
          *
-         * \ifacespython The parameter \a out does not exist;
-         * standard output will be used.
+         * \ifacespython The parameter \a out does not exist; instead
+         * standard output will always be used.  Moreover, this routine
+         * returns \c None.
          *
          * @param out the output stream to which to write.
          * @return a reference to the given output stream.
@@ -249,8 +250,9 @@ class REGINA_API NManifold :
          * Regina 4.3; in earlier versions, leading and trailing dollar
          * signs were provided.
          *
-         * \ifacespython The parameter \a out does not exist;
-         * standard output will be used.
+         * \ifacespython The parameter \a out does not exist; instead
+         * standard output will always be used.  Moreover, this routine
+         * returns \c None.
          *
          * @param out the output stream to which to write.
          * @return a reference to the given output stream.
@@ -266,8 +268,9 @@ class REGINA_API NManifold :
          * details are deemed necessary.  The default implementation of
          * this routine behaves in this way.
          *
-         * \ifacespython The parameter \a out does not exist;
-         * standard output will be used.
+         * \ifacespython The parameter \a out does not exist; instead
+         * standard output will always be used.  Moreover, this routine
+         * returns \c None.
          *
          * @param out the output stream to which to write.
          * @return a reference to the given output stream.

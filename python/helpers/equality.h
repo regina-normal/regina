@@ -150,7 +150,7 @@ namespace add_eq_operators_detail {
         static const T& makeRef();
 
         typedef decltype(makeRef() == makeRef()) EqType;
-        typedef decltype(makeRef() == makeRef()) IneqType;
+        typedef decltype(makeRef() != makeRef()) IneqType;
 
         static constexpr bool hasEqOperator =
             ! std::is_same<void, EqType>::value;
