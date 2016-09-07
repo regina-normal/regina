@@ -242,18 +242,14 @@ CHECK_CXX_SOURCE_COMPILES("
   int128_t x;
   uint128_t y;
   int main() { return 0; }"
-  INT128_T_FOUND )
+  INTERNAL_INT128_T_FOUND )
 
 CHECK_CXX_SOURCE_COMPILES("
   #include <stdint.h>
   __int128_t x;
   __uint128_t y;
   int main() { return 0; }"
-  __INT128_T_FOUND )
-
-IF (INT128_T_FOUND OR __INT128_T_FOUND)
-  SET(INT128_AVAILABLE TRUE)
-ENDIF (INT128_T_FOUND OR __INT128_T_FOUND)
+  INTERNAL___INT128_T_FOUND )
 
 CHECK_CXX_SOURCE_COMPILES("
   unsigned long long x = 0xFFFFFFFFFFFFFFFF;

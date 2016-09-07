@@ -33,6 +33,7 @@
 #include <regina-config.h>
 
 #include "engine.h"
+#include "utilities/intutils.h"
 
 namespace regina {
 

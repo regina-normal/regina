@@ -1,12 +1,14 @@
-/* Define if both int128_t and uint128_t types are available. */
-#cmakedefine INT128_T_FOUND
+/* Define if both int128_t and uint128_t types are available.
+   This macro is for internal use only; end users should use the macro
+   INT128_AVAILABLE and the typedefs from IntOfSize<16>, all of which
+   are found in utilities/intutils.h. */
+#cmakedefine INTERNAL_INT128_T_FOUND
 
-/* Define if both __int128_t and __uint128_t types are available. */
-#cmakedefine __INT128_T_FOUND
-
-/* Define if native 128-bit arithmetic is available through either
-   of the types defined above. */
-#cmakedefine INT128_AVAILABLE
+/* Define if both __int128_t and __uint128_t types are available.
+   This macro is for internal use only; end users should use the macro
+   INT128_AVAILABLE and the typedefs from IntOfSize<16>, all of which
+   are found in utilities/intutils.h. */
+#cmakedefine INTERNAL___INT128_T_FOUND
 
 /* Define if 64-bit integer literals are available with no suffix */
 #cmakedefine NUMERIC_64_FOUND

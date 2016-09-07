@@ -162,11 +162,6 @@ REGINA_API const char* versionSnapPea();
 /**
  * Does this particular build of Regina support native 128-bit arithmetic?
  *
- * This returns \c true if and only if either:
- *
- * - \c int128_t and \c uint128_t are supported on this platform; or
- * - \c __int128_t and \c __uint128_t are supported on this platform.
- *
  * On those platforms that do support native 128-bit arithmetic, some
  * expensive algorithms (in particular for normal surface enumeration)
  * are optimised to run significantly faster in some cases.

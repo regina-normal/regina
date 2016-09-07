@@ -153,7 +153,20 @@ struct IntOfMinSize {
     typedef typename IntOfSize<nextPowerOfTwo(bytes)>::utype utype;
 };
 
-#ifndef __DOXYGEN
+#ifdef __DOXYGEN
+    /**
+     * Defined if and only if native 128-bit arithmetic is available on
+     * this platform.
+     *
+     * If this macro is defined, then you can access native signed and
+     * unsigned 128-bit integers through the types IntOfSize<16>::type
+     * and IntOfSize<16>::utype respectively.
+     *
+     * If this macro is not defined, then the types IntOfSize<16>::type and
+     * IntOfSize<16>::utype will both be \c void.
+     */
+    #define INT128_AVAILABLE
+#else
 template <>
 struct IntOfSize<1> {
     typedef int8_t type;
@@ -178,19 +191,29 @@ struct IntOfSize<8> {
     typedef uint64_t utype;
 };
 
-template <>
-struct IntOfSize<16> {
-#if defined(__INT128_T_FOUND)
-    typedef __int128_t type;
-    typedef __uint128_t utype;
-#elif defined(INT128_T_FOUND)
-    typedef int128_t type;
-    typedef uint128_t utype;
+#if defined(INTERNAL___INT128_T_FOUND)
+    #define INT128_AVAILABLE
+    template <>
+    struct IntOfSize<16> {
+        typedef __int128_t type;
+        typedef __uint128_t utype;
+    };
+#elif defined(INTERNAL_INT128_T_FOUND)
+    #define INT128_AVAILABLE
+    template <>
+    struct IntOfSize<16> {
+        typedef int128_t type;
+        typedef uint128_t utype;
+    };
 #else
-    typedef void type;
-    typedef void utype;
+    #undef INT128_AVAILABLE
+    template <>
+    struct IntOfSize<16> {
+        typedef void type;
+        typedef void utype;
+    };
 #endif
-};
+
 #endif // __DOXYGEN
 
 } // namespace regina
