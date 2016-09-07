@@ -689,6 +689,9 @@ Version 5.0  [ (under development) ]
               passed through to the bracket operator.
             - The void / non-void variants now require that the function
               object must / must not be derived from Returns<T> respectively.
+        Routine hasInt128():
+            - New routine for runtime queries on whether native 128-bit
+              arithmetic is available.
         Routine makeAngleEquations():
             - Added as a global routine so that Python users can access it.
               This is identical to NAngleStructureVector::makeAngleEquations().
@@ -708,6 +711,9 @@ Version 5.0  [ (under development) ]
               superscript strings.
         Routine valueOf():
             - Now overloaded to support 8-bit, short and long long integers.
+        Routine versionSnapPy(), versionSnapPea():
+            - New routine for runtime queries on the version of the bundled
+              SnapPea kernel.
         Global arrays edgeNumber[][], edgeStart[], edgeEnd[]:
             - This long-deprecated global arrays have now been removed, and
               the corresponding static arrays in NEdge are now deprecated.

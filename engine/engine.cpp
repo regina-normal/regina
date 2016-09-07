@@ -98,6 +98,22 @@ bool versionUsesUTF8(const char* version) {
     }
 }
 
+const char* versionSnapPy() {
+    return SNAPPY_VERSION;
+}
+
+const char* versionSnapPea() {
+    return SNAPPY_VERSION;
+}
+
+bool hasInt128() {
+#ifdef INT128_AVAILABLE
+    return true;
+#else
+    return false;
+#endif
+}
+
 int testEngine(int value) {
     return value;
 }

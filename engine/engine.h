@@ -133,6 +133,49 @@ REGINA_DEPRECATED REGINA_API int getVersionMinor();
 REGINA_API bool versionUsesUTF8(const char* version);
 
 /**
+ * Returns the version of SnapPy whose underlying SnapPea kernel is built
+ * into Regina.
+ *
+ * The SnapPea kernel is now maintained by the larger \e SnapPy project,
+ * and Regina sources its version of the SnapPea kernel from one of the
+ * recent SnapPy releases.  See http://snappy.computop.org/ for details.
+ *
+ * In Regina, you can access the SnapPea kernel through the
+ * NSnapPeaTriangulation class.
+ *
+ * @return the version of SnapPy whose underlying SnapPea kernel is
+ * built into Regina.
+ */
+REGINA_API const char* versionSnapPy();
+
+/**
+ * An alias for versionSnapPy(), which returns the version of SnapPy whose
+ * underlying SnapPea kernel is built into Regina.
+ *
+ * See versionSnapPy() for details.
+ *
+ * @return the version of SnapPy whose underlying SnapPea kernel is
+ * built into Regina.
+ */
+REGINA_API const char* versionSnapPea();
+
+/**
+ * Does this particular build of Regina support native 128-bit arithmetic?
+ *
+ * This returns \c true if and only if either:
+ *
+ * - \c int128_t and \c uint128_t are supported on this platform; or
+ * - \c __int128_t and \c __uint128_t are supported on this platform.
+ *
+ * On those platforms that do support native 128-bit arithmetic, some
+ * expensive algorithms (in particular for normal surface enumeration)
+ * are optimised to run significantly faster in some cases.
+ *
+ * @return \c true if and only if this build supports native 128-bit arithmetic.
+ */
+REGINA_API bool hasInt128();
+
+/**
  * Tests to see if an interface can successfully communicate with the
  * underlying C++ calculation engine.
  *
