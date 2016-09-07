@@ -12,6 +12,10 @@
 #define INTERNAL___INT128_T_FOUND
 #endif
 
+/* Define if we should use boost's compile-time 128-bit integer detection,
+   instead of explicitly testing for 128-bit integer types in cmake. */
+/* #undef USE_BOOST_INT128 */
+
 /* Define if 64-bit integer literals are available with no suffix */
 #define NUMERIC_64_FOUND
 
