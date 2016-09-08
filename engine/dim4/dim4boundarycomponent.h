@@ -158,7 +158,7 @@ class REGINA_API Dim4BoundaryComponent :
          * tetrahedra (i.e., it is not ideal), then the index of each
          * <i>subdim</i>-face in this boundary component
          * matches the index of the corresponding <i>subdim</i>-face in the
-         * 3-manifold triangulation returned by triangulation().
+         * 3-manifold triangulation returned by build().
          *
          * \pre The template argument \a subdim is between 0 and 3 inclusive.
          *
@@ -210,12 +210,13 @@ class REGINA_API Dim4BoundaryComponent :
          * then this routine returns the triangulation of the corresponding
          * vertex link.  See Dim4Vertex::link() for details.
          *
-         * It is guaranteed that the full skeleton of this 3-manifold
-         * triangulation will have been generated already.
+         * This routine is fast (it uses a pre-computed triangulation).
+         * Moreover, it is guaranteed that the full skeleton of this
+         * 3-manifold triangulation will have been generated already.
          *
          * @return the triangulation of this boundary component.
          */
-        const NTriangulation* triangulation() const;
+        const NTriangulation* build() const;
 
         /**
          * Determines if this boundary component is ideal.
@@ -365,7 +366,7 @@ inline Dim4Component* Dim4BoundaryComponent::getComponent() const {
     return vertices_.front()->component();
 }
 
-inline const NTriangulation* Dim4BoundaryComponent::triangulation() const {
+inline const NTriangulation* Dim4BoundaryComponent::build() const {
     return (boundary_ ? boundary_ : vertices_.front()->buildLink());
 }
 
