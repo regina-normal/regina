@@ -52,11 +52,13 @@ namespace {
         const std::string&) = &Dim2Triangulation::newTriangle;
     regina::Dim2Triangle* (Dim2Triangulation::*triangle_non_const)(
         size_t) = &Dim2Triangulation::triangle;
+    size_t (Dim2Triangulation::*splitIntoComponents)(
+        regina::NPacket*, bool) = &Dim2Triangulation::splitIntoComponents;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_oneThreeMove,
         Dim2Triangulation::oneThreeMove, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_splitIntoComponents,
-        TriangulationBase<2>::splitIntoComponents, 0, 2);
+        Dim2Triangulation::splitIntoComponents, 0, 2);
 
     boost::python::list Dim2_getTriangles_list(Dim2Triangulation& t) {
         boost::python::list ans;
@@ -247,7 +249,7 @@ void addDim2Triangulation() {
         .def("isConnected", &Dim2Triangulation::isConnected)
         .def("isMinimal", &Dim2Triangulation::isMinimal)
         .def("orient", &Dim2Triangulation::orient)
-        .def("splitIntoComponents", &Dim2Triangulation::splitIntoComponents,
+        .def("splitIntoComponents", splitIntoComponents,
             OL_splitIntoComponents())
         .def("oneThreeMove", &Dim2Triangulation::oneThreeMove,
             OL_oneThreeMove())

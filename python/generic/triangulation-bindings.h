@@ -55,6 +55,8 @@ namespace {
             newSimplex_void_type)();
         typedef regina::Simplex<dim>* (Triangulation<dim>::*
             newSimplex_string_type)(const std::string&);
+        typedef size_t (Triangulation<dim>::*
+            splitIntoComponents_type)(regina::NPacket*, bool);
 
         static boost::python::list simplices_list(Triangulation<dim>& t) {
             boost::python::list ans;
@@ -121,7 +123,7 @@ namespace {
         }
 
         BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_splitIntoComponents,
-            TriangulationBase<dim>::splitIntoComponents, 0, 2);
+            Triangulation<dim>::splitIntoComponents, 0, 2);
     };
 }
 
@@ -222,7 +224,9 @@ void addTriangulation(const char* name) {
         .def("isOriented", &Triangulation<dim>::isOriented)
         .def("isConnected", &Triangulation<dim>::isConnected)
         .def("orient", &Triangulation<dim>::orient)
-        .def("splitIntoComponents", &Triangulation<dim>::splitIntoComponents,
+        .def("splitIntoComponents",
+            typename PyTriHelper<dim>::splitIntoComponents_type(
+                &Triangulation<dim>::splitIntoComponents),
             typename PyTriHelper<dim>::OL_splitIntoComponents())
         .def("finiteToIdeal", &Triangulation<dim>::finiteToIdeal)
         .def("makeDoubleCover", &Triangulation<dim>::makeDoubleCover)

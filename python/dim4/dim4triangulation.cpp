@@ -56,6 +56,8 @@ namespace {
         bool, bool) = &Dim4Triangulation::twoZeroMove;
     bool (Dim4Triangulation::*twoZeroMove_edge)(regina::Dim4Edge*,
         bool, bool) = &Dim4Triangulation::twoZeroMove;
+    size_t(Dim4Triangulation::*splitIntoComponents)(regina::NPacket*, bool) =
+        &Dim4Triangulation::splitIntoComponents;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyToLocalMinimum,
         Dim4Triangulation::simplifyToLocalMinimum, 0, 1);
@@ -76,7 +78,7 @@ namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_collapseEdge,
         Dim4Triangulation::collapseEdge, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_splitIntoComponents,
-        TriangulationBase<4>::splitIntoComponents, 0, 2);
+        Dim4Triangulation::splitIntoComponents, 0, 2);
 
     boost::python::list Dim4_getPentachora_list(Dim4Triangulation& t) {
         boost::python::list ans;
@@ -302,7 +304,7 @@ void addDim4Triangulation() {
         .def("homologyH2", &Dim4Triangulation::homologyH2,
             return_internal_reference<>())
         .def("orient", &Dim4Triangulation::orient)
-        .def("splitIntoComponents", &Dim4Triangulation::splitIntoComponents,
+        .def("splitIntoComponents", splitIntoComponents,
             OL_splitIntoComponents())
         .def("intelligentSimplify", &Dim4Triangulation::intelligentSimplify)
         .def("simplifyToLocalMinimum",
