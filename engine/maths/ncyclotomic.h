@@ -75,7 +75,7 @@ namespace regina {
  *
  * This class requires that the order \a n is strictly positive.
  */
-class REGINA_API NCyclotomic : public ShortOutput<NCyclotomic> {
+class REGINA_API NCyclotomic : public ShortOutput<NCyclotomic, true> {
     private:
         size_t field_;
             /**< The order \a n of the underlying cyclotomic field.
@@ -486,14 +486,14 @@ class REGINA_API NCyclotomic : public ShortOutput<NCyclotomic> {
          * \ifacespython Not present.
          *
          * @param out the output stream to which to write.
+         * @param utf8 \c true if unicode superscript characters may be used.
          * @param variable the symbol to use for the polynomial variable.
          * This may be \c null, in which case the default variable \c x
          * will be used.
-         * @param utf8 \c true if unicode superscript characters may be used.
          * @return a reference to the given output stream.
          */
-        void writeTextShort(std::ostream& out, const char* variable = 0,
-            bool utf8 = false) const;
+        void writeTextShort(std::ostream& out, bool utf8 = false,
+            const char* variable = 0) const;
 
         /**
          * Returns this field element as a human-readable string, using the
@@ -527,10 +527,10 @@ class REGINA_API NCyclotomic : public ShortOutput<NCyclotomic> {
          * unicode characters to make the output more pleasant to read.
          * In particular, it makes use of superscript digits for exponents.
          *
-         * Like the output from str(), this text is human-readable, fits
-         * on a single line, and does not end with a newline.
-         *
          * The string is encoded in UTF-8.
+         *
+         * \note There is also the usual variant of utf8() which takes no
+         * arguments; that variant is inherited from the Output class.
          *
          * @param variable the symbol to use for the polynomial variable.
          * This may be \c null, in which case the default variable \c x
@@ -538,7 +538,7 @@ class REGINA_API NCyclotomic : public ShortOutput<NCyclotomic> {
          * @return this field element as a unicode-enabled human-readable
          * string.
          */
-        std::string utf8(const char* variable = 0) const;
+        std::string utf8(const char* variable) const;
 };
 
 /*@}*/
@@ -681,18 +681,18 @@ inline NCyclotomic& NCyclotomic::operator /= (const NCyclotomic& other) {
 
 inline std::string NCyclotomic::str(const char* variable) const {
     // Make sure that python will be able to find the inherited str().
-    static_assert(std::is_same<
-        typename OutputBase<NCyclotomic>::type, Output<NCyclotomic>>::value,
+    static_assert(std::is_same<typename OutputBase<NCyclotomic>::type,
+        Output<NCyclotomic, true>>::value,
         "NCyclotomic is not identified as being inherited from Output<...>");
 
     std::ostringstream out;
-    writeTextShort(out, variable, false);
+    writeTextShort(out, false, variable);
     return out.str();
 }
 
 inline std::string NCyclotomic::utf8(const char* variable) const {
     std::ostringstream out;
-    writeTextShort(out, variable, true);
+    writeTextShort(out, true, variable);
     return out.str();
 }
 

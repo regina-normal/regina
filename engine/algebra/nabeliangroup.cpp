@@ -174,13 +174,16 @@ unsigned NAbelianGroup::torsionRank(const NLargeInteger& degree) const {
     return ans;
 }
 
-void NAbelianGroup::writeTextShort(std::ostream& out) const {
+void NAbelianGroup::writeTextShort(std::ostream& out, bool utf8) const {
     bool writtenSomething = false;
 
     if (rank_ > 0) {
         if (rank_ > 1)
             out << rank_ << ' ';
-        out << 'Z';
+        if (utf8)
+            out << "\u2124";
+        else
+            out << 'Z';
         writtenSomething = true;
     }
 
@@ -201,49 +204,10 @@ void NAbelianGroup::writeTextShort(std::ostream& out) const {
                 out << " + ";
             if (currMult > 1)
                 out << currMult << ' ';
-            out << "Z_" << currDegree.stringValue();
-            writtenSomething = true;
-        }
-        if (it == invariantFactors.end())
-            break;
-        currDegree = *it;
-        currMult = 1;
-        it++;
-    }
-
-    if (! writtenSomething)
-        out << '0';
-}
-
-void NAbelianGroup::writeUtf8(std::ostream& out) const {
-    bool writtenSomething = false;
-
-    if (rank_ > 0) {
-        if (rank_ > 1)
-            out << rank_ << ' ';
-        out << "\u2124";
-        writtenSomething = true;
-    }
-
-    std::multiset<NLargeInteger>::const_iterator it =
-        invariantFactors.begin();
-    NLargeInteger currDegree;
-    unsigned currMult = 0;
-    std::string s;
-    while(true) {
-        if (it != invariantFactors.end()) {
-            if ((*it) == currDegree) {
-                currMult++;
-                it++;
-                continue;
-            }
-        }
-        if (currMult > 0) {
-            if (writtenSomething)
-                out << " + ";
-            if (currMult > 1)
-                out << currMult << ' ';
-            out << "\u2124" << regina::subscript(currDegree);
+            if (utf8)
+                out << "\u2124" << regina::subscript(currDegree);
+            else
+                out << "Z_" << currDegree.stringValue();
             writtenSomething = true;
         }
         if (it == invariantFactors.end())

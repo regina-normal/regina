@@ -84,7 +84,6 @@ Version 5.0  [ (under development) ]
         Class Dim2BoundaryComponent, Dim2Component, Dim2Edge, Dim2Vertex
             - New dimension-agnostic routines countFaces<subdim>() and
               face<subdim>().
-            - Now derive from Output instead of ShareableObject.
         Class Dim2Component:
             - New routine getNumberOfBoundaryFacets(), which is identical to
               the dimension-specific getNumberOfBoundaryEdges().
@@ -229,7 +228,7 @@ Version 5.0  [ (under development) ]
         Class Link:
             - New packet class for knots and links in the 3-sphere.
         Class NAbelianGroup:
-            - New routine utf8(), which is a prettier variant of str().
+            - Now supports unicode output via utf8().
         Class NAngleStructureList:
             - Renamed getNumberOfStructures() to size().  The old name is
               deprecated, but has been kept for backward compatibility.
@@ -363,11 +362,11 @@ Version 5.0  [ (under development) ]
               addition, homology() has a new alias homologyH1().  The old names
               are kept but deprecated.
         Class NMarkedAbelianGroup:
-            - New routine utf8(), which is a prettier variant of str().
+            - Now supports unicode output via utf8().
             - Added != operator to complement the existing == operator.
         Class NMatrix:
             - The destructor and writeMatrix() are no longer virtual.
-            - Now derives from Output, and provides str() and detail()
+            - Now derives from Output, and provides str(), utf8() and detail()
               output routines.
         Class NMutex:
             - Deprecated; just use std::mutex and related classes instead.
@@ -641,7 +640,9 @@ Version 5.0  [ (under development) ]
               short and detailed string output.  These have been introduced as
               lightweight replacements for the now-defunct ShareableObject.
             - These new classes also provide an output operator << that allows
-              any object derived from Output to be written to an output stream.
+              any object derived from Output to be written to an output stream,
+              as well as a new utf8() function that allows classes to provide
+              optional support for richer unicode output.
         Class ReturnsTraits:
             - Helper class for compile-time analysis of function objects.
         Class SafePtr, SafePointeeBase, SafeRemnant:
@@ -651,8 +652,8 @@ Version 5.0  [ (under development) ]
         Class ShareableObject:
             - Removed entirely.  This is no longer needed as a base class for
               objects that are mirrored in external interfaces (e.g., python).
-            - The string output routines str() and detail() are now provided
-              by the Output template class instead.
+            - The output routines str() and detail(), as well as a new output
+              routine utf8(), are provided by the Output template class instead.
         Class Simplex, SimplexBase, SimplexFaces, SimplexFacesSuite:
             - Simplex<dim> is now a generic class that replaces the old
               Dim2Triangle, NTetrahedron and so on.  SimplexBase<...>,

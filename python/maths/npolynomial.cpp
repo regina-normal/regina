@@ -111,9 +111,8 @@ namespace {
         &NPolynomial<NRational>::init;
     std::string (NPolynomial<NRational>::*str_variable)(const char*) const =
         &NPolynomial<NRational>::str;
-
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_utf8,
-        NPolynomial<NRational>::utf8, 0, 1);
+    std::string (NPolynomial<NRational>::*utf8_variable)(const char*) const =
+        &NPolynomial<NRational>::utf8;
 }
 
 void addNPolynomial() {
@@ -136,7 +135,7 @@ void addNPolynomial() {
         .def("set", &NPolynomial<NRational>::set)
         .def("swap", &NPolynomial<NRational>::swap)
         .def("str", str_variable)
-        .def("utf8", &NPolynomial<NRational>::utf8, OL_utf8())
+        .def("utf8", utf8_variable)
         .def(self *= NRational())
         .def(self /= NRational())
         .def(self += self)

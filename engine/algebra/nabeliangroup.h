@@ -71,7 +71,7 @@ class NMatrixInt;
  * the like.
  */
 class REGINA_API NAbelianGroup :
-        public ShortOutput<NAbelianGroup>,
+        public ShortOutput<NAbelianGroup, true>,
         public boost::noncopyable {
     protected:
         unsigned rank_;
@@ -386,41 +386,11 @@ class REGINA_API NAbelianGroup :
          * \ifacespython Not present.
          *
          * @param out the output stream to which to write.
+         * @param utf8 if \c true, then richer unicode characters will
+         * be used to make the output more pleasant to read.  In particular,
+         * the output will use subscript digits and the blackboard bold Z.
          */
-        void writeTextShort(std::ostream& out) const;
-
-        /**
-         * Writes a text representation of this group using unicode characters
-         * to the given output stream.
-         *
-         * This is similar to writeTextShort(), except that it uses
-         * unicode characters to make the output more pleasant to read.
-         * In particular, it make use of subscript digits and the
-         * blackboard bold Z.
-         *
-         * The output will be encoded in UTF-8.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeUtf8(std::ostream& out) const;
-        /**
-         * Returns a text representation of this group using unicode characters.
-         *
-         * This is similar to the output from str(), except that it uses
-         * unicode characters to make the output more pleasant to read.
-         * In particular, it make use of subscript digits and the
-         * blackboard bold Z.
-         *
-         * Like the output from str(), this text is human-readable, fits on
-         * a single line, and does not end with a newline.
-         *
-         * The string is encoded in UTF-8.
-         *
-         * @return a unicode-enabled text representation of this object.
-         */
-        std::string utf8() const;
+        void writeTextShort(std::ostream& out, bool utf8 = false) const;
 
     protected:
         /**
@@ -516,12 +486,6 @@ inline bool NAbelianGroup::operator == (const NAbelianGroup& other) const {
 
 inline bool NAbelianGroup::operator != (const NAbelianGroup& other) const {
     return (rank_ != other.rank_ || invariantFactors != other.invariantFactors);
-}
-
-inline std::string NAbelianGroup::utf8() const {
-    std::ostringstream out;
-    writeUtf8(out);
-    return out.str();
 }
 
 } // namespace regina

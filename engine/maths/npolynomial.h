@@ -75,7 +75,7 @@ namespace regina {
  * template class NPolynomial<NRational>.
  */
 template <typename T>
-class NPolynomial : public ShortOutput<NPolynomial<T>> {
+class NPolynomial : public ShortOutput<NPolynomial<T>, true> {
     private:
         size_t degree_;
             /**< The degree of the polynomial.  Here the zero polynomial
@@ -476,14 +476,14 @@ class NPolynomial : public ShortOutput<NPolynomial<T>> {
          * \ifacespython Not present.
          *
          * @param out the output stream to which to write.
+         * @param utf8 \c true if unicode superscript characters may be used.
          * @param variable the symbol to use for the variable in this
          * polynomial.  This may be \c null, in which case the default
          * variable \c x will be used.
-         * @param utf8 \c true if unicode superscript characters may be used.
          * @return a reference to the given output stream.
          */
-        void writeTextShort(std::ostream& out, const char* variable = 0,
-            bool utf8 = false) const;
+        void writeTextShort(std::ostream& out, bool utf8 = false,
+            const char* variable = 0) const;
 
         /**
          * Returns this polynomial as a human-readable string, using the
@@ -507,17 +507,17 @@ class NPolynomial : public ShortOutput<NPolynomial<T>> {
          * unicode characters to make the output more pleasant to read.
          * In particular, it makes use of superscript digits for exponents.
          *
-         * Like the output from str(), this text is human-readable, fits
-         * on a single line, and does not end with a newline.
-         *
          * The string is encoded in UTF-8.
+         *
+         * \note There is also the usual variant of utf8() which takes no
+         * arguments; that variant is inherited from the Output class.
          *
          * @param variable the symbol to use for the variable in this
          * polynomial.  This may be \c null, in which case the default
          * variable \c x will be used.
          * @return this polynomial as a unicode-enabled human-readable string.
          */
-        std::string utf8(const char* variable = 0) const;
+        std::string utf8(const char* variable) const;
 };
 
 /*@}*/
@@ -976,8 +976,8 @@ void NPolynomial<T>::gcdWithCoeffs(const NPolynomial<U>& other,
 }
 
 template <typename T>
-void NPolynomial<T>::writeTextShort(std::ostream& out,
-        const char* variable, bool utf8) const {
+void NPolynomial<T>::writeTextShort(std::ostream& out, bool utf8,
+        const char* variable) const {
     if (degree_ == 0) {
         out << coeff_[0];
         return;
@@ -1031,20 +1031,19 @@ void NPolynomial<T>::writeTextShort(std::ostream& out,
 template <typename T>
 inline std::string NPolynomial<T>::str(const char* variable) const {
     // Make sure that python will be able to find the inherited str().
-    static_assert(std::is_same<
-            typename OutputBase<NPolynomial<T>>::type, Output<NPolynomial<T>>>
-        ::value,
+    static_assert(std::is_same<typename OutputBase<NPolynomial<T>>::type,
+        Output<NPolynomial<T>, true>>::value,
         "NPolynomial<T> is not identified as being inherited from Output<...>");
 
     std::ostringstream out;
-    writeTextShort(out, variable, false);
+    writeTextShort(out, false, variable);
     return out.str();
 }
 
 template <typename T>
 inline std::string NPolynomial<T>::utf8(const char* variable) const {
     std::ostringstream out;
-    writeTextShort(out, variable, true);
+    writeTextShort(out, true, variable);
     return out.str();
 }
 

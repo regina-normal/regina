@@ -228,10 +228,7 @@ std::string NGroupPresentation::recogniseGroup(bool moreUtf8) const {
 
     // abelian test
     if (identifyAbelian()) {
-        if (moreUtf8)
-            ab.get()->writeUtf8(out);
-        else
-            ab.get()->writeTextShort(out);
+        ab.get()->writeTextShort(out, moreUtf8);
         return out.str();
     }
 
