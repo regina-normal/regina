@@ -629,7 +629,7 @@ Version 5.0  [ (under development) ]
               these internal XML I/O classes, removing the old names completely.
             - NXMLDim2TriangulationReader and NXMLTriangulationReader are now
               just typedefs for the new class XMLTriangulationReader<dim>.
-        Class Output, ShortOutput:
+        Class Output, ShortOutput, OutputBase:
             - New classes that provide consistent APIs for objects to provide
               short and detailed string output.  These have been introduced as
               lightweight replacements for the now-defunct ShareableObject.

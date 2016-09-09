@@ -36,6 +36,7 @@
 
 #include <type_traits>
 #include <boost/python/def_visitor.hpp>
+#include "../engine/output.h"
 
 namespace regina {
 namespace python {
@@ -61,12 +62,14 @@ struct add_output : boost::python::def_visitor<add_output> {
     template <typename Class>
     void visit(Class& c) const {
         typedef typename Class::wrapped_type Type;
+        typedef typename regina::OutputBase<Type>::type BaseType;
+        typedef std::string (BaseType::*OutputFunctionType)() const;
 
-        c.def("str", &Type::str);
-        c.def("toString", &Type::str);
-        c.def("detail", &Type::detail);
-        c.def("toStringLong", &Type::detail);
-        c.def("__str__", &Type::str);
+        c.def("str", OutputFunctionType(&BaseType::str));
+        c.def("toString", OutputFunctionType(&BaseType::str));
+        c.def("detail", OutputFunctionType(&BaseType::detail));
+        c.def("toStringLong", OutputFunctionType(&BaseType::detail));
+        c.def("__str__", OutputFunctionType(&BaseType::str));
     }
 };
 
@@ -91,10 +94,12 @@ struct add_output_basic : boost::python::def_visitor<add_output_basic> {
     template <typename Class>
     void visit(Class& c) const {
         typedef typename Class::wrapped_type Type;
+        typedef typename regina::OutputBase<Type>::type BaseType;
+        typedef std::string (BaseType::*OutputFunctionType)() const;
 
-        c.def("str", &Type::str);
-        c.def("toString", &Type::str);
-        c.def("__str__", &Type::str);
+        c.def("str", OutputFunctionType(&BaseType::str));
+        c.def("toString", OutputFunctionType(&BaseType::str));
+        c.def("__str__", OutputFunctionType(&BaseType::str));
     }
 };
 
