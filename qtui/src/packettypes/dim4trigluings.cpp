@@ -759,7 +759,7 @@ void Dim4TriGluingsUI::boundaryComponents() {
                 "vertex link.</qt>"));
         if (chosen) {
             regina::NTriangulation* ans = new regina::NTriangulation(
-                *chosen->triangulation());
+                *chosen->build());
             ans->setLabel(tr("Boundary component %1").arg(
                 chosen->index()).toUtf8().constData());
             tri->insertChildLast(ans);

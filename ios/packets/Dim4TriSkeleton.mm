@@ -174,7 +174,7 @@
         return;
     }
     
-    regina::NTriangulation* ans = new regina::NTriangulation(*self.packet->boundaryComponent(seln.row - 1)->triangulation());
+    regina::NTriangulation* ans = new regina::NTriangulation(*self.packet->boundaryComponent(seln.row - 1)->build());
     ans->setLabel([NSString stringWithFormat:@"Boundary component %zd", seln.row - 1].UTF8String);
     self.packet->insertChildLast(ans);
     [ReginaHelper viewPacket:ans];

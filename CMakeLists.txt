@@ -237,23 +237,25 @@ if(NOT LANGINFO_FOUND)
   MESSAGE(WARNING "langinfo not found: UTF-8 will be used always, and the locale-specific encoding will be ignored.")
 endif(NOT LANGINFO_FOUND)
 
+IF(NOT USE_BOOST_INT128)
+  SET (USE_BOOST_INT128 OFF CACHE STRING
+    "Use boost's compile-time 128-bit integer detection, instead of explicitly testing for 128-bit integers here in cmake."
+    FORCE)
+ENDIF(NOT USE_BOOST_INT128)
+
 CHECK_CXX_SOURCE_COMPILES("
   #include <stdint.h>
   int128_t x;
   uint128_t y;
   int main() { return 0; }"
-  INT128_T_FOUND )
+  INTERNAL_INT128_T_FOUND )
 
 CHECK_CXX_SOURCE_COMPILES("
   #include <stdint.h>
   __int128_t x;
   __uint128_t y;
   int main() { return 0; }"
-  __INT128_T_FOUND )
-
-IF (INT128_T_FOUND OR __INT128_T_FOUND)
-  SET(INT128_AVAILABLE TRUE)
-ENDIF (INT128_T_FOUND OR __INT128_T_FOUND)
+  INTERNAL___INT128_T_FOUND )
 
 CHECK_CXX_SOURCE_COMPILES("
   unsigned long long x = 0xFFFFFFFFFFFFFFFF;

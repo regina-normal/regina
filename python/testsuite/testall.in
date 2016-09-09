@@ -47,9 +47,15 @@
 
 set -e
 
+# To see the output, you need to run:
+#     make test ARGS="-V"
+
+# Change verbose to 1 if you wish to see the full command lines.
+verbose=0
+
 executable=../regina-python
 testdir="@PROJECT_SOURCE_DIR@/python/testsuite"
-tmpout=test.tmp
+testoutdir=`mktemp -d`
 
 echo "---------------------------------------"
 echo "Test suite for Regina's python bindings"
@@ -72,24 +78,59 @@ export REGINA_HOME=
 
 broken=
 found=
+
 for i in `find "$testdir" -name "*.test" | sort`; do
 	found=1
 	testname=`basename "$i"`
+	baseline="${i/.test/.out}"
+	testout="$testoutdir/${testname/.test/.out}"
 	echo -n "Running $testname ... "
 
-	output="${i/.test/.out}"
-	if ! ( TERM= "$executable" -n "$i" "$testdir" > "$tmpout" 2>&1 ); then
-		echo "COULD NOT RUN"
+	# Run the test.
+	#
+	# Since we have "set -e", we need "&& dummy=" to prevent this line to just
+	# exit the bash script when the test has non-zero exit code.
+	# We use && as opposed to || in order to preserve the exit code from
+	# the first command.
+	#
+	# The code that unsets TERM fixes an issue seen some years ago on
+	# Fedora, where (as a result of a more exotic TERM setting) unprintable
+	# characters were being dumped at the beginning of the python output.
+	#
+	TERM= "$executable" -n "$i" "$testdir" > "$testout" 2>&1 && dummy=
+
+	# Catch exitcode.
+	exitcode=$?
+
+	# Branch based on exit code.
+	if [ "$exitcode" -ne 0 ];  then
+		echo "FAILED (exit code $exitcode)"
+		if [ "$verbose" -eq 1 ]; then
+			echo "    Command was:"
+			echo "        " \""$executable"\" "-n" \""$i"\" \""$testdir"\" ">" \""$testout"\" "2>&1"
+		fi
+		echo "    Output was:"
+		echo "        ..."
+		tail -n 5 $testout | sed -e 's/^/        /'
 		broken=1
 	else
-		if ! ( diff --strip-trailing-cr "$tmpout" "$output" > /dev/null ); then
-			echo "TEST FAILED"
+		if ! ( diff --strip-trailing-cr "$testout" "$baseline" > /dev/null ); then
+			echo "FAILED (output differs from expected)"
+			if [ "$verbose" -eq 1 ]; then
+				echo "    Command to diff:"
+				echo "        " diff "--strip-trailing-cr" \""$testout"\" \""$baseline"\"
+			fi
+			echo "    Diff was:"
+			diff --strip-trailing-cr -u \
+				--label 'Expected output' --label 'Actual output' \
+				"$testout" "$baseline" | head -n10 | sed -e 's/^/        /'
+			echo "        ..."
 			broken=1
 		else
 			echo "ok"
+			rm -f "$testout"
 		fi
 	fi
-	rm -f "$tmpout"
 done
 
 if ! test -n "$found"; then
@@ -108,7 +149,12 @@ if test -n "$broken"; then
 	echo
 	echo "One or more tests failed."
 	echo "Please see the list above for details."
+	echo
+	echo "The full output file(s) produced by Regina are in the directory:"
+	echo "    $testoutdir"
 	exit 1
+else
+	rmdir "$testoutdir"
 fi
 
 echo

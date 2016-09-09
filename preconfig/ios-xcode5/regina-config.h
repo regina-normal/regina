@@ -1,16 +1,20 @@
-/* Define if both int128_t and uint128_t types are available. */
-/* #undef INT128_T_FOUND */
+/* Define if both int128_t and uint128_t types are available.
+   This macro is for internal use only; end users should use the macro
+   INT128_AVAILABLE and the typedefs from IntOfSize<16>, all of which
+   are found in utilities/intutils.h. */
+/* #undef INTERNAL_INT128_T_FOUND */
 
-/* Define if both __int128_t and __uint128_t types are available. */
+/* Define if both __int128_t and __uint128_t types are available.
+   This macro is for internal use only; end users should use the macro
+   INT128_AVAILABLE and the typedefs from IntOfSize<16>, all of which
+   are found in utilities/intutils.h. */
 #if __LP64__
-#define __INT128_T_FOUND
+#define INTERNAL___INT128_T_FOUND
 #endif
 
-/* Define if native 128-bit arithmetic is available through either
-   of the types defined above. */
-#if __LP64__
-#define INT128_AVAILABLE
-#endif
+/* Define if we should use boost's compile-time 128-bit integer detection,
+   instead of explicitly testing for 128-bit integer types in cmake. */
+/* #undef USE_BOOST_INT128 */
 
 /* Define if 64-bit integer literals are available with no suffix */
 #define NUMERIC_64_FOUND

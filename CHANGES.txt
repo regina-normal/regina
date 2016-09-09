@@ -636,7 +636,7 @@ Version 5.0  [ (under development) ]
               these internal XML I/O classes, removing the old names completely.
             - NXMLDim2TriangulationReader and NXMLTriangulationReader are now
               just typedefs for the new class XMLTriangulationReader<dim>.
-        Class Output, ShortOutput:
+        Class Output, ShortOutput, OutputBase:
             - New classes that provide consistent APIs for objects to provide
               short and detailed string output.  These have been introduced as
               lightweight replacements for the now-defunct ShareableObject.
@@ -696,6 +696,9 @@ Version 5.0  [ (under development) ]
               passed through to the bracket operator.
             - The void / non-void variants now require that the function
               object must / must not be derived from Returns<T> respectively.
+        Routine hasInt128():
+            - New routine for runtime queries on whether native 128-bit
+              arithmetic is available.
         Routine makeAngleEquations():
             - Added as a global routine so that Python users can access it.
               This is identical to NAngleStructureVector::makeAngleEquations().
@@ -715,6 +718,9 @@ Version 5.0  [ (under development) ]
               superscript strings.
         Routine valueOf():
             - Now overloaded to support 8-bit, short and long long integers.
+        Routine versionSnapPy(), versionSnapPea():
+            - New routine for runtime queries on the version of the bundled
+              SnapPea kernel.
         Global arrays edgeNumber[][], edgeStart[], edgeEnd[]:
             - This long-deprecated global arrays have now been removed, and
               the corresponding static arrays in NEdge are now deprecated.
@@ -740,6 +746,15 @@ Version 5.0  [ (under development) ]
             - Removed this deprecated header from the triangulation/ directory.
         Header zstream.h:
             - Removed entirely.  Regina now uses boost::iostreams instead.
+        Macro INT128_AVAILABLE, INT128_T_FOUND, __INT128_T_FOUND:
+            - Both INT128_T_FOUND and __INT128_T_FOUND are now internal,
+              and should not be used by end users.
+            - The macro INT128_AVAILABLE has been moved from regina-config.h
+              into intutils.h, and it is now an explicit requirement that any
+              128-bit arithmetic must use the typedefs from IntOfSize<16>.
+            - A new cmake option USE_BOOST_INT128 allows users to override
+              cmake's 128-bit integer detection, and instead use boost's
+              compile-time detection.
         Macro REGINA_INLINE_REQUIRED:
             - New macro to help reduce noisy warnings under windows.
     USER INTERFACE:

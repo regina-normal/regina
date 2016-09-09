@@ -81,7 +81,7 @@ void addDim4BoundaryComponent() {
             return_value_policy<reference_existing_object>())
         .def("getComponent", &Dim4BoundaryComponent::component,
             return_value_policy<reference_existing_object>())
-        .def("triangulation", &Dim4BoundaryComponent::triangulation,
+        .def("build", &Dim4BoundaryComponent::build,
             return_value_policy<to_held_type<>>())
         .def("isIdeal", &Dim4BoundaryComponent::isIdeal)
         .def("isInvalidVertex", &Dim4BoundaryComponent::isInvalidVertex)

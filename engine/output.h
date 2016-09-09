@@ -41,6 +41,7 @@
 
 #include <sstream>
 #include <string>
+#include <type_traits>
 
 #include "regina-core.h"
 
@@ -188,6 +189,48 @@ struct ShortOutput : public Output<T> {
      * @param out the output stream to which to write.
      */
     void writeTextLong(std::ostream& out) const;
+};
+
+/**
+ * Provides a typedef to help identify where in the class hierarchy the
+ * output functions T::str() and T::detail() are implemented.
+ *
+ * If \a T is a class derived (directly or indirectly) from some class
+ * Output<X>, then <tt>OutputBase<T>::type</tt> is defined to be this
+ * parent class Output<X>.
+ *
+ * If \a T is not derived from any class Output<X>, then
+ * <tt>OutputBase<T>::type</tt> is defined to be \a T itself.
+ *
+ * This helper class can be useful when trying to disambiguate between the
+ * implementation of str() that is inherited from Output, versus an extended
+ * implementation of str() (perhaps with more arguments) that is implemented
+ * in the class \a T itself.
+ *
+ * \pre \a T is a class or struct type.
+ */
+template <class T>
+struct OutputBase {
+    private:
+        // Implementation details:
+        static T test(...);
+
+        template <typename U>
+        static Output<U> test(const Output<U>&);
+
+    public:
+        /**
+         * The class in which T::str() and T::detail() are implemented.
+         *
+         * If \a T is derived from the Output template class, then this
+         * type is the corresponding Output<X> base class.
+         * Otherwise, this type is \a T itself.
+         *
+         * \note The implementation of this typedef does not look for
+         * str() or detail() at all.  Instead, it is based purely on the
+         * inheritance condition as stated above.
+         */
+        typedef decltype(test(std::declval<T>())) type;
 };
 
 /*@}*/

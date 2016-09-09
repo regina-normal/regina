@@ -652,8 +652,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 bool makeBdryFinite = false) {
             std::string ans;
 
-            regina::NTriangulation t(
-                *(tri.boundaryComponent(whichBdry)->triangulation()));
+            NTriangulation t(*(tri.boundaryComponent(whichBdry)->build()));
             t.intelligentSimplify();
 
             if (makeBdryFinite) {
@@ -693,8 +692,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
             // Do a barycentric subdivision to turn any invalid edges
             // into proper RP^2 ideal boundaries.
-            NTriangulation t(
-                *(tri.boundaryComponent(whichBdry)->triangulation()));
+            NTriangulation t(*(tri.boundaryComponent(whichBdry)->build()));
             t.barycentricSubdivision();
             t.intelligentSimplify();
 
@@ -821,7 +819,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 count = bc->countTetrahedra();
                 for (j = 0; j < count; ++j) {
                     tet4 = bc->tetrahedron(j);
-                    tet3 = bc->triangulation()->tetrahedron(j);
+                    tet3 = bc->build()->tetrahedron(j);
                     for (triangle = 0; triangle < 4; ++triangle) {
                         adj3 = tet3->adjacentTetrahedron(triangle);
                         if (adj3) {
