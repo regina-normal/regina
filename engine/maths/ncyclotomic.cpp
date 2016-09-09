@@ -122,8 +122,8 @@ const NPolynomial<NInteger>& NCyclotomic::cyclotomic(size_t n) {
     return cyclotomicCache[n - 1];
 }
 
-void NCyclotomic::writeTextShort(std::ostream& out, const char* variable,
-        bool utf8) const {
+void NCyclotomic::writeTextShort(std::ostream& out, bool utf8,
+        const char* variable) const {
     if (! field_) {
         out << "<uninitialised>";
         return;

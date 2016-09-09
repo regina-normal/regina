@@ -44,7 +44,7 @@ namespace python {
 /**
  * Adds rich string output functions to the python bindings for a C++ class.
  *
- * This will add str() and detail(), as provided by the regina::Output
+ * This will add str(), utf8() and detail(), as provided by the regina::Output
  * (templated) base class.  It will also add \a __str__ as an alias for
  * str(), to provide "native" Python string output.
  *
@@ -53,7 +53,7 @@ namespace python {
  * boost::python::class_ object that wraps \a T.
  *
  * The wrapped class \a T should either derive from regina::Output, or
- * provide str() and detail() functions that are consistent with the
+ * provide str(), utf8() and detail() functions that are consistent with the
  * regina::Output interface.
  */
 struct add_output : boost::python::def_visitor<add_output> {
@@ -67,6 +67,7 @@ struct add_output : boost::python::def_visitor<add_output> {
 
         c.def("str", OutputFunctionType(&BaseType::str));
         c.def("toString", OutputFunctionType(&BaseType::str));
+        c.def("utf8", OutputFunctionType(&BaseType::utf8));
         c.def("detail", OutputFunctionType(&BaseType::detail));
         c.def("toStringLong", OutputFunctionType(&BaseType::detail));
         c.def("__str__", OutputFunctionType(&BaseType::str));
