@@ -109,6 +109,11 @@ namespace {
         &NPolynomial<NRational>::init;
     void (NPolynomial<NRational>::*init_degree)(size_t) =
         &NPolynomial<NRational>::init;
+    std::string (NPolynomial<NRational>::*str_variable)(const char*) const =
+        &NPolynomial<NRational>::str;
+
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_utf8,
+        NPolynomial<NRational>::utf8, 0, 1);
 }
 
 void addNPolynomial() {
@@ -130,6 +135,8 @@ void addNPolynomial() {
         .def("__setitem__", setItem)
         .def("set", &NPolynomial<NRational>::set)
         .def("swap", &NPolynomial<NRational>::swap)
+        .def("str", str_variable)
+        .def("utf8", &NPolynomial<NRational>::utf8, OL_utf8())
         .def(self *= NRational())
         .def(self /= NRational())
         .def(self += self)
@@ -138,8 +145,8 @@ void addNPolynomial() {
         .def(self /= self)
         .def("divisionAlg", &divisionAlg)
         .def("gcdWithCoeffs", &NPolynomial<NRational>::gcdWithCoeffs<NRational>)
-        .def(self_ns::str(self))
-        .def(self_ns::repr(self))
+        .def(regina::python::add_output())
+        .def(self_ns::repr(self)) // add_output only gives __str__
         .def(regina::python::add_eq_operators())
     ;
 }
