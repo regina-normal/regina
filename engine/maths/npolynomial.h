@@ -40,6 +40,8 @@
  */
 
 #include "regina-core.h"
+#include "utilities/stringutils.h"
+#include "output.h"
 #include <iostream>
 
 namespace regina {
@@ -73,7 +75,7 @@ namespace regina {
  * template class NPolynomial<NRational>.
  */
 template <typename T>
-class NPolynomial {
+class NPolynomial : public ShortOutput<NPolynomial<T>> {
     private:
         size_t degree_;
             /**< The degree of the polynomial.  Here the zero polynomial
@@ -461,18 +463,62 @@ class NPolynomial {
         template <typename U>
         void gcdWithCoeffs(const NPolynomial<U>& other,
             NPolynomial<T>& gcd, NPolynomial<T>& u, NPolynomial<T>& v) const;
-};
 
-/**
- * Writes the given polynomial to the given output stream in
- * human-readable form.
- *
- * @param out the output stream to which to write.
- * @param p the polynomial to write.
- * @return a reference to the given output stream.
- */
-template <typename T>
-std::ostream& operator << (std::ostream& out, const NPolynomial<T>& p);
+        /**
+         * Writes this polynomial to the given output stream, using the
+         * given variable name instead of \c x.
+         *
+         * If \a utf8 is passed as \c true then unicode superscript characters
+         * will be used for exponents; these will be encoded using UTF-8.
+         * This will make the output nicer, but will require more complex
+         * fonts to be available on the user's machine.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         * @param variable the symbol to use for the variable in this
+         * polynomial.  This may be \c null, in which case the default
+         * variable \c x will be used.
+         * @param utf8 \c true if unicode superscript characters may be used.
+         * @return a reference to the given output stream.
+         */
+        void writeTextShort(std::ostream& out, const char* variable = 0,
+            bool utf8 = false) const;
+
+        /**
+         * Returns this polynomial as a human-readable string, using the
+         * given variable name instead of \c x.
+         *
+         * \note There is also the usual variant of str() which takes no
+         * arguments; that variant is inherited from the Output class.
+         *
+         * @param variable the symbol to use for the variable in this
+         * polynomial.  This may be \c null, in which case the default
+         * variable \c x will be used.
+         * @return this polynomial as a human-readable string.
+         */
+        std::string str(const char* variable) const;
+
+        /**
+         * Returns this polynomial as a human-readable string using
+         * unicode characters, using the given variable name instead of \c x.
+         *
+         * This is similar to the output from str(), except that it uses
+         * unicode characters to make the output more pleasant to read.
+         * In particular, it makes use of superscript digits for exponents.
+         *
+         * Like the output from str(), this text is human-readable, fits
+         * on a single line, and does not end with a newline.
+         *
+         * The string is encoded in UTF-8.
+         *
+         * @param variable the symbol to use for the variable in this
+         * polynomial.  This may be \c null, in which case the default
+         * variable \c x will be used.
+         * @return this polynomial as a unicode-enabled human-readable string.
+         */
+        std::string utf8(const char* variable = 0) const;
+};
 
 /*@}*/
 
@@ -930,49 +976,76 @@ void NPolynomial<T>::gcdWithCoeffs(const NPolynomial<U>& other,
 }
 
 template <typename T>
-std::ostream& operator << (std::ostream& out, const NPolynomial<T>& p) {
-    if (p.degree() == 0)
-        return out << p[0];
+void NPolynomial<T>::writeTextShort(std::ostream& out,
+        const char* variable, bool utf8) const {
+    if (degree_ == 0) {
+        out << coeff_[0];
+        return;
+    }
 
-    size_t i = p.degree();
+    size_t i = degree_;
     while (true) {
         if (i == 0) {
             // This is the constant term.
             // If non-zero, it is not the first term being output.
-            if (p[i] < 0)
-                out << " - " << (-p[i]);
-            else if (p[i] != 0)
-                out << " + " << p[i];
+            if (coeff_[i] < 0)
+                out << " - " << (-coeff_[i]);
+            else if (coeff_[i] != 0)
+                out << " + " << coeff_[i];
             break;
         }
-        if (p[i] != 0) {
+        if (coeff_[i] != 0) {
             // This is non-zero, and not the constant term.
-            if (i == p.degree()) {
+            if (i == degree_) {
                 // This is the first term being output.
-                if (p[i] == -1)
+                if (coeff_[i] == -1)
                     out << "- ";
-                else if (p[i] != 1)
-                    out << p[i] << ' ';
+                else if (coeff_[i] != 1)
+                    out << coeff_[i] << ' ';
             } else {
                 // This is not the first term being output.
-                if (p[i] == -1)
+                if (coeff_[i] == -1)
                     out << " - ";
-                else if (p[i] < 0)
-                    out << " - " << (-p[i]) << ' ';
-                else if (p[i] == 1)
+                else if (coeff_[i] < 0)
+                    out << " - " << (-coeff_[i]) << ' ';
+                else if (coeff_[i] == 1)
                     out << " + ";
                 else
-                    out << " + " << p[i] << ' ';
+                    out << " + " << coeff_[i] << ' ';
             }
-            if (i == 1)
-                out << 'x';
+            if (variable)
+                out << variable;
             else
-                out << "x^" << i;
+                out << 'x';
+            if (i != 1) {
+                if (utf8)
+                    out << regina::superscript(i);
+                else
+                    out << '^' << i;
+            }
         }
         --i;
     }
+}
 
-    return out;
+template <typename T>
+inline std::string NPolynomial<T>::str(const char* variable) const {
+    // Make sure that python will be able to find the inherited str().
+    static_assert(std::is_same<
+            typename OutputBase<NPolynomial<T>>::type, Output<NPolynomial<T>>>
+        ::value,
+        "NPolynomial<T> is not identified as being inherited from Output<...>");
+
+    std::ostringstream out;
+    writeTextShort(out, variable, false);
+    return out.str();
+}
+
+template <typename T>
+inline std::string NPolynomial<T>::utf8(const char* variable) const {
+    std::ostringstream out;
+    writeTextShort(out, variable, true);
+    return out.str();
 }
 
 } // namespace regina

@@ -75,7 +75,7 @@ namespace regina {
  *
  * This class requires that the order \a n is strictly positive.
  */
-class REGINA_API NCyclotomic {
+class REGINA_API NCyclotomic : public ShortOutput<NCyclotomic> {
     private:
         size_t field_;
             /**< The order \a n of the underlying cyclotomic field.
@@ -468,22 +468,78 @@ class REGINA_API NCyclotomic {
          * @return the cyclotomic polynomial <tt>Φ_n</tt>.
          */
         static const NPolynomial<NInteger>& cyclotomic(size_t n);
-};
 
-/**
- * Writes the given field element to the given output stream in
- * human-readable form.
- *
- * The field element will be written using its rational polynomial
- * representation.  The underlying field will \e not be indicated in the
- * output, since this is often already understood.  If required, it can be
- * accessed by calling <tt>c.field()</tt>.
- *
- * @param out the output stream to which to write.
- * @param c the field element to write.
- * @return a reference to the given output stream.
- */
-REGINA_API std::ostream& operator << (std::ostream& out, const NCyclotomic& c);
+        /**
+         * Writes this field element to the given output stream, using the
+         * given variable name instead of \c x.
+         *
+         * The field element will be written using its rational polynomial
+         * representation.  The underlying field will \e not be indicated in the
+         * output, since this is often already understood.  If required, it can
+         * be accessed by calling <tt>c.field()</tt>.
+         *
+         * If \a utf8 is passed as \c true then unicode superscript characters
+         * will be used for exponents; these will be encoded using UTF-8.
+         * This will make the output nicer, but will require more complex
+         * fonts to be available on the user's machine.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         * @param variable the symbol to use for the polynomial variable.
+         * This may be \c null, in which case the default variable \c x
+         * will be used.
+         * @param utf8 \c true if unicode superscript characters may be used.
+         * @return a reference to the given output stream.
+         */
+        void writeTextShort(std::ostream& out, const char* variable = 0,
+            bool utf8 = false) const;
+
+        /**
+         * Returns this field element as a human-readable string, using the
+         * given variable name instead of \c x.
+         *
+         * The field element will be written using its rational polynomial
+         * representation.  The underlying field will \e not be indicated in the
+         * output, since this is often already understood.  If required, it can
+         * be accessed by calling <tt>c.field()</tt>.
+         *
+         * \note There is also the usual variant of str() which takes no
+         * arguments; that variant is inherited from the Output class.
+         *
+         * @param variable the symbol to use for the polynomial variable.
+         * This may be \c null, in which case the default variable \c x
+         * will be used.
+         * @return this field element as a human-readable string.
+         */
+        std::string str(const char* variable) const;
+
+        /**
+         * Returns this field element as a human-readable string using
+         * unicode characters, using the given variable name instead of \c x.
+         *
+         * The field element will be written using its rational polynomial
+         * representation.  The underlying field will \e not be indicated in the
+         * output, since this is often already understood.  If required, it can
+         * be accessed by calling <tt>c.field()</tt>.
+         *
+         * This is similar to the output from str(), except that it uses
+         * unicode characters to make the output more pleasant to read.
+         * In particular, it makes use of superscript digits for exponents.
+         *
+         * Like the output from str(), this text is human-readable, fits
+         * on a single line, and does not end with a newline.
+         *
+         * The string is encoded in UTF-8.
+         *
+         * @param variable the symbol to use for the polynomial variable.
+         * This may be \c null, in which case the default variable \c x
+         * will be used.
+         * @return this field element as a unicode-enabled human-readable
+         * string.
+         */
+        std::string utf8(const char* variable = 0) const;
+};
 
 /*@}*/
 
@@ -621,6 +677,23 @@ inline NCyclotomic& NCyclotomic::operator /= (const NCyclotomic& other) {
     NCyclotomic tmp(other);
     tmp.invert();
     return (*this) *= tmp;
+}
+
+inline std::string NCyclotomic::str(const char* variable) const {
+    // Make sure that python will be able to find the inherited str().
+    static_assert(std::is_same<
+        typename OutputBase<NCyclotomic>::type, Output<NCyclotomic>>::value,
+        "NCyclotomic is not identified as being inherited from Output<...>");
+
+    std::ostringstream out;
+    writeTextShort(out, variable, false);
+    return out.str();
+}
+
+inline std::string NCyclotomic::utf8(const char* variable) const {
+    std::ostringstream out;
+    writeTextShort(out, variable, true);
+    return out.str();
 }
 
 } // namespace regina

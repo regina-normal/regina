@@ -49,8 +49,12 @@ namespace {
             NCyclotomic::cyclotomic(n));
     }
 
+    std::string (NCyclotomic::*str_variable)(const char*) const =
+        &NCyclotomic::str;
+
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_evaluate,
         NCyclotomic::evaluate, 0, 1);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_utf8, NCyclotomic::utf8, 0, 1);
 }
 
 void addNCyclotomic() {
@@ -77,8 +81,10 @@ void addNCyclotomic() {
         .def(self /= self)
         .def("cyclotomic", &cyclotomic,
             return_value_policy<manage_new_object>())
-        .def(self_ns::str(self))
-        .def(self_ns::repr(self))
+        .def("str", str_variable)
+        .def("utf8", &NCyclotomic::utf8, OL_utf8())
+        .def(regina::python::add_output())
+        .def(self_ns::repr(self)) // add_output only gives __str__
         .def(regina::python::add_eq_operators())
         .staticmethod("cyclotomic")
     ;

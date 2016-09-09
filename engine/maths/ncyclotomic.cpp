@@ -122,42 +122,51 @@ const NPolynomial<NInteger>& NCyclotomic::cyclotomic(size_t n) {
     return cyclotomicCache[n - 1];
 }
 
-std::ostream& operator << (std::ostream& out, const NCyclotomic& c) {
-    if (! c.field())
-        return out << "<uninitialised>";
+void NCyclotomic::writeTextShort(std::ostream& out, const char* variable,
+        bool utf8) const {
+    if (! field_) {
+        out << "<uninitialised>";
+        return;
+    }
 
     bool output = false;
-    size_t i = c.degree() - 1;
+    size_t i = degree_ - 1;
     while (true) {
-        if (c[i] != 0) {
+        if (coeff_[i] != 0) {
             if (i == 0) {
                 if (output) {
-                    if (c[i] > 0)
-                        out << " + " << c[i];
+                    if (coeff_[i] > 0)
+                        out << " + " << coeff_[i];
                     else
-                        out << " - " << (-c[i]);
+                        out << " - " << (-coeff_[i]);
                 } else
-                    out << c[i];
+                    out << coeff_[i];
             } else {
                 if (output) {
-                    if (c[i] == 1)
+                    if (coeff_[i] == 1)
                         out << " + ";
-                    else if (c[i] > 0)
-                        out << " + " << c[i] << ' ';
-                    else if (c[i] == -1)
+                    else if (coeff_[i] > 0)
+                        out << " + " << coeff_[i] << ' ';
+                    else if (coeff_[i] == -1)
                         out << " - ";
                     else
-                        out << " - " << (-c[i]) << ' ';
+                        out << " - " << (-coeff_[i]) << ' ';
                 } else {
-                    if (c[i] == -1)
+                    if (coeff_[i] == -1)
                         out << "- ";
-                    else if (c[i] != 1)
-                        out << c[i] << ' ';
+                    else if (coeff_[i] != 1)
+                        out << coeff_[i] << ' ';
                 }
-                if (i == 1)
-                    out << 'x';
+                if (variable)
+                    out << variable;
                 else
-                    out << "x^" << i;
+                    out << 'x';
+                if (i != 1) {
+                    if (utf8)
+                        out << regina::superscript(i);
+                    else
+                        out << '^' << i;
+                }
             }
             output = true;
         }
@@ -169,8 +178,6 @@ std::ostream& operator << (std::ostream& out, const NCyclotomic& c) {
 
     if (! output)
         out << '0';
-
-    return out;
 }
 
 }
