@@ -40,6 +40,7 @@
  */
 
 #include "utilities/stringutils.h"
+#include "output.h"
 #include <iostream>
 #include <sstream>
 
@@ -78,7 +79,7 @@ namespace regina {
  * template class NLaurent<NInteger>.
  */
 template <typename T>
-class NLaurent {
+class NLaurent : public ShortOutput<NLaurent<T>> {
     private:
         long minExp_;
             /**< The minimum exponent that appears in the polynomial,
@@ -421,16 +422,14 @@ class NLaurent {
 
         /**
          * Writes this polynomial to the given output stream, using the
-         * given variable name.
+         * given variable name instead of \c x.
          *
          * If \a utf8 is passed as \c true then unicode superscript characters
          * will be used for exponents; these will be encoded using UTF-8.
          * This will make the output nicer, but will require more complex
          * fonts to be available on the user's machine.
          *
-         * \ifacespython The parameter \a out does not exist; instead
-         * standard output will always be used.  Moreover, this routine
-         * returns \c None.
+         * \ifacespython Not present.
          *
          * @param out the output stream to which to write.
          * @param variable the symbol to use for the variable in this
@@ -439,25 +438,42 @@ class NLaurent {
          * @param utf8 \c true if unicode superscript characters may be used.
          * @return a reference to the given output stream.
          */
-        std::ostream& write(std::ostream& out, const char* variable = 0,
+        void writeTextShort(std::ostream& out, const char* variable = 0,
             bool utf8 = false) const;
 
         /**
          * Returns this polynomial as a human-readable string, using the
-         * given variable name.
+         * given variable name instead of \c x.
          *
-         * If \a utf8 is passed as \c true then unicode superscript characters
-         * will be used for exponents; these will be encoded using UTF-8.
-         * This will make the output nicer, but will require more complex
-         * fonts to be available on the user's machine.
+         * \note There is also the usual variant of str() which takes no
+         * arguments; that variant is inherited from the Output class.
          *
          * @param variable the symbol to use for the variable in this
          * polynomial.  This may be \c null, in which case the default
          * variable \c x will be used.
-         * @param utf8 \c true if unicode superscript characters may be used.
          * @return this polynomial as a human-readable string.
          */
-        std::string str(const char* variable = 0, bool utf8 = false) const;
+        std::string str(const char* variable) const;
+
+        /**
+         * Returns this polynomial as a human-readable string using
+         * unicode characters, using the given variable name instead of \c x.
+         *
+         * This is similar to the output from str(), except that it uses
+         * unicode characters to make the output more pleasant to read.
+         * In particular, it makes use of superscript digits for exponents.
+         *
+         * Like the output from str(), this text is human-readable, fits
+         * on a single line, and does not end with a newline.
+         *
+         * The string is encoded in UTF-8.
+         *
+         * @param variable the symbol to use for the variable in this
+         * polynomial.  This may be \c null, in which case the default
+         * variable \c x will be used.
+         * @return this polynomial as a unicode-enabled human-readable string.
+         */
+        std::string utf8(const char* variable = 0) const;
 
     private:
         /**
@@ -485,20 +501,6 @@ class NLaurent {
          */
         void fixDegrees();
 };
-
-/**
- * Writes the given polynomial to the given output stream in
- * human-readable form.
- *
- * The variable will be called \a x.  To write the given polynomial using a
- * different variable name, you can call NLaurent::write() instead.
- *
- * @param out the output stream to which to write.
- * @param p the polynomial to write.
- * @return a reference to the given output stream.
- */
-template <typename T>
-std::ostream& operator << (std::ostream& out, const NLaurent<T>& p);
 
 /*@}*/
 
@@ -897,10 +899,12 @@ NLaurent<T>& NLaurent<T>::operator *= (const NLaurent<T>& other) {
 }
 
 template <typename T>
-std::ostream& NLaurent<T>::write(std::ostream& out, const char* variable,
+void NLaurent<T>::writeTextShort(std::ostream& out, const char* variable,
         bool utf8) const {
-    if (isZero())
-        return out << '0';
+    if (isZero()) {
+        out << '0';
+        return;
+    }
 
     // Both minExp_ and maxExp_ have non-zero coefficients (though
     // minExp_ and maxExp_ might be the same exponent).
@@ -941,14 +945,24 @@ std::ostream& NLaurent<T>::write(std::ostream& out, const char* variable,
             }
         }
     }
-
-    return out;
 }
 
 template <typename T>
-inline std::string NLaurent<T>::str(const char* variable, bool utf8) const {
+inline std::string NLaurent<T>::str(const char* variable) const {
+    // Make sure that python will be able to find the inherited str().
+    static_assert(std::is_same<
+        typename OutputBase<NLaurent<T>>::type, Output<NLaurent<T>>>::value,
+        "NLaurent<T> is not identified as being inherited from Output<...>");
+
     std::ostringstream out;
-    write(out, variable, utf8);
+    writeTextShort(out, variable, false);
+    return out.str();
+}
+
+template <typename T>
+inline std::string NLaurent<T>::utf8(const char* variable) const {
+    std::ostringstream out;
+    writeTextShort(out, variable, true);
     return out.str();
 }
 
@@ -1024,11 +1038,6 @@ void NLaurent<T>::fixDegrees() {
         base_ -= minExp_;
         minExp_ = maxExp_ = 0;
     }
-}
-
-template <typename T>
-inline std::ostream& operator << (std::ostream& out, const NLaurent<T>& p) {
-    return p.write(out);
 }
 
 } // namespace regina

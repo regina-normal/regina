@@ -66,19 +66,17 @@ namespace {
         p.set(x(), y(), value);
     }
 
-    void write_stdio(const NLaurent2<NInteger>& l, const char* varX = 0,
-            const char* varY = 0, bool utf8 = false) {
-        l.write(std::cout, varX, varY, utf8);
-    }
-
     void (NLaurent2<NInteger>::*init_void)() =
         &NLaurent2<NInteger>::init;
     void (NLaurent2<NInteger>::*init_degrees)(long, long) =
         &NLaurent2<NInteger>::init;
+    std::string (NLaurent2<NInteger>::*str_variables)(const char*, const char*)
+        const = &NLaurent2<NInteger>::str;
 
-    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_write_stdio, write_stdio, 1, 4);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_str, NLaurent2<NInteger>::str,
-        0, 3);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_str_variables,
+        NLaurent2<NInteger>::str, 1, 2);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_utf8, NLaurent2<NInteger>::utf8,
+        0, 2);
 }
 
 void addNLaurent2() {
@@ -93,8 +91,8 @@ void addNLaurent2() {
         .def("set", &NLaurent2<NInteger>::set)
         .def("swap", &NLaurent2<NInteger>::swap)
         .def("negate", &NLaurent2<NInteger>::negate)
-        .def("write", write_stdio, OL_write_stdio())
-        .def("str", &NLaurent2<NInteger>::str, OL_str())
+        .def("str", str_variables, OL_str_variables())
+        .def("utf8", &NLaurent2<NInteger>::utf8, OL_utf8())
         .def("__getitem__", getItem, return_internal_reference<>())
         .def("__setitem__", setItem)
         .def(self *= NInteger())
@@ -102,8 +100,8 @@ void addNLaurent2() {
         .def(self += self)
         .def(self -= self)
         .def(self *= self)
-        .def(self_ns::str(self))
-        .def(self_ns::repr(self))
+        .def(regina::python::add_output())
+        .def(self_ns::repr(self)) // add_output only gives __str__
         .def(regina::python::add_eq_operators())
     ;
 }

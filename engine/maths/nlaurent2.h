@@ -40,6 +40,7 @@
  */
 
 #include "utilities/stringutils.h"
+#include "output.h"
 #include <iostream>
 #include <map>
 #include <sstream>
@@ -79,7 +80,7 @@ namespace regina {
  * template class NLaurent2<NInteger>.
  */
 template <typename T>
-class NLaurent2 {
+class NLaurent2 : public ShortOutput<NLaurent2<T>> {
     private:
         typedef std::pair<long, long> Exponents;
 
@@ -311,9 +312,7 @@ class NLaurent2 {
          * This will make the output nicer, but will require more complex
          * fonts to be available on the user's machine.
          *
-         * \ifacespython The parameter \a out does not exist; instead
-         * standard output will always be used.  Moreover, this routine
-         * returns \c None.
+         * \ifacespython Not present.
          *
          * @param out the output stream to which to write.
          * @param varX the symbol to use for the variable \a x.  This may be
@@ -323,27 +322,44 @@ class NLaurent2 {
          * @param utf8 \c true if unicode superscript characters may be used.
          * @return a reference to the given output stream.
          */
-        std::ostream& write(std::ostream& out, const char* varX = 0,
+        void writeTextShort(std::ostream& out, const char* varX = 0,
             const char* varY = 0, bool utf8 = false) const;
 
         /**
          * Returns this polynomial as a human-readable string, using the
          * given variable names instead of \c x and \c y.
          *
-         * If \a utf8 is passed as \c true then unicode superscript characters
-         * will be used for exponents; these will be encoded using UTF-8.
-         * This will make the output nicer, but will require more complex
-         * fonts to be available on the user's machine.
+         * \note There is also the usual variant of str() which takes no
+         * arguments; that variant is inherited from the Output class.
          *
          * @param varX the symbol to use for the variable \a x.  This may be
          * \c null, in which case the default symbol <tt>'x'</tt> will be used.
          * @param varY the symbol to use for the variable \a y.  This may be
          * \c null, in which case the default symbol <tt>'y'</tt> will be used.
-         * @param utf8 \c true if unicode superscript characters may be used.
          * @return this polynomial as a human-readable string.
          */
-        std::string str(const char* varX = 0, const char* varY = 0,
-            bool utf8 = false) const;
+        std::string str(const char* varX, const char* varY = 0) const;
+
+        /**
+         * Returns this polynomial as a human-readable string using unicode
+         * characters, using the given variable names instead of \c x and \c y.
+         *
+         * This is similar to the output from str(), except that it uses
+         * unicode characters to make the output more pleasant to read.
+         * In particular, it makes use of superscript digits for exponents.
+         *
+         * Like the output from str(), this text is human-readable, fits
+         * on a single line, and does not end with a newline.
+         *
+         * The string is encoded in UTF-8.
+         *
+         * @param varX the symbol to use for the variable \a x.  This may be
+         * \c null, in which case the default symbol <tt>'x'</tt> will be used.
+         * @param varY the symbol to use for the variable \a y.  This may be
+         * \c null, in which case the default symbol <tt>'y'</tt> will be used.
+         * @return this polynomial as a unicode-enabled human-readable string.
+         */
+        std::string utf8(const char* varX = 0, const char* varY = 0) const;
 
     private:
         /**
@@ -355,21 +371,6 @@ class NLaurent2 {
     // operations on these polynomials.
     friend class Link;
 };
-
-/**
- * Writes the given polynomial to the given output stream in
- * human-readable form.
- *
- * The two variables will be called \a x and \a y, as described in the
- * NLaurent2 class notes.  To write the polynomial using different symbols
- * for the variable names, you can call NLaurent2::write() intsead.
- *
- * @param out the output stream to which to write.
- * @param p the polynomial to write.
- * @return a reference to the given output stream.
- */
-template <typename T>
-std::ostream& operator << (std::ostream& out, const NLaurent2<T>& p);
 
 /*@}*/
 
@@ -546,10 +547,12 @@ NLaurent2<T>& NLaurent2<T>::operator *= (const NLaurent2<T>& other) {
 }
 
 template <typename T>
-std::ostream& NLaurent2<T>::write(std::ostream& out,
-        const char* varX, const char* varY, bool utf8) const {
-    if (isZero())
-        return out << '0';
+void NLaurent2<T>::writeTextShort(std::ostream& out, const char* varX,
+        const char* varY, bool utf8) const {
+    if (isZero()) {
+        out << '0';
+        return;
+    }
 
     for (auto it = coeff_.rbegin(); it != coeff_.rend(); ++it) {
         T writeCoeff = it->second;
@@ -602,15 +605,26 @@ std::ostream& NLaurent2<T>::write(std::ostream& out,
             }
         }
     }
-
-    return out;
 }
 
 template <typename T>
-inline std::string NLaurent2<T>::str(const char* varX, const char* varY,
-        bool utf8) const {
+inline std::string NLaurent2<T>::str(const char* varX, const char* varY)
+        const {
+    // Make sure that python will be able to find the inherited str().
+    static_assert(std::is_same<
+        typename OutputBase<NLaurent2<T>>::type, Output<NLaurent2<T>>>::value,
+        "NLaurent2<T> is not identified as being inherited from Output<...>");
+
     std::ostringstream out;
-    write(out, varX, varY, utf8);
+    writeTextShort(out, varX, varY, false);
+    return out.str();
+}
+
+template <typename T>
+inline std::string NLaurent2<T>::utf8(const char* varX, const char* varY)
+        const {
+    std::ostringstream out;
+    writeTextShort(out, varX, varY, true);
     return out.str();
 }
 
@@ -622,11 +636,6 @@ void NLaurent2<T>::removeZeroes() {
             it = coeff_.erase(it); // C++11: returns next element.
         else
             ++it;
-}
-
-template <typename T>
-inline std::ostream& operator << (std::ostream& out, const NLaurent2<T>& p) {
-    return p.write(out);
 }
 
 } // namespace regina
