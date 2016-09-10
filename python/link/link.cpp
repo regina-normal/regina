@@ -34,11 +34,11 @@
 #include "maths/nlaurent.h"
 #include "maths/nlaurent2.h"
 #include "triangulation/ntriangulation.h"
-#include "../helpers.h"
 #include "../safeheldtype.h"
 
 // Held type must be declared before boost/python.hpp
 #include <boost/python.hpp>
+#include "../helpers.h"
 
 using namespace boost::python;
 using namespace regina::python;
