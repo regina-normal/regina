@@ -101,9 +101,8 @@ namespace {
         &NLaurent<NInteger>::init;
     std::string (NLaurent<NInteger>::*str_variable)(const char*) const =
         &NLaurent<NInteger>::str;
-
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_utf8, NLaurent<NInteger>::utf8,
-        0, 1);
+    std::string (NLaurent<NInteger>::*utf8_variable)(const char*) const =
+        &NLaurent<NInteger>::utf8;
 }
 
 void addNLaurent() {
@@ -128,7 +127,7 @@ void addNLaurent() {
         .def("scaleDown", &NLaurent<NInteger>::scaleDown)
         .def("negate", &NLaurent<NInteger>::negate)
         .def("str", str_variable)
-        .def("utf8", &NLaurent<NInteger>::utf8, OL_utf8())
+        .def("utf8", utf8_variable)
         .def(self *= NInteger())
         .def(self /= NInteger())
         .def(self += self)

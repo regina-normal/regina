@@ -79,7 +79,7 @@ namespace regina {
  * template class NLaurent<NInteger>.
  */
 template <typename T>
-class NLaurent : public ShortOutput<NLaurent<T>> {
+class NLaurent : public ShortOutput<NLaurent<T>, true> {
     private:
         long minExp_;
             /**< The minimum exponent that appears in the polynomial,
@@ -432,14 +432,14 @@ class NLaurent : public ShortOutput<NLaurent<T>> {
          * \ifacespython Not present.
          *
          * @param out the output stream to which to write.
+         * @param utf8 \c true if unicode superscript characters may be used.
          * @param variable the symbol to use for the variable in this
          * polynomial.  This may be \c null, in which case the default
          * variable \c x will be used.
-         * @param utf8 \c true if unicode superscript characters may be used.
          * @return a reference to the given output stream.
          */
-        void writeTextShort(std::ostream& out, const char* variable = 0,
-            bool utf8 = false) const;
+        void writeTextShort(std::ostream& out, bool utf8 = false,
+            const char* variable = 0) const;
 
         /**
          * Returns this polynomial as a human-readable string, using the
@@ -463,17 +463,17 @@ class NLaurent : public ShortOutput<NLaurent<T>> {
          * unicode characters to make the output more pleasant to read.
          * In particular, it makes use of superscript digits for exponents.
          *
-         * Like the output from str(), this text is human-readable, fits
-         * on a single line, and does not end with a newline.
-         *
          * The string is encoded in UTF-8.
+         *
+         * \note There is also the usual variant of utf8() which takes no
+         * arguments; that variant is inherited from the Output class.
          *
          * @param variable the symbol to use for the variable in this
          * polynomial.  This may be \c null, in which case the default
          * variable \c x will be used.
          * @return this polynomial as a unicode-enabled human-readable string.
          */
-        std::string utf8(const char* variable = 0) const;
+        std::string utf8(const char* variable) const;
 
     private:
         /**
@@ -899,8 +899,8 @@ NLaurent<T>& NLaurent<T>::operator *= (const NLaurent<T>& other) {
 }
 
 template <typename T>
-void NLaurent<T>::writeTextShort(std::ostream& out, const char* variable,
-        bool utf8) const {
+void NLaurent<T>::writeTextShort(std::ostream& out, bool utf8,
+        const char* variable) const {
     if (isZero()) {
         out << '0';
         return;
@@ -950,19 +950,19 @@ void NLaurent<T>::writeTextShort(std::ostream& out, const char* variable,
 template <typename T>
 inline std::string NLaurent<T>::str(const char* variable) const {
     // Make sure that python will be able to find the inherited str().
-    static_assert(std::is_same<
-        typename OutputBase<NLaurent<T>>::type, Output<NLaurent<T>>>::value,
+    static_assert(std::is_same<typename OutputBase<NLaurent<T>>::type,
+        Output<NLaurent<T>, true>>::value,
         "NLaurent<T> is not identified as being inherited from Output<...>");
 
     std::ostringstream out;
-    writeTextShort(out, variable, false);
+    writeTextShort(out, false, variable);
     return out.str();
 }
 
 template <typename T>
 inline std::string NLaurent<T>::utf8(const char* variable) const {
     std::ostringstream out;
-    writeTextShort(out, variable, true);
+    writeTextShort(out, true, variable);
     return out.str();
 }
 

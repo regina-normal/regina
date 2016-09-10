@@ -72,11 +72,13 @@ namespace {
         &NLaurent2<NInteger>::init;
     std::string (NLaurent2<NInteger>::*str_variables)(const char*, const char*)
         const = &NLaurent2<NInteger>::str;
+    std::string (NLaurent2<NInteger>::*utf8_variables)(const char*, const char*)
+        const = &NLaurent2<NInteger>::utf8;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_str_variables,
         NLaurent2<NInteger>::str, 1, 2);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_utf8, NLaurent2<NInteger>::utf8,
-        0, 2);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_utf8_variables,
+        NLaurent2<NInteger>::utf8, 1, 2);
 }
 
 void addNLaurent2() {
@@ -92,7 +94,7 @@ void addNLaurent2() {
         .def("swap", &NLaurent2<NInteger>::swap)
         .def("negate", &NLaurent2<NInteger>::negate)
         .def("str", str_variables, OL_str_variables())
-        .def("utf8", &NLaurent2<NInteger>::utf8, OL_utf8())
+        .def("utf8", utf8_variables, OL_utf8_variables())
         .def("__getitem__", getItem, return_internal_reference<>())
         .def("__setitem__", setItem)
         .def(self *= NInteger())
