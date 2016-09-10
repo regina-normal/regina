@@ -179,6 +179,8 @@ struct Output {
  * Writes the short text representation of the given object to the
  * given output stream.
  *
+ * This is equivalent to calling <tt>out << object.str()</tt>.
+ *
  * @param out the output stream to which to write.
  * @param object the object to write.
  * @return a reference to the given output stream.
@@ -336,7 +338,7 @@ struct Output<T, false> {
 template <class T>
 inline std::ostream& operator << (std::ostream& out,
         const Output<T, true>& object) {
-    static_cast<const T&>(object).writeTextShort(out, true);
+    static_cast<const T&>(object).writeTextShort(out, false);
     return out;
 }
 
