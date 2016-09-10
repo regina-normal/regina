@@ -154,6 +154,7 @@ class Dim2TriGluingsUI : public QObject, public PacketEditorTab {
          */
         QAction* actAddTri;
         QAction* actRemoveTri;
+        QAction* actOrient;
         QLinkedList<QAction*> triActionList;
         QLinkedList<QAction*> enableWhenWritable;
 
@@ -194,12 +195,15 @@ class Dim2TriGluingsUI : public QObject, public PacketEditorTab {
         /**
          * Triangulation actions.
          */
-        // None for now, but more may come.
+        void orient();
+        void doubleCover();
+        void splitIntoComponents();
 
         /**
          * Update the states of internal components.
          */
         void updateRemoveState();
+        void updateActionStates();
 };
 
 inline bool Dim2GluingsModel::isReadWrite() const {

@@ -272,9 +272,8 @@
     }
     
     bool hasOr = false;
-    regina::NTriangulation::ComponentIterator cit;
-    for (cit = self.packet->components().begin(); cit != self.packet->components().end(); ++cit)
-        if ((*cit)->isOrientable()) {
+    for (auto c : self.packet->components())
+        if (c->isOrientable()) {
             hasOr = true;
             break;
         }
@@ -326,7 +325,7 @@
         base = self.packet;
 
     // Make the split.
-    unsigned long nComps = self.packet->splitIntoComponents(base);
+    size_t nComps = self.packet->splitIntoComponents(base);
 
     // Tell the user what happened.
     UIAlertView* alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%ld Components Extracted", nComps]

@@ -433,6 +433,7 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
         "so that orientation is preserved across adjacent faces.<p>"
         "If this triangulation includes both orientable and non-orientable "
         "components, only the orientable components will be relabelled.</qt>"));
+    enableWhenWritable.append(actOrient);
     triActionList.append(actOrient);
     connect(actOrient, SIGNAL(triggered()), this, SLOT(orient()));
 
@@ -455,7 +456,6 @@ NTriGluingsUI::NTriGluingsUI(regina::NTriangulation* packet,
     QAction* actIdealToFinite = new QAction(this);
     actIdealToFinite->setText(tr("&Truncate Ideal Vertices"));
     actIdealToFinite->setIcon(ReginaSupport::regIcon("finite"));
-
     actIdealToFinite->setToolTip(tr(
         "Truncate any ideal vertices"));
     actIdealToFinite->setEnabled(readWrite);
@@ -780,10 +780,8 @@ void NTriGluingsUI::orient() {
     }
 
     bool hasOr = false;
-    NTriangulation::ComponentIterator cit;
-    for (cit = tri->components().begin(); cit != tri->components().end();
-            ++cit)
-        if ((*cit)->isOrientable()) {
+    for (auto c : tri->components())
+        if (c->isOrientable()) {
             hasOr = true;
             break;
         }

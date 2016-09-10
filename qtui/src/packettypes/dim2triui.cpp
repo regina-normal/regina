@@ -109,18 +109,22 @@ void Dim2TriHeaderUI::refresh() {
 }
 
 QString Dim2TriHeaderUI::summaryInfo(regina::Dim2Triangulation* tri) {
-    QString msg;
     if (tri->isEmpty())
-        msg = QObject::tr("Empty");
-    else if (! tri->isConnected()) {
+        return QObject::tr("Empty");
+
+    QString msg;
+    if (! tri->isConnected()) {
         msg = QObject::tr("Disconnected, ");
         if (tri->isClosed())
             msg += QObject::tr("closed, ");
         else
             msg += QObject::tr("with boundary, ");
-        if (tri->isOrientable())
-            msg += QObject::tr("orientable");
-        else
+        if (tri->isOrientable()) {
+            if (tri->isOriented())
+                msg += QObject::tr("orientable and oriented");
+            else
+                msg += QObject::tr("orientable but not oriented");
+        } else
             msg += QObject::tr("non-orientable");
     } else {
         // It's connected.  Report the exact manifold.
@@ -146,6 +150,11 @@ QString Dim2TriHeaderUI::summaryInfo(regina::Dim2Triangulation* tri) {
                 else if (punctures > 1)
                     msg += QObject::tr(", %1 punctures").arg(punctures);
             }
+
+            if (tri->isOriented())
+                msg += QObject::tr(", oriented");
+            else
+                msg += QObject::tr(", not oriented");
         } else {
             long punctures = tri->countBoundaryComponents();
             long genus = (2 - tri->eulerChar() - punctures);

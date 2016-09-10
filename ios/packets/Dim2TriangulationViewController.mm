@@ -58,10 +58,13 @@
             [msg appendString:@"closed, "];
         else
             [msg appendString:@"with boundary, "];
-        
-        if (self.packet->isOrientable())
-            [msg appendString:@"orientable"];
-        else
+
+        if (self.packet->isOrientable()) {
+            if (self.packet->isOriented())
+                [msg appendString:@"orientable and oriented"];
+            else
+                [msg appendString:@"orientable but not oriented"];
+        } else
             [msg appendString:@"non-orientable"];
     } else {
         // It's connected.  Report the exact manifold.
@@ -87,6 +90,10 @@
                 else if (punctures > 1)
                     [msg appendFormat:@", %ld punctures", punctures];
             }
+            if (self.packet->isOriented())
+                [msg appendString:@", oriented"];
+            else
+                [msg appendString:@", not oriented"];
         } else {
             long punctures = self.packet->countBoundaryComponents();
             long genus = (2 - self.packet->eulerChar() - punctures);

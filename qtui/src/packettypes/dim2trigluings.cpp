@@ -34,6 +34,7 @@
 #include "file/nxmlfile.h"
 #include "dim2/dim2edge.h"
 #include "dim2/dim2triangulation.h"
+#include "packet/ncontainer.h"
 
 // UI includes:
 #include "dim2trigluings.h"
@@ -304,7 +305,7 @@ Dim2TriGluingsUI::Dim2TriGluingsUI(regina::Dim2Triangulation* packet,
     edgeTable = new EditTableView();
     edgeTable->setSelectionMode(QAbstractItemView::ContiguousSelection);
     edgeTable->setModel(model);
-    
+
     if (readWrite) {
         QAbstractItemView::EditTriggers flags(
             QAbstractItemView::AllEditTriggers);
@@ -361,9 +362,58 @@ Dim2TriGluingsUI::Dim2TriGluingsUI(regina::Dim2Triangulation* packet,
         this, SLOT(updateRemoveState()));
     triActionList.append(actRemoveTri);
 
-    //QAction* sep = new QAction(this);
-    //sep->setSeparator(true);
-    //triActionList.append(sep);
+    QAction* sep = new QAction(this);
+    sep->setSeparator(true);
+    triActionList.append(sep);
+
+    actOrient = new QAction(this);
+    actOrient->setText(tr("&Orient"));
+    actOrient->setIcon(ReginaSupport::regIcon("orient"));
+    actOrient->setToolTip(tr(
+        "Relabel vertices of triangles for consistent orientation"));
+    actOrient->setEnabled(readWrite);
+    actOrient->setWhatsThis(tr("<qt>Relabel the vertices of each triangle "
+        "so that all triangles are oriented consistently, i.e., "
+        "so that orientation is preserved across adjacent edges.<p>"
+        "If this triangulation includes both orientable and non-orientable "
+        "components, only the orientable components will be relabelled.</qt>"));
+    triActionList.append(actOrient);
+    connect(actOrient, SIGNAL(triggered()), this, SLOT(orient()));
+
+    QAction* actDoubleCover = new QAction(this);
+    actDoubleCover->setText(tr("&Double Cover"));
+    actDoubleCover->setIcon(ReginaSupport::regIcon("doublecover"));
+    actDoubleCover->setToolTip(tr(
+        "Convert the triangulation to its orientable double cover"));
+    actDoubleCover->setEnabled(readWrite);
+    actDoubleCover->setWhatsThis(tr("Convert a non-orientable "
+        "triangulation into an orientable double cover.  This triangulation "
+        "will be modified directly.<p>"
+        "If this triangulation is already orientable, it will simply be "
+        "duplicated, resulting in a disconnected triangulation."));
+    enableWhenWritable.append(actDoubleCover);
+    triActionList.append(actDoubleCover);
+    connect(actDoubleCover, SIGNAL(triggered()), this, SLOT(doubleCover()));
+
+    sep = new QAction(this);
+    sep->setSeparator(true);
+    triActionList.append(sep);
+
+    QAction* actSplitIntoComponents = new QAction(this);
+    actSplitIntoComponents->setText(tr("E&xtract Components"));
+    actSplitIntoComponents->setIcon(ReginaSupport::regIcon("components"));
+    actSplitIntoComponents->setToolTip(tr(
+        "Form a new triangulation for each disconnected component"));
+    actSplitIntoComponents->setWhatsThis(tr("<qt>Split a disconnected "
+        "triangulation into its individual connected components.  This "
+        "triangulation will not be changed &ndash; each "
+        "connected component will be added as a new triangulation beneath "
+        "it in the packet tree.<p>"
+        "If this triangulation is already connected, this operation will "
+        "do nothing.</qt>"));
+    triActionList.append(actSplitIntoComponents);
+    connect(actSplitIntoComponents, SIGNAL(triggered()), this,
+        SLOT(splitIntoComponents()));
 
     // Tidy up.
 
@@ -383,6 +433,8 @@ const QLinkedList<QAction*>& Dim2TriGluingsUI::getPacketTypeActions() {
 void Dim2TriGluingsUI::fillToolBar(QToolBar* bar) {
     bar->addAction(actAddTri);
     bar->addAction(actRemoveTri);
+    bar->addSeparator();
+    bar->addAction(actOrient);
 }
 
 regina::NPacket* Dim2TriGluingsUI::getPacket() {
@@ -395,6 +447,7 @@ QWidget* Dim2TriGluingsUI::getInterface() {
 
 void Dim2TriGluingsUI::refresh() {
     model->rebuild();
+    updateActionStates();
 }
 
 void Dim2TriGluingsUI::endEdit() {
@@ -417,6 +470,7 @@ void Dim2TriGluingsUI::setReadWrite(bool readWrite) {
         (it.next())->setEnabled(readWrite);
 
     updateRemoveState();
+    updateActionStates();
 }
 
 void Dim2TriGluingsUI::addTri() {
@@ -476,11 +530,84 @@ void Dim2TriGluingsUI::removeSelectedTris() {
     }
 }
 
+void Dim2TriGluingsUI::orient() {
+    endEdit();
+
+    if (tri->isOriented()) {
+        ReginaSupport::info(ui, tr("This triangulation is already oriented."));
+        return;
+    }
+
+    bool hasOr = false;
+    for (auto c : tri->components())
+        if (c->isOrientable()) {
+            hasOr = true;
+            break;
+        }
+    if (! hasOr) {
+        ReginaSupport::info(ui,
+            tr("This triangulation has no orientable components."),
+            tr("Non-orientable components cannot be oriented."));
+        return;
+    }
+
+    tri->orient();
+}
+
+void Dim2TriGluingsUI::doubleCover() {
+    endEdit();
+
+    tri->makeDoubleCover();
+}
+
+void Dim2TriGluingsUI::splitIntoComponents() {
+    endEdit();
+
+    if (tri->countComponents() == 0)
+        ReginaSupport::info(ui,
+            tr("This triangulation is empty."),
+            tr("It has no components."));
+    else if (tri->countComponents() == 1)
+        ReginaSupport::info(ui,
+            tr("This triangulation is connected."),
+            tr("It has only one component."));
+    else {
+        // If there are already children of this triangulation, insert
+        // the new triangulations at a deeper level.
+        NPacket* base;
+        if (tri->firstChild()) {
+            base = new regina::NContainer();
+            tri->insertChildLast(base);
+            base->setLabel(tri->adornedLabel("Components"));
+        } else
+            base = tri;
+
+        // Make the split.
+        size_t nComps = tri->splitIntoComponents(base);
+
+        // Make sure the new components are visible.
+        enclosingPane->getMainWindow()->ensureVisibleInTree(base->firstChild());
+
+        // Tell the user what happened.
+        ReginaSupport::info(ui,
+            tr("%1 components were extracted.").arg(nComps));
+    }
+}
+
 void Dim2TriGluingsUI::updateRemoveState() {
     if (model->isReadWrite())
         actRemoveTri->setEnabled(
             ! edgeTable->selectionModel()->selectedIndexes().empty());
     else
         actRemoveTri->setEnabled(false);
+}
+
+void Dim2TriGluingsUI::updateActionStates() {
+    if (! model->isReadWrite())
+        actOrient->setEnabled(false);
+    else if (! tri->isOrientable())
+        actOrient->setEnabled(false);
+    else
+        actOrient->setEnabled(! tri->isOriented());
 }
 
