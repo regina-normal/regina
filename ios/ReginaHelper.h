@@ -116,9 +116,9 @@ namespace regina {
 + (void)runWithHUD:(NSString*)message code:(void(^)())code cleanup:(void(^)())cleanup;
 
 /**
- * Is this app running on iOS 8 or above?
+ * Is this app running on iOS 9 or above?
  */
-+ (BOOL)ios8;
++ (BOOL)ios9;
 
 /**
  * Initialises this helper class.  This should be called once at startup.

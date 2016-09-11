@@ -41,11 +41,7 @@
 @implementation SkeletonCell
 @end
 
-@interface SkeletonViewer () {
-    // In iOS 7 (but not iOS 8), we need to hold on to the detail popover
-    // to avoid it being deallocated whilst still visible.
-    UIPopoverController* detailPopover;
-}
+@interface SkeletonViewer ()
 @end
 
 @implementation SkeletonViewer
@@ -56,13 +52,6 @@
     
     UILongPressGestureRecognizer *r = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
     [self.details addGestureRecognizer:r];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    if (detailPopover && detailPopover.isPopoverVisible)
-        [detailPopover dismissPopoverAnimated:NO];
-    [super viewWillDisappear:animated];
 }
 
 + (NSAttributedString*)titleFromHeaderField:(UILabel*)field
@@ -137,7 +126,7 @@
 
         TextPopover* c = [self.storyboard instantiateViewControllerWithIdentifier:@"textPopover"];
         c.text = detail;
-        detailPopover = [[UIPopoverController alloc] initWithContentViewController:c];
+        UIPopoverController* detailPopover = [[UIPopoverController alloc] initWithContentViewController:c];
         [detailPopover presentPopoverFromRect:cell.frame
                                        inView:self.details
                      permittedArrowDirections:UIPopoverArrowDirectionUp | UIPopoverArrowDirectionDown

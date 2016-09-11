@@ -90,53 +90,34 @@
                 // Show an action sheet offering the various actions available.
                 UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:self.actionPath];
 
-                if ([ReginaHelper ios8]) {
-                    UIAlertController* alert = [UIAlertController alertControllerWithTitle:nil
-                                                                                   message:nil
-                                                                            preferredStyle:UIAlertControllerStyleActionSheet];
+                UIAlertController* alert = [UIAlertController alertControllerWithTitle:nil
+                                                                               message:nil
+                                                                        preferredStyle:UIAlertControllerStyleActionSheet];
 
-                    int index = 0;
-                    for (NSString* label : other) {
-                        [alert addAction:[UIAlertAction actionWithTitle:label
-                                                                  style:UIAlertActionStyleDefault
-                                                                handler:^(UIAlertAction*){
-                                                                    [self otherActionSelected:index];
+                int index = 0;
+                for (NSString* label : other) {
+                    [alert addAction:[UIAlertAction actionWithTitle:label
+                                                              style:UIAlertActionStyleDefault
+                                                            handler:^(UIAlertAction*){
+                                                                        [self otherActionSelected:index];
+                                                                        self.actionPath = nil;
+                                                                    }]];
+                    ++index;
+                }
+                [alert addAction:[UIAlertAction actionWithTitle:@"Rename"
+                                                          style:UIAlertActionStyleDefault
+                                                        handler:^(UIAlertAction*) {
+                                                                    [self renameBegin];
+                                                                }]];
+                [alert addAction:[UIAlertAction actionWithTitle:@"Cancel"
+                                                          style:UIAlertActionStyleCancel
+                                                        handler:^(UIAlertAction*) {
                                                                     self.actionPath = nil;
                                                                 }]];
-                        ++index;
-                    }
-                    [alert addAction:[UIAlertAction actionWithTitle:@"Rename"
-                                                              style:UIAlertActionStyleDefault
-                                                            handler:^(UIAlertAction*) {
-                                                                [self renameBegin];
-                                                            }]];
-                    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel"
-                                                              style:UIAlertActionStyleCancel
-                                                            handler:^(UIAlertAction*) {
-                                                                self.actionPath = nil;
-                                                            }]];
-                    [alert setModalPresentationStyle:UIModalPresentationPopover];
-                    alert.popoverPresentationController.sourceView = self.tableView;
-                    alert.popoverPresentationController.sourceRect = cell.frame;
-                    [self presentViewController:alert animated:YES completion:nil];
-                } else {
-                    UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:nil
-                                                                       delegate:self
-                                                              cancelButtonTitle:nil
-                                                         destructiveButtonTitle:nil
-                                                              otherButtonTitles:nil];
-
-                    int index = 0;
-                    for (NSString* label : other) {
-                        [sheet addButtonWithTitle:label];
-                        ++index;
-                    }
-                    renameIndex = [sheet addButtonWithTitle:@"Rename"];
-                    sheet.cancelButtonIndex = [sheet addButtonWithTitle:@"Cancel"];
-
-                    sheet.tag = SHEET_ACTION;
-                    [sheet showFromRect:cell.frame inView:self.tableView animated:YES];
-                }
+                [alert setModalPresentationStyle:UIModalPresentationPopover];
+                alert.popoverPresentationController.sourceView = self.tableView;
+                alert.popoverPresentationController.sourceRect = cell.frame;
+                [self presentViewController:alert animated:YES completion:nil];
             } else {
                 // The only available action is rename.
                 // Just do it immediately.
@@ -228,36 +209,26 @@
         self.actionPath = indexPath;
         CGRect cell = [tableView cellForRowAtIndexPath:indexPath].frame;
 
-        if ([ReginaHelper ios8]) {
-            UIAlertController* alert = [UIAlertController alertControllerWithTitle:nil
-                                                                           message:nil
-                                                                    preferredStyle:UIAlertControllerStyleActionSheet];
-            [alert addAction:[UIAlertAction actionWithTitle:[self deleteConfirmation:indexPath]
-                                                      style:UIAlertActionStyleDestructive
-                                                    handler:^(UIAlertAction*) {
-                                                        [self deleteAction];
-                                                        self.actionPath = nil;
-                                                    }]];
-            [alert addAction:[UIAlertAction actionWithTitle:@"Cancel"
-                                                      style:UIAlertActionStyleCancel
-                                                    handler:^(UIAlertAction*) {
-                                                        self.actionPath = nil;
-                                                    }]];
-            [alert setModalPresentationStyle:UIModalPresentationPopover];
-            alert.popoverPresentationController.sourceView = tableView;
-            alert.popoverPresentationController.sourceRect = cell;
-            // Popovers to the right appear strangely cropped on iOS 8.  Disallow them.
-            alert.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp | UIPopoverArrowDirectionDown;
-            [self presentViewController:alert animated:YES completion:nil];
-        } else {
-            UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:nil
-                                                               delegate:self
-                                                      cancelButtonTitle:@"Cancel"
-                                                 destructiveButtonTitle:[self deleteConfirmation:indexPath]
-                                                      otherButtonTitles:nil];
-            sheet.tag = SHEET_DELETE;
-            [sheet showFromRect:cell inView:tableView animated:YES];
-        }
+        UIAlertController* alert = [UIAlertController alertControllerWithTitle:nil
+                                                                       message:nil
+                                                                preferredStyle:UIAlertControllerStyleActionSheet];
+        [alert addAction:[UIAlertAction actionWithTitle:[self deleteConfirmation:indexPath]
+                                                  style:UIAlertActionStyleDestructive
+                                                handler:^(UIAlertAction*) {
+                                                            [self deleteAction];
+                                                            self.actionPath = nil;
+                                                        }]];
+        [alert addAction:[UIAlertAction actionWithTitle:@"Cancel"
+                                                  style:UIAlertActionStyleCancel
+                                                handler:^(UIAlertAction*) {
+                                                            self.actionPath = nil;
+                                                        }]];
+        [alert setModalPresentationStyle:UIModalPresentationPopover];
+        alert.popoverPresentationController.sourceView = tableView;
+        alert.popoverPresentationController.sourceRect = cell;
+        // Popovers to the right appear strangely cropped on iOS 8.  Disallow them.
+        alert.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp | UIPopoverArrowDirectionDown;
+        [self presentViewController:alert animated:YES completion:nil];
     }
 }
 

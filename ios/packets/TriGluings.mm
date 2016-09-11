@@ -450,18 +450,16 @@
 
 - (void)keyboardDidShow:(NSNotification*)notification
 {
-    // See the notes for TextViewController for why we take MIN(...) here.
     CGSize kbSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    CGFloat kbHeight = MIN(kbSize.width, kbSize.height);
 
     CGRect tableInDetail = [self.parentViewController.view convertRect:self.tetrahedra.frame fromView:self.view];
     CGFloat unused = self.parentViewController.view.bounds.size.height - tableInDetail.origin.y - tableInDetail.size.height;
 
-    if (kbHeight <= unused)
+    if (kbSize.height <= unused)
         return;
 
-    self.tetrahedra.contentInset = UIEdgeInsetsMake(0, 0, kbHeight - unused, 0);
-    self.tetrahedra.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, kbHeight - unused, 0);
+    self.tetrahedra.contentInset = UIEdgeInsetsMake(0, 0, kbSize.height - unused, 0);
+    self.tetrahedra.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, kbSize.height - unused, 0);
 
     [self.tetrahedra scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:editSimplex+1 inSection:0]
                            atScrollPosition:UITableViewScrollPositionNone

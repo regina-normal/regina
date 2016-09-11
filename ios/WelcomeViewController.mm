@@ -223,30 +223,20 @@ public:
     if (press.state == UIGestureRecognizerStateBegan) {
         CGPoint location = [press locationInView:self.view];
         if (CGRectContainsPoint(self.icon.frame, location)) {
-            if ([ReginaHelper ios8]) {
-                UIAlertController* alert = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-                [alert addAction:[UIAlertAction actionWithTitle:@"Run test suite"
-                                                          style:UIAlertActionStyleDefault
-                                                        handler:^(UIAlertAction*) {
-                                                            [self runTestSuite:nil];
-                                                        }]];
-                [alert addAction:[UIAlertAction actionWithTitle:@"Cancel"
-                                                          style:UIAlertActionStyleCancel
-                                                        handler:nil]];
-                [alert setModalPresentationStyle:UIModalPresentationPopover];
-                alert.popoverPresentationController.sourceView = self.view;
-                alert.popoverPresentationController.sourceRect = self.icon.frame;
-                if ([ReginaHelper ios8])
-                    alert.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp | UIPopoverArrowDirectionDown;
-                [self presentViewController:alert animated:YES completion:nil];
-            } else {
-                UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:nil
-                                                                   delegate:self
-                                                          cancelButtonTitle:@"Cancel"
-                                                     destructiveButtonTitle:nil
-                                                          otherButtonTitles:@"Run test suite", nil];
-                [sheet showFromRect:self.icon.frame inView:self.view animated:YES];
-            }
+            UIAlertController* alert = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+            [alert addAction:[UIAlertAction actionWithTitle:@"Run test suite"
+                                                      style:UIAlertActionStyleDefault
+                                                    handler:^(UIAlertAction*) {
+                                                                [self runTestSuite:nil];
+                                                            }]];
+            [alert addAction:[UIAlertAction actionWithTitle:@"Cancel"
+                                                      style:UIAlertActionStyleCancel
+                                                    handler:nil]];
+            [alert setModalPresentationStyle:UIModalPresentationPopover];
+            alert.popoverPresentationController.sourceView = self.view;
+            alert.popoverPresentationController.sourceRect = self.icon.frame;
+            alert.popoverPresentationController.permittedArrowDirections = UIPopoverArrowDirectionUp | UIPopoverArrowDirectionDown;
+            [self presentViewController:alert animated:YES completion:nil];
         }
     }
 }

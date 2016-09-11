@@ -287,37 +287,23 @@ enum DocSource {
 
 - (IBAction)newDocument:(id)sender
 {
-    // Note: on ios7, pressing the + button multiple times will bring up
-    // multiple overlaid copies of the new document action sheet.
-    // I assume this is a bug in ios7 (since the behaviour is fixed in ios8),
-    // so we won't worry about working around it here.
-    if ([ReginaHelper ios8]) {
-        UIAlertController* alert = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-        [alert addAction:[UIAlertAction actionWithTitle:@"New document"
-                                                  style:UIAlertActionStyleDefault
-                                                handler:^(UIAlertAction*) {
-                                                    [self newDocumentFrom:DOCSOURCE_NATIVE];
-                                                }]];
-        [alert addAction:[UIAlertAction actionWithTitle:@"Import from Dropbox"
-                                                  style:UIAlertActionStyleDefault
-                                                handler:^(UIAlertAction*) {
-                                                    [self newDocumentFrom:DOCSOURCE_DROPBOX];
-                                                }]];
-        [alert addAction:[UIAlertAction actionWithTitle:@"Cancel"
-                                                  style:UIAlertActionStyleCancel
-                                                handler:nil]];
-        [alert setModalPresentationStyle:UIModalPresentationPopover];
-        alert.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;
-        [self presentViewController:alert animated:YES completion:nil];
-    } else {
-        UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:nil
-                                                           delegate:self
-                                                  cancelButtonTitle:@"Cancel"
-                                             destructiveButtonTitle:nil
-                                                  otherButtonTitles:@"New document", @"Import from Dropbox", nil];
-        sheet.tag = sheetNew;
-        [sheet showFromBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
-    }
+    UIAlertController* alert = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    [alert addAction:[UIAlertAction actionWithTitle:@"New document"
+                                              style:UIAlertActionStyleDefault
+                                            handler:^(UIAlertAction*) {
+                                                        [self newDocumentFrom:DOCSOURCE_NATIVE];
+                                                    }]];
+    [alert addAction:[UIAlertAction actionWithTitle:@"Import from Dropbox"
+                                              style:UIAlertActionStyleDefault
+                                            handler:^(UIAlertAction*) {
+                                                        [self newDocumentFrom:DOCSOURCE_DROPBOX];
+                                                    }]];
+    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel"
+                                              style:UIAlertActionStyleCancel
+                                            handler:nil]];
+    [alert setModalPresentationStyle:UIModalPresentationPopover];
+    alert.popoverPresentationController.barButtonItem = self.navigationItem.rightBarButtonItem;
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (ReginaDocument *)documentForIndexPath:(NSIndexPath *)indexPath

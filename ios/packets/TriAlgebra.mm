@@ -93,10 +93,6 @@
 @interface TriAlgebra () <UITableViewDataSource, UIAlertViewDelegate> {
     int r;
     NSMutableArray* computed;
-
-    // In iOS 7 (but not iOS 8), we need to hold on to the T-V detail popover
-    // to avoid it being deallocated whilst still visible.
-    UIPopoverController* detailPopover;
 }
 @property (weak, nonatomic) IBOutlet UILabel *header;
 @property (weak, nonatomic) IBOutlet UIButton *lockIcon;
@@ -136,13 +132,6 @@
     self.tvValues.dataSource = self;
 
     [self reloadPacket];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    if (detailPopover && detailPopover.isPopoverVisible)
-        [detailPopover dismissPopoverAnimated:NO];
-    [super viewWillDisappear:animated];
 }
 
 + (void)reloadGroup:(const regina::NGroupPresentation &)group name:(UILabel *)name gens:(UILabel *)gens rels:(UILabel *)rels details:(UITextView *)details
@@ -414,7 +403,7 @@
 
         TextPopover* c = [self.storyboard instantiateViewControllerWithIdentifier:@"textPopover"];
         c.text = detail;
-        detailPopover = [[UIPopoverController alloc] initWithContentViewController:c];
+        UIPopoverController* detailPopover = [[UIPopoverController alloc] initWithContentViewController:c];
         [detailPopover presentPopoverFromRect:cell.frame
                                        inView:self.tvValues
                      permittedArrowDirections:UIPopoverArrowDirectionUp | UIPopoverArrowDirectionDown
