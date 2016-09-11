@@ -998,10 +998,16 @@ class REGINA_API Triangulation<3> :
          * This cache is updated every time turaevViro() is called, and
          * is emptied whenever the triangulation is modified.
          *
-         * Turaev-Viro invariants are identified by an (r, parity)
+         * Turaev-Viro invariants are identified by an (\a r, \a parity)
          * pair as described in the turaevViro() documentation.  The
-         * cache is just a set that maps (r, parity) pairs to the
+         * cache is just a set that maps (\a r, \a parity) pairs to the
          * corresponding invariant values.
+         *
+         * For even values of \a r, the parity is ignored when calling
+         * turaevViro() (since the even and odd versions of the invariant
+         * contain essentially the same information).  Therefore, in this
+         * cache, all even values of \a r will have the corresponding parities
+         * set to \c false.
          *
          * \note All invariants in this cache are now computed using exact
          * arithmetic, as elements of a cyclotomic field.  This is a
