@@ -168,6 +168,9 @@ class NTriTuraevViroUI : public QObject, public PacketViewerTab {
          * Note that preferences have changed.
          */
         void updatePreferences();
+
+    private:
+        void calculateInvariant(unsigned long r, bool parity);
 };
 
 /**

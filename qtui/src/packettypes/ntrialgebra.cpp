@@ -482,84 +482,40 @@ void NTriTuraevViroUI::calculateInvariant() {
     }
 
     // Calculate the invariant!
-    bool unicode = ReginaPrefSet::global().displayUnicode;
-    int i;
     if (r % 2) {
-        TuraevViroItem *odd, *even;
-        if (unicode) {
-            odd = new TuraevViroItem(r, true,
-                tri->turaevViro(r, true).utf8("\u03B6").c_str());
-            even = new TuraevViroItem(r, false,
-                tri->turaevViro(r, false).utf8("\u03B6").c_str());
-        } else {
-            odd = new TuraevViroItem(r, true,
-                tri->turaevViro(r, true).str("z").c_str());
-            even = new TuraevViroItem(r, false,
-                tri->turaevViro(r, false).str("z").c_str());
-        }
+        calculateInvariant(r, true);
+        calculateInvariant(r, false);
+    } else
+        calculateInvariant(r, false);
+}
 
-        // Insert the invariants in the right place in the table, and delete
-        // any previous invariants with the same value of r if they exist.
-        // Note: odd < even.
-        TuraevViroItem* curr;
-        int cmp;
-        for (i = 0; i < invariants->invisibleRootItem()->childCount(); ++i) {
-            curr = dynamic_cast<TuraevViroItem*>(
-                invariants->invisibleRootItem()->child(i));
-            cmp = odd->compare(curr);
-            if (cmp <= 0) {
-                // We belong here.
-                // If there are preexisting invariants, then they will
-                // be curr and possibly also the successor of curr.
-                if (cmp < 0)  {
-                    // Current invariant is not the same as odd, but might be
-                    // the same as even.
-                    if (even->compare(curr) == 0)
-                        delete curr;
-                } else {
-                    // Current invariant is the same as odd.
-                    // Its successor might or might not be the same as even.
-                    if (i + 1 < invariants->invisibleRootItem()->childCount()) {
-                        TuraevViroItem* succ = dynamic_cast<TuraevViroItem*>(
-                            invariants->invisibleRootItem()->child(i + 1));
-                        if (even->compare(succ) == 0)
-                            delete succ;
-                    }
-                    delete curr;
-                }
-                invariants->insertTopLevelItem(i, odd);
-                invariants->insertTopLevelItem(i + 1, even);
-                return;
-            }
-        }
-        invariants->addTopLevelItem(odd);
-        invariants->addTopLevelItem(even);
-    } else {
-        TuraevViroItem* item;
-        if (unicode)
-            item = new TuraevViroItem(r, true,
-                tri->turaevViro(r, true).utf8("\u03B6").c_str());
-        else
-            item = new TuraevViroItem(r, true,
-                tri->turaevViro(r, true).str("z").c_str());
+void NTriTuraevViroUI::calculateInvariant(unsigned long r, bool parity) {
+    bool unicode = ReginaPrefSet::global().displayUnicode;
 
-        // Insert the invariant in the right place in the table, and delete
-        // any previous invariant with the same parameters if it exists.
-        TuraevViroItem* curr;
-        int cmp;
-        for (i = 0; i < invariants->invisibleRootItem()->childCount(); ++i) {
-            curr = dynamic_cast<TuraevViroItem*>(
-                invariants->invisibleRootItem()->child(i));
-            cmp = item->compare(curr);
-            if (cmp <= 0) {
-                if (cmp == 0)
-                    delete curr;
-                invariants->insertTopLevelItem(i, item);
-                return;
-            }
-        }
-        invariants->addTopLevelItem(item);
+    const auto& s = tri->allCalculatedTuraevViro();
+    if (s.find(std::make_pair(r, parity)) != s.end()) {
+        // Duplicate.
+        return;
     }
+
+    TuraevViroItem* item;
+    if (unicode)
+        item = new TuraevViroItem(r, parity,
+            tri->turaevViro(r, parity).utf8("\u03B6").c_str());
+    else
+        item = new TuraevViroItem(r, parity,
+            tri->turaevViro(r, parity).str("z").c_str());
+
+    // Insert the invariant in the right place in the table.
+    // Since we have already checked for duplicates, we can assume no
+    // invariant with the same parameters exists.
+    for (int i = 0; i < invariants->invisibleRootItem()->childCount(); ++i)
+        if (item->compare(dynamic_cast<TuraevViroItem*>(
+                invariants->invisibleRootItem()->child(i))) < 0) {
+            invariants->insertTopLevelItem(i, item);
+            return;
+        }
+    invariants->addTopLevelItem(item);
 }
 
 void NTriTuraevViroUI::updatePreferences() {
