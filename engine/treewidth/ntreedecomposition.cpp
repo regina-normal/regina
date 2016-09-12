@@ -537,8 +537,7 @@ void NTreeDecomposition::makeNice() {
 void NTreeDecomposition::writeDot(std::ostream& out) const {
     out << "digraph tree {\n"
         "edge [color=black];\n"
-        "node [shape=circle,style=filled,height=0.15,"
-            "fixedsize=true,label=\"\",fontsize=9,fontcolor=\"#751010\"];\n";
+        "node [style=filled,fontsize=9,fontcolor=\"#751010\"];\n";
 
     NTreeBag* b = root_;
     int i;
