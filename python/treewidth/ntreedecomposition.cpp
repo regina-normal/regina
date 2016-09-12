@@ -105,6 +105,10 @@ namespace {
     inline NTreeDecomposition* fromList(boost::python::list graph) {
         return fromListAlg(graph);
     }
+
+    void writeDot_stdio(const NTreeDecomposition& t) {
+        t.writeDot(std::cout);
+    }
 }
 
 void addNTreeDecomposition() {
@@ -196,6 +200,8 @@ void addNTreeDecomposition() {
             return_value_policy<reference_existing_object>())
         .def("compress", &NTreeDecomposition::compress)
         .def("makeNice", &NTreeDecomposition::makeNice)
+        .def("writeDot", writeDot_stdio)
+        .def("dot", &NTreeDecomposition::dot)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
