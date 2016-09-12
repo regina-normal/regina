@@ -41,7 +41,7 @@ IF(LIBGVC_FOUND)
     SET(LINK_LIBS ${LINK_LIBS} ${LIBGVC_LIBRARIES})
     LINK_DIRECTORIES("${LIBGVC_LIBDIR}" "${LIBGVC_LIBDIR}/graphviz")
   ENDIF(WIN32)
-  SET(LINK_LIBS ${LINK_LIBS} gvplugin_core gvplugin_neato_layout)
+  SET(LINK_LIBS ${LINK_LIBS} gvplugin_core gvplugin_dot_layout gvplugin_neato_layout)
 ENDIF(LIBGVC_FOUND)
 
 IF(SRCHILITE_FOUND)

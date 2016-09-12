@@ -44,6 +44,8 @@
 
 class MessageLayer;
 
+class QComboBox;
+class QLabel;
 class QScrollArea;
 class QStackedWidget;
 class QSvgWidget;
@@ -66,10 +68,13 @@ class FacetGraphData {
         virtual ~FacetGraphData() {}
 
         virtual regina::NPacket* getPacket() = 0;
-        virtual std::string dot(bool withLabels) = 0;
-        virtual unsigned long numberOfSimplices() = 0;
+        virtual std::string dual(bool withLabels) = 0;
+        virtual std::string treeDecomp(bool nice, int& bags, int& width) = 0;
+        virtual size_t numberOfSimplices() = 0;
+        virtual QString simplexName() = 0;
         virtual QString simplicesName() = 0;
-        virtual QString overview() = 0;
+        virtual QString facetName() = 0;
+        virtual QString facetsName() = 0;
 };
 
 class Dim2EdgeGraphData : public FacetGraphData {
@@ -80,10 +85,13 @@ class Dim2EdgeGraphData : public FacetGraphData {
         Dim2EdgeGraphData(regina::Dim2Triangulation* tri) : tri_(tri) {}
 
         regina::NPacket* getPacket();
-        std::string dot(bool withLabels);
-        unsigned long numberOfSimplices();
+        std::string dual(bool withLabels);
+        std::string treeDecomp(bool nice, int& bags, int& width);
+        size_t numberOfSimplices();
+        QString simplexName();
         QString simplicesName();
-        QString overview();
+        QString facetName();
+        QString facetsName();
 };
 
 class Dim3FaceGraphData : public FacetGraphData {
@@ -94,10 +102,13 @@ class Dim3FaceGraphData : public FacetGraphData {
         Dim3FaceGraphData(regina::NTriangulation* tri) : tri_(tri) {}
 
         regina::NPacket* getPacket();
-        std::string dot(bool withLabels);
-        unsigned long numberOfSimplices();
+        std::string dual(bool withLabels);
+        std::string treeDecomp(bool nice, int& bags, int& width);
+        size_t numberOfSimplices();
+        QString simplexName();
         QString simplicesName();
-        QString overview();
+        QString facetName();
+        QString facetsName();
 };
 
 class Dim4FacetGraphData : public FacetGraphData {
@@ -108,10 +119,13 @@ class Dim4FacetGraphData : public FacetGraphData {
         Dim4FacetGraphData(regina::Dim4Triangulation* tri) : tri_(tri) {}
 
         regina::NPacket* getPacket();
-        std::string dot(bool withLabels);
-        unsigned long numberOfSimplices();
+        std::string dual(bool withLabels);
+        std::string treeDecomp(bool nice, int& bags, int& width);
+        size_t numberOfSimplices();
+        QString simplexName();
         QString simplicesName();
-        QString overview();
+        QString facetName();
+        QString facetsName();
 };
 
 /**
@@ -132,6 +146,8 @@ class FacetGraphTab : public QObject, public PacketViewerTab {
          * Internal components
          */
         QWidget* ui;
+        QComboBox* chooseType;
+        QLabel* graphMetrics;
         QStackedWidget* stack;
         QScrollArea* layerGraph;
         MessageLayer* layerInfo;
@@ -172,6 +188,12 @@ class FacetGraphTab : public QObject, public PacketViewerTab {
          */
         void showInfo(const QString& msg);
         void showError(const QString& msg);
+
+    private slots:
+        /**
+         * Change graphs.
+         */
+        void changeType(int index);
 };
 
 inline FacetGraphTab::~FacetGraphTab() {

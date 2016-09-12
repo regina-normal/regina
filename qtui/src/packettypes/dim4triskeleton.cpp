@@ -55,7 +55,7 @@ Dim4TriSkeletonUI::Dim4TriSkeletonUI(regina::Dim4Triangulation* packet,
             ReginaPrefSet::global().tabDim4TriSkeleton) {
     addTab(new Dim4TriSkelCompUI(packet, this), tr("&Skeletal Components"));
     addTab(new FacetGraphTab(new Dim4FacetGraphData(packet), this),
-        tr("&Facet Pairing Graph"));
+        tr("&Graphs"));
 }
 
 Dim4TriSkelCompUI::Dim4TriSkelCompUI(regina::Dim4Triangulation* packet,

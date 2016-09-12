@@ -55,7 +55,7 @@ NTriSkeletonUI::NTriSkeletonUI(regina::NTriangulation* packet,
             ReginaPrefSet::global().tabDim3TriSkeleton) {
     addTab(new NTriSkelCompUI(packet, this), tr("&Skeletal Components"));
     addTab(new FacetGraphTab(new Dim3FaceGraphData(packet), this),
-        tr("&Face Pairing Graph"));
+        tr("&Graphs"));
 }
 
 NTriSkelCompUI::NTriSkelCompUI(regina::NTriangulation* packet,

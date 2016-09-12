@@ -161,6 +161,7 @@ ReginaPrefSet::ReginaPrefSet() :
         tabSurfaceList(0),
         triGAPExec(defaultGAPExec),
         triGraphvizLabels(true),
+        triInitialGraphType(DualGraph),
         triSurfacePropsThreshold(6),
         warnOnNonEmbedded(true) {
 }
@@ -419,6 +420,15 @@ void ReginaPrefSet::readInternal() {
 
     settings.beginGroup("Triangulation");
     triGraphvizLabels = settings.value("GraphvizLabels", true).toBool();
+
+    str = settings.value("InitialGraphType").toString();
+    if (str == "Tree")
+        triInitialGraphType = ReginaPrefSet::TreeDecomposition;
+    else if (str == "NiceTree")
+        triInitialGraphType = ReginaPrefSet::NiceTreeDecomposition;
+    else
+        triInitialGraphType = ReginaPrefSet::DualGraph; /* default */
+
     triSurfacePropsThreshold = settings.value(
         "SurfacePropsThreshold", 6).toInt();
     settings.endGroup();
@@ -524,6 +534,16 @@ void ReginaPrefSet::saveInternal() const {
 
     settings.beginGroup("Triangulation");
     settings.setValue("GraphvizLabels", triGraphvizLabels);
+
+    switch (triInitialGraphType) {
+        case ReginaPrefSet::TreeDecomposition:
+            settings.setValue("InitialGraphType", "Tree"); break;
+        case ReginaPrefSet::NiceTreeDecomposition:
+            settings.setValue("InitialGraphType", "NiceTree"); break;
+        default:
+            settings.setValue("InitialGraphType", "Dual"); break;
+    }
+
     settings.setValue("SurfacePropsThreshold", triSurfacePropsThreshold);
     settings.endGroup();
 

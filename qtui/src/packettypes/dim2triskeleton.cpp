@@ -55,7 +55,7 @@ Dim2TriSkeletonUI::Dim2TriSkeletonUI(regina::Dim2Triangulation* packet,
             ReginaPrefSet::global().tabDim2TriSkeleton) {
     addTab(new Dim2TriSkelCompUI(packet, this), tr("&Skeletal Components"));
     addTab(new FacetGraphTab(new Dim2EdgeGraphData(packet), this),
-        tr("&Edge Pairing Graph"));
+        tr("&Graphs"));
 }
 
 Dim2TriSkelCompUI::Dim2TriSkelCompUI(regina::Dim2Triangulation* packet,
