@@ -534,6 +534,46 @@ void NTreeDecomposition::makeNice() {
     reindex();
 }
 
+void NTreeDecomposition::writeDot(std::ostream& out) const {
+    out << "digraph tree {\n"
+        "edge [color=black];\n"
+        "node [shape=circle,style=filled,height=0.15,"
+            "fixedsize=true,label=\"\",fontsize=9,fontcolor=\"#751010\"];\n";
+
+    NTreeBag* b = root_;
+    int i;
+    while (b) {
+        out << "b_" << b->index_ << " [label=\"";
+        if (b->size_) {
+            out << b->elements_[0];
+            for (i = 1; i < b->size_; ++i)
+                out << ", " << b->elements_[i];
+        } else
+            out << "empty";
+        out << "\"]\n";
+
+        if (b->parent_)
+            out << "b_" << b->parent_->index_ << " -> b_" << b->index_ << '\n';
+
+        if (b->children_)
+            b = b->children_;
+        else {
+            while (b && ! b->sibling_)
+                b = b->parent_;
+            if (b)
+                b = b->sibling_;
+        }
+    }
+
+    out << "}" << std::endl;
+}
+
+std::string NTreeDecomposition::dot() const {
+    std::ostringstream out;
+    writeDot(out);
+    return out.str();
+}
+
 void NTreeDecomposition::writeTextShort(std::ostream& out) const {
     out << "Tree decomposition: width " << width_
         << ", size " << size_;
