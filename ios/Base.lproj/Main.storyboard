@@ -5757,28 +5757,53 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
-                            <webView opaque="NO" contentMode="scaleToFill" scalesPageToFit="YES" allowsInlineMediaPlayback="NO" mediaPlaybackRequiresUserAction="NO" mediaPlaybackAllowsAirPlay="NO" keyboardDisplayRequiresUserAction="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JEU-GG-naj">
-                                <rect key="frame" x="20" y="80.5" width="663" height="618.5"/>
+                            <webView opaque="NO" contentMode="scaleToFill" misplaced="YES" scalesPageToFit="YES" allowsInlineMediaPlayback="NO" mediaPlaybackRequiresUserAction="NO" mediaPlaybackAllowsAirPlay="NO" keyboardDisplayRequiresUserAction="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JEU-GG-naj">
+                                <rect key="frame" x="20" y="148" width="663" height="550"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <dataDetectorType key="dataDetectorTypes"/>
                             </webView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="DTH-iQ-TuU">
+                                <rect key="frame" x="149" y="60" width="404" height="29"/>
+                                <segments>
+                                    <segment title="Dual graph"/>
+                                    <segment title="Tree decomposition"/>
+                                    <segment title="Nice tree decomp."/>
+                                </segments>
+                                <connections>
+                                    <action selector="typeChanged:" destination="n6H-e3-Xo9" eventType="valueChanged" id="H3J-gE-OOn"/>
+                                </connections>
+                            </segmentedControl>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VUB-mn-j3O">
+                                <rect key="frame" x="20" y="108.5" width="663" height="20"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="zc0-7d-g5d" secondAttribute="trailing" constant="20" id="Azr-52-tV4"/>
                             <constraint firstAttribute="trailing" secondItem="Iw3-GD-hAT" secondAttribute="trailing" constant="20" id="BJm-wj-HS7"/>
-                            <constraint firstItem="JEU-GG-naj" firstAttribute="top" secondItem="Iw3-GD-hAT" secondAttribute="bottom" constant="40" id="MWP-Lc-5Or"/>
+                            <constraint firstAttribute="trailing" secondItem="VUB-mn-j3O" secondAttribute="trailing" constant="20" id="DIf-fM-2qb"/>
+                            <constraint firstItem="VUB-mn-j3O" firstAttribute="leading" secondItem="QNA-h6-gj4" secondAttribute="leading" constant="20" id="JDt-wl-QIF"/>
+                            <constraint firstItem="DTH-iQ-TuU" firstAttribute="centerX" secondItem="QNA-h6-gj4" secondAttribute="centerX" id="Nxb-Tn-mSq"/>
+                            <constraint firstItem="DTH-iQ-TuU" firstAttribute="top" secondItem="Iw3-GD-hAT" secondAttribute="bottom" constant="20" id="Pov-Xi-NSk"/>
                             <constraint firstItem="Iw3-GD-hAT" firstAttribute="leading" secondItem="QNA-h6-gj4" secondAttribute="leading" constant="20" id="WX3-0Z-Zyo"/>
                             <constraint firstItem="Iw3-GD-hAT" firstAttribute="top" secondItem="QNA-h6-gj4" secondAttribute="top" constant="20" id="b07-DS-fuL"/>
+                            <constraint firstItem="JEU-GG-naj" firstAttribute="top" secondItem="VUB-mn-j3O" secondAttribute="bottom" constant="20" id="baL-Hq-5Bs"/>
                             <constraint firstItem="lCy-qR-26P" firstAttribute="top" secondItem="JEU-GG-naj" secondAttribute="bottom" constant="20" id="beQ-KB-uGQ"/>
                             <constraint firstItem="zc0-7d-g5d" firstAttribute="centerY" secondItem="Iw3-GD-hAT" secondAttribute="centerY" id="boe-vn-7VK"/>
                             <constraint firstItem="JEU-GG-naj" firstAttribute="leading" secondItem="QNA-h6-gj4" secondAttribute="leading" constant="20" id="kyO-Vv-vAJ"/>
                             <constraint firstAttribute="trailing" secondItem="JEU-GG-naj" secondAttribute="trailing" constant="20" id="l3D-Rq-fBk"/>
+                            <constraint firstItem="VUB-mn-j3O" firstAttribute="top" secondItem="DTH-iQ-TuU" secondAttribute="bottom" constant="20" id="wWC-E9-WY2"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Graph" image="Tab-Graph" id="aR5-Ii-50E"/>
                     <connections>
                         <outlet property="graph" destination="JEU-GG-naj" id="IVe-Xx-tKf"/>
+                        <outlet property="graphProperties" destination="VUB-mn-j3O" id="swS-gO-vPK"/>
+                        <outlet property="graphPropertiesGap" destination="baL-Hq-5Bs" id="NN0-ce-4bI"/>
+                        <outlet property="graphType" destination="DTH-iQ-TuU" id="RTH-tX-656"/>
                         <outlet property="header" destination="Iw3-GD-hAT" id="SlP-LT-3iy"/>
                         <outlet property="lockIcon" destination="zc0-7d-g5d" id="AWU-ou-nda"/>
                     </connections>
@@ -8627,7 +8652,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <webView opaque="NO" contentMode="scaleToFill" scalesPageToFit="YES" allowsInlineMediaPlayback="NO" mediaPlaybackRequiresUserAction="NO" mediaPlaybackAllowsAirPlay="NO" keyboardDisplayRequiresUserAction="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fz9-dJ-NqO">
-                                <rect key="frame" x="20" y="137.5" width="663" height="561"/>
+                                <rect key="frame" x="20" y="205.5" width="663" height="493"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <dataDetectorType key="dataDetectorTypes"/>
                             </webView>
@@ -8649,13 +8674,34 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="xFv-Mr-DCl">
+                                <rect key="frame" x="149" y="117.5" width="404" height="29"/>
+                                <segments>
+                                    <segment title="Dual graph"/>
+                                    <segment title="Tree decomposition"/>
+                                    <segment title="Nice tree decomp."/>
+                                </segments>
+                                <connections>
+                                    <action selector="typeChanged:" destination="Kls-ha-6ou" eventType="valueChanged" id="ENs-1y-4Yt"/>
+                                    <action selector="typeChanged:" destination="n6H-e3-Xo9" eventType="valueChanged" id="LK0-wY-8rg"/>
+                                </connections>
+                            </segmentedControl>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E9E-XF-AUe">
+                                <rect key="frame" x="20" y="165.5" width="663" height="20"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="fz9-dJ-NqO" firstAttribute="top" secondItem="rZO-CV-UTx" secondAttribute="bottom" constant="40" id="2aX-DW-mr2"/>
+                            <constraint firstItem="xFv-Mr-DCl" firstAttribute="top" secondItem="rZO-CV-UTx" secondAttribute="bottom" constant="20" id="2Cr-B0-V4t"/>
+                            <constraint firstItem="E9E-XF-AUe" firstAttribute="top" secondItem="xFv-Mr-DCl" secondAttribute="bottom" constant="20" id="3lX-Ul-v7k"/>
                             <constraint firstItem="bmc-Mz-2E8" firstAttribute="top" secondItem="wdL-d3-YWd" secondAttribute="bottom" constant="8" id="JcY-fd-jrB"/>
+                            <constraint firstAttribute="trailing" secondItem="E9E-XF-AUe" secondAttribute="trailing" constant="20" id="M0F-TS-9RM"/>
                             <constraint firstAttribute="trailing" secondItem="bmc-Mz-2E8" secondAttribute="trailing" constant="20" id="SEF-kJ-Pzm"/>
                             <constraint firstAttribute="trailing" secondItem="wdL-d3-YWd" secondAttribute="trailing" constant="20" id="TAa-xc-NYE"/>
+                            <constraint firstItem="fz9-dJ-NqO" firstAttribute="top" secondItem="E9E-XF-AUe" secondAttribute="bottom" constant="20" id="UJj-x6-bnE"/>
                             <constraint firstAttribute="trailing" secondItem="fz9-dJ-NqO" secondAttribute="trailing" constant="20" id="XCe-PQ-j4J"/>
                             <constraint firstItem="bmc-Mz-2E8" firstAttribute="leading" secondItem="9Ml-6q-QKB" secondAttribute="leading" constant="20" id="XiN-1S-BxQ"/>
                             <constraint firstItem="wdL-d3-YWd" firstAttribute="top" secondItem="9Ml-6q-QKB" secondAttribute="top" constant="20" id="drn-QS-IQg"/>
@@ -8664,7 +8710,9 @@
                             <constraint firstItem="ffZ-Rm-uio" firstAttribute="top" secondItem="fz9-dJ-NqO" secondAttribute="bottom" constant="20" id="mqy-vm-quz"/>
                             <constraint firstItem="bmc-Mz-2E8" firstAttribute="top" secondItem="wdL-d3-YWd" secondAttribute="bottom" constant="8" id="oLM-ke-ng0"/>
                             <constraint firstItem="rZO-CV-UTx" firstAttribute="leading" secondItem="9Ml-6q-QKB" secondAttribute="leading" constant="20" id="pd2-tG-1Mq"/>
+                            <constraint firstItem="E9E-XF-AUe" firstAttribute="leading" secondItem="9Ml-6q-QKB" secondAttribute="leading" constant="20" id="qoR-Zc-RUC"/>
                             <constraint firstItem="rZO-CV-UTx" firstAttribute="top" secondItem="bmc-Mz-2E8" secondAttribute="bottom" constant="8" id="tHL-0a-hhd"/>
+                            <constraint firstItem="xFv-Mr-DCl" firstAttribute="centerX" secondItem="9Ml-6q-QKB" secondAttribute="centerX" id="xLO-CM-fBe"/>
                             <constraint firstItem="wdL-d3-YWd" firstAttribute="leading" secondItem="9Ml-6q-QKB" secondAttribute="leading" constant="20" id="xzP-Ob-TGG"/>
                             <constraint firstAttribute="trailing" secondItem="rZO-CV-UTx" secondAttribute="trailing" constant="20" id="z0d-1h-GUn"/>
                         </constraints>
@@ -8672,6 +8720,9 @@
                     <tabBarItem key="tabBarItem" title="Graph" image="Tab-Graph" id="THI-lj-BAC"/>
                     <connections>
                         <outlet property="graph" destination="fz9-dJ-NqO" id="Fhp-qB-52S"/>
+                        <outlet property="graphProperties" destination="E9E-XF-AUe" id="WHK-sU-1ti"/>
+                        <outlet property="graphPropertiesGap" destination="UJj-x6-bnE" id="iYQ-cy-sNe"/>
+                        <outlet property="graphType" destination="xFv-Mr-DCl" id="CdN-iJ-A81"/>
                         <outlet property="header" destination="wdL-d3-YWd" id="Nqe-hP-39a"/>
                         <outlet property="solnType" destination="rZO-CV-UTx" id="Haw-qT-spl"/>
                         <outlet property="volume" destination="bmc-Mz-2E8" id="vpj-BA-67H"/>
@@ -9711,27 +9762,53 @@
                                 </state>
                             </button>
                             <webView opaque="NO" contentMode="scaleToFill" scalesPageToFit="YES" allowsInlineMediaPlayback="NO" mediaPlaybackRequiresUserAction="NO" mediaPlaybackAllowsAirPlay="NO" keyboardDisplayRequiresUserAction="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JqT-Oc-MVX">
-                                <rect key="frame" x="20" y="80.5" width="663" height="618.5"/>
+                                <rect key="frame" x="20" y="148.5" width="663" height="550.5"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <dataDetectorType key="dataDetectorTypes"/>
                             </webView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="eaB-ZZ-euD">
+                                <rect key="frame" x="149" y="60" width="404" height="29"/>
+                                <segments>
+                                    <segment title="Dual graph"/>
+                                    <segment title="Tree decomposition"/>
+                                    <segment title="Nice tree decomp."/>
+                                </segments>
+                                <connections>
+                                    <action selector="typeChanged:" destination="YKa-Ao-uYC" eventType="valueChanged" id="9oa-u5-HuL"/>
+                                    <action selector="typeChanged:" destination="n6H-e3-Xo9" eventType="valueChanged" id="XMF-Kj-knD"/>
+                                </connections>
+                            </segmentedControl>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KCH-I4-f5r">
+                                <rect key="frame" x="20" y="108.5" width="663" height="20"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="JqT-Oc-MVX" secondAttribute="trailing" constant="20" id="4a9-Fa-yWK"/>
+                            <constraint firstItem="JqT-Oc-MVX" firstAttribute="top" secondItem="KCH-I4-f5r" secondAttribute="bottom" constant="20" id="8wy-Wv-AEu"/>
                             <constraint firstItem="fCW-9f-0Ha" firstAttribute="leading" secondItem="39t-Es-Al8" secondAttribute="leading" constant="20" id="CC7-DP-Bjk"/>
                             <constraint firstAttribute="trailing" secondItem="nkp-tC-P0R" secondAttribute="trailing" constant="20" id="Fa7-ld-5XD"/>
                             <constraint firstItem="fND-qw-wgf" firstAttribute="top" secondItem="JqT-Oc-MVX" secondAttribute="bottom" constant="20" id="IQz-u4-qpV"/>
-                            <constraint firstItem="JqT-Oc-MVX" firstAttribute="top" secondItem="fCW-9f-0Ha" secondAttribute="bottom" constant="40" id="J15-jY-av5"/>
+                            <constraint firstItem="eaB-ZZ-euD" firstAttribute="top" secondItem="fCW-9f-0Ha" secondAttribute="bottom" constant="20" id="Iu0-bR-Xan"/>
                             <constraint firstItem="fCW-9f-0Ha" firstAttribute="top" secondItem="39t-Es-Al8" secondAttribute="top" constant="20" id="MTp-oV-Egw"/>
+                            <constraint firstItem="KCH-I4-f5r" firstAttribute="leading" secondItem="39t-Es-Al8" secondAttribute="leading" constant="20" id="W2M-ky-0mt"/>
                             <constraint firstItem="nkp-tC-P0R" firstAttribute="centerY" secondItem="fCW-9f-0Ha" secondAttribute="centerY" id="XlJ-wE-oHh"/>
+                            <constraint firstItem="KCH-I4-f5r" firstAttribute="top" secondItem="eaB-ZZ-euD" secondAttribute="bottom" constant="20" id="cTL-tk-Gtd"/>
                             <constraint firstAttribute="trailing" secondItem="fCW-9f-0Ha" secondAttribute="trailing" constant="20" id="cj6-V5-OQe"/>
+                            <constraint firstItem="eaB-ZZ-euD" firstAttribute="centerX" secondItem="39t-Es-Al8" secondAttribute="centerX" id="d5o-JL-AGp"/>
+                            <constraint firstAttribute="trailing" secondItem="KCH-I4-f5r" secondAttribute="trailing" constant="20" id="qp6-3r-Oav"/>
                             <constraint firstItem="JqT-Oc-MVX" firstAttribute="leading" secondItem="39t-Es-Al8" secondAttribute="leading" constant="20" id="xLd-IP-gqE"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Graph" image="Tab-Graph" id="cwp-Ya-hED"/>
                     <connections>
                         <outlet property="graph" destination="JqT-Oc-MVX" id="nCJ-dg-SxL"/>
+                        <outlet property="graphProperties" destination="KCH-I4-f5r" id="c5i-L5-red"/>
+                        <outlet property="graphPropertiesGap" destination="8wy-Wv-AEu" id="7SM-hB-wLQ"/>
+                        <outlet property="graphType" destination="eaB-ZZ-euD" id="zua-4N-BFH"/>
                         <outlet property="header" destination="fCW-9f-0Ha" id="weG-uj-eo6"/>
                         <outlet property="lockIcon" destination="nkp-tC-P0R" id="Ike-x9-ipN"/>
                     </connections>
