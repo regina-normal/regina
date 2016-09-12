@@ -116,14 +116,14 @@ extern gvplugin_library_t gvplugin_core_LTX_library;
     GVC_t* gvc = gvContext();
     gvAddLibrary(gvc, &gvplugin_core_LTX_library);
     if (self.graphType.selectedSegmentIndex == 0)
-        gvAddLibrary(gvc, &gvplugin_dot_layout_LTX_library);
-    else
         gvAddLibrary(gvc, &gvplugin_neato_layout_LTX_library);
+    else
+        gvAddLibrary(gvc, &gvplugin_dot_layout_LTX_library);
     Agraph_t* g = agmemread(dot.c_str());
     if (self.graphType.selectedSegmentIndex == 0)
-        gvLayout(gvc, g, "dot");
-    else
         gvLayout(gvc, g, "neato");
+    else
+        gvLayout(gvc, g, "dot");
     gvRenderData(gvc, g, "svg", &svg, &svgLen);
     gvFreeLayout(gvc, g);
     agclose(g);
