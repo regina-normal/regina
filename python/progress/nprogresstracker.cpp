@@ -36,6 +36,14 @@
 
 using namespace boost::python;
 using regina::NProgressTracker;
+using regina::NProgressTrackerOpen;
+
+namespace {
+    bool (NProgressTrackerOpen::*incSteps_void)() =
+        &NProgressTrackerOpen::incSteps;
+    bool (NProgressTrackerOpen::*incSteps_arg)(unsigned long) =
+        &NProgressTrackerOpen::incSteps;
+}
 
 void addNProgressTracker() {
     class_<NProgressTracker, std::auto_ptr<NProgressTracker>,
@@ -50,6 +58,22 @@ void addNProgressTracker() {
         .def("isCancelled", &NProgressTracker::isCancelled)
         .def("setPercent", &NProgressTracker::setPercent)
         .def("setFinished", &NProgressTracker::setFinished)
+        .def(regina::python::add_eq_operators())
+    ;
+
+    class_<NProgressTrackerOpen, std::auto_ptr<NProgressTrackerOpen>,
+            boost::noncopyable>("NProgressTrackerOpen", init<>())
+        .def("isFinished", &NProgressTrackerOpen::isFinished)
+        .def("stepsChanged", &NProgressTrackerOpen::stepsChanged)
+        .def("descriptionChanged", &NProgressTrackerOpen::descriptionChanged)
+        .def("steps", &NProgressTrackerOpen::steps)
+        .def("description", &NProgressTrackerOpen::description)
+        .def("cancel", &NProgressTrackerOpen::cancel)
+        .def("newStage", &NProgressTrackerOpen::newStage)
+        .def("isCancelled", &NProgressTrackerOpen::isCancelled)
+        .def("incSteps", incSteps_void)
+        .def("incSteps", incSteps_arg)
+        .def("setFinished", &NProgressTrackerOpen::setFinished)
         .def(regina::python::add_eq_operators())
     ;
 }

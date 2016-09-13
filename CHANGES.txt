@@ -457,6 +457,9 @@ Version 5.0  [ (under development) ]
         Class NProgress, NProgressFinished, NProgressManager,
                 NProgressMessage, NProgressNumber, NProgressStateNumeric:
             - Removed these old deprecated classes entirely.
+        Class NProgressTrackerBase, NProgressTrackerOpen:
+            - New classes to support open-ended integer-based progress
+              tracking, with no "numerical end point" known in advance.
         Class NRational:
             - The destructor is no longer virtual.
         Class NSatBlock:
