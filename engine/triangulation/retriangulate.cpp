@@ -30,11 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
+#include "progress/nprogresstracker.h"
 #include "triangulation/ntriangulation.h"
 #include <condition_variable>
 #include <mutex>
 #include <queue>
 #include <set>
+#include <system_error>
 #include <thread>
 #include <boost/noncopyable.hpp>
 
@@ -74,8 +76,9 @@ namespace {
             }
 
             bool seed(const NTriangulation& tri);
-            void processQueue();
-            void processQueueParallel(unsigned nThreads);
+            void processQueue(NProgressTrackerOpen* tracker);
+            void processQueueParallel(unsigned nThreads,
+                NProgressTrackerOpen* tracker);
 
             bool done() const;
 
@@ -127,18 +130,24 @@ namespace {
     }
 
     template <>
-    void TriBFS<false>::processQueue() {
+    void TriBFS<false>::processQueue(NProgressTrackerOpen* tracker) {
         SigSet::iterator next;
         while (! (done_ || process_.empty())) {
+            if (tracker && tracker->isCancelled())
+                break;
+
             next = process_.front();
             process_.pop();
 
             propagateFrom(next);
+
+            if (tracker)
+                tracker->incSteps();
         }
     }
 
     template <>
-    void TriBFS<true>::processQueue() {
+    void TriBFS<true>::processQueue(NProgressTrackerOpen* tracker) {
         SigSet::iterator next;
 
         std::unique_lock<std::mutex> lock(mutex_);
@@ -147,12 +156,18 @@ namespace {
             // Process the queue until either done_ is true, or there is
             // nothing left to process.
             while (! (done_ || process_.empty())) {
+                if (tracker && tracker->isCancelled())
+                    break;
+
                 next = process_.front();
                 process_.pop();
 
                 lock.unlock();
                 propagateFrom(next);
                 lock.lock();
+
+                if (tracker)
+                    tracker->incSteps();
             }
 
             if (--nRunning_ == 0) {
@@ -180,7 +195,8 @@ namespace {
     }
 
     template <>
-    void TriBFS<true>::processQueueParallel(unsigned nThreads) {
+    void TriBFS<true>::processQueueParallel(unsigned nThreads,
+            NProgressTrackerOpen* tracker) {
         nRunning_ = nThreads;
 
         std::thread* t = new std::thread[nThreads];
@@ -189,7 +205,7 @@ namespace {
         // In the std::thread constructor, passing this as a pointer is
         // essential - otherwise we may end up making copies of this instead.
         for (i = 0; i < nThreads; ++i)
-            t[i] = std::thread(&TriBFS<true>::processQueue, this);
+            t[i] = std::thread(&TriBFS<true>::processQueue, this, tracker);
         for (i = 0; i < nThreads; ++i)
             t[i].join();
     }
@@ -240,6 +256,43 @@ namespace {
         return false;
     }
 
+    bool enumerate(const NTriangulation& tri, int height, unsigned nThreads,
+            NProgressTrackerOpen* tracker,
+            const std::function<bool(const NTriangulation&)>& action) {
+        if (tracker)
+            tracker->newStage("Exploring triangulations");
+
+        if (height < 0) {
+            if (tracker)
+                tracker->setFinished();
+            return false;
+        }
+
+        if (nThreads <= 1) {
+            TriBFS<false> bfs(tri.size() + height, action);
+            if (bfs.seed(tri)) {
+                if (tracker)
+                    tracker->setFinished();
+                return true;
+            }
+            bfs.processQueue(tracker);
+            if (tracker)
+                tracker->setFinished();
+            return bfs.done();
+        } else {
+            TriBFS<true> bfs(tri.size() + height, action);
+            if (bfs.seed(tri)) {
+                if (tracker)
+                    tracker->setFinished();
+                return true;
+            }
+            bfs.processQueueParallel(nThreads, tracker);
+            if (tracker)
+                tracker->setFinished();
+            return bfs.done();
+        }
+    }
+
     bool simplifyFound(const NTriangulation& alt,
             NTriangulation& original, size_t minTet) {
         if (alt.size() < minTet) {
@@ -253,29 +306,25 @@ namespace {
     }
 }
 
-bool NTriangulation::simplifyExhaustive(int height, unsigned nThreads) {
-    return retriangulate(height, nThreads, &simplifyFound,
+bool NTriangulation::simplifyExhaustive(int height, unsigned nThreads,
+        NProgressTrackerOpen* tracker) {
+    return retriangulate(height, nThreads, tracker, &simplifyFound,
         std::ref(*this), size());
 }
 
 bool NTriangulation::retriangulateInternal(int height, unsigned nThreads,
+        NProgressTrackerOpen* tracker,
         const std::function<bool(const NTriangulation&)>& action) const {
-    if (height < 0)
-        return false;
-
-    if (nThreads <= 1) {
-        TriBFS<false> bfs(size() + height, action);
-        if (bfs.seed(*this))
+    if (tracker) {
+        try {
+            std::thread(&enumerate, *this, height, nThreads, tracker, action)
+                .detach();
             return true;
-        bfs.processQueue();
-        return bfs.done();
-    } else {
-        TriBFS<true> bfs(size() + height, action);
-        if (bfs.seed(*this))
-            return true;
-        bfs.processQueueParallel(nThreads);
-        return bfs.done();
-    }
+        } catch (const std::system_error& e) {
+            return false;
+        }
+    } else
+        return enumerate(*this, height, nThreads, tracker, action);
 }
 
 } // namespace regina

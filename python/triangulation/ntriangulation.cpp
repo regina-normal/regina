@@ -32,6 +32,7 @@
 
 #include "algebra/ngrouppresentation.h"
 #include "angle/nanglestructure.h"
+#include "progress/nprogresstracker.h"
 #include "surfaces/nnormalsurface.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
@@ -70,7 +71,7 @@ namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyToLocalMinimum,
         NTriangulation::simplifyToLocalMinimum, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyExhaustive,
-        NTriangulation::simplifyExhaustive, 0, 2);
+        NTriangulation::simplifyExhaustive, 0, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_threeTwoMove,
         NTriangulation::threeTwoMove, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_twoThreeMove,

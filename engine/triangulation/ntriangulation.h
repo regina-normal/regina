@@ -68,6 +68,7 @@ class NAngleStructure;
 class NBoundaryComponent;
 class NGroupPresentation;
 class NNormalSurface;
+class NProgressTrackerOpen;
 class NXMLPacketReader;
 
 template <int> class Component;
@@ -1323,12 +1324,22 @@ class REGINA_API Triangulation<3> :
          * finds itself stuck at a local minimum, simplifyExhaustive() is able
          * to "climb out" of such wells.
          *
-         * To assist with performance, this routine can run in
-         * parallel (multithreaded) mode; simply pass the number of
-         * parallel threads in the argument \a nThreads.  Even in
-         * multithreaded mode, this routine will not return until
+         * If a progress tracker is passed, then the exhaustive simplification
+         * will take place in a new thread and this routine will return
+         * immediately.  In this case, you will need to use some other
+         * means to determine whether the triangulation was eventually
+         * simplified (e.g., by examining size() after the tracker
+         * indicates that the operation has finished).
+         *
+         * To assist with performance, this routine can run in parallel
+         * (multithreaded) mode; simply pass the number of parallel threads
+         * in the argument \a nThreads.  Even in multithreaded mode, if no
+         * progress tracker is passed then this routine will not return until
          * processing has finished (i.e., either the triangulation was
          * simplified or the search was exhausted).
+         *
+         * If this routine is unable to simplify the triangulation, then
+         * the triangulation will not be changed.
          *
          * \pre This triangulation is connected.
          *
@@ -1337,11 +1348,17 @@ class REGINA_API Triangulation<3> :
          * triangulation.
          * @param nThreads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
-         * @return \c true if and only if the triangulation was successfully
-         * simplified to fewer tetrahedra.  Otherwise this triangulation
-         * will not be changed.
+         * @param tracker a progress tracker through which progress will
+         * be reported, or 0 if no progress reporting is required.
+         * @return If a progress tracker is passed, then this routine
+         * will return \c true or \c false immediately according to
+         * whether a new thread could or could not be started.  If no
+         * progress tracker is passed, then this routine will return \c true
+         * if and only if the triangulation was successfully simplified to
+         * fewer tetrahedra.
          */
-        bool simplifyExhaustive(int height = 1, unsigned nThreads = 1);
+        bool simplifyExhaustive(int height = 1, unsigned nThreads = 1,
+            NProgressTrackerOpen* tracker = 0);
 
         /**
          * Explores all triangulations that can be reached from this via
@@ -1387,17 +1404,22 @@ class REGINA_API Triangulation<3> :
          * and if necessary try increasing \a height one at a time until
          * this routine becomes too expensive to run.
          *
-         * To assist with performance, this routine can run in
-         * parallel (multithreaded) mode; simply pass the number of
-         * parallel threads in the argument \a nThreads.  Even in
-         * multithreaded mode, this routine will not return until
+         * If a progress tracker is passed, then the exploration of
+         * triangulations will take place in a new thread and this
+         * routine will return immediately.
+         *
+         * To assist with performance, this routine can run in parallel
+         * (multithreaded) mode; simply pass the number of parallel threads
+         * in the argument \a nThreads.  Even in multithreaded mode, if no
+         * progress tracker is passed then this routine will not return until
          * processing has finished (i.e., either \a action returned \c true,
          * or the search was exhausted).  All calls to \a action will be
          * protected by a mutex (i.e., different threads will never be
          * calling \a action at the same time).
          *
          * If \a height is negative, then this routine will do nothing
-         * and immediately return \c false.
+         * and immediately return \c false, and any progress tracker
+         * that was passed will immediately be marked as finished.
          *
          * \warning By default, the arguments \a args will be copied (or moved)
          * when they are passed to \a action.  If you need to pass some
@@ -1415,16 +1437,22 @@ class REGINA_API Triangulation<3> :
          * triangulation.
          * @param nThreads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
+         * @param tracker a progress tracker through which progress will
+         * be reported, or 0 if no progress reporting is required.
          * @param action a function (or other callable object) to call
          * upon each triangulation that is found.
          * @param args any additional arguments that should be passed to
          * \a action, following the initial triangulation argument.
-         * @return \c true if some call to \a action returned \c true
-         * (thereby terminating the search early), or \c false if the
-         * search ran to completion.
+         * @return If a progress tracker is passed, then this routine
+         * will return \c true or \c false immediately according to
+         * whether a new thread could or could not be started.  If no
+         * progress tracker is passed, then this routine will return \c true
+         * if some call to \a action returned \c true (thereby terminating
+         * the search early), or \c false if the search ran to completion.
          */
         template <typename Action, typename... Args>
         bool retriangulate(int height, unsigned nThreads,
+            NProgressTrackerOpen* tracker,
             Action&& action, Args&&... args) const;
 
         /**
@@ -3131,6 +3159,7 @@ class REGINA_API Triangulation<3> :
          * can be kept out of the main headers.
          */
         bool retriangulateInternal(int height, unsigned nThreads,
+            NProgressTrackerOpen* tracker,
             const std::function<bool(const NTriangulation&)>& action) const;
 
         void stretchBoundaryForestFromVertex(NVertex*, std::set<NEdge*>&,
@@ -3361,8 +3390,8 @@ inline const Triangulation<3>::TuraevViroSet&
 
 template <typename Action, typename... Args>
 inline bool Triangulation<3>::retriangulate(int height, unsigned nThreads,
-        Action&& action, Args&&... args) const {
-    return retriangulateInternal(height, nThreads,
+        NProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
+    return retriangulateInternal(height, nThreads, tracker,
         std::bind(action, std::placeholders::_1, args...));
 }
 
