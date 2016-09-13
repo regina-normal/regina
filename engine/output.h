@@ -260,10 +260,10 @@ template <class T>
 struct OutputBase {
     private:
         // Implementation details:
-        static T test(...);
+        static T& test(...);
 
         template <typename U, bool supportsUtf8>
-        static Output<U, supportsUtf8> test(const Output<U, supportsUtf8>&);
+        static Output<U, supportsUtf8>& test(const Output<U, supportsUtf8>&);
 
     public:
         /**
@@ -277,7 +277,8 @@ struct OutputBase {
          * str() or detail() at all.  Instead, it is based purely on the
          * inheritance condition as stated above.
          */
-        typedef decltype(test(std::declval<T>())) type;
+        typedef typename std::remove_reference<
+            decltype(test(std::declval<T>()))>::type type;
 };
 
 /*@}*/
