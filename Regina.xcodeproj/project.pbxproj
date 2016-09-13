@@ -183,6 +183,8 @@
 		051691C01C5AD61200DC69EC /* nhypersurfaceui.h in Sources */ = {isa = PBXBuildFile; fileRef = 051691AC1C5AD59000DC69EC /* nhypersurfaceui.h */; };
 		051806D4181202BD008EBB01 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = 051806D3181202BD008EBB01 /* icons */; };
 		051806D6181202E0008EBB01 /* examples in Resources */ = {isa = PBXBuildFile; fileRef = 051806D5181202E0008EBB01 /* examples */; };
+		051AE0641D88B06700D4769F /* SimplifyController.h in Headers */ = {isa = PBXBuildFile; fileRef = 051AE0621D88B06700D4769F /* SimplifyController.h */; };
+		051AE0651D88B06700D4769F /* SimplifyController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 051AE0631D88B06700D4769F /* SimplifyController.mm */; };
 		0523D88A180B54850094DAAD /* PacketManagerIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0523D889180B54850094DAAD /* PacketManagerIOS.mm */; };
 		052774141C55744300140918 /* nhypersurfacecreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052774101C55743E00140918 /* nhypersurfacecreator.cpp */; };
 		052774191C55761D00140918 /* NewHypersurfacesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 052774161C55760B00140918 /* NewHypersurfacesController.mm */; };
@@ -1984,6 +1986,8 @@
 		051691AC1C5AD59000DC69EC /* nhypersurfaceui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhypersurfaceui.h; sourceTree = "<group>"; };
 		051806D3181202BD008EBB01 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = src/icons; sourceTree = "<group>"; };
 		051806D5181202E0008EBB01 /* examples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = examples; sourceTree = SOURCE_ROOT; };
+		051AE0621D88B06700D4769F /* SimplifyController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimplifyController.h; sourceTree = "<group>"; };
+		051AE0631D88B06700D4769F /* SimplifyController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SimplifyController.mm; sourceTree = "<group>"; };
 		0523D888180B54850094DAAD /* PacketManagerIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketManagerIOS.h; sourceTree = "<group>"; };
 		0523D889180B54850094DAAD /* PacketManagerIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketManagerIOS.mm; sourceTree = "<group>"; };
 		052774101C55743E00140918 /* nhypersurfacecreator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nhypersurfacecreator.cpp; sourceTree = "<group>"; };
@@ -3463,6 +3467,8 @@
 				055FF38119BECF590057462A /* NewTriangulationController.mm */,
 				05B7708219C92A5000E2E558 /* ScriptViewController.h */,
 				05B7708319C92A5000E2E558 /* ScriptViewController.mm */,
+				051AE0621D88B06700D4769F /* SimplifyController.h */,
+				051AE0631D88B06700D4769F /* SimplifyController.mm */,
 				054535BA19D90C3A00BED767 /* Skeleton.h */,
 				054535BB19D90C3A00BED767 /* Skeleton.mm */,
 				058FADA919D38BFC0001B5B5 /* SnapPeaViewController.h */,
@@ -5686,6 +5692,7 @@
 				052F9FF1180600FB00FAE4DF /* nl31pillow.h in Headers */,
 				052FA096180600FB00FAE4DF /* nthread.h in Headers */,
 				052942D31C5CDC8B0011C1E6 /* safeptr.h in Headers */,
+				051AE0641D88B06700D4769F /* SimplifyController.h in Headers */,
 				052FA033180600FB00FAE4DF /* normalspec-impl.h in Headers */,
 				052F9F4D180600FB00FAE4DF /* nray.h in Headers */,
 				052F9F3E180600FB00FAE4DF /* nmatrix.h in Headers */,
@@ -7248,6 +7255,7 @@
 				052F9F72180600FB00FAE4DF /* chern_simons.c in Sources */,
 				0591E7A51C4F74C400793A9C /* dim4exampletriangulation.cpp in Sources */,
 				052F9F3F180600FB00FAE4DF /* nmatrix2.cpp in Sources */,
+				051AE0651D88B06700D4769F /* SimplifyController.mm in Sources */,
 				052F9FEA180600FB00FAE4DF /* nblockedsfsloop.cpp in Sources */,
 				0541AF611B8BE40B002E166B /* ntreedecomposition.cpp in Sources */,
 				052F9FA2180600FB00FAE4DF /* tidy_peripheral_curves.c in Sources */,
