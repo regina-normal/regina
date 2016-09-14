@@ -1506,7 +1506,6 @@
 		05DC051D1C41B85100C76D71 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05DC051C1C41B85100C76D71 /* boost.framework */; };
 		05DC051F1C41B87200C76D71 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05DC051E1C41B87200C76D71 /* boost.framework */; };
 		05DC05201C41B88D00C76D71 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05DC051C1C41B85100C76D71 /* boost.framework */; };
-		05E82DDB1D88C82E009EFA8F /* SimplifyController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 051AE0631D88B06700D4769F /* SimplifyController.mm */; };
 		05EA195719F30A0100D37501 /* EltMovesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05EA195619F30A0100D37501 /* EltMovesController.mm */; };
 		05F23E0F19C08834005B53B5 /* snappea-doc-64.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F23E0D19C08834005B53B5 /* snappea-doc-64.png */; };
 		05F23E1019C08834005B53B5 /* snappea-doc-320.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F23E0E19C08834005B53B5 /* snappea-doc-320.png */; };
@@ -1985,8 +1984,6 @@
 		051691AC1C5AD59000DC69EC /* nhypersurfaceui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhypersurfaceui.h; sourceTree = "<group>"; };
 		051806D3181202BD008EBB01 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = src/icons; sourceTree = "<group>"; };
 		051806D5181202E0008EBB01 /* examples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = examples; sourceTree = SOURCE_ROOT; };
-		051AE0621D88B06700D4769F /* SimplifyController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimplifyController.h; sourceTree = "<group>"; };
-		051AE0631D88B06700D4769F /* SimplifyController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SimplifyController.mm; sourceTree = "<group>"; };
 		0523D888180B54850094DAAD /* PacketManagerIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketManagerIOS.h; sourceTree = "<group>"; };
 		0523D889180B54850094DAAD /* PacketManagerIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketManagerIOS.mm; sourceTree = "<group>"; };
 		052774101C55743E00140918 /* nhypersurfacecreator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nhypersurfacecreator.cpp; sourceTree = "<group>"; };
@@ -3466,8 +3463,6 @@
 				055FF38119BECF590057462A /* NewTriangulationController.mm */,
 				05B7708219C92A5000E2E558 /* ScriptViewController.h */,
 				05B7708319C92A5000E2E558 /* ScriptViewController.mm */,
-				051AE0621D88B06700D4769F /* SimplifyController.h */,
-				051AE0631D88B06700D4769F /* SimplifyController.mm */,
 				054535BA19D90C3A00BED767 /* Skeleton.h */,
 				054535BB19D90C3A00BED767 /* Skeleton.mm */,
 				058FADA919D38BFC0001B5B5 /* SnapPeaViewController.h */,
@@ -6870,7 +6865,6 @@
 				052FA1DF1806129B00FAE4DF /* nsoriented.cpp in Sources */,
 				052FA1B61806129B00FAE4DF /* nblockedsfs.cpp in Sources */,
 				05D1172C19EE0169003BEC55 /* base64.cpp in Sources */,
-				05E82DDB1D88C82E009EFA8F /* SimplifyController.mm in Sources */,
 				052FA1AA1806129B00FAE4DF /* nscript.cpp in Sources */,
 				05C0645E1C56B1F7006E6483 /* Dim4TriangulationViewController.mm in Sources */,
 				05F96C131809F59600C99F96 /* PacketTreeController.mm in Sources */,

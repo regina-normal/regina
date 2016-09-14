@@ -8601,50 +8601,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="V3j-m6-3FB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7577" y="1708"/>
-        </scene>
-        <!--Simplify Controller-->
-        <scene sceneID="CzF-LJ-75v">
-            <objects>
-                <viewController storyboardIdentifier="simplify" modalPresentationStyle="formSheet" id="43O-Gw-55P" customClass="SimplifyController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="oVc-7c-YA5"/>
-                        <viewControllerLayoutGuide type="bottom" id="dae-Sm-0vO"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="ury-mp-Bua">
-                        <rect key="frame" x="0.0" y="0.0" width="540" height="620"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bTH-Fc-OPq">
-                                <rect key="frame" x="0.0" y="0.0" width="540" height="44"/>
-                                <items>
-                                    <navigationItem title="Simplify" id="C0b-Bp-nFs"/>
-                                </items>
-                            </navigationBar>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cDa-Vx-CLq">
-                                <rect key="frame" x="0.0" y="576" width="540" height="44"/>
-                                <items>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="lov-lB-idn"/>
-                                    <barButtonItem title="Close" id="qIV-83-CtS">
-                                        <connections>
-                                            <action selector="close:" destination="43O-Gw-55P" id="PoD-jy-p4p"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="1KT-Hj-o12"/>
-                                </items>
-                            </toolbar>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                    <nil key="simulatedStatusBarMetrics"/>
-                    <modalFormSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <connections>
-                        <outlet property="closeButton" destination="cDa-Vx-CLq" id="etr-2E-Tln"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="BYD-ma-dbw" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="8218" y="1708"/>
+            <point key="canvasLocation" x="7757" y="1708"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="A0v-Om-dAx">

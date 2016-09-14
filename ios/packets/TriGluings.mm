@@ -32,7 +32,6 @@
 
 #import "EltMovesController.h"
 #import "ReginaHelper.h"
-#import "SimplifyController.h"
 #import "TriangulationViewController.h"
 #import "TriGluings.h"
 #import "packet/ncontainer.h"
@@ -247,11 +246,12 @@
         return;
 
     if (! self.packet->intelligentSimplify()) {
-        // Greedy simplification failed.
-        // Offer a more exhaustive approach.
-        UIViewController* sheet = [self.storyboard instantiateViewControllerWithIdentifier:@"simplify"];
-        static_cast<SimplifyController*>(sheet).packet = self.packet;
-        [self presentViewController:sheet animated:YES completion:nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could Not Simplify"
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
     }
 }
 
