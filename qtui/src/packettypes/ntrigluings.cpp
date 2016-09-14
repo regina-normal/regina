@@ -59,7 +59,7 @@
 #include <QHeaderView>
 #include <QMessageBox>
 #include <QLabel>
-#include <QProgressDialog>
+#include <QPushButton>
 #include <QRegExp>
 #include <QTextDocument>
 #include <QToolBar>
