@@ -97,7 +97,7 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
     _defaultMotionEffectsEnabled = YES;
 
     // Default color, depending on the current iOS version
-    BOOL isLegacy = kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_7_0;
+    BOOL isLegacy = YES || kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_7_0;
     _contentColor = isLegacy ? [UIColor whiteColor] : [UIColor colorWithWhite:0.f alpha:0.7f];
     // Transparent background
     self.opaque = NO;
@@ -1105,7 +1105,7 @@ static const CGFloat MBDefaultDetailsLabelFontSize = 12.f;
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if ((self = [super initWithFrame:frame])) {
-        if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_7_0) {
+        if (false && kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_7_0) {
             _style = MBProgressHUDBackgroundStyleBlur;
             if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_8_0) {
                 _color = [UIColor colorWithWhite:0.8f alpha:0.6f];
