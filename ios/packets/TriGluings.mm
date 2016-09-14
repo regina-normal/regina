@@ -31,10 +31,12 @@
  **************************************************************************/
 
 #import "EltMovesController.h"
+#import "MBProgressHUD.h"
 #import "ReginaHelper.h"
 #import "TriangulationViewController.h"
 #import "TriGluings.h"
 #import "packet/ncontainer.h"
+#import "progress/nprogresstracker.h"
 #import "triangulation/ntriangulation.h"
 
 #pragma mark - Table cell
@@ -59,6 +61,7 @@
     int editSimplex;
     int editFacet; // -1 for editing the description
     BOOL myEdit;
+    regina::NProgressTrackerOpen* simplifyTracker; // for cancellation
 }
 @property (weak, nonatomic) IBOutlet UILabel *header;
 @property (weak, nonatomic) IBOutlet UIButton *lockIcon;
@@ -70,6 +73,8 @@
 
 @property (strong, nonatomic) TriangulationViewController* viewer;
 @property (assign, nonatomic) regina::NTriangulation* packet;
+
+@property (strong, nonatomic) NSLock* simplifyLock; // locks the simplifyTracker _pointer_, not the tracker itself.
 @end
 
 @implementation TriGluings
@@ -239,6 +244,88 @@
     return YES;
 }
 
+- (IBAction)simplifyCancel:(id)sender
+{
+    // Cancel the exhaustive simplification, if one is running.
+
+    // Note: the lock is created before the HUD (and the HUD calls this routine),
+    // so by the time this routine is called, we are guaranteed that
+    // self.simplifyLock is non-nil.
+
+    [self.simplifyLock lock];
+    if (self->simplifyTracker)
+        self->simplifyTracker->cancel();
+    [self.simplifyLock unlock];
+}
+
+- (void)simplifyExhaustiveWithHeight:(int)height
+{
+    if (! self.simplifyLock)
+        self.simplifyLock = [[NSLock alloc] init];
+
+    // Run the exhaustive simplification within a HUD.
+    [UIApplication sharedApplication].idleTimerDisabled = YES;
+
+    UIView* root = [UIApplication sharedApplication].keyWindow.rootViewController.view;
+    MBProgressHUD* hud = [MBProgressHUD showHUDAddedTo:root animated:YES];
+    hud.label.text = @"Searching Pachner graph…";
+
+    [hud.button setTitle:@"Cancel" forState:UIControlStateNormal];
+    [hud.button addTarget:self action:@selector(simplifyCancel:) forControlEvents:UIControlEventTouchUpInside];
+
+    size_t initSize = self.packet->size();
+
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        regina::NProgressTrackerOpen* tracker = new regina::NProgressTrackerOpen();
+        bool cancelled = false;
+
+        [self.simplifyLock lock];
+        self->simplifyTracker = tracker;
+        [self.simplifyLock unlock];
+
+        self.packet->simplifyExhaustive(height, 1 /* threads */, tracker);
+
+        unsigned long steps;
+        while (! tracker->isFinished()) {
+            if (tracker->stepsChanged()) {
+                steps = tracker->steps();
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    hud.detailsLabel.text = [NSString stringWithFormat:@"Tried %ld triangulations", steps];
+                });
+            }
+            usleep(100000);
+        }
+        [self.simplifyLock lock];
+        self->simplifyTracker = nullptr;
+        [self.simplifyLock unlock];
+
+        cancelled = tracker->isCancelled();
+        delete tracker;
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [hud hideAnimated:NO];
+            [UIApplication sharedApplication].idleTimerDisabled = NO;
+
+            if ((! cancelled) && self.packet->size() == initSize) {
+                // We still couldn't simplify.
+                UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Could Not Simplify"
+                                                                               message:[NSString stringWithFormat:@"I still could not simplify the triangulation, even after exhaustively searching the Pachner graph up to %ld tetrahedra.\n\nI can try more tetrahedra, but be warned: the time and memory required could grow very rapidly.", initSize + height]
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                [alert addAction:[UIAlertAction actionWithTitle:@"Keep trying"
+                                                          style:UIAlertActionStyleDefault
+                                                        handler:^(UIAlertAction* action) {
+                                                            [self simplifyExhaustiveWithHeight:(height + 1)];
+                                                        }]];
+                [alert addAction:[UIAlertAction actionWithTitle:@"Close"
+                                                          style:UIAlertActionStyleCancel
+                                                        handler:^(UIAlertAction * action) {}]];
+                [self presentViewController:alert animated:YES completion:nil];
+            }
+        });
+    });
+
+}
+
 - (IBAction)simplify:(id)sender
 {
     [self endEditing];
@@ -246,12 +333,20 @@
         return;
 
     if (! self.packet->intelligentSimplify()) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could Not Simplify"
-                                                        message:nil
-                                                       delegate:nil
-                                              cancelButtonTitle:@"Close"
-                                              otherButtonTitles:nil];
-        [alert show];
+        // Greedy simplification failed.
+        // Offer a more exhaustive alternative.
+        UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Could Not Simplify"
+                                                                       message:nil
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:@"Try harder"
+                                                  style:UIAlertActionStyleDefault
+                                                handler:^(UIAlertAction* action) {
+                                                            [self simplifyExhaustiveWithHeight:2];
+                                                        }]];
+        [alert addAction:[UIAlertAction actionWithTitle:@"Close"
+                                                  style:UIAlertActionStyleCancel
+                                                handler:^(UIAlertAction * action) {}]];
+        [self presentViewController:alert animated:YES completion:nil];
     }
 }
 
