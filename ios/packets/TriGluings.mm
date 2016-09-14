@@ -309,7 +309,7 @@
             if ((! cancelled) && self.packet->size() == initSize) {
                 // We still couldn't simplify.
                 UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Could Not Simplify"
-                                                                               message:[NSString stringWithFormat:@"I still could not simplify the triangulation, even after exhaustively searching the Pachner graph up to %ld tetrahedra.\n\nI can try more tetrahedra, but be warned: the time and memory required could grow very rapidly.", initSize + height]
+                                                                               message:[NSString stringWithFormat:@"I still could not simplify the triangulation, even after exhaustively searching the Pachner graph up to %ld tetrahedra.\n\nI can look further, but be warned: the time and memory required could grow very rapidly.", initSize + height]
                                                                         preferredStyle:UIAlertControllerStyleAlert];
                 [alert addAction:[UIAlertAction actionWithTitle:@"Keep trying"
                                                           style:UIAlertActionStyleDefault
