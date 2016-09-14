@@ -141,13 +141,14 @@ BOOL ios9;
     [UIApplication sharedApplication].idleTimerDisabled = YES;
 
     UIView* root = [UIApplication sharedApplication].keyWindow.rootViewController.view;
-    MBProgressHUD* hud = [MBProgressHUD showHUDAddedTo:root animated:YES];
-    hud.labelText = message;
-    
+
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:root animated:YES];
+    hud.label.text = message;
+
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         code();
         dispatch_async(dispatch_get_main_queue(), ^{
-            [hud hide:NO];
+            [hud hideAnimated:NO];
             if (cleanup != nil)
                 cleanup();
 

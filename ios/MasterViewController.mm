@@ -232,7 +232,7 @@ enum DocSource {
             dropboxHUD = [MBProgressHUD showHUDAddedTo:rootView animated:YES];
             dropboxHUD.mode = MBProgressHUDModeDeterminateHorizontalBar;
             dropboxHUD.progress = 0.0;
-            dropboxHUD.labelText = @"Downloading...";
+            dropboxHUD.label.text = @"Downloading...";
 
             [task resume];
             return YES;
@@ -507,7 +507,7 @@ enum DocSource {
     ReginaDocument* doc = [ReginaDocument documentWithInboxURL:location preferredName:downloadTask.currentRequest.URL];
 
     dispatch_async(dispatch_get_main_queue(), ^{
-        [dropboxHUD hide:NO];
+        [dropboxHUD hideAnimated:NO];
         dropboxHUD = nil;
 
         if (doc)
@@ -538,7 +538,7 @@ enum DocSource {
     if (error) {
         NSLog(@"Download error.");
         dispatch_async(dispatch_get_main_queue(), ^{
-            [dropboxHUD hide:NO];
+            [dropboxHUD hideAnimated:NO];
             dropboxHUD = nil;
 
             UIAlertView* alert = [[UIAlertView alloc]

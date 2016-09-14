@@ -265,10 +265,10 @@
     if (self.doc.hasUnsavedChanges) {
         UIView* rootView = [UIApplication sharedApplication].keyWindow.rootViewController.view;
         MBProgressHUD* hud = [MBProgressHUD showHUDAddedTo:rootView animated:YES];
-        [hud setLabelText:@"Saving"];
+        hud.label.text = @"Saving";
 
         [self.doc saveToURL:self.doc.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success){
-            [hud hide:NO];
+            [hud hideAnimated:NO];
             if (success)
                 [_interact presentOptionsMenuFromBarButtonItem:self.shareButton animated:YES];
             else {
