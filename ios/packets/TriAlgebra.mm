@@ -298,6 +298,10 @@
     }
 
     if (r >= TV_WARN_LARGE_R) {
+        // Hide the keyboard now.  This avoids an uncomfortable sequence
+        // of hide-show-hide.
+        [self.tvArgs resignFirstResponder];
+
         UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Long Calculation Ahead"
                                                                        message:@"Turaev-Viro invariants require exponential time to compute, and you have chosen a large value of r.  Are you sure you wish to proceed?"
                                                                 preferredStyle:UIAlertControllerStyleAlert];
@@ -308,9 +312,6 @@
         UIAlertAction* compute = [UIAlertAction actionWithTitle:@"Compute"
                                                           style:UIAlertActionStyleDefault
                                                         handler:^(UIAlertAction* action) {
-                                                            // Hide the keyboard.
-                                                            [self.tvArgs resignFirstResponder];
-
                                                             // Compute the invariant!
                                                             [ReginaHelper runWithHUD:@"Calculating…"
                                                                                 code:^{
