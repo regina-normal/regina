@@ -47,19 +47,6 @@
 // For the arithmetic to be correct, SLICES must be a multiple of 100.
 #define SLICES 1000
 
-namespace {
-    /**
-     * A subclass of QThread that gives us public access to sleep
-     * routines.
-     */
-    class WaitingThread : public QThread {
-        public:
-            static void tinySleep() {
-                QThread::usleep(250);
-            }
-    };
-}
-
 ProgressDialogNumeric::ProgressDialogNumeric(
         regina::NProgressTracker* tracker,
         const QString& displayText, QWidget* parent) :
@@ -89,7 +76,7 @@ bool ProgressDialogNumeric::run() {
         if (tracker_->descriptionChanged())
             setLabelText(tracker_->description().c_str());
         QCoreApplication::instance()->processEvents();
-        WaitingThread::tinySleep();
+        QThread::usleep(250);
     }
 
     return (! tracker_->isCancelled());
@@ -131,7 +118,7 @@ bool ProgressDialogMessage::run() {
             msg->setText(tracker_->description().c_str());
         }
         QCoreApplication::instance()->processEvents();
-        WaitingThread::tinySleep();
+        QThread::usleep(250);
     }
 
     return (! tracker_->isCancelled()); // Always true, for now.
