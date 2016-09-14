@@ -8606,7 +8606,7 @@
         <!--Simplify Controller-->
         <scene sceneID="CzF-LJ-75v">
             <objects>
-                <viewController storyboardIdentifier="simplify" id="43O-Gw-55P" customClass="SimplifyController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="simplify" modalPresentationStyle="formSheet" id="43O-Gw-55P" customClass="SimplifyController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="oVc-7c-YA5"/>
                         <viewControllerLayoutGuide type="bottom" id="dae-Sm-0vO"/>
