@@ -488,9 +488,11 @@ typedef struct NormalSurfaceList            NormalSurfaceList;
 /* #define CONST const */
 
 
+/* We build the snappea kernel as C++, so link it as C++. - B.B., 27/03/2014.
 #ifdef __cplusplus
 extern "C" {
 #endif
+*/
 
 /************************************************************************/
 
@@ -2631,8 +2633,10 @@ extern Real volume(Triangulation *manifold, int *precision);
 
 #include "end_namespace.h"
 
+/* We build the snappea kernel as C++, so link it as C++. - B.B., 27/03/2014.
 #ifdef __cplusplus
 }
 #endif
+*/
 
 #endif

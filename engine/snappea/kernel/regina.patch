@@ -1,20 +1,78 @@
-diff --git a/engine/snappea/kernel/homology.h b/engine/snappea/kernel/homology.h
-index c4ae28b..8548561 100644
---- a/engine/snappea/kernel/homology.h
-+++ b/engine/snappea/kernel/homology.h
-@@ -38,9 +38,9 @@
+diff --git a/engine/snappea/kernel/SnapPea.h b/engine/snappea/kernel/SnapPea.h
+index 8964456..40b8421 100644
+--- a/engine/snappea/kernel/SnapPea.h
++++ b/engine/snappea/kernel/SnapPea.h
+@@ -488,9 +488,11 @@ typedef struct NormalSurfaceList            NormalSurfaceList;
+ /* #define CONST const */
+ 
+ 
++/* We build the snappea kernel as C++, so link it as C++. - B.B., 27/03/2014.
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
++*/
+ 
+ /************************************************************************/
+ 
+@@ -2631,8 +2633,10 @@ extern Real volume(Triangulation *manifold, int *precision);
+ 
+ #include "end_namespace.h"
+ 
++/* We build the snappea kernel as C++, so link it as C++. - B.B., 27/03/2014.
+ #ifdef __cplusplus
+ }
+ #endif
++*/
+ 
+ #endif
+diff --git a/engine/snappea/kernel/end_namespace.h b/engine/snappea/kernel/end_namespace.h
+index c84202c..8a5082a 100644
+--- a/engine/snappea/kernel/end_namespace.h
++++ b/engine/snappea/kernel/end_namespace.h
+@@ -2,3 +2,5 @@
+  * If you declared a namespace block in kernel_namespace.h then
+  * you can close the block here.
   */
++
++} }
+diff --git a/engine/snappea/kernel/kernel.h b/engine/snappea/kernel/kernel.h
+index aa19f93..7536443 100644
+--- a/engine/snappea/kernel/kernel.h
++++ b/engine/snappea/kernel/kernel.h
+@@ -10,9 +10,11 @@
  
- typedef long int MatrixEntry;
--#define ENTRY_MAX   LLONG_MAX
--#define ENTRY_MIN   (-LLONG_MAX)
--#define LIMIT_MIN   LLONG_MIN
-+#define ENTRY_MAX   LONG_MAX
-+#define ENTRY_MIN   (-LONG_MAX)
-+#define LIMIT_MIN   LONG_MIN
+ #include "SnapPea.h"
  
- /*
-  *  The number of meaningful rows and columns in a RelationMatrix are
++/* We build the snappea kernel as C++, so link it as C++. - B.B., 27/03/2014.
+ #ifdef __cplusplus
+ extern "C" {
+ #endif
++*/
+ 
+ #include <string.h>
+ #include <math.h>
+@@ -29,9 +31,11 @@ extern "C" {
+ #include "kernel_prototypes.h"
+ #include "tables.h"
+ 
++/* We build the snappea kernel as C++, so link it as C++. - B.B., 27/03/2014.
+ #ifdef __cplusplus
+ }
+ #endif
++*/
+ 
+ #endif
+ 
+diff --git a/engine/snappea/kernel/kernel_namespace.h b/engine/snappea/kernel/kernel_namespace.h
+index 85f0600..8aee67e 100644
+--- a/engine/snappea/kernel/kernel_namespace.h
++++ b/engine/snappea/kernel/kernel_namespace.h
+@@ -13,3 +13,5 @@
+ #endif
+ #endif
+ #endif
++
++namespace regina { namespace snappea {
 diff --git a/engine/snappea/kernel/o31_matrices.c b/engine/snappea/kernel/o31_matrices.c
 index 23f45cb..8945d47 100644
 --- a/engine/snappea/kernel/o31_matrices.c

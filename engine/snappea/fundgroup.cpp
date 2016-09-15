@@ -38,7 +38,8 @@ namespace regina {
 const NGroupPresentation* NSnapPeaTriangulation::fundamentalGroupFilled(
             bool simplifyPresentation,
             bool fillingsMayAffectGenerators,
-            bool minimiseNumberOfGenerators) const {
+            bool minimiseNumberOfGenerators,
+            bool tryHardToShortenRelators) const {
     if (fundGroupFilled_.known())
         return fundGroupFilled_.value();
     if (! data_)
@@ -52,7 +53,8 @@ const NGroupPresentation* NSnapPeaTriangulation::fundamentalGroupFilled(
         regina::snappea::fundamental_group(data_,
             (simplifyPresentation ? 1 : 0),
             (fillingsMayAffectGenerators ? 1 : 0),
-            (minimiseNumberOfGenerators ? 1 : 0));
+            (minimiseNumberOfGenerators ? 1 : 0),
+            (tryHardToShortenRelators ? 1 : 0));
 
     // Convert the results into Regina's NGroupPresentation class.
     // Note that SnapPea gives a sequence of generators, whereas Regina

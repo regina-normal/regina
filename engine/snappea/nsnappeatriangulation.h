@@ -1101,13 +1101,18 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * simplification code should try to reduce the number of
          * generators at the expense of increasing the total length of
          * the relations, or \c false if it should do the opposite.
+         * @param tryHardToShortenRelators \c true if SnapPea's group
+         * simplification code should try to reduce the length of the relations
+         * by inserting one relation into another.  In general this is a
+         * good thing, but it can be very costly for large presentations.
          * @return the fundamental group of the filled manifold, or
          * 0 if this could not be computed.
          */
         const NGroupPresentation* fundamentalGroupFilled(
             bool simplifyPresentation = true,
             bool fillingsMayAffectGenerators = true,
-            bool minimiseNumberOfGenerators = true) const;
+            bool minimiseNumberOfGenerators = true,
+            bool tryHardToShortenRelators = true) const;
 
         /*@}*/
         /**

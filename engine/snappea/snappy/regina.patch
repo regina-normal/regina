@@ -1,11 +1,57 @@
---- a/engine/snappea/snappy/snappy_gluing_equations.c
-+++ b/engine/snappea/snappy/snappy_gluing_equations.c
-@@ -38,7 +38,7 @@
- int** get_gluing_equations(Triangulation *manifold, int* num_rows, int* num_cols)
- {
+diff --git a/engine/snappea/snappy/SnapPy.h b/engine/snappea/snappy/SnapPy.h
+index f9a7363..e46a619 100644
+--- a/engine/snappea/snappy/SnapPy.h
++++ b/engine/snappea/snappy/SnapPy.h
+@@ -1,3 +1,14 @@
++/**
++ *  Headers for additional SnapPy code that is not shipped with the
++ *  SnapPea kernel.
++ */
++
++#ifndef _SnapPy_
++#define _SnapPy_
++
++#include "../kernel/SnapPea.h"
++#include "../kernel/kernel_namespace.h"
++
+ /* Prototypes for functions defined in gluing_equations.c */
  
--  int             *eqn,  i, T, num_edges, num_eqns, eqn_index;
-+  int             *eqn,  i, T, num_eqns, eqn_index;
-   int **eqns;
-   EdgeClass       *edge;
-   PositionedTet   ptet0, ptet;
+ extern int** get_gluing_equations(Triangulation* manifold, 
+@@ -67,3 +78,6 @@ void install_combinatorial_bases( Triangulation *manifold,
+                                   MatrixInt22   *matrices );
+ void install_shortest_with_matrices( Triangulation *manifold, MatrixInt22 *matrices );
+ void reindex_cusps( Triangulation *manifold, int *indices );
++
++#include "../kernel/end_namespace.h"
++#endif
+diff --git a/engine/snappea/snappy/snappy_get_gluing_equations.c b/engine/snappea/snappy/snappy_get_gluing_equations.c
+index c96db95..6403eb6 100644
+--- a/engine/snappea/snappy/snappy_get_gluing_equations.c
++++ b/engine/snappea/snappy/snappy_get_gluing_equations.c
+@@ -1,5 +1,18 @@
+-#include "kernel.h"
+-#include "kernel_namespace.h"
++#include "../kernel/kernel.h"
++#include "../kernel/kernel_namespace.h"
++
++/*
++ * This file was originally named "get_gluing_equations.c" when distributed with
++ * SnapPy, but has been renamed here to avoid conflict. 
++ *
++ * SnapPy, and this file as a result, is licensed under the GNU General Public
++ * License.
++ *
++ * M. Culler, N. M. Dunfield, and J. R. Weeks. 
++ * SnapPy, a computer program for studying the geometry and 
++ * topology of 3-manifolds, http://snappy.computop.org
++ *
++ * */
+ 
+ /*
+ 
+@@ -140,4 +153,4 @@ void free_cusp_equation(int* equation){
+   my_free(equation);
+ }
+   
+-#include "end_namespace.h"
++#include "../kernel/end_namespace.h"
