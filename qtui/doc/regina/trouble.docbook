@@ -227,7 +227,7 @@
     </para></question>
     <answer>
      <para>
-      At the time of writing, &snappy; (version&nbsp;2.2) is not
+      At the time of writing, &snappy; (version&nbsp;2.4) is not
       compatible with multiple interpreters.  If you run the graphical
       user interface and import the <parameter>snappy</parameter> module
       in more than one &python; console, &snappy; will stop working.

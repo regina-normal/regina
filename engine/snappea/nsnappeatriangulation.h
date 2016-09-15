@@ -299,12 +299,14 @@ class REGINA_API NCusp :
  * SnapPy (standard precision), as well as some additional code
  * written explicitly for SnapPy.  The header regina-config.h includes a
  * macro SNAPPY_VERSION that gives the exact version of SnapPy that is
- * bundled into Regina.
+ * bundled into Regina, and you can query this at runtime by calling
+ * Regina's function regina::versionSnapPy().
  *
- * The SnapPea kernel was written by Jeff Weeks, and SnapPy was written by
- * Marc Culler, Nathan Dunfield, and others.  SnapPy and the corresponding
- * SnapPea kernel are distributed under the terms of the GNU General
- * Public License, version 2 or any later version, as published by the
+ * The SnapPea kernel was originally written by Jeff Weeks.  SnapPy,
+ * where this kernel is now maintained, is primarily developed by Marc Culler
+ * and Nathan Dunfield, with contributions from many people.  SnapPy and the
+ * corresponding SnapPea kernel are distributed under the terms of the GNU
+ * General Public License, version 2 or any later version, as published by the
  * Free Software Foundation.
  *
  * See http://snappy.computop.org/ for further information on
