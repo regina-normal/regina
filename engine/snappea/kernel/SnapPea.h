@@ -1,7 +1,7 @@
 /*
  *  SnapPea.h
  *
- *  This file defines the interface between SnapPea's comptational kernel
+ *  This file defines the interface between SnapPea's computational kernel
  *  ("the kernel") and the user-interface ("the UI").  Both parts
  *  must #include this file, and anything shared between the two parts
  *  must be declared in this file.  The only communication between the
@@ -488,11 +488,9 @@ typedef struct NormalSurfaceList            NormalSurfaceList;
 /* #define CONST const */
 
 
-/* We build the snappea kernel as C++, so link it as C++. - B.B., 27/03/2014.
 #ifdef __cplusplus
 extern "C" {
 #endif
-*/
 
 /************************************************************************/
 
@@ -502,12 +500,20 @@ extern "C" {
  *  The UI provides the following functions for use by the kernel:
  */
 
-extern void uAcknowledge(const char *message);
+extern
+#ifdef _MSC_VER
+ __declspec(dllexport)
+#endif
+void uAcknowledge(const char *message);
 /*
  *  Presents the string *message to the user and waits for acknowledgment ("OK").
  */
 
-extern int uQuery(const char *message, const int num_responses,
+extern
+#ifdef _MSC_VER
+ __declspec(dllexport)
+#endif
+int uQuery(const char *message, const int num_responses,
                 const char *responses[], const int default_response);
 /*
  *  Presents the string *message to the user and asks the user to choose
@@ -518,19 +524,31 @@ extern int uQuery(const char *message, const int num_responses,
  *  is present), uQuery should return the default_response.
  */
 
-extern void uFatalError(const char *function, const char *file);
+extern
+#ifdef _MSC_VER
+ __declspec(dllexport)
+#endif
+void uFatalError(const char *function, const char *file);
 /*
  *  Informs the user that a fatal error has occurred in the given
  *  function and file, and then exits.
  */
 
-extern void uAbortMemoryFull(void);
+extern
+#ifdef _MSC_VER
+ __declspec(dllexport)
+#endif
+void uAbortMemoryFull(void);
 /*
  *  Informs the user that the available memory has been exhausted,
  *  and aborts SnapPea.
  */
 
-extern void uPrepareMemFullMessage(void);
+extern
+#ifdef _MSC_VER
+ __declspec(dllexport)
+#endif
+void uPrepareMemFullMessage(void);
 /*
  *  uMemoryFull() is a tricky function, because the system may not find
  *  enough memory to display an error message.  (I tried having it stash
@@ -540,10 +558,22 @@ extern void uPrepareMemFullMessage(void);
  *  a (hidden) dialog box.  Call it once when the UI initializes.
  */
 
-extern void         uLongComputationBegins(const char *message,
+extern
+#ifdef _MSC_VER
+ __declspec(dllexport)
+#endif
+void         uLongComputationBegins(const char *message,
 					   Boolean is_abortable);
-extern FuncResult   uLongComputationContinues(void);
-extern void         uLongComputationEnds(void);
+extern
+#ifdef _MSC_VER
+ __declspec(dllexport)
+#endif
+FuncResult   uLongComputationContinues(void);
+extern
+#ifdef _MSC_VER
+ __declspec(dllexport)
+#endif
+void         uLongComputationEnds(void);
 /*
  *  The kernel uses these three functions to inform the UI of a long
  *  computation.  The UI relays this information to the user in whatever
@@ -656,6 +686,21 @@ extern FuncResult   canonize(Triangulation *manifold);
 
 extern FuncResult   proto_canonize(Triangulation *manifold);
 extern void         canonical_retriangulation(Triangulation *manifold);
+
+/*
+ * Similar to canonical_retriangulation, replaces the given triangulation
+ * (which has to be a subdivision of the canonical cell decomposition) with
+ * the canonical retriangulation of the canonical cell decompositon.
+ * However, instead of doing numerical comparisions of tilt, it takes an array
+ * of booleans indicating which faces are opaque. Four consecutive entires
+ * correspond to the four faces of one tetrahedron. Thus, the length has to
+ * be 4 times the number of tetrahedra.
+ * Matthias Goerner 11/30/14
+ */
+
+extern void canonical_retriangulation_with_opacities( Triangulation *manifold,
+						      Boolean *opacities);
+
 /*
  *  These functions comprise the two halves of canonize() in canonize.c.
  *
@@ -1330,7 +1375,9 @@ extern GroupPresentation *fundamental_group(
                     Triangulation   *manifold,
                     Boolean         simplify_presentation,
                     Boolean         fillings_may_affect_generators,
-                    Boolean         minimize_number_of_generators);
+                    Boolean         minimize_number_of_generators,
+                    Boolean         try_hard_to_shorten_relators);
+
 /*
  *  Computes the fundamental group of the manifold, taking into account
  *  Dehn fillings, and returns a pointer to it.  Please see
@@ -1599,6 +1646,12 @@ extern int  get_num_or_cusps(Triangulation *manifold);
 extern int  get_num_nonor_cusps(Triangulation *manifold);
 /*
  *  Returns the number of nonorientable cusps in *manifold.
+ */
+
+extern int  get_num_fake_cusps(Triangulation *manifold);
+/*
+ *  Returns the number of "fake" cusps in *manifold, which is
+ *  typically the number of finite vertices.
  */
 
 extern int  get_max_singularity(Triangulation *manifold);
@@ -2578,10 +2631,8 @@ extern Real volume(Triangulation *manifold, int *precision);
 
 #include "end_namespace.h"
 
-/* We build the snappea kernel as C++, so link it as C++. - B.B., 27/03/2014.
 #ifdef __cplusplus
 }
 #endif
-*/
 
 #endif
