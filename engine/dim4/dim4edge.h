@@ -87,6 +87,11 @@ class REGINA_API Face<4, 1> : public detail::FaceBase<4, 1>,
 
     public:
         /**
+         * Default destructor.
+         */
+        ~Face();
+
+        /**
          * Returns the boundary component of the triangulation to which
          * this edge belongs.
          *

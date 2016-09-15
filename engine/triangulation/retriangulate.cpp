@@ -208,6 +208,8 @@ namespace {
             t[i] = std::thread(&TriBFS<true>::processQueue, this, tracker);
         for (i = 0; i < nThreads; ++i)
             t[i].join();
+
+        delete[] t;
     }
 
     template <bool threading>
