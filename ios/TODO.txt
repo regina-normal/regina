@@ -1,13 +1,9 @@
 iOS User Interface TODO List
 ----------------------------
 
-NEXT RELEASE:
-
-- Test suite runs out of memory
-- Support iCloud and/or iCloud drive?
-
 LONG-TERM:
 
+- Support iCloud and/or iCloud drive?
 - Support files without container roots
 - Move packets around the tree.
 - Find a way to install *.tdb in a subdirectory beneath Resources/.
