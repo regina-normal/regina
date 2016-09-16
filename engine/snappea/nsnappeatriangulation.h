@@ -334,12 +334,11 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
             not_attempted,
                 /**< A solution has not been attempted. */
             geometric_solution,
-                /**< All tetrahedra are either positively oriented or
-                     flat, though the entire solution is not flat and
-                     no tetrahedra are degenerate. */
+                /**< All tetrahedra are positively oriented. */
             nongeometric_solution,
-                /**< The volume is positive, but some tetrahedra are
-                     negatively oriented. */
+                /**< The overall volume is positive, but some tetrahedra are
+                     flat or negatively oriented.  No tetrahedra have
+                     shape 0, 1 or infinity. */
             flat_solution,
                 /**< All tetrahedra are flat, but none have shape 0, 1 or
                      infinity. */
@@ -348,8 +347,10 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
             other_solution,
                 /**< The volume is zero or negative, but the solution is
                      neither flat nor degenerate. */
-            no_solution
+            no_solution,
                 /**< The gluing equations could not be solved. */
+            externally_computed
+                /**< Tetrahedron shapes were inserted into the triangulation. */
         } SolutionType;
 
     private:

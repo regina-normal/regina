@@ -479,6 +479,9 @@ Version 5.0  [ (under development) ]
         Class NSnapPeaTriangulation:
             - Updated the SnapPea kernel to the one shipped with SnapPy 2.4
               (standard precision).
+            - The definitions of geometric_solution and non_geometric_solution
+              have changed (following a similar change in SnapPea): now
+              geometric_solution means that all tetrahedra must be positive.
             - Routine fundamentalGroupFilled() has a new boolean argument for
               shortening relations.
         Class NSpiralSolidTorus:
