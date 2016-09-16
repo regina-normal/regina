@@ -45,8 +45,6 @@
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
-#include <QCoreApplication>
-#include <QFile>
 
 // Python includes:
 #include <compile.h>
