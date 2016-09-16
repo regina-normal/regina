@@ -45,6 +45,8 @@
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <QCoreApplication>
+#include <QFile>
 
 // Python includes:
 #include <compile.h>
@@ -89,6 +91,33 @@ PythonInterpreter::PythonInterpreter(PythonOutputStream* pyStdOut,
     if (pythonInitialised)
         PyEval_AcquireLock();
     else {
+#if defined(Q_OS_WIN32) && defined(REGINA_INSTALL_WINDOWS) && defined(__MINGW32__)
+        // Assume this is the MS Windows + MinGW + WiX package build,
+        // since nobody else in their right mind would be trying to build
+        // this under windows.
+        //
+        // When using MinGW's own python + boost packages, we need to
+        // manually include the python zip and the path to zlib.pyd on the
+        // python path, *before* the interpreter is initialised.
+        //
+        // Here we assume that python27.zip is installed in the same
+        // directory as the executable, and that zlib.pyd is installed
+        // in the same directory as the regina python module.
+
+        std::string regModuleDir = regina::NGlobalDirs::pythonModule();
+
+        const char* oldPath = getenv("PYTHONPATH");
+        std::string newPath("PYTHONPATH=");
+        newPath += regModuleDir;
+        newPath += ';';
+        newPath += regModuleDir;
+        newPath += "/python27.zip;";
+        if (oldPath)
+            newPath += oldPath;
+
+        putenv(strdup(newPath.c_str()));
+#endif
+
         PyEval_InitThreads();
         Py_Initialize();
         pythonInitialised = true;
