@@ -427,7 +427,6 @@
 		052F9FDB180600FB00FAE4DF /* nsnappeatriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D92180600FB00FAE4DF /* nsnappeatriangulation.cpp */; };
 		052F9FDC180600FB00FAE4DF /* nsnappeatriangulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D93180600FB00FAE4DF /* nsnappeatriangulation.h */; };
 		052F9FDD180600FB00FAE4DF /* SnapPy.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D97180600FB00FAE4DF /* SnapPy.h */; };
-		052F9FDE180600FB00FAE4DF /* snappy_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D98180600FB00FAE4DF /* snappy_gluing_equations.c */; };
 		052F9FDF180600FB00FAE4DF /* uimessages.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D99180600FB00FAE4DF /* uimessages.cpp */; };
 		052F9FE0180600FB00FAE4DF /* nsigcensus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D9C180600FB00FAE4DF /* nsigcensus.cpp */; };
 		052F9FE1180600FB00FAE4DF /* nsigcensus.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D9D180600FB00FAE4DF /* nsigcensus.h */; };
@@ -800,7 +799,6 @@
 		052FA20C1806129B00FAE4DF /* osutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E77180600FB00FAE4DF /* osutils.cpp */; };
 		052FA20D1806129B00FAE4DF /* stringutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E7C180600FB00FAE4DF /* stringutils.cpp */; };
 		052FA20E1806129B00FAE4DF /* xmlutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E7F180600FB00FAE4DF /* xmlutils.cpp */; };
-		052FA210180612C100FAE4DF /* snappy_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D98180600FB00FAE4DF /* snappy_gluing_equations.c */; };
 		052FA211180612DD00FAE4DF /* canonize.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D1F180600FA00FAE4DF /* canonize.c */; };
 		052FA212180612DD00FAE4DF /* canonize_part_1.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D21180600FA00FAE4DF /* canonize_part_1.c */; };
 		052FA213180612DD00FAE4DF /* canonize_part_2.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D22180600FA00FAE4DF /* canonize_part_2.c */; };
@@ -847,6 +845,8 @@
 		052FA23C180612DD00FAE4DF /* update_shapes.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D8F180600FB00FAE4DF /* update_shapes.c */; };
 		052FA23D180612DD00FAE4DF /* volume.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D90180600FB00FAE4DF /* volume.c */; };
 		053E5B5619B3D79200166778 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 053E5B5519B3D79100166778 /* libbz2.dylib */; };
+		053ED8121D8B836C00628652 /* snappy_get_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */; };
+		053ED8131D8B837500628652 /* snappy_get_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */; };
 		0541AF4B1B8BE2F5002E166B /* ncyclotomic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0541AF481B8BE2F5002E166B /* ncyclotomic.cpp */; };
 		0541AF4C1B8BE2F5002E166B /* ncyclotomic.h in Headers */ = {isa = PBXBuildFile; fileRef = 0541AF491B8BE2F5002E166B /* ncyclotomic.h */; };
 		0541AF4D1B8BE2F5002E166B /* npolynomial.h in Headers */ = {isa = PBXBuildFile; fileRef = 0541AF4A1B8BE2F5002E166B /* npolynomial.h */; };
@@ -2270,7 +2270,6 @@
 		052F9D95180600FB00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052F9D96180600FB00FAE4DF /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		052F9D97180600FB00FAE4DF /* SnapPy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPy.h; sourceTree = "<group>"; };
-		052F9D98180600FB00FAE4DF /* snappy_gluing_equations.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = snappy_gluing_equations.c; sourceTree = "<group>"; };
 		052F9D99180600FB00FAE4DF /* uimessages.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = uimessages.cpp; sourceTree = "<group>"; };
 		052F9D9B180600FB00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052F9D9C180600FB00FAE4DF /* nsigcensus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsigcensus.cpp; sourceTree = "<group>"; };
@@ -2551,6 +2550,7 @@
 		052FA13F1806103000FAE4DF /* MasterViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MasterViewController.mm; sourceTree = "<group>"; };
 		052FA1441806103000FAE4DF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		053E5B5519B3D79100166778 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = usr/lib/libbz2.dylib; sourceTree = SDKROOT; };
+		053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = snappy_get_gluing_equations.c; sourceTree = "<group>"; };
 		0541AF481B8BE2F5002E166B /* ncyclotomic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ncyclotomic.cpp; sourceTree = "<group>"; };
 		0541AF491B8BE2F5002E166B /* ncyclotomic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ncyclotomic.h; sourceTree = "<group>"; };
 		0541AF4A1B8BE2F5002E166B /* npolynomial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = npolynomial.h; sourceTree = "<group>"; };
@@ -4345,7 +4345,7 @@
 				052F9D96180600FB00FAE4DF /* README.txt */,
 				05A73C9919B2EF5A0099C617 /* regina.patch */,
 				052F9D97180600FB00FAE4DF /* SnapPy.h */,
-				052F9D98180600FB00FAE4DF /* snappy_gluing_equations.c */,
+				053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */,
 			);
 			path = snappy;
 			sourceTree = "<group>";
@@ -6579,6 +6579,7 @@
 				052FA1E61806129B00FAE4DF /* nxmlfilterreader.cpp in Sources */,
 				0586426E19D982D00019E056 /* SpreadHelper.mm in Sources */,
 				05D1174319EE01A1003BEC55 /* dim2census.cpp in Sources */,
+				053ED8131D8B837500628652 /* snappy_get_gluing_equations.c in Sources */,
 				05BEB0C119CCE0B0006AB2C8 /* UIView+Toast.m in Sources */,
 				052FA1811806129B00FAE4DF /* ntypetrie.cpp in Sources */,
 				05A73C8019B2EE680099C617 /* angle.cpp in Sources */,
@@ -6607,7 +6608,6 @@
 				0591E7E71C4F751B00793A9C /* links.cpp in Sources */,
 				052FA1F51806129B00FAE4DF /* insertlayered.cpp in Sources */,
 				052FA1981806129B00FAE4DF /* ntorusbundle.cpp in Sources */,
-				052FA210180612C100FAE4DF /* snappy_gluing_equations.c in Sources */,
 				052FA1921806129B00FAE4DF /* nlensspace.cpp in Sources */,
 				052FA2091806129B00FAE4DF /* i18nutils.cpp in Sources */,
 				05D1173E19EE0197003BEC55 /* nprimes.cpp in Sources */,
@@ -7104,6 +7104,7 @@
 				052FA00C180600FB00FAE4DF /* nsatblocktypes.cpp in Sources */,
 				052F9F1F180600FB00FAE4DF /* ngraphloop.cpp in Sources */,
 				0591E7B21C4F74C400793A9C /* homology.cpp in Sources */,
+				053ED8121D8B836C00628652 /* snappy_get_gluing_equations.c in Sources */,
 				052FA006180600FB00FAE4DF /* nsatannulus.cpp in Sources */,
 				052F9E91180600FB00FAE4DF /* nxmlanglestructreader.cpp in Sources */,
 				052FA07B180600FB00FAE4DF /* reorder.cpp in Sources */,
@@ -7167,7 +7168,6 @@
 				052F9F6C180600FB00FAE4DF /* canonize.c in Sources */,
 				052F9FFA180600FB00FAE4DF /* nlayeredsolidtorus.cpp in Sources */,
 				05A73CA019B2EF5A0099C617 /* matrix_conversion.c in Sources */,
-				052F9FDE180600FB00FAE4DF /* snappy_gluing_equations.c in Sources */,
 				052F9FFC180600FB00FAE4DF /* nlayeredsurfacebundle.cpp in Sources */,
 				052F9F89180600FB00FAE4DF /* interface.c in Sources */,
 				052F9F6E180600FB00FAE4DF /* canonize_part_1.c in Sources */,
