@@ -320,17 +320,24 @@ bool PythonInterpreter::importRegina() {
     }
 
     // Import the module.
-    PyObject* regModule = PyImport_ImportModule("regina"); // New ref.
-    if (regModule) {
-        PyDict_SetItemString(mainNamespace, "regina", regModule);
-        Py_DECREF(regModule);
-    } else {
+    bool ok = false;
+    try {
+        PyObject* regModule = PyImport_ImportModule("regina"); // New ref.
+        if (regModule) {
+            PyDict_SetItemString(mainNamespace, "regina", regModule);
+            Py_DECREF(regModule);
+            ok = true;
+        } else {
+            PyErr_Print();
+            PyErr_Clear();
+        }
+    } catch (const boost::python::error_already_set&) {
         PyErr_Print();
         PyErr_Clear();
     }
 
     state = PyEval_SaveThread();
-    return (regModule != 0);
+    return ok;
 }
 
 bool PythonInterpreter::setVar(const char* name, regina::NPacket* value) {
