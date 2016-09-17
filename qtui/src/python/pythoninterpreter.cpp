@@ -130,18 +130,23 @@ PythonInterpreter::PythonInterpreter(PythonOutputStream* pyStdOut,
 
     // Redirect stdout and stderr if appropriate.
     if (pyStdOut || pyStdErr) {
-        boost::python::class_<PythonOutputStream, boost::noncopyable>
-                ("PythonOutputStream", boost::python::no_init)
-            .def("write", &PythonOutputStream::write)
-            .def("flush", &PythonOutputStream::flush);
+        try {
+            boost::python::class_<PythonOutputStream, boost::noncopyable>
+                    ("PythonOutputStream", boost::python::no_init)
+                .def("write", &PythonOutputStream::write)
+                .def("flush", &PythonOutputStream::flush);
 
-        boost::python::reference_existing_object::
-            apply<PythonOutputStream*>::type conv;
+            boost::python::reference_existing_object::
+                apply<PythonOutputStream*>::type conv;
 
-        if (pyStdOut)
-            PySys_SetObject(const_cast<char*>("stdout"), conv(pyStdOut));
-        if (pyStdErr)
-            PySys_SetObject(const_cast<char*>("stderr"), conv(pyStdErr));
+            if (pyStdOut)
+                PySys_SetObject(const_cast<char*>("stdout"), conv(pyStdOut));
+            if (pyStdErr)
+                PySys_SetObject(const_cast<char*>("stderr"), conv(pyStdErr));
+        } catch (const boost::python::error_already_set&) {
+            PyErr_Print();
+            PyErr_Clear();
+        }
     }
 
     // Release the global interpreter lock.
@@ -343,18 +348,25 @@ bool PythonInterpreter::importRegina() {
 bool PythonInterpreter::setVar(const char* name, regina::NPacket* value) {
     PyEval_RestoreThread(state);
 
-    boost::python::reference_existing_object::
-        apply<regina::NPacket*>::type conv;
-    PyObject* pyValue = conv(value);
+    bool ok = false;
+    try {
+        boost::python::reference_existing_object::
+            apply<regina::NPacket*>::type conv;
+        PyObject* pyValue = conv(value);
 
-    if (pyValue) {
-        PyObject* nameStr = PyString_FromString(name); // New ref.
-        PyDict_SetItem(mainNamespace, nameStr, conv(value));
-        Py_DECREF(nameStr);
+        if (pyValue) {
+            PyObject* nameStr = PyString_FromString(name); // New ref.
+            PyDict_SetItem(mainNamespace, nameStr, conv(value));
+            Py_DECREF(nameStr);
+            ok = true;
+        }
+    } catch (const boost::python::error_already_set&) {
+        PyErr_Print();
+        PyErr_Clear();
     }
 
     state = PyEval_SaveThread();
-    return (pyValue != 0);
+    return ok;
 }
 
 bool PythonInterpreter::compileScript(const char* code) {
