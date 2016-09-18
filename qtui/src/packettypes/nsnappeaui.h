@@ -37,15 +37,17 @@
 #ifndef __NSNAPPEAUI_H
 #define __NSNAPPEAUI_H
 
+#include "packet/npacketlistener.h"
 #include "../packettabui.h"
 
-class QToolBar;
+class ClickableLabel;
 class NSnapPeaAlgebraUI;
 class NSnapPeaGluingsUI;
 class NSnapPeaShapesUI;
 class NTriSkeletonUI;
 class PacketEditIface;
 class QLabel;
+class QToolBar;
 
 namespace regina {
     class NSnapPeaTriangulation;
@@ -87,7 +89,10 @@ class NSnapPeaUI : public PacketTabbedUI {
 /**
  * A header for the SnapPea triangulation viewer.
  */
-class NSnapPeaHeaderUI : public PacketViewerTab {
+class NSnapPeaHeaderUI : public QObject, public PacketViewerTab,
+        public regina::NPacketListener {
+    Q_OBJECT
+
     private:
         /**
          * Packet details
@@ -99,6 +104,7 @@ class NSnapPeaHeaderUI : public PacketViewerTab {
          */
         QWidget* ui;
         QLabel* header;
+        ClickableLabel* locked;
         QToolBar* bar;
 
     public:
@@ -121,9 +127,33 @@ class NSnapPeaHeaderUI : public PacketViewerTab {
         void refresh();
 
         /**
+         * NPacketListener overrides.
+         */
+        void childWasAdded(regina::NPacket* packet, regina::NPacket* child);
+        void childWasRemoved(regina::NPacket* packet, regina::NPacket* child,
+            bool inParentDestructor);
+
+        /**
          * Allow other UIs to access the summary information.
          */
         static QString summaryInfo(regina::NSnapPeaTriangulation* tri);
+
+    public slots:
+        /**
+         * Explain to the user what the padlock means.
+         */
+        void lockedExplanation();
+
+    protected:
+        /**
+         * Update the state of the padlock.
+         */
+        void refreshLock();
+
+        /**
+         * Allow GUI updates from a non-GUI thread.
+         */
+        void customEvent(QEvent* event);
 };
 
 inline PacketEditIface* NSnapPeaUI::getEditIface() {

@@ -34,6 +34,9 @@
 #include "snappea/nsnappeatriangulation.h"
 
 // UI includes:
+#include "clickablelabel.h"
+#include "eventids.h"
+#include "iconcache.h"
 #include "nsnappeaui.h"
 #include "nsnappeaalgebra.h"
 #include "nsnappeafile.h"
@@ -44,7 +47,9 @@
 #include "ntrisurfaces.h"
 #include "packeteditiface.h"
 #include "reginamain.h"
+#include "reginasupport.h"
 
+#include <QApplication>
 #include <QLabel>
 #include <QToolBar>
 #include <QVBoxLayout>
@@ -100,12 +105,28 @@ NSnapPeaHeaderUI::NSnapPeaHeaderUI(regina::NSnapPeaTriangulation* packet,
     bar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     uiLayout->addWidget(bar);
 
+    QBoxLayout* headerLayout = new QHBoxLayout(ui);
+    headerLayout->setContentsMargins(0, 0, 0, 0);
     header = new QLabel();
     header->setAlignment(Qt::AlignCenter);
     header->setMargin(10);
     header->setWhatsThis(QObject::tr("Displays a few basic properties of the "
         "triangulation, such as orientability and solution type."));
-    uiLayout->addWidget(header);
+    headerLayout->addWidget(header, 1);
+    locked = new ClickableLabel(IconCache::icon(IconCache::lock));
+    locked->setWhatsThis(tr(
+        "<qt>This triangulation cannot be changed, since it has "
+        "normal surfaces and/or angle structures that refer to it.<p>"
+        "Click on the padlock for more information.</qt>"));
+    locked->hide();
+    connect(locked, SIGNAL(clicked()), this, SLOT(lockedExplanation()));
+    headerLayout->addWidget(locked);
+    headerLayout->addSpacing(10);
+    uiLayout->addLayout(headerLayout);
+
+    // Register ourselves as a lister for child changes, so we can
+    // update the lock icon accordingly.
+    tri->listen(this);
 }
 
 regina::NPacket* NSnapPeaHeaderUI::getPacket() {
@@ -118,6 +139,7 @@ QWidget* NSnapPeaHeaderUI::getInterface() {
 
 void NSnapPeaHeaderUI::refresh() {
     header->setText(summaryInfo(tri));
+    refreshLock();
 }
 
 QString NSnapPeaHeaderUI::summaryInfo(regina::NSnapPeaTriangulation* tri) {
@@ -197,5 +219,44 @@ QString NSnapPeaHeaderUI::summaryInfo(regina::NSnapPeaTriangulation* tri) {
     }
 
     return msg;
+}
+
+void NSnapPeaHeaderUI::lockedExplanation() {
+    if (tri->isPacketEditable())
+        return;
+
+    ReginaSupport::info(ui,
+        tr("This triangulation cannot be changed."),
+        tr("<qt>There are normal surfaces and/or angle structures "
+            "that refer to it, and so you cannot change its "
+            "tetrahedron gluings.<p>"
+            "You may clone the triangulation (through the "
+            "<i>Packet Tree</i> menu in the main window), and then "
+            "edit the clone instead.</qt>"));
+}
+
+void NSnapPeaHeaderUI::childWasAdded(regina::NPacket* packet,
+        regina::NPacket* child) {
+    // Be careful - we may not be in the GUI thread.
+    QApplication::postEvent(this, new QEvent(
+        (QEvent::Type)EVT_HEADER_CHILD_ADDED));
+}
+
+void NSnapPeaHeaderUI::childWasRemoved(regina::NPacket* packet,
+        regina::NPacket* child, bool inParentDestructor) {
+    if (! inParentDestructor)
+        refreshLock();
+}
+
+void NSnapPeaHeaderUI::refreshLock() {
+    if (tri->isPacketEditable())
+        locked->hide();
+    else
+        locked->show();
+}
+
+void NSnapPeaHeaderUI::customEvent(QEvent* event) {
+    if (event->type() == EVT_HEADER_CHILD_ADDED)
+        refreshLock();
 }
 
