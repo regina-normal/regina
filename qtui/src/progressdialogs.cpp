@@ -37,8 +37,10 @@
 #include "progressdialogs.h"
 
 #include <QApplication>
+#include <QDialogButtonBox>
 #include <QFrame>
 #include <QLabel>
+#include <QPushButton>
 #include <QThread>
 #include <QVBoxLayout>
 
@@ -122,5 +124,66 @@ bool ProgressDialogMessage::run() {
     }
 
     return (! tracker_->isCancelled()); // Always true, for now.
+}
+
+ProgressDialogOpen::ProgressDialogOpen(regina::NProgressTrackerOpen* tracker,
+        const QString& displayText, const QString& detailTemplate,
+        QWidget* parent) :
+        QDialog(parent), tracker_(tracker), detailTemplate_(detailTemplate) {
+    setWindowTitle(tr("Working"));
+    setWindowModality(Qt::WindowModal);
+
+    QVBoxLayout* layout = new QVBoxLayout(this);
+
+    QLabel* label = new QLabel(QString("<qt><b>%1</b></qt>").arg(displayText));
+    label->setAlignment(Qt::AlignCenter);
+    layout->addWidget(label);
+
+    QFrame* separator = new QFrame();
+    separator->setFrameStyle(QFrame::HLine);
+    separator->setFrameShadow(QFrame::Sunken);
+    layout->addWidget(separator);
+
+    msg = new QLabel(tr("Starting"));
+    msg->setAlignment(Qt::AlignLeft);
+    msg->setTextFormat(Qt::PlainText);
+    layout->addWidget(msg);
+
+    layout->addStretch(1);
+
+    buttons = new QDialogButtonBox(QDialogButtonBox::Cancel);
+    connect(buttons, SIGNAL(rejected()), this, SLOT(cancelTask()));
+    layout->addWidget(buttons);
+}
+
+bool ProgressDialogOpen::run() {
+    show();
+    QCoreApplication::instance()->processEvents();
+
+    msg->setText(tracker_->description().c_str());
+    while (! tracker_->isFinished()) {
+        if (tracker_->stepsChanged()) {
+            msg->setText(detailTemplate_.arg(tracker_->steps()));
+        }
+        QCoreApplication::instance()->processEvents();
+        QThread::msleep(100); // Less frequent updates; just 10 per second.
+    }
+
+    bool success = ! tracker_->isCancelled();
+    buttons->button(QDialogButtonBox::Cancel)->setEnabled(false);
+    tracker_ = 0;
+    return success;
+}
+
+void ProgressDialogOpen::cancelTask() {
+    // If run() is currently running, then this function will be called
+    // from QCoreApplication::processEvents() within the main run() loop.
+    // In particular, it will be called from the same thread, and so we
+    // do not need to worry about race conditions with tracker_.
+    //
+    // If run() has finished, then tracker_ will be null.
+
+    buttons->button(QDialogButtonBox::Cancel)->setEnabled(false);
+    tracker_->cancel();
 }
 
