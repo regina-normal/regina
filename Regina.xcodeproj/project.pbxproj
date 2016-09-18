@@ -1533,7 +1533,7 @@
 			outputFiles = (
 				"$(DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)_moc.cxx",
 			);
-			script = "~/Qt5/5.5/clang_64/bin/moc \\\n-I${HOME}/Qt5/5.5/clang_64/lib/QtCore.framework/Headers \\\n-I${HOME}/Qt5/5.5/clang_64/lib/QtGui.framework/Headers \\\n-I${HOME}/Qt5/5.5/clang_64/lib/QtSvg.framework/Headers \\\n-I${HOME}/Qt5/5.5/clang_64/lib/QtWidgets.framework/Headers \\\n-DQT_GUI_LIB -DQT_CORE_LIB \\\n-o ${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}_moc.cxx ${INPUT_FILE_PATH}";
+			script = "~/Qt5/5.7/clang_64/bin/moc \\\n-I${HOME}/Qt5/5.7/clang_64/lib/QtCore.framework/Headers \\\n-I${HOME}/Qt5/5.7/clang_64/lib/QtGui.framework/Headers \\\n-I${HOME}/Qt5/5.7/clang_64/lib/QtSvg.framework/Headers \\\n-I${HOME}/Qt5/5.7/clang_64/lib/QtWidgets.framework/Headers \\\n-DQT_GUI_LIB -DQT_CORE_LIB \\\n-o ${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}_moc.cxx ${INPUT_FILE_PATH}";
 		};
 		054BC4C219B4A708005E01A0 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -3203,30 +3203,30 @@
 		05A73CD919B2F24A0099C617 /* cusped-hyp-nor-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cusped-hyp-nor-census.rga"; sourceTree = "<group>"; };
 		05A73CDA19B2F24A0099C617 /* cusped-hyp-or-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cusped-hyp-or-census.rga"; sourceTree = "<group>"; };
 		05A73CDB19B2F24A0099C617 /* hyp-knot-link-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "hyp-knot-link-census.rga"; sourceTree = "<group>"; };
-		05AB5ECC1B8ED9F9007034C8 /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = ../../Qt5.5.0/5.5/clang_64/lib/QtCore.framework; sourceTree = "<group>"; };
-		05AB5ECD1B8ED9F9007034C8 /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = ../../Qt5.5.0/5.5/clang_64/lib/QtGui.framework; sourceTree = "<group>"; };
-		05AB5ECE1B8ED9FA007034C8 /* QtWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtWidgets.framework; path = ../../Qt5.5.0/5.5/clang_64/lib/QtWidgets.framework; sourceTree = "<group>"; };
-		05AB5ED21B8EDC27007034C8 /* QtSvg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtSvg.framework; path = ../../Qt5.5.0/5.5/clang_64/lib/QtSvg.framework; sourceTree = "<group>"; };
-		05AB5EDF1B94285B007034C8 /* libqcocoa.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqcocoa.dylib; path = ../../Qt5.5.0/5.5/clang_64/plugins/platforms/libqcocoa.dylib; sourceTree = "<group>"; };
-		05AB5EE01B94285B007034C8 /* libqminimal.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqminimal.dylib; path = ../../Qt5.5.0/5.5/clang_64/plugins/platforms/libqminimal.dylib; sourceTree = "<group>"; };
-		05AB5EE11B94285B007034C8 /* libqoffscreen.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqoffscreen.dylib; path = ../../Qt5.5.0/5.5/clang_64/plugins/platforms/libqoffscreen.dylib; sourceTree = "<group>"; };
-		05AB5EE61B9428B0007034C8 /* libqdds.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqdds.dylib; path = ../../Qt5.5.0/5.5/clang_64/plugins/imageformats/libqdds.dylib; sourceTree = "<group>"; };
-		05AB5EE71B9428B0007034C8 /* libqgif.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqgif.dylib; path = ../../Qt5.5.0/5.5/clang_64/plugins/imageformats/libqgif.dylib; sourceTree = "<group>"; };
-		05AB5EE81B9428B1007034C8 /* libqicns.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqicns.dylib; path = ../../Qt5.5.0/5.5/clang_64/plugins/imageformats/libqicns.dylib; sourceTree = "<group>"; };
-		05AB5EE91B9428B1007034C8 /* libqico.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqico.dylib; path = ../../Qt5.5.0/5.5/clang_64/plugins/imageformats/libqico.dylib; sourceTree = "<group>"; };
-		05AB5EEA1B9428B1007034C8 /* libqjp2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqjp2.dylib; path = ../../Qt5.5.0/5.5/clang_64/plugins/imageformats/libqjp2.dylib; sourceTree = "<group>"; };
-		05AB5EEB1B9428B1007034C8 /* libqjpeg.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqjpeg.dylib; path = ../../Qt5.5.0/5.5/clang_64/plugins/imageformats/libqjpeg.dylib; sourceTree = "<group>"; };
-		05AB5EEC1B9428B2007034C8 /* libqmng.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqmng.dylib; path = ../../Qt5.5.0/5.5/clang_64/plugins/imageformats/libqmng.dylib; sourceTree = "<group>"; };
-		05AB5EED1B9428B2007034C8 /* libqsvg.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqsvg.dylib; path = ../../Qt5.5.0/5.5/clang_64/plugins/imageformats/libqsvg.dylib; sourceTree = "<group>"; };
-		05AB5EEE1B9428B2007034C8 /* libqtga.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqtga.dylib; path = ../../Qt5.5.0/5.5/clang_64/plugins/imageformats/libqtga.dylib; sourceTree = "<group>"; };
-		05AB5EEF1B9428B3007034C8 /* libqtiff.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqtiff.dylib; path = ../../Qt5.5.0/5.5/clang_64/plugins/imageformats/libqtiff.dylib; sourceTree = "<group>"; };
-		05AB5EF01B9428B3007034C8 /* libqwbmp.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqwbmp.dylib; path = ../../Qt5.5.0/5.5/clang_64/plugins/imageformats/libqwbmp.dylib; sourceTree = "<group>"; };
-		05AB5EF11B9428B3007034C8 /* libqwebp.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqwebp.dylib; path = ../../Qt5.5.0/5.5/clang_64/plugins/imageformats/libqwebp.dylib; sourceTree = "<group>"; };
-		05AB5EFF1B9428DC007034C8 /* libqsvgicon.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqsvgicon.dylib; path = ../../Qt5.5.0/5.5/clang_64/plugins/iconengines/libqsvgicon.dylib; sourceTree = "<group>"; };
-		05AB5F021B9428FD007034C8 /* libqtuiotouchplugin.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqtuiotouchplugin.dylib; path = ../../Qt5.5.0/5.5/clang_64/plugins/generic/libqtuiotouchplugin.dylib; sourceTree = "<group>"; };
-		05AB5F051B9429BA007034C8 /* QtDBus.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtDBus.framework; path = ../../Qt5.5.0/5.5/clang_64/lib/QtDBus.framework; sourceTree = "<group>"; };
-		05AB5F061B9429BB007034C8 /* QtNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtNetwork.framework; path = ../../Qt5.5.0/5.5/clang_64/lib/QtNetwork.framework; sourceTree = "<group>"; };
-		05AB5F071B9429BB007034C8 /* QtPrintSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtPrintSupport.framework; path = ../../Qt5.5.0/5.5/clang_64/lib/QtPrintSupport.framework; sourceTree = "<group>"; };
+		05AB5ECC1B8ED9F9007034C8 /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = ../../Qt5.7.0/5.7/clang_64/lib/QtCore.framework; sourceTree = "<group>"; };
+		05AB5ECD1B8ED9F9007034C8 /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = ../../Qt5.7.0/5.7/clang_64/lib/QtGui.framework; sourceTree = "<group>"; };
+		05AB5ECE1B8ED9FA007034C8 /* QtWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtWidgets.framework; path = ../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework; sourceTree = "<group>"; };
+		05AB5ED21B8EDC27007034C8 /* QtSvg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtSvg.framework; path = ../../Qt5.7.0/5.7/clang_64/lib/QtSvg.framework; sourceTree = "<group>"; };
+		05AB5EDF1B94285B007034C8 /* libqcocoa.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqcocoa.dylib; path = ../../Qt5.7.0/5.7/clang_64/plugins/platforms/libqcocoa.dylib; sourceTree = "<group>"; };
+		05AB5EE01B94285B007034C8 /* libqminimal.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqminimal.dylib; path = ../../Qt5.7.0/5.7/clang_64/plugins/platforms/libqminimal.dylib; sourceTree = "<group>"; };
+		05AB5EE11B94285B007034C8 /* libqoffscreen.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqoffscreen.dylib; path = ../../Qt5.7.0/5.7/clang_64/plugins/platforms/libqoffscreen.dylib; sourceTree = "<group>"; };
+		05AB5EE61B9428B0007034C8 /* libqdds.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqdds.dylib; path = ../../Qt5.7.0/5.7/clang_64/plugins/imageformats/libqdds.dylib; sourceTree = "<group>"; };
+		05AB5EE71B9428B0007034C8 /* libqgif.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqgif.dylib; path = ../../Qt5.7.0/5.7/clang_64/plugins/imageformats/libqgif.dylib; sourceTree = "<group>"; };
+		05AB5EE81B9428B1007034C8 /* libqicns.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqicns.dylib; path = ../../Qt5.7.0/5.7/clang_64/plugins/imageformats/libqicns.dylib; sourceTree = "<group>"; };
+		05AB5EE91B9428B1007034C8 /* libqico.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqico.dylib; path = ../../Qt5.7.0/5.7/clang_64/plugins/imageformats/libqico.dylib; sourceTree = "<group>"; };
+		05AB5EEA1B9428B1007034C8 /* libqjp2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqjp2.dylib; path = ../../Qt5.7.0/5.7/clang_64/plugins/imageformats/libqjp2.dylib; sourceTree = "<group>"; };
+		05AB5EEB1B9428B1007034C8 /* libqjpeg.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqjpeg.dylib; path = ../../Qt5.7.0/5.7/clang_64/plugins/imageformats/libqjpeg.dylib; sourceTree = "<group>"; };
+		05AB5EEC1B9428B2007034C8 /* libqmng.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqmng.dylib; path = ../../Qt5.7.0/5.7/clang_64/plugins/imageformats/libqmng.dylib; sourceTree = "<group>"; };
+		05AB5EED1B9428B2007034C8 /* libqsvg.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqsvg.dylib; path = ../../Qt5.7.0/5.7/clang_64/plugins/imageformats/libqsvg.dylib; sourceTree = "<group>"; };
+		05AB5EEE1B9428B2007034C8 /* libqtga.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqtga.dylib; path = ../../Qt5.7.0/5.7/clang_64/plugins/imageformats/libqtga.dylib; sourceTree = "<group>"; };
+		05AB5EEF1B9428B3007034C8 /* libqtiff.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqtiff.dylib; path = ../../Qt5.7.0/5.7/clang_64/plugins/imageformats/libqtiff.dylib; sourceTree = "<group>"; };
+		05AB5EF01B9428B3007034C8 /* libqwbmp.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqwbmp.dylib; path = ../../Qt5.7.0/5.7/clang_64/plugins/imageformats/libqwbmp.dylib; sourceTree = "<group>"; };
+		05AB5EF11B9428B3007034C8 /* libqwebp.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqwebp.dylib; path = ../../Qt5.7.0/5.7/clang_64/plugins/imageformats/libqwebp.dylib; sourceTree = "<group>"; };
+		05AB5EFF1B9428DC007034C8 /* libqsvgicon.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqsvgicon.dylib; path = ../../Qt5.7.0/5.7/clang_64/plugins/iconengines/libqsvgicon.dylib; sourceTree = "<group>"; };
+		05AB5F021B9428FD007034C8 /* libqtuiotouchplugin.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqtuiotouchplugin.dylib; path = ../../Qt5.7.0/5.7/clang_64/plugins/generic/libqtuiotouchplugin.dylib; sourceTree = "<group>"; };
+		05AB5F051B9429BA007034C8 /* QtDBus.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtDBus.framework; path = ../../Qt5.7.0/5.7/clang_64/lib/QtDBus.framework; sourceTree = "<group>"; };
+		05AB5F061B9429BB007034C8 /* QtNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtNetwork.framework; path = ../../Qt5.7.0/5.7/clang_64/lib/QtNetwork.framework; sourceTree = "<group>"; };
+		05AB5F071B9429BB007034C8 /* QtPrintSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtPrintSupport.framework; path = ../../Qt5.7.0/5.7/clang_64/lib/QtPrintSupport.framework; sourceTree = "<group>"; };
 		05B14EA319B423A0002138C0 /* mkcensusdb */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mkcensusdb; sourceTree = BUILT_PRODUCTS_DIR; };
 		05B14EB019B4240D002138C0 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		05B14EB419B4240D002138C0 /* mkcensusdb.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mkcensusdb.cpp; sourceTree = "<group>"; };
@@ -7633,7 +7633,7 @@
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 					"$(USER_LIBRARY_DIR)/Frameworks",
-					"$(HOME)/Qt5.5.0/5.5/clang_64/lib",
+					"$(HOME)/Qt5.7.0/5.7/clang_64/lib",
 					"$(USER_LIBRARY_DIR)/Frameworks/osx",
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
@@ -7653,10 +7653,10 @@
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
 					"\"$(SRCROOT)/qtui/src\"",
-					"$(HOME)/Qt5/5.5/clang_64/lib/QtCore.framework/Headers",
-					"$(HOME)/Qt5/5.5/clang_64/lib/QtGui.framework/Headers",
-					"$(HOME)/Qt5/5.5/clang_64/lib/QtSvg.framework/Headers",
-					"$(HOME)/Qt5/5.5/clang_64/lib/QtWidgets.framework/Headers",
+					"$(HOME)/Qt5/5.7/clang_64/lib/QtCore.framework/Headers",
+					"$(HOME)/Qt5/5.7/clang_64/lib/QtGui.framework/Headers",
+					"$(HOME)/Qt5/5.7/clang_64/lib/QtSvg.framework/Headers",
+					"$(HOME)/Qt5/5.7/clang_64/lib/QtWidgets.framework/Headers",
 					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
 					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
 					"$(USER_LIBRARY_DIR)/Frameworks/osx/graphviz.framework/Headers",
@@ -7685,7 +7685,7 @@
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 					"$(USER_LIBRARY_DIR)/Frameworks",
-					"$(HOME)/Qt5.5.0/5.5/clang_64/lib",
+					"$(HOME)/Qt5.7.0/5.7/clang_64/lib",
 					"$(USER_LIBRARY_DIR)/Frameworks/osx",
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
@@ -7703,10 +7703,10 @@
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
 					"\"$(SRCROOT)/qtui/src\"",
-					"$(HOME)/Qt5/5.5/clang_64/lib/QtCore.framework/Headers",
-					"$(HOME)/Qt5/5.5/clang_64/lib/QtGui.framework/Headers",
-					"$(HOME)/Qt5/5.5/clang_64/lib/QtSvg.framework/Headers",
-					"$(HOME)/Qt5/5.5/clang_64/lib/QtWidgets.framework/Headers",
+					"$(HOME)/Qt5/5.7/clang_64/lib/QtCore.framework/Headers",
+					"$(HOME)/Qt5/5.7/clang_64/lib/QtGui.framework/Headers",
+					"$(HOME)/Qt5/5.7/clang_64/lib/QtSvg.framework/Headers",
+					"$(HOME)/Qt5/5.7/clang_64/lib/QtWidgets.framework/Headers",
 					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
 					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
 					"$(USER_LIBRARY_DIR)/Frameworks/osx/graphviz.framework/Headers",
