@@ -66,6 +66,7 @@ class IconCache {
             packet_triangulation,
             filter_comb,
             filter_prop,
+            lock,
             END_OF_LIST /* this denotes the total number of icons */
         };
 
