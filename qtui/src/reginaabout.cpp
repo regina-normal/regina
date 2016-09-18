@@ -171,8 +171,11 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
     thanksExpertise << "Stephan Tillmann";
 
     thanksInstitutions << "The American Institute of Mathematics";
+    thanksInstitutions << "The Australia-India Strategic Research Fund "
+        "(grant AISRF06660)";
     thanksInstitutions << "The Australian Research Council "
-        "(grants DP0208490, DP1094516, DP110101104 and DP140104246)";
+        "(grants DP0208490, DP1094516, DP110101104, DP140104246, DP150104108)";
+    thanksInstitutions << "The Indian Institute of Science";
     thanksInstitutions << "The Institute for Computational and "
         "Experimental Research in Mathematics, Brown University";
     thanksInstitutions << "The Institute for the Physics and "
