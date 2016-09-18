@@ -127,8 +127,7 @@ PacketPane::PacketPane(ReginaMain* newMainWindow, NPacket* newPacket,
     headerBox->addStretch(1);
 
     headerIcon = new QLabel();
-    headerIcon->setPixmap(PacketManager::icon(newPacket, true).
-        pixmap(headerSize));
+    headerIcon->setPixmap(PacketManager::icon(newPacket).pixmap(headerSize));
     headerIcon->setMargin(2); // Leave *some* space, however tiny.
     headerIcon->setWhatsThis(tr("This shows the label of the packet "
         "being viewed, as well as its packet type."));
@@ -258,16 +257,16 @@ void PacketPane::deregisterEditOperations() {
 
 void PacketPane::packetWasChanged(regina::NPacket*) {
     // Assume it's this packet.
-    refreshHeader();
     mainUI->refresh();
 }
 
 void PacketPane::packetWasRenamed(regina::NPacket*) {
     // Assume it's this packet.
-    refreshHeader();
+    regina::NPacket* packet = getPacket();
 
+    headerTitle->setText(packet->fullName().c_str());
     if (frame)
-        frame->setWindowTitle(getPacket()->humanLabel().c_str());
+        frame->setWindowTitle(packet->humanLabel().c_str());
 }
 
 void PacketPane::packetToBeDestroyed(regina::NPacket*) {
@@ -282,7 +281,6 @@ void PacketPane::childWasAdded(regina::NPacket* packet, regina::NPacket*) {
     if (packet->isPacketEditable() != readWrite)
         QApplication::postEvent(this, new QEvent(
             readWrite ? (QEvent::Type)EVT_PANE_SET_READONLY : (QEvent::Type)EVT_PANE_SET_READWRITE));
-    QApplication::postEvent(this, new QEvent((QEvent::Type)EVT_REFRESH_HEADER));
 }
 
 void PacketPane::childWasRemoved(regina::NPacket* packet, regina::NPacket*,
@@ -290,8 +288,6 @@ void PacketPane::childWasRemoved(regina::NPacket* packet, regina::NPacket*,
     // Assume it's this packet.
     if (packet->isPacketEditable() != readWrite)
         setReadWrite(!readWrite);
-    if (! inParentDestructor)
-        refreshHeader();
 }
 
 bool PacketPane::close() {
@@ -323,20 +319,11 @@ void PacketPane::updateClipboardActions() {
         editPaste->setEnabled(iface ? iface->pasteEnabled() : false);
 }
 
-void PacketPane::refreshHeader() {
-    regina::NPacket* packet = mainUI->getPacket();
-    headerTitle->setText(packet->fullName().c_str());
-    headerIcon->setPixmap(PacketManager::icon(packet, true).
-        pixmap(headerSize));
-}
-
 void PacketPane::customEvent(QEvent* evt) {
     int type = evt->type();
     if (type == EVT_PANE_SET_READONLY)
         setReadWrite(false);
     else if (type == EVT_PANE_SET_READWRITE)
         setReadWrite(true);
-    else if (type == EVT_REFRESH_HEADER)
-        refreshHeader();
 }
 

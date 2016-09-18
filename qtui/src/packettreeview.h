@@ -62,13 +62,6 @@ class PacketTreeItem : public QTreeWidgetItem, public regina::NPacketListener {
         regina::NPacket* packet;
 
         /**
-         * Do we currently believe the underlying packet to be editable?
-         * We refer here purely to child packet constraints; whether
-         * or not the overall file is read-only is irrelevant here.
-         */
-        bool isEditable;
-
-        /**
          * Since the KDE4 port, moving packets around the tree seems to
          * result in branches being closed when they were once open.
          * Manage this manually, sigh.
@@ -125,20 +118,6 @@ class PacketTreeItem : public QTreeWidgetItem, public regina::NPacketListener {
          * label.
          */
         void refreshLabel();
-        /**
-         * Updates the appearance of this item to correctly reflect whether
-         * or not the underlying packet is editable.  This refers purely to
-         * child packet constraints; whether or not the overall file is
-         * read-only is irrelevant here.
-         *
-         * This will only make a physical update if the editability has in
-         * fact changed; otherwise it will do nothing.
-         *
-         * Note that this routine may only be called from within the GUI
-         * thread!  Calling it from a different thread can cause an Xlib
-         * crash.
-         */
-        void updateEditable();
 
         /**
          * NPacketListener overrides.

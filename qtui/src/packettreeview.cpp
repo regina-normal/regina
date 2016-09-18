@@ -69,8 +69,7 @@ PacketTreeItem::PacketTreeItem(QTreeWidgetItem* parent,
 void PacketTreeItem::init() {
     packet->listen(this);
     refreshLabel();
-    setIcon(0, PacketManager::icon(packet, true));
-    isEditable = packet->isPacketEditable();
+    setIcon(0, PacketManager::icon(packet));
 }
 
 void PacketTreeItem::fill() {
@@ -95,14 +94,6 @@ void PacketTreeItem::refreshLabel() {
             setText(0, newLabel);
     } else
         setText(0, QObject::tr("<Deleted>"));
-}
-
-void PacketTreeItem::updateEditable() {
-    if (packet && packet->isPacketEditable() != isEditable) {
-        // We need updating.
-        isEditable = ! isEditable;
-        setIcon(0, PacketManager::icon(packet, true));
-    }
 }
 
 void PacketTreeItem::ensureExpanded() {
@@ -145,7 +136,6 @@ void PacketTreeItem::childWasRemoved(regina::NPacket*, regina::NPacket*,
     // this->packetToBeDestroyed() anyway.
     if (! inParentDestructor) {
         refreshSubtree();
-        updateEditable();
         getMainWindow()->setModified(true);
     }
 }
@@ -373,10 +363,9 @@ void PacketTreeView::customEvent(QEvent* evt) {
         PacketTreeItem* item = static_cast<PacketTreeItemEvent*>(evt)->
             getItem();
 
-        if (item) {
+        if (item)
             item->refreshSubtree();
-            item->updateEditable();
-        } else
+        else
             refreshFullTree();
         mainWindow->setModified(true);
     }
