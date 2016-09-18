@@ -35,6 +35,7 @@
 #include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 #include "packet/ntext.h"
+#include "progress/nprogresstracker.h"
 #include "snappea/nsnappeatriangulation.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangle.h"
@@ -46,6 +47,7 @@
 #include "packetchooser.h"
 #include "packetfilter.h"
 #include "patiencedialog.h"
+#include "progressdialogs.h"
 #include "reginamain.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"
@@ -764,11 +766,51 @@ void NTriGluingsUI::removeSelectedTets() {
 void NTriGluingsUI::simplify() {
     endEdit();
 
-    if (! tri->intelligentSimplify())
-        ReginaSupport::info(ui,
-            tr("I could not simplify the triangulation further."),
-            tr("This does not mean that the triangulation is minimal; it "
-            "simply means that I could not find a way of reducing it."));
+    if (! tri->intelligentSimplify()) {
+        QMessageBox msgBox(ui);
+        msgBox.setWindowTitle(tr("Information"));
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.setText(tr("I could not simplify the triangulation."));
+        msgBox.setInformativeText(tr("I have only tried fast heuristics "
+            "so far."));
+        msgBox.setStandardButtons(QMessageBox::Close);
+        QAbstractButton* work = msgBox.addButton(
+            tr("Try harder"), QMessageBox::ActionRole);
+        msgBox.setDefaultButton(QMessageBox::Close);
+        msgBox.exec();
+        if (msgBox.clickedButton() == work)
+            simplifyExhaustive(2);
+    }
+}
+
+void NTriGluingsUI::simplifyExhaustive(int height) {
+    size_t initSize = tri->size();
+
+    regina::NProgressTrackerOpen tracker;
+    ProgressDialogOpen dlg(&tracker, tr("Searching Pachner graph..."),
+        tr("Tried %1 triangulations"), ui);
+
+    tri->simplifyExhaustive(height, 1 /* threads */, &tracker);
+
+    if (dlg.run() && tri->size() == initSize) {
+        dlg.hide();
+
+        QMessageBox msgBox(ui);
+        msgBox.setWindowTitle(tr("Information"));
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.setText(tr("I still could not simplify the triangulation."));
+        msgBox.setInformativeText(tr("<qt>I have exhaustively searched "
+            "the Pachner graph up to %1 tetrahedra.<p>"
+            "I can look further, but be warned: the time and memory "
+            "required could grow <i>very</i> rapidly.").arg(initSize + height));
+        msgBox.setStandardButtons(QMessageBox::Close);
+        QAbstractButton* work = msgBox.addButton(
+            tr("Keep trying"), QMessageBox::ActionRole);
+        msgBox.setDefaultButton(QMessageBox::Close);
+        msgBox.exec();
+        if (msgBox.clickedButton() == work)
+            simplifyExhaustive(height + 1);
+    }
 }
 
 void NTriGluingsUI::orient() {
