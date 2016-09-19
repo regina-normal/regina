@@ -137,7 +137,7 @@ const QString ReginaAbout::regLicense( tr(
 ReginaAbout::ReginaAbout(QWidget* parent) : 
         QDialog(parent) {
     // Authors:
-    authors << AuthorInfo("Benjamin Burton", "bab@debian.org",
+    authors << AuthorInfo("Benjamin Burton", "bab@maths.uq.edu.au",
         "http://www.maths.uq.edu.au/~bab/");
     authors << AuthorInfo("Ryan Budney", "rybu@uvic.ca",
         "http://rybu.org/");

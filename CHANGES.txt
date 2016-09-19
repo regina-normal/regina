@@ -4146,6 +4146,6 @@ Version 2.1.1
 Version 2.1.0  [ 18 December, 2000 ]
     (Initial public release.)
 
-Ben Burton (bab@debian.org)
+Ben Burton (bab@maths.uq.edu.au)
 http://regina.sourceforge.net/
 

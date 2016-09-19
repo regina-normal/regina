@@ -17,7 +17,7 @@ AUTHORS:
 
 The primary developers of Regina are:
 
-  Benjamin Burton <bab@debian.org>
+  Benjamin Burton <bab@maths.uq.edu.au>
   Ryan Budney <rybu@uvic.ca>
   William Pettersson <william.pettersson@gmail.com>
 

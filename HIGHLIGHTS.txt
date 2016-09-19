@@ -671,6 +671,6 @@ Version 2.2  [ 7 October, 2001 ]
 
     (See CHANGES.txt for details beyond this point.)
 
-Ben Burton (bab@debian.org)
+Ben Burton (bab@maths.uq.edu.au)
 http://regina.sourceforge.net/
 
