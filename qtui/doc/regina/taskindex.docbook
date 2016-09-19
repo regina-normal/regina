@@ -462,10 +462,6 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="packet-dock">docking packets</link></primaryie>
- </indexentry>
-
- <indexentry>
   <primaryie>documentation</primaryie>
   <secondaryie><link linkend="python-docs">&regina; objects, classes
    and methods</link></secondaryie>
@@ -666,8 +662,8 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="packet-dock">floating packets
-   in separate windows</link></primaryie>
+  <primaryie><link linkend="options-unicode">fonts,
+   unicode symbols</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -934,6 +930,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="options-unicode">mathematical symbols,
+   enabling / disabling</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>Matveev's &recogniser;</primaryie>
   <seeie>See: &recogniser;</seeie>
  </indexentry>
@@ -1086,10 +1087,6 @@
   <secondaryie><link linkend="packet-new">creating new
    packets</link></secondaryie>
   <secondaryie><link linkend="packet-delete">deleting</link></secondaryie>
-  <secondaryie><link linkend="packet-dock">docking and
-   undocking</link></secondaryie>
-  <secondaryie><link linkend="packet-dock">floating in separate
-   windows</link></secondaryie>
   <secondaryie><link linkend="packet-move">moving within the
    tree</link></secondaryie>
   <secondaryie><link linkend="packet-tree">viewing and
@@ -1100,12 +1097,6 @@
   <primaryie>padlock</primaryie>
   <secondaryie><link linkend="packet-uneditable">in the packet
    tree</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>paper clip</primaryie>
-  <secondaryie><link linkend="packet-dock">button in packet
-   viewers</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1453,6 +1444,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="options-unicode">subscript / superscript symbols,
+   enabling / disabling</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>surface</primaryie>
   <seeie>See: triangulation, 2-manifold</seeie>
  </indexentry>
@@ -1665,7 +1661,8 @@
  </indexdiv><indexdiv id='taskindex-U'><title>&mdash; U &mdash;</title>
 
  <indexentry>
-  <primaryie><link linkend="packet-dock">undocking packets</link></primaryie>
+  <primaryie><link linkend="options-unicode">unicode symbols,
+   enabling / disabling</link></primaryie>
  </indexentry>
 
  <indexentry>

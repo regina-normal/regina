@@ -43,29 +43,22 @@
    The settings here are:
   </para>
   <glosslist>
-   <glossentry id="packet-dock">
-    <glossterm><guilabel>Dock packets in the main window</guilabel></glossterm>
+   <glossentry id="options-unicode">
+    <glossterm><guilabel>Use unicode for mathematical symbols</guilabel></glossterm>
     <glossdef>
      <para>
-      As of version&nbsp;4.92, &regina; works with lots of small windows
-      instead of one monolithic window.  The main window contains just
-      the packet tree, and each packet opens in its own separate window.
+      Most modern computers now have a rich set of fonts that include
+      subscripts, superscripts and a range of mathematical symbols.
+      By default, &regina; will use these symbols to make its display
+      easier to read (e.g., subscripts when describing abelian groups,
+      or superscripts when describing group presentations).
      </para>
      <para>
-      If you wish to return to the old behaviour (where packets were
-      &ldquo;docked&rdquo; in the main window beside the packet tree),
-      you can check this box.  A large dock area will appear to the
-      right of the packet tree, and each packet viewer will have an
-      extra <guilabel>Dock&nbsp;/&nbsp;Undock</guilabel> button
-      (indicated by the arrow below) that
-      allows you to pop it out into a separate window if you choose.
-     </para>
-     <para>
-      <inlinemediaobject>
-       <imageobject>
-        <imagedata fileref="dock.png"/>
-       </imageobject>
-      </inlinemediaobject>
+      If you cannot read these symbols on your machine (e.g., the
+      subscripts and superscripts are too hard to read, or the fonts do
+      not provide these symbols at all), then you can uncheck this option.
+      This will cause &regina; to use &ldquo;plain&rdquo; &ascii; symbols only,
+      which are supported on every machine.
      </para>
     </glossdef>
    </glossentry>
@@ -362,39 +355,6 @@
       provide the full path to the executable
       (such as <literal>/usr/local/bin/gap</literal>).
      </para>
-    </glossdef>
-   </glossentry>
-   <glossentry>
-    <glossterm><guilabel>&graphviz; executable</guilabel></glossterm>
-    <glossdef>
-     <para>
-      Tells &regina; where to find &graphvizurl;.  &graphviz; is
-      not required by &regina;, but is needed if you wish to
-      <link linkend="tri-skeleton-facegraph">view face pairing graphs</link>.
-     </para>
-     <para>
-      This setting should be the name of the command that &graphviz;
-      uses to draw undirected graphs.  The default
-      is <literal>neato</literal>,
-      but you may use one of &graphviz;' other drawing commands if you prefer
-      (but note that the command is <emphasis>not</emphasis> called
-      <literal>graphviz</literal>).
-     </para>
-     <para>
-      Again, &regina; will look for this command on the default search path.
-      If you have installed &graphviz; somewhere unusual then you will need to
-      provide the full path to the executable
-      (such as <filename>/usr/local/bin/neato</filename>).
-     </para>
-     <para><tip><para>
-      &regina; works best with &graphviz; version &ge;&nbsp;2.0.
-      If you have an ancient version (&graphviz;&nbsp;1.x) then
-      you will need to set your &graphviz; command to <command>dot</command>,
-      not <command>neato</command>.
-      This is because ancient versions of <command>neato</command> could
-      not display multiple edges.  &regina; will check the version and
-      warn you if you seem to be using the wrong command.
-     </para></tip></para>
     </glossdef>
    </glossentry>
   </glosslist>
