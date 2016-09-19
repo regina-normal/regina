@@ -2,19 +2,17 @@
  <title>What does Regina do?</title>
 
  <para>
-  A list of &regina;'s more noteworthy features is presented below.
+  Some of &regina;'s more noteworthy features are listed below.
  </para>
 
  <sect2 id="features-tri">
-  <title>Triangulations</title>
+  <title>3-Manifold Triangulations</title>
 
   <para>
-   The primary objects that a user works with in &regina; are
-   3-manifold triangulations.  As such, a large part of
-   the software is devoted to the creation, analysis and manipulation of
-   these triangulations.
-   &regina; can also work with 2-manifold triangulations and
-   recognise their underlying manifolds.
+   &regina;'s greatest strengths are in 3-manifold topology.
+   Here, the primary objects that a user works with are
+   3-manifold triangulations.  A large part of &regina; is
+   devoted to the creation, analysis and manipulation of these triangulations.
   </para>
 
   <sect3 id="features-tricreation">
@@ -101,6 +99,11 @@
       of &graphviz;;
      </para></listitem>
      <listitem><para>
+      a tree decomposition of the face pairing graph, for use with
+      fixed-parameter tractable algorithms
+      <xref linkend="bib-turaevviro-fpt"/>;
+     </para></listitem>
+     <listitem><para>
       text-based isomorphism signatures
       <xref linkend="bib-burton-pachner-orprime"/>,
       which identify a triangulation uniquely up to combinatorial isomorphism;
@@ -142,11 +145,14 @@
       transformations described in <xref linkend="bib-burton-nor7"/>;
      </para></listitem>
      <listitem><para>
-      automated simplification in which the software attempts to use
-      a combination of these elementary moves to reduce the number of
-      tetrahedra as far as possible, though there is no
-      guarantee that the smallest possible number of tetrahedra will be
-      achieved;
+      &ldquo;greedy&rdquo; simplification, which uses a fast combination
+      of these elementary moves to reduce the number of
+      tetrahedra as far as possible;
+     </para></listitem>
+     <listitem><para>
+      &ldquo;exhaustive&rdquo; simplification, which involves a
+      comprehensive search through the Pachner graph to find
+      simplification moves that the greedy method could not;
      </para></listitem>
      <listitem><para>
       conversion to a 0-efficient triangulation where possible
@@ -179,15 +185,66 @@
   </sect3>
  </sect2>
 
+ <sect2 id="features-dim4">
+  <title>4-Manifold Triangulations</title>
+  <para>
+   Since version&nbsp;5.0, &regina; now offers rich support for
+   triangulated 4-manifolds.
+  </para>
+  <para>
+   You can create 4-manifold triangulations using similar methods to
+   3-manifolds, including manual gluings of pentachora,
+   automatic generation of standard families, reconstruction from
+   isomorphism signatures, and construction of ready-made examples.
+  </para>
+  <para>
+   To analyse 4-manifold triangulations, &regina; offers a similar
+   suite of algebraic and combinatorial tools, including
+   detailed information about the skeleton and edge/vertex links,
+   various homology and homotopy groups,
+   analysis and tree decompositions of the facet pairing graph,
+   isomorphism testing, and isomorphism signatures.
+  </para>
+  <para>
+   To manipulate 4-manifold triangulations, &regina; offers a
+   similar combinatorial toolbox to that for 3-manifolds, including
+   elementary moves, automated simplification, barycentric subdivision,
+   double covers, and converting between ideal and real boundary components.
+  </para>
+ </sect2>
+
+ <sect2 id="features-highdim">
+  <title>Higher Dimensions</title>
+  <para>
+   Beyond 4-manifolds, &regina; offers very basic support
+   support for triangulations of dimensions 5&ndash;15.
+   This support is <emphasis>not</emphasis> available through the &gui;:
+   for this you will need to use either
+   <link linkend="python">&python;</link> or
+   <link linkend="compiling">&cpp;</link>.
+  </para>
+  <para>
+   Currently this support is limited to basic combinatorial tools,
+   such analysis of the skeleton and face structure of the triangulation,
+   double covers, creating ideal vertices, isomorphism testing,
+   and isomorphism signatures.
+  </para>
+  <para>
+   The level of support for higher-dimensional triangulations is
+   expected to grow in future releases.
+  </para>
+ </sect2>
+
  <sect2 id="features-census">
   <title>Census Creation and Lookup</title>
   <para>
-   &regina; can be used to form censuses of all 3-manifold triangulations
+   &regina; can be used to form censuses of all triangulations
    that satisfy various constraints, through the command-line tool
    <link linkend="man-tricensus"><command>tricensus</command></link>.
+   Census enumeration is currently available in dimensions 2, 3 and 4.
   </para>
   <para>
-   The census algorithm is heavily optimised; see
+   The census algorithms are heavily optimised; see
    <xref linkend="bib-burton-facegraphs"/>,
    <xref linkend="bib-burton-nor10"/> and
    <xref linkend="bib-burton-genus"/> for details.
@@ -213,10 +270,12 @@
  </sect2>
 
  <sect2 id="features-surfaces">
-  <title>Normal Surfaces</title>
+  <title>Normal Surfaces and Hypersurfaces</title>
   <para>
    &regina; is capable of enumerating all vertex or fundamental
-   normal surfaces within a triangulation; almost normal
+   normal surfaces within a 3-manifold triangulation, or all
+   vertex or fundamental normal hypersurfaces within a 4-manifold
+   triangulation.  For 3-manifolds, almost normal
    surfaces<footnote><para>Almost normal surfaces are closely related
      to normal surfaces and are used by Rubinstein in his 3-sphere recognition
      algorithm <xref linkend="bib-rubin-3sphere1"/>,
@@ -224,8 +283,11 @@
      almost normal discs, and does not consider annular
      pieces.</para></footnote>
    are supported also.
-   These operations are required by many high-level topological algorithms that
-   utilise normal surface theory.  The underlying enumeration algorithms
+  </para>
+  <para>
+   These operations&mdash;enumerating vertex and fundamental normal
+   surfaces&mdash;are required by many high-level topological algorithms
+   for 3-manifolds.  The underlying enumeration algorithms
    are highly optimised, and are described in detail in
    <xref linkend="bib-burton-dd"/>,
    <xref linkend="bib-burton-convert"/>,
@@ -234,7 +296,7 @@
    <xref linkend="bib-bo-tree"/>.
   </para>
   <para>
-   This enumeration can be performed in a variety of coordinate
+   For 3-manifolds, this enumeration can be performed in a variety of coordinate
    systems.  For an <replaceable>n</replaceable>-tetrahedron triangulation
    this includes the 7<replaceable>n</replaceable>
    standard triangle and quadrilateral coordinates, as well
@@ -249,14 +311,16 @@
   </para>
   <para>
    The enumeration
-   can be restricted to embedded normal surfaces or can be expanded to
-   include immersed and singular surfaces.  &regina; also supports
+   can be restricted to embedded normal surfaces/hypersurfaces,
+   or can be expanded to
+   include immersed and singular surfaces/hypersurfaces.
+   &regina; also supports
    spun-normal surfaces <xref linkend="bib-tillus-spun"/>,
    which are non-compact surfaces with infinitely many
-   discs found in ideal triangulations.
+   discs found in ideal 3-manifold triangulations.
   </para>
   <para>
-   To analyse normal surfaces, you can:
+   To analyse normal surfaces within a 3-manifold triangulation, you can:
    <itemizedlist>
     <listitem><para>
      view normal surfaces in a variety of coordinate systems,
@@ -295,6 +359,12 @@
     </para></listitem>
    </itemizedlist>
   </para>
+  <para>
+   For normal hypersurfaces in a 4-manifold triangulation, some
+   analogous operations are available.  In particular, you can view
+   hypersurfaces in different coordinate systems, calculate basic
+   properties, and test for local (but not yet global) compatibility.
+  </para>
  </sect2>
 
  <sect2 id="features-angles">
@@ -307,12 +377,12 @@
    <xref linkend="bib-rivin-combopt"/>,
    represent a purely
    algebraic generalisation of hyperbolic structures.  An angle structure
-   on an ideal triangulation is formed by assigning an interior
+   on an ideal 3-manifold triangulation is formed by assigning an interior
    dihedral angle to each edge of every tetrahedron in such a way that
    a variety of linear equations and inequalities are satisfied.
   </para>
   <para>
-   Using similar techniques to normal surface enumeration
+   Using similar techniques to normal surface enumeration,
    &regina; can enumerate all vertex angle structures in a triangulation,
    or all taut structures (for which each dihedral angle is precisely 0
    or &pi;).
@@ -332,7 +402,8 @@
  <sect2 id="features-splitting">
   <title>Splitting Surfaces</title>
   <para>
-   A splitting surface contains precisely one quadrilateral disc within
+   A splitting surface within a 3-manifold triangulation
+   contains precisely one quadrilateral disc within
    each tetrahedron and no other normal or almost normal discs.
    These surfaces have some interesting combinatorial and topological
    properties, described in detail in <xref linkend="bib-burton-phd"/>.

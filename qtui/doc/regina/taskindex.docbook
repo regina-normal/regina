@@ -111,6 +111,11 @@
   <seeie>See: elementary moves</seeie>
  </indexentry>
 
+ <indexentry>
+  <primaryie>(5&ndash;15)-manifold triangulation</primaryie>
+  <seeie>See: triangulation, (5&ndash;14)-manifold</seeie>
+ </indexentry>
+
  </indexdiv><indexdiv id='taskindex-A'><title>&mdash; A &mdash;</title>
 
  <indexentry>
@@ -1067,8 +1072,6 @@
   <secondaryie><link linkend="options-general">jump size</link></secondaryie>
   <secondaryie><link linkend="packet-move">moving packets</link></secondaryie>
   <secondaryie><link linkend="packet-tree">overview</link></secondaryie>
-  <secondaryie><link linkend="packet-refresh">refreshing a
-   subtree</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1633,6 +1636,11 @@
    recognition</link></secondaryie>
   <secondaryie><link linkend="tri-propvalid">validity</link></secondaryie>
   <secondaryie><link linkend="tri-snappea">volume</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="packet-higherdim">triangulation,
+   (5&ndash;15)-manifold</link></primaryie>
  </indexentry>
 
  <indexentry>

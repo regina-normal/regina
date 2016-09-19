@@ -40,14 +40,13 @@
    </para>
    <para>
     For example, if a triangulation has normal surfaces or angle structures
-    beneath it, then &regina; will not let you change the triangulation
-    because this would invalidate the normal coordinates or angle structure
+    that refer to it, then &regina; will not let you change the triangulation
+    because this would invalidate the normal coordinates and/or angle structure
     coordinates.
    </para>
    <para>
-    Uneditable packets such as this will be marked with a small padlock
-    in the tree: see the Figure&nbsp;8 Knot Complement in the
-    illustration below.
+    Uneditable packets such as this will be marked with a padlock
+    in the packet viewer:
    </para>
    <para>
     <inlinemediaobject>
@@ -143,7 +142,7 @@
     together in pairs.
     3-manifold triangulations are central to &regina;,
     and you can learn more about using them by reading the
-    <link linkend="triangulations">chapter on triangulations</link> in
+    <link linkend="triangulations">corresponding chapter</link> in
     this handbook.
    </para>
    <para>
@@ -168,12 +167,11 @@
    <para>
     A <firstterm>&snappea; triangulation</firstterm> packet stores a
     3-manifold using &snappea;'s internal data structures
-    (in contrast, the usual <link linkend="packet-triangulation">triangulation
-    packet</link> uses &regina;'s own structures, which are independent
-    of &snappea;).
+    (in contrast, the usual <link linkend="packet-triangulation">3-manifold
+    triangulation packet</link> uses &regina;'s own structures, which are
+    independent of &snappea;).
     You can learn more about using &snappea; triangulations in the
-    <link linkend="snappea">chapter on &snappea; triangulations</link>
-    later in this handbook.
+    <link linkend="snappea">corresponding chapter</link> later in this handbook.
    </para>
    <para>
     The advantages of using a &snappea; triangulation is that it stores
@@ -196,6 +194,67 @@
     <inlinemediaobject>
      <imageobject>
       <imagedata fileref="snappea.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+  </sect2>
+
+  <sect2 id="packet-dim4triangulation">
+   <title>4-Manifold Triangulations</title>
+   <para>
+    A <firstterm>4-manifold triangulation</firstterm> packet describes a
+    triangulated 4-manifold, formed by gluing faces of pentachora
+    (i.e., 4-simplices) together in pairs.
+    4-manifold triangulations were introduced in &regina;&nbsp;5.0,
+    and you can learn more about them by reading the
+    <link linkend="dim4triangulations">corresponding chapter</link> in
+    this handbook.
+   </para>
+   <para>
+    4-manifold triangulations are marked by the following icon:
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="icon-dim4triangulation.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="dim4triangulation.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+  </sect2>
+
+  <sect2 id="packet-higherdim">
+   <title>Higher-Dimensional Triangulations</title>
+   <para>
+    &regina; currently offers very basic support for triangulations of
+    dimensions 5&ndash;15.  At present you cannot work with these
+    higher-dimensional triangulations in the &gui;&mdash;instead you will
+    need to use either <link linkend="python">&python; scripting</link>
+    or <link linkend="compiling">&cpp; programming</link>.
+   </para>
+   <para>
+    Triangulations of dimension 5&ndash;15 are marked by an icon similar
+    to the following, with the dimension marked inside the
+    simplex-shaped outline:
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="icon-dim8triangulation.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    The packet viewer offers very little information, but it does include a
+    button to open a <link linkend="python-gui">&python; console</link>,
+    where you can analyse and/or modify the triangulation further.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="dim5triangulation.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -230,6 +289,42 @@
     <inlinemediaobject>
      <imageobject>
       <imagedata fileref="surfacelist.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+  </sect2>
+
+  <sect2 id="packet-hypersurfacelist">
+   <title>Normal Hypersurface Lists</title>
+   <para>
+    A <firstterm>normal hypersurface list</firstterm> represents a set
+    of normal hypersurfaces within a 4-manifold triangulation.
+    As with normal surface lists,
+    this will typically be the set of all vertex or fundamental hypersurfaces
+    in some normal coordinate system.
+    You can learn more about them in the
+    <link linkend="hypersurfaces">chapter on normal hypersurfaces</link>.
+   </para>
+   <para>
+    Normal hypersurface lists are marked by the following icon:
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="icon-hypersurfaces.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    At present, normal hypersurface lists can only be created in the
+    standard coordinate system (with 15 coordinates per pentachoron).
+    However, you can still view the hypersurfaces in a variety of different
+    coordinate systems.
+    In the packet tree, a normal hypersurface list must always appear as a
+    child of the corresponding 4-manifold triangulation.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="hypersurfacelist.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -282,7 +377,7 @@
     <title>Property Filters</title>
     <para>
      A <firstterm>property filter</firstterm> selects only those normal
-     surfaces with a given orientability, compactness, boundary
+     surfaces with a given orientability, compactness, boundary,
      and/or Euler characteristic.
     </para>
     <para>
@@ -468,26 +563,10 @@
     </inlinemediaobject>
    </para>
    <para>
-    Each time you create a new packet, you will be asked for some details
-    (as illustrated below):
-    <glosslist>
-     <glossentry>
-      <glossterm><guilabel>Create beneath:</guilabel></glossterm>
-      <glossdef><para>
-       Here you select where in the tree your new packet will appear.
-       Your new packet will be added as a child of whatever
-       you choose in this box.
-      </para></glossdef>
-     </glossentry>
-     <glossentry>
-      <glossterm><guilabel>Label:</guilabel></glossterm>
-      <glossdef><para>
-       This will be the label (i.e., the name) of the new packet.
-      </para></glossdef>
-     </glossentry>
-    </glosslist>
-    You might also be asked for additional information according to which
-    type of packet you are creating.
+    When you create a new packet, you will be asked where in the
+    tree your new packet should appear.  Choose a suitable parent
+    in the box marked <guilabel>Create beneath:</guilabel>, and your
+    new packet will be added as a child of whatever you choose here.
    </para>
    <para>
     <inlinemediaobject>
@@ -495,6 +574,18 @@
       <imagedata fileref="newtriangulation.png"/>
      </imageobject>
     </inlinemediaobject>
+   </para>
+   <para>
+    You might also be asked for some additional information, according to
+    which type of packet you are creating.  In the example above, you
+    must select the <emphasis>type</emphasis> of triangulation to create;
+    moreover, since the user
+    has selected to use an isomorphism signature, you must type
+    in the isomorphism signature as well.
+   </para>
+   <para>
+    The new packet will be given a label automatically, though you can of course
+    <link linkend="packet-rename">rename it</link> if you like.
    </para>
   </sect2>
 
@@ -640,30 +731,6 @@
     menu have keyboard shortcuts, allowing you to reorganise the
     packet tree quickly using just the keyboard.
    </para></tip>
-  </sect2>
-
-  <sect2 id="packet-refresh">
-   <title>Refreshing the Tree</title>
-
-   <para>
-    The
-    <menuchoice>
-     <guimenu>Packet Tree</guimenu>
-     <guimenuitem>Refresh Tree</guimenuitem>
-    </menuchoice>
-    menu item will reload the entire packet tree from &regina;'s
-    mathematical engine.  This should never be necessary, but the
-    operation is provided in case the user interface gets out of sync.
-    If this does happen, please <link linkend="services">let us know</link>
-    so that we can reproduce and hopefully fix the bug.
-   </para>
-   <para>
-    <inlinemediaobject>
-     <imageobject>
-      <imagedata fileref="menurefresh.png"/>
-     </imageobject>
-    </inlinemediaobject>
-   </para>
   </sect2>
  </sect1>
 </chapter>
