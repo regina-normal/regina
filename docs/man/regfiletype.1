@@ -3,7 +3,7 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "REGFILETYPE" "1" "06 February 2016" "" "The Regina Handbook"
+.TH "REGFILETYPE" "1" "20 September 2016" "" "The Regina Handbook"
 
 .SH NAME
 regfiletype \- Identify the formats of Regina data files
@@ -13,15 +13,19 @@ regfiletype \- Identify the formats of Regina data files
 
 .SH "DESCRIPTION"
 .PP
-Between Regina versions 2.4 and 3.0, the data files changed from
-using an impenetrable and undocumented binary format to using
-(optionally compressed) XML\&.
-.PP
-This utility determines which of these formats a given
+This utility determines which file format a given
 Regina data file is in.
-.PP
 You may pass multiple files on the command line; the format of each
 file will be written to standard output.
+.PP
+Only Regina's modern XML-based file formats are recognised
+(both compressed and uncompressed).
+In its very early years, Regina used an impenetrable and undocumented
+binary format; this was replaced with XML in 2002 (Regina\~3.0),
+and support for this format was removed completely in 2013
+(Regina\~4.94).
+If you still need to recognise and/or read files in this ancient binary
+format, you will need to download Regina\~4.93.
 .SH "MACOS\\~X USERS"
 .PP
 If you downloaded a drag-and-drop app bundle, this utility is
@@ -42,6 +46,7 @@ regconvert,
 regina-gui\&.
 .SH "AUTHOR"
 .PP
-This utility was written by Benjamin Burton <bab@debian.org>\&.
+This utility was written by Benjamin Burton
+<bab@maths.uq.edu.au>\&.
 Many people have been involved in the development
 of Regina; see the users' handbook for a full list of credits.

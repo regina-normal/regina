@@ -457,17 +457,20 @@
   <refsect1>
    <title>Description</title>
    <para>
-    Between &regina; versions 2.4 and 3.0, the data files changed from
-    using an impenetrable and undocumented binary format to using
-    (optionally compressed) &xml;.
-   </para>
-   <para>
-    This utility determines which of these formats a given
+    This utility determines which file format a given
     &regina; data file is in.
-   </para>
-   <para>
     You may pass multiple files on the command line; the format of each
     file will be written to standard output.
+   </para>
+   <para>
+    Only &regina;'s modern &xml;-based file formats are recognised
+    (both compressed and uncompressed).
+    In its very early years, &regina; used an impenetrable and undocumented
+    binary format; this was replaced with &xml; in 2002 (&regina;&nbsp;3.0),
+    and support for this format was removed completely in 2013
+    (&regina;&nbsp;4.94).
+    If you still need to recognise and/or read files in this ancient binary
+    format, you will need to download &regina;&nbsp;4.93.
    </para>
   </refsect1>
 
