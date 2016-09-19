@@ -210,7 +210,7 @@
 <prompt>example:~/source/regina/build&gt;</prompt>
 </screen>
      <para>
-      If you are stuck, please mail &reguserlist; for assistance,
+      If you are stuck, please &mailtheauthors; for assistance,
       including your <filename>CMakeCache.txt</filename>
       if possible to help diagnose the problem.
      </para>
@@ -397,9 +397,8 @@ Total Test time (real) =  19.48 sec
       Please! - mail the authors and let us know.  You are welcome to
       write to us directly (our <link linkend="acknowledgements">email
       addresses are here</link>).  Or even better,
-      use the <link linkend="services">&sourceforge; services</link>
-      such as the bug tracking system and mailing lists so that the
-      problem you report is publicly archived.
+      use the <link linkend="services">&sourceforge; bug tracking system</link>
+      so that the problem you report is publicly archived.
      </para>
      <para>
       This program is permanently in development.  There is a very

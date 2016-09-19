@@ -1208,7 +1208,7 @@ double NTriangulation::turaevViroApprox(unsigned long r,
             "WARNING: The Turaev-Viro invariant has an imaginary component.\n"
             "         This should never happen.\n"
             "         Please report this (along with the 3-manifold that"
-            "         was used) to " << PACKAGE_BUGREPORT << "." << std::endl;
+            "         was used) to Regina's authors." << std::endl;
     }
     return ans.real();
 }

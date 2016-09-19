@@ -44,9 +44,6 @@ use File::Basename;
 my $prog_name = $0;
 my $prog_dir = abs_path(dirname($prog_name));
 
-# Address to which questions should be emailed.
-my $regina_support = "regina-user\@lists.sourceforge.net";
-
 # Default verbosity level.
 my $default_verbosity = 1;
 
@@ -404,7 +401,7 @@ sub execError() {
     &err("E: An error occurred whilst trying to start the Python interpreter.\n");
     &err("E: Run '$prog_name --verbose' to see more detailed diagnostic output,\n");
     &err("   including the runtime options being used.\n");
-    &err("E: If you still cannot resolve the problem, please mail\n");
-    &err("   $regina_support for assistance.\n");
+    &err("E: If you still cannot resolve the problem, please mail the authors\n");
+    &err("   for assistance.\n");
 }
 

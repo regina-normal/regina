@@ -9,7 +9,6 @@
   <!ENTITY copyrightholder "The Regina development team">
   <!ENTITY copyrightnotice
    "Copyright &copy; &copyrightyears;, &copyrightholder;">
-  <!ENTITY reguserlist "<email>regina-user@lists.sourceforge.net</email>">
   <!ENTITY regabstract
    "<para>
      &regina; is a software package for 3-manifold and 4-manifold topologists,
@@ -23,6 +22,8 @@
      &regina; offers a full graphical user interface, as well as
      &python; bindings and a low-level &cpp; programming interface.
     </para>">
+  <!ENTITY mailtheauthors
+   "mail <link linkend='acknowledgements'>the authors</link>">
   <!ENTITY regwebsite
    "<ulink url='http://regina.sourceforge.net/'>&regina; website</ulink>">
   <!ENTITY regenginedocs

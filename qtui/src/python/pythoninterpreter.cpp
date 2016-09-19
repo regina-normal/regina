@@ -444,8 +444,7 @@ bool PythonInterpreter::isEmptyCommand(const std::string& command) {
 
 void PythonInterpreter::pleaseReport(const char* msg) {
     std::cerr << "ERROR: " << msg << std::endl;
-    std::cerr << "       Please report this anomaly to "
-        << PACKAGE_BUGREPORT << std::endl;
+    std::cerr << "       Please report this anomaly to the authors," << std::endl;
     std::cerr << "       since this should never occur.\n";
 }
 

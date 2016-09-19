@@ -323,12 +323,11 @@ bool PythonConsole::importRegina() {
                 "in Python's standard site-packages directory.  ");
         ReginaSupport::warn(this,
             tr("Regina's Python module could not be loaded."),
-            tr("<qt>%1Please write to %2 if you require "
+            tr("<qt>%1Please mail the authors if you require "
             "further assistance.<p>"
             "None of Regina's functions will "
             "be available during this Python session.</qt>")
-            .arg(installationMsg)
-            .arg(PACKAGE_BUGREPORT));
+            .arg(installationMsg));
         addError(tr("Unable to load module \"regina\"."));
         return false;
     }
@@ -343,8 +342,7 @@ void PythonConsole::setRootPacket(regina::NPacket* packet) {
         ReginaSupport::warn(this,
             tr("<qt>I could not set the <i>root</i> variable.</qt>"),
             tr("The (invisible) root of the packet tree will not be available "
-            "in this Python session.  Please report this error to %2.")
-            .arg(PACKAGE_BUGREPORT));
+            "in this Python session.  Please report this error to the authors."));
         addError(tr("The variable \"root\" has not been set."));
     }
 }
@@ -362,8 +360,7 @@ void PythonConsole::setSelectedPacket(regina::NPacket* packet) {
         ReginaSupport::warn(this,
             tr("<qt>I could not set the <i>item</i> variable.</qt>"),
             tr("The currently selected packet will not be available in "
-            "this Python session.  Please report this error to %2.")
-            .arg(PACKAGE_BUGREPORT));
+            "this Python session.  Please report this error to the authors."));
         addError(tr("The variable \"item\" has not been set."));
     }
 }

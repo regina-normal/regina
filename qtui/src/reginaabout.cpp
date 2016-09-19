@@ -244,10 +244,6 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
     transparent.setColor(QPalette::Text,
         transparent.color(QPalette::WindowText));
 
-    /*
-    QString authorText(tr("<p>Please report bugs to "
-        "<a href=\"mailto:%1\">%1</a>.</p>").arg(PACKAGE_BUGREPORT));
-    */
     QString authorText;
     foreach (const AuthorInfo& info, authors) {
         authorText += QString("<p style=\"margin: 0px;\">%1</p>")

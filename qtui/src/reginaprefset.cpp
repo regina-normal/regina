@@ -293,14 +293,14 @@ void ReginaPrefSet::openHandbook(const char* section, const char* handbook,
             ReginaSupport::warn(parentWidget,
                 QObject::tr("I could not find the requested handbook."),
                 QObject::tr("<qt>It should be installed at: "
-                "<tt>%1</tt><p>Please contact %2 for assistance.</qt>")
-                .arg(index.toHtmlEscaped()).arg(PACKAGE_BUGREPORT));
+                "<tt>%1</tt><p>Please mail the authors for assistance.</qt>")
+                .arg(index.toHtmlEscaped()));
         } else {
             ReginaSupport::warn(parentWidget,
                 QObject::tr("I could not find the Regina handbook."),
                 QObject::tr("<qt>It should be installed at: "
-                "<tt>%1</tt><p>Please contact %2 for assistance.</qt>")
-                .arg(index.toHtmlEscaped()).arg(PACKAGE_BUGREPORT));
+                "<tt>%1</tt><p>Please mail the authors for assistance.</qt>")
+                .arg(index.toHtmlEscaped()));
         }
     }
 }
