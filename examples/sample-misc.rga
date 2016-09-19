@@ -1054,7 +1054,7 @@ jZdNkm4pXQo+PgpzdGFydHhyZWYKMzUwNjYKJSVFT0YK
   <zeroeff value="T"/>
   <splitsfce value="F"/>
 </packet> <!-- Poincaré Homology Sphere (3_Manifold Triangulation) -->
-<packet label="ℝP² x S¹"
+<packet label="RP² x S¹"
 	type="3-Manifold Triangulation" typeid="3"
 	parent="3-Manifolds">
   <tetrahedra ntet="3">
@@ -1068,10 +1068,10 @@ jZdNkm4pXQo+PgpzdGFydHhyZWYKMzUwNjYKJSVFT0YK
   <H2><abeliangroup rank="0"> 2 </abeliangroup></H2>
 <packet label="Note"
 	type="Text" typeid="2"
-	parent="ℝP² x S¹">
+	parent="RP² x S¹">
   <text>There are in fact two triangulations of this 3-manifold with three tetrahedra.</text>
 </packet> <!-- Note (Text) -->
-</packet> <!-- ℝP² x S¹ (3_Manifold Triangulation) -->
+</packet> <!-- RP² x S¹ (3_Manifold Triangulation) -->
 <packet label="Whitehead Link Complement"
 	type="SnapPea Triangulation" typeid="16"
 	parent="3-Manifolds">
