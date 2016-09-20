@@ -2,7 +2,7 @@
  <title>Angle Structures</title>
 
  <para>
-  An <firstterm>angle structure</firstterm> on a triangulation is a
+  An <firstterm>angle structure</firstterm> on a 3-manifold triangulation is a
   simple algebraic generalisation of a hyperbolic structure.
   It contains some but not all of the properties required to produce a
   hyperbolic metric&mdash;in essence, it extracts the only linear parts
@@ -77,7 +77,7 @@
 
   <para>
    Angle structures are stored in lists, which typically hold all
-   vertex angle structures on a particular triangulation.
+   vertex angle structures on a particular 3-manifold triangulation.
    Here <firstterm>vertex angle structures</firstterm>
    correspond to the vertices of the solution polytope for the
    equations and inequalities <link linkend="angles">described earlier</link>.
@@ -120,8 +120,7 @@
   </para>
   <para>
    A <link linkend="packet-new">new packet</link> window will appear,
-   asking for the usual <link linkend="packet-new">packet label</link>
-   as well as some additional details:
+   asking for some additional details:
   </para>
   <para>
    <inlinemediaobject>
