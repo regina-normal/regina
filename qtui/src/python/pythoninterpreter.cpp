@@ -40,8 +40,6 @@
 
 #include "pythonoutputstream.h"
 
-// Held type must be declared before boost/python.hpp
-#include "../../../python/safeheldtype.h"
 #include <boost/python.hpp>
 #include <cctype>
 #include <cstdlib>
@@ -352,7 +350,8 @@ bool PythonInterpreter::setVar(const char* name, regina::NPacket* value) {
 
     bool ok = false;
     try {
-        regina::python::to_held_type<>::apply<regina::NPacket*>::type conv;
+        boost::python::reference_existing_object::
+            apply<regina::NPacket*>::type conv;
         PyObject* pyValue = conv(value);
 
         if (pyValue) {
