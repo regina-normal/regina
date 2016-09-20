@@ -55,7 +55,7 @@ verbose=0
 
 executable=../regina-python
 testdir="@PROJECT_SOURCE_DIR@/python/testsuite"
-testoutdir=`mktemp -d -t regina`
+testoutdir=`mktemp -d -t regina.XXX`
 
 echo "---------------------------------------"
 echo "Test suite for Regina's python bindings"
