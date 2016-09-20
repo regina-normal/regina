@@ -8,8 +8,8 @@
    </imageobject>
   </inlinemediaobject>
   A <firstterm>normal surface</firstterm> is a surface within a
-  3-manifold triangulation that meets each tetrahedron in a collection
-  of triangles and/or quadrilaterals, as illustrated to the right.
+  3-manifold triangulation that meets each tetrahedron in a (possibly empty)
+  collection of triangles and/or quadrilaterals, as illustrated to the right.
   For an overview of normal surface theory, see
   <xref linkend="bib-hass-knotnp"/>.
  </para>
@@ -127,7 +127,7 @@
            This is the standard 7<replaceable>n</replaceable>-dimensional
            coordinate system that typically appears in papers and textbooks
            (where <replaceable>n</replaceable> is the number of tetrahedra).
-           Each tetrahedron contributes three triangle and four
+           Each tetrahedron contributes four triangle and three
            quadrilateral coordinates.
           </para>
          </glossdef>
@@ -652,7 +652,7 @@
      disappear (instead you will see triangular coordinates of &infin;).
     </para>
     <para>
-     The available coordinate systems as follows.
+     The available coordinate systems are as follows.
      Some options might not be available for your surface list
      (for instance, if you enumerated in standard normal coordinates
      then the almost normal systems will not appear).
@@ -664,7 +664,7 @@
          This is the standard 7<replaceable>n</replaceable>-dimensional
          coordinate system that typically appears in papers and textbooks
          (where <replaceable>n</replaceable> is the number of tetrahedra).
-         Each tetrahedron contributes three triangle and four
+         Each tetrahedron contributes four triangle and three
          quadrilateral coordinates.
         </para>
         <para>
