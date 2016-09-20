@@ -1,9 +1,9 @@
 #!/bin/bash
 #
-# Regina - Software for 3-manifold topology and normal surface theory
+# Regina - Software for low-dimensional topology
 # Upstream synchronisation for the SnapPea kernel
 #
-# Copyright (c) 2014, Ben Burton
+# Copyright (c) 2014-2016, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # --------------------------------------------------------------------------

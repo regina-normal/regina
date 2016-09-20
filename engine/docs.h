@@ -38,7 +38,7 @@
  *
  *  <center><b>
  *  Regina<br>
- *  Software for 3-manifold topology and normal surface theory<br>
+ *  Software for low-dimensional topology<br>
  *  Copyright &copy; 1999-2016, The Regina development team
  *  </b></center>
  *
@@ -64,7 +64,7 @@
  *  you would any other paper that you use.  A suggested form of reference is:
  *
  *  Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,
- *  "Regina: Software for 3-manifold topology and normal surface theory",
+ *  "Regina: Software for low-dimensional topology",
  *  http://regina.sourceforge.net/ , 1999-2016.
  *
  *  <h3>Authors</h3>
