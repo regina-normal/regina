@@ -14,7 +14,7 @@
 		</tr>
 		<tr id="logo">
 		  <td valign="top">
-		    <a href="http://regina.sourceforge.net/"><img src="regina_logo.png" alt="Regina - Software for low-dimensional topology" width="296" height="79" border="0" /></a>
+		    <a href="http://regina.sourceforge.net/"><img src="regina_logo.png" alt="Regina - Software for low-dimensional topology" width="246" height="79" border="0" /></a>
 		  </td>
 		  <td valign="middle" align="center" id="location">
 		    <h1><!-- Why was this used in fact: could the text not just be copied?-->
