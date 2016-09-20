@@ -12,14 +12,14 @@
   <!ENTITY regabstract
    "<para>
      &regina; is a software package for 3-manifold and 4-manifold topologists,
-     with a focus on triangulations, normal surfaces, and angle structures.
+     with a focus on triangulations, normal surfaces and angle structures.
      For 3-manifolds, it includes high-level tasks such as 3-sphere
      recognition, connected sum decomposition and Hakenness testing,
      comes with a rich database of census manifolds, and incorporates
      the &snappea; kernel for working with hyperbolic manifolds.
-     For 4-manifolds, it offers several combinatorial and algebraic tools,
-     as well as support for normal hypersurfaces.
-     &regina; offers a full graphical user interface, as well as
+     For 4-manifolds, it offers a range of combinatorial and algebraic tools,
+     plus support for normal hypersurfaces.
+     &regina; comes with a full graphical user interface, as well as
      &python; bindings and a low-level &cpp; programming interface.
     </para>">
   <!ENTITY mailtheauthors

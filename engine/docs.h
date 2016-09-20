@@ -191,7 +191,7 @@
 /*! \page stddim Standard dimensions
  *
  *  Whilst Regina was originally designed for working with 3-manifolds,
- *  it offers varying levels of support for manifolds and triangulations
+ *  it now offers varying levels of support for manifolds and triangulations
  *  in other dimensions.
  *
  *  Regina's <i>standard dimensions</i> are those for which it offers
