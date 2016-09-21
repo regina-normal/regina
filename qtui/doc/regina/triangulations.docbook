@@ -1,35 +1,60 @@
 <chapter id="triangulations">
- <title>3-Manifold Triangulations</title>
+ <title>Triangulations</title>
 
  <para>
-  3-manifolds in &regina; are typically represented by
-  <firstterm>triangulations</firstterm>.  A triangulation of a 3-manifold
-  consists of a set of tetrahedra with instructions on how some or all
-  of the faces of these tetrahedra should be glued together in pairs.
+  Manifolds in &regina; are typically represented by
+  <firstterm>triangulations</firstterm>.
+  A &dmanifold; triangulation consists of a
+  set of &dsimplices; along with instructions on
+  how some or all of their (<replaceable>d</replaceable>-1)-dimensional
+  facets should be glued together in pairs.
+ </para>
+ <para>
+  Most triangulations in &regina; represent 2-, 3- and 4-manifolds.
+  We refer to their &dsimplices; as <emphasis>triangles</emphasis>,
+  <emphasis>tetrahedra</emphasis> and <emphasis>pentachora</emphasis>
+  respectively.
  </para>
  <para>
   &regina; works with <firstterm>generalised triangulations</firstterm>,
-  which are less strict than simplicial complexes:
-  you may glue two faces of the same tetrahedron together,
-  or you may glue faces so that different edges of the same tetrahedron become
-  identified (and likewise for vertices).
+  which are less strict than simplicial complexes.
+  This means that you may glue two facets of the same &dsimplex; together,
+  or you may glue facets so that different vertices of the same &dsimplex;
+  become identified (and likewise for edges and so on).
   Indeed, the best triangulations for computation are often
   <emphasis>one-vertex triangulations</emphasis>, where all vertices of
-  all tetrahedra become identified together.
+  all simplices become identified together.
  </para>
  <para>
   The downside of this flexibility is that, if you are not careful,
-  your triangulation might not represent a 3-manifold at all.
-  If this happens, &regina; will
-  <link linkend="tri-basicprops">tell you about it</link> when you view it.
+  your triangulation might not represent a &dmanifold; at all.
+  This is only a problem for dimensions
+  <replaceable>d</replaceable>&nbsp;&ge;&nbsp;3,
+  and if it happens in dimensions
+  <replaceable>d</replaceable>&nbsp;=&nbsp;3&nbsp;or&nbsp;4 then &regina; will
+  <link linkend="tri-basicprops">tell you about it</link> when you view
+  the triangulation.
  </para>
-
+ <para>
+  &regina; offers rich support for triangulations of dimensions 2, 3 and 4.
+  However, it also offers more basic support for triangulations of
+  dimensions 5&nbsp;&le;&nbsp;<replaceable>d</replaceable>&nbsp;&le;&nbsp;15.
+  These higher-dimensional triangulations are not supported in the &gui;;
+  instead you will
+  need to use either <link linkend="python">&python; scripting</link>
+  or <link linkend="compiling">&cpp; programming</link>.
+ </para>
+ <para>
+  The remainder of this chapter talks through triangulations of
+  dimensions 2, 3 and 4 only.
+ </para>
  <tip>
   <para>
    If you are more familiar with &snappeapylink;, you should be aware that
    &regina; and &snappy; are different programs with different aims,
    and (importantly) with different underlying data structures.
-   &snappy; stores information that &regina; does not (such as fillings
+   &snappy; stores information with 3-manifold triangulations
+   that &regina; does not (such as fillings
    and peripiheral curves on cusps, which often do not make sense in
    &regina;'s more general setting).
   </para>
@@ -471,6 +496,41 @@
       </para></glossdef>
      </glossentry>
     </glosslist>
+   </para>
+  </sect2>
+
+  <sect2 id="dim2-identify">
+   <title>Identifying Surfaces (2-manifolds only)</title>
+   <para>
+    One important difference between 2-manifolds and higher dimensions
+    is that the underlying 2-manifold is easy to recognise from its
+    triangulation.  For connected 2-manifold triangulations, &regina;
+    will display the exact 2-manifold at the top of the triangulation
+    viewer, as illustrated below.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="dim2-id.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    For orientable 2-manifolds, the <firstterm>genus</firstterm>
+    refers to the number of handles.  For non-orientable 2-manifolds, the
+    <firstterm>genus</firstterm> refers to
+    the number of crosscaps (so, for instance, the Klein bottle has genus two).
+   </para>
+   <para>
+    &regina; will also display the Euler characteristic at the top of the
+    triangulation viewer, marked with the symbol &chi;.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="dim2-euler.png"/>
+     </imageobject>
+    </inlinemediaobject>
    </para>
   </sect2>
 
@@ -2154,8 +2214,7 @@
      <guimenu>3-D&nbsp;Triangulation</guimenu>
      <guimenuitem>Vertex Links</guimenuitem>
     </menuchoice>.
-    This will build the vertex link as a new
-    <link linkend="dim2triangulations">2-manifold triangulation</link>.
+    This will build the vertex link as a new 2-manifold triangulation.
    </para>
    <para>
     <inlinemediaobject>

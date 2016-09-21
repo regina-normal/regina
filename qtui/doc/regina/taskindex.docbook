@@ -1548,7 +1548,6 @@
   <primaryie>triangulation, 2-manifold</primaryie>
   <secondaryie><link linkend="dim2-identify">Euler
    characteristic</link></secondaryie>
-  <secondaryie><link linkend="dim2triangulations">overview</link></secondaryie>
   <secondaryie><link linkend="dim2-identify">recognising the
    underlying 2-manifold</link></secondaryie>
  </indexentry>
