@@ -41,6 +41,8 @@
 
 #include <QStackedWidget>
 
+class PacketChooser;
+class ReginaMain;
 class QCheckBox;
 class QComboBox;
 class QLineEdit;
@@ -60,6 +62,8 @@ class Dim4TriangulationCreator : public PacketCreator {
         /**
          * Details for specific triangulation types
          */
+        PacketChooser* iBundleFrom;
+        PacketChooser* s1BundleFrom;
         QLineEdit* isoSig;
         QComboBox* exampleWhich;
 
@@ -67,7 +71,7 @@ class Dim4TriangulationCreator : public PacketCreator {
         /**
          * Constructor.
          */
-        Dim4TriangulationCreator();
+        Dim4TriangulationCreator(ReginaMain* mainWindow);
 
         /**
          * PacketCreator overrides.

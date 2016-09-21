@@ -67,7 +67,7 @@ void ReginaMain::newDim2Triangulation() {
 }
 
 void ReginaMain::newDim4Triangulation() {
-    newPacket(new Dim4TriangulationCreator(), 0,
+    newPacket(new Dim4TriangulationCreator(this), 0,
         tr("New 4-Manifold Triangulation"));
 }
 
