@@ -5,8 +5,8 @@
   In this chapter we deal with
   <firstterm>normal surfaces</firstterm> within 3-manifold triangulations, and
   <firstterm>normal hypersurfaces</firstterm> within 4-manifold triangulations.
-  For an overview of normal surface theory (in the context of 3-manifolds,
-  where it is much more developed), see <xref linkend="bib-hass-knotnp"/>.
+  For an overview of normal surface theory in the context of 3-manifolds
+  (where it is much more developed), see <xref linkend="bib-hass-knotnp"/>.
  </para>
  <para>
   <inlinemediaobject>
@@ -15,8 +15,7 @@
    </imageobject>
   </inlinemediaobject>
   A <firstterm>normal surface</firstterm> within a 3-manifold triangulation
-  <replaceable>T</replaceable> meets each pentachoron of
-  is a surface that meets each tetrahedron of
+  <replaceable>T</replaceable> is a surface that meets each tetrahedron of
   <replaceable>T</replaceable> in a (possibly empty) collection of
   triangles and/or quadrilaterals, where:
   <itemizedlist>
@@ -47,13 +46,13 @@
   </itemizedlist>
  </para>
  <para>
-  &regina; typically works with properly embedded normal surfaces and
-  hypersurfaces, but it also offers
+  &regina; typically works with <emphasis>properly embedded</emphasis>
+  normal surfaces and hypersurfaces, but it also offers
   basic support for immersed and singular surfaces.  In the context of
   3-manifolds, &regina; can also work with
   <firstterm>almost normal surfaces</firstterm>
   (which are like normal surfaces but with an extra
-  &ldquo;exceptional disc&rdquo;)
+  &ldquo;exceptional disc&rdquo;),
   and <firstterm>spun-normal surfaces</firstterm> (with infinitely
   many triangles spinning out towards the vertices).
  </para>
@@ -73,7 +72,7 @@
    Normal (hyper)surfaces are stored in lists,
    which typically represent all
    vertex or fundamental normal (hyper)surfaces within a
-   triangulation, as computed in some normal or almost normal
+   triangulation, defined relative to some normal or almost normal
    coordinate system.
   </para>
   <para>
@@ -141,8 +140,8 @@
        <link linkend="packet-snappea">&snappea; triangulation packets</link>.
        For a normal hypersurface list, you must choose a 4-manifold
        triangulation.
-       Either way, the new normal (hyper)surface list will appear as a
-       child of the selected triangulation in the packet tree.
+       Either way, the new normal (hyper)surface list will appear
+       within the packet tree as a child of the selected triangulation.
       </para>
      </glossdef>
     </glossentry>
@@ -155,15 +154,16 @@
       </para>
       <para>
        Your choice of coordinate system will affect which kinds of surfaces
-       appear in the final solution set.  For instance: within 3-manifold
-       triangulations, spun-normal
-       surfaces only appear in quadrilateral and quadrilateral-octagon
-       coordinates, and other surfaces (such as vertex links) only appear in
+       appear in the final solution set.  For instance: within a 3-manifold
+       triangulation, spun-normal surfaces can only appear in quadrilateral
+       and quadrilateral-octagon coordinates, and some other types of surfaces
+       (such as vertex links) will only appear in
        standard normal and standard almost normal coordinates.
       </para>
-      <para>
-       For normal surfaces in 3-manifold triangulations, your options are:
-       <glosslist id="surfaces-selectcoords">
+      <para id="surfaces-selectcoords">
+       For normal surfaces in 3-manifold triangulations, the available
+       coordinate systems are:
+       <glosslist>
         <glossentry>
          <glossterm><guilabel>Standard normal (tri-quad)</guilabel></glossterm>
          <glossdef>
@@ -223,12 +223,12 @@
         </glossentry>
        </glosslist>
       </para>
-      <para>
+      <para id="hypersurfaces-selectcoords">
        For normal hypersurfaces in 4-manifold triangulations,
-       you only have one coordinate system for enumerating hypersurfaces
-       (though &regina; can still
-       <emphasis>view</emphasis> hypersurfaces in different coordinate systems):
-       <glosslist id="hypersurfaces-selectcoords">
+       there is currently only one coordinate system available
+       for enumerating hypersurfaces (though &regina; can still
+       <emphasis>view</emphasis> hypersurfaces in other coordinate systems):
+       <glosslist>
         <glossentry>
          <glossterm><guilabel>Standard normal (tet-prism)</guilabel></glossterm>
          <glossdef>
@@ -255,7 +255,7 @@
        <firstterm>vertex</firstterm> normal (hyper)surfaces, or all
        <firstterm>fundamental</firstterm> normal (hyper)surfaces.
        Fundamental (hyper)surfaces are much slower to enumerate
-       than vertex (hyper)surfaces, but in some settings can offer
+       than vertex (hyper)surfaces, but in some settings they can offer
        significantly more information.
       </para>
       <para>
@@ -294,7 +294,7 @@
      </glossdef>
     </glossentry>
     <glossentry id="surfaces-embeddedonly">
-     <glossterm><guilabel>Embedded surfaces only</guilabel></glossterm>
+     <glossterm><guilabel>Embedded (hyper)surfaces only</guilabel></glossterm>
      <glossdef>
       <para>
        If this box is checked (the default), this indicates that you are
@@ -316,8 +316,8 @@
    </glosslist>
   </para>
   <para>
-   Once you are ready, click <guibutton>OK</guibutton> and &regina;
-   will enumerate all normal (hyper)surfaces according to your selection.
+   Once you are ready, click <guibutton>OK</guibutton> and &regina; will
+   enumerate all normal surfaces or hypersurfaces according to your selection.
    When this is finished, &regina; will package the results
    into a normal surface or hypersurface list and open it for you to view.
   </para>
@@ -328,7 +328,7 @@
     </imageobject>
    </inlinemediaobject>
   </para>
-  <para>
+  <note><para>
    If you selected an <emphasis>almost normal</emphasis> coordinate
    system, &regina; will enforce at most one octagon
    <emphasis>type</emphasis> but it will not enforce precisely one
@@ -338,7 +338,7 @@
    surfaces with multiple octagons (but all of the same type),
    or surfaces with no octagons at all.  The coordinate viewer makes it easy
    <link linkend="surfaces-propoctagon">to spot which is which</link>.
-  </para>
+  </para></note>
   <warning>
    <para>
     If you have a data file from &regina;&nbsp;4.5.1 or earlier,
@@ -354,22 +354,22 @@
 
   <para>
    Once you have <link linkend="surfaces-creation">built
-   a list of surfaces</link>, you can study these surfaces
-   using the various tabs in the normal surface list viewer.
+   a list of surfaces or hypersurfaces</link>, you can study them
+   using the various tabs in the normal (hyper)surface list viewer.
   </para>
   <para>
    Above all of these tabs is a header displaying the total number of
-   surfaces, the original enumeration parameters, and a link to the
+   (hyper)surfaces, the original enumeration parameters, and a link to the
    underlying triangulation.  The enumeration parameters include:
   </para>
   <itemizedlist>
    <listitem><para>whether you asked for
     <link linkend="surfaces-selectenum">vertex or fundamental</link>
-    surfaces;</para></listitem>
+    (hyper)surfaces;</para></listitem>
    <listitem><para>whether you asked for
-    <link linkend="surfaces-embeddedonly">embedded surfaces only</link>,
-    or for immersed and/or branched surfaces also;</para></listitem>
-   <listitem><para>the normal (or almost normal)
+    <link linkend="surfaces-embeddedonly">embedded (hyper)surfaces only</link>,
+    or for immersed and/or branched (hyper)surfaces also;</para></listitem>
+   <listitem><para>the normal or almost normal
     <link linkend="surfaces-selectcoords">coordinate system</link>
     in which you performed the enumeration.</para></listitem>
   </itemizedlist>
@@ -394,12 +394,13 @@
      </para></glossdef>
     </glossentry>
     <glossentry id="surfaces-header-custom">
-     <glossterm><guilabel>Custom surfaces</guilabel></glossterm>
+     <glossterm><guilabel>Custom (hyper)surfaces</guilabel></glossterm>
      <glossdef><para>
-      You might see this instead of vertex or fundamental surfaces.
-      This means that the list of surfaces was created using
+      You might see this instead of vertex or fundamental (hyper)surfaces.
+      This means that the list was created using
       some specialised or user-designed algorithm, and &regina; cannot
-      give you any more specific information about which surfaces these are.
+      give you any more specific information about which surfaces or
+      hypersurfaces these are.
      </para></glossdef>
     </glossentry>
     <glossentry>
@@ -423,20 +424,40 @@
   </para>
 
   <sect2 id="surfaces-summary">
-   <title>Summary of Surfaces</title>
+   <title>Summary of (Hyper)surfaces</title>
 
    <para>
     The <guilabel>Summary</guilabel> tab breaks down the
-    total number of surfaces
-    into sub-counts for different types of surfaces, as illustrated below.
-    At a broad level, the total is divided into
-    <emphasis>closed</emphasis> surfaces,
-    <emphasis>bounded</emphasis> surfaces (which have only real boundary),
-    and <emphasis>spun-normal surfaces</emphasis> (which have infinitely
-    many triangles).
-    For each category that contains one or more surfaces, a table is
-    given to break this down further according to orientability,
-    1-or-2-sidedness, and Euler characteristic.
+    total number of (hyper)surfaces
+    into sub-counts for different types of (hyper)surfaces,
+    as illustrated below.  At a broad level, the total is divided into:
+    <itemizedlist>
+     <listitem><para>
+      <emphasis>closed</emphasis> (hyper)surfaces, which do not meet the
+      boundary of the triangulation and contain only finitely many
+      normal pieces;
+     </para></listitem>
+     <listitem><para>
+      <emphasis>bounded</emphasis> (hyper)surfaces, which do meet the
+      boundary of the triangulation and again only have finitely many
+      normal pieces;
+     </para></listitem>
+     <listitem><para>
+      <emphasis>spun-normal surfaces</emphasis> in 3-manifold triangulations,
+      which have infinitely many triangles;
+     </para></listitem>
+     <listitem><para>
+      <emphasis>non-compact hypersurfaces</emphasis> in
+      4-manifold triangulations, which have infinitely many tetrahedra.
+     </para></listitem>
+    </itemizedlist>
+   </para>
+   <para>
+    For each category that contains one or more (hyper)surfaces, a table is
+    given to break this down further according to various simple
+    properties.  These include orientability, 1-or-2-sidedness,
+    Euler characteristic (within 3-manifolds only),
+    and homology (within 4-manifolds only).
    </para>
    <para>
     <inlinemediaobject>
@@ -446,20 +467,31 @@
     </inlinemediaobject>
    </para>
    <para>
-    Spun-normal surfaces will only be listed here in the
-    <guilabel>Summary</guilabel> tab if your chosen coordinate system
-    supports them.
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="hypersurfaces-summary.png"/>
+     </imageobject>
+    </inlinemediaobject>
    </para>
+   <note><para>
+    Spun-normal surfaces and non-compact hypersurfaces will only be
+    explicitly mentioned in the <guilabel>Summary</guilabel> tab if your
+    chosen coordinate system supports them.  In particular, for
+    normal hypersurfaces in 4-manifold triangulations, non-compact surfaces
+    should never be mentioned at all, unless you have used a specialised
+    hand-coded enumeration algorithm.
+   </para></note>
   </sect2>
 
   <sect2 id="surfaces-coords">
-   <title>Details of Individual Surfaces</title>
+   <title>Details of Individual (Hyper)surfaces</title>
 
    <para>
     You can view details of the individual surfaces in the
-    <guilabel>Surface Coordinates</guilabel> tab.  This brings up a
+    <guilabel>Surface Coordinates</guilabel> or
+    <guilabel>Hypersurface Coordinates</guilabel> tab.  This brings up a
     large table in which each row represents a single normal (or almost
-    normal) surface.
+    normal) surface or hypersurface.
    </para>
    <para>
     <inlinemediaobject>
@@ -469,85 +501,100 @@
     </inlinemediaobject>
    </para>
    <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="hypersurfaces-coords.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
     Above the table are some drop-down boxes that let you view the
-    list in different ways.  These are discussed further in
-    the notes on
+    list in different coordinate system, and for normal surfaces in
+    3-manifolds, with different filters applied.
+    These options are discussed further in the notes on
     <link linkend="surfaces-coords-coords">coordinate systems</link>
     and
     <link linkend="surfaces-filtering">filtering surfaces</link>.
    </para>
    <para>
-    In the first column, surfaces are numbered 0,1,2,... (in no particular
-    order) so that you can make note of them for later on.
-    You can also assign arbitrary names to surfaces by typing directly into
-    the second column; these names will be saved with your data file.
+    In the first column, (hyper)surfaces are numbered 0,1,2,...,
+    in no particular order, so that you can make note of them for later on.
+    You can also assign arbitrary names to (hyper)surfaces by typing
+    directly into the second column; these names will be saved with your
+    data file.
    </para>
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="surfaces-rename.png"/>
+      <imagedata fileref="hypersurfaces-rename.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
    <sect3 id="surfaces-coords-props">
-    <title>Properties of surfaces</title>
+    <title>Properties of (hyper)surfaces</title>
     <para>
-     The next few columns describe various properties of each surface.
+     The next few columns describe various properties of each (hyper)surface.
      Some of these columns might be empty or absent in your
      viewer (for instance, &regina; does not compute Euler
-     characteristic for spun-normal surfaces, and it hides the
-     orientability column if your enumeration allowed for
+     characteristic for spun-normal surfaces, and it hides several
+     of these columns if your enumeration allowed for
      immersed or singular surfaces).
     </para>
     <para>
      The columns and their meanings are:
      <glosslist>
       <glossentry id="surfaces-propeuler">
-       <glossterm><guilabel>Euler</guilabel></glossterm>
+       <glossterm><guilabel>Euler</guilabel> (for 3-manifolds only)</glossterm>
        <glossdef><para>
         Shows the Euler characteristic of the surface.
+       </para></glossdef>
+      </glossentry>
+      <glossentry id="hypersurfaces-prophomology">
+       <glossterm><guilabel>Homology</guilabel> (for 4-manifolds only)</glossterm>
+       <glossdef><para>
+        Shows the first homology group of the hypersurface.
        </para></glossdef>
       </glossentry>
       <glossentry id="surfaces-proporient">
        <glossterm><guilabel>Orient</guilabel></glossterm>
        <glossdef><para>
-        Contains a tick (&#x2713;) if the surface is
+        Contains a tick (&#x2713;) if the (hyper)surface is
         orientable, or the text <guilabel>Non-or.</guilabel> if it is not.
        </para></glossdef>
       </glossentry>
       <glossentry id="surfaces-propsides">
        <glossterm><guilabel>Sides</guilabel></glossterm>
        <glossdef><para>
-        Shows whether the surface is one-sided or two-sided.
+        Shows whether the (hyper)surface is one-sided or two-sided.
        </para></glossdef>
       </glossentry>
       <glossentry id="surfaces-boundary">
        <glossterm><guilabel>Bdry</guilabel></glossterm>
        <glossdef><para>
-        Indicates what type of boundary the surface has.
+        Indicates what type of boundary the (hyper)surface has.
         This will be one of:
         <glosslist>
          <glossentry>
           <glossterm><guilabel>&mdash;</guilabel></glossterm>
           <glossdef><para>
-           Indicates a closed, compact surface (i.e., no boundary at all
-           and finitely many discs).
+           Indicates a closed, compact (hyper)surface; that is,
+           with no boundary at all and finitely many normal pieces.
           </para></glossdef>
          </glossentry>
          <glossentry>
           <glossterm><guilabel>Real</guilabel></glossterm>
           <glossdef><para>
-           Indicates a compact surface with boundary (i.e.,
-           finitely many discs, some of which meet the boundary of
-           the triangulation).
+           Indicates a compact (hyper)surface with boundary; that is,
+           with finitely many normal pieces, some of which meet the
+           boundary of the triangulation.
           </para></glossdef>
          </glossentry>
          <glossentry id="surfaces-spun">
-          <glossterm><guilabel>Spun</guilabel></glossterm>
+          <glossterm><guilabel>Spun</guilabel> (3-manifolds only)</glossterm>
           <glossdef>
            <para>
-            Indicates a spun-normal surface (i.e., a non-compact surface
-            with infinitely many discs).
+            Indicates a spun-normal surface; that is, a non-compact surface
+            with infinitely many triangles.
             These only appear when the enumeration is done in
             quadrilateral or quadrilateral-octagon coordinates.
            </para>
@@ -595,6 +642,19 @@
            </para>
           </glossdef>
          </glossentry>
+         <glossentry id="hypersurfaces-spun">
+          <glossterm><guilabel>Non-compact</guilabel> (4-manifolds only)</glossterm>
+          <glossdef>
+           <para>
+            Indicates a non-compact hypersurface with infinitely many
+            tetrahedra.
+            As noted earlier, you should never see this unless you have
+            used your own specialised enumeration algorithms&mdash;this is
+            because &regina; currently only enumerates hypersurfaces
+            in standard coordinates, which produces compact hypersurfaces only.
+           </para>
+          </glossdef>
+         </glossentry>
         </glosslist>
        </para></glossdef>
       </glossentry>
@@ -605,7 +665,8 @@
          Indicates if a surface is a vertex link or a thin edge link
          (i.e., the boundary of a small regular neighbourhood of a
          vertex or edge).  If this is a one-sided surface whose
-         <emphasis>double</emphasis> is a thin edge link, then it will be
+         <emphasis>double</emphasis> is a thin edge link (which can
+         happen in 3-manifolds, but not 4-manifolds), then it will be
          reported as a thin edge link for these purposes.
         </para>
         <para>
@@ -613,20 +674,21 @@
          vertex and edge numbers that appear in the first column of the
          <link linkend="tri-vertices">vertex viewer</link> and
          <link linkend="tri-edges">edge viewer</link>.
-         It is possible for a surface to be the thin edge link for two edges
-         at the same time, in which case both edges will be listed.
+         Within a 3-manifold, it is possible for a normal surface to be the
+         thin edge link for two edges at the same time;
+         in this case both edges will be reported here.
         </para>
         <para>
-         If the surface is not a vertex link or a thin edge link, this
+         If the (hyper)surface is not a vertex link or a thin edge link, this
          cell will be left empty.
         </para>
        </glossdef>
       </glossentry>
       <glossentry id="surfaces-proptype">
-       <glossterm><guilabel>Type</guilabel></glossterm>
+       <glossterm><guilabel>Type</guilabel> (3-manifolds only)</glossterm>
        <glossdef>
         <para>
-         Indicates if this is one of a few special types of surface that
+         Indicates if this is one of a few special types of normal surface that
          &regina; identifies.  Possible values are:
          <glosslist>
           <glossentry>
@@ -654,7 +716,7 @@
        </glossdef>
       </glossentry>
       <glossentry id="surfaces-propoctagon">
-       <glossterm><guilabel>Octagon</guilabel></glossterm>
+       <glossterm><guilabel>Octagon</guilabel> (3-manifolds only)</glossterm>
        <glossdef>
         <para>
          Indicates which coordinate position contains the octagonal
@@ -690,25 +752,27 @@
    <sect3 id="surfaces-coords-coords">
     <title>Coordinates and Coordinate Systems</title>
     <para>
-     The remaining columns give the precise normal coordinates of the surface.
+     The remaining columns give the precise normal coordinates of the
+     surface or hypersurface.
     </para>
     <para>
-     You can view surfaces in several different coordinate systems (not just
-     the system you <link linkend="surfaces-selectcoords">used for
-     enumeration</link>).  To change the coordinate system, simply
+     You can view (hyper)surfaces in several different coordinate systems,
+     not just the system you <link linkend="surfaces-selectcoords">used for
+     enumeration</link>.  To change the coordinate system, simply
      select a new system from the drop-down box above the table.
     </para>
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="surfaces-coordbox.png"/>
+       <imagedata fileref="hypersurfaces-coordbox.png"/>
       </imageobject>
      </inlinemediaobject>
     </para>
     <para>
      This will <emphasis>not re-enumerate</emphasis>
      surfaces in the new coordinate system; it will simply re-display
-     the surfaces you already have.  For example, if you enumerated in
+     the surfaces you already have.  For example, if you enumerated
+     normal surfaces in
      quadrilateral coordinates then your list will not contain any
      vertex links, and these will not suddenly appear when you view in
      standard coorinates.  If your list contains spun-normal surfaces
@@ -716,7 +780,8 @@
      disappear (instead you will see triangular coordinates of &infin;).
     </para>
     <para>
-     The available coordinate systems are as follows.
+     For normal surfaces in 3-manifold triangulations,
+     the available coordinate systems are as follows.
      Some options might not be available for your surface list
      (for instance, if you enumerated in standard normal coordinates
      then the almost normal systems will not appear).
@@ -915,6 +980,91 @@
       </glossentry>
      </glosslist>
     </para>
+    <para>
+     For normal hypersurfaces in 4-manifold triangulations,
+     the available coordinate systems are:
+     <glosslist>
+      <glossentry id="hypersurfaces-defstandard">
+       <glossterm><guilabel>Standard normal (tet-prism)</guilabel></glossterm>
+       <glossdef>
+        <para>
+         This is the 15<replaceable>n</replaceable>-dimensional
+         coordinate system that counts all tetrahedra and prisms of all types
+         (where <replaceable>n</replaceable> is the number of pentachora
+         in the underlying triangulation).
+         Each pentachoron contributes five triangle and ten prism coordinates.
+        </para>
+        <para>
+         Tetrahedron coordinates are labelled
+         <guilabel>0:0</guilabel>, <guilabel>0:1</guilabel>,
+         <guilabel>0:2</guilabel>, <guilabel>0:3</guilabel>,
+         <guilabel>0:4</guilabel>,
+         <guilabel>1:0</guilabel>, etc., where coordinate
+         <replaceable>p</replaceable>:<replaceable>v</replaceable>
+         counts the number of tetrahedra in pentachoron
+         <replaceable>p</replaceable> that truncate vertex
+         <replaceable>v</replaceable> of that pentachoron.
+         Here 0&nbsp;&le;&nbsp;<replaceable>p</replaceable>&nbsp;&lt;&nbsp;<replaceable>n</replaceable>
+         and <replaceable>v</replaceable>&nbsp;&isin;&nbsp;{0,1,2,3,4}.
+        </para>
+        <para>
+         Prism coordinates are labelled
+         <guilabel>0:01</guilabel>,
+         <guilabel>0:02</guilabel>,
+         <guilabel>0:03</guilabel>,
+         <guilabel>0:04</guilabel>,
+         <guilabel>0:12</guilabel>, &hellip;,
+         <guilabel>0:34</guilabel>,
+         <guilabel>1:01</guilabel>,
+         etc., where coordinate
+         <replaceable>p</replaceable>:<replaceable>ab</replaceable>
+         counts the number of prisms in pentachoron
+         <replaceable>t</replaceable> that truncate the edge joining
+         vertices <replaceable>a</replaceable> and <replaceable>b</replaceable>
+         of that pentachoron.
+         Here 0&nbsp;&le;&nbsp;<replaceable>p</replaceable>&nbsp;&lt;&nbsp;<replaceable>n</replaceable>,
+         and
+         <replaceable>a</replaceable>,<replaceable>b</replaceable>&nbsp;&isin;&nbsp;{0,1,2,3,4}
+         with <replaceable>a</replaceable>&nbsp;&lt;&nbsp;<replaceable>b</replaceable>.
+        </para>
+       </glossdef>
+      </glossentry>
+      <glossentry id="hypersurfaces-defprism">
+       <glossterm><guilabel>Prism normal</guilabel></glossterm>
+       <glossdef>
+        <para>
+         These are the 10<replaceable>n</replaceable>-dimensional
+         <firstterm>prism coordinates</firstterm>,
+         obtained from standard normal (tet-prism) coordinates by ignoring
+         all tetrahedra and considering only the prisms.
+        </para>
+       </glossdef>
+      </glossentry>
+      <glossentry id="hypersurfaces-defedgewt">
+       <glossterm><guilabel>Edge weight</guilabel></glossterm>
+       <glossdef>
+        <para>
+         This system has one coordinate for each edge of the
+         triangulation.
+         The coordinates are labelled <guilabel>0</guilabel>,
+         <guilabel>1</guilabel>, <guilabel>2</guilabel>, etc., where
+         coordinate <replaceable>e</replaceable> counts the number of times the
+         hypersurface crosses edge number <replaceable>e</replaceable>.
+        </para>
+        <para>
+         Edge numbers and the pentachoron edges to which they
+         correspond can be found in the
+         <link linkend="dim4tri-edges">edge viewer</link>,
+         under the triangulation's <guilabel>Skeleton</guilabel> tab.
+        </para>
+        <para>
+         Edge weight coordinates are offered for viewing only.
+         You cannot enumerate hypersurfaces in edge weight coordinates.
+        </para>
+       </glossdef>
+      </glossentry>
+     </glosslist>
+    </para>
     <tip><para>
      If you grab and resize one of the coordinate columns, all of the
      coordinate columns will be resized at once.  This is useful if you
@@ -934,7 +1084,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="surfaces-matching.png"/>
+      <imagedata fileref="hypersurfaces-matching.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -962,11 +1112,11 @@
   </sect2>
 
   <sect2 id="surfaces-compat">
-   <title>Compatibility Between Surfaces</title>
+   <title>Compatibility Between (Hyper)surfaces</title>
 
    <para>
     The <guilabel>Compatibility</guilabel> tab
-    shows which pairs of surfaces are
+    shows which pairs of (hyper)surfaces are
     <emphasis>locally</emphasis> and <emphasis>globally</emphasis>
     compatible with each other.  This means:
    </para>
@@ -976,38 +1126,49 @@
       <glossterm>Locally compatible</glossterm>
       <glossdef>
        <para>
-        Two surfaces are <emphasis>locally compatible</emphasis> if
-        they are able to avoid intersection in any given tetrahedron of
-        the triangulation (though not necessarily in all tetrahedra
-        simultaneously).
+        Two (hyper)surfaces are <emphasis>locally compatible</emphasis> if
+        they are able to avoid intersection in any given top-dimensional
+        simplex of the triangulation (though not necessarily in all
+        such simplices simultaneously).
        </para>
        <para>
-        In other words, two surfaces are locally compatible if, in each
-        tetrahedron, they <emphasis>together</emphasis> use at most
-        one quadrilateral or octagonal disc type.
+        For 3-manifolds, this means that two compatible normal surfaces
+        can avoid intersecting in any given tetrahedron of the
+        triangulation.  That is, in each tetrahedron, they
+        <emphasis>together</emphasis> use at most one quadrilateral or
+        octagonal disc type.
+       </para>
+       <para>
+        For 4-manifolds, this means that two compatible normal hypersurfaces
+        can avoid intersecting in any given pentachoron of the
+        triangulation.  That is, in each pentachoron, they
+        <emphasis>together</emphasis> do not use two conflicting prism types.
        </para>
       </glossdef>
      </glossentry>
      <glossentry id="surfaces-globalcompat">
-      <glossterm>Globally compatible</glossterm>
+      <glossterm>Globally compatible (3-manifolds only)</glossterm>
       <glossdef>
        <para>
-        Two surfaces are <emphasis>globally compatible</emphasis> if
+        Two normal surfaces are <emphasis>globally compatible</emphasis> if
         they are able to avoid intersection in <emphasis>all</emphasis>
-        tetrahedra of the triangulation simultaneously.
+        tetrahedra of the 3-manifold triangulation simultaneously.
        </para>
        <para>
         In other words, two surfaces are globally compatible if they can
-        be made <emphasis>disjoint</emphasis> within the triangulation.
+        be made <emphasis>disjoint</emphasis> within the
+        underlying triangulation.
        </para>
       </glossdef>
      </glossentry>
     </glosslist>
    </para>
    <para>
-    The <guilabel>Compatibility</guilabel> tab displays two matrices
-    (one at a time): one shows local compatibility and one shows
-    global compatibility.  You can
+    Compatibility is shown visually using a coloured matrix:
+    The <guilabel>Compatibility</guilabel> tab shows this information
+    visually using coloured matrices.  It only displays one matrix at
+    a time (either the local compatibility matrix or, for 3-manifolds only,
+    the global compatibility matrix).  You can
     switch between them using the drop-down box indicated below.
    </para>
    <para>
@@ -1020,18 +1181,18 @@
    <para>
     Each matrix has dimensions
     <replaceable>S</replaceable>&nbsp;&times;&nbsp;<replaceable>S</replaceable>,
-    where <replaceable>S</replaceable> is the total number of surfaces
+    where <replaceable>S</replaceable> is the total number of (hyper)surfaces
     in the list.  Rows and columns are both numbered
     0,...,<replaceable>S</replaceable>-1.
     The cell at position
     (<replaceable>x</replaceable>,<replaceable>y</replaceable>)
-    is filled if and only if the surfaces numbered
+    is filled if and only if the (hyper)surfaces numbered
     <replaceable>x</replaceable> and <replaceable>y</replaceable> are
-    compatible.  Recall that surfaces are numbered in the leftmost
+    compatible.  Recall that (hyper)surfaces are numbered in the leftmost
     column of the <link linkend="surfaces-coords">coordinate viewer</link>.
    </para>
    <para>
-    For some surfaces, &regina; cannot test global compatibility.
+    For some normal surfaces, &regina; cannot test global compatibility.
     These include surfaces that are empty, disconnected, or spun.
     In such cases the corresponding rows and columns will be hashed out,
     as illustrated below.
@@ -1044,8 +1205,8 @@
     </inlinemediaobject>
    </para>
    <para>
-    If you have too many surfaces in your list, &regina; will not
-    generate these matrices automatically.
+    If you have too many surfaces or hypersurfaces in your list,
+    &regina; will not generate these matrices automatically.
     You can still compute them by pressing the
     <guilabel>Calculate</guilabel> button (indicated below).
    </para>
@@ -1062,10 +1223,51 @@
    <title>Crushing and Cutting</title>
 
    <para>
-    You can cut along a normal surface, or crush it using the techniques
+    Within a 3-manifold triangulation,
+    you can cut along a normal surface, or crush it using the techniques
     of Jaco and Rubinstein <xref linkend="bib-0-efficiency"/>.
     See the <link linkend="tri-cutcrush">chapter on triangulations</link>
     for details.
+   </para>
+  </sect2>
+
+  <sect2 id="hypersurfaces-triangulate">
+   <title>Triangulating Hypersurfaces</title>
+
+   <para>
+    Within a 4-manifold triangulation,
+    if you wish to study a normal hypersurface in more detail, you can
+    triangulate it.  This will create a new 3-manifold triangulation
+    describing the hypersurface, which you can then attack with
+    <link linkend="triangulations">all of the 3-manifold machinery</link>
+    that &regina; offers.
+   </para>
+   <para>
+    To triangulate a normal hypersurface,
+    select your hypersurface in the list and then choose
+    <menuchoice>
+     <guimenu>Normal Hypersurfaces</guimenu>
+     <guimenuitem>Triangulate Hypersurface</guimenuitem>
+    </menuchoice>
+    from the menu.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="hypersurfaces-tri.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    &regina; will create a new 3-manifold triangulation, which will appear
+    beneath the normal hypersurface list in the packet tree.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="hypersurfaces-tri-results.png"/>
+     </imageobject>
+    </inlinemediaobject>
    </para>
   </sect2>
  </sect1>
@@ -1078,7 +1280,9 @@
    &ldquo;junk surfaces&rdquo;, and it is sometimes desirable to restrict
    a long normal surface list to just those surfaces that satisfy
    some simple constraints.
-   &regina; allows you to do this using <emphasis>surface filters</emphasis>.
+   For surfaces within 3-manifold triangulations (but not 4-manifold
+   triangulations), &regina; allows you to do this using
+   <emphasis>surface filters</emphasis>.
   </para>
   <para>
    You can create filters based on
@@ -1298,4 +1502,3 @@
   </sect2>
  </sect1>
 </chapter>
-

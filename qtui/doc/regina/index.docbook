@@ -160,7 +160,6 @@
   <!ENTITY reginadim4tri SYSTEM "dim4tri.docbook">
   <!ENTITY reginadim2tri SYSTEM "dim2tri.docbook">
   <!ENTITY reginasurfaces SYSTEM "surfaces.docbook">
-  <!ENTITY reginahypersurfaces SYSTEM "hypersurfaces.docbook">
   <!ENTITY reginaangles SYSTEM "angles.docbook">
   <!ENTITY reginaforeign SYSTEM "foreign.docbook">
   <!ENTITY reginapython SYSTEM "python.docbook">
@@ -242,7 +241,6 @@
  &reginadim4tri;
  &reginadim2tri;
  &reginasurfaces;
- &reginahypersurfaces;
  &reginaangles;
  &reginaforeign;
  &reginapython;
