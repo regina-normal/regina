@@ -1,23 +1,57 @@
 <chapter id="surfaces">
- <title>Normal Surfaces</title>
+ <title>Normal Surfaces and Hypersurfaces</title>
 
+ <para>
+  In this chapter we deal with
+  <firstterm>normal surfaces</firstterm> within 3-manifold triangulations, and
+  <firstterm>normal hypersurfaces</firstterm> within 4-manifold triangulations.
+  For an overview of normal surface theory (in the context of 3-manifolds,
+  where it is much more developed), see <xref linkend="bib-hass-knotnp"/>.
+ </para>
  <para>
   <inlinemediaobject>
    <imageobject>
     <imagedata fileref="normaldiscs.png" align="right"/>
    </imageobject>
   </inlinemediaobject>
-  A <firstterm>normal surface</firstterm> is a surface within a
-  3-manifold triangulation that meets each tetrahedron in a (possibly empty)
-  collection of triangles and/or quadrilaterals, as illustrated to the right.
-  For an overview of normal surface theory, see
-  <xref linkend="bib-hass-knotnp"/>.
+  A <firstterm>normal surface</firstterm> within a 3-manifold triangulation
+  <replaceable>T</replaceable> meets each pentachoron of
+  is a surface that meets each tetrahedron of
+  <replaceable>T</replaceable> in a (possibly empty) collection of
+  triangles and/or quadrilaterals, where:
+  <itemizedlist>
+   <listitem><para>each <firstterm>triangle</firstterm>
+    &ldquo;truncates&rdquo; one vertex of the tetrahedron, separating it
+    from the opposite triangle;
+   </para></listitem>
+   <listitem><para>each <firstterm>quadrilateral</firstterm>
+    separates two opposite edges of the tetrahedron.
+   </para></listitem>
+  </itemizedlist>
+  See the illustration to the right for examples.
  </para>
  <para>
-  &regina; typically works with properly embedded normal surfaces,
-  but it also offers
-  basic support for immersed and singular surfaces.  In addition, it can
-  work with <firstterm>almost normal surfaces</firstterm>
+  Likewise, a <firstterm>normal hypersurface</firstterm> within a 4-manifold
+  triangulation <replaceable>T</replaceable> meets each pentachoron of
+  <replaceable>T</replaceable> in a (possibly empty) collection of
+  tetrahedra and/or prisms, where:
+  <itemizedlist>
+   <listitem><para>each <firstterm>tetrahedron</firstterm>
+    &ldquo;truncates&rdquo; one vertex of the pentachoron, separating it
+    from the opposite 3-face;
+   </para></listitem>
+   <listitem><para>each <firstterm>prism</firstterm>
+    &ldquo;truncates&rdquo; one edge of the pentachoron, separating it
+    from the opposite 2-face.
+   </para></listitem>
+  </itemizedlist>
+ </para>
+ <para>
+  &regina; typically works with properly embedded normal surfaces and
+  hypersurfaces, but it also offers
+  basic support for immersed and singular surfaces.  In the context of
+  3-manifolds, &regina; can also work with
+  <firstterm>almost normal surfaces</firstterm>
   (which are like normal surfaces but with an extra
   &ldquo;exceptional disc&rdquo;)
   and <firstterm>spun-normal surfaces</firstterm> (with infinitely
@@ -33,37 +67,45 @@
  </para>
 
  <sect1 id="surfaces-creation">
-  <title>Enumerating Normal Surfaces</title>
+  <title>Enumerating Normal Surfaces and Hypersurfaces</title>
 
   <para>
-   Normal surfaces are stored in lists, which typically represent all
-   vertex or fundamental normal surfaces within a
-   triangulation in some normal (or almost normal) coordinate system.
+   Normal (hyper)surfaces are stored in lists,
+   which typically represent all
+   vertex or fundamental normal (hyper)surfaces within a
+   triangulation, as computed in some normal or almost normal
+   coordinate system.
   </para>
   <para>
-   &regina; insists on keeping normal surface lists tied to their
-   corresponding triangulations (this is because normal surfaces are
-   expressed using coordinates relative to these triangulations).
-   A normal surface list will alway live immediately beneath the
-   corresponding triangulation in the packet tree, and
+   &regina; insists on keeping normal (hyper)surface lists together with their
+   corresponding triangulations, since normal (hyper)surfaces
+   are expressed using coordinates relative to these triangulations.
+   A normal surface list will always live immediately beneath the
+   corresponding 3-manifold triangulation in the packet tree, and
+   a normal hypersurface list will always live immediately beneath the
+   corresponding 4-manifold triangulation.
    &regina; will <link linkend="packet-uneditable">not let you modify</link>
-   the triangulation as long as it has any normal surface lists
-   (or <link linkend="angles">angle structure lists</link>) beneath it.
-   The triangulation will be marked with a small padlock to remind you
-   of this.
+   a triangulation that has any associated normal surfaces or
+   hypersurfaces (or <link linkend="angles">angle structures</link>),
+   and the triangulation will be marked with a padlock to remind you of this.
   </para>
   <para>
    <inlinemediaobject>
     <imageobject>
-     <imagedata fileref="surfaces-intree.png"/>
+     <imagedata fileref="hypersurfaces-intree.png"/>
     </imageobject>
    </inlinemediaobject>
   </para>
   <para>
-   To create a new normal surface list, select
+   To create a new normal surface or hypersurface list, select either
    <menuchoice>
     <guimenu>Packet Tree</guimenu>
-    <guimenuitem>New Normal Surface List</guimenuitem>
+    <guimenuitem>New Normal Surface List (3-D)</guimenuitem>
+   </menuchoice>
+   or
+   <menuchoice>
+    <guimenu>Packet Tree</guimenu>
+    <guimenuitem>New Normal Hypersurface List (4-D)</guimenuitem>
    </menuchoice>
    from the menu (or press the corresponding toolbar button).
   </para>
@@ -86,40 +128,42 @@
    </inlinemediaobject>
   </para>
   <para>
-   In addition to the <link linkend="packet-new">usual label option</link>,
-   there are important details that you must provide:
+   There are several details that you must provide:
    <glosslist>
     <glossentry>
      <glossterm><guilabel>Triangulation</guilabel></glossterm>
      <glossdef>
       <para>
-       This is the triangulation that will contain your normal surfaces.
-       You may chose either one of &regina;'s native
-       <link linkend="packet-triangulation">triangulation packets</link>
-       or one of its hybrid
+       This is the triangulation that will contain your normal (hyper)surfaces.
+       For a normal surface list, you may chose either one of &regina;'s native
+       <link linkend="packet-triangulation">3-manifold triangulation
+       packets</link>, or one of its hybrid
        <link linkend="packet-snappea">&snappea; triangulation packets</link>.
-       The new normal surface list will appear as a child of this
-       triangulation in the packet tree.
+       For a normal hypersurface list, you must choose a 4-manifold
+       triangulation.
+       Either way, the new normal (hyper)surface list will appear as a
+       child of the selected triangulation in the packet tree.
       </para>
      </glossdef>
     </glossentry>
-    <glossentry id="surfaces-selectcoords">
+    <glossentry>
      <glossterm><guilabel>Coordinate system</guilabel></glossterm>
      <glossdef>
       <para>
        This is the coordinate system that &regina; will use to enumerate
-       normal surfaces.
+       normal surfaces or hypersurfaces.
       </para>
       <para>
        Your choice of coordinate system will affect which kinds of surfaces
-       appear in the final solution set.  For instance, spun-normal
+       appear in the final solution set.  For instance: within 3-manifold
+       triangulations, spun-normal
        surfaces only appear in quadrilateral and quadrilateral-octagon
-       coordinates; other surfaces (such as vertex links) only appear in
+       coordinates, and other surfaces (such as vertex links) only appear in
        standard normal and standard almost normal coordinates.
       </para>
       <para>
-       Your options are:
-       <glosslist>
+       For normal surfaces in 3-manifold triangulations, your options are:
+       <glosslist id="surfaces-selectcoords">
         <glossentry>
          <glossterm><guilabel>Standard normal (tri-quad)</guilabel></glossterm>
          <glossdef>
@@ -179,6 +223,28 @@
         </glossentry>
        </glosslist>
       </para>
+      <para>
+       For normal hypersurfaces in 4-manifold triangulations,
+       you only have one coordinate system for enumerating hypersurfaces
+       (though &regina; can still
+       <emphasis>view</emphasis> hypersurfaces in different coordinate systems):
+       <glosslist id="hypersurfaces-selectcoords">
+        <glossentry>
+         <glossterm><guilabel>Standard normal (tet-prism)</guilabel></glossterm>
+         <glossdef>
+          <para>
+           This is a 15<replaceable>n</replaceable>-dimensional
+           coordinate system, where <replaceable>n</replaceable> is the
+           number of pentachora in the underlying triangulation.
+           Each pentachoron contributes five tetrahedron and ten prism
+           coordinates, corresponding to the five vertices and ten edges
+           respectively of the pentachoron that these tetrahedra and prisms
+           truncate.
+          </para>
+         </glossdef>
+        </glossentry>
+       </glosslist>
+      </para>
      </glossdef>
     </glossentry>
     <glossentry id="surfaces-selectenum">
@@ -186,40 +252,40 @@
      <glossdef>
       <para>
        Here you indicate whether you wish to enumerate all
-       <firstterm>vertex</firstterm> normal surfaces, or all
-       <firstterm>fundamental</firstterm> normal surfaces.
-       Fundamental surfaces are much slower to enumerate
-       than vertex surfaces, but in some settings can offer
+       <firstterm>vertex</firstterm> normal (hyper)surfaces, or all
+       <firstterm>fundamental</firstterm> normal (hyper)surfaces.
+       Fundamental (hyper)surfaces are much slower to enumerate
+       than vertex (hyper)surfaces, but in some settings can offer
        significantly more information.
       </para>
       <para>
        <glosslist>
         <glossentry>
-         <glossterm><guilabel>Vertex surfaces</guilabel></glossterm>
+         <glossterm><guilabel>Vertex (hyper)surfaces</guilabel></glossterm>
          <glossdef>
           <para>
            These correspond to the extreme rays of the normal
-           surface solution cone: in the chosen coordinate system,
-           a vertex normal surface cannot be expressed as a
-           non-negative linear combination of normal surfaces
+           (hyper)surface solution cone: in the chosen coordinate system,
+           a vertex normal (hyper)surface cannot be expressed as a
+           non-negative linear combination of normal (hyper)surfaces
            other than multiples of itself.
           </para>
           <para>
-           &regina; will only compute one surface for each
+           &regina; will only compute one (hyper)surface for each
            extreme ray&mdash;specifically, the smallest integer vector along
-           each ray.  This means that the coordinates of each vertex surface
-           will have greatest common divisor one.
+           each ray.  This means that the coordinates of each vertex
+           (hyper)surface will have greatest common divisor one.
           </para>
          </glossdef>
         </glossentry>
         <glossentry>
-         <glossterm><guilabel>Fundamental surfaces</guilabel></glossterm>
+         <glossterm><guilabel>Fundamental (hyper)surfaces</guilabel></glossterm>
          <glossdef>
           <para>
-           These correspond to the Hilbert basis of the normal surface
+           These correspond to the Hilbert basis of the normal (hyper)surface
            solution cone: in the chosen coordinate system, a fundamental
-           normal surface cannot be expressed as a sum of
-           normal surfaces other than zero and itself.
+           normal (hyper)surface cannot be expressed as a sum of
+           normal (hyper)surfaces other than zero and itself.
           </para>
          </glossdef>
         </glossentry>
@@ -232,17 +298,18 @@
      <glossdef>
       <para>
        If this box is checked (the default), this indicates that you are
-       only interested in properly embedded surfaces.
+       only interested in properly embedded (hyper)surfaces.
        This is consistent with most of the normal surface literature.
       </para>
       <para>
        If unchecked, this indicates that you are interested not only in
-       properly embedded normal surfaces, but also <emphasis>immersed</emphasis>
-       and <emphasis>singular</emphasis> surfaces.
+       properly embedded normal (hyper)surfaces, but also
+       <emphasis>immersed</emphasis>
+       and <emphasis>singular</emphasis> (hyper)surfaces.
        &regina; currently offers only very basic support for such
-       surfaces (it will not even tell you which are immersed and which are
-       singular); moreover, the enumeration of surfaces
-       will become <emphasis>much</emphasis> slower.
+       (hyper)surfaces&mdash;it will not even tell you which are immersed
+       and which are singular; moreover, the enumeration process could
+       become <emphasis>much</emphasis> slower.
       </para>
      </glossdef>
     </glossentry>
@@ -250,8 +317,9 @@
   </para>
   <para>
    Once you are ready, click <guibutton>OK</guibutton> and &regina;
-   will enumerate all vertex or fundamental normal surfaces
-   in the chosen coordinate system.
+   will enumerate all normal (hyper)surfaces according to your selection.
+   When this is finished, &regina; will package the results
+   into a normal surface or hypersurface list and open it for you to view.
   </para>
   <para>
    <inlinemediaobject>
@@ -259,10 +327,6 @@
      <imagedata fileref="surfaces-enumerating.png"/>
     </imageobject>
    </inlinemediaobject>
-  </para>
-  <para>
-   Once this is done, &regina; will package the results
-   into a normal surface list and open it for you to view.
   </para>
   <para>
    If you selected an <emphasis>almost normal</emphasis> coordinate
@@ -1234,3 +1298,4 @@
   </sect2>
  </sect1>
 </chapter>
+
