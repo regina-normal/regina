@@ -7,8 +7,8 @@
   all of their edges should be glued together in pairs.
  </para>
  <para>
-  2-manifold triangulations only play a minor role in &regina;; it is
-  with 3-manifold triangulations that the real action takes place.
+  2-manifold triangulations only play a minor role in &regina;; it is with
+  3-manifold and 4-manifold triangulations that the real action takes place.
   2-manifold triangulations can (for example) arise from
   <link linkend="man-tricensus">census generation</link>,
   or by constructing <link linkend="tri-vertexlinks">vertex links</link>
