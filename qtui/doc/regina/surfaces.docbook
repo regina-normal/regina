@@ -399,8 +399,8 @@
       You might see this instead of vertex or fundamental (hyper)surfaces.
       This means that the list was created using
       some specialised or user-designed algorithm, and &regina; cannot
-      give you any more specific information about which surfaces or
-      hypersurfaces these are.
+      give you any more specific information about
+      <emphasis>which</emphasis> surfaces or hypersurfaces these are.
      </para></glossdef>
     </glossentry>
     <glossentry>
@@ -454,7 +454,7 @@
    </para>
    <para>
     For each category that contains one or more (hyper)surfaces, a table is
-    given to break this down further according to various simple
+    shown to break this down further according to various simple
     properties.  These include orientability, 1-or-2-sidedness,
     Euler characteristic (within 3-manifolds only),
     and homology (within 4-manifolds only).
@@ -476,7 +476,7 @@
    <note><para>
     Spun-normal surfaces and non-compact hypersurfaces will only be
     explicitly mentioned in the <guilabel>Summary</guilabel> tab if your
-    chosen coordinate system supports them.  In particular, for
+    enumeration coordinate system supports them.  In particular, for
     normal hypersurfaces in 4-manifold triangulations, non-compact surfaces
     should never be mentioned at all, unless you have used a specialised
     hand-coded enumeration algorithm.
@@ -509,15 +509,16 @@
    </para>
    <para>
     Above the table are some drop-down boxes that let you view the
-    list in different coordinate system, and for normal surfaces in
-    3-manifolds, with different filters applied.
+    list in different coordinate systems, and&mdash;for 3-manifolds
+    only&mdash;with different filters applied.
     These options are discussed further in the notes on
     <link linkend="surfaces-coords-coords">coordinate systems</link>
     and
-    <link linkend="surfaces-filtering">filtering surfaces</link>.
+    <link linkend="surfaces-filtering">filtering surfaces</link>
+    respectively.
    </para>
    <para>
-    In the first column, (hyper)surfaces are numbered 0,1,2,...,
+    In the first column, (hyper)surfaces are numbered 0,1,2,&hellip;
     in no particular order, so that you can make note of them for later on.
     You can also assign arbitrary names to (hyper)surfaces by typing
     directly into the second column; these names will be saved with your
@@ -537,8 +538,7 @@
      Some of these columns might be empty or absent in your
      viewer (for instance, &regina; does not compute Euler
      characteristic for spun-normal surfaces, and it hides several
-     of these columns if your enumeration allowed for
-     immersed or singular surfaces).
+     columns if your enumeration allowed for immersed or singular surfaces).
     </para>
     <para>
      The columns and their meanings are:
@@ -679,8 +679,8 @@
          in this case both edges will be reported here.
         </para>
         <para>
-         If the (hyper)surface is not a vertex link or a thin edge link, this
-         cell will be left empty.
+         If the (hyper)surface is not a vertex link or a thin edge link,
+         then this cell will be left empty.
         </para>
        </glossdef>
       </glossentry>
@@ -1038,6 +1038,10 @@
          obtained from standard normal (tet-prism) coordinates by ignoring
          all tetrahedra and considering only the prisms.
         </para>
+        <para>
+         Prism coordinates are (for the time being) offered for viewing only.
+         You cannot enumerate hypersurfaces in prism coordinates.
+        </para>
        </glossdef>
       </glossentry>
       <glossentry id="hypersurfaces-defedgewt">
@@ -1147,7 +1151,7 @@
       </glossdef>
      </glossentry>
      <glossentry id="surfaces-globalcompat">
-      <glossterm>Globally compatible (3-manifolds only)</glossterm>
+      <glossterm>Globally compatible (shown for 3-manifolds only)</glossterm>
       <glossdef>
        <para>
         Two normal surfaces are <emphasis>globally compatible</emphasis> if
@@ -1164,7 +1168,6 @@
     </glosslist>
    </para>
    <para>
-    Compatibility is shown visually using a coloured matrix:
     The <guilabel>Compatibility</guilabel> tab shows this information
     visually using coloured matrices.  It only displays one matrix at
     a time (either the local compatibility matrix or, for 3-manifolds only,
@@ -1192,7 +1195,8 @@
     column of the <link linkend="surfaces-coords">coordinate viewer</link>.
    </para>
    <para>
-    For some normal surfaces, &regina; cannot test global compatibility.
+    For some normal surfaces in 3-manifolds,
+    &regina; cannot test global compatibility.
     These include surfaces that are empty, disconnected, or spun.
     In such cases the corresponding rows and columns will be hashed out,
     as illustrated below.
@@ -1206,7 +1210,7 @@
    </para>
    <para>
     If you have too many surfaces or hypersurfaces in your list,
-    &regina; will not generate these matrices automatically.
+    &regina; will not generate the compatibility matrices automatically.
     You can still compute them by pressing the
     <guilabel>Calculate</guilabel> button (indicated below).
    </para>
@@ -1238,7 +1242,7 @@
     Within a 4-manifold triangulation,
     if you wish to study a normal hypersurface in more detail, you can
     triangulate it.  This will create a new 3-manifold triangulation
-    describing the hypersurface, which you can then attack with
+    describing the topology of the hypersurface, which you can then attack with
     <link linkend="triangulations">all of the 3-manifold machinery</link>
     that &regina; offers.
    </para>
@@ -1273,15 +1277,14 @@
  </sect1>
 
  <sect1 id="surfaces-filtering">
-  <title>Using Filters</title>
+  <title>Filtering Surfaces (3-Manifolds Only)</title>
 
   <para>
    Large triangulations often contain a great many
    &ldquo;junk surfaces&rdquo;, and it is sometimes desirable to restrict
    a long normal surface list to just those surfaces that satisfy
-   some simple constraints.
-   For surfaces within 3-manifold triangulations (but not 4-manifold
-   triangulations), &regina; allows you to do this using
+   some simple constraints.  For surfaces within 3-manifold triangulations,
+   &regina; allows you to do this using
    <emphasis>surface filters</emphasis>.
   </para>
   <para>
@@ -1355,15 +1358,8 @@
 
    <para>
     To filter by simple properties
-    (such as orientability, boundary or Euler characteristic),
+    (such as orientability, boundary and/or Euler characteristic),
     create a new filter and select <guilabel>Filter by properties</guilabel>.
-   </para>
-   <para>
-    <inlinemediaobject>
-     <imageobject>
-      <imagedata fileref="newfilter-prop.png"/>
-     </imageobject>
-    </inlinemediaobject>
    </para>
    <para>
     Now you can open your new filter and select your constraints.
@@ -1449,13 +1445,6 @@
     To combine several other filters
     into a boolean expression, create a new filter and select
     <guilabel>Combination (AND/OR) filter</guilabel>.
-   </para>
-   <para>
-    <inlinemediaobject>
-     <imageobject>
-      <imagedata fileref="newfilter-comb.png"/>
-     </imageobject>
-    </inlinemediaobject>
    </para>
    <para>
     A combination filter is a high-level filter that combines all of the

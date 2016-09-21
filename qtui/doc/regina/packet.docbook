@@ -269,7 +269,8 @@
     in some normal (or almost normal) coordinate system.
     Like triangulations, normal surfaces are central to &regina;,
     and you can learn more about using them in the
-    <link linkend="surfaces">chapter on normal surfaces</link>.
+    <link linkend="surfaces">chapter on normal surfaces and
+    hypersurfaces</link>.
    </para>
    <para>
     Normal surface lists are marked by the following icon:
@@ -303,7 +304,8 @@
     this will typically be the set of all vertex or fundamental hypersurfaces
     in some normal coordinate system.
     You can learn more about them in the
-    <link linkend="hypersurfaces">chapter on normal hypersurfaces</link>.
+    <link linkend="surfaces">chapter on normal surfaces and
+    hypersurfaces</link>.
    </para>
    <para>
     Normal hypersurface lists are marked by the following icon:

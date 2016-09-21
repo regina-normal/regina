@@ -172,10 +172,8 @@
   <primaryie>boundary</primaryie>
   <secondaryie><link linkend="tri-real-ideal">extension from real to
    ideal</link></secondaryie>
-  <secondaryie><link linkend="hypersurfaces-boundary">of a normal
+  <secondaryie><link linkend="surfaces-boundary">of a normal surface or
    hypersurface</link></secondaryie>
-  <secondaryie><link linkend="surfaces-boundary">of a normal
-   surface</link></secondaryie>
   <secondaryie><link linkend="tri-propbdry">of a
    triangulation</link></secondaryie>
  </indexentry>
@@ -305,16 +303,14 @@
 
  <indexentry>
   <primaryie>compactness</primaryie>
-  <secondaryie><link linkend="hypersurfaces-boundary">of normal
-   hypersurfaces</link></secondaryie>
   <secondaryie><link linkend="surfaces-boundary">of normal
-   surfaces</link></secondaryie>
+   surfaces or hypersurfaces</link></secondaryie>
  </indexentry>
 
  <indexentry>
   <primaryie>compatibility matrices</primaryie>
-  <secondaryie><link linkend="hypersurfaces-compat">for normal hypersurfaces</link></secondaryie>
-  <secondaryie><link linkend="surfaces-compat">for normal surfaces</link></secondaryie>
+  <secondaryie><link linkend="surfaces-compat">for normal
+   surfaces or hypersurfaces</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -382,17 +378,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie>coordinate systems, normal hypersurface</primaryie>
-  <secondaryie><link linkend="hypersurfaces-selectcoords">enumerating in a
-   particular coordinate system</link></secondaryie>
-  <secondaryie><link linkend="hypersurfaces-defstandard">explanation of
-   different coordinate systems</link></secondaryie>
-  <secondaryie><link linkend="hypersurfaces-coords-coords">viewing in a
-   different coordinate system</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>coordinate systems, normal surface</primaryie>
+  <primaryie>coordinate systems, normal surface or hypersurface</primaryie>
   <secondaryie><link linkend="surfaces-selectcoords">enumerating in a
    particular coordinate system</link></secondaryie>
   <secondaryie><link linkend="surfaces-defstandard">explanation of
@@ -425,13 +411,8 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="hypersurfaces-header-custom">custom
-   hypersurfaces</link></primaryie>
- </indexentry>
-
- <indexentry>
   <primaryie><link linkend="surfaces-header-custom">custom
-   surfaces</link></primaryie>
+   surfaces or hypersurfaces</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -517,10 +498,8 @@
 
  <indexentry>
   <primaryie>edge links</primaryie>
-  <secondaryie><link linkend="hypersurfaces-proplink">recognising as
-   normal hypersurfaces</link></secondaryie>
   <secondaryie><link linkend="surfaces-proplink">recognising as
-   normal surfaces</link></secondaryie>
+   normal surfaces or hypersurfaces</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -553,13 +532,8 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="hypersurfaces-embeddedonly">embedded normal
-   hypersurfaces, enumerating</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="surfaces-embeddedonly">embedded normal surfaces,
-   enumerating</link></primaryie>
+  <primaryie><link linkend="surfaces-embeddedonly">embedded normal
+   surfaces or hypersurfaces, enumerating</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -571,10 +545,8 @@
   <primaryie>enumerating</primaryie>
   <secondaryie><link linkend="angles-creation">vertex angle
    structures</link></secondaryie>
-  <secondaryie><link linkend="hypersurfaces-creation">vertex or
-   fundamental normal hypersurfaces</link></secondaryie>
   <secondaryie><link linkend="surfaces-creation">vertex or
-   fundamental normal surfaces</link></secondaryie>
+   fundamental normal surfaces or hypersurfaces</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -706,13 +678,8 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="hypersurfaces-selectenum">fundamental normal
-   hypersurfaces, enumerating</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="surfaces-selectenum">fundamental normal surfaces,
-   enumerating</link></primaryie>
+  <primaryie><link linkend="surfaces-selectenum">fundamental normal
+   surfaces or hypersurfaces, enumerating</link></primaryie>
  </indexentry>
 
  </indexdiv><indexdiv id='taskindex-G'><title>&mdash; G &mdash;</title>
@@ -813,10 +780,8 @@
 
  <indexentry>
   <primaryie>immersed / singular</primaryie>
-  <secondaryie><link linkend="hypersurfaces-embeddedonly">normal hypersurfaces,
-   enumerating</link></secondaryie>
-  <secondaryie><link linkend="surfaces-embeddedonly">normal surfaces,
-   enumerating</link></secondaryie>
+  <secondaryie><link linkend="surfaces-embeddedonly">normal surfaces
+   or hypersurfaces, enumerating</link></secondaryie>
   <secondaryie><link linkend="options-general">warn before
    enumerating</link></secondaryie>
  </indexentry>
@@ -965,10 +930,8 @@
 
  <indexentry>
   <primaryie>matching equations</primaryie>
-  <secondaryie><link linkend="hypersurfaces-viewmatching">for
-   normal hypersurfaces</link></secondaryie>
   <secondaryie><link linkend="surfaces-viewmatching">for
-   normal surfaces</link></secondaryie>
+   normal surfaces or hypersurfaces</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1003,49 +966,15 @@
 
  <indexentry>
   <primaryie>naming</primaryie>
-  <secondaryie><link linkend="hypersurfaces-coords">hypersurfaces in a
-   hypersurface list</link></secondaryie>
+  <secondaryie><link linkend="surfaces-coords">surfaces or hypersurfaces
+   in a list</link></secondaryie>
   <secondaryie><link linkend="packet-rename">packets</link></secondaryie>
-  <secondaryie><link linkend="surfaces-coords">surfaces in a
-   surface list</link></secondaryie>
   <secondaryie><link linkend="tri-editgluings">tetrahedra in a
    triangulation</link></secondaryie>
  </indexentry>
 
  <indexentry>
-  <primaryie>normal hypersurfaces (in a 4-manifold triangulation)</primaryie>
-  <secondaryie><link linkend="hypersurfaces-coords-props">basic
-   properties</link></secondaryie>
-  <secondaryie><link linkend="hypersurfaces-summary">breakdown of total
-   counts by properties</link></secondaryie>
-  <secondaryie><link linkend="hypersurfaces-compat">compatibility
-   matrices</link></secondaryie>
-  <secondaryie><link linkend="hypersurfaces-defstandard">coordinate
-   systems, different systems explained</link></secondaryie>
-  <secondaryie><link linkend="hypersurfaces-coords-coords">coordinate
-   systems, viewing in different systems</link></secondaryie>
-  <secondaryie><link linkend="hypersurfaces-summary">counting different types
-   of surfaces</link></secondaryie>
-  <secondaryie><link linkend="hypersurfaces-triangulate">triangulating a
-   hypersurface</link></secondaryie>
-  <secondaryie><link linkend="hypersurfaces">definition</link></secondaryie>
-  <secondaryie><link linkend="hypersurfaces-proplink">edge links,
-   recognising</link></secondaryie>
-  <secondaryie><link linkend="hypersurfaces-creation">enumerating vertex
-   or fundamental normal surfaces</link></secondaryie>
-  <secondaryie><link linkend="hypersurfaces-prophomology">homology</link></secondaryie>
-  <secondaryie><link linkend="hypersurfaces-viewmatching">matching
-   equations</link></secondaryie>
-  <secondaryie><link linkend="hypersurfaces-coords">naming
-   surfaces in a list</link></secondaryie>
-  <secondaryie><link linkend="hypersurfaces-coords">numbering
-   surfaces in a list</link></secondaryie>
-  <secondaryie><link linkend="hypersurfaces-proplink">vertex links,
-   recognising</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>normal surfaces (in a 3-manifold triangulation)</primaryie>
+  <primaryie>normal surfaces or hypersurfaces</primaryie>
   <secondaryie><link linkend="surfaces-coords-props">basic
    properties</link></secondaryie>
   <secondaryie><link linkend="surfaces-summary">breakdown of total
@@ -1059,7 +988,7 @@
   <secondaryie><link linkend="surfaces-coords-coords">coordinate
    systems, viewing in different systems</link></secondaryie>
   <secondaryie><link linkend="surfaces-summary">counting different types
-   of surfaces</link></secondaryie>
+   of (hyper)surfaces</link></secondaryie>
   <secondaryie><link linkend="tri-cutcrush">crushing a
    surface</link></secondaryie>
   <secondaryie><link linkend="tri-cutcrush">cutting along a
@@ -1068,19 +997,22 @@
   <secondaryie><link linkend="surfaces-proplink">edge links,
    recognising</link></secondaryie>
   <secondaryie><link linkend="surfaces-creation">enumerating vertex
-   or fundamental normal surfaces</link></secondaryie>
+   or fundamental normal (hyper)surfaces</link></secondaryie>
   <secondaryie><link linkend="export-csvsurfacelist">exporting to
    &csv; files</link></secondaryie>
   <secondaryie><link linkend="surfaces-filtering">filtering surface
    lists</link></secondaryie>
+  <secondaryie><link linkend="hypersurfaces-prophomology">homology</link></secondaryie>
   <secondaryie><link linkend="surfaces-viewmatching">matching
    equations</link></secondaryie>
   <secondaryie><link linkend="surfaces-coords">naming
-   surfaces in a list</link></secondaryie>
+   (hyper)surfaces in a list</link></secondaryie>
   <secondaryie><link linkend="surfaces-coords">numbering
-   surfaces in a list</link></secondaryie>
+   (hyper)surfaces in a list</link></secondaryie>
   <secondaryie><link linkend="surfaces-proptype">splitting surfaces,
    recognising</link></secondaryie>
+  <secondaryie><link linkend="hypersurfaces-triangulate">triangulating a
+   hypersurface</link></secondaryie>
   <secondaryie><link linkend="surfaces-proplink">vertex links,
    recognising</link></secondaryie>
  </indexentry>
@@ -1121,10 +1053,8 @@
 
  <indexentry>
   <primaryie>orientability</primaryie>
-  <secondaryie><link linkend="hypersurfaces-proporient">of a normal
-   hypersurface</link></secondaryie>
   <secondaryie><link linkend="surfaces-proporient">of a normal
-   surface</link></secondaryie>
+   surface or hypersurface</link></secondaryie>
   <secondaryie><link linkend="tri-proporient">of a
    native triangulation</link></secondaryie>
   <secondaryie><link linkend="snappea-proporbl">of a
@@ -1361,10 +1291,8 @@
 
  <indexentry>
   <primaryie>sidedness</primaryie>
-  <secondaryie><link linkend="hypersurfaces-propsides">of a
-   normal hypersurface</link></secondaryie>
   <secondaryie><link linkend="surfaces-propsides">of a
-   normal surface</link></secondaryie>
+   normal surface or hypersurface</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1807,10 +1735,8 @@
 
  <indexentry>
   <primaryie>vertex links</primaryie>
-  <secondaryie><link linkend="hypersurfaces-proplink">recognising as
-   normal hypersurfaces</link></secondaryie>
   <secondaryie><link linkend="surfaces-proplink">recognising as
-   normal surfaces</link></secondaryie>
+   normal surfaces or hypersurfaces</link></secondaryie>
   <secondaryie><link linkend="tri-vertexlinks">triangulating for native
    triangulations</link></secondaryie>
   <secondaryie><link linkend="snappea-vertexlinks">triangulating for &snappea;
@@ -1818,13 +1744,8 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="hypersurfaces-selectenum">vertex normal
-   hypersurfaces, enumerating</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="surfaces-selectenum">vertex normal surfaces,
-   enumerating</link></primaryie>
+  <primaryie><link linkend="surfaces-selectenum">vertex normal
+   surfaces or hypersurfaces, enumerating</link></primaryie>
  </indexentry>
 
  <indexentry>
