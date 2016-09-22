@@ -2889,11 +2889,12 @@
    <para>
     If your triangulation is
     <link linkend="tri-basicprops">orientable but not oriented</link>,
-    you may wish to reorder the vertices 0,1,2,3 of each tetrahedron so that
-    adjacent tetrahedra have consistent orientations.
+    you may wish to reorder the vertices of each top-dimensional simplex
+    (e.g., vertices 0,1,2,3 of each tetrahedron in a 3-manifold) so that
+    adjacent simplices have consistent orientations.
     To do this, press the <guibutton>Orient</guibutton> button (or select
     <menuchoice>
-     <guimenu>3-D&nbsp;Triangulation</guimenu>
+     <guimenu>Triangulation</guimenu>
      <guimenuitem>Orient</guimenuitem>
     </menuchoice>
     from the menu).
@@ -2909,7 +2910,7 @@
     To convert a non-orientable triangulation into its orientable double cover,
     select
     <menuchoice>
-     <guimenu>3-D&nbsp;Triangulation</guimenu>
+     <guimenu>Triangulation</guimenu>
      <guimenuitem>Double Cover</guimenuitem>
     </menuchoice>.
     If your triangulation has any orientable components, they will
@@ -2982,8 +2983,8 @@
   <sect2 id="tri-connsumwith">
    <title>Building Connected Sums (3-D)</title>
    <para>
-    You can combine two triangulations by forming their connected sum.
-    This will convert some triangulation <replaceable>X</replaceable>
+    You can combine two 3-manifold triangulations by forming their connected
+    sum.  This will convert some triangulation <replaceable>X</replaceable>
     into the connected sum
     <replaceable>X</replaceable>&nbsp;#&nbsp;<replaceable>Y</replaceable>
     for some other triangulation <replaceable>Y</replaceable>
@@ -3046,8 +3047,8 @@
    <title>Cutting Along and Crushing Normal Surfaces (3-D)</title>
 
    <para>
-    If you have a normal surface in your triangulation, you can either cut
-    along your surface or crush it to a point.
+    If you have a normal surface in a 3-manifold triangulation,
+    you can either cut along your surface or crush it to a point.
     <itemizedlist>
      <listitem>
       <para>
