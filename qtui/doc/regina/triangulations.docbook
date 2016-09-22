@@ -80,12 +80,13 @@
    <title>New Triangulations</title>
    <para>
     The simplest way to create a triangulation is through the
+    various
     <menuchoice>
      <guimenu>Packet Tree</guimenu>
-     <guimenuitem>New 3-D Triangulation</guimenuitem>
+     <guimenuitem>New Triangulation</guimenuitem>
     </menuchoice>
-    menu item (or the corresponding toolbar button),
-    which will create a new triangulation from scratch.
+    menu items (or the corresponding toolbar buttons),
+    which will create a new triangulation of the given dimension from scratch.
    </para>
    <para>
     <inlinemediaobject>
@@ -95,9 +96,8 @@
     </inlinemediaobject>
    </para>
    <para>
-    In addition to the usual information, you are asked what
-    <emphasis>type</emphasis> of triangulation to create (see the
-    drop-down box below).
+    You will be asked what <emphasis>type</emphasis> of triangulation
+    to create (see the drop-down box below).
     Here we walk through the various options.
    </para>
    <para>
@@ -112,11 +112,11 @@
     <title>Empty</title>
 
     <para>
-     This will create a new triangulation with no tetrahedra at all.
+     This will create a new triangulation with no simplices at all.
      This is best if you wish to enter a triangulation by hand:
      first create an empty triangulation, and then
-     manually <link linkend="tri-editgluings">add tetrahedra
-     and edit the face gluings</link>.
+     manually <link linkend="tri-editgluings">add simplices
+     and edit the facet gluings</link>.
     </para>
     <para>
      <inlinemediaobject>
@@ -127,8 +127,99 @@
     </para>
    </sect3>
 
+   <sect3 id="tri-new-example">
+    <title>Example Triangulation</title>
+
+    <para>
+     &regina; offers a selection of ready-made sample triangulations,
+     which you can play with to discover how &regina; works.
+     These include examples of knot complements and 2-knot complements,
+     well-known spaces such as the &poincare; homology sphere and
+     the Weber-Seifert dodecahedral space, and many others.
+     Simply select an example from the list provided and &regina; will
+     build the corresponding triangulation for you.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="newtri-example.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+   </sect3>
+   <sect3 id="tri-new-isosig">
+    <title>Isomorphism Signature</title>
+
+    <para>
+     This will reconstruct a triangulation from an isomorphism signature.
+     An <firstterm>isomorphism signature</firstterm> is a compact sequence
+     of letters, digits and/or punctuation that identifies a
+     triangulation uniquely up to combinatorial isomorphism (i.e.,
+     relabelling simplices and their vertices).  An example for 3-manifolds is
+     <literal>cPcbbbiht</literal> (which describes the figure eight knot
+     complement).
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="newtri-isosig.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+    <para>
+     Stated precisely: every triangulation has a unique isomorphism signature,
+     and two triangulations have the same signature if and only if they
+     are isomorphic.
+     Isomorphism signatures are introduced in the paper
+     <xref linkend="bib-burton-simps3"/>.
+     They are available in all of the dimensions
+     that &regina; supports, and for 3-manifolds the format is
+     explicitly described in <xref linkend="bib-burton-pachner-orprime"/>.
+    </para>
+    <para>
+     If you already have a triangulation and you wish to view its
+     isomorphism signature: for 3-manifolds you can view it through the
+     <link linkend="tri-composition-isosig">triangulation composition</link>
+     tab, and in other dimensions you can access it through
+     <link linkend="python">&python; scripting</link>
+     or <link linkend="compiling">&cpp; programming</link>.
+    </para>
+    <caution><para>
+     Isomorphism signatures are <emphasis>case sensitive</emphasis>!
+     Be sure that you are entering upper-case and lower-case correctly
+     (or better, copy and paste the signature using the clipboard if you
+     can).
+    </para></caution>
+   </sect3>
+
+   <sect3 id="tri-new-or-nor">
+    <title>Orientable and non-orientable surfaces
+     (2-manifolds only)</title>
+    <para>
+     For 2-manifolds, &regina; can triangulate a connected surface of
+     any topological type.  Select either
+     <guilabel>Orientable surface</guilabel> or
+     <guilabel>Non-orientable surface</guilabel>
+     as the type of triangulation, and then enter the genus and the
+     number of punctures that you would like in the surface.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="newtri-nor.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+    <para>
+     For orientable surfaces the genus represents the number of handles
+     (e.g., the torus has orientable genus&nbsp;1), and for non-orientable
+     surfaces the genus represents the number of crosscaps
+     (e.g., the Klein bottle has non-orientable genus&nbsp;2).
+    </para>
+   </sect3>
+
    <sect3 id="tri-new-lens">
-    <title>Layered Lens Space</title>
+    <title>Layered Lens Space (3-manifolds only)</title>
 
     <para>
      This will create a layered lens space with the given parameters.
@@ -154,10 +245,14 @@
      The resulting 3-manifold will be the lens space
      L(<replaceable>p</replaceable>,<replaceable>q</replaceable>).
     </para>
+    <tip><para>
+     You do not need to separate the lens space parameters with commas:
+     any punctuation, or even just spaces, will suffice.
+    </para></tip>
    </sect3>
 
    <sect3 id="tri-sfs">
-    <title>&SFSLong;</title>
+    <title>&SFSLong; (3-manifolds only)</title>
 
     <para>
      This will create an orientable &sfslong; over the 2-sphere with any
@@ -191,10 +286,14 @@
      Pairs of the form (1,<replaceable>k</replaceable>) and even
      (1,0) are acceptable.
     </para>
+    <tip><para>
+     You do not need to separate the &sfslong; parameters with brackets
+     and commas: any punctuation, or even just spaces, will suffice.
+    </para></tip>
    </sect3>
 
    <sect3 id="tri-new-layered">
-    <title>Layered Solid Torus</title>
+    <title>Layered Solid Torus (3-manifolds only)</title>
 
     <para>
      This will create a layered solid torus with the given parameters.
@@ -219,54 +318,18 @@
      describe how many times the meridional disc of the solid torus
      intersects the three edges on the boundary of the triangulation.
     </para>
-   </sect3>
-
-   <sect3 id="tri-new-isosig">
-    <title>Isomorphism Signature</title>
-
-    <para>
-     This will reconstruct a triangulation from an isomorphism signature.
-     An <firstterm>isomorphism signature</firstterm> is a compact sequence
-     of letters, digits and/or punctuation that identifies a
-     triangulation uniquely up to combinatorial isomorphism (i.e.,
-     relabelling tetrahedra and their vertices).  An example is
-     <literal>cPcbbbiht</literal> (which describes the figure eight knot
-     complement).
-    </para>
-    <para>
-     <inlinemediaobject>
-      <imageobject>
-       <imagedata fileref="newtri-isosig.png"/>
-      </imageobject>
-     </inlinemediaobject>
-    </para>
-    <para>
-     Stated precisely: every triangulation has a unique isomorphism signature,
-     and two triangulations have the same signature if and only if they
-     are isomorphic.
-     Isomorphism signatures are introduced in the paper
-     <xref linkend="bib-burton-simps3"/>,
-     and the format is explicitly described in
-     <xref linkend="bib-burton-pachner-orprime"/>.
-    </para>
-    <para>
-     The isomorphism signature for an existing triangulation can be viewed
-     through the <link linkend="tri-composition-isosig">triangulation
-     composition</link> tab.
-    </para>
-    <caution><para>
-     Isomorphism signatures are <emphasis>case sensitive</emphasis>!
-     Be sure that you are entering upper-case and lower-case correctly
-     (or better, copy and paste the signature using the clipboard if you
-     can).
-    </para></caution>
+    <tip><para>
+     You do not need to separate the layered solid torus parameters with commas:
+     any punctuation, or even just spaces, will suffice.
+    </para></tip>
    </sect3>
 
    <sect3 id="tri-new-dehydration">
-    <title>Dehydration</title>
+    <title>Dehydration (3-manifolds only)</title>
 
     <para>
-     This will rehydrate a triangulation from the given dehydration string.
+     This will rehydrate a 3-manifold triangulation from the given
+     dehydration string.
      A <firstterm>dehydration string</firstterm> is a sequence of letters
      that contains enough information to reconstruct a triangulation
      (though tetrahedra and their vertices might be relabelled).
@@ -286,7 +349,7 @@
      </inlinemediaobject>
     </para>
     <para>
-     Only some triangulations have dehydration strings.
+     Only some 3-manifold triangulations have dehydration strings.
      The dehydration string (if it exists) for an existing triangulation
      can be viewed
      through the <link linkend="tri-composition-dehydration">triangulation
@@ -295,10 +358,11 @@
    </sect3>
 
    <sect3 id="tri-new-splitting">
-    <title>Splitting Surface</title>
+    <title>Splitting Surface (3-manifolds only)</title>
 
     <para>
-     This will reconstruct a triangulation from a splitting surface signature.
+     This will reconstruct a 3-manifold triangulation
+     from a splitting surface signature.
      A <firstterm>splitting surface</firstterm> is a compact normal
      surface consisting of precisely one quadrilateral per tetrahedron
      and no other normal discs.
@@ -326,25 +390,37 @@
     </para>
    </sect3>
 
-   <sect3 id="tri-new-example">
-    <title>Example Triangulation</title>
-
+   <sect3 id="tri-new-bundle">
+    <title>I-bundles and &s1;-bundles (4-manifolds only)</title>
     <para>
-     &regina; also offers a small
-     selection of ready-made sample triangulations;
-     these include the figure eight knot complement,
-     the &poincare; homology sphere, the Weber-Seifert dodecahedral
-     space, and many others.
-     Simply select one from the list provided and the
-     corresponding triangulation will be built for you.
+     This allows you to build an I-bundle or an
+     &s1;-bundle over an existing 3-manifold triangulation.
+    </para>
+    <para>
+     Choose either <guilabel>I-bundle</guilabel> or
+     <guilabel>&s1;-bundle</guilabel>
+     as the triangulation type, and then select your 3-manifold
+     triangulation in the drop-down box.  If your triangulation
+     represents the 3-manifold <replaceable>M</replaceable>, then
+     &regina; will build the 4-manifold
+     <replaceable>M</replaceable>&nbsp;&times;&nbsp;I or
+     <replaceable>M</replaceable>&nbsp;&times;&nbsp;&s1; respectively.
     </para>
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="newtri-example.png"/>
+       <imagedata fileref="newtri-bundle.png"/>
       </imageobject>
      </inlinemediaobject>
     </para>
+    <tip><para>
+     &regina; is also able to build non-trivial bundles, formed by
+     gluing the two boundaries of
+     <replaceable>M</replaceable>&nbsp;&times;&nbsp;I according to a
+     given monodromy.  However, this construction is only accessible through
+     <link linkend="python">&python; scripting</link>
+     or <link linkend="compiling">&cpp; programming</link>.
+    </para></tip>
    </sect3>
   </sect2>
 
@@ -367,7 +443,7 @@
    <title>Creating a Census</title>
 
    <para>
-    &regina; can build a census of all 3-manifold triangulations
+    &regina; can build a census of all triangulations
     satisfying a variety of different constraints.  The best way to
     do this is through the command-line tool
     <link linkend="man-tricensus"><command>tricensus</command></link>.

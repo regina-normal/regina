@@ -197,6 +197,10 @@
   <primaryie><link linkend="services">bug reporting</link></primaryie>
  </indexentry>
 
+ <indexentry>
+  <primaryie><link linkend="tri-new-bundle">bundles, creation</link></primaryie>
+ </indexentry>
+
  </indexdiv><indexdiv id='taskindex-C'><title>&mdash; C &mdash;</title>
 
  <indexentry>
@@ -759,6 +763,10 @@
  </indexdiv><indexdiv id='taskindex-I'><title>&mdash; I &mdash;</title>
 
  <indexentry>
+  <primaryie><link linkend="tri-new-bundle">I-bundles, creation</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>ideal vertices</primaryie>
   <secondaryie><link linkend="tri-real-ideal">creating from real boundary
    components</link></secondaryie>
@@ -1230,6 +1238,10 @@
  </indexdiv><indexdiv id='taskindex-S'><title>&mdash; S &mdash;</title>
 
  <indexentry>
+  <primaryie><link linkend="tri-new-bundle">&s1;-bundles, creation</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>samples</primaryie>
   <seeie>See: examples</seeie>
  </indexentry>
@@ -1545,15 +1557,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie>triangulation, 2-manifold</primaryie>
-  <secondaryie><link linkend="dim2-identify">Euler
-   characteristic</link></secondaryie>
-  <secondaryie><link linkend="dim2-identify">recognising the
-   underlying 2-manifold</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>triangulation, 3-manifold</primaryie>
+  <primaryie>triangulation, (2,3,4)-manifold</primaryie>
   <secondaryie><link linkend="tri-prop0eff">0-efficiency,
    testing for</link></secondaryie>
   <secondaryie><link linkend="tri-make0eff">0-efficient triangulation,
@@ -1595,6 +1599,8 @@
    edges</link></secondaryie>
   <secondaryie><link linkend="tri-elementarymove">elementary
    moves (3-2, 4-4, open book, etc.)</link></secondaryie>
+  <secondaryie><link linkend="dim2-identify">Euler
+   characteristic of a 2-manifold</link></secondaryie>
   <secondaryie><link linkend="tri-new-example">examples,
    creating</link></secondaryie>
   <secondaryie><link linkend="foreign-export">exporting to
@@ -1627,6 +1633,8 @@
   <secondaryie><link linkend="tri-orient">orientable double
    cover</link></secondaryie>
   <secondaryie><link linkend="tri-puncturedrill">puncturing</link></secondaryie>
+  <secondaryie><link linkend="dim2-identify">recognising the
+   underlying 2-manifold</link></secondaryie>
   <secondaryie><link linkend="tri-recognition">recognising the
    underlying 3-manifold</link></secondaryie>
   <secondaryie><link linkend="tri-censuslookup">searching for a

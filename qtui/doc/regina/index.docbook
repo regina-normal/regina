@@ -120,6 +120,7 @@
   <!ENTITY rhfedora "<application>Red Hat</application> /
    <application>Fedora</application>">
   <!ENTITY rpm "<acronym>RPM</acronym>">
+  <!ENTITY s1 "S<superscript>1</superscript>">
   <!ENTITY SFSLong "Seifert Fibred Space">
   <!ENTITY sfslong "Seifert fibred space">
   <!ENTITY snappea "<application>SnapPea</application>">
