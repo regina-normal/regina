@@ -71,6 +71,9 @@
   <!ENTITY csv "<acronym>CSV</acronym>">
   <!ENTITY cython "<application>Cython</application>">
   <!ENTITY debian "<application>Debian</application>">
+  <!ENTITY dmanifold "<replaceable>d</replaceable>-manifold">
+  <!ENTITY dsimplex "<replaceable>d</replaceable>-simplex">
+  <!ENTITY dsimplices "<replaceable>d</replaceable>-simplices">
   <!ENTITY evince "<application>Evince</application>">
   <!ENTITY fedora "<application>Fedora</application>">
   <!ENTITY fink "<application>Fink</application>">
@@ -157,8 +160,6 @@
   <!ENTITY reginapacket SYSTEM "packet.docbook">
   <!ENTITY reginatriangulations SYSTEM "triangulations.docbook">
   <!ENTITY reginasnappea SYSTEM "snappea.docbook">
-  <!ENTITY reginadim4tri SYSTEM "dim4tri.docbook">
-  <!ENTITY reginadim2tri SYSTEM "dim2tri.docbook">
   <!ENTITY reginasurfaces SYSTEM "surfaces.docbook">
   <!ENTITY reginaangles SYSTEM "angles.docbook">
   <!ENTITY reginaforeign SYSTEM "foreign.docbook">
@@ -238,8 +239,6 @@
  &reginapacket;
  &reginatriangulations;
  &reginasnappea;
- &reginadim4tri;
- &reginadim2tri;
  &reginasurfaces;
  &reginaangles;
  &reginaforeign;

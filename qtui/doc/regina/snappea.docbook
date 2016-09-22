@@ -444,7 +444,7 @@
      </menuchoice>
      from the menu.
      This will explicitly build the chosen vertex link as a new
-     <link linkend="dim2triangulations">2-manifold triangulation</link>.
+     2-manifold triangulation.
      This operation is the same as for &regina;'s native triangulations,
      and you can read more details in the
      <link linkend="tri-vertexlinks">triangulations chapter</link>.

@@ -33,9 +33,13 @@
 // Regina core includes:
 #include "dim4/dim4exampletriangulation.h"
 #include "dim4/dim4triangulation.h"
+#include "triangulation/ntriangulation.h"
 
 // UI includes:
 #include "dim4tricreator.h"
+#include "packetchooser.h"
+#include "packetfilter.h"
+#include "reginamain.h"
 #include "reginasupport.h"
 
 #include <QCheckBox>
@@ -57,6 +61,8 @@ namespace {
      */
     enum {
         TRI_EMPTY,
+        TRI_IBUNDLE,
+        TRI_S1BUNDLE,
         TRI_ISOSIG,
         TRI_EXAMPLE
     };
@@ -80,7 +86,7 @@ namespace {
     QRegExp reIsoSig("^([A-Za-z0-9+-]+)$");
 }
 
-Dim4TriangulationCreator::Dim4TriangulationCreator() {
+Dim4TriangulationCreator::Dim4TriangulationCreator(ReginaMain* mainWindow) {
     // Set up the basic layout.
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
@@ -105,17 +111,57 @@ Dim4TriangulationCreator::Dim4TriangulationCreator() {
     // Note that the order in which these options are added to the combo
     // box must correspond precisely to the type IDs defined at the head
     // of this file.
-    QWidget* hArea;
-    QBoxLayout* hLayout;
+    QWidget* area;
+    QBoxLayout* subLayout;
 
     type->insertItem(type->count(), QObject::tr("Empty"));
     details->addWidget(new QWidget());
 
+    type->insertItem(TRI_IBUNDLE, QObject::tr("I-bundle"));
+    area = new QWidget();
+    subLayout = new QVBoxLayout();
+    subLayout->setContentsMargins(0, 0, 0, 0);
+    area->setLayout(subLayout);
+    expln = QObject::trUtf8("<qt>Select the 3-manifold triangulation <i>M</i> "
+        "that you wish to use to form the I-bundle "
+        "<i>M</i>&nbsp;×&nbsp;I.</qt>");
+    label = new QLabel(QObject::tr("Select a 3-manifold to build an "
+        "I-bundle from:"));
+    label->setWhatsThis(expln);
+    subLayout->addWidget(label);
+    iBundleFrom = new PacketChooser(mainWindow->getPacketTree(),
+        new SubclassFilter<regina::NTriangulation>(),
+        PacketChooser::ROOT_AS_PACKET);
+    iBundleFrom->setWhatsThis(expln);
+    iBundleFrom->selectPacket(mainWindow->selectedPacket());
+    subLayout->addWidget(iBundleFrom, 1);
+    details->addWidget(area);
+
+    type->insertItem(TRI_S1BUNDLE, QObject::trUtf8("S¹-bundle"));
+    area = new QWidget();
+    subLayout = new QVBoxLayout();
+    subLayout->setContentsMargins(0, 0, 0, 0);
+    area->setLayout(subLayout);
+    expln = QObject::trUtf8("<qt>Select the 3-manifold triangulation <i>M</i> "
+        "that you wish to use to form the S¹-bundle "
+        "<i>M</i>&nbsp;×&nbsp;S¹.</qt>");
+    label = new QLabel(QObject::trUtf8("Select a 3-manifold to build an "
+        "S¹-bundle from:"));
+    label->setWhatsThis(expln);
+    subLayout->addWidget(label);
+    s1BundleFrom = new PacketChooser(mainWindow->getPacketTree(),
+        new SubclassFilter<regina::NTriangulation>(),
+        PacketChooser::ROOT_AS_PACKET);
+    s1BundleFrom->setWhatsThis(expln);
+    s1BundleFrom->selectPacket(mainWindow->selectedPacket());
+    subLayout->addWidget(s1BundleFrom, 1);
+    details->addWidget(area);
+
     type->insertItem(TRI_ISOSIG, QObject::tr("From isomorphism signature"));
-    hArea = new QWidget();
-    hLayout = new QHBoxLayout();
-    hLayout->setContentsMargins(0, 0, 0, 0);
-    hArea->setLayout(hLayout);
+    area = new QWidget();
+    subLayout = new QHBoxLayout();
+    subLayout->setContentsMargins(0, 0, 0, 0);
+    area->setLayout(subLayout);
     expln = QObject::tr("<qt>The isomorphism signature "
         "from which the new triangulation will be created.  An example "
         "isomorphism signature is <i>cMkabbb+aAa3blb</i>.<p>"
@@ -129,26 +175,26 @@ Dim4TriangulationCreator::Dim4TriangulationCreator() {
         "analogous scheme.</qt>");
     label = new QLabel(QObject::tr("Isomorphism signature:"));
     label->setWhatsThis(expln);
-    hLayout->addWidget(label);
+    subLayout->addWidget(label);
     isoSig = new QLineEdit();
-    isoSig->setValidator(new QRegExpValidator(reIsoSig, hArea));
+    isoSig->setValidator(new QRegExpValidator(reIsoSig, area));
     isoSig->setWhatsThis(expln);
-    hLayout->addWidget(isoSig, 1);
-    details->addWidget(hArea);
+    subLayout->addWidget(isoSig, 1);
+    details->addWidget(area);
 
     type->insertItem(type->count(), QObject::tr("Example triangulation"));
-    hArea = new QWidget();
-    hLayout = new QHBoxLayout();
-    hLayout->setContentsMargins(0, 0, 0, 0);
-    hArea->setLayout(hLayout);
+    area = new QWidget();
+    subLayout = new QHBoxLayout();
+    subLayout->setContentsMargins(0, 0, 0, 0);
+    area->setLayout(subLayout);
     expln = QObject::tr(
         "<qt>Specifies which particular example triangulation to create.<p>"
         "A selection of ready-made 4-manifold triangulations is offered "
         "here to help you experiment and see how Regina works.</qt>");
     label = new QLabel(QObject::tr("Example:"));
     label->setWhatsThis(expln);
-    hLayout->addWidget(label);
-    exampleWhich = new QComboBox(hArea);
+    subLayout->addWidget(label);
+    exampleWhich = new QComboBox(area);
     exampleWhich->insertItem(0, QObject::tr("Minimal 4-sphere (2 pentachora)"));
     exampleWhich->insertItem(1, QObject::tr("Simplicial 4-sphere (6 pentachora)"));
     exampleWhich->insertItem(2, QObject::trUtf8("RP⁴"));
@@ -157,8 +203,8 @@ Dim4TriangulationCreator::Dim4TriangulationCreator() {
     exampleWhich->insertItem(5, QObject::tr("Cappell-Shaneson 2-knot complement"));
     exampleWhich->setCurrentIndex(0);
     exampleWhich->setWhatsThis(expln);
-    hLayout->addWidget(exampleWhich, 1);
-    details->addWidget(hArea);
+    subLayout->addWidget(exampleWhich, 1);
+    details->addWidget(area);
 
     // Tidy up.
     type->setCurrentIndex(0);
@@ -178,6 +224,38 @@ regina::NPacket* Dim4TriangulationCreator::createPacket(regina::NPacket*,
     if (typeId == TRI_EMPTY) {
         Dim4Triangulation* ans = new Dim4Triangulation();
         ans->setLabel("4-D triangulation");
+        return ans;
+    } else if (typeId == TRI_IBUNDLE) {
+        regina::NTriangulation* from = dynamic_cast<regina::NTriangulation*>(
+            iBundleFrom->selectedPacket());
+        if (! from) {
+            ReginaSupport::info(parentWidget, QObject::tr(
+                "Please select a 3-manifold triangulation to build the "
+                "I-bundle from."));
+            return 0;
+        }
+        Dim4Triangulation* ans = Dim4ExampleTriangulation::iBundle(*from);
+        ans->intelligentSimplify();
+        if (from->label().empty())
+            ans->setLabel("I-bundle");
+        else
+            ans->setLabel(from->label() + " × I");
+        return ans;
+    } else if (typeId == TRI_S1BUNDLE) {
+        regina::NTriangulation* from = dynamic_cast<regina::NTriangulation*>(
+            s1BundleFrom->selectedPacket());
+        if (! from) {
+            ReginaSupport::info(parentWidget, QObject::trUtf8(
+                "Please select a 3-manifold triangulation to build the "
+                "S¹-bundle from."));
+            return 0;
+        }
+        Dim4Triangulation* ans = Dim4ExampleTriangulation::s1Bundle(*from);
+        ans->intelligentSimplify();
+        if (from->label().empty())
+            ans->setLabel("S¹-bundle");
+        else
+            ans->setLabel(from->label() + " × S¹");
         return ans;
     } else if (typeId == TRI_ISOSIG) {
         if (! reIsoSig.exactMatch(isoSig->text())) {

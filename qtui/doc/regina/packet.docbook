@@ -142,7 +142,7 @@
     together in pairs.
     3-manifold triangulations are central to &regina;,
     and you can learn more about using them by reading the
-    <link linkend="triangulations">corresponding chapter</link> in
+    <link linkend="triangulations">triangulations chapter</link> in
     this handbook.
    </para>
    <para>
@@ -207,7 +207,7 @@
     (i.e., 4-simplices) together in pairs.
     4-manifold triangulations were introduced in &regina;&nbsp;5.0,
     and you can learn more about them by reading the
-    <link linkend="dim4triangulations">corresponding chapter</link> in
+    <link linkend="triangulations">triangulations chapter</link> in
     this handbook.
    </para>
    <para>
