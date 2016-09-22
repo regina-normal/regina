@@ -1192,10 +1192,10 @@ class NTriangulationTest : public TriangulationTest<3> {
 
             NVertex* v = tri.vertex(vertex);
 
-            if (v->link() != NVertex::NON_STANDARD_BDRY) {
+            if (v->link() != NVertex::INVALID) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
-                    << " link is not listed as NON_STANDARD_BDRY.";
+                    << " link is not listed as INVALID.";
                 CPPUNIT_FAIL(msg.str());
             }
             if (v->isLinkClosed()) {
@@ -1249,10 +1249,10 @@ class NTriangulationTest : public TriangulationTest<3> {
 
             NVertex* v = tri.vertex(vertex);
 
-            if (v->link() != NVertex::NON_STANDARD_BDRY) {
+            if (v->link() != NVertex::INVALID) {
                 std::ostringstream msg;
                 msg << triName << ", vertex " << vertex
-                    << " link is not listed as NON_STANDARD_BDRY.";
+                    << " link is not listed as INVALID.";
                 CPPUNIT_FAIL(msg.str());
             }
             if (v->isLinkClosed()) {

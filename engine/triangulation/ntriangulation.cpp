@@ -356,12 +356,12 @@ long Triangulation<3>::eulerCharManifold() const {
         if ((*it)->isIdeal())
             ans += (*it)->eulerChar() - 1;
 
-    // If we have an invalid triangulation, we need to locate non-standard
-    // boundary vertices and invalid edges, and truncate those unwanted bits
-    // also.
+    // If we have an invalid triangulation, we need to locate invalid
+    // vertices (i.e., non-standard boundary vertices) and also invalid edges,
+    // and truncate those unwanted bits also.
     if (! valid_) {
         for (NVertex* v : vertices())
-            if (v->link() == NVertex::NON_STANDARD_BDRY)
+            if (v->link() == NVertex::INVALID)
                 ans += v->linkEulerChar() - 1;
         for (NEdge* e : edges())
             if (! e->isValid())

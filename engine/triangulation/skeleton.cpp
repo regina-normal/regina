@@ -264,7 +264,7 @@ void NTriangulation::calculateVertexLinks() {
             if (vertex->linkEulerChar_ == 1)
                 vertex->link_ = NVertex::DISC;
             else {
-                vertex->link_ = NVertex::NON_STANDARD_BDRY;
+                vertex->link_ = NVertex::INVALID;
                 vertex->markBadLink();
                 valid_ = vertex->component_->valid_ = false;
                 standard_ = false;

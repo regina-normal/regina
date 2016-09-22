@@ -629,8 +629,10 @@ Version 5.0  [ (under development) ]
               particular, this class now supports C++11 range-based for loops.
             - New routines ordering(), faceNumber() and containsVertex(), for
               consistency with higher-dimensional faces.
+            - The link constant NON_STANDARD_BDRY has been renamed to INVALID.
+              The old name has been kept but is now deprecated.
             - New routine isValid(), which is equivalent to testing whether
-              getLink() == NON_STANDARD_BDRY.
+              getLink() == INVALID.
             - Removed getEmbeddings() for C++, but kept it for Python.
             - Removed the old routine getNumberOfEmbeddings().  Just use
               the equivalent routine getDegree() instead.

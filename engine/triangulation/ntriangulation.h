@@ -630,9 +630,9 @@ class REGINA_API Triangulation<3> :
 
         /**
          * Returns the fundamental group of this triangulation.
-         * If this triangulation contains any ideal or non-standard
-         * vertices, the fundamental group will be
-         * calculated as if each such vertex had been truncated.
+         * If this triangulation contains any ideal or invalid vertices,
+         * the fundamental group will be calculated as if each such vertex
+         * had been truncated.
          *
          * If this triangulation contains any invalid edges, the
          * calculations will be performed <b>without</b> any truncation
@@ -696,9 +696,9 @@ class REGINA_API Triangulation<3> :
         void simplifiedFundamentalGroup(NGroupPresentation* newGroup);
         /**
          * Returns the first homology group for this triangulation.
-         * If this triangulation contains any ideal or non-standard
-         * vertices, the homology group will be
-         * calculated as if each such vertex had been truncated.
+         * If this triangulation contains any ideal or invalid vertices,
+         * the homology group will be calculated as if each such vertex
+         * had been truncated.
          *
          * If this triangulation contains any edges that are self-identified
          * in reverse, the homology will be computed \b without truncating
@@ -729,9 +729,9 @@ class REGINA_API Triangulation<3> :
         const NAbelianGroup& homology() const;
         /**
          * Returns the first homology group for this triangulation.
-         * If this triangulation contains any ideal or non-standard
-         * vertices, the homology group will be
-         * calculated as if each such vertex had been truncated.
+         * If this triangulation contains any ideal or invalid vertices,
+         * the homology group will be calculated as if each such vertex
+         * had been truncated.
          *
          * If this triangulation contains any edges that are self-identified
          * in reverse, the homology will be computed \b without truncating

@@ -162,6 +162,7 @@ void addNVertex() {
             .value("TORUS", regina::NVertex::TORUS)
             .value("KLEIN_BOTTLE", regina::NVertex::KLEIN_BOTTLE)
             .value("NON_STANDARD_CUSP", regina::NVertex::NON_STANDARD_CUSP)
+            .value("INVALID", regina::NVertex::INVALID)
             .value("NON_STANDARD_BDRY", regina::NVertex::NON_STANDARD_BDRY)
             ;
 
@@ -170,6 +171,7 @@ void addNVertex() {
         s.attr("TORUS") = NVertex::TORUS;
         s.attr("KLEIN_BOTTLE") = NVertex::KLEIN_BOTTLE;
         s.attr("NON_STANDARD_CUSP") = NVertex::NON_STANDARD_CUSP;
+        s.attr("INVALID") = NVertex::INVALID;
         s.attr("NON_STANDARD_BDRY") = NVertex::NON_STANDARD_BDRY;
     }
 

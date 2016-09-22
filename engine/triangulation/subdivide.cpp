@@ -275,12 +275,11 @@ bool NTriangulation::idealToFinite() {
     swapContents(staging);
     calculateSkeleton();
 
-    // Remove the tetrahedra that meet any of the non-standard or
-    // ideal vertices.
+    // Remove the tetrahedra that meet any of the ideal or invalid vertices.
     // First we make a list of the tetrahedra.
     std::vector<NTetrahedron*> tetList;
     for (NVertex* v : vertices())
-        if (v->isIdeal() || ! v->isStandard())
+        if (v->isIdeal() || ! v->isValid())
             for (auto& emb : *v)
                 tetList.push_back(emb.tetrahedron());
 
