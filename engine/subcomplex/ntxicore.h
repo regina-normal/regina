@@ -107,6 +107,10 @@ class REGINA_API NTxICore :
 
     public:
         /**
+         * Destroys this object.
+         */
+        virtual ~NTxICore();
+        /**
          * Returns a full copy of the <tt>T x I</tt> triangulation that
          * this object describes.
          *
@@ -470,6 +474,9 @@ class REGINA_API NTxIParallelCore : public NTxICore {
 // Inline functions for NTxICore
 
 inline NTxICore::NTxICore() {
+}
+
+inline NTxICore::~NTxICore() {
 }
 
 inline const NTriangulation& NTxICore::core() const {
