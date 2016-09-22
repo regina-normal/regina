@@ -1277,7 +1277,7 @@
  </sect1>
 
  <sect1 id="surfaces-filtering">
-  <title>Filtering Surfaces (3-Manifolds Only)</title>
+  <title>Filtering Surfaces (3-D)</title>
 
   <para>
    Large triangulations often contain a great many

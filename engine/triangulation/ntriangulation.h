@@ -2446,7 +2446,7 @@ class REGINA_API Triangulation<3> :
 
         /**
          * Converts an ideal triangulation into a finite triangulation.
-         * All ideal or non-standard vertices are truncated and thus
+         * All ideal or invalid vertices are truncated and thus
          * converted into real boundary components made from unglued
          * faces of tetrahedra.
          *

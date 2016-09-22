@@ -159,6 +159,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>bistellar flip</primaryie>
+  <seeie>See: elementary moves</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>book closing move</primaryie>
   <seeie>See: elementary moves</seeie>
  </indexentry>
@@ -583,6 +588,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="tri-simplify-exhaustive">exhaustive
+   simplification of triangulations</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="foreign-export">exporting
    data</link></primaryie>
  </indexentry>
@@ -664,6 +674,11 @@
  <indexentry>
   <primaryie>finite boundary</primaryie>
   <seeie>See: boundary</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>flip graph</primaryie>
+  <seeie>See: Pachner graph</seeie>
  </indexentry>
 
  <indexentry>
@@ -1081,6 +1096,15 @@
  </indexentry>
 
  </indexdiv><indexdiv id='taskindex-P'><title>&mdash; P &mdash;</title>
+
+ <indexentry>
+  <primaryie><link linkend="tri-simplify-exhaustive">Pachner graph,
+   searching</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-elementarymove">Pachner moves</link></primaryie>
+ </indexentry>
 
  <indexentry>
   <primaryie>packet tree</primaryie>

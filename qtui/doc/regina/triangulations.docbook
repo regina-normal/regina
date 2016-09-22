@@ -458,14 +458,50 @@
   <title>Analysis</title>
 
   <para>
-   &regina; offers a wealth of information about 3-manifold
+   &regina; offers a wealth of information about
    triangulations, spread across the many different tabs in the
    triangulation viewer.  Here we walk through the different properties
    and invariants that &regina; can compute.
   </para>
 
+  <sect2 id="dim2-identify">
+   <title>Identifying Surfaces (2-D)</title>
+   <para>
+    An important feature of 2-manifolds, as opposed to all other dimensions,
+    is that the underlying manifold is easy to recognise from its
+    triangulation.  For connected 2-manifold triangulations, &regina;
+    will display the exact 2-manifold at the top of the triangulation
+    viewer, as illustrated below.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="dim2-id.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    For orientable 2-manifolds, the <firstterm>genus</firstterm>
+    refers to the number of handles.  For non-orientable 2-manifolds, the
+    <firstterm>genus</firstterm> refers to
+    the number of crosscaps (so, for instance, the Klein bottle has genus two).
+   </para>
+   <para>
+    &regina; will also display the Euler characteristic at the top of the
+    triangulation viewer, marked with the symbol &chi;.  It will show this
+    even for disconnected surfaces also.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="dim2-euler.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+  </sect2>
+
   <sect2 id="tri-basicprops">
-   <title>Validity, Orientability and Other Basic Properties</title>
+   <title>Validity, Orientability and Other Basic Properties (All Dimensions)</title>
 
    <para>
     <inlinemediaobject>
@@ -575,43 +611,8 @@
    </para>
   </sect2>
 
-  <sect2 id="dim2-identify">
-   <title>Identifying Surfaces (2-manifolds only)</title>
-   <para>
-    One important difference between 2-manifolds and higher dimensions
-    is that the underlying 2-manifold is easy to recognise from its
-    triangulation.  For connected 2-manifold triangulations, &regina;
-    will display the exact 2-manifold at the top of the triangulation
-    viewer, as illustrated below.
-   </para>
-   <para>
-    <inlinemediaobject>
-     <imageobject>
-      <imagedata fileref="dim2-id.png"/>
-     </imageobject>
-    </inlinemediaobject>
-   </para>
-   <para>
-    For orientable 2-manifolds, the <firstterm>genus</firstterm>
-    refers to the number of handles.  For non-orientable 2-manifolds, the
-    <firstterm>genus</firstterm> refers to
-    the number of crosscaps (so, for instance, the Klein bottle has genus two).
-   </para>
-   <para>
-    &regina; will also display the Euler characteristic at the top of the
-    triangulation viewer, marked with the symbol &chi;.
-   </para>
-   <para>
-    <inlinemediaobject>
-     <imageobject>
-      <imagedata fileref="dim2-euler.png"/>
-     </imageobject>
-    </inlinemediaobject>
-   </para>
-  </sect2>
-
   <sect2 id="tri-viewgluings">
-   <title>Viewing Tetrahedron Face Gluings</title>
+   <title>Viewing Facet Gluings (All Dimensions)</title>
 
    <para>
     The <guilabel>Gluings</guilabel> tab shows how the various
@@ -662,7 +663,7 @@
   </sect2>
 
   <sect2 id="tri-skeleton">
-   <title>Skeletal Information</title>
+   <title>Skeletal Information (All Dimensions)</title>
 
    <para>
     The <guilabel>Skeleton</guilabel> tab holds
@@ -1161,7 +1162,7 @@
    </sect3>
 
    <sect3 id="tri-skeleton-facegraph">
-    <title>Face Pairing Graph</title>
+    <title>Graphs (All Dimensions)</title>
     <para>
      The
      <guilabel>Skeleton</guilabel>&rarr;<guilabel>Face Pairing Graph</guilabel>
@@ -1203,7 +1204,7 @@
   </sect2>
 
   <sect2 id="tri-algebra">
-   <title>Algebraic Invariants</title>
+   <title>Algebraic Invariants (3-D and 4-D)</title>
 
    <para>
     The <guilabel>Algebra</guilabel> tab
@@ -1599,7 +1600,7 @@
   </sect2>
 
   <sect2 id="tri-composition">
-   <title>Combinatorial Composition</title>
+   <title>Combinatorial Composition (3-D)</title>
    <para>
     The <guilabel>Composition</guilabel> tab
     offers more detailed information about the combinatorial
@@ -1831,7 +1832,7 @@
   </sect2>
 
   <sect2 id="tri-recognition">
-   <title>High-Level Recognition Routines</title>
+   <title>High-Level Recognition Routines (3-D)</title>
 
    <para>
     The <guilabel>Recognition</guilabel> tab
@@ -2082,7 +2083,7 @@
   </sect2>
 
   <sect2 id="tri-snappea">
-   <title>&snappea; Calculations</title>
+   <title>&snappea; Calculations (3-D)</title>
 
    <para>
     &snappea; is an excellent piece of software with a strong focus
@@ -2168,7 +2169,7 @@
   </sect2>
 
   <sect2 id="tri-decomposition">
-   <title>Decomposition</title>
+   <title>Decomposition (All Dimensions)</title>
    <para>
     &regina; implements some high-level algorithms for decomposition a
     3-manifold triangulation into &ldquo;atomic pieces&rdquo;.
@@ -2211,9 +2212,10 @@
    </sect3>
 
    <sect3 id="tri-decomposition-connsum">
-    <title>Connected Sum Decomposition</title>
+    <title>Connected Sum Decomposition (3-D)</title>
     <para>
-     If your triangulation is <link linkend="tri-basicprops">closed
+     For 3-manifolds,
+     if your triangulation is <link linkend="tri-basicprops">closed
      and connected</link>, &regina; can decompose it into a
      connected sum of prime 3-manifolds (none of which are 3-spheres).
      To do this, select
@@ -2281,7 +2283,7 @@
   </sect2>
 
   <sect2 id="tri-vertexlinks">
-   <title>Vertex Links</title>
+   <title>Triangulating Vertex Links (3-D and 4-D)</title>
 
    <para>
     If you wish to examine a 3-manifold vertex link in detail,
@@ -2326,6 +2328,13 @@
     </inlinemediaobject>
    </para>
   </sect2>
+
+  <sect2 id="dim4tri-tribdry">
+   <title>Triangulating Boundary Components (4-D)</title>
+   <para>
+    TODO.
+   </para>
+  </sect2>
  </sect1>
 
  <sect1 id="tri-modification">
@@ -2333,13 +2342,24 @@
 
   <para>
    There are many ways of modifying a 3-manifold triangulation.
-   Many of these can be found in the <guimenu>3-D&nbsp;Triangulation</guimenu> menu,
-   which appears when you open a triangulation for viewing.
+   Many of these can be found in the various
+   <guimenu>Triangulation</guimenu> menus,
+   which appear when you open a triangulation for viewing.
   </para>
   <para>
    <inlinemediaobject>
     <imageobject>
-     <imagedata fileref="menutri.png"/>
+     <imagedata fileref="menutri-2d.png"/>
+    </imageobject>
+   </inlinemediaobject>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="menutri-3d.png"/>
+    </imageobject>
+   </inlinemediaobject>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="menutri-4d.png"/>
     </imageobject>
    </inlinemediaobject>
   </para>
@@ -2350,20 +2370,27 @@
   </para></caution>
 
   <sect2 id="tri-editgluings">
-   <title>Editing Tetrahedron Face Gluings</title>
+   <title>Editing Gluings (All Dimensions)</title>
 
    <para>
     The simplest way to modify a triangulation is to open the
-    <guilabel>Gluings</guilabel> tab and edit the face gluings table directly.
-    See the notes on <link linkend="tri-viewgluings">viewing tetrahedron
-    face gluings</link> for details on how to read the table.
+    <guilabel>Gluings</guilabel> tab and edit the facet gluings table directly.
+    This allows you to change the gluings between triangles, tetrahedra or
+    pentachora for 2-, 3- and 4-manifolds respectively.
+    See the notes on <link linkend="tri-viewgluings">viewing
+    facet gluings</link> for details on how to read the table.
    </para>
    <para>
-    You can add and remove tetrahedra using the
-    <guilabel>Add Tet</guilabel> and <guilabel>Remove Tet</guilabel>
-    buttons, and you can change the gluings by typing directly into the table.
-    If you want to remove a gluing (i.e., make a face part of the
-    triangulation boundary), just delete the contents of the cell.
+    You can add and remove triangles, tetrahedra or pentachora using the
+    <guilabel>Add &hellip;</guilabel> and <guilabel>Remove &hellip;</guilabel>
+    buttons above the table (the Add button is marked
+    <guilabel>Add Triangle</guilabel>, <guilabel>Add Tet</guilabel>
+    or <guilabel>Add Pent</guilabel> for 2-, 3- and 4-manifolds
+    respectively, and likewise for the Remove button).
+    To change the gluings between existing triangles, tetrahedra or
+    pentachora, just type the new gluings directly into the table.
+    If you want to remove a gluing (i.e., make a facet part of the
+    triangulation boundary), simply delete the contents of the cell.
    </para>
    <para>
     <inlinemediaobject>
@@ -2373,10 +2400,12 @@
     </inlinemediaobject>
    </para>
    <para>
-    If you like, you can also <emphasis>name</emphasis> tetrahedra to help
+    If you like, you can also <emphasis>name</emphasis> triangles,
+    tetrahedra or pentachora to help
     keep track of their roles within the triangulation.
-    Click on the cell in the leftmost column (containing the tetrahedron
-    number), and type a new name directly into the cell.
+    Click on the cell in the leftmost column (containing the number that
+    identifies that triangle, tetrahedron or pentachoron),
+    and type a new name directly into the cell.
    </para>
    <para>
     <inlinemediaobject>
@@ -2388,23 +2417,23 @@
   </sect2>
 
   <sect2 id="tri-simplification">
-   <title>Automatic Simplification</title>
+   <title>Automatic Simplification (3-D and 4-D)</title>
 
    <para>
     &regina; has a rich set of <link linkend="tri-elementarymove">fast and
     effective moves</link> for simplifying
-    a triangulation without changing the underlying 3-manifold.
+    a triangulation without changing the underlying manifold.
     If you press the <guibutton>Simplify</guibutton> button (or select
     <menuchoice>
-     <guimenu>3-D&nbsp;Triangulation</guimenu>
+     <guimenu>Triangulation</guimenu>
      <guimenuitem>Simplify</guimenuitem>
     </menuchoice>),
     then &regina; will use a combination of these moves to reduce the
-    triangulation to as few tetrahedra as it can
-    <xref linkend="bib-burton-hyamfest"/>.
-    This is often very effective, but there is
-    <emphasis>no guarantee</emphasis> that this will produce the fewest
-    possible tetrahedra:
+    triangulation to as few tetrahedra (in 3-D) or pentachora (in 4-D)
+    as it can <xref linkend="bib-burton-hyamfest"/>.
+    This procedure is always fast and often very effective, but there is
+    <emphasis>no guarantee</emphasis> that this will produce the
+    smallest possible triangulation:
     &regina; might get stuck at a local minimum from which it cannot
     see how to escape.
    </para>
@@ -2417,23 +2446,80 @@
    </para>
    <para>
     If your triangulation has boundary, this routine will also try to
-    make the number of boundary triangles as small as it can (but again
-    there is no guarantee of reaching a global minimum).
+    make the number of boundary triangles (in 3-D) or
+    boundary tetrahedra (in 4-D) as small as it can, though again
+    there is no guarantee of reaching a global minimum.
    </para>
+   <sect3 id="tri-simplify-exhaustive">
+    <title>Exhaustive Simplification (3-D)</title>
+    <para>
+     For 3-manifolds, if &regina; cannot
+     simplify the triangulation immediately using its fast heuristics,
+     then it will offer to perform a slower, more exhaustive search.  Press
+     the <guilabel>Try harder</guilabel> button, as shown below:
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="tri-simplify-fail.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+    <para>
+     At this point, &regina; will begin an exhaustive search through the
+     Pachner graph (this is essentially the graph that relates all
+     triangulations of the underlying manifold through
+     2-3 and 3-2 Pachner moves):
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="tri-simplify-harder.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+    <para>
+     You can stop this search at any time by pressing the
+     <guilabel>Cancel</guilabel> button.
+    </para>
+    <para>
+     Since the Pachner graph is infinite, &regina; will only search up to
+     a certain number of tetrahedra.  If this still fails, it will offer
+     to search further, and you can press <guilabel>Keep trying</guilabel>
+     to continue the search using more tetrahedra than before.
+     This cycle of ever-expanding searches will continue for as long as
+     you like: &regina; will only stop if you decline to keep searching,
+     or you cancel a search while it is running, or it finds a smaller
+     triangulation.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="tri-simplify-keeptrying.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+    <warning><para>
+     When searching the Pachner graph, both the time and memory
+     consumption grow at a super-exponential rate relative to the number
+     of tetrahedra.  If you continue to press <guilabel>Keep trying</guilabel>
+     over and over, you may well run out of time or memory (or both).
+    </para></warning>
+   </sect3>
   </sect2>
 
   <sect2 id="tri-elementarymove">
-   <title>Manual Simplification: Elementary Moves</title>
+   <title>Manual Simplification: Elementary Moves (3-D and 4-D)</title>
 
    <para>
     Instead of using automatic simplification, you might wish to modify
     your triangulation manually one step at a time.  You can do this
     using <firstterm>elementary moves</firstterm>, which are small
     local modifications
-    to the triangulation that preserve the underlying 3-manifold.
+    to the triangulation that preserve the underlying manifold.
     To perform elementary moves, select
     <menuchoice>
-     <guimenu>3-D&nbsp;Triangulation</guimenu>
+     <guimenu>Triangulation</guimenu>
      <guimenuitem>Elementary Move</guimenuitem>
     </menuchoice>
    from the menu.
@@ -2454,7 +2540,7 @@
    <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="tri-eltmovebox.png"/>
+      <imagedata fileref="tri-eltmovebox-3d.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
@@ -2470,12 +2556,13 @@
     press <guibutton>Close</guibutton> to close the elementary move box.
    </para>
    <para>
-    We do not give full details of the various types of move here; see
-    <xref linkend="bib-burton-hyamfest"/>
-    for full descriptions as well as restrictions on their
-    possible locations.  A brief summary is as follows.
+    We only give a brief summary of the various types of move here.
+    The full details are in the <link linkend="python-docs">&api;
+    documentation</link>, and for 3-manifolds you can also read about
+    them in plain English <xref linkend="bib-burton-hyamfest"/>.
    </para>
    <para>
+    The available moves for 3-manifolds (as illustrated above) are:
     <glosslist>
      <glossentry>
       <glossterm><guilabel>3-2 Move</guilabel></glossterm>
@@ -2559,13 +2646,96 @@
      </glossentry>
     </glosslist>
    </para>
+   <para>
+    For 4-manifold triangulations, &regina; offers a similar selection
+    of moves, as illustrated below:
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-eltmovebox-4d.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    In brief, these 4-manifold moves are:
+    <glosslist>
+     <glossentry>
+      <glossterm><guilabel>4-2 Move</guilabel></glossterm>
+      <glossdef><para>
+       Replaces four pentachora joined along a degree&nbsp;4 edge
+       with two pentachora glued together along a tetrahedron.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><guilabel>3-3 Move</guilabel></glossterm>
+      <glossdef><para>
+       Replaces three pentachora joined along a degree&nbsp;3 triangle
+       with three pentachora joined along a new degree&nbsp;3 triangle
+       that is aligned in a different direction.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><guilabel>2-4 Move</guilabel></glossterm>
+      <glossdef><para>
+       Replaces two pentachora glued together along a tetrahedron
+       with four pentachora joined along a new degree&nbsp;4 edge.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><guilabel>1-5 Move</guilabel></glossterm>
+      <glossdef><para>
+       Replaces one pentachoron
+       with five pentachora that meet at a new internal degree&nbsp;5 vertex.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><guilabel>2-0 Move (Triangle)</guilabel></glossterm>
+      <glossdef><para>
+       Takes two pentachora joined along a degree&nbsp;2 triangle and
+       squashes them flat.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><guilabel>2-0 Move (Edge)</guilabel></glossterm>
+      <glossdef><para>
+       Takes two pentachora that meet at a degree&nbsp;2 edge and
+       squashes them flat.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><guilabel>Open Book</guilabel></glossterm>
+      <glossdef><para>
+       Takes an internal tetrahedron with one, two or three boundary
+       triangles and
+       &ldquo;unglues&rdquo; that tetrahedron, creating two new boundary
+       tetrahedra and exposing the pentachora inside to the boundary.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><guilabel>Shell Boundary</guilabel></glossterm>
+      <glossdef><para>
+       Removes an &ldquo;unnecessary pentachoron&rdquo; that sits along
+       the boundary of the triangulation.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><guilabel>Collapse Edge</guilabel></glossterm>
+      <glossdef><para>
+       Takes an edge between two distinct vertices and collapses it to a point.
+       Any pentachora that contained the edge will be &ldquo;flattened
+       away&rdquo;.
+      </para></glossdef>
+     </glossentry>
+    </glosslist>
+   </para>
   </sect2>
 
   <sect2 id="tri-make0eff">
-   <title>0-Efficiency</title>
+   <title>0-Efficiency (3-D)</title>
 
    <para>
-    A triangulation is <firstterm>0-efficient</firstterm> if its only
+    A 3-manifold triangulation is <firstterm>0-efficient</firstterm> if its only
     normal spheres and discs are vertex linking, and if it has no 2-sphere
     boundary components <xref linkend="bib-0-efficiency"/>.
     0-efficient triangulations have significant theoretical and
@@ -2622,36 +2792,37 @@
   </sect2>
 
   <sect2 id="tri-real-ideal">
-   <title>Switching Between Real and Ideal</title>
+   <title>Switching Between Real and Ideal (3-D and 4-D)</title>
 
    <para>
     You can convert between <firstterm>real</firstterm> boundary
-    components (formed from boundary triangles) and
+    components (formed from boundary triangles in 3-D, or boundary
+    tetrahedra in 4-D) and
     <firstterm>ideal</firstterm> boundary components (formed from
     individual vertices with closed non-spherical vertex links).
    </para>
    <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-truncate-makeideal.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
     If you have an ideal triangulation, you can select
     <menuchoice>
-     <guimenu>3-D&nbsp;Triangulation</guimenu>
+     <guimenu>Triangulation</guimenu>
      <guimenuitem>Truncate Ideal Vertices</guimenuitem>
     </menuchoice>
     to convert your ideal vertices into real boundary components.
     &regina; will subdivide the triangulation and delete a small
     neighbourhood of each ideal vertex.
-    Any <link linkend="tri-vertices-nonstdbdry">non-standard boundary
-    vertices</link> will be truncated also.
-   </para>
-   <para>
-    <inlinemediaobject>
-     <imageobject>
-      <imagedata fileref="tri-truncate.png"/>
-     </imageobject>
-    </inlinemediaobject>
+    Any <link linkend="tri-vertices-invalid">invalid vertices</link>
+    will be truncated also.
    </para>
    <tip><para>
     Because of the subdivision, this operation will greatly
-    increase the number of tetrahedra.  After you truncate ideal
+    increase the size of the triangulation.  After you truncate ideal
     vertices, try
     <link linkend="tri-simplification">simplifying your triangulation</link>.
    </para></tip>
@@ -2659,25 +2830,22 @@
     Conversely: if your triangulation has real boundary components and you
     wish to convert this into an ideal triangulation, select
     <menuchoice>
-     <guimenu>3-D&nbsp;Triangulation</guimenu>
+     <guimenu>Triangulation</guimenu>
      <guimenuitem>Make Ideal</guimenuitem>
     </menuchoice>.
    </para>
    <para>
-    <inlinemediaobject>
-     <imageobject>
-      <imagedata fileref="tri-makeideal.png"/>
-     </imageobject>
-    </inlinemediaobject>
+    Each real boundary component will be &ldquo;coned&rdquo; to a new
+    ideal vertex: in 3-D this means adding one new tetrahedron for
+    each boundary triangle, or in 4-D one new pentachoron for each
+    boundary tetrahedron.
    </para>
    <para>
-    Each real boundary component will be &ldquo;coned&rdquo; using new
-    tetrahedra (one for each boundary triangle).  Your boundary components
-    will all become ideal, but there are some caveats:
+    Your boundary components will all become ideal, but there are some caveats:
     <itemizedlist>
      <listitem><para>
-      Your triangulation will contain ideal vertices, but also
-      standard <emphasis>internal vertices</emphasis> whose links are
+      Your triangulation will contain new ideal vertices as described above,
+      but also <emphasis>internal vertices</emphasis> whose links are
       spheres.  To get rid of these internal vertices, try
       <link linkend="tri-simplification">simplifying your triangulation</link>.
      </para></listitem>
@@ -2690,19 +2858,21 @@
   </sect2>
 
   <sect2 id="tri-barycentric">
-   <title>Subdivision</title>
+   <title>Subdivision (3-D and 4-D)</title>
 
    <para>
     You can perform a barycentric subdivision on your triangulation by
     selecting
     <menuchoice>
-     <guimenu>3-D&nbsp;Triangulation</guimenu>
+     <guimenu>Triangulation</guimenu>
      <guimenuitem>Barycentric Subdivision</guimenuitem>
     </menuchoice>.
-    This involves splitting each original tetrahedron into 24 smaller
-    tetrahedra, adding new vertices at the
-    centroid of each tetrahedron, the centroid of each triangle, and the
-    midpoint of each edge.
+    In 3-D this involves splitting each original tetrahedron into
+    24&nbsp;=&nbsp;4! smaller
+    tetrahedra, with new vertices added at the
+    centroid of each tetrahedron, triangle and edge.
+    In 4-D, each original pentachoron splits into
+    120&nbsp;=&nbsp;5! smaller pentachora.
    </para>
    <para>
     <inlinemediaobject>
@@ -2714,7 +2884,7 @@
   </sect2>
 
   <sect2 id="tri-orient">
-   <title>Orienting Triangulations and Double Covers</title>
+   <title>Orienting Triangulations and Double Covers (All Dimensions)</title>
 
    <para>
     If your triangulation is
@@ -2755,7 +2925,7 @@
   </sect2>
 
   <sect2 id="tri-puncturedrill">
-   <title>Puncturing and Drilling</title>
+   <title>Puncturing and Drilling (3-D)</title>
 
    <para>
     You can puncture a 3-manifold triangulation; that is, remove a small ball
@@ -2810,7 +2980,7 @@
   </sect2>
 
   <sect2 id="tri-connsumwith">
-   <title>Building Connected Sums</title>
+   <title>Building Connected Sums (3-D)</title>
    <para>
     You can combine two triangulations by forming their connected sum.
     This will convert some triangulation <replaceable>X</replaceable>
@@ -2873,7 +3043,7 @@
   </sect2>
 
   <sect2 id="tri-cutcrush">
-   <title>Cutting Along and Crushing Normal Surfaces</title>
+   <title>Cutting Along and Crushing Normal Surfaces (3-D)</title>
 
    <para>
     If you have a normal surface in your triangulation, you can either cut
