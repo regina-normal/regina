@@ -8769,11 +8769,12 @@
                                 </items>
                             </toolbar>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Hws-07-J4P">
-                                <rect key="frame" x="40" y="84" width="461" height="29"/>
+                                <rect key="frame" x="33" y="84" width="475" height="29"/>
                                 <segments>
                                     <segment title="Empty"/>
                                     <segment title="Example"/>
-                                    <segment title="Isomorphism signature"/>
+                                    <segment title="Bundle"/>
+                                    <segment title="Isomorphism sig."/>
                                 </segments>
                             </segmentedControl>
                             <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FVF-Hd-Wjq">
@@ -11909,10 +11910,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="540" height="448"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <pickerView contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xah-b3-jQj" customClass="PacketPicker">
-                                <rect key="frame" x="20" y="68" width="500" height="360"/>
+                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xah-b3-jQj" customClass="PacketPicker">
+                                <rect key="frame" x="20" y="68" width="500" height="216"/>
                             </pickerView>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="sBa-jF-eAb">
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="sBa-jF-eAb">
                                 <rect key="frame" x="196" y="20" width="149" height="29"/>
                                 <segments>
                                     <segment title="I-bundle"/>
@@ -11927,7 +11928,6 @@
                         <constraints>
                             <constraint firstItem="sBa-jF-eAb" firstAttribute="top" secondItem="uJ8-IM-MGB" secondAttribute="bottom" constant="20" id="64T-iX-9rm"/>
                             <constraint firstItem="sBa-jF-eAb" firstAttribute="centerX" secondItem="cVb-fo-2g7" secondAttribute="centerX" id="DHX-5l-Wsu"/>
-                            <constraint firstItem="Itf-YJ-RIH" firstAttribute="top" secondItem="Xah-b3-jQj" secondAttribute="bottom" constant="20" id="DYl-bS-eca"/>
                             <constraint firstItem="Xah-b3-jQj" firstAttribute="leading" secondItem="cVb-fo-2g7" secondAttribute="leading" constant="20" id="I9K-Wf-R66"/>
                             <constraint firstItem="Xah-b3-jQj" firstAttribute="top" secondItem="sBa-jF-eAb" secondAttribute="bottom" constant="20" id="Tb0-bJ-XEd"/>
                             <constraint firstAttribute="trailing" secondItem="Xah-b3-jQj" secondAttribute="trailing" constant="20" id="dRv-cd-GYI"/>
