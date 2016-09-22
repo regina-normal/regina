@@ -11897,6 +11897,54 @@
             </objects>
             <point key="canvasLocation" x="9033.5" y="3359"/>
         </scene>
+        <!--New Dim4 Triangulation Bundle Page-->
+        <scene sceneID="kM3-CN-0LS">
+            <objects>
+                <viewController storyboardIdentifier="newDim4TriBundle" id="dGp-3S-OWy" customClass="NewDim4TriangulationBundlePage" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="uJ8-IM-MGB"/>
+                        <viewControllerLayoutGuide type="bottom" id="Itf-YJ-RIH"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="cVb-fo-2g7">
+                        <rect key="frame" x="0.0" y="0.0" width="540" height="448"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <pickerView contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xah-b3-jQj" customClass="PacketPicker">
+                                <rect key="frame" x="20" y="68" width="500" height="360"/>
+                            </pickerView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="sBa-jF-eAb">
+                                <rect key="frame" x="196" y="20" width="149" height="29"/>
+                                <segments>
+                                    <segment title="I-bundle"/>
+                                    <segment title="S¹-bundle"/>
+                                </segments>
+                                <connections>
+                                    <action selector="bundleTypeChanged:" destination="dGp-3S-OWy" eventType="valueChanged" id="POE-MU-aM1"/>
+                                </connections>
+                            </segmentedControl>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="sBa-jF-eAb" firstAttribute="top" secondItem="uJ8-IM-MGB" secondAttribute="bottom" constant="20" id="64T-iX-9rm"/>
+                            <constraint firstItem="sBa-jF-eAb" firstAttribute="centerX" secondItem="cVb-fo-2g7" secondAttribute="centerX" id="DHX-5l-Wsu"/>
+                            <constraint firstItem="Itf-YJ-RIH" firstAttribute="top" secondItem="Xah-b3-jQj" secondAttribute="bottom" constant="20" id="DYl-bS-eca"/>
+                            <constraint firstItem="Xah-b3-jQj" firstAttribute="leading" secondItem="cVb-fo-2g7" secondAttribute="leading" constant="20" id="I9K-Wf-R66"/>
+                            <constraint firstItem="Xah-b3-jQj" firstAttribute="top" secondItem="sBa-jF-eAb" secondAttribute="bottom" constant="20" id="Tb0-bJ-XEd"/>
+                            <constraint firstAttribute="trailing" secondItem="Xah-b3-jQj" secondAttribute="trailing" constant="20" id="dRv-cd-GYI"/>
+                        </constraints>
+                    </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="540" height="448"/>
+                    <connections>
+                        <outlet property="bundleType" destination="sBa-jF-eAb" id="iti-rf-EW3"/>
+                        <outlet property="from" destination="Xah-b3-jQj" id="rdW-2J-WYt"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="w9Z-PZ-4v3" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="7170" y="-2073"/>
+        </scene>
     </scenes>
     <resources>
         <image name="Action-Boundaries" width="32" height="32"/>
