@@ -62,6 +62,12 @@ namespace regina {
 - (void)fill:(regina::NPacket*)tree type:(regina::PacketType)packetType allowNone:(BOOL)allowNone noneText:(NSString*)noneText;
 
 /**
+ * Like fill: above, but supports two different packet types.
+ * This is useful (for instance) when you wish to allow both NTriangulation and NSnapPeaTriangulation.
+ */
+- (void)fill:(regina::NPacket*)tree type1:(regina::PacketType)packetType1 type2:(regina::PacketType)packetType2 allowNone:(BOOL)allowNone noneText:(NSString*)noneText;
+
+/**
  * Returns the packet selected in this picker, or 0 if the null packet is selected.
  */
 - (regina::NPacket*)selectedPacket;
