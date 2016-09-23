@@ -35,6 +35,7 @@
 
 // UI includes:
 #include "nsnappeafile.h"
+#include "packeteditiface.h"
 
 #include <QLabel>
 #include <QLayout>
@@ -58,6 +59,12 @@ NSnapPeaFileUI::NSnapPeaFileUI(regina::NSnapPeaTriangulation* packet,
         "representing this SnapPea triangulation.  You can copy this "
         "to the clipboard if you need to send it to some other application.");
     layout->addWidget(file, 1);
+
+    editIface = new PacketEditTextEditor(file);
+}
+
+NSnapPeaFileUI::~NSnapPeaFileUI() {
+    delete editIface;
 }
 
 regina::NPacket* NSnapPeaFileUI::getPacket() {

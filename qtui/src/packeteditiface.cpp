@@ -37,10 +37,10 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QPlainTextEdit>
+#include <QTextEdit>
 #include <QTreeWidget>
 
-PacketEditTextEditor::PacketEditTextEditor(QPlainTextEdit *edit) :
-        edit_(edit) {
+PacketEditTextEditor::PacketEditTextEditor(QTextEdit *edit) : edit_(edit) {
     connect(this, SIGNAL(sendCutToEditor()), edit_, SLOT(cut()));
     connect(this, SIGNAL(sendCopyToEditor()), edit_, SLOT(copy()));
     connect(this, SIGNAL(sendPasteToEditor()), edit_, SLOT(paste()));
@@ -75,6 +75,45 @@ void PacketEditTextEditor::copy() {
 }
 
 void PacketEditTextEditor::paste() {
+    emit sendPasteToEditor();
+}
+
+PacketEditPlainTextEditor::PacketEditPlainTextEditor(QPlainTextEdit *edit) :
+        edit_(edit) {
+    connect(this, SIGNAL(sendCutToEditor()), edit_, SLOT(cut()));
+    connect(this, SIGNAL(sendCopyToEditor()), edit_, SLOT(copy()));
+    connect(this, SIGNAL(sendPasteToEditor()), edit_, SLOT(paste()));
+
+    connect(edit_, SIGNAL(selectionChanged()), 
+        this, SLOT(fireStatesChanged()));
+
+    connect(QApplication::clipboard(), SIGNAL(dataChanged()),
+        this, SLOT(fireStatesChanged()));
+}
+
+bool PacketEditPlainTextEditor::cutEnabled() const {
+    return edit_->textCursor().hasSelection() && !edit_->isReadOnly();
+}
+
+bool PacketEditPlainTextEditor::copyEnabled() const {
+    return edit_->textCursor().hasSelection();
+}
+
+bool PacketEditPlainTextEditor::pasteEnabled() const {
+    return (! (QApplication::clipboard()->text(
+        QClipboard::Clipboard).isNull())) &&
+        !edit_->isReadOnly();
+}
+
+void PacketEditPlainTextEditor::cut() {
+    emit sendCutToEditor();
+}
+
+void PacketEditPlainTextEditor::copy() {
+    emit sendCopyToEditor();
+}
+
+void PacketEditPlainTextEditor::paste() {
     emit sendPasteToEditor();
 }
 
