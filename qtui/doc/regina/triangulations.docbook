@@ -1312,6 +1312,13 @@
      larger.  If you try this on a group presentation that is already
      large then it could easily exceed the memory of your computer.
     </para></warning>
+    <tip><para>
+     If you cannot read the superscript digits in the fundamental group
+     presentation, or if you cannot read the blackboard-bold Z symbols
+     in the homology groups, try
+     <link linkend="options-general">disabling unicode symbols</link>
+     in &regina;'s settings.
+    </para></tip>
     <tip>
      <para>
       If &regina; is having trouble starting &gap;, you can tell it how
