@@ -350,7 +350,6 @@
   <primaryie>configuration</primaryie>
   <secondaryie><link linkend="options-tools">&gaplong;</link></secondaryie>
   <secondaryie><link linkend="options-general">general</link></secondaryie>
-  <secondaryie><link linkend="options-tools">&graphviz;</link></secondaryie>
   <secondaryie><link linkend="options-tools">&pdf;
    viewing</link></secondaryie>
   <secondaryie><link linkend="options-python">&python;
@@ -490,13 +489,16 @@
  </indexentry>
 
  <indexentry>
-  <primaryie>dual 1-skeleton</primaryie>
-  <seeie>See: face pairing graphs</seeie>
+  <primaryie>dual CW-decomposition</primaryie>
+  <seeie>See: CW-decomposition</seeie>
  </indexentry>
 
  <indexentry>
-  <primaryie>dual CW-decomposition</primaryie>
-  <seeie>See: CW-decomposition</seeie>
+  <primaryie>dual graphs</primaryie>
+  <secondaryie><link linkend="options-fpg-labels">labelling</link></secondaryie>
+  <secondaryie><link linkend="tri-skeleton-tree">tree
+   decomposition of</link></secondaryie>
+  <secondaryie><link linkend="tri-skeleton-graphs">viewing</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -616,8 +618,7 @@
 
  <indexentry>
   <primaryie>face pairing graphs</primaryie>
-  <secondaryie><link linkend="options-fpg-labels">labelling</link></secondaryie>
-  <secondaryie><link linkend="tri-skeleton-facegraph">viewing</link></secondaryie>
+  <seeie>See: dual graphs</seeie>
  </indexentry>
 
  <indexentry>
@@ -726,14 +727,7 @@
 
  <indexentry>
   <primaryie>graphs, face pairing</primaryie>
-  <seeie>See: face pairing graphs</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie>&graphviz;</primaryie>
-  <secondaryie><link linkend="options-tools">configuration</link></secondaryie>
-  <secondaryie><link linkend="tri-skeleton-facegraph">using to
-   display face pairing graphs</link></secondaryie>
+  <seeie>See: dual graphs</seeie>
  </indexentry>
 
  </indexdiv><indexdiv id='taskindex-H'><title>&mdash; H &mdash;</title>
@@ -871,7 +865,7 @@
  </indexdiv><indexdiv id='taskindex-L'><title>&mdash; L &mdash;</title>
 
  <indexentry>
-  <primaryie><link linkend="options-fpg-labels">labelling face pairing
+  <primaryie><link linkend="options-fpg-labels">labelling dual
    graphs</link></primaryie>
  </indexentry>
 
@@ -993,6 +987,11 @@
   <secondaryie><link linkend="packet-rename">packets</link></secondaryie>
   <secondaryie><link linkend="tri-editgluings">tetrahedra in a
    triangulation</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-graphs-nice">nice tree
+   decomposition</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -1359,8 +1358,7 @@
  <indexentry>
   <primaryie>skeleton</primaryie>
   <secondaryie><link linkend="tri-skeleton">of a triangulation</link></secondaryie>
-  <secondaryie><link linkend="tri-skeleton-facegraph">dual
-   1-skeleton</link></secondaryie>
+  <secondaryie><link linkend="tri-graphs-dual">dual 1-skeleton</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1558,6 +1556,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="tri-graphs-tree">tree
+   decomposition</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>triangle arc normal coordinates</primaryie>
   <seeie>See: coordinate systems</seeie>
  </indexentry>
@@ -1618,6 +1621,8 @@
    string, rehydrating</link></secondaryie>
   <secondaryie><link linkend="tri-puncturedrill">drilling
    edges</link></secondaryie>
+  <secondaryie><link linkend="tri-graphs-dual">dual
+   graph</link></secondaryie>
   <secondaryie><link linkend="tri-elementarymove">elementary
    moves (3-2, 4-4, open book, etc.)</link></secondaryie>
   <secondaryie><link linkend="tri-skeleton-skelcomp">Euler
@@ -1626,8 +1631,8 @@
    creating</link></secondaryie>
   <secondaryie><link linkend="foreign-export">exporting to
    external files</link></secondaryie>
-  <secondaryie><link linkend="tri-skeleton-facegraph">face pairing
-   graphs</link></secondaryie>
+  <secondaryie><link linkend="tri-graphs-dual">face pairing
+   graph</link></secondaryie>
   <secondaryie><link linkend="tri-triangles">faces,
    viewing shapes</link></secondaryie>
   <secondaryie><link linkend="tri-algebra-homfund">fundamental
@@ -1650,6 +1655,8 @@
    and subcomplex testing</link></secondaryie>
   <secondaryie><link linkend="tri-new-isosig">isomorphism signature,
    recreating from</link></secondaryie>
+  <secondaryie><link linkend="tri-graphs-nice">nice tree
+   decomposition</link></secondaryie>
   <secondaryie><link linkend="tri-proporient">orientability</link></secondaryie>
   <secondaryie><link linkend="tri-orient">orientable double
    cover</link></secondaryie>
@@ -1673,6 +1680,8 @@
    testing for</link></secondaryie>
   <secondaryie><link linkend="tri-editgluings">tetrahedron face
    gluings, editing</link></secondaryie>
+  <secondaryie><link linkend="tri-graphs-tree">tree
+   decomposition</link></secondaryie>
   <secondaryie><link linkend="tri-triangles">triangles,
    viewing shapes</link></secondaryie>
   <secondaryie><link linkend="tri-algebra-turaevviro">Turaev-Viro

@@ -100,10 +100,9 @@
     <glossterm><guilabel>Labels on face pairing graphs</guilabel></glossterm>
     <glossdef><para>
      If checked, &regina; will label each node in the
-     <link linkend="tri-skeleton-facegraph">face pairing graph</link>
-     of a 3-manifold triangulation with the corresponding tetrahedron number.
-     This will likewise affect edge pairing graphs of 2-manifold
-     triangulations in the same manner.
+     <link linkend="tri-graphs-dual">dual graph</link>
+     of a triangulation with the number of the corresponding
+     top-dimensional simplex.
     </para></glossdef>
    </glossentry>
    <glossentry>

@@ -1211,13 +1211,16 @@
     </sect4>
    </sect3>
 
-   <sect3 id="tri-skeleton-facegraph">
+   <sect3 id="tri-skeleton-graphs">
     <title>Graphs (All Dimensions)</title>
     <para>
-     The
-     <guilabel>Skeleton</guilabel>&rarr;<guilabel>Face Pairing Graph</guilabel>
-     tab offers a visual representation of how the individual tetrahedra are
-     glued together.
+     The <guilabel>Skeleton</guilabel>&rarr;<guilabel>Graphs</guilabel> tab
+     is used to visualise the large-scale structure of the triangulation.
+    </para>
+    <para>
+     &regina; can display a variety of graphs about the triangulation.
+     Simply select which graph you want to see in the drop-dox box,
+     as indicated below.
     </para>
     <para>
      <inlinemediaobject>
@@ -1227,38 +1230,101 @@
      </inlinemediaobject>
     </para>
     <para>
-     The <firstterm>face pairing graph</firstterm> is essentially the
-     dual 1-skeleton of the triangulation: every
-     node of the graph represents a tetrahedron, and every arc
-     represents a pair of tetrahedron faces that are joined together.
-     Each node contains a small label indicating the corresponding
-     tetrahedron number (though these can be
-     <link linkend="options-fpg-labels">switched off</link>).
-     For a closed triangulation the face pairing graph is always
-     4-valent; for a bounded triangulation there may be nodes
-     of degree three or less.
-    </para>
-    <para>
-     &regina; uses the external application &graphvizurl; to
-     draw the graph.  If &graphviz; is not installed on
-     your system then the face pairing graph cannot be displayed.
-     &graphviz; is a widely-used application, and most
-     &linux; distributions offer &graphviz; packages.
-    </para>
-    <para>
-     If &graphviz; is installed but for some reason &regina; cannot find it,
-     you can tell &regina; where to find &graphviz; in the
-     <link linkend="options-tools">tools options</link>.
-    </para>
-    <para>
-     TODO: Talk about tree decompositions, and nice tree decompositions.
-    </para>
-    <para>
-     <inlinemediaobject>
-      <imageobject>
-       <imagedata fileref="tri-graphs-tree.png"/>
-      </imageobject>
-     </inlinemediaobject>
+     The graphs that &regina; displays include:
+     <glosslist>
+      <glossentry id="tri-graphs-dual">
+       <glossterm><guilabel>Dual graph</guilabel></glossterm>
+       <glossdef>
+        <para>
+         The dual graph (which is illustrated above) gives a
+         visual representation of how the top-dimensional
+         simplices of the triangulation are glued together.
+         This is sometimes known as the <firstterm>edge pairing</firstterm>,
+         <firstterm>face pairing</firstterm> or <firstterm>facet pairing
+         graph</firstterm> (for 2-, 3- and 4-manifolds respectively).
+        </para>
+        <para>
+         Every node of this graph represents a top-dimensional simplex;
+         that is, a triangle, tetrahedron or pentachoron in a 2-, 3- or
+         4-manifold triangulation respectively.
+         Every arc of this graph represents a gluing between two such
+         simplices along a pair of facets; that is, a pair of edges,
+         triangles or tetrahedra for 2-, 3- and 4-manifolds respectively.
+        </para>
+        <para>
+         Nodes will be labelled by the corresponding simplex numbers
+         (though these labels can be
+         <link linkend="options-fpg-labels">turned off</link>).
+         The dual graph of a closed <replaceable>d</replaceable>-manifold
+         triangulation is always (<replaceable>d</replaceable>+1)-valent;
+         for bounded triangulation some nodes may have smaller degree
+         (but never larger).
+        </para>
+       </glossdef>
+      </glossentry>
+      <glossentry id="tri-graphs-tree">
+       <glossterm><guilabel>Tree decomposition</guilabel></glossterm>
+       <glossdef>
+        <para>
+         A <firstterm>tree decomposition</firstterm> (illustrated below)
+         models the dual graph using a rooted tree.
+         &regina; uses these tree decompositions in some of its
+         fixed-parameter tractable algorithms
+         <xref linkend="bib-turaevviro-fpt"/>.
+        </para>
+        <para>
+         <inlinemediaobject>
+          <imageobject>
+           <imagedata fileref="tri-graphs-tree.png"/>
+          </imageobject>
+         </inlinemediaobject>
+        </para>
+        <para>
+         Each node of the tree decomposition is called a
+         <firstterm>bag</firstterm>, and contains a
+         <emphasis>set</emphasis> of nodes of the
+         dual graph.  The <firstterm>width</firstterm> of the
+         tree decomposition is one less than the size of the largest bag;
+         for fast algorithms, this width should be as small as possible.
+         &regina; will display both the width and the number of bags
+         above the graph itself.
+        </para>
+        <para>
+         &regina; does not guarantee to find a tree decomposition of
+         the smallest possible width (i.e., it does not compute the precise
+         <firstterm>treewidth</firstterm> of the dual graph, which is an
+         NP-hard problem).  Instead it uses fast heuristics that are
+         found to produce relatively low-width tree decompositions in practice.
+        </para>
+       </glossdef>
+      </glossentry>
+      <glossentry id="tri-graphs-nice">
+       <glossterm><guilabel>Nice tree decomposition</guilabel></glossterm>
+       <glossdef>
+        <para>
+         This is a variant of the tree decomposition that is less concise,
+         but more useful in practice for algorithms.
+        </para>
+        <para>
+         In a <firstterm>nice</firstterm> tree decomposition, the root
+         bag is empty, and the leaf bags each contain just one node of the
+         dual graph.  Moreover, every non-leaf bag either
+         (i)&nbsp;has exactly one child bag, which it clones and then
+         either adds or removes exactly one node of the dual graph;
+         or (ii)&nbsp;has exactly two identical child bags, which it clones
+         precisely.
+        </para>
+        <para>
+         As with tree decompositions, &regina; will display both the
+         width of the nice tree decomposition and the number of bags
+         that it contains.  Typically the width will be the same as for the
+         (plain) tree decomposition above, but the number of bags may
+         be significantly larger (though still linear in the overall
+         size of the triangulation).
+        </para>
+       </glossdef>
+      </glossentry>
+     </glosslist>
     </para>
    </sect3>
   </sect2>
