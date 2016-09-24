@@ -413,7 +413,7 @@
 
  <indexentry>
   <primaryie>cusps</primaryie>
-  <secondaryie><link linkend="tri-vertices">identifying
+  <secondaryie><link linkend="tri-faces">identifying
    in a native triangulation</link></secondaryie>
   <secondaryie><link linkend="snappea-shapes-cusps">viewing and filling
    in a &snappea; triangulation</link></secondaryie>
@@ -496,7 +496,7 @@
  <indexentry>
   <primaryie>dual graphs</primaryie>
   <secondaryie><link linkend="options-fpg-labels">labelling</link></secondaryie>
-  <secondaryie><link linkend="tri-skeleton-tree">tree
+  <secondaryie><link linkend="tri-graphs-tree">tree
    decomposition of</link></secondaryie>
   <secondaryie><link linkend="tri-skeleton-graphs">viewing</link></secondaryie>
  </indexentry>
@@ -525,7 +525,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-edges">edges, viewing
+  <primaryie><link linkend="tri-faces">edges, viewing
    in a triangulation</link></primaryie>
  </indexentry>
 
@@ -572,7 +572,7 @@
 
  <indexentry>
   <primaryie>Euler characteristic</primaryie>
-  <secondaryie><link linkend="tri-skeleton-skelcomp">of a
+  <secondaryie><link linkend="tri-euler">of a
    manifold</link></secondaryie>
   <secondaryie><link linkend="surfaces-propeuler">of a normal
    surface</link></secondaryie>
@@ -781,7 +781,7 @@
   <secondaryie><link linkend="tri-propideal">testing for</link></secondaryie>
   <secondaryie><link linkend="tri-real-ideal">truncating / converting
    to real boundary</link></secondaryie>
-  <secondaryie><link linkend="tri-vertices">viewing</link></secondaryie>
+  <secondaryie><link linkend="tri-faces">viewing</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1533,6 +1533,8 @@
    consistency</link></secondaryie>
   <secondaryie><link linkend="snappea-shapes">shapes from hyperbolic
    gluing equations</link></secondaryie>
+  <secondaryie><link linkend="tri-faces">viewing
+   in a triangulation</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1566,7 +1568,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-triangles">triangles (2-faces), viewing
+  <primaryie><link linkend="tri-faces">triangles (2-faces), viewing
    in a triangulation</link></primaryie>
  </indexentry>
 
@@ -1616,7 +1618,7 @@
   <secondaryie><link linkend="snappea-fromregina">converting to a
    &snappea; triangulation</link></secondaryie>
   <secondaryie><link linkend="tri-creation">creation</link></secondaryie>
-  <secondaryie><link linkend="tri-vertices">cusps</link></secondaryie>
+  <secondaryie><link linkend="tri-faces">cusps</link></secondaryie>
   <secondaryie><link linkend="tri-new-dehydration">dehydration
    string, rehydrating</link></secondaryie>
   <secondaryie><link linkend="tri-puncturedrill">drilling
@@ -1625,7 +1627,7 @@
    graph</link></secondaryie>
   <secondaryie><link linkend="tri-elementarymove">elementary
    moves (3-2, 4-4, open book, etc.)</link></secondaryie>
-  <secondaryie><link linkend="tri-skeleton-skelcomp">Euler
+  <secondaryie><link linkend="tri-euler">Euler
    characteristic</link></secondaryie>
   <secondaryie><link linkend="tri-new-example">examples,
    creating</link></secondaryie>
@@ -1633,7 +1635,7 @@
    external files</link></secondaryie>
   <secondaryie><link linkend="tri-graphs-dual">face pairing
    graph</link></secondaryie>
-  <secondaryie><link linkend="tri-triangles">faces,
+  <secondaryie><link linkend="tri-faces-shapes">faces,
    viewing shapes</link></secondaryie>
   <secondaryie><link linkend="tri-algebra-homfund">fundamental
    group</link></secondaryie>
@@ -1682,7 +1684,7 @@
    gluings, editing</link></secondaryie>
   <secondaryie><link linkend="tri-graphs-tree">tree
    decomposition</link></secondaryie>
-  <secondaryie><link linkend="tri-triangles">triangles,
+  <secondaryie><link linkend="tri-faces-shapes">triangles,
    viewing shapes</link></secondaryie>
   <secondaryie><link linkend="tri-algebra-turaevviro">Turaev-Viro
    invariants</link></secondaryie>
@@ -1751,7 +1753,7 @@
  </indexdiv><indexdiv id='taskindex-V'><title>&mdash; V &mdash;</title>
 
  <indexentry>
-  <primaryie><link linkend="tri-edges">valid edges,
+  <primaryie><link linkend="tri-faces-invalid">valid edges,
    testing for</link></primaryie>
  </indexentry>
 
@@ -1786,7 +1788,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-vertices">vertices, viewing
+  <primaryie><link linkend="tri-faces">vertices, viewing
    in a triangulation</link></primaryie>
  </indexentry>
 

@@ -672,8 +672,7 @@
         <para>
          The relevant vertex or edge will be listed also, using the
          vertex and edge numbers that appear in the first column of the
-         <link linkend="tri-vertices">vertex viewer</link> and
-         <link linkend="tri-edges">edge viewer</link>.
+         <link linkend="tri-faces">vertex and edge viewers</link>.
          Within a 3-manifold, it is possible for a normal surface to be the
          thin edge link for two edges at the same time;
          in this case both edges will be reported here.
@@ -938,7 +937,7 @@
         <para>
          Edge numbers and the tetrahedron edges to which they
          correspond can be found in the
-         <link linkend="tri-edges">edge viewer</link>,
+         <link linkend="tri-faces">edge viewer</link>,
          under the triangulation's <guilabel>Skeleton</guilabel> tab.
         </para>
         <para>
@@ -966,7 +965,7 @@
         <para>
          Triangle numbers and the tetrahedron faces to which they
          correspond can be found in the
-         <link linkend="tri-triangles">triangle viewer</link>,
+         <link linkend="tri-faces">triangle viewer</link>,
          under the triangulation's <guilabel>Skeleton</guilabel> tab.
          The three vertices 0,1,2 of each triangle correspond to the
          ordering of tetrahedron vertices that you see in the rightmost
@@ -1058,7 +1057,7 @@
         <para>
          Edge numbers and the pentachoron edges to which they
          correspond can be found in the
-         <link linkend="dim4tri-edges">edge viewer</link>,
+         <link linkend="tri-faces">edge viewer</link>,
          under the triangulation's <guilabel>Skeleton</guilabel> tab.
         </para>
         <para>

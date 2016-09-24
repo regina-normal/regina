@@ -558,7 +558,7 @@
        </para>
        <para>
         You can locate any ideal vertices using the
-        <link linkend="tri-vertices">skeleton viewers</link>.
+        <link linkend="tri-faces">skeleton viewers</link>.
        </para>
       </glossdef>
      </glossentry>
@@ -634,7 +634,7 @@
        </para>
        <para>
         You can locate the offending vertex, edge and/or triangle using the
-        <link linkend="tri-skeleton-skelcomp">skeleton viewers</link>.
+        <link linkend="tri-faces">skeleton viewers</link>.
         If the triangulation is invalid, no other information will appear
         in the banner.
        </para>
@@ -724,12 +724,26 @@
    <sect3 id="tri-skeleton-skelcomp">
     <title>Skeletal Components</title>
     <para>
-     In the
+     On the left of the
      <guilabel>Skeleton</guilabel>&rarr;<guilabel>Skeletal Components</guilabel>
-     tab you will see the total number of vertices, edges, triangles,
-     tetrahedra, components and boundary components in the triangulation.
-     Beside each number is a <guibutton>View</guibutton> button that
-     lets you view explicit structural details about each object in the class.
+     tab, you will see the total number of faces of each dimension
+     in the triangulation.  This includes vertices, edges, triangles,
+     tetrahedra (for 3- and 4-manifolds), and pentachora (for 4-manifolds).
+     On the right of the tab, you will see the total number of
+     components and boundary components in the triangulation,
+     as well as the Euler characteristic.
+    </para>
+    <para>
+     Next to each total count is a <guibutton>View</guibutton> button.
+     By pressing this, you can see more detailed
+     information about each of the faces, components or boundary components.
+     A full explanation of this detailed information
+     <link linkend="tri-faces">appears below</link>.
+     (The exception is the top-dimensional faces, i.e., the
+     <replaceable>d</replaceable>-simplices in a
+     <replaceable>d</replaceable>-manifold triangulation&mdash;they have
+     no view button because you can examine them in detail on the
+     <link linkend="tri-viewgluings">gluings tab</link> instead.)
     </para>
     <para>
      <inlinemediaobject>
@@ -738,117 +752,44 @@
       </imageobject>
      </inlinemediaobject>
     </para>
-    <sect4 id="tri-vertices">
-     <title>Viewing Vertices</title>
+    <sect4 id="tri-euler">
+     <title>Euler Characteristic</title>
      <para>
-      If you click on the <guibutton>View</guibutton> button beside the vertex
-      count, you will see a table listing the individual vertices of the
-      triangulation.
+      For 2-manifolds, the Euler characteristic is simply marked &chi;, and has
+      its usual meaning (vertices &minus; edges + triangles).  For 3- and 4-manifolds,
+      &regina; computes <emphasis>two</emphasis> Euler characteristics:
+      <itemizedlist>
+       <listitem><para>
+        <guilabel>&chi; (Triangulation)</guilabel> measures Euler
+        characteristic in the purely combinatorial sense: that is, the
+        alternating sum of the number of faces of each dimension
+        in the triangulation.
+       </para></listitem>
+       <listitem><para>
+        <guilabel>&chi; (Manifold)</guilabel> measures Euler characteristic
+        in a more topological sense: this assumes that we have made the
+        manifold compact by truncating all ideal vertices and replacing
+        them with real boundary components.
+        For 3-manifolds, if the triangulation is invalid then we likewise
+        assume that invalid vertices and the midpoints of invalid edges
+        are truncated.  For 4-manifolds, if the triangulation is invalid
+        then &regina; will not compute &chi;&nbsp;(Manifold) at all.
+       </para></listitem>
+      </itemizedlist>
      </para>
      <para>
-      <inlinemediaobject>
-       <imageobject>
-        <imagedata fileref="tri-vertices.png"/>
-       </imageobject>
-      </inlinemediaobject>
-     </para>
-     <para>
-      The columns in this table are:
-      <glosslist>
-       <glossentry>
-        <glossterm><guilabel>Vertex #</guilabel></glossterm>
-        <glossdef><para>
-         Identifies each vertex with an
-         individual <firstterm>vertex number</firstterm>, starting from 0
-         and counting upwards.
-        </para></glossdef>
-       </glossentry>
-       <glossentry>
-        <glossterm><guilabel>Type</guilabel></glossterm>
-        <glossdef><para>
-         Gives some information about the <firstterm>link</firstterm> of the
-         vertex (the boundary of a small regular neighbourhood).
-         Text you might see here includes:
-         <glosslist>
-          <glossentry>
-           <glossterm><guilabel>Bdry</guilabel></glossterm>
-           <glossdef><para>
-            Appears when the vertex is a standard boundary vertex,
-            i.e., the vertex link is a disc.
-           </para></glossdef>
-          </glossentry>
-          <glossentry>
-           <glossterm><guilabel>Cusp (torus)</guilabel></glossterm>
-           <glossdef><para>
-            Appears when the vertex is a torus cusp,
-            i.e., the vertex link is a torus.
-           </para></glossdef>
-          </glossentry>
-          <glossentry>
-           <glossterm><guilabel>Cusp (klein bottle)</guilabel></glossterm>
-           <glossdef><para>
-            Appears when the vertex is a Klein bottle cusp,
-            i.e., the vertex link is a Klein bottle.
-           </para></glossdef>
-          </glossentry>
-          <glossentry>
-           <glossterm><guilabel>Cusp
-            (<replaceable>surface</replaceable>)</guilabel></glossterm>
-           <glossdef><para>
-            Appears when the vertex is a non-standard cusp,
-            i.e., the vertex link is a closed surface but not a sphere,
-            torus or Klein bottle.  Here
-            <replaceable>surface</replaceable>
-            will describe the orientability and genus of the vertex link.
-            An example might be <literal>Cusp (orbl, genus 3)</literal>.
-           </para></glossdef>
-          </glossentry>
-          <glossentry id="tri-vertices-nonstdbdry">
-           <glossterm><guilabel>Non-std bdry</guilabel></glossterm>
-           <glossdef><para>
-            Appears when the vertex is a non-standard boundary vertex.
-            This means the vertex link is a surface with boundary but not
-            a disc.  If a vertex like this appears, the entire
-            triangulation
-            will be <link linkend="tri-propvalid">marked as invalid</link>.
-           </para></glossdef>
-          </glossentry>
-         </glosslist>
-         If the vertex link is a sphere (i.e., the vertex is an ordinary
-         internal vertex of the triangulation), then the second column will
-         be left empty.
-        </para></glossdef>
-       </glossentry>
-       <glossentry>
-        <glossterm><guilabel>Degree</guilabel></glossterm>
-        <glossdef><para>
-         Lists the <firstterm>degree</firstterm> of each vertex.
-         This is the number of individual tetrahedron vertices that are
-         identified together to make this vertex of the triangulation.
-        </para></glossdef>
-       </glossentry>
-       <glossentry>
-        <glossterm><guilabel>Tetrahedra (Tet vertices)</guilabel></glossterm>
-        <glossdef><para>
-         Lists precisely which vertices
-         of which tetrahedra come together to
-         form each overall vertex of the triangulation.  An example is
-         <literal>3&nbsp;(0), 7&nbsp;(1), 3&nbsp;(2), 5&nbsp;(0)</literal>,
-         indicating a degree&nbsp;4 vertex obtained by identifying
-         vertices&nbsp;0 and 2 of tetrahedron&nbsp;3,
-         vertex&nbsp;1 of tetrahedron&nbsp;7, and
-         vertex&nbsp;0 of tetrahedron&nbsp;5.
-        </para></glossdef>
-       </glossentry>
-      </glosslist>
+      For a compact 3-manifold or 4-manifold triangulation, both these
+      Euler characteristics should be the same.
      </para>
     </sect4>
-    <sect4 id="tri-edges">
-     <title>Viewing Edges</title>
+    <sect4 id="tri-faces">
+     <title>Viewing Faces</title>
      <para>
-      If you click on the <guibutton>View</guibutton> button beside the
-      edge count, you will see a table listing the individual
-      edges of the triangulation.
+      For each facial dimension <replaceable>k</replaceable>,
+      if you click on the <guibutton>View</guibutton> button next
+      to the total count of <replaceable>k</replaceable>-faces, you will see a
+      table that lists details of each individual
+      <replaceable>k</replaceable>-face of the triangulation.
      </para>
      <para>
       <inlinemediaobject>
@@ -858,117 +799,108 @@
       </inlinemediaobject>
      </para>
      <para>
-      The columns in this table are:
+      This table contains four columns:
       <glosslist>
        <glossentry>
-        <glossterm><guilabel>Edge #</guilabel></glossterm>
-        <glossdef><para>
-         Identifies each edge with an
-         individual <firstterm>edge number</firstterm>, starting from 0
-         and counting upwards.
-        </para></glossdef>
+        <glossterm><guilabel>Face #</guilabel></glossterm>
+        <glossdef>
+         <para>
+          Identifies each <replaceable>k</replaceable>-face with an individual
+          <firstterm>face number</firstterm>.
+         <para>
+         </para>
+          For each facial dimension <replaceable>k</replaceable>, the
+          <replaceable>k</replaceable>-faces are numbered consecutively
+          0,1,2,&hellip;.
+          That is, each triangulation has vertices numbered
+          0,1,2,&hellip;, as well as edges numbered
+          0,1,2,&hellip;, as well as triangles numbered
+          0,1,2,&hellip;, and so on.
+         </para>
+        </glossdef>
        </glossentry>
        <glossentry>
         <glossterm><guilabel>Type</guilabel></glossterm>
         <glossdef><para>
-         Gives some additional information about the edge.
+         Gives some basic information about the
+         <replaceable>k</replaceable>-face.
          Text you might see here includes:
          <glosslist>
           <glossentry>
            <glossterm><guilabel>Bdry</guilabel></glossterm>
-           <glossdef><para>
-            Indicates a boundary edge (i.e., an edge that lies on some
-            boundary triangle of the triangulation).
-           </para></glossdef>
+           <glossdef>
+            <para>
+             Indicates that the <replaceable>k</replaceable>-face
+             lies entirely within a real boundary component
+             of the triangulation.
+            </para>
+           </glossdef>
           </glossentry>
           <glossentry>
-           <glossterm><guilabel>INVALID</guilabel></glossterm>
-           <glossdef><para>
-            Indicates an edge glued to itself in reverse (so the midpoint of
-            this edge is a projective plane cusp).
-            If an edge like this appears, the entire triangulation will
-            also be <link linkend="tri-propvalid">marked as invalid</link>.
-           </para></glossdef>
+           <glossterm><guilabel>Ideal</guilabel></glossterm>
+           <glossdef>
+            <para>
+             Indicates an ideal vertex in a 3- or 4-manifold
+             triangulation, i.e., a vertex whose link is a closed
+             manifold but not a sphere.
+            </para>
+            <para>
+             For an ideal vertex in a 3-manifold triangulation,
+             this column will also identify the precise surface of the
+             vertex link (e.g., torus, Klein bottle, etc.).
+             For an ideal vertex in a 4-manifold triangulation,
+             you can always <link linkend="tri-vertexlinks">triangulate the
+             vertex link</link> and study it using all of &regina;'s
+             3-manifold machinery.
+            </para>
+           </glossdef>
+          </glossentry>
+          <glossentry id="tri-faces-invalid">
+           <glossterm><guilabel>Invalid</guilabel></glossterm>
+           <glossdef>
+            <para>
+             Indicates that this is an invalid face.
+             This can only occur in a 3- or 4-manifold triangulation
+             (not in dimension&nbsp;2).
+            </para>
+            <para>
+             An invalid vertex is one whose link
+             is neither a ball nor a closed manifold.
+             An invalid edge is one that is identified with itself in
+             reverse, or (for 4-manifolds) has a link that is neither a
+             sphere nor a ball.
+             An invalid triangle (for 4-manifolds only) is one that is
+             identified with itself under a non-identity reflection or
+             rotation.
+            </para>
+            <para>
+             If any face is invalid, then the entire triangulation will
+             also be <link linkend="tri-propvalid">marked as invalid</link>.
+            </para>
+           </glossdef>
           </glossentry>
          </glosslist>
-         If the edge is valid and an ordinary internal edge (i.e.,
-         the relative interior of the edge lies within the interior
-         of the triangulation), then the second column will be left empty.
-        </para></glossdef>
-       </glossentry>
-       <glossentry>
-        <glossterm><guilabel>Degree</guilabel></glossterm>
-        <glossdef><para>
-         Lists the <firstterm>degree</firstterm> of each edge.
-         This is the number of individual tetrahedron edges that are
-         identified together to make this edge of the triangulation.
-        </para></glossdef>
-       </glossentry>
-       <glossentry>
-        <glossterm><guilabel>Tetrahedra (Tet vertices)</guilabel></glossterm>
-        <glossdef>
-         <para>
-          Lists precisely which edges
-          of which tetrahedra come together to
-          form each overall edge of the triangulation.  An example is
-          <literal>0&nbsp;(31), 1&nbsp;(01), 0&nbsp;(02)</literal>,
-          indicating a degree&nbsp;3 edge obtained by identifying
-          edges&nbsp;31 and 02 of tetrahedron&nbsp;0, and
-          edge&nbsp;01 of tetrahedron&nbsp;1
-          (here edge
-          31 means the edge running from vertex&nbsp;3 to vertex&nbsp;1,
-          and so on).
-         </para>
-         <para>
-          The order of vertices is important: this example also shows that
-          vertex&nbsp;3 of tetrahedron&nbsp;0,
-          vertex&nbsp;0 of tetrahedron&nbsp;1, and
-          vertex&nbsp;0 of tetrahedron&nbsp;0 all represent
-          the <emphasis>same end</emphasis> of the edge.
-         </para>
-         <para>
-          The order of tetrahedra in this list is also important: tetrahera
-          are written in the order in which one sees them when walking
-          around the edge link.
-         </para>
-        </glossdef>
-       </glossentry>
-      </glosslist>
-     </para>
-    </sect4>
-    <sect4 id="tri-triangles">
-     <title>Viewing Triangles</title>
-     <para>
-      If you click on the <guibutton>View</guibutton> button beside the
-      triangle count, you will see a table listing the individual
-      triangles (i.e., 2-faces) of the triangulation.
-     </para>
-     <para>
-      <inlinemediaobject>
-       <imageobject>
-        <imagedata fileref="tri-faces.png"/>
-       </imageobject>
-      </inlinemediaobject>
-     </para>
-     <para>
-      The columns in this table are:
-      <glosslist>
-       <glossentry>
-        <glossterm><guilabel>Triangle #</guilabel></glossterm>
-        <glossdef><para>
-         Identifies each triangle with an
-         individual <firstterm>triangle number</firstterm>, starting from 0
-         and counting upwards.
-        </para></glossdef>
-       </glossentry>
-       <glossentry>
-        <glossterm><guilabel>Type</guilabel></glossterm>
-        <glossdef><para>
-         Gives some information about the <firstterm>shape</firstterm>
-         of the triangle within the triangulation, according to how its
-         edges and vertices are identified together.
-         Text you might see here includes:
-         <glosslist>
+        </para>
+        <para>
+         If the <replaceable>k</replaceable>-face does not have any of
+         the properties listed above, then the second column of the table
+         will be left empty.
+        </para>
+        <para>
+         There is one exception to this: for triangular faces in 3-manifolds,
+         &regina; will always use the second column of the table to
+         describe the combinatorial shape of the triangle.
+         Possible shapes include:
+        </para>
+        <para>
+         <inlinemediaobject>
+          <imageobject>
+           <imagedata fileref="tri-triangles.png"/>
+          </imageobject>
+         </inlinemediaobject>
+        </para>
+        <para>
+         <glosslist id="tri-faces-shapes">
           <glossentry>
            <glossterm><guilabel>Triangle</guilabel></glossterm>
            <glossdef><para>
@@ -1027,57 +959,68 @@
            </para></glossdef>
           </glossentry>
          </glosslist>
-         In addition to the shape, you will also see the text
-         <guilabel>(Bdry)</guilabel> for each boundary triangle
-         (i.e., each triangle that lies entirely within the boundary of the
-         triangulation).
         </para></glossdef>
        </glossentry>
        <glossentry>
         <glossterm><guilabel>Degree</guilabel></glossterm>
         <glossdef><para>
-         Lists the <firstterm>degree</firstterm> of each triangle,
-         i.e., the number of individual tetrahedron faces that are
-         identified together to make this triangle within the overall
-         triangulation.
-         This is always 1 for a boundary triangle, or 2 for an internal
-         triangle.
+         The third column of the <replaceable>k</replaceable>-face table
+         lists the <firstterm>degree</firstterm> of each face.
+         This is the number of individual
+         <replaceable>k</replaceable>-faces of individual tetrahedra
+         or pentachora (for 3-manifolds or 4-manifolds respectively)
+         that are identified together to make this
+         <replaceable>k</replaceable>-face of the triangulation.
         </para></glossdef>
        </glossentry>
        <glossentry>
-        <glossterm><guilabel>Tetrahedra (Tet vertices)</guilabel></glossterm>
+        <glossterm><guilabel>Triangles / Tetrahedra / Pentachora
+         (vertices)</guilabel></glossterm>
         <glossdef>
          <para>
-          Lists precisely which faces
-          of which tetrahedra come together to
-          form each overall triangle within the triangulation.  An example is
-          <literal>2&nbsp;(123), 3&nbsp;(120)</literal>,
-          indicating an internal triangle obtained by gluing
-          faces&nbsp;123 of tetrahedron&nbsp;2 with
-          faces&nbsp;120 of tetrahedron&nbsp;3.
+          The fourth and final column of the <replaceable>k</replaceable>-face
+          table indicates precisely which <replaceable>k</replaceable>-faces of
+          which tetrahedra or pentachora come together to form each overall
+          <replaceable>k</replaceable>-face of the triangulation.
+          An example for edges in a 3-manifold triangulation might be
+          <literal>0&nbsp;(31), 1&nbsp;(01), 0&nbsp;(02)</literal>,
+          which indicates a degree&nbsp;3 edge obtained by identifying
+          edges&nbsp;31 and 02 of tetrahedron&nbsp;0, and
+          edge&nbsp;01 of tetrahedron&nbsp;1.
+          Here &ldquo;edge 31&rdquo; means the edge running from
+          vertex&nbsp;3 to vertex&nbsp;1 of the tetrahedron, and so on.
          </para>
          <para>
-          Again, the order of vertices is important: this example also shows
-          that vertex&nbsp;3 of tetrahedron&nbsp;2 represents the
-          <emphasis>same corner</emphasis> of the triangle as
-          vertex&nbsp;0 of tetrahedron&nbsp;3.
+          The order of vertices in this list is important: the previous
+          example also shows that
+          vertex&nbsp;3 of tetrahedron&nbsp;0,
+          vertex&nbsp;0 of tetrahedron&nbsp;1, and
+          vertex&nbsp;0 of tetrahedron&nbsp;0 all represent
+          the <emphasis>same end</emphasis> of the edge.
+         </para>
+         <para>
+          For edges of 3-manifolds and triangles in 4-manifolds,
+          the order of tetrahedra or pentachora respectively is also important:
+          tetrahedra or pentachora are written in the order in which one sees
+          them when walking around the edge link or triangle link respectively.
          </para>
         </glossdef>
        </glossentry>
       </glosslist>
      </para>
     </sect4>
+
     <sect4 id="tri-components">
      <title>Viewing Components</title>
      <para>
       If you click on the <guibutton>View</guibutton> button beside the
-      component count, you will see a table listing the individual
+      component count, you will see a table listing details of the individual
       connected components of the triangulation.
      </para>
      <para>
       <inlinemediaobject>
        <imageobject>
-        <imagedata fileref="tri-comp.png"/>
+        <imagedata fileref="tri-components.png"/>
        </imageobject>
       </inlinemediaobject>
      </para>
@@ -1101,15 +1044,25 @@
          Text you might see here includes:
          <glosslist>
           <glossentry>
+           <glossterm><guilabel>Invalid</guilabel></glossterm>
+           <glossdef><para>
+            Indicates that this component is invalid.
+            A component is considered invalid if it contains any
+            <link linkend="tri-propvalid">invalid vertices,
+            edges or triangles</link>.
+           </para></glossdef>
+          </glossentry>
+          <glossentry>
            <glossterm><guilabel>Real</guilabel> /
             <guilabel>Ideal</guilabel></glossterm>
            <glossdef><para>
-            The text <guilabel>Real</guilabel> indicates that the
+            For valid components of 3-manifold and 4-manifold triangulations,
+            the text <guilabel>Real</guilabel> indicates that the
             the component contains no ideal vertices, and the text
             <guilabel>Ideal</guilabel> indicates that the component
             contains at least one ideal vertex.
-            An <firstterm>ideal vertex</firstterm> is a vertex whose
-            link is a closed surface but not a 2-sphere.
+            Recall that an <firstterm>ideal vertex</firstterm> is a vertex
+            whose link is a closed manifold but not a sphere.
            </para></glossdef>
           </glossentry>
           <glossentry>
@@ -1126,16 +1079,18 @@
        <glossentry>
         <glossterm><guilabel>Size</guilabel></glossterm>
         <glossdef><para>
-         Gives the number of tetrahedra belonging to each connected
-         component.
+         Gives the number of top-dimensional simplices
+         (i.e., triangles, tetrahedra or pentachora for a
+         2-, 3- or 4-manifold triangulation respectively)
+         that belong to each connected component.
         </para></glossdef>
        </glossentry>
        <glossentry>
-        <glossterm><guilabel>Tetrahedra</guilabel></glossterm>
+        <glossterm><guilabel>Triangles / Tetrahedra / Pentachora</guilabel></glossterm>
         <glossdef>
          <para>
-          Lists the individual tetrahedra belonging to each connected
-          component.
+          Lists the individual top-dimensional simplices that belong
+          to each connected component.
          </para>
         </glossdef>
        </glossentry>
@@ -1146,17 +1101,39 @@
      <title>Viewing Boundary Components</title>
      <para>
       If you click on the <guibutton>View</guibutton> button beside the
-      component count, you will see a table listing the individual
-      boundary components of the triangulation.
-      This includes <firstterm>real</firstterm> boundary components
-      (consisting of several boundary triangles), and also
-      <firstterm>ideal</firstterm> boundary components (each of which
-      consists of a single ideal vertex).
+      total count of boundary components,
+      you will see a table listing the individual boundary components of
+      the triangulation.
+      This includes:
+      <itemizedlist>
+       <listitem><para>
+        <firstterm>real</firstterm> boundary components,
+        which in a 2-, 3- or 4-manifold triangulation
+        are formed from one or more boundary edges, triangles or tetrahedra
+        respectively;
+       </para></listitem>
+       <listitem><para>
+        <firstterm>ideal</firstterm> boundary components, which consist
+        of a single vertex whose link is a closed manifold but not a sphere;
+       </para></listitem>
+       <listitem><para>
+        <firstterm>invalid vertices</firstterm>, which only appear in
+        4-manifold triangulations&mdash;these consist of a single invalid
+        vertex that does not already belong to some other boundary
+        component (e.g., a vertex whose link is an ideal 3-manifold
+        triangulation).
+       </para></listitem>
+      </itemizedlist>
      </para>
      <para>
       <inlinemediaobject>
        <imageobject>
-        <imagedata fileref="tri-bc.png"/>
+        <imagedata fileref="tri-bdrycomponents-real.png"/>
+       </imageobject>
+      </inlinemediaobject>
+      <inlinemediaobject>
+       <imageobject>
+        <imagedata fileref="tri-bdrycomponents-ideal.png"/>
        </imageobject>
       </inlinemediaobject>
      </para>
@@ -1174,35 +1151,40 @@
        <glossentry>
         <glossterm><guilabel>Type</guilabel></glossterm>
         <glossdef><para>
-         Either <guilabel>Real</guilabel> or <guilabel>Ideal</guilabel>,
-         according to whether this is a real or ideal boundary component
-         (as described above).
+         Either <guilabel>Real</guilabel>, <guilabel>Ideal</guilabel>,
+         or <guilabel>Invalid vertex</guilabel>, as outlined above.
+        </para><para>
+         This column is not shown for 2-manifold triangulations, which
+         can never have ideal or invalid vertices.
         </para></glossdef>
        </glossentry>
        <glossentry>
         <glossterm><guilabel>Size</guilabel></glossterm>
         <glossdef><para>
-         For a real boundary component, this gives the number of
-         boundary triangles that make up the component.
-         For an ideal boundary component, this will always state
-         <literal>1&nbsp;vertex</literal>.
+         For a real boundary component in a 2-, 3- or 4-manifold
+         triangulation, this gives the number of edges, triangles or
+         tetrahedra respectively that make up the component.
+         For an ideal boundary component or an invalid vertex,
+         this shows the degree of the corresponding vertex.
         </para></glossdef>
        </glossentry>
        <glossentry>
-        <glossterm><guilabel>Triangles / Vertex</guilabel></glossterm>
+        <glossterm><guilabel>Edges / Triangles / Tetrahedra /
+         Vertex</guilabel></glossterm>
         <glossdef>
          <para>
-          For a real boundary component, this lists the individual
-          boundary triangles that it contains.  For an ideal
-          boundary component, this lists the individual tetrahedron
-          vertices that are identified to form the overall ideal
-          vertex of the triangulation.
+          For a real boundary component in a 2-, 3- or 4-manifold
+          triangulation, this lists the individual boundary edges,
+          triangles or tetrahedra respectively that it contains.
+          For an ideal boundary component or an invalid vertex,
+          this lists which individual tetrahedron or pentachoron
+          vertices are identified to form the overall ideal
+          or invalid vertex of the triangulation.
          </para>
          <para>
-          Triangles and vertices are described in the same manner as
-          in the individual
-          <link linkend="tri-triangles">triangle</link> and
-          <link linkend="tri-vertices">vertex</link> viewers.
+          Edges, triangles, tetrahedra and vertices are described
+          in the same manner as in the individual
+          <link linkend="tri-faces">face viewers</link>.
          </para>
         </glossdef>
        </glossentry>
@@ -1345,8 +1327,8 @@
    </para>
    <caution>
     <para>
-     For 3-manifold triangulations,
-     there is no guarantee that <link linkend="tri-edges">invalid edges</link>
+     For 3-manifold triangulations, there is no guarantee that
+     <link linkend="tri-faces-invalid">invalid edges</link>
      (edges glued to themselves in reverse) will be handled correctly.
      In particular, the projective plane cusps they produce may be ignored.
     </para>
@@ -2460,7 +2442,7 @@
     You will be asked which vertex link you wish to construct,
     as illustrated below.
     For each available vertex, the drop-down list will show the vertex number
-    (as seen in the <link linkend="tri-vertices">skeleton viewer</link>),
+    (as seen in the <link linkend="tri-faces">skeleton viewer</link>),
     along with details of the individual tetrahedron or pentachoron vertices
     that combine to form that particular vertex of the triangulation.
    </para>
@@ -3022,7 +3004,7 @@
     to convert your ideal vertices into real boundary components.
     &regina; will subdivide the triangulation and delete a small
     neighbourhood of each ideal vertex.
-    Any <link linkend="tri-vertices-invalid">invalid vertices</link>
+    Any <link linkend="tri-faces-invalid">invalid vertices</link>
     will be truncated also.
    </para>
    <tip><para>
@@ -3172,7 +3154,7 @@
    <para>
     You will be asked which edge to drill out, as illustrated below.
     For each available edge, the drop-down list shows the edge number
-    (as seen in the <link linkend="tri-edges">skeleton viewer</link>),
+    (as seen in the <link linkend="tri-faces">skeleton viewer</link>),
     along with details of the individual tetrahedron edges that combine to
     form that edge of the triangulation.
    </para>

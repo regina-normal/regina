@@ -427,7 +427,7 @@
      The individual cusps are numbered by the &snappea; kernel
      (0, 1, 2, &hellip;).  Beside each cusp is the corresponding vertex number
      given by &regina;; this is the vertex number that you see in the
-     <link linkend="tri-vertices">skeleton viewer</link>.
+     <link linkend="tri-faces">skeleton viewer</link>.
      Note that &regina;'s vertex numbers and &snappea;'s cusp numbers are
      often, but not always, the same.
     </para>
