@@ -1222,7 +1222,7 @@
     <para>
      <inlinemediaobject>
       <imageobject>
-       <imagedata fileref="tri-fpg.png"/>
+       <imagedata fileref="tri-graphs-dual.png"/>
       </imageobject>
      </inlinemediaobject>
     </para>
@@ -1250,6 +1250,16 @@
      you can tell &regina; where to find &graphviz; in the
      <link linkend="options-tools">tools options</link>.
     </para>
+    <para>
+     TODO: Talk about tree decompositions, and nice tree decompositions.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="tri-graphs-tree.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
    </sect3>
   </sect2>
 
@@ -1267,12 +1277,20 @@
     been truncated</emphasis>, leaving a small boundary component
     where each ideal vertex used to be.
    </para>
-   <caution><para>
-    There is no guarantee that <link linkend="tri-edges">invalid edges</link>
-    (edges glued to themselves in reverse) will be handled correctly.
-    In particular, the projective plane cusps they produce may be
-    ignored.
-   </para></caution>
+   <caution>
+    <para>
+     For 3-manifold triangulations,
+     there is no guarantee that <link linkend="tri-edges">invalid edges</link>
+     (edges glued to themselves in reverse) will be handled correctly.
+     In particular, the projective plane cusps they produce may be ignored.
+    </para>
+    <para>
+     For 4-manifold triangulations,
+     if the triangulation is invalid for any reason&mdash;in particular,
+     if it has invalid edges or triangles&mdash;then &regina; will not
+     attempt to compute any algebraic invariants at all.
+    </para>
+   </caution>
 
    <sect3 id="tri-algebra-homfund">
     <title>Homology and Fundamental Group</title>
@@ -1284,28 +1302,24 @@
      as well as the fundamental group (on the right side of the panel).
     </para>
     <para>
-     The homology groups on the left include:
-     H1(M), the first homology group;
-     H1(M,&nbsp;&#x2202;M),
+     The homology groups on the left include the first homology group
+     H<subscript>1</subscript>(M), and the second homology group
+     H<subscript>2</subscript>(M).
+     For 3-manifolds (but not 4-manifolds), several additional groups
+     will be shown:
+     H<subscript>1</subscript>(M,&nbsp;&#x2202;M),
       the relative first homology group with respect to the boundary;
-     H1(&#x2202;M),
-      the first homology group of the boundary;
-     H2(M), the second homology group; and
-     H2(M&nbsp;;&nbsp;Z<subscript>2</subscript>), the second homology group
-      with coefficients in Z<subscript>2</subscript>.
-     All finite cyclic groups
-     Z<subscript><replaceable>k</replaceable></subscript>
-     will be written in the &ldquo;pidgin &tex;&rdquo; form
-     Z_<replaceable>k</replaceable>,
-     so that the order of each group is easier to read.
+     H<subscript>1</subscript>(&#x2202;M),
+      the first homology group of the boundary; and
+     H<subscript>2</subscript>(M&nbsp;;&nbsp;Z<subscript>2</subscript>),
+      the second homology group with coefficients in Z<subscript>2</subscript>.
     </para>
     <para>
      The fundamental group on the right will be
-     presented as a set of generators and
-     relations.
+     presented as a set of generators and relations.
      &regina; will also try to recognise the common name of this
-     group (though the recognition code is fairly na&iuml;ve);
-     if it can then the common name (such as &ldquo;Z_2&rdquo;)
+     group (though the recognition code is fairly na&iuml;ve); if it can then
+     the common name (such as &ldquo;Z<subscript>2</subscript>&rdquo;)
      will be displayed above the generators and relations.
     </para>
     <para>
@@ -1316,21 +1330,11 @@
      </inlinemediaobject>
     </para>
     <para>
-     &regina; does attempt to simplify the presentation automatically, but
-     if this is not satisfactory then there are further things you can try:
+     &regina; attempts to simplify the presentation as far as it can
+     (using small cancellation theory and Nielsen moves).
+     However, if this is not satisfactory then there are further things
+     you can try:
      <itemizedlist>
-      <listitem>
-       <para>
-        If you have subsequently modified the group presentation (for instance,
-        by pressing <guibutton>Relator explosion</guibutton> as described
-        below), then you can rerun &regina;'s simplification code by
-        pressing the <guibutton>Using Regina</guibutton> button.
-        &regina;'s simplification code is based on small cancellation theory
-        and Nielsen moves.
-        If you press <guibutton>Using Regina</guibutton>
-        twice in a row then the second press should have no effect.
-       </para>
-      </listitem>
       <listitem>
        <para>
         If you have &gaplongurl; installed on your system,
@@ -1348,19 +1352,28 @@
         This will attempt to multiply old relators together in a
         moderately intelligent way to build new relators, which might be
         more useful for later simplifications.
-        You should alternate this with one of the simplification buttons
-        described above.
         This process has been found particularly useful when trying
         to prove that a group is trivial.
+       </para>
+       <para>
+        The <guibutton>Relator explosion</guibutton> button
+        will make the group presentation larger&mdash;sometimes
+        <emphasis>much</emphasis> larger.
+        After pressing this button, you should simplify the presentation
+        again before trying anything else.
+        You can press the <guibutton>Using Regina</guibutton> button
+        to simplify the presentation using &regina;'s own code,
+        or you can press <guibutton>Using GAP</guibutton> as described above.
        </para>
       </listitem>
      </itemizedlist>
     </para>
     <warning><para>
-     Pressing <guibutton>Relator explosion</guibutton> will make your
-     presentation larger&mdash;possibly <emphasis>much</emphasis>
-     larger.  If you try this on a group presentation that is already
-     large then it could easily exceed the memory of your computer.
+     If you press the <guibutton>Relator explosion</guibutton> button
+     for a group presentation that is already very large, then
+     the increase in size could be enormous&mdash;so enormous that it
+     could crash &regina; entirely by exceeding the available memory on
+     your machine.
     </para></warning>
     <tip><para>
      If you cannot read the superscript digits in the fundamental group
@@ -1385,11 +1398,15 @@
     </tip>
    </sect3>
    <sect3 id="tri-algebra-turaevviro">
-    <title>Turaev-Viro Invariants</title>
+    <title>Turaev-Viro Invariants (3-D)</title>
     <para>
-     The <guilabel>Algebra</guilabel>&rarr;<guilabel>Turaev-Viro</guilabel>
+     For 3-manifold triangulations, the
+     <guilabel>Algebra</guilabel>&rarr;<guilabel>Turaev-Viro</guilabel>
      tab allows you to compute Turaev-Viro state sum invariants with
      arbitrary parameters.
+     As of &regina;&nbsp;5.0, these invariants are computed using exact
+     arithmetic in an appropriate cyclotomic field (so, unlike previous
+     versions, there is no need to worry about floating-point inaccuracies).
     </para>
     <para>
      <inlinemediaobject>
@@ -1402,19 +1419,29 @@
      Each Turaev-Viro invariant is defined by a set of
      <firstterm>initial data</firstterm>:
      an integer <replaceable>r</replaceable>&nbsp;&ge;&nbsp;3 and a
-     root of unity <replaceable>q</replaceable><subscript>0</subscript>
-     of degree 2<replaceable>r</replaceable>
+     root of unity &q0; of degree 2<replaceable>r</replaceable>
      (see Section&nbsp;7 of <xref linkend="bib-turaevviro"/> for details).
-     In &regina; you identify the root of unity
-     <replaceable>q</replaceable><subscript>0</subscript> using an
-     integer <replaceable>root</replaceable>
-     in the range
-     0&nbsp;&lt;&nbsp;<replaceable>root</replaceable>&nbsp;&lt;&nbsp;2<replaceable>r</replaceable>
-     (where <replaceable>r</replaceable> and <replaceable>root</replaceable>
-     must be coprime).
-     To compute a Turaev-Viro invariant, simply enter the two integers
-     <replaceable>r</replaceable>, <replaceable>root</replaceable>
-     into the box provided and press <guilabel>Calculate</guilabel>.
+    </para>
+    <itemizedlist>
+     <listitem><para>
+      For even values of <replaceable>r</replaceable>,
+      &q0; must be a primitive (2<replaceable>r</replaceable>)th root of unity,
+      and &regina; computes only one invariant (since all such
+      roots yield essentially the same information).
+     </para></listitem>
+     <listitem><para>
+      For odd values of <replaceable>r</replaceable>,
+      &q0; may either be a primitive
+      (2<replaceable>r</replaceable>)th root of unity or a primitive
+      <replaceable>r</replaceable>th root of unity.
+      &regina; computes both invariants, and marks them as
+      &ldquo;odd&rdquo; and &ldquo;even&rdquo; respectively.
+     </para></listitem>
+    </itemizedlist>
+    <para>
+     To compute a Turaev-Viro invariant, simply enter the integer
+     <replaceable>r</replaceable> into the box provided and press
+     <guilabel>Calculate</guilabel>.
     </para>
     <para>
      <inlinemediaobject>
@@ -1424,11 +1451,11 @@
      </inlinemediaobject>
     </para>
     <para>
-     Once computed, the new invariant will appear in the table beneath.
-     Be aware that these invariants are computing using
-     floating point arithmetic (with an exponential number of
-     arithmetical operations), and so &regina; cannot guarantee the
-     accuracy of the result.
+     &regina; will compute the corresponding invariant(s) as requested,
+     and display them in the table below as elements of the corresponding
+     cyclotomic field.
+     These field elements are expressed as polynomials in &zeta;, where
+     &zeta; denotes the primitive root of unity &q0; from the initial data.
     </para>
     <para>
      <inlinemediaobject>
@@ -1437,10 +1464,6 @@
       </imageobject>
      </inlinemediaobject>
     </para>
-    <para>
-     Turaev-Viro invariants are stored when you save your data file, so they
-     do not need to be recalculated when a file is closed and reopened.
-    </para>
     <caution><para>
      Only small values of <replaceable>r</replaceable>
      should be used, since the time required to calculate the
@@ -1448,10 +1471,11 @@
     </para></caution>
    </sect3>
    <sect3 id="tri-algebra-cellular">
-    <title>Cellular Information</title>
+    <title>Cellular Information (3-D)</title>
     <para>
-     The <guilabel>Algebra</guilabel>&rarr;<guilabel>Cellular Info</guilabel>
-     tab contains information on the standard and dual CW-decompositions,
+     For 3-manifold triangulations, the
+     <guilabel>Algebra</guilabel>&rarr;<guilabel>Cellular Info</guilabel> tab
+     contains further information on the standard and dual CW-decompositions,
      a variety of homology groups and mappings, the
      Kawauchi-Kojima invariants of the torsion linking form, and
      comments on where the triangulation might be embeddable.
@@ -1467,8 +1491,7 @@
      As with the other algebraic invariants described above,
      all information here refers to the <emphasis>compact</emphasis>
      manifold obtained by
-     truncating any ideal vertices and leaving real boundary surfaces
-     in their place.
+     truncating any ideal vertices and leaving real boundary surfaces intact.
     </para>
     <para>
      The information here includes:
@@ -1526,7 +1549,7 @@
        </para></glossdef>
       </glossentry>
       <glossentry>
-       <glossterm><guilabel>H1(&#x2202;M &rarr; M)</guilabel></glossterm>
+       <glossterm><guilabel>H<subscript>1</subscript>(&#x2202;M &rarr; M)</guilabel></glossterm>
        <glossdef><para>
         Since the boundary is a submanifold of the original manifold,
         there is an induced map on the first homology group.  This
@@ -1541,18 +1564,18 @@
          Given an oriented 3-manifold &varM;,
          there is a symmetric bilinear function
          t&hom1;(&varM;)&nbsp;x&nbsp;t&hom1;(&varM;)&nbsp;&mdash;>&nbsp;Q/Z
-         where t&hom1;(&varM;) is the torsion subgroup of &hom1;(&varM;).  
+         where t&hom1;(&varM;) is the torsion subgroup of &hom1;(&varM;).
          It is computed in this way: let &varx; and &vary; be 1-dimensional
          torsion homology classes.  Then &varn;&varx; is the boundary of
          some 2-cycle &varz; (transverse to &vary;) for some integer &varn;.
          The <firstterm>torsion linking form</firstterm> of
-         &varx; and &vary; is the 
+         &varx; and &vary; is the
          oriented intersection number of &varz; and &vary;, divided by &varn;.
         </para>
         <para>
          Kawauchi and Kojima
          gave a complete classification of such torsion linking forms
-         <xref linkend="bib-kktorsionlinkingform"/>.  &regina; computes the 
+         <xref linkend="bib-kktorsionlinkingform"/>.  &regina; computes the
          torsion linking form, and implements the Kawauchi-Kojima
          classification.
         </para>
@@ -1560,9 +1583,9 @@
          This item on the <guilabel>Cellular Info</guilabel> tab
          is the first of the three Kawauchi-Kojima invariants of the
          torsion linking form on the torsion subgroup of &hom1;:
-         the <firstterm>torsion form rank vector</firstterm>, which 
+         the <firstterm>torsion form rank vector</firstterm>, which
          lists the prime power decomposition of the torsion subgroup of
-         &hom1;(&varM;).  
+         &hom1;(&varM;).
          For example, if &hom1;(&varM;) is a direct sum of &varn; copies of
          Z<subscript>20</subscript> and &varm; copies of
          Z<subscript>18</subscript>, then the torsion form rank vector
@@ -1627,7 +1650,7 @@
          S<superscript>4</superscript>, or a homology sphere. If the manifold
          is orientable it tests for the hyperbolicity of the torsion linking
          form.  It also performs the Kawauchi-Kojima 2-torsion test, useful
-         for determining if a manifold with boundary does not embed in any 
+         for determining if a manifold with boundary does not embed in any
          homology 4-sphere.
         </para>
         <para>
@@ -1659,7 +1682,7 @@
   <sect2 id="tri-composition">
    <title>Combinatorial Composition (3-D)</title>
    <para>
-    The <guilabel>Composition</guilabel> tab
+    For 3-manifold triangulations, the <guilabel>Composition</guilabel> tab
     offers more detailed information about the combinatorial
     structure of the triangulation.
    </para>

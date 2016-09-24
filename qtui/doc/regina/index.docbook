@@ -113,6 +113,7 @@
    "<replaceable>P</replaceable><superscript>2</superscript>-irreducible">
   <!ENTITY previewapp "<application>Preview</application>">
   <!ENTITY python "<application>Python</application>">
+  <!ENTITY q0 "<replaceable>q</replaceable><subscript>0</subscript>">
   <!ENTITY qt "<application>Qt</application>">
   <!ENTITY recogniser "<application>3-Manifold Recogniser</application>">
   <!ENTITY recogniserlink "<ulink url='http://www.matlas.math.csu.ru/?page=recognizer'>&recogniser;</ulink>">
