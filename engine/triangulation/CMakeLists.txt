@@ -59,5 +59,6 @@ if (${REGINA_INSTALL_DEV})
     ntriangulation.h
     nvertex.h
     nxmltrireader.h
+    pachner.h
     DESTINATION ${INCLUDEDIR}/triangulation COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})
