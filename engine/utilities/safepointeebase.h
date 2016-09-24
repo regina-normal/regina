@@ -41,12 +41,12 @@
 
 #include "utilities/saferemnant.h"
 
+namespace regina {
+
 /**
  * \weakgroup utilities
  * @{
  */
-
-namespace regina {
 
 /**
  * A base class for objects of type \a T to be referenceable by a SafePtr.
@@ -111,6 +111,8 @@ private:
     detail::SafeRemnant<T> *remnant_;
         /**< Points to the corresponding persistent object. */
 };
+
+/*@}*/
 
 // Inline functions for SafePointeeBase
 

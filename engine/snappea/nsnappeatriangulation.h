@@ -58,7 +58,8 @@ template <int> class Triangulation;
 typedef Triangulation<3> NTriangulation;
 
 /**
- * \weakgroup triangulation
+ * \addtogroup snappea SnapPea Triangulations
+ * Interfaces for accessing the SnapPea kernel
  * @{
  */
 

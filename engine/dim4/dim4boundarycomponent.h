@@ -316,6 +316,8 @@ inline size_t Dim4BoundaryComponent::index() const {
     return markedIndex();
 }
 
+#ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
+
 template <>
 inline size_t Dim4BoundaryComponent::countFaces<3>() const {
     return tetrahedra_.size();
@@ -355,6 +357,8 @@ template <>
 inline Dim4Vertex* Dim4BoundaryComponent::face<0>(size_t index) const {
     return vertices_[index];
 }
+
+#endif // __DOXYGEN
 
 inline Dim4Component* Dim4BoundaryComponent::component() const {
     // There may be no tetrahedra, but there is always a vertex.

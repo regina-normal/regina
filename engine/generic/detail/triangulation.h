@@ -899,7 +899,7 @@ class TriangulationBase :
          * thereby be pushed up through the new simplices and converted
          * into a cusp formed using vertices of these new simplices.
          *
-         * In Regina's \ref stddef "standard dimensions", where triangulations
+         * In Regina's \ref stddim "standard dimensions", where triangulations
          * also support an idealToFinite() operation, this routine is a loose
          * converse of that operation.
          *

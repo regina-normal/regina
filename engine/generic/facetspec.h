@@ -73,7 +73,7 @@ namespace regina {
  * can be used by appending the dimension as a suffix (e.g., FacetSpec2
  * and FacetSpec3 for dimensions 2 and 3).  The typedefs
  * Dim2TriangleEdge, NTetFace and Dim4PentFacet can also be used in
- * Regina's \ref stddef "standard dimensions".
+ * Regina's \ref stddim "standard dimensions".
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.

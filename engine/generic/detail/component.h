@@ -181,7 +181,7 @@ class ComponentBase :
          *
          * As with Triangulation<dim>, this tests for bad self-identifications
          * in all dimensions, but only tests for bad links in Regina's
-         * \stddef "standard dimensions".
+         * \ref stddim "standard dimensions".
          *
          * @return \c true if and only if this component is valid.
          */

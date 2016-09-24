@@ -46,7 +46,8 @@
 namespace regina {
 
 /**
- * \weakgroup progress
+ * \addtogroup progress Progress Tracking
+ * Progress tracking for long operations
  * @{
  */
 

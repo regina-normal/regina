@@ -205,6 +205,8 @@ class XMLTriangulationReaderBase : public NXMLPacketReader {
 
 // Inline functions for XMLTriangulationTags
 
+#ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
+
 template <int dim>
 inline constexpr const char* XMLTriangulationTags<dim>::simplices() {
     return "simplices";
@@ -255,6 +257,8 @@ template <>
 inline constexpr const char* XMLTriangulationTags<2>::size() {
     return "ntriangles";
 }
+
+#endif // __DOXYGEN
 
 // Implementation details for XMLSimplexReader
 
