@@ -299,6 +299,7 @@ namespace {
             NTriangulation& original, size_t minTet) {
         if (alt.size() < minTet) {
             // TODO: Make t.cloneFrom(alt) public.
+            NPacket::ChangeEventSpan span(&original);
             original.removeAllTetrahedra();
             original.insertTriangulation(alt);
             original.intelligentSimplify();
