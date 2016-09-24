@@ -184,8 +184,9 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-bdrycomponents">boundary components, viewing
-   in a triangulation</link></primaryie>
+  <primaryie>boundary components</primaryie>
+  <secondaryie><link linkend="tri-tribdry">triangulating</link></secondaryie>
+  <secondaryie><link linkend="tri-bdrycomponents">viewing</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -569,10 +570,8 @@
 
  <indexentry>
   <primaryie>Euler characteristic</primaryie>
-  <secondaryie><link linkend="dim2-identify">of a
-   2-manifold</link></secondaryie>
-  <secondaryie><link linkend="tri-algebra-cellular">of a
-   3-manifold</link></secondaryie>
+  <secondaryie><link linkend="tri-skeleton-skelcomp">of a
+   manifold</link></secondaryie>
   <secondaryie><link linkend="surfaces-propeuler">of a normal
    surface</link></secondaryie>
  </indexentry>
@@ -1570,14 +1569,12 @@
 
  <indexentry>
   <primaryie>triangulating</primaryie>
-  <secondaryie><link linkend="dim4tri-tribdry">a boundary component
+  <secondaryie><link linkend="tri-tribdry">a boundary component
    in a 4-manifold triangulation</link></secondaryie>
   <secondaryie><link linkend="hypersurfaces-triangulate">a normal
    hypersurface</link></secondaryie>
   <secondaryie><link linkend="tri-vertexlinks">a vertex link in a
-   3-manifold triangulation</link></secondaryie>
-  <secondaryie><link linkend="dim4tri-vertexlinks">a vertex link in a
-   4-manifold triangulation</link></secondaryie>
+   triangulation</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1623,8 +1620,8 @@
    edges</link></secondaryie>
   <secondaryie><link linkend="tri-elementarymove">elementary
    moves (3-2, 4-4, open book, etc.)</link></secondaryie>
-  <secondaryie><link linkend="dim2-identify">Euler
-   characteristic of a 2-manifold</link></secondaryie>
+  <secondaryie><link linkend="tri-skeleton-skelcomp">Euler
+   characteristic</link></secondaryie>
   <secondaryie><link linkend="tri-new-example">examples,
    creating</link></secondaryie>
   <secondaryie><link linkend="foreign-export">exporting to
@@ -1657,7 +1654,7 @@
   <secondaryie><link linkend="tri-orient">orientable double
    cover</link></secondaryie>
   <secondaryie><link linkend="tri-puncturedrill">puncturing</link></secondaryie>
-  <secondaryie><link linkend="dim2-identify">recognising the
+  <secondaryie><link linkend="tri-identify">recognising the
    underlying 2-manifold</link></secondaryie>
   <secondaryie><link linkend="tri-recognition">recognising the
    underlying 3-manifold</link></secondaryie>

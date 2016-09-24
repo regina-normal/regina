@@ -464,10 +464,10 @@
    and invariants that &regina; can compute.
   </para>
 
-  <sect2 id="dim2-identify">
-   <title>Identifying Surfaces (2-D)</title>
+  <sect2 id="tri-identify">
+   <title>Identifying the Manifold (2-D and 3-D)</title>
    <para>
-    An important feature of 2-manifolds, as opposed to all other dimensions,
+    An important feature of 2-manifolds, as opposed to other dimensions,
     is that the underlying manifold is easy to recognise from its
     triangulation.  For connected 2-manifold triangulations, &regina;
     will display the exact 2-manifold at the top of the triangulation
@@ -482,9 +482,10 @@
    </para>
    <para>
     For orientable 2-manifolds, the <firstterm>genus</firstterm>
-    refers to the number of handles.  For non-orientable 2-manifolds, the
-    <firstterm>genus</firstterm> refers to
-    the number of crosscaps (so, for instance, the Klein bottle has genus two).
+    refers to the number of handles (e.g., the torus has orientable
+    genus&nbsp;1).  For non-orientable 2-manifolds, the
+    <firstterm>genus</firstterm> refers to the number of crosscaps
+    (e.g., the Klein bottle has non-orientable genus&nbsp;2).
    </para>
    <para>
     &regina; will also display the Euler characteristic at the top of the
@@ -492,17 +493,35 @@
     even for disconnected surfaces also.
    </para>
    <para>
+    For 3-manifold triangulations, &regina;
+    will try to identify the manifold automatically using a range of
+    relatively fast techniques, though a result is no longer guaranteed.
+    If &regina; does identify the underlying 3-manifold, this will be
+    shown on the <link linkend="tri-recognition">recognition tab</link>.
+    If you do not see a result immediatey, you can of course use all of
+    the machinery that &regina; offers to probe harder and seek an answer.
+   </para>
+   <para>
     <inlinemediaobject>
      <imageobject>
-      <imagedata fileref="dim2-euler.png"/>
+      <imagedata fileref="tri-recognition-manifold.png"/>
      </imageobject>
     </inlinemediaobject>
+   </para>
+   <para>
+    For triangulations in dimension &ge;&nbsp;4, &regina; does not
+    currently have any automated recognition routines&mdash;you will
+    need to manually work with &regina;'s various combinatorial and
+    algebraic tools to seek an answer.
    </para>
   </sect2>
 
   <sect2 id="tri-basicprops">
    <title>Validity, Orientability and Other Basic Properties (All Dimensions)</title>
-
+   <para>
+    At the top of each triangulation viewer is a header listing some
+    basic properties of the triangulation (circled in red below).
+   </para>
    <para>
     <inlinemediaobject>
      <imageobject>
@@ -511,27 +530,31 @@
     </inlinemediaobject>
    </para>
    <para>
-    At the top of each triangulation viewer is a banner listing some
-    basic properties of the triangulation (circled in red above).
-    The following words might appear:
+    In this header, the following words might appear:
    </para>
    <para>
     <glosslist>
      <glossentry id="tri-propclosed">
       <glossterm><guilabel>Closed</guilabel></glossterm>
-      <glossdef><para>
-       Signifies that the triangulation has no boundary triangles and no
-       ideal vertices.  In other words, the link of every vertex is a
-       2-sphere.
-      </para></glossdef>
+      <glossdef>
+       <para>
+        Signifies that the link of every vertex is a sphere.
+       </para>
+       <para>
+        This means that the triangulation has no boundary facets
+        (e.g., no boundary triangles in dimension&nbsp;3, or
+        no boundary tetrahedra in dimension&nbsp;4), and that
+        the triangulation also has no ideal vertices.
+       </para>
+      </glossdef>
      </glossentry>
      <glossentry id="tri-propideal">
       <glossterm><guilabel>Ideal bdry</guilabel></glossterm>
       <glossdef>
        <para>
         Signifies that at least one vertex of the triangulation is
-        <firstterm>ideal</firstterm>.  That is, there is some vertex
-        whose link is a closed surface but not a 2-sphere.
+        <firstterm>ideal</firstterm>.  An ideal vertex is one
+        whose link is a closed manifold but not a sphere.
        </para>
        <para>
         You can locate any ideal vertices using the
@@ -541,9 +564,18 @@
      </glossentry>
      <glossentry id="tri-propbdry">
       <glossterm><guilabel>Real bdry</guilabel></glossterm>
-      <glossdef><para>
-       Signifies that the triangulation contains one or more boundary triangles.
-      </para></glossdef>
+      <glossdef>
+       <para>
+        Signifies that the triangulation contains one or more boundary
+        facets (i.e., boundary edges, triangles or tetrahedra for a
+        2-, 3- or 4-manifold respectively).
+       </para>
+       <para>
+        For 2-manifolds, this is just written as <guilabel>with
+        boundary</guilabel>, since ideal boundary components do not
+        appear until dimension&nbsp;&ge;&nbsp;3.
+       </para>
+      </glossdef>
      </glossentry>
      <glossentry id="tri-proporient">
       <glossterm><guilabel>Orientable</guilabel> /
@@ -555,19 +587,20 @@
         The words <guilabel>orientable</guilabel>
         or <guilabel>non-orientable</guilabel> indicate
         whether or not the triangulation represents an orientable
-        3-manifold.
+        manifold.
        </para>
        <para>
         If the triangulation is orientable, &regina; will also tell you
         whether or not it is <firstterm>oriented</firstterm>; that is, whether
-        the vertex labels 0, 1, 2 and 3 on each
-        tetrahedron induce a consistent orientation for all tetrahedra
+        the vertex labels on each top-dimensional simplex
+        (e.g., the labels 0,1,2,3 on each tetrahedron in a 3-manifold)
+        induce a consistent orientation for all top-dimensional simplices
         in the entire triangulation.
        </para>
        <para>
-        If you need a consistent orientation for all tetrahedra but you
-        see <guilabel>orientable but not oriented</guilabel> instead,
-        you can fix this by
+        If you need a consistent orientation for all top-dimensional
+        simplices but you see <guilabel>orientable but not oriented</guilabel>
+        instead, you can fix this by
         <link linkend="tri-orient">orienting your triangulation</link>.
        </para>
       </glossdef>
@@ -578,7 +611,7 @@
       <glossdef><para>
        The words <guilabel>connected</guilabel>
        or <guilabel>disconnected</guilabel> indicate
-       whether or not the triangulation forms a single connected piece.
+       whether or not the triangulation forms a single connected component.
       </para></glossdef>
      </glossentry>
      <glossentry id="tri-propvalid">
@@ -587,13 +620,20 @@
        <para>
         Signifies that the triangulation is &ldquo;broken&rdquo; to the
         point where &regina; cannot do any serious work with it.
-        This can happen for one of two reasons:
-        (i)&nbsp;some vertex link is a surface with boundary
-        but not a disc; or
-        (ii)&nbsp;some edge is identified with itself in reverse.
+        This never happens in dimension&nbsp;2, but it can happen with
+        3- and 4-manifold triangulations, and this can be for one of
+        two reasons:
+        <itemizedlist>
+         <listitem><para>some vertex link is neither a closed manifold
+          nor a topological ball;</para></listitem>
+         <listitem><para>as a result of the gluings between top-dimensional
+          simplices, some edge is identified with itself in reverse,
+          or (in 4-D only) some triangle is identified with itself under a
+          non-identity reflection or rotation.</para></listitem>
+        </itemizedlist>
        </para>
        <para>
-        You can locate the offending vertex or edge using the
+        You can locate the offending vertex, edge and/or triangle using the
         <link linkend="tri-skeleton-skelcomp">skeleton viewers</link>.
         If the triangulation is invalid, no other information will appear
         in the banner.
@@ -603,7 +643,7 @@
      <glossentry>
       <glossterm><guilabel>Empty</guilabel></glossterm>
       <glossdef><para>
-       Signifies that the triangulation contains no tetrahedra at all.
+       Signifies that the triangulation contains no simplices at all.
        In this case, no other information will appear in the banner.
       </para></glossdef>
      </glossentry>
@@ -615,13 +655,22 @@
    <title>Viewing Facet Gluings (All Dimensions)</title>
 
    <para>
-    The <guilabel>Gluings</guilabel> tab shows how the various
-    tetrahedron faces are glued to each other in pairs.
-    The face gluings are presented in a table:
-    each row represents a tetrahedron, and the four columns on the right
-    represent the four triangular faces of each tetrahedron.
-    Tetrahedra are numbered 0,1,2,..., and
-    the four vertices of each tetrahedron are numbered 0,1,2,3.
+    The <guilabel>Gluings</guilabel> tab shows how the facets of the
+    top-dimensional simplices (i.e., edges of triangles, faces of
+    tetrahedra or facets of pentachora for 2-, 3- and 4-manifolds
+    respectively) are glued to each other in pairs.
+   </para>
+   <para>
+    The facet gluings are presented in a table.
+    For a <replaceable>d</replaceable>-manifold triangulation,
+    each row represents a <replaceable>d</replaceable>-simplex,
+    and the (<replaceable>d</replaceable>+1) columns on the right
+    represent the (<replaceable>d</replaceable>+1) facets of each
+    <replaceable>d</replaceable>-simplex.
+    The <replaceable>d</replaceable>-simplices are numbered 0,1,2,&hellip;,
+    and the (<replaceable>d</replaceable>+1) vertices of each
+    <replaceable>d</replaceable>-simplex are numbered
+    0,1,&hellip;,<replaceable>d</replaceable>.
    </para>
    <para>
     <inlinemediaobject>
@@ -631,13 +680,14 @@
     </inlinemediaobject>
    </para>
    <para>
-    Each cell of this table represents a single face of a single
-    tetrahedron.  For instance, the cell circled in red
-    above represents face&nbsp;123 of tetrahedron&nbsp;1 (that is, the face
-    formed from vertices 1,2,3 of tetrahedron&nbsp;1).
+    Each cell of this table represents a single facet of a single
+    <replaceable>d</replaceable>-simplex.  For instance, in the
+    3-manifold example illustrated above, the cell circled in red
+    represents face&nbsp;123 of tetrahedron&nbsp;1 (that is, the
+    triangular face formed from vertices 1,2,3 of tetrahedron&nbsp;1).
    </para>
    <para>
-    The contents of the cell show how the face is glued.  In the example
+    The contents of the cell show how the facet is glued.  In the example
     above, the circled cell contains <literal>8&nbsp;(312)</literal>,
     indicating that face&nbsp;123 of tetrahedron&nbsp;1 is glued to
     face&nbsp;312 of tetrahedron&nbsp;8 using the affine map that
@@ -647,15 +697,15 @@
     for tetrahedron&nbsp;8.
    </para>
    <para>
-    An empty cell indicates that a face is not glued to anything at all;
-    that is, the face forms part of the <emphasis>boundary</emphasis> of
-    the 3-manifold.  In the table above there are two boundary triangles:
+    An empty cell indicates that a facet is not glued to anything at all;
+    that is, the facet forms part of the <emphasis>boundary</emphasis> of
+    the manifold.  In the table above there are two boundary triangles:
     face&nbsp;013 of tetrahedron&nbsp;0, and face&nbsp;123 of
     tetrahedron&nbsp;4.  In our example these join together to form the torus
     boundary of the figure eight knot complement.
    </para>
    <para>
-    You can modify the triangulation by typing new face gluings directly
+    You can modify the triangulation by typing new facet gluings directly
     into this table.  See the section on
     <link linkend="tri-editgluings">modifying triangulations</link> for
     details.
@@ -1842,8 +1892,8 @@
    <title>High-Level Recognition Routines (3-D)</title>
 
    <para>
-    The <guilabel>Recognition</guilabel> tab
-    attempts to identify the underlying 3-manifold through a variety of
+    For 3-manifold triangulations, the <guilabel>Recognition</guilabel> tab
+    attempts to identify the underlying manifold through a variety of
     techniques,
     and also computes other high-level properties of the triangulation.
     It offers a combination of slow but exact procedures
@@ -1906,7 +1956,7 @@
        <xref linkend="bib-burton-quadoct"/>, and
        <xref linkend="bib-bo-branching"/>.
       </para><para>
-       This property is only shown for closed manifolds.
+       This property is only shown for closed 3-manifolds.
       </para></glossdef>
      </glossentry>
      <glossentry id="tri-prop3ball">
@@ -1918,7 +1968,7 @@
        The algorithm is a simple modification of the 3-sphere recognition
        algorithm as described above.
       </para><para>
-       This property is only shown for manifolds with real boundary
+       This property is only shown for 3-manifolds with real boundary
        triangles and no ideal vertices.
       </para></glossdef>
      </glossentry>
@@ -1931,7 +1981,7 @@
        terminate with the correct result <xref linkend="bib-bo-branching"/>.
       </para><para>
        This property is shown for ideal triangulations as well as
-       manifolds with real boundary triangles.
+       3-manifolds with real boundary triangles.
        For ideal triangulations, the ideal vertices will be treated as
        though they were truncated.
       </para></glossdef>
@@ -2071,7 +2121,7 @@
    </para>
    <tip><para>
     None of the tests on this tab will attempt a
-    connected sum decomposition, so if the manifold is non-prime then
+    connected sum decomposition, so if the 3-manifold is non-prime then
     it will probably not be recognised.  Try running a
     <link linkend="tri-decomposition-connsum">connected sum
     decomposition</link> first, and then recognising each of the
@@ -2095,7 +2145,7 @@
    <para>
     &snappea; is an excellent piece of software with a strong focus
     on hyperbolic 3-manifolds, originally by Jeffrey Weeks
-    and now maintained by Marc Culler and Nathan Dunfield as the
+    and now further developed by Marc Culler and Nathan Dunfield as the
     &python;-based &snappylink;.
     Portions of the &snappea; kernel are built into &regina;, which
     allows &regina; to compute information related to hyperbolic
@@ -2115,7 +2165,7 @@
     <itemizedlist>
      <listitem><para>
       If you are working with one of &regina;'s native
-      <link linkend="packet-triangulation">triangulation packets</link>,
+      <link linkend="packet-triangulation">3-manifold triangulation packets</link>,
       you can view some basic information (the solution type and the
       hyperbolic volume) through the triangulation
       <guilabel>&snappea;</guilabel> tab, as described below.
@@ -2128,20 +2178,14 @@
       fillings on the cusps.  See the
       <link linkend="snappea">chapter on &snappea; triangulations</link>
       for details.
-     </para><para>
-      If you have one of &regina;'s native triangulations but you want
-      this richer interface with &snappea;, it is easy to convert to a
-      &snappea; triangulation; again see the
-      <link linkend="snappea-fromregina">&snappea; triangulations
-      chapter</link> for details.
      </para></listitem>
     </itemizedlist>
    </para>
    <para>
-    For &regina;'s native triangulations, the
+    For &regina;'s native 3-manifold triangulations, the
     <guilabel>&snappea;</guilabel> tab will ask &snappea; to solve for a
     complete hyperbolic structure, and will then display the following
-    summary information:
+    basic summary information:
    </para>
    <para>
     <inlinemediaobject>
@@ -2173,25 +2217,36 @@
      </glossentry>
     </glosslist>
    </para>
+   <para>
+    If you would like a richer interface with the &snappea; kernel,
+    you can press the button marked <guilabel>Convert to a &snappea;
+    triangulation</guilabel>.  This will build a new hybrid
+    <link linkend="packet-snappea">&snappea; triangulation packet</link>,
+    which will appear beneath the original (native &regina;)
+    triangulation in the packet tree.
+    See the &snappea; triangulations chapter for further information about
+    <link linkend="snappea-fromregina">this conversion process</link>, or
+    about <link linkend="snappea">what you can do with &snappea;
+    triangulations</link> in general.
+   </para>
   </sect2>
 
   <sect2 id="tri-decomposition">
    <title>Decomposition (All Dimensions)</title>
    <para>
-    &regina; implements some high-level algorithms for decomposition a
-    3-manifold triangulation into &ldquo;atomic pieces&rdquo;.
-    These include the following:
+    &regina; implements some high-level algorithms for decomposition
+    manifolds into &ldquo;atomic pieces&rdquo;.  These include the following:
    </para>
 
    <sect3 id="tri-decomposition-component">
-    <title>Component Decomposition</title>
+    <title>Connected Components</title>
 
     <para>
      If your triangulation is
      <link linkend="tri-basicprops">disconnected</link>, you may wish to
      break it into its connected components.  To do this, select
      <menuchoice>
-      <guimenu>3-D&nbsp;Triangulation</guimenu>
+      <guimenu>Triangulation</guimenu>
       <guimenuitem>Extract Components</guimenuitem>
      </menuchoice>.
      You must open the triangulation for viewing before you can do this.
@@ -2224,12 +2279,13 @@
      For 3-manifolds,
      if your triangulation is <link linkend="tri-basicprops">closed
      and connected</link>, &regina; can decompose it into a
-     connected sum of prime 3-manifolds (none of which are 3-spheres).
+     connected sum of prime, non-sphere 3-manifolds.
      To do this, select
      <menuchoice>
       <guimenu>3-D&nbsp;Triangulation</guimenu>
       <guimenuitem>Connected Sum Decomposition</guimenuitem>
-     </menuchoice>.
+     </menuchoice>
+     from the menu.
      You must open the triangulation for viewing before you can do this.
     </para>
     <para>
@@ -2293,13 +2349,16 @@
    <title>Triangulating Vertex Links (3-D and 4-D)</title>
 
    <para>
-    If you wish to examine a 3-manifold vertex link in detail,
+    In a 3-manifold or 4-manifold triangulation,
+    if you wish to examine a vertex link in more detail then
     you can explicitly construct it by selecting
     <menuchoice>
-     <guimenu>3-D&nbsp;Triangulation</guimenu>
+     <guimenu>Triangulation</guimenu>
      <guimenuitem>Vertex Links</guimenuitem>
-    </menuchoice>.
-    This will build the vertex link as a new 2-manifold triangulation.
+    </menuchoice>
+    from the menu.
+    This will build the link of the selected vertex
+    as a new 2-manifold or 3-manifold triangulation respectively.
    </para>
    <para>
     <inlinemediaobject>
@@ -2311,10 +2370,10 @@
    <para>
     You will be asked which vertex link you wish to construct,
     as illustrated below.
-    For each available vertex, the drop-down list shows the vertex number
+    For each available vertex, the drop-down list will show the vertex number
     (as seen in the <link linkend="tri-vertices">skeleton viewer</link>),
-    along with details of the individual tetrahedron vertices that combine to
-    form that vertex of the triangulation.
+    along with details of the individual tetrahedron or pentachoron vertices
+    that combine to form that particular vertex of the triangulation.
    </para>
    <para>
     <inlinemediaobject>
@@ -2324,8 +2383,9 @@
     </inlinemediaobject>
    </para>
    <para>
-    The new 2-manifold trianguation will appear
-    beneath the original 3-manifold triangulation in the packet tree.
+    Once the vertex link is constructed, the resulting 2-manifold or
+    3-manifold trianguation will appear beneath the original 3-manifold or
+    4-manifold triangulation in the packet tree.
    </para>
    <para>
     <inlinemediaobject>
@@ -2336,10 +2396,59 @@
    </para>
   </sect2>
 
-  <sect2 id="dim4tri-tribdry">
+  <sect2 id="tri-tribdry">
    <title>Triangulating Boundary Components (4-D)</title>
    <para>
-    TODO.
+    Likewise, if you wish to study a boundary component of a 4-manifold
+    in detail, you can explicitly construct it by selecting
+    <menuchoice>
+     <guimenu>4-D&nbsp;Triangulation</guimenu>
+     <guimenuitem>Boundary Components</guimenuitem>
+    </menuchoice>.
+    This will build the selected boundary component
+    as a new 3-manifold triangulation.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-tribdry.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    You will be asked which boundary component you wish to construct,
+    as illustrated below.
+    You can triangulate both real boundary components (formed from
+    boundary tetrahedra) and ideal boundary components (represented by
+    vertices whose links are closed 3-manifolds but not spheres).
+   </para>
+   <para>
+    In the drop-down list, boundary components will be listed
+    using their boundary component numbers, as seen in the
+    <link linkend="tri-bdrycomponents">skeleton viewer</link>.
+    In addition, each real boundary component will include details
+    of its constituent boundary tetrahedra, and each ideal boundary
+    component will include details of the ideal vertex whose
+    link it represents.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-tribdrybox.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    Once the boundary component is constructed, the resulting 3-manifold
+    trianguation will appear beneath the original 4-manifold triangulation
+    in the packet tree.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-tribdryresult.png"/>
+     </imageobject>
+    </inlinemediaobject>
    </para>
   </sect2>
  </sect1>
