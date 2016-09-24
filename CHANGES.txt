@@ -7,7 +7,7 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
-Version 5.0  [ (under development) ]
+Version 5.0  [ 26 September, 2016 ]
 
     GENERAL:
         - Now supports triangulations of all dimensions 2,...,15.

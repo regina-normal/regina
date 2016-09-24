@@ -6,7 +6,7 @@ Regina - A Normal Surface Theory Calculator
     For a full list of changes, including all changes to the C++/Python API,
     see the file CHANGES.txt.
 
-Version 5.0  [ (under development) ]
+Version 5.0  [ 26 September, 2016 ]
 
     Features:
         - Regina now works with 4-manifolds!  It also offers a basic framework
