@@ -114,7 +114,7 @@
                 volume.text = @"Volume approximately zero";
             else
                 volume.text = [NSString stringWithFormat:@"Volume: %lf", self.packet->volume()];
-            solnType.text = @"Contains negatively oriented tetrahedra";
+            solnType.text = @"Contains flat or negative tetrahedra";
             break;
         case regina::NSnapPeaTriangulation::flat_solution:
             if (self.packet->volumeZero())
@@ -136,6 +136,10 @@
             break;
         case regina::NSnapPeaTriangulation::no_solution:
             volume.text = @"No solution found";
+            solnType.text = @"";
+            break;
+        case regina::NSnapPeaTriangulation::externally_computed:
+            volume.text = @"Externally computed";
             solnType.text = @"";
             break;
         default:

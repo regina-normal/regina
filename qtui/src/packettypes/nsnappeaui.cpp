@@ -192,7 +192,7 @@ QString NSnapPeaHeaderUI::summaryInfo(regina::NSnapPeaTriangulation* tri) {
                 msg += QObject::tr("Volume approximately zero\n");
             else
                 msg += QObject::tr("Volume: %1\n").arg(tri->volume());
-            msg += QObject::tr("Contains negatively oriented tetrahedra");
+            msg += QObject::tr("Contains flat or negative tetrahedra");
             break;
         case NSnapPeaTriangulation::flat_solution:
             if (tri->volumeZero())
@@ -210,6 +210,9 @@ QString NSnapPeaHeaderUI::summaryInfo(regina::NSnapPeaTriangulation* tri) {
             break;
         case NSnapPeaTriangulation::other_solution:
             msg += QObject::tr("Unrecognised solution type");
+            break;
+        case NSnapPeaTriangulation::externally_computed:
+            msg += QObject::tr("Externally computed");
             break;
         case NSnapPeaTriangulation::no_solution:
             msg += QObject::tr("No solution found");

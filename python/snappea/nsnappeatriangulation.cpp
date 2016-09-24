@@ -160,6 +160,8 @@ void addNSnapPeaTriangulation() {
             NSnapPeaTriangulation::degenerate_solution)
         .value("other_solution", NSnapPeaTriangulation::other_solution)
         .value("no_solution", NSnapPeaTriangulation::no_solution)
+        .value("externally_computed",
+            NSnapPeaTriangulation::externally_computed)
     ;
 
     s.attr("typeID") = regina::PACKET_SNAPPEATRIANGULATION;

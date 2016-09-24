@@ -84,7 +84,7 @@
             case regina::NSnapPeaTriangulation::geometric_solution:
                 self.solnType.text = @"Tetrahedra positively oriented"; break;
             case regina::NSnapPeaTriangulation::nongeometric_solution:
-                self.solnType.text = @"Contains negatively oriented tetrahedra"; break;
+                self.solnType.text = @"Contains flat or negative tetrahedra"; break;
             case regina::NSnapPeaTriangulation::flat_solution:
                 self.solnType.text = @"All tetrahedra flat"; break;
             case regina::NSnapPeaTriangulation::degenerate_solution:
@@ -93,6 +93,8 @@
                 self.solnType.text = @"Unrecognised solution type"; break;
             case regina::NSnapPeaTriangulation::no_solution:
                 self.solnType.text = @"No solution found"; break;
+            case regina::NSnapPeaTriangulation::externally_computed:
+                self.solnType.text = @"Externally computed"; break;
             default:
                 self.solnType.text = @"ERROR (invalid solution type)"; break;
         }

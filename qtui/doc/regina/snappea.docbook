@@ -356,15 +356,15 @@
          <glossterm><guilabel>Tetrahedra positively
           oriented</guilabel></glossterm>
          <glossdef><para>
-          All tetrahedra are either positively oriented or flat, though the
-          entire solution is not flat and no tetrahedra are degenerate.
+          All tetrahedra are positively oriented.
          </para></glossdef>
         </glossentry>
         <glossentry id="snappea-nongeometric">
-         <glossterm><guilabel>Contains negatively oriented
+         <glossterm><guilabel>Contains flat or negative
           tetrahedra</guilabel></glossterm>
          <glossdef><para>
-          The volume is positive, but some tetrahedra are negatively oriented.
+          The overall volume is positive, but some tetrahedra are flat
+          or negatively oriented.  No tetrahedra have shape 0, 1 or infinity.
          </para></glossdef>
         </glossentry>
         <glossentry>
@@ -391,6 +391,13 @@
          <glossterm><guilabel>No solution found</guilabel></glossterm>
          <glossdef><para>
           The gluing equations could not be solved.
+         </para></glossdef>
+        </glossentry>
+        <glossentry>
+         <glossterm><guilabel>Externally computed</guilabel></glossterm>
+         <glossdef><para>
+          Tetrahedron shapes were inserted into the triangulation by
+          some other means (e.g., manually, or by another program).
          </para></glossdef>
         </glossentry>
        </glosslist>
