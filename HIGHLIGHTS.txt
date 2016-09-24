@@ -9,25 +9,31 @@ Regina - A Normal Surface Theory Calculator
 Version 5.0  [ 26 September, 2016 ]
 
     Features:
-        - Regina now works with 4-manifolds!  It also offers a basic framework
-          for triangulations in higher dimensions (up to 15).
-        - Regina can now build and manipulate tree decompositions of graphs,
+        - Regina now works with 4-manifolds!  It also offers a more basic
+          framework for triangulations in higher dimensions (up to 15).
+        - You can now enumerate, study and triangulate normal hypersurfaces in
+          4-manifold triangulations.
+        - Regina now builds and manipulates tree decompositions of graphs,
           including dual graphs of triangulations.  This is particularly
           useful for fixed-parameter tractable algorithms.
         - Turaev-Viro invariants are now computed using exact arithmetic.
-        - Now offers "exhaustive simplification" for stubborn triangulations,
-          based on searching through the Pachner graph.
-        - Supports high-resolution displays (e.g., Macs with retina displays).
+        - When fast-and-greedy simplification fails, you can now try
+          "exhaustive simplification", which searches through the Pachner graph.
     Python and C++:
-        - The API has had an enormous overhaul.  Many things are now simpler,
-          shorter, and more consistent.  Most of the old classes and functions
-          have been kept for backward compatibility, but will be removed in a
-          future release.
-        - For C++ users: Regina now uses the newer C++11 standard.
+        - The API (functions, classes, etc.) has had an enormous overhaul.
+          Many things are now simpler, shorter, and more consistent.
+          Most of the old classes and functions have been kept for backward
+          compatibility, but WILL BE REMOVED in the next release.
+        - Regina is now based on the newer C++11 standard.
+        - Python now interacts with Regina more naturally, and error messages
+          are likely to be both fewer and more helpful.  Thanks to
+          Matthias Goerner for his help with this.
+        - Regina no longer clobbers Python's own builtin open() function!
+          For Regina's verison of open(), you can still call regina.open().
     Optimisations:
-        - Turaev-Viro invariants now use faster treewidth-based algorithms.
-        - Significant structural changes under the hood, in preparation for
-          the coming 5.0 release.
+        - Many widespread structural changes under the hood.
+        - Several new optimisations, most notably including treewidth-based
+          algorithms for Turaev-Viro invariants (arXiv:1503.04099).
 
 Version 4.96  [ 29 August, 2014 ]
 
