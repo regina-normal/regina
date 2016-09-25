@@ -79,7 +79,9 @@ int main(int argc, char **argv) {
         static_cast<const char*>(QFile::encodeName(
             QCoreApplication::applicationDirPath() + "/../share/regina")),
         static_cast<const char*>(QFile::encodeName(
-            QCoreApplication::applicationDirPath() + "/../lib/regina/python")));
+            QCoreApplication::applicationDirPath() + "/../lib/regina/python")),
+        static_cast<const char*>(QFile::encodeName(
+            QCoreApplication::applicationDirPath() + "/../share/regina/data/census")));
 #endif
 #endif
 
