@@ -89,7 +89,7 @@ PythonInterpreter::PythonInterpreter(PythonOutputStream* pyStdOut,
     if (pythonInitialised)
         PyEval_AcquireLock();
     else {
-#if defined(Q_OS_WIN32) && defined(REGINA_INSTALL_WINDOWS) && defined(__MINGW32__)
+#if defined(REGINA_INSTALL_WINDOWS) && defined(__MINGW32__)
         // Assume this is the MS Windows + MinGW + WiX package build,
         // since nobody else in their right mind would be trying to build
         // this under windows.
