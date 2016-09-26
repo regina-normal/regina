@@ -32,10 +32,8 @@ if (${REGINA_INSTALL_DEV})
     nfacepairing.h
     ngenericfacetpairing.h
     ngenericfacetpairing-impl.h
-    ngenericfacetpairing.tcc
     ngenericgluingperms.h
     ngenericgluingperms-impl.h
-    ngenericgluingperms.tcc
     ngluingperms.h
     ngluingpermsearcher.h
     DESTINATION ${INCLUDEDIR}/census COMPONENT Development)

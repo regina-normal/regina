@@ -54,7 +54,6 @@ if (${REGINA_INSTALL_DEV})
     normalcoords.h
     normalflags.h
     normalspec-impl.h
-    normalspec.tcc
     nprism.h
     nsanstandard.h
     nsmirrored.h

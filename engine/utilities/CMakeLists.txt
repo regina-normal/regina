@@ -50,7 +50,6 @@ if (${REGINA_INSTALL_DEV})
     sequence.h
     stringutils.h
     stringutils-impl.h
-    stringutils.tcc
     xmlutils.h
     DESTINATION ${INCLUDEDIR}/utilities COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})
