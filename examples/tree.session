@@ -12,61 +12,33 @@ Copyright (c) 1999-2016, The Regina development team
 ... #
 ... ################################
 ... 
->>> # Create a new census of all closed orientable 3-manifold
-... # triangulations with two tetrahedra.
+>>> # Recreate the original SnapPea census of cusped hyperbolic manifolds
+... # triangulated by at most 5 tetrahedra.
 ... census = NContainer()
->>> NCensus.formCensus(census, 2, NBoolSet.sTrue,
-...     NBoolSet.sTrue, NBoolSet.sFalse, 0, 0)
-16
->>> 
->>> # Calculate the homology of each triangulation in the census.
-... # The triangulations are all children of the "census" container.
-... tri = census.firstChild()
->>> while tri != None:
-...     print tri.label() + ":", tri.homology()
-...     tri = tri.nextSibling()
+>>> for i in range(415):
+...     mfd = NSnapPeaCensusManifold(NSnapPeaCensusManifold.SEC_5, i)
+...     tri = mfd.construct()
+...     tri.setLabel(mfd.name())
+...     census.insertChildLast(tri)
 ... 
-Item 1: Z_7
-Item 2: Z_5
-Item 3: Z
-Item 4: Z_3
-Item 5: Z_8
-Item 6: 0
-Item 7: 0
-Item 8: 0
-Item 9: Z_2
-Item 10: 0
-Item 11: 0
-Item 12: Z_3
-Item 13: 0
-Item 14: Z_3
-Item 15: 2 Z_2
-Item 16: Z_2
->>> 
->>> # Remove all triangulations with trivial homology from the tree.
+>>> # The triangulations are now all children of the "census" container.
+... # Remove all triangulations with more than two tetrahedra.
 ... tri = census.firstChild()
 >>> while tri != None:
 ...     next = tri.nextSibling()
-...     hom = tri.homology()
-...     if hom.isTrivial():
+...     if tri.size() > 2:
 ...         tri.makeOrphan()
 ...     tri = next
 ... 
->>> 
 >>> # Print the homology of each remaining triangulation.
 ... tri = census.firstChild()
 >>> while tri != None:
 ...     print tri.label() + ":", tri.homology()
 ...     tri = tri.nextSibling()
 ... 
-Item 1: Z_7
-Item 2: Z_5
-Item 3: Z
-Item 4: Z_3
-Item 5: Z_8
-Item 9: Z_2
-Item 12: Z_3
-Item 14: Z_3
-Item 15: 2 Z_2
-Item 16: Z_2
+Gieseking manifold: Z
+SnapPea m001: Z + Z_2
+SnapPea m002: Z + Z_2
+SnapPea m003: Z + Z_5
+Figure eight knot complement: Z
 >>>
