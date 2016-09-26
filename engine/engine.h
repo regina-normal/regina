@@ -65,14 +65,6 @@ namespace regina {
 REGINA_API const char* versionString();
 
 /**
- * Deprecated routine that returns the full version number of this
- * calculation engine.
- *
- * \deprecated Simply call versionString() instead.
- */
-REGINA_DEPRECATED REGINA_API const char* getVersionString();
-
-/**
  * Returns the major version number of this calculation engine.
  * For instance, version 2.3.1 would have major version 2.
  *
@@ -81,28 +73,12 @@ REGINA_DEPRECATED REGINA_API const char* getVersionString();
 REGINA_API int versionMajor();
 
 /**
- * Deprecated routine that returns the major version number of this
- * calculation engine.
- *
- * \deprecated Simply call versionMajor() instead.
- */
-REGINA_DEPRECATED REGINA_API int getVersionMajor();
-
-/**
  * Returns the minor version number of this calculation engine.
  * For instance, version 2.3.1 would have minor version 3.
  *
  * @return the minor version number of this calculation engine.
  */
 REGINA_API int versionMinor();
-
-/**
- * Deprecated routine that returns the minor version number of this
- * calculation engine.
- *
- * \deprecated Simply call versionMinor() instead.
- */
-REGINA_DEPRECATED REGINA_API int getVersionMinor();
 
 /**
  * Did the given version of Regina consistently use UTF-8 in its data
