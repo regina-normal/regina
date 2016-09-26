@@ -138,7 +138,6 @@ void addNNormalSurfaceList() {
     ;
 
     s.attr("typeID") = regina::PACKET_NORMALSURFACELIST;
-    s.attr("packetType") = regina::PACKET_NORMALSURFACELIST;
 
     implicitly_convertible<SafeHeldType<NNormalSurfaceList>,
         SafeHeldType<regina::NPacket> >();

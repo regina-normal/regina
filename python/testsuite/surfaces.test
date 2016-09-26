@@ -71,7 +71,7 @@ def surfaceStats(tri):
 		regina.NNormalSurfaceList.enumerate(tri, regina.NS_AN_QUAD_OCT, regina.NS_FUNDAMENTAL))
 
 t = regina.NTriangulation()
-t.setPacketLabel("Empty triangulation")
+t.setLabel("Empty triangulation")
 surfaceStats(t)
 
 surfaceStats(regina.NExampleTriangulation.threeSphere())

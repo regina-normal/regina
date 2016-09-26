@@ -140,7 +140,7 @@ void sameSize(Dim4Triangulation* t) {
 
     if (! found) {
         found = new Dim4Triangulation(*t);
-        found->setLabel(orig->makeUniqueLabel(orig->label() + " - New"));
+        found->setLabel(orig->label() + " - New");
         orig->insertChildLast(found);
         nNew++;
     }

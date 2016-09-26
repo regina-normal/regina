@@ -90,7 +90,6 @@ void addNAngleStructureList() {
     ;
 
     s.attr("typeID") = regina::PACKET_ANGLESTRUCTURELIST;
-    s.attr("packetType") = regina::PACKET_ANGLESTRUCTURELIST;
 
     implicitly_convertible<SafeHeldType<NAngleStructureList>,
         SafeHeldType<regina::NPacket> >();

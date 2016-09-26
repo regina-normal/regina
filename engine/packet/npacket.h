@@ -95,8 +95,8 @@ struct PacketInfo;
  *
  * This macro provides the class with:
  *
- * - a compile-time constant \a typeID and a deprecated compile-time constant
- *   \a packetType, both equal to the corresponding PacketType constant;
+ * - a compile-time constant \a typeID that is equal to the corresponding
+ *   PacketType constant;
  * - declarations and implementations of the virtual functions
  *   NPacket::type() and NPacket::typeName().
  *
@@ -112,7 +112,6 @@ struct PacketInfo;
 #define REGINA_PACKET(class_, id) \
     public: \
         static constexpr const PacketType typeID = id; \
-        REGINA_DEPRECATED static constexpr const PacketType packetType = id; \
         inline virtual PacketType type() const { \
             return id; \
         } \
@@ -145,7 +144,6 @@ struct PacketInfo;
 #define REGINA_PACKET_FROM(class_, helper) \
     public: \
         static constexpr const PacketType typeID = helper::typeID; \
-        static constexpr const PacketType packetType = helper::typeID; \
         inline virtual PacketType type() const { \
             return helper::typeID; \
         } \
@@ -268,15 +266,6 @@ class REGINA_API NPacket :
         virtual PacketType type() const = 0;
 
         /**
-         * Deprecated routine that returns the unique integer ID representing
-         * this type of packet.
-         *
-         * \deprecated This routine has been renamed to type().
-         * See the type() documentation for further details.
-         */
-        REGINA_DEPRECATED PacketType getPacketType() const;
-
-        /**
          * Returns an English name for this type of packet.
          * An example is \c NTriangulation.
          * This is the same for all packets of this class.
@@ -286,30 +275,12 @@ class REGINA_API NPacket :
         virtual std::string typeName() const = 0;
 
         /**
-         * Deprecated routine that returns an English name for this type of
-         * packet.
-         *
-         * \deprecated This routine has been renamed to typeName().
-         * See the typeName() documentation for further details.
-         */
-        REGINA_DEPRECATED std::string getPacketTypeName() const;
-
-        /**
          * Returns the label associated with this individual packet.
          * An example is \c MyTriangulation.
          *
          * @return this individual packet's label.
          */
         const std::string& label() const;
-
-        /**
-         * Deprecated routine that returns the label associated with this
-         * individual packet.
-         *
-         * \deprecated This routine has been renamed to label().
-         * See the label() documentation for further information.
-         */
-        REGINA_DEPRECATED const std::string& getPacketLabel() const;
 
         /**
          * Returns the label associated with this individual packet,
@@ -324,14 +295,6 @@ class REGINA_API NPacket :
          * @return this individual packet's label.
          */
         std::string humanLabel() const;
-        /**
-         * Deprecated routine that returns the label associated with this
-         * individual packet, adjusted if necessary for human-readable output.
-         *
-         * \deprecated This routine has been renamed to humanLabel().
-         * See the humanLabel() documentation for further details.
-         */
-        REGINA_DEPRECATED std::string getHumanLabel() const;
 
         /**
          * Returns the label of this packet adorned with the given string.
@@ -367,15 +330,6 @@ class REGINA_API NPacket :
         void setLabel(const std::string& label);
 
         /**
-         * Deprecated routine that sets the label associated with this
-         * individual packet.
-         *
-         * \deprecated This routine has been renamed to setLabel().
-         * See the setLabel() documentation for further details.
-         */
-        REGINA_DEPRECATED void setPacketLabel(const std::string& label);
-
-        /**
          * Returns a descriptive text string for the packet.
          * The string is of the form <i>label (packet-type)</i>.
          *
@@ -385,58 +339,6 @@ class REGINA_API NPacket :
          * @return the descriptive text string.
          */
         std::string fullName() const;
-        /**
-         * Deprecated routine that returns a descriptive text string for
-         * the packet.
-         *
-         * \deprecated This routine has been renamed to fullName().
-         * See the fullName() documentation for further details.
-         */
-        REGINA_DEPRECATED std::string getFullName() const;
-
-        /**
-         * Returns a new label that cannot be found anywhere in the
-         * entire tree structure.  This packet need not be the tree
-         * matriarch; this routine will search the entire tree to which
-         * this packet belongs.
-         *
-         * The new label will consist of the given base, possibly
-         * followed by a space and a number.
-         *
-         * \deprecated This routine is deprecated, since (as of Regina 4.95)
-         * packet labels in a data file are no longer required to be distinct.
-         *
-         * @param base a string upon which the new label will be based.
-         * @return a new unique label.
-         */
-        REGINA_DEPRECATED std::string makeUniqueLabel(const std::string& base)
-            const;
-
-        /**
-         * Ensures that all packet labels in both this and the given
-         * packet tree combined are distinct.  If two packets have the
-         * same label, one will be renamed by adding a space and a number.
-         *
-         * Packets in the given packet tree will be given priority over
-         * the labels; that is, if a packet in this tree has the same
-         * label as a packet in the given tree, it will be the packet in
-         * this tree that is renamed.
-         *
-         * The given packet tree may be \c null, in which case only this
-         * tree will be examined.
-         *
-         * \deprecated This routine is deprecated, since (as of Regina 4.95)
-         * packet labels in a data file are no longer required to be distinct.
-         *
-         * \pre This and the given packet belong to different packet
-         * trees, and are each matriarchs in their respective trees.
-         *
-         * @param reference the packet tree with which to compare this
-         * tree.
-         * @return \c true if and only if any of the packets were
-         * relabelled.
-         */
-        REGINA_DEPRECATED bool makeUniqueLabels(NPacket* reference);
 
         /*@}*/
         /**
@@ -546,14 +448,6 @@ class REGINA_API NPacket :
          * @return the set of all tags associated with this packet.
          */
         const std::set<std::string>& tags() const;
-        /**
-         * Deprecated routine that returns the set of all tags associated
-         * with this packet.
-         *
-         * \deprecated This routine has been renamed to tags().
-         * See the tags() documentation for further information.
-         */
-        REGINA_DEPRECATED const std::set<std::string>& getTags() const;
 
         /*@}*/
         /**
@@ -616,15 +510,6 @@ class REGINA_API NPacket :
         NPacket* parent() const;
 
         /**
-         * Deprecated routine that determines the parent packet in the
-         * tree structure.
-         *
-         * \deprecated This routine has been renamed as parent().
-         * See the parent() documentation for further details.
-         */
-        REGINA_DEPRECATED NPacket* getTreeParent() const;
-
-        /**
          * Determines the first child of this packet in the tree
          * structure.
          *
@@ -635,15 +520,6 @@ class REGINA_API NPacket :
         NPacket* firstChild() const;
 
         /**
-         * Deprecated routine that determines the first child of this
-         * packet in the tree structure.
-         *
-         * \deprecated This routine has been renamed as firstChild().
-         * See the firstChild() documentation for further details.
-         */
-        REGINA_DEPRECATED NPacket* getFirstTreeChild() const;
-
-        /**
          * Determines the last child of this packet in the tree
          * structure.
          *
@@ -652,15 +528,6 @@ class REGINA_API NPacket :
          * @return the last child packet, or 0 if there is none.
          */
         NPacket* lastChild() const;
-
-        /**
-         * Deprecated routine that determines the last child of this
-         * packet in the tree structure.
-         *
-         * \deprecated This routine has been renamed as lastChild().
-         * See the lastChild() documentation for further details.
-         */
-        REGINA_DEPRECATED NPacket* getLastTreeChild() const;
 
         /**
          * Determines the next sibling of this packet in the tree
@@ -675,15 +542,6 @@ class REGINA_API NPacket :
         NPacket* nextSibling() const;
 
         /**
-         * Deprecated routine that determines the next sibling of this
-         * packet in the tree structure.
-         *
-         * \deprecated This routine has been renamed as nextSibling().
-         * See the nextSibling() documentation for further details.
-         */
-        REGINA_DEPRECATED NPacket* getNextTreeSibling() const;
-
-        /**
          * Determines the previous sibling of this packet in the tree
          * structure.  This is the child of the parent that precedes
          * this packet.
@@ -696,29 +554,11 @@ class REGINA_API NPacket :
         NPacket* prevSibling() const;
 
         /**
-         * Deprecated routine that determines the previous sibling of this
-         * packet in the tree structure.
-         *
-         * \deprecated This routine has been renamed as prevSibling().
-         * See the prevSibling() documentation for further details.
-         */
-        REGINA_DEPRECATED NPacket* getPrevTreeSibling() const;
-
-        /**
          * Determines the root of the tree to which this packet belongs.
          *
          * @return the matriarch of the packet tree.
          */
         NPacket* root() const;
-
-        /**
-         * Deprecated routine that determines the root of the tree to
-         * which this packet belongs.
-         *
-         * \deprecated This routine has been renamed as root().
-         * See the root() documentation for further details.
-         */
-        REGINA_DEPRECATED NPacket* getTreeMatriarch() const;
 
         /**
          * Counts the number of levels between this packet and its given
@@ -784,14 +624,6 @@ class REGINA_API NPacket :
          * @return the total tree or subtree size.
          */
         size_t totalTreeSize() const;
-        /**
-         * Deprecated routine that returns the total number of packets
-         * in the tree or subtree for which this packet is matriarch.
-         *
-         * \deprecated This routine has been renamed to totalTreeSize().
-         * See the totalTreeSize() documentation for further details.
-         */
-        REGINA_DEPRECATED size_t getTotalTreeSize() const;
 
         /*@}*/
         /**
@@ -1367,19 +1199,6 @@ class REGINA_API NPacket :
                 ~ChangeEventSpan();
         };
 
-        /**
-         * A deprecated typedef for ChangeEventSpan.
-         *
-         * \deprecated ChangeEventSpan is now the correct way to fire a
-         * "packet changed" event.  The class ChangeEventSpan is similar
-         * to the old ChangeEventBlock except that it fires both
-         * NPacketListener::packetToBeChanged() and
-         * NPacketListener::packetWasChanged() (on construction and
-         * destruction respectively), and the old boolean argument
-         * \a fireOnDestruction is gone (events are now fired always).
-         */
-        REGINA_DEPRECATED typedef ChangeEventSpan ChangeEventBlock;
-
     protected:
         /**
          * Makes a newly allocated copy of this packet.
@@ -1605,34 +1424,10 @@ inline const std::string& NPacket::label() const {
     return label_;
 }
 
-inline const std::string& NPacket::getPacketLabel() const {
-    return label_;
-}
-
-inline PacketType NPacket::getPacketType() const {
-    return type();
-}
-
-inline std::string NPacket::getPacketTypeName() const {
-    return typeName();
-}
-
 inline std::string NPacket::humanLabel() const {
     if (label_.empty())
         return "(no label)";
     return label_;
-}
-
-inline std::string NPacket::getHumanLabel() const {
-    return humanLabel();
-}
-
-inline std::string NPacket::getFullName() const {
-    return fullName();
-}
-
-inline void NPacket::setPacketLabel(const std::string& label) {
-    setLabel(label);
 }
 
 inline bool NPacket::hasTag(const std::string& tag) const {
@@ -1653,10 +1448,6 @@ inline const std::set<std::string>& NPacket::tags() const {
     return *tags_;
 }
 
-inline const std::set<std::string>& NPacket::getTags() const {
-    return tags();
-}
-
 inline bool NPacket::isListening(NPacketListener* listener) {
     if (! listeners_.get())
         return false;
@@ -1667,15 +1458,7 @@ inline NPacket* NPacket::parent() const {
     return treeParent_;
 }
 
-inline NPacket* NPacket::getTreeParent() const {
-    return treeParent_;
-}
-
 inline NPacket* NPacket::firstChild() const {
-    return firstTreeChild_;
-}
-
-inline NPacket* NPacket::getFirstTreeChild() const {
     return firstTreeChild_;
 }
 
@@ -1683,28 +1466,12 @@ inline NPacket* NPacket::lastChild() const {
     return lastTreeChild_;
 }
 
-inline NPacket* NPacket::getLastTreeChild() const {
-    return lastTreeChild_;
-}
-
 inline NPacket* NPacket::prevSibling() const {
-    return prevTreeSibling_;
-}
-
-inline NPacket* NPacket::getPrevTreeSibling() const {
     return prevTreeSibling_;
 }
 
 inline NPacket* NPacket::nextSibling() const {
     return nextTreeSibling_;
-}
-
-inline NPacket* NPacket::getNextTreeSibling() const {
-    return nextTreeSibling_;
-}
-
-inline NPacket* NPacket::getTreeMatriarch() const {
-    return root();
 }
 
 inline unsigned NPacket::levelsUpTo(const NPacket* ancestor) const {
@@ -1713,10 +1480,6 @@ inline unsigned NPacket::levelsUpTo(const NPacket* ancestor) const {
 
 inline size_t NPacket::countDescendants() const {
     return totalTreeSize() - 1;
-}
-
-inline size_t NPacket::getTotalTreeSize() const {
-    return totalTreeSize();
 }
 
 inline bool NPacket::hasOwner() const {

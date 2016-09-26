@@ -145,7 +145,7 @@ def vitalStats(tri):
 	print
 
 t = regina.NTriangulation()
-t.setPacketLabel("Empty triangulation")
+t.setLabel("Empty triangulation")
 vitalStats(t)
 
 vitalStats(regina.NExampleTriangulation.threeSphere())

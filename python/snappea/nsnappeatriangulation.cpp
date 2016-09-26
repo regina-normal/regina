@@ -165,7 +165,6 @@ void addNSnapPeaTriangulation() {
     ;
 
     s.attr("typeID") = regina::PACKET_SNAPPEATRIANGULATION;
-    s.attr("packetType") = regina::PACKET_SNAPPEATRIANGULATION;
 
     implicitly_convertible<SafeHeldType<NSnapPeaTriangulation>,
         SafeHeldType<regina::NTriangulation> >();

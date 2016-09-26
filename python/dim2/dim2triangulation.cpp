@@ -233,7 +233,6 @@ void addDim2Triangulation() {
     ;
 
     s.attr("typeID") = regina::PACKET_DIM2TRIANGULATION;
-    s.attr("packetType") = regina::PACKET_DIM2TRIANGULATION;
 
     implicitly_convertible<SafeHeldType<Dim2Triangulation>,
         SafeHeldType<regina::NPacket> >();

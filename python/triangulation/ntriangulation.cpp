@@ -426,7 +426,6 @@ void addNTriangulation() {
     ;
 
     s.attr("typeID") = regina::PACKET_TRIANGULATION;
-    s.attr("packetType") = regina::PACKET_TRIANGULATION;
 
     implicitly_convertible<SafeHeldType<NTriangulation>,
         SafeHeldType<regina::NPacket> >();

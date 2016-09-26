@@ -55,7 +55,6 @@ void addNSurfaceFilter() {
     ;
 
     s.attr("typeID") = regina::PACKET_SURFACEFILTER;
-    s.attr("packetType") = regina::PACKET_SURFACEFILTER;
     s.attr("filterTypeID") = regina::NS_FILTER_DEFAULT;
 
     implicitly_convertible<SafeHeldType<NSurfaceFilter>,

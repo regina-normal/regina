@@ -69,14 +69,14 @@ for v in newVersions:
 i18nOld = regina.readFileMagic(testpath + '/i18n-latin1.rga')
 if i18nOld != None:
 	print i18nOld.label()
-	print i18nOld.getText()
+	print i18nOld.text()
 
 # Load a version of the same file created by a newer version of Regina,
 # which stores strings directly in UTF-8.
 i18nNew = regina.readFileMagic(testpath + '/i18n-utf8.rga')
 if i18nNew != None:
 	print i18nNew.label()
-	print i18nNew.getText()
+	print i18nNew.text()
 
 # Import a triangulation from SnapPea that uses a subscript character in
 # the triangulation name.

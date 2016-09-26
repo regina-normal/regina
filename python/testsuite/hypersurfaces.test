@@ -64,7 +64,7 @@ def surfaceStats(tri):
 		regina.HS_STANDARD, regina.HS_FUNDAMENTAL, regina.HS_HILBERT_DUAL))
 
 t = regina.Dim4Triangulation()
-t.setPacketLabel("Empty triangulation")
+t.setLabel("Empty triangulation")
 surfaceStats(t)
 
 surfaceStats(regina.Dim4ExampleTriangulation.fourSphere())

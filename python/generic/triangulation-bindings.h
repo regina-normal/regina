@@ -221,7 +221,6 @@ void addTriangulation(const char* name) {
     // We cast to PacketType so that boost.python sees this as a value,
     // not a reference.
     s.attr("typeID") = regina::PacketType(Triangulation<dim>::typeID);
-    s.attr("packetType") = regina::PacketType(Triangulation<dim>::packetType);
 
     implicitly_convertible<SafeHeldType<Triangulation<dim>>,
         SafeHeldType<regina::NPacket>>();
