@@ -155,7 +155,6 @@ void addNNormalSurfaceList() {
         .def("triangulation", &NNormalSurfaceList::triangulation,
             return_value_policy<to_held_type<> >())
         .def("size", &NNormalSurfaceList::size)
-        .def("getNumberOfSurfaces", &NNormalSurfaceList::size)
         .def("surface", &NNormalSurfaceList::surface,
             return_internal_reference<>())
         .def("getSurface", &NNormalSurfaceList::surface,

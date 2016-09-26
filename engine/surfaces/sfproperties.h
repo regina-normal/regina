@@ -133,14 +133,6 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
          */
         size_t countEulerChars() const;
         /**
-         * Deprecated routine that returns the number of allowable
-         * Euler characteristics.
-         *
-         * \deprecated This routine has been renamed to countEulerChars().
-         * See the countEulerChars() documentation for further details.
-         */
-        REGINA_DEPRECATED size_t getNumberOfECs() const;
-        /**
          * Returns the allowable Euler characteristic at the given index
          * in the set.  See eulerChars() for further details.
          *
@@ -329,9 +321,6 @@ inline const std::set<NLargeInteger>& NSurfaceFilterProperties::getECs() const {
     return eulerChar_;
 }
 inline size_t NSurfaceFilterProperties::countEulerChars() const {
-    return eulerChar_.size();
-}
-inline size_t NSurfaceFilterProperties::getNumberOfECs() const {
     return eulerChar_.size();
 }
 inline NLargeInteger NSurfaceFilterProperties::getEC(size_t index) const {

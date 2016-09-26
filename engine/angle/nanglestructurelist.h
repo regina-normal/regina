@@ -131,15 +131,6 @@ class REGINA_API NAngleStructureList : public NPacket {
          */
         size_t size() const;
         /**
-         * Deprecated routine to return the number of angle structures
-         * stored in this list.
-         *
-         * \deprecated Please use the identical routine size() instead.
-         *
-         * @return the number of angle structures.
-         */
-        REGINA_DEPRECATED size_t getNumberOfStructures() const;
-        /**
          * Returns the angle structure at the requested index in this
          * list.
          *
@@ -464,9 +455,6 @@ inline bool NAngleStructureList::isTautOnly() const {
 }
 
 inline size_t NAngleStructureList::size() const {
-    return structures.size();
-}
-inline size_t NAngleStructureList::getNumberOfStructures() const {
     return structures.size();
 }
 

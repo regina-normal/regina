@@ -769,14 +769,6 @@ class REGINA_API NPacket :
          */
         size_t countChildren() const;
         /**
-         * Deprecated routine that returns the number of immediate children
-         * of this packet.
-         *
-         * \deprecated This routine has been renamed to countChildren().
-         * See the countChildren() documentation for further details.
-         */
-        REGINA_DEPRECATED size_t getNumberOfChildren() const;
-        /**
          * Returns the total number of descendants of this packet.  This
          * includes children, grandchildren and so on.  This packet is not
          * included in the count.
@@ -784,14 +776,6 @@ class REGINA_API NPacket :
          * @return the total number of descendants.
          */
         size_t countDescendants() const;
-        /**
-         * Deprecated routine that returns the total number of descendants
-         * of this packet.
-         *
-         * \deprecated This routine has been renamed to countDescendants().
-         * See the countDescendants() documentation for further details.
-         */
-        REGINA_DEPRECATED size_t getNumberOfDescendants() const;
         /**
          * Determines the total number of packets in the tree or subtree
          * for which this packet is matriarch.  This packet is included
@@ -1729,14 +1713,6 @@ inline unsigned NPacket::levelsUpTo(const NPacket* ancestor) const {
 
 inline size_t NPacket::countDescendants() const {
     return totalTreeSize() - 1;
-}
-
-inline size_t NPacket::getNumberOfChildren() const {
-    return countChildren();
-}
-
-inline size_t NPacket::getNumberOfDescendants() const {
-    return countDescendants();
 }
 
 inline size_t NPacket::getTotalTreeSize() const {

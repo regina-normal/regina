@@ -659,15 +659,6 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          */
         size_t size() const;
         /**
-         * Deprecated routine to return the number of surfaces
-         * stored in this list.
-         *
-         * \deprecated Please use the identical routine size() instead.
-         *
-         * @return the number of surfaces.
-         */
-        REGINA_DEPRECATED size_t getNumberOfSurfaces() const;
-        /**
          * Returns the surface at the requested index in this set.
          *
          * @param index the index of the requested surface in this set;
@@ -1774,9 +1765,6 @@ inline bool NNormalSurfaceList::isEmbeddedOnly() const {
 }
 
 inline size_t NNormalSurfaceList::size() const {
-    return surfaces.size();
-}
-inline size_t NNormalSurfaceList::getNumberOfSurfaces() const {
     return surfaces.size();
 }
 

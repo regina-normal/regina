@@ -69,7 +69,6 @@ void addNAngleStructureList() {
             return_value_policy<to_held_type<> >())
         .def("isTautOnly", &NAngleStructureList::isTautOnly)
         .def("size", &NAngleStructureList::size)
-        .def("getNumberOfStructures", &NAngleStructureList::size)
         .def("structure", &NAngleStructureList::structure,
             return_internal_reference<>())
         .def("getStructure", &NAngleStructureList::structure,

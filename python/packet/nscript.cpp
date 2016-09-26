@@ -62,7 +62,6 @@ void addNScript() {
         .def("setText", &NScript::setText)
         .def("append", &NScript::append)
         .def("countVariables", &NScript::countVariables)
-        .def("getNumberOfVariables", &NScript::countVariables)
         .def("variableName", &NScript::variableName,
             return_value_policy<return_by_value>())
         .def("getVariableName", &NScript::variableName,

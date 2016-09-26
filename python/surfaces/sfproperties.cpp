@@ -58,7 +58,6 @@ void addNSurfaceFilterProperties() {
         .def("eulerChars", eulerChars_list)
         .def("getECs", eulerChars_list)
         .def("countEulerChars", &NSurfaceFilterProperties::countEulerChars)
-        .def("getNumberOfECs", &NSurfaceFilterProperties::countEulerChars)
         .def("eulerChar", &NSurfaceFilterProperties::eulerChar)
         .def("getEC", &NSurfaceFilterProperties::eulerChar)
         .def("orientability", &NSurfaceFilterProperties::orientability)

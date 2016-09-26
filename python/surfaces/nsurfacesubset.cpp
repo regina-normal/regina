@@ -61,7 +61,6 @@ void addNSurfaceSubset() {
         .def("triangulation", &NSurfaceSubset::triangulation,
             return_value_policy<to_held_type<> >())
         .def("size", &NSurfaceSubset::size)
-        .def("getNumberOfSurfaces", &NSurfaceSubset::size)
         .def("surface", &NSurfaceSubset::surface,
             return_internal_reference<>())
         .def("getSurface", &NSurfaceSubset::surface,

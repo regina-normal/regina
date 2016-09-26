@@ -143,13 +143,6 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
          */
         size_t countVariables() const;
         /**
-         * Deprecated routine that returns the number of variables
-         * associated with this script.
-         *
-         * \deprecated Simply call countVariables() instead.
-         */
-        REGINA_DEPRECATED size_t getNumberOfVariables() const;
-        /**
          * Returns the name of the requested variable associated with
          * this script.
          *
@@ -336,9 +329,6 @@ inline void NScript::append(const std::string& extraText) {
 }
 
 inline size_t NScript::countVariables() const {
-    return variables.size();
-}
-inline size_t NScript::getNumberOfVariables() const {
     return variables.size();
 }
 
