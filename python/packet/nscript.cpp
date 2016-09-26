@@ -32,6 +32,7 @@
 
 #include "packet/nscript.h"
 #include "../safeheldtype.h"
+#include "../helpers.h"
 
 // Held type must be declared before boost/python.hpp
 #include <boost/python.hpp>
@@ -89,5 +90,7 @@ void addNScript() {
 
     implicitly_convertible<SafeHeldType<NScript>,
         SafeHeldType<regina::NPacket> >();
+
+    FIX_REGINA_BOOST_CONVERTERS(NScript);
 }
 

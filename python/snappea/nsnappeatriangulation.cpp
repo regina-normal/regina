@@ -169,5 +169,7 @@ void addNSnapPeaTriangulation() {
 
     implicitly_convertible<SafeHeldType<NSnapPeaTriangulation>,
         SafeHeldType<regina::NTriangulation> >();
+
+    FIX_REGINA_BOOST_CONVERTERS(NSnapPeaTriangulation);
 }
 

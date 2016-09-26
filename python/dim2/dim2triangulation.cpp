@@ -273,6 +273,8 @@ void addDim2Triangulation() {
         SafeHeldType<regina::NPacket> >();
     }
 
+    FIX_REGINA_BOOST_CONVERTERS(Dim2Triangulation);
+
     scope().attr("Dim2Triangulation") = scope().attr("Triangulation2");
 }
 

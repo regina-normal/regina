@@ -33,6 +33,7 @@
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nsurfacefilter.h"
 #include "../safeheldtype.h"
+#include "../helpers.h"
 
 // Held type must be declared before boost/python.hpp
 #include <boost/python.hpp>
@@ -59,5 +60,7 @@ void addNSurfaceFilter() {
 
     implicitly_convertible<SafeHeldType<NSurfaceFilter>,
         SafeHeldType<regina::NPacket> >();
+
+    FIX_REGINA_BOOST_CONVERTERS(NSurfaceFilter);
 }
 

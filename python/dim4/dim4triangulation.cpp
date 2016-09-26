@@ -345,6 +345,8 @@ void addDim4Triangulation() {
         SafeHeldType<regina::NPacket> >();
     }
 
+    FIX_REGINA_BOOST_CONVERTERS(Dim4Triangulation);
+
     scope().attr("Dim4Triangulation") = scope().attr("Triangulation4");
 }
 

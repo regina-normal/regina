@@ -174,5 +174,6 @@ void addNPacket() {
 
     def("open", open_filename, return_value_policy<to_held_type<> >());
 
+    FIX_REGINA_BOOST_CONVERTERS(NPacket);
 }
 

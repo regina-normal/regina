@@ -32,6 +32,7 @@
 
 #include "packet/npdf.h"
 #include "../safeheldtype.h"
+#include "../helpers.h"
 
 // Held type must be declared before boost/python.hpp
 #include <boost/python.hpp>
@@ -59,5 +60,7 @@ void addNPDF() {
 
     implicitly_convertible<SafeHeldType<NPDF>,
         SafeHeldType<regina::NPacket> >();
+
+    FIX_REGINA_BOOST_CONVERTERS(NPDF);
 }
 

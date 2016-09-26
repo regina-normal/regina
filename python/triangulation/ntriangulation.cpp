@@ -471,6 +471,8 @@ void addNTriangulation() {
         SafeHeldType<regina::NPacket> >();
     }
 
+    FIX_REGINA_BOOST_CONVERTERS(NTriangulation);
+
     scope().attr("NTriangulation") = scope().attr("Triangulation3");
 }
 
