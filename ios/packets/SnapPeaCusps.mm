@@ -193,18 +193,16 @@
 
 - (void)keyboardDidShow:(NSNotification*)notification
 {
-    // See the notes for TextViewController for why we take MIN(...) here.
     CGSize kbSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    CGFloat kbHeight = MIN(kbSize.width, kbSize.height);
 
     CGRect tableInDetail = [self.parentViewController.view convertRect:self.cusps.bounds fromView:self.cusps];
     CGFloat unused = self.parentViewController.view.bounds.size.height - tableInDetail.origin.y - tableInDetail.size.height;
 
-    if (kbHeight <= unused)
+    if (kbSize.height <= unused)
         return;
 
-    self.cusps.contentInset = UIEdgeInsetsMake(0, 0, kbHeight - unused, 0);
-    self.cusps.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, kbHeight - unused, 0);
+    self.cusps.contentInset = UIEdgeInsetsMake(0, 0, kbSize.height - unused, 0);
+    self.cusps.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, kbSize.height - unused, 0);
 
     [self.cusps scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:editCusp+1 inSection:0]
                       atScrollPosition:UITableViewScrollPositionNone

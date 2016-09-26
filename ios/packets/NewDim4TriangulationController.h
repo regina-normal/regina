@@ -58,6 +58,14 @@
 @end
 
 /**
+ * The controller for building an I-bundle or S1-bundle from a 3-D triangulation.
+ *
+ * This represents an individual page within the larger NewDim4TriangulationController.
+ */
+@interface NewDim4TriangulationBundlePage : UIViewController <PacketCreator>
+@end
+
+/**
  * The controller for creating a new triangulation from an isomorphism signature.
  *
  * This represents an individual page within the larger NewDim4TriangulationController.

@@ -30,13 +30,17 @@
  *                                                                        *
  **************************************************************************/
 
+#define KEY_LAST_DIM4TRI_GRAPH_TYPE @"ViewDim4TriGraphType"
+
 #import "Dim4TriangulationViewController.h"
 #import "Dim4TriGraph.h"
 #import "dim4/dim4facetpairing.h"
 #import "dim4/dim4triangulation.h"
+#import "treewidth/ntreedecomposition.h"
 #import "gvc.h"
 
 extern gvplugin_library_t gvplugin_neato_layout_LTX_library;
+extern gvplugin_library_t gvplugin_dot_layout_LTX_library;
 extern gvplugin_library_t gvplugin_core_LTX_library;
 
 @interface Dim4TriGraph ()
@@ -45,6 +49,9 @@ extern gvplugin_library_t gvplugin_core_LTX_library;
 @property (weak, nonatomic) IBOutlet UILabel *solnType;
 @property (weak, nonatomic) IBOutlet UIButton *lockIcon;
 
+@property (weak, nonatomic) IBOutlet UISegmentedControl *graphType;
+@property (weak, nonatomic) IBOutlet UILabel *graphProperties;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *graphPropertiesGap;
 @property (weak, nonatomic) IBOutlet UIWebView *graph;
 
 @property (assign, nonatomic) regina::Dim4Triangulation* packet;
@@ -56,25 +63,63 @@ extern gvplugin_library_t gvplugin_core_LTX_library;
     [super viewWillAppear:animated];
     self.packet = static_cast<regina::Dim4Triangulation*>(static_cast<id<PacketViewer> >(self.parentViewController).packet);
 
+    self.graphType.selectedSegmentIndex = [[NSUserDefaults standardUserDefaults] integerForKey:KEY_LAST_DIM4TRI_GRAPH_TYPE];
+
     [self reloadPacket];
+}
+
+- (IBAction)typeChanged:(id)sender {
+    [self reloadPacket];
+    [[NSUserDefaults standardUserDefaults] setInteger:self.graphType.selectedSegmentIndex forKey:KEY_LAST_DIM4TRI_GRAPH_TYPE];
 }
 
 - (void)reloadPacket
 {
     [static_cast<Dim4TriangulationViewController*>(self.parentViewController) updateHeader:self.header lockIcon:self.lockIcon];
 
-    regina::Dim4FacetPairing* p = new regina::Dim4FacetPairing(*self.packet);
-    std::string dot = p->dot("v", false /* subgraph */, true /* labels */);
-    delete p;
+    std::string dot;
+    switch (self.graphType.selectedSegmentIndex) {
+        case 0: {
+            regina::Dim4FacetPairing p(*self.packet);
+            dot = p.dot("v", false /* subgraph */, true /* labels */);
+            self.graphProperties.text = nil;
+            self.graphPropertiesGap.constant = 0;
+            break;
+        }
+
+        case 1:
+        case 2: {
+            regina::NTreeDecomposition t(*self.packet);
+            if (self.graphType.selectedSegmentIndex == 2)
+                t.makeNice();
+            dot = t.dot();
+            self.graphProperties.text = [NSString stringWithFormat:@"%d bags, width %d", t.size(), t.width()];
+            self.graphPropertiesGap.constant = 20;
+            break;
+        }
+
+        default:
+            // Clear the display.
+            [self.graph loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"about:blank"]]];
+            self.graphProperties.text = nil;
+            self.graphPropertiesGap.constant = 20;
+            return;
+    }
 
     char* svg;
     unsigned svgLen;
 
     GVC_t* gvc = gvContext();
     gvAddLibrary(gvc, &gvplugin_core_LTX_library);
-    gvAddLibrary(gvc, &gvplugin_neato_layout_LTX_library);
+    if (self.graphType.selectedSegmentIndex == 0)
+        gvAddLibrary(gvc, &gvplugin_neato_layout_LTX_library);
+    else
+        gvAddLibrary(gvc, &gvplugin_dot_layout_LTX_library);
     Agraph_t* g = agmemread(dot.c_str());
-    gvLayout(gvc, g, "neato");
+    if (self.graphType.selectedSegmentIndex == 0)
+        gvLayout(gvc, g, "neato");
+    else
+        gvLayout(gvc, g, "dot");
     gvRenderData(gvc, g, "svg", &svg, &svgLen);
     gvFreeLayout(gvc, g);
     agclose(g);

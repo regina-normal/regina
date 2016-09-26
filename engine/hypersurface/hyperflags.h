@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file surfaces/hyperflags.h
+/*! \file hypersurface/hyperflags.h
  *  \brief Defines constants and flags for normal hypersurface enumeration.
  */
 

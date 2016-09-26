@@ -41,7 +41,7 @@ IF(LIBGVC_FOUND)
     SET(LINK_LIBS ${LINK_LIBS} ${LIBGVC_LIBRARIES})
     LINK_DIRECTORIES("${LIBGVC_LIBDIR}" "${LIBGVC_LIBDIR}/graphviz")
   ENDIF(WIN32)
-  SET(LINK_LIBS ${LINK_LIBS} gvplugin_core gvplugin_neato_layout)
+  SET(LINK_LIBS ${LINK_LIBS} gvplugin_core gvplugin_dot_layout gvplugin_neato_layout)
 ENDIF(LIBGVC_FOUND)
 
 IF(SRCHILITE_FOUND)
@@ -60,6 +60,7 @@ ENDIF(SRCHILITE_FOUND)
 
 SET(SOURCES ${SOURCES}
   bigwidget.cpp
+  clickablelabel.cpp
   codecchooser.cpp
   columnlayout.cpp
   examplesaction.cpp
@@ -143,7 +144,14 @@ if (APPLE)
   # contains file associations for Regina data files, amongst other things):
   set_target_properties(${REGINA_APP_NAME}
     PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/regina.plist )
-endif (APPLE)
+elseif (LIBGVC_FOUND AND NOT WIN32)
+  # Even if this is a no-rpath install into standard system directories,
+  # we still need to be able to link with the graphviz plugins.
+  # These plugins typically live within a graphviz-specific directory,
+  # and so an rpath for these is still required.
+  set_target_properties(${REGINA_APP_NAME}
+    PROPERTIES INSTALL_RPATH_USE_LINK_PATH TRUE)
+endif ()
 
 INSTALL(TARGETS ${REGINA_APP_NAME} DESTINATION ${APPDIR} COMPONENT Runtime)
 

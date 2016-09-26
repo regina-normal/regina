@@ -37,14 +37,16 @@
 #ifndef __DIM4TRIUI_H
 #define __DIM4TRIUI_H
 
+#include "packet/npacketlistener.h"
 #include "../packettabui.h"
 
-class QToolBar;
+class ClickableLabel;
 class Dim4TriAlgebraUI;
 class Dim4TriGluingsUI;
 class Dim4TriSkeletonUI;
 class PacketEditIface;
 class QLabel;
+class QToolBar;
 
 namespace regina {
     template <int> class Triangulation;
@@ -86,7 +88,10 @@ class Dim4TriangulationUI : public PacketTabbedUI {
 /**
  * A header for the 4-manifold triangulation viewer.
  */
-class Dim4TriHeaderUI : public PacketViewerTab {
+class Dim4TriHeaderUI : public QObject, public PacketViewerTab,
+        public regina::NPacketListener {
+    Q_OBJECT
+
     private:
         /**
          * Packet details
@@ -98,6 +103,7 @@ class Dim4TriHeaderUI : public PacketViewerTab {
          */
         QWidget* ui;
         QLabel* header;
+        ClickableLabel* locked;
         QToolBar* bar;
 
     public:
@@ -120,9 +126,33 @@ class Dim4TriHeaderUI : public PacketViewerTab {
         void refresh();
 
         /**
+         * NPacketListener overrides.
+         */
+        void childWasAdded(regina::NPacket* packet, regina::NPacket* child);
+        void childWasRemoved(regina::NPacket* packet, regina::NPacket* child,
+            bool inParentDestructor);
+
+        /**
          * Allow other UIs to access the summary information.
          */
         static QString summaryInfo(regina::Dim4Triangulation* tri);
+
+    public slots:
+        /**
+         * Explain to the user what the padlock means.
+         */
+        void lockedExplanation();
+
+    protected:
+        /**
+         * Update the state of the padlock.
+         */
+        void refreshLock();
+
+        /**
+         * Allow GUI updates from a non-GUI thread.
+         */
+        void customEvent(QEvent* event);
 };
 
 inline PacketEditIface* Dim4TriangulationUI::getEditIface() {

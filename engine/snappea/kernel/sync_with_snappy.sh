@@ -1,9 +1,9 @@
 #!/bin/bash
 #
-# Regina - Software for 3-manifold topology and normal surface theory
+# Regina - Software for low-dimensional topology
 # Upstream synchronisation for the SnapPea kernel
 #
-# Copyright (c) 2014, Ben Burton
+# Copyright (c) 2014-2016, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # --------------------------------------------------------------------------
@@ -41,7 +41,7 @@
 #
 set -e
 
-testfile=SnapPycore.pxi
+testfile=cython/SnapPycore.pxi
 if ! [ -d "$1" -a -e "$1/$testfile" ]; then
     echo "Usage: $0 <snappy_source_dir>"
     echo
@@ -49,13 +49,13 @@ if ! [ -d "$1" -a -e "$1/$testfile" ]; then
     exit 1
 fi
 
-headerdir="$1/headers"
-sourcedir="$1/kernel_code"
-unixdir="$1/unix_kit"
-snappydir="$1/addl_code"
+headerdir="$1/kernel/headers"
+sourcedir="$1/kernel/kernel_code"
+unixdir="$1/kernel/unix_kit"
+snappydir="$1/kernel/addl_code"
 
 unixfiles="unix_file_io.h unix_file_io.c"
-snappyfiles="gluing_equations.c"
+snappyfiles="get_gluing_equations.c"
 snappymaster="addl_code.h"
 
 for i in "$headerdir"/*.h "$sourcedir"/*.c; do

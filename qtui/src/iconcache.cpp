@@ -84,6 +84,9 @@ void IconCache::load(IconID id) {
         case filter_prop:
             cache_[id] = ReginaSupport::regIcon("filter_prop");
             return;
+        case lock:
+            cache_[id] = ReginaSupport::regIcon("lock");
+            return;
 
         // Keep gcc happy: list all enumeration values.
         case END_OF_LIST:

@@ -89,6 +89,33 @@ PythonInterpreter::PythonInterpreter(PythonOutputStream* pyStdOut,
     if (pythonInitialised)
         PyEval_AcquireLock();
     else {
+#if defined(REGINA_INSTALL_WINDOWS) && defined(__MINGW32__)
+        // Assume this is the MS Windows + MinGW + WiX package build,
+        // since nobody else in their right mind would be trying to build
+        // this under windows.
+        //
+        // When using MinGW's own python + boost packages, we need to
+        // manually include the python zip and the path to zlib.pyd on the
+        // python path, *before* the interpreter is initialised.
+        //
+        // Here we assume that python27.zip is installed in the same
+        // directory as the executable, and that zlib.pyd is installed
+        // in the same directory as the regina python module.
+
+        std::string regModuleDir = regina::NGlobalDirs::pythonModule();
+
+        const char* oldPath = getenv("PYTHONPATH");
+        std::string newPath("PYTHONPATH=");
+        newPath += regModuleDir;
+        newPath += ';';
+        newPath += regModuleDir;
+        newPath += "/python27.zip;";
+        if (oldPath)
+            newPath += oldPath;
+
+        putenv(strdup(newPath.c_str()));
+#endif
+
         PyEval_InitThreads();
         Py_Initialize();
         pythonInitialised = true;
@@ -103,18 +130,23 @@ PythonInterpreter::PythonInterpreter(PythonOutputStream* pyStdOut,
 
     // Redirect stdout and stderr if appropriate.
     if (pyStdOut || pyStdErr) {
-        boost::python::class_<PythonOutputStream, boost::noncopyable>
-                ("PythonOutputStream", boost::python::no_init)
-            .def("write", &PythonOutputStream::write)
-            .def("flush", &PythonOutputStream::flush);
+        try {
+            boost::python::class_<PythonOutputStream, boost::noncopyable>
+                    ("PythonOutputStream", boost::python::no_init)
+                .def("write", &PythonOutputStream::write)
+                .def("flush", &PythonOutputStream::flush);
 
-        boost::python::reference_existing_object::
-            apply<PythonOutputStream*>::type conv;
+            boost::python::reference_existing_object::
+                apply<PythonOutputStream*>::type conv;
 
-        if (pyStdOut)
-            PySys_SetObject(const_cast<char*>("stdout"), conv(pyStdOut));
-        if (pyStdErr)
-            PySys_SetObject(const_cast<char*>("stderr"), conv(pyStdErr));
+            if (pyStdOut)
+                PySys_SetObject(const_cast<char*>("stdout"), conv(pyStdOut));
+            if (pyStdErr)
+                PySys_SetObject(const_cast<char*>("stderr"), conv(pyStdErr));
+        } catch (const boost::python::error_already_set&) {
+            PyErr_Print();
+            PyErr_Clear();
+        }
     }
 
     // Release the global interpreter lock.
@@ -293,34 +325,48 @@ bool PythonInterpreter::importRegina() {
     }
 
     // Import the module.
-    PyObject* regModule = PyImport_ImportModule("regina"); // New ref.
-    if (regModule) {
-        PyDict_SetItemString(mainNamespace, "regina", regModule);
-        Py_DECREF(regModule);
-    } else {
+    bool ok = false;
+    try {
+        PyObject* regModule = PyImport_ImportModule("regina"); // New ref.
+        if (regModule) {
+            PyDict_SetItemString(mainNamespace, "regina", regModule);
+            Py_DECREF(regModule);
+            ok = true;
+        } else {
+            PyErr_Print();
+            PyErr_Clear();
+        }
+    } catch (const boost::python::error_already_set&) {
         PyErr_Print();
         PyErr_Clear();
     }
 
     state = PyEval_SaveThread();
-    return (regModule != 0);
+    return ok;
 }
 
 bool PythonInterpreter::setVar(const char* name, regina::NPacket* value) {
     PyEval_RestoreThread(state);
 
-    boost::python::reference_existing_object::
-        apply<regina::NPacket*>::type conv;
-    PyObject* pyValue = conv(value);
+    bool ok = false;
+    try {
+        boost::python::reference_existing_object::
+            apply<regina::NPacket*>::type conv;
+        PyObject* pyValue = conv(value);
 
-    if (pyValue) {
-        PyObject* nameStr = PyString_FromString(name); // New ref.
-        PyDict_SetItem(mainNamespace, nameStr, conv(value));
-        Py_DECREF(nameStr);
+        if (pyValue) {
+            PyObject* nameStr = PyString_FromString(name); // New ref.
+            PyDict_SetItem(mainNamespace, nameStr, conv(value));
+            Py_DECREF(nameStr);
+            ok = true;
+        }
+    } catch (const boost::python::error_already_set&) {
+        PyErr_Print();
+        PyErr_Clear();
     }
 
     state = PyEval_SaveThread();
-    return (pyValue != 0);
+    return ok;
 }
 
 bool PythonInterpreter::compileScript(const char* code) {
@@ -398,8 +444,7 @@ bool PythonInterpreter::isEmptyCommand(const std::string& command) {
 
 void PythonInterpreter::pleaseReport(const char* msg) {
     std::cerr << "ERROR: " << msg << std::endl;
-    std::cerr << "       Please report this anomaly to "
-        << PACKAGE_BUGREPORT << std::endl;
+    std::cerr << "       Please report this anomaly to the authors," << std::endl;
     std::cerr << "       since this should never occur.\n";
 }
 

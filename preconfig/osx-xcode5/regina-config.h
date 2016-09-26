@@ -46,9 +46,6 @@
 /* Define to the filename extension that we use for census databases. */
 #define REGINA_DB_EXT "tdb"
 
-/* Define to the address where bug reports for this package should be sent. */
-#define PACKAGE_BUGREPORT "regina-user@lists.sourceforge.net"
-
 /* Define to the full name and version of this package. */
 #define PACKAGE_STRING "Regina 5.0"
 

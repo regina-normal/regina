@@ -32,6 +32,7 @@
 
 #include "packet/ntext.h"
 #include "../safeheldtype.h"
+#include "../helpers.h"
 
 // Held type must be declared before boost/python.hpp
 #include <boost/python.hpp>
@@ -63,5 +64,7 @@ void addNText() {
 
     implicitly_convertible<SafeHeldType<NText>,
         SafeHeldType<regina::NPacket> >();
+
+    FIX_REGINA_BOOST_CONVERTERS(NText);
 }
 

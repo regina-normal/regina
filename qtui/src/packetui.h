@@ -415,11 +415,6 @@ class PacketPane : public QWidget, public regina::NPacketListener {
 
     protected:
         /**
-         * Refresh the packet label and icon in the header.
-         */
-        void refreshHeader();
-
-        /**
          * Allow GUI updates from within a non-GUI thread.
          */
         void customEvent(QEvent* evt);

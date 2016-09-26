@@ -449,9 +449,11 @@ class NGenericGluingPerms {
 /*@}*/
 
 // Indicate which templates we explicitly instantiate in the shared library.
+#ifndef __DOXYGEN
 extern template class REGINA_API NGenericGluingPerms<2>;
 extern template class REGINA_API NGenericGluingPerms<3>;
 extern template class REGINA_API NGenericGluingPerms<4>;
+#endif // __DOXYGEN
 
 // Inline functions for NGenericGluingPerms
 

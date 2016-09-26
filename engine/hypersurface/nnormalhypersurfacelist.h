@@ -120,28 +120,47 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
         virtual ~NNormalHypersurfaceList();
 
         /**
-         * Enumerates all vertex normal hypersurfaces in the given
-         * triangulation using the given coordinate system.
-         * These vertex normal hypersurfaces will be stored in a new normal
-         * hypersurface list.  Their representations will
-         * use the smallest possible integer coordinates.
-         * The option is offered to find only embedded normal hypersurfaces
-         * or to also include immersed and singular normal hypersurfaces.
+         * A unified routine for enumerating various classes of normal
+         * hypersurfaces within a given triangulation.
          *
-         * The normal hypersurface list that is created will be inserted as the
-         * last child of the given triangulation.  This triangulation \b must
-         * remain the parent of this normal hypersurface list, and must not
-         * change while this normal hypersurface list remains in existence.
+         * The HyperCoords argument allows you to specify an underlying
+         * coordinate system.
+         *
+         * The HyperList argument is a combination of flags that
+         * allows you to specify exactly which normal hypersurfaces you require.
+         * This includes (i) whether you want all vertex hypersurfaces
+         * or all fundamental hypersurfaces, which defaults to HS_VERTEX
+         * if you specify neither or both; and (ii) whether you want only
+         * properly embedded surfaces or you also wish to include
+         * immersed and/or singular surfaces, which defaults to
+         * HS_EMBEDDED_ONLY if you specify neither or both.
+         *
+         * The HyperAlg argument is a combination of flags that allows
+         * you to control the underlying enumeration algorithm.  These
+         * flags are treated as hints only: if your selection of
+         * algorithm is invalid, unavailable or unsupported then Regina
+         * will choose something more appropriate.  Unless you have
+         * some specialised need, the default HS_ALG_DEFAULT (which
+         * makes no hints at all) will allow Regina to choose what it
+         * thinks will be the most efficient method.
+         *
+         * The enumerated hypersurfaces will be stored in a new normal
+         * hypersurface list, and their representations will be scaled down
+         * to use the smallest possible integer coordinates.
+         * This normal hypersurface list will be inserted into the packet tree
+         * as the last child of the given triangulation.  This triangulation
+         * \b must remain the parent of this normal hypersurface list, and must
+         * not change while this normal hypersurface list remains in existence.
          *
          * If a progress tracker is passed, the normal hypersurface
          * enumeration will take place in a new thread and this routine
          * will return immediately.  If the user cancels the operation
-         * from another thread, then the normal hypersurface list will \e not
+         * from another thread, then the normal surface list will \e not
          * be inserted into the packet tree (but the caller of this
-         * routine will still need to delete it).  Regarding progress
-         * tracking, this routine will declare and work through a series
-         * of stages whose combined weights sum to 1; typically this
-         * means that the given tracker must not have been used before.
+         * routine will still need to delete it).  Regarding progress tracking,
+         * this routine will declare and work through a series of stages
+         * whose combined weights sum to 1; typically this means that the
+         * given tracker must not have been used before.
          *
          * If no progress tracker is passed, the enumeration will run
          * in the current thread and this routine will return only when
@@ -151,10 +170,10 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
          * @param owner the triangulation upon which this list of normal
          * hypersurfaces will be based.
          * @param coords the coordinate system to be used.
-         * @param embeddedOnly \c true if only embedded normal hypersurfaces
-         * are to be produced, or \c false if immersed and singular
-         * normal hypersurfaces are also to be produced; this defaults to
-         * \c true.
+         * @param which indicates which normal hypersurfaces should be
+         * enumerated.
+         * @param algHints passes requests to Regina for which specific
+         * enumeration algorithm should be used.
          * @param tracker a progress tracker through which progress will
          * be reported, or 0 if no progress reporting is required.
          * @return the newly created normal hypersurface list.  Note that if

@@ -109,10 +109,12 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
                      sphere, torus or Klein bottle.
                      In other words, this is an ideal vertex but not one
                      of the standard ideal vertex types. */
-            NON_STANDARD_BDRY = 6
+            INVALID = 6,
                 /**< Specifies a vertex link that has boundary and is not a
                      disc.  In other words, this vertex makes the
                      triangulation invalid. */
+            NON_STANDARD_BDRY = 6
+                /**< \deprecated This constant has been renamed \a INVALID. */
         };
     private:
         NBoundaryComponent* boundaryComponent_;
@@ -138,8 +140,7 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          *
          * See the note in the NBoundaryComponent overview regarding what
          * happens if the vertex link is a multiply punctured surface.
-         * Note that this makes the vertex non-standard and the
-         * triangulation invalid.
+         * Note that this makes both the vertex and the triangulation invalid.
          *
          * An ideal vertex will have its own individual boundary
          * component to which it belongs.
@@ -434,7 +435,7 @@ inline const Dim2Triangulation* Face<3, 0>::buildLink() const {
 }
 
 inline bool Face<3, 0>::isLinkClosed() const {
-    return (link_ != DISC && link_ != NON_STANDARD_BDRY);
+    return (link_ != DISC && link_ != INVALID);
 }
 
 inline bool Face<3, 0>::isIdeal() const {
@@ -447,7 +448,7 @@ inline bool Face<3, 0>::isBoundary() const {
 }
 
 inline bool Face<3, 0>::isStandard() const {
-    return (link_ != NON_STANDARD_CUSP && link_ != NON_STANDARD_BDRY);
+    return (link_ != NON_STANDARD_CUSP && link_ != INVALID);
 }
 
 inline long Face<3, 0>::linkEulerChar() const {

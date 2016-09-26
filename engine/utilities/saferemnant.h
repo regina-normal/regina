@@ -50,13 +50,13 @@
 #include "utilities/intrusiverefcounter.h"
 #endif
 
+namespace regina {
+namespace detail {
+
 /**
  * \weakgroup utilities
  * @{
  */
-
-namespace regina {
-namespace detail {
 
 /**
  * A helper class for SafePtr.
@@ -143,6 +143,8 @@ private:
     T* object_;
         /**< The pointee. */
 };
+
+/*@}*/
 
 // Implementation details for SafePointeeBase
 

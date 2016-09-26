@@ -272,6 +272,32 @@
   <date>May 2014</date>
  </biblioentry>
 
+ <biblioentry id="bib-turaevviro-fpt">
+  <abbrev>Bur15</abbrev>
+  <authorgroup>
+   <author>
+    <firstname>Benjamin</firstname>
+    <othername>A.</othername>
+    <surname>Burton</surname>
+   </author>
+   <author>
+    <firstname>Cl&eacute;ment</firstname>
+    <surname>Maria</surname>
+   </author>
+   <author>
+    <firstname>Jonathan</firstname>
+    <surname>Spreer</surname>
+   </author>
+  </authorgroup>
+  <title>Algorithms and complexity for Turaev-Viro invariants</title>
+  <edition>ICALP 2015: Automata, Languages, and Programming:
+   42nd International Colloquium</edition>
+  <volumenum>vol. 9134 of Lecture Notes in Comput. Sci.</volumenum>
+  <artpagenums>pp. 281&ndash;293</artpagenums>
+  <publishername>Springer</publishername>
+  <date>2015</date>
+ </biblioentry>
+
  <biblioentry id="bib-bo-branching">
   <abbrev>BO12</abbrev>
   <authorgroup>

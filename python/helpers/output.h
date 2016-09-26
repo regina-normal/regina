@@ -36,6 +36,7 @@
 
 #include <type_traits>
 #include <boost/python/def_visitor.hpp>
+#include <boost/python/operators.hpp>
 #include "../engine/output.h"
 
 namespace regina {
@@ -45,16 +46,16 @@ namespace python {
  * Adds rich string output functions to the python bindings for a C++ class.
  *
  * This will add str(), utf8() and detail(), as provided by the regina::Output
- * (templated) base class.  It will also add \a __str__ as an alias for
- * str(), to provide "native" Python string output.
+ * (templated) base class.  It will also add \a __str__ to provide "native"
+ * Python string output, using the C++ ostream output operator.
  *
  * To use this for some C++ class \a T in Regina, simply call
  * <t>c.def(regina::python::add_output())</t>, where \a c is the
  * boost::python::class_ object that wraps \a T.
  *
  * The wrapped class \a T should either derive from regina::Output, or
- * provide str(), utf8() and detail() functions that are consistent with the
- * regina::Output interface.
+ * should provide str(), utf8() and detail() functions and an ostream output
+ * operator in a way that is consistent with the regina::Output interface.
  */
 struct add_output : boost::python::def_visitor<add_output> {
     friend class boost::python::def_visitor_access;
@@ -70,7 +71,7 @@ struct add_output : boost::python::def_visitor<add_output> {
         c.def("utf8", OutputFunctionType(&BaseType::utf8));
         c.def("detail", OutputFunctionType(&BaseType::detail));
         c.def("toStringLong", OutputFunctionType(&BaseType::detail));
-        c.def("__str__", OutputFunctionType(&BaseType::str));
+        c.def(boost::python::self_ns::str(boost::python::self));
     }
 };
 

@@ -37,6 +37,11 @@
 
 namespace regina {
 
+Face<4, 1>::~Face() {
+    // Deleting null is always safe.
+    delete link_;
+}
+
 Dim2Triangulation* Face<4, 1>::buildLinkDetail(bool labels,
         Dim4Isomorphism** inclusion) const {
     // Build the triangulation.

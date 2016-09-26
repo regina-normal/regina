@@ -35,6 +35,7 @@
 #include "maths/nmatrixint.h"
 #include "progress/nprogresstracker.h"
 #include "../safeheldtype.h"
+#include "../helpers.h"
 
 // Held type must be declared before boost/python.hpp
 #include <boost/python.hpp>
@@ -104,5 +105,7 @@ void addNNormalHypersurfaceList() {
 
     implicitly_convertible<SafeHeldType<NNormalHypersurfaceList>,
         SafeHeldType<regina::NPacket> >();
+
+    FIX_REGINA_BOOST_CONVERTERS(NNormalHypersurfaceList);
 }
 

@@ -58,10 +58,10 @@ const QString ReginaAbout::regCopyright(
     tr("Copyright (c) 1999-2016, The Regina development team"));
 
 const QString ReginaAbout::regDescription(
-    tr("Software for 3-manifold topology and normal surface theory"));
+    tr("Software for low-dimensional topology"));
 
 const QString ReginaAbout::regReleased(
-    tr("Released %1").arg(QDate(2014, 8, 29).toString(Qt::TextDate)));
+    tr("Released %1").arg(QDate(2016, 9, 26).toString(Qt::TextDate)));
 
 const QString ReginaAbout::regWebsite("http://regina.sourceforge.net/");
 
@@ -71,7 +71,7 @@ const QString ReginaAbout::regLicense( tr(
     "If you find Regina useful in your research, please consider citing it as\n"
     "you would any other paper that you use.  A suggested form of reference is:\n\n"
     "  Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,\n"
-    "  \"Regina: Software for 3-manifold topology and normal surface theory\",\n"
+    "  \"Regina: Software for low-dimensional topology\",\n"
     "  http://regina.sourceforge.net/, 1999-2016.\n\n"
     "COPYING AND MODIFICATION:\n\n"
     "This program is free software; you can redistribute it and/or modify it\n"
@@ -102,10 +102,12 @@ const QString ReginaAbout::regLicense( tr(
     "SNAPPEA AND SNAPPY:\n\n"
     "Regina includes portions of the SnapPea kernel and its successor SnapPy,\n"
     "which it uses for some geometric calculations.  The SnapPea kernel was\n"
-    "written by Jeff Weeks, and SnapPy was written by Marc Culler, Nathan\n"
-    "Dunfield, and others.  SnapPy and the corresponding SnapPea kernel are\n"
-    "distributed under the terms of the GNU General Public License, version 2\n"
-    "or any later version, as published by the Free Software Foundation.\n\n"
+    "originally written by Jeff Weeks.  SnapPy, where this kernel is now\n"
+    "maintained, is primarily developed by Marc Culler and Nathan Dunfield,\n"
+    "with contributions from many people.  SnapPy and the corresponding\n"
+    "SnapPea kernel are distributed under the terms of the GNU General Public\n"
+    "License, version 2 or any later version, as published by the Free\n"
+    "Software Foundation.\n\n"
     "NORMALIZ LIBRARY:\n\n"
     "Regina includes a copy of libnormaliz, which it uses to help with the\n"
     "enumeration of fundamental normal surfaces.  Normaliz was written by\n"
@@ -135,7 +137,7 @@ const QString ReginaAbout::regLicense( tr(
 ReginaAbout::ReginaAbout(QWidget* parent) : 
         QDialog(parent) {
     // Authors:
-    authors << AuthorInfo("Benjamin Burton", "bab@debian.org",
+    authors << AuthorInfo("Benjamin Burton", "bab@maths.uq.edu.au",
         "http://www.maths.uq.edu.au/~bab/");
     authors << AuthorInfo("Ryan Budney", "rybu@uvic.ca",
         "http://rybu.org/");
@@ -169,8 +171,11 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
     thanksExpertise << "Stephan Tillmann";
 
     thanksInstitutions << "The American Institute of Mathematics";
+    thanksInstitutions << "The Australia-India Strategic Research Fund "
+        "(grant AISRF06660)";
     thanksInstitutions << "The Australian Research Council "
-        "(grants DP0208490, DP1094516, DP110101104 and DP140104246)";
+        "(grants DP0208490, DP1094516, DP110101104, DP140104246, DP150104108)";
+    thanksInstitutions << "The Indian Institute of Science";
     thanksInstitutions << "The Institute for Computational and "
         "Experimental Research in Mathematics, Brown University";
     thanksInstitutions << "The Institute for the Physics and "
@@ -239,10 +244,6 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
     transparent.setColor(QPalette::Text,
         transparent.color(QPalette::WindowText));
 
-    /*
-    QString authorText(tr("<p>Please report bugs to "
-        "<a href=\"mailto:%1\">%1</a>.</p>").arg(PACKAGE_BUGREPORT));
-    */
     QString authorText;
     foreach (const AuthorInfo& info, authors) {
         authorText += QString("<p style=\"margin: 0px;\">%1</p>")

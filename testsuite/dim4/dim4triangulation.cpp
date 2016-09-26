@@ -2204,10 +2204,9 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             std::list<NIsomorphism*> autos;
             tri->findAllIsomorphisms(*tri, back_inserter(autos));
 
-            for (std::list<NIsomorphism*>::const_iterator it = autos.begin();
-                    it != autos.end(); ++it) {
+            for (NIsomorphism* aut : autos) {
                 Dim4Triangulation* b =
-                    Dim4ExampleTriangulation::bundleWithMonodromy(*tri, **it);
+                    Dim4ExampleTriangulation::bundleWithMonodromy(*tri, *aut);
 
                 if (! b->isValid()) {
                     std::ostringstream msg;
@@ -2249,8 +2248,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                unsigned long expectBdryTets =
-                    20 * tri->countBoundaryTriangles();
+                size_t expectBdryTets = 20 * tri->countBoundaryTriangles();
 
                 if (b->countBoundaryFacets() != expectBdryTets) {
                     std::ostringstream msg;
@@ -2265,7 +2263,8 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 // combinatorial isomorphism, b must have (M x S1) as a
                 // finite sheeted cover.
 
-                delete *it;
+                delete b;
+                delete aut;
             }
         }
 

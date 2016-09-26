@@ -35,6 +35,7 @@
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/ntriangulation.h"
 #include "../safeheldtype.h"
+#include "../helpers.h"
 
 // Held type must be declared before boost/python.hpp
 #include <boost/python.hpp>
@@ -245,5 +246,7 @@ void addNNormalSurfaceList() {
 
     implicitly_convertible<SafeHeldType<NNormalSurfaceList>,
         SafeHeldType<regina::NPacket> >();
+
+    FIX_REGINA_BOOST_CONVERTERS(NNormalSurfaceList);
 }
 

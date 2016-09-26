@@ -18,6 +18,7 @@ set (IMGS
   filter_prop
   finite
   insert
+  lock
   locked
   orb
   orient

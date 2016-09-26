@@ -62,6 +62,7 @@
 #include <QTextDocument>
 #include <QValidator>
 
+using regina::NCyclotomic;
 using regina::NPacket;
 using regina::NTriangulation;
 
@@ -73,11 +74,6 @@ namespace {
     const unsigned long TV_WARN_LARGE_R = 15;
 
     /**
-     * A regular expression for Turaev-Viro parameters.
-     */
-    QRegExp reTVParams("^[ \\(]*(\\d+)[ ,]+(\\d+)[ \\)]*$");
-
-    /**
      * A list view item for storing a single Turaev-Viro invariant.
      *
      * These list view items are sorted numerically and drawn with a
@@ -86,25 +82,32 @@ namespace {
     class TuraevViroItem : public QTreeWidgetItem {
         private:
             unsigned long r_;
-            unsigned long root_;
-            double value_;
+            bool parity_;
+            QString value_;
 
         public:
-            TuraevViroItem(unsigned long r, unsigned long root, double value) :
-                    QTreeWidgetItem(), r_(r), root_(root), value_(value) {
-                setText(0, QString::number(r_));
-                setText(1, QString::number(root_));
-                setText(2, QString::number(value_));
+            TuraevViroItem(unsigned long r, bool parity, const QString& value) :
+                    QTreeWidgetItem(), r_(r), parity_(parity), value_(value) {
+                if (r_ % 2) {
+                    if (parity_)
+                        setText(0, QObject::tr("%1, odd").arg(r_));
+                    else
+                        setText(0, QObject::tr("%1, even").arg(r_));
+                } else
+                    setText(0, QString::number(r_));
 
-                for (int i = 0; i < 3; ++i)
-                    setTextAlignment(i, Qt::AlignRight);
+                setText(1, value_);
             }
 
             int compare(const TuraevViroItem* other) const {
                 if (r_ < other->r_) return -1;
                 if (r_ > other->r_) return 1;
-                if (root_ < other->root_) return -1;
-                if (root_ > other->root_) return 1;
+                if (r_ % 2) {
+                    if (parity_ && ! other->parity_)
+                        return -1;
+                    if (other->parity_ && ! parity_)
+                        return 1;
+                }
                 return 0;
             }
     };
@@ -309,24 +312,32 @@ NTriTuraevViroUI::NTriTuraevViroUI(regina::NTriangulation* packet,
     layout->addLayout(paramsArea);
     paramsArea->addStretch(1);
 
-    QString expln = tr("<qt>The (r, root) parameters of a Turaev-Viro "
-        "invariant to calculate.  These parameters describe the initial data "
+    QString expln = trUtf8("<qt>The argument <i>r</i> of the Turaev-Viro "
+        "invariant(s) to calculate.  This argument describes the initial data "
         "for the invariant as described in <i>State sum invariants of "
         "3-manifolds and quantum 6j-symbols</i>, Turaev and Viro, "
         "published in <i>Topology</i> <b>31</b>, no. 4, 1992.<p>"
-        "In particular, <i>r</i> and <i>root</i> must both be positive "
-        "integers with 0&nbsp;&lt;&nbsp;<i>root</i>&nbsp;&lt;&nbsp;2<i>r</i>, "
-        "where <i>root</i> describes a 2<i>r</i>-th root of unity.  "
-        "Example parameters are <i>5,3</i>.<p>"
+        "The initial data involves constructing a (2<i>r</i>)th root of unity "
+        "\u03B6, for which \u03B6\u00B2 is a primitive "
+        "<i>r</i>th root of unity.<p>"
+        "If <i>r</i> is even then the choice of root does not matter, "
+        "since all choices give equivalent invariants.  "
+        "If <i>r</i> is odd then there are two choices: either "
+        "\u03B6 may be a primitive (2<i>r</i>th) root of unity, "
+        "or \u03B6 may be a primitive <i>r</i>th root of unity.  Both "
+        "invariants will be calculated, and these will be marked as "
+        "<i>odd</i> and <i>even</i> respectively.<p>"
         "Note that only small values of <i>r</i> "
         "should be used, since the time required to calculate the invariant "
         "grows exponentially with <i>r</i>.</qt>");
-    paramsLabel = new QLabel(tr("Parameters (r, root):"));
+    paramsLabel = new QLabel(tr("<qt>Argument <i>r</i>:</qt>"));
     paramsLabel->setWhatsThis(expln);
     paramsArea->addWidget(paramsLabel);
 
     params = new QLineEdit(ui);
-    params->setValidator(new QRegExpValidator(reTVParams, ui));
+    QIntValidator* val = new QIntValidator(ui);
+    val->setBottom(0);
+    params->setValidator(val);
     params->setWhatsThis(expln);
     connect(params, SIGNAL(returnPressed()), this, SLOT(calculateInvariant()));
     paramsArea->addWidget(params);
@@ -334,11 +345,11 @@ NTriTuraevViroUI::NTriTuraevViroUI(regina::NTriangulation* packet,
     calculate = new QPushButton(ReginaSupport::themeIcon("system-run"),
         tr("Calculate"));
     // calculate->setFlat(true);
-    calculate->setToolTip(tr("Calculate the Turaev-Viro invariant with "
-        "these parameters"));
-    calculate->setWhatsThis(tr("<qt>Calculate the Turaev-Viro invariant "
-        "corresponding to the (r, root) parameters in the nearby text "
-        "box.  The result will be added to the list below.<p>"
+    calculate->setToolTip(tr("<qt>Calculate the Turaev-Viro invariant(s) "
+        "for this value of <i>r</i></qt>"));
+    calculate->setWhatsThis(tr("<qt>Calculate the Turaev-Viro invariant(s) "
+        "for the value of <i>r</i> in the adjacent text box.  "
+        "The results will be added to the list below.<p>"
         "<b>Warning:</b> This calculation can be quite slow for large "
         "values of <i>r</i>, since the processing time grows exponentially "
         "with <i>r</i>.</qt>"));
@@ -354,32 +365,27 @@ NTriTuraevViroUI::NTriTuraevViroUI(regina::NTriangulation* packet,
     invariants = new QTreeWidget(ui);
     invariants->setRootIsDecorated(false);
     invariants->setAlternatingRowColors(true);
-    invariants->header()->setStretchLastSection(false);
+    invariants->header()->setStretchLastSection(true);
     invariants->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
     invariants->setSelectionMode(QAbstractItemView::NoSelection);
-    invariants->setWhatsThis(tr("A list of all Turaev-Viro invariants "
+    invariants->setWhatsThis(tr("<qt>A list of all Turaev-Viro invariants "
         "that have been calculated so far for this triangulation.  To "
-        "calculate a new invariant, enter the (r, root) parameters into the "
-        "text box above and press <i>Calculate</i>."));
-    invArea->addWidget(invariants, 1);
+        "calculate a new invariant, enter the argument <i>r</i> into the "
+        "text box above and press <i>Calculate</i>.</qt>"));
+    invArea->addWidget(invariants, 4);
 
-    invariants->setColumnCount(3);
+    invariants->setColumnCount(2);
     QTreeWidgetItem* header = new QTreeWidgetItem();
     header->setText(0, tr("r"));
-    header->setText(1, tr("root"));
-    header->setText(2, tr("value"));
-    for (int i = 0; i < 3; ++i)
+    header->setText(1, tr("value"));
+    for (int i = 0; i < 2; ++i)
         header->setTextAlignment(i, Qt::AlignCenter);
     invariants->setHeaderItem(header);
 
     invArea->addStretch(1);
 
-    QLabel* warning = new QLabel(tr("<qt><b>Warning:</b> These are "
-        "computed using floating point arithmetic, with no guaranteed level "
-        "of accuracy.</qt>"));
-    warning->setWordWrap(true);
-    warning->setAlignment(Qt::AlignCenter);
-    layout->addWidget(warning);
+    connect(&ReginaPrefSet::global(), SIGNAL(preferencesChanged()),
+        this, SLOT(updatePreferences()));
 }
 
 regina::NPacket* NTriTuraevViroUI::getPacket() {
@@ -391,6 +397,8 @@ QWidget* NTriTuraevViroUI::getInterface() {
 }
 
 void NTriTuraevViroUI::refresh() {
+    bool unicode = ReginaPrefSet::global().displayUnicode;
+
     paramsLabel->setEnabled(true);
     params->setEnabled(true);
     calculate->setEnabled(true);
@@ -402,9 +410,14 @@ void NTriTuraevViroUI::refresh() {
     const NTriangulation::TuraevViroSet& invs(tri->allCalculatedTuraevViro());
     for (NTriangulation::TuraevViroSet::const_iterator it = invs.begin();
             it != invs.end(); it++)
-        invariants->addTopLevelItem(new TuraevViroItem(
-            (*it).first.first, (*it).first.second,
-            (*it).second.evaluate((*it).first.second).real()));
+        if (unicode)
+            invariants->addTopLevelItem(new TuraevViroItem(
+                (*it).first.first, (*it).first.second,
+                (*it).second.utf8("\u03B6" /* small zeta */).c_str()));
+        else
+            invariants->addTopLevelItem(new TuraevViroItem(
+                (*it).first.first, (*it).first.second,
+                (*it).second.str("z").c_str()));
 }
 
 void NTriTuraevViroUI::calculateInvariant() {
@@ -420,49 +433,34 @@ void NTriTuraevViroUI::calculateInvariant() {
         return;
     }
 
-    if (! reTVParams.exactMatch(params->text())) {
+    unsigned long r = params->text().toULong();
+    if (r == 0) {
         ReginaSupport::info(ui,
-            tr("<qt>The invariant parameters "
-            "(<i>r</i>, <i>root</i>) must be two positive integers.</qt>"),
-            tr("<qt>These parameters describe the initial data "
+            tr("<qt>The invariant argument <i>r</i> must be a positive "
+            "integer.</qt>"),
+            tr("<qt>This argument describes the initial data "
             "for the invariant as described in <i>State sum invariants of "
             "3-manifolds and quantum 6j-symbols</i>, Turaev and Viro, "
             "published in <i>Topology</i> <b>31</b>, no. 4, 1992.<p>"
-            "In particular, <i>r</i> and <i>root</i> must both be positive "
-            "integers with "
-            "0&nbsp;&lt;&nbsp;<i>root</i>&nbsp;&lt;&nbsp;2<i>r</i>, "
-            "where <i>root</i> describes a 2<i>r</i>-th root of unity.  "
-            "Example parameters are <i>5,3</i>.<p>"
+            "The initial data involves constructing a 2<i>r</i>th root of "
+            "unity \u03B6, for which \u03B6\u00B2 is a primitive "
+            "<i>r</i>th root of unity.<p>"
+            "If <i>r</i> is even then the choice of root does not matter, "
+            "since all choices give equivalent invariants.  "
+            "If <i>r</i> is odd then there are two choices: either "
+            "\u03B6 may be a primitive (2<i>r</i>th) root of unity, "
+            "or \u03B6 may be a primitive <i>r</i>th root of unity.  Both "
+            "invariants will be calculated, and these will be marked as "
+            "<i>odd</i> and <i>even</i> respectively.<p>"
             "Note that only small values of <i>r</i> "
             "should be used, since the time required to calculate the "
             "invariant grows exponentially with <i>r</i>.</qt>"));
         return;
     }
 
-    unsigned long r = reTVParams.cap(1).toULong();
-    unsigned long root = reTVParams.cap(2).toULong();
-
     if (r < 3) {
         ReginaSupport::info(ui,
-            tr("<qt>The first parameter <i>r</i> must be "
-            "at least 3.</qt>"));
-        return;
-    }
-
-    if (root <= 0 || root >= 2 * r) {
-        ReginaSupport::info(ui,
-            tr("<qt>The second parameter <i>root</i> "
-            "must be strictly between 0 and 2<i>r</i> (it specifies a "
-            "2<i>r</i>-th root of unity).</qt>"),
-            tr("<qt>Example parameters are <i>5,3</i>.</qt>"));
-        return;
-    }
-
-    if (regina::gcd(r, root) > 1) {
-        ReginaSupport::info(ui,
-            tr("<qt>The invariant parameters must have "
-            "no common factors.</qt>"),
-            tr("<qt>Example parameters are <i>5,3</i>.</qt>"));
+            tr("<qt>The argument <i>r</i> must be at least 3.</qt>"));
         return;
     }
 
@@ -484,25 +482,45 @@ void NTriTuraevViroUI::calculateInvariant() {
     }
 
     // Calculate the invariant!
-    double value = tri->turaevViro(r, root).evaluate(root).real();
-    TuraevViroItem* item = new TuraevViroItem(r, root, value);
+    if (r % 2) {
+        calculateInvariant(r, true);
+        calculateInvariant(r, false);
+    } else
+        calculateInvariant(r, false);
+}
 
-    // Insert the invariant in the right place in the table, and delete
-    // any previous invariant with the same parameters if it exists.
-    TuraevViroItem* curr;
-    int cmp;
-    for (int i = 0; i < invariants->invisibleRootItem()->childCount(); i++) {
-        curr = dynamic_cast<TuraevViroItem*>(
-            invariants->invisibleRootItem()->child(i));
-        cmp = item->compare(curr);
-        if (cmp <= 0) {
-            if (cmp == 0)
-                delete curr;
+void NTriTuraevViroUI::calculateInvariant(unsigned long r, bool parity) {
+    bool unicode = ReginaPrefSet::global().displayUnicode;
+
+    const auto& s = tri->allCalculatedTuraevViro();
+    if (s.find(std::make_pair(r, parity)) != s.end()) {
+        // Duplicate.
+        return;
+    }
+
+    TuraevViroItem* item;
+    if (unicode)
+        item = new TuraevViroItem(r, parity,
+            tri->turaevViro(r, parity).utf8("\u03B6").c_str());
+    else
+        item = new TuraevViroItem(r, parity,
+            tri->turaevViro(r, parity).str("z").c_str());
+
+    // Insert the invariant in the right place in the table.
+    // Since we have already checked for duplicates, we can assume no
+    // invariant with the same parameters exists.
+    for (int i = 0; i < invariants->invisibleRootItem()->childCount(); ++i)
+        if (item->compare(dynamic_cast<TuraevViroItem*>(
+                invariants->invisibleRootItem()->child(i))) < 0) {
             invariants->insertTopLevelItem(i, item);
             return;
         }
-    }
     invariants->addTopLevelItem(item);
+}
+
+void NTriTuraevViroUI::updatePreferences() {
+    // If we've changed the unicode setting, then we may need some redrawing.
+    refresh();
 }
 
 //////////////////////////////////////////////////////////////////////////////

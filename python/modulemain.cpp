@@ -65,7 +65,7 @@ using boost::python::self;
 namespace {
     std::string welcome() {
         return std::string(PACKAGE_STRING) +
-            "\nSoftware for 3-manifolds, 4-manifolds and normal surface theory" +
+            "\nSoftware for low-dimensional topology" +
             "\nCopyright (c) 1999-2016, The Regina development team";
     }
 }

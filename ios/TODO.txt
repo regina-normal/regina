@@ -1,47 +1,10 @@
-NEXT RELEASE:
-
-- Support files without container roots
-
-CLEAN UP:
-
-- MasterViewController
-- WelcomePopupController
-- PacketTreeController
-- ReginaDocument
-- NewPacketMenu
-- NewPacketController
-- NewPacketPageViewController
-
-- DetailViewController
-- PacketViewer and PacketEditor protocols
-
-- PacketManagerIOS
-
-- packets/TriGluingsViewController
-- packets/TriRecognitionViewController
-
-- packets/NewAnglesController
-- packets/NewSurfacesController
-
-WRITE VIEWERS:
-
-- 2-D triangulation:      2 tabs, editor
-- 3-D triangulation:      6 tabs, editor
-- SnapPea triangulation:  7 tabs, editor
-- Normal surfaces:        4 tabs
-
-SHORT-TERM:
-
-- Rerender AppIcon, Packets/Document, launch images
-
-TEST:
-
-- Return to the app during facetime (status bar is thicker), and make sure
-  the UI is still laid out correctly.
-- Test composition tab over the census.
+iOS User Interface TODO List
+----------------------------
 
 LONG-TERM:
 
+- Support iCloud and/or iCloud drive?
+- Support files without container roots
 - Move packets around the tree.
 - Find a way to install *.tdb in a subdirectory beneath Resources/.
 - Rename actions: ensure table view insets are OK if the device is rotated while the keyboard is shown

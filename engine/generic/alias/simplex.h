@@ -60,7 +60,8 @@ template <int> class Simplex;
 namespace alias {
 
 /**
- * \weakgroup alias
+ * \addtogroup alias Dimension-Specific Aliases
+ * Dimension-specific aliases for generic code
  * @{
  */
 

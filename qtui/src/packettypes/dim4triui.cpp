@@ -34,13 +34,18 @@
 #include "dim4/dim4triangulation.h"
 
 // UI includes:
+#include "clickablelabel.h"
+#include "eventids.h"
+#include "iconcache.h"
 #include "dim4trialgebra.h"
 #include "dim4trigluings.h"
 #include "dim4triskeleton.h"
 #include "dim4triui.h"
 #include "packeteditiface.h"
 #include "reginamain.h"
+#include "reginasupport.h"
 
+#include <QApplication>
 #include <QLabel>
 #include <QToolBar>
 #include <QVBoxLayout>
@@ -90,12 +95,28 @@ Dim4TriHeaderUI::Dim4TriHeaderUI(regina::Dim4Triangulation* packet,
     bar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     uiLayout->addWidget(bar);
 
+    QBoxLayout* headerLayout = new QHBoxLayout(ui);
+    headerLayout->setContentsMargins(0, 0, 0, 0);
     header = new QLabel();
     header->setAlignment(Qt::AlignCenter);
     header->setMargin(10);
     header->setWhatsThis(QObject::tr("Displays a few basic properties of the "
         "triangulation, such as boundary and orientability."));
-    uiLayout->addWidget(header);
+    headerLayout->addWidget(header, 1);
+    locked = new ClickableLabel(IconCache::icon(IconCache::lock));
+    locked->setWhatsThis(tr(
+        "<qt>This triangulation cannot be changed, since it has "
+        "normal hypersurfaces that refer to it.<p>"
+        "Click on the padlock for more information.</qt>"));
+    locked->hide();
+    connect(locked, SIGNAL(clicked()), this, SLOT(lockedExplanation()));
+    headerLayout->addWidget(locked);
+    headerLayout->addSpacing(10);
+    uiLayout->addLayout(headerLayout);
+
+    // Register ourselves as a lister for child changes, so we can
+    // update the lock icon accordingly.
+    tri->listen(this);
 }
 
 regina::NPacket* Dim4TriHeaderUI::getPacket() {
@@ -108,6 +129,7 @@ QWidget* Dim4TriHeaderUI::getInterface() {
 
 void Dim4TriHeaderUI::refresh() {
     header->setText(summaryInfo(tri));
+    refreshLock();
 }
 
 QString Dim4TriHeaderUI::summaryInfo(regina::Dim4Triangulation* tri) {
@@ -142,5 +164,44 @@ QString Dim4TriHeaderUI::summaryInfo(regina::Dim4Triangulation* tri) {
         QObject::tr("disconnected"));
 
     return msg;
+}
+
+void Dim4TriHeaderUI::lockedExplanation() {
+    if (tri->isPacketEditable())
+        return;
+
+    ReginaSupport::info(ui,
+        tr("This triangulation cannot be changed."),
+        tr("<qt>There are normal hypersurfaces "
+            "that refer to it, and so you cannot change its "
+            "pentachoron gluings.<p>"
+            "You may clone the triangulation (through the "
+            "<i>Packet Tree</i> menu in the main window), and then "
+            "edit the clone instead.</qt>"));
+}
+
+void Dim4TriHeaderUI::childWasAdded(regina::NPacket* packet,
+        regina::NPacket* child) {
+    // Be careful - we may not be in the GUI thread.
+    QApplication::postEvent(this, new QEvent(
+        (QEvent::Type)EVT_HEADER_CHILD_ADDED));
+}
+
+void Dim4TriHeaderUI::childWasRemoved(regina::NPacket* packet,
+        regina::NPacket* child, bool inParentDestructor) {
+    if (! inParentDestructor)
+        refreshLock();
+}
+
+void Dim4TriHeaderUI::refreshLock() {
+    if (tri->isPacketEditable())
+        locked->hide();
+    else
+        locked->show();
+}
+
+void Dim4TriHeaderUI::customEvent(QEvent* event) {
+    if (event->type() == EVT_HEADER_CHILD_ADDED)
+        refreshLock();
 }
 

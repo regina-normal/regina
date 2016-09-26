@@ -1,5 +1,5 @@
 
-     Regina - Software for 3-manifold topology and normal surface theory
+               Regina - Software for low-dimensional topology
             Copyright (c) 1999-2016, The Regina development team
 
 
@@ -9,7 +9,7 @@ If you find Regina useful in your research, please consider citing it as
 you would any other paper that you use.  A suggested form of reference is:
 
   Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,
-  "Regina: Software for 3-manifold topology and normal surface theory",
+  "Regina: Software for low-dimensional topology",
   http://regina.sourceforge.net/, 1999-2016.
 
 
@@ -17,7 +17,7 @@ AUTHORS:
 
 The primary developers of Regina are:
 
-  Benjamin Burton <bab@debian.org>
+  Benjamin Burton <bab@maths.uq.edu.au>
   Ryan Budney <rybu@uvic.ca>
   William Pettersson <william.pettersson@gmail.com>
 
@@ -67,10 +67,11 @@ SNAPPEA AND SNAPPY:
 
 Regina includes portions of the SnapPea kernel and its successor SnapPy,
 which it uses for some geometric calculations.  The SnapPea kernel was
-written by Jeff Weeks, and SnapPy was written by Marc Culler, Nathan
-Dunfield, and others.  SnapPy and the corresponding SnapPea kernel are
-distributed under the terms of the GNU General Public License, version 2
-or any later version, as published by the Free Software Foundation.
+originally written by Jeff Weeks.  SnapPy, where this kernel is now maintained,
+is primarily developed by Marc Culler and Nathan Dunfield, with contributions
+from many people.  SnapPy and the corresponding SnapPea kernel are distributed
+under the terms of the GNU General Public License, version 2 or any later
+version, as published by the Free Software Foundation.
 
 
 NORMALIZ LIBRARY:

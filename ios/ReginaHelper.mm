@@ -44,7 +44,7 @@ static UINavigationController* masterNav;
 static UINavigationController* detailNav;
 static MasterViewController* master;
 static DetailViewController* detail;
-BOOL ios8;
+BOOL ios9;
 
 @implementation ReginaHelper
 
@@ -141,13 +141,14 @@ BOOL ios8;
     [UIApplication sharedApplication].idleTimerDisabled = YES;
 
     UIView* root = [UIApplication sharedApplication].keyWindow.rootViewController.view;
-    MBProgressHUD* hud = [MBProgressHUD showHUDAddedTo:root animated:YES];
-    hud.labelText = message;
-    
+
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:root animated:YES];
+    hud.label.text = message;
+
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         code();
         dispatch_async(dispatch_get_main_queue(), ^{
-            [hud hide:NO];
+            [hud hideAnimated:NO];
             if (cleanup != nil)
                 cleanup();
 
@@ -156,9 +157,9 @@ BOOL ios8;
     });
 }
 
-+ (BOOL)ios8
++ (BOOL)ios9
 {
-    return ios8;
+    return ios9;
 }
 
 + (void)initWithApp:(AppDelegate *)app
@@ -180,11 +181,11 @@ BOOL ios8;
         masterNav = detailNav = nil;
     }
 
-    ios8 = ([[[UIDevice currentDevice] systemVersion] compare:@"8.0" options:NSNumericSearch] != NSOrderedAscending);
-    if (ios8)
-        NSLog(@"Running on >= iOS 8");
+    ios9 = ([[[UIDevice currentDevice] systemVersion] compare:@"9.0" options:NSNumericSearch] != NSOrderedAscending);
+    if (ios9)
+        NSLog(@"Running on >= iOS 9");
     else
-        NSLog(@"Running on iOS 7");
+        NSLog(@"Running on iOS 8");
 }
 
 @end

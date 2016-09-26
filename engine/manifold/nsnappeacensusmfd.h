@@ -172,7 +172,7 @@ class REGINA_API NSnapPeaCensusManifold : public NManifold {
          * Determines whether this and the given structure represent
          * the same 3-manifold from the SnapPea census.
          *
-         * As of Regina 4.97, this test respects the recent discovery that
+         * As of Regina 5.0, this test respects the recent discovery that
          * the manifolds \c x101 and \c x103 are homeomorphic.
          * For details, see B.B., <i>A duplicate pair in the SnapPea census</i>,
          * Experimental Mathematics, 23:170-173, 2014.
@@ -186,7 +186,7 @@ class REGINA_API NSnapPeaCensusManifold : public NManifold {
          * Determines whether this and the given structure represent
          * different 3-manifolds from the SnapPea census.
          *
-         * As of Regina 4.97, this test respects the recent discovery that
+         * As of Regina 5.0, this test respects the recent discovery that
          * the manifolds \c x101 and \c x103 are homeomorphic.
          * For details, see B.B., <i>A duplicate pair in the SnapPea census</i>,
          * Experimental Mathematics, 23:170-173, 2014.

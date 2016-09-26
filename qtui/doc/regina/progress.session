@@ -1,7 +1,7 @@
 example$ regina-python
 Regina 5.0
-Software for 3-manifolds, 4-manifolds and normal surface theory
-Copyright (c) 1999-2015, The Regina development team
+Software for low-dimensional topology
+Copyright (c) 1999-2016, The Regina development team
 &gt;&gt;&gt; ################################
 ... #
 ... #  Sample Python Script

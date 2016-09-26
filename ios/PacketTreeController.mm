@@ -106,10 +106,10 @@
     // We use an activity indicator since files could take some time to load.
     UIView* rootView = [UIApplication sharedApplication].keyWindow.rootViewController.view;
     MBProgressHUD* hud = [MBProgressHUD showHUDAddedTo:rootView animated:YES];
-    [hud setLabelText:@"Loading"];
+    hud.label.text = @"Loading";
     
     [doc openWithCompletionHandler:^(BOOL success) {
-        [hud hide:YES];
+        [hud hideAnimated:YES];
         if (! success) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could Not Open Document"
                                                             message:@"I can read Regina's own data files, as well as SnapPea/SnapPy triangulation files.  Please ensure that your document uses one of these file formats."

@@ -770,16 +770,14 @@ bool NGroupPresentation::simplifyWord( NGroupExpression &input ) const
 std::unique_ptr<NHomGroupPresentation>
 NGroupPresentation::intelligentSimplifyDetail()
 {
-    bool doRep(true), bool1(false), bool2(false);
+    bool doRep(true);
     std::unique_ptr<NHomGroupPresentation> redHom;
     while (doRep) {
         doRep = false;
-        bool1 = false;
-        bool2 = false;
         std::unique_ptr<NHomGroupPresentation> tempHom(
             smallCancellationDetail() );
         if (tempHom.get()) {
-            bool1 = true;
+            doRep = true;
             if (!redHom.get()) redHom.reset( tempHom.release() );
             else redHom.reset( tempHom->composeWith( *redHom.get() ).release() );
         }
@@ -787,11 +785,10 @@ NGroupPresentation::intelligentSimplifyDetail()
         std::unique_ptr<NHomGroupPresentation> temp2Hom(
             intelligentNielsenDetail() );
         if (temp2Hom.get()) {
-            bool2 = true;
+            doRep = true;
             if (!redHom.get()) redHom.reset( temp2Hom.release() );
             else redHom.reset( temp2Hom->composeWith( *redHom.get() ).release() );
         }
-        if ( bool2 ) doRep = true;
     }
 
     std::unique_ptr<NHomGroupPresentation> temp3Hom(

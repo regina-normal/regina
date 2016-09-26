@@ -69,7 +69,12 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>5.0.0.0</string>
+	<string>5.0.0.2</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>dbapi-1</string>
+		<string>dbapi-3</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIFileSharingEnabled</key>
@@ -80,6 +85,8 @@
 	<array>
 		<string>armv7</string>
 	</array>
+	<key>UIRequiresFullScreen</key>
+	<true/>
 	<key>UIStatusBarTintParameters</key>
 	<dict>
 		<key>UINavigationBar</key>

@@ -32,22 +32,26 @@
 
 #import "ReginaHelper.h"
 #import "TextHelper.h"
+#import "TextPopover.h"
 #import "TriangulationViewController.h"
 #import "TriAlgebra.h"
 #import "maths/numbertheory.h"
 #import "triangulation/ntriangulation.h"
 #import "utilities/stringutils.h"
 
+// TODO: Turaev-Viro: reduce size of the label in the "Left Detail" table cells?
+// TODO: Turaev-Viro calculation: "wait" not working
+
 #define TV_WARN_LARGE_R 15
 
 @interface TVItem : NSObject
 
-@property (assign, nonatomic) int r;
-@property (assign, nonatomic) int root;
-@property (assign, nonatomic) double value;
+@property (assign, nonatomic) unsigned long r;
+@property (assign, nonatomic) bool parity;
+@property (strong, nonatomic) NSString* value;
 
-- (id)initWithValue:(double)value r:(int)r root:(int)root;
-+ (id)itemWithValue:(double)value r:(int)r root:(int)root;
+- (id)initWithValue:(NSString*)value r:(unsigned long)r parity:(bool)parity;
++ (id)itemWithValue:(NSString*)value r:(unsigned long)r parity:(bool)parity;
 
 - (NSComparisonResult)compare:(TVItem*)rhs;
 
@@ -55,35 +59,39 @@
 
 @implementation TVItem
 
-- (id)initWithValue:(double)value r:(int)r root:(int)root
+- (id)initWithValue:(NSString*)value r:(unsigned long)r parity:(bool)parity
 {
     self = [super init];
     if (self) {
         _value = value;
         _r = r;
-        _root = root;
+        _parity = parity;
     }
     return self;
 }
 
-+ (id)itemWithValue:(double)value r:(int)r root:(int)root
++ (id)itemWithValue:(NSString*)value r:(unsigned long)r parity:(bool)parity
 {
-    return [[TVItem alloc] initWithValue:value r:r root:root];
+    return [[TVItem alloc] initWithValue:value r:r parity:parity];
 }
 
 - (NSComparisonResult)compare:(TVItem *)rhs
 {
     if (self.r < rhs.r) return NSOrderedAscending;
     if (self.r > rhs.r) return NSOrderedDescending;
-    if (self.root < rhs.root) return NSOrderedAscending;
-    if (self.root > rhs.root) return NSOrderedDescending;
+    if (self.r % 2) {
+        if (self.parity && ! rhs.parity)
+            return NSOrderedAscending;
+        if (rhs.parity && ! self.parity)
+            return NSOrderedDescending;
+    }
     return NSOrderedSame;
 }
 
 @end
 
-@interface TriAlgebra () <UITableViewDataSource, UIAlertViewDelegate> {
-    int r, root;
+@interface TriAlgebra () <UITableViewDataSource> {
+    int r;
     NSMutableArray* computed;
 }
 @property (weak, nonatomic) IBOutlet UILabel *header;
@@ -111,6 +119,10 @@
 {
     [super viewDidLoad];
     self.viewer = static_cast<TriangulationViewController*>(self.parentViewController);
+
+
+    UILongPressGestureRecognizer *g = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(tvDetail:)];
+    [self.tvValues addGestureRecognizer:g];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -234,29 +246,35 @@
 
     computed = [[NSMutableArray alloc] init];
     const regina::NTriangulation::TuraevViroSet& s = self.packet->allCalculatedTuraevViro();
-    for (regina::NTriangulation::TuraevViroSet::const_iterator it = s.begin(); it != s.end(); ++it)
-        [computed addObject:[TVItem itemWithValue:it->second.evaluate(it->first.second).real() r:it->first.first root:it->first.second]];
+    for (const auto& tv : s)
+        [computed addObject:[TVItem itemWithValue:@(tv.second.utf8("\u03B6" /* small zeta */).c_str())
+                                                r:tv.first.first
+                                           parity:tv.first.second]];
 
     [self.tvValues reloadData];
 }
 
 - (IBAction)tvCalculate:(id)sender {
-    NSRegularExpression* regex = [[NSRegularExpression alloc] initWithPattern:@"\\A[ \\(]*(\\d+)[ ,]+(\\d+)[ \\)]*\\Z" options:0 error:nil];
-    NSTextCheckingResult* result = [regex firstMatchInString:self.tvArgs.text options:0 range:NSMakeRange(0, self.tvArgs.text.length)];
-    if (! result) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Turaev-Viro Parameters"
-                                                        message:@"Please enter the parameters (r, root) in the box provided.  "
-                                                                 "These must be positive integers with 0 < root < 2r, and where "
-                                                                 "root describes a (2r)th root of unity.  An example is (5, 3)."
+    NSString* text = [self.tvArgs.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if (text.length == 0) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Missing Turaev-Viro Argument"
+                                                        message:@"Please enter the argument r into the box provided."
                                                        delegate:nil
                                               cancelButtonTitle:@"Close"
                                               otherButtonTitles:nil];
         [alert show];
         return;
     }
-
-    r = [[self.tvArgs.text substringWithRange:[result rangeAtIndex:1]] intValue];
-    root = [[self.tvArgs.text substringWithRange:[result rangeAtIndex:2]] intValue];
+    r = text.intValue;
+    if (r == 0) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invalid Turaev-Viro Argument"
+                                                        message:@"The Turaev-Viro argument r should be a positive integer."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
 
     // Run sanity checks.
     if (! (self.packet->isValid() && self.packet->isClosed() && ! self.packet->isEmpty())) {
@@ -279,34 +297,31 @@
         return;
     }
 
-    if (root <= 0 || root >= 2 * r) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Requires 0 < root < 2r"
-                                                        message:nil
-                                                       delegate:nil
-                                              cancelButtonTitle:@"Close"
-                                              otherButtonTitles:nil];
-        [alert show];
-        return;
-    }
-
-    if (regina::gcd(r, root) > 1) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Requires gcd(r, root) = 1"
-                                                        message:nil
-                                                       delegate:nil
-                                              cancelButtonTitle:@"Close"
-                                              otherButtonTitles:nil];
-        [alert show];
-        return;
-    }
-
     if (r >= TV_WARN_LARGE_R) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Long Calculation Ahead"
-                                                        message:@"Turaev-Viro invariants require exponential time to compute, and you have chosen a large value of r.  "
-                                                                 "Are you sure you wish to proceed?"
-                                                       delegate:self
-                                              cancelButtonTitle:@"Cancel"
-                                              otherButtonTitles:@"Compute", nil];
-        [alert show];
+        // Hide the keyboard now.  This avoids an uncomfortable sequence
+        // of hide-show-hide.
+        [self.tvArgs resignFirstResponder];
+
+        UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Long Calculation Ahead"
+                                                                       message:@"Turaev-Viro invariants require exponential time to compute, and you have chosen a large value of r.  Are you sure you wish to proceed?"
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+
+        UIAlertAction* cancel = [UIAlertAction actionWithTitle:@"Cancel"
+                                                         style:UIAlertActionStyleCancel
+                                                       handler:^(UIAlertAction* action) {}];
+        UIAlertAction* compute = [UIAlertAction actionWithTitle:@"Compute"
+                                                          style:UIAlertActionStyleDefault
+                                                        handler:^(UIAlertAction* action) {
+                                                            // Compute the invariant!
+                                                            [ReginaHelper runWithHUD:@"Calculating…"
+                                                                                code:^{
+                                                                                    [self calculateTV];
+                                                                                }
+                                                                             cleanup:nil];
+                                                        }];
+        [alert addAction:cancel];
+        [alert addAction:compute];
+        [self presentViewController:alert animated:YES completion:nil];
         return;
     }
 
@@ -317,14 +332,35 @@
 // This may be called from either the main queue or a background thread.
 - (void)calculateTV
 {
-    const regina::NTriangulation::TuraevViroSet& s = self.packet->allCalculatedTuraevViro();
-    if (s.find(std::make_pair(r, root)) != s.end()) {
-        // Duplicate.
-        return;
+    NSMutableArray<NSIndexPath*>* paths = [[NSMutableArray alloc] init];
+    NSIndexPath* path;
+    if (r % 2) {
+        if ((path = [self calculateTVWithParity:true]))
+            [paths addObject:path];
+        if ((path = [self calculateTVWithParity:false]))
+            [paths addObject:path];
+    } else {
+        if ((path = [self calculateTVWithParity:false]))
+            [paths addObject:path];
     }
 
-    double value = self.packet->turaevViro(r, root).evaluate(root).real();
-    TVItem* item = [TVItem itemWithValue:value r:r root:root];
+    // The table needs to be updated in the main queue.
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tvValues insertRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationRight];
+    });
+}
+
+// This must only be called by calculateTV.
+- (NSIndexPath*)calculateTVWithParity:(bool)parity
+{
+    const auto& s = self.packet->allCalculatedTuraevViro();
+    if (s.find(std::make_pair(r, parity)) != s.end()) {
+        // Duplicate.
+        return nil;
+    }
+
+    NSString* value = @(self.packet->turaevViro(r, parity).utf8("\u03B6" /* small zeta */).c_str());
+    TVItem* item = [TVItem itemWithValue:value r:r parity:parity];
 
     NSUInteger index = [computed indexOfObject:item
                                  inSortedRange:NSMakeRange(0, computed.count)
@@ -332,11 +368,64 @@
                                usingComparator:^(TVItem* x, TVItem* y) { return [x compare:y]; }];
     [computed insertObject:item atIndex:index];
 
-    // The table needs to be updated in the main queue.
-    dispatch_async(dispatch_get_main_queue(), ^{
-        NSIndexPath* path = [NSIndexPath indexPathForRow:index inSection:0];
-        [self.tvValues insertRowsAtIndexPaths:@[path] withRowAnimation:UITableViewRowAnimationRight];
-    });
+    return [NSIndexPath indexPathForRow:index inSection:0];
+}
+
+- (IBAction)tvDetail:(id)sender {
+    UILongPressGestureRecognizer *press = static_cast<UILongPressGestureRecognizer*>(sender);
+    UIGestureRecognizerState state = press.state;
+
+    CGPoint location = [press locationInView:self.tvValues];
+    NSIndexPath *indexPath = [self.tvValues indexPathForRowAtPoint:location];
+
+    if (! indexPath)
+        return;
+
+    if (state == UIGestureRecognizerStateBegan) {
+        UITableViewCell *cell = [self.tvValues cellForRowAtIndexPath:indexPath];
+        TVItem* item = computed[indexPath.row];
+
+        NSMutableAttributedString* detail = [[NSMutableAttributedString alloc] init];
+
+        [detail appendAttributedString:[TextHelper markedString:[NSString stringWithFormat:@"Turaev-Viro invariant: "]]];
+        if (item.r % 2 == 0) {
+            [detail appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"r = %ld\n\n", item.r]]];
+        } else if (item.parity) {
+            [detail appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"r = %ld, odd\n\n", item.r]]];
+        } else {
+            [detail appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"r = %ld, even\n\n", item.r]]];
+        }
+
+        [detail appendAttributedString:[TextHelper markedString:[NSString stringWithFormat:@"Value: "]]];
+        [detail appendAttributedString:[[NSAttributedString alloc] initWithString:item.value]];
+        [detail appendAttributedString:[[NSAttributedString alloc] initWithString:@"\n\n"]];
+
+        [detail appendAttributedString:[TextHelper markedString:[NSString stringWithFormat:@"Root: "]]];
+
+        unsigned long primitiveRoot = ((item.r % 2 && ! item.parity) ? item.r : 2 * item.r);
+        NSString* ending;
+
+        if (primitiveRoot % 10 == 1 && primitiveRoot % 100 != 11)
+            ending = @"st";
+        else if (primitiveRoot % 10 == 2 && primitiveRoot % 100 != 12)
+            ending = @"nd";
+        else if (primitiveRoot % 10 == 3 && primitiveRoot % 100 != 13)
+            ending = @"rd";
+        else
+            ending = @"th";
+
+        [detail appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\u03B6 is a primitive %ld%@ root of unity", primitiveRoot, ending]]];
+
+        [detail addAttributes:@{NSFontAttributeName: cell.detailTextLabel.font} range:NSMakeRange(0, detail.length)];
+
+        TextPopover* c = [self.storyboard instantiateViewControllerWithIdentifier:@"textPopover"];
+        c.text = detail;
+        UIPopoverController* detailPopover = [[UIPopoverController alloc] initWithContentViewController:c];
+        [detailPopover presentPopoverFromRect:cell.frame
+                                       inView:self.tvValues
+                     permittedArrowDirections:UIPopoverArrowDirectionUp | UIPopoverArrowDirectionDown
+                                     animated:YES];
+    }
 }
 
 #pragma mark - Table view
@@ -350,28 +439,20 @@
 {
     TVItem* item = computed[indexPath.row];
     UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"Value" forIndexPath:indexPath];
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%lf", item.value];
-    cell.textLabel.text = [NSString stringWithFormat:@"%d, %d:", item.r, item.root];
+    cell.detailTextLabel.text = item.value;
+    if (item.r % 2) {
+        if (item.parity)
+            cell.textLabel.text = [NSString stringWithFormat:@"%ld, odd", item.r];
+        else
+            cell.textLabel.text = [NSString stringWithFormat:@"%ld, even", item.r];
+    } else
+        cell.textLabel.text = [NSString stringWithFormat:@"%ld", item.r];
     return cell;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return NO;
-}
-
-#pragma mark - Alert view
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex == alertView.cancelButtonIndex)
-        return;
-
-    [ReginaHelper runWithHUD:@"Calculating…"
-                        code:^{
-                            [self calculateTV];
-                        }
-                     cleanup:nil];
 }
 
 @end

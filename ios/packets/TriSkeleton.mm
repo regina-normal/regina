@@ -246,7 +246,7 @@
                         else
                             cell.data0.text = [NSString stringWithFormat:@"Ideal: Genus %ld non-orbl", (2 - v->linkEulerChar())];
                         break;
-                    case regina::NVertex::NON_STANDARD_BDRY:
+                    case regina::NVertex::INVALID:
                         cell.data0.attributedText = [TextHelper badString:@"Invalid"];
                         break;
                     default:

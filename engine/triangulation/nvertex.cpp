@@ -49,7 +49,7 @@ void NVertex::writeTextShort(std::ostream& out) const {
         case TORUS: out << "Torus cusp "; break;
         case KLEIN_BOTTLE: out << "Klein bottle cusp "; break;
         case NON_STANDARD_CUSP: out << "Non-standard cusp "; break;
-        case NON_STANDARD_BDRY: out << "Non-standard boundary "; break;
+        case INVALID: out << "Invalid boundary "; break;
     }
     out << "vertex of degree " << degree();
 }

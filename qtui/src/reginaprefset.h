@@ -212,6 +212,10 @@ class ReginaPrefSet : public QObject {
         enum SurfacesCompatMatrix { LocalCompat, GlobalCompat };
             /**< Possible compatibility matrices that can be displayed for a
                  normal surface list. */
+        enum TriGraphType { DualGraph, TreeDecomposition,
+                NiceTreeDecomposition };
+            /**< Possible types of graph that can be displayed in a
+                 (2,3,4)-manifold graph viewer. */
 
         bool anglesCreationTaut;
             /**< When enumerating angle structures, should the taut
@@ -308,6 +312,9 @@ class ReginaPrefSet : public QObject {
             /**< Indicates whether tetrahedron/pentachoron numbers should
                  be used to label vertices in face/facet pairing graphs
                  for 3/4-manifold triangulations. */
+        TriGraphType triInitialGraphType;
+            /**< Indicates which graph to initially display in a
+                 (2,3,4)-manifold graph viewer. */
         unsigned triSurfacePropsThreshold;
             /**< The maximum number of tetrahedra for which surface-related
                  properties of 3-manifold triangulations will be automatically

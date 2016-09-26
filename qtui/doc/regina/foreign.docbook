@@ -182,7 +182,7 @@
    <para>
     You can import a list of isomorphism signatures from a text file.
     This is a space-efficient, plain-text method of storing a list
-    of either 2-manifold or 3-manifold triangulations.
+    of 2-, 3- or 4-manifold triangulations.
    </para>
    <para>
     An <firstterm>isomorphism signature</firstterm> is a
@@ -208,13 +208,14 @@
     dLQbcbchhjw   L(9,2)
    </programlisting>
    <para>
-    An isomorphism signature list must contain either all 2-manifold
-    triangulations, or all 3-manifold triangulations (not a mix of both).  The
+    In an isomorphism signature list, all signatures must represent
+    triangulations of the same dimension (so, for example, the list
+    cannot contain a mix of 3-manifold and 4-manifold signatures).  The
     <menuchoice>
      <guimenu>File</guimenu>
      <guisubmenu>Import</guisubmenu>
     </menuchoice>
-    has different menu items for importing lists for each dimension.
+    menu has different menu items for importing lists in each dimension.
    </para>
    <para>
     The import will appear in your packet tree as a new
@@ -363,7 +364,7 @@
     languages).
     If your script uses a different encoding, you will need to set this
     in <link linkend="options-encoding">&regina;'s options</link>.
-    If you only ever use letters or symbols on a typical English keyboard,
+    If you only ever use letters or symbols found on a typical English keyboard,
     you do not need to worry about this at all.
    </para>
    <para>
@@ -565,7 +566,7 @@
     If you wish to use a different encoding, you will need to set this
     in <link linkend="options-encoding">&regina;'s options</link>.
     If you are not sure, the default of &utf8; is typically a good choice.
-    If you only ever use letters or symbols on a typical English keyboard,
+    If you only ever use letters or symbols found on a typical English keyboard,
     you do not need to worry about text encodings at all.
    </para>
    <para>

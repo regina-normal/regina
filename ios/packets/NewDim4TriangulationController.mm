@@ -31,10 +31,12 @@
  **************************************************************************/
 
 #import "NewDim4TriangulationController.h"
+#import "PacketPicker.h"
 #import "PacketTreeController.h"
 #import "ReginaHelper.h"
 #import "dim4/dim4exampletriangulation.h"
 #import "dim4/dim4triangulation.h"
+#import "triangulation/ntriangulation.h"
 
 @interface NewDim4TriangulationController ()
 @property (weak, nonatomic) IBOutlet UISegmentedControl *types;
@@ -47,7 +49,7 @@
 - (void)viewDidLoad
 {
     self.pages = static_cast<NewPacketPageViewController*>(self.childViewControllers.lastObject);
-    [self.pages fillWithPages:@[@"newDim4TriEmpty", @"newDim4TriExample", @"newDim4TriIsosig"]
+    [self.pages fillWithPages:@[@"newDim4TriEmpty", @"newDim4TriExample", @"newDim4TriBundle", @"newDim4TriIsosig"]
                  pageSelector:self.types
                    defaultKey:@"NewDim4TriangulationPage"];
 }
@@ -170,6 +172,74 @@ typedef regina::Dim4Triangulation* (*Dim4TriangulationCreator)();
 - (regina::NPacket *)create
 {
     return [options[[self.example selectedRowInComponent:0]] create];
+}
+
+@end
+
+#pragma mark - Bundle page
+
+#define KEY_LAST_BUNDLE_TYPE @"NewDim4TriangulationBundleType"
+
+@interface NewDim4TriangulationBundlePage ()
+@property (weak, nonatomic) IBOutlet UISegmentedControl *bundleType;
+@property (weak, nonatomic) IBOutlet PacketPicker *from;
+@end
+
+@implementation NewDim4TriangulationBundlePage
+
+- (void)viewDidLoad
+{
+    NewDim4TriangulationController* c = static_cast<NewDim4TriangulationController*>(self.parentViewController.parentViewController);
+    [self.from fill:c.spec.parent->root() type1:regina::PACKET_TRIANGULATION type2:regina::PACKET_SNAPPEATRIANGULATION allowNone:NO noneText:@"No 3-manifold triangulations in this document"];
+    [self.bundleType setSelectedSegmentIndex:[[NSUserDefaults standardUserDefaults] integerForKey:KEY_LAST_BUNDLE_TYPE]];
+}
+
+- (IBAction)bundleTypeChanged:(id)sender {
+    [[NSUserDefaults standardUserDefaults] setInteger:[self.bundleType selectedSegmentIndex] forKey:KEY_LAST_BUNDLE_TYPE];
+}
+
+- (regina::NPacket*)create
+{
+    if ([self.from empty]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No 3-Manifold Triangulations"
+                                                        message:@"This document does not contain any 3-manifold triangulations, and so there is nothing for me to build a bundle from.  You can build a 4-D bundle by first adding a new 3-D triangulation to this document."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return 0;
+    }
+
+    regina::NTriangulation* tri = static_cast<regina::NTriangulation*>([self.from selectedPacket]);
+    if (! tri) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Triangulation Selected"
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return 0;
+    }
+
+    regina::Dim4Triangulation* ans;
+    if (self.bundleType.selectedSegmentIndex == 0) {
+        ans = regina::Dim4ExampleTriangulation::iBundle(*tri);
+
+        if (tri->label().empty())
+            ans->setLabel("I-bundle");
+        else
+            ans->setLabel(tri->label() + " × I");
+    } else {
+        ans = regina::Dim4ExampleTriangulation::s1Bundle(*tri);
+
+        if (tri->label().empty())
+            ans->setLabel("S¹-bundle");
+        else
+            ans->setLabel(tri->label() + " × S¹");
+    }
+
+    ans->intelligentSimplify();
+    return ans;
 }
 
 @end

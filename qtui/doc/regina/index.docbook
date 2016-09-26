@@ -4,22 +4,26 @@
   <!ENTITY kappname "&regina;">
 
   <!ENTITY regversion "5.0">
-  <!ENTITY regdate "29 August 2014">
+  <!ENTITY regdate "26 September 2016">
   <!ENTITY copyrightyears "1999&ndash;2016">
   <!ENTITY copyrightholder "The Regina development team">
   <!ENTITY copyrightnotice
    "Copyright &copy; &copyrightyears;, &copyrightholder;">
-  <!ENTITY reguserlist "<email>regina-user@lists.sourceforge.net</email>">
   <!ENTITY regabstract
    "<para>
-     &regina; is a software package for studying 3-manifold triangulations,
-     normal surfaces and angle structures.  Other key features include
-     census enumeration, combinatorial
-     recognition of triangulations, and high-level tasks such as
-     3-sphere recognition and connected sum decomposition.
-     &regina; comes with a full graphical user interface, and also offers
+     &regina; is a software package for 3-manifold and 4-manifold topologists,
+     with a focus on triangulations, normal surfaces and angle structures.
+     For 3-manifolds, it includes high-level tasks such as 3-sphere
+     recognition, connected sum decomposition and Hakenness testing,
+     comes with a rich database of census manifolds, and incorporates
+     the &snappea; kernel for working with hyperbolic manifolds.
+     For 4-manifolds, it offers a range of combinatorial and algebraic tools,
+     plus support for normal hypersurfaces.
+     &regina; comes with a full graphical user interface, as well as
      &python; bindings and a low-level &cpp; programming interface.
     </para>">
+  <!ENTITY mailtheauthors
+   "mail <link linkend='acknowledgements'>the authors</link>">
   <!ENTITY regwebsite
    "<ulink url='http://regina.sourceforge.net/'>&regina; website</ulink>">
   <!ENTITY regenginedocs
@@ -67,6 +71,9 @@
   <!ENTITY csv "<acronym>CSV</acronym>">
   <!ENTITY cython "<application>Cython</application>">
   <!ENTITY debian "<application>Debian</application>">
+  <!ENTITY dmanifold "<replaceable>d</replaceable>-manifold">
+  <!ENTITY dsimplex "<replaceable>d</replaceable>-simplex">
+  <!ENTITY dsimplices "<replaceable>d</replaceable>-simplices">
   <!ENTITY evince "<application>Evince</application>">
   <!ENTITY fedora "<application>Fedora</application>">
   <!ENTITY fink "<application>Fink</application>">
@@ -106,6 +113,7 @@
    "<replaceable>P</replaceable><superscript>2</superscript>-irreducible">
   <!ENTITY previewapp "<application>Preview</application>">
   <!ENTITY python "<application>Python</application>">
+  <!ENTITY q0 "<replaceable>q</replaceable><subscript>0</subscript>">
   <!ENTITY qt "<application>Qt</application>">
   <!ENTITY recogniser "<application>3-Manifold Recogniser</application>">
   <!ENTITY recogniserlink "<ulink url='http://www.matlas.math.csu.ru/?page=recognizer'>&recogniser;</ulink>">
@@ -113,6 +121,7 @@
   <!ENTITY rhfedora "<application>Red Hat</application> /
    <application>Fedora</application>">
   <!ENTITY rpm "<acronym>RPM</acronym>">
+  <!ENTITY s1 "S<superscript>1</superscript>">
   <!ENTITY SFSLong "Seifert Fibred Space">
   <!ENTITY sfslong "Seifert fibred space">
   <!ENTITY snappea "<application>SnapPea</application>">
@@ -153,7 +162,6 @@
   <!ENTITY reginapacket SYSTEM "packet.docbook">
   <!ENTITY reginatriangulations SYSTEM "triangulations.docbook">
   <!ENTITY reginasnappea SYSTEM "snappea.docbook">
-  <!ENTITY reginadim2tri SYSTEM "dim2tri.docbook">
   <!ENTITY reginasurfaces SYSTEM "surfaces.docbook">
   <!ENTITY reginaangles SYSTEM "angles.docbook">
   <!ENTITY reginaforeign SYSTEM "foreign.docbook">
@@ -186,7 +194,7 @@
    <firstname>Benjamin</firstname>
    <surname>Burton</surname>
    <affiliation>
-    <address><email>bab@debian.org</email></address>
+    <address><email>bab@maths.uq.edu.au</email></address>
    </affiliation>
   </author></authorgroup>
 
@@ -202,7 +210,7 @@
    </para>
   </legalnotice>
 
-  <date>2014-08-29</date>
+  <date>2016-09-26</date>
   <releaseinfo>5.0</releaseinfo>
 
   <abstract>
@@ -217,10 +225,11 @@
   </abstract>
 
   <keywordset>
-   <keyword>KDE</keyword>
+   <keyword>Qt</keyword>
    <keyword>Regina</keyword>
    <keyword>topology</keyword>
    <keyword>3-manifolds</keyword>
+   <keyword>4-manifolds</keyword>
    <keyword>triangulations</keyword>
    <keyword>normal surfaces</keyword>
    <keyword>angle structures</keyword>
@@ -232,7 +241,6 @@
  &reginapacket;
  &reginatriangulations;
  &reginasnappea;
- &reginadim2tri;
  &reginasurfaces;
  &reginaangles;
  &reginaforeign;

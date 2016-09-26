@@ -1291,6 +1291,9 @@ Equality type : BY_VALUE
 NProgressTracker : class
 Equality type : BY_REFERENCE
 
+NProgressTrackerOpen : class
+Equality type : BY_REFERENCE
+
 NRational : class
 Equality type : BY_VALUE
 

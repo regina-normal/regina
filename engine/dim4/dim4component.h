@@ -275,6 +275,8 @@ inline size_t Dim4Component::getNumberOfBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
+#ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
+
 template <>
 inline const std::vector<Dim4Tetrahedron*>& Component<4>::faces<3>() const {
     return tetrahedra_;
@@ -314,6 +316,8 @@ template <>
 inline Dim4Vertex* Dim4Component::face<0>(size_t index) const {
     return vertices_[index];
 }
+
+#endif // __DOXYGEN
 
 inline Dim4BoundaryComponent* Dim4Component::boundaryComponent(
         size_t index) const {

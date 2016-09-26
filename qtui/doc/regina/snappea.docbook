@@ -2,7 +2,7 @@
  <title>&snappea; Triangulations</title>
 
  <para>
-  &regina;'s native triangulation structure is the
+  For 3-manifolds, &regina;'s native triangulation structure is the
   <link linkend="packet-triangulation">triangulation packet</link>,
   as described in the
   <link linkend="triangulations">previous chapter</link>.
@@ -11,7 +11,7 @@
   all of &regina;'s topological algorithms.
  </para>
  <para>
-  However, if you are working with hyperbolic manifolds then it is
+  However, if you are working with hyperbolic 3-manifolds then it is
   sometimes desirable to work with both &regina; and &snappeapylink;
   simultaneously, and to preserve data that only
   &snappea; knows about (such as fillings and peripheral curves)
@@ -20,8 +20,8 @@
  <para>
   The solution is the <firstterm>&snappea; triangulation</firstterm> packet.
   This is a hybrid structure that maintains two synchronised copies of a
-  triangulation, one using &regina;'s internal structures and one using
-  &snappea;'s internal structures.
+  3-manifold triangulation, one using &regina;'s internal structures and one
+  using &snappea;'s internal structures.
  </para>
  <para>
   The advantages of using a &snappea; triangulation are:
@@ -77,9 +77,8 @@
    is inexact.  In particular, it may be subject to numerical instability
    or floating point error.
    If you wish to rigorously certify that a manifold is hyperbolic, see the
-   <link linkend="tri-hyperbolic">recognition tab</link> (which is
-   available for &regina;'s native triangulations and
-   also &snappea; triangulations).
+   <link linkend="tri-hyperbolic">recognition tab</link> (which works with
+   both &regina;'s native triangulations and also &snappea; triangulations).
   </para>
  </warning>
 
@@ -90,7 +89,7 @@
    <title>Converting from a &regina; Triangulation</title>
    <para>
     It is easy to convert one of &regina;'s native
-    <link linkend="packet-triangulation">triangulation packets</link>
+    <link linkend="packet-triangulation">3-manifold triangulation packets</link>
     into a &snappea; triangulation.  To do this, open the &regina;
     triangulation and then either:
     <itemizedlist>
@@ -180,10 +179,8 @@
     </inlinemediaobject>
    </para>
    <para>
-    In addition to the usual information, you are asked
-    <emphasis>how</emphasis> you wish to
-    create the &snappea; triangulation (see the
-    drop-down box below).
+    You will be asked <emphasis>how</emphasis> you wish to
+    create the &snappea; triangulation (see the drop-down box below).
     Here we walk through the various options.
    </para>
    <para>
@@ -224,7 +221,8 @@
     <title>Convert a &regina; triangulation</title>
 
     <para>
-     This allows you to select one of &regina;'s native triangulations from
+     This allows you to select one of &regina;'s native 3-manifold
+     triangulations from
      your current file and convert it into a &snappea; triangulation.
      This is exactly the same as opening the &regina; triangulation and
      converting it through the &snappea; tab,
@@ -250,10 +248,11 @@
     <title>Example Triangulation</title>
 
     <para>
-     As with the native triangulation class,
-     &regina; offers a small selection of ready-made sample triangulations.
-     Simply select one from the list provided and &regina; will build the
-     corresponding triangulation for you.
+     &regina; also offers a small selection of ready-made sample triangulations,
+     which you can play with to see how &snappea; triangulations work
+     within &regina;.
+     Simply select an example from the list provided and &regina; will build the
+     corresponding &snappea; triangulation for you.
     </para>
     <para>
      <inlinemediaobject>
@@ -282,7 +281,7 @@
 
   <para>
    &snappea; triangulations inherit a great deal of functionality
-   from &regina;'s native triangulations.  If you open the &snappea;
+   from &regina;'s native 3-manifold triangulations.  If you open the &snappea;
    triangulation viewer, you will see several familiar tabs:
    <link linkend="tri-viewgluings">gluings</link>,
    <link linkend="tri-skeleton">skeleton</link>,
@@ -357,15 +356,15 @@
          <glossterm><guilabel>Tetrahedra positively
           oriented</guilabel></glossterm>
          <glossdef><para>
-          All tetrahedra are either positively oriented or flat, though the
-          entire solution is not flat and no tetrahedra are degenerate.
+          All tetrahedra are positively oriented.
          </para></glossdef>
         </glossentry>
         <glossentry id="snappea-nongeometric">
-         <glossterm><guilabel>Contains negatively oriented
+         <glossterm><guilabel>Contains flat or negative
           tetrahedra</guilabel></glossterm>
          <glossdef><para>
-          The volume is positive, but some tetrahedra are negatively oriented.
+          The overall volume is positive, but some tetrahedra are flat
+          or negatively oriented.  No tetrahedra have shape 0, 1 or infinity.
          </para></glossdef>
         </glossentry>
         <glossentry>
@@ -392,6 +391,13 @@
          <glossterm><guilabel>No solution found</guilabel></glossterm>
          <glossdef><para>
           The gluing equations could not be solved.
+         </para></glossdef>
+        </glossentry>
+        <glossentry>
+         <glossterm><guilabel>Externally computed</guilabel></glossterm>
+         <glossdef><para>
+          Tetrahedron shapes were inserted into the triangulation by
+          some other means (e.g., manually, or by another program).
          </para></glossdef>
         </glossentry>
        </glosslist>
@@ -421,7 +427,7 @@
      The individual cusps are numbered by the &snappea; kernel
      (0, 1, 2, &hellip;).  Beside each cusp is the corresponding vertex number
      given by &regina;; this is the vertex number that you see in the
-     <link linkend="tri-vertices">skeleton viewer</link>.
+     <link linkend="tri-faces">skeleton viewer</link>.
      Note that &regina;'s vertex numbers and &snappea;'s cusp numbers are
      often, but not always, the same.
     </para>
@@ -444,7 +450,7 @@
      </menuchoice>
      from the menu.
      This will explicitly build the chosen vertex link as a new
-     <link linkend="dim2triangulations">2-manifold triangulation</link>.
+     2-manifold triangulation.
      This operation is the same as for &regina;'s native triangulations,
      and you can read more details in the
      <link linkend="tri-vertexlinks">triangulations chapter</link>.
@@ -532,67 +538,21 @@
      </imageobject>
     </inlinemediaobject>
    </para>
+   <tip><para>
+    If you cannot read the superscript digits in the fundamental group
+    presentations, or if you cannot read the blackboard-bold Z symbols
+    in the homology groups, try
+    <link linkend="options-general">disabling unicode symbols</link>
+    in &regina;'s settings.
+   </para></tip>
   </sect2>
 
-  <sect2 id="snappea-file">
-   <title>Exporting to Other Formats</title>
-   <para>
-    The <guilabel>File</guilabel> tab shows the triangulation in
-    &snappeapy;'s own file format.  You can copy this to the clipboard
-    and paste it into other applications if you wish.
-   </para>
-   <para>
-    If you simply wish to save the triangulation as a &snappeapy; data file
-    on your hard drive, you might find it easier to
-    <link linkend="export-snappea">export the &snappea; triangulation</link>
-    directly instead.
-   </para>
-   <para>
-    <inlinemediaobject>
-     <imageobject>
-      <imagedata fileref="snappea-file.png"/>
-     </imageobject>
-    </inlinemediaobject>
-   </para>
-   <sect3 id="snappea-toregina">
-    <title>Converting from a &regina; Triangulation</title>
-    <para>
-     If you want access to &regina;'s full functionality and
-     fine-grained access to the triangulation, you can convert your
-     &snappea; triangulation packet into one of &regina;'s
-     native <link linkend="packet-triangulation">triangulation packets</link>.
-     To do this, select
-     <menuchoice>
-      <guimenu>&snappea;&nbsp;Triangulation</guimenu>
-      <guimenuitem>Convert to &regina;</guimenuitem>
-     </menuchoice>
-     from the menu, or press the corresponding toolbar button
-     (as circled in the picture below).
-     This will create a new &regina; triangulation immediately beneath
-     the original &snappea; triangulation in the packet tree;
-     the original will be left untouched.
-    </para>
-    <warning><para>
-     Be aware that, when you convert to a &regina; triangulation,
-     all &snappea;-specific information such as fillings and peripheral
-     curves <emphasis>will be lost</emphasis>.
-     If you want the new &regina; triangulation to include your fillings,
-     then you should first
-     <link linkend="snappea-fill-permanent">make your fillings
-     permanent</link>.
-    </para></warning>
-    <para>
-     <inlinemediaobject>
-      <imageobject>
-       <imagedata fileref="snappea-toregina.png"/>
-      </imageobject>
-     </inlinemediaobject>
-    </para>
-   </sect3>
-  </sect2>
+  <sect2 id="snappea-retriangulation">
+   <title>Retriangulation</title>
+    Whilst &snappea; triangulations do not offer the same level of
+    fine-grained manipulation as &regina;'s own triangulations, there are
+    still some ways in which you can retriangulate your manifold.
 
-  <sect2 id="snappea-other">
-   <title>Other Operations</title>
    <sect3 id="snappea-randomise">
     <title>Randomisation</title>
     <para>
@@ -663,6 +623,71 @@
      This will create a new &regina; triangulation immediately beneath
      the original &snappea; triangulation in the packet tree;
      the original will be left untouched.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="snappea-canonical.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+   </sect3>
+  </sect2>
+
+  <sect2 id="snappea-file">
+   <title>Exporting to Other Formats</title>
+   <para>
+    The <guilabel>File</guilabel> tab shows the triangulation in
+    &snappeapy;'s own file format.  You can copy this to the clipboard
+    and paste it into other applications if you wish.
+   </para>
+   <para>
+    If you simply wish to save the triangulation as a &snappeapy; data file
+    on your hard drive, you might find it easier to
+    <link linkend="export-snappea">export the &snappea; triangulation</link>
+    directly instead.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="snappea-file.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <sect3 id="snappea-toregina">
+    <title>Converting to a &regina; Triangulation</title>
+    <para>
+     If you want access to &regina;'s full functionality and
+     fine-grained access to the triangulation, you can convert your
+     &snappea; triangulation packet into one of &regina;'s
+     native <link linkend="packet-triangulation">3-manifold
+     triangulation packets</link>.
+     To do this, select
+     <menuchoice>
+      <guimenu>&snappea;&nbsp;Triangulation</guimenu>
+      <guimenuitem>Convert to &regina;</guimenuitem>
+     </menuchoice>
+     from the menu, or press the corresponding toolbar button
+     (as circled in the picture below).
+     This will create a new &regina; triangulation immediately beneath
+     the original &snappea; triangulation in the packet tree;
+     the original will be left untouched.
+    </para>
+    <warning><para>
+     Be aware that, when you convert to a &regina; triangulation,
+     all &snappea;-specific information such as fillings and peripheral
+     curves <emphasis>will be lost</emphasis>.
+     If you want the new &regina; triangulation to include your fillings,
+     then you should first
+     <link linkend="snappea-fill-permanent">make your fillings
+     permanent</link>.
+    </para></warning>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="snappea-toregina.png"/>
+      </imageobject>
+     </inlinemediaobject>
     </para>
    </sect3>
   </sect2>

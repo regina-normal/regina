@@ -36,6 +36,7 @@
 #include "dim2/dim2triangulation.h"
 #include "dim4/dim4facetpairing.h"
 #include "dim4/dim4triangulation.h"
+#include "treewidth/ntreedecomposition.h"
 #include "triangulation/nfacepairing.h"
 #include "triangulation/ntriangulation.h"
 
@@ -46,6 +47,7 @@
 #include "../messagelayer.h"
 
 #include <fstream>
+#include <QComboBox>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -62,10 +64,12 @@
 #include "gvc.h"
 
 extern gvplugin_library_t gvplugin_neato_layout_LTX_library;
+extern gvplugin_library_t gvplugin_dot_layout_LTX_library;
 extern gvplugin_library_t gvplugin_core_LTX_library;
 
 lt_symlist_t lt_preloaded_symbols[] = {
     { "gvplugin_neato_layout_LTX_library", &gvplugin_neato_layout_LTX_library },
+    { "gvplugin_dot_layout_LTX_library", &gvplugin_dot_layout_LTX_library },
     { "gvplugin_core_LTX_library", &gvplugin_core_LTX_library },
     { 0, 0 }
 };
@@ -78,6 +82,49 @@ FacetGraphTab::FacetGraphTab(FacetGraphData* useData,
         graphvizLabels(ReginaPrefSet::global().triGraphvizLabels) {
     ui = new QWidget();
     QBoxLayout* baseLayout = new QVBoxLayout(ui);
+
+    // The drop-down box to choose which graph to display.
+    QBoxLayout* hdrLayout = new QHBoxLayout();
+    baseLayout->addLayout(hdrLayout);
+
+    QLabel* label = new QLabel(tr("Display graph:"), ui);
+    hdrLayout->addWidget(label);
+    chooseType = new QComboBox(ui);
+    chooseType->insertItem(0, tr("Dual graph"));
+    chooseType->insertItem(1, tr("Tree decomposition"));
+    chooseType->insertItem(2, tr("Nice tree decomposition"));
+    connect(chooseType, SIGNAL(activated(int)), this, SLOT(changeType(int)));
+    hdrLayout->addWidget(chooseType);
+    QString msg = tr("<qt>Allows you to switch between different graphs.<p>"
+        "The <i>dual graph</i> (or the %1 pairing graph) has a node "
+        "for every %2 in the trianguation, and an arc for every pair of "
+        "%3 that are joined together along two %4.<p>"
+        "A <i>tree decomposition</i> models the dual graph as a tree, "
+        "where each node of this tree is a \"bag\" containing several nodes "
+        "of the dual graph.  A <i>nice</i> tree decomposition is a "
+        "tree decomposition with a very specific structure that is "
+        "well-suited for use in algorithms.</qt>")
+        .arg(data->facetName())
+        .arg(data->simplexName())
+        .arg(data->simplicesName())
+        .arg(data->facetsName());
+    label->setWhatsThis(msg);
+    chooseType->setWhatsThis(msg);
+    switch (ReginaPrefSet::global().triInitialGraphType) {
+        case ReginaPrefSet::TreeDecomposition:
+            chooseType->setCurrentIndex(1); break;
+        case ReginaPrefSet::NiceTreeDecomposition:
+            chooseType->setCurrentIndex(2); break;
+        default: chooseType->setCurrentIndex(0); break;
+    }
+    chooseType->setEnabled(false);
+
+    hdrLayout->addStretch(1);
+
+    graphMetrics = new QLabel(ui);
+    hdrLayout->addWidget(graphMetrics);
+
+    // The stacked widget.
     stack = new QStackedWidget(ui);
 
     // Information and error layers.
@@ -95,7 +142,6 @@ FacetGraphTab::FacetGraphTab(FacetGraphData* useData,
     //                         "}");
     graph = new QSvgWidget(layerGraph);
     layerGraph->setWidget(graph);
-    layerGraph->setWhatsThis(data->overview());
     stack->addWidget(layerGraph);
 
     // Finish off.
@@ -126,8 +172,30 @@ void FacetGraphTab::updatePreferences() {
     // graph hasn't been drawn yet (i.e., nobody has ever selected
     // the graph tab), there's no need to refresh since this will
     // be done anyway when the tab is first shown.
-    if (! neverDrawn)
+
+    // Note that the labels option only matters for the dual graph, not the
+    // tree decompositions.
+    if (chooseType->currentIndex() == 0 && ! neverDrawn)
         refresh();
+}
+
+void FacetGraphTab::changeType(int index) {
+    switch (index) {
+        case 1:
+            ReginaPrefSet::global().triInitialGraphType =
+                ReginaPrefSet::TreeDecomposition;
+            break;
+        case 2:
+            ReginaPrefSet::global().triInitialGraphType =
+                ReginaPrefSet::NiceTreeDecomposition;
+            break;
+        default:
+            ReginaPrefSet::global().triInitialGraphType =
+                ReginaPrefSet::DualGraph;
+            break;
+    }
+
+    refresh();
 }
 
 regina::NPacket* FacetGraphTab::getPacket() {
@@ -139,6 +207,8 @@ QWidget* FacetGraphTab::getInterface() {
 }
 
 void FacetGraphTab::refresh() {
+    chooseType->setEnabled(false);
+
 #ifndef LIBGVC_FOUND
     showError(tr("<qt>This copy of <i>Regina</i> was built without "
         "<i>Graphviz</i> support.  Therefore I cannot draw graphs.<p>"
@@ -151,7 +221,7 @@ void FacetGraphTab::refresh() {
 #else
     neverDrawn = false;
 
-    unsigned long n = data->numberOfSimplices();
+    size_t n = data->numberOfSimplices();
     if (n == 0) {
         showInfo(tr("<qt>This triangulation is empty.</qt>"));
         return;
@@ -163,7 +233,53 @@ void FacetGraphTab::refresh() {
         return;
     }
 
-    std::string dot = data->dot(graphvizLabels);
+    std::string dot;
+    int width, bags;
+    switch (chooseType->currentIndex()) {
+        case 1:
+            dot = data->treeDecomp(false, bags, width);
+            graphMetrics->setText(tr("%1 bags, width %2").arg(bags).arg(width));
+            layerGraph->setWhatsThis(tr("<qt>A <i>tree decomposition</i> "
+                "models the dual graph of a triangulation as a tree.<p>"
+                "Each node of this tree is a \"bag\" containing several "
+                "nodes of the dual graph, and the <i>width</i> of the "
+                "tree decomposition is one less than the size of the "
+                "largest bag.<p>"
+                "Tree decompositions are subject to additional structural "
+                "constraints that make them useful in "
+                "fixed-parameter tractable algorithms.</qt>"));
+            break;
+        case 2:
+            dot = data->treeDecomp(true, bags, width);
+            graphMetrics->setText(tr("%1 bags, width %2").arg(bags).arg(width));
+            layerGraph->setWhatsThis(tr("<qt>A <i>tree decomposition</i> "
+                "models the dual graph of a triangulation as a tree.<p>"
+                "Each node of this tree is a \"bag\" containing several "
+                "nodes of the dual graph, and the <i>width</i> of the "
+                "tree decomposition is one less than the size of the "
+                "largest bag.<p>"
+                "A <i>nice</i> tree decomposition has a very particular "
+                "structure, in which bags only change incrementally "
+                "as you walk through the tree.  This makes them ideal "
+                "for implementing and analysing fixed-parameter "
+                "tractable algorithms.</qt>"));
+            break;
+        default:
+            dot = data->dual(graphvizLabels);
+            graphMetrics->setText(QString());
+            layerGraph->setWhatsThis(tr("<qt>The <i>dual graph</i> of "
+                "a triangulation describes which %1 %2 are "
+                "identified with which.<p>"
+                "Each node of the graph represents a %3, and each arc of "
+                "the graph represents a pair of %4 %5 that are glued "
+                "together.</qt>")
+                .arg(data->simplexName())
+                .arg(data->facetsName())
+                .arg(data->simplexName())
+                .arg(data->simplexName())
+                .arg(data->facetsName()));
+            break;
+    }
 
     char* svg;
     unsigned svgLen;
@@ -172,9 +288,15 @@ void FacetGraphTab::refresh() {
     GVC_t* gvc = gvContextPlugins(lt_preloaded_symbols, 0);
 
     gvAddLibrary(gvc, &gvplugin_core_LTX_library);
-    gvAddLibrary(gvc, &gvplugin_neato_layout_LTX_library);
+    if (chooseType->currentIndex() == 0)
+        gvAddLibrary(gvc, &gvplugin_neato_layout_LTX_library);
+    else
+        gvAddLibrary(gvc, &gvplugin_dot_layout_LTX_library);
     Agraph_t* g = agmemread(dot.c_str());
-    gvLayout(gvc, g, "neato");
+    if (chooseType->currentIndex() == 0)
+        gvLayout(gvc, g, "neato");
+    else
+        gvLayout(gvc, g, "dot");
     gvRenderData(gvc, g, "svg", &svg, &svgLen);
     gvFreeLayout(gvc, g);
     agclose(g);
@@ -184,6 +306,7 @@ void FacetGraphTab::refresh() {
     graph->resize(graph->sizeHint());
 
     stack->setCurrentWidget(layerGraph);
+    chooseType->setEnabled(true);
 #endif
 }
 
@@ -197,84 +320,114 @@ void FacetGraphTab::showError(const QString& msg) {
     stack->setCurrentWidget(layerError);
 }
 
-std::string Dim2EdgeGraphData::dot(bool withLabels) {
-    regina::Dim2EdgePairing* pairing = new regina::Dim2EdgePairing(*tri_);
-    std::string ans = pairing->dot(0 /* prefix */, false /* subgraphs */,
-        withLabels);
-    delete pairing;
-    return ans;
+std::string Dim2EdgeGraphData::dual(bool withLabels) {
+    regina::Dim2EdgePairing pairing(*tri_);
+    return pairing.dot(0 /* prefix */, false /* subgraphs */, withLabels);
 }
 
-unsigned long Dim2EdgeGraphData::numberOfSimplices() {
+std::string Dim2EdgeGraphData::treeDecomp(bool nice, int& bags, int& width) {
+    regina::NTreeDecomposition t(*tri_);
+    if (nice)
+        t.makeNice();
+    bags = t.size();
+    width = t.width();
+    return t.dot();
+}
+
+size_t Dim2EdgeGraphData::numberOfSimplices() {
     return tri_->size();
+}
+
+QString Dim2EdgeGraphData::simplexName() {
+    return QObject::tr("triangle");
 }
 
 QString Dim2EdgeGraphData::simplicesName() {
     return QObject::tr("triangles");
 }
 
-QString Dim2EdgeGraphData::overview() {
-    return QObject::tr("<qt>The <i>edge pairing graph</i> "
-        "of a triangulation describes which triangle edges are "
-        "identified with which.<p>Each node of the graph represents "
-        "a triangle, and each arc of the graph represents a pair of "
-        "triangle edges that are joined together.</qt>");
+QString Dim2EdgeGraphData::facetName() {
+    return QObject::tr("edge");
+}
+
+QString Dim2EdgeGraphData::facetsName() {
+    return QObject::tr("edges");
 }
 
 regina::NPacket* Dim2EdgeGraphData::getPacket() {
     return tri_;
 }
 
-std::string Dim3FaceGraphData::dot(bool withLabels) {
-    regina::NFacePairing* pairing = new regina::NFacePairing(*tri_);
-    std::string ans = pairing->dot(0 /* prefix */, false /* subgraphs */,
-        withLabels);
-    delete pairing;
-    return ans;
+std::string Dim3FaceGraphData::dual(bool withLabels) {
+    regina::NFacePairing pairing(*tri_);
+    return pairing.dot(0 /* prefix */, false /* subgraphs */, withLabels);
 }
 
-unsigned long Dim3FaceGraphData::numberOfSimplices() {
+std::string Dim3FaceGraphData::treeDecomp(bool nice, int& bags, int& width) {
+    regina::NTreeDecomposition t(*tri_);
+    if (nice)
+        t.makeNice();
+    bags = t.size();
+    width = t.width();
+    return t.dot();
+}
+
+size_t Dim3FaceGraphData::numberOfSimplices() {
     return tri_->size();
+}
+
+QString Dim3FaceGraphData::simplexName() {
+    return QObject::tr("tetrahedron");
 }
 
 QString Dim3FaceGraphData::simplicesName() {
     return QObject::tr("tetrahedra");
 }
 
-QString Dim3FaceGraphData::overview() {
-    return QObject::tr("<qt>The <i>face pairing graph</i> "
-        "of a triangulation describes which tetrahedron faces are "
-        "identified with which.<p>Each node of the graph represents "
-        "a tetrahedron, and each arc of the graph represents a pair of "
-        "tetrahedron faces that are joined together.</qt>");
+QString Dim3FaceGraphData::facetName() {
+    return QObject::tr("face");
+}
+
+QString Dim3FaceGraphData::facetsName() {
+    return QObject::tr("faces");
 }
 
 regina::NPacket* Dim3FaceGraphData::getPacket() {
     return tri_;
 }
 
-std::string Dim4FacetGraphData::dot(bool withLabels) {
-    regina::Dim4FacetPairing* pairing = new regina::Dim4FacetPairing(*tri_);
-    std::string ans = pairing->dot(0 /* prefix */, false /* subgraphs */,
-        withLabels);
-    delete pairing;
-    return ans;
+std::string Dim4FacetGraphData::dual(bool withLabels) {
+    regina::Dim4FacetPairing pairing(*tri_);
+    return pairing.dot(0 /* prefix */, false /* subgraphs */, withLabels);
 }
 
-unsigned long Dim4FacetGraphData::numberOfSimplices() {
+std::string Dim4FacetGraphData::treeDecomp(bool nice, int& bags, int& width) {
+    regina::NTreeDecomposition t(*tri_);
+    if (nice)
+        t.makeNice();
+    bags = t.size();
+    width = t.width();
+    return t.dot();
+}
+
+size_t Dim4FacetGraphData::numberOfSimplices() {
     return tri_->size();
+}
+
+QString Dim4FacetGraphData::simplexName() {
+    return QObject::tr("pentachoron");
 }
 
 QString Dim4FacetGraphData::simplicesName() {
     return QObject::tr("pentachora");
 }
 
-QString Dim4FacetGraphData::overview() {
-    return QObject::tr("<qt>The <i>facet pairing graph</i> "
-        "of a triangulation describes which pentachoron facets are "
-        "identified with which.<p>Each node of the graph represents "
-        "a pentachoron, and each arc of the graph represents a pair of "
-        "pentachoron facets that are joined together.</qt>");
+QString Dim4FacetGraphData::facetName() {
+    return QObject::tr("facet");
+}
+
+QString Dim4FacetGraphData::facetsName() {
+    return QObject::tr("facets");
 }
 
 regina::NPacket* Dim4FacetGraphData::getPacket() {

@@ -37,9 +37,10 @@
 #ifndef __NTRIANGULATIONUI_H
 #define __NTRIANGULATIONUI_H
 
+#include "packet/npacketlistener.h"
 #include "../packettabui.h"
 
-class QToolBar;
+class ClickableLabel;
 class NTriAlgebraUI;
 class NTriGluingsUI;
 class NTriSkeletonUI;
@@ -47,6 +48,7 @@ class NTriSurfacesUI;
 class NTriSnapPeaUI;
 class PacketEditIface;
 class QLabel;
+class QToolBar;
 
 namespace regina {
     template <int> class Triangulation;
@@ -90,7 +92,10 @@ class NTriangulationUI : public PacketTabbedUI {
 /**
  * A header for the 3-manifold triangulation viewer.
  */
-class NTriHeaderUI : public PacketViewerTab {
+class NTriHeaderUI : public QObject, public PacketViewerTab,
+        public regina::NPacketListener {
+    Q_OBJECT
+
     private:
         /**
          * Packet details
@@ -102,6 +107,7 @@ class NTriHeaderUI : public PacketViewerTab {
          */
         QWidget* ui;
         QLabel* header;
+        ClickableLabel* locked;
         QToolBar* bar;
 
     public:
@@ -124,9 +130,33 @@ class NTriHeaderUI : public PacketViewerTab {
         void refresh();
 
         /**
+         * NPacketListener overrides.
+         */
+        void childWasAdded(regina::NPacket* packet, regina::NPacket* child);
+        void childWasRemoved(regina::NPacket* packet, regina::NPacket* child,
+            bool inParentDestructor);
+
+        /**
          * Allow other UIs to access the summary information.
          */
         static QString summaryInfo(regina::NTriangulation* tri);
+
+    public slots:
+        /**
+         * Explain to the user what the padlock means.
+         */
+        void lockedExplanation();
+
+    protected:
+        /**
+         * Update the state of the padlock.
+         */
+        void refreshLock();
+
+        /**
+         * Allow GUI updates from a non-GUI thread.
+         */
+        void customEvent(QEvent* event);
 };
 
 inline PacketEditIface* NTriangulationUI::getEditIface() {

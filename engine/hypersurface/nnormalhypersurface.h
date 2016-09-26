@@ -436,9 +436,9 @@ class REGINA_API NNormalHypersurface :
          *
          * \ifacespython Not present.
          *
-         * @param triang the triangulation in which this normal hypersurface
-         * resides.
-         * @param newVector a vector containing the coordinates of the
+         * @param triangulation the triangulation in which this normal
+         * hypersurface resides.
+         * @param vector a vector containing the coordinates of the
          * normal hypersurface in whichever space is appropriate.
          */
         NNormalHypersurface(const Dim4Triangulation* triangulation,

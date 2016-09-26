@@ -523,9 +523,11 @@ class REGINA_API NNormalSurfaceList : public NPacket {
         /**
          * Deprecated method that uses an extremely slow modified
          * Contejean-Devie procedure to enumerate all embedded fundamental
-         * surfaces in the given triangulation.  For details of the
-         * algorithm, see B. A. Burton, "Fundamental normal surfaces and the
-         * enumeration of Hilbert bases", arXiv:1111.7055v1, Nov 2011.
+         * surfaces in the given triangulation.  For details of the algorithm,
+         * see B. A. Burton, "Fundamental normal surfaces and the enumeration
+         * of Hilbert bases", ALENEX 2014: Proceedings of the Sixteenth
+         * Workshop on Algorithm Engineering and Experiments, SIAM, 2013,
+         * pp. 112-124.
          *
          * Users can still access this slower procedure if they need to;
          * however, they should do this via enumerate(NTriangulation*,

@@ -129,6 +129,8 @@ private:
 
 } // namespace regina
 
+/*@}*/
+
 namespace boost {
 /**
  * Extracts a raw pointer from the given safe pointer.

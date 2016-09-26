@@ -234,7 +234,7 @@ QString NTriSnapPeaUI::solutionTypeString(int solnType) {
         case NSnapPeaTriangulation::geometric_solution:
             return tr("Tetrahedra positively oriented");
         case NSnapPeaTriangulation::nongeometric_solution:
-            return tr("Contains negatively oriented tetrahedra");
+            return tr("Contains flat or negative tetrahedra");
         case NSnapPeaTriangulation::flat_solution:
             return tr("All tetrahedra flat");
         case NSnapPeaTriangulation::degenerate_solution:
@@ -243,6 +243,8 @@ QString NTriSnapPeaUI::solutionTypeString(int solnType) {
             return tr("Unrecognised solution type");
         case NSnapPeaTriangulation::no_solution:
             return tr("No solution found");
+        case NSnapPeaTriangulation::externally_computed:
+            return tr("Externally computed");
         default:
             return tr("ERROR (invalid solution type)");
     }
@@ -255,13 +257,12 @@ QString NTriSnapPeaUI::solutionTypeExplanation(int solnType) {
                 "a solution has not been attempted.");
         case NSnapPeaTriangulation::geometric_solution:
             return tr("This particular solution type means that "
-                "all tetrahedra are either positively oriented or flat, "
-                "though the entire solution is not flat and no "
-                "tetrahedra are degenerate.");
+                "all tetrahedra are positively oriented.");
         case NSnapPeaTriangulation::nongeometric_solution:
             return tr("This particular solution type means that "
-                "the volume is positive, but some tetrahedra are "
-                "negatively oriented.");
+                "the overall volume is positive, but some tetrahedra are "
+                "flat or negatively oriented.  No tetrahedra have "
+                "shape 0, 1 or infinity.");
         case NSnapPeaTriangulation::flat_solution:
             return tr("This particular solution type means that "
                 "all tetrahedra are flat, but none have shape "
@@ -276,6 +277,11 @@ QString NTriSnapPeaUI::solutionTypeExplanation(int solnType) {
         case NSnapPeaTriangulation::no_solution:
             return tr("This particular solution type means that "
                 "the gluing equations could not be solved.");
+        case NSnapPeaTriangulation::externally_computed:
+            return tr("This particular solution type means that "
+                "tetrahedron shapes were inserted into the triangulation "
+                "by some other means (e.g., manually, or by another "
+                "program).");
         default:
             return tr("This particular solution type is unknown and "
                 "should never occur.  Please report this as a bug.");

@@ -44,6 +44,7 @@ namespace regina {
     class NProgressTracker;
 };
 
+class QDialogButtonBox;
 class QLabel;
 
 /**
@@ -127,6 +128,62 @@ class ProgressDialogMessage : public QDialog {
          * if the operation was cancelled.
          */
         bool run();
+};
+
+/**
+ * A dialog that interacts with a calculation engine progress tracker,
+ * displays an integer number of steps of progress, and supports cancellation.
+ *
+ * Upon calling ProgressDialogOpen::run(), the dialog will be
+ * displayed and it will follow the progress of the underlying
+ * operation in the calculation engine.  The operation itself should be
+ * running in a separate thread.
+ */
+class ProgressDialogOpen : public QDialog {
+    Q_OBJECT
+
+    private:
+        regina::NProgressTrackerOpen* tracker_;
+            /**< The progress tracker handling the inter-thread
+                 communication. */
+        QString detailTemplate_;
+            /**< The string displaying the number of steps completed so
+                 far.  This string should contain "%1", which will be
+                 replaced with the integer number of steps. */
+
+        QLabel* msg;
+            /**< The current detailed progress message.  This displays
+                 a string based on \a detailTemplate_. */
+        QDialogButtonBox* buttons;
+            /**< The box containing the cancel button. */
+
+    public:
+        /**
+         * Creates a new progress dialog linked to the given
+         * calculation engine progress tracker.
+         *
+         * The progress tracker must not have been started, i.e.,
+         * <tt>tracker->isStarted()</tt> must return \c false.
+         */
+        ProgressDialogOpen(regina::NProgressTrackerOpen* tracker,
+                const QString& displayText, const QString& detailTemplate,
+                QWidget* parent = 0);
+
+        /**
+         * Displays the dialog and follows the progress of the
+         * underlying operation.
+         *
+         * This routine will only return once the operation has finished.
+         * It returns \c true on successful completion, or \c false
+         * if the operation was cancelled.
+         */
+        bool run();
+
+    public slots:
+        /**
+         * Called when the user asks to cancel the operation.
+         */
+        void cancelTask();
 };
 
 #endif

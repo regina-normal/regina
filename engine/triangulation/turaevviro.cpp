@@ -1208,7 +1208,7 @@ double NTriangulation::turaevViroApprox(unsigned long r,
             "WARNING: The Turaev-Viro invariant has an imaginary component.\n"
             "         This should never happen.\n"
             "         Please report this (along with the 3-manifold that"
-            "         was used) to " << PACKAGE_BUGREPORT << "." << std::endl;
+            "         was used) to Regina's authors." << std::endl;
     }
     return ans.real();
 }
@@ -1219,7 +1219,7 @@ NCyclotomic NTriangulation::turaevViro(unsigned long r, bool parity,
     if (r < 3)
         return NCyclotomic();
     if (r % 2 == 0)
-        parity = false;
+        parity = false; // As required by allCalculatedTuraevViroInvariants().
 
     // Have we already calculated this invariant?
     std::pair<unsigned long, bool> tvParams(r, parity);

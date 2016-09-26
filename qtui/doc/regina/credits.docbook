@@ -7,7 +7,7 @@
    The primary developers of &regina; are:
    <itemizedlist>
     <listitem><para>Benjamin Burton
-     <email>bab@debian.org</email></para></listitem>
+     <email>bab@maths.uq.edu.au</email></para></listitem>
     <listitem><para>Ryan Budney
      <email>rybu@uvic.ca</email></para></listitem>
     <listitem><para>William Pettersson
@@ -43,8 +43,11 @@
   <para>The following institutions have supported the development of &regina;:
    <itemizedlist>
     <listitem><para>The American Institute of Mathematics</para></listitem>
-    <listitem><para>The Australian Research Council
-     (grants DP0208490, DP1094516, DP110101104 and DP140104246)</para></listitem>
+    <listitem><para>The Australia-India Strategic Research Fund
+     (grant AISRF06660)</para></listitem>
+    <listitem><para>The Australian Research Council (grants DP0208490,
+     DP1094516, DP110101104, DP140104246, DP150104108)</para></listitem>
+    <listitem><para>The Indian Institute of Science</para></listitem>
     <listitem><para>The Institute for Computational and Experimental
      Research in Mathematics, Brown University</para></listitem>
     <listitem><para>The Institute for the Physics and Mathematics of the
@@ -64,7 +67,7 @@
  <sect1 id="license">
   <title>License Details</title>
   <para>
-   &regina; &ndash; Software for 3-manifold topology and normal surface theory
+   &regina; &ndash; Software for low-dimensional topology
   </para>
   <para>
    &copyrightnotice;
@@ -137,11 +140,11 @@
     <para>
      &regina; includes portions of the &snappea; kernel and its successor
      &snappy;, which it uses for some geometric calculations.
-     The &snappea; kernel was
-     written by Jeff Weeks, and &snappy; was written by Marc Culler, Nathan
-     Dunfield, and others.  &snappy; and the corresponding &snappea; kernel are
-     distributed under the terms of the &gnu; General Public License,
-     version&nbsp;2
+     The &snappea; kernel was originally written by Jeff Weeks.
+     &snappy;, where this kernel is now maintained, is primarily developed by
+     Marc Culler and Nathan Dunfield, with contributions from many people.
+     &snappy; and the corresponding &snappea; kernel are distributed
+     under the terms of the &gnu; General Public License, version&nbsp;2
      or any later version, as published by the Free Software Foundation.
     </para>
    </sect3>

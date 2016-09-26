@@ -38,7 +38,7 @@
  *
  *  <center><b>
  *  Regina<br>
- *  Software for 3-manifold topology and normal surface theory<br>
+ *  Software for low-dimensional topology<br>
  *  Copyright &copy; 1999-2016, The Regina development team
  *  </b></center>
  *
@@ -64,14 +64,14 @@
  *  you would any other paper that you use.  A suggested form of reference is:
  *
  *  Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,
- *  "Regina: Software for 3-manifold topology and normal surface theory",
+ *  "Regina: Software for low-dimensional topology",
  *  http://regina.sourceforge.net/ , 1999-2016.
  *
  *  <h3>Authors</h3>
  *
  *  The primary developers of Regina are:
  *  <ul>
- *    <li>Benjamin Burton &lt;bab@debian.org&gt;</li>
+ *    <li>Benjamin Burton &lt;bab@maths.uq.edu.au&gt;</li>
  *    <li>Ryan Budney &lt;rybu@uvic.ca&gt;</li>
  *    <li>William Pettersson &lt;william.pettersson@gmail.com&gt;</li>
  *  </ul>
@@ -120,10 +120,12 @@
  *
  *  Regina includes portions of the SnapPea kernel and its successor SnapPy,
  *  which it uses for some geometric calculations.  The SnapPea kernel was
- *  written by Jeff Weeks, and SnapPy was written by Marc Culler, Nathan
- *  Dunfield, and others.  SnapPy and the corresponding SnapPea kernel are
- *  distributed under the terms of the GNU General Public License, version 2
- *  or any later version, as published by the Free Software Foundation.
+ *  originally written by Jeff Weeks.  SnapPy, where this kernel is now
+ *  maintained, is primarily developed by Marc Culler and Nathan Dunfield,
+ *  with contributions from many people.  SnapPy and the corresponding
+ *  SnapPea kernel are distributed under the terms of the GNU General Public
+ *  License, version 2 or any later version, as published by the Free Software
+ *  Foundation.
  *
  *  <h3>Normaliz Library</h3>
  *
@@ -189,7 +191,7 @@
 /*! \page stddim Standard dimensions
  *
  *  Whilst Regina was originally designed for working with 3-manifolds,
- *  it offers varying levels of support for manifolds and triangulations
+ *  it now offers varying levels of support for manifolds and triangulations
  *  in other dimensions.
  *
  *  Regina's <i>standard dimensions</i> are those for which it offers

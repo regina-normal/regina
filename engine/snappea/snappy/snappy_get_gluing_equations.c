@@ -2,7 +2,7 @@
 #include "../kernel/kernel_namespace.h"
 
 /*
- * This file was originally named "gluing_equations.c" when distributed with
+ * This file was originally named "get_gluing_equations.c" when distributed with
  * SnapPy, but has been renamed here to avoid conflict. 
  *
  * SnapPy, and this file as a result, is licensed under the GNU General Public

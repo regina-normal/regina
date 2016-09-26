@@ -68,6 +68,7 @@ class NAngleStructure;
 class NBoundaryComponent;
 class NGroupPresentation;
 class NNormalSurface;
+class NProgressTrackerOpen;
 class NXMLPacketReader;
 
 template <int> class Component;
@@ -629,9 +630,9 @@ class REGINA_API Triangulation<3> :
 
         /**
          * Returns the fundamental group of this triangulation.
-         * If this triangulation contains any ideal or non-standard
-         * vertices, the fundamental group will be
-         * calculated as if each such vertex had been truncated.
+         * If this triangulation contains any ideal or invalid vertices,
+         * the fundamental group will be calculated as if each such vertex
+         * had been truncated.
          *
          * If this triangulation contains any invalid edges, the
          * calculations will be performed <b>without</b> any truncation
@@ -695,9 +696,9 @@ class REGINA_API Triangulation<3> :
         void simplifiedFundamentalGroup(NGroupPresentation* newGroup);
         /**
          * Returns the first homology group for this triangulation.
-         * If this triangulation contains any ideal or non-standard
-         * vertices, the homology group will be
-         * calculated as if each such vertex had been truncated.
+         * If this triangulation contains any ideal or invalid vertices,
+         * the homology group will be calculated as if each such vertex
+         * had been truncated.
          *
          * If this triangulation contains any edges that are self-identified
          * in reverse, the homology will be computed \b without truncating
@@ -728,9 +729,9 @@ class REGINA_API Triangulation<3> :
         const NAbelianGroup& homology() const;
         /**
          * Returns the first homology group for this triangulation.
-         * If this triangulation contains any ideal or non-standard
-         * vertices, the homology group will be
-         * calculated as if each such vertex had been truncated.
+         * If this triangulation contains any ideal or invalid vertices,
+         * the homology group will be calculated as if each such vertex
+         * had been truncated.
          *
          * If this triangulation contains any edges that are self-identified
          * in reverse, the homology will be computed \b without truncating
@@ -998,10 +999,16 @@ class REGINA_API Triangulation<3> :
          * This cache is updated every time turaevViro() is called, and
          * is emptied whenever the triangulation is modified.
          *
-         * Turaev-Viro invariants are identified by an (r, parity)
+         * Turaev-Viro invariants are identified by an (\a r, \a parity)
          * pair as described in the turaevViro() documentation.  The
-         * cache is just a set that maps (r, parity) pairs to the
+         * cache is just a set that maps (\a r, \a parity) pairs to the
          * corresponding invariant values.
+         *
+         * For even values of \a r, the parity is ignored when calling
+         * turaevViro() (since the even and odd versions of the invariant
+         * contain essentially the same information).  Therefore, in this
+         * cache, all even values of \a r will have the corresponding parities
+         * set to \c false.
          *
          * \note All invariants in this cache are now computed using exact
          * arithmetic, as elements of a cyclotomic field.  This is a
@@ -1317,12 +1324,22 @@ class REGINA_API Triangulation<3> :
          * finds itself stuck at a local minimum, simplifyExhaustive() is able
          * to "climb out" of such wells.
          *
-         * To assist with performance, this routine can run in
-         * parallel (multithreaded) mode; simply pass the number of
-         * parallel threads in the argument \a nThreads.  Even in
-         * multithreaded mode, this routine will not return until
+         * If a progress tracker is passed, then the exhaustive simplification
+         * will take place in a new thread and this routine will return
+         * immediately.  In this case, you will need to use some other
+         * means to determine whether the triangulation was eventually
+         * simplified (e.g., by examining size() after the tracker
+         * indicates that the operation has finished).
+         *
+         * To assist with performance, this routine can run in parallel
+         * (multithreaded) mode; simply pass the number of parallel threads
+         * in the argument \a nThreads.  Even in multithreaded mode, if no
+         * progress tracker is passed then this routine will not return until
          * processing has finished (i.e., either the triangulation was
          * simplified or the search was exhausted).
+         *
+         * If this routine is unable to simplify the triangulation, then
+         * the triangulation will not be changed.
          *
          * \pre This triangulation is connected.
          *
@@ -1331,11 +1348,17 @@ class REGINA_API Triangulation<3> :
          * triangulation.
          * @param nThreads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
-         * @return \c true if and only if the triangulation was successfully
-         * simplified to fewer tetrahedra.  Otherwise this triangulation
-         * will not be changed.
+         * @param tracker a progress tracker through which progress will
+         * be reported, or 0 if no progress reporting is required.
+         * @return If a progress tracker is passed, then this routine
+         * will return \c true or \c false immediately according to
+         * whether a new thread could or could not be started.  If no
+         * progress tracker is passed, then this routine will return \c true
+         * if and only if the triangulation was successfully simplified to
+         * fewer tetrahedra.
          */
-        bool simplifyExhaustive(int height = 1, unsigned nThreads = 1);
+        bool simplifyExhaustive(int height = 1, unsigned nThreads = 1,
+            NProgressTrackerOpen* tracker = 0);
 
         /**
          * Explores all triangulations that can be reached from this via
@@ -1381,17 +1404,22 @@ class REGINA_API Triangulation<3> :
          * and if necessary try increasing \a height one at a time until
          * this routine becomes too expensive to run.
          *
-         * To assist with performance, this routine can run in
-         * parallel (multithreaded) mode; simply pass the number of
-         * parallel threads in the argument \a nThreads.  Even in
-         * multithreaded mode, this routine will not return until
+         * If a progress tracker is passed, then the exploration of
+         * triangulations will take place in a new thread and this
+         * routine will return immediately.
+         *
+         * To assist with performance, this routine can run in parallel
+         * (multithreaded) mode; simply pass the number of parallel threads
+         * in the argument \a nThreads.  Even in multithreaded mode, if no
+         * progress tracker is passed then this routine will not return until
          * processing has finished (i.e., either \a action returned \c true,
          * or the search was exhausted).  All calls to \a action will be
          * protected by a mutex (i.e., different threads will never be
          * calling \a action at the same time).
          *
          * If \a height is negative, then this routine will do nothing
-         * and immediately return \c false.
+         * and immediately return \c false, and any progress tracker
+         * that was passed will immediately be marked as finished.
          *
          * \warning By default, the arguments \a args will be copied (or moved)
          * when they are passed to \a action.  If you need to pass some
@@ -1409,16 +1437,22 @@ class REGINA_API Triangulation<3> :
          * triangulation.
          * @param nThreads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
+         * @param tracker a progress tracker through which progress will
+         * be reported, or 0 if no progress reporting is required.
          * @param action a function (or other callable object) to call
          * upon each triangulation that is found.
          * @param args any additional arguments that should be passed to
          * \a action, following the initial triangulation argument.
-         * @return \c true if some call to \a action returned \c true
-         * (thereby terminating the search early), or \c false if the
-         * search ran to completion.
+         * @return If a progress tracker is passed, then this routine
+         * will return \c true or \c false immediately according to
+         * whether a new thread could or could not be started.  If no
+         * progress tracker is passed, then this routine will return \c true
+         * if some call to \a action returned \c true (thereby terminating
+         * the search early), or \c false if the search ran to completion.
          */
         template <typename Action, typename... Args>
         bool retriangulate(int height, unsigned nThreads,
+            NProgressTrackerOpen* tracker,
             Action&& action, Args&&... args) const;
 
         /**
@@ -2412,7 +2446,7 @@ class REGINA_API Triangulation<3> :
 
         /**
          * Converts an ideal triangulation into a finite triangulation.
-         * All ideal or non-standard vertices are truncated and thus
+         * All ideal or invalid vertices are truncated and thus
          * converted into real boundary components made from unglued
          * faces of tetrahedra.
          *
@@ -3125,6 +3159,7 @@ class REGINA_API Triangulation<3> :
          * can be kept out of the main headers.
          */
         bool retriangulateInternal(int height, unsigned nThreads,
+            NProgressTrackerOpen* tracker,
             const std::function<bool(const NTriangulation&)>& action) const;
 
         void stretchBoundaryForestFromVertex(NVertex*, std::set<NEdge*>&,
@@ -3355,8 +3390,8 @@ inline const Triangulation<3>::TuraevViroSet&
 
 template <typename Action, typename... Args>
 inline bool Triangulation<3>::retriangulate(int height, unsigned nThreads,
-        Action&& action, Args&&... args) const {
-    return retriangulateInternal(height, nThreads,
+        NProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
+    return retriangulateInternal(height, nThreads, tracker,
         std::bind(action, std::placeholders::_1, args...));
 }
 

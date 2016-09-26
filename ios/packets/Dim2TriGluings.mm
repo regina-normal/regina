@@ -30,9 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
+#import "ReginaHelper.h"
 #import "Dim2TriGluings.h"
 #import "Dim2TriangulationViewController.h"
 #import "dim2/dim2triangulation.h"
+#import "packet/ncontainer.h"
 
 #pragma mark - Table cell
 
@@ -48,7 +50,7 @@
 
 #pragma mark - Dim2Triangulation gluings viewer
 
-@interface Dim2TriGluings () <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate> {
+@interface Dim2TriGluings () <UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, UIActionSheetDelegate> {
     CGFloat headerHeight;
     UILabel* editLabel;
     UITextField* editField;
@@ -58,6 +60,9 @@
 }
 @property (weak, nonatomic) IBOutlet UILabel *properties;
 @property (weak, nonatomic) IBOutlet UITableView *triangles;
+@property (weak, nonatomic) IBOutlet UIButton *orientButton;
+@property (weak, nonatomic) IBOutlet UIButton *orientIcon;
+@property (weak, nonatomic) IBOutlet UIButton *actionsButton;
 
 @property (strong, nonatomic) Dim2TriangulationViewController* viewer;
 @property (assign, nonatomic) regina::Dim2Triangulation* packet;
@@ -103,6 +108,7 @@
         return;
 
     [self.viewer updateHeader:self.properties];
+    self.orientButton.enabled = self.orientIcon.enabled = (self.packet->isOrientable() && ! self.packet->isOriented());
     [self.triangles reloadData];
 }
 
@@ -204,22 +210,142 @@
         [self editGluingForSimplex:indexPath.row-1 cell:cell label:cell.edge2];
 }
 
+#pragma mark - Triangulation operations
+
+- (BOOL)checkEditable
+{
+    if (! self.packet->isPacketEditable()) {
+        // 2-manifold triangulations are always editable... for now.
+        // This should not happen.
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Cannot Change Gluings"
+                                                        message:@"This should never happen - please report it to the Regina developers."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return NO;
+    }
+
+    return YES;
+}
+
+- (IBAction)orient:(id)sender
+{
+    [self endEditing];
+    if (! [self checkEditable])
+        return;
+
+    if (self.packet->isOriented()) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Already Oriented"
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+
+    bool hasOr = false;
+    for (auto c : self.packet->components())
+        if (c->isOrientable()) {
+            hasOr = true;
+            break;
+        }
+    if (! hasOr) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Orientable Components"
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+
+    self.packet->orient();
+}
+
+- (IBAction)extractComponents:(id)sender
+{
+    [self endEditing];
+
+    if (self.packet->isEmpty()) {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Empty Triangulation"
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+    if (self.packet->isConnected()) {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Triangulation is Connected"
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+
+    // Where to insert the components?
+    // If there are already children of this triangulation, insert
+    // the new triangulations at a deeper level.
+    regina::NPacket* base;
+    if (self.packet->firstChild()) {
+        base = new regina::NContainer();
+        self.packet->insertChildLast(base);
+        base->setLabel(self.packet->adornedLabel("Components"));
+    } else
+        base = self.packet;
+
+    // Make the split.
+    size_t nComps = self.packet->splitIntoComponents(base);
+
+    // Tell the user what happened.
+    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"%ld Components Extracted", nComps]
+                                                    message:@"I have constructed a new triangulation for each component."
+                                                   delegate:nil
+                                          cancelButtonTitle:@"Close"
+                                          otherButtonTitles:nil];
+    [alert show];
+
+    [ReginaHelper viewChildren:base];
+}
+
+- (IBAction)doubleCover:(id)sender
+{
+    [self endEditing];
+    if (! [self checkEditable])
+        return;
+
+    self.packet->makeDoubleCover();
+}
+
+- (IBAction)actions:(id)sender {
+    UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                       delegate:self
+                                              cancelButtonTitle:@"Cancel"
+                                         destructiveButtonTitle:nil
+                                              otherButtonTitles:@"Extract components",
+                                                                @"Double cover",
+                                                                nil];
+    [sheet showFromRect:self.actionsButton.frame inView:self.view animated:YES];
+}
+
 #pragma mark - Keyboard notifications
 
 - (void)keyboardDidShow:(NSNotification*)notification
 {
-    // See the notes for TextViewController for why we take MIN(...) here.
     CGSize kbSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    CGFloat kbHeight = MIN(kbSize.width, kbSize.height);
 
     CGRect tableInDetail = [self.parentViewController.view convertRect:self.triangles.frame fromView:self.view];
     CGFloat unused = self.parentViewController.view.bounds.size.height - tableInDetail.origin.y - tableInDetail.size.height;
 
-    if (kbHeight <= unused)
+    if (kbSize.height <= unused)
         return;
 
-    self.triangles.contentInset = UIEdgeInsetsMake(0, 0, kbHeight - unused, 0);
-    self.triangles.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, kbHeight - unused, 0);
+    self.triangles.contentInset = UIEdgeInsetsMake(0, 0, kbSize.height - unused, 0);
+    self.triangles.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, kbSize.height - unused, 0);
 
     [self.triangles scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:editSimplex+1 inSection:0]
                           atScrollPosition:UITableViewScrollPositionNone
@@ -423,6 +549,21 @@ cleanUpGluing:
         headerHeight = size.height;
     }
     return headerHeight;
+}
+
+#pragma mark - Action sheet
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    // Note: We implement didDismissWithButtonIndex: instead of clickedButtonAtIndex:,
+    // since this ensures that the action sheet popover is already dismissed before we
+    // try to open any other popover.
+    switch (buttonIndex) {
+        case 0:
+            [self extractComponents:nil]; break;
+        case 1:
+            [self doubleCover:nil]; break;
+    }
 }
 
 @end

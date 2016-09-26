@@ -46,37 +46,42 @@
 namespace regina {
 
 /**
- * \weakgroup progress
+ * \addtogroup progress Progress Tracking
+ * Progress tracking for long operations
  * @{
  */
 
 /**
- * Manages progress tracking and cancellation polling for long operations.
- * A typical progress tracker is simultaneously used by a \e writing thread,
- * which is performing the long calculations, and a \e reading thread,
- * which displays progress updates to the user and/or takes cancellation
- * requests from the user.
+ * The base class for Regina's progress tracking classes.
+ *
+ * These classes manage progress tracking and cancellation polling for long
+ * operations.  A typical progress tracker is simultaneously used by a
+ * \e writing thread, which is performing the long calculations, and a
+ * \e reading thread, which displays progress updates to the user and/or
+ * takes cancellation requests from the user.
  *
  * Progress works through a series of \e stages.  Each stage has a text
- * description, as well as a percentage progress that rises from 0 to 100
- * as the stage progresses.  Each stage also has a fractional weight
- * (between 0 and 1 inclusive), and the percentage progress of the entire
- * calculation is taken to be the weighted sum of the progress of the
- * individual stages.  The weights of all stages should sum to 1.
+ * description, as well as a numerical progress indicator.  For the
+ * class NProgressTracker, this is a percentage that rises from 0 to 100
+ * as the stage progresses; for NProgressTrackerOpen, this is an integer
+ * that starts at 0 and rises (with no particular upper bound).
  *
- * The life cycle of an NProgressTracker is as follows.
+ * The life cycle of a progress tracker is as follows.
  *
- * - The reading thread creates an NProgressTracker, and passes it to
- *   the writing thread when the calculation begins.
+ * - The reading thread creates a progress tracker (of type NProgressTracker
+ *   or NProgressTrackerOpen), and passes it to the writing thread when the
+ *   calculation begins.
  *
  * - The writing thread:
  *   - creates the first stage by calling newStage();
- *   - as the stage progresses, repeatedly updates the percentage progress of
- *     this stage by calling setPercent() and polls for cancellation by calling
- *     isCancelled();
+ *   - as the stage progresses, repeatedly updates the progress of
+ *     this stage by calling routines such as NProgressTracker::setPercent()
+ *     or NProgressTrackerOpen::incSteps(), and also polls for cancellation
+ *     by calling isCancelled();
  *   - moves through any additional stages in a similar fashion, by
- *     calling newStage() and then repeatedly calling setPercent() and
- *     isCancelled();
+ *     calling newStage() and then repeatedly calling routines such as
+ *     NProgressTracker::setPercent(), NProgressTrackerOpen::incSteps(),
+ *     and isCancelled();
  *   - calls setFinished() once all processing is complete (regardless
  *     of whether the operation finished naturally or was cancelled by
  *     the user);
@@ -84,16 +89,18 @@ namespace regina {
  *
  * - The reading thread:
  *   - passes the progress tracker to the writing thread;
- *   - repeatedly polls the state of the tracker by calling
- *     percentChanged(), descriptionChanged() and/or isFinished();
- *   - if percentChanged() returns \c true, collects the total
- *     percentage progress by calling percent() and displays this to the user;
+ *   - repeatedly polls the state of the tracker by calling routines such as
+ *     NProgressTracker::percentChanged(), NProgressTrackerOpen::stepsChanged(),
+ *     descriptionChanged() and/or isFinished();
+ *   - if percentChanged() or stepsChanged() returns \c true, collects the total
+ *     progress by calling percent() or steps() respectively and displays this
+ *     to the user;
  *   - if descriptionChanged() returns \c true, collects the description of
  *     the current stage by calling description() and displays this to the user;
  *   - if the user ever chooses to cancel the operation, calls cancel()
  *     but continues polling the state of the tracker as above;
  *   - once isFinished() returns \c true, displays any final information
- *     to the user and destroys the NProgressTracker.
+ *     to the user and destroys the progress tracker.
  *
  * It is imperative that the writing thread does not access the tracker
  * after calling setFinished(), and it is imperative that the reading
@@ -102,18 +109,17 @@ namespace regina {
  * it must still wait upon isFinished() before destroying the tracker.
  * Until isFinished() returns \c true, there is no guarantee that the
  * writing thread has detected and honoured the cancellation request.
+ *
+ * \note This class implements common functionality for NProgressTracker
+ * and NProgressTrackerOpen, and should not be used on its own.  Instead,
+ * you should always use either NProgressTracker or NProgressTrackerOpen
+ * (according to whether you need percentage-based or open-ended
+ * progress tracking respectively).
  */
-class REGINA_API NProgressTracker {
-    private:
-        double percent_;
-            /**< The percentage progress through the current stage.
-                 Note that this is typically not the same as the percentage
-                 progress through the entire operation. */
+class REGINA_API NProgressTrackerBase {
+    protected:
         std::string desc_;
             /**< The human-readable description of the current stage. */
-        bool percentChanged_;
-            /**< Has the percentage progress changed since the last call
-                 to percentChanged()? */
         bool descChanged_;
             /**< Has the description changed since the last call
                  to descriptionChanged()? */
@@ -124,28 +130,11 @@ class REGINA_API NProgressTracker {
             /**< Has the writing thread declared that it has finished
                  all processing? */
 
-        double prevPercent_;
-            /**< The total percentage progress of all previous stages,
-                 measured as a percentage of the entire operation. */
-        double currWeight_;
-            /**< The fractional weight assigned to the current stage;
-                 this must be between 0 and 1 inclusive. */
-
         std::mutex lock_;
             /**< A mutex to stop the reading and writing threads from
                  interfering with each other. */
 
     public:
-        /**
-         * Creates a new progress tracker.
-         * This sets a sensible state description (which declares that
-         * the operation is initialising), and marks the current
-         * progress as zero percent complete.
-         *
-         * This is typically called by the reading thread.
-         */
-        NProgressTracker();
-
         /**
          * Queries whether the writing thread has finished all
          * processing.  This will eventually return \c true regardless
@@ -159,16 +148,6 @@ class REGINA_API NProgressTracker {
          */
         bool isFinished();
         /**
-         * Queries whether the percentage progress has changed since the
-         * last call to percentChanged().  If this is the first time
-         * percentChanged() is called, the result will be \c true.
-         *
-         * This is typically called by the reading thread.
-         *
-         * @return \c true if and only if the percentage progress has changed.
-         */
-        bool percentChanged();
-        /**
          * Queries whether the stage description has changed since the
          * last call to descriptionChanged().  If this is the first time
          * descriptionChanged() is called, the result will be \c true.
@@ -178,17 +157,6 @@ class REGINA_API NProgressTracker {
          * @return \c true if and only if the stage description has changed.
          */
         bool descriptionChanged();
-        /**
-         * Returns the percentage progress through the entire operation.
-         * This combines the progress through the current stage with all
-         * previous stages, taking into account the relative weights that the
-         * writing thread has passed to newStage().
-         *
-         * This is typically called by the reading thread.
-         *
-         * @return \c the current percentage progress.
-         */
-        double percent();
         /**
          * Returns the human-readable description of the current stage.
          *
@@ -210,6 +178,107 @@ class REGINA_API NProgressTracker {
         void cancel();
 
         /**
+         * Queries whether the reading thread has made a request for the
+         * writing thread to cancel the operation; in other words, whether
+         * cancel() has been called.
+         *
+         * This is typically called by the writing thread.
+         *
+         * @return \c true if and only if a cancellation request has
+         * been made.
+         */
+        bool isCancelled();
+        /**
+         * Used by the writing thread to indicate that it has finished
+         * all processing.  The stage description will be updated to
+         * indicate that the operation is finished.
+         *
+         * This is typically called by the writing thread.
+         *
+         * \warning The base class implementation of this routine should
+         * never be called (and indeed, it is declared here but not
+         * implemented).  You should always call either
+         * NProgressTracker::setFinished() or
+         * NProgressTrackerOpen::setFinished().
+         */
+        void setFinished();
+
+    protected:
+        /**
+         * Creates a new progress tracker.
+         * This sets a sensible state description (which declares that
+         * the operation is initialising).
+         *
+         * This is only ever called by subclass constructors.
+         */
+        NProgressTrackerBase();
+};
+
+/**
+ * Manages percentage-based progress tracking and cancellation polling for
+ * long operations.
+ *
+ * See the NProgressTrackerBase documentation for detailed information on
+ * how to use a progress tracker.
+ *
+ * This class represents a progress tracker that measures progress using
+ * percentages.  Specifically, each stage has a percentage progress that
+ * rises from 0 to 100 as the stage progresses.  Each stage also has a
+ * fractional weight (between 0 and 1 inclusive), and the percentage progress
+ * of the entire calculation is taken to be the weighted sum of the progress
+ * of the individual stages.  The weights of all stages should sum to 1.
+ */
+class REGINA_API NProgressTracker : public NProgressTrackerBase {
+    private:
+        double percent_;
+            /**< The percentage progress through the current stage.
+                 Note that this is typically not the same as the percentage
+                 progress through the entire operation. */
+        bool percentChanged_;
+            /**< Has the percentage progress changed since the last call
+                 to percentChanged()? */
+
+        double prevPercent_;
+            /**< The total percentage progress of all previous stages,
+                 measured as a percentage of the entire operation. */
+        double currWeight_;
+            /**< The fractional weight assigned to the current stage;
+                 this must be between 0 and 1 inclusive. */
+
+    public:
+        /**
+         * Creates a new progress tracker.
+         * This sets a sensible state description (which declares that
+         * the operation is initialising), and marks the current
+         * progress as zero percent complete.
+         *
+         * This is typically called by the reading thread.
+         */
+        NProgressTracker();
+
+        /**
+         * Queries whether the percentage progress has changed since the
+         * last call to percentChanged().  If this is the first time
+         * percentChanged() is called, the result will be \c true.
+         *
+         * This is typically called by the reading thread.
+         *
+         * @return \c true if and only if the percentage progress has changed.
+         */
+        bool percentChanged();
+        /**
+         * Returns the percentage progress through the entire operation.
+         * This combines the progress through the current stage with all
+         * previous stages, taking into account the relative weights that the
+         * writing thread has passed to newStage().
+         *
+         * This is typically called by the reading thread.
+         *
+         * @return the current percentage progress.
+         */
+        double percent();
+
+        /**
          * Used by the writing thread to indicate that it has moved on
          * to a new stage of processing.  The percentage progress through
          * the current stage will automatically be set to 100.
@@ -225,17 +294,6 @@ class REGINA_API NProgressTracker {
          * in total.
          */
         void newStage(const char* desc, double weight = 1);
-        /**
-         * Queries whether the reading thread has made a request for the
-         * writing thread to cancel the operation; in other words, whether
-         * cancel() has been called.
-         *
-         * This is typically called by the writing thread.
-         *
-         * @return \c true if and only if a cancellation request has
-         * been made.
-         */
-        bool isCancelled();
         /**
          * Used by the writing thread to indicate the level of progress
          * through the current stage.
@@ -274,20 +332,150 @@ class REGINA_API NProgressTracker {
         void setFinished();
 };
 
+/**
+ * Manages percentage-based progress tracking and cancellation polling for
+ * open-ended operations.
+ *
+ * See the NProgressTrackerBase documentation for detailed information on
+ * how to use a progress tracker.
+ *
+ * This class represents a progress tracker that measures progress using
+ * a non-negative integer, which typically indicates the number of steps
+ * completed so far during the operation.  This integer begin at 0 and rises
+ * as the operation progresses.  There is no particular "end point" or
+ * upper bound on the number of steps, and indeed the end point is often
+ * unknown until the operation has finished.
+ */
+class REGINA_API NProgressTrackerOpen : public NProgressTrackerBase {
+    private:
+        unsigned long steps_;
+            /**< The number of steps completed over all stages. */
+        bool stepsChanged_;
+            /**< Has the number of steps completed changed since the last call
+                 to stepsChanged()? */
+
+    public:
+        /**
+         * Creates a new progress tracker.
+         * This sets a sensible state description (which declares that
+         * the operation is initialising), and marks the current
+         * progress as zero steps completed.
+         *
+         * This is typically called by the reading thread.
+         */
+        NProgressTrackerOpen();
+
+        /**
+         * Queries whether the number of steps completed has changed since the
+         * last call to stepsChanged().  If this is the first time
+         * stepsChanged() is called, the result will be \c true.
+         *
+         * This is typically called by the reading thread.
+         *
+         * @return \c true if and only if the number of steps completed
+         * has changed.
+         */
+        bool stepsChanged();
+        /**
+         * Returns the number of steps completed throughout the entire
+         * operation.  This counts the progress across all stages (both
+         * current and previous).
+         *
+         * This is typically called by the reading thread.
+         *
+         * @return the current number of steps completed.
+         */
+        unsigned long steps();
+
+        /**
+         * Used by the writing thread to indicate that it has moved on
+         * to a new stage of processing.  The number of steps completed
+         * will be left unchanged.
+         *
+         * This is typically called by the writing thread.
+         *
+         * @param desc a human-readable description of the new stage.
+         * Typically this begins with a capital and does not include a
+         * final period (full stop).
+         */
+        void newStage(const char* desc);
+        /**
+         * Used by the writing thread to indicate that one more step has
+         * been completed.
+         *
+         * This is typically called by the writing thread.
+         *
+         * @return \c true if there has been no cancellation request, or
+         * \c false if cancel() has been called (typically by the reading
+         * thread).
+         */
+        bool incSteps();
+        /**
+         * Used by the writing thread to indicate that some number of
+         * additional steps have been completed.
+         *
+         * This is typically called by the writing thread.
+         *
+         * @param add the number of additional steps that have been completed.
+         * The value returned by steps() will increase by this amount.
+         * @return \c true if there has been no cancellation request, or
+         * \c false if cancel() has been called (typically by the reading
+         * thread).
+         */
+        bool incSteps(unsigned long add);
+        /**
+         * Used by the writing thread to indicate that it has finished
+         * all processing.  The total number of steps completed will be
+         * left unchanged, but the stage description will be updated to
+         * indicate that the operation is finished.
+         *
+         * This is typically called by the writing thread.
+         */
+        void setFinished();
+};
+
 /*@}*/
+
+// Inline functions for NProgressTrackerBase
+
+inline NProgressTrackerBase::NProgressTrackerBase() :
+        desc_("Initialising"), descChanged_(true),
+        cancelled_(false), finished_(false) {
+}
+
+inline bool NProgressTrackerBase::isFinished() {
+    std::lock_guard<std::mutex> lock(lock_);
+    return finished_;
+}
+
+inline bool NProgressTrackerBase::descriptionChanged() {
+    std::lock_guard<std::mutex> lock(lock_);
+    if (descChanged_) {
+        const_cast<NProgressTrackerBase*>(this)->descChanged_ = false;
+        return true;
+    } else
+        return false;
+}
+
+inline std::string NProgressTrackerBase::description() {
+    std::lock_guard<std::mutex> lock(lock_);
+    return desc_;
+}
+
+inline void NProgressTrackerBase::cancel() {
+    std::lock_guard<std::mutex> lock(lock_);
+    cancelled_ = true;
+}
+
+inline bool NProgressTrackerBase::isCancelled() {
+    std::lock_guard<std::mutex> lock(lock_);
+    return cancelled_;
+}
 
 // Inline functions for NProgressTracker
 
 inline NProgressTracker::NProgressTracker() :
-        percent_(0), percentChanged_(true), descChanged_(true),
-        cancelled_(false), finished_(false),
-        prevPercent_(0), currWeight_(0) {
-    desc_ = "Initialising";
-}
-
-inline bool NProgressTracker::isFinished() {
-    std::lock_guard<std::mutex> lock(lock_);
-    return finished_;
+        percent_(0), percentChanged_(true), prevPercent_(0), currWeight_(0) {
 }
 
 inline bool NProgressTracker::percentChanged() {
@@ -299,28 +487,9 @@ inline bool NProgressTracker::percentChanged() {
         return false;
 }
 
-inline bool NProgressTracker::descriptionChanged() {
-    std::lock_guard<std::mutex> lock(lock_);
-    if (descChanged_) {
-        const_cast<NProgressTracker*>(this)->descChanged_ = false;
-        return true;
-    } else
-        return false;
-}
-
 inline double NProgressTracker::percent() {
     std::lock_guard<std::mutex> lock(lock_);
     return prevPercent_ + currWeight_ * percent_;
-}
-
-inline std::string NProgressTracker::description() {
-    std::lock_guard<std::mutex> lock(lock_);
-    return desc_;
-}
-
-inline void NProgressTracker::cancel() {
-    std::lock_guard<std::mutex> lock(lock_);
-    cancelled_ = true;
 }
 
 inline void NProgressTracker::newStage(const char* desc, double weight) {
@@ -330,11 +499,6 @@ inline void NProgressTracker::newStage(const char* desc, double weight) {
     prevPercent_ += 100 * currWeight_;
     currWeight_ = weight;
     percentChanged_ = descChanged_ = true;
-}
-
-inline bool NProgressTracker::isCancelled() {
-    std::lock_guard<std::mutex> lock(lock_);
-    return cancelled_;
 }
 
 inline bool NProgressTracker::setPercent(double percent) {
@@ -352,6 +516,52 @@ inline void NProgressTracker::setFinished() {
     desc_ = "Finished";
     finished_ = true;
     percentChanged_ = descChanged_ = true;
+}
+
+// Inline functions for NProgressTrackerOpen
+
+inline NProgressTrackerOpen::NProgressTrackerOpen() :
+        steps_(0), stepsChanged_(true) {
+}
+
+inline bool NProgressTrackerOpen::stepsChanged() {
+    std::lock_guard<std::mutex> lock(lock_);
+    if (stepsChanged_) {
+        const_cast<NProgressTrackerOpen*>(this)->stepsChanged_ = false;
+        return true;
+    } else
+        return false;
+}
+
+inline unsigned long NProgressTrackerOpen::steps() {
+    std::lock_guard<std::mutex> lock(lock_);
+    return steps_;
+}
+
+inline void NProgressTrackerOpen::newStage(const char* desc) {
+    std::lock_guard<std::mutex> lock(lock_);
+    desc_ = desc;
+    descChanged_ = true;
+}
+
+inline bool NProgressTrackerOpen::incSteps() {
+    std::lock_guard<std::mutex> lock(lock_);
+    ++steps_;
+    stepsChanged_ = true;
+    return ! cancelled_;
+}
+
+inline bool NProgressTrackerOpen::incSteps(unsigned long add) {
+    std::lock_guard<std::mutex> lock(lock_);
+    steps_ += add;
+    stepsChanged_ = true;
+    return ! cancelled_;
+}
+
+inline void NProgressTrackerOpen::setFinished() {
+    std::lock_guard<std::mutex> lock(lock_);
+    desc_ = "Finished";
+    finished_ = descChanged_ = true;
 }
 
 } // namespace regina

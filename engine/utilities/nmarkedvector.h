@@ -45,7 +45,8 @@
 namespace regina {
 
 /**
- * \weakgroup utilities
+ * \addtogroup utilities Miscellaneous Utilities
+ * Miscellaneous helper classes and functions
  * @{
  */
 

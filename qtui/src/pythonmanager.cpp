@@ -67,9 +67,8 @@ void PythonManager::openPythonReference(QWidget* topLevelWindow) {
         ReginaSupport::warn(topLevelWindow,
             QObject::tr("I could not find the Python API reference."),
             QObject::tr("<qt>It should be installed in: <tt>%1/</tt><p>"
-            "Please contact %2 for assistance.</qt>")
-            .arg(docDir.toHtmlEscaped())
-            .arg(PACKAGE_BUGREPORT));
+            "Please mail the authors for assistance.</qt>")
+            .arg(docDir.toHtmlEscaped()));
     }
 }
 
@@ -184,8 +183,8 @@ namespace {
             "could be found when Regina was compiled.  "
             "Watch the output of <b>cmake</b> at compile time "
             "for a more detailed explanation, or "
-            "please write to <tt>%1</tt> if you would like further "
-            "assistance.</qt>").arg(PACKAGE_BUGREPORT));
+            "please mail the authors if you would like further "
+            "assistance.</qt>"));
         return 0;
     }
 }

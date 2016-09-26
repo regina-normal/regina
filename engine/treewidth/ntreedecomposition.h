@@ -870,6 +870,38 @@ class REGINA_API NTreeDecomposition :
         void makeNice();
 
         /**
+         * Outputs this tree decomposition in the Graphviz DOT language.
+         * This produces a standalone DOT file that can be run through
+         * Graphviz in order to visualise the tree decomposition.
+         *
+         * This routine generates a directed graph (with arrows running
+         * from parent bags to their children).  The nodes of this graph
+         * will be labelled in a way that indicates the tetrahedra
+         * contained in each bag.  The resulting DOT file should be used
+         * with the \a dot program shipped with Graphviz.
+         *
+         * \ifacespython The \a out argument is not present; instead
+         * standard output is assumed.
+         *
+         * @param out the output stream to which to write.
+         *
+         * @see http://www.graphviz.org/
+         */
+        void writeDot(std::ostream& out) const;
+
+        /**
+         * Returns a Graphviz DOT representation of this tree decomposition.
+         *
+         * This routine simply returns the output of writeDot() as a
+         * string, instead of dumping it to an output stream.
+         *
+         * See the writeDot() notes for further details.
+         *
+         * @return the output of writeDot(), as outlined above.
+         */
+        std::string dot() const;
+
+        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *

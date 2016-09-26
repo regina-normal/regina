@@ -89,14 +89,6 @@
     myEdit = NO;
 }
 
-- (void)textViewDidChange:(UITextView *)textView
-{
-    // Grumph.  iOS 7 (but not iOS 8) lets the cursor move beneath
-    // the keyboard as you type.  Ensure that the cursor remains visible.
-    if (! [ReginaHelper ios8])
-        [self ensureCursorVisible];
-}
-
 - (void)ensureCursorVisible
 {
     // Sigh.  If we call [self.detail scrollRangeToVisible:self.detail.selectedRange],
@@ -115,17 +107,11 @@
 
 - (void)keyboardDidShow:(NSNotification*)notification
 {
-    // Madly, the (width, height) for kbSize seem to switch positions between iOS 7 and iOS 8
-    // when working in landscape mode.
-    // What we want seems to be:
-    // - kbSize.width for (iOS 7, landscape);
-    // - kbSize.height for (iOS 7, portrait) and (iOS 8, all).
-    // Just cheat and take the min.
+    // On iOS 8 (but not all orientations for iOS 7), what we need is kbSize.height.
     CGSize kbSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    CGFloat kbHeight = MIN(kbSize.width, kbSize.height);
 
-    self.detail.contentInset = UIEdgeInsetsMake(0, 0, kbHeight, 0);
-    self.detail.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, kbHeight, 0);
+    self.detail.contentInset = UIEdgeInsetsMake(0, 0, kbSize.height, 0);
+    self.detail.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, kbSize.height, 0);
 
     [self ensureCursorVisible];
 }

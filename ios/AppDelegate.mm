@@ -36,6 +36,10 @@
 #import "ReginaHelper.h"
 #import "file/nglobaldirs.h"
 
+@interface AppDelegate ()
+@property (strong, nonatomic) NSURL* launchedURL;
+@end
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -48,6 +52,9 @@
     // - This routine must be fast.  Long tasks should be run on a secondary thread.
     //
     [ReginaHelper initWithApp:self];
+
+    // Have we been asked to open an URL (e.g., from an "Open with..." action)?
+    self.launchedURL = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];
     
     // Make sure that Regina knows where to find its internal data files.
     NSString* path = [[NSBundle mainBundle] resourcePath];
@@ -59,7 +66,19 @@
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
+    // It seems that this is called only if an URL is passed whilst the application
+    // is already running.  If the application was not running, then we need to collect
+    // the URL from application:didFinishLaunchingWithOptions:.
     return [[ReginaHelper master] openURL:url];
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application
+{
+    if (self.launchedURL) {
+        // Open the URL that was passed at launch time.
+        [[ReginaHelper master] openURL:self.launchedURL];
+        self.launchedURL = nil;
+    }
 }
 							
 - (void)applicationDidEnterBackground:(UIApplication *)application

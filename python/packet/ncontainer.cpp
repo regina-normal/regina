@@ -32,6 +32,7 @@
 
 #include "packet/ncontainer.h"
 #include "../safeheldtype.h"
+#include "../helpers.h"
 
 // Held type must be declared before boost/python.hpp
 #include <boost/python.hpp>
@@ -52,5 +53,7 @@ void addNContainer() {
 
     implicitly_convertible<SafeHeldType<NContainer>,
         SafeHeldType<regina::NPacket>>();
+
+    FIX_REGINA_BOOST_CONVERTERS(NContainer);
 }
 

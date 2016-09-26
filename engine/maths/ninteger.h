@@ -1525,10 +1525,12 @@ std::ostream& operator << (std::ostream& out,
     const NIntegerBase<supportInfinity>& i);
 
 // Help the compiler by noting which explicit instantiations we offer.
+#ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
 extern template REGINA_API std::ostream& operator << (std::ostream& out,
     const NIntegerBase<true>& i);
 extern template REGINA_API std::ostream& operator << (std::ostream& out,
     const NIntegerBase<false>& i);
+#endif // __DOXYGEN
 
 /**
  * Adds the given native integer to the given large integer.
@@ -1545,10 +1547,12 @@ NIntegerBase<supportInfinity> operator + (long lhs,
     const NIntegerBase<supportInfinity>& rhs);
 
 // Help the compiler by noting which explicit instantiations we offer.
+#ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
 extern template REGINA_API NIntegerBase<true> operator +(long lhs,
     const NIntegerBase<true>& rhs);
 extern template REGINA_API NIntegerBase<false> operator +(long lhs,
     const NIntegerBase<false>& rhs);
+#endif // __DOXYGEN
 
 /**
  * Multiplies the given native integer with the given large integer.
@@ -1565,10 +1569,12 @@ NIntegerBase<supportInfinity> operator * (long lhs,
     const NIntegerBase<supportInfinity>& rhs);
 
 // Help the compiler by noting which explicit instantiations we offer.
+#ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
 extern template REGINA_API NIntegerBase<true> operator *(long lhs,
     const NIntegerBase<true>& rhs);
 extern template REGINA_API NIntegerBase<false> operator *(long lhs,
     const NIntegerBase<false>& rhs);
+#endif // __DOXYGEN
 
 /**
  * A wrapper class for a native, fixed-precision integer type of the
@@ -2410,6 +2416,8 @@ inline int NIntegerBase<supportInfinity>::sign() const {
         small_ > 0 ? 1 : small_ < 0 ? -1 : 0);
 }
 
+#ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
+
 template <>
 inline bool NIntegerBase<true>::isInfinite() const {
     return infinite_;
@@ -2430,6 +2438,8 @@ inline void NIntegerBase<true>::makeInfinite() {
 template <>
 inline void NIntegerBase<false>::makeInfinite() {
 }
+
+#endif // __DOXYGEN
 
 template <bool supportInfinity>
 inline long NIntegerBase<supportInfinity>::longValue() const {
@@ -2554,6 +2564,8 @@ inline NIntegerBase<supportInfinity>&
     return (*this) = value.c_str();
 }
 
+#ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
+
 template <>
 inline void NIntegerBase<true>::swap(NIntegerBase<true>& other) {
     // This should just work, since large_ is a pointer.
@@ -2568,6 +2580,8 @@ inline void NIntegerBase<false>::swap(NIntegerBase<false>& other) {
     std::swap(small_, other.small_);
     std::swap(large_, other.large_);
 }
+
+#endif // __DOXYGEN
 
 template <bool supportInfinity>
 inline bool NIntegerBase<supportInfinity>::operator ==(
@@ -3185,6 +3199,8 @@ template <>
 inline void NIntegerBase<false>::makeFinite() {
 }
 
+#ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
+
 // This definition must come *after* the definition of makeInfinite()
 // to keep the compiler happy.
 template <>
@@ -3192,6 +3208,8 @@ inline NIntegerBase<true>::NIntegerBase(bool, bool) : large_(0) {
     // The infinity constructor.
     makeInfinite();
 }
+
+#endif // __DOXYGEN
 
 // Inline functions for NNativeInteger
 
@@ -3603,6 +3621,8 @@ inline std::ostream& operator << (std::ostream& out,
     return out << i.data_;
 }
 
+#ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
+
 #ifdef INT128_AVAILABLE
 template <>
 inline std::ostream& operator << (std::ostream& out,
@@ -3612,6 +3632,8 @@ inline std::ostream& operator << (std::ostream& out,
     return out << NInteger(i);
 }
 #endif
+
+#endif // __DOXYGEN
 
 } // namespace regina
 

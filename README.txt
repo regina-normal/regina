@@ -17,10 +17,6 @@ If you encounter problems, try:
 
   http://regina.sourceforge.net/docs/troubleshooting.html
 
-or mail your question to:
-
-  regina-user@lists.sourceforge.net
-
 Enjoy!
 
- -- Ben Burton <bab@debian.org>, Sat, 06 Feb 2016 10:22:28 +1000
+ -- Ben Burton <bab@maths.uq.edu.au>, Tue, 20 Sep 2016 08:24:48 +1000

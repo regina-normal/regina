@@ -62,6 +62,7 @@ class NSnapPeaFileUI : public QObject, public PacketViewerTab {
          */
         QWidget* ui;
         QTextEdit* file;
+        PacketEditIface* editIface;
 
     public:
         /**
@@ -69,6 +70,7 @@ class NSnapPeaFileUI : public QObject, public PacketViewerTab {
          */
         NSnapPeaFileUI(regina::NSnapPeaTriangulation* packet,
             PacketTabbedUI* useParentUI);
+        ~NSnapPeaFileUI();
 
         /**
          * PacketViewerTab overrides.
@@ -76,6 +78,11 @@ class NSnapPeaFileUI : public QObject, public PacketViewerTab {
         regina::NPacket* getPacket();
         QWidget* getInterface();
         void refresh();
+        PacketEditIface* getEditIface();
 };
+
+inline PacketEditIface* NSnapPeaFileUI::getEditIface() {
+    return editIface;
+}
 
 #endif

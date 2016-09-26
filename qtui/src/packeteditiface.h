@@ -43,6 +43,7 @@
 class PacketUI;
 class PacketTabbedUI;
 class QPlainTextEdit;
+class QTextEdit;
 class QTreeWidget;
 
 
@@ -70,10 +71,38 @@ class PacketEditTextEditor : public PacketEditIface {
     Q_OBJECT
 
     private:
+        QTextEdit *edit_;
+
+    public:
+        PacketEditTextEditor(QTextEdit *edit);
+
+        virtual bool cutEnabled() const;
+        virtual bool copyEnabled() const;
+        virtual bool pasteEnabled() const;
+
+    public slots:
+        virtual void cut();
+        virtual void copy();
+        virtual void paste();
+
+    /**
+     * Hmm, seems we can't call cut/copy/paste directly on the text
+     * editor; instead we have to go via signals and slots.
+     */
+    signals:
+        void sendCutToEditor();
+        void sendCopyToEditor();
+        void sendPasteToEditor();
+};
+
+class PacketEditPlainTextEditor : public PacketEditIface {
+    Q_OBJECT
+
+    private:
         QPlainTextEdit *edit_;
 
     public:
-        PacketEditTextEditor(QPlainTextEdit *edit);
+        PacketEditPlainTextEditor(QPlainTextEdit *edit);
 
         virtual bool cutEnabled() const;
         virtual bool copyEnabled() const;

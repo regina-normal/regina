@@ -42,13 +42,13 @@ std::string NGlobalDirs::census_(REGINA_DATADIR "/data/census");
 void NGlobalDirs::setDirs(const std::string& homeDir,
         const std::string& pythonModuleDir,
         const std::string& censusDir) {
-    if (! home_.empty())
+    if (! homeDir.empty())
         home_ = homeDir;
 
     // The empty string has an explicit meaning for pythonModule_.
     pythonModule_ = pythonModuleDir;
 
-    if (! census_.empty())
+    if (! censusDir.empty())
         census_ = censusDir;
 }
 

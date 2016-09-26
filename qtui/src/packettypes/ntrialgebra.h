@@ -164,6 +164,13 @@ class NTriTuraevViroUI : public QObject, public PacketViewerTab {
          * Calculate the requested Turaev-Viro invariant.
          */
         void calculateInvariant();
+        /**
+         * Note that preferences have changed.
+         */
+        void updatePreferences();
+
+    private:
+        void calculateInvariant(unsigned long r, bool parity);
 };
 
 /**

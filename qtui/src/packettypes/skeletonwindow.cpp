@@ -211,7 +211,7 @@ QVariant VertexModel::data(const QModelIndex& index, int role) const {
                             return tr("Ideal: Genus %1 non-orbl").arg(
                                 2 - item->linkEulerChar());
                     }
-                    case NVertex::NON_STANDARD_BDRY:
+                    case NVertex::INVALID:
                         return tr("Invalid");
                     default:
                         return tr("Unknown");

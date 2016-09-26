@@ -42,4 +42,13 @@
 #include "helpers/equality.h"
 #include "helpers/output.h"
 
+#if BOOST_VERSION >= 106000 && BOOST_VERSION < 106100
+    // Boost.Python 1.60 did not automatically register to_python converters
+    // for SafeHeldType.
+    #define FIX_REGINA_BOOST_CONVERTERS(T) \
+        register_ptr_to_python<regina::python::SafeHeldType<T>>()
+#else
+    #define FIX_REGINA_BOOST_CONVERTERS(T)
+#endif
+
 #endif

@@ -7,7 +7,7 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
-Version 5.0  [ (under development) ]
+Version 5.0  [ 26 September, 2016 ]
 
     GENERAL:
         - Now supports triangulations of all dimensions 2,...,15.
@@ -27,36 +27,9 @@ Version 5.0  [ (under development) ]
           The new namespaces regina::detail and regina::alias contain
           implementation details that should not concern the end user.
     BACKWARD COMPATIBILITY:
-        - Some routines have been removed, which may break your old code:
-            * NTriangulation::addTetrahedron(), as well as the NTetrahedron
-              constructors, have been deprecated since 2011; they are now
-              removed completely.  To add tetrahedra to a triangulation,
-              call NTriangulation::newTetrahedron() instead.
-            * NTriangulation::gluingsHaveChanged() has likewise been deprecated
-              since 2011, and has now been removed completely.  This routine
-              is no longer necessary (it has done nothing since it was
-              deprecated), and you can simply remove it from your code.
-            * NTriangulation::getEulerCharacteristic() has been deprecated
-              since 2007, and has again been removed completely.  Just call
-              the equivalent routine eulerCharTri() instead.
-            * NProgress, NProgressManager and related classes have been
-              deprecated since 2013; they are also removed completely.
-              All the code that used to work with these classes now
-              works with the newer and more flexible NProgressTracker instead.
-            * NSurfaceFilter::getFilterName(), NSurfaceFilter::getFilterID()
-              and the filterID class constants have been deprecated since 2013;
-              these are now removed completely.  The filterType class constants
-              are also removed due to a name clash.  Use filterTypeName(),
-              filterType() and the filterTypeID constants instead.
-            * Global arrays edgeNumber[][], edgeStart[] and edgeEnd[] have
-              been deprecated since 2009; this are now removed.  Use the
-              arrays NEdge::edgeNumber[][] and NEdge::edgeVertex[][] instead.
-            * The class NTriBool has been deprecated since 2012, and has now
-              been removed entirely.  Regina no longer supports 3-way booleans.
-            * Some of the internal XML file I/O functions have been renamed,
-              though this should not affect end users.
-        - The function NEdge::ordering(), which replaces the old array
-          NEdge::ordering[], no longer guarantees an even permutation.
+        - Several routines have been removed, which may break your old code.
+          See http://regina.sourceforge.net/regina4to5.html for details,
+          as well as suggested replacements.
     ENGINE:
         All:
             - Removed ShareableObject from the class hierarchy.  All classes
@@ -464,6 +437,9 @@ Version 5.0  [ (under development) ]
         Class NProgress, NProgressFinished, NProgressManager,
                 NProgressMessage, NProgressNumber, NProgressStateNumeric:
             - Removed these old deprecated classes entirely.
+        Class NProgressTrackerBase, NProgressTrackerOpen:
+            - New classes to support open-ended integer-based progress
+              tracking, with no "numerical end point" known in advance.
         Class NRational:
             - The destructor is no longer virtual.
         Class NSatBlock:
@@ -480,6 +456,14 @@ Version 5.0  [ (under development) ]
               that the manifolds x101 and x103 are homeomorphic.  For details,
               see B.B., "A duplicate pair in the SnapPea census",
               Experimental Mathematics, 23:170-173, 2014.
+        Class NSnapPeaTriangulation:
+            - Updated the SnapPea kernel to the one shipped with SnapPy 2.4
+              (standard precision).
+            - The definitions of geometric_solution and non_geometric_solution
+              have changed (following a similar change in SnapPea): now
+              geometric_solution means that all tetrahedra must be positive.
+            - Routine fundamentalGroupFilled() has a new boolean argument for
+              shortening relations.
         Class NSpiralSolidTorus:
             - Renamed getNumberOfTetrahedra() to size().  The old name
               is deprecated but kept for backward compatibility.
@@ -608,7 +592,6 @@ Version 5.0  [ (under development) ]
             - Removed getEulerCharacteristic(), which was deprecated
               years ago to clarify the ambiguity in how it was computed.
             - New dimension-agnostic routine countBoundaryFacets().
-            - Removed the long-deprecated addTetrahedron().
             - Removed 2-face members FaceIterator, faceIndex(), getFace(),
               getFaces(), getNumberOfFaces() and hasBoundaryFaces(), all of
               which were deprecated.  Instead use the names that replace
@@ -625,8 +608,10 @@ Version 5.0  [ (under development) ]
               particular, this class now supports C++11 range-based for loops.
             - New routines ordering(), faceNumber() and containsVertex(), for
               consistency with higher-dimensional faces.
+            - The link constant NON_STANDARD_BDRY has been renamed to INVALID.
+              The old name has been kept but is now deprecated.
             - New routine isValid(), which is equivalent to testing whether
-              getLink() == NON_STANDARD_BDRY.
+              getLink() == INVALID.
             - Removed getEmbeddings() for C++, but kept it for Python.
             - Removed the old routine getNumberOfEmbeddings().  Just use
               the equivalent routine getDegree() instead.
@@ -729,7 +714,8 @@ Version 5.0  [ (under development) ]
         Global arrays vertexSplit...:
             - Renamed global arrays vertexSplit[][], vertexSplitMeeting[][][],
               vertexSplitPartner[][], vertexSplitString[][] to quadSeparating,
-              quadMeeting, quadPartner, quadString respectively.
+              quadMeeting, quadPartner, quadString respectively.  The old
+              names are kept but deprecated.
             - Deprecated array vertexSplitDefn[][].  Simply use
               NEdge::ordering() instead (with the caveat that NEdge::ordering()
               might switch the images of 2 and 3).
@@ -4142,6 +4128,6 @@ Version 2.1.1
 Version 2.1.0  [ 18 December, 2000 ]
     (Initial public release.)
 
-Ben Burton (bab@debian.org)
+Ben Burton (bab@maths.uq.edu.au)
 http://regina.sourceforge.net/
 

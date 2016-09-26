@@ -306,7 +306,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane) :
         "area.  Any variables listed in the table above will be "
         "set before the script is run."));
 
-    editIface = new PacketEditTextEditor(editWidget);
+    editIface = new PacketEditPlainTextEditor(editWidget);
 
     splitter->addWidget(editWidget);
 

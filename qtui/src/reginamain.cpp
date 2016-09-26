@@ -300,10 +300,8 @@ void ReginaMain::fileOpenUrl(const QUrl& url) {
     if (localFile.isEmpty()) {
         ReginaSupport::warn(this,
             tr("The filename is empty."),
-            tr("<qt>There may be a miscommunication between Regina and "
-            "your operating system.  "
-            "Please report this to the developers at <i>%1</i>.</qt>").
-            arg(PACKAGE_BUGREPORT));
+            tr("There may be a miscommunication between Regina and "
+            "your operating system.  Please report this to the authors."));
         return;
     }
 
@@ -347,8 +345,8 @@ void ReginaMain::fileOpenExample(const QUrl& url, const QString& description) {
         ReginaSupport::warn(this,
             tr("I could not locate the example that you requested."),
             tr("<qt>The example \"%1\" may not have been installed properly.  "
-            "Please contact <i>%2</i> for assistance.").
-            arg(description.toHtmlEscaped()).arg(PACKAGE_BUGREPORT));
+            "Please mail the authors for assistance.").
+            arg(description.toHtmlEscaped()));
         return;
     }
 
@@ -359,8 +357,8 @@ void ReginaMain::fileOpenExample(const QUrl& url, const QString& description) {
         ReginaSupport::warn(this,
             tr("I could not open the example that you requested."),
             tr("<qt>The example \"%1\" may not have been installed properly.  "
-            "Please contact <i>%2</i> for assistance.").
-            arg(description.toHtmlEscaped()).arg(PACKAGE_BUGREPORT));
+            "Please mail the authors for assistance.").
+            arg(description.toHtmlEscaped()));
         return;
     }
 

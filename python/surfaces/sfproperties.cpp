@@ -32,6 +32,7 @@
 
 #include "surfaces/sfproperties.h"
 #include "../safeheldtype.h"
+#include "../helpers.h"
 
 // Held type must be declared before boost/python.hpp
 #include <boost/python.hpp>
@@ -82,5 +83,7 @@ void addNSurfaceFilterProperties() {
 
     implicitly_convertible<SafeHeldType<NSurfaceFilterProperties>,
         SafeHeldType<regina::NSurfaceFilter> >();
+
+    FIX_REGINA_BOOST_CONVERTERS(NSurfaceFilterProperties);
 }
 

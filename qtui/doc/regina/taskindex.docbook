@@ -111,6 +111,11 @@
   <seeie>See: elementary moves</seeie>
  </indexentry>
 
+ <indexentry>
+  <primaryie>(5&ndash;15)-manifold triangulation</primaryie>
+  <seeie>See: triangulation, (5&ndash;14)-manifold</seeie>
+ </indexentry>
+
  </indexdiv><indexdiv id='taskindex-A'><title>&mdash; A &mdash;</title>
 
  <indexentry>
@@ -154,6 +159,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>bistellar flip</primaryie>
+  <seeie>See: elementary moves</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>book closing move</primaryie>
   <seeie>See: elementary moves</seeie>
  </indexentry>
@@ -167,15 +177,16 @@
   <primaryie>boundary</primaryie>
   <secondaryie><link linkend="tri-real-ideal">extension from real to
    ideal</link></secondaryie>
-  <secondaryie><link linkend="surfaces-boundary">of a normal
-   surface</link></secondaryie>
+  <secondaryie><link linkend="surfaces-boundary">of a normal surface or
+   hypersurface</link></secondaryie>
   <secondaryie><link linkend="tri-propbdry">of a
    triangulation</link></secondaryie>
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-bdrycomponents">boundary components, viewing
-   in a triangulation</link></primaryie>
+  <primaryie>boundary components</primaryie>
+  <secondaryie><link linkend="tri-tribdry">triangulating</link></secondaryie>
+  <secondaryie><link linkend="tri-bdrycomponents">viewing</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -190,6 +201,10 @@
 
  <indexentry>
   <primaryie><link linkend="services">bug reporting</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-new-bundle">bundles, creation</link></primaryie>
  </indexentry>
 
  </indexdiv><indexdiv id='taskindex-C'><title>&mdash; C &mdash;</title>
@@ -297,13 +312,15 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="surfaces-boundary">compactness of normal
-   surfaces</link></primaryie>
+  <primaryie>compactness</primaryie>
+  <secondaryie><link linkend="surfaces-boundary">of normal
+   surfaces or hypersurfaces</link></secondaryie>
  </indexentry>
 
  <indexentry>
-  <primaryie>compatibility matrices for normal surfaces</primaryie>
-  <secondaryie><link linkend="surfaces-compat">displaying</link></secondaryie>
+  <primaryie>compatibility matrices</primaryie>
+  <secondaryie><link linkend="surfaces-compat">for normal
+   surfaces or hypersurfaces</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -333,7 +350,6 @@
   <primaryie>configuration</primaryie>
   <secondaryie><link linkend="options-tools">&gaplong;</link></secondaryie>
   <secondaryie><link linkend="options-general">general</link></secondaryie>
-  <secondaryie><link linkend="options-tools">&graphviz;</link></secondaryie>
   <secondaryie><link linkend="options-tools">&pdf;
    viewing</link></secondaryie>
   <secondaryie><link linkend="options-python">&python;
@@ -371,7 +387,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie>coordinate systems, normal surface</primaryie>
+  <primaryie>coordinate systems, normal surface or hypersurface</primaryie>
   <secondaryie><link linkend="surfaces-selectcoords">enumerating in a
    particular coordinate system</link></secondaryie>
   <secondaryie><link linkend="surfaces-defstandard">explanation of
@@ -397,7 +413,7 @@
 
  <indexentry>
   <primaryie>cusps</primaryie>
-  <secondaryie><link linkend="tri-vertices">identifying
+  <secondaryie><link linkend="tri-faces">identifying
    in a native triangulation</link></secondaryie>
   <secondaryie><link linkend="snappea-shapes-cusps">viewing and filling
    in a &snappea; triangulation</link></secondaryie>
@@ -405,7 +421,7 @@
 
  <indexentry>
   <primaryie><link linkend="surfaces-header-custom">custom
-   surfaces</link></primaryie>
+   surfaces or hypersurfaces</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -457,10 +473,6 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="packet-dock">docking packets</link></primaryie>
- </indexentry>
-
- <indexentry>
   <primaryie>documentation</primaryie>
   <secondaryie><link linkend="python-docs">&regina; objects, classes
    and methods</link></secondaryie>
@@ -477,13 +489,16 @@
  </indexentry>
 
  <indexentry>
-  <primaryie>dual 1-skeleton</primaryie>
-  <seeie>See: face pairing graphs</seeie>
+  <primaryie>dual CW-decomposition</primaryie>
+  <seeie>See: CW-decomposition</seeie>
  </indexentry>
 
  <indexentry>
-  <primaryie>dual CW-decomposition</primaryie>
-  <seeie>See: CW-decomposition</seeie>
+  <primaryie>dual graphs</primaryie>
+  <secondaryie><link linkend="options-fpg-labels">labelling</link></secondaryie>
+  <secondaryie><link linkend="tri-graphs-tree">tree
+   decomposition of</link></secondaryie>
+  <secondaryie><link linkend="tri-skeleton-graphs">viewing</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -494,8 +509,9 @@
  </indexdiv><indexdiv id='taskindex-E'><title>&mdash; E &mdash;</title>
 
  <indexentry>
-  <primaryie><link linkend="surfaces-proplink">edge linking surfaces,
-   recognising</link></primaryie>
+  <primaryie>edge links</primaryie>
+  <secondaryie><link linkend="surfaces-proplink">recognising as
+   normal surfaces or hypersurfaces</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -509,7 +525,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-edges">edges, viewing
+  <primaryie><link linkend="tri-faces">edges, viewing
    in a triangulation</link></primaryie>
  </indexentry>
 
@@ -528,8 +544,8 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="surfaces-embeddedonly">embedded normal surfaces,
-   enumerating</link></primaryie>
+  <primaryie><link linkend="surfaces-embeddedonly">embedded normal
+   surfaces or hypersurfaces, enumerating</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -538,13 +554,11 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="angles-creation">enumerating vertex angle
-   structures</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="surfaces-creation">enumerating vertex or
-   fundamental normal surfaces</link></primaryie>
+  <primaryie>enumerating</primaryie>
+  <secondaryie><link linkend="angles-creation">vertex angle
+   structures</link></secondaryie>
+  <secondaryie><link linkend="surfaces-creation">vertex or
+   fundamental normal surfaces or hypersurfaces</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -558,10 +572,8 @@
 
  <indexentry>
   <primaryie>Euler characteristic</primaryie>
-  <secondaryie><link linkend="dim2-identify">of a
-   2-manifold</link></secondaryie>
-  <secondaryie><link linkend="tri-algebra-cellular">of a
-   3-manifold</link></secondaryie>
+  <secondaryie><link linkend="tri-euler">of a
+   manifold</link></secondaryie>
   <secondaryie><link linkend="surfaces-propeuler">of a normal
    surface</link></secondaryie>
  </indexentry>
@@ -574,6 +586,11 @@
   <secondaryie><link linkend="tutorial">sample data files</link></secondaryie>
   <secondaryie><link linkend="snappea-new-example">&snappea;
    triangulations</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-simplify-exhaustive">exhaustive
+   simplification of triangulations</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -601,8 +618,7 @@
 
  <indexentry>
   <primaryie>face pairing graphs</primaryie>
-  <secondaryie><link linkend="options-fpg-labels">labelling</link></secondaryie>
-  <secondaryie><link linkend="tri-skeleton-facegraph">viewing</link></secondaryie>
+  <seeie>See: dual graphs</seeie>
  </indexentry>
 
  <indexentry>
@@ -661,8 +677,13 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="packet-dock">floating packets
-   in separate windows</link></primaryie>
+  <primaryie>flip graph</primaryie>
+  <seeie>See: Pachner graph</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="options-unicode">fonts,
+   unicode symbols</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -676,8 +697,8 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="surfaces-selectenum">fundamental normal surfaces,
-   enumerating</link></primaryie>
+  <primaryie><link linkend="surfaces-selectenum">fundamental normal
+   surfaces or hypersurfaces, enumerating</link></primaryie>
  </indexentry>
 
  </indexdiv><indexdiv id='taskindex-G'><title>&mdash; G &mdash;</title>
@@ -706,14 +727,7 @@
 
  <indexentry>
   <primaryie>graphs, face pairing</primaryie>
-  <seeie>See: face pairing graphs</seeie>
- </indexentry>
-
- <indexentry>
-  <primaryie>&graphviz;</primaryie>
-  <secondaryie><link linkend="options-tools">configuration</link></secondaryie>
-  <secondaryie><link linkend="tri-skeleton-facegraph">using to
-   display face pairing graphs</link></secondaryie>
+  <seeie>See: dual graphs</seeie>
  </indexentry>
 
  </indexdiv><indexdiv id='taskindex-H'><title>&mdash; H &mdash;</title>
@@ -734,6 +748,8 @@
    group for &snappea; triangulations</link></secondaryie>
   <secondaryie><link linkend="tri-algebra-cellular">induced map from
    manifold to boundary</link></secondaryie>
+  <secondaryie><link linkend="hypersurfaces-prophomology">of a normal
+   hypersurface</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -755,13 +771,17 @@
  </indexdiv><indexdiv id='taskindex-I'><title>&mdash; I &mdash;</title>
 
  <indexentry>
+  <primaryie><link linkend="tri-new-bundle">I-bundles, creation</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>ideal vertices</primaryie>
   <secondaryie><link linkend="tri-real-ideal">creating from real boundary
    components</link></secondaryie>
   <secondaryie><link linkend="tri-propideal">testing for</link></secondaryie>
   <secondaryie><link linkend="tri-real-ideal">truncating / converting
    to real boundary</link></secondaryie>
-  <secondaryie><link linkend="tri-vertices">viewing</link></secondaryie>
+  <secondaryie><link linkend="tri-faces">viewing</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -775,8 +795,9 @@
  </indexentry>
 
  <indexentry>
-  <primaryie>immersed / singular normal surfaces</primaryie>
-  <secondaryie><link linkend="surfaces-embeddedonly">enumerating</link></secondaryie>
+  <primaryie>immersed / singular</primaryie>
+  <secondaryie><link linkend="surfaces-embeddedonly">normal surfaces
+   or hypersurfaces, enumerating</link></secondaryie>
   <secondaryie><link linkend="options-general">warn before
    enumerating</link></secondaryie>
  </indexentry>
@@ -844,7 +865,7 @@
  </indexdiv><indexdiv id='taskindex-L'><title>&mdash; L &mdash;</title>
 
  <indexentry>
-  <primaryie><link linkend="options-fpg-labels">labelling face pairing
+  <primaryie><link linkend="options-fpg-labels">labelling dual
    graphs</link></primaryie>
  </indexentry>
 
@@ -924,8 +945,14 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="surfaces-viewmatching">matching
-   equations for normal surfaces</link></primaryie>
+  <primaryie>matching equations</primaryie>
+  <secondaryie><link linkend="surfaces-viewmatching">for
+   normal surfaces or hypersurfaces</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="options-unicode">mathematical symbols,
+   enabling / disabling</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -955,15 +982,20 @@
 
  <indexentry>
   <primaryie>naming</primaryie>
+  <secondaryie><link linkend="surfaces-coords">surfaces or hypersurfaces
+   in a list</link></secondaryie>
   <secondaryie><link linkend="packet-rename">packets</link></secondaryie>
-  <secondaryie><link linkend="surfaces-coords">surfaces in a
-   surface list</link></secondaryie>
   <secondaryie><link linkend="tri-editgluings">tetrahedra in a
    triangulation</link></secondaryie>
  </indexentry>
 
  <indexentry>
-  <primaryie>normal surfaces</primaryie>
+  <primaryie><link linkend="tri-graphs-nice">nice tree
+   decomposition</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>normal surfaces or hypersurfaces</primaryie>
   <secondaryie><link linkend="surfaces-coords-props">basic
    properties</link></secondaryie>
   <secondaryie><link linkend="surfaces-summary">breakdown of total
@@ -977,7 +1009,7 @@
   <secondaryie><link linkend="surfaces-coords-coords">coordinate
    systems, viewing in different systems</link></secondaryie>
   <secondaryie><link linkend="surfaces-summary">counting different types
-   of surfaces</link></secondaryie>
+   of (hyper)surfaces</link></secondaryie>
   <secondaryie><link linkend="tri-cutcrush">crushing a
    surface</link></secondaryie>
   <secondaryie><link linkend="tri-cutcrush">cutting along a
@@ -986,19 +1018,22 @@
   <secondaryie><link linkend="surfaces-proplink">edge links,
    recognising</link></secondaryie>
   <secondaryie><link linkend="surfaces-creation">enumerating vertex
-   or fundamental normal surfaces</link></secondaryie>
+   or fundamental normal (hyper)surfaces</link></secondaryie>
   <secondaryie><link linkend="export-csvsurfacelist">exporting to
    &csv; files</link></secondaryie>
   <secondaryie><link linkend="surfaces-filtering">filtering surface
    lists</link></secondaryie>
+  <secondaryie><link linkend="hypersurfaces-prophomology">homology</link></secondaryie>
   <secondaryie><link linkend="surfaces-viewmatching">matching
    equations</link></secondaryie>
   <secondaryie><link linkend="surfaces-coords">naming
-   surfaces in a list</link></secondaryie>
+   (hyper)surfaces in a list</link></secondaryie>
   <secondaryie><link linkend="surfaces-coords">numbering
-   surfaces in a list</link></secondaryie>
+   (hyper)surfaces in a list</link></secondaryie>
   <secondaryie><link linkend="surfaces-proptype">splitting surfaces,
    recognising</link></secondaryie>
+  <secondaryie><link linkend="hypersurfaces-triangulate">triangulating a
+   hypersurface</link></secondaryie>
   <secondaryie><link linkend="surfaces-proplink">vertex links,
    recognising</link></secondaryie>
  </indexentry>
@@ -1040,7 +1075,7 @@
  <indexentry>
   <primaryie>orientability</primaryie>
   <secondaryie><link linkend="surfaces-proporient">of a normal
-   surface</link></secondaryie>
+   surface or hypersurface</link></secondaryie>
   <secondaryie><link linkend="tri-proporient">of a
    native triangulation</link></secondaryie>
   <secondaryie><link linkend="snappea-proporbl">of a
@@ -1061,14 +1096,21 @@
  </indexdiv><indexdiv id='taskindex-P'><title>&mdash; P &mdash;</title>
 
  <indexentry>
+  <primaryie><link linkend="tri-simplify-exhaustive">Pachner graph,
+   searching</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-elementarymove">Pachner moves</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>packet tree</primaryie>
   <secondaryie><link linkend="options-general">display large
    icon</link></secondaryie>
   <secondaryie><link linkend="options-general">jump size</link></secondaryie>
   <secondaryie><link linkend="packet-move">moving packets</link></secondaryie>
   <secondaryie><link linkend="packet-tree">overview</link></secondaryie>
-  <secondaryie><link linkend="packet-refresh">refreshing a
-   subtree</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1083,10 +1125,6 @@
   <secondaryie><link linkend="packet-new">creating new
    packets</link></secondaryie>
   <secondaryie><link linkend="packet-delete">deleting</link></secondaryie>
-  <secondaryie><link linkend="packet-dock">docking and
-   undocking</link></secondaryie>
-  <secondaryie><link linkend="packet-dock">floating in separate
-   windows</link></secondaryie>
   <secondaryie><link linkend="packet-move">moving within the
    tree</link></secondaryie>
   <secondaryie><link linkend="packet-tree">viewing and
@@ -1097,12 +1135,6 @@
   <primaryie>padlock</primaryie>
   <secondaryie><link linkend="packet-uneditable">in the packet
    tree</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>paper clip</primaryie>
-  <secondaryie><link linkend="packet-dock">button in packet
-   viewers</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1228,6 +1260,10 @@
  </indexdiv><indexdiv id='taskindex-S'><title>&mdash; S &mdash;</title>
 
  <indexentry>
+  <primaryie><link linkend="tri-new-bundle">&s1;-bundles, creation</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>samples</primaryie>
   <seeie>See: examples</seeie>
  </indexentry>
@@ -1288,8 +1324,9 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="surfaces-propsides">sidedness of a
-   normal surface</link></primaryie>
+  <primaryie>sidedness</primaryie>
+  <secondaryie><link linkend="surfaces-propsides">of a
+   normal surface or hypersurface</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1321,8 +1358,7 @@
  <indexentry>
   <primaryie>skeleton</primaryie>
   <secondaryie><link linkend="tri-skeleton">of a triangulation</link></secondaryie>
-  <secondaryie><link linkend="tri-skeleton-facegraph">dual
-   1-skeleton</link></secondaryie>
+  <secondaryie><link linkend="tri-graphs-dual">dual 1-skeleton</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1450,6 +1486,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="options-unicode">subscript / superscript symbols,
+   enabling / disabling</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>surface</primaryie>
   <seeie>See: triangulation, 2-manifold</seeie>
  </indexentry>
@@ -1492,6 +1533,8 @@
    consistency</link></secondaryie>
   <secondaryie><link linkend="snappea-shapes">shapes from hyperbolic
    gluing equations</link></secondaryie>
+  <secondaryie><link linkend="tri-faces">viewing
+   in a triangulation</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1515,26 +1558,32 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="tri-graphs-tree">tree
+   decomposition</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>triangle arc normal coordinates</primaryie>
   <seeie>See: coordinate systems</seeie>
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-triangles">triangles (2-faces), viewing
+  <primaryie><link linkend="tri-faces">triangles (2-faces), viewing
    in a triangulation</link></primaryie>
  </indexentry>
 
  <indexentry>
-  <primaryie>triangulation, 2-manifold</primaryie>
-  <secondaryie><link linkend="dim2-identify">Euler
-   characteristic</link></secondaryie>
-  <secondaryie><link linkend="dim2triangulations">overview</link></secondaryie>
-  <secondaryie><link linkend="dim2-identify">recognising the
-   underlying 2-manifold</link></secondaryie>
+  <primaryie>triangulating</primaryie>
+  <secondaryie><link linkend="tri-tribdry">a boundary component
+   in a 4-manifold triangulation</link></secondaryie>
+  <secondaryie><link linkend="hypersurfaces-triangulate">a normal
+   hypersurface</link></secondaryie>
+  <secondaryie><link linkend="tri-vertexlinks">a vertex link in a
+   triangulation</link></secondaryie>
  </indexentry>
 
  <indexentry>
-  <primaryie>triangulation, 3-manifold</primaryie>
+  <primaryie>triangulation, (2,3,4)-manifold</primaryie>
   <secondaryie><link linkend="tri-prop0eff">0-efficiency,
    testing for</link></secondaryie>
   <secondaryie><link linkend="tri-make0eff">0-efficient triangulation,
@@ -1569,20 +1618,24 @@
   <secondaryie><link linkend="snappea-fromregina">converting to a
    &snappea; triangulation</link></secondaryie>
   <secondaryie><link linkend="tri-creation">creation</link></secondaryie>
-  <secondaryie><link linkend="tri-vertices">cusps</link></secondaryie>
+  <secondaryie><link linkend="tri-faces">cusps</link></secondaryie>
   <secondaryie><link linkend="tri-new-dehydration">dehydration
    string, rehydrating</link></secondaryie>
   <secondaryie><link linkend="tri-puncturedrill">drilling
    edges</link></secondaryie>
+  <secondaryie><link linkend="tri-graphs-dual">dual
+   graph</link></secondaryie>
   <secondaryie><link linkend="tri-elementarymove">elementary
    moves (3-2, 4-4, open book, etc.)</link></secondaryie>
+  <secondaryie><link linkend="tri-euler">Euler
+   characteristic</link></secondaryie>
   <secondaryie><link linkend="tri-new-example">examples,
    creating</link></secondaryie>
   <secondaryie><link linkend="foreign-export">exporting to
    external files</link></secondaryie>
-  <secondaryie><link linkend="tri-skeleton-facegraph">face pairing
-   graphs</link></secondaryie>
-  <secondaryie><link linkend="tri-triangles">faces,
+  <secondaryie><link linkend="tri-graphs-dual">face pairing
+   graph</link></secondaryie>
+  <secondaryie><link linkend="tri-faces-shapes">faces,
    viewing shapes</link></secondaryie>
   <secondaryie><link linkend="tri-algebra-homfund">fundamental
    group</link></secondaryie>
@@ -1604,10 +1657,14 @@
    and subcomplex testing</link></secondaryie>
   <secondaryie><link linkend="tri-new-isosig">isomorphism signature,
    recreating from</link></secondaryie>
+  <secondaryie><link linkend="tri-graphs-nice">nice tree
+   decomposition</link></secondaryie>
   <secondaryie><link linkend="tri-proporient">orientability</link></secondaryie>
   <secondaryie><link linkend="tri-orient">orientable double
    cover</link></secondaryie>
   <secondaryie><link linkend="tri-puncturedrill">puncturing</link></secondaryie>
+  <secondaryie><link linkend="tri-identify">recognising the
+   underlying 2-manifold</link></secondaryie>
   <secondaryie><link linkend="tri-recognition">recognising the
    underlying 3-manifold</link></secondaryie>
   <secondaryie><link linkend="tri-censuslookup">searching for a
@@ -1625,7 +1682,9 @@
    testing for</link></secondaryie>
   <secondaryie><link linkend="tri-editgluings">tetrahedron face
    gluings, editing</link></secondaryie>
-  <secondaryie><link linkend="tri-triangles">triangles,
+  <secondaryie><link linkend="tri-graphs-tree">tree
+   decomposition</link></secondaryie>
+  <secondaryie><link linkend="tri-faces-shapes">triangles,
    viewing shapes</link></secondaryie>
   <secondaryie><link linkend="tri-algebra-turaevviro">Turaev-Viro
    invariants</link></secondaryie>
@@ -1633,6 +1692,11 @@
    recognition</link></secondaryie>
   <secondaryie><link linkend="tri-propvalid">validity</link></secondaryie>
   <secondaryie><link linkend="tri-snappea">volume</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="packet-higherdim">triangulation,
+   (5&ndash;15)-manifold</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -1657,7 +1721,8 @@
  </indexdiv><indexdiv id='taskindex-U'><title>&mdash; U &mdash;</title>
 
  <indexentry>
-  <primaryie><link linkend="packet-dock">undocking packets</link></primaryie>
+  <primaryie><link linkend="options-unicode">unicode symbols,
+   enabling / disabling</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -1688,7 +1753,7 @@
  </indexdiv><indexdiv id='taskindex-V'><title>&mdash; V &mdash;</title>
 
  <indexentry>
-  <primaryie><link linkend="tri-edges">valid edges,
+  <primaryie><link linkend="tri-faces-invalid">valid edges,
    testing for</link></primaryie>
  </indexentry>
 
@@ -1708,25 +1773,22 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="surfaces-proplink">vertex linking surfaces,
-   recognising</link></primaryie>
- </indexentry>
-
- <indexentry>
   <primaryie>vertex links</primaryie>
-  <primaryie><link linkend="tri-vertexlinks">triangulating for native
-   triangulations</link></primaryie>
-  <primaryie><link linkend="snappea-vertexlinks">triangulating for &snappea;
-   triangulations</link></primaryie>
+  <secondaryie><link linkend="surfaces-proplink">recognising as
+   normal surfaces or hypersurfaces</link></secondaryie>
+  <secondaryie><link linkend="tri-vertexlinks">triangulating for native
+   triangulations</link></secondaryie>
+  <secondaryie><link linkend="snappea-vertexlinks">triangulating for &snappea;
+   triangulations</link></secondaryie>
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="surfaces-selectenum">vertex normal surfaces,
-   enumerating</link></primaryie>
+  <primaryie><link linkend="surfaces-selectenum">vertex normal
+   surfaces or hypersurfaces, enumerating</link></primaryie>
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-vertices">vertices, viewing
+  <primaryie><link linkend="tri-faces">vertices, viewing
    in a triangulation</link></primaryie>
  </indexentry>
 

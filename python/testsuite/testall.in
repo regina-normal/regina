@@ -55,7 +55,7 @@ verbose=0
 
 executable=../regina-python
 testdir="@PROJECT_SOURCE_DIR@/python/testsuite"
-testoutdir=`mktemp -d`
+testoutdir=`mktemp -d -t regina.XXX`
 
 echo "---------------------------------------"
 echo "Test suite for Regina's python bindings"
@@ -114,16 +114,16 @@ for i in `find "$testdir" -name "*.test" | sort`; do
 		tail -n 5 $testout | sed -e 's/^/        /'
 		broken=1
 	else
-		if ! ( diff --strip-trailing-cr "$testout" "$baseline" > /dev/null ); then
+		if ! ( diff --strip-trailing-cr "$baseline" "$testout" > /dev/null ); then
 			echo "FAILED (output differs from expected)"
 			if [ "$verbose" -eq 1 ]; then
 				echo "    Command to diff:"
-				echo "        " diff "--strip-trailing-cr" \""$testout"\" \""$baseline"\"
+				echo "        " diff "--strip-trailing-cr" \""$baseline"\" \""$testout"\"
 			fi
 			echo "    Diff was:"
 			diff --strip-trailing-cr -u \
 				--label 'Expected output' --label 'Actual output' \
-				"$testout" "$baseline" | head -n10 | sed -e 's/^/        /'
+				"$baseline" "$testout" | head -n10 | sed -e 's/^/        /'
 			echo "        ..."
 			broken=1
 		else

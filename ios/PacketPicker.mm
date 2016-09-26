@@ -109,6 +109,26 @@
     self.dataSource = self;
 }
 
+- (void)fill:(regina::NPacket *)tree type1:(regina::PacketType)packetType1 type2:(regina::PacketType)packetType2 allowNone:(BOOL)allowNone noneText:(NSString *)noneText
+{
+    self.allowNone = allowNone;
+
+    self.choices = [NSMutableArray array];
+    if (allowNone)
+        [self.choices addObject:[PacketChoice packetChoiceEmptyWithText:noneText]];
+
+    regina::NPacket* p;
+    for (p = tree; p; p = p->nextTreePacket())
+        if (p->type() == packetType1 || p->type() == packetType2)
+            [self.choices addObject:[PacketChoice packetChoiceWithPacket:p]];
+
+    if (self.choices.count == 0)
+        [self.choices addObject:[PacketChoice packetChoiceEmptyWithText:noneText]];
+
+    self.delegate = self;
+    self.dataSource = self;
+}
+
 - (BOOL)empty
 {
     return ((! self.allowNone) && (self.choices.count == 1) && (! [self.choices[0] packet]));
