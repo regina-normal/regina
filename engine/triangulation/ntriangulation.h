@@ -327,15 +327,6 @@ class REGINA_API Triangulation<3> :
         /*@{*/
 
         /**
-         * Deprecated dimension-specific alias for simplexIndex().
-         *
-         * \deprecated This routine is deprecated, and will be removed in some
-         * future release of Regina.  Just call tet->index() instead.
-         *
-         * See simplexIndex() for further information.
-         */
-        REGINA_DEPRECATED long tetrahedronIndex(const NTetrahedron* tet) const;
-        /**
          * A dimension-specific alias for newSimplex().
          *
          * See newSimplex() for further information.
@@ -427,64 +418,6 @@ class REGINA_API Triangulation<3> :
          */
         REGINA_DEPRECATED NBoundaryComponent* getBoundaryComponent(size_t index)
             const;
-        /**
-         * Deprecated routine that returns the index of the given
-         * boundary component in the triangulation.
-         *
-         * \deprecated This routine is deprecated, and will be removed in some
-         * future release of Regina.  Just call bc->index() instead.
-         *
-         * \pre The given boundary component belongs to this triangulation.
-         *
-         * @param bc specifies which boundary component to find in the
-         * triangulation.
-         * @return the index of the specified boundary component,
-         * where 0 is the first boundary component, 1 is the second and so on. 
-         */
-        REGINA_DEPRECATED size_t boundaryComponentIndex(
-            const NBoundaryComponent* bc) const;
-        /**
-         * Deprecated routine that returns the index of the given vertex
-         * in the triangulation.
-         *
-         * \deprecated This routine is deprecated, and will be removed in some
-         * future release of Regina.  Just call vertex->index() instead.
-         *
-         * \pre The given vertex belongs to this triangulation.
-         *
-         * @param vertex specifies which vertex to find in the triangulation.
-         * @return the index of the specified vertex, where 0 is the first
-         * vertex, 1 is the second and so on.
-         */
-        REGINA_DEPRECATED size_t vertexIndex(const NVertex* vertex) const;
-        /**
-         * Deprecated routine that returns the index of the given edge
-         * in the triangulation.
-         *
-         * \deprecated This routine is deprecated, and will be removed in some
-         * future release of Regina.  Just call edge->index() instead.
-         *
-         * \pre The given edge belongs to this triangulation.
-         *
-         * @param edge specifies which edge to find in the triangulation.
-         * @return the index of the specified edge, where 0 is the first
-         * edge, 1 is the second and so on.
-         */
-        REGINA_DEPRECATED size_t edgeIndex(const NEdge* edge) const;
-        /**
-         * Deprecated routine that returns the index of the given triangle
-         * in the triangulation.
-         *
-         * \deprecated This routine is deprecated, and will be removed in some
-         * future release of Regina.  Just call triangle->index() instead.
-         *
-         * \pre The given triangle belongs to this triangulation.
-         *
-         * @param tri specifies which triangle to find in the triangulation.
-         * @return the index of the specified triangle, where 0 is the first
-         * triangle, 1 is the second and so on.
-         */
-        REGINA_DEPRECATED size_t triangleIndex(const NTriangle* tri) const;
 
         /**
          * Determines if this triangulation contains any two-sphere
@@ -3205,10 +3138,6 @@ inline bool Triangulation<3>::dependsOnParent() const {
     return false;
 }
 
-inline long Triangulation<3>::tetrahedronIndex(const NTetrahedron* tet) const {
-    return tet->markedIndex();
-}
-
 inline NTetrahedron* Triangulation<3>::newTetrahedron() {
     return newSimplex();
 }
@@ -3274,23 +3203,6 @@ inline NBoundaryComponent* Triangulation<3>::getBoundaryComponent(
         size_t index) const {
     ensureSkeleton();
     return boundaryComponents_[index];
-}
-
-inline size_t Triangulation<3>::boundaryComponentIndex(
-        const NBoundaryComponent* boundaryComponent) const {
-    return boundaryComponent->index();
-}
-
-inline size_t Triangulation<3>::vertexIndex(const NVertex* vertex) const {
-    return vertex->index();
-}
-
-inline size_t Triangulation<3>::edgeIndex(const NEdge* edge) const {
-    return edge->index();
-}
-
-inline size_t Triangulation<3>::triangleIndex(const NTriangle* tri) const {
-    return tri->index();
 }
 
 inline bool Triangulation<3>::hasTwoSphereBoundaryComponents() const {

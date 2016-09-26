@@ -173,7 +173,6 @@ void addDim4Triangulation() {
             return_internal_reference<>())
         .def("simplex", pentachoron_non_const,
             return_internal_reference<>())
-        .def("pentachoronIndex", &Dim4Triangulation::pentachoronIndex)
         .def("newPentachoron", newPentachoron_void,
             return_internal_reference<>())
         .def("newSimplex", newPentachoron_void,
@@ -222,12 +221,6 @@ void addDim4Triangulation() {
             return_internal_reference<>())
         .def("tetrahedron", &Dim4Triangulation::tetrahedron,
             return_internal_reference<>())
-        .def("boundaryComponentIndex",
-            &Dim4Triangulation::boundaryComponentIndex)
-        .def("vertexIndex", &Dim4Triangulation::vertexIndex)
-        .def("edgeIndex", &Dim4Triangulation::edgeIndex)
-        .def("triangleIndex", &Dim4Triangulation::triangleIndex)
-        .def("tetrahedronIndex", &Dim4Triangulation::tetrahedronIndex)
         .def("isIdenticalTo", &Dim4Triangulation::isIdenticalTo)
         .def("isIsomorphicTo",
             +[](const Dim4Triangulation& t, const Dim4Triangulation& s) {

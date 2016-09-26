@@ -189,15 +189,6 @@ class REGINA_API Triangulation<2> :
         /*@{*/
 
         /**
-         * Deprecated dimension-specific alias for simplexIndex().
-         *
-         * \deprecated This routine is deprecated, and will be removed in some
-         * future release of Regina.  Just call tri->index() instead.
-         *
-         * See simplexIndex() for further information.
-         */
-        REGINA_DEPRECATED long triangleIndex(const Dim2Triangle* tri) const;
-        /**
          * A dimension-specific alias for newSimplex().
          *
          * See newSimplex() for further information.
@@ -287,50 +278,6 @@ class REGINA_API Triangulation<2> :
          */
         REGINA_DEPRECATED Dim2BoundaryComponent* getBoundaryComponent(
             size_t index) const;
-        /**
-         * Deprecated routine that returns the index of the given
-         * boundary component in the triangulation.
-         *
-         * \deprecated This routine is deprecated, and will be removed in some
-         * future release of Regina.  Just call bc->index() instead.
-         *
-         * \pre The given boundary component belongs to this triangulation.
-         *
-         * @param bc specifies which boundary component to find in the
-         * triangulation.
-         * @return the index of the specified boundary component,
-         * where 0 is the first boundary component, 1 is the second and so on. 
-         */
-        REGINA_DEPRECATED size_t boundaryComponentIndex(
-            const Dim2BoundaryComponent* bc) const;
-        /**
-         * Deprecated routine that returns the index of the given vertex
-         * in the triangulation.
-         *
-         * \deprecated This routine is deprecated, and will be removed in some
-         * future release of Regina.  Just call vertex->index() instead.
-         *
-         * \pre The given vertex belongs to this triangulation.
-         *
-         * @param vertex specifies which vertex to find in the triangulation.
-         * @return the index of the specified vertex, where 0 is the first
-         * vertex, 1 is the second and so on.
-         */
-        REGINA_DEPRECATED size_t vertexIndex(const Dim2Vertex* vertex) const;
-        /**
-         * Deprecated routine that returns the index of the given edge
-         * in the triangulation.
-         *
-         * \deprecated This routine is deprecated, and will be removed in some
-         * future release of Regina.  Just call edge->index() instead.
-         *
-         * \pre The given edge belongs to this triangulation.
-         *
-         * @param edge specifies which edge to find in the triangulation.
-         * @return the index of the specified edge, where 0 is the first
-         * edge, 1 is the second and so on.
-         */
-        REGINA_DEPRECATED size_t edgeIndex(const Dim2Edge* edge) const;
 
         /*@}*/
         /**
@@ -533,10 +480,6 @@ inline bool Triangulation<2>::dependsOnParent() const {
     return false;
 }
 
-inline long Triangulation<2>::triangleIndex(const Dim2Triangle* tri) const {
-    return tri->markedIndex();
-}
-
 inline Dim2Triangle* Triangulation<2>::newTriangle() {
     return newSimplex();
 }
@@ -584,19 +527,6 @@ inline Dim2BoundaryComponent* Triangulation<2>::getBoundaryComponent(
         size_t index) const {
     ensureSkeleton();
     return boundaryComponents_[index];
-}
-
-inline size_t Triangulation<2>::boundaryComponentIndex(
-        const Dim2BoundaryComponent* boundaryComponent) const {
-    return boundaryComponent->markedIndex();
-}
-
-inline size_t Triangulation<2>::vertexIndex(const Dim2Vertex* vertex) const {
-    return vertex->index();
-}
-
-inline size_t Triangulation<2>::edgeIndex(const Dim2Edge* edge) const {
-    return edge->index();
 }
 
 inline bool Triangulation<2>::isValid() const {

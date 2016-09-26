@@ -227,16 +227,6 @@ class REGINA_API Triangulation<4> :
         /*@{*/
 
         /**
-         * Deprecated dimension-specific alias for simplexIndex().
-         *
-         * \deprecated This routine is deprecated, and will be removed in some
-         * future release of Regina.  Just call pent->index() instead.
-         *
-         * See simplexIndex() for further information.
-         */
-        REGINA_DEPRECATED long pentachoronIndex(const Dim4Pentachoron* pent)
-            const;
-        /**
          * A dimension-specific alias for newSimplex().
          *
          * See newSimplex() for further information.
@@ -334,79 +324,6 @@ class REGINA_API Triangulation<4> :
          */
         REGINA_DEPRECATED Dim4BoundaryComponent* getBoundaryComponent(
             size_t index) const;
-        /**
-         * Deprecated routine that returns the index of the given
-         * boundary component in the triangulation.
-         *
-         * \deprecated This routine is deprecated, and will be removed in some
-         * future release of Regina.  Just call bc->index() instead.
-         *
-         * \pre The given boundary component belongs to this triangulation.
-         *
-         * @param bc specifies which boundary component to find in the
-         * triangulation.
-         * @return the index of the specified boundary component,
-         * where 0 is the first boundary component, 1 is the second and so on.
-         */
-        REGINA_DEPRECATED size_t boundaryComponentIndex(
-            const Dim4BoundaryComponent* bc) const;
-        /**
-         * Deprecated routine that returns the index of the given vertex
-         * in the triangulation.
-         *
-         * \deprecated This routine is deprecated, and will be removed in some
-         * future release of Regina.  Just call vertex->index() instead.
-         *
-         * \pre The given vertex belongs to this triangulation.
-         *
-         * @param vertex specifies which vertex to find in the triangulation.
-         * @return the index of the specified vertex, where 0 is the first
-         * vertex, 1 is the second and so on.
-         */
-        REGINA_DEPRECATED size_t vertexIndex(const Dim4Vertex* vertex) const;
-        /**
-         * Deprecated routine that returns the index of the given edge
-         * in the triangulation.
-         *
-         * \deprecated This routine is deprecated, and will be removed in some
-         * future release of Regina.  Just call edge->index() instead.
-         *
-         * \pre The given edge belongs to this triangulation.
-         *
-         * @param edge specifies which edge to find in the triangulation.
-         * @return the index of the specified edge, where 0 is the first
-         * edge, 1 is the second and so on.
-         */
-        REGINA_DEPRECATED size_t edgeIndex(const Dim4Edge* edge) const;
-        /**
-         * Deprecated routine that returns the index of the given triangle
-         * in the triangulation.
-         *
-         * \deprecated This routine is deprecated, and will be removed in some
-         * future release of Regina.  Just call tri->index() instead.
-         *
-         * \pre The given triangle belongs to this triangulation.
-         *
-         * @param tri specifies which triangle to find in the triangulation.
-         * @return the index of the specified triangle, where 0 is the first
-         * triangle, 1 is the second and so on.
-         */
-        REGINA_DEPRECATED size_t triangleIndex(const Dim4Triangle* tri) const;
-        /**
-         * Deprecated routine that returns the index of the given tetrahedron
-         * in the triangulation.
-         *
-         * \deprecated This routine is deprecated, and will be removed in some
-         * future release of Regina.  Just call tet->index() instead.
-         *
-         * \pre The given tetrahedron belongs to this triangulation.
-         *
-         * @param tet specifies which tetrahedron to find in the triangulation.
-         * @return the index of the specified tetrahedron, where 0 is the
-         * first tetrahedron, 1 is the second and so on.
-         */
-        REGINA_DEPRECATED size_t tetrahedronIndex(const Dim4Tetrahedron* tet)
-            const;
 
         /*@}*/
         /**
@@ -1149,11 +1066,6 @@ inline bool Triangulation<4>::dependsOnParent() const {
     return false;
 }
 
-inline long Triangulation<4>::pentachoronIndex(const Dim4Pentachoron* pent)
-        const {
-    return pent->index();
-}
-
 inline Dim4Pentachoron* Triangulation<4>::newPentachoron() {
     return newSimplex();
 }
@@ -1202,28 +1114,6 @@ inline Dim4BoundaryComponent* Triangulation<4>::getBoundaryComponent(
         size_t index) const {
     ensureSkeleton();
     return boundaryComponents_[index];
-}
-
-inline size_t Triangulation<4>::boundaryComponentIndex(
-        const Dim4BoundaryComponent* boundaryComponent) const {
-    return boundaryComponent->index();
-}
-
-inline size_t Triangulation<4>::vertexIndex(const Dim4Vertex* vertex) const {
-    return vertex->index();
-}
-
-inline size_t Triangulation<4>::edgeIndex(const Dim4Edge* edge) const {
-    return edge->index();
-}
-
-inline size_t Triangulation<4>::triangleIndex(const Dim4Triangle* tri) const {
-    return tri->index();
-}
-
-inline size_t Triangulation<4>::tetrahedronIndex(const Dim4Tetrahedron* tet)
-        const {
-    return tet->index();
 }
 
 inline long Triangulation<4>::eulerCharTri() const {

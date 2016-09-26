@@ -85,10 +85,6 @@ class REGINA_API Dim2BoundaryComponent :
          * Returns the index of this boundary component in the underlying
          * triangulation.
          *
-         * This is identical to calling the deprecated function
-         * <tt>boundaryComponentIndex(this)</tt> on the underlying
-         * triangulation.
-         *
          * @return the index of this boundary component.
          */
         size_t index() const;

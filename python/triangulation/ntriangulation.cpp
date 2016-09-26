@@ -218,7 +218,6 @@ void addNTriangulation() {
             return_internal_reference<>())
         .def("simplex", tetrahedron_non_const,
             return_internal_reference<>())
-        .def("tetrahedronIndex", &NTriangulation::tetrahedronIndex)
         .def("newTetrahedron", newTetrahedron_void,
             return_internal_reference<>())
         .def("newSimplex", newTetrahedron_void,
@@ -263,11 +262,6 @@ void addNTriangulation() {
             return_internal_reference<>())
         .def("triangle", &NTriangulation::triangle,
             return_internal_reference<>())
-        .def("boundaryComponentIndex",
-            &NTriangulation::boundaryComponentIndex)
-        .def("vertexIndex", &NTriangulation::vertexIndex)
-        .def("edgeIndex", &NTriangulation::edgeIndex)
-        .def("triangleIndex", &NTriangulation::triangleIndex)
         .def("isIdenticalTo", &NTriangulation::isIdenticalTo)
         .def("isIsomorphicTo",
             +[](const NTriangulation& t, const NTriangulation& s) {

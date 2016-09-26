@@ -148,7 +148,6 @@ void addDim2Triangulation() {
             return_internal_reference<>())
         .def("simplex", triangle_non_const,
             return_internal_reference<>())
-        .def("triangleIndex", &Dim2Triangulation::triangleIndex)
         .def("newTriangle", newTriangle_void,
             return_internal_reference<>())
         .def("newSimplex", newTriangle_void,
@@ -189,10 +188,6 @@ void addDim2Triangulation() {
             return_internal_reference<>())
         .def("edge", &Dim2Triangulation::edge,
             return_internal_reference<>())
-        .def("boundaryComponentIndex",
-            &Dim2Triangulation::boundaryComponentIndex)
-        .def("vertexIndex", &Dim2Triangulation::vertexIndex)
-        .def("edgeIndex", &Dim2Triangulation::edgeIndex)
         .def("isIdenticalTo", &Dim2Triangulation::isIdenticalTo)
         .def("isIsomorphicTo",
             +[](const Dim2Triangulation& t, const Dim2Triangulation& s) {

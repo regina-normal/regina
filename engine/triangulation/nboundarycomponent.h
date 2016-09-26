@@ -108,10 +108,6 @@ class REGINA_API NBoundaryComponent :
          * Returns the index of this boundary component in the underlying
          * triangulation.
          *
-         * This is identical to calling the deprecated function
-         * <tt>boundaryComponentIndex(this)</tt> on the underlying
-         * triangulation.
-         *
          * @return the index of this boundary component.
          */
         REGINA_INLINE_REQUIRED
