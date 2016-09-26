@@ -19,13 +19,11 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     component.h
-    dimtraits.h
     face.h
     facenumbering.h
     facetpairing.h
     facetspec.h
     isomorphism.h
-    nfacetspec.h
     simplex.h
     triangulation.h
     xmltrireader.h

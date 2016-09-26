@@ -32,11 +32,8 @@ if (${REGINA_INSTALL_DEV})
     nbooleans.h
     nlistoncall.h
     nmarkedvector.h
-    nmatrix2.h
-    nmpi.h
     nproperty.h
     nqitmask.h
-    nrational.h
     ntrieset.h
     ntritmask.h
     nxmlcallback.h

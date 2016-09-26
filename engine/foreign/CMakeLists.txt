@@ -17,7 +17,6 @@ SET(SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
-    csvsurfacelist.h
     dehydration.h
     isosig.h
     orb.h

@@ -46,8 +46,6 @@ if (${REGINA_INSTALL_DEV})
     nface.h
     nfacepair.h
     nfacepairing.h
-    nfacetspec.h
-    ngenericisomorphism.h
     nhomologicaldata.h
     nisomorphism.h
     npermit.h
