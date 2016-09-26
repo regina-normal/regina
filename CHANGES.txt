@@ -26,42 +26,9 @@ Version 5.0  [ 26 September, 2016 ]
           The new namespaces regina::detail and regina::alias contain
           implementation details that should not concern the end user.
     BACKWARD COMPATIBILITY:
-        - Some routines have been removed, which may break your old code:
-            * NTriangulation::addTetrahedron(), as well as the NTetrahedron
-              constructors, have been deprecated since 2011; they are now
-              removed completely.  To add tetrahedra to a triangulation,
-              call NTriangulation::newTetrahedron() instead.
-            * NTriangulation::gluingsHaveChanged() has likewise been deprecated
-              since 2011, and has now been removed completely.  This routine
-              is no longer necessary (it has done nothing since it was
-              deprecated), and you can simply remove it from your code.
-            * NTriangulation::getEulerCharacteristic() has been deprecated
-              since 2007, and has again been removed completely.  Just call
-              the equivalent routine eulerCharTri() instead.
-            * In NComponent and NBoundaryComponent, routines getFace(),
-              getNumberOfFaces() and hasBoundaryFaces() have been deprecated
-              since 2013, and have now been removed.  Use the equivalent
-              routines triangle(), countTriangles() and hasBoundaryTriangles().
-            * NProgress, NProgressManager and related classes have been
-              deprecated since 2013; they are also removed completely.
-              All the code that used to work with these classes now
-              works with the newer and more flexible NProgressTracker instead.
-            * NSurfaceFilter::getFilterName(), NSurfaceFilter::getFilterID()
-              and the filterID class constants have been deprecated since 2013;
-              these are now removed completely.  The filterType class constants
-              are also removed due to a name clash.  Use filterTypeName(),
-              filterType() and the filterTypeID constants instead.
-            * The class NIsomorphismDirect has been deprecated since 2009,
-              and is now removed entirely.  Juse use NIsomorphism instead.
-            * Global arrays edgeNumber[][], edgeStart[] and edgeEnd[] have
-              been deprecated since 2009; this are now removed.  Use the
-              arrays NEdge::edgeNumber[][] and NEdge::edgeVertex[][] instead.
-            * The class NTriBool has been deprecated since 2012, and has now
-              been removed entirely.  Regina no longer supports 3-way booleans.
-            * Some of the internal XML file I/O functions have been renamed,
-              though this should not affect end users.
-        - The function NEdge::ordering(), which replaces the old array
-          NEdge::ordering[], no longer guarantees an even permutation.
+        - Several routines have been removed, which may break your old code.
+          See http://regina.sourceforge.net/regina4to5.html for details,
+          as well as suggested replacements.
     ENGINE:
         All:
             - Removed ShareableObject from the class hierarchy.  All classes
