@@ -244,12 +244,12 @@ int parseCmdLine(int argc, const char* argv[], bool isController) {
     orientability = regina::NBoolSet(! argNor, ! argOr);
 
     if (minimalPrimeP2)
-        whichPurge = regina::NCensus::PURGE_NON_MINIMAL_PRIME |
-            regina::NCensus::PURGE_P2_REDUCIBLE;
+        whichPurge = regina::NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME |
+            regina::NGluingPermSearcher::PURGE_P2_REDUCIBLE;
     else if (minimalPrime)
-        whichPurge = regina::NCensus::PURGE_NON_MINIMAL_PRIME;
+        whichPurge = regina::NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME;
     else if (minimal)
-        whichPurge = regina::NCensus::PURGE_NON_MINIMAL;
+        whichPurge = regina::NGluingPermSearcher::PURGE_NON_MINIMAL;
     else
         whichPurge = 0;
 

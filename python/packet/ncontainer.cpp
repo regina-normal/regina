@@ -49,7 +49,6 @@ void addNContainer() {
     ;
 
     s.attr("typeID") = regina::PACKET_CONTAINER;
-    s.attr("packetType") = regina::PACKET_CONTAINER;
 
     implicitly_convertible<SafeHeldType<NContainer>,
         SafeHeldType<regina::NPacket>>();

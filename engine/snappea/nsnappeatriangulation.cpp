@@ -633,45 +633,6 @@ NMatrixInt* NSnapPeaTriangulation::slopeEquations() const {
     return matrix;
 }
 
-/**
- * Written by William Pettersson, 2011.
- */
-bool NSnapPeaTriangulation::verifyTriangulation(const NTriangulation& tri)
-        const {
-    if (! data_)
-        return false;
-
-    regina::snappea::TriangulationData *tData;
-    regina::snappea::triangulation_to_data(data_, &tData);
-
-    int tet, face, i;
-    if (tData->num_tetrahedra != tri.size()) {
-        free_triangulation_data(tData);
-        return false;
-    }
-
-    NTriangulation::TetrahedronIterator it = tri.tetrahedra().begin();
-    for (tet = 0; tet < tData->num_tetrahedra; tet++) {
-        for (face = 0; face < 4; face++) {
-            if (tData->tetrahedron_data[tet].neighbor_index[face] !=
-                    (*it)->adjacentTetrahedron(face)->index()) {
-                free_triangulation_data(tData);
-                return false;
-            }
-            for (i = 0; i < 4; i++)
-                if (tData->tetrahedron_data[tet].gluing[face][i] !=
-                        (*it)->adjacentGluing(face)[i]) {
-                    free_triangulation_data(tData);
-                    return false;
-                }
-        }
-        it++;
-    }
-
-    free_triangulation_data(tData);
-    return true;
-}
-
 void NSnapPeaTriangulation::writeTextShort(std::ostream& out) const {
     if (data_) {
         out << "SnapPea triangulation with " << data_->num_tetrahedra
@@ -752,36 +713,12 @@ bool NSnapPeaTriangulation::saveSnapPea(const char* filename) const {
     return regina::snappea::write_triangulation(data_, filename);
 }
 
-void NSnapPeaTriangulation::dump() const {
-    if (! data_)
-        return;
-
-    char* file = regina::snappea::string_triangulation(data_);
-    printf("%s", file);
-    fflush(stdout);
-    free(file);
-}
-
-void NSnapPeaTriangulation::saveAsSnapPea(const char* filename) const {
-    if (data_)
-        regina::snappea::write_triangulation(data_, filename);
-}
-
 void NSnapPeaTriangulation::writeXMLPacketData(std::ostream& out) const {
     if (! data_)
         return;
 
     out << "  <snappea>" << regina::xml::xmlEncodeSpecialChars(snapPea())
         << "</snappea>\n";
-}
-
-NTriangulation* NSnapPeaTriangulation::toRegina() const {
-    if (data_) {
-        NTriangulation* ans = new NTriangulation(*this);
-        ans->setLabel(get_triangulation_name(data_));
-        return ans;
-    } else
-        return 0;
 }
 
 void NSnapPeaTriangulation::packetWasChanged(NPacket* packet) {

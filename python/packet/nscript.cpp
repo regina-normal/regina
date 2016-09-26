@@ -57,26 +57,16 @@ void addNScript() {
             SafeHeldType<NScript>, boost::noncopyable>("NScript", init<>())
         .def("text", &NScript::text,
             return_value_policy<return_by_value>())
-        .def("getText", &NScript::text,
-            return_value_policy<return_by_value>())
         .def("setText", &NScript::setText)
         .def("append", &NScript::append)
         .def("countVariables", &NScript::countVariables)
-        .def("getNumberOfVariables", &NScript::countVariables)
         .def("variableName", &NScript::variableName,
-            return_value_policy<return_by_value>())
-        .def("getVariableName", &NScript::variableName,
             return_value_policy<return_by_value>())
         .def("variableValue", variableValue_long,
             return_value_policy<to_held_type<>>())
-        .def("getVariableValue", variableValue_long,
-            return_value_policy<to_held_type<>>())
         .def("variableValue", variableValue_string,
             return_value_policy<to_held_type<>>())
-        .def("getVariableValue", variableValue_string,
-            return_value_policy<to_held_type<>>())
         .def("variableIndex", &NScript::variableIndex)
-        .def("getVariableIndex", &NScript::variableIndex)
         .def("setVariableName", &NScript::setVariableName)
         .def("setVariableValue", &NScript::setVariableValue)
         .def("addVariable", &NScript::addVariable)
@@ -86,7 +76,6 @@ void addNScript() {
     ;
 
     s.attr("typeID") = regina::PACKET_SCRIPT;
-    s.attr("packetType") = regina::PACKET_SCRIPT;
 
     implicitly_convertible<SafeHeldType<NScript>,
         SafeHeldType<regina::NPacket> >();

@@ -111,22 +111,6 @@ class REGINA_API FacetPairing<3> : public detail::FacetPairingBase<3> {
         FacetPairing(const NTriangulation& tri);
 
         /**
-         * A deprecated alias for size(), provided for backward
-         * compatibility only.
-         *
-         * This routine returns the number of tetrahedra whose faces are
-         * described by this face pairing.
-         *
-         * \deprecated As of Regina 4.94, this routine has been renamed
-         * to size().  The old name getNumberOfTetrahedra() is provided
-         * for backward compatibility, but will be removed in some future
-         * version of Regina.
-         *
-         * @return the number of tetrahedra under consideration.
-         */
-        REGINA_DEPRECATED size_t getNumberOfTetrahedra() const;
-
-        /**
          * Follows a chain as far as possible from the given point.
          *
          * A chain is the underlying face pairing for a layered chain;
@@ -567,10 +551,6 @@ inline FacetPairing<3>::FacetPairing(const NTriangulation& tri) :
 
 inline FacetPairing<3>::FacetPairing(size_t size) :
         detail::FacetPairingBase<3>(size) {
-}
-
-inline size_t FacetPairing<3>::getNumberOfTetrahedra() const {
-    return size_;
 }
 
 } // namespace regina

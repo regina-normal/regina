@@ -53,14 +53,11 @@ void addNText() {
         .def(init<const char*>())
         .def("text", &NText::text,
             return_value_policy<return_by_value>())
-        .def("getText", &NText::text,
-            return_value_policy<return_by_value>())
         .def("setText", setText_string)
         .def("setText", setText_chars)
     ;
 
     s.attr("typeID") = regina::PACKET_TEXT;
-    s.attr("packetType") = regina::PACKET_TEXT;
 
     implicitly_convertible<SafeHeldType<NText>,
         SafeHeldType<regina::NPacket> >();

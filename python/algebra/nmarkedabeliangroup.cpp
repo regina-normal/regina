@@ -153,8 +153,6 @@ void addNMarkedAbelianGroup() {
             &NMarkedAbelianGroup::minNumberOfGenerators)
         .def("countInvariantFactors",
             &NMarkedAbelianGroup::countInvariantFactors)
-        .def("getNumberOfInvariantFactors",
-            &NMarkedAbelianGroup::countInvariantFactors)
         .def("invariantFactor", &NMarkedAbelianGroup::invariantFactor,
             return_value_policy<return_by_value>())
         .def("getInvariantFactor", &NMarkedAbelianGroup::invariantFactor,

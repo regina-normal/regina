@@ -97,29 +97,6 @@ class REGINA_API NGluingPerms : public NGenericGluingPerms<3> {
          */
         NGluingPerms(std::istream& in);
 
-        /**
-         * Returns the total number of tetrahedra under consideration.
-         *
-         * \deprecated This routine has been renamed to size().
-         * This old name has been kept for backward compatibility, but
-         * will be removed in some future version of Regina.
-         *
-         * @return the number of tetrahedra under consideration.
-         */
-        REGINA_DEPRECATED unsigned getNumberOfTetrahedra() const;
-
-        /**
-         * Returns the specific pairing of tetrahedron faces that this
-         * set of gluing permutations complements.
-         *
-         * \deprecated This routine has been renamed to facetPairing().
-         * This old name has been kept for backward compatibility, but
-         * will be removed in some future version of Regina.
-         *
-         * @return the corresponding tetrahedron face pairing.
-         */
-        REGINA_DEPRECATED const NFacePairing* getFacePairing() const;
-
     protected:
         /**
          * Creates a new permutation set.  All internal arrays will be
@@ -152,14 +129,6 @@ inline NGluingPerms::NGluingPerms(std::istream& in) :
 
 inline NGluingPerms::NGluingPerms(const NFacePairing* pairing) :
         NGenericGluingPerms<3>(pairing) {
-}
-
-inline unsigned NGluingPerms::getNumberOfTetrahedra() const {
-    return pairing_->size();
-}
-
-inline const NFacePairing* NGluingPerms::getFacePairing() const {
-    return pairing_;
 }
 
 } // namespace regina

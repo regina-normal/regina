@@ -239,15 +239,6 @@ class SimplexBase :
         const std::string& description() const;
 
         /**
-         * Deprecated routine that returns the description associated with
-         * this simplex.
-         *
-         * \deprecated This routine has been renamed to description().
-         * See the description() documentation for further details.
-         */
-        REGINA_DEPRECATED const std::string& getDescription() const;
-
-        /**
          * Sets the description associated with this simplex.
          *
          * This may be any text whatsoever; typically it is intended to
@@ -262,8 +253,6 @@ class SimplexBase :
 
         /**
          * Returns the index of this simplex in the underlying triangulation.
-         * This is identical to calling
-         * <tt>triangulation()->simplexIndex(this)</tt>.
          *
          * The index will be an integer between 0 and
          * <tt>triangulation()->size()-1</tt> inclusive.
@@ -373,16 +362,6 @@ class SimplexBase :
          */
         void join(int myFacet, Simplex<dim>* you, NPerm<dim+1> gluing);
         /**
-         * Deprecated alias for join(), which joins the given facet of
-         * this simplex to some facet of another simplex.
-         *
-         * \deprecated Simply call join() instead.
-         *
-         * See join() for further details.
-         */
-        REGINA_DEPRECATED void joinTo(int myFacet, Simplex<dim>* you,
-            NPerm<dim+1> gluing);
-        /**
          * Unglues the given facet of this simplex from whatever it is
          * joined to.  As a result, the given facet of this simplex
          * will become a boundary facet.
@@ -420,15 +399,6 @@ class SimplexBase :
          * @return the triangulation containing this simplex.
          */
         Triangulation<dim>* triangulation() const;
-        /**
-         * Deprecated alias for triangulation(), which returns the
-         * triangulation to which this simplex belongs.
-         *
-         * \deprecated Simply call triangulation() instead.
-         *
-         * See triangulation() for further details.
-         */
-        REGINA_DEPRECATED Triangulation<dim>* getTriangulation() const;
 
         /**
          * Returns the connected component of the triangulation to
@@ -437,16 +407,6 @@ class SimplexBase :
          * @return the component containing this simplex.
          */
         Component<dim>* component() const;
-
-        /**
-         * Deprecated alias for component(), which returns the connected
-         * component of the triangulation to which this simplex belongs.
-         *
-         * \deprecated Simply call component() instead.
-         *
-         * See component() for further details.
-         */
-        REGINA_DEPRECATED Component<dim>* getComponent() const;
 
         /**
          * Returns the <i>subdim</i>-face of the underlying triangulation
@@ -694,11 +654,6 @@ inline const std::string& SimplexBase<dim>::description() const {
 }
 
 template <int dim>
-inline const std::string& SimplexBase<dim>::getDescription() const {
-    return description_;
-}
-
-template <int dim>
 inline void SimplexBase<dim>::setDescription(const std::string& desc) {
     typename Triangulation<dim>::ChangeEventSpan span(tri_);
     description_ = desc;
@@ -730,19 +685,9 @@ inline Triangulation<dim>* SimplexBase<dim>::triangulation() const {
 }
 
 template <int dim>
-inline Triangulation<dim>* SimplexBase<dim>::getTriangulation() const {
-    return tri_;
-}
-
-template <int dim>
 inline Component<dim>* SimplexBase<dim>::component() const {
     triangulation()->ensureSkeleton();
     return component_;
-}
-
-template <int dim>
-inline Component<dim>* SimplexBase<dim>::getComponent() const {
-    return component();
 }
 
 template <int dim>
@@ -830,12 +775,6 @@ void SimplexBase<dim>::join(int myFacet, Simplex<dim>* you,
     you->gluing_[yourFacet] = gluing.inverse();
 
     tri_->clearAllProperties();
-}
-
-template <int dim>
-inline void SimplexBase<dim>::joinTo(int myFacet, Simplex<dim>* you,
-        NPerm<dim+1> gluing) {
-    join(myFacet, you, gluing);
 }
 
 template <int dim>

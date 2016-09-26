@@ -30,7 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-#include "foreign/csvsurfacelist.h"
 #include "surfaces/nnormalsurfacelist.h"
 
 #include "csvsurfacehandler.h"

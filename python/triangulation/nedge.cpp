@@ -69,18 +69,11 @@ void addNEdge() {
         .def(init<const NEdgeEmbedding&>())
         .def("simplex", &NEdgeEmbedding::simplex,
             return_value_policy<reference_existing_object>())
-        .def("getSimplex", &NEdgeEmbedding::simplex,
-            return_value_policy<reference_existing_object>())
         .def("tetrahedron", &NEdgeEmbedding::tetrahedron,
             return_value_policy<reference_existing_object>())
-        .def("getTetrahedron", &NEdgeEmbedding::tetrahedron,
-            return_value_policy<reference_existing_object>())
         .def("face", &NEdgeEmbedding::face)
-        .def("getFace", &NEdgeEmbedding::face)
         .def("edge", &NEdgeEmbedding::edge)
-        .def("getEdge", &NEdgeEmbedding::edge)
         .def("vertices", &NEdgeEmbedding::vertices)
-        .def("getVertices", &NEdgeEmbedding::vertices)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
@@ -90,10 +83,7 @@ void addNEdge() {
                 boost::noncopyable>("Face3_1", no_init)
             .def("index", &NEdge::index)
             .def("embeddings", edge_embeddings_list)
-            .def("getEmbeddings", edge_embeddings_list)
             .def("embedding", &NEdge::embedding,
-                return_internal_reference<>())
-            .def("getEmbedding", &NEdge::embedding,
                 return_internal_reference<>())
             .def("front", &NEdge::front,
                 return_internal_reference<>())
@@ -101,26 +91,16 @@ void addNEdge() {
                 return_internal_reference<>())
             .def("triangulation", &NEdge::triangulation,
                 return_value_policy<to_held_type<> >())
-            .def("getTriangulation", &NEdge::triangulation,
-                return_value_policy<to_held_type<> >())
             .def("component", &NEdge::component,
                 return_value_policy<reference_existing_object>())
-            .def("getComponent", &NEdge::component,
-                return_value_policy<reference_existing_object>())
             .def("boundaryComponent", &NEdge::boundaryComponent,
-                return_value_policy<reference_existing_object>())
-            .def("getBoundaryComponent", &NEdge::boundaryComponent,
                 return_value_policy<reference_existing_object>())
             .def("face", &regina::python::face<NEdge, 1, int>)
             .def("vertex", &NEdge::vertex,
                 return_value_policy<reference_existing_object>())
-            .def("getVertex", &NEdge::vertex,
-                return_value_policy<reference_existing_object>())
             .def("faceMapping", &regina::python::faceMapping<NEdge, 1, 4>)
             .def("vertexMapping", &NEdge::vertexMapping)
-            .def("getVertexMapping", &NEdge::vertexMapping)
             .def("degree", &NEdge::degree)
-            .def("getDegree", &NEdge::degree)
             .def("isBoundary", &NEdge::isBoundary)
             .def("isValid", &NEdge::isValid)
             .def("hasBadIdentification", &NEdge::hasBadIdentification)

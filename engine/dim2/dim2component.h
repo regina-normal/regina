@@ -126,14 +126,6 @@ class REGINA_API Component<2> : public detail::ComponentBase<2>,
         size_t countBoundaryComponents() const;
 
         /**
-         * Deprecated function that returns the number of boundary
-         * components in this component.
-         *
-         * \deprecated Simply call countBoundaryComponents() instead.
-         */
-        REGINA_DEPRECATED size_t getNumberOfBoundaryComponents() const;
-
-        /**
          * Returns a reference to the list of all <i>subdim</i>-faces in
          * this component.
          *
@@ -180,15 +172,6 @@ class REGINA_API Component<2> : public detail::ComponentBase<2>,
          * @return the requested boundary component.
          */
         Dim2BoundaryComponent* boundaryComponent(size_t index) const;
-        /**
-         * Deprecated routine that returns the requested boundary component
-         * of this triangulation.
-         *
-         * \deprecated This routine has been renamed to boundaryComponent().
-         * See the boundaryComponent() documentation for further details.
-         */
-        REGINA_DEPRECATED Dim2BoundaryComponent* getBoundaryComponent(
-            size_t index) const;
 
         /**
          * Determines if this component is closed.
@@ -249,10 +232,6 @@ inline size_t Component<2>::countBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
-inline size_t Component<2>::getNumberOfBoundaryComponents() const {
-    return boundaryComponents_.size();
-}
-
 // Hide specialisations from doxygen, since it cannot handle them.
 #ifndef __DOXYGEN
 template <>
@@ -267,11 +246,6 @@ inline Dim2Vertex* Component<2>::face<0>(size_t index) const {
 #endif // ! __DOXYGEN
 
 inline Dim2BoundaryComponent* Component<2>::boundaryComponent(size_t index)
-        const {
-    return boundaryComponents_[index];
-}
-
-inline Dim2BoundaryComponent* Component<2>::getBoundaryComponent(size_t index)
         const {
     return boundaryComponents_[index];
 }

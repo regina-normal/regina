@@ -114,8 +114,6 @@ void addNAbelianGroup() {
         .def("getTorsionRank", torsionRank_large)
         .def("getTorsionRank", torsionRank_long)
         .def("countInvariantFactors", &NAbelianGroup::countInvariantFactors)
-        .def("getNumberOfInvariantFactors",
-            &NAbelianGroup::countInvariantFactors)
         .def("invariantFactor", &NAbelianGroup::invariantFactor,
             return_value_policy<return_by_value>())
         .def("getInvariantFactor", &NAbelianGroup::invariantFactor,

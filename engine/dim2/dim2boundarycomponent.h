@@ -85,10 +85,6 @@ class REGINA_API Dim2BoundaryComponent :
          * Returns the index of this boundary component in the underlying
          * triangulation.
          *
-         * This is identical to calling the deprecated function
-         * <tt>boundaryComponentIndex(this)</tt> on the underlying
-         * triangulation.
-         *
          * @return the index of this boundary component.
          */
         size_t index() const;
@@ -135,14 +131,6 @@ class REGINA_API Dim2BoundaryComponent :
          * @return the component containing this boundary component.
          */
         Dim2Component* component() const;
-        /**
-         * Deprecated routine that returns the component of the triangulation
-         * to which this boundary component belongs.
-         *
-         * \deprecated This routine has been renamed to component().
-         * See the component() documentation for further details.
-         */
-        REGINA_DEPRECATED Dim2Component* getComponent() const;
 
         /**
          * Writes a short text representation of this object to the
@@ -212,10 +200,6 @@ inline Dim2Vertex* Dim2BoundaryComponent::face<0>(size_t index) const {
 #endif // ! __DOXYGEN
 
 inline Dim2Component* Dim2BoundaryComponent::component() const {
-    return vertices_.front()->component();
-}
-
-inline Dim2Component* Dim2BoundaryComponent::getComponent() const {
     return vertices_.front()->component();
 }
 

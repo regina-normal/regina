@@ -123,14 +123,6 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
         size_t size() const;
 
         /**
-         * Deprecated routine that returns the number of tetrahedra in this
-         * layered solid torus.
-         *
-         * \deprecated Simply call size() instead.
-         */
-        REGINA_DEPRECATED size_t getNumberOfTetrahedra() const;
-
-        /**
          * Returns the tetrahedron that is glued to itself at the base of
          * this layered solid torus.
          *
@@ -494,10 +486,6 @@ inline NLayeredSolidTorus::NLayeredSolidTorus() {
 }
 
 inline size_t NLayeredSolidTorus::size() const {
-    return nTetrahedra;
-}
-
-inline size_t NLayeredSolidTorus::getNumberOfTetrahedra() const {
     return nTetrahedra;
 }
 

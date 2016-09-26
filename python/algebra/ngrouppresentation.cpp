@@ -127,7 +127,6 @@ void addNGroupPresentation() {
         .def("terms", terms_list)
         .def("getTerms", terms_list)
         .def("countTerms", &NGroupExpression::countTerms)
-        .def("getNumberOfTerms", &NGroupExpression::countTerms)
         .def("wordLength", &NGroupExpression::wordLength)
         .def("isTrivial", &NGroupExpression::isTrivial)
         .def("erase", &NGroupExpression::erase)
@@ -169,9 +168,7 @@ void addNGroupPresentation() {
             OL_addGenerator())
         .def("addRelation", addRelation_clone)
         .def("countGenerators", &NGroupPresentation::countGenerators)
-        .def("getNumberOfGenerators", &NGroupPresentation::countGenerators)
         .def("countRelations", &NGroupPresentation::countRelations)
-        .def("getNumberOfRelations", &NGroupPresentation::countRelations)
         .def("relation", &NGroupPresentation::relation,
             return_internal_reference<>())
         .def("getRelation", &NGroupPresentation::relation,
@@ -208,7 +205,6 @@ void addNGroupPresentation() {
         .def("abelianisation", &NGroupPresentation::abelianisation)
         .def("markedAbelianisation", &NGroupPresentation::markedAbelianisation)
         .def("toTeX", &NGroupPresentation::toTeX)
-        .def("toStringCompact", &NGroupPresentation::compact)
         .def("compact", &NGroupPresentation::compact)
         .def("writeTeX", presentationWriteTeX)
         .def("writeTextCompact", presentationWriteTextCompact)

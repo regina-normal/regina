@@ -83,15 +83,6 @@ class REGINA_API Isomorphism<3> : public detail::IsomorphismBase<3> {
         Isomorphism(const Isomorphism& copy);
 
         /**
-         * A deprecated dimension-specific alias for size().
-         *
-         * \deprecated Simply call size() instead.
-         *
-         * See size() for further information.
-         */
-        REGINA_DEPRECATED unsigned getSourceTetrahedra() const;
-
-        /**
          * A dimension-specific alias for simpImage().
          *
          * See simpImage() for further information.
@@ -132,10 +123,6 @@ inline Isomorphism<3>::Isomorphism(unsigned sourceTetrahedra) :
 
 inline Isomorphism<3>::Isomorphism(const Isomorphism& cloneMe) :
         detail::IsomorphismBase<3>(cloneMe) {
-}
-
-inline unsigned Isomorphism<3>::getSourceTetrahedra() const {
-    return nSimplices_;
 }
 
 inline int& Isomorphism<3>::tetImage(unsigned sourceTet) {

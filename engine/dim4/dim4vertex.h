@@ -116,14 +116,6 @@ class REGINA_API Face<4, 0> : public detail::FaceBase<4, 0>,
          * as determined by isBoundary().
          */
         Dim4BoundaryComponent* boundaryComponent() const;
-        /**
-         * Deprecated routine that returns the boundary component of the
-         * triangulation to which this vertex belongs.
-         *
-         * \deprecated This routine has been renamed as boundaryComponent().
-         * See the boundaryComponent() documentation for further details.
-         */
-        REGINA_DEPRECATED Dim4BoundaryComponent* getBoundaryComponent() const;
 
         /**
          * Returns a full 3-manifold triangulation describing
@@ -313,10 +305,6 @@ inline Face<4, 0>::Face(Dim4Component* component) :
 }
 
 inline Dim4BoundaryComponent* Face<4, 0>::boundaryComponent() const {
-    return boundaryComponent_;
-}
-
-inline Dim4BoundaryComponent* Face<4, 0>::getBoundaryComponent() const {
     return boundaryComponent_;
 }
 

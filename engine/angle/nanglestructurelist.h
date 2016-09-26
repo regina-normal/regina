@@ -113,14 +113,6 @@ class REGINA_API NAngleStructureList : public NPacket {
          * @return the corresponding triangulation.
          */
         NTriangulation* triangulation() const;
-        /**
-         * Deprecated routine that returns the triangulation on which these
-         * angle structures lie.
-         *
-         * \deprecated This routine has been renamed to triangulation().
-         * See the triangulation() documentation for further details.
-         */
-        REGINA_DEPRECATED NTriangulation* getTriangulation() const;
 
         /**
          * Returns whether this list was produced by enumerating taut angle
@@ -139,15 +131,6 @@ class REGINA_API NAngleStructureList : public NPacket {
          */
         size_t size() const;
         /**
-         * Deprecated routine to return the number of angle structures
-         * stored in this list.
-         *
-         * \deprecated Please use the identical routine size() instead.
-         *
-         * @return the number of angle structures.
-         */
-        REGINA_DEPRECATED size_t getNumberOfStructures() const;
-        /**
          * Returns the angle structure at the requested index in this
          * list.
          *
@@ -156,15 +139,6 @@ class REGINA_API NAngleStructureList : public NPacket {
          * @return the angle structure at the requested index.
          */
         const NAngleStructure* structure(size_t index) const;
-        /**
-         * Deprecated routine that returns the angle structure at the
-         * requested index in this list.
-         *
-         * \deprecated This routine has been renamed to structure().
-         * See the structure() documentation for further details.
-         */
-        REGINA_DEPRECATED const NAngleStructure* getStructure(size_t index)
-            const;
 
         /**
          * Determines whether any convex combination of the angle
@@ -189,32 +163,6 @@ class REGINA_API NAngleStructureList : public NPacket {
          * @return \c true if and only if a taut structure can be produced.
          */
         bool spansTaut() const;
-
-        /**
-         * Determines whether any convex combination of the angle
-         * structures in this list is a strict angle structure.
-         *
-         * \deprecated This routine will be removed in a future version
-         * of Regina.  Users should switch to the identical routine
-         * spansStrict() instead.
-         *
-         * @return \c true if and only if a strict angle structure can
-         * be produced.
-         */
-        REGINA_DEPRECATED bool allowsStrict() const;
-
-        /**
-         * Determines whether any angle structure in this list is a
-         * taut structure.
-         *
-         * \deprecated This routine will be removed in a future version
-         * of Regina.  Users should switch to the identical routine
-         * spansTaut() instead.
-         *
-         * @return \c true if and only if a taut angle structure can
-         * be produced.
-         */
-        REGINA_DEPRECATED bool allowsTaut() const;
 
         /**
          * Enumerates all angle structures on the given triangulation.
@@ -474,16 +422,8 @@ inline bool NAngleStructureList::isTautOnly() const {
 inline size_t NAngleStructureList::size() const {
     return structures.size();
 }
-inline size_t NAngleStructureList::getNumberOfStructures() const {
-    return structures.size();
-}
 
 inline const NAngleStructure* NAngleStructureList::structure(
-        size_t index) const {
-    return structures[index];
-}
-
-inline const NAngleStructure* NAngleStructureList::getStructure(
         size_t index) const {
     return structures[index];
 }
@@ -498,14 +438,6 @@ inline bool NAngleStructureList::spansTaut() const {
     if (! doesSpanTaut.known())
         calculateSpanTaut();
     return doesSpanTaut.value();
-}
-
-inline bool NAngleStructureList::allowsStrict() const {
-    return spansStrict();
-}
-
-inline bool NAngleStructureList::allowsTaut() const {
-    return spansTaut();
 }
 
 inline bool NAngleStructureList::dependsOnParent() const {

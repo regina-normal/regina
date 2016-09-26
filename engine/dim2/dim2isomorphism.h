@@ -84,15 +84,6 @@ class REGINA_API Isomorphism<2> : public detail::IsomorphismBase<2> {
         Isomorphism(const Isomorphism<2>& copy);
 
         /**
-         * A deprecated dimension-specific alias for size().
-         *
-         * \deprecated Simply call size() instead.
-         *
-         * See size() for further information.
-         */
-        REGINA_DEPRECATED unsigned getSourceTriangles() const;
-
-        /**
          * A dimension-specific alias for simpImage().
          *
          * See simpImage() for further information.
@@ -136,10 +127,6 @@ inline Isomorphism<2>::Isomorphism(unsigned sourceTriangles) :
 
 inline Isomorphism<2>::Isomorphism(const Isomorphism<2>& cloneMe) :
         detail::IsomorphismBase<2>(cloneMe) {
-}
-
-inline unsigned Isomorphism<2>::getSourceTriangles() const {
-    return nSimplices_;
 }
 
 inline int& Isomorphism<2>::triImage(unsigned sourceTriangle) {

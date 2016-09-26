@@ -56,7 +56,6 @@ void addNPDF() {
     ;
 
     s.attr("typeID") = regina::PACKET_PDF;
-    s.attr("packetType") = regina::PACKET_PDF;
 
     implicitly_convertible<SafeHeldType<NPDF>,
         SafeHeldType<regina::NPacket> >();

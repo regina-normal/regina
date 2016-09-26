@@ -69,7 +69,6 @@ namespace {
         template <typename Class>
         void visit(Class& c) const {
             c.def("vertex", &FaceEmbedding<dim, 0>::vertex);
-            c.def("getVertex", &FaceEmbedding<dim, 0>::vertex);
         }
     };
 
@@ -81,7 +80,6 @@ namespace {
         template <typename Class>
         void visit(Class& c) const {
             c.def("edge", &FaceEmbedding<dim, 1>::edge);
-            c.def("getEdge", &FaceEmbedding<dim, 1>::edge);
         }
     };
 
@@ -93,7 +91,6 @@ namespace {
         template <typename Class>
         void visit(Class& c) const {
             c.def("triangle", &FaceEmbedding<dim, 2>::triangle);
-            c.def("getTriangle", &FaceEmbedding<dim, 2>::triangle);
         }
     };
 
@@ -105,7 +102,6 @@ namespace {
         template <typename Class>
         void visit(Class& c) const {
             c.def("tetrahedron", &FaceEmbedding<dim, 3>::tetrahedron);
-            c.def("getTetrahedron", &FaceEmbedding<dim, 3>::tetrahedron);
         }
     };
 
@@ -117,7 +113,6 @@ namespace {
         template <typename Class>
         void visit(Class& c) const {
             c.def("pentachoron", &FaceEmbedding<dim, 4>::pentachoron);
-            c.def("getPentachoron", &FaceEmbedding<dim, 4>::pentachoron);
         }
     };
 
@@ -172,10 +167,7 @@ namespace {
         void visit(Class& c) const {
             c.def("vertex", &Face<dim, subdim>::vertex,
                 return_value_policy<reference_existing_object>());
-            c.def("getVertex", &Face<dim, subdim>::vertex,
-                return_value_policy<reference_existing_object>());
             c.def("vertexMapping", &Face<dim, subdim>::vertexMapping);
-            c.def("getVertexMapping", &Face<dim, subdim>::vertexMapping);
         }
     };
 
@@ -188,10 +180,7 @@ namespace {
         void visit(Class& c) const {
             c.def("edge", &Face<dim, subdim>::edge,
                 return_value_policy<reference_existing_object>());
-            c.def("getEdge", &Face<dim, subdim>::edge,
-                return_value_policy<reference_existing_object>());
             c.def("edgeMapping", &Face<dim, subdim>::edgeMapping);
-            c.def("getEdgeMapping", &Face<dim, subdim>::edgeMapping);
             c.def(subface_aliases<dim, subdim, 0>());
         }
     };
@@ -205,10 +194,7 @@ namespace {
         void visit(Class& c) const {
             c.def("triangle", &Face<dim, subdim>::triangle,
                 return_value_policy<reference_existing_object>());
-            c.def("getTriangle", &Face<dim, subdim>::triangle,
-                return_value_policy<reference_existing_object>());
             c.def("triangleMapping", &Face<dim, subdim>::triangleMapping);
-            c.def("getTriangleMapping", &Face<dim, subdim>::triangleMapping);
             c.def(subface_aliases<dim, subdim, 1>());
         }
     };
@@ -222,11 +208,7 @@ namespace {
         void visit(Class& c) const {
             c.def("tetrahedron", &Face<dim, subdim>::tetrahedron,
                 return_value_policy<reference_existing_object>());
-            c.def("getTetrahedron", &Face<dim, subdim>::tetrahedron,
-                return_value_policy<reference_existing_object>());
             c.def("tetrahedronMapping", &Face<dim, subdim>::tetrahedronMapping);
-            c.def("getTetrahedronMapping",
-                &Face<dim, subdim>::tetrahedronMapping);
             c.def(subface_aliases<dim, subdim, 2>());
         }
     };
@@ -240,11 +222,7 @@ namespace {
         void visit(Class& c) const {
             c.def("pentachoron", &Face<dim, subdim>::pentachoron,
                 return_value_policy<reference_existing_object>());
-            c.def("getPentachoron", &Face<dim, subdim>::pentachoron,
-                return_value_policy<reference_existing_object>());
             c.def("pentachoronMapping", &Face<dim, subdim>::pentachoronMapping);
-            c.def("getPentachoronMapping",
-                &Face<dim, subdim>::pentachoronMapping);
             c.def(subface_aliases<dim, subdim, 3>());
         }
     };
@@ -257,12 +235,8 @@ void addFace(const char* name, const char* embName) {
         .def(init<const FaceEmbedding<dim, subdim>&>())
         .def("simplex", &FaceEmbedding<dim, subdim>::simplex,
             return_value_policy<reference_existing_object>())
-        .def("getSimplex", &FaceEmbedding<dim, subdim>::simplex,
-            return_value_policy<reference_existing_object>())
         .def("face", &FaceEmbedding<dim, subdim>::face)
-        .def("getFace", &FaceEmbedding<dim, subdim>::face)
         .def("vertices", &FaceEmbedding<dim, subdim>::vertices)
-        .def("getVertices", &FaceEmbedding<dim, subdim>::vertices)
         .def(embedding_aliases<dim, subdim>())
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
@@ -274,12 +248,8 @@ void addFace(const char* name, const char* embName) {
         .def(face_validity_types<dim, subdim, dim - subdim>())
         .def("isLinkOrientable", &Face<dim, subdim>::isLinkOrientable)
         .def("degree", &Face<dim, subdim>::degree)
-        .def("getDegree", &Face<dim, subdim>::degree)
         .def("embeddings", Face_embeddings_list<dim, subdim>)
-        .def("getEmbeddings", Face_embeddings_list<dim, subdim>)
         .def("embedding", &Face<dim, subdim>::embedding,
-            return_internal_reference<>())
-        .def("getEmbedding", &Face<dim, subdim>::embedding,
             return_internal_reference<>())
         .def("front", &Face<dim, subdim>::front,
             return_internal_reference<>())
@@ -288,11 +258,7 @@ void addFace(const char* name, const char* embName) {
         .def("index", &Face<dim, subdim>::index)
         .def("triangulation", &Face<dim, subdim>::triangulation,
             return_value_policy<regina::python::to_held_type<>>())
-        .def("getTriangulation", &Face<dim, subdim>::triangulation,
-            return_value_policy<regina::python::to_held_type<>>())
         .def("component", &Face<dim, subdim>::component,
-            return_value_policy<reference_existing_object>())
-        .def("getComponent", &Face<dim, subdim>::component,
             return_value_policy<reference_existing_object>())
         .def("face", &regina::python::face<Face<dim, subdim>, subdim, int>)
         .def("faceMapping",

@@ -227,16 +227,6 @@ class REGINA_API Triangulation<4> :
         /*@{*/
 
         /**
-         * Deprecated dimension-specific alias for simplexIndex().
-         *
-         * \deprecated This routine is deprecated, and will be removed in some
-         * future release of Regina.  Just call pent->index() instead.
-         *
-         * See simplexIndex() for further information.
-         */
-        REGINA_DEPRECATED long pentachoronIndex(const Dim4Pentachoron* pent)
-            const;
-        /**
          * A dimension-specific alias for newSimplex().
          *
          * See newSimplex() for further information.
@@ -285,14 +275,6 @@ class REGINA_API Triangulation<4> :
         size_t countBoundaryComponents() const;
 
         /**
-         * Deprecated function that returns the number of boundary
-         * components in this triangulation.
-         *
-         * \deprecated Simply call countBoundaryComponents() instead.
-         */
-        REGINA_DEPRECATED size_t getNumberOfBoundaryComponents() const;
-
-        /**
          * Returns all boundary components of this triangulation.
          *
          * Note that each ideal vertex forms its own boundary component, and
@@ -313,15 +295,6 @@ class REGINA_API Triangulation<4> :
          */
         const std::vector<Dim4BoundaryComponent*>& boundaryComponents() const;
         /**
-         * Deprecated routine that returns all boundary components of this
-         * triangulation.
-         *
-         * \deprecated This routine has been renamed to boundaryComponents().
-         * See the boundaryComponents() documentation for further details.
-         */
-        REGINA_DEPRECATED const std::vector<Dim4BoundaryComponent*>&
-            getBoundaryComponents() const;
-        /**
          * Returns the requested boundary component of this triangulation.
          *
          * Bear in mind that each time the triangulation changes, the
@@ -333,88 +306,6 @@ class REGINA_API Triangulation<4> :
          * @return the requested boundary component.
          */
         Dim4BoundaryComponent* boundaryComponent(size_t index) const;
-        /**
-         * Deprecated routine that returns the requested boundary component
-         * of this triangulation.
-         *
-         * \deprecated This routine has been renamed to boundaryComponent().
-         * See the boundaryComponent() documentation for further details.
-         */
-        REGINA_DEPRECATED Dim4BoundaryComponent* getBoundaryComponent(
-            size_t index) const;
-        /**
-         * Deprecated routine that returns the index of the given
-         * boundary component in the triangulation.
-         *
-         * \deprecated This routine is deprecated, and will be removed in some
-         * future release of Regina.  Just call bc->index() instead.
-         *
-         * \pre The given boundary component belongs to this triangulation.
-         *
-         * @param bc specifies which boundary component to find in the
-         * triangulation.
-         * @return the index of the specified boundary component,
-         * where 0 is the first boundary component, 1 is the second and so on.
-         */
-        REGINA_DEPRECATED size_t boundaryComponentIndex(
-            const Dim4BoundaryComponent* bc) const;
-        /**
-         * Deprecated routine that returns the index of the given vertex
-         * in the triangulation.
-         *
-         * \deprecated This routine is deprecated, and will be removed in some
-         * future release of Regina.  Just call vertex->index() instead.
-         *
-         * \pre The given vertex belongs to this triangulation.
-         *
-         * @param vertex specifies which vertex to find in the triangulation.
-         * @return the index of the specified vertex, where 0 is the first
-         * vertex, 1 is the second and so on.
-         */
-        REGINA_DEPRECATED size_t vertexIndex(const Dim4Vertex* vertex) const;
-        /**
-         * Deprecated routine that returns the index of the given edge
-         * in the triangulation.
-         *
-         * \deprecated This routine is deprecated, and will be removed in some
-         * future release of Regina.  Just call edge->index() instead.
-         *
-         * \pre The given edge belongs to this triangulation.
-         *
-         * @param edge specifies which edge to find in the triangulation.
-         * @return the index of the specified edge, where 0 is the first
-         * edge, 1 is the second and so on.
-         */
-        REGINA_DEPRECATED size_t edgeIndex(const Dim4Edge* edge) const;
-        /**
-         * Deprecated routine that returns the index of the given triangle
-         * in the triangulation.
-         *
-         * \deprecated This routine is deprecated, and will be removed in some
-         * future release of Regina.  Just call tri->index() instead.
-         *
-         * \pre The given triangle belongs to this triangulation.
-         *
-         * @param tri specifies which triangle to find in the triangulation.
-         * @return the index of the specified triangle, where 0 is the first
-         * triangle, 1 is the second and so on.
-         */
-        REGINA_DEPRECATED size_t triangleIndex(const Dim4Triangle* tri) const;
-        /**
-         * Deprecated routine that returns the index of the given tetrahedron
-         * in the triangulation.
-         *
-         * \deprecated This routine is deprecated, and will be removed in some
-         * future release of Regina.  Just call tet->index() instead.
-         *
-         * \pre The given tetrahedron belongs to this triangulation.
-         *
-         * @param tet specifies which tetrahedron to find in the triangulation.
-         * @return the index of the specified tetrahedron, where 0 is the
-         * first tetrahedron, 1 is the second and so on.
-         */
-        REGINA_DEPRECATED size_t tetrahedronIndex(const Dim4Tetrahedron* tet)
-            const;
 
         /*@}*/
         /**
@@ -439,14 +330,6 @@ class REGINA_API Triangulation<4> :
          * @return the Euler characteristic of this triangulation.
          */
         long eulerCharTri() const;
-        /**
-         * Deprecated routine that returns the Euler characteristic of this
-         * triangulation.
-         *
-         * \deprecated This routine has been renamed to eulerCharTri().
-         * See the eulerCharTri() documentation for further details.
-         */
-        REGINA_DEPRECATED long getEulerCharTri() const;
 
         /**
          * Returns the Euler characteristic of the corresponding compact
@@ -473,14 +356,6 @@ class REGINA_API Triangulation<4> :
          * manifold.
          */
         long eulerCharManifold() const;
-        /**
-         * Deprecated routine that returns the Euler characteristic of
-         * the corresponding compact manifold.
-         *
-         * \deprecated This routine has been renamed to eulerCharManifold().
-         * See the eulerCharManifold() documentation for further details.
-         */
-        REGINA_DEPRECATED long getEulerCharManifold() const;
 
         /**
          * Determines if this triangulation is ideal.
@@ -1157,11 +1032,6 @@ inline bool Triangulation<4>::dependsOnParent() const {
     return false;
 }
 
-inline long Triangulation<4>::pentachoronIndex(const Dim4Pentachoron* pent)
-        const {
-    return pent->index();
-}
-
 inline Dim4Pentachoron* Triangulation<4>::newPentachoron() {
     return newSimplex();
 }
@@ -1188,18 +1058,8 @@ inline size_t Triangulation<4>::countBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
-inline size_t Triangulation<4>::getNumberOfBoundaryComponents() const {
-    return countBoundaryComponents();
-}
-
 inline const std::vector<Dim4BoundaryComponent*>&
         Triangulation<4>::boundaryComponents() const {
-    ensureSkeleton();
-    return (const std::vector<Dim4BoundaryComponent*>&)(boundaryComponents_);
-}
-
-inline const std::vector<Dim4BoundaryComponent*>&
-        Triangulation<4>::getBoundaryComponents() const {
     ensureSkeleton();
     return (const std::vector<Dim4BoundaryComponent*>&)(boundaryComponents_);
 }
@@ -1208,34 +1068,6 @@ inline Dim4BoundaryComponent* Triangulation<4>::boundaryComponent(
         size_t index) const {
     ensureSkeleton();
     return boundaryComponents_[index];
-}
-
-inline Dim4BoundaryComponent* Triangulation<4>::getBoundaryComponent(
-        size_t index) const {
-    ensureSkeleton();
-    return boundaryComponents_[index];
-}
-
-inline size_t Triangulation<4>::boundaryComponentIndex(
-        const Dim4BoundaryComponent* boundaryComponent) const {
-    return boundaryComponent->index();
-}
-
-inline size_t Triangulation<4>::vertexIndex(const Dim4Vertex* vertex) const {
-    return vertex->index();
-}
-
-inline size_t Triangulation<4>::edgeIndex(const Dim4Edge* edge) const {
-    return edge->index();
-}
-
-inline size_t Triangulation<4>::triangleIndex(const Dim4Triangle* tri) const {
-    return tri->index();
-}
-
-inline size_t Triangulation<4>::tetrahedronIndex(const Dim4Tetrahedron* tet)
-        const {
-    return tet->index();
 }
 
 inline long Triangulation<4>::eulerCharTri() const {
@@ -1247,14 +1079,6 @@ inline long Triangulation<4>::eulerCharTri() const {
         + static_cast<long>(countTriangles())
         - static_cast<long>(countTetrahedra())
         + static_cast<long>(size());
-}
-
-inline long Triangulation<4>::getEulerCharTri() const {
-    return eulerCharTri();
-}
-
-inline long Triangulation<4>::getEulerCharManifold() const {
-    return eulerCharManifold();
 }
 
 inline bool Triangulation<4>::isIdeal() const {

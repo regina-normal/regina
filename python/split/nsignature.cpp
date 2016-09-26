@@ -52,7 +52,6 @@ void addNSignature() {
     class_<NSignature, std::auto_ptr<NSignature>,
         boost::noncopyable>("NSignature", init<const NSignature&>())
         .def("order", &NSignature::order)
-        .def("getOrder", &NSignature::order)
         .def("parse", &NSignature::parse,
             return_value_policy<manage_new_object>())
         .def("triangulate", &NSignature::triangulate,

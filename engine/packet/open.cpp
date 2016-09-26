@@ -55,7 +55,7 @@ namespace {
                 /**< Sits above the entire packet tree read from file. */
             bool isReginaData;
                 /**< Are we actually reading a \<reginadata ...\> element? */
-            std::string version;
+            std::string version_;
                 /**< The version of Regina that created this file, or
                      the empty string if this is not known. */
 
@@ -75,8 +75,8 @@ namespace {
                     return 0;
             }
 
-            const std::string& getVersion() const {
-                return version;
+            const std::string& version() const {
+                return version_;
             }
 
             virtual void startElement(const std::string& n,
@@ -88,7 +88,7 @@ namespace {
                     regina::xml::XMLPropertyDict::const_iterator it =
                         props.find("engine");
                     if (it != props.end())
-                        version = stripWhitespace(it->second);
+                        version_ = stripWhitespace(it->second);
                 }
             }
 

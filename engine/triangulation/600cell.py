@@ -67,7 +67,7 @@ def simpToReg(simp):
     for j in range(n):
         for f in range(4):
             if ans.tetrahedron(j).adjacentTetrahedron(f) == None:
-                ans.tetrahedron(j).joinTo(f,
+                ans.tetrahedron(j).join(f,
                     ans.tetrahedron(neighbours[j][f]), gluings[j][f])
     return ans
 

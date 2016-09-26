@@ -142,13 +142,6 @@ class REGINA_API NSignature :
          * @return the order of this signature.
          */
         unsigned order() const;
-        /**
-         * Deprecated routine that returns the order of this signature.
-         *
-         * \deprecated This routine has been renamed to order().
-         * See the order() documentation for further details.
-         */
-        REGINA_DEPRECATED unsigned getOrder() const;
 
         /**
          * Parses the given signature string.
@@ -309,10 +302,6 @@ inline NSignature::~NSignature() {
 }
 
 inline unsigned NSignature::order() const {
-    return order_;
-}
-
-inline unsigned NSignature::getOrder() const {
     return order_;
 }
 

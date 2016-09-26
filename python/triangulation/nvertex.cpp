@@ -85,18 +85,11 @@ void addNVertex() {
         .def(init<const NVertexEmbedding&>())
         .def("simplex", &NVertexEmbedding::simplex,
             return_value_policy<reference_existing_object>())
-        .def("getSimplex", &NVertexEmbedding::simplex,
-            return_value_policy<reference_existing_object>())
         .def("tetrahedron", &NVertexEmbedding::tetrahedron,
             return_value_policy<reference_existing_object>())
-        .def("getTetrahedron", &NVertexEmbedding::tetrahedron,
-            return_value_policy<reference_existing_object>())
         .def("face", &NVertexEmbedding::face)
-        .def("getFace", &NVertexEmbedding::face)
         .def("vertex", &NVertexEmbedding::vertex)
-        .def("getVertex", &NVertexEmbedding::vertex)
         .def("vertices", &NVertexEmbedding::vertices)
-        .def("getVertices", &NVertexEmbedding::vertices)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
@@ -106,10 +99,7 @@ void addNVertex() {
                 boost::noncopyable>("Face3_0", no_init)
             .def("index", &NVertex::index)
             .def("embeddings", vertex_embeddings_list)
-            .def("getEmbeddings", vertex_embeddings_list)
             .def("embedding", &NVertex::embedding,
-                return_internal_reference<>())
-            .def("getEmbedding", &NVertex::embedding,
                 return_internal_reference<>())
             .def("front", &NVertex::front,
                 return_internal_reference<>())
@@ -117,18 +107,11 @@ void addNVertex() {
                 return_internal_reference<>())
             .def("triangulation", &NVertex::triangulation,
                 return_value_policy<to_held_type<> >())
-            .def("getTriangulation", &NVertex::triangulation,
-                return_value_policy<to_held_type<> >())
             .def("component", &NVertex::component,
-                return_value_policy<reference_existing_object>())
-            .def("getComponent", &NVertex::component,
                 return_value_policy<reference_existing_object>())
             .def("boundaryComponent", &NVertex::boundaryComponent,
                 return_value_policy<reference_existing_object>())
-            .def("getBoundaryComponent", &NVertex::boundaryComponent,
-                return_value_policy<reference_existing_object>())
             .def("degree", &NVertex::degree)
-            .def("getDegree", &NVertex::degree)
             .def("link", &NVertex::link)
             .def("getLink", &NVertex::link)
             .def("buildLink", &vertex_buildLink,

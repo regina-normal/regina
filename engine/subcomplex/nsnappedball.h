@@ -82,14 +82,6 @@ class REGINA_API NSnappedBall : public NStandardTriangulation {
          * @return the tetrahedron.
          */
         NTetrahedron* tetrahedron() const;
-        /**
-         * Deprecated routine that returns the tetrahedron that forms this
-         * snapped ball.
-         *
-         * \deprecated This routine has been renamed to tetrahedron().
-         * See the tetrahedron() documentation for further details.
-         */
-        REGINA_DEPRECATED NTetrahedron* getTetrahedron() const;
 
         /**
          * Returns one of the two tetrahedron faces that forms the boundary
@@ -103,14 +95,6 @@ class REGINA_API NSnappedBall : public NStandardTriangulation {
          * @return the corresponding face number in the tetrahedron.
          */
         int boundaryFace(int index) const;
-        /**
-         * Deprecated routine that returns one of the two tetrahedron faces
-         * that forms the boundary of this snapped ball.
-         *
-         * \deprecated This routine has been renamed to boundaryFace().
-         * See the boundaryFace() documentation for further details.
-         */
-        REGINA_DEPRECATED int getBoundaryFace(int index) const;
         /**
          * Returns one of the two tetrahedron faces internal to this snapped
          * ball.
@@ -202,15 +186,7 @@ inline NSnappedBall::NSnappedBall() {
 inline NTetrahedron* NSnappedBall::tetrahedron() const {
     return tet;
 }
-inline NTetrahedron* NSnappedBall::getTetrahedron() const {
-    return tet;
-}
 inline int NSnappedBall::boundaryFace(int index) const {
-    return index == 0 ?
-        NEdge::edgeVertex[5 - equator][0] :
-        NEdge::edgeVertex[5 - equator][1];
-}
-inline int NSnappedBall::getBoundaryFace(int index) const {
     return index == 0 ?
         NEdge::edgeVertex[5 - equator][0] :
         NEdge::edgeVertex[5 - equator][1];

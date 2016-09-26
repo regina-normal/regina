@@ -137,27 +137,15 @@ void addNNormalSurface() {
         .def("doubleSurface", &NNormalSurface::doubleSurface,
             return_value_policy<manage_new_object>())
         .def("triangles", &NNormalSurface::triangles)
-        .def("getTriangleCoord", &NNormalSurface::triangles)
         .def("orientedTriangles", &NNormalSurface::orientedTriangles)
-        .def("getOrientedTriangleCoord", &NNormalSurface::orientedTriangles)
         .def("quads", &NNormalSurface::quads)
-        .def("getQuadCoord", &NNormalSurface::quads)
         .def("orientedQuads", &NNormalSurface::orientedQuads)
-        .def("getOrientedQuadCoord", &NNormalSurface::orientedQuads)
         .def("octs", &NNormalSurface::octs)
-        .def("getOctCoord", &NNormalSurface::octs)
         .def("edgeWeight", &NNormalSurface::edgeWeight)
-        .def("getEdgeWeight", &NNormalSurface::edgeWeight)
-        .def("getFaceArcs", &NNormalSurface::arcs)
         .def("arcs", &NNormalSurface::arcs)
-        .def("getTriangleArcs", &NNormalSurface::arcs)
         .def("octPosition", &NNormalSurface::octPosition)
-        .def("getOctPosition", &NNormalSurface::octPosition)
         .def("countCoords", &NNormalSurface::countCoords)
-        .def("getNumberOfCoords", &NNormalSurface::countCoords)
         .def("triangulation", &NNormalSurface::triangulation,
-            return_value_policy<to_held_type<> >())
-        .def("getTriangulation", &NNormalSurface::triangulation,
             return_value_policy<to_held_type<> >())
         .def("name", &NNormalSurface::name,
             return_value_policy<return_by_value>())
@@ -168,8 +156,6 @@ void addNNormalSurface() {
         .def("isEmpty", &NNormalSurface::isEmpty)
         .def("isCompact", &NNormalSurface::isCompact)
         .def("eulerChar", &NNormalSurface::eulerChar)
-        .def("getEulerChar", &NNormalSurface::eulerChar)
-        .def("getEulerCharacteristic", &NNormalSurface::eulerChar)
         .def("isOrientable", &NNormalSurface::isOrientable)
         .def("isTwoSided", &NNormalSurface::isTwoSided)
         .def("isConnected", &NNormalSurface::isConnected)
@@ -208,14 +194,10 @@ void addNNormalSurface() {
 
     // Global arrays:
     scope().attr("quadSeparating") = &quadSeparating_arr;
-    scope().attr("vertexSplit") = &quadSeparating_arr;
     scope().attr("quadMeeting") = &quadMeeting_arr;
-    scope().attr("vertexSplitMeeting") = &quadMeeting_arr;
     scope().attr("vertexSplitDefn") = &vertexSplitDefn_arr;
     scope().attr("quadPartner") = &quadPartner_arr;
-    scope().attr("vertexSplitPartner") = &quadPartner_arr;
     scope().attr("quadString") = &quadString_arr;
-    scope().attr("vertexSplitString") = &quadString_arr;
     scope().attr("triDiscArcs") = &triDiscArcs_arr;
     scope().attr("quadDiscArcs") = &quadDiscArcs_arr;
     scope().attr("octDiscArcs") = &octDiscArcs_arr;

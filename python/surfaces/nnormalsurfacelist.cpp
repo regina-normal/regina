@@ -74,64 +74,6 @@ namespace {
         return NNormalSurfaceList::enumerate(owner, coords, which, algHints,
             tracker);
     }
-
-    NNormalSurfaceList* enumerateFundPrimal_2(regina::NTriangulation* owner,
-            regina::NormalCoords coords) {
-        return NNormalSurfaceList::enumerateFundPrimal(owner, coords);
-    }
-    NNormalSurfaceList* enumerateFundPrimal_3(regina::NTriangulation* owner,
-            regina::NormalCoords coords, bool embedded) {
-        return NNormalSurfaceList::enumerateFundPrimal(owner, coords,
-            embedded);
-    }
-    NNormalSurfaceList* enumerateFundPrimal_4(regina::NTriangulation* owner,
-            regina::NormalCoords coords, bool embedded,
-            regina::NNormalSurfaceList* vtxSurfaces) {
-        return NNormalSurfaceList::enumerateFundPrimal(owner, coords,
-            embedded, vtxSurfaces);
-    }
-    NNormalSurfaceList* enumerateFundPrimal_5(regina::NTriangulation* owner,
-            regina::NormalCoords coords, bool embedded,
-            regina::NNormalSurfaceList* vtxSurfaces,
-            regina::NProgressTracker* tracker) {
-        return NNormalSurfaceList::enumerateFundPrimal(owner, coords,
-            embedded, vtxSurfaces, tracker);
-    }
-
-    NNormalSurfaceList* enumerateFundDual_2(regina::NTriangulation* owner,
-            regina::NormalCoords coords) {
-        return NNormalSurfaceList::enumerateFundDual(owner, coords);
-    }
-    NNormalSurfaceList* enumerateFundDual_3(regina::NTriangulation* owner,
-            regina::NormalCoords coords, bool embedded) {
-        return NNormalSurfaceList::enumerateFundDual(owner, coords,
-            embedded);
-    }
-    NNormalSurfaceList* enumerateFundDual_4(regina::NTriangulation* owner,
-            regina::NormalCoords coords, bool embedded,
-            regina::NProgressTracker* tracker) {
-        return NNormalSurfaceList::enumerateFundDual(owner, coords,
-            embedded, tracker);
-    }
-
-    NNormalSurfaceList* enumerateFundFullCone_2(regina::NTriangulation* owner,
-            regina::NormalCoords coords) {
-        return NNormalSurfaceList::enumerateFundFullCone(owner, coords);
-    }
-    NNormalSurfaceList* enumerateFundFullCone_3(regina::NTriangulation* owner,
-            regina::NormalCoords coords, bool embedded) {
-        return NNormalSurfaceList::enumerateFundFullCone(owner, coords,
-            embedded);
-    }
-
-    NNormalSurfaceList* enumerateFundCD_2(regina::NTriangulation* owner,
-            regina::NormalCoords coords) {
-        return NNormalSurfaceList::enumerateFundCD(owner, coords);
-    }
-    NNormalSurfaceList* enumerateFundCD_3(regina::NTriangulation* owner,
-            regina::NormalCoords coords, bool embedded) {
-        return NNormalSurfaceList::enumerateFundCD(owner, coords, embedded);
-    }
 }
 
 void addNNormalSurfaceList() {
@@ -143,8 +85,6 @@ void addNNormalSurfaceList() {
             bases<regina::NPacket>,
             SafeHeldType<NNormalSurfaceList>, boost::noncopyable>
             ("NNormalSurfaceList", no_init)
-        .def("getFlavour", &NNormalSurfaceList::coords)
-        .def("flavour", &NNormalSurfaceList::coords)
         .def("coords", &NNormalSurfaceList::coords)
         .def("which", &NNormalSurfaceList::which)
         .def("algorithm", &NNormalSurfaceList::algorithm)
@@ -154,13 +94,8 @@ void addNNormalSurfaceList() {
         .def("isEmbeddedOnly", &NNormalSurfaceList::isEmbeddedOnly)
         .def("triangulation", &NNormalSurfaceList::triangulation,
             return_value_policy<to_held_type<> >())
-        .def("getTriangulation", &NNormalSurfaceList::triangulation,
-            return_value_policy<to_held_type<> >())
         .def("size", &NNormalSurfaceList::size)
-        .def("getNumberOfSurfaces", &NNormalSurfaceList::size)
         .def("surface", &NNormalSurfaceList::surface,
-            return_internal_reference<>())
-        .def("getSurface", &NNormalSurfaceList::surface,
             return_internal_reference<>())
         .def("writeAllSurfaces", writeAllSurfaces_stdio)
         .def("enumerate", unified_2,
@@ -170,34 +105,6 @@ void addNNormalSurfaceList() {
         .def("enumerate", unified_4,
             return_value_policy<to_held_type<> >())
         .def("enumerate", unified_5,
-            return_value_policy<to_held_type<> >())
-        .def("enumerateFundPrimal", enumerateFundPrimal_2,
-            return_value_policy<to_held_type<> >())
-        .def("enumerateFundPrimal", enumerateFundPrimal_3,
-            return_value_policy<to_held_type<> >())
-        .def("enumerateFundPrimal", enumerateFundPrimal_4,
-            return_value_policy<to_held_type<> >())
-        .def("enumerateFundPrimal", enumerateFundPrimal_5,
-            return_value_policy<to_held_type<> >())
-        .def("enumerateFundDual", enumerateFundDual_2,
-            return_value_policy<to_held_type<> >())
-        .def("enumerateFundDual", enumerateFundDual_3,
-            return_value_policy<to_held_type<> >())
-        .def("enumerateFundDual", enumerateFundDual_4,
-            return_value_policy<to_held_type<> >())
-        .def("enumerateFundFullCone", enumerateFundFullCone_2,
-            return_value_policy<to_held_type<> >())
-        .def("enumerateFundFullCone", enumerateFundFullCone_3,
-            return_value_policy<to_held_type<> >())
-        .def("enumerateFundCD", enumerateFundCD_2,
-            return_value_policy<to_held_type<> >())
-        .def("enumerateFundCD", enumerateFundCD_3,
-            return_value_policy<to_held_type<> >())
-        .def("enumerateStandardDirect",
-            &NNormalSurfaceList::enumerateStandardDirect,
-            return_value_policy<to_held_type<> >())
-        .def("enumerateStandardANDirect",
-            &NNormalSurfaceList::enumerateStandardANDirect,
             return_value_policy<to_held_type<> >())
         .def("quadToStandard", &NNormalSurfaceList::quadToStandard,
             return_value_policy<to_held_type<> >())
@@ -224,25 +131,9 @@ void addNNormalSurfaceList() {
         .def("saveCSVEdgeWeight", &NNormalSurfaceList::saveCSVEdgeWeight,
             OL_saveCSVEdgeWeight())
         .staticmethod("enumerate")
-        .staticmethod("enumerateStandardDirect")
-        .staticmethod("enumerateStandardANDirect")
-        .staticmethod("enumerateFundPrimal")
-        .staticmethod("enumerateFundDual")
-        .staticmethod("enumerateFundFullCone")
-        .staticmethod("enumerateFundCD")
     ;
 
     s.attr("typeID") = regina::PACKET_NORMALSURFACELIST;
-    s.attr("packetType") = regina::PACKET_NORMALSURFACELIST;
-    s.attr("STANDARD") = regina::NS_STANDARD;
-    s.attr("AN_STANDARD") = regina::NS_AN_STANDARD;
-    s.attr("QUAD") = regina::NS_QUAD;
-    s.attr("AN_QUAD_OCT") = regina::NS_AN_QUAD_OCT;
-    s.attr("EDGE_WEIGHT") = regina::NS_EDGE_WEIGHT;
-    s.attr("FACE_ARCS") = regina::NS_TRIANGLE_ARCS;
-    s.attr("AN_LEGACY") = regina::NS_AN_LEGACY;
-    s.attr("ORIENTED") = regina::NS_ORIENTED;
-    s.attr("ORIENTED_QUAD") = regina::NS_ORIENTED_QUAD;
 
     implicitly_convertible<SafeHeldType<NNormalSurfaceList>,
         SafeHeldType<regina::NPacket> >();

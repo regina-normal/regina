@@ -93,16 +93,6 @@ class REGINA_API NSurfaceSubset :
          * Returns the coordinate system being used by the
          * surfaces stored in this set.
          *
-         * \deprecated Users should switch to the identical routine
-         * coords() instead.
-         *
-         * @return the coordinate system used.
-         */
-        REGINA_DEPRECATED NormalCoords getFlavour() const;
-        /**
-         * Returns the coordinate system being used by the
-         * surfaces stored in this set.
-         *
          * @return the coordinate system used.
          */
         NormalCoords coords() const;
@@ -150,14 +140,6 @@ class REGINA_API NSurfaceSubset :
          * @return the triangulation in which these surfaces live.
          */
         NTriangulation* triangulation() const;
-        /**
-         * Deprecated routine that returns the triangulation in which these
-         * normal surfaces live.
-         *
-         * \deprecated This routine has been renamed to triangulation().
-         * See the triangulation() documentation for further details.
-         */
-        REGINA_DEPRECATED NTriangulation* getTriangulation() const;
 
         /**
          * Returns the number of surfaces stored in this list.
@@ -165,15 +147,6 @@ class REGINA_API NSurfaceSubset :
          * @return the number of surfaces.
          */
         size_t size() const;
-        /**
-         * Deprecated routine to return the number of surfaces
-         * stored in this list.
-         *
-         * \deprecated Please use the identical routine size() instead.
-         *
-         * @return the number of surfaces.
-         */
-        REGINA_DEPRECATED size_t getNumberOfSurfaces() const;
         /**
          * Returns the surface at the requested index in this set.
          *
@@ -183,14 +156,6 @@ class REGINA_API NSurfaceSubset :
          * @return the normal surface at the requested index in this set.
          */
         const NNormalSurface* surface(size_t index) const;
-        /**
-         * Deprecated routine that returns the surface at the requested
-         * index in this set.
-         *
-         * \deprecated This routine has been renamed to surface().
-         * See the surface() documentation for further details.
-         */
-        REGINA_DEPRECATED const NNormalSurface* getSurface(size_t index) const;
 
         /**
          * Writes the number of surfaces in this set followed by the
@@ -228,9 +193,6 @@ class REGINA_API NSurfaceSubset :
 
 // Inline functions for NSurfaceSubset
 
-inline NormalCoords NSurfaceSubset::getFlavour() const {
-    return source.coords();
-}
 inline NormalCoords NSurfaceSubset::coords() const {
     return source.coords();
 }
@@ -249,19 +211,10 @@ inline bool NSurfaceSubset::isEmbeddedOnly() const {
 inline NTriangulation* NSurfaceSubset::triangulation() const {
     return source.triangulation();
 }
-inline NTriangulation* NSurfaceSubset::getTriangulation() const {
-    return source.triangulation();
-}
 inline size_t NSurfaceSubset::size() const {
     return surfaces.size();
 }
-inline size_t NSurfaceSubset::getNumberOfSurfaces() const {
-    return surfaces.size();
-}
 inline const NNormalSurface* NSurfaceSubset::surface(size_t index) const {
-    return surfaces[index];
-}
-inline const NNormalSurface* NSurfaceSubset::getSurface(size_t index) const {
     return surfaces[index];
 }
 
