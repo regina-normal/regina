@@ -585,7 +585,6 @@ Version 5.0  [ 26 September, 2016 ]
             - Removed getEulerCharacteristic(), which was deprecated
               years ago to clarify the ambiguity in how it was computed.
             - New dimension-agnostic routine countBoundaryFacets().
-            - Removed the long-deprecated addTetrahedron().
             - Removed 2-face members FaceIterator, faceIndex(), getFace(),
               getFaces(), getNumberOfFaces() and hasBoundaryFaces(), all of
               which were deprecated.  Instead use the names that replace
@@ -708,7 +707,8 @@ Version 5.0  [ 26 September, 2016 ]
         Global arrays vertexSplit...:
             - Renamed global arrays vertexSplit[][], vertexSplitMeeting[][][],
               vertexSplitPartner[][], vertexSplitString[][] to quadSeparating,
-              quadMeeting, quadPartner, quadString respectively.
+              quadMeeting, quadPartner, quadString respectively.  The old
+              names are kept but deprecated.
             - Deprecated array vertexSplitDefn[][].  Simply use
               NEdge::ordering() instead (with the caveat that NEdge::ordering()
               might switch the images of 2 and 3).
