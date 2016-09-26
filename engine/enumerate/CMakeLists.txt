@@ -2,13 +2,6 @@
 
 # Files to compile
 SET ( FILES
-  nenumconstraint
-  ndoubledescription
-  ndoubledescriptor
-  nhilbertcd
-  nhilbertdual
-  nhilbertprimal
-  nmaxadmissible
   ntreeconstraint
   ntreelp
   ntreetraversal
@@ -27,7 +20,6 @@ if (${REGINA_INSTALL_DEV})
     nenumconstraint.h
     ndoubledescription.h
     ndoubledescription-impl.h
-    ndoubledescriptor.h
     nhilbertcd.h
     nhilbertcd-impl.h
     nhilbertdual.h

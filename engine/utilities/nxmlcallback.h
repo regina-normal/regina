@@ -116,14 +116,6 @@ class REGINA_API NXMLCallback : public regina::xml::XMLParserCallback {
          * @return the current state of this callback object.
          */
         int state() const;
-        /**
-         * Deprecated routine that returns the state that this callback object
-         * is currently in.
-         *
-         * \deprecated This routine has been renamed to state().
-         * See the state() documentation for further details.
-         */
-        REGINA_DEPRECATED int getState() const;
 
         /**
          * Aborts processing of the XML file completely.  The XMLParser
@@ -170,10 +162,6 @@ inline NXMLElementReader* NXMLCallback::currentReader() {
 }
 
 inline int NXMLCallback::state() const {
-    return state_;
-}
-
-inline int NXMLCallback::getState() const {
     return state_;
 }
 
