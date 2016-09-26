@@ -47,7 +47,6 @@ void addNAngleStructure() {
         .def("clone", &NAngleStructure::clone,
             return_value_policy<manage_new_object>())
         .def("angle", &NAngleStructure::angle)
-        .def("getAngle", &NAngleStructure::angle)
         .def("triangulation", &NAngleStructure::triangulation,
             return_value_policy<to_held_type<> >())
         .def("isStrict", &NAngleStructure::isStrict)

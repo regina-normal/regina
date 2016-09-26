@@ -198,15 +198,6 @@ class REGINA_API NAngleStructure :
          * @return the requested angle scaled down by <i>pi</i>.
          */
         NRational angle(size_t tetIndex, int edgePair) const;
-        /**
-         * Deprecated routine that returns the requested angle in this
-         * angle structure.
-         *
-         * \deprecated This routine has been renamed to angle().
-         * See the angle() documentation for further details.
-         */
-        REGINA_DEPRECATED NRational getAngle(size_t tetIndex, int edgePair)
-            const;
 
         /**
          * Returns the triangulation on which this angle structure lies.
@@ -341,11 +332,6 @@ inline NAngleStructure::~NAngleStructure() {
 
 inline const NTriangulation* NAngleStructure::triangulation() const {
     return triangulation_;
-}
-
-inline NRational NAngleStructure::getAngle(size_t tetIndex, int edgePair)
-        const {
-    return angle(tetIndex, edgePair);
 }
 
 inline bool NAngleStructure::isStrict() const {

@@ -139,15 +139,6 @@ class REGINA_API NAngleStructureList : public NPacket {
          * @return the angle structure at the requested index.
          */
         const NAngleStructure* structure(size_t index) const;
-        /**
-         * Deprecated routine that returns the angle structure at the
-         * requested index in this list.
-         *
-         * \deprecated This routine has been renamed to structure().
-         * See the structure() documentation for further details.
-         */
-        REGINA_DEPRECATED const NAngleStructure* getStructure(size_t index)
-            const;
 
         /**
          * Determines whether any convex combination of the angle
@@ -172,32 +163,6 @@ class REGINA_API NAngleStructureList : public NPacket {
          * @return \c true if and only if a taut structure can be produced.
          */
         bool spansTaut() const;
-
-        /**
-         * Determines whether any convex combination of the angle
-         * structures in this list is a strict angle structure.
-         *
-         * \deprecated This routine will be removed in a future version
-         * of Regina.  Users should switch to the identical routine
-         * spansStrict() instead.
-         *
-         * @return \c true if and only if a strict angle structure can
-         * be produced.
-         */
-        REGINA_DEPRECATED bool allowsStrict() const;
-
-        /**
-         * Determines whether any angle structure in this list is a
-         * taut structure.
-         *
-         * \deprecated This routine will be removed in a future version
-         * of Regina.  Users should switch to the identical routine
-         * spansTaut() instead.
-         *
-         * @return \c true if and only if a taut angle structure can
-         * be produced.
-         */
-        REGINA_DEPRECATED bool allowsTaut() const;
 
         /**
          * Enumerates all angle structures on the given triangulation.
@@ -463,11 +428,6 @@ inline const NAngleStructure* NAngleStructureList::structure(
     return structures[index];
 }
 
-inline const NAngleStructure* NAngleStructureList::getStructure(
-        size_t index) const {
-    return structures[index];
-}
-
 inline bool NAngleStructureList::spansStrict() const {
     if (! doesSpanStrict.known())
         calculateSpanStrict();
@@ -478,14 +438,6 @@ inline bool NAngleStructureList::spansTaut() const {
     if (! doesSpanTaut.known())
         calculateSpanTaut();
     return doesSpanTaut.value();
-}
-
-inline bool NAngleStructureList::allowsStrict() const {
-    return spansStrict();
-}
-
-inline bool NAngleStructureList::allowsTaut() const {
-    return spansTaut();
 }
 
 inline bool NAngleStructureList::dependsOnParent() const {
