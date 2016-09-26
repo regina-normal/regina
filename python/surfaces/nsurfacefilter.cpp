@@ -49,9 +49,7 @@ void addNSurfaceFilter() {
         .def(init<const NSurfaceFilter&>())
         .def("accept", &NSurfaceFilter::accept)
         .def("filterType", &NSurfaceFilter::filterType)
-        .def("getFilterType", &NSurfaceFilter::filterType)
         .def("filterTypeName", &NSurfaceFilter::filterTypeName)
-        .def("getFilterTypeName", &NSurfaceFilter::filterTypeName)
     ;
 
     s.attr("typeID") = regina::PACKET_SURFACEFILTER;

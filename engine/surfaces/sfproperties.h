@@ -144,13 +144,6 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
          */
         NBoolSet orientability() const;
         /**
-         * Deprecated routine that returns the set of allowable orientabilities.
-         *
-         * \deprecated This routine has been renamed to orientability().
-         * See the orientability() documentation for further details.
-         */
-        REGINA_DEPRECATED NBoolSet getOrientability() const;
-        /**
          * Returns the set of allowable compactness properties.
          * Note that this is a subset of <tt>{ true, false }</tt>.
          * Any surface whose compactness property is not in this set will
@@ -160,14 +153,6 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
          */
         NBoolSet compactness() const;
         /**
-         * Deprecated routine that returns the set of allowable
-         * compactness properties.
-         *
-         * \deprecated This routine has been renamed to compactness().
-         * See the compactness() documentation for further details.
-         */
-        REGINA_DEPRECATED NBoolSet getCompactness() const;
-        /**
          * Returns the set of allowable has-real-boundary properties.
          * Note that this is a subset of <tt>{ true, false }</tt>.
          * Any surface whose has-real-boundary property is not in this set
@@ -176,14 +161,6 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
          * @return the set of allowable has-real-boundary properties.
          */
         NBoolSet realBoundary() const;
-        /**
-         * Deprecated routine that returns the set of allowable
-         * has-real-boundary properties.
-         *
-         * \deprecated This routine has been renamed to realBoundary().
-         * See the realBoundary() documentation for further details.
-         */
-        REGINA_DEPRECATED NBoolSet getRealBoundary() const;
 
         /**
          * Sets the allowable Euler characteristics to the given set.
@@ -283,19 +260,10 @@ inline size_t NSurfaceFilterProperties::countEulerChars() const {
 inline NBoolSet NSurfaceFilterProperties::orientability() const {
     return orientability_;
 }
-inline NBoolSet NSurfaceFilterProperties::getOrientability() const {
-    return orientability_;
-}
 inline NBoolSet NSurfaceFilterProperties::compactness() const {
     return compactness_;
 }
-inline NBoolSet NSurfaceFilterProperties::getCompactness() const {
-    return compactness_;
-}
 inline NBoolSet NSurfaceFilterProperties::realBoundary() const {
-    return realBoundary_;
-}
-inline NBoolSet NSurfaceFilterProperties::getRealBoundary() const {
     return realBoundary_;
 }
 

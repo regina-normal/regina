@@ -265,26 +265,6 @@ class REGINA_API NNormalSurfaceList : public NPacket {
             NProgressTracker* tracker = 0);
 
         /**
-         * Deprecated routine to return the coordinate system
-         * being used by the surfaces stored in this set.
-         *
-         * \deprecated Users should switch to the identical routine
-         * coords() instead.
-         *
-         * @return the coordinate system used.
-         */
-        REGINA_DEPRECATED NormalCoords getFlavour() const;
-        /**
-         * Deprecated routine to return the coordinate system being used by the
-         * surfaces stored in this set.
-         *
-         * \deprecated Users should switch to the identical routine
-         * coords() instead.
-         *
-         * @return the coordinate system used.
-         */
-        REGINA_DEPRECATED NormalCoords flavour() const;
-        /**
          * Returns the coordinate system being used by the
          * surfaces stored in this set.
          *
@@ -376,14 +356,6 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * @return the normal surface at the requested index in this set.
          */
         const NNormalSurface* surface(size_t index) const;
-        /**
-         * Deprecated routine that returns the surface at the requested
-         * index in this set.
-         *
-         * \deprecated This routine has been renamed to surface().
-         * See the surface() documentation for further details.
-         */
-        REGINA_DEPRECATED const NNormalSurface* getSurface(size_t index) const;
         /**
          * Writes the number of surfaces in this set followed by the
          * details of each surface to the given output stream.  Output
@@ -1449,14 +1421,6 @@ inline NNormalSurfaceList::~NNormalSurfaceList() {
     for_each(surfaces.begin(), surfaces.end(), FuncDelete<NNormalSurface>());
 }
 
-inline NormalCoords NNormalSurfaceList::getFlavour() const {
-    return coords_;
-}
-
-inline NormalCoords NNormalSurfaceList::flavour() const {
-    return coords_;
-}
-
 inline NormalCoords NNormalSurfaceList::coords() const {
     return coords_;
 }
@@ -1478,11 +1442,6 @@ inline size_t NNormalSurfaceList::size() const {
 }
 
 inline const NNormalSurface* NNormalSurfaceList::surface(size_t index) const {
-    return surfaces[index];
-}
-
-inline const NNormalSurface* NNormalSurfaceList::getSurface(
-        size_t index) const {
     return surfaces[index];
 }
 

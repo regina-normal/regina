@@ -46,7 +46,6 @@ if (${REGINA_INSTALL_DEV})
     coordregistry-impl.h
     filterregistry.h
     filterregistry-impl.h
-    flavourregistry.h
     ndisc.h
     ndisctype.h
     nnormalsurface.h

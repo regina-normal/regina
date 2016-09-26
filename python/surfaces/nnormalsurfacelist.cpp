@@ -85,8 +85,6 @@ void addNNormalSurfaceList() {
             bases<regina::NPacket>,
             SafeHeldType<NNormalSurfaceList>, boost::noncopyable>
             ("NNormalSurfaceList", no_init)
-        .def("getFlavour", &NNormalSurfaceList::coords)
-        .def("flavour", &NNormalSurfaceList::coords)
         .def("coords", &NNormalSurfaceList::coords)
         .def("which", &NNormalSurfaceList::which)
         .def("algorithm", &NNormalSurfaceList::algorithm)
@@ -98,8 +96,6 @@ void addNNormalSurfaceList() {
             return_value_policy<to_held_type<> >())
         .def("size", &NNormalSurfaceList::size)
         .def("surface", &NNormalSurfaceList::surface,
-            return_internal_reference<>())
-        .def("getSurface", &NNormalSurfaceList::surface,
             return_internal_reference<>())
         .def("writeAllSurfaces", writeAllSurfaces_stdio)
         .def("enumerate", unified_2,

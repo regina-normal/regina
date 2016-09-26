@@ -73,13 +73,7 @@ namespace regina {
  * \a 5-i together).
  */
 REGINA_API extern const int quadSeparating[4][4];
-/**
- * Deprecated alias for regina::quadSeparating.
- *
- * \deprecated This array has been renamed to regina::quadSeparating.
- * See the regina::quadSeparating documentation for further details.
- */
-REGINA_DEPRECATED REGINA_API extern const int (*vertexSplit)[4];
+
 /**
  * Lists which quadrilateral types meet which edges in a tetrahedron.
  * See regina::quadSeparating and NNormalSurface::quads() for more
@@ -90,13 +84,6 @@ REGINA_DEPRECATED REGINA_API extern const int (*vertexSplit)[4];
  * <tt>i</tt> and <tt>j</tt>.
  */
 REGINA_API extern const int quadMeeting[4][4][2];
-/**
- * Deprecated alias for regina::quadMeeting.
- *
- * \deprecated This array has been renamed to regina::quadMeeting.
- * See the regina::quadMeeting documentation for further details.
- */
-REGINA_DEPRECATED REGINA_API extern const int (*vertexSplitMeeting)[4][2];
 
 /**
  * Deprecated array that lists the vertices which each quadrilateral type
@@ -134,13 +121,6 @@ REGINA_DEPRECATED REGINA_API extern const int vertexSplitDefn[3][4];
  * vertex <tt>quadPartner[i][v]</tt>.
  */
 REGINA_API extern const int quadPartner[3][4];
-/**
- * Deprecated alias for regina::quadPartner.
- *
- * \deprecated This array has been renamed to regina::quadPartner.
- * See the regina::quadPartner documentation for further details.
- */
-REGINA_DEPRECATED REGINA_API extern const int (*vertexSplitPartner)[4];
 
 /**
  * Contains strings that can be used to represent each quadrilateral type
@@ -153,13 +133,6 @@ REGINA_DEPRECATED REGINA_API extern const int (*vertexSplitPartner)[4];
  * that splits vertices 0,2 from vertices 1,3.
  */
 REGINA_API extern const char quadString[3][6];
-/**
- * Deprecated alias for regina::quadString.
- *
- * \deprecated This array has been renamed to regina::quadString.
- * See the regina::quadString documentation for further details.
- */
-REGINA_DEPRECATED REGINA_API extern const char (*vertexSplitString)[6];
 
 /**
  * Lists in consecutive order the directed normal arcs that form the
@@ -286,8 +259,8 @@ struct NormalInfo;
  *
  * This macro provides the class with:
  *
- * - a compile-time constant \a coordsID and a deprecated compile-time constant
- *   \a coordType, both equal to the corresponding NormalCoords constant;
+ * - a compile-time constant \a coordsID that is equal to the corresponding
+ *   NormalCoords constant;
  * - a typedef \a Info, which refers to the corresponding specialisation
  *   of the NormalInfo<> template;
  * - declarations and implementations of the virtual functions
@@ -303,7 +276,6 @@ struct NormalInfo;
     public: \
         typedef NormalInfo<id> Info; \
         static constexpr const NormalCoords coordsID = id; \
-        REGINA_DEPRECATED static constexpr const NormalCoords coordType = id; \
         inline virtual NNormalSurfaceVector* clone() const { \
             return new class_(*this); \
         } \
@@ -618,16 +590,6 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          */
         virtual NLargeInteger orientedTriangles(size_t tetIndex,
             int vertex, const NTriangulation* triang, bool orientation) const;
-        /**
-         * Deprecated routine that returns the number of oriented
-         * triangular discs of the given type in this normal surface.
-         *
-         * \deprecated This routine has been renamed to orientedTriangles().
-         * See the orientedTriangles() documentation for further details.
-         */
-        REGINA_DEPRECATED NLargeInteger getOrientedTriangleCoord(
-            size_t tetIndex, int vertex, const NTriangulation* triang,
-            bool orientation) const;
 
         /**
          * Returns the number of quadrilateral discs of the given type
@@ -645,15 +607,6 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          */
         virtual NLargeInteger quads(size_t tetIndex,
             int quadType, const NTriangulation* triang) const = 0;
-        /**
-         * Deprecated routine that returns the number of quadrilateral discs
-         * of the given type in this normal surface.
-         *
-         * \deprecated This routine has been renamed to quads().
-         * See the quads() documentation for further details.
-         */
-        REGINA_DEPRECATED NLargeInteger getQuadCoord(size_t tetIndex,
-            int quadType, const NTriangulation* triang) const;
 
         /**
          * Returns the number of oriented quadrilateral discs of the given type
@@ -677,15 +630,6 @@ class REGINA_API NNormalSurfaceVector : public NRay {
         virtual NLargeInteger orientedQuads(size_t tetIndex,
             int quadType, const NTriangulation* triang, bool orientation) const;
         /**
-         * Deprecated routine that returns the number of oriented
-         * quadrilateral discs of the given type in this normal surface.
-         *
-         * \deprecated This routine has been renamed to orientedQuads().
-         * See the orientedQuads() documentation for further details.
-         */
-        REGINA_DEPRECATED NLargeInteger getOrientedQuadCoord(size_t tetIndex,
-            int quadType, const NTriangulation* triang, bool orientation) const;
-        /**
          * Returns the number of octagonal discs of the given type
          * in this normal surface.
          * See NNormalSurface::octs() for further details.
@@ -701,15 +645,6 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          */
         virtual NLargeInteger octs(size_t tetIndex,
             int octType, const NTriangulation* triang) const = 0;
-        /**
-         * Deprecated routine that returns the number of octagonal discs
-         * of the given type in this normal surface.
-         *
-         * \deprecated This routine has been renamed to octs().
-         * See the octs() documentation for further details.
-         */
-        REGINA_DEPRECATED NLargeInteger getOctCoord(size_t tetIndex,
-            int octType, const NTriangulation* triang) const;
         /**
          * Returns the number of times this normal surface crosses the
          * given edge.
@@ -970,15 +905,6 @@ class REGINA_API NNormalSurface :
         NLargeInteger orientedTriangles(size_t tetIndex,
             int vertex, bool orientation) const;
         /**
-         * Deprecated routine that returns the number of oriented
-         * triangular discs of the given type in this normal surface.
-         *
-         * \deprecated This routine has been renamed to orientedTriangles().
-         * See the orientedTriangles() documentation for further details.
-         */
-        REGINA_DEPRECATED NLargeInteger getOrientedTriangleCoord(
-            size_t tetIndex, int vertex, bool orientation) const;
-        /**
          * Returns the number of quadrilateral discs of the given
          * type in this normal surface.
          *
@@ -1006,15 +932,6 @@ class REGINA_API NNormalSurface :
          * @return the number of quadrilateral discs of the given type.
          */
         NLargeInteger quads(size_t tetIndex, int quadType) const;
-        /**
-         * Deprecated routine that returns the number of quadrilateral discs
-         * of the given type in this normal surface.
-         *
-         * \deprecated This routine has been renamed to quads().
-         * See the quads() documentation for further details.
-         */
-        REGINA_DEPRECATED NLargeInteger getQuadCoord(size_t tetIndex,
-            int quadType) const;
         /**
          * Returns the number of oriented quadrilateral discs of the given type
          * in this normal surface.
@@ -1047,15 +964,6 @@ class REGINA_API NNormalSurface :
         NLargeInteger orientedQuads(size_t tetIndex,
             int quadType, bool orientation) const;
         /**
-         * Deprecated routine that returns the number of oriented
-         * quadrilateral discs of the given type in this normal surface.
-         *
-         * \deprecated This routine has been renamed to orientedQuads().
-         * See the orientedQuads() documentation for further details.
-         */
-        REGINA_DEPRECATED NLargeInteger getOrientedQuadCoord(size_t tetIndex,
-            int quadType, bool orientation) const;
-        /**
          * Returns the number of octagonal discs of the given type
          * in this normal surface.
          *
@@ -1083,15 +991,6 @@ class REGINA_API NNormalSurface :
          * @return the number of octagonal discs of the given type.
          */
         NLargeInteger octs(size_t tetIndex, int octType) const;
-        /**
-         * Deprecated routine that returns the number of octagonal discs
-         * of the given type in this normal surface.
-         *
-         * \deprecated This routine has been renamed to octs().
-         * See the octs() documentation for further details.
-         */
-        REGINA_DEPRECATED NLargeInteger getOctCoord(size_t tetIndex,
-            int octType) const;
         /**
          * Returns the number of times this normal surface crosses the
          * given edge.
@@ -1139,14 +1038,6 @@ class REGINA_API NNormalSurface :
          * or NDiscType::NONE if there is no such coordinate.
          */
         NDiscType octPosition() const;
-        /**
-         * Deprecated routine that determines the first coordinate position
-         * at which this surface has a non-zero octagonal coordinate.
-         *
-         * \deprecated This routine has been renamed to octPosition().
-         * See the octPosition() documentation for further details.
-         */
-        REGINA_DEPRECATED NDiscType getOctPosition() const;
 
         /**
          * Returns the number of coordinates in the specific underlying
@@ -1832,24 +1723,6 @@ inline NNormalSurfaceVector::NNormalSurfaceVector(
 }
 inline NNormalSurfaceVector::~NNormalSurfaceVector() {
 }
-inline NLargeInteger NNormalSurfaceVector::getQuadCoord(size_t tetIndex,
-        int quadType, const NTriangulation* triang) const {
-    return quads(tetIndex, quadType, triang);
-}
-inline NLargeInteger NNormalSurfaceVector::getOctCoord(size_t tetIndex,
-        int octType, const NTriangulation* triang) const {
-    return octs(tetIndex, octType, triang);
-}
-inline NLargeInteger NNormalSurfaceVector::getOrientedTriangleCoord(
-        size_t tetIndex, int vertex, const NTriangulation* triang,
-        bool orientation) const {
-    return orientedTriangles(tetIndex, vertex, triang, orientation);
-}
-inline NLargeInteger NNormalSurfaceVector::getOrientedQuadCoord(
-        size_t tetIndex, int quadType, const NTriangulation* triang,
-        bool orientation) const {
-    return orientedQuads(tetIndex, quadType, triang, orientation);
-}
 
 // Inline functions for NNormalSurface
 
@@ -1866,16 +1739,7 @@ inline NLargeInteger NNormalSurface::orientedTriangles(
     return vector->orientedTriangles(tetIndex, vertex, triangulation_,
         oriented);
 }
-inline NLargeInteger NNormalSurface::getOrientedTriangleCoord(
-        size_t tetIndex, int vertex, bool oriented) const {
-    return vector->orientedTriangles(tetIndex, vertex, triangulation_,
-        oriented);
-}
 inline NLargeInteger NNormalSurface::quads(size_t tetIndex,
-        int quadType) const {
-    return vector->quads(tetIndex, quadType, triangulation_);
-}
-inline NLargeInteger NNormalSurface::getQuadCoord(size_t tetIndex,
         int quadType) const {
     return vector->quads(tetIndex, quadType, triangulation_);
 }
@@ -1884,16 +1748,7 @@ inline NLargeInteger NNormalSurface::orientedQuads(
     return vector->orientedQuads(tetIndex, quadType, triangulation_,
         oriented);
 }
-inline NLargeInteger NNormalSurface::getOrientedQuadCoord(
-        size_t tetIndex, int quadType, bool oriented) const {
-    return vector->orientedQuads(tetIndex, quadType, triangulation_,
-        oriented);
-}
 inline NLargeInteger NNormalSurface::octs(size_t tetIndex, int octType) const {
-    return vector->octs(tetIndex, octType, triangulation_);
-}
-inline NLargeInteger NNormalSurface::getOctCoord(size_t tetIndex,
-        int octType) const {
     return vector->octs(tetIndex, octType, triangulation_);
 }
 inline NLargeInteger NNormalSurface::edgeWeight(size_t edgeIndex)
@@ -1909,10 +1764,6 @@ inline NDiscType NNormalSurface::octPosition() const {
     if (! octPosition_.known())
         calculateOctPosition();
     return octPosition_.value();
-}
-
-inline NDiscType NNormalSurface::getOctPosition() const {
-    return octPosition();
 }
 
 inline size_t NNormalSurface::countCoords() const {

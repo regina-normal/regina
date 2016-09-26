@@ -52,7 +52,6 @@ void addNSurfaceSubset() {
             boost::noncopyable>("NSurfaceSubset",
             init<const regina::NNormalSurfaceList&,
                 const regina::NSurfaceFilter&>())
-        .def("getFlavour", &NSurfaceSubset::coords)
         .def("coords", &NSurfaceSubset::coords)
         .def("allowsAlmostNormal", &NSurfaceSubset::allowsAlmostNormal)
         .def("allowsSpun", &NSurfaceSubset::allowsSpun)
@@ -62,8 +61,6 @@ void addNSurfaceSubset() {
             return_value_policy<to_held_type<> >())
         .def("size", &NSurfaceSubset::size)
         .def("surface", &NSurfaceSubset::surface,
-            return_internal_reference<>())
-        .def("getSurface", &NSurfaceSubset::surface,
             return_internal_reference<>())
         .def("writeAllSurfaces", writeAllSurfaces_stdio)
         .def(regina::python::add_output())

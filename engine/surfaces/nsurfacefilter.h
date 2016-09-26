@@ -205,23 +205,6 @@ class REGINA_API NSurfaceFilter : public NPacket {
          */
         virtual std::string filterTypeName() const;
 #endif
-        /**
-         * Deprecated routine that returns the unique integer ID corresponding
-         * to the filtering method that is this particular subclass of
-         * NSurfaceFilter.
-         *
-         * \deprecated This routine has been renamed to filterType().
-         * See the filterType() documentation for further details.
-         */
-        REGINA_DEPRECATED SurfaceFilterType getFilterType() const;
-        /**
-         * Deprecated routine that returns a string description of the
-         * filtering method that is this particular subclass of NSurfaceFilter.
-         *
-         * \deprecated This routine has been renamed to filterTypeName().
-         * See the filterTypeName() documentation for further details.
-         */
-        REGINA_DEPRECATED std::string getFilterTypeName() const;
 
         /**
          * Returns a newly created XML filter reader that will read the
@@ -282,14 +265,6 @@ inline NSurfaceFilter::~NSurfaceFilter() {
 
 inline bool NSurfaceFilter::accept(const NNormalSurface&) const {
     return true;
-}
-
-inline SurfaceFilterType NSurfaceFilter::getFilterType() const {
-    return filterType();
-}
-
-inline std::string NSurfaceFilter::getFilterTypeName() const {
-    return filterTypeName();
 }
 
 inline void NSurfaceFilter::writeXMLFilterData(std::ostream&) const {

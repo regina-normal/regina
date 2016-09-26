@@ -59,11 +59,8 @@ void addNSurfaceFilterProperties() {
         .def("countEulerChars", &NSurfaceFilterProperties::countEulerChars)
         .def("eulerChar", &NSurfaceFilterProperties::eulerChar)
         .def("orientability", &NSurfaceFilterProperties::orientability)
-        .def("getOrientability", &NSurfaceFilterProperties::orientability)
         .def("compactness", &NSurfaceFilterProperties::compactness)
-        .def("getCompactness", &NSurfaceFilterProperties::compactness)
         .def("realBoundary", &NSurfaceFilterProperties::realBoundary)
-        .def("getRealBoundary", &NSurfaceFilterProperties::realBoundary)
         .def("addEulerChar", &NSurfaceFilterProperties::addEulerChar)
         .def("removeEulerChar", &NSurfaceFilterProperties::removeEulerChar)
         .def("removeAllEulerChars",
