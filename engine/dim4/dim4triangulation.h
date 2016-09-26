@@ -295,15 +295,6 @@ class REGINA_API Triangulation<4> :
          */
         const std::vector<Dim4BoundaryComponent*>& boundaryComponents() const;
         /**
-         * Deprecated routine that returns all boundary components of this
-         * triangulation.
-         *
-         * \deprecated This routine has been renamed to boundaryComponents().
-         * See the boundaryComponents() documentation for further details.
-         */
-        REGINA_DEPRECATED const std::vector<Dim4BoundaryComponent*>&
-            getBoundaryComponents() const;
-        /**
          * Returns the requested boundary component of this triangulation.
          *
          * Bear in mind that each time the triangulation changes, the
@@ -315,15 +306,6 @@ class REGINA_API Triangulation<4> :
          * @return the requested boundary component.
          */
         Dim4BoundaryComponent* boundaryComponent(size_t index) const;
-        /**
-         * Deprecated routine that returns the requested boundary component
-         * of this triangulation.
-         *
-         * \deprecated This routine has been renamed to boundaryComponent().
-         * See the boundaryComponent() documentation for further details.
-         */
-        REGINA_DEPRECATED Dim4BoundaryComponent* getBoundaryComponent(
-            size_t index) const;
 
         /*@}*/
         /**
@@ -1082,19 +1064,7 @@ inline const std::vector<Dim4BoundaryComponent*>&
     return (const std::vector<Dim4BoundaryComponent*>&)(boundaryComponents_);
 }
 
-inline const std::vector<Dim4BoundaryComponent*>&
-        Triangulation<4>::getBoundaryComponents() const {
-    ensureSkeleton();
-    return (const std::vector<Dim4BoundaryComponent*>&)(boundaryComponents_);
-}
-
 inline Dim4BoundaryComponent* Triangulation<4>::boundaryComponent(
-        size_t index) const {
-    ensureSkeleton();
-    return boundaryComponents_[index];
-}
-
-inline Dim4BoundaryComponent* Triangulation<4>::getBoundaryComponent(
         size_t index) const {
     ensureSkeleton();
     return boundaryComponents_[index];

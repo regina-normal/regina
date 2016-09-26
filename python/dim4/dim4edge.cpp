@@ -118,8 +118,6 @@ void addDim4Edge() {
                 return_value_policy<reference_existing_object>())
             .def("boundaryComponent", &Dim4Edge::boundaryComponent,
                 return_value_policy<reference_existing_object>())
-            .def("getBoundaryComponent", &Dim4Edge::boundaryComponent,
-                return_value_policy<reference_existing_object>())
             .def("face", &regina::python::face<Dim4Edge, 1, int>)
             .def("vertex", &Dim4Edge::vertex,
                 return_value_policy<reference_existing_object>())

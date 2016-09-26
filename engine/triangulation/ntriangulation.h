@@ -389,15 +389,6 @@ class REGINA_API Triangulation<3> :
          */
         const std::vector<NBoundaryComponent*>& boundaryComponents() const;
         /**
-         * Deprecated routine that returns all boundary components of this
-         * triangulation.
-         *
-         * \deprecated This routine has been renamed to boundaryComponents().
-         * See the boundaryComponents() documentation for further details.
-         */
-        REGINA_DEPRECATED const std::vector<NBoundaryComponent*>&
-            getBoundaryComponents() const;
-        /**
          * Returns the requested triangulation boundary component.
          *
          * Bear in mind that each time the triangulation changes, the
@@ -409,15 +400,6 @@ class REGINA_API Triangulation<3> :
          * @return the requested boundary component.
          */
         NBoundaryComponent* boundaryComponent(size_t index) const;
-        /**
-         * Deprecated routine that returns the requested boundary component
-         * of this triangulation.
-         *
-         * \deprecated This routine has been renamed to boundaryComponent().
-         * See the boundaryComponent() documentation for further details.
-         */
-        REGINA_DEPRECATED NBoundaryComponent* getBoundaryComponent(size_t index)
-            const;
 
         /**
          * Determines if this triangulation contains any two-sphere
@@ -3163,19 +3145,7 @@ inline const std::vector<NBoundaryComponent*>&
     return (const std::vector<NBoundaryComponent*>&)(boundaryComponents_);
 }
 
-inline const std::vector<NBoundaryComponent*>&
-        Triangulation<3>::getBoundaryComponents() const {
-    ensureSkeleton();
-    return (const std::vector<NBoundaryComponent*>&)(boundaryComponents_);
-}
-
 inline NBoundaryComponent* Triangulation<3>::boundaryComponent(
-        size_t index) const {
-    ensureSkeleton();
-    return boundaryComponents_[index];
-}
-
-inline NBoundaryComponent* Triangulation<3>::getBoundaryComponent(
         size_t index) const {
     ensureSkeleton();
     return boundaryComponents_[index];

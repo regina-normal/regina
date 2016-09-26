@@ -200,7 +200,6 @@ void addDim4Triangulation() {
         .def("fVector", fVector_list)
         .def("components", Dim4_components_list)
         .def("boundaryComponents", Dim4_boundaryComponents_list)
-        .def("getBoundaryComponents", Dim4_boundaryComponents_list)
         .def("faces", &regina::python::faces<Dim4Triangulation, 4>)
         .def("vertices", regina::python::faces_list<Dim4Triangulation, 4, 0>)
         .def("edges", regina::python::faces_list<Dim4Triangulation, 4, 1>)
@@ -209,8 +208,6 @@ void addDim4Triangulation() {
         .def("component", &Dim4Triangulation::component,
             return_internal_reference<>())
         .def("boundaryComponent", &Dim4Triangulation::boundaryComponent,
-            return_internal_reference<>())
-        .def("getBoundaryComponent", &Dim4Triangulation::boundaryComponent,
             return_internal_reference<>())
         .def("face", &regina::python::face<Dim4Triangulation, 4, size_t>)
         .def("vertex", &Dim4Triangulation::vertex,

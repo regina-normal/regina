@@ -89,8 +89,6 @@ void addDim2Vertex() {
             return_value_policy<reference_existing_object>())
         .def("boundaryComponent", &Dim2Vertex::boundaryComponent,
             return_value_policy<reference_existing_object>())
-        .def("getBoundaryComponent", &Dim2Vertex::boundaryComponent,
-            return_value_policy<reference_existing_object>())
         .def("degree", &Dim2Vertex::degree)
         .def("isBoundary", &Dim2Vertex::isBoundary)
         .def("ordering", &Dim2Vertex::ordering)

@@ -103,8 +103,6 @@ void addNTriangle() {
                 return_value_policy<reference_existing_object>())
             .def("boundaryComponent", &NTriangle::boundaryComponent,
                 return_value_policy<reference_existing_object>())
-            .def("getBoundaryComponent", &NTriangle::boundaryComponent,
-                return_value_policy<reference_existing_object>())
             .def("face", &regina::python::face<NTriangle, 2, int>)
             .def("vertex", &NTriangle::vertex,
                 return_value_policy<reference_existing_object>())

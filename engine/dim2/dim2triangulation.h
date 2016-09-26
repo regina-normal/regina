@@ -249,15 +249,6 @@ class REGINA_API Triangulation<2> :
          */
         const std::vector<Dim2BoundaryComponent*>& boundaryComponents() const;
         /**
-         * Deprecated routine that returns all boundary components of this
-         * triangulation.
-         *
-         * \deprecated This routine has been renamed to boundaryComponents().
-         * See the boundaryComponents() documentation for further details.
-         */
-        REGINA_DEPRECATED const std::vector<Dim2BoundaryComponent*>&
-            getBoundaryComponents() const;
-        /**
          * Returns the requested triangulation boundary component.
          *
          * Bear in mind that each time the triangulation changes, the
@@ -269,15 +260,6 @@ class REGINA_API Triangulation<2> :
          * @return the requested boundary component.
          */
         Dim2BoundaryComponent* boundaryComponent(size_t index) const;
-        /**
-         * Deprecated routine that returns the requested boundary component
-         * of this triangulation.
-         *
-         * \deprecated This routine has been renamed to boundaryComponent().
-         * See the boundaryComponent() documentation for further details.
-         */
-        REGINA_DEPRECATED Dim2BoundaryComponent* getBoundaryComponent(
-            size_t index) const;
 
         /*@}*/
         /**
@@ -503,19 +485,7 @@ inline const std::vector<Dim2BoundaryComponent*>&
     return (const std::vector<Dim2BoundaryComponent*>&)(boundaryComponents_);
 }
 
-inline const std::vector<Dim2BoundaryComponent*>&
-        Triangulation<2>::getBoundaryComponents() const {
-    ensureSkeleton();
-    return (const std::vector<Dim2BoundaryComponent*>&)(boundaryComponents_);
-}
-
 inline Dim2BoundaryComponent* Triangulation<2>::boundaryComponent(
-        size_t index) const {
-    ensureSkeleton();
-    return boundaryComponents_[index];
-}
-
-inline Dim2BoundaryComponent* Triangulation<2>::getBoundaryComponent(
         size_t index) const {
     ensureSkeleton();
     return boundaryComponents_[index];
