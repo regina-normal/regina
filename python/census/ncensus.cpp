@@ -76,7 +76,7 @@ void addNCensus() {
         .def(regina::python::add_eq_operators())
     ;
 
-    s = class_<NCensus, std::auto_ptr<NCensus>,
+    class_<NCensus, std::auto_ptr<NCensus>,
             boost::noncopyable>("NCensus", no_init)
         .def("lookup", lookup_tri, return_value_policy<manage_new_object>())
         .def("lookup", lookup_sig, return_value_policy<manage_new_object>())
