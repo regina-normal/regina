@@ -191,58 +191,6 @@ struct NewFunction : public Returns<Base*> {
     }
 };
 
-/**
- * Deprecated function object for creating new objects subclassed from \a Base.
- *
- * This is a function object that creates a new object subclassed from \a Base,
- * where the particular subclass is chosen according to the template argument
- * to operator().  The template argument to the bracket operator would
- * typically be one of the registry helper classes, such as PacketInfo or
- * NormalInfo.
- *
- * The new object will be created using a single-argument constructor,
- * where the argument is of type \a Arg.
- *
- * This routine is intended for use with registry routines, such as the
- * non-void variants of forPacket() and forCoords().
- *
- * \deprecated This has been deprecated.  Instead you should use NewFunction,
- * which is more flexible and has less overhead.
- *
- * \ifacespython Not present.
- */
-template <class Base, typename Arg>
-struct REGINA_DEPRECATED NewFunction1 : public Returns<Base*> {
-    size_t arg_;
-        /**< The length of the new vector to create. */
-
-    /**
-     * Creates a new function object, whose bracket operator will create a
-     * new object by passing \a arg to its constructor.
-     *
-     * @param arg the argument to pass to the new object's class constructor.
-     */
-    inline NewFunction1(Arg arg) : arg_(arg) {
-    }
-
-    /**
-     * Creates a new object of the subclass Info::Class.
-     * The object will be created using a single-argument constructor
-     * for Info::Class, and the argument to this constructor will be
-     * the same argument \a arg that was passed to this function
-     * object's NewFunction1 constructor.
-     *
-     * \pre It is known in advance that Info::Class will be a subclass of
-     * \a Base.
-     *
-     * @return a new object of the subclass Info::Class.
-     */
-    template <typename Info>
-    inline Base* operator() (Info) {
-        return new typename Info::Class(arg_);
-    }
-};
-
 } // namespace regina
 
 #endif

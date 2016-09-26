@@ -64,8 +64,6 @@
 
 namespace regina {
 
-class NNormalSurfaceVector; // For the deprecated NewNormalSurfaceVector.
-
 /**
  * \weakgroup surfaces
  * @{
@@ -168,38 +166,6 @@ forCoords(NormalCoords coords, FunctionObject&& func,
 template <typename FunctionObject, typename... Args>
 typename ReturnsTraits<FunctionObject>::Void
 forCoords(NormalCoords coords, FunctionObject&& func, Args&&... args);
-
-/**
- * A legacy typedef provided for backward compatibility only.
- *
- * \deprecated The old NewNormalSurfaceVector class has been redesigned
- * as the more general template class NewFunction1, and moved into the
- * header registryutils.h.  This typedef is provided for backward
- * compatibility, and will be removed in some future version of Regina.
- */
-REGINA_DEPRECATED typedef NewFunction1<NNormalSurfaceVector, size_t>
-    NewNormalSurfaceVector;
-
-/**
- * A deprecated alias for the registry-based template function forCoords().
- * See forCoords() for further details.
- */
-template <typename FunctionObject>
-REGINA_DEPRECATED inline typename FunctionObject::ReturnType forFlavour(
-        NormalCoords coords, FunctionObject func,
-        typename FunctionObject::ReturnType defaultReturn) {
-    return forCoords<FunctionObject>(coords, func, defaultReturn);
-}
-
-/**
- * A deprecated alias for the registry-based template function forCoords().
- * See forCoords() for further details.
- */
-template <typename VoidFunctionObject>
-REGINA_DEPRECATED inline void forFlavour(NormalCoords coords,
-        VoidFunctionObject func) {
-    forCoords<VoidFunctionObject>(coords, func);
-}
 
 /*@}*/
 

@@ -439,7 +439,8 @@ int mainSlave() {
         s->makeOrphan(); delete s;
 
         clockStart = ::clock();
-        s = NNormalSurfaceList::enumerateStandardDirect(t);
+        s = NNormalSurfaceList::enumerate(t, NS_STANDARD,
+            NS_VERTEX | NS_EMBEDDED_ONLY, NS_VERTEX_STD_DIRECT);
         timeStd = ::clock() - clockStart;
         if (s->size() != numStd) {
             s->makeOrphan(); delete s;

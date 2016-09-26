@@ -74,64 +74,6 @@ namespace {
         return NNormalSurfaceList::enumerate(owner, coords, which, algHints,
             tracker);
     }
-
-    NNormalSurfaceList* enumerateFundPrimal_2(regina::NTriangulation* owner,
-            regina::NormalCoords coords) {
-        return NNormalSurfaceList::enumerateFundPrimal(owner, coords);
-    }
-    NNormalSurfaceList* enumerateFundPrimal_3(regina::NTriangulation* owner,
-            regina::NormalCoords coords, bool embedded) {
-        return NNormalSurfaceList::enumerateFundPrimal(owner, coords,
-            embedded);
-    }
-    NNormalSurfaceList* enumerateFundPrimal_4(regina::NTriangulation* owner,
-            regina::NormalCoords coords, bool embedded,
-            regina::NNormalSurfaceList* vtxSurfaces) {
-        return NNormalSurfaceList::enumerateFundPrimal(owner, coords,
-            embedded, vtxSurfaces);
-    }
-    NNormalSurfaceList* enumerateFundPrimal_5(regina::NTriangulation* owner,
-            regina::NormalCoords coords, bool embedded,
-            regina::NNormalSurfaceList* vtxSurfaces,
-            regina::NProgressTracker* tracker) {
-        return NNormalSurfaceList::enumerateFundPrimal(owner, coords,
-            embedded, vtxSurfaces, tracker);
-    }
-
-    NNormalSurfaceList* enumerateFundDual_2(regina::NTriangulation* owner,
-            regina::NormalCoords coords) {
-        return NNormalSurfaceList::enumerateFundDual(owner, coords);
-    }
-    NNormalSurfaceList* enumerateFundDual_3(regina::NTriangulation* owner,
-            regina::NormalCoords coords, bool embedded) {
-        return NNormalSurfaceList::enumerateFundDual(owner, coords,
-            embedded);
-    }
-    NNormalSurfaceList* enumerateFundDual_4(regina::NTriangulation* owner,
-            regina::NormalCoords coords, bool embedded,
-            regina::NProgressTracker* tracker) {
-        return NNormalSurfaceList::enumerateFundDual(owner, coords,
-            embedded, tracker);
-    }
-
-    NNormalSurfaceList* enumerateFundFullCone_2(regina::NTriangulation* owner,
-            regina::NormalCoords coords) {
-        return NNormalSurfaceList::enumerateFundFullCone(owner, coords);
-    }
-    NNormalSurfaceList* enumerateFundFullCone_3(regina::NTriangulation* owner,
-            regina::NormalCoords coords, bool embedded) {
-        return NNormalSurfaceList::enumerateFundFullCone(owner, coords,
-            embedded);
-    }
-
-    NNormalSurfaceList* enumerateFundCD_2(regina::NTriangulation* owner,
-            regina::NormalCoords coords) {
-        return NNormalSurfaceList::enumerateFundCD(owner, coords);
-    }
-    NNormalSurfaceList* enumerateFundCD_3(regina::NTriangulation* owner,
-            regina::NormalCoords coords, bool embedded) {
-        return NNormalSurfaceList::enumerateFundCD(owner, coords, embedded);
-    }
 }
 
 void addNNormalSurfaceList() {
@@ -168,34 +110,6 @@ void addNNormalSurfaceList() {
             return_value_policy<to_held_type<> >())
         .def("enumerate", unified_5,
             return_value_policy<to_held_type<> >())
-        .def("enumerateFundPrimal", enumerateFundPrimal_2,
-            return_value_policy<to_held_type<> >())
-        .def("enumerateFundPrimal", enumerateFundPrimal_3,
-            return_value_policy<to_held_type<> >())
-        .def("enumerateFundPrimal", enumerateFundPrimal_4,
-            return_value_policy<to_held_type<> >())
-        .def("enumerateFundPrimal", enumerateFundPrimal_5,
-            return_value_policy<to_held_type<> >())
-        .def("enumerateFundDual", enumerateFundDual_2,
-            return_value_policy<to_held_type<> >())
-        .def("enumerateFundDual", enumerateFundDual_3,
-            return_value_policy<to_held_type<> >())
-        .def("enumerateFundDual", enumerateFundDual_4,
-            return_value_policy<to_held_type<> >())
-        .def("enumerateFundFullCone", enumerateFundFullCone_2,
-            return_value_policy<to_held_type<> >())
-        .def("enumerateFundFullCone", enumerateFundFullCone_3,
-            return_value_policy<to_held_type<> >())
-        .def("enumerateFundCD", enumerateFundCD_2,
-            return_value_policy<to_held_type<> >())
-        .def("enumerateFundCD", enumerateFundCD_3,
-            return_value_policy<to_held_type<> >())
-        .def("enumerateStandardDirect",
-            &NNormalSurfaceList::enumerateStandardDirect,
-            return_value_policy<to_held_type<> >())
-        .def("enumerateStandardANDirect",
-            &NNormalSurfaceList::enumerateStandardANDirect,
-            return_value_policy<to_held_type<> >())
         .def("quadToStandard", &NNormalSurfaceList::quadToStandard,
             return_value_policy<to_held_type<> >())
         .def("quadOctToStandardAN", &NNormalSurfaceList::quadOctToStandardAN,
@@ -221,25 +135,10 @@ void addNNormalSurfaceList() {
         .def("saveCSVEdgeWeight", &NNormalSurfaceList::saveCSVEdgeWeight,
             OL_saveCSVEdgeWeight())
         .staticmethod("enumerate")
-        .staticmethod("enumerateStandardDirect")
-        .staticmethod("enumerateStandardANDirect")
-        .staticmethod("enumerateFundPrimal")
-        .staticmethod("enumerateFundDual")
-        .staticmethod("enumerateFundFullCone")
-        .staticmethod("enumerateFundCD")
     ;
 
     s.attr("typeID") = regina::PACKET_NORMALSURFACELIST;
     s.attr("packetType") = regina::PACKET_NORMALSURFACELIST;
-    s.attr("STANDARD") = regina::NS_STANDARD;
-    s.attr("AN_STANDARD") = regina::NS_AN_STANDARD;
-    s.attr("QUAD") = regina::NS_QUAD;
-    s.attr("AN_QUAD_OCT") = regina::NS_AN_QUAD_OCT;
-    s.attr("EDGE_WEIGHT") = regina::NS_EDGE_WEIGHT;
-    s.attr("FACE_ARCS") = regina::NS_TRIANGLE_ARCS;
-    s.attr("AN_LEGACY") = regina::NS_AN_LEGACY;
-    s.attr("ORIENTED") = regina::NS_ORIENTED;
-    s.attr("ORIENTED_QUAD") = regina::NS_ORIENTED_QUAD;
 
     implicitly_convertible<SafeHeldType<NNormalSurfaceList>,
         SafeHeldType<regina::NPacket> >();
