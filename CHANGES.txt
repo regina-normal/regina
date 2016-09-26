@@ -38,6 +38,10 @@ Version 5.0  [ 26 September, 2016 ]
             * NTriangulation::getEulerCharacteristic() has been deprecated
               since 2007, and has again been removed completely.  Just call
               the equivalent routine eulerCharTri() instead.
+            * In NComponent and NBoundaryComponent, routines getFace(),
+              getNumberOfFaces() and hasBoundaryFaces() have been deprecated
+              since 2013, and have now been removed.  Use the equivalent
+              routines triangle(), countTriangles() and hasBoundaryTriangles().
             * NProgress, NProgressManager and related classes have been
               deprecated since 2013; they are also removed completely.
               All the code that used to work with these classes now
@@ -47,6 +51,8 @@ Version 5.0  [ 26 September, 2016 ]
               these are now removed completely.  The filterType class constants
               are also removed due to a name clash.  Use filterTypeName(),
               filterType() and the filterTypeID constants instead.
+            * The class NIsomorphismDirect has been deprecated since 2009,
+              and is now removed entirely.  Juse use NIsomorphism instead.
             * Global arrays edgeNumber[][], edgeStart[] and edgeEnd[] have
               been deprecated since 2009; this are now removed.  Use the
               arrays NEdge::edgeNumber[][] and NEdge::edgeVertex[][] instead.
