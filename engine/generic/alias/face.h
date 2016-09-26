@@ -108,30 +108,11 @@ class FaceOfSimplex<Derived, dim, 0> {
         }
 
         /**
-         * Deprecated dimension-specific alias for face<0>().
-         *
-         * \deprecated Simply call vertex() instead.
-         */
-        REGINA_DEPRECATED Face<dim, 0>* getVertex(int i) const {
-            return static_cast<const Derived*>(this)->template face<0>(i);
-        }
-
-        /**
          * A dimension-specific alias for faceMapping<0>().
          *
          * See faceMapping() for further information.
          */
         NPerm<dim + 1> vertexMapping(int i) const {
-            return static_cast<const Derived*>(this)->
-                template faceMapping<0>(i);
-        }
-
-        /**
-         * Deprecated dimension-specific alias for faceMapping<0>().
-         *
-         * \deprecated Simply call vertexMapping() instead.
-         */
-        REGINA_DEPRECATED NPerm<dim + 1> getVertexMapping(int i) const {
             return static_cast<const Derived*>(this)->
                 template faceMapping<0>(i);
         }
@@ -159,30 +140,11 @@ class FaceOfSimplex<Derived, dim, 1> : public FaceOfSimplex<Derived, dim, 0> {
         }
 
         /**
-         * Deprecated dimension-specific alias for face<1>().
-         *
-         * \deprecated Simply call edge() instead.
-         */
-        REGINA_DEPRECATED Face<dim, 1>* getEdge(int i) const {
-            return static_cast<const Derived*>(this)->template face<1>(i);
-        }
-
-        /**
          * A dimension-specific alias for faceMapping<1>().
          *
          * See faceMapping() for further information.
          */
         NPerm<dim + 1> edgeMapping(int i) const {
-            return static_cast<const Derived*>(this)->
-                template faceMapping<1>(i);
-        }
-
-        /**
-         * Deprecated dimension-specific alias for faceMapping<1>().
-         *
-         * \deprecated Simply call edgeMapping() instead.
-         */
-        REGINA_DEPRECATED NPerm<dim + 1> getEdgeMapping(int i) const {
             return static_cast<const Derived*>(this)->
                 template faceMapping<1>(i);
         }
@@ -210,30 +172,11 @@ class FaceOfSimplex<Derived, dim, 2> : public FaceOfSimplex<Derived, dim, 1> {
         }
 
         /**
-         * Deprecated dimension-specific alias for face<2>().
-         *
-         * \deprecated Simply call triangle() instead.
-         */
-        REGINA_DEPRECATED Face<dim, 2>* getTriangle(int i) const {
-            return static_cast<const Derived*>(this)->template face<2>(i);
-        }
-
-        /**
          * A dimension-specific alias for faceMapping<2>().
          *
          * See faceMapping() for further information.
          */
         NPerm<dim + 1> triangleMapping(int i) const {
-            return static_cast<const Derived*>(this)->
-                template faceMapping<2>(i);
-        }
-
-        /**
-         * Deprecated dimension-specific alias for faceMapping<2>().
-         *
-         * \deprecated Simply call triangleMapping() instead.
-         */
-        REGINA_DEPRECATED NPerm<dim + 1> getTriangleMapping(int i) const {
             return static_cast<const Derived*>(this)->
                 template faceMapping<2>(i);
         }
@@ -261,30 +204,11 @@ class FaceOfSimplex<Derived, dim, 3> : public FaceOfSimplex<Derived, dim, 2> {
         }
 
         /**
-         * Deprecated dimension-specific alias for face<3>().
-         *
-         * \deprecated Simply call tetrahedron() instead.
-         */
-        REGINA_DEPRECATED Face<dim, 3>* getTetrahedron(int i) const {
-            return static_cast<const Derived*>(this)->template face<3>(i);
-        }
-
-        /**
          * A dimension-specific alias for faceMapping<3>().
          *
          * See faceMapping() for further information.
          */
         NPerm<dim + 1> tetrahedronMapping(int i) const {
-            return static_cast<const Derived*>(this)->
-                template faceMapping<3>(i);
-        }
-
-        /**
-         * Deprecated dimension-specific alias for faceMapping<3>().
-         *
-         * \deprecated Simply call tetrahedronMapping() instead.
-         */
-        REGINA_DEPRECATED NPerm<dim + 1> getTetrahedronMapping(int i) const {
             return static_cast<const Derived*>(this)->
                 template faceMapping<3>(i);
         }
@@ -312,30 +236,11 @@ class FaceOfSimplex<Derived, dim, 4> : public FaceOfSimplex<Derived, dim, 3> {
         }
 
         /**
-         * Deprecated dimension-specific alias for face<4>().
-         *
-         * \deprecated Simply call pentachoron() instead.
-         */
-        REGINA_DEPRECATED Face<dim, 4>* getPentachoron(int i) const {
-            return static_cast<const Derived*>(this)->template face<4>(i);
-        }
-
-        /**
          * A dimension-specific alias for faceMapping<4>().
          *
          * See faceMapping() for further information.
          */
         NPerm<dim + 1> pentachoronMapping(int i) const {
-            return static_cast<const Derived*>(this)->
-                template faceMapping<4>(i);
-        }
-
-        /**
-         * Deprecated dimension-specific alias for faceMapping<4>().
-         *
-         * \deprecated Simply call pentachoronMapping() instead.
-         */
-        REGINA_DEPRECATED NPerm<dim + 1> getPentachoronMapping(int i) const {
             return static_cast<const Derived*>(this)->
                 template faceMapping<4>(i);
         }
@@ -381,29 +286,11 @@ class FaceOfTriangulation<Derived, dim, 0> {
         }
 
         /**
-         * Deprecated dimension-specific alias for countFaces<0>().
-         *
-         * \deprecated Simply call countVertices() instead.
-         */
-        REGINA_DEPRECATED size_t getNumberOfVertices() const {
-            return static_cast<const Derived*>(this)->template countFaces<0>();
-        }
-
-        /**
          * A dimension-specific alias for face<0>().
          *
          * See face() for further information.
          */
         Face<dim, 0>* vertex(size_t i) const {
-            return static_cast<const Derived*>(this)->template face<0>(i);
-        }
-
-        /**
-         * Deprecated dimension-specific alias for face<0>().
-         *
-         * \deprecated Simply call vertex() instead.
-         */
-        REGINA_DEPRECATED Face<dim, 0>* getVertex(size_t i) const {
             return static_cast<const Derived*>(this)->template face<0>(i);
         }
 };
@@ -431,29 +318,11 @@ class FaceOfTriangulation<Derived, dim, 1> :
         }
 
         /**
-         * Deprecated dimension-specific alias for countFaces<1>().
-         *
-         * \deprecated Simply call countEdges() instead.
-         */
-        REGINA_DEPRECATED size_t getNumberOfEdges() const {
-            return static_cast<const Derived*>(this)->template countFaces<1>();
-        }
-
-        /**
          * A dimension-specific alias for face<1>().
          *
          * See face() for further information.
          */
         Face<dim, 1>* edge(size_t i) const {
-            return static_cast<const Derived*>(this)->template face<1>(i);
-        }
-
-        /**
-         * Deprecated dimension-specific alias for face<1>().
-         *
-         * \deprecated Simply call edge() instead.
-         */
-        REGINA_DEPRECATED Face<dim, 1>* getEdge(size_t i) const {
             return static_cast<const Derived*>(this)->template face<1>(i);
         }
 };
@@ -481,29 +350,11 @@ class FaceOfTriangulation<Derived, dim, 2> :
         }
 
         /**
-         * Deprecated dimension-specific alias for countFaces<2>().
-         *
-         * \deprecated Simply call countTriangles() instead.
-         */
-        REGINA_DEPRECATED size_t getNumberOfTriangles() const {
-            return static_cast<const Derived*>(this)->template countFaces<2>();
-        }
-
-        /**
          * A dimension-specific alias for face<2>().
          *
          * See face() for further information.
          */
         Face<dim, 2>* triangle(size_t i) const {
-            return static_cast<const Derived*>(this)->template face<2>(i);
-        }
-
-        /**
-         * Deprecated dimension-specific alias for face<2>().
-         *
-         * \deprecated Simply call triangle() instead.
-         */
-        REGINA_DEPRECATED Face<dim, 2>* getTriangle(size_t i) const {
             return static_cast<const Derived*>(this)->template face<2>(i);
         }
 };
@@ -531,29 +382,11 @@ class FaceOfTriangulation<Derived, dim, 3> :
         }
 
         /**
-         * Deprecated dimension-specific alias for countFaces<3>().
-         *
-         * \deprecated Simply call countTetrahedra() instead.
-         */
-        REGINA_DEPRECATED size_t getNumberOfTetrahedra() const {
-            return static_cast<const Derived*>(this)->template countFaces<3>();
-        }
-
-        /**
          * A dimension-specific alias for face<3>().
          *
          * See face() for further information.
          */
         Face<dim, 3>* tetrahedron(size_t i) const {
-            return static_cast<const Derived*>(this)->template face<3>(i);
-        }
-
-        /**
-         * Deprecated dimension-specific alias for face<3>().
-         *
-         * \deprecated Simply call tetrahedron() instead.
-         */
-        REGINA_DEPRECATED Face<dim, 3>* getTetrahedron(size_t i) const {
             return static_cast<const Derived*>(this)->template face<3>(i);
         }
 };
@@ -581,29 +414,11 @@ class FaceOfTriangulation<Derived, dim, 4> :
         }
 
         /**
-         * Deprecated dimension-specific alias for countFaces<4>().
-         *
-         * \deprecated Simply call countPentachora() instead.
-         */
-        REGINA_DEPRECATED size_t getNumberOfPentachora() const {
-            return static_cast<const Derived*>(this)->template countFaces<4>();
-        }
-
-        /**
          * A dimension-specific alias for face<4>().
          *
          * See face() for further information.
          */
         Face<dim, 4>* pentachoron(size_t i) const {
-            return static_cast<const Derived*>(this)->template face<4>(i);
-        }
-
-        /**
-         * Deprecated dimension-specific alias for face<4>().
-         *
-         * \deprecated Simply call pentachoron() instead.
-         */
-        REGINA_DEPRECATED Face<dim, 4>* getPentachoron(size_t i) const {
             return static_cast<const Derived*>(this)->template face<4>(i);
         }
 };
@@ -651,17 +466,6 @@ class FacesOfTriangulation<Derived, dim, 0> {
                 vertices() const {
             return static_cast<const Derived*>(this)->template faces<0>();
         }
-
-        /**
-         * Deprecated dimension-specific alias for faces<0>().
-         *
-         * \deprecated Simply call vertices() instead.
-         */
-        REGINA_DEPRECATED const typename
-                detail::FaceListHolder<Derived, 0>::Holder& getVertices()
-                const {
-            return static_cast<const Derived*>(this)->template faces<0>();
-        }
 };
 
 /**
@@ -686,16 +490,6 @@ class FacesOfTriangulation<Derived, dim, 1> :
          */
         const typename detail::FaceListHolder<Derived, 1>::Holder&
                 edges() const {
-            return static_cast<const Derived*>(this)->template faces<1>();
-        }
-
-        /**
-         * Deprecated dimension-specific alias for faces<1>().
-         *
-         * \deprecated Simply call edges() instead.
-         */
-        REGINA_DEPRECATED const typename
-                detail::FaceListHolder<Derived, 1>::Holder& getEdges() const {
             return static_cast<const Derived*>(this)->template faces<1>();
         }
 };
@@ -724,17 +518,6 @@ class FacesOfTriangulation<Derived, dim, 2> :
                 triangles() const {
             return static_cast<const Derived*>(this)->template faces<2>();
         }
-
-        /**
-         * Deprecated dimension-specific alias for faces<2>().
-         *
-         * \deprecated Simply call triangles() instead.
-         */
-        REGINA_DEPRECATED const typename
-                detail::FaceListHolder<Derived, 2>::Holder& getTriangles()
-                const {
-            return static_cast<const Derived*>(this)->template faces<2>();
-        }
 };
 
 /**
@@ -761,17 +544,6 @@ class FacesOfTriangulation<Derived, dim, 3> :
                 tetrahedra() const {
             return static_cast<const Derived*>(this)->template faces<3>();
         }
-
-        /**
-         * Deprecated dimension-specific alias for faces<3>().
-         *
-         * \deprecated Simply call tetrahedra() instead.
-         */
-        REGINA_DEPRECATED const typename
-                detail::FaceListHolder<Derived, 3>::Holder& getTetrahedra()
-                const {
-            return static_cast<const Derived*>(this)->template faces<3>();
-        }
 };
 
 /**
@@ -796,17 +568,6 @@ class FacesOfTriangulation<Derived, dim, 4> :
          */
         const typename detail::FaceListHolder<Derived, 4>::Holder&
                 pentachora() const {
-            return static_cast<const Derived*>(this)->template faces<4>();
-        }
-
-        /**
-         * Deprecated dimension-specific alias for faces<4>().
-         *
-         * \deprecated Simply call pentachora() instead.
-         */
-        REGINA_DEPRECATED const typename
-                detail::FaceListHolder<Derived, 4>::Holder& getPentachora()
-                const {
             return static_cast<const Derived*>(this)->template faces<4>();
         }
 };

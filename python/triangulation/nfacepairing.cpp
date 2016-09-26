@@ -97,7 +97,6 @@ void addNFacePairing() {
             ("NFacePairing", init<const NFacePairing&>())
         .def(init<const NTriangulation&>())
         .def("size", &NFacePairing::size)
-        .def("getNumberOfTetrahedra", &NFacePairing::size)
         .def("dest", dest_face,
             return_value_policy<reference_existing_object>())
         .def("dest", dest_unsigned,

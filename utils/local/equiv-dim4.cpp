@@ -184,9 +184,9 @@ void tryMovesDown(Dim4Triangulation* t, int maxLevels) {
     // Only try 4-2 moves if nothing better has worked so far.
     if (! found)
         for (i = 0; i < t->countEdges(); i++)
-            if (t->fourTwoMove(t->getEdge(i), true, false)) {
+            if (t->fourTwoMove(t->edge(i), true, false)) {
                 alt = new Dim4Triangulation(*t);
-                alt->fourTwoMove(alt->getEdge(i));
+                alt->fourTwoMove(alt->edge(i));
                 tryMovesDown(alt, maxLevels - 1);
                 found = true;
                 delete alt;
@@ -261,7 +261,7 @@ void tryMovesUp(Dim4Triangulation* t, int levelsRemaining) {
     } else {
         for (unsigned i = 0; i < t->countTetrahedra(); i++) {
             alt = new Dim4Triangulation(*t);
-            if (alt->twoFourMove(alt->getTetrahedron(i))) {
+            if (alt->twoFourMove(alt->tetrahedron(i))) {
                 if (levelsRemaining > 1)
                     tryMovesUp(alt, levelsRemaining - 1);
                 else

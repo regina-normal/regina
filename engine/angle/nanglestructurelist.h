@@ -113,14 +113,6 @@ class REGINA_API NAngleStructureList : public NPacket {
          * @return the corresponding triangulation.
          */
         NTriangulation* triangulation() const;
-        /**
-         * Deprecated routine that returns the triangulation on which these
-         * angle structures lie.
-         *
-         * \deprecated This routine has been renamed to triangulation().
-         * See the triangulation() documentation for further details.
-         */
-        REGINA_DEPRECATED NTriangulation* getTriangulation() const;
 
         /**
          * Returns whether this list was produced by enumerating taut angle

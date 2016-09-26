@@ -60,8 +60,6 @@ void addNSurfaceSubset() {
         .def("isEmbeddedOnly", &NSurfaceSubset::isEmbeddedOnly)
         .def("triangulation", &NSurfaceSubset::triangulation,
             return_value_policy<to_held_type<> >())
-        .def("getTriangulation", &NSurfaceSubset::triangulation,
-            return_value_policy<to_held_type<> >())
         .def("size", &NSurfaceSubset::size)
         .def("getNumberOfSurfaces", &NSurfaceSubset::size)
         .def("surface", &NSurfaceSubset::surface,

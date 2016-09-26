@@ -212,22 +212,13 @@ void addNTriangulation() {
         .def(init<const std::string&>())
         .def("size", &NTriangulation::size)
         .def("countTetrahedra", &NTriangulation::countTetrahedra)
-        .def("getNumberOfTetrahedra", &NTriangulation::countTetrahedra)
-        .def("getNumberOfSimplices", &NTriangulation::size)
-        .def("getTetrahedra", tetrahedra_list)
         .def("tetrahedra", tetrahedra_list)
-        .def("getSimplices", tetrahedra_list)
         .def("simplices", tetrahedra_list)
         .def("tetrahedron", tetrahedron_non_const,
             return_internal_reference<>())
-        .def("getTetrahedron", tetrahedron_non_const,
-            return_internal_reference<>())
         .def("simplex", tetrahedron_non_const,
             return_internal_reference<>())
-        .def("getSimplex", tetrahedron_non_const,
-            return_internal_reference<>())
         .def("tetrahedronIndex", &NTriangulation::tetrahedronIndex)
-        .def("simplexIndex", &NTriangulation::simplexIndex)
         .def("newTetrahedron", newTetrahedron_void,
             return_internal_reference<>())
         .def("newSimplex", newTetrahedron_void,
@@ -245,34 +236,21 @@ void addNTriangulation() {
         .def("swapContents", &NTriangulation::swapContents)
         .def("moveContentsTo", &NTriangulation::moveContentsTo)
         .def("countComponents", &NTriangulation::countComponents)
-        .def("getNumberOfComponents", &NTriangulation::countComponents)
         .def("countBoundaryComponents",
             &NTriangulation::countBoundaryComponents)
-        .def("getNumberOfBoundaryComponents",
-            &NTriangulation::countBoundaryComponents)
         .def("countFaces", &regina::python::countFaces<NTriangulation, 3>)
-        .def("getNumberOfFaces", &regina::python::countFaces<NTriangulation, 3>)
         .def("countVertices", &NTriangulation::countVertices)
-        .def("getNumberOfVertices", &NTriangulation::countVertices)
         .def("countEdges", &NTriangulation::countEdges)
-        .def("getNumberOfEdges", &NTriangulation::countEdges)
         .def("countTriangles", &NTriangulation::countTriangles)
-        .def("getNumberOfTriangles", &NTriangulation::countTriangles)
         .def("fVector", fVector_list)
         .def("components", components_list)
-        .def("getComponents", components_list)
         .def("boundaryComponents", boundaryComponents_list)
         .def("getBoundaryComponents", boundaryComponents_list)
         .def("faces", &regina::python::faces<NTriangulation, 3>)
         .def("vertices", regina::python::faces_list<NTriangulation, 3, 0>)
-        .def("getVertices", regina::python::faces_list<NTriangulation, 3, 0>)
         .def("edges", regina::python::faces_list<NTriangulation, 3, 1>)
-        .def("getEdges", regina::python::faces_list<NTriangulation, 3, 1>)
         .def("triangles", regina::python::faces_list<NTriangulation, 3, 2>)
-        .def("getTriangles", regina::python::faces_list<NTriangulation, 3, 2>)
         .def("component", &NTriangulation::component,
-            return_internal_reference<>())
-        .def("getComponent", &NTriangulation::component,
             return_internal_reference<>())
         .def("boundaryComponent", &NTriangulation::boundaryComponent,
             return_internal_reference<>())
@@ -281,17 +259,10 @@ void addNTriangulation() {
         .def("face", &regina::python::face<NTriangulation, 3, size_t>)
         .def("vertex", &NTriangulation::vertex,
             return_internal_reference<>())
-        .def("getVertex", &NTriangulation::vertex,
-            return_internal_reference<>())
         .def("edge", &NTriangulation::edge,
-            return_internal_reference<>())
-        .def("getEdge", &NTriangulation::edge,
             return_internal_reference<>())
         .def("triangle", &NTriangulation::triangle,
             return_internal_reference<>())
-        .def("getTriangle", &NTriangulation::triangle,
-            return_internal_reference<>())
-        .def("componentIndex", &NTriangulation::componentIndex)
         .def("boundaryComponentIndex",
             &NTriangulation::boundaryComponentIndex)
         .def("vertexIndex", &NTriangulation::vertexIndex)
@@ -325,8 +296,6 @@ void addNTriangulation() {
         .def("hasBoundaryTriangles", &NTriangulation::hasBoundaryTriangles)
         .def("countBoundaryFacets", &NTriangulation::countBoundaryFacets)
         .def("countBoundaryTriangles", &NTriangulation::countBoundaryTriangles)
-        .def("getNumberOfBoundaryTriangles",
-            &NTriangulation::countBoundaryTriangles)
         .def("isClosed", &NTriangulation::isClosed)
         .def("isOrientable", &NTriangulation::isOrientable)
         .def("isOriented", &NTriangulation::isOriented)

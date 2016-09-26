@@ -50,8 +50,6 @@ void addNAngleStructure() {
         .def("getAngle", &NAngleStructure::angle)
         .def("triangulation", &NAngleStructure::triangulation,
             return_value_policy<to_held_type<> >())
-        .def("getTriangulation", &NAngleStructure::triangulation,
-            return_value_policy<to_held_type<> >())
         .def("isStrict", &NAngleStructure::isStrict)
         .def("isTaut", &NAngleStructure::isTaut)
         .def("isVeering", &NAngleStructure::isVeering)

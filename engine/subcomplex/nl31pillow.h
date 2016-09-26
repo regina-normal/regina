@@ -94,14 +94,6 @@ class REGINA_API NL31Pillow : public NStandardTriangulation {
          */
         NTetrahedron* tetrahedron(int whichTet) const;
         /**
-         * Deprecated routine that returns one of the two tetrahedra involved
-         * in this structure.
-         *
-         * \deprecated This routine has been renamed to tetrahedron().
-         * See the tetrahedron() documentation for further details.
-         */
-        REGINA_DEPRECATED NTetrahedron* getTetrahedron(int whichTet) const;
-        /**
          * Returns the vertex number of the given tetrahedron
          * corresponding to the degree three vertex in the interior of
          * the triangular pillow.  See the general class notes for
@@ -162,9 +154,6 @@ inline NL31Pillow::~NL31Pillow() {
 }
 
 inline NTetrahedron* NL31Pillow::tetrahedron(int whichTet) const {
-    return tet[whichTet];
-}
-inline NTetrahedron* NL31Pillow::getTetrahedron(int whichTet) const {
     return tet[whichTet];
 }
 inline unsigned NL31Pillow::interiorVertex(int whichTet) const {

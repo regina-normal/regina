@@ -60,50 +60,27 @@ void addNComponent() {
         .def("index", &NComponent::index)
         .def("size", &NComponent::size)
         .def("countTetrahedra", &NComponent::countTetrahedra)
-        .def("getNumberOfTetrahedra", &NComponent::countTetrahedra)
-        .def("getNumberOfSimplices", &NComponent::size)
         .def("countFaces", &regina::python::countFaces<NComponent, 3>)
-        .def("getNumberOfFaces", &regina::python::countFaces<NComponent, 3>)
         .def("countTriangles", &NComponent::countTriangles)
-        .def("getNumberOfTriangles", &NComponent::countTriangles)
         .def("countEdges", &NComponent::countEdges)
-        .def("getNumberOfEdges", &NComponent::countEdges)
         .def("countVertices", &NComponent::countVertices)
-        .def("getNumberOfVertices", &NComponent::countVertices)
         .def("countBoundaryComponents", &NComponent::countBoundaryComponents)
-        .def("getNumberOfBoundaryComponents",
-            &NComponent::countBoundaryComponents)
         .def("simplices", simplices_list)
-        .def("getSimplices", simplices_list)
         .def("tetrahedra", simplices_list)
-        .def("getTetrahedra", simplices_list)
         .def("simplex", &NComponent::simplex,
             return_value_policy<reference_existing_object>())
         .def("tetrahedron", &NComponent::tetrahedron,
             return_value_policy<reference_existing_object>())
-        .def("getTetrahedron", &NComponent::tetrahedron,
-            return_value_policy<reference_existing_object>())
-        .def("getSimplex", &NComponent::simplex,
-            return_value_policy<reference_existing_object>())
         .def("faces", &regina::python::faces<NComponent, 3>)
         .def("triangles", regina::python::faces_list<NComponent, 3, 2>)
-        .def("getTriangles", regina::python::faces_list<NComponent, 3, 2>)
         .def("edges", regina::python::faces_list<NComponent, 3, 1>)
-        .def("getEdges", regina::python::faces_list<NComponent, 3, 1>)
         .def("vertices", regina::python::faces_list<NComponent, 3, 0>)
-        .def("getVertices", regina::python::faces_list<NComponent, 3, 0>)
         .def("face", &regina::python::face<NComponent, 3, size_t>)
         .def("triangle", &NComponent::triangle,
             return_value_policy<reference_existing_object>())
-        .def("getTriangle", &NComponent::triangle,
-            return_value_policy<reference_existing_object>())
         .def("edge", &NComponent::edge,
             return_value_policy<reference_existing_object>())
-        .def("getEdge", &NComponent::edge,
-            return_value_policy<reference_existing_object>())
         .def("vertex", &NComponent::vertex,
-            return_value_policy<reference_existing_object>())
-        .def("getVertex", &NComponent::vertex,
             return_value_policy<reference_existing_object>())
         .def("boundaryComponent", &NComponent::boundaryComponent,
             return_value_policy<reference_existing_object>())
@@ -116,11 +93,7 @@ void addNComponent() {
         .def("hasBoundaryFacets", &NComponent::hasBoundaryFacets)
         .def("hasBoundaryTriangles", &NComponent::hasBoundaryTriangles)
         .def("countBoundaryFacets", &NComponent::countBoundaryFacets)
-        .def("getNumberOfBoundaryFacets",
-            &NComponent::countBoundaryFacets)
         .def("countBoundaryTriangles", &NComponent::countBoundaryTriangles)
-        .def("getNumberOfBoundaryTriangles",
-            &NComponent::countBoundaryTriangles)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;

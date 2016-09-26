@@ -50,8 +50,6 @@ void addDim2Triangle() {
             boost::noncopyable>("Simplex2", no_init)
         .def("description", &Dim2Triangle::description,
             return_value_policy<return_by_value>())
-        .def("getDescription", &Dim2Triangle::description,
-            return_value_policy<return_by_value>())
         .def("setDescription", &Dim2Triangle::setDescription)
         .def("index", &Dim2Triangle::index)
         .def("adjacentTriangle", &Dim2Triangle::adjacentTriangle,
@@ -62,33 +60,22 @@ void addDim2Triangle() {
         .def("adjacentEdge", &Dim2Triangle::adjacentEdge)
         .def("adjacentFacet", &Dim2Triangle::adjacentFacet)
         .def("hasBoundary", &Dim2Triangle::hasBoundary)
-        .def("joinTo", &Dim2Triangle::join)
         .def("join", &Dim2Triangle::join)
         .def("unjoin", &Dim2Triangle::unjoin,
             return_value_policy<reference_existing_object>())
         .def("isolate", &Dim2Triangle::isolate)
         .def("triangulation", &Dim2Triangle::triangulation,
             return_value_policy<to_held_type<> >())
-        .def("getTriangulation", &Dim2Triangle::triangulation,
-            return_value_policy<to_held_type<> >())
         .def("component", &Dim2Triangle::component,
-            return_value_policy<reference_existing_object>())
-        .def("getComponent", &Dim2Triangle::component,
             return_value_policy<reference_existing_object>())
         .def("face", &regina::python::face<Dim2Triangle, 2, int>)
         .def("vertex", &Dim2Triangle::vertex,
             return_value_policy<reference_existing_object>())
-        .def("getVertex", &Dim2Triangle::vertex,
-            return_value_policy<reference_existing_object>())
         .def("edge", &Dim2Triangle::edge,
-            return_value_policy<reference_existing_object>())
-        .def("getEdge", &Dim2Triangle::edge,
             return_value_policy<reference_existing_object>())
         .def("faceMapping", &regina::python::faceMapping<Dim2Triangle, 2>)
         .def("vertexMapping", &Dim2Triangle::vertexMapping)
-        .def("getVertexMapping", &Dim2Triangle::vertexMapping)
         .def("edgeMapping", &Dim2Triangle::edgeMapping)
-        .def("getEdgeMapping", &Dim2Triangle::edgeMapping)
         .def("orientation", &Dim2Triangle::orientation)
         .def("facetInMaximalForest", &Dim2Triangle::facetInMaximalForest)
         .def(regina::python::add_output())

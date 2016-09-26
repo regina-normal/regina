@@ -381,14 +381,6 @@ class REGINA_API Triangulation<3> :
         size_t countBoundaryComponents() const;
 
         /**
-         * Deprecated function that returns the number of boundary
-         * components in this triangulation.
-         *
-         * \deprecated Simply call countBoundaryComponents() instead.
-         */
-        REGINA_DEPRECATED size_t getNumberOfBoundaryComponents() const;
-
-        /**
          * Returns all boundary components of this triangulation.
          * Note that each ideal vertex forms its own boundary component.
          *
@@ -3240,10 +3232,6 @@ inline void Triangulation<3>::removeAllTetrahedra() {
 inline size_t Triangulation<3>::countBoundaryComponents() const {
     ensureSkeleton();
     return boundaryComponents_.size();
-}
-
-inline size_t Triangulation<3>::getNumberOfBoundaryComponents() const {
-    return countBoundaryComponents();
 }
 
 inline long Triangulation<3>::eulerCharTri() const {

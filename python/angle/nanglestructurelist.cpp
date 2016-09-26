@@ -67,8 +67,6 @@ void addNAngleStructureList() {
             ("NAngleStructureList", no_init)
         .def("triangulation", &NAngleStructureList::triangulation,
             return_value_policy<to_held_type<> >())
-        .def("getTriangulation", &NAngleStructureList::triangulation,
-            return_value_policy<to_held_type<> >())
         .def("isTautOnly", &NAngleStructureList::isTautOnly)
         .def("size", &NAngleStructureList::size)
         .def("getNumberOfStructures", &NAngleStructureList::size)

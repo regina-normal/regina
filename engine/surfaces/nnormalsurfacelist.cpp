@@ -118,10 +118,6 @@ NTriangulation* NNormalSurfaceList::triangulation() const {
     return dynamic_cast<NTriangulation*>(parent());
 }
 
-NTriangulation* NNormalSurfaceList::getTriangulation() const {
-    return dynamic_cast<NTriangulation*>(parent());
-}
-
 namespace {
     struct AlmostNormalFunction : public Returns<bool> {
         template <typename Coords>

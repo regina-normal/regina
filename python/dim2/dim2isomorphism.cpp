@@ -53,8 +53,6 @@ void addDim2Isomorphism() {
     class_<Isomorphism<2>, std::auto_ptr<Isomorphism<2>>, boost::noncopyable>
             ("Isomorphism2", init<const Dim2Isomorphism&>())
         .def("size", &Dim2Isomorphism::size)
-        .def("getSourceSimplices", &Dim2Isomorphism::size)
-        .def("getSourceTriangles", &Dim2Isomorphism::size)
         .def("simpImage", simpImage_const)
         .def("triImage", simpImage_const)
         .def("facetPerm", facetPerm_const)

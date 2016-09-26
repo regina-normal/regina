@@ -137,7 +137,6 @@ void addNNormalSurface() {
         .def("doubleSurface", &NNormalSurface::doubleSurface,
             return_value_policy<manage_new_object>())
         .def("triangles", &NNormalSurface::triangles)
-        .def("getTriangleCoord", &NNormalSurface::triangles)
         .def("orientedTriangles", &NNormalSurface::orientedTriangles)
         .def("getOrientedTriangleCoord", &NNormalSurface::orientedTriangles)
         .def("quads", &NNormalSurface::quads)
@@ -147,17 +146,12 @@ void addNNormalSurface() {
         .def("octs", &NNormalSurface::octs)
         .def("getOctCoord", &NNormalSurface::octs)
         .def("edgeWeight", &NNormalSurface::edgeWeight)
-        .def("getEdgeWeight", &NNormalSurface::edgeWeight)
-        .def("getFaceArcs", &NNormalSurface::arcs)
         .def("arcs", &NNormalSurface::arcs)
-        .def("getTriangleArcs", &NNormalSurface::arcs)
         .def("octPosition", &NNormalSurface::octPosition)
         .def("getOctPosition", &NNormalSurface::octPosition)
         .def("countCoords", &NNormalSurface::countCoords)
         .def("getNumberOfCoords", &NNormalSurface::countCoords)
         .def("triangulation", &NNormalSurface::triangulation,
-            return_value_policy<to_held_type<> >())
-        .def("getTriangulation", &NNormalSurface::triangulation,
             return_value_policy<to_held_type<> >())
         .def("name", &NNormalSurface::name,
             return_value_policy<return_by_value>())

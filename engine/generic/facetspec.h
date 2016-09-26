@@ -289,20 +289,6 @@ typedef FacetSpec<3> NTetFace;
  */
 typedef FacetSpec<4> Dim4PentFacet;
 
-/**
- * Deprecated alias for FacetSpec<dim>.
- *
- * \deprecated The old NFacetSpec<dim> class has been renamed to FacetSpec<dim>.
- * This NFacetSpec<dim> alias has been kept for backward compatibility,
- * and will be removed from a future version of Regina.
- *
- * \ifacespython This deprecated alias is not available through Python,
- * though the renamed class FacetSpec<dim> is.  See the FacetSpec
- * documentation for details.
- */
-template <int dim>
-using NFacetSpec REGINA_DEPRECATED = FacetSpec<dim>;
-
 /*@}*/
 
 // Inline functions for FacetSpec

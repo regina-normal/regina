@@ -51,8 +51,6 @@ void addDim4Pentachoron() {
             boost::noncopyable>("Simplex4", no_init)
         .def("description", &Dim4Pentachoron::description,
             return_value_policy<return_by_value>())
-        .def("getDescription", &Dim4Pentachoron::description,
-            return_value_policy<return_by_value>())
         .def("setDescription", &Dim4Pentachoron::setDescription)
         .def("index", &Dim4Pentachoron::index)
         .def("adjacentPentachoron", &Dim4Pentachoron::adjacentPentachoron,
@@ -62,45 +60,28 @@ void addDim4Pentachoron() {
         .def("adjacentGluing", &Dim4Pentachoron::adjacentGluing)
         .def("adjacentFacet", &Dim4Pentachoron::adjacentFacet)
         .def("hasBoundary", &Dim4Pentachoron::hasBoundary)
-        .def("joinTo", &Dim4Pentachoron::join)
         .def("join", &Dim4Pentachoron::join)
         .def("unjoin", &Dim4Pentachoron::unjoin,
             return_value_policy<reference_existing_object>())
         .def("isolate", &Dim4Pentachoron::isolate)
         .def("triangulation", &Dim4Pentachoron::triangulation,
             return_value_policy<to_held_type<>>())
-        .def("getTriangulation", &Dim4Pentachoron::triangulation,
-            return_value_policy<to_held_type<>>())
         .def("component", &Dim4Pentachoron::component,
-            return_value_policy<reference_existing_object>())
-        .def("getComponent", &Dim4Pentachoron::component,
             return_value_policy<reference_existing_object>())
         .def("face", &regina::python::face<Dim4Pentachoron, 4, int>)
         .def("vertex", &Dim4Pentachoron::vertex,
             return_value_policy<reference_existing_object>())
-        .def("getVertex", &Dim4Pentachoron::vertex,
-            return_value_policy<reference_existing_object>())
         .def("edge", &Dim4Pentachoron::edge,
-            return_value_policy<reference_existing_object>())
-        .def("getEdge", &Dim4Pentachoron::edge,
             return_value_policy<reference_existing_object>())
         .def("triangle", &Dim4Pentachoron::triangle,
             return_value_policy<reference_existing_object>())
-        .def("getTriangle", &Dim4Pentachoron::triangle,
-            return_value_policy<reference_existing_object>())
         .def("tetrahedron", &Dim4Pentachoron::tetrahedron,
-            return_value_policy<reference_existing_object>())
-        .def("getTetrahedron", &Dim4Pentachoron::tetrahedron,
             return_value_policy<reference_existing_object>())
         .def("faceMapping", &regina::python::faceMapping<Dim4Pentachoron, 4>)
         .def("vertexMapping", &Dim4Pentachoron::vertexMapping)
-        .def("getVertexMapping", &Dim4Pentachoron::vertexMapping)
         .def("edgeMapping", &Dim4Pentachoron::edgeMapping)
-        .def("getEdgeMapping", &Dim4Pentachoron::edgeMapping)
         .def("triangleMapping", &Dim4Pentachoron::triangleMapping)
-        .def("getTriangleMapping", &Dim4Pentachoron::triangleMapping)
         .def("tetrahedronMapping", &Dim4Pentachoron::tetrahedronMapping)
-        .def("getTetrahedronMapping", &Dim4Pentachoron::tetrahedronMapping)
         .def("orientation", &Dim4Pentachoron::orientation)
         .def("facetInMaximalForest", &Dim4Pentachoron::facetInMaximalForest)
         .def(regina::python::add_output())

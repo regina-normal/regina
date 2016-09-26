@@ -154,8 +154,6 @@ void addNNormalSurfaceList() {
         .def("isEmbeddedOnly", &NNormalSurfaceList::isEmbeddedOnly)
         .def("triangulation", &NNormalSurfaceList::triangulation,
             return_value_policy<to_held_type<> >())
-        .def("getTriangulation", &NNormalSurfaceList::triangulation,
-            return_value_policy<to_held_type<> >())
         .def("size", &NNormalSurfaceList::size)
         .def("getNumberOfSurfaces", &NNormalSurfaceList::size)
         .def("surface", &NNormalSurfaceList::surface,

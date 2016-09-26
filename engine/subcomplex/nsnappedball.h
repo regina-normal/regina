@@ -82,14 +82,6 @@ class REGINA_API NSnappedBall : public NStandardTriangulation {
          * @return the tetrahedron.
          */
         NTetrahedron* tetrahedron() const;
-        /**
-         * Deprecated routine that returns the tetrahedron that forms this
-         * snapped ball.
-         *
-         * \deprecated This routine has been renamed to tetrahedron().
-         * See the tetrahedron() documentation for further details.
-         */
-        REGINA_DEPRECATED NTetrahedron* getTetrahedron() const;
 
         /**
          * Returns one of the two tetrahedron faces that forms the boundary
@@ -200,9 +192,6 @@ class REGINA_API NSnappedBall : public NStandardTriangulation {
 inline NSnappedBall::NSnappedBall() {
 }
 inline NTetrahedron* NSnappedBall::tetrahedron() const {
-    return tet;
-}
-inline NTetrahedron* NSnappedBall::getTetrahedron() const {
     return tet;
 }
 inline int NSnappedBall::boundaryFace(int index) const {

@@ -139,10 +139,6 @@ NTriangulation* NAngleStructureList::triangulation() const {
     return dynamic_cast<NTriangulation*>(parent());
 }
 
-NTriangulation* NAngleStructureList::getTriangulation() const {
-    return dynamic_cast<NTriangulation*>(parent());
-}
-
 void NAngleStructureList::writeTextShort(std::ostream& o) const {
     o << structures.size() << " vertex angle structure";
     if (structures.size() != 1)

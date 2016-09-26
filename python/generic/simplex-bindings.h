@@ -63,10 +63,7 @@ namespace {
         void visit(Class& c) const {
             c.def("vertex", &Simplex<dim>::vertex,
                 return_value_policy<reference_existing_object>());
-            c.def("getVertex", &Simplex<dim>::vertex,
-                return_value_policy<reference_existing_object>());
             c.def("vertexMapping", &Simplex<dim>::vertexMapping);
-            c.def("getVertexMapping", &Simplex<dim>::vertexMapping);
         }
     };
 
@@ -79,10 +76,7 @@ namespace {
         void visit(Class& c) const {
             c.def("edge", &Simplex<dim>::edge,
                 return_value_policy<reference_existing_object>());
-            c.def("getEdge", &Simplex<dim>::edge,
-                return_value_policy<reference_existing_object>());
             c.def("edgeMapping", &Simplex<dim>::edgeMapping);
-            c.def("getEdgeMapping", &Simplex<dim>::edgeMapping);
             c.def(face_aliases<dim, 0>());
         }
     };
@@ -96,10 +90,7 @@ namespace {
         void visit(Class& c) const {
             c.def("triangle", &Simplex<dim>::triangle,
                 return_value_policy<reference_existing_object>());
-            c.def("getTriangle", &Simplex<dim>::triangle,
-                return_value_policy<reference_existing_object>());
             c.def("triangleMapping", &Simplex<dim>::triangleMapping);
-            c.def("getTriangleMapping", &Simplex<dim>::triangleMapping);
             c.def(face_aliases<dim, 1>());
         }
     };
@@ -113,10 +104,7 @@ namespace {
         void visit(Class& c) const {
             c.def("tetrahedron", &Simplex<dim>::tetrahedron,
                 return_value_policy<reference_existing_object>());
-            c.def("getTetrahedron", &Simplex<dim>::tetrahedron,
-                return_value_policy<reference_existing_object>());
             c.def("tetrahedronMapping", &Simplex<dim>::tetrahedronMapping);
-            c.def("getTetrahedronMapping", &Simplex<dim>::tetrahedronMapping);
             c.def(face_aliases<dim, 2>());
         }
     };
@@ -130,10 +118,7 @@ namespace {
         void visit(Class& c) const {
             c.def("pentachoron", &Simplex<dim>::pentachoron,
                 return_value_policy<reference_existing_object>());
-            c.def("getPentachoron", &Simplex<dim>::pentachoron,
-                return_value_policy<reference_existing_object>());
             c.def("pentachoronMapping", &Simplex<dim>::pentachoronMapping);
-            c.def("getPentachoronMapping", &Simplex<dim>::pentachoronMapping);
             c.def(face_aliases<dim, 3>());
         }
     };
@@ -145,8 +130,6 @@ void addSimplex(const char* name) {
             boost::noncopyable>(name, no_init)
         .def("description", &Simplex<dim>::description,
             return_value_policy<return_by_value>())
-        .def("getDescription", &Simplex<dim>::description,
-            return_value_policy<return_by_value>())
         .def("setDescription", &Simplex<dim>::setDescription)
         .def("index", &Simplex<dim>::index)
         .def("adjacentSimplex", &Simplex<dim>::adjacentSimplex,
@@ -154,18 +137,13 @@ void addSimplex(const char* name) {
         .def("adjacentGluing", &Simplex<dim>::adjacentGluing)
         .def("adjacentFacet", &Simplex<dim>::adjacentFacet)
         .def("hasBoundary", &Simplex<dim>::hasBoundary)
-        .def("joinTo", &Simplex<dim>::join)
         .def("join", &Simplex<dim>::join)
         .def("unjoin", &Simplex<dim>::unjoin,
             return_value_policy<reference_existing_object>())
         .def("isolate", &Simplex<dim>::isolate)
         .def("triangulation", &Simplex<dim>::triangulation,
             return_value_policy<to_held_type<>>())
-        .def("getTriangulation", &Simplex<dim>::triangulation,
-            return_value_policy<to_held_type<>>())
         .def("component", &Simplex<dim>::component,
-            return_value_policy<reference_existing_object>())
-        .def("getComponent", &Simplex<dim>::component,
             return_value_policy<reference_existing_object>())
         .def("face", &regina::python::face<Simplex<dim>, dim, int>)
         .def("faceMapping", &regina::python::faceMapping<Simplex<dim>, dim>)

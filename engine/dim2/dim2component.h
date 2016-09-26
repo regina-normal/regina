@@ -126,14 +126,6 @@ class REGINA_API Component<2> : public detail::ComponentBase<2>,
         size_t countBoundaryComponents() const;
 
         /**
-         * Deprecated function that returns the number of boundary
-         * components in this component.
-         *
-         * \deprecated Simply call countBoundaryComponents() instead.
-         */
-        REGINA_DEPRECATED size_t getNumberOfBoundaryComponents() const;
-
-        /**
          * Returns a reference to the list of all <i>subdim</i>-faces in
          * this component.
          *
@@ -246,10 +238,6 @@ inline const std::vector<Dim2Vertex*>& Component<2>::faces<0>() const {
 #endif // ! __DOXYGEN
 
 inline size_t Component<2>::countBoundaryComponents() const {
-    return boundaryComponents_.size();
-}
-
-inline size_t Component<2>::getNumberOfBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 

@@ -885,14 +885,6 @@ public:
      * on the manifold's homological data.
      */
     const std::string& embeddabilityComment();
-    /**
-     * Deprecated routine that returns a comment on whether the manifold
-     * might embed in a homology 3-sphere or 4-sphere.
-     *
-     * \deprecated This routine has been renamed to embeddabilityComment().
-     * See the embeddabilityComment() documentation for further details.
-     */
-    REGINA_DEPRECATED const std::string& getEmbeddabilityComment();
 };
 
 /*@}*/
@@ -1157,10 +1149,6 @@ inline const std::string& NHomologicalData::embeddabilityComment()
 {
     computeEmbeddabilityString();
     return embeddabilityString;
-}
-inline const std::string& NHomologicalData::getEmbeddabilityComment()
-{
-    return embeddabilityComment();
 }
 
 } // namespace regina

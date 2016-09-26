@@ -100,28 +100,6 @@ class REGINA_API NPillowTwoSphere :
          */
         NTriangle* triangle(int index) const;
         /**
-         * Deprecated routine that returns one of the two triangles whose
-         * boundaries are joined.
-         *
-         * \deprecated This routine has been renamed to triangle().
-         * See the triangle() documentation for further details.
-         */
-        REGINA_DEPRECATED NTriangle* getTriangle(int index) const;
-        /**
-         * A deprecated alias for triangle().
-         *
-         * This routine returns one of the two triangles whose boundaries
-         * are joined.  See triangle() for further details.
-         *
-         * \deprecated This routine will be removed in a future version
-         * of Regina.  Please use triangle() instead.
-         *
-         * @param index specifies which of the two triangles to return;
-         * this must be either 0 or 1.
-         * @return the corresponding triangle.
-         */
-        REGINA_DEPRECATED NTriangle* getFace(int index) const;
-        /**
          * Returns a permutation describing how the boundaries of the two
          * triangles are joined.
          *
@@ -134,28 +112,6 @@ class REGINA_API NPillowTwoSphere :
          * joined.
          */
         NPerm4 triangleMapping() const;
-        /**
-         * Deprecated routine that returns a permutation describing how the
-         * boundaries of the two triangles are joined.
-         *
-         * \deprecated This routine has been renamed to triangleMapping().
-         * See the triangleMapping() documentation for further details.
-         */
-        REGINA_DEPRECATED NPerm4 getTriangleMapping() const;
-        /**
-         * A deprecated alias for triangleMapping().
-         *
-         * This routine returns a permutation describing how the boundaries
-         * of the two triangles are joined.  See triangleMapping()
-         * for further details.
-         *
-         * \deprecated This routine will be removed in a future version
-         * of Regina.  Please use triangleMapping() instead.
-         *
-         * @return a permutation describing how the triangle boundaries are
-         * joined.
-         */
-        REGINA_DEPRECATED NPerm4 getFaceMapping() const;
 
         /**
          * Determines if the two given triangles together form a pillow
@@ -198,19 +154,7 @@ inline NPillowTwoSphere::NPillowTwoSphere() {
 inline NTriangle* NPillowTwoSphere::triangle(int index) const {
     return triangle_[index];
 }
-inline NTriangle* NPillowTwoSphere::getTriangle(int index) const {
-    return triangle_[index];
-}
-inline NTriangle* NPillowTwoSphere::getFace(int index) const {
-    return triangle_[index];
-}
 inline NPerm4 NPillowTwoSphere::triangleMapping() const {
-    return triMapping_;
-}
-inline NPerm4 NPillowTwoSphere::getTriangleMapping() const {
-    return triMapping_;
-}
-inline NPerm4 NPillowTwoSphere::getFaceMapping() const {
     return triMapping_;
 }
 inline void NPillowTwoSphere::writeTextShort(std::ostream& out) const {

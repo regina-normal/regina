@@ -80,7 +80,7 @@ namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_splitIntoComponents,
         Dim4Triangulation::splitIntoComponents, 0, 2);
 
-    boost::python::list Dim4_getPentachora_list(Dim4Triangulation& t) {
+    boost::python::list Dim4_pentachora_list(Dim4Triangulation& t) {
         boost::python::list ans;
         for (auto s : t.pentachora())
             ans.append(boost::python::ptr(s));
@@ -167,22 +167,13 @@ void addDim4Triangulation() {
         .def(init<const std::string&>())
         .def("size", &Dim4Triangulation::size)
         .def("countPentachora", &Dim4Triangulation::countPentachora)
-        .def("getNumberOfPentachora", &Dim4Triangulation::countPentachora)
-        .def("getNumberOfSimplices", &Dim4Triangulation::size)
-        .def("getPentachora", Dim4_getPentachora_list)
-        .def("pentachora", Dim4_getPentachora_list)
-        .def("getSimplices", Dim4_getPentachora_list)
-        .def("simplices", Dim4_getPentachora_list)
+        .def("pentachora", Dim4_pentachora_list)
+        .def("simplices", Dim4_pentachora_list)
         .def("pentachoron", pentachoron_non_const,
-            return_internal_reference<>())
-        .def("getPentachoron", pentachoron_non_const,
             return_internal_reference<>())
         .def("simplex", pentachoron_non_const,
             return_internal_reference<>())
-        .def("getSimplex", pentachoron_non_const,
-            return_internal_reference<>())
         .def("pentachoronIndex", &Dim4Triangulation::pentachoronIndex)
-        .def("simplexIndex", &Dim4Triangulation::simplexIndex)
         .def("newPentachoron", newPentachoron_void,
             return_internal_reference<>())
         .def("newSimplex", newPentachoron_void,
@@ -200,41 +191,23 @@ void addDim4Triangulation() {
         .def("swapContents", &Dim4Triangulation::swapContents)
         .def("moveContentsTo", &Dim4Triangulation::moveContentsTo)
         .def("countComponents", &Dim4Triangulation::countComponents)
-        .def("getNumberOfComponents", &Dim4Triangulation::countComponents)
         .def("countBoundaryComponents",
             &Dim4Triangulation::countBoundaryComponents)
-        .def("getNumberOfBoundaryComponents",
-            &Dim4Triangulation::countBoundaryComponents)
         .def("countFaces", &regina::python::countFaces<Dim4Triangulation, 4>)
-        .def("getNumberOfFaces",
-            &regina::python::countFaces<Dim4Triangulation, 4>)
         .def("countVertices", &Dim4Triangulation::countVertices)
-        .def("getNumberOfVertices", &Dim4Triangulation::countVertices)
         .def("countEdges", &Dim4Triangulation::countEdges)
-        .def("getNumberOfEdges", &Dim4Triangulation::countEdges)
         .def("countTriangles", &Dim4Triangulation::countTriangles)
-        .def("getNumberOfTriangles", &Dim4Triangulation::countTriangles)
         .def("countTetrahedra", &Dim4Triangulation::countTetrahedra)
-        .def("getNumberOfTetrahedra", &Dim4Triangulation::countTetrahedra)
         .def("fVector", fVector_list)
         .def("components", Dim4_components_list)
-        .def("getComponents", Dim4_components_list)
         .def("boundaryComponents", Dim4_boundaryComponents_list)
         .def("getBoundaryComponents", Dim4_boundaryComponents_list)
         .def("faces", &regina::python::faces<Dim4Triangulation, 4>)
         .def("vertices", regina::python::faces_list<Dim4Triangulation, 4, 0>)
-        .def("getVertices", regina::python::faces_list<Dim4Triangulation, 4, 0>)
         .def("edges", regina::python::faces_list<Dim4Triangulation, 4, 1>)
-        .def("getEdges", regina::python::faces_list<Dim4Triangulation, 4, 1>)
         .def("triangles", regina::python::faces_list<Dim4Triangulation, 4, 2>)
-        .def("getTriangles",
-            regina::python::faces_list<Dim4Triangulation, 4, 2>)
         .def("tetrahedra", regina::python::faces_list<Dim4Triangulation, 4, 3>)
-        .def("getTetrahedra",
-            regina::python::faces_list<Dim4Triangulation, 4, 3>)
         .def("component", &Dim4Triangulation::component,
-            return_internal_reference<>())
-        .def("getComponent", &Dim4Triangulation::component,
             return_internal_reference<>())
         .def("boundaryComponent", &Dim4Triangulation::boundaryComponent,
             return_internal_reference<>())
@@ -243,21 +216,12 @@ void addDim4Triangulation() {
         .def("face", &regina::python::face<Dim4Triangulation, 4, size_t>)
         .def("vertex", &Dim4Triangulation::vertex,
             return_internal_reference<>())
-        .def("getVertex", &Dim4Triangulation::vertex,
-            return_internal_reference<>())
         .def("edge", &Dim4Triangulation::edge,
-            return_internal_reference<>())
-        .def("getEdge", &Dim4Triangulation::edge,
             return_internal_reference<>())
         .def("triangle", &Dim4Triangulation::triangle,
             return_internal_reference<>())
-        .def("getTriangle", &Dim4Triangulation::triangle,
-            return_internal_reference<>())
         .def("tetrahedron", &Dim4Triangulation::tetrahedron,
             return_internal_reference<>())
-        .def("getTetrahedron", &Dim4Triangulation::tetrahedron,
-            return_internal_reference<>())
-        .def("componentIndex", &Dim4Triangulation::componentIndex)
         .def("boundaryComponentIndex",
             &Dim4Triangulation::boundaryComponentIndex)
         .def("vertexIndex", &Dim4Triangulation::vertexIndex)
@@ -287,8 +251,6 @@ void addDim4Triangulation() {
         .def("hasBoundaryTetrahedra", &Dim4Triangulation::hasBoundaryTetrahedra)
         .def("countBoundaryFacets", &Dim4Triangulation::countBoundaryFacets)
         .def("countBoundaryTetrahedra",
-            &Dim4Triangulation::countBoundaryTetrahedra)
-        .def("getNumberOfBoundaryTetrahedra",
             &Dim4Triangulation::countBoundaryTetrahedra)
         .def("isClosed", &Dim4Triangulation::isClosed)
         .def("isOrientable", &Dim4Triangulation::isOrientable)

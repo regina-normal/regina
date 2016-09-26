@@ -124,14 +124,6 @@ class REGINA_API NSpiralSolidTorus : public NStandardTriangulation {
         size_t size() const;
 
         /**
-         * Deprecated function that returns the number of tetrahedra in this
-         * spiralled solid torus.
-         *
-         * \deprecated Simply call size() instead.
-         */
-        REGINA_DEPRECATED size_t getNumberOfTetrahedra() const;
-
-        /**
          * Returns the requested tetrahedron in this spiralled solid torus.
          * Tetrahedra are numbered from 0 to size()-1
          * inclusive, with tetrahedron <i>i</i>+1 being placed above
@@ -142,14 +134,6 @@ class REGINA_API NSpiralSolidTorus : public NStandardTriangulation {
          * @return the requested tetrahedron.
          */
         NTetrahedron* tetrahedron(size_t index) const;
-        /**
-         * Deprecated routine that returns the requested tetrahedron in this
-         * spiralled solid torus.
-         *
-         * \deprecated This routine has been renamed to tetrahedron().
-         * See the tetrahedron() documentation for further details.
-         */
-        REGINA_DEPRECATED NTetrahedron* getTetrahedron(size_t index) const;
 
         /**
          * Returns a permutation represeting the role that each vertex
@@ -176,15 +160,6 @@ class REGINA_API NSpiralSolidTorus : public NStandardTriangulation {
          * of the requested tetrahedron.
          */
         NPerm4 vertexRoles(size_t index) const;
-        /**
-         * Deprecated routine that returns a permutation represeting the role
-         * that each vertex of the requested tetrahedron plays in the solid
-         * torus.
-         *
-         * \deprecated This routine has been renamed to vertexRoles().
-         * See the vertexRoles() documentation for further details.
-         */
-        REGINA_DEPRECATED NPerm4 getVertexRoles(size_t index) const;
 
         /**
          * Reverses this spiralled solid torus.
@@ -297,20 +272,10 @@ inline size_t NSpiralSolidTorus::size() const {
     return nTet;
 }
 
-inline size_t NSpiralSolidTorus::getNumberOfTetrahedra() const {
-    return nTet;
-}
-
 inline NTetrahedron* NSpiralSolidTorus::tetrahedron(size_t index) const {
     return tet[index];
 }
-inline NTetrahedron* NSpiralSolidTorus::getTetrahedron(size_t index) const {
-    return tet[index];
-}
 inline NPerm4 NSpiralSolidTorus::vertexRoles(size_t index) const {
-    return vertexRoles_[index];
-}
-inline NPerm4 NSpiralSolidTorus::getVertexRoles(size_t index) const {
     return vertexRoles_[index];
 }
 

@@ -242,14 +242,6 @@ class REGINA_API Triangulation<2> :
         size_t countBoundaryComponents() const;
 
         /**
-         * Deprecated function that returns the number of boundary
-         * components in this triangulation.
-         *
-         * \deprecated Simply call countBoundaryComponents() instead.
-         */
-        REGINA_DEPRECATED size_t getNumberOfBoundaryComponents() const;
-
-        /**
          * Returns all boundary components of this triangulation.
          *
          * Bear in mind that each time the triangulation changes, the
@@ -568,10 +560,6 @@ inline void Triangulation<2>::removeAllTriangles() {
 inline size_t Triangulation<2>::countBoundaryComponents() const {
     ensureSkeleton();
     return boundaryComponents_.size();
-}
-
-inline size_t Triangulation<2>::getNumberOfBoundaryComponents() const {
-    return countBoundaryComponents();
 }
 
 inline const std::vector<Dim2BoundaryComponent*>&

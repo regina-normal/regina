@@ -45,15 +45,9 @@ void addNPillowTwoSphere() {
             ("NPillowTwoSphere", no_init)
         .def("clone", &NPillowTwoSphere::clone,
             return_value_policy<manage_new_object>())
-        .def("getFace", &NPillowTwoSphere::triangle,
-            return_value_policy<reference_existing_object>())
         .def("triangle", &NPillowTwoSphere::triangle,
             return_value_policy<reference_existing_object>())
-        .def("getTriangle", &NPillowTwoSphere::triangle,
-            return_value_policy<reference_existing_object>())
-        .def("getFaceMapping", &NPillowTwoSphere::triangleMapping)
         .def("triangleMapping", &NPillowTwoSphere::triangleMapping)
-        .def("getTriangleMapping", &NPillowTwoSphere::triangleMapping)
         .def("formsPillowTwoSphere", &NPillowTwoSphere::formsPillowTwoSphere,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_output())
