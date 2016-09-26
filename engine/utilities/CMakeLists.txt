@@ -5,7 +5,6 @@ SET ( FILES
   base64
   i18nutils
   nbooleans
-  nthread
   nxmlcallback
   osutils
   stringutils
@@ -38,7 +37,6 @@ if (${REGINA_INSTALL_DEV})
     nproperty.h
     nqitmask.h
     nrational.h
-    nthread.h
     ntrieset.h
     ntritmask.h
     nxmlcallback.h
