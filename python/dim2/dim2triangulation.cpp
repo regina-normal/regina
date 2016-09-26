@@ -204,7 +204,6 @@ void addDim2Triangulation() {
         .def("isEmpty", &Dim2Triangulation::isEmpty)
         .def("isValid", &Dim2Triangulation::isValid)
         .def("eulerChar", &Dim2Triangulation::eulerChar)
-        .def("getEulerChar", &Dim2Triangulation::eulerChar)
         .def("isClosed", &Dim2Triangulation::isClosed)
         .def("hasBoundaryFacets", &Dim2Triangulation::hasBoundaryFacets)
         .def("hasBoundaryEdges", &Dim2Triangulation::hasBoundaryEdges)

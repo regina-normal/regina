@@ -70,7 +70,6 @@ void addNHomologicalData() {
         .def("countBdryCells", &NHomologicalData::countBdryCells)
         .def("getNumBdryCells", &NHomologicalData::countBdryCells)
         .def("eulerChar", &NHomologicalData::eulerChar)
-        .def("getEulerChar", &NHomologicalData::eulerChar)
         .def("torsionRankVectorString",
             &NHomologicalData::torsionRankVectorString,
             return_value_policy<copy_const_reference>())

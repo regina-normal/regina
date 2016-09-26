@@ -161,8 +161,6 @@ void addNNormalSurface() {
         .def("isEmpty", &NNormalSurface::isEmpty)
         .def("isCompact", &NNormalSurface::isCompact)
         .def("eulerChar", &NNormalSurface::eulerChar)
-        .def("getEulerChar", &NNormalSurface::eulerChar)
-        .def("getEulerCharacteristic", &NNormalSurface::eulerChar)
         .def("isOrientable", &NNormalSurface::isOrientable)
         .def("isTwoSided", &NNormalSurface::isTwoSided)
         .def("isConnected", &NNormalSurface::isConnected)

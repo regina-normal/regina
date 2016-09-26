@@ -37,7 +37,6 @@
 
 using namespace boost::python;
 using regina::NPrismSpec;
-using regina::NPrismSetSurface;
 
 void addNPrism() {
     class_<NPrismSpec>("NPrismSpec")

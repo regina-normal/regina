@@ -32,14 +32,14 @@
 # MA 02110-1301, USA.
 
 def printEuler(t, name):
-	print t.getEulerCharTri(), t.getEulerCharManifold(), \
+	print t.eulerCharTri(), t.eulerCharManifold(), \
 		'---', name
 
 	# Consistency check, while we're here.
-	eHom = regina.NHomologicalData(t).getEulerChar()
-	if eHom != t.getEulerCharManifold():
-		print 'ERROR: NTriangulation::getEulerCharManifold() and'
-		print '       NHomologicalData.getEulerChar() disagree!'
+	eHom = regina.NHomologicalData(t).eulerChar()
+	if eHom != t.eulerCharManifold():
+		print 'ERROR: NTriangulation::eulerCharManifold() and'
+		print '       NHomologicalData.eulerChar() disagree!'
 
 print 'Euler characteristics for triangulation vs compact manifold:'
 

@@ -41,27 +41,5 @@ std::ostream& operator << (std::ostream& out, const NPrismSpec& spec) {
     return out;
 }
 
-NPrismSetSurface::NPrismSetSurface(const NNormalSurface& surface) {
-    const NTriangulation* tri = surface.triangulation();
-    unsigned long nTet = tri->size();
-
-    if (nTet == 0) {
-        quadType_ = 0;
-        return;
-    }
-
-    // Work out which tetrahedra contain which quad types.
-    quadType_ = new signed char[nTet];
-    for (unsigned long tet = 0; tet < nTet; tet++)
-        if (surface.quads(tet, 0) != 0)
-            quadType_[tet] = 0;
-        else if (surface.quads(tet, 1) != 0)
-            quadType_[tet] = 1;
-        else if (surface.quads(tet, 2) != 0)
-            quadType_[tet] = 2;
-        else
-            quadType_[tet] = -1;
-}
-
 } // namespace regina
 

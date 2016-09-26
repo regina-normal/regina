@@ -59,8 +59,6 @@ void addNBoundaryComponent() {
         .def("component", &NBoundaryComponent::component,
             return_value_policy<reference_existing_object>())
         .def("eulerChar", &NBoundaryComponent::eulerChar)
-        .def("getEulerChar", &NBoundaryComponent::eulerChar)
-        .def("getEulerCharacteristic", &NBoundaryComponent::eulerChar)
         .def("isIdeal", &NBoundaryComponent::isIdeal)
         .def("isOrientable", &NBoundaryComponent::isOrientable)
         .def(regina::python::add_output())

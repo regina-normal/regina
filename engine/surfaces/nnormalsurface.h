@@ -1252,31 +1252,6 @@ class REGINA_API NNormalSurface :
          */
         NLargeInteger eulerChar() const;
         /**
-         * Deprecated routine that returns the Euler characteristic of this
-         * surface.
-         *
-         * \deprecated This routine has been renamed to eulerChar().
-         * See the eulerChar() documentation for further details.
-         */
-        REGINA_DEPRECATED NLargeInteger getEulerChar() const;
-        /**
-         * A deprecated alias for eulerChar().
-         *
-         * Returns the Euler characteristic of this surface.
-         *
-         * This routine caches its results, which means that once it has
-         * been called for a particular surface, subsequent calls return
-         * the answer immediately.
-         *
-         * \pre This normal surface is compact (has finitely many discs).
-         *
-         * \deprecated This routine will be removed in a future version of
-         * Regina.  Please use the identical routine eulerChar() instead.
-         *
-         * @return the Euler characteristic.
-         */
-        REGINA_DEPRECATED NLargeInteger getEulerCharacteristic() const;
-        /**
          * Returns whether or not this surface is orientable.
          * 
          * This routine caches its results, which means that once it has
@@ -1971,14 +1946,6 @@ inline NLargeInteger NNormalSurface::eulerChar() const {
     if (! eulerChar_.known())
         calculateEulerChar();
     return eulerChar_.value();
-}
-
-inline NLargeInteger NNormalSurface::getEulerChar() const {
-    return eulerChar();
-}
-
-inline NLargeInteger NNormalSurface::getEulerCharacteristic() const {
-    return eulerChar();
 }
 
 inline bool NNormalSurface::isOrientable() const {

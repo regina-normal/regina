@@ -459,14 +459,6 @@ class REGINA_API Triangulation<3> :
          * @return the Euler characteristic of this triangulation.
          */
         long eulerCharTri() const;
-        /**
-         * Deprecated routine that returns the Euler characteristic of this
-         * triangulation.
-         *
-         * \deprecated This routine has been renamed to eulerCharTri().
-         * See the eulerCharTri() documentation for further details.
-         */
-        REGINA_DEPRECATED long getEulerCharTri() const;
 
         /**
          * Returns the Euler characteristic of the corresponding compact
@@ -492,14 +484,6 @@ class REGINA_API Triangulation<3> :
          * manifold.
          */
         long eulerCharManifold() const;
-        /**
-         * Deprecated routine that returns the Euler characteristic of
-         * the corresponding compact 3-manifold.
-         *
-         * \deprecated This routine has been renamed to eulerCharManifold().
-         * See the eulerCharManifold() documentation for further details.
-         */
-        REGINA_DEPRECATED long getEulerCharManifold() const;
 
         /**
          * Determines if this triangulation is ideal.
@@ -3171,14 +3155,6 @@ inline long Triangulation<3>::eulerCharTri() const {
         - static_cast<long>(countEdges())
         + static_cast<long>(countTriangles())
         - static_cast<long>(simplices_.size());
-}
-
-inline long Triangulation<3>::getEulerCharTri() const {
-    return eulerCharTri();
-}
-
-inline long Triangulation<3>::getEulerCharManifold() const {
-    return eulerCharManifold();
 }
 
 inline const std::vector<NBoundaryComponent*>&
