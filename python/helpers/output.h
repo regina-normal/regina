@@ -67,10 +67,8 @@ struct add_output : boost::python::def_visitor<add_output> {
         typedef std::string (BaseType::*OutputFunctionType)() const;
 
         c.def("str", OutputFunctionType(&BaseType::str));
-        c.def("toString", OutputFunctionType(&BaseType::str));
         c.def("utf8", OutputFunctionType(&BaseType::utf8));
         c.def("detail", OutputFunctionType(&BaseType::detail));
-        c.def("toStringLong", OutputFunctionType(&BaseType::detail));
         c.def(boost::python::self_ns::str(boost::python::self));
     }
 };
@@ -100,7 +98,6 @@ struct add_output_basic : boost::python::def_visitor<add_output_basic> {
         typedef std::string (BaseType::*OutputFunctionType)() const;
 
         c.def("str", OutputFunctionType(&BaseType::str));
-        c.def("toString", OutputFunctionType(&BaseType::str));
         c.def("__str__", OutputFunctionType(&BaseType::str));
     }
 };

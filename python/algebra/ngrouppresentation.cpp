@@ -208,7 +208,6 @@ void addNGroupPresentation() {
         .def("abelianisation", &NGroupPresentation::abelianisation)
         .def("markedAbelianisation", &NGroupPresentation::markedAbelianisation)
         .def("toTeX", &NGroupPresentation::toTeX)
-        .def("toStringCompact", &NGroupPresentation::compact)
         .def("compact", &NGroupPresentation::compact)
         .def("writeTeX", presentationWriteTeX)
         .def("writeTextCompact", presentationWriteTextCompact)

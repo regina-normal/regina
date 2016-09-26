@@ -155,24 +155,6 @@ struct Output {
      * @return a detailed text representation of this object.
      */
     std::string detail() const;
-    /**
-     * A deprecated alias for str().
-     *
-     * \deprecated This routine has (at long last) been deprecated;
-     * use the simpler-to-type str() instead.
-     *
-     * @return a short text representation of this object.
-     */
-    REGINA_DEPRECATED std::string toString() const;
-    /**
-     * A deprecated alias for detail().
-     *
-     * \deprecated This routine has (at long last) been deprecated;
-     * use the simpler-to-type detail() instead.
-     *
-     * @return a long text representation of this object.
-     */
-    REGINA_DEPRECATED std::string toStringLong() const;
 };
 
 /**
@@ -303,12 +285,6 @@ struct Output<T, true> {
         static_cast<const T*>(this)->writeTextLong(out);
         return out.str();
     }
-    inline REGINA_DEPRECATED std::string toString() const {
-        return str();
-    }
-    inline REGINA_DEPRECATED std::string toStringLong() const {
-        return detail();
-    }
 };
 
 template <class T>
@@ -327,12 +303,6 @@ struct Output<T, false> {
         std::ostringstream out;
         static_cast<const T*>(this)->writeTextLong(out);
         return out.str();
-    }
-    inline REGINA_DEPRECATED std::string toString() const {
-        return str();
-    }
-    inline REGINA_DEPRECATED std::string toStringLong() const {
-        return detail();
     }
 };
 

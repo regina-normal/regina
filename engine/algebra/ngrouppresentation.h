@@ -1314,17 +1314,6 @@ class REGINA_API NGroupPresentation :
         void writeTeX(std::ostream& out) const;
 
         /**
-         * A deprecated alias for compact(), which returns a
-         * compact one-line representation of this group presentation.
-         *
-         * \deprecated This routine has been deprecated; use the
-         * simpler-to-type compact() instead.
-         *
-         * @return a compact representation of this group presentation.
-         */
-        REGINA_DEPRECATED std::string toStringCompact() const;
-
-        /**
          * Returns a compact one-line representation of this group presentation,
          * including details of all generators and relations.
          * See writeTextCompact() for details on how this is formed.
