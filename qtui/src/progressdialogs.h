@@ -42,6 +42,7 @@
 
 namespace regina {
     class NProgressTracker;
+    class NProgressTrackerOpen;
 };
 
 class QDialogButtonBox;
