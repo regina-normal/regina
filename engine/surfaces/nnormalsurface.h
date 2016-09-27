@@ -1062,14 +1062,6 @@ class REGINA_API NNormalSurface :
          */
         const std::string& name() const;
         /**
-         * Deprecated routine that returns the name associated with this
-         * normal surface.
-         *
-         * \deprecated This routine has been renamed to name().
-         * See the name() documentation for further details.
-         */
-        REGINA_DEPRECATED const std::string& getName() const;
-        /**
          * Sets the name associated with this normal surface.
          * Names are optional and need not be unique.
          * The default name for a surface is the empty string.
@@ -1615,72 +1607,6 @@ class REGINA_API NNormalSurface :
          */
         const NNormalSurfaceVector* rawVector() const;
 
-        /**
-         * Searches for a non-vertex-linking normal 2-sphere within the
-         * given triangulation.  If a non-vertex linking normal 2-sphere
-         * exists anywhere at all within the triangulation, then this routine
-         * is guaranteed to find one.
-         *
-         * Note that the surface returned (if any) depends upon the
-         * triangulation, and so must be destroyed before the triangulation
-         * itself.
-         *
-         * \deprecated This routine will be removed in a future version
-         * of Regina.  Use NTriangulation::hasNonTrivialSphereOrDisc()
-         * instead.
-         *
-         * @param tri the triangulation in which to search.
-         * @return a newly allocated non-vertex-linking normal sphere
-         * within the given triangulation, or 0 if no such sphere exists.
-         */
-        REGINA_DEPRECATED static NNormalSurface* findNonTrivialSphere(
-            NTriangulation* tri);
-
-        /**
-         * Searches the list of vertex octagonal almost normal surfaces for
-         * an almost normal 2-sphere within the given triangulation.  This
-         * means that tubed almost normal 2-spheres or non-vertex octagonal
-         * almost normal 2-spheres will not be found.
-         *
-         * This search can be done either in standard almost normal
-         * coordinates (with triangles, quadrilaterals and octagons), or
-         * in quadrilateral-octagon coordinates.  This choice of coordinate
-         * system affects how we define "vertex".  The default is to use
-         * standard coordinates (where the set of vertex surfaces is larger).
-         *
-         * For "sufficiently nice" triangulations, if this routine fails
-         * to find an almost normal 2-sphere then we can be certain that
-         * the triangulation contains no almost normal 2-spheres at all.
-         * In particular, this is true for closed orientable one-vertex
-         * 0-efficient triangulations.  For a proof in standard coordinates,
-         * see "0-efficient triangulations of 3-manifolds", William Jaco
-         * and J. Hyam Rubinstein, J. Differential Geom. 65 (2003),
-         * no. 1, 61--168.  For a proof in quadrilateral-octagon coordinates,
-         * see "Quadrilateral-octagon coordinates for almost normal surfaces",
-         * Benjamin A. Burton, Experiment. Math. 19 (2010), 285-315.
-         *
-         * Note that the surface that this routine returns (if any) depends
-         * upon the triangulation, and so this surface must be destroyed
-         * before the triangulation is destroyed.
-         *
-         * \warning Currently this routine can be quite slow since it
-         * performs a full enumeration of vertex almost normal surfaces.
-         *
-         * \deprecated This routine will be removed in a future version
-         * of Regina.  Use NTriangulation::hasOctagonalAlmostNormalSphere()
-         * instead, which offers significant optimisations over this routine.
-         *
-         * @param tri the triangulation in which to search.
-         * @param quadOct \c true if we should search for vertex
-         * surfaces in quadrilateral-octagon coordinates, or \c false
-         * (the default) if we should search for surfaces in standard
-         * almost normal coordinates.
-         * @return a newly allocated vertex octagonal almost normal sphere
-         * within the given triangulation, or 0 if no such sphere exists.
-         */
-        REGINA_DEPRECATED static NNormalSurface* findVtxOctAlmostNormalSphere(
-            NTriangulation* tri, bool quadOct = false);
-
     protected:
         /**
          * Calculates the position of the first non-zero octagon
@@ -1774,9 +1700,6 @@ inline const NTriangulation* NNormalSurface::triangulation() const {
 }
 
 inline const std::string& NNormalSurface::name() const {
-    return name_;
-}
-inline const std::string& NNormalSurface::getName() const {
     return name_;
 }
 inline void NNormalSurface::setName(const std::string& newName) {

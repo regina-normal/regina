@@ -117,13 +117,6 @@ namespace {
             boost::python::ptr(ans.second));
     }
 
-    NNormalSurface* findVtxOctAlmostNormalSphere1(NTriangulation* t) {
-        return NNormalSurface::findVtxOctAlmostNormalSphere(t);
-    }
-    NNormalSurface* findVtxOctAlmostNormalSphere2(NTriangulation* t, bool b) {
-        return NNormalSurface::findVtxOctAlmostNormalSphere(t, b);
-    }
-
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_isCompressingDisc,
         NNormalSurface::isCompressingDisc, 0, 1);
 }
@@ -148,8 +141,6 @@ void addNNormalSurface() {
         .def("triangulation", &NNormalSurface::triangulation,
             return_value_policy<to_held_type<> >())
         .def("name", &NNormalSurface::name,
-            return_value_policy<return_by_value>())
-        .def("getName", &NNormalSurface::name,
             return_value_policy<return_by_value>())
         .def("setName", &NNormalSurface::setName)
         .def("writeRawVector", writeRawVector_stdio)
@@ -180,16 +171,8 @@ void addNNormalSurface() {
         .def("disjoint", &NNormalSurface::disjoint)
         .def("boundaryIntersections", &NNormalSurface::boundaryIntersections,
             return_value_policy<manage_new_object>())
-        .def("findNonTrivialSphere", &NNormalSurface::findNonTrivialSphere,
-            return_value_policy<manage_new_object>())
-        .def("findVtxOctAlmostNormalSphere", findVtxOctAlmostNormalSphere1,
-            return_value_policy<manage_new_object>())
-        .def("findVtxOctAlmostNormalSphere", findVtxOctAlmostNormalSphere2,
-            return_value_policy<manage_new_object>())
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
-        .staticmethod("findNonTrivialSphere")
-        .staticmethod("findVtxOctAlmostNormalSphere")
     ;
 
     // Global arrays:

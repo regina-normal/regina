@@ -59,9 +59,7 @@ void addNStandardTriangulation() {
             std::auto_ptr<NStandardTriangulation> >
             ("NStandardTriangulation", no_init)
         .def("name", &NStandardTriangulation::name)
-        .def("getName", &NStandardTriangulation::name)
         .def("TeXName", &NStandardTriangulation::TeXName)
-        .def("getTeXName", &NStandardTriangulation::TeXName)
         .def("manifold", &NStandardTriangulation::manifold,
             return_value_policy<manage_new_object>())
         .def("getManifold", &NStandardTriangulation::manifold,
