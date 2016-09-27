@@ -163,25 +163,6 @@ void addNMarkedAbelianGroup() {
         .def("snfRep", snfRep_list_list)
         .def("rankCC", &NMarkedAbelianGroup::rankCC)
         .def("minNumberCycleGens", &NMarkedAbelianGroup::minNumberCycleGens)
-        .def("MRB", &NMarkedAbelianGroup::MRB,
-            return_internal_reference<>())
-        .def("MRBi", &NMarkedAbelianGroup::MRBi,
-            return_internal_reference<>())
-        .def("MCB", &NMarkedAbelianGroup::MCB,
-            return_internal_reference<>())
-        .def("MCBi", &NMarkedAbelianGroup::MCBi,
-            return_internal_reference<>())
-        .def("NRB", &NMarkedAbelianGroup::NRB,
-            return_internal_reference<>())
-        .def("NRBi", &NMarkedAbelianGroup::NRBi,
-            return_internal_reference<>())
-        .def("NCB", &NMarkedAbelianGroup::NCB,
-            return_internal_reference<>())
-        .def("NCBi", &NMarkedAbelianGroup::NCBi,
-            return_internal_reference<>())
-        .def("rankM", &NMarkedAbelianGroup::rankM)
-        .def("freeLoc", &NMarkedAbelianGroup::freeLoc)
-        .def("torsionLoc", &NMarkedAbelianGroup::torsionLoc)
         .def("M", &NMarkedAbelianGroup::M,
             return_internal_reference<>())
         .def("N", &NMarkedAbelianGroup::N,
