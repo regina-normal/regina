@@ -177,7 +177,6 @@ void addLink() {
     ;
 
     s.attr("typeID") = regina::PACKET_LINK;
-    s.attr("packetType") = regina::PACKET_LINK;
     s.attr("jonesVar") = Link::jonesVar;
     s.attr("homflyVarX") = Link::homflyVarX;
     s.attr("homflyVarY") = Link::homflyVarY;
