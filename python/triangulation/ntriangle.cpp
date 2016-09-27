@@ -143,9 +143,5 @@ void addNTriangle() {
 
     scope().attr("NTriangleEmbedding") = scope().attr("FaceEmbedding3_2");
     scope().attr("NTriangle") = scope().attr("Face3_2");
-
-    // Support for deprecated typedefs:
-    scope().attr("NFace") = scope().attr("NTriangle");
-    scope().attr("NFaceEmbedding") = scope().attr("NTriangleEmbedding");
 }
 

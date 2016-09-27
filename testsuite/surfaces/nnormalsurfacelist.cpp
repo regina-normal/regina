@@ -244,9 +244,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             NNormalSurfaceList* l;
 
             // Make sure that calls to enumerate() using default arguments
-            // fall through to the new enumerate() that takes NormalFlags
-            // and NormalAlg, not the deprecated version that takes a
-            // bool (embeddedOnly).
+            // fall through to the correct enumerate() function, which takes
+            // NormalFlags and NormalAlg.
 
             l = NNormalSurfaceList::enumerate(&t, regina::NS_QUAD);
             if (l->which() != (regina::NS_VERTEX | regina::NS_EMBEDDED_ONLY)) {

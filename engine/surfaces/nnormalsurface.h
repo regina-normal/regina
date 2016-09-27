@@ -86,30 +86,26 @@ REGINA_API extern const int quadSeparating[4][4];
 REGINA_API extern const int quadMeeting[4][4][2];
 
 /**
- * Deprecated array that lists the vertices which each quadrilateral type
- * separates within a tetrahedron.
+ * Lists which vertices each quadrilateral type separates in a tetrahedron.
  * See regina::quadSeparating and NNormalSurface::quads() for more
  * information on quadrilateral types.
  *
  * Quadrilateral type \c i splits the vertex pairs
- * <tt>vertexSplitDefn[i][0,1]</tt> and
- * <tt>vertexSplitDefn[i][2,3]</tt>.
+ * <tt>quadDefn[i][0,1]</tt> and
+ * <tt>quadDefn[i][2,3]</tt>.
  *
  * It is guaranteed that:
  *
- * - <tt>vertexSplitDefn[i][0] < vertexSplitDefn[i][1]</tt>;
+ * - <tt>quadDefn[i][0] < quadDefn[i][1]</tt>;
+ * - <tt>quadDefn[i][2] < quadDefn[i][3]</tt>;
+ * - <tt>quadDefn[i][0] < quadDefn[i][2]</tt>.
  *
- * - <tt>vertexSplitDefn[i][2] < vertexSplitDefn[i][3]</tt>;
- *
- * - <tt>vertexSplitDefn[i][0] < vertexSplitDefn[i][2]</tt>.
- *
- * \deprecated This array is redundant, and will be removed in a future
- * release of Regina.  Instead of vertexSplitDefn[\a i][\a j], you can
- * call NEdge::ordering(\a i)[\a j] which carries the same information.
- * Be aware however that NEdge::ordering() might reorder the images
- * NEdge::ordering(\a i)[2] and NEdge::ordering(\a i)[3].
+ * This array contains similar information to the function NEdge::ordering().
+ * Instead of quadDefn[\a i][\a j], you can call NEdge::ordering(\a i)[\a j];
+ * this will give the same results for \a j = 0 and 1, but it might
+ * switch the results for \a j = 2 and 3.
  */
-REGINA_DEPRECATED REGINA_API extern const int vertexSplitDefn[3][4];
+REGINA_API extern const int quadDefn[3][4];
 
 /**
  * Lists the second vertex with which each vertex is paired under each
