@@ -30,7 +30,6 @@ if (${REGINA_INSTALL_DEV})
     matrixops.h
     ncyclotomic.h
     ninteger.h
-    nlargeinteger.h
     nlaurent.h
     nlaurent2.h
     nmatrix.h
