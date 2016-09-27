@@ -140,7 +140,7 @@ typedef regina::NTriangulation* (*TriangulationCreator)();
                 [ExampleTriangulation exampleWithName:@"Connected sum ℝP³ # ℝP³" creator:&regina::NExampleTriangulation::rp3rp3],
                 [ExampleTriangulation exampleWithName:@"Figure eight knot complement" creator:&regina::NExampleTriangulation::figureEight],
                 [ExampleTriangulation exampleWithName:@"Gieseking manifold" creator:&regina::NExampleTriangulation::gieseking],
-                [ExampleTriangulation exampleWithName:@"Lens space L(8,3)" creator:&regina::NExampleTriangulation::lens8_3],
+                [ExampleTriangulation exampleWithName:@"Lens space L(8,3)" creator:[](){ return regina::NExampleTriangulation::lens(8, 3); }],
                 [ExampleTriangulation exampleWithName:@"Poincaré homology sphere" creator:&regina::NExampleTriangulation::poincareHomologySphere],
                 [ExampleTriangulation exampleWithName:@"Product ℝP² × S¹" creator:&regina::NExampleTriangulation::rp2xs1],
                 [ExampleTriangulation exampleWithName:@"Product S² × S¹" creator:&regina::NExampleTriangulation::s2xs1],
