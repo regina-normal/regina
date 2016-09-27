@@ -138,17 +138,17 @@ typedef regina::NTriangulation* (*TriangulationCreator)();
                 [ExampleTriangulation exampleWithName:@"3-sphere (dual to Bing's house)" creator:&regina::NExampleTriangulation::bingsHouse],
                 [ExampleTriangulation exampleWithName:@"3-sphere (600-cell)" creator:&regina::NExampleTriangulation::sphere600],
                 [ExampleTriangulation exampleWithName:@"Connected sum ℝP³ # ℝP³" creator:&regina::NExampleTriangulation::rp3rp3],
-                [ExampleTriangulation exampleWithName:@"Figure eight knot complement" creator:&regina::NExampleTriangulation::figureEightKnotComplement],
+                [ExampleTriangulation exampleWithName:@"Figure eight knot complement" creator:&regina::NExampleTriangulation::figureEight],
                 [ExampleTriangulation exampleWithName:@"Gieseking manifold" creator:&regina::NExampleTriangulation::gieseking],
                 [ExampleTriangulation exampleWithName:@"Lens space L(8,3)" creator:&regina::NExampleTriangulation::lens8_3],
                 [ExampleTriangulation exampleWithName:@"Poincaré homology sphere" creator:&regina::NExampleTriangulation::poincareHomologySphere],
                 [ExampleTriangulation exampleWithName:@"Product ℝP² × S¹" creator:&regina::NExampleTriangulation::rp2xs1],
                 [ExampleTriangulation exampleWithName:@"Product S² × S¹" creator:&regina::NExampleTriangulation::s2xs1],
                 [ExampleTriangulation exampleWithName:@"Solid Klein bottle" creator:&regina::NExampleTriangulation::solidKleinBottle],
-                [ExampleTriangulation exampleWithName:@"Trefoil knot complement" creator:&regina::NExampleTriangulation::trefoilKnotComplement],
+                [ExampleTriangulation exampleWithName:@"Trefoil knot complement" creator:&regina::NExampleTriangulation::trefoil],
                 [ExampleTriangulation exampleWithName:@"Weeks manifold" creator:&regina::NExampleTriangulation::weeks],
                 [ExampleTriangulation exampleWithName:@"Weber-Seifert dodecahedral space" creator:&regina::NExampleTriangulation::weberSeifert],
-                [ExampleTriangulation exampleWithName:@"Whitehead link complement" creator:&regina::NExampleTriangulation::whiteheadLinkComplement]];
+                [ExampleTriangulation exampleWithName:@"Whitehead link complement" creator:&regina::NExampleTriangulation::whiteheadLink]];
     
     self.example.dataSource = self;
     self.example.delegate = self;

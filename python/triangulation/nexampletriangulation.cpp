@@ -53,16 +53,12 @@ void addNExampleTriangulation() {
             return_value_policy<to_held_type<> >())
         .def("rp3rp3", &NExampleTriangulation::rp3rp3,
             return_value_policy<to_held_type<> >())
-        .def("lens8_3", &NExampleTriangulation::lens8_3,
-            return_value_policy<to_held_type<> >())
         .def("lens", &NExampleTriangulation::lens,
             return_value_policy<to_held_type<> >())
         .def("poincareHomologySphere",
             &NExampleTriangulation::poincareHomologySphere,
             return_value_policy<to_held_type<> >())
         .def("weeks", &NExampleTriangulation::weeks,
-            return_value_policy<to_held_type<> >())
-        .def("seifertWeber", &NExampleTriangulation::weberSeifert,
             return_value_policy<to_held_type<> >())
         .def("weberSeifert", &NExampleTriangulation::weberSeifert,
             return_value_policy<to_held_type<> >())
@@ -74,26 +70,15 @@ void addNExampleTriangulation() {
             return_value_policy<to_held_type<> >())
         .def("sphere600", &NExampleTriangulation::sphere600,
             return_value_policy<to_held_type<> >())
-        .def("lst3_4_7", &NExampleTriangulation::lst3_4_7,
-            return_value_policy<to_held_type<> >())
         .def("lst", &NExampleTriangulation::lst,
             return_value_policy<to_held_type<> >())
         .def("solidKleinBottle", &NExampleTriangulation::solidKleinBottle,
             return_value_policy<to_held_type<> >())
         .def("figureEight", &NExampleTriangulation::figureEight,
             return_value_policy<to_held_type<> >())
-        .def("figureEightKnotComplement",
-            &NExampleTriangulation::figureEight,
-            return_value_policy<to_held_type<> >())
         .def("trefoil", &NExampleTriangulation::trefoil,
             return_value_policy<to_held_type<> >())
-        .def("trefoilKnotComplement",
-            &NExampleTriangulation::trefoil,
-            return_value_policy<to_held_type<> >())
         .def("whiteheadLink", &NExampleTriangulation::whiteheadLink,
-            return_value_policy<to_held_type<> >())
-        .def("whiteheadLinkComplement",
-            &NExampleTriangulation::whiteheadLink,
             return_value_policy<to_held_type<> >())
         .def("gieseking", &NExampleTriangulation::gieseking,
             return_value_policy<to_held_type<> >())
@@ -106,24 +91,18 @@ void addNExampleTriangulation() {
         .staticmethod("s2xs1")
         .staticmethod("rp2xs1")
         .staticmethod("rp3rp3")
-        .staticmethod("lens8_3")
         .staticmethod("lens")
         .staticmethod("poincareHomologySphere")
         .staticmethod("weeks")
-        .staticmethod("seifertWeber")
         .staticmethod("weberSeifert")
         .staticmethod("smallClosedOrblHyperbolic")
         .staticmethod("smallClosedNonOrblHyperbolic")
         .staticmethod("sphere600")
-        .staticmethod("lst3_4_7")
         .staticmethod("lst")
         .staticmethod("solidKleinBottle")
         .staticmethod("figureEight")
-        .staticmethod("figureEightKnotComplement")
         .staticmethod("trefoil")
-        .staticmethod("trefoilKnotComplement")
         .staticmethod("whiteheadLink")
-        .staticmethod("whiteheadLinkComplement")
         .staticmethod("gieseking")
         .staticmethod("cuspedGenusTwoTorus")
     ;

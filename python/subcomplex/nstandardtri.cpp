@@ -68,8 +68,6 @@ void addNStandardTriangulation() {
             return_value_policy<manage_new_object>())
         .def("homologyH1", &NStandardTriangulation::homologyH1,
             return_value_policy<manage_new_object>())
-        .def("getHomologyH1", &NStandardTriangulation::homologyH1,
-            return_value_policy<manage_new_object>())
         .def("writeName", writeName_stdio)
         .def("writeTeXName", writeTeXName_stdio)
         .def("isStandardTriangulation", isStandardTri_comp,

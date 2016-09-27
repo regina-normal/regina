@@ -105,14 +105,6 @@ class REGINA_API NManifold :
          */
         std::string structure() const;
         /**
-         * Deprecated routine that returns details of the structure of this
-         * 3-manifold that might not be evident from its common name.
-         *
-         * \deprecated This routine has been renamed to structure().
-         * See the structure() documentation for further details.
-         */
-        REGINA_DEPRECATED std::string getStructure() const;
-        /**
          * Returns a triangulation of this 3-manifold, if such a
          * construction has been implemented.  If no construction routine
          * has yet been implemented for this 3-manifold (for instance,
@@ -168,14 +160,6 @@ class REGINA_API NManifold :
          * the appropriate calculation routine has not yet been implemented.
          */
         NAbelianGroup* homologyH1() const;
-        /**
-         * Deprecated routine that returns the first homology group of this
-         * 3-manifold, if such a routine has been implemented.
-         *
-         * \deprecated This routine has been renamed to homology().
-         * See the homology() documentation for further details.
-         */
-        REGINA_DEPRECATED NAbelianGroup* getHomologyH1() const;
 
         /**
          * Returns whether or not this is a finite-volume hyperbolic manifold.
@@ -304,14 +288,6 @@ inline NAbelianGroup* NManifold::homology() const {
 
 inline NAbelianGroup* NManifold::homologyH1() const {
     return homology();
-}
-
-inline NAbelianGroup* NManifold::getHomologyH1() const {
-    return homology();
-}
-
-inline std::string NManifold::getStructure() const {
-    return structure();
 }
 
 inline std::ostream& NManifold::writeStructure(std::ostream& out) const {

@@ -292,29 +292,18 @@ void addNTriangulation() {
         .def("isConnected", &NTriangulation::isConnected)
         .def("fundamentalGroup", &NTriangulation::fundamentalGroup,
             return_internal_reference<>())
-        .def("getFundamentalGroup", &NTriangulation::fundamentalGroup,
-            return_internal_reference<>())
         .def("simplifiedFundamentalGroup", simplifiedFundamentalGroup_clone)
         .def("homology", &NTriangulation::homology,
             return_internal_reference<>())
         .def("homologyH1", &NTriangulation::homologyH1,
             return_internal_reference<>())
-        .def("getHomologyH1", &NTriangulation::homologyH1,
-            return_internal_reference<>())
         .def("homologyRel", &NTriangulation::homologyRel,
-            return_internal_reference<>())
-        .def("getHomologyH1Rel", &NTriangulation::homologyRel,
             return_internal_reference<>())
         .def("homologyBdry", &NTriangulation::homologyBdry,
             return_internal_reference<>())
-        .def("getHomologyH1Bdry", &NTriangulation::homologyBdry,
-            return_internal_reference<>())
         .def("homologyH2", &NTriangulation::homologyH2,
             return_internal_reference<>())
-        .def("getHomologyH2", &NTriangulation::homologyH2,
-            return_internal_reference<>())
         .def("homologyH2Z2", &NTriangulation::homologyH2Z2)
-        .def("getHomologyH2Z2", &NTriangulation::homologyH2Z2)
         .def("turaevViro", &NTriangulation::turaevViro, OL_turaevViro())
         .def("turaevViroApprox", &NTriangulation::turaevViroApprox,
             OL_turaevViroApprox())

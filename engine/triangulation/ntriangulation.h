@@ -553,14 +553,6 @@ class REGINA_API Triangulation<3> :
          */
         const NGroupPresentation& fundamentalGroup() const;
         /**
-         * Deprecated routine that returns the fundamental group of this
-         * triangulation.
-         *
-         * \deprecated This routine has been renamed to fundamentalGroup().
-         * See the fundamentalGroup() documentation for further details.
-         */
-        REGINA_DEPRECATED const NGroupPresentation& getFundamentalGroup() const;
-        /**
          * Notifies the triangulation that you have simplified the
          * presentation of its fundamental group.  The old group
          * presentation will be destroyed, and this triangulation will take
@@ -652,14 +644,6 @@ class REGINA_API Triangulation<3> :
          */
         const NAbelianGroup& homologyH1() const;
         /**
-         * Deprecated routine that returns the first homology group for
-         * this triangulation.
-         *
-         * \deprecated This routine has been renamed to homology().
-         * See the homology() documentation for further details.
-         */
-        REGINA_DEPRECATED const NAbelianGroup& getHomologyH1() const;
-        /**
          * Returns the relative first homology group with
          * respect to the boundary for this triangulation.
          * Note that ideal vertices are considered part of the boundary.
@@ -676,14 +660,6 @@ class REGINA_API Triangulation<3> :
          * boundary.
          */
         const NAbelianGroup& homologyRel() const;
-        /**
-         * Deprecated routine that returns the relative first homology
-         * group with respect to the boundary for this triangulation.
-         *
-         * \deprecated This routine has been renamed to homologyRel().
-         * See the homologyRel() documentation for further details.
-         */
-        REGINA_DEPRECATED const NAbelianGroup& getHomologyH1Rel() const;
         /**
          * Returns the first homology group of the
          * boundary for this triangulation.
@@ -705,14 +681,6 @@ class REGINA_API Triangulation<3> :
          */
         const NAbelianGroup& homologyBdry() const;
         /**
-         * Deprecated routine that returns the first homology group of
-         * the boundary for this triangulation.
-         *
-         * \deprecated This routine has been renamed to homologyBdry().
-         * See the homologyBdry() documentation for further details.
-         */
-        REGINA_DEPRECATED const NAbelianGroup& getHomologyH1Bdry() const;
-        /**
          * Returns the second homology group for this triangulation.
          * If this triangulation contains any ideal vertices,
          * the homology group will be
@@ -733,14 +701,6 @@ class REGINA_API Triangulation<3> :
          */
         const NAbelianGroup& homologyH2() const;
         /**
-         * Deprecated routine that returns the second homology group for
-         * this triangulation.
-         *
-         * \deprecated This routine has been renamed to homologyH2().
-         * See the homologyH2() documentation for further details.
-         */
-        REGINA_DEPRECATED const NAbelianGroup& getHomologyH2() const;
-        /**
          * Returns the second homology group with coefficients in Z_2
          * for this triangulation.
          * If this triangulation contains any ideal vertices,
@@ -759,14 +719,6 @@ class REGINA_API Triangulation<3> :
          * with coefficients in Z_2.
          */
         unsigned long homologyH2Z2() const;
-        /**
-         * Deprecated routine that returns the second homology group
-         * with coefficients in Z_2 for this triangulation.
-         *
-         * \deprecated This routine has been renamed to homologyH2Z2().
-         * See the homologyH2Z2() documentation for further details.
-         */
-        REGINA_DEPRECATED unsigned long getHomologyH2Z2() const;
         /**
          * Computes the given Turaev-Viro state sum invariant of this
          * 3-manifold using exact arithmetic.
@@ -3197,36 +3149,12 @@ inline bool Triangulation<3>::hasStrictAngleStructure() const {
     return (strictAngleStructure_.value() != 0);
 }
 
-inline const NGroupPresentation& NTriangulation::getFundamentalGroup() const {
-    return fundamentalGroup();
-}
-
 inline const NAbelianGroup& NTriangulation::homologyH1() const {
     return homology();
 }
 
-inline const NAbelianGroup& NTriangulation::getHomologyH1() const {
-    return homology();
-}
-
-inline const NAbelianGroup& NTriangulation::getHomologyH1Rel() const {
-    return homologyRel();
-}
-
-inline const NAbelianGroup& NTriangulation::getHomologyH1Bdry() const {
-    return homologyBdry();
-}
-
 inline unsigned long Triangulation<3>::homologyH2Z2() const {
     return homologyRel().rank() + homologyRel().torsionRank(2);
-}
-
-inline unsigned long Triangulation<3>::getHomologyH2Z2() const {
-    return homologyRel().rank() + homologyRel().torsionRank(2);
-}
-
-inline const NAbelianGroup& NTriangulation::getHomologyH2() const {
-    return homologyH2();
 }
 
 inline const Triangulation<3>::TuraevViroSet&

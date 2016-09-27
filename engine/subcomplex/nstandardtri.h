@@ -194,14 +194,6 @@ class REGINA_API NStandardTriangulation :
          * the appropriate calculation routine has not yet been implemented.
          */
         NAbelianGroup* homologyH1() const;
-        /**
-         * Deprecated routine that returns the expected first homology group of
-         * this triangulation, if such a routine has been implemented.
-         *
-         * \deprecated This routine has been renamed to homology().
-         * See the homology() documentation for further details.
-         */
-        REGINA_DEPRECATED NAbelianGroup* getHomologyH1() const;
 
         /**
          * Writes the name of this triangulation as a human-readable
@@ -325,10 +317,6 @@ inline NAbelianGroup* NStandardTriangulation::homology() const {
 }
 
 inline NAbelianGroup* NStandardTriangulation::homologyH1() const {
-    return homology();
-}
-
-inline NAbelianGroup* NStandardTriangulation::getHomologyH1() const {
     return homology();
 }
 

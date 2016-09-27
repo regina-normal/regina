@@ -43,13 +43,10 @@ if (${REGINA_INSTALL_DEV})
     ncomponent.h
     nedge.h
     nexampletriangulation.h
-    nface.h
     nfacepair.h
     nfacepairing.h
     nhomologicaldata.h
     nisomorphism.h
-    npermit.h
-    ntetface.h
     ntetrahedron.h
     ntriangle.h
     ntriangulation.h
