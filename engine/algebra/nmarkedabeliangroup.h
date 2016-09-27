@@ -227,13 +227,6 @@ class REGINA_API NMarkedAbelianGroup :
          * @return the rank of the group.
          */
         unsigned long rank() const;
-        /**
-         * Deprecated routine that returns the rank of the group.
-         *
-         * \deprecated This routine has been renamed to rank().
-         * See the rank() documentation for further details.
-         */
-        REGINA_DEPRECATED unsigned long getRank() const;
 
         /**
          * Returns the rank in the group of the torsion term of given degree.
@@ -270,28 +263,6 @@ class REGINA_API NMarkedAbelianGroup :
          * @return the rank in the group of the given torsion term.
          */
         unsigned long torsionRank(unsigned long degree) const;
-
-        /**
-         * Deprecated routine that returns the rank in the group of the torsion
-         * term of given degree.
-         *
-         * \deprecated This routine has been renamed to
-         * torsionRank(unsigned long) const.
-         * See the torsionRank(unsigned long) const for further details.
-         */
-        REGINA_DEPRECATED unsigned long getTorsionRank(unsigned long degree)
-            const;
-
-        /**
-         * Deprecated routine that returns the rank in the group of the torsion
-         * term of given degree.
-         *
-         * \deprecated This routine has been renamed to
-         * torsionRank(const NLargeInteger&) const.
-         * See the torsionRank(const NLargeInteger&) const for further details.
-         */
-        REGINA_DEPRECATED unsigned long getTorsionRank(
-            const NLargeInteger& degree) const;
 
         /**
          * Returns the number of invariant factors that describe the
@@ -331,34 +302,6 @@ class REGINA_API NMarkedAbelianGroup :
          * @return \c true if and only if this is the trivial group.
          */
         bool isTrivial() const;
-
-        /**
-         * Determines whether this and the given abelian group are
-         * isomorphic.
-         *
-         * \deprecated This routine will be removed in a future version
-         * of Regina.  Users should switch to the less ambiguously named
-         * routine isIsomorphicTo() instead.
-         *
-         * @param other the group with which this should be compared.
-         * @return \c true if and only if the two groups are isomorphic.
-         */
-        REGINA_DEPRECATED bool operator == (const NMarkedAbelianGroup &other)
-            const;
-
-        /**
-         * Determines whether this and the given abelian group are
-         * non-isomorphic.
-         *
-         * \deprecated This routine will be removed in a future version
-         * of Regina.  Users should switch to the less ambiguously named
-         * routine isIsomorphicTo() instead.
-         *
-         * @param other the group with which this should be compared.
-         * @return \c true if and only if the two groups are non-isomorphic.
-         */
-        REGINA_DEPRECATED bool operator != (const NMarkedAbelianGroup &other)
-            const;
 
         /**
          * Determines whether this and the given abelian group are
@@ -422,15 +365,6 @@ class REGINA_API NMarkedAbelianGroup :
          * you will receive an empty vector.
          */
         std::vector<NLargeInteger> freeRep(unsigned long index) const;
-        /**
-         * Deprecated routine that returns the requested free generator in the
-         * original chain complex defining the group.
-         *
-         * \deprecated This routine has been renamed to freeRep().
-         * See the freeRep() documentation for further details.
-         */
-        REGINA_DEPRECATED std::vector<NLargeInteger> getFreeRep(
-            unsigned long index) const;
 
         /**
          * Returns the requested generator of the torsion subgroup but
@@ -456,16 +390,6 @@ class REGINA_API NMarkedAbelianGroup :
          * equivalently, N.rows()).
          */
         std::vector<NLargeInteger> torsionRep(unsigned long index) const;
-        /**
-         * Deprecated routine that returns the requested generator of the
-         * torsion subgroup but represented in the original chain complex
-         * defining the group.
-         *
-         * \deprecated This routine has been renamed to torsionRep().
-         * See the torsionRep() documentation for further details.
-         */
-        REGINA_DEPRECATED std::vector<NLargeInteger> getTorsionRep(
-            unsigned long index) const;
 
         /**
          * A combination of freeRep and torsionRep, this routine takes
@@ -623,14 +547,6 @@ class REGINA_API NMarkedAbelianGroup :
          * @return the rank of the chain complex.
          */
         unsigned long rankCC() const;
-        /**
-         * Deprecated routine that returns the rank of the chain complex
-         * supporting the homology computation.
-         *
-         * \deprecated This routine has been renamed to rankCC().
-         * See the rankCC() documentation for further details.
-         */
-        REGINA_DEPRECATED unsigned long getRankCC() const;
 
         /**
          * Expresses the given vector as a combination of free and torsion
@@ -696,22 +612,6 @@ class REGINA_API NMarkedAbelianGroup :
             const std::vector<NLargeInteger>& v) const;
 
         /**
-         * A deprecated alternative to snfRep().
-         *
-         * \deprecated This routine has been renamed to snfRep().  See
-         * snfRep() for details, preconditions and warnings.
-         *
-         * \ifacespython Both \a v and the return value are python lists.
-         *
-         * @param v a vector of length M.columns().
-         * @return a vector that describes \a v in the standard
-         * Z_{d1} + ... + Z_{dk} + Z^d form, or the empty vector if
-         * \a v is not in the kernel of \a M.
-         */
-        REGINA_DEPRECATED std::vector<NLargeInteger> getSNFIsoRep(
-            const std::vector<NLargeInteger>& v) const;
-
-        /**
          * Returns the number of generators of ker(M), where M is one of
          * the defining matrices of the chain complex.
          *
@@ -753,14 +653,6 @@ class REGINA_API NMarkedAbelianGroup :
          */
         REGINA_DEPRECATED const NMatrixInt& MRB() const;
         /**
-         * Deprecated routine that returns a change-of-basis matrix for the
-         * Smith normal form of \a M.
-         *
-         * \deprecated This routine has been renamed to MRB().
-         * See the MRB() documentation for further details.
-         */
-        REGINA_DEPRECATED const NMatrixInt& getMRB() const;
-        /**
          * Returns an inverse change-of-basis matrix for the Smith normal
          * form of \a M.
          *
@@ -780,14 +672,6 @@ class REGINA_API NMarkedAbelianGroup :
          */
         REGINA_DEPRECATED const NMatrixInt& MRBi() const;
         /**
-         * Deprecated routine that returns an inverse change-of-basis matrix
-         * for the Smith normal form of \a M.
-         *
-         * \deprecated This routine has been renamed to MRBi().
-         * See the MRBi() documentation for further details.
-         */
-        REGINA_DEPRECATED const NMatrixInt& getMRBi() const;
-        /**
          * Returns a change-of-basis matrix for the Smith normal form of \a M.
          *
          * This is one of several routines that returns information on
@@ -805,14 +689,6 @@ class REGINA_API NMarkedAbelianGroup :
          * @return the matrix MCB() as described above.
          */
         REGINA_DEPRECATED const NMatrixInt& MCB() const;
-        /**
-         * Deprecated routine that returns a change-of-basis matrix for the
-         * Smith normal form of \a M.
-         *
-         * \deprecated This routine has been renamed to MCB().
-         * See the MCB() documentation for further details.
-         */
-        REGINA_DEPRECATED const NMatrixInt& getMCB() const;
         /**
          * Returns an inverse change-of-basis matrix for the Smith normal
          * form of \a M.
@@ -833,14 +709,6 @@ class REGINA_API NMarkedAbelianGroup :
          */
         REGINA_DEPRECATED const NMatrixInt& MCBi() const;
         /**
-         * Deprecated routine that returns an inverse change-of-basis matrix
-         * for the Smith normal form of \a M.
-         *
-         * \deprecated This routine has been renamed to MCBi().
-         * See the MCBi() documentation for further details.
-         */
-        REGINA_DEPRECATED const NMatrixInt& getMCBi() const;
-        /**
          * Returns a change-of-basis matrix for the Smith normal form of
          * the internal presentation matrix.
          *
@@ -859,14 +727,6 @@ class REGINA_API NMarkedAbelianGroup :
          * @return the matrix NRB() as described above.
          */
         REGINA_DEPRECATED const NMatrixInt& NRB() const;
-        /**
-         * Deprecated routine that returns a change-of-basis matrix for the
-         * Smith normal form of the internal presentation matrix.
-         *
-         * \deprecated This routine has been renamed to NRB().
-         * See the NRB() documentation for further details.
-         */
-        REGINA_DEPRECATED const NMatrixInt& getNRB() const;
         /**
          * Returns an inverse change-of-basis matrix for the Smith normal
          * form of the internal presentation matrix.
@@ -887,14 +747,6 @@ class REGINA_API NMarkedAbelianGroup :
          */
         REGINA_DEPRECATED const NMatrixInt& NRBi() const;
         /**
-         * Deprecated routine that returns an inverse change-of-basis matrix
-         * for the Smith normal form of the internal presentation matrix.
-         *
-         * \deprecated This routine has been renamed to NRBi().
-         * See the NRBi() documentation for further details.
-         */
-        REGINA_DEPRECATED const NMatrixInt& getNRBi() const;
-        /**
          * Returns a change-of-basis matrix for the Smith normal form of
          * the internal presentation matrix.
          *
@@ -914,14 +766,6 @@ class REGINA_API NMarkedAbelianGroup :
          */
         REGINA_DEPRECATED const NMatrixInt& NCB() const;
         /**
-         * Returns a change-of-basis matrix for the Smith normal form of
-         * the internal presentation matrix.
-         *
-         * \deprecated This routine has been renamed to NCB().
-         * See the NCB() documentation for further details.
-         */
-        REGINA_DEPRECATED const NMatrixInt& getNCB() const;
-        /**
          * Returns an inverse change-of-basis matrix for the Smith normal
          * form of the internal presentation matrix.
          *
@@ -940,14 +784,6 @@ class REGINA_API NMarkedAbelianGroup :
          * @return the matrix NCBi() as described above.
          */
         REGINA_DEPRECATED const NMatrixInt& NCBi() const;
-        /**
-         * Deprecated routine that returns an inverse change-of-basis matrix
-         * for the Smith normal form of the internal presentation matrix.
-         *
-         * \deprecated This routine has been renamed to NCBi().
-         * See the NCBi() documentation for further details.
-         */
-        REGINA_DEPRECATED const NMatrixInt& getNCBi() const;
 
         /**
          * Returns the rank of the defining matrix \a M.
@@ -960,14 +796,6 @@ class REGINA_API NMarkedAbelianGroup :
          * @return the rank of the defining matrix \a M.
          */
         REGINA_DEPRECATED unsigned long rankM() const;
-        /**
-         * Deprecated routine that returns the rank of the defining
-         * matrix \a M.
-         *
-         * \deprecated This routine has been renamed to rankM().
-         * See the rankM() documentation for further details.
-         */
-        REGINA_DEPRECATED unsigned long getRankM() const;
 
         /**
          * Returns the index of the first free generator in the Smith
@@ -979,15 +807,6 @@ class REGINA_API NMarkedAbelianGroup :
          * @return the index of the first free generator.
          */
         REGINA_DEPRECATED unsigned long freeLoc() const;
-        /**
-         * Deprecated routine that returns the index of the first free
-         * generator in the Smith normal form of the internal presentation
-         * matrix.
-         *
-         * \deprecated This routine has been renamed to freeLoc().
-         * See the freeLoc() documentation for further details.
-         */
-        REGINA_DEPRECATED unsigned long getFreeLoc() const;
 
         /**
          * Returns the index of the first torsion generator in the Smith
@@ -999,15 +818,6 @@ class REGINA_API NMarkedAbelianGroup :
          * @return the index of the first torsion generator.
          */
         REGINA_DEPRECATED unsigned long torsionLoc() const;
-        /**
-         * Deprecated routine that returns the index of the first torsion
-         * generator in the Smith normal form of the internal presentation
-         * matrix.
-         *
-         * \deprecated This routine has been renamed to torsionLoc().
-         * See the torsionLoc() documentation for further details.
-         */
-        REGINA_DEPRECATED unsigned long getTorsionLoc() const;
 
         /**
          * Returns the `right' matrix used in defining the chain complex.
@@ -1022,13 +832,6 @@ class REGINA_API NMarkedAbelianGroup :
          */
         const NMatrixInt& M() const;
         /**
-         * Returns the `right' matrix used in defining the chain complex.
-         *
-         * \deprecated This routine has been renamed to M().
-         * See the M() documentation for further details.
-         */
-        REGINA_DEPRECATED const NMatrixInt& getM() const;
-        /**
          * Returns the `left' matrix used in defining the chain complex.
          * Our group was defined as the kernel of \a M mod the image of \a N.
          * This is the matrix \a N.
@@ -1040,13 +843,6 @@ class REGINA_API NMarkedAbelianGroup :
          * @return a reference to the defining matrix N.
          */
         const NMatrixInt& N() const;
-        /**
-         * Returns the `left' matrix used in defining the chain complex.
-         *
-         * \deprecated This routine has been renamed to N().
-         * See the N() documentation for further details.
-         */
-        REGINA_DEPRECATED const NMatrixInt& getN() const;
         /**
          * Returns the coefficients used for the computation of homology.
          * That is, this routine returns the integer \a p where we use
@@ -1244,15 +1040,6 @@ class REGINA_API NHomMarkedAbelianGroup :
          */
         bool isMonic() const;
         /**
-         * A deprecated alternative to isIsomorphism().
-         *
-         * \deprecated This routine will be removed in a future version
-         * of Regina; please use the identical routine isIsomorphism() instead.
-         *
-         * @return true if this homomorphism is an isomorphism.
-         */
-        REGINA_DEPRECATED bool isIso() const;
-        /**
          * Is this an isomorphism?
          *
          * @return true if this homomorphism is an isomorphism.
@@ -1282,26 +1069,12 @@ class REGINA_API NHomMarkedAbelianGroup :
         REGINA_INLINE_REQUIRED
         const NMarkedAbelianGroup& kernel() const;
         /**
-         * Deprecated routine that returns the kernel of this homomorphism.
-         *
-         * \deprecated This routine has been renamed to kernel().
-         * See the kernel() documentation for further details.
-         */
-        REGINA_DEPRECATED const NMarkedAbelianGroup& getKernel() const;
-        /**
          * Returns the cokernel of this homomorphism.
          *
          * @return the cokernel of the homomorphism, as a marked abelian group.
          */
         REGINA_INLINE_REQUIRED
         const NMarkedAbelianGroup& cokernel() const;
-        /**
-         * Deprecated routine that returns the cokernel of this homomorphism.
-         *
-         * \deprecated This routine has been renamed to cokernel().
-         * See the cokernel() documentation for further details.
-         */
-        REGINA_DEPRECATED const NMarkedAbelianGroup& getCokernel() const;
         /**
          * Returns the image of this homomorphism.
          *
@@ -1339,39 +1112,17 @@ class REGINA_API NHomMarkedAbelianGroup :
          */
         const NMarkedAbelianGroup& domain() const;
         /**
-         * Deprecated routine that returns the domain of this homomorphism.
-         *
-         * \deprecated This routine has been renamed to domain().
-         * See the domain() documentation for further details.
-         */
-        REGINA_DEPRECATED const NMarkedAbelianGroup& getDomain() const;
-        /**
          * Returns the range of this homomorphism.
          *
          * @return the range that was used to define the homomorphism.
          */
         const NMarkedAbelianGroup& range() const;
         /**
-         * Deprecated routine that returns the range of this homomorphism.
-         *
-         * \deprecated This routine has been renamed to domain().
-         * See the domain() documentation for further details.
-         */
-        REGINA_DEPRECATED const NMarkedAbelianGroup& getRange() const;
-        /**
          * Returns the defining matrix for the homomorphism.
          *
          * @return the matrix that was used to define the homomorphism.
          */
         const NMatrixInt& definingMatrix() const;
-        /**
-         * Deprecated routine that returns the defining matrix for the
-         * homomorphism.
-         *
-         * \deprecated This routine has been renamed to definingMatrix().
-         * See the definingMatrix() documentation for further details.
-         */
-        REGINA_DEPRECATED const NMatrixInt& getDefiningMatrix() const;
 
         /**
          * Returns the internal reduced matrix representing the homomorphism.
@@ -1390,14 +1141,6 @@ class REGINA_API NHomMarkedAbelianGroup :
          * @return a copy of the internal representation of the homomorphism.
          */
         const NMatrixInt& reducedMatrix() const;
-        /**
-         * Deprecated routine that returns the internal reduced matrix
-         * representing the homomorphism.
-         *
-         * \deprecated This routine has been renamed to reducedMatrix().
-         * See the reducedMatrix() documentation for further details.
-         */
-        REGINA_DEPRECATED const NMatrixInt& getReducedMatrix() const;
 
         /**
          * Evaluate the image of a vector under this homomorphism, using
@@ -1529,16 +1272,6 @@ inline unsigned long NMarkedAbelianGroup::torsionRank(unsigned long degree)
     return torsionRank(NLargeInteger(degree));
 }
 
-inline unsigned long NMarkedAbelianGroup::getTorsionRank(unsigned long degree)
-        const {
-    return torsionRank(NLargeInteger(degree));
-}
-
-inline unsigned long NMarkedAbelianGroup::getTorsionRank(
-        const NLargeInteger& degree) const {
-    return torsionRank(degree);
-}
-
 inline size_t NMarkedAbelianGroup::countInvariantFactors() const {
     return ifNum;
 }
@@ -1552,25 +1285,12 @@ inline unsigned long NMarkedAbelianGroup::rank() const {
     return snfrank;
 }
 
-inline unsigned long NMarkedAbelianGroup::getRank() const {
-    return snfrank;
-}
-
 inline unsigned long NMarkedAbelianGroup::minNumberOfGenerators() const {
     return snfrank + ifNum;
 }
 
 inline unsigned long NMarkedAbelianGroup::rankCC() const {
     return OM.columns();
-}
-
-inline unsigned long NMarkedAbelianGroup::getRankCC() const {
-    return OM.columns();
-}
-
-inline std::vector<NLargeInteger> NMarkedAbelianGroup::getSNFIsoRep(
-        const std::vector<NLargeInteger>& v) const {
-    return snfRep(v);
 }
 
 inline unsigned long NMarkedAbelianGroup::minNumberCycleGens() const {
@@ -1586,108 +1306,50 @@ inline bool NMarkedAbelianGroup::equalTo(const NMarkedAbelianGroup& other)
     return ( (OM == other.OM) && (ON == other.ON) && (coeff == other.coeff) );
 }
 
-inline bool NMarkedAbelianGroup::operator == (
-        const NMarkedAbelianGroup &other) const {
-    return isIsomorphicTo(other);
-}
-
-inline bool NMarkedAbelianGroup::operator != (
-        const NMarkedAbelianGroup &other) const {
-    return ! isIsomorphicTo(other);
-}
-
 inline bool NMarkedAbelianGroup::isIsomorphicTo(
         const NMarkedAbelianGroup &other) const {
     return ((InvFacList == other.InvFacList) && (snfrank == other.snfrank));
 }
 
-inline std::vector<NLargeInteger> NMarkedAbelianGroup::getFreeRep(unsigned long index)
-        const {
-    return freeRep(index);
-}
-
-inline std::vector<NLargeInteger> NMarkedAbelianGroup::getTorsionRep(unsigned long
-        index) const {
-    return torsionRep(index);
-}
 inline const NMatrixInt& NMarkedAbelianGroup::MRB() const {
-    return OMR;
-}
-inline const NMatrixInt& NMarkedAbelianGroup::getMRB() const {
     return OMR;
 }
 inline const NMatrixInt& NMarkedAbelianGroup::MRBi() const {
     return OMRi;
 }
-inline const NMatrixInt& NMarkedAbelianGroup::getMRBi() const {
-    return OMRi;
-}
 inline const NMatrixInt& NMarkedAbelianGroup::MCB() const {
-    return OMC;
-}
-inline const NMatrixInt& NMarkedAbelianGroup::getMCB() const {
     return OMC;
 }
 inline const NMatrixInt& NMarkedAbelianGroup::MCBi() const {
     return OMCi;
 }
-inline const NMatrixInt& NMarkedAbelianGroup::getMCBi() const {
-    return OMCi;
-}
 inline const NMatrixInt& NMarkedAbelianGroup::NRB() const {
-    return *ornR;
-}
-inline const NMatrixInt& NMarkedAbelianGroup::getNRB() const {
     return *ornR;
 }
 inline const NMatrixInt& NMarkedAbelianGroup::NRBi() const {
     return *ornRi;
 }
-inline const NMatrixInt& NMarkedAbelianGroup::getNRBi() const {
-    return *ornRi;
-}
 inline const NMatrixInt& NMarkedAbelianGroup::NCB() const {
     return *ornC;
 }
-inline const NMatrixInt& NMarkedAbelianGroup::getNCB() const {
-    return *ornC;
-}
 inline const NMatrixInt& NMarkedAbelianGroup::NCBi() const {
-    return *ornCi;
-}
-inline const NMatrixInt& NMarkedAbelianGroup::getNCBi() const {
     return *ornCi;
 }
 
 inline unsigned long NMarkedAbelianGroup::rankM() const {
     return rankOM;
 }
-inline unsigned long NMarkedAbelianGroup::getRankM() const {
-    return rankOM;
-}
 inline unsigned long NMarkedAbelianGroup::freeLoc() const {
     return snffreeindex;
 }
-inline unsigned long NMarkedAbelianGroup::getFreeLoc() const {
-    return snffreeindex;
-}
 inline unsigned long NMarkedAbelianGroup::torsionLoc() const {
-    return ifLoc;
-}
-inline unsigned long NMarkedAbelianGroup::getTorsionLoc() const {
     return ifLoc;
 }
 
 inline const NMatrixInt& NMarkedAbelianGroup::M() const {
     return OM;
 }
-inline const NMatrixInt& NMarkedAbelianGroup::getM() const {
-    return OM;
-}
 inline const NMatrixInt& NMarkedAbelianGroup::N() const {
-    return ON;
-}
-inline const NMatrixInt& NMarkedAbelianGroup::getN() const {
     return ON;
 }
 inline const NLargeInteger& NMarkedAbelianGroup::coefficients() const {
@@ -1721,31 +1383,14 @@ inline NHomMarkedAbelianGroup::~NHomMarkedAbelianGroup() {
 inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::domain() const {
     return domain_;
 }
-inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getDomain() const {
-    return domain_;
-}
 inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::range() const {
-    return range_;
-}
-inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getRange() const {
     return range_;
 }
 inline const NMatrixInt& NHomMarkedAbelianGroup::definingMatrix() const {
     return matrix;
 }
-inline const NMatrixInt& NHomMarkedAbelianGroup::getDefiningMatrix() const {
-    return matrix;
-}
 
 inline const NMatrixInt& NHomMarkedAbelianGroup::reducedMatrix() const {
-    // Cast away const to compute the reduced matrix -- the only reason we're
-    // changing data members now is because we delayed calculations
-    // until they were really required.
-    const_cast<NHomMarkedAbelianGroup*>(this)->computeReducedMatrix();
-    return *reducedMatrix_;
-}
-
-inline const NMatrixInt& NHomMarkedAbelianGroup::getReducedMatrix() const {
     // Cast away const to compute the reduced matrix -- the only reason we're
     // changing data members now is because we delayed calculations
     // until they were really required.
@@ -1759,10 +1404,6 @@ inline bool NHomMarkedAbelianGroup::isEpic() const {
 
 inline bool NHomMarkedAbelianGroup::isMonic() const {
     return kernel().isTrivial();
-}
-
-inline bool NHomMarkedAbelianGroup::isIso() const {
-    return isIsomorphism();
 }
 
 inline bool NHomMarkedAbelianGroup::isIsomorphism() const {
@@ -1781,14 +1422,6 @@ inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::kernel() const {
     return *kernel_;
 }
 
-inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getKernel() const {
-    // Cast away const to compute the kernel -- the only reason we're
-    // changing data members now is because we delayed calculations
-    // until they were really required.
-    const_cast<NHomMarkedAbelianGroup*>(this)->computeKernel();
-    return *kernel_;
-}
-
 inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::image() const {
     // Cast away const to compute the kernel -- the only reason we're
     // changing data members now is because we delayed calculations
@@ -1798,14 +1431,6 @@ inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::image() const {
 }
 
 inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::cokernel() const {
-    // Cast away const to compute the kernel -- the only reason we're
-    // changing data members now is because we delayed calculations
-    // until they were really required.
-    const_cast<NHomMarkedAbelianGroup*>(this)->computeCokernel();
-    return *coKernel_;
-}
-
-inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getCokernel() const {
     // Cast away const to compute the kernel -- the only reason we're
     // changing data members now is because we delayed calculations
     // until they were really required.
