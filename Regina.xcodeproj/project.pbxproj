@@ -941,6 +941,9 @@
 		0543AEC61811E12A002758F8 /* shortrunner.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5F61811D920002CC2AE /* shortrunner.h */; };
 		054535B919D8EA7100BED767 /* TextPopover.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054535B819D8EA7100BED767 /* TextPopover.mm */; };
 		054535BC19D90C3A00BED767 /* Skeleton.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054535BB19D90C3A00BED767 /* Skeleton.mm */; };
+		054739E01D9AAE7100C7B56F /* clickablelabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054739DC1D9AAE5D00C7B56F /* clickablelabel.cpp */; };
+		054739E11D9B176200C7B56F /* clickablelabel.h in Sources */ = {isa = PBXBuildFile; fileRef = 054739DD1D9AAE5D00C7B56F /* clickablelabel.h */; };
+		054739E31D9B188000C7B56F /* libqmacjp2.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 054739E21D9B187F00C7B56F /* libqmacjp2.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		0547FCB51C4F60A200BF1AD9 /* xmltrireader.h in Headers */ = {isa = PBXBuildFile; fileRef = 0547FCB41C4F60A100BF1AD9 /* xmltrireader.h */; };
 		054BC4C319B4A726005E01A0 /* closed-hyp-census-full.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABE9E19B499DC00044C1B /* closed-hyp-census-full.zsig */; };
 		054BC4C419B4A726005E01A0 /* closed-nor-census-11.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABE9F19B499DC00044C1B /* closed-nor-census-11.zsig */; };
@@ -1379,9 +1382,7 @@
 		05AB5EF31B9428B3007034C8 /* libqgif.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5EE71B9428B0007034C8 /* libqgif.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		05AB5EF41B9428B3007034C8 /* libqicns.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5EE81B9428B1007034C8 /* libqicns.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		05AB5EF51B9428B3007034C8 /* libqico.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5EE91B9428B1007034C8 /* libqico.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5EF61B9428B3007034C8 /* libqjp2.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5EEA1B9428B1007034C8 /* libqjp2.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		05AB5EF71B9428B3007034C8 /* libqjpeg.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5EEB1B9428B1007034C8 /* libqjpeg.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5EF81B9428B3007034C8 /* libqmng.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5EEC1B9428B2007034C8 /* libqmng.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		05AB5EF91B9428B3007034C8 /* libqsvg.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5EED1B9428B2007034C8 /* libqsvg.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		05AB5EFA1B9428B3007034C8 /* libqtga.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5EEE1B9428B2007034C8 /* libqtga.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		05AB5EFB1B9428B3007034C8 /* libqtiff.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5EEF1B9428B3007034C8 /* libqtiff.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -1650,13 +1651,12 @@
 			dstPath = imageformats;
 			dstSubfolderSpec = 13;
 			files = (
+				054739E31D9B188000C7B56F /* libqmacjp2.dylib in CopyFiles */,
 				05AB5EF21B9428B3007034C8 /* libqdds.dylib in CopyFiles */,
 				05AB5EF31B9428B3007034C8 /* libqgif.dylib in CopyFiles */,
 				05AB5EF41B9428B3007034C8 /* libqicns.dylib in CopyFiles */,
 				05AB5EF51B9428B3007034C8 /* libqico.dylib in CopyFiles */,
-				05AB5EF61B9428B3007034C8 /* libqjp2.dylib in CopyFiles */,
 				05AB5EF71B9428B3007034C8 /* libqjpeg.dylib in CopyFiles */,
-				05AB5EF81B9428B3007034C8 /* libqmng.dylib in CopyFiles */,
 				05AB5EF91B9428B3007034C8 /* libqsvg.dylib in CopyFiles */,
 				05AB5EFA1B9428B3007034C8 /* libqtga.dylib in CopyFiles */,
 				05AB5EFB1B9428B3007034C8 /* libqtiff.dylib in CopyFiles */,
@@ -2564,6 +2564,9 @@
 		054535B819D8EA7100BED767 /* TextPopover.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TextPopover.mm; sourceTree = "<group>"; };
 		054535BA19D90C3A00BED767 /* Skeleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skeleton.h; sourceTree = "<group>"; };
 		054535BB19D90C3A00BED767 /* Skeleton.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Skeleton.mm; sourceTree = "<group>"; };
+		054739DC1D9AAE5D00C7B56F /* clickablelabel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = clickablelabel.cpp; sourceTree = "<group>"; };
+		054739DD1D9AAE5D00C7B56F /* clickablelabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = clickablelabel.h; sourceTree = "<group>"; };
+		054739E21D9B187F00C7B56F /* libqmacjp2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqmacjp2.dylib; path = ../../Qt5.7.0/5.7/clang_64/plugins/imageformats/libqmacjp2.dylib; sourceTree = "<group>"; };
 		0547FCB41C4F60A100BF1AD9 /* xmltrireader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltrireader.h; sourceTree = "<group>"; };
 		054F7E27180B93770090B1F3 /* WelcomePopupController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomePopupController.h; sourceTree = "<group>"; };
 		054F7E28180B93770090B1F3 /* WelcomePopupController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WelcomePopupController.m; sourceTree = "<group>"; };
@@ -3117,9 +3120,7 @@
 		05AB5EE71B9428B0007034C8 /* libqgif.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqgif.dylib; path = ../../Qt5.7.0/5.7/clang_64/plugins/imageformats/libqgif.dylib; sourceTree = "<group>"; };
 		05AB5EE81B9428B1007034C8 /* libqicns.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqicns.dylib; path = ../../Qt5.7.0/5.7/clang_64/plugins/imageformats/libqicns.dylib; sourceTree = "<group>"; };
 		05AB5EE91B9428B1007034C8 /* libqico.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqico.dylib; path = ../../Qt5.7.0/5.7/clang_64/plugins/imageformats/libqico.dylib; sourceTree = "<group>"; };
-		05AB5EEA1B9428B1007034C8 /* libqjp2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqjp2.dylib; path = ../../Qt5.7.0/5.7/clang_64/plugins/imageformats/libqjp2.dylib; sourceTree = "<group>"; };
 		05AB5EEB1B9428B1007034C8 /* libqjpeg.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqjpeg.dylib; path = ../../Qt5.7.0/5.7/clang_64/plugins/imageformats/libqjpeg.dylib; sourceTree = "<group>"; };
-		05AB5EEC1B9428B2007034C8 /* libqmng.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqmng.dylib; path = ../../Qt5.7.0/5.7/clang_64/plugins/imageformats/libqmng.dylib; sourceTree = "<group>"; };
 		05AB5EED1B9428B2007034C8 /* libqsvg.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqsvg.dylib; path = ../../Qt5.7.0/5.7/clang_64/plugins/imageformats/libqsvg.dylib; sourceTree = "<group>"; };
 		05AB5EEE1B9428B2007034C8 /* libqtga.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqtga.dylib; path = ../../Qt5.7.0/5.7/clang_64/plugins/imageformats/libqtga.dylib; sourceTree = "<group>"; };
 		05AB5EEF1B9428B3007034C8 /* libqtiff.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqtiff.dylib; path = ../../Qt5.7.0/5.7/clang_64/plugins/imageformats/libqtiff.dylib; sourceTree = "<group>"; };
@@ -4934,6 +4935,8 @@
 				0564A40A1811D91E002CC2AE /* bigwidget.cpp */,
 				0564A40B1811D91E002CC2AE /* bigwidget.h */,
 				0564A40C1811D91E002CC2AE /* choosers */,
+				054739DC1D9AAE5D00C7B56F /* clickablelabel.cpp */,
+				054739DD1D9AAE5D00C7B56F /* clickablelabel.h */,
 				0564A41A1811D91E002CC2AE /* CMakeLists.txt */,
 				0564A41B1811D91E002CC2AE /* codecchooser.cpp */,
 				0564A41C1811D91E002CC2AE /* codecchooser.h */,
@@ -5470,9 +5473,8 @@
 				05AB5EE71B9428B0007034C8 /* libqgif.dylib */,
 				05AB5EE81B9428B1007034C8 /* libqicns.dylib */,
 				05AB5EE91B9428B1007034C8 /* libqico.dylib */,
-				05AB5EEA1B9428B1007034C8 /* libqjp2.dylib */,
 				05AB5EEB1B9428B1007034C8 /* libqjpeg.dylib */,
-				05AB5EEC1B9428B2007034C8 /* libqmng.dylib */,
+				054739E21D9B187F00C7B56F /* libqmacjp2.dylib */,
 				05AB5EED1B9428B2007034C8 /* libqsvg.dylib */,
 				05AB5EEE1B9428B2007034C8 /* libqtga.dylib */,
 				05AB5EEF1B9428B3007034C8 /* libqtiff.dylib */,
@@ -6700,6 +6702,7 @@
 				050F5E8A1B9BD9C100C1F681 /* commandedit.h in Sources */,
 				050F5E8B1B9BD9C100C1F681 /* pythonconsole.h in Sources */,
 				0543AE991811E12A002758F8 /* coordinatechooser.h in Sources */,
+				054739E11D9B176200C7B56F /* clickablelabel.h in Sources */,
 				0543AE9A1811E12A002758F8 /* examplesaction.h in Sources */,
 				0591E83F1C4F769100793A9C /* dim4trialgebra.cpp in Sources */,
 				0591E8441C4F772B00793A9C /* dim4trialgebra.h in Sources */,
@@ -6846,6 +6849,7 @@
 				0564A9491811D921002CC2AE /* packetmanager.cpp in Sources */,
 				050F5E801B9BD6F400C1F681 /* pythonoutputstream.cpp in Sources */,
 				0564A9481811D921002CC2AE /* packeteditiface.cpp in Sources */,
+				054739E01D9AAE7100C7B56F /* clickablelabel.cpp in Sources */,
 				0564A94B1811D921002CC2AE /* packettreeview.cpp in Sources */,
 				0564A8131811D921002CC2AE /* sourcehandler.cpp in Sources */,
 				0564A99B1811D921002CC2AE /* treenav.cpp in Sources */,
