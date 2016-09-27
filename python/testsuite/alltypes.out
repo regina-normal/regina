@@ -1087,12 +1087,6 @@ Equality type : NEVER_INSTANTIATED
 NExampleTriangulation : class
 Equality type : NEVER_INSTANTIATED
 
-NFace : class
-Equality type : BY_REFERENCE
-
-NFaceEmbedding : class
-Equality type : BY_VALUE
-
 NFacePair : class
 Equality type : BY_VALUE
 
@@ -1178,7 +1172,7 @@ NManifold : class
 Equality type : BY_REFERENCE
 
 NMarkedAbelianGroup : class
-Equality type : BY_VALUE
+Equality type : BY_REFERENCE
 
 NMatrix2 : class
 Equality type : BY_VALUE
