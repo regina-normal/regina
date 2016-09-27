@@ -324,15 +324,6 @@ class REGINA_API NMarkedAbelianGroup :
          * @return the requested invariant factor.
          */
         const NLargeInteger& invariantFactor(size_t index) const;
-        /**
-         * Deprecated routine that returns the given invariant factor
-         * describing the torsion elements of this group.
-         *
-         * \deprecated This routine has been renamed to invariantFactor().
-         * See the invariantFactor() documentation for further details.
-         */
-        REGINA_DEPRECATED const NLargeInteger& getInvariantFactor(size_t index)
-            const;
 
         /**
          * Determines whether this is the trivial (zero) group.
@@ -1318,13 +1309,6 @@ class REGINA_API NHomMarkedAbelianGroup :
          */
         REGINA_INLINE_REQUIRED
         const NMarkedAbelianGroup& image() const;
-        /**
-         * Deprecated routine that returns the image of this homomorphism.
-         *
-         * \deprecated This routine has been renamed to image().
-         * See the image() documentation for further details.
-         */
-        REGINA_DEPRECATED const NMarkedAbelianGroup& getImage() const;
 
         /**
          * Short text representation.  This will state some basic
@@ -1560,11 +1544,6 @@ inline size_t NMarkedAbelianGroup::countInvariantFactors() const {
 }
 
 inline const NLargeInteger& NMarkedAbelianGroup::invariantFactor(
-        size_t index) const {
-    return InvFacList[index];
-}
-
-inline const NLargeInteger& NMarkedAbelianGroup::getInvariantFactor(
         size_t index) const {
     return InvFacList[index];
 }
@@ -1811,14 +1790,6 @@ inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getKernel() const {
 }
 
 inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::image() const {
-    // Cast away const to compute the kernel -- the only reason we're
-    // changing data members now is because we delayed calculations
-    // until they were really required.
-    const_cast<NHomMarkedAbelianGroup*>(this)->computeImage();
-    return *image_;
-}
-
-inline const NMarkedAbelianGroup& NHomMarkedAbelianGroup::getImage() const {
     // Cast away const to compute the kernel -- the only reason we're
     // changing data members now is because we delayed calculations
     // until they were really required.

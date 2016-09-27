@@ -138,14 +138,6 @@ class REGINA_API NLayeredChain : public NStandardTriangulation {
          */
         NTetrahedron* bottom() const;
         /**
-         * Deprecated routine that returns the bottom tetrahedron of this
-         * layered chain.
-         *
-         * \deprecated This routine has been renamed to bottom().
-         * See the bottom() documentation for further details.
-         */
-        REGINA_DEPRECATED NTetrahedron* getBottom() const;
-        /**
          * Returns the top tetrahedron of this layered chain.
          *
          * @return the top tetrahedron.
@@ -157,14 +149,6 @@ class REGINA_API NLayeredChain : public NStandardTriangulation {
          * @return the number of tetrahedra.
          */
         unsigned long index() const;
-        /**
-         * Deprecated routine that returns the number of tetrahedra in this
-         * layered chain.
-         *
-         * \deprecated This routine has been renamed to index().
-         * See the index() documentation for further details.
-         */
-        REGINA_DEPRECATED unsigned long getIndex() const;
 
         /**
          * Returns a permutation represeting the role that each vertex
@@ -183,15 +167,6 @@ class REGINA_API NLayeredChain : public NStandardTriangulation {
          * of the bottom tetrahedron.
          */
         NPerm4 bottomVertexRoles() const;
-        /**
-         * Deprecated routine that returns a permutation represeting the role
-         * that each vertex of the bottom tetrahedron plays in the layered
-         * chain.
-         *
-         * \deprecated This routine has been renamed to bottomVertexRoles().
-         * See the bottomVertexRoles() documentation for further details.
-         */
-        REGINA_DEPRECATED NPerm4 getBottomVertexRoles() const;
 
         /**
          * Returns a permutation represeting the role that each vertex
@@ -299,23 +274,14 @@ inline NLayeredChain::~NLayeredChain() {
 inline NTetrahedron* NLayeredChain::bottom() const {
     return bottom_;
 }
-inline NTetrahedron* NLayeredChain::getBottom() const {
-    return bottom_;
-}
 inline NTetrahedron* NLayeredChain::top() const {
     return top_;
 }
 inline unsigned long NLayeredChain::index() const {
     return index_;
 }
-inline unsigned long NLayeredChain::getIndex() const {
-    return index_;
-}
 
 inline NPerm4 NLayeredChain::bottomVertexRoles() const {
-    return bottomVertexRoles_;
-}
-inline NPerm4 NLayeredChain::getBottomVertexRoles() const {
     return bottomVertexRoles_;
 }
 inline NPerm4 NLayeredChain::topVertexRoles() const {

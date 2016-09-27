@@ -48,11 +48,8 @@ void addNSnappedBall() {
             return_value_policy<reference_existing_object>())
         .def("boundaryFace", &NSnappedBall::boundaryFace)
         .def("internalFace", &NSnappedBall::internalFace)
-        .def("getInternalFace", &NSnappedBall::internalFace)
         .def("equatorEdge", &NSnappedBall::equatorEdge)
-        .def("getEquatorEdge", &NSnappedBall::equatorEdge)
         .def("internalEdge", &NSnappedBall::internalEdge)
-        .def("getInternalEdge", &NSnappedBall::internalEdge)
         .def("formsSnappedBall", &NSnappedBall::formsSnappedBall,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_eq_operators())

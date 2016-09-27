@@ -102,14 +102,6 @@ class REGINA_API NSnappedTwoSphere :
          * @return the corresponding snapped 3-ball.
          */
         const NSnappedBall* snappedBall(int index) const;
-        /**
-         * Deprecated routine that returns one of the two snapped 3-balls whose
-         * equators are joined.
-         *
-         * \deprecated This routine has been renamed to snappedBall().
-         * See the snappedBall() documentation for further details.
-         */
-        REGINA_DEPRECATED const NSnappedBall* getSnappedBall(int index) const;
 
         /**
          * Determines if the two given tetrahedra together form a snapped
@@ -171,9 +163,6 @@ inline NSnappedTwoSphere::~NSnappedTwoSphere() {
     delete ball[0]; delete ball[1];
 }
 inline const NSnappedBall* NSnappedTwoSphere::snappedBall(int index) const {
-    return ball[index];
-}
-inline const NSnappedBall* NSnappedTwoSphere::getSnappedBall(int index) const {
     return ball[index];
 }
 inline void NSnappedTwoSphere::writeTextShort(std::ostream& out) const {

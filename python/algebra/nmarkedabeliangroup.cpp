@@ -155,8 +155,6 @@ void addNMarkedAbelianGroup() {
             &NMarkedAbelianGroup::countInvariantFactors)
         .def("invariantFactor", &NMarkedAbelianGroup::invariantFactor,
             return_value_policy<return_by_value>())
-        .def("getInvariantFactor", &NMarkedAbelianGroup::invariantFactor,
-            return_value_policy<return_by_value>())
         .def("isTrivial", &NMarkedAbelianGroup::isTrivial)
         .def("isIsomorphicTo", &NMarkedAbelianGroup::isIsomorphicTo)
         .def("equalTo", &NMarkedAbelianGroup::equalTo)
@@ -249,8 +247,6 @@ void addNMarkedAbelianGroup() {
         .def("getCokernel", &NHomMarkedAbelianGroup::cokernel,
             return_internal_reference<>())
         .def("image", &NHomMarkedAbelianGroup::image,
-            return_internal_reference<>())
-        .def("getImage", &NHomMarkedAbelianGroup::image,
             return_internal_reference<>())
         .def("domain", &NHomMarkedAbelianGroup::domain,
             return_internal_reference<>())
