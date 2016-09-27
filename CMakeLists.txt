@@ -502,38 +502,63 @@ ELSE(DISABLE_GUI)
   FIND_PACKAGE(Qt5Widgets)
   FIND_PACKAGE(Qt5Svg)
 
-  PKG_CHECK_MODULES(LIBGVC libgvc)
-  IF(LIBGVC_FOUND)
-    IF(WIN32)
-      # FindPkgConfig has a nasty habit of converting paths like
-      # "Program Files" into lists like "Program;Files".
-      #
-      # Here we convert these paths back; moreover, we convert them to
-      # the ugly 8.3 filename format since windres.exe cannot (yet) cope
-      # with paths containing spaces.  Sigh.
-      #
-      # Notes:
-      # - This code assumes the Graphviz path does not contain semicolons.
-      # - Although FindPkgConfig sets many LIBGVC_... variables, we only fix
-      #   those that we use in our build system.
-      #
-      string(REPLACE ";" " " _TMP_STR "${LIBGVC_INCLUDEDIR}")
-      execute_process(
-        COMMAND cmd /c for %A in ("${_TMP_STR}") do @echo %~sA
-        RESULT_VARIABLE _conv_res
-        OUTPUT_VARIABLE _TMP_STR)
-      string(REGEX REPLACE "\n" "" _TMP_STR "${_TMP_STR}")
-      set(LIBGVC_INCLUDEDIR "${_TMP_STR}" CACHE INTERNAL "")
+  IF (APPLE AND GRAPHVIZ_FRAMEWORK_PATH)
+    # The GRAPHVIZ_FRAMEWORK_PATH option is a hack that allows you to link
+    # with a single Graphviz framework, instead of the full suite of
+    # Graphviz libraries and plugins.
+    #
+    # This framework should be called graphviz.framework, and should provide
+    # all the necessary Graphviz components in just *one* library.  The
+    # GRAPHVIZ_FRAMEWORK_PATH setting should be the directory *containing*
+    # this framework (not the full path to the framework itself).
+    #
+    # It is expected that nobody except the Regina developer(s) will use
+    # this option.
+    #
+    FIND_LIBRARY(GRAPHVIZ_FRAMEWORK graphviz PATHS ${GRAPHVIZ_FRAMEWORK_PATH})
+    IF (GRAPHVIZ_FRAMEWORK)
+      SET(GRAPHVIZ_TYPE Framework)
+      SET(LIBGVC_FOUND TRUE)
+    ELSE (GRAPHVIZ_FRAMEWORK)
+      MESSAGE(WARNING "Could not find Graphviz framework, even though GRAPHVIZ_FRAMEWORK was set.")
+      SET(LIBGVC_FOUND FALSE)
+    ENDIF (GRAPHVIZ_FRAMEWORK)
+  ELSE (APPLE AND GRAPHVIZ_FRAMEWORK_PATH)
+    PKG_CHECK_MODULES(LIBGVC libgvc)
+    IF(LIBGVC_FOUND)
+      SET(GRAPHVIZ_TYPE Library)
 
-      string(REPLACE ";" " " _TMP_STR "${LIBGVC_LIBDIR}")
-      execute_process(
-        COMMAND cmd /c for %A in ("${_TMP_STR}") do @echo %~sA
-        RESULT_VARIABLE _conv_res
-        OUTPUT_VARIABLE _TMP_STR)
-      string(REGEX REPLACE "\n" "" _TMP_STR "${_TMP_STR}")
-      set(LIBGVC_LIBDIR "${_TMP_STR}" CACHE INTERNAL "")
-    ENDIF(WIN32)
-  ENDIF(LIBGVC_FOUND)
+      IF(WIN32)
+        # FindPkgConfig has a nasty habit of converting paths like
+        # "Program Files" into lists like "Program;Files".
+        #
+        # Here we convert these paths back; moreover, we convert them to
+        # the ugly 8.3 filename format since windres.exe cannot (yet) cope
+        # with paths containing spaces.  Sigh.
+        #
+        # Notes:
+        # - This code assumes the Graphviz path does not contain semicolons.
+        # - Although FindPkgConfig sets many LIBGVC_... variables, we only fix
+        #   those that we use in our build system.
+        #
+        string(REPLACE ";" " " _TMP_STR "${LIBGVC_INCLUDEDIR}")
+        execute_process(
+          COMMAND cmd /c for %A in ("${_TMP_STR}") do @echo %~sA
+          RESULT_VARIABLE _conv_res
+          OUTPUT_VARIABLE _TMP_STR)
+        string(REGEX REPLACE "\n" "" _TMP_STR "${_TMP_STR}")
+        set(LIBGVC_INCLUDEDIR "${_TMP_STR}" CACHE INTERNAL "")
+
+        string(REPLACE ";" " " _TMP_STR "${LIBGVC_LIBDIR}")
+        execute_process(
+          COMMAND cmd /c for %A in ("${_TMP_STR}") do @echo %~sA
+          RESULT_VARIABLE _conv_res
+          OUTPUT_VARIABLE _TMP_STR)
+        string(REGEX REPLACE "\n" "" _TMP_STR "${_TMP_STR}")
+        set(LIBGVC_LIBDIR "${_TMP_STR}" CACHE INTERNAL "")
+      ENDIF(WIN32)
+    ENDIF(LIBGVC_FOUND)
+  ENDIF(APPLE AND GRAPHVIZ_FRAMEWORK_PATH)
   MACRO_LOG_FEATURE(LIBGVC_FOUND
     "GraphViz libraries"
     "Visualising graphs"
