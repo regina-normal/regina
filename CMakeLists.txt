@@ -304,11 +304,11 @@ MACRO_LOG_FEATURE(ICONV_FOUND
   "http://www.gnu.org/s/libiconv/"
   TRUE)
 
-FIND_PACKAGE(Boost COMPONENTS iostreams python regex)
+FIND_PACKAGE(Boost 1.55 COMPONENTS iostreams python regex)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
 MACRO_LOG_FEATURE(Boost_FOUND
-  "Boost"
-  "Essential: Boost C++ components (iostreams, python, regex)"
+  "Boost (>= 1.55)"
+  "Essential: C++ components (iostreams, python, regex)"
   "http://www.boost.org/"
   TRUE)
 

@@ -26,7 +26,6 @@ if (${REGINA_INSTALL_DEV})
     flags.h
     i18nutils.h
     intutils.h
-    intrusiverefcounter.h
     memutils.h
     nbitmask.h
     nbooleans.h
