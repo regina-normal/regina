@@ -148,14 +148,6 @@ class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
          */
         const NTriSolidTorus& core() const;
         /**
-         * Deprecated routine that returns the triangular solid torus at the
-         * core of this triangulation.
-         *
-         * \deprecated This routine has been renamed to core().
-         * See the core() documentation for further details.
-         */
-        REGINA_DEPRECATED const NTriSolidTorus& getCore() const;
-        /**
          * Returns the layered solid torus attached to the requested
          * annulus on the boundary of the core triangular solid torus.
          * If the layered solid torus is a degenerate (2,1,1) mobius
@@ -320,9 +312,6 @@ inline NAugTriSolidTorus::NAugTriSolidTorus() : core_(0),
 }
 
 inline const NTriSolidTorus& NAugTriSolidTorus::core() const {
-    return *core_;
-}
-inline const NTriSolidTorus& NAugTriSolidTorus::getCore() const {
     return *core_;
 }
 inline const NLayeredSolidTorus* NAugTriSolidTorus::augTorus(

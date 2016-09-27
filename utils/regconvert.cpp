@@ -30,7 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-#include "file/nxmlfile.h"
 #include "packet/npacket.h"
 #include <cstdlib>
 

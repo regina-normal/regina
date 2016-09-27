@@ -43,7 +43,6 @@
 #include "dim2/dim2triangulation.h"
 #include "dim4/dim4facetpairing.h"
 #include "dim4/dim4triangulation.h"
-#include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 #include "packet/ntext.h"
 #include "triangulation/nfacepairing.h"

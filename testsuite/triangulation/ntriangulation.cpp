@@ -43,7 +43,6 @@
 #include "maths/approx.h"
 #include "maths/nmatrixint.h"
 #include "maths/numbertheory.h"
-#include "maths/permconv.h"
 #include "packet/ncontainer.h"
 #include "split/nsignature.h"
 #include "subcomplex/nstandardtri.h"

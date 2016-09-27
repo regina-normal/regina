@@ -3012,6 +3012,25 @@ class REGINA_API Triangulation<3> :
                 std::set<NVertex*>&, std::set<NVertex*>&) const;
             /**< Internal to maximalForestInSkeleton(). */
 
+        /**
+         * Reads the contents of a SnapPea data file from the given input
+         * stream, and converts the result to a new NTriangulation.  Since
+         * this returns an NTriangulation, it will lose some SnapPea-specific
+         * information in the process (such as peripheral curves).
+         *
+         * If the input stream could not be read or if the data was not in the
+         * correct format, 0 will be returned.  Otherwise a newly allocated
+         * triangulation will be returned, and it is the user's responsibility
+         * to deallocate this when it is finished with.
+         *
+         * Unlike the NSnapPeaTriangulation constructor, this routine uses
+         * Regina's own SnapPea input code - it does not call any functions
+         * from the SnapPea kernel.
+         *
+         * \ifacespython Not present.
+         */
+        static NTriangulation* readSnapPea(std::istream& in);
+
     friend class regina::Simplex<3>;
     friend class regina::detail::SimplexBase<3>;
     friend class regina::detail::TriangulationBase<3>;

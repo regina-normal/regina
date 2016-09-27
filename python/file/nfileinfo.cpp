@@ -42,17 +42,10 @@ void addNFileInfo() {
             ("NFileInfo", no_init)
         .def("pathname", &NFileInfo::pathname,
             return_value_policy<return_by_value>())
-        .def("getPathname", &NFileInfo::pathname,
-            return_value_policy<return_by_value>())
         .def("type", &NFileInfo::type)
-        .def("getType", &NFileInfo::type)
         .def("typeDescription", &NFileInfo::typeDescription,
             return_value_policy<return_by_value>())
-        .def("getTypeDescription", &NFileInfo::typeDescription,
-            return_value_policy<return_by_value>())
         .def("engine", &NFileInfo::engine,
-            return_value_policy<return_by_value>())
-        .def("getEngine", &NFileInfo::engine,
             return_value_policy<return_by_value>())
         .def("isCompressed", &NFileInfo::isCompressed)
         .def("isInvalid", &NFileInfo::isInvalid)

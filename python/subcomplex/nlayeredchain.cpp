@@ -49,14 +49,11 @@ void addNLayeredChain() {
             return_value_policy<reference_existing_object>())
         .def("top", &NLayeredChain::top,
             return_value_policy<reference_existing_object>())
-        .def("getTop", &NLayeredChain::top,
-            return_value_policy<reference_existing_object>())
         .def("index", &NLayeredChain::index)
         .def("getIndex", &NLayeredChain::index)
         .def("bottomVertexRoles", &NLayeredChain::bottomVertexRoles)
         .def("getBottomVertexRoles", &NLayeredChain::bottomVertexRoles)
         .def("topVertexRoles", &NLayeredChain::topVertexRoles)
-        .def("getTopVertexRoles", &NLayeredChain::topVertexRoles)
         .def("extendAbove", &NLayeredChain::extendAbove)
         .def("extendBelow", &NLayeredChain::extendBelow)
         .def("extendMaximal", &NLayeredChain::extendMaximal)

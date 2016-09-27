@@ -222,13 +222,6 @@ class REGINA_API NRational {
          */
         NInteger numerator() const;
         /**
-         * Deprecated routine that returns the numerator of this rational.
-         *
-         * \deprecated This routine has been renamed to numerator().
-         * See the numerator() documentation for further details.
-         */
-        REGINA_DEPRECATED NInteger getNumerator() const;
-        /**
          * Returns the denominator of this rational.
          * Note that rationals are always stored in lowest terms with
          * non-negative denominator.  Infinity will be stored as 1/0.
@@ -236,13 +229,6 @@ class REGINA_API NRational {
          * @return the denominator.
          */
         NInteger denominator() const;
-        /**
-         * Deprecated routine that returns the denominator of this rational.
-         *
-         * \deprecated This routine has been renamed to denominator().
-         * See the denominator() documentation for further details.
-         */
-        REGINA_DEPRECATED NInteger getDenominator() const;
 
         /**
          * Calculates the product of two rationals.
@@ -441,14 +427,6 @@ class REGINA_API NRational {
          * @author Ryan Budney
          */
         std::string TeX() const;
-        /**
-         * Deprecated routine that returns this rational as written using TeX
-         * formatting.
-         *
-         * \deprecated This routine has been renamed to TeX().
-         * See the TeX() documentation for further details.
-         */
-        REGINA_DEPRECATED std::string getTeX() const;
 
         /**
          * Writes this rational in TeX format to the given output stream.
@@ -583,18 +561,6 @@ inline void NRational::swap(NRational& other) {
 inline void NRational::negate() {
     if (flavour == f_normal)
         mpq_neg(data, data);
-}
-
-inline NInteger NRational::getNumerator() const {
-    return numerator();
-}
-
-inline NInteger NRational::getDenominator() const {
-    return denominator();
-}
-
-inline std::string NRational::getTeX() const {
-    return TeX();
 }
 
 inline bool NRational::operator <= (const NRational& compare) const {

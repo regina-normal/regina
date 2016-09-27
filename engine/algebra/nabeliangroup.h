@@ -223,13 +223,6 @@ class REGINA_API NAbelianGroup :
          */
         unsigned rank() const;
         /**
-         * Deprecated routine that returns the rank of the group.
-         *
-         * \deprecated This routine has been renamed to rank().
-         * See the rank() documentation for further details.
-         */
-        REGINA_DEPRECATED unsigned getRank() const;
-        /**
          * Returns the rank in the group of the torsion term of given degree.
          * If the given degree is <i>d</i>, this routine will return the
          * largest <i>m</i> for which <i>m</i>Z_<i>d</i> is a subgroup
@@ -264,25 +257,6 @@ class REGINA_API NAbelianGroup :
          */
         unsigned torsionRank(unsigned long degree) const;
         /**
-         * Deprecated routine that returns the rank in the group of the torsion
-         * term of given degree.
-         *
-         * \deprecated This routine has been renamed to
-         * torsionRank(const NLargeInteger&).  See the
-         * torsionRank(const NLargeInteger&) documentation for further details.
-         */
-        REGINA_DEPRECATED unsigned getTorsionRank(const NLargeInteger& degree)
-            const;
-        /**
-         * Deprecated routine that returns the rank in the group of the torsion
-         * term of given degree.
-         *
-         * \deprecated This routine has been renamed to
-         * torsionRank(unsigned long).  See the torsionRank(unsigned long)
-         * documentation for further details.
-         */
-        REGINA_DEPRECATED unsigned getTorsionRank(unsigned long degree) const;
-        /**
          * Returns the number of invariant factors that describe the
          * torsion elements of this group.
          * See the NAbelianGroup class notes for further details.
@@ -304,15 +278,6 @@ class REGINA_API NAbelianGroup :
          * @return the requested invariant factor.
          */
         const NLargeInteger& invariantFactor(size_t index) const;
-        /**
-         * Deprecated routine that returns the given invariant factor
-         * describing the torsion elements of this group.
-         *
-         * \deprecated This routine has been renamed as invariantFactor().
-         * See the invariantFactor() documentation for further details.
-         */
-        REGINA_DEPRECATED const NLargeInteger& getInvariantFactor(size_t index)
-            const;
 
         /**
          * Determines whether this is the trivial (zero) group.
@@ -429,29 +394,12 @@ inline unsigned NAbelianGroup::rank() const {
     return rank_;
 }
 
-inline unsigned NAbelianGroup::getRank() const {
-    return rank_;
-}
-
 inline unsigned NAbelianGroup::torsionRank(unsigned long degree) const {
     return torsionRank(NLargeInteger(degree));
 }
 
-inline unsigned NAbelianGroup::getTorsionRank(unsigned long degree) const {
-    return torsionRank(NLargeInteger(degree));
-}
-
-inline unsigned NAbelianGroup::getTorsionRank(const NLargeInteger& degree)
-        const {
-    return torsionRank(degree);
-}
-
 inline size_t NAbelianGroup::countInvariantFactors() const {
     return invariantFactors.size();
-}
-
-inline const NLargeInteger& NAbelianGroup::getInvariantFactor(size_t index) const {
-    return invariantFactor(index);
 }
 
 inline bool NAbelianGroup::isTrivial() const {

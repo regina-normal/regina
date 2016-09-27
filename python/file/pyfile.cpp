@@ -32,11 +32,9 @@
 
 void addNFileInfo();
 void addNGlobalDirs();
-void addNXMLFile();
 
 void addFile() {
     addNFileInfo();
     addNGlobalDirs();
-    addNXMLFile();
 }
 

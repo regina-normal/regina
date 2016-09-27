@@ -32,7 +32,6 @@
 
 #include <cstdlib>
 #include <list>
-#include "file/nxmlfile.h"
 #include "packet/npacket.h"
 #include "utilities/i18nutils.h"
 

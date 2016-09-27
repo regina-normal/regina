@@ -32,7 +32,6 @@
 
 // Regina core includes:
 #include "dim4/dim4triangulation.h"
-#include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 #include "triangulation/ntriangulation.h"
 

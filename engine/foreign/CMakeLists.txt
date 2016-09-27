@@ -5,8 +5,6 @@ SET ( FILES
   dehydration
   isosig
   orb
-  pdf
-  snappea
   )
 
 # Prepend folder name
@@ -20,8 +18,5 @@ if (${REGINA_INSTALL_DEV})
     dehydration.h
     isosig.h
     orb.h
-    pdf.h
-    recogniser.h
-    snappea.h
     DESTINATION ${INCLUDEDIR}/foreign COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

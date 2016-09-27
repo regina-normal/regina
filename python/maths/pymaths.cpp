@@ -45,7 +45,6 @@ void addNPolynomial();
 void addNPrimes();
 void addNRational();
 void addNumberTheory();
-void addPermConv();
 
 void addMaths() {
     addMatrixOps();
@@ -63,6 +62,5 @@ void addMaths() {
     addNPrimes();
     addNRational();
     addNumberTheory();
-    addPermConv();
 }
 

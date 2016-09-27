@@ -77,6 +77,19 @@ namespace {
 }
 
 void addNNormalSurfaceList() {
+    enum_<regina::SurfaceExportFields>("SurfaceExportFields")
+        .value("surfaceExportName", regina::surfaceExportName)
+        .value("surfaceExportEuler", regina::surfaceExportEuler)
+        .value("surfaceExportOrient", regina::surfaceExportOrient)
+        .value("surfaceExportSides", regina::surfaceExportSides)
+        .value("surfaceExportBdry", regina::surfaceExportBdry)
+        .value("surfaceExportLink", regina::surfaceExportLink)
+        .value("surfaceExportType", regina::surfaceExportType)
+        .value("surfaceExportNone", regina::surfaceExportNone)
+        .value("surfaceExportAllButName", regina::surfaceExportAllButName)
+        .value("surfaceExportAll", regina::surfaceExportAll)
+    ;
+
     def("makeMatchingEquations",
         regina::makeMatchingEquations,
         return_value_policy<manage_new_object>());

@@ -43,9 +43,6 @@ Equality type : BY_REFERENCE
 Dim2BoundaryComponent : class
 Equality type : BY_REFERENCE
 
-Dim2Census : class
-Equality type : NEVER_INSTANTIATED
-
 Dim2Component : class
 Equality type : BY_REFERENCE
 

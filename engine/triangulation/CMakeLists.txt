@@ -24,6 +24,7 @@ SET ( FILES
   simplify
   simplifyglobal
   skeleton
+  snappea
   subdivide
   surfaces
   turaevviro

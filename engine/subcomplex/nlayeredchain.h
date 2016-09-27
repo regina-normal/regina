@@ -152,14 +152,6 @@ class REGINA_API NLayeredChain : public NStandardTriangulation {
          */
         NTetrahedron* top() const;
         /**
-         * Deprecated routine that returns the top tetrahedron of this layered
-         * chain.
-         *
-         * \deprecated This routine has been renamed to top().
-         * See the top() documentation for further details.
-         */
-        REGINA_DEPRECATED NTetrahedron* getTop() const;
-        /**
          * Returns the number of tetrahedra in this layered chain.
          *
          * @return the number of tetrahedra.
@@ -218,14 +210,6 @@ class REGINA_API NLayeredChain : public NStandardTriangulation {
          * of the top tetrahedron.
          */
         NPerm4 topVertexRoles() const;
-        /**
-         * Deprecated routine that returns a permutation represeting the role
-         * that each vertex of the top tetrahedron plays in the layered chain.
-         *
-         * \deprecated This routine has been renamed to topVertexRoles().
-         * See the topVertexRoles() documentation for further details.
-         */
-        REGINA_DEPRECATED NPerm4 getTopVertexRoles() const;
 
         /**
          * Checks to see whether this layered chain can be extended to
@@ -321,9 +305,6 @@ inline NTetrahedron* NLayeredChain::getBottom() const {
 inline NTetrahedron* NLayeredChain::top() const {
     return top_;
 }
-inline NTetrahedron* NLayeredChain::getTop() const {
-    return top_;
-}
 inline unsigned long NLayeredChain::index() const {
     return index_;
 }
@@ -338,9 +319,6 @@ inline NPerm4 NLayeredChain::getBottomVertexRoles() const {
     return bottomVertexRoles_;
 }
 inline NPerm4 NLayeredChain::topVertexRoles() const {
-    return topVertexRoles_;
-}
-inline NPerm4 NLayeredChain::getTopVertexRoles() const {
     return topVertexRoles_;
 }
 

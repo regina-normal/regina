@@ -46,8 +46,6 @@ void addNPlugTriSolidTorus() {
             return_value_policy<manage_new_object>())
         .def("core", &NPlugTriSolidTorus::core,
             return_internal_reference<>())
-        .def("getCore", &NPlugTriSolidTorus::core,
-            return_internal_reference<>())
         .def("chain", &NPlugTriSolidTorus::chain,
             return_internal_reference<>())
         .def("getChain", &NPlugTriSolidTorus::chain,

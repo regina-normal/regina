@@ -32,7 +32,6 @@
 
 // Regina core includes:
 #include "dim2/dim2triangulation.h"
-#include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 #include "packet/ntext.h"
 #include "progress/nprogresstracker.h"

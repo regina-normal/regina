@@ -8,7 +8,7 @@ if len(sys.argv) != 2:
     print "Usage: " + sys.argv[0] + " <filename>"
     sys.exit(1)
 
-tree = regina.readFileMagic(sys.argv[1])
+tree = regina.open(sys.argv[1])
 if not tree:
     print "E: Could not open file " + sys.argv[1] + "."
     print

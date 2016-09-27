@@ -47,8 +47,6 @@ void addNAugTriSolidTorus() {
             return_value_policy<manage_new_object>())
         .def("core", &NAugTriSolidTorus::core,
             return_internal_reference<>())
-        .def("getCore", &NAugTriSolidTorus::core,
-            return_internal_reference<>())
         .def("augTorus", &NAugTriSolidTorus::augTorus,
             return_internal_reference<>())
         .def("getAugTorus", &NAugTriSolidTorus::augTorus,

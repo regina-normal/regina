@@ -69,7 +69,7 @@ namespace {
                 if (subTagName == "abeliangroup") {
                     NAbelianGroup* ans =
                         dynamic_cast<NXMLAbelianGroupReader*>(subReader)->
-                        getGroup();
+                        group();
                     if (ans)
                         prop_ = ans;
                 }
@@ -104,7 +104,7 @@ namespace {
                 if (subTagName == "group") {
                     NGroupPresentation* ans =
                         dynamic_cast<NXMLGroupPresentationReader*>(subReader)->
-                        getGroup();
+                        group();
                     if (ans)
                         prop_ = ans;
                 }

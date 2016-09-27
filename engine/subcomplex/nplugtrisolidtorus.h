@@ -154,14 +154,6 @@ class REGINA_API NPlugTriSolidTorus : public NStandardTriangulation {
          * @return the core triangular solid torus.
          */
         const NTriSolidTorus& core() const;
-        /**
-         * Deprecated routine that returns the triangular solid torus at the
-         * core of this triangulation.
-         *
-         * \deprecated This routine has been renamed to core().
-         * See the core() documentation for further details.
-         */
-        REGINA_DEPRECATED const NTriSolidTorus& getCore() const;
 
         /**
          * Returns the layered chain attached to the requested
@@ -267,9 +259,6 @@ inline NPlugTriSolidTorus::NPlugTriSolidTorus() : core_(0) {
 }
 
 inline const NTriSolidTorus& NPlugTriSolidTorus::core() const {
-    return *core_;
-}
-inline const NTriSolidTorus& NPlugTriSolidTorus::getCore() const {
     return *core_;
 }
 inline const NLayeredChain* NPlugTriSolidTorus::chain(int annulus) const {
