@@ -1372,10 +1372,10 @@
 		05AB5ED31B8EDC27007034C8 /* QtSvg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB5ED21B8EDC27007034C8 /* QtSvg.framework */; };
 		05AB5ED61B8EDFBF007034C8 /* regina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 05561D181811F27A00FD6E2E /* regina.icns */; };
 		05AB5ED71B8EDFBF007034C8 /* x-regina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 05561D191811F27A00FD6E2E /* x-regina.icns */; };
-		05AB5ED91B9423A8007034C8 /* QtCore.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5ECC1B8ED9F9007034C8 /* QtCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		05AB5EDA1B9423A8007034C8 /* QtGui.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5ECD1B8ED9F9007034C8 /* QtGui.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		05AB5EDB1B9423A8007034C8 /* QtSvg.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5ED21B8EDC27007034C8 /* QtSvg.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		05AB5EDC1B9423A8007034C8 /* QtWidgets.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5ECE1B8ED9FA007034C8 /* QtWidgets.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		05AB5ED91B9423A8007034C8 /* QtCore.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5ECC1B8ED9F9007034C8 /* QtCore.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		05AB5EDA1B9423A8007034C8 /* QtGui.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5ECD1B8ED9F9007034C8 /* QtGui.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		05AB5EDB1B9423A8007034C8 /* QtSvg.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5ED21B8EDC27007034C8 /* QtSvg.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		05AB5EDC1B9423A8007034C8 /* QtWidgets.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5ECE1B8ED9FA007034C8 /* QtWidgets.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		05AB5EE21B94285C007034C8 /* libqcocoa.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5EDF1B94285B007034C8 /* libqcocoa.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		05AB5EE31B94285C007034C8 /* libqminimal.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5EE01B94285B007034C8 /* libqminimal.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		05AB5EE41B94285C007034C8 /* libqoffscreen.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5EE11B94285B007034C8 /* libqoffscreen.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -1391,9 +1391,9 @@
 		05AB5EFD1B9428B3007034C8 /* libqwebp.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5EF11B9428B3007034C8 /* libqwebp.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		05AB5F001B9428DC007034C8 /* libqsvgicon.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5EFF1B9428DC007034C8 /* libqsvgicon.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		05AB5F031B9428FE007034C8 /* libqtuiotouchplugin.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5F021B9428FD007034C8 /* libqtuiotouchplugin.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5F081B9429BB007034C8 /* QtDBus.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5F051B9429BA007034C8 /* QtDBus.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		05AB5F091B9429BB007034C8 /* QtNetwork.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5F061B9429BB007034C8 /* QtNetwork.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		05AB5F0A1B9429BB007034C8 /* QtPrintSupport.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5F071B9429BB007034C8 /* QtPrintSupport.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		05AB5F081B9429BB007034C8 /* QtDBus.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5F051B9429BA007034C8 /* QtDBus.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		05AB5F091B9429BB007034C8 /* QtNetwork.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5F061B9429BB007034C8 /* QtNetwork.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		05AB5F0A1B9429BB007034C8 /* QtPrintSupport.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5F071B9429BB007034C8 /* QtPrintSupport.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		05B14EB519B4240D002138C0 /* mkcensusdb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B14EB419B4240D002138C0 /* mkcensusdb.cpp */; };
 		05B14EB719B424D8002138C0 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A51806047E00FAE4DF /* libz.dylib */; };
 		05B14EB919B424F9002138C0 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 053E5B5519B3D79100166778 /* libbz2.dylib */; };
