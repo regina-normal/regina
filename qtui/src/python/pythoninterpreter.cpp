@@ -317,9 +317,12 @@ bool PythonInterpreter::importRegina() {
         PyObject* path = PySys_GetObject(
             const_cast<char*>("path")); // Borrowed reference.
         if (path) {
+            // Ensure that regina's path gets pushed to the beginning
+            // of sys.path, not the end - this ensures that different
+            // installations can live happily side-by-side.
             PyObject* regModuleDirPy =
                 PyString_FromString(regModuleDir.c_str());
-            PyList_Append(path, regModuleDirPy);
+            PyList_Insert(path, 0, regModuleDirPy);
             Py_DECREF(regModuleDirPy);
         }
     }
