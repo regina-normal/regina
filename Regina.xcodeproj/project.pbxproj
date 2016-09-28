@@ -4480,7 +4480,10 @@
 			children = (
 				05CAFB541C4D8FCE0001C253 /* graphviz.framework */,
 				05AB5ECC1B8ED9F9007034C8 /* QtCore.framework */,
+				05AB5F051B9429BA007034C8 /* QtDBus.framework */,
 				05AB5ECD1B8ED9F9007034C8 /* QtGui.framework */,
+				05AB5F061B9429BB007034C8 /* QtNetwork.framework */,
+				05AB5F071B9429BB007034C8 /* QtPrintSupport.framework */,
 				05AB5ED21B8EDC27007034C8 /* QtSvg.framework */,
 				05AB5ECE1B8ED9FA007034C8 /* QtWidgets.framework */,
 				05F4947B19BDDD5D00CD887C /* DBChooser.framework */,
@@ -5237,9 +5240,6 @@
 		0575E6501805F36D009E3FC4 = {
 			isa = PBXGroup;
 			children = (
-				05AB5F051B9429BA007034C8 /* QtDBus.framework */,
-				05AB5F061B9429BB007034C8 /* QtNetwork.framework */,
-				05AB5F071B9429BB007034C8 /* QtPrintSupport.framework */,
 				052F9BFD180600FA00FAE4DF /* engine */,
 				057118AF19B307A3009FEDC5 /* data */,
 				052FA0CA1806088B00FAE4DF /* testsuite */,
