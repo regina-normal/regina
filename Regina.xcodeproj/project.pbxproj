@@ -967,6 +967,7 @@
 		0550010D1C4D9EF900501C24 /* face9.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055001031C4D9EEB00501C24 /* face9.cpp */; };
 		0554CA7A1C5983870053461B /* generictriui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA761C5983730053461B /* generictriui.cpp */; };
 		0554CA7B1C5983B00053461B /* generictriui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA771C5983730053461B /* generictriui.h */; };
+		055722D31D9BC9D3005789B4 /* boost-python.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 056AA9931C41C10100FA81D3 /* boost-python.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		05583A6219B8041F00076187 /* ReginaDocument.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05583A6119B8041F00076187 /* ReginaDocument.mm */; };
 		055ABEA519B49C1900044C1B /* closed-hyp-census-full.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABE9E19B499DC00044C1B /* closed-hyp-census-full.zsig */; };
 		055ABEA619B49C1900044C1B /* closed-nor-census-11.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABE9F19B499DC00044C1B /* closed-nor-census-11.zsig */; };
@@ -1623,6 +1624,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				055722D31D9BC9D3005789B4 /* boost-python.framework in CopyFiles */,
 				05AB5F081B9429BB007034C8 /* QtDBus.framework in CopyFiles */,
 				05AB5F091B9429BB007034C8 /* QtNetwork.framework in CopyFiles */,
 				05AB5F0A1B9429BB007034C8 /* QtPrintSupport.framework in CopyFiles */,
