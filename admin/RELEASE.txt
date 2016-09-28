@@ -8,11 +8,10 @@ Program version:
     docs/man/*.1 (windows executable path)
     ios/Regina-Info.plist (CFBundleShortVersionString, CFBundleVersion)
     qtui/doc/regina/about.docbook (plain citation, bibTeX citation)
-    qtui/doc/regina/index.docbook (&regversion;, &regdate;,
-                                   date, releaseinfo, copyrightyears)
+    qtui/doc/regina/index.docbook (&regversion;, &regdate;, copyrightyears)
     qtui/doc/regina/manonly.docbook (&regversion;)
     qtui/doc/regina/python.docbook (python session banner)
-    qtui/doc/regina-xml/index.docbook (same as for .../regina/index.docbook)
+    qtui/doc/regina-xml/index.docbook (&regversion;, &regdate;, copyrightyears)
     qtui/src/reginaabout.cpp (regReleased)
     preconfig/*/regina-config.h (PACKAGE_* macros)
     www/index.html (last updated, current version, contents, news,

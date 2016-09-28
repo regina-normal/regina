@@ -4,7 +4,7 @@
   <!ENTITY kappname "&regina;">
 
   <!ENTITY regversion "5.0">
-  <!ENTITY regdate "26 September 2016">
+  <!ENTITY regdate "2016-09-26">
   <!ENTITY copyrightyears "1999&ndash;2016">
   <!ENTITY copyrightholder "The Regina development team">
   <!ENTITY copyrightnotice
@@ -210,13 +210,13 @@
    </para>
   </legalnotice>
 
-  <date>2016-09-26</date>
-  <releaseinfo>5.0</releaseinfo>
+  <date>&regdate;</date>
+  <releaseinfo>&regversion;</releaseinfo>
 
   <abstract>
    &regabstract;
    <para>
-    This handbook is current as of &regdate; for &regina; &regversion;.
+    This handbook is current as of &regina;&nbsp;&regversion;.
    </para>
    <para>
     Tip: You can also browse the
