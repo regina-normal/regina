@@ -40,8 +40,10 @@
 #define REGINA_DATADIR "/usr/local/share/regina"
 
 /* Define to the directory on the system in which Regina's python module is
-   installed.  can always be changed at runtime vi NGlobalDirs::setDirs(). */
-#define REGINA_PYLIBDIR "/usr/local/lib/regina/python"
+   installed, or the empty string if the module is installed in a standard
+   python location (i.e., it can be found automatically on python's sys.path).
+   This can always be changed at runtime vi NGlobalDirs::setDirs(). */
+#define REGINA_PYLIBDIR ""
 
 /* Define to the filename extension that we use for census databases. */
 #define REGINA_DB_EXT "tdb"
@@ -59,5 +61,5 @@
 #define PACKAGE_VERSION_MINOR 0
 
 /* Define to the version of SnapPy that is bundled with Regina. */
-#define SNAPPY_VERSION "2.2"
+#define SNAPPY_VERSION "2.4"
 
