@@ -4478,39 +4478,8 @@
 		052FA0AF180604A900FAE4DF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				05CAFB541C4D8FCE0001C253 /* graphviz.framework */,
-				05AB5ECC1B8ED9F9007034C8 /* QtCore.framework */,
-				05AB5F051B9429BA007034C8 /* QtDBus.framework */,
-				05AB5ECD1B8ED9F9007034C8 /* QtGui.framework */,
-				05AB5F061B9429BB007034C8 /* QtNetwork.framework */,
-				05AB5F071B9429BB007034C8 /* QtPrintSupport.framework */,
-				05AB5ED21B8EDC27007034C8 /* QtSvg.framework */,
-				05AB5ECE1B8ED9FA007034C8 /* QtWidgets.framework */,
-				05F4947B19BDDD5D00CD887C /* DBChooser.framework */,
-				0569F93119B3658200051091 /* libbz2.dylib */,
-				057FA74F180615F5008E25F6 /* libiconv.dylib */,
-				057FA750180615F5008E25F6 /* libxml2.dylib */,
-				057FA751180615F5008E25F6 /* libz.dylib */,
-				05DC051E1C41B87200C76D71 /* boost.framework */,
-				05DC051C1C41B85100C76D71 /* boost.framework */,
-				056AA9931C41C10100FA81D3 /* boost-python.framework */,
-				056AA99C1C41DAC100FA81D3 /* cppunit.framework */,
-				056AA9991C41DA6900FA81D3 /* cppunit.framework */,
-				056AA9A01C41DDF400FA81D3 /* graphviz.framework */,
-				056AA9A81C41DE9D00FA81D3 /* libgmp.framework */,
-				056AA9A21C41DE8600FA81D3 /* libgmp.framework */,
-				056AA9A91C41DE9E00FA81D3 /* libgmpxx.framework */,
-				056AA9A31C41DE8600FA81D3 /* libgmpxx.framework */,
-				056AA99E1C41DACA00FA81D3 /* libtokyocabinet.framework */,
-				056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */,
-				053E5B5519B3D79100166778 /* libbz2.dylib */,
-				055B7317181D7F2400449D14 /* libiconv.dylib */,
-				055B7319181D7F2B00449D14 /* libxml2.dylib */,
-				052FA0A51806047E00FAE4DF /* libz.dylib */,
-				050F5E851B9BD7EF00C1F681 /* libpython2.7.dylib */,
-				052FA1291806102F00FAE4DF /* Foundation.framework */,
-				057FA7551806184A008E25F6 /* UIKit.framework */,
-				052FA12B1806102F00FAE4DF /* CoreGraphics.framework */,
+				05C65E771D9C7B0B00877233 /* iOS */,
+				05C65E781D9C7B1200877233 /* OSX */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -5512,6 +5481,53 @@
 				05BEB0C019CCE0B0006AB2C8 /* UIView+Toast.m */,
 			);
 			name = Toast;
+			sourceTree = "<group>";
+		};
+		05C65E771D9C7B0B00877233 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				05DC051E1C41B87200C76D71 /* boost.framework */,
+				056AA99C1C41DAC100FA81D3 /* cppunit.framework */,
+				056AA9A01C41DDF400FA81D3 /* graphviz.framework */,
+				056AA9A81C41DE9D00FA81D3 /* libgmp.framework */,
+				056AA9A91C41DE9E00FA81D3 /* libgmpxx.framework */,
+				056AA99E1C41DACA00FA81D3 /* libtokyocabinet.framework */,
+				05F4947B19BDDD5D00CD887C /* DBChooser.framework */,
+				0569F93119B3658200051091 /* libbz2.dylib */,
+				057FA74F180615F5008E25F6 /* libiconv.dylib */,
+				057FA750180615F5008E25F6 /* libxml2.dylib */,
+				057FA751180615F5008E25F6 /* libz.dylib */,
+				052FA12B1806102F00FAE4DF /* CoreGraphics.framework */,
+				052FA1291806102F00FAE4DF /* Foundation.framework */,
+				057FA7551806184A008E25F6 /* UIKit.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		05C65E781D9C7B1200877233 /* OSX */ = {
+			isa = PBXGroup;
+			children = (
+				05DC051C1C41B85100C76D71 /* boost.framework */,
+				056AA9931C41C10100FA81D3 /* boost-python.framework */,
+				056AA9991C41DA6900FA81D3 /* cppunit.framework */,
+				05CAFB541C4D8FCE0001C253 /* graphviz.framework */,
+				056AA9A21C41DE8600FA81D3 /* libgmp.framework */,
+				056AA9A31C41DE8600FA81D3 /* libgmpxx.framework */,
+				056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */,
+				05AB5ECC1B8ED9F9007034C8 /* QtCore.framework */,
+				05AB5F051B9429BA007034C8 /* QtDBus.framework */,
+				05AB5ECD1B8ED9F9007034C8 /* QtGui.framework */,
+				05AB5F061B9429BB007034C8 /* QtNetwork.framework */,
+				05AB5F071B9429BB007034C8 /* QtPrintSupport.framework */,
+				05AB5ED21B8EDC27007034C8 /* QtSvg.framework */,
+				05AB5ECE1B8ED9FA007034C8 /* QtWidgets.framework */,
+				053E5B5519B3D79100166778 /* libbz2.dylib */,
+				055B7317181D7F2400449D14 /* libiconv.dylib */,
+				055B7319181D7F2B00449D14 /* libxml2.dylib */,
+				052FA0A51806047E00FAE4DF /* libz.dylib */,
+				050F5E851B9BD7EF00C1F681 /* libpython2.7.dylib */,
+			);
+			name = OSX;
 			sourceTree = "<group>";
 		};
 		05F96C14180A14E600C99F96 /* MBProgressHUD */ = {
