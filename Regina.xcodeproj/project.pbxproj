@@ -22,6 +22,7 @@
 		050AFC5A19DCB9B100835ED6 /* SnapPeaAlgebra.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050AFC5519DCB9B100835ED6 /* SnapPeaAlgebra.mm */; };
 		050AFC5C19DCB9B200835ED6 /* SnapPeaGluings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050AFC5919DCB9B100835ED6 /* SnapPeaGluings.mm */; };
 		050AFC5F19DCC68B00835ED6 /* SurfacesCompat.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050AFC5E19DCC68B00835ED6 /* SurfacesCompat.mm */; };
+		050BEA361D9C8B6700B96DB8 /* __init__.py in CopyFiles */ = {isa = PBXBuildFile; fileRef = 050F5E6B1B9BD30700C1F681 /* __init__.py */; };
 		050F5DD31B9BAB9C00C1F681 /* nabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D021B9BAB9C00C1F681 /* nabeliangroup.cpp */; };
 		050F5DD41B9BAB9C00C1F681 /* ngrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D031B9BAB9C00C1F681 /* ngrouppresentation.cpp */; };
 		050F5DD51B9BAB9C00C1F681 /* nhomgrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D041B9BAB9C00C1F681 /* nhomgrouppresentation.cpp */; };
@@ -153,7 +154,6 @@
 		050F5E611B9BAB9C00C1F681 /* globalarray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DD21B9BAB9C00C1F681 /* globalarray.cpp */; };
 		050F5E621B9BAC5200C1F681 /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
 		050F5E6A1B9BD2ED00C1F681 /* engine.so in CopyFiles */ = {isa = PBXBuildFile; fileRef = 050F5CDD1B9BAAAA00C1F681 /* engine.so */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		050F5E6D1B9BD34100C1F681 /* __init__.py in CopyFiles */ = {isa = PBXBuildFile; fileRef = 050F5E6B1B9BD30700C1F681 /* __init__.py */; };
 		050F5E711B9BD51B00C1F681 /* libregina-engine.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		050F5E7D1B9BD6F400C1F681 /* commandedit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E741B9BD6F400C1F681 /* commandedit.cpp */; };
 		050F5E7E1B9BD6F400C1F681 /* pythonconsole.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E761B9BD6F400C1F681 /* pythonconsole.cpp */; };
@@ -1560,13 +1560,22 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		050BEA351D9C8B3700B96DB8 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = python;
+			dstSubfolderSpec = 7;
+			files = (
+				050BEA361D9C8B6700B96DB8 /* __init__.py in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		050F5E691B9BD2AA00C1F681 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = python/regina;
 			dstSubfolderSpec = 6;
 			files = (
-				050F5E6D1B9BD34100C1F681 /* __init__.py in CopyFiles */,
 				050F5E6A1B9BD2ED00C1F681 /* engine.so in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5909,6 +5918,8 @@
 				05AB5EFE1B9428BD007034C8 /* CopyFiles */,
 				05AB5F011B9428E4007034C8 /* CopyFiles */,
 				050F5E691B9BD2AA00C1F681 /* CopyFiles */,
+				050BEA351D9C8B3700B96DB8 /* CopyFiles */,
+				050BEA371D9C8B7E00B96DB8 /* ShellScript */,
 				050F5E701B9BD50C00C1F681 /* CopyFiles */,
 			);
 			buildRules = (
@@ -6053,6 +6064,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		050BEA371D9C8B7E00B96DB8 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "ln -f -s ../../../Resources/python/__init__.py ${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS/python/regina/__init__.py";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		050F5CD91B9BAAAA00C1F681 /* Sources */ = {
