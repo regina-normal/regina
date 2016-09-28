@@ -247,7 +247,14 @@
      saying &ldquo;No &python; class registered for &cpp; class
      <classname>regina::NPacket</classname>&rdquo;, and/or a
      message that &regina; &ldquo;could not set the
-     <emphasis>root</emphasis> variable&rdquo;.
+     root variable&rdquo;.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="trouble-python-root.png"/>
+      </imageobject>
+     </inlinemediaobject>
     </para></question>
     <answer>
      <para>
