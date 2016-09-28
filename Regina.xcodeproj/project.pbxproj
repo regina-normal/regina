@@ -2905,7 +2905,6 @@
 		0588F1171808D43B006BDC79 /* packettype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packettype.h; sourceTree = "<group>"; };
 		0589FAC1181484860064CD57 /* TriGluings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriGluings.h; sourceTree = "<group>"; };
 		0589FAC2181484860064CD57 /* TriGluings.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TriGluings.mm; sourceTree = "<group>"; };
-		0589FAC718148F700064CD57 /* sample-ios.rga */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "sample-ios.rga"; sourceTree = "<group>"; };
 		0589FACA1814BECF0064CD57 /* PacketListenerIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketListenerIOS.h; sourceTree = "<group>"; };
 		0589FACB1814BECF0064CD57 /* PacketListenerIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketListenerIOS.mm; sourceTree = "<group>"; };
 		058FADA319D388920001B5B5 /* Dim2TriangulationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Dim2TriangulationViewController.h; sourceTree = "<group>"; };
@@ -5403,7 +5402,6 @@
 				05A47F9E1809CB7600F86BFD /* progress.py */,
 				05A47F9F1809CB7600F86BFD /* progress.session */,
 				05A47FA01809CB7600F86BFD /* README.txt */,
-				0589FAC718148F700064CD57 /* sample-ios.rga */,
 				05A47FA11809CB7600F86BFD /* sample-misc.rga */,
 				05A47FA51809CB7600F86BFD /* tree.py */,
 				05A47FA61809CB7600F86BFD /* tree.session */,
