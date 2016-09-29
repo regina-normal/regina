@@ -42,6 +42,27 @@
 #include <QFile>
 
 int main(int argc, char **argv) {
+#if defined(REGINA_INSTALL_BUNDLE) && defined(Q_OS_MACX) && defined(REGINA_XCODE_BUNDLE)
+    // The Xcode bundle has sandboxing enabled, which means Qt will have
+    // trouble searching for its plugins.
+    // Therefore we need to set the Qt plugin path explicitly, *before*
+    // the main application object is created.
+
+    QString appDirPath;
+    {
+        // QCoreApplication::applicationDirPath() does not work until there
+        // is a QCoreApplication object already created.  Since we need
+        // to fix the plugin directories *before* Regina's own application
+        // object is created, we use a temporary object here instead.
+        QCoreApplication tmp(argc, argv);
+        appDirPath = QCoreApplication::applicationDirPath();
+
+        // I *think* that this temporary application object needs to be
+        // destroyed before we call QCoreApplication::addLibraryPath().
+    }
+    QCoreApplication::addLibraryPath(appDirPath + "/../PlugIns");
+#endif
+
     ReginaManager *app = new ReginaManager(argc, argv);
     app->setAttribute(Qt::AA_UseHighDpiPixmaps);
 
