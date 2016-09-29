@@ -1004,6 +1004,7 @@
 		055FF38219BECF590057462A /* NewTriangulationController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055FF38119BECF590057462A /* NewTriangulationController.mm */; };
 		055FF38519BFB3C30057462A /* NewPacketPageViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055FF38419BFB3C30057462A /* NewPacketPageViewController.mm */; };
 		055FF38819C044FB0057462A /* NewDim2TriangulationController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055FF38719C044FB0057462A /* NewDim2TriangulationController.mm */; };
+		05617AD61D9D3C5A00B1E33B /* regina-python.in in Resources */ = {isa = PBXBuildFile; fileRef = 05617AD51D9D3C5400B1E33B /* regina-python.in */; };
 		0564A7F81811D921002CC2AE /* actionspart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4091811D91E002CC2AE /* actionspart.cpp */; };
 		0564A7F91811D921002CC2AE /* bigwidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A40A1811D91E002CC2AE /* bigwidget.cpp */; };
 		0564A7FA1811D921002CC2AE /* boundarycomponentchooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A40D1811D91E002CC2AE /* boundarycomponentchooser.cpp */; };
@@ -1552,6 +1553,17 @@
 				"$(DERIVED_FILE_DIR)/${INPUT_FILE_BASE}.tdb",
 			);
 			script = "${CONFIGURATION_BUILD_DIR}/mkcensusdb ${INPUT_FILE_PATH} ${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}.tdb";
+		};
+		05617AD71D9D3CBD00B1E33B /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*.in";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"$(DERIVED_FILE_DIR)/${INPUT_FILE_BASE}",
+			);
+			script = "cat ${INPUT_FILE_PATH} | sed \\\n  -e \"s#@PYTHON_EXECUTABLE@#/usr/bin/python2.7#\" \\\n  -e \"s#@REGINA_INSTALL_TYPE@#Bundle#\" \\\n  -e \"s#@CMAKE_SYSTEM_NAME@#Darwin#\" \\\n  -e \"s#@OSX_PYTHON_32@#0#\" \\\n  -e \"s#@CMAKE_INSTALL_PREFIX@##\" \\\n  -e \"s#@PKGDATADIR@##\" \\\n  -e \"s#@LIBDIR@##\" \\\n  -e \"s#@PACKAGE_NAME@#regina#\" \\\n  -e \"s#@CMAKE_SOURCE_DIR@##\" \\\n> ${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}\n";
 		};
 		05B14EBC19B428EA002138C0 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -2655,6 +2667,7 @@
 		055FF38419BFB3C30057462A /* NewPacketPageViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewPacketPageViewController.mm; sourceTree = "<group>"; };
 		055FF38619C044FB0057462A /* NewDim2TriangulationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewDim2TriangulationController.h; sourceTree = "<group>"; };
 		055FF38719C044FB0057462A /* NewDim2TriangulationController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewDim2TriangulationController.mm; sourceTree = "<group>"; };
+		05617AD51D9D3C5400B1E33B /* regina-python.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; path = "regina-python.in"; sourceTree = "<group>"; };
 		0564A1DF1811D6F8002CC2AE /* Regina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Regina.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0564A2161811D91C002CC2AE /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		0564A4071811D91E002CC2AE /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
@@ -3465,6 +3478,7 @@
 				05431FA11C40F56E009BC072 /* CMakeLists.txt */,
 				05431FA31C40F56E009BC072 /* README.txt */,
 				050F5E6B1B9BD30700C1F681 /* __init__.py */,
+				05617AD51D9D3C5400B1E33B /* regina-python.in */,
 				050F5D001B9BAB9C00C1F681 /* algebra */,
 				050F5D071B9BAB9C00C1F681 /* angle */,
 				050F5DC01B9BAB9C00C1F681 /* census */,
@@ -5992,6 +6006,7 @@
 			);
 			buildRules = (
 				0514CAF01D9CE54A00EDB2E6 /* PBXBuildRule */,
+				05617AD71D9D3CBD00B1E33B /* PBXBuildRule */,
 				0514CAEE1D9CDF2600EDB2E6 /* PBXBuildRule */,
 				0514CAEB1D9CD4ED00EDB2E6 /* PBXBuildRule */,
 				055ABEB519B49F4500044C1B /* PBXBuildRule */,
@@ -6129,6 +6144,7 @@
 				0514CAEA1D9CD4D600EDB2E6 /* index.docbook in Resources */,
 				055ABEC719B49FC300044C1B /* hyp-knot-link-census.zsig in Resources */,
 				051806D4181202BD008EBB01 /* icons in Resources */,
+				05617AD61D9D3C5A00B1E33B /* regina-python.in in Resources */,
 				058637F3181DBC5900E95307 /* syntax in Resources */,
 				051806D6181202E0008EBB01 /* examples in Resources */,
 				058637F5181DBCE100E95307 /* pylib in Resources */,
@@ -6152,7 +6168,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "ln -f -s ../../../Resources/python/__init__.py ${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS/python/regina/__init__.py";
+			shellScript = "macosdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS\"\n\nln -f -s ../../../Resources/python/__init__.py ${macosdir}/python/regina/__init__.py\nln -f -s ../Resources/regina-python ${macosdir}/regina-python\nchmod a+x ${macosdir}/../Resources/regina-python\n";
 		};
 		0514CAE31D9C9A5800EDB2E6 /* Sign Qt Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
