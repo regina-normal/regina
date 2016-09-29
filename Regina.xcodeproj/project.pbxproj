@@ -164,6 +164,10 @@
 		050F5E8B1B9BD9C100C1F681 /* pythonconsole.h in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E771B9BD6F400C1F681 /* pythonconsole.h */; };
 		0513753D1809B8D3002E525B /* coordregistry-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0513753B1809B8D2002E525B /* coordregistry-impl.h */; };
 		0513753E1809B8D3002E525B /* coordregistry.h in Headers */ = {isa = PBXBuildFile; fileRef = 0513753C1809B8D2002E525B /* coordregistry.h */; };
+		0514CAE91D9CD4D200EDB2E6 /* index.docbook in Resources */ = {isa = PBXBuildFile; fileRef = 0514CAE71D9CD4B500EDB2E6 /* index.docbook */; };
+		0514CAEA1D9CD4D600EDB2E6 /* index.docbook in Resources */ = {isa = PBXBuildFile; fileRef = 0514CAE81D9CD4CE00EDB2E6 /* index.docbook */; };
+		0514CAEC1D9CD5F100EDB2E6 /* index.docbook in Sources */ = {isa = PBXBuildFile; fileRef = 0514CAE71D9CD4B500EDB2E6 /* index.docbook */; };
+		0514CAED1D9CD5F400EDB2E6 /* index.docbook in Sources */ = {isa = PBXBuildFile; fileRef = 0514CAE81D9CD4CE00EDB2E6 /* index.docbook */; };
 		051691B71C5AD5AC00DC69EC /* nhypercompatui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051691A31C5AD59000DC69EC /* nhypercompatui.cpp */; };
 		051691B81C5AD5AC00DC69EC /* nhypercoordinateui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051691A51C5AD59000DC69EC /* nhypercoordinateui.cpp */; };
 		051691B91C5AD5AC00DC69EC /* nhypermatchingui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051691A71C5AD59000DC69EC /* nhypermatchingui.cpp */; };
@@ -1482,6 +1486,28 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
+		0514CAEB1D9CD4ED00EDB2E6 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*/regina/index.docbook";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"$(DERIVED_FILE_DIR)/docs-regina",
+			);
+			script = "custom=${INPUT_FILE_DIR}/../ksgmltools2/customization\ndtd=${custom}/dtd\nsheet=${custom}/regina.xsl\noutput=${DERIVED_FILE_DIR}/docs-regina\n\n/sw/bin/xsltproc --path $dtd -o ${output}/ $sheet ${INPUT_FILE_PATH}\ncp ${INPUT_FILE_DIR}/*.{css,html,png} ${output}\n";
+		};
+		0514CAEE1D9CDF2600EDB2E6 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*/regina-xml/index.docbook";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"$(DERIVED_FILE_DIR)/docs-regina-xml",
+			);
+			script = "custom=${INPUT_FILE_DIR}/../ksgmltools2/customization\ndtd=${custom}/dtd\nsheet=${custom}/regina.xsl\noutput=${DERIVED_FILE_DIR}/docs-regina-xml\n\n/sw/bin/xsltproc --path $dtd -o ${output}/ $sheet ${INPUT_FILE_PATH}\ncp ${INPUT_FILE_DIR}/*.{css,png} ${output}\n";
+		};
 		0543AE921811DE96002758F8 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
 			compilerSpec = com.apple.compilers.proxy.script;
@@ -1932,6 +1958,8 @@
 		050F5E851B9BD7EF00C1F681 /* libpython2.7.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpython2.7.dylib; path = usr/lib/libpython2.7.dylib; sourceTree = SDKROOT; };
 		0513753B1809B8D2002E525B /* coordregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "coordregistry-impl.h"; sourceTree = "<group>"; };
 		0513753C1809B8D2002E525B /* coordregistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = coordregistry.h; sourceTree = "<group>"; };
+		0514CAE71D9CD4B500EDB2E6 /* index.docbook */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = index.docbook; sourceTree = "<group>"; };
+		0514CAE81D9CD4CE00EDB2E6 /* index.docbook */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = index.docbook; sourceTree = "<group>"; };
 		051691A31C5AD59000DC69EC /* nhypercompatui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nhypercompatui.cpp; sourceTree = "<group>"; };
 		051691A41C5AD59000DC69EC /* nhypercompatui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhypercompatui.h; sourceTree = "<group>"; };
 		051691A51C5AD59000DC69EC /* nhypercoordinateui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nhypercoordinateui.cpp; sourceTree = "<group>"; };
@@ -3786,6 +3814,32 @@
 			path = python;
 			sourceTree = "<group>";
 		};
+		0514CAE41D9CD42D00EDB2E6 /* doc */ = {
+			isa = PBXGroup;
+			children = (
+				0514CAE51D9CD45300EDB2E6 /* regina */,
+				0514CAE61D9CD47B00EDB2E6 /* regina-xml */,
+			);
+			path = doc;
+			sourceTree = "<group>";
+		};
+		0514CAE51D9CD45300EDB2E6 /* regina */ = {
+			isa = PBXGroup;
+			children = (
+				0514CAE71D9CD4B500EDB2E6 /* index.docbook */,
+			);
+			path = regina;
+			sourceTree = "<group>";
+		};
+		0514CAE61D9CD47B00EDB2E6 /* regina-xml */ = {
+			isa = PBXGroup;
+			children = (
+				0514CAE81D9CD4CE00EDB2E6 /* index.docbook */,
+			);
+			name = "regina-xml";
+			path = "qtui/doc/regina-xml";
+			sourceTree = SOURCE_ROOT;
+		};
 		052F9BFD180600FA00FAE4DF /* engine */ = {
 			isa = PBXGroup;
 			children = (
@@ -4898,6 +4952,7 @@
 				0564A2161811D91C002CC2AE /* CMakeLists.txt */,
 				0564A4071811D91E002CC2AE /* README.txt */,
 				0564A4081811D91E002CC2AE /* src */,
+				0514CAE41D9CD42D00EDB2E6 /* doc */,
 				0564A6181811D921002CC2AE /* TODO.txt */,
 				05561D181811F27A00FD6E2E /* regina.icns */,
 				05561D191811F27A00FD6E2E /* x-regina.icns */,
@@ -5924,6 +5979,8 @@
 				050F5E701B9BD50C00C1F681 /* CopyFiles */,
 			);
 			buildRules = (
+				0514CAEE1D9CDF2600EDB2E6 /* PBXBuildRule */,
+				0514CAEB1D9CD4ED00EDB2E6 /* PBXBuildRule */,
 				055ABEB519B49F4500044C1B /* PBXBuildRule */,
 				0543AE921811DE96002758F8 /* PBXBuildRule */,
 			);
@@ -6052,8 +6109,10 @@
 				055ABEC219B49FC300044C1B /* closed-hyp-census-full.zsig in Resources */,
 				055ABEC319B49FC300044C1B /* closed-nor-census-11.zsig in Resources */,
 				055ABEC419B49FC300044C1B /* closed-or-census-11.zsig in Resources */,
+				0514CAE91D9CD4D200EDB2E6 /* index.docbook in Resources */,
 				055ABEC519B49FC300044C1B /* cusped-hyp-nor-census-9.zsig in Resources */,
 				055ABEC619B49FC300044C1B /* cusped-hyp-or-census-9.zsig in Resources */,
+				0514CAEA1D9CD4D600EDB2E6 /* index.docbook in Resources */,
 				055ABEC719B49FC300044C1B /* hyp-knot-link-census.zsig in Resources */,
 				051806D4181202BD008EBB01 /* icons in Resources */,
 				058637F3181DBC5900E95307 /* syntax in Resources */,
@@ -6749,6 +6808,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0514CAEC1D9CD5F100EDB2E6 /* index.docbook in Sources */,
+				0514CAED1D9CD5F400EDB2E6 /* index.docbook in Sources */,
 				055ABEB619B49F6800044C1B /* closed-hyp-census-full.zsig in Sources */,
 				055ABEB719B49F6800044C1B /* closed-nor-census-11.zsig in Sources */,
 				055ABEB819B49F6800044C1B /* closed-or-census-11.zsig in Sources */,
