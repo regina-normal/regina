@@ -169,6 +169,9 @@ ReginaPrefSet::ReginaPrefSet() :
 QString ReginaPrefSet::pythonLibrariesConfig() {
 #ifdef Q_OS_WIN32
     return QString(); // Use the registry instead.
+#elif defined(REGINA_INSTALL_BUNDLE) && defined(Q_OS_MACX) && defined(REGINA_XCODE_BUNDLE)
+    // The Xcode build is sandboxed, so we can't read ~/.regina-libs.
+    return QString();
 #else
     return QDir::homePath() + "/.regina-libs";
 #endif

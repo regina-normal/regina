@@ -98,6 +98,7 @@
   <!ENTITY latin1 "<acronym>LATIN1</acronym>">
   <!ENTITY libnormaliz "<application>libnormaliz</application>">
   <!ENTITY linux "<application><acronym>GNU</acronym>/Linux</application>">
+  <!ENTITY macappstore "Mac App Store">
   <!ENTITY macosx "<application>MacOS</application>">
   <!ENTITY mandriva "<application>Mandriva</application>">
   <!ENTITY mobius "M&ouml;bius">
