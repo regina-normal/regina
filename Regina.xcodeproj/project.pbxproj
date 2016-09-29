@@ -8127,6 +8127,12 @@
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks/osx",
 				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"REGINA_INSTALL_BUNDLE=1",
+					"REGINA_XCODE_BUNDLE=1",
+					"$(inherited)",
+				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -8156,6 +8162,10 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"REGINA_INSTALL_BUNDLE=1",
+					"REGINA_XCODE_BUNDLE=1",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -8187,6 +8197,12 @@
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks/osx",
 				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"REGINA_INSTALL_BUNDLE=1",
+					"REGINA_XCODE_BUNDLE=1",
+					"$(inherited)",
+				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -8216,6 +8232,10 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"REGINA_INSTALL_BUNDLE=1",
+					"REGINA_XCODE_BUNDLE=1",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -8247,6 +8267,12 @@
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks/osx",
 				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"REGINA_INSTALL_BUNDLE=1",
+					"REGINA_XCODE_BUNDLE=1",
+					"$(inherited)",
+				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -8276,6 +8302,10 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"REGINA_INSTALL_BUNDLE=1",
+					"REGINA_XCODE_BUNDLE=1",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -8307,6 +8337,12 @@
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks/osx",
 				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"REGINA_INSTALL_BUNDLE=1",
+					"REGINA_XCODE_BUNDLE=1",
+					"$(inherited)",
+				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -8336,6 +8372,10 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"REGINA_INSTALL_BUNDLE=1",
+					"REGINA_XCODE_BUNDLE=1",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -8367,6 +8407,12 @@
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks/osx",
 				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"REGINA_INSTALL_BUNDLE=1",
+					"REGINA_XCODE_BUNDLE=1",
+					"$(inherited)",
+				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -8396,6 +8442,10 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"REGINA_INSTALL_BUNDLE=1",
+					"REGINA_XCODE_BUNDLE=1",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -8427,6 +8477,12 @@
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks/osx",
 				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"REGINA_INSTALL_BUNDLE=1",
+					"REGINA_XCODE_BUNDLE=1",
+					"$(inherited)",
+				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -8456,6 +8512,10 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"REGINA_INSTALL_BUNDLE=1",
+					"REGINA_XCODE_BUNDLE=1",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -8487,6 +8547,12 @@
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks/osx",
 				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"REGINA_INSTALL_BUNDLE=1",
+					"REGINA_XCODE_BUNDLE=1",
+					"$(inherited)",
+				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -8516,6 +8582,10 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"REGINA_INSTALL_BUNDLE=1",
+					"REGINA_XCODE_BUNDLE=1",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -8547,6 +8617,12 @@
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks/osx",
 				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"REGINA_INSTALL_BUNDLE=1",
+					"REGINA_XCODE_BUNDLE=1",
+					"$(inherited)",
+				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -8576,6 +8652,10 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"REGINA_INSTALL_BUNDLE=1",
+					"REGINA_XCODE_BUNDLE=1",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -8947,6 +9027,7 @@
 				05617AE31D9DBFBF00B1E33B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		05617B051D9DC51700B1E33B /* Build configuration list for PBXNativeTarget "Utils - CensusLookup" */ = {
 			isa = XCConfigurationList;
@@ -8955,6 +9036,7 @@
 				05617B071D9DC51700B1E33B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		05617B101D9DC52300B1E33B /* Build configuration list for PBXNativeTarget "Utils - RegConcat" */ = {
 			isa = XCConfigurationList;
@@ -8963,6 +9045,7 @@
 				05617B121D9DC52300B1E33B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		05617B1B1D9DC52B00B1E33B /* Build configuration list for PBXNativeTarget "Utils - RegConvert" */ = {
 			isa = XCConfigurationList;
@@ -8971,6 +9054,7 @@
 				05617B1D1D9DC52B00B1E33B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		05617B261D9DC53500B1E33B /* Build configuration list for PBXNativeTarget "Utils - RegFileDump" */ = {
 			isa = XCConfigurationList;
@@ -8979,6 +9063,7 @@
 				05617B281D9DC53500B1E33B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		05617B311D9DC54600B1E33B /* Build configuration list for PBXNativeTarget "Utils - RegFileType" */ = {
 			isa = XCConfigurationList;
@@ -8987,6 +9072,7 @@
 				05617B331D9DC54600B1E33B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		05617B3C1D9DC55100B1E33B /* Build configuration list for PBXNativeTarget "Utils - SigCensus" */ = {
 			isa = XCConfigurationList;
@@ -8995,6 +9081,7 @@
 				05617B3E1D9DC55100B1E33B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		05617B471D9DC55C00B1E33B /* Build configuration list for PBXNativeTarget "Utils - TriSetCmp" */ = {
 			isa = XCConfigurationList;
@@ -9003,6 +9090,7 @@
 				05617B491D9DC55C00B1E33B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		0564A2131811D6FA002CC2AE /* Build configuration list for PBXNativeTarget "Qt" */ = {
 			isa = XCConfigurationList;
