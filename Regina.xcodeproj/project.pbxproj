@@ -7365,7 +7365,6 @@
 					/usr/include/python2.7,
 				);
 				MACH_O_TYPE = mh_bundle;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = (
 					"-undefined",
@@ -7413,7 +7412,6 @@
 					/usr/include/python2.7,
 				);
 				MACH_O_TYPE = mh_bundle;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
 					"-undefined",
@@ -7613,7 +7611,6 @@
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.regina.macos.Regina;
 				PRODUCT_NAME = Regina;
 				WRAPPER_EXTENSION = app;
@@ -7665,7 +7662,6 @@
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.regina.macos.Regina;
 				PRODUCT_NAME = Regina;
 				WRAPPER_EXTENSION = app;
@@ -7716,7 +7712,7 @@
 					"\"$(SRCROOT)\"",
 					/usr/include/libxml2,
 				);
-				MACOSX_DEPLOYMENT_TARGET = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 			};
@@ -7760,7 +7756,7 @@
 					"\"$(SRCROOT)\"",
 					/usr/include/libxml2,
 				);
-				MACOSX_DEPLOYMENT_TARGET = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				SDKROOT = macosx;
 			};
 			name = Release;
