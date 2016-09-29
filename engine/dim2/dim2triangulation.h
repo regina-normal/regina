@@ -189,6 +189,15 @@ class REGINA_API Triangulation<2> :
         /*@{*/
 
         /**
+         * Deprecated dimension-specific alias for simplexIndex().
+         *
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call tri->index() instead.
+         *
+         * See simplexIndex() for further information.
+         */
+        REGINA_DEPRECATED long triangleIndex(const Dim2Triangle* tri) const;
+        /**
          * A dimension-specific alias for newSimplex().
          *
          * See newSimplex() for further information.
@@ -233,6 +242,14 @@ class REGINA_API Triangulation<2> :
         size_t countBoundaryComponents() const;
 
         /**
+         * Deprecated function that returns the number of boundary
+         * components in this triangulation.
+         *
+         * \deprecated Simply call countBoundaryComponents() instead.
+         */
+        REGINA_DEPRECATED size_t getNumberOfBoundaryComponents() const;
+
+        /**
          * Returns all boundary components of this triangulation.
          *
          * Bear in mind that each time the triangulation changes, the
@@ -249,6 +266,15 @@ class REGINA_API Triangulation<2> :
          */
         const std::vector<Dim2BoundaryComponent*>& boundaryComponents() const;
         /**
+         * Deprecated routine that returns all boundary components of this
+         * triangulation.
+         *
+         * \deprecated This routine has been renamed to boundaryComponents().
+         * See the boundaryComponents() documentation for further details.
+         */
+        REGINA_DEPRECATED const std::vector<Dim2BoundaryComponent*>&
+            getBoundaryComponents() const;
+        /**
          * Returns the requested triangulation boundary component.
          *
          * Bear in mind that each time the triangulation changes, the
@@ -260,6 +286,59 @@ class REGINA_API Triangulation<2> :
          * @return the requested boundary component.
          */
         Dim2BoundaryComponent* boundaryComponent(size_t index) const;
+        /**
+         * Deprecated routine that returns the requested boundary component
+         * of this triangulation.
+         *
+         * \deprecated This routine has been renamed to boundaryComponent().
+         * See the boundaryComponent() documentation for further details.
+         */
+        REGINA_DEPRECATED Dim2BoundaryComponent* getBoundaryComponent(
+            size_t index) const;
+        /**
+         * Deprecated routine that returns the index of the given
+         * boundary component in the triangulation.
+         *
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call bc->index() instead.
+         *
+         * \pre The given boundary component belongs to this triangulation.
+         *
+         * @param bc specifies which boundary component to find in the
+         * triangulation.
+         * @return the index of the specified boundary component,
+         * where 0 is the first boundary component, 1 is the second and so on. 
+         */
+        REGINA_DEPRECATED size_t boundaryComponentIndex(
+            const Dim2BoundaryComponent* bc) const;
+        /**
+         * Deprecated routine that returns the index of the given vertex
+         * in the triangulation.
+         *
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call vertex->index() instead.
+         *
+         * \pre The given vertex belongs to this triangulation.
+         *
+         * @param vertex specifies which vertex to find in the triangulation.
+         * @return the index of the specified vertex, where 0 is the first
+         * vertex, 1 is the second and so on.
+         */
+        REGINA_DEPRECATED size_t vertexIndex(const Dim2Vertex* vertex) const;
+        /**
+         * Deprecated routine that returns the index of the given edge
+         * in the triangulation.
+         *
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call edge->index() instead.
+         *
+         * \pre The given edge belongs to this triangulation.
+         *
+         * @param edge specifies which edge to find in the triangulation.
+         * @return the index of the specified edge, where 0 is the first
+         * edge, 1 is the second and so on.
+         */
+        REGINA_DEPRECATED size_t edgeIndex(const Dim2Edge* edge) const;
 
         /*@}*/
         /**
@@ -288,6 +367,14 @@ class REGINA_API Triangulation<2> :
          * @return the Euler characteristic of this triangulation.
          */
         long eulerChar() const;
+        /**
+         * Deprecated routine that returns the Euler characteristic of this
+         * triangulation.
+         *
+         * \deprecated This routine has been renamed to eulerChar().
+         * See the eulerChar() documentation for further details.
+         */
+        REGINA_DEPRECATED long getEulerChar() const;
         /**
          * Determines if this triangulation is closed.
          * This is the case if and only if it has no boundary components.
@@ -454,6 +541,10 @@ inline bool Triangulation<2>::dependsOnParent() const {
     return false;
 }
 
+inline long Triangulation<2>::triangleIndex(const Dim2Triangle* tri) const {
+    return tri->markedIndex();
+}
+
 inline Dim2Triangle* Triangulation<2>::newTriangle() {
     return newSimplex();
 }
@@ -479,8 +570,18 @@ inline size_t Triangulation<2>::countBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
+inline size_t Triangulation<2>::getNumberOfBoundaryComponents() const {
+    return countBoundaryComponents();
+}
+
 inline const std::vector<Dim2BoundaryComponent*>&
         Triangulation<2>::boundaryComponents() const {
+    ensureSkeleton();
+    return (const std::vector<Dim2BoundaryComponent*>&)(boundaryComponents_);
+}
+
+inline const std::vector<Dim2BoundaryComponent*>&
+        Triangulation<2>::getBoundaryComponents() const {
     ensureSkeleton();
     return (const std::vector<Dim2BoundaryComponent*>&)(boundaryComponents_);
 }
@@ -489,6 +590,25 @@ inline Dim2BoundaryComponent* Triangulation<2>::boundaryComponent(
         size_t index) const {
     ensureSkeleton();
     return boundaryComponents_[index];
+}
+
+inline Dim2BoundaryComponent* Triangulation<2>::getBoundaryComponent(
+        size_t index) const {
+    ensureSkeleton();
+    return boundaryComponents_[index];
+}
+
+inline size_t Triangulation<2>::boundaryComponentIndex(
+        const Dim2BoundaryComponent* boundaryComponent) const {
+    return boundaryComponent->markedIndex();
+}
+
+inline size_t Triangulation<2>::vertexIndex(const Dim2Vertex* vertex) const {
+    return vertex->index();
+}
+
+inline size_t Triangulation<2>::edgeIndex(const Dim2Edge* edge) const {
+    return edge->index();
 }
 
 inline bool Triangulation<2>::isValid() const {
@@ -502,6 +622,10 @@ inline long Triangulation<2>::eulerChar() const {
     return static_cast<long>(countVertices())
         - static_cast<long>(countEdges())
         + static_cast<long>(simplices_.size());
+}
+
+inline long Triangulation<2>::getEulerChar() const {
+    return eulerChar();
 }
 
 inline bool Triangulation<2>::isClosed() const {

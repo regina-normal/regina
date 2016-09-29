@@ -101,6 +101,14 @@ class REGINA_API Face<4, 3> : public detail::FaceBase<4, 3>,
          * the triangulation.
          */
         Dim4BoundaryComponent* boundaryComponent() const;
+        /**
+         * Deprecated routine that returns the boundary component of the
+         * triangulation to which this tetrahedron belongs.
+         *
+         * \deprecated This routine has been renamed as boundaryComponent().
+         * See the boundaryComponent() documentation for further details.
+         */
+        REGINA_DEPRECATED Dim4BoundaryComponent* getBoundaryComponent() const;
 
         /**
          * Determines whether this tetrahedron represents a dual edge in the
@@ -183,6 +191,10 @@ inline Face<4, 3>::Face(Dim4Component* component) :
 }
 
 inline Dim4BoundaryComponent* Face<4, 3>::boundaryComponent() const {
+    return boundaryComponent_;
+}
+
+inline Dim4BoundaryComponent* Face<4, 3>::getBoundaryComponent() const {
     return boundaryComponent_;
 }
 

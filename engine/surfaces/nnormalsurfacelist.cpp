@@ -44,6 +44,16 @@ namespace {
         "Legacy standard almost normal (pruned tri-quad-oct)";
 }
 
+const NormalCoords NNormalSurfaceList::STANDARD = NS_STANDARD;;
+const NormalCoords NNormalSurfaceList::QUAD = NS_QUAD;
+const NormalCoords NNormalSurfaceList::AN_LEGACY = NS_AN_LEGACY;
+const NormalCoords NNormalSurfaceList::AN_QUAD_OCT = NS_AN_QUAD_OCT;
+const NormalCoords NNormalSurfaceList::AN_STANDARD = NS_AN_STANDARD;
+const NormalCoords NNormalSurfaceList::EDGE_WEIGHT = NS_EDGE_WEIGHT;
+const NormalCoords NNormalSurfaceList::FACE_ARCS = NS_TRIANGLE_ARCS;
+const NormalCoords NNormalSurfaceList::ORIENTED = NS_ORIENTED;
+const NormalCoords NNormalSurfaceList::ORIENTED_QUAD = NS_ORIENTED_QUAD;
+
 // This should really be inline.  However, when inline, it seems to
 // trigger an instantiation of the generic Triangulation<3> as opposed
 // to the specialised Triangulation<3>.  A forward declaration of the
@@ -105,6 +115,10 @@ NEnumConstraintList* makeEmbeddedConstraints(
 }
 
 NTriangulation* NNormalSurfaceList::triangulation() const {
+    return dynamic_cast<NTriangulation*>(parent());
+}
+
+NTriangulation* NNormalSurfaceList::getTriangulation() const {
     return dynamic_cast<NTriangulation*>(parent());
 }
 

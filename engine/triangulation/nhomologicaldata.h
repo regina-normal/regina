@@ -680,6 +680,15 @@ public:
     long eulerChar();
 
     /**
+     * Deprecated routine that returns the proper Euler characteristic
+     * of the manifold, computed from the CW-decomposition.
+     *
+     * \deprecated This routine has been renamed to eulerChar().
+     * See the eulerChar() documentation for further details.
+     */
+    REGINA_DEPRECATED long getEulerChar();
+
+    /**
      * Returns the torsion form rank vector. This is the first of
      * the three Kawauchi-Kojima complete invariants of the torsion
      * linking form.
@@ -876,6 +885,14 @@ public:
      * on the manifold's homological data.
      */
     const std::string& embeddabilityComment();
+    /**
+     * Deprecated routine that returns a comment on whether the manifold
+     * might embed in a homology 3-sphere or 4-sphere.
+     *
+     * \deprecated This routine has been renamed to embeddabilityComment().
+     * See the embeddabilityComment() documentation for further details.
+     */
+    REGINA_DEPRECATED const std::string& getEmbeddabilityComment();
 };
 
 /*@}*/
@@ -1030,6 +1047,11 @@ inline long int NHomologicalData::eulerChar()
     return numDualCells[0]-numDualCells[1]+numDualCells[2]-numDualCells[3];
 }
 
+inline long int NHomologicalData::getEulerChar()
+{
+    return eulerChar();
+}
+
 inline const NMarkedAbelianGroup& NHomologicalData::getHomology(unsigned q)
 {
     return homology(q);
@@ -1135,6 +1157,10 @@ inline const std::string& NHomologicalData::embeddabilityComment()
 {
     computeEmbeddabilityString();
     return embeddabilityString;
+}
+inline const std::string& NHomologicalData::getEmbeddabilityComment()
+{
+    return embeddabilityComment();
 }
 
 } // namespace regina

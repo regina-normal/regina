@@ -108,6 +108,10 @@ class REGINA_API NBoundaryComponent :
          * Returns the index of this boundary component in the underlying
          * triangulation.
          *
+         * This is identical to calling the deprecated function
+         * <tt>boundaryComponentIndex(this)</tt> on the underlying
+         * triangulation.
+         *
          * @return the index of this boundary component.
          */
         REGINA_INLINE_REQUIRED
@@ -155,6 +159,14 @@ class REGINA_API NBoundaryComponent :
          * @return the component containing this boundary component.
          */
         NComponent* component() const;
+        /**
+         * Deprecated routine that returns the component of the triangulation
+         * to which this boundary component belongs.
+         *
+         * \deprecated This routine has been renamed to component().
+         * See the component() documentation for further details.
+         */
+        REGINA_DEPRECATED NComponent* getComponent() const;
 
         /**
          * Returns the Euler characteristic of this boundary component.
@@ -164,6 +176,29 @@ class REGINA_API NBoundaryComponent :
          * @return the Euler characteristic.
          */
         long eulerChar() const;
+
+        /**
+         * Deprecated routine that returns the Euler characteristic of this
+         * boundary component.
+         *
+         * \deprecated This routine has been renamed to eulerChar().
+         * See the eulerChar() documentation for further details.
+         */
+        REGINA_DEPRECATED long getEulerChar() const;
+
+        /**
+         * A deprecated alias for eulerChar().
+         *
+         * Returns the Euler characteristic of this boundary component.
+         * If this boundary component is ideal, the Euler characteristic
+         * of the link of the corresponding ideal vertex is returned.
+         *
+         * \deprecated This routine will be removed in a future version of
+         * Regina.  Please use the identical routine eulerChar() instead.
+         *
+         * @return the Euler characteristic.
+         */
+        REGINA_DEPRECATED long getEulerCharacteristic() const;
 
         /**
          * Determines if this boundary component is ideal.
@@ -284,10 +319,22 @@ inline NComponent* NBoundaryComponent::component() const {
     return vertices_.front()->component();
 }
 
+inline NComponent* NBoundaryComponent::getComponent() const {
+    return vertices_.front()->component();
+}
+
 inline long NBoundaryComponent::eulerChar() const {
     return (isIdeal() ?
         vertices_.front()->linkEulerChar() :
         long(vertices_.size()) - long(edges_.size()) + long(triangles_.size()));
+}
+
+inline long NBoundaryComponent::getEulerChar() const {
+    return eulerChar();
+}
+
+inline long NBoundaryComponent::getEulerCharacteristic() const {
+    return eulerChar();
 }
 
 inline bool NBoundaryComponent::isIdeal() const {

@@ -101,6 +101,7 @@ void addNNormalHypersurfaceList() {
     ;
 
     s.attr("typeID") = regina::PACKET_NORMALHYPERSURFACELIST;
+    s.attr("packetType") = regina::PACKET_NORMALHYPERSURFACELIST;
 
     implicitly_convertible<SafeHeldType<NNormalHypersurfaceList>,
         SafeHeldType<regina::NPacket> >();

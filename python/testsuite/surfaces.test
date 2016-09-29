@@ -62,16 +62,16 @@ def surfaceStats(tri):
 	dumpSurfaces('Vertex surfaces (quad-oct almost normal)',
 		regina.NNormalSurfaceList.enumerate(tri, regina.NS_AN_QUAD_OCT))
 	dumpSurfaces('Fundamental surfaces (std)',
-		regina.NNormalSurfaceList.enumerate(tri, regina.NS_STANDARD, regina.NS_FUNDAMENTAL))
+		regina.NNormalSurfaceList.enumerateFundPrimal(tri, regina.NS_STANDARD))
 	dumpSurfaces('Fundamental surfaces (quad)',
-		regina.NNormalSurfaceList.enumerate(tri, regina.NS_QUAD, regina.NS_FUNDAMENTAL))
+		regina.NNormalSurfaceList.enumerateFundPrimal(tri, regina.NS_QUAD))
 	dumpSurfaces('Fundamental surfaces (std almost normal)',
-		regina.NNormalSurfaceList.enumerate(tri, regina.NS_AN_STANDARD, regina.NS_FUNDAMENTAL))
+		regina.NNormalSurfaceList.enumerateFundPrimal(tri, regina.NS_AN_STANDARD))
 	dumpSurfaces('Fundamental surfaces (quad-oct almost normal)',
-		regina.NNormalSurfaceList.enumerate(tri, regina.NS_AN_QUAD_OCT, regina.NS_FUNDAMENTAL))
+		regina.NNormalSurfaceList.enumerateFundPrimal(tri, regina.NS_AN_QUAD_OCT))
 
 t = regina.NTriangulation()
-t.setLabel("Empty triangulation")
+t.setPacketLabel("Empty triangulation")
 surfaceStats(t)
 
 surfaceStats(regina.NExampleTriangulation.threeSphere())

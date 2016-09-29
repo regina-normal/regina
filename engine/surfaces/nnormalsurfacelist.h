@@ -171,6 +171,94 @@ class REGINA_API NNormalSurfaceList : public NPacket {
     REGINA_PACKET(NNormalSurfaceList, PACKET_NORMALSURFACELIST)
 
     public:
+        /**
+         * Represents standard triangle-quadrilateral coordinates for
+         * normal surfaces.
+         *
+         * \deprecated Instead of this class constant, you should use
+         * the NormalCoords enum value NS_STANDARD directly.
+         */
+        REGINA_DEPRECATED static const NormalCoords STANDARD;
+        /**
+         * Represents standard triangle-quadrilateral-octagon coordinates
+         * for octagonal almost normal surfaces.
+         *
+         * \deprecated Instead of this class constant, you should use
+         * the NormalCoords enum value NS_AN_STANDARD directly.
+         */
+        REGINA_DEPRECATED static const NormalCoords AN_STANDARD;
+        /**
+         * Represents quadrilateral coordinates for normal surfaces.
+         * For details, see "Normal surface Q-theory", Jeffrey L. Tollefson,
+         * Pacific J. Math. 183 (1998), no. 2, 359--374.
+         *
+         * \deprecated Instead of this class constant, you should use
+         * the NormalCoords enum value NS_QUAD directly.
+         */
+        REGINA_DEPRECATED static const NormalCoords QUAD;
+        /**
+         * Represents quadrilateral-octagon coordinates for octagonal
+         * almost normal surfaces.  For details, see
+         * "Quadrilateral-octagon coordinates for almost normal surfaces",
+         * Benjamin A. Burton, Experiment. Math. 19 (2010), 285-315.
+         *
+         * \deprecated Instead of this class constant, you should use
+         * the NormalCoords enum value NS_AN_QUAD_OCT directly.
+         */
+        REGINA_DEPRECATED static const NormalCoords AN_QUAD_OCT;
+
+        /**
+         * Represents edge weight coordinates for normal surfaces.
+         * This coordinate system is for representation only; surface
+         * vectors and lists cannot be created in this coordinate system.
+         *
+         * \deprecated Instead of this class constant, you should use
+         * the NormalCoords enum value NS_EDGE_WEIGHT directly.
+         */
+        REGINA_DEPRECATED static const NormalCoords EDGE_WEIGHT;
+        /**
+         * Represents triangle arc coordinates for normal surfaces.
+         * This coordinate system is for representation only; surface
+         * vectors and lists cannot be created in this coordinate system.
+         *
+         * \deprecated Instead of this class constant, you should use
+         * the NormalCoords enum value NS_TRIANGLE_ARCS.
+         */
+        REGINA_DEPRECATED static const NormalCoords FACE_ARCS;
+        /**
+         * Indicates that a list of almost normal surfaces was created
+         * using Regina 4.5.1 or earlier, where surfaces with more than
+         * one octagon of the same type were stripped out of the final
+         * solution set.  As of Regina 4.6 such surfaces are now
+         * included in the solution set, since we need them if we
+         * wish to enumerate \e all almost normal surfaces (not just
+         * the \e vertex almost normal surfaces).
+         *
+         * This coordinate system is only used with legacy data files; new
+         * vectors and lists cannot be created in this coordinate system.
+         * The underlying coordinates are identical to those of AN_STANDARD.
+         *
+         * \deprecated Instead of this class constant, you should use
+         * the NormalCoords enum value NS_AN_LEGACY directly.
+         */
+        REGINA_DEPRECATED static const NormalCoords AN_LEGACY;
+        /**
+         * Represents standard triangle-quadrilateral coordinates for
+         * transversely oriented normal surfaces.
+         *
+         * \deprecated Instead of this class constant, you should use
+         * the NormalCoords enum value NS_ORIENTED directly.
+         */
+        REGINA_DEPRECATED static const NormalCoords ORIENTED;
+        /**
+         * Represents quadrilateral coordinates for transversely oriented 
+         * normal surfaces.
+         *
+         * \deprecated Instead of this class constant, you should use
+         * the NormalCoords enum value NS_ORIENTED_QUAD directly.
+         */
+        REGINA_DEPRECATED static const NormalCoords ORIENTED_QUAD;
+
         class VectorIterator;
 
     protected:
@@ -265,6 +353,229 @@ class REGINA_API NNormalSurfaceList : public NPacket {
             NProgressTracker* tracker = 0);
 
         /**
+         * Deprecated method that uses a slow-but-direct procedure to
+         * enumerate all embedded vertex normal surfaces in standard
+         * coordinates, without using the faster procedure that works
+         * via quadrilateral coordinates.
+         *
+         * Users can still access this slower procedure if they need to;
+         * however, they should do this via enumerate(NTriangulation*,
+         * NormalCoords, NormalList, NormalAlg, NProgressTracker*) instead.
+         * See the documentation for that routine for further details.
+         *
+         * \deprecated The correct way to access this procedure is to call
+         * <tt>enumerate(owner, NS_STANDARD, NS_LIST_DEFAULT,
+         * NS_VERTEX_STD_DIRECT)</tt>.
+         *
+         * \warning This routine is slow, and users will not want to
+         * call it unless they have some specialised need.
+         *
+         * @param owner the triangulation upon which this list of
+         * surfaces will be based.
+         * @return the newly created normal surface list.
+         */
+        REGINA_DEPRECATED static NNormalSurfaceList* enumerateStandardDirect(
+            NTriangulation* owner);
+
+        /**
+         * Deprecated method that uses a slow-but-direct procedure to
+         * enumerate all embedded vertex almost normal surfaces in standard
+         * almost normal coordinates, without using the faster procedure
+         * that works via quadrilateral-octagon coordinates.
+         *
+         * Users can still access this slower procedure if they need to;
+         * however, they should do this via enumerate(NTriangulation*,
+         * NormalCoords, NormalList, NormalAlg, NProgressTracker*) instead.
+         * See the documentation for that routine for further details.
+         *
+         * \deprecated The correct way to access this procedure is to call
+         * <tt>enumerate(owner, NS_AN_STANDARD, NS_LIST_DEFAULT,
+         * NS_VERTEX_STD_DIRECT)</tt>.
+         *
+         * \warning This routine is slow, and users will not want to
+         * call it unless they have some specialised need.
+         *
+         * @param owner the triangulation upon which this list of
+         * surfaces will be based.
+         * @return the newly created normal surface list.
+         */
+        REGINA_DEPRECATED static NNormalSurfaceList* enumerateStandardANDirect(
+            NTriangulation* owner);
+
+        /**
+         * Deprecated method that enumerates all fundamental normal surfaces
+         * in the given triangulation using the primal Hilbert basis algorithm.
+         * For details of the algorithm, see B. A. Burton, "Enumerating
+         * fundamental normal surfaces: Algorithms, experiments and invariants",
+         * ALENEX 2014: Proceedings of the Meeting on Algorithm
+         * Engineering & Experiments, SIAM, 2014, pp. 112-124.
+         *
+         * Users can still access this procedure if they need to;
+         * however, they should do this via enumerate(NTriangulation*,
+         * NormalCoords, NormalList, NormalAlg, NProgressTracker*) instead.
+         * See the documentation for that routine for further details.
+         *
+         * \warning As of Regina 4.94, the \a vtxSurfaces argument is ignored.
+         * Future versions of Regina will automatically search existing surface
+         * lists in the packet tree for a ready-made list of vertex normal
+         * surfaces that can be used.
+         *
+         * \deprecated The correct way to access this procedure is to call
+         * <tt>enumerate(owner, coords, NS_FUNDAMENTAL | NS_EMBEDDED_ONLY,
+         * NS_HILBERT_PRIMAL, tracker)</tt> if \a embeddedOnly is \c true, or
+         * <tt>enumerate(owner, coords, NS_FUNDAMENTAL | NS_IMMERSED_SINGULAR,
+         * NS_HILBERT_PRIMAL, tracker)</tt> if \a embeddedOnly is \c false.
+         *
+         * @param owner the triangulation upon which this list of normal
+         * surfaces will be based.
+         * @param coords the coordinate system to be used.
+         * @param embeddedOnly \c true if only embedded normal surfaces
+         * are to be produced, or \c false if immersed and singular
+         * normal surfaces are also to be produced; this defaults to \c true.
+         * @param vtxSurfaces the set of all \e vertex normal surfaces
+         * as enumerated under the same coordinate system and
+         * constraints as given here; this may be 0 if unknown.
+         * @param tracker a progress tracker through which progress will
+         * be reported, or 0 if no progress reporting is required.
+         * @return the newly created normal surface list.  Note that if
+         * a progress tracker is passed then this list may not be completely
+         * filled when this routine returns.  If a progress tracker is
+         * passed and a new thread could not be started, this routine
+         * returns 0 (and no normal surface list is created).
+         */
+        REGINA_DEPRECATED static NNormalSurfaceList* enumerateFundPrimal(
+            NTriangulation* owner, NormalCoords coords,
+            bool embeddedOnly = true,
+            NNormalSurfaceList* vtxSurfaces = 0,
+            NProgressTracker* tracker = 0);
+
+        /**
+         * Deprecated method that enumerates all fundamental normal surfaces
+         * in the given triangulation using the dual Hilbert basis algorithm.
+         * For details of the algorithm, see B. A. Burton, "Enumerating
+         * fundamental normal surfaces: Algorithms, experiments and invariants",
+         * ALENEX 2014: Proceedings of the Meeting on Algorithm
+         * Engineering & Experiments, SIAM, 2014, pp. 112-124.
+         *
+         * Users can still access this procedure if they need to;
+         * however, they should do this via enumerate(NTriangulation*,
+         * NormalCoords, NormalList, NormalAlg, NProgressTracker*) instead.
+         * See the documentation for that routine for further details.
+         *
+         * \deprecated The correct way to access this procedure is to call
+         * <tt>enumerate(owner, coords, NS_FUNDAMENTAL | NS_EMBEDDED_ONLY,
+         * NS_HILBERT_DUAL, tracker)</tt> if \a embeddedOnly is \c true, or
+         * <tt>enumerate(owner, coords, NS_FUNDAMENTAL | NS_IMMERSED_SINGULAR,
+         * NS_HILBERT_DUAL, tracker)</tt> if \a embeddedOnly is \c false.
+         *
+         * @param owner the triangulation upon which this list of normal
+         * surfaces will be based.
+         * @param coords the coordinate system to be used.
+         * @param embeddedOnly \c true if only embedded normal surfaces
+         * are to be produced, or \c false if immersed and singular
+         * normal surfaces are also to be produced; this defaults to \c true.
+         * @param tracker a progress tracker through which progress will
+         * be reported, or 0 if no progress reporting is required.
+         * @return the newly created normal surface list.  Note that if
+         * a progress tracker is passed then this list may not be completely
+         * filled when this routine returns.  If a progress tracker is
+         * passed and a new thread could not be started, this routine
+         * returns 0 (and no normal surface list is created).
+         */
+        REGINA_DEPRECATED static NNormalSurfaceList* enumerateFundDual(
+            NTriangulation* owner, NormalCoords coords,
+            bool embeddedOnly = true,
+            NProgressTracker* tracker = 0);
+
+        /**
+         * Deprecated method that uses an extremely slow procedure to enumerate
+         * all embedded fundamental surfaces in the given triangulation,
+         * by running Normaliz over the full (and typically very large)
+         * solution cone, and only enforcing embedded constraints (such as
+         * the quadrilateral constraints) afterwards.
+         *
+         * Users can still access this slower procedure if they need to;
+         * however, they should do this via enumerate(NTriangulation*,
+         * NormalCoords, NormalList, NormalAlg, NProgressTracker*) instead.
+         * See the documentation for that routine for further details.
+         *
+         * \deprecated The correct way to access this procedure is to call
+         * <tt>enumerate(owner, coords, NS_FUNDAMENTAL | NS_EMBEDDED_ONLY,
+         * NS_HILBERT_FULLCONE)</tt> if \a embeddedOnly is \c true, or
+         * <tt>enumerate(owner, coords, NS_FUNDAMENTAL | NS_IMMERSED_SINGULAR,
+         * NS_HILBERT_FULLCONE)</tt> if \a embeddedOnly is \c false.
+         *
+         * \warning This routine is extremely slow, and users will not want to
+         * call it unless they have some specialised need.
+         *
+         * @param owner the triangulation upon which this list of normal
+         * surfaces will be based.
+         * @param coords the coordinate system to be used.
+         * @param embeddedOnly \c true if only embedded normal surfaces
+         * are to be produced, or \c false if immersed and singular
+         * normal surfaces are also to be produced; this defaults to \c true.
+         * @return the newly created normal surface list.
+         */
+        REGINA_DEPRECATED static NNormalSurfaceList* enumerateFundFullCone(
+            NTriangulation* owner, NormalCoords coords,
+            bool embeddedOnly = true);
+
+        /**
+         * Deprecated method that uses an extremely slow modified
+         * Contejean-Devie procedure to enumerate all embedded fundamental
+         * surfaces in the given triangulation.  For details of the algorithm,
+         * see B. A. Burton, "Fundamental normal surfaces and the enumeration
+         * of Hilbert bases", ALENEX 2014: Proceedings of the Sixteenth
+         * Workshop on Algorithm Engineering and Experiments, SIAM, 2013,
+         * pp. 112-124.
+         *
+         * Users can still access this slower procedure if they need to;
+         * however, they should do this via enumerate(NTriangulation*,
+         * NormalCoords, NormalList, NormalAlg, NProgressTracker*) instead.
+         * See the documentation for that routine for further details.
+         *
+         * \deprecated The correct way to access this procedure is to call
+         * <tt>enumerate(owner, coords, NS_FUNDAMENTAL | NS_EMBEDDED_ONLY,
+         * NS_HILBERT_CD)</tt> if \a embeddedOnly is \c true, or
+         * <tt>enumerate(owner, coords, NS_FUNDAMENTAL | NS_IMMERSED_SINGULAR,
+         * NS_HILBERT_CD)</tt> if \a embeddedOnly is \c false.
+         *
+         * \warning This routine is extremely slow, and users will not want to
+         * call it unless they have some specialised need.
+         *
+         * @param owner the triangulation upon which this list of normal
+         * surfaces will be based.
+         * @param coords the coordinate system to be used.
+         * @param embeddedOnly \c true if only embedded normal surfaces
+         * are to be produced, or \c false if immersed and singular
+         * normal surfaces are also to be produced; this defaults to \c true.
+         * @return the newly created normal surface list.
+         */
+        REGINA_DEPRECATED static NNormalSurfaceList* enumerateFundCD(
+            NTriangulation* owner, NormalCoords coords,
+            bool embeddedOnly = true);
+
+        /**
+         * Deprecated routine to return the coordinate system
+         * being used by the surfaces stored in this set.
+         *
+         * \deprecated Users should switch to the identical routine
+         * coords() instead.
+         *
+         * @return the coordinate system used.
+         */
+        REGINA_DEPRECATED NormalCoords getFlavour() const;
+        /**
+         * Deprecated routine to return the coordinate system being used by the
+         * surfaces stored in this set.
+         *
+         * \deprecated Users should switch to the identical routine
+         * coords() instead.
+         *
+         * @return the coordinate system used.
+         */
+        REGINA_DEPRECATED NormalCoords flavour() const;
+        /**
          * Returns the coordinate system being used by the
          * surfaces stored in this set.
          *
@@ -342,11 +653,28 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          */
         NTriangulation* triangulation() const;
         /**
+         * Deprecated routine that returns the triangulation in which these
+         * normal surfaces live.
+         *
+         * \deprecated This routine has been renamed to triangulation().
+         * See the triangulation() documentation for further details.
+         */
+        REGINA_DEPRECATED NTriangulation* getTriangulation() const;
+        /**
          * Returns the number of surfaces stored in this list.
          *
          * @return the number of surfaces.
          */
         size_t size() const;
+        /**
+         * Deprecated routine to return the number of surfaces
+         * stored in this list.
+         *
+         * \deprecated Please use the identical routine size() instead.
+         *
+         * @return the number of surfaces.
+         */
+        REGINA_DEPRECATED size_t getNumberOfSurfaces() const;
         /**
          * Returns the surface at the requested index in this set.
          *
@@ -356,6 +684,14 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * @return the normal surface at the requested index in this set.
          */
         const NNormalSurface* surface(size_t index) const;
+        /**
+         * Deprecated routine that returns the surface at the requested
+         * index in this set.
+         *
+         * \deprecated This routine has been renamed to surface().
+         * See the surface() documentation for further details.
+         */
+        REGINA_DEPRECATED const NNormalSurface* getSurface(size_t index) const;
         /**
          * Writes the number of surfaces in this set followed by the
          * details of each surface to the given output stream.  Output
@@ -1421,6 +1757,14 @@ inline NNormalSurfaceList::~NNormalSurfaceList() {
     for_each(surfaces.begin(), surfaces.end(), FuncDelete<NNormalSurface>());
 }
 
+inline NormalCoords NNormalSurfaceList::getFlavour() const {
+    return coords_;
+}
+
+inline NormalCoords NNormalSurfaceList::flavour() const {
+    return coords_;
+}
+
 inline NormalCoords NNormalSurfaceList::coords() const {
     return coords_;
 }
@@ -1440,13 +1784,69 @@ inline bool NNormalSurfaceList::isEmbeddedOnly() const {
 inline size_t NNormalSurfaceList::size() const {
     return surfaces.size();
 }
+inline size_t NNormalSurfaceList::getNumberOfSurfaces() const {
+    return surfaces.size();
+}
 
 inline const NNormalSurface* NNormalSurfaceList::surface(size_t index) const {
     return surfaces[index];
 }
 
+inline const NNormalSurface* NNormalSurfaceList::getSurface(
+        size_t index) const {
+    return surfaces[index];
+}
+
 inline bool NNormalSurfaceList::dependsOnParent() const {
     return true;
+}
+
+inline NNormalSurfaceList* NNormalSurfaceList::enumerateStandardDirect(
+        NTriangulation* owner) {
+    return enumerate(owner, NS_STANDARD, NS_VERTEX | NS_EMBEDDED_ONLY,
+        NS_VERTEX_STD_DIRECT);
+}
+
+inline NNormalSurfaceList* NNormalSurfaceList::enumerateStandardANDirect(
+        NTriangulation* owner) {
+    return enumerate(owner, NS_AN_STANDARD, NS_VERTEX | NS_EMBEDDED_ONLY,
+        NS_VERTEX_STD_DIRECT);
+}
+
+inline NNormalSurfaceList* NNormalSurfaceList::enumerateFundPrimal(
+        NTriangulation* owner, NormalCoords coords,
+        bool embeddedOnly, NNormalSurfaceList*, NProgressTracker* tracker) {
+    return enumerate(owner, coords,
+        NS_FUNDAMENTAL |
+            (embeddedOnly ? NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
+        NS_HILBERT_PRIMAL, tracker);
+}
+
+inline NNormalSurfaceList* NNormalSurfaceList::enumerateFundDual(
+        NTriangulation* owner, NormalCoords coords,
+        bool embeddedOnly, NProgressTracker* tracker) {
+    return enumerate(owner, coords,
+        NS_FUNDAMENTAL |
+            (embeddedOnly ? NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
+        NS_HILBERT_DUAL, tracker);
+}
+
+inline NNormalSurfaceList* NNormalSurfaceList::enumerateFundCD(
+        NTriangulation* owner, NormalCoords coords,
+        bool embeddedOnly) {
+    return enumerate(owner, coords,
+        NS_FUNDAMENTAL |
+            (embeddedOnly ? NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
+        NS_HILBERT_CD);
+}
+
+inline NNormalSurfaceList* NNormalSurfaceList::enumerateFundFullCone(
+        NTriangulation* owner, NormalCoords coords,
+        bool embeddedOnly) {
+    return enumerate(owner, coords,
+        NS_FUNDAMENTAL |
+            (embeddedOnly ? NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
+        NS_HILBERT_FULLCONE);
 }
 
 inline NNormalSurfaceList::VectorIterator::VectorIterator() {

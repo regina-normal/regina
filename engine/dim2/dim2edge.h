@@ -93,6 +93,14 @@ class REGINA_API Face<2, 1> : public detail::FaceBase<2, 1>,
          * the triangulation.
          */
         Dim2BoundaryComponent* boundaryComponent() const;
+        /**
+         * Deprecated routine that returns the boundary component of the
+         * triangulation to which this edge belongs.
+         *
+         * \deprecated This routine has been renamed as boundaryComponent().
+         * See the boundaryComponent() documentation for further details.
+         */
+        REGINA_DEPRECATED Dim2BoundaryComponent* getBoundaryComponent() const;
 
         /**
          * Determines if this edge lies entirely on the boundary of the
@@ -184,6 +192,10 @@ inline Face<2, 1>::Face(Dim2Component* component) :
 }
 
 inline Dim2BoundaryComponent* Face<2, 1>::boundaryComponent() const {
+    return boundaryComponent_;
+}
+
+inline Dim2BoundaryComponent* Face<2, 1>::getBoundaryComponent() const {
     return boundaryComponent_;
 }
 

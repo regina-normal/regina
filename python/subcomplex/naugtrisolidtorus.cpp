@@ -54,6 +54,7 @@ void addNAugTriSolidTorus() {
         .def("getAugTorus", &NAugTriSolidTorus::augTorus,
             return_internal_reference<>())
         .def("edgeGroupRoles", &NAugTriSolidTorus::edgeGroupRoles)
+        .def("getEdgeGroupRoles", &NAugTriSolidTorus::edgeGroupRoles)
         .def("chainLength", &NAugTriSolidTorus::chainLength)
         .def("getChainLength", &NAugTriSolidTorus::chainLength)
         .def("chainType", &NAugTriSolidTorus::chainType)

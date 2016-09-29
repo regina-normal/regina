@@ -150,6 +150,14 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          * as determined by isBoundary().
          */
         NBoundaryComponent* boundaryComponent() const;
+        /**
+         * Deprecated routine that returns the boundary component of the
+         * triangulation to which this vertex belongs.
+         *
+         * \deprecated This routine has been renamed as boundaryComponent().
+         * See the boundaryComponent() documentation for further details.
+         */
+        REGINA_DEPRECATED NBoundaryComponent* getBoundaryComponent() const;
 
         /**
          * Returns a broad categorisation of the link of the vertex.
@@ -402,6 +410,10 @@ inline Face<3, 0>::Face(NComponent* component) :
 }
 
 inline NBoundaryComponent* Face<3, 0>::boundaryComponent() const {
+    return boundaryComponent_;
+}
+
+inline NBoundaryComponent* Face<3, 0>::getBoundaryComponent() const {
     return boundaryComponent_;
 }
 

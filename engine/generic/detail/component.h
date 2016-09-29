@@ -103,6 +103,10 @@ class ComponentBase :
          * Returns the index of this component within the underlying
          * triangulation.
          *
+         * This is identical to calling the deprecated function
+         * <tt>t->componentIndex(this)</tt>, where
+         * \a t represents the underlying triangulation.
+         *
          * @return the index of this component.
          */
         size_t index() const;
@@ -114,6 +118,15 @@ class ComponentBase :
          * @return The number of top-dimensional simplices.
          */
         size_t size() const;
+        /**
+         * Deprecated routine that returns the number of top-dimensional
+         * simplices in this component.
+         *
+         * \deprecated Simply call size() instead.
+         *
+         * @return the number of top-dimensional simplices.
+         */
+        REGINA_DEPRECATED size_t getNumberOfSimplices() const;
         /**
          * Returns all top-dimensional simplices in this component.
          *
@@ -129,6 +142,16 @@ class ComponentBase :
          */
         const std::vector<Simplex<dim>*>& simplices() const;
         /**
+         * Deprecated routine that returns all of the top-dimensional
+         * simplices in this component.
+         *
+         * \deprecated Simply call simplices() instead.
+         *
+         * See simplices() for further details.
+         */
+        REGINA_DEPRECATED const std::vector<Simplex<dim>*>& getSimplices()
+            const;
+        /**
          * Returns the top-dimensional simplex at the given index in
          * this component.
          *
@@ -140,6 +163,15 @@ class ComponentBase :
          * @return the <i>index</i>th top-dimensional simplex.
          */
         Simplex<dim>* simplex(size_t index) const;
+        /**
+         * Deprecated routine that returns the top-dimensional simplex
+         * at the given index in this component.
+         *
+         * \deprecated Simply call simplex() instead.
+         *
+         * See simplices() for further details.
+         */
+        REGINA_DEPRECATED Simplex<dim>* getSimplex(size_t index) const;
 
         /**
          * Determines if this component is valid.
@@ -188,6 +220,15 @@ class ComponentBase :
          * @return the total number of boundary facets.
          */
         size_t countBoundaryFacets() const;
+        /**
+         * Deprecated routine that returns the number of boundary facets
+         * in this component.
+         *
+         * \deprecated Simply call countBoundaryFacets() instead.
+         *
+         * See countBoundaryFacets() for further details.
+         */
+        REGINA_DEPRECATED size_t getNumberOfBoundaryFacets() const;
 
         /**
          * Writes a short text representation of this object to the
@@ -239,12 +280,28 @@ inline size_t ComponentBase<dim>::size() const {
 }
 
 template <int dim>
+inline size_t ComponentBase<dim>::getNumberOfSimplices() const {
+    return simplices_.size();
+}
+
+template <int dim>
 inline const std::vector<Simplex<dim>*>& ComponentBase<dim>::simplices() const {
     return simplices_;
 }
 
 template <int dim>
+inline const std::vector<Simplex<dim>*>& ComponentBase<dim>::getSimplices()
+        const {
+    return simplices_;
+}
+
+template <int dim>
 inline Simplex<dim>* ComponentBase<dim>::simplex(size_t index) const {
+    return simplices_[index];
+}
+
+template <int dim>
+inline Simplex<dim>* ComponentBase<dim>::getSimplex(size_t index) const {
     return simplices_[index];
 }
 
@@ -265,6 +322,11 @@ inline bool ComponentBase<dim>::hasBoundaryFacets() const {
 
 template <int dim>
 inline size_t ComponentBase<dim>::countBoundaryFacets() const {
+    return boundaryFacets_;
+}
+
+template <int dim>
+inline size_t ComponentBase<dim>::getNumberOfBoundaryFacets() const {
     return boundaryFacets_;
 }
 

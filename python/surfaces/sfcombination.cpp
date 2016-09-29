@@ -47,6 +47,7 @@ void addNSurfaceFilterCombination() {
             ("NSurfaceFilterCombination")
         .def(init<const NSurfaceFilterCombination&>())
         .def("usesAnd", &NSurfaceFilterCombination::usesAnd)
+        .def("getUsesAnd", &NSurfaceFilterCombination::usesAnd)
         .def("setUsesAnd", &NSurfaceFilterCombination::setUsesAnd)
     ;
 

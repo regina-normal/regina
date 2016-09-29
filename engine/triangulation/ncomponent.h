@@ -133,6 +133,14 @@ class REGINA_API Component<3> : public detail::ComponentBase<3>,
         size_t countBoundaryComponents() const;
 
         /**
+         * Deprecated function that returns the number of boundary
+         * components in this component.
+         *
+         * \deprecated Simply call countBoundaryComponents() instead.
+         */
+        REGINA_DEPRECATED size_t getNumberOfBoundaryComponents() const;
+
+        /**
          * Returns a reference to the list of all <i>subdim</i>-faces in
          * this component.
          *
@@ -179,6 +187,15 @@ class REGINA_API Component<3> : public detail::ComponentBase<3>,
          * @return the requested boundary component.
          */
         NBoundaryComponent* boundaryComponent(size_t index) const;
+        /**
+         * Deprecated routine that returns the requested boundary component
+         * of this triangulation.
+         *
+         * \deprecated This routine has been renamed to boundaryComponent().
+         * See the boundaryComponent() documentation for further details.
+         */
+        REGINA_DEPRECATED NBoundaryComponent* getBoundaryComponent(
+            size_t index) const;
 
         /**
          * Determines if this component is ideal.
@@ -245,6 +262,10 @@ inline size_t Component<3>::countBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
+inline size_t Component<3>::getNumberOfBoundaryComponents() const {
+    return boundaryComponents_.size();
+}
+
 // Hide specialisations from doxygen, since it cannot handle them.
 #ifndef __DOXYGEN
 template <>
@@ -279,6 +300,11 @@ inline NVertex* Component<3>::face<0>(size_t index) const {
 #endif // ! __DOXYGEN
 
 inline NBoundaryComponent* Component<3>::boundaryComponent(size_t index) const {
+    return boundaryComponents_[index];
+}
+
+inline NBoundaryComponent* Component<3>::getBoundaryComponent(size_t index)
+        const {
     return boundaryComponents_[index];
 }
 

@@ -82,6 +82,14 @@ class REGINA_API NManifold :
          */
         std::string name() const;
         /**
+         * Deprecated routine that returns the common name of this 3-manifold
+         * as a human-readable string.
+         *
+         * \deprecated This routine has been renamed to name().
+         * See the name() documentation for further details.
+         */
+        REGINA_DEPRECATED std::string getName() const;
+        /**
          * Returns the common name of this 3-manifold in TeX format.
          * No leading or trailing dollar signs will be included.
          *
@@ -92,6 +100,14 @@ class REGINA_API NManifold :
          * @return the common name of this 3-manifold in TeX format.
          */
         std::string TeXName() const;
+        /**
+         * Deprecated routine that returns the common name of this 3-manifold
+         * in TeX format.
+         *
+         * \deprecated This routine has been renamed to TeXName().
+         * See the TeXName() documentation for further details.
+         */
+        REGINA_DEPRECATED std::string getTeXName() const;
         /**
          * Returns details of the structure of this 3-manifold that
          * might not be evident from its common name.  For instance, for
@@ -308,6 +324,14 @@ inline NAbelianGroup* NManifold::homologyH1() const {
 
 inline NAbelianGroup* NManifold::getHomologyH1() const {
     return homology();
+}
+
+inline std::string NManifold::getName() const {
+    return name();
+}
+
+inline std::string NManifold::getTeXName() const {
+    return TeXName();
 }
 
 inline std::string NManifold::getStructure() const {

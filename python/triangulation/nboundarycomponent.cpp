@@ -47,18 +47,31 @@ void addNBoundaryComponent() {
         .def("index", &NBoundaryComponent::index)
         .def("countFaces", &regina::python::countFaces<NBoundaryComponent, 3>)
         .def("countTriangles", &NBoundaryComponent::countTriangles)
+        .def("getNumberOfTriangles", &NBoundaryComponent::countTriangles)
         .def("countEdges", &NBoundaryComponent::countEdges)
+        .def("getNumberOfEdges", &NBoundaryComponent::countEdges)
         .def("countVertices", &NBoundaryComponent::countVertices)
+        .def("getNumberOfVertices", &NBoundaryComponent::countVertices)
         .def("face", &regina::python::face<NBoundaryComponent, 3, size_t>)
         .def("triangle", &NBoundaryComponent::triangle,
             return_value_policy<reference_existing_object>())
+        .def("getTriangle", &NBoundaryComponent::triangle,
+            return_value_policy<reference_existing_object>())
         .def("edge", &NBoundaryComponent::edge,
+            return_value_policy<reference_existing_object>())
+        .def("getEdge", &NBoundaryComponent::edge,
             return_value_policy<reference_existing_object>())
         .def("vertex", &NBoundaryComponent::vertex,
             return_value_policy<reference_existing_object>())
+        .def("getVertex", &NBoundaryComponent::vertex,
+            return_value_policy<reference_existing_object>())
         .def("component", &NBoundaryComponent::component,
             return_value_policy<reference_existing_object>())
+        .def("getComponent", &NBoundaryComponent::component,
+            return_value_policy<reference_existing_object>())
         .def("eulerChar", &NBoundaryComponent::eulerChar)
+        .def("getEulerChar", &NBoundaryComponent::eulerChar)
+        .def("getEulerCharacteristic", &NBoundaryComponent::eulerChar)
         .def("isIdeal", &NBoundaryComponent::isIdeal)
         .def("isOrientable", &NBoundaryComponent::isOrientable)
         .def(regina::python::add_output())

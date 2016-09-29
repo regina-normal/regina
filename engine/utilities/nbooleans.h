@@ -308,6 +308,14 @@ class REGINA_API NBoolSet {
          */
         unsigned char byteCode() const;
         /**
+         * Deprecated routine that returns the byte code representing this
+         * boolean set.
+         *
+         * \deprecated This routine has been renamed to byteCode().
+         * See the byteCode() documentation for further details.
+         */
+        REGINA_DEPRECATED unsigned char getByteCode() const;
+        /**
          * Sets this boolean set to that represented by the given byte
          * code.  See byteCode() for more information on byte codes.
          *
@@ -453,6 +461,9 @@ inline NBoolSet NBoolSet::operator ~ () const {
 }
 
 inline unsigned char NBoolSet::byteCode() const {
+    return elements;
+}
+inline unsigned char NBoolSet::getByteCode() const {
     return elements;
 }
 inline void NBoolSet::setByteCode(unsigned char code) {

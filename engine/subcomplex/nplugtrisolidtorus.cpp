@@ -144,10 +144,8 @@ NManifold* NPlugTriSolidTorus::manifold() const {
 
 NPlugTriSolidTorus* NPlugTriSolidTorus::isPlugTriSolidTorus(
         NComponent* comp) {
-    // Each triangular solid torus is tested three times since we
-    // can't call NTetrahedron::index() from within a component only.
-    // TODO: Update - yes we can now.  This constraint was from an
-    // ancient version of regina.  Fix this code accordingly.
+    // TODO: Each triangular solid torus is tested three times since we
+    // can't call getTetrahedronIndex() from within a component only.
 
     // Basic property checks.
     if ((! comp->isClosed()) || (! comp->isOrientable()))

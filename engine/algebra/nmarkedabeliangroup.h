@@ -304,6 +304,15 @@ class REGINA_API NMarkedAbelianGroup :
         size_t countInvariantFactors() const;
 
         /**
+         * Deprecated routine that returns the number of invariant factors
+         * that describe the torsion elements of this group.
+         *
+         * \deprecated This routine has been renamed as countInvariantFactors().
+         * See the countInvariantFactors() documentation for further details.
+         */
+        REGINA_DEPRECATED size_t getNumberOfInvariantFactors() const;
+
+        /**
          * Returns the minimum number of generators for the group.
          *
          * @return the minimum number of generators.
@@ -1556,6 +1565,10 @@ inline unsigned long NMarkedAbelianGroup::getTorsionRank(
 }
 
 inline size_t NMarkedAbelianGroup::countInvariantFactors() const {
+    return ifNum;
+}
+
+inline size_t NMarkedAbelianGroup::getNumberOfInvariantFactors() const {
     return ifNum;
 }
 

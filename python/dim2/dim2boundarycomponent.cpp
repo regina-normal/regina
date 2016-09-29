@@ -47,13 +47,21 @@ void addDim2BoundaryComponent() {
         .def("countFaces",
             &regina::python::countFaces<Dim2BoundaryComponent, 2>)
         .def("countEdges", &Dim2BoundaryComponent::countEdges)
+        .def("getNumberOfEdges", &Dim2BoundaryComponent::countEdges)
         .def("countVertices", &Dim2BoundaryComponent::countVertices)
+        .def("getNumberOfVertices", &Dim2BoundaryComponent::countVertices)
         .def("face", &regina::python::face<Dim2BoundaryComponent, 2, size_t>)
         .def("edge", &Dim2BoundaryComponent::edge,
             return_value_policy<reference_existing_object>())
+        .def("getEdge", &Dim2BoundaryComponent::edge,
+            return_value_policy<reference_existing_object>())
         .def("vertex", &Dim2BoundaryComponent::vertex,
             return_value_policy<reference_existing_object>())
+        .def("getVertex", &Dim2BoundaryComponent::vertex,
+            return_value_policy<reference_existing_object>())
         .def("component", &Dim2BoundaryComponent::component,
+            return_value_policy<reference_existing_object>())
+        .def("getComponent", &Dim2BoundaryComponent::component,
             return_value_policy<reference_existing_object>())
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())

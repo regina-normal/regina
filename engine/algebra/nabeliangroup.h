@@ -291,6 +291,14 @@ class REGINA_API NAbelianGroup :
          */
         size_t countInvariantFactors() const;
         /**
+         * Deprecated routine that returns the number of invariant factors
+         * that describe the torsion elements of this group.
+         *
+         * \deprecated This routine has been renamed as countInvariantFactors().
+         * See the countInvariantFactors() documentation for further details.
+         */
+        REGINA_DEPRECATED size_t getNumberOfInvariantFactors() const;
+        /**
          * Returns the given invariant factor describing the torsion
          * elements of this group.
          * See the NAbelianGroup class notes for further details.
@@ -447,6 +455,10 @@ inline unsigned NAbelianGroup::getTorsionRank(const NLargeInteger& degree)
 }
 
 inline size_t NAbelianGroup::countInvariantFactors() const {
+    return invariantFactors.size();
+}
+
+inline size_t NAbelianGroup::getNumberOfInvariantFactors() const {
     return invariantFactors.size();
 }
 

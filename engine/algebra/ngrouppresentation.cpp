@@ -2273,6 +2273,12 @@ void NGroupPresentation::writeTextLong(std::ostream& out) const {
         }
 }
 
+std::string NGroupPresentation::toStringCompact() const {
+    std::ostringstream out;
+    writeTextCompact(out);
+    return out.str();
+}
+
 std::string NGroupPresentation::compact() const {
     std::ostringstream out;
     writeTextCompact(out);

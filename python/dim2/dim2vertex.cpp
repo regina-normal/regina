@@ -62,11 +62,18 @@ void addDim2Vertex() {
         .def(init<const Dim2VertexEmbedding&>())
         .def("simplex", &Dim2VertexEmbedding::simplex,
             return_value_policy<reference_existing_object>())
+        .def("getSimplex", &Dim2VertexEmbedding::simplex,
+            return_value_policy<reference_existing_object>())
         .def("triangle", &Dim2VertexEmbedding::triangle,
             return_value_policy<reference_existing_object>())
+        .def("getTriangle", &Dim2VertexEmbedding::triangle,
+            return_value_policy<reference_existing_object>())
         .def("face", &Dim2VertexEmbedding::face)
+        .def("getFace", &Dim2VertexEmbedding::face)
         .def("vertex", &Dim2VertexEmbedding::vertex)
+        .def("getVertex", &Dim2VertexEmbedding::vertex)
         .def("vertices", &Dim2VertexEmbedding::vertices)
+        .def("getVertices", &Dim2VertexEmbedding::vertices)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
@@ -77,7 +84,10 @@ void addDim2Vertex() {
         .def("isValid", &Dim2Vertex::isValid)
         .def("isLinkOrientable", &Dim2Vertex::isLinkOrientable)
         .def("embeddings", Dim2Vertex_embeddings_list)
+        .def("getEmbeddings", Dim2Vertex_embeddings_list)
         .def("embedding", &Dim2Vertex::embedding,
+            return_internal_reference<>())
+        .def("getEmbedding", &Dim2Vertex::embedding,
             return_internal_reference<>())
         .def("front", &Dim2Vertex::front,
             return_internal_reference<>())
@@ -85,11 +95,18 @@ void addDim2Vertex() {
             return_internal_reference<>())
         .def("triangulation", &Dim2Vertex::triangulation,
             return_value_policy<to_held_type<> >())
+        .def("getTriangulation", &Dim2Vertex::triangulation,
+            return_value_policy<to_held_type<> >())
         .def("component", &Dim2Vertex::component,
+            return_value_policy<reference_existing_object>())
+        .def("getComponent", &Dim2Vertex::component,
             return_value_policy<reference_existing_object>())
         .def("boundaryComponent", &Dim2Vertex::boundaryComponent,
             return_value_policy<reference_existing_object>())
+        .def("getBoundaryComponent", &Dim2Vertex::boundaryComponent,
+            return_value_policy<reference_existing_object>())
         .def("degree", &Dim2Vertex::degree)
+        .def("getDegree", &Dim2Vertex::degree)
         .def("isBoundary", &Dim2Vertex::isBoundary)
         .def("ordering", &Dim2Vertex::ordering)
         .def("faceNumber", &Dim2Vertex::faceNumber)

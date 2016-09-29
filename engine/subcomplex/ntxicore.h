@@ -252,6 +252,14 @@ class REGINA_API NTxICore :
          */
         std::string name() const;
         /**
+         * Deprecated routine that returns the name of this specific
+         * triangulation of <tt>T x I</tt> as a human-readable string.
+         *
+         * \deprecated This routine has been renamed to name().
+         * See the name() documentation for further details.
+         */
+        REGINA_DEPRECATED std::string getName() const;
+        /**
          * Returns the name of this specific triangulation of
          * <tt>T x I</tt> in TeX format.  No leading or trailing dollar
          * signs will be included.
@@ -259,6 +267,14 @@ class REGINA_API NTxICore :
          * @return the name of this triangulation in TeX format.
          */
         std::string TeXName() const;
+        /**
+         * Deprecated routine that returns the name of this specific
+         * triangulation of <tt>T x I</tt> in TeX format.
+         *
+         * \deprecated This routine has been renamed to TeXName().
+         * See the TeXName() documentation for further details.
+         */
+        REGINA_DEPRECATED std::string getTeXName() const;
 
         /**
          * Writes the name of this specific triangulation of
@@ -485,6 +501,12 @@ inline const NMatrix2& NTxICore::parallelReln() const {
     return parallelReln_;
 }
 
+inline std::string NTxICore::getName() const {
+    return name();
+}
+inline std::string NTxICore::getTeXName() const {
+    return TeXName();
+}
 inline void NTxICore::writeTextShort(std::ostream& out) const {
     writeName(out);
 }

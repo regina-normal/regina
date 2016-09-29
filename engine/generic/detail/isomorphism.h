@@ -125,6 +125,17 @@ class IsomorphismBase :
         unsigned size() const;
 
         /**
+         * A deprecated alias for size(), which returns the number of
+         * simplices in the source triangulation associated with this
+         * isomorphism.
+         *
+         * \deprecated Simply call size() instead.
+         *
+         * @return the number of simplices in the source triangulation.
+         */
+        REGINA_DEPRECATED unsigned getSourceSimplices() const;
+
+        /**
          * Determines the image of the given source simplex under
          * this isomorphism.
          *
@@ -352,6 +363,11 @@ inline IsomorphismBase<dim>::~IsomorphismBase() {
 
 template <int dim>
 inline unsigned IsomorphismBase<dim>::size() const {
+    return nSimplices_;
+}
+
+template <int dim>
+inline unsigned IsomorphismBase<dim>::getSourceSimplices() const {
     return nSimplices_;
 }
 

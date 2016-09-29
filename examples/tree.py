@@ -8,23 +8,29 @@
 #
 ################################
 
-# Recreate the original SnapPea census of cusped hyperbolic manifolds
-# triangulated by at most 5 tetrahedra.
+# Create a new census of all closed orientable 3-manifold
+# triangulations with two tetrahedra.
 census = NContainer()
-for i in range(415):
-    mfd = NSnapPeaCensusManifold(NSnapPeaCensusManifold.SEC_5, i)
-    tri = mfd.construct()
-    tri.setLabel(mfd.name())
-    census.insertChildLast(tri)
+NCensus.formCensus(census, 2, NBoolSet.sTrue,
+    NBoolSet.sTrue, NBoolSet.sFalse, 0, 0)
 
-# The triangulations are now all children of the "census" container.
-# Remove all triangulations with more than two tetrahedra.
+# Calculate the homology of each triangulation in the census.
+# The triangulations are all children of the "census" container.
+tri = census.firstChild()
+while tri != None:
+    print tri.label() + ":", tri.homology()
+    tri = tri.nextSibling()
+
+
+# Remove all triangulations with trivial homology from the tree.
 tri = census.firstChild()
 while tri != None:
     next = tri.nextSibling()
-    if tri.size() > 2:
+    hom = tri.homology()
+    if hom.isTrivial():
         tri.makeOrphan()
     tri = next
+
 
 # Print the homology of each remaining triangulation.
 tri = census.firstChild()

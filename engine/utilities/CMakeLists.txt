@@ -5,6 +5,7 @@ SET ( FILES
   base64
   i18nutils
   nbooleans
+  nthread
   nxmlcallback
   osutils
   stringutils
@@ -31,8 +32,12 @@ if (${REGINA_INSTALL_DEV})
     nbooleans.h
     nlistoncall.h
     nmarkedvector.h
+    nmatrix2.h
+    nmpi.h
     nproperty.h
     nqitmask.h
+    nrational.h
+    nthread.h
     ntrieset.h
     ntritmask.h
     nxmlcallback.h
@@ -46,6 +51,7 @@ if (${REGINA_INSTALL_DEV})
     sequence.h
     stringutils.h
     stringutils-impl.h
+    stringutils.tcc
     xmlutils.h
     DESTINATION ${INCLUDEDIR}/utilities COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

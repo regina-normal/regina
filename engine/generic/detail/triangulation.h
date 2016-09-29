@@ -367,6 +367,15 @@ class TriangulationBase :
          */
         size_t size() const;
         /**
+         * Deprecated routine that returns the number of top-dimensional
+         * simplices in the triangulation.
+         *
+         * \deprecated Simply call size() instead.
+         *
+         * @return the number of top-dimensional simplices.
+         */
+        REGINA_DEPRECATED size_t getNumberOfSimplices() const;
+        /**
          * Returns all top-dimensional simplices in the triangulation.
          *
          * The reference that is returned will remain valid for as long as
@@ -380,6 +389,16 @@ class TriangulationBase :
          */
         const std::vector<Simplex<dim>*>& simplices() const;
         /**
+         * Deprecated routine that returns all of the top-dimensional
+         * simplices in the triangulation.
+         *
+         * \deprecated Simply call simplices() instead.
+         *
+         * See simplices() for further details.
+         */
+        REGINA_DEPRECATED const std::vector<Simplex<dim>*>& getSimplices()
+            const;
+        /**
          * Returns the top-dimensional simplex at the given index in the
          * triangulation.
          *
@@ -392,6 +411,15 @@ class TriangulationBase :
          */
         Simplex<dim>* simplex(size_t index);
         /**
+         * Deprecated routine that returns the top-dimensional simplex at
+         * the given index in the triangulation.
+         *
+         * \deprecated Simply call simplex() instead.
+         *
+         * See simplex() for further details.
+         */
+        REGINA_DEPRECATED Simplex<dim>* getSimplex(size_t index);
+        /**
          * Returns the top-dimensional simplex at the given index in the
          * triangulation.
          *
@@ -403,6 +431,39 @@ class TriangulationBase :
          * @return the <i>index</i>th top-dimensional simplex.
          */
         const Simplex<dim>* simplex(size_t index) const;
+        /**
+         * Deprecated routine that returns the top-dimensional simplex at
+         * the given index in the triangulation.
+         *
+         * \deprecated Simply call simplex() instead.
+         *
+         * See simplex() for further details.
+         */
+        REGINA_DEPRECATED const Simplex<dim>* getSimplex(size_t index) const;
+        /**
+         * Deprecated routine that returns the index of the given
+         * top-dimensional simplex in the triangulation.
+         *
+         * Note that indexing may change when a simplex is added to or
+         * removed from the triangulation.
+         *
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call simplex->index() instead.
+         *
+         * \pre The given simplex is contained in this triangulation.
+         *
+         * \warning Passing a null pointer to this routine will probably
+         * crash your program.  If you are passing the result of some other
+         * routine that \e might return null (such as
+         * Simplex<dim>::adjacentSimplex), you should explicitly
+         * test for null beforehand.
+         *
+         * @param simplex specifies which simplex to find in the triangulation.
+         * @return the index of the specified simplex; this will be an
+         * integer between 0 and size()-1 inclusive.
+         */
+        REGINA_DEPRECATED size_t simplexIndex(const Simplex<dim>* simplex)
+            const;
         /**
          * Creates a new top-dimensional simplex and adds it to this
          * triangulation.
@@ -513,6 +574,16 @@ class TriangulationBase :
         size_t countComponents() const;
 
         /**
+         * Deprecated routine that returns the number of connected components
+         * in this triangulation.
+         *
+         * \deprecated Simply call countComponents() instead.
+         *
+         * See countComponents() for further details.
+         */
+        REGINA_DEPRECATED size_t getNumberOfComponents() const;
+
+        /**
          * Returns the number of <i>subdim</i>-faces in this triangulation.
          *
          * \pre The template argument \a subdim is between 0 and <i>dim</i>-1
@@ -527,6 +598,17 @@ class TriangulationBase :
          */
         template <int subdim>
         size_t countFaces() const;
+
+        /**
+         * Deprecated routine that returns the number of <i>subdim</i>-faces
+         * in this triangulation.
+         *
+         * \deprecated Simply call countFaces() instead.
+         *
+         * See countFaces() for further details.
+         */
+        template <int subdim>
+        REGINA_DEPRECATED size_t getNumberOfFaces() const;
 
         /**
          * Returns the f-vector of this triangulation, which counts the
@@ -562,6 +644,17 @@ class TriangulationBase :
          * @return the list of all components.
          */
         const std::vector<Component<dim>*>& components() const;
+
+        /**
+         * Deprecated routine that returns all connected components
+         * of this triangulation.
+         *
+         * \deprecated Simply call components() instead.
+         *
+         * See components() for further details.
+         */
+        REGINA_DEPRECATED const std::vector<Component<dim>*>& getComponents()
+            const;
 
         /**
          * Returns an object that allows iteration through and random access
@@ -600,6 +693,16 @@ class TriangulationBase :
         Component<dim>* component(size_t index) const;
 
         /**
+         * Deprecated routine that returns the requested connected component
+         * of this triangulation.
+         *
+         * \deprecated Simply call component() instead.
+         *
+         * See component() for further details.
+         */
+        REGINA_DEPRECATED Component<dim>* getComponent(size_t index) const;
+
+        /**
          * Returns the requested <i>subdim</i>-face of this triangulation.
          *
          * \pre The template argument \a subdim is between 0 and <i>dim</i>-1
@@ -616,6 +719,23 @@ class TriangulationBase :
          */
         template <int subdim>
         Face<dim, subdim>* face(size_t index) const;
+
+        /**
+         * Deprecated routine that returns the index of the given
+         * connected component in this triangulation.
+         *
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call component->index() instead.
+         *
+         * \pre The given component belongs to this triangulation.
+         *
+         * @param component specifies which component to find in the
+         * triangulation.
+         * @return the index of the specified component; this will be an
+         * integer between 0 and countComponents()-1 inclusive.
+         */
+        REGINA_DEPRECATED size_t componentIndex(const Component<dim>* component)
+            const;
 
         /*@}*/
         /**
@@ -1624,7 +1744,18 @@ inline size_t TriangulationBase<dim>::size() const {
 }
 
 template <int dim>
+inline size_t TriangulationBase<dim>::getNumberOfSimplices() const {
+    return simplices_.size();
+}
+
+template <int dim>
 inline const std::vector<Simplex<dim>*>& TriangulationBase<dim>::simplices()
+        const {
+    return (const std::vector<Simplex<dim>*>&)(simplices_);
+}
+
+template <int dim>
+inline const std::vector<Simplex<dim>*>& TriangulationBase<dim>::getSimplices()
         const {
     return (const std::vector<Simplex<dim>*>&)(simplices_);
 }
@@ -1635,8 +1766,25 @@ inline Simplex<dim>* TriangulationBase<dim>::simplex(size_t index) {
 }
 
 template <int dim>
+inline Simplex<dim>* TriangulationBase<dim>::getSimplex(size_t index) {
+    return simplices_[index];
+}
+
+template <int dim>
 inline const Simplex<dim>* TriangulationBase<dim>::simplex(size_t index) const {
     return simplices_[index];
+}
+
+template <int dim>
+inline const Simplex<dim>* TriangulationBase<dim>::getSimplex(size_t index)
+        const {
+    return simplices_[index];
+}
+
+template <int dim>
+inline size_t TriangulationBase<dim>::simplexIndex(const Simplex<dim>* simplex)
+        const {
+    return simplex->index();
 }
 
 template <int dim>
@@ -1744,8 +1892,21 @@ inline size_t TriangulationBase<dim>::countComponents() const {
 }
 
 template <int dim>
+inline size_t TriangulationBase<dim>::getNumberOfComponents() const {
+    ensureSkeleton();
+    return components_.size();
+}
+
+template <int dim>
 template <int subdim>
 inline size_t TriangulationBase<dim>::countFaces() const {
+    ensureSkeleton();
+    return FaceList<dim, subdim>::size();
+}
+
+template <int dim>
+template <int subdim>
+inline size_t TriangulationBase<dim>::getNumberOfFaces() const {
     ensureSkeleton();
     return FaceList<dim, subdim>::size();
 }
@@ -1768,6 +1929,13 @@ inline const std::vector<Component<dim>*>& TriangulationBase<dim>::components()
 }
 
 template <int dim>
+inline const std::vector<Component<dim>*>&
+        TriangulationBase<dim>::getComponents() const {
+    ensureSkeleton();
+    return (const std::vector<Component<dim>*>&)(components_);
+}
+
+template <int dim>
 template <int subdim>
 inline const FaceList<dim, subdim>& TriangulationBase<dim>::faces() const {
     ensureSkeleton();
@@ -1781,10 +1949,23 @@ inline Component<dim>* TriangulationBase<dim>::component(size_t index) const {
 }
 
 template <int dim>
+inline Component<dim>* TriangulationBase<dim>::getComponent(size_t index)
+        const {
+    ensureSkeleton();
+    return components_[index];
+}
+
+template <int dim>
 template <int subdim>
 inline Face<dim, subdim>* TriangulationBase<dim>::face(size_t index) const {
     ensureSkeleton();
     return FaceList<dim, subdim>::operator [](index);
+}
+
+template <int dim>
+inline size_t TriangulationBase<dim>::componentIndex(
+        const Component<dim>* component) const {
+    return component->index();
 }
 
 template <int dim>

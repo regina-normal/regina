@@ -94,6 +94,14 @@ class REGINA_API NStandardTriangulation :
          */
         std::string name() const;
         /**
+         * Deprecated routine that returns the name of this specific
+         * triangulation as a human-readable string.
+         *
+         * \deprecated This routine has been renamed to name().
+         * See the name() documentation for further details.
+         */
+        REGINA_DEPRECATED std::string getName() const;
+        /**
          * Returns the name of this specific triangulation in TeX
          * format.  No leading or trailing dollar signs will be included.
          *
@@ -104,6 +112,14 @@ class REGINA_API NStandardTriangulation :
          * @return the name of this triangulation in TeX format.
          */
         std::string TeXName() const;
+        /**
+         * Deprecated routine that returns the name of this specific
+         * triangulation in TeX format.
+         *
+         * \deprecated This routine has been renamed to TeXName().
+         * See the TeXName() documentation for further details.
+         */
+        REGINA_DEPRECATED std::string getTeXName() const;
         /**
          * Returns the 3-manifold represented by this triangulation, if
          * such a recognition routine has been implemented.  If the
@@ -310,6 +326,14 @@ class REGINA_API NStandardTriangulation :
 // Inline functions for NStandardTriangulation
 
 inline NStandardTriangulation::~NStandardTriangulation() {
+}
+
+inline std::string NStandardTriangulation::getName() const {
+    return name();
+}
+
+inline std::string NStandardTriangulation::getTeXName() const {
+    return TeXName();
 }
 
 inline NManifold* NStandardTriangulation::manifold() const {

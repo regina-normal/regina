@@ -311,6 +311,14 @@ class REGINA_API NGroupExpression :
          */
         size_t countTerms() const;
         /**
+         * Deprecated routine that returns the number of terms in this
+         * expression.
+         *
+         * \deprecated This routine has been renamed to countTerms().
+         * See the countTerms() documentation for further details.
+         */
+        REGINA_DEPRECATED size_t getNumberOfTerms() const;
+        /**
          * Returns the length of the word, i.e. the number of letters
          * with exponent +1 or -1 for which this word is expressable as a
          * product.
@@ -818,11 +826,27 @@ class REGINA_API NGroupPresentation :
          */
         unsigned long countGenerators() const;
         /**
+         * Deprecated routine that returns the number of generators in this
+         * group presentation.
+         *
+         * \deprecated This routine has been renamed to countGenerators().
+         * See the countGenerators() documentation for further details.
+         */
+        REGINA_DEPRECATED unsigned long getNumberOfGenerators() const;
+        /**
          * Returns the number of relations in this group presentation.
          *
          * @return the number of relations.
          */
         size_t countRelations() const;
+        /**
+         * Deprecated routine that returns the number of relations in this
+         * group presentation.
+         *
+         * \deprecated This routine has been renamed to countRelations().
+         * See the countRelations() documentation for further details.
+         */
+        REGINA_DEPRECATED size_t getNumberOfRelations() const;
         /**
          * Returns the relation at the given index in this group
          * presentation.  The relation will be of the form <tt>expresson
@@ -1290,6 +1314,17 @@ class REGINA_API NGroupPresentation :
         void writeTeX(std::ostream& out) const;
 
         /**
+         * A deprecated alias for compact(), which returns a
+         * compact one-line representation of this group presentation.
+         *
+         * \deprecated This routine has been deprecated; use the
+         * simpler-to-type compact() instead.
+         *
+         * @return a compact representation of this group presentation.
+         */
+        REGINA_DEPRECATED std::string toStringCompact() const;
+
+        /**
          * Returns a compact one-line representation of this group presentation,
          * including details of all generators and relations.
          * See writeTextCompact() for details on how this is formed.
@@ -1580,6 +1615,10 @@ inline size_t NGroupExpression::countTerms() const {
     return terms_.size();
 }
 
+inline size_t NGroupExpression::getNumberOfTerms() const {
+    return terms_.size();
+}
+
 inline bool NGroupExpression::isTrivial() const {
     return terms_.empty();
 }
@@ -1660,7 +1699,15 @@ inline unsigned long NGroupPresentation::countGenerators() const {
     return nGenerators;
 }
 
+inline unsigned long NGroupPresentation::getNumberOfGenerators() const {
+    return nGenerators;
+}
+
 inline size_t NGroupPresentation::countRelations() const {
+    return relations.size();
+}
+
+inline size_t NGroupPresentation::getNumberOfRelations() const {
     return relations.size();
 }
 

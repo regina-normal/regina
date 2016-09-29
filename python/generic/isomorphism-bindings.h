@@ -56,6 +56,7 @@ void addIsomorphism(const char* name) {
     class_<Isomorphism<dim>, std::auto_ptr<Isomorphism<dim>>,
             boost::noncopyable>(name, init<const Isomorphism<dim>&>())
         .def("size", &Isomorphism<dim>::size)
+        .def("getSourceSimplices", &Isomorphism<dim>::size)
         .def("simpImage", typename PyIsoHelper<dim>::simpImage_const_type(
             &Isomorphism<dim>::simpImage))
         .def("facetPerm", typename PyIsoHelper<dim>::facetPerm_const_type(

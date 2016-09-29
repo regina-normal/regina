@@ -133,10 +133,16 @@ void addTriangulation(const char* name) {
             SafeHeldType<Triangulation<dim>>, boost::noncopyable>(name)
         .def(init<const Triangulation<dim>&>())
         .def("size", &Triangulation<dim>::size)
+        .def("getNumberOfSimplices", &Triangulation<dim>::size)
         .def("simplices", PyTriHelper<dim>::simplices_list)
+        .def("getSimplices", PyTriHelper<dim>::simplices_list)
         .def("simplex", typename PyTriHelper<dim>::simplex_non_const_type(
             &Triangulation<dim>::simplex),
             return_internal_reference<>())
+        .def("getSimplex", typename PyTriHelper<dim>::simplex_non_const_type(
+            &Triangulation<dim>::simplex),
+            return_internal_reference<>())
+        .def("simplexIndex", &Triangulation<dim>::simplexIndex)
         .def("newSimplex", typename PyTriHelper<dim>::newSimplex_void_type(
             &Triangulation<dim>::newSimplex),
             return_internal_reference<>())
@@ -149,35 +155,66 @@ void addTriangulation(const char* name) {
         .def("swapContents", &Triangulation<dim>::swapContents)
         .def("moveContentsTo", &Triangulation<dim>::moveContentsTo)
         .def("countComponents", &Triangulation<dim>::countComponents)
+        .def("getNumberOfComponents", &Triangulation<dim>::countComponents)
         .def("countFaces", &regina::python::countFaces<Triangulation<dim>, dim>)
+        .def("getNumberOfFaces",
+            &regina::python::countFaces<Triangulation<dim>, dim>)
         .def("fVector", PyTriHelper<dim>::fVector_list)
         .def("components", PyTriHelper<dim>::components_list)
+        .def("getComponents", PyTriHelper<dim>::components_list)
         .def("faces", &regina::python::faces<Triangulation<dim>, dim>)
         .def("component", &Triangulation<dim>::component,
             return_internal_reference<>())
+        .def("getComponent", &Triangulation<dim>::component,
+            return_internal_reference<>())
         .def("face", &regina::python::face<Triangulation<dim>, dim, size_t>)
+        .def("componentIndex", &Triangulation<dim>::componentIndex)
         .def("countVertices", &Triangulation<dim>::countVertices)
+        .def("getNumberOfVertices", &Triangulation<dim>::countVertices)
         .def("countEdges", &Triangulation<dim>::countEdges)
+        .def("getNumberOfEdges", &Triangulation<dim>::countEdges)
         .def("countTriangles", &Triangulation<dim>::countTriangles)
+        .def("getNumberOfTriangles", &Triangulation<dim>::countTriangles)
         .def("countTetrahedra", &Triangulation<dim>::countTetrahedra)
+        .def("getNumberOfTetrahedra", &Triangulation<dim>::countTetrahedra)
         .def("countPentachora", &Triangulation<dim>::countPentachora)
+        .def("getNumberOfPentachora", &Triangulation<dim>::countPentachora)
         .def("vertices", regina::python::faces_list<Triangulation<dim>, dim, 0>)
+        .def("getVertices",
+            regina::python::faces_list<Triangulation<dim>, dim, 0>)
         .def("edges", regina::python::faces_list<Triangulation<dim>, dim, 1>)
+        .def("getEdges", regina::python::faces_list<Triangulation<dim>, dim, 1>)
         .def("triangles",
+            regina::python::faces_list<Triangulation<dim>, dim, 2>)
+        .def("getTriangles",
             regina::python::faces_list<Triangulation<dim>, dim, 2>)
         .def("tetrahedra",
             regina::python::faces_list<Triangulation<dim>, dim, 3>)
+        .def("getTetrahedra",
+            regina::python::faces_list<Triangulation<dim>, dim, 3>)
         .def("pentachora",
+            regina::python::faces_list<Triangulation<dim>, dim, 4>)
+        .def("getPentachora",
             regina::python::faces_list<Triangulation<dim>, dim, 4>)
         .def("vertex", &Triangulation<dim>::vertex,
             return_internal_reference<>())
+        .def("getVertex", &Triangulation<dim>::vertex,
+            return_internal_reference<>())
         .def("edge", &Triangulation<dim>::edge,
+            return_internal_reference<>())
+        .def("getEdge", &Triangulation<dim>::edge,
             return_internal_reference<>())
         .def("triangle", &Triangulation<dim>::triangle,
             return_internal_reference<>())
+        .def("getTriangle", &Triangulation<dim>::triangle,
+            return_internal_reference<>())
         .def("tetrahedron", &Triangulation<dim>::tetrahedron,
             return_internal_reference<>())
+        .def("getTetrahedron", &Triangulation<dim>::tetrahedron,
+            return_internal_reference<>())
         .def("pentachoron", &Triangulation<dim>::pentachoron,
+            return_internal_reference<>())
+        .def("getPentachoron", &Triangulation<dim>::pentachoron,
             return_internal_reference<>())
         .def("isEmpty", &Triangulation<dim>::isEmpty)
         .def("isValid", &Triangulation<dim>::isValid)
@@ -221,6 +258,7 @@ void addTriangulation(const char* name) {
     // We cast to PacketType so that boost.python sees this as a value,
     // not a reference.
     s.attr("typeID") = regina::PacketType(Triangulation<dim>::typeID);
+    s.attr("packetType") = regina::PacketType(Triangulation<dim>::packetType);
 
     implicitly_convertible<SafeHeldType<Triangulation<dim>>,
         SafeHeldType<regina::NPacket>>();

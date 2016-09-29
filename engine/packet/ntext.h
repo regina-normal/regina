@@ -99,6 +99,14 @@ class REGINA_API NText : public NPacket {
         const std::string& text() const;
 
         /**
+         * Deprecated routine that returns the string stored in the packet.
+         *
+         * \deprecated This routine has been renamed to text().
+         * See the text() documentation for further details.
+         */
+        REGINA_DEPRECATED const std::string& getText() const;
+
+        /**
          * Sets the packet data to the given string.
          *
          * @param newText the new value for the packet.
@@ -137,6 +145,10 @@ inline NText::NText(const char* newText) : text_(newText) {
 }
 
 inline const std::string& NText::text() const {
+    return text_;
+}
+
+inline const std::string& NText::getText() const {
     return text_;
 }
 

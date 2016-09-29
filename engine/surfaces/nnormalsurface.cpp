@@ -47,12 +47,16 @@ const int quadSeparating[4][4] = {
     {  2, 1, 0,-1 }
 };
 
+const int (*vertexSplit)[4] = quadSeparating;
+
 const int quadMeeting[4][4][2] = {
     { {-1,-1}, { 1, 2}, { 0, 2}, { 0, 1} },
     { { 1, 2}, {-1,-1}, { 0, 1}, { 0, 2} },
     { { 0, 2}, { 0, 1}, {-1,-1}, { 1, 2} },
     { { 0, 1}, { 0, 2}, { 1, 2}, {-1,-1} }
 };
+
+const int (*vertexSplitMeeting)[4][2] = quadMeeting;
 
 const int vertexSplitDefn[3][4] = {
     { 0, 1, 2, 3 },
@@ -66,7 +70,11 @@ const int quadPartner[3][4] = {
     { 3, 2, 1, 0}
 };
 
+const int (*vertexSplitPartner)[4] = quadPartner;
+
 const char quadString[3][6] = { "01/23", "02/13", "03/12" };
+
+const char (*vertexSplitString)[6] = quadString;
 
 // The following three arrays cannot be made 2-D because of a g++-2.95 bug.
 

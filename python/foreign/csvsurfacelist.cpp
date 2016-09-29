@@ -31,14 +31,24 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
+#include "foreign/csvsurfacelist.h"
 #include "surfaces/nnormalsurfacelist.h"
 
 using namespace boost::python;
 
 namespace {
+    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_writeCSVStandard,
+        regina::writeCSVStandard, 2, 3);
+    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_writeCSVEdgeWeight,
+        regina::writeCSVEdgeWeight, 2, 3);
 }
 
 void addForeignCSVSurfaceList() {
+    def("writeCSVStandard", regina::writeCSVStandard,
+        OL_writeCSVStandard());
+    def("writeCSVEdgeWeight", regina::writeCSVEdgeWeight,
+        OL_writeCSVEdgeWeight());
+
     enum_<regina::SurfaceExportFields>("SurfaceExportFields")
         .value("surfaceExportName", regina::surfaceExportName)
         .value("surfaceExportEuler", regina::surfaceExportEuler)

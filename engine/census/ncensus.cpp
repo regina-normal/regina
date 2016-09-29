@@ -46,6 +46,7 @@
 #include <tcutil.h>
 #endif
 #include "census/ncensus.h"
+#include "census/ngluingpermsearcher.h"
 #include "file/nglobaldirs.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/memutils.h"
@@ -136,6 +137,137 @@ NCensusHits* NCensus::lookup(const std::string& isoSig) {
 
 NCensusDB* NCensus::standardDB(const char* filename, const char* desc) {
     return new NCensusDB(NGlobalDirs::census() + "/" + filename, desc);
+}
+
+const int NCensus::PURGE_NON_MINIMAL = NGluingPermSearcher::PURGE_NON_MINIMAL;
+const int NCensus::PURGE_NON_PRIME = NGluingPermSearcher::PURGE_NON_PRIME;
+const int NCensus::PURGE_NON_MINIMAL_PRIME =
+    NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME;
+const int NCensus::PURGE_P2_REDUCIBLE = NGluingPermSearcher::PURGE_P2_REDUCIBLE;
+
+unsigned long NCensus::formCensus(NPacket* parent, unsigned nTetrahedra,
+        NBoolSet finiteness, NBoolSet orientability, NBoolSet boundary,
+        int nBdryFaces, int whichPurge, AcceptTriangulation sieve,
+        void* sieveArgs) {
+    // If obviously nothing is going to happen but we won't realise
+    // it until we've actually generated the face pairings, change
+    // nTetrahedra to 0 so we'll realise it immediately once the new
+    // thread starts.
+    if (finiteness == NBoolSet::sNone || orientability == NBoolSet::sNone)
+        nTetrahedra = 0;
+
+    // Start the census!
+    NCensus* census = new NCensus(parent, finiteness, orientability,
+        whichPurge, sieve, sieveArgs);
+
+    NFacePairing::findAllPairings(nTetrahedra, boundary, nBdryFaces,
+        NCensus::foundFacePairing, census);
+    unsigned long ans = census->whichSoln - 1;
+    delete census;
+    return ans;
+}
+
+unsigned long NCensus::formPartialCensus(const NFacePairing* pairing,
+        NPacket* parent, NBoolSet finiteness, NBoolSet orientability,
+        int whichPurge, AcceptTriangulation sieve, void* sieveArgs) {
+    // Is it obvious that nothing will happen?
+    if (finiteness == NBoolSet::sNone || orientability == NBoolSet::sNone)
+        return 0;
+
+    // Make a list of automorphisms.
+    NFacePairing::IsoList autos;
+    pairing->findAutomorphisms(autos);
+
+    // Select the individual gluing permutations.
+    NCensus census(parent, finiteness, orientability, whichPurge,
+        sieve, sieveArgs);
+    NGluingPermSearcher::findAllPerms(pairing, &autos,
+        ! census.orientability.hasFalse(), ! census.finiteness.hasFalse(),
+        census.whichPurge, NCensus::foundGluingPerms, &census);
+
+    // Clean up.
+    std::for_each(autos.begin(), autos.end(), FuncDelete<NIsomorphism>());
+    return census.whichSoln - 1;
+}
+
+NCensus::NCensus(NPacket* newParent, const NBoolSet& newFiniteness,
+        const NBoolSet& newOrientability, int newWhichPurge,
+        AcceptTriangulation newSieve, void* newSieveArgs) :
+        parent(newParent),
+        finiteness(newFiniteness), orientability(newOrientability),
+        whichPurge(newWhichPurge), sieve(newSieve), sieveArgs(newSieveArgs),
+        whichSoln(1) {
+}
+
+void NCensus::foundFacePairing(const NFacePairing* pairing,
+        const NFacePairing::IsoList* autos, void* census) {
+    NCensus* realCensus = static_cast<NCensus*>(census);
+    if (pairing) {
+        // We've found another face pairing.
+        // Select the individual gluing permutations.
+        NGluingPermSearcher::findAllPerms(pairing, autos,
+            ! realCensus->orientability.hasFalse(),
+            ! realCensus->finiteness.hasFalse(),
+            realCensus->whichPurge, NCensus::foundGluingPerms, census);
+    } else {
+        // Census generation has finished.
+    }
+}
+
+void NCensus::foundGluingPerms(const NGluingPermSearcher* perms, void* census) {
+    if (perms) {
+        // We've found another permutation set.
+        // Triangulate and see what we've got.
+        NTriangulation* tri = perms->triangulate();
+        NCensus* realCensus = static_cast<NCensus*>(census);
+
+        bool ok = true;
+        if (! tri->isValid())
+            ok = false;
+        else if ((! realCensus->finiteness.hasFalse()) && tri->isIdeal())
+            ok = false;
+        else if ((! realCensus->finiteness.hasTrue()) && (! tri->isIdeal()))
+            ok = false;
+        else if ((! realCensus->orientability.hasTrue()) && tri->isOrientable())
+            ok = false;
+        else if (realCensus->sieve &&
+                ! realCensus->sieve(tri, realCensus->sieveArgs))
+            ok = false;
+
+        if (ok) {
+            // Put it in the census!
+            // Make sure it has a charming label.
+            // Don't insist on unique labels, since this requirement
+            // will soon be dropped and it multiplies the running time
+            // by a factor of #triangulations.
+            std::ostringstream out;
+            out << "Item " << realCensus->whichSoln;
+            tri->setLabel(out.str());
+            realCensus->parent->insertChildLast(tri);
+            realCensus->whichSoln++;
+        } else {
+            // Bad triangulation.
+            delete tri;
+        }
+    }
+}
+
+bool NCensus::mightBeMinimal(NTriangulation* tri, void*) {
+    if (! tri->hasBoundaryTriangles()) {
+        // No boundary faces.
+
+        // Tests specific to closed finite orientable triangulations:
+        if (tri->isOrientable() && (! tri->isIdeal())) {
+            // Check for too many vertices.
+            if (tri->countVertices() > 1 && tri->size() > 2)
+                return false;
+        }
+
+        // Check for obvious simplifications.
+        if (tri->simplifyToLocalMinimum(false))
+            return false;
+    }
+    return true;
 }
 
 } // namespace regina

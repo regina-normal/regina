@@ -52,6 +52,8 @@ void addNIsomorphism() {
     class_<Isomorphism<3>, std::auto_ptr<Isomorphism<3>>, boost::noncopyable>
             ("Isomorphism3", init<const NIsomorphism&>())
         .def("size", &NIsomorphism::size)
+        .def("getSourceSimplices", &NIsomorphism::size)
+        .def("getSourceTetrahedra", &NIsomorphism::size)
         .def("simpImage", simpImage_const)
         .def("tetImage", simpImage_const)
         .def("facetPerm", facetPerm_const)

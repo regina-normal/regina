@@ -212,7 +212,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
             viewCoords = regina::NS_EDGE_WEIGHT;
             break;
         case 3:
-            viewCoords = regina::NS_TRIANGLE_ARCS;
+            viewCoords = regina::NS_FACE_ARCS;
             break;
     }
 

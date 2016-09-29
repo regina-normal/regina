@@ -107,6 +107,15 @@ enum NormalCoords {
      */
     NS_TRIANGLE_ARCS = 201,
     /**
+     * A deprecated alias for NS_TRIANGLE_ARCS.
+     * This represents triangle arc coordinates for normal surfaces.
+     * See NS_TRIANGLE_ARCS for further details.
+     *
+     * \deprecated This constant will be removed in a future version
+     * of Regina.  Please use NS_TRIANGLE_ARCS instead.
+     */
+    NS_FACE_ARCS REGINA_DEPRECATED_ENUM = 201,
+    /**
      * Represents standard triangle-quadrilateral coordinates for
      * transversely oriented normal surfaces.
      */

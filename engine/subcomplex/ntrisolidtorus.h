@@ -119,6 +119,14 @@ class REGINA_API NTriSolidTorus : public NStandardTriangulation {
          * @return the requested tetrahedron.
          */
         NTetrahedron* tetrahedron(int index) const;
+        /**
+         * Deprecated routine that returns the requested tetrahedron in this
+         * solid torus.
+         *
+         * \deprecated This routine has been renamed to tetrahedron().
+         * See the tetrahedron() documentation for further details.
+         */
+        REGINA_DEPRECATED NTetrahedron* getTetrahedron(int index) const;
 
         /**
          * Returns a permutation represeting the role that each vertex
@@ -149,6 +157,15 @@ class REGINA_API NTriSolidTorus : public NStandardTriangulation {
          * of the requested tetrahedron.
          */
         NPerm4 vertexRoles(int index) const;
+        /**
+         * Deprecated routine that returns a permutation represeting the role
+         * that each vertex of the requested tetrahedron plays in the solid
+         * torus.
+         *
+         * \deprecated This routine has been renamed to vertexRoles().
+         * See the vertexRoles() documentation for further details.
+         */
+        REGINA_DEPRECATED NPerm4 getVertexRoles(int index) const;
 
         /**
          * Determines whether the two triangles of the requested annulus are
@@ -291,7 +308,13 @@ inline NTriSolidTorus::~NTriSolidTorus() {
 inline NTetrahedron* NTriSolidTorus::tetrahedron(int index) const {
     return tet[index];
 }
+inline NTetrahedron* NTriSolidTorus::getTetrahedron(int index) const {
+    return tet[index];
+}
 inline NPerm4 NTriSolidTorus::vertexRoles(int index) const {
+    return vertexRoles_[index];
+}
+inline NPerm4 NTriSolidTorus::getVertexRoles(int index) const {
     return vertexRoles_[index];
 }
 

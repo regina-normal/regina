@@ -39,6 +39,7 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
+    dimtraits.h
     nboundarycomponent.h
     ncomponent.h
     nedge.h
@@ -46,6 +47,9 @@ if (${REGINA_INSTALL_DEV})
     nface.h
     nfacepair.h
     nfacepairing.h
+    nfacetspec.h
+    ngenericisomorphism.h
+    ngenericisomorphism.tcc
     nhomologicaldata.h
     nisomorphism.h
     npermit.h

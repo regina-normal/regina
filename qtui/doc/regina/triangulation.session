@@ -77,7 +77,7 @@ False
 &gt;&gt;&gt; # Verify that the normal surface list is already a child packet of the
 ... # triangulation.  This happens automatically whenever you enumerate
 ... # normal surfaces (or angle structures).
-... if surfaces.parent() == t:
+... if surfaces.getTreeParent() == t:
 ...     print "OK: Parent-child relationship is correct."
 ... else:
 ...     print "ERROR: Parent-child relationship is incorrect."

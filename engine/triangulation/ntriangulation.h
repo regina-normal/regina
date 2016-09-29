@@ -327,6 +327,15 @@ class REGINA_API Triangulation<3> :
         /*@{*/
 
         /**
+         * Deprecated dimension-specific alias for simplexIndex().
+         *
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call tet->index() instead.
+         *
+         * See simplexIndex() for further information.
+         */
+        REGINA_DEPRECATED long tetrahedronIndex(const NTetrahedron* tet) const;
+        /**
          * A dimension-specific alias for newSimplex().
          *
          * See newSimplex() for further information.
@@ -372,6 +381,14 @@ class REGINA_API Triangulation<3> :
         size_t countBoundaryComponents() const;
 
         /**
+         * Deprecated function that returns the number of boundary
+         * components in this triangulation.
+         *
+         * \deprecated Simply call countBoundaryComponents() instead.
+         */
+        REGINA_DEPRECATED size_t getNumberOfBoundaryComponents() const;
+
+        /**
          * Returns all boundary components of this triangulation.
          * Note that each ideal vertex forms its own boundary component.
          *
@@ -389,6 +406,15 @@ class REGINA_API Triangulation<3> :
          */
         const std::vector<NBoundaryComponent*>& boundaryComponents() const;
         /**
+         * Deprecated routine that returns all boundary components of this
+         * triangulation.
+         *
+         * \deprecated This routine has been renamed to boundaryComponents().
+         * See the boundaryComponents() documentation for further details.
+         */
+        REGINA_DEPRECATED const std::vector<NBoundaryComponent*>&
+            getBoundaryComponents() const;
+        /**
          * Returns the requested triangulation boundary component.
          *
          * Bear in mind that each time the triangulation changes, the
@@ -400,6 +426,73 @@ class REGINA_API Triangulation<3> :
          * @return the requested boundary component.
          */
         NBoundaryComponent* boundaryComponent(size_t index) const;
+        /**
+         * Deprecated routine that returns the requested boundary component
+         * of this triangulation.
+         *
+         * \deprecated This routine has been renamed to boundaryComponent().
+         * See the boundaryComponent() documentation for further details.
+         */
+        REGINA_DEPRECATED NBoundaryComponent* getBoundaryComponent(size_t index)
+            const;
+        /**
+         * Deprecated routine that returns the index of the given
+         * boundary component in the triangulation.
+         *
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call bc->index() instead.
+         *
+         * \pre The given boundary component belongs to this triangulation.
+         *
+         * @param bc specifies which boundary component to find in the
+         * triangulation.
+         * @return the index of the specified boundary component,
+         * where 0 is the first boundary component, 1 is the second and so on. 
+         */
+        REGINA_DEPRECATED size_t boundaryComponentIndex(
+            const NBoundaryComponent* bc) const;
+        /**
+         * Deprecated routine that returns the index of the given vertex
+         * in the triangulation.
+         *
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call vertex->index() instead.
+         *
+         * \pre The given vertex belongs to this triangulation.
+         *
+         * @param vertex specifies which vertex to find in the triangulation.
+         * @return the index of the specified vertex, where 0 is the first
+         * vertex, 1 is the second and so on.
+         */
+        REGINA_DEPRECATED size_t vertexIndex(const NVertex* vertex) const;
+        /**
+         * Deprecated routine that returns the index of the given edge
+         * in the triangulation.
+         *
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call edge->index() instead.
+         *
+         * \pre The given edge belongs to this triangulation.
+         *
+         * @param edge specifies which edge to find in the triangulation.
+         * @return the index of the specified edge, where 0 is the first
+         * edge, 1 is the second and so on.
+         */
+        REGINA_DEPRECATED size_t edgeIndex(const NEdge* edge) const;
+        /**
+         * Deprecated routine that returns the index of the given triangle
+         * in the triangulation.
+         *
+         * \deprecated This routine is deprecated, and will be removed in some
+         * future release of Regina.  Just call triangle->index() instead.
+         *
+         * \pre The given triangle belongs to this triangulation.
+         *
+         * @param tri specifies which triangle to find in the triangulation.
+         * @return the index of the specified triangle, where 0 is the first
+         * triangle, 1 is the second and so on.
+         */
+        REGINA_DEPRECATED size_t triangleIndex(const NTriangle* tri) const;
 
         /**
          * Determines if this triangulation contains any two-sphere
@@ -441,6 +534,14 @@ class REGINA_API Triangulation<3> :
          * @return the Euler characteristic of this triangulation.
          */
         long eulerCharTri() const;
+        /**
+         * Deprecated routine that returns the Euler characteristic of this
+         * triangulation.
+         *
+         * \deprecated This routine has been renamed to eulerCharTri().
+         * See the eulerCharTri() documentation for further details.
+         */
+        REGINA_DEPRECATED long getEulerCharTri() const;
 
         /**
          * Returns the Euler characteristic of the corresponding compact
@@ -466,6 +567,14 @@ class REGINA_API Triangulation<3> :
          * manifold.
          */
         long eulerCharManifold() const;
+        /**
+         * Deprecated routine that returns the Euler characteristic of
+         * the corresponding compact 3-manifold.
+         *
+         * \deprecated This routine has been renamed to eulerCharManifold().
+         * See the eulerCharManifold() documentation for further details.
+         */
+        REGINA_DEPRECATED long getEulerCharManifold() const;
 
         /**
          * Determines if this triangulation is ideal.
@@ -3104,6 +3213,10 @@ inline bool Triangulation<3>::dependsOnParent() const {
     return false;
 }
 
+inline long Triangulation<3>::tetrahedronIndex(const NTetrahedron* tet) const {
+    return tet->markedIndex();
+}
+
 inline NTetrahedron* Triangulation<3>::newTetrahedron() {
     return newSimplex();
 }
@@ -3129,6 +3242,10 @@ inline size_t Triangulation<3>::countBoundaryComponents() const {
     return boundaryComponents_.size();
 }
 
+inline size_t Triangulation<3>::getNumberOfBoundaryComponents() const {
+    return countBoundaryComponents();
+}
+
 inline long Triangulation<3>::eulerCharTri() const {
     ensureSkeleton();
 
@@ -3139,8 +3256,22 @@ inline long Triangulation<3>::eulerCharTri() const {
         - static_cast<long>(simplices_.size());
 }
 
+inline long Triangulation<3>::getEulerCharTri() const {
+    return eulerCharTri();
+}
+
+inline long Triangulation<3>::getEulerCharManifold() const {
+    return eulerCharManifold();
+}
+
 inline const std::vector<NBoundaryComponent*>&
         Triangulation<3>::boundaryComponents() const {
+    ensureSkeleton();
+    return (const std::vector<NBoundaryComponent*>&)(boundaryComponents_);
+}
+
+inline const std::vector<NBoundaryComponent*>&
+        Triangulation<3>::getBoundaryComponents() const {
     ensureSkeleton();
     return (const std::vector<NBoundaryComponent*>&)(boundaryComponents_);
 }
@@ -3149,6 +3280,29 @@ inline NBoundaryComponent* Triangulation<3>::boundaryComponent(
         size_t index) const {
     ensureSkeleton();
     return boundaryComponents_[index];
+}
+
+inline NBoundaryComponent* Triangulation<3>::getBoundaryComponent(
+        size_t index) const {
+    ensureSkeleton();
+    return boundaryComponents_[index];
+}
+
+inline size_t Triangulation<3>::boundaryComponentIndex(
+        const NBoundaryComponent* boundaryComponent) const {
+    return boundaryComponent->index();
+}
+
+inline size_t Triangulation<3>::vertexIndex(const NVertex* vertex) const {
+    return vertex->index();
+}
+
+inline size_t Triangulation<3>::edgeIndex(const NEdge* edge) const {
+    return edge->index();
+}
+
+inline size_t Triangulation<3>::triangleIndex(const NTriangle* tri) const {
+    return tri->index();
 }
 
 inline bool Triangulation<3>::hasTwoSphereBoundaryComponents() const {

@@ -180,6 +180,16 @@ class FaceEmbeddingBase :
          * @return the top-dimensional simplex.
          */
         Simplex<dim>* simplex() const;
+        /**
+         * Deprecated routine that returns the top-dimensional simplex
+         * in which the underlying <i>subdim</i>-face of the triangulation
+         * is contained.
+         *
+         * \deprecated Simply call simplex() instead.
+         *
+         * See simplex() for further details.
+         */
+        REGINA_DEPRECATED Simplex<dim>* getSimplex() const;
 
         /**
          * Returns the corresponding face number of simplex().
@@ -192,6 +202,15 @@ class FaceEmbeddingBase :
          * inclusive.
          */
         int face() const;
+        /**
+         * Deprecated routine that returns the corresponding face number
+         * of simplex().
+         *
+         * \deprecated Simply call face() instead.
+         *
+         * See face() for further details.
+         */
+        REGINA_DEPRECATED int getFace() const;
 
         /**
          * Maps vertices (0,...,\a subdim) of the underlying <i>subdim</i>-face
@@ -212,6 +231,16 @@ class FaceEmbeddingBase :
          * <i>subdim</i>-face to the corresponding vertices of simplex().
          */
         NPerm<dim+1> vertices() const;
+        /**
+         * Deprecated routine that maps vertices (0,...,\a subdim) of the
+         * underlying <i>subdim</i>-face of the triangulation to the
+         * corresponding vertex numbers of simplex().
+         *
+         * \deprecated Simply call vertices() instead.
+         *
+         * See vertices() for further details.
+         */
+        REGINA_DEPRECATED NPerm<dim+1> getVertices() const;
 
         /**
          * Tests whether this and the given object are identical.
@@ -300,6 +329,14 @@ class FaceStorage {
          */
         size_t degree() const;
         /**
+         * Deprecated routine that returns the degree of this face.
+         *
+         * \deprecated Simply call degree() instead.
+         *
+         * See degree() for further details.
+         */
+        REGINA_DEPRECATED size_t getDegree() const;
+        /**
          * Returns one of the ways in which this face appears within a
          * top-dimensional simplex of the underlying triangluation.
          *
@@ -316,6 +353,17 @@ class FaceStorage {
          * @return details of the requested appearance.
          */
         const FaceEmbedding<dim, dim - codim>& embedding(size_t index) const;
+        /**
+         * Deprecated routine that returns one of the ways in which this
+         * face appears within a top-dimensional simplex of the underlying
+         * triangulation.
+         *
+         * \deprecated Simply call embedding() instead.
+         *
+         * See embedding() for further details.
+         */
+        REGINA_DEPRECATED const FaceEmbedding<dim, dim - codim>& getEmbedding(
+            size_t index) const;
 
         /**
          * A begin function for iterating through all appearances of
@@ -419,7 +467,9 @@ class FaceStorage<dim, 2> {
 
     public:
         size_t degree() const;
+        size_t getDegree() const;
         const FaceEmbedding<dim, dim-2>& embedding(size_t index) const;
+        const FaceEmbedding<dim, dim-2>& getEmbedding(size_t index) const;
 
         typename std::deque<FaceEmbedding<dim, dim-2>>::const_iterator
             begin() const;
@@ -444,7 +494,9 @@ class FaceStorage<dim, 1> {
         FaceStorage();
 
         size_t degree() const;
+        size_t getDegree() const;
         const FaceEmbedding<dim, dim-1>& embedding(size_t index) const;
+        const FaceEmbedding<dim, dim-1>& getEmbedding(size_t index) const;
 
         const FaceEmbedding<dim, dim-1>* begin() const;
         const FaceEmbedding<dim, dim-1>* end() const;
@@ -854,6 +906,12 @@ class FaceBase :
          * Returns the index of this face within the underlying
          * triangulation.
          *
+         * This is identical to calling the deprecated function
+         * <tt>triangulation()->vertexIndex(this)</tt> for
+         * faces of dimension \a subdim = 1, or
+         * <tt>triangulation()->edgeIndex(this)</tt> for
+         * faces of dimension \a subdim = 2, or so on.
+         *
          * @return the index of this face.
          */
         size_t index() const;
@@ -864,12 +922,30 @@ class FaceBase :
          */
         Triangulation<dim>* triangulation() const;
         /**
+         * Deprecated routine that returns the triangulation to which
+         * this face belongs.
+         *
+         * \deprecated Simply call triangulation() instead.
+         *
+         * See triangulation() for further details.
+         */
+        REGINA_DEPRECATED Triangulation<dim>* getTriangulation() const;
+        /**
          * Returns the component of the triangulation to which this
          * face belongs.
          *
          * @return the component containing this face.
          */
         Component<dim>* component() const;
+        /**
+         * Deprecated routine that returns the component of the
+         * triangulation to which this face belongs.
+         *
+         * \deprecated Simply call component() instead.
+         *
+         * See component() for further details.
+         */
+        REGINA_DEPRECATED Component<dim>* getComponent() const;
 
         /**
          * Returns the <i>lowerdim</i>-face of the underlying triangulation
@@ -1005,13 +1081,28 @@ inline Simplex<dim>* FaceEmbeddingBase<dim, subdim>::simplex() const {
 }
 
 template <int dim, int subdim>
+inline Simplex<dim>* FaceEmbeddingBase<dim, subdim>::getSimplex() const {
+    return simplex_;
+}
+
+template <int dim, int subdim>
 inline int FaceEmbeddingBase<dim, subdim>::face() const {
+    return face_;
+}
+
+template <int dim, int subdim>
+inline int FaceEmbeddingBase<dim, subdim>::getFace() const {
     return face_;
 }
 
 template <int dim, int subdim>
 inline NPerm<dim+1> FaceEmbeddingBase<dim, subdim>::vertices() const {
     return simplex_->template faceMapping<subdim>(face_);
+}
+
+template <int dim, int subdim>
+inline NPerm<dim+1> FaceEmbeddingBase<dim, subdim>::getVertices() const {
+    return vertices();
 }
 
 template <int dim, int subdim>
@@ -1047,8 +1138,19 @@ inline size_t FaceStorage<dim, codim>::degree() const {
 }
 
 template <int dim, int codim>
+inline size_t FaceStorage<dim, codim>::getDegree() const {
+    return embeddings_.size();
+}
+
+template <int dim, int codim>
 inline const FaceEmbedding<dim, dim - codim>& FaceStorage<dim, codim>::
         embedding(size_t index) const {
+    return embeddings_[index];
+}
+
+template <int dim, int codim>
+inline const FaceEmbedding<dim, dim - codim>& FaceStorage<dim, codim>::
+        getEmbedding(size_t index) const {
     return embeddings_[index];
 }
 
@@ -1093,11 +1195,22 @@ template <int dim>
 inline size_t FaceStorage<dim, 1>::degree() const {
     return nEmb_;
 }
+
+template <int dim>
+inline size_t FaceStorage<dim, 1>::getDegree() const {
+    return nEmb_;
+}
 #endif // ! __DOXYGEN
 
 template <int dim>
 inline const FaceEmbedding<dim, dim-1>& FaceStorage<dim, 1>::
         embedding(size_t index) const {
+    return embeddings_[index];
+}
+
+template <int dim>
+inline const FaceEmbedding<dim, dim-1>& FaceStorage<dim, 1>::
+        getEmbedding(size_t index) const {
     return embeddings_[index];
 }
 
@@ -1133,8 +1246,19 @@ inline size_t FaceStorage<dim, 2>::degree() const {
 }
 
 template <int dim>
+inline size_t FaceStorage<dim, 2>::getDegree() const {
+    return embeddings_.size();
+}
+
+template <int dim>
 inline const FaceEmbedding<dim, dim-2>& FaceStorage<dim, 2>::
         embedding(size_t index) const {
+    return embeddings_[index];
+}
+
+template <int dim>
+inline const FaceEmbedding<dim, dim-2>& FaceStorage<dim, 2>::
+        getEmbedding(size_t index) const {
     return embeddings_[index];
 }
 
@@ -1281,7 +1405,17 @@ inline Triangulation<dim>* FaceBase<dim, subdim>::triangulation() const {
 }
 
 template <int dim, int subdim>
+inline Triangulation<dim>* FaceBase<dim, subdim>::getTriangulation() const {
+    return triangulation();
+}
+
+template <int dim, int subdim>
 inline Component<dim>* FaceBase<dim, subdim>::component() const {
+    return component_;
+}
+
+template <int dim, int subdim>
+inline Component<dim>* FaceBase<dim, subdim>::getComponent() const {
     return component_;
 }
 

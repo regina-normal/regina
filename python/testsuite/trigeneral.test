@@ -66,7 +66,7 @@ def vitalStats(tri):
 	print tri.countVertices(), "vertices"
 	print "2-sphere boundaries:", tri.hasTwoSphereBoundaryComponents()
 	print "Negative ideal boundaries:", tri.hasNegativeIdealBoundaryComponents()
-	print "EC:", tri.eulerCharTri()
+	print "EC:", tri.getEulerCharTri()
 	print "Valid:", tri.isValid()
 	print "Ideal:", tri.isIdeal()
 	print "Standard:", tri.isStandard()
@@ -145,7 +145,7 @@ def vitalStats(tri):
 	print
 
 t = regina.NTriangulation()
-t.setLabel("Empty triangulation")
+t.setPacketLabel("Empty triangulation")
 vitalStats(t)
 
 vitalStats(regina.NExampleTriangulation.threeSphere())

@@ -60,7 +60,9 @@ void addNTxICore() {
         .def("parallelReln", &NTxICore::parallelReln,
             return_internal_reference<>())
         .def("name", &NTxICore::name)
+        .def("getName", &NTxICore::name)
         .def("TeXName", &NTxICore::TeXName)
+        .def("getTeXName", &NTxICore::TeXName)
         .def("writeName", writeName_stdio)
         .def("writeTeXName", writeTeXName_stdio)
         .def(regina::python::add_output())

@@ -123,6 +123,9 @@ void addNSnapPeaTriangulation() {
             [return_internal_reference<>()])
         .def("homologyFilled", &NSnapPeaTriangulation::homologyFilled,
             return_internal_reference<>())
+        .def("verifyTriangulation", &NSnapPeaTriangulation::verifyTriangulation)
+        .def("toRegina", &NSnapPeaTriangulation::toRegina,
+            return_value_policy<to_held_type<> >())
         .def("protoCanonize", &NSnapPeaTriangulation::protoCanonize,
             return_value_policy<to_held_type<> >())
         .def("protoCanonise", &NSnapPeaTriangulation::protoCanonise,
@@ -133,6 +136,8 @@ void addNSnapPeaTriangulation() {
             return_value_policy<to_held_type<> >())
         .def("randomize", &NSnapPeaTriangulation::randomize)
         .def("randomise", &NSnapPeaTriangulation::randomise)
+        .def("dump", &NSnapPeaTriangulation::dump)
+        .def("saveAsSnapPea", &NSnapPeaTriangulation::saveAsSnapPea)
         .def("kernelMessagesEnabled",
             &NSnapPeaTriangulation::kernelMessagesEnabled)
         .def("enableKernelMessages",
@@ -160,6 +165,7 @@ void addNSnapPeaTriangulation() {
     ;
 
     s.attr("typeID") = regina::PACKET_SNAPPEATRIANGULATION;
+    s.attr("packetType") = regina::PACKET_SNAPPEATRIANGULATION;
 
     implicitly_convertible<SafeHeldType<NSnapPeaTriangulation>,
         SafeHeldType<regina::NTriangulation> >();

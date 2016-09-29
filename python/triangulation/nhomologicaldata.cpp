@@ -70,6 +70,7 @@ void addNHomologicalData() {
         .def("countBdryCells", &NHomologicalData::countBdryCells)
         .def("getNumBdryCells", &NHomologicalData::countBdryCells)
         .def("eulerChar", &NHomologicalData::eulerChar)
+        .def("getEulerChar", &NHomologicalData::eulerChar)
         .def("torsionRankVectorString",
             &NHomologicalData::torsionRankVectorString,
             return_value_policy<copy_const_reference>())
@@ -92,6 +93,9 @@ void addNHomologicalData() {
         .def("formIsSplit", &NHomologicalData::formIsSplit)
         .def("formSatKK", &NHomologicalData::formSatKK)
         .def("embeddabilityComment",
+            &NHomologicalData::embeddabilityComment,
+            return_value_policy<copy_const_reference>())
+        .def("getEmbeddabilityComment",
             &NHomologicalData::embeddabilityComment,
             return_value_policy<copy_const_reference>())
         .def(regina::python::add_output())

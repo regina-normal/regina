@@ -73,11 +73,18 @@ void addDim4Triangle() {
         .def(init<const Dim4TriangleEmbedding&>())
         .def("simplex", &Dim4TriangleEmbedding::simplex,
             return_value_policy<reference_existing_object>())
+        .def("getSimplex", &Dim4TriangleEmbedding::simplex,
+            return_value_policy<reference_existing_object>())
         .def("pentachoron", &Dim4TriangleEmbedding::pentachoron,
             return_value_policy<reference_existing_object>())
+        .def("getPentachoron", &Dim4TriangleEmbedding::pentachoron,
+            return_value_policy<reference_existing_object>())
         .def("face", &Dim4TriangleEmbedding::face)
+        .def("getFace", &Dim4TriangleEmbedding::face)
         .def("triangle", &Dim4TriangleEmbedding::triangle)
+        .def("getTriangle", &Dim4TriangleEmbedding::triangle)
         .def("vertices", &Dim4TriangleEmbedding::vertices)
+        .def("getVertices", &Dim4TriangleEmbedding::vertices)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
@@ -87,7 +94,10 @@ void addDim4Triangle() {
                 boost::noncopyable>("Face4_2", no_init)
             .def("index", &Dim4Triangle::index)
             .def("embeddings", Dim4Triangle_embeddings_list)
+            .def("getEmbeddings", Dim4Triangle_embeddings_list)
             .def("embedding", &Dim4Triangle::embedding,
+                return_internal_reference<>())
+            .def("getEmbedding", &Dim4Triangle::embedding,
                 return_internal_reference<>())
             .def("front", &Dim4Triangle::front,
                 return_internal_reference<>())
@@ -95,20 +105,33 @@ void addDim4Triangle() {
                 return_internal_reference<>())
             .def("triangulation", &Dim4Triangle::triangulation,
                 return_value_policy<to_held_type<>>())
+            .def("getTriangulation", &Dim4Triangle::triangulation,
+                return_value_policy<to_held_type<>>())
             .def("component", &Dim4Triangle::component,
                 return_value_policy<reference_existing_object>())
+            .def("getComponent", &Dim4Triangle::component,
+                return_value_policy<reference_existing_object>())
             .def("boundaryComponent", &Dim4Triangle::boundaryComponent,
+                return_value_policy<reference_existing_object>())
+            .def("getBoundaryComponent", &Dim4Triangle::boundaryComponent,
                 return_value_policy<reference_existing_object>())
             .def("face", &regina::python::face<Dim4Triangle, 2, int>)
             .def("vertex", &Dim4Triangle::vertex,
                 return_value_policy<reference_existing_object>())
+            .def("getVertex", &Dim4Triangle::vertex,
+                return_value_policy<reference_existing_object>())
             .def("edge", &Dim4Triangle::edge,
+                return_value_policy<reference_existing_object>())
+            .def("getEdge", &Dim4Triangle::edge,
                 return_value_policy<reference_existing_object>())
             .def("faceMapping",
                 &regina::python::faceMapping<Dim4Triangle, 2, 5>)
             .def("vertexMapping", &Dim4Triangle::vertexMapping)
+            .def("getVertexMapping", &Dim4Triangle::vertexMapping)
             .def("edgeMapping", &Dim4Triangle::edgeMapping)
+            .def("getEdgeMapping", &Dim4Triangle::edgeMapping)
             .def("degree", &Dim4Triangle::degree)
+            .def("getDegree", &Dim4Triangle::degree)
             .def("isBoundary", &Dim4Triangle::isBoundary)
             .def("isLinkOrientable", &Dim4Triangle::isLinkOrientable)
             .def("isValid", &Dim4Triangle::isValid)

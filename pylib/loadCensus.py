@@ -155,7 +155,7 @@ def loadCensusInternal(baseFilename, minTet, maxTet):
     while p != None:
         next = p.nextTreePacket()
 
-        if p.type() == regina.NTriangulation.typeID:
+        if p.type() == regina.NTriangulation.packetType:
             nTets = p.countTetrahedra()
             if nTets >= minTet and nTets <= maxTet:
                 # We want this triangulation.
@@ -166,7 +166,7 @@ def loadCensusInternal(baseFilename, minTet, maxTet):
             if nTets < minTet or nTets > maxTet:
                 # We don't want this triangulation.
                 # Remove it from the tree.
-                parent = p.parent()
+                parent = p.getTreeParent()
 
                 p.makeOrphan()
                 removed = removed + 1
@@ -176,7 +176,7 @@ def loadCensusInternal(baseFilename, minTet, maxTet):
                 while parent != data and parent != None and \
                         parent.countChildren() == 0:
                     tmp = parent
-                    parent = parent.parent()
+                    parent = parent.getTreeParent()
                     tmp.makeOrphan()
 
         p = next

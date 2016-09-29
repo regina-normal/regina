@@ -103,6 +103,14 @@ class REGINA_API NSurfaceFilterCombination : public NSurfaceFilter {
          */
         bool usesAnd() const;
         /**
+         * Deprecated routine that determines whether this is an \a and
+         * or an \a or combination.
+         *
+         * \deprecated This routine has been renamed to usesAnd().
+         * See the usesAnd() documentation for further details.
+         */
+        REGINA_DEPRECATED bool getUsesAnd() const;
+        /**
          * Sets whether this is an \a and or an \a or combination.
          *
          * @param value \c true if this is to be an \a and combination,
@@ -131,6 +139,9 @@ inline NSurfaceFilterCombination::NSurfaceFilterCombination(
 }
 
 inline bool NSurfaceFilterCombination::usesAnd() const {
+    return usesAnd_;
+}
+inline bool NSurfaceFilterCombination::getUsesAnd() const {
     return usesAnd_;
 }
 inline void NSurfaceFilterCombination::setUsesAnd(bool value) {

@@ -28,6 +28,7 @@ SET ( FILES
   quadtostd
   sfcombination
   sfproperties
+  spheres
   stdtoquad
   )
 
@@ -45,6 +46,7 @@ if (${REGINA_INSTALL_DEV})
     coordregistry-impl.h
     filterregistry.h
     filterregistry-impl.h
+    flavourregistry.h
     ndisc.h
     ndisctype.h
     nnormalsurface.h
@@ -52,6 +54,7 @@ if (${REGINA_INSTALL_DEV})
     normalcoords.h
     normalflags.h
     normalspec-impl.h
+    normalspec.tcc
     nprism.h
     nsanstandard.h
     nsmirrored.h

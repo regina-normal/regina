@@ -608,6 +608,66 @@ void NPacket::internalCloneDescendants(NPacket* parent) const {
     }
 }
 
+std::string NPacket::makeUniqueLabel(const std::string& base) const {
+    const NPacket* topLevel = this;
+    while (topLevel->treeParent_)
+        topLevel = topLevel->treeParent_;
+
+    if (! topLevel->findPacketLabel(base))
+        return base;
+
+    std::string ans;
+    size_t extraInt = 2;
+    while(1) {
+        std::ostringstream out;
+        out << ' ' << extraInt;
+        ans = base + out.str();
+        if (! topLevel->findPacketLabel(ans))
+            return ans;
+        else
+            extraInt++;
+    }
+    return "";
+}
+
+bool NPacket::makeUniqueLabels(NPacket* reference) {
+    NPacket* tree[3];
+    if (reference) {
+        tree[0] = reference;
+        tree[1] = this;
+        tree[2] = 0;
+    } else {
+        tree[0] = this;
+        tree[1] = 0;
+    }
+
+    std::set<std::string> labels;
+
+    int whichTree;
+    NPacket* p;
+    std::string label, newLabel;
+    size_t extraInt;
+    bool changed = false;
+    for (whichTree = 0; tree[whichTree]; whichTree++)
+        for (p = tree[whichTree]; p; p = p->nextTreePacket()) {
+            label = p->label();
+            if (! labels.insert(label).second) {
+                extraInt = 1;
+                do {
+                    extraInt++;
+                    std::ostringstream out;
+                    out << ' ' << extraInt;
+                    newLabel = label + out.str();
+                } while (! labels.insert(newLabel).second);
+
+                p->setLabel(newLabel);
+                changed = true;
+            }
+        }
+
+    return changed;
+}
+
 bool NPacket::addTag(const std::string& tag) {
     fireEvent(&NPacketListener::packetToBeRenamed);
     if (treeParent_)

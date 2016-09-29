@@ -201,6 +201,15 @@ class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
          * corresponding top level edge groups.
          */
         NPerm4 edgeGroupRoles(int annulus) const;
+        /**
+         * Deprecated routine that returns a permutation describing the role
+         * played by each top level edge group of the layered solid torus glued
+         * to the requested annulus of the core triangular solid torus.
+         *
+         * \deprecated This routine has been renamed to edgeGroupRoles().
+         * See the edgeGroupRoles() documentation for further details.
+         */
+        REGINA_DEPRECATED NPerm4 getEdgeGroupRoles(int annulus) const;
 
         /**
          * Returns the number of tetrahedra in the layered chain linking
@@ -334,6 +343,9 @@ inline const NLayeredSolidTorus* NAugTriSolidTorus::getAugTorus(
     return augTorus_[annulus];
 }
 inline NPerm4 NAugTriSolidTorus::edgeGroupRoles(int annulus) const {
+    return edgeGroupRoles_[annulus];
+}
+inline NPerm4 NAugTriSolidTorus::getEdgeGroupRoles(int annulus) const {
     return edgeGroupRoles_[annulus];
 }
 inline unsigned long NAugTriSolidTorus::chainLength() const {
