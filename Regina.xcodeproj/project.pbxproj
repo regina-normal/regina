@@ -22,7 +22,7 @@
 		050AFC5A19DCB9B100835ED6 /* SnapPeaAlgebra.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050AFC5519DCB9B100835ED6 /* SnapPeaAlgebra.mm */; };
 		050AFC5C19DCB9B200835ED6 /* SnapPeaGluings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050AFC5919DCB9B100835ED6 /* SnapPeaGluings.mm */; };
 		050AFC5F19DCC68B00835ED6 /* SurfacesCompat.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050AFC5E19DCC68B00835ED6 /* SurfacesCompat.mm */; };
-		050BEA361D9C8B6700B96DB8 /* __init__.py in CopyFiles */ = {isa = PBXBuildFile; fileRef = 050F5E6B1B9BD30700C1F681 /* __init__.py */; };
+		050BEA361D9C8B6700B96DB8 /* __init__.py in Copy Python Init Script */ = {isa = PBXBuildFile; fileRef = 050F5E6B1B9BD30700C1F681 /* __init__.py */; };
 		050F5DD31B9BAB9C00C1F681 /* nabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D021B9BAB9C00C1F681 /* nabeliangroup.cpp */; };
 		050F5DD41B9BAB9C00C1F681 /* ngrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D031B9BAB9C00C1F681 /* ngrouppresentation.cpp */; };
 		050F5DD51B9BAB9C00C1F681 /* nhomgrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D041B9BAB9C00C1F681 /* nhomgrouppresentation.cpp */; };
@@ -153,8 +153,8 @@
 		050F5E5E1B9BAB9C00C1F681 /* pyforeign.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DCF1B9BAB9C00C1F681 /* pyforeign.cpp */; };
 		050F5E611B9BAB9C00C1F681 /* globalarray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DD21B9BAB9C00C1F681 /* globalarray.cpp */; };
 		050F5E621B9BAC5200C1F681 /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
-		050F5E6A1B9BD2ED00C1F681 /* engine.so in CopyFiles */ = {isa = PBXBuildFile; fileRef = 050F5CDD1B9BAAAA00C1F681 /* engine.so */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		050F5E711B9BD51B00C1F681 /* libregina-engine.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		050F5E6A1B9BD2ED00C1F681 /* engine.so in Copy Python Module */ = {isa = PBXBuildFile; fileRef = 050F5CDD1B9BAAAA00C1F681 /* engine.so */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		050F5E711B9BD51B00C1F681 /* libregina-engine.dylib in Copy Regina Engine */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		050F5E7D1B9BD6F400C1F681 /* commandedit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E741B9BD6F400C1F681 /* commandedit.cpp */; };
 		050F5E7E1B9BD6F400C1F681 /* pythonconsole.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E761B9BD6F400C1F681 /* pythonconsole.cpp */; };
 		050F5E7F1B9BD6F400C1F681 /* pythoninterpreter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E781B9BD6F400C1F681 /* pythoninterpreter.cpp */; };
@@ -948,7 +948,7 @@
 		054535BC19D90C3A00BED767 /* Skeleton.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054535BB19D90C3A00BED767 /* Skeleton.mm */; };
 		054739E01D9AAE7100C7B56F /* clickablelabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054739DC1D9AAE5D00C7B56F /* clickablelabel.cpp */; };
 		054739E11D9B176200C7B56F /* clickablelabel.h in Sources */ = {isa = PBXBuildFile; fileRef = 054739DD1D9AAE5D00C7B56F /* clickablelabel.h */; };
-		054739E31D9B188000C7B56F /* libqmacjp2.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 054739E21D9B187F00C7B56F /* libqmacjp2.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		054739E31D9B188000C7B56F /* libqmacjp2.dylib in Copy Qt Plugins (imageformats) */ = {isa = PBXBuildFile; fileRef = 054739E21D9B187F00C7B56F /* libqmacjp2.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		0547FCB51C4F60A200BF1AD9 /* xmltrireader.h in Headers */ = {isa = PBXBuildFile; fileRef = 0547FCB41C4F60A100BF1AD9 /* xmltrireader.h */; };
 		054BC4C319B4A726005E01A0 /* closed-hyp-census-full.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABE9E19B499DC00044C1B /* closed-hyp-census-full.zsig */; };
 		054BC4C419B4A726005E01A0 /* closed-nor-census-11.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABE9F19B499DC00044C1B /* closed-nor-census-11.zsig */; };
@@ -972,7 +972,7 @@
 		0550010D1C4D9EF900501C24 /* face9.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055001031C4D9EEB00501C24 /* face9.cpp */; };
 		0554CA7A1C5983870053461B /* generictriui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA761C5983730053461B /* generictriui.cpp */; };
 		0554CA7B1C5983B00053461B /* generictriui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA771C5983730053461B /* generictriui.h */; };
-		055722D31D9BC9D3005789B4 /* boost-python.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 056AA9931C41C10100FA81D3 /* boost-python.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		055722D31D9BC9D3005789B4 /* boost-python.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9931C41C10100FA81D3 /* boost-python.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		05583A6219B8041F00076187 /* ReginaDocument.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05583A6119B8041F00076187 /* ReginaDocument.mm */; };
 		055ABEA519B49C1900044C1B /* closed-hyp-census-full.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABE9E19B499DC00044C1B /* closed-hyp-census-full.zsig */; };
 		055ABEA619B49C1900044C1B /* closed-nor-census-11.zsig in Sources */ = {isa = PBXBuildFile; fileRef = 055ABE9F19B499DC00044C1B /* closed-nor-census-11.zsig */; };
@@ -1103,11 +1103,11 @@
 		056AA9A71C41DE9100FA81D3 /* libgmpxx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A31C41DE8600FA81D3 /* libgmpxx.framework */; };
 		056AA9AA1C41DE9E00FA81D3 /* libgmp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A81C41DE9D00FA81D3 /* libgmp.framework */; };
 		056AA9AB1C41DE9E00FA81D3 /* libgmpxx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A91C41DE9E00FA81D3 /* libgmpxx.framework */; };
-		057118CA19B30A2D009FEDC5 /* snappea-census-sec5.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B319B308F8009FEDC5 /* snappea-census-sec5.dat */; };
-		057118CB19B30A2D009FEDC5 /* snappea-census-sec6n.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B419B308F8009FEDC5 /* snappea-census-sec6n.dat */; };
-		057118CC19B30A2D009FEDC5 /* snappea-census-sec6o.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B519B308F8009FEDC5 /* snappea-census-sec6o.dat */; };
-		057118CD19B30A2D009FEDC5 /* snappea-census-sec7n.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B619B308F8009FEDC5 /* snappea-census-sec7n.dat */; };
-		057118CE19B30A2D009FEDC5 /* snappea-census-sec7o.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B719B308F8009FEDC5 /* snappea-census-sec7o.dat */; };
+		057118CA19B30A2D009FEDC5 /* snappea-census-sec5.dat in Copy SnapPea Census Data */ = {isa = PBXBuildFile; fileRef = 057118B319B308F8009FEDC5 /* snappea-census-sec5.dat */; };
+		057118CB19B30A2D009FEDC5 /* snappea-census-sec6n.dat in Copy SnapPea Census Data */ = {isa = PBXBuildFile; fileRef = 057118B419B308F8009FEDC5 /* snappea-census-sec6n.dat */; };
+		057118CC19B30A2D009FEDC5 /* snappea-census-sec6o.dat in Copy SnapPea Census Data */ = {isa = PBXBuildFile; fileRef = 057118B519B308F8009FEDC5 /* snappea-census-sec6o.dat */; };
+		057118CD19B30A2D009FEDC5 /* snappea-census-sec7n.dat in Copy SnapPea Census Data */ = {isa = PBXBuildFile; fileRef = 057118B619B308F8009FEDC5 /* snappea-census-sec7n.dat */; };
+		057118CE19B30A2D009FEDC5 /* snappea-census-sec7o.dat in Copy SnapPea Census Data */ = {isa = PBXBuildFile; fileRef = 057118B719B308F8009FEDC5 /* snappea-census-sec7o.dat */; };
 		057118D019B30BC0009FEDC5 /* snappea-census-sec5.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B319B308F8009FEDC5 /* snappea-census-sec5.dat */; };
 		057118D119B30BC0009FEDC5 /* snappea-census-sec6n.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B419B308F8009FEDC5 /* snappea-census-sec6n.dat */; };
 		057118D219B30BC0009FEDC5 /* snappea-census-sec6o.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B519B308F8009FEDC5 /* snappea-census-sec6o.dat */; };
@@ -1378,28 +1378,28 @@
 		05AB5ED31B8EDC27007034C8 /* QtSvg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB5ED21B8EDC27007034C8 /* QtSvg.framework */; };
 		05AB5ED61B8EDFBF007034C8 /* regina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 05561D181811F27A00FD6E2E /* regina.icns */; };
 		05AB5ED71B8EDFBF007034C8 /* x-regina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 05561D191811F27A00FD6E2E /* x-regina.icns */; };
-		05AB5ED91B9423A8007034C8 /* QtCore.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5ECC1B8ED9F9007034C8 /* QtCore.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		05AB5EDA1B9423A8007034C8 /* QtGui.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5ECD1B8ED9F9007034C8 /* QtGui.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		05AB5EDB1B9423A8007034C8 /* QtSvg.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5ED21B8EDC27007034C8 /* QtSvg.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		05AB5EDC1B9423A8007034C8 /* QtWidgets.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5ECE1B8ED9FA007034C8 /* QtWidgets.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		05AB5EE21B94285C007034C8 /* libqcocoa.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5EDF1B94285B007034C8 /* libqcocoa.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5EE31B94285C007034C8 /* libqminimal.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5EE01B94285B007034C8 /* libqminimal.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5EE41B94285C007034C8 /* libqoffscreen.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5EE11B94285B007034C8 /* libqoffscreen.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5EF21B9428B3007034C8 /* libqdds.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5EE61B9428B0007034C8 /* libqdds.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5EF31B9428B3007034C8 /* libqgif.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5EE71B9428B0007034C8 /* libqgif.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5EF41B9428B3007034C8 /* libqicns.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5EE81B9428B1007034C8 /* libqicns.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5EF51B9428B3007034C8 /* libqico.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5EE91B9428B1007034C8 /* libqico.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5EF71B9428B3007034C8 /* libqjpeg.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5EEB1B9428B1007034C8 /* libqjpeg.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5EF91B9428B3007034C8 /* libqsvg.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5EED1B9428B2007034C8 /* libqsvg.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5EFA1B9428B3007034C8 /* libqtga.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5EEE1B9428B2007034C8 /* libqtga.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5EFB1B9428B3007034C8 /* libqtiff.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5EEF1B9428B3007034C8 /* libqtiff.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5EFC1B9428B3007034C8 /* libqwbmp.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5EF01B9428B3007034C8 /* libqwbmp.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5EFD1B9428B3007034C8 /* libqwebp.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5EF11B9428B3007034C8 /* libqwebp.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5F001B9428DC007034C8 /* libqsvgicon.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5EFF1B9428DC007034C8 /* libqsvgicon.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5F031B9428FE007034C8 /* libqtuiotouchplugin.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5F021B9428FD007034C8 /* libqtuiotouchplugin.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5F081B9429BB007034C8 /* QtDBus.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5F051B9429BA007034C8 /* QtDBus.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		05AB5F091B9429BB007034C8 /* QtNetwork.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5F061B9429BB007034C8 /* QtNetwork.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		05AB5F0A1B9429BB007034C8 /* QtPrintSupport.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05AB5F071B9429BB007034C8 /* QtPrintSupport.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		05AB5ED91B9423A8007034C8 /* QtCore.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB5ECC1B8ED9F9007034C8 /* QtCore.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		05AB5EDA1B9423A8007034C8 /* QtGui.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB5ECD1B8ED9F9007034C8 /* QtGui.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		05AB5EDB1B9423A8007034C8 /* QtSvg.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB5ED21B8EDC27007034C8 /* QtSvg.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		05AB5EDC1B9423A8007034C8 /* QtWidgets.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB5ECE1B8ED9FA007034C8 /* QtWidgets.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		05AB5EE21B94285C007034C8 /* libqcocoa.dylib in Copy Qt Plugins (platforms) */ = {isa = PBXBuildFile; fileRef = 05AB5EDF1B94285B007034C8 /* libqcocoa.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		05AB5EE31B94285C007034C8 /* libqminimal.dylib in Copy Qt Plugins (platforms) */ = {isa = PBXBuildFile; fileRef = 05AB5EE01B94285B007034C8 /* libqminimal.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		05AB5EE41B94285C007034C8 /* libqoffscreen.dylib in Copy Qt Plugins (platforms) */ = {isa = PBXBuildFile; fileRef = 05AB5EE11B94285B007034C8 /* libqoffscreen.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		05AB5EF21B9428B3007034C8 /* libqdds.dylib in Copy Qt Plugins (imageformats) */ = {isa = PBXBuildFile; fileRef = 05AB5EE61B9428B0007034C8 /* libqdds.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		05AB5EF31B9428B3007034C8 /* libqgif.dylib in Copy Qt Plugins (imageformats) */ = {isa = PBXBuildFile; fileRef = 05AB5EE71B9428B0007034C8 /* libqgif.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		05AB5EF41B9428B3007034C8 /* libqicns.dylib in Copy Qt Plugins (imageformats) */ = {isa = PBXBuildFile; fileRef = 05AB5EE81B9428B1007034C8 /* libqicns.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		05AB5EF51B9428B3007034C8 /* libqico.dylib in Copy Qt Plugins (imageformats) */ = {isa = PBXBuildFile; fileRef = 05AB5EE91B9428B1007034C8 /* libqico.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		05AB5EF71B9428B3007034C8 /* libqjpeg.dylib in Copy Qt Plugins (imageformats) */ = {isa = PBXBuildFile; fileRef = 05AB5EEB1B9428B1007034C8 /* libqjpeg.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		05AB5EF91B9428B3007034C8 /* libqsvg.dylib in Copy Qt Plugins (imageformats) */ = {isa = PBXBuildFile; fileRef = 05AB5EED1B9428B2007034C8 /* libqsvg.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		05AB5EFA1B9428B3007034C8 /* libqtga.dylib in Copy Qt Plugins (imageformats) */ = {isa = PBXBuildFile; fileRef = 05AB5EEE1B9428B2007034C8 /* libqtga.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		05AB5EFB1B9428B3007034C8 /* libqtiff.dylib in Copy Qt Plugins (imageformats) */ = {isa = PBXBuildFile; fileRef = 05AB5EEF1B9428B3007034C8 /* libqtiff.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		05AB5EFC1B9428B3007034C8 /* libqwbmp.dylib in Copy Qt Plugins (imageformats) */ = {isa = PBXBuildFile; fileRef = 05AB5EF01B9428B3007034C8 /* libqwbmp.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		05AB5EFD1B9428B3007034C8 /* libqwebp.dylib in Copy Qt Plugins (imageformats) */ = {isa = PBXBuildFile; fileRef = 05AB5EF11B9428B3007034C8 /* libqwebp.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		05AB5F001B9428DC007034C8 /* libqsvgicon.dylib in Copy Qt Plugins (iconengines) */ = {isa = PBXBuildFile; fileRef = 05AB5EFF1B9428DC007034C8 /* libqsvgicon.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		05AB5F031B9428FE007034C8 /* libqtuiotouchplugin.dylib in Copy Qt Plugins (generic) */ = {isa = PBXBuildFile; fileRef = 05AB5F021B9428FD007034C8 /* libqtuiotouchplugin.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		05AB5F081B9429BB007034C8 /* QtDBus.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB5F051B9429BA007034C8 /* QtDBus.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		05AB5F091B9429BB007034C8 /* QtNetwork.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB5F061B9429BB007034C8 /* QtNetwork.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		05AB5F0A1B9429BB007034C8 /* QtPrintSupport.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB5F071B9429BB007034C8 /* QtPrintSupport.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		05B14EB519B4240D002138C0 /* mkcensusdb.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B14EB419B4240D002138C0 /* mkcensusdb.cpp */; };
 		05B14EB719B424D8002138C0 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A51806047E00FAE4DF /* libz.dylib */; };
 		05B14EB919B424F9002138C0 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 053E5B5519B3D79100166778 /* libbz2.dylib */; };
@@ -1610,34 +1610,37 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		050BEA351D9C8B3700B96DB8 /* CopyFiles */ = {
+		050BEA351D9C8B3700B96DB8 /* Copy Python Init Script */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = python;
 			dstSubfolderSpec = 7;
 			files = (
-				050BEA361D9C8B6700B96DB8 /* __init__.py in CopyFiles */,
+				050BEA361D9C8B6700B96DB8 /* __init__.py in Copy Python Init Script */,
 			);
+			name = "Copy Python Init Script";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		050F5E691B9BD2AA00C1F681 /* CopyFiles */ = {
+		050F5E691B9BD2AA00C1F681 /* Copy Python Module */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = python/regina;
 			dstSubfolderSpec = 6;
 			files = (
-				050F5E6A1B9BD2ED00C1F681 /* engine.so in CopyFiles */,
+				050F5E6A1B9BD2ED00C1F681 /* engine.so in Copy Python Module */,
 			);
+			name = "Copy Python Module";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		050F5E701B9BD50C00C1F681 /* CopyFiles */ = {
+		050F5E701B9BD50C00C1F681 /* Copy Regina Engine */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 6;
 			files = (
-				050F5E711B9BD51B00C1F681 /* libregina-engine.dylib in CopyFiles */,
+				050F5E711B9BD51B00C1F681 /* libregina-engine.dylib in Copy Regina Engine */,
 			);
+			name = "Copy Regina Engine";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		052FA0BF1806072900FAE4DF /* CopyFiles */ = {
@@ -1649,18 +1652,19 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
-		057118C919B30A13009FEDC5 /* CopyFiles */ = {
+		057118C919B30A13009FEDC5 /* Copy SnapPea Census Data */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = data/snappea;
 			dstSubfolderSpec = 7;
 			files = (
-				057118CA19B30A2D009FEDC5 /* snappea-census-sec5.dat in CopyFiles */,
-				057118CB19B30A2D009FEDC5 /* snappea-census-sec6n.dat in CopyFiles */,
-				057118CC19B30A2D009FEDC5 /* snappea-census-sec6o.dat in CopyFiles */,
-				057118CD19B30A2D009FEDC5 /* snappea-census-sec7n.dat in CopyFiles */,
-				057118CE19B30A2D009FEDC5 /* snappea-census-sec7o.dat in CopyFiles */,
+				057118CA19B30A2D009FEDC5 /* snappea-census-sec5.dat in Copy SnapPea Census Data */,
+				057118CB19B30A2D009FEDC5 /* snappea-census-sec6n.dat in Copy SnapPea Census Data */,
+				057118CC19B30A2D009FEDC5 /* snappea-census-sec6o.dat in Copy SnapPea Census Data */,
+				057118CD19B30A2D009FEDC5 /* snappea-census-sec7n.dat in Copy SnapPea Census Data */,
+				057118CE19B30A2D009FEDC5 /* snappea-census-sec7o.dat in Copy SnapPea Census Data */,
 			);
+			name = "Copy SnapPea Census Data";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		057118CF19B30BAF009FEDC5 /* CopyFiles */ = {
@@ -1677,73 +1681,78 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		05AB5ED81B942354007034C8 /* CopyFiles */ = {
+		05AB5ED81B942354007034C8 /* Copy Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				055722D31D9BC9D3005789B4 /* boost-python.framework in CopyFiles */,
-				05AB5F081B9429BB007034C8 /* QtDBus.framework in CopyFiles */,
-				05AB5F091B9429BB007034C8 /* QtNetwork.framework in CopyFiles */,
-				05AB5F0A1B9429BB007034C8 /* QtPrintSupport.framework in CopyFiles */,
-				05AB5ED91B9423A8007034C8 /* QtCore.framework in CopyFiles */,
-				05AB5EDA1B9423A8007034C8 /* QtGui.framework in CopyFiles */,
-				05AB5EDB1B9423A8007034C8 /* QtSvg.framework in CopyFiles */,
-				05AB5EDC1B9423A8007034C8 /* QtWidgets.framework in CopyFiles */,
+				055722D31D9BC9D3005789B4 /* boost-python.framework in Copy Frameworks */,
+				05AB5F081B9429BB007034C8 /* QtDBus.framework in Copy Frameworks */,
+				05AB5F091B9429BB007034C8 /* QtNetwork.framework in Copy Frameworks */,
+				05AB5F0A1B9429BB007034C8 /* QtPrintSupport.framework in Copy Frameworks */,
+				05AB5ED91B9423A8007034C8 /* QtCore.framework in Copy Frameworks */,
+				05AB5EDA1B9423A8007034C8 /* QtGui.framework in Copy Frameworks */,
+				05AB5EDB1B9423A8007034C8 /* QtSvg.framework in Copy Frameworks */,
+				05AB5EDC1B9423A8007034C8 /* QtWidgets.framework in Copy Frameworks */,
 			);
+			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		05AB5EDE1B942813007034C8 /* CopyFiles */ = {
+		05AB5EDE1B942813007034C8 /* Copy Qt Plugins (platforms) */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = platforms;
 			dstSubfolderSpec = 13;
 			files = (
-				05AB5EE21B94285C007034C8 /* libqcocoa.dylib in CopyFiles */,
-				05AB5EE31B94285C007034C8 /* libqminimal.dylib in CopyFiles */,
-				05AB5EE41B94285C007034C8 /* libqoffscreen.dylib in CopyFiles */,
+				05AB5EE21B94285C007034C8 /* libqcocoa.dylib in Copy Qt Plugins (platforms) */,
+				05AB5EE31B94285C007034C8 /* libqminimal.dylib in Copy Qt Plugins (platforms) */,
+				05AB5EE41B94285C007034C8 /* libqoffscreen.dylib in Copy Qt Plugins (platforms) */,
 			);
+			name = "Copy Qt Plugins (platforms)";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		05AB5EE51B942884007034C8 /* CopyFiles */ = {
+		05AB5EE51B942884007034C8 /* Copy Qt Plugins (imageformats) */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = imageformats;
 			dstSubfolderSpec = 13;
 			files = (
-				054739E31D9B188000C7B56F /* libqmacjp2.dylib in CopyFiles */,
-				05AB5EF21B9428B3007034C8 /* libqdds.dylib in CopyFiles */,
-				05AB5EF31B9428B3007034C8 /* libqgif.dylib in CopyFiles */,
-				05AB5EF41B9428B3007034C8 /* libqicns.dylib in CopyFiles */,
-				05AB5EF51B9428B3007034C8 /* libqico.dylib in CopyFiles */,
-				05AB5EF71B9428B3007034C8 /* libqjpeg.dylib in CopyFiles */,
-				05AB5EF91B9428B3007034C8 /* libqsvg.dylib in CopyFiles */,
-				05AB5EFA1B9428B3007034C8 /* libqtga.dylib in CopyFiles */,
-				05AB5EFB1B9428B3007034C8 /* libqtiff.dylib in CopyFiles */,
-				05AB5EFC1B9428B3007034C8 /* libqwbmp.dylib in CopyFiles */,
-				05AB5EFD1B9428B3007034C8 /* libqwebp.dylib in CopyFiles */,
+				054739E31D9B188000C7B56F /* libqmacjp2.dylib in Copy Qt Plugins (imageformats) */,
+				05AB5EF21B9428B3007034C8 /* libqdds.dylib in Copy Qt Plugins (imageformats) */,
+				05AB5EF31B9428B3007034C8 /* libqgif.dylib in Copy Qt Plugins (imageformats) */,
+				05AB5EF41B9428B3007034C8 /* libqicns.dylib in Copy Qt Plugins (imageformats) */,
+				05AB5EF51B9428B3007034C8 /* libqico.dylib in Copy Qt Plugins (imageformats) */,
+				05AB5EF71B9428B3007034C8 /* libqjpeg.dylib in Copy Qt Plugins (imageformats) */,
+				05AB5EF91B9428B3007034C8 /* libqsvg.dylib in Copy Qt Plugins (imageformats) */,
+				05AB5EFA1B9428B3007034C8 /* libqtga.dylib in Copy Qt Plugins (imageformats) */,
+				05AB5EFB1B9428B3007034C8 /* libqtiff.dylib in Copy Qt Plugins (imageformats) */,
+				05AB5EFC1B9428B3007034C8 /* libqwbmp.dylib in Copy Qt Plugins (imageformats) */,
+				05AB5EFD1B9428B3007034C8 /* libqwebp.dylib in Copy Qt Plugins (imageformats) */,
 			);
+			name = "Copy Qt Plugins (imageformats)";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		05AB5EFE1B9428BD007034C8 /* CopyFiles */ = {
+		05AB5EFE1B9428BD007034C8 /* Copy Qt Plugins (iconengines) */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = iconengines;
 			dstSubfolderSpec = 13;
 			files = (
-				05AB5F001B9428DC007034C8 /* libqsvgicon.dylib in CopyFiles */,
+				05AB5F001B9428DC007034C8 /* libqsvgicon.dylib in Copy Qt Plugins (iconengines) */,
 			);
+			name = "Copy Qt Plugins (iconengines)";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		05AB5F011B9428E4007034C8 /* CopyFiles */ = {
+		05AB5F011B9428E4007034C8 /* Copy Qt Plugins (generic) */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = generic;
 			dstSubfolderSpec = 13;
 			files = (
-				05AB5F031B9428FE007034C8 /* libqtuiotouchplugin.dylib in CopyFiles */,
+				05AB5F031B9428FE007034C8 /* libqtuiotouchplugin.dylib in Copy Qt Plugins (generic) */,
 			);
+			name = "Copy Qt Plugins (generic)";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		05F9560919B5296D00377BEC /* CopyFiles */ = {
@@ -5992,17 +6001,17 @@
 				0564A1DB1811D6F8002CC2AE /* Sources */,
 				0564A1DC1811D6F8002CC2AE /* Frameworks */,
 				0564A1DD1811D6F8002CC2AE /* Resources */,
-				057118C919B30A13009FEDC5 /* CopyFiles */,
-				05AB5ED81B942354007034C8 /* CopyFiles */,
+				057118C919B30A13009FEDC5 /* Copy SnapPea Census Data */,
+				05AB5ED81B942354007034C8 /* Copy Frameworks */,
 				0514CAE31D9C9A5800EDB2E6 /* Sign Qt Frameworks */,
-				05AB5EDE1B942813007034C8 /* CopyFiles */,
-				05AB5EE51B942884007034C8 /* CopyFiles */,
-				05AB5EFE1B9428BD007034C8 /* CopyFiles */,
-				05AB5F011B9428E4007034C8 /* CopyFiles */,
-				050F5E691B9BD2AA00C1F681 /* CopyFiles */,
-				050BEA351D9C8B3700B96DB8 /* CopyFiles */,
+				05AB5EDE1B942813007034C8 /* Copy Qt Plugins (platforms) */,
+				05AB5EE51B942884007034C8 /* Copy Qt Plugins (imageformats) */,
+				05AB5EFE1B9428BD007034C8 /* Copy Qt Plugins (iconengines) */,
+				05AB5F011B9428E4007034C8 /* Copy Qt Plugins (generic) */,
+				050F5E691B9BD2AA00C1F681 /* Copy Python Module */,
+				050BEA351D9C8B3700B96DB8 /* Copy Python Init Script */,
 				050BEA371D9C8B7E00B96DB8 /* Symlink Scripts */,
-				050F5E701B9BD50C00C1F681 /* CopyFiles */,
+				050F5E701B9BD50C00C1F681 /* Copy Regina Engine */,
 			);
 			buildRules = (
 				0514CAF01D9CE54A00EDB2E6 /* PBXBuildRule */,
