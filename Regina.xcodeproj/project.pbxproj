@@ -1519,7 +1519,7 @@
 			outputFiles = (
 				"$(DERIVED_FILE_DIR)/engine-docs",
 			);
-			script = "conf=${DERIVED_FILE_DIR}/docs.conf\nsource=${INPUT_FILE_DIR}/../..\noutput=${DERIVED_FILE_DIR}/engine-docs\n\ncat ${INPUT_FILE_PATH} | sed -e \"s#@PROJECT_SOURCE_DIR@#${source}#\" -e \"s#@PROJECT_BINARY_DIR@/docs/engine#${output}#\" > ${conf}\n\n/sw/bin/doxygen ${conf} 2&>1\ncp `find ${source}/engine -name \"*.png\"` ${output}\n";
+			script = "conf=${DERIVED_FILE_DIR}/docs.conf\nsource=${INPUT_FILE_DIR}/../..\noutput=${DERIVED_FILE_DIR}/engine-docs\n\ncat ${INPUT_FILE_PATH} | sed -e \"s#@PROJECT_SOURCE_DIR@#${source}#\" -e \"s#@PROJECT_BINARY_DIR@/docs/engine#${output}#\" > ${conf}\n\n/sw/bin/doxygen ${conf} 2>&1\ncp `find ${source}/engine -name \"*.png\"` ${output}\n";
 		};
 		0543AE921811DE96002758F8 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
