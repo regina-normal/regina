@@ -1011,6 +1011,48 @@
 		05617AFA1D9DC26A00B1E33B /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7317181D7F2400449D14 /* libiconv.dylib */; };
 		05617AFB1D9DC27900B1E33B /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
 		05617AFC1D9DC33700B1E33B /* tricensus in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617ADD1D9DBFBE00B1E33B /* tricensus */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		05617B4A1D9DC59200B1E33B /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
+		05617B4B1D9DC59700B1E33B /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
+		05617B4C1D9DC59B00B1E33B /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
+		05617B4D1D9DC59E00B1E33B /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
+		05617B4E1D9DC5A200B1E33B /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
+		05617B4F1D9DC5A500B1E33B /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
+		05617B501D9DC5A800B1E33B /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
+		05617B511D9DC5C900B1E33B /* popt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05617AF81D9DC16900B1E33B /* popt.framework */; };
+		05617B521D9DC5C900B1E33B /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7317181D7F2400449D14 /* libiconv.dylib */; };
+		05617B531D9DC5C900B1E33B /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
+		05617B541D9DC5CD00B1E33B /* popt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05617AF81D9DC16900B1E33B /* popt.framework */; };
+		05617B551D9DC5CD00B1E33B /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7317181D7F2400449D14 /* libiconv.dylib */; };
+		05617B561D9DC5CD00B1E33B /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
+		05617B571D9DC5D200B1E33B /* popt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05617AF81D9DC16900B1E33B /* popt.framework */; };
+		05617B581D9DC5D200B1E33B /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7317181D7F2400449D14 /* libiconv.dylib */; };
+		05617B591D9DC5D200B1E33B /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
+		05617B5A1D9DC5D500B1E33B /* popt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05617AF81D9DC16900B1E33B /* popt.framework */; };
+		05617B5B1D9DC5D500B1E33B /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7317181D7F2400449D14 /* libiconv.dylib */; };
+		05617B5C1D9DC5D500B1E33B /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
+		05617B5D1D9DC5D900B1E33B /* popt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05617AF81D9DC16900B1E33B /* popt.framework */; };
+		05617B5E1D9DC5D900B1E33B /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7317181D7F2400449D14 /* libiconv.dylib */; };
+		05617B5F1D9DC5D900B1E33B /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
+		05617B601D9DC5DC00B1E33B /* popt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05617AF81D9DC16900B1E33B /* popt.framework */; };
+		05617B611D9DC5DC00B1E33B /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7317181D7F2400449D14 /* libiconv.dylib */; };
+		05617B621D9DC5DC00B1E33B /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
+		05617B631D9DC5DF00B1E33B /* popt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05617AF81D9DC16900B1E33B /* popt.framework */; };
+		05617B641D9DC5DF00B1E33B /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7317181D7F2400449D14 /* libiconv.dylib */; };
+		05617B651D9DC5DF00B1E33B /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
+		05617B741D9DC72F00B1E33B /* censuslookup in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B011D9DC51600B1E33B /* censuslookup */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		05617B751D9DC72F00B1E33B /* regconcat in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B0C1D9DC52200B1E33B /* regconcat */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		05617B761D9DC72F00B1E33B /* regconvert in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B171D9DC52B00B1E33B /* regconvert */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		05617B771D9DC72F00B1E33B /* regfiledump in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B221D9DC53400B1E33B /* regfiledump */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		05617B781D9DC72F00B1E33B /* regfiletype in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B2D1D9DC54500B1E33B /* regfiletype */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		05617B791D9DC72F00B1E33B /* sigcensus in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B381D9DC55000B1E33B /* sigcensus */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		05617B7A1D9DC72F00B1E33B /* trisetcmp in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B431D9DC55B00B1E33B /* trisetcmp */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		05617B7B1D9DC79E00B1E33B /* trisetcmp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05617AEB1D9DC02900B1E33B /* trisetcmp.cpp */; };
+		05617B7C1D9DC7A200B1E33B /* sigcensus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05617AE91D9DC02900B1E33B /* sigcensus.cpp */; };
+		05617B7D1D9DC7A600B1E33B /* regfiletype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05617AE81D9DC02900B1E33B /* regfiletype.cpp */; };
+		05617B7E1D9DC7A800B1E33B /* regfiledump.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05617AE71D9DC02900B1E33B /* regfiledump.cpp */; };
+		05617B7F1D9DC7AB00B1E33B /* regconvert.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05617AE61D9DC02900B1E33B /* regconvert.cpp */; };
+		05617B801D9DC7AE00B1E33B /* regconcat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05617AE51D9DC02900B1E33B /* regconcat.cpp */; };
+		05617B811D9DC7B000B1E33B /* censuslookup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05617AE41D9DC02900B1E33B /* censuslookup.cpp */; };
 		0564A7F81811D921002CC2AE /* actionspart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4091811D91E002CC2AE /* actionspart.cpp */; };
 		0564A7F91811D921002CC2AE /* bigwidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A40A1811D91E002CC2AE /* bigwidget.cpp */; };
 		0564A7FA1811D921002CC2AE /* boundarycomponentchooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A40D1811D91E002CC2AE /* boundarycomponentchooser.cpp */; };
@@ -1613,6 +1655,55 @@
 			remoteGlobalIDString = 05617ADC1D9DBFBE00B1E33B;
 			remoteInfo = "Utils - TriCensus";
 		};
+		05617B661D9DC6F800B1E33B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 05617B001D9DC51600B1E33B;
+			remoteInfo = "Utils - CensusLookup";
+		};
+		05617B681D9DC6FB00B1E33B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 05617B0B1D9DC52200B1E33B;
+			remoteInfo = "Utils - RegConcat";
+		};
+		05617B6A1D9DC70600B1E33B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 05617B161D9DC52B00B1E33B;
+			remoteInfo = "Utils - RegConvert";
+		};
+		05617B6C1D9DC70900B1E33B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 05617B211D9DC53400B1E33B;
+			remoteInfo = "Utils - RegFileDump";
+		};
+		05617B6E1D9DC70C00B1E33B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 05617B2C1D9DC54500B1E33B;
+			remoteInfo = "Utils - RegFileType";
+		};
+		05617B701D9DC70E00B1E33B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 05617B371D9DC55000B1E33B;
+			remoteInfo = "Utils - SigCensus";
+		};
+		05617B721D9DC71100B1E33B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 05617B421D9DC55B00B1E33B;
+			remoteInfo = "Utils - TriSetCmp";
+		};
 		05B14EBA19B427AC002138C0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
@@ -1651,6 +1742,13 @@
 			dstPath = "";
 			dstSubfolderSpec = 6;
 			files = (
+				05617B741D9DC72F00B1E33B /* censuslookup in Copy Engine and Utilities */,
+				05617B751D9DC72F00B1E33B /* regconcat in Copy Engine and Utilities */,
+				05617B761D9DC72F00B1E33B /* regconvert in Copy Engine and Utilities */,
+				05617B771D9DC72F00B1E33B /* regfiledump in Copy Engine and Utilities */,
+				05617B781D9DC72F00B1E33B /* regfiletype in Copy Engine and Utilities */,
+				05617B791D9DC72F00B1E33B /* sigcensus in Copy Engine and Utilities */,
+				05617B7A1D9DC72F00B1E33B /* trisetcmp in Copy Engine and Utilities */,
 				05617AFC1D9DC33700B1E33B /* tricensus in Copy Engine and Utilities */,
 				050F5E711B9BD51B00C1F681 /* libregina-engine.dylib in Copy Engine and Utilities */,
 			);
@@ -2701,6 +2799,13 @@
 		05617AEA1D9DC02900B1E33B /* tricensus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tricensus.cpp; sourceTree = "<group>"; };
 		05617AEB1D9DC02900B1E33B /* trisetcmp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = trisetcmp.cpp; sourceTree = "<group>"; };
 		05617AF81D9DC16900B1E33B /* popt.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = popt.framework; path = ../../Library/Frameworks/osx/popt.framework; sourceTree = "<group>"; };
+		05617B011D9DC51600B1E33B /* censuslookup */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = censuslookup; sourceTree = BUILT_PRODUCTS_DIR; };
+		05617B0C1D9DC52200B1E33B /* regconcat */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = regconcat; sourceTree = BUILT_PRODUCTS_DIR; };
+		05617B171D9DC52B00B1E33B /* regconvert */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = regconvert; sourceTree = BUILT_PRODUCTS_DIR; };
+		05617B221D9DC53400B1E33B /* regfiledump */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = regfiledump; sourceTree = BUILT_PRODUCTS_DIR; };
+		05617B2D1D9DC54500B1E33B /* regfiletype */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = regfiletype; sourceTree = BUILT_PRODUCTS_DIR; };
+		05617B381D9DC55000B1E33B /* sigcensus */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sigcensus; sourceTree = BUILT_PRODUCTS_DIR; };
+		05617B431D9DC55B00B1E33B /* trisetcmp */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = trisetcmp; sourceTree = BUILT_PRODUCTS_DIR; };
 		0564A1DF1811D6F8002CC2AE /* Regina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Regina.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0564A2161811D91C002CC2AE /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		0564A4071811D91E002CC2AE /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
@@ -3364,6 +3469,83 @@
 				05617AF91D9DC16900B1E33B /* popt.framework in Frameworks */,
 				05617AFA1D9DC26A00B1E33B /* libiconv.dylib in Frameworks */,
 				05617AFB1D9DC27900B1E33B /* libxml2.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05617AFE1D9DC51600B1E33B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05617B501D9DC5A800B1E33B /* libregina-engine.dylib in Frameworks */,
+				05617B631D9DC5DF00B1E33B /* popt.framework in Frameworks */,
+				05617B641D9DC5DF00B1E33B /* libiconv.dylib in Frameworks */,
+				05617B651D9DC5DF00B1E33B /* libxml2.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05617B091D9DC52200B1E33B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05617B4F1D9DC5A500B1E33B /* libregina-engine.dylib in Frameworks */,
+				05617B601D9DC5DC00B1E33B /* popt.framework in Frameworks */,
+				05617B611D9DC5DC00B1E33B /* libiconv.dylib in Frameworks */,
+				05617B621D9DC5DC00B1E33B /* libxml2.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05617B141D9DC52B00B1E33B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05617B4E1D9DC5A200B1E33B /* libregina-engine.dylib in Frameworks */,
+				05617B5D1D9DC5D900B1E33B /* popt.framework in Frameworks */,
+				05617B5E1D9DC5D900B1E33B /* libiconv.dylib in Frameworks */,
+				05617B5F1D9DC5D900B1E33B /* libxml2.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05617B1F1D9DC53400B1E33B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05617B4D1D9DC59E00B1E33B /* libregina-engine.dylib in Frameworks */,
+				05617B5A1D9DC5D500B1E33B /* popt.framework in Frameworks */,
+				05617B5B1D9DC5D500B1E33B /* libiconv.dylib in Frameworks */,
+				05617B5C1D9DC5D500B1E33B /* libxml2.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05617B2A1D9DC54500B1E33B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05617B4C1D9DC59B00B1E33B /* libregina-engine.dylib in Frameworks */,
+				05617B571D9DC5D200B1E33B /* popt.framework in Frameworks */,
+				05617B581D9DC5D200B1E33B /* libiconv.dylib in Frameworks */,
+				05617B591D9DC5D200B1E33B /* libxml2.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05617B351D9DC55000B1E33B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05617B4B1D9DC59700B1E33B /* libregina-engine.dylib in Frameworks */,
+				05617B541D9DC5CD00B1E33B /* popt.framework in Frameworks */,
+				05617B551D9DC5CD00B1E33B /* libiconv.dylib in Frameworks */,
+				05617B561D9DC5CD00B1E33B /* libxml2.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05617B401D9DC55B00B1E33B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05617B4A1D9DC59200B1E33B /* libregina-engine.dylib in Frameworks */,
+				05617B511D9DC5C900B1E33B /* popt.framework in Frameworks */,
+				05617B521D9DC5C900B1E33B /* libiconv.dylib in Frameworks */,
+				05617B531D9DC5C900B1E33B /* libxml2.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5381,6 +5563,13 @@
 				05B14EA319B423A0002138C0 /* mkcensusdb */,
 				050F5CDD1B9BAAAA00C1F681 /* engine.so */,
 				05617ADD1D9DBFBE00B1E33B /* tricensus */,
+				05617B011D9DC51600B1E33B /* censuslookup */,
+				05617B0C1D9DC52200B1E33B /* regconcat */,
+				05617B171D9DC52B00B1E33B /* regconvert */,
+				05617B221D9DC53400B1E33B /* regfiledump */,
+				05617B2D1D9DC54500B1E33B /* regfiletype */,
+				05617B381D9DC55000B1E33B /* sigcensus */,
+				05617B431D9DC55B00B1E33B /* trisetcmp */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -6063,6 +6252,118 @@
 			productReference = 05617ADD1D9DBFBE00B1E33B /* tricensus */;
 			productType = "com.apple.product-type.tool";
 		};
+		05617B001D9DC51600B1E33B /* Utils - CensusLookup */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 05617B051D9DC51700B1E33B /* Build configuration list for PBXNativeTarget "Utils - CensusLookup" */;
+			buildPhases = (
+				05617AFD1D9DC51600B1E33B /* Sources */,
+				05617AFE1D9DC51600B1E33B /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Utils - CensusLookup";
+			productName = "Utils - CensusLookup";
+			productReference = 05617B011D9DC51600B1E33B /* censuslookup */;
+			productType = "com.apple.product-type.tool";
+		};
+		05617B0B1D9DC52200B1E33B /* Utils - RegConcat */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 05617B101D9DC52300B1E33B /* Build configuration list for PBXNativeTarget "Utils - RegConcat" */;
+			buildPhases = (
+				05617B081D9DC52200B1E33B /* Sources */,
+				05617B091D9DC52200B1E33B /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Utils - RegConcat";
+			productName = "Utils - RegConcat";
+			productReference = 05617B0C1D9DC52200B1E33B /* regconcat */;
+			productType = "com.apple.product-type.tool";
+		};
+		05617B161D9DC52B00B1E33B /* Utils - RegConvert */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 05617B1B1D9DC52B00B1E33B /* Build configuration list for PBXNativeTarget "Utils - RegConvert" */;
+			buildPhases = (
+				05617B131D9DC52B00B1E33B /* Sources */,
+				05617B141D9DC52B00B1E33B /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Utils - RegConvert";
+			productName = "Utils - RegConvert";
+			productReference = 05617B171D9DC52B00B1E33B /* regconvert */;
+			productType = "com.apple.product-type.tool";
+		};
+		05617B211D9DC53400B1E33B /* Utils - RegFileDump */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 05617B261D9DC53500B1E33B /* Build configuration list for PBXNativeTarget "Utils - RegFileDump" */;
+			buildPhases = (
+				05617B1E1D9DC53400B1E33B /* Sources */,
+				05617B1F1D9DC53400B1E33B /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Utils - RegFileDump";
+			productName = "Utils - RegFileDump";
+			productReference = 05617B221D9DC53400B1E33B /* regfiledump */;
+			productType = "com.apple.product-type.tool";
+		};
+		05617B2C1D9DC54500B1E33B /* Utils - RegFileType */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 05617B311D9DC54600B1E33B /* Build configuration list for PBXNativeTarget "Utils - RegFileType" */;
+			buildPhases = (
+				05617B291D9DC54500B1E33B /* Sources */,
+				05617B2A1D9DC54500B1E33B /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Utils - RegFileType";
+			productName = "Utils - RegFileType";
+			productReference = 05617B2D1D9DC54500B1E33B /* regfiletype */;
+			productType = "com.apple.product-type.tool";
+		};
+		05617B371D9DC55000B1E33B /* Utils - SigCensus */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 05617B3C1D9DC55100B1E33B /* Build configuration list for PBXNativeTarget "Utils - SigCensus" */;
+			buildPhases = (
+				05617B341D9DC55000B1E33B /* Sources */,
+				05617B351D9DC55000B1E33B /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Utils - SigCensus";
+			productName = "Utils - SigCensus";
+			productReference = 05617B381D9DC55000B1E33B /* sigcensus */;
+			productType = "com.apple.product-type.tool";
+		};
+		05617B421D9DC55B00B1E33B /* Utils - TriSetCmp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 05617B471D9DC55C00B1E33B /* Build configuration list for PBXNativeTarget "Utils - TriSetCmp" */;
+			buildPhases = (
+				05617B3F1D9DC55B00B1E33B /* Sources */,
+				05617B401D9DC55B00B1E33B /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Utils - TriSetCmp";
+			productName = "Utils - TriSetCmp";
+			productReference = 05617B431D9DC55B00B1E33B /* trisetcmp */;
+			productType = "com.apple.product-type.tool";
+		};
 		0564A1DE1811D6F8002CC2AE /* Qt */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0564A2131811D6FA002CC2AE /* Build configuration list for PBXNativeTarget "Qt" */;
@@ -6093,7 +6394,14 @@
 			dependencies = (
 				055ABEB419B49F1100044C1B /* PBXTargetDependency */,
 				050F5E6F1B9BD3A000C1F681 /* PBXTargetDependency */,
+				05617B671D9DC6F800B1E33B /* PBXTargetDependency */,
+				05617B691D9DC6FB00B1E33B /* PBXTargetDependency */,
+				05617B6B1D9DC70600B1E33B /* PBXTargetDependency */,
+				05617B6D1D9DC70900B1E33B /* PBXTargetDependency */,
+				05617B6F1D9DC70C00B1E33B /* PBXTargetDependency */,
+				05617B711D9DC70E00B1E33B /* PBXTargetDependency */,
 				05617AF71D9DC0E000B1E33B /* PBXTargetDependency */,
+				05617B731D9DC71100B1E33B /* PBXTargetDependency */,
 			);
 			name = Qt;
 			productName = Qt;
@@ -6154,6 +6462,34 @@
 						CreatedOnToolsVersion = 8.0;
 						ProvisioningStyle = Automatic;
 					};
+					05617B001D9DC51600B1E33B = {
+						CreatedOnToolsVersion = 8.0;
+						ProvisioningStyle = Automatic;
+					};
+					05617B0B1D9DC52200B1E33B = {
+						CreatedOnToolsVersion = 8.0;
+						ProvisioningStyle = Automatic;
+					};
+					05617B161D9DC52B00B1E33B = {
+						CreatedOnToolsVersion = 8.0;
+						ProvisioningStyle = Automatic;
+					};
+					05617B211D9DC53400B1E33B = {
+						CreatedOnToolsVersion = 8.0;
+						ProvisioningStyle = Automatic;
+					};
+					05617B2C1D9DC54500B1E33B = {
+						CreatedOnToolsVersion = 8.0;
+						ProvisioningStyle = Automatic;
+					};
+					05617B371D9DC55000B1E33B = {
+						CreatedOnToolsVersion = 8.0;
+						ProvisioningStyle = Automatic;
+					};
+					05617B421D9DC55B00B1E33B = {
+						CreatedOnToolsVersion = 8.0;
+						ProvisioningStyle = Automatic;
+					};
 					0564A1DE1811D6F8002CC2AE = {
 						DevelopmentTeam = 67JTSH67LZ;
 						ProvisioningStyle = Automatic;
@@ -6184,7 +6520,14 @@
 				0564A1DE1811D6F8002CC2AE /* Qt */,
 				052FA1271806102F00FAE4DF /* iOS */,
 				05B14EA219B423A0002138C0 /* Census Tools */,
+				05617B001D9DC51600B1E33B /* Utils - CensusLookup */,
+				05617B0B1D9DC52200B1E33B /* Utils - RegConcat */,
+				05617B161D9DC52B00B1E33B /* Utils - RegConvert */,
+				05617B211D9DC53400B1E33B /* Utils - RegFileDump */,
+				05617B2C1D9DC54500B1E33B /* Utils - RegFileType */,
+				05617B371D9DC55000B1E33B /* Utils - SigCensus */,
 				05617ADC1D9DBFBE00B1E33B /* Utils - TriCensus */,
+				05617B421D9DC55B00B1E33B /* Utils - TriSetCmp */,
 			);
 		};
 /* End PBXProject section */
@@ -6928,6 +7271,62 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		05617AFD1D9DC51600B1E33B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05617B811D9DC7B000B1E33B /* censuslookup.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05617B081D9DC52200B1E33B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05617B801D9DC7AE00B1E33B /* regconcat.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05617B131D9DC52B00B1E33B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05617B7F1D9DC7AB00B1E33B /* regconvert.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05617B1E1D9DC53400B1E33B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05617B7E1D9DC7A800B1E33B /* regfiledump.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05617B291D9DC54500B1E33B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05617B7D1D9DC7A600B1E33B /* regfiletype.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05617B341D9DC55000B1E33B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05617B7C1D9DC7A200B1E33B /* sigcensus.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05617B3F1D9DC55B00B1E33B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05617B7B1D9DC79E00B1E33B /* trisetcmp.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0564A1DB1811D6F8002CC2AE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -7412,6 +7811,41 @@
 			target = 05617ADC1D9DBFBE00B1E33B /* Utils - TriCensus */;
 			targetProxy = 05617AF61D9DC0E000B1E33B /* PBXContainerItemProxy */;
 		};
+		05617B671D9DC6F800B1E33B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 05617B001D9DC51600B1E33B /* Utils - CensusLookup */;
+			targetProxy = 05617B661D9DC6F800B1E33B /* PBXContainerItemProxy */;
+		};
+		05617B691D9DC6FB00B1E33B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 05617B0B1D9DC52200B1E33B /* Utils - RegConcat */;
+			targetProxy = 05617B681D9DC6FB00B1E33B /* PBXContainerItemProxy */;
+		};
+		05617B6B1D9DC70600B1E33B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 05617B161D9DC52B00B1E33B /* Utils - RegConvert */;
+			targetProxy = 05617B6A1D9DC70600B1E33B /* PBXContainerItemProxy */;
+		};
+		05617B6D1D9DC70900B1E33B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 05617B211D9DC53400B1E33B /* Utils - RegFileDump */;
+			targetProxy = 05617B6C1D9DC70900B1E33B /* PBXContainerItemProxy */;
+		};
+		05617B6F1D9DC70C00B1E33B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 05617B2C1D9DC54500B1E33B /* Utils - RegFileType */;
+			targetProxy = 05617B6E1D9DC70C00B1E33B /* PBXContainerItemProxy */;
+		};
+		05617B711D9DC70E00B1E33B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 05617B371D9DC55000B1E33B /* Utils - SigCensus */;
+			targetProxy = 05617B701D9DC70E00B1E33B /* PBXContainerItemProxy */;
+		};
+		05617B731D9DC71100B1E33B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 05617B421D9DC55B00B1E33B /* Utils - TriSetCmp */;
+			targetProxy = 05617B721D9DC71100B1E33B /* PBXContainerItemProxy */;
+		};
 		05B14EBB19B427AC002138C0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 05B14EA219B423A0002138C0 /* Census Tools */;
@@ -7736,6 +8170,426 @@
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = tricensus;
+			};
+			name = Release;
+		};
+		05617B061D9DC51700B1E33B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
+				);
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = censuslookup;
+			};
+			name = Debug;
+		};
+		05617B071D9DC51700B1E33B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = censuslookup;
+			};
+			name = Release;
+		};
+		05617B111D9DC52300B1E33B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
+				);
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = regconcat;
+			};
+			name = Debug;
+		};
+		05617B121D9DC52300B1E33B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = regconcat;
+			};
+			name = Release;
+		};
+		05617B1C1D9DC52B00B1E33B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
+				);
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = regconvert;
+			};
+			name = Debug;
+		};
+		05617B1D1D9DC52B00B1E33B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = regconvert;
+			};
+			name = Release;
+		};
+		05617B271D9DC53500B1E33B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
+				);
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = regfiledump;
+			};
+			name = Debug;
+		};
+		05617B281D9DC53500B1E33B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = regfiledump;
+			};
+			name = Release;
+		};
+		05617B321D9DC54600B1E33B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
+				);
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = regfiletype;
+			};
+			name = Debug;
+		};
+		05617B331D9DC54600B1E33B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = regfiletype;
+			};
+			name = Release;
+		};
+		05617B3D1D9DC55100B1E33B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
+				);
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = sigcensus;
+			};
+			name = Debug;
+		};
+		05617B3E1D9DC55100B1E33B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = sigcensus;
+			};
+			name = Release;
+		};
+		05617B481D9DC55C00B1E33B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
+				);
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = trisetcmp;
+			};
+			name = Debug;
+		};
+		05617B491D9DC55C00B1E33B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = trisetcmp;
 			};
 			name = Release;
 		};
@@ -8091,6 +8945,62 @@
 			buildConfigurations = (
 				05617AE21D9DBFBF00B1E33B /* Debug */,
 				05617AE31D9DBFBF00B1E33B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		05617B051D9DC51700B1E33B /* Build configuration list for PBXNativeTarget "Utils - CensusLookup" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05617B061D9DC51700B1E33B /* Debug */,
+				05617B071D9DC51700B1E33B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		05617B101D9DC52300B1E33B /* Build configuration list for PBXNativeTarget "Utils - RegConcat" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05617B111D9DC52300B1E33B /* Debug */,
+				05617B121D9DC52300B1E33B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		05617B1B1D9DC52B00B1E33B /* Build configuration list for PBXNativeTarget "Utils - RegConvert" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05617B1C1D9DC52B00B1E33B /* Debug */,
+				05617B1D1D9DC52B00B1E33B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		05617B261D9DC53500B1E33B /* Build configuration list for PBXNativeTarget "Utils - RegFileDump" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05617B271D9DC53500B1E33B /* Debug */,
+				05617B281D9DC53500B1E33B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		05617B311D9DC54600B1E33B /* Build configuration list for PBXNativeTarget "Utils - RegFileType" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05617B321D9DC54600B1E33B /* Debug */,
+				05617B331D9DC54600B1E33B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		05617B3C1D9DC55100B1E33B /* Build configuration list for PBXNativeTarget "Utils - SigCensus" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05617B3D1D9DC55100B1E33B /* Debug */,
+				05617B3E1D9DC55100B1E33B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		05617B471D9DC55C00B1E33B /* Build configuration list for PBXNativeTarget "Utils - TriSetCmp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05617B481D9DC55C00B1E33B /* Debug */,
+				05617B491D9DC55C00B1E33B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};

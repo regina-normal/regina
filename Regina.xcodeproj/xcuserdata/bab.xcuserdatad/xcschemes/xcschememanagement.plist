@@ -19,12 +19,61 @@
 			<key>orderHint</key>
 			<integer>3</integer>
 		</dict>
+		<key>Utils - CensusLookup.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>6</integer>
+		</dict>
+		<key>Utils - RegConcat.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>7</integer>
+		</dict>
+		<key>Utils - RegConvert.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>8</integer>
+		</dict>
+		<key>Utils - RegFileDump.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>9</integer>
+		</dict>
+		<key>Utils - RegFileType.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>10</integer>
+		</dict>
+		<key>Utils - SigCensus.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>11</integer>
+		</dict>
 		<key>Utils - TriCensus.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
 			<integer>5</integer>
+		</dict>
+		<key>Utils - TriSetCmp.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>12</integer>
 		</dict>
 		<key>iOS debug.xcscheme</key>
 		<dict>
@@ -60,6 +109,41 @@
 			<true/>
 		</dict>
 		<key>05617ADC1D9DBFBE00B1E33B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>05617B001D9DC51600B1E33B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>05617B0B1D9DC52200B1E33B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>05617B161D9DC52B00B1E33B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>05617B211D9DC53400B1E33B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>05617B2C1D9DC54500B1E33B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>05617B371D9DC55000B1E33B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>05617B421D9DC55B00B1E33B</key>
 		<dict>
 			<key>primary</key>
 			<true/>
