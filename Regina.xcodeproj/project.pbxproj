@@ -6368,6 +6368,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0564A2131811D6FA002CC2AE /* Build configuration list for PBXNativeTarget "Qt" */;
 			buildPhases = (
+				051B54301D9DD60F00A2DC82 /* Fix Library Paths */,
 				0564A1DB1811D6F8002CC2AE /* Sources */,
 				0564A1DC1811D6F8002CC2AE /* Frameworks */,
 				0564A1DD1811D6F8002CC2AE /* Resources */,
@@ -6610,6 +6611,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Xcode code-sign-on-copy wants to sign Versions/A, not Versions/5.\n# Therefore we do the signing \"manually\" here in a script instead.\n\n/usr/bin/codesign --force --sign FEC3D02FCBA875AB788C350444FE86918ACA2413 --preserve-metadata=identifier,entitlements --timestamp=none ${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/Frameworks/Qt*.framework/Versions/5\n";
+		};
+		051B54301D9DD60F00A2DC82 /* Fix Library Paths */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Fix Library Paths";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "module=${TARGET_BUILD_DIR}/engine.so\n\ninstall_name_tool -change @rpath/boost-python.framework/Versions/A/boost-python @loader_path/../../../Frameworks/boost-python.framework/Versions/A/boost-python ${module}\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
