@@ -57,7 +57,6 @@
 
 // Constants.
 const long MAXTET = 15;
-const unsigned SLEEP_SECONDS = 1;
 
 // Census parameters.
 long nTet = 0, nBdryFaces = -1;

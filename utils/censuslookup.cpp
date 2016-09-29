@@ -48,8 +48,6 @@ int main(int argc, char* argv[]) {
     if (argc < 2)
         usage(argv[0], "Please specify one or more isomorphism signatures.");
 
-    int i;
-    unsigned long n;
     const regina::NCensusHit* hit;
     for (int i = 1; i < argc; ++i) {
         regina::NCensusHits* hits = regina::NCensus::lookup(argv[i]);
