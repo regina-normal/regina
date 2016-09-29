@@ -5980,14 +5980,14 @@
 				0564A1DD1811D6F8002CC2AE /* Resources */,
 				057118C919B30A13009FEDC5 /* CopyFiles */,
 				05AB5ED81B942354007034C8 /* CopyFiles */,
-				0514CAE31D9C9A5800EDB2E6 /* ShellScript */,
+				0514CAE31D9C9A5800EDB2E6 /* Sign Qt Frameworks */,
 				05AB5EDE1B942813007034C8 /* CopyFiles */,
 				05AB5EE51B942884007034C8 /* CopyFiles */,
 				05AB5EFE1B9428BD007034C8 /* CopyFiles */,
 				05AB5F011B9428E4007034C8 /* CopyFiles */,
 				050F5E691B9BD2AA00C1F681 /* CopyFiles */,
 				050BEA351D9C8B3700B96DB8 /* CopyFiles */,
-				050BEA371D9C8B7E00B96DB8 /* ShellScript */,
+				050BEA371D9C8B7E00B96DB8 /* Symlink Scripts */,
 				050F5E701B9BD50C00C1F681 /* CopyFiles */,
 			);
 			buildRules = (
@@ -6140,26 +6140,28 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		050BEA371D9C8B7E00B96DB8 /* ShellScript */ = {
+		050BEA371D9C8B7E00B96DB8 /* Symlink Scripts */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Symlink Scripts";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "ln -f -s ../../../Resources/python/__init__.py ${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS/python/regina/__init__.py";
 		};
-		0514CAE31D9C9A5800EDB2E6 /* ShellScript */ = {
+		0514CAE31D9C9A5800EDB2E6 /* Sign Qt Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Sign Qt Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
