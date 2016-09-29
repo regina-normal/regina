@@ -168,6 +168,7 @@
 		0514CAEA1D9CD4D600EDB2E6 /* index.docbook in Resources */ = {isa = PBXBuildFile; fileRef = 0514CAE81D9CD4CE00EDB2E6 /* index.docbook */; };
 		0514CAEC1D9CD5F100EDB2E6 /* index.docbook in Sources */ = {isa = PBXBuildFile; fileRef = 0514CAE71D9CD4B500EDB2E6 /* index.docbook */; };
 		0514CAED1D9CD5F400EDB2E6 /* index.docbook in Sources */ = {isa = PBXBuildFile; fileRef = 0514CAE81D9CD4CE00EDB2E6 /* index.docbook */; };
+		0514CAEF1D9CE54200EDB2E6 /* docs.conf.in in Resources */ = {isa = PBXBuildFile; fileRef = 052F9C50180600FA00FAE4DF /* docs.conf.in */; };
 		051691B71C5AD5AC00DC69EC /* nhypercompatui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051691A31C5AD59000DC69EC /* nhypercompatui.cpp */; };
 		051691B81C5AD5AC00DC69EC /* nhypercoordinateui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051691A51C5AD59000DC69EC /* nhypercoordinateui.cpp */; };
 		051691B91C5AD5AC00DC69EC /* nhypermatchingui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051691A71C5AD59000DC69EC /* nhypermatchingui.cpp */; };
@@ -1507,6 +1508,17 @@
 				"$(DERIVED_FILE_DIR)/docs-regina-xml",
 			);
 			script = "custom=${INPUT_FILE_DIR}/../ksgmltools2/customization\ndtd=${custom}/dtd\nsheet=${custom}/regina.xsl\noutput=${DERIVED_FILE_DIR}/docs-regina-xml\n\n/sw/bin/xsltproc --path $dtd -o ${output}/ $sheet ${INPUT_FILE_PATH}\ncp ${INPUT_FILE_DIR}/*.{css,png} ${output}\n";
+		};
+		0514CAF01D9CE54A00EDB2E6 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			filePatterns = "*/docs.conf.in";
+			fileType = pattern.proxy;
+			isEditable = 1;
+			outputFiles = (
+				"$(DERIVED_FILE_DIR)/engine-docs",
+			);
+			script = "conf=${DERIVED_FILE_DIR}/docs.conf\nsource=${INPUT_FILE_DIR}/../..\noutput=${DERIVED_FILE_DIR}/engine-docs\n\ncat ${INPUT_FILE_PATH} | sed -e \"s#@PROJECT_SOURCE_DIR@#${source}#\" -e \"s#@PROJECT_BINARY_DIR@/docs/engine#${output}#\" > ${conf}\n\n/sw/bin/doxygen ${conf} 2&>1\ncp `find ${source}/engine -name \"*.png\"` ${output}\n";
 		};
 		0543AE921811DE96002758F8 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -5979,6 +5991,7 @@
 				050F5E701B9BD50C00C1F681 /* CopyFiles */,
 			);
 			buildRules = (
+				0514CAF01D9CE54A00EDB2E6 /* PBXBuildRule */,
 				0514CAEE1D9CDF2600EDB2E6 /* PBXBuildRule */,
 				0514CAEB1D9CD4ED00EDB2E6 /* PBXBuildRule */,
 				055ABEB519B49F4500044C1B /* PBXBuildRule */,
@@ -6111,6 +6124,7 @@
 				055ABEC419B49FC300044C1B /* closed-or-census-11.zsig in Resources */,
 				0514CAE91D9CD4D200EDB2E6 /* index.docbook in Resources */,
 				055ABEC519B49FC300044C1B /* cusped-hyp-nor-census-9.zsig in Resources */,
+				0514CAEF1D9CE54200EDB2E6 /* docs.conf.in in Resources */,
 				055ABEC619B49FC300044C1B /* cusped-hyp-or-census-9.zsig in Resources */,
 				0514CAEA1D9CD4D600EDB2E6 /* index.docbook in Resources */,
 				055ABEC719B49FC300044C1B /* hyp-knot-link-census.zsig in Resources */,
