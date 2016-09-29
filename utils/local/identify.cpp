@@ -51,6 +51,7 @@
  */
 
 #include <algebra/nabeliangroup.h>
+#include <file/nxmlfile.h>
 #include <manifold/nmanifold.h>
 #include <packet/ncontainer.h>
 #include <subcomplex/nstandardtri.h>

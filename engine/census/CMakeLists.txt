@@ -4,6 +4,7 @@
 SET ( FILES
   closedprimemin
   compact
+  dim2census
   dim2gluingpermsearcher
   dim4gluingpermsearcher
   euler
@@ -21,6 +22,7 @@ SET(SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
+    dim2census.h
     dim2gluingperms.h
     dim2gluingpermsearcher.h
     dim4gluingperms.h

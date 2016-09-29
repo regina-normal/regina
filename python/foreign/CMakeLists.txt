@@ -2,10 +2,14 @@
 
 # Files to compile
 SET ( FILES
+  csvsurfacelist
   dehydration
   isosig
   orb
+  pdf
   pyforeign
+  recogniser
+  snappea
   )
 
 # Prepend folder name

@@ -72,6 +72,7 @@
  * found to be non-minimal will not be saved at all.
  */
 
+#include <file/nxmlfile.h>
 #include <packet/ncontainer.h>
 #include <triangulation/ntriangulation.h>
 

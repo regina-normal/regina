@@ -711,10 +711,10 @@ namespace {
         innerTet_[4]->join(1, innerTet_[3], NPerm4());
 
         NPerm4 vertices(
-            regina::quadDefn[type][0],
-            regina::quadDefn[type][2],
-            regina::quadDefn[type][1],
-            regina::quadDefn[type][3]);
+            regina::vertexSplitDefn[type][0],
+            regina::vertexSplitDefn[type][2],
+            regina::vertexSplitDefn[type][1],
+            regina::vertexSplitDefn[type][3]);
 
         BdryQuad* q;
 

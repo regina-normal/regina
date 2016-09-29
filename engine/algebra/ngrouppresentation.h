@@ -285,10 +285,27 @@ class REGINA_API NGroupExpression :
          */
         const std::list<NGroupExpressionTerm>& terms() const;
         /**
+         * Deprecated routine that returns the list of terms in this
+         * expression.
+         *
+         * \deprecated This routine has been renamed to terms().
+         * See the terms() documentation for further details.
+         */
+        REGINA_DEPRECATED std::list<NGroupExpressionTerm>& getTerms();
+        /**
+         * Deprecated routine that returns a constant reference to the list of
+         * terms in this expression.
+         *
+         * \deprecated This routine has been renamed to terms().
+         * See the terms() documentation for further details.
+         */
+        REGINA_DEPRECATED const std::list<NGroupExpressionTerm>& getTerms()
+            const;
+        /**
          * Returns the number of terms in this expression.
          *
          * For instance, the expression <tt>g1^2 g3^-1 g6</tt> contains three
-         * terms.  See also wordLength().
+         * terms.  See also getWordLength().
          *
          * @return the number of terms.
          */
@@ -354,6 +371,23 @@ class REGINA_API NGroupExpression :
          */
         const NGroupExpressionTerm& term(size_t index) const;
         /**
+         * Deprecated routine that returns the term at the given index in this
+         * expression.
+         *
+         * \deprecated This routine has been renamed to term().
+         * See the term() documentation for further details.
+         */
+        REGINA_DEPRECATED NGroupExpressionTerm& getTerm(size_t index);
+        /**
+         * Deprecated routine that returns a constant reference to the term at
+         * the given index in this expression.
+         *
+         * \deprecated This routine has been renamed to term(size_t) const.
+         * See the term(size_t) const documentation for further details.
+         */
+        REGINA_DEPRECATED const NGroupExpressionTerm& getTerm(size_t index)
+            const;
+        /**
          * Returns the generator corresonding to the
          * term at the given index in this expression.
          * Index 0 represents the first term, index 1
@@ -368,6 +402,14 @@ class REGINA_API NGroupExpression :
          */
         unsigned long generator(size_t index) const;
         /**
+         * Deprecated routine that returns the generator corresponding to the
+         * term at the given index in this expression.
+         *
+         * \deprecated This routine has been renamed to generator().
+         * See the generator() documentation for further details.
+         */
+        REGINA_DEPRECATED unsigned long getGenerator(size_t index) const;
+        /**
          * Returns the exponent corresonding to the
          * term at the given index in this expression.
          * Index 0 represents the first term, index 1
@@ -381,6 +423,14 @@ class REGINA_API NGroupExpression :
          * @return the requested exponent.
          */
         long exponent(size_t index) const;
+        /**
+         * Deprecated routine that returns the exponent corresponding to the
+         * term at the given index in this expression.
+         *
+         * \deprecated This routine has been renamed to exponent().
+         * See the exponent() documentation for further details.
+         */
+        REGINA_DEPRECATED long getExponent(size_t index) const;
 
         /**
          * Adds the given term to the beginning of this expression.
@@ -786,6 +836,15 @@ class REGINA_API NGroupPresentation :
          * this will be the expression <tt>g1^2 g2</tt>.
          */
         const NGroupExpression& relation(size_t index) const;
+        /**
+         * Deprecated routine that returns the relation at the given index in
+         * this group presentation.
+         *
+         * \deprecated This routine has been renamed to relation().
+         * See the relation() documentation for further details.
+         */
+        REGINA_DEPRECATED const NGroupExpression& getRelation(size_t index)
+            const;
 
         /**
          * Tests whether all of the relations for the group are indeed words
@@ -1508,12 +1567,29 @@ inline const std::list<NGroupExpressionTerm>& NGroupExpression::terms()
     return terms_;
 }
 
+inline std::list<NGroupExpressionTerm>& NGroupExpression::getTerms() {
+    return terms_;
+}
+
+inline const std::list<NGroupExpressionTerm>& NGroupExpression::getTerms()
+        const {
+    return terms_;
+}
+
 inline size_t NGroupExpression::countTerms() const {
     return terms_.size();
 }
 
 inline bool NGroupExpression::isTrivial() const {
     return terms_.empty();
+}
+
+inline NGroupExpressionTerm& NGroupExpression::getTerm(size_t index) {
+    return term(index);
+}
+
+inline const NGroupExpressionTerm& NGroupExpression::getTerm(size_t index) const {
+    return term(index);
 }
 
 inline size_t NGroupExpression::wordLength() const {
@@ -1528,7 +1604,15 @@ inline unsigned long NGroupExpression::generator(size_t index) const {
     return term(index).generator;
 }
 
+inline unsigned long NGroupExpression::getGenerator(size_t index) const {
+    return term(index).generator;
+}
+
 inline long NGroupExpression::exponent(size_t index) const {
+    return term(index).exponent;
+}
+
+inline long NGroupExpression::getExponent(size_t index) const {
     return term(index).exponent;
 }
 
@@ -1581,6 +1665,10 @@ inline size_t NGroupPresentation::countRelations() const {
 }
 
 inline const NGroupExpression& NGroupPresentation::relation(
+        size_t index) const {
+    return *relations[index];
+}
+inline const NGroupExpression& NGroupPresentation::getRelation(
         size_t index) const {
     return *relations[index];
 }

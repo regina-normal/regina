@@ -159,18 +159,18 @@ std::pair<const NEdge*, const NEdge*> NNormalSurfaceVector::isThinEdgeLink(
         t = triang->tetrahedron(tet);
         for (type = 0; type < 3; type++) {
             coord = quads(tet, type, triang);
-            e[0] = t->edge(NEdge::edgeNumber[quadDefn[type][0]]
-                [quadDefn[type][1]]);
-            e[1] = t->edge(NEdge::edgeNumber[quadDefn[type][2]]
-                [quadDefn[type][3]]);
-            e[2] = t->edge(NEdge::edgeNumber[quadDefn[type][0]]
-                [quadDefn[type][2]]);
-            e[3] = t->edge(NEdge::edgeNumber[quadDefn[type][0]]
-                [quadDefn[type][3]]);
-            e[4] = t->edge(NEdge::edgeNumber[quadDefn[type][1]]
-                [quadDefn[type][2]]);
-            e[5] = t->edge(NEdge::edgeNumber[quadDefn[type][1]]
-                [quadDefn[type][3]]);
+            e[0] = t->edge(NEdge::edgeNumber[vertexSplitDefn[type][0]]
+                [vertexSplitDefn[type][1]]);
+            e[1] = t->edge(NEdge::edgeNumber[vertexSplitDefn[type][2]]
+                [vertexSplitDefn[type][3]]);
+            e[2] = t->edge(NEdge::edgeNumber[vertexSplitDefn[type][0]]
+                [vertexSplitDefn[type][2]]);
+            e[3] = t->edge(NEdge::edgeNumber[vertexSplitDefn[type][0]]
+                [vertexSplitDefn[type][3]]);
+            e[4] = t->edge(NEdge::edgeNumber[vertexSplitDefn[type][1]]
+                [vertexSplitDefn[type][2]]);
+            e[5] = t->edge(NEdge::edgeNumber[vertexSplitDefn[type][1]]
+                [vertexSplitDefn[type][3]]);
 
             if (coord == 0) {
                 // No discs in this coordinate.

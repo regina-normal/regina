@@ -461,6 +461,31 @@ class REGINA_API NSatRegion :
         NSFSpace* createSFS(bool reflect) const;
 
         /**
+         * A deprecated version of the routine that returns details of the
+         * Seifert fibred space represented by this region.
+         *
+         * This is an old and now-deprecated version of createSFS(), which
+         * imposed additional preconditions (all boundary components had to be
+         * tori), and required the user to pass the number of boundary
+         * components as the first argument.  This first argument is now
+         * ignored, and the preconditions have been relaxed to allow Klein
+         * bottle boundary components also.
+         *
+         * See createSFS(bool), the new version of this routine, for further
+         * details.
+         *
+         * \deprecated This routine simply ignores the first argument,
+         * and passes the second argument through to createSFS(bool).
+         * Code should be changed to call createSFS(bool) directly.
+         *
+         * @param reflect \c true if this region is to be reflected
+         * as the Seifert fibred space is created, or \c false if not.
+         * @return the newly created structure of the underlying Seifert
+         * fibred space.
+         */
+        REGINA_DEPRECATED NSFSpace* createSFS(long, bool reflect) const;
+
+        /**
          * Expands this region as far as possible within the overall
          * triangulation.  This routine will hunt for new saturated
          * blocks, and will also hunt for new adjacencies between
@@ -646,6 +671,10 @@ inline const NSatBlockSpec& NSatRegion::block(unsigned long which) const {
 
 inline unsigned long NSatRegion::numberOfBoundaryAnnuli() const {
     return nBdryAnnuli_;
+}
+
+inline NSFSpace* NSatRegion::createSFS(long, bool reflect) const {
+    return createSFS(reflect);
 }
 
 inline void NSatRegion::writeTextLong(std::ostream& out) const {

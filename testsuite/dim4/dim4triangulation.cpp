@@ -41,6 +41,7 @@
 #include "dim4/dim4tetrahedron.h"
 #include "dim4/dim4triangulation.h"
 #include "manifold/nmanifold.h"
+#include "maths/permconv.h"
 #include "packet/ncontainer.h"
 #include "subcomplex/nstandardtri.h"
 #include "triangulation/nexampletriangulation.h"

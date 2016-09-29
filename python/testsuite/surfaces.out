@@ -863,7 +863,7 @@ Coordinates: Quad-oct almost normal
 
 
 -------------------------------
-LST(3,4,7)
+Layered solid torus
 Vertex surfaces (std)
 -------------------------------
 
@@ -882,7 +882,7 @@ Coordinates: Standard normal (tri-quad)
 
 
 -------------------------------
-LST(3,4,7)
+Layered solid torus
 Vertex surfaces (quad)
 -------------------------------
 
@@ -898,7 +898,7 @@ Coordinates: Quad normal
 
 
 -------------------------------
-LST(3,4,7)
+Layered solid torus
 Vertex surfaces (std almost normal)
 -------------------------------
 
@@ -930,7 +930,7 @@ Coordinates: Standard almost normal (tri-quad-oct)
 
 
 -------------------------------
-LST(3,4,7)
+Layered solid torus
 Vertex surfaces (quad-oct almost normal)
 -------------------------------
 
@@ -957,7 +957,7 @@ Coordinates: Quad-oct almost normal
 
 
 -------------------------------
-LST(3,4,7)
+Layered solid torus
 Fundamental surfaces (std)
 -------------------------------
 
@@ -976,7 +976,7 @@ Coordinates: Standard normal (tri-quad)
 
 
 -------------------------------
-LST(3,4,7)
+Layered solid torus
 Fundamental surfaces (quad)
 -------------------------------
 
@@ -993,7 +993,7 @@ Coordinates: Quad normal
 
 
 -------------------------------
-LST(3,4,7)
+Layered solid torus
 Fundamental surfaces (std almost normal)
 -------------------------------
 
@@ -1026,7 +1026,7 @@ Coordinates: Standard almost normal (tri-quad-oct)
 
 
 -------------------------------
-LST(3,4,7)
+Layered solid torus
 Fundamental surfaces (quad-oct almost normal)
 -------------------------------
 

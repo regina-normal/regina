@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "regina-config.h"
+#include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 #include "surfaces/nnormalsurfacelist.h"
 

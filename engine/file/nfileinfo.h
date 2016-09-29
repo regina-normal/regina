@@ -100,6 +100,14 @@ class REGINA_API NFileInfo :
          */
         const std::string& pathname() const;
         /**
+         * Deprecated routine that returns the pathname of the data file being
+         * described.
+         *
+         * \deprecated This routine has been renamed to pathname().
+         * See the pathname() routine for further details.
+         */
+        REGINA_DEPRECATED const std::string& getPathname() const;
+        /**
          * Returns the type of data file.  The type will be given as one
          * of the file type constants defined in this class.
          *
@@ -107,17 +115,40 @@ class REGINA_API NFileInfo :
          */
         int type() const;
         /**
+         * Deprecated routine that returns the type of data file.
+         *
+         * \deprecated This routine has been renamed to type().
+         * See the type() documentation for further details.
+         */
+        REGINA_DEPRECATED int getType() const;
+        /**
          * Returns a human-readable description of the type of data file.
          *
          * @return a description of the type of data file.
          */
         const std::string& typeDescription() const;
         /**
+         * Deprecated routine that returns a human-readable description of the
+         * type of data file.
+         *
+         * \deprecated This routine has been renamed to typeDescription().
+         * See the typeDescription() documentation for further details.
+         */
+        REGINA_DEPRECATED const std::string& getTypeDescription() const;
+        /**
          * Returns the version of the calculation engine that wrote this file.
          *
          * @return the engine version for this file.
          */
         const std::string& engine() const;
+        /**
+         * Deprecated routine that returns the version of the calculation
+         * engine that wrote this file.
+         *
+         * \deprecated This routine has been renamed to engine().
+         * See the engine() documentation for further details.
+         */
+        REGINA_DEPRECATED const std::string& getEngine() const;
         /**
          * Returns whether this file is stored in compressed format.
          * Currently this option only applies to XML data files.
@@ -186,7 +217,15 @@ inline const std::string& NFileInfo::pathname() const {
     return pathname_;
 }
 
+inline const std::string& NFileInfo::getPathname() const {
+    return pathname_;
+}
+
 inline int NFileInfo::type() const {
+    return type_;
+}
+
+inline int NFileInfo::getType() const {
     return type_;
 }
 
@@ -194,7 +233,15 @@ inline const std::string& NFileInfo::typeDescription() const {
     return typeDescription_;
 }
 
+inline const std::string& NFileInfo::getTypeDescription() const {
+    return typeDescription_;
+}
+
 inline const std::string& NFileInfo::engine() const {
+    return engine_;
+}
+
+inline const std::string& NFileInfo::getEngine() const {
     return engine_;
 }
 

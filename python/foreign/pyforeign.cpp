@@ -30,13 +30,21 @@
  *                                                                        *
  **************************************************************************/
 
+void addForeignCSVSurfaceList();
 void addForeignDehydration();
 void addForeignIsoSig();
 void addForeignOrb();
+void addForeignPDF();
+void addForeignSnapPea();
+void addForeignRecogniser();
 
 void addForeign() {
+    addForeignCSVSurfaceList();
     addForeignDehydration();
     addForeignIsoSig();
     addForeignOrb();
+    addForeignPDF();
+    addForeignSnapPea();
+    addForeignRecogniser();
 }
 

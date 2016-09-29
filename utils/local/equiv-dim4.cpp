@@ -73,6 +73,7 @@
  */
 
 #include <dim4/dim4triangulation.h>
+#include <file/nxmlfile.h>
 #include <packet/ncontainer.h>
 
 #include <cstdio>
@@ -478,7 +479,7 @@ int main(int argc, const char* argv[]) {
     poptFreeContext(optCon);
 
     // Read the data file.
-    if (! (tree = regina::open(filename.c_str()))) {
+    if (! (tree = readXMLFile(filename.c_str()))) {
         fprintf(stderr, "ERROR: Could not read data from %s.\n",
             filename.c_str());
         return 1;
@@ -490,7 +491,7 @@ int main(int argc, const char* argv[]) {
     // Are we saving results?
     if (outFile && newTree) {
         fprintf(stderr, "\nSaving results to %s...\n", outFile);
-        newTree->save(outFile);
+        writeXMLFile(outFile, newTree);
     } else
         fprintf(stderr, "\nNot saving results.\n");
 

@@ -179,6 +179,14 @@ class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2>,
         Type type();
 
         /**
+         * Deprecated routine that returns a description of the triangle type.
+         *
+         * \deprecated This routine has been renamed to type().
+         * See the type() documentation for further details.
+         */
+        REGINA_DEPRECATED Type getType();
+
+        /**
          * Return the triangle vertex or triangle edge that plays a special role
          * for the triangle type of this triangle.  Note that this routine is
          * only relevant for some triangle types.  The triangle type is
@@ -189,6 +197,15 @@ class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2>,
          * vertex or edge.
          */
         int subtype();
+
+        /**
+         * Deprecated routine that returns the triangle vertex or triangle edge
+         * that plays a special role for the triangle type of this triangle.
+         *
+         * \deprecated This routine has been renamed to subtype().
+         * See the subtype() documentation for further details.
+         */
+        REGINA_DEPRECATED int getSubtype();
 
         /**
          * Determines whether this triangle is wrapped up to form a Mobius band.
@@ -287,7 +304,16 @@ inline bool Face<3, 2>::inMaximalForest() const {
         front().triangle());
 }
 
+inline NTriangle::Type Face<3, 2>::getType() {
+    return type();
+}
+
 inline int Face<3, 2>::subtype() {
+    type();
+    return subtype_;
+}
+
+inline int Face<3, 2>::getSubtype() {
     type();
     return subtype_;
 }

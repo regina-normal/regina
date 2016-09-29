@@ -67,6 +67,7 @@
  * This option may not be used with any of the other options listed above.
  */
 
+#include <file/nxmlfile.h>
 #include <algebra/nabeliangroup.h>
 #include <manifold/nmanifold.h>
 #include <packet/ncontainer.h>

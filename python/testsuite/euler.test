@@ -47,13 +47,13 @@ print 'Euler characteristics for triangulation vs compact manifold:'
 printEuler(regina.NTriangulation(), "Empty triangulation")
 
 # Closed:
-printEuler(regina.NExampleTriangulation.lens(8,3), "L(8,3)")
+printEuler(regina.NExampleTriangulation.lens8_3(), "L(8,3)")
 printEuler(regina.NExampleTriangulation.rp2xs1(), "RP2 x S1")
 
 # Bounded:
 printEuler(regina.NExampleTriangulation.solidKleinBottle(),
 	"Solid Klein bottle")
-printEuler(regina.NExampleTriangulation.lst(3,4), "LST(3,4,7)")
+printEuler(regina.NExampleTriangulation.lst3_4_7(), "LST(3,4,7)")
 
 tri = regina.NTriangulation()
 tri.newTetrahedron()

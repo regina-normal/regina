@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include "foreign/pdf.h"
 #include "packet/npdf.h"
 
 #include "pdfhandler.h"

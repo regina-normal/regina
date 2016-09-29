@@ -57,7 +57,7 @@ namespace {
 
     GlobalArray2D<int> quadSeparating_arr(regina::quadSeparating, 4);
     GlobalArray3D<int> quadMeeting_arr(regina::quadMeeting, 4);
-    GlobalArray2D<int> quadDefn_arr(regina::quadDefn, 3);
+    GlobalArray2D<int> vertexSplitDefn_arr(regina::vertexSplitDefn, 3);
     GlobalArray2D<int> quadPartner_arr(regina::quadPartner, 3);
     GlobalArray<const char*> quadString_arr(quadString_1D, 3);
     GlobalArray2D<regina::NPerm4> triDiscArcs_arr(regina::__triDiscArcs, 4, 3);
@@ -178,7 +178,7 @@ void addNNormalSurface() {
     // Global arrays:
     scope().attr("quadSeparating") = &quadSeparating_arr;
     scope().attr("quadMeeting") = &quadMeeting_arr;
-    scope().attr("quadDefn") = &quadDefn_arr;
+    scope().attr("vertexSplitDefn") = &vertexSplitDefn_arr;
     scope().attr("quadPartner") = &quadPartner_arr;
     scope().attr("quadString") = &quadString_arr;
     scope().attr("triDiscArcs") = &triDiscArcs_arr;

@@ -89,6 +89,14 @@ class REGINA_API NHandlebody : public NManifold {
          */
         unsigned long handles() const;
         /**
+         * Deprecated routine that returns the number of handles of this
+         * handlebody.
+         *
+         * \deprecated This routine has been renamed to handles().
+         * See the handles() documentation for further details.
+         */
+        REGINA_DEPRECATED unsigned long getHandles() const;
+        /**
          * Returns whether this handlebody is orientable.
          *
          * @return \c true if this handlebody is orientable, or \c false
@@ -133,6 +141,9 @@ inline NHandlebody::NHandlebody(const NHandlebody& cloneMe) : NManifold(),
 inline NHandlebody::~NHandlebody() {
 }
 inline unsigned long NHandlebody::handles() const {
+    return nHandles;
+}
+inline unsigned long NHandlebody::getHandles() const {
     return nHandles;
 }
 inline bool NHandlebody::isOrientable() const {

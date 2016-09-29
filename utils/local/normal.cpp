@@ -44,6 +44,7 @@
  * An MPI-enabled version of this tool also exists (mpi/normal-mpi.cpp).
  */
 
+#include <file/nxmlfile.h>
 #include <packet/ncontainer.h>
 #include <surfaces/nnormalsurfacelist.h>
 #include <triangulation/ntriangulation.h>

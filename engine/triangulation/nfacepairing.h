@@ -57,6 +57,27 @@ typedef Triangulation<3> NTriangulation;
  */
 
 /**
+ * A deprecated typedef provided for backward compatibility only.
+ *
+ * \deprecated As of Regina 4.94, this typedef is now available as
+ * NFacePairing::IsoList.  The old typedef NFacePairingIsoList is
+ * provided for backward compatibility, but will be removed in some
+ * future version of Regina.
+ */
+REGINA_DEPRECATED typedef std::list<NIsomorphism*> NFacePairingIsoList;
+
+/**
+ * A deprecated typedef provided for backward compatibility only.
+ *
+ * \deprecated As of Regina 4.94, this typedef is now available as
+ * NFacePairing::Use.  The old typedef UseFacePairing is
+ * provided for backward compatibility, but will be removed in some
+ * future version of Regina.
+ */
+REGINA_DEPRECATED typedef void (*UseFacePairing)(const FacetPairing<3>*,
+    const NFacePairingIsoList*, void*);
+
+/**
  * Represents the dual graph of a 3-manifold triangulation.
  *
  * This is a specialisation of the generic FacetPairing class template;

@@ -54,6 +54,11 @@ namespace {
             ptr(block), annulus, blockRefVert, blockRefHoriz);
     }
 
+    regina::NSFSpace* (NSatRegion::*createSFS_bool)(bool) const =
+        &NSatRegion::createSFS;
+    regina::NSFSpace* (NSatRegion::*createSFS_long_bool)(long, bool) const =
+        &NSatRegion::createSFS;
+
     bool expand_nolist(NSatRegion& r, bool stopIfIncomplete = false) {
         NSatBlock::TetList avoidTets;
         return r.expand(avoidTets, stopIfIncomplete);
@@ -89,7 +94,9 @@ void addNSatRegion() {
         .def("blockIndex", &NSatRegion::blockIndex)
         .def("numberOfBoundaryAnnuli", &NSatRegion::numberOfBoundaryAnnuli)
         .def("boundaryAnnulus", boundaryAnnulus_tuple)
-        .def("createSFS", &NSatRegion::createSFS,
+        .def("createSFS", createSFS_bool,
+            return_value_policy<manage_new_object>())
+        .def("createSFS", createSFS_long_bool,
             return_value_policy<manage_new_object>())
         .def("expand", expand_nolist, OL_expand())
         .def("writeBlockAbbrs", writeBlockAbbrs_stdio, OL_writeBlockAbbrs())

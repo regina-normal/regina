@@ -100,6 +100,15 @@ class REGINA_API NSimpleSurfaceBundle : public NManifold {
          */
         int type() const;
         /**
+         * Deprecated routine that returns the specific type of surface bundle
+         * being represented.
+         *
+         *
+         * \deprecated This routine has been renamed to type().
+         * See the type() documentation for further details.
+         */
+        REGINA_DEPRECATED int getType() const;
+        /**
          * Determines whether this and the given surface bundle represent
          * the same 3-manifold.
          *
@@ -137,6 +146,9 @@ inline NSimpleSurfaceBundle::NSimpleSurfaceBundle(
         type_(cloneMe.type_) {
 }
 inline int NSimpleSurfaceBundle::type() const {
+    return type_;
+}
+inline int NSimpleSurfaceBundle::getType() const {
     return type_;
 }
 inline bool NSimpleSurfaceBundle::operator ==

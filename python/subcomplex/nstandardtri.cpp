@@ -62,9 +62,13 @@ void addNStandardTriangulation() {
         .def("TeXName", &NStandardTriangulation::TeXName)
         .def("manifold", &NStandardTriangulation::manifold,
             return_value_policy<manage_new_object>())
+        .def("getManifold", &NStandardTriangulation::manifold,
+            return_value_policy<manage_new_object>())
         .def("homology", &NStandardTriangulation::homology,
             return_value_policy<manage_new_object>())
         .def("homologyH1", &NStandardTriangulation::homologyH1,
+            return_value_policy<manage_new_object>())
+        .def("getHomologyH1", &NStandardTriangulation::homologyH1,
             return_value_policy<manage_new_object>())
         .def("writeName", writeName_stdio)
         .def("writeTeXName", writeTeXName_stdio)

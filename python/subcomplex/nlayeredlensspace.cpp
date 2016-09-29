@@ -45,10 +45,15 @@ void addNLayeredLensSpace() {
         .def("clone", &NLayeredLensSpace::clone,
             return_value_policy<manage_new_object>())
         .def("p", &NLayeredLensSpace::p)
+        .def("getP", &NLayeredLensSpace::p)
         .def("q", &NLayeredLensSpace::q)
+        .def("getQ", &NLayeredLensSpace::q)
         .def("torus", &NLayeredLensSpace::torus,
             return_internal_reference<>())
+        .def("getTorus", &NLayeredLensSpace::torus,
+            return_internal_reference<>())
         .def("mobiusBoundaryGroup", &NLayeredLensSpace::mobiusBoundaryGroup)
+        .def("getMobiusBoundaryGroup", &NLayeredLensSpace::mobiusBoundaryGroup)
         .def("isSnapped", &NLayeredLensSpace::isSnapped)
         .def("isTwisted", &NLayeredLensSpace::isTwisted)
         .def("isLayeredLensSpace", &NLayeredLensSpace::isLayeredLensSpace,

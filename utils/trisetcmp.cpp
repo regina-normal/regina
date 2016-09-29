@@ -32,6 +32,7 @@
 
 #include <cstdlib>
 #include "dim4/dim4triangulation.h"
+#include "file/nxmlfile.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/i18nutils.h"
 

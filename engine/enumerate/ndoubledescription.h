@@ -298,6 +298,17 @@ class REGINA_API NDoubleDescription {
         };
 
         /**
+         * A comparison object that helps sort hyperplanes into a good
+         * order before running the double description algorithm.
+         *
+         * \deprecated The inner class LexComp no longer exists; instead
+         * its functionality has been moved to the standalone class
+         * NPosOrder.  This typedef is offered for backward compatibility,
+         * and will be removed in a future version of Regina.
+         */
+        REGINA_DEPRECATED typedef NPosOrder LexComp;
+
+        /**
          * Private constructor to ensure that objects of this class are
          * never created.
          */

@@ -34,6 +34,7 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "maths/nperm4.h"
+#include "maths/permconv.h"
 #include "testsuite/triangulation/testtriangulation.h"
 
 using regina::NPerm4;

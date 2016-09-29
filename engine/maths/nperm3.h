@@ -306,6 +306,14 @@ class REGINA_API NPerm<3> {
          * @return the internal code.
          */
         Code permCode() const;
+        /**
+         * Deprecated routine that returns the internal code representing this
+         * permutation.
+         *
+         * \deprecated This routine has been renamed to permCode().
+         * See the permCode() documentation for further details.
+         */
+        REGINA_DEPRECATED Code getPermCode() const;
 
         /**
          * Sets this permutation to that represented by the given
@@ -681,6 +689,10 @@ inline NPerm<3>::NPerm(const NPerm<3>& cloneMe) : code_(cloneMe.code_) {
 }
 
 inline NPerm<3>::Code NPerm<3>::permCode() const {
+    return code_;
+}
+
+inline NPerm<3>::Code NPerm<3>::getPermCode() const {
     return code_;
 }
 

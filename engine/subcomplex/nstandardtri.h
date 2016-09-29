@@ -125,6 +125,14 @@ class REGINA_API NStandardTriangulation :
          */
         virtual NManifold* manifold() const;
         /**
+         * Deprecated routine that returns the 3-manifold represented by this
+         * triangulation,
+         *
+         * \deprecated This routine has been renamed to manifold().
+         * See the manifold() documentation for further details.
+         */
+        REGINA_DEPRECATED NManifold* getManifold() const;
+        /**
          * Returns the expected first homology group of this triangulation,
          * if such a routine has been implemented.  If the calculation of
          * homology has not yet been implemented for this triangulation
@@ -186,6 +194,14 @@ class REGINA_API NStandardTriangulation :
          * the appropriate calculation routine has not yet been implemented.
          */
         NAbelianGroup* homologyH1() const;
+        /**
+         * Deprecated routine that returns the expected first homology group of
+         * this triangulation, if such a routine has been implemented.
+         *
+         * \deprecated This routine has been renamed to homology().
+         * See the homology() documentation for further details.
+         */
+        REGINA_DEPRECATED NAbelianGroup* getHomologyH1() const;
 
         /**
          * Writes the name of this triangulation as a human-readable
@@ -300,11 +316,19 @@ inline NManifold* NStandardTriangulation::manifold() const {
     return 0;
 }
 
+inline NManifold* NStandardTriangulation::getManifold() const {
+    return manifold();
+}
+
 inline NAbelianGroup* NStandardTriangulation::homology() const {
     return 0;
 }
 
 inline NAbelianGroup* NStandardTriangulation::homologyH1() const {
+    return homology();
+}
+
+inline NAbelianGroup* NStandardTriangulation::getHomologyH1() const {
     return homology();
 }
 

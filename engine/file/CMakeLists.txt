@@ -15,5 +15,8 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     nfileinfo.h
     nglobaldirs.h
+    nxmlcallback.h
+    nxmlelementreader.h
+    nxmlfile.h
     DESTINATION ${INCLUDEDIR}/file COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

@@ -47,7 +47,7 @@ print
 
 t1 = NTriangulation()
 t2 = NExampleTriangulation.poincareHomologySphere()
-t3 = NExampleTriangulation.figureEight()
+t3 = NExampleTriangulation.figureEightKnotComplement()
 p = NPDF()
 
 t = NText()

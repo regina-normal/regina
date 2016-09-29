@@ -157,27 +157,27 @@ using regina::NTriangle;
         unsigned long stdCoord = whichCoord / 2;
         if (whichCoord % 2 == 0) {
             // "true" orientation.
-            // Note that quadDefn[i][0] == 0 always.
+            // Note that vertexSplitDefn[i][0] == 0 always.
             if (stdCoord % 7 < 4)
                 return [NSString stringWithFormat:@"%ld: %ld", (stdCoord / 7), (stdCoord % 7)];
             else
-                return [NSString stringWithFormat:@"%ld: %d%d", (stdCoord / 7), regina::quadDefn[(stdCoord % 7) - 4][0], regina::quadDefn[(stdCoord % 7) - 4][1]];
+                return [NSString stringWithFormat:@"%ld: %d%d", (stdCoord / 7), regina::vertexSplitDefn[(stdCoord % 7) - 4][0], regina::vertexSplitDefn[(stdCoord % 7) - 4][1]];
         } else {
             // "false" orientation.
             if (stdCoord % 7 < 4)
                 return [NSString stringWithFormat:@"%ld: %s", (stdCoord / 7), NTriangle::ordering(stdCoord % 7).trunc3().c_str()];
             else
-                return [NSString stringWithFormat:@"%ld: %d%d", (stdCoord / 7), regina::quadDefn[(stdCoord % 7) - 4][2], regina::quadDefn[(stdCoord % 7) - 4][3]];
+                return [NSString stringWithFormat:@"%ld: %d%d", (stdCoord / 7), regina::vertexSplitDefn[(stdCoord % 7) - 4][2], regina::vertexSplitDefn[(stdCoord % 7) - 4][3]];
         }
     } else if (coordSystem == regina::NS_ORIENTED_QUAD) {
         unsigned long quadCoord = whichCoord / 2;
         if (whichCoord % 2 == 0) {
             // "true" orientation.
-            // Note that quadDefn[i][0] == 0 always.
-            return [NSString stringWithFormat:@"%ld: %d%d", (quadCoord / 3), regina::quadDefn[(quadCoord % 3)][0], regina::quadDefn[(quadCoord % 3)][1]];
+            // Note that vertexSplitDefn[i][0] == 0 always.
+            return [NSString stringWithFormat:@"%ld: %d%d", (quadCoord / 3), regina::vertexSplitDefn[(quadCoord % 3)][0], regina::vertexSplitDefn[(quadCoord % 3)][1]];
         } else {
             // "false" orientation.
-            return [NSString stringWithFormat:@"%ld: %d%d", (quadCoord / 3), regina::quadDefn[(quadCoord % 3)][2], regina::quadDefn[(quadCoord % 3)][3]];
+            return [NSString stringWithFormat:@"%ld: %d%d", (quadCoord / 3), regina::vertexSplitDefn[(quadCoord % 3)][2], regina::vertexSplitDefn[(quadCoord % 3)][3]];
         }
     }
 

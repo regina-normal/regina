@@ -4,6 +4,7 @@
 SET ( FILES
   nfileinfo
   nglobaldirs
+  nxmlfile
   pyfile
   )
 

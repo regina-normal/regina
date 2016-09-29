@@ -17,6 +17,7 @@ SET ( FILES
   nprimes
   nrational
   numbertheory
+  permconv
   pymaths
   )
 

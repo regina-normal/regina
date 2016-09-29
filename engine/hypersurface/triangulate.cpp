@@ -35,6 +35,7 @@
 #include "dim4/dim4triangle.h"
 #include "dim4/dim4triangulation.h"
 #include "hypersurface/nnormalhypersurface.h"
+#include "maths/permconv.h"
 #include "surfaces/ndisc.h"
 #include "triangulation/ntriangulation.h"
 
@@ -266,23 +267,23 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                     Dim4Edge::edgeNumber[outerTetEmb[3]][outerTetEmb[4]]).
                     longValue(),
             prisms(pent, Dim4Edge::edgeNumber
-                    [outerTetEmb[quadDefn[0][0]]]
-                    [outerTetEmb[quadDefn[0][1]]]).longValue() +
+                    [outerTetEmb[vertexSplitDefn[0][0]]]
+                    [outerTetEmb[vertexSplitDefn[0][1]]]).longValue() +
                 prisms(pent, Dim4Edge::edgeNumber
-                    [outerTetEmb[quadDefn[0][2]]]
-                    [outerTetEmb[quadDefn[0][3]]]).longValue(),
+                    [outerTetEmb[vertexSplitDefn[0][2]]]
+                    [outerTetEmb[vertexSplitDefn[0][3]]]).longValue(),
             prisms(pent, Dim4Edge::edgeNumber
-                    [outerTetEmb[quadDefn[1][0]]]
-                    [outerTetEmb[quadDefn[1][1]]]).longValue() +
+                    [outerTetEmb[vertexSplitDefn[1][0]]]
+                    [outerTetEmb[vertexSplitDefn[1][1]]]).longValue() +
                 prisms(pent, Dim4Edge::edgeNumber
-                    [outerTetEmb[quadDefn[1][2]]]
-                    [outerTetEmb[quadDefn[1][3]]]).longValue(),
+                    [outerTetEmb[vertexSplitDefn[1][2]]]
+                    [outerTetEmb[vertexSplitDefn[1][3]]]).longValue(),
             prisms(pent, Dim4Edge::edgeNumber
-                    [outerTetEmb[quadDefn[2][0]]]
-                    [outerTetEmb[quadDefn[2][1]]]).longValue() +
+                    [outerTetEmb[vertexSplitDefn[2][0]]]
+                    [outerTetEmb[vertexSplitDefn[2][1]]]).longValue() +
                 prisms(pent, Dim4Edge::edgeNumber
-                    [outerTetEmb[quadDefn[2][2]]]
-                    [outerTetEmb[quadDefn[2][3]]]).longValue());
+                    [outerTetEmb[vertexSplitDefn[2][2]]]
+                    [outerTetEmb[vertexSplitDefn[2][3]]]).longValue());
     }
 
     // Run through normal tetrahedra, setting up DiscData maps as we go.
@@ -433,10 +434,10 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                 // Map (A,B,C,D) of the outer tetrahedron to vertices of
                 // the pentachoron.
                 roles = outerTetEmb * NPerm5(
-                    quadDefn[outerTetDisc.type - 4][0],
-                    quadDefn[outerTetDisc.type - 4][1],
-                    quadDefn[outerTetDisc.type - 4][2],
-                    quadDefn[outerTetDisc.type - 4][3],
+                    vertexSplitDefn[outerTetDisc.type - 4][0],
+                    vertexSplitDefn[outerTetDisc.type - 4][1],
+                    vertexSplitDefn[outerTetDisc.type - 4][2],
+                    vertexSplitDefn[outerTetDisc.type - 4][3],
                     4);
 
                 // Set things up to be correct if A,B,C,D == e0,e1,f1,f2.
@@ -484,10 +485,10 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                 // Map (A,B,C,D) of the outer tetrahedron to vertices of
                 // the pentachoron.
                 roles = outerTetEmb * NPerm5(
-                    quadDefn[outerTetDisc.type - 4][0],
-                    quadDefn[outerTetDisc.type - 4][1],
-                    quadDefn[outerTetDisc.type - 4][2],
-                    quadDefn[outerTetDisc.type - 4][3],
+                    vertexSplitDefn[outerTetDisc.type - 4][0],
+                    vertexSplitDefn[outerTetDisc.type - 4][1],
+                    vertexSplitDefn[outerTetDisc.type - 4][2],
+                    vertexSplitDefn[outerTetDisc.type - 4][3],
                     4);
 
                 // Set things up to be correct if A,B,C,D == e0,e1,f0,f2.
@@ -536,10 +537,10 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                 // Map (A,B,C,D) of the outer tetrahedron to vertices of
                 // the pentachoron.
                 roles = outerTetEmb * NPerm5(
-                    quadDefn[outerTetDisc.type - 4][0],
-                    quadDefn[outerTetDisc.type - 4][1],
-                    quadDefn[outerTetDisc.type - 4][2],
-                    quadDefn[outerTetDisc.type - 4][3],
+                    vertexSplitDefn[outerTetDisc.type - 4][0],
+                    vertexSplitDefn[outerTetDisc.type - 4][1],
+                    vertexSplitDefn[outerTetDisc.type - 4][2],
+                    vertexSplitDefn[outerTetDisc.type - 4][3],
                     4);
 
                 // Set things up to be correct if A,B,C,D == e0,e1,f0,f1.

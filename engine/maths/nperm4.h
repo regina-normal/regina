@@ -334,6 +334,14 @@ class REGINA_API NPerm<4> {
          * @return the first-generation permutation code.
          */
         Code permCode() const;
+        /**
+         * Deprecated routine that returns the first-generation code
+         * representing this permutation.
+         *
+         * \deprecated This routine has been renamed to permCode().
+         * See the permCode() documentation for further details.
+         */
+        REGINA_DEPRECATED Code getPermCode() const;
 
         /**
          * Returns the second-generation code representing this permutation.
@@ -348,6 +356,14 @@ class REGINA_API NPerm<4> {
          * @return the second-generation permutation code.
          */
         Code permCode2() const;
+        /**
+         * Deprecated routine that returns the second-generation code
+         * representing this permutation.
+         *
+         * \deprecated This routine has been renamed to permCode2().
+         * See the permCode2() documentation for further details.
+         */
+        REGINA_DEPRECATED Code getPermCode2() const;
 
         /**
          * Sets this permutation to that represented by the given
@@ -801,7 +817,19 @@ inline NPerm<4>::Code NPerm<4>::permCode() const {
         (imageTable[code_][3] << 6));
 }
 
+inline NPerm<4>::Code NPerm<4>::getPermCode() const {
+    return static_cast<Code>(
+        imageTable[code_][0] |
+        (imageTable[code_][1] << 2) |
+        (imageTable[code_][2] << 4) |
+        (imageTable[code_][3] << 6));
+}
+
 inline NPerm<4>::Code NPerm<4>::permCode2() const {
+    return code_;
+}
+
+inline NPerm<4>::Code NPerm<4>::getPermCode2() const {
     return code_;
 }
 

@@ -43,6 +43,9 @@ Equality type : BY_REFERENCE
 Dim2BoundaryComponent : class
 Equality type : BY_REFERENCE
 
+Dim2Census : class
+Equality type : NEVER_INSTANTIATED
+
 Dim2Component : class
 Equality type : BY_REFERENCE
 
@@ -1087,6 +1090,12 @@ Equality type : NEVER_INSTANTIATED
 NExampleTriangulation : class
 Equality type : NEVER_INSTANTIATED
 
+NFace : class
+Equality type : BY_REFERENCE
+
+NFaceEmbedding : class
+Equality type : BY_VALUE
+
 NFacePair : class
 Equality type : BY_VALUE
 
@@ -1172,7 +1181,7 @@ NManifold : class
 Equality type : BY_REFERENCE
 
 NMarkedAbelianGroup : class
-Equality type : BY_REFERENCE
+Equality type : BY_VALUE
 
 NMatrix2 : class
 Equality type : BY_VALUE

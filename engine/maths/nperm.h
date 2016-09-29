@@ -250,6 +250,14 @@ class NPerm {
          * @return the internal code.
          */
         Code permCode() const;
+        /**
+         * Deprecated routine that returns the internal code representing this
+         * permutation.
+         *
+         * \deprecated This routine has been renamed to permCode().
+         * See the permCode() documentation for further details.
+         */
+        REGINA_DEPRECATED Code getPermCode() const;
 
         /**
          * Sets this permutation to that represented by the given
@@ -594,6 +602,11 @@ inline NPerm<n>::NPerm(Code code) : code_(code) {
 
 template <int n>
 inline typename NPerm<n>::Code NPerm<n>::permCode() const {
+    return code_;
+}
+
+template <int n>
+inline typename NPerm<n>::Code NPerm<n>::getPermCode() const {
     return code_;
 }
 

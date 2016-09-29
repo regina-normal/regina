@@ -176,6 +176,15 @@ class REGINA_API NLayering : public boost::noncopyable {
          * @return the number of layered tetrahedra.
          */
         unsigned long size() const;
+        /**
+         * Deprecated routine that returns the number of individual tetrahedra
+         * that have been layered onto the original boundary, according to the
+         * data stored in this structure.
+         *
+         * \deprecated This routine has been renamed to size().
+         * See the size() documentation for further details.
+         */
+        REGINA_DEPRECATED unsigned long getSize() const;
 
         /**
          * Returns the tetrahedra that provide the old boundary triangles.
@@ -191,6 +200,14 @@ class REGINA_API NLayering : public boost::noncopyable {
          */
         NTetrahedron* oldBoundaryTet(unsigned which) const;
         /**
+         * Deprecated routine that returns the tetrahedra that provide the old
+         * boundary triangles.
+         *
+         * \deprecated This routine has been renamed to oldBoundaryTet().
+         * See the oldBoundaryTet() documentation for further details.
+         */
+        REGINA_DEPRECATED NTetrahedron* getOldBoundaryTet(unsigned which) const;
+        /**
          * Returns the permutations that describe the old boundary triangles.
          * These refer to the original boundary before any layerings
          * take place.
@@ -203,6 +220,14 @@ class REGINA_API NLayering : public boost::noncopyable {
          * @return the requested permutation describing the old boundary.
          */
         NPerm4 oldBoundaryRoles(unsigned which) const;
+        /**
+         * Deprecated routine that returns the permutations that describe the
+         * old boundary triangles.
+         *
+         * \deprecated This routine has been renamed to oldBoundaryRoles().
+         * See the oldBoundaryRoles() documentation for further details.
+         */
+        REGINA_DEPRECATED NPerm4 getOldBoundaryRoles(unsigned which) const;
         /**
          * Returns the tetrahedra that provide the new boundary triangles.
          * These belong to the final boundary after layerings have been
@@ -217,6 +242,14 @@ class REGINA_API NLayering : public boost::noncopyable {
          */
         NTetrahedron* newBoundaryTet(unsigned which) const;
         /**
+         * Deprecated routine that returns the tetrahedra that provide the new
+         * boundary triangles.
+         *
+         * \deprecated This routine has been renamed to newBoundaryTet().
+         * See the newBoundaryTet() documentation for further details.
+         */
+        REGINA_DEPRECATED NTetrahedron* getNewBoundaryTet(unsigned which) const;
+        /**
          * Returns the permutations that describe the new boundary triangles.
          * These refer to the final boundary after layerings have been
          * performed.
@@ -229,6 +262,14 @@ class REGINA_API NLayering : public boost::noncopyable {
          * @return the requested permutation describing the new boundary.
          */
         NPerm4 newBoundaryRoles(unsigned which) const;
+        /**
+         * Deprecated routine that returns the permutations that describe the
+         * new boundary triangles.
+         *
+         * \deprecated This routine has been renamed to newBoundaryRoles().
+         * See the newBoundaryRoles() documentation for further details.
+         */
+        REGINA_DEPRECATED NPerm4 getNewBoundaryRoles(unsigned which) const;
 
         /**
          * Returns a 2-by-2 matrix describing the relationship between
@@ -414,7 +455,15 @@ inline unsigned long NLayering::size() const {
     return size_;
 }
 
+inline unsigned long NLayering::getSize() const {
+    return size_;
+}
+
 inline NTetrahedron* NLayering::oldBoundaryTet(unsigned which) const {
+    return oldBdryTet_[which];
+}
+
+inline NTetrahedron* NLayering::getOldBoundaryTet(unsigned which) const {
     return oldBdryTet_[which];
 }
 
@@ -422,11 +471,23 @@ inline NPerm4 NLayering::oldBoundaryRoles(unsigned which) const {
     return oldBdryRoles_[which];
 }
 
+inline NPerm4 NLayering::getOldBoundaryRoles(unsigned which) const {
+    return oldBdryRoles_[which];
+}
+
 inline NTetrahedron* NLayering::newBoundaryTet(unsigned which) const {
     return newBdryTet_[which];
 }
 
+inline NTetrahedron* NLayering::getNewBoundaryTet(unsigned which) const {
+    return newBdryTet_[which];
+}
+
 inline NPerm4 NLayering::newBoundaryRoles(unsigned which) const {
+    return newBdryRoles_[which];
+}
+
+inline NPerm4 NLayering::getNewBoundaryRoles(unsigned which) const {
     return newBdryRoles_[which];
 }
 

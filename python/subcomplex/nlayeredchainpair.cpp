@@ -46,6 +46,8 @@ void addNLayeredChainPair() {
             return_value_policy<manage_new_object>())
         .def("chain", &NLayeredChainPair::chain,
             return_internal_reference<>())
+        .def("getChain", &NLayeredChainPair::chain,
+            return_internal_reference<>())
         .def("isLayeredChainPair", &NLayeredChainPair::isLayeredChainPair,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_eq_operators())

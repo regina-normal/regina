@@ -82,6 +82,7 @@ void addNPerm5() {
         .def(init<int, int, int, int, int, int, int, int, int, int>())
         .def(init<const NPerm5&>())
         .def("permCode", &NPerm5::permCode)
+        .def("getPermCode", &NPerm5::permCode)
         .def("setPermCode", &NPerm5::setPermCode)
         .def("fromPermCode", &NPerm5::fromPermCode)
         .def("isPermCode", &NPerm5::isPermCode)

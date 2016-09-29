@@ -60,7 +60,11 @@ void addNHomGroupPresentation() {
         .def(init<const NGroupPresentation&>())
         .def("domain", &NHomGroupPresentation::domain,
             return_internal_reference<>())
+        .def("getDomain", &NHomGroupPresentation::domain,
+            return_internal_reference<>())
         .def("range", &NHomGroupPresentation::range,
+            return_internal_reference<>())
+        .def("getRange", &NHomGroupPresentation::range,
             return_internal_reference<>())
         .def("knowsInverse", &NHomGroupPresentation::knowsInverse)
         .def("evaluate", evaluate_exp)

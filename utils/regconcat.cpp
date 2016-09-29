@@ -33,6 +33,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <list>
+#include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 
 void usage(const char* progName, const std::string& error = std::string()) {

@@ -47,6 +47,7 @@
  * for each triangulation by passing -s.
  */
 
+#include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/ntriangulation.h"

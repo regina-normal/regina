@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include "foreign/recogniser.h"
 #include "triangulation/ntriangulation.h"
 
 #include "reginasupport.h"

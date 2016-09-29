@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "dim2/dim2triangulation.h"
+#include "maths/permconv.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/nvertex.h"
 #include <sstream>

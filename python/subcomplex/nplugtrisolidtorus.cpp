@@ -46,10 +46,16 @@ void addNPlugTriSolidTorus() {
             return_value_policy<manage_new_object>())
         .def("core", &NPlugTriSolidTorus::core,
             return_internal_reference<>())
+        .def("getCore", &NPlugTriSolidTorus::core,
+            return_internal_reference<>())
         .def("chain", &NPlugTriSolidTorus::chain,
             return_internal_reference<>())
+        .def("getChain", &NPlugTriSolidTorus::chain,
+            return_internal_reference<>())
         .def("chainType", &NPlugTriSolidTorus::chainType)
+        .def("getChainType", &NPlugTriSolidTorus::chainType)
         .def("equatorType", &NPlugTriSolidTorus::equatorType)
+        .def("getEquatorType", &NPlugTriSolidTorus::equatorType)
         .def("isPlugTriSolidTorus", &NPlugTriSolidTorus::isPlugTriSolidTorus,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_eq_operators())

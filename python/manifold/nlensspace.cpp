@@ -43,7 +43,9 @@ void addNLensSpace() {
             ("NLensSpace", init<unsigned long, unsigned long>())
         .def(init<const NLensSpace&>())
         .def("p", &NLensSpace::p)
+        .def("getP", &NLensSpace::p)
         .def("q", &NLensSpace::q)
+        .def("getQ", &NLensSpace::q)
         .def(regina::python::add_eq_operators())
     ;
 

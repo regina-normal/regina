@@ -58,6 +58,7 @@
  * and reduced triangulations) will be saved to the given output data file.
  */
 
+#include <file/nxmlfile.h>
 #include <packet/ncontainer.h>
 #include <triangulation/ntriangulation.h>
 

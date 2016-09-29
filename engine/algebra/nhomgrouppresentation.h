@@ -162,11 +162,25 @@ class REGINA_API NHomGroupPresentation :
          */
         const NGroupPresentation& domain() const;
         /**
+         * Deprecated routine that returns the domain of the map.
+         *
+         * \deprecated This routine has been renamed to domain().
+         * See the domain() documentation for further details.
+         */
+        REGINA_DEPRECATED const NGroupPresentation& getDomain() const;
+        /**
          * The range of the map.
          *
          * @return a reference to the range.
          */
         const NGroupPresentation& range() const;
+        /**
+         * Deprecated routine that returns the range of the map.
+         *
+         * \deprecated This routine has been renamed to range().
+         * See the range() documentation for further details.
+         */
+        REGINA_DEPRECATED const NGroupPresentation& getRange() const;
 
         /**
          * Returns whether or not this is a declared isomorphism.
@@ -428,7 +442,15 @@ inline const NGroupPresentation& NHomGroupPresentation::domain() const {
     return *domain_;
 }
 
+inline const NGroupPresentation& NHomGroupPresentation::getDomain() const {
+    return *domain_;
+}
+
 inline const NGroupPresentation& NHomGroupPresentation::range() const {
+    return *range_;
+}
+
+inline const NGroupPresentation& NHomGroupPresentation::getRange() const {
     return *range_;
 }
 

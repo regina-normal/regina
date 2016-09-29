@@ -129,6 +129,14 @@ class REGINA_API NSnapPeaCensusTri: public NStandardTriangulation {
          * @return the section of the SnapPea census.
          */
         char section() const;
+        /**
+         * Deprecated routine that returns the section of the SnapPea census to
+         * which this triangulation belongs.
+         *
+         * \deprecated This routine has been renamed to section().
+         * See the section() documentation for further details.
+         */
+        REGINA_DEPRECATED char getSection() const;
 
         /**
          * Returns the index of this triangulation within its particular
@@ -138,6 +146,14 @@ class REGINA_API NSnapPeaCensusTri: public NStandardTriangulation {
          * @return the index of this triangulation within its section.
          */
         unsigned long index() const;
+        /**
+         * Deprecated routine that returns the index of this triangulation
+         * within its particular section of the SnapPea census.
+         *
+         * \deprecated This routine has been renamed to index().
+         * See the index() documentation for further details.
+         */
+        REGINA_DEPRECATED unsigned long getIndex() const;
 
         /**
          * Determines whether this and the given structure represent
@@ -206,7 +222,15 @@ inline char NSnapPeaCensusTri::section() const {
     return section_;
 }
 
+inline char NSnapPeaCensusTri::getSection() const {
+    return section_;
+}
+
 inline unsigned long NSnapPeaCensusTri::index() const {
+    return index_;
+}
+
+inline unsigned long NSnapPeaCensusTri::getIndex() const {
     return index_;
 }
 

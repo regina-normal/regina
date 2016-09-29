@@ -113,6 +113,7 @@ void addNVertex() {
                 return_value_policy<reference_existing_object>())
             .def("degree", &NVertex::degree)
             .def("link", &NVertex::link)
+            .def("getLink", &NVertex::link)
             .def("buildLink", &vertex_buildLink,
                 return_value_policy<to_held_type<>>())
             .def("buildLinkDetail", vertex_buildLinkDetail_void)
@@ -126,6 +127,8 @@ void addNVertex() {
             .def("hasBadLink", &NVertex::hasBadLink)
             .def("isLinkOrientable", &NVertex::isLinkOrientable)
             .def("linkEulerChar", &NVertex::linkEulerChar)
+            .def("getLinkEulerChar", &NVertex::linkEulerChar)
+            .def("getLinkEulerCharacteristic", &NVertex::linkEulerChar)
             .def("ordering", &NVertex::ordering)
             .def("faceNumber", &NVertex::faceNumber)
             .def("containsVertex", &NVertex::containsVertex)
@@ -143,6 +146,7 @@ void addNVertex() {
             .value("KLEIN_BOTTLE", regina::NVertex::KLEIN_BOTTLE)
             .value("NON_STANDARD_CUSP", regina::NVertex::NON_STANDARD_CUSP)
             .value("INVALID", regina::NVertex::INVALID)
+            .value("NON_STANDARD_BDRY", regina::NVertex::NON_STANDARD_BDRY)
             ;
 
         s.attr("SPHERE") = NVertex::SPHERE;
@@ -151,6 +155,7 @@ void addNVertex() {
         s.attr("KLEIN_BOTTLE") = NVertex::KLEIN_BOTTLE;
         s.attr("NON_STANDARD_CUSP") = NVertex::NON_STANDARD_CUSP;
         s.attr("INVALID") = NVertex::INVALID;
+        s.attr("NON_STANDARD_BDRY") = NVertex::NON_STANDARD_BDRY;
     }
 
     scope().attr("NVertexEmbedding") = scope().attr("FaceEmbedding3_0");

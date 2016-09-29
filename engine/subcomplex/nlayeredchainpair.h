@@ -107,6 +107,14 @@ class REGINA_API NLayeredChainPair : public NStandardTriangulation {
          * @return the requested layered chain.
          */
         const NLayeredChain* chain(int which) const;
+        /**
+         * Deprecated routine that returns the requested layered chain used to
+         * form this structure.
+         *
+         * \deprecated This routine has been renamed to chain().
+         * See the chain() documentation for further details.
+         */
+        REGINA_DEPRECATED const NLayeredChain* getChain(int which) const;
 
         /**
          * Determines if the given triangulation component is a layered
@@ -145,6 +153,9 @@ inline NLayeredChainPair::~NLayeredChainPair() {
 }
 
 inline const NLayeredChain* NLayeredChainPair::chain(int which) const {
+    return chain_[which];
+}
+inline const NLayeredChain* NLayeredChainPair::getChain(int which) const {
     return chain_[which];
 }
 inline std::ostream& NLayeredChainPair::writeName(std::ostream& out) const {

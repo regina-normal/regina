@@ -95,11 +95,27 @@ class REGINA_API NLayeredLensSpace : public NStandardTriangulation {
          */
         unsigned long p() const;
         /**
+         * Deprecated routine that returns the first parameter \a p of this
+         * lens space L(p,q).
+         *
+         * \deprecated This routine has been renamed to p().
+         * See the p() documentation for further details.
+         */
+        REGINA_DEPRECATED unsigned long getP() const;
+        /**
          * Returns the second parameter \a q of this lens space L(p,q).
          *
          * @return the second parameter \a q.
          */
         unsigned long q() const;
+        /**
+         * Deprecated routine that returns the second parameter \a q of this
+         * lens space L(p,q).
+         *
+         * \deprecated This routine has been renamed to q().
+         * See the q() documentation for further details.
+         */
+        REGINA_DEPRECATED unsigned long getQ() const;
 
         /**
          * Returns the layered solid torus to which the mobius strip is
@@ -108,6 +124,14 @@ class REGINA_API NLayeredLensSpace : public NStandardTriangulation {
          * @return the layered solid torus.
          */
         const NLayeredSolidTorus& torus() const;
+        /**
+         * Deprecated routine that returns the layered solid torus to which the
+         * mobius strip is glued.
+         *
+         * \deprecated This routine has been renamed to torus().
+         * See the torus() documentation for further details.
+         */
+        REGINA_DEPRECATED const NLayeredSolidTorus& getTorus() const;
         /**
          * Determines which edge of the layered solid torus is glued to
          * the boundary of the mobius strip (i.e., the weight 2 edge
@@ -121,6 +145,14 @@ class REGINA_API NLayeredLensSpace : public NStandardTriangulation {
          * which the mobius strip boundary is glued.
          */
         int mobiusBoundaryGroup() const;
+        /**
+         * Deprecated routine that retermines which edge of the layered solid
+         * torus is glued to the boundary of the mobius strip.
+         *
+         * \deprecated This routine has been renamed to mobiusBoundaryGroup().
+         * See the mobiousBoundaryGroup() documentation for further details.
+         */
+        REGINA_DEPRECATED int getMobiusBoundaryGroup() const;
         /**
          * Determines if the layered solid torus that forms the basis for
          * this lens space is snapped shut (folded closed without a twist).
@@ -173,13 +205,25 @@ inline NLayeredLensSpace::~NLayeredLensSpace() {
 inline unsigned long NLayeredLensSpace::p() const {
     return p_;
 }
+inline unsigned long NLayeredLensSpace::getP() const {
+    return p_;
+}
 inline unsigned long NLayeredLensSpace::q() const {
+    return q_;
+}
+inline unsigned long NLayeredLensSpace::getQ() const {
     return q_;
 }
 inline const NLayeredSolidTorus& NLayeredLensSpace::torus() const {
     return *torus_;
 }
+inline const NLayeredSolidTorus& NLayeredLensSpace::getTorus() const {
+    return *torus_;
+}
 inline int NLayeredLensSpace::mobiusBoundaryGroup() const {
+    return mobiusBoundaryGroup_;
+}
+inline int NLayeredLensSpace::getMobiusBoundaryGroup() const {
     return mobiusBoundaryGroup_;
 }
 inline bool NLayeredLensSpace::isSnapped() const {

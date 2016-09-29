@@ -120,6 +120,19 @@ class REGINA_API NExampleTriangulation {
         static NTriangulation* rp3rp3();
 
         /**
+         * Deprecated routine that returns the minimal triangulation of the
+         * lens space <tt>L(8,3)</tt>.
+         *
+         * \deprecated This is identical to calling
+         * NExampleTriangulation::lens(8, 3).  This hard-coded lens8_3()
+         * routine will be removed in a future release of Regina.
+         *
+         * @return a newly constructed triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
+        REGINA_DEPRECATED static NTriangulation* lens8_3();
+
+        /**
          * Returns a triangulation of the lens space <tt>L(p,q)</tt>.
          *
          * The triangulation uses a layered lens space, which is
@@ -174,6 +187,20 @@ class REGINA_API NExampleTriangulation {
         static NTriangulation* weberSeifert();
 
         /**
+         * Returns a one-vertex triangulation of the Weber-Seifert
+         * dodecahedral space.
+         *
+         * \deprecated This routine is now called weberSeifert(),
+         * for consistency with Weber and Seifert's original paper.
+         * The old name seifertWeber() has been kept for backward
+         * compatibility, but will be removed in a future version of Regina.
+         *
+         * @return a newly constructed triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
+        REGINA_DEPRECATED static NTriangulation* seifertWeber();
+
+        /**
          * Returns the nine-tetrahedron closed orientable hyperbolic
          * 3-manifold with volume 0.94270736.
          *
@@ -210,6 +237,19 @@ class REGINA_API NExampleTriangulation {
          * \name Finite Bounded Triangulations
          */
         /*@{*/
+
+        /**
+         * Deprecated routine that returns the three-tetrahedron
+         * layered solid torus <tt>LST(3,4,7)</tt>.
+         *
+         * \deprecated This is identical to calling
+         * NExampleTriangulation::lst(3, 4).  This hard-coded lst3_4_7()
+         * routine will be removed in a future release of Regina.
+         *
+         * @return a newly constructed triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
+        REGINA_DEPRECATED static NTriangulation* lst3_4_7();
 
         /**
          * Returns the layered solid torus <tt>LST(a,b,c)</tt>.
@@ -256,6 +296,17 @@ class REGINA_API NExampleTriangulation {
         static NTriangulation* figureEight();
 
         /**
+         * Deprecated function that teturns a two-tetrahedron ideal
+         * triangulation of the figure eight knot complement.
+         *
+         * \deprecated This has been renamed to figureEight().
+         *
+         * @return a newly constructed triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
+        REGINA_DEPRECATED static NTriangulation* figureEightKnotComplement();
+
+        /**
          * Returns a two-tetrahedron ideal triangulation of the trefoil
          * knot complement.
          *
@@ -265,6 +316,17 @@ class REGINA_API NExampleTriangulation {
         static NTriangulation* trefoil();
 
         /**
+         * Deprecated function that returns a two-tetrahedron ideal
+         * triangulation of the trefoil knot complement.
+         *
+         * \deprecated This has been renamed to trefoil().
+         *
+         * @return a newly constructed triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
+        REGINA_DEPRECATED static NTriangulation* trefoilKnotComplement();
+
+        /**
          * Returns a four-tetrahedron ideal triangulation of the
          * Whitehead link complement.
          *
@@ -272,6 +334,17 @@ class REGINA_API NExampleTriangulation {
          * destroyed by the caller of this routine.
          */
         static NTriangulation* whiteheadLink();
+
+        /**
+         * Deprecated function that returns a four-tetrahedron ideal
+         * triangulation of the Whitehead link complement.
+         *
+         * \deprecated This has been renamed to whiteheadLink().
+         *
+         * @return a newly constructed triangulation, which must be
+         * destroyed by the caller of this routine.
+         */
+        REGINA_DEPRECATED static NTriangulation* whiteheadLinkComplement();
 
         /**
          * Returns the one-tetrahedron ideal triangulation of the
@@ -296,6 +369,20 @@ class REGINA_API NExampleTriangulation {
 };
 
 /*@}*/
+
+// Inline functions:
+
+inline NTriangulation* NExampleTriangulation::figureEightKnotComplement() {
+    return NExampleTriangulation::figureEight();
+}
+
+inline NTriangulation* NExampleTriangulation::trefoilKnotComplement() {
+    return NExampleTriangulation::trefoil();
+}
+
+inline NTriangulation* NExampleTriangulation::whiteheadLinkComplement() {
+    return NExampleTriangulation::whiteheadLink();
+}
 
 } // namespace regina
 

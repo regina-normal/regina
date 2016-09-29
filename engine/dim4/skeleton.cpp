@@ -35,6 +35,7 @@
 #include <utility>
 #include "dim2/dim2triangulation.h"
 #include "dim4/dim4triangulation.h"
+#include "maths/permconv.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {

@@ -109,10 +109,12 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
                      sphere, torus or Klein bottle.
                      In other words, this is an ideal vertex but not one
                      of the standard ideal vertex types. */
-            INVALID = 6
+            INVALID = 6,
                 /**< Specifies a vertex link that has boundary and is not a
                      disc.  In other words, this vertex makes the
                      triangulation invalid. */
+            NON_STANDARD_BDRY = 6
+                /**< \deprecated This constant has been renamed \a INVALID. */
         };
     private:
         NBoundaryComponent* boundaryComponent_;
@@ -161,6 +163,14 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          * @return a broad categorisation of the vertex link.
          */
         LinkType link() const;
+        /**
+         * Deprecated routine that returns a broad categorisation of the link
+         * of the vertex.
+         *
+         * \deprecated This routine has been renamed to link().
+         * See the link() documentation for further details.
+         */
+        REGINA_DEPRECATED LinkType getLink() const;
 
         /**
          * Returns a full 2-manifold triangulation describing
@@ -314,6 +324,30 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0>,
          */
         REGINA_INLINE_REQUIRED
         long linkEulerChar() const;
+        /**
+         * Deprecated routine that returns the Euler characteristic of
+         * the vertex link.
+         *
+         * \deprecated This routine has been renamed to linkEulerChar().
+         * See the linkEulerChar() documentation for further details.
+         */
+        REGINA_DEPRECATED long getLinkEulerChar() const;
+
+        /**
+         * A deprecated alias for linkEulerChar().
+         *
+         * Returns the Euler characteristic of the vertex link.
+         *
+         * This routine does not require a full triangulation of the
+         * vertex link, and so can be much faster than calling
+         * buildLink().eulerChar().
+         *
+         * \deprecated This routine will be removed in a future version of
+         * Regina.  Please use the identical routine linkEulerChar() instead.
+         *
+         * @return the Euler characteristic of the vertex link.
+         */
+        REGINA_DEPRECATED long getLinkEulerCharacteristic() const;
 
         /**
          * Writes a short text representation of this object to the
@@ -375,6 +409,10 @@ inline NVertex::LinkType Face<3, 0>::link() const {
     return link_;
 }
 
+inline NVertex::LinkType Face<3, 0>::getLink() const {
+    return link_;
+}
+
 inline const Dim2Triangulation* Face<3, 0>::buildLink() const {
     if (! linkTri_) {
         // This is a construct-on-demand member: cast away constness to
@@ -402,6 +440,14 @@ inline bool Face<3, 0>::isStandard() const {
 }
 
 inline long Face<3, 0>::linkEulerChar() const {
+    return linkEulerChar_;
+}
+
+inline long Face<3, 0>::getLinkEulerChar() const {
+    return linkEulerChar_;
+}
+
+inline long Face<3, 0>::getLinkEulerCharacteristic() const {
     return linkEulerChar_;
 }
 

@@ -79,13 +79,13 @@ b = t.tetrahedron(0)
 print a == b, a != b
 
 print 'NAbelianGroup:'
-t = NExampleTriangulation.lens(8,3)
+t = NExampleTriangulation.lens8_3()
 a = t.homology()
 b = t.homology()
 print a == b, a != b
 
 print 'NGroupPresentation:'
-t = NExampleTriangulation.lens(8,3)
+t = NExampleTriangulation.lens8_3()
 a = t.fundamentalGroup()
 b = t.fundamentalGroup()
 print a == b, a != b

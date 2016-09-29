@@ -35,11 +35,39 @@
 
 using namespace boost::python;
 
+namespace {
+    boost::python::list factorise_list(unsigned long n) {
+        std::list<unsigned long> factors;
+        std::list<unsigned long>::const_iterator it;
+
+        regina::factorise(n, factors);
+
+        boost::python::list ans;
+        for (it = factors.begin(); it != factors.end(); it++)
+            ans.append(*it);
+        return ans;
+    }
+
+    boost::python::list primesUpTo_list(const regina::NLargeInteger& roof) {
+        std::list<regina::NLargeInteger> primes;
+        std::list<regina::NLargeInteger>::const_iterator it;
+
+        regina::primesUpTo(roof, primes);
+
+        boost::python::list ans;
+        for (it = primes.begin(); it != primes.end(); it++)
+            ans.append(*it);
+        return ans;
+    }
+}
+
 void addNumberTheory() {
     def("reducedMod", regina::reducedMod);
     def("gcd", regina::gcd);
     def("gcdWithCoeffs", regina::gcdWithCoeffs);
     def("lcm", regina::lcm);
     def("modularInverse", regina::modularInverse);
+    def("factorise", factorise_list);
+    def("primesUpTo", primesUpTo_list);
 }
 

@@ -2,6 +2,7 @@
 
 # Files to compile
 SET ( FILES
+  dim2census
   ncensus
   ngluingpermsearcher
   pycensus

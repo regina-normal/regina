@@ -35,17 +35,21 @@
 #include <fstream>
 #include <iomanip>
 
+#include "foreign/snappea.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/stringutils.h"
 
 namespace regina {
 
-NTriangulation* Triangulation<3>::fromSnapPea(const std::string& snapPeaData) {
-    std::istringstream in(snapPeaData);
-    return Triangulation<3>::readSnapPea(in);
+NTriangulation* readSnapPea(const char* filename) {
+    std::ifstream in(filename);
+    if (!in)
+        return 0;
+    else
+        return readSnapPea(in);
 }
 
-NTriangulation* Triangulation<3>::readSnapPea(std::istream& in) {
+NTriangulation* readSnapPea(std::istream& in) {
     // Check that this is a SnapPea triangulation.
     char name[1001];
     unsigned len;
@@ -144,6 +148,14 @@ NTriangulation* Triangulation<3>::readSnapPea(std::istream& in) {
     // All done!
     delete[] tet;
     return triang;
+}
+
+bool writeSnapPea(const char* filename, const NTriangulation& tri) {
+    return tri.saveSnapPea(filename);
+}
+
+void writeSnapPea(std::ostream& out, const NTriangulation& tri) {
+    tri.snapPea(out);
 }
 
 } // namespace regina

@@ -55,6 +55,7 @@
  * container as it is processed.
  */
 
+#include <file/nxmlfile.h>
 #include <maths/numbertheory.h>
 #include <packet/ncontainer.h>
 #include <triangulation/ntriangulation.h>

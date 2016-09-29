@@ -46,8 +46,12 @@ void addNLayeredLoop() {
         .def("clone", &NLayeredLoop::clone,
             return_value_policy<manage_new_object>())
         .def("length", &NLayeredLoop::length)
+        .def("getLength", &NLayeredLoop::length)
+        .def("getIndex", &NLayeredLoop::length)
         .def("isTwisted", &NLayeredLoop::isTwisted)
         .def("hinge", &NLayeredLoop::hinge,
+            return_value_policy<reference_existing_object>())
+        .def("getHinge", &NLayeredLoop::hinge,
             return_value_policy<reference_existing_object>())
         .def("isLayeredLoop", &NLayeredLoop::isLayeredLoop,
             return_value_policy<manage_new_object>())

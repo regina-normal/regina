@@ -43,7 +43,9 @@ void addNSnapPeaCensusManifold() {
             ("NSnapPeaCensusManifold", init<char, unsigned long>())
         .def(init<const NSnapPeaCensusManifold&>())
         .def("section", &NSnapPeaCensusManifold::section)
+        .def("getSection", &NSnapPeaCensusManifold::section)
         .def("index", &NSnapPeaCensusManifold::index)
+        .def("getIndex", &NSnapPeaCensusManifold::index)
         .def(regina::python::add_eq_operators())
     ;
 

@@ -202,6 +202,15 @@ NTriangulation* NExampleTriangulation::rp3rp3() {
     return ans;
 }
 
+NTriangulation* NExampleTriangulation::lens8_3() {
+    NTriangulation* ans = new NTriangulation();
+    ans->setLabel("L(8,3)");
+
+    ans->insertLayeredLensSpace(8, 3);
+
+    return ans;
+}
+
 NTriangulation* NExampleTriangulation::lens(size_t p, size_t q) {
     NTriangulation* ans = new NTriangulation();
     ans->insertLayeredLensSpace(p, q);
@@ -248,6 +257,14 @@ NTriangulation* NExampleTriangulation::weberSeifert() {
     return ans;
 }
 
+NTriangulation* NExampleTriangulation::seifertWeber() {
+    // Kept for backward compatibility.
+    // Use the old name in the packet label.
+    NTriangulation* ans = weberSeifert();
+    ans->setLabel("Seifert-Weber dodecahedral space");
+    return ans;
+}
+
 NTriangulation* NExampleTriangulation::smallClosedOrblHyperbolic() {
     NTriangulation* ans = new NTriangulation();
     ans->setLabel("Closed orientable hyperbolic 3-manifold");
@@ -273,6 +290,15 @@ NTriangulation* NExampleTriangulation::sphere600() {
 
     ans->orient();
     ans->setLabel("600-cell");
+    return ans;
+}
+
+NTriangulation* NExampleTriangulation::lst3_4_7() {
+    NTriangulation* ans = new NTriangulation();
+    ans->setLabel("Layered solid torus");
+
+    ans->insertLayeredSolidTorus(3, 4);
+
     return ans;
 }
 
