@@ -19,6 +19,13 @@
 			<key>orderHint</key>
 			<integer>3</integer>
 		</dict>
+		<key>Utils - TriCensus.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>5</integer>
+		</dict>
 		<key>iOS debug.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -48,6 +55,11 @@
 			<true/>
 		</dict>
 		<key>052FA1491806103000FAE4DF</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>05617ADC1D9DBFBE00B1E33B</key>
 		<dict>
 			<key>primary</key>
 			<true/>

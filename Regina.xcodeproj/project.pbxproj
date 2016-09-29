@@ -154,7 +154,7 @@
 		050F5E611B9BAB9C00C1F681 /* globalarray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DD21B9BAB9C00C1F681 /* globalarray.cpp */; };
 		050F5E621B9BAC5200C1F681 /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
 		050F5E6A1B9BD2ED00C1F681 /* engine.so in Copy Python Module */ = {isa = PBXBuildFile; fileRef = 050F5CDD1B9BAAAA00C1F681 /* engine.so */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		050F5E711B9BD51B00C1F681 /* libregina-engine.dylib in Copy Regina Engine */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		050F5E711B9BD51B00C1F681 /* libregina-engine.dylib in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		050F5E7D1B9BD6F400C1F681 /* commandedit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E741B9BD6F400C1F681 /* commandedit.cpp */; };
 		050F5E7E1B9BD6F400C1F681 /* pythonconsole.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E761B9BD6F400C1F681 /* pythonconsole.cpp */; };
 		050F5E7F1B9BD6F400C1F681 /* pythoninterpreter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E781B9BD6F400C1F681 /* pythoninterpreter.cpp */; };
@@ -1005,6 +1005,12 @@
 		055FF38519BFB3C30057462A /* NewPacketPageViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055FF38419BFB3C30057462A /* NewPacketPageViewController.mm */; };
 		055FF38819C044FB0057462A /* NewDim2TriangulationController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 055FF38719C044FB0057462A /* NewDim2TriangulationController.mm */; };
 		05617AD61D9D3C5A00B1E33B /* regina-python.in in Resources */ = {isa = PBXBuildFile; fileRef = 05617AD51D9D3C5400B1E33B /* regina-python.in */; };
+		05617AF41D9DC03C00B1E33B /* tricensus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05617AEA1D9DC02900B1E33B /* tricensus.cpp */; };
+		05617AF51D9DC09500B1E33B /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
+		05617AF91D9DC16900B1E33B /* popt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05617AF81D9DC16900B1E33B /* popt.framework */; };
+		05617AFA1D9DC26A00B1E33B /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7317181D7F2400449D14 /* libiconv.dylib */; };
+		05617AFB1D9DC27900B1E33B /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
+		05617AFC1D9DC33700B1E33B /* tricensus in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617ADD1D9DBFBE00B1E33B /* tricensus */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		0564A7F81811D921002CC2AE /* actionspart.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4091811D91E002CC2AE /* actionspart.cpp */; };
 		0564A7F91811D921002CC2AE /* bigwidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A40A1811D91E002CC2AE /* bigwidget.cpp */; };
 		0564A7FA1811D921002CC2AE /* boundarycomponentchooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A40D1811D91E002CC2AE /* boundarycomponentchooser.cpp */; };
@@ -1600,6 +1606,13 @@
 			remoteGlobalIDString = 05B14EA219B423A0002138C0;
 			remoteInfo = "Census Tools";
 		};
+		05617AF61D9DC0E000B1E33B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 05617ADC1D9DBFBE00B1E33B;
+			remoteInfo = "Utils - TriCensus";
+		};
 		05B14EBA19B427AC002138C0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
@@ -1632,15 +1645,16 @@
 			name = "Copy Python Module";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		050F5E701B9BD50C00C1F681 /* Copy Regina Engine */ = {
+		050F5E701B9BD50C00C1F681 /* Copy Engine and Utilities */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 6;
 			files = (
-				050F5E711B9BD51B00C1F681 /* libregina-engine.dylib in Copy Regina Engine */,
+				05617AFC1D9DC33700B1E33B /* tricensus in Copy Engine and Utilities */,
+				050F5E711B9BD51B00C1F681 /* libregina-engine.dylib in Copy Engine and Utilities */,
 			);
-			name = "Copy Regina Engine";
+			name = "Copy Engine and Utilities";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		052FA0BF1806072900FAE4DF /* CopyFiles */ = {
@@ -2677,6 +2691,16 @@
 		055FF38619C044FB0057462A /* NewDim2TriangulationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewDim2TriangulationController.h; sourceTree = "<group>"; };
 		055FF38719C044FB0057462A /* NewDim2TriangulationController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewDim2TriangulationController.mm; sourceTree = "<group>"; };
 		05617AD51D9D3C5400B1E33B /* regina-python.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; path = "regina-python.in"; sourceTree = "<group>"; };
+		05617ADD1D9DBFBE00B1E33B /* tricensus */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = tricensus; sourceTree = BUILT_PRODUCTS_DIR; };
+		05617AE41D9DC02900B1E33B /* censuslookup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = censuslookup.cpp; sourceTree = "<group>"; };
+		05617AE51D9DC02900B1E33B /* regconcat.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = regconcat.cpp; sourceTree = "<group>"; };
+		05617AE61D9DC02900B1E33B /* regconvert.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = regconvert.cpp; sourceTree = "<group>"; };
+		05617AE71D9DC02900B1E33B /* regfiledump.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = regfiledump.cpp; sourceTree = "<group>"; };
+		05617AE81D9DC02900B1E33B /* regfiletype.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = regfiletype.cpp; sourceTree = "<group>"; };
+		05617AE91D9DC02900B1E33B /* sigcensus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sigcensus.cpp; sourceTree = "<group>"; };
+		05617AEA1D9DC02900B1E33B /* tricensus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tricensus.cpp; sourceTree = "<group>"; };
+		05617AEB1D9DC02900B1E33B /* trisetcmp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = trisetcmp.cpp; sourceTree = "<group>"; };
+		05617AF81D9DC16900B1E33B /* popt.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = popt.framework; path = ../../Library/Frameworks/osx/popt.framework; sourceTree = "<group>"; };
 		0564A1DF1811D6F8002CC2AE /* Regina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Regina.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0564A2161811D91C002CC2AE /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		0564A4071811D91E002CC2AE /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
@@ -3329,6 +3353,17 @@
 				057FA7561806184B008E25F6 /* UIKit.framework in Frameworks */,
 				052FA12A1806102F00FAE4DF /* Foundation.framework in Frameworks */,
 				05F4947C19BDDD5E00CD887C /* DBChooser.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05617ADA1D9DBFBE00B1E33B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05617AF51D9DC09500B1E33B /* libregina-engine.dylib in Frameworks */,
+				05617AF91D9DC16900B1E33B /* popt.framework in Frameworks */,
+				05617AFA1D9DC26A00B1E33B /* libiconv.dylib in Frameworks */,
+				05617AFB1D9DC27900B1E33B /* libxml2.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4981,6 +5016,21 @@
 			name = HTML;
 			sourceTree = "<group>";
 		};
+		05617ADE1D9DBFBF00B1E33B /* utils */ = {
+			isa = PBXGroup;
+			children = (
+				05617AE41D9DC02900B1E33B /* censuslookup.cpp */,
+				05617AE51D9DC02900B1E33B /* regconcat.cpp */,
+				05617AE61D9DC02900B1E33B /* regconvert.cpp */,
+				05617AE71D9DC02900B1E33B /* regfiledump.cpp */,
+				05617AE81D9DC02900B1E33B /* regfiletype.cpp */,
+				05617AE91D9DC02900B1E33B /* sigcensus.cpp */,
+				05617AEA1D9DC02900B1E33B /* tricensus.cpp */,
+				05617AEB1D9DC02900B1E33B /* trisetcmp.cpp */,
+			);
+			path = utils;
+			sourceTree = "<group>";
+		};
 		0564A2151811D91C002CC2AE /* qtui */ = {
 			isa = PBXGroup;
 			children = (
@@ -5314,6 +5364,7 @@
 				050F5CDE1B9BAAAA00C1F681 /* python */,
 				052FA12F1806102F00FAE4DF /* ios */,
 				05A47F961809CB7500F86BFD /* examples */,
+				05617ADE1D9DBFBF00B1E33B /* utils */,
 				0575E65A1805F36D009E3FC4 /* Products */,
 				052FA0AF180604A900FAE4DF /* Frameworks */,
 				05AB5F041B942903007034C8 /* Plugins */,
@@ -5329,6 +5380,7 @@
 				0564A1DF1811D6F8002CC2AE /* Regina.app */,
 				05B14EA319B423A0002138C0 /* mkcensusdb */,
 				050F5CDD1B9BAAAA00C1F681 /* engine.so */,
+				05617ADD1D9DBFBE00B1E33B /* tricensus */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -5611,6 +5663,7 @@
 				056AA9A21C41DE8600FA81D3 /* libgmp.framework */,
 				056AA9A31C41DE8600FA81D3 /* libgmpxx.framework */,
 				056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */,
+				05617AF81D9DC16900B1E33B /* popt.framework */,
 				05AB5ECC1B8ED9F9007034C8 /* QtCore.framework */,
 				05AB5F051B9429BA007034C8 /* QtDBus.framework */,
 				05AB5ECD1B8ED9F9007034C8 /* QtGui.framework */,
@@ -5994,6 +6047,22 @@
 			productReference = 052FA1281806102F00FAE4DF /* Regina.app */;
 			productType = "com.apple.product-type.application";
 		};
+		05617ADC1D9DBFBE00B1E33B /* Utils - TriCensus */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 05617AE11D9DBFBF00B1E33B /* Build configuration list for PBXNativeTarget "Utils - TriCensus" */;
+			buildPhases = (
+				05617AD91D9DBFBE00B1E33B /* Sources */,
+				05617ADA1D9DBFBE00B1E33B /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Utils - TriCensus";
+			productName = "Utils - TriCensus";
+			productReference = 05617ADD1D9DBFBE00B1E33B /* tricensus */;
+			productType = "com.apple.product-type.tool";
+		};
 		0564A1DE1811D6F8002CC2AE /* Qt */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0564A2131811D6FA002CC2AE /* Build configuration list for PBXNativeTarget "Qt" */;
@@ -6011,7 +6080,7 @@
 				050F5E691B9BD2AA00C1F681 /* Copy Python Module */,
 				050BEA351D9C8B3700B96DB8 /* Copy Python Init Script */,
 				050BEA371D9C8B7E00B96DB8 /* Symlink Scripts */,
-				050F5E701B9BD50C00C1F681 /* Copy Regina Engine */,
+				050F5E701B9BD50C00C1F681 /* Copy Engine and Utilities */,
 			);
 			buildRules = (
 				0514CAF01D9CE54A00EDB2E6 /* PBXBuildRule */,
@@ -6024,6 +6093,7 @@
 			dependencies = (
 				055ABEB419B49F1100044C1B /* PBXTargetDependency */,
 				050F5E6F1B9BD3A000C1F681 /* PBXTargetDependency */,
+				05617AF71D9DC0E000B1E33B /* PBXTargetDependency */,
 			);
 			name = Qt;
 			productName = Qt;
@@ -6080,6 +6150,10 @@
 					052FA1271806102F00FAE4DF = {
 						DevelopmentTeam = 67JTSH67LZ;
 					};
+					05617ADC1D9DBFBE00B1E33B = {
+						CreatedOnToolsVersion = 8.0;
+						ProvisioningStyle = Automatic;
+					};
 					0564A1DE1811D6F8002CC2AE = {
 						DevelopmentTeam = 67JTSH67LZ;
 						ProvisioningStyle = Automatic;
@@ -6110,6 +6184,7 @@
 				0564A1DE1811D6F8002CC2AE /* Qt */,
 				052FA1271806102F00FAE4DF /* iOS */,
 				05B14EA219B423A0002138C0 /* Census Tools */,
+				05617ADC1D9DBFBE00B1E33B /* Utils - TriCensus */,
 			);
 		};
 /* End PBXProject section */
@@ -6845,6 +6920,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		05617AD91D9DBFBE00B1E33B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05617AF41D9DC03C00B1E33B /* tricensus.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0564A1DB1811D6F8002CC2AE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -7324,6 +7407,11 @@
 			target = 05B14EA219B423A0002138C0 /* Census Tools */;
 			targetProxy = 055ABEB319B49F1100044C1B /* PBXContainerItemProxy */;
 		};
+		05617AF71D9DC0E000B1E33B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 05617ADC1D9DBFBE00B1E33B /* Utils - TriCensus */;
+			targetProxy = 05617AF61D9DC0E000B1E33B /* PBXContainerItemProxy */;
+		};
 		05B14EBB19B427AC002138C0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 05B14EA219B423A0002138C0 /* Census Tools */;
@@ -7588,6 +7676,66 @@
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		05617AE21D9DBFBF00B1E33B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
+				);
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = tricensus;
+			};
+			name = Debug;
+		};
+		05617AE31D9DBFBF00B1E33B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = tricensus;
 			};
 			name = Release;
 		};
@@ -7937,6 +8085,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		05617AE11D9DBFBF00B1E33B /* Build configuration list for PBXNativeTarget "Utils - TriCensus" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				05617AE21D9DBFBF00B1E33B /* Debug */,
+				05617AE31D9DBFBF00B1E33B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		0564A2131811D6FA002CC2AE /* Build configuration list for PBXNativeTarget "Qt" */ = {
 			isa = XCConfigurationList;
