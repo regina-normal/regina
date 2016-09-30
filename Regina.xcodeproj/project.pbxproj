@@ -8177,6 +8177,12 @@
 					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/qtui/src/regina.plist",
+				);
 				PRODUCT_NAME = tricensus;
 				SKIP_INSTALL = YES;
 			};
@@ -8212,6 +8218,12 @@
 					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/qtui/src/regina.plist",
+				);
 				PRODUCT_NAME = tricensus;
 				SKIP_INSTALL = YES;
 			};
@@ -8249,6 +8261,12 @@
 					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/qtui/src/regina.plist",
+				);
 				PRODUCT_NAME = censuslookup;
 				SKIP_INSTALL = YES;
 			};
@@ -8284,6 +8302,12 @@
 					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/qtui/src/regina.plist",
+				);
 				PRODUCT_NAME = censuslookup;
 				SKIP_INSTALL = YES;
 			};
@@ -8321,6 +8345,12 @@
 					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/qtui/src/regina.plist",
+				);
 				PRODUCT_NAME = regconcat;
 				SKIP_INSTALL = YES;
 			};
@@ -8356,6 +8386,12 @@
 					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/qtui/src/regina.plist",
+				);
 				PRODUCT_NAME = regconcat;
 				SKIP_INSTALL = YES;
 			};
@@ -8393,6 +8429,12 @@
 					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/qtui/src/regina.plist",
+				);
 				PRODUCT_NAME = regconvert;
 				SKIP_INSTALL = YES;
 			};
@@ -8428,6 +8470,12 @@
 					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/qtui/src/regina.plist",
+				);
 				PRODUCT_NAME = regconvert;
 				SKIP_INSTALL = YES;
 			};
@@ -8465,6 +8513,12 @@
 					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/qtui/src/regina.plist",
+				);
 				PRODUCT_NAME = regfiledump;
 				SKIP_INSTALL = YES;
 			};
@@ -8500,6 +8554,12 @@
 					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/qtui/src/regina.plist",
+				);
 				PRODUCT_NAME = regfiledump;
 				SKIP_INSTALL = YES;
 			};
@@ -8537,6 +8597,12 @@
 					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/qtui/src/regina.plist",
+				);
 				PRODUCT_NAME = regfiletype;
 				SKIP_INSTALL = YES;
 			};
@@ -8572,6 +8638,12 @@
 					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/qtui/src/regina.plist",
+				);
 				PRODUCT_NAME = regfiletype;
 				SKIP_INSTALL = YES;
 			};
@@ -8609,6 +8681,12 @@
 					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/qtui/src/regina.plist",
+				);
 				PRODUCT_NAME = sigcensus;
 				SKIP_INSTALL = YES;
 			};
@@ -8644,6 +8722,12 @@
 					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/qtui/src/regina.plist",
+				);
 				PRODUCT_NAME = sigcensus;
 				SKIP_INSTALL = YES;
 			};
@@ -8681,6 +8765,12 @@
 					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/qtui/src/regina.plist",
+				);
 				PRODUCT_NAME = trisetcmp;
 				SKIP_INSTALL = YES;
 			};
@@ -8716,6 +8806,12 @@
 					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/qtui/src/regina.plist",
+				);
 				PRODUCT_NAME = trisetcmp;
 				SKIP_INSTALL = YES;
 			};
