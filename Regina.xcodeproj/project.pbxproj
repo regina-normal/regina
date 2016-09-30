@@ -1084,7 +1084,6 @@
 		05617B631D9DC5DF00B1E33B /* popt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05617AF81D9DC16900B1E33B /* popt.framework */; };
 		05617B641D9DC5DF00B1E33B /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7317181D7F2400449D14 /* libiconv.dylib */; };
 		05617B651D9DC5DF00B1E33B /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
-		05617B741D9DC72F00B1E33B /* censuslookup in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B011D9DC51600B1E33B /* censuslookup */; };
 		05617B751D9DC72F00B1E33B /* regconcat in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B0C1D9DC52200B1E33B /* regconcat */; };
 		05617B761D9DC72F00B1E33B /* regconvert in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B171D9DC52B00B1E33B /* regconvert */; };
 		05617B771D9DC72F00B1E33B /* regfiledump in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B221D9DC53400B1E33B /* regfiledump */; };
@@ -1781,7 +1780,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 6;
 			files = (
-				05617B741D9DC72F00B1E33B /* censuslookup in Copy Engine and Utilities */,
 				05617B751D9DC72F00B1E33B /* regconcat in Copy Engine and Utilities */,
 				05617B761D9DC72F00B1E33B /* regconvert in Copy Engine and Utilities */,
 				05617B771D9DC72F00B1E33B /* regfiledump in Copy Engine and Utilities */,
