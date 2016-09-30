@@ -6624,7 +6624,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "module=${TARGET_BUILD_DIR}/engine.so\n\ninstall_name_tool -change @rpath/boost-python.framework/Versions/A/boost-python @loader_path/../../../Frameworks/boost-python.framework/Versions/A/boost-python ${module}\n";
+			shellScript = "module=${BUILT_PRODUCTS_DIR}/engine.so\n\ninstall_name_tool -change @rpath/boost-python.framework/Versions/A/boost-python @loader_path/../../../Frameworks/boost-python.framework/Versions/A/boost-python ${module}\ninstall_name_tool -change @loader_path/libregina-engine.dylib @loader_path/../../libregina-engine.dylib ${module}\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -8891,7 +8891,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				COMBINE_HIDPI_IMAGES = YES;
-				DYLIB_INSTALL_NAME_BASE = "@loader_path/../..";
+				DYLIB_INSTALL_NAME_BASE = "@loader_path";
 				EXECUTABLE_PREFIX = lib;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -8922,7 +8922,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				COMBINE_HIDPI_IMAGES = YES;
-				DYLIB_INSTALL_NAME_BASE = "@loader_path/../..";
+				DYLIB_INSTALL_NAME_BASE = "@loader_path";
 				EXECUTABLE_PREFIX = lib;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
