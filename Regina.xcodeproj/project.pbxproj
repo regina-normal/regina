@@ -1010,7 +1010,7 @@
 		05617AF91D9DC16900B1E33B /* popt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05617AF81D9DC16900B1E33B /* popt.framework */; };
 		05617AFA1D9DC26A00B1E33B /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7317181D7F2400449D14 /* libiconv.dylib */; };
 		05617AFB1D9DC27900B1E33B /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
-		05617AFC1D9DC33700B1E33B /* tricensus in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617ADD1D9DBFBE00B1E33B /* tricensus */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		05617AFC1D9DC33700B1E33B /* tricensus in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617ADD1D9DBFBE00B1E33B /* tricensus */; };
 		05617B4A1D9DC59200B1E33B /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
 		05617B4B1D9DC59700B1E33B /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
 		05617B4C1D9DC59B00B1E33B /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
@@ -1039,13 +1039,13 @@
 		05617B631D9DC5DF00B1E33B /* popt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05617AF81D9DC16900B1E33B /* popt.framework */; };
 		05617B641D9DC5DF00B1E33B /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7317181D7F2400449D14 /* libiconv.dylib */; };
 		05617B651D9DC5DF00B1E33B /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
-		05617B741D9DC72F00B1E33B /* censuslookup in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B011D9DC51600B1E33B /* censuslookup */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05617B751D9DC72F00B1E33B /* regconcat in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B0C1D9DC52200B1E33B /* regconcat */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05617B761D9DC72F00B1E33B /* regconvert in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B171D9DC52B00B1E33B /* regconvert */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05617B771D9DC72F00B1E33B /* regfiledump in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B221D9DC53400B1E33B /* regfiledump */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05617B781D9DC72F00B1E33B /* regfiletype in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B2D1D9DC54500B1E33B /* regfiletype */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05617B791D9DC72F00B1E33B /* sigcensus in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B381D9DC55000B1E33B /* sigcensus */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05617B7A1D9DC72F00B1E33B /* trisetcmp in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B431D9DC55B00B1E33B /* trisetcmp */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		05617B741D9DC72F00B1E33B /* censuslookup in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B011D9DC51600B1E33B /* censuslookup */; };
+		05617B751D9DC72F00B1E33B /* regconcat in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B0C1D9DC52200B1E33B /* regconcat */; };
+		05617B761D9DC72F00B1E33B /* regconvert in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B171D9DC52B00B1E33B /* regconvert */; };
+		05617B771D9DC72F00B1E33B /* regfiledump in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B221D9DC53400B1E33B /* regfiledump */; };
+		05617B781D9DC72F00B1E33B /* regfiletype in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B2D1D9DC54500B1E33B /* regfiletype */; };
+		05617B791D9DC72F00B1E33B /* sigcensus in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B381D9DC55000B1E33B /* sigcensus */; };
+		05617B7A1D9DC72F00B1E33B /* trisetcmp in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B431D9DC55B00B1E33B /* trisetcmp */; };
 		05617B7B1D9DC79E00B1E33B /* trisetcmp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05617AEB1D9DC02900B1E33B /* trisetcmp.cpp */; };
 		05617B7C1D9DC7A200B1E33B /* sigcensus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05617AE91D9DC02900B1E33B /* sigcensus.cpp */; };
 		05617B7D1D9DC7A600B1E33B /* regfiletype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05617AE81D9DC02900B1E33B /* regfiletype.cpp */; };
@@ -2131,6 +2131,7 @@
 		052942D61C5CDCBF0011C1E6 /* safeheldtype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = safeheldtype.h; sourceTree = "<group>"; };
 		052AB70F1C6304A800C44D54 /* facetspec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetspec.h; sourceTree = "<group>"; };
 		052AB7111C6304C500C44D54 /* facetspec.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetspec.cpp; sourceTree = "<group>"; };
+		052DB59F1D9E592800EDEA68 /* Utils.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Utils.entitlements; sourceTree = "<group>"; };
 		052F9BFF180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052F9C00180600FA00FAE4DF /* nabeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nabeliangroup.cpp; sourceTree = "<group>"; };
 		052F9C01180600FA00FAE4DF /* nabeliangroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nabeliangroup.h; sourceTree = "<group>"; };
@@ -5224,6 +5225,7 @@
 				05561D181811F27A00FD6E2E /* regina.icns */,
 				05561D191811F27A00FD6E2E /* x-regina.icns */,
 				0543AEC71811E2AD002758F8 /* Regina.entitlements */,
+				052DB59F1D9E592800EDEA68 /* Utils.entitlements */,
 				051806D5181202E0008EBB01 /* examples */,
 				051806D3181202BD008EBB01 /* icons */,
 				058637F4181DBCE100E95307 /* pylib */,
@@ -6383,6 +6385,7 @@
 				050BEA351D9C8B3700B96DB8 /* Copy Python Init Script */,
 				050BEA371D9C8B7E00B96DB8 /* Symlink Scripts */,
 				050F5E701B9BD50C00C1F681 /* Copy Engine and Utilities */,
+				052DB59E1D9E587C00EDEA68 /* Sign Utilities */,
 			);
 			buildRules = (
 				0514CAF01D9CE54A00EDB2E6 /* PBXBuildRule */,
@@ -6625,6 +6628,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "module=${BUILT_PRODUCTS_DIR}/engine.so\n\ninstall_name_tool -change @rpath/boost-python.framework/Versions/A/boost-python @loader_path/../../../Frameworks/boost-python.framework/Versions/A/boost-python ${module}\ninstall_name_tool -change @loader_path/libregina-engine.dylib @loader_path/../../libregina-engine.dylib ${module}\n";
+		};
+		052DB59E1D9E587C00EDEA68 /* Sign Utilities */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Sign Utilities";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# We need to sign the utilities with entitlements.\n\nfor i in censuslookup regconcat regconvert regfiledump regfiletype sigcensus trisetcmp tricensus; do\n/usr/bin/codesign --force --sign FEC3D02FCBA875AB788C350444FE86918ACA2413 --entitlements ${SRCROOT}/qtui/Utils.entitlements --timestamp=none ${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS/$i\ndone\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
