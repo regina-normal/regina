@@ -6823,7 +6823,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# We need to sign the utilities with entitlements.\n\nfor i in regconcat regconvert regfiledump regfiletype sigcensus trisetcmp tricensus; do\n/usr/bin/codesign --force --sign FEC3D02FCBA875AB788C350444FE86918ACA2413 --entitlements ${SRCROOT}/qtui/Utils.entitlements --timestamp=none ${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS/$i\ndone\n";
+			shellScript = "# We need to sign the utilities with entitlements.\n\nfor i in regconcat regconvert regfiledump regfiletype sigcensus trisetcmp tricensus; do\n/usr/bin/codesign --force --sign FEC3D02FCBA875AB788C350444FE86918ACA2413 --entitlements ${SRCROOT}/utils/bundle/Utils.entitlements --timestamp=none ${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS/$i\ndone\n";
 		};
 		052DB5C31D9F22D900EDEA68 /* Clean out *.pyc */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8387,7 +8387,7 @@
 					"-sectcreate",
 					__TEXT,
 					__info_plist,
-					"$(SRCROOT)/qtui/src/regina.plist",
+					"$(SRCROOT)/utils/bundle/tricensus.plist",
 				);
 				PRODUCT_NAME = tricensus;
 				SKIP_INSTALL = YES;
@@ -8428,7 +8428,7 @@
 					"-sectcreate",
 					__TEXT,
 					__info_plist,
-					"$(SRCROOT)/qtui/src/regina.plist",
+					"$(SRCROOT)/utils/bundle/tricensus.plist",
 				);
 				PRODUCT_NAME = tricensus;
 				SKIP_INSTALL = YES;
@@ -8471,7 +8471,7 @@
 					"-sectcreate",
 					__TEXT,
 					__info_plist,
-					"$(SRCROOT)/qtui/src/regina.plist",
+					"$(SRCROOT)/utils/bundle/censuslookup.plist",
 				);
 				PRODUCT_NAME = censuslookup;
 				SKIP_INSTALL = YES;
@@ -8512,7 +8512,7 @@
 					"-sectcreate",
 					__TEXT,
 					__info_plist,
-					"$(SRCROOT)/qtui/src/regina.plist",
+					"$(SRCROOT)/utils/bundle/censuslookup.plist",
 				);
 				PRODUCT_NAME = censuslookup;
 				SKIP_INSTALL = YES;
@@ -8555,7 +8555,7 @@
 					"-sectcreate",
 					__TEXT,
 					__info_plist,
-					"$(SRCROOT)/qtui/src/regina.plist",
+					"$(SRCROOT)/utils/bundle/regconcat.plist",
 				);
 				PRODUCT_NAME = regconcat;
 				SKIP_INSTALL = YES;
@@ -8596,7 +8596,7 @@
 					"-sectcreate",
 					__TEXT,
 					__info_plist,
-					"$(SRCROOT)/qtui/src/regina.plist",
+					"$(SRCROOT)/utils/bundle/regconcat.plist",
 				);
 				PRODUCT_NAME = regconcat;
 				SKIP_INSTALL = YES;
@@ -8639,7 +8639,7 @@
 					"-sectcreate",
 					__TEXT,
 					__info_plist,
-					"$(SRCROOT)/qtui/src/regina.plist",
+					"$(SRCROOT)/utils/bundle/regconvert.plist",
 				);
 				PRODUCT_NAME = regconvert;
 				SKIP_INSTALL = YES;
@@ -8680,7 +8680,7 @@
 					"-sectcreate",
 					__TEXT,
 					__info_plist,
-					"$(SRCROOT)/qtui/src/regina.plist",
+					"$(SRCROOT)/utils/bundle/regconvert.plist",
 				);
 				PRODUCT_NAME = regconvert;
 				SKIP_INSTALL = YES;
@@ -8723,7 +8723,7 @@
 					"-sectcreate",
 					__TEXT,
 					__info_plist,
-					"$(SRCROOT)/qtui/src/regina.plist",
+					"$(SRCROOT)/utils/bundle/regfiledump.plist",
 				);
 				PRODUCT_NAME = regfiledump;
 				SKIP_INSTALL = YES;
@@ -8764,7 +8764,7 @@
 					"-sectcreate",
 					__TEXT,
 					__info_plist,
-					"$(SRCROOT)/qtui/src/regina.plist",
+					"$(SRCROOT)/utils/bundle/regfiledump.plist",
 				);
 				PRODUCT_NAME = regfiledump;
 				SKIP_INSTALL = YES;
@@ -8807,7 +8807,7 @@
 					"-sectcreate",
 					__TEXT,
 					__info_plist,
-					"$(SRCROOT)/qtui/src/regina.plist",
+					"$(SRCROOT)/utils/bundle/regfiletype.plist",
 				);
 				PRODUCT_NAME = regfiletype;
 				SKIP_INSTALL = YES;
@@ -8848,7 +8848,7 @@
 					"-sectcreate",
 					__TEXT,
 					__info_plist,
-					"$(SRCROOT)/qtui/src/regina.plist",
+					"$(SRCROOT)/utils/bundle/regfiletype.plist",
 				);
 				PRODUCT_NAME = regfiletype;
 				SKIP_INSTALL = YES;
@@ -8891,7 +8891,7 @@
 					"-sectcreate",
 					__TEXT,
 					__info_plist,
-					"$(SRCROOT)/qtui/src/regina.plist",
+					"$(SRCROOT)/utils/bundle/sigcensus.plist",
 				);
 				PRODUCT_NAME = sigcensus;
 				SKIP_INSTALL = YES;
@@ -8932,7 +8932,7 @@
 					"-sectcreate",
 					__TEXT,
 					__info_plist,
-					"$(SRCROOT)/qtui/src/regina.plist",
+					"$(SRCROOT)/utils/bundle/sigcensus.plist",
 				);
 				PRODUCT_NAME = sigcensus;
 				SKIP_INSTALL = YES;
@@ -8975,7 +8975,7 @@
 					"-sectcreate",
 					__TEXT,
 					__info_plist,
-					"$(SRCROOT)/qtui/src/regina.plist",
+					"$(SRCROOT)/utils/bundle/trisetcmp.plist",
 				);
 				PRODUCT_NAME = trisetcmp;
 				SKIP_INSTALL = YES;
@@ -9016,7 +9016,7 @@
 					"-sectcreate",
 					__TEXT,
 					__info_plist,
-					"$(SRCROOT)/qtui/src/regina.plist",
+					"$(SRCROOT)/utils/bundle/trisetcmp.plist",
 				);
 				PRODUCT_NAME = trisetcmp;
 				SKIP_INSTALL = YES;
