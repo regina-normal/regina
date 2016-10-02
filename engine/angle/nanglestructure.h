@@ -307,6 +307,24 @@ class REGINA_API AngleStructure :
     friend class regina::NXMLAngleStructureReader;
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NAngleStructureVector has now been renamed to
+ * AngleStructureVector.
+ */
+REGINA_DEPRECATED typedef AngleStructureVector NAngleStructureVector;
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NAngleStructure has now been renamed to
+ * AngleStructure.
+ */
+REGINA_DEPRECATED typedef AngleStructure NAngleStructure;
+
 /*@}*/
 
 // Inline functions for AngleStructureVector

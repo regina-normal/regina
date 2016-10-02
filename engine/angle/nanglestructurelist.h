@@ -406,6 +406,15 @@ class REGINA_API AngleStructures : public NPacket {
  */
 REGINA_API NMatrixInt* makeAngleEquations(const NTriangulation* tri);
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NAngleStructureList has now been renamed to
+ * AngleStructures.
+ */
+REGINA_DEPRECATED typedef AngleStructures NAngleStructureList;
+
 /*@}*/
 
 // Inline functions for AngleStructures

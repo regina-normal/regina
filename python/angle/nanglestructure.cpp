@@ -55,5 +55,7 @@ void addNAngleStructure() {
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
+
+    scope().attr("NAngleStructure") = scope().attr("AngleStructure");
 }
 

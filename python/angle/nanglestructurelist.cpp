@@ -91,5 +91,7 @@ void addAngleStructures() {
         SafeHeldType<regina::NPacket> >();
 
     FIX_REGINA_BOOST_CONVERTERS(AngleStructures);
+
+    scope().attr("NAngleStructureList") = scope().attr("AngleStructureList");
 }
 
