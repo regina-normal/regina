@@ -46,7 +46,7 @@
 #include <tcutil.h>
 #endif
 #include "census/ncensus.h"
-#include "file/nglobaldirs.h"
+#include "file/globaldirs.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/memutils.h"
 
@@ -135,7 +135,7 @@ NCensusHits* NCensus::lookup(const std::string& isoSig) {
 }
 
 NCensusDB* NCensus::standardDB(const char* filename, const char* desc) {
-    return new NCensusDB(NGlobalDirs::census() + "/" + filename, desc);
+    return new NCensusDB(GlobalDirs::census() + "/" + filename, desc);
 }
 
 } // namespace regina

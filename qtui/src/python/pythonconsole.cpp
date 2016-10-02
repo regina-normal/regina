@@ -32,7 +32,7 @@
 
 #include "Python.h"
 #include "regina-config.h"
-#include "file/nglobaldirs.h"
+#include "file/globaldirs.h"
 #include "packet/npacket.h"
 
 // Put this before any Qt/KDE stuff so Python 2.3 "slots" doesn't clash.
@@ -313,7 +313,7 @@ bool PythonConsole::importRegina() {
         return true;
     } else {
         QString installationMsg;
-        std::string regModuleDir = regina::NGlobalDirs::pythonModule().c_str();
+        std::string regModuleDir = regina::GlobalDirs::pythonModule().c_str();
         if (! regModuleDir.empty())
             installationMsg = tr("The module 'regina' should be installed "
                 "beneath the directory <tt>%1/</tt>.  ")

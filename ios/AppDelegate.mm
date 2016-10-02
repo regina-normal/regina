@@ -34,7 +34,7 @@
 #import "DetailViewController.h"
 #import "MasterViewController.h"
 #import "ReginaHelper.h"
-#import "file/nglobaldirs.h"
+#import "file/globaldirs.h"
 
 @interface AppDelegate ()
 @property (strong, nonatomic) NSURL* launchedURL;
@@ -59,7 +59,7 @@
     // Make sure that Regina knows where to find its internal data files.
     NSString* path = [[NSBundle mainBundle] resourcePath];
     const char* home = [path UTF8String];
-    regina::NGlobalDirs::setDirs(home, "", home);
+    regina::GlobalDirs::setDirs(home, "", home);
     
     return NO;
 }

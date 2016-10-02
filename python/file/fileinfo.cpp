@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Computational Engine                                                  *
+ *  Python Interface                                                      *
  *                                                                        *
  *  Copyright (c) 1999-2016, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,27 +30,38 @@
  *                                                                        *
  **************************************************************************/
 
-#include "regina-config.h"
-#include "file/nglobaldirs.h"
+#include <boost/python.hpp>
+#include "file/fileinfo.h"
+#include "../helpers.h"
 
-namespace regina {
+using namespace boost::python;
+using regina::FileInfo;
 
-std::string NGlobalDirs::home_(REGINA_DATADIR);
-std::string NGlobalDirs::pythonModule_(REGINA_PYLIBDIR);
-std::string NGlobalDirs::census_(REGINA_DATADIR "/data/census");
+void addFileInfo() {
+    {
+        scope s = class_<FileInfo, std::auto_ptr<FileInfo>, boost::noncopyable>
+                ("FileInfo", no_init)
+            .def("pathname", &FileInfo::pathname,
+                return_value_policy<return_by_value>())
+            .def("type", &FileInfo::type)
+            .def("typeDescription", &FileInfo::typeDescription,
+                return_value_policy<return_by_value>())
+            .def("engine", &FileInfo::engine,
+                return_value_policy<return_by_value>())
+            .def("isCompressed", &FileInfo::isCompressed)
+            .def("isInvalid", &FileInfo::isInvalid)
+            .def("identify", &FileInfo::identify,
+                return_value_policy<manage_new_object>())
+            .def(regina::python::add_output())
+            .def(regina::python::add_eq_operators())
+            .staticmethod("identify")
+        ;
 
-void NGlobalDirs::setDirs(const std::string& homeDir,
-        const std::string& pythonModuleDir,
-        const std::string& censusDir) {
-    if (! homeDir.empty())
-        home_ = homeDir;
+        // Apparently there is no way in python to make a module attribute
+        // read-only.
+        s.attr("TYPE_XML") = FileInfo::TYPE_XML;
+    }
 
-    // The empty string has an explicit meaning for pythonModule_.
-    pythonModule_ = pythonModuleDir;
-
-    if (! censusDir.empty())
-        census_ = censusDir;
+    scope().attr("NFileInfo") = scope().attr("FileInfo");
 }
-
-} // namespace regina
 

@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "file/nfileinfo.h"
+#include "file/fileinfo.h"
 #include <cstdlib>
 #include <iostream>
 
@@ -44,12 +44,12 @@ int main(int argc, char* argv[]) {
     if (argc < 2)
         usage(argv[0]);
 
-    regina::NFileInfo* info;
+    regina::FileInfo* info;
     for (int i = 1; i < argc; i++) {
         if (argc != 2)
             std::cout << "[ " << argv[i] << " ]\n";
 
-        info = regina::NFileInfo::identify(argv[i]);
+        info = regina::FileInfo::identify(argv[i]);
         if (info)
             info->writeTextLong(std::cout);
         else

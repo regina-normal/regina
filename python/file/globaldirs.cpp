@@ -30,34 +30,50 @@
  *                                                                        *
  **************************************************************************/
 
+// We need to see Python.h first to avoid a "portability fix" in pyport.h
+// that breaks boost.python on MacOSX.
+#include "Python.h"
+
 #include <boost/python.hpp>
-#include "file/nfileinfo.h"
+#include "file/globaldirs.h"
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NFileInfo;
+using regina::GlobalDirs;
 
-void addNFileInfo() {
-    scope s = class_<NFileInfo, std::auto_ptr<NFileInfo>, boost::noncopyable>
-            ("NFileInfo", no_init)
-        .def("pathname", &NFileInfo::pathname,
-            return_value_policy<return_by_value>())
-        .def("type", &NFileInfo::type)
-        .def("typeDescription", &NFileInfo::typeDescription,
-            return_value_policy<return_by_value>())
-        .def("engine", &NFileInfo::engine,
-            return_value_policy<return_by_value>())
-        .def("isCompressed", &NFileInfo::isCompressed)
-        .def("isInvalid", &NFileInfo::isInvalid)
-        .def("identify", &NFileInfo::identify,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("identify")
+namespace {
+    void setDirs_2(const std::string& x, const std::string& y) {
+        GlobalDirs::setDirs(x, y);
+    }
+
+    void setDirs_3(const std::string& x, const std::string& y,
+            const std::string& z) {
+        GlobalDirs::setDirs(x, y, z);
+    }
+}
+
+void addGlobalDirs() {
+    class_<GlobalDirs>("GlobalDirs", no_init)
+        .def("home", &GlobalDirs::home)
+        .def("pythonModule", &GlobalDirs::pythonModule)
+        .def("census", &GlobalDirs::census)
+        .def("pythonLibs", &GlobalDirs::pythonLibs)
+        .def("examples", &GlobalDirs::examples)
+        .def("engineDocs", &GlobalDirs::engineDocs)
+        .def("data", &GlobalDirs::data)
+        .def("setDirs", setDirs_2)
+        .def("setDirs", setDirs_3)
+        .def(regina::python::no_eq_operators())
+        .staticmethod("home")
+        .staticmethod("pythonModule")
+        .staticmethod("census")
+        .staticmethod("pythonLibs")
+        .staticmethod("examples")
+        .staticmethod("engineDocs")
+        .staticmethod("data")
+        .staticmethod("setDirs")
     ;
 
-    // Apparently there is no way in python to make a module attribute
-    // read-only.
-    s.attr("TYPE_XML") = NFileInfo::TYPE_XML;
+    scope().attr("NGlobalDirs") = scope().attr("GlobalDirs");
 }
 

@@ -35,7 +35,7 @@
  * sources, written by Michael Koch and released under the GNU LGPL v2.
  */
 
-#include "file/nglobaldirs.h"
+#include "file/globaldirs.h"
 
 #include "examplesaction.h"
 #include "reginasupport.h"
@@ -72,7 +72,7 @@ void ExamplesAction::addUrl(const QString& fileName, const QString& text) {
     insertAction(0 /* insert last */, action);
     group->addAction(action);
     urls_.insert(action, QUrl(QString("file:%1/%2")
-        .arg(QFile::decodeName(regina::NGlobalDirs::examples().c_str()))
+        .arg(QFile::decodeName(regina::GlobalDirs::examples().c_str()))
         .arg(fileName)));
 }
 

@@ -2,8 +2,8 @@
 
 # Files to compile
 SET ( FILES
-  nfileinfo
-  nglobaldirs
+  fileinfo
+  globaldirs
   pyfile
   )
 

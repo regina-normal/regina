@@ -1093,10 +1093,10 @@ Equality type : BY_VALUE
 NFacePairing : class
 Equality type : BY_REFERENCE
 
-NFileInfo : class
+FileInfo : class
 Equality type : BY_REFERENCE
 
-NGlobalDirs : class
+GlobalDirs : class
 Equality type : NEVER_INSTANTIATED
 
 NGluingPermSearcher : class

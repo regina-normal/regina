@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2016, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,48 +30,27 @@
  *                                                                        *
  **************************************************************************/
 
-// We need to see Python.h first to avoid a "portability fix" in pyport.h
-// that breaks boost.python on MacOSX.
-#include "Python.h"
+#include "regina-config.h"
+#include "file/globaldirs.h"
 
-#include <boost/python.hpp>
-#include "file/nglobaldirs.h"
-#include "../helpers.h"
+namespace regina {
 
-using namespace boost::python;
-using regina::NGlobalDirs;
+std::string GlobalDirs::home_(REGINA_DATADIR);
+std::string GlobalDirs::pythonModule_(REGINA_PYLIBDIR);
+std::string GlobalDirs::census_(REGINA_DATADIR "/data/census");
 
-namespace {
-    void setDirs_2(const std::string& x, const std::string& y) {
-        NGlobalDirs::setDirs(x, y);
-    }
+void GlobalDirs::setDirs(const std::string& homeDir,
+        const std::string& pythonModuleDir,
+        const std::string& censusDir) {
+    if (! homeDir.empty())
+        home_ = homeDir;
 
-    void setDirs_3(const std::string& x, const std::string& y,
-            const std::string& z) {
-        NGlobalDirs::setDirs(x, y, z);
-    }
+    // The empty string has an explicit meaning for pythonModule_.
+    pythonModule_ = pythonModuleDir;
+
+    if (! censusDir.empty())
+        census_ = censusDir;
 }
 
-void addNGlobalDirs() {
-    class_<NGlobalDirs>("NGlobalDirs", no_init)
-        .def("home", &NGlobalDirs::home)
-        .def("pythonModule", &NGlobalDirs::pythonModule)
-        .def("census", &NGlobalDirs::census)
-        .def("pythonLibs", &NGlobalDirs::pythonLibs)
-        .def("examples", &NGlobalDirs::examples)
-        .def("engineDocs", &NGlobalDirs::engineDocs)
-        .def("data", &NGlobalDirs::data)
-        .def("setDirs", setDirs_2)
-        .def("setDirs", setDirs_3)
-        .def(regina::python::no_eq_operators())
-        .staticmethod("home")
-        .staticmethod("pythonModule")
-        .staticmethod("census")
-        .staticmethod("pythonLibs")
-        .staticmethod("examples")
-        .staticmethod("engineDocs")
-        .staticmethod("data")
-        .staticmethod("setDirs")
-    ;
-}
+} // namespace regina
 

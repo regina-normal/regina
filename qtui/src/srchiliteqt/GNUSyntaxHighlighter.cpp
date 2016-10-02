@@ -28,7 +28,7 @@
 #include <srchilite/instances.h>
 
 // Begin Regina-specific changes
-#include "file/nglobaldirs.h" // Regina: Added to use Regina's standard dirs.
+#include "file/globaldirs.h" // Regina: Added to use Regina's standard dirs.
 // End Regina-specific changes
 
 namespace srchiliteqt {
@@ -69,7 +69,7 @@ srchilite::HighlightStatePtr GNUSyntaxHighlighter::getHighlightState(
     // Use the language files installed with Regina, since the user
     // might not have their own source-highlight installation.
     return getLangDefManager()->getHighlightState(
-        regina::NGlobalDirs::home() + "/syntax", TOSTDSTRING(file));
+        regina::GlobalDirs::home() + "/syntax", TOSTDSTRING(file));
     // End Regina-specific changes
 }
 
@@ -109,13 +109,13 @@ const TextFormatterMap &GNUSyntaxHighlighter::getTextFormatterMap(
         //srchilite::StyleFileParser::parseCssStyleFile(TOSTDSTRING(styleFile),
         //        &formatterFactory, bgcolor);
         srchilite::StyleFileParser::parseCssStyleFile(
-                regina::NGlobalDirs::home() + "/syntax",
+                regina::GlobalDirs::home() + "/syntax",
                 TOSTDSTRING(styleFile), &formatterFactory, bgcolor);
     } else {
         //srchilite::StyleFileParser::parseStyleFile(TOSTDSTRING(styleFile),
         //        &formatterFactory, bgcolor);
         srchilite::StyleFileParser::parseStyleFile(
-                regina::NGlobalDirs::home() + "/syntax",
+                regina::GlobalDirs::home() + "/syntax",
                 TOSTDSTRING(styleFile), &formatterFactory, bgcolor);
     }
     // End Regina-specific changes

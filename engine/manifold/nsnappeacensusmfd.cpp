@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "file/nglobaldirs.h"
+#include "file/globaldirs.h"
 #include "manifold/nsnappeacensusmfd.h"
 #include "subcomplex/nsnappeacensustri.h"
 #include "triangulation/nexampletriangulation.h"
@@ -102,7 +102,7 @@ NTriangulation* NSnapPeaCensusManifold::construct() const {
         return ans;
 
     // Fetch the relevant data from the census dehydration files.
-    std::string file = NGlobalDirs::data() + "/snappea";
+    std::string file = GlobalDirs::data() + "/snappea";
     switch (section_) {
         case SEC_5:
             file += "/snappea-census-sec5.dat"; break;
@@ -143,7 +143,7 @@ NTriangulation* NSnapPeaCensusManifold::construct() const {
 
 NAbelianGroup* NSnapPeaCensusManifold::homology() const {
     // Fetch the relevant data from the census dehydration files.
-    std::string file = NGlobalDirs::data() + "/snappea";
+    std::string file = GlobalDirs::data() + "/snappea";
     switch (section_) {
         case SEC_5:
             file += "/snappea-census-sec5.dat"; break;

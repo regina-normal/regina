@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "regina-config.h"
-#include "file/nglobaldirs.h"
+#include "file/globaldirs.h"
 
 #include "pythonmanager.h"
 #include "reginasupport.h"
@@ -58,7 +58,7 @@ void PythonManager::deregisterConsole(PythonConsole* console) {
 
 void PythonManager::openPythonReference(QWidget* topLevelWindow) {
     QString docDir =
-        QFile::decodeName(regina::NGlobalDirs::engineDocs().c_str());
+        QFile::decodeName(regina::GlobalDirs::engineDocs().c_str());
     QString index = docDir + "/index.html";
 
     if (QFileInfo(index).exists()) {

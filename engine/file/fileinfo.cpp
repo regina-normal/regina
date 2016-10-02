@@ -37,7 +37,7 @@
 #include <boost/iostreams/device/file.hpp>
 #include <boost/iostreams/filtering_stream.hpp>
 #include <boost/iostreams/filter/gzip.hpp>
-#include "file/nfileinfo.h"
+#include "file/fileinfo.h"
 
 namespace regina {
 
@@ -45,8 +45,8 @@ namespace regina {
 #define STARTS_TRUE 1
 #define STARTS_COULD_NOT_OPEN 2
 
-// const int NFileInfo::TYPE_BINARY = 1; // OBSOLETE as of Regina 4.94.
-const int NFileInfo::TYPE_XML = 2;
+// const int FileInfo::TYPE_BINARY = 1; // OBSOLETE as of Regina 4.94.
+const int FileInfo::TYPE_XML = 2;
 
 namespace {
     /**
@@ -73,15 +73,15 @@ namespace {
     }
 }
 
-NFileInfo* NFileInfo::identify(const std::string& idPathname) {
+FileInfo* FileInfo::identify(const std::string& idPathname) {
     // Check for an XML file.
     int starts = fileStartsWith(idPathname.c_str(), "<?xml");
     if (starts == STARTS_COULD_NOT_OPEN)
         return 0;
 
-    NFileInfo* ans = 0;
+    FileInfo* ans = 0;
     if (starts == STARTS_TRUE) {
-        ans = new NFileInfo();
+        ans = new FileInfo();
         ans->compressed = false;
     } else {
         std::ifstream file(idPathname.c_str(),
@@ -94,7 +94,7 @@ NFileInfo* NFileInfo::identify(const std::string& idPathname) {
             std::string s;
             in >> s;
             if ((! in.eof()) && (s == "<?xml")) {
-                ans = new NFileInfo();
+                ans = new FileInfo();
                 ans->compressed = true;
             }
         }
@@ -102,7 +102,7 @@ NFileInfo* NFileInfo::identify(const std::string& idPathname) {
 
     if (ans) {
         ans->pathname_ = idPathname;
-        ans->type_ = NFileInfo::TYPE_XML;
+        ans->type_ = FileInfo::TYPE_XML;
         ans->typeDescription_ = "XML Regina data file";
 
         // Make it an invalid file until we know otherwise.
@@ -180,13 +180,13 @@ NFileInfo* NFileInfo::identify(const std::string& idPathname) {
     return 0;
 }
 
-void NFileInfo::writeTextShort(std::ostream& out) const {
+void FileInfo::writeTextShort(std::ostream& out) const {
     out << "File information: " << typeDescription_;
     if (compressed)
         out << " (compressed)";
 }
 
-void NFileInfo::writeTextLong(std::ostream& out) const {
+void FileInfo::writeTextLong(std::ostream& out) const {
     out << "Regina data\n" << typeDescription_;
     if (compressed)
         out << " (compressed)";

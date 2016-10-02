@@ -32,7 +32,7 @@
 
 // Regina core includes:
 #include "regina-config.h"
-#include "file/nglobaldirs.h"
+#include "file/globaldirs.h"
 #include "packet/nscript.h"
 
 // UI includes:

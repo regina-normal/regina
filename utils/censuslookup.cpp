@@ -36,7 +36,7 @@
 #include <libgen.h> // for dirname()
 #endif
 #include "census/ncensus.h"
-#include "file/nglobaldirs.h"
+#include "file/globaldirs.h"
 
 void usage(const char* progName, const std::string& error = std::string()) {
     if (! error.empty())
@@ -64,9 +64,9 @@ int main(int argc, char* argv[]) {
     // installed through a "copy bundle resources" phase (not "copy files").
     std::string appDir = dirname(argv[0]);
 #ifdef REGINA_XCODE_BUNDLE
-    regina::NGlobalDirs::setDirs("", "", appDir + "/../Resources");
+    regina::GlobalDirs::setDirs("", "", appDir + "/../Resources");
 #else
-    regina::NGlobalDirs::setDirs("", "", appDir + "/../Resources/data/census");
+    regina::GlobalDirs::setDirs("", "", appDir + "/../Resources/data/census");
 #endif
 #endif
 

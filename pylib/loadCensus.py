@@ -140,7 +140,7 @@ def loadCensusInternal(baseFilename, minTet, maxTet):
             "as large as minTet (" + str(minTet) + ")."
         return None
 
-    realFilename = regina.NGlobalDirs.examples() + '/' + baseFilename
+    realFilename = regina.GlobalDirs.examples() + '/' + baseFilename
     data = regina.open(realFilename)
     if data == None:
         print "ERROR: Could not load census: " + realFilename
