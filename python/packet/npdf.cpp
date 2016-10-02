@@ -46,16 +46,15 @@ namespace {
 }
 
 void addNPDF() {
-    scope s = class_<NPDF, bases<regina::NPacket>,
+    class_<NPDF, bases<regina::NPacket>,
             SafeHeldType<NPDF>, boost::noncopyable>("NPDF", init<>())
         .def(init<const char*>())
         .def("isNull", &NPDF::isNull)
         .def("size", &NPDF::size)
         .def("reset", reset_empty)
         .def("savePDF", &NPDF::savePDF)
+        .attr("typeID") = regina::PACKET_PDF
     ;
-
-    s.attr("typeID") = regina::PACKET_PDF;
 
     implicitly_convertible<SafeHeldType<NPDF>,
         SafeHeldType<regina::NPacket> >();

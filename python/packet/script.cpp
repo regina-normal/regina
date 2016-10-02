@@ -53,7 +53,7 @@ namespace {
 }
 
 void addScript() {
-    scope s = class_<Script, bases<regina::NPacket>,
+    class_<Script, bases<regina::NPacket>,
             SafeHeldType<Script>, boost::noncopyable>("Script", init<>())
         .def("text", &Script::text,
             return_value_policy<return_by_value>())
@@ -73,7 +73,7 @@ void addScript() {
         .def("removeVariable", removeVariable_long)
         .def("removeVariable", removeVariable_string)
         .def("removeAllVariables", &Script::removeAllVariables)
-        .attr("typeID") = regina::PACKET_SCRIPT;
+        .attr("typeID") = regina::PACKET_SCRIPT
     ;
 
     implicitly_convertible<SafeHeldType<Script>,

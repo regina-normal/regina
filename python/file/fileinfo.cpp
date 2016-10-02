@@ -38,29 +38,25 @@ using namespace boost::python;
 using regina::FileInfo;
 
 void addFileInfo() {
-    {
-        scope s = class_<FileInfo, std::auto_ptr<FileInfo>, boost::noncopyable>
-                ("FileInfo", no_init)
-            .def("pathname", &FileInfo::pathname,
-                return_value_policy<return_by_value>())
-            .def("type", &FileInfo::type)
-            .def("typeDescription", &FileInfo::typeDescription,
-                return_value_policy<return_by_value>())
-            .def("engine", &FileInfo::engine,
-                return_value_policy<return_by_value>())
-            .def("isCompressed", &FileInfo::isCompressed)
-            .def("isInvalid", &FileInfo::isInvalid)
-            .def("identify", &FileInfo::identify,
-                return_value_policy<manage_new_object>())
-            .def(regina::python::add_output())
-            .def(regina::python::add_eq_operators())
-            .staticmethod("identify")
-        ;
-
-        // Apparently there is no way in python to make a module attribute
-        // read-only.
-        s.attr("TYPE_XML") = FileInfo::TYPE_XML;
-    }
+    class_<FileInfo, std::auto_ptr<FileInfo>, boost::noncopyable>
+            ("FileInfo", no_init)
+        .def("pathname", &FileInfo::pathname,
+            return_value_policy<return_by_value>())
+        .def("type", &FileInfo::type)
+        .def("typeDescription", &FileInfo::typeDescription,
+            return_value_policy<return_by_value>())
+        .def("engine", &FileInfo::engine,
+            return_value_policy<return_by_value>())
+        .def("isCompressed", &FileInfo::isCompressed)
+        .def("isInvalid", &FileInfo::isInvalid)
+        .def("identify", &FileInfo::identify,
+            return_value_policy<manage_new_object>())
+        .def(regina::python::add_output())
+        .def(regina::python::add_eq_operators())
+        .staticmethod("identify")
+        // Apparently there is no way in python to make attributes read-only.
+        .attr("TYPE_XML") = FileInfo::TYPE_XML
+    ;
 
     scope().attr("NFileInfo") = scope().attr("FileInfo");
 }

@@ -129,7 +129,7 @@ namespace {
 
 template <int dim>
 void addTriangulation(const char* name) {
-    scope s = class_<Triangulation<dim>, bases<regina::NPacket>,
+    class_<Triangulation<dim>, bases<regina::NPacket>,
             SafeHeldType<Triangulation<dim>>, boost::noncopyable>(name)
         .def(init<const Triangulation<dim>&>())
         .def("size", &Triangulation<dim>::size)
@@ -216,11 +216,10 @@ void addTriangulation(const char* name) {
         .def(regina::python::add_eq_operators())
         .staticmethod("fromIsoSig")
         .staticmethod("isoSigComponentSize")
+        // We cast to PacketType so that boost.python sees this as a value,
+        // not a reference.
+        .attr("typeID") = regina::PacketType(Triangulation<dim>::typeID)
     ;
-
-    // We cast to PacketType so that boost.python sees this as a value,
-    // not a reference.
-    s.attr("typeID") = regina::PacketType(Triangulation<dim>::typeID);
 
     implicitly_convertible<SafeHeldType<Triangulation<dim>>,
         SafeHeldType<regina::NPacket>>();
