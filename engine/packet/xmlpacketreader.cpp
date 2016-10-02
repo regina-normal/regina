@@ -41,10 +41,10 @@ namespace regina {
 
 namespace {
     struct XMLReaderFunction : public Returns<NXMLElementReader*> {
-        template <typename Packet>
+        template <typename PacketInfo>
         inline NXMLElementReader* operator() (Packet* me,
                 XMLTreeResolver& resolver) {
-            return Packet::Class::xmlReader(me, resolver);
+            return PacketInfo::Class::xmlReader(me, resolver);
         }
     };
 }
