@@ -1,4 +1,6 @@
 SET ( FILES
+  anglescreator
+  anglesui
   dim2tricreator
   dim2trigluings
   dim2triskeleton
@@ -14,8 +16,6 @@ SET ( FILES
   gaprunner
   generictriui
   groupwidget
-  nanglestructurecreator
-  nanglestructureui
   ncompatcanvas
   ncontainerui
   nhypercompatui

@@ -30,12 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file nanglestructureui.h
+/*! \file anglesui.h
  *  \brief Provides an interface for viewing angle structure lists.
  */
 
-#ifndef __NANGLESTRUCTUREUI_H
-#define __NANGLESTRUCTUREUI_H
+#ifndef __ANGLESUI_H
+#define __ANGLESUI_H
 
 #include "angle/anglestructures.h"
 #include "triangulation/ntriangulation.h"
@@ -91,7 +91,7 @@ class AngleModel : public QAbstractItemModel {
 /**
  * A packet interface for viewing angle structure lists.
  */
-class NAngleStructureUI : public QObject, public PacketReadOnlyUI,
+class AngleStructureUI : public QObject, public PacketReadOnlyUI,
         regina::PacketListener {
     Q_OBJECT
 
@@ -117,9 +117,9 @@ class NAngleStructureUI : public QObject, public PacketReadOnlyUI,
         /**
          * Constructor and destructor.
          */
-        NAngleStructureUI(regina::AngleStructures* packet,
+        AngleStructureUI(regina::AngleStructures* packet,
                 PacketPane* newEnclosingPane);
-        ~NAngleStructureUI();
+        ~AngleStructureUI();
 
         /**
          * PacketUI overrides.

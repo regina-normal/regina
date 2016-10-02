@@ -42,7 +42,7 @@
 #include "packettypes/dim2triui.h"
 #include "packettypes/dim4triui.h"
 #include "packettypes/generictriui.h"
-#include "packettypes/nanglestructureui.h"
+#include "packettypes/anglesui.h"
 #include "packettypes/ncontainerui.h"
 #include "packettypes/nhypersurfaceui.h"
 #include "packettypes/nnormalsurfaceui.h"
@@ -147,7 +147,7 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
         PacketPane* enclosingPane) {
     switch (packet->type()) {
         case PACKET_ANGLESTRUCTURELIST:
-            return new NAngleStructureUI(
+            return new AngleStructureUI(
                 dynamic_cast<AngleStructures*>(packet), enclosingPane);
         case PACKET_CONTAINER:
             return new NContainerUI(

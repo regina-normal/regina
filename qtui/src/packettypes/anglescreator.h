@@ -30,12 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file nanglestructurecreator.h
+/*! \file anglescreator.h
  *  \brief Allows the creation of angle structure lists.
  */
 
-#ifndef __NANGLESTRUCTURECREATOR_H
-#define __NANGLESTRUCTURECREATOR_H
+#ifndef __ANGLESUI_H
+#define __ANGLESUI_H
 
 #include "../packetcreator.h"
 
@@ -44,7 +44,7 @@ class QCheckBox;
 /**
  * An interface for creating angle structure lists.
  */
-class NAngleStructureCreator : public PacketCreator {
+class AngleStructureCreator : public PacketCreator {
     private:
         /**
          * Internal components
@@ -56,7 +56,7 @@ class NAngleStructureCreator : public PacketCreator {
         /**
          * Constructor.
          */
-        NAngleStructureCreator();
+        AngleStructureCreator();
 
         /**
          * PacketCreator overrides.

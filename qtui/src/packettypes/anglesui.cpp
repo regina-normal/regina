@@ -36,7 +36,7 @@
 
 // UI includes:
 #include "bigwidget.h"
-#include "nanglestructureui.h"
+#include "anglesui.h"
 #include "reginamain.h"
 
 #include <QLabel>
@@ -139,7 +139,7 @@ QVariant AngleModel::headerData(int section, Qt::Orientation orientation,
         return QVariant();
 }
 
-NAngleStructureUI::NAngleStructureUI(AngleStructures* packet,
+AngleStructureUI::AngleStructureUI(AngleStructures* packet,
         PacketPane* enclosingPane) : PacketReadOnlyUI(enclosingPane),
         currentlyAutoResizing(false) {
     ui = new BigWidget(1, 2);
@@ -207,30 +207,30 @@ NAngleStructureUI::NAngleStructureUI(AngleStructures* packet,
     packet->triangulation()->listen(this);
 }
 
-NAngleStructureUI::~NAngleStructureUI() {
+AngleStructureUI::~AngleStructureUI() {
     delete model;
 }
 
-NPacket* NAngleStructureUI::getPacket() {
+NPacket* AngleStructureUI::getPacket() {
     return model->structures();
 }
 
-QWidget* NAngleStructureUI::getInterface() {
+QWidget* AngleStructureUI::getInterface() {
     return ui;
 }
 
-QString NAngleStructureUI::getPacketMenuText() const {
+QString AngleStructureUI::getPacketMenuText() const {
     return tr("&Angle Structures");
 }
 
-void NAngleStructureUI::refresh() {
+void AngleStructureUI::refresh() {
     refreshHeader();
 
     // Rebuild the table.
     model->rebuild();
 }
 
-void NAngleStructureUI::refreshHeader() {
+void AngleStructureUI::refreshHeader() {
     QString count, span;
 
     // Update the general statistics.
@@ -271,13 +271,13 @@ void NAngleStructureUI::refreshHeader() {
             humanLabel().c_str()).toHtmlEscaped()));
 }
 
-void NAngleStructureUI::viewTriangulation() {
+void AngleStructureUI::viewTriangulation() {
     enclosingPane->getMainWindow()->packetView(
         model->structures()->triangulation(),
         false /* visible in tree */, false /* select in tree */);
 }
 
-void NAngleStructureUI::columnResized(int section, int, int newSize) {
+void AngleStructureUI::columnResized(int section, int, int newSize) {
     if (currentlyAutoResizing || section == 0)
         return;
 
@@ -289,7 +289,7 @@ void NAngleStructureUI::columnResized(int section, int, int newSize) {
     currentlyAutoResizing = false;
 }
 
-void NAngleStructureUI::packetWasRenamed(regina::NPacket*) {
+void AngleStructureUI::packetWasRenamed(regina::NPacket*) {
     // Assume it is the parent triangulation.
     refreshHeader();
 }

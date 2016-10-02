@@ -43,7 +43,7 @@
 #include "reginamain.h"
 #include "packettypes/dim2tricreator.h"
 #include "packettypes/dim4tricreator.h"
-#include "packettypes/nanglestructurecreator.h"
+#include "packettypes/anglescreator.h"
 #include "packettypes/nhypersurfacecreator.h"
 #include "packettypes/nnormalsurfacecreator.h"
 #include "packettypes/nsurfacefiltercreator.h"
@@ -51,7 +51,7 @@
 #include "packettypes/nsnappeacreator.h"
 
 void ReginaMain::newAngleStructures() {
-    newPacket(new NAngleStructureCreator(),
+    newPacket(new AngleStructureCreator(),
         new SubclassFilter<regina::NTriangulation>(),
         tr("New Angle Structure Solutions"));
 }

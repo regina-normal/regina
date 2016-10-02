@@ -36,7 +36,7 @@
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
-#include "nanglestructurecreator.h"
+#include "anglescreator.h"
 #include "../progressdialogs.h"
 #include "reginasupport.h"
 #include "reginaprefset.h"
@@ -46,7 +46,7 @@
 #include <QLayout>
 #include <QWhatsThis>
 
-NAngleStructureCreator::NAngleStructureCreator() {
+AngleStructureCreator::AngleStructureCreator() {
     // Set up the basic layout.
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
@@ -61,19 +61,19 @@ NAngleStructureCreator::NAngleStructureCreator() {
     layout->addWidget(tautOnly);
 }
 
-QWidget* NAngleStructureCreator::getInterface() {
+QWidget* AngleStructureCreator::getInterface() {
     return ui;
 }
 
-QString NAngleStructureCreator::parentPrompt() {
+QString AngleStructureCreator::parentPrompt() {
     return ui->tr("Triangulation:");
 }
 
-QString NAngleStructureCreator::parentWhatsThis() {
+QString AngleStructureCreator::parentWhatsThis() {
     return ui->tr("The triangulation that will contain your angle structures.");
 }
 
-regina::NPacket* NAngleStructureCreator::createPacket(
+regina::NPacket* AngleStructureCreator::createPacket(
         regina::NPacket* parentPacket, QWidget* parentWidget) {
     // Note that parent may be either NTriangulation or NSnapPeaTriangulation.
     if (! dynamic_cast<regina::NTriangulation*>(parentPacket)) {
@@ -110,7 +110,7 @@ regina::NPacket* NAngleStructureCreator::createPacket(
     }
 }
 
-void NAngleStructureCreator::explainNoParents() {
+void AngleStructureCreator::explainNoParents() {
     ReginaSupport::sorry(ui,
         ui->tr("There are no triangulations to work with."),
         ui->tr("Angle structures must live within a 3-manifold "

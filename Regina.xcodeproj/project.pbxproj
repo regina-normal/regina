@@ -923,7 +923,7 @@
 		0543AEA61811E12A002758F8 /* eltmovedialog.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5911811D920002CC2AE /* eltmovedialog.h */; };
 		0543AEA71811E12A002758F8 /* facetgraphtab.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5931811D920002CC2AE /* facetgraphtab.h */; };
 		0543AEA81811E12A002758F8 /* gaprunner.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5951811D920002CC2AE /* gaprunner.h */; };
-		0543AEA91811E12A002758F8 /* nanglestructureui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5991811D920002CC2AE /* nanglestructureui.h */; };
+		0543AEA91811E12A002758F8 /* anglesui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5991811D920002CC2AE /* anglesui.h */; };
 		0543AEAA1811E12A002758F8 /* ncompatcanvas.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A59B1811D920002CC2AE /* ncompatcanvas.h */; };
 		0543AEAB1811E12A002758F8 /* nnormalsurfaceui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5A11811D920002CC2AE /* nnormalsurfaceui.h */; };
 		0543AEAC1811E12A002758F8 /* scriptui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5A51811D920002CC2AE /* scriptui.h */; };
@@ -1102,8 +1102,8 @@
 		0564A9511811D921002CC2AE /* eltmovedialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5901811D920002CC2AE /* eltmovedialog.cpp */; };
 		0564A9521811D921002CC2AE /* facetgraphtab.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5921811D920002CC2AE /* facetgraphtab.cpp */; };
 		0564A9531811D921002CC2AE /* gaprunner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5941811D920002CC2AE /* gaprunner.cpp */; };
-		0564A9541811D921002CC2AE /* nanglestructurecreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5961811D920002CC2AE /* nanglestructurecreator.cpp */; };
-		0564A9551811D921002CC2AE /* nanglestructureui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5981811D920002CC2AE /* nanglestructureui.cpp */; };
+		0564A9541811D921002CC2AE /* anglescreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5961811D920002CC2AE /* anglescreator.cpp */; };
+		0564A9551811D921002CC2AE /* anglesui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5981811D920002CC2AE /* anglesui.cpp */; };
 		0564A9561811D921002CC2AE /* ncompatcanvas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A59A1811D920002CC2AE /* ncompatcanvas.cpp */; };
 		0564A9571811D921002CC2AE /* ncontainerui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A59C1811D920002CC2AE /* ncontainerui.cpp */; };
 		0564A9581811D921002CC2AE /* nnormalsurfacecreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A59E1811D920002CC2AE /* nnormalsurfacecreator.cpp */; };
@@ -2906,10 +2906,10 @@
 		0564A5931811D920002CC2AE /* facetgraphtab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetgraphtab.h; sourceTree = "<group>"; };
 		0564A5941811D920002CC2AE /* gaprunner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gaprunner.cpp; sourceTree = "<group>"; };
 		0564A5951811D920002CC2AE /* gaprunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gaprunner.h; sourceTree = "<group>"; };
-		0564A5961811D920002CC2AE /* nanglestructurecreator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nanglestructurecreator.cpp; sourceTree = "<group>"; };
-		0564A5971811D920002CC2AE /* nanglestructurecreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nanglestructurecreator.h; sourceTree = "<group>"; };
-		0564A5981811D920002CC2AE /* nanglestructureui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nanglestructureui.cpp; sourceTree = "<group>"; };
-		0564A5991811D920002CC2AE /* nanglestructureui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nanglestructureui.h; sourceTree = "<group>"; };
+		0564A5961811D920002CC2AE /* anglescreator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = anglescreator.cpp; sourceTree = "<group>"; };
+		0564A5971811D920002CC2AE /* anglescreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = anglescreator.h; sourceTree = "<group>"; };
+		0564A5981811D920002CC2AE /* anglesui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = anglesui.cpp; sourceTree = "<group>"; };
+		0564A5991811D920002CC2AE /* anglesui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = anglesui.h; sourceTree = "<group>"; };
 		0564A59A1811D920002CC2AE /* ncompatcanvas.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ncompatcanvas.cpp; sourceTree = "<group>"; };
 		0564A59B1811D920002CC2AE /* ncompatcanvas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ncompatcanvas.h; sourceTree = "<group>"; };
 		0564A59C1811D920002CC2AE /* ncontainerui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ncontainerui.cpp; sourceTree = "<group>"; };
@@ -5414,6 +5414,10 @@
 			isa = PBXGroup;
 			children = (
 				0564A5871811D920002CC2AE /* CMakeLists.txt */,
+				0564A5961811D920002CC2AE /* anglescreator.cpp */,
+				0564A5971811D920002CC2AE /* anglescreator.h */,
+				0564A5981811D920002CC2AE /* anglesui.cpp */,
+				0564A5991811D920002CC2AE /* anglesui.h */,
 				0564A5881811D920002CC2AE /* dim2tricreator.cpp */,
 				0564A5891811D920002CC2AE /* dim2tricreator.h */,
 				0564A58A1811D920002CC2AE /* dim2trigluings.cpp */,
@@ -5445,10 +5449,6 @@
 				0554CA771C5983730053461B /* generictriui.h */,
 				05A73CBC19B2F1AB0099C617 /* groupwidget.cpp */,
 				05A73CBD19B2F1AB0099C617 /* groupwidget.h */,
-				0564A5961811D920002CC2AE /* nanglestructurecreator.cpp */,
-				0564A5971811D920002CC2AE /* nanglestructurecreator.h */,
-				0564A5981811D920002CC2AE /* nanglestructureui.cpp */,
-				0564A5991811D920002CC2AE /* nanglestructureui.h */,
 				0564A59A1811D920002CC2AE /* ncompatcanvas.cpp */,
 				0564A59B1811D920002CC2AE /* ncompatcanvas.h */,
 				0564A59C1811D920002CC2AE /* ncontainerui.cpp */,
@@ -7452,7 +7452,7 @@
 				0543AEA81811E12A002758F8 /* gaprunner.h in Sources */,
 				0554CA7B1C5983B00053461B /* generictriui.h in Sources */,
 				05A73CE219B2F99B0099C617 /* groupwidget.h in Sources */,
-				0543AEA91811E12A002758F8 /* nanglestructureui.h in Sources */,
+				0543AEA91811E12A002758F8 /* anglesui.h in Sources */,
 				0543AEAA1811E12A002758F8 /* ncompatcanvas.h in Sources */,
 				051691BC1C5AD60100DC69EC /* nhypercompatui.h in Sources */,
 				051691BD1C5AD60600DC69EC /* nhypercoordinateui.h in Sources */,
@@ -7520,10 +7520,10 @@
 				0564A95D1811D921002CC2AE /* nsurfacecoordinateui.cpp in Sources */,
 				0564A8061811D921002CC2AE /* exports.cpp in Sources */,
 				051691B71C5AD5AC00DC69EC /* nhypercompatui.cpp in Sources */,
-				0564A9541811D921002CC2AE /* nanglestructurecreator.cpp in Sources */,
+				0564A9541811D921002CC2AE /* anglescreator.cpp in Sources */,
 				0564A9831811D921002CC2AE /* reginasupport.cpp in Sources */,
 				0564A8041811D921002CC2AE /* coordinates.cpp in Sources */,
-				0564A9551811D921002CC2AE /* nanglestructureui.cpp in Sources */,
+				0564A9551811D921002CC2AE /* anglesui.cpp in Sources */,
 				0591E8401C4F769100793A9C /* dim4tricreator.cpp in Sources */,
 				0564A96D1811D921002CC2AE /* snappeacomponents.cpp in Sources */,
 				0564A9661811D921002CC2AE /* ntriangulationui.cpp in Sources */,
