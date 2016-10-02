@@ -36,7 +36,7 @@
 #import "TriangulationViewController.h"
 #import "TriGluings.h"
 #import "packet/ncontainer.h"
-#import "progress/nprogresstracker.h"
+#import "progress/progresstracker.h"
 #import "triangulation/ntriangulation.h"
 
 #pragma mark - Table cell
@@ -61,7 +61,7 @@
     int editSimplex;
     int editFacet; // -1 for editing the description
     BOOL myEdit;
-    regina::NProgressTrackerOpen* simplifyTracker; // for cancellation
+    regina::ProgressTrackerOpen* simplifyTracker; // for cancellation
 }
 @property (weak, nonatomic) IBOutlet UILabel *header;
 @property (weak, nonatomic) IBOutlet UIButton *lockIcon;
@@ -276,7 +276,7 @@
     size_t initSize = self.packet->size();
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        regina::NProgressTrackerOpen* tracker = new regina::NProgressTrackerOpen();
+        regina::ProgressTrackerOpen* tracker = new regina::ProgressTrackerOpen();
         bool cancelled = false;
 
         [self.simplifyLock lock];

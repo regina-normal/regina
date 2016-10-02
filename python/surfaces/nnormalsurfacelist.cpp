@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "maths/nmatrixint.h"
-#include "progress/nprogresstracker.h"
+#include "progress/progresstracker.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/ntriangulation.h"
 #include "../safeheldtype.h"
@@ -70,7 +70,7 @@ namespace {
     }
     NNormalSurfaceList* unified_5(regina::NTriangulation* owner,
             regina::NormalCoords coords, regina::NormalList which,
-            regina::NormalAlg algHints, regina::NProgressTracker* tracker) {
+            regina::NormalAlg algHints, regina::ProgressTracker* tracker) {
         return NNormalSurfaceList::enumerate(owner, coords, which, algHints,
             tracker);
     }

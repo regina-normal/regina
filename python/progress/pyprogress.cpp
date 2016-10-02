@@ -30,9 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-void addNProgressTracker();
+void addProgressTracker();
 
 void addProgress() {
-    addNProgressTracker();
+    addProgressTracker();
 }
 

@@ -52,7 +52,7 @@
 namespace regina {
 
 class AngleStructures;
-class NProgressTracker;
+class ProgressTracker;
 class NXMLPacketReader;
 class XMLAngleStructuresReader;
 
@@ -207,7 +207,7 @@ class REGINA_API AngleStructures : public NPacket {
          * returns 0 (and no angle structure list is created).
          */
         static AngleStructures* enumerate(NTriangulation* owner,
-            bool tautOnly = false, NProgressTracker* tracker = 0);
+            bool tautOnly = false, ProgressTracker* tracker = 0);
 
         /**
          * A slower, alternative method to enumerate all taut angle structures
@@ -379,7 +379,7 @@ class REGINA_API AngleStructures : public NPacket {
          * capabilities are not required.
          */
         void enumerateInternal(NTriangulation* triang,
-            NProgressTracker* tracker = 0);
+            ProgressTracker* tracker = 0);
 
     friend class regina::XMLAngleStructuresReader;
 };

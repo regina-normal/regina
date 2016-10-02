@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "progress/nprogresstracker.h"
+#include "progress/progresstracker.h"
 
 // UI includes:
 #include "progressdialogs.h"
@@ -50,7 +50,7 @@
 #define SLICES 1000
 
 ProgressDialogNumeric::ProgressDialogNumeric(
-        regina::NProgressTracker* tracker,
+        regina::ProgressTracker* tracker,
         const QString& displayText, QWidget* parent) :
         QProgressDialog(parent),
         /* Don't use Qt::Popup because the layout breaks under fink. */
@@ -85,7 +85,7 @@ bool ProgressDialogNumeric::run() {
 }
 
 ProgressDialogMessage::ProgressDialogMessage(
-        regina::NProgressTracker* tracker,
+        regina::ProgressTracker* tracker,
         const QString& displayText, QWidget* parent) :
         QDialog(parent), tracker_(tracker) {
     setWindowTitle(tr("Working"));
@@ -126,7 +126,7 @@ bool ProgressDialogMessage::run() {
     return (! tracker_->isCancelled()); // Always true, for now.
 }
 
-ProgressDialogOpen::ProgressDialogOpen(regina::NProgressTrackerOpen* tracker,
+ProgressDialogOpen::ProgressDialogOpen(regina::ProgressTrackerOpen* tracker,
         const QString& displayText, const QString& detailTemplate,
         QWidget* parent) :
         QDialog(parent), tracker_(tracker), detailTemplate_(detailTemplate) {

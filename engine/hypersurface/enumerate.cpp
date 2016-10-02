@@ -38,7 +38,7 @@
 #include "hypersurface/nnormalhypersurfacelist.h"
 #include "hypersurface/hscoordregistry.h"
 #include "maths/nmatrixint.h"
-#include "progress/nprogresstracker.h"
+#include "progress/progresstracker.h"
 #include "utilities/xmlutils.h"
 
 namespace regina {
@@ -46,7 +46,7 @@ namespace regina {
 NNormalHypersurfaceList* NNormalHypersurfaceList::enumerate(
         Dim4Triangulation* owner, HyperCoords coords,
         HyperList which, HyperAlg algHints,
-        NProgressTracker* tracker) {
+        ProgressTracker* tracker) {
     NNormalHypersurfaceList* list = new NNormalHypersurfaceList(
         coords, which, algHints);
 

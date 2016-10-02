@@ -55,7 +55,7 @@ namespace regina {
 class NMatrixInt;
 class NNormalHypersurface;
 class NNormalHypersurfaceList;
-class NProgressTracker;
+class ProgressTracker;
 class NXMLNormalHypersurfaceListReader;
 class NXMLPacketReader;
 
@@ -186,7 +186,7 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
             HyperCoords coords,
             HyperList which = HS_LIST_DEFAULT,
             HyperAlg algHints = HS_ALG_DEFAULT,
-            NProgressTracker* tracker = 0); // TODO
+            ProgressTracker* tracker = 0); // TODO
 
         /**
          * Returns the coordinate system being used by the
@@ -529,7 +529,7 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
                     /**< The hypersurface list to be filled. */
                 Dim4Triangulation* triang_;
                     /**< The triangulation in which these hypersurfaces lie. */
-                NProgressTracker* tracker_;
+                ProgressTracker* tracker_;
                     /**< The progress tracker through which progress is
                          reported and cancellation requests are accepted,
                          or 0 if no progress tracker is in use. */
@@ -546,7 +546,7 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
                  * these capabilities are not required.
                  */
                 Enumerator(NNormalHypersurfaceList* list,
-                    Dim4Triangulation* triang, NProgressTracker* tracker);
+                    Dim4Triangulation* triang, ProgressTracker* tracker);
 
                 /**
                  * Performs the real enumeration work, in a setting
@@ -582,7 +582,7 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
                  * If \a tracker_ is non-null, this routine will declare and
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
-                 * call NProgressTracker::setFinished().
+                 * call ProgressTracker::setFinished().
                  */
                 template <typename Coords>
                 void fillVertex();
@@ -603,7 +603,7 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
                  * If \a tracker_ is non-null, this routine declare and
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
-                 * call NProgressTracker::setFinished().
+                 * call ProgressTracker::setFinished().
                  */
                 template <typename Coords>
                 void fillFundamental();
@@ -636,7 +636,7 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
                  * If \a tracker_ is non-null, this routine will declare and
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
-                 * call NProgressTracker::setFinished().
+                 * call ProgressTracker::setFinished().
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
@@ -654,7 +654,7 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
                  * If \a tracker_ is non-null, this routine will declare and
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
-                 * call NProgressTracker::setFinished().
+                 * call ProgressTracker::setFinished().
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
@@ -884,7 +884,7 @@ inline NNormalHypersurfaceList::NNormalHypersurfaceList(HyperCoords coords,
 
 inline NNormalHypersurfaceList::Enumerator::Enumerator(
         NNormalHypersurfaceList* list, Dim4Triangulation* triang,
-        NProgressTracker* tracker) :
+        ProgressTracker* tracker) :
         list_(list), triang_(triang), tracker_(tracker) {
 }
 

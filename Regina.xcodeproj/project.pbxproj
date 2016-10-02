@@ -44,6 +44,7 @@
 		050C648A1DA1249B00C9420F /* globaldirs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050C64831DA1249600C9420F /* globaldirs.cpp */; };
 		050C648F1DA124EB00C9420F /* fileinfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050C648B1DA124E200C9420F /* fileinfo.cpp */; };
 		050C64901DA124EB00C9420F /* globaldirs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050C648C1DA124E200C9420F /* globaldirs.cpp */; };
+		050C64921DA12B0700C9420F /* nprogresstracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64911DA12B0700C9420F /* nprogresstracker.h */; };
 		050F5DD31B9BAB9C00C1F681 /* nabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D021B9BAB9C00C1F681 /* nabeliangroup.cpp */; };
 		050F5DD41B9BAB9C00C1F681 /* ngrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D031B9BAB9C00C1F681 /* ngrouppresentation.cpp */; };
 		050F5DD51B9BAB9C00C1F681 /* nhomgrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D041B9BAB9C00C1F681 /* nhomgrouppresentation.cpp */; };
@@ -93,7 +94,7 @@
 		050F5E091B9BAB9C00C1F681 /* ntext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D441B9BAB9C00C1F681 /* ntext.cpp */; };
 		050F5E0A1B9BAB9C00C1F681 /* packettype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D451B9BAB9C00C1F681 /* packettype.cpp */; };
 		050F5E0B1B9BAB9C00C1F681 /* pypacket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D461B9BAB9C00C1F681 /* pypacket.cpp */; };
-		050F5E0E1B9BAB9C00C1F681 /* nprogresstracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D4B1B9BAB9C00C1F681 /* nprogresstracker.cpp */; };
+		050F5E0E1B9BAB9C00C1F681 /* progresstracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D4B1B9BAB9C00C1F681 /* progresstracker.cpp */; };
 		050F5E0F1B9BAB9C00C1F681 /* pyprogress.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D4C1B9BAB9C00C1F681 /* pyprogress.cpp */; };
 		050F5E101B9BAB9C00C1F681 /* nexamplesnappeatriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D4F1B9BAB9C00C1F681 /* nexamplesnappeatriangulation.cpp */; };
 		050F5E111B9BAB9C00C1F681 /* nsnappeatriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D501B9BAB9C00C1F681 /* nsnappeatriangulation.cpp */; };
@@ -347,7 +348,7 @@
 		052F9F61180600FB00FAE4DF /* nxmlpacketreaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D0B180600FA00FAE4DF /* nxmlpacketreaders.cpp */; };
 		052F9F62180600FB00FAE4DF /* nxmlpacketreaders.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D0C180600FA00FAE4DF /* nxmlpacketreaders.h */; };
 		052F9F63180600FB00FAE4DF /* packetregistry.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D0D180600FA00FAE4DF /* packetregistry.h */; };
-		052F9F66180600FB00FAE4DF /* nprogresstracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D12180600FA00FAE4DF /* nprogresstracker.h */; };
+		052F9F66180600FB00FAE4DF /* progresstracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D12180600FA00FAE4DF /* progresstracker.h */; };
 		052F9F69180600FB00FAE4DF /* regina-core.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D17180600FA00FAE4DF /* regina-core.h */; };
 		052F9F6C180600FB00FAE4DF /* canonize.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D1F180600FA00FAE4DF /* canonize.c */; };
 		052F9F6D180600FB00FAE4DF /* canonize.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D20180600FA00FAE4DF /* canonize.h */; };
@@ -1922,6 +1923,7 @@
 		050C64841DA1249600C9420F /* globaldirs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = globaldirs.h; sourceTree = "<group>"; };
 		050C648B1DA124E200C9420F /* fileinfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fileinfo.cpp; sourceTree = "<group>"; };
 		050C648C1DA124E200C9420F /* globaldirs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = globaldirs.cpp; sourceTree = "<group>"; };
+		050C64911DA12B0700C9420F /* nprogresstracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nprogresstracker.h; sourceTree = "<group>"; };
 		050F5CDD1B9BAAAA00C1F681 /* engine.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = engine.so; sourceTree = BUILT_PRODUCTS_DIR; };
 		050F5D011B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		050F5D021B9BAB9C00C1F681 /* nabeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nabeliangroup.cpp; sourceTree = "<group>"; };
@@ -1981,7 +1983,7 @@
 		050F5D451B9BAB9C00C1F681 /* packettype.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = packettype.cpp; sourceTree = "<group>"; };
 		050F5D461B9BAB9C00C1F681 /* pypacket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pypacket.cpp; sourceTree = "<group>"; };
 		050F5D481B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		050F5D4B1B9BAB9C00C1F681 /* nprogresstracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nprogresstracker.cpp; sourceTree = "<group>"; };
+		050F5D4B1B9BAB9C00C1F681 /* progresstracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = progresstracker.cpp; sourceTree = "<group>"; };
 		050F5D4C1B9BAB9C00C1F681 /* pyprogress.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pyprogress.cpp; sourceTree = "<group>"; };
 		050F5D4E1B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		050F5D4F1B9BAB9C00C1F681 /* nexamplesnappeatriangulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nexamplesnappeatriangulation.cpp; sourceTree = "<group>"; };
@@ -2298,7 +2300,7 @@
 		052F9D0C180600FA00FAE4DF /* nxmlpacketreaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nxmlpacketreaders.h; sourceTree = "<group>"; };
 		052F9D0D180600FA00FAE4DF /* packetregistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packetregistry.h; sourceTree = "<group>"; };
 		052F9D0F180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		052F9D12180600FA00FAE4DF /* nprogresstracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nprogresstracker.h; sourceTree = "<group>"; };
+		052F9D12180600FA00FAE4DF /* progresstracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = progresstracker.h; sourceTree = "<group>"; };
 		052F9D15180600FA00FAE4DF /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		052F9D16180600FA00FAE4DF /* regina-config.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "regina-config.h.in"; sourceTree = "<group>"; };
 		052F9D17180600FA00FAE4DF /* regina-core.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "regina-core.h"; sourceTree = "<group>"; };
@@ -3854,7 +3856,7 @@
 			isa = PBXGroup;
 			children = (
 				050F5D481B9BAB9C00C1F681 /* CMakeLists.txt */,
-				050F5D4B1B9BAB9C00C1F681 /* nprogresstracker.cpp */,
+				050F5D4B1B9BAB9C00C1F681 /* progresstracker.cpp */,
 				050F5D4C1B9BAB9C00C1F681 /* pyprogress.cpp */,
 			);
 			path = progress;
@@ -4427,7 +4429,8 @@
 			isa = PBXGroup;
 			children = (
 				052F9D0F180600FA00FAE4DF /* CMakeLists.txt */,
-				052F9D12180600FA00FAE4DF /* nprogresstracker.h */,
+				050C64911DA12B0700C9420F /* nprogresstracker.h */,
+				052F9D12180600FA00FAE4DF /* progresstracker.h */,
 			);
 			path = progress;
 			sourceTree = "<group>";
@@ -5997,6 +6000,7 @@
 				052F9F0F180600FB00FAE4DF /* isosig.h in Headers */,
 				052F9F5C180600FB00FAE4DF /* nscript.h in Headers */,
 				052F9F2D180600FB00FAE4DF /* nsfs.h in Headers */,
+				050C64921DA12B0700C9420F /* nprogresstracker.h in Headers */,
 				05431F701C40F3C9009BC072 /* HilbertSeries.h in Headers */,
 				052F9E9E180600FB00FAE4DF /* ncensus.h in Headers */,
 				052FA06D180600FB00FAE4DF /* nisomorphism.h in Headers */,
@@ -6127,7 +6131,7 @@
 				052F9ED0180600FB00FAE4DF /* nmaxadmissible.h in Headers */,
 				052F9F9E180600FB00FAE4DF /* tables.h in Headers */,
 				052FA00B180600FB00FAE4DF /* nsatblockstarter.h in Headers */,
-				052F9F66180600FB00FAE4DF /* nprogresstracker.h in Headers */,
+				052F9F66180600FB00FAE4DF /* progresstracker.h in Headers */,
 				052FA02C180600FB00FAE4DF /* ndisctype.h in Headers */,
 				05A73CAC19B2EFF90099C617 /* nxmltreeresolver.h in Headers */,
 				05FEA07C19C1890900A31924 /* nexamplesnappeatriangulation.h in Headers */,
@@ -6748,7 +6752,7 @@
 				050F5E261B9BAB9C00C1F681 /* nsatblock.cpp in Sources */,
 				050F5DD51B9BAB9C00C1F681 /* nhomgrouppresentation.cpp in Sources */,
 				050F5E4D1B9BAB9C00C1F681 /* pytriangulation.cpp in Sources */,
-				050F5E0E1B9BAB9C00C1F681 /* nprogresstracker.cpp in Sources */,
+				050F5E0E1B9BAB9C00C1F681 /* progresstracker.cpp in Sources */,
 				057EE4E81C600A3600C4D155 /* facetpairing13.cpp in Sources */,
 				050F5E381B9BAB9C00C1F681 /* nprism.cpp in Sources */,
 				050F5E4C1B9BAB9C00C1F681 /* nvertex.cpp in Sources */,

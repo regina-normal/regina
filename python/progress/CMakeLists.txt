@@ -2,7 +2,7 @@
 
 # Files to compile
 SET ( FILES
-  nprogresstracker
+  progresstracker
   pyprogress
   )
 

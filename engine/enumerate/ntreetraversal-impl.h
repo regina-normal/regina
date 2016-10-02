@@ -47,7 +47,7 @@
 
 #include "angle/anglestructure.h"
 #include "enumerate/ntreetraversal.h"
-#include "progress/nprogresstracker.h"
+#include "progress/progresstracker.h"
 #include "surfaces/nsanstandard.h"
 #include "surfaces/nsquad.h"
 #include "surfaces/nsquadoct.h"
@@ -418,7 +418,7 @@ double NTreeTraversal<LPConstraint, BanConstraint, Integer>::percent() const {
 
 template <class LPConstraint, typename BanConstraint, typename Integer>
 bool NTreeEnumeration<LPConstraint, BanConstraint, Integer>::next(
-        NProgressTracker* tracker) {
+        ProgressTracker* tracker) {
     if (lastNonZero_ < 0) {
         // Our type vector is the zero vector.
         // This means we are starting the search from the very
@@ -794,7 +794,7 @@ bool NTreeEnumeration<LPConstraint, BanConstraint, Integer>::next(
 
 template <class LPConstraint, typename BanConstraint, typename Integer>
 bool NTautEnumeration<LPConstraint, BanConstraint, Integer>::next(
-        NProgressTracker* tracker) {
+        ProgressTracker* tracker) {
     // Note that for taut angle structures we have no domination test and
     // no zero test.  The domination comes for free (every taut angle
     // structure is at a vertex of the angle structure polytope), and the

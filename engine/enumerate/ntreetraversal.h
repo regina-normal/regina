@@ -47,7 +47,7 @@
 
 namespace regina {
 
-class NProgressTracker;
+class ProgressTracker;
 
 template <int> class Triangulation;
 typedef Triangulation<3> NTriangulation;
@@ -844,8 +844,8 @@ class NTreeEnumeration :
          * An optional progress tracker may be passed.  If so, this routine
          * will update the percentage progress and poll for cancellation
          * requests.  It will be assumed that an appropriate stage has already
-         * been declared via NProgressTracker::newStage() before this routine
-         * is called, and that NProgressTracker::setFinished() will be
+         * been declared via ProgressTracker::newStage() before this routine
+         * is called, and that ProgressTracker::setFinished() will be
          * called after this routine returns (and presumably not until
          * the entire search tree is exhausted).
          * The percentage progress will be given in the context of a complete
@@ -864,7 +864,7 @@ class NTreeEnumeration :
          * \c false if the search has now finished and no more vertex
          * surfaces were found.
          */
-        bool next(NProgressTracker* tracker = 0);
+        bool next(ProgressTracker* tracker = 0);
 
         /**
          * A callback function that writes to standard output the type vector
@@ -1112,8 +1112,8 @@ class NTautEnumeration :
          * An optional progress tracker may be passed.  If so, this routine
          * will update the percentage progress and poll for cancellation
          * requests.  It will be assumed that an appropriate stage has already
-         * been declared via NProgressTracker::newStage() before this routine
-         * is called, and that NProgressTracker::setFinished() will be
+         * been declared via ProgressTracker::newStage() before this routine
+         * is called, and that ProgressTracker::setFinished() will be
          * called after this routine returns (and presumably not until
          * the entire search tree is exhausted).
          * The percentage progress will be given in the context of a complete
@@ -1132,7 +1132,7 @@ class NTautEnumeration :
          * \c false if the search has now finished and no more taut angle
          * strutures were found.
          */
-        bool next(NProgressTracker* tracker = 0);
+        bool next(ProgressTracker* tracker = 0);
 
         /**
          * A callback function that writes to standard output the type vector

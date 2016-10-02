@@ -1264,10 +1264,10 @@ Equality type : NEVER_INSTANTIATED
 NPrismSpec : class
 Equality type : BY_VALUE
 
-NProgressTracker : class
+ProgressTracker : class
 Equality type : BY_REFERENCE
 
-NProgressTrackerOpen : class
+ProgressTrackerOpen : class
 Equality type : BY_REFERENCE
 
 NRational : class

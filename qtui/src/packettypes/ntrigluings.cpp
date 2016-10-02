@@ -34,7 +34,7 @@
 #include "dim2/dim2triangulation.h"
 #include "packet/ncontainer.h"
 #include "packet/ntext.h"
-#include "progress/nprogresstracker.h"
+#include "progress/progresstracker.h"
 #include "snappea/nsnappeatriangulation.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangle.h"
@@ -785,7 +785,7 @@ void NTriGluingsUI::simplify() {
 void NTriGluingsUI::simplifyExhaustive(int height) {
     size_t initSize = tri->size();
 
-    regina::NProgressTrackerOpen tracker;
+    regina::ProgressTrackerOpen tracker;
     ProgressDialogOpen dlg(&tracker, tr("Searching Pachner graph..."),
         tr("Tried %1 triangulations"), ui);
 

@@ -33,7 +33,7 @@
 #import "NewHypersurfacesController.h"
 #import "PacketTreeController.h"
 #import "ReginaHelper.h"
-#import "progress/nprogresstracker.h"
+#import "progress/progresstracker.h"
 #import "hypersurface/nnormalhypersurfacelist.h"
 
 #define KEY_LAST_TYPE @"NewHypersurfacesType"
@@ -48,7 +48,7 @@ static NSArray* embText;
 
 @interface NewHypersurfacesController () {
     bool _running;
-    regina::NProgressTracker _tracker;
+    regina::ProgressTracker _tracker;
 }
 @property (weak, nonatomic) IBOutlet UILabel *triangulation;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *whichControl;

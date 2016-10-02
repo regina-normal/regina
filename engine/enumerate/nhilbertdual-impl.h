@@ -47,7 +47,7 @@
 #include "enumerate/nenumconstraint.h"
 #include "enumerate/nhilbertdual.h"
 #include "enumerate/ordering.h"
-#include "progress/nprogresstracker.h"
+#include "progress/progresstracker.h"
 #include "utilities/nbitmask.h"
 
 namespace regina {
@@ -55,7 +55,7 @@ namespace regina {
 template <class RayClass, class OutputIterator>
 void NHilbertDual::enumerateHilbertBasis(OutputIterator results,
         const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-        NProgressTracker* tracker, unsigned initialRows) {
+        ProgressTracker* tracker, unsigned initialRows) {
     // Get the dimension of the entire space in which we are working.
     size_t dim = subspace.columns();
 
@@ -96,7 +96,7 @@ void NHilbertDual::enumerateHilbertBasis(OutputIterator results,
 template <class RayClass, class BitmaskType, class OutputIterator>
 void NHilbertDual::enumerateUsingBitmask(OutputIterator results,
         const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-        NProgressTracker* tracker, unsigned initialRows) {
+        ProgressTracker* tracker, unsigned initialRows) {
     // Get the dimension of the entire space in which we are working.
     // At this point we are guaranteed that the dimension is non-zero.
     size_t dim = subspace.columns();

@@ -68,7 +68,7 @@ class AngleStructure;
 class NBoundaryComponent;
 class NGroupPresentation;
 class NNormalSurface;
-class NProgressTrackerOpen;
+class ProgressTrackerOpen;
 class NXMLPacketReader;
 
 template <int> class Component;
@@ -1201,7 +1201,7 @@ class REGINA_API Triangulation<3> :
          * fewer tetrahedra.
          */
         bool simplifyExhaustive(int height = 1, unsigned nThreads = 1,
-            NProgressTrackerOpen* tracker = 0);
+            ProgressTrackerOpen* tracker = 0);
 
         /**
          * Explores all triangulations that can be reached from this via
@@ -1295,7 +1295,7 @@ class REGINA_API Triangulation<3> :
          */
         template <typename Action, typename... Args>
         bool retriangulate(int height, unsigned nThreads,
-            NProgressTrackerOpen* tracker,
+            ProgressTrackerOpen* tracker,
             Action&& action, Args&&... args) const;
 
         /**
@@ -3002,7 +3002,7 @@ class REGINA_API Triangulation<3> :
          * can be kept out of the main headers.
          */
         bool retriangulateInternal(int height, unsigned nThreads,
-            NProgressTrackerOpen* tracker,
+            ProgressTrackerOpen* tracker,
             const std::function<bool(const NTriangulation&)>& action) const;
 
         void stretchBoundaryForestFromVertex(NVertex*, std::set<NEdge*>&,
@@ -3183,7 +3183,7 @@ inline const Triangulation<3>::TuraevViroSet&
 
 template <typename Action, typename... Args>
 inline bool Triangulation<3>::retriangulate(int height, unsigned nThreads,
-        NProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
+        ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
     return retriangulateInternal(height, nThreads, tracker,
         std::bind(action, std::placeholders::_1, args...));
 }

@@ -34,7 +34,7 @@
 #import "PacketTreeController.h"
 #import "ReginaHelper.h"
 #import "angle/anglestructures.h"
-#import "progress/nprogresstracker.h"
+#import "progress/progresstracker.h"
 
 #define KEY_LAST_TAUT @"NewAnglesTaut"
 
@@ -44,7 +44,7 @@ static NSArray* whichText;
 
 @interface NewAnglesController () {
     bool _running;
-    regina::NProgressTracker _tracker;
+    regina::ProgressTracker _tracker;
 }
 @property (weak, nonatomic) IBOutlet UILabel *triangulation;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *whichControl;

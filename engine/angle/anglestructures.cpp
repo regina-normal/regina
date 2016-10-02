@@ -34,7 +34,7 @@
 #include "enumerate/ndoubledescription.h"
 #include "enumerate/ntreetraversal.h"
 #include "maths/nmatrixint.h"
-#include "progress/nprogresstracker.h"
+#include "progress/progresstracker.h"
 #include "surfaces/nnormalsurface.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/xmlutils.h"
@@ -45,7 +45,7 @@ namespace regina {
 typedef std::vector<AngleStructure*>::const_iterator StructureIteratorConst;
 
 void AngleStructures::enumerateInternal(NTriangulation* triang,
-        NProgressTracker* tracker) {
+        ProgressTracker* tracker) {
     // Form the matching equations.
     NMatrixInt* eqns = AngleStructureVector::makeAngleEquations(triang);
 
@@ -95,7 +95,7 @@ void AngleStructures::enumerateInternal(NTriangulation* triang,
 }
 
 AngleStructures* AngleStructures::enumerate(NTriangulation* owner,
-        bool tautOnly, NProgressTracker* tracker) {
+        bool tautOnly, ProgressTracker* tracker) {
     AngleStructures* ans = new AngleStructures(tautOnly);
 
     if (tracker)

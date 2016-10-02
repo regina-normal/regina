@@ -32,7 +32,7 @@
 
 // Regina core includes:
 #include "dim4/dim4triangulation.h"
-#include "progress/nprogresstracker.h"
+#include "progress/progresstracker.h"
 #include "hypersurface/nnormalhypersurfacelist.h"
 
 // UI includes:
@@ -168,7 +168,7 @@ regina::NPacket* NHypersurfaceCreator::createPacket(regina::NPacket* parent,
         (basisId == BASIS_VERTEX ? regina::HS_VERTEX : regina::HS_FUNDAMENTAL);
 
     if (basisId == BASIS_VERTEX) {
-        regina::NProgressTracker tracker;
+        regina::ProgressTracker tracker;
         ProgressDialogNumeric dlg(&tracker,
             ui->tr("Enumerating vertex normal hypersurfaces"),
             parentWidget);
@@ -190,7 +190,7 @@ regina::NPacket* NHypersurfaceCreator::createPacket(regina::NPacket* parent,
             return 0;
         }
     } else {
-        regina::NProgressTracker tracker;
+        regina::ProgressTracker tracker;
         ProgressDialogMessage dlg(&tracker,
             ui->tr("Enumerating fundamental normal hypersurfaces"),
             parentWidget);

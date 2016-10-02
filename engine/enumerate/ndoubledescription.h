@@ -52,7 +52,7 @@ namespace regina {
 class NEnumConstraintList;
 class NMatrixInt;
 class NRay;
-class NProgressTracker;
+class ProgressTracker;
 
 /**
  * \addtogroup enumerate Vertex Enumeration
@@ -109,8 +109,8 @@ class REGINA_API NDoubleDescription {
          * An optional progress tracker may be passed.  If so, this routine
          * will update the percentage progress and poll for cancellation
          * requests.  It will be assumed that an appropriate stage has already
-         * been declared via NProgressTracker::newStage() before this routine
-         * is called, and that NProgressTracker::setFinished() will be
+         * been declared via ProgressTracker::newStage() before this routine
+         * is called, and that ProgressTracker::setFinished() will be
          * called after this routine returns.
          *
          * \pre The template argument RayClass is derived from NRay (or
@@ -136,7 +136,7 @@ class REGINA_API NDoubleDescription {
         template <class RayClass, class OutputIterator>
         static void enumerateExtremalRays(OutputIterator results,
             const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-            NProgressTracker* tracker = 0, unsigned long initialRows = 0);
+            ProgressTracker* tracker = 0, unsigned long initialRows = 0);
 
     private:
         /**
@@ -321,7 +321,7 @@ class REGINA_API NDoubleDescription {
         template <class RayClass, class BitmaskType, class OutputIterator>
         static void enumerateUsingBitmask(OutputIterator results,
             const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-            NProgressTracker* tracker, unsigned long initialRows);
+            ProgressTracker* tracker, unsigned long initialRows);
 
         /**
          * A part of the full double description algorithm that
@@ -382,7 +382,7 @@ class REGINA_API NDoubleDescription {
             unsigned long dim, unsigned long prevHyperplanes,
             const BitmaskType* constraintsBegin,
             const BitmaskType* constraintsEnd,
-            NProgressTracker* tracker);
+            ProgressTracker* tracker);
 };
 
 /*@}*/

@@ -32,7 +32,7 @@
 
 // Regina core includes:
 #include "angle/anglestructures.h"
-#include "progress/nprogresstracker.h"
+#include "progress/progresstracker.h"
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
@@ -88,7 +88,7 @@ regina::NPacket* NAngleStructureCreator::createPacket(
     // Remember our options for next time.
     ReginaPrefSet::global().anglesCreationTaut = tautOnly->isChecked();
 
-    regina::NProgressTracker tracker;
+    regina::ProgressTracker tracker;
     ProgressDialogNumeric dlg(&tracker,
         ui->tr("Enumerating vertex angle structures..."), parentWidget);
 

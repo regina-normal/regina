@@ -33,7 +33,7 @@
 #include "dim4/dim4triangulation.h"
 #include "hypersurface/nnormalhypersurfacelist.h"
 #include "maths/nmatrixint.h"
-#include "progress/nprogresstracker.h"
+#include "progress/progresstracker.h"
 #include "../safeheldtype.h"
 #include "../helpers.h"
 
@@ -63,7 +63,7 @@ namespace {
     }
     NNormalHypersurfaceList* unified_5(regina::Dim4Triangulation* owner,
             regina::HyperCoords coords, regina::HyperList which,
-            regina::HyperAlg algHints, regina::NProgressTracker* tracker) {
+            regina::HyperAlg algHints, regina::ProgressTracker* tracker) {
         return NNormalHypersurfaceList::enumerate(owner, coords, which,
             algHints, tracker);
     }

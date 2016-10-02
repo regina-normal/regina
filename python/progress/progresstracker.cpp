@@ -31,50 +31,53 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "progress/nprogresstracker.h"
+#include "progress/progresstracker.h"
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NProgressTracker;
-using regina::NProgressTrackerOpen;
+using regina::ProgressTracker;
+using regina::ProgressTrackerOpen;
 
 namespace {
-    bool (NProgressTrackerOpen::*incSteps_void)() =
-        &NProgressTrackerOpen::incSteps;
-    bool (NProgressTrackerOpen::*incSteps_arg)(unsigned long) =
-        &NProgressTrackerOpen::incSteps;
+    bool (ProgressTrackerOpen::*incSteps_void)() =
+        &ProgressTrackerOpen::incSteps;
+    bool (ProgressTrackerOpen::*incSteps_arg)(unsigned long) =
+        &ProgressTrackerOpen::incSteps;
 }
 
-void addNProgressTracker() {
-    class_<NProgressTracker, std::auto_ptr<NProgressTracker>,
-            boost::noncopyable>("NProgressTracker", init<>())
-        .def("isFinished", &NProgressTracker::isFinished)
-        .def("percentChanged", &NProgressTracker::percentChanged)
-        .def("descriptionChanged", &NProgressTracker::descriptionChanged)
-        .def("percent", &NProgressTracker::percent)
-        .def("description", &NProgressTracker::description)
-        .def("cancel", &NProgressTracker::cancel)
-        .def("newStage", &NProgressTracker::newStage)
-        .def("isCancelled", &NProgressTracker::isCancelled)
-        .def("setPercent", &NProgressTracker::setPercent)
-        .def("setFinished", &NProgressTracker::setFinished)
+void addProgressTracker() {
+    class_<ProgressTracker, std::auto_ptr<ProgressTracker>,
+            boost::noncopyable>("ProgressTracker", init<>())
+        .def("isFinished", &ProgressTracker::isFinished)
+        .def("percentChanged", &ProgressTracker::percentChanged)
+        .def("descriptionChanged", &ProgressTracker::descriptionChanged)
+        .def("percent", &ProgressTracker::percent)
+        .def("description", &ProgressTracker::description)
+        .def("cancel", &ProgressTracker::cancel)
+        .def("newStage", &ProgressTracker::newStage)
+        .def("isCancelled", &ProgressTracker::isCancelled)
+        .def("setPercent", &ProgressTracker::setPercent)
+        .def("setFinished", &ProgressTracker::setFinished)
         .def(regina::python::add_eq_operators())
     ;
 
-    class_<NProgressTrackerOpen, std::auto_ptr<NProgressTrackerOpen>,
-            boost::noncopyable>("NProgressTrackerOpen", init<>())
-        .def("isFinished", &NProgressTrackerOpen::isFinished)
-        .def("stepsChanged", &NProgressTrackerOpen::stepsChanged)
-        .def("descriptionChanged", &NProgressTrackerOpen::descriptionChanged)
-        .def("steps", &NProgressTrackerOpen::steps)
-        .def("description", &NProgressTrackerOpen::description)
-        .def("cancel", &NProgressTrackerOpen::cancel)
-        .def("newStage", &NProgressTrackerOpen::newStage)
-        .def("isCancelled", &NProgressTrackerOpen::isCancelled)
+    class_<ProgressTrackerOpen, std::auto_ptr<ProgressTrackerOpen>,
+            boost::noncopyable>("ProgressTrackerOpen", init<>())
+        .def("isFinished", &ProgressTrackerOpen::isFinished)
+        .def("stepsChanged", &ProgressTrackerOpen::stepsChanged)
+        .def("descriptionChanged", &ProgressTrackerOpen::descriptionChanged)
+        .def("steps", &ProgressTrackerOpen::steps)
+        .def("description", &ProgressTrackerOpen::description)
+        .def("cancel", &ProgressTrackerOpen::cancel)
+        .def("newStage", &ProgressTrackerOpen::newStage)
+        .def("isCancelled", &ProgressTrackerOpen::isCancelled)
         .def("incSteps", incSteps_void)
         .def("incSteps", incSteps_arg)
-        .def("setFinished", &NProgressTrackerOpen::setFinished)
+        .def("setFinished", &ProgressTrackerOpen::setFinished)
         .def(regina::python::add_eq_operators())
     ;
+
+    scope().attr("NProgressTracker") = scope().attr("ProgressTracker");
+    scope().attr("NProgressTrackerOpen") = scope().attr("ProgressTrackerOpen");
 }
 

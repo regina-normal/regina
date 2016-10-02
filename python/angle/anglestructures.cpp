@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "angle/anglestructures.h"
-#include "progress/nprogresstracker.h"
+#include "progress/progresstracker.h"
 #include "triangulation/ntriangulation.h"
 #include "../safeheldtype.h"
 #include "../helpers.h"
@@ -53,7 +53,7 @@ namespace {
         return AngleStructures::enumerate(owner, tautOnly);
     }
     AngleStructures* enumerate_3(regina::NTriangulation* owner,
-            bool tautOnly, regina::NProgressTracker* tracker) {
+            bool tautOnly, regina::ProgressTracker* tracker) {
         return AngleStructures::enumerate(owner, tautOnly, tracker);
     }
 }
