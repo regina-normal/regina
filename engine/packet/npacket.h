@@ -1399,7 +1399,7 @@ REGINA_API NPacket* open(const char* filename);
  * @param in the input stream to read from.
  * @return the packet tree read from file, or 0 on error (as explained above).
  */
-REGINA_API NPacket* open(std::istream& s);
+REGINA_API NPacket* open(std::istream& in);
 
 /*@}*/
 
