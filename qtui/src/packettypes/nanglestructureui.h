@@ -92,7 +92,7 @@ class AngleModel : public QAbstractItemModel {
  * A packet interface for viewing angle structure lists.
  */
 class NAngleStructureUI : public QObject, public PacketReadOnlyUI,
-        regina::NPacketListener {
+        regina::PacketListener {
     Q_OBJECT
 
     private:
@@ -135,7 +135,7 @@ class NAngleStructureUI : public QObject, public PacketReadOnlyUI,
         void refreshHeader();
 
         /**
-         * NPacketListener overrides.
+         * PacketListener overrides.
          */
         void packetWasRenamed(regina::NPacket* packet);
         

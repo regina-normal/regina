@@ -37,7 +37,7 @@
 #ifndef __NCONTAINERUI_H
 #define __NCONTAINERUI_H
 
-#include "packet/npacketlistener.h"
+#include "packet/packetlistener.h"
 
 #include "../packetui.h"
 
@@ -53,7 +53,7 @@ namespace regina {
  *
  * Note that this interface is always read-only.
  */
-class NContainerUI : public PacketReadOnlyUI, public regina::NPacketListener {
+class NContainerUI : public PacketReadOnlyUI, public regina::PacketListener {
     private:
         /**
          * Packet details
@@ -82,7 +82,7 @@ class NContainerUI : public PacketReadOnlyUI, public regina::NPacketListener {
         void refresh();
 
         /**
-         * NPacketListener overrides.
+         * PacketListener overrides.
          */
         void childWasAdded(regina::NPacket* packet, regina::NPacket* child);
         void childWasRemoved(regina::NPacket* packet, regina::NPacket* child,

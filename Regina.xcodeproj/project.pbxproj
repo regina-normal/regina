@@ -47,6 +47,7 @@
 		050C64921DA12B0700C9420F /* nprogresstracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64911DA12B0700C9420F /* nprogresstracker.h */; };
 		050C64951DA12FC000C9420F /* examplesnappea.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050C64931DA12FBD00C9420F /* examplesnappea.cpp */; };
 		050C64971DA1301B00C9420F /* nexamplesnappeatriangulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64961DA1301B00C9420F /* nexamplesnappeatriangulation.h */; };
+		050C64991DA1388A00C9420F /* npacketlistener.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64981DA1388A00C9420F /* npacketlistener.h */; };
 		050F5DD31B9BAB9C00C1F681 /* nabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D021B9BAB9C00C1F681 /* nabeliangroup.cpp */; };
 		050F5DD41B9BAB9C00C1F681 /* ngrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D031B9BAB9C00C1F681 /* ngrouppresentation.cpp */; };
 		050F5DD51B9BAB9C00C1F681 /* nhomgrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D041B9BAB9C00C1F681 /* nhomgrouppresentation.cpp */; };
@@ -336,8 +337,8 @@
 		052F9F53180600FB00FAE4DF /* ncontainer.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9CFD180600FA00FAE4DF /* ncontainer.h */; };
 		052F9F54180600FB00FAE4DF /* npacket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CFE180600FA00FAE4DF /* npacket.cpp */; };
 		052F9F55180600FB00FAE4DF /* npacket.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9CFF180600FA00FAE4DF /* npacket.h */; };
-		052F9F56180600FB00FAE4DF /* npacketlistener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D00180600FA00FAE4DF /* npacketlistener.cpp */; };
-		052F9F57180600FB00FAE4DF /* npacketlistener.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D01180600FA00FAE4DF /* npacketlistener.h */; };
+		052F9F56180600FB00FAE4DF /* packetlistener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D00180600FA00FAE4DF /* packetlistener.cpp */; };
+		052F9F57180600FB00FAE4DF /* packetlistener.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D01180600FA00FAE4DF /* packetlistener.h */; };
 		052F9F59180600FB00FAE4DF /* npdf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D03180600FA00FAE4DF /* npdf.cpp */; };
 		052F9F5A180600FB00FAE4DF /* npdf.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D04180600FA00FAE4DF /* npdf.h */; };
 		052F9F5B180600FB00FAE4DF /* nscript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D05180600FA00FAE4DF /* nscript.cpp */; };
@@ -674,7 +675,7 @@
 		052FA1A41806129B00FAE4DF /* numbertheory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CF6180600FA00FAE4DF /* numbertheory.cpp */; };
 		052FA1A51806129B00FAE4DF /* seedprimes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CFA180600FA00FAE4DF /* seedprimes.cpp */; };
 		052FA1A61806129B00FAE4DF /* npacket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CFE180600FA00FAE4DF /* npacket.cpp */; };
-		052FA1A71806129B00FAE4DF /* npacketlistener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D00180600FA00FAE4DF /* npacketlistener.cpp */; };
+		052FA1A71806129B00FAE4DF /* packetlistener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D00180600FA00FAE4DF /* packetlistener.cpp */; };
 		052FA1A91806129B00FAE4DF /* npdf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D03180600FA00FAE4DF /* npdf.cpp */; };
 		052FA1AA1806129B00FAE4DF /* nscript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D05180600FA00FAE4DF /* nscript.cpp */; };
 		052FA1AB1806129B00FAE4DF /* ntext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D07180600FA00FAE4DF /* ntext.cpp */; };
@@ -1927,6 +1928,7 @@
 		050C64911DA12B0700C9420F /* nprogresstracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nprogresstracker.h; sourceTree = "<group>"; };
 		050C64931DA12FBD00C9420F /* examplesnappea.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = examplesnappea.cpp; sourceTree = "<group>"; };
 		050C64961DA1301B00C9420F /* nexamplesnappeatriangulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nexamplesnappeatriangulation.h; sourceTree = "<group>"; };
+		050C64981DA1388A00C9420F /* npacketlistener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = npacketlistener.h; sourceTree = "<group>"; };
 		050F5CDD1B9BAAAA00C1F681 /* engine.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = engine.so; sourceTree = BUILT_PRODUCTS_DIR; };
 		050F5D011B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		050F5D021B9BAB9C00C1F681 /* nabeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nabeliangroup.cpp; sourceTree = "<group>"; };
@@ -2288,8 +2290,8 @@
 		052F9CFD180600FA00FAE4DF /* ncontainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ncontainer.h; sourceTree = "<group>"; };
 		052F9CFE180600FA00FAE4DF /* npacket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = npacket.cpp; sourceTree = "<group>"; };
 		052F9CFF180600FA00FAE4DF /* npacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = npacket.h; sourceTree = "<group>"; };
-		052F9D00180600FA00FAE4DF /* npacketlistener.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = npacketlistener.cpp; sourceTree = "<group>"; };
-		052F9D01180600FA00FAE4DF /* npacketlistener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = npacketlistener.h; sourceTree = "<group>"; };
+		052F9D00180600FA00FAE4DF /* packetlistener.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = packetlistener.cpp; sourceTree = "<group>"; };
+		052F9D01180600FA00FAE4DF /* packetlistener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packetlistener.h; sourceTree = "<group>"; };
 		052F9D03180600FA00FAE4DF /* npdf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = npdf.cpp; sourceTree = "<group>"; };
 		052F9D04180600FA00FAE4DF /* npdf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = npdf.h; sourceTree = "<group>"; };
 		052F9D05180600FA00FAE4DF /* nscript.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nscript.cpp; sourceTree = "<group>"; };
@@ -4406,8 +4408,7 @@
 				052F9CFD180600FA00FAE4DF /* ncontainer.h */,
 				052F9CFE180600FA00FAE4DF /* npacket.cpp */,
 				052F9CFF180600FA00FAE4DF /* npacket.h */,
-				052F9D00180600FA00FAE4DF /* npacketlistener.cpp */,
-				052F9D01180600FA00FAE4DF /* npacketlistener.h */,
+				050C64981DA1388A00C9420F /* npacketlistener.h */,
 				052F9D03180600FA00FAE4DF /* npdf.cpp */,
 				052F9D04180600FA00FAE4DF /* npdf.h */,
 				052F9D05180600FA00FAE4DF /* nscript.cpp */,
@@ -4415,6 +4416,8 @@
 				052F9D07180600FA00FAE4DF /* ntext.cpp */,
 				052F9D08180600FA00FAE4DF /* ntext.h */,
 				05A73CAB19B2EFF90099C617 /* open.cpp */,
+				052F9D00180600FA00FAE4DF /* packetlistener.cpp */,
+				052F9D01180600FA00FAE4DF /* packetlistener.h */,
 				0588F1161808D43B006BDC79 /* packetregistry-impl.h */,
 				052F9D0D180600FA00FAE4DF /* packetregistry.h */,
 				0588F1171808D43B006BDC79 /* packettype.h */,
@@ -6079,8 +6082,9 @@
 				052F9FDD180600FB00FAE4DF /* SnapPy.h in Headers */,
 				052F9F8B180600FB00FAE4DF /* isometry.h in Headers */,
 				052FA0A2180600FB00FAE4DF /* xmlutils.h in Headers */,
-				052F9F57180600FB00FAE4DF /* npacketlistener.h in Headers */,
+				052F9F57180600FB00FAE4DF /* packetlistener.h in Headers */,
 				050C647C1DA1056700C9420F /* xmlanglestructreader.h in Headers */,
+				050C64991DA1388A00C9420F /* npacketlistener.h in Headers */,
 				052F9FFD180600FB00FAE4DF /* nlayeredsurfacebundle.h in Headers */,
 				0541AF4D1B8BE2F5002E166B /* npolynomial.h in Headers */,
 				052F9F63180600FB00FAE4DF /* packetregistry.h in Headers */,
@@ -7211,7 +7215,7 @@
 				052FA2021806129B00FAE4DF /* simplify.cpp in Sources */,
 				055FF38219BECF590057462A /* NewTriangulationController.mm in Sources */,
 				052FA1731806129B00FAE4DF /* dim2exampletriangulation.cpp in Sources */,
-				052FA1A71806129B00FAE4DF /* npacketlistener.cpp in Sources */,
+				052FA1A71806129B00FAE4DF /* packetlistener.cpp in Sources */,
 				052FA20D1806129B00FAE4DF /* stringutils.cpp in Sources */,
 				050C648A1DA1249B00C9420F /* globaldirs.cpp in Sources */,
 				052FA1C51806129B00FAE4DF /* nsatannulus.cpp in Sources */,
@@ -7709,7 +7713,7 @@
 				052FA057180600FB00FAE4DF /* decompose.cpp in Sources */,
 				052F9F29180600FB00FAE4DF /* nmanifold.cpp in Sources */,
 				052F9FD9180600FB00FAE4DF /* volume.c in Sources */,
-				052F9F56180600FB00FAE4DF /* npacketlistener.cpp in Sources */,
+				052F9F56180600FB00FAE4DF /* packetlistener.cpp in Sources */,
 				050C647B1DA1056700C9420F /* xmlanglestructreader.cpp in Sources */,
 				052F9FA3180600FB00FAE4DF /* transcendentals.c in Sources */,
 				052F9F0C180600FB00FAE4DF /* dehydration.cpp in Sources */,

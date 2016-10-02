@@ -37,7 +37,7 @@
 #ifndef __NTRICOMPOSITION_H
 #define __NTRICOMPOSITION_H
 
-#include "packet/npacketlistener.h"
+#include "packet/packetlistener.h"
 
 #include "../packettabui.h"
 
@@ -66,7 +66,7 @@ namespace regina {
  * A triangulation page for viewing the combinatorial composition.
  */
 class NTriCompositionUI : public QObject, public PacketViewerTab,
-        public regina::NPacketListener {
+        public regina::PacketListener {
     Q_OBJECT
 
     private:
@@ -114,7 +114,7 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
         void refresh();
 
         /**
-         * NPacketListener overrides.
+         * PacketListener overrides.
          */
         void packetToBeDestroyed(regina::NPacket* packet);
 

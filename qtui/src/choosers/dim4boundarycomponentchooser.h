@@ -38,7 +38,7 @@
 #ifndef __DIM4BOUNDARYCOMPONENTCHOOSER_H
 #define __DIM4BOUNDARYCOMPONENTCHOOSER_H
 
-#include "packet/npacketlistener.h"
+#include "packet/packetlistener.h"
 
 #include <QDialog>
 #include <QComboBox>
@@ -67,7 +67,7 @@ namespace regina {
  * classes do not use slots or signals, I believe this is okay.
  */
 class Dim4BoundaryComponentChooser :
-        public QComboBox, public regina::NPacketListener {
+        public QComboBox, public regina::PacketListener {
     public:
         /**
          * A filter function, used to determine whether a given
@@ -131,7 +131,7 @@ class Dim4BoundaryComponentChooser :
         bool refresh();
 
         /**
-         * NPacketListener overrides.
+         * PacketListener overrides.
          */
         void packetToBeChanged(regina::NPacket*);
         void packetWasChanged(regina::NPacket*);

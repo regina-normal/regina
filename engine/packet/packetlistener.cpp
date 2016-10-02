@@ -31,15 +31,15 @@
  **************************************************************************/
 
 #include "packet/npacket.h"
-#include "packet/npacketlistener.h"
+#include "packet/packetlistener.h"
 
 namespace regina {
 
-NPacketListener::~NPacketListener() {
+PacketListener::~PacketListener() {
     unregisterFromAllPackets();
 }
 
-void NPacketListener::unregisterFromAllPackets() {
+void PacketListener::unregisterFromAllPackets() {
     std::set<NPacket*>::iterator it, next;
 
     it = packets.begin();

@@ -37,7 +37,7 @@
 #ifndef __NSURFACESUMMARYUI_H
 #define __NSURFACESUMMARYUI_H
 
-#include "packet/npacketlistener.h"
+#include "packet/packetlistener.h"
 
 #include "../packettabui.h"
 
@@ -52,7 +52,7 @@ class QTreeWidget;
  * A normal surface page for viewing surface coordinates.
  */
 class NSurfaceSummaryUI : public QObject, public PacketViewerTab,
-        public regina::NPacketListener {
+        public regina::PacketListener {
     Q_OBJECT
 
     private:

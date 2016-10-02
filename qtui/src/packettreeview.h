@@ -37,7 +37,7 @@
 #ifndef __PACKETTREEVIEW_H
 #define __PACKETTREEVIEW_H
 
-#include "packet/npacketlistener.h"
+#include "packet/packetlistener.h"
 
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
@@ -53,7 +53,7 @@ namespace regina {
 /**
  * A single item in a Regina packet tree.
  */
-class PacketTreeItem : public QTreeWidgetItem, public regina::NPacketListener {
+class PacketTreeItem : public QTreeWidgetItem, public regina::PacketListener {
     private:
         /**
          * The underlying packet, or 0 if the underlying packet has
@@ -120,7 +120,7 @@ class PacketTreeItem : public QTreeWidgetItem, public regina::NPacketListener {
         void refreshLabel();
 
         /**
-         * NPacketListener overrides.
+         * PacketListener overrides.
          */
         void packetWasChanged(regina::NPacket* packet);
         void packetWasRenamed(regina::NPacket* packet);
@@ -151,7 +151,7 @@ class PacketTreeItem : public QTreeWidgetItem, public regina::NPacketListener {
  * The item corresponding to the root of the packet tree will \e not be
  * included in the tree.
  */
-class PacketTreeView : public QTreeWidget, public regina::NPacketListener {
+class PacketTreeView : public QTreeWidget, public regina::PacketListener {
     Q_OBJECT
 
     private:
@@ -246,7 +246,7 @@ class PacketTreeView : public QTreeWidget, public regina::NPacketListener {
             QTreeWidgetItem* fromItem);
 
         /**
-         * NPacketListener overrides.
+         * PacketListener overrides.
          */
         void childWasAdded(regina::NPacket* packet, regina::NPacket* child);
         void childWasRemoved(regina::NPacket* packet, regina::NPacket* child,

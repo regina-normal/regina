@@ -83,7 +83,7 @@ struct PacketInfo<PACKET_SCRIPT> {
  * - if \a P is deleted then \a V will take the value \c None, and the script
  *   will likewise notify listeners of the change.
  */
-class REGINA_API NScript : public NPacket, public NPacketListener {
+class REGINA_API NScript : public NPacket, public PacketListener {
     REGINA_PACKET(NScript, PACKET_SCRIPT)
 
     private:

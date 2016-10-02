@@ -81,7 +81,7 @@ class NHyperSurfaceUI : public PacketTabbedUI {
  * A header for the normal surface list viewer.
  */
 class NHyperHeaderUI : public QObject, public PacketViewerTab,
-        public regina::NPacketListener {
+        public regina::PacketListener {
     Q_OBJECT
 
     private:
@@ -111,7 +111,7 @@ class NHyperHeaderUI : public QObject, public PacketViewerTab,
         void refresh();
 
         /**
-         * NPacketListener overrides.
+         * PacketListener overrides.
          */
         void packetWasRenamed(regina::NPacket* packet);
 

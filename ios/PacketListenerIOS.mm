@@ -32,16 +32,16 @@
 
 #import "PacketListenerIOS.h"
 #import "packet/npacket.h"
-#import "packet/npacketlistener.h"
+#import "packet/packetlistener.h"
 
 #pragma mark C++ wrapper
 
-class NPacketListenerObjC : public regina::NPacketListener {
+class PacketListenerObjC : public regina::PacketListener {
 private:
     void* _object;
     regina::NPacket* _listenChildrenOf;
 public:
-    inline NPacketListenerObjC(void* object, regina::NPacket* listenChildrenOf) : _object(object), _listenChildrenOf(listenChildrenOf) {
+    inline PacketListenerObjC(void* object, regina::NPacket* listenChildrenOf) : _object(object), _listenChildrenOf(listenChildrenOf) {
     }
     
     inline void packetToBeChanged(regina::NPacket* packet) {
@@ -115,7 +115,7 @@ public:
 #pragma mark - Main interface
 
 @interface PacketListenerIOS () {
-    NPacketListenerObjC* _wrapper;
+    PacketListenerObjC* _wrapper;
 }
 @end
 
@@ -125,7 +125,7 @@ public:
 {
     self = [super init];
     if (self) {
-        _wrapper = new NPacketListenerObjC((__bridge void*)delegate, listenChildren ? packet : 0);
+        _wrapper = new PacketListenerObjC((__bridge void*)delegate, listenChildren ? packet : 0);
         packet->listen(_wrapper);
 
         if (listenChildren)

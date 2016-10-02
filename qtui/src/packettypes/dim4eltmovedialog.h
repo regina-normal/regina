@@ -38,7 +38,7 @@
 #ifndef __DIM4ELTMOVEDIALOG_H
 #define __DIM4ELTMOVEDIALOG_H
 
-#include "packet/npacketlistener.h"
+#include "packet/packetlistener.h"
 
 #include <QDialog>
 #include <vector>
@@ -61,7 +61,7 @@ namespace regina {
  * A dialog used to select and perform an elementary move on a
  * 4-manifold triangulation.
  */
-class Dim4EltMoveDialog : public QDialog, public regina::NPacketListener {
+class Dim4EltMoveDialog : public QDialog, public regina::PacketListener {
     Q_OBJECT
 
     private:

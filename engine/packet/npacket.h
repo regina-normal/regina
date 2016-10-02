@@ -46,14 +46,14 @@
 
 #include "regina-core.h"
 #include "output.h"
-#include "packet/npacketlistener.h"
+#include "packet/packetlistener.h"
 #include "packet/packettype.h"
 #include "utilities/safepointeebase.h"
 #include <boost/noncopyable.hpp>
 
 namespace regina {
 
-class NPacketListener;
+class PacketListener;
 class XMLPacketReader;
 class XMLTreeResolver;
 
@@ -187,7 +187,7 @@ struct PacketInfo;
  *
  * Note that external objects can listen for events on packets, such as
  * when packets are changed or about to be destroyed.  See the
- * NPacketListener class notes for details.
+ * PacketListener class notes for details.
  *
  * \todo \feature Provide automatic name selection/specification upon
  * child packet insertion.
@@ -214,7 +214,7 @@ class REGINA_API NPacket :
         std::unique_ptr<std::set<std::string>> tags_;
             /**< The set of all tags associated with this packet. */
 
-        std::unique_ptr<std::set<NPacketListener*>> listeners_;
+        std::unique_ptr<std::set<PacketListener*>> listeners_;
             /**< All objects listening for events on this packet. */
         unsigned changeEventSpans_;
             /**< The number of change event spans currently registered.
@@ -457,7 +457,7 @@ class REGINA_API NPacket :
 
         /**
          * Registers the given packet listener to listen for events on
-         * this packet.  See the NPacketListener class notes for
+         * this packet.  See the PacketListener class notes for
          * details.
          *
          * \ifacespython Not present.
@@ -467,10 +467,10 @@ class REGINA_API NPacket :
          * or \c false if the given listener was already registered
          * beforehand.
          */
-        bool listen(NPacketListener* listener);
+        bool listen(PacketListener* listener);
         /**
          * Determines whether the given packet listener is currently
-         * listening for events on this packet.  See the NPacketListener
+         * listening for events on this packet.  See the PacketListener
          * class notes for details.
          *
          * \ifacespython Not present.
@@ -479,10 +479,10 @@ class REGINA_API NPacket :
          * @return \c true if the given listener is currently registered
          * with this packet, or \c false otherwise.
          */
-        bool isListening(NPacketListener* listener);
+        bool isListening(PacketListener* listener);
         /**
          * Unregisters the given packet listener so that it no longer
-         * listens for events on this packet.  See the NPacketListener
+         * listens for events on this packet.  See the PacketListener
          * class notes for details.
          *
          * \ifacespython Not present.
@@ -492,7 +492,7 @@ class REGINA_API NPacket :
          * or \c false if the given listener was not registered in the
          * first place.
          */
-        bool unlisten(NPacketListener* listener);
+        bool unlisten(PacketListener* listener);
 
         /*@}*/
         /**
@@ -1147,18 +1147,18 @@ class REGINA_API NPacket :
          *
          * Objects of this type should be created on the stack before
          * data within a packet is changed.  On creation, this object
-         * will fire a NPacketListener::packetToBeChanged() event to all
+         * will fire a PacketListener::packetToBeChanged() event to all
          * registered listeners.  On destruction (i.e., when the object
          * goes out of scope), it will fire a
-         * NPacketListener::packetWasChanged() event.
+         * PacketListener::packetWasChanged() event.
          *
          * It may be the case that several objects of this type all
          * exist at the same time for the same packet.  In this case, only
          * the outermost object will fire events; that is, only the first
          * object to be constructed will fire
-         * NPacketListener::packetToBeChanged(), and only the last
+         * PacketListener::packetToBeChanged(), and only the last
          * object to be destroyed will fire
-         * NPacketListener::packetWasChanged().  This is because the
+         * PacketListener::packetWasChanged().  This is because the
          * "inner" ChangeEventSpan objects earlier represent smaller events
          * that are part of a larger suite of changes.
          *
@@ -1181,7 +1181,7 @@ class REGINA_API NPacket :
                  *
                  * If this is the only ChangeEventSpan currently in existence
                  * for the given packet, this constructor will call
-                 * NPacketListener::packetToBeChanged() for all
+                 * PacketListener::packetToBeChanged() for all
                  * registered listeners for the given packet.
                  *
                  * @param packet the packet whose data is about to change.
@@ -1193,7 +1193,7 @@ class REGINA_API NPacket :
                  *
                  * If this is the only ChangeEventSpan currently in existence
                  * for the given packet, this destructor will call
-                 * NPacketListener::packetWasChanged() for all
+                 * PacketListener::packetWasChanged() for all
                  * registered listeners for the given packet.
                  */
                 ~ChangeEventSpan();
@@ -1259,7 +1259,7 @@ class REGINA_API NPacket :
         void internalCloneDescendants(NPacket* parent) const;
 
         /**
-         * Calls the given NPacketListener event for all registered
+         * Calls the given PacketListener event for all registered
          * packet listeners.  The first argument to the event function
          * will be this packet.
          *
@@ -1267,13 +1267,13 @@ class REGINA_API NPacket :
          * manually, since it behaves correctly even if listeners unregister
          * themselves as they handle the event.
          *
-         * @param event the member function of NPacketListener to be called
+         * @param event the member function of PacketListener to be called
          * for each listener.
          */
-        void fireEvent(void (NPacketListener::*event)(NPacket*));
+        void fireEvent(void (PacketListener::*event)(NPacket*));
 
         /**
-         * Calls the given NPacketListener event for all registered
+         * Calls the given PacketListener event for all registered
          * packet listeners.  The first argument to the event function
          * will be this packet.
          *
@@ -1281,15 +1281,15 @@ class REGINA_API NPacket :
          * manually, since it behaves correctly even if listeners unregister
          * themselves as they handle the event.
          *
-         * @param event the member function of NPacketListener to be called
+         * @param event the member function of PacketListener to be called
          * for each listener.
          * @param arg2 the second argument to pass to the event function.
          */
-        void fireEvent(void (NPacketListener::*event)(NPacket*, NPacket*),
+        void fireEvent(void (PacketListener::*event)(NPacket*, NPacket*),
             NPacket* arg2);
 
         /**
-         * Calls the given NPacketListener event for all registered
+         * Calls the given PacketListener event for all registered
          * packet listeners.  The first argument to the event function
          * will be this packet
          *
@@ -1297,16 +1297,16 @@ class REGINA_API NPacket :
          * manually, since it behaves correctly even if listeners unregister
          * themselves as they handle the event.
          *
-         * @param event the member function of NPacketListener to be called
+         * @param event the member function of PacketListener to be called
          * for each listener.
          * @param arg2 the second argument to pass to the event function.
          * @param arg3 the third argument to pass to the event function.
          */
-        void fireEvent(void (NPacketListener::*event)(NPacket*, NPacket*, bool),
+        void fireEvent(void (PacketListener::*event)(NPacket*, NPacket*, bool),
             NPacket* arg2, bool arg3);
 
         /**
-         * Calls NPacketListener::packetToBeDestroyed() for all registered
+         * Calls PacketListener::packetToBeDestroyed() for all registered
          * packet listeners.
          *
          * This routine unregisters each listener just before it calls
@@ -1448,7 +1448,7 @@ inline const std::set<std::string>& NPacket::tags() const {
     return *tags_;
 }
 
-inline bool NPacket::isListening(NPacketListener* listener) {
+inline bool NPacket::isListening(PacketListener* listener) {
     if (! listeners_.get())
         return false;
     return listeners_->count(listener);
@@ -1489,7 +1489,7 @@ inline bool NPacket::hasOwner() const {
 inline NPacket::ChangeEventSpan::ChangeEventSpan(NPacket* packet) :
         packet_(packet) {
     if (! packet_->changeEventSpans_)
-        packet_->fireEvent(&NPacketListener::packetToBeChanged);
+        packet_->fireEvent(&PacketListener::packetToBeChanged);
 
     packet_->changeEventSpans_++;
 }
@@ -1498,7 +1498,7 @@ inline NPacket::ChangeEventSpan::~ChangeEventSpan() {
     packet_->changeEventSpans_--;
 
     if (! packet_->changeEventSpans_)
-        packet_->fireEvent(&NPacketListener::packetWasChanged);
+        packet_->fireEvent(&PacketListener::packetWasChanged);
 }
 
 } // namespace regina

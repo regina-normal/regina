@@ -37,7 +37,7 @@
 #ifndef __NSCRIPTUI_H
 #define __NSCRIPTUI_H
 
-#include "packet/npacketlistener.h"
+#include "packet/packetlistener.h"
 
 #include "../packetui.h"
 

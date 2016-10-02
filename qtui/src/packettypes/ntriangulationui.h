@@ -37,7 +37,7 @@
 #ifndef __NTRIANGULATIONUI_H
 #define __NTRIANGULATIONUI_H
 
-#include "packet/npacketlistener.h"
+#include "packet/packetlistener.h"
 #include "../packettabui.h"
 
 class ClickableLabel;
@@ -93,7 +93,7 @@ class NTriangulationUI : public PacketTabbedUI {
  * A header for the 3-manifold triangulation viewer.
  */
 class NTriHeaderUI : public QObject, public PacketViewerTab,
-        public regina::NPacketListener {
+        public regina::PacketListener {
     Q_OBJECT
 
     private:
@@ -130,7 +130,7 @@ class NTriHeaderUI : public QObject, public PacketViewerTab,
         void refresh();
 
         /**
-         * NPacketListener overrides.
+         * PacketListener overrides.
          */
         void childWasAdded(regina::NPacket* packet, regina::NPacket* child);
         void childWasRemoved(regina::NPacket* packet, regina::NPacket* child,

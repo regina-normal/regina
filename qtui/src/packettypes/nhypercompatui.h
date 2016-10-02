@@ -37,7 +37,7 @@
 #ifndef __NHYPERCOMPATUI_H
 #define __NHYPERCOMPATUI_H
 
-#include "packet/npacketlistener.h"
+#include "packet/packetlistener.h"
 
 #include "../packettabui.h"
 
@@ -57,7 +57,7 @@ namespace regina {
  * A normal surface page for viewing surface coordinates.
  */
 class NHyperCompatibilityUI : public QObject, public PacketViewerTab,
-        public regina::NPacketListener {
+        public regina::PacketListener {
     Q_OBJECT
 
     private:

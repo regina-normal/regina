@@ -38,7 +38,7 @@
 #define __FACECHOOSER_H
 
 #include "choosers/facename.h"
-#include "packet/npacketlistener.h"
+#include "packet/packetlistener.h"
 
 #include <QBoxLayout>
 #include <QDialog>
@@ -67,7 +67,7 @@ namespace regina {
  * classes do not use slots or signals, I believe this is okay.
  */
 template <int dim, int subdim>
-class FaceChooser : public QComboBox, public regina::NPacketListener {
+class FaceChooser : public QComboBox, public regina::PacketListener {
     public:
         /**
          * A filter function, used to determine whether a given face
@@ -132,7 +132,7 @@ class FaceChooser : public QComboBox, public regina::NPacketListener {
         bool refresh();
 
         /**
-         * NPacketListener overrides.
+         * PacketListener overrides.
          */
         void packetToBeChanged(regina::NPacket*);
         void packetWasChanged(regina::NPacket*);

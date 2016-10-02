@@ -37,7 +37,7 @@
 #ifndef __PACKETCHOOSER_H
 #define __PACKETCHOOSER_H
 
-#include "packet/npacketlistener.h"
+#include "packet/packetlistener.h"
 
 #include <QDialog>
 #include <QComboBox>
@@ -75,7 +75,7 @@ namespace regina {
  * that no activated() signal will be emitted since this change was not
  * a result of direct user interaction.
  */
-class PacketChooser : public QComboBox, public regina::NPacketListener {
+class PacketChooser : public QComboBox, public regina::PacketListener {
     Q_OBJECT
 
     public:
@@ -170,7 +170,7 @@ class PacketChooser : public QComboBox, public regina::NPacketListener {
         void setAutoUpdate(bool shouldAutoUpdate);
 
         /**
-         * NPacketListener overrides.
+         * PacketListener overrides.
          */
         void packetWasRenamed(regina::NPacket* packet);
         void packetToBeDestroyed(regina::NPacket* packet);

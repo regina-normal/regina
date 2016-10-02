@@ -37,7 +37,7 @@ namespace regina {
 }
 
 /**
- * A protocol that mirrors Regina's C++ NPacketListener interface.
+ * A protocol that mirrors Regina's C++ PacketListener interface.
  *
  * Objects that wish to respond to changes to the packet tree should
  * implement the relevant methods from this protocol.
@@ -63,7 +63,7 @@ namespace regina {
  * An object that listens for changes to a packet tree and responds
  * by calling the corresponding methods for a given delegate object.
  *
- * This class essentially acts as a bridge between the C++ NPacketListener code
+ * This class essentially acts as a bridge between the C++ PacketListener code
  * and the Objective-C protocol mechanisms.
  *
  * \warning This class does not manage lifespans at all.  You must ensure that,

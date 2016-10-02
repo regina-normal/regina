@@ -314,7 +314,7 @@ class REGINA_API Cusp :
  * SnapPea and its successor SnapPy.
  */
 class REGINA_API NSnapPeaTriangulation : public NTriangulation,
-        public NPacketListener {
+        public PacketListener {
     REGINA_PACKET(NSnapPeaTriangulation, PACKET_SNAPPEATRIANGULATION)
 
     public:

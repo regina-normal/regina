@@ -4,7 +4,7 @@
 SET ( FILES
   ncontainer
   npacket
-  npacketlistener
+  packetlistener
   npdf
   nscript
   ntext
@@ -29,6 +29,7 @@ if (${REGINA_INSTALL_DEV})
     npdf.h
     nscript.h
     ntext.h
+    packetlistener.h
     xmlpacketreader.h
     xmlpacketreaders.h
     xmltreeresolver.h

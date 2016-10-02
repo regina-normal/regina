@@ -38,7 +38,7 @@
 #ifndef __CUSPCHOOSER_H
 #define __CUSPCHOOSER_H
 
-#include "packet/npacketlistener.h"
+#include "packet/packetlistener.h"
 
 #include <QDialog>
 #include <QComboBox>
@@ -68,7 +68,7 @@ typedef bool (*CuspFilterFunc)(const regina::Cusp*);
  * Q_OBJECT does not play well with template classes.  Since the chooser
  * classes do not use slots or signals, I believe this is okay.
  */
-class CuspChooser : public QComboBox, public regina::NPacketListener {
+class CuspChooser : public QComboBox, public regina::PacketListener {
     public:
         enum {
             CUSP_ALL = -1,
@@ -133,7 +133,7 @@ class CuspChooser : public QComboBox, public regina::NPacketListener {
         bool refresh();
 
         /**
-         * NPacketListener overrides.
+         * PacketListener overrides.
          */
         void packetToBeChanged(regina::NPacket*);
         void packetWasChanged(regina::NPacket*);

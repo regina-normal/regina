@@ -37,7 +37,7 @@
 #ifndef __NSURFACECOODINATEUI_H
 #define __NSURFACECOODINATEUI_H
 
-#include "packet/npacketlistener.h"
+#include "packet/packetlistener.h"
 #include "surfaces/nnormalsurfacelist.h"
 
 #include "../packettabui.h"
@@ -130,7 +130,7 @@ class SurfaceModel : public QAbstractItemModel {
  * A normal surface page for viewing surface coordinates.
  */
 class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
-        public regina::NPacketListener {
+        public regina::PacketListener {
     Q_OBJECT
 
     private:
@@ -180,7 +180,7 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
         void setReadWrite(bool readWrite);
 
         /**
-         * NPacketListener overrides.
+         * PacketListener overrides.
          */
         void packetToBeDestroyed(regina::NPacket* packet);
 

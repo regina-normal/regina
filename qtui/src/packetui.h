@@ -37,7 +37,7 @@
 #ifndef __PACKETUI_H
 #define __PACKETUI_H
 
-#include "packet/npacketlistener.h"
+#include "packet/packetlistener.h"
 
 #include <QLinkedList>
 #include <QWidget>
@@ -255,7 +255,7 @@ class DefaultPacketUI : public PacketReadOnlyUI {
  *
  * Packet panes float freely in their own frames.
  */
-class PacketPane : public QWidget, public regina::NPacketListener {
+class PacketPane : public QWidget, public regina::PacketListener {
     Q_OBJECT
 
     private:
@@ -370,7 +370,7 @@ class PacketPane : public QWidget, public regina::NPacketListener {
         void deregisterEditOperations();
 
         /**
-         * NPacketListener overrides.
+         * PacketListener overrides.
          */
         void packetWasChanged(regina::NPacket* packet);
         void packetWasRenamed(regina::NPacket* packet);

@@ -37,7 +37,7 @@
 #ifndef __NSURFACEFILTERCOMB_H
 #define __NSURFACEFILTERCOMB_H
 
-#include "packet/npacketlistener.h"
+#include "packet/packetlistener.h"
 
 #include "../packetui.h"
 
@@ -54,7 +54,7 @@ namespace regina {
  * A packet interface for working with combination surface filters.
  */
 class NSurfaceFilterCombUI : public QObject, public PacketUI,
-        public regina::NPacketListener {
+        public regina::PacketListener {
     Q_OBJECT
 
     private:
@@ -90,7 +90,7 @@ class NSurfaceFilterCombUI : public QObject, public PacketUI,
         void setReadWrite(bool readWrite);
 
         /**
-         * NPacketListener overrides.
+         * PacketListener overrides.
          */
         void packetWasRenamed(regina::NPacket* packet);
         void childWasAdded(regina::NPacket* packet, regina::NPacket* child);
