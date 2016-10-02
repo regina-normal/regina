@@ -19,7 +19,6 @@ if (${REGINA_INSTALL_DEV})
     anglestructures.h
     nanglestructure.h
     nanglestructurelist.h
-    nxmlanglestructreader.h
     xmlanglestructreader.h
     DESTINATION ${INCLUDEDIR}/angle COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})
