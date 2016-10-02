@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <vector>
-#include "angle/nxmlanglestructreader.h"
+#include "angle/xmlanglestructreader.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/stringutils.h"
 

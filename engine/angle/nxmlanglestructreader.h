@@ -31,7 +31,7 @@
  **************************************************************************/
 
 /*! \file angle/nxmlanglestructreader.h
- *  \brief Deals with parsing XML data for angle structure lists.
+ *  \brief Deprecated header.
  */
 
 #ifndef __NXMLANGLESTRUCTREADER_H
@@ -39,117 +39,9 @@
 #define __NXMLANGLESTRUCTREADER_H
 #endif
 
-#include "regina-core.h"
-#include "packet/nxmlpacketreader.h"
-#include "angle/anglestructures.h"
+#warning This header is deprecated; please use angle/xmlanglestructreader.h instead.
 
-namespace regina {
-
-/**
- * \weakgroup angle
- * @{
- */
-
-/**
- * An XML element reader that reads a single angle structure.
- *
- * \ifacespython Not present.
- */
-class REGINA_API XMLAngleStructureReader : public NXMLElementReader {
-    private:
-        AngleStructure* angles;
-            /**< The angle structure currently being read. */
-        NTriangulation* tri;
-            /**< The triangulation on which this angle structure is placed. */
-        long vecLen;
-            /**< The length of corresponding angle structure vector. */
-
-    public:
-        /**
-         * Creates a new angle structure reader.
-         *
-         * @param newTri the triangulation on which this angle structure lies.
-         */
-        XMLAngleStructureReader(NTriangulation* newTri);
-
-        /**
-         * Returns the angle structure that has been read.
-         *
-         * @return the newly allocated angle structure, or 0 if an error
-         * occurred.
-         */
-        AngleStructure* structure();
-
-        virtual void startElement(const std::string& tagName,
-            const regina::xml::XMLPropertyDict& tagProps,
-            NXMLElementReader* parentReader);
-        virtual void initialChars(const std::string& chars);
-        virtual NXMLElementReader* startSubElement(
-            const std::string& subTagName,
-            const regina::xml::XMLPropertyDict& subTagProps);
-};
-
-/**
- * An XML packet reader that reads a single angle structure list.
- *
- * \pre The parent XML element reader is in fact an
- * NXMLTriangulationReader.
- *
- * \ifacespython Not present.
- */
-class REGINA_API XMLAngleStructuresReader : public NXMLPacketReader {
-    private:
-        AngleStructures* list;
-            /**< The angle structure list currently being read. */
-        NTriangulation* tri;
-            /**< The triangulation on which these angle structures
-                 are placed. */
-
-    public:
-        /**
-         * Creates a new angle structure list reader.
-         *
-         * @param newTri the triangulation on which these angle
-         * structures are placed.
-         * @param resolver the master resolver that will be used to fix
-         * dangling packet references after the entire XML file has been read.
-         */
-        XMLAngleStructuresReader(NTriangulation* newTri,
-            NXMLTreeResolver& resolver);
-
-        virtual NPacket* packet() override;
-        virtual NXMLElementReader* startContentSubElement(
-            const std::string& subTagName,
-            const regina::xml::XMLPropertyDict& subTagProps) override;
-        virtual void endContentSubElement(const std::string& subTagName,
-            NXMLElementReader* subReader) override;
-};
-
-/*@}*/
-
-// Inline functions for XMLAngleStructureReader
-
-inline XMLAngleStructureReader::XMLAngleStructureReader(
-        NTriangulation* newTri) : angles(0), tri(newTri), vecLen(-1) {
-}
-
-inline AngleStructure* XMLAngleStructureReader::structure() {
-    return angles;
-}
-
-// Inline functions for XMLAngleStructuresReader
-
-inline XMLAngleStructuresReader::XMLAngleStructuresReader(
-        NTriangulation* newTri, NXMLTreeResolver& resolver) :
-        NXMLPacketReader(resolver),
-        list(new AngleStructures(false)), tri(newTri) {
-}
-
-inline NPacket* XMLAngleStructuresReader::packet() {
-    return list;
-}
-
-} // namespace regina
+#include "angle/xmlanglestructreader.h"
 
 #endif
 

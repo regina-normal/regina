@@ -4,7 +4,7 @@
 SET ( FILES
   anglestructure
   anglestructures
-  nxmlanglestructreader
+  xmlanglestructreader
   )
 
 # Prepend folder name
@@ -20,5 +20,6 @@ if (${REGINA_INSTALL_DEV})
     nanglestructure.h
     nanglestructurelist.h
     nxmlanglestructreader.h
+    xmlanglestructreader.h
     DESTINATION ${INCLUDEDIR}/angle COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})
