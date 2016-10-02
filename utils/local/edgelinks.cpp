@@ -42,7 +42,6 @@
  * command-line argument, and this directory must already exist.
  */
 
-#include <packet/ncontainer.h>
 #include <surfaces/nnormalsurfacelist.h>
 #include <triangulation/ntriangulation.h>
 

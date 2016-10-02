@@ -41,7 +41,7 @@
 
 #include "regina-core.h"
 #include "packet/xmlpacketreader.h"
-#include "packet/ncontainer.h"
+#include "packet/container.h"
 #include "packet/pdf.h"
 #include "packet/script.h"
 #include "packet/text.h"
@@ -60,7 +60,7 @@ namespace regina {
  */
 class REGINA_API XMLContainerReader : public XMLPacketReader {
     private:
-        NContainer* container;
+        Container* container;
             /**< The container currently being read. */
 
     public:
@@ -161,7 +161,7 @@ class REGINA_API XMLTextReader : public XMLPacketReader {
 // Inline functions for XMLContainerReader
 
 inline XMLContainerReader::XMLContainerReader(XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), container(new NContainer()) {
+        XMLPacketReader(resolver), container(new Container()) {
 }
 
 inline NPacket* XMLContainerReader::packet() {

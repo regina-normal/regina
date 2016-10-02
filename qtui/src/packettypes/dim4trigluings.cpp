@@ -32,7 +32,7 @@
 
 // Regina core includes:
 #include "dim4/dim4triangulation.h"
-#include "packet/ncontainer.h"
+#include "packet/container.h"
 #include "triangulation/ntriangulation.h"
 
 // UI includes:
@@ -813,7 +813,7 @@ void Dim4TriGluingsUI::splitIntoComponents() {
         // the new triangulations at a deeper level.
         NPacket* base;
         if (tri->firstChild()) {
-            base = new regina::NContainer();
+            base = new regina::Container();
             tri->insertChildLast(base);
             base->setLabel(tri->adornedLabel("Components"));
         } else

@@ -34,7 +34,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "census/dim2gluingpermsearcher.h"
 #include "dim2/dim2triangulation.h"
-#include "packet/ncontainer.h"
+#include "packet/container.h"
 #include "testsuite/census/testcensus.h"
 
 using regina::NBoolSet;

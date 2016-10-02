@@ -75,7 +75,7 @@
 #include <sstream>
 #include <popt.h>
 
-#include "packet/ncontainer.h"
+#include "packet/container.h"
 #include "triangulation/ntriangulation.h"
 
 #include "mpi.h"
@@ -524,13 +524,13 @@ int mainController() {
         printf("EQUIVALENCE CLASSES:\n\n");
 
         if (outFile) {
-            newTree = new NContainer();
+            newTree = new Container();
             newTree->setLabel("Equivalence Classes");
         }
 
         int classNum = 1;
         std::string className;
-        NContainer* classCnt = 0;
+        Container* classCnt = 0;
 
         ClassMap::iterator cit, cit2;
         int c;
@@ -547,7 +547,7 @@ int mainController() {
 
                 printf("%s\n\n", className.c_str());
                 if (outFile) {
-                    classCnt = new NContainer();
+                    classCnt = new Container();
                     classCnt->setLabel(className);
                     newTree->insertChildLast(classCnt);
                 }

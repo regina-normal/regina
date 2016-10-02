@@ -54,7 +54,7 @@
  */
 
 #include <maths/numbertheory.h>
-#include <packet/ncontainer.h>
+#include <packet/container.h>
 #include <triangulation/ntriangulation.h>
 
 #include <cstdlib>
@@ -87,7 +87,7 @@ struct InvData;
 std::vector<InvData*> manifolds;
 
 struct InvData {
-    NContainer* manifold;
+    Container* manifold;
 
     std::string h1;
     unsigned long h2z2;
@@ -153,7 +153,7 @@ void initTVParams() {
             }
 }
 
-void process(NContainer* c) {
+void process(Container* c) {
     InvData* mfdData = 0;
     std::string mfdDataName;
     bool mfdInconsistent = false;
@@ -301,7 +301,7 @@ int main(int argc, const char* argv[]) {
         if (p->type() == PACKET_CONTAINER) {
             if (verbose)
                 std::cout << "... " << p->label() << " ...\n";
-            process(static_cast<NContainer*>(p));
+            process(static_cast<Container*>(p));
         }
 
     findDuplicates();

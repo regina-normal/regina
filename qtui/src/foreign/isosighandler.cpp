@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "foreign/isosig.h"
-#include "packet/ncontainer.h"
+#include "packet/container.h"
 #include "packet/text.h"
 
 #include "isosighandler.h"

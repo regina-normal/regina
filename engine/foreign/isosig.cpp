@@ -36,13 +36,13 @@
 #include "dim2/dim2triangulation.h"
 #include "dim4/dim4triangulation.h"
 #include "foreign/isosig.h"
-#include "packet/ncontainer.h"
+#include "packet/container.h"
 #include "packet/text.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
 
-NContainer* readIsoSigList(const char *filename, unsigned dimension,
+Container* readIsoSigList(const char *filename, unsigned dimension,
         unsigned colSigs, int colLabels, unsigned long ignoreLines) {
     // Open the file.
     std::ifstream in(filename);
@@ -56,11 +56,11 @@ NContainer* readIsoSigList(const char *filename, unsigned dimension,
     for (i = 0; i < ignoreLines; i++) {
         std::getline(in, line);
         if (in.eof())
-            return new NContainer();
+            return new Container();
     }
 
     // Read in and process the remaining lines.
-    NContainer* ans = new NContainer();
+    Container* ans = new Container();
     std::string errStrings;
 
     int col;

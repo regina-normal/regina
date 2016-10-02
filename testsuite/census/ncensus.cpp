@@ -35,7 +35,7 @@
 #include "census/ncensus.h"
 #include "census/ngluingpermsearcher.h"
 #include "file/globaldirs.h"
-#include "packet/ncontainer.h"
+#include "packet/container.h"
 #include "triangulation/ntriangulation.h"
 #include "testsuite/census/testcensus.h"
 

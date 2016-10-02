@@ -33,7 +33,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <list>
-#include "packet/ncontainer.h"
+#include "packet/container.h"
 
 void usage(const char* progName, const std::string& error = std::string()) {
     if (! error.empty())
@@ -83,7 +83,7 @@ int main(int argc, char* argv[]) {
         usage(argv[0], "No data files have been supplied.");
 
     // Read the input files one by one.
-    regina::NPacket* ans = new regina::NContainer();
+    regina::NPacket* ans = new regina::Container();
     ans->setLabel("Combined Data");
 
     bool error = false;

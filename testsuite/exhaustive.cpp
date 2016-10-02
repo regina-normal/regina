@@ -34,7 +34,7 @@
 #include "census/dim4gluingpermsearcher.h"
 #include "census/ncensus.h"
 #include "census/ngluingpermsearcher.h"
-#include "packet/ncontainer.h"
+#include "packet/container.h"
 #include "triangulation/ntriangulation.h"
 #include "dim4/dim4triangulation.h"
 

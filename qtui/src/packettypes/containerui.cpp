@@ -31,18 +31,18 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "packet/ncontainer.h"
+#include "packet/container.h"
 
 // UI includes:
-#include "ncontainerui.h"
+#include "containerui.h"
 
 #include <QBoxLayout>
 #include <QLabel>
 
 using regina::NPacket;
-using regina::NContainer;
+using regina::Container;
 
-NContainerUI::NContainerUI(NContainer* packet, PacketPane* enclosingPane) :
+ContainerUI::ContainerUI(Container* packet, PacketPane* enclosingPane) :
         PacketReadOnlyUI(enclosingPane), container(packet) {
     ui = new QWidget();
     QBoxLayout* layout = new QVBoxLayout(ui);
@@ -96,28 +96,28 @@ NContainerUI::NContainerUI(NContainer* packet, PacketPane* enclosingPane) :
     container->listen(this);
 }
 
-NPacket* NContainerUI::getPacket() {
+NPacket* ContainerUI::getPacket() {
     return container;
 }
 
-QWidget* NContainerUI::getInterface() {
+QWidget* ContainerUI::getInterface() {
     return ui;
 }
 
-QString NContainerUI::getPacketMenuText() const {
+QString ContainerUI::getPacketMenuText() const {
     return ui->tr("&Container");
 }
 
-void NContainerUI::refresh() {
+void ContainerUI::refresh() {
     children->setText(QString::number(container->countChildren()));
     descendants->setText(QString::number(container->countDescendants()));
 }
 
-void NContainerUI::childWasAdded(NPacket*, NPacket*) {
+void ContainerUI::childWasAdded(NPacket*, NPacket*) {
     refresh();
 }
 
-void NContainerUI::childWasRemoved(NPacket*, NPacket*,
+void ContainerUI::childWasRemoved(NPacket*, NPacket*,
         bool inParentDestructor) {
     if (! inParentDestructor)
         refresh();

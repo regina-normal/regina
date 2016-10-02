@@ -49,7 +49,7 @@
 #define __PACKETREGISTRY_IMPL_H
 #endif
 
-#include "packet/ncontainer.h"
+#include "packet/container.h"
 #include "packet/text.h"
 #include "triangulation/ntriangulation.h"
 #include "surfaces/nnormalsurfacelist.h"

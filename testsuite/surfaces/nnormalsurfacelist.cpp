@@ -33,7 +33,7 @@
 #include <algorithm>
 #include <cppunit/extensions/HelperMacros.h>
 #include <memory>
-#include "packet/ncontainer.h"
+#include "packet/container.h"
 #include "split/nsignature.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/nexampletriangulation.h"
@@ -45,7 +45,7 @@
 using regina::NAbelianGroup;
 using regina::NBoolSet;
 using regina::NBoundaryComponent;
-using regina::NContainer;
+using regina::Container;
 using regina::NEdge;
 using regina::NExampleTriangulation;
 using regina::NNormalSurface;
@@ -2063,12 +2063,12 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
             const NNormalSurface *s;
             std::unique_ptr<NTriangulation> t;
-            std::unique_ptr<NContainer> comp;
+            std::unique_ptr<Container> comp;
             unsigned long nComp;
 
             std::unique_ptr<NNormalSurface> sDouble;
             std::unique_ptr<NTriangulation> tDouble;
-            std::unique_ptr<NContainer> compDouble;
+            std::unique_ptr<Container> compDouble;
             unsigned long nCompDouble;
 
             bool separating;
@@ -2081,13 +2081,13 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
                 s = list->surface(i);
                 t.reset(s->cutAlong());
                 t->intelligentSimplify();
-                comp.reset(new NContainer());
+                comp.reset(new Container());
                 nComp = t->splitIntoComponents(comp.get(), false);
 
                 sDouble.reset(doubleSurface(s));
                 tDouble.reset(sDouble->cutAlong());
                 tDouble->intelligentSimplify();
-                compDouble.reset(new NContainer());
+                compDouble.reset(new Container());
                 nCompDouble = tDouble->splitIntoComponents(compDouble.get(),
                     false);
 

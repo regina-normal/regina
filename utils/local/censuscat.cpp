@@ -47,7 +47,7 @@
  * for each triangulation by passing -s.
  */
 
-#include "packet/ncontainer.h"
+#include "packet/container.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/ntriangulation.h"
 
@@ -64,7 +64,7 @@ unsigned totKept = 0;
 
 bool makeSurfaces = false;
 bool checkZeroEff = false;
-NContainer* all;
+Container* all;
 
 typedef std::map<std::string, NPacket*> HomologyMap;
 HomologyMap H1Map;
@@ -93,7 +93,7 @@ void insertTri(const NTriangulation& source) {
 
     HomologyMap::iterator it = H1Map.find(H1);
     if (it == H1Map.end()) {
-        NPacket* p = new NContainer();
+        NPacket* p = new Container();
         p->setLabel(H1);
         p->insertChildLast(t);
 
@@ -182,7 +182,7 @@ int main(int argc, char* argv[]) {
         process(argv[i]);
 
     // Insert each homology container into the overall container.
-    all = new NContainer();
+    all = new Container();
     all->setLabel("All");
 
     long size;

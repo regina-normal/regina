@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "packet/ncontainer.h"
+#include "packet/container.h"
 #include "../safeheldtype.h"
 #include "../helpers.h"
 
@@ -39,19 +39,21 @@
 
 using namespace boost::python;
 using regina::python::SafeHeldType;
-using regina::NContainer;
+using regina::Container;
 
-void addNContainer() {
-    class_<NContainer, bases<regina::NPacket>,
-            SafeHeldType<NContainer>, boost::noncopyable>(
-            "NContainer", init<>())
+void addContainer() {
+    class_<Container, bases<regina::NPacket>,
+            SafeHeldType<Container>, boost::noncopyable>(
+            "Container", init<>())
         .def(init<const std::string&>())
         .attr("typeID") = regina::PACKET_CONTAINER
     ;
 
-    implicitly_convertible<SafeHeldType<NContainer>,
+    implicitly_convertible<SafeHeldType<Container>,
         SafeHeldType<regina::NPacket>>();
 
-    FIX_REGINA_BOOST_CONVERTERS(NContainer);
+    FIX_REGINA_BOOST_CONVERTERS(Container);
+
+    scope().attr("NContainer") = scope().attr("Container");
 }
 

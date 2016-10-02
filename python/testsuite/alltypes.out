@@ -1051,7 +1051,7 @@ Equality type : BY_REFERENCE
 NComponent : class
 Equality type : BY_REFERENCE
 
-NContainer : class
+Container : class
 Equality type : BY_REFERENCE
 
 Cusp : class

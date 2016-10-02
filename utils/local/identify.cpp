@@ -52,7 +52,6 @@
 
 #include <algebra/nabeliangroup.h>
 #include <manifold/nmanifold.h>
-#include <packet/ncontainer.h>
 #include <subcomplex/nstandardtri.h>
 #include <triangulation/ntriangulation.h>
 

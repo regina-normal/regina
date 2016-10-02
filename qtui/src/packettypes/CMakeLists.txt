@@ -1,6 +1,7 @@
 SET ( FILES
   anglescreator
   anglesui
+  containerui
   dim2tricreator
   dim2trigluings
   dim2triskeleton
@@ -17,7 +18,6 @@ SET ( FILES
   generictriui
   groupwidget
   ncompatcanvas
-  ncontainerui
   nhypercompatui
   nhypercoordinateui
   nhypermatchingui

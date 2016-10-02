@@ -32,7 +32,7 @@
 # MA 02110-1301, USA.
 
 def watcher(p):
-    c = NContainer()
+    c = Container()
     p.insertChildLast(c)
     return c
 
@@ -50,7 +50,7 @@ def ensureDestroyed(watcher):
         pass
 
 print 'Script variables #1'
-a = NContainer(); aw = watcher(a)
+a = Container(); aw = watcher(a)
 b = NTriangulation(); b.newSimplex(); bw = watcher(b)
 c = Script(); cw = watcher(c)
 a.insertChildLast(b)
@@ -63,7 +63,7 @@ a = None
 ensureDestroyed(aw); ensureDestroyed(bw); ensureDestroyed(cw)
 
 print 'Script variables #2'
-a = NContainer(); aw = watcher(a)
+a = Container(); aw = watcher(a)
 b = NTriangulation(); b.newSimplex(); bw = watcher(b)
 c = Script(); cw = watcher(c)
 a.insertChildLast(b)

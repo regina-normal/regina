@@ -44,7 +44,7 @@
 #include "census/ngluingpermsearcher.h"
 #include "dim2/dim2triangulation.h"
 #include "dim4/dim4triangulation.h"
-#include "packet/ncontainer.h"
+#include "packet/container.h"
 #include "packet/text.h"
 #include "triangulation/ntriangulation.h"
 
@@ -787,7 +787,7 @@ regina::NPacket* slaveSkeletonTree(
         const typename CensusType::GluingPermSearcher* search,
         const char* searchRep) {
     // Create the overall parent packet.
-    regina::NContainer* parent = new regina::NContainer();
+    regina::Container* parent = new regina::Container();
     parent->setLabel("Partial MPI census");
 
     // Create a child packet that describes the census parameters.
@@ -822,7 +822,7 @@ template <class CensusType>
 regina::NPacket* slaveSkeletonTree(
         const typename CensusType::Pairing* pairing) {
     // Create the overall parent packet.
-    regina::NContainer* parent = new regina::NContainer();
+    regina::Container* parent = new regina::Container();
     parent->setLabel("Partial MPI census");
 
     // Create a child packet that describes the census parameters.
@@ -924,7 +924,7 @@ void slaveProcessPartialSearch() {
     regina::NPacket* parent = 0;
     regina::NPacket* dest = 0;
     if (! sigs) {
-        dest = new regina::NContainer();
+        dest = new regina::Container();
         dest->setLabel("Triangulations");
     }
 
@@ -1037,7 +1037,7 @@ void slaveProcessPairing() {
         sigStreamErr = false;
     } else {
         parent = slaveSkeletonTree<CensusType>(pairing);
-        dest = new regina::NContainer();
+        dest = new regina::Container();
         dest->setLabel("Triangulations");
         parent->insertChildLast(dest);
     }

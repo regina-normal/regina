@@ -2,7 +2,7 @@
 
 # Files to compile
 SET ( FILES
-  ncontainer
+  container
   npacket
   packettype
   pdf

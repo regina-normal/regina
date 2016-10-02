@@ -73,7 +73,7 @@
  */
 
 #include <dim4/dim4triangulation.h>
-#include <packet/ncontainer.h>
+#include <packet/container.h>
 
 #include <cstdio>
 #include <list>
@@ -352,13 +352,13 @@ void processTree() {
         printf("EQUIVALENCE CLASSES:\n\n");
 
         if (outFile) {
-            newTree = new NContainer();
+            newTree = new Container();
             newTree->setLabel("Equivalence Classes");
         }
 
         int classNum = 1;
         std::string className;
-        NContainer* classCnt = 0;
+        Container* classCnt = 0;
 
         for (cit = eClass.begin(); cit != eClass.end(); cit++)
             if (cit->second >= 0) {
@@ -374,7 +374,7 @@ void processTree() {
 
                 printf("%s\n\n", className.c_str());
                 if (outFile) {
-                    classCnt = new NContainer();
+                    classCnt = new Container();
                     classCnt->setLabel(className);
                     newTree->insertChildLast(classCnt);
                 }

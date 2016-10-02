@@ -32,7 +32,7 @@
 
 // Regina core includes:
 #include "dim2/dim2triangulation.h"
-#include "packet/ncontainer.h"
+#include "packet/container.h"
 #include "packet/text.h"
 #include "progress/progresstracker.h"
 #include "snappea/nsnappeatriangulation.h"
@@ -1019,7 +1019,7 @@ void NTriGluingsUI::splitIntoComponents() {
         // the new triangulations at a deeper level.
         NPacket* base;
         if (tri->firstChild()) {
-            base = new regina::NContainer();
+            base = new regina::Container();
             tri->insertChildLast(base);
             base->setLabel(tri->adornedLabel("Components"));
         } else
@@ -1059,7 +1059,7 @@ void NTriGluingsUI::connectedSumDecomposition() {
         // the new triangulations at a deeper level.
         NPacket* base;
         if (tri->firstChild()) {
-            base = new regina::NContainer();
+            base = new regina::Container();
             tri->insertChildLast(base);
             base->setLabel(tri->adornedLabel("Summands"));
         } else

@@ -34,7 +34,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "census/dim4gluingpermsearcher.h"
 #include "dim4/dim4triangulation.h"
-#include "packet/ncontainer.h"
+#include "packet/container.h"
 #include "testsuite/census/testcensus.h"
 
 using regina::Dim4FacetPairing;

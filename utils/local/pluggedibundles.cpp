@@ -49,7 +49,6 @@
  * All output is written to standard output.
  */
 
-#include <packet/ncontainer.h>
 #include <subcomplex/nblockedsfs.h>
 #include <subcomplex/nstandardtri.h>
 #include <triangulation/ntriangulation.h>

@@ -60,7 +60,6 @@
  * An MPI-enabled version of this tool also exists (mpi/normal-compare-mpi.cpp).
  */
 
-#include <packet/ncontainer.h>
 #include <surfaces/nnormalsurfacelist.h>
 #include <triangulation/ntriangulation.h>
 

@@ -61,7 +61,7 @@ def isContainer(packet):
     Is the given packet a container?
     Returns 1 for true, or 0 for false.
     """
-    return (packet.type() == regina.NContainer.typeID)
+    return (packet.type() == regina.Container.typeID)
 
 def isScript(packet):
     """

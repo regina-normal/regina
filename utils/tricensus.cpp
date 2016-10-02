@@ -43,7 +43,7 @@
 #include "dim2/dim2triangulation.h"
 #include "dim4/dim4facetpairing.h"
 #include "dim4/dim4triangulation.h"
-#include "packet/ncontainer.h"
+#include "packet/container.h"
 #include "packet/text.h"
 #include "triangulation/nfacepairing.h"
 #include "triangulation/ntriangulation.h"
@@ -223,7 +223,7 @@ void foundFacePairing(const typename CensusType::Pairing* pairing,
         // If creating a full .rga file, store triangulations for each face
         // pairing in a different container.
         if (subContainers) {
-            subContainer = new regina::NContainer();
+            subContainer = new regina::Container();
             subContainer->setLabel(pairing->str());
             static_cast<regina::NPacket*>(container)->insertChildLast(subContainer);
         } else {
@@ -603,7 +603,7 @@ int runCensus() {
             return 1;
         }
     } else {
-        parent = new regina::NContainer();
+        parent = new regina::Container();
         if (usePairs)
             parent->setLabel("Partial command-line census");
         else
@@ -611,7 +611,7 @@ int runCensus() {
 
         desc = parameterPacket();
 
-        census = new regina::NContainer();
+        census = new regina::Container();
         census->setLabel("Triangulations");
 
         parent->insertChildLast(desc);

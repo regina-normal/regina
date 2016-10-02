@@ -2,7 +2,6 @@
 
 # Files to compile
 SET ( FILES
-  ncontainer
   npacket
   packetlistener
   open
@@ -23,6 +22,7 @@ SET(SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
+    container.h
     ncontainer.h
     npacket.h
     npacketlistener.h

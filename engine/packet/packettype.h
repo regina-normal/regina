@@ -56,7 +56,7 @@ namespace regina {
  */
 enum PacketType {
     /**
-     * Represents a container packet, of class NContainer.
+     * Represents a container packet, of class Container.
      */
     PACKET_CONTAINER = 1,
     /**

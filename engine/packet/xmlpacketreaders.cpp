@@ -182,7 +182,7 @@ void XMLScriptReader::endContentSubElement(const std::string& subTagName,
     }
 }
 
-XMLPacketReader* NContainer::xmlReader(NPacket*,
+XMLPacketReader* Container::xmlReader(NPacket*,
         XMLTreeResolver& resolver) {
     return new XMLContainerReader(resolver);
 }

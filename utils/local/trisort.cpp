@@ -46,7 +46,7 @@
  * The original file will be overwritten with any changes that were made.
  */
 
-#include <packet/ncontainer.h>
+#include <packet/container.h>
 #include <subcomplex/nblockedsfs.h>
 #include <subcomplex/nstandardtri.h>
 #include <triangulation/ntriangulation.h>
@@ -116,7 +116,7 @@ void usage(const char* progName, const std::string& error = std::string()) {
     exit(1);
 }
 
-bool hasTriangulation(NContainer* c) {
+bool hasTriangulation(Container* c) {
     for (NPacket* child = c->firstChild(); child; child = child->nextSibling())
         if (child->type() == PACKET_TRIANGULATION)
             return true;
@@ -124,7 +124,7 @@ bool hasTriangulation(NContainer* c) {
     return false;
 }
 
-void process(NContainer* c) {
+void process(Container* c) {
     if (! hasTriangulation(c))
         return;
 
@@ -206,7 +206,7 @@ int main(int argc, char* argv[]) {
     // Process each container.
     for (NPacket* p = tree; p; p = p->nextTreePacket())
         if (p->type() == PACKET_CONTAINER)
-            process(static_cast<NContainer*>(p));
+            process(static_cast<Container*>(p));
 
     // Save the data file if required.
     if (saveChanges) {

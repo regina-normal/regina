@@ -44,7 +44,6 @@
  * All output is written to standard output.
  */
 
-#include <packet/ncontainer.h>
 #include <snappea/nsnappeatriangulation.h>
 #include <triangulation/ntriangulation.h>
 

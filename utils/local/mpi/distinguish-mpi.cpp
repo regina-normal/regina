@@ -56,7 +56,7 @@
  */
 
 #include <maths/numbertheory.h>
-#include <packet/ncontainer.h>
+#include <packet/container.h>
 #include <triangulation/ntriangulation.h>
 
 #include <cstdio>
@@ -332,7 +332,7 @@ std::ostream& ctrlLogStamp() {
  * Contains a set of invariants for a 3-manifold triangulation.
  */
 struct InvData {
-    NContainer* manifold;
+    Container* manifold;
 
     std::string h1;
     unsigned long h2z2;
@@ -340,7 +340,7 @@ struct InvData {
 
     bool inconsistent;
 
-    InvData(NContainer* useManifold) : manifold(useManifold),
+    InvData(Container* useManifold) : manifold(useManifold),
             turaevViro(new double[tvParamCount]), inconsistent(false) {
     }
 
@@ -517,7 +517,7 @@ void ctrlFarmTask(NTriangulation* tri, InvData* data, int whichTV) {
  * Process a single manifold container (and specifically, all of its
  * triangulation children).
  */
-void ctrlProcess(NContainer* c) {
+void ctrlProcess(Container* c) {
     InvData* mfdData = 0;
     NTriangulation* tri;
     int i;
@@ -626,7 +626,7 @@ int mainController() {
         if (p->type() == PACKET_CONTAINER) {
             ctrlLogStamp() << "Processing container: " << p->label()
                 << std::endl;
-            ctrlProcess(static_cast<NContainer*>(p));
+            ctrlProcess(static_cast<Container*>(p));
         }
 
     // Kill off any slaves that never started working.

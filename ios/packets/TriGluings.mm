@@ -35,7 +35,7 @@
 #import "ReginaHelper.h"
 #import "TriangulationViewController.h"
 #import "TriGluings.h"
-#import "packet/ncontainer.h"
+#import "packet/container.h"
 #import "progress/progresstracker.h"
 #import "triangulation/ntriangulation.h"
 
@@ -413,7 +413,7 @@
     // the new triangulations at a deeper level.
     regina::NPacket* base;
     if (self.packet->firstChild()) {
-        base = new regina::NContainer();
+        base = new regina::Container();
         self.packet->insertChildLast(base);
         base->setLabel(self.packet->adornedLabel("Components"));
     } else

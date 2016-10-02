@@ -34,7 +34,7 @@
 #import "Dim2TriGluings.h"
 #import "Dim2TriangulationViewController.h"
 #import "dim2/dim2triangulation.h"
-#import "packet/ncontainer.h"
+#import "packet/container.h"
 
 #pragma mark - Table cell
 
@@ -292,7 +292,7 @@
     // the new triangulations at a deeper level.
     regina::NPacket* base;
     if (self.packet->firstChild()) {
-        base = new regina::NContainer();
+        base = new regina::Container();
         self.packet->insertChildLast(base);
         base->setLabel(self.packet->adornedLabel("Components"));
     } else

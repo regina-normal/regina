@@ -33,7 +33,7 @@
 // Regina core includes:
 #include "dim2/dim2edge.h"
 #include "dim2/dim2triangulation.h"
-#include "packet/ncontainer.h"
+#include "packet/container.h"
 
 // UI includes:
 #include "dim2trigluings.h"
@@ -575,7 +575,7 @@ void Dim2TriGluingsUI::splitIntoComponents() {
         // the new triangulations at a deeper level.
         NPacket* base;
         if (tri->firstChild()) {
-            base = new regina::NContainer();
+            base = new regina::Container();
             tri->insertChildLast(base);
             base->setLabel(tri->adornedLabel("Components"));
         } else

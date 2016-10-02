@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-void addNContainer();
+void addContainer();
 void addNPacket();
 void addPDF();
 void addScript();
@@ -42,7 +42,7 @@ void addPacket() {
     addPacketType();
 
     addNPacket();
-    addNContainer();
+    addContainer();
     addPDF();
     addScript();
     addText();

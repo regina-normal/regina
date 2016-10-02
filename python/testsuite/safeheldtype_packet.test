@@ -52,7 +52,7 @@ p = PDF()
 
 t = Text()
 
-c = NContainer()
+c = Container()
 c.insertChildFirst(t1)
 
 print c.countChildren()

@@ -61,7 +61,6 @@
  * exists (../normal-compare.cpp).
  */
 
-#include <packet/ncontainer.h>
 #include <surfaces/nnormalsurfacelist.h>
 #include <triangulation/ntriangulation.h>
 

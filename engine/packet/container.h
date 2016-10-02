@@ -30,74 +30,106 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file foreign/dehydration.h
- *  \brief Allows reading lists of dehydrated triangulations.
+/*! \file packet/container.h
+ *  \brief Contains a packet whose entire life purpose is to contain
+ *  other packets.
  */
 
-#ifndef __DEHYDRATION_H
+#ifndef __CONTAINER_H
 #ifndef __DOXYGEN
-#define __DEHYDRATION_H
+#define __CONTAINER_H
 #endif
 
 #include "regina-core.h"
+#include "packet/npacket.h"
 
 namespace regina {
 
+class XMLPacketReader;
 class Container;
 
 /**
- * \weakgroup foreign
+ * \weakgroup packet
  * @{
  */
 
+#ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
+template <>
+struct PacketInfo<PACKET_CONTAINER> {
+    typedef Container Class;
+    inline static const char* name() {
+        return "Container";
+    }
+};
+#endif
+
 /**
- * Reads a list of dehydrated triangulations from the given text file.
- * The file should contain one dehydration string per line.  These
- * strings will be rehydrated as described in
- * NTriangulation::insertRehydration().
- *
- * A newly allocated container will be returned; the imported
- * triangulations will be inserted as children of this container.
- * The container will not be assigned a label.  The individual
- * triangulations will be assigned labels according to the parameter
- * \a colLabels.
- *
- * If any dehydrations strings are invalid, these will be recorded in an
- * additional text packet that will be the last child of the returned
- * container.
- *
- * If an I/O error occurred while trying to read the given file, 0 will be
- * returned.
- *
- * In its simplest form, the text file can simply contain one
- * dehydration string per line and nothing else.  However, more complex
- * formats are allowed.  In particular, by passing appropriate values
- * for the arguments \a colDehydrations and \a colLabels, the dehydration
- * strings and triangulation packet labels can be taken from arbitrary
- * columns of the text file.  Columns are considered to be separated by
- * whitespace and are numbered beginning at 0.
- *
- * \i18n This routine makes no assumptions about the
- * \ref i18n "character encoding" used in the given file \e name, and
- * simply passes it through unchanged to low-level C/C++ file I/O routines.
- * It assumes however that the \e contents of the file are in UTF-8.
- *
- * @param filename the name of the text file from which to read.
- * @param colDehydrations the column of the text file containing the
- * dehydration strings.
- * @param colLabels the column of the text file containing the
- * triangulation packet labels.  If this is negative then the dehydration
- * strings themselves will be used as packet labels.
- * @param ignoreLines the number of lines at the beginning of the text
- * file that should be ignored completely.
- * @return a new container as described above, or 0 if an I/O error occurred
- * whilst reading the given file.
+ * A packet that simply contains other packets.  Such
+ * a packet contains no real data.
  */
-REGINA_API Container* readDehydrationList(const char *filename,
-    unsigned colDehydrations = 0, int colLabels = -1,
-    unsigned long ignoreLines = 0);
+class REGINA_API Container : public NPacket {
+    REGINA_PACKET(Container, PACKET_CONTAINER)
+
+    public:
+        /**
+         * Default constructor.
+         */
+        Container();
+
+        /**
+         * Constructs a new container with the given packet label.
+         *
+         * This constructor is (for example) helpful when you are
+         * building a complex packet tree to save to a Regina data file,
+         * and you are using containers to organise the data in this tree.
+         *
+         * @param label the packet label for this new container.
+         */
+        Container(const std::string& label);
+
+        virtual void writeTextShort(std::ostream& out) const;
+        static XMLPacketReader* xmlReader(NPacket* parent,
+            XMLTreeResolver& resolver);
+        virtual bool dependsOnParent() const;
+
+    protected:
+        virtual NPacket* internalClonePacket(NPacket* parent) const;
+        virtual void writeXMLPacketData(std::ostream& out) const;
+};
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NContainer has now been renamed to Container.
+ */
+REGINA_DEPRECATED typedef Container NContainer;
 
 /*@}*/
+
+// Inline functions for Container
+
+inline Container::Container() {
+}
+
+inline Container::Container(const std::string& label) {
+    setLabel(label);
+}
+
+inline void Container::writeTextShort(std::ostream& o) const {
+    o << "Container";
+}
+
+inline bool Container::dependsOnParent() const {
+    return false;
+}
+
+inline NPacket* Container::internalClonePacket(NPacket*) const {
+    return new Container();
+}
+
+inline void Container::writeXMLPacketData(std::ostream&) const {
+}
 
 } // namespace regina
 

@@ -35,7 +35,7 @@
 #import "Dim4TriangulationViewController.h"
 #import "Dim4TriGluings.h"
 #import "dim4/dim4triangulation.h"
-#import "packet/ncontainer.h"
+#import "packet/container.h"
 
 #pragma mark - Table cell
 
@@ -321,7 +321,7 @@
     // the new triangulations at a deeper level.
     regina::NPacket* base;
     if (self.packet->firstChild()) {
-        base = new regina::NContainer();
+        base = new regina::Container();
         self.packet->insertChildLast(base);
         base->setLabel(self.packet->adornedLabel("Components"));
     } else

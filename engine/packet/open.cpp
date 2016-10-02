@@ -37,7 +37,7 @@
 #include <boost/iostreams/filter/gzip.hpp>
 #include "engine.h"
 #include "generic/xmltrireader.h"
-#include "packet/ncontainer.h"
+#include "packet/container.h"
 #include "packet/xmlpacketreader.h"
 #include "packet/xmltreeresolver.h"
 #include "utilities/nxmlcallback.h"
@@ -51,7 +51,7 @@ namespace {
      */
     class ReginaDataReader : public regina::XMLPacketReader {
         private:
-            NContainer container;
+            Container container;
                 /**< Sits above the entire packet tree read from file. */
             bool isReginaData;
                 /**< Are we actually reading a \<reginadata ...\> element? */

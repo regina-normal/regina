@@ -36,7 +36,7 @@
 #import "PacketManagerIOS.h"
 #import "PacketTreeController.h"
 #import "ReginaHelper.h"
-#import "packet/ncontainer.h"
+#import "packet/container.h"
 #import "packet/npacket.h"
 #import "packet/text.h"
 #import "surfaces/nsurfacefilter.h"
@@ -144,7 +144,7 @@
         case regina::PACKET_CONTAINER:
         {
             // We can do this immediately, no input required.
-            regina::NContainer* c = new regina::NContainer();
+            regina::Container* c = new regina::Container();
             c->setLabel("Container");
             spec.parent->insertChildLast(c);
             [spec created:c];

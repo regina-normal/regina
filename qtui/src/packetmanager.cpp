@@ -43,7 +43,7 @@
 #include "packettypes/dim4triui.h"
 #include "packettypes/generictriui.h"
 #include "packettypes/anglesui.h"
-#include "packettypes/ncontainerui.h"
+#include "packettypes/containerui.h"
 #include "packettypes/nhypersurfaceui.h"
 #include "packettypes/nnormalsurfaceui.h"
 #include "packettypes/pdfui.h"
@@ -150,8 +150,8 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
             return new AngleStructureUI(
                 dynamic_cast<AngleStructures*>(packet), enclosingPane);
         case PACKET_CONTAINER:
-            return new NContainerUI(
-                dynamic_cast<NContainer*>(packet), enclosingPane);
+            return new ContainerUI(
+                dynamic_cast<Container*>(packet), enclosingPane);
         case PACKET_DIM2TRIANGULATION:
             return new Dim2TriangulationUI(
                 dynamic_cast<Dim2Triangulation*>(packet), enclosingPane);

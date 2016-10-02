@@ -47,7 +47,6 @@
  * Mathematics of Computation 68/225, 1999.
  */
 
-#include "packet/ncontainer.h"
 #include "triangulation/ntriangulation.h"
 
 #include <cstdlib>

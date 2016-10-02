@@ -10,7 +10,7 @@
 
 # Recreate the original SnapPea census of cusped hyperbolic manifolds
 # triangulated by at most 5 tetrahedra.
-census = NContainer()
+census = Container()
 for i in range(415):
     mfd = NSnapPeaCensusManifold(NSnapPeaCensusManifold.SEC_5, i)
     tri = mfd.construct()

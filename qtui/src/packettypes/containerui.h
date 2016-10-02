@@ -30,12 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file ncontainerui.h
+/*! \file containerui.h
  *  \brief Provides an interface for viewing container packets.
  */
 
-#ifndef __NCONTAINERUI_H
-#define __NCONTAINERUI_H
+#ifndef __CONTAINERUI_H
+#define __CONTAINERUI_H
 
 #include "packet/packetlistener.h"
 
@@ -44,7 +44,7 @@
 class QLabel;
 
 namespace regina {
-    class NContainer;
+    class Container;
     class NPacket;
 };
 
@@ -53,12 +53,12 @@ namespace regina {
  *
  * Note that this interface is always read-only.
  */
-class NContainerUI : public PacketReadOnlyUI, public regina::PacketListener {
+class ContainerUI : public PacketReadOnlyUI, public regina::PacketListener {
     private:
         /**
          * Packet details
          */
-        regina::NContainer* container;
+        regina::Container* container;
 
         /**
          * Internal components
@@ -71,7 +71,7 @@ class NContainerUI : public PacketReadOnlyUI, public regina::PacketListener {
         /**
          * Constructor.
          */
-        NContainerUI(regina::NContainer* packet, PacketPane* newEnclosingPane);
+        ContainerUI(regina::Container* packet, PacketPane* newEnclosingPane);
 
         /**
          * PacketUI overrides.

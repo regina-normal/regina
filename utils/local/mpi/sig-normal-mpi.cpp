@@ -43,7 +43,6 @@
 
 #include "mpi.h"
 
-#include <packet/ncontainer.h>
 #include <surfaces/nnormalsurfacelist.h>
 #include <triangulation/ntriangulation.h>
 

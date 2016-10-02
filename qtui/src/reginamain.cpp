@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "regina-config.h"
-#include "packet/ncontainer.h"
+#include "packet/container.h"
 #include "surfaces/nnormalsurfacelist.h"
 
 #include "eventids.h"
@@ -321,7 +321,7 @@ void ReginaMain::fileOpenUrl(const QUrl& url) {
     // As of Regina 4.95, the root packet is hidden.
     // If the root packet is not a container, create a new fake root above it.
     if (packetTree->type() != regina::PACKET_CONTAINER) {
-        regina::NContainer* newRoot = new regina::NContainer();
+        regina::Container* newRoot = new regina::Container();
         newRoot->insertChildLast(packetTree);
         packetTree = newRoot;
 
@@ -648,7 +648,7 @@ void ReginaMain::setupWidgets() {
 void ReginaMain::initPacketTree() {
     if (packetTree)
         delete packetTree;
-    packetTree = new regina::NContainer();
+    packetTree = new regina::Container();
     // No label now, since the root packet is hidden.
     // packetTree->setLabel(tr("Data").toUtf8().constData());
 

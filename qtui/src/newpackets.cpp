@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "dim4/dim4triangulation.h"
-#include "packet/ncontainer.h"
+#include "packet/container.h"
 #include "packet/script.h"
 #include "packet/text.h"
 #include "snappea/nsnappeatriangulation.h"
@@ -57,7 +57,7 @@ void ReginaMain::newAngleStructures() {
 }
 
 void ReginaMain::newContainer() {
-    newPacket(new BasicPacketCreator<regina::NContainer>(), 0,
+    newPacket(new BasicPacketCreator<regina::Container>(), 0,
         tr("New Container"));
 }
 
