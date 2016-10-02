@@ -2,8 +2,8 @@
 
 # Files to compile
 SET ( FILES
-  nanglestructure
-  nanglestructurelist
+  anglestructure
+  anglestructures
   pyangle
   )
 

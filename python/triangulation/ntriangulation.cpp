@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "algebra/ngrouppresentation.h"
-#include "angle/nanglestructure.h"
+#include "angle/anglestructure.h"
 #include "progress/nprogresstracker.h"
 #include "surfaces/nnormalsurface.h"
 #include "triangulation/nisomorphism.h"

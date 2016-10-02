@@ -30,11 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-void addNAngleStructure();
+void addAngleStructure();
 void addAngleStructures();
 
 void addAngle() {
-    addNAngleStructure();
+    addAngleStructure();
     addAngleStructures();
 }
 

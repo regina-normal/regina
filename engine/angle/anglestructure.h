@@ -30,13 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file angle/nanglestructure.h
+/*! \file angle/anglestructure.h
  *  \brief Deals with angle structures on triangulations.
  */
 
-#ifndef __NANGLESTRUCTURE_H
+#ifndef __ANGLESTRUCTURE_H
 #ifndef __DOXYGEN
-#define __NANGLESTRUCTURE_H
+#define __ANGLESTRUCTURE_H
 #endif
 
 #include "regina-core.h"

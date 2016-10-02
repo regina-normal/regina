@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "angle/nanglestructurelist.h"
+#include "angle/anglestructures.h"
 #include "enumerate/ndoubledescription.h"
 #include "enumerate/ntreetraversal.h"
 #include "maths/nmatrixint.h"

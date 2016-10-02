@@ -23,13 +23,19 @@
 		050AFC5C19DCB9B200835ED6 /* SnapPeaGluings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050AFC5919DCB9B100835ED6 /* SnapPeaGluings.mm */; };
 		050AFC5F19DCC68B00835ED6 /* SurfacesCompat.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050AFC5E19DCC68B00835ED6 /* SurfacesCompat.mm */; };
 		050BEA361D9C8B6700B96DB8 /* __init__.py in Copy Python Scripts */ = {isa = PBXBuildFile; fileRef = 050F5E6B1B9BD30700C1F681 /* __init__.py */; };
+		050C64691DA1019B00C9420F /* anglestructure.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050C64651DA1019B00C9420F /* anglestructure.cpp */; };
+		050C646A1DA1019B00C9420F /* anglestructure.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64661DA1019B00C9420F /* anglestructure.h */; };
+		050C646B1DA1019B00C9420F /* anglestructures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050C64671DA1019B00C9420F /* anglestructures.cpp */; };
+		050C646C1DA1019B00C9420F /* anglestructures.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64681DA1019B00C9420F /* anglestructures.h */; };
+		050C646D1DA101A900C9420F /* anglestructure.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050C64651DA1019B00C9420F /* anglestructure.cpp */; };
+		050C646E1DA101A900C9420F /* anglestructures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050C64671DA1019B00C9420F /* anglestructures.cpp */; };
+		050C64731DA101D700C9420F /* anglestructure.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050C646F1DA101CC00C9420F /* anglestructure.cpp */; };
+		050C64741DA101D700C9420F /* anglestructurelist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050C64701DA101CC00C9420F /* anglestructurelist.cpp */; };
 		050F5DD31B9BAB9C00C1F681 /* nabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D021B9BAB9C00C1F681 /* nabeliangroup.cpp */; };
 		050F5DD41B9BAB9C00C1F681 /* ngrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D031B9BAB9C00C1F681 /* ngrouppresentation.cpp */; };
 		050F5DD51B9BAB9C00C1F681 /* nhomgrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D041B9BAB9C00C1F681 /* nhomgrouppresentation.cpp */; };
 		050F5DD61B9BAB9C00C1F681 /* nmarkedabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D051B9BAB9C00C1F681 /* nmarkedabeliangroup.cpp */; };
 		050F5DD71B9BAB9C00C1F681 /* pyalgebra.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D061B9BAB9C00C1F681 /* pyalgebra.cpp */; };
-		050F5DD81B9BAB9C00C1F681 /* nanglestructure.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D091B9BAB9C00C1F681 /* nanglestructure.cpp */; };
-		050F5DD91B9BAB9C00C1F681 /* nanglestructurelist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D0A1B9BAB9C00C1F681 /* nanglestructurelist.cpp */; };
 		050F5DDA1B9BAB9C00C1F681 /* pyangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D0B1B9BAB9C00C1F681 /* pyangle.cpp */; };
 		050F5DDB1B9BAB9C00C1F681 /* dim2boundarycomponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D0E1B9BAB9C00C1F681 /* dim2boundarycomponent.cpp */; };
 		050F5DDC1B9BAB9C00C1F681 /* dim2component.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D0F1B9BAB9C00C1F681 /* dim2component.cpp */; };
@@ -204,10 +210,6 @@
 		052F9E8A180600FB00FAE4DF /* nmarkedabeliangroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C07180600FA00FAE4DF /* nmarkedabeliangroup.h */; };
 		052F9E8B180600FB00FAE4DF /* nxmlalgebrareader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C08180600FA00FAE4DF /* nxmlalgebrareader.cpp */; };
 		052F9E8C180600FB00FAE4DF /* nxmlalgebrareader.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C09180600FA00FAE4DF /* nxmlalgebrareader.h */; };
-		052F9E8D180600FB00FAE4DF /* nanglestructure.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C0C180600FA00FAE4DF /* nanglestructure.cpp */; };
-		052F9E8E180600FB00FAE4DF /* nanglestructure.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C0D180600FA00FAE4DF /* nanglestructure.h */; };
-		052F9E8F180600FB00FAE4DF /* nanglestructurelist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C0E180600FA00FAE4DF /* nanglestructurelist.cpp */; };
-		052F9E90180600FB00FAE4DF /* nanglestructurelist.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C0F180600FA00FAE4DF /* nanglestructurelist.h */; };
 		052F9E91180600FB00FAE4DF /* nxmlanglestructreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C10180600FA00FAE4DF /* nxmlanglestructreader.cpp */; };
 		052F9E92180600FB00FAE4DF /* nxmlanglestructreader.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C11180600FA00FAE4DF /* nxmlanglestructreader.h */; };
 		052F9E93180600FB00FAE4DF /* closedprimemin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C13180600FA00FAE4DF /* closedprimemin.cpp */; };
@@ -620,8 +622,6 @@
 		052FA1611806129B00FAE4DF /* nhomgrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C04180600FA00FAE4DF /* nhomgrouppresentation.cpp */; };
 		052FA1621806129B00FAE4DF /* nmarkedabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C06180600FA00FAE4DF /* nmarkedabeliangroup.cpp */; };
 		052FA1631806129B00FAE4DF /* nxmlalgebrareader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C08180600FA00FAE4DF /* nxmlalgebrareader.cpp */; };
-		052FA1641806129B00FAE4DF /* nanglestructure.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C0C180600FA00FAE4DF /* nanglestructure.cpp */; };
-		052FA1651806129B00FAE4DF /* nanglestructurelist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C0E180600FA00FAE4DF /* nanglestructurelist.cpp */; };
 		052FA1661806129B00FAE4DF /* nxmlanglestructreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C10180600FA00FAE4DF /* nxmlanglestructreader.cpp */; };
 		052FA1671806129B00FAE4DF /* closedprimemin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C13180600FA00FAE4DF /* closedprimemin.cpp */; };
 		052FA1681806129B00FAE4DF /* compact.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C15180600FA00FAE4DF /* compact.cpp */; };
@@ -1902,6 +1902,12 @@
 		050AFC5919DCB9B100835ED6 /* SnapPeaGluings.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SnapPeaGluings.mm; sourceTree = "<group>"; };
 		050AFC5D19DCC68B00835ED6 /* SurfacesCompat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SurfacesCompat.h; sourceTree = "<group>"; };
 		050AFC5E19DCC68B00835ED6 /* SurfacesCompat.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SurfacesCompat.mm; sourceTree = "<group>"; };
+		050C64651DA1019B00C9420F /* anglestructure.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = anglestructure.cpp; sourceTree = "<group>"; };
+		050C64661DA1019B00C9420F /* anglestructure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = anglestructure.h; sourceTree = "<group>"; };
+		050C64671DA1019B00C9420F /* anglestructures.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = anglestructures.cpp; sourceTree = "<group>"; };
+		050C64681DA1019B00C9420F /* anglestructures.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = anglestructures.h; sourceTree = "<group>"; };
+		050C646F1DA101CC00C9420F /* anglestructure.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = anglestructure.cpp; sourceTree = "<group>"; };
+		050C64701DA101CC00C9420F /* anglestructurelist.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = anglestructurelist.cpp; sourceTree = "<group>"; };
 		050F5CDD1B9BAAAA00C1F681 /* engine.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = engine.so; sourceTree = BUILT_PRODUCTS_DIR; };
 		050F5D011B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		050F5D021B9BAB9C00C1F681 /* nabeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nabeliangroup.cpp; sourceTree = "<group>"; };
@@ -1910,8 +1916,6 @@
 		050F5D051B9BAB9C00C1F681 /* nmarkedabeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nmarkedabeliangroup.cpp; sourceTree = "<group>"; };
 		050F5D061B9BAB9C00C1F681 /* pyalgebra.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pyalgebra.cpp; sourceTree = "<group>"; };
 		050F5D081B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		050F5D091B9BAB9C00C1F681 /* nanglestructure.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nanglestructure.cpp; sourceTree = "<group>"; };
-		050F5D0A1B9BAB9C00C1F681 /* nanglestructurelist.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nanglestructurelist.cpp; sourceTree = "<group>"; };
 		050F5D0B1B9BAB9C00C1F681 /* pyangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pyangle.cpp; sourceTree = "<group>"; };
 		050F5D0D1B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		050F5D0E1B9BAB9C00C1F681 /* dim2boundarycomponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim2boundarycomponent.cpp; sourceTree = "<group>"; };
@@ -2138,10 +2142,6 @@
 		052F9C08180600FA00FAE4DF /* nxmlalgebrareader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nxmlalgebrareader.cpp; sourceTree = "<group>"; };
 		052F9C09180600FA00FAE4DF /* nxmlalgebrareader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nxmlalgebrareader.h; sourceTree = "<group>"; };
 		052F9C0B180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		052F9C0C180600FA00FAE4DF /* nanglestructure.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nanglestructure.cpp; sourceTree = "<group>"; };
-		052F9C0D180600FA00FAE4DF /* nanglestructure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nanglestructure.h; sourceTree = "<group>"; };
-		052F9C0E180600FA00FAE4DF /* nanglestructurelist.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nanglestructurelist.cpp; sourceTree = "<group>"; };
-		052F9C0F180600FA00FAE4DF /* nanglestructurelist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nanglestructurelist.h; sourceTree = "<group>"; };
 		052F9C10180600FA00FAE4DF /* nxmlanglestructreader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nxmlanglestructreader.cpp; sourceTree = "<group>"; };
 		052F9C11180600FA00FAE4DF /* nxmlanglestructreader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nxmlanglestructreader.h; sourceTree = "<group>"; };
 		052F9C13180600FA00FAE4DF /* closedprimemin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = closedprimemin.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
@@ -3749,8 +3749,8 @@
 			isa = PBXGroup;
 			children = (
 				050F5D081B9BAB9C00C1F681 /* CMakeLists.txt */,
-				050F5D091B9BAB9C00C1F681 /* nanglestructure.cpp */,
-				050F5D0A1B9BAB9C00C1F681 /* nanglestructurelist.cpp */,
+				050C646F1DA101CC00C9420F /* anglestructure.cpp */,
+				050C64701DA101CC00C9420F /* anglestructurelist.cpp */,
 				050F5D0B1B9BAB9C00C1F681 /* pyangle.cpp */,
 			);
 			path = angle;
@@ -4158,10 +4158,10 @@
 			isa = PBXGroup;
 			children = (
 				052F9C0B180600FA00FAE4DF /* CMakeLists.txt */,
-				052F9C0C180600FA00FAE4DF /* nanglestructure.cpp */,
-				052F9C0D180600FA00FAE4DF /* nanglestructure.h */,
-				052F9C0E180600FA00FAE4DF /* nanglestructurelist.cpp */,
-				052F9C0F180600FA00FAE4DF /* nanglestructurelist.h */,
+				050C64651DA1019B00C9420F /* anglestructure.cpp */,
+				050C64661DA1019B00C9420F /* anglestructure.h */,
+				050C64671DA1019B00C9420F /* anglestructures.cpp */,
+				050C64681DA1019B00C9420F /* anglestructures.h */,
 				052F9C10180600FA00FAE4DF /* nxmlanglestructreader.cpp */,
 				052F9C11180600FA00FAE4DF /* nxmlanglestructreader.h */,
 			);
@@ -5892,6 +5892,7 @@
 			files = (
 				052F9F11180600FB00FAE4DF /* orb.h in Headers */,
 				0591E7DA1C4F750200793A9C /* hscoordregistry.h in Headers */,
+				050C646A1DA1019B00C9420F /* anglestructure.h in Headers */,
 				052FA03F180600FB00FAE4DF /* nsquad.h in Headers */,
 				05431F861C40F3C9009BC072 /* vector_operations.h in Headers */,
 				05A73C9019B2EF130099C617 /* nxmlsnappeareader.h in Headers */,
@@ -6042,7 +6043,6 @@
 				052F9EF7180600FB00FAE4DF /* ntreelp.h in Headers */,
 				052F9EB8180600FB00FAE4DF /* dim2vertex.h in Headers */,
 				052F9F5E180600FB00FAE4DF /* ntext.h in Headers */,
-				052F9E8E180600FB00FAE4DF /* nanglestructure.h in Headers */,
 				0591E7D91C4F750200793A9C /* hscoordregistry-impl.h in Headers */,
 				052F9FEF180600FB00FAE4DF /* nblockedsfstriple.h in Headers */,
 				05CA99E618078466006161DC /* registryutils.h in Headers */,
@@ -6083,12 +6083,12 @@
 				052FA07A180600FB00FAE4DF /* nxmltrireader.h in Headers */,
 				0591E7DF1C4F750200793A9C /* nhsstandard.h in Headers */,
 				0541AF501B8BE32E002E166B /* output.h in Headers */,
-				052F9E90180600FB00FAE4DF /* nanglestructurelist.h in Headers */,
 				05431F2D1C40F2DB009BC072 /* nperm.h in Headers */,
 				052F9EC7180600FB00FAE4DF /* nhilbertcd.h in Headers */,
 				05431F231C40F260009BC072 /* facenumbering.h in Headers */,
 				052F9FDC180600FB00FAE4DF /* nsnappeatriangulation.h in Headers */,
 				052F9F60180600FB00FAE4DF /* nxmlpacketreader.h in Headers */,
+				050C646C1DA1019B00C9420F /* anglestructures.h in Headers */,
 				052FA05E180600FB00FAE4DF /* nboundarycomponent.h in Headers */,
 				05431F021C40F1F6009BC072 /* simplex.h in Headers */,
 				052FA041180600FB00FAE4DF /* nsquadoct.h in Headers */,
@@ -6739,7 +6739,6 @@
 				05431FAA1C40F5A2009BC072 /* nperm2.cpp in Sources */,
 				0591E81C1C4F763B00793A9C /* dim4vertex.cpp in Sources */,
 				057EE4D51C600A3600C4D155 /* isomorphism7.cpp in Sources */,
-				050F5DD81B9BAB9C00C1F681 /* nanglestructure.cpp in Sources */,
 				050F5E351B9BAB9C00C1F681 /* nnormalsurfacelist.cpp in Sources */,
 				050F5E491B9BAB9C00C1F681 /* ntetrahedron.cpp in Sources */,
 				050F5DFB1B9BAB9C00C1F681 /* nperm3.cpp in Sources */,
@@ -6781,13 +6780,13 @@
 				050F5E4F1B9BAB9C00C1F681 /* nbooleans.cpp in Sources */,
 				050F5DE61B9BAB9C00C1F681 /* nglobaldirs.cpp in Sources */,
 				050F5E1E1B9BAB9C00C1F681 /* nlayeredloop.cpp in Sources */,
+				050C64731DA101D700C9420F /* anglestructure.cpp in Sources */,
 				050F5E401B9BAB9C00C1F681 /* pytreewidth.cpp in Sources */,
 				0550010D1C4D9EF900501C24 /* face9.cpp in Sources */,
 				057EE4D31C600A3600C4D155 /* isomorphism5.cpp in Sources */,
 				057EE4D71C600A3600C4D155 /* isomorphism9.cpp in Sources */,
 				050F5DDC1B9BAB9C00C1F681 /* dim2component.cpp in Sources */,
 				050F5DF11B9BAB9C00C1F681 /* nsimplesurfacebundle.cpp in Sources */,
-				050F5DD91B9BAB9C00C1F681 /* nanglestructurelist.cpp in Sources */,
 				050F5E221B9BAB9C00C1F681 /* npillowtwosphere.cpp in Sources */,
 				050F5E301B9BAB9C00C1F681 /* ntxicore.cpp in Sources */,
 				057EE4CA1C600A3600C4D155 /* triangulation7.cpp in Sources */,
@@ -6853,6 +6852,7 @@
 				057EE4CB1C600A3600C4D155 /* triangulation8.cpp in Sources */,
 				050F5DFF1B9BAB9C00C1F681 /* nprimes.cpp in Sources */,
 				050F5E3C1B9BAB9C00C1F681 /* sfcombination.cpp in Sources */,
+				050C64741DA101D700C9420F /* anglestructurelist.cpp in Sources */,
 				050F5E4E1B9BAB9C00C1F681 /* i18nutils.cpp in Sources */,
 				050F5E141B9BAB9C00C1F681 /* pysplit.cpp in Sources */,
 				05431FCC1C40F653009BC072 /* nfacepairing.cpp in Sources */,
@@ -6966,6 +6966,7 @@
 				052FA1681806129B00FAE4DF /* compact.cpp in Sources */,
 				0591011B1813230A000A8D16 /* NewPacketMenu.mm in Sources */,
 				052FA1C41806129B00FAE4DF /* nplugtrisolidtorus.cpp in Sources */,
+				050C646D1DA101A900C9420F /* anglestructure.cpp in Sources */,
 				05937AD119CECF4300160F9A /* MDSpreadView.m in Sources */,
 				052FA1A21806129B00FAE4DF /* nrational.cpp in Sources */,
 				052FA1A51806129B00FAE4DF /* seedprimes.cpp in Sources */,
@@ -6973,6 +6974,7 @@
 				05A73CA719B2EF5A0099C617 /* sl2c_matrices.c in Sources */,
 				0591E7EA1C4F751B00793A9C /* nnormalhypersurfacelist.cpp in Sources */,
 				0541AF4E1B8BE30B002E166B /* ncyclotomic.cpp in Sources */,
+				050C646E1DA101A900C9420F /* anglestructures.cpp in Sources */,
 				05583A6219B8041F00076187 /* ReginaDocument.mm in Sources */,
 				052FA22B180612DD00FAE4DF /* intersection_numbers.c in Sources */,
 				05F6D3B91C52CD5F007307F0 /* NewDim4TriangulationController.mm in Sources */,
@@ -7172,7 +7174,6 @@
 				05FEA07F19C2B96000A31924 /* PacketPicker.mm in Sources */,
 				05D1173919EE0197003BEC55 /* matrixops.cpp in Sources */,
 				0528AA131D9A36C6000CAC20 /* snappea.cpp in Sources */,
-				052FA1641806129B00FAE4DF /* nanglestructure.cpp in Sources */,
 				052FA2071806129B00FAE4DF /* turaevviro.cpp in Sources */,
 				05D0A1101812F0BE005ED097 /* TriangulationViewController.mm in Sources */,
 				052FA1DB1806129B00FAE4DF /* nnormalsurface.cpp in Sources */,
@@ -7244,7 +7245,6 @@
 				052FA232180612DD00FAE4DF /* shortest_cusp_basis.c in Sources */,
 				052FA228180612DD00FAE4DF /* hyperbolic_structure.c in Sources */,
 				05D1173D19EE0197003BEC55 /* nperm5.cpp in Sources */,
-				052FA1651806129B00FAE4DF /* nanglestructurelist.cpp in Sources */,
 				05A73C7B19B2EDFC0099C617 /* nxmlcallback.cpp in Sources */,
 				052FA2041806129B00FAE4DF /* skeleton.cpp in Sources */,
 				05431F911C40F40E009BC072 /* offload_handler.cpp in Sources */,
@@ -7710,7 +7710,6 @@
 				052F9F2E180600FB00FAE4DF /* nsfsaltset.cpp in Sources */,
 				052F9F96180600FB00FAE4DF /* precision.c in Sources */,
 				052F9F71180600FB00FAE4DF /* change_peripheral_curves.c in Sources */,
-				052F9E8D180600FB00FAE4DF /* nanglestructure.cpp in Sources */,
 				052F9FF4180600FB00FAE4DF /* nlayeredchainpair.cpp in Sources */,
 				05431F361C40F363009BC072 /* retriangulate.cpp in Sources */,
 				052F9F7B180600FB00FAE4DF /* cusp_shapes.c in Sources */,
@@ -7757,11 +7756,11 @@
 				052F9F02180600FB00FAE4DF /* nglobaldirs.cpp in Sources */,
 				052F9E87180600FB00FAE4DF /* nhomgrouppresentation.cpp in Sources */,
 				052F9F74180600FB00FAE4DF /* close_cusps.c in Sources */,
+				050C64691DA1019B00C9420F /* anglestructure.cpp in Sources */,
 				0591E7BA1C4F74C400793A9C /* subdivide.cpp in Sources */,
 				0528AA121D9A36C1000CAC20 /* snappea.cpp in Sources */,
 				052FA059180600FB00FAE4DF /* homology.cpp in Sources */,
 				052F9E83180600FB00FAE4DF /* nabeliangroup.cpp in Sources */,
-				052F9E8F180600FB00FAE4DF /* nanglestructurelist.cpp in Sources */,
 				0591E7E41C4F750200793A9C /* nxmlhypersurfacereader.cpp in Sources */,
 				052F9FDF180600FB00FAE4DF /* uimessages.cpp in Sources */,
 				052F9E89180600FB00FAE4DF /* nmarkedabeliangroup.cpp in Sources */,
@@ -7810,6 +7809,7 @@
 				052FA03C180600FB00FAE4DF /* nsorientedquad.cpp in Sources */,
 				05A73C7A19B2EDFC0099C617 /* nxmlcallback.cpp in Sources */,
 				052F9F0E180600FB00FAE4DF /* isosig.cpp in Sources */,
+				050C646B1DA1019B00C9420F /* anglestructures.cpp in Sources */,
 				052FA087180600FB00FAE4DF /* i18nutils.cpp in Sources */,
 				052FA042180600FB00FAE4DF /* nsstandard.cpp in Sources */,
 				052FA048180600FB00FAE4DF /* nxmlfilterreader.cpp in Sources */,

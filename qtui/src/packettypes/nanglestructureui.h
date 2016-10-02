@@ -37,7 +37,7 @@
 #ifndef __NANGLESTRUCTUREUI_H
 #define __NANGLESTRUCTUREUI_H
 
-#include "angle/nanglestructurelist.h"
+#include "angle/anglestructures.h"
 #include "triangulation/ntriangulation.h"
 #include "../packetui.h"
 

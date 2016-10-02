@@ -2,7 +2,7 @@
 
 # Files to compile
 SET ( FILES
-  nanglestructurelist
+  anglestructures
   )
 
 # Prepend folder name

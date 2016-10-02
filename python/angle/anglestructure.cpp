@@ -30,68 +30,32 @@
  *                                                                        *
  **************************************************************************/
 
-#include "angle/nanglestructurelist.h"
-#include "progress/nprogresstracker.h"
-#include "triangulation/ntriangulation.h"
-#include "../safeheldtype.h"
-#include "../helpers.h"
-
-// Held type must be declared before boost/python.hpp
 #include <boost/python.hpp>
+#include "angle/anglestructure.h"
+#include "triangulation/ntriangulation.h"
+#include "../helpers.h"
+#include "../safeheldtype.h"
 
 using namespace boost::python;
 using namespace regina::python;
-using regina::AngleStructures;
+using regina::AngleStructure;
+using regina::NTriangulation;
 
-namespace {
-    // Write manual overload wrappers since this is a static member function.
-    AngleStructures* enumerate_1(regina::NTriangulation* owner) {
-        return AngleStructures::enumerate(owner);
-    }
-    AngleStructures* enumerate_2(regina::NTriangulation* owner,
-            bool tautOnly) {
-        return AngleStructures::enumerate(owner, tautOnly);
-    }
-    AngleStructures* enumerate_3(regina::NTriangulation* owner,
-            bool tautOnly, regina::NProgressTracker* tracker) {
-        return AngleStructures::enumerate(owner, tautOnly, tracker);
-    }
-}
-
-void addAngleStructures() {
-    def("makeAngleEquations", regina::makeAngleEquations,
-        return_value_policy<manage_new_object>());
-
-    scope s = class_<AngleStructures, bases<regina::NPacket>,
-            SafeHeldType<AngleStructures>, boost::noncopyable>
-            ("AngleStructures", no_init)
-        .def("triangulation", &AngleStructures::triangulation,
+void addAngleStructure() {
+    class_<AngleStructure, std::auto_ptr<AngleStructure>, boost::noncopyable>
+            ("AngleStructure", no_init)
+        .def("clone", &AngleStructure::clone,
+            return_value_policy<manage_new_object>())
+        .def("angle", &AngleStructure::angle)
+        .def("triangulation", &AngleStructure::triangulation,
             return_value_policy<to_held_type<> >())
-        .def("isTautOnly", &AngleStructures::isTautOnly)
-        .def("size", &AngleStructures::size)
-        .def("structure", &AngleStructures::structure,
-            return_internal_reference<>())
-        .def("spansStrict", &AngleStructures::spansStrict)
-        .def("spansTaut", &AngleStructures::spansTaut)
-        .def("enumerate", enumerate_1,
-            return_value_policy<to_held_type<> >())
-        .def("enumerate", enumerate_2,
-            return_value_policy<to_held_type<> >())
-        .def("enumerate", enumerate_3,
-            return_value_policy<to_held_type<> >())
-        .def("enumerateTautDD", &AngleStructures::enumerateTautDD,
-            return_value_policy<to_held_type<> >())
-        .staticmethod("enumerate")
-        .staticmethod("enumerateTautDD")
+        .def("isStrict", &AngleStructure::isStrict)
+        .def("isTaut", &AngleStructure::isTaut)
+        .def("isVeering", &AngleStructure::isVeering)
+        .def(regina::python::add_output())
+        .def(regina::python::add_eq_operators())
     ;
 
-    s.attr("typeID") = regina::PACKET_ANGLESTRUCTURELIST;
-
-    implicitly_convertible<SafeHeldType<AngleStructures>,
-        SafeHeldType<regina::NPacket> >();
-
-    FIX_REGINA_BOOST_CONVERTERS(AngleStructures);
-
-    scope().attr("NAngleStructureList") = scope().attr("AngleStructureList");
+    scope().attr("NAngleStructure") = scope().attr("AngleStructure");
 }
 

@@ -31,7 +31,6 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "angle/nanglestructurelist.h"
 #include "surfaces/nnormalsurface.h"
 #include "triangulation/ntriangulation.h"
 

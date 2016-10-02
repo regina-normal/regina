@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "angle/nanglestructure.h"
+#include "angle/anglestructure.h"
 #include "enumerate/ntreeconstraint.h"
 #include "enumerate/ntreelp.h"
 #include "triangulation/ntriangulation.h"

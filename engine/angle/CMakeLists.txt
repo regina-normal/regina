@@ -2,8 +2,8 @@
 
 # Files to compile
 SET ( FILES
-  nanglestructure
-  nanglestructurelist
+  anglestructure
+  anglestructures
   nxmlanglestructreader
   )
 
@@ -15,8 +15,8 @@ SET(SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
-    nanglestructure.h
-    nanglestructurelist.h
+    anglestructure.h
+    anglestructures.h
     nxmlanglestructreader.h
     DESTINATION ${INCLUDEDIR}/angle COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

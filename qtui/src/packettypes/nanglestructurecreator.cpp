@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "angle/nanglestructurelist.h"
+#include "angle/anglestructures.h"
 #include "progress/nprogresstracker.h"
 #include "triangulation/ntriangulation.h"
 

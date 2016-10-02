@@ -30,21 +30,21 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file angle/nanglestructurelist.h
+/*! \file angle/anglestructures.h
  *  \brief Contains a packet representing a collection of angle
  *  structures on a triangulation.
  */
 
-#ifndef __NANGLESTRUCTURELIST_H
+#ifndef __ANGLESTRUCTURES_H
 #ifndef __DOXYGEN
-#define __NANGLESTRUCTURELIST_H
+#define __ANGLESTRUCTURES_H
 #endif
 
 #include <algorithm>
 #include <iterator>
 #include <vector>
 #include "regina-core.h"
-#include "angle/nanglestructure.h"
+#include "angle/anglestructure.h"
 #include "packet/npacket.h"
 #include "utilities/memutils.h"
 #include "utilities/nproperty.h"

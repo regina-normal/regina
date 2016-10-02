@@ -45,7 +45,7 @@
 #define __NTREETRAVERSAL_IMPL_H
 #endif
 
-#include "angle/nanglestructure.h"
+#include "angle/anglestructure.h"
 #include "enumerate/ntreetraversal.h"
 #include "progress/nprogresstracker.h"
 #include "surfaces/nsanstandard.h"

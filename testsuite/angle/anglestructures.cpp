@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <cppunit/extensions/HelperMacros.h>
-#include "angle/nanglestructurelist.h"
+#include "angle/anglestructures.h"
 #include "surfaces/nnormalsurface.h"
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntetrahedron.h"

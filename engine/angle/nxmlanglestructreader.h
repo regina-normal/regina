@@ -41,7 +41,7 @@
 
 #include "regina-core.h"
 #include "packet/nxmlpacketreader.h"
-#include "angle/nanglestructurelist.h"
+#include "angle/anglestructures.h"
 
 namespace regina {
 

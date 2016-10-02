@@ -33,7 +33,7 @@
 #import "NewAnglesController.h"
 #import "PacketTreeController.h"
 #import "ReginaHelper.h"
-#import "angle/nanglestructurelist.h"
+#import "angle/anglestructures.h"
 #import "progress/nprogresstracker.h"
 
 #define KEY_LAST_TAUT @"NewAnglesTaut"

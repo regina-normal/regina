@@ -35,8 +35,8 @@
 #import "ReginaHelper.h"
 #import "SpreadHelper.h"
 #import "TextHelper.h"
-#import "angle/nanglestructure.h"
-#import "angle/nanglestructurelist.h"
+#import "angle/anglestructure.h"
+#import "angle/anglestructures.h"
 #import "triangulation/ntriangulation.h"
 
 #pragma mark - Angle structure view controller
