@@ -80,7 +80,7 @@ int CuspModel::columnCount(const QModelIndex& /* unused parent*/) const {
 
 QVariant CuspModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        const regina::NCusp* cusp = tri_->cusp(index.row());
+        const regina::Cusp* cusp = tri_->cusp(index.row());
         switch (index.column()) {
             case 0:
                 return QString::number(index.row());
@@ -96,7 +96,7 @@ QVariant CuspModel::data(const QModelIndex& index, int role) const {
         }
     } else if (role == Qt::EditRole) {
         if (index.column() == 2) {
-            const regina::NCusp* cusp = tri_->cusp(index.row());
+            const regina::Cusp* cusp = tri_->cusp(index.row());
             if (cusp->complete())
                 return QString();
             else

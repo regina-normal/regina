@@ -1054,7 +1054,7 @@ Equality type : BY_REFERENCE
 NContainer : class
 Equality type : BY_REFERENCE
 
-NCusp : class
+Cusp : class
 Equality type : BY_REFERENCE
 
 NCyclotomic : class

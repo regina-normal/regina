@@ -40,7 +40,7 @@
 #include <QDialogButtonBox>
 #include <QLabel>
 
-using regina::NCusp;
+using regina::Cusp;
 
 CuspChooser::CuspChooser(
         regina::NSnapPeaTriangulation* tri,
@@ -100,11 +100,11 @@ void CuspChooser::fill() {
         }
 }
 
-bool CuspChooser::filterFilled(const NCusp* c) {
+bool CuspChooser::filterFilled(const Cusp* c) {
     return ! c->complete();
 }
 
-bool CuspChooser::filterComplete(const NCusp* c) {
+bool CuspChooser::filterComplete(const Cusp* c) {
     return c->complete();
 }
 

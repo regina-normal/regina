@@ -45,7 +45,7 @@
 #include <vector>
 
 namespace regina {
-    class NCusp;
+    class Cusp;
     class NSnapPeaTriangulation;
 };
 
@@ -53,7 +53,7 @@ namespace regina {
  * A filter function, used to determine whether a given cusp
  * should appear in the list.
  */
-typedef bool (*CuspFilterFunc)(const regina::NCusp*);
+typedef bool (*CuspFilterFunc)(const regina::Cusp*);
 
 /**
  * A widget through which a single cusp of some SnapPea triangulation
@@ -142,8 +142,8 @@ class CuspChooser : public QComboBox, public regina::NPacketListener {
         /**
          * Some ready-made cusp filters.
          */
-        static bool filterFilled(const regina::NCusp*);
-        static bool filterComplete(const regina::NCusp*);
+        static bool filterFilled(const regina::Cusp*);
+        static bool filterComplete(const regina::Cusp*);
 
     private:
         /**

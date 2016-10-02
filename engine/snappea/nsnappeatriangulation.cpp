@@ -56,7 +56,7 @@ namespace {
 
 std::complex<double> NSnapPeaTriangulation::zero_(0, 0);
 
-void NCusp::writeTextShort(std::ostream& out) const {
+void Cusp::writeTextShort(std::ostream& out) const {
     if (complete())
         out << "Complete cusp: ";
     else
@@ -754,7 +754,7 @@ void NSnapPeaTriangulation::sync() {
 
             unsigned i, j;
 
-            cusp_ = new NCusp[data_->num_cusps];
+            cusp_ = new Cusp[data_->num_cusps];
             regina::snappea::Cusp* c = data_->cusp_list_begin.next;
             for (i = 0; i < data_->num_cusps; ++i) {
                 cusp_[c->index].vertex_ = 0;

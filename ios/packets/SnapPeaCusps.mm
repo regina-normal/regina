@@ -146,7 +146,7 @@
     editLabel = label;
     editCusp = cusp;
     
-    const regina::NCusp* c = self.packet->cusp(cusp);
+    const regina::Cusp* c = self.packet->cusp(cusp);
     
     editField = [[UITextField alloc] initWithFrame:label.frame];
     editField.backgroundColor = cell.backgroundColor;
@@ -342,7 +342,7 @@ cleanUpFilling:
     
     if (tableView == self.cusps) {
         SnapPeaCuspCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cusp" forIndexPath:indexPath];
-        const regina::NCusp* cusp = self.packet->cusp(indexPath.row - 1);
+        const regina::Cusp* cusp = self.packet->cusp(indexPath.row - 1);
         cell.cusp.text = [NSString stringWithFormat:@"%d.", indexPath.row - 1];
         cell.vertex.text = [NSString stringWithFormat:@"%ld", cusp->vertex()->markedIndex()];
         if (cusp->complete())
