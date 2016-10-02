@@ -1935,6 +1935,8 @@
 		050C649A1DA1B61000C9420F /* nscript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nscript.h; sourceTree = "<group>"; };
 		050C649C1DA1BC9C00C9420F /* npdf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = npdf.h; sourceTree = "<group>"; };
 		050C649E1DA1C22100C9420F /* ntext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntext.h; sourceTree = "<group>"; };
+		050C64A41DA1C2BC00C9420F /* tricensus-mpi-status */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; path = "tricensus-mpi-status"; sourceTree = "<group>"; };
+		050C64A51DA1C2BC00C9420F /* tricensus-mpi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "tricensus-mpi.cpp"; sourceTree = "<group>"; };
 		050F5CDD1B9BAAAA00C1F681 /* engine.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = engine.so; sourceTree = BUILT_PRODUCTS_DIR; };
 		050F5D011B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		050F5D021B9BAB9C00C1F681 /* nabeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nabeliangroup.cpp; sourceTree = "<group>"; };
@@ -3713,6 +3715,15 @@
 			path = packets;
 			sourceTree = "<group>";
 		};
+		050C64A01DA1C28F00C9420F /* mpi */ = {
+			isa = PBXGroup;
+			children = (
+				050C64A41DA1C2BC00C9420F /* tricensus-mpi-status */,
+				050C64A51DA1C2BC00C9420F /* tricensus-mpi.cpp */,
+			);
+			path = mpi;
+			sourceTree = "<group>";
+		};
 		050F5CDE1B9BAAAA00C1F681 /* python */ = {
 			isa = PBXGroup;
 			children = (
@@ -5243,6 +5254,7 @@
 				05617AEA1D9DC02900B1E33B /* tricensus.cpp */,
 				05617AEB1D9DC02900B1E33B /* trisetcmp.cpp */,
 				052DB5C01D9F1FF100EDEA68 /* alt */,
+				050C64A01DA1C28F00C9420F /* mpi */,
 			);
 			path = utils;
 			sourceTree = "<group>";
