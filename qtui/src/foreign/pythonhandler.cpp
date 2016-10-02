@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "packet/nscript.h"
+#include "packet/script.h"
 #include "utilities/stringutils.h"
 
 #include "pythonhandler.h"
@@ -67,7 +67,7 @@ regina::NPacket* PythonHandler::importData(const QString& fileName,
 
     in.setCodec(ReginaPrefSet::importExportCodec());
 
-    regina::NScript* ans = new regina::NScript();
+    regina::Script* ans = new regina::Script();
     ans->setLabel(QObject::tr("Imported Script").toUtf8().constData());
 
     // Read in the script.
@@ -127,12 +127,12 @@ regina::NPacket* PythonHandler::importData(const QString& fileName,
 }
 
 PacketFilter* PythonHandler::canExport() const {
-    return new SingleTypeFilter<regina::NScript>();
+    return new SingleTypeFilter<regina::Script>();
 }
 
 bool PythonHandler::exportData(regina::NPacket* data, const QString& fileName,
         QWidget* parentWidget) const {
-    regina::NScript* script = dynamic_cast<regina::NScript*>(data);
+    regina::Script* script = dynamic_cast<regina::Script*>(data);
 
     QFile f(fileName);
     if (! f.open(QIODevice::WriteOnly)) {

@@ -27,7 +27,6 @@ SET ( FILES
   nnormalsurfacecreator
   nnormalsurfaceui
   npdfui
-  nscriptui
   nsnappeaalgebra
   nsnappeacreator
   nsnappeafile
@@ -50,6 +49,7 @@ SET ( FILES
   ntriskeleton
   ntrisnappea
   ntrisurfaces
+  scriptui
   skeletonwindow
   snappeacomponents
   )

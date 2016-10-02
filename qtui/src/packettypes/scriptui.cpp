@@ -33,13 +33,13 @@
 // Regina core includes:
 #include "regina-config.h"
 #include "file/globaldirs.h"
-#include "packet/nscript.h"
+#include "packet/script.h"
 
 // UI includes:
 #include "bigwidget.h"
 #include "docwidget.h"
 #include "edittableview.h"
-#include "nscriptui.h"
+#include "scriptui.h"
 #include "packetchooser.h"
 #include "packeteditiface.h"
 #include "packetmanager.h"
@@ -64,7 +64,7 @@
 #include <set>
 
 using regina::NPacket;
-using regina::NScript;
+using regina::Script;
 
 namespace {
     QRegExp rePythonIdentifier("^[A-Za-z_][A-Za-z0-9_]*$");
@@ -96,7 +96,7 @@ void ScriptValueDelegate::updateEditorGeometry(QWidget* editor,
     editor->setGeometry(option.rect);
 }
 
-ScriptVarModel::ScriptVarModel(NScript* script, bool readWrite) :
+ScriptVarModel::ScriptVarModel(Script* script, bool readWrite) :
         script_(script), isReadWrite_(readWrite) {
 }
 
@@ -241,7 +241,7 @@ bool ScriptVarModel::nameUsedElsewhere(const QString& name, int exclude) const {
     return false;
 }
 
-NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane) :
+ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
         PacketUI(enclosingPane), script(packet) {
     bool readWrite = enclosingPane->isReadWrite();
 
@@ -288,7 +288,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane) :
 
     // --- Text Editor ---
 
-    editWidget = new DocWidget<NScript, DocWidgetFinalNewline>(
+    editWidget = new DocWidget<Script, DocWidgetFinalNewline>(
         packet, splitter);
     editWidget->setReadOnly(!readWrite);
     editWidget->setLineWrapMode(QPlainTextEdit::NoWrap);
@@ -398,7 +398,7 @@ NScriptUI::NScriptUI(NScript* packet, PacketPane* enclosingPane) :
         this, SLOT(updatePreferences()));
 }
 
-NScriptUI::~NScriptUI() {
+ScriptUI::~ScriptUI() {
     // Make sure the actions, including separators, are all deleted.
     for (QLinkedList<QAction*>::iterator it = scriptActionList.begin() ;
             it != scriptActionList.end(); it++ )
@@ -411,23 +411,23 @@ NScriptUI::~NScriptUI() {
     delete editWidget;
 }
 
-NPacket* NScriptUI::getPacket() {
+NPacket* ScriptUI::getPacket() {
     return script;
 }
 
-QWidget* NScriptUI::getInterface() {
+QWidget* ScriptUI::getInterface() {
     return ui;
 }
 
-const QLinkedList<QAction*>& NScriptUI::getPacketTypeActions() {
+const QLinkedList<QAction*>& ScriptUI::getPacketTypeActions() {
     return scriptActionList;
 }
 
-QString NScriptUI::getPacketMenuText() const {
+QString ScriptUI::getPacketMenuText() const {
     return tr("S&cript");
 }
 
-void NScriptUI::refresh() {
+void ScriptUI::refresh() {
     // Refresh the variables.
     model->rebuild();
 
@@ -438,12 +438,12 @@ void NScriptUI::refresh() {
     updateRemoveState();
 }
 
-void NScriptUI::endEdit() {
+void ScriptUI::endEdit() {
     varTable->endEdit();
     editWidget->commit();
 }
 
-void NScriptUI::setReadWrite(bool readWrite) {
+void ScriptUI::setReadWrite(bool readWrite) {
     model->setReadWrite(readWrite);
 
     if (readWrite)
@@ -456,7 +456,7 @@ void NScriptUI::setReadWrite(bool readWrite) {
     updateRemoveState();
 }
 
-void NScriptUI::addVariable() {
+void ScriptUI::addVariable() {
     endEdit();
 
     // Find a suitable variable name.
@@ -484,7 +484,7 @@ void NScriptUI::addVariable() {
         script->variableIndex(varName.toUtf8().constData()), 0, QModelIndex()));
 }
 
-void NScriptUI::removeSelectedVariables() {
+void ScriptUI::removeSelectedVariables() {
     endEdit();
 
     // Note that selections are contiguous.
@@ -530,7 +530,7 @@ void NScriptUI::removeSelectedVariables() {
         script->removeVariable(*rit);
 }
 
-void NScriptUI::updateRemoveState() {
+void ScriptUI::updateRemoveState() {
     // Are we read-write?
     if (actAdd->isEnabled())
         actRemove->setEnabled(script->countVariables() > 0);
@@ -538,7 +538,7 @@ void NScriptUI::updateRemoveState() {
         actRemove->setEnabled(false);
 }
 
-void NScriptUI::compile() {
+void ScriptUI::compile() {
     endEdit();
 
     if (enclosingPane->getMainWindow()->getPythonManager().compileScript(ui,
@@ -554,7 +554,7 @@ void NScriptUI::compile() {
             "this console to further investigate the problem."));
 }
 
-void NScriptUI::execute() {
+void ScriptUI::execute() {
     endEdit();
 
     // Set up the variable list.
@@ -570,12 +570,12 @@ void NScriptUI::execute() {
             editWidget->toPlainText() + "\n\n", vars);
 }
 
-void NScriptUI::updatePreferences() {
+void ScriptUI::updatePreferences() {
     editWidget->setFont(ReginaPrefSet::fixedWidthFont());
     updateTabWidth();
 }
 
-void NScriptUI::updateTabWidth() {
+void ScriptUI::updateTabWidth() {
     editWidget->setTabStopWidth(
         QFontMetrics(editWidget->font()).width('x') *
         ReginaPrefSet::global().pythonSpacesPerTab);

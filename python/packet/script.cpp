@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "packet/nscript.h"
+#include "packet/script.h"
 #include "../safeheldtype.h"
 #include "../helpers.h"
 
@@ -39,47 +39,47 @@
 
 using namespace boost::python;
 using namespace regina::python;
-using regina::NScript;
+using regina::Script;
 
 namespace {
-    regina::NPacket* (NScript::*variableValue_long)(size_t) const =
-        &NScript::variableValue;
-    regina::NPacket* (NScript::*variableValue_string)(const std::string&)
-        const = &NScript::variableValue;
+    regina::NPacket* (Script::*variableValue_long)(size_t) const =
+        &Script::variableValue;
+    regina::NPacket* (Script::*variableValue_string)(const std::string&)
+        const = &Script::variableValue;
 
-    void (NScript::*removeVariable_long)(size_t) = &NScript::removeVariable;
-    void (NScript::*removeVariable_string)(const std::string&) =
-        &NScript::removeVariable;
+    void (Script::*removeVariable_long)(size_t) = &Script::removeVariable;
+    void (Script::*removeVariable_string)(const std::string&) =
+        &Script::removeVariable;
 }
 
-void addNScript() {
-    scope s = class_<NScript, bases<regina::NPacket>,
-            SafeHeldType<NScript>, boost::noncopyable>("NScript", init<>())
-        .def("text", &NScript::text,
+void addScript() {
+    scope s = class_<Script, bases<regina::NPacket>,
+            SafeHeldType<Script>, boost::noncopyable>("Script", init<>())
+        .def("text", &Script::text,
             return_value_policy<return_by_value>())
-        .def("setText", &NScript::setText)
-        .def("append", &NScript::append)
-        .def("countVariables", &NScript::countVariables)
-        .def("variableName", &NScript::variableName,
+        .def("setText", &Script::setText)
+        .def("append", &Script::append)
+        .def("countVariables", &Script::countVariables)
+        .def("variableName", &Script::variableName,
             return_value_policy<return_by_value>())
         .def("variableValue", variableValue_long,
             return_value_policy<to_held_type<>>())
         .def("variableValue", variableValue_string,
             return_value_policy<to_held_type<>>())
-        .def("variableIndex", &NScript::variableIndex)
-        .def("setVariableName", &NScript::setVariableName)
-        .def("setVariableValue", &NScript::setVariableValue)
-        .def("addVariable", &NScript::addVariable)
+        .def("variableIndex", &Script::variableIndex)
+        .def("setVariableName", &Script::setVariableName)
+        .def("setVariableValue", &Script::setVariableValue)
+        .def("addVariable", &Script::addVariable)
         .def("removeVariable", removeVariable_long)
         .def("removeVariable", removeVariable_string)
-        .def("removeAllVariables", &NScript::removeAllVariables)
+        .def("removeAllVariables", &Script::removeAllVariables)
     ;
 
     s.attr("typeID") = regina::PACKET_SCRIPT;
 
-    implicitly_convertible<SafeHeldType<NScript>,
+    implicitly_convertible<SafeHeldType<Script>,
         SafeHeldType<regina::NPacket> >();
 
-    FIX_REGINA_BOOST_CONVERTERS(NScript);
+    FIX_REGINA_BOOST_CONVERTERS(Script);
 }
 

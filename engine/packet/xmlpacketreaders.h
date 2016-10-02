@@ -43,7 +43,7 @@
 #include "packet/xmlpacketreader.h"
 #include "packet/ncontainer.h"
 #include "packet/npdf.h"
-#include "packet/nscript.h"
+#include "packet/script.h"
 #include "packet/ntext.h"
 
 namespace regina {
@@ -109,7 +109,7 @@ class REGINA_API XMLPDFReader : public XMLPacketReader {
  */
 class REGINA_API XMLScriptReader : public XMLPacketReader {
     private:
-        NScript* script;
+        Script* script;
             /**< The script currently being read. */
 
     public:
@@ -181,7 +181,7 @@ inline NPacket* XMLPDFReader::packet() {
 // Inline functions for XMLScriptReader
 
 inline XMLScriptReader::XMLScriptReader(XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), script(new NScript()) {
+        XMLPacketReader(resolver), script(new Script()) {
 }
 
 inline NPacket* XMLScriptReader::packet() {

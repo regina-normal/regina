@@ -45,7 +45,7 @@ namespace {
     /**
      * Reads a single script variable and its value.
      */
-    class NScriptVarReader : public NXMLElementReader {
+    class ScriptVarReader : public NXMLElementReader {
         private:
             std::string name, valueID, valueLabel;
 
@@ -77,7 +77,7 @@ namespace {
      */
     class VariableResolutionTask : public XMLTreeResolutionTask {
         private:
-            NScript* script_;
+            Script* script_;
             std::string name_;
             std::string valueID_;
                 /**< An internal packet ID.  Used by Regina >= 4.95. */
@@ -85,7 +85,7 @@ namespace {
                 /**< A packet label.  Used by Regina <= 4.94. */
 
         public:
-            inline VariableResolutionTask(NScript* script,
+            inline VariableResolutionTask(Script* script,
                     const std::string& name,
                     const std::string& valueID,
                     const std::string& valueLabel) :
@@ -161,7 +161,7 @@ NXMLElementReader* XMLScriptReader::startContentSubElement(
     else if (subTagName == "line") // Old-style
         return new NXMLCharsReader();
     else if (subTagName == "var")
-        return new NScriptVarReader();
+        return new ScriptVarReader();
     else
         return new NXMLElementReader();
 }
@@ -174,7 +174,7 @@ void XMLScriptReader::endContentSubElement(const std::string& subTagName,
         script->append(dynamic_cast<NXMLCharsReader*>(subReader)->chars());
         script->append("\n");
     } else if (subTagName == "var") {
-        NScriptVarReader* var = dynamic_cast<NScriptVarReader*>(subReader);
+        ScriptVarReader* var = dynamic_cast<ScriptVarReader*>(subReader);
         if (! var->getName().empty())
             resolver_.queueTask(new VariableResolutionTask(
                 script, var->getName(),
@@ -191,7 +191,7 @@ XMLPacketReader* NPDF::xmlReader(NPacket*, XMLTreeResolver& resolver) {
     return new XMLPDFReader(resolver);
 }
 
-XMLPacketReader* NScript::xmlReader(NPacket*, XMLTreeResolver& resolver) {
+XMLPacketReader* Script::xmlReader(NPacket*, XMLTreeResolver& resolver) {
     return new XMLScriptReader(resolver);
 }
 

@@ -75,7 +75,7 @@ enum PacketType {
      */
     PACKET_NORMALSURFACELIST = 6,
     /**
-     * Represents a script packet, of class NScript.
+     * Represents a script packet, of class Script.
      */
     PACKET_SCRIPT = 7,
     /**

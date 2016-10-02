@@ -32,7 +32,7 @@
 
 #import "PacketManagerIOS.h"
 #import "ScriptViewController.h"
-#import "packet/nscript.h"
+#import "packet/script.h"
 
 #pragma mark - Script variable cell
 
@@ -52,7 +52,7 @@
 }
 @property (weak, nonatomic) IBOutlet UITableView *variables;
 @property (weak, nonatomic) IBOutlet UITextView *script;
-@property (assign, nonatomic) regina::NScript* packet;
+@property (assign, nonatomic) regina::Script* packet;
 @end
 
 @implementation ScriptViewController

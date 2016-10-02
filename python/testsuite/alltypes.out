@@ -1309,7 +1309,7 @@ Equality type : BY_REFERENCE
 NSatTriPrism : class
 Equality type : BY_REFERENCE
 
-NScript : class
+Script : class
 Equality type : BY_REFERENCE
 
 NSignature : class

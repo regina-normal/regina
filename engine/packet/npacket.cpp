@@ -39,7 +39,7 @@
 #include "engine.h"
 #include "packet/npacket.h"
 #include "packet/packetlistener.h"
-#include "packet/nscript.h"
+#include "packet/script.h"
 #include "utilities/base64.h"
 #include "utilities/stringutils.h"
 #include "utilities/xmlutils.h"
@@ -724,10 +724,10 @@ void NPacket::writeXMLPacketTree(std::ostream& out) const {
 
     // If we appear as a variable in a script packet, then write an ID that the
     // script can reference.  We can look through our packet listeners to see
-    // if this is necessary, since an NScript always listens to its variables.
+    // if this is necessary, since a Script always listens to its variables.
     if (listeners_.get())
         for (auto it = listeners_->begin(); it != listeners_->end(); ++it)
-            if (dynamic_cast<NScript*>(*it)) {
+            if (dynamic_cast<Script*>(*it)) {
                 out << "\tid=\"" << internalID() << "\"\n";
                 break;
             }

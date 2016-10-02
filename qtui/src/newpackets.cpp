@@ -32,7 +32,7 @@
 
 #include "dim4/dim4triangulation.h"
 #include "packet/ncontainer.h"
-#include "packet/nscript.h"
+#include "packet/script.h"
 #include "packet/ntext.h"
 #include "snappea/nsnappeatriangulation.h"
 
@@ -94,7 +94,7 @@ void ReginaMain::newPDF() {
 }
 
 void ReginaMain::newScript() {
-    newPacket(new BasicPacketCreator<regina::NScript>(), 0,
+    newPacket(new BasicPacketCreator<regina::Script>(), 0,
         tr("New Script"));
 }
 

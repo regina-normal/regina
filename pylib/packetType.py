@@ -68,7 +68,7 @@ def isScript(packet):
     Is the given packet a python script?
     Returns 1 for true, or 0 for false.
     """
-    return (packet.type() == regina.NScript.typeID)
+    return (packet.type() == regina.Script.typeID)
 
 def isSurfaceFilter(packet):
     """

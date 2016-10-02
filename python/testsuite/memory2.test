@@ -52,7 +52,7 @@ def ensureDestroyed(watcher):
 print 'Script variables #1'
 a = NContainer(); aw = watcher(a)
 b = NTriangulation(); b.newSimplex(); bw = watcher(b)
-c = NScript(); cw = watcher(c)
+c = Script(); cw = watcher(c)
 a.insertChildLast(b)
 a.insertChildLast(c)
 c.addVariable('foo', b)
@@ -65,7 +65,7 @@ ensureDestroyed(aw); ensureDestroyed(bw); ensureDestroyed(cw)
 print 'Script variables #2'
 a = NContainer(); aw = watcher(a)
 b = NTriangulation(); b.newSimplex(); bw = watcher(b)
-c = NScript(); cw = watcher(c)
+c = Script(); cw = watcher(c)
 a.insertChildLast(b)
 a.insertChildLast(c)
 c.addVariable('foo', a)

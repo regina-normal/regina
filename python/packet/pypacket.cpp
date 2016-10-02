@@ -33,7 +33,7 @@
 void addNContainer();
 void addNPacket();
 void addNPDF();
-void addNScript();
+void addScript();
 void addNText();
 void addPacketType();
 
@@ -44,7 +44,7 @@ void addPacket() {
     addNPacket();
     addNContainer();
     addNPDF();
-    addNScript();
+    addScript();
     addNText();
 }
 

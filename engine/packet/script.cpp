@@ -31,40 +31,40 @@
  **************************************************************************/
 
 #include <iterator>
-#include "packet/nscript.h"
+#include "packet/script.h"
 #include "utilities/xmlutils.h"
 
 #define PROP_VARIABLE 1
 
 namespace regina {
 
-const std::string& NScript::variableName(size_t index) const {
+const std::string& Script::variableName(size_t index) const {
     std::map<std::string, NPacket*>::const_iterator it = variables.begin();
     advance(it, index);
     return (*it).first;
 }
 
-NPacket* NScript::variableValue(size_t index) const {
+NPacket* Script::variableValue(size_t index) const {
     std::map<std::string, NPacket*>::const_iterator it = variables.begin();
     advance(it, index);
     return (*it).second;
 }
 
-NPacket* NScript::variableValue(const std::string& name) const {
+NPacket* Script::variableValue(const std::string& name) const {
     std::map<std::string, NPacket*>::const_iterator it = variables.find(name);
     if (it == variables.end())
         return 0;
     return (*it).second;
 }
 
-long NScript::variableIndex(const std::string& name) const {
+long Script::variableIndex(const std::string& name) const {
     std::map<std::string, NPacket*>::const_iterator it = variables.find(name);
     if (it == variables.end())
         return -1;
     return distance(variables.begin(), it);
 }
 
-void NScript::setVariableName(size_t index, const std::string& name) {
+void Script::setVariableName(size_t index, const std::string& name) {
     std::map<std::string, NPacket*>::iterator it = variables.begin();
     advance(it, index);
 
@@ -78,7 +78,7 @@ void NScript::setVariableName(size_t index, const std::string& name) {
     variables.insert(std::make_pair(name, value));
 }
 
-void NScript::setVariableValue(size_t index, NPacket* value) {
+void Script::setVariableValue(size_t index, NPacket* value) {
     std::map<std::string, NPacket*>::iterator it = variables.begin();
     advance(it, index);
 
@@ -94,7 +94,7 @@ void NScript::setVariableValue(size_t index, NPacket* value) {
         it->second->listen(this);
 }
 
-void NScript::removeVariable(const std::string& name) {
+void Script::removeVariable(const std::string& name) {
     std::map<std::string, NPacket*>::iterator it = variables.find(name);
     if (it == variables.end())
         return;
@@ -106,7 +106,7 @@ void NScript::removeVariable(const std::string& name) {
     variables.erase(it);
 }
 
-void NScript::removeVariable(size_t index) {
+void Script::removeVariable(size_t index) {
     std::map<std::string, NPacket*>::iterator it = variables.begin();
     advance(it, index);
 
@@ -117,7 +117,7 @@ void NScript::removeVariable(size_t index) {
     variables.erase(it);
 }
 
-void NScript::writeTextLong(std::ostream& o) const {
+void Script::writeTextLong(std::ostream& o) const {
     if (variables.empty())
         o << "No variables.\n";
     else {
@@ -133,14 +133,14 @@ void NScript::writeTextLong(std::ostream& o) const {
     o << '\n' << text_;
 }
 
-NPacket* NScript::internalClonePacket(NPacket*) const {
-    NScript* ans = new NScript();
+NPacket* Script::internalClonePacket(NPacket*) const {
+    Script* ans = new Script();
     ans->text_ = text_;
     ans->variables = variables;
     return ans;
 }
 
-void NScript::writeXMLPacketData(std::ostream& out) const {
+void Script::writeXMLPacketData(std::ostream& out) const {
     using regina::xml::xmlEncodeSpecialChars;
 
     for (std::map<std::string, NPacket*>::const_iterator vit =
@@ -158,14 +158,14 @@ void NScript::writeXMLPacketData(std::ostream& out) const {
     out << "  <text>" << xmlEncodeSpecialChars(text_) << "</text>\n";
 }
 
-void NScript::packetWasRenamed(NPacket*) {
+void Script::packetWasRenamed(NPacket*) {
     // We assume that the packet that was renamed is one of the
     // variables for this packet.
     // There is nothing to update here; just fire the update.
     ChangeEventSpan span(this);
 }
 
-void NScript::packetToBeDestroyed(NPacket* packet) {
+void Script::packetToBeDestroyed(NPacket* packet) {
     // We know the script will change, because one of our variables is
     // listening on this packet.
     ChangeEventSpan span(this);

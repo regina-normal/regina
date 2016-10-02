@@ -5,10 +5,10 @@ SET ( FILES
   ncontainer
   npacket
   npdf
-  nscript
   ntext
   packettype
   pypacket
+  script
   )
 
 # Prepend folder name

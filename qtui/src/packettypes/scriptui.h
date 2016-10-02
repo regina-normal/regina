@@ -30,12 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file nscriptui.h
+/*! \file scriptui.h
  *  \brief Provides an interface for viewing script packets.
  */
 
-#ifndef __NSCRIPTUI_H
-#define __NSCRIPTUI_H
+#ifndef __SCRIPTUI_H
+#define __SCRIPTUI_H
 
 #include "packet/packetlistener.h"
 
@@ -54,7 +54,7 @@ class QPlainTextEdit;
 
 namespace regina {
     class NPacket;
-    class NScript;
+    class Script;
 };
 
 class ScriptVarModel : public QAbstractItemModel {
@@ -62,7 +62,7 @@ class ScriptVarModel : public QAbstractItemModel {
         /**
          * Details of the script.
          */
-        regina::NScript* script_;
+        regina::Script* script_;
 
         /**
          * Current state.
@@ -73,7 +73,7 @@ class ScriptVarModel : public QAbstractItemModel {
         /**
          * Constructor.
          */
-        ScriptVarModel(regina::NScript* script, bool readWrite);
+        ScriptVarModel(regina::Script* script, bool readWrite);
 
         /**
          * Read-write state.
@@ -111,10 +111,10 @@ class ScriptVarModel : public QAbstractItemModel {
 
 class ScriptValueDelegate : public QStyledItemDelegate {
     private:
-        regina::NScript* script_;
+        regina::Script* script_;
 
     public:
-        ScriptValueDelegate(regina::NScript* script);
+        ScriptValueDelegate(regina::Script* script);
 
         virtual QWidget* createEditor(QWidget* parent,
             const QStyleOptionViewItem& option, const QModelIndex& index) const;
@@ -129,14 +129,14 @@ class ScriptValueDelegate : public QStyledItemDelegate {
 /**
  * A packet interface for viewing script packets.
  */
-class NScriptUI : public QObject, public PacketUI {
+class ScriptUI : public QObject, public PacketUI {
     Q_OBJECT
 
     private:
         /**
          * Packet details
          */
-        regina::NScript* script;
+        regina::Script* script;
 
         /**
          * Internal components
@@ -145,7 +145,7 @@ class NScriptUI : public QObject, public PacketUI {
         ScriptVarModel* model;
         EditTableView* varTable;
         QStyledItemDelegate* valueDelegate;
-        DocWidget<regina::NScript, DocWidgetFinalNewline>* editWidget;
+        DocWidget<regina::Script, DocWidgetFinalNewline>* editWidget;
         PacketEditIface* editIface;
 
         /**
@@ -159,8 +159,8 @@ class NScriptUI : public QObject, public PacketUI {
         /**
          * Constructor and destructor.
          */
-        NScriptUI(regina::NScript* packet, PacketPane* newEnclosingPane);
-        ~NScriptUI();
+        ScriptUI(regina::Script* packet, PacketPane* newEnclosingPane);
+        ~ScriptUI();
 
         /**
          * PacketUI overrides.
@@ -230,11 +230,11 @@ inline QModelIndex ScriptVarModel::parent(const QModelIndex&) const {
     return QModelIndex();
 }
 
-inline ScriptValueDelegate::ScriptValueDelegate(regina::NScript* script) :
+inline ScriptValueDelegate::ScriptValueDelegate(regina::Script* script) :
         script_(script) {
 }
 
-inline PacketEditIface* NScriptUI::getEditIface() {
+inline PacketEditIface* ScriptUI::getEditIface() {
     return editIface;
 }
 

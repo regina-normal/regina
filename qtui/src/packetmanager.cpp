@@ -47,7 +47,7 @@
 #include "packettypes/nhypersurfaceui.h"
 #include "packettypes/nnormalsurfaceui.h"
 #include "packettypes/npdfui.h"
-#include "packettypes/nscriptui.h"
+#include "packettypes/scriptui.h"
 #include "packettypes/nsnappeaui.h"
 #include "packettypes/nsurfacefiltercomb.h"
 #include "packettypes/nsurfacefilterprop.h"
@@ -165,8 +165,8 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
             return new NHyperSurfaceUI(
                 dynamic_cast<NNormalHypersurfaceList*>(packet), enclosingPane);
         case PACKET_SCRIPT:
-            return new NScriptUI(
-                dynamic_cast<NScript*>(packet), enclosingPane);
+            return new ScriptUI(
+                dynamic_cast<Script*>(packet), enclosingPane);
         case PACKET_SNAPPEATRIANGULATION:
             return new NSnapPeaUI(
                 dynamic_cast<NSnapPeaTriangulation*>(packet), enclosingPane);
