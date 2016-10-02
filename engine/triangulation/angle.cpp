@@ -57,7 +57,7 @@ bool NTriangulation::knowsStrictAngleStructure() const {
     return strictAngleStructure_.known();
 }
 
-const NAngleStructure* NTriangulation::findStrictAngleStructure() const {
+const AngleStructure* NTriangulation::findStrictAngleStructure() const {
     // The following test also catches any easy cases.
     if (knowsStrictAngleStructure())
         return strictAngleStructure_.value();
@@ -81,9 +81,9 @@ const NAngleStructure* NTriangulation::findStrictAngleStructure() const {
 
     // We have a strict angle structure: reconstruct it.
     unsigned long len = 3 * simplices_.size() + 1;
-    NAngleStructureVector* v = new NAngleStructureVector(len);
+    AngleStructureVector* v = new AngleStructureVector(len);
     lp.extractSolution(*v, 0 /* type vector */);
-    return (strictAngleStructure_ = new NAngleStructure(this, v));
+    return (strictAngleStructure_ = new AngleStructure(this, v));
 }
 
 } // namespace regina

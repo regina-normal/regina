@@ -31,10 +31,10 @@
  **************************************************************************/
 
 void addNAngleStructure();
-void addNAngleStructureList();
+void addAngleStructures();
 
 void addAngle() {
     addNAngleStructure();
-    addNAngleStructureList();
+    addAngleStructures();
 }
 

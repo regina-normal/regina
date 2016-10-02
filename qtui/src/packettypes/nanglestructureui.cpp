@@ -49,7 +49,7 @@
 #define DEFAULT_ANGLE_COLUMN_WIDTH 40
 #define ANGLE_STATS_PADDING 5
 
-using regina::NAngleStructureList;
+using regina::AngleStructures;
 using regina::NPacket;
 
 void AngleModel::rebuild() {
@@ -71,7 +71,7 @@ int AngleModel::columnCount(const QModelIndex& /* unused parent */) const {
 
 QVariant AngleModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        const regina::NAngleStructure* s = structures_->structure(index.row());
+        const regina::AngleStructure* s = structures_->structure(index.row());
         if (index.column() == 0) {
             if (s->isStrict())
                 return tr("Strict");
@@ -140,7 +140,7 @@ QVariant AngleModel::headerData(int section, Qt::Orientation orientation,
         return QVariant();
 }
 
-NAngleStructureUI::NAngleStructureUI(NAngleStructureList* packet,
+NAngleStructureUI::NAngleStructureUI(AngleStructures* packet,
         PacketPane* enclosingPane) : PacketReadOnlyUI(enclosingPane),
         currentlyAutoResizing(false) {
     ui = new BigWidget(1, 2);

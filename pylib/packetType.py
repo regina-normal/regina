@@ -54,7 +54,7 @@ def isAngleStructureList(packet):
     Is the given packet an angle structure list?
     Returns 1 for true, or 0 for false.
     """
-    return (packet.type() == regina.NAngleStructureList.typeID)
+    return (packet.type() == regina.AngleStructures.typeID)
 
 def isContainer(packet):
     """

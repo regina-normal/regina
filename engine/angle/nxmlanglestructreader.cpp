@@ -53,7 +53,7 @@ void NXMLAngleStructureReader::initialChars(const std::string& chars) {
         return;
 
     // Create a new vector and read all non-zero entries.
-    NAngleStructureVector* vec = new NAngleStructureVector(vecLen);
+    AngleStructureVector* vec = new AngleStructureVector(vecLen);
 
     long pos;
     NLargeInteger value;
@@ -71,7 +71,7 @@ void NXMLAngleStructureReader::initialChars(const std::string& chars) {
         return;
     }
 
-    angles = new NAngleStructure(tri, vec);
+    angles = new AngleStructure(tri, vec);
 }
 
 NXMLElementReader* NXMLAngleStructureReader::startSubElement(
@@ -118,12 +118,12 @@ void NXMLAngleStructureListReader::endContentSubElement(
         const std::string& subTagName,
         NXMLElementReader* subReader) {
     if (subTagName == "struct")
-        if (NAngleStructure* s =
+        if (AngleStructure* s =
                 dynamic_cast<NXMLAngleStructureReader*>(subReader)->structure())
             list->structures.push_back(s);
 }
 
-NXMLPacketReader* NAngleStructureList::xmlReader(NPacket* parent,
+NXMLPacketReader* AngleStructures::xmlReader(NPacket* parent,
         NXMLTreeResolver& resolver) {
     return new NXMLAngleStructureListReader(
         dynamic_cast<NTriangulation*>(parent), resolver);

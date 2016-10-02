@@ -42,5 +42,5 @@
 
 #include <cppunit/ui/text/TestRunner.h>
 
-void addNAngleStructureList(CppUnit::TextUi::TestRunner& runner);
+void addAngleStructures(CppUnit::TextUi::TestRunner& runner);
 

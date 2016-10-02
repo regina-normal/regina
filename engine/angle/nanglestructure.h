@@ -83,7 +83,7 @@ typedef Triangulation<3> NTriangulation;
  *
  * \ifacespython Not present.
  */
-class REGINA_API NAngleStructureVector : public NRay {
+class REGINA_API AngleStructureVector : public NRay {
     public:
         /**
          * Creates a new vector all of whose entries are initialised to
@@ -91,13 +91,13 @@ class REGINA_API NAngleStructureVector : public NRay {
          *
          * @param length the number of elements in the new vector.
          */
-        NAngleStructureVector(size_t length);
+        AngleStructureVector(size_t length);
         /**
          * Creates a new vector that is a clone of the given vector.
          *
          * @param cloneMe the vector to clone.
          */
-        NAngleStructureVector(const NVector<NLargeInteger>& cloneMe);
+        AngleStructureVector(const NVector<NLargeInteger>& cloneMe);
 
         /**
          * Creates a new set of angle structure equations for the given
@@ -105,7 +105,7 @@ class REGINA_API NAngleStructureVector : public NRay {
          *
          * Each equation will be represented as a row of the matrix, and
          * each column will represent a coordinate in the underlying
-         * coordinate system (which is described in the NAngleStructureVector
+         * coordinate system (which is described in the AngleStructureVector
          * class notes).
          *
          * The returned matrix will be newly allocated and its destruction
@@ -127,11 +127,11 @@ class REGINA_API NAngleStructureVector : public NRay {
  * Once the underlying triangulation changes, this angle structure
  * is no longer valid.
  */
-class REGINA_API NAngleStructure :
-        public ShortOutput<NAngleStructure>,
+class REGINA_API AngleStructure :
+        public ShortOutput<AngleStructure>,
         public boost::noncopyable {
     private:
-        NAngleStructureVector* vector;
+        AngleStructureVector* vector;
             /**< Stores (indirectly) the individual angles in this angle
              *   structure. */
         const NTriangulation* triangulation_;
@@ -165,20 +165,20 @@ class REGINA_API NAngleStructure :
          * @param newVector a vector containing the individual angles in the
          * angle structure.
          */
-        NAngleStructure(const NTriangulation* triang,
-            NAngleStructureVector* newVector);
+        AngleStructure(const NTriangulation* triang,
+            AngleStructureVector* newVector);
         /**
          * Destroys this angle structure.
          * The underlying vector of angles will also be deallocated.
          */
-        ~NAngleStructure();
+        ~AngleStructure();
 
         /**
          * Creates a newly allocated clone of this angle structure.
          *
          * @return a clone of this angle structure.
          */
-        NAngleStructure* clone() const;
+        AngleStructure* clone() const;
 
         /**
          * Returns the requested angle in this angle structure.
@@ -274,7 +274,7 @@ class REGINA_API NAngleStructure :
          *
          * @return the underlying raw vector.
          */
-        const NAngleStructureVector* rawVector() const;
+        const AngleStructureVector* rawVector() const;
 
         /**
          * Writes a short text representation of this object to the
@@ -289,7 +289,7 @@ class REGINA_API NAngleStructure :
         /**
          * Writes a chunk of XML containing this angle structure and all
          * of its properties.  This routine will be called from within
-         * NAngleStructureList::writeXMLPacketData().
+         * AngleStructures::writeXMLPacketData().
          *
          * \ifacespython Not present.
          *
@@ -309,50 +309,50 @@ class REGINA_API NAngleStructure :
 
 /*@}*/
 
-// Inline functions for NAngleStructureVector
+// Inline functions for AngleStructureVector
 
-inline NAngleStructureVector::NAngleStructureVector(size_t length) :
+inline AngleStructureVector::AngleStructureVector(size_t length) :
         NRay(length) {
 }
 
-inline NAngleStructureVector::NAngleStructureVector(
+inline AngleStructureVector::AngleStructureVector(
         const NVector<NLargeInteger>& cloneMe) : NRay(cloneMe) {
 }
 
-// Inline functions for NAngleStructure
+// Inline functions for AngleStructure
 
-inline NAngleStructure::NAngleStructure(const NTriangulation* triang,
-        NAngleStructureVector* newVector) : vector(newVector),
+inline AngleStructure::AngleStructure(const NTriangulation* triang,
+        AngleStructureVector* newVector) : vector(newVector),
         triangulation_(triang), flags(0) {
 }
 
-inline NAngleStructure::~NAngleStructure() {
+inline AngleStructure::~AngleStructure() {
     delete vector;
 }
 
-inline const NTriangulation* NAngleStructure::triangulation() const {
+inline const NTriangulation* AngleStructure::triangulation() const {
     return triangulation_;
 }
 
-inline bool NAngleStructure::isStrict() const {
+inline bool AngleStructure::isStrict() const {
     if ((flags & flagCalculatedType) == 0)
         calculateType();
     return ((flags & flagStrict) != 0);
 }
 
-inline bool NAngleStructure::isTaut() const {
+inline bool AngleStructure::isTaut() const {
     if ((flags & flagCalculatedType) == 0)
         calculateType();
     return ((flags & flagTaut) != 0);
 }
 
-inline bool NAngleStructure::isVeering() const {
+inline bool AngleStructure::isVeering() const {
     if ((flags & flagCalculatedType) == 0)
         calculateType();
     return ((flags & flagVeering) != 0);
 }
 
-inline const NAngleStructureVector* NAngleStructure::rawVector() const {
+inline const AngleStructureVector* AngleStructure::rawVector() const {
     return vector;
 }
 

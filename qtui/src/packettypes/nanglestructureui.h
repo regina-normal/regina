@@ -47,7 +47,7 @@ class QLabel;
 class QTreeView;
 
 namespace regina {
-    class NAngleStructureList;
+    class AngleStructures;
     class NPacket;
 };
 
@@ -56,19 +56,19 @@ class AngleModel : public QAbstractItemModel {
         /**
          * Details of the angle structures being displayed
          */
-        regina::NAngleStructureList* structures_;
+        regina::AngleStructures* structures_;
         unsigned nCoords;
 
     public:
         /**
          * Constructor.
          */
-        AngleModel(regina::NAngleStructureList* structures);
+        AngleModel(regina::AngleStructures* structures);
 
         /**
          * Data retrieval.
          */
-        regina::NAngleStructureList* structures() const;
+        regina::AngleStructures* structures() const;
 
         /**
          * Rebuild the model from scratch.
@@ -117,7 +117,7 @@ class NAngleStructureUI : public QObject, public PacketReadOnlyUI,
         /**
          * Constructor and destructor.
          */
-        NAngleStructureUI(regina::NAngleStructureList* packet,
+        NAngleStructureUI(regina::AngleStructures* packet,
                 PacketPane* newEnclosingPane);
         ~NAngleStructureUI();
 
@@ -151,12 +151,12 @@ class NAngleStructureUI : public QObject, public PacketReadOnlyUI,
         void columnResized(int section, int oldSize, int newSize);
 };
 
-inline AngleModel::AngleModel(regina::NAngleStructureList* structures) :
+inline AngleModel::AngleModel(regina::AngleStructures* structures) :
         structures_(structures),
         nCoords(3 * structures_->triangulation()->size()) {
 }
 
-inline regina::NAngleStructureList* AngleModel::structures() const {
+inline regina::AngleStructures* AngleModel::structures() const {
     return structures_;
 }
 

@@ -52,7 +52,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *span;
 @property (weak, nonatomic) IBOutlet UIButton *triangulation;
 @property (weak, nonatomic) IBOutlet MDSpreadView *angles;
-@property (assign, nonatomic) regina::NAngleStructureList* packet;
+@property (assign, nonatomic) regina::AngleStructures* packet;
 @end
 
 @implementation AngleViewController
@@ -179,7 +179,7 @@
 
 - (id)spreadView:(MDSpreadView *)aSpreadView objectValueForRowAtIndexPath:(MDIndexPath *)rowPath forColumnAtIndexPath:(MDIndexPath *)columnPath
 {
-    const regina::NAngleStructure* a = self.packet->structure(rowPath.row);
+    const regina::AngleStructure* a = self.packet->structure(rowPath.row);
 
     if (columnPath.column == 0) {
         if (a->isStrict())

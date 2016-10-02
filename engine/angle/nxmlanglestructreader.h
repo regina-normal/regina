@@ -57,7 +57,7 @@ namespace regina {
  */
 class REGINA_API NXMLAngleStructureReader : public NXMLElementReader {
     private:
-        NAngleStructure* angles;
+        AngleStructure* angles;
             /**< The angle structure currently being read. */
         NTriangulation* tri;
             /**< The triangulation on which this angle structure is placed. */
@@ -78,7 +78,7 @@ class REGINA_API NXMLAngleStructureReader : public NXMLElementReader {
          * @return the newly allocated angle structure, or 0 if an error
          * occurred.
          */
-        NAngleStructure* structure();
+        AngleStructure* structure();
 
         virtual void startElement(const std::string& tagName,
             const regina::xml::XMLPropertyDict& tagProps,
@@ -99,7 +99,7 @@ class REGINA_API NXMLAngleStructureReader : public NXMLElementReader {
  */
 class REGINA_API NXMLAngleStructureListReader : public NXMLPacketReader {
     private:
-        NAngleStructureList* list;
+        AngleStructures* list;
             /**< The angle structure list currently being read. */
         NTriangulation* tri;
             /**< The triangulation on which these angle structures
@@ -133,7 +133,7 @@ inline NXMLAngleStructureReader::NXMLAngleStructureReader(
         NTriangulation* newTri) : angles(0), tri(newTri), vecLen(-1) {
 }
 
-inline NAngleStructure* NXMLAngleStructureReader::structure() {
+inline AngleStructure* NXMLAngleStructureReader::structure() {
     return angles;
 }
 
@@ -142,7 +142,7 @@ inline NAngleStructure* NXMLAngleStructureReader::structure() {
 inline NXMLAngleStructureListReader::NXMLAngleStructureListReader(
         NTriangulation* newTri, NXMLTreeResolver& resolver) :
         NXMLPacketReader(resolver),
-        list(new NAngleStructureList(false)), tri(newTri) {
+        list(new AngleStructures(false)), tri(newTri) {
 }
 
 inline NPacket* NXMLAngleStructureListReader::packet() {

@@ -64,7 +64,7 @@
 
 namespace regina {
 
-class NAngleStructure;
+class AngleStructure;
 class NBoundaryComponent;
 class NGroupPresentation;
 class NNormalSurface;
@@ -240,7 +240,7 @@ class REGINA_API Triangulation<3> :
                  that are known to represent closed, connected,
                  orientable, irreducible 3-manifolds. */
 
-        mutable NProperty<NAngleStructure, StoreManagedPtr>
+        mutable NProperty<AngleStructure, StoreManagedPtr>
                 strictAngleStructure_;
             /**< A strict angle structure on this triangulation, or the
                  null pointer if none exists. */
@@ -992,7 +992,7 @@ class REGINA_API Triangulation<3> :
          * @return a strict angle structure on this triangulation, or 0 if
          * none exists.
          */
-        const NAngleStructure* findStrictAngleStructure() const;
+        const AngleStructure* findStrictAngleStructure() const;
         /**
          * Determines whether this triangulation supports a strict angle
          * structure.  Recall that a \e strict angle structure is one

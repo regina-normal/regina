@@ -1009,10 +1009,10 @@ Equality type : NEVER_INSTANTIATED
 NAbelianGroup : class
 Equality type : BY_VALUE
 
-NAngleStructure : class
+AngleStructure : class
 Equality type : BY_REFERENCE
 
-NAngleStructureList : class
+AngleStructures : class
 Equality type : BY_REFERENCE
 
 NAugTriSolidTorus : class

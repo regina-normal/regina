@@ -42,12 +42,12 @@
 
 namespace regina {
 
-typedef std::vector<NAngleStructure*>::const_iterator StructureIteratorConst;
+typedef std::vector<AngleStructure*>::const_iterator StructureIteratorConst;
 
-void NAngleStructureList::enumerateInternal(NTriangulation* triang,
+void AngleStructures::enumerateInternal(NTriangulation* triang,
         NProgressTracker* tracker) {
     // Form the matching equations.
-    NMatrixInt* eqns = NAngleStructureVector::makeAngleEquations(triang);
+    NMatrixInt* eqns = AngleStructureVector::makeAngleEquations(triang);
 
     if (tautOnly_ && (! triang->isEmpty())) {
         // For now just stick to arbitrary precision arithmetic.
@@ -79,7 +79,7 @@ void NAngleStructureList::enumerateInternal(NTriangulation* triang,
             tracker->newStage("Enumerating vertex angle structures");
 
         // Find the angle structures.
-        NDoubleDescription::enumerateExtremalRays<NAngleStructureVector>(
+        NDoubleDescription::enumerateExtremalRays<AngleStructureVector>(
             StructureInserter(*this, triang), *eqns, 0 /* constraints */,
             tracker);
 
@@ -94,24 +94,24 @@ void NAngleStructureList::enumerateInternal(NTriangulation* triang,
     delete eqns;
 }
 
-NAngleStructureList* NAngleStructureList::enumerate(NTriangulation* owner,
+AngleStructures* AngleStructures::enumerate(NTriangulation* owner,
         bool tautOnly, NProgressTracker* tracker) {
-    NAngleStructureList* ans = new NAngleStructureList(tautOnly);
+    AngleStructures* ans = new AngleStructures(tautOnly);
 
     if (tracker)
-        std::thread(&NAngleStructureList::enumerateInternal,
+        std::thread(&AngleStructures::enumerateInternal,
             ans, owner, tracker).detach();
     else
         ans->enumerateInternal(owner);
     return ans;
 }
 
-NAngleStructureList* NAngleStructureList::enumerateTautDD(
+AngleStructures* AngleStructures::enumerateTautDD(
         NTriangulation* owner) {
-    NAngleStructureList* ans = new NAngleStructureList(true /* taut only */);
+    AngleStructures* ans = new AngleStructures(true /* taut only */);
 
     // Form the matching equations.
-    NMatrixInt* eqns = NAngleStructureVector::makeAngleEquations(owner);
+    NMatrixInt* eqns = AngleStructureVector::makeAngleEquations(owner);
 
     // Form the taut constraints.
     NEnumConstraintList* constraints = new NEnumConstraintList(owner->size());
@@ -124,7 +124,7 @@ NAngleStructureList* NAngleStructureList::enumerateTautDD(
     }
 
     // Find the angle structures.
-    NDoubleDescription::enumerateExtremalRays<NAngleStructureVector>(
+    NDoubleDescription::enumerateExtremalRays<AngleStructureVector>(
         StructureInserter(*ans, owner), *eqns, constraints, 0 /* tracker */);
 
     // All done!
@@ -135,18 +135,18 @@ NAngleStructureList* NAngleStructureList::enumerateTautDD(
     return ans;
 }
 
-NTriangulation* NAngleStructureList::triangulation() const {
+NTriangulation* AngleStructures::triangulation() const {
     return dynamic_cast<NTriangulation*>(parent());
 }
 
-void NAngleStructureList::writeTextShort(std::ostream& o) const {
+void AngleStructures::writeTextShort(std::ostream& o) const {
     o << structures.size() << " vertex angle structure";
     if (structures.size() != 1)
         o << 's';
     o << " (" << (tautOnly_ ? "taut only" : "no restrictions")  << ')';
 }
 
-void NAngleStructureList::writeTextLong(std::ostream& o) const {
+void AngleStructures::writeTextLong(std::ostream& o) const {
     writeTextShort(o);
     o << ":\n";
 
@@ -157,7 +157,7 @@ void NAngleStructureList::writeTextLong(std::ostream& o) const {
     }
 }
 
-void NAngleStructureList::writeXMLPacketData(std::ostream& out) const {
+void AngleStructures::writeXMLPacketData(std::ostream& out) const {
     using regina::xml::xmlValueTag;
 
     // Write the enumeration parameters.
@@ -177,11 +177,11 @@ void NAngleStructureList::writeXMLPacketData(std::ostream& out) const {
             << '\n';
 }
 
-NPacket* NAngleStructureList::internalClonePacket(NPacket* /* parent */)
+NPacket* AngleStructures::internalClonePacket(NPacket* /* parent */)
         const {
-    NAngleStructureList* ans = new NAngleStructureList(tautOnly_);
+    AngleStructures* ans = new AngleStructures(tautOnly_);
     transform(structures.begin(), structures.end(),
-        back_inserter(ans->structures), FuncNewClonePtr<NAngleStructure>());
+        back_inserter(ans->structures), FuncNewClonePtr<AngleStructure>());
 
     if (doesSpanStrict.known())
         ans->doesSpanStrict = doesSpanStrict;
@@ -191,7 +191,7 @@ NPacket* NAngleStructureList::internalClonePacket(NPacket* /* parent */)
     return ans;
 }
 
-void NAngleStructureList::calculateSpanStrict() const {
+void AngleStructures::calculateSpanStrict() const {
     if (structures.empty()) {
         doesSpanStrict = false;
         return;
@@ -209,7 +209,7 @@ void NAngleStructureList::calculateSpanStrict() const {
 
     // Get the list of bad unchanging angles from the first structure.
     StructureIteratorConst it = structures.begin();
-    const NAngleStructure* s = *it;
+    const AngleStructure* s = *it;
 
     NRational angle;
     unsigned long tet;
@@ -256,9 +256,9 @@ void NAngleStructureList::calculateSpanStrict() const {
     delete[] fixedAngles;
 }
 
-void NAngleStructureList::calculateSpanTaut() const {
+void AngleStructures::calculateSpanTaut() const {
     doesSpanTaut = (find_if(structures.begin(), structures.end(),
-        std::mem_fun(&NAngleStructure::isTaut)) != structures.end());
+        std::mem_fun(&AngleStructure::isTaut)) != structures.end());
 }
 
 } // namespace regina

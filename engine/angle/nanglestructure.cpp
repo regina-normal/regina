@@ -37,12 +37,12 @@
 
 namespace regina {
 
-const unsigned long NAngleStructure::flagStrict = 1;
-const unsigned long NAngleStructure::flagTaut = 2;
-const unsigned long NAngleStructure::flagCalculatedType = 4;
-const unsigned long NAngleStructure::flagVeering = 8;
+const unsigned long AngleStructure::flagStrict = 1;
+const unsigned long AngleStructure::flagTaut = 2;
+const unsigned long AngleStructure::flagCalculatedType = 4;
+const unsigned long AngleStructure::flagVeering = 8;
 
-NMatrixInt* NAngleStructureVector::makeAngleEquations(
+NMatrixInt* AngleStructureVector::makeAngleEquations(
         const NTriangulation* tri) {
     size_t n = tri->size();
     size_t cols = 3 * n + 1;
@@ -83,14 +83,14 @@ NMatrixInt* NAngleStructureVector::makeAngleEquations(
     return eqns;
 }
 
-NAngleStructure* NAngleStructure::clone() const {
-    NAngleStructure* ans = new NAngleStructure(triangulation_,
-        new NAngleStructureVector(*vector));
+AngleStructure* AngleStructure::clone() const {
+    AngleStructure* ans = new AngleStructure(triangulation_,
+        new AngleStructureVector(*vector));
     ans->flags = flags;
     return ans;
 }
 
-NRational NAngleStructure::angle(size_t tetIndex, int edgePair)
+NRational AngleStructure::angle(size_t tetIndex, int edgePair)
         const {
     const NLargeInteger& num = (*vector)[3 * tetIndex + edgePair];
     const NLargeInteger& den =
@@ -102,7 +102,7 @@ NRational NAngleStructure::angle(size_t tetIndex, int edgePair)
     return NRational(num.divExact(gcd), den.divExact(gcd));
 }
 
-void NAngleStructure::writeTextShort(std::ostream& out) const {
+void AngleStructure::writeTextShort(std::ostream& out) const {
     size_t nTets = triangulation_->size();
     unsigned j;
     for (size_t tet = 0; tet < nTets; tet++) {
@@ -116,7 +116,7 @@ void NAngleStructure::writeTextShort(std::ostream& out) const {
     }
 }
 
-void NAngleStructure::writeXMLData(std::ostream& out) const {
+void AngleStructure::writeXMLData(std::ostream& out) const {
     // Write the vector length.
     size_t vecLen = vector->size();
     out << "  <struct len=\"" << vecLen << "\"> ";
@@ -138,7 +138,7 @@ void NAngleStructure::writeXMLData(std::ostream& out) const {
     out << "</struct>\n";
 }
 
-void NAngleStructure::calculateType() const {
+void AngleStructure::calculateType() const {
     size_t size = vector->size();
     if (size == 1) {
         // We have no tetrahedra, which means this angle structure has it all:

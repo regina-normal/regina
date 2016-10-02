@@ -45,7 +45,7 @@
 
 namespace regina {
 
-class NAngleStructure;
+class AngleStructure;
 class NNormalSurface;
 
 template <int> class Triangulation;
@@ -335,7 +335,7 @@ class LPConstraintBase {
          * @return \c true if the given angle structure satisfies these linear
          * constraints, or \c false if it does not.
          */
-        static bool verify(const NAngleStructure* s);
+        static bool verify(const AngleStructure* s);
 
         /**
          * Indicates whether the given coordinate system is supported by
@@ -415,7 +415,7 @@ class LPConstraintNone : public LPConstraintSubspace {
         static void constrain(
             LPData<regina::LPConstraintNone, Integer>&, unsigned);
         static bool verify(const NNormalSurface*);
-        static bool verify(const NAngleStructure*);
+        static bool verify(const AngleStructure*);
         static bool supported(NormalCoords coords);
 };
 
@@ -481,7 +481,7 @@ class LPConstraintEuler : public LPConstraintBase {
             LPData<regina::LPConstraintEuler, Integer>& lp,
             unsigned numCols);
         static bool verify(const NNormalSurface* s);
-        static bool verify(const NAngleStructure*);
+        static bool verify(const AngleStructure*);
         static bool supported(NormalCoords coords);
 };
 
@@ -554,7 +554,7 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
             LPData<regina::LPConstraintNonSpun, Integer>& lp,
             unsigned numCols);
         static bool verify(const NNormalSurface* s);
-        static bool verify(const NAngleStructure*);
+        static bool verify(const AngleStructure*);
         static bool supported(NormalCoords coords);
 };
 
@@ -877,7 +877,7 @@ inline bool LPConstraintNone::verify(const NNormalSurface*) {
     return true;
 }
 
-inline bool LPConstraintNone::verify(const NAngleStructure*) {
+inline bool LPConstraintNone::verify(const AngleStructure*) {
     return true;
 }
 
@@ -931,7 +931,7 @@ inline bool LPConstraintEuler::verify(const NNormalSurface* s) {
     return (s->eulerChar() > 0);
 }
 
-inline bool LPConstraintEuler::verify(const NAngleStructure*) {
+inline bool LPConstraintEuler::verify(const AngleStructure*) {
     return false;
 }
 
@@ -982,7 +982,7 @@ inline bool LPConstraintNonSpun::verify(const NNormalSurface* s) {
     return s->isCompact();
 }
 
-inline bool LPConstraintNonSpun::verify(const NAngleStructure*) {
+inline bool LPConstraintNonSpun::verify(const AngleStructure*) {
     return false;
 }
 

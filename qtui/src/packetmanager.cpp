@@ -148,7 +148,7 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
     switch (packet->type()) {
         case PACKET_ANGLESTRUCTURELIST:
             return new NAngleStructureUI(
-                dynamic_cast<NAngleStructureList*>(packet), enclosingPane);
+                dynamic_cast<AngleStructures*>(packet), enclosingPane);
         case PACKET_CONTAINER:
             return new NContainerUI(
                 dynamic_cast<NContainer*>(packet), enclosingPane);

@@ -41,45 +41,45 @@
 
 using namespace boost::python;
 using namespace regina::python;
-using regina::NAngleStructureList;
+using regina::AngleStructures;
 
 namespace {
     // Write manual overload wrappers since this is a static member function.
-    NAngleStructureList* enumerate_1(regina::NTriangulation* owner) {
-        return NAngleStructureList::enumerate(owner);
+    AngleStructures* enumerate_1(regina::NTriangulation* owner) {
+        return AngleStructures::enumerate(owner);
     }
-    NAngleStructureList* enumerate_2(regina::NTriangulation* owner,
+    AngleStructures* enumerate_2(regina::NTriangulation* owner,
             bool tautOnly) {
-        return NAngleStructureList::enumerate(owner, tautOnly);
+        return AngleStructures::enumerate(owner, tautOnly);
     }
-    NAngleStructureList* enumerate_3(regina::NTriangulation* owner,
+    AngleStructures* enumerate_3(regina::NTriangulation* owner,
             bool tautOnly, regina::NProgressTracker* tracker) {
-        return NAngleStructureList::enumerate(owner, tautOnly, tracker);
+        return AngleStructures::enumerate(owner, tautOnly, tracker);
     }
 }
 
-void addNAngleStructureList() {
+void addAngleStructures() {
     def("makeAngleEquations", regina::makeAngleEquations,
         return_value_policy<manage_new_object>());
 
-    scope s = class_<NAngleStructureList, bases<regina::NPacket>,
-            SafeHeldType<NAngleStructureList>, boost::noncopyable>
-            ("NAngleStructureList", no_init)
-        .def("triangulation", &NAngleStructureList::triangulation,
+    scope s = class_<AngleStructures, bases<regina::NPacket>,
+            SafeHeldType<AngleStructures>, boost::noncopyable>
+            ("AngleStructures", no_init)
+        .def("triangulation", &AngleStructures::triangulation,
             return_value_policy<to_held_type<> >())
-        .def("isTautOnly", &NAngleStructureList::isTautOnly)
-        .def("size", &NAngleStructureList::size)
-        .def("structure", &NAngleStructureList::structure,
+        .def("isTautOnly", &AngleStructures::isTautOnly)
+        .def("size", &AngleStructures::size)
+        .def("structure", &AngleStructures::structure,
             return_internal_reference<>())
-        .def("spansStrict", &NAngleStructureList::spansStrict)
-        .def("spansTaut", &NAngleStructureList::spansTaut)
+        .def("spansStrict", &AngleStructures::spansStrict)
+        .def("spansTaut", &AngleStructures::spansTaut)
         .def("enumerate", enumerate_1,
             return_value_policy<to_held_type<> >())
         .def("enumerate", enumerate_2,
             return_value_policy<to_held_type<> >())
         .def("enumerate", enumerate_3,
             return_value_policy<to_held_type<> >())
-        .def("enumerateTautDD", &NAngleStructureList::enumerateTautDD,
+        .def("enumerateTautDD", &AngleStructures::enumerateTautDD,
             return_value_policy<to_held_type<> >())
         .staticmethod("enumerate")
         .staticmethod("enumerateTautDD")
@@ -87,9 +87,9 @@ void addNAngleStructureList() {
 
     s.attr("typeID") = regina::PACKET_ANGLESTRUCTURELIST;
 
-    implicitly_convertible<SafeHeldType<NAngleStructureList>,
+    implicitly_convertible<SafeHeldType<AngleStructures>,
         SafeHeldType<regina::NPacket> >();
 
-    FIX_REGINA_BOOST_CONVERTERS(NAngleStructureList);
+    FIX_REGINA_BOOST_CONVERTERS(AngleStructures);
 }
 

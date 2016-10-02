@@ -84,7 +84,7 @@ enum PacketType {
      */
     PACKET_SURFACEFILTER = 8,
     /**
-     * Represents an angle structure list, of class NAngleStructureList.
+     * Represents an angle structure list, of class AngleStructures.
      */
     PACKET_ANGLESTRUCTURELIST = 9,
     /**

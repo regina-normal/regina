@@ -142,16 +142,16 @@ NNormalSurface* NTreeTraversal<LPConstraint, BanConstraint, Integer>::
 }
 
 template <class LPConstraint, typename BanConstraint, typename Integer>
-NAngleStructure* NTreeTraversal<LPConstraint, BanConstraint, Integer>::
+AngleStructure* NTreeTraversal<LPConstraint, BanConstraint, Integer>::
         buildStructure() const {
     // Note that the vector constructors automatically set all
     // elements to zero, as required by LPData::extractSolution().
     if (coords_ != NS_ANGLE)
         return 0;
 
-    NAngleStructureVector* v = new NAngleStructureVector(3 * nTets_ + 1);
+    AngleStructureVector* v = new AngleStructureVector(3 * nTets_ + 1);
     lpSlot_[nTypes_]->extractSolution(*v, type_);
-    return new NAngleStructure(origTableaux_.tri(), v);
+    return new AngleStructure(origTableaux_.tri(), v);
 }
 
 template <class LPConstraint, typename BanConstraint, typename Integer>
@@ -187,14 +187,14 @@ bool NTreeTraversal<LPConstraint, BanConstraint, Integer>::verify(
 
 template <class LPConstraint, typename BanConstraint, typename Integer>
 bool NTreeTraversal<LPConstraint, BanConstraint, Integer>::verify(
-        const NAngleStructure* s, const NMatrixInt* angleEqns) const {
+        const AngleStructure* s, const NMatrixInt* angleEqns) const {
     if (coords_ != NS_ANGLE)
         return false;
 
     // Rebuild the matching equations if necessary.
     NMatrixInt* tmpEqns = 0;
     if (! angleEqns) {
-        tmpEqns = NAngleStructureVector::makeAngleEquations(
+        tmpEqns = AngleStructureVector::makeAngleEquations(
             origTableaux_.tri());
         angleEqns = tmpEqns;
     }
@@ -965,7 +965,7 @@ template <class LPConstraint, typename BanConstraint, typename Integer>
 bool NTautEnumeration<LPConstraint, BanConstraint, Integer>::
         writeStructure(const NTautEnumeration& tree, void*) {
     std::cout << "SOLN #" << tree.nSolns() << ": ";
-    NAngleStructure* s = tree.buildStructure();
+    AngleStructure* s = tree.buildStructure();
     std::cout << s->str() << std::endl;
     delete s;
     return true;

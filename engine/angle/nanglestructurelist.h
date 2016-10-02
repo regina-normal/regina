@@ -51,7 +51,7 @@
 
 namespace regina {
 
-class NAngleStructureList;
+class AngleStructures;
 class NProgressTracker;
 class NXMLPacketReader;
 class NXMLAngleStructureListReader;
@@ -64,7 +64,7 @@ class NXMLAngleStructureListReader;
 #ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct PacketInfo<PACKET_ANGLESTRUCTURELIST> {
-    typedef NAngleStructureList Class;
+    typedef AngleStructures Class;
     inline static const char* name() {
         return "Angle Structure List";
     }
@@ -80,11 +80,11 @@ struct PacketInfo<PACKET_ANGLESTRUCTURELIST> {
  * Angle structure lists should be created using the routine enumerate(),
  * which is new as of Regina 3.95.
  */
-class REGINA_API NAngleStructureList : public NPacket {
-    REGINA_PACKET(NAngleStructureList, PACKET_ANGLESTRUCTURELIST)
+class REGINA_API AngleStructures : public NPacket {
+    REGINA_PACKET(AngleStructures, PACKET_ANGLESTRUCTURELIST)
 
     private:
-        std::vector<NAngleStructure*> structures;
+        std::vector<AngleStructure*> structures;
             /**< Contains the angle structures stored in this packet. */
         bool tautOnly_;
             /**< Stores whether we are only interested in taut structures.
@@ -105,7 +105,7 @@ class REGINA_API NAngleStructureList : public NPacket {
         /**
          * Destroys this list and all the angle structures within.
          */
-        virtual ~NAngleStructureList();
+        virtual ~AngleStructures();
 
         /**
          * Returns the triangulation on which these angle structures lie.
@@ -138,12 +138,12 @@ class REGINA_API NAngleStructureList : public NPacket {
          * this list; this must be between 0 and size()-1 inclusive.
          * @return the angle structure at the requested index.
          */
-        const NAngleStructure* structure(size_t index) const;
+        const AngleStructure* structure(size_t index) const;
 
         /**
          * Determines whether any convex combination of the angle
          * structures in this list is a strict angle structure.
-         * See NAngleStructure::isStrict() for details on strict angle
+         * See AngleStructure::isStrict() for details on strict angle
          * structures.
          *
          * @return \c true if and only if a strict angle structure can
@@ -157,7 +157,7 @@ class REGINA_API NAngleStructureList : public NPacket {
          * is equivalent to testing whether any convex combination of
          * the angle structures in this list is a taut structure.
          *
-         * See NAngleStructure::isTaut() for details on taut
+         * See AngleStructure::isTaut() for details on taut
          * structures.
          *
          * @return \c true if and only if a taut structure can be produced.
@@ -206,7 +206,7 @@ class REGINA_API NAngleStructureList : public NPacket {
          * passed and a new thread could not be started, this routine
          * returns 0 (and no angle structure list is created).
          */
-        static NAngleStructureList* enumerate(NTriangulation* owner,
+        static AngleStructures* enumerate(NTriangulation* owner,
             bool tautOnly = false, NProgressTracker* tracker = 0);
 
         /**
@@ -231,7 +231,7 @@ class REGINA_API NAngleStructureList : public NPacket {
          * will be enumerated.
          * @return the newly created angle structure list.
          */
-        static NAngleStructureList* enumerateTautDD(NTriangulation* owner);
+        static AngleStructures* enumerateTautDD(NTriangulation* owner);
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
@@ -249,7 +249,7 @@ class REGINA_API NAngleStructureList : public NPacket {
          * or \c false if we should enumerate all vertices of the angle
          * structure solution space.
          */
-        NAngleStructureList(bool tautOnly);
+        AngleStructures(bool tautOnly);
 
         virtual NPacket* internalClonePacket(NPacket* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
@@ -267,16 +267,16 @@ class REGINA_API NAngleStructureList : public NPacket {
 
         /**
          * An output iterator used to insert angle structures into an
-         * NAngleStructureList.
+         * AngleStructures.
          *
-         * Objects of type <tt>NAngleStructure*</tt> and
-         * <tt>NAngleStructureVector*</tt> can be assigned to this
-         * iterator.  In the latter case, a surrounding NAngleStructure
+         * Objects of type <tt>AngleStructure*</tt> and
+         * <tt>AngleStructureVector*</tt> can be assigned to this
+         * iterator.  In the latter case, a surrounding AngleStructure
          * will be automatically created.
          */
         struct StructureInserter : public std::iterator<
-                std::output_iterator_tag, NAngleStructureVector*> {
-            NAngleStructureList* list;
+                std::output_iterator_tag, AngleStructureVector*> {
+            AngleStructures* list;
                 /**< The list into which angle structures will be inserted. */
             NTriangulation* owner;
                 /**< The triangulation on which the angle structures to
@@ -299,7 +299,7 @@ class REGINA_API NAngleStructureList : public NPacket {
              * @param newOwner the triangulation on which the structures
              * to be inserted lie.
              */
-            StructureInserter(NAngleStructureList& newList,
+            StructureInserter(AngleStructures& newList,
                 NTriangulation* newOwner);
             /**
              * Creates a new output iterator that is a clone of the
@@ -328,7 +328,7 @@ class REGINA_API NAngleStructureList : public NPacket {
              * @param structure the angle structure to insert.
              * @return this output iterator.
              */
-            StructureInserter& operator =(NAngleStructure* structure);
+            StructureInserter& operator =(AngleStructure* structure);
             /**
              * Appends the angle structure corresponding to the given
              * vector to the end of the appropriate structure list.
@@ -341,7 +341,7 @@ class REGINA_API NAngleStructureList : public NPacket {
              * @param vector the vector of the angle structure to insert.
              * @return this output iterator.
              */
-            StructureInserter& operator =(NAngleStructureVector* vector);
+            StructureInserter& operator =(AngleStructureVector* vector);
 
             /**
              * Returns a reference to this output iterator.
@@ -389,16 +389,16 @@ class REGINA_API NAngleStructureList : public NPacket {
  *
  * Each equation will be represented as a row of the matrix, and
  * each column will represent a coordinate in the underlying
- * coordinate system (which is described in the NAngleStructureVector
+ * coordinate system (which is described in the AngleStructureVector
  * class notes).
  *
  * The returned matrix will be newly allocated and its destruction
  * will be the responsibility of the caller of this routine.
  *
  * This routine is identical to the static class method
- * NAngleStructureVector::makeAngleEquations().  It is offered again here
+ * AngleStructureVector::makeAngleEquations().  It is offered again here
  * as a global routine so that it is accessible to Python users (who cannot
- * access the NAngleStructureVector class).
+ * access the AngleStructureVector class).
  *
  * @param tri the triangulation upon which these angle structure
  * equations will be based.
@@ -408,99 +408,99 @@ REGINA_API NMatrixInt* makeAngleEquations(const NTriangulation* tri);
 
 /*@}*/
 
-// Inline functions for NAngleStructureList
+// Inline functions for AngleStructures
 
-inline NAngleStructureList::~NAngleStructureList() {
+inline AngleStructures::~AngleStructures() {
     for_each(structures.begin(), structures.end(),
-        FuncDelete<NAngleStructure>());
+        FuncDelete<AngleStructure>());
 }
 
-inline bool NAngleStructureList::isTautOnly() const {
+inline bool AngleStructures::isTautOnly() const {
     return tautOnly_;
 }
 
-inline size_t NAngleStructureList::size() const {
+inline size_t AngleStructures::size() const {
     return structures.size();
 }
 
-inline const NAngleStructure* NAngleStructureList::structure(
+inline const AngleStructure* AngleStructures::structure(
         size_t index) const {
     return structures[index];
 }
 
-inline bool NAngleStructureList::spansStrict() const {
+inline bool AngleStructures::spansStrict() const {
     if (! doesSpanStrict.known())
         calculateSpanStrict();
     return doesSpanStrict.value();
 }
 
-inline bool NAngleStructureList::spansTaut() const {
+inline bool AngleStructures::spansTaut() const {
     if (! doesSpanTaut.known())
         calculateSpanTaut();
     return doesSpanTaut.value();
 }
 
-inline bool NAngleStructureList::dependsOnParent() const {
+inline bool AngleStructures::dependsOnParent() const {
     return true;
 }
 
-inline NAngleStructureList::NAngleStructureList(bool tautOnly) :
+inline AngleStructures::AngleStructures(bool tautOnly) :
         tautOnly_(tautOnly) {
 }
 
-inline NAngleStructureList::StructureInserter::StructureInserter() : list(0),
+inline AngleStructures::StructureInserter::StructureInserter() : list(0),
         owner(0) {
 }
 
-inline NAngleStructureList::StructureInserter::StructureInserter(
-        NAngleStructureList& newList, NTriangulation* newOwner) :
+inline AngleStructures::StructureInserter::StructureInserter(
+        AngleStructures& newList, NTriangulation* newOwner) :
         list(&newList), owner(newOwner) {
 }
 
-inline NAngleStructureList::StructureInserter::StructureInserter(
+inline AngleStructures::StructureInserter::StructureInserter(
         const StructureInserter& cloneMe) : list(cloneMe.list),
         owner(cloneMe.owner) {
 }
 
-inline NAngleStructureList::StructureInserter&
-        NAngleStructureList::StructureInserter::operator =(
+inline AngleStructures::StructureInserter&
+        AngleStructures::StructureInserter::operator =(
         const StructureInserter& cloneMe) {
     list = cloneMe.list;
     owner = cloneMe.owner;
     return *this;
 }
 
-inline NAngleStructureList::StructureInserter&
-        NAngleStructureList::StructureInserter::operator =(
-        NAngleStructure* structure) {
+inline AngleStructures::StructureInserter&
+        AngleStructures::StructureInserter::operator =(
+        AngleStructure* structure) {
     list->structures.push_back(structure);
     return *this;
 }
 
-inline NAngleStructureList::StructureInserter&
-        NAngleStructureList::StructureInserter::operator =(
-        NAngleStructureVector* vector) {
-    list->structures.push_back(new NAngleStructure(owner, vector));
+inline AngleStructures::StructureInserter&
+        AngleStructures::StructureInserter::operator =(
+        AngleStructureVector* vector) {
+    list->structures.push_back(new AngleStructure(owner, vector));
     return *this;
 }
 
-inline NAngleStructureList::StructureInserter&
-        NAngleStructureList::StructureInserter::operator *() {
+inline AngleStructures::StructureInserter&
+        AngleStructures::StructureInserter::operator *() {
     return *this;
 }
 
-inline NAngleStructureList::StructureInserter&
-        NAngleStructureList::StructureInserter::operator ++() {
+inline AngleStructures::StructureInserter&
+        AngleStructures::StructureInserter::operator ++() {
     return *this;
 }
 
-inline NAngleStructureList::StructureInserter&
-        NAngleStructureList::StructureInserter::operator ++(int) {
+inline AngleStructures::StructureInserter&
+        AngleStructures::StructureInserter::operator ++(int) {
     return *this;
 }
 
 inline NMatrixInt* makeAngleEquations(const NTriangulation* tri) {
-    return NAngleStructureVector::makeAngleEquations(tri);
+    return AngleStructureVector::makeAngleEquations(tri);
 }
 
 } // namespace regina

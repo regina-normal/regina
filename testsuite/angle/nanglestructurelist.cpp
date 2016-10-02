@@ -40,15 +40,15 @@
 #include "testsuite/exhaustive.h"
 #include "testsuite/angle/testangle.h"
 
-using regina::NAngleStructure;
-using regina::NAngleStructureList;
-using regina::NAngleStructureVector;
+using regina::AngleStructure;
+using regina::AngleStructures;
+using regina::AngleStructureVector;
 using regina::NExampleTriangulation;
 using regina::NTetrahedron;
 using regina::NTriangulation;
 
-class NAngleStructureListTest : public CppUnit::TestFixture {
-    CPPUNIT_TEST_SUITE(NAngleStructureListTest);
+class AngleStructuresTest : public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(AngleStructuresTest);
 
     CPPUNIT_TEST(empty);
     CPPUNIT_TEST(oneTet);
@@ -95,7 +95,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
         void tearDown() {
         }
 
-        void testSize(NAngleStructureList* list, const char* triName,
+        void testSize(AngleStructures* list, const char* triName,
                 unsigned long expectedSize,
                 bool allowStrict, bool allowTaut) {
             {
@@ -131,13 +131,13 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
             }
         }
 
-        void countStructures(const NAngleStructureList* list,
+        void countStructures(const AngleStructures* list,
                 const char* triName, unsigned long expectedCount,
                 bool strict, bool taut) {
             unsigned long tot = 0;
             unsigned long size = list->size();
 
-            const NAngleStructure* s;
+            const AngleStructure* s;
             for (unsigned long i = 0; i < size; i++) {
                 s = list->structure(i);
 
@@ -159,7 +159,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
         }
 
         void empty() {
-            NAngleStructureList* list = NAngleStructureList::enumerate(
+            AngleStructures* list = AngleStructures::enumerate(
                 &triEmpty);
 
             testSize(list, "the empty triangulation", 1, true, true);
@@ -168,7 +168,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
         }
 
         void oneTet() {
-            NAngleStructureList* list = NAngleStructureList::enumerate(
+            AngleStructures* list = AngleStructures::enumerate(
                 &triOneTet);
 
             testSize(list, "a standalone tetrahedron", 3, true, true);
@@ -179,7 +179,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
         }
 
         void gieseking() {
-            NAngleStructureList* list = NAngleStructureList::enumerate(
+            AngleStructures* list = AngleStructures::enumerate(
                 &triGieseking);
 
             testSize(list, "the Gieseking manifold", 3, true, true);
@@ -190,7 +190,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
         }
 
         void figure8() {
-            NAngleStructureList* list = NAngleStructureList::enumerate(
+            AngleStructures* list = AngleStructures::enumerate(
                 &triFigure8);
 
             testSize(list, "the figure eight knot complement", 5, true, true);
@@ -203,7 +203,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
         }
 
         void loopC2() {
-            NAngleStructureList* list = NAngleStructureList::enumerate(
+            AngleStructures* list = AngleStructures::enumerate(
                 &triLoopC2);
 
             testSize(list, "the untwisted layered loop C(2)", 0, false, false);
@@ -219,7 +219,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NAngleStructureList* a = NAngleStructureList::enumerate(tri, true);
+            AngleStructures* a = AngleStructures::enumerate(tri, true);
             if (a->size() != nTaut) {
                 std::ostringstream msg;
                 msg << "Taut angle structures for " << isoSig << ": "
@@ -232,7 +232,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
             regina::NRational tmp, tot;
             regina::NEdge* e;
             for (i = 0; i < a->size(); ++i) {
-                const NAngleStructure* s = a->structure(i);
+                const AngleStructure* s = a->structure(i);
 
                 for (j = 0; j < tri->size(); ++j) {
                     tot = 0;
@@ -323,8 +323,8 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
         }
 
         void verifyTautVsAll(NTriangulation* t, const char* name) {
-            NAngleStructureList* all = NAngleStructureList::enumerate(t, false);
-            NAngleStructureList* taut = NAngleStructureList::enumerate(t, true);
+            AngleStructures* all = AngleStructures::enumerate(t, false);
+            AngleStructures* taut = AngleStructures::enumerate(t, true);
 
             if (all->isTautOnly()) {
                 std::ostringstream msg;
@@ -391,8 +391,8 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
             verifyTautVsAll(&triOneTet, "a standalone tetrahedron");
         }
 
-        static bool lexLess(const NAngleStructureVector* a,
-                const NAngleStructureVector* b) {
+        static bool lexLess(const AngleStructureVector* a,
+                const AngleStructureVector* b) {
             for (unsigned i = 0; i < a->size(); ++i) {
                 if ((*a)[i] < (*b)[i])
                     return true;
@@ -402,8 +402,8 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
             return false;
         }
 
-        static bool identical(const NAngleStructureList* lhs,
-                const NAngleStructureList* rhs) {
+        static bool identical(const AngleStructures* lhs,
+                const AngleStructures* rhs) {
             if (lhs->size() != rhs->size())
                 return false;
 
@@ -411,7 +411,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
             if (n == 0)
                 return true;
 
-            typedef const NAngleStructureVector* VecPtr;
+            typedef const AngleStructureVector* VecPtr;
             VecPtr* lhsRaw = new VecPtr[n];
             VecPtr* rhsRaw = new VecPtr[n];
 
@@ -436,15 +436,15 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
             return ok;
         }
 
-        static bool identicalTaut(const NAngleStructureList* all,
-                const NAngleStructureList* taut) {
+        static bool identicalTaut(const AngleStructures* all,
+                const AngleStructures* taut) {
             if (all->size() < taut->size())
                 return false;
 
             unsigned long nAll = all->size();
             unsigned long nTaut = taut->size();
 
-            typedef const NAngleStructureVector* VecPtr;
+            typedef const AngleStructureVector* VecPtr;
             VecPtr* allRaw = new VecPtr[nAll + 1];
             VecPtr* tautRaw = new VecPtr[nTaut + 1];
 
@@ -478,11 +478,11 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
         }
 
         static void verifyTreeVsDD(NTriangulation* tri) {
-            NAngleStructureList* all = NAngleStructureList::enumerate(
+            AngleStructures* all = AngleStructures::enumerate(
                 tri, false);
-            NAngleStructureList* tautTree = NAngleStructureList::enumerate(
+            AngleStructures* tautTree = AngleStructures::enumerate(
                 tri, true);
-            NAngleStructureList* tautDD = NAngleStructureList::enumerateTautDD(
+            AngleStructures* tautDD = AngleStructures::enumerateTautDD(
                 tri);
             bool strictTree = tri->hasStrictAngleStructure();
 
@@ -559,7 +559,7 @@ class NAngleStructureListTest : public CppUnit::TestFixture {
         }
 };
 
-void addNAngleStructureList(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(NAngleStructureListTest::suite());
+void addAngleStructures(CppUnit::TextUi::TestRunner& runner) {
+    runner.addTest(AngleStructuresTest::suite());
 }
 

@@ -38,20 +38,20 @@
 
 using namespace boost::python;
 using namespace regina::python;
-using regina::NAngleStructure;
+using regina::AngleStructure;
 using regina::NTriangulation;
 
 void addNAngleStructure() {
-    class_<NAngleStructure, std::auto_ptr<NAngleStructure>, boost::noncopyable>
-            ("NAngleStructure", no_init)
-        .def("clone", &NAngleStructure::clone,
+    class_<AngleStructure, std::auto_ptr<AngleStructure>, boost::noncopyable>
+            ("AngleStructure", no_init)
+        .def("clone", &AngleStructure::clone,
             return_value_policy<manage_new_object>())
-        .def("angle", &NAngleStructure::angle)
-        .def("triangulation", &NAngleStructure::triangulation,
+        .def("angle", &AngleStructure::angle)
+        .def("triangulation", &AngleStructure::triangulation,
             return_value_policy<to_held_type<> >())
-        .def("isStrict", &NAngleStructure::isStrict)
-        .def("isTaut", &NAngleStructure::isTaut)
-        .def("isVeering", &NAngleStructure::isVeering)
+        .def("isStrict", &AngleStructure::isStrict)
+        .def("isTaut", &AngleStructure::isTaut)
+        .def("isVeering", &AngleStructure::isVeering)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;

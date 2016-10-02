@@ -92,7 +92,7 @@ regina::NPacket* NAngleStructureCreator::createPacket(
     ProgressDialogNumeric dlg(&tracker,
         ui->tr("Enumerating vertex angle structures..."), parentWidget);
 
-    regina::NAngleStructureList* ans = regina::NAngleStructureList::enumerate(
+    regina::AngleStructures* ans = regina::AngleStructures::enumerate(
             dynamic_cast<regina::NTriangulation*>(parentPacket),
             tautOnly->isChecked(), &tracker);
 

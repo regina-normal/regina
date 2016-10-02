@@ -38,7 +38,7 @@
 
 #define KEY_LAST_TAUT @"NewAnglesTaut"
 
-using regina::NAngleStructureList;
+using regina::AngleStructures;
 
 static NSArray* whichText;
 
@@ -108,8 +108,8 @@ static NSArray* whichText;
     [UIApplication sharedApplication].idleTimerDisabled = YES;
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NAngleStructureList* ans =
-            NAngleStructureList::enumerate((regina::NTriangulation*)self.spec.parent, tautOnly, &_tracker);
+        AngleStructures* ans =
+            AngleStructures::enumerate((regina::NTriangulation*)self.spec.parent, tautOnly, &_tracker);
         while (! _tracker.isFinished()) {
             if (_tracker.percentChanged()) {
                 // This operation blocks until the UI is updated:
