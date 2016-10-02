@@ -62,36 +62,38 @@ void addAngleStructures() {
     def("makeAngleEquations", regina::makeAngleEquations,
         return_value_policy<manage_new_object>());
 
-    scope s = class_<AngleStructures, bases<regina::NPacket>,
-            SafeHeldType<AngleStructures>, boost::noncopyable>
-            ("AngleStructures", no_init)
-        .def("triangulation", &AngleStructures::triangulation,
-            return_value_policy<to_held_type<> >())
-        .def("isTautOnly", &AngleStructures::isTautOnly)
-        .def("size", &AngleStructures::size)
-        .def("structure", &AngleStructures::structure,
-            return_internal_reference<>())
-        .def("spansStrict", &AngleStructures::spansStrict)
-        .def("spansTaut", &AngleStructures::spansTaut)
-        .def("enumerate", enumerate_1,
-            return_value_policy<to_held_type<> >())
-        .def("enumerate", enumerate_2,
-            return_value_policy<to_held_type<> >())
-        .def("enumerate", enumerate_3,
-            return_value_policy<to_held_type<> >())
-        .def("enumerateTautDD", &AngleStructures::enumerateTautDD,
-            return_value_policy<to_held_type<> >())
-        .staticmethod("enumerate")
-        .staticmethod("enumerateTautDD")
-    ;
+    {
+        scope s = class_<AngleStructures, bases<regina::NPacket>,
+                SafeHeldType<AngleStructures>, boost::noncopyable>
+                ("AngleStructures", no_init)
+            .def("triangulation", &AngleStructures::triangulation,
+                return_value_policy<to_held_type<> >())
+            .def("isTautOnly", &AngleStructures::isTautOnly)
+            .def("size", &AngleStructures::size)
+            .def("structure", &AngleStructures::structure,
+                return_internal_reference<>())
+            .def("spansStrict", &AngleStructures::spansStrict)
+            .def("spansTaut", &AngleStructures::spansTaut)
+            .def("enumerate", enumerate_1,
+                return_value_policy<to_held_type<> >())
+            .def("enumerate", enumerate_2,
+                return_value_policy<to_held_type<> >())
+            .def("enumerate", enumerate_3,
+                return_value_policy<to_held_type<> >())
+            .def("enumerateTautDD", &AngleStructures::enumerateTautDD,
+                return_value_policy<to_held_type<> >())
+            .staticmethod("enumerate")
+            .staticmethod("enumerateTautDD")
+        ;
 
-    s.attr("typeID") = regina::PACKET_ANGLESTRUCTURELIST;
+        s.attr("typeID") = regina::PACKET_ANGLESTRUCTURELIST;
+    }
 
     implicitly_convertible<SafeHeldType<AngleStructures>,
         SafeHeldType<regina::NPacket> >();
 
     FIX_REGINA_BOOST_CONVERTERS(AngleStructures);
 
-    scope().attr("NAngleStructureList") = scope().attr("AngleStructureList");
+    scope().attr("NAngleStructureList") = scope().attr("AngleStructures");
 }
 

@@ -30,12 +30,12 @@
 		050C646D1DA101A900C9420F /* anglestructure.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050C64651DA1019B00C9420F /* anglestructure.cpp */; };
 		050C646E1DA101A900C9420F /* anglestructures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050C64671DA1019B00C9420F /* anglestructures.cpp */; };
 		050C64731DA101D700C9420F /* anglestructure.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050C646F1DA101CC00C9420F /* anglestructure.cpp */; };
-		050C64741DA101D700C9420F /* anglestructurelist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050C64701DA101CC00C9420F /* anglestructurelist.cpp */; };
 		050C64771DA1035400C9420F /* nanglestructure.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64751DA1035400C9420F /* nanglestructure.h */; };
 		050C64781DA1035400C9420F /* nanglestructurelist.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64761DA1035400C9420F /* nanglestructurelist.h */; };
 		050C647B1DA1056700C9420F /* xmlanglestructreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050C64791DA1056700C9420F /* xmlanglestructreader.cpp */; };
 		050C647C1DA1056700C9420F /* xmlanglestructreader.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C647A1DA1056700C9420F /* xmlanglestructreader.h */; };
 		050C647D1DA1057000C9420F /* xmlanglestructreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050C64791DA1056700C9420F /* xmlanglestructreader.cpp */; };
+		050C64801DA10A0700C9420F /* anglestructures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050C647E1DA109FD00C9420F /* anglestructures.cpp */; };
 		050F5DD31B9BAB9C00C1F681 /* nabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D021B9BAB9C00C1F681 /* nabeliangroup.cpp */; };
 		050F5DD41B9BAB9C00C1F681 /* ngrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D031B9BAB9C00C1F681 /* ngrouppresentation.cpp */; };
 		050F5DD51B9BAB9C00C1F681 /* nhomgrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D041B9BAB9C00C1F681 /* nhomgrouppresentation.cpp */; };
@@ -1909,11 +1909,11 @@
 		050C64671DA1019B00C9420F /* anglestructures.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = anglestructures.cpp; sourceTree = "<group>"; };
 		050C64681DA1019B00C9420F /* anglestructures.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = anglestructures.h; sourceTree = "<group>"; };
 		050C646F1DA101CC00C9420F /* anglestructure.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = anglestructure.cpp; sourceTree = "<group>"; };
-		050C64701DA101CC00C9420F /* anglestructurelist.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = anglestructurelist.cpp; sourceTree = "<group>"; };
 		050C64751DA1035400C9420F /* nanglestructure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nanglestructure.h; sourceTree = "<group>"; };
 		050C64761DA1035400C9420F /* nanglestructurelist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nanglestructurelist.h; sourceTree = "<group>"; };
 		050C64791DA1056700C9420F /* xmlanglestructreader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlanglestructreader.cpp; sourceTree = "<group>"; };
 		050C647A1DA1056700C9420F /* xmlanglestructreader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlanglestructreader.h; sourceTree = "<group>"; };
+		050C647E1DA109FD00C9420F /* anglestructures.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = anglestructures.cpp; sourceTree = "<group>"; };
 		050F5CDD1B9BAAAA00C1F681 /* engine.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = engine.so; sourceTree = BUILT_PRODUCTS_DIR; };
 		050F5D011B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		050F5D021B9BAB9C00C1F681 /* nabeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nabeliangroup.cpp; sourceTree = "<group>"; };
@@ -3754,7 +3754,7 @@
 			children = (
 				050F5D081B9BAB9C00C1F681 /* CMakeLists.txt */,
 				050C646F1DA101CC00C9420F /* anglestructure.cpp */,
-				050C64701DA101CC00C9420F /* anglestructurelist.cpp */,
+				050C647E1DA109FD00C9420F /* anglestructures.cpp */,
 				050F5D0B1B9BAB9C00C1F681 /* pyangle.cpp */,
 			);
 			path = angle;
@@ -6860,7 +6860,7 @@
 				057EE4CB1C600A3600C4D155 /* triangulation8.cpp in Sources */,
 				050F5DFF1B9BAB9C00C1F681 /* nprimes.cpp in Sources */,
 				050F5E3C1B9BAB9C00C1F681 /* sfcombination.cpp in Sources */,
-				050C64741DA101D700C9420F /* anglestructurelist.cpp in Sources */,
+				050C64801DA10A0700C9420F /* anglestructures.cpp in Sources */,
 				050F5E4E1B9BAB9C00C1F681 /* i18nutils.cpp in Sources */,
 				050F5E141B9BAB9C00C1F681 /* pysplit.cpp in Sources */,
 				05431FCC1C40F653009BC072 /* nfacepairing.cpp in Sources */,
