@@ -78,7 +78,7 @@ val = None
 ensureDestroyed(aw); ensureDestroyed(bw); ensureDestroyed(cw)
 
 print 'Example triangulation'
-f = NExampleSnapPeaTriangulation.figureEight(); fw = watcher(f)
+f = ExampleSnapPea.figureEight(); fw = watcher(f)
 ensureAlive(fw)
 f = None
 ensureDestroyed(fw)

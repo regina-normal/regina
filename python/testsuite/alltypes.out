@@ -1081,7 +1081,7 @@ Equality type : BY_REFERENCE
 NEdgeEmbedding : class
 Equality type : BY_VALUE
 
-NExampleSnapPeaTriangulation : class
+ExampleSnapPea : class
 Equality type : NEVER_INSTANTIATED
 
 NExampleTriangulation : class

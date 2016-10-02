@@ -14,7 +14,8 @@ Version 5.1  [ (under development) ]
         - Renamed all types NFoo to Foo, and renamed the headers accordingly.
           The old types and headers are deprecated but kept for backward
           compatibility.  There are some exceptions:
-            + NAngleStructureList has been renamed to AngleStructures.
+            + NAngleStructureList becomes AngleStructures.
+            + NExampleSnapPeaTriangulation becomes ExampleSnapPea.
             + NXMLFoo classes have no backward compatible headers or typedefs,
               since these are for internal use only.
     ENGINE:

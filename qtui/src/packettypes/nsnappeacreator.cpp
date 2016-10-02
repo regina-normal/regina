@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "snappea/nexamplesnappeatriangulation.h"
+#include "snappea/examplesnappea.h"
 #include "snappea/nsnappeatriangulation.h"
 
 // UI includes:
@@ -48,7 +48,7 @@
 #include <QTextEdit>
 #include <QStackedWidget>
 
-using regina::NExampleSnapPeaTriangulation;
+using regina::ExampleSnapPea;
 using regina::NSnapPeaTriangulation;
 using regina::NTriangulation;
 
@@ -276,15 +276,15 @@ regina::NPacket* NSnapPeaTriangulationCreator::createPacket(regina::NPacket*,
     } else if (typeId == TRI_EXAMPLE) {
         switch (exampleWhich->currentIndex()) {
             case EXAMPLE_GIESEKING:
-                return NExampleSnapPeaTriangulation::gieseking();
+                return ExampleSnapPea::gieseking();
             case EXAMPLE_FIG8:
-                return NExampleSnapPeaTriangulation::figureEight();
+                return ExampleSnapPea::figureEight();
             case EXAMPLE_TREFOIL:
-                return NExampleSnapPeaTriangulation::trefoil();
+                return ExampleSnapPea::trefoil();
             case EXAMPLE_WHITEHEAD:
-                return NExampleSnapPeaTriangulation::whiteheadLink();
+                return ExampleSnapPea::whiteheadLink();
             case EXAMPLE_X101:
-                return NExampleSnapPeaTriangulation::x101();
+                return ExampleSnapPea::x101();
         }
 
         ReginaSupport::info(parentWidget,

@@ -30,11 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-void addNExampleSnapPeaTriangulation();
+void addExampleSnapPea();
 void addNSnapPeaTriangulation();
 
 void addSnapPea() {
-    addNExampleSnapPeaTriangulation();
+    addExampleSnapPea();
     addNSnapPeaTriangulation();
 }
 

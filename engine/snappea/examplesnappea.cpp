@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "snappea/nexamplesnappeatriangulation.h"
+#include "snappea/examplesnappea.h"
 #include "snappea/nsnappeatriangulation.h"
 
 namespace {
@@ -38,7 +38,7 @@ namespace {
 
 namespace regina {
 
-NSnapPeaTriangulation* NExampleSnapPeaTriangulation::figureEight() {
+NSnapPeaTriangulation* ExampleSnapPea::figureEight() {
     NSnapPeaTriangulation* ans = new NSnapPeaTriangulation(
 "% Triangulation\n"
 "m004\n"
@@ -72,7 +72,7 @@ NSnapPeaTriangulation* NExampleSnapPeaTriangulation::figureEight() {
     return ans;
 }
 
-NSnapPeaTriangulation* NExampleSnapPeaTriangulation::trefoil() {
+NSnapPeaTriangulation* ExampleSnapPea::trefoil() {
     NSnapPeaTriangulation* ans = new NSnapPeaTriangulation(
 "% Triangulation\n"
 "Trefoil\n"
@@ -106,7 +106,7 @@ NSnapPeaTriangulation* NExampleSnapPeaTriangulation::trefoil() {
     return ans;
 }
 
-NSnapPeaTriangulation* NExampleSnapPeaTriangulation::whiteheadLink() {
+NSnapPeaTriangulation* ExampleSnapPea::whiteheadLink() {
     NSnapPeaTriangulation* ans = new NSnapPeaTriangulation(
 "% Triangulation\n"
 "m129\n"
@@ -159,7 +159,7 @@ NSnapPeaTriangulation* NExampleSnapPeaTriangulation::whiteheadLink() {
     return ans;
 }
 
-NSnapPeaTriangulation* NExampleSnapPeaTriangulation::gieseking() {
+NSnapPeaTriangulation* ExampleSnapPea::gieseking() {
     NSnapPeaTriangulation* ans = new NSnapPeaTriangulation(
 "% Triangulation\n"
 "m000\n"
@@ -184,7 +184,7 @@ NSnapPeaTriangulation* NExampleSnapPeaTriangulation::gieseking() {
     return ans;
 }
 
-NSnapPeaTriangulation* NExampleSnapPeaTriangulation::x101() {
+NSnapPeaTriangulation* ExampleSnapPea::x101() {
     NSnapPeaTriangulation* ans = new NSnapPeaTriangulation(
 "% Triangulation\n"
 "x101\n"

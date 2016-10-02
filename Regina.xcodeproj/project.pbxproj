@@ -45,6 +45,8 @@
 		050C648F1DA124EB00C9420F /* fileinfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050C648B1DA124E200C9420F /* fileinfo.cpp */; };
 		050C64901DA124EB00C9420F /* globaldirs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050C648C1DA124E200C9420F /* globaldirs.cpp */; };
 		050C64921DA12B0700C9420F /* nprogresstracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64911DA12B0700C9420F /* nprogresstracker.h */; };
+		050C64951DA12FC000C9420F /* examplesnappea.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050C64931DA12FBD00C9420F /* examplesnappea.cpp */; };
+		050C64971DA1301B00C9420F /* nexamplesnappeatriangulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64961DA1301B00C9420F /* nexamplesnappeatriangulation.h */; };
 		050F5DD31B9BAB9C00C1F681 /* nabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D021B9BAB9C00C1F681 /* nabeliangroup.cpp */; };
 		050F5DD41B9BAB9C00C1F681 /* ngrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D031B9BAB9C00C1F681 /* ngrouppresentation.cpp */; };
 		050F5DD51B9BAB9C00C1F681 /* nhomgrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D041B9BAB9C00C1F681 /* nhomgrouppresentation.cpp */; };
@@ -96,7 +98,6 @@
 		050F5E0B1B9BAB9C00C1F681 /* pypacket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D461B9BAB9C00C1F681 /* pypacket.cpp */; };
 		050F5E0E1B9BAB9C00C1F681 /* progresstracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D4B1B9BAB9C00C1F681 /* progresstracker.cpp */; };
 		050F5E0F1B9BAB9C00C1F681 /* pyprogress.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D4C1B9BAB9C00C1F681 /* pyprogress.cpp */; };
-		050F5E101B9BAB9C00C1F681 /* nexamplesnappeatriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D4F1B9BAB9C00C1F681 /* nexamplesnappeatriangulation.cpp */; };
 		050F5E111B9BAB9C00C1F681 /* nsnappeatriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D501B9BAB9C00C1F681 /* nsnappeatriangulation.cpp */; };
 		050F5E121B9BAB9C00C1F681 /* pysnappea.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D511B9BAB9C00C1F681 /* pysnappea.cpp */; };
 		050F5E131B9BAB9C00C1F681 /* nsignature.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D541B9BAB9C00C1F681 /* nsignature.cpp */; };
@@ -1534,9 +1535,9 @@
 		05F9561319B53E7900377BEC /* TriRecognition.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F9561219B53E7900377BEC /* TriRecognition.mm */; };
 		05F96C131809F59600C99F96 /* PacketTreeController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F96C121809F59600C99F96 /* PacketTreeController.mm */; };
 		05F96C17180A153A00C99F96 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 05F96C16180A153A00C99F96 /* MBProgressHUD.m */; };
-		05FEA07A19C1890900A31924 /* nexamplesnappeatriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FEA07819C1890900A31924 /* nexamplesnappeatriangulation.cpp */; };
-		05FEA07B19C1890900A31924 /* nexamplesnappeatriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FEA07819C1890900A31924 /* nexamplesnappeatriangulation.cpp */; };
-		05FEA07C19C1890900A31924 /* nexamplesnappeatriangulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 05FEA07919C1890900A31924 /* nexamplesnappeatriangulation.h */; };
+		05FEA07A19C1890900A31924 /* examplesnappea.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FEA07819C1890900A31924 /* examplesnappea.cpp */; };
+		05FEA07B19C1890900A31924 /* examplesnappea.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FEA07819C1890900A31924 /* examplesnappea.cpp */; };
+		05FEA07C19C1890900A31924 /* examplesnappea.h in Headers */ = {isa = PBXBuildFile; fileRef = 05FEA07919C1890900A31924 /* examplesnappea.h */; };
 		05FEA07F19C2B96000A31924 /* PacketPicker.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05FEA07E19C2B96000A31924 /* PacketPicker.mm */; };
 /* End PBXBuildFile section */
 
@@ -1924,6 +1925,8 @@
 		050C648B1DA124E200C9420F /* fileinfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fileinfo.cpp; sourceTree = "<group>"; };
 		050C648C1DA124E200C9420F /* globaldirs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = globaldirs.cpp; sourceTree = "<group>"; };
 		050C64911DA12B0700C9420F /* nprogresstracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nprogresstracker.h; sourceTree = "<group>"; };
+		050C64931DA12FBD00C9420F /* examplesnappea.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = examplesnappea.cpp; sourceTree = "<group>"; };
+		050C64961DA1301B00C9420F /* nexamplesnappeatriangulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nexamplesnappeatriangulation.h; sourceTree = "<group>"; };
 		050F5CDD1B9BAAAA00C1F681 /* engine.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = engine.so; sourceTree = BUILT_PRODUCTS_DIR; };
 		050F5D011B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		050F5D021B9BAB9C00C1F681 /* nabeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nabeliangroup.cpp; sourceTree = "<group>"; };
@@ -1986,7 +1989,6 @@
 		050F5D4B1B9BAB9C00C1F681 /* progresstracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = progresstracker.cpp; sourceTree = "<group>"; };
 		050F5D4C1B9BAB9C00C1F681 /* pyprogress.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pyprogress.cpp; sourceTree = "<group>"; };
 		050F5D4E1B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		050F5D4F1B9BAB9C00C1F681 /* nexamplesnappeatriangulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nexamplesnappeatriangulation.cpp; sourceTree = "<group>"; };
 		050F5D501B9BAB9C00C1F681 /* nsnappeatriangulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsnappeatriangulation.cpp; sourceTree = "<group>"; };
 		050F5D511B9BAB9C00C1F681 /* pysnappea.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pysnappea.cpp; sourceTree = "<group>"; };
 		050F5D531B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
@@ -3418,8 +3420,8 @@
 		05F96C121809F59600C99F96 /* PacketTreeController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketTreeController.mm; sourceTree = "<group>"; };
 		05F96C15180A153A00C99F96 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBProgressHUD.h; path = MBProgressHUD/MBProgressHUD.h; sourceTree = "<group>"; };
 		05F96C16180A153A00C99F96 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBProgressHUD.m; path = MBProgressHUD/MBProgressHUD.m; sourceTree = "<group>"; };
-		05FEA07819C1890900A31924 /* nexamplesnappeatriangulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nexamplesnappeatriangulation.cpp; sourceTree = "<group>"; };
-		05FEA07919C1890900A31924 /* nexamplesnappeatriangulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nexamplesnappeatriangulation.h; sourceTree = "<group>"; };
+		05FEA07819C1890900A31924 /* examplesnappea.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = examplesnappea.cpp; sourceTree = "<group>"; };
+		05FEA07919C1890900A31924 /* examplesnappea.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = examplesnappea.h; sourceTree = "<group>"; };
 		05FEA07D19C2B96000A31924 /* PacketPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketPicker.h; sourceTree = "<group>"; };
 		05FEA07E19C2B96000A31924 /* PacketPicker.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketPicker.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -3866,7 +3868,7 @@
 			isa = PBXGroup;
 			children = (
 				050F5D4E1B9BAB9C00C1F681 /* CMakeLists.txt */,
-				050F5D4F1B9BAB9C00C1F681 /* nexamplesnappeatriangulation.cpp */,
+				050C64931DA12FBD00C9420F /* examplesnappea.cpp */,
 				050F5D501B9BAB9C00C1F681 /* nsnappeatriangulation.cpp */,
 				050F5D511B9BAB9C00C1F681 /* pysnappea.cpp */,
 			);
@@ -4439,11 +4441,12 @@
 			isa = PBXGroup;
 			children = (
 				052F9D1D180600FA00FAE4DF /* CMakeLists.txt */,
+				05FEA07819C1890900A31924 /* examplesnappea.cpp */,
+				05FEA07919C1890900A31924 /* examplesnappea.h */,
 				05A73C8619B2EF130099C617 /* fundgroup.cpp */,
 				05A73C8719B2EF130099C617 /* homology.cpp */,
 				052F9D1E180600FA00FAE4DF /* kernel */,
-				05FEA07819C1890900A31924 /* nexamplesnappeatriangulation.cpp */,
-				05FEA07919C1890900A31924 /* nexamplesnappeatriangulation.h */,
+				050C64961DA1301B00C9420F /* nexamplesnappeatriangulation.h */,
 				052F9D92180600FB00FAE4DF /* nsnappeatriangulation.cpp */,
 				052F9D93180600FB00FAE4DF /* nsnappeatriangulation.h */,
 				05A73C8819B2EF130099C617 /* xmlsnappeareader.cpp */,
@@ -5925,6 +5928,7 @@
 				052F9F49180600FB00FAE4DF /* nprimes.h in Headers */,
 				052FA06B180600FB00FAE4DF /* nhomologicaldata.h in Headers */,
 				052F9ECA180600FB00FAE4DF /* nhilbertdual.h in Headers */,
+				050C64971DA1301B00C9420F /* nexamplesnappeatriangulation.h in Headers */,
 				052FA078180600FB00FAE4DF /* nvertex.h in Headers */,
 				052F9EAC180600FB00FAE4DF /* dim2boundarycomponent.h in Headers */,
 				052FA01F180600FB00FAE4DF /* ntxicore.h in Headers */,
@@ -6134,7 +6138,7 @@
 				052F9F66180600FB00FAE4DF /* progresstracker.h in Headers */,
 				052FA02C180600FB00FAE4DF /* ndisctype.h in Headers */,
 				05A73CAC19B2EFF90099C617 /* nxmltreeresolver.h in Headers */,
-				05FEA07C19C1890900A31924 /* nexamplesnappeatriangulation.h in Headers */,
+				05FEA07C19C1890900A31924 /* examplesnappea.h in Headers */,
 				052FA036180600FB00FAE4DF /* nprism.h in Headers */,
 				052FA015180600FB00FAE4DF /* nsnappedtwosphere.h in Headers */,
 				052F9EAA180600FB00FAE4DF /* ngluingpermsearcher.h in Headers */,
@@ -6846,7 +6850,6 @@
 				050F5DFA1B9BAB9C00C1F681 /* nmatrixint.cpp in Sources */,
 				057EE4C51C600A3600C4D155 /* simplex13.cpp in Sources */,
 				050F5DFD1B9BAB9C00C1F681 /* nperm5.cpp in Sources */,
-				050F5E101B9BAB9C00C1F681 /* nexamplesnappeatriangulation.cpp in Sources */,
 				050F5E551B9BAB9C00C1F681 /* ncensus.cpp in Sources */,
 				057EE4CE1C600A3600C4D155 /* triangulation11.cpp in Sources */,
 				057EE4EA1C600A3600C4D155 /* facetpairing15.cpp in Sources */,
@@ -6857,6 +6860,7 @@
 				050F5E471B9BAB9C00C1F681 /* nisomorphism.cpp in Sources */,
 				05431FC41C40F5D4009BC072 /* pygeneric.cpp in Sources */,
 				0591E81B1C4F763B00793A9C /* dim4triangulation.cpp in Sources */,
+				050C64951DA12FC000C9420F /* examplesnappea.cpp in Sources */,
 				057EE4BD1C600A3600C4D155 /* simplex5.cpp in Sources */,
 				050F5DFC1B9BAB9C00C1F681 /* nperm4.cpp in Sources */,
 				050F5E5C1B9BAB9C00C1F681 /* orb.cpp in Sources */,
@@ -7285,7 +7289,7 @@
 				05D1173119EE0172003BEC55 /* ntriangulation.cpp in Sources */,
 				0591E7EB1C4F751B00793A9C /* nxmlhypersurfacereader.cpp in Sources */,
 				052FA216180612DD00FAE4DF /* chern_simons.c in Sources */,
-				05FEA07B19C1890900A31924 /* nexamplesnappeatriangulation.cpp in Sources */,
+				05FEA07B19C1890900A31924 /* examplesnappea.cpp in Sources */,
 				052FA238180612DD00FAE4DF /* tidy_peripheral_curves.c in Sources */,
 				052FA235180612DD00FAE4DF /* subdivide.c in Sources */,
 				0591E7C51C4F74E100793A9C /* nxmldim4trireader.cpp in Sources */,
@@ -7758,7 +7762,7 @@
 				0591E7B71C4F74C400793A9C /* simplify.cpp in Sources */,
 				052F9FF8180600FB00FAE4DF /* nlayeredloop.cpp in Sources */,
 				052F9F9D180600FB00FAE4DF /* tables.c in Sources */,
-				05FEA07A19C1890900A31924 /* nexamplesnappeatriangulation.cpp in Sources */,
+				05FEA07A19C1890900A31924 /* examplesnappea.cpp in Sources */,
 				052FA05C180600FB00FAE4DF /* insertlayered.cpp in Sources */,
 				052F9EFA180600FB00FAE4DF /* ntreetraversal.cpp in Sources */,
 				052FA023180600FB00FAE4DF /* enumfilter.cpp in Sources */,
