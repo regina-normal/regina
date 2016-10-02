@@ -50,7 +50,7 @@
 #endif
 
 #include "packet/ncontainer.h"
-#include "packet/ntext.h"
+#include "packet/text.h"
 #include "triangulation/ntriangulation.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "packet/script.h"

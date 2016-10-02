@@ -31,13 +31,13 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "packet/ntext.h"
+#include "packet/text.h"
 
 // UI includes:
 #include "bigwidget.h"
 #include "docwidget.h"
 #include "packeteditiface.h"
-#include "ntextui.h"
+#include "textui.h"
 
 #include <cstring>
 #include <sstream>
@@ -45,15 +45,15 @@
 #include <QVBoxLayout>
 
 using regina::NPacket;
-using regina::NText;
+using regina::Text;
 
-NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane) :
+TextUI::TextUI(Text* packet, PacketPane* enclosingPane) :
         PacketUI(enclosingPane), text(packet) {
     ui = new BigWidget(1, 2);
     QBoxLayout* layout = new QVBoxLayout(ui);
     layout->setContentsMargins(0, 0, 0, 0);
 
-    editWidget = new DocWidget<NText>(text, enclosingPane);
+    editWidget = new DocWidget<Text>(text, enclosingPane);
     editWidget->setReadOnly(!enclosingPane->isReadWrite());
     editWidget->setLineWrapMode(QPlainTextEdit::WidgetWidth);
     editIface = new PacketEditPlainTextEditor(editWidget);
@@ -62,28 +62,28 @@ NTextUI::NTextUI(NText* packet, PacketPane* enclosingPane) :
     refresh();
 }
 
-NTextUI::~NTextUI() {
+TextUI::~TextUI() {
 //    delete editIface;
     delete ui;
 }
 
-NPacket* NTextUI::getPacket() {
+NPacket* TextUI::getPacket() {
     return text;
 }
 
-QWidget* NTextUI::getInterface() {
+QWidget* TextUI::getInterface() {
     return ui;
 }
 
-QString NTextUI::getPacketMenuText() const {
+QString TextUI::getPacketMenuText() const {
     return tr("Te&xt");
 }
 
-void NTextUI::refresh() {
+void TextUI::refresh() {
     editWidget->refresh();
 }
 
-void NTextUI::setReadWrite(bool readWrite) {
+void TextUI::setReadWrite(bool readWrite) {
     editWidget->setReadOnly(!readWrite);
 }
 

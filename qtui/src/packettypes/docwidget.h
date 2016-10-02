@@ -48,7 +48,7 @@ class QTextDocument;
 /**
  * A widget for displaying and editing the text contents of a text-based
  * packet.  The template argument PacketType should be one of Regina's
- * text-based packet types, such as NText or Script.  In particular, it
+ * text-based packet types, such as Text or Script.  In particular, it
  * must have the text-based member functions text() and setText().
  *
  * This widget keeps an internal registry, through which each packet

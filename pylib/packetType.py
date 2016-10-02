@@ -89,7 +89,7 @@ def isText(packet):
     Is the given packet a text packet?
     Returns 1 for true, or 0 for false.
     """
-    return (packet.type() == regina.NText.typeID)
+    return (packet.type() == regina.Text.typeID)
 
 def isTriangulation(packet):
     """

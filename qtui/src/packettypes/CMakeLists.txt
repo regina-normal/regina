@@ -39,7 +39,6 @@ SET ( FILES
   nsurfacefilterprop
   nsurfacematchingui
   nsurfacesummaryui
-  ntextui
   ntrialgebra
   ntriangulationcreator
   ntriangulationui
@@ -52,6 +51,7 @@ SET ( FILES
   scriptui
   skeletonwindow
   snappeacomponents
+  textui
   )
 
 FOREACH( FILE ${FILES} )

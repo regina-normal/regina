@@ -38,7 +38,7 @@
 #import "ReginaHelper.h"
 #import "packet/ncontainer.h"
 #import "packet/npacket.h"
-#import "packet/ntext.h"
+#import "packet/text.h"
 #import "surfaces/nsurfacefilter.h"
 
 @implementation PacketManagerIOS
@@ -153,7 +153,7 @@
         case regina::PACKET_TEXT:
         {
             // We can do this immediately, no input required.
-            regina::NText* t = new regina::NText();
+            regina::Text* t = new regina::Text();
             t->setLabel("Text");
             t->setText("Type your text here.");
             spec.parent->insertChildLast(t);

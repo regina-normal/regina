@@ -44,7 +44,7 @@
 #include "dim4/dim4facetpairing.h"
 #include "dim4/dim4triangulation.h"
 #include "packet/ncontainer.h"
-#include "packet/ntext.h"
+#include "packet/text.h"
 #include "triangulation/nfacepairing.h"
 #include "triangulation/ntriangulation.h"
 
@@ -253,8 +253,8 @@ void dumpPairing(const typename CensusType::Pairing* pair,
 /**
  * Return a new text packet storing the census parameters.
  */
-regina::NText* parameterPacket() {
-    regina::NText* desc = new regina::NText();
+regina::Text* parameterPacket() {
+    regina::Text* desc = new regina::Text();
     desc->setLabel("Parameters");
     std::ostringstream descStream;
 
@@ -670,7 +670,7 @@ int runCensus() {
 
         // Store the face pairings used with the census.
         if (! sigs) {
-            regina::NText* pairingPacket = new regina::NText(pairingList);
+            regina::Text* pairingPacket = new regina::Text(pairingList);
             pairingPacket->setLabel(
                 dim4 ? "Facet Pairings" : dim2 ? "Edge Pairings" :
                 "Face Pairings");

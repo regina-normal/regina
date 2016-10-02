@@ -45,7 +45,7 @@
 #include "dim2/dim2triangulation.h"
 #include "dim4/dim4triangulation.h"
 #include "packet/ncontainer.h"
-#include "packet/ntext.h"
+#include "packet/text.h"
 #include "triangulation/ntriangulation.h"
 
 // Write messages tailored to the working dimension.
@@ -791,7 +791,7 @@ regina::NPacket* slaveSkeletonTree(
     parent->setLabel("Partial MPI census");
 
     // Create a child packet that describes the census parameters.
-    regina::NText* desc = new regina::NText();
+    regina::Text* desc = new regina::Text();
     desc->setLabel("Parameters");
     std::ostringstream descStream;
 
@@ -826,7 +826,7 @@ regina::NPacket* slaveSkeletonTree(
     parent->setLabel("Partial MPI census");
 
     // Create a child packet that describes the census parameters.
-    regina::NText* desc = new regina::NText();
+    regina::Text* desc = new regina::Text();
     desc->setLabel("Parameters");
     std::ostringstream descStream;
 

@@ -195,7 +195,7 @@ XMLPacketReader* Script::xmlReader(NPacket*, XMLTreeResolver& resolver) {
     return new XMLScriptReader(resolver);
 }
 
-XMLPacketReader* NText::xmlReader(NPacket*, XMLTreeResolver& resolver) {
+XMLPacketReader* Text::xmlReader(NPacket*, XMLTreeResolver& resolver) {
     return new XMLTextReader(resolver);
 }
 

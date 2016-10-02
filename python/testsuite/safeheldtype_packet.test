@@ -37,8 +37,8 @@ print "Basic:"
 print
 
 print NExampleTriangulation.poincareHomologySphere().isoSig()
-print NText("Hello World")
-print NText("Hello World").text()
+print Text("Hello World")
+print Text("Hello World").text()
 
 print
 print "-----------------------------------------------------------"
@@ -50,7 +50,7 @@ t2 = NExampleTriangulation.poincareHomologySphere()
 t3 = NExampleTriangulation.figureEight()
 p = PDF()
 
-t = NText()
+t = Text()
 
 c = NContainer()
 c.insertChildFirst(t1)
@@ -103,7 +103,7 @@ l = p.firstChild()
 
 print l.text()
 
-t2.insertChildAfter(NText("New"), t3)
+t2.insertChildAfter(Text("New"), t3)
 
 print t2.countChildren()
 print t2.countDescendants()

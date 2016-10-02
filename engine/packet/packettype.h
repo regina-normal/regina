@@ -60,7 +60,7 @@ enum PacketType {
      */
     PACKET_CONTAINER = 1,
     /**
-     * Represents a text packet, of class NText.
+     * Represents a text packet, of class Text.
      */
     PACKET_TEXT = 2,
     /**

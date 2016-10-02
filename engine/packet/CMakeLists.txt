@@ -5,10 +5,10 @@ SET ( FILES
   ncontainer
   npacket
   packetlistener
-  ntext
   open
   pdf
   script
+  text
   xmlpacketreader
   xmlpacketreaders
   )
@@ -38,5 +38,6 @@ if (${REGINA_INSTALL_DEV})
     packetregistry-impl.h
     packettype.h
     script.h
+    text.h
     DESTINATION ${INCLUDEDIR}/packet COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

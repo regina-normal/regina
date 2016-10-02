@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Computational Engine                                                  *
+ *  Python Interface                                                      *
  *                                                                        *
  *  Copyright (c) 1999-2016, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,15 +30,39 @@
  *                                                                        *
  **************************************************************************/
 
-#include "packet/ntext.h"
-#include "utilities/xmlutils.h"
+#include "packet/text.h"
+#include "../safeheldtype.h"
+#include "../helpers.h"
 
-namespace regina {
+// Held type must be declared before boost/python.hpp
+#include <boost/python.hpp>
 
-void NText::writeXMLPacketData(std::ostream& out) const {
-    out << "  <text>" << regina::xml::xmlEncodeSpecialChars(text_)
-        << "</text>\n";
+using namespace boost::python;
+using namespace regina::python;
+using regina::Text;
+
+namespace {
+    void (Text::*setText_string)(const std::string&) = &Text::setText;
+    void (Text::*setText_chars)(const char*) = &Text::setText;
 }
 
-} // namespace regina
+void addText() {
+    class_<Text, bases<regina::NPacket>,
+            SafeHeldType<Text>, boost::noncopyable>("Text", init<>())
+        .def(init<const std::string&>())
+        .def(init<const char*>())
+        .def("text", &Text::text,
+            return_value_policy<return_by_value>())
+        .def("setText", setText_string)
+        .def("setText", setText_chars)
+        .attr("typeID") = regina::PACKET_TEXT
+    ;
+
+    implicitly_convertible<SafeHeldType<Text>,
+        SafeHeldType<regina::NPacket> >();
+
+    FIX_REGINA_BOOST_CONVERTERS(Text);
+
+    scope().attr("NText") = scope().attr("Text");
+}
 

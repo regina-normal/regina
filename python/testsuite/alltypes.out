@@ -1357,7 +1357,7 @@ Equality type : BY_VALUE
 NTetrahedron : class
 Equality type : BY_REFERENCE
 
-NText : class
+Text : class
 Equality type : BY_REFERENCE
 
 NTorusBundle : class

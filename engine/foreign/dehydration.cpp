@@ -35,7 +35,7 @@
 
 #include "foreign/dehydration.h"
 #include "packet/ncontainer.h"
-#include "packet/ntext.h"
+#include "packet/text.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
@@ -107,7 +107,7 @@ NContainer* readDehydrationList(const char *filename,
 
     // Finish off.
     if (! errStrings.empty()) {
-        NText* errPkt = new NText(std::string(
+        Text* errPkt = new Text(std::string(
             "The following dehydration string(s) could not be rehydrated:\n") +
             errStrings);
         errPkt->setLabel("Errors");

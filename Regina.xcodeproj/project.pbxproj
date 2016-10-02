@@ -50,6 +50,7 @@
 		050C64991DA1388A00C9420F /* npacketlistener.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64981DA1388A00C9420F /* npacketlistener.h */; };
 		050C649B1DA1B61000C9420F /* nscript.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C649A1DA1B61000C9420F /* nscript.h */; };
 		050C649D1DA1BC9C00C9420F /* npdf.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C649C1DA1BC9C00C9420F /* npdf.h */; };
+		050C649F1DA1C22100C9420F /* ntext.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C649E1DA1C22100C9420F /* ntext.h */; };
 		050F5DD31B9BAB9C00C1F681 /* nabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D021B9BAB9C00C1F681 /* nabeliangroup.cpp */; };
 		050F5DD41B9BAB9C00C1F681 /* ngrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D031B9BAB9C00C1F681 /* ngrouppresentation.cpp */; };
 		050F5DD51B9BAB9C00C1F681 /* nhomgrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D041B9BAB9C00C1F681 /* nhomgrouppresentation.cpp */; };
@@ -96,7 +97,7 @@
 		050F5E061B9BAB9C00C1F681 /* npacket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D411B9BAB9C00C1F681 /* npacket.cpp */; };
 		050F5E071B9BAB9C00C1F681 /* pdf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D421B9BAB9C00C1F681 /* pdf.cpp */; };
 		050F5E081B9BAB9C00C1F681 /* script.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D431B9BAB9C00C1F681 /* script.cpp */; };
-		050F5E091B9BAB9C00C1F681 /* ntext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D441B9BAB9C00C1F681 /* ntext.cpp */; };
+		050F5E091B9BAB9C00C1F681 /* text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D441B9BAB9C00C1F681 /* text.cpp */; };
 		050F5E0A1B9BAB9C00C1F681 /* packettype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D451B9BAB9C00C1F681 /* packettype.cpp */; };
 		050F5E0B1B9BAB9C00C1F681 /* pypacket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D461B9BAB9C00C1F681 /* pypacket.cpp */; };
 		050F5E0E1B9BAB9C00C1F681 /* progresstracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D4B1B9BAB9C00C1F681 /* progresstracker.cpp */; };
@@ -345,8 +346,8 @@
 		052F9F5A180600FB00FAE4DF /* pdf.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D04180600FA00FAE4DF /* pdf.h */; };
 		052F9F5B180600FB00FAE4DF /* script.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D05180600FA00FAE4DF /* script.cpp */; };
 		052F9F5C180600FB00FAE4DF /* script.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D06180600FA00FAE4DF /* script.h */; };
-		052F9F5D180600FB00FAE4DF /* ntext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D07180600FA00FAE4DF /* ntext.cpp */; };
-		052F9F5E180600FB00FAE4DF /* ntext.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D08180600FA00FAE4DF /* ntext.h */; };
+		052F9F5D180600FB00FAE4DF /* text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D07180600FA00FAE4DF /* text.cpp */; };
+		052F9F5E180600FB00FAE4DF /* text.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D08180600FA00FAE4DF /* text.h */; };
 		052F9F5F180600FB00FAE4DF /* xmlpacketreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D09180600FA00FAE4DF /* xmlpacketreader.cpp */; };
 		052F9F60180600FB00FAE4DF /* xmlpacketreader.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D0A180600FA00FAE4DF /* xmlpacketreader.h */; };
 		052F9F61180600FB00FAE4DF /* xmlpacketreaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D0B180600FA00FAE4DF /* xmlpacketreaders.cpp */; };
@@ -680,7 +681,7 @@
 		052FA1A71806129B00FAE4DF /* packetlistener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D00180600FA00FAE4DF /* packetlistener.cpp */; };
 		052FA1A91806129B00FAE4DF /* pdf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D03180600FA00FAE4DF /* pdf.cpp */; };
 		052FA1AA1806129B00FAE4DF /* script.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D05180600FA00FAE4DF /* script.cpp */; };
-		052FA1AB1806129B00FAE4DF /* ntext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D07180600FA00FAE4DF /* ntext.cpp */; };
+		052FA1AB1806129B00FAE4DF /* text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D07180600FA00FAE4DF /* text.cpp */; };
 		052FA1AC1806129B00FAE4DF /* xmlpacketreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D09180600FA00FAE4DF /* xmlpacketreader.cpp */; };
 		052FA1AD1806129B00FAE4DF /* xmlpacketreaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D0B180600FA00FAE4DF /* xmlpacketreaders.cpp */; };
 		052FA1B01806129B00FAE4DF /* nsnappeatriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D92180600FB00FAE4DF /* nsnappeatriangulation.cpp */; };
@@ -934,7 +935,7 @@
 		0543AEB01811E12A002758F8 /* nsurfacefilterprop.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5AF1811D920002CC2AE /* nsurfacefilterprop.h */; };
 		0543AEB11811E12A002758F8 /* nsurfacematchingui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B11811D920002CC2AE /* nsurfacematchingui.h */; };
 		0543AEB21811E12A002758F8 /* nsurfacesummaryui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B31811D920002CC2AE /* nsurfacesummaryui.h */; };
-		0543AEB31811E12A002758F8 /* ntextui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B51811D920002CC2AE /* ntextui.h */; };
+		0543AEB31811E12A002758F8 /* textui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B51811D920002CC2AE /* textui.h */; };
 		0543AEB41811E12A002758F8 /* ntrialgebra.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B71811D920002CC2AE /* ntrialgebra.h */; };
 		0543AEB51811E12A002758F8 /* ntriangulationui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5BB1811D920002CC2AE /* ntriangulationui.h */; };
 		0543AEB61811E12A002758F8 /* ntricomposition.h in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5BD1811D920002CC2AE /* ntricomposition.h */; };
@@ -1118,7 +1119,7 @@
 		0564A9601811D921002CC2AE /* nsurfacefilterprop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5AE1811D920002CC2AE /* nsurfacefilterprop.cpp */; };
 		0564A9611811D921002CC2AE /* nsurfacematchingui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B01811D920002CC2AE /* nsurfacematchingui.cpp */; };
 		0564A9621811D921002CC2AE /* nsurfacesummaryui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B21811D920002CC2AE /* nsurfacesummaryui.cpp */; };
-		0564A9631811D921002CC2AE /* ntextui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B41811D920002CC2AE /* ntextui.cpp */; };
+		0564A9631811D921002CC2AE /* textui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B41811D920002CC2AE /* textui.cpp */; };
 		0564A9641811D921002CC2AE /* ntrialgebra.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B61811D920002CC2AE /* ntrialgebra.cpp */; };
 		0564A9651811D921002CC2AE /* ntriangulationcreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5B81811D920002CC2AE /* ntriangulationcreator.cpp */; };
 		0564A9661811D921002CC2AE /* ntriangulationui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5BA1811D920002CC2AE /* ntriangulationui.cpp */; };
@@ -1933,6 +1934,7 @@
 		050C64981DA1388A00C9420F /* npacketlistener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = npacketlistener.h; sourceTree = "<group>"; };
 		050C649A1DA1B61000C9420F /* nscript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nscript.h; sourceTree = "<group>"; };
 		050C649C1DA1BC9C00C9420F /* npdf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = npdf.h; sourceTree = "<group>"; };
+		050C649E1DA1C22100C9420F /* ntext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntext.h; sourceTree = "<group>"; };
 		050F5CDD1B9BAAAA00C1F681 /* engine.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = engine.so; sourceTree = BUILT_PRODUCTS_DIR; };
 		050F5D011B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		050F5D021B9BAB9C00C1F681 /* nabeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nabeliangroup.cpp; sourceTree = "<group>"; };
@@ -1988,7 +1990,7 @@
 		050F5D411B9BAB9C00C1F681 /* npacket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = npacket.cpp; sourceTree = "<group>"; };
 		050F5D421B9BAB9C00C1F681 /* pdf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pdf.cpp; sourceTree = "<group>"; };
 		050F5D431B9BAB9C00C1F681 /* script.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = script.cpp; sourceTree = "<group>"; };
-		050F5D441B9BAB9C00C1F681 /* ntext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ntext.cpp; sourceTree = "<group>"; };
+		050F5D441B9BAB9C00C1F681 /* text.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = text.cpp; sourceTree = "<group>"; };
 		050F5D451B9BAB9C00C1F681 /* packettype.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = packettype.cpp; sourceTree = "<group>"; };
 		050F5D461B9BAB9C00C1F681 /* pypacket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pypacket.cpp; sourceTree = "<group>"; };
 		050F5D481B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
@@ -2300,8 +2302,8 @@
 		052F9D04180600FA00FAE4DF /* pdf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdf.h; sourceTree = "<group>"; };
 		052F9D05180600FA00FAE4DF /* script.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = script.cpp; sourceTree = "<group>"; };
 		052F9D06180600FA00FAE4DF /* script.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = script.h; sourceTree = "<group>"; };
-		052F9D07180600FA00FAE4DF /* ntext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ntext.cpp; sourceTree = "<group>"; };
-		052F9D08180600FA00FAE4DF /* ntext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntext.h; sourceTree = "<group>"; };
+		052F9D07180600FA00FAE4DF /* text.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = text.cpp; sourceTree = "<group>"; };
+		052F9D08180600FA00FAE4DF /* text.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = text.h; sourceTree = "<group>"; };
 		052F9D09180600FA00FAE4DF /* xmlpacketreader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlpacketreader.cpp; sourceTree = "<group>"; };
 		052F9D0A180600FA00FAE4DF /* xmlpacketreader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlpacketreader.h; sourceTree = "<group>"; };
 		052F9D0B180600FA00FAE4DF /* xmlpacketreaders.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlpacketreaders.cpp; sourceTree = "<group>"; };
@@ -2938,8 +2940,8 @@
 		0564A5B11811D920002CC2AE /* nsurfacematchingui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsurfacematchingui.h; sourceTree = "<group>"; };
 		0564A5B21811D920002CC2AE /* nsurfacesummaryui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsurfacesummaryui.cpp; sourceTree = "<group>"; };
 		0564A5B31811D920002CC2AE /* nsurfacesummaryui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsurfacesummaryui.h; sourceTree = "<group>"; };
-		0564A5B41811D920002CC2AE /* ntextui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ntextui.cpp; sourceTree = "<group>"; };
-		0564A5B51811D920002CC2AE /* ntextui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntextui.h; sourceTree = "<group>"; };
+		0564A5B41811D920002CC2AE /* textui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = textui.cpp; sourceTree = "<group>"; };
+		0564A5B51811D920002CC2AE /* textui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = textui.h; sourceTree = "<group>"; };
 		0564A5B61811D920002CC2AE /* ntrialgebra.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ntrialgebra.cpp; sourceTree = "<group>"; };
 		0564A5B71811D920002CC2AE /* ntrialgebra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntrialgebra.h; sourceTree = "<group>"; };
 		0564A5B81811D920002CC2AE /* ntriangulationcreator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ntriangulationcreator.cpp; sourceTree = "<group>"; };
@@ -3851,11 +3853,11 @@
 				050F5D3F1B9BAB9C00C1F681 /* CMakeLists.txt */,
 				050F5D401B9BAB9C00C1F681 /* ncontainer.cpp */,
 				050F5D411B9BAB9C00C1F681 /* npacket.cpp */,
-				050F5D441B9BAB9C00C1F681 /* ntext.cpp */,
 				050F5D451B9BAB9C00C1F681 /* packettype.cpp */,
 				050F5D421B9BAB9C00C1F681 /* pdf.cpp */,
 				050F5D461B9BAB9C00C1F681 /* pypacket.cpp */,
 				050F5D431B9BAB9C00C1F681 /* script.cpp */,
+				050F5D441B9BAB9C00C1F681 /* text.cpp */,
 			);
 			path = packet;
 			sourceTree = "<group>";
@@ -4415,8 +4417,7 @@
 				050C64981DA1388A00C9420F /* npacketlistener.h */,
 				050C649C1DA1BC9C00C9420F /* npdf.h */,
 				050C649A1DA1B61000C9420F /* nscript.h */,
-				052F9D07180600FA00FAE4DF /* ntext.cpp */,
-				052F9D08180600FA00FAE4DF /* ntext.h */,
+				050C649E1DA1C22100C9420F /* ntext.h */,
 				05A73CAB19B2EFF90099C617 /* open.cpp */,
 				052F9D00180600FA00FAE4DF /* packetlistener.cpp */,
 				052F9D01180600FA00FAE4DF /* packetlistener.h */,
@@ -4427,6 +4428,8 @@
 				052F9D04180600FA00FAE4DF /* pdf.h */,
 				052F9D05180600FA00FAE4DF /* script.cpp */,
 				052F9D06180600FA00FAE4DF /* script.h */,
+				052F9D07180600FA00FAE4DF /* text.cpp */,
+				052F9D08180600FA00FAE4DF /* text.h */,
 				052F9D09180600FA00FAE4DF /* xmlpacketreader.cpp */,
 				052F9D0A180600FA00FAE4DF /* xmlpacketreader.h */,
 				052F9D0B180600FA00FAE4DF /* xmlpacketreaders.cpp */,
@@ -5498,8 +5501,6 @@
 				0564A5B11811D920002CC2AE /* nsurfacematchingui.h */,
 				0564A5B21811D920002CC2AE /* nsurfacesummaryui.cpp */,
 				0564A5B31811D920002CC2AE /* nsurfacesummaryui.h */,
-				0564A5B41811D920002CC2AE /* ntextui.cpp */,
-				0564A5B51811D920002CC2AE /* ntextui.h */,
 				0564A5B61811D920002CC2AE /* ntrialgebra.cpp */,
 				0564A5B71811D920002CC2AE /* ntrialgebra.h */,
 				0564A5B81811D920002CC2AE /* ntriangulationcreator.cpp */,
@@ -5524,6 +5525,8 @@
 				0564A5C71811D920002CC2AE /* skeletonwindow.h */,
 				0564A5C81811D920002CC2AE /* snappeacomponents.cpp */,
 				0564A5C91811D920002CC2AE /* snappeacomponents.h */,
+				0564A5B41811D920002CC2AE /* textui.cpp */,
+				0564A5B51811D920002CC2AE /* textui.h */,
 			);
 			path = packettypes;
 			sourceTree = "<group>";
@@ -6046,6 +6049,7 @@
 				055DDCF01808575300C973FB /* surfacefiltertype.h in Headers */,
 				0583656318DB8876008B08D9 /* end_namespace.h in Headers */,
 				05431EEF1C40F093009BC072 /* dim2edgepairing.h in Headers */,
+				050C649F1DA1C22100C9420F /* ntext.h in Headers */,
 				0591E7F21C4F75C300793A9C /* dim4gluingperms.h in Headers */,
 				052F9EF5180600FB00FAE4DF /* ntreelp-impl.h in Headers */,
 				052F9F4B180600FB00FAE4DF /* nrational.h in Headers */,
@@ -6075,7 +6079,7 @@
 				052FA01B180600FB00FAE4DF /* ntrisolidtorus.h in Headers */,
 				052F9EF7180600FB00FAE4DF /* ntreelp.h in Headers */,
 				052F9EB8180600FB00FAE4DF /* dim2vertex.h in Headers */,
-				052F9F5E180600FB00FAE4DF /* ntext.h in Headers */,
+				052F9F5E180600FB00FAE4DF /* text.h in Headers */,
 				0591E7D91C4F750200793A9C /* hscoordregistry-impl.h in Headers */,
 				052F9FEF180600FB00FAE4DF /* nblockedsfstriple.h in Headers */,
 				05CA99E618078466006161DC /* registryutils.h in Headers */,
@@ -6878,7 +6882,7 @@
 				050F5E5C1B9BAB9C00C1F681 /* orb.cpp in Sources */,
 				057EE4C81C600A3600C4D155 /* triangulation5.cpp in Sources */,
 				057EE4E01C600A3600C4D155 /* facetpairing5.cpp in Sources */,
-				050F5E091B9BAB9C00C1F681 /* ntext.cpp in Sources */,
+				050F5E091B9BAB9C00C1F681 /* text.cpp in Sources */,
 				050F5DEC1B9BAB9C00C1F681 /* ngraphtriple.cpp in Sources */,
 				050F5E3F1B9BAB9C00C1F681 /* ntreedecomposition.cpp in Sources */,
 				057EE4CC1C600A3600C4D155 /* triangulation9.cpp in Sources */,
@@ -7294,7 +7298,7 @@
 				052FA1911806129B00FAE4DF /* nhandlebody.cpp in Sources */,
 				052FA1CF1806129B00FAE4DF /* ntrisolidtorus.cpp in Sources */,
 				052FA1BE1806129B00FAE4DF /* nlayeredloop.cpp in Sources */,
-				052FA1AB1806129B00FAE4DF /* ntext.cpp in Sources */,
+				052FA1AB1806129B00FAE4DF /* text.cpp in Sources */,
 				05B9EC1C18245F2100DCACF3 /* euler.cpp in Sources */,
 				0591E7C71C4F74E100793A9C /* simplifyglobal.cpp in Sources */,
 				054F7E29180B93770090B1F3 /* WelcomePopupController.m in Sources */,
@@ -7478,7 +7482,7 @@
 				0543AEB11811E12A002758F8 /* nsurfacematchingui.h in Sources */,
 				0543AEB21811E12A002758F8 /* nsurfacesummaryui.h in Sources */,
 				05B1EF181C54299C008E7B49 /* dim4boundarycomponentchooser.cpp in Sources */,
-				0543AEB31811E12A002758F8 /* ntextui.h in Sources */,
+				0543AEB31811E12A002758F8 /* textui.h in Sources */,
 				0543AEB41811E12A002758F8 /* ntrialgebra.h in Sources */,
 				0543AEB51811E12A002758F8 /* ntriangulationui.h in Sources */,
 				0543AEB61811E12A002758F8 /* ntricomposition.h in Sources */,
@@ -7585,7 +7589,7 @@
 				0564A9771811D921002CC2AE /* pythonmanager.cpp in Sources */,
 				05A73CCC19B2F1AB0099C617 /* nsnappeacreator.cpp in Sources */,
 				0564A80F1811D921002CC2AE /* pythonhandler.cpp in Sources */,
-				0564A9631811D921002CC2AE /* ntextui.cpp in Sources */,
+				0564A9631811D921002CC2AE /* textui.cpp in Sources */,
 				0564A8051811D921002CC2AE /* examplesaction.cpp in Sources */,
 				0564A9471811D921002CC2AE /* packetcreator.cpp in Sources */,
 				0564A9411811D921002CC2AE /* main.cpp in Sources */,
@@ -7770,7 +7774,7 @@
 				052F9F59180600FB00FAE4DF /* pdf.cpp in Sources */,
 				052FA04B180600FB00FAE4DF /* nxmlsurfacereader.cpp in Sources */,
 				052FA065180600FB00FAE4DF /* nfacepair.cpp in Sources */,
-				052F9F5D180600FB00FAE4DF /* ntext.cpp in Sources */,
+				052F9F5D180600FB00FAE4DF /* text.cpp in Sources */,
 				0591E7B71C4F74C400793A9C /* simplify.cpp in Sources */,
 				052F9FF8180600FB00FAE4DF /* nlayeredloop.cpp in Sources */,
 				052F9F9D180600FB00FAE4DF /* tables.c in Sources */,

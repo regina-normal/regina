@@ -41,7 +41,7 @@
 
 #import "packet/npacket.h"
 #import "packet/ncontainer.h"
-#import "packet/ntext.h"
+#import "packet/text.h"
 
 @interface PacketTreeController () <UIAlertViewDelegate, PacketDelegate> {
     /**

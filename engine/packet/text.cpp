@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2016, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,37 +30,15 @@
  *                                                                        *
  **************************************************************************/
 
-#include "packet/ntext.h"
-#include "../safeheldtype.h"
-#include "../helpers.h"
+#include "packet/text.h"
+#include "utilities/xmlutils.h"
 
-// Held type must be declared before boost/python.hpp
-#include <boost/python.hpp>
+namespace regina {
 
-using namespace boost::python;
-using namespace regina::python;
-using regina::NText;
-
-namespace {
-    void (NText::*setText_string)(const std::string&) = &NText::setText;
-    void (NText::*setText_chars)(const char*) = &NText::setText;
+void Text::writeXMLPacketData(std::ostream& out) const {
+    out << "  <text>" << regina::xml::xmlEncodeSpecialChars(text_)
+        << "</text>\n";
 }
 
-void addNText() {
-    class_<NText, bases<regina::NPacket>,
-            SafeHeldType<NText>, boost::noncopyable>("NText", init<>())
-        .def(init<const std::string&>())
-        .def(init<const char*>())
-        .def("text", &NText::text,
-            return_value_policy<return_by_value>())
-        .def("setText", setText_string)
-        .def("setText", setText_chars)
-        .attr("typeID") = regina::PACKET_TEXT
-    ;
-
-    implicitly_convertible<SafeHeldType<NText>,
-        SafeHeldType<regina::NPacket> >();
-
-    FIX_REGINA_BOOST_CONVERTERS(NText);
-}
+} // namespace regina
 

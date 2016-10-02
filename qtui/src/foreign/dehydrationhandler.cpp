@@ -32,7 +32,7 @@
 
 #include "foreign/dehydration.h"
 #include "packet/ncontainer.h"
-#include "packet/ntext.h"
+#include "packet/text.h"
 
 #include "dehydrationhandler.h"
 #include "reginamain.h"

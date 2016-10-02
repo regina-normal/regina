@@ -69,7 +69,6 @@
 #include <popt.h>
 #include "census/ngluingpermsearcher.h"
 #include "packet/ncontainer.h"
-#include "packet/ntext.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/ntriangulation.h"
 #include "mpi.h"

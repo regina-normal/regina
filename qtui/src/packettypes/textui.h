@@ -30,12 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file ntextui.h
+/*! \file textui.h
  *  \brief Provides an interface for viewing text packets.
  */
 
-#ifndef __NTEXTUI_H
-#define __NTEXTUI_H
+#ifndef __TEXTUI_H
+#define __TEXTUI_H
 
 #include "../packetui.h"
 
@@ -46,34 +46,34 @@ class DocWidgetNoSanitise;
 
 namespace regina {
     class NPacket;
-    class NText;
+    class Text;
 };
 
 /**
  * A packet interface for viewing text packets.
  */
-class NTextUI : public QObject, public PacketUI {
+class TextUI : public QObject, public PacketUI {
     Q_OBJECT
 
     private:
         /**
          * Packet details
          */
-        regina::NText* text;
+        regina::Text* text;
 
         /**
          * Internal components
          */
         QWidget* ui;
-        DocWidget<regina::NText, DocWidgetNoSanitise>* editWidget;
+        DocWidget<regina::Text, DocWidgetNoSanitise>* editWidget;
         PacketEditIface* editIface;
 
     public:
         /**
          * Constructor and destructor.
          */
-        NTextUI(regina::NText* packet, PacketPane* newEnclosingPane);
-        ~NTextUI();
+        TextUI(regina::Text* packet, PacketPane* newEnclosingPane);
+        ~TextUI();
 
         /**
          * PacketUI overrides.
@@ -86,7 +86,7 @@ class NTextUI : public QObject, public PacketUI {
         void setReadWrite(bool readWrite);
 };
 
-inline PacketEditIface* NTextUI::getEditIface() {
+inline PacketEditIface* TextUI::getEditIface() {
     return editIface;
 }
 

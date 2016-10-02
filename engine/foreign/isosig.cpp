@@ -37,7 +37,7 @@
 #include "dim4/dim4triangulation.h"
 #include "foreign/isosig.h"
 #include "packet/ncontainer.h"
-#include "packet/ntext.h"
+#include "packet/text.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
@@ -126,7 +126,7 @@ NContainer* readIsoSigList(const char *filename, unsigned dimension,
         std::ostringstream msg;
         msg << "The following isomorphism string(s) could not be interpreted "
             "as " << dimension << "-manifold triangulations:\n" << errStrings;
-        NText* errPkt = new NText(msg.str());
+        Text* errPkt = new Text(msg.str());
         errPkt->setLabel("Errors");
         ans->insertChildLast(errPkt);
     }

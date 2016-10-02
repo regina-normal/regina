@@ -33,7 +33,7 @@
 #include "dim4/dim4triangulation.h"
 #include "packet/ncontainer.h"
 #include "packet/script.h"
-#include "packet/ntext.h"
+#include "packet/text.h"
 #include "snappea/nsnappeatriangulation.h"
 
 #include "newpacketdialog.h"
@@ -104,7 +104,7 @@ void ReginaMain::newSnapPeaTriangulation() {
 }
 
 void ReginaMain::newText() {
-    newPacket(new BasicPacketCreator<regina::NText>(), 0,
+    newPacket(new BasicPacketCreator<regina::Text>(), 0,
         tr("New Text Packet"));
 }
 

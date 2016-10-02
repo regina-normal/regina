@@ -51,7 +51,7 @@
 #include "packettypes/nsnappeaui.h"
 #include "packettypes/nsurfacefiltercomb.h"
 #include "packettypes/nsurfacefilterprop.h"
-#include "packettypes/ntextui.h"
+#include "packettypes/textui.h"
 #include "packettypes/ntriangulationui.h"
 
 #include <QPlainTextEdit>
@@ -184,8 +184,8 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
                     return new DefaultPacketUI(packet, enclosingPane);
             }
         case PACKET_TEXT:
-            return new NTextUI(
-                dynamic_cast<NText*>(packet), enclosingPane);
+            return new TextUI(
+                dynamic_cast<Text*>(packet), enclosingPane);
         case PACKET_TRIANGULATION:
             return new NTriangulationUI(
                 dynamic_cast<NTriangulation*>(packet), enclosingPane);
