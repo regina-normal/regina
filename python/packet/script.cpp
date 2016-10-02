@@ -73,13 +73,14 @@ void addScript() {
         .def("removeVariable", removeVariable_long)
         .def("removeVariable", removeVariable_string)
         .def("removeAllVariables", &Script::removeAllVariables)
+        .attr("typeID") = regina::PACKET_SCRIPT;
     ;
-
-    s.attr("typeID") = regina::PACKET_SCRIPT;
 
     implicitly_convertible<SafeHeldType<Script>,
         SafeHeldType<regina::NPacket> >();
 
     FIX_REGINA_BOOST_CONVERTERS(Script);
+
+    scope().attr("NScript") = scope().attr("Script");
 }
 
