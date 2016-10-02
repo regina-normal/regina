@@ -297,8 +297,8 @@ class Triangulation :
 
         /*@}*/
 
-        static NXMLPacketReader* xmlReader(NPacket* parent,
-                NXMLTreeResolver& resolver);
+        static XMLPacketReader* xmlReader(NPacket* parent,
+                XMLTreeResolver& resolver);
 
     protected:
         virtual NPacket* internalClonePacket(NPacket* parent) const;
@@ -627,8 +627,8 @@ void Triangulation<dim>::writeXMLPacketData(std::ostream& out) const {
 }
 
 template <int dim>
-inline NXMLPacketReader* Triangulation<dim>::xmlReader(NPacket*,
-        NXMLTreeResolver& resolver) {
+inline XMLPacketReader* Triangulation<dim>::xmlReader(NPacket*,
+        XMLTreeResolver& resolver) {
     return new XMLTriangulationReader<dim>(resolver);
 }
 

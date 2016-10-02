@@ -45,7 +45,7 @@
 
 namespace regina {
 
-class NXMLPacketReader;
+class XMLPacketReader;
 class NContainer;
 
 /**
@@ -88,8 +88,8 @@ class REGINA_API NContainer : public NPacket {
         NContainer(const std::string& label);
 
         virtual void writeTextShort(std::ostream& out) const;
-        static NXMLPacketReader* xmlReader(NPacket* parent,
-            NXMLTreeResolver& resolver);
+        static XMLPacketReader* xmlReader(NPacket* parent,
+            XMLTreeResolver& resolver);
         virtual bool dependsOnParent() const;
 
     protected:

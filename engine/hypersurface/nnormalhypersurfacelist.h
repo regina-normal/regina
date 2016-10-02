@@ -57,7 +57,7 @@ class NNormalHypersurface;
 class NNormalHypersurfaceList;
 class ProgressTracker;
 class NXMLNormalHypersurfaceListReader;
-class NXMLPacketReader;
+class XMLPacketReader;
 
 template <int> class Triangulation;
 // We *must* declare the specialisation here; otherwise this header has
@@ -259,8 +259,8 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
-        static NXMLPacketReader* xmlReader(NPacket* parent,
-            NXMLTreeResolver& resolver);
+        static XMLPacketReader* xmlReader(NPacket* parent,
+            XMLTreeResolver& resolver);
         virtual bool dependsOnParent() const;
 
         /**

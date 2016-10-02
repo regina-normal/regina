@@ -38,8 +38,8 @@
 #include "engine.h"
 #include "generic/xmltrireader.h"
 #include "packet/ncontainer.h"
-#include "packet/nxmlpacketreader.h"
-#include "packet/nxmltreeresolver.h"
+#include "packet/xmlpacketreader.h"
+#include "packet/xmltreeresolver.h"
 #include "utilities/nxmlcallback.h"
 #include "utilities/stringutils.h"
 
@@ -49,7 +49,7 @@ namespace {
     /**
      * Reads the outermost \<reginadata ...\> XML element.
      */
-    class ReginaDataReader : public regina::NXMLPacketReader {
+    class ReginaDataReader : public regina::XMLPacketReader {
         private:
             NContainer container;
                 /**< Sits above the entire packet tree read from file. */
@@ -63,8 +63,8 @@ namespace {
             /**
              * Create a new top-level reader.
              */
-            ReginaDataReader(NXMLTreeResolver& resolver) :
-                    NXMLPacketReader(resolver),
+            ReginaDataReader(XMLTreeResolver& resolver) :
+                    XMLPacketReader(resolver),
                     isReginaData(false) {
             }
 
@@ -136,7 +136,7 @@ NPacket* open(std::istream& s) {
         in.push(::boost::iostreams::gzip_decompressor());
     in.push(s);
 
-    NXMLTreeResolver resolver;
+    XMLTreeResolver resolver;
 
     ReginaDataReader reader(resolver);
     regina::NXMLCallback callback(reader, std::cerr);

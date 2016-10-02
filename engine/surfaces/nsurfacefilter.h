@@ -48,7 +48,7 @@ namespace regina {
 class NNormalSurface;
 class NNormalSurfaceList;
 class NSurfaceFilter;
-class NXMLPacketReader;
+class XMLPacketReader;
 class NXMLFilterReader;
 
 /**
@@ -231,8 +231,8 @@ class REGINA_API NSurfaceFilter : public NPacket {
         static NXMLFilterReader* xmlFilterReader(NPacket* parent);
 
         virtual void writeTextShort(std::ostream& out) const;
-        static NXMLPacketReader* xmlReader(NPacket* parent,
-            NXMLTreeResolver& resolver);
+        static XMLPacketReader* xmlReader(NPacket* parent,
+            XMLTreeResolver& resolver);
         virtual bool dependsOnParent() const;
 
     protected:

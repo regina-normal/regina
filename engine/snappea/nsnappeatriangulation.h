@@ -1332,8 +1332,8 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         virtual void writeTextLong(std::ostream& out) const;
 
         virtual bool dependsOnParent() const;
-        static NXMLPacketReader* xmlReader(NPacket* parent,
-            NXMLTreeResolver& resolver);
+        static XMLPacketReader* xmlReader(NPacket* parent,
+            XMLTreeResolver& resolver);
 
         /*@}*/
         /**

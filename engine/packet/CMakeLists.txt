@@ -8,9 +8,9 @@ SET ( FILES
   npdf
   nscript
   ntext
-  nxmlpacketreader
-  nxmlpacketreaders
   open
+  xmlpacketreader
+  xmlpacketreaders
   )
 
 # Prepend folder name
@@ -29,9 +29,9 @@ if (${REGINA_INSTALL_DEV})
     npdf.h
     nscript.h
     ntext.h
-    nxmlpacketreader.h
-    nxmlpacketreaders.h
-    nxmltreeresolver.h
+    xmlpacketreader.h
+    xmlpacketreaders.h
+    xmltreeresolver.h
     packetregistry.h
     packetregistry-impl.h
     packettype.h

@@ -40,7 +40,7 @@
 #endif
 
 #include "regina-core.h"
-#include "packet/nxmlpacketreader.h"
+#include "packet/xmlpacketreader.h"
 #include "snappea/nsnappeatriangulation.h"
 
 namespace regina {
@@ -55,7 +55,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class REGINA_API XMLSnapPeaReader : public NXMLPacketReader {
+class REGINA_API XMLSnapPeaReader : public XMLPacketReader {
     private:
         NSnapPeaTriangulation* snappea_;
             /**< The SnapPea triangulation currently being read. */
@@ -67,7 +67,7 @@ class REGINA_API XMLSnapPeaReader : public NXMLPacketReader {
          * @param resolver the master resolver that will be used to fix
          * dangling packet references after the entire XML file has been read.
          */
-        XMLSnapPeaReader(NXMLTreeResolver& resolver);
+        XMLSnapPeaReader(XMLTreeResolver& resolver);
 
         virtual NPacket* packet() override;
         virtual NXMLElementReader* startContentSubElement(
@@ -81,8 +81,8 @@ class REGINA_API XMLSnapPeaReader : public NXMLPacketReader {
 
 // Inline functions for XMLSnapPeaReader
 
-inline XMLSnapPeaReader::XMLSnapPeaReader(NXMLTreeResolver& resolver) :
-        NXMLPacketReader(resolver), snappea_(new NSnapPeaTriangulation()) {
+inline XMLSnapPeaReader::XMLSnapPeaReader(XMLTreeResolver& resolver) :
+        XMLPacketReader(resolver), snappea_(new NSnapPeaTriangulation()) {
 }
 
 inline NPacket* XMLSnapPeaReader::packet() {

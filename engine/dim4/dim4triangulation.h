@@ -59,7 +59,7 @@
 namespace regina {
 
 class Dim4BoundaryComponent;
-class NXMLPacketReader;
+class XMLPacketReader;
 
 template <int> class Component;
 template <int> class Isomorphism;
@@ -939,8 +939,8 @@ class REGINA_API Triangulation<4> :
 
         /*@}*/
 
-        static NXMLPacketReader* xmlReader(NPacket* parent,
-            NXMLTreeResolver& resolver);
+        static XMLPacketReader* xmlReader(NPacket* parent,
+            XMLTreeResolver& resolver);
 
     protected:
         virtual NPacket* internalClonePacket(NPacket* parent) const;

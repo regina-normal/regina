@@ -40,7 +40,7 @@
 #endif
 
 #include "regina-core.h"
-#include "packet/nxmlpacketreader.h"
+#include "packet/xmlpacketreader.h"
 #include "surfaces/nsurfacefilter.h"
 
 namespace regina {
@@ -96,11 +96,11 @@ class REGINA_API NXMLFilterReader : public NXMLElementReader {
  * The filter type will be determined by this class and an appropriate
  * NXMLFilterReader will be used to process the type-specific details.
  *
- * \pre The parent XML element reader is in fact an NXMLPacketReader.
+ * \pre The parent XML element reader is in fact an XMLPacketReader.
  *
  * \ifacespython Not present.
  */
-class REGINA_API NXMLFilterPacketReader : public NXMLPacketReader {
+class REGINA_API NXMLFilterPacketReader : public XMLPacketReader {
     private:
         NSurfaceFilter* filter_;
             /**< The surface filter currently being read. */
@@ -116,7 +116,7 @@ class REGINA_API NXMLFilterPacketReader : public NXMLPacketReader {
          * @param resolver the master resolver that will be used to fix
          * dangling packet references after the entire XML file has been read.
          */
-        NXMLFilterPacketReader(NPacket* newParent, NXMLTreeResolver& resolver);
+        NXMLFilterPacketReader(NPacket* newParent, XMLTreeResolver& resolver);
 
         virtual NPacket* packet() override;
         virtual NXMLElementReader* startContentSubElement(
@@ -140,8 +140,8 @@ inline NSurfaceFilter* NXMLFilterReader::filter() {
 // Inline functions for NXMLFilterPacketReader
 
 inline NXMLFilterPacketReader::NXMLFilterPacketReader(NPacket* newParent,
-        NXMLTreeResolver& resolver) :
-        NXMLPacketReader(resolver), filter_(0), parent_(newParent) {
+        XMLTreeResolver& resolver) :
+        XMLPacketReader(resolver), filter_(0), parent_(newParent) {
 }
 
 inline NPacket* NXMLFilterPacketReader::packet() {

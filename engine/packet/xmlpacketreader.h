@@ -30,13 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file packet/nxmlpacketreader.h
+/*! \file packet/xmlpacketreader.h
  *  \brief Deals with parsing XML data for individual packets.
  */
 
-#ifndef __NXMLPACKETREADER_H
+#ifndef __XMLPACKETREADER_H
 #ifndef __DOXYGEN
-#define __NXMLPACKETREADER_H
+#define __XMLPACKETREADER_H
 #endif
 
 #include "regina-core.h"
@@ -45,7 +45,7 @@
 namespace regina {
 
 class NPacket;
-class NXMLTreeResolver;
+class XMLTreeResolver;
 
 /**
  * \weakgroup packet
@@ -55,10 +55,10 @@ class NXMLTreeResolver;
 /**
  * An XML element reader that reads the data for an individual packet.
  *
- * Generally a subclass of NXMLPacketReader will be used to receive and
+ * Generally a subclass of XMLPacketReader will be used to receive and
  * store packets that you care about.  However, if you simply wish to
  * ignore a particular packet (and all of its descendants), you can use
- * class NXMLPacketReader itself for the packet(s) you wish to ignore.
+ * class XMLPacketReader itself for the packet(s) you wish to ignore.
  *
  * Routine packet() is used to return the packet that was read; see
  * its documentation for further notes on how the packet should be
@@ -68,17 +68,17 @@ class NXMLTreeResolver;
  * overridden by derived classes.  They determine whether the subelement
  * is another packet element or a packet tag; if so then they deal with
  * the subelement themselves (packet elements will be read using a new
- * NXMLPacketReader of the correct type), and if not then they call
+ * XMLPacketReader of the correct type), and if not then they call
  * startContentSubElement() and endContentSubElement() which \e should
  * be overridden for processing of non-packet XML subelements.
  *
  * If routine abort() is overridden, it \e must at some point call
- * NXMLPacketReader::abort() which will destroy whatever new packets
+ * XMLPacketReader::abort() which will destroy whatever new packets
  * have already been created.
  *
  * \ifacespython Not present.
  */
-class REGINA_API NXMLPacketReader : public NXMLElementReader {
+class REGINA_API XMLPacketReader : public NXMLElementReader {
     private:
         std::string childLabel;
             /**< The packet label to give the child packet currently
@@ -88,7 +88,7 @@ class REGINA_API NXMLPacketReader : public NXMLElementReader {
                  currently being read. */
 
     protected:
-        NXMLTreeResolver& resolver_;
+        XMLTreeResolver& resolver_;
             /**< The master resolver that will be used to fix dangling packet
                  references after the entire XML file has been read. */
 
@@ -99,7 +99,7 @@ class REGINA_API NXMLPacketReader : public NXMLElementReader {
          * @param resolver the master resolver that will be used to fix
          * dangling packet references after the entire XML file has been read.
          */
-        NXMLPacketReader(NXMLTreeResolver& resolver);
+        XMLPacketReader(XMLTreeResolver& resolver);
 
         /**
          * Returns the newly allocated packet that has been read by
@@ -117,7 +117,7 @@ class REGINA_API NXMLPacketReader : public NXMLElementReader {
          * packet tags will not be added.
          *
          * The newly allocated packet should not be given a packet
-         * label.  This will be done by NXMLPacketReader::endSubElement().
+         * label.  This will be done by XMLPacketReader::endSubElement().
          *
          * The newly allocated packet may or may not be inserted in the
          * packet tree structure; this does not matter (although if it
@@ -125,7 +125,7 @@ class REGINA_API NXMLPacketReader : public NXMLElementReader {
          *
          * The newly allocated packet should not be given any associated
          * packet tags.  This will be done by
-         * NXMLPacketReader::startSubElement().
+         * XMLPacketReader::startSubElement().
          *
          * The default implementation returns 0.
          *
@@ -178,22 +178,22 @@ class REGINA_API NXMLPacketReader : public NXMLElementReader {
 
 /*@}*/
 
-// Inline functions for NXMLPacketReader
+// Inline functions for XMLPacketReader
 
-inline NXMLPacketReader::NXMLPacketReader(NXMLTreeResolver& resolver) :
+inline XMLPacketReader::XMLPacketReader(XMLTreeResolver& resolver) :
         resolver_(resolver) {
 }
 
-inline NPacket* NXMLPacketReader::packet() {
+inline NPacket* XMLPacketReader::packet() {
     return 0;
 }
 
-inline NXMLElementReader* NXMLPacketReader::startContentSubElement(
+inline NXMLElementReader* XMLPacketReader::startContentSubElement(
         const std::string&, const regina::xml::XMLPropertyDict&) {
     return new NXMLElementReader();
 }
 
-inline void NXMLPacketReader::endContentSubElement(const std::string&,
+inline void XMLPacketReader::endContentSubElement(const std::string&,
         NXMLElementReader*) {
 }
 

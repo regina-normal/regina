@@ -40,7 +40,7 @@
 #endif
 
 #include "regina-core.h"
-#include "packet/nxmlpacketreader.h"
+#include "packet/xmlpacketreader.h"
 #include "angle/anglestructures.h"
 
 namespace regina {
@@ -97,7 +97,7 @@ class REGINA_API XMLAngleStructureReader : public NXMLElementReader {
  *
  * \ifacespython Not present.
  */
-class REGINA_API XMLAngleStructuresReader : public NXMLPacketReader {
+class REGINA_API XMLAngleStructuresReader : public XMLPacketReader {
     private:
         AngleStructures* list;
             /**< The angle structure list currently being read. */
@@ -115,7 +115,7 @@ class REGINA_API XMLAngleStructuresReader : public NXMLPacketReader {
          * dangling packet references after the entire XML file has been read.
          */
         XMLAngleStructuresReader(NTriangulation* newTri,
-            NXMLTreeResolver& resolver);
+            XMLTreeResolver& resolver);
 
         virtual NPacket* packet() override;
         virtual NXMLElementReader* startContentSubElement(
@@ -140,8 +140,8 @@ inline AngleStructure* XMLAngleStructureReader::structure() {
 // Inline functions for XMLAngleStructuresReader
 
 inline XMLAngleStructuresReader::XMLAngleStructuresReader(
-        NTriangulation* newTri, NXMLTreeResolver& resolver) :
-        NXMLPacketReader(resolver),
+        NTriangulation* newTri, XMLTreeResolver& resolver) :
+        XMLPacketReader(resolver),
         list(new AngleStructures(false)), tri(newTri) {
 }
 

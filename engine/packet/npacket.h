@@ -54,8 +54,8 @@
 namespace regina {
 
 class NPacketListener;
-class NXMLPacketReader;
-class NXMLTreeResolver;
+class XMLPacketReader;
+class XMLTreeResolver;
 
 /**
  * \addtogroup packet Basic Packet Types
@@ -176,8 +176,8 @@ struct PacketInfo;
  *   <li>All abstract functions must be implemented, except for those
  *     already provided by REGINA_PACKET.</li>
  *   <li>A public function
- *     <tt>static NXMLPacketReader* xmlReader(NPacket* parent,
- *     NXMLTreeResolver& resolver)</tt>
+ *     <tt>static XMLPacketReader* xmlReader(NPacket* parent,
+ *     XMLTreeResolver& resolver)</tt>
  *     must be declared and implemented.  See the notes for xmlReader()
  *     for further details.</li>
  *   <li>Whenever the contents of the packet are changed, a local
@@ -1118,8 +1118,8 @@ class REGINA_API NPacket :
          * If the new packet needs to store pointers to other packets that
          * might not have been read yet (such as a script packet that
          * needs pointers to its variables), then it should queue a new
-         * NXMLTreeResolutionTask to the given NXMLTreeResolver.  After the
-         * complete data file has been read, NXMLTreeResolver::resolve()
+         * XMLTreeResolutionTask to the given XMLTreeResolver.  After the
+         * complete data file has been read, XMLTreeResolver::resolve()
          * will run all of its queued tasks, at which point the new packet can
          * resolve any dangling references.
          *
@@ -1137,8 +1137,8 @@ class REGINA_API NPacket :
          * @return the newly created XML element reader.
          */
         #ifdef __DOXYGEN
-        static NXMLPacketReader* xmlReader(NPacket* parent,
-            NXMLTreeResolver& resolver);
+        static XMLPacketReader* xmlReader(NPacket* parent,
+            XMLTreeResolver& resolver);
         #endif
 
         /**

@@ -53,7 +53,7 @@ namespace regina {
 
 class AngleStructures;
 class ProgressTracker;
-class NXMLPacketReader;
+class XMLPacketReader;
 class XMLAngleStructuresReader;
 
 /**
@@ -235,8 +235,8 @@ class REGINA_API AngleStructures : public NPacket {
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
-        static NXMLPacketReader* xmlReader(NPacket* parent,
-            NXMLTreeResolver& resolver);
+        static XMLPacketReader* xmlReader(NPacket* parent,
+            XMLTreeResolver& resolver);
         virtual bool dependsOnParent() const;
 
     protected:

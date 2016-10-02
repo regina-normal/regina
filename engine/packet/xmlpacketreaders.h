@@ -30,17 +30,17 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file packet/nxmlpacketreaders.h
+/*! \file packet/xmlpacketreaders.h
  *  \brief Deals with parsing XML data for various basic packet types.
  */
 
-#ifndef __NXMLPACKETREADERS_H
+#ifndef __XMLPACKETREADERS_H
 #ifndef __DOXYGEN
-#define __NXMLPACKETREADERS_H
+#define __XMLPACKETREADERS_H
 #endif
 
 #include "regina-core.h"
-#include "packet/nxmlpacketreader.h"
+#include "packet/xmlpacketreader.h"
 #include "packet/ncontainer.h"
 #include "packet/npdf.h"
 #include "packet/nscript.h"
@@ -58,7 +58,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NXMLContainerReader : public NXMLPacketReader {
+class REGINA_API XMLContainerReader : public XMLPacketReader {
     private:
         NContainer* container;
             /**< The container currently being read. */
@@ -70,7 +70,7 @@ class REGINA_API NXMLContainerReader : public NXMLPacketReader {
          * @param resolver the master resolver that will be used to fix
          * dangling packet references after the entire XML file has been read.
          */
-        NXMLContainerReader(NXMLTreeResolver& resolver);
+        XMLContainerReader(XMLTreeResolver& resolver);
 
         virtual NPacket* packet() override;
 };
@@ -80,7 +80,7 @@ class REGINA_API NXMLContainerReader : public NXMLPacketReader {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NXMLPDFReader : public NXMLPacketReader {
+class REGINA_API XMLPDFReader : public XMLPacketReader {
     private:
         NPDF* pdf;
             /**< The PDF packet currently being read. */
@@ -92,7 +92,7 @@ class REGINA_API NXMLPDFReader : public NXMLPacketReader {
          * @param resolver the master resolver that will be used to fix
          * dangling packet references after the entire XML file has been read.
          */
-        NXMLPDFReader(NXMLTreeResolver& resolver);
+        XMLPDFReader(XMLTreeResolver& resolver);
 
         virtual NPacket* packet() override;
         virtual NXMLElementReader* startContentSubElement(
@@ -107,7 +107,7 @@ class REGINA_API NXMLPDFReader : public NXMLPacketReader {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NXMLScriptReader : public NXMLPacketReader {
+class REGINA_API XMLScriptReader : public XMLPacketReader {
     private:
         NScript* script;
             /**< The script currently being read. */
@@ -119,7 +119,7 @@ class REGINA_API NXMLScriptReader : public NXMLPacketReader {
          * @param resolver the master resolver that will be used to fix
          * dangling packet references after the entire XML file has been read.
          */
-        NXMLScriptReader(NXMLTreeResolver& resolver);
+        XMLScriptReader(XMLTreeResolver& resolver);
 
         virtual NPacket* packet() override;
         virtual NXMLElementReader* startContentSubElement(
@@ -134,7 +134,7 @@ class REGINA_API NXMLScriptReader : public NXMLPacketReader {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NXMLTextReader : public NXMLPacketReader {
+class REGINA_API XMLTextReader : public XMLPacketReader {
     private:
         NText* text;
             /**< The text packet currently being read. */
@@ -146,7 +146,7 @@ class REGINA_API NXMLTextReader : public NXMLPacketReader {
          * @param resolver the master resolver that will be used to fix
          * dangling packet references after the entire XML file has been read.
          */
-        NXMLTextReader(NXMLTreeResolver& resolver);
+        XMLTextReader(XMLTreeResolver& resolver);
 
         virtual NPacket* packet() override;
         virtual NXMLElementReader* startContentSubElement(
@@ -158,47 +158,47 @@ class REGINA_API NXMLTextReader : public NXMLPacketReader {
 
 /*@}*/
 
-// Inline functions for NXMLContainerReader
+// Inline functions for XMLContainerReader
 
-inline NXMLContainerReader::NXMLContainerReader(NXMLTreeResolver& resolver) :
-        NXMLPacketReader(resolver), container(new NContainer()) {
+inline XMLContainerReader::XMLContainerReader(XMLTreeResolver& resolver) :
+        XMLPacketReader(resolver), container(new NContainer()) {
 }
 
-inline NPacket* NXMLContainerReader::packet() {
+inline NPacket* XMLContainerReader::packet() {
     return container;
 }
 
-// Inline functions for NXMLPDFReader
+// Inline functions for XMLPDFReader
 
-inline NXMLPDFReader::NXMLPDFReader(NXMLTreeResolver& resolver) :
-        NXMLPacketReader(resolver), pdf(new NPDF()) {
+inline XMLPDFReader::XMLPDFReader(XMLTreeResolver& resolver) :
+        XMLPacketReader(resolver), pdf(new NPDF()) {
 }
 
-inline NPacket* NXMLPDFReader::packet() {
+inline NPacket* XMLPDFReader::packet() {
     return pdf;
 }
 
-// Inline functions for NXMLScriptReader
+// Inline functions for XMLScriptReader
 
-inline NXMLScriptReader::NXMLScriptReader(NXMLTreeResolver& resolver) :
-        NXMLPacketReader(resolver), script(new NScript()) {
+inline XMLScriptReader::XMLScriptReader(XMLTreeResolver& resolver) :
+        XMLPacketReader(resolver), script(new NScript()) {
 }
 
-inline NPacket* NXMLScriptReader::packet() {
+inline NPacket* XMLScriptReader::packet() {
     return script;
 }
 
-// Inline functions for NXMLTextReader
+// Inline functions for XMLTextReader
 
-inline NXMLTextReader::NXMLTextReader(NXMLTreeResolver& resolver) :
-        NXMLPacketReader(resolver), text(new NText()) {
+inline XMLTextReader::XMLTextReader(XMLTreeResolver& resolver) :
+        XMLPacketReader(resolver), text(new NText()) {
 }
 
-inline NPacket* NXMLTextReader::packet() {
+inline NPacket* XMLTextReader::packet() {
     return text;
 }
 
-inline NXMLElementReader* NXMLTextReader::startContentSubElement(
+inline NXMLElementReader* XMLTextReader::startContentSubElement(
         const std::string& subTagName, const regina::xml::XMLPropertyDict&) {
     if (subTagName == "text")
         return new NXMLCharsReader();
@@ -206,7 +206,7 @@ inline NXMLElementReader* NXMLTextReader::startContentSubElement(
         return new NXMLElementReader();
 }
 
-inline void NXMLTextReader::endContentSubElement(const std::string& subTagName,
+inline void XMLTextReader::endContentSubElement(const std::string& subTagName,
         NXMLElementReader* subReader) {
     if (subTagName == "text")
         text->setText(dynamic_cast<NXMLCharsReader*>(subReader)->chars());

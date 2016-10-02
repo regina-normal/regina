@@ -47,7 +47,7 @@
 
 namespace regina {
 
-class NXMLPacketReader;
+class XMLPacketReader;
 class NScript;
 
 /**
@@ -244,8 +244,8 @@ class REGINA_API NScript : public NPacket, public NPacketListener {
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
-        static NXMLPacketReader* xmlReader(NPacket* parent,
-            NXMLTreeResolver& resolver);
+        static XMLPacketReader* xmlReader(NPacket* parent,
+            XMLTreeResolver& resolver);
         virtual bool dependsOnParent() const;
 
         virtual void packetWasRenamed(NPacket* packet);

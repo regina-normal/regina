@@ -69,7 +69,7 @@ class REGINA_API XMLTriangulationReader<4> :
          * @param resolver the master resolver that will be used to fix
          * dangling packet references after the entire XML file has been read.
          */
-        XMLTriangulationReader(NXMLTreeResolver& resolver);
+        XMLTriangulationReader(XMLTreeResolver& resolver);
 
         /**
          * Returns an XML element reader for the given optional property of a
@@ -105,7 +105,7 @@ typedef XMLTriangulationReader<4> NXMLDim4TriangulationReader;
 // Inline functions for XMLTriangulationReader<4>
 
 inline XMLTriangulationReader<4>::XMLTriangulationReader(
-        NXMLTreeResolver& resolver) :
+        XMLTreeResolver& resolver) :
         detail::XMLTriangulationReaderBase<4>(resolver) {
 }
 

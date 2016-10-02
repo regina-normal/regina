@@ -344,10 +344,10 @@
 		052F9F5C180600FB00FAE4DF /* nscript.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D06180600FA00FAE4DF /* nscript.h */; };
 		052F9F5D180600FB00FAE4DF /* ntext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D07180600FA00FAE4DF /* ntext.cpp */; };
 		052F9F5E180600FB00FAE4DF /* ntext.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D08180600FA00FAE4DF /* ntext.h */; };
-		052F9F5F180600FB00FAE4DF /* nxmlpacketreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D09180600FA00FAE4DF /* nxmlpacketreader.cpp */; };
-		052F9F60180600FB00FAE4DF /* nxmlpacketreader.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D0A180600FA00FAE4DF /* nxmlpacketreader.h */; };
-		052F9F61180600FB00FAE4DF /* nxmlpacketreaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D0B180600FA00FAE4DF /* nxmlpacketreaders.cpp */; };
-		052F9F62180600FB00FAE4DF /* nxmlpacketreaders.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D0C180600FA00FAE4DF /* nxmlpacketreaders.h */; };
+		052F9F5F180600FB00FAE4DF /* xmlpacketreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D09180600FA00FAE4DF /* xmlpacketreader.cpp */; };
+		052F9F60180600FB00FAE4DF /* xmlpacketreader.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D0A180600FA00FAE4DF /* xmlpacketreader.h */; };
+		052F9F61180600FB00FAE4DF /* xmlpacketreaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D0B180600FA00FAE4DF /* xmlpacketreaders.cpp */; };
+		052F9F62180600FB00FAE4DF /* xmlpacketreaders.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D0C180600FA00FAE4DF /* xmlpacketreaders.h */; };
 		052F9F63180600FB00FAE4DF /* packetregistry.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D0D180600FA00FAE4DF /* packetregistry.h */; };
 		052F9F66180600FB00FAE4DF /* progresstracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D12180600FA00FAE4DF /* progresstracker.h */; };
 		052F9F69180600FB00FAE4DF /* regina-core.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D17180600FA00FAE4DF /* regina-core.h */; };
@@ -678,8 +678,8 @@
 		052FA1A91806129B00FAE4DF /* npdf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D03180600FA00FAE4DF /* npdf.cpp */; };
 		052FA1AA1806129B00FAE4DF /* nscript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D05180600FA00FAE4DF /* nscript.cpp */; };
 		052FA1AB1806129B00FAE4DF /* ntext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D07180600FA00FAE4DF /* ntext.cpp */; };
-		052FA1AC1806129B00FAE4DF /* nxmlpacketreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D09180600FA00FAE4DF /* nxmlpacketreader.cpp */; };
-		052FA1AD1806129B00FAE4DF /* nxmlpacketreaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D0B180600FA00FAE4DF /* nxmlpacketreaders.cpp */; };
+		052FA1AC1806129B00FAE4DF /* xmlpacketreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D09180600FA00FAE4DF /* xmlpacketreader.cpp */; };
+		052FA1AD1806129B00FAE4DF /* xmlpacketreaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D0B180600FA00FAE4DF /* xmlpacketreaders.cpp */; };
 		052FA1B01806129B00FAE4DF /* nsnappeatriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D92180600FB00FAE4DF /* nsnappeatriangulation.cpp */; };
 		052FA1B11806129B00FAE4DF /* uimessages.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D99180600FB00FAE4DF /* uimessages.cpp */; };
 		052FA1B21806129B00FAE4DF /* nsigcensus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D9C180600FB00FAE4DF /* nsigcensus.cpp */; };
@@ -1408,7 +1408,7 @@
 		05A73CA519B2EF5A0099C617 /* Moebius_transformations.c in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C9619B2EF5A0099C617 /* Moebius_transformations.c */; };
 		05A73CA619B2EF5A0099C617 /* sl2c_matrices.c in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C9719B2EF5A0099C617 /* sl2c_matrices.c */; };
 		05A73CA719B2EF5A0099C617 /* sl2c_matrices.c in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C9719B2EF5A0099C617 /* sl2c_matrices.c */; };
-		05A73CAC19B2EFF90099C617 /* nxmltreeresolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 05A73CAA19B2EFF90099C617 /* nxmltreeresolver.h */; };
+		05A73CAC19B2EFF90099C617 /* xmltreeresolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 05A73CAA19B2EFF90099C617 /* xmltreeresolver.h */; };
 		05A73CAD19B2EFF90099C617 /* open.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CAB19B2EFF90099C617 /* open.cpp */; };
 		05A73CAE19B2EFF90099C617 /* open.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CAB19B2EFF90099C617 /* open.cpp */; };
 		05A73CBA19B2F14B0099C617 /* ngrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CB819B2F14B0099C617 /* ngrouppresentation.cpp */; };
@@ -2296,10 +2296,10 @@
 		052F9D06180600FA00FAE4DF /* nscript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nscript.h; sourceTree = "<group>"; };
 		052F9D07180600FA00FAE4DF /* ntext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ntext.cpp; sourceTree = "<group>"; };
 		052F9D08180600FA00FAE4DF /* ntext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntext.h; sourceTree = "<group>"; };
-		052F9D09180600FA00FAE4DF /* nxmlpacketreader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nxmlpacketreader.cpp; sourceTree = "<group>"; };
-		052F9D0A180600FA00FAE4DF /* nxmlpacketreader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nxmlpacketreader.h; sourceTree = "<group>"; };
-		052F9D0B180600FA00FAE4DF /* nxmlpacketreaders.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nxmlpacketreaders.cpp; sourceTree = "<group>"; };
-		052F9D0C180600FA00FAE4DF /* nxmlpacketreaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nxmlpacketreaders.h; sourceTree = "<group>"; };
+		052F9D09180600FA00FAE4DF /* xmlpacketreader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlpacketreader.cpp; sourceTree = "<group>"; };
+		052F9D0A180600FA00FAE4DF /* xmlpacketreader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlpacketreader.h; sourceTree = "<group>"; };
+		052F9D0B180600FA00FAE4DF /* xmlpacketreaders.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlpacketreaders.cpp; sourceTree = "<group>"; };
+		052F9D0C180600FA00FAE4DF /* xmlpacketreaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlpacketreaders.h; sourceTree = "<group>"; };
 		052F9D0D180600FA00FAE4DF /* packetregistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packetregistry.h; sourceTree = "<group>"; };
 		052F9D0F180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052F9D12180600FA00FAE4DF /* progresstracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = progresstracker.h; sourceTree = "<group>"; };
@@ -3286,7 +3286,7 @@
 		05A73C9719B2EF5A0099C617 /* sl2c_matrices.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = sl2c_matrices.c; sourceTree = "<group>"; };
 		05A73C9819B2EF5A0099C617 /* sync_with_snappy.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = sync_with_snappy.sh; sourceTree = "<group>"; };
 		05A73C9919B2EF5A0099C617 /* regina.patch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = regina.patch; sourceTree = "<group>"; };
-		05A73CAA19B2EFF90099C617 /* nxmltreeresolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nxmltreeresolver.h; sourceTree = "<group>"; };
+		05A73CAA19B2EFF90099C617 /* xmltreeresolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltreeresolver.h; sourceTree = "<group>"; };
 		05A73CAB19B2EFF90099C617 /* open.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = open.cpp; sourceTree = "<group>"; };
 		05A73CB419B2F1280099C617 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		05A73CB519B2F1280099C617 /* generictriangulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = generictriangulation.h; sourceTree = "<group>"; };
@@ -4414,15 +4414,15 @@
 				052F9D06180600FA00FAE4DF /* nscript.h */,
 				052F9D07180600FA00FAE4DF /* ntext.cpp */,
 				052F9D08180600FA00FAE4DF /* ntext.h */,
-				052F9D09180600FA00FAE4DF /* nxmlpacketreader.cpp */,
-				052F9D0A180600FA00FAE4DF /* nxmlpacketreader.h */,
-				052F9D0B180600FA00FAE4DF /* nxmlpacketreaders.cpp */,
-				052F9D0C180600FA00FAE4DF /* nxmlpacketreaders.h */,
-				05A73CAA19B2EFF90099C617 /* nxmltreeresolver.h */,
 				05A73CAB19B2EFF90099C617 /* open.cpp */,
 				0588F1161808D43B006BDC79 /* packetregistry-impl.h */,
 				052F9D0D180600FA00FAE4DF /* packetregistry.h */,
 				0588F1171808D43B006BDC79 /* packettype.h */,
+				052F9D09180600FA00FAE4DF /* xmlpacketreader.cpp */,
+				052F9D0A180600FA00FAE4DF /* xmlpacketreader.h */,
+				052F9D0B180600FA00FAE4DF /* xmlpacketreaders.cpp */,
+				052F9D0C180600FA00FAE4DF /* xmlpacketreaders.h */,
+				05A73CAA19B2EFF90099C617 /* xmltreeresolver.h */,
 			);
 			path = packet;
 			sourceTree = "<group>";
@@ -6110,7 +6110,7 @@
 				052F9EC7180600FB00FAE4DF /* nhilbertcd.h in Headers */,
 				05431F231C40F260009BC072 /* facenumbering.h in Headers */,
 				052F9FDC180600FB00FAE4DF /* nsnappeatriangulation.h in Headers */,
-				052F9F60180600FB00FAE4DF /* nxmlpacketreader.h in Headers */,
+				052F9F60180600FB00FAE4DF /* xmlpacketreader.h in Headers */,
 				050C646C1DA1019B00C9420F /* anglestructures.h in Headers */,
 				052FA05E180600FB00FAE4DF /* nboundarycomponent.h in Headers */,
 				05431F021C40F1F6009BC072 /* simplex.h in Headers */,
@@ -6137,7 +6137,7 @@
 				052FA00B180600FB00FAE4DF /* nsatblockstarter.h in Headers */,
 				052F9F66180600FB00FAE4DF /* progresstracker.h in Headers */,
 				052FA02C180600FB00FAE4DF /* ndisctype.h in Headers */,
-				05A73CAC19B2EFF90099C617 /* nxmltreeresolver.h in Headers */,
+				05A73CAC19B2EFF90099C617 /* xmltreeresolver.h in Headers */,
 				05FEA07C19C1890900A31924 /* examplesnappea.h in Headers */,
 				052FA036180600FB00FAE4DF /* nprism.h in Headers */,
 				052FA015180600FB00FAE4DF /* nsnappedtwosphere.h in Headers */,
@@ -6181,7 +6181,7 @@
 				052FA032180600FB00FAE4DF /* normalflags.h in Headers */,
 				052F9FE7180600FB00FAE4DF /* naugtrisolidtorus.h in Headers */,
 				05431F7B1C40F3C9009BC072 /* my_omp.h in Headers */,
-				052F9F62180600FB00FAE4DF /* nxmlpacketreaders.h in Headers */,
+				052F9F62180600FB00FAE4DF /* xmlpacketreaders.h in Headers */,
 				052FA08E180600FB00FAE4DF /* nlistoncall.h in Headers */,
 				052FA00D180600FB00FAE4DF /* nsatblocktypes.h in Headers */,
 				052942D21C5CDC8B0011C1E6 /* safepointeebase.h in Headers */,
@@ -7008,7 +7008,7 @@
 				052FA1A01806129B00FAE4DF /* nperm5.cpp in Sources */,
 				05431F381C40F369009BC072 /* retriangulate.cpp in Sources */,
 				052FA1361806103000FAE4DF /* main.m in Sources */,
-				052FA1AD1806129B00FAE4DF /* nxmlpacketreaders.cpp in Sources */,
+				052FA1AD1806129B00FAE4DF /* xmlpacketreaders.cpp in Sources */,
 				052FA233180612DD00FAE4DF /* simplify_triangulation.c in Sources */,
 				0591E8601C50D28D00793A9C /* enumerate.cpp in Sources */,
 				052FA1D01806129B00FAE4DF /* ntrivialtri.cpp in Sources */,
@@ -7233,7 +7233,7 @@
 				05C0646E1C56C9E0006E6483 /* Dim4TriAlgebra.mm in Sources */,
 				05431F301C40F2E4009BC072 /* nperm2.cpp in Sources */,
 				05B7708719CA4FF100E2E558 /* FilterViewController.mm in Sources */,
-				052FA1AC1806129B00FAE4DF /* nxmlpacketreader.cpp in Sources */,
+				052FA1AC1806129B00FAE4DF /* xmlpacketreader.cpp in Sources */,
 				0591E7C81C4F74E100793A9C /* skeleton.cpp in Sources */,
 				057F317419B8935800D30520 /* Example.mm in Sources */,
 				052FA1991806129B00FAE4DF /* order.cpp in Sources */,
@@ -7635,7 +7635,7 @@
 				053ED8121D8B836C00628652 /* snappy_get_gluing_equations.c in Sources */,
 				052FA006180600FB00FAE4DF /* nsatannulus.cpp in Sources */,
 				052FA07B180600FB00FAE4DF /* reorder.cpp in Sources */,
-				052F9F61180600FB00FAE4DF /* nxmlpacketreaders.cpp in Sources */,
+				052F9F61180600FB00FAE4DF /* xmlpacketreaders.cpp in Sources */,
 				055B7315181D7CF800449D14 /* dim2vertex.cpp in Sources */,
 				052F9EBA180600FB00FAE4DF /* nxmldim2trireader.cpp in Sources */,
 				0591E7E01C4F750200793A9C /* nnormalhypersurface.cpp in Sources */,
@@ -7676,7 +7676,7 @@
 				052FA080180600FB00FAE4DF /* surfaces.cpp in Sources */,
 				05431F8A1C40F40D009BC072 /* HilbertSeries.cpp in Sources */,
 				052FA062180600FB00FAE4DF /* nexampletriangulation.cpp in Sources */,
-				052F9F5F180600FB00FAE4DF /* nxmlpacketreader.cpp in Sources */,
+				052F9F5F180600FB00FAE4DF /* xmlpacketreader.cpp in Sources */,
 				052FA020180600FB00FAE4DF /* components.cpp in Sources */,
 				052FA035180600FB00FAE4DF /* nprism.cpp in Sources */,
 				052FA060180600FB00FAE4DF /* nedge.cpp in Sources */,

@@ -165,8 +165,8 @@ void NXMLNormalSurfaceListReader::endContentSubElement(
                 list->surfaces.push_back(s);
 }
 
-NXMLPacketReader* NNormalSurfaceList::xmlReader(NPacket* parent,
-        NXMLTreeResolver& resolver) {
+XMLPacketReader* NNormalSurfaceList::xmlReader(NPacket* parent,
+        XMLTreeResolver& resolver) {
     return new NXMLNormalSurfaceListReader(
         dynamic_cast<NTriangulation*>(parent), resolver);
 }

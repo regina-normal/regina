@@ -30,8 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
-#include "packet/nxmlpacketreaders.h"
-#include "packet/nxmltreeresolver.h"
+#include "packet/xmlpacketreaders.h"
+#include "packet/xmltreeresolver.h"
 #include "utilities/base64.h"
 #include <cctype>
 #include <string>
@@ -75,7 +75,7 @@ namespace {
      * A resolution task that, after the entire XML file has been read,
      * will bind a script variable to its corresponding packet reference.
      */
-    class VariableResolutionTask : public NXMLTreeResolutionTask {
+    class VariableResolutionTask : public XMLTreeResolutionTask {
         private:
             NScript* script_;
             std::string name_;
@@ -93,10 +93,10 @@ namespace {
                     valueLabel_(valueLabel) {
             }
 
-            inline void resolve(const NXMLTreeResolver& resolver) {
+            inline void resolve(const XMLTreeResolver& resolver) {
                 NPacket* resolution = 0;
                 if (! valueID_.empty()) {
-                    NXMLTreeResolver::IDMap::const_iterator it =
+                    XMLTreeResolver::IDMap::const_iterator it =
                         resolver.ids().find(valueID_);
                     resolution = (it == resolver.ids().end() ? 0 : it->second);
                 }
@@ -108,7 +108,7 @@ namespace {
     };
 }
 
-NXMLElementReader* NXMLPDFReader::startContentSubElement(
+NXMLElementReader* XMLPDFReader::startContentSubElement(
         const std::string& subTagName, const regina::xml::XMLPropertyDict&) {
     if (subTagName == "pdf")
         return new NXMLCharsReader();
@@ -116,7 +116,7 @@ NXMLElementReader* NXMLPDFReader::startContentSubElement(
         return new NXMLElementReader();
 }
 
-void NXMLPDFReader::endContentSubElement(const std::string& subTagName,
+void XMLPDFReader::endContentSubElement(const std::string& subTagName,
         NXMLElementReader* subReader) {
     if (subTagName == "pdf") {
         std::string base64 = dynamic_cast<NXMLCharsReader*>(subReader)->
@@ -153,7 +153,7 @@ void NXMLPDFReader::endContentSubElement(const std::string& subTagName,
     }
 }
 
-NXMLElementReader* NXMLScriptReader::startContentSubElement(
+NXMLElementReader* XMLScriptReader::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict&) {
     if (subTagName == "text")
@@ -166,7 +166,7 @@ NXMLElementReader* NXMLScriptReader::startContentSubElement(
         return new NXMLElementReader();
 }
 
-void NXMLScriptReader::endContentSubElement(const std::string& subTagName,
+void XMLScriptReader::endContentSubElement(const std::string& subTagName,
         NXMLElementReader* subReader) {
     if (subTagName == "text")
         script->setText(dynamic_cast<NXMLCharsReader*>(subReader)->chars());
@@ -182,21 +182,21 @@ void NXMLScriptReader::endContentSubElement(const std::string& subTagName,
     }
 }
 
-NXMLPacketReader* NContainer::xmlReader(NPacket*,
-        NXMLTreeResolver& resolver) {
-    return new NXMLContainerReader(resolver);
+XMLPacketReader* NContainer::xmlReader(NPacket*,
+        XMLTreeResolver& resolver) {
+    return new XMLContainerReader(resolver);
 }
 
-NXMLPacketReader* NPDF::xmlReader(NPacket*, NXMLTreeResolver& resolver) {
-    return new NXMLPDFReader(resolver);
+XMLPacketReader* NPDF::xmlReader(NPacket*, XMLTreeResolver& resolver) {
+    return new XMLPDFReader(resolver);
 }
 
-NXMLPacketReader* NScript::xmlReader(NPacket*, NXMLTreeResolver& resolver) {
-    return new NXMLScriptReader(resolver);
+XMLPacketReader* NScript::xmlReader(NPacket*, XMLTreeResolver& resolver) {
+    return new XMLScriptReader(resolver);
 }
 
-NXMLPacketReader* NText::xmlReader(NPacket*, NXMLTreeResolver& resolver) {
-    return new NXMLTextReader(resolver);
+XMLPacketReader* NText::xmlReader(NPacket*, XMLTreeResolver& resolver) {
+    return new XMLTextReader(resolver);
 }
 
 } // namespace regina

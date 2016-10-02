@@ -41,7 +41,7 @@
 
 #include "regina-core.h"
 #include "hypersurface/nnormalhypersurfacelist.h"
-#include "packet/nxmlpacketreader.h"
+#include "packet/xmlpacketreader.h"
 
 namespace regina {
 
@@ -104,7 +104,7 @@ class REGINA_API NXMLNormalHypersurfaceReader : public NXMLElementReader {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NXMLNormalHypersurfaceListReader : public NXMLPacketReader {
+class REGINA_API NXMLNormalHypersurfaceListReader : public XMLPacketReader {
     private:
         NNormalHypersurfaceList* list_;
             /**< The normal hypersurface list currently being read. */
@@ -121,7 +121,7 @@ class REGINA_API NXMLNormalHypersurfaceListReader : public NXMLPacketReader {
          * dangling packet references after the entire XML file has been read.
          */
         NXMLNormalHypersurfaceListReader(const Dim4Triangulation* tri,
-            NXMLTreeResolver& resolver);
+            XMLTreeResolver& resolver);
 
         virtual NPacket* packet() override;
         virtual NXMLElementReader* startContentSubElement(
@@ -147,8 +147,8 @@ inline NNormalHypersurface* NXMLNormalHypersurfaceReader::hypersurface() {
 // Inline functions for NXMLNormalHypersurfaceListReader
 
 inline NXMLNormalHypersurfaceListReader::NXMLNormalHypersurfaceListReader(
-        const Dim4Triangulation* tri, NXMLTreeResolver& resolver) :
-        NXMLPacketReader(resolver), list_(0), tri_(tri) {
+        const Dim4Triangulation* tri, XMLTreeResolver& resolver) :
+        XMLPacketReader(resolver), list_(0), tri_(tri) {
 }
 
 inline NPacket* NXMLNormalHypersurfaceListReader::packet() {
