@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file packet/npdf.h
+/*! \file packet/pdf.h
  *  \brief A packet that contains a PDF document.
  */
 
