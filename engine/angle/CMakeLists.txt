@@ -17,6 +17,8 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     anglestructure.h
     anglestructures.h
+    nanglestructure.h
+    nanglestructurelist.h
     nxmlanglestructreader.h
     DESTINATION ${INCLUDEDIR}/angle COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})
