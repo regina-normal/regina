@@ -33,7 +33,7 @@
 void addFileInfo();
 void addGlobalDirs();
 
-void addFile() {
+void addFileClasses() {
     addFileInfo();
     addGlobalDirs();
 }

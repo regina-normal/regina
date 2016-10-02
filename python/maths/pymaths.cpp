@@ -46,7 +46,7 @@ void addNPrimes();
 void addNRational();
 void addNumberTheory();
 
-void addMaths() {
+void addMathsClasses() {
     addMatrixOps();
     addNCyclotomic();
     addNInteger();

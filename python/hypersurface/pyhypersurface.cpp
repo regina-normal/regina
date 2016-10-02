@@ -35,7 +35,7 @@ void addHyperFlags();
 void addNNormalHypersurface();
 void addNNormalHypersurfaceList();
 
-void addHypersurface() {
+void addHypersurfaceClasses() {
     addHyperCoords();
     addHyperFlags();
     addNNormalHypersurface();

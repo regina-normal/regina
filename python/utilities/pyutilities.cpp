@@ -36,7 +36,7 @@ void addNBoolSet();
 void addOSUtils();
 void addStringUtils();
 
-void addUtilities() {
+void addUtilitiesClasses() {
     addIntUtils();
     addLocale();
     addNBoolSet();

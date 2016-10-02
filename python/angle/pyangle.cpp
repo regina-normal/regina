@@ -33,7 +33,7 @@
 void addAngleStructure();
 void addAngleStructures();
 
-void addAngle() {
+void addAngleClasses() {
     addAngleStructure();
     addAngleStructures();
 }

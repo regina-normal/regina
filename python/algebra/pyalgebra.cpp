@@ -35,7 +35,7 @@ void addNGroupPresentation();
 void addNHomGroupPresentation();
 void addNMarkedAbelianGroup();
 
-void addAlgebra() {
+void addAlgebraClasses() {
     addNAbelianGroup();
     addNGroupPresentation();
     addNHomGroupPresentation();

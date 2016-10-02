@@ -59,7 +59,7 @@ void addNTriSolidTorus();
 void addNTrivialTri();
 void addNTxICore();
 
-void addSubcomplex() {
+void addSubcomplexClasses() {
     addNStandardTriangulation();
     addNAugTriSolidTorus();
     addNL31Pillow();

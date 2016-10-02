@@ -33,7 +33,7 @@
 void addExampleSnapPea();
 void addNSnapPeaTriangulation();
 
-void addSnapPea() {
+void addSnapPeaClasses() {
     addExampleSnapPea();
     addNSnapPeaTriangulation();
 }

@@ -101,7 +101,7 @@ void addTriangulations13();
 void addTriangulations14();
 void addTriangulations15();
 
-void addGeneric() {
+void addGenericClasses() {
     addFacetSpec();
     addComponent5();
     addComponent6();

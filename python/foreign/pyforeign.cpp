@@ -34,7 +34,7 @@ void addForeignDehydration();
 void addForeignIsoSig();
 void addForeignOrb();
 
-void addForeign() {
+void addForeignClasses() {
     addForeignDehydration();
     addForeignIsoSig();
     addForeignOrb();

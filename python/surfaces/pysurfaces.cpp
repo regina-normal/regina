@@ -43,7 +43,7 @@ void addNSurfaceFilterProperties();
 void addNSurfaceSubset();
 void addSurfaceFilterType();
 
-void addSurfaces() {
+void addSurfacesClasses() {
     // Enum types must go first.
     addNormalCoords();
     addSurfaceFilterType();

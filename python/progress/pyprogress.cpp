@@ -32,7 +32,7 @@
 
 void addProgressTracker();
 
-void addProgress() {
+void addProgressClasses() {
     addProgressTracker();
 }
 

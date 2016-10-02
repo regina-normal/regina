@@ -37,7 +37,7 @@ void addScript();
 void addText();
 void addPacketType();
 
-void addPacket() {
+void addPacketClasses() {
     // Enums must come first.
     addPacketType();
 

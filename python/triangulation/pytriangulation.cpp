@@ -43,7 +43,7 @@ void addNTriangle();
 void addNTriangulation();
 void addNVertex();
 
-void addTriangulation() {
+void addTriangulationClasses() {
     addNBoundaryComponent();
     addNComponent();
     addNEdge();
