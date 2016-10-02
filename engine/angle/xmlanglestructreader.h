@@ -117,7 +117,7 @@ class REGINA_API XMLAngleStructuresReader : public XMLPacketReader {
         XMLAngleStructuresReader(NTriangulation* newTri,
             XMLTreeResolver& resolver);
 
-        virtual NPacket* packet() override;
+        virtual Packet* packet() override;
         virtual NXMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
@@ -145,7 +145,7 @@ inline XMLAngleStructuresReader::XMLAngleStructuresReader(
         list(new AngleStructures(false)), tri(newTri) {
 }
 
-inline NPacket* XMLAngleStructuresReader::packet() {
+inline Packet* XMLAngleStructuresReader::packet() {
     return list;
 }
 

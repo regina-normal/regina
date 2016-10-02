@@ -43,7 +43,7 @@ class QAbstractButton;
 class QLabel;
 
 namespace regina {
-    class NPacket;
+    class Packet;
     template <int> class Triangulation;
     typedef Triangulation<3> NTriangulation;
 };
@@ -103,7 +103,7 @@ class NTriSurfacesUI : public QObject, public PacketViewerTab {
         /**
          * PacketViewerTab overrides.
          */
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         QWidget* getInterface();
         void refresh();
 

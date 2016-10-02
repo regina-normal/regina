@@ -57,7 +57,7 @@
 // We will be more conservative here.
 #define MAX_CENSUS_TRIANGULATION_SIZE 50
 
-using regina::NPacket;
+using regina::Packet;
 using regina::NTriangulation;
 
 NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
@@ -310,7 +310,7 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
         this, SLOT(updatePreferences()));
 }
 
-regina::NPacket* NTriSurfacesUI::getPacket() {
+regina::Packet* NTriSurfacesUI::getPacket() {
     return tri;
 }
 

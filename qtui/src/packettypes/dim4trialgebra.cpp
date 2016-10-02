@@ -46,7 +46,7 @@
 #include <QLayout>
 
 using regina::Dim4Triangulation;
-using regina::NPacket;
+using regina::Packet;
 
 Dim4TriAlgebraUI::Dim4TriAlgebraUI(regina::Dim4Triangulation* packet,
         PacketTabbedUI* useParentUI) :
@@ -118,7 +118,7 @@ Dim4TriHomologyFundUI::Dim4TriHomologyFundUI(regina::Dim4Triangulation* packet,
         this, SLOT(updatePreferences()));
 }
 
-regina::NPacket* Dim4TriHomologyFundUI::getPacket() {
+regina::Packet* Dim4TriHomologyFundUI::getPacket() {
     return tri;
 }
 

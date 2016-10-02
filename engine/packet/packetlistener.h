@@ -44,7 +44,7 @@
 
 namespace regina {
 
-class NPacket;
+class Packet;
 
 /**
  * \weakgroup packet
@@ -55,7 +55,7 @@ class NPacket;
  * An object that can be registered to listen for packet events.
  *
  * A packet listener can be registered to listen for events on a
- * packet by calling NPacket::listen().
+ * packet by calling Packet::listen().
  *
  * Each time that one of the events listed in this class occurs,
  * the packet will call the appropriate routine for all registered
@@ -97,7 +97,7 @@ class NPacket;
  */
 class REGINA_API PacketListener {
     private:
-        std::set<NPacket*> packets;
+        std::set<Packet*> packets;
             /**< The set of packets upon which this object is currently
                  listening. */
 
@@ -134,7 +134,7 @@ class REGINA_API PacketListener {
          *
          * @param packet the packet being listened to.
          */
-        virtual void packetToBeChanged(NPacket* packet);
+        virtual void packetToBeChanged(Packet* packet);
         /**
          * Called after the contents of the packet have been changed.
          * Before the contents are changed, packetToBeChanged() will be
@@ -144,7 +144,7 @@ class REGINA_API PacketListener {
          *
          * @param packet the packet being listened to.
          */
-        virtual void packetWasChanged(NPacket* packet);
+        virtual void packetWasChanged(Packet* packet);
         /**
          * Called before the packet label or tags are to be changed.
          * Once the label or tags are changed, packetWasRenamed() will be
@@ -155,7 +155,7 @@ class REGINA_API PacketListener {
          * @param packet the packet being listened to.
          * @see childToBeRenamed()
          */
-        virtual void packetToBeRenamed(NPacket* packet);
+        virtual void packetToBeRenamed(Packet* packet);
         /**
          * Called after the packet label or tags have been changed.
          * Before the label or tags are changed, packetToBeRenamed() will be
@@ -166,7 +166,7 @@ class REGINA_API PacketListener {
          * @param packet the packet being listened to.
          * @see childWasRenamed()
          */
-        virtual void packetWasRenamed(NPacket* packet);
+        virtual void packetWasRenamed(Packet* packet);
         /**
          * Called before the packet is about to be destroyed.  Note that
          * there is no matching function called \e after the
@@ -189,7 +189,7 @@ class REGINA_API PacketListener {
          *
          * @param packet the packet being listened to.
          */
-        virtual void packetToBeDestroyed(NPacket* packet);
+        virtual void packetToBeDestroyed(Packet* packet);
         /**
          * Called before a child packet is to be inserted directly beneath
          * the packet.
@@ -201,7 +201,7 @@ class REGINA_API PacketListener {
          * @param packet the packet being listened to.
          * @param child the child packet to be added.
          */
-        virtual void childToBeAdded(NPacket* packet, NPacket* child);
+        virtual void childToBeAdded(Packet* packet, Packet* child);
         /**
          * Called after a child packet has been inserted directly beneath
          * the packet.
@@ -213,7 +213,7 @@ class REGINA_API PacketListener {
          * @param packet the packet being listened to.
          * @param child the child packet that was added.
          */
-        virtual void childWasAdded(NPacket* packet, NPacket* child);
+        virtual void childWasAdded(Packet* packet, Packet* child);
         /**
          * Called before a child packet is to be removed from directly beneath
          * the packet.  Note that the child packet may be about to be
@@ -235,7 +235,7 @@ class REGINA_API PacketListener {
          * is in fact being destroyed, and the child was simply removed
          * as part of the standard subtree destruction.
          */
-        virtual void childToBeRemoved(NPacket* packet, NPacket* child,
+        virtual void childToBeRemoved(Packet* packet, Packet* child,
             bool inParentDestructor);
         /**
          * Called after a child packet has been removed from directly beneath
@@ -258,7 +258,7 @@ class REGINA_API PacketListener {
          * is in fact being destroyed, and the child was simply removed
          * as part of the standard subtree destruction.
          */
-        virtual void childWasRemoved(NPacket* packet, NPacket* child,
+        virtual void childWasRemoved(Packet* packet, Packet* child,
             bool inParentDestructor);
         /**
          * Called before the child packets directly beneath the packet
@@ -270,7 +270,7 @@ class REGINA_API PacketListener {
          *
          * @param packet the packet being listened to.
          */
-        virtual void childrenToBeReordered(NPacket* packet);
+        virtual void childrenToBeReordered(Packet* packet);
 
         /**
          * Called after the child packets directly beneath the packet
@@ -282,7 +282,7 @@ class REGINA_API PacketListener {
          *
          * @param packet the packet being listened to.
          */
-        virtual void childrenWereReordered(NPacket* packet);
+        virtual void childrenWereReordered(Packet* packet);
         /**
          * Called before one of this packet's immediate children has its
          * label or tags changed.
@@ -294,7 +294,7 @@ class REGINA_API PacketListener {
          * @param child the child packet to be renamed.
          * @see packetToBeRenamed()
          */
-        virtual void childToBeRenamed(NPacket* packet, NPacket* child);
+        virtual void childToBeRenamed(Packet* packet, Packet* child);
         /**
          * Called after one of this packet's immediate children has its
          * label or tags changed.
@@ -306,7 +306,7 @@ class REGINA_API PacketListener {
          * @param child the child packet that was renamed.
          * @see packetWasRenamed()
          */
-        virtual void childWasRenamed(NPacket* packet, NPacket* child);
+        virtual void childWasRenamed(Packet* packet, Packet* child);
 
         /*@}*/
 
@@ -314,7 +314,7 @@ class REGINA_API PacketListener {
      * Allow packets to automatically deregister listeners as they are
      * destroyed.
      */
-    friend class NPacket;
+    friend class Packet;
 };
 
 /**
@@ -329,43 +329,43 @@ REGINA_DEPRECATED typedef PacketListener NPacketListener;
 
 // Inline functions for PacketListener
 
-inline void PacketListener::packetToBeChanged(NPacket*) {
+inline void PacketListener::packetToBeChanged(Packet*) {
 }
 
-inline void PacketListener::packetWasChanged(NPacket*) {
+inline void PacketListener::packetWasChanged(Packet*) {
 }
 
-inline void PacketListener::packetToBeRenamed(NPacket*) {
+inline void PacketListener::packetToBeRenamed(Packet*) {
 }
 
-inline void PacketListener::packetWasRenamed(NPacket*) {
+inline void PacketListener::packetWasRenamed(Packet*) {
 }
 
-inline void PacketListener::packetToBeDestroyed(NPacket*) {
+inline void PacketListener::packetToBeDestroyed(Packet*) {
 }
 
-inline void PacketListener::childToBeAdded(NPacket*, NPacket*) {
+inline void PacketListener::childToBeAdded(Packet*, Packet*) {
 }
 
-inline void PacketListener::childWasAdded(NPacket*, NPacket*) {
+inline void PacketListener::childWasAdded(Packet*, Packet*) {
 }
 
-inline void PacketListener::childToBeRemoved(NPacket*, NPacket*, bool) {
+inline void PacketListener::childToBeRemoved(Packet*, Packet*, bool) {
 }
 
-inline void PacketListener::childWasRemoved(NPacket*, NPacket*, bool) {
+inline void PacketListener::childWasRemoved(Packet*, Packet*, bool) {
 }
 
-inline void PacketListener::childrenToBeReordered(NPacket*) {
+inline void PacketListener::childrenToBeReordered(Packet*) {
 }
 
-inline void PacketListener::childrenWereReordered(NPacket*) {
+inline void PacketListener::childrenWereReordered(Packet*) {
 }
 
-inline void PacketListener::childToBeRenamed(NPacket*, NPacket*) {
+inline void PacketListener::childToBeRenamed(Packet*, Packet*) {
 }
 
-inline void PacketListener::childWasRenamed(NPacket*, NPacket*) {
+inline void PacketListener::childWasRenamed(Packet*, Packet*) {
 }
 
 } // namespace regina

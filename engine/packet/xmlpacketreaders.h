@@ -72,7 +72,7 @@ class REGINA_API XMLContainerReader : public XMLPacketReader {
          */
         XMLContainerReader(XMLTreeResolver& resolver);
 
-        virtual NPacket* packet() override;
+        virtual Packet* packet() override;
 };
 
 /**
@@ -94,7 +94,7 @@ class REGINA_API XMLPDFReader : public XMLPacketReader {
          */
         XMLPDFReader(XMLTreeResolver& resolver);
 
-        virtual NPacket* packet() override;
+        virtual Packet* packet() override;
         virtual NXMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
@@ -121,7 +121,7 @@ class REGINA_API XMLScriptReader : public XMLPacketReader {
          */
         XMLScriptReader(XMLTreeResolver& resolver);
 
-        virtual NPacket* packet() override;
+        virtual Packet* packet() override;
         virtual NXMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
@@ -148,7 +148,7 @@ class REGINA_API XMLTextReader : public XMLPacketReader {
          */
         XMLTextReader(XMLTreeResolver& resolver);
 
-        virtual NPacket* packet() override;
+        virtual Packet* packet() override;
         virtual NXMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
@@ -164,7 +164,7 @@ inline XMLContainerReader::XMLContainerReader(XMLTreeResolver& resolver) :
         XMLPacketReader(resolver), container(new Container()) {
 }
 
-inline NPacket* XMLContainerReader::packet() {
+inline Packet* XMLContainerReader::packet() {
     return container;
 }
 
@@ -174,7 +174,7 @@ inline XMLPDFReader::XMLPDFReader(XMLTreeResolver& resolver) :
         XMLPacketReader(resolver), pdf(new PDF()) {
 }
 
-inline NPacket* XMLPDFReader::packet() {
+inline Packet* XMLPDFReader::packet() {
     return pdf;
 }
 
@@ -184,7 +184,7 @@ inline XMLScriptReader::XMLScriptReader(XMLTreeResolver& resolver) :
         XMLPacketReader(resolver), script(new Script()) {
 }
 
-inline NPacket* XMLScriptReader::packet() {
+inline Packet* XMLScriptReader::packet() {
     return script;
 }
 
@@ -194,7 +194,7 @@ inline XMLTextReader::XMLTextReader(XMLTreeResolver& resolver) :
         XMLPacketReader(resolver), text(new Text()) {
 }
 
-inline NPacket* XMLTextReader::packet() {
+inline Packet* XMLTextReader::packet() {
     return text;
 }
 

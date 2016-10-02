@@ -52,7 +52,7 @@
 #include <QRegExp>
 #include <QToolBar>
 
-using regina::NPacket;
+using regina::Packet;
 using regina::Dim4Triangulation;
 
 namespace {
@@ -214,7 +214,7 @@ bool Dim4GluingsModel::setData(const QModelIndex& index, const QVariant& value,
         return false;
 
     // Yes!  Go ahead and make the change.
-    regina::NPacket::ChangeEventSpan span(tri_);
+    regina::Packet::ChangeEventSpan span(tri_);
 
     // First unglue from the old partner if it exists.
     if (p->adjacentSimplex(facet))
@@ -564,7 +564,7 @@ void Dim4TriGluingsUI::fillToolBar(QToolBar* bar) {
     bar->addAction(actOrient);
 }
 
-regina::NPacket* Dim4TriGluingsUI::getPacket() {
+regina::Packet* Dim4TriGluingsUI::getPacket() {
     return tri;
 }
 
@@ -651,7 +651,7 @@ void Dim4TriGluingsUI::removeSelectedPents() {
     if (first == 0 && last == tri->size() - 1)
         tri->removeAllSimplices();
     else {
-        regina::NPacket::ChangeEventSpan span(tri);
+        regina::Packet::ChangeEventSpan span(tri);
         for (int i = last; i >= first; --i)
             tri->removeSimplexAt(i);
     }
@@ -705,7 +705,7 @@ void Dim4TriGluingsUI::idealToFinite() {
             tr("This triangulation has no ideal vertices."),
             tr("Only ideal vertices can be truncated."));
     else {
-        regina::NPacket::ChangeEventSpan span(tri);
+        regina::Packet::ChangeEventSpan span(tri);
         tri->idealToFinite();
         tri->intelligentSimplify();
     }
@@ -720,7 +720,7 @@ void Dim4TriGluingsUI::finiteToIdeal() {
             tr("Only real boundary components will be converted into "
             "ideal vertices."));
     else {
-        regina::NPacket::ChangeEventSpan span(tri);
+        regina::Packet::ChangeEventSpan span(tri);
         tri->finiteToIdeal();
         tri->intelligentSimplify();
     }
@@ -811,7 +811,7 @@ void Dim4TriGluingsUI::splitIntoComponents() {
     else {
         // If there are already children of this triangulation, insert
         // the new triangulations at a deeper level.
-        NPacket* base;
+        Packet* base;
         if (tri->firstChild()) {
             base = new regina::Container();
             tri->insertChildLast(base);

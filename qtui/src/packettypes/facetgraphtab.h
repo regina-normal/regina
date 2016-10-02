@@ -51,7 +51,7 @@ class QStackedWidget;
 class QSvgWidget;
 
 namespace regina {
-    class NPacket;
+    class Packet;
 
     template <int> class Triangulation;
     typedef Triangulation<2> Dim2Triangulation;
@@ -67,7 +67,7 @@ class FacetGraphData {
     public:
         virtual ~FacetGraphData() {}
 
-        virtual regina::NPacket* getPacket() = 0;
+        virtual regina::Packet* getPacket() = 0;
         virtual std::string dual(bool withLabels) = 0;
         virtual std::string treeDecomp(bool nice, int& bags, int& width) = 0;
         virtual size_t numberOfSimplices() = 0;
@@ -84,7 +84,7 @@ class Dim2EdgeGraphData : public FacetGraphData {
     public:
         Dim2EdgeGraphData(regina::Dim2Triangulation* tri) : tri_(tri) {}
 
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         std::string dual(bool withLabels);
         std::string treeDecomp(bool nice, int& bags, int& width);
         size_t numberOfSimplices();
@@ -101,7 +101,7 @@ class Dim3FaceGraphData : public FacetGraphData {
     public:
         Dim3FaceGraphData(regina::NTriangulation* tri) : tri_(tri) {}
 
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         std::string dual(bool withLabels);
         std::string treeDecomp(bool nice, int& bags, int& width);
         size_t numberOfSimplices();
@@ -118,7 +118,7 @@ class Dim4FacetGraphData : public FacetGraphData {
     public:
         Dim4FacetGraphData(regina::Dim4Triangulation* tri) : tri_(tri) {}
 
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         std::string dual(bool withLabels);
         std::string treeDecomp(bool nice, int& bags, int& width);
         size_t numberOfSimplices();
@@ -172,7 +172,7 @@ class FacetGraphTab : public QObject, public PacketViewerTab {
         /**
          * PacketViewerTab overrides.
          */
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         QWidget* getInterface();
         void refresh();
 

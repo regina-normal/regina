@@ -53,7 +53,7 @@ class QSplitter;
 class QPlainTextEdit;
 
 namespace regina {
-    class NPacket;
+    class Packet;
     class Script;
 };
 
@@ -165,7 +165,7 @@ class ScriptUI : public QObject, public PacketUI {
         /**
          * PacketUI overrides.
          */
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         QWidget* getInterface();
         PacketEditIface* getEditIface();
         const QLinkedList<QAction*>& getPacketTypeActions();

@@ -278,10 +278,10 @@ struct FaceCalculator<dim, 0, 2> {
  * See the Triangulation class notes for further information.
  *
  * Note that this class does not derive from Output.  This is to avoid clashes
- * with the output code inherited from NPacket.  Specifically:
+ * with the output code inherited from Packet.  Specifically:
  *
- * - for those dimensions where Triangulation<dim> derives from NPacket, the
- *   output routines are inherited from NPacket (which derives from Output).
+ * - for those dimensions where Triangulation<dim> derives from Packet, the
+ *   output routines are inherited from Packet (which derives from Output).
  *
  * - for other dimensions, Triangulation<dim> derives from Output directly.
  *
@@ -825,7 +825,7 @@ class TriangulationBase :
          * they should be left without labels at all.
          * @return the number of new component triangulations constructed.
          */
-        size_t splitIntoComponents(NPacket* componentParent = 0,
+        size_t splitIntoComponents(Packet* componentParent = 0,
             bool setLabels = true);
 
         /*@}*/
@@ -2636,7 +2636,7 @@ bool TriangulationBase<dim>::finiteToIdeal() {
 }
 
 template <int dim>
-size_t TriangulationBase<dim>::splitIntoComponents(NPacket* componentParent,
+size_t TriangulationBase<dim>::splitIntoComponents(Packet* componentParent,
         bool setLabels) {
     // Knock off the empty triangulation first.
     if (simplices_.empty())

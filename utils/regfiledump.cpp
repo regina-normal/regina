@@ -32,10 +32,10 @@
 
 #include <cstdlib>
 #include <list>
-#include "packet/npacket.h"
+#include "packet/packet.h"
 #include "utilities/i18nutils.h"
 
-using regina::NPacket;
+using regina::Packet;
 
 typedef std::list<std::string> StringList;
 
@@ -77,7 +77,7 @@ void dumpNoPacket(std::ostream& out, const std::string& packetLabel,
     }
 }
 
-void dumpPacketHeader(std::ostream& out, NPacket* p) {
+void dumpPacketHeader(std::ostream& out, Packet* p) {
     out << separator << '\n';
     out << "*\n";
     out << "* Label: " << p->humanLabel() << '\n';
@@ -98,7 +98,7 @@ void dumpPacketHeader(std::ostream& out, NPacket* p) {
     out << separator << '\n';
 }
 
-void dumpPacket(std::ostream& out, NPacket* p, char dumpOpt) {
+void dumpPacket(std::ostream& out, Packet* p, char dumpOpt) {
     if (dumpOpt == 'l')
         out << p->fullName() << '\n';
     else if (dumpOpt == 'f') {
@@ -166,14 +166,14 @@ int main(int argc, char* argv[]) {
         "UTF-8", regina::i18n::Locale::codeset());
 
     // Do the actual work.
-    NPacket* tree = regina::open(file.c_str());
+    Packet* tree = regina::open(file.c_str());
     if (! tree) {
         std::cerr << "File " << file << " could not be read.\n";
         return 1;
     }
 
     if (dumpOpt != 'n') {
-        NPacket* p;
+        Packet* p;
         if (packets.empty())
             for (p = tree; p; p = p->nextTreePacket())
                 dumpPacket(out, p, dumpOpt);

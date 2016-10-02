@@ -177,7 +177,7 @@ void AngleStructures::writeXMLPacketData(std::ostream& out) const {
             << '\n';
 }
 
-NPacket* AngleStructures::internalClonePacket(NPacket* /* parent */)
+Packet* AngleStructures::internalClonePacket(Packet* /* parent */)
         const {
     AngleStructures* ans = new AngleStructures(tautOnly_);
     transform(structures.begin(), structures.end(),

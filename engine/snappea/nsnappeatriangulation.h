@@ -1332,7 +1332,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         virtual void writeTextLong(std::ostream& out) const;
 
         virtual bool dependsOnParent() const;
-        static XMLPacketReader* xmlReader(NPacket* parent,
+        static XMLPacketReader* xmlReader(Packet* parent,
             XMLTreeResolver& resolver);
 
         /*@}*/
@@ -1341,12 +1341,12 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          */
         /*@{*/
 
-        virtual void packetWasChanged(NPacket* packet);
+        virtual void packetWasChanged(Packet* packet);
 
         /*@}*/
 
     protected:
-        virtual NPacket* internalClonePacket(NPacket* parent) const;
+        virtual Packet* internalClonePacket(Packet* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
 
     private:
@@ -1496,7 +1496,7 @@ inline void NSnapPeaTriangulation::randomise() {
     randomize();
 }
 
-inline NPacket* NSnapPeaTriangulation::internalClonePacket(NPacket*) const {
+inline Packet* NSnapPeaTriangulation::internalClonePacket(Packet*) const {
     return new NSnapPeaTriangulation(*this);
 }
 

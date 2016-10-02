@@ -52,7 +52,7 @@
 #include <QTreeView>
 
 using regina::NNormalSurfaceList;
-using regina::NPacket;
+using regina::Packet;
 
 SurfaceModel::SurfaceModel(regina::NNormalSurfaceList* surfaces,
         bool readWrite) :
@@ -362,7 +362,7 @@ bool SurfaceModel::setData(const QModelIndex& index, const QVariant& value,
         // At present, NNormalSurface::setName() does not fire a change
         // event (since a normal surface does not know what list it
         // belongs to).  Fire it here instead.
-        regina::NPacket::ChangeEventSpan span(surfaces_);
+        regina::Packet::ChangeEventSpan span(surfaces_);
         const_cast<regina::NNormalSurface*>(
             surfaces_->surface(realIndex[index.row()]))->
             setName(value.toString().toUtf8().constData());
@@ -584,7 +584,7 @@ const QLinkedList<QAction*>& NSurfaceCoordinateUI::getPacketTypeActions() {
     return surfaceActionList;
 }
 
-regina::NPacket* NSurfaceCoordinateUI::getPacket() {
+regina::Packet* NSurfaceCoordinateUI::getPacket() {
     return surfaces;
 }
 
@@ -631,7 +631,7 @@ void NSurfaceCoordinateUI::setReadWrite(bool readWrite) {
     updateActionStates();
 }
 
-void NSurfaceCoordinateUI::packetToBeDestroyed(NPacket*) {
+void NSurfaceCoordinateUI::packetToBeDestroyed(Packet*) {
     // Our currently applied filter is about to be destroyed.
     filter->setCurrentIndex(0); // (i.e., None)
     refresh();

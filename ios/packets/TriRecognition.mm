@@ -361,7 +361,7 @@
         return;
     }
 
-    regina::NPacket* base = new regina::Container();
+    regina::Packet* base = new regina::Container();
     __block long nSummands = 0;
     [ReginaHelper runWithHUD:@"Decomposing…"
                         code:^{

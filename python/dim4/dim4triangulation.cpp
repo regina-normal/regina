@@ -56,7 +56,7 @@ namespace {
         bool, bool) = &Dim4Triangulation::twoZeroMove;
     bool (Dim4Triangulation::*twoZeroMove_edge)(regina::Dim4Edge*,
         bool, bool) = &Dim4Triangulation::twoZeroMove;
-    size_t(Dim4Triangulation::*splitIntoComponents)(regina::NPacket*, bool) =
+    size_t(Dim4Triangulation::*splitIntoComponents)(regina::Packet*, bool) =
         &Dim4Triangulation::splitIntoComponents;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyToLocalMinimum,
@@ -160,7 +160,7 @@ namespace {
 
 void addDim4Triangulation() {
     {
-    scope s = class_<Triangulation<4>, bases<regina::NPacket>,
+    scope s = class_<Triangulation<4>, bases<regina::Packet>,
             SafeHeldType<Triangulation<4>>,
             boost::noncopyable>("Triangulation4")
         .def(init<const Dim4Triangulation&>())
@@ -291,7 +291,7 @@ void addDim4Triangulation() {
     s.attr("typeID") = regina::PACKET_DIM4TRIANGULATION;
 
     implicitly_convertible<SafeHeldType<Dim4Triangulation>,
-        SafeHeldType<regina::NPacket> >();
+        SafeHeldType<regina::Packet> >();
     }
 
     FIX_REGINA_BOOST_CONVERTERS(Dim4Triangulation);

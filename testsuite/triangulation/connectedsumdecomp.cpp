@@ -480,7 +480,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             NAbelianGroup h1;
             NTriangulation* term;
             bool foundNor = false;
-            for (regina::NPacket* p = parent.firstChild(); p;
+            for (regina::Packet* p = parent.firstChild(); p;
                     p = p->nextSibling()) {
                 term = static_cast<NTriangulation*>(p);
                 if (! term->isOrientable())

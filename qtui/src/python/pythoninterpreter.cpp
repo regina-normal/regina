@@ -35,7 +35,7 @@
 
 #include "regina-config.h"
 #include "file/globaldirs.h"
-#include "packet/npacket.h"
+#include "packet/packet.h"
 
 
 #include "pythonoutputstream.h"
@@ -348,13 +348,13 @@ bool PythonInterpreter::importRegina() {
     return ok;
 }
 
-bool PythonInterpreter::setVar(const char* name, regina::NPacket* value) {
+bool PythonInterpreter::setVar(const char* name, regina::Packet* value) {
     PyEval_RestoreThread(state);
 
     bool ok = false;
     try {
         boost::python::reference_existing_object::
-            apply<regina::NPacket*>::type conv;
+            apply<regina::Packet*>::type conv;
         PyObject* pyValue = conv(value);
 
         if (pyValue) {

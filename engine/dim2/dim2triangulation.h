@@ -43,7 +43,7 @@
 #include <vector>
 #include "regina-core.h"
 #include "generic/triangulation.h"
-#include "packet/npacket.h"
+#include "packet/packet.h"
 #include "utilities/nmarkedvector.h"
 #include "utilities/nproperty.h"
 
@@ -105,7 +105,7 @@ struct PacketInfo<PACKET_DIM2TRIANGULATION> {
  */
 template <>
 class REGINA_API Triangulation<2> :
-        public NPacket,
+        public Packet,
         public detail::TriangulationBase<2> {
     REGINA_PACKET(Triangulation<2>, PACKET_DIM2TRIANGULATION)
 
@@ -375,11 +375,11 @@ class REGINA_API Triangulation<2> :
 
         /*@}*/
 
-        static XMLPacketReader* xmlReader(NPacket* parent,
+        static XMLPacketReader* xmlReader(Packet* parent,
             XMLTreeResolver& resolver);
 
     protected:
-        virtual NPacket* internalClonePacket(NPacket* parent) const;
+        virtual Packet* internalClonePacket(Packet* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
 
         /**
@@ -513,7 +513,7 @@ inline bool Triangulation<2>::isIdeal() const {
     return false;
 }
 
-inline NPacket* Triangulation<2>::internalClonePacket(NPacket*) const {
+inline Packet* Triangulation<2>::internalClonePacket(Packet*) const {
     return new Triangulation(*this);
 }
 

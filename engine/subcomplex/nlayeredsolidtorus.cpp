@@ -679,7 +679,7 @@ NTriangulation* NLayeredSolidTorus::flatten(const NTriangulation* original,
     NTetrahedron* newTop = ans->tetrahedron(topLevel_->index());
     NTetrahedron* newBase = ans->tetrahedron(base_->index());
 
-    NPacket::ChangeEventSpan span(ans);
+    Packet::ChangeEventSpan span(ans);
 
     // Reglue the top faces before deleting the layered solid torus.
     NTetrahedron* adj0 = newTop->adjacentTetrahedron(topFace_[0]);

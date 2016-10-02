@@ -34,7 +34,7 @@
 #import "ReginaDocument.h"
 
 namespace regina {
-    class NPacket;
+    class Packet;
 }
 
 @interface DetailViewController : UIViewController <UISplitViewControllerDelegate>
@@ -49,6 +49,6 @@ namespace regina {
  * The current working packet.
  * If you set this to nil (but \a doc is non-nil) then an empty panel will be displayed.
  */
-@property (assign, nonatomic) regina::NPacket* packet;
+@property (assign, nonatomic) regina::Packet* packet;
 
 @end

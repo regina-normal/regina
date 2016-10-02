@@ -46,7 +46,7 @@
 class PacketFilter;
 
 namespace regina {
-    class NPacket;
+    class Packet;
 };
 
 /**
@@ -90,12 +90,12 @@ class PacketChooser : public QComboBox, public regina::PacketListener {
         };
 
     private:
-        regina::NPacket* subtree;
+        regina::Packet* subtree;
             /**< The subtree of packets available for selection. */
         PacketFilter* filter;
             /**< A filter to restrict the available selections, or
                  0 if no filter is necessary. */
-        std::vector<regina::NPacket*> packets;
+        std::vector<regina::Packet*> packets;
             /**< A list of the packets corresponding to the available
                  entries in the packet chooser. */
 
@@ -117,13 +117,13 @@ class PacketChooser : public QComboBox, public regina::PacketListener {
          * This chooser will claim ownership of any filter that is
          * passed.
          */
-        PacketChooser(regina::NPacket* newSubtree,
+        PacketChooser(regina::Packet* newSubtree,
                 RootRole useRootRole, QWidget* parent);
-        PacketChooser(regina::NPacket* newSubtree, PacketFilter* newFilter,
+        PacketChooser(regina::Packet* newSubtree, PacketFilter* newFilter,
                 RootRole useRootRole, QWidget* parent);
-        PacketChooser(regina::NPacket* newSubtree, PacketFilter* newFilter,
+        PacketChooser(regina::Packet* newSubtree, PacketFilter* newFilter,
                 RootRole useRootRole = ROOT_AS_SUBTREE, bool allowNone = false,
-                regina::NPacket* initialSelection = 0, QWidget* parent = 0);
+                regina::Packet* initialSelection = 0, QWidget* parent = 0);
         ~PacketChooser();
 
         /**
@@ -148,7 +148,7 @@ class PacketChooser : public QComboBox, public regina::PacketListener {
          * If the "None" entry is selected or if there are in fact no
          * available packets to choose from, this routine will return 0.
          */
-        regina::NPacket* selectedPacket();
+        regina::Packet* selectedPacket();
 
         /**
          * Changes the selection to the given packet.
@@ -160,7 +160,7 @@ class PacketChooser : public QComboBox, public regina::PacketListener {
          *
          * The activated() signal will \e not be emitted.
          */
-        void selectPacket(regina::NPacket* packet);
+        void selectPacket(regina::Packet* packet);
 
         /**
          * Set whether this packet chooser should update itself
@@ -172,8 +172,8 @@ class PacketChooser : public QComboBox, public regina::PacketListener {
         /**
          * PacketListener overrides.
          */
-        void packetWasRenamed(regina::NPacket* packet);
-        void packetToBeDestroyed(regina::NPacket* packet);
+        void packetWasRenamed(regina::Packet* packet);
+        void packetToBeDestroyed(regina::Packet* packet);
 
     public slots:
         /**
@@ -192,7 +192,7 @@ class PacketChooser : public QComboBox, public regina::PacketListener {
          * Fills the chooser with the set of allowable packets.
          * A packet to be preselected can be optionally specified.
          */
-        void fill(bool allowNone, regina::NPacket* select);
+        void fill(bool allowNone, regina::Packet* select);
 
         /**
          * Verifies whether the current list of packets shown in the
@@ -218,24 +218,24 @@ class PacketDialog : public QDialog {
          * Constructor and destructor.
          */
         PacketDialog(QWidget* parent,
-            regina::NPacket* subtree,
+            regina::Packet* subtree,
             PacketFilter* filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis,
             PacketChooser::RootRole rootRole = PacketChooser::ROOT_AS_SUBTREE,
             bool allowNone = false,
-            regina::NPacket* initialSelection = 0);
+            regina::Packet* initialSelection = 0);
 
-        static regina::NPacket* choose(QWidget* parent,
-            regina::NPacket* subtree,
+        static regina::Packet* choose(QWidget* parent,
+            regina::Packet* subtree,
             PacketFilter* filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis,
             PacketChooser::RootRole rootRole = PacketChooser::ROOT_AS_SUBTREE,
             bool allowNone = false,
-            regina::NPacket* initialSelection = 0);
+            regina::Packet* initialSelection = 0);
 };
 
 inline PacketFilter* PacketChooser::getFilter() {

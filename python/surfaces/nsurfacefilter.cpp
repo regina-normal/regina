@@ -43,7 +43,7 @@ using namespace regina::python;
 using regina::NSurfaceFilter;
 
 void addNSurfaceFilter() {
-    scope s = class_<NSurfaceFilter, bases<regina::NPacket>,
+    scope s = class_<NSurfaceFilter, bases<regina::Packet>,
             SafeHeldType<NSurfaceFilter>, boost::noncopyable>
             ("NSurfaceFilter")
         .def(init<const NSurfaceFilter&>())
@@ -56,7 +56,7 @@ void addNSurfaceFilter() {
     s.attr("filterTypeID") = regina::NS_FILTER_DEFAULT;
 
     implicitly_convertible<SafeHeldType<NSurfaceFilter>,
-        SafeHeldType<regina::NPacket> >();
+        SafeHeldType<regina::Packet> >();
 
     FIX_REGINA_BOOST_CONVERTERS(NSurfaceFilter);
 }

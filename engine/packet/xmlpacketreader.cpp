@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "generic/xmltrireader.h"
-#include "packet/npacket.h"
+#include "packet/packet.h"
 #include "packet/xmlpacketreader.h"
 #include "packet/xmltreeresolver.h"
 #include "packet/packetregistry.h"
@@ -42,7 +42,7 @@ namespace regina {
 namespace {
     struct XMLReaderFunction : public Returns<NXMLElementReader*> {
         template <typename Packet>
-        inline NXMLElementReader* operator() (NPacket* me,
+        inline NXMLElementReader* operator() (Packet* me,
                 XMLTreeResolver& resolver) {
             return Packet::Class::xmlReader(me, resolver);
         }
@@ -53,7 +53,7 @@ NXMLElementReader* XMLPacketReader::startSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& subTagProps) {
     if (subTagName == "packet") {
-        NPacket* me = packet();
+        Packet* me = packet();
         if (! me)
             return new XMLPacketReader(resolver_);
 
@@ -87,7 +87,7 @@ NXMLElementReader* XMLPacketReader::startSubElement(
         else
             return new XMLPacketReader(resolver_);
     } else if (subTagName == "tag") {
-        if (NPacket* me = packet()) {
+        if (Packet* me = packet()) {
             std::string packetTag = subTagProps.lookup("name");
             if (! packetTag.empty())
                 me->addTag(packetTag);
@@ -100,10 +100,10 @@ NXMLElementReader* XMLPacketReader::startSubElement(
 void XMLPacketReader::endSubElement(const std::string& subTagName,
         NXMLElementReader* subReader) {
     if (subTagName == "packet") {
-        NPacket* child =
+        Packet* child =
             dynamic_cast<XMLPacketReader*>(subReader)->packet();
         if (child) {
-            NPacket* me = packet();
+            Packet* me = packet();
             if (me) {
                 child->setLabel(childLabel);
                 if (! childID.empty())
@@ -120,7 +120,7 @@ void XMLPacketReader::endSubElement(const std::string& subTagName,
 }
 
 void XMLPacketReader::abort(NXMLElementReader* /* subReader */) {
-    NPacket* me = packet();
+    Packet* me = packet();
     if (me)
         if (! me->parent())
             delete me;

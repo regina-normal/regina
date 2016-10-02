@@ -44,7 +44,7 @@
 
 namespace regina {
 
-long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
+long NTriangulation::connectedSumDecomposition(Packet* primeParent,
         bool setLabels) {
     // Precondition checks.
     if (! (isValid() && isClosed() && isConnected()))
@@ -463,7 +463,7 @@ bool NTriangulation::isSolidTorus() const {
     // Pull out the big guns: normal surface time.
     NNormalSurface* s;
     NTriangulation* crushed;
-    NPacket* p;
+    Packet* p;
     NTriangulation* comp;
     while (true) {
         // INVARIANT: working is homeomorphic to our original manifold.
@@ -585,7 +585,7 @@ bool NTriangulation::knowsSolidTorus() const {
     return false;
 }
 
-NPacket* NTriangulation::makeZeroEfficient() {
+Packet* NTriangulation::makeZeroEfficient() {
     // Extract a connected sum decomposition.
     Container* connSum = new Container();
     connSum->setLabel(adornedLabel("Decomposition"));

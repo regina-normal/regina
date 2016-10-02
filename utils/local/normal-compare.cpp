@@ -181,13 +181,13 @@ int main(int argc, char* argv[]) {
 
     freopen(statsFile.c_str(), "w", stdout);
 
-    NPacket* tree = open(dataFile);
+    Packet* tree = open(dataFile);
     if (! tree) {
         fprintf(stderr, "Could not open data file %s.\n", dataFile.c_str());
         return 1;
     }
 
-    NPacket* p = tree;
+    Packet* p = tree;
     while (p && p->type() != PACKET_TRIANGULATION)
         p = p->nextTreePacket();
     long currTri = 0;

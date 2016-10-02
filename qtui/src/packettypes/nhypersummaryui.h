@@ -42,7 +42,7 @@
 #include "../packettabui.h"
 
 namespace regina {
-    class NPacket;
+    class Packet;
     class NNormalHypersurfaceList;
 };
 
@@ -84,7 +84,7 @@ class NHyperSummaryUI : public QObject, public PacketViewerTab,
         /**
          * PacketViewerTab overrides.
          */
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         QWidget* getInterface();
         void refresh();
 

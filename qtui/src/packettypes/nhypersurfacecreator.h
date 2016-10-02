@@ -70,7 +70,7 @@ class NHypersurfaceCreator : public PacketCreator {
         QWidget* getInterface();
         QString parentPrompt();
         QString parentWhatsThis();
-        regina::NPacket* createPacket(regina::NPacket* parentPacket,
+        regina::Packet* createPacket(regina::Packet* parentPacket,
             QWidget* parentWidget);
         void explainNoParents();
 };

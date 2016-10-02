@@ -129,7 +129,7 @@
 
 - (void)updateTriangulationButton
 {
-    regina::NPacket* tri = self.packet->triangulation();
+    regina::Packet* tri = self.packet->triangulation();
     NSString* triName = [NSString stringWithUTF8String:tri->label().c_str()];
     if (triName.length == 0)
         triName = @"(Unnamed)";
@@ -138,7 +138,7 @@
 
 #pragma mark - Packet listener
 
-- (void)packetWasRenamed:(regina::NPacket *)packet
+- (void)packetWasRenamed:(regina::Packet *)packet
 {
     if (packet == self.packet->triangulation())
         [self updateTriangulationButton];

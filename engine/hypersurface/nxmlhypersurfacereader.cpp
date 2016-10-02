@@ -146,7 +146,7 @@ void NXMLNormalHypersurfaceListReader::endContentSubElement(
                 list_->surfaces_.push_back(s);
 }
 
-XMLPacketReader* NNormalHypersurfaceList::xmlReader(NPacket* parent,
+XMLPacketReader* NNormalHypersurfaceList::xmlReader(Packet* parent,
         XMLTreeResolver& resolver) {
     return new NXMLNormalHypersurfaceListReader(
         dynamic_cast<Dim4Triangulation*>(parent), resolver);

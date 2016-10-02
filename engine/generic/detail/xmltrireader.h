@@ -193,7 +193,7 @@ class XMLTriangulationReaderBase : public XMLPacketReader {
          */
         XMLTriangulationReaderBase(XMLTreeResolver& resolver);
 
-        virtual NPacket* packet() override;
+        virtual Packet* packet() override;
         virtual NXMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
@@ -348,7 +348,7 @@ inline XMLTriangulationReaderBase<dim>::XMLTriangulationReaderBase(
 }
 
 template <int dim>
-inline NPacket* XMLTriangulationReaderBase<dim>::packet() {
+inline Packet* XMLTriangulationReaderBase<dim>::packet() {
     return tri_;
 }
 

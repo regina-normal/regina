@@ -120,7 +120,7 @@ int firstOnly = 0;
 std::string filename;
 
 // The input packet tree.
-NPacket* tree;
+Packet* tree;
 
 
 
@@ -246,7 +246,7 @@ bool checkInputTree() {
     std::set<std::string> allLabels;
     unsigned labelLen;
 
-    for (NPacket* p = tree; p; p = p->nextTreePacket()) {
+    for (Packet* p = tree; p; p = p->nextTreePacket()) {
         labelLen = p->label().length();
         if (labelLen == 0) {
             fprintf(stderr, "ERROR: Empty packet label found in input file.\n");
@@ -522,7 +522,7 @@ void ctrlProcess(Container* c) {
     NTriangulation* tri;
     int i;
 
-    for (NPacket* child = c->firstChild(); child;
+    for (Packet* child = c->firstChild(); child;
             child = child->nextSibling()) {
         if (child->type() != PACKET_TRIANGULATION)
             continue;
@@ -622,7 +622,7 @@ int mainController() {
     }
 
     // Process the packets.
-    for (NPacket* p = tree; p; p = p->nextTreePacket())
+    for (Packet* p = tree; p; p = p->nextTreePacket())
         if (p->type() == PACKET_CONTAINER) {
             ctrlLogStamp() << "Processing container: " << p->label()
                 << std::endl;

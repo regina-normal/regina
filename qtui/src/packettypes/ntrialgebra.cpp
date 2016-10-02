@@ -63,7 +63,7 @@
 #include <QValidator>
 
 using regina::NCyclotomic;
-using regina::NPacket;
+using regina::Packet;
 using regina::NTriangulation;
 
 namespace {
@@ -212,7 +212,7 @@ NTriHomologyFundUI::NTriHomologyFundUI(regina::NTriangulation* packet,
         this, SLOT(updatePreferences()));
 }
 
-regina::NPacket* NTriHomologyFundUI::getPacket() {
+regina::Packet* NTriHomologyFundUI::getPacket() {
     return tri;
 }
 
@@ -388,7 +388,7 @@ NTriTuraevViroUI::NTriTuraevViroUI(regina::NTriangulation* packet,
         this, SLOT(updatePreferences()));
 }
 
-regina::NPacket* NTriTuraevViroUI::getPacket() {
+regina::Packet* NTriTuraevViroUI::getPacket() {
     return tri;
 }
 
@@ -791,7 +791,7 @@ NTriCellularInfoUI::NTriCellularInfoUI(regina::NTriangulation* packet,
 }
 
 
-regina::NPacket* NTriCellularInfoUI::getPacket() {
+regina::Packet* NTriCellularInfoUI::getPacket() {
     return tri;
 }
 

@@ -60,7 +60,7 @@ class CSVSurfaceHandler : public PacketExporter {
          * PacketExporter overrides:
          */
         virtual PacketFilter* canExport() const;
-        virtual bool exportData(regina::NPacket* data,
+        virtual bool exportData(regina::Packet* data,
             const QString& fileName, QWidget* parentWidget) const;
 
     private:

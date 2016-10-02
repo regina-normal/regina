@@ -48,7 +48,7 @@
 #include <QValidator>
 
 using regina::NBoolSet;
-using regina::NPacket;
+using regina::Packet;
 using regina::NSurfaceFilterProperties;
 
 namespace {
@@ -194,7 +194,7 @@ NSurfaceFilterPropUI::NSurfaceFilterPropUI(NSurfaceFilterProperties* packet,
         this, SLOT(notifyOptionsChanged()));
 }
 
-regina::NPacket* NSurfaceFilterPropUI::getPacket() {
+regina::Packet* NSurfaceFilterPropUI::getPacket() {
     return filter;
 }
 
@@ -240,7 +240,7 @@ bool NSurfaceFilterPropUI::notifyOptionsChanged() {
     // characteristics and then jumping directly to toggle some other
     // checkbox).  We therefore wrap everything in a ChangeEventSpan, to
     // avoid refresh() being automatically called partway through.
-    regina::NPacket::ChangeEventSpan span(filter);
+    regina::Packet::ChangeEventSpan span(filter);
 
     inNotify = true;
     bool success = true;

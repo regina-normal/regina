@@ -74,7 +74,7 @@ int argDown = 1;
 const char* outFile = 0;
 
 // The input packet tree.
-NPacket* tree = 0;
+Packet* tree = 0;
 
 // The original triangulation currently being processed.
 NTriangulation* orig;
@@ -240,8 +240,8 @@ void tryMovesUp(NTriangulation* t, int levelsRemaining) {
 }
 
 void processTree() {
-    NPacket* p = tree;
-    NPacket* next;
+    Packet* p = tree;
+    Packet* next;
 
     while (p) {
         next = p->nextTreePacket();

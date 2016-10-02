@@ -48,7 +48,7 @@ class QTreeView;
 
 namespace regina {
     class AngleStructures;
-    class NPacket;
+    class Packet;
 };
 
 class AngleModel : public QAbstractItemModel {
@@ -124,7 +124,7 @@ class AngleStructureUI : public QObject, public PacketReadOnlyUI,
         /**
          * PacketUI overrides.
          */
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         QWidget* getInterface();
         QString getPacketMenuText() const;
         void refresh();
@@ -137,7 +137,7 @@ class AngleStructureUI : public QObject, public PacketReadOnlyUI,
         /**
          * PacketListener overrides.
          */
-        void packetWasRenamed(regina::NPacket* packet);
+        void packetWasRenamed(regina::Packet* packet);
         
     public slots:
         /**

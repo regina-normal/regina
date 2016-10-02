@@ -55,7 +55,7 @@
 
 - (IBAction)create:(id)sender
 {
-    regina::NPacket* ans = [self.pages create];
+    regina::Packet* ans = [self.pages create];
     if (ans) {
         self.spec.parent->insertChildLast(ans);
         [self.spec created:ans];
@@ -85,7 +85,7 @@
     [self.from fill:c.spec.parent->root() type:regina::PACKET_TRIANGULATION allowNone:NO noneText:@"No Regina triangulations in this document"];
 }
 
-- (regina::NPacket*)create
+- (regina::Packet*)create
 {
     if ([self.from empty]) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Triangulations to Convert"
@@ -227,7 +227,7 @@ typedef regina::NSnapPeaTriangulation* (*SnapPeaCreator)();
     [[NSUserDefaults standardUserDefaults] setInteger:[self.example selectedRowInComponent:0] forKey:KEY_LAST_EXAMPLE];
 }
 
-- (regina::NPacket *)create
+- (regina::Packet *)create
 {
     return [options[[self.example selectedRowInComponent:0]] create];
 }

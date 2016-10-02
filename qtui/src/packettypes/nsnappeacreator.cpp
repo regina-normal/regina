@@ -189,7 +189,7 @@ QWidget* NSnapPeaTriangulationCreator::getInterface() {
     return ui;
 }
 
-regina::NPacket* NSnapPeaTriangulationCreator::createPacket(regina::NPacket*,
+regina::Packet* NSnapPeaTriangulationCreator::createPacket(regina::Packet*,
         QWidget* parentWidget) {
     int typeId = type->currentIndex();
     if (typeId == TRI_CONVERT) {

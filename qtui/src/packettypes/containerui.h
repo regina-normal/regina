@@ -45,7 +45,7 @@ class QLabel;
 
 namespace regina {
     class Container;
-    class NPacket;
+    class Packet;
 };
 
 /**
@@ -76,7 +76,7 @@ class ContainerUI : public PacketReadOnlyUI, public regina::PacketListener {
         /**
          * PacketUI overrides.
          */
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         QWidget* getInterface();
         QString getPacketMenuText() const;
         void refresh();
@@ -84,8 +84,8 @@ class ContainerUI : public PacketReadOnlyUI, public regina::PacketListener {
         /**
          * PacketListener overrides.
          */
-        void childWasAdded(regina::NPacket* packet, regina::NPacket* child);
-        void childWasRemoved(regina::NPacket* packet, regina::NPacket* child,
+        void childWasAdded(regina::Packet* packet, regina::Packet* child);
+        void childWasRemoved(regina::Packet* packet, regina::Packet* child,
             bool inParentDestructor);
 };
 

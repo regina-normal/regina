@@ -74,7 +74,7 @@ void addNNormalHypersurfaceList() {
         regina::makeMatchingEquations,
         return_value_policy<manage_new_object>());
 
-    scope s = class_<NNormalHypersurfaceList, bases<regina::NPacket>,
+    scope s = class_<NNormalHypersurfaceList, bases<regina::Packet>,
             SafeHeldType<NNormalHypersurfaceList>, boost::noncopyable>
             ("NNormalHypersurfaceList", no_init)
         .def("enumerate", unified_2,
@@ -103,7 +103,7 @@ void addNNormalHypersurfaceList() {
     s.attr("typeID") = regina::PACKET_NORMALHYPERSURFACELIST;
 
     implicitly_convertible<SafeHeldType<NNormalHypersurfaceList>,
-        SafeHeldType<regina::NPacket> >();
+        SafeHeldType<regina::Packet> >();
 
     FIX_REGINA_BOOST_CONVERTERS(NNormalHypersurfaceList);
 }

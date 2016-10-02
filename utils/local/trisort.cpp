@@ -60,10 +60,10 @@
 using namespace regina;
 
 bool saveChanges = true;
-NPacket* tree;
+Packet* tree;
 
 struct TriSpec {
-    NPacket* packet;
+    Packet* packet;
     bool isTri;
     bool hasName;
     bool hasSpecialName;
@@ -117,7 +117,7 @@ void usage(const char* progName, const std::string& error = std::string()) {
 }
 
 bool hasTriangulation(Container* c) {
-    for (NPacket* child = c->firstChild(); child; child = child->nextSibling())
+    for (Packet* child = c->firstChild(); child; child = child->nextSibling())
         if (child->type() == PACKET_TRIANGULATION)
             return true;
 
@@ -131,7 +131,7 @@ void process(Container* c) {
     NStandardTriangulation* std;
     std::vector<TriSpec> children;
     TriSpec spec;
-    for (NPacket* child = c->firstChild(); child;
+    for (Packet* child = c->firstChild(); child;
             child = child->nextSibling()) {
         spec.packet = child;
         spec.isTri = (child->type() == PACKET_TRIANGULATION);
@@ -204,7 +204,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Process each container.
-    for (NPacket* p = tree; p; p = p->nextTreePacket())
+    for (Packet* p = tree; p; p = p->nextTreePacket())
         if (p->type() == PACKET_CONTAINER)
             process(static_cast<Container*>(p));
 

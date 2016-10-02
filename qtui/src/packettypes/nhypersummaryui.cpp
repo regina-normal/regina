@@ -153,7 +153,7 @@ NHyperSummaryUI::NHyperSummaryUI(
 NHyperSummaryUI::~NHyperSummaryUI() {
 }
 
-regina::NPacket* NHyperSummaryUI::getPacket() {
+regina::Packet* NHyperSummaryUI::getPacket() {
     return surfaces;
 }
 

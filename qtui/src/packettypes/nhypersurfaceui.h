@@ -106,14 +106,14 @@ class NHyperHeaderUI : public QObject, public PacketViewerTab,
         /**
          * PacketViewerTab overrides.
          */
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         QWidget* getInterface();
         void refresh();
 
         /**
          * PacketListener overrides.
          */
-        void packetWasRenamed(regina::NPacket* packet);
+        void packetWasRenamed(regina::Packet* packet);
 
     private slots:
         /**

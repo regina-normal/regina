@@ -33,7 +33,7 @@
 #include "Python.h"
 #include "regina-config.h"
 #include "file/globaldirs.h"
-#include "packet/npacket.h"
+#include "packet/packet.h"
 
 // Put this before any Qt/KDE stuff so Python 2.3 "slots" doesn't clash.
 #include "pythoninterpreter.h"
@@ -333,7 +333,7 @@ bool PythonConsole::importRegina() {
     }
 }
 
-void PythonConsole::setRootPacket(regina::NPacket* packet) {
+void PythonConsole::setRootPacket(regina::Packet* packet) {
     if (interpreter->setVar("root", packet)) {
         if (packet)
             addOutput(tr("The (invisible) root of the packet tree is in the "
@@ -347,7 +347,7 @@ void PythonConsole::setRootPacket(regina::NPacket* packet) {
     }
 }
 
-void PythonConsole::setSelectedPacket(regina::NPacket* packet) {
+void PythonConsole::setSelectedPacket(regina::Packet* packet) {
     // Set the variable.
     if (interpreter->setVar("item", packet)) {
         if (packet)
@@ -365,7 +365,7 @@ void PythonConsole::setSelectedPacket(regina::NPacket* packet) {
     }
 }
 
-void PythonConsole::setVar(const QString& name, regina::NPacket* value) {
+void PythonConsole::setVar(const QString& name, regina::Packet* value) {
     if (! interpreter->setVar(name.toUtf8(), value)) {
         QString pktName;
         if (value)

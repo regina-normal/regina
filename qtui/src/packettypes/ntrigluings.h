@@ -47,7 +47,7 @@ class EditTableView;
 class QToolBar;
 
 namespace regina {
-    class NPacket;
+    class Packet;
     template <int> class Simplex;
     template <int> class Triangulation;
     typedef Triangulation<3> NTriangulation;
@@ -181,7 +181,7 @@ class NTriGluingsUI : public QObject, public PacketEditorTab {
         /**
          * PacketEditorTab overrides.
          */
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         QWidget* getInterface();
         const QLinkedList<QAction*>& getPacketTypeActions();
         void refresh();

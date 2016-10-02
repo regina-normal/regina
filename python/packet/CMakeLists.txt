@@ -3,7 +3,7 @@
 # Files to compile
 SET ( FILES
   container
-  npacket
+  packet
   packettype
   pdf
   pypacket

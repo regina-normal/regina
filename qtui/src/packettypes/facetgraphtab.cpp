@@ -198,7 +198,7 @@ void FacetGraphTab::changeType(int index) {
     refresh();
 }
 
-regina::NPacket* FacetGraphTab::getPacket() {
+regina::Packet* FacetGraphTab::getPacket() {
     return data->getPacket();
 }
 
@@ -354,7 +354,7 @@ QString Dim2EdgeGraphData::facetsName() {
     return QObject::tr("edges");
 }
 
-regina::NPacket* Dim2EdgeGraphData::getPacket() {
+regina::Packet* Dim2EdgeGraphData::getPacket() {
     return tri_;
 }
 
@@ -392,7 +392,7 @@ QString Dim3FaceGraphData::facetsName() {
     return QObject::tr("faces");
 }
 
-regina::NPacket* Dim3FaceGraphData::getPacket() {
+regina::Packet* Dim3FaceGraphData::getPacket() {
     return tri_;
 }
 
@@ -430,7 +430,7 @@ QString Dim4FacetGraphData::facetsName() {
     return QObject::tr("facets");
 }
 
-regina::NPacket* Dim4FacetGraphData::getPacket() {
+regina::Packet* Dim4FacetGraphData::getPacket() {
     return tri_;
 }
 

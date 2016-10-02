@@ -245,7 +245,7 @@
      &python; scripting does not work on &macosx;.
      Instead I get a <exceptionname>TypeError</exceptionname>
      saying &ldquo;No &python; class registered for &cpp; class
-     <classname>regina::NPacket</classname>&rdquo;, and/or a
+     <classname>regina::Packet</classname>&rdquo;, and/or a
      message that &regina; &ldquo;could not set the
      root variable&rdquo;.
     </para>

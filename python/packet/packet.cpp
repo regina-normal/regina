@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "packet/npacket.h"
+#include "packet/packet.h"
 #include "../safeheldtype.h"
 #include "../helpers.h"
 
@@ -39,30 +39,30 @@
 
 using namespace boost::python;
 using namespace regina::python;
-using regina::NPacket;
+using regina::Packet;
 
 namespace {
-    NPacket* (NPacket::*firstTreePacket_non_const)(const std::string&) =
-        &NPacket::firstTreePacket;
-    NPacket* (NPacket::*nextTreePacket_non_const)(const std::string&) =
-        &NPacket::nextTreePacket;
-    NPacket* (NPacket::*findPacketLabel_non_const)(const std::string&) =
-        &NPacket::findPacketLabel;
-    bool (NPacket::*save_filename)(const char*, bool) const = &NPacket::save;
-    NPacket* (*open_filename)(const char*) = &regina::open;
+    Packet* (Packet::*firstTreePacket_non_const)(const std::string&) =
+        &Packet::firstTreePacket;
+    Packet* (Packet::*nextTreePacket_non_const)(const std::string&) =
+        &Packet::nextTreePacket;
+    Packet* (Packet::*findPacketLabel_non_const)(const std::string&) =
+        &Packet::findPacketLabel;
+    bool (Packet::*save_filename)(const char*, bool) const = &Packet::save;
+    Packet* (*open_filename)(const char*) = &regina::open;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_moveUp,
-        NPacket::moveUp, 0, 1);
+        Packet::moveUp, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_moveDown,
-        NPacket::moveDown, 0, 1);
+        Packet::moveDown, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_nextTreePacket,
-        NPacket::nextTreePacket, 0, 1);
+        Packet::nextTreePacket, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_clone,
-        NPacket::clone, 0, 2);
+        Packet::clone, 0, 2);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_save,
-        NPacket::save, 1, 2);
+        Packet::save, 1, 2);
 
-    void reparent_check(NPacket& child, NPacket* newParent,
+    void reparent_check(Packet& child, Packet* newParent,
             bool first = false) {
         if (child.parent())
             child.reparent(newParent, first);
@@ -75,7 +75,7 @@ namespace {
 
     BOOST_PYTHON_FUNCTION_OVERLOADS(OL_reparent, reparent_check, 2, 3);
 
-    boost::python::list tags_list(const NPacket* p) {
+    boost::python::list tags_list(const Packet* p) {
         boost::python::list ans;
         for (auto& t : p->tags())
             ans.append(t);
@@ -83,72 +83,74 @@ namespace {
     }
 }
 
-void addNPacket() {
-    class_<NPacket, boost::noncopyable,
-            SafeHeldType<NPacket> >("NPacket", no_init)
-        .def("type", &NPacket::type)
-        .def("typeName", &NPacket::typeName)
-        .def("label", &NPacket::label,
+void addPacket() {
+    class_<Packet, boost::noncopyable,
+            SafeHeldType<Packet> >("Packet", no_init)
+        .def("type", &Packet::type)
+        .def("typeName", &Packet::typeName)
+        .def("label", &Packet::label,
             return_value_policy<return_by_value>())
-        .def("humanLabel", &NPacket::humanLabel)
-        .def("adornedLabel", &NPacket::adornedLabel)
-        .def("setLabel", &NPacket::setLabel)
-        .def("fullName", &NPacket::fullName)
-        .def("hasTag", &NPacket::hasTag)
-        .def("hasTags", &NPacket::hasTags)
-        .def("addTag", &NPacket::addTag)
-        .def("removeTag", &NPacket::removeTag)
-        .def("removeAllTags", &NPacket::removeAllTags)
+        .def("humanLabel", &Packet::humanLabel)
+        .def("adornedLabel", &Packet::adornedLabel)
+        .def("setLabel", &Packet::setLabel)
+        .def("fullName", &Packet::fullName)
+        .def("hasTag", &Packet::hasTag)
+        .def("hasTags", &Packet::hasTags)
+        .def("addTag", &Packet::addTag)
+        .def("removeTag", &Packet::removeTag)
+        .def("removeAllTags", &Packet::removeAllTags)
         .def("tags", tags_list)
-        .def("parent", &NPacket::parent,
+        .def("parent", &Packet::parent,
             return_value_policy<to_held_type<> >())
-        .def("firstChild", &NPacket::firstChild,
+        .def("firstChild", &Packet::firstChild,
             return_value_policy<to_held_type<> >())
-        .def("lastChild", &NPacket::lastChild,
+        .def("lastChild", &Packet::lastChild,
             return_value_policy<to_held_type<> >())
-        .def("nextSibling", &NPacket::nextSibling,
+        .def("nextSibling", &Packet::nextSibling,
             return_value_policy<to_held_type<> >())
-        .def("prevSibling", &NPacket::prevSibling,
+        .def("prevSibling", &Packet::prevSibling,
             return_value_policy<to_held_type<> >())
-        .def("root", &NPacket::root,
+        .def("root", &Packet::root,
             return_value_policy<to_held_type<> >())
-        .def("hasOwner", &NPacket::hasOwner)
-        .def("levelsDownTo", &NPacket::levelsDownTo)
-        .def("levelsUpTo", &NPacket::levelsUpTo)
-        .def("isGrandparentOf", &NPacket::isGrandparentOf)
-        .def("countChildren", &NPacket::countChildren)
-        .def("countDescendants", &NPacket::countDescendants)
-        .def("totalTreeSize", &NPacket::totalTreeSize)
-        .def("insertChildFirst", &NPacket::insertChildFirst)
-        .def("insertChildLast", &NPacket::insertChildLast)
-        .def("insertChildAfter", &NPacket::insertChildAfter)
-        .def("makeOrphan", &NPacket::makeOrphan)
+        .def("hasOwner", &Packet::hasOwner)
+        .def("levelsDownTo", &Packet::levelsDownTo)
+        .def("levelsUpTo", &Packet::levelsUpTo)
+        .def("isGrandparentOf", &Packet::isGrandparentOf)
+        .def("countChildren", &Packet::countChildren)
+        .def("countDescendants", &Packet::countDescendants)
+        .def("totalTreeSize", &Packet::totalTreeSize)
+        .def("insertChildFirst", &Packet::insertChildFirst)
+        .def("insertChildLast", &Packet::insertChildLast)
+        .def("insertChildAfter", &Packet::insertChildAfter)
+        .def("makeOrphan", &Packet::makeOrphan)
         .def("reparent", reparent_check, OL_reparent())
-        .def("transferChildren", &NPacket::transferChildren)
-        .def("swapWithNextSibling", &NPacket::swapWithNextSibling)
-        .def("moveUp", &NPacket::moveUp, OL_moveUp())
-        .def("moveDown", &NPacket::moveDown, OL_moveDown())
-        .def("moveToFirst", &NPacket::moveToFirst)
-        .def("moveToLast", &NPacket::moveToLast)
-        .def("sortChildren", &NPacket::sortChildren)
+        .def("transferChildren", &Packet::transferChildren)
+        .def("swapWithNextSibling", &Packet::swapWithNextSibling)
+        .def("moveUp", &Packet::moveUp, OL_moveUp())
+        .def("moveDown", &Packet::moveDown, OL_moveDown())
+        .def("moveToFirst", &Packet::moveToFirst)
+        .def("moveToLast", &Packet::moveToLast)
+        .def("sortChildren", &Packet::sortChildren)
         .def("nextTreePacket", nextTreePacket_non_const, OL_nextTreePacket()
             [return_value_policy<to_held_type<> >()])
         .def("firstTreePacket", firstTreePacket_non_const,
             return_value_policy<to_held_type<> >())
         .def("findPacketLabel", findPacketLabel_non_const,
             return_value_policy<to_held_type<> >())
-        .def("dependsOnParent", &NPacket::dependsOnParent)
-        .def("isPacketEditable", &NPacket::isPacketEditable)
-        .def("clone", &NPacket::clone,
+        .def("dependsOnParent", &Packet::dependsOnParent)
+        .def("isPacketEditable", &Packet::isPacketEditable)
+        .def("clone", &Packet::clone,
             OL_clone()[return_value_policy<to_held_type<> >()])
         .def("save", save_filename, OL_save())
-        .def("internalID", &NPacket::internalID)
+        .def("internalID", &Packet::internalID)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
 
     def("open", open_filename, return_value_policy<to_held_type<> >());
 
-    FIX_REGINA_BOOST_CONVERTERS(NPacket);
+    FIX_REGINA_BOOST_CONVERTERS(Packet);
+
+    scope().attr("NPacket") = scope().attr("Packet");
 }
 

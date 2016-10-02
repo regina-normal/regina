@@ -40,7 +40,7 @@
 #endif
 
 #include "regina-core.h"
-#include "packet/npacket.h"
+#include "packet/packet.h"
 
 namespace regina {
 
@@ -65,7 +65,7 @@ struct PacketInfo<PACKET_TEXT> {
 /**
  * A packet representing a text string.
  */
-class REGINA_API Text : public NPacket {
+class REGINA_API Text : public Packet {
     REGINA_PACKET(Text, PACKET_TEXT)
 
     private:
@@ -114,12 +114,12 @@ class REGINA_API Text : public NPacket {
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
-        static XMLPacketReader* xmlReader(NPacket* parent,
+        static XMLPacketReader* xmlReader(Packet* parent,
             XMLTreeResolver& resolver);
         virtual bool dependsOnParent() const;
 
     protected:
-        virtual NPacket* internalClonePacket(NPacket* parent) const;
+        virtual Packet* internalClonePacket(Packet* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
 };
 
@@ -176,7 +176,7 @@ inline bool Text::dependsOnParent() const {
     return false;
 }
 
-inline NPacket* Text::internalClonePacket(NPacket*) const {
+inline Packet* Text::internalClonePacket(Packet*) const {
     return new Text(text_);
 }
 

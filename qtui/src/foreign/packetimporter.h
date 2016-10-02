@@ -43,7 +43,7 @@ class QTextCodec;
 class ReginaMain;
 
 namespace regina {
-    class NPacket;
+    class Packet;
 };
 
 /**
@@ -71,7 +71,7 @@ class PacketImporter {
          * Sensible packet labels must be assigned to all packets in the
          * imported tree.
          */
-        virtual regina::NPacket* importData(const QString& fileName,
+        virtual regina::Packet* importData(const QString& fileName,
             ReginaMain* parentWidget) const = 0;
 
         /**

@@ -124,7 +124,7 @@ NXMLElementReader* XMLTriangulationReader<4>::startPropertySubElement(
     return new NXMLElementReader();
 }
 
-XMLPacketReader* Triangulation<4>::xmlReader(NPacket*,
+XMLPacketReader* Triangulation<4>::xmlReader(Packet*,
         XMLTreeResolver& resolver) {
     return new NXMLDim4TriangulationReader(resolver);
 }

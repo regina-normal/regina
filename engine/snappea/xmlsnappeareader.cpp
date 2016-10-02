@@ -60,7 +60,7 @@ void XMLSnapPeaReader::endContentSubElement(
     }
 }
 
-XMLPacketReader* NSnapPeaTriangulation::xmlReader(NPacket*,
+XMLPacketReader* NSnapPeaTriangulation::xmlReader(Packet*,
         XMLTreeResolver& resolver) {
     return new XMLSnapPeaReader(resolver);
 }

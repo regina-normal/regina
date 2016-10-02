@@ -39,7 +39,7 @@ namespace regina {
 namespace {
     struct XMLReaderFunction : public Returns<NXMLElementReader*> {
         template <typename Filter>
-        inline NXMLElementReader* operator() (NPacket* parent) {
+        inline NXMLElementReader* operator() (Packet* parent) {
             return Filter::Class::xmlFilterReader(parent);
         }
     };
@@ -72,7 +72,7 @@ void NXMLFilterPacketReader::endContentSubElement(
             filter_ = dynamic_cast<NXMLFilterReader*>(subReader)->filter();
 }
 
-XMLPacketReader* NSurfaceFilter::xmlReader(NPacket* parent,
+XMLPacketReader* NSurfaceFilter::xmlReader(Packet* parent,
         XMLTreeResolver& resolver) {
     return new NXMLFilterPacketReader(parent, resolver);
 }

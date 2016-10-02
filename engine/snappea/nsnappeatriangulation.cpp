@@ -721,7 +721,7 @@ void NSnapPeaTriangulation::writeXMLPacketData(std::ostream& out) const {
         << "</snappea>\n";
 }
 
-void NSnapPeaTriangulation::packetWasChanged(NPacket* packet) {
+void NSnapPeaTriangulation::packetWasChanged(Packet* packet) {
     // If the triangulation is changed "illegitimately", via the
     // inherited NTriangulation interface, then convert this to a null
     // triangulation.

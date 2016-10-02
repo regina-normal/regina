@@ -62,7 +62,7 @@ void addAngleStructures() {
     def("makeAngleEquations", regina::makeAngleEquations,
         return_value_policy<manage_new_object>());
 
-    class_<AngleStructures, bases<regina::NPacket>,
+    class_<AngleStructures, bases<regina::Packet>,
             SafeHeldType<AngleStructures>, boost::noncopyable>
             ("AngleStructures", no_init)
         .def("triangulation", &AngleStructures::triangulation,
@@ -87,7 +87,7 @@ void addAngleStructures() {
     ;
 
     implicitly_convertible<SafeHeldType<AngleStructures>,
-        SafeHeldType<regina::NPacket> >();
+        SafeHeldType<regina::Packet> >();
 
     FIX_REGINA_BOOST_CONVERTERS(AngleStructures);
 

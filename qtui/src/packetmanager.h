@@ -45,7 +45,7 @@
 class QPlainTextEdit;
 
 namespace regina {
-    class NPacket;
+    class Packet;
 };
 
 /**
@@ -60,10 +60,10 @@ class PacketManager {
          * may be rendered at various different sizes.
          *
          * If \a allowLock is true and the packet is not editable
-         * according to NPacket::isPacketEditable(), a small padlock
+         * according to Packet::isPacketEditable(), a small padlock
          * will be overlaid onto the icon.
          */
-        static QIcon icon(regina::NPacket* packet, bool allowLock = false);
+        static QIcon icon(regina::Packet* packet, bool allowLock = false);
 
         /**
          * Returns a newly created interface appropriate for viewing or
@@ -76,7 +76,7 @@ class PacketManager {
          * read-only or read-write status throughout its lifetime.
          * See PacketUI::setReadWrite() for details.
          */
-        static PacketUI* createUI(regina::NPacket* packet,
+        static PacketUI* createUI(regina::Packet* packet,
             PacketPane* enclosingPane);
 
         /**
@@ -85,7 +85,7 @@ class PacketManager {
          * If this packet should be viewed using an internal viewer, this
          * routine returns 0.
          */
-        static PacketExternalViewer externalViewer(regina::NPacket* packet);
+        static PacketExternalViewer externalViewer(regina::Packet* packet);
 };
 
 #endif

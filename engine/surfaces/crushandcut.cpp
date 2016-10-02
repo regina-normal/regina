@@ -1154,7 +1154,7 @@ namespace {
 
 NTriangulation* NNormalSurface::cutAlong() const {
     NTriangulation* ans = new NTriangulation();
-    NPacket::ChangeEventSpan span(ans);
+    Packet::ChangeEventSpan span(ans);
 
     unsigned long nTet = triangulation()->size();
     if (nTet == 0)
@@ -1552,7 +1552,7 @@ bool NNormalSurface::isIncompressible() const {
 
     cut->splitIntoComponents();
     int which = 0;
-    for (NPacket* comp = cut->firstChild(); comp; comp = comp->nextSibling())
+    for (Packet* comp = cut->firstChild(); comp; comp = comp->nextSibling())
         if (static_cast<NTriangulation*>(comp)->hasBoundaryTriangles()) {
             if (which == 2) {
                 // We have more than two components with boundary.

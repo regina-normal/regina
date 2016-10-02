@@ -32,7 +32,7 @@
 
 // Regina core includes:
 #include "regina-config.h"
-#include "packet/npacket.h"
+#include "packet/packet.h"
 
 // UI includes:
 #include "eventids.h"
@@ -59,7 +59,7 @@
 #include <QTreeWidget>
 #include <QWhatsThis>
 
-using regina::NPacket;
+using regina::Packet;
 
 // Hard-code the header size for now.
 namespace {
@@ -68,7 +68,7 @@ namespace {
 
 QLinkedList<QAction*> PacketUI::noActions;
 
-DefaultPacketUI::DefaultPacketUI(regina::NPacket* newPacket,
+DefaultPacketUI::DefaultPacketUI(regina::Packet* newPacket,
         PacketPane* newEnclosingPane) :
         PacketReadOnlyUI(newEnclosingPane), packet(newPacket) {
     QString msg = newEnclosingPane->tr(
@@ -83,7 +83,7 @@ DefaultPacketUI::DefaultPacketUI(regina::NPacket* newPacket,
     label->setContentsMargins(20, 20, 20, 20);
 }
 
-regina::NPacket* DefaultPacketUI::getPacket() {
+regina::Packet* DefaultPacketUI::getPacket() {
     return packet;
 }
 
@@ -98,7 +98,7 @@ QString DefaultPacketUI::getPacketMenuText() const {
 void DefaultPacketUI::refresh() {
 }
 
-PacketPane::PacketPane(ReginaMain* newMainWindow, NPacket* newPacket,
+PacketPane::PacketPane(ReginaMain* newMainWindow, Packet* newPacket,
         QWidget* parent) : QWidget(parent),
         mainWindow(newMainWindow), frame(0),
         editCut(0), editCopy(0), editPaste(0) {
@@ -255,26 +255,26 @@ void PacketPane::deregisterEditOperations() {
     }
 }
 
-void PacketPane::packetWasChanged(regina::NPacket*) {
+void PacketPane::packetWasChanged(regina::Packet*) {
     // Assume it's this packet.
     mainUI->refresh();
 }
 
-void PacketPane::packetWasRenamed(regina::NPacket*) {
+void PacketPane::packetWasRenamed(regina::Packet*) {
     // Assume it's this packet.
-    regina::NPacket* packet = getPacket();
+    regina::Packet* packet = getPacket();
 
     headerTitle->setText(packet->fullName().c_str());
     if (frame)
         frame->setWindowTitle(packet->humanLabel().c_str());
 }
 
-void PacketPane::packetToBeDestroyed(regina::NPacket*) {
+void PacketPane::packetToBeDestroyed(regina::Packet*) {
     // Assume it's this packet.
     close();
 }
 
-void PacketPane::childWasAdded(regina::NPacket* packet, regina::NPacket*) {
+void PacketPane::childWasAdded(regina::Packet* packet, regina::Packet*) {
     // Assume it's this packet.
     // Watch out though.  We may not be in the GUI thread.
     // Better do it all through Qt events.
@@ -283,7 +283,7 @@ void PacketPane::childWasAdded(regina::NPacket* packet, regina::NPacket*) {
             readWrite ? (QEvent::Type)EVT_PANE_SET_READONLY : (QEvent::Type)EVT_PANE_SET_READWRITE));
 }
 
-void PacketPane::childWasRemoved(regina::NPacket* packet, regina::NPacket*,
+void PacketPane::childWasRemoved(regina::Packet* packet, regina::Packet*,
         bool inParentDestructor) {
     // Assume it's this packet.
     if (packet->isPacketEditable() != readWrite)

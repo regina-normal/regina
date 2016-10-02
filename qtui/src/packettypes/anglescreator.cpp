@@ -73,8 +73,8 @@ QString AngleStructureCreator::parentWhatsThis() {
     return ui->tr("The triangulation that will contain your angle structures.");
 }
 
-regina::NPacket* AngleStructureCreator::createPacket(
-        regina::NPacket* parentPacket, QWidget* parentWidget) {
+regina::Packet* AngleStructureCreator::createPacket(
+        regina::Packet* parentPacket, QWidget* parentWidget) {
     // Note that parent may be either NTriangulation or NSnapPeaTriangulation.
     if (! dynamic_cast<regina::NTriangulation*>(parentPacket)) {
         ReginaSupport::sorry(ui,

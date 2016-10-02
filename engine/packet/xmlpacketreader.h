@@ -44,7 +44,7 @@
 
 namespace regina {
 
-class NPacket;
+class Packet;
 class XMLTreeResolver;
 
 /**
@@ -133,7 +133,7 @@ class REGINA_API XMLPacketReader : public NXMLElementReader {
          * is incomplete, the packet should be ignored or an error
          * occurred.
          */
-        virtual NPacket* packet();
+        virtual Packet* packet();
 
         /**
          * Used instead of startSubElement() for XML subelements that
@@ -184,7 +184,7 @@ inline XMLPacketReader::XMLPacketReader(XMLTreeResolver& resolver) :
         resolver_(resolver) {
 }
 
-inline NPacket* XMLPacketReader::packet() {
+inline Packet* XMLPacketReader::packet() {
     return 0;
 }
 

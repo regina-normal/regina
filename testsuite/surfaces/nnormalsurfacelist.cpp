@@ -51,7 +51,7 @@ using regina::NExampleTriangulation;
 using regina::NNormalSurface;
 using regina::NNormalSurfaceList;
 using regina::NNormalSurfaceVector;
-using regina::NPacket;
+using regina::Packet;
 using regina::NPerm4;
 using regina::NSignature;
 using regina::NTetrahedron;
@@ -2074,7 +2074,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             bool separating;
 
             unsigned long expected;
-            NPacket* p;
+            Packet* p;
 
             // We use the fact that each normal surface is connected.
             for (unsigned long i = 0; i < n; ++i) {

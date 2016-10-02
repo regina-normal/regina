@@ -173,7 +173,7 @@ void NNormalHypersurfaceList::writeXMLPacketData(std::ostream& out) const {
         (*it)->writeXMLData(out);
 }
 
-NPacket* NNormalHypersurfaceList::internalClonePacket(NPacket* /* parent */)
+Packet* NNormalHypersurfaceList::internalClonePacket(Packet* /* parent */)
         const {
     NNormalHypersurfaceList* ans = new NNormalHypersurfaceList(
         coords_, which_, algorithm_);

@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "packet/npacket.h"
+#include "packet/packet.h"
 
 #include "importdialog.h"
 #include "reginaprefset.h"
@@ -48,8 +48,8 @@
 #include <QTextDocument>
 #include <QWhatsThis>
 
-ImportDialog::ImportDialog(QWidget* parent, regina::NPacket* importedData,
-        regina::NPacket* packetTree, regina::NPacket* defaultParent,
+ImportDialog::ImportDialog(QWidget* parent, regina::Packet* importedData,
+        regina::Packet* packetTree, regina::Packet* defaultParent,
         PacketFilter* useFilter, bool useCodec, const QString& dialogTitle) :
         QDialog(parent), tree(packetTree), newTree(importedData) {
     setWindowTitle(dialogTitle);
@@ -119,7 +119,7 @@ bool ImportDialog::validate() {
 
 void ImportDialog::slotOk() {
     // Get the parent packet.
-    regina::NPacket* parentPacket = chooser->selectedPacket();
+    regina::Packet* parentPacket = chooser->selectedPacket();
     if (! parentPacket) {
         ReginaSupport::info(this,
             tr("Please select a parent packet."));

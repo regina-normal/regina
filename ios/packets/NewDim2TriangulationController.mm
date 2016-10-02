@@ -54,7 +54,7 @@
 
 - (IBAction)create:(id)sender
 {
-    regina::NPacket* ans = [self.pages create];
+    regina::Packet* ans = [self.pages create];
     if (ans) {
         self.spec.parent->insertChildLast(ans);
         [self.spec created:ans];
@@ -73,9 +73,9 @@
 
 @implementation NewDim2TriangulationEmptyPage
 
-- (regina::NPacket*)create
+- (regina::Packet*)create
 {
-    regina::NPacket* ans = new regina::Dim2Triangulation();
+    regina::Packet* ans = new regina::Dim2Triangulation();
     ans->setLabel("2-D triangulation");
     return ans;
 }
@@ -170,7 +170,7 @@ typedef regina::Dim2Triangulation* (*Dim2TriangulationCreator)();
     [[NSUserDefaults standardUserDefaults] setInteger:[self.example selectedRowInComponent:0] forKey:KEY_LAST_EXAMPLE];
 }
 
-- (regina::NPacket *)create
+- (regina::Packet *)create
 {
     return [options[[self.example selectedRowInComponent:0]] create];
 }
@@ -265,7 +265,7 @@ typedef regina::Dim2Triangulation* (*Dim2TriangulationCreator)();
     [self checkPunctures];
 }
 
-- (regina::NPacket*)create
+- (regina::Packet*)create
 {
     int useGenus = [self checkGenus];
     if (useGenus < 0)
@@ -287,7 +287,7 @@ typedef regina::Dim2Triangulation* (*Dim2TriangulationCreator)();
         return 0;
     }
 
-    regina::NPacket* ans;
+    regina::Packet* ans;
     if (useOrbl)
         ans = regina::Dim2ExampleTriangulation::orientable(useGenus, usePunctures);
     else
@@ -310,7 +310,7 @@ typedef regina::Dim2Triangulation* (*Dim2TriangulationCreator)();
     [c create:sender];
 }
 
-- (regina::NPacket *)create
+- (regina::Packet *)create
 {
     std::string sig = [self.isosig.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]].UTF8String;
     if (sig.empty()) {

@@ -123,7 +123,7 @@ void XMLAngleStructuresReader::endContentSubElement(
             list->structures.push_back(s);
 }
 
-XMLPacketReader* AngleStructures::xmlReader(NPacket* parent,
+XMLPacketReader* AngleStructures::xmlReader(Packet* parent,
         XMLTreeResolver& resolver) {
     return new XMLAngleStructuresReader(
         dynamic_cast<NTriangulation*>(parent), resolver);

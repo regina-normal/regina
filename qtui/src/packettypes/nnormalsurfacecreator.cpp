@@ -120,7 +120,7 @@ QString NNormalSurfaceCreator::parentWhatsThis() {
     return ui->tr("The triangulation that will contain your normal surfaces.");
 }
 
-regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
+regina::Packet* NNormalSurfaceCreator::createPacket(regina::Packet* parent,
         QWidget* parentWidget) {
     // Note that parent may be either NTriangulation or NSnapPeaTriangulation.
     if (! dynamic_cast<regina::NTriangulation*>(parent)) {

@@ -125,15 +125,15 @@ class NTriHeaderUI : public QObject, public PacketViewerTab,
         /**
          * PacketViewerTab overrides.
          */
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         QWidget* getInterface();
         void refresh();
 
         /**
          * PacketListener overrides.
          */
-        void childWasAdded(regina::NPacket* packet, regina::NPacket* child);
-        void childWasRemoved(regina::NPacket* packet, regina::NPacket* child,
+        void childWasAdded(regina::Packet* packet, regina::Packet* child);
+        void childWasRemoved(regina::Packet* packet, regina::Packet* child,
             bool inParentDestructor);
 
         /**

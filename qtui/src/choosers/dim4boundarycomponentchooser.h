@@ -133,9 +133,9 @@ class Dim4BoundaryComponentChooser :
         /**
          * PacketListener overrides.
          */
-        void packetToBeChanged(regina::NPacket*);
-        void packetWasChanged(regina::NPacket*);
-        void packetToBeDestroyed(regina::NPacket*);
+        void packetToBeChanged(regina::Packet*);
+        void packetWasChanged(regina::Packet*);
+        void packetToBeDestroyed(regina::Packet*);
 
     private:
         /**
@@ -190,16 +190,16 @@ inline bool Dim4BoundaryComponentChooser::refresh() {
     return (count() > 0);
 }
 
-inline void Dim4BoundaryComponentChooser::packetToBeChanged(regina::NPacket*) {
+inline void Dim4BoundaryComponentChooser::packetToBeChanged(regina::Packet*) {
     clear();
     options_.clear();
 }
 
-inline void Dim4BoundaryComponentChooser::packetWasChanged(regina::NPacket*) {
+inline void Dim4BoundaryComponentChooser::packetWasChanged(regina::Packet*) {
     fill();
 }
 
-inline void Dim4BoundaryComponentChooser::packetToBeDestroyed(regina::NPacket*) {
+inline void Dim4BoundaryComponentChooser::packetToBeDestroyed(regina::Packet*) {
     clear();
     options_.clear();
 }

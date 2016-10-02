@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // UI includes:
-#include "packet/npacket.h"
+#include "packet/packet.h"
 
 #include "packetui.h"
 #include "packetwindow.h"

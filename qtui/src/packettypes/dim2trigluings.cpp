@@ -54,7 +54,7 @@
 #include <QToolBar>
 #include <set>
 
-using regina::NPacket;
+using regina::Packet;
 using regina::Dim2Triangulation;
 
 namespace {
@@ -213,7 +213,7 @@ bool Dim2GluingsModel::setData(const QModelIndex& index, const QVariant& value,
         return false;
 
     // Yes!  Go ahead and make the change.
-    regina::NPacket::ChangeEventSpan span(tri_);
+    regina::Packet::ChangeEventSpan span(tri_);
 
     // First unglue from the old partner if it exists.
     if (t->adjacentSimplex(edge))
@@ -436,7 +436,7 @@ void Dim2TriGluingsUI::fillToolBar(QToolBar* bar) {
     bar->addAction(actOrient);
 }
 
-regina::NPacket* Dim2TriGluingsUI::getPacket() {
+regina::Packet* Dim2TriGluingsUI::getPacket() {
     return tri;
 }
 
@@ -523,7 +523,7 @@ void Dim2TriGluingsUI::removeSelectedTris() {
     if (first == 0 && last == tri->size() - 1)
         tri->removeAllSimplices();
     else {
-        regina::NPacket::ChangeEventSpan span(tri);
+        regina::Packet::ChangeEventSpan span(tri);
         for (int i = last; i >= first; --i)
             tri->removeSimplexAt(i);
     }
@@ -573,7 +573,7 @@ void Dim2TriGluingsUI::splitIntoComponents() {
     else {
         // If there are already children of this triangulation, insert
         // the new triangulations at a deeper level.
-        NPacket* base;
+        Packet* base;
         if (tri->firstChild()) {
             base = new regina::Container();
             tri->insertChildLast(base);

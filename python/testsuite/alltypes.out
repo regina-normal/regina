@@ -1198,7 +1198,7 @@ Equality type : BY_REFERENCE
 PDF : class
 Equality type : BY_REFERENCE
 
-NPacket : class
+Packet : class
 Equality type : BY_REFERENCE
 
 NPerm10 : class

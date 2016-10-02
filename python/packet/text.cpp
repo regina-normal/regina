@@ -47,7 +47,7 @@ namespace {
 }
 
 void addText() {
-    class_<Text, bases<regina::NPacket>,
+    class_<Text, bases<regina::Packet>,
             SafeHeldType<Text>, boost::noncopyable>("Text", init<>())
         .def(init<const std::string&>())
         .def(init<const char*>())
@@ -59,7 +59,7 @@ void addText() {
     ;
 
     implicitly_convertible<SafeHeldType<Text>,
-        SafeHeldType<regina::NPacket> >();
+        SafeHeldType<regina::Packet> >();
 
     FIX_REGINA_BOOST_CONVERTERS(Text);
 

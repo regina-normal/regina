@@ -272,7 +272,7 @@ static NSMutableCharacterSet* eulerSeparators;
 {
     _subfilters = [NSPointerArray pointerArrayWithOptions:NSPointerFunctionsOpaqueMemory | NSPointerFunctionsOpaquePersonality];
 
-    regina::NPacket* p;
+    regina::Packet* p;
     for (p = self.packet->firstChild(); p; p = p->nextSibling())
         if (p->type() == regina::PACKET_SURFACEFILTER)
             [_subfilters addPointer:p];
@@ -304,7 +304,7 @@ static NSMutableCharacterSet* eulerSeparators;
         return [self.children dequeueReusableCellWithIdentifier:@"Add" forIndexPath:indexPath];
     else {
         UITableViewCell* cell = [self.children dequeueReusableCellWithIdentifier:@"Subfilter" forIndexPath:indexPath];
-        cell.textLabel.text = [NSString stringWithUTF8String:static_cast<regina::NPacket*>([_subfilters pointerAtIndex:indexPath.row])->label().c_str()];
+        cell.textLabel.text = [NSString stringWithUTF8String:static_cast<regina::Packet*>([_subfilters pointerAtIndex:indexPath.row])->label().c_str()];
         return cell;
     }
 }
@@ -322,22 +322,22 @@ static NSMutableCharacterSet* eulerSeparators;
         return;
     }
 
-    [ReginaHelper viewPacket:static_cast<regina::NPacket*>([_subfilters pointerAtIndex:indexPath.row])];
+    [ReginaHelper viewPacket:static_cast<regina::Packet*>([_subfilters pointerAtIndex:indexPath.row])];
 }
 
-- (void)childWasAddedTo:(regina::NPacket *)packet child:(regina::NPacket *)child
+- (void)childWasAddedTo:(regina::Packet *)packet child:(regina::Packet *)child
 {
     // Be brutal for now: just reload the entire table.
     [self updateSubfilters];
 }
 
-- (void)childWasRemovedFrom:(regina::NPacket *)packet child:(regina::NPacket *)child inParentDestructor:(bool)d
+- (void)childWasRemovedFrom:(regina::Packet *)packet child:(regina::Packet *)child inParentDestructor:(bool)d
 {
     // Be brutal for now: just reload the entire table.
     [self updateSubfilters];
 }
 
-- (void)childWasRenamed:(regina::NPacket *)packet child:(regina::NPacket *)child
+- (void)childWasRenamed:(regina::Packet *)packet child:(regina::Packet *)child
 {
     // Be brutal for now: just reload the entire table.
     [self updateSubfilters];

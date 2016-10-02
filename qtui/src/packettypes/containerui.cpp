@@ -39,7 +39,7 @@
 #include <QBoxLayout>
 #include <QLabel>
 
-using regina::NPacket;
+using regina::Packet;
 using regina::Container;
 
 ContainerUI::ContainerUI(Container* packet, PacketPane* enclosingPane) :
@@ -96,7 +96,7 @@ ContainerUI::ContainerUI(Container* packet, PacketPane* enclosingPane) :
     container->listen(this);
 }
 
-NPacket* ContainerUI::getPacket() {
+Packet* ContainerUI::getPacket() {
     return container;
 }
 
@@ -113,11 +113,11 @@ void ContainerUI::refresh() {
     descendants->setText(QString::number(container->countDescendants()));
 }
 
-void ContainerUI::childWasAdded(NPacket*, NPacket*) {
+void ContainerUI::childWasAdded(Packet*, Packet*) {
     refresh();
 }
 
-void ContainerUI::childWasRemoved(NPacket*, NPacket*,
+void ContainerUI::childWasRemoved(Packet*, Packet*,
         bool inParentDestructor) {
     if (! inParentDestructor)
         refresh();

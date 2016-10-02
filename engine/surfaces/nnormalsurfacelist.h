@@ -44,7 +44,7 @@
 #include <iterator>
 #include <vector>
 #include "regina-core.h"
-#include "packet/npacket.h"
+#include "packet/packet.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/normalflags.h"
 #include "surfaces/normalcoords.h"
@@ -167,7 +167,7 @@ struct PacketInfo<PACKET_NORMALSURFACELIST> {
  * \todo \feature Generate facets of the solution space representing
  * embedded surfaces.
  */
-class REGINA_API NNormalSurfaceList : public NPacket {
+class REGINA_API NNormalSurfaceList : public Packet {
     REGINA_PACKET(NNormalSurfaceList, PACKET_NORMALSURFACELIST)
 
     public:
@@ -370,7 +370,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
-        static XMLPacketReader* xmlReader(NPacket* parent,
+        static XMLPacketReader* xmlReader(Packet* parent,
             XMLTreeResolver& resolver);
         virtual bool dependsOnParent() const;
 
@@ -905,7 +905,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
         NNormalSurfaceList(NormalCoords coords, NormalList which,
             NormalAlg algorithm);
 
-        virtual NPacket* internalClonePacket(NPacket* parent) const;
+        virtual Packet* internalClonePacket(Packet* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
 
         /**

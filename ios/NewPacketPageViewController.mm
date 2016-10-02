@@ -87,7 +87,7 @@
         [[NSUserDefaults standardUserDefaults] setInteger:currentPage forKey:defaultKey];
 }
 
-- (regina::NPacket *)create
+- (regina::Packet *)create
 {
     id <PacketCreator> c = self.pages[currentPage];
     return [c create];

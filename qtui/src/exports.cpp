@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "packet/npacket.h"
+#include "packet/packet.h"
 
 #include "packettreeview.h"
 #include "reginamain.h"
@@ -92,7 +92,7 @@ void ReginaMain::exportFile(const PacketExporter& exporter,
     ExportDialog dlg(this, packetTree, treeView->selectedPacket(),
         exporter.canExport(), exporter.useExportEncoding(), dialogTitle);
     if (dlg.validate() && dlg.exec() == QDialog::Accepted) {
-        regina::NPacket* data = dlg.selectedPacket();
+        regina::Packet* data = dlg.selectedPacket();
         if (data) {
             QString file = QFileDialog::getSaveFileName(this,
                 dialogTitle, QString(), fileFilter);

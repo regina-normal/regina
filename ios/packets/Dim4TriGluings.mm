@@ -319,7 +319,7 @@
     // Where to insert the components?
     // If there are already children of this triangulation, insert
     // the new triangulations at a deeper level.
-    regina::NPacket* base;
+    regina::Packet* base;
     if (self.packet->firstChild()) {
         base = new regina::Container();
         self.packet->insertChildLast(base);
@@ -376,7 +376,7 @@
         }
     }
     
-    regina::NPacket::ChangeEventSpan span(self.packet);
+    regina::Packet::ChangeEventSpan span(self.packet);
     self.packet->idealToFinite();
     self.packet->intelligentSimplify();
 }
@@ -397,7 +397,7 @@
         return;
     }
 
-    regina::NPacket::ChangeEventSpan span(self.packet);
+    regina::Packet::ChangeEventSpan span(self.packet);
     self.packet->finiteToIdeal();
     self.packet->intelligentSimplify();
 }
@@ -553,7 +553,7 @@
                 // Do it.
                 myEdit = YES;
                 {
-                    regina::NPacket::ChangeEventSpan span(self.packet);
+                    regina::Packet::ChangeEventSpan span(self.packet);
                     
                     // First unglue from the old partner if it exists.
                     if (s->adjacentSimplex(editFacet)) {

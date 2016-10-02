@@ -51,7 +51,7 @@ class PacketChooser;
 class QTreeView;
 
 namespace regina {
-    class NPacket;
+    class Packet;
     class NNormalSurfaceList;
     class NSurfaceFilter;
 };
@@ -174,7 +174,7 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
          * PacketEditorTab overrides.
          * Note that refresh() is a slot now.
          */
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         QWidget* getInterface();
         const QLinkedList<QAction*>& getPacketTypeActions();
         void setReadWrite(bool readWrite);
@@ -182,7 +182,7 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
         /**
          * PacketListener overrides.
          */
-        void packetToBeDestroyed(regina::NPacket* packet);
+        void packetToBeDestroyed(regina::Packet* packet);
 
     public slots:
         /**

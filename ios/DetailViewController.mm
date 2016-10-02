@@ -39,7 +39,7 @@
 #import "PacketViewer.h"
 #import "ReginaHelper.h"
 #import "TempFile.h"
-#import "packet/npacket.h"
+#import "packet/packet.h"
 #import "packet/pdf.h"
 #import "packet/packettype.h"
 
@@ -126,7 +126,7 @@
     [self setDoc:doc forceRefresh:NO];
 }
 
-- (void)setPacket:(regina::NPacket *)p forceRefresh:(BOOL)force emptySegue:(NSString*)emptySegue {
+- (void)setPacket:(regina::Packet *)p forceRefresh:(BOOL)force emptySegue:(NSString*)emptySegue {
     if (_packet == p && ! force)
         return;
 
@@ -212,7 +212,7 @@
     }
 }
 
-- (void)setPacket:(regina::NPacket *)packet
+- (void)setPacket:(regina::Packet *)packet
 {
     [self setPacket:packet forceRefresh:NO emptySegue:nil];
 }
@@ -287,7 +287,7 @@
 
 #pragma mark - Packet listener
 
-- (void)packetWasChanged:(regina::NPacket *)packet
+- (void)packetWasChanged:(regina::Packet *)packet
 {
     [[ReginaHelper document] setDirty];
 
@@ -295,19 +295,19 @@
         [static_cast<id<PacketViewer> >(self.contents) reloadPacket];
 }
 
-- (void)packetWasRenamed:(regina::NPacket *)packet
+- (void)packetWasRenamed:(regina::Packet *)packet
 {
     if (packet == self.packet)
         self.title = [NSString stringWithUTF8String:packet->label().c_str()];
 }
 
-- (void)packetToBeDestroyed:(regina::NPacket *)packet
+- (void)packetToBeDestroyed:(regina::Packet *)packet
 {
     if (packet == self.packet)
         self.packet = nil;
 }
 
-- (void)childWasAddedTo:(regina::NPacket *)packet child:(regina::NPacket *)child
+- (void)childWasAddedTo:(regina::Packet *)packet child:(regina::Packet *)child
 {
     if (packet == self.packet) {
         bool newEditability = packet->isPacketEditable();
@@ -320,7 +320,7 @@
     }
 }
 
-- (void)childWasRemovedFrom:(regina::NPacket *)packet child:(regina::NPacket *)child inParentDestructor:(bool)d
+- (void)childWasRemovedFrom:(regina::Packet *)packet child:(regina::Packet *)child inParentDestructor:(bool)d
 {
     if (packet == self.packet) {
         bool newEditability = packet->isPacketEditable();

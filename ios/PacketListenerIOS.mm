@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #import "PacketListenerIOS.h"
-#import "packet/npacket.h"
+#import "packet/packet.h"
 #import "packet/packetlistener.h"
 
 #pragma mark C++ wrapper
@@ -39,74 +39,74 @@
 class PacketListenerObjC : public regina::PacketListener {
 private:
     void* _object;
-    regina::NPacket* _listenChildrenOf;
+    regina::Packet* _listenChildrenOf;
 public:
-    inline PacketListenerObjC(void* object, regina::NPacket* listenChildrenOf) : _object(object), _listenChildrenOf(listenChildrenOf) {
+    inline PacketListenerObjC(void* object, regina::Packet* listenChildrenOf) : _object(object), _listenChildrenOf(listenChildrenOf) {
     }
     
-    inline void packetToBeChanged(regina::NPacket* packet) {
+    inline void packetToBeChanged(regina::Packet* packet) {
         if ([(__bridge id)_object respondsToSelector:@selector(packetToBeChanged:)])
             [(__bridge id)_object packetToBeChanged:packet];
     }
     
-    inline void packetWasChanged(regina::NPacket* packet) {
+    inline void packetWasChanged(regina::Packet* packet) {
         if ([(__bridge id)_object respondsToSelector:@selector(packetWasChanged:)])
             [(__bridge id)_object packetWasChanged:packet];
     }
     
-    inline void packetToBeRenamed(regina::NPacket* packet) {
+    inline void packetToBeRenamed(regina::Packet* packet) {
         if ([(__bridge id)_object respondsToSelector:@selector(packetToBeRenamed:)])
             [(__bridge id)_object packetToBeRenamed:packet];
     }
     
-    inline void packetWasRenamed(regina::NPacket* packet) {
+    inline void packetWasRenamed(regina::Packet* packet) {
         if ([(__bridge id)_object respondsToSelector:@selector(packetWasRenamed:)])
             [(__bridge id)_object packetWasRenamed:packet];
     }
     
-    inline void packetToBeDestroyed(regina::NPacket* packet) {
+    inline void packetToBeDestroyed(regina::Packet* packet) {
         if ([(__bridge id)_object respondsToSelector:@selector(packetToBeDestroyed:)])
             [(__bridge id)_object packetToBeDestroyed:packet];
     }
     
-    inline void childToBeAdded(regina::NPacket* packet, regina::NPacket* child) {
+    inline void childToBeAdded(regina::Packet* packet, regina::Packet* child) {
         if (packet == _listenChildrenOf)
             child->listen(this);
         if ([(__bridge id)_object respondsToSelector:@selector(childToBeAddedTo:child:)])
             [(__bridge id)_object childToBeAddedTo:packet child:child];
     }
     
-    inline void childWasAdded(regina::NPacket* packet, regina::NPacket* child) {
+    inline void childWasAdded(regina::Packet* packet, regina::Packet* child) {
         if ([(__bridge id)_object respondsToSelector:@selector(childWasAddedTo:child:)])
             [(__bridge id)_object childWasAddedTo:packet child:child];
     }
     
-    inline void childToBeRemoved(regina::NPacket* packet, regina::NPacket* child, bool inParentDestructor) {
+    inline void childToBeRemoved(regina::Packet* packet, regina::Packet* child, bool inParentDestructor) {
         if ([(__bridge id)_object respondsToSelector:@selector(childToBeRemovedFrom:child:inParentDestructor:)])
             [(__bridge id)_object childToBeRemovedFrom:packet child:child inParentDestructor:inParentDestructor];
     }
     
-    inline void childWasRemoved(regina::NPacket* packet, regina::NPacket* child, bool inParentDestructor) {
+    inline void childWasRemoved(regina::Packet* packet, regina::Packet* child, bool inParentDestructor) {
         if ([(__bridge id)_object respondsToSelector:@selector(childWasRemovedFrom:child:inParentDestructor:)])
             [(__bridge id)_object childWasRemovedFrom:packet child:child inParentDestructor:inParentDestructor];
     }
     
-    inline void childrenToBeReordered(regina::NPacket* packet) {
+    inline void childrenToBeReordered(regina::Packet* packet) {
         if ([(__bridge id)_object respondsToSelector:@selector(childrenToBeReordered:)])
             [(__bridge id)_object childrenToBeReordered:packet];
     }
     
-    inline void childrenWereReordered(regina::NPacket* packet) {
+    inline void childrenWereReordered(regina::Packet* packet) {
         if ([(__bridge id)_object respondsToSelector:@selector(childrenWereReordered:)])
             [(__bridge id)_object childrenWereReordered:packet];
     }
 
-    inline void childToBeRenamed(regina::NPacket* packet, regina::NPacket* child) {
+    inline void childToBeRenamed(regina::Packet* packet, regina::Packet* child) {
         if ([(__bridge id)_object respondsToSelector:@selector(childToBeRenamed:child:)])
             [(__bridge id)_object childToBeRenamed:packet child:child];
     }
     
-    inline void childWasRenamed(regina::NPacket* packet, regina::NPacket* child) {
+    inline void childWasRenamed(regina::Packet* packet, regina::Packet* child) {
         if ([(__bridge id)_object respondsToSelector:@selector(childWasRenamed:child:)])
             [(__bridge id)_object childWasRenamed:packet child:child];
     }
@@ -121,7 +121,7 @@ public:
 
 @implementation PacketListenerIOS
 
-- (id)initWithPacket:(regina::NPacket *)packet delegate:(id<PacketDelegate>)delegate listenChildren:(BOOL)listenChildren
+- (id)initWithPacket:(regina::Packet *)packet delegate:(id<PacketDelegate>)delegate listenChildren:(BOOL)listenChildren
 {
     self = [super init];
     if (self) {
@@ -129,13 +129,13 @@ public:
         packet->listen(_wrapper);
 
         if (listenChildren)
-            for (regina::NPacket* p = packet->firstChild(); p; p = p->nextSibling())
+            for (regina::Packet* p = packet->firstChild(); p; p = p->nextSibling())
                 p->listen(_wrapper);
     }
     return self;
 }
 
-+ (id)listenerWithPacket:(regina::NPacket *)packet delegate:(id<PacketDelegate>)delegate listenChildren:(BOOL)listenChildren
++ (id)listenerWithPacket:(regina::Packet *)packet delegate:(id<PacketDelegate>)delegate listenChildren:(BOOL)listenChildren
 {
     return [[PacketListenerIOS alloc] initWithPacket:packet delegate:delegate listenChildren:listenChildren];
 }

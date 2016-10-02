@@ -53,7 +53,7 @@ class QTreeWidget;
 class ReginaMain;
 
 namespace regina {
-    class NPacket;
+    class Packet;
 };
 
 /**
@@ -91,7 +91,7 @@ class PacketUI {
          * This routine should always return the same pointer throughout
          * the life of this object.
          */
-        virtual regina::NPacket* getPacket() = 0;
+        virtual regina::Packet* getPacket() = 0;
 
         /**
          * Return the entire interface component.
@@ -230,20 +230,20 @@ class PacketReadOnlyUI : public PacketUI {
  */
 class DefaultPacketUI : public PacketReadOnlyUI {
     private:
-        regina::NPacket* packet;
+        regina::Packet* packet;
         QLabel* label;
 
     public:
         /**
          * Constructor.
          */
-        DefaultPacketUI(regina::NPacket* newPacket,
+        DefaultPacketUI(regina::Packet* newPacket,
             PacketPane* newEnclosingPane);
 
         /**
          * Implementations of PacketUI virtual functions.
          */
-        virtual regina::NPacket* getPacket();
+        virtual regina::Packet* getPacket();
         virtual QWidget* getInterface();
         virtual QString getPacketMenuText() const;
         virtual void refresh();
@@ -297,14 +297,14 @@ class PacketPane : public QWidget, public regina::PacketListener {
          * An appropriate internal interface component will be selected
          * by way of the PacketManager class.
          */
-        PacketPane(ReginaMain* newMainWindow, regina::NPacket* newPacket,
+        PacketPane(ReginaMain* newMainWindow, regina::Packet* newPacket,
             QWidget* parent = 0);
         ~PacketPane();
 
         /**
          * Query components and actions.
          */
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         ReginaMain* getMainWindow();
         PacketUI* getUI();
 
@@ -328,7 +328,7 @@ class PacketPane : public QWidget, public regina::PacketListener {
          *
          * If \a allowReadWrite is \c true but nevertheless the pane
          * cannot be put into read-write mode, i.e., if
-         * NPacket::isPacketEditable() returns \c false or the
+         * Packet::isPacketEditable() returns \c false or the
          * underlying file is in read-only mode, then this routine will
          * do nothing and return \c false.  Otherwise this routine will
          * set the read-write status as requested and return \c true.
@@ -372,11 +372,11 @@ class PacketPane : public QWidget, public regina::PacketListener {
         /**
          * PacketListener overrides.
          */
-        void packetWasChanged(regina::NPacket* packet);
-        void packetWasRenamed(regina::NPacket* packet);
-        void packetToBeDestroyed(regina::NPacket* packet);
-        void childWasAdded(regina::NPacket* packet, regina::NPacket* child);
-        void childWasRemoved(regina::NPacket* packet, regina::NPacket* child,
+        void packetWasChanged(regina::Packet* packet);
+        void packetWasRenamed(regina::Packet* packet);
+        void packetToBeDestroyed(regina::Packet* packet);
+        void childWasAdded(regina::Packet* packet, regina::Packet* child);
+        void childWasRemoved(regina::Packet* packet, regina::Packet* child,
             bool inParentDestructor);
 
     public slots:
@@ -424,7 +424,7 @@ class PacketPane : public QWidget, public regina::PacketListener {
  * A packet-specific interface for opening a packet using an external
  * viewer.
  */
-typedef void (*PacketExternalViewer)(regina::NPacket* /* packet */,
+typedef void (*PacketExternalViewer)(regina::Packet* /* packet */,
     QWidget* /* parentWidget */);
 
 inline PacketUI::PacketUI(PacketPane* newEnclosingPane) :
@@ -452,7 +452,7 @@ inline PacketReadOnlyUI::PacketReadOnlyUI(PacketPane* newEnclosingPane) :
 inline void PacketReadOnlyUI::setReadWrite(bool) {
 }
 
-inline regina::NPacket* PacketPane::getPacket() {
+inline regina::Packet* PacketPane::getPacket() {
     return mainUI->getPacket();
 }
 

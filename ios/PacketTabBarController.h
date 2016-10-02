@@ -34,7 +34,7 @@
 #import "PacketViewer.h"
 
 namespace regina {
-    class NPacket;
+    class Packet;
 }
 
 @interface PacketTabBarController : UITabBarController

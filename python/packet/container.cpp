@@ -42,7 +42,7 @@ using regina::python::SafeHeldType;
 using regina::Container;
 
 void addContainer() {
-    class_<Container, bases<regina::NPacket>,
+    class_<Container, bases<regina::Packet>,
             SafeHeldType<Container>, boost::noncopyable>(
             "Container", init<>())
         .def(init<const std::string&>())
@@ -50,7 +50,7 @@ void addContainer() {
     ;
 
     implicitly_convertible<SafeHeldType<Container>,
-        SafeHeldType<regina::NPacket>>();
+        SafeHeldType<regina::Packet>>();
 
     FIX_REGINA_BOOST_CONVERTERS(Container);
 

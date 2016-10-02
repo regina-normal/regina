@@ -43,7 +43,7 @@
 #include <utility>
 #include <vector>
 #include "regina-core.h"
-#include "packet/npacket.h"
+#include "packet/packet.h"
 
 namespace regina {
 
@@ -83,13 +83,13 @@ struct PacketInfo<PACKET_SCRIPT> {
  * - if \a P is deleted then \a V will take the value \c None, and the script
  *   will likewise notify listeners of the change.
  */
-class REGINA_API Script : public NPacket, public PacketListener {
+class REGINA_API Script : public Packet, public PacketListener {
     REGINA_PACKET(Script, PACKET_SCRIPT)
 
     private:
         std::string text_;
             /**< The complete text of this script, including newlines. */
-        std::map<std::string, NPacket*> variables;
+        std::map<std::string, Packet*> variables;
             /**< A map storing the variables with which this script
                  is to be run.  Variable names are mapped to their
                  corresponding values. */
@@ -161,7 +161,7 @@ class REGINA_API Script : public NPacket, public PacketListener {
          * be between 0 and countVariables()-1 inclusive.
          * @return the value of the requested variable.
          */
-        NPacket* variableValue(size_t index) const;
+        Packet* variableValue(size_t index) const;
         /**
          * Returns the value of the variable stored with the given
          * name.  Variables may take the value \c null.
@@ -173,7 +173,7 @@ class REGINA_API Script : public NPacket, public PacketListener {
          * names are case sensitive.
          * @return the value of the requested variable.
          */
-        NPacket* variableValue(const std::string& name) const;
+        Packet* variableValue(const std::string& name) const;
 
         /**
          * Changes the name of an existing variable associated with
@@ -196,7 +196,7 @@ class REGINA_API Script : public NPacket, public PacketListener {
          * this must be between 0 and countVariables()-1 inclusive.
          * @param value the new value to assign to the variable.
          */
-        void setVariableValue(size_t index, NPacket* value);
+        void setVariableValue(size_t index, Packet* value);
 
         /**
          * Adds a new variable to be associated with this script.
@@ -214,7 +214,7 @@ class REGINA_API Script : public NPacket, public PacketListener {
          * @return \c true if the variable was successfully added, or
          * \c false if a variable with the given name was already stored.
          */
-        bool addVariable(const std::string& name, NPacket* value);
+        bool addVariable(const std::string& name, Packet* value);
         /**
          * Removes the variable stored with the given name.
          * If no variable is stored with the given name, this routine
@@ -244,15 +244,15 @@ class REGINA_API Script : public NPacket, public PacketListener {
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
-        static XMLPacketReader* xmlReader(NPacket* parent,
+        static XMLPacketReader* xmlReader(Packet* parent,
             XMLTreeResolver& resolver);
         virtual bool dependsOnParent() const;
 
-        virtual void packetWasRenamed(NPacket* packet);
-        virtual void packetToBeDestroyed(NPacket* packet);
+        virtual void packetWasRenamed(Packet* packet);
+        virtual void packetToBeDestroyed(Packet* packet);
 
     protected:
-        virtual NPacket* internalClonePacket(NPacket* parent) const;
+        virtual Packet* internalClonePacket(Packet* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
 };
 
@@ -294,7 +294,7 @@ inline size_t Script::countVariables() const {
     return variables.size();
 }
 
-inline bool Script::addVariable(const std::string& name, NPacket* value) {
+inline bool Script::addVariable(const std::string& name, Packet* value) {
     ChangeEventSpan span(this);
     bool ans = variables.insert(std::make_pair(name, value)).second;
     if (value)

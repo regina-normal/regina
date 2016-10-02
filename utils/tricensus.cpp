@@ -100,7 +100,7 @@ struct Dim2Params {
 
     inline static void findAllPerms(const Pairing* p,
             const Pairing::IsoList* autos, bool orientableOnly,
-            bool finiteOnly, int whichPurge, regina::NPacket* dest) {
+            bool finiteOnly, int whichPurge, regina::Packet* dest) {
         GluingPermSearcher::findAllPerms(p, autos,
             orientableOnly,
             foundGluingPerms<Dim2Params>, dest);
@@ -122,7 +122,7 @@ struct Dim3Params {
 
     inline static void findAllPerms(const Pairing* p,
             const Pairing::IsoList* autos, bool orientableOnly,
-            bool finiteOnly, int whichPurge, regina::NPacket* dest) {
+            bool finiteOnly, int whichPurge, regina::Packet* dest) {
         GluingPermSearcher::findAllPerms(p, autos,
             orientableOnly, finiteOnly, whichPurge,
             foundGluingPerms<Dim3Params>, dest);
@@ -144,7 +144,7 @@ struct Dim4Params {
 
     inline static void findAllPerms(const Pairing* p,
             const Pairing::IsoList* autos, bool orientableOnly,
-            bool finiteOnly, int /* whichPurge */, regina::NPacket* dest) {
+            bool finiteOnly, int /* whichPurge */, regina::Packet* dest) {
         GluingPermSearcher::findAllPerms(p, autos,
             orientableOnly, finiteOnly,
             foundGluingPerms<Dim4Params>, dest);
@@ -194,8 +194,8 @@ void foundGluingPerms(const typename CensusType::GluingPermSearcher* perms,
                 sigStream << tri->isoSig() << std::endl;
                 delete tri;
             } else {
-                regina::NPacket* dest =
-                    static_cast<regina::NPacket*>(container);
+                regina::Packet* dest =
+                    static_cast<regina::Packet*>(container);
 
                 std::ostringstream out;
                 out << "Item " << (nSolns + 1);
@@ -219,15 +219,15 @@ void foundFacePairing(const typename CensusType::Pairing* pairing,
         const typename CensusType::Pairing::IsoList* autos, void* container) {
     if (pairing) {
         std::cout << pairing->str() << std::endl;
-        regina::NPacket* subContainer;
+        regina::Packet* subContainer;
         // If creating a full .rga file, store triangulations for each face
         // pairing in a different container.
         if (subContainers) {
             subContainer = new regina::Container();
             subContainer->setLabel(pairing->str());
-            static_cast<regina::NPacket*>(container)->insertChildLast(subContainer);
+            static_cast<regina::Packet*>(container)->insertChildLast(subContainer);
         } else {
-            subContainer = static_cast<regina::NPacket*>(container);
+            subContainer = static_cast<regina::Packet*>(container);
         }
         CensusType::findAllPerms(pairing, autos,
             ! orientability.hasFalse(), ! finiteness.hasFalse(),
@@ -592,9 +592,9 @@ int runCensus() {
     nSolns = 0;
 
     // Prepare the packet tree (or signature file) for output.
-    regina::NPacket* parent = 0;
-    regina::NPacket* census = 0;
-    regina::NPacket* desc = 0;
+    regina::Packet* parent = 0;
+    regina::Packet* census = 0;
+    regina::Packet* desc = 0;
     if (sigs) {
         sigStream.open(outFile.c_str());
         if (! sigStream) {

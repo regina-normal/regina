@@ -83,11 +83,11 @@ int main(int argc, char* argv[]) {
         usage(argv[0], "No data files have been supplied.");
 
     // Read the input files one by one.
-    regina::NPacket* ans = new regina::Container();
+    regina::Packet* ans = new regina::Container();
     ans->setLabel("Combined Data");
 
     bool error = false;
-    regina::NPacket* data;
+    regina::Packet* data;
     for(std::list<std::string>::const_iterator it = files.begin();
             it != files.end(); it++) {
         data = regina::open(it->c_str());

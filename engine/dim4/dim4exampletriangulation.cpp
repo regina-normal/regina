@@ -166,7 +166,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::cappellShaneson() {
 Dim4Triangulation* Dim4ExampleTriangulation::doubleCone(
         const NTriangulation& base) {
     Dim4Triangulation* ans = new Dim4Triangulation();
-    NPacket::ChangeEventSpan span(ans);
+    Packet::ChangeEventSpan span(ans);
     ans->setLabel("Double cone over " + base.label());
 
     unsigned long n = base.size();
@@ -214,7 +214,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::doubleCone(
 Dim4Triangulation* Dim4ExampleTriangulation::singleCone(
         const NTriangulation& base) {
     Dim4Triangulation* ans = new Dim4Triangulation();
-    NPacket::ChangeEventSpan span(ans);
+    Packet::ChangeEventSpan span(ans);
     ans->setLabel("Single cone over " + base.label());
 
     unsigned long n = base.size();
@@ -401,7 +401,7 @@ namespace {
 Dim4Triangulation* Dim4ExampleTriangulation::iBundle(
         const NTriangulation& base) {
     Dim4Triangulation* ans = new Dim4Triangulation();
-    NPacket::ChangeEventSpan span(ans);
+    Packet::ChangeEventSpan span(ans);
     ans->setLabel(base.label() + " x I");
 
     unsigned long n = base.size();
@@ -455,7 +455,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::iBundle(
 Dim4Triangulation* Dim4ExampleTriangulation::s1Bundle(
         const NTriangulation& base) {
     Dim4Triangulation* ans = iBundle(base);
-    NPacket::ChangeEventSpan span(ans);
+    Packet::ChangeEventSpan span(ans);
     ans->setLabel(base.label() + " x S1");
 
     NPerm5 id;
@@ -470,7 +470,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::s1Bundle(
 Dim4Triangulation* Dim4ExampleTriangulation::bundleWithMonodromy(
         const NTriangulation& base, const NIsomorphism& monodromy) {
     Dim4Triangulation* ans = iBundle(base);
-    NPacket::ChangeEventSpan span(ans);
+    Packet::ChangeEventSpan span(ans);
     ans->setLabel(base.label() + " x I / ~");
 
     NPerm5 id;

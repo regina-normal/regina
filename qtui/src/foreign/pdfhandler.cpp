@@ -42,7 +42,7 @@
 
 const PDFHandler PDFHandler::instance;
 
-regina::NPacket* PDFHandler::importData(const QString& fileName,
+regina::Packet* PDFHandler::importData(const QString& fileName,
         ReginaMain* parentWidget) const {
     regina::PDF* ans = new regina::PDF(
         static_cast<const char*>(QFile::encodeName(fileName)));
@@ -62,7 +62,7 @@ PacketFilter* PDFHandler::canExport() const {
     return new SingleTypeFilter<regina::PDF>();
 }
 
-bool PDFHandler::exportData(regina::NPacket* data, const QString& fileName,
+bool PDFHandler::exportData(regina::Packet* data, const QString& fileName,
         QWidget* parentWidget) const {
     regina::PDF* pdf = dynamic_cast<regina::PDF*>(data);
     if (! pdf->data()) {

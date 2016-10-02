@@ -47,7 +47,7 @@ class QRadioButton;
 
 namespace regina {
     class NSurfaceFilterCombination;
-    class NPacket;
+    class Packet;
 };
 
 /**
@@ -83,7 +83,7 @@ class NSurfaceFilterCombUI : public QObject, public PacketUI,
         /**
          * PacketUI overrides.
          */
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         QWidget* getInterface();
         QString getPacketMenuText() const;
         void refresh();
@@ -92,11 +92,11 @@ class NSurfaceFilterCombUI : public QObject, public PacketUI,
         /**
          * PacketListener overrides.
          */
-        void packetWasRenamed(regina::NPacket* packet);
-        void childWasAdded(regina::NPacket* packet, regina::NPacket* child);
-        void childWasRemoved(regina::NPacket* packet, regina::NPacket* child,
+        void packetWasRenamed(regina::Packet* packet);
+        void childWasAdded(regina::Packet* packet, regina::Packet* child);
+        void childWasRemoved(regina::Packet* packet, regina::Packet* child,
             bool inParentDestructor);
-        void childrenWereReordered(regina::NPacket* packet);
+        void childrenWereReordered(regina::Packet* packet);
 
     public slots:
         /**

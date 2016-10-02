@@ -43,7 +43,7 @@ class GroupWidget;
 class QLabel;
 
 namespace regina {
-    class NPacket;
+    class Packet;
 
     template <int> class Triangulation;
     typedef Triangulation<4> Dim4Triangulation;
@@ -94,7 +94,7 @@ class Dim4TriHomologyFundUI : public QObject, public PacketViewerTab {
         /**
          * PacketViewerTab overrides.
          */
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         QWidget* getInterface();
         void refresh();
 

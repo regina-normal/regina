@@ -71,7 +71,7 @@ static NSArray* whichText;
 }
 
 - (IBAction)create:(id)sender {
-    regina::NPacket* ans;
+    regina::Packet* ans;
     switch (self.whichControl.selectedSegmentIndex) {
         case 0:
             ans = new regina::NSurfaceFilterProperties;

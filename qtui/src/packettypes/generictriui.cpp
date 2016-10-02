@@ -44,10 +44,10 @@
 #include <QLayout>
 #include <QPushButton>
 
-using regina::NPacket;
+using regina::Packet;
 using regina::Triangulation;
 
-GenericTriangulationBase::GenericTriangulationBase(regina::NPacket* p,
+GenericTriangulationBase::GenericTriangulationBase(regina::Packet* p,
         PacketPane* enclosingPane) :
         PacketReadOnlyUI(enclosingPane), packet(p) {
 #ifdef BOOST_PYTHON_FOUND
@@ -70,7 +70,7 @@ void GenericTriangulationBase::pythonConsole() {
         packet->root(), packet);
 }
 
-regina::NPacket* GenericTriangulationBase::getPacket() {
+regina::Packet* GenericTriangulationBase::getPacket() {
     return packet;
 }
 

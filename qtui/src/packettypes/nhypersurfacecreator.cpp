@@ -125,7 +125,7 @@ QString NHypersurfaceCreator::parentWhatsThis() {
         "normal hypersurfaces.");
 }
 
-regina::NPacket* NHypersurfaceCreator::createPacket(regina::NPacket* parent,
+regina::Packet* NHypersurfaceCreator::createPacket(regina::Packet* parent,
         QWidget* parentWidget) {
     if (! dynamic_cast<regina::Dim4Triangulation*>(parent)) {
         ReginaSupport::sorry(ui,

@@ -37,7 +37,7 @@
 #ifndef __PACKETCREATOR_H
 #define __PACKETCREATOR_H
 
-#include "packet/npacket.h"
+#include "packet/packet.h"
 #include <qstring.h>
 
 class QWidget;
@@ -95,7 +95,7 @@ class PacketCreator {
          * done then it will be done elsewhere.  It does not need to assign
          * a packet label; this will be also be done elsewhere.
          */
-        virtual regina::NPacket* createPacket(regina::NPacket* parentPacket,
+        virtual regina::Packet* createPacket(regina::Packet* parentPacket,
             QWidget* parentWidget) = 0;
 
         /**
@@ -122,8 +122,8 @@ class BasicPacketCreator : public PacketCreator {
         /**
          * PacketCreator overrides.
          */
-        regina::NPacket* createPacket(regina::NPacket*, QWidget*) {
-            regina::NPacket* ans = new T();
+        regina::Packet* createPacket(regina::Packet*, QWidget*) {
+            regina::Packet* ans = new T();
             ans->setLabel(ans->typeName());
             return ans;
         }

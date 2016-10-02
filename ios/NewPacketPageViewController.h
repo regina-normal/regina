@@ -33,7 +33,7 @@
 #import "NewPacketController.h"
 
 namespace regina {
-    class NPacket;
+    class Packet;
 }
 
 @protocol PacketCreator
@@ -42,7 +42,7 @@ namespace regina {
 // Need not insert it into the tree.
 // May return 0, but if so, should explain to
 // the user why.
-- (regina::NPacket*)create;
+- (regina::Packet*)create;
 
 @end
 
@@ -51,7 +51,7 @@ namespace regina {
 // Storyboard controllers must all adhere to the PacketCreator protocol.
 // The defaultKey may be nil.
 - (void)fillWithPages:(NSArray*)storyboardIDs pageSelector:(UISegmentedControl*)s defaultKey:(NSString*)key;
-- (regina::NPacket*)create;
+- (regina::Packet*)create;
 
 @end
 

@@ -37,7 +37,7 @@
 #include <qlayout.h>
 #include <qtabwidget.h>
 
-using regina::NPacket;
+using regina::Packet;
 
 PacketTabbedUI::PacketTabbedUI(PacketPane* enclosingPane,
         unsigned& indexPref) : PacketUI(enclosingPane),
@@ -137,7 +137,7 @@ void PacketTabbedUI::setCurrentTab(int tabIndex) {
     tabs->setCurrentIndex(tabIndex);
 }
 
-regina::NPacket* PacketTabbedUI::getPacket() {
+regina::Packet* PacketTabbedUI::getPacket() {
     /**
      * Get the packet from one of our internal pages.
      */
@@ -277,7 +277,7 @@ void PacketTabbedViewerTab::setCurrentTab(int tabIndex) {
     tabs->setCurrentIndex(tabIndex);
 }
 
-regina::NPacket* PacketTabbedViewerTab::getPacket() {
+regina::Packet* PacketTabbedViewerTab::getPacket() {
     return viewerTabs.front()->getPacket();
 }
 

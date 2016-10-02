@@ -52,7 +52,7 @@ class QTreeWidgetItem;
 
 namespace regina {
     class NMatrix2;
-    class NPacket;
+    class Packet;
     class NSatRegion;
     class NStandardTriangulation;
     template <int> class Isomorphism;
@@ -108,7 +108,7 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
         /**
          * PacketViewerTab overrides.
          */
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         QWidget* getInterface();
         PacketEditIface* getEditIface();
         void refresh();
@@ -116,7 +116,7 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
         /**
          * PacketListener overrides.
          */
-        void packetToBeDestroyed(regina::NPacket* packet);
+        void packetToBeDestroyed(regina::Packet* packet);
 
     public slots:
         /**

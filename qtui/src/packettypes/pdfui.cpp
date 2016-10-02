@@ -49,7 +49,7 @@
 #include <QTextDocument>
 #include <QUrl>
 
-void PDFExternalViewer::view(regina::NPacket* packet, QWidget* parentWidget) {
+void PDFExternalViewer::view(regina::Packet* packet, QWidget* parentWidget) {
     // Write the PDF data to our temporary file.
     const char* data = static_cast<regina::PDF*>(packet)->data();
     if (! data) {

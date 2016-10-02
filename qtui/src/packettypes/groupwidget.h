@@ -43,7 +43,7 @@ class QLabel;
 class QListWidget;
 
 namespace regina {
-    class NPacket;
+    class Packet;
     class NGroupPresentation;
 };
 

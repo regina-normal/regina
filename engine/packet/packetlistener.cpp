@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "packet/npacket.h"
+#include "packet/packet.h"
 #include "packet/packetlistener.h"
 
 namespace regina {
@@ -40,7 +40,7 @@ PacketListener::~PacketListener() {
 }
 
 void PacketListener::unregisterFromAllPackets() {
-    std::set<NPacket*>::iterator it, next;
+    std::set<Packet*>::iterator it, next;
 
     it = packets.begin();
     next = it;

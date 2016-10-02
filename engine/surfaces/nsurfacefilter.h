@@ -40,7 +40,7 @@
 #endif
 
 #include "regina-core.h"
-#include "packet/npacket.h"
+#include "packet/packet.h"
 #include "surfaces/surfacefiltertype.h"
 
 namespace regina {
@@ -154,7 +154,7 @@ struct SurfaceFilterInfo<NS_FILTER_DEFAULT> {
  *
  * \todo \feature Implement property \a lastAppliedTo.
  */
-class REGINA_API NSurfaceFilter : public NPacket {
+class REGINA_API NSurfaceFilter : public Packet {
     REGINA_PACKET(NSurfaceFilter, PACKET_SURFACEFILTER)
     REGINA_SURFACE_FILTER(NSurfaceFilter, NS_FILTER_DEFAULT)
 
@@ -219,7 +219,7 @@ class REGINA_API NSurfaceFilter : public NPacket {
          * filter's parent in the tree structure.  This information is
          * for reference only, and need not be used.
          * See the description of parameter \a parent in
-         * NPacket::xmlReader() for further details.
+         * Packet::xmlReader() for further details.
          *
          * \ifacespython Not present.
          *
@@ -228,10 +228,10 @@ class REGINA_API NSurfaceFilter : public NPacket {
          * tree matriarch.
          * @return the newly created XML filter reader.
          */
-        static NXMLFilterReader* xmlFilterReader(NPacket* parent);
+        static NXMLFilterReader* xmlFilterReader(Packet* parent);
 
         virtual void writeTextShort(std::ostream& out) const;
-        static XMLPacketReader* xmlReader(NPacket* parent,
+        static XMLPacketReader* xmlReader(Packet* parent,
             XMLTreeResolver& resolver);
         virtual bool dependsOnParent() const;
 
@@ -248,7 +248,7 @@ class REGINA_API NSurfaceFilter : public NPacket {
          * @param out the output stream to which the XML should be written.
          */
         virtual void writeXMLFilterData(std::ostream& out) const;
-        virtual NPacket* internalClonePacket(NPacket* parent) const;
+        virtual Packet* internalClonePacket(Packet* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
 };
 
@@ -258,7 +258,7 @@ class REGINA_API NSurfaceFilter : public NPacket {
 
 inline NSurfaceFilter::NSurfaceFilter() {
 }
-inline NSurfaceFilter::NSurfaceFilter(const NSurfaceFilter&) : NPacket() {
+inline NSurfaceFilter::NSurfaceFilter(const NSurfaceFilter&) : Packet() {
 }
 inline NSurfaceFilter::~NSurfaceFilter() {
 }
@@ -278,7 +278,7 @@ inline bool NSurfaceFilter::dependsOnParent() const {
     return false;
 }
 
-inline NPacket* NSurfaceFilter::internalClonePacket(NPacket*) const {
+inline Packet* NSurfaceFilter::internalClonePacket(Packet*) const {
     return new NSurfaceFilter();
 }
 

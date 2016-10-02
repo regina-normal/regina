@@ -46,7 +46,7 @@ class QTreeWidget;
 class QPushButton;
 
 namespace regina {
-    class NPacket;
+    class Packet;
 
     template <int> class Triangulation;
     typedef Triangulation<3> NTriangulation;
@@ -103,7 +103,7 @@ class NTriHomologyFundUI : public QObject, public PacketViewerTab {
         /**
          * PacketViewerTab overrides.
          */
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         QWidget* getInterface();
         void refresh();
 
@@ -155,7 +155,7 @@ class NTriTuraevViroUI : public QObject, public PacketViewerTab {
         /**
          * PacketViewerTab overrides.
          */
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         QWidget* getInterface();
         void refresh();
 
@@ -214,7 +214,7 @@ class NTriCellularInfoUI: public QObject, public PacketViewerTab {
         /**
          * PacketViewerTab overrides.
          */
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         QWidget* getInterface();
         void refresh();
 

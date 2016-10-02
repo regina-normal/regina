@@ -46,7 +46,7 @@
 #include <QLayout>
 #include <QPushButton>
 
-using regina::NPacket;
+using regina::Packet;
 using regina::NTriangulation;
 
 NTriSkeletonUI::NTriSkeletonUI(regina::NTriangulation* packet,
@@ -209,7 +209,7 @@ NTriSkelCompUI::NTriSkelCompUI(regina::NTriangulation* packet,
     layout->addStretch(1);
 }
 
-regina::NPacket* NTriSkelCompUI::getPacket() {
+regina::Packet* NTriSkelCompUI::getPacket() {
     return tri;
 }
 

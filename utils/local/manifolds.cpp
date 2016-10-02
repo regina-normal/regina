@@ -89,16 +89,16 @@ bool renameMfds = false;
 bool sortMfds = false;
 bool saveChanges = false;
 bool rawList = false;
-NPacket* tree;
+Packet* tree;
 
 struct ManifoldSpec {
-    NPacket* container;
+    Packet* container;
     bool hasTriangulation;
     NManifold* manifold; // 0 if unknown
 
     ManifoldSpec() : container(0), hasTriangulation(false), manifold(0) {
     }
-    ManifoldSpec(NPacket* c, bool t, NManifold* m) :
+    ManifoldSpec(Packet* c, bool t, NManifold* m) :
             container(c), hasTriangulation(t), manifold(m) {
     }
 
@@ -156,7 +156,7 @@ bool process(Container* c) {
     NStandardTriangulation* std;
     NManifold* mfd;
     std::string name, structure;
-    for (NPacket* child = c->firstChild(); child;
+    for (Packet* child = c->firstChild(); child;
             child = child->nextSibling()) {
         if (child->type() != PACKET_TRIANGULATION)
             continue;
@@ -280,7 +280,7 @@ int main(int argc, char* argv[]) {
     // Process the packets.
     if (! sortMfds) {
         // Just run through them in prefix order.
-        for (NPacket* p = tree; p; p = p->nextTreePacket())
+        for (Packet* p = tree; p; p = p->nextTreePacket())
             if (p->type() == PACKET_CONTAINER)
                 process(static_cast<Container*>(p));
     } else {
@@ -293,7 +293,7 @@ int main(int argc, char* argv[]) {
         if (tree->type() == PACKET_CONTAINER)
             process(static_cast<Container*>(tree));
 
-        NPacket *parent, *p;
+        Packet *parent, *p;
         bool foundManifolds;
         for (parent = tree; parent; parent = parent->nextTreePacket()) {
             // Process all children of parent, and then sort.

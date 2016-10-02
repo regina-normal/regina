@@ -46,7 +46,7 @@ namespace {
 }
 
 void addPDF() {
-    class_<PDF, bases<regina::NPacket>,
+    class_<PDF, bases<regina::Packet>,
             SafeHeldType<PDF>, boost::noncopyable>("PDF", init<>())
         .def(init<const char*>())
         .def("isNull", &PDF::isNull)
@@ -57,7 +57,7 @@ void addPDF() {
     ;
 
     implicitly_convertible<SafeHeldType<PDF>,
-        SafeHeldType<regina::NPacket> >();
+        SafeHeldType<regina::Packet> >();
 
     FIX_REGINA_BOOST_CONVERTERS(PDF);
 

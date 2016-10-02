@@ -45,7 +45,7 @@
 #include <vector>
 #include "regina-core.h"
 #include "angle/anglestructure.h"
-#include "packet/npacket.h"
+#include "packet/packet.h"
 #include "utilities/memutils.h"
 #include "utilities/nproperty.h"
 
@@ -80,7 +80,7 @@ struct PacketInfo<PACKET_ANGLESTRUCTURELIST> {
  * Angle structure lists should be created using the routine enumerate(),
  * which is new as of Regina 3.95.
  */
-class REGINA_API AngleStructures : public NPacket {
+class REGINA_API AngleStructures : public Packet {
     REGINA_PACKET(AngleStructures, PACKET_ANGLESTRUCTURELIST)
 
     private:
@@ -235,7 +235,7 @@ class REGINA_API AngleStructures : public NPacket {
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
-        static XMLPacketReader* xmlReader(NPacket* parent,
+        static XMLPacketReader* xmlReader(Packet* parent,
             XMLTreeResolver& resolver);
         virtual bool dependsOnParent() const;
 
@@ -251,7 +251,7 @@ class REGINA_API AngleStructures : public NPacket {
          */
         AngleStructures(bool tautOnly);
 
-        virtual NPacket* internalClonePacket(NPacket* parent) const;
+        virtual Packet* internalClonePacket(Packet* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
 
         /**

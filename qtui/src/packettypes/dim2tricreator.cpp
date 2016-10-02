@@ -236,7 +236,7 @@ QWidget* Dim2TriangulationCreator::getInterface() {
     return ui;
 }
 
-regina::NPacket* Dim2TriangulationCreator::createPacket(regina::NPacket*,
+regina::Packet* Dim2TriangulationCreator::createPacket(regina::Packet*,
         QWidget* parentWidget) {
     int typeId = type->currentIndex();
     if (typeId == TRI_EMPTY) {

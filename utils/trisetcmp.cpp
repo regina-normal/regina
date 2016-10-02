@@ -36,7 +36,7 @@
 #include "utilities/i18nutils.h"
 
 using regina::Dim4Triangulation;
-using regina::NPacket;
+using regina::Packet;
 using regina::NTriangulation;
 
 bool subcomplexTesting = false;
@@ -69,8 +69,8 @@ void usage(const char* progName, const std::string& error = std::string()) {
     exit(1);
 }
 
-void runMatches(NPacket* tree1, NPacket* tree2, std::ostream& out) {
-    NPacket *p1, *p2;
+void runMatches(Packet* tree1, Packet* tree2, std::ostream& out) {
+    Packet *p1, *p2;
 
     if (subcomplexTesting)
         out << "Matching (isomorphic subcomplex) triangulations:\n"
@@ -111,9 +111,9 @@ void runMatches(NPacket* tree1, NPacket* tree2, std::ostream& out) {
         out << std::endl << nMatches << " matches." << std::endl;
 }
 
-void runNonMatches(const std::string& file1, NPacket* tree1,
-        const std::string& file2, NPacket* tree2, std::ostream& out) {
-    NPacket *p1, *p2;
+void runNonMatches(const std::string& file1, Packet* tree1,
+        const std::string& file2, Packet* tree2, std::ostream& out) {
+    Packet *p1, *p2;
 
     out << "Triangulations in " << file1 << " but not " << file2
         << ":\n" << std::endl;
@@ -206,7 +206,7 @@ int main(int argc, char* argv[]) {
         usage(argv[0], "Two data files must be specified.");
 
     // Open the two data files.
-    NPacket* tree1 = regina::open(file1.c_str());
+    Packet* tree1 = regina::open(file1.c_str());
     if (! tree1) {
         std::cerr << "File " << file1 << " could not be read.\n";
         std::cerr << "Please check that it exists and that it is a Regina data file.\n";
@@ -214,7 +214,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    NPacket* tree2 = regina::open(file2.c_str());
+    Packet* tree2 = regina::open(file2.c_str());
     if (! tree2) {
         std::cerr << "File " << file2 << " could not be read.\n";
         std::cerr << "Please check that it exists and that it is a Regina data file.\n";

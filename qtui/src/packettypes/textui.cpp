@@ -44,7 +44,7 @@
 #include <QPlainTextEdit>
 #include <QVBoxLayout>
 
-using regina::NPacket;
+using regina::Packet;
 using regina::Text;
 
 TextUI::TextUI(Text* packet, PacketPane* enclosingPane) :
@@ -67,7 +67,7 @@ TextUI::~TextUI() {
     delete ui;
 }
 
-NPacket* TextUI::getPacket() {
+Packet* TextUI::getPacket() {
     return text;
 }
 

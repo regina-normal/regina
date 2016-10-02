@@ -135,9 +135,9 @@ class CuspChooser : public QComboBox, public regina::PacketListener {
         /**
          * PacketListener overrides.
          */
-        void packetToBeChanged(regina::NPacket*);
-        void packetWasChanged(regina::NPacket*);
-        void packetToBeDestroyed(regina::NPacket*);
+        void packetToBeChanged(regina::Packet*);
+        void packetWasChanged(regina::Packet*);
+        void packetToBeDestroyed(regina::Packet*);
 
         /**
          * Some ready-made cusp filters.
@@ -198,16 +198,16 @@ inline bool CuspChooser::refresh() {
     return (count() > 0);
 }
 
-inline void CuspChooser::packetToBeChanged(regina::NPacket*) {
+inline void CuspChooser::packetToBeChanged(regina::Packet*) {
     clear();
     options_.clear();
 }
 
-inline void CuspChooser::packetWasChanged(regina::NPacket*) {
+inline void CuspChooser::packetWasChanged(regina::Packet*) {
     fill();
 }
 
-inline void CuspChooser::packetToBeDestroyed(regina::NPacket*) {
+inline void CuspChooser::packetToBeDestroyed(regina::Packet*) {
     clear();
     options_.clear();
 }

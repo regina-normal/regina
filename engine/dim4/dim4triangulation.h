@@ -46,7 +46,7 @@
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
 #include "generic/triangulation.h"
-#include "packet/npacket.h"
+#include "packet/packet.h"
 #include "utilities/nmarkedvector.h"
 #include "utilities/nproperty.h"
 
@@ -116,7 +116,7 @@ struct PacketInfo<PACKET_DIM4TRIANGULATION> {
  */
 template <>
 class REGINA_API Triangulation<4> :
-        public NPacket,
+        public Packet,
         public detail::TriangulationBase<4> {
     REGINA_PACKET(Triangulation<4>, PACKET_DIM4TRIANGULATION)
 
@@ -939,11 +939,11 @@ class REGINA_API Triangulation<4> :
 
         /*@}*/
 
-        static XMLPacketReader* xmlReader(NPacket* parent,
+        static XMLPacketReader* xmlReader(Packet* parent,
             XMLTreeResolver& resolver);
 
     protected:
-        virtual NPacket* internalClonePacket(NPacket* parent) const;
+        virtual Packet* internalClonePacket(Packet* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
 
         /**
@@ -1100,7 +1100,7 @@ inline const NAbelianGroup& Triangulation<4>::homology() const {
     return homologyH1();
 }
 
-inline NPacket* Triangulation<4>::internalClonePacket(NPacket*) const {
+inline Packet* Triangulation<4>::internalClonePacket(Packet*) const {
     return new Dim4Triangulation(*this);
 }
 

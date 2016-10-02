@@ -54,7 +54,7 @@ private:
     regina::Triangulation<dim>* tri_;
 
 public:
-    GenericTriangulationHelperDim(regina::NPacket* tri) :
+    GenericTriangulationHelperDim(regina::Packet* tri) :
             tri_(static_cast<regina::Triangulation<dim>*>(tri)) {
     }
     virtual int dimension() const {
@@ -88,7 +88,7 @@ public:
 @property (weak, nonatomic) IBOutlet UILabel *type;
 @property (weak, nonatomic) IBOutlet UILabel *fVector;
 @property (weak, nonatomic) IBOutlet UILabel *boundary;
-@property (assign, nonatomic) regina::NPacket* packet;
+@property (assign, nonatomic) regina::Packet* packet;
 @end
 
 @implementation GenericTriangulationViewController

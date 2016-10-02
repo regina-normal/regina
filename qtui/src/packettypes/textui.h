@@ -45,7 +45,7 @@ class DocWidget;
 class DocWidgetNoSanitise;
 
 namespace regina {
-    class NPacket;
+    class Packet;
     class Text;
 };
 
@@ -78,7 +78,7 @@ class TextUI : public QObject, public PacketUI {
         /**
          * PacketUI overrides.
          */
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         QWidget* getInterface();
         PacketEditIface* getEditIface();
         QString getPacketMenuText() const;

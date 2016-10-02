@@ -53,7 +53,7 @@ namespace {
 
 const PythonHandler PythonHandler::instance;
 
-regina::NPacket* PythonHandler::importData(const QString& fileName,
+regina::Packet* PythonHandler::importData(const QString& fileName,
         ReginaMain* parentWidget) const {
     QFile f(fileName);
     if (! f.open(QIODevice::ReadOnly)) {
@@ -130,7 +130,7 @@ PacketFilter* PythonHandler::canExport() const {
     return new SingleTypeFilter<regina::Script>();
 }
 
-bool PythonHandler::exportData(regina::NPacket* data, const QString& fileName,
+bool PythonHandler::exportData(regina::Packet* data, const QString& fileName,
         QWidget* parentWidget) const {
     regina::Script* script = dynamic_cast<regina::Script*>(data);
 
@@ -155,7 +155,7 @@ bool PythonHandler::exportData(regina::NPacket* data, const QString& fileName,
 
     // Output the value of each variable.
     unsigned long i;
-    regina::NPacket* value;
+    regina::Packet* value;
     for (i = 0; i < script->countVariables(); i++) {
         value = script->variableValue(i);
         out << "### " << varMarker

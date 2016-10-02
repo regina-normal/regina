@@ -92,7 +92,7 @@
     ScriptVariableCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Variable" forIndexPath:indexPath];
     cell.variable.text = [NSString stringWithUTF8String:self.packet->variableName(indexPath.row - 1).c_str()];
 
-    regina::NPacket* value = self.packet->variableValue(indexPath.row - 1);
+    regina::Packet* value = self.packet->variableValue(indexPath.row - 1);
     if (value) {
         cell.icon.image = [PacketManagerIOS iconFor:value];
         if (value->parent())

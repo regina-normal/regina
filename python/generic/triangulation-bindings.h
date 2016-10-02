@@ -56,7 +56,7 @@ namespace {
         typedef regina::Simplex<dim>* (Triangulation<dim>::*
             newSimplex_string_type)(const std::string&);
         typedef size_t (Triangulation<dim>::*
-            splitIntoComponents_type)(regina::NPacket*, bool);
+            splitIntoComponents_type)(regina::Packet*, bool);
 
         static boost::python::list simplices_list(Triangulation<dim>& t) {
             boost::python::list ans;
@@ -129,7 +129,7 @@ namespace {
 
 template <int dim>
 void addTriangulation(const char* name) {
-    class_<Triangulation<dim>, bases<regina::NPacket>,
+    class_<Triangulation<dim>, bases<regina::Packet>,
             SafeHeldType<Triangulation<dim>>, boost::noncopyable>(name)
         .def(init<const Triangulation<dim>&>())
         .def("size", &Triangulation<dim>::size)
@@ -222,7 +222,7 @@ void addTriangulation(const char* name) {
     ;
 
     implicitly_convertible<SafeHeldType<Triangulation<dim>>,
-        SafeHeldType<regina::NPacket>>();
+        SafeHeldType<regina::Packet>>();
 
     FIX_REGINA_BOOST_CONVERTERS(Triangulation<dim>);
 }

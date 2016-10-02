@@ -53,7 +53,7 @@
 #include <QStackedWidget>
 
 using regina::NNormalSurfaceList;
-using regina::NPacket;
+using regina::Packet;
 
 NSurfaceCompatibilityUI::NSurfaceCompatibilityUI(
         regina::NNormalSurfaceList* packet, PacketTabbedUI* useParentUI) :
@@ -131,7 +131,7 @@ void NSurfaceCompatibilityUI::updatePreferences() {
         refresh();
 }
 
-regina::NPacket* NSurfaceCompatibilityUI::getPacket() {
+regina::Packet* NSurfaceCompatibilityUI::getPacket() {
     return surfaces;
 }
 

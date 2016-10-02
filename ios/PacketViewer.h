@@ -33,13 +33,13 @@
 #import "PacketListenerIOS.h"
 
 namespace regina {
-    class NPacket;
+    class Packet;
 }
 
 @protocol PacketViewer
 
-- (regina::NPacket*)packet;
-- (void)setPacket:(regina::NPacket*)packet;
+- (regina::Packet*)packet;
+- (void)setPacket:(regina::Packet*)packet;
 - (void)reloadPacket;
 
 @optional

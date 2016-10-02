@@ -63,7 +63,7 @@
 #include <QToolBar>
 #include <set>
 
-using regina::NPacket;
+using regina::Packet;
 using regina::Script;
 
 namespace {
@@ -123,7 +123,7 @@ QVariant ScriptVarModel::data(const QModelIndex& index, int role) const {
         if (index.column() == 0)
             return script_->variableName(index.row()).c_str();
         else if (index.column() == 1) {
-            NPacket* p = script_->variableValue(index.row());
+            Packet* p = script_->variableValue(index.row());
             if (! p)
                 return tr("<None>");
             else if (p->label().empty())
@@ -134,7 +134,7 @@ QVariant ScriptVarModel::data(const QModelIndex& index, int role) const {
             return QVariant();
     } else if (role == Qt::DecorationRole) {
         if (index.column() == 1) {
-            NPacket* p = script_->variableValue(index.row());
+            Packet* p = script_->variableValue(index.row());
             if (! p)
                 return QIcon();
             else
@@ -411,7 +411,7 @@ ScriptUI::~ScriptUI() {
     delete editWidget;
 }
 
-NPacket* ScriptUI::getPacket() {
+Packet* ScriptUI::getPacket() {
     return script;
 }
 

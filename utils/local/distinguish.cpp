@@ -80,7 +80,7 @@ unsigned totMfdsDuplicate = 0;
 
 int verbose = 0;
 std::string filename;
-NPacket* tree;
+Packet* tree;
 
 struct InvData;
 
@@ -160,7 +160,7 @@ void process(Container* c) {
 
     InvData* triData;
 
-    for (NPacket* child = c->firstChild(); child;
+    for (Packet* child = c->firstChild(); child;
             child = child->nextSibling()) {
         if (child->type() != PACKET_TRIANGULATION)
             continue;
@@ -297,7 +297,7 @@ int main(int argc, const char* argv[]) {
     }
 
     // Process the packets.
-    for (NPacket* p = tree; p; p = p->nextTreePacket())
+    for (Packet* p = tree; p; p = p->nextTreePacket())
         if (p->type() == PACKET_CONTAINER) {
             if (verbose)
                 std::cout << "... " << p->label() << " ...\n";

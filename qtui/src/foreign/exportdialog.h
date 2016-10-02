@@ -44,7 +44,7 @@ class PacketChooser;
 class PacketFilter;
 
 namespace regina {
-    class NPacket;
+    class Packet;
 };
 
 /**
@@ -62,8 +62,8 @@ class ExportDialog : public QDialog {
         /**
          * Packet tree structure:
          */
-        regina::NPacket* tree;
-        regina::NPacket* chosenPacket;
+        regina::Packet* tree;
+        regina::Packet* chosenPacket;
 
     public:
         /**
@@ -76,8 +76,8 @@ class ExportDialog : public QDialog {
          * This dialog and its components will claim ownership of the
          * given packet filter.
          */
-        ExportDialog(QWidget* parent, regina::NPacket* packetTree,
-            regina::NPacket* defaultSelection, PacketFilter* useFilter,
+        ExportDialog(QWidget* parent, regina::Packet* packetTree,
+            regina::Packet* defaultSelection, PacketFilter* useFilter,
             bool useCodec, const QString& dialogTitle);
 
         /**
@@ -93,7 +93,7 @@ class ExportDialog : public QDialog {
         /**
          * Returns the packet or packet subtree selected by the user.
          */
-        regina::NPacket* selectedPacket();
+        regina::Packet* selectedPacket();
 
     protected slots:
         /**
@@ -107,7 +107,7 @@ class ExportDialog : public QDialog {
         virtual void slotEncodingInfo();
 };
 
-inline regina::NPacket* ExportDialog::selectedPacket() {
+inline regina::Packet* ExportDialog::selectedPacket() {
     return chosenPacket;
 }
 

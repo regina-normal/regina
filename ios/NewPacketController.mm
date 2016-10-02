@@ -34,7 +34,7 @@
 #import "NewPacketController.h"
 #import "ReginaHelper.h"
 #import "PacketTreeController.h"
-#import "packet/npacket.h"
+#import "packet/packet.h"
 
 #pragma mark - New packet specification
 
@@ -47,7 +47,7 @@
         _type = type;
         _viewOnCreation = YES;
 
-        regina::NPacket* viewing = [ReginaHelper detail].packet;
+        regina::Packet* viewing = [ReginaHelper detail].packet;
         if (type == regina::PACKET_NORMALSURFACELIST || type == regina::PACKET_ANGLESTRUCTURELIST) {
             if (viewing && [NewPacketSpec isTriangulation:viewing])
                 _parent = viewing;
@@ -73,7 +73,7 @@
     return [[NewPacketSpec alloc] initWithType:type tree:tree];
 }
 
-- (id)initWithType:(regina::PacketType)type parent:(regina::NPacket *)parent
+- (id)initWithType:(regina::PacketType)type parent:(regina::Packet *)parent
 {
     self = [super init];
     if (self) {
@@ -84,7 +84,7 @@
     return self;
 }
 
-+ (id)specWithType:(regina::PacketType)type parent:(regina::NPacket *)parent
++ (id)specWithType:(regina::PacketType)type parent:(regina::Packet *)parent
 {
     return [[NewPacketSpec alloc] initWithType:type parent:parent];
 }
@@ -120,7 +120,7 @@
     return NO;
 }
 
-- (void)created:(regina::NPacket *)result
+- (void)created:(regina::Packet *)result
 {
     if (result) {
         if (self.viewOnCreation && result->type() != regina::PACKET_CONTAINER)
@@ -130,7 +130,7 @@
     }
 }
 
-+ (BOOL)isTriangulation:(regina::NPacket*)p
++ (BOOL)isTriangulation:(regina::Packet*)p
 {
     return (p->type() == regina::PACKET_TRIANGULATION || p->type() == regina::PACKET_SNAPPEATRIANGULATION);
 }

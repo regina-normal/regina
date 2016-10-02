@@ -95,7 +95,7 @@ void addNNormalSurfaceList() {
         return_value_policy<manage_new_object>());
 
     scope s = class_<NNormalSurfaceList,
-            bases<regina::NPacket>,
+            bases<regina::Packet>,
             SafeHeldType<NNormalSurfaceList>, boost::noncopyable>
             ("NNormalSurfaceList", no_init)
         .def("coords", &NNormalSurfaceList::coords)
@@ -149,7 +149,7 @@ void addNNormalSurfaceList() {
     s.attr("typeID") = regina::PACKET_NORMALSURFACELIST;
 
     implicitly_convertible<SafeHeldType<NNormalSurfaceList>,
-        SafeHeldType<regina::NPacket> >();
+        SafeHeldType<regina::Packet> >();
 
     FIX_REGINA_BOOST_CONVERTERS(NNormalSurfaceList);
 }

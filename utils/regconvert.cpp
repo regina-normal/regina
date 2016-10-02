@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "packet/npacket.h"
+#include "packet/packet.h"
 #include <cstdlib>
 
 void usage(const char* progName, const std::string& error = std::string()) {
@@ -98,7 +98,7 @@ int main(int argc, char* argv[]) {
             "Only uncompressed XML can be written to standard output.");
 
     // Read the old file.
-    regina::NPacket* tree = regina::open(oldFile.c_str());
+    regina::Packet* tree = regina::open(oldFile.c_str());
     if (! tree) {
         std::cerr << "File " << oldFile << " could not be read.\n";
         return 1;

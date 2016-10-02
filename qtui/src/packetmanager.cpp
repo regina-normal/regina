@@ -58,7 +58,7 @@
 
 using namespace regina;
 
-QIcon PacketManager::icon(NPacket* packet, bool allowLock) {
+QIcon PacketManager::icon(Packet* packet, bool allowLock) {
     IconCache::IconID id;
 
     switch (packet->type()) {
@@ -143,7 +143,7 @@ QIcon PacketManager::icon(NPacket* packet, bool allowLock) {
         return IconCache::icon(id);
 }
 
-PacketUI* PacketManager::createUI(regina::NPacket* packet,
+PacketUI* PacketManager::createUI(regina::Packet* packet,
         PacketPane* enclosingPane) {
     switch (packet->type()) {
         case PACKET_ANGLESTRUCTURELIST:
@@ -227,7 +227,7 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
     }
 }
 
-PacketExternalViewer PacketManager::externalViewer(regina::NPacket* packet) {
+PacketExternalViewer PacketManager::externalViewer(regina::Packet* packet) {
     if (packet->type() == PACKET_PDF)
         return &PDFExternalViewer::view;
     return 0;

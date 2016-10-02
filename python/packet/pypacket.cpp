@@ -31,7 +31,7 @@
  **************************************************************************/
 
 void addContainer();
-void addNPacket();
+void addPacket();
 void addPDF();
 void addScript();
 void addText();
@@ -41,7 +41,7 @@ void addPacket() {
     // Enums must come first.
     addPacketType();
 
-    addNPacket();
+    addPacket();
     addContainer();
     addPDF();
     addScript();

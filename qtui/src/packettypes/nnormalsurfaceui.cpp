@@ -48,7 +48,7 @@
 #include <QTextDocument>
 #include <QWhatsThis>
 
-using regina::NPacket;
+using regina::Packet;
 using regina::NNormalSurface;
 
 NNormalSurfaceUI::NNormalSurfaceUI(regina::NNormalSurfaceList* packet,
@@ -101,7 +101,7 @@ NSurfaceHeaderUI::NSurfaceHeaderUI(regina::NNormalSurfaceList* packet,
     packet->triangulation()->listen(this);
 }
 
-regina::NPacket* NSurfaceHeaderUI::getPacket() {
+regina::Packet* NSurfaceHeaderUI::getPacket() {
     return surfaces;
 }
 
@@ -157,7 +157,7 @@ void NSurfaceHeaderUI::viewTriangulation() {
         false /* visible in tree */, false /* select in tree */);
 }
 
-void NSurfaceHeaderUI::packetWasRenamed(regina::NPacket*) {
+void NSurfaceHeaderUI::packetWasRenamed(regina::Packet*) {
     // Assume it is the parent triangulation.
     refresh();
 }

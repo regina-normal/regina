@@ -49,7 +49,7 @@ class QComboBox;
 class QStackedWidget;
 
 namespace regina {
-    class NPacket;
+    class Packet;
     class NNormalHypersurfaceList;
 };
 
@@ -108,7 +108,7 @@ class NHyperCompatibilityUI : public QObject, public PacketViewerTab,
         /**
          * PacketViewerTab overrides.
          */
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         QWidget* getInterface();
         void refresh();
 

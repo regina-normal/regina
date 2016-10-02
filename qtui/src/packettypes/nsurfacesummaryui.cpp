@@ -148,7 +148,7 @@ NSurfaceSummaryUI::NSurfaceSummaryUI(
 NSurfaceSummaryUI::~NSurfaceSummaryUI() {
 }
 
-regina::NPacket* NSurfaceSummaryUI::getPacket() {
+regina::Packet* NSurfaceSummaryUI::getPacket() {
     return surfaces;
 }
 

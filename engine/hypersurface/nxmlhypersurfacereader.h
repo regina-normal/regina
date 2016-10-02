@@ -123,7 +123,7 @@ class REGINA_API NXMLNormalHypersurfaceListReader : public XMLPacketReader {
         NXMLNormalHypersurfaceListReader(const Dim4Triangulation* tri,
             XMLTreeResolver& resolver);
 
-        virtual NPacket* packet() override;
+        virtual Packet* packet() override;
         virtual NXMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
@@ -151,7 +151,7 @@ inline NXMLNormalHypersurfaceListReader::NXMLNormalHypersurfaceListReader(
         XMLPacketReader(resolver), list_(0), tri_(tri) {
 }
 
-inline NPacket* NXMLNormalHypersurfaceListReader::packet() {
+inline Packet* NXMLNormalHypersurfaceListReader::packet() {
     return list_;
 }
 

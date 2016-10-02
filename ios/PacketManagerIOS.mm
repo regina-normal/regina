@@ -37,13 +37,13 @@
 #import "PacketTreeController.h"
 #import "ReginaHelper.h"
 #import "packet/container.h"
-#import "packet/npacket.h"
+#import "packet/packet.h"
 #import "packet/text.h"
 #import "surfaces/nsurfacefilter.h"
 
 @implementation PacketManagerIOS
 
-+ (UIImage*)iconFor:(regina::NPacket *)p {
++ (UIImage*)iconFor:(regina::Packet *)p {
     if (! p->parent())
         return [UIImage imageNamed:@"Document"];
 
@@ -99,7 +99,7 @@
     }
 }
 
-+ (NSString *)viewerFor:(regina::NPacket *)p {
++ (NSString *)viewerFor:(regina::Packet *)p {
     switch (p->type()) {
         case regina::PACKET_ANGLESTRUCTURELIST: return @"viewAngles";
         case regina::PACKET_DIM2TRIANGULATION: return @"viewDim2Triangulation";

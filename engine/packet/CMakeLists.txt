@@ -2,9 +2,9 @@
 
 # Files to compile
 SET ( FILES
-  npacket
-  packetlistener
   open
+  packet
+  packetlistener
   pdf
   script
   text
@@ -29,6 +29,7 @@ if (${REGINA_INSTALL_DEV})
     npdf.h
     nscript.h
     ntext.h
+    packet.h
     packetlistener.h
     pdf.h
     xmlpacketreader.h

@@ -32,7 +32,7 @@
 
 #include <cstdlib>
 #include <cstring>
-#include <packet/npacket.h>
+#include <packet/packet.h>
 
 void usage(const char* program) {
     std::cerr << "Load a (typically large) file into memory." << std::endl;
@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
     }
 
     std::cout << "Loading..." << std::endl;
-    regina::NPacket* tree = regina::open(file);
+    regina::Packet* tree = regina::open(file);
     if (! tree) {
         std::cerr << "ERROR: Could not load file: " << file << std::endl;
         return 1;
@@ -68,7 +68,7 @@ int main(int argc, char* argv[]) {
 
     if (traverse) {
         std::cout << "Traversing..." << std::endl;
-        for (regina::NPacket* p = tree; p; p = p->nextTreePacket())
+        for (regina::Packet* p = tree; p; p = p->nextTreePacket())
             ;
     }
 

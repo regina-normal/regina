@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "packet/npacket.h"
+#include "packet/packet.h"
 
 // UI includes:
 #include "packettreeview.h"
@@ -39,7 +39,7 @@
 #include "reginasupport.h"
 
 void ReginaMain::moveShallow() {
-    regina::NPacket* packet = checkPacketSelected();
+    regina::Packet* packet = checkPacketSelected();
     if (! packet)
         return;
 
@@ -54,8 +54,8 @@ void ReginaMain::moveShallow() {
         return;
     }
 
-    regina::NPacket* parent = packet->parent();
-    regina::NPacket* grandparent = parent->parent();
+    regina::Packet* parent = packet->parent();
+    regina::Packet* grandparent = parent->parent();
     if (! grandparent) {
         ReginaSupport::info(this,
             tr("This is already a top-level packet."),
@@ -70,7 +70,7 @@ void ReginaMain::moveShallow() {
 }
 
 void ReginaMain::moveDeep() {
-    regina::NPacket* packet = checkPacketSelected();
+    regina::Packet* packet = checkPacketSelected();
     if (! packet)
         return;
 
@@ -86,7 +86,7 @@ void ReginaMain::moveDeep() {
     }
 
     bool down = true;
-    regina::NPacket* newParent = packet->nextSibling();
+    regina::Packet* newParent = packet->nextSibling();
     if (! newParent) {
         newParent = packet->prevSibling();
         down = false;
@@ -109,7 +109,7 @@ void ReginaMain::moveDeep() {
 }
 
 void ReginaMain::moveUp() {
-    regina::NPacket* packet = checkPacketSelected();
+    regina::Packet* packet = checkPacketSelected();
     if (! packet)
         return;
 
@@ -130,7 +130,7 @@ void ReginaMain::moveUp() {
 }
 
 void ReginaMain::moveDown() {
-    regina::NPacket* packet = checkPacketSelected();
+    regina::Packet* packet = checkPacketSelected();
     if (! packet)
         return;
 
@@ -151,7 +151,7 @@ void ReginaMain::moveDown() {
 }
 
 void ReginaMain::movePageUp() {
-    regina::NPacket* packet = checkPacketSelected();
+    regina::Packet* packet = checkPacketSelected();
     if (! packet)
         return;
 
@@ -172,7 +172,7 @@ void ReginaMain::movePageUp() {
 }
 
 void ReginaMain::movePageDown() {
-    regina::NPacket* packet = checkPacketSelected();
+    regina::Packet* packet = checkPacketSelected();
     if (! packet)
         return;
 
@@ -193,7 +193,7 @@ void ReginaMain::movePageDown() {
 }
 
 void ReginaMain::moveTop() {
-    regina::NPacket* packet = checkPacketSelected();
+    regina::Packet* packet = checkPacketSelected();
     if (! packet)
         return;
 
@@ -214,7 +214,7 @@ void ReginaMain::moveTop() {
 }
 
 void ReginaMain::moveBottom() {
-    regina::NPacket* packet = checkPacketSelected();
+    regina::Packet* packet = checkPacketSelected();
     if (! packet)
         return;
 

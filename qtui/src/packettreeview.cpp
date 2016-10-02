@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "packet/npacket.h"
+#include "packet/packet.h"
 
 // UI includes:
 #include "eventids.h"
@@ -45,22 +45,22 @@
 #include <QHeaderView>
 #include <QTreeWidget>
 
-using regina::NPacket;
+using regina::Packet;
 
-PacketTreeItem::PacketTreeItem(PacketTreeView* parent, NPacket* realPacket) :
+PacketTreeItem::PacketTreeItem(PacketTreeView* parent, Packet* realPacket) :
         QTreeWidgetItem(parent), packet(realPacket),
         shouldBeExpanded_(false) {
     init();
 }
 
-PacketTreeItem::PacketTreeItem(QTreeWidgetItem* parent, NPacket* realPacket) :
+PacketTreeItem::PacketTreeItem(QTreeWidgetItem* parent, Packet* realPacket) :
         QTreeWidgetItem(parent), packet(realPacket),
         shouldBeExpanded_(false) {
     init();
 }
 
 PacketTreeItem::PacketTreeItem(QTreeWidgetItem* parent,
-        QTreeWidgetItem* after, NPacket* realPacket) :
+        QTreeWidgetItem* after, Packet* realPacket) :
         QTreeWidgetItem(parent, after), packet(realPacket),
         shouldBeExpanded_(false) {
     init();
@@ -74,7 +74,7 @@ void PacketTreeItem::init() {
 
 void PacketTreeItem::fill() {
     PacketTreeItem* childTree = 0;
-    for (NPacket* p = packet->firstChild(); p; p = p->nextSibling()) {
+    for (Packet* p = packet->firstChild(); p; p = p->nextSibling()) {
         if (childTree)
             childTree = static_cast<PacketTreeView*>(treeWidget())->
                 createAndSelect(this, childTree, p);
@@ -105,16 +105,16 @@ void PacketTreeItem::ensureExpanded() {
         treeWidget()->collapseItem(this);
 }
 
-void PacketTreeItem::packetWasChanged(regina::NPacket*) {
+void PacketTreeItem::packetWasChanged(regina::Packet*) {
     getMainWindow()->setModified(true);
 }
 
-void PacketTreeItem::packetWasRenamed(regina::NPacket*) {
+void PacketTreeItem::packetWasRenamed(regina::Packet*) {
     refreshLabel();
     getMainWindow()->setModified(true);
 }
 
-void PacketTreeItem::packetToBeDestroyed(regina::NPacket*) {
+void PacketTreeItem::packetToBeDestroyed(regina::Packet*) {
     packet = 0;
     refreshLabel();
     getMainWindow()->setModified(true);
@@ -124,13 +124,13 @@ void PacketTreeItem::packetToBeDestroyed(regina::NPacket*) {
     delete this;
 }
 
-void PacketTreeItem::childWasAdded(regina::NPacket*, regina::NPacket*) {
+void PacketTreeItem::childWasAdded(regina::Packet*, regina::Packet*) {
     // Be careful.  We might not be in the GUI thread.
     QApplication::postEvent(treeWidget(), new PacketTreeItemEvent(
         static_cast<QEvent::Type>(EVT_TREE_CHILD_ADDED), this));
 }
 
-void PacketTreeItem::childWasRemoved(regina::NPacket*, regina::NPacket*,
+void PacketTreeItem::childWasRemoved(regina::Packet*, regina::Packet*,
         bool inParentDestructor) {
     // If we're in the parent destructor, it's all going to be done in
     // this->packetToBeDestroyed() anyway.
@@ -140,7 +140,7 @@ void PacketTreeItem::childWasRemoved(regina::NPacket*, regina::NPacket*,
     }
 }
 
-void PacketTreeItem::childrenWereReordered(regina::NPacket*) {
+void PacketTreeItem::childrenWereReordered(regina::Packet*) {
     refreshSubtree();
     getMainWindow()->setModified(true);
 }
@@ -166,18 +166,18 @@ PacketTreeView::PacketTreeView(ReginaMain* newMainWindow, QWidget* parent)
         SLOT(packetView(QTreeWidgetItem*)));
 }
 
-void PacketTreeView::fill(NPacket* topPacket) {
+void PacketTreeView::fill(Packet* topPacket) {
     clear();
 
     root = topPacket;
     root->listen(this);
 
     // The root packet itself does not appear in the tree.
-    for (NPacket* p = root->firstChild(); p; p = p->nextSibling())
+    for (Packet* p = root->firstChild(); p; p = p->nextSibling())
         createAndSelect(p)->fill();
 }
 
-PacketTreeItem* PacketTreeView::find(regina::NPacket* packet) {
+PacketTreeItem* PacketTreeView::find(regina::Packet* packet) {
     if (! packet)
         return 0;
 
@@ -189,7 +189,7 @@ PacketTreeItem* PacketTreeView::find(regina::NPacket* packet) {
 
     int itemCount = 0;
     PacketTreeItem* item;
-    regina::NPacket* current;
+    regina::Packet* current;
     while (itemCount < root->childCount()) {
         item = dynamic_cast<PacketTreeItem*>(root->child(itemCount++));
         current = item->getPacket();
@@ -205,7 +205,7 @@ PacketTreeItem* PacketTreeView::find(regina::NPacket* packet) {
     return 0;
 }
 
-void PacketTreeView::selectPacket(regina::NPacket* p, bool allowDefer) {
+void PacketTreeView::selectPacket(regina::Packet* p, bool allowDefer) {
     if (p == 0) {
         if (! selectedItems().isEmpty())
             clearSelection();
@@ -228,7 +228,7 @@ void PacketTreeView::packetView(QTreeWidgetItem* packet) {
             dynamic_cast<PacketTreeItem*>(packet)->getPacket());
 }
 
-void PacketTreeView::refreshSubtree(regina::NPacket* fromPacket,
+void PacketTreeView::refreshSubtree(regina::Packet* fromPacket,
         QTreeWidgetItem* fromItem) {
     // Is this a stale node in the tree?
     if (! fromPacket) {
@@ -242,11 +242,11 @@ void PacketTreeView::refreshSubtree(regina::NPacket* fromPacket,
 
     // Before we do anything else: this routine can mess up the current
     // selection.  Remember it so we can restore it later.
-    regina::NPacket* selected = selectedPacket();
+    regina::Packet* selected = selectedPacket();
 
     // Run through the child packets and child nodes and ensure they
     // match up.
-    NPacket* p = fromPacket->firstChild();
+    Packet* p = fromPacket->firstChild();
     int itemCounter = 0;
     PacketTreeItem* item = static_cast<PacketTreeItem*>(
         fromItem->child(itemCounter));
@@ -329,7 +329,7 @@ void PacketTreeView::refreshSubtree(regina::NPacket* fromPacket,
         selectPacket(selected);
 }
 
-PacketTreeItem* PacketTreeView::createAndSelect(regina::NPacket* packet) {
+PacketTreeItem* PacketTreeView::createAndSelect(regina::Packet* packet) {
     PacketTreeItem* item = new PacketTreeItem(this, packet);
     if (packet == toSelect) {
         setCurrentItem(item);
@@ -339,7 +339,7 @@ PacketTreeItem* PacketTreeView::createAndSelect(regina::NPacket* packet) {
 }
 
 PacketTreeItem* PacketTreeView::createAndSelect(QTreeWidgetItem* parent,
-        regina::NPacket* packet) {
+        regina::Packet* packet) {
     PacketTreeItem* item = new PacketTreeItem(parent, packet);
     if (packet == toSelect) {
         setCurrentItem(item);
@@ -349,7 +349,7 @@ PacketTreeItem* PacketTreeView::createAndSelect(QTreeWidgetItem* parent,
 }
 
 PacketTreeItem* PacketTreeView::createAndSelect(QTreeWidgetItem* parent,
-        QTreeWidgetItem* after, regina::NPacket* packet) {
+        QTreeWidgetItem* after, regina::Packet* packet) {
     PacketTreeItem* item = new PacketTreeItem(parent, after, packet);
     if (packet == toSelect) {
         setCurrentItem(item);
@@ -385,20 +385,20 @@ void PacketTreeView::handleItemCollapsed(QTreeWidgetItem* item) {
     p->markShouldBeExpanded(false);
 }
 
-void PacketTreeView::childWasAdded(regina::NPacket*, regina::NPacket*) {
+void PacketTreeView::childWasAdded(regina::Packet*, regina::Packet*) {
     // Be careful.  We might not be in the GUI thread.
     QApplication::postEvent(this, new PacketTreeItemEvent(
         static_cast<QEvent::Type>(EVT_TREE_CHILD_ADDED), 0 /* root packet */));
 }
 
-void PacketTreeView::childWasRemoved(regina::NPacket*, regina::NPacket*, bool) {
+void PacketTreeView::childWasRemoved(regina::Packet*, regina::Packet*, bool) {
     // We can't be in the parent destructor, since the tree itself only
     // listens on the root packet.
     refreshFullTree();
     getMainWindow()->setModified(true);
 }
 
-void PacketTreeView::childrenWereReordered(regina::NPacket*) {
+void PacketTreeView::childrenWereReordered(regina::Packet*) {
     refreshFullTree();
     getMainWindow()->setModified(true);
 }

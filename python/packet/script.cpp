@@ -42,9 +42,9 @@ using namespace regina::python;
 using regina::Script;
 
 namespace {
-    regina::NPacket* (Script::*variableValue_long)(size_t) const =
+    regina::Packet* (Script::*variableValue_long)(size_t) const =
         &Script::variableValue;
-    regina::NPacket* (Script::*variableValue_string)(const std::string&)
+    regina::Packet* (Script::*variableValue_string)(const std::string&)
         const = &Script::variableValue;
 
     void (Script::*removeVariable_long)(size_t) = &Script::removeVariable;
@@ -53,7 +53,7 @@ namespace {
 }
 
 void addScript() {
-    class_<Script, bases<regina::NPacket>,
+    class_<Script, bases<regina::Packet>,
             SafeHeldType<Script>, boost::noncopyable>("Script", init<>())
         .def("text", &Script::text,
             return_value_policy<return_by_value>())
@@ -77,7 +77,7 @@ void addScript() {
     ;
 
     implicitly_convertible<SafeHeldType<Script>,
-        SafeHeldType<regina::NPacket> >();
+        SafeHeldType<regina::Packet> >();
 
     FIX_REGINA_BOOST_CONVERTERS(Script);
 

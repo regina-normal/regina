@@ -161,7 +161,7 @@ class PacketTabbedUI : public QObject, public PacketUI {
         /**
          * PacketUI overrides.
          */
-        virtual regina::NPacket* getPacket();
+        virtual regina::Packet* getPacket();
         virtual QWidget* getInterface();
         virtual void refresh();
         virtual void endEdit();
@@ -355,7 +355,7 @@ class PacketTabbedViewerTab : public QObject, public PacketViewerTab {
         /**
          * PacketUI overrides.
          */
-        virtual regina::NPacket* getPacket();
+        virtual regina::Packet* getPacket();
         virtual QWidget* getInterface();
         virtual void refresh();
 

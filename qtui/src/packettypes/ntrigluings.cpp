@@ -66,7 +66,7 @@
 #include <QToolBar>
 #include <set>
 
-using regina::NPacket;
+using regina::Packet;
 using regina::NTriangulation;
 
 namespace {
@@ -227,7 +227,7 @@ bool GluingsModel::setData(const QModelIndex& index, const QVariant& value,
         return false;
 
     // Yes!  Go ahead and make the change.
-    regina::NPacket::ChangeEventSpan span(tri_);
+    regina::Packet::ChangeEventSpan span(tri_);
 
     // First unglue from the old partner if it exists.
     if (t->adjacentSimplex(face))
@@ -669,7 +669,7 @@ void NTriGluingsUI::fillToolBar(QToolBar* bar) {
     bar->addAction(actOrient);
 }
 
-regina::NPacket* NTriGluingsUI::getPacket() {
+regina::Packet* NTriGluingsUI::getPacket() {
     return tri;
 }
 
@@ -756,7 +756,7 @@ void NTriGluingsUI::removeSelectedTets() {
     if (first == 0 && last == tri->size() - 1)
         tri->removeAllSimplices();
     else {
-        regina::NPacket::ChangeEventSpan span(tri);
+        regina::Packet::ChangeEventSpan span(tri);
         for (int i = last; i >= first; --i)
             tri->removeSimplexAt(i);
     }
@@ -850,7 +850,7 @@ void NTriGluingsUI::idealToFinite() {
             tr("This triangulation has no ideal vertices."),
             tr("Only ideal vertices can be truncated."));
     else {
-        regina::NPacket::ChangeEventSpan span(tri);
+        regina::Packet::ChangeEventSpan span(tri);
         tri->idealToFinite();
         tri->intelligentSimplify();
     }
@@ -865,7 +865,7 @@ void NTriGluingsUI::finiteToIdeal() {
             tr("Only real boundary components will be converted into "
             "ideal vertices."));
     else {
-        regina::NPacket::ChangeEventSpan span(tri);
+        regina::Packet::ChangeEventSpan span(tri);
         tri->finiteToIdeal();
         tri->intelligentSimplify();
     }
@@ -890,7 +890,7 @@ void NTriGluingsUI::puncture() {
         ReginaSupport::info(ui,
             tr("I cannot puncture an empty triangulation."));
     else {
-        regina::NPacket::ChangeEventSpan span(tri);
+        regina::Packet::ChangeEventSpan span(tri);
         tri->puncture();
         tri->intelligentSimplify();
     }
@@ -1017,7 +1017,7 @@ void NTriGluingsUI::splitIntoComponents() {
     else {
         // If there are already children of this triangulation, insert
         // the new triangulations at a deeper level.
-        NPacket* base;
+        Packet* base;
         if (tri->firstChild()) {
             base = new regina::Container();
             tri->insertChildLast(base);
@@ -1057,7 +1057,7 @@ void NTriGluingsUI::connectedSumDecomposition() {
 
         // If there are already children of this triangulation, insert
         // the new triangulations at a deeper level.
-        NPacket* base;
+        Packet* base;
         if (tri->firstChild()) {
             base = new regina::Container();
             tri->insertChildLast(base);
@@ -1168,7 +1168,7 @@ void NTriGluingsUI::makeZeroEfficient() {
         orig.reset(new NTriangulation(*tri));
 
     // Make it 0-efficient and see what happens.
-    NPacket* decomp = tri->makeZeroEfficient();
+    Packet* decomp = tri->makeZeroEfficient();
     dlg.reset();
 
     if (decomp) {

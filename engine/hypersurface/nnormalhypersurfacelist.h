@@ -47,7 +47,7 @@
 #include "hypersurface/hypercoords.h"
 #include "hypersurface/hyperflags.h"
 #include "hypersurface/nnormalhypersurface.h"
-#include "packet/npacket.h"
+#include "packet/packet.h"
 #include "utilities/memutils.h"
 
 namespace regina {
@@ -91,7 +91,7 @@ struct PacketInfo<PACKET_NORMALHYPERSURFACELIST> {
  *
  * Normal hypersurface lists should be created using the routine enumerate().
  */
-class REGINA_API NNormalHypersurfaceList : public NPacket {
+class REGINA_API NNormalHypersurfaceList : public Packet {
     REGINA_PACKET(NNormalHypersurfaceList, PACKET_NORMALHYPERSURFACELIST)
 
     public:
@@ -259,7 +259,7 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
-        static XMLPacketReader* xmlReader(NPacket* parent,
+        static XMLPacketReader* xmlReader(Packet* parent,
             XMLTreeResolver& resolver);
         virtual bool dependsOnParent() const;
 
@@ -423,7 +423,7 @@ class REGINA_API NNormalHypersurfaceList : public NPacket {
         NNormalHypersurfaceList(HyperCoords coords, HyperList which,
             HyperAlg algorithm);
 
-        virtual NPacket* internalClonePacket(NPacket* parent) const;
+        virtual Packet* internalClonePacket(Packet* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
 
         /**

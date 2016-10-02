@@ -47,7 +47,7 @@
 
 namespace regina {
 
-class NPacket;
+class Packet;
 
 /**
  * \weakgroup packet
@@ -127,7 +127,7 @@ class REGINA_API XMLTreeResolutionTask {
  */
 class REGINA_API XMLTreeResolver : boost::noncopyable {
     public:
-        typedef std::map<std::string, NPacket*> IDMap;
+        typedef std::map<std::string, Packet*> IDMap;
             /**< A type that maps internal IDs from the data file to the
                  corresponding packets.  See ids() for details. */
 
@@ -174,7 +174,7 @@ class REGINA_API XMLTreeResolver : boost::noncopyable {
          * the data file.
          * @param packet the corresponding packet.
          */
-        void storeID(const std::string& id, NPacket* packet);
+        void storeID(const std::string& id, Packet* packet);
 
         /**
          * Returns the map from internal IDs to packets, as stored in
@@ -189,7 +189,7 @@ class REGINA_API XMLTreeResolver : boost::noncopyable {
          * share the same ID).
          *
          * Note that IDs read from the data file need not bear any
-         * relation to the IDs that are returned from NPacket::internalID(),
+         * relation to the IDs that are returned from Packet::internalID(),
          * although this is typically how they are constructed when a
          * file is saved.
          *
@@ -237,7 +237,7 @@ inline void XMLTreeResolver::queueTask(XMLTreeResolutionTask* task) {
     tasks_.push_back(task);
 }
 
-inline void XMLTreeResolver::storeID(const std::string& id, NPacket* packet) {
+inline void XMLTreeResolver::storeID(const std::string& id, Packet* packet) {
     ids_.insert(std::make_pair(id, packet));
 }
 

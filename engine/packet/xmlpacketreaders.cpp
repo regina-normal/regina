@@ -94,7 +94,7 @@ namespace {
             }
 
             inline void resolve(const XMLTreeResolver& resolver) {
-                NPacket* resolution = 0;
+                Packet* resolution = 0;
                 if (! valueID_.empty()) {
                     XMLTreeResolver::IDMap::const_iterator it =
                         resolver.ids().find(valueID_);
@@ -182,20 +182,20 @@ void XMLScriptReader::endContentSubElement(const std::string& subTagName,
     }
 }
 
-XMLPacketReader* Container::xmlReader(NPacket*,
+XMLPacketReader* Container::xmlReader(Packet*,
         XMLTreeResolver& resolver) {
     return new XMLContainerReader(resolver);
 }
 
-XMLPacketReader* PDF::xmlReader(NPacket*, XMLTreeResolver& resolver) {
+XMLPacketReader* PDF::xmlReader(Packet*, XMLTreeResolver& resolver) {
     return new XMLPDFReader(resolver);
 }
 
-XMLPacketReader* Script::xmlReader(NPacket*, XMLTreeResolver& resolver) {
+XMLPacketReader* Script::xmlReader(Packet*, XMLTreeResolver& resolver) {
     return new XMLScriptReader(resolver);
 }
 
-XMLPacketReader* Text::xmlReader(NPacket*, XMLTreeResolver& resolver) {
+XMLPacketReader* Text::xmlReader(Packet*, XMLTreeResolver& resolver) {
     return new XMLTextReader(resolver);
 }
 

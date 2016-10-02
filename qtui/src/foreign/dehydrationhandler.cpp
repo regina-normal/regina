@@ -44,7 +44,7 @@
 
 const DehydrationHandler DehydrationHandler::instance;
 
-regina::NPacket* DehydrationHandler::importData(const QString& fileName,
+regina::Packet* DehydrationHandler::importData(const QString& fileName,
         ReginaMain* parentWidget) const {
     QString explnSuffix = QObject::tr("<p>The file should be a plain text "
         "file containing one dehydration string per line.  "
@@ -53,7 +53,7 @@ regina::NPacket* DehydrationHandler::importData(const QString& fileName,
         "Callahan, Hildebrand and Weeks, published in "
         "<i>Mathematics of Computation</i> <b>68</b>, 1999.</qt>");
 
-    regina::NPacket* ans = regina::readDehydrationList(
+    regina::Packet* ans = regina::readDehydrationList(
         static_cast<const char*>(QFile::encodeName(fileName)));
     if (! ans) {
         ReginaSupport::sorry(parentWidget,
@@ -64,7 +64,7 @@ regina::NPacket* DehydrationHandler::importData(const QString& fileName,
         return 0;
     }
 
-    regina::NPacket* last = ans->lastChild();
+    regina::Packet* last = ans->lastChild();
     if (last == 0) {
         ReginaSupport::sorry(parentWidget,
             QObject::tr("The import failed."),

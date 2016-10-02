@@ -50,7 +50,7 @@
 #include "angle/anglestructure.h"
 #include "generic/triangulation.h"
 #include "maths/ncyclotomic.h"
-#include "packet/npacket.h"
+#include "packet/packet.h"
 #include "treewidth/ntreedecomposition.h"
 #include "utilities/nbooleans.h"
 #include "utilities/nmarkedvector.h"
@@ -167,7 +167,7 @@ enum TuraevViroAlg {
  */
 template <>
 class REGINA_API Triangulation<3> :
-        public NPacket,
+        public Packet,
         public detail::TriangulationBase<3> {
     REGINA_PACKET(Triangulation<3>, PACKET_TRIANGULATION)
 
@@ -1873,7 +1873,7 @@ class REGINA_API Triangulation<3> :
          * because this is a non-orientable triangulation with embedded
          * two-sided projective planes.
          */
-        long connectedSumDecomposition(NPacket* primeParent = 0,
+        long connectedSumDecomposition(Packet* primeParent = 0,
             bool setLabels = true);
         /**
          * Determines whether this is a triangulation of a 3-sphere.
@@ -2001,7 +2001,7 @@ class REGINA_API Triangulation<3> :
          * underlying 3-manifold is composite (in which case the
          * original triangulation was not changed).
          */
-        NPacket* makeZeroEfficient();
+        Packet* makeZeroEfficient();
         /**
          * Determines whether this is a triangulation of the solid
          * torus; that is, the unknot complement.  This routine can be
@@ -2920,11 +2920,11 @@ class REGINA_API Triangulation<3> :
 
         /*@}*/
 
-        static XMLPacketReader* xmlReader(NPacket* parent,
+        static XMLPacketReader* xmlReader(Packet* parent,
             XMLTreeResolver& resolver);
 
     protected:
-        virtual NPacket* internalClonePacket(NPacket* parent) const;
+        virtual Packet* internalClonePacket(Packet* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
 
         /**
@@ -3067,7 +3067,7 @@ inline Triangulation<3>::~Triangulation() {
     clearAllProperties();
 }
 
-inline NPacket* Triangulation<3>::internalClonePacket(NPacket*) const {
+inline Packet* Triangulation<3>::internalClonePacket(Packet*) const {
     return new NTriangulation(*this);
 }
 

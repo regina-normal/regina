@@ -41,7 +41,7 @@
 #endif
 
 #include "regina-core.h"
-#include "packet/npacket.h"
+#include "packet/packet.h"
 
 namespace regina {
 
@@ -67,7 +67,7 @@ struct PacketInfo<PACKET_CONTAINER> {
  * A packet that simply contains other packets.  Such
  * a packet contains no real data.
  */
-class REGINA_API Container : public NPacket {
+class REGINA_API Container : public Packet {
     REGINA_PACKET(Container, PACKET_CONTAINER)
 
     public:
@@ -88,12 +88,12 @@ class REGINA_API Container : public NPacket {
         Container(const std::string& label);
 
         virtual void writeTextShort(std::ostream& out) const;
-        static XMLPacketReader* xmlReader(NPacket* parent,
+        static XMLPacketReader* xmlReader(Packet* parent,
             XMLTreeResolver& resolver);
         virtual bool dependsOnParent() const;
 
     protected:
-        virtual NPacket* internalClonePacket(NPacket* parent) const;
+        virtual Packet* internalClonePacket(Packet* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
 };
 
@@ -124,7 +124,7 @@ inline bool Container::dependsOnParent() const {
     return false;
 }
 
-inline NPacket* Container::internalClonePacket(NPacket*) const {
+inline Packet* Container::internalClonePacket(Packet*) const {
     return new Container();
 }
 

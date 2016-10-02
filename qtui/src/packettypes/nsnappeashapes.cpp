@@ -53,7 +53,7 @@
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
 
-using regina::NPacket;
+using regina::Packet;
 using regina::NSnapPeaTriangulation;
 
 namespace {
@@ -354,7 +354,7 @@ void NSnapPeaShapesUI::fillToolBar(QToolBar* bar) {
     bar->addAction(actToRegina);
 }
 
-regina::NPacket* NSnapPeaShapesUI::getPacket() {
+regina::Packet* NSnapPeaShapesUI::getPacket() {
     return tri;
 }
 

@@ -107,9 +107,9 @@ class Dim4EltMoveDialog : public QDialog, public regina::PacketListener {
         /**
          * Update the overview information if the triangulation changes.
          */
-        void packetWasRenamed(regina::NPacket*);
-        void packetWasChanged(regina::NPacket*);
-        void packetToBeDestroyed(regina::NPacket*);
+        void packetWasRenamed(regina::Packet*);
+        void packetWasChanged(regina::Packet*);
+        void packetToBeDestroyed(regina::Packet*);
 
     protected slots:
         /**

@@ -44,7 +44,7 @@
  */
 class PDFExternalViewer {
     public:
-        static void view(regina::NPacket* packet, QWidget* parentWidget);
+        static void view(regina::Packet* packet, QWidget* parentWidget);
 };
 
 #endif

@@ -150,15 +150,15 @@ void SkeletonWindow::refresh() {
     table->header()->resizeSections(QHeaderView::ResizeToContents);
 }
 
-void SkeletonWindow::packetWasChanged(regina::NPacket*) {
+void SkeletonWindow::packetWasChanged(regina::Packet*) {
     refresh();
 }
 
-void SkeletonWindow::packetWasRenamed(regina::NPacket*) {
+void SkeletonWindow::packetWasRenamed(regina::Packet*) {
     updateCaption();
 }
 
-void SkeletonWindow::packetToBeDestroyed(regina::NPacket*) {
+void SkeletonWindow::packetToBeDestroyed(regina::Packet*) {
     accepted();
 }
 

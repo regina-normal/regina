@@ -49,7 +49,7 @@
 #define ANGLE_STATS_PADDING 5
 
 using regina::AngleStructures;
-using regina::NPacket;
+using regina::Packet;
 
 void AngleModel::rebuild() {
     // We should be using beginResetModel() / ... / endResetModel(),
@@ -211,7 +211,7 @@ AngleStructureUI::~AngleStructureUI() {
     delete model;
 }
 
-NPacket* AngleStructureUI::getPacket() {
+Packet* AngleStructureUI::getPacket() {
     return model->structures();
 }
 
@@ -289,7 +289,7 @@ void AngleStructureUI::columnResized(int section, int, int newSize) {
     currentlyAutoResizing = false;
 }
 
-void AngleStructureUI::packetWasRenamed(regina::NPacket*) {
+void AngleStructureUI::packetWasRenamed(regina::Packet*) {
     // Assume it is the parent triangulation.
     refreshHeader();
 }
