@@ -30,13 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file snappea/nxmlsnappeareader.h
+/*! \file snappea/xmlsnappeareader.h
  *  \brief Deals with parsing XML data for SnapPea triangulations.
  */
 
-#ifndef __NXMLSNAPPEAREADER_H
+#ifndef __XMLSNAPPEAREADER_H
 #ifndef __DOXYGEN
-#define __NXMLSNAPPEAREADER_H
+#define __XMLSNAPPEAREADER_H
 #endif
 
 #include "regina-core.h"
@@ -55,7 +55,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NXMLSnapPeaReader : public NXMLPacketReader {
+class REGINA_API XMLSnapPeaReader : public NXMLPacketReader {
     private:
         NSnapPeaTriangulation* snappea_;
             /**< The SnapPea triangulation currently being read. */
@@ -67,7 +67,7 @@ class REGINA_API NXMLSnapPeaReader : public NXMLPacketReader {
          * @param resolver the master resolver that will be used to fix
          * dangling packet references after the entire XML file has been read.
          */
-        NXMLSnapPeaReader(NXMLTreeResolver& resolver);
+        XMLSnapPeaReader(NXMLTreeResolver& resolver);
 
         virtual NPacket* packet() override;
         virtual NXMLElementReader* startContentSubElement(
@@ -79,17 +79,17 @@ class REGINA_API NXMLSnapPeaReader : public NXMLPacketReader {
 
 /*@}*/
 
-// Inline functions for NXMLSnapPeaReader
+// Inline functions for XMLSnapPeaReader
 
-inline NXMLSnapPeaReader::NXMLSnapPeaReader(NXMLTreeResolver& resolver) :
+inline XMLSnapPeaReader::XMLSnapPeaReader(NXMLTreeResolver& resolver) :
         NXMLPacketReader(resolver), snappea_(new NSnapPeaTriangulation()) {
 }
 
-inline NPacket* NXMLSnapPeaReader::packet() {
+inline NPacket* XMLSnapPeaReader::packet() {
     return snappea_;
 }
 
-inline NXMLElementReader* NXMLSnapPeaReader::startContentSubElement(
+inline NXMLElementReader* XMLSnapPeaReader::startContentSubElement(
         const std::string& subTagName, const regina::xml::XMLPropertyDict&) {
     if (subTagName == "snappea")
         return new NXMLCharsReader();

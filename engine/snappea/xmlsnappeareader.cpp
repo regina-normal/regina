@@ -31,12 +31,12 @@
  **************************************************************************/
 
 #include "snappea/nsnappeatriangulation.h"
-#include "snappea/nxmlsnappeareader.h"
+#include "snappea/xmlsnappeareader.h"
 #include "snappea/kernel/unix_file_io.h"
 
 namespace regina {
 
-void NXMLSnapPeaReader::endContentSubElement(
+void XMLSnapPeaReader::endContentSubElement(
         const std::string& subTagName, NXMLElementReader* subReader) {
     if (subTagName == "snappea") {
         if (snappea_->data_) {
@@ -62,7 +62,7 @@ void NXMLSnapPeaReader::endContentSubElement(
 
 NXMLPacketReader* NSnapPeaTriangulation::xmlReader(NPacket*,
         NXMLTreeResolver& resolver) {
-    return new NXMLSnapPeaReader(resolver);
+    return new XMLSnapPeaReader(resolver);
 }
 
 } // namespace regina

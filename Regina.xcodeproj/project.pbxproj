@@ -1390,9 +1390,9 @@
 		05A73C8B19B2EF130099C617 /* fundgroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C8619B2EF130099C617 /* fundgroup.cpp */; };
 		05A73C8C19B2EF130099C617 /* homology.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C8719B2EF130099C617 /* homology.cpp */; };
 		05A73C8D19B2EF130099C617 /* homology.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C8719B2EF130099C617 /* homology.cpp */; };
-		05A73C8E19B2EF130099C617 /* nxmlsnappeareader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C8819B2EF130099C617 /* nxmlsnappeareader.cpp */; };
-		05A73C8F19B2EF130099C617 /* nxmlsnappeareader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C8819B2EF130099C617 /* nxmlsnappeareader.cpp */; };
-		05A73C9019B2EF130099C617 /* nxmlsnappeareader.h in Headers */ = {isa = PBXBuildFile; fileRef = 05A73C8919B2EF130099C617 /* nxmlsnappeareader.h */; };
+		05A73C8E19B2EF130099C617 /* xmlsnappeareader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C8819B2EF130099C617 /* xmlsnappeareader.cpp */; };
+		05A73C8F19B2EF130099C617 /* xmlsnappeareader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C8819B2EF130099C617 /* xmlsnappeareader.cpp */; };
+		05A73C9019B2EF130099C617 /* xmlsnappeareader.h in Headers */ = {isa = PBXBuildFile; fileRef = 05A73C8919B2EF130099C617 /* xmlsnappeareader.h */; };
 		05A73C9A19B2EF5A0099C617 /* abelian_group.c in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C9119B2EF5A0099C617 /* abelian_group.c */; };
 		05A73C9B19B2EF5A0099C617 /* abelian_group.c in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C9119B2EF5A0099C617 /* abelian_group.c */; };
 		05A73C9C19B2EF5A0099C617 /* fundamental_group.c in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C9219B2EF5A0099C617 /* fundamental_group.c */; };
@@ -3273,8 +3273,8 @@
 		05A73C8319B2EEC50099C617 /* csv.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = csv.cpp; sourceTree = "<group>"; };
 		05A73C8619B2EF130099C617 /* fundgroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fundgroup.cpp; path = engine/snappea/fundgroup.cpp; sourceTree = SOURCE_ROOT; };
 		05A73C8719B2EF130099C617 /* homology.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = homology.cpp; path = engine/snappea/homology.cpp; sourceTree = SOURCE_ROOT; };
-		05A73C8819B2EF130099C617 /* nxmlsnappeareader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = nxmlsnappeareader.cpp; path = engine/snappea/nxmlsnappeareader.cpp; sourceTree = SOURCE_ROOT; };
-		05A73C8919B2EF130099C617 /* nxmlsnappeareader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = nxmlsnappeareader.h; path = engine/snappea/nxmlsnappeareader.h; sourceTree = SOURCE_ROOT; };
+		05A73C8819B2EF130099C617 /* xmlsnappeareader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = xmlsnappeareader.cpp; path = engine/snappea/xmlsnappeareader.cpp; sourceTree = SOURCE_ROOT; };
+		05A73C8919B2EF130099C617 /* xmlsnappeareader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = xmlsnappeareader.h; path = engine/snappea/xmlsnappeareader.h; sourceTree = SOURCE_ROOT; };
 		05A73C9119B2EF5A0099C617 /* abelian_group.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = abelian_group.c; sourceTree = "<group>"; };
 		05A73C9219B2EF5A0099C617 /* fundamental_group.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = fundamental_group.c; sourceTree = "<group>"; };
 		05A73C9319B2EF5A0099C617 /* homology.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = homology.c; sourceTree = "<group>"; };
@@ -4446,8 +4446,8 @@
 				05FEA07919C1890900A31924 /* nexamplesnappeatriangulation.h */,
 				052F9D92180600FB00FAE4DF /* nsnappeatriangulation.cpp */,
 				052F9D93180600FB00FAE4DF /* nsnappeatriangulation.h */,
-				05A73C8819B2EF130099C617 /* nxmlsnappeareader.cpp */,
-				05A73C8919B2EF130099C617 /* nxmlsnappeareader.h */,
+				05A73C8819B2EF130099C617 /* xmlsnappeareader.cpp */,
+				05A73C8919B2EF130099C617 /* xmlsnappeareader.h */,
 				052F9D94180600FB00FAE4DF /* snappy */,
 				052F9D99180600FB00FAE4DF /* uimessages.cpp */,
 			);
@@ -5910,7 +5910,7 @@
 				050C646A1DA1019B00C9420F /* anglestructure.h in Headers */,
 				052FA03F180600FB00FAE4DF /* nsquad.h in Headers */,
 				05431F861C40F3C9009BC072 /* vector_operations.h in Headers */,
-				05A73C9019B2EF130099C617 /* nxmlsnappeareader.h in Headers */,
+				05A73C9019B2EF130099C617 /* xmlsnappeareader.h in Headers */,
 				052F9E9C180600FB00FAE4DF /* dim2gluingpermsearcher.h in Headers */,
 				052F9FF1180600FB00FAE4DF /* nl31pillow.h in Headers */,
 				052942D31C5CDC8B0011C1E6 /* safeptr.h in Headers */,
@@ -7170,7 +7170,7 @@
 				05C064781C585628006E6483 /* GenericTriangulationViewController.mm in Sources */,
 				05D1174219EE019D003BEC55 /* dim2triangulation.cpp in Sources */,
 				052FA1D41806129B00FAE4DF /* enumerator.cpp in Sources */,
-				05A73C8F19B2EF130099C617 /* nxmlsnappeareader.cpp in Sources */,
+				05A73C8F19B2EF130099C617 /* xmlsnappeareader.cpp in Sources */,
 				05D1172F19EE0172003BEC55 /* nhomologicaldata.cpp in Sources */,
 				055FF38519BFB3C30057462A /* NewPacketPageViewController.mm in Sources */,
 				052FA18E1806129B00FAE4DF /* ngraphloop.cpp in Sources */,
@@ -7619,7 +7619,7 @@
 				0591E7DE1C4F750200793A9C /* nhsstandard.cpp in Sources */,
 				052FA012180600FB00FAE4DF /* nsnappedball.cpp in Sources */,
 				052F9F25180600FB00FAE4DF /* nhandlebody.cpp in Sources */,
-				05A73C8E19B2EF130099C617 /* nxmlsnappeareader.cpp in Sources */,
+				05A73C8E19B2EF130099C617 /* xmlsnappeareader.cpp in Sources */,
 				052FA028180600FB00FAE4DF /* links.cpp in Sources */,
 				052F9F37180600FB00FAE4DF /* approx.cpp in Sources */,
 				052F9F52180600FB00FAE4DF /* seedprimes.cpp in Sources */,

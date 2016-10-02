@@ -6,7 +6,7 @@ SET ( FILES
   homology
   nexamplesnappeatriangulation
   nsnappeatriangulation
-  nxmlsnappeareader
+  xmlsnappeareader
   uimessages)
 
 
@@ -27,7 +27,7 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     nexamplesnappeatriangulation.h
     nsnappeatriangulation.h
-    nxmlsnappeareader.h
+    xmlsnappeareader.h
     DESTINATION ${INCLUDEDIR}/snappea COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})
 

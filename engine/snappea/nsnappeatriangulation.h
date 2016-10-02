@@ -52,7 +52,7 @@ namespace snappea {
 
 class NMatrixInt;
 class NSnapPeaTriangulation;
-class NXMLSnapPeaReader;
+class XMLSnapPeaReader;
 
 template <int> class Triangulation;
 typedef Triangulation<3> NTriangulation;
@@ -1407,7 +1407,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          */
         void reset(regina::snappea::Triangulation* data);
 
-    friend class regina::NXMLSnapPeaReader;
+    friend class regina::XMLSnapPeaReader;
 };
 
 /*@}*/
