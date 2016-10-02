@@ -40,7 +40,7 @@
 #import "ReginaHelper.h"
 #import "TempFile.h"
 #import "packet/npacket.h"
-#import "packet/npdf.h"
+#import "packet/pdf.h"
 #import "packet/packettype.h"
 
 @interface DetailViewController () <UIDocumentInteractionControllerDelegate, PacketDelegate> {
@@ -155,7 +155,7 @@
         self.navigationItem.title = @"";
         [self embedViewer:(emptySegue ? emptySegue : @"empty")];
     } else if (p->type() == regina::PACKET_PDF) {
-        regina::NPDF* pdf = static_cast<regina::NPDF*>(p);
+        regina::PDF* pdf = static_cast<regina::PDF*>(p);
 
         // Open the PDF using QuickLook.
         if (pdf->isNull()) {

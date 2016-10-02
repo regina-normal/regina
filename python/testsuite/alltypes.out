@@ -1195,7 +1195,7 @@ Equality type : BY_REFERENCE
 NNormalSurfaceList : class
 Equality type : BY_REFERENCE
 
-NPDF : class
+PDF : class
 Equality type : BY_REFERENCE
 
 NPacket : class

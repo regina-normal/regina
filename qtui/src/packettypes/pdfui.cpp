@@ -31,10 +31,10 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "packet/npdf.h"
+#include "packet/pdf.h"
 
 // UI includes:
-#include "npdfui.h"
+#include "pdfui.h"
 #include "reginamain.h"
 #include "reginasupport.h"
 #include "sharedtempfile.h"
@@ -49,9 +49,9 @@
 #include <QTextDocument>
 #include <QUrl>
 
-void NPDFExternalViewer::view(regina::NPacket* packet, QWidget* parentWidget) {
+void PDFExternalViewer::view(regina::NPacket* packet, QWidget* parentWidget) {
     // Write the PDF data to our temporary file.
-    const char* data = static_cast<regina::NPDF*>(packet)->data();
+    const char* data = static_cast<regina::PDF*>(packet)->data();
     if (! data) {
         ReginaSupport::info(parentWidget,
             QObject::tr("This PDF packet is empty."));
@@ -69,7 +69,7 @@ void NPDFExternalViewer::view(regina::NPacket* packet, QWidget* parentWidget) {
         return;
     }
 
-    if (! static_cast<regina::NPDF*>(packet)->savePDF(static_cast<const char*>(
+    if (! static_cast<regina::PDF*>(packet)->savePDF(static_cast<const char*>(
             QFile::encodeName(temp->localFileName())))) {
         ReginaSupport::warn(parentWidget,
             QObject::tr("<qt>An error occurred whilst writing the PDF "

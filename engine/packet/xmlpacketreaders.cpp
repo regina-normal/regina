@@ -147,7 +147,7 @@ void XMLPDFReader::endContentSubElement(const std::string& subTagName,
         char* data;
         size_t dataLen;
         if (base64Decode(base64.c_str(), out - base64.begin(), &data, &dataLen))
-            pdf->reset(data, dataLen, NPDF::OWN_NEW);
+            pdf->reset(data, dataLen, PDF::OWN_NEW);
         else
             pdf->reset();
     }
@@ -187,7 +187,7 @@ XMLPacketReader* NContainer::xmlReader(NPacket*,
     return new XMLContainerReader(resolver);
 }
 
-XMLPacketReader* NPDF::xmlReader(NPacket*, XMLTreeResolver& resolver) {
+XMLPacketReader* PDF::xmlReader(NPacket*, XMLTreeResolver& resolver) {
     return new XMLPDFReader(resolver);
 }
 

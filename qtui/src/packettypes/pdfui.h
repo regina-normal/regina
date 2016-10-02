@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Python Interface                                                      *
+ *  KDE User Interface                                                    *
  *                                                                        *
  *  Copyright (c) 1999-2016, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,35 +30,21 @@
  *                                                                        *
  **************************************************************************/
 
-#include "packet/npdf.h"
-#include "../safeheldtype.h"
-#include "../helpers.h"
+/*! \file pdfui.h
+ *  \brief Provides an interface for viewing PDF packets.
+ */
 
-// Held type must be declared before boost/python.hpp
-#include <boost/python.hpp>
+#ifndef __PDFUI_H
+#define __PDFUI_H
 
-using namespace boost::python;
-using regina::python::SafeHeldType;
-using regina::NPDF;
+#include "packetui.h"
 
-namespace {
-    void (NPDF::*reset_empty)() = &NPDF::reset;
-}
+/**
+ * An external viewer for PDF packets.
+ */
+class PDFExternalViewer {
+    public:
+        static void view(regina::NPacket* packet, QWidget* parentWidget);
+};
 
-void addNPDF() {
-    class_<NPDF, bases<regina::NPacket>,
-            SafeHeldType<NPDF>, boost::noncopyable>("NPDF", init<>())
-        .def(init<const char*>())
-        .def("isNull", &NPDF::isNull)
-        .def("size", &NPDF::size)
-        .def("reset", reset_empty)
-        .def("savePDF", &NPDF::savePDF)
-        .attr("typeID") = regina::PACKET_PDF
-    ;
-
-    implicitly_convertible<SafeHeldType<NPDF>,
-        SafeHeldType<regina::NPacket> >();
-
-    FIX_REGINA_BOOST_CONVERTERS(NPDF);
-}
-
+#endif

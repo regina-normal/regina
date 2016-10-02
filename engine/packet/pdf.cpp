@@ -32,7 +32,7 @@
 
 #include <cstdio>
 #include <sys/stat.h>
-#include "packet/npdf.h"
+#include "packet/pdf.h"
 #include "utilities/base64.h"
 #include "utilities/xmlutils.h"
 
@@ -40,7 +40,7 @@
 
 namespace regina {
 
-NPDF::NPDF(const char* filename) : data_(0), size_(0), alloc_(OWN_NEW) {
+PDF::PDF(const char* filename) : data_(0), size_(0), alloc_(OWN_NEW) {
     // Use FILE* so we can call fstat().
 
     // Open the file.
@@ -84,7 +84,7 @@ NPDF::NPDF(const char* filename) : data_(0), size_(0), alloc_(OWN_NEW) {
     size_ = size;
 }
 
-void NPDF::reset() {
+void PDF::reset() {
     ChangeEventSpan span(this);
 
     if (data_) {
@@ -99,7 +99,7 @@ void NPDF::reset() {
     alloc_ = OWN_NEW;
 }
 
-void NPDF::reset(char* data, size_t size, OwnershipPolicy alloc) {
+void PDF::reset(char* data, size_t size, OwnershipPolicy alloc) {
     ChangeEventSpan span(this);
 
     // Out with the old data.
@@ -128,7 +128,7 @@ void NPDF::reset(char* data, size_t size, OwnershipPolicy alloc) {
     }
 }
 
-bool NPDF::savePDF(const char* filename) const {
+bool PDF::savePDF(const char* filename) const {
     if (! data_)
         return false;
 
@@ -150,7 +150,7 @@ bool NPDF::savePDF(const char* filename) const {
     return true;
 }
 
-void NPDF::writeXMLPacketData(std::ostream& out) const {
+void PDF::writeXMLPacketData(std::ostream& out) const {
     if (! data_) {
         // We have an empty PDF packet.
         out << "  <pdf encoding=\"null\"></pdf>\n";

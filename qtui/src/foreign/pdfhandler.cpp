@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "packet/npdf.h"
+#include "packet/pdf.h"
 
 #include "pdfhandler.h"
 #include "reginamain.h"
@@ -44,7 +44,7 @@ const PDFHandler PDFHandler::instance;
 
 regina::NPacket* PDFHandler::importData(const QString& fileName,
         ReginaMain* parentWidget) const {
-    regina::NPDF* ans = new regina::NPDF(
+    regina::PDF* ans = new regina::PDF(
         static_cast<const char*>(QFile::encodeName(fileName)));
     if (ans->isNull()) {
         delete ans;
@@ -59,12 +59,12 @@ regina::NPacket* PDFHandler::importData(const QString& fileName,
 }
 
 PacketFilter* PDFHandler::canExport() const {
-    return new SingleTypeFilter<regina::NPDF>();
+    return new SingleTypeFilter<regina::PDF>();
 }
 
 bool PDFHandler::exportData(regina::NPacket* data, const QString& fileName,
         QWidget* parentWidget) const {
-    regina::NPDF* pdf = dynamic_cast<regina::NPDF*>(data);
+    regina::PDF* pdf = dynamic_cast<regina::PDF*>(data);
     if (! pdf->data()) {
         ReginaSupport::sorry(parentWidget,
             QObject::tr("This PDF packet is empty."),

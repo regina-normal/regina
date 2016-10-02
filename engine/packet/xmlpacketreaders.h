@@ -42,7 +42,7 @@
 #include "regina-core.h"
 #include "packet/xmlpacketreader.h"
 #include "packet/ncontainer.h"
-#include "packet/npdf.h"
+#include "packet/pdf.h"
 #include "packet/script.h"
 #include "packet/ntext.h"
 
@@ -82,7 +82,7 @@ class REGINA_API XMLContainerReader : public XMLPacketReader {
  */
 class REGINA_API XMLPDFReader : public XMLPacketReader {
     private:
-        NPDF* pdf;
+        PDF* pdf;
             /**< The PDF packet currently being read. */
 
     public:
@@ -171,7 +171,7 @@ inline NPacket* XMLContainerReader::packet() {
 // Inline functions for XMLPDFReader
 
 inline XMLPDFReader::XMLPDFReader(XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), pdf(new NPDF()) {
+        XMLPacketReader(resolver), pdf(new PDF()) {
 }
 
 inline NPacket* XMLPDFReader::packet() {

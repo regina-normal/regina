@@ -56,7 +56,7 @@
 #include "packet/script.h"
 #include "surfaces/nsurfacefilter.h"
 #include "angle/anglestructures.h"
-#include "packet/npdf.h"
+#include "packet/pdf.h"
 #include "dim2/dim2triangulation.h"
 #include "dim4/dim4triangulation.h"
 #include "hypersurface/nnormalhypersurfacelist.h"

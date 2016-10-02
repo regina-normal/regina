@@ -46,7 +46,7 @@
 #include "packettypes/ncontainerui.h"
 #include "packettypes/nhypersurfaceui.h"
 #include "packettypes/nnormalsurfaceui.h"
-#include "packettypes/npdfui.h"
+#include "packettypes/pdfui.h"
 #include "packettypes/scriptui.h"
 #include "packettypes/nsnappeaui.h"
 #include "packettypes/nsurfacefiltercomb.h"
@@ -229,7 +229,7 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
 
 PacketExternalViewer PacketManager::externalViewer(regina::NPacket* packet) {
     if (packet->type() == PACKET_PDF)
-        return &NPDFExternalViewer::view;
+        return &PDFExternalViewer::view;
     return 0;
 }
 

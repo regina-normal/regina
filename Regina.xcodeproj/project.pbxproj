@@ -49,6 +49,7 @@
 		050C64971DA1301B00C9420F /* nexamplesnappeatriangulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64961DA1301B00C9420F /* nexamplesnappeatriangulation.h */; };
 		050C64991DA1388A00C9420F /* npacketlistener.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64981DA1388A00C9420F /* npacketlistener.h */; };
 		050C649B1DA1B61000C9420F /* nscript.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C649A1DA1B61000C9420F /* nscript.h */; };
+		050C649D1DA1BC9C00C9420F /* npdf.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C649C1DA1BC9C00C9420F /* npdf.h */; };
 		050F5DD31B9BAB9C00C1F681 /* nabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D021B9BAB9C00C1F681 /* nabeliangroup.cpp */; };
 		050F5DD41B9BAB9C00C1F681 /* ngrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D031B9BAB9C00C1F681 /* ngrouppresentation.cpp */; };
 		050F5DD51B9BAB9C00C1F681 /* nhomgrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D041B9BAB9C00C1F681 /* nhomgrouppresentation.cpp */; };
@@ -93,7 +94,7 @@
 		050F5E041B9BAB9C00C1F681 /* modulemain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D3D1B9BAB9C00C1F681 /* modulemain.cpp */; };
 		050F5E051B9BAB9C00C1F681 /* ncontainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D401B9BAB9C00C1F681 /* ncontainer.cpp */; };
 		050F5E061B9BAB9C00C1F681 /* npacket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D411B9BAB9C00C1F681 /* npacket.cpp */; };
-		050F5E071B9BAB9C00C1F681 /* npdf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D421B9BAB9C00C1F681 /* npdf.cpp */; };
+		050F5E071B9BAB9C00C1F681 /* pdf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D421B9BAB9C00C1F681 /* pdf.cpp */; };
 		050F5E081B9BAB9C00C1F681 /* script.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D431B9BAB9C00C1F681 /* script.cpp */; };
 		050F5E091B9BAB9C00C1F681 /* ntext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D441B9BAB9C00C1F681 /* ntext.cpp */; };
 		050F5E0A1B9BAB9C00C1F681 /* packettype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D451B9BAB9C00C1F681 /* packettype.cpp */; };
@@ -340,8 +341,8 @@
 		052F9F55180600FB00FAE4DF /* npacket.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9CFF180600FA00FAE4DF /* npacket.h */; };
 		052F9F56180600FB00FAE4DF /* packetlistener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D00180600FA00FAE4DF /* packetlistener.cpp */; };
 		052F9F57180600FB00FAE4DF /* packetlistener.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D01180600FA00FAE4DF /* packetlistener.h */; };
-		052F9F59180600FB00FAE4DF /* npdf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D03180600FA00FAE4DF /* npdf.cpp */; };
-		052F9F5A180600FB00FAE4DF /* npdf.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D04180600FA00FAE4DF /* npdf.h */; };
+		052F9F59180600FB00FAE4DF /* pdf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D03180600FA00FAE4DF /* pdf.cpp */; };
+		052F9F5A180600FB00FAE4DF /* pdf.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D04180600FA00FAE4DF /* pdf.h */; };
 		052F9F5B180600FB00FAE4DF /* script.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D05180600FA00FAE4DF /* script.cpp */; };
 		052F9F5C180600FB00FAE4DF /* script.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D06180600FA00FAE4DF /* script.h */; };
 		052F9F5D180600FB00FAE4DF /* ntext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D07180600FA00FAE4DF /* ntext.cpp */; };
@@ -677,7 +678,7 @@
 		052FA1A51806129B00FAE4DF /* seedprimes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CFA180600FA00FAE4DF /* seedprimes.cpp */; };
 		052FA1A61806129B00FAE4DF /* npacket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CFE180600FA00FAE4DF /* npacket.cpp */; };
 		052FA1A71806129B00FAE4DF /* packetlistener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D00180600FA00FAE4DF /* packetlistener.cpp */; };
-		052FA1A91806129B00FAE4DF /* npdf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D03180600FA00FAE4DF /* npdf.cpp */; };
+		052FA1A91806129B00FAE4DF /* pdf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D03180600FA00FAE4DF /* pdf.cpp */; };
 		052FA1AA1806129B00FAE4DF /* script.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D05180600FA00FAE4DF /* script.cpp */; };
 		052FA1AB1806129B00FAE4DF /* ntext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D07180600FA00FAE4DF /* ntext.cpp */; };
 		052FA1AC1806129B00FAE4DF /* xmlpacketreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D09180600FA00FAE4DF /* xmlpacketreader.cpp */; };
@@ -1108,7 +1109,7 @@
 		0564A9571811D921002CC2AE /* ncontainerui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A59C1811D920002CC2AE /* ncontainerui.cpp */; };
 		0564A9581811D921002CC2AE /* nnormalsurfacecreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A59E1811D920002CC2AE /* nnormalsurfacecreator.cpp */; };
 		0564A9591811D921002CC2AE /* nnormalsurfaceui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5A01811D920002CC2AE /* nnormalsurfaceui.cpp */; };
-		0564A95A1811D921002CC2AE /* npdfui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5A21811D920002CC2AE /* npdfui.cpp */; };
+		0564A95A1811D921002CC2AE /* pdfui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5A21811D920002CC2AE /* pdfui.cpp */; };
 		0564A95B1811D921002CC2AE /* scriptui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5A41811D920002CC2AE /* scriptui.cpp */; };
 		0564A95C1811D921002CC2AE /* nsurfacecompatui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5A61811D920002CC2AE /* nsurfacecompatui.cpp */; };
 		0564A95D1811D921002CC2AE /* nsurfacecoordinateui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5A81811D920002CC2AE /* nsurfacecoordinateui.cpp */; };
@@ -1931,6 +1932,7 @@
 		050C64961DA1301B00C9420F /* nexamplesnappeatriangulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nexamplesnappeatriangulation.h; sourceTree = "<group>"; };
 		050C64981DA1388A00C9420F /* npacketlistener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = npacketlistener.h; sourceTree = "<group>"; };
 		050C649A1DA1B61000C9420F /* nscript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nscript.h; sourceTree = "<group>"; };
+		050C649C1DA1BC9C00C9420F /* npdf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = npdf.h; sourceTree = "<group>"; };
 		050F5CDD1B9BAAAA00C1F681 /* engine.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = engine.so; sourceTree = BUILT_PRODUCTS_DIR; };
 		050F5D011B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		050F5D021B9BAB9C00C1F681 /* nabeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nabeliangroup.cpp; sourceTree = "<group>"; };
@@ -1984,7 +1986,7 @@
 		050F5D3F1B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		050F5D401B9BAB9C00C1F681 /* ncontainer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ncontainer.cpp; sourceTree = "<group>"; };
 		050F5D411B9BAB9C00C1F681 /* npacket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = npacket.cpp; sourceTree = "<group>"; };
-		050F5D421B9BAB9C00C1F681 /* npdf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = npdf.cpp; sourceTree = "<group>"; };
+		050F5D421B9BAB9C00C1F681 /* pdf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pdf.cpp; sourceTree = "<group>"; };
 		050F5D431B9BAB9C00C1F681 /* script.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = script.cpp; sourceTree = "<group>"; };
 		050F5D441B9BAB9C00C1F681 /* ntext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ntext.cpp; sourceTree = "<group>"; };
 		050F5D451B9BAB9C00C1F681 /* packettype.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = packettype.cpp; sourceTree = "<group>"; };
@@ -2294,8 +2296,8 @@
 		052F9CFF180600FA00FAE4DF /* npacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = npacket.h; sourceTree = "<group>"; };
 		052F9D00180600FA00FAE4DF /* packetlistener.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = packetlistener.cpp; sourceTree = "<group>"; };
 		052F9D01180600FA00FAE4DF /* packetlistener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packetlistener.h; sourceTree = "<group>"; };
-		052F9D03180600FA00FAE4DF /* npdf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = npdf.cpp; sourceTree = "<group>"; };
-		052F9D04180600FA00FAE4DF /* npdf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = npdf.h; sourceTree = "<group>"; };
+		052F9D03180600FA00FAE4DF /* pdf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pdf.cpp; sourceTree = "<group>"; };
+		052F9D04180600FA00FAE4DF /* pdf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdf.h; sourceTree = "<group>"; };
 		052F9D05180600FA00FAE4DF /* script.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = script.cpp; sourceTree = "<group>"; };
 		052F9D06180600FA00FAE4DF /* script.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = script.h; sourceTree = "<group>"; };
 		052F9D07180600FA00FAE4DF /* ntext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ntext.cpp; sourceTree = "<group>"; };
@@ -2918,8 +2920,8 @@
 		0564A59F1811D920002CC2AE /* nnormalsurfacecreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nnormalsurfacecreator.h; sourceTree = "<group>"; };
 		0564A5A01811D920002CC2AE /* nnormalsurfaceui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nnormalsurfaceui.cpp; sourceTree = "<group>"; };
 		0564A5A11811D920002CC2AE /* nnormalsurfaceui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nnormalsurfaceui.h; sourceTree = "<group>"; };
-		0564A5A21811D920002CC2AE /* npdfui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = npdfui.cpp; sourceTree = "<group>"; };
-		0564A5A31811D920002CC2AE /* npdfui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = npdfui.h; sourceTree = "<group>"; };
+		0564A5A21811D920002CC2AE /* pdfui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pdfui.cpp; sourceTree = "<group>"; };
+		0564A5A31811D920002CC2AE /* pdfui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdfui.h; sourceTree = "<group>"; };
 		0564A5A41811D920002CC2AE /* scriptui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = scriptui.cpp; sourceTree = "<group>"; };
 		0564A5A51811D920002CC2AE /* scriptui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scriptui.h; sourceTree = "<group>"; };
 		0564A5A61811D920002CC2AE /* nsurfacecompatui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsurfacecompatui.cpp; sourceTree = "<group>"; };
@@ -3849,9 +3851,9 @@
 				050F5D3F1B9BAB9C00C1F681 /* CMakeLists.txt */,
 				050F5D401B9BAB9C00C1F681 /* ncontainer.cpp */,
 				050F5D411B9BAB9C00C1F681 /* npacket.cpp */,
-				050F5D421B9BAB9C00C1F681 /* npdf.cpp */,
 				050F5D441B9BAB9C00C1F681 /* ntext.cpp */,
 				050F5D451B9BAB9C00C1F681 /* packettype.cpp */,
+				050F5D421B9BAB9C00C1F681 /* pdf.cpp */,
 				050F5D461B9BAB9C00C1F681 /* pypacket.cpp */,
 				050F5D431B9BAB9C00C1F681 /* script.cpp */,
 			);
@@ -4411,8 +4413,7 @@
 				052F9CFE180600FA00FAE4DF /* npacket.cpp */,
 				052F9CFF180600FA00FAE4DF /* npacket.h */,
 				050C64981DA1388A00C9420F /* npacketlistener.h */,
-				052F9D03180600FA00FAE4DF /* npdf.cpp */,
-				052F9D04180600FA00FAE4DF /* npdf.h */,
+				050C649C1DA1BC9C00C9420F /* npdf.h */,
 				050C649A1DA1B61000C9420F /* nscript.h */,
 				052F9D07180600FA00FAE4DF /* ntext.cpp */,
 				052F9D08180600FA00FAE4DF /* ntext.h */,
@@ -4422,6 +4423,8 @@
 				0588F1161808D43B006BDC79 /* packetregistry-impl.h */,
 				052F9D0D180600FA00FAE4DF /* packetregistry.h */,
 				0588F1171808D43B006BDC79 /* packettype.h */,
+				052F9D03180600FA00FAE4DF /* pdf.cpp */,
+				052F9D04180600FA00FAE4DF /* pdf.h */,
 				052F9D05180600FA00FAE4DF /* script.cpp */,
 				052F9D06180600FA00FAE4DF /* script.h */,
 				052F9D09180600FA00FAE4DF /* xmlpacketreader.cpp */,
@@ -5469,10 +5472,6 @@
 				0564A59F1811D920002CC2AE /* nnormalsurfacecreator.h */,
 				0564A5A01811D920002CC2AE /* nnormalsurfaceui.cpp */,
 				0564A5A11811D920002CC2AE /* nnormalsurfaceui.h */,
-				0564A5A21811D920002CC2AE /* npdfui.cpp */,
-				0564A5A31811D920002CC2AE /* npdfui.h */,
-				0564A5A41811D920002CC2AE /* scriptui.cpp */,
-				0564A5A51811D920002CC2AE /* scriptui.h */,
 				05A73CBE19B2F1AB0099C617 /* nsnappeaalgebra.cpp */,
 				05A73CBF19B2F1AB0099C617 /* nsnappeaalgebra.h */,
 				05A73CC019B2F1AB0099C617 /* nsnappeacreator.cpp */,
@@ -5517,6 +5516,10 @@
 				0564A5C31811D920002CC2AE /* ntrisnappea.h */,
 				0564A5C41811D920002CC2AE /* ntrisurfaces.cpp */,
 				0564A5C51811D920002CC2AE /* ntrisurfaces.h */,
+				0564A5A21811D920002CC2AE /* pdfui.cpp */,
+				0564A5A31811D920002CC2AE /* pdfui.h */,
+				0564A5A41811D920002CC2AE /* scriptui.cpp */,
+				0564A5A51811D920002CC2AE /* scriptui.h */,
 				0564A5C61811D920002CC2AE /* skeletonwindow.cpp */,
 				0564A5C71811D920002CC2AE /* skeletonwindow.h */,
 				0564A5C81811D920002CC2AE /* snappeacomponents.cpp */,
@@ -5954,6 +5957,7 @@
 				050C64881DA1249600C9420F /* globaldirs.h in Headers */,
 				052F9FF5180600FB00FAE4DF /* nlayeredchainpair.h in Headers */,
 				052FA045180600FB00FAE4DF /* nsurfacefilter.h in Headers */,
+				050C649D1DA1BC9C00C9420F /* npdf.h in Headers */,
 				05431F141C40F257009BC072 /* simplex.h in Headers */,
 				052FA061180600FB00FAE4DF /* nedge.h in Headers */,
 				052FA049180600FB00FAE4DF /* nxmlfilterreader.h in Headers */,
@@ -6082,7 +6086,7 @@
 				05431F661C40F3C9009BC072 /* cone_dual_mode.h in Headers */,
 				0591E7A11C4F74C400793A9C /* dim4boundarycomponent.h in Headers */,
 				052FA09B180600FB00FAE4DF /* ptrutils.h in Headers */,
-				052F9F5A180600FB00FAE4DF /* npdf.h in Headers */,
+				052F9F5A180600FB00FAE4DF /* pdf.h in Headers */,
 				052F9FDD180600FB00FAE4DF /* SnapPy.h in Headers */,
 				052F9F8B180600FB00FAE4DF /* isometry.h in Headers */,
 				052FA0A2180600FB00FAE4DF /* xmlutils.h in Headers */,
@@ -6752,7 +6756,7 @@
 				050F5DE31B9BAB9C00C1F681 /* dim2vertex.cpp in Sources */,
 				05CAFB521C4CEA160001C253 /* face14.cpp in Sources */,
 				0591E82A1C4F764F00793A9C /* pyhypersurface.cpp in Sources */,
-				050F5E071B9BAB9C00C1F681 /* npdf.cpp in Sources */,
+				050F5E071B9BAB9C00C1F681 /* pdf.cpp in Sources */,
 				050F5E271B9BAB9C00C1F681 /* nsatblocktypes.cpp in Sources */,
 				050F5E421B9BAB9C00C1F681 /* ncomponent.cpp in Sources */,
 				050F5DED1B9BAB9C00C1F681 /* nhandlebody.cpp in Sources */,
@@ -7119,7 +7123,7 @@
 				052FA1621806129B00FAE4DF /* nmarkedabeliangroup.cpp in Sources */,
 				05A73C7619B2EDBF0099C617 /* hyperbolic.cpp in Sources */,
 				052FA1D91806129B00FAE4DF /* ndisc.cpp in Sources */,
-				052FA1A91806129B00FAE4DF /* npdf.cpp in Sources */,
+				052FA1A91806129B00FAE4DF /* pdf.cpp in Sources */,
 				0591E7BC1C4F74E100793A9C /* dim4edge.cpp in Sources */,
 				052FA22D180612DD00FAE4DF /* o31_matrices.c in Sources */,
 				0503DCDB19B7E4F10085F3CC /* CensusListController.mm in Sources */,
@@ -7592,7 +7596,7 @@
 				0564A9581811D921002CC2AE /* nnormalsurfacecreator.cpp in Sources */,
 				0564A7F91811D921002CC2AE /* bigwidget.cpp in Sources */,
 				0564A96E1811D921002CC2AE /* packetui.cpp in Sources */,
-				0564A95A1811D921002CC2AE /* npdfui.cpp in Sources */,
+				0564A95A1811D921002CC2AE /* pdfui.cpp in Sources */,
 				0564A7F81811D921002CC2AE /* actionspart.cpp in Sources */,
 				0564A96B1811D921002CC2AE /* ntrisurfaces.cpp in Sources */,
 				0564A80D1811D921002CC2AE /* orbhandler.cpp in Sources */,
@@ -7763,7 +7767,7 @@
 				052FA00E180600FB00FAE4DF /* nsatregion.cpp in Sources */,
 				052F9EA9180600FB00FAE4DF /* ngluingpermsearcher.cpp in Sources */,
 				05A73CAD19B2EFF90099C617 /* open.cpp in Sources */,
-				052F9F59180600FB00FAE4DF /* npdf.cpp in Sources */,
+				052F9F59180600FB00FAE4DF /* pdf.cpp in Sources */,
 				052FA04B180600FB00FAE4DF /* nxmlsurfacereader.cpp in Sources */,
 				052FA065180600FB00FAE4DF /* nfacepair.cpp in Sources */,
 				052F9F5D180600FB00FAE4DF /* ntext.cpp in Sources */,

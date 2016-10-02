@@ -4,7 +4,7 @@
 SET ( FILES
   ncontainer
   npacket
-  npdf
+  pdf
   ntext
   packettype
   pypacket

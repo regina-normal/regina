@@ -88,7 +88,7 @@ enum PacketType {
      */
     PACKET_ANGLESTRUCTURELIST = 9,
     /**
-     * Represents a PDF document, of class NPDF.
+     * Represents a PDF document, of class PDF.
      */
     PACKET_PDF = 10,
     /**
