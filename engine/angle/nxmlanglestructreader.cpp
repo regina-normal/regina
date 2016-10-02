@@ -37,14 +37,14 @@
 
 namespace regina {
 
-void NXMLAngleStructureReader::startElement(const std::string&,
+void XMLAngleStructureReader::startElement(const std::string&,
         const regina::xml::XMLPropertyDict& props,
         NXMLElementReader*) {
     if (! valueOf(props.lookup("len"), vecLen))
         vecLen = -1;
 }
 
-void NXMLAngleStructureReader::initialChars(const std::string& chars) {
+void XMLAngleStructureReader::initialChars(const std::string& chars) {
     if (vecLen < 0 || tri == 0)
         return;
 
@@ -74,7 +74,7 @@ void NXMLAngleStructureReader::initialChars(const std::string& chars) {
     angles = new AngleStructure(tri, vec);
 }
 
-NXMLElementReader* NXMLAngleStructureReader::startSubElement(
+NXMLElementReader* XMLAngleStructureReader::startSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
     if (! angles)
@@ -89,7 +89,7 @@ NXMLElementReader* NXMLAngleStructureReader::startSubElement(
     return new NXMLElementReader();
 }
 
-NXMLElementReader* NXMLAngleStructureListReader::startContentSubElement(
+NXMLElementReader* XMLAngleStructuresReader::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
     bool b;
@@ -97,7 +97,7 @@ NXMLElementReader* NXMLAngleStructureListReader::startContentSubElement(
         if (valueOf(props.lookup("tautonly"), b))
             list->tautOnly_ = b;
     } else if (subTagName == "struct") {
-        return new NXMLAngleStructureReader(tri);
+        return new XMLAngleStructureReader(tri);
     } else if (subTagName == "spanstrict") {
         if (valueOf(props.lookup("value"), b))
             list->doesSpanStrict = b;
@@ -114,18 +114,18 @@ NXMLElementReader* NXMLAngleStructureListReader::startContentSubElement(
     return new NXMLElementReader();
 }
 
-void NXMLAngleStructureListReader::endContentSubElement(
+void XMLAngleStructuresReader::endContentSubElement(
         const std::string& subTagName,
         NXMLElementReader* subReader) {
     if (subTagName == "struct")
         if (AngleStructure* s =
-                dynamic_cast<NXMLAngleStructureReader*>(subReader)->structure())
+                dynamic_cast<XMLAngleStructureReader*>(subReader)->structure())
             list->structures.push_back(s);
 }
 
 NXMLPacketReader* AngleStructures::xmlReader(NPacket* parent,
         NXMLTreeResolver& resolver) {
-    return new NXMLAngleStructureListReader(
+    return new XMLAngleStructuresReader(
         dynamic_cast<NTriangulation*>(parent), resolver);
 }
 

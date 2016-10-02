@@ -54,7 +54,7 @@ namespace regina {
 class AngleStructures;
 class NProgressTracker;
 class NXMLPacketReader;
-class NXMLAngleStructureListReader;
+class XMLAngleStructuresReader;
 
 /**
  * \weakgroup angle
@@ -381,7 +381,7 @@ class REGINA_API AngleStructures : public NPacket {
         void enumerateInternal(NTriangulation* triang,
             NProgressTracker* tracker = 0);
 
-    friend class regina::NXMLAngleStructureListReader;
+    friend class regina::XMLAngleStructuresReader;
 };
 
 /**

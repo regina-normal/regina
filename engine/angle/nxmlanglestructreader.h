@@ -55,7 +55,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NXMLAngleStructureReader : public NXMLElementReader {
+class REGINA_API XMLAngleStructureReader : public NXMLElementReader {
     private:
         AngleStructure* angles;
             /**< The angle structure currently being read. */
@@ -70,7 +70,7 @@ class REGINA_API NXMLAngleStructureReader : public NXMLElementReader {
          *
          * @param newTri the triangulation on which this angle structure lies.
          */
-        NXMLAngleStructureReader(NTriangulation* newTri);
+        XMLAngleStructureReader(NTriangulation* newTri);
 
         /**
          * Returns the angle structure that has been read.
@@ -97,7 +97,7 @@ class REGINA_API NXMLAngleStructureReader : public NXMLElementReader {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NXMLAngleStructureListReader : public NXMLPacketReader {
+class REGINA_API XMLAngleStructuresReader : public NXMLPacketReader {
     private:
         AngleStructures* list;
             /**< The angle structure list currently being read. */
@@ -114,7 +114,7 @@ class REGINA_API NXMLAngleStructureListReader : public NXMLPacketReader {
          * @param resolver the master resolver that will be used to fix
          * dangling packet references after the entire XML file has been read.
          */
-        NXMLAngleStructureListReader(NTriangulation* newTri,
+        XMLAngleStructuresReader(NTriangulation* newTri,
             NXMLTreeResolver& resolver);
 
         virtual NPacket* packet() override;
@@ -127,25 +127,25 @@ class REGINA_API NXMLAngleStructureListReader : public NXMLPacketReader {
 
 /*@}*/
 
-// Inline functions for NXMLAngleStructureReader
+// Inline functions for XMLAngleStructureReader
 
-inline NXMLAngleStructureReader::NXMLAngleStructureReader(
+inline XMLAngleStructureReader::XMLAngleStructureReader(
         NTriangulation* newTri) : angles(0), tri(newTri), vecLen(-1) {
 }
 
-inline AngleStructure* NXMLAngleStructureReader::structure() {
+inline AngleStructure* XMLAngleStructureReader::structure() {
     return angles;
 }
 
-// Inline functions for NXMLAngleStructureListReader
+// Inline functions for XMLAngleStructuresReader
 
-inline NXMLAngleStructureListReader::NXMLAngleStructureListReader(
+inline XMLAngleStructuresReader::XMLAngleStructuresReader(
         NTriangulation* newTri, NXMLTreeResolver& resolver) :
         NXMLPacketReader(resolver),
         list(new AngleStructures(false)), tri(newTri) {
 }
 
-inline NPacket* NXMLAngleStructureListReader::packet() {
+inline NPacket* XMLAngleStructuresReader::packet() {
     return list;
 }
 

@@ -48,7 +48,7 @@
 namespace regina {
 
 class NMatrixInt;
-class NXMLAngleStructureReader;
+class XMLAngleStructureReader;
 
 template <int> class Triangulation;
 typedef Triangulation<3> NTriangulation;
@@ -304,7 +304,7 @@ class REGINA_API AngleStructure :
          */
         void calculateType() const;
 
-    friend class regina::NXMLAngleStructureReader;
+    friend class regina::XMLAngleStructureReader;
 };
 
 /**
