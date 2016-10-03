@@ -37,7 +37,7 @@
 #ifndef __SNAPPEAGLUINGS_H
 #define __SNAPPEAGLUINGS_H
 
-#include "packettypes/ntrigluings.h"
+#include "packets/ntrigluings.h"
 
 namespace regina {
     class SnapPeaTriangulation;

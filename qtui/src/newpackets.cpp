@@ -41,14 +41,14 @@
 #include "packetfilter.h"
 #include "packettreeview.h"
 #include "reginamain.h"
-#include "packettypes/dim2tricreator.h"
-#include "packettypes/dim4tricreator.h"
-#include "packettypes/anglescreator.h"
-#include "packettypes/nhypersurfacecreator.h"
-#include "packettypes/nnormalsurfacecreator.h"
-#include "packettypes/nsurfacefiltercreator.h"
-#include "packettypes/ntriangulationcreator.h"
-#include "packettypes/snappeacreator.h"
+#include "packets/dim2tricreator.h"
+#include "packets/dim4tricreator.h"
+#include "packets/anglescreator.h"
+#include "packets/nhypersurfacecreator.h"
+#include "packets/nnormalsurfacecreator.h"
+#include "packets/nsurfacefiltercreator.h"
+#include "packets/ntriangulationcreator.h"
+#include "packets/snappeacreator.h"
 
 void ReginaMain::newAngleStructures() {
     newPacket(new AngleStructureCreator(),

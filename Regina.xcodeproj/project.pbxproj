@@ -5333,7 +5333,7 @@
 				0564A5831811D920002CC2AE /* packettabui.h */,
 				0564A5841811D920002CC2AE /* packettreeview.cpp */,
 				0564A5851811D920002CC2AE /* packettreeview.h */,
-				0564A5861811D920002CC2AE /* packettypes */,
+				0564A5861811D920002CC2AE /* packets */,
 				0564A5CA1811D920002CC2AE /* packetui.cpp */,
 				0564A5CB1811D920002CC2AE /* packetui.h */,
 				0564A5CC1811D920002CC2AE /* packetwindow.cpp */,
@@ -5432,7 +5432,7 @@
 			path = foreign;
 			sourceTree = "<group>";
 		};
-		0564A5861811D920002CC2AE /* packettypes */ = {
+		0564A5861811D920002CC2AE /* packets */ = {
 			isa = PBXGroup;
 			children = (
 				0564A5871811D920002CC2AE /* CMakeLists.txt */,
@@ -5544,7 +5544,7 @@
 				0564A5B41811D920002CC2AE /* textui.cpp */,
 				0564A5B51811D920002CC2AE /* textui.h */,
 			);
-			path = packettypes;
+			path = packets;
 			sourceTree = "<group>";
 		};
 		0564A60C1811D920002CC2AE /* syntax */ = {
