@@ -35,17 +35,17 @@
 #include "dim2/dim2triangulation.h"
 #include "dim4/dim4facetpairing.h"
 #include "dim4/dim4triangulation.h"
-#include "treewidth/ntreedecomposition.h"
+#include "treewidth/treedecomposition.h"
 #include "triangulation/nfacepairing.h"
 #include "triangulation/ntriangulation.h"
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NTreeBag;
-using regina::NTreeDecomposition;
+using regina::TreeBag;
+using regina::TreeDecomposition;
 
 namespace {
-    NTreeDecomposition* fromListAlg(boost::python::list graph,
+    TreeDecomposition* fromListAlg(boost::python::list graph,
             regina::TreeDecompositionAlg alg = regina::TD_UPPER) {
         long len = boost::python::len(graph);
 
@@ -92,7 +92,7 @@ namespace {
             }
         }
 
-        NTreeDecomposition* ans = new NTreeDecomposition(
+        TreeDecomposition* ans = new TreeDecomposition(
             len, const_cast<bool const**>(g), alg);
 
         for (i = 0; i < len; ++i)
@@ -102,16 +102,16 @@ namespace {
         return ans;
     }
 
-    inline NTreeDecomposition* fromList(boost::python::list graph) {
+    inline TreeDecomposition* fromList(boost::python::list graph) {
         return fromListAlg(graph);
     }
 
-    void writeDot_stdio(const NTreeDecomposition& t) {
+    void writeDot_stdio(const TreeDecomposition& t) {
         t.writeDot(std::cout);
     }
 }
 
-void addNTreeDecomposition() {
+void addTreeDecomposition() {
     scope global;
 
     enum_<regina::TreeDecompositionAlg>("TreeDecompositionAlg")
@@ -144,32 +144,32 @@ void addNTreeDecomposition() {
     global.attr("NICE_FORGET") = regina::NICE_FORGET;
     global.attr("NICE_JOIN") = regina::NICE_JOIN;
 
-    class_<NTreeBag, std::auto_ptr<NTreeBag>,
-            boost::noncopyable>("NTreeBag", no_init)
-        .def("size", &NTreeBag::size)
-        .def("element", &NTreeBag::element)
-        .def("contains", &NTreeBag::contains)
-        .def("index", &NTreeBag::index)
-        .def("type", &NTreeBag::type)
-        .def("subtype", &NTreeBag::subtype)
-        .def("compare", &NTreeBag::compare)
-        .def("next", &NTreeBag::next,
+    class_<TreeBag, std::auto_ptr<TreeBag>,
+            boost::noncopyable>("TreeBag", no_init)
+        .def("size", &TreeBag::size)
+        .def("element", &TreeBag::element)
+        .def("contains", &TreeBag::contains)
+        .def("index", &TreeBag::index)
+        .def("type", &TreeBag::type)
+        .def("subtype", &TreeBag::subtype)
+        .def("compare", &TreeBag::compare)
+        .def("next", &TreeBag::next,
             return_value_policy<reference_existing_object>())
-        .def("nextPrefix", &NTreeBag::nextPrefix,
+        .def("nextPrefix", &TreeBag::nextPrefix,
             return_value_policy<reference_existing_object>())
-        .def("parent", &NTreeBag::parent,
+        .def("parent", &TreeBag::parent,
             return_value_policy<reference_existing_object>())
-        .def("children", &NTreeBag::children,
+        .def("children", &TreeBag::children,
             return_value_policy<reference_existing_object>())
-        .def("sibling", &NTreeBag::sibling,
+        .def("sibling", &TreeBag::sibling,
             return_value_policy<reference_existing_object>())
-        .def("isLeaf", &NTreeBag::isLeaf)
+        .def("isLeaf", &TreeBag::isLeaf)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
 
-    class_<NTreeDecomposition, std::auto_ptr<NTreeDecomposition>,
-            boost::noncopyable>("NTreeDecomposition", no_init)
+    class_<TreeDecomposition, std::auto_ptr<TreeDecomposition>,
+            boost::noncopyable>("TreeDecomposition", no_init)
         .def(init<const regina::NTriangulation&>())
         .def(init<const regina::NTriangulation&,
             regina::TreeDecompositionAlg>())
@@ -190,20 +190,23 @@ void addNTreeDecomposition() {
             regina::TreeDecompositionAlg>())
         .def("__init__", make_constructor(fromListAlg))
         .def("__init__", make_constructor(fromList))
-        .def("width", &NTreeDecomposition::width)
-        .def("size", &NTreeDecomposition::size)
-        .def("root", &NTreeDecomposition::root,
+        .def("width", &TreeDecomposition::width)
+        .def("size", &TreeDecomposition::size)
+        .def("root", &TreeDecomposition::root,
             return_value_policy<reference_existing_object>())
-        .def("first", &NTreeDecomposition::first,
+        .def("first", &TreeDecomposition::first,
             return_value_policy<reference_existing_object>())
-        .def("firstPrefix", &NTreeDecomposition::firstPrefix,
+        .def("firstPrefix", &TreeDecomposition::firstPrefix,
             return_value_policy<reference_existing_object>())
-        .def("compress", &NTreeDecomposition::compress)
-        .def("makeNice", &NTreeDecomposition::makeNice)
+        .def("compress", &TreeDecomposition::compress)
+        .def("makeNice", &TreeDecomposition::makeNice)
         .def("writeDot", writeDot_stdio)
-        .def("dot", &NTreeDecomposition::dot)
+        .def("dot", &TreeDecomposition::dot)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
+
+    scope().attr("NTreeBag") = scope().attr("TreeBag");
+    scope().attr("NTreeDecomposition") = scope().attr("TreeDecomposition");
 }
 

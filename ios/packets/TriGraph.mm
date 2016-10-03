@@ -35,7 +35,7 @@
 #import "SnapPeaViewController.h"
 #import "TriangulationViewController.h"
 #import "TriGraph.h"
-#import "treewidth/ntreedecomposition.h"
+#import "treewidth/treedecomposition.h"
 #import "triangulation/nfacepairing.h"
 #import "triangulation/ntriangulation.h"
 #import "gvc.h"
@@ -93,7 +93,7 @@ extern gvplugin_library_t gvplugin_core_LTX_library;
 
         case 1:
         case 2: {
-            regina::NTreeDecomposition t(*self.packet);
+            regina::TreeDecomposition t(*self.packet);
             if (self.graphType.selectedSegmentIndex == 2)
                 t.makeNice();
             dot = t.dot();

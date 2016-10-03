@@ -54,6 +54,8 @@
 		050C64A81DA1C63F00C9420F /* ncontainer.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64A71DA1C63F00C9420F /* ncontainer.h */; };
 		050C64AA1DA1C95700C9420F /* npacket.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64A91DA1C95700C9420F /* npacket.h */; };
 		050C64AC1DA264A900C9420F /* nsnappeatriangulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64AB1DA264A800C9420F /* nsnappeatriangulation.h */; };
+		050C64AF1DA304BF00C9420F /* ntreedecomposition-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64AD1DA304BF00C9420F /* ntreedecomposition-impl.h */; };
+		050C64B01DA304BF00C9420F /* ntreedecomposition.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64AE1DA304BF00C9420F /* ntreedecomposition.h */; };
 		050F5DD31B9BAB9C00C1F681 /* nabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D021B9BAB9C00C1F681 /* nabeliangroup.cpp */; };
 		050F5DD41B9BAB9C00C1F681 /* ngrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D031B9BAB9C00C1F681 /* ngrouppresentation.cpp */; };
 		050F5DD51B9BAB9C00C1F681 /* nhomgrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D041B9BAB9C00C1F681 /* nhomgrouppresentation.cpp */; };
@@ -151,7 +153,7 @@
 		050F5E3C1B9BAB9C00C1F681 /* sfcombination.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D811B9BAB9C00C1F681 /* sfcombination.cpp */; };
 		050F5E3D1B9BAB9C00C1F681 /* sfproperties.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D821B9BAB9C00C1F681 /* sfproperties.cpp */; };
 		050F5E3E1B9BAB9C00C1F681 /* surfacefiltertype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D831B9BAB9C00C1F681 /* surfacefiltertype.cpp */; };
-		050F5E3F1B9BAB9C00C1F681 /* ntreedecomposition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DA81B9BAB9C00C1F681 /* ntreedecomposition.cpp */; };
+		050F5E3F1B9BAB9C00C1F681 /* treedecomposition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DA81B9BAB9C00C1F681 /* treedecomposition.cpp */; };
 		050F5E401B9BAB9C00C1F681 /* pytreewidth.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DA91B9BAB9C00C1F681 /* pytreewidth.cpp */; };
 		050F5E411B9BAB9C00C1F681 /* nboundarycomponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DAC1B9BAB9C00C1F681 /* nboundarycomponent.cpp */; };
 		050F5E421B9BAB9C00C1F681 /* ncomponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DAD1B9BAB9C00C1F681 /* ncomponent.cpp */; };
@@ -828,10 +830,10 @@
 		0541AF4E1B8BE30B002E166B /* ncyclotomic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0541AF481B8BE2F5002E166B /* ncyclotomic.cpp */; };
 		0541AF501B8BE32E002E166B /* output.h in Headers */ = {isa = PBXBuildFile; fileRef = 0541AF4F1B8BE32E002E166B /* output.h */; };
 		0541AF521B8BE386002E166B /* sequence.h in Headers */ = {isa = PBXBuildFile; fileRef = 0541AF511B8BE386002E166B /* sequence.h */; };
-		0541AF601B8BE40B002E166B /* ntreedecomposition-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0541AF5D1B8BE40B002E166B /* ntreedecomposition-impl.h */; };
-		0541AF611B8BE40B002E166B /* ntreedecomposition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0541AF5E1B8BE40B002E166B /* ntreedecomposition.cpp */; };
-		0541AF621B8BE40B002E166B /* ntreedecomposition.h in Headers */ = {isa = PBXBuildFile; fileRef = 0541AF5F1B8BE40B002E166B /* ntreedecomposition.h */; };
-		0541AF631B8BE411002E166B /* ntreedecomposition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0541AF5E1B8BE40B002E166B /* ntreedecomposition.cpp */; };
+		0541AF601B8BE40B002E166B /* treedecomposition-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0541AF5D1B8BE40B002E166B /* treedecomposition-impl.h */; };
+		0541AF611B8BE40B002E166B /* treedecomposition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0541AF5E1B8BE40B002E166B /* treedecomposition.cpp */; };
+		0541AF621B8BE40B002E166B /* treedecomposition.h in Headers */ = {isa = PBXBuildFile; fileRef = 0541AF5F1B8BE40B002E166B /* treedecomposition.h */; };
+		0541AF631B8BE411002E166B /* treedecomposition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0541AF5E1B8BE40B002E166B /* treedecomposition.cpp */; };
 		05431EEC1C40F069009BC072 /* ngenericgluingperms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431EEB1C40F069009BC072 /* ngenericgluingperms.cpp */; };
 		05431EED1C40F071009BC072 /* ngenericgluingperms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05431EEB1C40F069009BC072 /* ngenericgluingperms.cpp */; };
 		05431EEF1C40F093009BC072 /* dim2edgepairing.h in Headers */ = {isa = PBXBuildFile; fileRef = 05431EEE1C40F093009BC072 /* dim2edgepairing.h */; };
@@ -1942,6 +1944,8 @@
 		050C64A71DA1C63F00C9420F /* ncontainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ncontainer.h; sourceTree = "<group>"; };
 		050C64A91DA1C95700C9420F /* npacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = npacket.h; sourceTree = "<group>"; };
 		050C64AB1DA264A800C9420F /* nsnappeatriangulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsnappeatriangulation.h; sourceTree = "<group>"; };
+		050C64AD1DA304BF00C9420F /* ntreedecomposition-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ntreedecomposition-impl.h"; sourceTree = "<group>"; };
+		050C64AE1DA304BF00C9420F /* ntreedecomposition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntreedecomposition.h; sourceTree = "<group>"; };
 		050F5CDD1B9BAAAA00C1F681 /* engine.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = engine.so; sourceTree = BUILT_PRODUCTS_DIR; };
 		050F5D011B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		050F5D021B9BAB9C00C1F681 /* nabeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nabeliangroup.cpp; sourceTree = "<group>"; };
@@ -2087,7 +2091,7 @@
 		050F5DA41B9BAB9C00C1F681 /* trigeneral.out */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = trigeneral.out; sourceTree = "<group>"; };
 		050F5DA51B9BAB9C00C1F681 /* trigeneral.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = trigeneral.test; sourceTree = "<group>"; };
 		050F5DA71B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		050F5DA81B9BAB9C00C1F681 /* ntreedecomposition.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ntreedecomposition.cpp; sourceTree = "<group>"; };
+		050F5DA81B9BAB9C00C1F681 /* treedecomposition.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = treedecomposition.cpp; sourceTree = "<group>"; };
 		050F5DA91B9BAB9C00C1F681 /* pytreewidth.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pytreewidth.cpp; sourceTree = "<group>"; };
 		050F5DAB1B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		050F5DAC1B9BAB9C00C1F681 /* nboundarycomponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nboundarycomponent.cpp; sourceTree = "<group>"; };
@@ -2665,9 +2669,9 @@
 		0541AF4F1B8BE32E002E166B /* output.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = output.h; sourceTree = "<group>"; };
 		0541AF511B8BE386002E166B /* sequence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sequence.h; sourceTree = "<group>"; };
 		0541AF5C1B8BE40B002E166B /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		0541AF5D1B8BE40B002E166B /* ntreedecomposition-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ntreedecomposition-impl.h"; sourceTree = "<group>"; };
-		0541AF5E1B8BE40B002E166B /* ntreedecomposition.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ntreedecomposition.cpp; sourceTree = "<group>"; };
-		0541AF5F1B8BE40B002E166B /* ntreedecomposition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntreedecomposition.h; sourceTree = "<group>"; };
+		0541AF5D1B8BE40B002E166B /* treedecomposition-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "treedecomposition-impl.h"; sourceTree = "<group>"; };
+		0541AF5E1B8BE40B002E166B /* treedecomposition.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = treedecomposition.cpp; sourceTree = "<group>"; };
+		0541AF5F1B8BE40B002E166B /* treedecomposition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = treedecomposition.h; sourceTree = "<group>"; };
 		05431EEB1C40F069009BC072 /* ngenericgluingperms.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ngenericgluingperms.cpp; sourceTree = "<group>"; };
 		05431EEE1C40F093009BC072 /* dim2edgepairing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim2edgepairing.h; sourceTree = "<group>"; };
 		05431EF31C40F1F6009BC072 /* component.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = component.h; sourceTree = "<group>"; };
@@ -4015,7 +4019,7 @@
 			isa = PBXGroup;
 			children = (
 				050F5DA71B9BAB9C00C1F681 /* CMakeLists.txt */,
-				050F5DA81B9BAB9C00C1F681 /* ntreedecomposition.cpp */,
+				050F5DA81B9BAB9C00C1F681 /* treedecomposition.cpp */,
 				050F5DA91B9BAB9C00C1F681 /* pytreewidth.cpp */,
 			);
 			path = treewidth;
@@ -5057,9 +5061,11 @@
 			isa = PBXGroup;
 			children = (
 				0541AF5C1B8BE40B002E166B /* CMakeLists.txt */,
-				0541AF5D1B8BE40B002E166B /* ntreedecomposition-impl.h */,
-				0541AF5E1B8BE40B002E166B /* ntreedecomposition.cpp */,
-				0541AF5F1B8BE40B002E166B /* ntreedecomposition.h */,
+				050C64AD1DA304BF00C9420F /* ntreedecomposition-impl.h */,
+				050C64AE1DA304BF00C9420F /* ntreedecomposition.h */,
+				0541AF5D1B8BE40B002E166B /* treedecomposition-impl.h */,
+				0541AF5E1B8BE40B002E166B /* treedecomposition.cpp */,
+				0541AF5F1B8BE40B002E166B /* treedecomposition.h */,
 			);
 			path = treewidth;
 			sourceTree = "<group>";
@@ -5987,6 +5993,7 @@
 				052F9ECC180600FB00FAE4DF /* nhilbertprimal-impl.h in Headers */,
 				05431F271C40F260009BC072 /* isosig-impl.h in Headers */,
 				052FA074180600FB00FAE4DF /* ntriangle.h in Headers */,
+				050C64AF1DA304BF00C9420F /* ntreedecomposition-impl.h in Headers */,
 				052FA001180600FB00FAE4DF /* npillowtwosphere.h in Headers */,
 				052F9F2B180600FB00FAE4DF /* notation.h in Headers */,
 				052FA093180600FB00FAE4DF /* nqitmask.h in Headers */,
@@ -6070,6 +6077,7 @@
 				05431EEF1C40F093009BC072 /* dim2edgepairing.h in Headers */,
 				050C649F1DA1C22100C9420F /* ntext.h in Headers */,
 				0591E7F21C4F75C300793A9C /* dim4gluingperms.h in Headers */,
+				050C64B01DA304BF00C9420F /* ntreedecomposition.h in Headers */,
 				052F9EF5180600FB00FAE4DF /* ntreelp-impl.h in Headers */,
 				052F9F4B180600FB00FAE4DF /* nrational.h in Headers */,
 				05431F211C40F260009BC072 /* component.h in Headers */,
@@ -6078,7 +6086,7 @@
 				052FA09F180600FB00FAE4DF /* stringutils.h in Headers */,
 				052F9EA4180600FB00FAE4DF /* ngenericgluingperms-impl.h in Headers */,
 				052FA01D180600FB00FAE4DF /* ntrivialtri.h in Headers */,
-				0541AF621B8BE40B002E166B /* ntreedecomposition.h in Headers */,
+				0541AF621B8BE40B002E166B /* treedecomposition.h in Headers */,
 				052F9EA5180600FB00FAE4DF /* ngenericgluingperms.h in Headers */,
 				05431EFC1C40F1F6009BC072 /* component.h in Headers */,
 				05431F841C40F3C9009BC072 /* sublattice_representation.h in Headers */,
@@ -6090,7 +6098,7 @@
 				052F9F43180600FB00FAE4DF /* nperm3.h in Headers */,
 				0591E7A21C4F74C400793A9C /* dim4component.h in Headers */,
 				05431F241C40F260009BC072 /* facetpairing-impl.h in Headers */,
-				0541AF601B8BE40B002E166B /* ntreedecomposition-impl.h in Headers */,
+				0541AF601B8BE40B002E166B /* treedecomposition-impl.h in Headers */,
 				052FA02A180600FB00FAE4DF /* ndisc.h in Headers */,
 				05431F9E1C40F537009BC072 /* testgeneric.h in Headers */,
 				052F9F2A180600FB00FAE4DF /* nmanifold.h in Headers */,
@@ -6902,7 +6910,7 @@
 				057EE4E01C600A3600C4D155 /* facetpairing5.cpp in Sources */,
 				050F5E091B9BAB9C00C1F681 /* text.cpp in Sources */,
 				050F5DEC1B9BAB9C00C1F681 /* ngraphtriple.cpp in Sources */,
-				050F5E3F1B9BAB9C00C1F681 /* ntreedecomposition.cpp in Sources */,
+				050F5E3F1B9BAB9C00C1F681 /* treedecomposition.cpp in Sources */,
 				057EE4CC1C600A3600C4D155 /* triangulation9.cpp in Sources */,
 				050F5E5A1B9BAB9C00C1F681 /* dehydration.cpp in Sources */,
 				052942D91C5CDCCB0011C1E6 /* safeheldtype.cpp in Sources */,
@@ -7187,7 +7195,7 @@
 				05937AD719CECF4300160F9A /* MDSpreadViewHeaderCell.m in Sources */,
 				052FA1FE1806129B00FAE4DF /* ntriangulation.cpp in Sources */,
 				058FADBB19D506160001B5B5 /* TriComposition.mm in Sources */,
-				0541AF631B8BE411002E166B /* ntreedecomposition.cpp in Sources */,
+				0541AF631B8BE411002E166B /* treedecomposition.cpp in Sources */,
 				052FA2031806129B00FAE4DF /* simplifyglobal.cpp in Sources */,
 				052FA1E41806129B00FAE4DF /* nsurfacefilter.cpp in Sources */,
 				052FA1C81806129B00FAE4DF /* nsatblocktypes.cpp in Sources */,
@@ -7807,7 +7815,7 @@
 				0591E7A51C4F74C400793A9C /* dim4exampletriangulation.cpp in Sources */,
 				052F9F3F180600FB00FAE4DF /* nmatrix2.cpp in Sources */,
 				052F9FEA180600FB00FAE4DF /* nblockedsfsloop.cpp in Sources */,
-				0541AF611B8BE40B002E166B /* ntreedecomposition.cpp in Sources */,
+				0541AF611B8BE40B002E166B /* treedecomposition.cpp in Sources */,
 				052F9FA2180600FB00FAE4DF /* tidy_peripheral_curves.c in Sources */,
 				052F9F44180600FB00FAE4DF /* nperm4.cpp in Sources */,
 				052FA014180600FB00FAE4DF /* nsnappedtwosphere.cpp in Sources */,

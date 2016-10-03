@@ -40,7 +40,7 @@
 #include "maths/approx.h"
 #include "maths/ncyclotomic.h"
 #include "maths/numbertheory.h"
-#include "treewidth/ntreedecomposition.h"
+#include "treewidth/treedecomposition.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/sequence.h"
 #include <gmpxx.h>
@@ -746,11 +746,11 @@ namespace {
             InitialData<exact>& init) {
         typedef typename InitialData<exact>::TVType TVType;
 
-        const NTreeDecomposition& d = tri.niceTreeDecomposition();
+        const TreeDecomposition& d = tri.niceTreeDecomposition();
 
         int nEdges = tri.countEdges();
         int nBags = d.size();
-        const NTreeBag *bag, *child, *sibling;
+        const TreeBag *bag, *child, *sibling;
         int i, j;
         int index;
         const NTetrahedron* tet;

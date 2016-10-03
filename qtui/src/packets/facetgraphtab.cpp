@@ -36,7 +36,7 @@
 #include "dim2/dim2triangulation.h"
 #include "dim4/dim4facetpairing.h"
 #include "dim4/dim4triangulation.h"
-#include "treewidth/ntreedecomposition.h"
+#include "treewidth/treedecomposition.h"
 #include "triangulation/nfacepairing.h"
 #include "triangulation/ntriangulation.h"
 
@@ -326,7 +326,7 @@ std::string Dim2EdgeGraphData::dual(bool withLabels) {
 }
 
 std::string Dim2EdgeGraphData::treeDecomp(bool nice, int& bags, int& width) {
-    regina::NTreeDecomposition t(*tri_);
+    regina::TreeDecomposition t(*tri_);
     if (nice)
         t.makeNice();
     bags = t.size();
@@ -364,7 +364,7 @@ std::string Dim3FaceGraphData::dual(bool withLabels) {
 }
 
 std::string Dim3FaceGraphData::treeDecomp(bool nice, int& bags, int& width) {
-    regina::NTreeDecomposition t(*tri_);
+    regina::TreeDecomposition t(*tri_);
     if (nice)
         t.makeNice();
     bags = t.size();
@@ -402,7 +402,7 @@ std::string Dim4FacetGraphData::dual(bool withLabels) {
 }
 
 std::string Dim4FacetGraphData::treeDecomp(bool nice, int& bags, int& width) {
-    regina::NTreeDecomposition t(*tri_);
+    regina::TreeDecomposition t(*tri_);
     if (nice)
         t.makeNice();
     bags = t.size();

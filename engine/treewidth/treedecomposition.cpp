@@ -34,39 +34,39 @@
 #include "dim2/dim2edgepairing.h"
 #include "dim2/dim2triangulation.h"
 #include "dim4/dim4triangulation.h"
-#include "treewidth/ntreedecomposition.h"
-#include "treewidth/ntreedecomposition-impl.h"
+#include "treewidth/treedecomposition.h"
+#include "treewidth/treedecomposition-impl.h"
 #include "triangulation/nfacepairing.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
 
 // Instantiate templates for standard dimensions:
-template REGINA_API NTreeDecomposition::NTreeDecomposition(
+template REGINA_API TreeDecomposition::TreeDecomposition(
     const Triangulation<2>&, TreeDecompositionAlg);
-template REGINA_API NTreeDecomposition::NTreeDecomposition(
+template REGINA_API TreeDecomposition::TreeDecomposition(
     const Triangulation<3>&, TreeDecompositionAlg);
-template REGINA_API NTreeDecomposition::NTreeDecomposition(
+template REGINA_API TreeDecomposition::TreeDecomposition(
     const Triangulation<4>&, TreeDecompositionAlg);
 
-template REGINA_API NTreeDecomposition::NTreeDecomposition(
+template REGINA_API TreeDecomposition::TreeDecomposition(
     const FacetPairing<2>&, TreeDecompositionAlg);
-template REGINA_API NTreeDecomposition::NTreeDecomposition(
+template REGINA_API TreeDecomposition::TreeDecomposition(
     const FacetPairing<3>&, TreeDecompositionAlg);
-template REGINA_API NTreeDecomposition::NTreeDecomposition(
+template REGINA_API TreeDecomposition::TreeDecomposition(
     const FacetPairing<4>&, TreeDecompositionAlg);
 
 // Instantiate templates for common types:
-template REGINA_API NTreeDecomposition::NTreeDecomposition(
+template REGINA_API TreeDecomposition::TreeDecomposition(
     unsigned, bool const** const, TreeDecompositionAlg);
-template REGINA_API NTreeDecomposition::NTreeDecomposition(
+template REGINA_API TreeDecomposition::TreeDecomposition(
     unsigned, int const** const, TreeDecompositionAlg);
 
-bool NTreeBag::contains(int element) const {
+bool TreeBag::contains(int element) const {
     return std::binary_search(elements_, elements_ + size_, element);
 }
 
-BagComparison NTreeBag::compare(const NTreeBag& rhs) const {
+BagComparison TreeBag::compare(const TreeBag& rhs) const {
     int p1 = 0;
     int p2 = 0;
     bool extraInLHS = false;
@@ -97,27 +97,27 @@ BagComparison NTreeBag::compare(const NTreeBag& rhs) const {
     return (extraInLHS ? BAG_SUPERSET : extraInRHS ? BAG_SUBSET : BAG_EQUAL);
 }
 
-const NTreeBag* NTreeBag::nextPrefix() const {
+const TreeBag* TreeBag::nextPrefix() const {
     if (children_)
         return children_;
 
-    const NTreeBag* b = this;
+    const TreeBag* b = this;
     while (b && ! b->sibling_)
         b = b->parent_;
     return (b ? b->sibling_ : 0);
 }
 
-const NTreeBag* NTreeBag::next() const {
+const TreeBag* TreeBag::next() const {
     if (! sibling_)
         return parent_;
 
-    const NTreeBag* b = sibling_;
+    const TreeBag* b = sibling_;
     while (b && b->children_)
         b = b->children_;
     return b;
 }
 
-void NTreeBag::writeTextShort(std::ostream& out) const {
+void TreeBag::writeTextShort(std::ostream& out) const {
     if (size_ == 1)
         out << "Bag of 1 element:";
     else
@@ -127,7 +127,7 @@ void NTreeBag::writeTextShort(std::ostream& out) const {
         out << ' ' << elements_[i];
 }
 
-void NTreeDecomposition::Graph::dump(std::ostream& out) const {
+void TreeDecomposition::Graph::dump(std::ostream& out) const {
     int i, j;
     for (i = 0; i < order_; ++i) {
         for (j = 0; j < order_; ++j)
@@ -136,7 +136,7 @@ void NTreeDecomposition::Graph::dump(std::ostream& out) const {
     }
 }
 
-void NTreeDecomposition::construct(Graph& graph, TreeDecompositionAlg alg) {
+void TreeDecomposition::construct(Graph& graph, TreeDecompositionAlg alg) {
     if (graph.order_ == 0) {
         // No tree, no bags.
         width_ = -1;
@@ -153,7 +153,7 @@ void NTreeDecomposition::construct(Graph& graph, TreeDecompositionAlg alg) {
     reindex();
 }
 
-void NTreeDecomposition::greedyFillIn(Graph& graph) {
+void TreeDecomposition::greedyFillIn(Graph& graph) {
     width_ = 0;
 
     // Find a good elimination order.
@@ -167,7 +167,7 @@ void NTreeDecomposition::greedyFillIn(Graph& graph) {
     bool* used = new bool[graph.order_];
     int* elimOrder = new int[graph.order_]; // Elimination stage -> vertex
     int* elimStage = new int[graph.order_]; // Vertex -> elimination stage
-    NTreeBag** bags = new NTreeBag*[graph.order_];
+    TreeBag** bags = new TreeBag*[graph.order_];
 
     std::fill(used, used + graph.order_, false);
 
@@ -217,7 +217,7 @@ void NTreeDecomposition::greedyFillIn(Graph& graph) {
         // Build the corresponding bag.
         // This contains the eliminated vertex and all of its unused neighbours.
         // Ensure the elements are stored in sorted order.
-        bags[stage] = new NTreeBag(bestElimBagSize);
+        bags[stage] = new TreeBag(bestElimBagSize);
         which = 0;
         for (j = 0; j < graph.order_; ++j) {
             if (j == bestElim) {
@@ -268,17 +268,17 @@ void NTreeDecomposition::greedyFillIn(Graph& graph) {
     delete[] bags;
 }
 
-const NTreeBag* NTreeDecomposition::first() const {
+const TreeBag* TreeDecomposition::first() const {
     if (! root_)
         return 0;
 
-    NTreeBag* b = root_;
+    TreeBag* b = root_;
     while (b->children_)
         b = b->children_;
     return b;
 }
 
-bool NTreeDecomposition::compress() {
+bool TreeDecomposition::compress() {
     // Do a prefix enumeration (root first), and compress edges up to
     // parents when one bag is a subset of the other.
     // The path condition ensures that no such subset relationships
@@ -287,11 +287,11 @@ bool NTreeDecomposition::compress() {
         return false;
 
     bool changed = false;
-    NTreeBag* b = root_->children_;
-    NTreeBag* siblingOf = 0;
-    NTreeBag* next;
-    NTreeBag* nextIsSiblingOf;
-    NTreeBag* child;
+    TreeBag* b = root_->children_;
+    TreeBag* siblingOf = 0;
+    TreeBag* next;
+    TreeBag* nextIsSiblingOf;
+    TreeBag* child;
     while (b) {
         // We are ready to process bag b.
         // Invariants:
@@ -381,7 +381,7 @@ bool NTreeDecomposition::compress() {
     return changed;
 }
 
-void NTreeDecomposition::makeNice() {
+void TreeDecomposition::makeNice() {
     if (! root_)
         return;
 
@@ -397,11 +397,11 @@ void NTreeDecomposition::makeNice() {
 
     // First add a chain of forget nodes above the root, right up to a
     // new empty bag.
-    NTreeBag* b = root_;
-    NTreeBag *tmp, *tmp2, *tmp3;
+    TreeBag* b = root_;
+    TreeBag *tmp, *tmp2, *tmp3;
     int i;
     for (i = b->size_ - 1; i >= 0; --i) {
-        tmp = new NTreeBag(i);
+        tmp = new TreeBag(i);
         std::copy(b->elements_, b->elements_ + i, tmp->elements_);
         tmp->children_ = root_;
         root_->parent_ = tmp;
@@ -411,7 +411,7 @@ void NTreeDecomposition::makeNice() {
         tmp->subtype_ = i;
     }
 
-    NTreeBag* next;
+    TreeBag* next;
     int p1, p2;
     while (b) {
         // Invariants:
@@ -422,8 +422,8 @@ void NTreeDecomposition::makeNice() {
             b->type_ = NICE_JOIN;
             b->subtype_ = 0;
 
-            tmp = new NTreeBag(*b);
-            tmp2 = new NTreeBag(*b);
+            tmp = new TreeBag(*b);
+            tmp2 = new TreeBag(*b);
 
             tmp2->children_ = b->children_->sibling_;
             tmp2->children_->parent_ = tmp2;
@@ -458,7 +458,7 @@ void NTreeDecomposition::makeNice() {
                     tmp->type_ = NICE_INTRODUCE;
                     tmp->subtype_ = p1;
 
-                    tmp3 = new NTreeBag(tmp->size_ - 1);
+                    tmp3 = new TreeBag(tmp->size_ - 1);
                     std::copy(tmp->elements_,
                         tmp->elements_ + p1, tmp3->elements_);
                     std::copy(tmp->elements_ + p1 + 1,
@@ -473,7 +473,7 @@ void NTreeDecomposition::makeNice() {
                 } else if (p1 == tmp->size_ ||
                         (tmp->elements_[p1] > tmp2->elements_[p2])) {
                     // Forget tmp2->elements_[p2].
-                    tmp3 = new NTreeBag(tmp2->size_ - 1);
+                    tmp3 = new TreeBag(tmp2->size_ - 1);
                     std::copy(tmp2->elements_,
                         tmp2->elements_ + p2, tmp3->elements_);
                     std::copy(tmp2->elements_ + p2 + 1,
@@ -510,14 +510,14 @@ void NTreeDecomposition::makeNice() {
         } else {
             // b is a leaf node.
             // Build a series of introduce nodes.
-            next = const_cast<NTreeBag*>(b->nextPrefix());
+            next = const_cast<TreeBag*>(b->nextPrefix());
 
             b->type_ = NICE_INTRODUCE;
             b->subtype_ = b->size_ - 1;
 
             tmp = b;
             for (i = b->size_ - 1; i > 0; --i) {
-                tmp2 = new NTreeBag(i);
+                tmp2 = new TreeBag(i);
                 std::copy(b->elements_, b->elements_ + i, tmp2->elements_);
                 tmp->children_ = tmp2;
                 tmp2->parent_ = tmp;
@@ -534,12 +534,12 @@ void NTreeDecomposition::makeNice() {
     reindex();
 }
 
-void NTreeDecomposition::writeDot(std::ostream& out) const {
+void TreeDecomposition::writeDot(std::ostream& out) const {
     out << "digraph tree {\n"
         "edge [color=black];\n"
         "node [style=filled,fontsize=9,fontcolor=\"#751010\"];\n";
 
-    NTreeBag* b = root_;
+    TreeBag* b = root_;
     int i;
     while (b) {
         out << "b_" << b->index_ << " [label=\"";
@@ -567,23 +567,23 @@ void NTreeDecomposition::writeDot(std::ostream& out) const {
     out << "}" << std::endl;
 }
 
-std::string NTreeDecomposition::dot() const {
+std::string TreeDecomposition::dot() const {
     std::ostringstream out;
     writeDot(out);
     return out.str();
 }
 
-void NTreeDecomposition::writeTextShort(std::ostream& out) const {
+void TreeDecomposition::writeTextShort(std::ostream& out) const {
     out << "Tree decomposition: width " << width_
         << ", size " << size_;
 }
 
-void NTreeDecomposition::writeTextLong(std::ostream& out) const {
+void TreeDecomposition::writeTextLong(std::ostream& out) const {
     writeTextShort(out);
     out << std::endl;
 
     int indent = 0;
-    NTreeBag* b = root_;
+    TreeBag* b = root_;
     int i;
 
     while (b) {

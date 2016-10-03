@@ -51,7 +51,7 @@
 #include "generic/triangulation.h"
 #include "maths/ncyclotomic.h"
 #include "packet/packet.h"
-#include "treewidth/ntreedecomposition.h"
+#include "treewidth/treedecomposition.h"
 #include "utilities/nbooleans.h"
 #include "utilities/nmarkedvector.h"
 #include "utilities/nproperty.h"
@@ -245,7 +245,7 @@ class REGINA_API Triangulation<3> :
             /**< A strict angle structure on this triangulation, or the
                  null pointer if none exists. */
 
-        mutable NProperty<NTreeDecomposition, StoreManagedPtr>
+        mutable NProperty<TreeDecomposition, StoreManagedPtr>
                 niceTreeDecomposition_;
             /**< A nice tree decomposition of the face pairing graph of
                  this triangulation. */
@@ -2262,8 +2262,8 @@ class REGINA_API Triangulation<3> :
          * implementing algorithms that are fixed-parameter tractable
          * in the treewidth of the face pairing graph.
          *
-         * See NTreeDecomposition for further details on tree
-         * decompositions, and see NTreeDecomposition::makeNice() for
+         * See TreeDecomposition for further details on tree
+         * decompositions, and see TreeDecomposition::makeNice() for
          * details on what it means to be a \e nice tree decomposition.
          *
          * This routine is fast: it will use a greedy algorithm to find a
@@ -2279,7 +2279,7 @@ class REGINA_API Triangulation<3> :
          * @return a nice tree decomposition of the face pairing graph
          * of this triangulation.
          */
-        const NTreeDecomposition& niceTreeDecomposition() const;
+        const TreeDecomposition& niceTreeDecomposition() const;
 
         /*@}*/
         /**
@@ -3188,12 +3188,12 @@ inline bool Triangulation<3>::retriangulate(int height, unsigned nThreads,
         std::bind(action, std::placeholders::_1, args...));
 }
 
-inline const NTreeDecomposition& Triangulation<3>::niceTreeDecomposition()
+inline const TreeDecomposition& Triangulation<3>::niceTreeDecomposition()
         const {
     if (niceTreeDecomposition_.known())
         return *niceTreeDecomposition_.value();
 
-    NTreeDecomposition* ans = new NTreeDecomposition(*this, TD_UPPER);
+    TreeDecomposition* ans = new TreeDecomposition(*this, TD_UPPER);
     ans->makeNice();
     return *(niceTreeDecomposition_ = ans);
 }

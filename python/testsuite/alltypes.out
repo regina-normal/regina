@@ -1345,10 +1345,10 @@ Equality type : BY_REFERENCE
 NTorusBundle : class
 Equality type : BY_REFERENCE
 
-NTreeBag : class
+TreeBag : class
 Equality type : BY_REFERENCE
 
-NTreeDecomposition : class
+TreeDecomposition : class
 Equality type : BY_REFERENCE
 
 NTriSolidTorus : class

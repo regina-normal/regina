@@ -30,18 +30,75 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file treewidth/ntreedecomposition.h
- *  \brief Deprecated header.
+/*! \file treewidth/treedecomposition-impl.h
+ *  \brief Contains implementations of template member functions in the
+ *  TreeDecomposition class.
+ *
+ *  This file is \e not included automatically by treedecomposition.h.
+ *  However, most end users should never need to include it, since
+ *  Regina's calculation engine provides full explicit instantiations
+ *  of these routines for \ref stddim "standard dimensions" and for
+ *  common types.
  */
 
-#ifndef __NTREEDECOMPOSITION_H
+#ifndef __TREEDECOMPOSITION_IMPL_H
 #ifndef __DOXYGEN
-#define __NTREEDECOMPOSITION_H
+#define __TREEDECOMPOSITION_IMPL_H
 #endif
-
-#warning This header is deprecated; please use treewidth/treedecomposition.h instead.
 
 #include "treewidth/treedecomposition.h"
 
-#endif
+namespace regina {
 
+template <int dim>
+TreeDecomposition::TreeDecomposition(
+        const Triangulation<dim>& triangulation,
+        TreeDecompositionAlg alg) :
+        width_(0), root_(0) {
+    Graph g(triangulation.size());
+
+    int i, j;
+    const Simplex<dim>* simp;
+    for (i = 0; i < g.order_; ++i) {
+        simp = triangulation.simplex(i);
+        for (j = 0; j <= dim; ++j)
+            if (simp->adjacentSimplex(j))
+                g.adj_[i][simp->adjacentSimplex(j)->index()] = true;
+    }
+
+    construct(g, alg);
+}
+
+template <int dim>
+TreeDecomposition::TreeDecomposition(
+        const FacetPairing<dim>& pairing,
+        TreeDecompositionAlg alg) :
+        width_(0), root_(0) {
+    Graph g(pairing.size());
+
+    int i, j;
+    for (i = 0; i < g.order_; ++i)
+        for (j = 0; j <= dim; ++j)
+            if (! pairing.isUnmatched(i, j))
+                g.adj_[i][pairing.dest(i, j).simp] = true;
+
+    construct(g, alg);
+}
+
+template <typename T>
+TreeDecomposition::TreeDecomposition(unsigned order, T const** graph,
+        TreeDecompositionAlg alg) :
+        width_(0), root_(0) {
+    Graph g(order);
+
+    int i, j;
+    for (i = 0; i < order; ++i)
+        for (j = 0; j < order; ++j)
+            g.adj_[i][j] = graph[i][j] || graph[j][i];
+
+    construct(g, alg);
+}
+
+} // namespace regina
+
+#endif
