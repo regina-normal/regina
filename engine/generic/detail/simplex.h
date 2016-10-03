@@ -45,7 +45,7 @@
 #include "generic/facenumbering.h"
 #include "generic/alias/face.h"
 #include "maths/nperm.h"
-#include "utilities/nmarkedvector.h"
+#include "utilities/markedvector.h"
 #include <cassert>
 #include <boost/noncopyable.hpp>
 
@@ -183,7 +183,7 @@ class SimplexFacesSuite<dim, 0> : protected SimplexFaces<dim, 0> {
  */
 template <int dim>
 class SimplexBase :
-        public NMarkedElement,
+        public MarkedElement,
         public Output<SimplexBase<dim>>,
         protected SimplexFacesSuite<dim, dim-1>,
         public alias::FaceOfSimplex<SimplexBase<dim>, dim>,

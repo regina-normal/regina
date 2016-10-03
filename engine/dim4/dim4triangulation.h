@@ -47,7 +47,7 @@
 #include "algebra/ngrouppresentation.h"
 #include "generic/triangulation.h"
 #include "packet/packet.h"
-#include "utilities/nmarkedvector.h"
+#include "utilities/markedvector.h"
 #include "utilities/nproperty.h"
 
 // The following headers are necessary so that std::unique_ptr can invoke
@@ -147,7 +147,7 @@ class REGINA_API Triangulation<4> :
                  links, or it may mean that the vertex links have not yet
                  been calculated. */
 
-        NMarkedVector<Dim4BoundaryComponent> boundaryComponents_;
+        MarkedVector<Dim4BoundaryComponent> boundaryComponents_;
             /**< The components that form the boundary of the
                  triangulation. */
 

@@ -41,7 +41,7 @@
 
 #include "regina-core.h"
 #include "generic/simplex.h"
-#include "utilities/nmarkedvector.h"
+#include "utilities/markedvector.h"
 // NOTE: More #includes follow after the class declarations.
 
 namespace regina {

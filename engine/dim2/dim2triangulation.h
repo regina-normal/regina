@@ -44,7 +44,7 @@
 #include "regina-core.h"
 #include "generic/triangulation.h"
 #include "packet/packet.h"
-#include "utilities/nmarkedvector.h"
+#include "utilities/markedvector.h"
 #include "utilities/nproperty.h"
 
 // The following headers are necessary so that std::unique_ptr can invoke
@@ -122,7 +122,7 @@ class REGINA_API Triangulation<2> :
             /**< Used to iterate through boundary components. */
 
     private:
-        NMarkedVector<Dim2BoundaryComponent> boundaryComponents_;
+        MarkedVector<Dim2BoundaryComponent> boundaryComponents_;
             /**< The components that form the boundary of the triangulation. */
 
     public:

@@ -30,8 +30,8 @@ if (${REGINA_INSTALL_DEV})
     memutils.h
     nbitmask.h
     nbooleans.h
-    nlistoncall.h
-    nmarkedvector.h
+    listoncall.h
+    markedvector.h
     nproperty.h
     nqitmask.h
     ntrieset.h

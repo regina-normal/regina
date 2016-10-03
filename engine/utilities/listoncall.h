@@ -30,14 +30,14 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file utilities/nlistoncall.h
+/*! \file utilities/listoncall.h
  *  \brief Provides lists of expensive objects that are only created
  *  when required.
  */
 
-#ifndef __NLISTONCALL_H
+#ifndef __LISTONCALL_H
 #ifndef __DOXYGEN
-#define __NLISTONCALL_H
+#define __LISTONCALL_H
 #endif
 
 #include "regina-core.h"
@@ -59,7 +59,7 @@ namespace regina {
  * use of the software.
  *
  * A particular hard-coded list should be defined by a subclass of
- * NListOnCall.  The list should be filled within the pure virtual
+ * ListOnCall.  The list should be filled within the pure virtual
  * routine initialise(), which must be overridden.
  *
  * A static list of this type is relatively cheap to create.  The list
@@ -83,7 +83,7 @@ namespace regina {
  * \ifacespython Not present.
  */
 template <typename T>
-class NListOnCall : public boost::noncopyable {
+class ListOnCall : public boost::noncopyable {
     public:
         /**
          * An iterator over this list.  This operates as a forward
@@ -105,13 +105,13 @@ class NListOnCall : public boost::noncopyable {
          * with items; this does not happen until the first time that
          * begin() is called.
          */
-        NListOnCall() : initialised(false) {
+        ListOnCall() : initialised(false) {
         }
 
         /**
          * Destroys this list and all of the items it contains.
          */
-        virtual ~NListOnCall() {
+        virtual ~ListOnCall() {
             for (iterator it = items.begin(); it != items.end(); it++)
                 delete const_cast<T*>(*it);
         }
@@ -127,8 +127,8 @@ class NListOnCall : public boost::noncopyable {
          */
         iterator begin() const {
             if (! initialised) {
-                const_cast<NListOnCall<T>*>(this)->initialise();
-                const_cast<NListOnCall<T>*>(this)->initialised = true;
+                const_cast<ListOnCall<T>*>(this)->initialise();
+                const_cast<ListOnCall<T>*>(this)->initialised = true;
             }
 
             return items.begin();
@@ -164,7 +164,7 @@ class NListOnCall : public boost::noncopyable {
         /**
          * Fills this list with items.  The particular set of items to
          * use will typically depend on the particular subclass of
-         * NListOnCall that is being defined.
+         * ListOnCall that is being defined.
          *
          * This routine will be run the first time that begin() is
          * called on each list, and will not be run again.

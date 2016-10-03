@@ -43,7 +43,7 @@
 #include "regina-core.h"
 #include "output.h"
 #include "generic/alias/face.h"
-#include "utilities/nmarkedvector.h"
+#include "utilities/markedvector.h"
 #include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
@@ -91,7 +91,7 @@ typedef Face<3, 2> NTriangle;
 class REGINA_API NBoundaryComponent :
         public Output<NBoundaryComponent>,
         public alias::FaceOfTriangulation<NBoundaryComponent, 3>,
-        public NMarkedElement {
+        public MarkedElement {
     private:
         std::vector<NTriangle*> triangles_;
             /**< List of triangles in the component. */

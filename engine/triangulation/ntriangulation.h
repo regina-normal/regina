@@ -53,7 +53,7 @@
 #include "packet/packet.h"
 #include "treewidth/treedecomposition.h"
 #include "utilities/boolset.h"
-#include "utilities/nmarkedvector.h"
+#include "utilities/markedvector.h"
 #include "utilities/nproperty.h"
 
 // The following headers are necessary so that std::unique_ptr can invoke
@@ -191,7 +191,7 @@ class REGINA_API Triangulation<3> :
                  as described by turaevViro(). */
 
     private:
-        NMarkedVector<NBoundaryComponent> boundaryComponents_;
+        MarkedVector<NBoundaryComponent> boundaryComponents_;
             /**< The components that form the boundary of the triangulation. */
 
         bool ideal_;

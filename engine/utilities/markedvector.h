@@ -30,13 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file utilities/nmarkedvector.h
+/*! \file utilities/markedvector.h
  *  \brief Provides space-efficient arrays with fast object-to-index lookup.
  */
 
-#ifndef __NMARKEDVECTOR_H
+#ifndef __MARKEDVECTOR_H
 #ifndef __DOXYGEN
-#define __NMARKEDVECTOR_H
+#define __MARKEDVECTOR_H
 #endif
 
 #include <vector>
@@ -51,17 +51,17 @@ namespace regina {
  */
 
 /**
- * A base class for elements of NMarkedVector.
+ * A base class for elements of MarkedVector.
  *
- * NMarkedVector is a vector class that provides fast, space-efficient
+ * MarkedVector is a vector class that provides fast, space-efficient
  * reverse lookup of array indices (i.e., given an object, find the
  * index at which it is stored).  The way it does this is to store the
  * array indices in the object themselves.
  *
- * As a result, any type to be stored in an NMarkedVector must be derived
+ * As a result, any type to be stored in a MarkedVector must be derived
  * from this class.  This class provides a space to store the
  * corresponding array index, and looks after access control so that
- * only NMarkedVector can edit this index.
+ * only MarkedVector can edit this index.
  *
  * Since indices are stored with the objects, it is possible to perform
  * this reverse lookup by querying the object alone, without any
@@ -69,33 +69,33 @@ namespace regina {
  * routine markedIndex().
  *
  * The trade-off of course is that any object may not belong to more
- * than one NMarkedVector at a time.  Any attempt to do this will result
+ * than one MarkedVector at a time.  Any attempt to do this will result
  * in undefined behaviour.
  *
- * See NMarkedVector for further information.
+ * See MarkedVector for further information.
  *
  * \ifacespython Not present.
  */
-class REGINA_API NMarkedElement {
+class REGINA_API MarkedElement {
     private:
         size_t marking_;
-            /**< The index in the NMarkedVector at which this object is
-                 stored.  If the object does not belong to an NMarkedVector,
+            /**< The index in the MarkedVector at which this object is
+                 stored.  If the object does not belong to a MarkedVector,
                  the value of this field is undefined. */
 
     public:
         /**
          * Returns the index at which this object is stored in an
-         * NMarkedVector.  If this object does not belong to an
-         * NMarkedVector, the return value is undefined.
+         * MarkedVector.  If this object does not belong to an
+         * MarkedVector, the return value is undefined.
          *
          * @return the index at which this object is stored.
          */
         inline size_t markedIndex() const;
 
     template <typename T>
-    friend class NMarkedVector;
-        /**< Allow only NMarkedVector to edit the array index. */
+    friend class MarkedVector;
+        /**< Allow only MarkedVector to edit the array index. */
 };
 
 /**
@@ -103,7 +103,7 @@ class REGINA_API NMarkedElement {
  * array indices.
  *
  * This class derives from std::vector, and so provides fast forward
- * lookups from array indices to objects.  What NMarkedVector provides
+ * lookups from array indices to objects.  What MarkedVector provides
  * in addition to this is fast reverse lookups from objects back to
  * array indices.
  *
@@ -112,13 +112,13 @@ class REGINA_API NMarkedElement {
  * inside the objects themselves.  As a result, there are two
  * significant constraints:
  *
- * - This class can only store objects derived from NMarkedElement
+ * - This class can only store objects derived from MarkedElement
  *   (which provides space for storing the array indices and handles
  *   their access control).  In particular, it cannot store native types
  *   such as \c int or predefined types such as \c std::string.
  *
- * - An object can only belong to one NMarkedVector at a time.  Any
- *   attempt to insert an object into more than one NMarkedVector at the
+ * - An object can only belong to one MarkedVector at a time.  Any
+ *   attempt to insert an object into more than one MarkedVector at the
  *   same time results in undefined behaviour.
  *
  * Using this class is fairly simple.  The class provides a restricted
@@ -128,19 +128,19 @@ class REGINA_API NMarkedElement {
  * time if required).  In addition, any const method of std::vector can
  * be accessed through an explicit cast to const std::vector&.  To
  * perform a reverse lookup (find the index at which an array is stored),
- * simply call the object's inherited method NMarkedElement::markedIndex().
+ * simply call the object's inherited method MarkedElement::markedIndex().
  *
  * Note that, like its parent std::vector, this class performs no memory
  * management.  In particular, elements (which are pointers to real objects)
  * are not destroyed when they are removed from a vector or when the vector
  * is eventually destroyed.
  *
- * \pre The type \a T is a class derived from NMarkedElement.
+ * \pre The type \a T is a class derived from MarkedElement.
  *
  * \ifacespython Not present.
  */
 template <typename T>
-class NMarkedVector : private std::vector<T*> {
+class MarkedVector : private std::vector<T*> {
     public:
         using typename std::vector<T*>::iterator;
         using typename std::vector<T*>::const_iterator;
@@ -160,7 +160,7 @@ class NMarkedVector : private std::vector<T*> {
         /**
          * Constructs a new empty vector.
          */
-        inline NMarkedVector() {}
+        inline MarkedVector() {}
 
         /**
          * Casts this vector to a const std::vector, thus providing
@@ -181,7 +181,7 @@ class NMarkedVector : private std::vector<T*> {
          * is removed or when this vector is eventually destroyed.
          *
          * \pre The given item does not already belong to some other
-         * NMarkedVector.
+         * MarkedVector.
          *
          * @param item the item to add to this vector.
          */
@@ -238,16 +238,16 @@ class NMarkedVector : private std::vector<T*> {
          *
          * @param other the vector whose contents are to be swapped with this.
          */
-        inline void swap(NMarkedVector<T>& other) {
+        inline void swap(MarkedVector<T>& other) {
             std::vector<T*>::swap(other);
         }
 };
 
 /*@}*/
 
-// Inline functions for NMarkedElement
+// Inline functions for MarkedElement
 
-inline size_t NMarkedElement::markedIndex() const {
+inline size_t MarkedElement::markedIndex() const {
     return marking_;
 }
 

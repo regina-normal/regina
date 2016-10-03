@@ -42,7 +42,7 @@
 // There are more #includes below - we need to define FaceList
 // before including generic/detail/triangulation.h.
 #include "packet/packet.h"
-#include "utilities/nmarkedvector.h"
+#include "utilities/markedvector.h"
 #include "utilities/xmlutils.h"
 #include <type_traits>
 
@@ -90,7 +90,7 @@ class FaceList {
                  <tt>Face<dim, subdim>*</tt>. */
 
     private:
-        NMarkedVector<Face<dim, subdim>> faces_;
+        MarkedVector<Face<dim, subdim>> faces_;
             /**< All <i>subdim</i>-faces of the underlying triangulation. */
 
     public:

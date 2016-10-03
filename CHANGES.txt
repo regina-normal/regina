@@ -16,9 +16,10 @@ Version 5.1  [ (under development) ]
           compatibility.  There are some exceptions:
             + NAngleStructureList becomes AngleStructures.
             + NExampleSnapPeaTriangulation becomes ExampleSnapPea.
-            + NXMLFoo classes have no backward compatible headers or typedefs,
-              since these are for internal use only.
             + utilities/nbooleans.h becomes utilities/boolset.h.
+            + Some internal classes do not have backward compatible headers or
+              typedefs.  None of these internal classes are exposed to Python,
+              and typical C++ users would have no reason to use them either.
     ENGINE:
         Global array quadDefn[][]:
             - Added to nnormalsurface.h, with the same contents as the old

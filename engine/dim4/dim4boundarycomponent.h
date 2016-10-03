@@ -43,7 +43,7 @@
 #include "regina-core.h"
 #include "output.h"
 #include "generic/alias/face.h"
-#include "utilities/nmarkedvector.h"
+#include "utilities/markedvector.h"
 #include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
@@ -97,7 +97,7 @@ class REGINA_API Dim4BoundaryComponent :
         public Output<Dim4BoundaryComponent>,
         public alias::FaceOfTriangulation<Dim4BoundaryComponent, 4>,
         public boost::noncopyable,
-        public NMarkedElement {
+        public MarkedElement {
     private:
         std::vector<Dim4Tetrahedron*> tetrahedra_;
             /**< List of tetrahedra in the boundary component. */
