@@ -60,7 +60,6 @@ my $quiet = 0;
 my $verbose = 0;
 my $interactive = 0;
 my $autoImport = 1;
-my $nolibs = 0;
 my $regina_home = '';
 my $python_lib_dir = '';
 my $script = '';
@@ -93,7 +92,9 @@ foreach my $arg (@ARGV) {
     }
 
     if ($arg eq '-n' or $arg eq '--nolibs') {
-        $nolibs = 1;
+        print STDERR "I: The --nolibs option is no longer used, since Regina has dropped support\n";
+        print STDERR "   for its ancient \"python libraries\" facility.  The Python language itself\n";
+        print STDERR "   offers better and more standardised ways of importing your own code.\n\n";
         next;
     }
 
@@ -282,7 +283,6 @@ if ($script) {
     $cmd .= 'regina.reginaSetup(banner=False';
     $interactive and $cmd .= ', readline=True';
     $quiet and $cmd .= ', quiet=True';
-    $nolibs and $cmd .= ', libs=False';
     $cmd .= ', namespace=globals()); regina.__execScript(globals())';
 
     my @fullCommandLine = ($python_cmd);
@@ -295,7 +295,6 @@ if ($script) {
     $autoImport and $cmd .= 'from regina import *; ';
     $cmd .= 'regina.reginaSetup(banner=True, readline=True';
     $quiet and $cmd .= ', quiet=True';
-    $nolibs and $cmd .= ', libs=False';
     $cmd .= ', namespace=globals())';
     exec ($python_cmd, '-i', '-c', $cmd) or &execError();
 }
@@ -386,11 +385,9 @@ sub usage {
     my $msg = shift;
     defined($msg) and print STDERR "$msg\n\n";
     print STDERR "Usage: 1. $prog_name\n";
-    print STDERR "               [ -q, --quiet | -v, --verbose ]\n";
-    print STDERR "               [ -n --nolibs ] [ -a, --noautoimport] \n";
+    print STDERR "               [ -q, --quiet | -v, --verbose ] [ -a, --noautoimport]\n";
     print STDERR "       2. $prog_name\n";
-    print STDERR "               [ -q, --quiet | -v, --verbose ]\n";
-    print STDERR "               [ -n --nolibs ] [ -a, --noautoimport] \n";
+    print STDERR "               [ -q, --quiet | -v, --verbose ] [ -a, --noautoimport]\n";
     print STDERR "               [ -i, --interactive ] script [ script_args ... ]\n";
     exit 1;
 }

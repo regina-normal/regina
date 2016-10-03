@@ -221,27 +221,6 @@
    <literal>regina.NTriangulation()</literal> and
    <literal>regina.open(filename)</literal>).
   </para>
-  <tip>
-   <para>
-    If you have code that you find yourself writing again and again,
-    you can put it in a <firstterm>user library</firstterm>.
-    &regina; will run all of the code in all of your user libraries
-    at the beginning of every &python; session
-    (including graphical consoles, script packets
-    and <command>regina-python</command>).
-   </para>
-   <para>
-    User libraries are just ordinary &python; files: you can maintain
-    the current list of enabled libraries through
-    &regina;'s <link linkend="python-libraries">&python; options</link>.
-    On &linux; and the downloadable &macosx; app (but not on &windows;
-    or the &macappstore; version), you can also maintain this
-    list directly by editing the text file &regina-libs;,
-    as described in the
-    <link linkend="man-regina-python"><command>regina-python</command></link>
-    reference.
-   </para>
-  </tip>
 
   <sect2 id="python-docs">
    <title>Documentation</title>

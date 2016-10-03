@@ -7,6 +7,16 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
+Mac App Store version 5.0
+
+    USER INTERFACE:
+        - Disabled syntax highlighting for script packets, since this
+          uses GPL code which is incompatible with the App Store license.
+    PYTHON:
+        - Removed Regina's ancient "python libraries" facility, since Python
+          itself offers better and more standardised ways of doing this.
+          This will be removed from all of Regina's builds in version 5.1.
+
 Version 5.0  [ 26 September, 2016 ]
 
     GENERAL:

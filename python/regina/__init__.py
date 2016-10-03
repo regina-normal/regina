@@ -30,8 +30,7 @@ import sys, os
 from .engine import *
 
 def reginaSetup(quiet = False, readline = True, banner = False,
-                snappyPath = True, libs = True, namespace = None,
-                builtinOpen = True):
+                snappyPath = True, namespace = None, builtinOpen = True):
     """
     Initialise a Regina python session.
 
@@ -40,8 +39,6 @@ def reginaSetup(quiet = False, readline = True, banner = False,
                      otherwise be written to standard output.  If an error
                      occurs, details of the error will be written regardless.
         readline   : If true, attempt to enable tab completion.
-        libs       : If true, execute all of the user's start-up libraries
-                     in the global namespace.
         snappyPath : Applies to platforms where SnapPy might not be installed
                      on the python path (e.g., MacOS users with the SnapPy app
                      bundle).  If true, this setup routine will (i) attempt
@@ -108,86 +105,11 @@ def reginaSetup(quiet = False, readline = True, banner = False,
                     sys.path.append(snappyLib + '/site-packages.zip')
                     sys.path.append(snappyLib + '/lib-dynload')
 
-    if libs:
-        if __execLibs(namespace, quiet):
-            # We tried to import something...
-            if not quiet:
-                # ... and we wrote some messages about it.
-                print
-
     if banner:
         print engine.welcome()
 
     if builtinOpen and namespace:
         namespace['open'] = __builtins__['open']
-
-def __execLibs(namespace = None, quiet = False):
-    """
-    For internal use by this module.
-    Executes all of the user's start-up libraries in the global namespace.
-
-    Arguments:
-        namespace : The global namespace in which the library scripts will be
-                    executed.  This may be None, in which case the caller's
-                    global namespace will be used.
-        quiet:      If true, do not print information about which libraries
-                    are being loaded.
-
-    Returns:
-        True if there was at least one library that we tried to import,
-        or False if there were none.
-    """
-
-    libConfig = os.path.expanduser('~/.regina-libs')
-
-    try:
-        f = __builtins__['open'](libConfig, 'r')
-    except:
-        # No configuration file.  Silently do nothing.
-        return
-
-    # The filenames in the configuration file are encoded using UTF-8.
-    # Find the correct encoding for talking with the filesystem.
-    import locale
-    codeset = locale.getdefaultlocale()[1]
-    if codeset == 'UTF-8':
-        codeset = None
-
-    # If something goes wrong whilst reading the file, let the exception
-    # fall through to the user.
-    triedImport = False
-    for line in f:
-        lib = line.strip()
-        if len(lib) == 0:
-            continue
-        if lib[0] == '#':
-            continue
-
-        triedImport = True
-        if codeset:
-            lib = lib.decode('UTF-8').encode(codeset)
-
-        if not os.path.exists(lib):
-            print 'ERROR: Python library does not exist: ' + lib
-            print '       Please remove this from the configuration file: ' + \
-                libConfig
-            continue
-
-        if not quiet:
-            print 'Running ' + lib + '...'
-        try:
-            if namespace:
-                execfile(lib, namespace)
-            else:
-                execfile(lib)
-        except SystemExit:
-            pass
-        except:
-            sys.excepthook(*sys.exc_info())
-            print 'ERROR: Could not execute user library:', lib
-
-    f.close()
-    return triedImport
 
 def __execScript(namespace = None):
     """
