@@ -909,7 +909,6 @@
 
  <indexentry>
   <primaryie>libraries</primaryie>
-  <secondaryie><link linkend="python-libraries">&python;</link></secondaryie>
   <secondaryie><link linkend="compiling">&regina;, compiling into
    other code</link></secondaryie>
  </indexentry>
@@ -1287,8 +1286,6 @@
    &python; scripts</link></secondaryie>
   <secondaryie><link linkend="python-starting">invoking in the
    &gui;</link></secondaryie>
-  <secondaryie><link linkend="python-libraries">&python;
-   libraries</link></secondaryie>
   <secondaryie><link linkend="packet-script">script
    packets</link></secondaryie>
  </indexentry>
@@ -1738,11 +1735,6 @@
    interface</link></secondaryie>
   <secondaryie><link linkend="utils">specialised command-line
    utilities</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>user libraries</primaryie>
-  <seeie>See: libraries</seeie>
  </indexentry>
 
  <indexentry>

@@ -1243,7 +1243,6 @@
 		0583656C18DB88E8008B08D9 /* dim2triangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0583656818DB88D9008B08D9 /* dim2triangulation.cpp */; };
 		0583656D18DB8B68008B08D9 /* kernel_namespace.h in Headers */ = {isa = PBXBuildFile; fileRef = 0583656018DB8876008B08D9 /* kernel_namespace.h */; };
 		058637F3181DBC5900E95307 /* syntax in Resources */ = {isa = PBXBuildFile; fileRef = 058637F2181DBC5800E95307 /* syntax */; };
-		058637F5181DBCE100E95307 /* pylib in Resources */ = {isa = PBXBuildFile; fileRef = 058637F4181DBCE100E95307 /* pylib */; };
 		058641F019D77D820019E056 /* TextHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 058641EF19D77D820019E056 /* TextHelper.mm */; };
 		0586426B19D92D550019E056 /* SurfacesMatching.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0586426A19D92D550019E056 /* SurfacesMatching.mm */; };
 		0586426E19D982D00019E056 /* SpreadHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0586426D19D982D00019E056 /* SpreadHelper.mm */; };
@@ -2158,7 +2157,6 @@
 		052942D61C5CDCBF0011C1E6 /* safeheldtype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = safeheldtype.h; sourceTree = "<group>"; };
 		052AB70F1C6304A800C44D54 /* facetspec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetspec.h; sourceTree = "<group>"; };
 		052AB7111C6304C500C44D54 /* facetspec.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetspec.cpp; sourceTree = "<group>"; };
-		052DB59F1D9E592800EDEA68 /* Utils.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Utils.entitlements; sourceTree = "<group>"; };
 		052DB5C11D9F200600EDEA68 /* censuslookup */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = censuslookup; sourceTree = "<group>"; };
 		052F9BFF180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052F9C00180600FA00FAE4DF /* nabeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nabeliangroup.cpp; sourceTree = "<group>"; };
@@ -3113,7 +3111,6 @@
 		0583656818DB88D9008B08D9 /* dim2triangulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim2triangulation.cpp; sourceTree = "<group>"; };
 		0583656918DB88D9008B08D9 /* testdim2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testdim2.h; sourceTree = "<group>"; };
 		058637F2181DBC5800E95307 /* syntax */ = {isa = PBXFileReference; lastKnownFileType = folder; name = syntax; path = src/syntax; sourceTree = "<group>"; };
-		058637F4181DBCE100E95307 /* pylib */ = {isa = PBXFileReference; lastKnownFileType = folder; path = pylib; sourceTree = SOURCE_ROOT; };
 		058641EE19D77D820019E056 /* TextHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextHelper.h; sourceTree = "<group>"; };
 		058641EF19D77D820019E056 /* TextHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TextHelper.mm; sourceTree = "<group>"; };
 		0586426919D92D550019E056 /* SurfacesMatching.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SurfacesMatching.h; sourceTree = "<group>"; };
@@ -5276,10 +5273,8 @@
 				05561D181811F27A00FD6E2E /* regina.icns */,
 				05561D191811F27A00FD6E2E /* x-regina.icns */,
 				0543AEC71811E2AD002758F8 /* Regina.entitlements */,
-				052DB59F1D9E592800EDEA68 /* Utils.entitlements */,
 				051806D5181202E0008EBB01 /* examples */,
 				051806D3181202BD008EBB01 /* icons */,
-				058637F4181DBCE100E95307 /* pylib */,
 				058637F2181DBC5800E95307 /* syntax */,
 			);
 			path = qtui;
@@ -6641,7 +6636,6 @@
 				05617AD61D9D3C5A00B1E33B /* regina-python.in in Resources */,
 				058637F3181DBC5900E95307 /* syntax in Resources */,
 				051806D6181202E0008EBB01 /* examples in Resources */,
-				058637F5181DBCE100E95307 /* pylib in Resources */,
 				05AB5ED61B8EDFBF007034C8 /* regina.icns in Resources */,
 				05AB5ED71B8EDFBF007034C8 /* x-regina.icns in Resources */,
 			);

@@ -461,7 +461,6 @@ IF(Boost_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
     MESSAGE(FATAL_ERROR "Could not query the python site-packages directory.  Please either set the correct python interpreter (-DPYTHON_EXECUTABLE=...), or else disable python bindings (-DDISABLE_PYTHON).")
   ENDIF ()
 
-  ADD_SUBDIRECTORY(pylib)
   ADD_SUBDIRECTORY(python)
   SET(BOOST_PYTHON_FOUND TRUE)
 

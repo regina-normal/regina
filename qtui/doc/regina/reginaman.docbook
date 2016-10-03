@@ -127,22 +127,10 @@
     <literal>from regina import&nbsp;*</literal>).
    </para>
    <para>
-    If you have frequently-used code, you can store it in a
-    <firstterm>user library</firstterm>.
-    At the beginning of each &python; session, &regina; will automatically
-    run all of the code in all of your user libraries.
-    The list of user libraries will be read from the text file
-    &regina-libs;, which should contain one
-    library filename per line.  Blank lines and lines beginning with a
-    hash (#) will be ignored.  You can also configure this list of
-    libraries through the graphical user interface: see the
-    &python; options page.
-   </para>
-   <para>
     Instead of starting an interactive &python; session, you can pass a
     &python; script (with arguments if desired).  In this case &regina;
     will run the script (after first importing the
-    <parameter>regina</parameter> module and loading any user libraries).
+    <parameter>regina</parameter> module).
     If you pass <option>--interactive</option>, &regina; will leave you
     at a &python; prompt once the script finishes;
     otherwise it will exit &python; and return you to the command line.
@@ -177,16 +165,6 @@
       <para>
        This is equivalent to setting the environment variable
        <parameter>REGINA_VERBOSITY</parameter>=<literal>2</literal>.
-      </para>
-     </listitem>
-    </varlistentry>
-    <varlistentry>
-     <term><option>-n</option></term>
-     <term><option>--nolibs</option></term>
-     <listitem>
-      <para>
-       Do not load any user libraries when the session starts.
-       User libraries are discussed in the overview above.
       </para>
      </listitem>
     </varlistentry>

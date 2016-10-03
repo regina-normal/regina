@@ -36,7 +36,6 @@
    "<ulink url='http://regina.sourceforge.net/docs/'>regina.sourceforge.net</ulink>">
   <!ENTITY regmanburtonthesisurl
    "<ulink url='http://www.maths.uq.edu.au/~bab/papers/'>www.maths.uq.edu.au</ulink>">
-  <!ENTITY regina-libs "<filename>~/.regina-libs</filename>">
   <!ENTITY manpageack "Many people have been involved in the development
    of &regina;; see the <link linkend='acknowledgements'>acknowledgements
    page</link> for a full list of credits.">

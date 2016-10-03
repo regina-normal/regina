@@ -65,61 +65,6 @@
  * the preferences dialog for the time being.
  */
 
-namespace {
-    /**
-     * A list view item for a single ReginaFilePref.
-     */
-    class ReginaFilePrefItem : public QListWidgetItem {
-        private:
-            ReginaFilePref data;
-
-        public:
-            /**
-             * There won't be many censuses overall so we just add the
-             * item to the end of the list (which requires traversing
-             * the entire list).
-             */
-            ReginaFilePrefItem(QListWidget* parent,
-                    const ReginaFilePref& newData) :
-                    QListWidgetItem(iconFor(newData),
-                        newData.longDisplayName(), parent),
-                    data(newData) {
-            }
-
-            ReginaFilePref& getData() {
-                return data;
-            }
-
-            const ReginaFilePref& getData() const {
-                return data;
-            }
-
-            bool activateFile() {
-                if (data.isActive())
-                    return false;
-
-                data.activate();
-                setIcon(ReginaSupport::themeIcon("dialog-ok"));
-                return true;
-            }
-
-            bool deactivateFile() {
-                if (! data.isActive())
-                    return false;
-
-                data.deactivate();
-                setIcon(ReginaSupport::themeIcon("dialog-cancel"));
-                return true;
-            }
-
-            static QIcon iconFor(const ReginaFilePref& data) {
-                return (data.isActive() ?
-                    ReginaSupport::themeIcon("dialog-ok") :
-                    ReginaSupport::themeIcon("dialog-cancel"));
-            }
-    };
-}
-
 ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
         QDialog(parent), mainWindow(parent) {
     setWindowTitle(tr("Regina Preferences"));
@@ -173,11 +118,6 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     pythonPrefs->editSpacesPerTab->setText(
         QString::number(prefSet.pythonSpacesPerTab));
     // pythonPrefs->cbWordWrap->setChecked(prefSet.pythonWordWrap);
-
-    foreach (const ReginaFilePref& f, prefSet.pythonLibraries) {
-        new ReginaFilePrefItem(pythonPrefs->listFiles, f);
-    }
-    pythonPrefs->updateActiveCount();
 
     toolsPrefs->cbSnapPeaMessages->setChecked(
         regina::NSnapPeaTriangulation::kernelMessagesEnabled());
@@ -279,13 +219,6 @@ void ReginaPreferences::slotApply() {
             QString::number(prefSet.pythonSpacesPerTab));
     }
     // prefSet.pythonWordWrap = pythonPrefs->cbWordWrap->isChecked();
-
-    prefSet.pythonLibraries.clear();
-    for (int i=0; i < pythonPrefs->listFiles->count();i++) {
-        QListWidgetItem* item = pythonPrefs->listFiles->item(i);
-        prefSet.pythonLibraries.push_back(
-            dynamic_cast<ReginaFilePrefItem*>(item)->getData());
-    }
 
     regina::NSnapPeaTriangulation::enableKernelMessages(
         toolsPrefs->cbSnapPeaMessages->isChecked());
@@ -579,174 +512,6 @@ ReginaPrefPython::ReginaPrefPython(QWidget* parent) : QWidget(parent) {
     editSpacesPerTab->setWhatsThis(msg);
     layout->addLayout(box);
 
-    // Add a small gap.
-    layout->addSpacing(5);
-
-    // Set up the active file count.
-    activeCount = new QLabel();
-    layout->addWidget(activeCount);
-
-    // Prepare the main area.
-    box = new QHBoxLayout();
-
-    // Set up the list view.
-    listFiles = new QListWidget();
-    box->addWidget(listFiles, 1);
-    listFiles->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    msg = tr("The list of Python libraries to be "
-        "loaded at the beginning of each new Python session.  Note that "
-        "libraries in this list may be deactivated, "
-        "which means that they will not be loaded.");
-    listFiles->setWhatsThis(msg);
-    activeCount->setWhatsThis(msg);
-    connect(listFiles, SIGNAL(itemSelectionChanged()),
-        this, SLOT(updateButtons()));
-
-    // Set up the button panel.
-    QBoxLayout* vBox = new QVBoxLayout();
-
-    QPushButton* btnAdd = new QPushButton(ReginaSupport::regIcon("insert"),
-        tr("Add..."));
-    // btnAdd->setFlat(true);
-    vBox->addWidget(btnAdd);
-    connect(btnAdd, SIGNAL(clicked()), this, SLOT(add()));
-    btnAdd->setToolTip(tr("Add a new Python library"));
-    btnAdd->setWhatsThis(tr("Add a new Python library.  "
-        "This list contains the Python libraries to be loaded at "
-        "the beginning of each new Python session."));
-
-    btnRemove = new QPushButton(ReginaSupport::regIcon("delete"),
-        tr("Remove"));
-    // btnRemove->setFlat(true);
-    vBox->addWidget(btnRemove);
-    connect(btnRemove, SIGNAL(clicked()), this, SLOT(remove()));
-    btnRemove->setToolTip(tr("Remove selected Python libraries"));
-    btnRemove->setWhatsThis(tr("Remove the selected Python libraries.  "
-        "This list contains the Python libraries to be loaded at "
-        "the beginning of each new Python session."));
-
-    btnActivate = new QPushButton(ReginaSupport::themeIcon("dialog-ok"),
-        tr("Activate"));
-    // btnActivate->setFlat(true);
-    vBox->addWidget(btnActivate);
-    connect(btnActivate, SIGNAL(clicked()), this, SLOT(activate()));
-    btnActivate->setToolTip(tr("Activate selected Python libraries"));
-    btnActivate->setWhatsThis(tr("Activate the selected Python "
-        "libraries.  When a new Python session is started, only the active "
-        "libraries in this list will be loaded."));
-
-    btnDeactivate = new QPushButton(ReginaSupport::themeIcon("dialog-cancel"),
-        tr("Deactivate"));
-    // btnDeactivate->setFlat(true);
-    vBox->addWidget(btnDeactivate);
-    connect(btnDeactivate, SIGNAL(clicked()), this, SLOT(deactivate()));
-    btnDeactivate->setToolTip(tr("Deactivate selected Python libraries"));
-    btnDeactivate->setWhatsThis(tr("Deactivate the selected Python "
-        "libraries.  When a new Python session is started, only the active "
-        "libraries in this list will be loaded."));
-
-    vBox->addStretch(1);
-    box->addLayout(vBox);
-    layout->addLayout(box, 1);
-
-    updateButtons();
+    // Fill the rest of the panel with blank space.
+    layout->addStretch(1);
 }
-
-void ReginaPrefPython::updateActiveCount() {
-    long count = 0;
-    for(int i=0; i < listFiles->count() ; i++) {
-        QListWidgetItem *item = listFiles->item(i);
-        if (dynamic_cast<ReginaFilePrefItem*>(item)->getData().isActive())
-            count++;
-    }
-
-    if (count == 0)
-        activeCount->setText(tr("No active Python libraries:"));
-    else if (count == 1)
-        activeCount->setText(tr("1 active Python library:"));
-    else
-        activeCount->setText(tr("%1 active Python libraries:").arg(count));
-}
-
-void ReginaPrefPython::updateButtons() {
-    bool hasSelection = ! (listFiles->selectedItems().isEmpty());
-    btnRemove->setEnabled(hasSelection);
-    btnActivate->setEnabled(hasSelection);
-    btnDeactivate->setEnabled(hasSelection);
-}
-
-void ReginaPrefPython::add() {
-    QStringList files = QFileDialog::getOpenFileNames(this, 
-        tr("Add Python Libraries"),
-        QFile::decodeName(regina::GlobalDirs::pythonLibs().c_str()),
-        FILTER_PYTHON_LIBRARIES);
-    if (! files.isEmpty()) {
-        for (QStringList::const_iterator it = files.begin();
-                it != files.end(); it++)
-            new ReginaFilePrefItem(listFiles, ReginaFilePref(*it));
-        updateActiveCount();
-    }
-}
-
-void ReginaPrefPython::remove() {
-    QList<QListWidgetItem*> selection = listFiles->selectedItems();
-    if (selection.isEmpty())
-        ReginaSupport::sorry(this,
-            tr("No libraries are selected."),
-            tr("<qt>Please select one or more libraries to remove, then "
-            "press <i>Remove</i> again."));
-    else {
-        while (! selection.isEmpty()) 
-          delete (selection.takeFirst());
-        updateActiveCount();
-    }
-}
-
-void ReginaPrefPython::activate() {
-    QList<QListWidgetItem*> selection = listFiles->selectedItems();
-    if (selection.isEmpty())
-        ReginaSupport::sorry(this,
-            tr("No libraries are selected."),
-            tr("<qt>Please select one or more libraries to activate, then "
-            "press <i>Activate</i> again."));
-    else {
-        bool done = false;
-        QListIterator<QListWidgetItem*> it(selection);
-        while(it.hasNext())
-            done |= dynamic_cast<ReginaFilePrefItem*>(it.next())->
-              activateFile();
-        if (done)
-            updateActiveCount();
-        else if (selection.count() == 1)
-            ReginaSupport::sorry(this,
-                tr("The selected library is already active."));
-        else
-            ReginaSupport::sorry(this,
-                tr("The selected libraries are already active."));
-    }
-}
-
-void ReginaPrefPython::deactivate() {
-    QList<QListWidgetItem*> selection = listFiles->selectedItems();
-    if (selection.isEmpty())
-        ReginaSupport::sorry(this,
-            tr("No libraries are selected."),
-            tr("<qt>Please select one or more libraries to deactivate, then "
-            "press <i>Deactivate</i> again."));
-    else {
-        bool done = false;
-        QListIterator<QListWidgetItem*> it(selection);
-        while(it.hasNext())
-            done |= dynamic_cast<ReginaFilePrefItem*>(it.next())->
-              deactivateFile();
-        if (done)
-            updateActiveCount();
-        else if (selection.count() == 1)
-            ReginaSupport::sorry(this,
-                tr("The selected library is already inactive."));
-        else
-            ReginaSupport::sorry(this,
-                tr("The selected libraries are already inactive."));
-    }
-}
-
