@@ -105,7 +105,7 @@ void addNSnapPeaTriangulation() {
         .def("countCompleteCusps", &NSnapPeaTriangulation::countCompleteCusps)
         .def("countFilledCusps", &NSnapPeaTriangulation::countFilledCusps)
         .def("cusp", &NSnapPeaTriangulation::cusp, OL_cusp()[
-            return_value_policy<reference_existing_object>()])
+            return_internal_reference<>()])
         .def("fill", &NSnapPeaTriangulation::fill, OL_fill())
         .def("unfill", &NSnapPeaTriangulation::unfill, OL_unfill())
         .def("filledTriangulation", filledTriangulation_void,
