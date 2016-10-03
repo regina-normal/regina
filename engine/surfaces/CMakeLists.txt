@@ -28,7 +28,6 @@ SET ( FILES
   quadtostd
   sfcombination
   sfproperties
-  spheres
   stdtoquad
   )
 

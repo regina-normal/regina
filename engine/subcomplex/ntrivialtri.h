@@ -113,14 +113,6 @@ class REGINA_API NTrivialTri : public NStandardTriangulation {
          * triangulation constants defined in this class.
          */
         int type() const;
-        /**
-         * Deprecated routine that returns the specific trivial triangulation
-         * being represented.
-         *
-         * \deprecated This routine has been renamed to type().
-         * See the type() documentation for further details.
-         */
-        REGINA_DEPRECATED int getType() const;
 
         /**
          * Determines if the given triangulation component is one of the
@@ -158,10 +150,6 @@ inline NTrivialTri* NTrivialTri::clone() const {
 }
 
 inline int NTrivialTri::type() const {
-    return type_;
-}
-
-inline int NTrivialTri::getType() const {
     return type_;
 }
 

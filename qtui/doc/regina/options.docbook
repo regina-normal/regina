@@ -242,16 +242,23 @@
       differ with your &linux; distribution.
      </para>
      <para><tip><para>
-      On &linux; and &macosx;, the list of &python; libraries is stored in
-      the file &regina-libs;.
+      On &linux; and the downloadable &macosx; app
+      (but not the &macappstore; version),
+      the list of &python; libraries is stored in the file &regina-libs;.
       This is a plain text file, with each library filename
       written on a separate line.  &regina; will ignore
       any blank lines or lines beginning with a hash (#).
       You are welcome to edit this file directly if you prefer.
      </para><para>
-      On &windows; this list is stored in the registry,
-      and you should only edit it through the &python; configuration panel
-      as described above.
+      The &macappstore; version is sandboxed, which means it cannot
+      write to &regina-libs; directly.  Instead it
+      keeps the list of &python; libraries in a &macosx; preference list.
+      The easiest way to edit this list is through the &python;
+      configuration panel as described above.
+     </para><para>
+      On &windows; the list of &python; libraries list is stored in the
+      registry.  Likewise, in this case the best way to edit the list
+      is through the &python; configuration panel.
      </para></tip></para>
     </glossdef>
    </glossentry>

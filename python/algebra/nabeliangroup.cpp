@@ -108,15 +108,10 @@ void addNAbelianGroup() {
         .def("addGroup", addGroup_matrix)
         .def("addGroup", addGroup_group)
         .def("rank", &NAbelianGroup::rank)
-        .def("getRank", &NAbelianGroup::rank)
         .def("torsionRank", torsionRank_large)
         .def("torsionRank", torsionRank_long)
-        .def("getTorsionRank", torsionRank_large)
-        .def("getTorsionRank", torsionRank_long)
         .def("countInvariantFactors", &NAbelianGroup::countInvariantFactors)
         .def("invariantFactor", &NAbelianGroup::invariantFactor,
-            return_value_policy<return_by_value>())
-        .def("getInvariantFactor", &NAbelianGroup::invariantFactor,
             return_value_policy<return_by_value>())
         .def("isTrivial", &NAbelianGroup::isTrivial)
         .def("isZ", &NAbelianGroup::isZ)

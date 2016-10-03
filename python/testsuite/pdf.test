@@ -42,7 +42,7 @@ pdf = NPDF()
 print 'Null:', pdf.isNull()
 print 'Size:', pdf.size()
 
-pdf = readPDF(testpath + '/sample.pdf')
+pdf = NPDF(testpath + '/sample.pdf')
 print 'Null:', pdf.isNull()
 print 'Size:', pdf.size()
 

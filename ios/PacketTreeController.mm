@@ -39,7 +39,6 @@
 #import "PacketTreeController.h"
 #import "ReginaHelper.h"
 
-#import "file/nxmlfile.h"
 #import "packet/npacket.h"
 #import "packet/ncontainer.h"
 #import "packet/ntext.h"

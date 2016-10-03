@@ -154,14 +154,6 @@ class REGINA_API NPlugTriSolidTorus : public NStandardTriangulation {
          * @return the core triangular solid torus.
          */
         const NTriSolidTorus& core() const;
-        /**
-         * Deprecated routine that returns the triangular solid torus at the
-         * core of this triangulation.
-         *
-         * \deprecated This routine has been renamed to core().
-         * See the core() documentation for further details.
-         */
-        REGINA_DEPRECATED const NTriSolidTorus& getCore() const;
 
         /**
          * Returns the layered chain attached to the requested
@@ -176,15 +168,6 @@ class REGINA_API NPlugTriSolidTorus : public NStandardTriangulation {
          * @return the corresponding layered chain.
          */
         const NLayeredChain* chain(int annulus) const;
-        /**
-         * Deprecated routine that returns the layered chain attached to the
-         * requested annulus on the boundary of the core triangular solid
-         * torus.
-         *
-         * \deprecated This routine has been renamed to chain().
-         * See the chain() documentation for further details.
-         */
-        REGINA_DEPRECATED const NLayeredChain* getChain(int annulus) const;
 
         /**
          * Returns the way in which a layered chain is attached to the
@@ -198,15 +181,6 @@ class REGINA_API NPlugTriSolidTorus : public NStandardTriangulation {
          * if there is no layered chain attached to the requested annulus.
          */
         int chainType(int annulus) const;
-        /**
-         * Deprecated routine that returns the way in which a layered chain is
-         * attached to the requested annulus on the boundary of the core
-         * triangular solid torus.
-         *
-         * \deprecated This routine has been renamed to chainType().
-         * See the chainType() documentation for further details.
-         */
-        REGINA_DEPRECATED int getChainType(int annulus) const;
 
         /**
          * Returns which types of edges form the equator of the plug.
@@ -224,14 +198,6 @@ class REGINA_API NPlugTriSolidTorus : public NStandardTriangulation {
          * class.
          */
         int equatorType() const;
-        /**
-         * Deprecated routine that returns which types of edges form the
-         * equator of the plug.
-         *
-         * \deprecated This routine has been renamed to equatorType().
-         * See the equatorType() documentation for further details.
-         */
-        REGINA_DEPRECATED int getEquatorType() const;
 
         /**
          * Determines if the given triangulation component is a
@@ -269,25 +235,13 @@ inline NPlugTriSolidTorus::NPlugTriSolidTorus() : core_(0) {
 inline const NTriSolidTorus& NPlugTriSolidTorus::core() const {
     return *core_;
 }
-inline const NTriSolidTorus& NPlugTriSolidTorus::getCore() const {
-    return *core_;
-}
 inline const NLayeredChain* NPlugTriSolidTorus::chain(int annulus) const {
-    return chain_[annulus];
-}
-inline const NLayeredChain* NPlugTriSolidTorus::getChain(int annulus) const {
     return chain_[annulus];
 }
 inline int NPlugTriSolidTorus::chainType(int annulus) const {
     return chainType_[annulus];
 }
-inline int NPlugTriSolidTorus::getChainType(int annulus) const {
-    return chainType_[annulus];
-}
 inline int NPlugTriSolidTorus::equatorType() const {
-    return equatorType_;
-}
-inline int NPlugTriSolidTorus::getEquatorType() const {
     return equatorType_;
 }
 

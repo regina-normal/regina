@@ -31,7 +31,6 @@
  **************************************************************************/
 
 #include "dim4/dim4vertex.h"
-#include "maths/permconv.h"
 #include "triangulation/ntriangulation.h"
 #include <sstream>
 

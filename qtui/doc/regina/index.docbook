@@ -4,7 +4,7 @@
   <!ENTITY kappname "&regina;">
 
   <!ENTITY regversion "5.0">
-  <!ENTITY regdate "26 September 2016">
+  <!ENTITY regdate "2016-09-26">
   <!ENTITY copyrightyears "1999&ndash;2016">
   <!ENTITY copyrightholder "The Regina development team">
   <!ENTITY copyrightnotice
@@ -98,7 +98,8 @@
   <!ENTITY latin1 "<acronym>LATIN1</acronym>">
   <!ENTITY libnormaliz "<application>libnormaliz</application>">
   <!ENTITY linux "<application><acronym>GNU</acronym>/Linux</application>">
-  <!ENTITY macosx "<application>MacOS&nbsp;X</application>">
+  <!ENTITY macappstore "Mac App Store">
+  <!ENTITY macosx "<application>MacOS</application>">
   <!ENTITY mandriva "<application>Mandriva</application>">
   <!ENTITY mobius "M&ouml;bius">
   <!ENTITY mpi "<acronym>MPI</acronym>">
@@ -210,13 +211,13 @@
    </para>
   </legalnotice>
 
-  <date>2016-09-26</date>
-  <releaseinfo>5.0</releaseinfo>
+  <date>&regdate;</date>
+  <releaseinfo>&regversion;</releaseinfo>
 
   <abstract>
    &regabstract;
    <para>
-    This handbook is current as of &regdate; for &regina; &regversion;.
+    This handbook is current as of &regina;&nbsp;&regversion;.
    </para>
    <para>
     Tip: You can also browse the

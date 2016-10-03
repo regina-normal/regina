@@ -90,7 +90,6 @@ void addNSatBlock() {
         .def("transform", &NSatBlock::transform)
         .def("nextBoundaryAnnulus", nextBoundaryAnnulus_tuple)
         .def("abbr", &NSatBlock::abbr, OL_abbr())
-        .def("getAbbr", &NSatBlock::abbr, OL_abbr())
         .def("writeAbbr", writeAbbr_stdio, OL_writeAbbr())
         .def(self < self)
         .def("isBlock", isBlock_nolist,

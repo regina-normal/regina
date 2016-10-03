@@ -44,19 +44,12 @@ void addNLayering() {
     class_<NLayering, boost::noncopyable, std::auto_ptr<NLayering> >
             ("NLayering", init<NTetrahedron*, NPerm4, NTetrahedron*, NPerm4>())
         .def("size", &NLayering::size)
-        .def("getSize", &NLayering::size)
         .def("oldBoundaryTet", &NLayering::oldBoundaryTet,
             return_value_policy<reference_existing_object>())
-        .def("getOldBoundaryTet", &NLayering::oldBoundaryTet,
-            return_value_policy<reference_existing_object>())
         .def("oldBoundaryRoles", &NLayering::oldBoundaryRoles)
-        .def("getOldBoundaryRoles", &NLayering::oldBoundaryRoles)
         .def("newBoundaryTet", &NLayering::newBoundaryTet,
             return_value_policy<reference_existing_object>())
-        .def("getNewBoundaryTet", &NLayering::newBoundaryTet,
-            return_value_policy<reference_existing_object>())
         .def("newBoundaryRoles", &NLayering::newBoundaryRoles)
-        .def("getNewBoundaryRoles", &NLayering::newBoundaryRoles)
         .def("boundaryReln", &NLayering::boundaryReln,
             return_internal_reference<>())
         .def("extendOne", &NLayering::extendOne)

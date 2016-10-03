@@ -132,14 +132,6 @@ class REGINA_API NTorusBundle : public NManifold {
          * @return the monodromy for this torus bundle.
          */
         const NMatrix2& monodromy() const;
-        /**
-         * Deprecated routine that returns the monodromy describing how the
-         * upper and lower torus boundaries are identified.
-         *
-         * \deprecated This routine has been renamed to monodromy().
-         * See the monodromy() documentation for further details.
-         */
-        REGINA_DEPRECATED const NMatrix2& getMonodromy() const;
 
         NAbelianGroup* homology() const;
         bool isHyperbolic() const;
@@ -242,10 +234,6 @@ inline NTorusBundle::NTorusBundle(const NTorusBundle& cloneMe) :
 }
 
 inline const NMatrix2& NTorusBundle::monodromy() const {
-    return monodromy_;
-}
-
-inline const NMatrix2& NTorusBundle::getMonodromy() const {
     return monodromy_;
 }
 

@@ -43,7 +43,6 @@
 #include "dim2/dim2triangulation.h"
 #include "dim4/dim4facetpairing.h"
 #include "dim4/dim4triangulation.h"
-#include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 #include "packet/ntext.h"
 #include "triangulation/nfacepairing.h"
@@ -58,7 +57,6 @@
 
 // Constants.
 const long MAXTET = 15;
-const unsigned SLEEP_SECONDS = 1;
 
 // Census parameters.
 long nTet = 0, nBdryFaces = -1;

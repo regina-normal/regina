@@ -32,7 +32,11 @@
 
 #include <cstdlib>
 #include <iostream>
+#ifdef REGINA_INSTALL_BUNDLE
+#include <libgen.h> // for dirname()
+#endif
 #include "census/ncensus.h"
+#include "file/nglobaldirs.h"
 
 void usage(const char* progName, const std::string& error = std::string()) {
     if (! error.empty())
@@ -48,8 +52,25 @@ int main(int argc, char* argv[]) {
     if (argc < 2)
         usage(argv[0], "Please specify one or more isomorphism signatures.");
 
-    int i;
-    unsigned long n;
+#ifdef REGINA_INSTALL_BUNDLE
+    // The census databases are installed in the bundle, and we cannot
+    // know the path to that in advance.  Set it dynamically now.
+    //
+    // The cmake-built bundle puts the databases in a sensible location:
+    // Regina.app/Contents/Resources/data/census.
+    // The xcode-built bundle puts them in the root resources directory:
+    // Regina.app/Contents/Resources.
+    // This is because the databases are "derived sources" and so need to be
+    // installed through a "copy bundle resources" phase (not "copy files").
+    std::string appDir = dirname(argv[0]);
+#ifdef REGINA_XCODE_BUNDLE
+    regina::NGlobalDirs::setDirs("", "", appDir + "/../Resources");
+#else
+    regina::NGlobalDirs::setDirs("", "", appDir + "/../Resources/data/census");
+#endif
+#endif
+
+
     const regina::NCensusHit* hit;
     for (int i = 1; i < argc; ++i) {
         regina::NCensusHits* hits = regina::NCensus::lookup(argv[i]);

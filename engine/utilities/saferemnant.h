@@ -39,16 +39,12 @@
 #define __SAFEREMNANT_H
 #endif
 
+// Boost versions prior to 1.55 do not provide intrusive_ref_counter.
 #include <boost/version.hpp>
-#if BOOST_VERSION >= 105500
-#define USE_BOOST_INTRUSIVE_REF_COUNTER
-#endif
+static_assert(BOOST_VERSION >= 105500,
+    "Regina now requires boost version 1.55 or later.");
 
-#ifdef USE_BOOST_INTRUSIVE_REF_COUNTER
 #include <boost/smart_ptr/intrusive_ref_counter.hpp>
-#else
-#include "utilities/intrusiverefcounter.h"
-#endif
 
 namespace regina {
 namespace detail {
@@ -84,12 +80,7 @@ namespace detail {
  * @author Matthias Goerner
  */
 template <class T>
-class SafeRemnant :
-#ifdef USE_BOOST_INTRUSIVE_REF_COUNTER
-    public boost::intrusive_ref_counter<SafeRemnant<T>> {
-#else
-    public regina::temporary::IntrusiveRefCounter<SafeRemnant<T>> {
-#endif
+class SafeRemnant : public boost::intrusive_ref_counter<SafeRemnant<T>> {
 
 public:
     /**

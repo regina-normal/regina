@@ -31,7 +31,6 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "foreign/pdf.h"
 #include "packet/npdf.h"
 
 // UI includes:

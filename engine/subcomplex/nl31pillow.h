@@ -110,15 +110,6 @@ class REGINA_API NL31Pillow : public NStandardTriangulation {
          * will be between 0 and 3 inclusive.
          */
         unsigned interiorVertex(int whichTet) const;
-        /**
-         * Deprecated routine that returns the vertex number of the given
-         * tetrahedron corresponding to the degree three vertex in the interior
-         * of the triangular pillow.
-         *
-         * \deprecated This routine has been renamed to interiorVertex().
-         * See the interiorVertex() documentation for further details.
-         */
-        REGINA_DEPRECATED unsigned getInteriorVertex(int whichTet) const;
 
         /**
          * Determines if the given triangulation component is a
@@ -157,9 +148,6 @@ inline NTetrahedron* NL31Pillow::tetrahedron(int whichTet) const {
     return tet[whichTet];
 }
 inline unsigned NL31Pillow::interiorVertex(int whichTet) const {
-    return interior[whichTet];
-}
-inline unsigned NL31Pillow::getInteriorVertex(int whichTet) const {
     return interior[whichTet];
 }
 inline std::ostream& NL31Pillow::writeName(std::ostream& out) const {

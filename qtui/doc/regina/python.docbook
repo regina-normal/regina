@@ -234,7 +234,8 @@
     User libraries are just ordinary &python; files: you can maintain
     the current list of enabled libraries through
     &regina;'s <link linkend="python-libraries">&python; options</link>.
-    On &linux; and &macosx;, if you prefer, you can also maintain this
+    On &linux; and the downloadable &macosx; app (but not on &windows;
+    or the &macappstore; version), you can also maintain this
     list directly by editing the text file &regina-libs;,
     as described in the
     <link linkend="man-regina-python"><command>regina-python</command></link>

@@ -136,56 +136,6 @@ REGINA_API long lcm(long a, long b);
  */
 REGINA_API unsigned long modularInverse(unsigned long n, unsigned long k);
 
-/**
- * Calculates the prime factorisation of the given integer.
- * All the prime factors will be inserted into the given list.
- * The algorithm used is <b>very neanderthal</b> and should only be used with
- * reasonably sized integers.  Don't use it to do RSA!
- *
- * If a prime factor is repeated, it will be inserted multiple times into
- * the list.  The primes in the list are not guaranteed to appear in any
- * specific order, nor are multiple occurrences of the same prime
- * guaranteed to appear together.
- *
- * Note that once finished the list will contain the prime factors as well
- * as whatever happened to be in the list before this function was
- * called.
- *
- * \pre The given integer is at least 1.
- *
- * \deprecated This routine is old and slow; please consider using the
- * much faster routines from the NPrimes class instead.
- *
- * \ifacespython Argument \a factors is not present; instead this
- * routine returns a python list containing the prime factors.
- *
- * @param n the integer to factorise.
- * @param factors the list into which prime factors will be inserted.
- */
-REGINA_DEPRECATED REGINA_API void factorise(
-    unsigned long n, std::list<unsigned long>& factors);
-
-/**
- * Determines all primes up to and including the given upper bound.
- * All the primes found will be inserted into the given list in
- * increasing order.
- *
- * The algorithm currently used is <b>fairly neanderthal</b>.
- *
- * \pre The given list is empty.
- *
- * \deprecated This routine is old and slow; please consider using the
- * much faster routines from the NPrimes class instead.
- *
- * \ifacespython Argument \a primes is not present; instead this routine
- * returns a python list containing the primes up to and including \a roof.
- *
- * @param roof the upper bound up to which primes will be found.
- * @param primes the list into which the primes will be inserted.
- */
-REGINA_DEPRECATED REGINA_API void primesUpTo(const NLargeInteger& roof,
-    std::list<NLargeInteger>& primes);
-
 /*@}*/
 
 } // namespace regina

@@ -169,6 +169,9 @@ ReginaPrefSet::ReginaPrefSet() :
 QString ReginaPrefSet::pythonLibrariesConfig() {
 #ifdef Q_OS_WIN32
     return QString(); // Use the registry instead.
+#elif defined(REGINA_INSTALL_BUNDLE) && defined(Q_OS_MACX) && defined(REGINA_XCODE_BUNDLE)
+    // The Xcode build is sandboxed, so we can't read ~/.regina-libs.
+    return QString();
 #else
     return QDir::homePath() + "/.regina-libs";
 #endif
@@ -270,10 +273,19 @@ void ReginaPrefSet::openHandbook(const char* section, const char* handbook,
     QString handbookName = (handbook ? handbook : "regina");
 
     QString home = QFile::decodeName(regina::NGlobalDirs::home().c_str());
+#if defined(REGINA_INSTALL_BUNDLE) && defined(Q_OS_MACX) && defined(REGINA_XCODE_BUNDLE)
+    // The Xcode build installs the handbooks as bundle resources, at the root
+    // of the Resources directory.
+    QString index = home +
+    QString("/docs-%1/index.html").arg(handbookName);
+    QString page = home +
+    QString("/docs-%1/%2.html").arg(handbookName).arg(section);
+#else
     QString index = home +
         QString("/docs/en/%1/index.html").arg(handbookName);
     QString page = home +
         QString("/docs/en/%1/%2.html").arg(handbookName).arg(section);
+#endif
     if (QFileInfo(page).exists()) {
         if (! QDesktopServices::openUrl(QUrl::fromLocalFile(page))) {
             if (handbook) {

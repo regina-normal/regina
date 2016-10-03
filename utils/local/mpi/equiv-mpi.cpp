@@ -75,7 +75,6 @@
 #include <sstream>
 #include <popt.h>
 
-#include "file/nxmlfile.h"
 #include "packet/ncontainer.h"
 #include "triangulation/ntriangulation.h"
 

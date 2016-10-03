@@ -108,23 +108,6 @@ class REGINA_API NLayeredLoop : public NStandardTriangulation {
          */
         unsigned long length() const;
         /**
-         * Deprecated routine that returns the length of this layered loop.
-         *
-         * \deprecated This routine has been renamed to length().
-         * See the length() documentation for further details.
-         */
-        REGINA_DEPRECATED unsigned long getLength() const;
-        /**
-         * Returns the length of this layered loop.
-         * See the general class notes for further details.
-         *
-         * \deprecated The preferred way of accessing the length of a
-         * layered loop is through length().
-         *
-         * @return the length of this layered loop.
-         */
-        REGINA_DEPRECATED unsigned long getIndex() const;
-        /**
          * Determines if this layered loop contains a twist.
          * See the general class notes for further details.
          *
@@ -143,14 +126,6 @@ class REGINA_API NLayeredLoop : public NStandardTriangulation {
          * @return the requested hinge edge.
          */
         NEdge* hinge(int which) const;
-        /**
-         * Deprecated routine that returns the requested hinge edge of this
-         * layered loop.
-         *
-         * \deprecated This routine has been renamed to hinge().
-         * See the hinge() documentation for further details.
-         */
-        REGINA_DEPRECATED NEdge* getHinge(int which) const;
 
         /**
          * Determines if the given triangulation component is a layered
@@ -188,19 +163,10 @@ inline NLayeredLoop::~NLayeredLoop() {
 inline unsigned long NLayeredLoop::length() const {
     return length_;
 }
-inline unsigned long NLayeredLoop::getLength() const {
-    return length_;
-}
-inline unsigned long NLayeredLoop::getIndex() const {
-    return length_;
-}
 inline bool NLayeredLoop::isTwisted() const {
     return (hinge_[1] == 0);
 }
 inline NEdge* NLayeredLoop::hinge(int which) const {
-    return hinge_[which];
-}
-inline NEdge* NLayeredLoop::getHinge(int which) const {
     return hinge_[which];
 }
 inline std::ostream& NLayeredLoop::writeName(std::ostream& out) const {

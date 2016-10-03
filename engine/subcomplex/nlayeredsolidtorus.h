@@ -130,14 +130,6 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
          */
         NTetrahedron* base() const;
         /**
-         * Deprecated routine that returns the tetrahedron that is glued to
-         * itself at the base of this layered solid torus.
-         *
-         * \deprecated This routine has been renamed to base().
-         * See the base() documentation for further details.
-         */
-        REGINA_DEPRECATED NTetrahedron* getBase() const;
-        /**
          * Returns the requested edge of the base tetrahedron belonging
          * to the given group.  The layering identifies the six edges
          * of the base tetrahedron into a group of three, a group of two
@@ -163,14 +155,6 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
          */
         int baseEdge(int group, int index) const;
         /**
-         * Deprecated routine that returns the requested edge of the base
-         * tetrahedron belonging to the given group.
-         *
-         * \deprecated This routine has been renamed to baseEdge().
-         * See the baseEdge() documentation for further details.
-         */
-        REGINA_DEPRECATED int getBaseEdge(int group, int index) const;
-        /**
          * Returns the group that the given edge of the base tetrahedron
          * belongs to.  See baseEdge() for further details about
          * groups.
@@ -185,14 +169,6 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
          */
         int baseEdgeGroup(int edge) const;
         /**
-         * Deprecated routine that returns the group that the given edge of the
-         * base tetrahedron belongs to.
-         *
-         * \deprecated This routine has been renamed to baseEdgeGroup().
-         * See the baseEdgeGroup() documentation for further details.
-         */
-        REGINA_DEPRECATED int getBaseEdgeGroup(int edge) const;
-        /**
          * Returns one of the two faces of the base tetrahedron that are
          * glued to each other.
          *
@@ -202,14 +178,6 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
          * this will be between 0 and 3 inclusive.
          */
         int baseFace(int index) const;
-        /**
-         * Deprecated routine that returns one of the two faces of the base
-         * tetrahedron that are glued to each other.
-         *
-         * \deprecated This routine has been renamed to baseFace().
-         * See the baseFace() documentation for further details.
-         */
-        REGINA_DEPRECATED int getBaseFace(int index) const;
 
         /**
          * Returns the top level tetrahedron in this layered solid torus.
@@ -220,14 +188,6 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
          */
         NTetrahedron* topLevel() const;
         /**
-         * Deprecated routine that returns the top level tetrahedron in this
-         * layered solid torus.
-         *
-         * \deprecated This routine has been renamed to topLevel().
-         * See the topLevel() documentation for further details.
-         */
-        REGINA_DEPRECATED NTetrahedron* getTopLevel() const;
-        /**
          * Returns the number of times the meridinal disc of the torus
          * cuts the top level tetrahedron edges in the given group.
          * See topEdge() for further details about groups.
@@ -237,15 +197,6 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
          * in the given group.
          */
         unsigned long meridinalCuts(int group) const;
-        /**
-         * Deprecated routine that returns the number of times the meridinal
-         * disc of the torus cuts the top level tetrahedron edges in the given
-         * group.
-         *
-         * \deprecated This routine has been renamed to meridinalCuts().
-         * See the meridinalCuts() documentation for further details.
-         */
-        REGINA_DEPRECATED unsigned long getMeridinalCuts(int group) const;
         /**
          * Returns the requested edge of the top level tetrahedron belonging
          * to the given group.  The layering reduces five of the top
@@ -278,14 +229,6 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
          */
         int topEdge(int group, int index) const;
         /**
-         * Deprecated routine that returns the requested edge of the top level
-         * tetrahedron belonging to the given group.
-         *
-         * \deprecated This routine has been renamed to topEdge().
-         * See the topEdge() documentation for further details.
-         */
-        REGINA_DEPRECATED int getTopEdge(int group, int index) const;
-        /**
          * Returns the group that the given edge of the top level
          * tetrahedron belongs to.  See topEdge() for further details
          * about groups.
@@ -303,14 +246,6 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
          */
         int topEdgeGroup(int edge) const;
         /**
-         * Deprecated routine that returns the group that the given edge of the
-         * top level tetrahedron belongs to.
-         *
-         * \deprecated This routine has been renamed to topEdgeGroup().
-         * See the topEdgeGroup() documentation for further details.
-         */
-        REGINA_DEPRECATED int getTopEdgeGroup(int edge) const;
-        /**
          * Returns one of the two faces of the top level tetrahedron that
          * form the boundary of this layered solid torus.
          *
@@ -320,15 +255,6 @@ class REGINA_API NLayeredSolidTorus : public NStandardTriangulation {
          * this will be between 0 and 3 inclusive.
          */
         int topFace(int index) const;
-        /**
-         * Deprecated routine that returns one of the two faces of the top
-         * level tetrahedron that form the boundary of this layered solid
-         * torus.
-         *
-         * \deprecated This routine has been renamed to topFace().
-         * See the topFace() documentation for further details.
-         */
-        REGINA_DEPRECATED int getTopFace(int index) const;
 
         /**
          * Flattens this layered solid torus to a Mobius band.
@@ -492,58 +418,30 @@ inline size_t NLayeredSolidTorus::size() const {
 inline NTetrahedron* NLayeredSolidTorus::base() const {
     return base_;
 }
-inline NTetrahedron* NLayeredSolidTorus::getBase() const {
-    return base_;
-}
 inline int NLayeredSolidTorus::baseEdge(int group, int index) const {
-    return group == 1 ? baseEdge_[index] :
-        group == 2 ? baseEdge_[1 + index] : baseEdge_[3 + index];
-}
-inline int NLayeredSolidTorus::getBaseEdge(int group, int index) const {
     return group == 1 ? baseEdge_[index] :
         group == 2 ? baseEdge_[1 + index] : baseEdge_[3 + index];
 }
 inline int NLayeredSolidTorus::baseEdgeGroup(int edge) const {
     return baseEdgeGroup_[edge];
 }
-inline int NLayeredSolidTorus::getBaseEdgeGroup(int edge) const {
-    return baseEdgeGroup_[edge];
-}
 inline int NLayeredSolidTorus::baseFace(int index) const {
-    return baseFace_[index];
-}
-inline int NLayeredSolidTorus::getBaseFace(int index) const {
     return baseFace_[index];
 }
 
 inline NTetrahedron* NLayeredSolidTorus::topLevel() const {
     return topLevel_;
 }
-inline NTetrahedron* NLayeredSolidTorus::getTopLevel() const {
-    return topLevel_;
-}
 inline unsigned long NLayeredSolidTorus::meridinalCuts(int group) const {
-    return meridinalCuts_[group];
-}
-inline unsigned long NLayeredSolidTorus::getMeridinalCuts(int group) const {
     return meridinalCuts_[group];
 }
 inline int NLayeredSolidTorus::topEdge(int group, int index) const {
     return topEdge_[group][index];
 }
-inline int NLayeredSolidTorus::getTopEdge(int group, int index) const {
-    return topEdge_[group][index];
-}
 inline int NLayeredSolidTorus::topEdgeGroup(int edge) const {
     return topEdgeGroup_[edge];
 }
-inline int NLayeredSolidTorus::getTopEdgeGroup(int edge) const {
-    return topEdgeGroup_[edge];
-}
 inline int NLayeredSolidTorus::topFace(int index) const {
-    return topFace_[index];
-}
-inline int NLayeredSolidTorus::getTopFace(int index) const {
     return topFace_[index];
 }
 

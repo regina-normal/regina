@@ -37,7 +37,7 @@
 #include "hypersurface/nhsstandard.h"
 #include "maths/nmatrixint.h"
 #include "maths/nrational.h"
-#include "surfaces/nnormalsurface.h" // for vertexSplitDefn[][].
+#include "surfaces/nnormalsurface.h" // for quadDefn[][].
 
 namespace regina {
 
@@ -111,17 +111,17 @@ NMatrixInt* NNormalHypersurfaceVectorStandard::makeMatchingEquations(
             for (i=0; i<3; i++) {
                 // Prisms that meet this quad:
                 ans->entry(row, 15 * pent0 + 5 +
-                    Dim4Edge::edgeNumber[perm0[vertexSplitDefn[i][0]]]
-                                        [perm0[vertexSplitDefn[i][1]]]) += 1;
+                    Dim4Edge::edgeNumber[perm0[quadDefn[i][0]]]
+                                        [perm0[quadDefn[i][1]]]) += 1;
                 ans->entry(row, 15 * pent0 + 5 +
-                    Dim4Edge::edgeNumber[perm0[vertexSplitDefn[i][2]]]
-                                        [perm0[vertexSplitDefn[i][3]]]) += 1;
+                    Dim4Edge::edgeNumber[perm0[quadDefn[i][2]]]
+                                        [perm0[quadDefn[i][3]]]) += 1;
                 ans->entry(row, 15 * pent1 + 5 +
-                    Dim4Edge::edgeNumber[perm1[vertexSplitDefn[i][0]]]
-                                        [perm1[vertexSplitDefn[i][1]]]) -= 1;
+                    Dim4Edge::edgeNumber[perm1[quadDefn[i][0]]]
+                                        [perm1[quadDefn[i][1]]]) -= 1;
                 ans->entry(row, 15 * pent1 + 5 +
-                    Dim4Edge::edgeNumber[perm1[vertexSplitDefn[i][2]]]
-                                        [perm1[vertexSplitDefn[i][3]]]) -= 1;
+                    Dim4Edge::edgeNumber[perm1[quadDefn[i][2]]]
+                                        [perm1[quadDefn[i][3]]]) -= 1;
                 row++;
             }
         }

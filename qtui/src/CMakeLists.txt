@@ -21,27 +21,32 @@ IF(BOOST_PYTHON_FOUND)
 ENDIF(BOOST_PYTHON_FOUND)
 
 IF(LIBGVC_FOUND)
-  # Alas, the pkg-config files shipped with Graphviz under windows are wrong.
-  # They give the wrong library directory, and even worse they give the
-  # wrong library *names* (graph.dll instead of cgraph.dll).
-  # For now, we hard-code fixes for these errors in the WIN32 code below.
-  INCLUDE_DIRECTORIES("${LIBGVC_INCLUDEDIR}")
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${LIBGVC_CFLAGS_OTHER}")
-  SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${LIBGVC_LDFLAGS_OTHER}")
-  IF(WIN32)
-    # We do some hard-coding to fix the pkg-config errors described above.
-    # Note that, under windows, Graphviz ships its plugins in the same
-    # directory as its core library DLLs.
-    SET(LINK_LIBS ${LINK_LIBS} gvc cgraph cdt)
-    LINK_DIRECTORIES("${LIBGVC_LIBDIR}/release/dll")
-  ELSE(WIN32)
-    # Assume that pkg-config is telling us the truth.
-    # Note, however, that the graphviz plugins typically live in a
-    # subdirectory graphviz/ beneath the main library path.
-    SET(LINK_LIBS ${LINK_LIBS} ${LIBGVC_LIBRARIES})
-    LINK_DIRECTORIES("${LIBGVC_LIBDIR}" "${LIBGVC_LIBDIR}/graphviz")
-  ENDIF(WIN32)
-  SET(LINK_LIBS ${LINK_LIBS} gvplugin_core gvplugin_dot_layout gvplugin_neato_layout)
+  IF(${GRAPHVIZ_TYPE} STREQUAL Framework)
+    INCLUDE_DIRECTORIES("${GRAPHVIZ_FRAMEWORK}/Headers")
+    SET(LINK_LIBS ${LINK_LIBS} ${GRAPHVIZ_FRAMEWORK})
+  ELSE (${GRAPHVIZ_TYPE} STREQUAL Framework)
+    # Alas, the pkg-config files shipped with Graphviz under windows are wrong.
+    # They give the wrong library directory, and even worse they give the
+    # wrong library *names* (graph.dll instead of cgraph.dll).
+    # For now, we hard-code fixes for these errors in the WIN32 code below.
+    INCLUDE_DIRECTORIES("${LIBGVC_INCLUDEDIR}")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${LIBGVC_CFLAGS_OTHER}")
+    SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${LIBGVC_LDFLAGS_OTHER}")
+    IF(WIN32)
+      # We do some hard-coding to fix the pkg-config errors described above.
+      # Note that, under windows, Graphviz ships its plugins in the same
+      # directory as its core library DLLs.
+      SET(LINK_LIBS ${LINK_LIBS} gvc cgraph cdt)
+      LINK_DIRECTORIES("${LIBGVC_LIBDIR}/release/dll")
+    ELSE(WIN32)
+      # Assume that pkg-config is telling us the truth.
+      # Note, however, that the graphviz plugins typically live in a
+      # subdirectory graphviz/ beneath the main library path.
+      SET(LINK_LIBS ${LINK_LIBS} ${LIBGVC_LIBRARIES})
+      LINK_DIRECTORIES("${LIBGVC_LIBDIR}" "${LIBGVC_LIBDIR}/graphviz")
+    ENDIF(WIN32)
+    SET(LINK_LIBS ${LINK_LIBS} gvplugin_core gvplugin_dot_layout gvplugin_neato_layout)
+  ENDIF (${GRAPHVIZ_TYPE} STREQUAL Framework)
 ENDIF(LIBGVC_FOUND)
 
 IF(SRCHILITE_FOUND)
@@ -144,7 +149,7 @@ if (APPLE)
   # contains file associations for Regina data files, amongst other things):
   set_target_properties(${REGINA_APP_NAME}
     PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/regina.plist )
-elseif (LIBGVC_FOUND AND NOT WIN32)
+elseif (LIBGVC_FOUND AND ${GRAPHVIZ_TYPE} STREQUAL Library AND NOT WIN32)
   # Even if this is a no-rpath install into standard system directories,
   # we still need to be able to link with the graphviz plugins.
   # These plugins typically live within a graphviz-specific directory,

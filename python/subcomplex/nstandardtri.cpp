@@ -59,18 +59,12 @@ void addNStandardTriangulation() {
             std::auto_ptr<NStandardTriangulation> >
             ("NStandardTriangulation", no_init)
         .def("name", &NStandardTriangulation::name)
-        .def("getName", &NStandardTriangulation::name)
         .def("TeXName", &NStandardTriangulation::TeXName)
-        .def("getTeXName", &NStandardTriangulation::TeXName)
         .def("manifold", &NStandardTriangulation::manifold,
-            return_value_policy<manage_new_object>())
-        .def("getManifold", &NStandardTriangulation::manifold,
             return_value_policy<manage_new_object>())
         .def("homology", &NStandardTriangulation::homology,
             return_value_policy<manage_new_object>())
         .def("homologyH1", &NStandardTriangulation::homologyH1,
-            return_value_policy<manage_new_object>())
-        .def("getHomologyH1", &NStandardTriangulation::homologyH1,
             return_value_policy<manage_new_object>())
         .def("writeName", writeName_stdio)
         .def("writeTeXName", writeTeXName_stdio)

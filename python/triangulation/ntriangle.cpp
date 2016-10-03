@@ -85,9 +85,7 @@ void addNTriangle() {
             .def("isBoundary", &NTriangle::isBoundary)
             .def("inMaximalForest", &NTriangle::inMaximalForest)
             .def("type", &NTriangle::type)
-            .def("getType", &NTriangle::type)
             .def("subtype", &NTriangle::subtype)
-            .def("getSubtype", &NTriangle::subtype)
             .def("isMobiusBand", &NTriangle::isMobiusBand)
             .def("isCone", &NTriangle::isCone)
             .def("isValid", &NTriangle::isValid)
@@ -145,9 +143,5 @@ void addNTriangle() {
 
     scope().attr("NTriangleEmbedding") = scope().attr("FaceEmbedding3_2");
     scope().attr("NTriangle") = scope().attr("Face3_2");
-
-    // Support for deprecated typedefs:
-    scope().attr("NFace") = scope().attr("NTriangle");
-    scope().attr("NFaceEmbedding") = scope().attr("NTriangleEmbedding");
 }
 

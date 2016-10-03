@@ -202,14 +202,14 @@ namespace Coordinates {
             size_t stdCoord = whichCoord / 2;
             if (whichCoord % 2 == 0) {
                 // "true" orientation.
-                // Note that vertexSplitDefn[i][0] == 0 always.
+                // Note that quadDefn[i][0] == 0 always.
                 if (stdCoord % 7 < 4)
                     return QString("%1: %2").arg(stdCoord / 7).
                         arg(stdCoord % 7);
                 else
                     return QString("%1: %2%3").arg(stdCoord / 7).
-                        arg(regina::vertexSplitDefn[(stdCoord % 7) - 4][0]).
-                        arg(regina::vertexSplitDefn[(stdCoord % 7) - 4][1]);
+                        arg(regina::quadDefn[(stdCoord % 7) - 4][0]).
+                        arg(regina::quadDefn[(stdCoord % 7) - 4][1]);
             } else {
                 // "false" orientation.
                 if (stdCoord % 7 < 4)
@@ -217,22 +217,22 @@ namespace Coordinates {
                         arg(NTriangle::ordering(stdCoord % 7).trunc3().c_str());
                 else
                     return QString("%1: %2%3").arg(stdCoord / 7).
-                        arg(regina::vertexSplitDefn[(stdCoord % 7) - 4][2]).
-                        arg(regina::vertexSplitDefn[(stdCoord % 7) - 4][3]);
+                        arg(regina::quadDefn[(stdCoord % 7) - 4][2]).
+                        arg(regina::quadDefn[(stdCoord % 7) - 4][3]);
             }
         } else if (coordSystem == regina::NS_ORIENTED_QUAD) {
             size_t quadCoord = whichCoord / 2;
             if (whichCoord % 2 == 0) {
                 // "true" orientation.
-                // Note that vertexSplitDefn[i][0] == 0 always.
+                // Note that quadDefn[i][0] == 0 always.
                 return QString("%1: %2%3").arg(quadCoord / 3).
-                    arg(regina::vertexSplitDefn[(quadCoord % 3)][0]).
-                    arg(regina::vertexSplitDefn[(quadCoord % 3)][1]);
+                    arg(regina::quadDefn[(quadCoord % 3)][0]).
+                    arg(regina::quadDefn[(quadCoord % 3)][1]);
             } else {
                 // "false" orientation.
                 return QString("%1: %2%3").arg(quadCoord / 3).
-                    arg(regina::vertexSplitDefn[(quadCoord % 3)][2]).
-                    arg(regina::vertexSplitDefn[(quadCoord % 3)][3]);
+                    arg(regina::quadDefn[(quadCoord % 3)][2]).
+                    arg(regina::quadDefn[(quadCoord % 3)][3]);
             }
         }
 
@@ -328,7 +328,7 @@ namespace Coordinates {
             size_t stdCoord = whichCoord / 2;
             if (whichCoord % 2 == 0) {
                 // "true" orientation.
-                // Note that vertexSplitDefn[i][0] == 0 always.
+                // Note that quadDefn[i][0] == 0 always.
                 if (stdCoord % 7 < 4)
                     return context->tr("Tetrahedron %1, "
                         "triangle oriented towards vertex %2").
@@ -338,8 +338,8 @@ namespace Coordinates {
                     return context->tr("Tetrahedron %1, "
                         "quad oriented towards edge %2%3").
                         arg(stdCoord / 7).
-                        arg(regina::vertexSplitDefn[(stdCoord % 7) - 4][0]).
-                        arg(regina::vertexSplitDefn[(stdCoord % 7) - 4][1]);
+                        arg(regina::quadDefn[(stdCoord % 7) - 4][0]).
+                        arg(regina::quadDefn[(stdCoord % 7) - 4][1]);
             } else {
                 // "false" orientation.
                 if (stdCoord % 7 < 4)
@@ -351,26 +351,26 @@ namespace Coordinates {
                     return context->tr("Tetrahedron %1, "
                         "quad oriented towards edge %2%3").
                         arg(stdCoord / 7).
-                        arg(regina::vertexSplitDefn[(stdCoord % 7) - 4][2]).
-                        arg(regina::vertexSplitDefn[(stdCoord % 7) - 4][3]);
+                        arg(regina::quadDefn[(stdCoord % 7) - 4][2]).
+                        arg(regina::quadDefn[(stdCoord % 7) - 4][3]);
             }
         } else if (coordSystem == regina::NS_ORIENTED_QUAD) {
             size_t quadCoord = whichCoord / 2;
             if (whichCoord % 2 == 0) {
                 // "true" orientation.
-                // Note that vertexSplitDefn[i][0] == 0 always.
+                // Note that quadDefn[i][0] == 0 always.
                 return context->tr("Tetrahedron %1, "
                     "quad oriented towards edge %2%3").
                     arg(quadCoord / 3).
-                    arg(regina::vertexSplitDefn[(quadCoord % 3)][0]).
-                    arg(regina::vertexSplitDefn[(quadCoord % 3)][1]);
+                    arg(regina::quadDefn[(quadCoord % 3)][0]).
+                    arg(regina::quadDefn[(quadCoord % 3)][1]);
             } else {
                 // "false" orientation.
                 return context->tr("Tetrahedron %1, "
                     "quad oriented towards edge %2%3").
                     arg(quadCoord / 3).
-                    arg(regina::vertexSplitDefn[(quadCoord % 3)][2]).
-                    arg(regina::vertexSplitDefn[(quadCoord % 3)][3]);
+                    arg(regina::quadDefn[(quadCoord % 3)][2]).
+                    arg(regina::quadDefn[(quadCoord % 3)][3]);
             }
         }
 

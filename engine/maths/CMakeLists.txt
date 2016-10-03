@@ -47,6 +47,5 @@ if (${REGINA_INSTALL_DEV})
     nray.h
     numbertheory.h
     nvector.h
-    permconv.h
     DESTINATION ${INCLUDEDIR}/maths COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

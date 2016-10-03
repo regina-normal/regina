@@ -46,7 +46,6 @@
  * The original file will be overwritten with any changes that were made.
  */
 
-#include <file/nxmlfile.h>
 #include <packet/ncontainer.h>
 #include <subcomplex/nblockedsfs.h>
 #include <subcomplex/nstandardtri.h>

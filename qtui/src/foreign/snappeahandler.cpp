@@ -30,7 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-#include "foreign/snappea.h"
 #include "snappea/nsnappeatriangulation.h"
 
 #include "reginamain.h"

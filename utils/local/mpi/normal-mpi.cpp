@@ -45,7 +45,6 @@
  * A single-processor version of this tool also exists (../normal.cpp).
  */
 
-#include <file/nxmlfile.h>
 #include <packet/ncontainer.h>
 #include <surfaces/nnormalsurfacelist.h>
 #include <triangulation/ntriangulation.h>

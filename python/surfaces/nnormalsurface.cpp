@@ -57,7 +57,7 @@ namespace {
 
     GlobalArray2D<int> quadSeparating_arr(regina::quadSeparating, 4);
     GlobalArray3D<int> quadMeeting_arr(regina::quadMeeting, 4);
-    GlobalArray2D<int> vertexSplitDefn_arr(regina::vertexSplitDefn, 3);
+    GlobalArray2D<int> quadDefn_arr(regina::quadDefn, 3);
     GlobalArray2D<int> quadPartner_arr(regina::quadPartner, 3);
     GlobalArray<const char*> quadString_arr(quadString_1D, 3);
     GlobalArray2D<regina::NPerm4> triDiscArcs_arr(regina::__triDiscArcs, 4, 3);
@@ -117,13 +117,6 @@ namespace {
             boost::python::ptr(ans.second));
     }
 
-    NNormalSurface* findVtxOctAlmostNormalSphere1(NTriangulation* t) {
-        return NNormalSurface::findVtxOctAlmostNormalSphere(t);
-    }
-    NNormalSurface* findVtxOctAlmostNormalSphere2(NTriangulation* t, bool b) {
-        return NNormalSurface::findVtxOctAlmostNormalSphere(t, b);
-    }
-
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_isCompressingDisc,
         NNormalSurface::isCompressingDisc, 0, 1);
 }
@@ -148,8 +141,6 @@ void addNNormalSurface() {
         .def("triangulation", &NNormalSurface::triangulation,
             return_value_policy<to_held_type<> >())
         .def("name", &NNormalSurface::name,
-            return_value_policy<return_by_value>())
-        .def("getName", &NNormalSurface::name,
             return_value_policy<return_by_value>())
         .def("setName", &NNormalSurface::setName)
         .def("writeRawVector", writeRawVector_stdio)
@@ -180,22 +171,14 @@ void addNNormalSurface() {
         .def("disjoint", &NNormalSurface::disjoint)
         .def("boundaryIntersections", &NNormalSurface::boundaryIntersections,
             return_value_policy<manage_new_object>())
-        .def("findNonTrivialSphere", &NNormalSurface::findNonTrivialSphere,
-            return_value_policy<manage_new_object>())
-        .def("findVtxOctAlmostNormalSphere", findVtxOctAlmostNormalSphere1,
-            return_value_policy<manage_new_object>())
-        .def("findVtxOctAlmostNormalSphere", findVtxOctAlmostNormalSphere2,
-            return_value_policy<manage_new_object>())
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
-        .staticmethod("findNonTrivialSphere")
-        .staticmethod("findVtxOctAlmostNormalSphere")
     ;
 
     // Global arrays:
     scope().attr("quadSeparating") = &quadSeparating_arr;
     scope().attr("quadMeeting") = &quadMeeting_arr;
-    scope().attr("vertexSplitDefn") = &vertexSplitDefn_arr;
+    scope().attr("quadDefn") = &quadDefn_arr;
     scope().attr("quadPartner") = &quadPartner_arr;
     scope().attr("quadString") = &quadString_arr;
     scope().attr("triDiscArcs") = &triDiscArcs_arr;

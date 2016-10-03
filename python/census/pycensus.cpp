@@ -32,11 +32,9 @@
 
 void addNGluingPermSearcher();
 void addNCensus();
-void addDim2Census();
 
 void addCensus() {
     addNGluingPermSearcher();
     addNCensus();
-    addDim2Census();
 }
 

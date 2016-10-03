@@ -37,7 +37,6 @@
 #include <sstream>
 #include <stack>
 
-#include "foreign/snappea.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/stringutils.h"
 #include "utilities/xmlutils.h"
@@ -583,11 +582,6 @@ bool Triangulation<3>::saveRecogniser(const char* filename) const {
         return false;
     recogniser(out);
     return true;
-}
-
-NTriangulation* Triangulation<3>::fromSnapPea(const std::string& snapPeaData) {
-    std::istringstream in(snapPeaData);
-    return readSnapPea(in);
 }
 
 } // namespace regina

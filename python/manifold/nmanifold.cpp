@@ -57,18 +57,13 @@ void addNManifold() {
     class_<NManifold, boost::noncopyable, std::auto_ptr<NManifold> >
             ("NManifold", no_init)
         .def("name", &NManifold::name)
-        .def("getName", &NManifold::name)
         .def("TeXName", &NManifold::TeXName)
-        .def("getTeXName", &NManifold::TeXName)
         .def("structure", &NManifold::structure)
-        .def("getStructure", &NManifold::structure)
         .def("construct", &NManifold::construct,
             return_value_policy<to_held_type<> >())
         .def("homology", &NManifold::homology,
             return_value_policy<manage_new_object>())
         .def("homologyH1", &NManifold::homologyH1,
-            return_value_policy<manage_new_object>())
-        .def("getHomologyH1", &NManifold::homologyH1,
             return_value_policy<manage_new_object>())
         .def("isHyperbolic", &NManifold::isHyperbolic)
         .def("writeName", writeName_stdio)

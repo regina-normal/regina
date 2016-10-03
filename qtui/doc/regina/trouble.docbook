@@ -135,6 +135,29 @@
   </qandadiv>
 
   <qandadiv id="trouble-gui"><title>The User Interface</title>
+   <qandaentry id="trouble-gui-shortcuts">
+    <question><para>
+     On &ubuntu;, none of the keyboard shortcuts work.
+    </para></question>
+    <answer>
+     <para>
+      This is due to a
+      <ulink url="https://bugs.launchpad.net/appmenu-qt5/+bug/1380702">larger
+      bug in &ubuntu;</ulink> that affects not just &regina; but all
+      programs that use the &qt; libraries.
+      It is not clear if/when &ubuntu; will fix this problem.
+     </para>
+     <para>
+      In the meantime, if it bothers you greatly then you can try
+      uninstalling the <literal>appmenu-qt5</literal> package.
+      This will fix the keyboard shortcuts, but at a cost: all
+      &qt;-based applications will lose
+      the unified menu bar at the top of the screen, and
+      instead will put their menus inside their own windows.
+     </para>
+    </answer>
+   </qandaentry>
+
    <qandaentry id="trouble-gui-whatsthis">
     <question><para>
      On &ubuntu;, the &ldquo;What&rsquo;s this?&rdquo; help
@@ -154,7 +177,7 @@
       impossible to read).
      </para>
      <para>
-      Unfortunately this is a
+      Unfortunately this is another
       <ulink url="https://bugs.launchpad.net/ubuntu/+source/qt4-x11/+bug/877236">long-standing
       bug in &ubuntu;</ulink>, which
       affects not only &regina; but all &qt;-based applications.
@@ -217,13 +240,53 @@
     </answer>
    </qandaentry>
 
+   <qandaentry id="trouble-python-root">
+    <question><para>
+     &python; scripting does not work on &macosx;.
+     Instead I get a <exceptionname>TypeError</exceptionname>
+     saying &ldquo;No &python; class registered for &cpp; class
+     <classname>regina::NPacket</classname>&rdquo;, and/or a
+     message that &regina; &ldquo;could not set the
+     root variable&rdquo;.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="trouble-python-root.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para></question>
+    <answer>
+     <para>
+      If you have a second, hand-built version of &regina; installed on your
+      system, then this can conflict with the standalone app that you
+      download from &regina;'s website.
+     </para>
+     <para>
+      Look for a second copy of &regina;'s &python; module on your
+      system.  It will be a directory called <filename>regina</filename>,
+      containing the files <filename>engine.so</filename> and
+      <filename>__init__.py</filename>.  On a modern &macosx; system using
+      the standard system &python;, a hand-built version of &regina;
+      will typically install this module in
+      <filename>/Library/Python/2.7/site-packages/regina</filename>.
+     </para>
+     <para>
+      The next release of &regina; (version&nbsp;5.1) will allow two
+      such installations to work happily side-by-side.  In the meantime,
+      you can fix the problem by manually removing the hand-built &python;
+      module that you found.
+     </para>
+    </answer>
+   </qandaentry>
+
    <qandaentry id="trouble-python-snappy">
     <question><para>
      &snappy; has stopped working in the graphical user interface.
      When I import &snappy; and try to create a manifold, I receive a
      <exceptionname>TypeError</exceptionname> with the message
-     &quot;isinstance() arg 2 must be a class, type, or tuple
-     of classes and types&quot;.
+     &ldquo;isinstance() arg 2 must be a class, type, or tuple
+     of classes and types&rdquo;.
     </para></question>
     <answer>
      <para>
