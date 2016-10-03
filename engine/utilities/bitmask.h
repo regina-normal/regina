@@ -30,13 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file utilities/nbitmask.h
+/*! \file utilities/bitmask.h
  *  \brief Provides optimised bitmasks of arbitrary length.
  */
 
-#ifndef __NBITMASK_H
+#ifndef __BITMASK_H
 #ifndef __DOXYGEN
-#define __NBITMASK_H
+#define __BITMASK_H
 #endif
 
 #include <algorithm>
@@ -63,7 +63,7 @@ namespace regina {
  * Nevertheless, this class still has overhead because the bits must be
  * allocated on the heap, and because every operation requires looping
  * through the individual bytes.  For reasonably small bitmasks, see the
- * highly optimised NBitmask1 and NBitmask2 classes instead.
+ * highly optimised Bitmask1 and Bitmask2 classes instead.
  *
  * Once a bitmask is created, the only way its length (the number of bits)
  * can be changed is by calling reset(size_t).
@@ -85,7 +85,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NBitmask {
+class REGINA_API Bitmask {
     private:
         typedef unsigned Piece;
             /**< The types of the machine-native pieces into which this
@@ -114,7 +114,7 @@ class REGINA_API NBitmask {
          * destructor is safe to use even if a bitmask has never been
          * initialised.
          */
-        NBitmask();
+        Bitmask();
 
         /**
          * Creates a new bitmask of the given length with all bits set to
@@ -123,7 +123,7 @@ class REGINA_API NBitmask {
          * @param length the number of bits stored in this bitmask; this must
          * be at least one.
          */
-        NBitmask(size_t length);
+        Bitmask(size_t length);
 
         /**
          * Creates a clone of the given bitmask.
@@ -134,12 +134,12 @@ class REGINA_API NBitmask {
          *
          * @param cloneMe the bitmask to clone.
          */
-        NBitmask(const NBitmask& cloneMe);
+        Bitmask(const Bitmask& cloneMe);
 
         /**
          * Destroys this bitmask.
          */
-        ~NBitmask();
+        ~Bitmask();
 
         /**
          * Returns the value of the given bit of this bitmask.
@@ -262,7 +262,7 @@ class REGINA_API NBitmask {
          * @param other the bitmask to clone.
          * @return a reference to this bitmask.
          */
-        NBitmask& operator = (const NBitmask& other);
+        Bitmask& operator = (const Bitmask& other);
 
         /**
          * Leaves the first \a numBits bits of this bitmask intact, but
@@ -287,7 +287,7 @@ class REGINA_API NBitmask {
          * @param other the bitmask to intersect with this.
          * @return a reference to this bitmask.
          */
-        NBitmask& operator &= (const NBitmask& other);
+        Bitmask& operator &= (const Bitmask& other);
 
         /**
          * Sets this to the union of this and the given bitmask.
@@ -298,7 +298,7 @@ class REGINA_API NBitmask {
          * @param other the bitmask to union with this.
          * @return a reference to this bitmask.
          */
-        NBitmask& operator |= (const NBitmask& other);
+        Bitmask& operator |= (const Bitmask& other);
 
         /**
          * Sets this to the exclusive disjunction (XOR) of this and the
@@ -310,7 +310,7 @@ class REGINA_API NBitmask {
          * @param other the bitmask to XOR with this.
          * @return a reference to this bitmask.
          */
-        NBitmask& operator ^= (const NBitmask& other);
+        Bitmask& operator ^= (const Bitmask& other);
 
         /**
          * Sets this to the set difference of this and the given bitmask.
@@ -321,7 +321,7 @@ class REGINA_API NBitmask {
          * @param other the bitmask to XOR with this.
          * @return a reference to this bitmask.
          */
-        NBitmask& operator -= (const NBitmask& other);
+        Bitmask& operator -= (const Bitmask& other);
 
         /**
          * Negates every bit in this bitmask.  All \c true bits will be
@@ -345,7 +345,7 @@ class REGINA_API NBitmask {
          * @return \c true if and only if this and the given bitmask are
          * identical.
          */
-        bool operator == (const NBitmask& other) const;
+        bool operator == (const Bitmask& other) const;
 
         /**
          * Determines whether this bitmask appears strictly before the given
@@ -362,7 +362,7 @@ class REGINA_API NBitmask {
          * @return \c true if and only if this is lexicographically
          * strictly smaller than the given bitmask.
          */
-        bool lessThan(const NBitmask& other) const;
+        bool lessThan(const Bitmask& other) const;
 
         /**
          * Determines whether this bitmask is entirely contained within
@@ -382,7 +382,7 @@ class REGINA_API NBitmask {
          * @return \c true if and only if this bitmask is entirely contained
          * within the given bitmask.
          */
-        bool operator <= (const NBitmask& other) const;
+        bool operator <= (const Bitmask& other) const;
 
         /**
          * Determines whether this bitmask is entirely contained within
@@ -398,7 +398,7 @@ class REGINA_API NBitmask {
          * @return \c true if and only if this bitmask is entirely contained
          * within the union of \a x and \a y.
          */
-        bool inUnion(const NBitmask& x, const NBitmask& y) const;
+        bool inUnion(const Bitmask& x, const Bitmask& y) const;
 
         /**
          * Determines whether this bitmask contains the intersection of
@@ -414,7 +414,7 @@ class REGINA_API NBitmask {
          * @return \c true if and only if this bitmask entirely contains
          * the intersection of \a x and \a y.
          */
-        bool containsIntn(const NBitmask& x, const NBitmask& y) const;
+        bool containsIntn(const Bitmask& x, const Bitmask& y) const;
 
         /**
          * Returns the number of bits currently set to \c true in this
@@ -452,7 +452,7 @@ class REGINA_API NBitmask {
          */
         bool atMostOneBit() const;
 
-    friend std::ostream& operator << (std::ostream& out, const NBitmask& mask);
+    friend std::ostream& operator << (std::ostream& out, const Bitmask& mask);
 };
 
 /**
@@ -470,10 +470,10 @@ class REGINA_API NBitmask {
  * @param mask the bitmask to write.
  * @return a reference to the given output stream.
  */
-REGINA_API std::ostream& operator << (std::ostream& out, const NBitmask& mask);
+REGINA_API std::ostream& operator << (std::ostream& out, const Bitmask& mask);
 
 template <typename T>
-class NBitmask1;
+class Bitmask1;
 
 /**
  * Writes the given bitmask to the given output stream as a sequence of
@@ -489,7 +489,7 @@ class NBitmask1;
  * @return a reference to the given output stream.
  */
 template <typename T>
-std::ostream& operator << (std::ostream& out, const NBitmask1<T>& mask) {
+std::ostream& operator << (std::ostream& out, const Bitmask1<T>& mask) {
     for (T bit = 1; bit; bit <<= 1)
         out << ((mask.mask & bit) ? '1' : '0');
     return out;
@@ -509,15 +509,15 @@ std::ostream& operator << (std::ostream& out, const NBitmask1<T>& mask) {
  * long).
  *
  * For another extremely fast bitmask class that can store twice as
- * many bits, see NBitmask2.  For a bitmask class that can store
- * arbitrarily many bits, see NBitmask.
+ * many bits, see Bitmask2.  For a bitmask class that can store
+ * arbitrarily many bits, see Bitmask.
  *
  * \pre Type \a T is an unsigned integral numeric type.
  *
  * \ifacespython Not present.
  */
 template <typename T>
-class NBitmask1 {
+class Bitmask1 {
     private:
         T mask;
             /**< Contains all 8 * sizeof(\a T) bits of this bitmask. */
@@ -526,19 +526,19 @@ class NBitmask1 {
         /**
          * Creates a new bitmask with all bits set to \c false.
          */
-        inline NBitmask1() : mask(0) {
+        inline Bitmask1() : mask(0) {
         }
 
         /**
          * Creates a new bitmask with all bits set to \c false.
          *
          * The integer argument is merely for compatibility with
-         * the NBitmask constructor, and will be ignored.
+         * the Bitmask constructor, and will be ignored.
          *
          * \warning This is \e not a constructor that initialises the
          * bitmask to a given pattern.
          */
-        inline NBitmask1(size_t) : mask(0) {
+        inline Bitmask1(size_t) : mask(0) {
         }
 
         /**
@@ -546,7 +546,7 @@ class NBitmask1 {
          *
          * @param cloneMe the bitmask to clone.
          */
-        inline NBitmask1(const NBitmask1<T>& cloneMe) : mask(cloneMe.mask) {
+        inline Bitmask1(const Bitmask1<T>& cloneMe) : mask(cloneMe.mask) {
         }
 
         /**
@@ -560,7 +560,7 @@ class NBitmask1 {
          * Sets all bits of this bitmask to \c false.
          *
          * The integer argument is merely for compatibility with
-         * NBitmask::reset(size_t), and will be ignored.
+         * Bitmask::reset(size_t), and will be ignored.
          */
         inline void reset(size_t) {
             mask = 0;
@@ -572,7 +572,7 @@ class NBitmask1 {
          * @param other the bitmask to clone.
          * @return a reference to this bitmask.
          */
-        NBitmask1<T>& operator = (const NBitmask1<T>& other) {
+        Bitmask1<T>& operator = (const Bitmask1<T>& other) {
             mask = other.mask;
             return *this;
         }
@@ -675,7 +675,7 @@ class NBitmask1 {
          * @param other the bitmask to intersect with this.
          * @return a reference to this bitmask.
          */
-        inline NBitmask1<T>& operator &= (const NBitmask1<T>& other) {
+        inline Bitmask1<T>& operator &= (const Bitmask1<T>& other) {
             mask &= other.mask;
             return *this;
         }
@@ -687,7 +687,7 @@ class NBitmask1 {
          * @param other the bitmask to union with this.
          * @return a reference to this bitmask.
          */
-        inline NBitmask1<T>& operator |= (const NBitmask1<T>& other) {
+        inline Bitmask1<T>& operator |= (const Bitmask1<T>& other) {
             mask |= other.mask;
             return *this;
         }
@@ -700,7 +700,7 @@ class NBitmask1 {
          * @param other the bitmask to XOR with this.
          * @return a reference to this bitmask.
          */
-        inline NBitmask1<T>& operator ^= (const NBitmask1<T>& other) {
+        inline Bitmask1<T>& operator ^= (const Bitmask1<T>& other) {
             mask ^= other.mask;
             return *this;
         }
@@ -712,7 +712,7 @@ class NBitmask1 {
          * @param other the bitmask to XOR with this.
          * @return a reference to this bitmask.
          */
-        inline NBitmask1<T>& operator -= (const NBitmask1<T>& other) {
+        inline Bitmask1<T>& operator -= (const Bitmask1<T>& other) {
             mask |= other.mask;
             mask ^= other.mask;
             return *this;
@@ -722,7 +722,7 @@ class NBitmask1 {
          * Negates every bit in this bitmask.  All \c true bits will be
          * set to \c false and vice versa.
          *
-         * Unlike the more generic NBitmask, this optimised bitmask
+         * Unlike the more generic Bitmask, this optimised bitmask
          * class does not store a length.  This means that all
          * 8 * sizeof(\a T) possible bits will be negated.
          */
@@ -737,7 +737,7 @@ class NBitmask1 {
          * @return \c true if and only if this and the given bitmask are
          * identical.
          */
-        inline bool operator == (const NBitmask1<T>& other) const {
+        inline bool operator == (const Bitmask1<T>& other) const {
             return (mask == other.mask);
         }
 
@@ -754,7 +754,7 @@ class NBitmask1 {
          * @return \c true if and only if this is lexicographically
          * strictly smaller than the given bitmask.
          */
-        inline bool lessThan(const NBitmask1<T>& other) const {
+        inline bool lessThan(const Bitmask1<T>& other) const {
             return (mask < other.mask);
         }
 
@@ -774,7 +774,7 @@ class NBitmask1 {
          * @return \c true if and only if this bitmask is entirely contained
          * within the given bitmask.
          */
-        inline bool operator <= (const NBitmask1<T>& other) const {
+        inline bool operator <= (const Bitmask1<T>& other) const {
             return ((mask | other.mask) == other.mask);
         }
 
@@ -790,7 +790,7 @@ class NBitmask1 {
          * @return \c true if and only if this bitmask is entirely contained
          * within the union of \a x and \a y.
          */
-        inline bool inUnion(const NBitmask1<T>& x, const NBitmask1<T>& y)
+        inline bool inUnion(const Bitmask1<T>& x, const Bitmask1<T>& y)
                 const {
             return ((mask & (x.mask | y.mask)) == mask);
         }
@@ -807,7 +807,7 @@ class NBitmask1 {
          * @return \c true if and only if this bitmask entirely contains
          * the intersection of \a x and \a y.
          */
-        inline bool containsIntn(const NBitmask1<T>& x, const NBitmask1<T>& y)
+        inline bool containsIntn(const Bitmask1<T>& x, const Bitmask1<T>& y)
                 const {
             return ((mask | (x.mask & y.mask)) == mask);
         }
@@ -857,11 +857,11 @@ class NBitmask1 {
         }
 
     friend std::ostream& operator << <T>(std::ostream& out,
-        const NBitmask1<T>& mask);
+        const Bitmask1<T>& mask);
 };
 
 template <typename T, typename U>
-class NBitmask2;
+class Bitmask2;
 
 /**
  * Writes the given bitmask to the given output stream as a sequence of
@@ -877,7 +877,7 @@ class NBitmask2;
  * @return a reference to the given output stream.
  */
 template <typename T, typename U>
-std::ostream& operator << (std::ostream& out, const NBitmask2<T, U>& mask) {
+std::ostream& operator << (std::ostream& out, const Bitmask2<T, U>& mask) {
     for (T bit = 1; bit; bit <<= 1)
         out << ((mask.low & bit) ? '1' : '0');
     for (U bit = 1; bit; bit <<= 1)
@@ -900,15 +900,15 @@ std::ostream& operator << (std::ostream& out, const NBitmask2<T, U>& mask) {
  * or unsigned long long).
  *
  * For an even faster bitmask class that can only store half as many bits,
- * see NBitmask1.  For a bitmask class that can store arbitrarily many bits,
- * see NBitmask.
+ * see Bitmask1.  For a bitmask class that can store arbitrarily many bits,
+ * see Bitmask.
  *
  * \pre Types \a T and \a U are unsigned integral numeric types.
  *
  * \ifacespython Not present.
  */
 template <typename T, typename U = T>
-class NBitmask2 {
+class Bitmask2 {
     private:
         T low;
             /**< Contains the first 8 * sizeof(\a T) bits of this bitmask. */
@@ -919,19 +919,19 @@ class NBitmask2 {
         /**
          * Creates a new bitmask with all bits set to \c false.
          */
-        inline NBitmask2() : low(0), high(0) {
+        inline Bitmask2() : low(0), high(0) {
         }
 
         /**
          * Creates a new bitmask with all bits set to \c false.
          *
          * The integer argument is merely for compatibility with
-         * the NBitmask constructor, and will be ignored.
+         * the Bitmask constructor, and will be ignored.
          *
          * \warning This is \e not a constructor that initialises the
          * bitmask to a given pattern.
          */
-        inline NBitmask2(size_t) : low(0), high(0) {
+        inline Bitmask2(size_t) : low(0), high(0) {
         }
 
         /**
@@ -939,7 +939,7 @@ class NBitmask2 {
          *
          * @param cloneMe the bitmask to clone.
          */
-        inline NBitmask2(const NBitmask2<T, U>& cloneMe) :
+        inline Bitmask2(const Bitmask2<T, U>& cloneMe) :
                 low(cloneMe.low), high(cloneMe.high) {
         }
 
@@ -955,7 +955,7 @@ class NBitmask2 {
          * Sets all bits of this bitmask to \c false.
          *
          * The integer argument is merely for compatibility with
-         * NBitmask::reset(size_t), and will be ignored.
+         * Bitmask::reset(size_t), and will be ignored.
          */
         inline void reset(size_t) {
             low = 0;
@@ -968,7 +968,7 @@ class NBitmask2 {
          * @param other the bitmask to clone.
          * @return a reference to this bitmask.
          */
-        NBitmask2<T, U>& operator = (const NBitmask2<T, U>& other) {
+        Bitmask2<T, U>& operator = (const Bitmask2<T, U>& other) {
             low = other.low;
             high = other.high;
             return *this;
@@ -1096,7 +1096,7 @@ class NBitmask2 {
          * @param other the bitmask to intersect with this.
          * @return a reference to this bitmask.
          */
-        inline NBitmask2<T, U>& operator &= (const NBitmask2<T, U>& other) {
+        inline Bitmask2<T, U>& operator &= (const Bitmask2<T, U>& other) {
             low &= other.low;
             high &= other.high;
             return *this;
@@ -1109,7 +1109,7 @@ class NBitmask2 {
          * @param other the bitmask to union with this.
          * @return a reference to this bitmask.
          */
-        inline NBitmask2<T, U>& operator |= (const NBitmask2<T, U>& other) {
+        inline Bitmask2<T, U>& operator |= (const Bitmask2<T, U>& other) {
             low |= other.low;
             high |= other.high;
             return *this;
@@ -1123,7 +1123,7 @@ class NBitmask2 {
          * @param other the bitmask to XOR with this.
          * @return a reference to this bitmask.
          */
-        inline NBitmask2<T, U>& operator ^= (const NBitmask2<T, U>& other) {
+        inline Bitmask2<T, U>& operator ^= (const Bitmask2<T, U>& other) {
             low ^= other.low;
             high ^= other.high;
             return *this;
@@ -1136,7 +1136,7 @@ class NBitmask2 {
          * @param other the bitmask to XOR with this.
          * @return a reference to this bitmask.
          */
-        inline NBitmask2<T, U>& operator -= (const NBitmask2<T, U>& other) {
+        inline Bitmask2<T, U>& operator -= (const Bitmask2<T, U>& other) {
             low |= other.low;
             low ^= other.low;
             high |= other.high;
@@ -1148,7 +1148,7 @@ class NBitmask2 {
          * Negates every bit in this bitmask.  All \c true bits will be
          * set to \c false and vice versa.
          *
-         * Unlike the more generic NBitmask, this optimised bitmask
+         * Unlike the more generic Bitmask, this optimised bitmask
          * class does not store a length.  This means that all
          * 8 * sizeof(\a T) + 8 * sizeof(\a U) possible bits will be negated.
          */
@@ -1164,7 +1164,7 @@ class NBitmask2 {
          * @return \c true if and only if this and the given bitmask are
          * identical.
          */
-        inline bool operator == (const NBitmask2<T, U>& other) const {
+        inline bool operator == (const Bitmask2<T, U>& other) const {
             return (low == other.low && high == other.high);
         }
 
@@ -1181,7 +1181,7 @@ class NBitmask2 {
          * @return \c true if and only if this is lexicographically
          * strictly smaller than the given bitmask.
          */
-        inline bool lessThan(const NBitmask2<T, U>& other) const {
+        inline bool lessThan(const Bitmask2<T, U>& other) const {
             return (high < other.high ||
                 (high == other.high && low < other.low));
         }
@@ -1202,7 +1202,7 @@ class NBitmask2 {
          * @return \c true if and only if this bitmask is entirely contained
          * within the given bitmask.
          */
-        inline bool operator <= (const NBitmask2<T, U>& other) const {
+        inline bool operator <= (const Bitmask2<T, U>& other) const {
             return ((low | other.low) == other.low &&
                 (high | other.high) == other.high);
         }
@@ -1219,7 +1219,7 @@ class NBitmask2 {
          * @return \c true if and only if this bitmask is entirely contained
          * within the union of \a x and \a y.
          */
-        inline bool inUnion(const NBitmask2<T, U>& x, const NBitmask2<T, U>& y)
+        inline bool inUnion(const Bitmask2<T, U>& x, const Bitmask2<T, U>& y)
                 const {
             return ((low & (x.low | y.low)) == low &&
                 (high & (x.high | y.high)) == high);
@@ -1237,8 +1237,8 @@ class NBitmask2 {
          * @return \c true if and only if this bitmask entirely contains
          * the intersection of \a x and \a y.
          */
-        inline bool containsIntn(const NBitmask2<T, U>& x,
-                const NBitmask2<T, U>& y) const {
+        inline bool containsIntn(const Bitmask2<T, U>& x,
+                const Bitmask2<T, U>& y) const {
             return ((low | (x.low & y.low)) == low &&
                 (high | (x.high & y.high)) == high);
         }
@@ -1300,7 +1300,7 @@ class NBitmask2 {
         }
 
     friend std::ostream& operator << <T, U>(std::ostream& out,
-        const NBitmask2<T, U>& mask);
+        const Bitmask2<T, U>& mask);
 };
 
 #ifndef __DOXYGEN
@@ -1310,8 +1310,8 @@ class NBitmask2 {
  *
  * Please do not use this class directly, since this template is internal
  * and subject to change in future versions of Regina.  Instead please
- * use the convenience typedefs NBitmaskLen8, NBitmaskLen16, NBitmaskLen32
- * and NBitmaskLen64.
+ * use the convenience typedefs BitmaskLen8, BitmaskLen16, BitmaskLen32
+ * and BitmaskLen64.
  *
  * The reason this template exists is to circumvent the fact that we cannot
  * use sizeof() in a #if statement.  The boolean argument to this template
@@ -1322,13 +1322,13 @@ struct InternalBitmaskLen32;
 
 template <>
 struct InternalBitmaskLen32<true> {
-    typedef NBitmask1<unsigned int> Type;
+    typedef Bitmask1<unsigned int> Type;
 };
 
 template <>
 struct InternalBitmaskLen32<false> {
     // The standard guarantees that sizeof(long) >= 4.
-    typedef NBitmask1<unsigned long> Type;
+    typedef Bitmask1<unsigned long> Type;
 };
 
 /**
@@ -1337,8 +1337,8 @@ struct InternalBitmaskLen32<false> {
  *
  * Please do not use this class directly, since this template is internal
  * and subject to change in future versions of Regina.  Instead please
- * use the convenience typedefs NBitmaskLen8, NBitmaskLen16, NBitmaskLen32
- * and NBitmaskLen64.
+ * use the convenience typedefs BitmaskLen8, BitmaskLen16, BitmaskLen32
+ * and BitmaskLen64.
  *
  * The reason this template exists is to circumvent the fact that we cannot
  * use sizeof() in a #if statement.  The boolean argument to this template
@@ -1349,13 +1349,13 @@ struct InternalBitmaskLen64;
 
 template <>
 struct InternalBitmaskLen64<true> {
-    typedef NBitmask1<unsigned long> Type;
+    typedef Bitmask1<unsigned long> Type;
 };
 
 template <>
 struct InternalBitmaskLen64<false> {
     // The C standard guarantees that sizeof(long long) >= 8.
-    typedef NBitmask1<unsigned long long> Type;
+    typedef Bitmask1<unsigned long long> Type;
 };
 #endif // End block for doxygen to ignore.
 
@@ -1364,85 +1364,85 @@ struct InternalBitmaskLen64<false> {
  * class capable of holding at least 8 true-or-false bits.
  *
  * This bitmask class is guaranteed to be an instantiation of the
- * template class NBitmask1.
+ * template class Bitmask1.
  *
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
  * \ifacespython Not present.
  */
-typedef NBitmask1<unsigned char> NBitmaskLen8;
+typedef Bitmask1<unsigned char> BitmaskLen8;
 
 /**
  * A convenience typedef that gives a small and extremely fast bitmask
  * class capable of holding at least 16 true-or-false bits.
  *
  * This bitmask class is guaranteed to be an instantiation of the
- * template class NBitmask1.
+ * template class Bitmask1.
  *
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
  * \ifacespython Not present.
  */
-typedef NBitmask1<unsigned int> NBitmaskLen16;
+typedef Bitmask1<unsigned int> BitmaskLen16;
 
 /**
  * A convenience typedef that gives a small and extremely fast bitmask
  * class capable of holding at least 32 true-or-false bits.
  *
  * This bitmask class is guaranteed to be an instantiation of the
- * template class NBitmask1.
+ * template class Bitmask1.
  *
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
  * \ifacespython Not present.
  */
-typedef InternalBitmaskLen32<>::Type NBitmaskLen32;
+typedef InternalBitmaskLen32<>::Type BitmaskLen32;
 
 /**
  * A convenience typedef that gives a small and extremely fast bitmask
  * class capable of holding at least 64 true-or-false bits.
  *
  * This bitmask class is guaranteed to be an instantiation of
- * \e either the template class NBitmask1 or the template class NBitmask2.
+ * \e either the template class Bitmask1 or the template class Bitmask2.
  *
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
  * \ifacespython Not present.
  */
-typedef InternalBitmaskLen64<>::Type NBitmaskLen64;
+typedef InternalBitmaskLen64<>::Type BitmaskLen64;
 
 /*@}*/
 
-// Inline functions for NBitmask
+// Inline functions for Bitmask
 
-inline NBitmask::NBitmask() : pieces(0), mask(0) {
+inline Bitmask::Bitmask() : pieces(0), mask(0) {
 }
 
-inline NBitmask::NBitmask(size_t length) :
+inline Bitmask::Bitmask(size_t length) :
         pieces((length - 1) / (8 * sizeof(Piece)) + 1),
         mask(new Piece[pieces]) {
     std::fill(mask, mask + pieces, 0);
 }
 
-inline NBitmask::NBitmask(const NBitmask& cloneMe) :
+inline Bitmask::Bitmask(const Bitmask& cloneMe) :
         pieces(cloneMe.pieces),
         mask(new Piece[cloneMe.pieces]) {
     std::copy(cloneMe.mask, cloneMe.mask + pieces, mask);
 }
 
-inline NBitmask::~NBitmask() {
+inline Bitmask::~Bitmask() {
     delete[] mask;
 }
 
-inline void NBitmask::reset() {
+inline void Bitmask::reset() {
     std::fill(mask, mask + pieces, 0);
 }
 
-inline void NBitmask::reset(size_t length) {
+inline void Bitmask::reset(size_t length) {
     delete[] mask;
 
     pieces = (length - 1) / (8 * sizeof(Piece)) + 1;
@@ -1451,7 +1451,7 @@ inline void NBitmask::reset(size_t length) {
     std::fill(mask, mask + pieces, 0);
 }
 
-inline NBitmask& NBitmask::operator = (const NBitmask& other) {
+inline Bitmask& Bitmask::operator = (const Bitmask& other) {
     if (pieces != other.pieces) {
         delete[] mask;
         pieces = other.pieces;
@@ -1462,7 +1462,7 @@ inline NBitmask& NBitmask::operator = (const NBitmask& other) {
     return *this;
 }
 
-inline void NBitmask::truncate(size_t numBits) {
+inline void Bitmask::truncate(size_t numBits) {
     size_t skip = numBits / (8 * sizeof(Piece));
     numBits = numBits % (8 * sizeof(Piece));
 
@@ -1474,12 +1474,12 @@ inline void NBitmask::truncate(size_t numBits) {
     }
 }
 
-inline bool NBitmask::get(size_t index) const {
+inline bool Bitmask::get(size_t index) const {
     return (mask[index / (8 * sizeof(Piece))] &
         (Piece(1) << (index % (8 * sizeof(Piece)))));
 }
 
-inline void NBitmask::set(size_t index, bool value) {
+inline void Bitmask::set(size_t index, bool value) {
     mask[index / (8 * sizeof(Piece))] |=
         (Piece(1) << (index % (8 * sizeof(Piece))));
     if (! value)
@@ -1487,25 +1487,25 @@ inline void NBitmask::set(size_t index, bool value) {
             (Piece(1) << (index % (8 * sizeof(Piece))));
 }
 
-inline NBitmask& NBitmask::operator &= (const NBitmask& other) {
+inline Bitmask& Bitmask::operator &= (const Bitmask& other) {
     for (size_t i = 0; i < pieces; ++i)
         mask[i] &= other.mask[i];
     return *this;
 }
 
-inline NBitmask& NBitmask::operator |= (const NBitmask& other) {
+inline Bitmask& Bitmask::operator |= (const Bitmask& other) {
     for (size_t i = 0; i < pieces; ++i)
         mask[i] |= other.mask[i];
     return *this;
 }
 
-inline NBitmask& NBitmask::operator ^= (const NBitmask& other) {
+inline Bitmask& Bitmask::operator ^= (const Bitmask& other) {
     for (size_t i = 0; i < pieces; ++i)
         mask[i] ^= other.mask[i];
     return *this;
 }
 
-inline NBitmask& NBitmask::operator -= (const NBitmask& other) {
+inline Bitmask& Bitmask::operator -= (const Bitmask& other) {
     for (size_t i = 0; i < pieces; ++i) {
         mask[i] |= other.mask[i];
         mask[i] ^= other.mask[i];
@@ -1513,16 +1513,16 @@ inline NBitmask& NBitmask::operator -= (const NBitmask& other) {
     return *this;
 }
 
-inline void NBitmask::flip() {
+inline void Bitmask::flip() {
     for (size_t i = 0; i < pieces; ++i)
         mask[i] = ~mask[i];
 }
 
-inline bool NBitmask::operator == (const NBitmask& other) const {
+inline bool Bitmask::operator == (const Bitmask& other) const {
     return std::equal(mask, mask + pieces, other.mask);
 }
 
-inline bool NBitmask::lessThan(const NBitmask& other) const {
+inline bool Bitmask::lessThan(const Bitmask& other) const {
     for (long i = pieces - 1; i >= 0; --i)
         if (mask[i] < other.mask[i])
             return true;
@@ -1531,35 +1531,35 @@ inline bool NBitmask::lessThan(const NBitmask& other) const {
     return false;
 }
 
-inline bool NBitmask::operator <= (const NBitmask& other) const {
+inline bool Bitmask::operator <= (const Bitmask& other) const {
     for (size_t i = 0; i < pieces; ++i)
         if ((mask[i] | other.mask[i]) != other.mask[i])
             return false;
     return true;
 }
 
-inline bool NBitmask::inUnion(const NBitmask& x, const NBitmask& y) const {
+inline bool Bitmask::inUnion(const Bitmask& x, const Bitmask& y) const {
     for (size_t i = 0; i < pieces; ++i)
         if ((mask[i] & (x.mask[i] | y.mask[i])) != mask[i])
             return false;
     return true;
 }
 
-inline bool NBitmask::containsIntn(const NBitmask& x, const NBitmask& y) const {
+inline bool Bitmask::containsIntn(const Bitmask& x, const Bitmask& y) const {
     for (size_t i = 0; i < pieces; ++i)
         if ((mask[i] | (x.mask[i] & y.mask[i])) != mask[i])
             return false;
     return true;
 }
 
-inline size_t NBitmask::bits() const {
+inline size_t Bitmask::bits() const {
     size_t ans = 0;
     for (size_t i = 0; i < pieces; ++i)
         ans += BitManipulator<Piece>::bits(mask[i]);
     return ans;
 }
 
-inline long NBitmask::firstBit() const {
+inline long Bitmask::firstBit() const {
     for (size_t i = 0; i < pieces; ++i)
         if (mask[i])
             return 8 * sizeof(Piece) * i +
@@ -1567,7 +1567,7 @@ inline long NBitmask::firstBit() const {
     return -1;
 }
 
-inline long NBitmask::lastBit() const {
+inline long Bitmask::lastBit() const {
     for (long i = pieces - 1; i >= 0; --i)
         if (mask[i])
             return 8 * sizeof(Piece) * i +
@@ -1575,7 +1575,7 @@ inline long NBitmask::lastBit() const {
     return -1;
 }
 
-inline bool NBitmask::atMostOneBit() const {
+inline bool Bitmask::atMostOneBit() const {
     unsigned bits = 0;
     for (size_t i = 0; i < pieces; ++i) {
         bits += BitManipulator<Piece>::bits(mask[i]);
@@ -1585,8 +1585,8 @@ inline bool NBitmask::atMostOneBit() const {
     return true;
 }
 
-inline std::ostream& operator << (std::ostream& out, const NBitmask& mask) {
-    NBitmask::Piece bit;
+inline std::ostream& operator << (std::ostream& out, const Bitmask& mask) {
+    Bitmask::Piece bit;
     for (size_t i = 0; i < mask.pieces; ++i)
         for (bit = 1; bit; bit <<= 1)
             out << ((bit & mask.mask[i]) ? '1' : '0');

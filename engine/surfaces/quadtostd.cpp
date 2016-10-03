@@ -42,7 +42,7 @@
 #include "surfaces/nsquadoct.h"
 #include "triangulation/ntriangulation.h"
 #include "triangulation/nvertex.h"
-#include "utilities/nbitmask.h"
+#include "utilities/bitmask.h"
 #include <iterator>
 #include <vector>
 
@@ -108,12 +108,12 @@ namespace {
      * to \c true if and only if the corresponding coordinate is zero.
      *
      * Since this class is used heavily, faster bitmask types such as
-     * NBitmask1 and NBitmask2 are preferred; however, if the number
-     * of coordinates is too large then the slower general-use NBitmask
+     * Bitmask1 and Bitmask2 are preferred; however, if the number
+     * of coordinates is too large then the slower general-use Bitmask
      * class will need to be used instead.
      *
      * \pre The template argument \a BitmaskType is one of Regina's
-     * bitmask types, such as NBitmask, NBitmask1 or NBitmask2.
+     * bitmask types, such as Bitmask, Bitmask1 or Bitmask2.
      */
     template <class BitmaskType>
     class RaySpec : private NRay {
@@ -347,27 +347,27 @@ void NNormalSurfaceList::buildStandardFromReduced(NTriangulation* owner,
     // templated on the bitmask type.
     if (nFacets <= 8 * sizeof(unsigned))
         buildStandardFromReducedUsing<Variant,
-            NBitmask1<unsigned> >(owner, reducedList, tracker);
+            Bitmask1<unsigned> >(owner, reducedList, tracker);
     else if (nFacets <= 8 * sizeof(unsigned long))
         buildStandardFromReducedUsing<Variant,
-            NBitmask1<unsigned long> >(owner, reducedList, tracker);
+            Bitmask1<unsigned long> >(owner, reducedList, tracker);
     else if (nFacets <= 8 * sizeof(unsigned long long))
         buildStandardFromReducedUsing<Variant,
-            NBitmask1<unsigned long long> >(owner, reducedList, tracker);
+            Bitmask1<unsigned long long> >(owner, reducedList, tracker);
     else if (nFacets <= 8 * sizeof(unsigned long long) + 8 * sizeof(unsigned))
         buildStandardFromReducedUsing<Variant,
-            NBitmask2<unsigned long long, unsigned> >(owner, reducedList,
+            Bitmask2<unsigned long long, unsigned> >(owner, reducedList,
                 tracker);
     else if (nFacets <= 8 * sizeof(unsigned long long) +
             8 * sizeof(unsigned long))
         buildStandardFromReducedUsing<Variant,
-            NBitmask2<unsigned long long, unsigned long> >(owner, reducedList,
+            Bitmask2<unsigned long long, unsigned long> >(owner, reducedList,
                 tracker);
     else if (nFacets <= 16 * sizeof(unsigned long long))
         buildStandardFromReducedUsing<Variant,
-            NBitmask2<unsigned long long> >(owner, reducedList, tracker);
+            Bitmask2<unsigned long long> >(owner, reducedList, tracker);
     else
-        buildStandardFromReducedUsing<Variant, NBitmask>(owner, reducedList,
+        buildStandardFromReducedUsing<Variant, Bitmask>(owner, reducedList,
             tracker);
 }
 

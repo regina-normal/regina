@@ -58,7 +58,7 @@
 #include "maths/matrixops.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/ntriangulation.h"
-#include "utilities/nbitmask.h"
+#include "utilities/bitmask.h"
 #include <cstring>
 
 namespace regina {
@@ -1101,10 +1101,10 @@ void LPData<LPConstraint, Integer>::makeFeasible() {
     // overall is at most three times the total number of pivots
     // before the first repeated basis).
     unsigned nCols = origTableaux_->columns();
-    NBitmask currBasis(nCols);
+    Bitmask currBasis(nCols);
     for (r = 0; r < rank_; ++r)
         currBasis.set(basis_[r], true);
-    NBitmask oldBasis(currBasis);
+    Bitmask oldBasis(currBasis);
     unsigned long pow2 = 1;
     unsigned long nPivots = 0;
 

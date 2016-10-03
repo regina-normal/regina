@@ -30,13 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file utilities/nqitmask.h
+/*! \file utilities/qitmask.h
  *  \brief Provides optimised "base 4 bitmasks" of fixed length.
  */
 
-#ifndef __NQITMASK_H
+#ifndef __QITMASK_H
 #ifndef __DOXYGEN
-#define __NQITMASK_H
+#define __QITMASK_H
 #endif
 
 #include <algorithm>
@@ -53,7 +53,7 @@ namespace regina {
  */
 
 template <typename T>
-class NQitmask1;
+class Qitmask1;
 
 /**
  * Writes the given qitmask to the given output stream as a sequence of
@@ -69,7 +69,7 @@ class NQitmask1;
  * @return a reference to the given output stream.
  */
 template <typename T>
-std::ostream& operator << (std::ostream& out, const NQitmask1<T>& mask) {
+std::ostream& operator << (std::ostream& out, const Qitmask1<T>& mask) {
     for (T bit = 1; bit; bit <<= 1)
         out << int(((mask.mask1 & bit) ? 1 : 0) | ((mask.mask2 & bit) ? 2 : 0));
     return out;
@@ -90,7 +90,7 @@ std::ostream& operator << (std::ostream& out, const NQitmask1<T>& mask) {
  * long).
  *
  * For another extremely fast qitmask class that can store twice as
- * many qits, see NQitmask2.  At present there is no qitmask class
+ * many qits, see Qitmask2.  At present there is no qitmask class
  * in Regina that can store arbitrarily many qits.
  *
  * \pre Type \a T is an unsigned integral numeric type.
@@ -98,7 +98,7 @@ std::ostream& operator << (std::ostream& out, const NQitmask1<T>& mask) {
  * \ifacespython Not present.
  */
 template <typename T>
-class NQitmask1 {
+class Qitmask1 {
     private:
         T mask1;
             /**< The ith bit of this mask contains the least significant
@@ -111,7 +111,7 @@ class NQitmask1 {
         /**
          * Creates a new qitmask with all qits set to 0.
          */
-        inline NQitmask1() : mask1(0), mask2(0) {
+        inline Qitmask1() : mask1(0), mask2(0) {
         }
 
         /**
@@ -119,7 +119,7 @@ class NQitmask1 {
          *
          * @param cloneMe the qitmask to clone.
          */
-        inline NQitmask1(const NQitmask1<T>& cloneMe) :
+        inline Qitmask1(const Qitmask1<T>& cloneMe) :
                 mask1(cloneMe.mask1), mask2(cloneMe.mask2) {
         }
 
@@ -136,7 +136,7 @@ class NQitmask1 {
          * @param other the qitmask to clone.
          * @return a reference to this qitmask.
          */
-        NQitmask1<T>& operator = (const NQitmask1<T>& other) {
+        Qitmask1<T>& operator = (const Qitmask1<T>& other) {
             mask1 = other.mask1;
             mask2 = other.mask2;
             return *this;
@@ -209,7 +209,7 @@ class NQitmask1 {
          * @param rhs the qitmask to add to this.
          * @return a reference to this qitmask.
          */
-        inline NQitmask1<T>& operator += (const NQitmask1<T>& rhs) {
+        inline Qitmask1<T>& operator += (const Qitmask1<T>& rhs) {
             mask2 = mask2 ^ rhs.mask2 ^ (mask1 & rhs.mask1);
             mask1 = mask1 ^ rhs.mask1;
             return *this;
@@ -223,7 +223,7 @@ class NQitmask1 {
          * @param rhs the qitmask to subtract from this.
          * @return a reference to this qitmask.
          */
-        inline NQitmask1<T>& operator -= (const NQitmask1<T>& rhs) {
+        inline Qitmask1<T>& operator -= (const Qitmask1<T>& rhs) {
             mask2 = mask2 ^ rhs.mask2 ^ (rhs.mask1 & ~ mask1);
             mask1 = mask1 ^ rhs.mask1;
             return *this;
@@ -236,7 +236,7 @@ class NQitmask1 {
          * @return \c true if and only if this and the given qitmask are
          * identical.
          */
-        inline bool operator == (const NQitmask1<T>& other) const {
+        inline bool operator == (const Qitmask1<T>& other) const {
             return (mask1 == other.mask1 && mask2 == other.mask2);
         }
 
@@ -255,16 +255,16 @@ class NQitmask1 {
          * @return \c true if there is some index at which this and \a other
          * both have non-zero qits, or \c false otherwise.
          */
-        inline bool hasNonZeroMatch(const NQitmask1<T>& other) const {
+        inline bool hasNonZeroMatch(const Qitmask1<T>& other) const {
             return ((mask1 | mask2) & (other.mask1 | other.mask2));
         }
 
     friend std::ostream& operator << <T>(std::ostream& out,
-        const NQitmask1<T>& mask);
+        const Qitmask1<T>& mask);
 };
 
 template <typename T, typename U>
-class NQitmask2;
+class Qitmask2;
 
 /**
  * Writes the given qitmask to the given output stream as a sequence of
@@ -280,7 +280,7 @@ class NQitmask2;
  * @return a reference to the given output stream.
  */
 template <typename T, typename U>
-std::ostream& operator << (std::ostream& out, const NQitmask2<T, U>& mask) {
+std::ostream& operator << (std::ostream& out, const Qitmask2<T, U>& mask) {
     for (T bit = 1; bit; bit <<= 1)
         out << int(((mask.low1 & bit) ? 1 : 0) | ((mask.low2 & bit) ? 2 : 0));
     for (U bit = 1; bit; bit <<= 1)
@@ -303,7 +303,7 @@ std::ostream& operator << (std::ostream& out, const NQitmask2<T, U>& mask) {
  * or unsigned long long).
  *
  * For an even faster qitmask class that can only store half as many qits,
- * see NQitmask1.  At present there is no qitmask class
+ * see Qitmask1.  At present there is no qitmask class
  * in Regina that can store arbitrarily many qits.
  *
  * \pre Types \a T and \a U are unsigned integral numeric types.
@@ -311,7 +311,7 @@ std::ostream& operator << (std::ostream& out, const NQitmask2<T, U>& mask) {
  * \ifacespython Not present.
  */
 template <typename T, typename U = T>
-class NQitmask2 {
+class Qitmask2 {
     private:
         T low1;
             /**< The ith bit of this mask stores the least significant bit
@@ -330,7 +330,7 @@ class NQitmask2 {
         /**
          * Creates a new qitmask with all qits set to 0.
          */
-        inline NQitmask2() : low1(0), low2(0), high1(0), high2(0) {
+        inline Qitmask2() : low1(0), low2(0), high1(0), high2(0) {
         }
 
         /**
@@ -338,7 +338,7 @@ class NQitmask2 {
          *
          * @param cloneMe the qitmask to clone.
          */
-        inline NQitmask2(const NQitmask2<T, U>& cloneMe) :
+        inline Qitmask2(const Qitmask2<T, U>& cloneMe) :
                 low1(cloneMe.low1), low2(cloneMe.low2),
                 high1(cloneMe.high1), high2(cloneMe.high2) {
         }
@@ -357,7 +357,7 @@ class NQitmask2 {
          * @param other the qitmask to clone.
          * @return a reference to this qitmask.
          */
-        NQitmask2<T, U>& operator = (const NQitmask2<T, U>& other) {
+        Qitmask2<T, U>& operator = (const Qitmask2<T, U>& other) {
             low1 = other.low1;
             low2 = other.low2;
             high1 = other.high1;
@@ -446,7 +446,7 @@ class NQitmask2 {
          * @param rhs the qitmask to add to this.
          * @return a reference to this qitmask.
          */
-        inline NQitmask2<T, U>& operator += (const NQitmask2<T, U>& rhs) {
+        inline Qitmask2<T, U>& operator += (const Qitmask2<T, U>& rhs) {
             low2 = low2 ^ rhs.low2 ^ (low1 & rhs.low1);
             low1 = low1 ^ rhs.low1;
             high2 = high2 ^ rhs.high2 ^ (high1 & rhs.high1);
@@ -462,7 +462,7 @@ class NQitmask2 {
          * @param rhs the qitmask to subtract from this.
          * @return a reference to this qitmask.
          */
-        inline NQitmask2<T, U>& operator -= (const NQitmask2<T, U>& rhs) {
+        inline Qitmask2<T, U>& operator -= (const Qitmask2<T, U>& rhs) {
             low2 = low2 ^ rhs.low2 ^ (rhs.low1 & ~ low1);
             low1 = low1 ^ rhs.low1;
             high2 = high2 ^ rhs.high2 ^ (rhs.high1 & ~ high1);
@@ -477,7 +477,7 @@ class NQitmask2 {
          * @return \c true if and only if this and the given qitmask are
          * identical.
          */
-        inline bool operator == (const NQitmask2<T, U>& other) const {
+        inline bool operator == (const Qitmask2<T, U>& other) const {
             return (low1 == other.low1 && low2 == other.low2 &&
                 high1 == other.high1 && high2 == other.high2);
         }
@@ -497,13 +497,13 @@ class NQitmask2 {
          * @return \c true if there is some index at which this and \a other
          * both have non-zero qits, or \c false otherwise.
          */
-        inline bool hasNonZeroMatch(const NQitmask2<T, U>& other) const {
+        inline bool hasNonZeroMatch(const Qitmask2<T, U>& other) const {
             return ((low1 | low2) & (other.low1 | other.low2)) ||
                 ((high1 | high2) & (other.high1 | other.high2));
         }
 
     friend std::ostream& operator << <T, U>(std::ostream& out,
-        const NQitmask2<T, U>& mask);
+        const Qitmask2<T, U>& mask);
 };
 
 #ifndef __DOXYGEN
@@ -513,8 +513,8 @@ class NQitmask2 {
  *
  * Please do not use this class directly, since this template is internal
  * and subject to change in future versions of Regina.  Instead please
- * use the convenience typedefs NQitmaskLen8, NQitmaskLen16, NQitmaskLen32
- * and NQitmaskLen64.
+ * use the convenience typedefs QitmaskLen8, QitmaskLen16, QitmaskLen32
+ * and QitmaskLen64.
  *
  * The reason this template exists is to circumvent the fact that we cannot
  * use sizeof() in a #if statement.  The boolean argument to this template
@@ -525,13 +525,13 @@ struct InternalQitmaskLen32;
 
 template <>
 struct InternalQitmaskLen32<true> {
-    typedef NQitmask1<unsigned int> Type;
+    typedef Qitmask1<unsigned int> Type;
 };
 
 template <>
 struct InternalQitmaskLen32<false> {
     // The standard guarantees that sizeof(long) >= 4.
-    typedef NQitmask1<unsigned long> Type;
+    typedef Qitmask1<unsigned long> Type;
 };
 
 /**
@@ -540,8 +540,8 @@ struct InternalQitmaskLen32<false> {
  *
  * Please do not use this class directly, since this template is internal
  * and subject to change in future versions of Regina.  Instead please
- * use the convenience typedefs NQitmaskLen8, NQitmaskLen16, NQitmaskLen32
- * and NQitmaskLen64.
+ * use the convenience typedefs QitmaskLen8, QitmaskLen16, QitmaskLen32
+ * and QitmaskLen64.
  *
  * The reason this template exists is to circumvent the fact that we cannot
  * use sizeof() in a #if statement.  The boolean argument to this template
@@ -552,13 +552,13 @@ struct InternalQitmaskLen64;
 
 template <>
 struct InternalQitmaskLen64<true> {
-    typedef NQitmask1<unsigned long> Type;
+    typedef Qitmask1<unsigned long> Type;
 };
 
 template <>
 struct InternalQitmaskLen64<false> {
     // The C standard guarantees that sizeof(long long) >= 8.
-    typedef NQitmask1<unsigned long long> Type;
+    typedef Qitmask1<unsigned long long> Type;
 };
 #endif // End block for doxygen to ignore.
 
@@ -567,56 +567,56 @@ struct InternalQitmaskLen64<false> {
  * class capable of holding at least 8 true-or-false bits.
  *
  * This qitmask class is guaranteed to be an instantiation of the
- * template class NQitmask1.
+ * template class Qitmask1.
  *
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
  * \ifacespython Not present.
  */
-typedef NQitmask1<unsigned char> NQitmaskLen8;
+typedef Qitmask1<unsigned char> QitmaskLen8;
 
 /**
  * A convenience typedef that gives a small and extremely fast qitmask
  * class capable of holding at least 16 true-or-false bits.
  *
  * This qitmask class is guaranteed to be an instantiation of the
- * template class NQitmask1.
+ * template class Qitmask1.
  *
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
  * \ifacespython Not present.
  */
-typedef NQitmask1<unsigned int> NQitmaskLen16;
+typedef Qitmask1<unsigned int> QitmaskLen16;
 
 /**
  * A convenience typedef that gives a small and extremely fast qitmask
  * class capable of holding at least 32 true-or-false bits.
  *
  * This qitmask class is guaranteed to be an instantiation of the
- * template class NQitmask1.
+ * template class Qitmask1.
  *
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
  * \ifacespython Not present.
  */
-typedef InternalQitmaskLen32<>::Type NQitmaskLen32;
+typedef InternalQitmaskLen32<>::Type QitmaskLen32;
 
 /**
  * A convenience typedef that gives a small and extremely fast qitmask
  * class capable of holding at least 64 true-or-false bits.
  *
  * This qitmask class is guaranteed to be an instantiation of
- * \e either the template class NQitmask1 or the template class NQitmask2.
+ * \e either the template class Qitmask1 or the template class Qitmask2.
  *
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
  * \ifacespython Not present.
  */
-typedef InternalQitmaskLen64<>::Type NQitmaskLen64;
+typedef InternalQitmaskLen64<>::Type QitmaskLen64;
 
 /*@}*/
 

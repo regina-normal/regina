@@ -105,7 +105,7 @@ std::string truncateFixture(const std::string& testName) {
 void populateTests(CppUnit::TextTestRunner& runner) {
     // Utilities:
     addBase64(runner);
-    addNBitmask(runner);
+    addBitmask(runner);
 
     // Maths:
     addNInteger(runner);

@@ -237,7 +237,7 @@ NEulerSearcher::NEulerSearcher(int useEuler, const NFacePairing* pairing,
     edgeStateChanged = new int[nTets * 8];
     std::fill(edgeStateChanged, edgeStateChanged + nTets * 8, -1);
 
-    // Since NQitmaskLen64 only supports 64 faces, only work with
+    // Since QitmaskLen64 only supports 64 faces, only work with
     // the first 16 tetrahedra.  If n > 16, this just weakens the
     // optimisation; however, this is no great loss since for n > 16 the
     // census code is at present infeasibly slow anyway.

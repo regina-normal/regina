@@ -23,6 +23,7 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     base64.h
     bitmanip.h
+    bitmask.h
     boolset.h
     flags.h
     i18nutils.h
@@ -30,13 +31,11 @@ if (${REGINA_INSTALL_DEV})
     listoncall.h
     markedvector.h
     memutils.h
-    nbitmask.h
     nbooleans.h
-    nqitmask.h
-    ntritmask.h
     osutils.h
     property.h
     ptrutils.h
+    qitmask.h
     registryutils.h
     safepointeebase.h
     safeptr.h
@@ -45,6 +44,7 @@ if (${REGINA_INSTALL_DEV})
     stringutils.h
     stringutils-impl.h
     trieset.h
+    tritmask.h
     xmlcallback.h
     xmlelementreader.h
     xmlutils.h

@@ -30,13 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file utilities/ntritmask.h
+/*! \file utilities/tritmask.h
  *  \brief Provides optimised "ternary bitmasks" of fixed length.
  */
 
-#ifndef __NTRITMASK_H
+#ifndef __TRITMASK_H
 #ifndef __DOXYGEN
-#define __NTRITMASK_H
+#define __TRITMASK_H
 #endif
 
 #include <algorithm>
@@ -67,7 +67,7 @@ namespace regina {
  * long).
  *
  * For another extremely fast tritmask class that can store twice as
- * many trits, see NTritmask2.  At present there is no tritmask class
+ * many trits, see Tritmask2.  At present there is no tritmask class
  * in Regina that can store arbitrarily many trits.
  *
  * \pre Type \a T is an unsigned integral numeric type.
@@ -75,7 +75,7 @@ namespace regina {
  * \ifacespython Not present.
  */
 template <typename T>
-class NTritmask1 {
+class Tritmask1 {
     private:
         T mask1;
             /**< The ith bit of this mask indicates whether the ith trit
@@ -88,7 +88,7 @@ class NTritmask1 {
         /**
          * Creates a new tritmask with all trits set to 0.
          */
-        inline NTritmask1() : mask1(0), mask2(0) {
+        inline Tritmask1() : mask1(0), mask2(0) {
         }
 
         /**
@@ -96,7 +96,7 @@ class NTritmask1 {
          *
          * @param cloneMe the tritmask to clone.
          */
-        inline NTritmask1(const NTritmask1<T>& cloneMe) :
+        inline Tritmask1(const Tritmask1<T>& cloneMe) :
                 mask1(cloneMe.mask1), mask2(cloneMe.mask2) {
         }
 
@@ -113,7 +113,7 @@ class NTritmask1 {
          * @param other the tritmask to clone.
          * @return a reference to this tritmask.
          */
-        NTritmask1<T>& operator = (const NTritmask1<T>& other) {
+        Tritmask1<T>& operator = (const Tritmask1<T>& other) {
             mask1 = other.mask1;
             mask2 = other.mask2;
             return *this;
@@ -190,7 +190,7 @@ class NTritmask1 {
          * @param rhs the tritmask to "min" with this.
          * @return a reference to this tritmask.
          */
-        inline NTritmask1<T>& minWith(const NTritmask1<T>& rhs) {
+        inline Tritmask1<T>& minWith(const Tritmask1<T>& rhs) {
             mask1 &= rhs.mask1;
             mask2 &= rhs.mask2;
             return *this;
@@ -206,7 +206,7 @@ class NTritmask1 {
          * @param rhs the tritmask to "max" with this.
          * @return a reference to this tritmask.
          */
-        inline NTritmask1<T>& maxWith(const NTritmask1<T>& rhs) {
+        inline Tritmask1<T>& maxWith(const Tritmask1<T>& rhs) {
             mask1 |= rhs.mask1;
             mask2 |= rhs.mask2;
             return *this;
@@ -224,7 +224,7 @@ class NTritmask1 {
          * @param rhs the tritmask to add to this.
          * @return a reference to this tritmask.
          */
-        inline NTritmask1<T>& operator += (const NTritmask1<T>& rhs) {
+        inline Tritmask1<T>& operator += (const Tritmask1<T>& rhs) {
             mask2 = (mask1 & rhs.mask1) | mask2 | rhs.mask2;
             mask1 = (mask1 | rhs.mask1);
             return *this;
@@ -244,7 +244,7 @@ class NTritmask1 {
          * @param rhs the tritmask to subtract from this.
          * @return a reference to this tritmask.
          */
-        inline NTritmask1<T>& operator -= (const NTritmask1<T>& rhs) {
+        inline Tritmask1<T>& operator -= (const Tritmask1<T>& rhs) {
             mask1 = (mask1 & ~ rhs.mask1) | (mask2 & ~ rhs.mask2);
             mask2 = (mask2 & ~ rhs.mask1);
             return *this;
@@ -257,12 +257,12 @@ class NTritmask1 {
          * @return \c true if and only if this and the given tritmask are
          * identical.
          */
-        inline bool operator == (const NTritmask1<T>& other) const {
+        inline bool operator == (const Tritmask1<T>& other) const {
             return (mask1 == other.mask1 && mask2 == other.mask2);
         }
 
     friend std::ostream& operator << (std::ostream& out,
-        const NTritmask1<T>& mask);
+        const Tritmask1<T>& mask);
 };
 
 /**
@@ -279,7 +279,7 @@ class NTritmask1 {
  * @return a reference to the given output stream.
  */
 template <typename T>
-std::ostream& operator << (std::ostream& out, const NTritmask1<T>& mask) {
+std::ostream& operator << (std::ostream& out, const Tritmask1<T>& mask) {
     for (T bit = 1; bit; bit <<= 1)
         out << ((mask.mask2 & bit) ? '2' : (mask.mask1 & bit) ? '1' : '0');
     return out;
@@ -300,7 +300,7 @@ std::ostream& operator << (std::ostream& out, const NTritmask1<T>& mask) {
  * or unsigned long long).
  *
  * For an even faster tritmask class that can only store half as many trits,
- * see NTritmask1.  At present there is no tritmask class
+ * see Tritmask1.  At present there is no tritmask class
  * in Regina that can store arbitrarily many trits.
  *
  * \pre Types \a T and \a U are unsigned integral numeric types.
@@ -308,7 +308,7 @@ std::ostream& operator << (std::ostream& out, const NTritmask1<T>& mask) {
  * \ifacespython Not present.
  */
 template <typename T, typename U = T>
-class NTritmask2 {
+class Tritmask2 {
     private:
         T low1;
             /**< The ith bit of this mask indicates whether the ith trit
@@ -327,7 +327,7 @@ class NTritmask2 {
         /**
          * Creates a new tritmask with all trits set to 0.
          */
-        inline NTritmask2() : low1(0), low2(0), high1(0), high2(0) {
+        inline Tritmask2() : low1(0), low2(0), high1(0), high2(0) {
         }
 
         /**
@@ -335,7 +335,7 @@ class NTritmask2 {
          *
          * @param cloneMe the tritmask to clone.
          */
-        inline NTritmask2(const NTritmask2<T, U>& cloneMe) :
+        inline Tritmask2(const Tritmask2<T, U>& cloneMe) :
                 low1(cloneMe.low1), low2(cloneMe.low2),
                 high1(cloneMe.high1), high2(cloneMe.high2) {
         }
@@ -354,7 +354,7 @@ class NTritmask2 {
          * @param other the tritmask to clone.
          * @return a reference to this tritmask.
          */
-        NTritmask2<T, U>& operator = (const NTritmask2<T, U>& other) {
+        Tritmask2<T, U>& operator = (const Tritmask2<T, U>& other) {
             low1 = other.low1;
             low2 = other.low2;
             high1 = other.high1;
@@ -447,7 +447,7 @@ class NTritmask2 {
          * @param rhs the tritmask to "min" with this.
          * @return a reference to this tritmask.
          */
-        inline NTritmask2<T, U>& minWith(const NTritmask2<T, U>& rhs) {
+        inline Tritmask2<T, U>& minWith(const Tritmask2<T, U>& rhs) {
             low1 &= rhs.low1;
             low2 &= rhs.low2;
             high1 &= rhs.high1;
@@ -465,7 +465,7 @@ class NTritmask2 {
          * @param rhs the tritmask to "max" with this.
          * @return a reference to this tritmask.
          */
-        inline NTritmask2<T, U>& maxWith(const NTritmask2<T, U>& rhs) {
+        inline Tritmask2<T, U>& maxWith(const Tritmask2<T, U>& rhs) {
             low1 |= rhs.low1;
             low2 |= rhs.low2;
             high1 |= rhs.high1;
@@ -485,7 +485,7 @@ class NTritmask2 {
          * @param rhs the tritmask to add to this.
          * @return a reference to this tritmask.
          */
-        inline NTritmask2<T, U>& operator += (const NTritmask2<T, U>& rhs) {
+        inline Tritmask2<T, U>& operator += (const Tritmask2<T, U>& rhs) {
             low2 = (low1 & rhs.low1) | low2 | rhs.low2;
             low1 = (low1 | rhs.low1);
             high2 = (high1 & rhs.high1) | high2 | rhs.high2;
@@ -507,7 +507,7 @@ class NTritmask2 {
          * @param rhs the tritmask to subtract from this.
          * @return a reference to this tritmask.
          */
-        inline NTritmask2<T, U>& operator -= (const NTritmask2<T, U>& rhs) {
+        inline Tritmask2<T, U>& operator -= (const Tritmask2<T, U>& rhs) {
             low1 = (low1 & ~ rhs.low1) | (low2 & ~ rhs.low2);
             low2 = (low2 & ~ rhs.low1);
             high1 = (high1 & ~ rhs.high1) | (high2 & ~ rhs.high2);
@@ -522,13 +522,13 @@ class NTritmask2 {
          * @return \c true if and only if this and the given tritmask are
          * identical.
          */
-        inline bool operator == (const NTritmask2<T, U>& other) const {
+        inline bool operator == (const Tritmask2<T, U>& other) const {
             return (low1 == other.low1 && low2 == other.low2 &&
                 high1 == other.high1 && high2 == other.high2);
         }
 
     friend std::ostream& operator << (std::ostream& out,
-        const NTritmask2<T, U>& mask);
+        const Tritmask2<T, U>& mask);
 };
 
 /**
@@ -545,7 +545,7 @@ class NTritmask2 {
  * @return a reference to the given output stream.
  */
 template <typename T, typename U>
-std::ostream& operator << (std::ostream& out, const NTritmask2<T, U>& mask) {
+std::ostream& operator << (std::ostream& out, const Tritmask2<T, U>& mask) {
     for (T bit = 1; bit; bit <<= 1)
         out << ((mask.low2 & bit) ? '2' : (mask.low1 & bit) ? '1' : '0');
     for (U bit = 1; bit; bit <<= 1)
@@ -560,8 +560,8 @@ std::ostream& operator << (std::ostream& out, const NTritmask2<T, U>& mask) {
  *
  * Please do not use this class directly, since this template is internal
  * and subject to change in future versions of Regina.  Instead please
- * use the convenience typedefs NTritmaskLen8, NTritmaskLen16, NTritmaskLen32
- * and NTritmaskLen64.
+ * use the convenience typedefs TritmaskLen8, TritmaskLen16, TritmaskLen32
+ * and TritmaskLen64.
  *
  * The reason this template exists is to circumvent the fact that we cannot
  * use sizeof() in a #if statement.  The boolean argument to this template
@@ -572,13 +572,13 @@ struct InternalTritmaskLen32;
 
 template <>
 struct InternalTritmaskLen32<true> {
-    typedef NTritmask1<unsigned int> Type;
+    typedef Tritmask1<unsigned int> Type;
 };
 
 template <>
 struct InternalTritmaskLen32<false> {
     // The standard guarantees that sizeof(long) >= 4.
-    typedef NTritmask1<unsigned long> Type;
+    typedef Tritmask1<unsigned long> Type;
 };
 
 /**
@@ -587,8 +587,8 @@ struct InternalTritmaskLen32<false> {
  *
  * Please do not use this class directly, since this template is internal
  * and subject to change in future versions of Regina.  Instead please
- * use the convenience typedefs NTritmaskLen8, NTritmaskLen16, NTritmaskLen32
- * and NTritmaskLen64.
+ * use the convenience typedefs TritmaskLen8, TritmaskLen16, TritmaskLen32
+ * and TritmaskLen64.
  *
  * The reason this template exists is to circumvent the fact that we cannot
  * use sizeof() in a #if statement.  The boolean argument to this template
@@ -599,13 +599,13 @@ struct InternalTritmaskLen64;
 
 template <>
 struct InternalTritmaskLen64<true> {
-    typedef NTritmask1<unsigned long> Type;
+    typedef Tritmask1<unsigned long> Type;
 };
 
 template <>
 struct InternalTritmaskLen64<false> {
     // The C standard guarantees that sizeof(long long) >= 8.
-    typedef NTritmask1<unsigned long long> Type;
+    typedef Tritmask1<unsigned long long> Type;
 };
 #endif // End block for doxygen to ignore.
 
@@ -614,56 +614,56 @@ struct InternalTritmaskLen64<false> {
  * class capable of holding at least 8 true-or-false bits.
  *
  * This tritmask class is guaranteed to be an instantiation of the
- * template class NTritmask1.
+ * template class Tritmask1.
  *
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
  * \ifacespython Not present.
  */
-typedef NTritmask1<unsigned char> NTritmaskLen8;
+typedef Tritmask1<unsigned char> TritmaskLen8;
 
 /**
  * A convenience typedef that gives a small and extremely fast tritmask
  * class capable of holding at least 16 true-or-false bits.
  *
  * This tritmask class is guaranteed to be an instantiation of the
- * template class NTritmask1.
+ * template class Tritmask1.
  *
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
  * \ifacespython Not present.
  */
-typedef NTritmask1<unsigned int> NTritmaskLen16;
+typedef Tritmask1<unsigned int> TritmaskLen16;
 
 /**
  * A convenience typedef that gives a small and extremely fast tritmask
  * class capable of holding at least 32 true-or-false bits.
  *
  * This tritmask class is guaranteed to be an instantiation of the
- * template class NTritmask1.
+ * template class Tritmask1.
  *
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
  * \ifacespython Not present.
  */
-typedef InternalTritmaskLen32<>::Type NTritmaskLen32;
+typedef InternalTritmaskLen32<>::Type TritmaskLen32;
 
 /**
  * A convenience typedef that gives a small and extremely fast tritmask
  * class capable of holding at least 64 true-or-false bits.
  *
  * This tritmask class is guaranteed to be an instantiation of
- * \e either the template class NTritmask1 or the template class NTritmask2.
+ * \e either the template class Tritmask1 or the template class Tritmask2.
  *
  * The particular instantiation is subject to change between different
  * platforms, different compilers and/or different versions of Regina.
  *
  * \ifacespython Not present.
  */
-typedef InternalTritmaskLen64<>::Type NTritmaskLen64;
+typedef InternalTritmaskLen64<>::Type TritmaskLen64;
 
 /*@}*/
 

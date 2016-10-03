@@ -155,7 +155,7 @@ class NHilbertPrimal {
          * public routine enumerateHilbertBasis().
          *
          * \pre The bitmask type is one of Regina's bitmask types, such
-         * as NBitmask, NBitmask1 or NBitmask2.
+         * as Bitmask, Bitmask1 or Bitmask2.
          * \pre The type \a BitmaskType can handle at least \a n bits,
          * where \a n is the dimension of the Euclidean space (i.e., the
          * number of columns in \a subspace).

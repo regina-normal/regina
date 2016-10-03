@@ -53,7 +53,7 @@
 #include "maths/nray.h"
 #include "progress/progresstracker.h"
 #include "utilities/memutils.h"
-#include "utilities/nbitmask.h"
+#include "utilities/bitmask.h"
 #include "utilities/trieset.h"
 
 namespace regina {
@@ -222,28 +222,28 @@ void NDoubleDescription::enumerateExtremalRays(OutputIterator results,
     // Then farm the work out to the real enumeration routine that is
     // templated on the bitmask type.
     if (nFacets <= 8 * sizeof(unsigned))
-        enumerateUsingBitmask<RayClass, NBitmask1<unsigned> >(results,
+        enumerateUsingBitmask<RayClass, Bitmask1<unsigned> >(results,
             subspace, constraints, tracker, initialRows);
     else if (nFacets <= 8 * sizeof(unsigned long))
-        enumerateUsingBitmask<RayClass, NBitmask1<unsigned long> >(results,
+        enumerateUsingBitmask<RayClass, Bitmask1<unsigned long> >(results,
             subspace, constraints, tracker, initialRows);
     else if (nFacets <= 8 * sizeof(unsigned long long))
-        enumerateUsingBitmask<RayClass, NBitmask1<unsigned long long> >(results,
+        enumerateUsingBitmask<RayClass, Bitmask1<unsigned long long> >(results,
             subspace, constraints, tracker, initialRows);
     else if (nFacets <= 8 * sizeof(unsigned long long) + 8 * sizeof(unsigned))
         enumerateUsingBitmask<RayClass,
-            NBitmask2<unsigned long long, unsigned> >(results,
+            Bitmask2<unsigned long long, unsigned> >(results,
             subspace, constraints, tracker, initialRows);
     else if (nFacets <= 8 * sizeof(unsigned long long) +
             8 * sizeof(unsigned long))
         enumerateUsingBitmask<RayClass,
-            NBitmask2<unsigned long long, unsigned long> >(
+            Bitmask2<unsigned long long, unsigned long> >(
             results, subspace, constraints, tracker, initialRows);
     else if (nFacets <= 16 * sizeof(unsigned long long))
-        enumerateUsingBitmask<RayClass, NBitmask2<unsigned long long> >(results,
+        enumerateUsingBitmask<RayClass, Bitmask2<unsigned long long> >(results,
             subspace, constraints, tracker, initialRows);
     else
-        enumerateUsingBitmask<RayClass, NBitmask>(results,
+        enumerateUsingBitmask<RayClass, Bitmask>(results,
             subspace, constraints, tracker, initialRows);
 }
 

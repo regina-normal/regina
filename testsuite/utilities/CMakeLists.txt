@@ -3,7 +3,7 @@
 # Files to compile
 SET ( FILES
   base64
-  nbitmask
+  bitmask
   )
 
 # Prepend folder name

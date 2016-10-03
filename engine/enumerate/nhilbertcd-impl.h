@@ -48,7 +48,7 @@
 #include "enumerate/nhilbertcd.h"
 #include "maths/nmatrixint.h"
 #include "maths/nray.h"
-#include "utilities/nbitmask.h"
+#include "utilities/bitmask.h"
 #include <list>
 
 namespace regina {
@@ -66,28 +66,28 @@ void NHilbertCD::enumerateHilbertBasis(OutputIterator results,
     // Then farm the work out to the real enumeration routine that is
     // templated on the bitmask type.
     if (dim <= 8 * sizeof(unsigned))
-        enumerateUsingBitmask<RayClass, NBitmask1<unsigned> >(results,
+        enumerateUsingBitmask<RayClass, Bitmask1<unsigned> >(results,
             subspace, constraints);
     else if (dim <= 8 * sizeof(unsigned long))
-        enumerateUsingBitmask<RayClass, NBitmask1<unsigned long> >(results,
+        enumerateUsingBitmask<RayClass, Bitmask1<unsigned long> >(results,
             subspace, constraints);
     else if (dim <= 8 * sizeof(unsigned long long))
-        enumerateUsingBitmask<RayClass, NBitmask1<unsigned long long> >(results,
+        enumerateUsingBitmask<RayClass, Bitmask1<unsigned long long> >(results,
             subspace, constraints);
     else if (dim <= 8 * sizeof(unsigned long long) + 8 * sizeof(unsigned))
         enumerateUsingBitmask<RayClass,
-            NBitmask2<unsigned long long, unsigned> >(results,
+            Bitmask2<unsigned long long, unsigned> >(results,
             subspace, constraints);
     else if (dim <= 8 * sizeof(unsigned long long) +
             8 * sizeof(unsigned long))
         enumerateUsingBitmask<RayClass,
-            NBitmask2<unsigned long long, unsigned long> >(
+            Bitmask2<unsigned long long, unsigned long> >(
             results, subspace, constraints);
     else if (dim <= 16 * sizeof(unsigned long long))
-        enumerateUsingBitmask<RayClass, NBitmask2<unsigned long long> >(results,
+        enumerateUsingBitmask<RayClass, Bitmask2<unsigned long long> >(results,
             subspace, constraints);
     else
-        enumerateUsingBitmask<RayClass, NBitmask>(results,
+        enumerateUsingBitmask<RayClass, Bitmask>(results,
             subspace, constraints);
 }
 

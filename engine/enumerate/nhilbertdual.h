@@ -185,7 +185,7 @@ class NHilbertDual {
          * or \c true if the coordinate is non-zero.
          *
          * \pre The template argument \a BitmaskType is one of Regina's
-         * bitmask types, such as NBitmask, NBitmask1 or NBitmask2.
+         * bitmask types, such as Bitmask, Bitmask1 or Bitmask2.
          */
         template <class BitmaskType>
         class VecSpec : private NRay {
@@ -333,7 +333,7 @@ class NHilbertDual {
          * enumerateHilbertBasis().
          *
          * \pre The bitmask type is one of Regina's bitmask types, such
-         * as NBitmask, NBitmask1 or NBitmask2.
+         * as Bitmask, Bitmask1 or Bitmask2.
          * \pre The type \a BitmaskType can handle at least \a n bits,
          * where \a n is the number of coordinates in the underlying vectors.
          */

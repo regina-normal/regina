@@ -42,7 +42,7 @@
 
 #include "regina-core.h"
 #include "census/ngluingperms.h"
-#include "utilities/nqitmask.h"
+#include "utilities/qitmask.h"
 
 /**
  * Specifies whether the NClosedPrimeMinSearcher census generation code
@@ -907,7 +907,7 @@ class REGINA_API NEulerSearcher : public NGluingPermSearcher {
                      when grafting operations are undone.  If this object is
                      still the root of its tree, this value is set to false. */
 
-            NQitmaskLen64 facesPos;
+            QitmaskLen64 facesPos;
                 /**< Indicates how many times this edge runs along the
                      boundary of each tetrahedron face in the positive
                      direction.  Specifically, the (4t+i)th trit counts
@@ -926,7 +926,7 @@ class REGINA_API NEulerSearcher : public NGluingPermSearcher {
                      TetEdgeState), but it is only used and updated in
                      the subclass NClosedPrimeMinSearcher (where it
                      allows us to optimise the census algorithm). */
-            NQitmaskLen64 facesNeg;
+            QitmaskLen64 facesNeg;
                 /**< Indicates how many times this edge runs along the
                      boundary of each tetrahedron face in the negative
                      direction.  Specifically, the (4t+i)th trit counts
@@ -1711,7 +1711,7 @@ class REGINA_API NCompactSearcher : public NGluingPermSearcher {
                      when grafting operations are undone.  If this object is
                      still the root of its tree, this value is set to false. */
 
-            NQitmaskLen64 facesPos;
+            QitmaskLen64 facesPos;
                 /**< Indicates how many times this edge runs along the
                      boundary of each tetrahedron face in the positive
                      direction.  Specifically, the (4t+i)th trit counts
@@ -1730,7 +1730,7 @@ class REGINA_API NCompactSearcher : public NGluingPermSearcher {
                      TetEdgeState), but it is only used and updated in
                      the subclass NClosedPrimeMinSearcher (where it
                      allows us to optimise the census algorithm). */
-            NQitmaskLen64 facesNeg;
+            QitmaskLen64 facesNeg;
                 /**< Indicates how many times this edge runs along the
                      boundary of each tetrahedron face in the negative
                      direction.  Specifically, the (4t+i)th trit counts

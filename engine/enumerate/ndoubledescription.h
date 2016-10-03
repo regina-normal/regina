@@ -167,12 +167,12 @@ class REGINA_API NDoubleDescription {
          * and only if this ray belongs to the corresponding original facet.
          *
          * Since this class is used heavily, faster bitmask types such
-         * as NBitmask1 and NBitmask2 are preferred; however, if the
-         * number of facets is too large then the slower general-use NBitmask
+         * as Bitmask1 and Bitmask2 are preferred; however, if the
+         * number of facets is too large then the slower general-use Bitmask
          * class will need to be used instead.
          *
          * \pre The template argument \a BitmaskType is one of Regina's
-         * bitmask types, such as NBitmask, NBitmask1 or NBitmask2.
+         * bitmask types, such as Bitmask, Bitmask1 or Bitmask2.
          */
         template <class BitmaskType>
         class RaySpec : private NRay {
@@ -313,7 +313,7 @@ class REGINA_API NDoubleDescription {
          * public routine enumerateExtremalRays().
          *
          * \pre The bitmask type is one of Regina's bitmask types, such
-         * as NBitmask, NBitmask1 or NBitmask2.
+         * as Bitmask, Bitmask1 or Bitmask2.
          * \pre The type \a BitmaskType can handle at least \a f bits,
          * where \a f is the number of original facets in the given range.
          * \pre The given range of facets is not empty.

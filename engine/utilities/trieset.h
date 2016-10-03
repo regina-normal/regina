@@ -40,7 +40,7 @@
 #endif
 
 #include "regina-core.h"
-#include "utilities/nbitmask.h"
+#include "utilities/bitmask.h"
 
 namespace regina {
 
@@ -84,7 +84,7 @@ namespace regina {
  * not store any sets are never explicitly constructed in memory.
  *
  * \pre The template argument T is one of Regina's bitmask types, such
- * as NBitmask, NBitmask1 or NBitmask2.
+ * as Bitmask, Bitmask1 or Bitmask2.
  *
  * \ifacespython Not present.
  */

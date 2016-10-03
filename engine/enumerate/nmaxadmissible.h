@@ -41,7 +41,7 @@
 #endif
 
 #include "regina-core.h"
-#include "utilities/nbitmask.h"
+#include "utilities/bitmask.h"
 #include <vector>
 
 namespace regina {
@@ -99,14 +99,14 @@ class NMaxAdmissible {
          * type that, when dereferenced, can be cast to a const NRay*.
          *
          * \pre The template argument BitmaskType is one of the bitmask
-         * types NBitmask, NBitmask1 or NBitmask2.
+         * types Bitmask, Bitmask1 or Bitmask2.
          *
          * \pre Bitmasks of type BitmaskType can hold \a n bits, where
          * \a n is the dimension of the underlying space (i.e., the size
          * of the input vectors described by \a beginExtremalRays and
-         * \a endExtremalRays).  This is always true of NBitmask, but
+         * \a endExtremalRays).  This is always true of Bitmask, but
          * you must be careful when using one of the fast but size-limited
-         * types NBitmask1 or NBitmask2.
+         * types Bitmask1 or Bitmask2.
          *
          * @param beginExtremalRays an iterator that begins the set of
          * admissible extremal rays, as described above.  Typically this would
