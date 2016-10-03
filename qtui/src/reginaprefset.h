@@ -53,129 +53,6 @@ class QTextCodec;
 class QWidget;
 
 /**
- * A structure holding a single filename which may or may not be active
- * (such as a census file or a python library).
- */
-struct ReginaFilePref {
-    private:
-        QString filename_;
-            /**< The full filename. */
-        QString displayName_;
-            /**< The long human-readable text to display for this file. */
-        QString systemKey_;
-            /**< If this is a system file, the corresponding configuration
-                 key; otherwise, the null string.  System files may be disabled
-                 but not deleted, and might use descriptive display names. */
-        bool active_;
-            /**< Whether or not this filename is currently active. */
-
-    public:
-        /**
-         * Constructs an active non-system file.
-         * The filename must be set using setFilename().
-         */
-        ReginaFilePref();
-
-        /**
-         * Constructs a non-system file with the given filename.
-         * The display name will be set automatically.
-         */
-        ReginaFilePref(const QString& filename, bool active = true);
-
-        /**
-         * Constructs a system file with the given details.
-         */
-        ReginaFilePref(const QString& filename, const QString& displayName,
-            const QString& systemKey, bool active = true);
-
-        /**
-         * Constructs a system file whose active status is read from the
-         * given system settings.
-         */
-        ReginaFilePref(const QString& filename, const QString& displayName,
-            const QString& systemKey, QSettings& settings);
-
-        /**
-         * Sets the filename, and sets the display name to a suitable
-         * human-readable representation of the filename.
-         */
-        void setFilename(const QString& filename);
-
-        /**
-         * Marks this file as active.
-         */
-        void activate();
-
-        /**
-         * Marks this file as inactive.
-         */
-        void deactivate();
-
-        /**
-         * Returns a long human-readable display name.
-         */
-        const QString& longDisplayName() const;
-
-        /**
-         * Returns a short human-readable display name.
-         */
-        QString shortDisplayName() const;
-
-        /**
-         * Return the filename in an 8-bit encoding suitable for passing to
-         * low-level file I/O routines.
-         */
-        QByteArray encodeFilename() const;
-
-        /**
-         * Indicates whether this file is currently active.
-         */
-        bool isActive() const;
-
-        /**
-         * Tests whether this file exists.
-         */
-        bool exists() const;
-
-        /**
-         * Indicates whether this is a system file.
-         */
-        bool isSystem() const;
-
-        /**
-         * Indicates whether this and the given preference use identical
-         * filenames.
-         * Note that different representations of the same file will
-         * treated as different filenames (e.g., "foo/x" != "foo/../foo/x").
-         */
-        bool operator == (const ReginaFilePref& f) const;
-
-    private:
-        /**
-         * Adds settings that stores all files in the given list (both
-         * system and non-system files).
-         * It is assumed that the settings group has already been set.
-         *
-         * When reading keys, the non-system files can be read through
-         * readUserKey(), whereas the system files must be read via a
-         * hard-coded list (since users should not be able to change
-         * the hard-code list of system files).
-         */
-        static void writeKeys(const QList<ReginaFilePref>& list,
-            QSettings& settings);
-
-        /**
-         * Reads the setting that lists all non-system files, and pushes
-         * them onto the end of the given list.
-         * It is assumed that the settings group has already been set.
-         */
-        static void readUserKey(QList<ReginaFilePref>& list,
-            QSettings& settings);
-
-    friend class ReginaPrefSet;
-};
-
-/**
  * A structure holding all Regina preferences.
  *
  * There is only one global object of type ReginaPrefSet; this ensures
@@ -243,8 +120,6 @@ class ReginaPrefSet : public QObject {
                  is empty, Regina will do its best to find a suitable viewer. */
         bool pythonAutoIndent;
             /**< Should auto-indent be enabled in python consoles? */
-        QList<ReginaFilePref> pythonLibraries;
-            /**< The python libraries to load upon each session startup. */
         unsigned pythonSpacesPerTab;
             /**< The number of spaces to insert when <TAB> is pressed in a
                  python console. */
@@ -363,13 +238,6 @@ class ReginaPrefSet : public QObject {
         static const QList<QUrl>& recentFiles();
 
         /**
-         * Returns the full path to the python libraries configuration file.
-         * Under Windows (where python libraries are stored in the registry),
-         * this routine returns the null string.
-         */
-        static QString pythonLibrariesConfig();
-
-        /**
          * Returns a sensible fixed-width font.  The font size is not
          * specified.
          */
@@ -455,51 +323,7 @@ class ReginaPrefSet : public QObject {
         // Non-static internal read/write routines:
         void readInternal();
         void saveInternal() const;
-
-        // Read and write python libraries to/from the regina-python
-        // configuration file.  As an exception, under Windows, use the
-        // registry instead.
-        void readPythonLibraries();
-        void savePythonLibraries() const;
 };
-
-inline ReginaFilePref::ReginaFilePref() : active_(true) {
-}
-
-inline ReginaFilePref::ReginaFilePref(const QString& filename, bool active) :
-        active_(active) {
-    setFilename(filename);
-}
-
-inline ReginaFilePref::ReginaFilePref(const QString& filename,
-        const QString& displayName, const QString& systemKey, bool active) :
-        filename_(filename), displayName_(displayName),
-        systemKey_(systemKey), active_(active) {
-}
-
-inline bool ReginaFilePref::isActive() const {
-    return active_;
-}
-
-inline bool ReginaFilePref::isSystem() const {
-    return (! systemKey_.isNull());
-}
-
-inline void ReginaFilePref::activate() {
-    active_ = true;
-}
-
-inline void ReginaFilePref::deactivate() {
-    active_ = false;
-}
-
-inline const QString& ReginaFilePref::longDisplayName() const {
-    return displayName_;
-}
-
-inline bool ReginaFilePref::operator == (const ReginaFilePref& f) const {
-    return (filename_ == f.filename_);
-}
 
 inline ReginaPrefSet& ReginaPrefSet::global() {
     return instance_;

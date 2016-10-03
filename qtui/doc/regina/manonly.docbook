@@ -18,7 +18,6 @@
     </para>">
   <!ENTITY regwebsite
    "<ulink url='http://regina.sourceforge.net/'>&regina; website</ulink>">
-  <!ENTITY regina-libs "<filename>~/.regina-libs</filename>">
   <!ENTITY regmanapiurl
    "<emphasis>http://regina.sourceforge.net/engine-docs/</emphasis>">
   <!ENTITY regmanhandbookurl

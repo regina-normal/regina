@@ -128,24 +128,9 @@ class ReginaPrefPython : public QWidget {
         QCheckBox* cbWordWrap;
         QLineEdit* editSpacesPerTab;
 
-        QLabel* activeCount;
-        QListWidget* listFiles;
-        QPushButton* btnRemove;
-        QPushButton* btnActivate;
-        QPushButton* btnDeactivate;
-
     public:
         ReginaPrefPython(QWidget* parent = 0);
-        void updateActiveCount();
 
-    public slots:
-        void updateButtons();
-        void add();
-        void remove();
-        void activate();
-        void deactivate();
-
-    public:
     friend class ReginaPreferences;
 };
 

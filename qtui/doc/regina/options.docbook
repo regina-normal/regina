@@ -210,58 +210,6 @@
      box when you press <keycap>Tab</keycap>.
     </para></glossdef>
    </glossentry>
-   <glossentry id="python-libraries">
-    <glossterm><guilabel>&python; libraries</guilabel></glossterm>
-    <glossdef>
-     <para>
-      <firstterm>&python; libraries</firstterm> are files containing
-      code that is run automatically at the beginning of every
-      <link linkend="python-starting">&python; session</link>
-      (each time you open a graphical console, run a script packet,
-      or start <command>regina-python</command> from the command line).
-      A typical &python; library defines one or more useful functions.
-     </para>
-     <para>
-      The idea of &python; libraries is that you can save your own
-      frequently-used code in a file, and then add
-      this file to the list of libraries here in the &python; options panel.
-     </para>
-     <para>
-      When you no longer wish to use a library, you can remove it from
-      the list or you can just <emphasis>deactivate</emphasis> it.
-      Deactivating means the code will
-      <emphasis>not be run automatically</emphasis>, but the file will remain
-      here in the list so that you can easily activate it again.
-      Active libraries are marked with a tick, and deactivated libraries are
-      marked with a no-entry sign (as seen in the illustration above).
-     </para>
-     <para>
-      &regina; ships with some example &python; libraries.
-      These are usually installed in
-      <filename>/usr/share/regina/pylib/</filename>, though this may
-      differ with your &linux; distribution.
-     </para>
-     <para><tip><para>
-      On &linux; and the downloadable &macosx; app
-      (but not the &macappstore; version),
-      the list of &python; libraries is stored in the file &regina-libs;.
-      This is a plain text file, with each library filename
-      written on a separate line.  &regina; will ignore
-      any blank lines or lines beginning with a hash (#).
-      You are welcome to edit this file directly if you prefer.
-     </para><para>
-      The &macappstore; version is sandboxed, which means it cannot
-      write to &regina-libs; directly.  Instead it
-      keeps the list of &python; libraries in a &macosx; preference list.
-      The easiest way to edit this list is through the &python;
-      configuration panel as described above.
-     </para><para>
-      On &windows; the list of &python; libraries list is stored in the
-      registry.  Likewise, in this case the best way to edit the list
-      is through the &python; configuration panel.
-     </para></tip></para>
-    </glossdef>
-   </glossentry>
   </glosslist>
  </sect1>
 

@@ -15,6 +15,10 @@ Version 5.1  [ (under development) ]
         Global array quadDefn[][]:
             - Added to nnormalsurface.h, with the same contents as the old
               (and now removed) array vertexSplitDefn[][].
+    PYTHON:
+        - Remove Regina's ancient "python libraries" facility, since the Python
+          language itself offers better ways of doing this.  The configuration
+          file ~/.regina-libs is now ignored, and you can happily delete it.
 
 Version 5.0  [ 26 September, 2016 ]
 
