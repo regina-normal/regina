@@ -39,7 +39,7 @@
 #include "triangulation/ntriangulation.h"
 #include "testsuite/census/testcensus.h"
 
-using regina::NBoolSet;
+using regina::BoolSet;
 using regina::NCensus;
 using regina::NCensusHit;
 using regina::NCensusHits;
@@ -159,31 +159,31 @@ class NCensusTest : public CppUnit::TestFixture {
         void rawCounts() {
             unsigned nAll[] = { 1, 5, 61, 1581 };
             rawCountsCompare(1, 3, nAll, "closed/ideal",
-                NBoolSet::sBoth, NBoolSet::sBoth, NBoolSet::sFalse,
+                BoolSet::sBoth, BoolSet::sBoth, BoolSet::sFalse,
                 0, 0, false);
 
             unsigned nOrientable[] = { 1, 4, 35, 454, 13776 };
             rawCountsCompare(1, 3, nOrientable, "closed/ideal orbl",
-                NBoolSet::sBoth, NBoolSet::sTrue, NBoolSet::sFalse,
+                BoolSet::sBoth, BoolSet::sTrue, BoolSet::sFalse,
                 0, 0, false);
         }
 
         void rawCountsCompact() {
             unsigned nAll[] = { 1, 4, 17, 81, 577, 5184, 57753 };
             rawCountsCompare(1, 4, nAll, "closed compact",
-                NBoolSet::sTrue, NBoolSet::sBoth, NBoolSet::sFalse,
+                BoolSet::sTrue, BoolSet::sBoth, BoolSet::sFalse,
                 0, 0, false);
 
             unsigned nOrientable[] = { 1, 4, 16, 76, 532, 4807, 52946 };
             rawCountsCompare(1, 4, nOrientable, "closed compact orbl",
-                NBoolSet::sTrue, NBoolSet::sTrue, NBoolSet::sFalse,
+                BoolSet::sTrue, BoolSet::sTrue, BoolSet::sFalse,
                 0, 0, false);
         }
 
         void rawCountsPrimeMinimalOr() {
             unsigned nOrientable[] = { 1, 4, 11, 7, 17, 50 };
             rawCountsCompare(1, 4, nOrientable, "closed orbl prime minimal",
-                NBoolSet::sTrue, NBoolSet::sTrue, NBoolSet::sFalse, 0,
+                BoolSet::sTrue, BoolSet::sTrue, BoolSet::sFalse, 0,
                 NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME, true);
         }
 
@@ -191,7 +191,7 @@ class NCensusTest : public CppUnit::TestFixture {
             unsigned nNonOrientable[] = { 0, 0, 1, 0, 2, 4 };
             rawCountsCompare(1, 4, nNonOrientable,
                 "closed non-orbl prime minimal P2-irreducible",
-                NBoolSet::sTrue, NBoolSet::sFalse, NBoolSet::sFalse, 0,
+                BoolSet::sTrue, BoolSet::sFalse, BoolSet::sFalse, 0,
                 NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME |
                 NGluingPermSearcher::PURGE_P2_REDUCIBLE, true);
         }
@@ -199,12 +199,12 @@ class NCensusTest : public CppUnit::TestFixture {
         void rawCountsBounded() {
             unsigned nAll[] = { 1, 3, 17, 156, 2308 };
             rawCountsCompare(1, 3, nAll, "bounded compact",
-                NBoolSet::sTrue, NBoolSet::sBoth, NBoolSet::sTrue,
+                BoolSet::sTrue, BoolSet::sBoth, BoolSet::sTrue,
                 -1, 0, false);
 
             unsigned nOrientable[] = { 1, 3, 14, 120, 1531 };
             rawCountsCompare(1, 3, nOrientable, "bounded compact orbl",
-                NBoolSet::sTrue, NBoolSet::sTrue, NBoolSet::sTrue,
+                BoolSet::sTrue, BoolSet::sTrue, BoolSet::sTrue,
                 -1, 0, false);
         }
 
@@ -212,25 +212,25 @@ class NCensusTest : public CppUnit::TestFixture {
             // Enforced: all vertices torus/KB, no low-degree edges.
             unsigned nAll[] = { 1, 1, 7, 31, 224, 1075, 6348 };
             rawCountsCompare(1, 4, nAll, "candidate minimal cusped hyperbolic",
-                NBoolSet::sFalse, NBoolSet::sBoth, NBoolSet::sFalse, -1,
+                BoolSet::sFalse, BoolSet::sBoth, BoolSet::sFalse, -1,
                 NGluingPermSearcher::PURGE_NON_MINIMAL_HYP, false);
 
             unsigned nOrientable[] = { 1, 0, 3, 14, 113, 590, 3481 };
             rawCountsCompare(1, 5, nOrientable,
                 "candidate minimal cusped hyperbolic orbl",
-                NBoolSet::sFalse, NBoolSet::sTrue, NBoolSet::sFalse, -1,
+                BoolSet::sFalse, BoolSet::sTrue, BoolSet::sFalse, -1,
                 NGluingPermSearcher::PURGE_NON_MINIMAL_HYP, false);
         }
 
         struct CensusSpec {
-            NBoolSet finite_;
-            NBoolSet orbl_;
+            BoolSet finite_;
+            BoolSet orbl_;
             int purge_;
             bool minimal_;
 
             unsigned long count_;
 
-            CensusSpec(NBoolSet finite, NBoolSet orbl,
+            CensusSpec(BoolSet finite, BoolSet orbl,
                     int purge, bool minimal) :
                     finite_(finite), orbl_(orbl),
                     purge_(purge), minimal_(minimal), count_(0) {}
@@ -243,13 +243,13 @@ class NCensusTest : public CppUnit::TestFixture {
                 if (tri->isValid() &&
                         (! (s->minimal_ &&
                             tri->simplifyToLocalMinimum(false))) &&
-                        (! (s->orbl_ == NBoolSet::sTrue &&
+                        (! (s->orbl_ == BoolSet::sTrue &&
                             ! tri->isOrientable())) &&
-                        (! (s->orbl_ == NBoolSet::sFalse &&
+                        (! (s->orbl_ == BoolSet::sFalse &&
                             tri->isOrientable())) &&
-                        (! (s->finite_ == NBoolSet::sTrue &&
+                        (! (s->finite_ == BoolSet::sTrue &&
                             tri->isIdeal())) &&
-                        (! (s->finite_ == NBoolSet::sFalse &&
+                        (! (s->finite_ == BoolSet::sFalse &&
                             ! tri->isIdeal())))
                     ++s->count_;
                 delete tri;
@@ -268,8 +268,8 @@ class NCensusTest : public CppUnit::TestFixture {
 
         static void rawCountsCompare(unsigned minTets, unsigned maxTets,
                 const unsigned* realAns, const char* censusType,
-                NBoolSet finiteness, NBoolSet orientability,
-                NBoolSet boundary, int nBdryFaces, int whichPurge,
+                BoolSet finiteness, BoolSet orientability,
+                BoolSet boundary, int nBdryFaces, int whichPurge,
                 bool minimal) {
             for (unsigned nTets = minTets; nTets <= maxTets; nTets++) {
                 CensusSpec spec(finiteness, orientability, whichPurge, minimal);

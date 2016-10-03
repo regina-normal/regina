@@ -40,7 +40,7 @@
 using regina::Dim4FacetPairing;
 using regina::Dim4GluingPermSearcher;
 using regina::Dim4Triangulation;
-using regina::NBoolSet;
+using regina::BoolSet;
 
 class Dim4CensusTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(Dim4CensusTest);
@@ -61,44 +61,44 @@ class Dim4CensusTest : public CppUnit::TestFixture {
         void rawCounts() {
             unsigned nAll[] = { 1, 0, 23, 0, 8656, 0 };
             rawCountsCompare(1, 3, nAll, "closed/ideal",
-                NBoolSet::sBoth, NBoolSet::sBoth, NBoolSet::sFalse, 0);
+                BoolSet::sBoth, BoolSet::sBoth, BoolSet::sFalse, 0);
 
             unsigned nOrientable[] = { 1, 0, 15, 0, 4150, 0 };
             rawCountsCompare(1, 3, nOrientable, "closed/ideal",
-                NBoolSet::sBoth, NBoolSet::sTrue, NBoolSet::sFalse, 0);
+                BoolSet::sBoth, BoolSet::sTrue, BoolSet::sFalse, 0);
         }
 
         void rawCountsCompact() {
             unsigned nAll[] = { 1, 0, 10, 0 };
             rawCountsCompare(1, 3, nAll, "closed compact",
-                NBoolSet::sTrue, NBoolSet::sBoth, NBoolSet::sFalse, 0);
+                BoolSet::sTrue, BoolSet::sBoth, BoolSet::sFalse, 0);
 
             unsigned nOrientable[] = { 1, 0, 8, 0 };
             rawCountsCompare(1, 3, nOrientable, "closed compact orbl",
-                NBoolSet::sTrue, NBoolSet::sTrue, NBoolSet::sFalse, 0);
+                BoolSet::sTrue, BoolSet::sTrue, BoolSet::sFalse, 0);
         }
 
         void rawCountsBounded() {
             unsigned nAll[] = { 1, 7, 51, 939, 25265 };
             rawCountsCompare(1, 2, nAll, "bounded",
-                NBoolSet::sBoth, NBoolSet::sBoth, NBoolSet::sTrue, -1);
+                BoolSet::sBoth, BoolSet::sBoth, BoolSet::sTrue, -1);
 
             unsigned nCompact[] = { 1, 5, 38, 782 };
             rawCountsCompare(1, 2, nCompact, "bounded compact",
-                NBoolSet::sTrue, NBoolSet::sBoth, NBoolSet::sTrue, -1);
+                BoolSet::sTrue, BoolSet::sBoth, BoolSet::sTrue, -1);
 
             unsigned nOrientable[] = { 1, 4, 27, 457 };
             rawCountsCompare(1, 2, nOrientable, "bounded compact orbl",
-                NBoolSet::sTrue, NBoolSet::sTrue, NBoolSet::sTrue, -1);
+                BoolSet::sTrue, BoolSet::sTrue, BoolSet::sTrue, -1);
         }
 
         struct CensusSpec {
-            NBoolSet finite_;
-            NBoolSet orbl_;
+            BoolSet finite_;
+            BoolSet orbl_;
 
             unsigned long count_;
 
-            CensusSpec(NBoolSet finite, NBoolSet orbl) :
+            CensusSpec(BoolSet finite, BoolSet orbl) :
                 finite_(finite), orbl_(orbl), count_(0) {}
         };
 
@@ -108,13 +108,13 @@ class Dim4CensusTest : public CppUnit::TestFixture {
                 CensusSpec* s = static_cast<CensusSpec*>(spec);
                 Dim4Triangulation* tri = perms->triangulate();
                 if (tri->isValid() &&
-                        (! (s->orbl_ == NBoolSet::sTrue &&
+                        (! (s->orbl_ == BoolSet::sTrue &&
                             ! tri->isOrientable())) &&
-                        (! (s->orbl_ == NBoolSet::sFalse &&
+                        (! (s->orbl_ == BoolSet::sFalse &&
                             tri->isOrientable())) &&
-                        (! (s->finite_ == NBoolSet::sTrue &&
+                        (! (s->finite_ == BoolSet::sTrue &&
                             tri->isIdeal())) &&
-                        (! (s->finite_ == NBoolSet::sFalse &&
+                        (! (s->finite_ == BoolSet::sFalse &&
                             ! tri->isIdeal())))
                     ++s->count_;
                 delete tri;
@@ -133,8 +133,8 @@ class Dim4CensusTest : public CppUnit::TestFixture {
 
         static void rawCountsCompare(unsigned minPent, unsigned maxPent,
                 const unsigned* realAns, const char* censusType,
-                NBoolSet finiteness, NBoolSet orientability,
-                NBoolSet boundary, int nBdryFacets) {
+                BoolSet finiteness, BoolSet orientability,
+                BoolSet boundary, int nBdryFacets) {
             for (unsigned nPent = minPent; nPent <= maxPent; nPent++) {
                 CensusSpec spec(finiteness, orientability);
 

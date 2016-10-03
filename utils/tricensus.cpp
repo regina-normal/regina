@@ -60,7 +60,7 @@ const long MAXTET = 15;
 
 // Census parameters.
 long nTet = 0, nBdryFaces = -1;
-regina::NBoolSet
+regina::BoolSet
     finiteness(true, true),
     orientability(true, true),
     boundary(true, true);
@@ -272,9 +272,9 @@ regina::Text* parameterPacket() {
         descStream << nTet << ' ' <<
             (nTet == 1 ? WORD_tetrahedron : WORD_tetrahedra) << "\n";
 
-        if (boundary == regina::NBoolSet::sTrue)
+        if (boundary == regina::BoolSet::sTrue)
             descStream << "Boundary " << WORD_faces << " only\n";
-        else if (boundary == regina::NBoolSet::sFalse)
+        else if (boundary == regina::BoolSet::sFalse)
             descStream << "No boundary " << WORD_faces << " only\n";
         else
             descStream << "With and without boundary " << WORD_faces << "\n";
@@ -284,16 +284,16 @@ regina::Text* parameterPacket() {
                 " boundary " << WORD_faces << "\n";
     }
 
-    if (finiteness == regina::NBoolSet::sTrue)
+    if (finiteness == regina::BoolSet::sTrue)
         descStream << "Finite only\n";
-    else if (finiteness == regina::NBoolSet::sFalse)
+    else if (finiteness == regina::BoolSet::sFalse)
         descStream << "Ideal only\n";
     else
         descStream << "Finite and ideal\n";
 
-    if (orientability == regina::NBoolSet::sTrue)
+    if (orientability == regina::BoolSet::sTrue)
         descStream << "Orientable only\n";
-    else if (orientability == regina::NBoolSet::sFalse)
+    else if (orientability == regina::BoolSet::sFalse)
         descStream << "Non-orientable only\n";
     else
         descStream << "Orientable and non-orientable\n";
@@ -553,9 +553,9 @@ int main(int argc, const char* argv[]) {
     poptFreeContext(optCon);
 
     // Finalise the census parameters.
-    finiteness = regina::NBoolSet(! argIdeal, ! argFinite);
-    orientability = regina::NBoolSet(! argNor, ! argOr);
-    boundary = regina::NBoolSet(! argNoBdry, ! argBdry);
+    finiteness = regina::BoolSet(! argIdeal, ! argFinite);
+    orientability = regina::BoolSet(! argNor, ! argOr);
+    boundary = regina::BoolSet(! argNoBdry, ! argBdry);
 
     // And off we go!
     if (dim2)

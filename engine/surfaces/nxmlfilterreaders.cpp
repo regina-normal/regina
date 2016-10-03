@@ -110,15 +110,15 @@ namespace {
                 if (subTagName == "euler") {
                     return new NXMLCharsReader();
                 } else if (subTagName == "orbl") {
-                    NBoolSet b;
+                    BoolSet b;
                     if (valueOf(props.lookup("value"), b))
                         filter_->setOrientability(b);
                 } else if (subTagName == "compact") {
-                    NBoolSet b;
+                    BoolSet b;
                     if (valueOf(props.lookup("value"), b))
                         filter_->setCompactness(b);
                 } else if (subTagName == "realbdry") {
-                    NBoolSet b;
+                    BoolSet b;
                     if (valueOf(props.lookup("value"), b))
                         filter_->setRealBoundary(b);
                 }

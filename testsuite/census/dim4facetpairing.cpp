@@ -36,7 +36,7 @@
 #include "testsuite/census/testcensus.h"
 
 using regina::Dim4FacetPairing;
-using regina::NBoolSet;
+using regina::BoolSet;
 
 /**
  * Simply increment the given count when a face pairing is found.
@@ -75,7 +75,7 @@ class Dim4FacetPairingTest : public CppUnit::TestFixture {
             unsigned size;
             for (size = 0; size <= 5; ++size) {
                 count = 0;
-                Dim4FacetPairing::findAllPairings(size, NBoolSet::sFalse,
+                Dim4FacetPairing::findAllPairings(size, BoolSet::sFalse,
                     0, countFacetPairings, &count);
 
                 if (count != nPairs[size]) {
@@ -100,7 +100,7 @@ class Dim4FacetPairingTest : public CppUnit::TestFixture {
 
             for (size = 0; size <= 6; ++size) {
                 count = 0;
-                Dim4FacetPairing::findAllPairings(size, NBoolSet::sTrue,
+                Dim4FacetPairing::findAllPairings(size, BoolSet::sTrue,
                     1, countFacetPairings, &count);
 
                 if (count != nBdry1[size]) {
@@ -115,7 +115,7 @@ class Dim4FacetPairingTest : public CppUnit::TestFixture {
 
             for (size = 0; size <= 5; ++size) {
                 count = 0;
-                Dim4FacetPairing::findAllPairings(size, NBoolSet::sTrue,
+                Dim4FacetPairing::findAllPairings(size, BoolSet::sTrue,
                     2, countFacetPairings, &count);
 
                 if (count != nBdry2[size]) {
@@ -130,7 +130,7 @@ class Dim4FacetPairingTest : public CppUnit::TestFixture {
 
             for (size = 0; size <= 4; ++size) {
                 count = 0;
-                Dim4FacetPairing::findAllPairings(size, NBoolSet::sTrue,
+                Dim4FacetPairing::findAllPairings(size, BoolSet::sTrue,
                     -1, countFacetPairings, &count);
 
                 if (count != nBdry[size]) {

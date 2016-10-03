@@ -119,8 +119,8 @@ class NSurfaceFilterPropUI : public QObject, public PacketUI {
         /**
          * Translate between UI elements and underlying filter options.
          */
-        regina::NBoolSet getBoolSet(QCheckBox* use, QComboBox* opt);
-        void setBoolSet(QCheckBox* use, QComboBox* opt, regina::NBoolSet set);
+        regina::BoolSet getBoolSet(QCheckBox* use, QComboBox* opt);
+        void setBoolSet(QCheckBox* use, QComboBox* opt, regina::BoolSet set);
         QString filterECList();
 };
 

@@ -43,7 +43,7 @@
 #include "testsuite/surfaces/testsurfaces.h"
 
 using regina::NAbelianGroup;
-using regina::NBoolSet;
+using regina::BoolSet;
 using regina::NBoundaryComponent;
 using regina::Container;
 using regina::NEdge;

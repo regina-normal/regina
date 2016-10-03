@@ -1045,7 +1045,7 @@ Equality type : BY_REFERENCE
 NBlockedSFSTriple : class
 Equality type : BY_REFERENCE
 
-NBoolSet : class
+BoolSet : class
 Equality type : BY_VALUE
 
 NBoundaryComponent : class

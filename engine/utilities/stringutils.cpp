@@ -153,23 +153,23 @@ bool valueOf(const std::string& str, bool& dest) {
     return (str[0] == 'F' || str[0] == 'f');
 }
 
-bool valueOf(const std::string& str, NBoolSet& dest) {
+bool valueOf(const std::string& str, BoolSet& dest) {
     if (str.length() != 2) {
-        dest = NBoolSet::sNone;
+        dest = BoolSet::sNone;
         return false;
     }
     char t = str[0];
     char f = str[1];
     if (t != '-' && t != 'T' && t != 't') {
-        dest = NBoolSet::sNone;
+        dest = BoolSet::sNone;
         return false;
     }
     if (f != '-' && f != 'F' && f != 'f') {
-        dest = NBoolSet::sNone;
+        dest = BoolSet::sNone;
         return false;
     }
 
-    dest = NBoolSet(t != '-', f != '-');
+    dest = BoolSet(t != '-', f != '-');
     return true;
 }
 

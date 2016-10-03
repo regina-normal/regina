@@ -551,7 +551,7 @@ class FacetPairingBase :
          * the function \a use which will be called upon each pairing found.
          */
         static void findAllPairings(size_t nSimplices,
-            NBoolSet boundary, int nBdryFacets, Use use, void* useArgs = 0);
+            BoolSet boundary, int nBdryFacets, Use use, void* useArgs = 0);
 
     protected:
         /**
@@ -678,7 +678,7 @@ class FacetPairingBase :
          * FacetPairing<dim>, not an instance of the parent class
          * FacetPairingBase<dim>.
          */
-        void enumerateInternal(NBoolSet boundary, int nBdryFacets,
+        void enumerateInternal(BoolSet boundary, int nBdryFacets,
             Use use, void* useArgs);
 };
 
@@ -771,7 +771,7 @@ inline void FacetPairingBase<dim>::findAutomorphisms(
 
 template <int dim>
 inline void FacetPairingBase<dim>::findAllPairings(size_t nSimplices,
-        NBoolSet boundary, int nBdryFacets,
+        BoolSet boundary, int nBdryFacets,
         typename FacetPairingBase<dim>::Use use, void* useArgs) {
     FacetPairing<dim> pairing(nSimplices);
     pairing.enumerateInternal(boundary, nBdryFacets, use, useArgs);

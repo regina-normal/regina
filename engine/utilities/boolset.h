@@ -51,10 +51,10 @@ namespace regina {
 
 /**
  * A set of booleans.  Note that there are only four possible such sets.
- * NBoolSet objects are small enough to pass about by value instead of
+ * BoolSet objects are small enough to pass about by value instead of
  * by reference.
  */
-class REGINA_API NBoolSet {
+class REGINA_API BoolSet {
     private:
         unsigned char elements;
             /**< The first two bits of this character represent whether
@@ -66,32 +66,32 @@ class REGINA_API NBoolSet {
             /**< A character with only the \c false member bit set. */
 
     public:
-        static const NBoolSet sNone;
+        static const BoolSet sNone;
             /**< The empty set. */
-        static const NBoolSet sTrue;
+        static const BoolSet sTrue;
             /**< The set containing only \c true. */
-        static const NBoolSet sFalse;
+        static const BoolSet sFalse;
             /**< The set containing only \c false. */
-        static const NBoolSet sBoth;
+        static const BoolSet sBoth;
             /**< The set containing both \c true and \c false. */
 
     public:
         /**
          * Creates a new empty set.
          */
-        NBoolSet();
+        BoolSet();
         /**
          * Creates a set containing a single member as given.
          *
          * @param member the single element to include in this set.
          */
-        NBoolSet(bool member);
+        BoolSet(bool member);
         /**
          * Creates a set equal to the given set.
          *
          * @param cloneMe the set upon which we will base the new set.
          */
-        NBoolSet(const NBoolSet& cloneMe);
+        BoolSet(const BoolSet& cloneMe);
         /**
          * Creates a set specifying whether \c true and/or \c false
          * should be a member.
@@ -101,7 +101,7 @@ class REGINA_API NBoolSet {
          * @param insertFalse should the new set include the element
          * <tt>false</tt>?
          */
-        NBoolSet(bool insertTrue, bool insertFalse);
+        BoolSet(bool insertTrue, bool insertFalse);
 
         /**
          * Determines if \c true is a member of this set.
@@ -159,7 +159,7 @@ class REGINA_API NBoolSet {
          * @return \c true if and only if this and the given set are
          * equal.
          */
-        bool operator == (const NBoolSet& other) const;
+        bool operator == (const BoolSet& other) const;
         /**
          * Determines if this set is not equal to the given set.
          *
@@ -167,7 +167,7 @@ class REGINA_API NBoolSet {
          * @return \c true if and only if this and the given set are
          * not equal.
          */
-        bool operator != (const NBoolSet& other) const;
+        bool operator != (const BoolSet& other) const;
         /**
          * Determines if this set is a proper subset of the given set.
          *
@@ -175,7 +175,7 @@ class REGINA_API NBoolSet {
          * @return \c true if and only if this is a proper subset of the
          * given set.
          */
-        bool operator < (const NBoolSet& other) const;
+        bool operator < (const BoolSet& other) const;
         /**
          * Determines if this set is a proper superset of the given set.
          *
@@ -183,7 +183,7 @@ class REGINA_API NBoolSet {
          * @return \c true if and only if this is a proper superset of the
          * given set.
          */
-        bool operator > (const NBoolSet& other) const;
+        bool operator > (const BoolSet& other) const;
         /**
          * Determines if this set is a subset of (possibly equal to)
          * the given set.
@@ -192,7 +192,7 @@ class REGINA_API NBoolSet {
          * @return \c true if and only if this is a subset of the
          * given set.
          */
-        bool operator <= (const NBoolSet& other) const;
+        bool operator <= (const BoolSet& other) const;
         /**
          * Determines if this set is a superset of (possibly equal to)
          * the given set.
@@ -201,7 +201,7 @@ class REGINA_API NBoolSet {
          * @return \c true if and only if this is a superset of the
          * given set.
          */
-        bool operator >= (const NBoolSet& other) const;
+        bool operator >= (const BoolSet& other) const;
 
         /**
          * Sets this set to be identical to the given set.
@@ -209,7 +209,7 @@ class REGINA_API NBoolSet {
          * @param cloneMe the set whose value this set will take.
          * @return a reference to this set.
          */
-        NBoolSet& operator = (const NBoolSet& cloneMe);
+        BoolSet& operator = (const BoolSet& cloneMe);
         /**
          * Sets this set to the single member set containing the given
          * element.
@@ -217,7 +217,7 @@ class REGINA_API NBoolSet {
          * @param member the single element to include in this set.
          * @return a reference to this set.
          */
-        NBoolSet& operator = (bool member);
+        BoolSet& operator = (bool member);
         /**
          * Sets this set to be the union of this and the given set.
          * The result is a set containing precisely the elements that
@@ -227,7 +227,7 @@ class REGINA_API NBoolSet {
          * @param other the set to union with this set.
          * @return a reference to this set.
          */
-        NBoolSet& operator |= (const NBoolSet& other);
+        BoolSet& operator |= (const BoolSet& other);
         /**
          * Sets this set to be the intersection of this and the given set.
          * The result is a set containing precisely the elements that
@@ -237,7 +237,7 @@ class REGINA_API NBoolSet {
          * @param other the set to intersect with this set.
          * @return a reference to this set.
          */
-        NBoolSet& operator &= (const NBoolSet& other);
+        BoolSet& operator &= (const BoolSet& other);
         /**
          * Sets this set to be the symmetric difference of this and the
          * given set.
@@ -249,7 +249,7 @@ class REGINA_API NBoolSet {
          * is to be found.
          * @return a reference to this set.
          */
-        NBoolSet& operator ^= (const NBoolSet& other);
+        BoolSet& operator ^= (const BoolSet& other);
 
         /**
          * Returns the union of this set with the given set.
@@ -260,7 +260,7 @@ class REGINA_API NBoolSet {
          * @param other the set to union with this set.
          * @return the union of this and the given set.
          */
-        NBoolSet operator | (const NBoolSet& other) const;
+        BoolSet operator | (const BoolSet& other) const;
         /**
          * Returns the intersection of this set with the given set.
          * The result is a set containing precisely the elements that
@@ -270,7 +270,7 @@ class REGINA_API NBoolSet {
          * @param other the set to intersect with this set.
          * @return the intersection of this and the given set.
          */
-        NBoolSet operator & (const NBoolSet& other) const;
+        BoolSet operator & (const BoolSet& other) const;
         /**
          * Returns the symmetric difference of this set and the given set.
          * The result is a set containing precisely the elements that
@@ -281,7 +281,7 @@ class REGINA_API NBoolSet {
          * is to be found.
          * @return the symmetric difference of this and the given set.
          */
-        NBoolSet operator ^ (const NBoolSet& other) const;
+        BoolSet operator ^ (const BoolSet& other) const;
         /**
          * Returns the complement of this set.
          * The result is a set containing precisely the elements that
@@ -290,7 +290,7 @@ class REGINA_API NBoolSet {
          *
          * @return the complement of this set.
          */
-        NBoolSet operator ~ () const;
+        BoolSet operator ~ () const;
 
         /**
          * Returns the byte code representing this boolean set.
@@ -301,8 +301,8 @@ class REGINA_API NBoolSet {
          * The lowest order bit of the byte code is 1 if and only if
          * \c true is in the set.  The next lowest order bit is 1 if and
          * only if \c false is in the set.  All other bits are 0.
-         * Thus sets NBoolSet::sNone, NBoolSet::sTrue, NBoolSet::sFalse
-         * and NBoolSet::sBoth have byte codes 0, 1, 2 and 3 respectively.
+         * Thus sets BoolSet::sNone, BoolSet::sTrue, BoolSet::sFalse
+         * and BoolSet::sBoth have byte codes 0, 1, 2 and 3 respectively.
          *
          * @return the byte code representing this set.
          */
@@ -326,9 +326,9 @@ class REGINA_API NBoolSet {
          * @param code the byte code from which the new set will be
          * created.
          */
-        static NBoolSet fromByteCode(unsigned char code);
+        static BoolSet fromByteCode(unsigned char code);
 
-    friend std::ostream& operator << (std::ostream& out, const NBoolSet& set);
+    friend std::ostream& operator << (std::ostream& out, const BoolSet& set);
 };
 
 /**
@@ -341,125 +341,133 @@ class REGINA_API NBoolSet {
  * @param set the boolean set to write.
  * @return a reference to \a out.
  */
-REGINA_API std::ostream& operator << (std::ostream& out, const NBoolSet& set);
+REGINA_API std::ostream& operator << (std::ostream& out, const BoolSet& set);
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NBoolSet has now been renamed to BoolSet.
+ */
+REGINA_DEPRECATED typedef BoolSet NBoolSet;
 
 /*@}*/
 
-// Inline functions for NBoolSet
+// Inline functions for BoolSet
 
-inline NBoolSet::NBoolSet() : elements(0) {
+inline BoolSet::BoolSet() : elements(0) {
 }
-inline NBoolSet::NBoolSet(bool member) :
+inline BoolSet::BoolSet(bool member) :
         elements(member ? eltTrue : eltFalse) {
 }
-inline NBoolSet::NBoolSet(const NBoolSet& cloneMe) :
+inline BoolSet::BoolSet(const BoolSet& cloneMe) :
         elements(cloneMe.elements) {
 }
-inline NBoolSet::NBoolSet(bool insertTrue, bool insertFalse) : elements(0) {
+inline BoolSet::BoolSet(bool insertTrue, bool insertFalse) : elements(0) {
     if (insertTrue)
         elements = static_cast<unsigned char>(elements | eltTrue);
     if (insertFalse)
         elements = static_cast<unsigned char>(elements | eltFalse);
 }
 
-inline bool NBoolSet::hasTrue() const {
+inline bool BoolSet::hasTrue() const {
     return (elements & eltTrue);
 }
-inline bool NBoolSet::hasFalse() const {
+inline bool BoolSet::hasFalse() const {
     return (elements & eltFalse);
 }
-inline bool NBoolSet::contains(bool value) const {
+inline bool BoolSet::contains(bool value) const {
     return (elements & (value ? eltTrue : eltFalse));
 }
 
-inline void NBoolSet::insertTrue() {
+inline void BoolSet::insertTrue() {
     elements = static_cast<unsigned char>(elements | eltTrue);
 }
-inline void NBoolSet::insertFalse() {
+inline void BoolSet::insertFalse() {
     elements = static_cast<unsigned char>(elements | eltFalse);
 }
-inline void NBoolSet::removeTrue() {
+inline void BoolSet::removeTrue() {
     elements = static_cast<unsigned char>(elements & eltFalse);
 }
-inline void NBoolSet::removeFalse() {
+inline void BoolSet::removeFalse() {
     elements = static_cast<unsigned char>(elements & eltTrue);
 }
-inline void NBoolSet::empty() {
+inline void BoolSet::empty() {
     elements = 0;
 }
-inline void NBoolSet::fill() {
+inline void BoolSet::fill() {
     elements = static_cast<unsigned char>(eltTrue | eltFalse);
 }
 
-inline bool NBoolSet::operator == (const NBoolSet& other) const {
+inline bool BoolSet::operator == (const BoolSet& other) const {
     return (elements == other.elements);
 }
-inline bool NBoolSet::operator != (const NBoolSet& other) const {
+inline bool BoolSet::operator != (const BoolSet& other) const {
     return (elements != other.elements);
 }
-inline bool NBoolSet::operator < (const NBoolSet& other) const {
+inline bool BoolSet::operator < (const BoolSet& other) const {
     return ((elements & other.elements) == elements) &&
         (elements != other.elements);
 }
-inline bool NBoolSet::operator > (const NBoolSet& other) const {
+inline bool BoolSet::operator > (const BoolSet& other) const {
     return ((elements & other.elements) == other.elements) &&
         (elements != other.elements);
 }
-inline bool NBoolSet::operator <= (const NBoolSet& other) const {
+inline bool BoolSet::operator <= (const BoolSet& other) const {
     return ((elements & other.elements) == elements);
 }
-inline bool NBoolSet::operator >= (const NBoolSet& other) const {
+inline bool BoolSet::operator >= (const BoolSet& other) const {
     return ((elements & other.elements) == other.elements);
 }
 
-inline NBoolSet& NBoolSet::operator = (const NBoolSet& cloneMe) {
+inline BoolSet& BoolSet::operator = (const BoolSet& cloneMe) {
     elements = cloneMe.elements;
     return *this;
 }
-inline NBoolSet& NBoolSet::operator = (bool member) {
+inline BoolSet& BoolSet::operator = (bool member) {
     elements = (member ? eltTrue : eltFalse);
     return *this;
 }
-inline NBoolSet& NBoolSet::operator |= (const NBoolSet& other) {
+inline BoolSet& BoolSet::operator |= (const BoolSet& other) {
     elements = static_cast<unsigned char>(elements | other.elements);
     return *this;
 }
-inline NBoolSet& NBoolSet::operator &= (const NBoolSet& other) {
+inline BoolSet& BoolSet::operator &= (const BoolSet& other) {
     elements = static_cast<unsigned char>(elements & other.elements);
     return *this;
 }
-inline NBoolSet& NBoolSet::operator ^= (const NBoolSet& other) {
+inline BoolSet& BoolSet::operator ^= (const BoolSet& other) {
     elements = static_cast<unsigned char>(elements ^ other.elements);
     return *this;
 }
 
-inline NBoolSet NBoolSet::operator | (const NBoolSet& other) const {
-    NBoolSet ans;
+inline BoolSet BoolSet::operator | (const BoolSet& other) const {
+    BoolSet ans;
     ans.elements = static_cast<unsigned char>(elements | other.elements);
     return ans;
 }
-inline NBoolSet NBoolSet::operator & (const NBoolSet& other) const {
-    NBoolSet ans;
+inline BoolSet BoolSet::operator & (const BoolSet& other) const {
+    BoolSet ans;
     ans.elements = static_cast<unsigned char>(elements & other.elements);
     return ans;
 }
-inline NBoolSet NBoolSet::operator ^ (const NBoolSet& other) const {
-    NBoolSet ans;
+inline BoolSet BoolSet::operator ^ (const BoolSet& other) const {
+    BoolSet ans;
     ans.elements = static_cast<unsigned char>(elements ^ other.elements);
     return ans;
 }
-inline NBoolSet NBoolSet::operator ~ () const {
-    return NBoolSet(! hasTrue(), ! hasFalse());
+inline BoolSet BoolSet::operator ~ () const {
+    return BoolSet(! hasTrue(), ! hasFalse());
 }
 
-inline unsigned char NBoolSet::byteCode() const {
+inline unsigned char BoolSet::byteCode() const {
     return elements;
 }
-inline void NBoolSet::setByteCode(unsigned char code) {
+inline void BoolSet::setByteCode(unsigned char code) {
     elements = code;
 }
-inline NBoolSet NBoolSet::fromByteCode(unsigned char code) {
-    return NBoolSet(code & eltTrue, code & eltFalse);
+inline BoolSet BoolSet::fromByteCode(unsigned char code) {
+    return BoolSet(code & eltTrue, code & eltFalse);
 }
 
 } // namespace regina

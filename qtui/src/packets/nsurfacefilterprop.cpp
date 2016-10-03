@@ -47,7 +47,7 @@
 #include <QRadioButton>
 #include <QValidator>
 
-using regina::NBoolSet;
+using regina::BoolSet;
 using regina::Packet;
 using regina::NSurfaceFilterProperties;
 
@@ -290,20 +290,20 @@ void NSurfaceFilterPropUI::enableDisableBdry() {
     optBdry->setEnabled(allowReadWrite && useBdry->isChecked());
 }
 
-NBoolSet NSurfaceFilterPropUI::getBoolSet(QCheckBox* use, QComboBox* opt) {
+BoolSet NSurfaceFilterPropUI::getBoolSet(QCheckBox* use, QComboBox* opt) {
     if (use->isChecked()) {
         // Restrict to a single boolean value.
         // Assume that TRUE is the first combo box option.
-        return NBoolSet(opt->currentIndex() == 0);
+        return BoolSet(opt->currentIndex() == 0);
     } else {
         // No restrictions.
-        return NBoolSet::sBoth;
+        return BoolSet::sBoth;
     }
 }
 
 void NSurfaceFilterPropUI::setBoolSet(QCheckBox* use, QComboBox* opt,
-        NBoolSet set) {
-    if (set == NBoolSet::sBoth || set == NBoolSet::sNone) {
+        BoolSet set) {
+    if (set == BoolSet::sBoth || set == BoolSet::sNone) {
         // No restrictions.
         // Note that we're essentially ignoring sNone, which should
         // never occur (and is useless) anyway.

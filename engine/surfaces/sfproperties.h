@@ -83,11 +83,11 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
         std::set<NLargeInteger> eulerChar_;
             /**< The set of allowable Euler characteristics.  An empty
                  set signifies that any Euler characteristic is allowed. */
-        NBoolSet orientability_;
+        BoolSet orientability_;
             /**< The set of allowable orientability properties. */
-        NBoolSet compactness_;
+        BoolSet compactness_;
             /**< The set of allowable compactness properties. */
-        NBoolSet realBoundary_;
+        BoolSet realBoundary_;
             /**< The set of allowable has-real-boundary properties. */
 
     public:
@@ -142,7 +142,7 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
          *
          * @return the set of allowable orientabilities.
          */
-        NBoolSet orientability() const;
+        BoolSet orientability() const;
         /**
          * Returns the set of allowable compactness properties.
          * Note that this is a subset of <tt>{ true, false }</tt>.
@@ -151,7 +151,7 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
          *
          * @return the set of allowable compactness properties.
          */
-        NBoolSet compactness() const;
+        BoolSet compactness() const;
         /**
          * Returns the set of allowable has-real-boundary properties.
          * Note that this is a subset of <tt>{ true, false }</tt>.
@@ -160,7 +160,7 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
          *
          * @return the set of allowable has-real-boundary properties.
          */
-        NBoolSet realBoundary() const;
+        BoolSet realBoundary() const;
 
         /**
          * Sets the allowable Euler characteristics to the given set.
@@ -206,14 +206,14 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
          *
          * @param value the new set of allowable orientabilities.
          */
-        void setOrientability(const NBoolSet& value);
+        void setOrientability(const BoolSet& value);
         /**
          * Sets the set of allowable compactness properties.
          * See compactness() for further details.
          *
          * @param value the new set of allowable compactness properties.
          */
-        void setCompactness(const NBoolSet& value);
+        void setCompactness(const BoolSet& value);
         /**
          * Sets the set of allowable has-real-boundary properties.
          * See realBoundary() for further details.
@@ -221,7 +221,7 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
          * @param value the new set of allowable has-real-boundary
          * properties.
          */
-        void setRealBoundary(const NBoolSet& value);
+        void setRealBoundary(const BoolSet& value);
 
         virtual bool accept(const NNormalSurface& surface) const;
         virtual void writeTextLong(std::ostream& out) const;
@@ -237,9 +237,9 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
 // Inline functions for NSurfaceFilterProperties
 
 inline NSurfaceFilterProperties::NSurfaceFilterProperties() :
-        orientability_(NBoolSet::sBoth),
-        compactness_(NBoolSet::sBoth),
-        realBoundary_(NBoolSet::sBoth) {
+        orientability_(BoolSet::sBoth),
+        compactness_(BoolSet::sBoth),
+        realBoundary_(BoolSet::sBoth) {
 }
 inline NSurfaceFilterProperties::NSurfaceFilterProperties(
         const NSurfaceFilterProperties& cloneMe) :
@@ -257,13 +257,13 @@ inline const std::set<NLargeInteger>& NSurfaceFilterProperties::eulerChars()
 inline size_t NSurfaceFilterProperties::countEulerChars() const {
     return eulerChar_.size();
 }
-inline NBoolSet NSurfaceFilterProperties::orientability() const {
+inline BoolSet NSurfaceFilterProperties::orientability() const {
     return orientability_;
 }
-inline NBoolSet NSurfaceFilterProperties::compactness() const {
+inline BoolSet NSurfaceFilterProperties::compactness() const {
     return compactness_;
 }
-inline NBoolSet NSurfaceFilterProperties::realBoundary() const {
+inline BoolSet NSurfaceFilterProperties::realBoundary() const {
     return realBoundary_;
 }
 
@@ -286,19 +286,19 @@ inline void NSurfaceFilterProperties::removeAllEulerChars() {
     ChangeEventSpan span(this);
     eulerChar_.clear();
 }
-inline void NSurfaceFilterProperties::setOrientability(const NBoolSet& value) {
+inline void NSurfaceFilterProperties::setOrientability(const BoolSet& value) {
     if (orientability_ != value) {
         ChangeEventSpan span(this);
         orientability_ = value;
     }
 }
-inline void NSurfaceFilterProperties::setCompactness(const NBoolSet& value) {
+inline void NSurfaceFilterProperties::setCompactness(const BoolSet& value) {
     if (compactness_ != value) {
         ChangeEventSpan span(this);
         compactness_ = value;
     }
 }
-inline void NSurfaceFilterProperties::setRealBoundary(const NBoolSet& value) {
+inline void NSurfaceFilterProperties::setRealBoundary(const BoolSet& value) {
     if (realBoundary_ != value) {
         ChangeEventSpan span(this);
         realBoundary_ = value;

@@ -76,11 +76,11 @@ void NSurfaceFilterProperties::writeTextLong(std::ostream& o) const {
             o << ' ' << *it;
         o << '\n';
     }
-    if (orientability_ != NBoolSet::sBoth)
+    if (orientability_ != BoolSet::sBoth)
         o << "    Orientability: " << orientability_ << '\n';
-    if (compactness_ != NBoolSet::sBoth)
+    if (compactness_ != BoolSet::sBoth)
         o << "    Compactness: " << compactness_ << '\n';
-    if (realBoundary_ != NBoolSet::sBoth)
+    if (realBoundary_ != BoolSet::sBoth)
         o << "    Has real boundary: " << realBoundary_ << '\n';
 }
 
@@ -94,11 +94,11 @@ void NSurfaceFilterProperties::writeXMLFilterData(std::ostream& out) const {
         out << "</euler>\n";
     }
 
-    if (orientability_ != NBoolSet::sBoth)
+    if (orientability_ != BoolSet::sBoth)
         out << "    " << xmlValueTag("orbl", orientability_) << '\n';
-    if (compactness_ != NBoolSet::sBoth)
+    if (compactness_ != BoolSet::sBoth)
         out << "    " << xmlValueTag("compact", compactness_) << '\n';
-    if (realBoundary_ != NBoolSet::sBoth)
+    if (realBoundary_ != BoolSet::sBoth)
         out << "    " << xmlValueTag("realbdry", realBoundary_) << '\n';
 }
 

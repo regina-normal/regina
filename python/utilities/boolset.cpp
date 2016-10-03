@@ -35,46 +35,50 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NBoolSet;
+using regina::BoolSet;
 
 void addBoolSet() {
-    scope s = class_<NBoolSet>("NBoolSet")
-        .def(init<bool>())
-        .def(init<const NBoolSet&>())
-        .def(init<bool, bool>())
-        .def("hasTrue", &NBoolSet::hasTrue)
-        .def("hasFalse", &NBoolSet::hasFalse)
-        .def("contains", &NBoolSet::contains)
-        .def("insertTrue", &NBoolSet::insertTrue)
-        .def("insertFalse", &NBoolSet::insertFalse)
-        .def("removeTrue", &NBoolSet::removeTrue)
-        .def("removeFalse", &NBoolSet::removeFalse)
-        .def("empty", &NBoolSet::empty)
-        .def("fill", &NBoolSet::fill)
-        .def(self < self)
-        .def(self > self)
-        .def(self <= self)
-        .def(self >= self)
-        .def(self |= self)
-        .def(self &= self)
-        .def(self ^= self)
-        .def(self | self)
-        .def(self & self)
-        .def(self ^ self)
-        .def(~ self)
-        .def("byteCode", &NBoolSet::byteCode)
-        .def("setByteCode", &NBoolSet::setByteCode)
-        .def("fromByteCode", &NBoolSet::fromByteCode)
-        .staticmethod("fromByteCode")
-        .def(self_ns::str(self))
-        .def(regina::python::add_eq_operators())
-    ;
+    {
+        scope s = class_<BoolSet>("BoolSet")
+            .def(init<bool>())
+            .def(init<const BoolSet&>())
+            .def(init<bool, bool>())
+            .def("hasTrue", &BoolSet::hasTrue)
+            .def("hasFalse", &BoolSet::hasFalse)
+            .def("contains", &BoolSet::contains)
+            .def("insertTrue", &BoolSet::insertTrue)
+            .def("insertFalse", &BoolSet::insertFalse)
+            .def("removeTrue", &BoolSet::removeTrue)
+            .def("removeFalse", &BoolSet::removeFalse)
+            .def("empty", &BoolSet::empty)
+            .def("fill", &BoolSet::fill)
+            .def(self < self)
+            .def(self > self)
+            .def(self <= self)
+            .def(self >= self)
+            .def(self |= self)
+            .def(self &= self)
+            .def(self ^= self)
+            .def(self | self)
+            .def(self & self)
+            .def(self ^ self)
+            .def(~ self)
+            .def("byteCode", &BoolSet::byteCode)
+            .def("setByteCode", &BoolSet::setByteCode)
+            .def("fromByteCode", &BoolSet::fromByteCode)
+            .staticmethod("fromByteCode")
+            .def(self_ns::str(self))
+            .def(regina::python::add_eq_operators())
+        ;
 
-    // Apparently there is no way in python to make a module attribute
-    // read-only.
-    s.attr("sNone") = NBoolSet::sNone;
-    s.attr("sTrue") = NBoolSet::sTrue;
-    s.attr("sFalse") = NBoolSet::sFalse;
-    s.attr("sBoth") = NBoolSet::sBoth;
+        // Apparently there is no way in python to make a module attribute
+        // read-only.
+        s.attr("sNone") = BoolSet::sNone;
+        s.attr("sTrue") = BoolSet::sTrue;
+        s.attr("sFalse") = BoolSet::sFalse;
+        s.attr("sBoth") = BoolSet::sBoth;
+    }
+
+    scope().attr("NBoolSet") = scope().attr("BoolSet");
 }
 
