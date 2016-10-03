@@ -44,7 +44,7 @@
 #include "regina-core.h"
 #include "maths/ninteger.h"
 #include "surfaces/nsurfacefilter.h"
-#include "utilities/nbooleans.h"
+#include "utilities/boolset.h"
 
 namespace regina {
 

@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "utilities/nbooleans.h"
+#include "utilities/boolset.h"
 
 #include <iostream>
 

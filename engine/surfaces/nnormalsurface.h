@@ -47,7 +47,7 @@
 #include "maths/nray.h"
 #include "surfaces/ndisctype.h"
 #include "surfaces/normalcoords.h"
-#include "utilities/nbooleans.h"
+#include "utilities/boolset.h"
 #include "utilities/nproperty.h"
 #include <boost/noncopyable.hpp>
 

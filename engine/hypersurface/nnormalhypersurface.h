@@ -47,7 +47,7 @@
 #include "hypersurface/hypercoords.h"
 #include "maths/nperm5.h"
 #include "maths/nray.h"
-#include "utilities/nbooleans.h"
+#include "utilities/boolset.h"
 #include "utilities/nproperty.h"
 #include <boost/noncopyable.hpp>
 

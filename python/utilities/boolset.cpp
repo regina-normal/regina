@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "utilities/nbooleans.h"
+#include "utilities/boolset.h"
 #include "../helpers.h"
 
 using namespace boost::python;

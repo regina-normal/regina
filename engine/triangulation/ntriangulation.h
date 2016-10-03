@@ -52,7 +52,7 @@
 #include "maths/ncyclotomic.h"
 #include "packet/packet.h"
 #include "treewidth/treedecomposition.h"
-#include "utilities/nbooleans.h"
+#include "utilities/boolset.h"
 #include "utilities/nmarkedvector.h"
 #include "utilities/nproperty.h"
 

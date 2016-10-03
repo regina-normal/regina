@@ -35,7 +35,7 @@
 #include <climits>
 #include "maths/ninteger.h"
 #include "utilities/stringutils.h"
-#include "utilities/nbooleans.h"
+#include "utilities/boolset.h"
 
 namespace regina {
 

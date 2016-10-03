@@ -46,7 +46,7 @@
 #include "regina-core.h"
 #include "output.h"
 #include "generic/facetspec.h"
-#include "utilities/nbooleans.h"
+#include "utilities/boolset.h"
 
 namespace regina {
 

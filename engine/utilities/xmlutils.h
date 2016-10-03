@@ -49,7 +49,7 @@
 #include <sstream>
 #include <libxml/parser.h>
 #include "regina-core.h"
-#include "utilities/nbooleans.h"
+#include "utilities/boolset.h"
 
 namespace regina {
 

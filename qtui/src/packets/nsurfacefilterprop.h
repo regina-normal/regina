@@ -38,7 +38,7 @@
 #ifndef __NSURFACEFILTERPROP_H
 #define __NSURFACEFILTERPROP_H
 
-#include "utilities/nbooleans.h"
+#include "utilities/boolset.h"
 
 #include "../packetui.h"
 

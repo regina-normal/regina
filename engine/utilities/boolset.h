@@ -30,13 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file utilities/nbooleans.h
+/*! \file utilities/boolset.h
  *  \brief Provides various types that extend the standard boolean.
  */
 
-#ifndef __NBOOLEANS_H
+#ifndef __BOOLSET_H
 #ifndef __DOXYGEN
-#define __NBOOLEANS_H
+#define __BOOLSET_H
 #endif
 
 #include <iostream>
