@@ -34,7 +34,7 @@
 #include "packet/container.h"
 #include "packet/script.h"
 #include "packet/text.h"
-#include "snappea/nsnappeatriangulation.h"
+#include "snappea/snappeatriangulation.h"
 
 #include "newpacketdialog.h"
 #include "packetcreator.h"
@@ -48,7 +48,7 @@
 #include "packettypes/nnormalsurfacecreator.h"
 #include "packettypes/nsurfacefiltercreator.h"
 #include "packettypes/ntriangulationcreator.h"
-#include "packettypes/nsnappeacreator.h"
+#include "packettypes/snappeacreator.h"
 
 void ReginaMain::newAngleStructures() {
     newPacket(new AngleStructureCreator(),
@@ -99,7 +99,7 @@ void ReginaMain::newScript() {
 }
 
 void ReginaMain::newSnapPeaTriangulation() {
-    newPacket(new NSnapPeaTriangulationCreator(this), 0,
+    newPacket(new SnapPeaTriangulationCreator(this), 0,
         tr("New SnapPea Triangulation"));
 }
 

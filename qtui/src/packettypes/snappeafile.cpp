@@ -31,10 +31,10 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "snappea/nsnappeatriangulation.h"
+#include "snappea/snappeatriangulation.h"
 
 // UI includes:
-#include "nsnappeafile.h"
+#include "snappeafile.h"
 #include "packeteditiface.h"
 
 #include <QLabel>
@@ -42,9 +42,9 @@
 #include <QTextEdit>
 
 using regina::Packet;
-using regina::NSnapPeaTriangulation;
+using regina::SnapPeaTriangulation;
 
-NSnapPeaFileUI::NSnapPeaFileUI(regina::NSnapPeaTriangulation* packet,
+SnapPeaFileUI::SnapPeaFileUI(regina::SnapPeaTriangulation* packet,
         PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), tri(packet) {
     ui = new QWidget();
@@ -63,19 +63,19 @@ NSnapPeaFileUI::NSnapPeaFileUI(regina::NSnapPeaTriangulation* packet,
     editIface = new PacketEditTextEditor(file);
 }
 
-NSnapPeaFileUI::~NSnapPeaFileUI() {
+SnapPeaFileUI::~SnapPeaFileUI() {
     delete editIface;
 }
 
-regina::Packet* NSnapPeaFileUI::getPacket() {
+regina::Packet* SnapPeaFileUI::getPacket() {
     return tri;
 }
 
-QWidget* NSnapPeaFileUI::getInterface() {
+QWidget* SnapPeaFileUI::getInterface() {
     return ui;
 }
 
-void NSnapPeaFileUI::refresh() {
+void SnapPeaFileUI::refresh() {
     if (tri->isNull()) {
         file->setPlainText(tr("Null triangulation"));
     } else {

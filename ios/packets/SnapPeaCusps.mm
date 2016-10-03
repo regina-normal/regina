@@ -34,7 +34,7 @@
 #import "SnapPeaViewController.h"
 #import "SnapPeaCusps.h"
 #import "maths/numbertheory.h"
-#import "snappea/nsnappeatriangulation.h"
+#import "snappea/snappeatriangulation.h"
 
 #pragma mark - Table cells
 
@@ -74,7 +74,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *fillIcon;
 
 @property (strong, nonatomic) SnapPeaViewController* viewer;
-@property (assign, nonatomic) regina::NSnapPeaTriangulation* packet;
+@property (assign, nonatomic) regina::SnapPeaTriangulation* packet;
 @end
 
 @implementation SnapPeaCusps

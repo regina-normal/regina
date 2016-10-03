@@ -111,7 +111,7 @@ enum PacketType {
     PACKET_DIM2TRIANGULATION = 15,
     /**
      * Represents a triangulation in the embedded SnapPea kernel, of
-     * class NSnapPeaTriangulation.
+     * class SnapPeaTriangulation.
      */
     PACKET_SNAPPEATRIANGULATION = 16,
     /**

@@ -33,7 +33,7 @@
 // Regina core includes:
 #include "census/ncensus.h"
 #include "manifold/nmanifold.h"
-#include "snappea/nsnappeatriangulation.h"
+#include "snappea/snappeatriangulation.h"
 #include "subcomplex/nstandardtri.h"
 #include "triangulation/ntriangulation.h"
 
@@ -69,7 +69,7 @@ NTriSurfacesUI::NTriSurfacesUI(regina::NTriangulation* packet,
     layout->addStretch(2);
 
     QLabel* label;
-    if (dynamic_cast<regina::NSnapPeaTriangulation*>(packet))
+    if (dynamic_cast<regina::SnapPeaTriangulation*>(packet))
         label = new QLabel(tr(
             "<qt><b>Unfilled Manifold:<br>"
             "High-level Recognition Routines</b></qt>"), ui);
@@ -351,7 +351,7 @@ void NTriSurfacesUI::refresh() {
         delete std;
     }
 
-    if (! dynamic_cast<regina::NSnapPeaTriangulation*>(tri)) {
+    if (! dynamic_cast<regina::SnapPeaTriangulation*>(tri)) {
         titleZeroEff->setVisible(true);
         zeroEff->setVisible(true);
         btnZeroEff->setVisible(true);

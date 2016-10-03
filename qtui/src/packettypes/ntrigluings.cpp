@@ -35,7 +35,7 @@
 #include "packet/container.h"
 #include "packet/text.h"
 #include "progress/progresstracker.h"
-#include "snappea/nsnappeatriangulation.h"
+#include "snappea/snappeatriangulation.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangle.h"
 
@@ -1263,7 +1263,7 @@ void NTriGluingsUI::toSnapPea() {
         return;
     }
 
-    regina::NSnapPeaTriangulation* ans = new regina::NSnapPeaTriangulation(*tri,
+    regina::SnapPeaTriangulation* ans = new regina::SnapPeaTriangulation(*tri,
         true /* allow closed, since we have already check this */);
     if (ans->isNull()) {
         ReginaSupport::sorry(ui,

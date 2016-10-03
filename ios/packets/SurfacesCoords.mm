@@ -37,7 +37,7 @@
 #import "SurfacesViewController.h"
 #import "TextHelper.h"
 #import "MDSpreadViewClasses.h"
-#import "snappea/nsnappeatriangulation.h"
+#import "snappea/snappeatriangulation.h"
 #import "surfaces/nnormalsurfacelist.h"
 #import "triangulation/ntriangulation.h"
 
@@ -156,7 +156,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
                     tmp = (self.compact.on ? [RegularSpreadViewCell cellSizeFor:@"—"] : [RegularSpreadHeaderCell cellSizeFor:@"Bdry"]).width;
                 else if (! self.packet->allowsSpun())
                     tmp = [RegularSpreadViewCell cellSizeFor:@"Real"].width;
-                else if (! dynamic_cast<regina::NSnapPeaTriangulation*>(self.packet->triangulation()))
+                else if (! dynamic_cast<regina::SnapPeaTriangulation*>(self.packet->triangulation()))
                     tmp = [RegularSpreadViewCell cellSizeFor:@"Spun"].width;
                 else
                     tmp = [RegularSpreadViewCell cellSizeFor:@"Spun (99, 99)"].width;

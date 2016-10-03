@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "snappea/nsnappeatriangulation.h"
+#include "snappea/snappeatriangulation.h"
 
 #include "reginamain.h"
 #include "reginasupport.h"
@@ -44,7 +44,7 @@ const SnapPeaHandler SnapPeaHandler::instance;
 
 regina::Packet* SnapPeaHandler::importData(const QString& fileName,
         ReginaMain* parentWidget) const {
-    regina::NSnapPeaTriangulation* ans = new regina::NSnapPeaTriangulation(
+    regina::SnapPeaTriangulation* ans = new regina::SnapPeaTriangulation(
         static_cast<const char*>(QFile::encodeName(fileName)));
     if (ans->isNull()) {
         ReginaSupport::sorry(parentWidget,

@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "enumerate/ntreeconstraint.h"
-#include "snappea/nsnappeatriangulation.h"
+#include "snappea/snappeatriangulation.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
@@ -90,7 +90,7 @@ bool LPConstraintNonSpun::addRows(
         return false;
 
     // Compute the two slope equations for the torus cusp, if we can.
-    NSnapPeaTriangulation snapPea(*tri, false);
+    SnapPeaTriangulation snapPea(*tri, false);
     NMatrixInt* coeffs = snapPea.slopeEquations();
     if (! coeffs)
         return false;

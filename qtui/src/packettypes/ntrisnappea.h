@@ -45,7 +45,7 @@ class QStackedWidget;
 
 namespace regina {
     class Packet;
-    class NSnapPeaTriangulation;
+    class SnapPeaTriangulation;
     template <int> class Triangulation;
     typedef Triangulation<3> NTriangulation;
 };
@@ -61,7 +61,7 @@ class NTriSnapPeaUI : public QObject, public PacketViewerTab {
          * Packet details
          */
         regina::NTriangulation* reginaTri;
-        regina::NSnapPeaTriangulation* snappeaTri;
+        regina::SnapPeaTriangulation* snappeaTri;
 
         /**
          * Internal components
@@ -103,7 +103,7 @@ class NTriSnapPeaUI : public QObject, public PacketViewerTab {
 
     private:
         /**
-         * These routines convert an NSnapPeaTriangulation::SolutionType
+         * These routines convert an SnapPeaTriangulation::SolutionType
          * into various types of human-readable string.  They are declared
          * to take an int so that the calculation engine headers need not
          * be included.

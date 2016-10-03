@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Qt User Interface                                                     *
+ *  KDE User Interface                                                    *
  *                                                                        *
  *  Copyright (c) 1999-2016, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,47 +30,56 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file nsnappeafile.h
- *  \brief Provides access to the SnapPea data file for SnapPea triangulations.
+/*! \file snappeaalgebra.h
+ *  \brief Provides an algebra viewer for SnapPea triangulations.
  */
 
-#ifndef __NSNAPPEAFILE_H
-#define __NSNAPPEAFILE_H
+#ifndef __SNAPPEAALGEBRA_H
+#define __SNAPPEAALGEBRA_H
 
 #include "../packettabui.h"
 
-class QTextEdit;
+class GroupWidget;
+class QLabel;
 
 namespace regina {
-    class NSnapPeaTriangulation;
+    class Packet;
+    class SnapPeaTriangulation;
 };
 
 /**
- * A triangulation page for viewing normal surface properties.
+ * A triangulation page for viewing algebraic properties.
  */
-class NSnapPeaFileUI : public QObject, public PacketViewerTab {
+class SnapPeaAlgebraUI : public QObject, public PacketViewerTab {
     Q_OBJECT
 
     private:
         /**
          * Packet details
          */
-        regina::NSnapPeaTriangulation* tri;
+        regina::SnapPeaTriangulation* tri;
 
         /**
          * Internal components
          */
         QWidget* ui;
-        QTextEdit* file;
-        PacketEditIface* editIface;
+
+        QLabel* filledH1;
+        QLabel* unfilledH1;
+        GroupWidget* filledFundGroup;
+        GroupWidget* unfilledFundGroup;
+
+        QLabel* filledH1Title;
+        QLabel* unfilledH1Title;
+        QLabel* filledFundGroupTitle;
+        QLabel* unfilledFundGroupTitle;
 
     public:
         /**
-         * Constructor and destructor.
+         * Constructor.
          */
-        NSnapPeaFileUI(regina::NSnapPeaTriangulation* packet,
-            PacketTabbedUI* useParentUI);
-        ~NSnapPeaFileUI();
+        SnapPeaAlgebraUI(regina::SnapPeaTriangulation* packet,
+                PacketTabbedUI* useParentUI);
 
         /**
          * PacketViewerTab overrides.
@@ -78,11 +87,12 @@ class NSnapPeaFileUI : public QObject, public PacketViewerTab {
         regina::Packet* getPacket();
         QWidget* getInterface();
         void refresh();
-        PacketEditIface* getEditIface();
-};
 
-inline PacketEditIface* NSnapPeaFileUI::getEditIface() {
-    return editIface;
-}
+    public slots:
+        /**
+         * Note that preferences have changed.
+         */
+        void updatePreferences();
+};
 
 #endif

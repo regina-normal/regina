@@ -26,12 +26,6 @@ SET ( FILES
   nhypersurfaceui
   nnormalsurfacecreator
   nnormalsurfaceui
-  nsnappeaalgebra
-  nsnappeacreator
-  nsnappeafile
-  nsnappeagluings
-  nsnappeashapes
-  nsnappeaui
   nsurfacecompatui
   nsurfacecoordinateui
   nsurfacefiltercomb
@@ -50,7 +44,13 @@ SET ( FILES
   pdfui
   scriptui
   skeletonwindow
+  snappeaalgebra
   snappeacomponents
+  snappeacreator
+  snappeafile
+  snappeagluings
+  snappeashapes
+  snappeaui
   textui
   )
 

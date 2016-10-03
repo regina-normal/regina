@@ -48,7 +48,7 @@
 #include "packettypes/nnormalsurfaceui.h"
 #include "packettypes/pdfui.h"
 #include "packettypes/scriptui.h"
-#include "packettypes/nsnappeaui.h"
+#include "packettypes/snappeaui.h"
 #include "packettypes/nsurfacefiltercomb.h"
 #include "packettypes/nsurfacefilterprop.h"
 #include "packettypes/textui.h"
@@ -168,8 +168,8 @@ PacketUI* PacketManager::createUI(regina::Packet* packet,
             return new ScriptUI(
                 dynamic_cast<Script*>(packet), enclosingPane);
         case PACKET_SNAPPEATRIANGULATION:
-            return new NSnapPeaUI(
-                dynamic_cast<NSnapPeaTriangulation*>(packet), enclosingPane);
+            return new SnapPeaUI(
+                dynamic_cast<SnapPeaTriangulation*>(packet), enclosingPane);
         case PACKET_SURFACEFILTER:
             switch (((NSurfaceFilter*)packet)->filterType()) {
                 case NS_FILTER_COMBINATION:

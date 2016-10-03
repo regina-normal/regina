@@ -46,7 +46,7 @@
 
 namespace regina {
     class Cusp;
-    class NSnapPeaTriangulation;
+    class SnapPeaTriangulation;
 };
 
 /**
@@ -76,7 +76,7 @@ class CuspChooser : public QComboBox, public regina::PacketListener {
         };
 
     private:
-        regina::NSnapPeaTriangulation* tri_;
+        regina::SnapPeaTriangulation* tri_;
             /**< The triangulation whose cusps we are choosing from. */
         CuspFilterFunc filter_;
             /**< A filter to restrict the available selections, or
@@ -100,7 +100,7 @@ class CuspChooser : public QComboBox, public regina::PacketListener {
          * The given filter may be 0, in which case every cusp
          * will be offered.
          */
-        CuspChooser(regina::NSnapPeaTriangulation* tri,
+        CuspChooser(regina::SnapPeaTriangulation* tri,
                 CuspFilterFunc filter, QWidget* parent,
                 bool autoUpdate = true);
 
@@ -177,14 +177,14 @@ class CuspDialog : public QDialog {
          * Constructor and destructor.
          */
         CuspDialog(QWidget* parent,
-            regina::NSnapPeaTriangulation* tri,
+            regina::SnapPeaTriangulation* tri,
             CuspFilterFunc filter,
             const QString& title,
             const QString& message,
             const QString& whatsThis);
 
         static int choose(QWidget* parent,
-            regina::NSnapPeaTriangulation* tri,
+            regina::SnapPeaTriangulation* tri,
             CuspFilterFunc filter,
             const QString& title,
             const QString& message,

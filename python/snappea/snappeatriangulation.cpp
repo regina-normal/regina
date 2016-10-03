@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "maths/nmatrixint.h"
-#include "snappea/nsnappeatriangulation.h"
+#include "snappea/snappeatriangulation.h"
 #include "../safeheldtype.h"
 #include "../helpers.h"
 
@@ -41,37 +41,37 @@
 using namespace boost::python;
 using namespace regina::python;
 using regina::Cusp;
-using regina::NSnapPeaTriangulation;
+using regina::SnapPeaTriangulation;
 using regina::NTriangulation;
 
 namespace {
-    double (NSnapPeaTriangulation::*volume_void)() const =
-        &NSnapPeaTriangulation::volume;
-    NTriangulation* (NSnapPeaTriangulation::*filledTriangulation_void)() const =
-        &NSnapPeaTriangulation::filledTriangulation;
-    NTriangulation* (NSnapPeaTriangulation::*filledTriangulation_unsigned)
-        (unsigned) const = &NSnapPeaTriangulation::filledTriangulation;
+    double (SnapPeaTriangulation::*volume_void)() const =
+        &SnapPeaTriangulation::volume;
+    NTriangulation* (SnapPeaTriangulation::*filledTriangulation_void)() const =
+        &SnapPeaTriangulation::filledTriangulation;
+    NTriangulation* (SnapPeaTriangulation::*filledTriangulation_unsigned)
+        (unsigned) const = &SnapPeaTriangulation::filledTriangulation;
 
-    boost::python::tuple volume_precision(const NSnapPeaTriangulation& t) {
+    boost::python::tuple volume_precision(const SnapPeaTriangulation& t) {
         int precision;
         double volume = t.volume(precision);
         return boost::python::make_tuple(volume, precision);
     }
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_fundamentalGroupFilled,
-        NSnapPeaTriangulation::fundamentalGroupFilled, 0, 3);
+        SnapPeaTriangulation::fundamentalGroupFilled, 0, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_cusp,
-        NSnapPeaTriangulation::cusp, 0, 1);
+        SnapPeaTriangulation::cusp, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_fill,
-        NSnapPeaTriangulation::fill, 2, 3);
+        SnapPeaTriangulation::fill, 2, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_unfill,
-        NSnapPeaTriangulation::unfill, 0, 1);
+        SnapPeaTriangulation::unfill, 0, 1);
 
     BOOST_PYTHON_FUNCTION_OVERLOADS(OL_enableKernelMessages,
-        NSnapPeaTriangulation::enableKernelMessages, 0, 1);
+        SnapPeaTriangulation::enableKernelMessages, 0, 1);
 }
 
-void addNSnapPeaTriangulation() {
+void addSnapPeaTriangulation() {
     class_<Cusp, std::auto_ptr<Cusp>, boost::noncopyable>("Cusp", no_init)
         .def("vertex", &Cusp::vertex,
             return_value_policy<reference_existing_object>())
@@ -82,92 +82,94 @@ void addNSnapPeaTriangulation() {
         .def(regina::python::add_eq_operators())
     ;
 
-    class_<NSnapPeaTriangulation, bases<regina::NTriangulation>,
-            SafeHeldType<NSnapPeaTriangulation>, boost::noncopyable>
-            ("NSnapPeaTriangulation", init<>())
+    class_<SnapPeaTriangulation, bases<regina::NTriangulation>,
+            SafeHeldType<SnapPeaTriangulation>, boost::noncopyable>
+            ("SnapPeaTriangulation", init<>())
         .def(init<const std::string&>())
-        .def(init<const NSnapPeaTriangulation&>())
+        .def(init<const SnapPeaTriangulation&>())
         .def(init<const NTriangulation&, optional<bool> >())
-        .def("isNull", &NSnapPeaTriangulation::isNull)
-        .def("name", &NSnapPeaTriangulation::name)
-        .def("solutionType", &NSnapPeaTriangulation::solutionType)
+        .def("isNull", &SnapPeaTriangulation::isNull)
+        .def("name", &SnapPeaTriangulation::name)
+        .def("solutionType", &SnapPeaTriangulation::solutionType)
         .def("volume", volume_void)
         .def("volumeWithPrecision", volume_precision)
-        .def("volumeZero", &NSnapPeaTriangulation::volumeZero)
-        .def("shape", &NSnapPeaTriangulation::shape,
+        .def("volumeZero", &SnapPeaTriangulation::volumeZero)
+        .def("shape", &SnapPeaTriangulation::shape,
             return_value_policy<copy_const_reference>())
-        .def("minImaginaryShape", &NSnapPeaTriangulation::minImaginaryShape)
-        .def("gluingEquations", &NSnapPeaTriangulation::gluingEquations,
+        .def("minImaginaryShape", &SnapPeaTriangulation::minImaginaryShape)
+        .def("gluingEquations", &SnapPeaTriangulation::gluingEquations,
             return_value_policy<manage_new_object>())
         .def("gluingEquationsRect",
-            &NSnapPeaTriangulation::gluingEquationsRect,
+            &SnapPeaTriangulation::gluingEquationsRect,
             return_value_policy<manage_new_object>())
-        .def("countCusps", &NSnapPeaTriangulation::countCusps)
+        .def("countCusps", &SnapPeaTriangulation::countCusps)
         .def("countCompleteCusps",
-            &NSnapPeaTriangulation::countCompleteCusps)
-        .def("countFilledCusps", &NSnapPeaTriangulation::countFilledCusps)
-        .def("cusp", &NSnapPeaTriangulation::cusp, OL_cusp()[
+            &SnapPeaTriangulation::countCompleteCusps)
+        .def("countFilledCusps", &SnapPeaTriangulation::countFilledCusps)
+        .def("cusp", &SnapPeaTriangulation::cusp, OL_cusp()[
             return_internal_reference<>()])
-        .def("fill", &NSnapPeaTriangulation::fill, OL_fill())
-        .def("unfill", &NSnapPeaTriangulation::unfill, OL_unfill())
+        .def("fill", &SnapPeaTriangulation::fill, OL_fill())
+        .def("unfill", &SnapPeaTriangulation::unfill, OL_unfill())
         .def("filledTriangulation", filledTriangulation_void,
             return_value_policy<to_held_type<> >())
         .def("filledTriangulation", filledTriangulation_unsigned,
             return_value_policy<to_held_type<> >())
-        .def("slopeEquations", &NSnapPeaTriangulation::slopeEquations,
+        .def("slopeEquations", &SnapPeaTriangulation::slopeEquations,
             return_value_policy<manage_new_object>())
         .def("fundamentalGroupFilled",
-            &NSnapPeaTriangulation::fundamentalGroupFilled,
+            &SnapPeaTriangulation::fundamentalGroupFilled,
             OL_fundamentalGroupFilled(args(
                 "simplify_presentation",
                 "fillings_may_affect_generators",
                 "minimize_number_of_generators"))
             [return_internal_reference<>()])
-        .def("homologyFilled", &NSnapPeaTriangulation::homologyFilled,
+        .def("homologyFilled", &SnapPeaTriangulation::homologyFilled,
             return_internal_reference<>())
-        .def("protoCanonize", &NSnapPeaTriangulation::protoCanonize,
+        .def("protoCanonize", &SnapPeaTriangulation::protoCanonize,
             return_value_policy<to_held_type<> >())
-        .def("protoCanonise", &NSnapPeaTriangulation::protoCanonise,
+        .def("protoCanonise", &SnapPeaTriangulation::protoCanonise,
             return_value_policy<to_held_type<> >())
-        .def("canonize", &NSnapPeaTriangulation::canonize,
+        .def("canonize", &SnapPeaTriangulation::canonize,
             return_value_policy<to_held_type<> >())
-        .def("canonise", &NSnapPeaTriangulation::canonise,
+        .def("canonise", &SnapPeaTriangulation::canonise,
             return_value_policy<to_held_type<> >())
-        .def("randomize", &NSnapPeaTriangulation::randomize)
-        .def("randomise", &NSnapPeaTriangulation::randomise)
+        .def("randomize", &SnapPeaTriangulation::randomize)
+        .def("randomise", &SnapPeaTriangulation::randomise)
         .def("kernelMessagesEnabled",
-            &NSnapPeaTriangulation::kernelMessagesEnabled)
+            &SnapPeaTriangulation::kernelMessagesEnabled)
         .def("enableKernelMessages",
-            &NSnapPeaTriangulation::enableKernelMessages,
+            &SnapPeaTriangulation::enableKernelMessages,
             OL_enableKernelMessages())
         .def("disableKernelMessages",
-            &NSnapPeaTriangulation::disableKernelMessages)
+            &SnapPeaTriangulation::disableKernelMessages)
         .staticmethod("kernelMessagesEnabled")
         .staticmethod("enableKernelMessages")
         .staticmethod("disableKernelMessages")
         .attr("typeID") = regina::PACKET_SNAPPEATRIANGULATION
     ;
 
-    enum_<NSnapPeaTriangulation::SolutionType>("SolutionType")
-        .value("not_attempted", NSnapPeaTriangulation::not_attempted)
+    enum_<SnapPeaTriangulation::SolutionType>("SolutionType")
+        .value("not_attempted", SnapPeaTriangulation::not_attempted)
         .value("geometric_solution",
-            NSnapPeaTriangulation::geometric_solution)
+            SnapPeaTriangulation::geometric_solution)
         .value("nongeometric_solution",
-            NSnapPeaTriangulation::nongeometric_solution)
-        .value("flat_solution", NSnapPeaTriangulation::flat_solution)
+            SnapPeaTriangulation::nongeometric_solution)
+        .value("flat_solution", SnapPeaTriangulation::flat_solution)
         .value("degenerate_solution",
-            NSnapPeaTriangulation::degenerate_solution)
-        .value("other_solution", NSnapPeaTriangulation::other_solution)
-        .value("no_solution", NSnapPeaTriangulation::no_solution)
+            SnapPeaTriangulation::degenerate_solution)
+        .value("other_solution", SnapPeaTriangulation::other_solution)
+        .value("no_solution", SnapPeaTriangulation::no_solution)
         .value("externally_computed",
-            NSnapPeaTriangulation::externally_computed)
+            SnapPeaTriangulation::externally_computed)
     ;
 
-    implicitly_convertible<SafeHeldType<NSnapPeaTriangulation>,
+    implicitly_convertible<SafeHeldType<SnapPeaTriangulation>,
         SafeHeldType<regina::NTriangulation> >();
 
-    FIX_REGINA_BOOST_CONVERTERS(NSnapPeaTriangulation);
+    FIX_REGINA_BOOST_CONVERTERS(SnapPeaTriangulation);
 
     scope().attr("NCusp") = scope().attr("Cusp");
+    scope().attr("NSnapPeaTriangulation") =
+        scope().attr("SnapPeaTriangulation");
 }
 

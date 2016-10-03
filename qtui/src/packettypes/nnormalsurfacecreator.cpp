@@ -122,7 +122,7 @@ QString NNormalSurfaceCreator::parentWhatsThis() {
 
 regina::Packet* NNormalSurfaceCreator::createPacket(regina::Packet* parent,
         QWidget* parentWidget) {
-    // Note that parent may be either NTriangulation or NSnapPeaTriangulation.
+    // Note that parent may be either NTriangulation or SnapPeaTriangulation.
     if (! dynamic_cast<regina::NTriangulation*>(parent)) {
         ReginaSupport::sorry(ui,
             ui->tr("The selected parent is not a 3-manifold triangulation."),

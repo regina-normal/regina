@@ -60,7 +60,7 @@
 #include "dim2/dim2triangulation.h"
 #include "dim4/dim4triangulation.h"
 #include "hypersurface/nnormalhypersurfacelist.h"
-#include "snappea/nsnappeatriangulation.h"
+#include "snappea/snappeatriangulation.h"
 #include "generic/triangulation.h"
 
 namespace regina {

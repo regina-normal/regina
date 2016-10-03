@@ -544,9 +544,9 @@ class REGINA_API Triangulation<3> :
          *
          * \warning As with every routine implemented by Regina's
          * NTriangulation class, if you are calling this from the subclass
-         * NSnapPeaTriangulation then <b>any fillings on the cusps will be
+         * SnapPeaTriangulation then <b>any fillings on the cusps will be
          * ignored</b>.  If you wish to compute the fundamental group with
-         * fillings, call NSnapPeaTriangulation::fundamentalGroupFilled()
+         * fillings, call SnapPeaTriangulation::fundamentalGroupFilled()
          * instead.
          *
          * @return the fundamental group.
@@ -603,9 +603,9 @@ class REGINA_API Triangulation<3> :
          *
          * \warning As with every routine implemented by Regina's
          * NTriangulation class, if you are calling this from the subclass
-         * NSnapPeaTriangulation then <b>any fillings on the cusps will
+         * SnapPeaTriangulation then <b>any fillings on the cusps will
          * be ignored</b>.  If you wish to compute homology with fillings,
-         * call NSnapPeaTriangulation::homologyFilled() instead.
+         * call SnapPeaTriangulation::homologyFilled() instead.
          *
          * @return the first homology group.
          */
@@ -636,9 +636,9 @@ class REGINA_API Triangulation<3> :
          *
          * \warning As with every routine implemented by Regina's
          * NTriangulation class, if you are calling this from the subclass
-         * NSnapPeaTriangulation then <b>any fillings on the cusps will
+         * SnapPeaTriangulation then <b>any fillings on the cusps will
          * be ignored</b>.  If you wish to compute homology with fillings,
-         * call NSnapPeaTriangulation::homologyFilled() instead.
+         * call SnapPeaTriangulation::homologyFilled() instead.
          *
          * @return the first homology group.
          */
@@ -2657,7 +2657,7 @@ class REGINA_API Triangulation<3> :
          *   information (such as the Turaev-Viro invariants) will not
          *   be written to the SnapPea file at all.
          *
-         * - If you are calling this from the subclass NSnapPeaTriangulation,
+         * - If you are calling this from the subclass SnapPeaTriangulation,
          *   then all additional SnapPea-specific information will be written
          *   to the file (indeed, the SnapPea kernel itself will be used to
          *   produce the file contents).
@@ -2690,7 +2690,7 @@ class REGINA_API Triangulation<3> :
          *   information (such as the Turaev-Viro invariants) will not
          *   be written to the SnapPea file at all.
          *
-         * - If you are calling this from the subclass NSnapPeaTriangulation,
+         * - If you are calling this from the subclass SnapPeaTriangulation,
          *   then all additional SnapPea-specific information will be written
          *   to the file (indeed, the SnapPea kernel itself will be used to
          *   produce the file contents).
@@ -2726,7 +2726,7 @@ class REGINA_API Triangulation<3> :
          *   information (such as the Turaev-Viro invariants) will not
          *   be written to the SnapPea file at all.
          *
-         * - If you are calling this from the subclass NSnapPeaTriangulation,
+         * - If you are calling this from the subclass SnapPeaTriangulation,
          *   then all additional SnapPea-specific information will be written
          *   to the file (indeed, the SnapPea kernel itself will be used to
          *   produce the file contents).
@@ -2889,12 +2889,12 @@ class REGINA_API Triangulation<3> :
          * Regina's NTriangulation class does not track such information itself.
          *
          * If you wish to preserve all SnapPea-specific information from the
-         * data file, you should work with the NSnapPeaTriangulation class
+         * data file, you should work with the SnapPeaTriangulation class
          * instead (which uses the SnapPea kernel directly, and can therefore
          * store anything that SnapPea can).
          *
          * If you wish to read a triangulation from a SnapPea \e file, you
-         * should likewise call the NSnapPeaTriangulation constructor, giving
+         * should likewise call the SnapPeaTriangulation constructor, giving
          * the filename as argument.  This will read all SnapPea-specific
          * information (as described above), and also avoids constructing an
          * enormous intermediate string.
@@ -2905,10 +2905,10 @@ class REGINA_API Triangulation<3> :
          *
          * \warning This routine is "lossy", in that drops SnapPea-specific
          * information (as described above).  Unless you specifically need an
-         * NTriangulation (not an NSnapPeaTriangulation) or you need to avoid
+         * NTriangulation (not an SnapPeaTriangulation) or you need to avoid
          * calling routines from the SnapPea kernel, it is highly recommended
-         * that you create an NSnapPeaTriangulation from the given file
-         * contents instead.  See the string-based NSnapPeaTriangulation
+         * that you create an SnapPeaTriangulation from the given file
+         * contents instead.  See the string-based SnapPeaTriangulation
          * constructor for how to do this.
          *
          * @param snapPeaData a string containing the full contents of a
@@ -3023,7 +3023,7 @@ class REGINA_API Triangulation<3> :
          * triangulation will be returned, and it is the user's responsibility
          * to deallocate this when it is finished with.
          *
-         * Unlike the NSnapPeaTriangulation constructor, this routine uses
+         * Unlike the SnapPeaTriangulation constructor, this routine uses
          * Regina's own SnapPea input code - it does not call any functions
          * from the SnapPea kernel.
          *

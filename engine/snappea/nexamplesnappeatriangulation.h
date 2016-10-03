@@ -34,9 +34,9 @@
  *  \brief Deprecated header.
  */
 
-#ifndef __EXAMPLESNAPPEA_H
+#ifndef __NEXAMPLESNAPPEATRIANGULATION_H
 #ifndef __DOXYGEN
-#define __EXAMPLESNAPPEA_H
+#define __NEXAMPLESNAPPEATRIANGULATION_H
 #endif
 
 #warning This header is deprecated; please use snappea/examplesnappea.h instead.

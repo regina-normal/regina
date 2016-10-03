@@ -75,7 +75,7 @@ QString AngleStructureCreator::parentWhatsThis() {
 
 regina::Packet* AngleStructureCreator::createPacket(
         regina::Packet* parentPacket, QWidget* parentWidget) {
-    // Note that parent may be either NTriangulation or NSnapPeaTriangulation.
+    // Note that parent may be either NTriangulation or SnapPeaTriangulation.
     if (! dynamic_cast<regina::NTriangulation*>(parentPacket)) {
         ReginaSupport::sorry(ui,
             ui->tr("The selected parent is not a 3-manifold triangulation."),

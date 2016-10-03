@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "snappea/nsnappeatriangulation.h"
+#include "snappea/snappeatriangulation.h"
 #include "snappea/xmlsnappeareader.h"
 #include "snappea/kernel/unix_file_io.h"
 
@@ -60,7 +60,7 @@ void XMLSnapPeaReader::endContentSubElement(
     }
 }
 
-XMLPacketReader* NSnapPeaTriangulation::xmlReader(Packet*,
+XMLPacketReader* SnapPeaTriangulation::xmlReader(Packet*,
         XMLTreeResolver& resolver) {
     return new XMLSnapPeaReader(resolver);
 }

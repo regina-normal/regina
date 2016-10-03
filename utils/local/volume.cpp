@@ -44,7 +44,7 @@
  * All output is written to standard output.
  */
 
-#include <snappea/nsnappeatriangulation.h>
+#include <snappea/snappeatriangulation.h>
 #include <triangulation/ntriangulation.h>
 
 #include <cstdlib>
@@ -77,13 +77,13 @@ void process(NTriangulation* t) {
     std::cout << t->label() << "  -->  ";
     totTris++;
 
-    NSnapPeaTriangulation s(*t, true);
+    SnapPeaTriangulation s(*t, true);
     if (s.isNull()) {
         std::cout << "UNUSABLE";
         totUnusable++;
     } else {
-        NSnapPeaTriangulation::SolutionType type = s.solutionType();
-        if (type == NSnapPeaTriangulation::geometric_solution)
+        SnapPeaTriangulation::SolutionType type = s.solutionType();
+        if (type == SnapPeaTriangulation::geometric_solution)
             totGeometric++;
 
         int precision;
@@ -92,19 +92,19 @@ void process(NTriangulation* t) {
         std::cout << vol << " (" << precision << " place(s)) ... ";
 
         switch(type) {
-            case NSnapPeaTriangulation::not_attempted:
+            case SnapPeaTriangulation::not_attempted:
                 std::cout << "not attempted"; break;
-            case NSnapPeaTriangulation::geometric_solution:
+            case SnapPeaTriangulation::geometric_solution:
                 std::cout << "geometric"; break;
-            case NSnapPeaTriangulation::nongeometric_solution:
+            case SnapPeaTriangulation::nongeometric_solution:
                 std::cout << "nongeometric"; break;
-            case NSnapPeaTriangulation::flat_solution:
+            case SnapPeaTriangulation::flat_solution:
                 std::cout << "flat"; break;
-            case NSnapPeaTriangulation::degenerate_solution:
+            case SnapPeaTriangulation::degenerate_solution:
                 std::cout << "degenerate"; break;
-            case NSnapPeaTriangulation::other_solution:
+            case SnapPeaTriangulation::other_solution:
                 std::cout << "other solution"; break;
-            case NSnapPeaTriangulation::no_solution:
+            case SnapPeaTriangulation::no_solution:
                 std::cout << "no solution"; break;
         }
     }
@@ -113,7 +113,7 @@ void process(NTriangulation* t) {
 }
 
 int main(int argc, char* argv[]) {
-    NSnapPeaTriangulation::disableKernelMessages();
+    SnapPeaTriangulation::disableKernelMessages();
 
     // Command-line parsing.
     char optChar;

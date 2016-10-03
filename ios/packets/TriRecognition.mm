@@ -38,7 +38,7 @@
 #import "census/ncensus.h"
 #import "manifold/nmanifold.h"
 #import "packet/container.h"
-#import "snappea/nsnappeatriangulation.h"
+#import "snappea/snappeatriangulation.h"
 #import "subcomplex/nstandardtri.h"
 #import "triangulation/ntriangulation.h"
 
@@ -161,7 +161,7 @@
         if (self.packet->size() <= 6)
             self.packet->isSolidTorus();
     }
-    if ((! self.packet->isEmpty()) && (! dynamic_cast<regina::NSnapPeaTriangulation*>(self.packet))) {
+    if ((! self.packet->isEmpty()) && (! dynamic_cast<regina::SnapPeaTriangulation*>(self.packet))) {
         [propertyList addObject:@PROP_ZEROEFF];
         [propertyList addObject:@PROP_SPLITTING];
         if (self.packet->size() <= 6) {
@@ -460,7 +460,7 @@
 
 - (IBAction)canonical:(id)sender {
     // This action is only available to SnapPea triangulations.
-    regina::NSnapPeaTriangulation* s = dynamic_cast<regina::NSnapPeaTriangulation*>(self.packet);
+    regina::SnapPeaTriangulation* s = dynamic_cast<regina::SnapPeaTriangulation*>(self.packet);
     if (! s)
         return;
     

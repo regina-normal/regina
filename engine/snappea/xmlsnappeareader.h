@@ -41,7 +41,7 @@
 
 #include "regina-core.h"
 #include "packet/xmlpacketreader.h"
-#include "snappea/nsnappeatriangulation.h"
+#include "snappea/snappeatriangulation.h"
 
 namespace regina {
 
@@ -57,7 +57,7 @@ namespace regina {
  */
 class REGINA_API XMLSnapPeaReader : public XMLPacketReader {
     private:
-        NSnapPeaTriangulation* snappea_;
+        SnapPeaTriangulation* snappea_;
             /**< The SnapPea triangulation currently being read. */
 
     public:
@@ -82,7 +82,7 @@ class REGINA_API XMLSnapPeaReader : public XMLPacketReader {
 // Inline functions for XMLSnapPeaReader
 
 inline XMLSnapPeaReader::XMLSnapPeaReader(XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), snappea_(new NSnapPeaTriangulation()) {
+        XMLPacketReader(resolver), snappea_(new SnapPeaTriangulation()) {
 }
 
 inline Packet* XMLSnapPeaReader::packet() {

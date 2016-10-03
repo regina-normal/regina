@@ -158,6 +158,6 @@ void populateTests(CppUnit::TextTestRunner& runner) {
     addDim4FacetPairing(runner);
 
     // SnapPea:
-    addNSnapPeaTriangulation(runner);
+    addSnapPeaTriangulation(runner);
 }
 

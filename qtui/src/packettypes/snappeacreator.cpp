@@ -32,10 +32,10 @@
 
 // Regina core includes:
 #include "snappea/examplesnappea.h"
-#include "snappea/nsnappeatriangulation.h"
+#include "snappea/snappeatriangulation.h"
 
 // UI includes:
-#include "nsnappeacreator.h"
+#include "snappeacreator.h"
 #include "packetchooser.h"
 #include "packetfilter.h"
 #include "reginamain.h"
@@ -49,7 +49,7 @@
 #include <QStackedWidget>
 
 using regina::ExampleSnapPea;
-using regina::NSnapPeaTriangulation;
+using regina::SnapPeaTriangulation;
 using regina::NTriangulation;
 
 namespace {
@@ -76,7 +76,7 @@ namespace {
     };
 }
 
-NSnapPeaTriangulationCreator::NSnapPeaTriangulationCreator(
+SnapPeaTriangulationCreator::SnapPeaTriangulationCreator(
         ReginaMain* mainWindow) {
     // Set up the basic layout.
     ui = new QWidget();
@@ -185,11 +185,11 @@ NSnapPeaTriangulationCreator::NSnapPeaTriangulationCreator(
         SLOT(setCurrentIndex(int)));
 }
 
-QWidget* NSnapPeaTriangulationCreator::getInterface() {
+QWidget* SnapPeaTriangulationCreator::getInterface() {
     return ui;
 }
 
-regina::Packet* NSnapPeaTriangulationCreator::createPacket(regina::Packet*,
+regina::Packet* SnapPeaTriangulationCreator::createPacket(regina::Packet*,
         QWidget* parentWidget) {
     int typeId = type->currentIndex();
     if (typeId == TRI_CONVERT) {
@@ -202,8 +202,8 @@ regina::Packet* NSnapPeaTriangulationCreator::createPacket(regina::Packet*,
             return 0;
         }
 
-        NSnapPeaTriangulation* fromSnapPea =
-            dynamic_cast<NSnapPeaTriangulation*>(from);
+        SnapPeaTriangulation* fromSnapPea =
+            dynamic_cast<SnapPeaTriangulation*>(from);
         if (fromSnapPea) {
             if (fromSnapPea->isNull()) {
                 ReginaSupport::info(parentWidget,
@@ -215,8 +215,8 @@ regina::Packet* NSnapPeaTriangulationCreator::createPacket(regina::Packet*,
                         "instead."));
                 return 0;
             }
-            NSnapPeaTriangulation* ans =
-                new NSnapPeaTriangulation(*fromSnapPea);
+            SnapPeaTriangulation* ans =
+                new SnapPeaTriangulation(*fromSnapPea);
             ans->setLabel(from->label());
             return ans;
         }
@@ -240,7 +240,7 @@ regina::Packet* NSnapPeaTriangulationCreator::createPacket(regina::Packet*,
             return 0;
         }
 
-        NSnapPeaTriangulation* ans = new NSnapPeaTriangulation(*from,
+        SnapPeaTriangulation* ans = new SnapPeaTriangulation(*from,
             true /* allow closed, since we checked this above. */);
         if (ans->isNull()) {
             ReginaSupport::info(parentWidget,
@@ -260,7 +260,7 @@ regina::Packet* NSnapPeaTriangulationCreator::createPacket(regina::Packet*,
         ans->setLabel(from->label());
         return ans;
     } else if (typeId == TRI_FILE) {
-        NSnapPeaTriangulation* ans = new NSnapPeaTriangulation(
+        SnapPeaTriangulation* ans = new SnapPeaTriangulation(
             fileContents->toPlainText().toUtf8().constData());
         if ((! ans) || (ans->isNull())) {
             ReginaSupport::info(parentWidget,

@@ -30,69 +30,54 @@
  *                                                                        *
  **************************************************************************/
 
-// Regina core includes:
-#include "snappea/nsnappeatriangulation.h"
+/*! \file snappeagluings.h
+ *  \brief Provides a face gluing viewer for SnapPea triangulations.
+ */
 
-// UI includes:
-#include "nsnappeagluings.h"
+#ifndef __SNAPPEAGLUINGS_H
+#define __SNAPPEAGLUINGS_H
 
-#include <memory>
-#include <QHeaderView>
-#include <QTableView>
+#include "packettypes/ntrigluings.h"
 
-using regina::Packet;
-using regina::NSnapPeaTriangulation;
+namespace regina {
+    class SnapPeaTriangulation;
+};
 
-NSnapPeaGluingsUI::NSnapPeaGluingsUI(regina::NSnapPeaTriangulation* packet,
-        PacketTabbedUI* useParentUI) :
-        PacketViewerTab(useParentUI), tri(packet) {
-    // Set up the table of face gluings.
-    model = new GluingsModel(packet, false /* read-only */);
-    faceTable = new QTableView();
-    faceTable->setSelectionMode(QAbstractItemView::ContiguousSelection);
-    faceTable->setModel(model);
-    faceTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+class QTableView;
 
-    faceTable->setWhatsThis(tr("<qt>A table specifying which tetrahedron "
-        "faces are identified with which others.<p>"
-        "Tetrahedra are numbered upwards from 0, and the four vertices of "
-        "each tetrahedron are numbered 0, 1, 2 and 3.  Each row of the table "
-        "represents a single tetrahedron, and shows the identifications "
-        "for each of its four faces.<p>"
-        "As an example, if we are looking at the table cell for face 012 of "
-        "tetrahedron 7, a gluing of <i>5 (031)</i> shows that "
-        "that this face is identified with face 031 of tetrahedron 5, in "
-        "such a way that vertices 0, 1 and 2 of tetrahedron "
-        "7 are mapped to vertices 0, 3 and 1 respectively of tetrahedron 5.<p>"
-        "To change these identifications, simply type your own gluings into "
-        "the table.</qt>"));
+/**
+ * A SnapPea triangulation page for viewing face gluings.
+ */
+class SnapPeaGluingsUI : public QObject, public PacketViewerTab {
+    Q_OBJECT
 
-    faceTable->verticalHeader()->hide();
+    private:
+        /**
+         * Packet details
+         */
+        regina::SnapPeaTriangulation* tri;
 
-    //faceTable->setColumnStretchable(0, true);
-    //faceTable->setColumnStretchable(1, true);
-    //faceTable->setColumnStretchable(2, true);
-    //faceTable->setColumnStretchable(3, true);
-    //faceTable->setColumnStretchable(4, true);
+        /**
+         * Internal components
+         */
+        QWidget* ui;
+        QTableView* faceTable;
+        GluingsModel* model;
 
-    ui = faceTable;
-}
+    public:
+        /**
+         * Constructor and destructor.
+         */
+        SnapPeaGluingsUI(regina::SnapPeaTriangulation* packet,
+                PacketTabbedUI* useParentUI);
+        ~SnapPeaGluingsUI();
 
-NSnapPeaGluingsUI::~NSnapPeaGluingsUI() {
-    // Make sure the actions, including separators, are all deleted.
+        /**
+         * PacketViewerTab overrides.
+         */
+        regina::Packet* getPacket();
+        QWidget* getInterface();
+        void refresh();
+};
 
-    delete model;
-}
-
-regina::Packet* NSnapPeaGluingsUI::getPacket() {
-    return tri;
-}
-
-QWidget* NSnapPeaGluingsUI::getInterface() {
-    return ui;
-}
-
-void NSnapPeaGluingsUI::refresh() {
-    model->rebuild();
-}
-
+#endif

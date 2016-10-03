@@ -31,12 +31,12 @@
  **************************************************************************/
 
 #include "maths/nmatrixint.h"
-#include "snappea/nsnappeatriangulation.h"
+#include "snappea/snappeatriangulation.h"
 #include "snappea/kernel/kernel_prototypes.h"
 
 namespace regina {
 
-const NAbelianGroup* NSnapPeaTriangulation::homologyFilled() const {
+const NAbelianGroup* SnapPeaTriangulation::homologyFilled() const {
     if (! data_)
         return 0;
     if (h1Filled_.known())

@@ -42,5 +42,5 @@
 
 #include <cppunit/ui/text/TestRunner.h>
 
-void addNSnapPeaTriangulation(CppUnit::TextUi::TestRunner& runner);
+void addSnapPeaTriangulation(CppUnit::TextUi::TestRunner& runner);
 

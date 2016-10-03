@@ -33,12 +33,12 @@
 #import "PacketTabBarController.h"
 
 namespace regina {
-    class NSnapPeaTriangulation;
+    class SnapPeaTriangulation;
 }
 
 @interface SnapPeaViewController : PacketTabBarController <PacketEditor>
 
-@property (assign, nonatomic) regina::NSnapPeaTriangulation* packet;
+@property (assign, nonatomic) regina::SnapPeaTriangulation* packet;
 
 - (void)updateHeader:(UILabel*)summary volume:(UILabel*)volume solnType:(UILabel*)solnType;
 

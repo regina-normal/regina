@@ -30,43 +30,43 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file nsnappeaui.h
+/*! \file snappeaui.h
  *  \brief Provides an interface for viewing SnapPea triangulations.
  */
 
-#ifndef __NSNAPPEAUI_H
-#define __NSNAPPEAUI_H
+#ifndef __SNAPPEAUI_H
+#define __SNAPPEAUI_H
 
 #include "packet/packetlistener.h"
 #include "../packettabui.h"
 
 class ClickableLabel;
-class NSnapPeaAlgebraUI;
-class NSnapPeaGluingsUI;
-class NSnapPeaShapesUI;
+class SnapPeaAlgebraUI;
+class SnapPeaGluingsUI;
+class SnapPeaShapesUI;
 class NTriSkeletonUI;
 class PacketEditIface;
 class QLabel;
 class QToolBar;
 
 namespace regina {
-    class NSnapPeaTriangulation;
+    class SnapPeaTriangulation;
 };
 
 /**
  * A packet interface for viewing 3-manifold triangulations.
  */
-class NSnapPeaUI : public PacketTabbedUI {
+class SnapPeaUI : public PacketTabbedUI {
     Q_OBJECT
 
     private:
         /**
          * Internal components
          */
-        NSnapPeaShapesUI* shapes;
-        NSnapPeaGluingsUI* gluings;
+        SnapPeaShapesUI* shapes;
+        SnapPeaGluingsUI* gluings;
         NTriSkeletonUI* skeleton;
-        NSnapPeaAlgebraUI* algebra;
+        SnapPeaAlgebraUI* algebra;
 
         PacketEditIface* editIface;
 
@@ -74,9 +74,9 @@ class NSnapPeaUI : public PacketTabbedUI {
         /**
          * Constructor and destructor.
          */
-        NSnapPeaUI(regina::NSnapPeaTriangulation* packet,
+        SnapPeaUI(regina::SnapPeaTriangulation* packet,
             PacketPane* newEnclosingPane);
-        ~NSnapPeaUI();
+        ~SnapPeaUI();
 
         /**
          * PacketUI overrides.
@@ -89,7 +89,7 @@ class NSnapPeaUI : public PacketTabbedUI {
 /**
  * A header for the SnapPea triangulation viewer.
  */
-class NSnapPeaHeaderUI : public QObject, public PacketViewerTab,
+class SnapPeaHeaderUI : public QObject, public PacketViewerTab,
         public regina::PacketListener {
     Q_OBJECT
 
@@ -97,7 +97,7 @@ class NSnapPeaHeaderUI : public QObject, public PacketViewerTab,
         /**
          * Packet details
          */
-        regina::NSnapPeaTriangulation* tri;
+        regina::SnapPeaTriangulation* tri;
 
         /**
          * Internal components
@@ -111,7 +111,7 @@ class NSnapPeaHeaderUI : public QObject, public PacketViewerTab,
         /**
          * Constructor.
          */
-        NSnapPeaHeaderUI(regina::NSnapPeaTriangulation* packet,
+        SnapPeaHeaderUI(regina::SnapPeaTriangulation* packet,
                 PacketTabbedUI* useParentUI);
 
         /**
@@ -136,7 +136,7 @@ class NSnapPeaHeaderUI : public QObject, public PacketViewerTab,
         /**
          * Allow other UIs to access the summary information.
          */
-        static QString summaryInfo(regina::NSnapPeaTriangulation* tri);
+        static QString summaryInfo(regina::SnapPeaTriangulation* tri);
 
     public slots:
         /**
@@ -156,11 +156,11 @@ class NSnapPeaHeaderUI : public QObject, public PacketViewerTab,
         void customEvent(QEvent* event);
 };
 
-inline PacketEditIface* NSnapPeaUI::getEditIface() {
+inline PacketEditIface* SnapPeaUI::getEditIface() {
     return editIface;
 }
 
-inline QToolBar* NSnapPeaHeaderUI::getToolBar() {
+inline QToolBar* SnapPeaHeaderUI::getToolBar() {
     return bar;
 }
 

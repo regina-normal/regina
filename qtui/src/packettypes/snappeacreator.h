@@ -30,69 +30,53 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file nsnappeaalgebra.h
- *  \brief Provides an algebra viewer for SnapPea triangulations.
+/*! \file snappeacreator.h
+ *  \brief Allows the creation of SnapPea triangulations.
  */
 
-#ifndef __NSNAPPEAALGEBRA_H
-#define __NSNAPPEAALGEBRA_H
+#ifndef __SNAPPEACREATOR_H
+#define __SNAPPEACREATOR_H
 
-#include "../packettabui.h"
+#include "../packetcreator.h"
 
-class GroupWidget;
-class QLabel;
+#include <QStackedWidget>
 
-namespace regina {
-    class Packet;
-    class NSnapPeaTriangulation;
-};
+class ReginaMain;
 
+class PacketChooser;
+class QComboBox;
+class QTextEdit;
 /**
- * A triangulation page for viewing algebraic properties.
+ * An interface for creating SnapPea triangulations.
  */
-class NSnapPeaAlgebraUI : public QObject, public PacketViewerTab {
-    Q_OBJECT
-
+class SnapPeaTriangulationCreator : public PacketCreator {
     private:
-        /**
-         * Packet details
-         */
-        regina::NSnapPeaTriangulation* tri;
-
         /**
          * Internal components
          */
         QWidget* ui;
+        QComboBox* type;
+        QStackedWidget* details;
 
-        QLabel* filledH1;
-        QLabel* unfilledH1;
-        GroupWidget* filledFundGroup;
-        GroupWidget* unfilledFundGroup;
-
-        QLabel* filledH1Title;
-        QLabel* unfilledH1Title;
-        QLabel* filledFundGroupTitle;
-        QLabel* unfilledFundGroupTitle;
+        /**
+         * Details for specific triangulation types
+         */
+        PacketChooser* convertFrom;
+        QTextEdit* fileContents;
+        QComboBox* exampleWhich;
 
     public:
         /**
          * Constructor.
          */
-        NSnapPeaAlgebraUI(regina::NSnapPeaTriangulation* packet,
-                PacketTabbedUI* useParentUI);
+        SnapPeaTriangulationCreator(ReginaMain* mainWindow);
 
         /**
-         * PacketViewerTab overrides.
+         * PacketCreator overrides.
          */
-        regina::Packet* getPacket();
         QWidget* getInterface();
-        void refresh();
-
-    public slots:
-        /**
-         * Note that preferences have changed.
-         */
-        void updatePreferences();
+        regina::Packet* createPacket(regina::Packet* parentPacket,
+            QWidget* parentWidget);
 };
 
 #endif

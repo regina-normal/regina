@@ -3,7 +3,7 @@
 # Files to compile
 SET ( FILES
   examplesnappea
-  nsnappeatriangulation
+  snappeatriangulation
   pysnappea
   )
 

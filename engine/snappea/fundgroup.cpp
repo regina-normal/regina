@@ -30,12 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-#include "snappea/nsnappeatriangulation.h"
+#include "snappea/snappeatriangulation.h"
 #include "snappea/kernel/SnapPea.h"
 
 namespace regina {
 
-const NGroupPresentation* NSnapPeaTriangulation::fundamentalGroupFilled(
+const NGroupPresentation* SnapPeaTriangulation::fundamentalGroupFilled(
             bool simplifyPresentation,
             bool fillingsMayAffectGenerators,
             bool minimiseNumberOfGenerators,

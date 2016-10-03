@@ -34,7 +34,7 @@
 #import "TextHelper.h"
 #import "TriangulationViewController.h"
 #import "TriSnapPea.h"
-#import "snappea/nsnappeatriangulation.h"
+#import "snappea/snappeatriangulation.h"
 #import "triangulation/ntriangulation.h"
 
 @interface TriSnapPea ()
@@ -69,7 +69,7 @@
 {
     [self.viewer updateHeader:self.header lockIcon:self.lockIcon];
 
-    regina::NSnapPeaTriangulation snappeaTri(*self.packet);
+    regina::SnapPeaTriangulation snappeaTri(*self.packet);
 
     if (snappeaTri.isNull()) {
         self.solnType.attributedText = self.volume.attributedText = [TextHelper dimString:@"Unavailable for this triangulation"];
@@ -79,21 +79,21 @@
         self.convertIcon.hidden = YES;
     } else {
         switch (snappeaTri.solutionType()) {
-            case regina::NSnapPeaTriangulation::not_attempted:
+            case regina::SnapPeaTriangulation::not_attempted:
                 self.solnType.text = @"Not attempted"; break;
-            case regina::NSnapPeaTriangulation::geometric_solution:
+            case regina::SnapPeaTriangulation::geometric_solution:
                 self.solnType.text = @"Tetrahedra positively oriented"; break;
-            case regina::NSnapPeaTriangulation::nongeometric_solution:
+            case regina::SnapPeaTriangulation::nongeometric_solution:
                 self.solnType.text = @"Contains flat or negative tetrahedra"; break;
-            case regina::NSnapPeaTriangulation::flat_solution:
+            case regina::SnapPeaTriangulation::flat_solution:
                 self.solnType.text = @"All tetrahedra flat"; break;
-            case regina::NSnapPeaTriangulation::degenerate_solution:
+            case regina::SnapPeaTriangulation::degenerate_solution:
                 self.solnType.text = @"Contains degenerate tetrahedra"; break;
-            case regina::NSnapPeaTriangulation::other_solution:
+            case regina::SnapPeaTriangulation::other_solution:
                 self.solnType.text = @"Unrecognised solution type"; break;
-            case regina::NSnapPeaTriangulation::no_solution:
+            case regina::SnapPeaTriangulation::no_solution:
                 self.solnType.text = @"No solution found"; break;
-            case regina::NSnapPeaTriangulation::externally_computed:
+            case regina::SnapPeaTriangulation::externally_computed:
                 self.solnType.text = @"Externally computed"; break;
             default:
                 self.solnType.text = @"ERROR (invalid solution type)"; break;
@@ -120,7 +120,7 @@
 }
 
 - (IBAction)toSnapPea:(id)sender {
-    regina::NSnapPeaTriangulation* s = new regina::NSnapPeaTriangulation(*self.packet);
+    regina::SnapPeaTriangulation* s = new regina::SnapPeaTriangulation(*self.packet);
     s->setLabel(self.packet->label());
 
     self.packet->insertChildLast(s);

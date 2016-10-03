@@ -31,17 +31,17 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "snappea/nsnappeatriangulation.h"
+#include "snappea/snappeatriangulation.h"
 
 // UI includes:
 #include "clickablelabel.h"
 #include "eventids.h"
 #include "iconcache.h"
-#include "nsnappeaui.h"
-#include "nsnappeaalgebra.h"
-#include "nsnappeafile.h"
-#include "nsnappeagluings.h"
-#include "nsnappeashapes.h"
+#include "snappeaui.h"
+#include "snappeaalgebra.h"
+#include "snappeafile.h"
+#include "snappeagluings.h"
+#include "snappeashapes.h"
 #include "ntricomposition.h"
 #include "ntriskeleton.h"
 #include "ntrisurfaces.h"
@@ -55,18 +55,18 @@
 #include <QVBoxLayout>
 
 using regina::Packet;
-using regina::NSnapPeaTriangulation;
+using regina::SnapPeaTriangulation;
 
-NSnapPeaUI::NSnapPeaUI(regina::NSnapPeaTriangulation* packet,
+SnapPeaUI::SnapPeaUI(regina::SnapPeaTriangulation* packet,
         PacketPane* newEnclosingPane) :
         PacketTabbedUI(newEnclosingPane,
             ReginaPrefSet::global().tabSnapPeaTri) {
-    NSnapPeaHeaderUI* header = new NSnapPeaHeaderUI(packet, this);
-    shapes = new NSnapPeaShapesUI(packet, this,
+    SnapPeaHeaderUI* header = new SnapPeaHeaderUI(packet, this);
+    shapes = new SnapPeaShapesUI(packet, this,
         newEnclosingPane->isReadWrite());
-    gluings = new NSnapPeaGluingsUI(packet, this);
+    gluings = new SnapPeaGluingsUI(packet, this);
     skeleton = new NTriSkeletonUI(packet, this);
-    algebra = new NSnapPeaAlgebraUI(packet, this);
+    algebra = new SnapPeaAlgebraUI(packet, this);
 
     shapes->fillToolBar(header->getToolBar());
 
@@ -77,24 +77,24 @@ NSnapPeaUI::NSnapPeaUI(regina::NSnapPeaTriangulation* packet,
     addTab(algebra, QObject::tr("&Algebra"));
     addTab(new NTriCompositionUI(packet, this), QObject::tr("&Composition"));
     addTab(new NTriSurfacesUI(packet, this), QObject::tr("&Recognition"));
-    addTab(new NSnapPeaFileUI(packet, this), QObject::tr("&File"));
+    addTab(new SnapPeaFileUI(packet, this), QObject::tr("&File"));
 
     editIface = new PacketEditTabbedUI(this);
 }
 
-NSnapPeaUI::~NSnapPeaUI() {
+SnapPeaUI::~SnapPeaUI() {
     delete editIface;
 }
 
-const QLinkedList<QAction*>& NSnapPeaUI::getPacketTypeActions() {
+const QLinkedList<QAction*>& SnapPeaUI::getPacketTypeActions() {
     return shapes->getPacketTypeActions();
 }
 
-QString NSnapPeaUI::getPacketMenuText() const {
+QString SnapPeaUI::getPacketMenuText() const {
     return QObject::tr("&SnapPea Triangulation");
 }
 
-NSnapPeaHeaderUI::NSnapPeaHeaderUI(regina::NSnapPeaTriangulation* packet,
+SnapPeaHeaderUI::SnapPeaHeaderUI(regina::SnapPeaTriangulation* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();
@@ -129,20 +129,20 @@ NSnapPeaHeaderUI::NSnapPeaHeaderUI(regina::NSnapPeaTriangulation* packet,
     tri->listen(this);
 }
 
-regina::Packet* NSnapPeaHeaderUI::getPacket() {
+regina::Packet* SnapPeaHeaderUI::getPacket() {
     return tri;
 }
 
-QWidget* NSnapPeaHeaderUI::getInterface() {
+QWidget* SnapPeaHeaderUI::getInterface() {
     return ui;
 }
 
-void NSnapPeaHeaderUI::refresh() {
+void SnapPeaHeaderUI::refresh() {
     header->setText(summaryInfo(tri));
     refreshLock();
 }
 
-QString NSnapPeaHeaderUI::summaryInfo(regina::NSnapPeaTriangulation* tri) {
+QString SnapPeaHeaderUI::summaryInfo(regina::SnapPeaTriangulation* tri) {
     if (tri->isNull())
         return QObject::tr("Null triangulation (no SnapPea data)");
     if (tri->isEmpty())
@@ -177,44 +177,44 @@ QString NSnapPeaHeaderUI::summaryInfo(regina::NSnapPeaTriangulation* tri) {
     }
 
     switch (tri->solutionType()) {
-        case NSnapPeaTriangulation::not_attempted:
+        case SnapPeaTriangulation::not_attempted:
             msg += QObject::tr("Solution not attempted");
             break;
-        case NSnapPeaTriangulation::geometric_solution:
+        case SnapPeaTriangulation::geometric_solution:
             if (tri->volumeZero())
                 msg += QObject::tr("Volume approximately zero\n");
             else
                 msg += QObject::tr("Volume: %1\n").arg(tri->volume());
             msg += QObject::tr("Tetrahedra positively oriented");
             break;
-        case NSnapPeaTriangulation::nongeometric_solution:
+        case SnapPeaTriangulation::nongeometric_solution:
             if (tri->volumeZero())
                 msg += QObject::tr("Volume approximately zero\n");
             else
                 msg += QObject::tr("Volume: %1\n").arg(tri->volume());
             msg += QObject::tr("Contains flat or negative tetrahedra");
             break;
-        case NSnapPeaTriangulation::flat_solution:
+        case SnapPeaTriangulation::flat_solution:
             if (tri->volumeZero())
                 msg += QObject::tr("Volume approximately zero\n");
             else
                 msg += QObject::tr("Volume: %1\n").arg(tri->volume());
             msg += QObject::tr("All tetrahedra flat");
             break;
-        case NSnapPeaTriangulation::degenerate_solution:
+        case SnapPeaTriangulation::degenerate_solution:
             if (tri->volumeZero())
                 msg += QObject::tr("Volume approximately zero\n");
             else
                 msg += QObject::tr("Volume: %1\n").arg(tri->volume());
             msg += QObject::tr("Contains degenerate tetrahedra");
             break;
-        case NSnapPeaTriangulation::other_solution:
+        case SnapPeaTriangulation::other_solution:
             msg += QObject::tr("Unrecognised solution type");
             break;
-        case NSnapPeaTriangulation::externally_computed:
+        case SnapPeaTriangulation::externally_computed:
             msg += QObject::tr("Externally computed");
             break;
-        case NSnapPeaTriangulation::no_solution:
+        case SnapPeaTriangulation::no_solution:
             msg += QObject::tr("No solution found");
             break;
         default:
@@ -224,7 +224,7 @@ QString NSnapPeaHeaderUI::summaryInfo(regina::NSnapPeaTriangulation* tri) {
     return msg;
 }
 
-void NSnapPeaHeaderUI::lockedExplanation() {
+void SnapPeaHeaderUI::lockedExplanation() {
     if (tri->isPacketEditable())
         return;
 
@@ -238,27 +238,27 @@ void NSnapPeaHeaderUI::lockedExplanation() {
             "edit the clone instead.</qt>"));
 }
 
-void NSnapPeaHeaderUI::childWasAdded(regina::Packet* packet,
+void SnapPeaHeaderUI::childWasAdded(regina::Packet* packet,
         regina::Packet* child) {
     // Be careful - we may not be in the GUI thread.
     QApplication::postEvent(this, new QEvent(
         (QEvent::Type)EVT_HEADER_CHILD_ADDED));
 }
 
-void NSnapPeaHeaderUI::childWasRemoved(regina::Packet* packet,
+void SnapPeaHeaderUI::childWasRemoved(regina::Packet* packet,
         regina::Packet* child, bool inParentDestructor) {
     if (! inParentDestructor)
         refreshLock();
 }
 
-void NSnapPeaHeaderUI::refreshLock() {
+void SnapPeaHeaderUI::refreshLock() {
     if (tri->isPacketEditable())
         locked->hide();
     else
         locked->show();
 }
 
-void NSnapPeaHeaderUI::customEvent(QEvent* event) {
+void SnapPeaHeaderUI::customEvent(QEvent* event) {
     if (event->type() == EVT_HEADER_CHILD_ADDED)
         refreshLock();
 }

@@ -34,7 +34,7 @@
 #include <iomanip>
 #include <cppunit/extensions/HelperMacros.h>
 #include "maths/nmatrixint.h"
-#include "snappea/nsnappeatriangulation.h"
+#include "snappea/snappeatriangulation.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
@@ -44,12 +44,12 @@
 
 using regina::NExampleTriangulation;
 using regina::NPerm4;
-using regina::NSnapPeaTriangulation;
+using regina::SnapPeaTriangulation;
 using regina::NTetrahedron;
 using regina::NTriangulation;
 
-class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
-    CPPUNIT_TEST_SUITE(NSnapPeaTriangulationTest);
+class SnapPeaTriangulationTest : public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(SnapPeaTriangulationTest);
 
     CPPUNIT_TEST(incompatible);
     CPPUNIT_TEST(volume);
@@ -81,7 +81,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
          * Experiment. Math. 3/4, 1994, pp 261--274.
          *
          * Note that for the time being these triangulations will be
-         * rejected by NSnapPeaTriangulation, since most SnapPea
+         * rejected by SnapPeaTriangulation, since most SnapPea
          * functions require an ideal triangulation.
          */
         NTriangulation closedHypOr, closedHypNor;
@@ -131,7 +131,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
         void setUp() {
             // Keep the kernel quiet.  It interferes with the test
             // suite's running progress messages.
-            NSnapPeaTriangulation::disableKernelMessages();
+            SnapPeaTriangulation::disableKernelMessages();
 
             NTetrahedron* t;
             NTetrahedron* s;
@@ -245,7 +245,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
         }
 
         void testIncompatible(NTriangulation& tri, const char* message) {
-            NSnapPeaTriangulation s(tri);
+            SnapPeaTriangulation s(tri);
             CPPUNIT_ASSERT_MESSAGE(message, s.isNull());
         }
 
@@ -331,7 +331,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             // Verify the volume to the given number of decimal places.
             // Places are counted after the decimal point in standard
             // (non-scientific) notation.
-            NSnapPeaTriangulation s(tri);
+            SnapPeaTriangulation s(tri);
             {
                 std::ostringstream msg;
                 msg << "Triangulation " << tri.label() <<
@@ -429,7 +429,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             // volume is zero to the given number of decimal places.
             // Places are counted after the decimal point in standard
             // (non-scientific) notation.
-            NSnapPeaTriangulation s(tri);
+            SnapPeaTriangulation s(tri);
             {
                 std::ostringstream msg;
                 msg << triName <<
@@ -443,7 +443,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
                 msg << triName << " has a solution type that is not flat.";
 
                 CPPUNIT_ASSERT_MESSAGE(msg.str(), s.solutionType() ==
-                    NSnapPeaTriangulation::flat_solution);
+                    SnapPeaTriangulation::flat_solution);
             }
 
             int precision;
@@ -476,7 +476,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
             // different chipsets.
             // Places are counted after the decimal point in standard
             // (non-scientific) notation.
-            NSnapPeaTriangulation s(tri);
+            SnapPeaTriangulation s(tri);
             {
                 std::ostringstream msg;
                 msg << triName <<
@@ -491,7 +491,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
                     " has a solution type that is not degenerate.";
 
                 CPPUNIT_ASSERT_MESSAGE(msg.str(), s.solutionType() ==
-                    NSnapPeaTriangulation::degenerate_solution);
+                    SnapPeaTriangulation::degenerate_solution);
             }
 
             // Don't test volumes for degenerate solutions, since these
@@ -510,7 +510,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
         void spunBoundaries() {
             NTriangulation* f8 =
                 NExampleTriangulation::figureEight();
-            NSnapPeaTriangulation* t = new NSnapPeaTriangulation(*f8);
+            SnapPeaTriangulation* t = new SnapPeaTriangulation(*f8);
 
             regina::NNormalSurfaceList* s =
                 regina::NNormalSurfaceList::enumerate(t, regina::NS_QUAD);
@@ -567,7 +567,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
         static void testStability(NTriangulation* tri) {
             // Just make sure SnapPea can work with the triangulation
             // without crashing.
-            NSnapPeaTriangulation s(*tri);
+            SnapPeaTriangulation s(*tri);
             s.volume();
             s.randomize();
             s.volume();
@@ -580,7 +580,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
 
         void testFilledHomology(const NTriangulation& tri, int m, int l,
                 const std::string& expectedH1) {
-            NSnapPeaTriangulation s(tri);
+            SnapPeaTriangulation s(tri);
             if (s.isNull()) {
                 std::ostringstream msg;
                 msg << "Null SnapPea triangulation for " << tri.label() << ".";
@@ -631,7 +631,7 @@ class NSnapPeaTriangulationTest : public CppUnit::TestFixture {
         }
 };
 
-void addNSnapPeaTriangulation(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(NSnapPeaTriangulationTest::suite());
+void addSnapPeaTriangulation(CppUnit::TextUi::TestRunner& runner) {
+    runner.addTest(SnapPeaTriangulationTest::suite());
 }
 

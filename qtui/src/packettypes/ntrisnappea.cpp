@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "snappea/nsnappeatriangulation.h"
+#include "snappea/snappeatriangulation.h"
 
 // UI includes:
 #include "iconcache.h"
@@ -49,7 +49,7 @@
 #include <QStackedWidget>
 
 using regina::Packet;
-using regina::NSnapPeaTriangulation;
+using regina::SnapPeaTriangulation;
 using regina::NTriangulation;
 
 NTriSnapPeaUI::NTriSnapPeaUI(regina::NTriangulation* packet,
@@ -163,7 +163,7 @@ void NTriSnapPeaUI::refresh() {
     if (snappeaTri)
         delete snappeaTri;
 
-    snappeaTri = new NSnapPeaTriangulation(*reginaTri);
+    snappeaTri = new SnapPeaTriangulation(*reginaTri);
 
     if (snappeaTri->isNull()) {
         ui->setCurrentWidget(dataNull);
@@ -206,7 +206,7 @@ void NTriSnapPeaUI::toSnapPea() {
         return;
     }
 
-    NSnapPeaTriangulation* ans = new NSnapPeaTriangulation(*snappeaTri);
+    SnapPeaTriangulation* ans = new SnapPeaTriangulation(*snappeaTri);
     if (ans->isNull()) {
         // This should never happen either...
         ui->setCurrentWidget(dataNull);
@@ -229,21 +229,21 @@ void NTriSnapPeaUI::toSnapPea() {
 
 QString NTriSnapPeaUI::solutionTypeString(int solnType) {
     switch (solnType) {
-        case NSnapPeaTriangulation::not_attempted:
+        case SnapPeaTriangulation::not_attempted:
             return tr("Not attempted");
-        case NSnapPeaTriangulation::geometric_solution:
+        case SnapPeaTriangulation::geometric_solution:
             return tr("Tetrahedra positively oriented");
-        case NSnapPeaTriangulation::nongeometric_solution:
+        case SnapPeaTriangulation::nongeometric_solution:
             return tr("Contains flat or negative tetrahedra");
-        case NSnapPeaTriangulation::flat_solution:
+        case SnapPeaTriangulation::flat_solution:
             return tr("All tetrahedra flat");
-        case NSnapPeaTriangulation::degenerate_solution:
+        case SnapPeaTriangulation::degenerate_solution:
             return tr("Contains degenerate tetrahedra");
-        case NSnapPeaTriangulation::other_solution:
+        case SnapPeaTriangulation::other_solution:
             return tr("Unrecognised solution type");
-        case NSnapPeaTriangulation::no_solution:
+        case SnapPeaTriangulation::no_solution:
             return tr("No solution found");
-        case NSnapPeaTriangulation::externally_computed:
+        case SnapPeaTriangulation::externally_computed:
             return tr("Externally computed");
         default:
             return tr("ERROR (invalid solution type)");
@@ -252,32 +252,32 @@ QString NTriSnapPeaUI::solutionTypeString(int solnType) {
 
 QString NTriSnapPeaUI::solutionTypeExplanation(int solnType) {
     switch (solnType) {
-        case NSnapPeaTriangulation::not_attempted:
+        case SnapPeaTriangulation::not_attempted:
             return tr("This particular solution type means that "
                 "a solution has not been attempted.");
-        case NSnapPeaTriangulation::geometric_solution:
+        case SnapPeaTriangulation::geometric_solution:
             return tr("This particular solution type means that "
                 "all tetrahedra are positively oriented.");
-        case NSnapPeaTriangulation::nongeometric_solution:
+        case SnapPeaTriangulation::nongeometric_solution:
             return tr("This particular solution type means that "
                 "the overall volume is positive, but some tetrahedra are "
                 "flat or negatively oriented.  No tetrahedra have "
                 "shape 0, 1 or infinity.");
-        case NSnapPeaTriangulation::flat_solution:
+        case SnapPeaTriangulation::flat_solution:
             return tr("This particular solution type means that "
                 "all tetrahedra are flat, but none have shape "
                 "0, 1 or infinity.");
-        case NSnapPeaTriangulation::degenerate_solution:
+        case SnapPeaTriangulation::degenerate_solution:
             return tr("This particular solution type means that "
                 "at least one tetrahedron has shape 0, 1 or infinity.");
-        case NSnapPeaTriangulation::other_solution:
+        case SnapPeaTriangulation::other_solution:
             return tr("This particular solution type means that "
                 "the volume is zero or negative, but the solution is "
                 "neither flat nor degenerate.");
-        case NSnapPeaTriangulation::no_solution:
+        case SnapPeaTriangulation::no_solution:
             return tr("This particular solution type means that "
                 "the gluing equations could not be solved.");
-        case NSnapPeaTriangulation::externally_computed:
+        case SnapPeaTriangulation::externally_computed:
             return tr("This particular solution type means that "
                 "tetrahedron shapes were inserted into the triangulation "
                 "by some other means (e.g., manually, or by another "

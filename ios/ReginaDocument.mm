@@ -35,7 +35,7 @@
 #import "ReginaHelper.h"
 #import "packet/container.h"
 #import "packet/text.h"
-#import "snappea/nsnappeatriangulation.h"
+#import "snappea/snappeatriangulation.h"
 #import <boost/iostreams/device/array.hpp>
 #import <boost/iostreams/stream.hpp>
 #import <sstream>
@@ -215,7 +215,7 @@ enum DocError {
     if (strncmp(prefix, "% Tri", 5) == 0) {
         // Looks like it belongs to SnapPea/SnapPy.
         std::string str(static_cast<const char*>(data.bytes), data.length);
-        regina::NSnapPeaTriangulation* tri = new regina::NSnapPeaTriangulation(str);
+        regina::SnapPeaTriangulation* tri = new regina::SnapPeaTriangulation(str);
         if ((! tri) || tri->isNull()) {
             delete tri;
             *outError = [NSError errorWithDomain:@"ReginaDocument"

@@ -34,7 +34,7 @@
 
 #include "file/fileinfo.h"
 #include "file/globaldirs.h"
-#include "snappea/nsnappeatriangulation.h"
+#include "snappea/snappeatriangulation.h"
 
 #include "codecchooser.h"
 #include "coordinatechooser.h"
@@ -120,7 +120,7 @@ ReginaPreferences::ReginaPreferences(ReginaMain* parent) :
     // pythonPrefs->cbWordWrap->setChecked(prefSet.pythonWordWrap);
 
     toolsPrefs->cbSnapPeaMessages->setChecked(
-        regina::NSnapPeaTriangulation::kernelMessagesEnabled());
+        regina::SnapPeaTriangulation::kernelMessagesEnabled());
     if (prefSet.pdfExternalViewer.isEmpty()) {
         toolsPrefs->cbDefaultPDFViewer->setChecked(true);
         toolsPrefs->editPDFViewer->setEnabled(false);
@@ -220,7 +220,7 @@ void ReginaPreferences::slotApply() {
     }
     // prefSet.pythonWordWrap = pythonPrefs->cbWordWrap->isChecked();
 
-    regina::NSnapPeaTriangulation::enableKernelMessages(
+    regina::SnapPeaTriangulation::enableKernelMessages(
         toolsPrefs->cbSnapPeaMessages->isChecked());
     // Don't be too fussy about what they put in the PDF viewer field, since
     // Regina tries hard to find a suitable PDF viewer regardless.

@@ -1538,7 +1538,7 @@ class REGINA_API NNormalSurface :
          * kernel, since Regina does not use or store peripheral curves for
          * its own NTriangulation class.  Therefore, if the underlying
          * triangulation (as returned by triangulation()) is not of the
-         * subclass NSnapPeaTriangulation, this routine will simply return 0.
+         * subclass SnapPeaTriangulation, this routine will simply return 0.
          *
          * All cusps are treated as complete.  That is, any Dehn fillings
          * stored in the SnapPea triangulation will be ignored.
@@ -1563,7 +1563,7 @@ class REGINA_API NNormalSurface :
          *
          * If the triangulation contains more than one vertex, the rows
          * in the resulting matrix are ordered by cusp index (as stored by
-         * SnapPea).  You can call NSnapPeaTriangulation::cuspVertex() to
+         * SnapPea).  You can call SnapPeaTriangulation::cuspVertex() to
          * map these to Regina's vertex indices if needed.
          *
          * At present, Regina can only compute boundary slopes if the
@@ -1577,7 +1577,7 @@ class REGINA_API NNormalSurface :
          * @return a newly allocated matrix with \a number_of_vertices
          * rows and two columns as described above, or 0 if the boundary
          * slopes cannot be computed (e.g., if the underlying triangulation
-         * is not of type NSnapPeaTriangulation, or if it fails to meet the
+         * is not of type SnapPeaTriangulation, or if it fails to meet the
          * preconditions outlined above).
          */
         NMatrixInt* boundaryIntersections() const;

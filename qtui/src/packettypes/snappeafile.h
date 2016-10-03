@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
  *  Copyright (c) 1999-2016, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,53 +30,59 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file snappeacreator.h
- *  \brief Allows the creation of SnapPea triangulations.
+/*! \file snappeafile.h
+ *  \brief Provides access to the SnapPea data file for SnapPea triangulations.
  */
 
-#ifndef __SNAPPEACREATOR_H
-#define __SNAPPEACREATOR_H
+#ifndef __SNAPPEAFILE_H
+#define __SNAPPEAFILE_H
 
-#include "../packetcreator.h"
+#include "../packettabui.h"
 
-#include <QStackedWidget>
-
-class ReginaMain;
-
-class PacketChooser;
-class QComboBox;
 class QTextEdit;
+
+namespace regina {
+    class SnapPeaTriangulation;
+};
+
 /**
- * An interface for creating SnapPea triangulations.
+ * A triangulation page for viewing normal surface properties.
  */
-class NSnapPeaTriangulationCreator : public PacketCreator {
+class SnapPeaFileUI : public QObject, public PacketViewerTab {
+    Q_OBJECT
+
     private:
+        /**
+         * Packet details
+         */
+        regina::SnapPeaTriangulation* tri;
+
         /**
          * Internal components
          */
         QWidget* ui;
-        QComboBox* type;
-        QStackedWidget* details;
-
-        /**
-         * Details for specific triangulation types
-         */
-        PacketChooser* convertFrom;
-        QTextEdit* fileContents;
-        QComboBox* exampleWhich;
+        QTextEdit* file;
+        PacketEditIface* editIface;
 
     public:
         /**
-         * Constructor.
+         * Constructor and destructor.
          */
-        NSnapPeaTriangulationCreator(ReginaMain* mainWindow);
+        SnapPeaFileUI(regina::SnapPeaTriangulation* packet,
+            PacketTabbedUI* useParentUI);
+        ~SnapPeaFileUI();
 
         /**
-         * PacketCreator overrides.
+         * PacketViewerTab overrides.
          */
+        regina::Packet* getPacket();
         QWidget* getInterface();
-        regina::Packet* createPacket(regina::Packet* parentPacket,
-            QWidget* parentWidget);
+        void refresh();
+        PacketEditIface* getEditIface();
 };
+
+inline PacketEditIface* SnapPeaFileUI::getEditIface() {
+    return editIface;
+}
 
 #endif

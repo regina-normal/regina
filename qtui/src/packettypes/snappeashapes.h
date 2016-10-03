@@ -30,13 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file nsnappeashapes.h
+/*! \file snappeashapes.h
  *  \brief Provides access to tetrahedron shapes and cusp data for
  *  SnapPea triangulations.
  */
 
-#ifndef __NSNAPPEASHAPES_H
-#define __NSNAPPEASHAPES_H
+#ifndef __SNAPPEASHAPES_H
+#define __SNAPPEASHAPES_H
 
 #include "../packettabui.h"
 
@@ -49,7 +49,7 @@ class QTreeWidget;
 class QTreeWidgetItem;
 
 namespace regina {
-    class NSnapPeaTriangulation;
+    class SnapPeaTriangulation;
 };
 
 /**
@@ -60,13 +60,13 @@ class CuspModel : public QAbstractItemModel {
         /**
          * Details of the cusps being displayed.
          */
-        regina::NSnapPeaTriangulation* tri_;
+        regina::SnapPeaTriangulation* tri_;
 
     public:
         /**
          * Constructor and destructor.
          */
-        CuspModel(regina::NSnapPeaTriangulation* tri);
+        CuspModel(regina::SnapPeaTriangulation* tri);
 
         /**
          * Rebuild the model from scratch.
@@ -91,7 +91,7 @@ class CuspModel : public QAbstractItemModel {
 /**
  * A triangulation page for viewing normal surface properties.
  */
-class NSnapPeaShapesUI : public QObject, public PacketEditorTab {
+class SnapPeaShapesUI : public QObject, public PacketEditorTab {
     Q_OBJECT
 
     private:
@@ -99,7 +99,7 @@ class NSnapPeaShapesUI : public QObject, public PacketEditorTab {
          * Packet details
          */
         CuspModel* model;
-        regina::NSnapPeaTriangulation* tri;
+        regina::SnapPeaTriangulation* tri;
 
         /**
          * Internal components
@@ -122,9 +122,9 @@ class NSnapPeaShapesUI : public QObject, public PacketEditorTab {
         /**
          * Constructor and destructor.
          */
-        NSnapPeaShapesUI(regina::NSnapPeaTriangulation* packet,
+        SnapPeaShapesUI(regina::SnapPeaTriangulation* packet,
             PacketTabbedUI* useParentUI, bool readWrite);
-        ~NSnapPeaShapesUI();
+        ~SnapPeaShapesUI();
 
         /**
          * Fill the given toolbar with actions.
@@ -161,7 +161,7 @@ class NSnapPeaShapesUI : public QObject, public PacketEditorTab {
         void updateNonNullActions();
 };
 
-inline CuspModel::CuspModel(regina::NSnapPeaTriangulation* tri) : tri_(tri) {
+inline CuspModel::CuspModel(regina::SnapPeaTriangulation* tri) : tri_(tri) {
 }
 
 inline QModelIndex CuspModel::parent(const QModelIndex&) const {

@@ -33,11 +33,11 @@
 // Regina core includes:
 #include "dim2/dim2triangulation.h"
 #include "maths/numbertheory.h"
-#include "snappea/nsnappeatriangulation.h"
+#include "snappea/snappeatriangulation.h"
 
 // UI includes:
 #include "edittreeview.h"
-#include "nsnappeashapes.h"
+#include "snappeashapes.h"
 #include "reginamain.h"
 #include "reginasupport.h"
 #include "choosers/cuspchooser.h"
@@ -54,7 +54,7 @@
 #include <QTreeWidgetItem>
 
 using regina::Packet;
-using regina::NSnapPeaTriangulation;
+using regina::SnapPeaTriangulation;
 
 namespace {
     QRegExp reIntPair("^[^0-9\\-]*(-?\\d+)[^0-9\\-]+(-?\\d+)[^0-9\\-]*$");
@@ -208,7 +208,7 @@ bool CuspModel::setData(const QModelIndex& index, const QVariant& value,
         return false;
 }
 
-NSnapPeaShapesUI::NSnapPeaShapesUI(regina::NSnapPeaTriangulation* packet,
+SnapPeaShapesUI::SnapPeaShapesUI(regina::SnapPeaTriangulation* packet,
         PacketTabbedUI* useParentUI, bool readWrite) :
         PacketEditorTab(useParentUI), tri(packet) {
     ui = new QWidget();
@@ -340,29 +340,29 @@ NSnapPeaShapesUI::NSnapPeaShapesUI(regina::NSnapPeaTriangulation* packet,
     refresh();
 }
 
-NSnapPeaShapesUI::~NSnapPeaShapesUI() {
+SnapPeaShapesUI::~SnapPeaShapesUI() {
     delete model;
 }
 
-const QLinkedList<QAction*>& NSnapPeaShapesUI::getPacketTypeActions() {
+const QLinkedList<QAction*>& SnapPeaShapesUI::getPacketTypeActions() {
     return triActionList;
 }
 
-void NSnapPeaShapesUI::fillToolBar(QToolBar* bar) {
+void SnapPeaShapesUI::fillToolBar(QToolBar* bar) {
     bar->addAction(actRandomise);
     bar->addAction(actFill);
     bar->addAction(actToRegina);
 }
 
-regina::Packet* NSnapPeaShapesUI::getPacket() {
+regina::Packet* SnapPeaShapesUI::getPacket() {
     return tri;
 }
 
-QWidget* NSnapPeaShapesUI::getInterface() {
+QWidget* SnapPeaShapesUI::getInterface() {
     return ui;
 }
 
-void NSnapPeaShapesUI::refresh() {
+void SnapPeaShapesUI::refresh() {
     // Rebuild the cusps table.
     model->rebuild();
 
@@ -388,8 +388,8 @@ void NSnapPeaShapesUI::refresh() {
         updateNonNullActions();
         return;
     }
-    if (tri->solutionType() == NSnapPeaTriangulation::not_attempted ||
-            tri->solutionType() == NSnapPeaTriangulation::no_solution) {
+    if (tri->solutionType() == SnapPeaTriangulation::not_attempted ||
+            tri->solutionType() == SnapPeaTriangulation::no_solution) {
         updateNonNullActions();
         return;
     }
@@ -410,11 +410,11 @@ void NSnapPeaShapesUI::refresh() {
     updateNonNullActions();
 }
 
-void NSnapPeaShapesUI::endEdit() {
+void SnapPeaShapesUI::endEdit() {
     cusps->endEdit();
 }
 
-void NSnapPeaShapesUI::setReadWrite(bool readWrite) {
+void SnapPeaShapesUI::setReadWrite(bool readWrite) {
     // Regardless of whether we allow edits, we can do nothing with a
     // null triangulation.
     if (tri->isNull())
@@ -427,7 +427,7 @@ void NSnapPeaShapesUI::setReadWrite(bool readWrite) {
     updateNonNullActions();
 }
 
-void NSnapPeaShapesUI::vertexLinks() {
+void SnapPeaShapesUI::vertexLinks() {
     endEdit();
 
     if (tri->countVertices() == 0)
@@ -457,7 +457,7 @@ void NSnapPeaShapesUI::vertexLinks() {
     }
 }
 
-void NSnapPeaShapesUI::toRegina() {
+void SnapPeaShapesUI::toRegina() {
     endEdit();
 
     if (tri->isNull())
@@ -472,7 +472,7 @@ void NSnapPeaShapesUI::toRegina() {
     }
 }
 
-void NSnapPeaShapesUI::fill() {
+void SnapPeaShapesUI::fill() {
     endEdit();
 
     if (tri->isNull())
@@ -514,13 +514,13 @@ void NSnapPeaShapesUI::fill() {
     }
 }
 
-void NSnapPeaShapesUI::randomise() {
+void SnapPeaShapesUI::randomise() {
     endEdit();
 
     tri->randomize();
 }
 
-void NSnapPeaShapesUI::canonise() {
+void SnapPeaShapesUI::canonise() {
     endEdit();
 
     if (tri->isNull())
@@ -543,7 +543,7 @@ void NSnapPeaShapesUI::canonise() {
     }
 }
 
-void NSnapPeaShapesUI::updateNonNullActions() {
+void SnapPeaShapesUI::updateNonNullActions() {
     if (tri->isNull()) {
         QLinkedListIterator<QAction*> it(requiresNonNull);
         while (it.hasNext())

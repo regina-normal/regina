@@ -32,7 +32,7 @@
 
 #include "regina-config.h"
 #include "file/globaldirs.h"
-#include "snappea/nsnappeatriangulation.h"
+#include "snappea/snappeatriangulation.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "utilities/stringutils.h"
 
@@ -239,7 +239,7 @@ void ReginaPrefSet::readInternal() {
     settings.endGroup();
 
     settings.beginGroup("SnapPea");
-    regina::NSnapPeaTriangulation::enableKernelMessages(
+    regina::SnapPeaTriangulation::enableKernelMessages(
         settings.value("KernelMessages", false).toBool());
     settings.endGroup();
 
@@ -354,7 +354,7 @@ void ReginaPrefSet::saveInternal() const {
 
     settings.beginGroup("SnapPea");
     settings.setValue("KernelMessages",
-        regina::NSnapPeaTriangulation::kernelMessagesEnabled());
+        regina::SnapPeaTriangulation::kernelMessagesEnabled());
     settings.endGroup();
 
     settings.beginGroup("Surfaces");

@@ -34,20 +34,20 @@
 #include "algebra/ngrouppresentation.h"
 #include "algebra/nmarkedabeliangroup.h"
 #include "maths/numbertheory.h"
-#include "snappea/nsnappeatriangulation.h"
+#include "snappea/snappeatriangulation.h"
 
 // UI includes:
 #include "columnlayout.h"
 #include "groupwidget.h"
-#include "nsnappeaalgebra.h"
+#include "snappeaalgebra.h"
 #include "reginaprefset.h"
 
 #include <QLabel>
 
 using regina::Packet;
-using regina::NSnapPeaTriangulation;
+using regina::SnapPeaTriangulation;
 
-NSnapPeaAlgebraUI::NSnapPeaAlgebraUI(regina::NSnapPeaTriangulation* packet,
+SnapPeaAlgebraUI::SnapPeaAlgebraUI(regina::SnapPeaTriangulation* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         tri(packet) {
     ui = new QWidget();
@@ -118,15 +118,15 @@ NSnapPeaAlgebraUI::NSnapPeaAlgebraUI(regina::NSnapPeaTriangulation* packet,
         this, SLOT(updatePreferences()));
 }
 
-regina::Packet* NSnapPeaAlgebraUI::getPacket() {
+regina::Packet* SnapPeaAlgebraUI::getPacket() {
     return tri;
 }
 
-QWidget* NSnapPeaAlgebraUI::getInterface() {
+QWidget* SnapPeaAlgebraUI::getInterface() {
     return ui;
 }
 
-void NSnapPeaAlgebraUI::refresh() {
+void SnapPeaAlgebraUI::refresh() {
     bool unicode = ReginaPrefSet::global().displayUnicode;
 
     if (tri->isNull()) {
@@ -171,7 +171,7 @@ void NSnapPeaAlgebraUI::refresh() {
     unfilledFundGroup->show();
 }
 
-void NSnapPeaAlgebraUI::updatePreferences() {
+void SnapPeaAlgebraUI::updatePreferences() {
     // If we've changed the unicode setting, then we may need some redrawing.
     refresh();
 }

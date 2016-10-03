@@ -32,7 +32,7 @@
 
 #include <boost/python.hpp>
 #include "snappea/examplesnappea.h"
-#include "snappea/nsnappeatriangulation.h"
+#include "snappea/snappeatriangulation.h"
 #include "../helpers.h"
 #include "../safeheldtype.h"
 

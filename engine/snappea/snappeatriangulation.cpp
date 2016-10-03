@@ -36,7 +36,7 @@
 
 #include "maths/nmatrixint.h"
 #include "maths/numbertheory.h"
-#include "snappea/nsnappeatriangulation.h"
+#include "snappea/snappeatriangulation.h"
 #include "snappea/kernel/kernel_prototypes.h"
 #include "snappea/kernel/triangulation.h"
 #include "snappea/kernel/unix_file_io.h"
@@ -54,7 +54,7 @@ namespace {
     static std::mutex snapMutex;
 }
 
-std::complex<double> NSnapPeaTriangulation::zero_(0, 0);
+std::complex<double> SnapPeaTriangulation::zero_(0, 0);
 
 void Cusp::writeTextShort(std::ostream& out) const {
     if (complete())
@@ -68,7 +68,7 @@ void Cusp::writeTextShort(std::ostream& out) const {
         out << ", filling (" << m_ << ", " << l_ << ')';
 }
 
-NSnapPeaTriangulation::NSnapPeaTriangulation(
+SnapPeaTriangulation::SnapPeaTriangulation(
         const std::string& fileNameOrContents) :
         data_(0), shape_(0), cusp_(0), filledCusps_(0), syncing_(false) {
     try {
@@ -89,7 +89,7 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(
     listen(this);
 }
 
-NSnapPeaTriangulation::NSnapPeaTriangulation(const NSnapPeaTriangulation& tri) :
+SnapPeaTriangulation::SnapPeaTriangulation(const SnapPeaTriangulation& tri) :
         data_(0), shape_(0), cusp_(0), filledCusps_(0), syncing_(false) {
     if (tri.data_) {
         regina::snappea::copy_triangulation(tri.data_, &data_);
@@ -98,10 +98,10 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(const NSnapPeaTriangulation& tri) :
     listen(this);
 }
 
-NSnapPeaTriangulation::NSnapPeaTriangulation(const NTriangulation& tri, bool) :
+SnapPeaTriangulation::SnapPeaTriangulation(const NTriangulation& tri, bool) :
         data_(0), shape_(0), cusp_(0), filledCusps_(0), syncing_(false) {
-    const NSnapPeaTriangulation* clone =
-        dynamic_cast<const NSnapPeaTriangulation*>(&tri);
+    const SnapPeaTriangulation* clone =
+        dynamic_cast<const SnapPeaTriangulation*>(&tri);
     if (clone) {
         // We have a full SnapPea triangulation to clone.
         if (clone->data_) {
@@ -215,38 +215,38 @@ NSnapPeaTriangulation::NSnapPeaTriangulation(const NTriangulation& tri, bool) :
     listen(this);
 }
 
-NSnapPeaTriangulation::~NSnapPeaTriangulation() {
+SnapPeaTriangulation::~SnapPeaTriangulation() {
     unlisten(this);
     delete[] shape_;
     delete[] cusp_;
     regina::snappea::free_triangulation(data_);
 }
 
-std::string NSnapPeaTriangulation::name() const {
+std::string SnapPeaTriangulation::name() const {
     return (data_ ? get_triangulation_name(data_) : "");
 }
 
-NSnapPeaTriangulation::SolutionType NSnapPeaTriangulation::solutionType()
+SnapPeaTriangulation::SolutionType SnapPeaTriangulation::solutionType()
         const {
     if (! data_)
-        return NSnapPeaTriangulation::not_attempted;
+        return SnapPeaTriangulation::not_attempted;
     return static_cast<SolutionType>(
         regina::snappea::get_filled_solution_type(data_));
 }
 
-double NSnapPeaTriangulation::volume() const {
+double SnapPeaTriangulation::volume() const {
     if (! data_)
         return 0;
     return regina::snappea::volume(data_, 0);
 }
 
-double NSnapPeaTriangulation::volume(int& precision) const {
+double SnapPeaTriangulation::volume(int& precision) const {
     if (! data_)
         return 0;
     return regina::snappea::volume(data_, &precision);
 }
 
-bool NSnapPeaTriangulation::volumeZero() const {
+bool SnapPeaTriangulation::volumeZero() const {
     int precision;
     double vol = regina::snappea::volume(data_, &precision);
 
@@ -264,7 +264,7 @@ bool NSnapPeaTriangulation::volumeZero() const {
     return (fabs(vol) < epsilon);
 }
 
-double NSnapPeaTriangulation::minImaginaryShape() const {
+double SnapPeaTriangulation::minImaginaryShape() const {
     if (! shape_)
         return 0;
 
@@ -277,7 +277,7 @@ double NSnapPeaTriangulation::minImaginaryShape() const {
     return ans;
 }
 
-void NSnapPeaTriangulation::unfill(unsigned whichCusp) {
+void SnapPeaTriangulation::unfill(unsigned whichCusp) {
     if (! data_)
         return;
 
@@ -296,7 +296,7 @@ void NSnapPeaTriangulation::unfill(unsigned whichCusp) {
     syncFillings();
 }
 
-bool NSnapPeaTriangulation::fill(int m, int l, unsigned whichCusp) {
+bool SnapPeaTriangulation::fill(int m, int l, unsigned whichCusp) {
     if (! data_)
         return false;
 
@@ -342,7 +342,7 @@ bool NSnapPeaTriangulation::fill(int m, int l, unsigned whichCusp) {
     return true;
 }
 
-NTriangulation* NSnapPeaTriangulation::filledTriangulation(unsigned whichCusp)
+NTriangulation* SnapPeaTriangulation::filledTriangulation(unsigned whichCusp)
         const {
     if (! data_)
         return 0;
@@ -368,14 +368,14 @@ NTriangulation* NSnapPeaTriangulation::filledTriangulation(unsigned whichCusp)
         t = regina::snappea::fill_cusps(data_, fill_cusp, data_->name, 0);
         delete[] fill_cusp;
 
-        NSnapPeaTriangulation* ans = new NSnapPeaTriangulation();
+        SnapPeaTriangulation* ans = new SnapPeaTriangulation();
         if (t)
             ans->reset(t);
         return ans;
     }
 }
 
-NTriangulation* NSnapPeaTriangulation::filledTriangulation() const {
+NTriangulation* SnapPeaTriangulation::filledTriangulation() const {
     if (! data_)
         return 0;
 
@@ -383,7 +383,7 @@ NTriangulation* NSnapPeaTriangulation::filledTriangulation() const {
     regina::snappea::Triangulation* t;
     if (filledCusps_ == 0) {
         // Fill no cusps.
-        return new NSnapPeaTriangulation(*this);
+        return new SnapPeaTriangulation(*this);
     } else if (filledCusps_ == nCusps) {
         // Fill all cusps.
         t = regina::snappea::fill_cusps(data_, 0, data_->name,
@@ -405,13 +405,13 @@ NTriangulation* NSnapPeaTriangulation::filledTriangulation() const {
 
         if (! t)
             return 0;
-        NSnapPeaTriangulation* ans = new NSnapPeaTriangulation();
+        SnapPeaTriangulation* ans = new SnapPeaTriangulation();
         ans->reset(t);
         return ans;
     }
 }
 
-NSnapPeaTriangulation* NSnapPeaTriangulation::protoCanonize() const {
+SnapPeaTriangulation* SnapPeaTriangulation::protoCanonize() const {
     if (! data_)
         return 0;
 
@@ -423,13 +423,13 @@ NSnapPeaTriangulation* NSnapPeaTriangulation::protoCanonize() const {
         return 0;
     }
 
-    NSnapPeaTriangulation* ans = new NSnapPeaTriangulation();
+    SnapPeaTriangulation* ans = new SnapPeaTriangulation();
     ans->setLabel(get_triangulation_name(data_));
     ans->reset(tmp);
     return ans;
 }
 
-NTriangulation* NSnapPeaTriangulation::canonize() const {
+NTriangulation* SnapPeaTriangulation::canonize() const {
     if (! data_)
         return 0;
 
@@ -448,7 +448,7 @@ NTriangulation* NSnapPeaTriangulation::canonize() const {
     return ans;
 }
 
-void NSnapPeaTriangulation::randomize() {
+void SnapPeaTriangulation::randomize() {
     if (! data_)
         return;
 
@@ -456,7 +456,7 @@ void NSnapPeaTriangulation::randomize() {
     sync();
 }
 
-NMatrixInt* NSnapPeaTriangulation::gluingEquations() const {
+NMatrixInt* SnapPeaTriangulation::gluingEquations() const {
     if (! data_)
         return 0;
 
@@ -504,7 +504,7 @@ NMatrixInt* NSnapPeaTriangulation::gluingEquations() const {
     return matrix;
 }
 
-NMatrixInt* NSnapPeaTriangulation::gluingEquationsRect() const {
+NMatrixInt* SnapPeaTriangulation::gluingEquationsRect() const {
     if (! data_)
         return 0;
 
@@ -592,7 +592,7 @@ NMatrixInt* NSnapPeaTriangulation::gluingEquationsRect() const {
 /**
  * Written by William Pettersson, 2011.
  */
-NMatrixInt* NSnapPeaTriangulation::slopeEquations() const {
+NMatrixInt* SnapPeaTriangulation::slopeEquations() const {
     if (! data_)
         return 0;
 
@@ -633,7 +633,7 @@ NMatrixInt* NSnapPeaTriangulation::slopeEquations() const {
     return matrix;
 }
 
-void NSnapPeaTriangulation::writeTextShort(std::ostream& out) const {
+void SnapPeaTriangulation::writeTextShort(std::ostream& out) const {
     if (data_) {
         out << "SnapPea triangulation with " << data_->num_tetrahedra
             << " tetrahedra";
@@ -642,7 +642,7 @@ void NSnapPeaTriangulation::writeTextShort(std::ostream& out) const {
     }
 }
 
-void NSnapPeaTriangulation::writeTextLong(std::ostream& out) const {
+void SnapPeaTriangulation::writeTextLong(std::ostream& out) const {
     if (! data_) {
         out << "Null SnapPea triangulation" << std::endl;
         return;
@@ -673,22 +673,22 @@ void NSnapPeaTriangulation::writeTextLong(std::ostream& out) const {
     }
 }
 
-bool NSnapPeaTriangulation::kernelMessagesEnabled() {
+bool SnapPeaTriangulation::kernelMessagesEnabled() {
     std::lock_guard<std::mutex> ml(snapMutex);
     return kernelMessages_;
 }
 
-void NSnapPeaTriangulation::enableKernelMessages(bool enabled) {
+void SnapPeaTriangulation::enableKernelMessages(bool enabled) {
     std::lock_guard<std::mutex> ml(snapMutex);
     kernelMessages_ = enabled;
 }
 
-void NSnapPeaTriangulation::disableKernelMessages() {
+void SnapPeaTriangulation::disableKernelMessages() {
     std::lock_guard<std::mutex> ml(snapMutex);
     kernelMessages_ = false;
 }
 
-std::string NSnapPeaTriangulation::snapPea() const {
+std::string SnapPeaTriangulation::snapPea() const {
     if (! data_)
         return std::string();
 
@@ -698,7 +698,7 @@ std::string NSnapPeaTriangulation::snapPea() const {
     return ans;
 }
 
-void NSnapPeaTriangulation::snapPea(std::ostream& out) const {
+void SnapPeaTriangulation::snapPea(std::ostream& out) const {
     if (! data_)
         return;
 
@@ -707,13 +707,13 @@ void NSnapPeaTriangulation::snapPea(std::ostream& out) const {
     free(file);
 }
 
-bool NSnapPeaTriangulation::saveSnapPea(const char* filename) const {
+bool SnapPeaTriangulation::saveSnapPea(const char* filename) const {
     if (! (data_ && filename && *filename))
         return false;
     return regina::snappea::write_triangulation(data_, filename);
 }
 
-void NSnapPeaTriangulation::writeXMLPacketData(std::ostream& out) const {
+void SnapPeaTriangulation::writeXMLPacketData(std::ostream& out) const {
     if (! data_)
         return;
 
@@ -721,7 +721,7 @@ void NSnapPeaTriangulation::writeXMLPacketData(std::ostream& out) const {
         << "</snappea>\n";
 }
 
-void NSnapPeaTriangulation::packetWasChanged(Packet* packet) {
+void SnapPeaTriangulation::packetWasChanged(Packet* packet) {
     // If the triangulation is changed "illegitimately", via the
     // inherited NTriangulation interface, then convert this to a null
     // triangulation.
@@ -729,7 +729,7 @@ void NSnapPeaTriangulation::packetWasChanged(Packet* packet) {
         reset(0);
 }
 
-void NSnapPeaTriangulation::sync() {
+void SnapPeaTriangulation::sync() {
     // TODO: Check first whether anything has changed, and only resync
     // the NTriangulation data if it has.
     syncing_ = true;
@@ -805,7 +805,7 @@ void NSnapPeaTriangulation::sync() {
     syncing_ = false;
 }
 
-void NSnapPeaTriangulation::syncFillings() {
+void SnapPeaTriangulation::syncFillings() {
     syncing_ = true;
     {
         ChangeEventSpan span(this);
@@ -815,7 +815,7 @@ void NSnapPeaTriangulation::syncFillings() {
     syncing_ = false;
 }
 
-void NSnapPeaTriangulation::fillingsHaveChanged() {
+void SnapPeaTriangulation::fillingsHaveChanged() {
     // Clear properties that depend on the fillings.
     fundGroupFilled_.clear();
     h1Filled_.clear();
@@ -849,7 +849,7 @@ void NSnapPeaTriangulation::fillingsHaveChanged() {
     }
 }
 
-void NSnapPeaTriangulation::fillRegina(regina::snappea::Triangulation* src,
+void SnapPeaTriangulation::fillRegina(regina::snappea::Triangulation* src,
         NTriangulation& dest) {
     ChangeEventSpan span(&dest);
 
@@ -873,7 +873,7 @@ void NSnapPeaTriangulation::fillRegina(regina::snappea::Triangulation* src,
     regina::snappea::free_triangulation_data(tData);
 }
 
-void NSnapPeaTriangulation::reset(regina::snappea::Triangulation* data) {
+void SnapPeaTriangulation::reset(regina::snappea::Triangulation* data) {
     if (data_)
         regina::snappea::free_triangulation(data_);
     data_ = data;
