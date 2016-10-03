@@ -66,7 +66,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NXMLFilterReader : public NXMLElementReader {
+class REGINA_API NXMLFilterReader : public XMLElementReader {
     public:
         /**
          * Creates a new filter element reader.
@@ -119,11 +119,11 @@ class REGINA_API NXMLFilterPacketReader : public XMLPacketReader {
         NXMLFilterPacketReader(Packet* newParent, XMLTreeResolver& resolver);
 
         virtual Packet* packet() override;
-        virtual NXMLElementReader* startContentSubElement(
+        virtual XMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
         virtual void endContentSubElement(const std::string& subTagName,
-            NXMLElementReader* subReader) override;
+            XMLElementReader* subReader) override;
 };
 
 /*@}*/

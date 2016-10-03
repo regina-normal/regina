@@ -5,9 +5,9 @@ SET ( FILES
   boolset
   base64
   i18nutils
-  nxmlcallback
   osutils
   stringutils
+  xmlcallback
   xmlutils
   )
 
@@ -36,8 +36,8 @@ if (${REGINA_INSTALL_DEV})
     nqitmask.h
     ntrieset.h
     ntritmask.h
-    nxmlcallback.h
-    nxmlelementreader.h
+    xmlcallback.h
+    xmlelementreader.h
     osutils.h
     ptrutils.h
     registryutils.h

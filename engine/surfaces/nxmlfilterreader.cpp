@@ -37,22 +37,22 @@
 namespace regina {
 
 namespace {
-    struct XMLReaderFunction : public Returns<NXMLElementReader*> {
+    struct XMLReaderFunction : public Returns<XMLElementReader*> {
         template <typename Filter>
-        inline NXMLElementReader* operator() (Packet* parent) {
+        inline XMLElementReader* operator() (Packet* parent) {
             return Filter::Class::xmlFilterReader(parent);
         }
     };
 }
 
-NXMLElementReader* NXMLFilterPacketReader::startContentSubElement(
+XMLElementReader* NXMLFilterPacketReader::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
     if (! filter_)
         if (subTagName == "filter") {
             int type;
             if (valueOf(props.lookup("typeid"), type)) {
-                NXMLElementReader* ans = forFilter(
+                XMLElementReader* ans = forFilter(
                     static_cast<SurfaceFilterType>(type),
                     XMLReaderFunction(), 0, parent_);
                 if (ans)
@@ -61,12 +61,12 @@ NXMLElementReader* NXMLFilterPacketReader::startContentSubElement(
                     return new NXMLFilterReader();
             }
         }
-    return new NXMLElementReader();
+    return new XMLElementReader();
 }
 
 void NXMLFilterPacketReader::endContentSubElement(
         const std::string& subTagName,
-        NXMLElementReader* subReader) {
+        XMLElementReader* subReader) {
     if (! filter_)
         if (subTagName == "filter")
             filter_ = dynamic_cast<NXMLFilterReader*>(subReader)->filter();

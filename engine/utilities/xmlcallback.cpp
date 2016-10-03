@@ -31,25 +31,25 @@
  **************************************************************************/
 
 #include <iomanip>
-#include "utilities/nxmlcallback.h"
+#include "utilities/xmlcallback.h"
 
 namespace regina {
 
-const int NXMLCallback::WAITING = 1;
-const int NXMLCallback::WORKING = 2;
-const int NXMLCallback::DONE = 3;
-const int NXMLCallback::ABORTED = 4;
+const int XMLCallback::WAITING = 1;
+const int XMLCallback::WORKING = 2;
+const int XMLCallback::DONE = 3;
+const int XMLCallback::ABORTED = 4;
     
-NXMLCallback::~NXMLCallback() {
+XMLCallback::~XMLCallback() {
     if (! readers.empty())
         abort();
 }
     
-void NXMLCallback::start_document(regina::xml::XMLParser* parser) {
+void XMLCallback::start_document(regina::xml::XMLParser* parser) {
     topReader.usingParser(parser);
 }
 
-void NXMLCallback::end_document() {
+void XMLCallback::end_document() {
     if (state_ == WAITING) {
         errStream << "XML Fatal Error: File contains no tags." << std::endl;
         abort();
@@ -59,7 +59,7 @@ void NXMLCallback::end_document() {
     }
 }
 
-void NXMLCallback::start_element(const std::string& n,
+void XMLCallback::start_element(const std::string& n,
         const regina::xml::XMLPropertyDict& p) {
     if (state_ == DONE) {
         errStream << "XML Fatal Error: File contains multiple top-level tags."
@@ -71,11 +71,11 @@ void NXMLCallback::start_element(const std::string& n,
         charsAreInitial = true;
         state_ = WORKING;
     } else if (state_ == WORKING) {
-        NXMLElementReader* current = currentReader();
+        XMLElementReader* current = currentReader();
         if (charsAreInitial)
             current->initialChars(currChars);
 
-        NXMLElementReader* child = current->startSubElement(n, p);
+        XMLElementReader* child = current->startSubElement(n, p);
         readers.push(child);
         child->startElement(n, p, current);
         currChars = "";
@@ -83,9 +83,9 @@ void NXMLCallback::start_element(const std::string& n,
     }
 }
 
-void NXMLCallback::end_element(const std::string& n) {
+void XMLCallback::end_element(const std::string& n) {
     if (state_ == WORKING) {
-        NXMLElementReader* current = currentReader();
+        XMLElementReader* current = currentReader();
 
         if (charsAreInitial) {
             charsAreInitial = false;
@@ -105,34 +105,34 @@ void NXMLCallback::end_element(const std::string& n) {
     }
 }
 
-void NXMLCallback::characters(const std::string& s) {
+void XMLCallback::characters(const std::string& s) {
     if (state_ == WORKING)
         if (charsAreInitial)
             currChars += s;
 }
 
-void NXMLCallback::warning(const std::string& s) {
+void XMLCallback::warning(const std::string& s) {
     errStream << "XML Warning: " << s << std::endl;
 }
 
-void NXMLCallback::error(const std::string& s) {
+void XMLCallback::error(const std::string& s) {
     errStream << "XML Error: " << s << std::endl;
     abort();
 }
 
-void NXMLCallback::fatal_error(const std::string& s) {
+void XMLCallback::fatal_error(const std::string& s) {
     errStream << "XML Fatal Error: " << s << std::endl;
     abort();
 }
 
-void NXMLCallback::abort() {
+void XMLCallback::abort() {
     if (state_ == ABORTED)
         return;
     state_ = ABORTED;
 
     // Make sure we don't delete a child reader until we've called
     // abortElement() on its parent.
-    NXMLElementReader* child = 0;
+    XMLElementReader* child = 0;
     while (! readers.empty()) {
         readers.top()->abort(child);
         if (child)

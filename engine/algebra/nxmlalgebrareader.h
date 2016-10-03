@@ -42,7 +42,7 @@
 #include "regina-core.h"
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
-#include "utilities/nxmlelementreader.h"
+#include "utilities/xmlelementreader.h"
 
 namespace regina {
 
@@ -58,7 +58,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NXMLAbelianGroupReader : public NXMLElementReader {
+class REGINA_API NXMLAbelianGroupReader : public XMLElementReader {
     private:
         NAbelianGroup* group_;
             /**< The abelian group currently being read. */
@@ -79,7 +79,7 @@ class REGINA_API NXMLAbelianGroupReader : public NXMLElementReader {
 
         virtual void startElement(const std::string& tagName,
             const regina::xml::XMLPropertyDict& tagProps,
-            NXMLElementReader* parentReader);
+            XMLElementReader* parentReader);
         virtual void initialChars(const std::string& chars);
 };
 
@@ -90,7 +90,7 @@ class REGINA_API NXMLAbelianGroupReader : public NXMLElementReader {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NXMLGroupPresentationReader : public NXMLElementReader {
+class REGINA_API NXMLGroupPresentationReader : public XMLElementReader {
     private:
         NGroupPresentation* group_;
             /**< The group presentation currently being read. */
@@ -111,12 +111,12 @@ class REGINA_API NXMLGroupPresentationReader : public NXMLElementReader {
 
         virtual void startElement(const std::string& tagName,
             const regina::xml::XMLPropertyDict& tagProps,
-            NXMLElementReader* parentReader);
-        virtual NXMLElementReader* startSubElement(
+            XMLElementReader* parentReader);
+        virtual XMLElementReader* startSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps);
         virtual void endSubElement(const std::string& subTagName,
-            NXMLElementReader* subReader);
+            XMLElementReader* subReader);
 };
 
 /*@}*/

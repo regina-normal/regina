@@ -30,13 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file utilities/nxmlelementreader.h
+/*! \file utilities/xmlelementreader.h
  *  \brief Deals with parsing XML program data at the tag level.
  */
 
-#ifndef __NXMLELEMENTREADER_H
+#ifndef __XMLELEMENTREADER_H
 #ifndef __DOXYGEN
-#define __NXMLELEMENTREADER_H
+#define __XMLELEMENTREADER_H
 #endif
 
 #include "regina-core.h"
@@ -56,14 +56,14 @@ namespace regina {
  * with reading subelements of the element in question, although the contents
  * of subelements will be made available.
  *
- * Generally a subclass of NXMLElementReader will be used to receive and
+ * Generally a subclass of XMLElementReader will be used to receive and
  * store information that you care about.  However, if you simply wish to
  * ignore the contents of a particular XML element (and all of its
- * subelements), you can use class NXMLElementReader itself for the
+ * subelements), you can use class XMLElementReader itself for the
  * element(s) you wish to ignore.
  *
  * When the parser runs through a particular XML element, the routines of
- * the corresponding NXMLElementReader will be called as follows.  First
+ * the corresponding XMLElementReader will be called as follows.  First
  * startElement() and initialChars() will be called.  Then for each
  * subelement encountered the following processing will take place:
  * startSubElement() will be called to create a new child reader, the entire
@@ -76,8 +76,8 @@ namespace regina {
  * upon all active readers and all active readers will be destroyed.
  *
  * To parse an entire XML file using a variety of element readers (all of
- * which may be of different subclasses of NXMLElementReader), create a
- * new regina::xml::XMLParser with an NXMLCallback as its corresponding
+ * which may be of different subclasses of XMLElementReader), create a
+ * new regina::xml::XMLParser with an XMLCallback as its corresponding
  * callback object.
  *
  * When parsing begins on an entire XML file, an additional call is made:
@@ -86,18 +86,18 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NXMLElementReader {
+class REGINA_API XMLElementReader {
     public:
         /**
          * Creates a new element reader.
          */
-        NXMLElementReader();
+        XMLElementReader();
         /**
          * Destroys this element reader.
          *
          * The default implementation does nothing.
          */
-        virtual ~NXMLElementReader();
+        virtual ~XMLElementReader();
 
         /**
          * Signifies that parsing of this XML element is beginning.
@@ -113,7 +113,7 @@ class REGINA_API NXMLElementReader {
          */
         virtual void startElement(const std::string& tagName,
             const regina::xml::XMLPropertyDict& tagProps,
-            NXMLElementReader* parentReader);
+            XMLElementReader* parentReader);
         /**
          * Signifies that the initial text belonging to this XML element
          * has been read.  The initial text is everything between the
@@ -128,7 +128,7 @@ class REGINA_API NXMLElementReader {
          * Signifies that a subelement of this XML element is about to be
          * parsed.
          *
-         * The default implementation returns a new NXMLElementReader
+         * The default implementation returns a new XMLElementReader
          * which can be used to ignore the subelement completely.
          *
          * @param subTagName the name of the subelement opening tag.
@@ -138,7 +138,7 @@ class REGINA_API NXMLElementReader {
          * parse the subelement.  This class should \e not take care of
          * the new reader's destruction; that will be done by the parser.
          */
-        virtual NXMLElementReader* startSubElement(
+        virtual XMLElementReader* startSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps);
         /**
@@ -155,7 +155,7 @@ class REGINA_API NXMLElementReader {
          * and that the child reader has not yet been destroyed.
          */
         virtual void endSubElement(const std::string& subTagName,
-            NXMLElementReader* subReader);
+            XMLElementReader* subReader);
         /**
          * Signifies that parsing of this XML element is finished.
          *
@@ -189,7 +189,7 @@ class REGINA_API NXMLElementReader {
          * already been called upon the child reader and that the child
          * reader has not yet been destroyed.
          */
-        virtual void abort(NXMLElementReader* subReader);
+        virtual void abort(XMLElementReader* subReader);
 };
 
 /**
@@ -199,7 +199,7 @@ class REGINA_API NXMLElementReader {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NXMLCharsReader : public NXMLElementReader {
+class REGINA_API XMLCharsReader : public XMLElementReader {
     private:
         std::string readChars;
             /**< The characters stored in this XML element. */
@@ -208,7 +208,7 @@ class REGINA_API NXMLCharsReader : public NXMLElementReader {
         /**
          * Creates a new XML element reader.
          */
-        NXMLCharsReader();
+        XMLCharsReader();
 
         /**
          * Returns the characters stored in the XML element that has
@@ -223,49 +223,49 @@ class REGINA_API NXMLCharsReader : public NXMLElementReader {
 
 /*@}*/
 
-// Inline functions for NXMLElementReader
+// Inline functions for XMLElementReader
 
-inline NXMLElementReader::NXMLElementReader() {
+inline XMLElementReader::XMLElementReader() {
 }
 
-inline NXMLElementReader::~NXMLElementReader() {
+inline XMLElementReader::~XMLElementReader() {
 }
 
-inline void NXMLElementReader::startElement(const std::string&,
-        const regina::xml::XMLPropertyDict&, NXMLElementReader*) {
+inline void XMLElementReader::startElement(const std::string&,
+        const regina::xml::XMLPropertyDict&, XMLElementReader*) {
 }
 
-inline void NXMLElementReader::initialChars(const std::string&) {
+inline void XMLElementReader::initialChars(const std::string&) {
 }
 
-inline NXMLElementReader* NXMLElementReader::startSubElement(
+inline XMLElementReader* XMLElementReader::startSubElement(
         const std::string&, const regina::xml::XMLPropertyDict&) {
-    return new NXMLElementReader();
+    return new XMLElementReader();
 }
 
-inline void NXMLElementReader::endSubElement(const std::string&,
-        NXMLElementReader*) {
+inline void XMLElementReader::endSubElement(const std::string&,
+        XMLElementReader*) {
 }
 
-inline void NXMLElementReader::endElement() {
+inline void XMLElementReader::endElement() {
 }
 
-inline void NXMLElementReader::usingParser(regina::xml::XMLParser*) {
+inline void XMLElementReader::usingParser(regina::xml::XMLParser*) {
 }
 
-inline void NXMLElementReader::abort(NXMLElementReader*) {
+inline void XMLElementReader::abort(XMLElementReader*) {
 }
 
-// Inline functions for NXMLCharsReader
+// Inline functions for XMLCharsReader
 
-inline NXMLCharsReader::NXMLCharsReader() {
+inline XMLCharsReader::XMLCharsReader() {
 }
 
-inline const std::string& NXMLCharsReader::chars() {
+inline const std::string& XMLCharsReader::chars() {
     return readChars;
 }
 
-inline void NXMLCharsReader::initialChars(const std::string& chars) {
+inline void XMLCharsReader::initialChars(const std::string& chars) {
     readChars = chars;
 }
 

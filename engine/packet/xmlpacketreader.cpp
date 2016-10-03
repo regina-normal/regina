@@ -40,16 +40,16 @@
 namespace regina {
 
 namespace {
-    struct XMLReaderFunction : public Returns<NXMLElementReader*> {
+    struct XMLReaderFunction : public Returns<XMLElementReader*> {
         template <typename PacketInfo>
-        inline NXMLElementReader* operator() (Packet* me,
+        inline XMLElementReader* operator() (Packet* me,
                 XMLTreeResolver& resolver) {
             return PacketInfo::Class::xmlReader(me, resolver);
         }
     };
 }
 
-NXMLElementReader* XMLPacketReader::startSubElement(
+XMLElementReader* XMLPacketReader::startSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& subTagProps) {
     if (subTagName == "packet") {
@@ -80,7 +80,7 @@ NXMLElementReader* XMLPacketReader::startSubElement(
         if (typeID <= 0)
             return new XMLPacketReader(resolver_);
 
-        NXMLElementReader* ans = forPacket(static_cast<PacketType>(typeID),
+        XMLElementReader* ans = forPacket(static_cast<PacketType>(typeID),
             XMLReaderFunction(), 0, me, resolver_);
         if (ans)
             return ans;
@@ -92,13 +92,13 @@ NXMLElementReader* XMLPacketReader::startSubElement(
             if (! packetTag.empty())
                 me->addTag(packetTag);
         }
-        return new NXMLElementReader();
+        return new XMLElementReader();
     } else
         return startContentSubElement(subTagName, subTagProps);
 }
 
 void XMLPacketReader::endSubElement(const std::string& subTagName,
-        NXMLElementReader* subReader) {
+        XMLElementReader* subReader) {
     if (subTagName == "packet") {
         Packet* child =
             dynamic_cast<XMLPacketReader*>(subReader)->packet();
@@ -119,7 +119,7 @@ void XMLPacketReader::endSubElement(const std::string& subTagName,
         endContentSubElement(subTagName, subReader);
 }
 
-void XMLPacketReader::abort(NXMLElementReader* /* subReader */) {
+void XMLPacketReader::abort(XMLElementReader* /* subReader */) {
     Packet* me = packet();
     if (me)
         if (! me->parent())

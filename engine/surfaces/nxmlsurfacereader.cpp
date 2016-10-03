@@ -40,7 +40,7 @@ namespace regina {
 
 void NXMLNormalSurfaceReader::startElement(const std::string&,
         const regina::xml::XMLPropertyDict& props,
-        NXMLElementReader*) {
+        XMLElementReader*) {
     if (! valueOf(props.lookup("len"), vecLen))
         vecLen = -1;
     name = props.lookup("name");
@@ -85,11 +85,11 @@ void NXMLNormalSurfaceReader::initialChars(const std::string& chars) {
         surface_->setName(name);
 }
 
-NXMLElementReader* NXMLNormalSurfaceReader::startSubElement(
+XMLElementReader* NXMLNormalSurfaceReader::startSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
     if (! surface_)
-        return new NXMLElementReader();
+        return new XMLElementReader();
 
     if (subTagName == "euler") {
         NLargeInteger val;
@@ -116,10 +116,10 @@ NXMLElementReader* NXMLNormalSurfaceReader::startSubElement(
         if (valueOf(props.lookup("value"), val))
             surface_->compact = val;
     }
-    return new NXMLElementReader();
+    return new XMLElementReader();
 }
 
-NXMLElementReader* NXMLNormalSurfaceListReader::startContentSubElement(
+XMLElementReader* NXMLNormalSurfaceListReader::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
     if (list) {
@@ -151,12 +151,12 @@ NXMLElementReader* NXMLNormalSurfaceListReader::startContentSubElement(
             }
         }
     }
-    return new NXMLElementReader();
+    return new XMLElementReader();
 }
 
 void NXMLNormalSurfaceListReader::endContentSubElement(
         const std::string& subTagName,
-        NXMLElementReader* subReader) {
+        XMLElementReader* subReader) {
     if (list)
         if (subTagName == "surface")
             if (NNormalSurface* s =

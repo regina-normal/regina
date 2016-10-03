@@ -30,19 +30,19 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file utilities/nxmlcallback.h
+/*! \file utilities/xmlcallback.h
  *  \brief Deals with parsing XML program data at the file level.
  */
 
-#ifndef __NXMLCALLBACK_H
+#ifndef __XMLCALLBACK_H
 #ifndef __DOXYGEN
-#define __NXMLCALLBACK_H
+#define __XMLCALLBACK_H
 #endif
 
 #include <iostream>
 #include <stack>
 #include "regina-core.h"
-#include "utilities/nxmlelementreader.h"
+#include "utilities/xmlelementreader.h"
 
 namespace regina {
 
@@ -53,13 +53,13 @@ namespace regina {
 
 /**
  * Provides the callbacks for an XMLParser required to parse an entire
- * file using a series of NXMLElementReader objects.
- * See the NXMLElementReader class notes for details of precisely how
+ * file using a series of XMLElementReader objects.
+ * See the XMLElementReader class notes for details of precisely how
  * processing will take place.
  *
  * \ifacespython Not present.
  */
-class REGINA_API NXMLCallback : public regina::xml::XMLParserCallback {
+class REGINA_API XMLCallback : public regina::xml::XMLParserCallback {
     public:
         static const int WAITING;
             /**< Signifies that the top-level XML element has not yet been
@@ -72,9 +72,9 @@ class REGINA_API NXMLCallback : public regina::xml::XMLParserCallback {
             /**< Signifies that XML processing was aborted. */
 
     private:
-        NXMLElementReader& topReader;
+        XMLElementReader& topReader;
             /**< The top-level element reader. */
-        std::stack<NXMLElementReader*> readers;
+        std::stack<XMLElementReader*> readers;
             /**< A stack of all currently active element readers. */
         std::ostream& errStream;
             /**< The output stream to use for warning or error messages. */
@@ -99,14 +99,14 @@ class REGINA_API NXMLCallback : public regina::xml::XMLParserCallback {
          * @param newErrStream the output stream to which any warning or
          * error messages should be sent.
          */
-        NXMLCallback(NXMLElementReader& newTopReader,
+        XMLCallback(XMLElementReader& newTopReader,
             std::ostream& newErrStream);
         /**
          * Destroys this callback object.  Any element reader (aside from
          * the top-level reader) that has not yet been destroyed will
          * have abort() called upon it and will be destroyed at this point.
          */
-        virtual ~NXMLCallback();
+        virtual ~XMLCallback();
 
         /**
          * Returns the state that this callback object is currently in.
@@ -120,10 +120,10 @@ class REGINA_API NXMLCallback : public regina::xml::XMLParserCallback {
         /**
          * Aborts processing of the XML file completely.  The XMLParser
          * may continue sending information but it will be completely
-         * ignored by this NXMLCallback object from this point onwards.
+         * ignored by this XMLCallback object from this point onwards.
          *
          * All currently active readers will have
-         * NXMLElementReader::abort() called upon them and all except for
+         * XMLElementReader::abort() called upon them and all except for
          * the top-level reader will be destroyed.
          */
         void abort();
@@ -145,23 +145,23 @@ class REGINA_API NXMLCallback : public regina::xml::XMLParserCallback {
          *
          * @return the current deepest element reader.
          */
-        NXMLElementReader* currentReader();
+        XMLElementReader* currentReader();
 };
 
 /*@}*/
 
-// Inline functions for NXMLCallback
+// Inline functions for XMLCallback
 
-inline NXMLCallback::NXMLCallback(NXMLElementReader& newTopReader,
+inline XMLCallback::XMLCallback(XMLElementReader& newTopReader,
         std::ostream& newErrStream) : topReader(newTopReader),
         errStream(newErrStream), charsAreInitial(true), state_(WAITING) {
 }
 
-inline NXMLElementReader* NXMLCallback::currentReader() {
+inline XMLElementReader* XMLCallback::currentReader() {
     return (readers.empty() ? &topReader : readers.top());
 }
 
-inline int NXMLCallback::state() const {
+inline int XMLCallback::state() const {
     return state_;
 }
 

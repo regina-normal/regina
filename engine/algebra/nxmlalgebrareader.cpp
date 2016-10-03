@@ -42,7 +42,7 @@ namespace {
     /**
      * Reads a single relation in a group presentation.
      */
-    class NExpressionReader : public NXMLElementReader {
+    class NExpressionReader : public XMLElementReader {
         private:
             NGroupExpression* exp;
             long nGens;
@@ -95,7 +95,7 @@ namespace {
 }
 
 void NXMLAbelianGroupReader::startElement(const std::string&,
-        const regina::xml::XMLPropertyDict& tagProps, NXMLElementReader*) {
+        const regina::xml::XMLPropertyDict& tagProps, XMLElementReader*) {
     long rank;
     if (valueOf(tagProps.lookup("rank"), rank))
         if (rank >= 0) {
@@ -124,7 +124,7 @@ void NXMLAbelianGroupReader::initialChars(const std::string& chars) {
 }
 
 void NXMLGroupPresentationReader::startElement(const std::string&,
-        const regina::xml::XMLPropertyDict& tagProps, NXMLElementReader*) {
+        const regina::xml::XMLPropertyDict& tagProps, XMLElementReader*) {
     long nGen;
     if (valueOf(tagProps.lookup("generators"), nGen))
         if (nGen >= 0) {
@@ -134,17 +134,17 @@ void NXMLGroupPresentationReader::startElement(const std::string&,
         }
 }
 
-NXMLElementReader* NXMLGroupPresentationReader::startSubElement(
+XMLElementReader* NXMLGroupPresentationReader::startSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& /* subTagProps */) {
     if (group_)
         if (subTagName == "reln")
             return new NExpressionReader(group_->countGenerators());
-    return new NXMLElementReader();
+    return new XMLElementReader();
 }
 
 void NXMLGroupPresentationReader::endSubElement(const std::string& subTagName,
-        NXMLElementReader* subReader) {
+        XMLElementReader* subReader) {
     if (group_)
         if (subTagName == "reln") {
             NGroupExpression* exp =

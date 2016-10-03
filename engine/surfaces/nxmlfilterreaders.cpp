@@ -73,7 +73,7 @@ namespace {
                 return filter_;
             }
 
-            NXMLElementReader* startSubElement(const std::string& subTagName,
+            XMLElementReader* startSubElement(const std::string& subTagName,
                     const regina::xml::XMLPropertyDict& props) {
                 if (! filter_)
                     if (subTagName == "op") {
@@ -86,7 +86,7 @@ namespace {
                             filter_->setUsesAnd(false);
                         }
                     }
-                return new NXMLElementReader();
+                return new XMLElementReader();
             }
     };
 
@@ -105,10 +105,10 @@ namespace {
                 return filter_;
             }
 
-            NXMLElementReader* startSubElement(const std::string& subTagName,
+            XMLElementReader* startSubElement(const std::string& subTagName,
                     const regina::xml::XMLPropertyDict& props) {
                 if (subTagName == "euler") {
-                    return new NXMLCharsReader();
+                    return new XMLCharsReader();
                 } else if (subTagName == "orbl") {
                     BoolSet b;
                     if (valueOf(props.lookup("value"), b))
@@ -122,16 +122,16 @@ namespace {
                     if (valueOf(props.lookup("value"), b))
                         filter_->setRealBoundary(b);
                 }
-                return new NXMLElementReader();
+                return new XMLElementReader();
             }
 
             void endSubElement(
                     const std::string& subTagName,
-                    NXMLElementReader* subReader) {
+                    XMLElementReader* subReader) {
                 if (subTagName == "euler") {
                     std::list<std::string> tokens;
                     basicTokenise(back_inserter(tokens),
-                        dynamic_cast<NXMLCharsReader*>(subReader)->chars());
+                        dynamic_cast<XMLCharsReader*>(subReader)->chars());
 
                     NLargeInteger val;
                     for (std::list<std::string>::const_iterator it =

@@ -80,7 +80,7 @@ class REGINA_API XMLTriangulationReader<2> :
          * 3-manifold triangulations), then this function should return
          * a corresponding element reader.
          *
-         * Otherwise this function should return a new NXMLElementReader,
+         * Otherwise this function should return a new XMLElementReader,
          * which will cause the XML element to be ignored.
          *
          * @param subTagName the name of the XML subelement opening tag.
@@ -90,7 +90,7 @@ class REGINA_API XMLTriangulationReader<2> :
          * parse the subelement.  This class should not take care of the
          * new reader's destruction; that will be done by the parser.
          */
-        NXMLElementReader* startPropertySubElement(
+        XMLElementReader* startPropertySubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps);
 };
@@ -109,9 +109,9 @@ inline XMLTriangulationReader<2>::XMLTriangulationReader(
         detail::XMLTriangulationReaderBase<2>(resolver) {
 }
 
-inline NXMLElementReader* XMLTriangulationReader<2>::startPropertySubElement(
+inline XMLElementReader* XMLTriangulationReader<2>::startPropertySubElement(
         const std::string&, const regina::xml::XMLPropertyDict&) {
-    return new NXMLElementReader();
+    return new XMLElementReader();
 }
 
 } // namespace regina
