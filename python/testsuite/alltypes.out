@@ -1,3 +1,12 @@
+AngleStructure : class
+Equality type : BY_REFERENCE
+
+AngleStructures : class
+Equality type : BY_REFERENCE
+
+BoolSet : class
+Equality type : BY_VALUE
+
 Component10 : class
 Equality type : BY_REFERENCE
 
@@ -1024,12 +1033,6 @@ Equality type : NEVER_INSTANTIATED
 NAbelianGroup : class
 Equality type : BY_VALUE
 
-AngleStructure : class
-Equality type : BY_REFERENCE
-
-AngleStructures : class
-Equality type : BY_REFERENCE
-
 NAugTriSolidTorus : class
 Equality type : BY_REFERENCE
 
@@ -1044,9 +1047,6 @@ Equality type : BY_REFERENCE
 
 NBlockedSFSTriple : class
 Equality type : BY_REFERENCE
-
-BoolSet : class
-Equality type : BY_VALUE
 
 NBoundaryComponent : class
 Equality type : BY_REFERENCE
@@ -1309,9 +1309,6 @@ Equality type : BY_VALUE
 NSnapPeaCensusTri : class
 Equality type : BY_VALUE
 
-SnapPeaTriangulation : class
-Equality type : BY_REFERENCE
-
 NSnappedBall : class
 Equality type : BY_REFERENCE
 
@@ -1343,12 +1340,6 @@ NTetrahedron : class
 Equality type : BY_REFERENCE
 
 NTorusBundle : class
-Equality type : BY_REFERENCE
-
-TreeBag : class
-Equality type : BY_REFERENCE
-
-TreeDecomposition : class
 Equality type : BY_REFERENCE
 
 NTriSolidTorus : class
@@ -1444,7 +1435,16 @@ Equality type : BY_REFERENCE
 Simplex9 : class
 Equality type : BY_REFERENCE
 
+SnapPeaTriangulation : class
+Equality type : BY_REFERENCE
+
 Text : class
+Equality type : BY_REFERENCE
+
+TreeBag : class
+Equality type : BY_REFERENCE
+
+TreeDecomposition : class
 Equality type : BY_REFERENCE
 
 Triangulation10 : class
