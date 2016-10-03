@@ -99,7 +99,8 @@ constexpr IntType nextPowerOfTwo(IntType n) {
  * Gives access to native integer types that hold \e exactly \a k bytes,
  * where \a k may be any compile-time constant.
  *
- * \tparam k the exact number of bytes in the native integer types.
+ * \tparam bytes the exact number of bytes in the native integer types
+ * (i.e., the integer \a k described above).
  *
  * \ifacespython Not present.
  *
@@ -130,7 +131,8 @@ struct IntOfSize {
  * Gives access to native integer types that hold <em>at least</em> \a k bytes,
  * where \a k may be any compile-time constant.
  *
- * \tparam k the minimum number of bytes in the native integer types.
+ * \tparam bytes the minimum number of bytes in the native integer types
+ * (i.e., the integer \a k described above).
  *
  * \ifacespython Not present.
  *
