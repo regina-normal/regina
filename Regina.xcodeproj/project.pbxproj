@@ -2175,7 +2175,6 @@
 		052942D61C5CDCBF0011C1E6 /* safeheldtype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = safeheldtype.h; sourceTree = "<group>"; };
 		052AB70F1C6304A800C44D54 /* facetspec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetspec.h; sourceTree = "<group>"; };
 		052AB7111C6304C500C44D54 /* facetspec.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetspec.cpp; sourceTree = "<group>"; };
-		052DB59F1D9E592800EDEA68 /* Utils.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Utils.entitlements; sourceTree = "<group>"; };
 		052DB5C11D9F200600EDEA68 /* censuslookup */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = censuslookup; sourceTree = "<group>"; };
 		052F9BFF180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052F9C00180600FA00FAE4DF /* nabeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nabeliangroup.cpp; sourceTree = "<group>"; };
@@ -5378,7 +5377,6 @@
 				05561D181811F27A00FD6E2E /* regina.icns */,
 				05561D191811F27A00FD6E2E /* x-regina.icns */,
 				0543AEC71811E2AD002758F8 /* Regina.entitlements */,
-				052DB59F1D9E592800EDEA68 /* Utils.entitlements */,
 				051806D5181202E0008EBB01 /* examples */,
 				051806D3181202BD008EBB01 /* icons */,
 				058637F4181DBCE100E95307 /* pylib */,
