@@ -2,9 +2,9 @@
 
 # Files to compile
 SET ( FILES
+  boolset
   i18nutils
   intutils
-  nbooleans
   osutils
   pyutilities
   stringutils

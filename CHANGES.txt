@@ -18,6 +18,7 @@ Version 5.1  [ (under development) ]
             + NExampleSnapPeaTriangulation becomes ExampleSnapPea.
             + NXMLFoo classes have no backward compatible headers or typedefs,
               since these are for internal use only.
+            + utilities/nbooleans.h becomes utilities/boolset.h.
     ENGINE:
         Global array quadDefn[][]:
             - Added to nnormalsurface.h, with the same contents as the old

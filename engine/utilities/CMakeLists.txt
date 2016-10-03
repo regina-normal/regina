@@ -2,9 +2,9 @@
 
 # Files to compile
 SET ( FILES
+  boolset
   base64
   i18nutils
-  nbooleans
   nxmlcallback
   osutils
   stringutils
@@ -23,6 +23,7 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     base64.h
     bitmanip.h
+    boolset.h
     flags.h
     i18nutils.h
     intutils.h

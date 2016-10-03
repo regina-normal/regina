@@ -37,7 +37,7 @@
 using namespace boost::python;
 using regina::NBoolSet;
 
-void addNBoolSet() {
+void addBoolSet() {
     scope s = class_<NBoolSet>("NBoolSet")
         .def(init<bool>())
         .def(init<const NBoolSet&>())

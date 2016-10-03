@@ -56,6 +56,7 @@
 		050C64AC1DA264A900C9420F /* nsnappeatriangulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64AB1DA264A800C9420F /* nsnappeatriangulation.h */; };
 		050C64AF1DA304BF00C9420F /* ntreedecomposition-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64AD1DA304BF00C9420F /* ntreedecomposition-impl.h */; };
 		050C64B01DA304BF00C9420F /* ntreedecomposition.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64AE1DA304BF00C9420F /* ntreedecomposition.h */; };
+		050C64B21DA3085C00C9420F /* nbooleans.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64B11DA3085C00C9420F /* nbooleans.h */; };
 		050F5DD31B9BAB9C00C1F681 /* nabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D021B9BAB9C00C1F681 /* nabeliangroup.cpp */; };
 		050F5DD41B9BAB9C00C1F681 /* ngrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D031B9BAB9C00C1F681 /* ngrouppresentation.cpp */; };
 		050F5DD51B9BAB9C00C1F681 /* nhomgrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D041B9BAB9C00C1F681 /* nhomgrouppresentation.cpp */; };
@@ -168,7 +169,7 @@
 		050F5E4C1B9BAB9C00C1F681 /* nvertex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DB71B9BAB9C00C1F681 /* nvertex.cpp */; };
 		050F5E4D1B9BAB9C00C1F681 /* pytriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DB81B9BAB9C00C1F681 /* pytriangulation.cpp */; };
 		050F5E4E1B9BAB9C00C1F681 /* i18nutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DBB1B9BAB9C00C1F681 /* i18nutils.cpp */; };
-		050F5E4F1B9BAB9C00C1F681 /* nbooleans.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DBC1B9BAB9C00C1F681 /* nbooleans.cpp */; };
+		050F5E4F1B9BAB9C00C1F681 /* boolset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DBC1B9BAB9C00C1F681 /* boolset.cpp */; };
 		050F5E501B9BAB9C00C1F681 /* osutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DBD1B9BAB9C00C1F681 /* osutils.cpp */; };
 		050F5E511B9BAB9C00C1F681 /* pyutilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DBE1B9BAB9C00C1F681 /* pyutilities.cpp */; };
 		050F5E521B9BAB9C00C1F681 /* stringutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DBF1B9BAB9C00C1F681 /* stringutils.cpp */; };
@@ -582,8 +583,8 @@
 		052FA089180600FB00FAE4DF /* intutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E67180600FB00FAE4DF /* intutils.h */; };
 		052FA08A180600FB00FAE4DF /* memutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E68180600FB00FAE4DF /* memutils.h */; };
 		052FA08B180600FB00FAE4DF /* nbitmask.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E69180600FB00FAE4DF /* nbitmask.h */; };
-		052FA08C180600FB00FAE4DF /* nbooleans.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E6A180600FB00FAE4DF /* nbooleans.cpp */; };
-		052FA08D180600FB00FAE4DF /* nbooleans.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E6B180600FB00FAE4DF /* nbooleans.h */; };
+		052FA08C180600FB00FAE4DF /* boolset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E6A180600FB00FAE4DF /* boolset.cpp */; };
+		052FA08D180600FB00FAE4DF /* boolset.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E6B180600FB00FAE4DF /* boolset.h */; };
 		052FA08E180600FB00FAE4DF /* nlistoncall.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E6C180600FB00FAE4DF /* nlistoncall.h */; };
 		052FA08F180600FB00FAE4DF /* nmarkedvector.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E6D180600FB00FAE4DF /* nmarkedvector.h */; };
 		052FA092180600FB00FAE4DF /* nproperty.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E70180600FB00FAE4DF /* nproperty.h */; };
@@ -772,7 +773,7 @@
 		052FA2071806129B00FAE4DF /* turaevviro.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E5D180600FB00FAE4DF /* turaevviro.cpp */; };
 		052FA2081806129B00FAE4DF /* base64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E5F180600FB00FAE4DF /* base64.cpp */; };
 		052FA2091806129B00FAE4DF /* i18nutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E65180600FB00FAE4DF /* i18nutils.cpp */; };
-		052FA20A1806129B00FAE4DF /* nbooleans.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E6A180600FB00FAE4DF /* nbooleans.cpp */; };
+		052FA20A1806129B00FAE4DF /* boolset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E6A180600FB00FAE4DF /* boolset.cpp */; };
 		052FA20C1806129B00FAE4DF /* osutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E77180600FB00FAE4DF /* osutils.cpp */; };
 		052FA20D1806129B00FAE4DF /* stringutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E7C180600FB00FAE4DF /* stringutils.cpp */; };
 		052FA20E1806129B00FAE4DF /* xmlutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E7F180600FB00FAE4DF /* xmlutils.cpp */; };
@@ -1946,6 +1947,7 @@
 		050C64AB1DA264A800C9420F /* nsnappeatriangulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsnappeatriangulation.h; sourceTree = "<group>"; };
 		050C64AD1DA304BF00C9420F /* ntreedecomposition-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ntreedecomposition-impl.h"; sourceTree = "<group>"; };
 		050C64AE1DA304BF00C9420F /* ntreedecomposition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntreedecomposition.h; sourceTree = "<group>"; };
+		050C64B11DA3085C00C9420F /* nbooleans.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nbooleans.h; sourceTree = "<group>"; };
 		050F5CDD1B9BAAAA00C1F681 /* engine.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = engine.so; sourceTree = BUILT_PRODUCTS_DIR; };
 		050F5D011B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		050F5D021B9BAB9C00C1F681 /* nabeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nabeliangroup.cpp; sourceTree = "<group>"; };
@@ -2108,7 +2110,7 @@
 		050F5DB81B9BAB9C00C1F681 /* pytriangulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pytriangulation.cpp; sourceTree = "<group>"; };
 		050F5DBA1B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		050F5DBB1B9BAB9C00C1F681 /* i18nutils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = i18nutils.cpp; sourceTree = "<group>"; };
-		050F5DBC1B9BAB9C00C1F681 /* nbooleans.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nbooleans.cpp; sourceTree = "<group>"; };
+		050F5DBC1B9BAB9C00C1F681 /* boolset.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boolset.cpp; sourceTree = "<group>"; };
 		050F5DBD1B9BAB9C00C1F681 /* osutils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = osutils.cpp; sourceTree = "<group>"; };
 		050F5DBE1B9BAB9C00C1F681 /* pyutilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pyutilities.cpp; sourceTree = "<group>"; };
 		050F5DBF1B9BAB9C00C1F681 /* stringutils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = stringutils.cpp; sourceTree = "<group>"; };
@@ -2584,8 +2586,8 @@
 		052F9E67180600FB00FAE4DF /* intutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = intutils.h; sourceTree = "<group>"; };
 		052F9E68180600FB00FAE4DF /* memutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = memutils.h; sourceTree = "<group>"; };
 		052F9E69180600FB00FAE4DF /* nbitmask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nbitmask.h; sourceTree = "<group>"; };
-		052F9E6A180600FB00FAE4DF /* nbooleans.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nbooleans.cpp; sourceTree = "<group>"; };
-		052F9E6B180600FB00FAE4DF /* nbooleans.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nbooleans.h; sourceTree = "<group>"; };
+		052F9E6A180600FB00FAE4DF /* boolset.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boolset.cpp; sourceTree = "<group>"; };
+		052F9E6B180600FB00FAE4DF /* boolset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = boolset.h; sourceTree = "<group>"; };
 		052F9E6C180600FB00FAE4DF /* nlistoncall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nlistoncall.h; sourceTree = "<group>"; };
 		052F9E6D180600FB00FAE4DF /* nmarkedvector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nmarkedvector.h; sourceTree = "<group>"; };
 		052F9E70180600FB00FAE4DF /* nproperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nproperty.h; sourceTree = "<group>"; };
@@ -4050,9 +4052,9 @@
 			isa = PBXGroup;
 			children = (
 				050F5DBA1B9BAB9C00C1F681 /* CMakeLists.txt */,
+				050F5DBC1B9BAB9C00C1F681 /* boolset.cpp */,
 				050F5DBB1B9BAB9C00C1F681 /* i18nutils.cpp */,
 				05431FCD1C40F65D009BC072 /* intutils.cpp */,
-				050F5DBC1B9BAB9C00C1F681 /* nbooleans.cpp */,
 				050F5DBD1B9BAB9C00C1F681 /* osutils.cpp */,
 				050F5DBE1B9BAB9C00C1F681 /* pyutilities.cpp */,
 				050F5DBF1B9BAB9C00C1F681 /* stringutils.cpp */,
@@ -4808,6 +4810,8 @@
 				052F9E5F180600FB00FAE4DF /* base64.cpp */,
 				052F9E60180600FB00FAE4DF /* base64.h */,
 				052F9E61180600FB00FAE4DF /* bitmanip.h */,
+				052F9E6A180600FB00FAE4DF /* boolset.cpp */,
+				052F9E6B180600FB00FAE4DF /* boolset.h */,
 				052F9E63180600FB00FAE4DF /* CMakeLists.txt */,
 				052F9E64180600FB00FAE4DF /* flags.h */,
 				052F9E65180600FB00FAE4DF /* i18nutils.cpp */,
@@ -4815,8 +4819,7 @@
 				052F9E67180600FB00FAE4DF /* intutils.h */,
 				052F9E68180600FB00FAE4DF /* memutils.h */,
 				052F9E69180600FB00FAE4DF /* nbitmask.h */,
-				052F9E6A180600FB00FAE4DF /* nbooleans.cpp */,
-				052F9E6B180600FB00FAE4DF /* nbooleans.h */,
+				050C64B11DA3085C00C9420F /* nbooleans.h */,
 				052F9E6C180600FB00FAE4DF /* nlistoncall.h */,
 				052F9E6D180600FB00FAE4DF /* nmarkedvector.h */,
 				052F9E70180600FB00FAE4DF /* nproperty.h */,
@@ -6004,7 +6007,7 @@
 				050C649B1DA1B61000C9420F /* nscript.h in Headers */,
 				050C64771DA1035400C9420F /* nanglestructure.h in Headers */,
 				052F9F8D180600FB00FAE4DF /* kernel_prototypes.h in Headers */,
-				052FA08D180600FB00FAE4DF /* nbooleans.h in Headers */,
+				052FA08D180600FB00FAE4DF /* boolset.h in Headers */,
 				052F9F35180600FB00FAE4DF /* ntorusbundle.h in Headers */,
 				05431F721C40F3C9009BC072 /* integer.h in Headers */,
 				052F9F24180600FB00FAE4DF /* ngraphtriple.h in Headers */,
@@ -6141,6 +6144,7 @@
 				052F9FFF180600FB00FAE4DF /* nlayering.h in Headers */,
 				05431EFD1C40F1F6009BC072 /* face.h in Headers */,
 				052F9F38180600FB00FAE4DF /* approx.h in Headers */,
+				050C64B21DA3085C00C9420F /* nbooleans.h in Headers */,
 				052FA03B180600FB00FAE4DF /* nsoriented.h in Headers */,
 				0591E7E51C4F750200793A9C /* nxmlhypersurfacereader.h in Headers */,
 				052F9F6D180600FB00FAE4DF /* canonize.h in Headers */,
@@ -6843,7 +6847,7 @@
 				050F5E361B9BAB9C00C1F681 /* normalcoords.cpp in Sources */,
 				050F5E211B9BAB9C00C1F681 /* nlayering.cpp in Sources */,
 				050F5E5E1B9BAB9C00C1F681 /* pyforeign.cpp in Sources */,
-				050F5E4F1B9BAB9C00C1F681 /* nbooleans.cpp in Sources */,
+				050F5E4F1B9BAB9C00C1F681 /* boolset.cpp in Sources */,
 				050F5E1E1B9BAB9C00C1F681 /* nlayeredloop.cpp in Sources */,
 				050C64731DA101D700C9420F /* anglestructure.cpp in Sources */,
 				050F5E401B9BAB9C00C1F681 /* pytreewidth.cpp in Sources */,
@@ -7174,7 +7178,7 @@
 				052FA236180612DD00FAE4DF /* tables.c in Sources */,
 				052FA19D1806129B00FAE4DF /* nmatrix2.cpp in Sources */,
 				052FA215180612DD00FAE4DF /* change_peripheral_curves.c in Sources */,
-				052FA20A1806129B00FAE4DF /* nbooleans.cpp in Sources */,
+				052FA20A1806129B00FAE4DF /* boolset.cpp in Sources */,
 				052FA221180612DD00FAE4DF /* edge_classes.c in Sources */,
 				05F23E1919C1418A005B53B5 /* NewSnapPeaController.mm in Sources */,
 				052FA17A1806129B00FAE4DF /* engine.cpp in Sources */,
@@ -7711,7 +7715,7 @@
 				052FA010180600FB00FAE4DF /* nsnappeacensustri.cpp in Sources */,
 				052F9F42180600FB00FAE4DF /* nperm3.cpp in Sources */,
 				052F9FA6180600FB00FAE4DF /* triangulations.c in Sources */,
-				052FA08C180600FB00FAE4DF /* nbooleans.cpp in Sources */,
+				052FA08C180600FB00FAE4DF /* boolset.cpp in Sources */,
 				052F9F36180600FB00FAE4DF /* order.cpp in Sources */,
 				052F9FFE180600FB00FAE4DF /* nlayering.cpp in Sources */,
 				05A73C8C19B2EF130099C617 /* homology.cpp in Sources */,
