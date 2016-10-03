@@ -46,7 +46,7 @@
 #define TICK_LENGTH 3
 
 // UI includes:
-#include "ncompatcanvas.h"
+#include "compatcanvas.h"
 
 #include <qcolor.h>
 #include <QGraphicsSimpleTextItem>
@@ -56,7 +56,7 @@ using regina::NNormalHypersurfaceList;
 using regina::NNormalSurface;
 using regina::NNormalSurfaceList;
 
-NCompatCanvas::NCompatCanvas(unsigned useNumSurfaces) :
+CompatCanvas::CompatCanvas(unsigned useNumSurfaces) :
         QGraphicsScene(),
         nSurfaces(useNumSurfaces), filled(false) {
     if (MIN_CELL * nSurfaces > NICE_SIZE)
@@ -248,10 +248,10 @@ NCompatCanvas::NCompatCanvas(unsigned useNumSurfaces) :
     update();
 }
 
-NCompatCanvas::~NCompatCanvas() {
+CompatCanvas::~CompatCanvas() {
 }
 
-void NCompatCanvas::fillLocal(const NNormalSurfaceList& surfaces) {
+void CompatCanvas::fillLocal(const NNormalSurfaceList& surfaces) {
     if (filled)
         return;
 
@@ -295,7 +295,7 @@ void NCompatCanvas::fillLocal(const NNormalSurfaceList& surfaces) {
     update();
 }
 
-void NCompatCanvas::fillLocal(const NNormalHypersurfaceList& surfaces) {
+void CompatCanvas::fillLocal(const NNormalHypersurfaceList& surfaces) {
     if (filled)
         return;
 
@@ -339,7 +339,7 @@ void NCompatCanvas::fillLocal(const NNormalHypersurfaceList& surfaces) {
     update();
 }
 
-void NCompatCanvas::fillGlobal(const NNormalSurfaceList& surfaces) {
+void CompatCanvas::fillGlobal(const NNormalSurfaceList& surfaces) {
     if (filled)
         return;
 

@@ -42,7 +42,7 @@
 #include "../packettabui.h"
 
 class MessageLayer;
-class NCompatCanvas;
+class CompatCanvas;
 class QPushButton;
 class QGraphicsView;
 class QComboBox;
@@ -80,8 +80,8 @@ class NSurfaceCompatibilityUI : public QObject, public PacketViewerTab,
          * are real objects, we do not \e fill the canvases with data
          * points until the user actually tries to display them.
          */
-        NCompatCanvas* matrixLocal;
-        NCompatCanvas* matrixGlobal;
+        CompatCanvas* matrixLocal;
+        CompatCanvas* matrixGlobal;
         QGraphicsView* layerLocal;
         QGraphicsView* layerGlobal;
 

@@ -30,13 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file ncompatcanvas.h
+/*! \file compatcanvas.h
  *  \brief Provides a canvas for displaying a surface/hypersurface
  *  compatibility matrix.
  */
 
-#ifndef __NCOMPATCANVAS_H
-#define __NCOMPATCANVAS_H
+#ifndef __COMPATCANVAS_H
+#define __COMPATCANVAS_H
 
 #include <QGraphicsScene>
 
@@ -49,7 +49,7 @@ namespace regina {
  * A canvas for displaying a compatibility matrix for a list of
  * normal surfaces or hypersurfaces.
  */
-class NCompatCanvas : public QGraphicsScene {
+class CompatCanvas : public QGraphicsScene {
     Q_OBJECT
 
     private:
@@ -71,8 +71,8 @@ class NCompatCanvas : public QGraphicsScene {
         /**
          * Constructor and destructor.
          */
-        NCompatCanvas(unsigned useNumSurfaces);
-        ~NCompatCanvas();
+        CompatCanvas(unsigned useNumSurfaces);
+        ~CompatCanvas();
 
         /**
          * Fill the canvas with data.

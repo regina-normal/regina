@@ -35,9 +35,9 @@
 #include "surfaces/nnormalsurfacelist.h"
 
 // UI includes:
+#include "compatcanvas.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"
-#include "ncompatcanvas.h"
 #include "nsurfacecompatui.h"
 #include "reginamain.h"
 #include "messagelayer.h"
@@ -174,8 +174,8 @@ void NSurfaceCompatibilityUI::refresh() {
     }
 
     // Yes, we should compute new matrices.
-    matrixLocal = new NCompatCanvas(surfaces->size());
-    matrixGlobal = new NCompatCanvas(surfaces->size());
+    matrixLocal = new CompatCanvas(surfaces->size());
+    matrixGlobal = new CompatCanvas(surfaces->size());
 
     layerLocal = new QGraphicsView(matrixLocal);
     stack->addWidget(layerLocal);

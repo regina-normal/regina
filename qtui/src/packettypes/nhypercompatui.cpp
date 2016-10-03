@@ -35,9 +35,9 @@
 #include "hypersurface/nnormalhypersurfacelist.h"
 
 // UI includes:
+#include "compatcanvas.h"
 #include "reginaprefset.h"
 #include "reginasupport.h"
-#include "ncompatcanvas.h"
 #include "nhypercompatui.h"
 #include "reginamain.h"
 #include "messagelayer.h"
@@ -164,7 +164,7 @@ void NHyperCompatibilityUI::refresh() {
     }
 
     // Yes, we should compute new matrices.
-    matrixLocal = new NCompatCanvas(surfaces->size());
+    matrixLocal = new CompatCanvas(surfaces->size());
 
     layerLocal = new QGraphicsView(matrixLocal);
     stack->addWidget(layerLocal);
