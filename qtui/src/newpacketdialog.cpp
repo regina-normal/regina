@@ -46,7 +46,7 @@
 #include <QWhatsThis>
 
 NewPacketDialog::NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
-        regina::NPacket* packetTree, regina::NPacket* defaultParent,
+        regina::Packet* packetTree, regina::Packet* defaultParent,
         PacketFilter* useFilter, const QString& dialogTitle) :
         QDialog(parent), //dialogTitle, Ok|Cancel, Ok, parent),
         creator(newCreator), tree(packetTree), newPacket(0) {
@@ -103,7 +103,7 @@ bool NewPacketDialog::validate() {
 
 void NewPacketDialog::slotOk() {
     // Get the parent packet.
-    regina::NPacket* parentPacket = chooser->selectedPacket();
+    regina::Packet* parentPacket = chooser->selectedPacket();
     if (! parentPacket) {
         ReginaSupport::info(this,
             tr("Please select a parent packet."));

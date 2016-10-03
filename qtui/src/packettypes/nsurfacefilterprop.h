@@ -49,7 +49,7 @@ class QLineEdit;
 
 namespace regina {
     class NSurfaceFilterProperties;
-    class NPacket;
+    class Packet;
 };
 
 /**
@@ -94,7 +94,7 @@ class NSurfaceFilterPropUI : public QObject, public PacketUI {
         /**
          * PacketUI overrides.
          */
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         QWidget* getInterface();
         QString getPacketMenuText() const;
         void refresh();

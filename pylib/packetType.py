@@ -54,21 +54,21 @@ def isAngleStructureList(packet):
     Is the given packet an angle structure list?
     Returns 1 for true, or 0 for false.
     """
-    return (packet.type() == regina.NAngleStructureList.typeID)
+    return (packet.type() == regina.AngleStructures.typeID)
 
 def isContainer(packet):
     """
     Is the given packet a container?
     Returns 1 for true, or 0 for false.
     """
-    return (packet.type() == regina.NContainer.typeID)
+    return (packet.type() == regina.Container.typeID)
 
 def isScript(packet):
     """
     Is the given packet a python script?
     Returns 1 for true, or 0 for false.
     """
-    return (packet.type() == regina.NScript.typeID)
+    return (packet.type() == regina.Script.typeID)
 
 def isSurfaceFilter(packet):
     """
@@ -89,7 +89,7 @@ def isText(packet):
     Is the given packet a text packet?
     Returns 1 for true, or 0 for false.
     """
-    return (packet.type() == regina.NText.typeID)
+    return (packet.type() == regina.Text.typeID)
 
 def isTriangulation(packet):
     """

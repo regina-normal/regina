@@ -38,11 +38,11 @@ if (len(sys.argv) > 1):
 else:
     testpath = '.'
 
-pdf = NPDF()
+pdf = PDF()
 print 'Null:', pdf.isNull()
 print 'Size:', pdf.size()
 
-pdf = NPDF(testpath + '/sample.pdf')
+pdf = PDF(testpath + '/sample.pdf')
 print 'Null:', pdf.isNull()
 print 'Size:', pdf.size()
 

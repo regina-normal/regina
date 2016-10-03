@@ -35,8 +35,8 @@
 
 namespace regina {
 
-NXMLPacketReader* Triangulation<2>::xmlReader(NPacket*,
-        NXMLTreeResolver& resolver) {
+XMLPacketReader* Triangulation<2>::xmlReader(Packet*,
+        XMLTreeResolver& resolver) {
     return new NXMLDim2TriangulationReader(resolver);
 }
 

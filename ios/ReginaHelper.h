@@ -39,7 +39,7 @@
 @class ReginaDocument;
 
 namespace regina {
-    class NPacket;
+    class Packet;
 }
 
 /**
@@ -91,14 +91,14 @@ namespace regina {
  * even if the packet is already selected, or even if the packet does not appear
  * in the master view at all.
  */
-+ (void)viewPacket:(regina::NPacket*)packet;
++ (void)viewPacket:(regina::Packet*)packet;
 
 /**
  * Navigates to the given packet in the master view so that its list of children
  * is visible.  In addition, if there is only one child, that child will be
  * opened for viewing in the detail view.
  */
-+ (void)viewChildren:(regina::NPacket*)packet;
++ (void)viewChildren:(regina::Packet*)packet;
 
 /**
  * Shows a notification banner for a brief period of time.

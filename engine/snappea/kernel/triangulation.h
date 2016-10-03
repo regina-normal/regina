@@ -61,7 +61,7 @@ typedef struct ComplexWithLog   ComplexWithLog;
 typedef struct TetShape         TetShape;
 typedef struct Tetrahedron      Tetrahedron;
 typedef struct EdgeClass        EdgeClass;
-typedef struct Cusp             Cusp;
+struct Cusp;
 
 
 /*

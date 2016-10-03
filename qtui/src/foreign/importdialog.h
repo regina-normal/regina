@@ -45,7 +45,7 @@ class PacketFilter;
 class QLineEdit;
 
 namespace regina {
-    class NPacket;
+    class Packet;
 };
 
 /**
@@ -69,8 +69,8 @@ class ImportDialog : public QDialog {
         /**
          * Packet tree structure:
          */
-        regina::NPacket* tree;
-        regina::NPacket* newTree;
+        regina::Packet* tree;
+        regina::Packet* newTree;
 
     public:
         /**
@@ -83,8 +83,8 @@ class ImportDialog : public QDialog {
          * This dialog and its components will claim ownership of the
          * given packet filter.
          */
-        ImportDialog(QWidget* parent, regina::NPacket* importedData,
-            regina::NPacket* packetTree, regina::NPacket* defaultParent,
+        ImportDialog(QWidget* parent, regina::Packet* importedData,
+            regina::Packet* packetTree, regina::Packet* defaultParent,
             PacketFilter* useFilter, bool useCodec, const QString& dialogTitle);
 
         /**

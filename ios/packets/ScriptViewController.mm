@@ -32,7 +32,7 @@
 
 #import "PacketManagerIOS.h"
 #import "ScriptViewController.h"
-#import "packet/nscript.h"
+#import "packet/script.h"
 
 #pragma mark - Script variable cell
 
@@ -52,7 +52,7 @@
 }
 @property (weak, nonatomic) IBOutlet UITableView *variables;
 @property (weak, nonatomic) IBOutlet UITextView *script;
-@property (assign, nonatomic) regina::NScript* packet;
+@property (assign, nonatomic) regina::Script* packet;
 @end
 
 @implementation ScriptViewController
@@ -92,7 +92,7 @@
     ScriptVariableCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Variable" forIndexPath:indexPath];
     cell.variable.text = [NSString stringWithUTF8String:self.packet->variableName(indexPath.row - 1).c_str()];
 
-    regina::NPacket* value = self.packet->variableValue(indexPath.row - 1);
+    regina::Packet* value = self.packet->variableValue(indexPath.row - 1);
     if (value) {
         cell.icon.image = [PacketManagerIOS iconFor:value];
         if (value->parent())

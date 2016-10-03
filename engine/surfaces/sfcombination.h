@@ -112,10 +112,10 @@ class REGINA_API NSurfaceFilterCombination : public NSurfaceFilter {
 
         virtual bool accept(const NNormalSurface& surface) const;
         virtual void writeTextLong(std::ostream& out) const;
-        static NXMLFilterReader* xmlFilterReader(NPacket* parent);
+        static NXMLFilterReader* xmlFilterReader(Packet* parent);
 
     protected:
-        virtual NPacket* internalClonePacket(NPacket* parent) const;
+        virtual Packet* internalClonePacket(Packet* parent) const;
         virtual void writeXMLFilterData(std::ostream& out) const;
 };
 
@@ -144,7 +144,7 @@ inline void NSurfaceFilterCombination::writeTextLong(std::ostream& o) const {
     o << (usesAnd_ ? "AND" : "OR") << " combination normal surface filter\n";
 }
 
-inline NPacket* NSurfaceFilterCombination::internalClonePacket(NPacket*) const {
+inline Packet* NSurfaceFilterCombination::internalClonePacket(Packet*) const {
     return new NSurfaceFilterCombination(*this);
 }
 

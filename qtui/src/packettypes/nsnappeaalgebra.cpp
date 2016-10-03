@@ -44,7 +44,7 @@
 
 #include <QLabel>
 
-using regina::NPacket;
+using regina::Packet;
 using regina::NSnapPeaTriangulation;
 
 NSnapPeaAlgebraUI::NSnapPeaAlgebraUI(regina::NSnapPeaTriangulation* packet,
@@ -118,7 +118,7 @@ NSnapPeaAlgebraUI::NSnapPeaAlgebraUI(regina::NSnapPeaTriangulation* packet,
         this, SLOT(updatePreferences()));
 }
 
-regina::NPacket* NSnapPeaAlgebraUI::getPacket() {
+regina::Packet* NSnapPeaAlgebraUI::getPacket() {
     return tri;
 }
 

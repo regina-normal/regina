@@ -41,7 +41,7 @@
 #include "skeletonwindow.h"
 
 namespace regina {
-    class NPacket;
+    class Packet;
 
     template <int> class Triangulation;
     typedef Triangulation<2> Dim2Triangulation;
@@ -97,7 +97,7 @@ class Dim2TriSkelCompUI : public QObject, public PacketViewerTab {
         /**
          * PacketViewerTab overrides.
          */
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         QWidget* getInterface();
         void refresh();
 

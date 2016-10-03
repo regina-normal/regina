@@ -88,7 +88,7 @@
 
 - (void)updateTriangulationButton:(UIButton*)button
 {
-    regina::NPacket* tri = self.packet->triangulation();
+    regina::Packet* tri = self.packet->triangulation();
     NSString* triName = [NSString stringWithUTF8String:tri->label().c_str()];
     if (triName.length == 0)
         triName = @"(Unnamed)";
@@ -144,7 +144,7 @@
     [ReginaHelper viewPacket:self.packet->triangulation()];
 }
 
-- (void)packetWasRenamed:(regina::NPacket *)packet
+- (void)packetWasRenamed:(regina::Packet *)packet
 {
     if (packet == self.packet->triangulation())
         [self.viewer updateTriangulationButton:self.tri];

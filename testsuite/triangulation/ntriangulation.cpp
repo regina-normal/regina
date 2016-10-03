@@ -43,7 +43,7 @@
 #include "maths/approx.h"
 #include "maths/nmatrixint.h"
 #include "maths/numbertheory.h"
-#include "packet/ncontainer.h"
+#include "packet/container.h"
 #include "split/nsignature.h"
 #include "subcomplex/nstandardtri.h"
 #include "surfaces/nnormalsurfacelist.h"
@@ -2204,7 +2204,7 @@ class NTriangulationTest : public TriangulationTest<3> {
 
             if (tri->isValid() && tri->isClosed() && tri->isOrientable() &&
                     tri->isConnected()) {
-                regina::NContainer parent;
+                regina::Container parent;
                 long comps = tri->connectedSumDecomposition(&parent);
                 if (comps != 0) {
                     std::ostringstream msg;
@@ -2239,7 +2239,7 @@ class NTriangulationTest : public TriangulationTest<3> {
 
             if (tri->isValid() && tri->isClosed() && tri->isOrientable() &&
                     tri->isConnected()) {
-                regina::NContainer parent;
+                regina::Container parent;
                 long comps = tri->connectedSumDecomposition(&parent);
                 if (comps == 0) {
                     std::ostringstream msg;
@@ -2307,7 +2307,7 @@ class NTriangulationTest : public TriangulationTest<3> {
 
             if (tri->isValid() && tri->isClosed() && tri->isOrientable() &&
                     tri->isConnected()) {
-                regina::NContainer parent;
+                regina::Container parent;
                 long comps = tri->connectedSumDecomposition(&parent);
                 if (expected && comps != 0) {
                     std::ostringstream msg;
@@ -3034,7 +3034,7 @@ class NTriangulationTest : public TriangulationTest<3> {
             if (tri->isOrientable()) {
                 // We should simply come away with two identical copies
                 // of tri.
-                regina::NContainer parent;
+                regina::Container parent;
                 if (cover.splitIntoComponents(&parent) != 2) {
                     std::ostringstream msg;
                     msg << tri->label()

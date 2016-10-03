@@ -33,37 +33,37 @@
 #import <Foundation/Foundation.h>
 
 namespace regina {
-    class NPacket;
+    class Packet;
 }
 
 /**
- * A protocol that mirrors Regina's C++ NPacketListener interface.
+ * A protocol that mirrors Regina's C++ PacketListener interface.
  *
  * Objects that wish to respond to changes to the packet tree should
  * implement the relevant methods from this protocol.
  */
 @protocol PacketDelegate <NSObject>
 @optional
-- (void)packetToBeChanged:(regina::NPacket*)packet;
-- (void)packetWasChanged:(regina::NPacket*)packet;
-- (void)packetToBeRenamed:(regina::NPacket*)packet;
-- (void)packetWasRenamed:(regina::NPacket*)packet;
-- (void)packetToBeDestroyed:(regina::NPacket*)packet;
-- (void)childToBeAddedTo:(regina::NPacket*)packet child:(regina::NPacket*)child;
-- (void)childWasAddedTo:(regina::NPacket*)packet child:(regina::NPacket*)child;
-- (void)childToBeRemovedFrom:(regina::NPacket*)packet child:(regina::NPacket*)child inParentDestructor:(bool)d;
-- (void)childWasRemovedFrom:(regina::NPacket*)packet child:(regina::NPacket*)child inParentDestructor:(bool)d;
-- (void)childrenToBeReordered:(regina::NPacket*)packet;
-- (void)childrenWereReordered:(regina::NPacket*)packet;
-- (void)childToBeRenamed:(regina::NPacket*)packet child:(regina::NPacket*)child;
-- (void)childWasRenamed:(regina::NPacket*)packet child:(regina::NPacket*)child;
+- (void)packetToBeChanged:(regina::Packet*)packet;
+- (void)packetWasChanged:(regina::Packet*)packet;
+- (void)packetToBeRenamed:(regina::Packet*)packet;
+- (void)packetWasRenamed:(regina::Packet*)packet;
+- (void)packetToBeDestroyed:(regina::Packet*)packet;
+- (void)childToBeAddedTo:(regina::Packet*)packet child:(regina::Packet*)child;
+- (void)childWasAddedTo:(regina::Packet*)packet child:(regina::Packet*)child;
+- (void)childToBeRemovedFrom:(regina::Packet*)packet child:(regina::Packet*)child inParentDestructor:(bool)d;
+- (void)childWasRemovedFrom:(regina::Packet*)packet child:(regina::Packet*)child inParentDestructor:(bool)d;
+- (void)childrenToBeReordered:(regina::Packet*)packet;
+- (void)childrenWereReordered:(regina::Packet*)packet;
+- (void)childToBeRenamed:(regina::Packet*)packet child:(regina::Packet*)child;
+- (void)childWasRenamed:(regina::Packet*)packet child:(regina::Packet*)child;
 @end
 
 /**
  * An object that listens for changes to a packet tree and responds
  * by calling the corresponding methods for a given delegate object.
  *
- * This class essentially acts as a bridge between the C++ NPacketListener code
+ * This class essentially acts as a bridge between the C++ PacketListener code
  * and the Objective-C protocol mechanisms.
  *
  * \warning This class does not manage lifespans at all.  You must ensure that,
@@ -77,7 +77,7 @@ namespace regina {
  * sending events to the given delegate object.  See
  * listenerWithPacket:delegate:listenChildren: for further details.
  */
-- (id)initWithPacket:(regina::NPacket*)packet delegate:(id<PacketDelegate>)delegate listenChildren:(BOOL)listenChildren;
+- (id)initWithPacket:(regina::Packet*)packet delegate:(id<PacketDelegate>)delegate listenChildren:(BOOL)listenChildren;
 
 /**
  * Creates a new packet listener, listening to the given packet and
@@ -88,7 +88,7 @@ namespace regina {
  * deeper level in the packet tree).  This behaviour will be maintained automatically as
  * packets are added and/or removed from the packet tree.
  */
-+ (id)listenerWithPacket:(regina::NPacket*)packet delegate:(id<PacketDelegate>)delegate listenChildren:(BOOL)listenChildren;
++ (id)listenerWithPacket:(regina::Packet*)packet delegate:(id<PacketDelegate>)delegate listenChildren:(BOOL)listenChildren;
 
 /**
  * Unregisters this listener from all packets that it is currently listening to.

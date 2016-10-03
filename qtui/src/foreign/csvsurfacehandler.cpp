@@ -45,7 +45,7 @@ PacketFilter* CSVSurfaceHandler::canExport() const {
     return new SingleTypeFilter<regina::NNormalSurfaceList>();
 }
 
-bool CSVSurfaceHandler::exportData(regina::NPacket* data,
+bool CSVSurfaceHandler::exportData(regina::Packet* data,
         const QString& fileName, QWidget* parentWidget) const {
     regina::NNormalSurfaceList* list =
         dynamic_cast<regina::NNormalSurfaceList*>(data);

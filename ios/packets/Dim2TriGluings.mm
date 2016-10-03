@@ -34,7 +34,7 @@
 #import "Dim2TriGluings.h"
 #import "Dim2TriangulationViewController.h"
 #import "dim2/dim2triangulation.h"
-#import "packet/ncontainer.h"
+#import "packet/container.h"
 
 #pragma mark - Table cell
 
@@ -290,9 +290,9 @@
     // Where to insert the components?
     // If there are already children of this triangulation, insert
     // the new triangulations at a deeper level.
-    regina::NPacket* base;
+    regina::Packet* base;
     if (self.packet->firstChild()) {
-        base = new regina::NContainer();
+        base = new regina::Container();
         self.packet->insertChildLast(base);
         base->setLabel(self.packet->adornedLabel("Components"));
     } else
@@ -439,7 +439,7 @@
                 // Do it.
                 myEdit = YES;
                 {
-                    regina::NPacket::ChangeEventSpan span(self.packet);
+                    regina::Packet::ChangeEventSpan span(self.packet);
                     
                     // First unglue from the old partner if it exists.
                     if (t->adjacentSimplex(editEdge)) {

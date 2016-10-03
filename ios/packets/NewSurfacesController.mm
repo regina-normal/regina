@@ -33,7 +33,7 @@
 #import "NewSurfacesController.h"
 #import "PacketTreeController.h"
 #import "ReginaHelper.h"
-#import "progress/nprogresstracker.h"
+#import "progress/progresstracker.h"
 #import "surfaces/nnormalsurfacelist.h"
 
 #define KEY_LAST_TYPE @"NewSurfacesType"
@@ -48,7 +48,7 @@ static NSArray* embText;
 
 @interface NewSurfacesController () {
     bool _running;
-    regina::NProgressTracker _tracker;
+    regina::ProgressTracker _tracker;
 }
 @property (weak, nonatomic) IBOutlet UILabel *triangulation;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *whichControl;

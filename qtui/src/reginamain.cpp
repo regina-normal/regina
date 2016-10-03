@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "regina-config.h"
-#include "packet/ncontainer.h"
+#include "packet/container.h"
 #include "surfaces/nnormalsurfacelist.h"
 
 #include "eventids.h"
@@ -137,7 +137,7 @@ void ReginaMain::unplugPacketMenu() {
     }
 }
 
-regina::NPacket* ReginaMain::selectedPacket() {
+regina::Packet* ReginaMain::selectedPacket() {
     return treeView->selectedPacket();
 }
 
@@ -152,7 +152,7 @@ void ReginaMain::setModified(bool modified) {
     }
 }
 
-void ReginaMain::packetView(regina::NPacket* packet, bool makeVisibleInTree,
+void ReginaMain::packetView(regina::Packet* packet, bool makeVisibleInTree,
         bool selectInTree) {
     PacketExternalViewer ext = PacketManager::externalViewer(packet);
     if (ext) {
@@ -168,7 +168,7 @@ void ReginaMain::packetView(regina::NPacket* packet, bool makeVisibleInTree,
             // the tree has not been refreshed yet?
             // Force a refresh now and try again.
 
-            regina::NPacket* treeParent = packet->parent();
+            regina::Packet* treeParent = packet->parent();
             // We refresh from treeParent.
             if (treeParent && treeParent->parent()) {
                 // treeParent is not the root, which means the parent
@@ -197,7 +197,7 @@ void ReginaMain::packetView(regina::NPacket* packet, bool makeVisibleInTree,
     }
 }
 
-void ReginaMain::ensureVisibleInTree(regina::NPacket* packet) {
+void ReginaMain::ensureVisibleInTree(regina::Packet* packet) {
     PacketTreeItem* item = treeView->find(packet);
     if (item)
         treeView->scrollToItem(item);
@@ -304,7 +304,7 @@ void ReginaMain::fileOpenUrl(const QUrl& url) {
         return;
     }
 
-    regina::NPacket* packetTree = regina::open(
+    regina::Packet* packetTree = regina::open(
         static_cast<const char*>(QFile::encodeName(localFile)));
 
     if (! packetTree) {
@@ -321,7 +321,7 @@ void ReginaMain::fileOpenUrl(const QUrl& url) {
     // As of Regina 4.95, the root packet is hidden.
     // If the root packet is not a container, create a new fake root above it.
     if (packetTree->type() != regina::PACKET_CONTAINER) {
-        regina::NContainer* newRoot = new regina::NContainer();
+        regina::Container* newRoot = new regina::Container();
         newRoot->insertChildLast(packetTree);
         packetTree = newRoot;
 
@@ -349,7 +349,7 @@ void ReginaMain::fileOpenExample(const QUrl& url, const QString& description) {
         return;
     }
 
-    regina::NPacket* packetTree = regina::open(
+    regina::Packet* packetTree = regina::open(
         static_cast<const char*>(QFile::encodeName(localFile)));
 
     if (! packetTree) {
@@ -417,13 +417,13 @@ void ReginaMain::fileSaveAs() {
 }
 
 void ReginaMain::packetView() {
-    regina::NPacket* packet = checkPacketSelected();
+    regina::Packet* packet = checkPacketSelected();
     if (packet)
         packetView(packet, false);
 }
 
 void ReginaMain::packetRename() {
-    regina::NPacket* packet = checkPacketSelected();
+    regina::Packet* packet = checkPacketSelected();
     if (! packet)
         return;
 
@@ -441,7 +441,7 @@ void ReginaMain::packetRename() {
 }
 
 void ReginaMain::packetDelete() {
-    regina::NPacket* packet = checkPacketSelected();
+    regina::Packet* packet = checkPacketSelected();
     if (! packet)
         return;
 
@@ -483,26 +483,26 @@ void ReginaMain::treeRefresh() {
 }
 
 void ReginaMain::clonePacket() {
-    regina::NPacket* packet = checkPacketSelected();
+    regina::Packet* packet = checkPacketSelected();
     if (! (packet && packet->parent())) {
         // Note that the root packet is not visible, and cannot be cloned.
         return;
     }
 
-    regina::NPacket* ans = packet->clone(false, false);
+    regina::Packet* ans = packet->clone(false, false);
 
     treeView->selectPacket(ans, true);
     packetView(ans, false);
 }
 
 void ReginaMain::cloneSubtree() {
-    regina::NPacket* packet = checkSubtreeSelected();
+    regina::Packet* packet = checkSubtreeSelected();
     if (! (packet && packet->parent())) {
         // Note that the root packet is not visible, and cannot be cloned.
         return;
     }
 
-    regina::NPacket* ans = packet->clone(true, false);
+    regina::Packet* ans = packet->clone(true, false);
 
     treeView->selectPacket(ans, true);
     packetView(ans, false);
@@ -648,7 +648,7 @@ void ReginaMain::setupWidgets() {
 void ReginaMain::initPacketTree() {
     if (packetTree)
         delete packetTree;
-    packetTree = new regina::NContainer();
+    packetTree = new regina::Container();
     // No label now, since the root packet is hidden.
     // packetTree->setLabel(tr("Data").toUtf8().constData());
 
@@ -666,18 +666,18 @@ void ReginaMain::view(PacketPane* newPane) {
     allPanes.append(newPane);
 }
 
-regina::NPacket* ReginaMain::checkPacketSelected() {
+regina::Packet* ReginaMain::checkPacketSelected() {
     // We guarantee not to return the root packet.
-    regina::NPacket* p = treeView->selectedPacket();
+    regina::Packet* p = treeView->selectedPacket();
     if (p && p->parent())
         return p;
     ReginaSupport::info(this, tr("Please select a packet to work with."));
     return 0;
 }
 
-regina::NPacket* ReginaMain::checkSubtreeSelected() {
+regina::Packet* ReginaMain::checkSubtreeSelected() {
     // We guarantee not to return the root packet.
-    regina::NPacket* p = treeView->selectedPacket();
+    regina::Packet* p = treeView->selectedPacket();
     if (p && p->parent())
         return p;
     ReginaSupport::info(this, tr("Please select a packet to work with."));
@@ -685,7 +685,7 @@ regina::NPacket* ReginaMain::checkSubtreeSelected() {
     return 0;
 }
 
-bool ReginaMain::initData(regina::NPacket* usePacketTree,
+bool ReginaMain::initData(regina::Packet* usePacketTree,
         const QString& useLocalFilename,
         const QString& useDisplayName) {
     if (packetTree) {
@@ -721,10 +721,10 @@ bool ReginaMain::initData(regina::NPacket* usePacketTree,
 bool ReginaMain::saveFile() {
     endEdit();
 
-    regina::NPacket* writeTree = packetTree;
+    regina::Packet* writeTree = packetTree;
     if (fakeRoot_) {
         // Save the (visible) child, but only if there is exactly one child.
-        regina::NPacket* child = packetTree->firstChild();
+        regina::Packet* child = packetTree->firstChild();
         if (child && ! child->nextSibling())
             writeTree = child;
     }

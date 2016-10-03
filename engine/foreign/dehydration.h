@@ -43,7 +43,7 @@
 
 namespace regina {
 
-class NContainer;
+class Container;
 
 /**
  * \weakgroup foreign
@@ -93,7 +93,7 @@ class NContainer;
  * @return a new container as described above, or 0 if an I/O error occurred
  * whilst reading the given file.
  */
-REGINA_API NContainer* readDehydrationList(const char *filename,
+REGINA_API Container* readDehydrationList(const char *filename,
     unsigned colDehydrations = 0, int colLabels = -1,
     unsigned long ignoreLines = 0);
 

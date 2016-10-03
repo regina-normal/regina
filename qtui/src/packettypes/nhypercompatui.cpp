@@ -53,7 +53,7 @@
 #include <QStackedWidget>
 
 using regina::NNormalHypersurfaceList;
-using regina::NPacket;
+using regina::Packet;
 
 NHyperCompatibilityUI::NHyperCompatibilityUI(
         regina::NNormalHypersurfaceList* packet, PacketTabbedUI* useParentUI) :
@@ -123,7 +123,7 @@ void NHyperCompatibilityUI::updatePreferences() {
         refresh();
 }
 
-regina::NPacket* NHyperCompatibilityUI::getPacket() {
+regina::Packet* NHyperCompatibilityUI::getPacket() {
     return surfaces;
 }
 

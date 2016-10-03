@@ -39,7 +39,7 @@
 #include "hypersurface/nnormalhypersurfacelist.h"
 #include "hypersurface/hscoordregistry.h"
 #include "maths/nmatrixint.h"
-#include "progress/nprogresstracker.h"
+#include "progress/progresstracker.h"
 #include "utilities/xmlutils.h"
 
 namespace regina {
@@ -173,7 +173,7 @@ void NNormalHypersurfaceList::writeXMLPacketData(std::ostream& out) const {
         (*it)->writeXMLData(out);
 }
 
-NPacket* NNormalHypersurfaceList::internalClonePacket(NPacket* /* parent */)
+Packet* NNormalHypersurfaceList::internalClonePacket(Packet* /* parent */)
         const {
     NNormalHypersurfaceList* ans = new NNormalHypersurfaceList(
         coords_, which_, algorithm_);

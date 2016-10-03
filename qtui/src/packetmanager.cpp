@@ -42,23 +42,23 @@
 #include "packettypes/dim2triui.h"
 #include "packettypes/dim4triui.h"
 #include "packettypes/generictriui.h"
-#include "packettypes/nanglestructureui.h"
-#include "packettypes/ncontainerui.h"
+#include "packettypes/anglesui.h"
+#include "packettypes/containerui.h"
 #include "packettypes/nhypersurfaceui.h"
 #include "packettypes/nnormalsurfaceui.h"
-#include "packettypes/npdfui.h"
-#include "packettypes/nscriptui.h"
+#include "packettypes/pdfui.h"
+#include "packettypes/scriptui.h"
 #include "packettypes/nsnappeaui.h"
 #include "packettypes/nsurfacefiltercomb.h"
 #include "packettypes/nsurfacefilterprop.h"
-#include "packettypes/ntextui.h"
+#include "packettypes/textui.h"
 #include "packettypes/ntriangulationui.h"
 
 #include <QPlainTextEdit>
 
 using namespace regina;
 
-QIcon PacketManager::icon(NPacket* packet, bool allowLock) {
+QIcon PacketManager::icon(Packet* packet, bool allowLock) {
     IconCache::IconID id;
 
     switch (packet->type()) {
@@ -143,15 +143,15 @@ QIcon PacketManager::icon(NPacket* packet, bool allowLock) {
         return IconCache::icon(id);
 }
 
-PacketUI* PacketManager::createUI(regina::NPacket* packet,
+PacketUI* PacketManager::createUI(regina::Packet* packet,
         PacketPane* enclosingPane) {
     switch (packet->type()) {
         case PACKET_ANGLESTRUCTURELIST:
-            return new NAngleStructureUI(
-                dynamic_cast<NAngleStructureList*>(packet), enclosingPane);
+            return new AngleStructureUI(
+                dynamic_cast<AngleStructures*>(packet), enclosingPane);
         case PACKET_CONTAINER:
-            return new NContainerUI(
-                dynamic_cast<NContainer*>(packet), enclosingPane);
+            return new ContainerUI(
+                dynamic_cast<Container*>(packet), enclosingPane);
         case PACKET_DIM2TRIANGULATION:
             return new Dim2TriangulationUI(
                 dynamic_cast<Dim2Triangulation*>(packet), enclosingPane);
@@ -165,8 +165,8 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
             return new NHyperSurfaceUI(
                 dynamic_cast<NNormalHypersurfaceList*>(packet), enclosingPane);
         case PACKET_SCRIPT:
-            return new NScriptUI(
-                dynamic_cast<NScript*>(packet), enclosingPane);
+            return new ScriptUI(
+                dynamic_cast<Script*>(packet), enclosingPane);
         case PACKET_SNAPPEATRIANGULATION:
             return new NSnapPeaUI(
                 dynamic_cast<NSnapPeaTriangulation*>(packet), enclosingPane);
@@ -184,8 +184,8 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
                     return new DefaultPacketUI(packet, enclosingPane);
             }
         case PACKET_TEXT:
-            return new NTextUI(
-                dynamic_cast<NText*>(packet), enclosingPane);
+            return new TextUI(
+                dynamic_cast<Text*>(packet), enclosingPane);
         case PACKET_TRIANGULATION:
             return new NTriangulationUI(
                 dynamic_cast<NTriangulation*>(packet), enclosingPane);
@@ -227,9 +227,9 @@ PacketUI* PacketManager::createUI(regina::NPacket* packet,
     }
 }
 
-PacketExternalViewer PacketManager::externalViewer(regina::NPacket* packet) {
+PacketExternalViewer PacketManager::externalViewer(regina::Packet* packet) {
     if (packet->type() == PACKET_PDF)
-        return &NPDFExternalViewer::view;
+        return &PDFExternalViewer::view;
     return 0;
 }
 

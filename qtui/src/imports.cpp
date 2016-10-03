@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "packet/npacket.h"
+#include "packet/packet.h"
 
 #include "packettreeview.h"
 #include "reginamain.h"
@@ -98,7 +98,7 @@ void ReginaMain::importFile(const PacketImporter& importer,
         dialogTitle, QString(), fileFilter);
     if (file.isEmpty())
         return;
-    regina::NPacket* newTree = importer.importData(file, this);
+    regina::Packet* newTree = importer.importData(file, this);
 
     if (newTree) {
         ImportDialog dlg(this, newTree, packetTree,

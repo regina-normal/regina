@@ -41,8 +41,8 @@
 #include <QProgressDialog>
 
 namespace regina {
-    class NProgressTracker;
-    class NProgressTrackerOpen;
+    class ProgressTracker;
+    class ProgressTrackerOpen;
 };
 
 class QDialogButtonBox;
@@ -62,7 +62,7 @@ class ProgressDialogNumeric : public QProgressDialog {
     Q_OBJECT
 
     private:
-        regina::NProgressTracker* tracker_;
+        regina::ProgressTracker* tracker_;
             /**< The progress tracker handling the inter-thread
                  communication. */
 
@@ -74,7 +74,7 @@ class ProgressDialogNumeric : public QProgressDialog {
          * The progress tracker must not have been started, i.e.,
          * <tt>tracker->isStarted()</tt> must return \c false.
          */
-        ProgressDialogNumeric(regina::NProgressTracker* tracker,
+        ProgressDialogNumeric(regina::ProgressTracker* tracker,
                 const QString& displayText, QWidget* parent = 0);
 
         /**
@@ -102,7 +102,7 @@ class ProgressDialogMessage : public QDialog {
     Q_OBJECT
 
     private:
-        regina::NProgressTracker* tracker_;
+        regina::ProgressTracker* tracker_;
             /**< The progress tracker handling the inter-thread
                  communication. */
 
@@ -117,7 +117,7 @@ class ProgressDialogMessage : public QDialog {
          * The progress tracker must not have been started, i.e.,
          * <tt>tracker->isStarted()</tt> must return \c false.
          */
-        ProgressDialogMessage(regina::NProgressTracker* tracker,
+        ProgressDialogMessage(regina::ProgressTracker* tracker,
                 const QString& displayText, QWidget* parent = 0);
 
         /**
@@ -144,7 +144,7 @@ class ProgressDialogOpen : public QDialog {
     Q_OBJECT
 
     private:
-        regina::NProgressTrackerOpen* tracker_;
+        regina::ProgressTrackerOpen* tracker_;
             /**< The progress tracker handling the inter-thread
                  communication. */
         QString detailTemplate_;
@@ -166,7 +166,7 @@ class ProgressDialogOpen : public QDialog {
          * The progress tracker must not have been started, i.e.,
          * <tt>tracker->isStarted()</tt> must return \c false.
          */
-        ProgressDialogOpen(regina::NProgressTrackerOpen* tracker,
+        ProgressDialogOpen(regina::ProgressTrackerOpen* tracker,
                 const QString& displayText, const QString& detailTemplate,
                 QWidget* parent = 0);
 

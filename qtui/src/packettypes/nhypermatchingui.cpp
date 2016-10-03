@@ -44,7 +44,7 @@
 #define DEFAULT_MATCHING_COLUMN_WIDTH 40
 
 using regina::NNormalHypersurfaceList;
-using regina::NPacket;
+using regina::Packet;
 
 void HyperMatchingModel::rebuild() {
     beginResetModel();
@@ -138,7 +138,7 @@ NHyperMatchingUI::~NHyperMatchingUI() {
     delete model;
 }
 
-regina::NPacket* NHyperMatchingUI::getPacket() {
+regina::Packet* NHyperMatchingUI::getPacket() {
     return model->surfaces();
 }
 

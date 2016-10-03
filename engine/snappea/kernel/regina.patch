@@ -177,3 +177,16 @@ index e436105..17618d3 100644
  
  #include "end_namespace.h"
  
+diff --git a/engine/snappea/kernel/triangulation.h b/engine/snappea/kernel/triangulation.h
+index a85629c..bf53f81 100644
+--- a/engine/snappea/kernel/triangulation.h
++++ b/engine/snappea/kernel/triangulation.h
+@@ -61,7 +61,7 @@ typedef struct ComplexWithLog   ComplexWithLog;
+ typedef struct TetShape         TetShape;
+ typedef struct Tetrahedron      Tetrahedron;
+ typedef struct EdgeClass        EdgeClass;
+-typedef struct Cusp             Cusp;
++struct Cusp;
+ 
+ 
+ /*

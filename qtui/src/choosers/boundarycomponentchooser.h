@@ -38,7 +38,7 @@
 #ifndef __BOUNDARYCOMPONENTCHOOSER_H
 #define __BOUNDARYCOMPONENTCHOOSER_H
 
-#include "packet/npacketlistener.h"
+#include "packet/packetlistener.h"
 
 #include <QDialog>
 #include <QComboBox>
@@ -73,7 +73,7 @@ typedef bool (*BoundaryComponentFilterFunc)(regina::NBoundaryComponent*);
  * classes do not use slots or signals, I believe this is okay.
  */
 class BoundaryComponentChooser :
-        public QComboBox, public regina::NPacketListener {
+        public QComboBox, public regina::PacketListener {
     private:
         regina::NTriangulation* tri_;
             /**< The triangulation whose boundary components we are
@@ -131,11 +131,11 @@ class BoundaryComponentChooser :
         bool refresh();
 
         /**
-         * NPacketListener overrides.
+         * PacketListener overrides.
          */
-        void packetToBeChanged(regina::NPacket*);
-        void packetWasChanged(regina::NPacket*);
-        void packetToBeDestroyed(regina::NPacket*);
+        void packetToBeChanged(regina::Packet*);
+        void packetWasChanged(regina::Packet*);
+        void packetToBeDestroyed(regina::Packet*);
 
     private:
         /**
@@ -190,16 +190,16 @@ inline bool BoundaryComponentChooser::refresh() {
     return (count() > 0);
 }
 
-inline void BoundaryComponentChooser::packetToBeChanged(regina::NPacket*) {
+inline void BoundaryComponentChooser::packetToBeChanged(regina::Packet*) {
     clear();
     options_.clear();
 }
 
-inline void BoundaryComponentChooser::packetWasChanged(regina::NPacket*) {
+inline void BoundaryComponentChooser::packetWasChanged(regina::Packet*) {
     fill();
 }
 
-inline void BoundaryComponentChooser::packetToBeDestroyed(regina::NPacket*) {
+inline void BoundaryComponentChooser::packetToBeDestroyed(regina::Packet*) {
     clear();
     options_.clear();
 }

@@ -32,8 +32,8 @@
 
 #include "regina-config.h"
 
-#include "file/nfileinfo.h"
-#include "file/nglobaldirs.h"
+#include "file/fileinfo.h"
+#include "file/globaldirs.h"
 #include "snappea/nsnappeatriangulation.h"
 
 #include "codecchooser.h"
@@ -678,7 +678,7 @@ void ReginaPrefPython::updateButtons() {
 void ReginaPrefPython::add() {
     QStringList files = QFileDialog::getOpenFileNames(this, 
         tr("Add Python Libraries"),
-        QFile::decodeName(regina::NGlobalDirs::pythonLibs().c_str()),
+        QFile::decodeName(regina::GlobalDirs::pythonLibs().c_str()),
         FILTER_PYTHON_LIBRARIES);
     if (! files.isEmpty()) {
         for (QStringList::const_iterator it = files.begin();

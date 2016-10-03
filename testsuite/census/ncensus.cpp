@@ -34,8 +34,8 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "census/ncensus.h"
 #include "census/ngluingpermsearcher.h"
-#include "file/nglobaldirs.h"
-#include "packet/ncontainer.h"
+#include "file/globaldirs.h"
+#include "packet/container.h"
 #include "triangulation/ntriangulation.h"
 #include "testsuite/census/testcensus.h"
 
@@ -131,9 +131,9 @@ class NCensusTest : public CppUnit::TestFixture {
 #ifdef TESTSUITE_CENSUS_DIR
             // Temporarily redirect the home directory so that Regina
             // finds the census data files in the source tree.
-            std::string census = regina::NGlobalDirs::census();
-            std::string python = regina::NGlobalDirs::pythonModule();
-            regina::NGlobalDirs::setDirs("", python, TESTSUITE_CENSUS_DIR);
+            std::string census = regina::GlobalDirs::census();
+            std::string python = regina::GlobalDirs::pythonModule();
+            regina::GlobalDirs::setDirs("", python, TESTSUITE_CENSUS_DIR);
 #endif
             
             verifyLookupNone("");
@@ -152,7 +152,7 @@ class NCensusTest : public CppUnit::TestFixture {
                 "L408001", "L410005"); // hyp knots & links, multiple times
 
 #ifdef TESTSUITE_CENSUS_DIR
-            regina::NGlobalDirs::setDirs("", python, census);
+            regina::GlobalDirs::setDirs("", python, census);
 #endif
         }
 

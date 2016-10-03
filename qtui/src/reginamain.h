@@ -61,7 +61,7 @@ class RecentFilesAction;
 class ReginaManager;
 
 namespace regina {
-    class NPacket;
+    class Packet;
 };
 
 /**
@@ -83,7 +83,7 @@ class ReginaMain : public QMainWindow {
         /**
          * Current data file
          */
-        regina::NPacket* packetTree;
+        regina::Packet* packetTree;
             /**< The current working packet tree. */
         QString localFile;
             /**< Current filename, or null if we don't have one (or if we are
@@ -169,13 +169,13 @@ class ReginaMain : public QMainWindow {
         /**
          * Allow access to the packet tree that this window manages.
          */
-        regina::NPacket* getPacketTree();
+        regina::Packet* getPacketTree();
 
         /**
          * Return the currently selected packet in the packet tree,
          * or 0 if nothing is selected.
          */
-        regina::NPacket* selectedPacket();
+        regina::Packet* selectedPacket();
 
         /**
          * Indicate that the file is dirty.
@@ -185,13 +185,13 @@ class ReginaMain : public QMainWindow {
         /**
          * View the given packet.
          */
-        void packetView(regina::NPacket*, bool makeVisibleInTree = true,
+        void packetView(regina::Packet*, bool makeVisibleInTree = true,
             bool selectInTree = false);
 
         /**
          * Ensure that the given packet is visible in the packet tree.
          */
-        void ensureVisibleInTree(regina::NPacket* packet);
+        void ensureVisibleInTree(regina::Packet* packet);
 
         /**
          * Handles the deregistration of a packet pane from the list of
@@ -376,8 +376,8 @@ class ReginaMain : public QMainWindow {
          * visible to the user.  These routines guarantee that the root
          * packet will not be returned.
          */
-        regina::NPacket* checkPacketSelected();
-        regina::NPacket* checkSubtreeSelected();
+        regina::Packet* checkPacketSelected();
+        regina::Packet* checkSubtreeSelected();
 
         /**
          * Generic packet operations.
@@ -393,7 +393,7 @@ class ReginaMain : public QMainWindow {
         /**
          * Open and save files.
          */
-        bool initData(regina::NPacket* usePacketTree,
+        bool initData(regina::Packet* usePacketTree,
             const QString& useLocalFilename,
             const QString& useDisplayName);
         bool saveFile();
@@ -409,7 +409,7 @@ inline PythonManager& ReginaMain::getPythonManager() {
     return consoles;
 }
 
-inline regina::NPacket* ReginaMain::getPacketTree() {
+inline regina::Packet* ReginaMain::getPacketTree() {
     return packetTree;
 }
 

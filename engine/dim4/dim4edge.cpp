@@ -45,7 +45,7 @@ Dim2Triangulation* Face<4, 1>::buildLinkDetail(bool labels,
         Dim4Isomorphism** inclusion) const {
     // Build the triangulation.
     Dim2Triangulation* ans = new Dim2Triangulation();
-    NPacket::ChangeEventSpan span(ans);
+    Packet::ChangeEventSpan span(ans);
 
     if (inclusion)
         *inclusion = new Dim4Isomorphism(degree());

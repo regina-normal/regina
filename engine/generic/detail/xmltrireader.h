@@ -41,7 +41,7 @@
 #endif
 
 #include "regina-core.h"
-#include "packet/nxmlpacketreader.h"
+#include "packet/xmlpacketreader.h"
 #include "generic/triangulation.h"
 #include "utilities/stringutils.h"
 #include <vector>
@@ -179,7 +179,7 @@ class XMLSimplicesReader : public NXMLElementReader {
  * \tparam dim The dimension of the triangulation being read.
  */
 template <int dim>
-class XMLTriangulationReaderBase : public NXMLPacketReader {
+class XMLTriangulationReaderBase : public XMLPacketReader {
     protected:
         Triangulation<dim>* tri_;
             /**< The triangulation currently being read. */
@@ -191,9 +191,9 @@ class XMLTriangulationReaderBase : public NXMLPacketReader {
          * @param resolver the master resolver that will be used to fix
          * dangling packet references after the entire XML file has been read.
          */
-        XMLTriangulationReaderBase(NXMLTreeResolver& resolver);
+        XMLTriangulationReaderBase(XMLTreeResolver& resolver);
 
-        virtual NPacket* packet() override;
+        virtual Packet* packet() override;
         virtual NXMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
@@ -343,12 +343,12 @@ NXMLElementReader* XMLSimplicesReader<dim>::startSubElement(
 
 template <int dim>
 inline XMLTriangulationReaderBase<dim>::XMLTriangulationReaderBase(
-        NXMLTreeResolver& resolver) :
-        NXMLPacketReader(resolver), tri_(new Triangulation<dim>()) {
+        XMLTreeResolver& resolver) :
+        XMLPacketReader(resolver), tri_(new Triangulation<dim>()) {
 }
 
 template <int dim>
-inline NPacket* XMLTriangulationReaderBase<dim>::packet() {
+inline Packet* XMLTriangulationReaderBase<dim>::packet() {
     return tri_;
 }
 

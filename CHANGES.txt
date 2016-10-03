@@ -11,6 +11,13 @@ Version 5.1  [ (under development) ]
 
     GENERAL:
         - Removed all code that was deprecated in or before version 5.0.
+        - Renamed all types NFoo to Foo, and renamed the headers accordingly.
+          The old types and headers are deprecated but kept for backward
+          compatibility.  There are some exceptions:
+            + NAngleStructureList becomes AngleStructures.
+            + NExampleSnapPeaTriangulation becomes ExampleSnapPea.
+            + NXMLFoo classes have no backward compatible headers or typedefs,
+              since these are for internal use only.
     ENGINE:
         Global array quadDefn[][]:
             - Added to nnormalsurface.h, with the same contents as the old

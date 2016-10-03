@@ -39,7 +39,7 @@
 #include "enumerate/ntreetraversal.h"
 #include "maths/matrixops.h"
 #include "maths/nmatrixint.h"
-#include "progress/nprogresstracker.h"
+#include "progress/progresstracker.h"
 #include "surfaces/coordregistry.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/ntriangulation.h"
@@ -56,7 +56,7 @@ NInteger maxSigned128(NNativeInteger<16>(~(IntOfSize<16>::type(1) << 127)));
 NNormalSurfaceList* NNormalSurfaceList::enumerate(
         NTriangulation* owner, NormalCoords coords,
         NormalList which, NormalAlg algHints,
-        NProgressTracker* tracker) {
+        ProgressTracker* tracker) {
     NNormalSurfaceList* list = new NNormalSurfaceList(
         coords, which, algHints);
 

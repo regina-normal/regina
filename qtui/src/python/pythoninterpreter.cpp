@@ -34,8 +34,8 @@
 #include "pythoninterpreter.h"
 
 #include "regina-config.h"
-#include "file/nglobaldirs.h"
-#include "packet/npacket.h"
+#include "file/globaldirs.h"
+#include "packet/packet.h"
 
 
 #include "pythonoutputstream.h"
@@ -102,7 +102,7 @@ PythonInterpreter::PythonInterpreter(PythonOutputStream* pyStdOut,
         // directory as the executable, and that zlib.pyd is installed
         // in the same directory as the regina python module.
 
-        std::string regModuleDir = regina::NGlobalDirs::pythonModule();
+        std::string regModuleDir = regina::GlobalDirs::pythonModule();
 
         const char* oldPath = getenv("PYTHONPATH");
         std::string newPath("PYTHONPATH=");
@@ -312,7 +312,7 @@ bool PythonInterpreter::importRegina() {
     PyEval_RestoreThread(state);
 
     // Adjust the python path if we need to.
-    std::string regModuleDir = regina::NGlobalDirs::pythonModule();
+    std::string regModuleDir = regina::GlobalDirs::pythonModule();
     if (! regModuleDir.empty()) {
         PyObject* path = PySys_GetObject(
             const_cast<char*>("path")); // Borrowed reference.
@@ -348,13 +348,13 @@ bool PythonInterpreter::importRegina() {
     return ok;
 }
 
-bool PythonInterpreter::setVar(const char* name, regina::NPacket* value) {
+bool PythonInterpreter::setVar(const char* name, regina::Packet* value) {
     PyEval_RestoreThread(state);
 
     bool ok = false;
     try {
         boost::python::reference_existing_object::
-            apply<regina::NPacket*>::type conv;
+            apply<regina::Packet*>::type conv;
         PyObject* pyValue = conv(value);
 
         if (pyValue) {

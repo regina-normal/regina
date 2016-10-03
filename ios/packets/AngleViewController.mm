@@ -35,8 +35,8 @@
 #import "ReginaHelper.h"
 #import "SpreadHelper.h"
 #import "TextHelper.h"
-#import "angle/nanglestructure.h"
-#import "angle/nanglestructurelist.h"
+#import "angle/anglestructure.h"
+#import "angle/anglestructures.h"
 #import "triangulation/ntriangulation.h"
 
 #pragma mark - Angle structure view controller
@@ -52,7 +52,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *span;
 @property (weak, nonatomic) IBOutlet UIButton *triangulation;
 @property (weak, nonatomic) IBOutlet MDSpreadView *angles;
-@property (assign, nonatomic) regina::NAngleStructureList* packet;
+@property (assign, nonatomic) regina::AngleStructures* packet;
 @end
 
 @implementation AngleViewController
@@ -129,7 +129,7 @@
 
 - (void)updateTriangulationButton
 {
-    regina::NPacket* tri = self.packet->triangulation();
+    regina::Packet* tri = self.packet->triangulation();
     NSString* triName = [NSString stringWithUTF8String:tri->label().c_str()];
     if (triName.length == 0)
         triName = @"(Unnamed)";
@@ -138,7 +138,7 @@
 
 #pragma mark - Packet listener
 
-- (void)packetWasRenamed:(regina::NPacket *)packet
+- (void)packetWasRenamed:(regina::Packet *)packet
 {
     if (packet == self.packet->triangulation())
         [self updateTriangulationButton];
@@ -179,7 +179,7 @@
 
 - (id)spreadView:(MDSpreadView *)aSpreadView objectValueForRowAtIndexPath:(MDIndexPath *)rowPath forColumnAtIndexPath:(MDIndexPath *)columnPath
 {
-    const regina::NAngleStructure* a = self.packet->structure(rowPath.row);
+    const regina::AngleStructure* a = self.packet->structure(rowPath.row);
 
     if (columnPath.column == 0) {
         if (a->isStrict())

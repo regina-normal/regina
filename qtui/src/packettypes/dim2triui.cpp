@@ -44,7 +44,7 @@
 #include <QToolBar>
 #include <QVBoxLayout>
 
-using regina::NPacket;
+using regina::Packet;
 using regina::Dim2Triangulation;
 
 Dim2TriangulationUI::Dim2TriangulationUI(regina::Dim2Triangulation* packet,
@@ -96,7 +96,7 @@ Dim2TriHeaderUI::Dim2TriHeaderUI(regina::Dim2Triangulation* packet,
     uiLayout->addWidget(header);
 }
 
-regina::NPacket* Dim2TriHeaderUI::getPacket() {
+regina::Packet* Dim2TriHeaderUI::getPacket() {
     return tri;
 }
 

@@ -43,7 +43,7 @@
 
 namespace regina {
 
-class NContainer;
+class Container;
 
 /**
  * \weakgroup foreign
@@ -99,7 +99,7 @@ class NContainer;
  * @return a new container as described above, or 0 if an I/O error occurred
  * whilst reading the given file.
  */
-REGINA_API NContainer* readIsoSigList(const char *filename,
+REGINA_API Container* readIsoSigList(const char *filename,
     unsigned dimension = 3, unsigned colSigs = 0, int colLabels = -1,
     unsigned long ignoreLines = 0);
 

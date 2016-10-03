@@ -40,7 +40,13 @@ Equality type : BY_REFERENCE
 Component9 : class
 Equality type : BY_REFERENCE
 
+Container : class
+Equality type : BY_REFERENCE
+
 Crossing : class
+Equality type : BY_REFERENCE
+
+Cusp : class
 Equality type : BY_REFERENCE
 
 Dim2BoundaryComponent : class
@@ -128,6 +134,9 @@ Dim4VertexEmbedding : class
 Equality type : BY_VALUE
 
 ExampleLink : class
+Equality type : NEVER_INSTANTIATED
+
+ExampleSnapPea : class
 Equality type : NEVER_INSTANTIATED
 
 Face10_0 : class
@@ -925,6 +934,9 @@ Equality type : BY_VALUE
 FacetSpec9 : class
 Equality type : BY_VALUE
 
+FileInfo : class
+Equality type : BY_REFERENCE
+
 GlobalArray2D_NPerm4 : class
 Equality type : BY_REFERENCE
 
@@ -960,6 +972,9 @@ Equality type : BY_REFERENCE
 
 GlobalArray_unsigned : class
 Equality type : BY_REFERENCE
+
+GlobalDirs : class
+Equality type : NEVER_INSTANTIATED
 
 HyperAlg : class
 Equality type : BY_VALUE
@@ -1018,10 +1033,10 @@ Equality type : NEVER_INSTANTIATED
 NAbelianGroup : class
 Equality type : BY_VALUE
 
-NAngleStructure : class
+AngleStructure : class
 Equality type : BY_REFERENCE
 
-NAngleStructureList : class
+AngleStructures : class
 Equality type : BY_REFERENCE
 
 NAugTriSolidTorus : class
@@ -1060,12 +1075,6 @@ Equality type : BY_REFERENCE
 NComponent : class
 Equality type : BY_REFERENCE
 
-NContainer : class
-Equality type : BY_REFERENCE
-
-NCusp : class
-Equality type : BY_REFERENCE
-
 NCyclotomic : class
 Equality type : BY_VALUE
 
@@ -1090,9 +1099,6 @@ Equality type : BY_REFERENCE
 NEdgeEmbedding : class
 Equality type : BY_VALUE
 
-NExampleSnapPeaTriangulation : class
-Equality type : NEVER_INSTANTIATED
-
 NExampleTriangulation : class
 Equality type : NEVER_INSTANTIATED
 
@@ -1101,12 +1107,6 @@ Equality type : BY_VALUE
 
 NFacePairing : class
 Equality type : BY_REFERENCE
-
-NFileInfo : class
-Equality type : BY_REFERENCE
-
-NGlobalDirs : class
-Equality type : NEVER_INSTANTIATED
 
 NGluingPermSearcher : class
 Equality type : BY_REFERENCE
@@ -1210,12 +1210,6 @@ Equality type : BY_REFERENCE
 NNormalSurfaceList : class
 Equality type : BY_REFERENCE
 
-NPDF : class
-Equality type : BY_REFERENCE
-
-NPacket : class
-Equality type : BY_REFERENCE
-
 NPerm10 : class
 Equality type : BY_VALUE
 
@@ -1279,12 +1273,6 @@ Equality type : NEVER_INSTANTIATED
 NPrismSpec : class
 Equality type : BY_VALUE
 
-NProgressTracker : class
-Equality type : BY_REFERENCE
-
-NProgressTrackerOpen : class
-Equality type : BY_REFERENCE
-
 NRational : class
 Equality type : BY_VALUE
 
@@ -1322,9 +1310,6 @@ NSatRegion : class
 Equality type : BY_REFERENCE
 
 NSatTriPrism : class
-Equality type : BY_REFERENCE
-
-NScript : class
 Equality type : BY_REFERENCE
 
 NSignature : class
@@ -1372,9 +1357,6 @@ Equality type : BY_VALUE
 NTetrahedron : class
 Equality type : BY_REFERENCE
 
-NText : class
-Equality type : BY_REFERENCE
-
 NTorusBundle : class
 Equality type : BY_REFERENCE
 
@@ -1420,6 +1402,21 @@ Equality type : BY_VALUE
 NormalList : class
 Equality type : BY_VALUE
 
+PDF : class
+Equality type : BY_REFERENCE
+
+Packet : class
+Equality type : BY_REFERENCE
+
+ProgressTracker : class
+Equality type : BY_REFERENCE
+
+ProgressTrackerOpen : class
+Equality type : BY_REFERENCE
+
+Script : class
+Equality type : BY_REFERENCE
+
 Simplex10 : class
 Equality type : BY_REFERENCE
 
@@ -1464,6 +1461,9 @@ Equality type : BY_REFERENCE
 
 StrandRef : class
 Equality type : BY_VALUE
+
+Text : class
+Equality type : BY_REFERENCE
 
 Triangulation10 : class
 Equality type : BY_REFERENCE

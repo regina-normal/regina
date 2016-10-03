@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "packet/npacket.h"
+#include "packet/packet.h"
 
 #include "exportdialog.h"
 #include "reginaprefset.h"
@@ -47,8 +47,8 @@
 #include <QTextDocument>
 #include <QWhatsThis>
 
-ExportDialog::ExportDialog(QWidget* parent, regina::NPacket* packetTree,
-        regina::NPacket* defaultSelection, PacketFilter* useFilter,
+ExportDialog::ExportDialog(QWidget* parent, regina::Packet* packetTree,
+        regina::Packet* defaultSelection, PacketFilter* useFilter,
         bool useCodec, const QString& dialogTitle) :
         QDialog(parent),
         tree(packetTree), chosenPacket(0) {

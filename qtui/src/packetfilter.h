@@ -37,7 +37,7 @@
 #ifndef __PACKETFILTER_H
 #define __PACKETFILTER_H
 
-#include "packet/npacket.h"
+#include "packet/packet.h"
 
 /**
  * Represents a means by which packets can be either accepted or
@@ -55,7 +55,7 @@ class PacketFilter {
          * Should the given packet be accepted according to this
          * particular acceptance algorithm?
          */
-        virtual bool accept(regina::NPacket* packet) = 0;
+        virtual bool accept(regina::Packet* packet) = 0;
 };
 
 /**
@@ -66,7 +66,7 @@ class AllPacketsFilter : public PacketFilter {
         /**
          * PacketFilter overrides.
          */
-        virtual bool accept(regina::NPacket* packet);
+        virtual bool accept(regina::Packet* packet);
 };
 
 /**
@@ -78,7 +78,7 @@ class StandaloneFilter : public PacketFilter {
         /**
          * PacketFilter overrides.
          */
-        virtual bool accept(regina::NPacket* packet);
+        virtual bool accept(regina::Packet* packet);
 };
 
 /**
@@ -86,7 +86,7 @@ class StandaloneFilter : public PacketFilter {
  *
  * The template argument T must be one of the available packet types.
  * The acceptance test will be performed by calling
- * NPacket::type() upon each packet being questioned.
+ * Packet::type() upon each packet being questioned.
  */
 template <class T>
 class SingleTypeFilter : public PacketFilter {
@@ -94,7 +94,7 @@ class SingleTypeFilter : public PacketFilter {
         /**
          * PacketFilter overrides.
          */
-        virtual bool accept(regina::NPacket* packet) {
+        virtual bool accept(regina::Packet* packet) {
             return (packet->type() == T::typeID);
         }
 };
@@ -104,7 +104,7 @@ class SingleTypeFilter : public PacketFilter {
  *
  * The template arguments S and T must each be one of the available packet
  * types.  The acceptance test will be performed by calling
- * NPacket::type() upon each packet being questioned.
+ * Packet::type() upon each packet being questioned.
  */
 template <class S, class T>
 class TwoTypeFilter : public PacketFilter {
@@ -112,7 +112,7 @@ class TwoTypeFilter : public PacketFilter {
         /**
          * PacketFilter overrides.
          */
-        virtual bool accept(regina::NPacket* packet) {
+        virtual bool accept(regina::Packet* packet) {
             int type = packet->type();
             return (type == S::typeID || type == T::typeID);
         }
@@ -132,7 +132,7 @@ class SubclassFilter : public PacketFilter {
         /**
          * PacketFilter overrides.
          */
-        virtual bool accept(regina::NPacket* packet) {
+        virtual bool accept(regina::Packet* packet) {
             return dynamic_cast<T*>(packet);
         }
 };
@@ -140,11 +140,11 @@ class SubclassFilter : public PacketFilter {
 inline PacketFilter::~PacketFilter() {
 }
 
-inline bool AllPacketsFilter::accept(regina::NPacket*) {
+inline bool AllPacketsFilter::accept(regina::Packet*) {
     return true;
 }
 
-inline bool StandaloneFilter::accept(regina::NPacket* packet) {
+inline bool StandaloneFilter::accept(regina::Packet* packet) {
     return ! packet->dependsOnParent();
 }
 

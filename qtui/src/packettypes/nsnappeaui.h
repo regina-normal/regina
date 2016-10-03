@@ -37,7 +37,7 @@
 #ifndef __NSNAPPEAUI_H
 #define __NSNAPPEAUI_H
 
-#include "packet/npacketlistener.h"
+#include "packet/packetlistener.h"
 #include "../packettabui.h"
 
 class ClickableLabel;
@@ -90,7 +90,7 @@ class NSnapPeaUI : public PacketTabbedUI {
  * A header for the SnapPea triangulation viewer.
  */
 class NSnapPeaHeaderUI : public QObject, public PacketViewerTab,
-        public regina::NPacketListener {
+        public regina::PacketListener {
     Q_OBJECT
 
     private:
@@ -122,15 +122,15 @@ class NSnapPeaHeaderUI : public QObject, public PacketViewerTab,
         /**
          * PacketViewerTab overrides.
          */
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         QWidget* getInterface();
         void refresh();
 
         /**
-         * NPacketListener overrides.
+         * PacketListener overrides.
          */
-        void childWasAdded(regina::NPacket* packet, regina::NPacket* child);
-        void childWasRemoved(regina::NPacket* packet, regina::NPacket* child,
+        void childWasAdded(regina::Packet* packet, regina::Packet* child);
+        void childWasRemoved(regina::Packet* packet, regina::Packet* child,
             bool inParentDestructor);
 
         /**

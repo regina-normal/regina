@@ -47,7 +47,7 @@
 
 namespace regina {
 
-class NProgressTracker;
+class ProgressTracker;
 
 template <int> class Triangulation;
 typedef Triangulation<3> NTriangulation;
@@ -399,7 +399,7 @@ class NTreeTraversal : public BanConstraint {
          * @return the taut angle structure that has been found at the
          * current stage of the search.
          */
-        NAngleStructure* buildStructure() const;
+        AngleStructure* buildStructure() const;
 
         /**
          * Ensures that the given normal or almost normal surface satisfies
@@ -455,7 +455,7 @@ class NTreeTraversal : public BanConstraint {
          *
          * Instead of using the initial tableaux to verify the angle equations,
          * this routine goes back to the original angle equations matrix as
-         * constructed by NAngleStructureVector::makeAngleEquations().
+         * constructed by AngleStructureVector::makeAngleEquations().
          * This ensures that the test is independent of any potential
          * problems with the tableaux.  You are not required to pass
          * your own angle equations (if you don't, they will be temporarily
@@ -475,12 +475,12 @@ class NTreeTraversal : public BanConstraint {
          * @param angleEqns the angle equations to check against
          * the given angle structure; this may be 0, in which case the angle
          * equations will be temporarily reconstructed for you using
-         * NAngleStructureVector::makeMatchingEquations().
+         * AngleStructureVector::makeMatchingEquations().
          * @return \c true if the given angle structure passes all of the tests
          * described above, or \c false if it fails one or more tests
          * (indicating a problem or error).
          */
-        bool verify(const NAngleStructure* s,
+        bool verify(const AngleStructure* s,
                 const NMatrixInt* angleEqns = 0) const;
 
     protected:
@@ -844,8 +844,8 @@ class NTreeEnumeration :
          * An optional progress tracker may be passed.  If so, this routine
          * will update the percentage progress and poll for cancellation
          * requests.  It will be assumed that an appropriate stage has already
-         * been declared via NProgressTracker::newStage() before this routine
-         * is called, and that NProgressTracker::setFinished() will be
+         * been declared via ProgressTracker::newStage() before this routine
+         * is called, and that ProgressTracker::setFinished() will be
          * called after this routine returns (and presumably not until
          * the entire search tree is exhausted).
          * The percentage progress will be given in the context of a complete
@@ -864,7 +864,7 @@ class NTreeEnumeration :
          * \c false if the search has now finished and no more vertex
          * surfaces were found.
          */
-        bool next(NProgressTracker* tracker = 0);
+        bool next(ProgressTracker* tracker = 0);
 
         /**
          * A callback function that writes to standard output the type vector
@@ -1112,8 +1112,8 @@ class NTautEnumeration :
          * An optional progress tracker may be passed.  If so, this routine
          * will update the percentage progress and poll for cancellation
          * requests.  It will be assumed that an appropriate stage has already
-         * been declared via NProgressTracker::newStage() before this routine
-         * is called, and that NProgressTracker::setFinished() will be
+         * been declared via ProgressTracker::newStage() before this routine
+         * is called, and that ProgressTracker::setFinished() will be
          * called after this routine returns (and presumably not until
          * the entire search tree is exhausted).
          * The percentage progress will be given in the context of a complete
@@ -1132,7 +1132,7 @@ class NTautEnumeration :
          * \c false if the search has now finished and no more taut angle
          * strutures were found.
          */
-        bool next(NProgressTracker* tracker = 0);
+        bool next(ProgressTracker* tracker = 0);
 
         /**
          * A callback function that writes to standard output the type vector

@@ -44,7 +44,7 @@ class QLabel;
 class QStackedWidget;
 
 namespace regina {
-    class NPacket;
+    class Packet;
     class NSnapPeaTriangulation;
     template <int> class Triangulation;
     typedef Triangulation<3> NTriangulation;
@@ -86,7 +86,7 @@ class NTriSnapPeaUI : public QObject, public PacketViewerTab {
         /**
          * PacketViewerTab overrides.
          */
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         QWidget* getInterface();
         void refresh();
 

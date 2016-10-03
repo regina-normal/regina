@@ -48,7 +48,7 @@ namespace {
     const int ID_OR = 1;
 }
 
-using regina::NPacket;
+using regina::Packet;
 using regina::NSurfaceFilterCombination;
 
 NSurfaceFilterCombUI::NSurfaceFilterCombUI(NSurfaceFilterCombination* packet,
@@ -155,7 +155,7 @@ NSurfaceFilterCombUI::~NSurfaceFilterCombUI() {
     delete boolType;
 }
 
-regina::NPacket* NSurfaceFilterCombUI::getPacket() {
+regina::Packet* NSurfaceFilterCombUI::getPacket() {
     return filter;
 }
 
@@ -176,23 +176,23 @@ void NSurfaceFilterCombUI::setReadWrite(bool readWrite) {
     typeOr->setEnabled(readWrite);
 }
 
-void NSurfaceFilterCombUI::packetWasRenamed(NPacket* p) {
+void NSurfaceFilterCombUI::packetWasRenamed(Packet* p) {
     if (p->parent() == filter)
         refreshChildList();
 }
 
-void NSurfaceFilterCombUI::childWasAdded(NPacket* p, NPacket*) {
+void NSurfaceFilterCombUI::childWasAdded(Packet* p, Packet*) {
     if (p == filter)
         refreshChildList();
 }
 
-void NSurfaceFilterCombUI::childWasRemoved(NPacket* p, NPacket*,
+void NSurfaceFilterCombUI::childWasRemoved(Packet* p, Packet*,
         bool inParentDestructor) {
     if ((! inParentDestructor) && p == filter)
         refreshChildList();
 }
 
-void NSurfaceFilterCombUI::childrenWereReordered(NPacket* p) {
+void NSurfaceFilterCombUI::childrenWereReordered(Packet* p) {
     if (p == filter)
         refreshChildList();
 }
@@ -206,7 +206,7 @@ void NSurfaceFilterCombUI::refreshChildList() {
 
     // Add the items in reverse order since the QListViewItem
     // constructor puts new items at the front.
-    for (regina::NPacket* p = filter->firstChild(); p; p = p->nextSibling())
+    for (regina::Packet* p = filter->firstChild(); p; p = p->nextSibling())
         if (p->type() == regina::PACKET_SURFACEFILTER) {
             new QListWidgetItem(PacketManager::icon(p),
                 p->humanLabel().c_str(), children);

@@ -52,7 +52,7 @@ namespace snappea {
 
 class NMatrixInt;
 class NSnapPeaTriangulation;
-class NXMLSnapPeaReader;
+class XMLSnapPeaReader;
 
 template <int> class Triangulation;
 typedef Triangulation<3> NTriangulation;
@@ -121,15 +121,15 @@ struct PacketInfo<PACKET_SNAPPEATRIANGULATION> {
  * Represents a single cusp of a SnapPea triangulation.
  * See the NSnapPeaTriangulation class for further details.
  *
- * NCusp objects should be considered temporary only.  They are preserved
+ * Cusp objects should be considered temporary only.  They are preserved
  * if you change the fillings (via NSnapPeaTriangulation::fill()
  * or NSnapPeaTriangulation::unfill()).  However, if you change the SnapPea
  * triangulation itself (e.g., via randomize()), then all cusp objects will
  * be deleted and replaced with new ones (using fresh data re-fetched from
  * the SnapPea kernel).
  */
-class REGINA_API NCusp :
-        public ShortOutput<NCusp>,
+class REGINA_API Cusp :
+        public ShortOutput<Cusp>,
         public boost::noncopyable {
     private:
         NVertex* vertex_;
@@ -204,7 +204,7 @@ class REGINA_API NCusp :
         /**
          * A default constructor that performs no initialisation whatsoever.
          */
-        NCusp();
+        Cusp();
 
     friend class NSnapPeaTriangulation;
         /**< Allow access to private members. */
@@ -314,7 +314,7 @@ class REGINA_API NCusp :
  * SnapPea and its successor SnapPy.
  */
 class REGINA_API NSnapPeaTriangulation : public NTriangulation,
-        public NPacketListener {
+        public PacketListener {
     REGINA_PACKET(NSnapPeaTriangulation, PACKET_SNAPPEATRIANGULATION)
 
     public:
@@ -365,7 +365,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
                  hyperbolic structure.  If this is a null triangulation, or if
                  the solution type is no_solution or not_attempted, then
                  shape_ will be 0. */
-        NCusp* cusp_;
+        Cusp* cusp_;
             /**< An array that caches information about each cusp of the
                  internal SnapPea triangulation.  If this is a null
                  triangulation then cusp_ will be 0. */
@@ -694,7 +694,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * The edge equations will be ordered arbitrarily.  The cusp equations
          * will be presented in pairs ordered by cusp index (as stored by
          * SnapPea); within each pair the meridian equation will appear before
-         * the longitude equation.  The NCusp::vertex() method (which
+         * the longitude equation.  The Cusp::vertex() method (which
          * is accessed through the cusp() routine) can help translate
          * between SnapPea's cusp numbers and Regina's vertex numbers.
          *
@@ -816,7 +816,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * <tt>Manifold.cusp_info()[c]</tt>, though the set of
          * information returned about each cusp is different.
          *
-         * These NCusp objects should be considered temporary only.  They are
+         * These Cusp objects should be considered temporary only.  They are
          * preserved if you change the fillings (via fill() or unfill()).
          * However, if you change the SnapPea triangulation itself
          * (e.g., via randomize()), then all cusp objects will be deleted
@@ -824,7 +824,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * the SnapPea kernel).
          *
          * \warning Be warned that cusp \a i might not correspond to vertex
-         * \a i of the triangulation.  The NCusp::vertex() method (which
+         * \a i of the triangulation.  The Cusp::vertex() method (which
          * is accessed through the cusp() routine) can help translate
          * between SnapPea's cusp numbers and Regina's vertex numbers.
          *
@@ -833,7 +833,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * @return information about the given cusp, or 0 if this is a
          * null triangulation.
          */
-        const NCusp* cusp(unsigned whichCusp = 0) const;
+        const Cusp* cusp(unsigned whichCusp = 0) const;
 
         /**
          * Assigns a Dehn filling to the given cusp.  This routine will
@@ -862,7 +862,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * then this routine will again do nothing and simply return \c false.
          *
          * \warning Be warned that cusp \a i might not correspond to vertex
-         * \a i of the triangulation.  The NCusp::vertex() method (which
+         * \a i of the triangulation.  The Cusp::vertex() method (which
          * is accessed through the cusp() routine) can help translate
          * between SnapPea's cusp numbers and Regina's vertex numbers.
          *
@@ -884,7 +884,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * safely does nothing.
          *
          * \warning Be warned that cusp \a i might not correspond to vertex
-         * \a i of the triangulation.  The NCusp::vertex() method (which
+         * \a i of the triangulation.  The Cusp::vertex() method (which
          * is accessed through the cusp() routine) can help translate
          * between SnapPea's cusp numbers and Regina's vertex numbers.
          *
@@ -900,7 +900,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * If this triangulation has more than one cusp to begin with,
          * then the result will be a new instance of NSnapPeaTriangulation,
          * and will have one fewer cusp.  Note that the remaining cusps
-         * may be reindexed, and all NCusp structures will be destroyed
+         * may be reindexed, and all Cusp structures will be destroyed
          * and rebuilt.  Auxiliary information on the remaining cusps (such
          * as filling coefficients and peripheral curves) will be preserved,
          * and SnapPea will automatically attempt to compute a hyperbolic
@@ -917,7 +917,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * then this routine will simply return 0.
          *
          * \warning Be warned that cusp \a i might not correspond to vertex
-         * \a i of the triangulation.  The NCusp::vertex() method (which
+         * \a i of the triangulation.  The Cusp::vertex() method (which
          * is accessed through the cusp() routine) can help translate
          * between SnapPea's cusp numbers and Regina's vertex numbers.
          *
@@ -939,7 +939,7 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          * If some but not all cusps are complete, then the result will
          * be a new instance of NSnapPeaTriangulation, and will have
          * fewer cusps.  Note that the remaining cusps may be reindexed,
-         * and all NCusp structures will be destroyed and rebuilt.  Auxiliary
+         * and all Cusp structures will be destroyed and rebuilt.  Auxiliary
          * information on the remaining cusps (such as peripheral curves)
          * will be preserved, and SnapPea will automatically attempt to
          * compute a hyperbolic structure on the new triangulation.
@@ -1332,8 +1332,8 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
         virtual void writeTextLong(std::ostream& out) const;
 
         virtual bool dependsOnParent() const;
-        static NXMLPacketReader* xmlReader(NPacket* parent,
-            NXMLTreeResolver& resolver);
+        static XMLPacketReader* xmlReader(Packet* parent,
+            XMLTreeResolver& resolver);
 
         /*@}*/
         /**
@@ -1341,12 +1341,12 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          */
         /*@{*/
 
-        virtual void packetWasChanged(NPacket* packet);
+        virtual void packetWasChanged(Packet* packet);
 
         /*@}*/
 
     protected:
-        virtual NPacket* internalClonePacket(NPacket* parent) const;
+        virtual Packet* internalClonePacket(Packet* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
 
     private:
@@ -1407,8 +1407,16 @@ class REGINA_API NSnapPeaTriangulation : public NTriangulation,
          */
         void reset(regina::snappea::Triangulation* data);
 
-    friend class regina::NXMLSnapPeaReader;
+    friend class regina::XMLSnapPeaReader;
 };
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NCusp has now been renamed to Cusp.
+ */
+REGINA_DEPRECATED typedef Cusp NCusp;
 
 /*@}*/
 
@@ -1419,24 +1427,24 @@ inline SnapPeaFatalError::SnapPeaFatalError(
         function(fromFunction), file(fromFile) {
 }
 
-// Inline functions for NCusp
+// Inline functions for Cusp
 
-inline NCusp::NCusp() {
+inline Cusp::Cusp() {
 }
 
-inline NVertex* NCusp::vertex() const {
+inline NVertex* Cusp::vertex() const {
     return vertex_;
 }
 
-inline bool NCusp::complete() const {
+inline bool Cusp::complete() const {
     return (m_ == 0 && l_ == 0);
 }
 
-inline int NCusp::m() const {
+inline int Cusp::m() const {
     return m_;
 }
 
-inline int NCusp::l() const {
+inline int Cusp::l() const {
     return l_;
 }
 
@@ -1468,7 +1476,7 @@ inline unsigned NSnapPeaTriangulation::countFilledCusps() const {
     return filledCusps_;
 }
 
-inline const NCusp* NSnapPeaTriangulation::cusp(unsigned whichCusp) const {
+inline const Cusp* NSnapPeaTriangulation::cusp(unsigned whichCusp) const {
     return (cusp_ ? cusp_ + whichCusp : 0);
 }
 
@@ -1488,7 +1496,7 @@ inline void NSnapPeaTriangulation::randomise() {
     randomize();
 }
 
-inline NPacket* NSnapPeaTriangulation::internalClonePacket(NPacket*) const {
+inline Packet* NSnapPeaTriangulation::internalClonePacket(Packet*) const {
     return new NSnapPeaTriangulation(*this);
 }
 

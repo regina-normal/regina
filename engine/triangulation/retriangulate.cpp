@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "progress/nprogresstracker.h"
+#include "progress/progresstracker.h"
 #include "triangulation/ntriangulation.h"
 #include <condition_variable>
 #include <mutex>
@@ -76,9 +76,9 @@ namespace {
             }
 
             bool seed(const NTriangulation& tri);
-            void processQueue(NProgressTrackerOpen* tracker);
+            void processQueue(ProgressTrackerOpen* tracker);
             void processQueueParallel(unsigned nThreads,
-                NProgressTrackerOpen* tracker);
+                ProgressTrackerOpen* tracker);
 
             bool done() const;
 
@@ -130,7 +130,7 @@ namespace {
     }
 
     template <>
-    void TriBFS<false>::processQueue(NProgressTrackerOpen* tracker) {
+    void TriBFS<false>::processQueue(ProgressTrackerOpen* tracker) {
         SigSet::iterator next;
         while (! (done_ || process_.empty())) {
             if (tracker && tracker->isCancelled())
@@ -147,7 +147,7 @@ namespace {
     }
 
     template <>
-    void TriBFS<true>::processQueue(NProgressTrackerOpen* tracker) {
+    void TriBFS<true>::processQueue(ProgressTrackerOpen* tracker) {
         SigSet::iterator next;
 
         std::unique_lock<std::mutex> lock(mutex_);
@@ -196,7 +196,7 @@ namespace {
 
     template <>
     void TriBFS<true>::processQueueParallel(unsigned nThreads,
-            NProgressTrackerOpen* tracker) {
+            ProgressTrackerOpen* tracker) {
         nRunning_ = nThreads;
 
         std::thread* t = new std::thread[nThreads];
@@ -259,7 +259,7 @@ namespace {
     }
 
     bool enumerate(const NTriangulation& tri, int height, unsigned nThreads,
-            NProgressTrackerOpen* tracker,
+            ProgressTrackerOpen* tracker,
             const std::function<bool(const NTriangulation&)>& action) {
         if (tracker)
             tracker->newStage("Exploring triangulations");
@@ -299,7 +299,7 @@ namespace {
             NTriangulation& original, size_t minTet) {
         if (alt.size() < minTet) {
             // TODO: Make t.cloneFrom(alt) public.
-            NPacket::ChangeEventSpan span(&original);
+            Packet::ChangeEventSpan span(&original);
             original.removeAllTetrahedra();
             original.insertTriangulation(alt);
             original.intelligentSimplify();
@@ -310,13 +310,13 @@ namespace {
 }
 
 bool NTriangulation::simplifyExhaustive(int height, unsigned nThreads,
-        NProgressTrackerOpen* tracker) {
+        ProgressTrackerOpen* tracker) {
     return retriangulate(height, nThreads, tracker, &simplifyFound,
         std::ref(*this), size());
 }
 
 bool NTriangulation::retriangulateInternal(int height, unsigned nThreads,
-        NProgressTrackerOpen* tracker,
+        ProgressTrackerOpen* tracker,
         const std::function<bool(const NTriangulation&)>& action) const {
     if (tracker) {
         try {

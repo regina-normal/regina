@@ -27,7 +27,7 @@ Copyright (c) 1999-2016, The Regina development team
 &gt;&gt;&gt; # Create a progress tracker to use during the normal surface enumeration.
 ... # This will report the state of progress while the enumeration runs in
 ... # the background.
-... tracker = NProgressTracker()
+... tracker = ProgressTracker()
 &gt;&gt;&gt; 
 &gt;&gt;&gt; # Start the normal surface enumeration.
 ... # Because we are passing a progress tracker to enumerate(), the

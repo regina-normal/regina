@@ -340,7 +340,7 @@ void Dim4EltMoveDialog::updateApply() {
     buttons->button(QDialogButtonBox::Apply)->setEnabled(b && b->isEnabled());
 }
 
-void Dim4EltMoveDialog::packetWasRenamed(regina::NPacket*) {
+void Dim4EltMoveDialog::packetWasRenamed(regina::Packet*) {
     name->setText(tri->humanLabel().c_str());
 }
 
@@ -355,7 +355,7 @@ void Dim4EltMoveDialog::updateStates(ChooserClass* chooser, QRadioButton* button
     }
 }
 
-void Dim4EltMoveDialog::packetWasChanged(regina::NPacket*) {
+void Dim4EltMoveDialog::packetWasChanged(regina::Packet*) {
     if (tri->size() == 1)
         overview->setText(tr("1 pentachoron"));
     else
@@ -375,7 +375,7 @@ void Dim4EltMoveDialog::packetWasChanged(regina::NPacket*) {
     updateApply();
 }
 
-void Dim4EltMoveDialog::packetToBeDestroyed(regina::NPacket*) {
+void Dim4EltMoveDialog::packetToBeDestroyed(regina::Packet*) {
     reject();
 }
 

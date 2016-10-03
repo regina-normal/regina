@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "file/nglobaldirs.h"
+#include "file/globaldirs.h"
 
 #include "iconcache.h"
 #include "reginamain.h"
@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
 
 #ifdef REGINA_INSTALL_BUNDLE
 #ifdef Q_OS_MACX
-    regina::NGlobalDirs::setDirs(
+    regina::GlobalDirs::setDirs(
         static_cast<const char*>(QFile::encodeName(
             QCoreApplication::applicationDirPath() + "/../Resources")),
         static_cast<const char*>(QFile::encodeName(
@@ -96,7 +96,7 @@ int main(int argc, char **argv) {
 
 #ifdef REGINA_INSTALL_WINDOWS
 #ifdef Q_OS_WIN32
-    regina::NGlobalDirs::setDirs(
+    regina::GlobalDirs::setDirs(
         static_cast<const char*>(QFile::encodeName(
             QCoreApplication::applicationDirPath() + "/../share/regina")),
         static_cast<const char*>(QFile::encodeName(

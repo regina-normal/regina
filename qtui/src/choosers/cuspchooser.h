@@ -38,14 +38,14 @@
 #ifndef __CUSPCHOOSER_H
 #define __CUSPCHOOSER_H
 
-#include "packet/npacketlistener.h"
+#include "packet/packetlistener.h"
 
 #include <QDialog>
 #include <QComboBox>
 #include <vector>
 
 namespace regina {
-    class NCusp;
+    class Cusp;
     class NSnapPeaTriangulation;
 };
 
@@ -53,7 +53,7 @@ namespace regina {
  * A filter function, used to determine whether a given cusp
  * should appear in the list.
  */
-typedef bool (*CuspFilterFunc)(const regina::NCusp*);
+typedef bool (*CuspFilterFunc)(const regina::Cusp*);
 
 /**
  * A widget through which a single cusp of some SnapPea triangulation
@@ -68,7 +68,7 @@ typedef bool (*CuspFilterFunc)(const regina::NCusp*);
  * Q_OBJECT does not play well with template classes.  Since the chooser
  * classes do not use slots or signals, I believe this is okay.
  */
-class CuspChooser : public QComboBox, public regina::NPacketListener {
+class CuspChooser : public QComboBox, public regina::PacketListener {
     public:
         enum {
             CUSP_ALL = -1,
@@ -133,17 +133,17 @@ class CuspChooser : public QComboBox, public regina::NPacketListener {
         bool refresh();
 
         /**
-         * NPacketListener overrides.
+         * PacketListener overrides.
          */
-        void packetToBeChanged(regina::NPacket*);
-        void packetWasChanged(regina::NPacket*);
-        void packetToBeDestroyed(regina::NPacket*);
+        void packetToBeChanged(regina::Packet*);
+        void packetWasChanged(regina::Packet*);
+        void packetToBeDestroyed(regina::Packet*);
 
         /**
          * Some ready-made cusp filters.
          */
-        static bool filterFilled(const regina::NCusp*);
-        static bool filterComplete(const regina::NCusp*);
+        static bool filterFilled(const regina::Cusp*);
+        static bool filterComplete(const regina::Cusp*);
 
     private:
         /**
@@ -198,16 +198,16 @@ inline bool CuspChooser::refresh() {
     return (count() > 0);
 }
 
-inline void CuspChooser::packetToBeChanged(regina::NPacket*) {
+inline void CuspChooser::packetToBeChanged(regina::Packet*) {
     clear();
     options_.clear();
 }
 
-inline void CuspChooser::packetWasChanged(regina::NPacket*) {
+inline void CuspChooser::packetWasChanged(regina::Packet*) {
     fill();
 }
 
-inline void CuspChooser::packetToBeDestroyed(regina::NPacket*) {
+inline void CuspChooser::packetToBeDestroyed(regina::Packet*) {
     clear();
     options_.clear();
 }

@@ -33,15 +33,15 @@
 #import <Foundation/Foundation.h>
 
 namespace regina {
-    class NPacket;
+    class Packet;
 }
 
 @class NewPacketSpec;
 
 @interface PacketManagerIOS : NSObject
 
-+ (UIImage*)iconFor:(regina::NPacket*)p;
-+ (NSString*)viewerFor:(regina::NPacket*)p;
++ (UIImage*)iconFor:(regina::Packet*)p;
++ (NSString*)viewerFor:(regina::Packet*)p;
 + (void)newPacket:(NewPacketSpec*)spec;
 
 @end

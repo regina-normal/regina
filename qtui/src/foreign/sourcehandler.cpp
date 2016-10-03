@@ -49,7 +49,7 @@ PacketFilter* SourceHandler::canExport() const {
     return new SubclassFilter<regina::NTriangulation>();
 }
 
-bool SourceHandler::exportData(regina::NPacket* data, const QString& fileName,
+bool SourceHandler::exportData(regina::Packet* data, const QString& fileName,
         QWidget* parentWidget) const {
     regina::NTriangulation* tri = dynamic_cast<regina::NTriangulation*>(data);
 

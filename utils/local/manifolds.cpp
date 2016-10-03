@@ -69,7 +69,7 @@
 
 #include <algebra/nabeliangroup.h>
 #include <manifold/nmanifold.h>
-#include <packet/ncontainer.h>
+#include <packet/container.h>
 #include <subcomplex/nstandardtri.h>
 #include <triangulation/ntriangulation.h>
 
@@ -89,16 +89,16 @@ bool renameMfds = false;
 bool sortMfds = false;
 bool saveChanges = false;
 bool rawList = false;
-NPacket* tree;
+Packet* tree;
 
 struct ManifoldSpec {
-    NPacket* container;
+    Packet* container;
     bool hasTriangulation;
     NManifold* manifold; // 0 if unknown
 
     ManifoldSpec() : container(0), hasTriangulation(false), manifold(0) {
     }
-    ManifoldSpec(NPacket* c, bool t, NManifold* m) :
+    ManifoldSpec(Packet* c, bool t, NManifold* m) :
             container(c), hasTriangulation(t), manifold(m) {
     }
 
@@ -150,13 +150,13 @@ bool ManifoldSpec::operator < (const ManifoldSpec& other) const {
 /**
  * Returns true if and only if the given container contains any triangulations.
  */
-bool process(NContainer* c) {
+bool process(Container* c) {
     bool foundTri = false;
 
     NStandardTriangulation* std;
     NManifold* mfd;
     std::string name, structure;
-    for (NPacket* child = c->firstChild(); child;
+    for (Packet* child = c->firstChild(); child;
             child = child->nextSibling()) {
         if (child->type() != PACKET_TRIANGULATION)
             continue;
@@ -280,9 +280,9 @@ int main(int argc, char* argv[]) {
     // Process the packets.
     if (! sortMfds) {
         // Just run through them in prefix order.
-        for (NPacket* p = tree; p; p = p->nextTreePacket())
+        for (Packet* p = tree; p; p = p->nextTreePacket())
             if (p->type() == PACKET_CONTAINER)
-                process(static_cast<NContainer*>(p));
+                process(static_cast<Container*>(p));
     } else {
         // We need to be careful about how we run through the tree.
         // We need to do all child containers of each parent container at
@@ -291,9 +291,9 @@ int main(int argc, char* argv[]) {
         // Process the root first, since it doesn't have a parent to be
         // sorted within.
         if (tree->type() == PACKET_CONTAINER)
-            process(static_cast<NContainer*>(tree));
+            process(static_cast<Container*>(tree));
 
-        NPacket *parent, *p;
+        Packet *parent, *p;
         bool foundManifolds;
         for (parent = tree; parent; parent = parent->nextTreePacket()) {
             // Process all children of parent, and then sort.
@@ -302,7 +302,7 @@ int main(int argc, char* argv[]) {
 
             for (p = parent->firstChild(); p; p = p->nextSibling())
                 if (p->type() == PACKET_CONTAINER) {
-                    if (process(static_cast<NContainer*>(p)))
+                    if (process(static_cast<Container*>(p)))
                         foundManifolds = true;
                 } else
                     children.push_back(ManifoldSpec(p, false, 0));

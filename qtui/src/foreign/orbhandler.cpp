@@ -43,9 +43,9 @@
 
 const OrbHandler OrbHandler::instance;
 
-regina::NPacket* OrbHandler::importData(const QString& fileName,
+regina::Packet* OrbHandler::importData(const QString& fileName,
         ReginaMain* parentWidget) const {
-    regina::NPacket* ans = regina::readOrb(
+    regina::Packet* ans = regina::readOrb(
         static_cast<const char*>(QFile::encodeName(fileName)));
     if (! ans)
         ReginaSupport::sorry(parentWidget,

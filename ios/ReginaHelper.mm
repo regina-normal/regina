@@ -37,7 +37,7 @@
 #import "ReginaHelper.h"
 #import "MBProgressHUD.h"
 #import "UIView+Toast.h"
-#import "packet/npacket.h"
+#import "packet/packet.h"
 
 static UISplitViewController* split;
 static UINavigationController* masterNav;
@@ -85,7 +85,7 @@ BOOL ios9;
     return nil;
 }
 
-+ (void)viewPacket:(regina::NPacket *)packet
++ (void)viewPacket:(regina::Packet *)packet
 {
     BOOL display = (packet->type() != regina::PACKET_CONTAINER);
     if (display)
@@ -103,12 +103,12 @@ BOOL ios9;
         [tree selectPacket:packet];
 }
 
-+ (void)viewChildren:(regina::NPacket *)packet
++ (void)viewChildren:(regina::Packet *)packet
 {
     PacketTreeController* tree = [ReginaHelper tree];
     [tree navigateToPacket:packet];
 
-    regina::NPacket* child = packet->firstChild();
+    regina::Packet* child = packet->firstChild();
 
     if (child && ! child->nextSibling()) {
         detail.packet = packet->firstChild();

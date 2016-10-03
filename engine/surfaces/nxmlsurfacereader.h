@@ -40,7 +40,7 @@
 #endif
 
 #include "regina-core.h"
-#include "packet/nxmlpacketreader.h"
+#include "packet/xmlpacketreader.h"
 #include "surfaces/nnormalsurfacelist.h"
 
 namespace regina {
@@ -103,7 +103,7 @@ class REGINA_API NXMLNormalSurfaceReader : public NXMLElementReader {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NXMLNormalSurfaceListReader : public NXMLPacketReader {
+class REGINA_API NXMLNormalSurfaceListReader : public XMLPacketReader {
     private:
         NNormalSurfaceList* list;
             /**< The normal surface list currently being read. */
@@ -119,9 +119,9 @@ class REGINA_API NXMLNormalSurfaceListReader : public NXMLPacketReader {
          * dangling packet references after the entire XML file has been read.
          */
         NXMLNormalSurfaceListReader(const NTriangulation* newTri,
-            NXMLTreeResolver& resolver);
+            XMLTreeResolver& resolver);
 
-        virtual NPacket* packet() override;
+        virtual Packet* packet() override;
         virtual NXMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
@@ -145,11 +145,11 @@ inline NNormalSurface* NXMLNormalSurfaceReader::surface() {
 // Inline functions for NXMLNormalSurfaceListReader
 
 inline NXMLNormalSurfaceListReader::NXMLNormalSurfaceListReader(
-        const NTriangulation* newTri, NXMLTreeResolver& resolver) :
-        NXMLPacketReader(resolver), list(0), tri(newTri) {
+        const NTriangulation* newTri, XMLTreeResolver& resolver) :
+        XMLPacketReader(resolver), list(0), tri(newTri) {
 }
 
-inline NPacket* NXMLNormalSurfaceListReader::packet() {
+inline Packet* NXMLNormalSurfaceListReader::packet() {
     return list;
 }
 

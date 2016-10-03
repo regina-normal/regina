@@ -48,7 +48,7 @@ class QString;
 class QWidget;
 
 namespace regina {
-    class NPacket;
+    class Packet;
 }
 
 /**
@@ -57,7 +57,7 @@ namespace regina {
 struct PythonVariable {
     QString name;
         /**< The name of the variable. */
-    regina::NPacket* value;
+    regina::Packet* value;
         /**< The value of the variable.  This may be 0, in which case
              the corresponding Python value will be None. */
 
@@ -65,7 +65,7 @@ struct PythonVariable {
      * Basic constructors.
      */
     PythonVariable();
-    PythonVariable(const QString& newName, regina::NPacket* newValue);
+    PythonVariable(const QString& newName, regina::Packet* newValue);
 };
 
 typedef QLinkedList<PythonVariable> PythonVariableList;
@@ -101,8 +101,8 @@ class PythonManager {
          * to the user and 0 is returned.
          */
         PythonConsole* launchPythonConsole(QWidget* parent,
-                regina::NPacket* tree = 0,
-                regina::NPacket* selectedPacket = 0);
+                regina::Packet* tree = 0,
+                regina::Packet* selectedPacket = 0);
 
         /**
          * Launches a new python console to run the given script.
@@ -160,7 +160,7 @@ inline PythonVariable::PythonVariable() : value(0) {
 }
 
 inline PythonVariable::PythonVariable(const QString& newName,
-        regina::NPacket* newValue) : name(newName), value(newValue) {
+        regina::Packet* newValue) : name(newName), value(newValue) {
 }
 
 #endif

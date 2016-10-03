@@ -47,7 +47,7 @@
 #include <QPushButton>
 
 using regina::Dim4Triangulation;
-using regina::NPacket;
+using regina::Packet;
 
 Dim4TriSkeletonUI::Dim4TriSkeletonUI(regina::Dim4Triangulation* packet,
         PacketTabbedUI* useParentUI) :
@@ -221,7 +221,7 @@ Dim4TriSkelCompUI::Dim4TriSkelCompUI(regina::Dim4Triangulation* packet,
     layout->addStretch(1);
 }
 
-regina::NPacket* Dim4TriSkelCompUI::getPacket() {
+regina::Packet* Dim4TriSkelCompUI::getPacket() {
     return tri;
 }
 

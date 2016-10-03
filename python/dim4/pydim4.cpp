@@ -41,7 +41,7 @@ void addDim4Triangle();
 void addDim4Triangulation();
 void addDim4Vertex();
 
-void addDim4() {
+void addDim4Classes() {
     addDim4BoundaryComponent();
     addDim4Component();
     addDim4Edge();

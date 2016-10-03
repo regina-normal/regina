@@ -37,7 +37,7 @@
 #ifndef __DIM4TRIUI_H
 #define __DIM4TRIUI_H
 
-#include "packet/npacketlistener.h"
+#include "packet/packetlistener.h"
 #include "../packettabui.h"
 
 class ClickableLabel;
@@ -89,7 +89,7 @@ class Dim4TriangulationUI : public PacketTabbedUI {
  * A header for the 4-manifold triangulation viewer.
  */
 class Dim4TriHeaderUI : public QObject, public PacketViewerTab,
-        public regina::NPacketListener {
+        public regina::PacketListener {
     Q_OBJECT
 
     private:
@@ -121,15 +121,15 @@ class Dim4TriHeaderUI : public QObject, public PacketViewerTab,
         /**
          * PacketViewerTab overrides.
          */
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         QWidget* getInterface();
         void refresh();
 
         /**
-         * NPacketListener overrides.
+         * PacketListener overrides.
          */
-        void childWasAdded(regina::NPacket* packet, regina::NPacket* child);
-        void childWasRemoved(regina::NPacket* packet, regina::NPacket* child,
+        void childWasAdded(regina::Packet* packet, regina::Packet* child);
+        void childWasRemoved(regina::Packet* packet, regina::Packet* child,
             bool inParentDestructor);
 
         /**

@@ -44,7 +44,6 @@
  * An MPI-enabled version of this tool also exists (mpi/normal-mpi.cpp).
  */
 
-#include <packet/ncontainer.h>
 #include <surfaces/nnormalsurfacelist.h>
 #include <triangulation/ntriangulation.h>
 
@@ -152,7 +151,7 @@ int isRga(const struct dirent* entry) {
  * Main routine for dealing with a single data file.
  */
 bool process(const std::string& filename) {
-    NPacket* tree = open(filename);
+    Packet* tree = open(filename);
     if (! tree)
         return false;
 
@@ -164,7 +163,7 @@ bool process(const std::string& filename) {
 
     NTriangulation* t;
     NNormalSurfaceList* s;
-    for (NPacket* p = tree; p; p = p->nextTreePacket())
+    for (Packet* p = tree; p; p = p->nextTreePacket())
         if (p->type() == PACKET_TRIANGULATION) {
             t = static_cast<NTriangulation*>(p);
             s = NNormalSurfaceList::enumerate(t,

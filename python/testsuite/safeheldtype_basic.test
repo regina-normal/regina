@@ -33,12 +33,12 @@
 
 print "Constructor:"
 
-print NContainer()
+print Container()
 
 print "Deleting parent:"
 
-c  = NContainer()
-c1 = NContainer()
+c  = Container()
+c1 = Container()
 
 c.insertChildFirst(c1)
 
@@ -51,9 +51,9 @@ except RuntimeError:
 
 print "Deleting matriarch:"
     
-c  = NContainer()
-c.insertChildFirst(NContainer())
-c.firstChild().insertChildFirst(NContainer())
+c  = Container()
+c.insertChildFirst(Container())
+c.firstChild().insertChildFirst(Container())
 
 c1 = c.firstChild()
 c2 = c.firstChild().firstChild()
@@ -72,9 +72,9 @@ except RuntimeError:
 
 print "Multiple references:"
 
-c = NContainer()
-c1 = NContainer()
-c2 = NContainer()
+c = Container()
+c1 = Container()
+c2 = Container()
 
 c.insertChildFirst(c1)
 c1.insertChildFirst(c2)

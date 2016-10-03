@@ -2,8 +2,8 @@
 
 # Files to compile
 SET ( FILES
-  nfileinfo
-  nglobaldirs)
+  fileinfo
+  globaldirs)
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )
@@ -13,6 +13,8 @@ SET(SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
+    fileinfo.h
+    globaldirs.h
     nfileinfo.h
     nglobaldirs.h
     DESTINATION ${INCLUDEDIR}/file COMPONENT Development)

@@ -48,7 +48,7 @@ namespace regina {
 
 class NEnumConstraintList;
 class NMatrixInt;
-class NProgressTracker;
+class ProgressTracker;
 class NRay;
 
 /**
@@ -110,8 +110,8 @@ class NHilbertPrimal {
          * An optional progress tracker may be passed.  If so, this routine
          * will update the percentage progress and poll for cancellation
          * requests.  It will be assumed that an appropriate stage has already
-         * been declared via NProgressTracker::newStage() before this routine
-         * is called, and that NProgressTracker::setFinished() will be
+         * been declared via ProgressTracker::newStage() before this routine
+         * is called, and that ProgressTracker::setFinished() will be
          * called after this routine returns.
          *
          * \pre If \a constraints is passed, then the given list of
@@ -142,7 +142,7 @@ class NHilbertPrimal {
         static void enumerateHilbertBasis(OutputIterator results,
             const RayIterator& raysBegin, const RayIterator& raysEnd,
             const NEnumConstraintList* constraints,
-            NProgressTracker* tracker = 0);
+            ProgressTracker* tracker = 0);
 
     private:
         /**
@@ -164,7 +164,7 @@ class NHilbertPrimal {
             class RayIterator, class OutputIterator>
         static void enumerateUsingBitmask(OutputIterator results,
             const RayIterator& raysBegin, const RayIterator& raysEnd,
-            const NEnumConstraintList* constraints, NProgressTracker* tracker);
+            const NEnumConstraintList* constraints, ProgressTracker* tracker);
 
         /**
          * Determines whether the given ray lies in the face specified

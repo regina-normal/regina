@@ -38,7 +38,7 @@
 #ifndef __ELTMOVEDIALOG_H
 #define __ELTMOVEDIALOG_H
 
-#include "packet/npacketlistener.h"
+#include "packet/packetlistener.h"
 
 #include <QDialog>
 #include <vector>
@@ -61,7 +61,7 @@ namespace regina {
  * A dialog used to select and perform an elementary move on a
  * 3-manifold triangulation.
  */
-class EltMoveDialog : public QDialog, public regina::NPacketListener {
+class EltMoveDialog : public QDialog, public regina::PacketListener {
     Q_OBJECT
 
     private:
@@ -111,9 +111,9 @@ class EltMoveDialog : public QDialog, public regina::NPacketListener {
         /**
          * Update the overview information if the triangulation changes.
          */
-        void packetWasRenamed(regina::NPacket*);
-        void packetWasChanged(regina::NPacket*);
-        void packetToBeDestroyed(regina::NPacket*);
+        void packetWasRenamed(regina::Packet*);
+        void packetWasChanged(regina::Packet*);
+        void packetToBeDestroyed(regina::Packet*);
 
     protected slots:
         /**

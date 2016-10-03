@@ -31,8 +31,8 @@
  **************************************************************************/
 
 #include "foreign/isosig.h"
-#include "packet/ncontainer.h"
-#include "packet/ntext.h"
+#include "packet/container.h"
+#include "packet/text.h"
 
 #include "isosighandler.h"
 #include "reginamain.h"
@@ -46,7 +46,7 @@ const IsoSigHandler IsoSigHandler::instance2(2);
 const IsoSigHandler IsoSigHandler::instance3(3);
 const IsoSigHandler IsoSigHandler::instance4(4);
 
-regina::NPacket* IsoSigHandler::importData(const QString& fileName,
+regina::Packet* IsoSigHandler::importData(const QString& fileName,
         ReginaMain* parentWidget) const {
     QString explnSuffix = QObject::tr("<p>The file should be a plain text file "
         "containing one %1-manifold isomorphism signature per line.  "
@@ -55,7 +55,7 @@ regina::NPacket* IsoSigHandler::importData(const QString& fileName,
         "of closed orientable 3-manifold triangulations</i>, "
         "Burton, 2011, <tt>arXiv:1110.6080</tt>.</qt>").arg(dimension_);
 
-    regina::NPacket* ans = regina::readIsoSigList(
+    regina::Packet* ans = regina::readIsoSigList(
         static_cast<const char*>(QFile::encodeName(fileName)), dimension_);
     if (! ans) {
         ReginaSupport::sorry(parentWidget,
@@ -66,7 +66,7 @@ regina::NPacket* IsoSigHandler::importData(const QString& fileName,
         return 0;
     }
 
-    regina::NPacket* last = ans->lastChild();
+    regina::Packet* last = ans->lastChild();
     if (last == 0) {
         ReginaSupport::sorry(parentWidget,
             QObject::tr("The import failed."),

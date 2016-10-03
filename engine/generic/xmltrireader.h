@@ -76,7 +76,7 @@ class XMLTriangulationReader :
          * @param resolver the master resolver that will be used to fix
          * dangling packet references after the entire XML file has been read.
          */
-        XMLTriangulationReader(NXMLTreeResolver& resolver);
+        XMLTriangulationReader(XMLTreeResolver& resolver);
 
         /**
          * Returns an XML element reader for the given optional property of a
@@ -114,7 +114,7 @@ template <> class XMLTriangulationReader<4>;
 
 template <int dim>
 inline XMLTriangulationReader<dim>::XMLTriangulationReader(
-        NXMLTreeResolver& resolver) :
+        XMLTreeResolver& resolver) :
         detail::XMLTriangulationReaderBase<dim>(resolver) {
 }
 

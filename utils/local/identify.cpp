@@ -52,7 +52,6 @@
 
 #include <algebra/nabeliangroup.h>
 #include <manifold/nmanifold.h>
-#include <packet/ncontainer.h>
 #include <subcomplex/nstandardtri.h>
 #include <triangulation/ntriangulation.h>
 
@@ -68,7 +67,7 @@ unsigned homBad = 0;
 unsigned homChecked = 0;
 
 bool outputContainers = false;
-NPacket* tree;
+Packet* tree;
 
 void usage(const char* progName, const std::string& error = std::string()) {
     if (! error.empty())
@@ -160,7 +159,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Process the packets.
-    for (NPacket* p = tree; p; p = p->nextTreePacket())
+    for (Packet* p = tree; p; p = p->nextTreePacket())
         if (p->type() == PACKET_TRIANGULATION)
             process(static_cast<NTriangulation*>(p));
         else if (outputContainers && p->type() == PACKET_CONTAINER)

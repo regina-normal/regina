@@ -81,7 +81,7 @@ class NNormalSurfaceUI : public PacketTabbedUI {
  * A header for the normal surface list viewer.
  */
 class NSurfaceHeaderUI : public QObject, public PacketViewerTab,
-        public regina::NPacketListener {
+        public regina::PacketListener {
     Q_OBJECT
 
     private:
@@ -106,14 +106,14 @@ class NSurfaceHeaderUI : public QObject, public PacketViewerTab,
         /**
          * PacketViewerTab overrides.
          */
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         QWidget* getInterface();
         void refresh();
 
         /**
-         * NPacketListener overrides.
+         * PacketListener overrides.
          */
-        void packetWasRenamed(regina::NPacket* packet);
+        void packetWasRenamed(regina::Packet* packet);
 
     private slots:
         /**

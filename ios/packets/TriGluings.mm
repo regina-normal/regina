@@ -35,8 +35,8 @@
 #import "ReginaHelper.h"
 #import "TriangulationViewController.h"
 #import "TriGluings.h"
-#import "packet/ncontainer.h"
-#import "progress/nprogresstracker.h"
+#import "packet/container.h"
+#import "progress/progresstracker.h"
 #import "triangulation/ntriangulation.h"
 
 #pragma mark - Table cell
@@ -61,7 +61,7 @@
     int editSimplex;
     int editFacet; // -1 for editing the description
     BOOL myEdit;
-    regina::NProgressTrackerOpen* simplifyTracker; // for cancellation
+    regina::ProgressTrackerOpen* simplifyTracker; // for cancellation
 }
 @property (weak, nonatomic) IBOutlet UILabel *header;
 @property (weak, nonatomic) IBOutlet UIButton *lockIcon;
@@ -276,7 +276,7 @@
     size_t initSize = self.packet->size();
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        regina::NProgressTrackerOpen* tracker = new regina::NProgressTrackerOpen();
+        regina::ProgressTrackerOpen* tracker = new regina::ProgressTrackerOpen();
         bool cancelled = false;
 
         [self.simplifyLock lock];
@@ -411,9 +411,9 @@
     // Where to insert the components?
     // If there are already children of this triangulation, insert
     // the new triangulations at a deeper level.
-    regina::NPacket* base;
+    regina::Packet* base;
     if (self.packet->firstChild()) {
-        base = new regina::NContainer();
+        base = new regina::Container();
         self.packet->insertChildLast(base);
         base->setLabel(self.packet->adornedLabel("Components"));
     } else
@@ -458,7 +458,7 @@
         return;
     }
     
-    regina::NPacket::ChangeEventSpan span(self.packet);
+    regina::Packet::ChangeEventSpan span(self.packet);
     self.packet->idealToFinite();
     self.packet->intelligentSimplify();
 }
@@ -479,7 +479,7 @@
         return;
     }
 
-    regina::NPacket::ChangeEventSpan span(self.packet);
+    regina::Packet::ChangeEventSpan span(self.packet);
     self.packet->finiteToIdeal();
     self.packet->intelligentSimplify();
 }
@@ -509,7 +509,7 @@
         return;
     }
 
-    regina::NPacket::ChangeEventSpan span(self.packet);
+    regina::Packet::ChangeEventSpan span(self.packet);
     self.packet->puncture();
     self.packet->intelligentSimplify();
 }
@@ -656,7 +656,7 @@
                 // Do it.
                 myEdit = YES;
                 {
-                    regina::NPacket::ChangeEventSpan span(self.packet);
+                    regina::Packet::ChangeEventSpan span(self.packet);
                     
                     // First unglue from the old partner if it exists.
                     if (t->adjacentSimplex(editFacet)) {

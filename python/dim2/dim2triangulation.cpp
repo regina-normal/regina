@@ -53,7 +53,7 @@ namespace {
     regina::Dim2Triangle* (Dim2Triangulation::*triangle_non_const)(
         size_t) = &Dim2Triangulation::triangle;
     size_t (Dim2Triangulation::*splitIntoComponents)(
-        regina::NPacket*, bool) = &Dim2Triangulation::splitIntoComponents;
+        regina::Packet*, bool) = &Dim2Triangulation::splitIntoComponents;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_oneThreeMove,
         Dim2Triangulation::oneThreeMove, 1, 3);
@@ -135,7 +135,7 @@ namespace {
 
 void addDim2Triangulation() {
     {
-    scope s = class_<Triangulation<2>, bases<regina::NPacket>,
+    scope s = class_<Triangulation<2>, bases<regina::Packet>,
             SafeHeldType<Triangulation<2>>,
             boost::noncopyable>("Triangulation2")
         .def(init<const Dim2Triangulation&>())
@@ -232,7 +232,7 @@ void addDim2Triangulation() {
     s.attr("typeID") = regina::PACKET_DIM2TRIANGULATION;
 
     implicitly_convertible<SafeHeldType<Dim2Triangulation>,
-        SafeHeldType<regina::NPacket> >();
+        SafeHeldType<regina::Packet> >();
     }
 
     FIX_REGINA_BOOST_CONVERTERS(Dim2Triangulation);

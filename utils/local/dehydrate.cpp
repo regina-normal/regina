@@ -47,7 +47,6 @@
  * Mathematics of Computation 68/225, 1999.
  */
 
-#include "packet/ncontainer.h"
 #include "triangulation/ntriangulation.h"
 
 #include <cstdlib>
@@ -78,14 +77,14 @@ int main(int argc, char* argv[]) {
     bool found = false;
     std::string dehydration;
     for ( ; i < argc; i++) {
-        NPacket* tree = open(argv[i]);
+        Packet* tree = open(argv[i]);
         if (tree == 0) {
             std::cerr << "ERROR: Could not read data from " << argv[i] << '.'
                 << std::endl;
             continue;
         }
 
-        for (NPacket* p = tree; p; p = p->nextTreePacket())
+        for (Packet* p = tree; p; p = p->nextTreePacket())
             if (p->type() == PACKET_TRIANGULATION) {
                 found = true;
                 dehydration = static_cast<NTriangulation*>(p)->dehydrate();

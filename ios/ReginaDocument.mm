@@ -33,8 +33,8 @@
 #import "PacketTreeController.h"
 #import "ReginaDocument.h"
 #import "ReginaHelper.h"
-#import "packet/ncontainer.h"
-#import "packet/ntext.h"
+#import "packet/container.h"
+#import "packet/text.h"
 #import "snappea/nsnappeatriangulation.h"
 #import <boost/iostreams/device/array.hpp>
 #import <boost/iostreams/stream.hpp>
@@ -143,8 +143,8 @@ enum DocError {
     
     self = [super initWithFileURL:url];
     if (self) {
-        _tree = new regina::NContainer();
-        regina::NText* text = new regina::NText(
+        _tree = new regina::Container();
+        regina::Text* text = new regina::Text(
 "Welcome to Regina!\n\n"
 "A single Regina document can contain many objects, also called \"packets\".  "
 "For example, a packet might be a triangulation, a list of normal surfaces, "
@@ -223,7 +223,7 @@ enum DocError {
                                         userInfo:[NSDictionary dictionaryWithObject:@"Could not read SnapPea data file" forKey:NSLocalizedDescriptionKey]];
             return NO;
         }
-        _tree = new regina::NContainer();
+        _tree = new regina::Container();
         _tree->setLabel("SnapPea import");
         _tree->insertChildLast(tri);
         

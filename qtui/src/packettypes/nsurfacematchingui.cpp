@@ -44,7 +44,7 @@
 #define DEFAULT_MATCHING_COLUMN_WIDTH 40
 
 using regina::NNormalSurfaceList;
-using regina::NPacket;
+using regina::Packet;
 
 void MatchingModel::rebuild() {
     beginResetModel();
@@ -138,7 +138,7 @@ NSurfaceMatchingUI::~NSurfaceMatchingUI() {
     delete model;
 }
 
-regina::NPacket* NSurfaceMatchingUI::getPacket() {
+regina::Packet* NSurfaceMatchingUI::getPacket() {
     return model->surfaces();
 }
 

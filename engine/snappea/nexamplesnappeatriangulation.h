@@ -31,80 +31,17 @@
  **************************************************************************/
 
 /*! \file snappea/nexamplesnappeatriangulation.h
- *  \brief Offers several ready-made example SnapPea triangulations.
+ *  \brief Deprecated header.
  */
 
-#ifndef __NEXAMPLESNAPPEATRIANGULATION_H
+#ifndef __EXAMPLESNAPPEA_H
 #ifndef __DOXYGEN
-#define __NEXAMPLESNAPPEATRIANGULATION_H
+#define __EXAMPLESNAPPEA_H
 #endif
 
-#include "regina-core.h"
+#warning This header is deprecated; please use snappea/examplesnappea.h instead.
 
-namespace regina {
-
-class NSnapPeaTriangulation;
-
-/**
- * \weakgroup snappea
- * @{
- */
-
-/**
- * This class offers routines for constructing various example SnapPea
- * triangulations.  This is analagous to the (much richer)
- * NExampleTriangulation class.
- *
- * Each of the routines in this class constructs a new triangulation from
- * scratch.  It is up to the caller of each routine to destroy the
- * triangulation that is returned.
- */
-class REGINA_API NExampleSnapPeaTriangulation {
-    public:
-        /**
-         * Returns a new triangulation of the Gieseking manifold.
-         *
-         * @return a newly constructed SnapPea triangulation, which must be
-         * destroyed by the caller of this routine.
-         */
-        static NSnapPeaTriangulation* gieseking();
-
-        /**
-         * Returns a new triangulation of the figure eight knot complement.
-         *
-         * @return a newly constructed SnapPea triangulation, which must be
-         * destroyed by the caller of this routine.
-         */
-        static NSnapPeaTriangulation* figureEight();
-
-        /**
-         * Returns a new triangulation of the trefoil knot complement.
-         *
-         * @return a newly constructed SnapPea triangulation, which must be
-         * destroyed by the caller of this routine.
-         */
-        static NSnapPeaTriangulation* trefoil();
-
-        /**
-         * Returns a new triangulation of the Whitehead link complement.
-         *
-         * @return a newly constructed SnapPea triangulation, which must be
-         * destroyed by the caller of this routine.
-         */
-        static NSnapPeaTriangulation* whiteheadLink();
-
-        /**
-         * Returns a new triangulation of the census manifold \c x101.
-         *
-         * @return a newly constructed SnapPea triangulation, which must be
-         * destroyed by the caller of this routine.
-         */
-        static NSnapPeaTriangulation* x101();
-};
-
-/*@}*/
-
-} // namespace regina
+#include "snappeafile/examplesnappea.h"
 
 #endif
 

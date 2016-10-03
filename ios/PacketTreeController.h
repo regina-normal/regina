@@ -36,18 +36,18 @@
 #import "packet/packettype.h"
 
 namespace regina {
-    class NPacket;
+    class Packet;
 }
 
 @class NewPacketSpec;
 
 @interface PacketTreeController : EditableTableViewController
 
-@property (assign, nonatomic, readonly) regina::NPacket* node;
+@property (assign, nonatomic, readonly) regina::Packet* node;
 
 - (void)newDocument;
 - (void)openDocument:(ReginaDocument*)doc;
-- (void)openSubtree:(regina::NPacket*)p;
+- (void)openSubtree:(regina::Packet*)p;
 
 /**
  * Should only need to be called from the internal packet listener.
@@ -60,7 +60,7 @@ namespace regina {
  * Refuses to select a container packet, but regardless will scroll
  * down to ensure that the packet is visible in the table.
  */
-- (BOOL)selectPacket:(regina::NPacket*)p;
+- (BOOL)selectPacket:(regina::Packet*)p;
 
 - (void)newPacket:(regina::PacketType)type;
 
@@ -68,6 +68,6 @@ namespace regina {
  * Currently, will do nothing unless this involves a single push or a single pop.
  * Safe if dest is 0.
  */
-- (void)navigateToPacket:(regina::NPacket*)dest;
+- (void)navigateToPacket:(regina::Packet*)dest;
 
 @end

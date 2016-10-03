@@ -31,9 +31,9 @@
  **************************************************************************/
 
 #include "dim4/dim4triangulation.h"
-#include "packet/ncontainer.h"
-#include "packet/nscript.h"
-#include "packet/ntext.h"
+#include "packet/container.h"
+#include "packet/script.h"
+#include "packet/text.h"
 #include "snappea/nsnappeatriangulation.h"
 
 #include "newpacketdialog.h"
@@ -43,7 +43,7 @@
 #include "reginamain.h"
 #include "packettypes/dim2tricreator.h"
 #include "packettypes/dim4tricreator.h"
-#include "packettypes/nanglestructurecreator.h"
+#include "packettypes/anglescreator.h"
 #include "packettypes/nhypersurfacecreator.h"
 #include "packettypes/nnormalsurfacecreator.h"
 #include "packettypes/nsurfacefiltercreator.h"
@@ -51,13 +51,13 @@
 #include "packettypes/nsnappeacreator.h"
 
 void ReginaMain::newAngleStructures() {
-    newPacket(new NAngleStructureCreator(),
+    newPacket(new AngleStructureCreator(),
         new SubclassFilter<regina::NTriangulation>(),
         tr("New Angle Structure Solutions"));
 }
 
 void ReginaMain::newContainer() {
-    newPacket(new BasicPacketCreator<regina::NContainer>(), 0,
+    newPacket(new BasicPacketCreator<regina::Container>(), 0,
         tr("New Container"));
 }
 
@@ -94,7 +94,7 @@ void ReginaMain::newPDF() {
 }
 
 void ReginaMain::newScript() {
-    newPacket(new BasicPacketCreator<regina::NScript>(), 0,
+    newPacket(new BasicPacketCreator<regina::Script>(), 0,
         tr("New Script"));
 }
 
@@ -104,7 +104,7 @@ void ReginaMain::newSnapPeaTriangulation() {
 }
 
 void ReginaMain::newText() {
-    newPacket(new BasicPacketCreator<regina::NText>(), 0,
+    newPacket(new BasicPacketCreator<regina::Text>(), 0,
         tr("New Text Packet"));
 }
 
@@ -118,7 +118,7 @@ void ReginaMain::newPacket(PacketCreator* creator, PacketFilter* parentFilter,
     NewPacketDialog dlg(this, creator, packetTree,
         treeView->selectedPacket(), parentFilter, dialogTitle);
     if (dlg.validate() && dlg.exec() == QDialog::Accepted) {
-        regina::NPacket* newPacket = dlg.createdPacket();
+        regina::Packet* newPacket = dlg.createdPacket();
         if (newPacket) {
             // Open a UI for the new packet, and select it in the tree.
             packetView(newPacket, true, true);

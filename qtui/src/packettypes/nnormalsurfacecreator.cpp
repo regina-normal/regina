@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "progress/nprogresstracker.h"
+#include "progress/progresstracker.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/ntriangulation.h"
 
@@ -120,7 +120,7 @@ QString NNormalSurfaceCreator::parentWhatsThis() {
     return ui->tr("The triangulation that will contain your normal surfaces.");
 }
 
-regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
+regina::Packet* NNormalSurfaceCreator::createPacket(regina::Packet* parent,
         QWidget* parentWidget) {
     // Note that parent may be either NTriangulation or NSnapPeaTriangulation.
     if (! dynamic_cast<regina::NTriangulation*>(parent)) {
@@ -179,7 +179,7 @@ regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
         (basisId == BASIS_VERTEX ? regina::NS_VERTEX : regina::NS_FUNDAMENTAL);
 
     if (basisId == BASIS_VERTEX) {
-        regina::NProgressTracker tracker;
+        regina::ProgressTracker tracker;
         ProgressDialogNumeric dlg(&tracker,
             ui->tr("Enumerating vertex normal surfaces"),
             parentWidget);
@@ -201,7 +201,7 @@ regina::NPacket* NNormalSurfaceCreator::createPacket(regina::NPacket* parent,
             return 0;
         }
     } else {
-        regina::NProgressTracker tracker;
+        regina::ProgressTracker tracker;
         ProgressDialogMessage dlg(&tracker,
             ui->tr("Enumerating fundamental normal surfaces"),
             parentWidget);

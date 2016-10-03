@@ -2,13 +2,13 @@
 
 # Files to compile
 SET ( FILES
-  ncontainer
-  npacket
-  npdf
-  nscript
-  ntext
+  container
+  packet
   packettype
+  pdf
   pypacket
+  script
+  text
   )
 
 # Prepend folder name

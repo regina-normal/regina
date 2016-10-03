@@ -22,7 +22,7 @@ print tri.size(), 'tetrahedra'
 # Create a progress tracker to use during the normal surface enumeration.
 # This will report the state of progress while the enumeration runs in
 # the background.
-tracker = NProgressTracker()
+tracker = ProgressTracker()
 
 # Start the normal surface enumeration.
 # Because we are passing a progress tracker to enumerate(), the

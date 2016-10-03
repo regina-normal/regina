@@ -75,7 +75,7 @@ class NSnapPeaTriangulationCreator : public PacketCreator {
          * PacketCreator overrides.
          */
         QWidget* getInterface();
-        regina::NPacket* createPacket(regina::NPacket* parentPacket,
+        regina::Packet* createPacket(regina::Packet* parentPacket,
             QWidget* parentWidget);
 };
 

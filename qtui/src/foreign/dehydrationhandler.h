@@ -58,7 +58,7 @@ class DehydrationHandler : public PacketImporter {
         /**
          * PacketImporter overrides:
          */
-        virtual regina::NPacket* importData(const QString& fileName,
+        virtual regina::Packet* importData(const QString& fileName,
             ReginaMain* parentWidget) const;
 
     private:

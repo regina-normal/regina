@@ -45,9 +45,9 @@
 #define __NTREETRAVERSAL_IMPL_H
 #endif
 
-#include "angle/nanglestructure.h"
+#include "angle/anglestructure.h"
 #include "enumerate/ntreetraversal.h"
-#include "progress/nprogresstracker.h"
+#include "progress/progresstracker.h"
 #include "surfaces/nsanstandard.h"
 #include "surfaces/nsquad.h"
 #include "surfaces/nsquadoct.h"
@@ -142,16 +142,16 @@ NNormalSurface* NTreeTraversal<LPConstraint, BanConstraint, Integer>::
 }
 
 template <class LPConstraint, typename BanConstraint, typename Integer>
-NAngleStructure* NTreeTraversal<LPConstraint, BanConstraint, Integer>::
+AngleStructure* NTreeTraversal<LPConstraint, BanConstraint, Integer>::
         buildStructure() const {
     // Note that the vector constructors automatically set all
     // elements to zero, as required by LPData::extractSolution().
     if (coords_ != NS_ANGLE)
         return 0;
 
-    NAngleStructureVector* v = new NAngleStructureVector(3 * nTets_ + 1);
+    AngleStructureVector* v = new AngleStructureVector(3 * nTets_ + 1);
     lpSlot_[nTypes_]->extractSolution(*v, type_);
-    return new NAngleStructure(origTableaux_.tri(), v);
+    return new AngleStructure(origTableaux_.tri(), v);
 }
 
 template <class LPConstraint, typename BanConstraint, typename Integer>
@@ -187,14 +187,14 @@ bool NTreeTraversal<LPConstraint, BanConstraint, Integer>::verify(
 
 template <class LPConstraint, typename BanConstraint, typename Integer>
 bool NTreeTraversal<LPConstraint, BanConstraint, Integer>::verify(
-        const NAngleStructure* s, const NMatrixInt* angleEqns) const {
+        const AngleStructure* s, const NMatrixInt* angleEqns) const {
     if (coords_ != NS_ANGLE)
         return false;
 
     // Rebuild the matching equations if necessary.
     NMatrixInt* tmpEqns = 0;
     if (! angleEqns) {
-        tmpEqns = NAngleStructureVector::makeAngleEquations(
+        tmpEqns = AngleStructureVector::makeAngleEquations(
             origTableaux_.tri());
         angleEqns = tmpEqns;
     }
@@ -418,7 +418,7 @@ double NTreeTraversal<LPConstraint, BanConstraint, Integer>::percent() const {
 
 template <class LPConstraint, typename BanConstraint, typename Integer>
 bool NTreeEnumeration<LPConstraint, BanConstraint, Integer>::next(
-        NProgressTracker* tracker) {
+        ProgressTracker* tracker) {
     if (lastNonZero_ < 0) {
         // Our type vector is the zero vector.
         // This means we are starting the search from the very
@@ -794,7 +794,7 @@ bool NTreeEnumeration<LPConstraint, BanConstraint, Integer>::next(
 
 template <class LPConstraint, typename BanConstraint, typename Integer>
 bool NTautEnumeration<LPConstraint, BanConstraint, Integer>::next(
-        NProgressTracker* tracker) {
+        ProgressTracker* tracker) {
     // Note that for taut angle structures we have no domination test and
     // no zero test.  The domination comes for free (every taut angle
     // structure is at a vertex of the angle structure polytope), and the
@@ -965,7 +965,7 @@ template <class LPConstraint, typename BanConstraint, typename Integer>
 bool NTautEnumeration<LPConstraint, BanConstraint, Integer>::
         writeStructure(const NTautEnumeration& tree, void*) {
     std::cout << "SOLN #" << tree.nSolns() << ": ";
-    NAngleStructure* s = tree.buildStructure();
+    AngleStructure* s = tree.buildStructure();
     std::cout << s->str() << std::endl;
     delete s;
     return true;

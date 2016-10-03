@@ -37,7 +37,7 @@
 #import "TriRecognition.h"
 #import "census/ncensus.h"
 #import "manifold/nmanifold.h"
-#import "packet/ncontainer.h"
+#import "packet/container.h"
 #import "snappea/nsnappeatriangulation.h"
 #import "subcomplex/nstandardtri.h"
 #import "triangulation/ntriangulation.h"
@@ -361,7 +361,7 @@
         return;
     }
 
-    regina::NPacket* base = new regina::NContainer();
+    regina::Packet* base = new regina::Container();
     __block long nSummands = 0;
     [ReginaHelper runWithHUD:@"Decomposing…"
                         code:^{

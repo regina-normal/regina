@@ -31,25 +31,25 @@
  **************************************************************************/
 
 #import "PacketPicker.h"
-#import "packet/npacket.h"
+#import "packet/packet.h"
 
 #pragma mark - Packet choice
 
 @interface PacketChoice : NSObject
 
-@property (assign, nonatomic, readonly) regina::NPacket* packet;
+@property (assign, nonatomic, readonly) regina::Packet* packet;
 @property (strong, nonatomic, readonly) NSString* text;
 
-- (id)initWithPacket:(regina::NPacket*)p;
+- (id)initWithPacket:(regina::Packet*)p;
 - (id)initEmptyWithText:(NSString*)text;
-+ (id)packetChoiceWithPacket:(regina::NPacket*)p;
++ (id)packetChoiceWithPacket:(regina::Packet*)p;
 + (id)packetChoiceEmptyWithText:(NSString*)text;
 
 @end
 
 @implementation PacketChoice
 
-- (id)initWithPacket:(regina::NPacket*)p {
+- (id)initWithPacket:(regina::Packet*)p {
     self = [super init];
     if (self) {
         _packet = p;
@@ -68,7 +68,7 @@
     return self;
 }
 
-+ (id)packetChoiceWithPacket:(regina::NPacket*)p {
++ (id)packetChoiceWithPacket:(regina::Packet*)p {
     return [[PacketChoice alloc] initWithPacket:p];
 }
 
@@ -89,7 +89,7 @@
 
 @implementation PacketPicker
 
-- (void)fill:(regina::NPacket *)tree type:(regina::PacketType)packetType allowNone:(BOOL)allowNone noneText:(NSString *)noneText
+- (void)fill:(regina::Packet *)tree type:(regina::PacketType)packetType allowNone:(BOOL)allowNone noneText:(NSString *)noneText
 {
     self.allowNone = allowNone;
 
@@ -97,7 +97,7 @@
     if (allowNone)
         [self.choices addObject:[PacketChoice packetChoiceEmptyWithText:noneText]];
 
-    regina::NPacket* p;
+    regina::Packet* p;
     for (p = tree; p; p = p->nextTreePacket())
         if (p->type() == packetType)
             [self.choices addObject:[PacketChoice packetChoiceWithPacket:p]];
@@ -109,7 +109,7 @@
     self.dataSource = self;
 }
 
-- (void)fill:(regina::NPacket *)tree type1:(regina::PacketType)packetType1 type2:(regina::PacketType)packetType2 allowNone:(BOOL)allowNone noneText:(NSString *)noneText
+- (void)fill:(regina::Packet *)tree type1:(regina::PacketType)packetType1 type2:(regina::PacketType)packetType2 allowNone:(BOOL)allowNone noneText:(NSString *)noneText
 {
     self.allowNone = allowNone;
 
@@ -117,7 +117,7 @@
     if (allowNone)
         [self.choices addObject:[PacketChoice packetChoiceEmptyWithText:noneText]];
 
-    regina::NPacket* p;
+    regina::Packet* p;
     for (p = tree; p; p = p->nextTreePacket())
         if (p->type() == packetType1 || p->type() == packetType2)
             [self.choices addObject:[PacketChoice packetChoiceWithPacket:p]];
@@ -134,7 +134,7 @@
     return ((! self.allowNone) && (self.choices.count == 1) && (! [self.choices[0] packet]));
 }
 
-- (regina::NPacket *)selectedPacket
+- (regina::Packet *)selectedPacket
 {
     return [self.choices[[self selectedRowInComponent:0]] packet];
 }

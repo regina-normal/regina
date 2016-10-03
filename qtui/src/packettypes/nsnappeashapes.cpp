@@ -53,7 +53,7 @@
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
 
-using regina::NPacket;
+using regina::Packet;
 using regina::NSnapPeaTriangulation;
 
 namespace {
@@ -80,7 +80,7 @@ int CuspModel::columnCount(const QModelIndex& /* unused parent*/) const {
 
 QVariant CuspModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        const regina::NCusp* cusp = tri_->cusp(index.row());
+        const regina::Cusp* cusp = tri_->cusp(index.row());
         switch (index.column()) {
             case 0:
                 return QString::number(index.row());
@@ -96,7 +96,7 @@ QVariant CuspModel::data(const QModelIndex& index, int role) const {
         }
     } else if (role == Qt::EditRole) {
         if (index.column() == 2) {
-            const regina::NCusp* cusp = tri_->cusp(index.row());
+            const regina::Cusp* cusp = tri_->cusp(index.row());
             if (cusp->complete())
                 return QString();
             else
@@ -354,7 +354,7 @@ void NSnapPeaShapesUI::fillToolBar(QToolBar* bar) {
     bar->addAction(actToRegina);
 }
 
-regina::NPacket* NSnapPeaShapesUI::getPacket() {
+regina::Packet* NSnapPeaShapesUI::getPacket() {
     return tri;
 }
 

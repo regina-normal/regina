@@ -41,7 +41,7 @@
 #include <QLayout>
 #include <QTextEdit>
 
-using regina::NPacket;
+using regina::Packet;
 using regina::NSnapPeaTriangulation;
 
 NSnapPeaFileUI::NSnapPeaFileUI(regina::NSnapPeaTriangulation* packet,
@@ -67,7 +67,7 @@ NSnapPeaFileUI::~NSnapPeaFileUI() {
     delete editIface;
 }
 
-regina::NPacket* NSnapPeaFileUI::getPacket() {
+regina::Packet* NSnapPeaFileUI::getPacket() {
     return tri;
 }
 

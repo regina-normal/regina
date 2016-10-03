@@ -37,7 +37,7 @@
 #ifndef __NTRICOMPOSITION_H
 #define __NTRICOMPOSITION_H
 
-#include "packet/npacketlistener.h"
+#include "packet/packetlistener.h"
 
 #include "../packettabui.h"
 
@@ -52,7 +52,7 @@ class QTreeWidgetItem;
 
 namespace regina {
     class NMatrix2;
-    class NPacket;
+    class Packet;
     class NSatRegion;
     class NStandardTriangulation;
     template <int> class Isomorphism;
@@ -66,7 +66,7 @@ namespace regina {
  * A triangulation page for viewing the combinatorial composition.
  */
 class NTriCompositionUI : public QObject, public PacketViewerTab,
-        public regina::NPacketListener {
+        public regina::PacketListener {
     Q_OBJECT
 
     private:
@@ -108,15 +108,15 @@ class NTriCompositionUI : public QObject, public PacketViewerTab,
         /**
          * PacketViewerTab overrides.
          */
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         QWidget* getInterface();
         PacketEditIface* getEditIface();
         void refresh();
 
         /**
-         * NPacketListener overrides.
+         * PacketListener overrides.
          */
-        void packetToBeDestroyed(regina::NPacket* packet);
+        void packetToBeDestroyed(regina::Packet* packet);
 
     public slots:
         /**

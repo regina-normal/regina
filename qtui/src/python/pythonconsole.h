@@ -41,7 +41,7 @@
 #include "pythonoutputstream.h"
 #include "../reginaprefset.h"
 
-#include <packet/npacket.h>
+#include <packet/packet.h>
 #include <QMainWindow>
 
 class CommandEdit;
@@ -133,9 +133,9 @@ class PythonConsole : public QMainWindow {
          * Configure the python interpreter.
          */
         bool importRegina();
-        void setRootPacket(regina::NPacket* packet);
-        void setSelectedPacket(regina::NPacket* packet);
-        void setVar(const QString& name, regina::NPacket* value);
+        void setRootPacket(regina::Packet* packet);
+        void setSelectedPacket(regina::Packet* packet);
+        void setVar(const QString& name, regina::Packet* value);
         void executeLine(const QString& line);
         void executeLine(const std::string& line);
         void executeLine(const char* line);

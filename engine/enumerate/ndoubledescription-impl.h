@@ -51,7 +51,7 @@
 #include "enumerate/nenumconstraint.h"
 #include "maths/matrixops.h"
 #include "maths/nray.h"
-#include "progress/nprogresstracker.h"
+#include "progress/progresstracker.h"
 #include "utilities/memutils.h"
 #include "utilities/nbitmask.h"
 #include "utilities/ntrieset.h"
@@ -209,7 +209,7 @@ void NDoubleDescription::RaySpec<BitmaskType>::recover(
 template <class RayClass, class OutputIterator>
 void NDoubleDescription::enumerateExtremalRays(OutputIterator results,
         const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-        NProgressTracker* tracker, unsigned long initialRows) {
+        ProgressTracker* tracker, unsigned long initialRows) {
     unsigned long nFacets = subspace.columns();
 
     // If the space has dimension zero, return no results.
@@ -250,7 +250,7 @@ void NDoubleDescription::enumerateExtremalRays(OutputIterator results,
 template <class RayClass, class BitmaskType, class OutputIterator>
 void NDoubleDescription::enumerateUsingBitmask(OutputIterator results,
         const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-        NProgressTracker* tracker, unsigned long initialRows) {
+        ProgressTracker* tracker, unsigned long initialRows) {
     // Get the dimension of the entire space in which we are working.
     unsigned long dim = subspace.columns();
 
@@ -381,7 +381,7 @@ bool NDoubleDescription::intersectHyperplane(
         unsigned long dim, unsigned long prevHyperplanes,
         const BitmaskType* constraintsBegin,
         const BitmaskType* constraintsEnd,
-        NProgressTracker* tracker) {
+        ProgressTracker* tracker) {
     if (src.empty())
         return false;
 

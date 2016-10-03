@@ -37,7 +37,7 @@
 #ifndef __NSURFACECOODINATEUI_H
 #define __NSURFACECOODINATEUI_H
 
-#include "packet/npacketlistener.h"
+#include "packet/packetlistener.h"
 #include "surfaces/nnormalsurfacelist.h"
 
 #include "../packettabui.h"
@@ -51,7 +51,7 @@ class PacketChooser;
 class QTreeView;
 
 namespace regina {
-    class NPacket;
+    class Packet;
     class NNormalSurfaceList;
     class NSurfaceFilter;
 };
@@ -130,7 +130,7 @@ class SurfaceModel : public QAbstractItemModel {
  * A normal surface page for viewing surface coordinates.
  */
 class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
-        public regina::NPacketListener {
+        public regina::PacketListener {
     Q_OBJECT
 
     private:
@@ -174,15 +174,15 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
          * PacketEditorTab overrides.
          * Note that refresh() is a slot now.
          */
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         QWidget* getInterface();
         const QLinkedList<QAction*>& getPacketTypeActions();
         void setReadWrite(bool readWrite);
 
         /**
-         * NPacketListener overrides.
+         * PacketListener overrides.
          */
-        void packetToBeDestroyed(regina::NPacket* packet);
+        void packetToBeDestroyed(regina::Packet* packet);
 
     public slots:
         /**

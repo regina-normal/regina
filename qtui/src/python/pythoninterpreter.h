@@ -45,7 +45,7 @@
 class PythonOutputStream;
 
 namespace regina {
-    class NPacket;
+    class Packet;
 }
 
 /**
@@ -99,7 +99,7 @@ class PythonInterpreter {
          * \c false on failure.
          */
         bool importRegina();
-        bool setVar(const char* name, regina::NPacket* value);
+        bool setVar(const char* name, regina::Packet* value);
         bool compileScript(const char* code);
         bool runScript(const char* code);
         bool runScript(const char* filename, const char* shortName);

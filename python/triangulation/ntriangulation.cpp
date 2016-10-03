@@ -31,8 +31,8 @@
  **************************************************************************/
 
 #include "algebra/ngrouppresentation.h"
-#include "angle/nanglestructure.h"
-#include "progress/nprogresstracker.h"
+#include "angle/anglestructure.h"
+#include "progress/progresstracker.h"
 #include "surfaces/nnormalsurface.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
@@ -65,7 +65,7 @@ namespace {
         &NTriangulation::recogniser;
     std::string (NTriangulation::*recognizer_void)() const =
         &NTriangulation::recognizer;
-    size_t (NTriangulation::*splitIntoComponents)(regina::NPacket*, bool) =
+    size_t (NTriangulation::*splitIntoComponents)(regina::Packet*, bool) =
         &NTriangulation::splitIntoComponents;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyToLocalMinimum,
@@ -205,7 +205,7 @@ void addNTriangulation() {
     global.attr("TV_TREEWIDTH") = regina::TV_TREEWIDTH;
     global.attr("TV_NAIVE") = regina::TV_NAIVE;
 
-    scope s = class_<Triangulation<3>, bases<regina::NPacket>,
+    scope s = class_<Triangulation<3>, bases<regina::Packet>,
             SafeHeldType<Triangulation<3>>,
             boost::noncopyable>("Triangulation3")
         .def(init<const NTriangulation&>())
@@ -414,7 +414,7 @@ void addNTriangulation() {
     s.attr("typeID") = regina::PACKET_TRIANGULATION;
 
     implicitly_convertible<SafeHeldType<NTriangulation>,
-        SafeHeldType<regina::NPacket> >();
+        SafeHeldType<regina::Packet> >();
     }
 
     FIX_REGINA_BOOST_CONVERTERS(NTriangulation);

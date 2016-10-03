@@ -34,7 +34,7 @@
 def watcher(p):
     # Returns a packet that can be used as a proxy for testing
     # whether or not p has been destroyed.
-    c = NContainer()
+    c = Container()
     p.insertChildLast(c)
     return c
 
@@ -54,7 +54,7 @@ def ensureDestroyed(watcher):
 
 
 print 'Insertion case'
-c = NContainer(); cw = watcher(c)
+c = Container(); cw = watcher(c)
 t = NTriangulation(); t.newTetrahedron(); tw = watcher(t)
 c.insertChildLast(t)
 ensureAlive(cw); ensureAlive(tw)
@@ -64,7 +64,7 @@ c = None
 ensureDestroyed(cw); ensureDestroyed(tw)
 
 print 'Root destruction case'
-a = NContainer(); aw = watcher(a)
+a = Container(); aw = watcher(a)
 b = NTriangulation(); bw = watcher(b)
 a.insertChildLast(b)
 ensureAlive(aw); ensureAlive(bw)
@@ -76,7 +76,7 @@ except:
 ensureDestroyed(aw); ensureDestroyed(bw)
 
 print 'Orphan case'
-p = NContainer(); pw = watcher(p)
+p = Container(); pw = watcher(p)
 q = NTriangulation(); qw = watcher(q)
 p.insertChildLast(q)
 ensureAlive(pw); ensureAlive(qw)

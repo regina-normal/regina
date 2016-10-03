@@ -41,7 +41,7 @@ void addNSimpleSurfaceBundle();
 void addNSnapPeaCensusManifold();
 void addNTorusBundle();
 
-void addManifold() {
+void addManifoldClasses() {
     addNManifold();
     addNHandlebody();
     addNLensSpace();

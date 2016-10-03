@@ -436,8 +436,8 @@ void Triangulation<3>::cloneFrom(const NTriangulation& X) {
 
     if (X.strictAngleStructure_.known()) {
         if (X.strictAngleStructure_.value())
-            strictAngleStructure_ = new NAngleStructure(this,
-                new NAngleStructureVector(
+            strictAngleStructure_ = new AngleStructure(this,
+                new AngleStructureVector(
                 *X.strictAngleStructure_.value()->rawVector()));
         else
             strictAngleStructure_ = 0;

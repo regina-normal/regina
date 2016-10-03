@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "packet/nscript.h"
+#include "packet/script.h"
 #include "utilities/stringutils.h"
 
 #include "pythonhandler.h"
@@ -53,7 +53,7 @@ namespace {
 
 const PythonHandler PythonHandler::instance;
 
-regina::NPacket* PythonHandler::importData(const QString& fileName,
+regina::Packet* PythonHandler::importData(const QString& fileName,
         ReginaMain* parentWidget) const {
     QFile f(fileName);
     if (! f.open(QIODevice::ReadOnly)) {
@@ -67,7 +67,7 @@ regina::NPacket* PythonHandler::importData(const QString& fileName,
 
     in.setCodec(ReginaPrefSet::importExportCodec());
 
-    regina::NScript* ans = new regina::NScript();
+    regina::Script* ans = new regina::Script();
     ans->setLabel(QObject::tr("Imported Script").toUtf8().constData());
 
     // Read in the script.
@@ -127,12 +127,12 @@ regina::NPacket* PythonHandler::importData(const QString& fileName,
 }
 
 PacketFilter* PythonHandler::canExport() const {
-    return new SingleTypeFilter<regina::NScript>();
+    return new SingleTypeFilter<regina::Script>();
 }
 
-bool PythonHandler::exportData(regina::NPacket* data, const QString& fileName,
+bool PythonHandler::exportData(regina::Packet* data, const QString& fileName,
         QWidget* parentWidget) const {
-    regina::NScript* script = dynamic_cast<regina::NScript*>(data);
+    regina::Script* script = dynamic_cast<regina::Script*>(data);
 
     QFile f(fileName);
     if (! f.open(QIODevice::WriteOnly)) {
@@ -155,7 +155,7 @@ bool PythonHandler::exportData(regina::NPacket* data, const QString& fileName,
 
     // Output the value of each variable.
     unsigned long i;
-    regina::NPacket* value;
+    regina::Packet* value;
     for (i = 0; i < script->countVariables(); i++) {
         value = script->variableValue(i);
         out << "### " << varMarker

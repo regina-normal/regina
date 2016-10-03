@@ -34,13 +34,13 @@
 #include <sstream>
 
 #include "foreign/dehydration.h"
-#include "packet/ncontainer.h"
-#include "packet/ntext.h"
+#include "packet/container.h"
+#include "packet/text.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
 
-NContainer* readDehydrationList(const char *filename,
+Container* readDehydrationList(const char *filename,
         unsigned colDehydrations, int colLabels, unsigned long ignoreLines) {
     // Open the file.
     std::ifstream in(filename);
@@ -54,11 +54,11 @@ NContainer* readDehydrationList(const char *filename,
     for (i = 0; i < ignoreLines; i++) {
         std::getline(in, line);
         if (in.eof())
-            return new NContainer();
+            return new Container();
     }
 
     // Read in and process the remaining lines.
-    NContainer* ans = new NContainer();
+    Container* ans = new Container();
     std::string errStrings;
 
     int col;
@@ -107,7 +107,7 @@ NContainer* readDehydrationList(const char *filename,
 
     // Finish off.
     if (! errStrings.empty()) {
-        NText* errPkt = new NText(std::string(
+        Text* errPkt = new Text(std::string(
             "The following dehydration string(s) could not be rehydrated:\n") +
             errStrings);
         errPkt->setLabel("Errors");

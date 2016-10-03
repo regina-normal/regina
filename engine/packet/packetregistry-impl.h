@@ -49,14 +49,14 @@
 #define __PACKETREGISTRY_IMPL_H
 #endif
 
-#include "packet/ncontainer.h"
-#include "packet/ntext.h"
+#include "packet/container.h"
+#include "packet/text.h"
 #include "triangulation/ntriangulation.h"
 #include "surfaces/nnormalsurfacelist.h"
-#include "packet/nscript.h"
+#include "packet/script.h"
 #include "surfaces/nsurfacefilter.h"
-#include "angle/nanglestructurelist.h"
-#include "packet/npdf.h"
+#include "angle/anglestructures.h"
+#include "packet/pdf.h"
 #include "dim2/dim2triangulation.h"
 #include "dim4/dim4triangulation.h"
 #include "hypersurface/nnormalhypersurfacelist.h"

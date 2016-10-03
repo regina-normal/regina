@@ -38,7 +38,7 @@
 #define __FACECHOOSER_H
 
 #include "choosers/facename.h"
-#include "packet/npacketlistener.h"
+#include "packet/packetlistener.h"
 
 #include <QBoxLayout>
 #include <QDialog>
@@ -67,7 +67,7 @@ namespace regina {
  * classes do not use slots or signals, I believe this is okay.
  */
 template <int dim, int subdim>
-class FaceChooser : public QComboBox, public regina::NPacketListener {
+class FaceChooser : public QComboBox, public regina::PacketListener {
     public:
         /**
          * A filter function, used to determine whether a given face
@@ -132,11 +132,11 @@ class FaceChooser : public QComboBox, public regina::NPacketListener {
         bool refresh();
 
         /**
-         * NPacketListener overrides.
+         * PacketListener overrides.
          */
-        void packetToBeChanged(regina::NPacket*);
-        void packetWasChanged(regina::NPacket*);
-        void packetToBeDestroyed(regina::NPacket*);
+        void packetToBeChanged(regina::Packet*);
+        void packetWasChanged(regina::Packet*);
+        void packetToBeDestroyed(regina::Packet*);
 
     private:
         /**
@@ -277,18 +277,18 @@ inline bool FaceChooser<dim, subdim>::refresh() {
 }
 
 template <int dim, int subdim>
-inline void FaceChooser<dim, subdim>::packetToBeChanged(regina::NPacket*) {
+inline void FaceChooser<dim, subdim>::packetToBeChanged(regina::Packet*) {
     clear();
     options_.clear();
 }
 
 template <int dim, int subdim>
-inline void FaceChooser<dim, subdim>::packetWasChanged(regina::NPacket*) {
+inline void FaceChooser<dim, subdim>::packetWasChanged(regina::Packet*) {
     fill();
 }
 
 template <int dim, int subdim>
-inline void FaceChooser<dim, subdim>::packetToBeDestroyed(regina::NPacket*) {
+inline void FaceChooser<dim, subdim>::packetToBeDestroyed(regina::Packet*) {
     clear();
     options_.clear();
 }

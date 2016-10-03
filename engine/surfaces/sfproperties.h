@@ -225,10 +225,10 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
 
         virtual bool accept(const NNormalSurface& surface) const;
         virtual void writeTextLong(std::ostream& out) const;
-        static NXMLFilterReader* xmlFilterReader(NPacket* parent);
+        static NXMLFilterReader* xmlFilterReader(Packet* parent);
 
     protected:
-        virtual NPacket* internalClonePacket(NPacket* parent) const;
+        virtual Packet* internalClonePacket(Packet* parent) const;
         virtual void writeXMLFilterData(std::ostream& out) const;
 };
 
@@ -305,7 +305,7 @@ inline void NSurfaceFilterProperties::setRealBoundary(const NBoolSet& value) {
     }
 }
 
-inline NPacket* NSurfaceFilterProperties::internalClonePacket(NPacket*) const {
+inline Packet* NSurfaceFilterProperties::internalClonePacket(Packet*) const {
     return new NSurfaceFilterProperties(*this);
 }
 

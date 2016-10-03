@@ -43,8 +43,8 @@
 #include "dim2/dim2triangulation.h"
 #include "dim4/dim4facetpairing.h"
 #include "dim4/dim4triangulation.h"
-#include "packet/ncontainer.h"
-#include "packet/ntext.h"
+#include "packet/container.h"
+#include "packet/text.h"
 #include "triangulation/nfacepairing.h"
 #include "triangulation/ntriangulation.h"
 
@@ -100,7 +100,7 @@ struct Dim2Params {
 
     inline static void findAllPerms(const Pairing* p,
             const Pairing::IsoList* autos, bool orientableOnly,
-            bool finiteOnly, int whichPurge, regina::NPacket* dest) {
+            bool finiteOnly, int whichPurge, regina::Packet* dest) {
         GluingPermSearcher::findAllPerms(p, autos,
             orientableOnly,
             foundGluingPerms<Dim2Params>, dest);
@@ -122,7 +122,7 @@ struct Dim3Params {
 
     inline static void findAllPerms(const Pairing* p,
             const Pairing::IsoList* autos, bool orientableOnly,
-            bool finiteOnly, int whichPurge, regina::NPacket* dest) {
+            bool finiteOnly, int whichPurge, regina::Packet* dest) {
         GluingPermSearcher::findAllPerms(p, autos,
             orientableOnly, finiteOnly, whichPurge,
             foundGluingPerms<Dim3Params>, dest);
@@ -144,7 +144,7 @@ struct Dim4Params {
 
     inline static void findAllPerms(const Pairing* p,
             const Pairing::IsoList* autos, bool orientableOnly,
-            bool finiteOnly, int /* whichPurge */, regina::NPacket* dest) {
+            bool finiteOnly, int /* whichPurge */, regina::Packet* dest) {
         GluingPermSearcher::findAllPerms(p, autos,
             orientableOnly, finiteOnly,
             foundGluingPerms<Dim4Params>, dest);
@@ -194,8 +194,8 @@ void foundGluingPerms(const typename CensusType::GluingPermSearcher* perms,
                 sigStream << tri->isoSig() << std::endl;
                 delete tri;
             } else {
-                regina::NPacket* dest =
-                    static_cast<regina::NPacket*>(container);
+                regina::Packet* dest =
+                    static_cast<regina::Packet*>(container);
 
                 std::ostringstream out;
                 out << "Item " << (nSolns + 1);
@@ -219,15 +219,15 @@ void foundFacePairing(const typename CensusType::Pairing* pairing,
         const typename CensusType::Pairing::IsoList* autos, void* container) {
     if (pairing) {
         std::cout << pairing->str() << std::endl;
-        regina::NPacket* subContainer;
+        regina::Packet* subContainer;
         // If creating a full .rga file, store triangulations for each face
         // pairing in a different container.
         if (subContainers) {
-            subContainer = new regina::NContainer();
+            subContainer = new regina::Container();
             subContainer->setLabel(pairing->str());
-            static_cast<regina::NPacket*>(container)->insertChildLast(subContainer);
+            static_cast<regina::Packet*>(container)->insertChildLast(subContainer);
         } else {
-            subContainer = static_cast<regina::NPacket*>(container);
+            subContainer = static_cast<regina::Packet*>(container);
         }
         CensusType::findAllPerms(pairing, autos,
             ! orientability.hasFalse(), ! finiteness.hasFalse(),
@@ -253,8 +253,8 @@ void dumpPairing(const typename CensusType::Pairing* pair,
 /**
  * Return a new text packet storing the census parameters.
  */
-regina::NText* parameterPacket() {
-    regina::NText* desc = new regina::NText();
+regina::Text* parameterPacket() {
+    regina::Text* desc = new regina::Text();
     desc->setLabel("Parameters");
     std::ostringstream descStream;
 
@@ -592,9 +592,9 @@ int runCensus() {
     nSolns = 0;
 
     // Prepare the packet tree (or signature file) for output.
-    regina::NPacket* parent = 0;
-    regina::NPacket* census = 0;
-    regina::NPacket* desc = 0;
+    regina::Packet* parent = 0;
+    regina::Packet* census = 0;
+    regina::Packet* desc = 0;
     if (sigs) {
         sigStream.open(outFile.c_str());
         if (! sigStream) {
@@ -603,7 +603,7 @@ int runCensus() {
             return 1;
         }
     } else {
-        parent = new regina::NContainer();
+        parent = new regina::Container();
         if (usePairs)
             parent->setLabel("Partial command-line census");
         else
@@ -611,7 +611,7 @@ int runCensus() {
 
         desc = parameterPacket();
 
-        census = new regina::NContainer();
+        census = new regina::Container();
         census->setLabel("Triangulations");
 
         parent->insertChildLast(desc);
@@ -670,7 +670,7 @@ int runCensus() {
 
         // Store the face pairings used with the census.
         if (! sigs) {
-            regina::NText* pairingPacket = new regina::NText(pairingList);
+            regina::Text* pairingPacket = new regina::Text(pairingList);
             pairingPacket->setLabel(
                 dim4 ? "Facet Pairings" : dim2 ? "Edge Pairings" :
                 "Face Pairings");

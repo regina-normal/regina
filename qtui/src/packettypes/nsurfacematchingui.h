@@ -48,7 +48,7 @@ class QTreeView;
 namespace regina {
     class NMatrixInt;
     class NNormalSurfaceList;
-    class NPacket;
+    class Packet;
     template <int> class Triangulation;
     typedef Triangulation<3> NTriangulation;
 };
@@ -125,7 +125,7 @@ class NSurfaceMatchingUI : public QObject, public PacketViewerTab {
         /**
          * PacketViewerTab overrides.
          */
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         QWidget* getInterface();
         void refresh();
 

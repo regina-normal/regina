@@ -37,9 +37,9 @@
 #include <boost/iostreams/filter/gzip.hpp>
 #include "engine.h"
 #include "generic/xmltrireader.h"
-#include "packet/ncontainer.h"
-#include "packet/nxmlpacketreader.h"
-#include "packet/nxmltreeresolver.h"
+#include "packet/container.h"
+#include "packet/xmlpacketreader.h"
+#include "packet/xmltreeresolver.h"
 #include "utilities/nxmlcallback.h"
 #include "utilities/stringutils.h"
 
@@ -49,9 +49,9 @@ namespace {
     /**
      * Reads the outermost \<reginadata ...\> XML element.
      */
-    class ReginaDataReader : public regina::NXMLPacketReader {
+    class ReginaDataReader : public regina::XMLPacketReader {
         private:
-            NContainer container;
+            Container container;
                 /**< Sits above the entire packet tree read from file. */
             bool isReginaData;
                 /**< Are we actually reading a \<reginadata ...\> element? */
@@ -63,12 +63,12 @@ namespace {
             /**
              * Create a new top-level reader.
              */
-            ReginaDataReader(NXMLTreeResolver& resolver) :
-                    NXMLPacketReader(resolver),
+            ReginaDataReader(XMLTreeResolver& resolver) :
+                    XMLPacketReader(resolver),
                     isReginaData(false) {
             }
 
-            virtual NPacket* packet() {
+            virtual Packet* packet() {
                 if (isReginaData)
                     return &container;
                 else
@@ -94,7 +94,7 @@ namespace {
 
             virtual void abort(NXMLElementReader*) {
                 // Delete all children of the top-level container.
-                while (NPacket* child = container.firstChild()) {
+                while (Packet* child = container.firstChild()) {
                     child->makeOrphan();
                     delete child;
                 }
@@ -117,14 +117,14 @@ namespace {
     const int regChunkSize = 1024;
 }
 
-NPacket* open(const char* filename) {
+Packet* open(const char* filename) {
     std::ifstream file(filename, std::ios_base::in | std::ios_base::binary);
     // We don't test whether the file was opened, since open(std::istream&)
     // tests this for us as the first thing it does.
     return regina::open(file);
 }
 
-NPacket* open(std::istream& s) {
+Packet* open(std::istream& s) {
     // Note: open(const char*) relies on us testing here whether s was
     // successfully opened.  If anyone removes this test, then they
     // should add a corresponding test to open(const char*) instead.
@@ -136,7 +136,7 @@ NPacket* open(std::istream& s) {
         in.push(::boost::iostreams::gzip_decompressor());
     in.push(s);
 
-    NXMLTreeResolver resolver;
+    XMLTreeResolver resolver;
 
     ReginaDataReader reader(resolver);
     regina::NXMLCallback callback(reader, std::cerr);
@@ -253,7 +253,7 @@ NPacket* open(std::istream& s) {
 
     // See if we read anything.
     // If so, break it away from the top-level container and return it.
-    NPacket* p = reader.packet();
+    Packet* p = reader.packet();
     if (p) {
         p = p->firstChild();
         if (p)

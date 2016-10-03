@@ -79,7 +79,7 @@ namespace regina {
 
 class NEnumConstraintList;
 class NMatrixInt;
-class NProgressTracker;
+class ProgressTracker;
 
 /**
  * \weakgroup enumerate
@@ -138,8 +138,8 @@ class NHilbertDual {
          * An optional progress tracker may be passed.  If so, this routine
          * will update the percentage progress and poll for cancellation
          * requests.  It will be assumed that an appropriate stage has already
-         * been declared via NProgressTracker::newStage() before this routine
-         * is called, and that NProgressTracker::setFinished() will be
+         * been declared via ProgressTracker::newStage() before this routine
+         * is called, and that ProgressTracker::setFinished() will be
          * called after this routine returns.
          *
          * \pre The template argument RayClass is derived from NRay (or
@@ -165,7 +165,7 @@ class NHilbertDual {
         template <class RayClass, class OutputIterator>
         static void enumerateHilbertBasis(OutputIterator results,
             const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-            NProgressTracker* tracker = 0, unsigned initialRows = 0);
+            ProgressTracker* tracker = 0, unsigned initialRows = 0);
 
     private:
         /**
@@ -340,7 +340,7 @@ class NHilbertDual {
         template <class RayClass, class BitmaskType, class OutputIterator>
         static void enumerateUsingBitmask(OutputIterator results,
             const NMatrixInt& subspace, const NEnumConstraintList* constraints,
-            NProgressTracker* tracker, unsigned initialRows);
+            ProgressTracker* tracker, unsigned initialRows);
 
         /**
          * Private constructor to ensure that objects of this class are

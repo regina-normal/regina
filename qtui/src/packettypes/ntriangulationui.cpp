@@ -53,7 +53,7 @@
 #include <QToolBar>
 #include <QVBoxLayout>
 
-using regina::NPacket;
+using regina::Packet;
 using regina::NTriangulation;
 
 NTriangulationUI::NTriangulationUI(regina::NTriangulation* packet,
@@ -126,7 +126,7 @@ NTriHeaderUI::NTriHeaderUI(regina::NTriangulation* packet,
     tri->listen(this);
 }
 
-regina::NPacket* NTriHeaderUI::getPacket() {
+regina::Packet* NTriHeaderUI::getPacket() {
     return tri;
 }
 
@@ -187,15 +187,15 @@ void NTriHeaderUI::lockedExplanation() {
             "edit the clone instead.</qt>"));
 }
 
-void NTriHeaderUI::childWasAdded(regina::NPacket* packet,
-        regina::NPacket* child) {
+void NTriHeaderUI::childWasAdded(regina::Packet* packet,
+        regina::Packet* child) {
     // Be careful - we may not be in the GUI thread.
     QApplication::postEvent(this, new QEvent(
         (QEvent::Type)EVT_HEADER_CHILD_ADDED));
 }
 
-void NTriHeaderUI::childWasRemoved(regina::NPacket* packet,
-        regina::NPacket* child, bool inParentDestructor) {
+void NTriHeaderUI::childWasRemoved(regina::Packet* packet,
+        regina::Packet* child, bool inParentDestructor) {
     if (! inParentDestructor)
         refreshLock();
 }

@@ -34,7 +34,7 @@
 #include <sstream>
 
 #include "enumerate/ntreetraversal.h"
-#include "packet/ncontainer.h"
+#include "packet/container.h"
 #include "subcomplex/nsnappedball.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nnormalsurfacelist.h"
@@ -44,7 +44,7 @@
 
 namespace regina {
 
-long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
+long NTriangulation::connectedSumDecomposition(Packet* primeParent,
         bool setLabels) {
     // Precondition checks.
     if (! (isValid() && isClosed() && isConnected()))
@@ -68,7 +68,7 @@ long NTriangulation::connectedSumDecomposition(NPacket* primeParent,
     }
 
     // Start crushing normal spheres.
-    NContainer toProcess;
+    Container toProcess;
     toProcess.insertChildLast(working);
 
     std::list<NTriangulation*> primeComponents;
@@ -281,7 +281,7 @@ bool NTriangulation::isThreeSphere() const {
     }
 
     // Time for some more heavy machinery.  On to normal surfaces.
-    NContainer toProcess;
+    Container toProcess;
     toProcess.insertChildLast(working);
 
     NTriangulation* processing;
@@ -463,7 +463,7 @@ bool NTriangulation::isSolidTorus() const {
     // Pull out the big guns: normal surface time.
     NNormalSurface* s;
     NTriangulation* crushed;
-    NPacket* p;
+    Packet* p;
     NTriangulation* comp;
     while (true) {
         // INVARIANT: working is homeomorphic to our original manifold.
@@ -585,9 +585,9 @@ bool NTriangulation::knowsSolidTorus() const {
     return false;
 }
 
-NPacket* NTriangulation::makeZeroEfficient() {
+Packet* NTriangulation::makeZeroEfficient() {
     // Extract a connected sum decomposition.
-    NContainer* connSum = new NContainer();
+    Container* connSum = new Container();
     connSum->setLabel(adornedLabel("Decomposition"));
 
     long ans = connectedSumDecomposition(connSum, true);
@@ -641,7 +641,7 @@ bool NTriangulation::isIrreducible() const {
     }
 
     // Start crushing normal spheres.
-    NContainer toProcess;
+    Container toProcess;
     toProcess.insertChildLast(working);
 
     NTriangulation* processing;

@@ -34,7 +34,7 @@
 #import "packet/packettype.h"
 
 namespace regina {
-    class NPacket;
+    class Packet;
 }
 
 @class PacketTreeController;
@@ -42,7 +42,7 @@ namespace regina {
 @interface NewPacketSpec : NSObject
 
 @property (assign, nonatomic, readonly) regina::PacketType type;
-@property (assign, nonatomic, readonly) regina::NPacket* parent;
+@property (assign, nonatomic, readonly) regina::Packet* parent;
 @property (assign, nonatomic) BOOL viewOnCreation;
 
 // Note: parent will be 0 if no suitable parent could be found.
@@ -51,12 +51,12 @@ namespace regina {
 + (id)specWithType:(regina::PacketType)type tree:(PacketTreeController*)tree;
 
 // PRE: The given parent is suitable and non-null.
-- (id)initWithType:(regina::PacketType)type parent:(regina::NPacket*)parent;
-+ (id)specWithType:(regina::PacketType)type parent:(regina::NPacket*)parent;
+- (id)initWithType:(regina::PacketType)type parent:(regina::Packet*)parent;
++ (id)specWithType:(regina::PacketType)type parent:(regina::Packet*)parent;
 
 - (BOOL)hasParentWithAlert;
 
-- (void)created:(regina::NPacket*)result;
+- (void)created:(regina::Packet*)result;
 
 @end
 

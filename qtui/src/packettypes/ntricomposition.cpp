@@ -76,7 +76,7 @@
 #include <QTreeWidgetItem>
 
 using regina::NEdge;
-using regina::NPacket;
+using regina::Packet;
 using regina::NPerm4;
 using regina::NSatRegion;
 using regina::NTriangulation;
@@ -175,7 +175,7 @@ NTriCompositionUI::~NTriCompositionUI() {
     delete editIface;
 }
 
-regina::NPacket* NTriCompositionUI::getPacket() {
+regina::Packet* NTriCompositionUI::getPacket() {
     return tri;
 }
 
@@ -245,7 +245,7 @@ void NTriCompositionUI::refresh() {
     details->setRootIsDecorated(foundInnerChildren);
 }
 
-void NTriCompositionUI::packetToBeDestroyed(regina::NPacket*) {
+void NTriCompositionUI::packetToBeDestroyed(regina::Packet*) {
     // Our current isomorphism test triangulation is about to be
     // destroyed.
     isoTest->setCurrentIndex(0); // (i.e., None)

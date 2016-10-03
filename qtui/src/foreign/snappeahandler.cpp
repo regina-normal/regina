@@ -42,7 +42,7 @@
 
 const SnapPeaHandler SnapPeaHandler::instance;
 
-regina::NPacket* SnapPeaHandler::importData(const QString& fileName,
+regina::Packet* SnapPeaHandler::importData(const QString& fileName,
         ReginaMain* parentWidget) const {
     regina::NSnapPeaTriangulation* ans = new regina::NSnapPeaTriangulation(
         static_cast<const char*>(QFile::encodeName(fileName)));
@@ -62,7 +62,7 @@ PacketFilter* SnapPeaHandler::canExport() const {
     return new SubclassFilter<regina::NTriangulation>();
 }
 
-bool SnapPeaHandler::exportData(regina::NPacket* data,
+bool SnapPeaHandler::exportData(regina::Packet* data,
         const QString& fileName, QWidget* parentWidget) const {
     regina::NTriangulation* tri = dynamic_cast<regina::NTriangulation*>(data);
     if (! tri->isValid()) {

@@ -38,9 +38,9 @@
 #include <QFile>
 #include <QTextDocument>
 
-regina::NPacket* ReginaHandler::importData(const QString& fileName,
+regina::Packet* ReginaHandler::importData(const QString& fileName,
         ReginaMain* parentWidget) const {
-    regina::NPacket* ans = regina::open(
+    regina::Packet* ans = regina::open(
         static_cast<const char*>(QFile::encodeName(fileName)));
     if (! ans)
         ReginaSupport::sorry(parentWidget,
@@ -57,7 +57,7 @@ PacketFilter* ReginaHandler::canExport() const {
     return new StandaloneFilter();
 }
 
-bool ReginaHandler::exportData(regina::NPacket* data,
+bool ReginaHandler::exportData(regina::Packet* data,
         const QString& fileName, QWidget* parentWidget) const {
     if (data->dependsOnParent()) {
         ReginaSupport::sorry(parentWidget,

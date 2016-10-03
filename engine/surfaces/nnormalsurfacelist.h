@@ -44,7 +44,7 @@
 #include <iterator>
 #include <vector>
 #include "regina-core.h"
-#include "packet/npacket.h"
+#include "packet/packet.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/normalflags.h"
 #include "surfaces/normalcoords.h"
@@ -54,8 +54,8 @@ namespace regina {
 
 class NMatrixInt;
 class NNormalSurfaceList;
-class NProgressTracker;
-class NXMLPacketReader;
+class ProgressTracker;
+class XMLPacketReader;
 class NXMLNormalSurfaceListReader;
 
 template <int> class Triangulation;
@@ -167,7 +167,7 @@ struct PacketInfo<PACKET_NORMALSURFACELIST> {
  * \todo \feature Generate facets of the solution space representing
  * embedded surfaces.
  */
-class REGINA_API NNormalSurfaceList : public NPacket {
+class REGINA_API NNormalSurfaceList : public Packet {
     REGINA_PACKET(NNormalSurfaceList, PACKET_NORMALSURFACELIST)
 
     public:
@@ -262,7 +262,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
             NormalCoords coords,
             NormalList which = NS_LIST_DEFAULT,
             NormalAlg algHints = NS_ALG_DEFAULT,
-            NProgressTracker* tracker = 0);
+            ProgressTracker* tracker = 0);
 
         /**
          * Returns the coordinate system being used by the
@@ -370,8 +370,8 @@ class REGINA_API NNormalSurfaceList : public NPacket {
 
         virtual void writeTextShort(std::ostream& out) const;
         virtual void writeTextLong(std::ostream& out) const;
-        static NXMLPacketReader* xmlReader(NPacket* parent,
-            NXMLTreeResolver& resolver);
+        static XMLPacketReader* xmlReader(Packet* parent,
+            XMLTreeResolver& resolver);
         virtual bool dependsOnParent() const;
 
         /**
@@ -905,7 +905,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
         NNormalSurfaceList(NormalCoords coords, NormalList which,
             NormalAlg algorithm);
 
-        virtual NPacket* internalClonePacket(NPacket* parent) const;
+        virtual Packet* internalClonePacket(Packet* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
 
         /**
@@ -1062,8 +1062,8 @@ class REGINA_API NNormalSurfaceList : public NPacket {
          * An optional progress tracker may be passed.  If so, this routine
          * will update the percentage progress and poll for cancellation
          * requests.  It will be assumed that an appropriate stage has already
-         * been declared via NProgressTracker::newStage() before this routine
-         * is called, and that NProgressTracker::setFinished() will be
+         * been declared via ProgressTracker::newStage() before this routine
+         * is called, and that ProgressTracker::setFinished() will be
          * called after this routine returns.
          *
          * Although this is a template function, it is a private
@@ -1090,7 +1090,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
         template <class Variant>
         void buildStandardFromReduced(NTriangulation* owner,
             const std::vector<NNormalSurface*>& reducedList,
-            NProgressTracker* tracker = 0);
+            ProgressTracker* tracker = 0);
 
         /**
          * Implements the one-template-argument version of
@@ -1111,7 +1111,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
         template <class Variant, class BitmaskType>
         void buildStandardFromReducedUsing(NTriangulation* owner,
             const std::vector<NNormalSurface*>& reducedList,
-            NProgressTracker* tracker);
+            ProgressTracker* tracker);
 
         /**
          * Converts a set of embedded vertex surfaces in (quad or quad-oct)
@@ -1156,7 +1156,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                     /**< The surface list to be filled. */
                 NTriangulation* triang_;
                     /**< The triangulation in which these surfaces lie. */
-                NProgressTracker* tracker_;
+                ProgressTracker* tracker_;
                     /**< The progress tracker through which progress is
                          reported and cancellation requests are accepted,
                          or 0 if no progress tracker is in use. */
@@ -1172,7 +1172,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * capabilities are not required.
                  */
                 Enumerator(NNormalSurfaceList* list,
-                    NTriangulation* triang, NProgressTracker* tracker);
+                    NTriangulation* triang, ProgressTracker* tracker);
 
                 /**
                  * Performs the real enumeration work, in a setting
@@ -1209,7 +1209,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * If \a tracker_ is non-null, this routine will declare and
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
-                 * call NProgressTracker::setFinished().
+                 * call ProgressTracker::setFinished().
                  */
                 template <typename Coords>
                 void fillVertex();
@@ -1230,7 +1230,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * If \a tracker_ is non-null, this routine will declare and
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
-                 * call NProgressTracker::setFinished().
+                 * call ProgressTracker::setFinished().
                  */
                 template <typename Coords>
                 void fillFundamental();
@@ -1298,7 +1298,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * If \a tracker_ is non-null, this routine will declare and
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
-                 * call NProgressTracker::setFinished().
+                 * call ProgressTracker::setFinished().
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
@@ -1316,7 +1316,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * If \a tracker_ is non-null, this routine will declare and
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
-                 * call NProgressTracker::setFinished().
+                 * call ProgressTracker::setFinished().
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
@@ -1334,7 +1334,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * If \a tracker_ is non-null, this routine will declare and
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
-                 * call NProgressTracker::setFinished().
+                 * call ProgressTracker::setFinished().
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
@@ -1352,7 +1352,7 @@ class REGINA_API NNormalSurfaceList : public NPacket {
                  * If \a tracker_ is non-null, this routine will declare and
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
-                 * call NProgressTracker::setFinished().
+                 * call ProgressTracker::setFinished().
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
@@ -1568,7 +1568,7 @@ inline NNormalSurfaceList::NNormalSurfaceList(NormalCoords coords,
 }
 
 inline NNormalSurfaceList::Enumerator::Enumerator(NNormalSurfaceList* list,
-        NTriangulation* triang, NProgressTracker* tracker) :
+        NTriangulation* triang, ProgressTracker* tracker) :
         list_(list), triang_(triang), tracker_(tracker) {
 }
 

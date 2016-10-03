@@ -66,7 +66,7 @@ Dim2Triangulation* NVertex::buildLinkDetail(bool labels,
         NIsomorphism** inclusion) const {
     // Build the triangulation.
     Dim2Triangulation* ans = new Dim2Triangulation();
-    NPacket::ChangeEventSpan span(ans);
+    Packet::ChangeEventSpan span(ans);
 
     if (inclusion)
         *inclusion = new NIsomorphism(degree());

@@ -37,7 +37,7 @@
 #ifndef __NSURFACEFILTERCOMB_H
 #define __NSURFACEFILTERCOMB_H
 
-#include "packet/npacketlistener.h"
+#include "packet/packetlistener.h"
 
 #include "../packetui.h"
 
@@ -47,14 +47,14 @@ class QRadioButton;
 
 namespace regina {
     class NSurfaceFilterCombination;
-    class NPacket;
+    class Packet;
 };
 
 /**
  * A packet interface for working with combination surface filters.
  */
 class NSurfaceFilterCombUI : public QObject, public PacketUI,
-        public regina::NPacketListener {
+        public regina::PacketListener {
     Q_OBJECT
 
     private:
@@ -83,20 +83,20 @@ class NSurfaceFilterCombUI : public QObject, public PacketUI,
         /**
          * PacketUI overrides.
          */
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         QWidget* getInterface();
         QString getPacketMenuText() const;
         void refresh();
         void setReadWrite(bool readWrite);
 
         /**
-         * NPacketListener overrides.
+         * PacketListener overrides.
          */
-        void packetWasRenamed(regina::NPacket* packet);
-        void childWasAdded(regina::NPacket* packet, regina::NPacket* child);
-        void childWasRemoved(regina::NPacket* packet, regina::NPacket* child,
+        void packetWasRenamed(regina::Packet* packet);
+        void childWasAdded(regina::Packet* packet, regina::Packet* child);
+        void childWasRemoved(regina::Packet* packet, regina::Packet* child,
             bool inParentDestructor);
-        void childrenWereReordered(regina::NPacket* packet);
+        void childrenWereReordered(regina::Packet* packet);
 
     public slots:
         /**

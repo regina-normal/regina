@@ -55,7 +55,7 @@ except:
     sys.stderr.write('ERROR: Could not import the regina module.\n')
     sys.exit(1)
 
-regina.NGlobalDirs.setDirs('', '', appDir + '/../Resources')
+regina.GlobalDirs.setDirs('', '', appDir + '/../Resources')
 
 for sig in sys.argv[1:]:
     hits = regina.NCensus.lookup(sig)

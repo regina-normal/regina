@@ -38,7 +38,7 @@
 #ifndef __SKELETONWINDOW_H
 #define __SKELETONWINDOW_H
 
-#include "packet/npacketlistener.h"
+#include "packet/packetlistener.h"
 
 #include <QDialog>
 #include <QAbstractItemModel>
@@ -115,7 +115,7 @@ class SkeletalModel : public QAbstractItemModel {
  * triangulation, as long as an appropriate SkeletalModel subclass is
  * available.
  */
-class SkeletonWindow : public QDialog, public regina::NPacketListener {
+class SkeletonWindow : public QDialog, public regina::PacketListener {
     Q_OBJECT
 
     private:
@@ -143,11 +143,11 @@ class SkeletonWindow : public QDialog, public regina::NPacketListener {
         void updateCaption();
 
         /**
-         * NPacketListener overrides.
+         * PacketListener overrides.
          */
-        void packetWasChanged(regina::NPacket* packet);
-        void packetWasRenamed(regina::NPacket* packet);
-        void packetToBeDestroyed(regina::NPacket* packet);
+        void packetWasChanged(regina::Packet* packet);
+        void packetWasRenamed(regina::Packet* packet);
+        void packetToBeDestroyed(regina::Packet* packet);
 };
 
 /**

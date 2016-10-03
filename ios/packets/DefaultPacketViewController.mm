@@ -31,11 +31,11 @@
  **************************************************************************/
 
 #import "DefaultPacketViewController.h"
-#import "packet/npacket.h"
+#import "packet/packet.h"
 
 @interface DefaultPacketViewController ()
 @property (weak, nonatomic) IBOutlet UITextView *detail;
-@property (assign, nonatomic) regina::NPacket* packet;
+@property (assign, nonatomic) regina::Packet* packet;
 @end
 
 @implementation DefaultPacketViewController

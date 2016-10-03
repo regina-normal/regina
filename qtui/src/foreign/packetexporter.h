@@ -44,7 +44,7 @@ class QTextCodec;
 class QWidget;
 
 namespace regina {
-    class NPacket;
+    class Packet;
 };
 
 /**
@@ -79,7 +79,7 @@ class PacketExporter {
          * argument \a parentWidget as the parent widget of the message
          * box).
          */
-        virtual bool exportData(regina::NPacket* data, const QString& fileName,
+        virtual bool exportData(regina::Packet* data, const QString& fileName,
             QWidget* parentWidget) const = 0;
 
         /**

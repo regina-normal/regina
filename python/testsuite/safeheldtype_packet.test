@@ -4,7 +4,7 @@
 # Copyright (c) 2015-2016, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
-# Provides tests for the wrapping of NPacket subclasses through SafeHeldType
+# Provides tests for the wrapping of Packet subclasses through SafeHeldType
 #
 # This file is a single component of Regina's python test suite.  To run
 # the python test suite, move to the main python directory in the source
@@ -37,8 +37,8 @@ print "Basic:"
 print
 
 print NExampleTriangulation.poincareHomologySphere().isoSig()
-print NText("Hello World")
-print NText("Hello World").text()
+print Text("Hello World")
+print Text("Hello World").text()
 
 print
 print "-----------------------------------------------------------"
@@ -48,11 +48,11 @@ print
 t1 = NTriangulation()
 t2 = NExampleTriangulation.poincareHomologySphere()
 t3 = NExampleTriangulation.figureEight()
-p = NPDF()
+p = PDF()
 
-t = NText()
+t = Text()
 
-c = NContainer()
+c = Container()
 c.insertChildFirst(t1)
 
 print c.countChildren()
@@ -103,7 +103,7 @@ l = p.firstChild()
 
 print l.text()
 
-t2.insertChildAfter(NText("New"), t3)
+t2.insertChildAfter(Text("New"), t3)
 
 print t2.countChildren()
 print t2.countDescendants()

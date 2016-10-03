@@ -46,7 +46,7 @@ class PacketFilter;
 class QLineEdit;
 
 namespace regina {
-    class NPacket;
+    class Packet;
 };
 
 /**
@@ -69,8 +69,8 @@ class NewPacketDialog : public QDialog {
         /**
          * Packet tree structure:
          */
-        regina::NPacket* tree;
-        regina::NPacket* newPacket;
+        regina::Packet* tree;
+        regina::Packet* newPacket;
 
     public:
         /**
@@ -84,7 +84,7 @@ class NewPacketDialog : public QDialog {
          * given PacketCreator and PacketFilter.
          */
         NewPacketDialog(QWidget* parent, PacketCreator* newCreator,
-            regina::NPacket* packetTree, regina::NPacket* defaultParent,
+            regina::Packet* packetTree, regina::Packet* defaultParent,
             PacketFilter* useFilter, const QString& dialogTitle);
         virtual ~NewPacketDialog();
 
@@ -100,7 +100,7 @@ class NewPacketDialog : public QDialog {
         /**
          * Returns the packet that was created by this dialog, if any.
          */
-        regina::NPacket* createdPacket();
+        regina::Packet* createdPacket();
 
     protected slots:
         /**
@@ -109,7 +109,7 @@ class NewPacketDialog : public QDialog {
         virtual void slotOk();
 };
 
-inline regina::NPacket* NewPacketDialog::createdPacket() {
+inline regina::Packet* NewPacketDialog::createdPacket() {
     return newPacket;
 }
 

@@ -53,7 +53,7 @@
  */
 // #define REGINA_NOOPT_REORDER_COLUMNS
 
-#include "angle/nanglestructure.h"
+#include "angle/anglestructure.h"
 #include "enumerate/ntreelp.h"
 #include "maths/matrixops.h"
 #include "surfaces/nnormalsurfacelist.h"
@@ -125,11 +125,11 @@ LPInitialTableaux<LPConstraint>::LPInitialTableaux(
         eqns_ = regina::makeMatchingEquations(tri, coords);
         scaling_ = 0;
     } else {
-        eqns_ = NAngleStructureVector::makeAngleEquations(tri);
+        eqns_ = AngleStructureVector::makeAngleEquations(tri);
 
         // Scale each row so that the rightmost entry (used for
         // projectivising the angle structure polytope) is always -2.
-        // This is possible since the matrix returned by NAngleStructureVector
+        // This is possible since the matrix returned by AngleStructureVector
         // will have final entries of -1 and -2 only.
         scaling_ = -2;
         long rightmost;

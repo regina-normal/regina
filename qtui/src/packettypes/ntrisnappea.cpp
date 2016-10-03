@@ -48,7 +48,7 @@
 #include <QPushButton>
 #include <QStackedWidget>
 
-using regina::NPacket;
+using regina::Packet;
 using regina::NSnapPeaTriangulation;
 using regina::NTriangulation;
 
@@ -151,7 +151,7 @@ NTriSnapPeaUI::~NTriSnapPeaUI() {
         delete snappeaTri;
 }
 
-regina::NPacket* NTriSnapPeaUI::getPacket() {
+regina::Packet* NTriSnapPeaUI::getPacket() {
     return reginaTri;
 }
 

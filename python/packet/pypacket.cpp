@@ -30,21 +30,21 @@
  *                                                                        *
  **************************************************************************/
 
-void addNContainer();
-void addNPacket();
-void addNPDF();
-void addNScript();
-void addNText();
+void addContainer();
+void addPacket();
+void addPDF();
+void addScript();
+void addText();
 void addPacketType();
 
-void addPacket() {
+void addPacketClasses() {
     // Enums must come first.
     addPacketType();
 
-    addNPacket();
-    addNContainer();
-    addNPDF();
-    addNScript();
-    addNText();
+    addPacket();
+    addContainer();
+    addPDF();
+    addScript();
+    addText();
 }
 

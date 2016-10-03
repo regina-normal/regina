@@ -39,7 +39,7 @@ void addDim2Triangle();
 void addDim2Triangulation();
 void addDim2Vertex();
 
-void addDim2() {
+void addDim2Classes() {
     addDim2BoundaryComponent();
     addDim2Component();
     addDim2Edge();

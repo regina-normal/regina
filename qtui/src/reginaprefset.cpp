@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "regina-config.h"
-#include "file/nglobaldirs.h"
+#include "file/globaldirs.h"
 #include "snappea/nsnappeatriangulation.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "utilities/stringutils.h"
@@ -272,7 +272,7 @@ void ReginaPrefSet::openHandbook(const char* section, const char* handbook,
         QWidget* parentWidget) {
     QString handbookName = (handbook ? handbook : "regina");
 
-    QString home = QFile::decodeName(regina::NGlobalDirs::home().c_str());
+    QString home = QFile::decodeName(regina::GlobalDirs::home().c_str());
 #if defined(REGINA_INSTALL_BUNDLE) && defined(Q_OS_MACX) && defined(REGINA_XCODE_BUNDLE)
     // The Xcode build installs the handbooks as bundle resources, at the root
     // of the Resources directory.

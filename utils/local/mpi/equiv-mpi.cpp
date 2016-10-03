@@ -75,7 +75,7 @@
 #include <sstream>
 #include <popt.h>
 
-#include "packet/ncontainer.h"
+#include "packet/container.h"
 #include "triangulation/ntriangulation.h"
 
 #include "mpi.h"
@@ -121,7 +121,7 @@ std::string inFile;
 const char* outFile = 0;
 
 // The input packet tree.
-NPacket* tree = 0;
+Packet* tree = 0;
 
 // A set of triangulations that have been found to be homeomorphic to
 // each other.  A set of this type forms the solution to a single slave task.
@@ -142,7 +142,7 @@ const char* logFile = "equiv.log";
 bool hasError = false;
 
 // The output packet tree.
-NPacket* newTree = 0;
+Packet* newTree = 0;
 
 // A mapping from triangulations to equivalence classes.
 typedef std::map<NTriangulation*, int> ClassMap;
@@ -256,7 +256,7 @@ bool checkInputTree() {
     std::set<std::string> allLabels;
     unsigned labelLen;
 
-    for (NPacket* p = tree; p; p = p->nextTreePacket()) {
+    for (Packet* p = tree; p; p = p->nextTreePacket()) {
         labelLen = p->label().length();
         if (labelLen == 0) {
             fprintf(stderr, "ERROR: Empty packet label found in input file.\n");
@@ -362,7 +362,7 @@ int ctrlWaitForSlave() {
 
         equivs.clear();
 
-        NPacket* p;
+        Packet* p;
         NTriangulation* tri;
         while (1) {
             MPI_Recv(triLabel, MAX_TRI_LABEL_LEN + 1, MPI_CHAR, slave,
@@ -500,7 +500,7 @@ int mainController() {
     }
 
     // Do it.
-    for (NPacket* p = tree; p; p = p->nextTreePacket())
+    for (Packet* p = tree; p; p = p->nextTreePacket())
         if (p->type() == PACKET_TRIANGULATION) {
             nTris++;
             ctrlFarmTri(static_cast<NTriangulation*>(p));
@@ -524,13 +524,13 @@ int mainController() {
         printf("EQUIVALENCE CLASSES:\n\n");
 
         if (outFile) {
-            newTree = new NContainer();
+            newTree = new Container();
             newTree->setLabel("Equivalence Classes");
         }
 
         int classNum = 1;
         std::string className;
-        NContainer* classCnt = 0;
+        Container* classCnt = 0;
 
         ClassMap::iterator cit, cit2;
         int c;
@@ -547,7 +547,7 @@ int mainController() {
 
                 printf("%s\n\n", className.c_str());
                 if (outFile) {
-                    classCnt = new NContainer();
+                    classCnt = new Container();
                     classCnt->setLabel(className);
                     newTree->insertChildLast(classCnt);
                 }
@@ -687,7 +687,7 @@ void slaveSendEquivs() {
 void slaveSameSize(NTriangulation* t) {
     // Hunt for it in the packet tree.
     NTriangulation* found = 0;
-    for (NPacket* p = tree; p; p = p->nextTreePacket())
+    for (Packet* p = tree; p; p = p->nextTreePacket())
         if (p->type() == PACKET_TRIANGULATION)
             if (static_cast<NTriangulation*>(p)->isIsomorphicTo(*t).get()) {
                 found = static_cast<NTriangulation*>(p);
@@ -891,7 +891,7 @@ void slaveProcessTri(NTriangulation* tri) {
  */
 int mainSlave() {
     char triLabel[MAX_TRI_LABEL_LEN + 1];
-    NPacket* p;
+    Packet* p;
     NTriangulation* tri;
 
     // Keep fetching and processing tasks until there are no more.

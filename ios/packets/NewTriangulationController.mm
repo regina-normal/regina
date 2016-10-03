@@ -54,7 +54,7 @@
 
 - (IBAction)create:(id)sender
 {
-    regina::NPacket* ans = [self.pages create];
+    regina::Packet* ans = [self.pages create];
     if (ans) {
         self.spec.parent->insertChildLast(ans);
         [self.spec created:ans];
@@ -73,9 +73,9 @@
 
 @implementation NewTriangulationEmptyPage
 
-- (regina::NPacket*)create
+- (regina::Packet*)create
 {
-    regina::NPacket* ans = new regina::NTriangulation();
+    regina::Packet* ans = new regina::NTriangulation();
     ans->setLabel("3-D triangulation");
     return ans;
 }
@@ -176,7 +176,7 @@ typedef regina::NTriangulation* (*TriangulationCreator)();
     [[NSUserDefaults standardUserDefaults] setInteger:[self.example selectedRowInComponent:0] forKey:KEY_LAST_EXAMPLE];
 }
 
-- (regina::NPacket *)create
+- (regina::Packet *)create
 {
     return [options[[self.example selectedRowInComponent:0]] create];
 }
@@ -196,7 +196,7 @@ typedef regina::NTriangulation* (*TriangulationCreator)();
     [c create:sender];
 }
 
-- (regina::NPacket *)create
+- (regina::Packet *)create
 {
     std::string sig = [self.isosig.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]].UTF8String;
     if (sig.empty()) {

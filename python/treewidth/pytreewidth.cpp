@@ -32,7 +32,7 @@
 
 void addNTreeDecomposition();
 
-void addTreewidth() {
+void addTreewidthClasses() {
     addNTreeDecomposition();
 }
 

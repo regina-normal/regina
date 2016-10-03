@@ -148,7 +148,7 @@ void populateTests(CppUnit::TextTestRunner& runner) {
     addIncompressible(runner);
 
     // Angle structures:
-    addNAngleStructureList(runner);
+    addAngleStructures(runner);
 
     // Census:
     addNCensus(runner);

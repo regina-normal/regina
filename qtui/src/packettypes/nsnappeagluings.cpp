@@ -40,7 +40,7 @@
 #include <QHeaderView>
 #include <QTableView>
 
-using regina::NPacket;
+using regina::Packet;
 using regina::NSnapPeaTriangulation;
 
 NSnapPeaGluingsUI::NSnapPeaGluingsUI(regina::NSnapPeaTriangulation* packet,
@@ -84,7 +84,7 @@ NSnapPeaGluingsUI::~NSnapPeaGluingsUI() {
     delete model;
 }
 
-regina::NPacket* NSnapPeaGluingsUI::getPacket() {
+regina::Packet* NSnapPeaGluingsUI::getPacket() {
     return tri;
 }
 

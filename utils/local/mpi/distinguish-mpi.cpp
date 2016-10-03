@@ -56,7 +56,7 @@
  */
 
 #include <maths/numbertheory.h>
-#include <packet/ncontainer.h>
+#include <packet/container.h>
 #include <triangulation/ntriangulation.h>
 
 #include <cstdio>
@@ -120,7 +120,7 @@ int firstOnly = 0;
 std::string filename;
 
 // The input packet tree.
-NPacket* tree;
+Packet* tree;
 
 
 
@@ -246,7 +246,7 @@ bool checkInputTree() {
     std::set<std::string> allLabels;
     unsigned labelLen;
 
-    for (NPacket* p = tree; p; p = p->nextTreePacket()) {
+    for (Packet* p = tree; p; p = p->nextTreePacket()) {
         labelLen = p->label().length();
         if (labelLen == 0) {
             fprintf(stderr, "ERROR: Empty packet label found in input file.\n");
@@ -332,7 +332,7 @@ std::ostream& ctrlLogStamp() {
  * Contains a set of invariants for a 3-manifold triangulation.
  */
 struct InvData {
-    NContainer* manifold;
+    Container* manifold;
 
     std::string h1;
     unsigned long h2z2;
@@ -340,7 +340,7 @@ struct InvData {
 
     bool inconsistent;
 
-    InvData(NContainer* useManifold) : manifold(useManifold),
+    InvData(Container* useManifold) : manifold(useManifold),
             turaevViro(new double[tvParamCount]), inconsistent(false) {
     }
 
@@ -517,12 +517,12 @@ void ctrlFarmTask(NTriangulation* tri, InvData* data, int whichTV) {
  * Process a single manifold container (and specifically, all of its
  * triangulation children).
  */
-void ctrlProcess(NContainer* c) {
+void ctrlProcess(Container* c) {
     InvData* mfdData = 0;
     NTriangulation* tri;
     int i;
 
-    for (NPacket* child = c->firstChild(); child;
+    for (Packet* child = c->firstChild(); child;
             child = child->nextSibling()) {
         if (child->type() != PACKET_TRIANGULATION)
             continue;
@@ -622,11 +622,11 @@ int mainController() {
     }
 
     // Process the packets.
-    for (NPacket* p = tree; p; p = p->nextTreePacket())
+    for (Packet* p = tree; p; p = p->nextTreePacket())
         if (p->type() == PACKET_CONTAINER) {
             ctrlLogStamp() << "Processing container: " << p->label()
                 << std::endl;
-            ctrlProcess(static_cast<NContainer*>(p));
+            ctrlProcess(static_cast<Container*>(p));
         }
 
     // Kill off any slaves that never started working.

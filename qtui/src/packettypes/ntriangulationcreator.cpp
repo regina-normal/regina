@@ -321,7 +321,7 @@ QWidget* NTriangulationCreator::getInterface() {
     return ui;
 }
 
-regina::NPacket* NTriangulationCreator::createPacket(regina::NPacket*,
+regina::Packet* NTriangulationCreator::createPacket(regina::Packet*,
         QWidget* parentWidget) {
     int typeId = type->currentIndex();
     if (typeId == TRI_EMPTY) {

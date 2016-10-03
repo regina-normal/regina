@@ -61,7 +61,6 @@
  * exists (../normal-compare.cpp).
  */
 
-#include <packet/ncontainer.h>
 #include <surfaces/nnormalsurfacelist.h>
 #include <triangulation/ntriangulation.h>
 
@@ -294,13 +293,13 @@ int mainController() {
 
     // Run through the triangulations in the data file and farm them out
     // to slaves in turn.
-    NPacket* tree = open(dataFile);
+    Packet* tree = open(dataFile);
     if (! tree) {
         fprintf(stderr, "Could not open data file %s.\n", dataFile.c_str());
         return 1;
     }
 
-    NPacket* p = tree;
+    Packet* p = tree;
     while (p && p->type() != PACKET_TRIANGULATION)
         p = p->nextTreePacket();
     long currTri = 0;
@@ -368,13 +367,13 @@ void slaveSendError(long errorCode, long reason1, long reason2) {
  * Main routine for a slave (ranks 1..size).
  */
 int mainSlave() {
-    NPacket* tree = open(dataFile);
+    Packet* tree = open(dataFile);
     if (! tree) {
         fprintf(stderr, "Could not open data file %s.\n", dataFile.c_str());
         return 1;
     }
 
-    NPacket* p = tree;
+    Packet* p = tree;
     while (p && p->type() != PACKET_TRIANGULATION)
         p = p->nextTreePacket();
     long currTri = 0;

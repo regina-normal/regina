@@ -38,7 +38,7 @@
 #ifndef __EDGEINTCHOOSER_H
 #define __EDGEINTCHOOSER_H
 
-#include "packet/npacketlistener.h"
+#include "packet/packetlistener.h"
 
 #include <QDialog>
 #include <QComboBox>
@@ -76,7 +76,7 @@ typedef bool (*EdgeIntFilterFunc)(regina::NEdge*, int);
  * Q_OBJECT does not play well with template classes.  Since the chooser
  * classes do not use slots or signals, I believe this is okay.
  */
-class EdgeIntChooser : public QComboBox, public regina::NPacketListener {
+class EdgeIntChooser : public QComboBox, public regina::PacketListener {
     private:
         regina::NTriangulation* tri_;
             /**< The triangulation whose edges we are
@@ -139,11 +139,11 @@ class EdgeIntChooser : public QComboBox, public regina::NPacketListener {
         bool refresh();
 
         /**
-         * NPacketListener overrides.
+         * PacketListener overrides.
          */
-        void packetToBeChanged(regina::NPacket*);
-        void packetWasChanged(regina::NPacket*);
-        void packetToBeDestroyed(regina::NPacket*);
+        void packetToBeChanged(regina::Packet*);
+        void packetWasChanged(regina::Packet*);
+        void packetToBeDestroyed(regina::Packet*);
 
     private:
         /**
@@ -201,16 +201,16 @@ inline bool EdgeIntChooser::refresh() {
     return (count() > 0);
 }
 
-inline void EdgeIntChooser::packetToBeChanged(regina::NPacket*) {
+inline void EdgeIntChooser::packetToBeChanged(regina::Packet*) {
     clear();
     options_.clear();
 }
 
-inline void EdgeIntChooser::packetWasChanged(regina::NPacket*) {
+inline void EdgeIntChooser::packetWasChanged(regina::Packet*) {
     fill();
 }
 
-inline void EdgeIntChooser::packetToBeDestroyed(regina::NPacket*) {
+inline void EdgeIntChooser::packetToBeDestroyed(regina::Packet*) {
     clear();
     options_.clear();
 }

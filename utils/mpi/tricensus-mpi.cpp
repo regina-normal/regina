@@ -44,8 +44,8 @@
 #include "census/ngluingpermsearcher.h"
 #include "dim2/dim2triangulation.h"
 #include "dim4/dim4triangulation.h"
-#include "packet/ncontainer.h"
-#include "packet/ntext.h"
+#include "packet/container.h"
+#include "packet/text.h"
 #include "triangulation/ntriangulation.h"
 
 // Write messages tailored to the working dimension.
@@ -86,7 +86,7 @@ struct Dim2Params {
 
     inline static void findAllPerms(Pairing* p, bool orientableOnly,
             bool /* finiteOnly */, int /* whichPurge */,
-            regina::NPacket* dest) {
+            regina::Packet* dest) {
         GluingPermSearcher::findAllPerms(p, 0,
             orientableOnly, slaveFoundGluingPerms<Dim2Params>, dest);
     }
@@ -113,7 +113,7 @@ struct Dim3Params {
     }
 
     inline static void findAllPerms(Pairing* p, bool orientableOnly,
-            bool finiteOnly, int whichPurge, regina::NPacket* dest) {
+            bool finiteOnly, int whichPurge, regina::Packet* dest) {
         GluingPermSearcher::findAllPerms(p, 0,
             orientableOnly, finiteOnly, whichPurge,
             slaveFoundGluingPerms<Dim3Params>, dest);
@@ -141,7 +141,7 @@ struct Dim4Params {
     }
 
     inline static void findAllPerms(Pairing* p, bool orientableOnly,
-            bool finiteOnly, int /* whichPurge */, regina::NPacket* dest) {
+            bool finiteOnly, int /* whichPurge */, regina::Packet* dest) {
         GluingPermSearcher::findAllPerms(p, 0,
             orientableOnly, finiteOnly,
             slaveFoundGluingPerms<Dim4Params>, dest);
@@ -714,8 +714,8 @@ void slaveFoundGluingPerms(const typename CensusType::GluingPermSearcher* perms,
                     sigStream << tri->isoSig() << std::endl;
                 delete tri;
             } else {
-                regina::NPacket* dest =
-                    static_cast<regina::NPacket*>(container);
+                regina::Packet* dest =
+                    static_cast<regina::Packet*>(container);
 
                 std::ostringstream out;
                 out << "Item " << (nSolns + 1);
@@ -783,15 +783,15 @@ void slaveDescribeCensusParameters(std::ostream& out) {
  * as the last child of the parent.
  */
 template <class CensusType>
-regina::NPacket* slaveSkeletonTree(
+regina::Packet* slaveSkeletonTree(
         const typename CensusType::GluingPermSearcher* search,
         const char* searchRep) {
     // Create the overall parent packet.
-    regina::NContainer* parent = new regina::NContainer();
+    regina::Container* parent = new regina::Container();
     parent->setLabel("Partial MPI census");
 
     // Create a child packet that describes the census parameters.
-    regina::NText* desc = new regina::NText();
+    regina::Text* desc = new regina::Text();
     desc->setLabel("Parameters");
     std::ostringstream descStream;
 
@@ -819,14 +819,14 @@ regina::NPacket* slaveSkeletonTree(
  * as the last child of the parent.
  */
 template <class CensusType>
-regina::NPacket* slaveSkeletonTree(
+regina::Packet* slaveSkeletonTree(
         const typename CensusType::Pairing* pairing) {
     // Create the overall parent packet.
-    regina::NContainer* parent = new regina::NContainer();
+    regina::Container* parent = new regina::Container();
     parent->setLabel("Partial MPI census");
 
     // Create a child packet that describes the census parameters.
-    regina::NText* desc = new regina::NText();
+    regina::Text* desc = new regina::Text();
     desc->setLabel("Parameters");
     std::ostringstream descStream;
 
@@ -921,10 +921,10 @@ void slaveProcessPartialSearch() {
         TAG_REQUEST_SUBSEARCH, MPI_COMM_WORLD, &status);
 
     // Construct the subsearch.
-    regina::NPacket* parent = 0;
-    regina::NPacket* dest = 0;
+    regina::Packet* parent = 0;
+    regina::Packet* dest = 0;
     if (! sigs) {
-        dest = new regina::NContainer();
+        dest = new regina::Container();
         dest->setLabel("Triangulations");
     }
 
@@ -1030,14 +1030,14 @@ void slaveProcessPairing() {
     }
 
     // Run the partial census.
-    regina::NPacket* parent = 0;
-    regina::NPacket* dest = 0;
+    regina::Packet* parent = 0;
+    regina::Packet* dest = 0;
     if (sigs) {
         slaveMakeTaskFilename(sigFile, ".sig");
         sigStreamErr = false;
     } else {
         parent = slaveSkeletonTree<CensusType>(pairing);
-        dest = new regina::NContainer();
+        dest = new regina::Container();
         dest->setLabel("Triangulations");
         parent->insertChildLast(dest);
     }

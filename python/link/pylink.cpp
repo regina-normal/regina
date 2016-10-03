@@ -33,7 +33,7 @@
 void addExampleLink();
 void addLink();
 
-void addLinkDir() {
+void addLinkClasses() {
     addExampleLink();
     addLink();
 }

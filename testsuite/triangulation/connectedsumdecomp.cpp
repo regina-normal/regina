@@ -36,7 +36,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "algebra/nabeliangroup.h"
 #include "manifold/nmanifold.h"
-#include "packet/ncontainer.h"
+#include "packet/container.h"
 #include "split/nsignature.h"
 #include "subcomplex/nstandardtri.h"
 #include "triangulation/ntriangulation.h"
@@ -45,7 +45,7 @@
 #include "testsuite/triangulation/testtriangulation.h"
 
 using regina::NAbelianGroup;
-using regina::NContainer;
+using regina::Container;
 using regina::NManifold;
 using regina::NPerm4;
 using regina::NSignature;
@@ -83,7 +83,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
 
         NTriangulation* verifyThreeSphere(NTriangulation* tri,
                 const std::string& triName) {
-            NContainer summands;
+            Container summands;
             unsigned long ans = tri->connectedSumDecomposition(&summands);
 
             CPPUNIT_ASSERT_MESSAGE("The 3-sphere " + triName +
@@ -101,7 +101,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                 const std::string& triName, const std::string& manifold) {
             // Recall that ASSERTS throw exceptions, so after testing
             // them we can assume their conditions to be true.
-            NContainer summands;
+            Container summands;
             unsigned long ans = tri->connectedSumDecomposition(&summands);
 
             CPPUNIT_ASSERT_MESSAGE("The prime 3-manifold " + triName +
@@ -154,7 +154,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                 const std::string& manifold2) {
             // Recall that ASSERTS throw exceptions, so after testing
             // them we can assume their conditions to be true.
-            NContainer summands;
+            Container summands;
             unsigned long ans = tri->connectedSumDecomposition(&summands);
 
             CPPUNIT_ASSERT_MESSAGE("The composite 3-manifold " + triName +
@@ -246,7 +246,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
                 const std::string& triName) {
             // Recall that ASSERTS throw exceptions, so after testing
             // them we can assume their conditions to be true.
-            NContainer summands;
+            Container summands;
             unsigned long ans = tri->connectedSumDecomposition(&summands);
 
             NTriangulation* summand1 = static_cast<NTriangulation*>(
@@ -454,7 +454,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             if (! (tri->isValid() && tri->isClosed() && tri->isConnected()))
                 return;
 
-            NContainer parent;
+            Container parent;
             long ncomp = tri->connectedSumDecomposition(&parent);
 
             if (ncomp == -1) {
@@ -480,7 +480,7 @@ class ConnectedSumDecompTest : public CppUnit::TestFixture {
             NAbelianGroup h1;
             NTriangulation* term;
             bool foundNor = false;
-            for (regina::NPacket* p = parent.firstChild(); p;
+            for (regina::Packet* p = parent.firstChild(); p;
                     p = p->nextSibling()) {
                 term = static_cast<NTriangulation*>(p);
                 if (! term->isOrientable())

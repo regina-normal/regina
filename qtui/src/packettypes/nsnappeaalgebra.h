@@ -43,7 +43,7 @@ class GroupWidget;
 class QLabel;
 
 namespace regina {
-    class NPacket;
+    class Packet;
     class NSnapPeaTriangulation;
 };
 
@@ -84,7 +84,7 @@ class NSnapPeaAlgebraUI : public QObject, public PacketViewerTab {
         /**
          * PacketViewerTab overrides.
          */
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         QWidget* getInterface();
         void refresh();
 

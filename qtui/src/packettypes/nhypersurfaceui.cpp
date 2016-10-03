@@ -48,7 +48,7 @@
 #include <QTextDocument>
 #include <QWhatsThis>
 
-using regina::NPacket;
+using regina::Packet;
 using regina::NNormalHypersurface;
 
 NHyperSurfaceUI::NHyperSurfaceUI(regina::NNormalHypersurfaceList* packet,
@@ -101,7 +101,7 @@ NHyperHeaderUI::NHyperHeaderUI(regina::NNormalHypersurfaceList* packet,
     packet->triangulation()->listen(this);
 }
 
-regina::NPacket* NHyperHeaderUI::getPacket() {
+regina::Packet* NHyperHeaderUI::getPacket() {
     return surfaces;
 }
 
@@ -157,7 +157,7 @@ void NHyperHeaderUI::viewTriangulation() {
         false /* visible in tree */, false /* select in tree */);
 }
 
-void NHyperHeaderUI::packetWasRenamed(regina::NPacket*) {
+void NHyperHeaderUI::packetWasRenamed(regina::Packet*) {
     // Assume it is the parent triangulation.
     refresh();
 }

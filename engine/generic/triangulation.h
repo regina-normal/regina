@@ -41,7 +41,7 @@
 
 // There are more #includes below - we need to define FaceList
 // before including generic/detail/triangulation.h.
-#include "packet/npacket.h"
+#include "packet/packet.h"
 #include "utilities/nmarkedvector.h"
 #include "utilities/xmlutils.h"
 #include <type_traits>
@@ -230,7 +230,7 @@ namespace regina {
  */
 template <int dim>
 class Triangulation :
-        public NPacket,
+        public Packet,
         public detail::TriangulationBase<dim> {
     static_assert(! standardDim(dim),
         "The generic implementation of Triangulation<dim> "
@@ -297,11 +297,11 @@ class Triangulation :
 
         /*@}*/
 
-        static NXMLPacketReader* xmlReader(NPacket* parent,
-                NXMLTreeResolver& resolver);
+        static XMLPacketReader* xmlReader(Packet* parent,
+                XMLTreeResolver& resolver);
 
     protected:
-        virtual NPacket* internalClonePacket(NPacket* parent) const;
+        virtual Packet* internalClonePacket(Packet* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
 
     private:
@@ -587,7 +587,7 @@ inline bool Triangulation<dim>::dependsOnParent() const {
 }
 
 template <int dim>
-inline NPacket* Triangulation<dim>::internalClonePacket(NPacket* parent) const {
+inline Packet* Triangulation<dim>::internalClonePacket(Packet* parent) const {
     return new Triangulation<dim>(*this);
 }
 
@@ -627,8 +627,8 @@ void Triangulation<dim>::writeXMLPacketData(std::ostream& out) const {
 }
 
 template <int dim>
-inline NXMLPacketReader* Triangulation<dim>::xmlReader(NPacket*,
-        NXMLTreeResolver& resolver) {
+inline XMLPacketReader* Triangulation<dim>::xmlReader(Packet*,
+        XMLTreeResolver& resolver) {
     return new XMLTriangulationReader<dim>(resolver);
 }
 

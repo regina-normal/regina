@@ -37,7 +37,7 @@
 #ifndef __NHYPERCOMPATUI_H
 #define __NHYPERCOMPATUI_H
 
-#include "packet/npacketlistener.h"
+#include "packet/packetlistener.h"
 
 #include "../packettabui.h"
 
@@ -49,7 +49,7 @@ class QComboBox;
 class QStackedWidget;
 
 namespace regina {
-    class NPacket;
+    class Packet;
     class NNormalHypersurfaceList;
 };
 
@@ -57,7 +57,7 @@ namespace regina {
  * A normal surface page for viewing surface coordinates.
  */
 class NHyperCompatibilityUI : public QObject, public PacketViewerTab,
-        public regina::NPacketListener {
+        public regina::PacketListener {
     Q_OBJECT
 
     private:
@@ -108,7 +108,7 @@ class NHyperCompatibilityUI : public QObject, public PacketViewerTab,
         /**
          * PacketViewerTab overrides.
          */
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
         QWidget* getInterface();
         void refresh();
 

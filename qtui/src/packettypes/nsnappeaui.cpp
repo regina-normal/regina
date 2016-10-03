@@ -54,7 +54,7 @@
 #include <QToolBar>
 #include <QVBoxLayout>
 
-using regina::NPacket;
+using regina::Packet;
 using regina::NSnapPeaTriangulation;
 
 NSnapPeaUI::NSnapPeaUI(regina::NSnapPeaTriangulation* packet,
@@ -129,7 +129,7 @@ NSnapPeaHeaderUI::NSnapPeaHeaderUI(regina::NSnapPeaTriangulation* packet,
     tri->listen(this);
 }
 
-regina::NPacket* NSnapPeaHeaderUI::getPacket() {
+regina::Packet* NSnapPeaHeaderUI::getPacket() {
     return tri;
 }
 
@@ -238,15 +238,15 @@ void NSnapPeaHeaderUI::lockedExplanation() {
             "edit the clone instead.</qt>"));
 }
 
-void NSnapPeaHeaderUI::childWasAdded(regina::NPacket* packet,
-        regina::NPacket* child) {
+void NSnapPeaHeaderUI::childWasAdded(regina::Packet* packet,
+        regina::Packet* child) {
     // Be careful - we may not be in the GUI thread.
     QApplication::postEvent(this, new QEvent(
         (QEvent::Type)EVT_HEADER_CHILD_ADDED));
 }
 
-void NSnapPeaHeaderUI::childWasRemoved(regina::NPacket* packet,
-        regina::NPacket* child, bool inParentDestructor) {
+void NSnapPeaHeaderUI::childWasRemoved(regina::Packet* packet,
+        regina::Packet* child, bool inParentDestructor) {
     if (! inParentDestructor)
         refreshLock();
 }

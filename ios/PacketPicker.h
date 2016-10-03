@@ -34,7 +34,7 @@
 #import "packet/packettype.h"
 
 namespace regina {
-    class NPacket;
+    class Packet;
 }
 
 /**
@@ -59,18 +59,18 @@ namespace regina {
  * then the null packet will be offered regardless of what you pass as \a allowNone.
  * @param noneText The text to display for the null packet.
  */
-- (void)fill:(regina::NPacket*)tree type:(regina::PacketType)packetType allowNone:(BOOL)allowNone noneText:(NSString*)noneText;
+- (void)fill:(regina::Packet*)tree type:(regina::PacketType)packetType allowNone:(BOOL)allowNone noneText:(NSString*)noneText;
 
 /**
  * Like fill: above, but supports two different packet types.
  * This is useful (for instance) when you wish to allow both NTriangulation and NSnapPeaTriangulation.
  */
-- (void)fill:(regina::NPacket*)tree type1:(regina::PacketType)packetType1 type2:(regina::PacketType)packetType2 allowNone:(BOOL)allowNone noneText:(NSString*)noneText;
+- (void)fill:(regina::Packet*)tree type1:(regina::PacketType)packetType1 type2:(regina::PacketType)packetType2 allowNone:(BOOL)allowNone noneText:(NSString*)noneText;
 
 /**
  * Returns the packet selected in this picker, or 0 if the null packet is selected.
  */
-- (regina::NPacket*)selectedPacket;
+- (regina::Packet*)selectedPacket;
 
 /**
  * Returns whether this picker contains no valid options at all.

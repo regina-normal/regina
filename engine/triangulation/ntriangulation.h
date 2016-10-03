@@ -47,10 +47,10 @@
 #include "regina-core.h"
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
-#include "angle/nanglestructure.h"
+#include "angle/anglestructure.h"
 #include "generic/triangulation.h"
 #include "maths/ncyclotomic.h"
-#include "packet/npacket.h"
+#include "packet/packet.h"
 #include "treewidth/ntreedecomposition.h"
 #include "utilities/nbooleans.h"
 #include "utilities/nmarkedvector.h"
@@ -64,12 +64,12 @@
 
 namespace regina {
 
-class NAngleStructure;
+class AngleStructure;
 class NBoundaryComponent;
 class NGroupPresentation;
 class NNormalSurface;
-class NProgressTrackerOpen;
-class NXMLPacketReader;
+class ProgressTrackerOpen;
+class XMLPacketReader;
 
 template <int> class Component;
 template <int> class Isomorphism;
@@ -167,7 +167,7 @@ enum TuraevViroAlg {
  */
 template <>
 class REGINA_API Triangulation<3> :
-        public NPacket,
+        public Packet,
         public detail::TriangulationBase<3> {
     REGINA_PACKET(Triangulation<3>, PACKET_TRIANGULATION)
 
@@ -240,7 +240,7 @@ class REGINA_API Triangulation<3> :
                  that are known to represent closed, connected,
                  orientable, irreducible 3-manifolds. */
 
-        mutable NProperty<NAngleStructure, StoreManagedPtr>
+        mutable NProperty<AngleStructure, StoreManagedPtr>
                 strictAngleStructure_;
             /**< A strict angle structure on this triangulation, or the
                  null pointer if none exists. */
@@ -992,7 +992,7 @@ class REGINA_API Triangulation<3> :
          * @return a strict angle structure on this triangulation, or 0 if
          * none exists.
          */
-        const NAngleStructure* findStrictAngleStructure() const;
+        const AngleStructure* findStrictAngleStructure() const;
         /**
          * Determines whether this triangulation supports a strict angle
          * structure.  Recall that a \e strict angle structure is one
@@ -1201,7 +1201,7 @@ class REGINA_API Triangulation<3> :
          * fewer tetrahedra.
          */
         bool simplifyExhaustive(int height = 1, unsigned nThreads = 1,
-            NProgressTrackerOpen* tracker = 0);
+            ProgressTrackerOpen* tracker = 0);
 
         /**
          * Explores all triangulations that can be reached from this via
@@ -1295,7 +1295,7 @@ class REGINA_API Triangulation<3> :
          */
         template <typename Action, typename... Args>
         bool retriangulate(int height, unsigned nThreads,
-            NProgressTrackerOpen* tracker,
+            ProgressTrackerOpen* tracker,
             Action&& action, Args&&... args) const;
 
         /**
@@ -1873,7 +1873,7 @@ class REGINA_API Triangulation<3> :
          * because this is a non-orientable triangulation with embedded
          * two-sided projective planes.
          */
-        long connectedSumDecomposition(NPacket* primeParent = 0,
+        long connectedSumDecomposition(Packet* primeParent = 0,
             bool setLabels = true);
         /**
          * Determines whether this is a triangulation of a 3-sphere.
@@ -2001,7 +2001,7 @@ class REGINA_API Triangulation<3> :
          * underlying 3-manifold is composite (in which case the
          * original triangulation was not changed).
          */
-        NPacket* makeZeroEfficient();
+        Packet* makeZeroEfficient();
         /**
          * Determines whether this is a triangulation of the solid
          * torus; that is, the unknot complement.  This routine can be
@@ -2920,11 +2920,11 @@ class REGINA_API Triangulation<3> :
 
         /*@}*/
 
-        static NXMLPacketReader* xmlReader(NPacket* parent,
-            NXMLTreeResolver& resolver);
+        static XMLPacketReader* xmlReader(Packet* parent,
+            XMLTreeResolver& resolver);
 
     protected:
-        virtual NPacket* internalClonePacket(NPacket* parent) const;
+        virtual Packet* internalClonePacket(Packet* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
 
         /**
@@ -3002,7 +3002,7 @@ class REGINA_API Triangulation<3> :
          * can be kept out of the main headers.
          */
         bool retriangulateInternal(int height, unsigned nThreads,
-            NProgressTrackerOpen* tracker,
+            ProgressTrackerOpen* tracker,
             const std::function<bool(const NTriangulation&)>& action) const;
 
         void stretchBoundaryForestFromVertex(NVertex*, std::set<NEdge*>&,
@@ -3067,7 +3067,7 @@ inline Triangulation<3>::~Triangulation() {
     clearAllProperties();
 }
 
-inline NPacket* Triangulation<3>::internalClonePacket(NPacket*) const {
+inline Packet* Triangulation<3>::internalClonePacket(Packet*) const {
     return new NTriangulation(*this);
 }
 
@@ -3183,7 +3183,7 @@ inline const Triangulation<3>::TuraevViroSet&
 
 template <typename Action, typename... Args>
 inline bool Triangulation<3>::retriangulate(int height, unsigned nThreads,
-        NProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
+        ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
     return retriangulateInternal(height, nThreads, tracker,
         std::bind(action, std::placeholders::_1, args...));
 }

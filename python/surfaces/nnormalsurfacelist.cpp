@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "maths/nmatrixint.h"
-#include "progress/nprogresstracker.h"
+#include "progress/progresstracker.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/ntriangulation.h"
 #include "../safeheldtype.h"
@@ -70,7 +70,7 @@ namespace {
     }
     NNormalSurfaceList* unified_5(regina::NTriangulation* owner,
             regina::NormalCoords coords, regina::NormalList which,
-            regina::NormalAlg algHints, regina::NProgressTracker* tracker) {
+            regina::NormalAlg algHints, regina::ProgressTracker* tracker) {
         return NNormalSurfaceList::enumerate(owner, coords, which, algHints,
             tracker);
     }
@@ -95,7 +95,7 @@ void addNNormalSurfaceList() {
         return_value_policy<manage_new_object>());
 
     scope s = class_<NNormalSurfaceList,
-            bases<regina::NPacket>,
+            bases<regina::Packet>,
             SafeHeldType<NNormalSurfaceList>, boost::noncopyable>
             ("NNormalSurfaceList", no_init)
         .def("coords", &NNormalSurfaceList::coords)
@@ -149,7 +149,7 @@ void addNNormalSurfaceList() {
     s.attr("typeID") = regina::PACKET_NORMALSURFACELIST;
 
     implicitly_convertible<SafeHeldType<NNormalSurfaceList>,
-        SafeHeldType<regina::NPacket> >();
+        SafeHeldType<regina::Packet> >();
 
     FIX_REGINA_BOOST_CONVERTERS(NNormalSurfaceList);
 }

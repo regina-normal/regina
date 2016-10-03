@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "file/nglobaldirs.h"
+#include "file/globaldirs.h"
 #include "reginamain.h"
 #include "reginasupport.h"
 #include <QFile>
@@ -143,7 +143,7 @@ void ReginaSupport::failure(QWidget* parent, const QString& text,
 
 const QString& ReginaSupport::home() {
     if (home_.isNull())
-        home_ = QFile::decodeName(regina::NGlobalDirs::home().c_str());
+        home_ = QFile::decodeName(regina::GlobalDirs::home().c_str());
     return home_;
 }
 

@@ -45,7 +45,7 @@ PacketFilter* RecogniserHandler::canExport() const {
     return new SubclassFilter<regina::NTriangulation>();
 }
 
-bool RecogniserHandler::exportData(regina::NPacket* data,
+bool RecogniserHandler::exportData(regina::Packet* data,
         const QString& fileName, QWidget* parentWidget) const {
     regina::NTriangulation* tri = dynamic_cast<regina::NTriangulation*>(data);
     if (! tri->isValid()) {

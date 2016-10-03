@@ -10,7 +10,7 @@ sigs = [ 'tLAwLvLLMvQQQkcbbdfkonmlnroqprqqsshqnhjpiapvsvnjrgfohk',
 def enum(t, coords, which, alg):
     start = time.clock()
     if progress:
-        m = NProgressTracker()
+        m = ProgressTracker()
         s = NNormalSurfaceList.enumerate(t, coords, which, alg, m)
         while not m.isFinished():
             print m.percent(), '%'

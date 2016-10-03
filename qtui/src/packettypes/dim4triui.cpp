@@ -50,7 +50,7 @@
 #include <QToolBar>
 #include <QVBoxLayout>
 
-using regina::NPacket;
+using regina::Packet;
 using regina::Dim4Triangulation;
 
 Dim4TriangulationUI::Dim4TriangulationUI(regina::Dim4Triangulation* packet,
@@ -119,7 +119,7 @@ Dim4TriHeaderUI::Dim4TriHeaderUI(regina::Dim4Triangulation* packet,
     tri->listen(this);
 }
 
-regina::NPacket* Dim4TriHeaderUI::getPacket() {
+regina::Packet* Dim4TriHeaderUI::getPacket() {
     return tri;
 }
 
@@ -180,15 +180,15 @@ void Dim4TriHeaderUI::lockedExplanation() {
             "edit the clone instead.</qt>"));
 }
 
-void Dim4TriHeaderUI::childWasAdded(regina::NPacket* packet,
-        regina::NPacket* child) {
+void Dim4TriHeaderUI::childWasAdded(regina::Packet* packet,
+        regina::Packet* child) {
     // Be careful - we may not be in the GUI thread.
     QApplication::postEvent(this, new QEvent(
         (QEvent::Type)EVT_HEADER_CHILD_ADDED));
 }
 
-void Dim4TriHeaderUI::childWasRemoved(regina::NPacket* packet,
-        regina::NPacket* child, bool inParentDestructor) {
+void Dim4TriHeaderUI::childWasRemoved(regina::Packet* packet,
+        regina::Packet* child, bool inParentDestructor) {
     if (! inParentDestructor)
         refreshLock();
 }

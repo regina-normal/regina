@@ -47,7 +47,7 @@
  * for each triangulation by passing -s.
  */
 
-#include "packet/ncontainer.h"
+#include "packet/container.h"
 #include "surfaces/nnormalsurfacelist.h"
 #include "triangulation/ntriangulation.h"
 
@@ -64,9 +64,9 @@ unsigned totKept = 0;
 
 bool makeSurfaces = false;
 bool checkZeroEff = false;
-NContainer* all;
+Container* all;
 
-typedef std::map<std::string, NPacket*> HomologyMap;
+typedef std::map<std::string, Packet*> HomologyMap;
 HomologyMap H1Map;
 
 void usage(const char* progName, const std::string& error = std::string()) {
@@ -93,7 +93,7 @@ void insertTri(const NTriangulation& source) {
 
     HomologyMap::iterator it = H1Map.find(H1);
     if (it == H1Map.end()) {
-        NPacket* p = new NContainer();
+        Packet* p = new Container();
         p->setLabel(H1);
         p->insertChildLast(t);
 
@@ -108,7 +108,7 @@ void insertTri(const NTriangulation& source) {
 }
 
 void process(const char* filename) {
-    NPacket* tree = open(filename);
+    Packet* tree = open(filename);
     if (tree == 0) {
         std::cerr << "ERROR: Could not read data from " << filename << '.'
             << std::endl;
@@ -121,7 +121,7 @@ void process(const char* filename) {
 
     NTriangulation* t;
 
-    for (NPacket* p = tree; p; p = p->nextTreePacket())
+    for (Packet* p = tree; p; p = p->nextTreePacket())
         if (p->type() == PACKET_TRIANGULATION) {
             nTris++;
 
@@ -182,7 +182,7 @@ int main(int argc, char* argv[]) {
         process(argv[i]);
 
     // Insert each homology container into the overall container.
-    all = new NContainer();
+    all = new Container();
     all->setLabel("All");
 
     long size;

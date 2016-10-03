@@ -33,7 +33,7 @@
 #include "dim4/dim4triangulation.h"
 #include "hypersurface/nnormalhypersurfacelist.h"
 #include "maths/nmatrixint.h"
-#include "progress/nprogresstracker.h"
+#include "progress/progresstracker.h"
 #include "../safeheldtype.h"
 #include "../helpers.h"
 
@@ -63,7 +63,7 @@ namespace {
     }
     NNormalHypersurfaceList* unified_5(regina::Dim4Triangulation* owner,
             regina::HyperCoords coords, regina::HyperList which,
-            regina::HyperAlg algHints, regina::NProgressTracker* tracker) {
+            regina::HyperAlg algHints, regina::ProgressTracker* tracker) {
         return NNormalHypersurfaceList::enumerate(owner, coords, which,
             algHints, tracker);
     }
@@ -74,7 +74,7 @@ void addNNormalHypersurfaceList() {
         regina::makeMatchingEquations,
         return_value_policy<manage_new_object>());
 
-    scope s = class_<NNormalHypersurfaceList, bases<regina::NPacket>,
+    scope s = class_<NNormalHypersurfaceList, bases<regina::Packet>,
             SafeHeldType<NNormalHypersurfaceList>, boost::noncopyable>
             ("NNormalHypersurfaceList", no_init)
         .def("enumerate", unified_2,
@@ -103,7 +103,7 @@ void addNNormalHypersurfaceList() {
     s.attr("typeID") = regina::PACKET_NORMALHYPERSURFACELIST;
 
     implicitly_convertible<SafeHeldType<NNormalHypersurfaceList>,
-        SafeHeldType<regina::NPacket> >();
+        SafeHeldType<regina::Packet> >();
 
     FIX_REGINA_BOOST_CONVERTERS(NNormalHypersurfaceList);
 }

@@ -32,7 +32,7 @@
 
 #include <boost/python.hpp>
 #include "foreign/dehydration.h"
-#include "packet/ncontainer.h"
+#include "packet/container.h"
 #include "../safeheldtype.h"
 
 using namespace boost::python;

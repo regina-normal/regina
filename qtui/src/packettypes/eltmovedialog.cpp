@@ -400,7 +400,7 @@ void EltMoveDialog::updateApply() {
     buttons->button(QDialogButtonBox::Apply)->setEnabled(b && b->isEnabled());
 }
 
-void EltMoveDialog::packetWasRenamed(regina::NPacket*) {
+void EltMoveDialog::packetWasRenamed(regina::Packet*) {
     name->setText(tri->humanLabel().c_str());
 }
 
@@ -415,7 +415,7 @@ void EltMoveDialog::updateStates(ChooserClass* chooser, QRadioButton* button) {
     }
 }
 
-void EltMoveDialog::packetWasChanged(regina::NPacket*) {
+void EltMoveDialog::packetWasChanged(regina::Packet*) {
     if (tri->size() == 1)
         overview->setText(tr("1 tetrahedron"));
     else
@@ -437,7 +437,7 @@ void EltMoveDialog::packetWasChanged(regina::NPacket*) {
     updateApply();
 }
 
-void EltMoveDialog::packetToBeDestroyed(regina::NPacket*) {
+void EltMoveDialog::packetToBeDestroyed(regina::Packet*) {
     reject();
 }
 

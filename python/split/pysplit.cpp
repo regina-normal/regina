@@ -32,7 +32,7 @@
 
 void addNSignature();
 
-void addSplit() {
+void addSplitClasses() {
     addNSignature();
 }
 

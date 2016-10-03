@@ -1,4 +1,7 @@
 SET ( FILES
+  anglescreator
+  anglesui
+  containerui
   dim2tricreator
   dim2trigluings
   dim2triskeleton
@@ -14,10 +17,7 @@ SET ( FILES
   gaprunner
   generictriui
   groupwidget
-  nanglestructurecreator
-  nanglestructureui
   ncompatcanvas
-  ncontainerui
   nhypercompatui
   nhypercoordinateui
   nhypermatchingui
@@ -26,8 +26,6 @@ SET ( FILES
   nhypersurfaceui
   nnormalsurfacecreator
   nnormalsurfaceui
-  npdfui
-  nscriptui
   nsnappeaalgebra
   nsnappeacreator
   nsnappeafile
@@ -41,7 +39,6 @@ SET ( FILES
   nsurfacefilterprop
   nsurfacematchingui
   nsurfacesummaryui
-  ntextui
   ntrialgebra
   ntriangulationcreator
   ntriangulationui
@@ -50,8 +47,11 @@ SET ( FILES
   ntriskeleton
   ntrisnappea
   ntrisurfaces
+  pdfui
+  scriptui
   skeletonwindow
   snappeacomponents
+  textui
   )
 
 FOREACH( FILE ${FILES} )

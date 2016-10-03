@@ -30,11 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-void addNFileInfo();
-void addNGlobalDirs();
+void addFileInfo();
+void addGlobalDirs();
 
-void addFile() {
-    addNFileInfo();
-    addNGlobalDirs();
+void addFileClasses() {
+    addFileInfo();
+    addGlobalDirs();
 }
 

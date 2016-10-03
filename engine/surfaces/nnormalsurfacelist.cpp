@@ -236,7 +236,7 @@ void NNormalSurfaceList::writeXMLPacketData(std::ostream& out) const {
         (*it)->writeXMLData(out);
 }
 
-NPacket* NNormalSurfaceList::internalClonePacket(NPacket* /* parent */) const {
+Packet* NNormalSurfaceList::internalClonePacket(Packet* /* parent */) const {
     NNormalSurfaceList* ans = new NNormalSurfaceList(
         coords_, which_, algorithm_);
     transform(surfaces.begin(), surfaces.end(), back_inserter(ans->surfaces),

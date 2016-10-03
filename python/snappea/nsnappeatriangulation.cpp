@@ -40,7 +40,7 @@
 
 using namespace boost::python;
 using namespace regina::python;
-using regina::NCusp;
+using regina::Cusp;
 using regina::NSnapPeaTriangulation;
 using regina::NTriangulation;
 
@@ -72,17 +72,17 @@ namespace {
 }
 
 void addNSnapPeaTriangulation() {
-    class_<NCusp, std::auto_ptr<NCusp>, boost::noncopyable>("NCusp", no_init)
-        .def("vertex", &NCusp::vertex,
+    class_<Cusp, std::auto_ptr<Cusp>, boost::noncopyable>("Cusp", no_init)
+        .def("vertex", &Cusp::vertex,
             return_value_policy<reference_existing_object>())
-        .def("complete", &NCusp::complete)
-        .def("m", &NCusp::m)
-        .def("l", &NCusp::l)
+        .def("complete", &Cusp::complete)
+        .def("m", &Cusp::m)
+        .def("l", &Cusp::l)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
     ;
 
-    scope s = class_<NSnapPeaTriangulation, bases<regina::NTriangulation>,
+    class_<NSnapPeaTriangulation, bases<regina::NTriangulation>,
             SafeHeldType<NSnapPeaTriangulation>, boost::noncopyable>
             ("NSnapPeaTriangulation", init<>())
         .def(init<const std::string&>())
@@ -99,10 +99,12 @@ void addNSnapPeaTriangulation() {
         .def("minImaginaryShape", &NSnapPeaTriangulation::minImaginaryShape)
         .def("gluingEquations", &NSnapPeaTriangulation::gluingEquations,
             return_value_policy<manage_new_object>())
-        .def("gluingEquationsRect", &NSnapPeaTriangulation::gluingEquationsRect,
+        .def("gluingEquationsRect",
+            &NSnapPeaTriangulation::gluingEquationsRect,
             return_value_policy<manage_new_object>())
         .def("countCusps", &NSnapPeaTriangulation::countCusps)
-        .def("countCompleteCusps", &NSnapPeaTriangulation::countCompleteCusps)
+        .def("countCompleteCusps",
+            &NSnapPeaTriangulation::countCompleteCusps)
         .def("countFilledCusps", &NSnapPeaTriangulation::countFilledCusps)
         .def("cusp", &NSnapPeaTriangulation::cusp, OL_cusp()[
             return_value_policy<reference_existing_object>()])
@@ -143,11 +145,13 @@ void addNSnapPeaTriangulation() {
         .staticmethod("kernelMessagesEnabled")
         .staticmethod("enableKernelMessages")
         .staticmethod("disableKernelMessages")
+        .attr("typeID") = regina::PACKET_SNAPPEATRIANGULATION
     ;
 
     enum_<NSnapPeaTriangulation::SolutionType>("SolutionType")
         .value("not_attempted", NSnapPeaTriangulation::not_attempted)
-        .value("geometric_solution", NSnapPeaTriangulation::geometric_solution)
+        .value("geometric_solution",
+            NSnapPeaTriangulation::geometric_solution)
         .value("nongeometric_solution",
             NSnapPeaTriangulation::nongeometric_solution)
         .value("flat_solution", NSnapPeaTriangulation::flat_solution)
@@ -159,11 +163,11 @@ void addNSnapPeaTriangulation() {
             NSnapPeaTriangulation::externally_computed)
     ;
 
-    s.attr("typeID") = regina::PACKET_SNAPPEATRIANGULATION;
-
     implicitly_convertible<SafeHeldType<NSnapPeaTriangulation>,
         SafeHeldType<regina::NTriangulation> >();
 
     FIX_REGINA_BOOST_CONVERTERS(NSnapPeaTriangulation);
+
+    scope().attr("NCusp") = scope().attr("Cusp");
 }
 

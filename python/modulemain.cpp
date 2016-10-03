@@ -38,27 +38,27 @@
 
 void addGlobalArray();
 
-void addAlgebra();
-void addAngle();
-void addCensus();
-void addDim2();
-void addDim4();
-void addFile();
-void addForeign();
-void addGeneric();
-void addHypersurface();
-void addLinkDir();
-void addManifold();
-void addMaths();
-void addPacket();
-void addProgress();
-void addSnapPea();
-void addSplit();
-void addSubcomplex();
-void addSurfaces();
-void addTreewidth();
-void addTriangulation();
-void addUtilities();
+void addAlgebraClasses();
+void addAngleClasses();
+void addCensusClasses();
+void addDim2Classes();
+void addDim4Classes();
+void addFileClasses();
+void addForeignClasses();
+void addGenericClasses();
+void addHypersurfaceClasses();
+void addLinkClasses();
+void addManifoldClasses();
+void addMathsClasses();
+void addPacketClasses();
+void addProgressClasses();
+void addSnapPeaClasses();
+void addSplitClasses();
+void addSubcomplexClasses();
+void addSurfacesClasses();
+void addTreewidthClasses();
+void addTriangulationClasses();
+void addUtilitiesClasses();
 
 using boost::python::self;
 
@@ -98,26 +98,26 @@ BOOST_PYTHON_MODULE(engine) {
 
     // Components from subdirectories (in approximate dependency order):
 
-    addUtilities();
-    addProgress();
-    addMaths();
-    addAlgebra();
-    addPacket();
-    addTriangulation();
-    addCensus();
-    addDim4();
-    addFile();
-    addForeign();
-    addSplit();
-    addSnapPea();
-    addSubcomplex();
-    addManifold();
-    addAngle();
-    addSurfaces();
-    addHypersurface();
-    addDim2();
-    addGeneric();
-    addTreewidth();
-    addLinkDir();
+    addUtilitiesClasses();
+    addProgressClasses();
+    addMathsClasses();
+    addAlgebraClasses();
+    addPacketClasses();
+    addTriangulationClasses();
+    addCensusClasses();
+    addDim4Classes();
+    addFileClasses();
+    addForeignClasses();
+    addSplitClasses();
+    addSnapPeaClasses();
+    addSubcomplexClasses();
+    addManifoldClasses();
+    addAngleClasses();
+    addSurfacesClasses();
+    addHypersurfaceClasses();
+    addDim2Classes();
+    addGenericClasses();
+    addTreewidthClasses();
+    addLinkClasses();
 }
 

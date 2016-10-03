@@ -67,10 +67,10 @@ NNormalSurfaceList* NNormalSurfaceList::quadOctToStandardAN() const {
 
 template void NNormalSurfaceList::buildStandardFromReduced<
         NNormalSurfaceList::NormalSpec>(NTriangulation*,
-        const std::vector<NNormalSurface*>&, NProgressTracker*);
+        const std::vector<NNormalSurface*>&, ProgressTracker*);
 template void NNormalSurfaceList::buildStandardFromReduced<
         NNormalSurfaceList::AlmostNormalSpec>(NTriangulation*,
-        const std::vector<NNormalSurface*>&, NProgressTracker*);
+        const std::vector<NNormalSurface*>&, ProgressTracker*);
 
 /**
  * Put helper classes and constants into an anonymous namespace.
@@ -337,7 +337,7 @@ NNormalSurfaceList* NNormalSurfaceList::internalReducedToStandard() const {
 template <class Variant>
 void NNormalSurfaceList::buildStandardFromReduced(NTriangulation* owner,
         const std::vector<NNormalSurface*>& reducedList,
-        NProgressTracker* tracker) {
+        ProgressTracker* tracker) {
     size_t nFacets = Variant::stdLen(owner->size());
 
     // Choose a bitmask type for representing the set of facets that a
@@ -374,7 +374,7 @@ void NNormalSurfaceList::buildStandardFromReduced(NTriangulation* owner,
 template <class Variant, class BitmaskType>
 void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
         const std::vector<NNormalSurface*>& reducedList,
-        NProgressTracker* tracker) {
+        ProgressTracker* tracker) {
     // Prepare for the reduced-to-standard double description run.
     unsigned long n = owner->size();
     size_t slen = Variant::stdLen(n); // # standard coordinates

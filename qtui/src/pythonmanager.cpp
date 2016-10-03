@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "regina-config.h"
-#include "file/nglobaldirs.h"
+#include "file/globaldirs.h"
 
 #include "pythonmanager.h"
 #include "reginasupport.h"
@@ -58,7 +58,7 @@ void PythonManager::deregisterConsole(PythonConsole* console) {
 
 void PythonManager::openPythonReference(QWidget* topLevelWindow) {
     QString docDir =
-        QFile::decodeName(regina::NGlobalDirs::engineDocs().c_str());
+        QFile::decodeName(regina::GlobalDirs::engineDocs().c_str());
     QString index = docDir + "/index.html";
 
     if (QFileInfo(index).exists()) {
@@ -77,7 +77,7 @@ void PythonManager::openPythonReference(QWidget* topLevelWindow) {
 #include "python/pythonconsole.h"
 
 PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
-        regina::NPacket* tree, regina::NPacket* selectedPacket) {
+        regina::Packet* tree, regina::Packet* selectedPacket) {
     PythonConsole* ans = new PythonConsole(parent, this);
 
     ans->blockInput(parent->QObject::tr("Initialising..."));
@@ -190,7 +190,7 @@ namespace {
 }
 
 PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
-        regina::NPacket*, regina::NPacket*) {
+        regina::Packet*, regina::Packet*) {
     return scriptingDisabled(parent);
 }
 

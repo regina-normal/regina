@@ -56,11 +56,11 @@ namespace regina {
  */
 enum PacketType {
     /**
-     * Represents a container packet, of class NContainer.
+     * Represents a container packet, of class Container.
      */
     PACKET_CONTAINER = 1,
     /**
-     * Represents a text packet, of class NText.
+     * Represents a text packet, of class Text.
      */
     PACKET_TEXT = 2,
     /**
@@ -75,7 +75,7 @@ enum PacketType {
      */
     PACKET_NORMALSURFACELIST = 6,
     /**
-     * Represents a script packet, of class NScript.
+     * Represents a script packet, of class Script.
      */
     PACKET_SCRIPT = 7,
     /**
@@ -84,11 +84,11 @@ enum PacketType {
      */
     PACKET_SURFACEFILTER = 8,
     /**
-     * Represents an angle structure list, of class NAngleStructureList.
+     * Represents an angle structure list, of class AngleStructures.
      */
     PACKET_ANGLESTRUCTURELIST = 9,
     /**
-     * Represents a PDF document, of class NPDF.
+     * Represents a PDF document, of class PDF.
      */
     PACKET_PDF = 10,
     /**

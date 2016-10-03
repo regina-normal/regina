@@ -46,7 +46,7 @@
  * The original file will be overwritten with any changes that were made.
  */
 
-#include <packet/ncontainer.h>
+#include <packet/container.h>
 #include <subcomplex/nblockedsfs.h>
 #include <subcomplex/nstandardtri.h>
 #include <triangulation/ntriangulation.h>
@@ -60,10 +60,10 @@
 using namespace regina;
 
 bool saveChanges = true;
-NPacket* tree;
+Packet* tree;
 
 struct TriSpec {
-    NPacket* packet;
+    Packet* packet;
     bool isTri;
     bool hasName;
     bool hasSpecialName;
@@ -116,22 +116,22 @@ void usage(const char* progName, const std::string& error = std::string()) {
     exit(1);
 }
 
-bool hasTriangulation(NContainer* c) {
-    for (NPacket* child = c->firstChild(); child; child = child->nextSibling())
+bool hasTriangulation(Container* c) {
+    for (Packet* child = c->firstChild(); child; child = child->nextSibling())
         if (child->type() == PACKET_TRIANGULATION)
             return true;
 
     return false;
 }
 
-void process(NContainer* c) {
+void process(Container* c) {
     if (! hasTriangulation(c))
         return;
 
     NStandardTriangulation* std;
     std::vector<TriSpec> children;
     TriSpec spec;
-    for (NPacket* child = c->firstChild(); child;
+    for (Packet* child = c->firstChild(); child;
             child = child->nextSibling()) {
         spec.packet = child;
         spec.isTri = (child->type() == PACKET_TRIANGULATION);
@@ -204,9 +204,9 @@ int main(int argc, char* argv[]) {
     }
 
     // Process each container.
-    for (NPacket* p = tree; p; p = p->nextTreePacket())
+    for (Packet* p = tree; p; p = p->nextTreePacket())
         if (p->type() == PACKET_CONTAINER)
-            process(static_cast<NContainer*>(p));
+            process(static_cast<Container*>(p));
 
     // Save the data file if required.
     if (saveChanges) {

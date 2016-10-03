@@ -61,7 +61,7 @@ class GenericTriangulationBase : public QObject, public PacketReadOnlyUI {
         /**
          * Packet details
          */
-        regina::NPacket* packet;
+        regina::Packet* packet;
 
         /**
          * Internal components
@@ -72,13 +72,13 @@ class GenericTriangulationBase : public QObject, public PacketReadOnlyUI {
         /**
          * Constructor and destructor.
          */
-        GenericTriangulationBase(regina::NPacket* p,
+        GenericTriangulationBase(regina::Packet* p,
             PacketPane* enclosingPane);
 
         /**
          * PacketUI overrides.
          */
-        regina::NPacket* getPacket();
+        regina::Packet* getPacket();
 
     public slots:
         /**

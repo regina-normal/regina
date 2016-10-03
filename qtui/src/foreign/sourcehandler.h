@@ -57,7 +57,7 @@ class SourceHandler : public PacketExporter {
          * PacketExporter overrides:
          */
         virtual PacketFilter* canExport() const;
-        virtual bool exportData(regina::NPacket* data, const QString& fileName,
+        virtual bool exportData(regina::Packet* data, const QString& fileName,
             QWidget* parentWidget) const;
         virtual bool useExportEncoding() const;
 

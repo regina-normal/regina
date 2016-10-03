@@ -45,7 +45,6 @@
  * A single-processor version of this tool also exists (../normal.cpp).
  */
 
-#include <packet/ncontainer.h>
 #include <surfaces/nnormalsurfacelist.h>
 #include <triangulation/ntriangulation.h>
 
@@ -360,8 +359,8 @@ void slaveSendResult(long ans) {
  */
 int mainSlave() {
     char filename[MAX_FILENAME + 1];
-    NPacket* tree = 0;
-    NPacket* p;
+    Packet* tree = 0;
+    Packet* p;
     NTriangulation* t;
     NNormalSurfaceList* s;
     long done;

@@ -32,13 +32,13 @@
 
 #import "ReginaHelper.h"
 #import "TextViewController.h"
-#import "packet/ntext.h"
+#import "packet/text.h"
 
 @interface TextViewController () <UITextViewDelegate> {
     BOOL myEdit;
 }
 @property (weak, nonatomic) IBOutlet UITextView *detail;
-@property (assign, nonatomic) regina::NText* packet;
+@property (assign, nonatomic) regina::Text* packet;
 @end
 
 @implementation TextViewController

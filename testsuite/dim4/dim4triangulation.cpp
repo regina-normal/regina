@@ -41,7 +41,7 @@
 #include "dim4/dim4tetrahedron.h"
 #include "dim4/dim4triangulation.h"
 #include "manifold/nmanifold.h"
-#include "packet/ncontainer.h"
+#include "packet/container.h"
 #include "subcomplex/nstandardtri.h"
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntetrahedron.h"
@@ -1168,7 +1168,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             // We have a non-empty connected triangulation.
             if (tri->isOrientable()) {
                 // We should simply come away with two identical copies of tri.
-                regina::NContainer parent;
+                regina::Container parent;
                 if (cover.splitIntoComponents(&parent) != 2) {
                     std::ostringstream msg;
                     msg << tri->label()
