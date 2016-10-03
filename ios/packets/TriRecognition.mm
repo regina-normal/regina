@@ -70,7 +70,7 @@
 @interface TriRecognition () <UITableViewDataSource> {
     NSMutableArray* propertyList;
     NSString* manifoldName;
-    regina::NProperty<bool> isHyp;
+    regina::Property<bool> isHyp;
 }
 @property (weak, nonatomic) IBOutlet UILabel *header;
 @property (weak, nonatomic) IBOutlet UILabel *volume;

@@ -54,7 +54,7 @@
 #include "progress/progresstracker.h"
 #include "utilities/memutils.h"
 #include "utilities/nbitmask.h"
-#include "utilities/ntrieset.h"
+#include "utilities/trieset.h"
 
 namespace regina {
 
@@ -422,10 +422,10 @@ bool NDoubleDescription::intersectHyperplane(
     const BitmaskType* constraint;
     bool broken;
 
-    // We use the NTrieSet data structure to speed up adjacency testing
-    // in the code below.  Construct an NTrieSet that records the facet
+    // We use the TrieSet data structure to speed up adjacency testing
+    // in the code below.  Construct a TrieSet that records the facet
     // structure for every vertex in the old solution set.
-    NTrieSet<BitmaskType> trie;
+    TrieSet<BitmaskType> trie;
     for (otherit = src.begin(); otherit != src.end(); ++otherit)
         trie.insert((*otherit)->facets());
 

@@ -33,7 +33,7 @@
 #include "algebra/nxmlalgebrareader.h"
 #include "dim4/dim4triangulation.h"
 #include "dim4/nxmldim4trireader.h"
-#include "utilities/nproperty.h"
+#include "utilities/property.h"
 
 namespace regina {
 
@@ -46,7 +46,7 @@ namespace {
      */
     class NAbelianGroupPropertyReader : public XMLElementReader {
         public:
-            typedef NProperty<NAbelianGroup, StoreManagedPtr> PropType;
+            typedef Property<NAbelianGroup, StoreManagedPtr> PropType;
 
         private:
             PropType& prop_;
@@ -81,7 +81,7 @@ namespace {
      */
     class NGroupPresentationPropertyReader : public XMLElementReader {
         public:
-            typedef NProperty<NGroupPresentation, StoreManagedPtr> PropType;
+            typedef Property<NGroupPresentation, StoreManagedPtr> PropType;
 
         private:
             PropType& prop_;

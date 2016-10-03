@@ -45,7 +45,7 @@
 #include "generic/triangulation.h"
 #include "packet/packet.h"
 #include "utilities/markedvector.h"
-#include "utilities/nproperty.h"
+#include "utilities/property.h"
 
 // The following headers are necessary so that std::unique_ptr can invoke
 // destructors where necessary.

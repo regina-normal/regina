@@ -30,13 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file utilities/ntrieset.h
+/*! \file utilities/trieset.h
  *  \brief Provides a trie-like structure for storing sets.
  */
 
-#ifndef __NTRIESET_H
+#ifndef __TRIESET_H
 #ifndef __DOXYGEN
-#define __NTRIESET_H
+#define __TRIESET_H
 #endif
 
 #include "regina-core.h"
@@ -89,9 +89,9 @@ namespace regina {
  * \ifacespython Not present.
  */
 template <typename T>
-class NTrieSet {
+class TrieSet {
     private:
-        NTrieSet* child_[2];
+        TrieSet* child_[2];
             /**< Stores the two child nodes that appear beneath this
                  node in the tree.  If \c P is the prefix corresponding
                  to this node, then the two child nodes will correspond to
@@ -108,11 +108,11 @@ class NTrieSet {
         /**
          * Constructs an empty collection of sets.
          */
-        NTrieSet();
+        TrieSet();
         /**
          * Destroys this collection of sets.
          */
-        ~NTrieSet();
+        ~TrieSet();
 
         /**
          * Insert the given set into this collection.  The same set may
@@ -191,38 +191,38 @@ class NTrieSet {
 
 /*@}*/
 
-// Inline functions and template implementations for NTrieSet
+// Inline functions and template implementations for TrieSet
 
 template <typename T>
-inline NTrieSet<T>::NTrieSet() : descendants_(0) {
+inline TrieSet<T>::TrieSet() : descendants_(0) {
     child_[0] = child_[1] = 0;
 }
 
 template <typename T>
-inline NTrieSet<T>::~NTrieSet() {
+inline TrieSet<T>::~TrieSet() {
     delete child_[0];
     delete child_[1];
 }
 
 template <typename T>
-void NTrieSet<T>::insert(const T& entry) {
+void TrieSet<T>::insert(const T& entry) {
     ++descendants_;
 
     long last = entry.lastBit();
     if (last < 0)
         return;
 
-    NTrieSet<T>* node = this;
+    TrieSet<T>* node = this;
     for (long pos = 0; pos <= last; ++pos) {
         if (entry.get(pos)) {
             // Follow right branch.
             if (! node->child_[1])
-                node->child_[1] = new NTrieSet<T>();
+                node->child_[1] = new TrieSet<T>();
             node = node->child_[1];
         } else {
             // Follow left branch.
             if (! node->child_[0])
-                node->child_[0] = new NTrieSet<T>();
+                node->child_[0] = new TrieSet<T>();
             node = node->child_[0];
         }
         ++node->descendants_;
@@ -230,9 +230,9 @@ void NTrieSet<T>::insert(const T& entry) {
 }
 
 template <typename T>
-bool NTrieSet<T>::hasSubset(const T& superset, unsigned long universeSize)
+bool TrieSet<T>::hasSubset(const T& superset, unsigned long universeSize)
         const {
-    const NTrieSet<T>** node = new const NTrieSet<T>*[universeSize + 2];
+    const TrieSet<T>** node = new const TrieSet<T>*[universeSize + 2];
 
     long level = 0;
     node[0] = this;
@@ -268,9 +268,9 @@ bool NTrieSet<T>::hasSubset(const T& superset, unsigned long universeSize)
 }
 
 template <typename T>
-bool NTrieSet<T>::hasExtraSuperset(const T& subset,
+bool TrieSet<T>::hasExtraSuperset(const T& subset,
         const T& exc1, const T& exc2, unsigned long universeSize) const {
-    const NTrieSet<T>** node = new const NTrieSet<T>*[universeSize + 2];
+    const TrieSet<T>** node = new const TrieSet<T>*[universeSize + 2];
 
     long last = subset.lastBit();
 

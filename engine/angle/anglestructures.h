@@ -47,7 +47,7 @@
 #include "angle/anglestructure.h"
 #include "packet/packet.h"
 #include "utilities/memutils.h"
-#include "utilities/nproperty.h"
+#include "utilities/property.h"
 
 namespace regina {
 
@@ -91,12 +91,12 @@ class REGINA_API AngleStructures : public Packet {
                  This is an option selected by the user before enumeration
                  takes place. */
 
-        mutable NProperty<bool> doesSpanStrict;
+        mutable Property<bool> doesSpanStrict;
             /**< Does the convex span of this list include a strict
                  angle structure?
                  This is determined by looking at the output angle structues
                  after enumeration has taken place. */
-        mutable NProperty<bool> doesSpanTaut;
+        mutable Property<bool> doesSpanTaut;
             /**< Does this list include a taut structure?
                  This is determined by looking at the output angle structues
                  after enumeration has taken place. */

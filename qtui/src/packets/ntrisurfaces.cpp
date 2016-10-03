@@ -321,7 +321,7 @@ QWidget* NTriSurfacesUI::getInterface() {
 void NTriSurfacesUI::refresh() {
     int autoCalcThreshold = ReginaPrefSet::global().triSurfacePropsThreshold;
 
-    regina::NProperty<bool> isHyp;
+    regina::Property<bool> isHyp;
     if (! tri->isValid())
         isHyp = false;
 

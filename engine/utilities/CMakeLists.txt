@@ -27,18 +27,15 @@ if (${REGINA_INSTALL_DEV})
     flags.h
     i18nutils.h
     intutils.h
+    listoncall.h
+    markedvector.h
     memutils.h
     nbitmask.h
     nbooleans.h
-    listoncall.h
-    markedvector.h
-    nproperty.h
     nqitmask.h
-    ntrieset.h
     ntritmask.h
-    xmlcallback.h
-    xmlelementreader.h
     osutils.h
+    property.h
     ptrutils.h
     registryutils.h
     safepointeebase.h
@@ -47,6 +44,9 @@ if (${REGINA_INSTALL_DEV})
     sequence.h
     stringutils.h
     stringutils-impl.h
+    trieset.h
+    xmlcallback.h
+    xmlelementreader.h
     xmlutils.h
     DESTINATION ${INCLUDEDIR}/utilities COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

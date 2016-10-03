@@ -54,7 +54,7 @@
 #include "treewidth/treedecomposition.h"
 #include "utilities/boolset.h"
 #include "utilities/markedvector.h"
-#include "utilities/nproperty.h"
+#include "utilities/property.h"
 
 // The following headers are necessary so that std::unique_ptr can invoke
 // destructors where necessary.
@@ -199,53 +199,53 @@ class REGINA_API Triangulation<3> :
         bool standard_;
             /**< Is the triangulation standard? */
 
-        mutable NProperty<NGroupPresentation, StoreManagedPtr>
+        mutable Property<NGroupPresentation, StoreManagedPtr>
                 fundamentalGroup_;
             /**< Fundamental group of the triangulation. */
-        mutable NProperty<NAbelianGroup, StoreManagedPtr> H1_;
+        mutable Property<NAbelianGroup, StoreManagedPtr> H1_;
             /**< First homology group of the triangulation. */
-        mutable NProperty<NAbelianGroup, StoreManagedPtr> H1Rel_;
+        mutable Property<NAbelianGroup, StoreManagedPtr> H1Rel_;
             /**< Relative first homology group of the triangulation
              *   with respect to the boundary. */
-        mutable NProperty<NAbelianGroup, StoreManagedPtr> H1Bdry_;
+        mutable Property<NAbelianGroup, StoreManagedPtr> H1Bdry_;
             /**< First homology group of the boundary. */
-        mutable NProperty<NAbelianGroup, StoreManagedPtr> H2_;
+        mutable Property<NAbelianGroup, StoreManagedPtr> H2_;
             /**< Second homology group of the triangulation. */
 
-        mutable NProperty<bool> twoSphereBoundaryComponents_;
+        mutable Property<bool> twoSphereBoundaryComponents_;
             /**< Does the triangulation contain any 2-sphere boundary
                  components? */
-        mutable NProperty<bool> negativeIdealBoundaryComponents_;
+        mutable Property<bool> negativeIdealBoundaryComponents_;
             /**< Does the triangulation contain any boundary components
                  that are ideal and have negative Euler characteristic? */
 
-        mutable NProperty<bool> zeroEfficient_;
+        mutable Property<bool> zeroEfficient_;
             /**< Is the triangulation zero-efficient? */
-        mutable NProperty<bool> splittingSurface_;
+        mutable Property<bool> splittingSurface_;
             /**< Does the triangulation have a normal splitting surface? */
 
-        mutable NProperty<bool> threeSphere_;
+        mutable Property<bool> threeSphere_;
             /**< Is this a triangulation of a 3-sphere? */
-        mutable NProperty<bool> threeBall_;
+        mutable Property<bool> threeBall_;
             /**< Is this a triangulation of a 3-dimensional ball? */
-        mutable NProperty<bool> solidTorus_;
+        mutable Property<bool> solidTorus_;
             /**< Is this a triangulation of the solid torus? */
-        mutable NProperty<bool> irreducible_;
+        mutable Property<bool> irreducible_;
             /**< Is this 3-manifold irreducible? */
-        mutable NProperty<bool> compressingDisc_;
+        mutable Property<bool> compressingDisc_;
             /**< Does this 3-manifold contain a compressing disc? */
-        mutable NProperty<bool> haken_;
+        mutable Property<bool> haken_;
             /**< Is this 3-manifold Haken?
                  This property must only be stored for triangulations
                  that are known to represent closed, connected,
                  orientable, irreducible 3-manifolds. */
 
-        mutable NProperty<AngleStructure, StoreManagedPtr>
+        mutable Property<AngleStructure, StoreManagedPtr>
                 strictAngleStructure_;
             /**< A strict angle structure on this triangulation, or the
                  null pointer if none exists. */
 
-        mutable NProperty<TreeDecomposition, StoreManagedPtr>
+        mutable Property<TreeDecomposition, StoreManagedPtr>
                 niceTreeDecomposition_;
             /**< A nice tree decomposition of the face pairing graph of
                  this triangulation. */

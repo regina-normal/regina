@@ -45,7 +45,7 @@ namespace {
      */
     class NAbelianGroupPropertyReader : public XMLElementReader {
         public:
-            typedef NProperty<NAbelianGroup, StoreManagedPtr> PropType;
+            typedef Property<NAbelianGroup, StoreManagedPtr> PropType;
 
         private:
             PropType& prop;
@@ -80,7 +80,7 @@ namespace {
      */
     class NGroupPresentationPropertyReader : public XMLElementReader {
         public:
-            typedef NProperty<NGroupPresentation, StoreManagedPtr> PropType;
+            typedef Property<NGroupPresentation, StoreManagedPtr> PropType;
 
         private:
             PropType& prop;

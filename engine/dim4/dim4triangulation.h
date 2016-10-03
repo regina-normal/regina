@@ -48,7 +48,7 @@
 #include "generic/triangulation.h"
 #include "packet/packet.h"
 #include "utilities/markedvector.h"
-#include "utilities/nproperty.h"
+#include "utilities/property.h"
 
 // The following headers are necessary so that std::unique_ptr can invoke
 // destructors where necessary.
@@ -154,11 +154,11 @@ class REGINA_API Triangulation<4> :
         bool ideal_;
             /**< Is the triangulation ideal? */
 
-        mutable NProperty<NGroupPresentation, StoreManagedPtr> fundGroup_;
+        mutable Property<NGroupPresentation, StoreManagedPtr> fundGroup_;
             /**< Fundamental group of the triangulation. */
-        mutable NProperty<NAbelianGroup, StoreManagedPtr> H1_;
+        mutable Property<NAbelianGroup, StoreManagedPtr> H1_;
             /**< First homology group of the triangulation. */
-        mutable NProperty<NAbelianGroup, StoreManagedPtr> H2_;
+        mutable Property<NAbelianGroup, StoreManagedPtr> H2_;
             /**< Second homology group of the triangulation. */
 
     public:

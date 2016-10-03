@@ -587,9 +587,9 @@
 		052FA08D180600FB00FAE4DF /* boolset.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E6B180600FB00FAE4DF /* boolset.h */; };
 		052FA08E180600FB00FAE4DF /* listoncall.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E6C180600FB00FAE4DF /* listoncall.h */; };
 		052FA08F180600FB00FAE4DF /* markedvector.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E6D180600FB00FAE4DF /* markedvector.h */; };
-		052FA092180600FB00FAE4DF /* nproperty.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E70180600FB00FAE4DF /* nproperty.h */; };
+		052FA092180600FB00FAE4DF /* property.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E70180600FB00FAE4DF /* property.h */; };
 		052FA093180600FB00FAE4DF /* nqitmask.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E71180600FB00FAE4DF /* nqitmask.h */; };
-		052FA097180600FB00FAE4DF /* ntrieset.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E75180600FB00FAE4DF /* ntrieset.h */; };
+		052FA097180600FB00FAE4DF /* trieset.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E75180600FB00FAE4DF /* trieset.h */; };
 		052FA098180600FB00FAE4DF /* ntritmask.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E76180600FB00FAE4DF /* ntritmask.h */; };
 		052FA099180600FB00FAE4DF /* osutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E77180600FB00FAE4DF /* osutils.cpp */; };
 		052FA09A180600FB00FAE4DF /* osutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E78180600FB00FAE4DF /* osutils.h */; };
@@ -2590,9 +2590,9 @@
 		052F9E6B180600FB00FAE4DF /* boolset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = boolset.h; sourceTree = "<group>"; };
 		052F9E6C180600FB00FAE4DF /* listoncall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = listoncall.h; sourceTree = "<group>"; };
 		052F9E6D180600FB00FAE4DF /* markedvector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = markedvector.h; sourceTree = "<group>"; };
-		052F9E70180600FB00FAE4DF /* nproperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nproperty.h; sourceTree = "<group>"; };
+		052F9E70180600FB00FAE4DF /* property.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = property.h; sourceTree = "<group>"; };
 		052F9E71180600FB00FAE4DF /* nqitmask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nqitmask.h; sourceTree = "<group>"; };
-		052F9E75180600FB00FAE4DF /* ntrieset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntrieset.h; sourceTree = "<group>"; };
+		052F9E75180600FB00FAE4DF /* trieset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trieset.h; sourceTree = "<group>"; };
 		052F9E76180600FB00FAE4DF /* ntritmask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntritmask.h; sourceTree = "<group>"; };
 		052F9E77180600FB00FAE4DF /* osutils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = osutils.cpp; sourceTree = "<group>"; };
 		052F9E78180600FB00FAE4DF /* osutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = osutils.h; sourceTree = "<group>"; };
@@ -4822,12 +4822,11 @@
 				052F9E68180600FB00FAE4DF /* memutils.h */,
 				052F9E69180600FB00FAE4DF /* nbitmask.h */,
 				050C64B11DA3085C00C9420F /* nbooleans.h */,
-				052F9E70180600FB00FAE4DF /* nproperty.h */,
 				052F9E71180600FB00FAE4DF /* nqitmask.h */,
-				052F9E75180600FB00FAE4DF /* ntrieset.h */,
 				052F9E76180600FB00FAE4DF /* ntritmask.h */,
 				052F9E77180600FB00FAE4DF /* osutils.cpp */,
 				052F9E78180600FB00FAE4DF /* osutils.h */,
+				052F9E70180600FB00FAE4DF /* property.h */,
 				052F9E79180600FB00FAE4DF /* ptrutils.h */,
 				05CA99E518078465006161DC /* registryutils.h */,
 				052942CE1C5CDC8B0011C1E6 /* safepointeebase.h */,
@@ -4837,6 +4836,7 @@
 				052F9E7B180600FB00FAE4DF /* stringutils-impl.h */,
 				052F9E7C180600FB00FAE4DF /* stringutils.cpp */,
 				052F9E7D180600FB00FAE4DF /* stringutils.h */,
+				052F9E75180600FB00FAE4DF /* trieset.h */,
 				05A73C7719B2EDFC0099C617 /* xmlcallback.cpp */,
 				05A73C7819B2EDFC0099C617 /* xmlcallback.h */,
 				05A73C7919B2EDFC0099C617 /* xmlelementreader.h */,
@@ -6197,7 +6197,7 @@
 				052FA084180600FB00FAE4DF /* bitmanip.h in Headers */,
 				052F9FDA180600FB00FAE4DF /* winged_edge.h in Headers */,
 				052942D41C5CDC8B0011C1E6 /* saferemnant.h in Headers */,
-				052FA097180600FB00FAE4DF /* ntrieset.h in Headers */,
+				052FA097180600FB00FAE4DF /* trieset.h in Headers */,
 				052FA007180600FB00FAE4DF /* nsatannulus.h in Headers */,
 				052F9F28180600FB00FAE4DF /* nlensspace.h in Headers */,
 				052F9F9F180600FB00FAE4DF /* terse_triangulation.h in Headers */,
@@ -6233,7 +6233,7 @@
 				052FA00D180600FB00FAE4DF /* nsatblocktypes.h in Headers */,
 				052942D21C5CDC8B0011C1E6 /* safepointeebase.h in Headers */,
 				052F9EC0180600FB00FAE4DF /* ndoubledescription-impl.h in Headers */,
-				052FA092180600FB00FAE4DF /* nproperty.h in Headers */,
+				052FA092180600FB00FAE4DF /* property.h in Headers */,
 				052F9ECF180600FB00FAE4DF /* nmaxadmissible-impl.h in Headers */,
 				052F9FF3180600FB00FAE4DF /* nlayeredchain.h in Headers */,
 				052F9E86180600FB00FAE4DF /* ngrouppresentation.h in Headers */,

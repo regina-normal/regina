@@ -372,11 +372,11 @@ class REGINA_API SnapPeaTriangulation : public NTriangulation,
         unsigned filledCusps_;
             /**< The number of cusps that are currently filled. */
 
-        mutable NProperty<NGroupPresentation, StoreManagedPtr> fundGroupFilled_;
+        mutable Property<NGroupPresentation, StoreManagedPtr> fundGroupFilled_;
             /**< The fundamental group of the filled triangulation,
                  or 0 if this cannot be computed (e.g., if SnapPea
                  does not return a matrix of relations). */
-        mutable NProperty<NAbelianGroup, StoreManagedPtr> h1Filled_;
+        mutable Property<NAbelianGroup, StoreManagedPtr> h1Filled_;
             /**< The first homology group of the filled triangulation,
                  or 0 if this cannot be computed. */
 

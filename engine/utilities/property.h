@@ -30,13 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file utilities/nproperty.h
+/*! \file utilities/property.h
  *  \brief Deals with calculable properties of individual objects.
  */
 
-#ifndef __NPROPERTY_H
+#ifndef __PROPERTY_H
 #ifndef __DOXYGEN
-#define __NPROPERTY_H
+#define __PROPERTY_H
 #endif
 
 #include <boost/noncopyable.hpp>
@@ -50,15 +50,15 @@ namespace regina {
  */
 
 /**
- * An NProperty storage policy indicating that the property should be
+ * A Property storage policy indicating that the property should be
  * held by value.  That is, upon assignment or initialisation the
- * underlying value will be copied into the NProperty wrapper.
+ * underlying value will be copied into the Property wrapper.
  *
  * The property type T must have a copy assignment
  * operator, and it must also have either a copy constructor and/or a
- * default constructor according to which NProperty constructors are used.
+ * default constructor according to which Property constructors are used.
  *
- * See the NProperty class notes for details.
+ * See the Property class notes for details.
  *
  * \ifacespython Not present.
  */
@@ -88,12 +88,12 @@ class StoreValue {
 };
 
 /**
- * An NProperty storage policy indicating that the property should be
+ * A Property storage policy indicating that the property should be
  * held by constant pointer.  The property assignment and query routines
- * will also use constant pointers, and the NProperty wrapper takes no
+ * will also use constant pointers, and the Property wrapper takes no
  * responsibility for memory management of the held value.
  *
- * See the NProperty class notes for details.
+ * See the Property class notes for details.
  *
  * \ifacespython Not present.
  */
@@ -130,15 +130,15 @@ class StoreConstPtr {
 };
 
 /**
- * An NProperty storage policy indicating that the property should be
+ * A Property storage policy indicating that the property should be
  * held by pointer and that the property wrapper will also take
  * responsibility for memory management.  The property assignment and
  * query routines will also use pointers; in particular the query
  * routines will return a constant pointer.  When the held value is
- * changed or the NProperty wrapper is destroyed, any currently held
+ * changed or the Property wrapper is destroyed, any currently held
  * value will be destroyed automatically.
  *
- * See the NProperty class notes for details.
+ * See the Property class notes for details.
  *
  * \ifacespython Not present.
  */
@@ -189,16 +189,16 @@ class StoreManagedPtr {
 
 /**
  * A base class that provides routines shared by all properties,
- * regardless of their individual NProperty template parameters.
+ * regardless of their individual Property template parameters.
  *
  * \ifacespython Not present.
  */
-class REGINA_API NPropertyBase {
+class REGINA_API PropertyBase {
     public:
         /**
          * Virtual destructor.
          */
-        virtual ~NPropertyBase() {
+        virtual ~PropertyBase() {
         }
 
         /**
@@ -231,8 +231,8 @@ class REGINA_API NPropertyBase {
  * \ifacespython Not present.
  */
 template <typename T, template <typename Stored> class Storage = StoreValue>
-class NProperty :
-        public NPropertyBase,
+class Property :
+        public PropertyBase,
         protected Storage<T>,
         public boost::noncopyable {
     public:
@@ -251,7 +251,7 @@ class NProperty :
         /**
          * Constructor.  This property is initially marked as unknown.
          */
-        NProperty() : Storage<T>(), known_(false) {
+        Property() : Storage<T>(), known_(false) {
         }
 
         /**
@@ -291,8 +291,8 @@ class NProperty :
          * @param newValue the property to copy into this property.
          * @return a reference to this property.
          */
-        const NProperty<T, Storage>& operator = (
-                const NProperty<T, Storage>& newValue) {
+        const Property<T, Storage>& operator = (
+                const Property<T, Storage>& newValue) {
             Storage<T>::clear();
 
             // Use the value() query so that we initialise from
@@ -306,7 +306,7 @@ class NProperty :
             return *this;
         }
 
-        // NPropertyBase overrides:
+        // PropertyBase overrides:
 
         bool known() const {
             return known_;
@@ -320,9 +320,9 @@ class NProperty :
 
 /*
 template <template <class ListElement> class ListType>
-class NPropertyList : public ListType<NPropertyBase*> {
+class PropertyList : public ListType<PropertyBase*> {
     private:
-        typedef typename ListType<NPropertyBase*>::iterator Iterator;
+        typedef typename ListType<PropertyBase*>::iterator Iterator;
 
     public:
         void clearAllProperties() {

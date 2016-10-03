@@ -48,7 +48,7 @@
 #include "surfaces/ndisctype.h"
 #include "surfaces/normalcoords.h"
 #include "utilities/boolset.h"
-#include "utilities/nproperty.h"
+#include "utilities/property.h"
 #include <boost/noncopyable.hpp>
 
 namespace regina {
@@ -755,23 +755,23 @@ class REGINA_API NNormalSurface :
         std::string name_;
             /**< An optional name associated with this surface. */
 
-        mutable NProperty<NDiscType> octPosition_;
+        mutable Property<NDiscType> octPosition_;
             /**< The position of the first non-zero octagonal coordinate,
                  or NDiscType::NONE if there is no non-zero octagonal
                  coordinate.  Here NDiscType::type is an octagon type
                  between 0 and 2 inclusive. */
-        mutable NProperty<NLargeInteger> eulerChar_;
+        mutable Property<NLargeInteger> eulerChar_;
             /**< The Euler characteristic of this surface. */
-        mutable NProperty<bool> orientable;
+        mutable Property<bool> orientable;
             /**< Is this surface orientable? */
-        mutable NProperty<bool> twoSided;
+        mutable Property<bool> twoSided;
             /**< Is this surface two-sided? */
-        mutable NProperty<bool> connected;
+        mutable Property<bool> connected;
             /**< Is this surface connected? */
-        mutable NProperty<bool> realBoundary;
+        mutable Property<bool> realBoundary;
             /**< Does this surface have real boundary (i.e. does it meet
              *   any boundary triangles)? */
-        mutable NProperty<bool> compact;
+        mutable Property<bool> compact;
             /**< Is this surface compact (i.e. does it only contain
              *   finitely many discs)? */
 
