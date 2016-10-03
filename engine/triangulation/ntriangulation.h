@@ -2907,7 +2907,7 @@ class REGINA_API Triangulation<3> :
          * information (as described above).  Unless you specifically need an
          * NTriangulation (not an SnapPeaTriangulation) or you need to avoid
          * calling routines from the SnapPea kernel, it is highly recommended
-         * that you create an SnapPeaTriangulation from the given file
+         * that you create a SnapPeaTriangulation from the given file
          * contents instead.  See the string-based SnapPeaTriangulation
          * constructor for how to do this.
          *

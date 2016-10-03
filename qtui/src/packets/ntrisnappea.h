@@ -103,7 +103,7 @@ class NTriSnapPeaUI : public QObject, public PacketViewerTab {
 
     private:
         /**
-         * These routines convert an SnapPeaTriangulation::SolutionType
+         * These routines convert a SnapPeaTriangulation::SolutionType
          * into various types of human-readable string.  They are declared
          * to take an int so that the calculation engine headers need not
          * be included.
