@@ -160,7 +160,7 @@ PacketUI* PacketManager::createUI(regina::Packet* packet,
                 dynamic_cast<Dim4Triangulation*>(packet), enclosingPane);
         case PACKET_NORMALSURFACELIST:
             return new NNormalSurfaceUI(
-                dynamic_cast<NNormalSurfaceList*>(packet), enclosingPane);
+                dynamic_cast<NormalSurfaces*>(packet), enclosingPane);
         case PACKET_NORMALHYPERSURFACELIST:
             return new NHyperSurfaceUI(
                 dynamic_cast<NNormalHypersurfaceList*>(packet), enclosingPane);

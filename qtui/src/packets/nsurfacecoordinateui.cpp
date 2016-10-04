@@ -51,10 +51,10 @@
 #include <QStyle>
 #include <QTreeView>
 
-using regina::NNormalSurfaceList;
+using regina::NormalSurfaces;
 using regina::Packet;
 
-SurfaceModel::SurfaceModel(regina::NNormalSurfaceList* surfaces,
+SurfaceModel::SurfaceModel(regina::NormalSurfaces* surfaces,
         bool readWrite) :
         surfaces_(surfaces),
         coordSystem_(surfaces->coords()),
@@ -446,7 +446,7 @@ QString SurfaceModel::propertyColDesc(int whichCol) const {
     return tr("Unknown");
 }
 
-NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
+NSurfaceCoordinateUI::NSurfaceCoordinateUI(regina::NormalSurfaces* packet,
         PacketTabbedUI* useParentUI, bool readWrite) :
         PacketEditorTab(useParentUI), surfaces(packet), appliedFilter(0),
         isReadWrite(readWrite), currentlyResizing(false) {

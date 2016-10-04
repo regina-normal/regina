@@ -52,7 +52,7 @@ class QTreeView;
 
 namespace regina {
     class Packet;
-    class NNormalSurfaceList;
+    class NormalSurfaces;
     class NSurfaceFilter;
 };
 
@@ -61,7 +61,7 @@ class SurfaceModel : public QAbstractItemModel {
         /**
          * Details of the normal surfaces being displayed
          */
-        regina::NNormalSurfaceList* surfaces_;
+        regina::NormalSurfaces* surfaces_;
         regina::NormalCoords coordSystem_;
 
         /**
@@ -80,13 +80,13 @@ class SurfaceModel : public QAbstractItemModel {
         /**
          * Constructor and destructor.
          */
-        SurfaceModel(regina::NNormalSurfaceList* surfaces, bool readWrite);
+        SurfaceModel(regina::NormalSurfaces* surfaces, bool readWrite);
         ~SurfaceModel();
 
         /**
          * Data retrieval.
          */
-        regina::NNormalSurfaceList* surfaces() const;
+        regina::NormalSurfaces* surfaces() const;
         const regina::NNormalSurface* surface(const QModelIndex& index) const;
         size_t surfaceIndex(const QModelIndex& index) const;
         regina::NormalCoords coordSystem() const;
@@ -138,7 +138,7 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
          * Packet details
          */
         SurfaceModel* model;
-        regina::NNormalSurfaceList* surfaces;
+        regina::NormalSurfaces* surfaces;
         regina::NSurfaceFilter* appliedFilter;
 
         /**
@@ -166,7 +166,7 @@ class NSurfaceCoordinateUI : public QObject, public PacketEditorTab,
         /**
          * Constructor and destructor.
          */
-        NSurfaceCoordinateUI(regina::NNormalSurfaceList* packet,
+        NSurfaceCoordinateUI(regina::NormalSurfaces* packet,
             PacketTabbedUI* useParentUI, bool readWrite);
         ~NSurfaceCoordinateUI();
 
@@ -216,7 +216,7 @@ inline SurfaceModel::~SurfaceModel() {
     delete[] realIndex;
 }
 
-inline regina::NNormalSurfaceList* SurfaceModel::surfaces() const {
+inline regina::NormalSurfaces* SurfaceModel::surfaces() const {
     return surfaces_;
 }
 

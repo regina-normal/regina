@@ -53,7 +53,7 @@
 namespace regina {
 
 class NMatrixInt;
-class NNormalSurfaceList;
+class NormalSurfaces;
 class ProgressTracker;
 class XMLPacketReader;
 class NXMLNormalSurfaceListReader;
@@ -72,8 +72,8 @@ typedef Triangulation<3> NTriangulation;
 /**
  * Used to describe a field, or a set of fields, that can be exported
  * alongside a normal surface list.  This enumeration type is used with
- * export routines such as NNormalSurfaceList::saveCSVStandard() or
- * NNormalSurfaceList::saveCSVEdgeWeight().
+ * export routines such as NormalSurfaces::saveCSVStandard() or
+ * NormalSurfaces::saveCSVEdgeWeight().
  *
  * This type describes fields in addition to normal coordinates, not the
  * normal coordinates themselves (which are always exported).  Each field
@@ -142,7 +142,7 @@ enum SurfaceExportFields {
 #ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct PacketInfo<PACKET_NORMALSURFACELIST> {
-    typedef NNormalSurfaceList Class;
+    typedef NormalSurfaces Class;
     inline static const char* name() {
         return "Normal Surface List";
     }
@@ -167,8 +167,8 @@ struct PacketInfo<PACKET_NORMALSURFACELIST> {
  * \todo \feature Generate facets of the solution space representing
  * embedded surfaces.
  */
-class REGINA_API NNormalSurfaceList : public Packet {
-    REGINA_PACKET(NNormalSurfaceList, PACKET_NORMALSURFACELIST)
+class REGINA_API NormalSurfaces : public Packet {
+    REGINA_PACKET(NormalSurfaces, PACKET_NORMALSURFACELIST)
 
     public:
         class VectorIterator;
@@ -193,7 +193,7 @@ class REGINA_API NNormalSurfaceList : public Packet {
         /**
          * Destroys this list and all the surfaces within.
          */
-        virtual ~NNormalSurfaceList();
+        virtual ~NormalSurfaces();
 
         /**
          * A unified routine for enumerating various classes of normal
@@ -258,7 +258,7 @@ class REGINA_API NNormalSurfaceList : public Packet {
          * passed and a new thread could not be started, this routine
          * returns 0 (and no normal surface list is created).
          */
-        static NNormalSurfaceList* enumerate(NTriangulation* owner,
+        static NormalSurfaces* enumerate(NTriangulation* owner,
             NormalCoords coords,
             NormalList which = NS_LIST_DEFAULT,
             NormalAlg algHints = NS_ALG_DEFAULT,
@@ -437,7 +437,7 @@ class REGINA_API NNormalSurfaceList : public Packet {
          * @return a full list of vertex normal surfaces in standard (tri-quad)
          * coordinates, or 0 if any of the basic sanity checks failed.
          */
-        NNormalSurfaceList* quadToStandard() const;
+        NormalSurfaces* quadToStandard() const;
 
         /**
          * Converts the set of all embedded vertex almost normal surfaces in
@@ -462,7 +462,7 @@ class REGINA_API NNormalSurfaceList : public Packet {
          * tri-quad-oct coordinates, or 0 if any of the basic sanity checks
          * failed.
          */
-        NNormalSurfaceList* quadOctToStandardAN() const;
+        NormalSurfaces* quadOctToStandardAN() const;
 
         /**
          * Converts the set of all embedded vertex normal surfaces in
@@ -511,7 +511,7 @@ class REGINA_API NNormalSurfaceList : public Packet {
          * @return a full list of vertex normal surfaces in quadrilateral
          * coordinates, or 0 if any of the basic sanity checks failed.
          */
-        NNormalSurfaceList* standardToQuad() const;
+        NormalSurfaces* standardToQuad() const;
 
         /**
          * Converts the set of all embedded vertex almost normal surfaces in
@@ -535,7 +535,7 @@ class REGINA_API NNormalSurfaceList : public Packet {
          * quadrilateral-octagon coordinates, or 0 if any of the basic
          * sanity checks failed.
          */
-        NNormalSurfaceList* standardANToQuadOct() const;
+        NormalSurfaces* standardANToQuadOct() const;
 
         /**
          * Creates a new list filled with the surfaces from this list
@@ -564,7 +564,7 @@ class REGINA_API NNormalSurfaceList : public Packet {
          * @return the new list, which will also have been inserted as
          * a new child packet of the underlying triangulation.
          */
-        NNormalSurfaceList* filterForLocallyCompatiblePairs() const;
+        NormalSurfaces* filterForLocallyCompatiblePairs() const;
 
         /**
          * Creates a new list filled with the surfaces from this list
@@ -604,7 +604,7 @@ class REGINA_API NNormalSurfaceList : public Packet {
          * @return the new list, which will also have been inserted as
          * a new child packet of the underlying triangulation.
          */
-        NNormalSurfaceList* filterForDisjointPairs() const;
+        NormalSurfaces* filterForDisjointPairs() const;
 
         /**
          * Creates a new list filled with only the surfaces from this list
@@ -665,7 +665,7 @@ class REGINA_API NNormalSurfaceList : public Packet {
          * @return the new list, which will also have been inserted as
          * a new child packet of the underlying triangulation.
          */
-        NNormalSurfaceList* filterForPotentiallyIncompressible() const;
+        NormalSurfaces* filterForPotentiallyIncompressible() const;
 
         /**
          * Returns a newly created matrix containing the matching
@@ -887,7 +887,7 @@ class REGINA_API NNormalSurfaceList : public Packet {
                 VectorIterator(
                     const std::vector<NNormalSurface*>::const_iterator& i);
 
-            friend class NNormalSurfaceList;
+            friend class NormalSurfaces;
         };
 
     protected:
@@ -902,7 +902,7 @@ class REGINA_API NNormalSurfaceList : public Packet {
          * @param algorithm details of the enumeration algorithm that
          * will be used to fill this list.
          */
-        NNormalSurfaceList(NormalCoords coords, NormalList which,
+        NormalSurfaces(NormalCoords coords, NormalList which,
             NormalAlg algorithm);
 
         virtual Packet* internalClonePacket(Packet* parent) const;
@@ -910,7 +910,7 @@ class REGINA_API NNormalSurfaceList : public Packet {
 
         /**
          * An output iterator used to insert surfaces into an
-         * NNormalSurfaceList.
+         * NormalSurfaces.
          *
          * Objects of type <tt>NNormalSurface*</tt> and
          * <tt>NNormalSurfaceVector*</tt> can be assigned to this
@@ -929,7 +929,7 @@ class REGINA_API NNormalSurfaceList : public Packet {
          */
         struct SurfaceInserter : public std::iterator<
                 std::output_iterator_tag, NNormalSurfaceVector*> {
-            NNormalSurfaceList* list;
+            NormalSurfaces* list;
                 /**< The list into which surfaces will be inserted. */
             NTriangulation* owner;
                 /**< The triangulation in which the surfaces to be
@@ -944,7 +944,7 @@ class REGINA_API NNormalSurfaceList : public Packet {
              * @param newOwner the triangulation in which the surfaces
              * to be inserted are contained.
              */
-            SurfaceInserter(NNormalSurfaceList& newList,
+            SurfaceInserter(NormalSurfaces& newList,
                 NTriangulation* newOwner);
             /**
              * Creates a new output iterator that is a clone of the
@@ -1128,7 +1128,7 @@ class REGINA_API NNormalSurfaceList : public Packet {
          * quadToStandard() or quadOctToStandardAN() accordingly.
          */
         template <class Variant>
-        NNormalSurfaceList* internalReducedToStandard() const;
+        NormalSurfaces* internalReducedToStandard() const;
 
         /**
          * Converts a set of embedded vertex surfaces in
@@ -1145,14 +1145,14 @@ class REGINA_API NNormalSurfaceList : public Packet {
          * standardToQuad() or standardANToQuadOct() accordingly.
          */
         template <class Variant>
-        NNormalSurfaceList* internalStandardToReduced() const;
+        NormalSurfaces* internalStandardToReduced() const;
 
         /**
          * A functor that performs all normal surface enumeration.
          */
         class Enumerator {
             private:
-                NNormalSurfaceList* list_;
+                NormalSurfaces* list_;
                     /**< The surface list to be filled. */
                 NTriangulation* triang_;
                     /**< The triangulation in which these surfaces lie. */
@@ -1171,7 +1171,7 @@ class REGINA_API NNormalSurfaceList : public Packet {
                  * reporting and cancellation polling, or 0 if these
                  * capabilities are not required.
                  */
-                Enumerator(NNormalSurfaceList* list,
+                Enumerator(NormalSurfaces* list,
                     NTriangulation* triang, ProgressTracker* tracker);
 
                 /**
@@ -1415,159 +1415,159 @@ REGINA_API EnumConstraints* makeEmbeddedConstraints(
 
 /*@}*/
 
-// Inline functions for NNormalSurfaceList
+// Inline functions for NormalSurfaces
 
-inline NNormalSurfaceList::~NNormalSurfaceList() {
+inline NormalSurfaces::~NormalSurfaces() {
     for_each(surfaces.begin(), surfaces.end(), FuncDelete<NNormalSurface>());
 }
 
-inline NormalCoords NNormalSurfaceList::coords() const {
+inline NormalCoords NormalSurfaces::coords() const {
     return coords_;
 }
 
-inline NormalList NNormalSurfaceList::which() const {
+inline NormalList NormalSurfaces::which() const {
     return which_;
 }
 
-inline NormalAlg NNormalSurfaceList::algorithm() const {
+inline NormalAlg NormalSurfaces::algorithm() const {
     return algorithm_;
 }
 
-inline bool NNormalSurfaceList::isEmbeddedOnly() const {
+inline bool NormalSurfaces::isEmbeddedOnly() const {
     return which_.has(NS_EMBEDDED_ONLY);
 }
 
-inline size_t NNormalSurfaceList::size() const {
+inline size_t NormalSurfaces::size() const {
     return surfaces.size();
 }
 
-inline const NNormalSurface* NNormalSurfaceList::surface(size_t index) const {
+inline const NNormalSurface* NormalSurfaces::surface(size_t index) const {
     return surfaces[index];
 }
 
-inline bool NNormalSurfaceList::dependsOnParent() const {
+inline bool NormalSurfaces::dependsOnParent() const {
     return true;
 }
 
-inline NNormalSurfaceList::VectorIterator::VectorIterator() {
+inline NormalSurfaces::VectorIterator::VectorIterator() {
 }
 
-inline NNormalSurfaceList::VectorIterator::VectorIterator(
-        const NNormalSurfaceList::VectorIterator& cloneMe) :
+inline NormalSurfaces::VectorIterator::VectorIterator(
+        const NormalSurfaces::VectorIterator& cloneMe) :
         it_(cloneMe.it_) {
 }
 
-inline NNormalSurfaceList::VectorIterator& NNormalSurfaceList::VectorIterator::
-        operator =(const NNormalSurfaceList::VectorIterator& cloneMe) {
+inline NormalSurfaces::VectorIterator& NormalSurfaces::VectorIterator::
+        operator =(const NormalSurfaces::VectorIterator& cloneMe) {
     it_ = cloneMe.it_;
     return *this;
 }
 
-inline bool NNormalSurfaceList::VectorIterator::operator ==(
-        const NNormalSurfaceList::VectorIterator& other) const {
+inline bool NormalSurfaces::VectorIterator::operator ==(
+        const NormalSurfaces::VectorIterator& other) const {
     return (it_ == other.it_);
 }
 
-inline bool NNormalSurfaceList::VectorIterator::operator !=(
-        const NNormalSurfaceList::VectorIterator& other) const {
+inline bool NormalSurfaces::VectorIterator::operator !=(
+        const NormalSurfaces::VectorIterator& other) const {
     return (it_ != other.it_);
 }
 
-inline const NNormalSurfaceVector* NNormalSurfaceList::VectorIterator::
+inline const NNormalSurfaceVector* NormalSurfaces::VectorIterator::
         operator *() const {
     return (*it_)->rawVector();
 }
 
-inline NNormalSurfaceList::VectorIterator& NNormalSurfaceList::VectorIterator::
+inline NormalSurfaces::VectorIterator& NormalSurfaces::VectorIterator::
         operator ++() {
     ++it_;
     return *this;
 }
 
-inline NNormalSurfaceList::VectorIterator NNormalSurfaceList::VectorIterator::
+inline NormalSurfaces::VectorIterator NormalSurfaces::VectorIterator::
         operator ++(int) {
-    return NNormalSurfaceList::VectorIterator(it_++);
+    return NormalSurfaces::VectorIterator(it_++);
 }
 
-inline NNormalSurfaceList::VectorIterator& NNormalSurfaceList::VectorIterator::
+inline NormalSurfaces::VectorIterator& NormalSurfaces::VectorIterator::
         operator --() {
     --it_;
     return *this;
 }
 
-inline NNormalSurfaceList::VectorIterator NNormalSurfaceList::VectorIterator::
+inline NormalSurfaces::VectorIterator NormalSurfaces::VectorIterator::
         operator --(int) {
-    return NNormalSurfaceList::VectorIterator(it_--);
+    return NormalSurfaces::VectorIterator(it_--);
 }
 
-inline NNormalSurfaceList::VectorIterator::VectorIterator(
+inline NormalSurfaces::VectorIterator::VectorIterator(
         const std::vector<NNormalSurface*>::const_iterator& i) : it_(i) {
 }
 
-inline NNormalSurfaceList::VectorIterator NNormalSurfaceList::beginVectors()
+inline NormalSurfaces::VectorIterator NormalSurfaces::beginVectors()
         const {
     return VectorIterator(surfaces.begin());
 }
 
-inline NNormalSurfaceList::VectorIterator NNormalSurfaceList::endVectors()
+inline NormalSurfaces::VectorIterator NormalSurfaces::endVectors()
         const {
     return VectorIterator(surfaces.end());
 }
 
-inline NNormalSurfaceList::SurfaceInserter::SurfaceInserter(
-        NNormalSurfaceList& newList, NTriangulation* newOwner) :
+inline NormalSurfaces::SurfaceInserter::SurfaceInserter(
+        NormalSurfaces& newList, NTriangulation* newOwner) :
         list(&newList), owner(newOwner) {
 }
 
-inline NNormalSurfaceList::SurfaceInserter::SurfaceInserter(
+inline NormalSurfaces::SurfaceInserter::SurfaceInserter(
         const SurfaceInserter& cloneMe) : list(cloneMe.list),
         owner(cloneMe.owner) {
 }
 
 
-inline NNormalSurfaceList::SurfaceInserter&
-        NNormalSurfaceList::SurfaceInserter::operator =(
+inline NormalSurfaces::SurfaceInserter&
+        NormalSurfaces::SurfaceInserter::operator =(
         const SurfaceInserter& cloneMe) {
     list = cloneMe.list;
     owner = cloneMe.owner;
     return *this;
 }
 
-inline NNormalSurfaceList::SurfaceInserter&
-        NNormalSurfaceList::SurfaceInserter::operator =(
+inline NormalSurfaces::SurfaceInserter&
+        NormalSurfaces::SurfaceInserter::operator =(
         NNormalSurface* surface) {
     list->surfaces.push_back(surface);
     return *this;
 }
 
-inline NNormalSurfaceList::SurfaceInserter&
-        NNormalSurfaceList::SurfaceInserter::operator =(
+inline NormalSurfaces::SurfaceInserter&
+        NormalSurfaces::SurfaceInserter::operator =(
         NNormalSurfaceVector* vector) {
     list->surfaces.push_back(new NNormalSurface(owner, vector));
     return *this;
 }
 
-inline NNormalSurfaceList::SurfaceInserter&
-        NNormalSurfaceList::SurfaceInserter::operator *() {
+inline NormalSurfaces::SurfaceInserter&
+        NormalSurfaces::SurfaceInserter::operator *() {
     return *this;
 }
 
-inline NNormalSurfaceList::SurfaceInserter&
-        NNormalSurfaceList::SurfaceInserter::operator ++() {
+inline NormalSurfaces::SurfaceInserter&
+        NormalSurfaces::SurfaceInserter::operator ++() {
     return *this;
 }
 
-inline NNormalSurfaceList::SurfaceInserter&
-        NNormalSurfaceList::SurfaceInserter::operator ++(int) {
+inline NormalSurfaces::SurfaceInserter&
+        NormalSurfaces::SurfaceInserter::operator ++(int) {
     return *this;
 }
 
-inline NNormalSurfaceList::NNormalSurfaceList(NormalCoords coords,
+inline NormalSurfaces::NormalSurfaces(NormalCoords coords,
         NormalList which, NormalAlg algorithm) :
         coords_(coords), which_(which), algorithm_(algorithm) {
 }
 
-inline NNormalSurfaceList::Enumerator::Enumerator(NNormalSurfaceList* list,
+inline NormalSurfaces::Enumerator::Enumerator(NormalSurfaces* list,
         NTriangulation* triang, ProgressTracker* tracker) :
         list_(list), triang_(triang), tracker_(tracker) {
 }

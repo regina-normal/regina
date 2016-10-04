@@ -162,11 +162,11 @@ bool process(const std::string& filename) {
     }
 
     NTriangulation* t;
-    NNormalSurfaceList* s;
+    NormalSurfaces* s;
     for (Packet* p = tree; p; p = p->nextTreePacket())
         if (p->type() == PACKET_TRIANGULATION) {
             t = static_cast<NTriangulation*>(p);
-            s = NNormalSurfaceList::enumerate(t,
+            s = NormalSurfaces::enumerate(t,
                 (quad ? NS_QUAD : NS_STANDARD));
             out << t->size() << ' ' << s->size() << " \""
                 << t->label() << '"' << std::endl;

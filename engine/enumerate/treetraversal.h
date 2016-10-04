@@ -115,7 +115,7 @@ typedef Triangulation<3> NTriangulation;
  * coordinates, where we represent an octagon using two conflicting 
  * quadrilaterals in the same tetrahedron (which meet the tetrahedron boundary
  * in the same set of arcs as a single octagon would).  As with the almost
- * normal coordinate systems in NNormalSurfaceList, we allow multiple octagons
+ * normal coordinate systems in NormalSurfaces, we allow multiple octagons
  * of the same type, but only one octagon type in the entire tetrahedron.
  * In the type vector, octagons are indicated by setting a quadrilateral
  * type to 4, 5 or 6.
@@ -668,8 +668,8 @@ class TreeTraversal : public BanConstraint {
  * to be \e much slower than in quadrilateral or quadrilateral-octagon
  * coordinates respectively.  Instead you should enumerate vertex
  * solutions using quadrilateral or quadrilateral-octagon coordinates, and
- * then run the conversion procedure NNormalSurfaceList::quadToStandard()
- * or NNormalSurfaceList::quadOctToStandardAN().
+ * then run the conversion procedure NormalSurfaces::quadToStandard()
+ * or NormalSurfaces::quadOctToStandardAN().
  *
  * \headers Parts of this template class are implemented in a separate header
  * (treetraversal-impl.h), which is not included automatically by this file.

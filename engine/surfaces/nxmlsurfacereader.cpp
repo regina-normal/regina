@@ -136,13 +136,13 @@ XMLElementReader* NXMLNormalSurfaceListReader::startContentSubElement(
                 if (valueOf(props.lookup("type"), listType) &&
                         valueOf(props.lookup("algorithm"), algorithm)) {
                     // Parameters look sane; create the empty list.
-                    list = new NNormalSurfaceList(
+                    list = new NormalSurfaces(
                         static_cast<NormalCoords>(coords),
                         NormalList::fromInt(listType),
                         NormalAlg::fromInt(algorithm));
                 } else if (valueOf(props.lookup("embedded"), embedded)) {
                     // Parameters look sane but use the old format.
-                    list = new NNormalSurfaceList(
+                    list = new NormalSurfaces(
                         static_cast<NormalCoords>(coords),
                         NS_LEGACY | (embedded ?
                             NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
@@ -165,7 +165,7 @@ void NXMLNormalSurfaceListReader::endContentSubElement(
                 list->surfaces.push_back(s);
 }
 
-XMLPacketReader* NNormalSurfaceList::xmlReader(Packet* parent,
+XMLPacketReader* NormalSurfaces::xmlReader(Packet* parent,
         XMLTreeResolver& resolver) {
     return new NXMLNormalSurfaceListReader(
         dynamic_cast<NTriangulation*>(parent), resolver);

@@ -54,7 +54,7 @@
 using regina::NNormalHypersurface;
 using regina::NNormalHypersurfaceList;
 using regina::NNormalSurface;
-using regina::NNormalSurfaceList;
+using regina::NormalSurfaces;
 
 CompatCanvas::CompatCanvas(unsigned useNumSurfaces) :
         QGraphicsScene(),
@@ -251,7 +251,7 @@ CompatCanvas::CompatCanvas(unsigned useNumSurfaces) :
 CompatCanvas::~CompatCanvas() {
 }
 
-void CompatCanvas::fillLocal(const NNormalSurfaceList& surfaces) {
+void CompatCanvas::fillLocal(const NormalSurfaces& surfaces) {
     if (filled)
         return;
 
@@ -339,7 +339,7 @@ void CompatCanvas::fillLocal(const NNormalHypersurfaceList& surfaces) {
     update();
 }
 
-void CompatCanvas::fillGlobal(const NNormalSurfaceList& surfaces) {
+void CompatCanvas::fillGlobal(const NormalSurfaces& surfaces) {
     if (filled)
         return;
 

@@ -75,13 +75,13 @@ int main() {
             break;
 
         regina::NTriangulation* tri = regina::NTriangulation::fromIsoSig(input);
-        regina::NNormalSurfaceList* s;
+        regina::NormalSurfaces* s;
 
-        s = regina::NNormalSurfaceList::enumerate(tri, regina::NS_STANDARD);
+        s = regina::NormalSurfaces::enumerate(tri, regina::NS_STANDARD);
         ++sfreq[s->size()];
         delete s;
 
-        s = regina::NNormalSurfaceList::enumerate(tri, regina::NS_QUAD);
+        s = regina::NormalSurfaces::enumerate(tri, regina::NS_QUAD);
         ++qfreq[s->size()];
         delete s;
 

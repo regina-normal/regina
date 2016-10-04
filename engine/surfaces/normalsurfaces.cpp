@@ -49,11 +49,11 @@ namespace {
 // to the specialised Triangulation<3>.  A forward declaration of the
 // specialisation is not enough to stop it.  I wish I understood how to
 // avoid this, but in the meantime, here we are.
-NMatrixInt* NNormalSurfaceList::recreateMatchingEquations() const {
+NMatrixInt* NormalSurfaces::recreateMatchingEquations() const {
     return makeMatchingEquations(triangulation(), coords_);
 }
 
-void NNormalSurfaceList::writeAllSurfaces(std::ostream& out) const {
+void NormalSurfaces::writeAllSurfaces(std::ostream& out) const {
     unsigned long n = size();
     out << "Number of surfaces is " << n << '\n';
     for (unsigned long i = 0; i < n; i++) {
@@ -104,7 +104,7 @@ EnumConstraints* makeEmbeddedConstraints(
     return forCoords(coords, EmbeddedConstraints(), 0, triangulation);
 }
 
-NTriangulation* NNormalSurfaceList::triangulation() const {
+NTriangulation* NormalSurfaces::triangulation() const {
     return dynamic_cast<NTriangulation*>(parent());
 }
 
@@ -115,7 +115,7 @@ namespace {
     };
 }
 
-bool NNormalSurfaceList::allowsAlmostNormal() const {
+bool NormalSurfaces::allowsAlmostNormal() const {
     if (coords_ == NS_AN_LEGACY)
         return true;
     else
@@ -129,7 +129,7 @@ namespace {
     };
 }
 
-bool NNormalSurfaceList::allowsSpun() const {
+bool NormalSurfaces::allowsSpun() const {
     // Both the default and the NS_AN_LEGACY cases should return false.
     return forCoords(coords_, SpunFunction(), false);
 }
@@ -141,7 +141,7 @@ namespace {
     };
 }
 
-bool NNormalSurfaceList::allowsOriented() const {
+bool NormalSurfaces::allowsOriented() const {
     // Both the default and the NS_AN_LEGACY cases should return false.
     return forCoords(coords_, OrientedFunction(), false);
 }
@@ -153,7 +153,7 @@ namespace {
     };
 }
 
-void NNormalSurfaceList::writeTextShort(std::ostream& out) const {
+void NormalSurfaces::writeTextShort(std::ostream& out) const {
     out << surfaces.size();
 
     if (which_.has(regina::NS_EMBEDDED_ONLY))
@@ -186,7 +186,7 @@ void NNormalSurfaceList::writeTextShort(std::ostream& out) const {
     out << ')';
 }
 
-void NNormalSurfaceList::writeTextLong(std::ostream& out) const {
+void NormalSurfaces::writeTextLong(std::ostream& out) const {
     if (which_.has(regina::NS_EMBEDDED_ONLY))
         out << "Embedded,";
     else if (which_.has(regina::NS_IMMERSED_SINGULAR))
@@ -216,7 +216,7 @@ void NNormalSurfaceList::writeTextLong(std::ostream& out) const {
     writeAllSurfaces(out);
 }
 
-void NNormalSurfaceList::writeXMLPacketData(std::ostream& out) const {
+void NormalSurfaces::writeXMLPacketData(std::ostream& out) const {
     // Write the surface list parameters.
     out << "  <params "
         << "type=\"" << which_.intValue() << "\" "
@@ -236,8 +236,8 @@ void NNormalSurfaceList::writeXMLPacketData(std::ostream& out) const {
         (*it)->writeXMLData(out);
 }
 
-Packet* NNormalSurfaceList::internalClonePacket(Packet* /* parent */) const {
-    NNormalSurfaceList* ans = new NNormalSurfaceList(
+Packet* NormalSurfaces::internalClonePacket(Packet* /* parent */) const {
+    NormalSurfaces* ans = new NormalSurfaces(
         coords_, which_, algorithm_);
     transform(surfaces.begin(), surfaces.end(), back_inserter(ans->surfaces),
         FuncNewClonePtr<NNormalSurface>());

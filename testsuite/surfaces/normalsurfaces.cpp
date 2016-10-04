@@ -49,7 +49,7 @@ using regina::Container;
 using regina::NEdge;
 using regina::NExampleTriangulation;
 using regina::NNormalSurface;
-using regina::NNormalSurfaceList;
+using regina::NormalSurfaces;
 using regina::NNormalSurfaceVector;
 using regina::Packet;
 using regina::NPerm4;
@@ -73,8 +73,8 @@ using regina::NS_VERTEX_VIA_REDUCED;
 using regina::NS_HILBERT_DUAL;
 using regina::NS_HILBERT_PRIMAL;
 
-class NNormalSurfaceListTest : public CppUnit::TestFixture {
-    CPPUNIT_TEST_SUITE(NNormalSurfaceListTest);
+class NormalSurfacesTest : public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(NormalSurfacesTest);
 
     CPPUNIT_TEST(defaultArgs);
     CPPUNIT_TEST(standardEmpty);
@@ -241,13 +241,13 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         void defaultArgs() {
             NTriangulation t(oneTet);
-            NNormalSurfaceList* l;
+            NormalSurfaces* l;
 
             // Make sure that calls to enumerate() using default arguments
             // fall through to the correct enumerate() function, which takes
             // NormalFlags and NormalAlg.
 
-            l = NNormalSurfaceList::enumerate(&t, regina::NS_QUAD);
+            l = NormalSurfaces::enumerate(&t, regina::NS_QUAD);
             if (l->which() != (regina::NS_VERTEX | regina::NS_EMBEDDED_ONLY)) {
                 std::ostringstream msg;
                 msg << "Enumeration with default (flags, algorithm) gave "
@@ -256,7 +256,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             }
             delete l;
 
-            l = NNormalSurfaceList::enumerate(&t, regina::NS_QUAD,
+            l = NormalSurfaces::enumerate(&t, regina::NS_QUAD,
                 regina::NS_IMMERSED_SINGULAR);
             if (l->which() !=
                     (regina::NS_VERTEX | regina::NS_IMMERSED_SINGULAR)) {
@@ -268,7 +268,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             delete l;
         }
 
-        void testSize(NNormalSurfaceList* list,
+        void testSize(NormalSurfaces* list,
                 const char* listType, unsigned long expectedSize) {
             std::ostringstream msg;
             msg << "Number of " << listType << " for "
@@ -410,7 +410,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             }
         }
 
-        void countCompactSurfaces(const NNormalSurfaceList* list,
+        void countCompactSurfaces(const NormalSurfaces* list,
                 const char* surfaceType,
                 unsigned long expectedCount, int euler,
                 bool connected, bool orient, bool twoSided,
@@ -465,8 +465,8 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             return false;
         }
 
-        static bool identical(const NNormalSurfaceList* lhs,
-                const NNormalSurfaceList* rhs) {
+        static bool identical(const NormalSurfaces* lhs,
+                const NormalSurfaces* rhs) {
             if (lhs->size() != rhs->size())
                 return false;
 
@@ -500,7 +500,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void standardEmpty() {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &empty, NS_STANDARD);
 
             testSize(list, "standard normal surfaces", 0);
@@ -509,7 +509,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void quadEmpty() {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &empty, NS_QUAD);
 
             testSize(list, "quad normal surfaces", 0);
@@ -518,7 +518,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void almostNormalEmpty() {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &empty, NS_AN_STANDARD);
 
             testSize(list, "standard almost normal surfaces", 0);
@@ -527,7 +527,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void standardOneTet() {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &oneTet, NS_STANDARD);
 
             testSize(list, "standard normal surfaces", 7);
@@ -548,7 +548,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void quadOneTet() {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &oneTet, NS_QUAD);
 
             testSize(list, "quad normal surfaces", 3);
@@ -563,7 +563,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void almostNormalOneTet() {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &oneTet, NS_AN_STANDARD);
 
             testSize(list, "standard almost normal surfaces", 10);
@@ -590,7 +590,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void standardGieseking() {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &gieseking, NS_STANDARD);
 
             testSize(list, "standard normal surfaces", 1);
@@ -606,7 +606,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void quadGieseking() {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &gieseking, NS_QUAD);
 
             testSize(list, "quad normal surfaces", 0);
@@ -615,7 +615,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void almostNormalGieseking() {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &gieseking, NS_AN_STANDARD);
 
             testSize(list, "standard almost normal surfaces", 1);
@@ -631,7 +631,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void standardFigure8() {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &figure8, NS_STANDARD);
 
             testSize(list, "standard normal surfaces", 1);
@@ -647,7 +647,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void quadFigure8() {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &figure8, NS_QUAD);
 
             testSize(list, "quad normal surfaces", 4);
@@ -664,7 +664,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void almostNormalFigure8() {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &figure8, NS_AN_STANDARD);
 
             testSize(list, "standard almost normal surfaces", 1);
@@ -680,7 +680,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void standardS3() {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &S3, NS_STANDARD);
 
             testSize(list, "standard normal surfaces", 3);
@@ -703,7 +703,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void quadS3() {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &S3, NS_QUAD);
 
             testSize(list, "quad normal surfaces", 1);
@@ -719,7 +719,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void almostNormalS3() {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &S3, NS_AN_STANDARD);
 
             testSize(list, "standard almost normal surfaces", 4);
@@ -749,7 +749,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void standardLoopC2() {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &loopC2, NS_STANDARD);
 
             testSize(list, "standard normal surfaces", 5);
@@ -779,7 +779,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void quadLoopC2() {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &loopC2, NS_QUAD);
 
             testSize(list, "quad normal surfaces", 3);
@@ -802,7 +802,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void almostNormalLoopC2() {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &loopC2, NS_AN_STANDARD);
 
             testSize(list, "standard almost normal surfaces", 5);
@@ -832,7 +832,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void standardLoopCtw3() {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &loopCtw3, NS_STANDARD);
 
             testSize(list, "standard normal surfaces", 5);
@@ -862,7 +862,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void quadLoopCtw3() {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &loopCtw3, NS_QUAD);
 
             testSize(list, "quad normal surfaces", 4);
@@ -885,7 +885,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void almostNormalLoopCtw3() {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &loopCtw3, NS_AN_STANDARD);
 
             testSize(list, "standard almost normal surfaces", 5);
@@ -915,7 +915,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void standardLargeS3() {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &largeS3, NS_STANDARD);
 
             testSize(list, "standard normal surfaces", 15);
@@ -980,7 +980,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void quadLargeS3() {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &largeS3, NS_QUAD);
 
             testSize(list, "quad normal surfaces", 4);
@@ -1010,7 +1010,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void almostNormalLargeS3() {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &largeS3, NS_AN_STANDARD);
 
             // Bleh.  Too messy.  Just count them.
@@ -1020,7 +1020,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void standardLargeRP3() {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &largeRP3, NS_STANDARD);
 
             // Bleh.  Too messy.  Just count them.
@@ -1030,7 +1030,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void quadLargeRP3() {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &largeRP3, NS_QUAD);
 
             testSize(list, "quad normal surfaces", 5);
@@ -1067,7 +1067,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void almostNormalLargeRP3() {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &largeRP3, NS_AN_STANDARD);
 
             // Bleh.  Too messy.  Just count them.
@@ -1077,7 +1077,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void standardTwistedKxI() {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &twistedKxI, NS_STANDARD);
 
             testSize(list, "standard normal surfaces", 8);
@@ -1135,7 +1135,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void quadTwistedKxI() {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &twistedKxI, NS_QUAD);
 
             testSize(list, "quad normal surfaces", 6);
@@ -1179,7 +1179,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void almostNormalTwistedKxI() {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &twistedKxI, NS_AN_STANDARD);
 
             testSize(list, "standard almost normal surfaces", 13);
@@ -1261,7 +1261,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void standardNorSFS() {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &norSFS, NS_STANDARD);
 
             testSize(list, "standard normal surfaces", 25);
@@ -1348,7 +1348,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         void quadNorSFS() {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &norSFS, NS_QUAD);
 
             testSize(list, "quad normal surfaces", 21);
@@ -1416,7 +1416,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         void testStandardLoopCtwGeneric(unsigned len) {
             NTriangulation loop;
             loop.insertLayeredLoop(len, true);
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &loop, NS_STANDARD);
 
             std::ostringstream name;
@@ -1452,7 +1452,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         void testQuadLoopCtwGeneric(unsigned len) {
             NTriangulation loop;
             loop.insertLayeredLoop(len, true);
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &loop, NS_QUAD);
 
             std::ostringstream name;
@@ -1481,7 +1481,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         void testAlmostNormalLoopCtwGeneric(unsigned len) {
             NTriangulation loop;
             loop.insertLayeredLoop(len, true);
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 &loop, NS_AN_STANDARD);
 
             std::ostringstream name;
@@ -1548,11 +1548,11 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         static void verifyConversions(NTriangulation* tri) {
-            std::unique_ptr<NNormalSurfaceList> stdDirect(
-                NNormalSurfaceList::enumerate(
+            std::unique_ptr<NormalSurfaces> stdDirect(
+                NormalSurfaces::enumerate(
                 tri, NS_STANDARD, NS_VERTEX, NS_VERTEX_STD_DIRECT));
-            std::unique_ptr<NNormalSurfaceList> stdConv(
-                NNormalSurfaceList::enumerate(
+            std::unique_ptr<NormalSurfaces> stdConv(
+                NormalSurfaces::enumerate(
                 tri, NS_STANDARD, NS_VERTEX, NS_VERTEX_VIA_REDUCED));
             if ((! tri->isEmpty()) &&
                     (stdDirect->algorithm().has(NS_VERTEX_VIA_REDUCED) ||
@@ -1597,9 +1597,9 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             // Only test standard-to-quad if the preconditions for
             // standardToQuad() hold.
             if (tri->isValid() && ! tri->isIdeal()) {
-                std::unique_ptr<NNormalSurfaceList> quadDirect(
-                    NNormalSurfaceList::enumerate(tri, NS_QUAD));
-                std::unique_ptr<NNormalSurfaceList> quadConv(
+                std::unique_ptr<NormalSurfaces> quadDirect(
+                    NormalSurfaces::enumerate(tri, NS_QUAD));
+                std::unique_ptr<NormalSurfaces> quadConv(
                     stdDirect->standardToQuad());
                 if (! identical(quadDirect.get(), quadConv.get())) {
                     std::ostringstream msg;
@@ -1612,11 +1612,11 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         static void verifyConversionsAN(NTriangulation* tri) {
-            std::unique_ptr<NNormalSurfaceList> stdDirect(
-                NNormalSurfaceList::enumerate(
+            std::unique_ptr<NormalSurfaces> stdDirect(
+                NormalSurfaces::enumerate(
                 tri, NS_AN_STANDARD, NS_VERTEX, NS_VERTEX_STD_DIRECT));
-            std::unique_ptr<NNormalSurfaceList> stdConv(
-                NNormalSurfaceList::enumerate(
+            std::unique_ptr<NormalSurfaces> stdConv(
+                NormalSurfaces::enumerate(
                 tri, NS_AN_STANDARD, NS_VERTEX, NS_VERTEX_VIA_REDUCED));
             if ((! tri->isEmpty()) &&
                     (stdDirect->algorithm().has(NS_VERTEX_VIA_REDUCED) ||
@@ -1661,9 +1661,9 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
             // Only test standard-to-quad if the preconditions for
             // standardToQuad() hold.
             if (tri->isValid() && ! tri->isIdeal()) {
-                std::unique_ptr<NNormalSurfaceList> quadDirect(
-                    NNormalSurfaceList::enumerate(tri, NS_AN_QUAD_OCT));
-                std::unique_ptr<NNormalSurfaceList> quadConv(
+                std::unique_ptr<NormalSurfaces> quadDirect(
+                    NormalSurfaces::enumerate(tri, NS_AN_QUAD_OCT));
+                std::unique_ptr<NormalSurfaces> quadConv(
                     stdDirect->standardANToQuadOct());
                 if (! identical(quadDirect.get(), quadConv.get())) {
                     std::ostringstream msg;
@@ -1715,9 +1715,9 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         template <regina::NormalCoords coords>
         static void verifyTreeVsDD(NTriangulation* tri) {
-            NNormalSurfaceList* dd = NNormalSurfaceList::enumerate(
+            NormalSurfaces* dd = NormalSurfaces::enumerate(
                 tri, coords, NS_VERTEX, NS_VERTEX_DD | NS_VERTEX_STD_DIRECT);
-            NNormalSurfaceList* tree = NNormalSurfaceList::enumerate(
+            NormalSurfaces* tree = NormalSurfaces::enumerate(
                 tri, coords, NS_VERTEX, NS_VERTEX_TREE | NS_VERTEX_STD_DIRECT);
             if ((! tri->isEmpty()) &&
                     (dd->algorithm().has(NS_VERTEX_TREE) ||
@@ -1758,9 +1758,9 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
 
         template <regina::NormalCoords coords>
         static void verifyFundPrimalVsDual(NTriangulation* tri) {
-            NNormalSurfaceList* primal = NNormalSurfaceList::enumerate(
+            NormalSurfaces* primal = NormalSurfaces::enumerate(
                 tri, coords, NS_FUNDAMENTAL, NS_HILBERT_PRIMAL);
-            NNormalSurfaceList* dual = NNormalSurfaceList::enumerate(
+            NormalSurfaces* dual = NormalSurfaces::enumerate(
                 tri, coords, NS_FUNDAMENTAL, NS_HILBERT_DUAL);
             if ((! tri->isEmpty()) &&
                     (primal->algorithm().has(NS_HILBERT_DUAL) ||
@@ -1800,7 +1800,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 
         static void testDisjoint(NTriangulation* tri) {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 tri, NS_AN_STANDARD);
             unsigned long n = list->size();
 
@@ -2057,7 +2057,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
          * PRE: tri is valid and has only one component.
          */
         static void testCutAlong(NTriangulation* tri) {
-            NNormalSurfaceList* list = NNormalSurfaceList::enumerate(
+            NormalSurfaces* list = NormalSurfaces::enumerate(
                 tri, NS_STANDARD);
             unsigned long n = list->size();
 
@@ -2318,7 +2318,7 @@ class NNormalSurfaceListTest : public CppUnit::TestFixture {
         }
 };
 
-void addNNormalSurfaceList(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(NNormalSurfaceListTest::suite());
+void addNormalSurfaces(CppUnit::TextUi::TestRunner& runner) {
+    runner.addTest(NormalSurfacesTest::suite());
 }
 

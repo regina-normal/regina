@@ -28,7 +28,7 @@ tracker = ProgressTracker()
 # Because we are passing a progress tracker to enumerate(), the
 # enumeration will start in the background and control will return
 # immediately to the python console.
-surfaces = NNormalSurfaceList.enumerate(tri, NS_STANDARD, NS_VERTEX,
+surfaces = NormalSurfaces.enumerate(tri, NS_STANDARD, NS_VERTEX,
     NS_ALG_DEFAULT, tracker)
 
 # At this point the enumeration is up and running.

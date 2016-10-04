@@ -52,11 +52,11 @@
 #include <QVBoxLayout>
 #include <QStackedWidget>
 
-using regina::NNormalSurfaceList;
+using regina::NormalSurfaces;
 using regina::Packet;
 
 NSurfaceCompatibilityUI::NSurfaceCompatibilityUI(
-        regina::NNormalSurfaceList* packet, PacketTabbedUI* useParentUI) :
+        regina::NormalSurfaces* packet, PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), surfaces(packet),
         matrixLocal(0), matrixGlobal(0), layerLocal(0), layerGlobal(0),
         requestedCalculation(false) {

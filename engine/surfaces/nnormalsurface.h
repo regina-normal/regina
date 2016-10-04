@@ -1094,7 +1094,7 @@ class REGINA_API NNormalSurface :
         /**
          * Writes a chunk of XML containing this normal surface and all
          * of its properties.  This routine will be called from within
-         * NNormalSurfaceList::writeXMLPacketData().
+         * NormalSurfaces::writeXMLPacketData().
          *
          * \ifacespython Not present.
          *
@@ -1441,7 +1441,7 @@ class REGINA_API NNormalSurface :
          * disc types (such as octagons), this routine will still return
          * \c true if this particular surface does not use them.
          * This is in contrast to the routine
-         * NNormalSurfaceList::allowsAlmostNormal(), which only examines
+         * NormalSurfaces::allowsAlmostNormal(), which only examines
          * the underlying coordinate system.
          *
          * @return \c true if and only if this surface contains only

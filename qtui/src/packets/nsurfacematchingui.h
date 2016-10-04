@@ -47,7 +47,7 @@ class QTreeView;
 
 namespace regina {
     class NMatrixInt;
-    class NNormalSurfaceList;
+    class NormalSurfaces;
     class Packet;
     template <int> class Triangulation;
     typedef Triangulation<3> NTriangulation;
@@ -59,18 +59,18 @@ class MatchingModel : public QAbstractItemModel {
          * Details of the matching equations being displayed
          */
         std::unique_ptr<regina::NMatrixInt> eqns_;
-        regina::NNormalSurfaceList* surfaces_;
+        regina::NormalSurfaces* surfaces_;
 
     public:
         /**
          * Constructor.
          */
-        MatchingModel(regina::NNormalSurfaceList* surfaces);
+        MatchingModel(regina::NormalSurfaces* surfaces);
 
         /**
          * Data retrieval.
          */
-        regina::NNormalSurfaceList* surfaces() const;
+        regina::NormalSurfaces* surfaces() const;
 
         /**
          * Rebuild the model from scratch.
@@ -118,7 +118,7 @@ class NSurfaceMatchingUI : public QObject, public PacketViewerTab {
         /**
          * Constructor and destructor.
          */
-        NSurfaceMatchingUI(regina::NNormalSurfaceList* packet,
+        NSurfaceMatchingUI(regina::NormalSurfaces* packet,
                 PacketTabbedUI* useParentUI);
         ~NSurfaceMatchingUI();
 
@@ -136,11 +136,11 @@ class NSurfaceMatchingUI : public QObject, public PacketViewerTab {
         void columnResized(int section, int oldSize, int newSize);
 };
 
-inline MatchingModel::MatchingModel(regina::NNormalSurfaceList* surfaces) :
+inline MatchingModel::MatchingModel(regina::NormalSurfaces* surfaces) :
         surfaces_(surfaces) {
 }
 
-inline regina::NNormalSurfaceList* MatchingModel::surfaces() const {
+inline regina::NormalSurfaces* MatchingModel::surfaces() const {
     return surfaces_;
 }
 

@@ -74,7 +74,7 @@ class REGINA_API NSurfaceSubset :
             /**< Contains the surfaces contained in this subset.
                  These will all be pointers to surfaces stored in
                  \a source. */
-        const NNormalSurfaceList& source;
+        const NormalSurfaces& source;
             /**< The surface list for which this is a subset. */
 
     public:
@@ -87,7 +87,7 @@ class REGINA_API NSurfaceSubset :
          * @param filter the filter that defines which surfaces in \a list
          * will be included in this subset.
          */
-        NSurfaceSubset(const NNormalSurfaceList& list,
+        NSurfaceSubset(const NormalSurfaces& list,
             const NSurfaceFilter& filter);
         /**
          * Returns the coordinate system being used by the

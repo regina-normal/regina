@@ -512,8 +512,8 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
                 NExampleTriangulation::figureEight();
             SnapPeaTriangulation* t = new SnapPeaTriangulation(*f8);
 
-            regina::NNormalSurfaceList* s =
-                regina::NNormalSurfaceList::enumerate(t, regina::NS_QUAD);
+            regina::NormalSurfaces* s =
+                regina::NormalSurfaces::enumerate(t, regina::NS_QUAD);
             if (s->size() != 4)
                 CPPUNIT_FAIL(
                     "The figure 8 knot complement should have 4 vertex "

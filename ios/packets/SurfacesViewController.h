@@ -33,12 +33,12 @@
 #import "PacketTabBarController.h"
 
 namespace regina {
-    class NNormalSurfaceList;
+    class NormalSurfaces;
 }
 
 @interface SurfacesViewController : PacketTabBarController <PacketViewer>
 
-@property (assign, nonatomic) regina::NNormalSurfaceList* packet;
+@property (assign, nonatomic) regina::NormalSurfaces* packet;
 
 - (void)updateHeader:(UILabel*)summary coords:(UILabel*)coords tri:(UIButton*)tri;
 
@@ -47,7 +47,7 @@ namespace regina {
 @interface SurfacesTab : UIViewController <PacketViewer>
 
 @property (strong, nonatomic) SurfacesViewController* viewer;
-@property (assign, nonatomic) regina::NNormalSurfaceList* packet;
+@property (assign, nonatomic) regina::NormalSurfaces* packet;
 
 - (IBAction)openTriangulation:(id)sender;
 

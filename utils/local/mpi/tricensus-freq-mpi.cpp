@@ -575,12 +575,12 @@ void slaveFoundGluingPerms(const regina::NGluingPermSearcher* perms, void*) {
             nSolns++;
 
             // Enumerate normal surfaces!
-            regina::NNormalSurfaceList* s;
+            regina::NormalSurfaces* s;
 
-            s = regina::NNormalSurfaceList::enumerate(tri, regina::NS_STANDARD);
+            s = regina::NormalSurfaces::enumerate(tri, regina::NS_STANDARD);
             ++sfreq[s->size()];
 
-            s = regina::NNormalSurfaceList::enumerate(tri, regina::NS_QUAD);
+            s = regina::NormalSurfaces::enumerate(tri, regina::NS_QUAD);
             ++qfreq[s->size()];
         }
 

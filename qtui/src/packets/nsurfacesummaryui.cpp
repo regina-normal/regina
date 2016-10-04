@@ -74,7 +74,7 @@ namespace {
 }
 
 NSurfaceSummaryUI::NSurfaceSummaryUI(
-        regina::NNormalSurfaceList* packet, PacketTabbedUI* useParentUI) :
+        regina::NormalSurfaces* packet, PacketTabbedUI* useParentUI) :
         PacketViewerTab(useParentUI), surfaces(packet) {
     QScrollArea* scroller = new QScrollArea();
     scroller->setWidgetResizable(true);

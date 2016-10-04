@@ -71,7 +71,7 @@ enum PacketType {
      */
     PACKET_TRIANGULATION = 3,
     /**
-     * Represents a normal surface list, of class NNormalSurfaceList.
+     * Represents a normal surface list, of class NormalSurfaces.
      */
     PACKET_NORMALSURFACELIST = 6,
     /**

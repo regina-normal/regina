@@ -105,7 +105,7 @@ class REGINA_API NXMLNormalSurfaceReader : public XMLElementReader {
  */
 class REGINA_API NXMLNormalSurfaceListReader : public XMLPacketReader {
     private:
-        NNormalSurfaceList* list;
+        NormalSurfaces* list;
             /**< The normal surface list currently being read. */
         const NTriangulation* tri;
             /**< The triangulation in which these normal surfaces live. */

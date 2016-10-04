@@ -33,7 +33,7 @@
 void addNDisc();
 void addNDiscType();
 void addNNormalSurface();
-void addNNormalSurfaceList();
+void addNormalSurfaces();
 void addNormalCoords();
 void addNormalFlags();
 void addNPrism();
@@ -52,7 +52,7 @@ void addSurfacesClasses() {
     addNDisc();
     addNDiscType();
     addNNormalSurface();
-    addNNormalSurfaceList();
+    addNormalSurfaces();
     addNPrism();
     addNSurfaceFilter();
     addNSurfaceFilterCombination();

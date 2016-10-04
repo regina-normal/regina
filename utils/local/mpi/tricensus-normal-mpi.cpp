@@ -565,8 +565,8 @@ void slaveFoundGluingPerms(const regina::NGluingPermSearcher* perms, void*) {
                         serr = true;
                 }
                 if (! serr) {
-                    regina::NNormalSurfaceList* s =
-                        regina::NNormalSurfaceList::enumerate(tri,
+                    regina::NormalSurfaces* s =
+                        regina::NormalSurfaces::enumerate(tri,
                         regina::NS_STANDARD);
                     sout << tri->size() << ' ' << s->size() << ' '
                         << '#' << nSolns << '\n';
@@ -582,8 +582,8 @@ void slaveFoundGluingPerms(const regina::NGluingPermSearcher* perms, void*) {
                         qerr = true;
                 }
                 if (! qerr) {
-                    regina::NNormalSurfaceList* s =
-                        regina::NNormalSurfaceList::enumerate(tri,
+                    regina::NormalSurfaces* s =
+                        regina::NormalSurfaces::enumerate(tri,
                         regina::NS_QUAD);
                     qout << tri->size() << ' ' << s->size() << ' '
                         << '#' << nSolns << '\n';

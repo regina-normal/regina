@@ -42,7 +42,7 @@
 #include <QString>
 
 using regina::HyperCoords;
-using regina::NNormalSurfaceList;
+using regina::NormalSurfaces;
 using regina::NormalCoords;
 using regina::NTriangle;
 

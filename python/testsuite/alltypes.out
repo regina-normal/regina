@@ -1192,7 +1192,7 @@ Equality type : BY_REFERENCE
 NNormalSurface : class
 Equality type : BY_REFERENCE
 
-NNormalSurfaceList : class
+NormalSurfaces : class
 Equality type : BY_REFERENCE
 
 NPerm10 : class

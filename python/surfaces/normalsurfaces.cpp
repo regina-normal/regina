@@ -42,41 +42,41 @@
 
 using namespace boost::python;
 using namespace regina::python;
-using regina::NNormalSurfaceList;
+using regina::NormalSurfaces;
 
 namespace {
-    void writeAllSurfaces_stdio(const NNormalSurfaceList& s) {
+    void writeAllSurfaces_stdio(const NormalSurfaces& s) {
         s.writeAllSurfaces(std::cout);
     }
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_saveCSVStandard,
-        NNormalSurfaceList::saveCSVStandard, 1, 2);
+        NormalSurfaces::saveCSVStandard, 1, 2);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_saveCSVEdgeWeight,
-        NNormalSurfaceList::saveCSVEdgeWeight, 1, 2);
+        NormalSurfaces::saveCSVEdgeWeight, 1, 2);
 
     // Write manual overload wrappers since these are static member functions.
-    NNormalSurfaceList* unified_2(regina::NTriangulation* owner,
+    NormalSurfaces* unified_2(regina::NTriangulation* owner,
             regina::NormalCoords coords) {
-        return NNormalSurfaceList::enumerate(owner, coords);
+        return NormalSurfaces::enumerate(owner, coords);
     }
-    NNormalSurfaceList* unified_3(regina::NTriangulation* owner,
+    NormalSurfaces* unified_3(regina::NTriangulation* owner,
             regina::NormalCoords coords, regina::NormalList which) {
-        return NNormalSurfaceList::enumerate(owner, coords, which);
+        return NormalSurfaces::enumerate(owner, coords, which);
     }
-    NNormalSurfaceList* unified_4(regina::NTriangulation* owner,
+    NormalSurfaces* unified_4(regina::NTriangulation* owner,
             regina::NormalCoords coords, regina::NormalList which,
             regina::NormalAlg algHints) {
-        return NNormalSurfaceList::enumerate(owner, coords, which, algHints);
+        return NormalSurfaces::enumerate(owner, coords, which, algHints);
     }
-    NNormalSurfaceList* unified_5(regina::NTriangulation* owner,
+    NormalSurfaces* unified_5(regina::NTriangulation* owner,
             regina::NormalCoords coords, regina::NormalList which,
             regina::NormalAlg algHints, regina::ProgressTracker* tracker) {
-        return NNormalSurfaceList::enumerate(owner, coords, which, algHints,
+        return NormalSurfaces::enumerate(owner, coords, which, algHints,
             tracker);
     }
 }
 
-void addNNormalSurfaceList() {
+void addNormalSurfaces() {
     enum_<regina::SurfaceExportFields>("SurfaceExportFields")
         .value("surfaceExportName", regina::surfaceExportName)
         .value("surfaceExportEuler", regina::surfaceExportEuler)
@@ -94,21 +94,21 @@ void addNNormalSurfaceList() {
         regina::makeMatchingEquations,
         return_value_policy<manage_new_object>());
 
-    scope s = class_<NNormalSurfaceList,
+    scope s = class_<NormalSurfaces,
             bases<regina::Packet>,
-            SafeHeldType<NNormalSurfaceList>, boost::noncopyable>
-            ("NNormalSurfaceList", no_init)
-        .def("coords", &NNormalSurfaceList::coords)
-        .def("which", &NNormalSurfaceList::which)
-        .def("algorithm", &NNormalSurfaceList::algorithm)
-        .def("allowsAlmostNormal", &NNormalSurfaceList::allowsAlmostNormal)
-        .def("allowsSpun", &NNormalSurfaceList::allowsSpun)
-        .def("allowsOriented", &NNormalSurfaceList::allowsOriented)
-        .def("isEmbeddedOnly", &NNormalSurfaceList::isEmbeddedOnly)
-        .def("triangulation", &NNormalSurfaceList::triangulation,
+            SafeHeldType<NormalSurfaces>, boost::noncopyable>
+            ("NormalSurfaces", no_init)
+        .def("coords", &NormalSurfaces::coords)
+        .def("which", &NormalSurfaces::which)
+        .def("algorithm", &NormalSurfaces::algorithm)
+        .def("allowsAlmostNormal", &NormalSurfaces::allowsAlmostNormal)
+        .def("allowsSpun", &NormalSurfaces::allowsSpun)
+        .def("allowsOriented", &NormalSurfaces::allowsOriented)
+        .def("isEmbeddedOnly", &NormalSurfaces::isEmbeddedOnly)
+        .def("triangulation", &NormalSurfaces::triangulation,
             return_value_policy<to_held_type<> >())
-        .def("size", &NNormalSurfaceList::size)
-        .def("surface", &NNormalSurfaceList::surface,
+        .def("size", &NormalSurfaces::size)
+        .def("surface", &NormalSurfaces::surface,
             return_internal_reference<>())
         .def("writeAllSurfaces", writeAllSurfaces_stdio)
         .def("enumerate", unified_2,
@@ -119,38 +119,38 @@ void addNNormalSurfaceList() {
             return_value_policy<to_held_type<> >())
         .def("enumerate", unified_5,
             return_value_policy<to_held_type<> >())
-        .def("quadToStandard", &NNormalSurfaceList::quadToStandard,
+        .def("quadToStandard", &NormalSurfaces::quadToStandard,
             return_value_policy<to_held_type<> >())
-        .def("quadOctToStandardAN", &NNormalSurfaceList::quadOctToStandardAN,
+        .def("quadOctToStandardAN", &NormalSurfaces::quadOctToStandardAN,
             return_value_policy<to_held_type<> >())
-        .def("standardToQuad", &NNormalSurfaceList::standardToQuad,
+        .def("standardToQuad", &NormalSurfaces::standardToQuad,
             return_value_policy<to_held_type<> >())
-        .def("standardANToQuadOct", &NNormalSurfaceList::standardANToQuadOct,
+        .def("standardANToQuadOct", &NormalSurfaces::standardANToQuadOct,
             return_value_policy<to_held_type<> >())
         .def("filterForLocallyCompatiblePairs",
-            &NNormalSurfaceList::filterForLocallyCompatiblePairs,
+            &NormalSurfaces::filterForLocallyCompatiblePairs,
             return_value_policy<to_held_type<> >())
         .def("filterForDisjointPairs",
-            &NNormalSurfaceList::filterForDisjointPairs,
+            &NormalSurfaces::filterForDisjointPairs,
             return_value_policy<to_held_type<> >())
         .def("filterForPotentiallyIncompressible",
-            &NNormalSurfaceList::filterForPotentiallyIncompressible,
+            &NormalSurfaces::filterForPotentiallyIncompressible,
             return_value_policy<to_held_type<> >())
         .def("recreateMatchingEquations",
-            &NNormalSurfaceList::recreateMatchingEquations,
+            &NormalSurfaces::recreateMatchingEquations,
             return_value_policy<manage_new_object>())
-        .def("saveCSVStandard", &NNormalSurfaceList::saveCSVStandard,
+        .def("saveCSVStandard", &NormalSurfaces::saveCSVStandard,
             OL_saveCSVStandard())
-        .def("saveCSVEdgeWeight", &NNormalSurfaceList::saveCSVEdgeWeight,
+        .def("saveCSVEdgeWeight", &NormalSurfaces::saveCSVEdgeWeight,
             OL_saveCSVEdgeWeight())
         .staticmethod("enumerate")
     ;
 
     s.attr("typeID") = regina::PACKET_NORMALSURFACELIST;
 
-    implicitly_convertible<SafeHeldType<NNormalSurfaceList>,
+    implicitly_convertible<SafeHeldType<NormalSurfaces>,
         SafeHeldType<regina::Packet> >();
 
-    FIX_REGINA_BOOST_CONVERTERS(NNormalSurfaceList);
+    FIX_REGINA_BOOST_CONVERTERS(NormalSurfaces);
 }
 

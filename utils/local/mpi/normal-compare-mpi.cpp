@@ -379,8 +379,8 @@ int mainSlave() {
     long currTri = 0;
 
     NTriangulation* t;
-    NNormalSurfaceList* q;
-    NNormalSurfaceList* s;
+    NormalSurfaces* q;
+    NormalSurfaces* s;
 
     long numStd, numQuad;
     long timeStd, timeQuad, timeConv;
@@ -424,7 +424,7 @@ int mainSlave() {
         }
 
         clockStart = ::clock();
-        q = NNormalSurfaceList::enumerate(t, NS_QUAD, true);
+        q = NormalSurfaces::enumerate(t, NS_QUAD, true);
         timeQuad = ::clock() - clockStart;
         numQuad = q->size();
 
@@ -437,7 +437,7 @@ int mainSlave() {
         s->makeOrphan(); delete s;
 
         clockStart = ::clock();
-        s = NNormalSurfaceList::enumerate(t, NS_STANDARD,
+        s = NormalSurfaces::enumerate(t, NS_STANDARD,
             NS_VERTEX | NS_EMBEDDED_ONLY, NS_VERTEX_STD_DIRECT);
         timeStd = ::clock() - clockStart;
         if (s->size() != numStd) {

@@ -35,7 +35,7 @@
 
 namespace regina {
 
-NSurfaceSubset::NSurfaceSubset(const NNormalSurfaceList& set,
+NSurfaceSubset::NSurfaceSubset(const NormalSurfaces& set,
         const NSurfaceFilter& filter) : source(set) {
     unsigned long n = set.size();
     NNormalSurface* s;

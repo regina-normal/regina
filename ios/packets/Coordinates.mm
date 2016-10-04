@@ -40,7 +40,7 @@
 
 using regina::HyperCoords;
 using regina::NNormalHypersurfaceList;
-using regina::NNormalSurfaceList;
+using regina::NormalSurfaces;
 using regina::NormalCoords;
 using regina::NTriangle;
 

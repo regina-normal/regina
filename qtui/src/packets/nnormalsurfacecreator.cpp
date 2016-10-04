@@ -49,7 +49,7 @@
 #include <QMessageBox>
 #include <QWhatsThis>
 
-using regina::NNormalSurfaceList;
+using regina::NormalSurfaces;
 
 namespace {
     /**
@@ -184,7 +184,7 @@ regina::Packet* NNormalSurfaceCreator::createPacket(regina::Packet* parent,
             ui->tr("Enumerating vertex normal surfaces"),
             parentWidget);
 
-        NNormalSurfaceList* ans = NNormalSurfaceList::enumerate(
+        NormalSurfaces* ans = NormalSurfaces::enumerate(
             dynamic_cast<regina::NTriangulation*>(parent),
             coordSystem,
             regina::NS_VERTEX | (embedded->isChecked() ?
@@ -206,7 +206,7 @@ regina::Packet* NNormalSurfaceCreator::createPacket(regina::Packet* parent,
             ui->tr("Enumerating fundamental normal surfaces"),
             parentWidget);
 
-        NNormalSurfaceList* ans = NNormalSurfaceList::enumerate(
+        NormalSurfaces* ans = NormalSurfaces::enumerate(
             dynamic_cast<regina::NTriangulation*>(parent),
             coordSystem,
             regina::NS_FUNDAMENTAL | (embedded->isChecked() ?

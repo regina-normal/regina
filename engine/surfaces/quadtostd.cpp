@@ -57,19 +57,19 @@ namespace regina {
 // Since the template funtcions are private, we do not need to declare
 // them with REGINA_API.
 
-NNormalSurfaceList* NNormalSurfaceList::quadToStandard() const {
+NormalSurfaces* NormalSurfaces::quadToStandard() const {
     return internalReducedToStandard<NormalSpec>();
 }
 
-NNormalSurfaceList* NNormalSurfaceList::quadOctToStandardAN() const {
+NormalSurfaces* NormalSurfaces::quadOctToStandardAN() const {
     return internalReducedToStandard<AlmostNormalSpec>();
 }
 
-template void NNormalSurfaceList::buildStandardFromReduced<
-        NNormalSurfaceList::NormalSpec>(NTriangulation*,
+template void NormalSurfaces::buildStandardFromReduced<
+        NormalSurfaces::NormalSpec>(NTriangulation*,
         const std::vector<NNormalSurface*>&, ProgressTracker*);
-template void NNormalSurfaceList::buildStandardFromReduced<
-        NNormalSurfaceList::AlmostNormalSpec>(NTriangulation*,
+template void NormalSurfaces::buildStandardFromReduced<
+        NormalSurfaces::AlmostNormalSpec>(NTriangulation*,
         const std::vector<NNormalSurface*>&, ProgressTracker*);
 
 /**
@@ -308,7 +308,7 @@ namespace {
 } // anonymous namespace
 
 template <class Variant>
-NNormalSurfaceList* NNormalSurfaceList::internalReducedToStandard() const {
+NormalSurfaces* NormalSurfaces::internalReducedToStandard() const {
     NTriangulation* owner = triangulation();
 
     // Basic sanity checks:
@@ -320,7 +320,7 @@ NNormalSurfaceList* NNormalSurfaceList::internalReducedToStandard() const {
         return 0;
 
     // Prepare a final surface list.
-    NNormalSurfaceList* ans = new NNormalSurfaceList(
+    NormalSurfaces* ans = new NormalSurfaces(
         Variant::standardCoords(), NS_EMBEDDED_ONLY | NS_VERTEX,
         algorithm_ | NS_VERTEX_VIA_REDUCED);
 
@@ -335,7 +335,7 @@ NNormalSurfaceList* NNormalSurfaceList::internalReducedToStandard() const {
 }
 
 template <class Variant>
-void NNormalSurfaceList::buildStandardFromReduced(NTriangulation* owner,
+void NormalSurfaces::buildStandardFromReduced(NTriangulation* owner,
         const std::vector<NNormalSurface*>& reducedList,
         ProgressTracker* tracker) {
     size_t nFacets = Variant::stdLen(owner->size());
@@ -372,7 +372,7 @@ void NNormalSurfaceList::buildStandardFromReduced(NTriangulation* owner,
 }
 
 template <class Variant, class BitmaskType>
-void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
+void NormalSurfaces::buildStandardFromReducedUsing(NTriangulation* owner,
         const std::vector<NNormalSurface*>& reducedList,
         ProgressTracker* tracker) {
     // Prepare for the reduced-to-standard double description run.

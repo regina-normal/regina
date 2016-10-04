@@ -43,7 +43,7 @@
 
 namespace regina {
     class Packet;
-    class NNormalSurfaceList;
+    class NormalSurfaces;
 };
 
 class QTreeWidget;
@@ -59,7 +59,7 @@ class NSurfaceSummaryUI : public QObject, public PacketViewerTab,
         /**
          * Packet details
          */
-        regina::NNormalSurfaceList* surfaces;
+        regina::NormalSurfaces* surfaces;
 
         /**
          * Internal components
@@ -77,7 +77,7 @@ class NSurfaceSummaryUI : public QObject, public PacketViewerTab,
         /**
          * Constructor and destructor.
          */
-        NSurfaceSummaryUI(regina::NNormalSurfaceList* packet,
+        NSurfaceSummaryUI(regina::NormalSurfaces* packet,
             PacketTabbedUI* useParentUI);
         ~NSurfaceSummaryUI();
 

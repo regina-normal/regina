@@ -51,7 +51,7 @@
 using regina::Packet;
 using regina::NNormalSurface;
 
-NNormalSurfaceUI::NNormalSurfaceUI(regina::NNormalSurfaceList* packet,
+NNormalSurfaceUI::NNormalSurfaceUI(regina::NormalSurfaces* packet,
         PacketPane* newEnclosingPane) :
         PacketTabbedUI(newEnclosingPane,
             ReginaPrefSet::global().tabSurfaceList) {
@@ -80,7 +80,7 @@ QString NNormalSurfaceUI::getPacketMenuText() const {
     return tr("&Normal Surfaces");
 }
 
-NSurfaceHeaderUI::NSurfaceHeaderUI(regina::NNormalSurfaceList* packet,
+NSurfaceHeaderUI::NSurfaceHeaderUI(regina::NormalSurfaces* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         surfaces(packet) {
     header = new QLabel(0);

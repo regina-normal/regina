@@ -42,7 +42,7 @@
 
 namespace regina {
     class NNormalHypersurfaceList;
-    class NNormalSurfaceList;
+    class NormalSurfaces;
 };
 
 /**
@@ -83,9 +83,9 @@ class CompatCanvas : public QGraphicsScene {
          * \pre The given list is non-empty and contains only embedded
          * surfaces/hypersurfaces.
          */
-        void fillLocal(const regina::NNormalSurfaceList& surfaces);
+        void fillLocal(const regina::NormalSurfaces& surfaces);
         void fillLocal(const regina::NNormalHypersurfaceList& surfaces);
-        void fillGlobal(const regina::NNormalSurfaceList& surfaces);
+        void fillGlobal(const regina::NormalSurfaces& surfaces);
 };
 
 #endif

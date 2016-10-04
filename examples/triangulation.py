@@ -28,7 +28,7 @@ print t.homologyBdry()
 print t.isZeroEfficient()
 
 # Make our own list of vertex normal surfaces in standard coordinates.
-surfaces = NNormalSurfaceList.enumerate(t, NS_STANDARD)
+surfaces = NormalSurfaces.enumerate(t, NS_STANDARD)
 
 # Verify that the normal surface list is already a child packet of the
 # triangulation.  This happens automatically whenever you enumerate

@@ -68,7 +68,7 @@ namespace Coordinates {
 
     /**
      * Does the given coordinate system generate almost normal
-     * surfaces when used with NNormalSurfaceList::enumerate()?
+     * surfaces when used with NormalSurfaces::enumerate()?
      *
      * Only coordinate systems that are used for enumerating surfaces
      * (not just viewing surfaces) are relevant here.

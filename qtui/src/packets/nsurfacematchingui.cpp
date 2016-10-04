@@ -43,7 +43,7 @@
 
 #define DEFAULT_MATCHING_COLUMN_WIDTH 40
 
-using regina::NNormalSurfaceList;
+using regina::NormalSurfaces;
 using regina::Packet;
 
 void MatchingModel::rebuild() {
@@ -96,7 +96,7 @@ QVariant MatchingModel::headerData(int section, Qt::Orientation orientation,
         return QVariant();
 }
 
-NSurfaceMatchingUI::NSurfaceMatchingUI(regina::NNormalSurfaceList* packet,
+NSurfaceMatchingUI::NSurfaceMatchingUI(regina::NormalSurfaces* packet,
         PacketTabbedUI* useParentUI) : PacketViewerTab(useParentUI),
         currentlyAutoResizing(false), everRefreshed(false) {
     model = new MatchingModel(packet);

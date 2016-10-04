@@ -40,7 +40,7 @@
 #define KEY_LAST_COORDS @"NewSurfacesCoords"
 #define KEY_LAST_EMB @"NewSurfacesEmb"
 
-using regina::NNormalSurfaceList;
+using regina::NormalSurfaces;
 
 static NSArray* whichText;
 static NSArray* coordText;
@@ -175,8 +175,8 @@ static NSArray* embText;
     [UIApplication sharedApplication].idleTimerDisabled = YES;
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        NNormalSurfaceList* ans =
-            NNormalSurfaceList::enumerate((regina::NTriangulation*)self.spec.parent,
+        NormalSurfaces* ans =
+            NormalSurfaces::enumerate((regina::NTriangulation*)self.spec.parent,
                                           coords, which, regina::NS_ALG_DEFAULT, &_tracker);
         while (! _tracker.isFinished()) {
             if (_tracker.percentChanged()) {

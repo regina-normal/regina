@@ -47,7 +47,7 @@ class NSurfaceCoordinateUI;
 class QLabel;
 
 namespace regina {
-    class NNormalSurfaceList;
+    class NormalSurfaces;
 };
 
 /**
@@ -67,7 +67,7 @@ class NNormalSurfaceUI : public PacketTabbedUI {
         /**
          * Constructor.
          */
-        NNormalSurfaceUI(regina::NNormalSurfaceList* packet,
+        NNormalSurfaceUI(regina::NormalSurfaces* packet,
             PacketPane* newEnclosingPane);
 
         /**
@@ -88,7 +88,7 @@ class NSurfaceHeaderUI : public QObject, public PacketViewerTab,
         /**
          * Packet details
          */
-        regina::NNormalSurfaceList* surfaces;
+        regina::NormalSurfaces* surfaces;
 
         /**
          * Internal components
@@ -100,7 +100,7 @@ class NSurfaceHeaderUI : public QObject, public PacketViewerTab,
         /**
          * Constructor.
          */
-        NSurfaceHeaderUI(regina::NNormalSurfaceList* packet,
+        NSurfaceHeaderUI(regina::NormalSurfaces* packet,
                 PacketTabbedUI* useParentUI);
 
         /**

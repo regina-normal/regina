@@ -42,7 +42,7 @@ using namespace regina::python;
 using regina::NSurfaceSubset;
 
 namespace {
-    void writeAllSurfaces_stdio(const regina::NNormalSurfaceList& s) {
+    void writeAllSurfaces_stdio(const regina::NormalSurfaces& s) {
         s.writeAllSurfaces(std::cout);
     }
 }
@@ -50,7 +50,7 @@ namespace {
 void addNSurfaceSubset() {
     scope s = class_<NSurfaceSubset, std::auto_ptr<NSurfaceSubset>,
             boost::noncopyable>("NSurfaceSubset",
-            init<const regina::NNormalSurfaceList&,
+            init<const regina::NormalSurfaces&,
                 const regina::NSurfaceFilter&>())
         .def("coords", &NSurfaceSubset::coords)
         .def("allowsAlmostNormal", &NSurfaceSubset::allowsAlmostNormal)

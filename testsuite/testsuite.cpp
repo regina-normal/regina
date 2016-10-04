@@ -143,7 +143,7 @@ void populateTests(CppUnit::TextTestRunner& runner) {
     addNStandardTriangulation(runner);
 
     // Surfaces:
-    addNNormalSurfaceList(runner);
+    addNormalSurfaces(runner);
     addIncompressible(runner);
 
     // Angle structures:
