@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "enumerate/ntreeconstraint.h"
+#include "enumerate/treeconstraint.h"
 #include "snappea/snappeatriangulation.h"
 #include "triangulation/ntriangulation.h"
 

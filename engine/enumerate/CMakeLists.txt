@@ -2,8 +2,8 @@
 
 # Files to compile
 SET ( FILES
-  ntreeconstraint
-  ntreelp
+  treeconstraint
+  treelp
   ntreetraversal
   ntypetrie
   )
@@ -46,5 +46,8 @@ if (${REGINA_INSTALL_DEV})
     ntreetraversal-impl.h
     ntypetrie.h
     ordering.h
+    treeconstraint.h
+    treelp.h
+    treelp-impl.h
     DESTINATION ${INCLUDEDIR}/enumerate COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

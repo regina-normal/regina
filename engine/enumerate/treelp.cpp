@@ -30,8 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
-#include "enumerate/ntreeconstraint.h"
-#include "enumerate/ntreelp-impl.h"
+#include "enumerate/treeconstraint.h"
+#include "enumerate/treelp-impl.h"
 
 namespace regina {
 

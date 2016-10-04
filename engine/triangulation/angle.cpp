@@ -31,8 +31,8 @@
  **************************************************************************/
 
 #include "angle/anglestructure.h"
-#include "enumerate/ntreeconstraint.h"
-#include "enumerate/ntreelp.h"
+#include "enumerate/treeconstraint.h"
+#include "enumerate/treelp.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {

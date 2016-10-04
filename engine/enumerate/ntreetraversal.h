@@ -41,8 +41,8 @@
 #endif
 
 #include <mutex>
-#include "enumerate/ntreeconstraint.h"
-#include "enumerate/ntreelp.h"
+#include "enumerate/treeconstraint.h"
+#include "enumerate/treelp.h"
 #include "enumerate/ntypetrie.h"
 
 namespace regina {

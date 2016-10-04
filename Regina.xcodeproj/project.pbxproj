@@ -68,6 +68,9 @@
 		050C64C41DA32E7D00C9420F /* nhilbertprimal.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64BE1DA32E7D00C9420F /* nhilbertprimal.h */; };
 		050C64C71DA3302900C9420F /* nmaxadmissible-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64C51DA3302900C9420F /* nmaxadmissible-impl.h */; };
 		050C64C81DA3302900C9420F /* nmaxadmissible.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64C61DA3302900C9420F /* nmaxadmissible.h */; };
+		050C64CC1DA3311100C9420F /* ntreeconstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64C91DA3311100C9420F /* ntreeconstraint.h */; };
+		050C64CD1DA3311100C9420F /* ntreelp-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64CA1DA3311100C9420F /* ntreelp-impl.h */; };
+		050C64CE1DA3311100C9420F /* ntreelp.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64CB1DA3311100C9420F /* ntreelp.h */; };
 		050F5DD31B9BAB9C00C1F681 /* nabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D021B9BAB9C00C1F681 /* nabeliangroup.cpp */; };
 		050F5DD41B9BAB9C00C1F681 /* ngrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D031B9BAB9C00C1F681 /* ngrouppresentation.cpp */; };
 		050F5DD51B9BAB9C00C1F681 /* nhomgrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D041B9BAB9C00C1F681 /* nhomgrouppresentation.cpp */; };
@@ -284,11 +287,11 @@
 		052F9ECD180600FB00FAE4DF /* hilbertprimal.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C62180600FA00FAE4DF /* hilbertprimal.h */; };
 		052F9ECF180600FB00FAE4DF /* maxadmissible-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C64180600FA00FAE4DF /* maxadmissible-impl.h */; };
 		052F9ED0180600FB00FAE4DF /* maxadmissible.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C65180600FA00FAE4DF /* maxadmissible.h */; };
-		052F9EF3180600FB00FAE4DF /* ntreeconstraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C8E180600FA00FAE4DF /* ntreeconstraint.cpp */; };
-		052F9EF4180600FB00FAE4DF /* ntreeconstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C8F180600FA00FAE4DF /* ntreeconstraint.h */; };
-		052F9EF5180600FB00FAE4DF /* ntreelp-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C90180600FA00FAE4DF /* ntreelp-impl.h */; };
-		052F9EF6180600FB00FAE4DF /* ntreelp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C91180600FA00FAE4DF /* ntreelp.cpp */; };
-		052F9EF7180600FB00FAE4DF /* ntreelp.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C92180600FA00FAE4DF /* ntreelp.h */; };
+		052F9EF3180600FB00FAE4DF /* treeconstraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C8E180600FA00FAE4DF /* treeconstraint.cpp */; };
+		052F9EF4180600FB00FAE4DF /* treeconstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C8F180600FA00FAE4DF /* treeconstraint.h */; };
+		052F9EF5180600FB00FAE4DF /* treelp-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C90180600FA00FAE4DF /* treelp-impl.h */; };
+		052F9EF6180600FB00FAE4DF /* treelp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C91180600FA00FAE4DF /* treelp.cpp */; };
+		052F9EF7180600FB00FAE4DF /* treelp.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C92180600FA00FAE4DF /* treelp.h */; };
 		052F9EF9180600FB00FAE4DF /* ntreetraversal-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C94180600FA00FAE4DF /* ntreetraversal-impl.h */; };
 		052F9EFA180600FB00FAE4DF /* ntreetraversal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C95180600FA00FAE4DF /* ntreetraversal.cpp */; };
 		052F9EFB180600FB00FAE4DF /* ntreetraversal.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C96180600FA00FAE4DF /* ntreetraversal.h */; };
@@ -663,8 +666,8 @@
 		052FA1781806129B00FAE4DF /* nxmldim2trireader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C49180600FA00FAE4DF /* nxmldim2trireader.cpp */; };
 		052FA1791806129B00FAE4DF /* skeleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C4B180600FA00FAE4DF /* skeleton.cpp */; };
 		052FA17A1806129B00FAE4DF /* engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C51180600FA00FAE4DF /* engine.cpp */; };
-		052FA17E1806129B00FAE4DF /* ntreeconstraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C8E180600FA00FAE4DF /* ntreeconstraint.cpp */; };
-		052FA17F1806129B00FAE4DF /* ntreelp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C91180600FA00FAE4DF /* ntreelp.cpp */; };
+		052FA17E1806129B00FAE4DF /* treeconstraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C8E180600FA00FAE4DF /* treeconstraint.cpp */; };
+		052FA17F1806129B00FAE4DF /* treelp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C91180600FA00FAE4DF /* treelp.cpp */; };
 		052FA1801806129B00FAE4DF /* ntreetraversal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C95180600FA00FAE4DF /* ntreetraversal.cpp */; };
 		052FA1811806129B00FAE4DF /* ntypetrie.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C98180600FA00FAE4DF /* ntypetrie.cpp */; };
 		052FA1871806129B00FAE4DF /* dehydration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CAB180600FA00FAE4DF /* dehydration.cpp */; };
@@ -1970,6 +1973,9 @@
 		050C64BE1DA32E7D00C9420F /* nhilbertprimal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhilbertprimal.h; sourceTree = "<group>"; };
 		050C64C51DA3302900C9420F /* nmaxadmissible-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "nmaxadmissible-impl.h"; sourceTree = "<group>"; };
 		050C64C61DA3302900C9420F /* nmaxadmissible.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nmaxadmissible.h; sourceTree = "<group>"; };
+		050C64C91DA3311100C9420F /* ntreeconstraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntreeconstraint.h; sourceTree = "<group>"; };
+		050C64CA1DA3311100C9420F /* ntreelp-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ntreelp-impl.h"; sourceTree = "<group>"; };
+		050C64CB1DA3311100C9420F /* ntreelp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntreelp.h; sourceTree = "<group>"; };
 		050F5CDD1B9BAAAA00C1F681 /* engine.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = engine.so; sourceTree = BUILT_PRODUCTS_DIR; };
 		050F5D011B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		050F5D021B9BAB9C00C1F681 /* nabeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nabeliangroup.cpp; sourceTree = "<group>"; };
@@ -2248,11 +2254,11 @@
 		052F9C62180600FA00FAE4DF /* hilbertprimal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hilbertprimal.h; sourceTree = "<group>"; };
 		052F9C64180600FA00FAE4DF /* maxadmissible-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "maxadmissible-impl.h"; sourceTree = "<group>"; };
 		052F9C65180600FA00FAE4DF /* maxadmissible.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = maxadmissible.h; sourceTree = "<group>"; };
-		052F9C8E180600FA00FAE4DF /* ntreeconstraint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ntreeconstraint.cpp; sourceTree = "<group>"; };
-		052F9C8F180600FA00FAE4DF /* ntreeconstraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntreeconstraint.h; sourceTree = "<group>"; };
-		052F9C90180600FA00FAE4DF /* ntreelp-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ntreelp-impl.h"; sourceTree = "<group>"; };
-		052F9C91180600FA00FAE4DF /* ntreelp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ntreelp.cpp; sourceTree = "<group>"; };
-		052F9C92180600FA00FAE4DF /* ntreelp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntreelp.h; sourceTree = "<group>"; };
+		052F9C8E180600FA00FAE4DF /* treeconstraint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = treeconstraint.cpp; sourceTree = "<group>"; };
+		052F9C8F180600FA00FAE4DF /* treeconstraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = treeconstraint.h; sourceTree = "<group>"; };
+		052F9C90180600FA00FAE4DF /* treelp-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "treelp-impl.h"; sourceTree = "<group>"; };
+		052F9C91180600FA00FAE4DF /* treelp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = treelp.cpp; sourceTree = "<group>"; };
+		052F9C92180600FA00FAE4DF /* treelp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = treelp.h; sourceTree = "<group>"; };
 		052F9C94180600FA00FAE4DF /* ntreetraversal-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ntreetraversal-impl.h"; sourceTree = "<group>"; };
 		052F9C95180600FA00FAE4DF /* ntreetraversal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ntreetraversal.cpp; sourceTree = "<group>"; };
 		052F9C96180600FA00FAE4DF /* ntreetraversal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntreetraversal.h; sourceTree = "<group>"; };
@@ -4320,17 +4326,20 @@
 				050C64BE1DA32E7D00C9420F /* nhilbertprimal.h */,
 				050C64C51DA3302900C9420F /* nmaxadmissible-impl.h */,
 				050C64C61DA3302900C9420F /* nmaxadmissible.h */,
-				052F9C8E180600FA00FAE4DF /* ntreeconstraint.cpp */,
-				052F9C8F180600FA00FAE4DF /* ntreeconstraint.h */,
-				052F9C90180600FA00FAE4DF /* ntreelp-impl.h */,
-				052F9C91180600FA00FAE4DF /* ntreelp.cpp */,
-				052F9C92180600FA00FAE4DF /* ntreelp.h */,
+				050C64C91DA3311100C9420F /* ntreeconstraint.h */,
+				050C64CA1DA3311100C9420F /* ntreelp-impl.h */,
+				050C64CB1DA3311100C9420F /* ntreelp.h */,
 				052F9C94180600FA00FAE4DF /* ntreetraversal-impl.h */,
 				052F9C95180600FA00FAE4DF /* ntreetraversal.cpp */,
 				052F9C96180600FA00FAE4DF /* ntreetraversal.h */,
 				052F9C98180600FA00FAE4DF /* ntypetrie.cpp */,
 				052F9C99180600FA00FAE4DF /* ntypetrie.h */,
 				052F9C9A180600FA00FAE4DF /* ordering.h */,
+				052F9C8E180600FA00FAE4DF /* treeconstraint.cpp */,
+				052F9C8F180600FA00FAE4DF /* treeconstraint.h */,
+				052F9C90180600FA00FAE4DF /* treelp-impl.h */,
+				052F9C91180600FA00FAE4DF /* treelp.cpp */,
+				052F9C92180600FA00FAE4DF /* treelp.h */,
 			);
 			path = enumerate;
 			sourceTree = "<group>";
@@ -5984,6 +5993,7 @@
 				052FA03F180600FB00FAE4DF /* nsquad.h in Headers */,
 				05431F861C40F3C9009BC072 /* vector_operations.h in Headers */,
 				05A73C9019B2EF130099C617 /* xmlsnappeareader.h in Headers */,
+				050C64CE1DA3311100C9420F /* ntreelp.h in Headers */,
 				052F9E9C180600FB00FAE4DF /* dim2gluingpermsearcher.h in Headers */,
 				052F9FF1180600FB00FAE4DF /* nl31pillow.h in Headers */,
 				052942D31C5CDC8B0011C1E6 /* safeptr.h in Headers */,
@@ -6103,6 +6113,7 @@
 				052F9FA0180600FB00FAE4DF /* tersest_triangulation.h in Headers */,
 				0591E7F41C4F75C300793A9C /* dim4gluingpermsearcher.h in Headers */,
 				052F9EB5180600FB00FAE4DF /* dim2triangle.h in Headers */,
+				050C64CD1DA3311100C9420F /* ntreelp-impl.h in Headers */,
 				052F9FED180600FB00FAE4DF /* nblockedsfspair.h in Headers */,
 				052F9F33180600FB00FAE4DF /* nsnappeacensusmfd.h in Headers */,
 				052F9F20180600FB00FAE4DF /* ngraphloop.h in Headers */,
@@ -6119,7 +6130,7 @@
 				050C649F1DA1C22100C9420F /* ntext.h in Headers */,
 				0591E7F21C4F75C300793A9C /* dim4gluingperms.h in Headers */,
 				050C64B01DA304BF00C9420F /* ntreedecomposition.h in Headers */,
-				052F9EF5180600FB00FAE4DF /* ntreelp-impl.h in Headers */,
+				052F9EF5180600FB00FAE4DF /* treelp-impl.h in Headers */,
 				052F9F4B180600FB00FAE4DF /* nrational.h in Headers */,
 				05431F211C40F260009BC072 /* component.h in Headers */,
 				052F9EC5180600FB00FAE4DF /* enumconstraints.h in Headers */,
@@ -6145,7 +6156,7 @@
 				052F9F2A180600FB00FAE4DF /* nmanifold.h in Headers */,
 				0591E7AB1C4F74C400793A9C /* dim4tetrahedron.h in Headers */,
 				052FA01B180600FB00FAE4DF /* ntrisolidtorus.h in Headers */,
-				052F9EF7180600FB00FAE4DF /* ntreelp.h in Headers */,
+				052F9EF7180600FB00FAE4DF /* treelp.h in Headers */,
 				052F9EB8180600FB00FAE4DF /* dim2vertex.h in Headers */,
 				052F9F5E180600FB00FAE4DF /* text.h in Headers */,
 				0591E7D91C4F750200793A9C /* hscoordregistry-impl.h in Headers */,
@@ -6200,6 +6211,7 @@
 				05431F231C40F260009BC072 /* facenumbering.h in Headers */,
 				052F9FDC180600FB00FAE4DF /* snappeatriangulation.h in Headers */,
 				052F9F60180600FB00FAE4DF /* xmlpacketreader.h in Headers */,
+				050C64CC1DA3311100C9420F /* ntreeconstraint.h in Headers */,
 				050C646C1DA1019B00C9420F /* anglestructures.h in Headers */,
 				052FA05E180600FB00FAE4DF /* nboundarycomponent.h in Headers */,
 				05431F021C40F1F6009BC072 /* simplex.h in Headers */,
@@ -6246,7 +6258,7 @@
 				052F9F28180600FB00FAE4DF /* nlensspace.h in Headers */,
 				052F9F9F180600FB00FAE4DF /* terse_triangulation.h in Headers */,
 				052F9EC1180600FB00FAE4DF /* doubledescription.h in Headers */,
-				052F9EF4180600FB00FAE4DF /* ntreeconstraint.h in Headers */,
+				052F9EF4180600FB00FAE4DF /* treeconstraint.h in Headers */,
 				052FA09A180600FB00FAE4DF /* osutils.h in Headers */,
 				052F9F55180600FB00FAE4DF /* packet.h in Headers */,
 				052F9EBF180600FB00FAE4DF /* engine.h in Headers */,
@@ -7170,7 +7182,7 @@
 				052FA219180612DD00FAE4DF /* complex.c in Sources */,
 				0591E7C21C4F74E100793A9C /* homology.cpp in Sources */,
 				05431F991C40F528009BC072 /* nperm.cpp in Sources */,
-				052FA17F1806129B00FAE4DF /* ntreelp.cpp in Sources */,
+				052FA17F1806129B00FAE4DF /* treelp.cpp in Sources */,
 				05937AD519CECF4300160F9A /* MDSpreadViewCellCornerHeaderBackground.m in Sources */,
 				058FADBD19D506160001B5B5 /* TriSnapPea.mm in Sources */,
 				0591E7E91C4F751B00793A9C /* nnormalhypersurface.cpp in Sources */,
@@ -7281,7 +7293,7 @@
 				052FA1E51806129B00FAE4DF /* nsurfacesubset.cpp in Sources */,
 				052FA1D21806129B00FAE4DF /* components.cpp in Sources */,
 				0589FAC3181484860064CD57 /* TriGluings.mm in Sources */,
-				052FA17E1806129B00FAE4DF /* ntreeconstraint.cpp in Sources */,
+				052FA17E1806129B00FAE4DF /* treeconstraint.cpp in Sources */,
 				050313C11812DB06007F0CBE /* TextViewController.mm in Sources */,
 				05FEA07F19C2B96000A31924 /* PacketPicker.mm in Sources */,
 				05D1173919EE0197003BEC55 /* matrixops.cpp in Sources */,
@@ -7880,7 +7892,7 @@
 				052F9E89180600FB00FAE4DF /* nmarkedabeliangroup.cpp in Sources */,
 				05A73CA419B2EF5A0099C617 /* Moebius_transformations.c in Sources */,
 				0591E7B31C4F74C400793A9C /* homotopy.cpp in Sources */,
-				052F9EF6180600FB00FAE4DF /* ntreelp.cpp in Sources */,
+				052F9EF6180600FB00FAE4DF /* treelp.cpp in Sources */,
 				052FA018180600FB00FAE4DF /* nstandardtri.cpp in Sources */,
 				052F9FA7180600FB00FAE4DF /* unix_file_io.c in Sources */,
 				052FA029180600FB00FAE4DF /* ndisc.cpp in Sources */,
@@ -7909,7 +7921,7 @@
 				052FA09E180600FB00FAE4DF /* stringutils.cpp in Sources */,
 				052F9FF2180600FB00FAE4DF /* nlayeredchain.cpp in Sources */,
 				052F9F84180600FB00FAE4DF /* gluing_equations.c in Sources */,
-				052F9EF3180600FB00FAE4DF /* ntreeconstraint.cpp in Sources */,
+				052F9EF3180600FB00FAE4DF /* treeconstraint.cpp in Sources */,
 				0591E7B01C4F74C400793A9C /* dim4vertex.cpp in Sources */,
 				05A73C7F19B2EE680099C617 /* angle.cpp in Sources */,
 				052FA077180600FB00FAE4DF /* nvertex.cpp in Sources */,
