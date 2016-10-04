@@ -32,7 +32,7 @@
 
 #include "link/link.h"
 #include "maths/ninteger.h"
-#include "maths/nlaurent2.h"
+#include "maths/laurent2.h"
 
 // #define DUMP_STATES
 
@@ -100,21 +100,21 @@ enum CrossingState {
     CROSSING_SPLICE_2 = 7
 };
 
-NLaurent2<NInteger>* Link::homflyAZ() const {
+Laurent2<NInteger>* Link::homflyAZ() const {
     // Throughout this code, delta = (alpha - alpha^-1) / z.
 
     size_t n = crossings_.size();
     if (n == 0) {
         if (components_.size() == 0)
-            return new NLaurent2<NInteger>();
+            return new Laurent2<NInteger>();
 
         // We have an unlink with no crossings.
         // The HOMFLY polynomial is delta^(#components - 1).
-        NLaurent2<NInteger> delta(1, -1);
+        Laurent2<NInteger> delta(1, -1);
         delta.set(-1, -1, -1);
 
         // The following constructor initialises ans to 1.
-        NLaurent2<NInteger>* ans = new NLaurent2<NInteger>(0, 0);
+        Laurent2<NInteger>* ans = new Laurent2<NInteger>(0, 0);
         for (size_t i = 1; i < components_.size(); ++i)
             (*ans) *= delta;
 
@@ -150,7 +150,7 @@ NLaurent2<NInteger>* Link::homflyAZ() const {
     // Since we are assured at least one crossing at this point,
     // we have 0 <= i <= #components + #crossings - 1.
     size_t maxComp = 0;
-    NLaurent2<NInteger>* coeff = new NLaurent2<NInteger>[
+    Laurent2<NInteger>* coeff = new Laurent2<NInteger>[
         n + components_.size()];
 
     // Iterate through a tree of states:
@@ -163,7 +163,7 @@ NLaurent2<NInteger>* Link::homflyAZ() const {
     bool* seen = new bool[2 * n]; // index = 2 * crossing_index + strand
     std::fill(seen, seen + 2 * n, false);
 
-    NLaurent2<NInteger> term;
+    Laurent2<NInteger> term;
     StrandRef s = StrandRef(crossings_.front(), 0);
     long pos = 0;
     bool backtrack;
@@ -360,12 +360,12 @@ NLaurent2<NInteger>* Link::homflyAZ() const {
 
     // Piece together the final polynomial.
 
-    NLaurent2<NInteger>* ans = new NLaurent2<NInteger>;
+    Laurent2<NInteger>* ans = new Laurent2<NInteger>;
 
-    NLaurent2<NInteger> delta(1, -1);
+    Laurent2<NInteger> delta(1, -1);
     delta.set(-1, -1, -1);
 
-    NLaurent2<NInteger> deltaPow(0, 0); // Initialises to delta^0 == 1.
+    Laurent2<NInteger> deltaPow(0, 0); // Initialises to delta^0 == 1.
     for (size_t i = 0; i < unknots; ++i)
         deltaPow *= delta;
     for (size_t i = 0; i < maxComp; ++i) {
@@ -380,8 +380,8 @@ NLaurent2<NInteger>* Link::homflyAZ() const {
     return ans;
 }
 
-NLaurent2<NInteger>* Link::homflyLM() const {
-    NLaurent2<NInteger>* ans = homflyAZ();
+Laurent2<NInteger>* Link::homflyLM() const {
+    Laurent2<NInteger>* ans = homflyAZ();
 
     // Negate all coefficients for a^i z^j where i-j == 2 (mod 4).
     // Note that i-j should always be 0 or 2 (mod 4), never odd.

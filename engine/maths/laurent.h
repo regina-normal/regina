@@ -30,12 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-#ifndef __NLAURENT_H
+#ifndef __LAURENT_H
 #ifndef __DOXYGEN
-#define __NLAURENT_H
+#define __LAURENT_H
 #endif
 
-/*! \file maths/nlaurent.h
+/*! \file maths/laurent.h
  *  \brief Implements single variable Laurent polynomials over arbitrary rings.
  */
 
@@ -72,14 +72,14 @@ namespace regina {
  * The underlying storage method for this class is dense (i.e., all
  * coefficients are explicitly stored, including zero coefficients).
  *
- * See also the class NLaurent2, which describes Laurent polynomials in
+ * See also the class Laurent2, which describes Laurent polynomials in
  * two variables.
  *
- * \ifacespython In Python, the class NLaurent refers to the specific
- * template class NLaurent<NInteger>.
+ * \ifacespython In Python, the class Laurent refers to the specific
+ * template class Laurent<NInteger>.
  */
 template <typename T>
-class NLaurent : public ShortOutput<NLaurent<T>, true> {
+class Laurent : public ShortOutput<Laurent<T>, true> {
     private:
         long minExp_;
             /**< The minimum exponent that appears in the polynomial,
@@ -103,14 +103,14 @@ class NLaurent : public ShortOutput<NLaurent<T>, true> {
         /**
          * Creates the zero polynomial.
          */
-        NLaurent();
+        Laurent();
 
         /**
          * Creates the polynomial <tt>x^d</tt> for the given exponent \a d.
          *
          * @param exponent the exponent to use for the new polynomial.
          */
-        explicit NLaurent(long exponent);
+        explicit Laurent(long exponent);
 
         /**
          * Creates a new copy of the given polynomial.
@@ -122,7 +122,7 @@ class NLaurent : public ShortOutput<NLaurent<T>, true> {
          *
          * @param value the polynomial to clone.
          */
-        NLaurent(const NLaurent<T>& value);
+        Laurent(const Laurent<T>& value);
 
         /**
          * Creates a new copy of the given polynomial.
@@ -132,7 +132,7 @@ class NLaurent : public ShortOutput<NLaurent<T>, true> {
          * @param value the polynomial to clone.
          */
         template <typename U>
-        NLaurent(const NLaurent<U>& value);
+        Laurent(const Laurent<U>& value);
 
         /**
          * Creates a new polynomial from the given sequence of coefficients.
@@ -158,12 +158,12 @@ class NLaurent : public ShortOutput<NLaurent<T>, true> {
          * sequence of coefficients.
          */
         template <typename iterator>
-        NLaurent(long minExp, iterator begin, iterator end);
+        Laurent(long minExp, iterator begin, iterator end);
 
         /**
          * Destroys this polynomial.
          */
-        ~NLaurent();
+        ~Laurent();
 
         /**
          * Sets this to become the zero polynomial.
@@ -277,7 +277,7 @@ class NLaurent : public ShortOutput<NLaurent<T>, true> {
          * @return \c true if and only if this and the given polynomial
          * are equal.
          */
-        bool operator == (const NLaurent<T>& rhs) const;
+        bool operator == (const Laurent<T>& rhs) const;
 
         /**
          * Tests whether this and the given polynomial are not equal.
@@ -286,7 +286,7 @@ class NLaurent : public ShortOutput<NLaurent<T>, true> {
          * @return \c true if and only if this and the given polynomial
          * are not equal.
          */
-        bool operator != (const NLaurent<T>& rhs) const;
+        bool operator != (const Laurent<T>& rhs) const;
 
         /**
          * Sets this to be a copy of the given polynomial.
@@ -301,7 +301,7 @@ class NLaurent : public ShortOutput<NLaurent<T>, true> {
          * @param value the polynomial to copy.
          * @return a reference to this polynomial.
          */
-        NLaurent& operator = (const NLaurent<T>& value);
+        Laurent& operator = (const Laurent<T>& value);
 
         /**
          * Sets this to be a copy of the given polynomial.
@@ -313,7 +313,7 @@ class NLaurent : public ShortOutput<NLaurent<T>, true> {
          * @return a reference to this polynomial.
          */
         template <typename U>
-        NLaurent& operator = (const NLaurent<U>& value);
+        Laurent& operator = (const Laurent<U>& value);
 
         /**
          * Swaps the contents of this and the given polynomial.
@@ -325,7 +325,7 @@ class NLaurent : public ShortOutput<NLaurent<T>, true> {
          * @param other the polynomial whose contents should be swapped
          * with this.
          */
-        void swap(NLaurent<T>& other);
+        void swap(Laurent<T>& other);
 
         /**
          * Multiplies this polynomial by <tt>x^s</tt> for some integer \a s.
@@ -373,7 +373,7 @@ class NLaurent : public ShortOutput<NLaurent<T>, true> {
          * @param scalar the scalar factor to multiply by.
          * @return a reference to this polynomial.
          */
-        NLaurent& operator *= (const T& scalar);
+        Laurent& operator *= (const T& scalar);
 
         /**
          * Divides this polynomial by the given constant.
@@ -385,7 +385,7 @@ class NLaurent : public ShortOutput<NLaurent<T>, true> {
          * @param scalar the scalar factor to divide by.
          * @return a reference to this polynomial.
          */
-        NLaurent& operator /= (const T& scalar);
+        Laurent& operator /= (const T& scalar);
 
         /**
          * Adds the given polynomial to this.
@@ -396,7 +396,7 @@ class NLaurent : public ShortOutput<NLaurent<T>, true> {
          * @param other the polynomial to add to this.
          * @return a reference to this polynomial.
          */
-        NLaurent& operator += (const NLaurent<T>& other);
+        Laurent& operator += (const Laurent<T>& other);
 
         /**
          * Subtracts the given polynomial from this.
@@ -407,7 +407,7 @@ class NLaurent : public ShortOutput<NLaurent<T>, true> {
          * @param other the polynomial to subtract from this.
          * @return a reference to this polynomial.
          */
-        NLaurent& operator -= (const NLaurent<T>& other);
+        Laurent& operator -= (const Laurent<T>& other);
 
         /**
          * Multiplies this by the given polynomial.
@@ -418,7 +418,7 @@ class NLaurent : public ShortOutput<NLaurent<T>, true> {
          * @param other the polynomial to multiply this by.
          * @return a reference to this polynomial.
          */
-        NLaurent& operator *= (const NLaurent<T>& other);
+        Laurent& operator *= (const Laurent<T>& other);
 
         /**
          * Writes this polynomial to the given output stream, using the
@@ -505,29 +505,29 @@ class NLaurent : public ShortOutput<NLaurent<T>, true> {
 /*@}*/
 
 template <typename T>
-const T NLaurent<T>::zero_(0);
+const T Laurent<T>::zero_(0);
 
 template <typename T>
-inline NLaurent<T>::NLaurent() : minExp_(0), maxExp_(0), base_(0),
+inline Laurent<T>::Laurent() : minExp_(0), maxExp_(0), base_(0),
         coeff_(new T[1]) {
     // The default constructor for T already initialises coeff_[0] to zero.
 }
 
 template <typename T>
-inline NLaurent<T>::NLaurent(long exp) :
+inline Laurent<T>::Laurent(long exp) :
         minExp_(exp), maxExp_(exp), base_(exp), coeff_(new T[1]) {
     coeff_[0] = 1;
 }
 
 template <typename T>
 template <typename iterator>
-inline NLaurent<T>::NLaurent(long minExp, iterator begin, iterator end) :
+inline Laurent<T>::Laurent(long minExp, iterator begin, iterator end) :
         coeff_(0) {
     init(minExp, begin, end);
 }
 
 template <typename T>
-inline NLaurent<T>::NLaurent(const NLaurent<T>& value) :
+inline Laurent<T>::Laurent(const Laurent<T>& value) :
         minExp_(value.minExp_), maxExp_(value.maxExp_), base_(value.minExp_),
         coeff_(new T[value.maxExp_ - value.minExp_ + 1]) {
     for (size_t i = 0; i <= maxExp_ - minExp_; ++i)
@@ -536,7 +536,7 @@ inline NLaurent<T>::NLaurent(const NLaurent<T>& value) :
 
 template <typename T>
 template <typename U>
-inline NLaurent<T>::NLaurent(const NLaurent<U>& value) :
+inline Laurent<T>::Laurent(const Laurent<U>& value) :
         minExp_(value.minExp_), maxExp_(value.maxExp_), base_(value.minExp_),
         coeff_(new T[value.maxExp_ - value.minExp_ + 1]) {
     for (size_t i = 0; i <= maxExp_ - minExp_; ++i)
@@ -544,12 +544,12 @@ inline NLaurent<T>::NLaurent(const NLaurent<U>& value) :
 }
 
 template <typename T>
-inline NLaurent<T>::~NLaurent() {
+inline Laurent<T>::~Laurent() {
     delete[] coeff_;
 }
 
 template <typename T>
-inline void NLaurent<T>::init() {
+inline void Laurent<T>::init() {
     delete[] coeff_;
     minExp_ = maxExp_ = base_ = 0;
     coeff_ = new T[1];
@@ -557,7 +557,7 @@ inline void NLaurent<T>::init() {
 }
 
 template <typename T>
-inline void NLaurent<T>::init(long exp) {
+inline void Laurent<T>::init(long exp) {
     delete[] coeff_;
     minExp_ = maxExp_ = base_ = exp;
     coeff_ = new T[1];
@@ -566,7 +566,7 @@ inline void NLaurent<T>::init(long exp) {
 
 template <typename T>
 template <typename iterator>
-void NLaurent<T>::init(long minExp, iterator begin, iterator end) {
+void Laurent<T>::init(long minExp, iterator begin, iterator end) {
     delete[] coeff_;
 
     // Skip through any initial zero terms.
@@ -596,22 +596,22 @@ void NLaurent<T>::init(long minExp, iterator begin, iterator end) {
 }
 
 template <typename T>
-inline long NLaurent<T>::minExp() const {
+inline long Laurent<T>::minExp() const {
     return minExp_;
 }
 
 template <typename T>
-inline long NLaurent<T>::maxExp() const {
+inline long Laurent<T>::maxExp() const {
     return maxExp_;
 }
 
 template <typename T>
-inline bool NLaurent<T>::isZero() const {
+inline bool Laurent<T>::isZero() const {
     return (minExp_ == maxExp_ && coeff_[minExp_ - base_] == 0);
 }
 
 template <typename T>
-inline const T& NLaurent<T>::operator [] (long exp) const {
+inline const T& Laurent<T>::operator [] (long exp) const {
     if (exp < minExp_ || exp > maxExp_)
         return zero_;
     else
@@ -619,7 +619,7 @@ inline const T& NLaurent<T>::operator [] (long exp) const {
 }
 
 template <typename T>
-void NLaurent<T>::set(long exp, const T& value) {
+void Laurent<T>::set(long exp, const T& value) {
     if (value == 0) {
         if (exp == maxExp_) {
             if (minExp_ == maxExp_) {
@@ -677,7 +677,7 @@ void NLaurent<T>::set(long exp, const T& value) {
 }
 
 template <typename T>
-inline bool NLaurent<T>::operator == (const NLaurent<T>& rhs) const {
+inline bool Laurent<T>::operator == (const Laurent<T>& rhs) const {
     if (minExp_ != rhs.minExp_ || maxExp_ != rhs.maxExp_)
         return false;
     for (long i = minExp_; i <= maxExp_; ++i)
@@ -687,7 +687,7 @@ inline bool NLaurent<T>::operator == (const NLaurent<T>& rhs) const {
 }
 
 template <typename T>
-inline bool NLaurent<T>::operator != (const NLaurent<T>& rhs) const {
+inline bool Laurent<T>::operator != (const Laurent<T>& rhs) const {
     if (minExp_ != rhs.minExp_ || maxExp_ != rhs.maxExp_)
         return true;
     for (long i = minExp_; i <= maxExp_; ++i)
@@ -697,7 +697,7 @@ inline bool NLaurent<T>::operator != (const NLaurent<T>& rhs) const {
 }
 
 template <typename T>
-NLaurent<T>& NLaurent<T>::operator = (const NLaurent<T>& other) {
+Laurent<T>& Laurent<T>::operator = (const Laurent<T>& other) {
     // Treat x = x separately, since otherwise we break things when we
     // reset base_ = other.minExp_.
     if (&other == this)
@@ -716,7 +716,7 @@ NLaurent<T>& NLaurent<T>::operator = (const NLaurent<T>& other) {
 
 template <typename T>
 template <typename U>
-NLaurent<T>& NLaurent<T>::operator = (const NLaurent<U>& other) {
+Laurent<T>& Laurent<T>::operator = (const Laurent<U>& other) {
     // Treat x = x separately, since otherwise we break things when we
     // reset base_ = other.minExp_.
     if (&other == this)
@@ -734,7 +734,7 @@ NLaurent<T>& NLaurent<T>::operator = (const NLaurent<U>& other) {
 }
 
 template <typename T>
-inline void NLaurent<T>::swap(NLaurent<T>& other) {
+inline void Laurent<T>::swap(Laurent<T>& other) {
     std::swap(minExp_, other.minExp_);
     std::swap(maxExp_, other.maxExp_);
     std::swap(base_, other.base_);
@@ -742,14 +742,14 @@ inline void NLaurent<T>::swap(NLaurent<T>& other) {
 }
 
 template <typename T>
-inline void NLaurent<T>::shift(long s) {
+inline void Laurent<T>::shift(long s) {
     base_ += s;
     minExp_ += s;
     maxExp_ += s;
 }
 
 template <typename T>
-void NLaurent<T>::scaleUp(long k) {
+void Laurent<T>::scaleUp(long k) {
     if (k == 1)
         return;
 
@@ -782,7 +782,7 @@ void NLaurent<T>::scaleUp(long k) {
 }
 
 template <typename T>
-void NLaurent<T>::scaleDown(long k) {
+void Laurent<T>::scaleDown(long k) {
     if (k == 1)
         return;
 
@@ -815,14 +815,14 @@ void NLaurent<T>::scaleDown(long k) {
 }
 
 template <typename T>
-inline void NLaurent<T>::negate() {
+inline void Laurent<T>::negate() {
     for (long exp = minExp_; exp <= maxExp_; ++exp)
         if (coeff_[exp - base_] != 0)
             coeff_[exp - base_] = -coeff_[exp - base_];
 }
 
 template <typename T>
-NLaurent<T>& NLaurent<T>::operator *= (const T& scalar) {
+Laurent<T>& Laurent<T>::operator *= (const T& scalar) {
     if (scalar == 0)
         init();
     else {
@@ -833,7 +833,7 @@ NLaurent<T>& NLaurent<T>::operator *= (const T& scalar) {
 }
 
 template <typename T>
-inline NLaurent<T>& NLaurent<T>::operator /= (const T& scalar) {
+inline Laurent<T>& Laurent<T>::operator /= (const T& scalar) {
     for (long exp = minExp_; exp <= maxExp_; ++exp)
         coeff_[exp - base_] /= scalar;
 
@@ -843,7 +843,7 @@ inline NLaurent<T>& NLaurent<T>::operator /= (const T& scalar) {
 }
 
 template <typename T>
-inline NLaurent<T>& NLaurent<T>::operator += (const NLaurent<T>& other) {
+inline Laurent<T>& Laurent<T>::operator += (const Laurent<T>& other) {
     // This works even if &other == this, since in this case we do not
     // reallocate.
     reallocateForRange(other.minExp_, other.maxExp_);
@@ -857,7 +857,7 @@ inline NLaurent<T>& NLaurent<T>::operator += (const NLaurent<T>& other) {
 }
 
 template <typename T>
-inline NLaurent<T>& NLaurent<T>::operator -= (const NLaurent<T>& other) {
+inline Laurent<T>& Laurent<T>::operator -= (const Laurent<T>& other) {
     // This works even if &other == this, since in this case we do not
     // reallocate.
     reallocateForRange(other.minExp_, other.maxExp_);
@@ -871,7 +871,7 @@ inline NLaurent<T>& NLaurent<T>::operator -= (const NLaurent<T>& other) {
 }
 
 template <typename T>
-NLaurent<T>& NLaurent<T>::operator *= (const NLaurent<T>& other) {
+Laurent<T>& Laurent<T>::operator *= (const Laurent<T>& other) {
     if (isZero())
         return *this;
     if (other.isZero()) {
@@ -899,7 +899,7 @@ NLaurent<T>& NLaurent<T>::operator *= (const NLaurent<T>& other) {
 }
 
 template <typename T>
-void NLaurent<T>::writeTextShort(std::ostream& out, bool utf8,
+void Laurent<T>::writeTextShort(std::ostream& out, bool utf8,
         const char* variable) const {
     if (isZero()) {
         out << '0';
@@ -948,11 +948,11 @@ void NLaurent<T>::writeTextShort(std::ostream& out, bool utf8,
 }
 
 template <typename T>
-inline std::string NLaurent<T>::str(const char* variable) const {
+inline std::string Laurent<T>::str(const char* variable) const {
     // Make sure that python will be able to find the inherited str().
-    static_assert(std::is_same<typename OutputBase<NLaurent<T>>::type,
-        Output<NLaurent<T>, true>>::value,
-        "NLaurent<T> is not identified as being inherited from Output<...>");
+    static_assert(std::is_same<typename OutputBase<Laurent<T>>::type,
+        Output<Laurent<T>, true>>::value,
+        "Laurent<T> is not identified as being inherited from Output<...>");
 
     std::ostringstream out;
     writeTextShort(out, false, variable);
@@ -960,14 +960,14 @@ inline std::string NLaurent<T>::str(const char* variable) const {
 }
 
 template <typename T>
-inline std::string NLaurent<T>::utf8(const char* variable) const {
+inline std::string Laurent<T>::utf8(const char* variable) const {
     std::ostringstream out;
     writeTextShort(out, true, variable);
     return out.str();
 }
 
 template <typename T>
-void NLaurent<T>::reallocateForRange(long newMin, long newMax) {
+void Laurent<T>::reallocateForRange(long newMin, long newMax) {
     long exp;
     if (base_ > newMin) {
         // We must reallocate.
@@ -1026,7 +1026,7 @@ void NLaurent<T>::reallocateForRange(long newMin, long newMax) {
 }
 
 template <typename T>
-void NLaurent<T>::fixDegrees() {
+void Laurent<T>::fixDegrees() {
     while (maxExp_ > minExp_ && coeff_[maxExp_ - base_] == 0)
         --maxExp_;
     while (minExp_ < maxExp_ && coeff_[minExp_ - base_] == 0)

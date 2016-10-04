@@ -32,15 +32,15 @@
 
 #include <boost/python.hpp>
 #include "maths/ninteger.h"
-#include "maths/nlaurent2.h"
+#include "maths/laurent2.h"
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NLaurent2;
+using regina::Laurent2;
 using regina::NInteger;
 
 namespace {
-    const regina::NInteger& getItem(const NLaurent2<NInteger>& p,
+    const regina::NInteger& getItem(const Laurent2<NInteger>& p,
             boost::python::tuple exponents) {
         if (boost::python::len(exponents) != 2) {
             PyErr_SetString(PyExc_ValueError,
@@ -53,7 +53,7 @@ namespace {
         return p(x(), y());
     }
 
-    void setItem(NLaurent2<NInteger>& p, boost::python::tuple exponents,
+    void setItem(Laurent2<NInteger>& p, boost::python::tuple exponents,
             const regina::NInteger& value) {
         if (boost::python::len(exponents) != 2) {
             PyErr_SetString(PyExc_ValueError,
@@ -66,33 +66,33 @@ namespace {
         p.set(x(), y(), value);
     }
 
-    void (NLaurent2<NInteger>::*init_void)() =
-        &NLaurent2<NInteger>::init;
-    void (NLaurent2<NInteger>::*init_degrees)(long, long) =
-        &NLaurent2<NInteger>::init;
-    std::string (NLaurent2<NInteger>::*str_variables)(const char*, const char*)
-        const = &NLaurent2<NInteger>::str;
-    std::string (NLaurent2<NInteger>::*utf8_variables)(const char*, const char*)
-        const = &NLaurent2<NInteger>::utf8;
+    void (Laurent2<NInteger>::*init_void)() =
+        &Laurent2<NInteger>::init;
+    void (Laurent2<NInteger>::*init_degrees)(long, long) =
+        &Laurent2<NInteger>::init;
+    std::string (Laurent2<NInteger>::*str_variables)(const char*, const char*)
+        const = &Laurent2<NInteger>::str;
+    std::string (Laurent2<NInteger>::*utf8_variables)(const char*, const char*)
+        const = &Laurent2<NInteger>::utf8;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_str_variables,
-        NLaurent2<NInteger>::str, 1, 2);
+        Laurent2<NInteger>::str, 1, 2);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_utf8_variables,
-        NLaurent2<NInteger>::utf8, 1, 2);
+        Laurent2<NInteger>::utf8, 1, 2);
 }
 
-void addNLaurent2() {
-    scope s = class_<NLaurent2<NInteger>,
-            std::auto_ptr<NLaurent2<NInteger> >,
-            boost::noncopyable>("NLaurent2")
+void addLaurent2() {
+    scope s = class_<Laurent2<NInteger>,
+            std::auto_ptr<Laurent2<NInteger> >,
+            boost::noncopyable>("Laurent2")
         .def(init<long, long>())
-        .def(init<const NLaurent2<NInteger>&>())
+        .def(init<const Laurent2<NInteger>&>())
         .def("init", init_void)
         .def("init", init_degrees)
-        .def("isZero", &NLaurent2<NInteger>::isZero)
-        .def("set", &NLaurent2<NInteger>::set)
-        .def("swap", &NLaurent2<NInteger>::swap)
-        .def("negate", &NLaurent2<NInteger>::negate)
+        .def("isZero", &Laurent2<NInteger>::isZero)
+        .def("set", &Laurent2<NInteger>::set)
+        .def("swap", &Laurent2<NInteger>::swap)
+        .def("negate", &Laurent2<NInteger>::negate)
         .def("str", str_variables, OL_str_variables())
         .def("utf8", utf8_variables, OL_utf8_variables())
         .def("__getitem__", getItem, return_internal_reference<>())

@@ -1012,6 +1012,12 @@ Equality type : BY_REFERENCE
 Isomorphism9 : class
 Equality type : BY_REFERENCE
 
+Laurent : class
+Equality type : BY_VALUE
+
+Laurent2 : class
+Equality type : BY_VALUE
+
 Link : class
 Equality type : BY_REFERENCE
 
@@ -1141,12 +1147,6 @@ NL31Pillow : class
 Equality type : BY_REFERENCE
 
 NLargeInteger : class
-Equality type : BY_VALUE
-
-NLaurent : class
-Equality type : BY_VALUE
-
-NLaurent2 : class
 Equality type : BY_VALUE
 
 NLayeredChain : class

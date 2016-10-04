@@ -78,7 +78,7 @@ print p.str('z')
 print p.utf8()
 print p.utf8('z')
 
-p = NLaurent(4)
+p = Laurent(4)
 p[-3] = 2
 p
 print p
@@ -87,7 +87,7 @@ print p.str('z')
 print p.utf8()
 print p.utf8('z')
 
-p = NLaurent2(-1, 2)
+p = Laurent2(-1, 2)
 p[0, -3] = 4
 p
 print p

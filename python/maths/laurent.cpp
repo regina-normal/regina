@@ -32,18 +32,18 @@
 
 #include <boost/python.hpp>
 #include "maths/ninteger.h"
-#include "maths/nlaurent.h"
+#include "maths/laurent.h"
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NLaurent;
+using regina::Laurent;
 using regina::NInteger;
 
 namespace {
-    const regina::NInteger& getItem(const NLaurent<NInteger>& p, long exp) {
+    const regina::NInteger& getItem(const Laurent<NInteger>& p, long exp) {
         return p[exp];
     }
-    void setItem(NLaurent<NInteger>& p, long exp,
+    void setItem(Laurent<NInteger>& p, long exp,
             const regina::NInteger& value) {
         p.set(exp, value);
     }
@@ -76,10 +76,10 @@ namespace {
         return coeffs;
     }
 
-    NLaurent<NInteger>* create_seq(long minExp, boost::python::list l) {
+    Laurent<NInteger>* create_seq(long minExp, boost::python::list l) {
         NInteger* coeffs = seqFromList(l);
         if (coeffs) {
-            NLaurent<NInteger>* ans = new NLaurent<NInteger>(
+            Laurent<NInteger>* ans = new Laurent<NInteger>(
                 minExp, coeffs, coeffs + boost::python::len(l));
             delete[] coeffs;
             return ans;
@@ -87,7 +87,7 @@ namespace {
         return 0;
     }
 
-    void init_seq(NLaurent<NInteger>& p, long minExp, boost::python::list l) {
+    void init_seq(Laurent<NInteger>& p, long minExp, boost::python::list l) {
         NInteger* coeffs = seqFromList(l);
         if (coeffs) {
             p.init(minExp, coeffs, coeffs + boost::python::len(l));
@@ -95,37 +95,37 @@ namespace {
         }
     }
 
-    void (NLaurent<NInteger>::*init_void)() =
-        &NLaurent<NInteger>::init;
-    void (NLaurent<NInteger>::*init_degree)(long) =
-        &NLaurent<NInteger>::init;
-    std::string (NLaurent<NInteger>::*str_variable)(const char*) const =
-        &NLaurent<NInteger>::str;
-    std::string (NLaurent<NInteger>::*utf8_variable)(const char*) const =
-        &NLaurent<NInteger>::utf8;
+    void (Laurent<NInteger>::*init_void)() =
+        &Laurent<NInteger>::init;
+    void (Laurent<NInteger>::*init_degree)(long) =
+        &Laurent<NInteger>::init;
+    std::string (Laurent<NInteger>::*str_variable)(const char*) const =
+        &Laurent<NInteger>::str;
+    std::string (Laurent<NInteger>::*utf8_variable)(const char*) const =
+        &Laurent<NInteger>::utf8;
 }
 
-void addNLaurent() {
-    scope s = class_<NLaurent<NInteger>,
-            std::auto_ptr<NLaurent<NInteger> >,
-            boost::noncopyable>("NLaurent")
+void addLaurent() {
+    scope s = class_<Laurent<NInteger>,
+            std::auto_ptr<Laurent<NInteger> >,
+            boost::noncopyable>("Laurent")
         .def(init<long>())
-        .def(init<const NLaurent<NInteger>&>())
+        .def(init<const Laurent<NInteger>&>())
         .def("__init__", make_constructor(create_seq))
         .def("init", init_void)
         .def("init", init_degree)
         .def("init", init_seq)
-        .def("minExp", &NLaurent<NInteger>::minExp)
-        .def("maxExp", &NLaurent<NInteger>::maxExp)
-        .def("isZero", &NLaurent<NInteger>::isZero)
+        .def("minExp", &Laurent<NInteger>::minExp)
+        .def("maxExp", &Laurent<NInteger>::maxExp)
+        .def("isZero", &Laurent<NInteger>::isZero)
         .def("__getitem__", getItem, return_internal_reference<>())
         .def("__setitem__", setItem)
-        .def("set", &NLaurent<NInteger>::set)
-        .def("swap", &NLaurent<NInteger>::swap)
-        .def("shift", &NLaurent<NInteger>::shift)
-        .def("scaleUp", &NLaurent<NInteger>::scaleUp)
-        .def("scaleDown", &NLaurent<NInteger>::scaleDown)
-        .def("negate", &NLaurent<NInteger>::negate)
+        .def("set", &Laurent<NInteger>::set)
+        .def("swap", &Laurent<NInteger>::swap)
+        .def("shift", &Laurent<NInteger>::shift)
+        .def("scaleUp", &Laurent<NInteger>::scaleUp)
+        .def("scaleDown", &Laurent<NInteger>::scaleDown)
+        .def("negate", &Laurent<NInteger>::negate)
         .def("str", str_variable)
         .def("utf8", utf8_variable)
         .def(self *= NInteger())

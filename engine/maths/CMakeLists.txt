@@ -28,11 +28,11 @@ if (${REGINA_INSTALL_DEV})
   INSTALL( FILES
     approx.h
     cyclotomic.h
+    laurent.h
+    laurent2.h
     matrixops.h
     ncyclotomic.h
     ninteger.h
-    nlaurent.h
-    nlaurent2.h
     nmatrix.h
     nmatrix2.h
     nmatrixint.h

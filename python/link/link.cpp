@@ -31,8 +31,8 @@
  **************************************************************************/
 
 #include "link/link.h"
-#include "maths/nlaurent.h"
-#include "maths/nlaurent2.h"
+#include "maths/laurent.h"
+#include "maths/laurent2.h"
 #include "triangulation/ntriangulation.h"
 #include "../safeheldtype.h"
 

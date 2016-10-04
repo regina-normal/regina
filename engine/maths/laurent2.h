@@ -30,12 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-#ifndef __NLAURENT2_H
+#ifndef __LAURENT2_H
 #ifndef __DOXYGEN
-#define __NLAURENT2_H
+#define __LAURENT2_H
 #endif
 
-/*! \file maths/nlaurent2.h
+/*! \file maths/laurent2.h
  *  \brief Implements Laurent polynomials in two variables over arbitrary rings.
  */
 
@@ -73,14 +73,14 @@ namespace regina {
  * The underlying storage method for this class is dense (i.e., all
  * coefficients are explicitly stored, including zero coefficients).
  *
- * See also the class NLaurent, which describes Laurent polynomials in
+ * See also the class Laurent, which describes Laurent polynomials in
  * just one variable.
  *
- * \ifacespython In Python, the class NLaurent2 refers to the specific
- * template class NLaurent2<NInteger>.
+ * \ifacespython In Python, the class Laurent2 refers to the specific
+ * template class Laurent2<NInteger>.
  */
 template <typename T>
-class NLaurent2 : public ShortOutput<NLaurent2<T>, true> {
+class Laurent2 : public ShortOutput<Laurent2<T>, true> {
     private:
         typedef std::pair<long, long> Exponents;
 
@@ -97,7 +97,7 @@ class NLaurent2 : public ShortOutput<NLaurent2<T>, true> {
         /**
          * Creates the zero polynomial.
          */
-        NLaurent2();
+        Laurent2();
 
         /**
          * Creates the polynomial <tt>x^d y^e</tt> for the given exponents
@@ -106,7 +106,7 @@ class NLaurent2 : public ShortOutput<NLaurent2<T>, true> {
          * @param xExp the exponent \a d, which is attached to \a x.
          * @param yExp the exponent \a e, which is attached to \a y.
          */
-        explicit NLaurent2(long xExp, long yExp);
+        explicit Laurent2(long xExp, long yExp);
 
         /**
          * Creates a new copy of the given polynomial.
@@ -118,7 +118,7 @@ class NLaurent2 : public ShortOutput<NLaurent2<T>, true> {
          *
          * @param value the polynomial to clone.
          */
-        NLaurent2(const NLaurent2<T>& value);
+        Laurent2(const Laurent2<T>& value);
 
         /**
          * Creates a new copy of the given polynomial.
@@ -128,7 +128,7 @@ class NLaurent2 : public ShortOutput<NLaurent2<T>, true> {
          * @param value the polynomial to clone.
          */
         template <typename U>
-        NLaurent2(const NLaurent2<U>& value);
+        Laurent2(const Laurent2<U>& value);
 
         /**
          * Sets this to become the zero polynomial.
@@ -195,7 +195,7 @@ class NLaurent2 : public ShortOutput<NLaurent2<T>, true> {
          * @return \c true if and only if this and the given polynomial
          * are equal.
          */
-        bool operator == (const NLaurent2<T>& rhs) const;
+        bool operator == (const Laurent2<T>& rhs) const;
 
         /**
          * Tests whether this and the given polynomial are not equal.
@@ -204,7 +204,7 @@ class NLaurent2 : public ShortOutput<NLaurent2<T>, true> {
          * @return \c true if and only if this and the given polynomial
          * are not equal.
          */
-        bool operator != (const NLaurent2<T>& rhs) const;
+        bool operator != (const Laurent2<T>& rhs) const;
 
         /**
          * Sets this to be a copy of the given polynomial.
@@ -219,7 +219,7 @@ class NLaurent2 : public ShortOutput<NLaurent2<T>, true> {
          * @param value the polynomial to copy.
          * @return a reference to this polynomial.
          */
-        NLaurent2& operator = (const NLaurent2<T>& value);
+        Laurent2& operator = (const Laurent2<T>& value);
 
         /**
          * Sets this to be a copy of the given polynomial.
@@ -231,7 +231,7 @@ class NLaurent2 : public ShortOutput<NLaurent2<T>, true> {
          * @return a reference to this polynomial.
          */
         template <typename U>
-        NLaurent2& operator = (const NLaurent2<U>& value);
+        Laurent2& operator = (const Laurent2<U>& value);
 
         /**
          * Swaps the contents of this and the given polynomial.
@@ -243,7 +243,7 @@ class NLaurent2 : public ShortOutput<NLaurent2<T>, true> {
          * @param other the polynomial whose contents should be swapped
          * with this.
          */
-        void swap(NLaurent2<T>& other);
+        void swap(Laurent2<T>& other);
 
         /**
          * Negates this polynomial.
@@ -256,7 +256,7 @@ class NLaurent2 : public ShortOutput<NLaurent2<T>, true> {
          * @param scalar the scalar factor to multiply by.
          * @return a reference to this polynomial.
          */
-        NLaurent2& operator *= (const T& scalar);
+        Laurent2& operator *= (const T& scalar);
 
         /**
          * Divides this polynomial by the given constant.
@@ -268,7 +268,7 @@ class NLaurent2 : public ShortOutput<NLaurent2<T>, true> {
          * @param scalar the scalar factor to divide by.
          * @return a reference to this polynomial.
          */
-        NLaurent2& operator /= (const T& scalar);
+        Laurent2& operator /= (const T& scalar);
 
         /**
          * Adds the given polynomial to this.
@@ -279,7 +279,7 @@ class NLaurent2 : public ShortOutput<NLaurent2<T>, true> {
          * @param other the polynomial to add to this.
          * @return a reference to this polynomial.
          */
-        NLaurent2& operator += (const NLaurent2<T>& other);
+        Laurent2& operator += (const Laurent2<T>& other);
 
         /**
          * Subtracts the given polynomial from this.
@@ -290,7 +290,7 @@ class NLaurent2 : public ShortOutput<NLaurent2<T>, true> {
          * @param other the polynomial to subtract from this.
          * @return a reference to this polynomial.
          */
-        NLaurent2& operator -= (const NLaurent2<T>& other);
+        Laurent2& operator -= (const Laurent2<T>& other);
 
         /**
          * Multiplies this by the given polynomial.
@@ -301,7 +301,7 @@ class NLaurent2 : public ShortOutput<NLaurent2<T>, true> {
          * @param other the polynomial to multiply this by.
          * @return a reference to this polynomial.
          */
-        NLaurent2& operator *= (const NLaurent2<T>& other);
+        Laurent2& operator *= (const Laurent2<T>& other);
 
         /**
          * Writes this polynomial to the given output stream, using the
@@ -375,46 +375,46 @@ class NLaurent2 : public ShortOutput<NLaurent2<T>, true> {
 /*@}*/
 
 template <typename T>
-const T NLaurent2<T>::zero_(0);
+const T Laurent2<T>::zero_(0);
 
 template <typename T>
-inline NLaurent2<T>::NLaurent2() {
+inline Laurent2<T>::Laurent2() {
 }
 
 template <typename T>
-inline NLaurent2<T>::NLaurent2(long xExp, long yExp) {
+inline Laurent2<T>::Laurent2(long xExp, long yExp) {
     coeff_.emplace(Exponents(xExp, yExp), 1);
 }
 
 template <typename T>
-inline NLaurent2<T>::NLaurent2(const NLaurent2<T>& value) :
+inline Laurent2<T>::Laurent2(const Laurent2<T>& value) :
         coeff_(value.coeff_) {
 }
 
 template <typename T>
 template <typename U>
-inline NLaurent2<T>::NLaurent2(const NLaurent2<U>& value) :
+inline Laurent2<T>::Laurent2(const Laurent2<U>& value) :
         coeff_(value.coeff_) {
 }
 
 template <typename T>
-inline void NLaurent2<T>::init() {
+inline void Laurent2<T>::init() {
     coeff_.clear();
 }
 
 template <typename T>
-inline void NLaurent2<T>::init(long xExp, long yExp) {
+inline void Laurent2<T>::init(long xExp, long yExp) {
     coeff_.clear();
     coeff_.emplace(Exponents(xExp, yExp), 1);
 }
 
 template <typename T>
-inline bool NLaurent2<T>::isZero() const {
+inline bool Laurent2<T>::isZero() const {
     return coeff_.empty();
 }
 
 template <typename T>
-inline const T& NLaurent2<T>::operator () (long xExp, long yExp) const {
+inline const T& Laurent2<T>::operator () (long xExp, long yExp) const {
     auto it = coeff_.find(Exponents(xExp, yExp));
     if (it == coeff_.end())
         return zero_;
@@ -423,7 +423,7 @@ inline const T& NLaurent2<T>::operator () (long xExp, long yExp) const {
 }
 
 template <typename T>
-void NLaurent2<T>::set(long xExp, long yExp, const T& value) {
+void Laurent2<T>::set(long xExp, long yExp, const T& value) {
     if (value == 0) {
         coeff_.erase(Exponents(xExp, yExp));
     } else {
@@ -434,48 +434,48 @@ void NLaurent2<T>::set(long xExp, long yExp, const T& value) {
 }
 
 template <typename T>
-inline bool NLaurent2<T>::operator == (const NLaurent2<T>& rhs) const {
+inline bool Laurent2<T>::operator == (const Laurent2<T>& rhs) const {
     return coeff_ == rhs.coeff_;
 }
 
 template <typename T>
-inline bool NLaurent2<T>::operator != (const NLaurent2<T>& rhs) const {
+inline bool Laurent2<T>::operator != (const Laurent2<T>& rhs) const {
     return ! (coeff_ == rhs.coeff_);
 }
 
 template <typename T>
-inline NLaurent2<T>& NLaurent2<T>::operator = (const NLaurent2<T>& other) {
+inline Laurent2<T>& Laurent2<T>::operator = (const Laurent2<T>& other) {
     coeff_ = other.coeff_;
     return *this;
 }
 
 template <typename T>
 template <typename U>
-inline NLaurent2<T>& NLaurent2<T>::operator = (const NLaurent2<U>& other) {
+inline Laurent2<T>& Laurent2<T>::operator = (const Laurent2<U>& other) {
     coeff_ = other.coeff_;
     return *this;
 }
 
 template <typename T>
-inline void NLaurent2<T>::swap(NLaurent2<T>& other) {
+inline void Laurent2<T>::swap(Laurent2<T>& other) {
     std::swap(coeff_, other.coeff_);
 }
 
 template <typename T>
-inline void NLaurent2<T>::negate() {
+inline void Laurent2<T>::negate() {
     for (auto it = coeff_.begin(); it != coeff_.end(); ++it)
         it->second = -it->second;
 }
 
 template <typename T>
-inline NLaurent2<T>& NLaurent2<T>::operator *= (const T& scalar) {
+inline Laurent2<T>& Laurent2<T>::operator *= (const T& scalar) {
     for (auto it = coeff_.begin(); it != coeff_.end(); ++it)
         it->second *= scalar;
     return *this;
 }
 
 template <typename T>
-inline NLaurent2<T>& NLaurent2<T>::operator /= (const T& scalar) {
+inline Laurent2<T>& Laurent2<T>::operator /= (const T& scalar) {
     for (auto it = coeff_.begin(); it != coeff_.end(); ++it)
         it->second /= scalar;
 
@@ -485,7 +485,7 @@ inline NLaurent2<T>& NLaurent2<T>::operator /= (const T& scalar) {
 }
 
 template <typename T>
-NLaurent2<T>& NLaurent2<T>::operator += (const NLaurent2<T>& other) {
+Laurent2<T>& Laurent2<T>::operator += (const Laurent2<T>& other) {
     // This works even if &other == this, since in this case there are
     // no insertions or deletions.
     for (const auto& entry : other.coeff_) {
@@ -500,7 +500,7 @@ NLaurent2<T>& NLaurent2<T>::operator += (const NLaurent2<T>& other) {
 }
 
 template <typename T>
-NLaurent2<T>& NLaurent2<T>::operator -= (const NLaurent2<T>& other) {
+Laurent2<T>& Laurent2<T>::operator -= (const Laurent2<T>& other) {
     // This works even if &other == this, since in this case there are
     // no insertions or deletions.
     for (auto entry : other.coeff_) {
@@ -516,7 +516,7 @@ NLaurent2<T>& NLaurent2<T>::operator -= (const NLaurent2<T>& other) {
 }
 
 template <typename T>
-NLaurent2<T>& NLaurent2<T>::operator *= (const NLaurent2<T>& other) {
+Laurent2<T>& Laurent2<T>::operator *= (const Laurent2<T>& other) {
     if (isZero())
         return *this;
     if (other.isZero()) {
@@ -547,7 +547,7 @@ NLaurent2<T>& NLaurent2<T>::operator *= (const NLaurent2<T>& other) {
 }
 
 template <typename T>
-void NLaurent2<T>::writeTextShort(std::ostream& out, bool utf8,
+void Laurent2<T>::writeTextShort(std::ostream& out, bool utf8,
         const char* varX, const char* varY) const {
     if (isZero()) {
         out << '0';
@@ -608,12 +608,12 @@ void NLaurent2<T>::writeTextShort(std::ostream& out, bool utf8,
 }
 
 template <typename T>
-inline std::string NLaurent2<T>::str(const char* varX, const char* varY)
+inline std::string Laurent2<T>::str(const char* varX, const char* varY)
         const {
     // Make sure that python will be able to find the inherited str().
-    static_assert(std::is_same<typename OutputBase<NLaurent2<T>>::type,
-        Output<NLaurent2<T>, true>>::value,
-        "NLaurent2<T> is not identified as being inherited from Output<...>");
+    static_assert(std::is_same<typename OutputBase<Laurent2<T>>::type,
+        Output<Laurent2<T>, true>>::value,
+        "Laurent2<T> is not identified as being inherited from Output<...>");
 
     std::ostringstream out;
     writeTextShort(out, false, varX, varY);
@@ -621,7 +621,7 @@ inline std::string NLaurent2<T>::str(const char* varX, const char* varY)
 }
 
 template <typename T>
-inline std::string NLaurent2<T>::utf8(const char* varX, const char* varY)
+inline std::string Laurent2<T>::utf8(const char* varX, const char* varY)
         const {
     std::ostringstream out;
     writeTextShort(out, true, varX, varY);
@@ -629,7 +629,7 @@ inline std::string NLaurent2<T>::utf8(const char* varX, const char* varY)
 }
 
 template <typename T>
-void NLaurent2<T>::removeZeroes() {
+void Laurent2<T>::removeZeroes() {
     auto it = coeff_.begin();
     while (it != coeff_.end())
         if (it->second == 0)

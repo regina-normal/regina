@@ -36,8 +36,8 @@
 #include "census/ncensus.h"
 #include "link/examplelink.h"
 #include "link/link.h"
-#include "maths/nlaurent.h"
-#include "maths/nlaurent2.h"
+#include "maths/laurent.h"
+#include "maths/laurent2.h"
 #include "packet/ncontainer.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nnormalsurfacelist.h"
@@ -222,7 +222,7 @@ class LinkTest : public CppUnit::TestFixture {
 
         void testJones(Link* l, const char* expected) {
             std::ostringstream s;
-            regina::NLaurent<regina::NInteger>* found = l->jones();
+            regina::Laurent<regina::NInteger>* found = l->jones();
             s << *found;
             delete found;
 
@@ -258,7 +258,7 @@ class LinkTest : public CppUnit::TestFixture {
 
         void testHomflyAZ(Link* l, const char* expected) {
             std::ostringstream s;
-            regina::NLaurent2<regina::NInteger>* found = l->homflyAZ();
+            regina::Laurent2<regina::NInteger>* found = l->homflyAZ();
             s << *found;
             delete found;
 
@@ -272,7 +272,7 @@ class LinkTest : public CppUnit::TestFixture {
 
         void testHomflyLM(Link* l, const char* expected) {
             std::ostringstream s;
-            regina::NLaurent2<regina::NInteger>* found = l->homflyLM();
+            regina::Laurent2<regina::NInteger>* found = l->homflyLM();
             s << *found;
             delete found;
 
