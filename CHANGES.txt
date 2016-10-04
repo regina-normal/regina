@@ -23,6 +23,11 @@ Version 5.1  [ (under development) ]
               typedefs.  None of these internal classes are exposed to Python,
               and typical C++ users would have no reason to use them either.
     ENGINE:
+        Enum PacketType:
+            - Renamed PACKET_NORMALSURFACELIST to PACKET_NORMALSURFACES,
+              PACKET_NORMALHYPERSURFACELIST to PACKET_NORMALHYPERSURFACES,
+              and PACKET_ANGLESTRUCTURELIST to PACKET_ANGLESTRUCTURES.
+              The old names are kept but deprecated.
         Global array quadDefn[][]:
             - Added to nnormalsurface.h, with the same contents as the old
               (and now removed) array vertexSplitDefn[][].

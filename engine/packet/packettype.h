@@ -73,7 +73,13 @@ enum PacketType {
     /**
      * Represents a normal surface list, of class NormalSurfaces.
      */
-    PACKET_NORMALSURFACELIST = 6,
+    PACKET_NORMALSURFACES = 6,
+    /**
+     * Deprecated alias for PACKET_NORMALSURFACES.
+     *
+     * \deprecated This constant has been renamed to PACKET_NORMALSURFACES.
+     */
+    REGINA_DEPRECATED_ENUM PACKET_NORMALSURFACELIST = 6,
     /**
      * Represents a script packet, of class Script.
      */
@@ -86,7 +92,13 @@ enum PacketType {
     /**
      * Represents an angle structure list, of class AngleStructures.
      */
-    PACKET_ANGLESTRUCTURELIST = 9,
+    PACKET_ANGLESTRUCTURES = 9,
+    /**
+     * Deprecated alias for PACKET_ANGLESTRUCTURES.
+     *
+     * \deprecated This constant has been renamed to PACKET_ANGLESTRUCTURES.
+     */
+    REGINA_DEPRECATED_ENUM PACKET_ANGLESTRUCTURELIST = 9,
     /**
      * Represents a PDF document, of class PDF.
      */
@@ -101,7 +113,13 @@ enum PacketType {
     /**
      * Represents a normal hypersurface list, of class NNormalHypersurfaceList.
      */
-    PACKET_NORMALHYPERSURFACELIST = 13,
+    PACKET_NORMALHYPERSURFACES = 13,
+    /**
+     * Deprecated alias for PACKET_NORMALHYPERSURFACES.
+     *
+     * \deprecated This constant has been renamed to PACKET_NORMALHYPERSURFACES.
+     */
+    REGINA_DEPRECATED_ENUM PACKET_NORMALHYPERSURFACELIST = 13,
     /**
      * Represents a 2-dimensional triangulation, of class Triangulation<2>
      * (or equivalently, Dim2Triangulation).
