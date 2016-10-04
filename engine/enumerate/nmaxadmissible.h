@@ -46,7 +46,7 @@
 
 namespace regina {
 
-class NEnumConstraintList;
+class EnumConstraints;
 
 /**
  * \weakgroup enumerate
@@ -72,7 +72,7 @@ class NMaxAdmissible {
          *
          * Admissibility is defined by the given set of constraints.  Each
          * constraint requires that at most one of a given set of coordinates
-         * can be non-zero; see the NEnumConstraintList class for details.
+         * can be non-zero; see the EnumConstraints class for details.
          * In particular, the quadrilateral constraints from normal surface
          * theory are of this type.
          *
@@ -85,7 +85,7 @@ class NMaxAdmissible {
          *
          * The input for this routine is the set of all admissible extremal rays
          * of the cone.  These should be computed beforehand; for instance,
-         * using the routine NDoubleDescription::enumerateExtremalRays().
+         * using the routine DoubleDescription::enumerateExtremalRays().
          *
          * The return value is the set of all maximal admissible faces, stored
          * in a newly allocated vector.  Each face \a F is described by a
@@ -123,7 +123,7 @@ class NMaxAdmissible {
         template <class BitmaskType, class RayIterator>
         static std::vector<BitmaskType>* enumerate(
                 RayIterator beginExtremalRays, RayIterator endExtremalRays,
-                const NEnumConstraintList* constraints);
+                const EnumConstraints* constraints);
 };
 
 /*@}*/

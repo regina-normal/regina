@@ -31,7 +31,7 @@
  **************************************************************************/
 
 /*! \file enumerate/nenumconstraint.h
- *  \brief Deals with validity constraints in polytope vertex enumeration.
+ *  \brief Deprecated header.
  */
 
 #ifndef __NENUMCONSTRAINT_H
@@ -39,83 +39,9 @@
 #define __NENUMCONSTRAINT_H
 #endif
 
-#include <cstddef>
-#include <set>
-#include <vector>
-#include "regina-core.h"
+#warning This header is deprecated; please use enumerate/enumconstraints.h instead.
 
-namespace regina {
-
-/**
- * \weakgroup enumerate
- * @{
- */
-
-/**
- * Represents an individual validity constraint for use with
- * polytope vertex enumeration.
- *
- * Vertex enumeration routines such as
- * NDoubleDescription::enumerateExtremalRays() take a cone (specifically
- * the non-negative orthant), form the intersection of that cone with a
- * given linear subspace, and return the extremal rays of the new cone
- * that results.
- *
- * In some cases we are only interested in \e valid rays of the new cone.
- * The NEnumConstraintList class stores a number of "validity constraints";
- * a ray is then "valid" if it satisfies all of these constraints.
- *
- * Each individual constraint is presented as a set of integers; the
- * meaning of such a constraint is as follows.  We number the facets of
- * the original cone 0,1,2,... (where the <i>i</i>th facet is the plane
- * perpendicular to the <i>i</i>th coordinate axis).  If a constraint is
- * described by the integers \a x, \a y, \a z, ..., then it indicates that a
- * ray can only lie outside at most one of the facets numbered
- * \a x, \a y, \a z, ... .
- *
- * In practice, this allows us to represent constraints in normal
- * surface theory.  For instance, to insist that some tetrahedron
- * contains at most one quadrilateral disc type, we add a constraint
- * with three integers, representing the original facets
- * \a q1=0, \a q2=0, \a q3=0 (where \a q1, \a q2 and \a q3 are the three
- * quadrilateral coordinates for that tetrahedron).
- *
- * The NEnumConstraintList class is simply a std::vector of constraints,
- * where each constraint is a std::set of unsigned integers.  Typically
- * one will create a vector containing the desired number of constraints
- * and then walk through each constraint, filling the sets as appropriate.
- *
- * \ifacespython Not present.
- */
-class REGINA_API NEnumConstraintList :
-        public std::vector<std::set<unsigned long> > {
-    public:
-        /**
-         * Creates an empty list of constraints.
-         */
-        NEnumConstraintList();
-
-        /**
-         * Creates a new list of constraints with the given size.
-         * Each constraint will be initialised to an empty set.
-         *
-         * @param size the number of constraints to include in the new list.
-         */
-        NEnumConstraintList(size_t size);
-};
-
-/*@}*/
-
-// Inline functions for NEnumConstraintList
-
-inline NEnumConstraintList::NEnumConstraintList() {
-}
-
-inline NEnumConstraintList::NEnumConstraintList(size_t size) :
-        std::vector<std::set<unsigned long> >(size) {
-}
-
-} // namespace regina
+#include "enumerate/enumconstraints.h"
 
 #endif
 

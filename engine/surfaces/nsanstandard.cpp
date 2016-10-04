@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "enumerate/nenumconstraint.h"
+#include "enumerate/enumconstraints.h"
 #include "surfaces/nsanstandard.h"
 #include "maths/nmatrixint.h"
 #include "maths/nrational.h"
@@ -132,11 +132,11 @@ NMatrixInt* NNormalSurfaceVectorANStandard::makeMatchingEquations(
     return ans;
 }
 
-NEnumConstraintList* NNormalSurfaceVectorANStandard::makeEmbeddedConstraints(
+EnumConstraints* NNormalSurfaceVectorANStandard::makeEmbeddedConstraints(
         const NTriangulation* triangulation) {
     // At most one quad/oct per tetrahedron.
     // Also at most one oct type overall.
-    NEnumConstraintList* ans = new NEnumConstraintList(
+    EnumConstraints* ans = new EnumConstraints(
         triangulation->size() + 1);
 
     unsigned base = 0;

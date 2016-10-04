@@ -57,6 +57,9 @@
 		050C64AF1DA304BF00C9420F /* ntreedecomposition-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64AD1DA304BF00C9420F /* ntreedecomposition-impl.h */; };
 		050C64B01DA304BF00C9420F /* ntreedecomposition.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64AE1DA304BF00C9420F /* ntreedecomposition.h */; };
 		050C64B21DA3085C00C9420F /* nbooleans.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64B11DA3085C00C9420F /* nbooleans.h */; };
+		050C64B61DA32B1400C9420F /* ndoubledescription-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64B31DA32B1400C9420F /* ndoubledescription-impl.h */; };
+		050C64B71DA32B1400C9420F /* ndoubledescription.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64B41DA32B1400C9420F /* ndoubledescription.h */; };
+		050C64B81DA32B1400C9420F /* nenumconstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64B51DA32B1400C9420F /* nenumconstraint.h */; };
 		050F5DD31B9BAB9C00C1F681 /* nabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D021B9BAB9C00C1F681 /* nabeliangroup.cpp */; };
 		050F5DD41B9BAB9C00C1F681 /* ngrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D031B9BAB9C00C1F681 /* ngrouppresentation.cpp */; };
 		050F5DD51B9BAB9C00C1F681 /* nhomgrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D041B9BAB9C00C1F681 /* nhomgrouppresentation.cpp */; };
@@ -262,9 +265,9 @@
 		052F9EBD180600FB00FAE4DF /* docs.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C4C180600FA00FAE4DF /* docs.h */; };
 		052F9EBE180600FB00FAE4DF /* engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C51180600FA00FAE4DF /* engine.cpp */; };
 		052F9EBF180600FB00FAE4DF /* engine.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C52180600FA00FAE4DF /* engine.h */; };
-		052F9EC0180600FB00FAE4DF /* ndoubledescription-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C55180600FA00FAE4DF /* ndoubledescription-impl.h */; };
-		052F9EC1180600FB00FAE4DF /* ndoubledescription.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C56180600FA00FAE4DF /* ndoubledescription.h */; };
-		052F9EC5180600FB00FAE4DF /* nenumconstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C5A180600FA00FAE4DF /* nenumconstraint.h */; };
+		052F9EC0180600FB00FAE4DF /* doubledescription-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C55180600FA00FAE4DF /* doubledescription-impl.h */; };
+		052F9EC1180600FB00FAE4DF /* doubledescription.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C56180600FA00FAE4DF /* doubledescription.h */; };
+		052F9EC5180600FB00FAE4DF /* enumconstraints.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C5A180600FA00FAE4DF /* enumconstraints.h */; };
 		052F9EC6180600FB00FAE4DF /* nhilbertcd-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C5B180600FA00FAE4DF /* nhilbertcd-impl.h */; };
 		052F9EC7180600FB00FAE4DF /* nhilbertcd.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C5C180600FA00FAE4DF /* nhilbertcd.h */; };
 		052F9EC9180600FB00FAE4DF /* nhilbertdual-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C5E180600FA00FAE4DF /* nhilbertdual-impl.h */; };
@@ -1948,6 +1951,9 @@
 		050C64AD1DA304BF00C9420F /* ntreedecomposition-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ntreedecomposition-impl.h"; sourceTree = "<group>"; };
 		050C64AE1DA304BF00C9420F /* ntreedecomposition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntreedecomposition.h; sourceTree = "<group>"; };
 		050C64B11DA3085C00C9420F /* nbooleans.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nbooleans.h; sourceTree = "<group>"; };
+		050C64B31DA32B1400C9420F /* ndoubledescription-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ndoubledescription-impl.h"; sourceTree = "<group>"; };
+		050C64B41DA32B1400C9420F /* ndoubledescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndoubledescription.h; sourceTree = "<group>"; };
+		050C64B51DA32B1400C9420F /* nenumconstraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nenumconstraint.h; sourceTree = "<group>"; };
 		050F5CDD1B9BAAAA00C1F681 /* engine.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = engine.so; sourceTree = BUILT_PRODUCTS_DIR; };
 		050F5D011B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		050F5D021B9BAB9C00C1F681 /* nabeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nabeliangroup.cpp; sourceTree = "<group>"; };
@@ -2215,9 +2221,9 @@
 		052F9C51180600FA00FAE4DF /* engine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = engine.cpp; sourceTree = "<group>"; };
 		052F9C52180600FA00FAE4DF /* engine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = engine.h; sourceTree = "<group>"; };
 		052F9C54180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		052F9C55180600FA00FAE4DF /* ndoubledescription-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ndoubledescription-impl.h"; sourceTree = "<group>"; };
-		052F9C56180600FA00FAE4DF /* ndoubledescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndoubledescription.h; sourceTree = "<group>"; };
-		052F9C5A180600FA00FAE4DF /* nenumconstraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nenumconstraint.h; sourceTree = "<group>"; };
+		052F9C55180600FA00FAE4DF /* doubledescription-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "doubledescription-impl.h"; sourceTree = "<group>"; };
+		052F9C56180600FA00FAE4DF /* doubledescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = doubledescription.h; sourceTree = "<group>"; };
+		052F9C5A180600FA00FAE4DF /* enumconstraints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = enumconstraints.h; sourceTree = "<group>"; };
 		052F9C5B180600FA00FAE4DF /* nhilbertcd-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "nhilbertcd-impl.h"; sourceTree = "<group>"; };
 		052F9C5C180600FA00FAE4DF /* nhilbertcd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhilbertcd.h; sourceTree = "<group>"; };
 		052F9C5E180600FA00FAE4DF /* nhilbertdual-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "nhilbertdual-impl.h"; sourceTree = "<group>"; };
@@ -4276,9 +4282,12 @@
 			isa = PBXGroup;
 			children = (
 				052F9C54180600FA00FAE4DF /* CMakeLists.txt */,
-				052F9C55180600FA00FAE4DF /* ndoubledescription-impl.h */,
-				052F9C56180600FA00FAE4DF /* ndoubledescription.h */,
-				052F9C5A180600FA00FAE4DF /* nenumconstraint.h */,
+				052F9C55180600FA00FAE4DF /* doubledescription-impl.h */,
+				052F9C56180600FA00FAE4DF /* doubledescription.h */,
+				052F9C5A180600FA00FAE4DF /* enumconstraints.h */,
+				050C64B31DA32B1400C9420F /* ndoubledescription-impl.h */,
+				050C64B41DA32B1400C9420F /* ndoubledescription.h */,
+				050C64B51DA32B1400C9420F /* nenumconstraint.h */,
 				052F9C5B180600FA00FAE4DF /* nhilbertcd-impl.h */,
 				052F9C5C180600FA00FAE4DF /* nhilbertcd.h */,
 				052F9C5E180600FA00FAE4DF /* nhilbertdual-impl.h */,
@@ -6084,7 +6093,7 @@
 				052F9EF5180600FB00FAE4DF /* ntreelp-impl.h in Headers */,
 				052F9F4B180600FB00FAE4DF /* nrational.h in Headers */,
 				05431F211C40F260009BC072 /* component.h in Headers */,
-				052F9EC5180600FB00FAE4DF /* nenumconstraint.h in Headers */,
+				052F9EC5180600FB00FAE4DF /* enumconstraints.h in Headers */,
 				0591E7DB1C4F750200793A9C /* hypercoords.h in Headers */,
 				052FA09F180600FB00FAE4DF /* stringutils.h in Headers */,
 				052F9EA4180600FB00FAE4DF /* ngenericgluingperms-impl.h in Headers */,
@@ -6130,6 +6139,7 @@
 				052F9FFD180600FB00FAE4DF /* nlayeredsurfacebundle.h in Headers */,
 				0541AF4D1B8BE2F5002E166B /* npolynomial.h in Headers */,
 				052F9F63180600FB00FAE4DF /* packetregistry.h in Headers */,
+				050C64B81DA32B1400C9420F /* nenumconstraint.h in Headers */,
 				05431F6E1C40F3C9009BC072 /* general.h in Headers */,
 				0591E7DD1C4F750200793A9C /* nhsmirrored.h in Headers */,
 				052FA05F180600FB00FAE4DF /* ncomponent.h in Headers */,
@@ -6138,6 +6148,7 @@
 				052F9FF7180600FB00FAE4DF /* nlayeredlensspace.h in Headers */,
 				052F9FFB180600FB00FAE4DF /* nlayeredsolidtorus.h in Headers */,
 				052F9F4F180600FB00FAE4DF /* numbertheory.h in Headers */,
+				050C64B71DA32B1400C9420F /* ndoubledescription.h in Headers */,
 				0591E7A91C4F74C400793A9C /* dim4pentachoron.h in Headers */,
 				05431F751C40F3C9009BC072 /* libnormaliz.h in Headers */,
 				05431F251C40F260009BC072 /* facetpairing.h in Headers */,
@@ -6172,6 +6183,7 @@
 				0541AF4C1B8BE2F5002E166B /* ncyclotomic.h in Headers */,
 				05431F011C40F1F6009BC072 /* isomorphism.h in Headers */,
 				0583656D18DB8B68008B08D9 /* kernel_namespace.h in Headers */,
+				050C64B61DA32B1400C9420F /* ndoubledescription-impl.h in Headers */,
 				0591E7B11C4F74C400793A9C /* dim4vertex.h in Headers */,
 				05431F131C40F257009BC072 /* facenumber.h in Headers */,
 				0588F1181808D43B006BDC79 /* packetregistry-impl.h in Headers */,
@@ -6201,7 +6213,7 @@
 				052FA007180600FB00FAE4DF /* nsatannulus.h in Headers */,
 				052F9F28180600FB00FAE4DF /* nlensspace.h in Headers */,
 				052F9F9F180600FB00FAE4DF /* terse_triangulation.h in Headers */,
-				052F9EC1180600FB00FAE4DF /* ndoubledescription.h in Headers */,
+				052F9EC1180600FB00FAE4DF /* doubledescription.h in Headers */,
 				052F9EF4180600FB00FAE4DF /* ntreeconstraint.h in Headers */,
 				052FA09A180600FB00FAE4DF /* osutils.h in Headers */,
 				052F9F55180600FB00FAE4DF /* packet.h in Headers */,
@@ -6232,7 +6244,7 @@
 				052FA08E180600FB00FAE4DF /* listoncall.h in Headers */,
 				052FA00D180600FB00FAE4DF /* nsatblocktypes.h in Headers */,
 				052942D21C5CDC8B0011C1E6 /* safepointeebase.h in Headers */,
-				052F9EC0180600FB00FAE4DF /* ndoubledescription-impl.h in Headers */,
+				052F9EC0180600FB00FAE4DF /* doubledescription-impl.h in Headers */,
 				052FA092180600FB00FAE4DF /* property.h in Headers */,
 				052F9ECF180600FB00FAE4DF /* nmaxadmissible-impl.h in Headers */,
 				052F9FF3180600FB00FAE4DF /* nlayeredchain.h in Headers */,

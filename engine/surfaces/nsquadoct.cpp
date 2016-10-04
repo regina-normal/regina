@@ -32,7 +32,7 @@
 
 #include <deque>
 #include <set>
-#include "enumerate/nenumconstraint.h"
+#include "enumerate/enumconstraints.h"
 #include "surfaces/nsquadoct.h"
 #include "surfaces/nsanstandard.h"
 #include "maths/nmatrixint.h"
@@ -85,11 +85,11 @@ NMatrixInt* NNormalSurfaceVectorQuadOct::makeMatchingEquations(
     return ans;
 }
 
-NEnumConstraintList* NNormalSurfaceVectorQuadOct::makeEmbeddedConstraints(
+EnumConstraints* NNormalSurfaceVectorQuadOct::makeEmbeddedConstraints(
         const NTriangulation* triangulation) {
     // At most one quad/oct per tetrahedron.
     // At most one oct type overall.
-    NEnumConstraintList* ans = new NEnumConstraintList(
+    EnumConstraints* ans = new EnumConstraints(
         triangulation->size() + 1);
 
     unsigned base = 0;

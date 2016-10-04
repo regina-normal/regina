@@ -44,7 +44,7 @@
 
 #include "regina-core.h"
 #include "regina-config.h"
-#include "enumerate/nenumconstraint.h"
+#include "enumerate/enumconstraints.h"
 #include "enumerate/nhilbertprimal.h"
 #include "enumerate/nmaxadmissible.h"
 #include "libnormaliz/cone.h"
@@ -60,7 +60,7 @@ namespace regina {
 template <class RayClass, class RayIterator, class OutputIterator>
 void NHilbertPrimal::enumerateHilbertBasis(OutputIterator results,
         const RayIterator& raysBegin, const RayIterator& raysEnd,
-        const NEnumConstraintList* constraints, ProgressTracker* tracker) {
+        const EnumConstraints* constraints, ProgressTracker* tracker) {
     if (raysBegin == raysEnd) {
         // No extremal rays; no Hilbert basis.
         return;
@@ -105,7 +105,7 @@ template <class RayClass, class BitmaskType,
         class RayIterator, class OutputIterator>
 void NHilbertPrimal::enumerateUsingBitmask(OutputIterator results,
         const RayIterator& raysBegin, const RayIterator& raysEnd,
-        const NEnumConstraintList* constraints, ProgressTracker* tracker) {
+        const EnumConstraints* constraints, ProgressTracker* tracker) {
     // We know at this point that the dimension is non-zero.
     size_t dim = (*raysBegin)->size();
 

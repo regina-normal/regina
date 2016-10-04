@@ -32,7 +32,7 @@
 
 #include <iterator>
 #include <thread>
-#include "enumerate/ndoubledescription.h"
+#include "enumerate/doubledescription.h"
 #include "enumerate/nhilbertcd.h"
 #include "enumerate/nhilbertdual.h"
 #include "enumerate/nhilbertprimal.h"
@@ -213,10 +213,10 @@ template <typename Coords>
 void NNormalSurfaceList::Enumerator::fillVertexDD() {
     NMatrixInt* eqns = makeMatchingEquations(triang_, list_->coords_);
 
-    NEnumConstraintList* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
+    EnumConstraints* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
         makeEmbeddedConstraints(triang_, list_->coords_) : 0);
 
-    NDoubleDescription::enumerateExtremalRays<typename Coords::Class>(
+    DoubleDescription::enumerateExtremalRays<typename Coords::Class>(
         SurfaceInserter(*list_, triang_), *eqns, constraints, tracker_);
 
     delete constraints;
@@ -433,7 +433,7 @@ void NNormalSurfaceList::Enumerator::fillFundamentalDual() {
 
     NMatrixInt* eqns = makeMatchingEquations(triang_, list_->coords_);
 
-    NEnumConstraintList* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
+    EnumConstraints* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
         makeEmbeddedConstraints(triang_, list_->coords_) : 0);
 
     NHilbertDual::enumerateHilbertBasis<typename Coords::Class>(
@@ -453,7 +453,7 @@ void NNormalSurfaceList::Enumerator::fillFundamentalCD() {
 
     NMatrixInt* eqns = makeMatchingEquations(triang_, list_->coords_);
 
-    NEnumConstraintList* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
+    EnumConstraints* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
         makeEmbeddedConstraints(triang_, list_->coords_) : 0);
 
     NHilbertCD::enumerateHilbertBasis<typename Coords::Class>(
@@ -473,7 +473,7 @@ void NNormalSurfaceList::Enumerator::fillFundamentalPrimal() {
         tracker_->newStage("Initialising Hilbert basis enumeration", 0.1);
 
     // Fetch validity constraints from the registry.
-    NEnumConstraintList* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
+    EnumConstraints* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
         makeEmbeddedConstraints(triang_, list_->coords_) : 0);
 
     // Enumerate all vertex normal surfaces.
@@ -547,7 +547,7 @@ void NNormalSurfaceList::Enumerator::fillFundamentalFullCone() {
             tracker_->newStage("Extracting relevant solutions", 0.2);
 
         // Fetch validity constraints from the registry.
-        NEnumConstraintList* constraints =
+        EnumConstraints* constraints =
             (list_->which_.has(NS_EMBEDDED_ONLY) ?
             makeEmbeddedConstraints(triang_, list_->coords_) : 0);
 
@@ -555,7 +555,7 @@ void NNormalSurfaceList::Enumerator::fillFundamentalFullCone() {
         int nonZero;
         int i;
         std::vector<std::vector<mpz_class> >::const_iterator hlit;
-        NEnumConstraintList::const_iterator eit;
+        EnumConstraints::const_iterator eit;
         std::set<unsigned long>::const_iterator sit;
         NNormalSurfaceVector* v;
         NLargeInteger tmpInt;

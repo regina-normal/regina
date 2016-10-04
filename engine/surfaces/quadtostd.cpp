@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "regina-config.h"
-#include "enumerate/ndoubledescription.h"
+#include "enumerate/doubledescription.h"
 #include "maths/nmatrixint.h"
 #include "maths/nray.h"
 #include "surfaces/nnormalsurface.h"
@@ -78,7 +78,7 @@ template void NNormalSurfaceList::buildStandardFromReduced<
 namespace {
     /**
      * A back insertion iterator that defines \a value_type, which is
-     * required by NDoubleDescription::enumerate().
+     * required by DoubleDescription::enumerate().
      *
      * The standard back_insert_iterator does not provide this typedef,
      * so we subclass and provide the typedef ourselves.
@@ -386,14 +386,14 @@ void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
     // constraints for almost normal surfaces) as bitmasks.
     // Since we have a non-empty triangulation, we know the list of
     // constraints is non-empty.
-    NEnumConstraintList* constraints =
+    EnumConstraints* constraints =
         Variant::StandardVector::makeEmbeddedConstraints(owner);
 
     BitmaskType* constraintsBegin = new BitmaskType[constraints->size()];
     BitmaskType* constraintsEnd = constraintsBegin;
 
-    NEnumConstraintList::const_iterator cit;
-    for (NEnumConstraintList::const_iterator cit = constraints->begin();
+    EnumConstraints::const_iterator cit;
+    for (EnumConstraints::const_iterator cit = constraints->begin();
             cit != constraints->end(); ++cit, ++constraintsEnd) {
         constraintsEnd->reset(slen);
         constraintsEnd->set(cit->begin(), cit->end(), true);

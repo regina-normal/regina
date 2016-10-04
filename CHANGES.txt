@@ -15,6 +15,7 @@ Version 5.1  [ (under development) ]
           The old types and headers are deprecated but kept for backward
           compatibility.  There are some exceptions:
             + NAngleStructureList becomes AngleStructures.
+            + NEnumConstraintList becomes EnumConstraints.
             + NExampleSnapPeaTriangulation becomes ExampleSnapPea.
             + utilities/nbooleans.h becomes utilities/boolset.h.
             + Some internal classes do not have backward compatible headers or

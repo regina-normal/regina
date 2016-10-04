@@ -201,7 +201,7 @@ REGINA_API extern const NPerm4 __octDiscArcs[24];
 #define octDiscArcs(i, j) __octDiscArcs[(8 * (i)) + (j)]
 #endif
 
-class NEnumConstraintList;
+class EnumConstraints;
 class NXMLNormalSurfaceReader;
 class NMatrixInt;
 
@@ -717,7 +717,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @return a newly allocated set of constraints.
          */
         #ifdef __DOXYGEN
-            static NEnumConstraintList* makeEmbeddedConstraints(
+            static EnumConstraints* makeEmbeddedConstraints(
                 const NTriangulation* triangulation);
         #endif
 };

@@ -77,7 +77,7 @@
 
 namespace regina {
 
-class NEnumConstraintList;
+class EnumConstraints;
 class NMatrixInt;
 class ProgressTracker;
 
@@ -131,7 +131,7 @@ class NHilbertDual {
          * in which case this routine will only return \e valid basis elements.
          * Each validity constraint is of the form "a basis element may only
          * lie outside at most one of these facets of the original
-         * cone"; see the NEnumConstraintList class for details.  These
+         * cone"; see the EnumConstraints class for details.  These
          * contraints have the important property that, although validity is
          * not preserved under addition, \e invalidity is.
          *
@@ -164,7 +164,7 @@ class NHilbertDual {
          */
         template <class RayClass, class OutputIterator>
         static void enumerateHilbertBasis(OutputIterator results,
-            const NMatrixInt& subspace, const NEnumConstraintList* constraints,
+            const NMatrixInt& subspace, const EnumConstraints* constraints,
             ProgressTracker* tracker = 0, unsigned initialRows = 0);
 
     private:
@@ -339,7 +339,7 @@ class NHilbertDual {
          */
         template <class RayClass, class BitmaskType, class OutputIterator>
         static void enumerateUsingBitmask(OutputIterator results,
-            const NMatrixInt& subspace, const NEnumConstraintList* constraints,
+            const NMatrixInt& subspace, const EnumConstraints* constraints,
             ProgressTracker* tracker, unsigned initialRows);
 
         /**

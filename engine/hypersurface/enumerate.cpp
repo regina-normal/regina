@@ -32,7 +32,7 @@
 
 #include <thread>
 #include "dim4/dim4triangulation.h"
-#include "enumerate/ndoubledescription.h"
+#include "enumerate/doubledescription.h"
 #include "enumerate/nhilbertdual.h"
 #include "enumerate/nhilbertprimal.h"
 #include "hypersurface/nnormalhypersurfacelist.h"
@@ -107,10 +107,10 @@ template <typename Coords>
 void NNormalHypersurfaceList::Enumerator::fillVertexDD() {
     NMatrixInt* eqns = makeMatchingEquations(triang_, list_->coords_);
 
-    NEnumConstraintList* constraints = (list_->which_.has(HS_EMBEDDED_ONLY) ?
+    EnumConstraints* constraints = (list_->which_.has(HS_EMBEDDED_ONLY) ?
         makeEmbeddedConstraints(triang_, list_->coords_) : 0);
 
-    NDoubleDescription::enumerateExtremalRays<typename Coords::Class>(
+    DoubleDescription::enumerateExtremalRays<typename Coords::Class>(
         HypersurfaceInserter(*list_, triang_), *eqns, constraints, tracker_);
 
     delete constraints;
@@ -153,7 +153,7 @@ void NNormalHypersurfaceList::Enumerator::fillFundamentalPrimal() {
         tracker_->newStage("Initialising Hilbert basis enumeration", 0.1);
 
     // Fetch any necessary validity constraints.
-    NEnumConstraintList* constraints = (list_->which_.has(HS_EMBEDDED_ONLY) ?
+    EnumConstraints* constraints = (list_->which_.has(HS_EMBEDDED_ONLY) ?
         makeEmbeddedConstraints(triang_, list_->coords_) : 0);
 
     // Enumerate all vertex normal hypersurfaces.
@@ -192,7 +192,7 @@ void NNormalHypersurfaceList::Enumerator::fillFundamentalDual() {
 
     NMatrixInt* eqns = makeMatchingEquations(triang_, list_->coords_);
 
-    NEnumConstraintList* constraints = (list_->which_.has(HS_EMBEDDED_ONLY) ?
+    EnumConstraints* constraints = (list_->which_.has(HS_EMBEDDED_ONLY) ?
         makeEmbeddedConstraints(triang_, list_->coords_) : 0);
 
     NHilbertDual::enumerateHilbertBasis<typename Coords::Class>(

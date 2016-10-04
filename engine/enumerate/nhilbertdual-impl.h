@@ -44,7 +44,7 @@
 
 #include <algorithm>
 #include <iterator>
-#include "enumerate/nenumconstraint.h"
+#include "enumerate/enumconstraints.h"
 #include "enumerate/nhilbertdual.h"
 #include "enumerate/ordering.h"
 #include "progress/progresstracker.h"
@@ -54,7 +54,7 @@ namespace regina {
 
 template <class RayClass, class OutputIterator>
 void NHilbertDual::enumerateHilbertBasis(OutputIterator results,
-        const NMatrixInt& subspace, const NEnumConstraintList* constraints,
+        const NMatrixInt& subspace, const EnumConstraints* constraints,
         ProgressTracker* tracker, unsigned initialRows) {
     // Get the dimension of the entire space in which we are working.
     size_t dim = subspace.columns();
@@ -95,7 +95,7 @@ void NHilbertDual::enumerateHilbertBasis(OutputIterator results,
 
 template <class RayClass, class BitmaskType, class OutputIterator>
 void NHilbertDual::enumerateUsingBitmask(OutputIterator results,
-        const NMatrixInt& subspace, const NEnumConstraintList* constraints,
+        const NMatrixInt& subspace, const EnumConstraints* constraints,
         ProgressTracker* tracker, unsigned initialRows) {
     // Get the dimension of the entire space in which we are working.
     // At this point we are guaranteed that the dimension is non-zero.
@@ -139,7 +139,7 @@ void NHilbertDual::enumerateUsingBitmask(OutputIterator results,
     if (constraints && ! constraints->empty()) {
         constraintsBegin = new BitmaskType[constraints->size()];
 
-        NEnumConstraintList::const_iterator cit;
+        EnumConstraints::const_iterator cit;
         for (cit = constraints->begin(), constraintsEnd = constraintsBegin;
                 cit != constraints->end(); ++cit, ++constraintsEnd) {
             constraintsEnd->reset(dim);

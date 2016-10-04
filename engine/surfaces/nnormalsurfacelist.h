@@ -1410,7 +1410,7 @@ REGINA_API NMatrixInt* makeMatchingEquations(
  * @param coords the coordinate system to be used.
  * @return a newly allocated set of constraints.
  */
-REGINA_API NEnumConstraintList* makeEmbeddedConstraints(
+REGINA_API EnumConstraints* makeEmbeddedConstraints(
     const NTriangulation* triangulation, NormalCoords coords);
 
 /*@}*/

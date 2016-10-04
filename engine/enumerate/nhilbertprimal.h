@@ -46,7 +46,7 @@
 
 namespace regina {
 
-class NEnumConstraintList;
+class EnumConstraints;
 class NMatrixInt;
 class ProgressTracker;
 class NRay;
@@ -91,7 +91,7 @@ class NHilbertPrimal {
          * subspace is a pointed polyhedral cone with apex at the origin,
          * and this routine requires the extremal rays of this cone to
          * be provided as input.  The extremal rays can be computed
-         * using NDoubleDescription::enumerate() in general cases,
+         * using DoubleDescription::enumerate() in general cases,
          * though sometimes (such as with normal surface theory) more
          * efficient methods are available.
          *
@@ -103,7 +103,7 @@ class NHilbertPrimal {
          * constraints, in which case this routine will only return \e valid
          * basis elements.  Each validity constraint is of the form "at
          * most one of these coordinates may be non-zero"; see the
-         * NEnumConstraintList class for details.  These contraints have the
+         * EnumConstraints class for details.  These contraints have the
          * important property that, although validity is not preserved under
          * addition, \e invalidity is.
          *
@@ -141,7 +141,7 @@ class NHilbertPrimal {
         template <class RayClass, class RayIterator, class OutputIterator>
         static void enumerateHilbertBasis(OutputIterator results,
             const RayIterator& raysBegin, const RayIterator& raysEnd,
-            const NEnumConstraintList* constraints,
+            const EnumConstraints* constraints,
             ProgressTracker* tracker = 0);
 
     private:
@@ -164,7 +164,7 @@ class NHilbertPrimal {
             class RayIterator, class OutputIterator>
         static void enumerateUsingBitmask(OutputIterator results,
             const RayIterator& raysBegin, const RayIterator& raysEnd,
-            const NEnumConstraintList* constraints, ProgressTracker* tracker);
+            const EnumConstraints* constraints, ProgressTracker* tracker);
 
         /**
          * Determines whether the given ray lies in the face specified

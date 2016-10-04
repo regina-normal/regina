@@ -91,15 +91,15 @@ NMatrixInt* makeMatchingEquations(const NTriangulation* triangulation,
 }
 
 namespace {
-    struct EmbeddedConstraints : public Returns<NEnumConstraintList*> {
+    struct EmbeddedConstraints : public Returns<EnumConstraints*> {
         template <typename Coords>
-        inline NEnumConstraintList* operator() (const NTriangulation* tri) {
+        inline EnumConstraints* operator() (const NTriangulation* tri) {
             return Coords::Class::makeEmbeddedConstraints(tri);
         }
     };
 }
 
-NEnumConstraintList* makeEmbeddedConstraints(
+EnumConstraints* makeEmbeddedConstraints(
         const NTriangulation* triangulation, NormalCoords coords) {
     return forCoords(coords, EmbeddedConstraints(), 0, triangulation);
 }

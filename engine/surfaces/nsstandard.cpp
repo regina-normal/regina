@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "enumerate/nenumconstraint.h"
+#include "enumerate/enumconstraints.h"
 #include "surfaces/nsstandard.h"
 #include "maths/nmatrixint.h"
 #include "maths/nrational.h"
@@ -116,9 +116,9 @@ NMatrixInt* NNormalSurfaceVectorStandard::makeMatchingEquations(
     return ans;
 }
 
-NEnumConstraintList* NNormalSurfaceVectorStandard::makeEmbeddedConstraints(
+EnumConstraints* NNormalSurfaceVectorStandard::makeEmbeddedConstraints(
         const NTriangulation* triangulation) {
-    NEnumConstraintList* ans = new NEnumConstraintList(
+    EnumConstraints* ans = new EnumConstraints(
         triangulation->size());
 
     unsigned base = 0;

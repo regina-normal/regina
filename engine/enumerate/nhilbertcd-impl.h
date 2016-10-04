@@ -44,7 +44,7 @@
 
 #include "regina-core.h"
 #include "regina-config.h"
-#include "enumerate/nenumconstraint.h"
+#include "enumerate/enumconstraints.h"
 #include "enumerate/nhilbertcd.h"
 #include "maths/nmatrixint.h"
 #include "maths/nray.h"
@@ -55,7 +55,7 @@ namespace regina {
 
 template <class RayClass, class OutputIterator>
 void NHilbertCD::enumerateHilbertBasis(OutputIterator results,
-        const NMatrixInt& subspace, const NEnumConstraintList* constraints) {
+        const NMatrixInt& subspace, const EnumConstraints* constraints) {
     // Get the dimension of the space.
     size_t dim = subspace.columns();
     if (dim == 0)
@@ -93,7 +93,7 @@ void NHilbertCD::enumerateHilbertBasis(OutputIterator results,
 
 template <class RayClass, class BitmaskType, class OutputIterator>
 void NHilbertCD::enumerateUsingBitmask(OutputIterator results,
-        const NMatrixInt& subspace, const NEnumConstraintList* constraints) {
+        const NMatrixInt& subspace, const EnumConstraints* constraints) {
     // Stack-based Contejean-Devie algorithm (Information & Computation, 1994).
     size_t dim = subspace.columns();
     size_t nEqns = subspace.rows();
@@ -106,7 +106,7 @@ void NHilbertCD::enumerateUsingBitmask(OutputIterator results,
     if (constraints && ! constraints->empty()) {
         constraintsBegin = new BitmaskType[constraints->size()];
 
-        NEnumConstraintList::const_iterator cit;
+        EnumConstraints::const_iterator cit;
         for (cit = constraints->begin(), constraintsEnd = constraintsBegin;
                 cit != constraints->end(); ++cit, ++constraintsEnd) {
             constraintsEnd->reset(dim);

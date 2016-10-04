@@ -59,7 +59,7 @@ namespace regina {
  * @{
  */
 
-class NEnumConstraintList;
+class EnumConstraints;
 class NXMLNormalHypersurfaceReader;
 
 template <int> class Triangulation;
@@ -374,7 +374,7 @@ class REGINA_API NNormalHypersurfaceVector : public NRay {
          * @return a newly allocated set of constraints.
          */
         #ifdef __DOXYGEN
-            static NEnumConstraintList* makeEmbeddedConstraints(
+            static EnumConstraints* makeEmbeddedConstraints(
                 const Dim4Triangulation* triangulation);
         #endif
 };

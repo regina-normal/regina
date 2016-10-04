@@ -60,7 +60,7 @@ namespace regina {
  * order before enumerating vertex or fundamental normal surfaces
  * A hyperplane is described by a row of the \a subspace matrix,
  * as passed to an enumeration routine such as
- * NDoubleDescription::enumerateExtremalRays() or
+ * DoubleDescription::enumerateExtremalRays() or
  * NHilbertDual::enumerateHilbertBasis().
  *
  * The ordering is defined as follows.  For each hyperplane, we

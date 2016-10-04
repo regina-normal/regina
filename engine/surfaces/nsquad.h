@@ -113,7 +113,7 @@ class REGINA_API NNormalSurfaceVectorQuad :
             const NTriangulation* triangulation);
         static NMatrixInt* makeMatchingEquations(
             const NTriangulation* triangulation);
-        static NEnumConstraintList* makeEmbeddedConstraints(
+        static EnumConstraints* makeEmbeddedConstraints(
             const NTriangulation* triangulation);
 };
 

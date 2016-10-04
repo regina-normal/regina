@@ -17,6 +17,9 @@ SET(SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
+    enumconstraints.h
+    doubledescription.h
+    doubledescription-impl.h
     nenumconstraint.h
     ndoubledescription.h
     ndoubledescription-impl.h

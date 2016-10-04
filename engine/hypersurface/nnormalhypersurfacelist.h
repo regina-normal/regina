@@ -718,7 +718,7 @@ REGINA_API NMatrixInt* makeMatchingEquations(
  * constants in NNormalHypersurfaceList.
  * @return a newly allocated set of constraints.
  */
-REGINA_API NEnumConstraintList* makeEmbeddedConstraints(
+REGINA_API EnumConstraints* makeEmbeddedConstraints(
     const Dim4Triangulation* triangulation, HyperCoords coords);
 
 /*@}*/

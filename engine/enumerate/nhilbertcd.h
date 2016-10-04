@@ -48,7 +48,7 @@
 
 namespace regina {
 
-class NEnumConstraintList;
+class EnumConstraints;
 class NMatrixInt;
 class NRay;
 
@@ -107,7 +107,7 @@ class NHilbertCD {
          * constraints, in which case this routine will only return \e valid
          * basis elements.  Each validity constraint is of the form "at
          * most one of these coordinates may be non-zero"; see the
-         * NEnumConstraintList class for details.  These contraints have the
+         * EnumConstraints class for details.  These contraints have the
          * important property that, although validity is not preserved under
          * addition, \e invalidity is.
          *
@@ -132,7 +132,7 @@ class NHilbertCD {
          */
         template <class RayClass, class OutputIterator>
         static void enumerateHilbertBasis(OutputIterator results,
-            const NMatrixInt& subspace, const NEnumConstraintList* constraints);
+            const NMatrixInt& subspace, const EnumConstraints* constraints);
 
     private:
         /**
@@ -180,7 +180,7 @@ class NHilbertCD {
          */
         template <class RayClass, class BitmaskType, class OutputIterator>
         static void enumerateUsingBitmask(OutputIterator results,
-            const NMatrixInt& subspace, const NEnumConstraintList* constraints);
+            const NMatrixInt& subspace, const EnumConstraints* constraints);
 
         /**
          * Private constructor to ensure that objects of this class are

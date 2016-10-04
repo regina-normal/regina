@@ -69,7 +69,7 @@ typedef Triangulation<3> NTriangulation;
  * multiply by <i>pi</i>.
  *
  * The reason for using this obfuscated representation is so we can
- * use the NDoubleDescription vertex enumeration routines to
+ * use the DoubleDescription vertex enumeration routines to
  * calculate vertex angle structures.
  *
  * If there are \a t tetrahedra in the underlying triangulation, there

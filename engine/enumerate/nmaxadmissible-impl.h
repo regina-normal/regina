@@ -42,7 +42,7 @@
 #define __NMAXADMISSIBLE_IMPL_H
 #endif
 
-#include "enumerate/nenumconstraint.h"
+#include "enumerate/enumconstraints.h"
 #include "enumerate/nmaxadmissible.h"
 #include <algorithm>
 #include <list>
@@ -52,7 +52,7 @@ namespace regina {
 template <class BitmaskType, class RayIterator>
 std::vector<BitmaskType>* NMaxAdmissible::enumerate(
         RayIterator beginExtremalRays, RayIterator endExtremalRays,
-        const NEnumConstraintList* constraints) {
+        const EnumConstraints* constraints) {
     if (beginExtremalRays == endExtremalRays) {
         // Input is empty, so output is empty.
         return new std::vector<BitmaskType>();
@@ -65,7 +65,7 @@ std::vector<BitmaskType>* NMaxAdmissible::enumerate(
     // Rewrite the constraints as bitmasks.
     std::vector<BitmaskType> constMasks;
     if (constraints) {
-        NEnumConstraintList::const_iterator cit;
+        EnumConstraints::const_iterator cit;
         std::set<unsigned long>::const_iterator sit; 
         for (cit = constraints->begin(); cit != constraints->end(); ++cit) {
             b.reset();

@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "enumerate/nenumconstraint.h"
+#include "enumerate/enumconstraints.h"
 #include "surfaces/nsoriented.h"
 #include "maths/nmatrixint.h"
 #include "maths/nrational.h"
@@ -136,11 +136,11 @@ NMatrixInt* NNormalSurfaceVectorOriented::makeMatchingEquations(
     return ans;
 }
 
-NEnumConstraintList* NNormalSurfaceVectorOriented::makeEmbeddedConstraints(
+EnumConstraints* NNormalSurfaceVectorOriented::makeEmbeddedConstraints(
         const NTriangulation* triangulation) {
     // TODO: Must be a neater way of doing this, but might mean re-working
     // bitmasks.
-    NEnumConstraintList* ans = new NEnumConstraintList(
+    EnumConstraints* ans = new EnumConstraints(
         8 * triangulation->size());
 
     unsigned base = 0;
