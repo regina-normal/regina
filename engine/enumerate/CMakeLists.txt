@@ -5,7 +5,7 @@ SET ( FILES
   treeconstraint
   treelp
   treetraversal
-  ntypetrie
+  typetrie
   )
 
 # Prepend folder name
