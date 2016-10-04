@@ -39,20 +39,20 @@
 #include "packetmanager.h"
 #include "reginamain.h"
 #include "reginasupport.h"
-#include "packettypes/dim2triui.h"
-#include "packettypes/dim4triui.h"
-#include "packettypes/generictriui.h"
-#include "packettypes/anglesui.h"
-#include "packettypes/containerui.h"
-#include "packettypes/nhypersurfaceui.h"
-#include "packettypes/nnormalsurfaceui.h"
-#include "packettypes/pdfui.h"
-#include "packettypes/scriptui.h"
-#include "packettypes/nsnappeaui.h"
-#include "packettypes/nsurfacefiltercomb.h"
-#include "packettypes/nsurfacefilterprop.h"
-#include "packettypes/textui.h"
-#include "packettypes/ntriangulationui.h"
+#include "packets/dim2triui.h"
+#include "packets/dim4triui.h"
+#include "packets/generictriui.h"
+#include "packets/anglesui.h"
+#include "packets/containerui.h"
+#include "packets/nhypersurfaceui.h"
+#include "packets/nnormalsurfaceui.h"
+#include "packets/pdfui.h"
+#include "packets/scriptui.h"
+#include "packets/snappeaui.h"
+#include "packets/nsurfacefiltercomb.h"
+#include "packets/nsurfacefilterprop.h"
+#include "packets/textui.h"
+#include "packets/ntriangulationui.h"
 
 #include <QPlainTextEdit>
 
@@ -160,7 +160,7 @@ PacketUI* PacketManager::createUI(regina::Packet* packet,
                 dynamic_cast<Dim4Triangulation*>(packet), enclosingPane);
         case PACKET_NORMALSURFACELIST:
             return new NNormalSurfaceUI(
-                dynamic_cast<NNormalSurfaceList*>(packet), enclosingPane);
+                dynamic_cast<NormalSurfaces*>(packet), enclosingPane);
         case PACKET_NORMALHYPERSURFACELIST:
             return new NHyperSurfaceUI(
                 dynamic_cast<NNormalHypersurfaceList*>(packet), enclosingPane);
@@ -168,8 +168,8 @@ PacketUI* PacketManager::createUI(regina::Packet* packet,
             return new ScriptUI(
                 dynamic_cast<Script*>(packet), enclosingPane);
         case PACKET_SNAPPEATRIANGULATION:
-            return new NSnapPeaUI(
-                dynamic_cast<NSnapPeaTriangulation*>(packet), enclosingPane);
+            return new SnapPeaUI(
+                dynamic_cast<SnapPeaTriangulation*>(packet), enclosingPane);
         case PACKET_SURFACEFILTER:
             switch (((NSurfaceFilter*)packet)->filterType()) {
                 case NS_FILTER_COMBINATION:

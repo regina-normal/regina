@@ -31,8 +31,8 @@
  **************************************************************************/
 
 #include "angle/anglestructures.h"
-#include "enumerate/ndoubledescription.h"
-#include "enumerate/ntreetraversal.h"
+#include "enumerate/doubledescription.h"
+#include "enumerate/treetraversal.h"
 #include "maths/nmatrixint.h"
 #include "progress/progresstracker.h"
 #include "surfaces/nnormalsurface.h"
@@ -56,7 +56,7 @@ void AngleStructures::enumerateInternal(NTriangulation* triang,
         if (tracker)
             tracker->newStage("Enumerating taut angle structures");
 
-        NTautEnumeration<LPConstraintNone, BanNone, NInteger> search(triang);
+        TautEnumeration<LPConstraintNone, BanNone, NInteger> search(triang);
         while (search.next(tracker)) {
             structures.push_back(search.buildStructure());
             if (tracker && tracker->isCancelled())
@@ -79,7 +79,7 @@ void AngleStructures::enumerateInternal(NTriangulation* triang,
             tracker->newStage("Enumerating vertex angle structures");
 
         // Find the angle structures.
-        NDoubleDescription::enumerateExtremalRays<AngleStructureVector>(
+        DoubleDescription::enumerateExtremalRays<AngleStructureVector>(
             StructureInserter(*this, triang), *eqns, 0 /* constraints */,
             tracker);
 
@@ -114,7 +114,7 @@ AngleStructures* AngleStructures::enumerateTautDD(
     NMatrixInt* eqns = AngleStructureVector::makeAngleEquations(owner);
 
     // Form the taut constraints.
-    NEnumConstraintList* constraints = new NEnumConstraintList(owner->size());
+    EnumConstraints* constraints = new EnumConstraints(owner->size());
 
     unsigned base = 0;
     for (unsigned c = 0; c < constraints->size(); ++c) {
@@ -124,7 +124,7 @@ AngleStructures* AngleStructures::enumerateTautDD(
     }
 
     // Find the angle structures.
-    NDoubleDescription::enumerateExtremalRays<AngleStructureVector>(
+    DoubleDescription::enumerateExtremalRays<AngleStructureVector>(
         StructureInserter(*ans, owner), *eqns, constraints, 0 /* tracker */);
 
     // All done!

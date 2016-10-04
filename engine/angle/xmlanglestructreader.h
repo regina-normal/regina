@@ -55,7 +55,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class REGINA_API XMLAngleStructureReader : public NXMLElementReader {
+class REGINA_API XMLAngleStructureReader : public XMLElementReader {
     private:
         AngleStructure* angles;
             /**< The angle structure currently being read. */
@@ -82,9 +82,9 @@ class REGINA_API XMLAngleStructureReader : public NXMLElementReader {
 
         virtual void startElement(const std::string& tagName,
             const regina::xml::XMLPropertyDict& tagProps,
-            NXMLElementReader* parentReader);
+            XMLElementReader* parentReader);
         virtual void initialChars(const std::string& chars);
-        virtual NXMLElementReader* startSubElement(
+        virtual XMLElementReader* startSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps);
 };
@@ -118,11 +118,11 @@ class REGINA_API XMLAngleStructuresReader : public XMLPacketReader {
             XMLTreeResolver& resolver);
 
         virtual Packet* packet() override;
-        virtual NXMLElementReader* startContentSubElement(
+        virtual XMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
         virtual void endContentSubElement(const std::string& subTagName,
-            NXMLElementReader* subReader) override;
+            XMLElementReader* subReader) override;
 };
 
 /*@}*/

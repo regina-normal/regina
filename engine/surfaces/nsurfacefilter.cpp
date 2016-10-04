@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "surfaces/nsurfacefilter.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 #include "surfaces/filterregistry.h"
 #include "utilities/xmlutils.h"
 

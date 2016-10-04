@@ -33,11 +33,11 @@
 #include <list>
 #include <sstream>
 
-#include "enumerate/ntreetraversal.h"
+#include "enumerate/treetraversal.h"
 #include "packet/container.h"
 #include "subcomplex/nsnappedball.h"
 #include "surfaces/nnormalsurface.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 #include "triangulation/nboundarycomponent.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
@@ -808,7 +808,7 @@ bool NTriangulation::hasCompressingDisc() const {
                     // Fall back to a full vertex enumeration.
                     // This mirrors the code for non-orientable
                     // triangulations; see that later block for details.
-                    NNormalSurfaceList* q = NNormalSurfaceList::enumerate(
+                    NormalSurfaces* q = NormalSurfaces::enumerate(
                         use, NS_STANDARD);
 
                     unsigned long nSurfaces = q->size();
@@ -825,7 +825,7 @@ bool NTriangulation::hasCompressingDisc() const {
                 }
             }
 
-            NTreeSingleSoln<LPConstraintEuler> search(use, NS_STANDARD);
+            TreeSingleSoln<LPConstraintEuler> search(use, NS_STANDARD);
             if (! search.find()) {
                 // No compressing discs!
                 delete use;
@@ -868,7 +868,7 @@ bool NTriangulation::hasCompressingDisc() const {
         // use standard coordinates.  Jaco, Letscher and Rubinstein mention
         // quad space, but don't give details (which I'd prefer to see).
         // Leave it in standard coordinates for now.
-        NNormalSurfaceList* q = NNormalSurfaceList::enumerate(use, NS_STANDARD);
+        NormalSurfaces* q = NormalSurfaces::enumerate(use, NS_STANDARD);
 
         // Run through all vertex surfaces looking for a compressing disc.
         unsigned long nSurfaces = q->size();
@@ -1094,7 +1094,7 @@ bool NTriangulation::isHaken() const {
 
     // Enumerate vertex normal surfaces in quad coordinates.
     // std::cout << "Enumerating surfaces..." << std::endl;
-    NNormalSurfaceList* list = NNormalSurfaceList::enumerate(&t, NS_QUAD);
+    NormalSurfaces* list = NormalSurfaces::enumerate(&t, NS_QUAD);
 
     // Run through each surface, one at a time.
     // Sort them first however, so we process the (easier) smaller genus

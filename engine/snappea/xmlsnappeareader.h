@@ -41,7 +41,7 @@
 
 #include "regina-core.h"
 #include "packet/xmlpacketreader.h"
-#include "snappea/nsnappeatriangulation.h"
+#include "snappea/snappeatriangulation.h"
 
 namespace regina {
 
@@ -57,7 +57,7 @@ namespace regina {
  */
 class REGINA_API XMLSnapPeaReader : public XMLPacketReader {
     private:
-        NSnapPeaTriangulation* snappea_;
+        SnapPeaTriangulation* snappea_;
             /**< The SnapPea triangulation currently being read. */
 
     public:
@@ -70,11 +70,11 @@ class REGINA_API XMLSnapPeaReader : public XMLPacketReader {
         XMLSnapPeaReader(XMLTreeResolver& resolver);
 
         virtual Packet* packet() override;
-        virtual NXMLElementReader* startContentSubElement(
+        virtual XMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
         virtual void endContentSubElement(const std::string& subTagName,
-            NXMLElementReader* subReader) override;
+            XMLElementReader* subReader) override;
 };
 
 /*@}*/
@@ -82,19 +82,19 @@ class REGINA_API XMLSnapPeaReader : public XMLPacketReader {
 // Inline functions for XMLSnapPeaReader
 
 inline XMLSnapPeaReader::XMLSnapPeaReader(XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), snappea_(new NSnapPeaTriangulation()) {
+        XMLPacketReader(resolver), snappea_(new SnapPeaTriangulation()) {
 }
 
 inline Packet* XMLSnapPeaReader::packet() {
     return snappea_;
 }
 
-inline NXMLElementReader* XMLSnapPeaReader::startContentSubElement(
+inline XMLElementReader* XMLSnapPeaReader::startContentSubElement(
         const std::string& subTagName, const regina::xml::XMLPropertyDict&) {
     if (subTagName == "snappea")
-        return new NXMLCharsReader();
+        return new XMLCharsReader();
     else
-        return new NXMLElementReader();
+        return new XMLElementReader();
 }
 
 } // namespace regina

@@ -43,7 +43,7 @@
 #include "regina-core.h"
 #include "subcomplex/nsatblock.h"
 #include "triangulation/ntriangulation.h"
-#include "utilities/nlistoncall.h"
+#include "utilities/listoncall.h"
 
 namespace regina {
 
@@ -139,14 +139,14 @@ class REGINA_API NSatBlockStarter : boost::noncopyable {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NSatBlockStarterSet : private NListOnCall<NSatBlockStarter> {
+class REGINA_API NSatBlockStarterSet : private ListOnCall<NSatBlockStarter> {
     public:
         /**
          * An iterator over the starter blocks in this list.  This operates
          * as a forward iterator in a manner consistent with the standard C++
          * library.
          */
-        typedef NListOnCall<NSatBlockStarter>::iterator iterator;
+        typedef ListOnCall<NSatBlockStarter>::iterator iterator;
 
     private:
         static const NSatBlockStarterSet blocks;
@@ -330,11 +330,11 @@ inline NSatBlockStarterSet::NSatBlockStarterSet() {
 }
 
 inline NSatBlockStarterSet::iterator NSatBlockStarterSet::begin() {
-    return blocks.NListOnCall<NSatBlockStarter>::begin();
+    return blocks.ListOnCall<NSatBlockStarter>::begin();
 }
 
 inline NSatBlockStarterSet::iterator NSatBlockStarterSet::end() {
-    return blocks.NListOnCall<NSatBlockStarter>::end();
+    return blocks.ListOnCall<NSatBlockStarter>::end();
 }
 
 // Inline functions for NSatBlockStarterSearcher

@@ -39,7 +39,7 @@ namespace regina {
 
 void XMLAngleStructureReader::startElement(const std::string&,
         const regina::xml::XMLPropertyDict& props,
-        NXMLElementReader*) {
+        XMLElementReader*) {
     if (! valueOf(props.lookup("len"), vecLen))
         vecLen = -1;
 }
@@ -74,11 +74,11 @@ void XMLAngleStructureReader::initialChars(const std::string& chars) {
     angles = new AngleStructure(tri, vec);
 }
 
-NXMLElementReader* XMLAngleStructureReader::startSubElement(
+XMLElementReader* XMLAngleStructureReader::startSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
     if (! angles)
-        return new NXMLElementReader();
+        return new XMLElementReader();
 
     /** Flags in data files are deprecated as of Regina 4.93.
     if (subTagName == "flags") {
@@ -86,10 +86,10 @@ NXMLElementReader* XMLAngleStructureReader::startSubElement(
             angles->flags = 0;
     }
     */
-    return new NXMLElementReader();
+    return new XMLElementReader();
 }
 
-NXMLElementReader* XMLAngleStructuresReader::startContentSubElement(
+XMLElementReader* XMLAngleStructuresReader::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
     bool b;
@@ -111,12 +111,12 @@ NXMLElementReader* XMLAngleStructuresReader::startContentSubElement(
         if (valueOf(props.lookup("value"), b))
             list->doesSpanTaut = b;
     }
-    return new NXMLElementReader();
+    return new XMLElementReader();
 }
 
 void XMLAngleStructuresReader::endContentSubElement(
         const std::string& subTagName,
-        NXMLElementReader* subReader) {
+        XMLElementReader* subReader) {
     if (subTagName == "struct")
         if (AngleStructure* s =
                 dynamic_cast<XMLAngleStructureReader*>(subReader)->structure())

@@ -32,9 +32,9 @@
 
 #include <algorithm>
 #include "maths/nmatrixint.h"
-#include "snappea/nsnappeatriangulation.h"
+#include "snappea/snappeatriangulation.h"
 #include "surfaces/nnormalsurface.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/xmlutils.h"
 
@@ -428,8 +428,8 @@ void NNormalSurface::calculateRealBoundary() const {
 
 NMatrixInt* NNormalSurface::boundaryIntersections() const {
     // Make sure this is really a SnapPea triangulation.
-    const NSnapPeaTriangulation* snapPea =
-        dynamic_cast<const NSnapPeaTriangulation*>(triangulation());
+    const SnapPeaTriangulation* snapPea =
+        dynamic_cast<const SnapPeaTriangulation*>(triangulation());
     if (! snapPea)
         return 0;
 

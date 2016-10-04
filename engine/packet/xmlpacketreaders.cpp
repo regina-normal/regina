@@ -45,14 +45,14 @@ namespace {
     /**
      * Reads a single script variable and its value.
      */
-    class ScriptVarReader : public NXMLElementReader {
+    class ScriptVarReader : public XMLElementReader {
         private:
             std::string name, valueID, valueLabel;
 
         public:
             inline void startElement(const std::string& /* tagName */,
                     const regina::xml::XMLPropertyDict& props,
-                    NXMLElementReader*) {
+                    XMLElementReader*) {
                 name = props.lookup("name");
                 valueID = props.lookup("valueid");
                 valueLabel = props.lookup("value");
@@ -108,18 +108,18 @@ namespace {
     };
 }
 
-NXMLElementReader* XMLPDFReader::startContentSubElement(
+XMLElementReader* XMLPDFReader::startContentSubElement(
         const std::string& subTagName, const regina::xml::XMLPropertyDict&) {
     if (subTagName == "pdf")
-        return new NXMLCharsReader();
+        return new XMLCharsReader();
     else
-        return new NXMLElementReader();
+        return new XMLElementReader();
 }
 
 void XMLPDFReader::endContentSubElement(const std::string& subTagName,
-        NXMLElementReader* subReader) {
+        XMLElementReader* subReader) {
     if (subTagName == "pdf") {
-        std::string base64 = dynamic_cast<NXMLCharsReader*>(subReader)->
+        std::string base64 = dynamic_cast<XMLCharsReader*>(subReader)->
             chars();
 
         // Strip out whitespace.
@@ -153,25 +153,25 @@ void XMLPDFReader::endContentSubElement(const std::string& subTagName,
     }
 }
 
-NXMLElementReader* XMLScriptReader::startContentSubElement(
+XMLElementReader* XMLScriptReader::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict&) {
     if (subTagName == "text")
-        return new NXMLCharsReader();
+        return new XMLCharsReader();
     else if (subTagName == "line") // Old-style
-        return new NXMLCharsReader();
+        return new XMLCharsReader();
     else if (subTagName == "var")
         return new ScriptVarReader();
     else
-        return new NXMLElementReader();
+        return new XMLElementReader();
 }
 
 void XMLScriptReader::endContentSubElement(const std::string& subTagName,
-        NXMLElementReader* subReader) {
+        XMLElementReader* subReader) {
     if (subTagName == "text")
-        script->setText(dynamic_cast<NXMLCharsReader*>(subReader)->chars());
+        script->setText(dynamic_cast<XMLCharsReader*>(subReader)->chars());
     else if (subTagName == "line") { // Old-style
-        script->append(dynamic_cast<NXMLCharsReader*>(subReader)->chars());
+        script->append(dynamic_cast<XMLCharsReader*>(subReader)->chars());
         script->append("\n");
     } else if (subTagName == "var") {
         ScriptVarReader* var = dynamic_cast<ScriptVarReader*>(subReader);

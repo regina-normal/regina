@@ -80,7 +80,7 @@ if i18nNew != None:
 
 # Import a triangulation from SnapPea that uses a subscript character in
 # the triangulation name.
-subscriptImport = NSnapPeaTriangulation(testpath + '/O2_1.tri')
+subscriptImport = SnapPeaTriangulation(testpath + '/O2_1.tri')
 if subscriptImport != None:
 	print subscriptImport.label()
 

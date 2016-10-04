@@ -30,9 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-#include "enumerate/ntreetraversal.h"
+#include "enumerate/treetraversal.h"
 #include "triangulation/ntriangulation.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 
 namespace regina {
 
@@ -80,7 +80,7 @@ NNormalSurface* NTriangulation::hasNonTrivialSphereOrDisc() {
     // Use combinatorial optimisation if we can.
     if (isValid() && countVertices() == 1) {
         // For now, just use the safe arbitrary-precision NInteger type.
-        NTreeSingleSoln<LPConstraintEuler> tree(this, NS_STANDARD);
+        TreeSingleSoln<LPConstraintEuler> tree(this, NS_STANDARD);
         if (tree.find()) {
             NNormalSurface* s = tree.buildSurface();
             if (! ((! s->hasRealBoundary()) &&
@@ -97,7 +97,7 @@ NNormalSurface* NTriangulation::hasNonTrivialSphereOrDisc() {
     // For valid, non-ideal triangulations we can do this in quad
     // coordinates (where a non-trivial sphere or disc is guaranteed to
     // appear as a vertex surface).  Otherwise fall back to standard coords.
-    NNormalSurfaceList* surfaces = NNormalSurfaceList::enumerate(this,
+    NormalSurfaces* surfaces = NormalSurfaces::enumerate(this,
         (isValid() && ! isIdeal()) ? NS_QUAD : NS_STANDARD);
     const NNormalSurface* s;
     NNormalSurface* ans = 0;
@@ -143,7 +143,7 @@ NNormalSurface* NTriangulation::hasOctagonalAlmostNormalSphere() {
     // ones we need to be more fussy about.
     if (countVertices() == 1) {
         // For now, just use the safe arbitrary-precision NInteger type.
-        NTreeSingleSoln<LPConstraintEuler> tree(this, NS_AN_STANDARD);
+        TreeSingleSoln<LPConstraintEuler> tree(this, NS_AN_STANDARD);
         if (tree.find()) {
             // Since our preconditions ensure the triangulation is
             // closed, orientable and 0-efficient, there are no
@@ -162,7 +162,7 @@ NNormalSurface* NTriangulation::hasOctagonalAlmostNormalSphere() {
     // Given our preconditions, we can do this in quadrilateral-octagon
     // coordinates; for details see "Quadrilateral-octagon coordinates for
     // almost normal surfaces", B.B., Experiment. Math. 19 (2010), 285-315.
-    NNormalSurfaceList* surfaces = NNormalSurfaceList::enumerate(this,
+    NormalSurfaces* surfaces = NormalSurfaces::enumerate(this,
         NS_AN_QUAD_OCT);
 
     // Our vertex surfaces are guaranteed to be in smallest possible
@@ -247,7 +247,7 @@ bool NTriangulation::hasSplittingSurface() {
     // Work on a clone of this triangulation so we don't trigger any
     // changes to the packet tree.
     NTriangulation working(*this);
-    NNormalSurfaceList* surfaces = NNormalSurfaceList::enumerate(&working,
+    NormalSurfaces* surfaces = NormalSurfaces::enumerate(&working,
         NS_STANDARD);
 
     // Run through all vertex surfaces.

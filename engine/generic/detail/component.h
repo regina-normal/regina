@@ -43,7 +43,7 @@
 #include "regina-core.h"
 #include "output.h"
 #include "generic/alias/simplex.h"
-#include "utilities/nmarkedvector.h"
+#include "utilities/markedvector.h"
 #include <boost/noncopyable.hpp>
 
 namespace regina {
@@ -82,7 +82,7 @@ class ComponentBase :
         public alias::Simplices<ComponentBase<dim>, dim>,
         public alias::SimplexAt<ComponentBase<dim>, dim, false>,
         public boost::noncopyable,
-        public NMarkedElement {
+        public MarkedElement {
     private:
         std::vector<Simplex<dim>*> simplices_;
             /**< List of triangles in the component. */

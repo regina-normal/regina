@@ -40,7 +40,7 @@ namespace regina {
 
 void NXMLNormalHypersurfaceReader::startElement(const std::string&,
         const regina::xml::XMLPropertyDict& props,
-        NXMLElementReader*) {
+        XMLElementReader*) {
     if (! valueOf(props.lookup("len"), vecLen_))
         vecLen_ = -1;
     name_ = props.lookup("name");
@@ -82,11 +82,11 @@ void NXMLNormalHypersurfaceReader::initialChars(const std::string& chars) {
         surface_->setName(name_);
 }
 
-NXMLElementReader* NXMLNormalHypersurfaceReader::startSubElement(
+XMLElementReader* NXMLNormalHypersurfaceReader::startSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
     if (! surface_)
-        return new NXMLElementReader();
+        return new XMLElementReader();
 
     if (subTagName == "realbdry") {
         bool val;
@@ -97,10 +97,10 @@ NXMLElementReader* NXMLNormalHypersurfaceReader::startSubElement(
         if (valueOf(props.lookup("value"), val))
             surface_->compact_ = val;
     }
-    return new NXMLElementReader();
+    return new XMLElementReader();
 }
 
-NXMLElementReader* NXMLNormalHypersurfaceListReader::startContentSubElement(
+XMLElementReader* NXMLNormalHypersurfaceListReader::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
     if (list_) {
@@ -132,12 +132,12 @@ NXMLElementReader* NXMLNormalHypersurfaceListReader::startContentSubElement(
             }
         }
     }
-    return new NXMLElementReader();
+    return new XMLElementReader();
 }
 
 void NXMLNormalHypersurfaceListReader::endContentSubElement(
         const std::string& subTagName,
-        NXMLElementReader* subReader) {
+        XMLElementReader* subReader) {
     if (list_)
         if (subTagName == "hypersurface")
             if (NNormalHypersurface* s =

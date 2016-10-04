@@ -95,7 +95,7 @@ struct XMLTriangulationTags {
  * \tparam dim The dimension of the triangulation being read.
  */
 template <int dim>
-class XMLSimplexReader : public NXMLElementReader {
+class XMLSimplexReader : public XMLElementReader {
     private:
         Triangulation<dim>* tri_;
             /**< The triangulation containing the simplices being read. */
@@ -116,7 +116,7 @@ class XMLSimplexReader : public NXMLElementReader {
         XMLSimplexReader(Triangulation<dim>* tri, size_t whichSimplex);
 
         virtual void startElement(const std::string&,
-                const regina::xml::XMLPropertyDict& props, NXMLElementReader*);
+                const regina::xml::XMLPropertyDict& props, XMLElementReader*);
 
         virtual void initialChars(const std::string& chars);
 };
@@ -137,7 +137,7 @@ class XMLSimplexReader : public NXMLElementReader {
  * \tparam dim The dimension of the triangulation being read.
  */
 template <int dim>
-class XMLSimplicesReader : public NXMLElementReader {
+class XMLSimplicesReader : public XMLElementReader {
     private:
         Triangulation<dim>* tri_;
             /**< The triangulation to contain the simplices being read. */
@@ -158,9 +158,9 @@ class XMLSimplicesReader : public NXMLElementReader {
         XMLSimplicesReader(Triangulation<dim>* tri);
 
         virtual void startElement(const std::string&,
-                const regina::xml::XMLPropertyDict& props, NXMLElementReader*);
+                const regina::xml::XMLPropertyDict& props, XMLElementReader*);
 
-        virtual NXMLElementReader* startSubElement(
+        virtual XMLElementReader* startSubElement(
                 const std::string& subTagName,
                 const regina::xml::XMLPropertyDict&);
 };
@@ -194,11 +194,11 @@ class XMLTriangulationReaderBase : public XMLPacketReader {
         XMLTriangulationReaderBase(XMLTreeResolver& resolver);
 
         virtual Packet* packet() override;
-        virtual NXMLElementReader* startContentSubElement(
+        virtual XMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
         virtual void endContentSubElement(const std::string& subTagName,
-            NXMLElementReader* subReader) override;
+            XMLElementReader* subReader) override;
 };
 
 /*@}*/
@@ -270,7 +270,7 @@ inline XMLSimplexReader<dim>::XMLSimplexReader(
 
 template <int dim>
 inline void XMLSimplexReader<dim>::startElement(const std::string&,
-        const regina::xml::XMLPropertyDict& props, NXMLElementReader*) {
+        const regina::xml::XMLPropertyDict& props, XMLElementReader*) {
     simplex_->setDescription(props.lookup("desc"));
 }
 
@@ -319,7 +319,7 @@ inline XMLSimplicesReader<dim>::XMLSimplicesReader(Triangulation<dim>* tri) :
 
 template <int dim>
 void XMLSimplicesReader<dim>::startElement(const std::string& /* tagName */,
-        const regina::xml::XMLPropertyDict& props, NXMLElementReader*) {
+        const regina::xml::XMLPropertyDict& props, XMLElementReader*) {
     long nSimplices;
     if (valueOf(props.lookup(XMLTriangulationTags<dim>::size()), nSimplices))
         for ( ; nSimplices > 0; --nSimplices)
@@ -327,16 +327,16 @@ void XMLSimplicesReader<dim>::startElement(const std::string& /* tagName */,
 }
 
 template <int dim>
-NXMLElementReader* XMLSimplicesReader<dim>::startSubElement(
+XMLElementReader* XMLSimplicesReader<dim>::startSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict&) {
     if (subTagName == XMLTriangulationTags<dim>::simplex()) {
         if (readSimplices_ < tri_->size())
             return new XMLSimplexReader<dim>(tri_, readSimplices_++);
         else
-            return new NXMLElementReader();
+            return new XMLElementReader();
     } else
-        return new NXMLElementReader();
+        return new XMLElementReader();
 }
 
 // Inline functions for XMLTriangulationReaderBase
@@ -353,7 +353,7 @@ inline Packet* XMLTriangulationReaderBase<dim>::packet() {
 }
 
 template <int dim>
-NXMLElementReader* XMLTriangulationReaderBase<dim>::startContentSubElement(
+XMLElementReader* XMLTriangulationReaderBase<dim>::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& subTagProps) {
     if (subTagName == XMLTriangulationTags<dim>::simplices())
@@ -364,7 +364,7 @@ NXMLElementReader* XMLTriangulationReaderBase<dim>::startContentSubElement(
 
 template <int dim>
 inline void XMLTriangulationReaderBase<dim>::endContentSubElement(
-        const std::string&, NXMLElementReader*) {
+        const std::string&, XMLElementReader*) {
 }
 
 } } // namespace regina::detail

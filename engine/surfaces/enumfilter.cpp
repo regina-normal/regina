@@ -31,18 +31,18 @@
  **************************************************************************/
 
 #include <vector>
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
 
-NNormalSurfaceList* NNormalSurfaceList::filterForLocallyCompatiblePairs()
+NormalSurfaces* NormalSurfaces::filterForLocallyCompatiblePairs()
         const {
     // Sanity check:
     if (! isEmbeddedOnly())
         return 0;
 
-    NNormalSurfaceList* ans = new NNormalSurfaceList(
+    NormalSurfaces* ans = new NormalSurfaces(
         coords_, NS_CUSTOM | NS_EMBEDDED_ONLY, NS_ALG_CUSTOM);
 
     // Find all surfaces that have a compatible partner.
@@ -64,12 +64,12 @@ NNormalSurfaceList* NNormalSurfaceList::filterForLocallyCompatiblePairs()
     return ans;
 }
 
-NNormalSurfaceList* NNormalSurfaceList::filterForDisjointPairs() const {
+NormalSurfaces* NormalSurfaces::filterForDisjointPairs() const {
     // Sanity check:
     if (! isEmbeddedOnly())
         return 0;
 
-    NNormalSurfaceList* ans = new NNormalSurfaceList(
+    NormalSurfaces* ans = new NormalSurfaces(
         coords_, NS_CUSTOM | NS_EMBEDDED_ONLY, NS_ALG_CUSTOM);
 
     // Collect all the surfaces that we might care about.
@@ -106,13 +106,13 @@ NNormalSurfaceList* NNormalSurfaceList::filterForDisjointPairs() const {
     return ans;
 }
 
-NNormalSurfaceList* NNormalSurfaceList::filterForPotentiallyIncompressible()
+NormalSurfaces* NormalSurfaces::filterForPotentiallyIncompressible()
         const {
     // Sanity check:
     if (! isEmbeddedOnly())
         return 0;
 
-    NNormalSurfaceList* ans = new NNormalSurfaceList(
+    NormalSurfaces* ans = new NormalSurfaces(
         coords_, NS_CUSTOM | NS_EMBEDDED_ONLY, NS_ALG_CUSTOM);
 
     NTriangulation* t;

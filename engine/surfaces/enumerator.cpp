@@ -32,16 +32,16 @@
 
 #include <iterator>
 #include <thread>
-#include "enumerate/ndoubledescription.h"
-#include "enumerate/nhilbertcd.h"
-#include "enumerate/nhilbertdual.h"
-#include "enumerate/nhilbertprimal.h"
-#include "enumerate/ntreetraversal.h"
+#include "enumerate/doubledescription.h"
+#include "enumerate/hilbertcd.h"
+#include "enumerate/hilbertdual.h"
+#include "enumerate/hilbertprimal.h"
+#include "enumerate/treetraversal.h"
 #include "maths/matrixops.h"
 #include "maths/nmatrixint.h"
 #include "progress/progresstracker.h"
 #include "surfaces/coordregistry.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
@@ -53,11 +53,11 @@ namespace regina {
 NInteger maxSigned128(NNativeInteger<16>(~(IntOfSize<16>::type(1) << 127)));
 #endif
 
-NNormalSurfaceList* NNormalSurfaceList::enumerate(
+NormalSurfaces* NormalSurfaces::enumerate(
         NTriangulation* owner, NormalCoords coords,
         NormalList which, NormalAlg algHints,
         ProgressTracker* tracker) {
-    NNormalSurfaceList* list = new NNormalSurfaceList(
+    NormalSurfaces* list = new NormalSurfaces(
         coords, which, algHints);
 
     if (tracker)
@@ -69,7 +69,7 @@ NNormalSurfaceList* NNormalSurfaceList::enumerate(
 }
 
 template <typename Coords>
-void NNormalSurfaceList::Enumerator::operator() () {
+void NormalSurfaces::Enumerator::operator() () {
     // Clean up the "type of list" flag.
     list_->which_ &= (
         NS_EMBEDDED_ONLY | NS_IMMERSED_SINGULAR | NS_VERTEX | NS_FUNDAMENTAL);
@@ -92,7 +92,7 @@ void NNormalSurfaceList::Enumerator::operator() () {
 }
 
 template <typename Coords>
-void NNormalSurfaceList::Enumerator::fillVertex() {
+void NormalSurfaces::Enumerator::fillVertex() {
     // ----- Decide which algorithm to use -----
 
     // Here we will set the algorithm_ flag to precisely what we plan to do.
@@ -136,11 +136,11 @@ void NNormalSurfaceList::Enumerator::fillVertex() {
 
     // Check whether tree traversal supports our enumeration arguments.
     // If not, switch back to double description.
-    // The integer template argument for NTreeTraversal::supported()
+    // The integer template argument for TreeTraversal::supported()
     // is unimportant here; we just use NInteger.
     if (list_->algorithm_.has(NS_VERTEX_TREE) &&
             ! (list_->which_.has(NS_EMBEDDED_ONLY) &&
-                NTreeTraversal<LPConstraintNone, BanNone, NInteger>::supported(
+                TreeTraversal<LPConstraintNone, BanNone, NInteger>::supported(
                 list_->coords_)))
         list_->algorithm_ ^= (NS_VERTEX_TREE | NS_VERTEX_DD);
 
@@ -173,7 +173,7 @@ void NNormalSurfaceList::Enumerator::fillVertex() {
         // for other, unsupported coordinate systems.
 
         // Enumerate in reduced (quad / quad-oct) form.
-        Enumerator e(new NNormalSurfaceList(
+        Enumerator e(new NormalSurfaces(
                 (list_->coords_ == NS_STANDARD ? NS_QUAD : NS_AN_QUAD_OCT),
                 list_->which_, list_->algorithm_ ^ NS_VERTEX_VIA_REDUCED),
             triang_, tracker_);
@@ -210,13 +210,13 @@ void NNormalSurfaceList::Enumerator::fillVertex() {
 }
 
 template <typename Coords>
-void NNormalSurfaceList::Enumerator::fillVertexDD() {
+void NormalSurfaces::Enumerator::fillVertexDD() {
     NMatrixInt* eqns = makeMatchingEquations(triang_, list_->coords_);
 
-    NEnumConstraintList* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
+    EnumConstraints* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
         makeEmbeddedConstraints(triang_, list_->coords_) : 0);
 
-    NDoubleDescription::enumerateExtremalRays<typename Coords::Class>(
+    DoubleDescription::enumerateExtremalRays<typename Coords::Class>(
         SurfaceInserter(*list_, triang_), *eqns, constraints, tracker_);
 
     delete constraints;
@@ -224,7 +224,7 @@ void NNormalSurfaceList::Enumerator::fillVertexDD() {
 }
 
 template <typename Coords>
-void NNormalSurfaceList::Enumerator::fillVertexTree() {
+void NormalSurfaces::Enumerator::fillVertexTree() {
     // We can always do this with the arbitrary-precision NInteger,
     // but it will be much faster if we can get away with native
     // integers instead.  To do this, though, we need to be able to
@@ -232,7 +232,7 @@ void NNormalSurfaceList::Enumerator::fillVertexTree() {
     // algorithm are sufficiently small in magnitude.
     //
     // Here we compute an upper bound on the magnitude of the integers that
-    // could appear in a vanilla NTreeEnumeration<LPConstraintNone, BanNone>
+    // could appear in a vanilla TreeEnumeration<LPConstraintNone, BanNone>
     // algorithm.  For details on how these arguments work, see
     // section 4 of the tree traversal algorithm paper (Burton & Ozlen,
     // Algorithmica, 2013).
@@ -382,8 +382,8 @@ void NNormalSurfaceList::Enumerator::fillVertexTree() {
 }
 
 template <typename Coords, typename Integer>
-void NNormalSurfaceList::Enumerator::fillVertexTreeWith() {
-    NTreeEnumeration<LPConstraintNone, BanNone, Integer> search(
+void NormalSurfaces::Enumerator::fillVertexTreeWith() {
+    TreeEnumeration<LPConstraintNone, BanNone, Integer> search(
         triang_, list_->coords_);
     while (search.next(tracker_)) {
         list_->surfaces.push_back(search.buildSurface());
@@ -393,7 +393,7 @@ void NNormalSurfaceList::Enumerator::fillVertexTreeWith() {
 }
 
 template <typename Coords>
-void NNormalSurfaceList::Enumerator::fillFundamental() {
+void NormalSurfaces::Enumerator::fillFundamental() {
     // Get the empty triangulation out of the way separately.
     if (triang_->isEmpty()) {
         list_->algorithm_ = NS_HILBERT_DUAL; /* shrug */
@@ -425,7 +425,7 @@ void NNormalSurfaceList::Enumerator::fillFundamental() {
 }
 
 template <typename Coords>
-void NNormalSurfaceList::Enumerator::fillFundamentalDual() {
+void NormalSurfaces::Enumerator::fillFundamentalDual() {
     list_->algorithm_ = NS_HILBERT_DUAL;
 
     if (tracker_)
@@ -433,10 +433,10 @@ void NNormalSurfaceList::Enumerator::fillFundamentalDual() {
 
     NMatrixInt* eqns = makeMatchingEquations(triang_, list_->coords_);
 
-    NEnumConstraintList* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
+    EnumConstraints* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
         makeEmbeddedConstraints(triang_, list_->coords_) : 0);
 
-    NHilbertDual::enumerateHilbertBasis<typename Coords::Class>(
+    HilbertDual::enumerateHilbertBasis<typename Coords::Class>(
         SurfaceInserter(*list_, triang_), *eqns, constraints, tracker_);
 
     delete constraints;
@@ -444,7 +444,7 @@ void NNormalSurfaceList::Enumerator::fillFundamentalDual() {
 }
 
 template <typename Coords>
-void NNormalSurfaceList::Enumerator::fillFundamentalCD() {
+void NormalSurfaces::Enumerator::fillFundamentalCD() {
     list_->algorithm_ = NS_HILBERT_CD;
 
     if (tracker_)
@@ -453,10 +453,10 @@ void NNormalSurfaceList::Enumerator::fillFundamentalCD() {
 
     NMatrixInt* eqns = makeMatchingEquations(triang_, list_->coords_);
 
-    NEnumConstraintList* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
+    EnumConstraints* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
         makeEmbeddedConstraints(triang_, list_->coords_) : 0);
 
-    NHilbertCD::enumerateHilbertBasis<typename Coords::Class>(
+    HilbertCD::enumerateHilbertBasis<typename Coords::Class>(
         SurfaceInserter(*list_, triang_), *eqns, constraints);
 
     delete constraints;
@@ -464,7 +464,7 @@ void NNormalSurfaceList::Enumerator::fillFundamentalCD() {
 }
 
 template <typename Coords>
-void NNormalSurfaceList::Enumerator::fillFundamentalPrimal() {
+void NormalSurfaces::Enumerator::fillFundamentalPrimal() {
     // We will not set algorithm_ until after the extremal ray
     // enumeration has finished (since we might want to pass additional flags
     // to and/or from that routine).
@@ -473,14 +473,14 @@ void NNormalSurfaceList::Enumerator::fillFundamentalPrimal() {
         tracker_->newStage("Initialising Hilbert basis enumeration", 0.1);
 
     // Fetch validity constraints from the registry.
-    NEnumConstraintList* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
+    EnumConstraints* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
         makeEmbeddedConstraints(triang_, list_->coords_) : 0);
 
     // Enumerate all vertex normal surfaces.
     if (tracker_)
         tracker_->newStage("Enumerating extremal rays", 0.4);
 
-    NNormalSurfaceList* vtx = new NNormalSurfaceList(list_->coords_,
+    NormalSurfaces* vtx = new NormalSurfaces(list_->coords_,
         NS_VERTEX | (list_->which_.has(NS_EMBEDDED_ONLY) ?
             NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
         list_->algorithm_ /* passes through any vertex enumeration flags */);
@@ -495,7 +495,7 @@ void NNormalSurfaceList::Enumerator::fillFundamentalPrimal() {
     if (tracker_)
         tracker_->newStage("Expanding to Hilbert basis", 0.5);
 
-    NHilbertPrimal::enumerateHilbertBasis<typename Coords::Class>(
+    HilbertPrimal::enumerateHilbertBasis<typename Coords::Class>(
         SurfaceInserter(*list_, triang_),
         vtx->beginVectors(), vtx->endVectors(), constraints, tracker_);
 
@@ -504,7 +504,7 @@ void NNormalSurfaceList::Enumerator::fillFundamentalPrimal() {
 }
 
 template <typename Coords>
-void NNormalSurfaceList::Enumerator::fillFundamentalFullCone() {
+void NormalSurfaces::Enumerator::fillFundamentalFullCone() {
     list_->algorithm_ = NS_HILBERT_FULLCONE;
 
     if (tracker_)
@@ -547,7 +547,7 @@ void NNormalSurfaceList::Enumerator::fillFundamentalFullCone() {
             tracker_->newStage("Extracting relevant solutions", 0.2);
 
         // Fetch validity constraints from the registry.
-        NEnumConstraintList* constraints =
+        EnumConstraints* constraints =
             (list_->which_.has(NS_EMBEDDED_ONLY) ?
             makeEmbeddedConstraints(triang_, list_->coords_) : 0);
 
@@ -555,7 +555,7 @@ void NNormalSurfaceList::Enumerator::fillFundamentalFullCone() {
         int nonZero;
         int i;
         std::vector<std::vector<mpz_class> >::const_iterator hlit;
-        NEnumConstraintList::const_iterator eit;
+        EnumConstraints::const_iterator eit;
         std::set<unsigned long>::const_iterator sit;
         NNormalSurfaceVector* v;
         NLargeInteger tmpInt;

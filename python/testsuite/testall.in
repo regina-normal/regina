@@ -97,7 +97,7 @@ for i in `find "$testdir" -name "*.test" | sort`; do
 	# Fedora, where (as a result of a more exotic TERM setting) unprintable
 	# characters were being dumped at the beginning of the python output.
 	#
-	TERM= "$executable" -n "$i" "$testdir" > "$testout" 2>&1 && dummy=
+	TERM= "$executable" "$i" "$testdir" > "$testout" 2>&1 && dummy=
 
 	# Catch exitcode.
 	exitcode=$?
@@ -107,7 +107,7 @@ for i in `find "$testdir" -name "*.test" | sort`; do
 		echo "FAILED (exit code $exitcode)"
 		if [ "$verbose" -eq 1 ]; then
 			echo "    Command was:"
-			echo "        " \""$executable"\" "-n" \""$i"\" \""$testdir"\" ">" \""$testout"\" "2>&1"
+			echo "        " \""$executable"\" \""$i"\" \""$testdir"\" ">" \""$testout"\" "2>&1"
 		fi
 		echo "    Output was:"
 		echo "        ..."

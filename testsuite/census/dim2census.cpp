@@ -37,7 +37,7 @@
 #include "packet/container.h"
 #include "testsuite/census/testcensus.h"
 
-using regina::NBoolSet;
+using regina::BoolSet;
 using regina::Dim2EdgePairing;
 using regina::Dim2GluingPermSearcher;
 using regina::Dim2Triangulation;
@@ -62,23 +62,23 @@ class Dim2CensusTest : public CppUnit::TestFixture {
             // All counts taken from an enumeration using Regina 4.94.
             unsigned nAll[] = { 1, 0, 7, 0, 51, 0, 738, 0, 20540, 0, 911677 };
             rawCountsCompare(1, 8, nAll, "closed",
-                NBoolSet::sBoth, NBoolSet::sFalse, 0, false);
+                BoolSet::sBoth, BoolSet::sFalse, 0, false);
 
             unsigned nOrientable[] = { 1, 0, 3, 0, 11, 0, 73, 0, 838, 0, 15840};
             rawCountsCompare(1, 10, nOrientable, "closed orbl",
-                NBoolSet::sTrue, NBoolSet::sFalse, 0, false);
+                BoolSet::sTrue, BoolSet::sFalse, 0, false);
         }
 
         void rawCountsBounded() {
             // All counts taken from an enumeration using Regina 4.94.
             unsigned nAll[] = { 1, 3, 6, 26, 105, 622, 3589, 28031, 202169 };
             rawCountsCompare(1, 7, nAll, "bounded",
-                NBoolSet::sBoth, NBoolSet::sTrue, -1, false);
+                BoolSet::sBoth, BoolSet::sTrue, -1, false);
 
             unsigned nOrientable[] =
                 { 1, 2, 4, 11, 41, 155, 750, 3967, 23260, 148885, 992299 };
             rawCountsCompare(1, 8, nOrientable, "bounded orbl",
-                NBoolSet::sTrue, NBoolSet::sTrue, -1, false);
+                BoolSet::sTrue, BoolSet::sTrue, -1, false);
         }
 
         void rawCountsClosedMinimal() {
@@ -86,21 +86,21 @@ class Dim2CensusTest : public CppUnit::TestFixture {
             unsigned nOrientable[] = { 1, 0, 3 /* sphere + torus */, 0, 0, 0,
                 8, 0, 0, 0, 927 };
             rawCountsCompare(1, 10, nOrientable, "closed orbl minimal",
-                NBoolSet::sTrue, NBoolSet::sFalse, 0, true);
+                BoolSet::sTrue, BoolSet::sFalse, 0, true);
 
             unsigned nNonOrientable[] = { 1, 0, 4 /* PP + KB */, 0, 11, 0,
                 144, 0, 3627, 0, 149288 };
             rawCountsCompare(1, 8, nNonOrientable, "closed non-orbl minimal",
-                NBoolSet::sFalse, NBoolSet::sFalse, 0, true);
+                BoolSet::sFalse, BoolSet::sFalse, 0, true);
         }
 
         struct CensusSpec {
-            NBoolSet orbl_;
+            BoolSet orbl_;
             bool minimal_;
 
             unsigned long count_;
 
-            CensusSpec(NBoolSet orbl, bool minimal) :
+            CensusSpec(BoolSet orbl, bool minimal) :
                 orbl_(orbl), minimal_(minimal), count_(0) {}
         };
 
@@ -110,9 +110,9 @@ class Dim2CensusTest : public CppUnit::TestFixture {
                 CensusSpec* s = static_cast<CensusSpec*>(spec);
                 Dim2Triangulation* tri = perms->triangulate();
                 if ((! (s->minimal_ && ! tri->isMinimal())) &&
-                        (! (s->orbl_ == NBoolSet::sTrue &&
+                        (! (s->orbl_ == BoolSet::sTrue &&
                             ! tri->isOrientable())) &&
-                        (! (s->orbl_ == NBoolSet::sFalse &&
+                        (! (s->orbl_ == BoolSet::sFalse &&
                             tri->isOrientable())))
                     ++s->count_;
                 delete tri;
@@ -131,7 +131,7 @@ class Dim2CensusTest : public CppUnit::TestFixture {
 
         static void rawCountsCompare(unsigned minTris, unsigned maxTris,
                 const unsigned* realAns, const char* censusType,
-                NBoolSet orientability, NBoolSet boundary, int nBdryFaces,
+                BoolSet orientability, BoolSet boundary, int nBdryFaces,
                 bool minimal) {
             for (unsigned nTris = minTris; nTris <= maxTris; nTris++) {
                 CensusSpec spec(orientability, minimal);

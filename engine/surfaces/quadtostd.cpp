@@ -31,18 +31,18 @@
  **************************************************************************/
 
 #include "regina-config.h"
-#include "enumerate/ndoubledescription.h"
+#include "enumerate/doubledescription.h"
 #include "maths/nmatrixint.h"
 #include "maths/nray.h"
 #include "surfaces/nnormalsurface.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 #include "surfaces/nsstandard.h"
 #include "surfaces/nsquad.h"
 #include "surfaces/nsanstandard.h"
 #include "surfaces/nsquadoct.h"
 #include "triangulation/ntriangulation.h"
 #include "triangulation/nvertex.h"
-#include "utilities/nbitmask.h"
+#include "utilities/bitmask.h"
 #include <iterator>
 #include <vector>
 
@@ -57,19 +57,19 @@ namespace regina {
 // Since the template funtcions are private, we do not need to declare
 // them with REGINA_API.
 
-NNormalSurfaceList* NNormalSurfaceList::quadToStandard() const {
+NormalSurfaces* NormalSurfaces::quadToStandard() const {
     return internalReducedToStandard<NormalSpec>();
 }
 
-NNormalSurfaceList* NNormalSurfaceList::quadOctToStandardAN() const {
+NormalSurfaces* NormalSurfaces::quadOctToStandardAN() const {
     return internalReducedToStandard<AlmostNormalSpec>();
 }
 
-template void NNormalSurfaceList::buildStandardFromReduced<
-        NNormalSurfaceList::NormalSpec>(NTriangulation*,
+template void NormalSurfaces::buildStandardFromReduced<
+        NormalSurfaces::NormalSpec>(NTriangulation*,
         const std::vector<NNormalSurface*>&, ProgressTracker*);
-template void NNormalSurfaceList::buildStandardFromReduced<
-        NNormalSurfaceList::AlmostNormalSpec>(NTriangulation*,
+template void NormalSurfaces::buildStandardFromReduced<
+        NormalSurfaces::AlmostNormalSpec>(NTriangulation*,
         const std::vector<NNormalSurface*>&, ProgressTracker*);
 
 /**
@@ -78,7 +78,7 @@ template void NNormalSurfaceList::buildStandardFromReduced<
 namespace {
     /**
      * A back insertion iterator that defines \a value_type, which is
-     * required by NDoubleDescription::enumerate().
+     * required by DoubleDescription::enumerate().
      *
      * The standard back_insert_iterator does not provide this typedef,
      * so we subclass and provide the typedef ourselves.
@@ -108,12 +108,12 @@ namespace {
      * to \c true if and only if the corresponding coordinate is zero.
      *
      * Since this class is used heavily, faster bitmask types such as
-     * NBitmask1 and NBitmask2 are preferred; however, if the number
-     * of coordinates is too large then the slower general-use NBitmask
+     * Bitmask1 and Bitmask2 are preferred; however, if the number
+     * of coordinates is too large then the slower general-use Bitmask
      * class will need to be used instead.
      *
      * \pre The template argument \a BitmaskType is one of Regina's
-     * bitmask types, such as NBitmask, NBitmask1 or NBitmask2.
+     * bitmask types, such as Bitmask, Bitmask1 or Bitmask2.
      */
     template <class BitmaskType>
     class RaySpec : private NRay {
@@ -308,7 +308,7 @@ namespace {
 } // anonymous namespace
 
 template <class Variant>
-NNormalSurfaceList* NNormalSurfaceList::internalReducedToStandard() const {
+NormalSurfaces* NormalSurfaces::internalReducedToStandard() const {
     NTriangulation* owner = triangulation();
 
     // Basic sanity checks:
@@ -320,7 +320,7 @@ NNormalSurfaceList* NNormalSurfaceList::internalReducedToStandard() const {
         return 0;
 
     // Prepare a final surface list.
-    NNormalSurfaceList* ans = new NNormalSurfaceList(
+    NormalSurfaces* ans = new NormalSurfaces(
         Variant::standardCoords(), NS_EMBEDDED_ONLY | NS_VERTEX,
         algorithm_ | NS_VERTEX_VIA_REDUCED);
 
@@ -335,7 +335,7 @@ NNormalSurfaceList* NNormalSurfaceList::internalReducedToStandard() const {
 }
 
 template <class Variant>
-void NNormalSurfaceList::buildStandardFromReduced(NTriangulation* owner,
+void NormalSurfaces::buildStandardFromReduced(NTriangulation* owner,
         const std::vector<NNormalSurface*>& reducedList,
         ProgressTracker* tracker) {
     size_t nFacets = Variant::stdLen(owner->size());
@@ -347,32 +347,32 @@ void NNormalSurfaceList::buildStandardFromReduced(NTriangulation* owner,
     // templated on the bitmask type.
     if (nFacets <= 8 * sizeof(unsigned))
         buildStandardFromReducedUsing<Variant,
-            NBitmask1<unsigned> >(owner, reducedList, tracker);
+            Bitmask1<unsigned> >(owner, reducedList, tracker);
     else if (nFacets <= 8 * sizeof(unsigned long))
         buildStandardFromReducedUsing<Variant,
-            NBitmask1<unsigned long> >(owner, reducedList, tracker);
+            Bitmask1<unsigned long> >(owner, reducedList, tracker);
     else if (nFacets <= 8 * sizeof(unsigned long long))
         buildStandardFromReducedUsing<Variant,
-            NBitmask1<unsigned long long> >(owner, reducedList, tracker);
+            Bitmask1<unsigned long long> >(owner, reducedList, tracker);
     else if (nFacets <= 8 * sizeof(unsigned long long) + 8 * sizeof(unsigned))
         buildStandardFromReducedUsing<Variant,
-            NBitmask2<unsigned long long, unsigned> >(owner, reducedList,
+            Bitmask2<unsigned long long, unsigned> >(owner, reducedList,
                 tracker);
     else if (nFacets <= 8 * sizeof(unsigned long long) +
             8 * sizeof(unsigned long))
         buildStandardFromReducedUsing<Variant,
-            NBitmask2<unsigned long long, unsigned long> >(owner, reducedList,
+            Bitmask2<unsigned long long, unsigned long> >(owner, reducedList,
                 tracker);
     else if (nFacets <= 16 * sizeof(unsigned long long))
         buildStandardFromReducedUsing<Variant,
-            NBitmask2<unsigned long long> >(owner, reducedList, tracker);
+            Bitmask2<unsigned long long> >(owner, reducedList, tracker);
     else
-        buildStandardFromReducedUsing<Variant, NBitmask>(owner, reducedList,
+        buildStandardFromReducedUsing<Variant, Bitmask>(owner, reducedList,
             tracker);
 }
 
 template <class Variant, class BitmaskType>
-void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
+void NormalSurfaces::buildStandardFromReducedUsing(NTriangulation* owner,
         const std::vector<NNormalSurface*>& reducedList,
         ProgressTracker* tracker) {
     // Prepare for the reduced-to-standard double description run.
@@ -386,14 +386,14 @@ void NNormalSurfaceList::buildStandardFromReducedUsing(NTriangulation* owner,
     // constraints for almost normal surfaces) as bitmasks.
     // Since we have a non-empty triangulation, we know the list of
     // constraints is non-empty.
-    NEnumConstraintList* constraints =
+    EnumConstraints* constraints =
         Variant::StandardVector::makeEmbeddedConstraints(owner);
 
     BitmaskType* constraintsBegin = new BitmaskType[constraints->size()];
     BitmaskType* constraintsEnd = constraintsBegin;
 
-    NEnumConstraintList::const_iterator cit;
-    for (NEnumConstraintList::const_iterator cit = constraints->begin();
+    EnumConstraints::const_iterator cit;
+    for (EnumConstraints::const_iterator cit = constraints->begin();
             cit != constraints->end(); ++cit, ++constraintsEnd) {
         constraintsEnd->reset(slen);
         constraintsEnd->set(cit->begin(), cit->end(), true);

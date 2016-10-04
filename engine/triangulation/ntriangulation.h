@@ -49,12 +49,12 @@
 #include "algebra/ngrouppresentation.h"
 #include "angle/anglestructure.h"
 #include "generic/triangulation.h"
-#include "maths/ncyclotomic.h"
+#include "maths/cyclotomic.h"
 #include "packet/packet.h"
-#include "treewidth/ntreedecomposition.h"
-#include "utilities/nbooleans.h"
-#include "utilities/nmarkedvector.h"
-#include "utilities/nproperty.h"
+#include "treewidth/treedecomposition.h"
+#include "utilities/boolset.h"
+#include "utilities/markedvector.h"
+#include "utilities/property.h"
 
 // The following headers are necessary so that std::unique_ptr can invoke
 // destructors where necessary.
@@ -185,13 +185,13 @@ class REGINA_API Triangulation<3> :
                 BoundaryComponentIterator;
             /**< Used to iterate through boundary components. */
 
-        typedef std::map<std::pair<unsigned long, bool>, NCyclotomic>
+        typedef std::map<std::pair<unsigned long, bool>, Cyclotomic>
                 TuraevViroSet;
             /**< A map from (\a r, \a parity) pairs to Turaev-Viro invariants,
                  as described by turaevViro(). */
 
     private:
-        NMarkedVector<NBoundaryComponent> boundaryComponents_;
+        MarkedVector<NBoundaryComponent> boundaryComponents_;
             /**< The components that form the boundary of the triangulation. */
 
         bool ideal_;
@@ -199,53 +199,53 @@ class REGINA_API Triangulation<3> :
         bool standard_;
             /**< Is the triangulation standard? */
 
-        mutable NProperty<NGroupPresentation, StoreManagedPtr>
+        mutable Property<NGroupPresentation, StoreManagedPtr>
                 fundamentalGroup_;
             /**< Fundamental group of the triangulation. */
-        mutable NProperty<NAbelianGroup, StoreManagedPtr> H1_;
+        mutable Property<NAbelianGroup, StoreManagedPtr> H1_;
             /**< First homology group of the triangulation. */
-        mutable NProperty<NAbelianGroup, StoreManagedPtr> H1Rel_;
+        mutable Property<NAbelianGroup, StoreManagedPtr> H1Rel_;
             /**< Relative first homology group of the triangulation
              *   with respect to the boundary. */
-        mutable NProperty<NAbelianGroup, StoreManagedPtr> H1Bdry_;
+        mutable Property<NAbelianGroup, StoreManagedPtr> H1Bdry_;
             /**< First homology group of the boundary. */
-        mutable NProperty<NAbelianGroup, StoreManagedPtr> H2_;
+        mutable Property<NAbelianGroup, StoreManagedPtr> H2_;
             /**< Second homology group of the triangulation. */
 
-        mutable NProperty<bool> twoSphereBoundaryComponents_;
+        mutable Property<bool> twoSphereBoundaryComponents_;
             /**< Does the triangulation contain any 2-sphere boundary
                  components? */
-        mutable NProperty<bool> negativeIdealBoundaryComponents_;
+        mutable Property<bool> negativeIdealBoundaryComponents_;
             /**< Does the triangulation contain any boundary components
                  that are ideal and have negative Euler characteristic? */
 
-        mutable NProperty<bool> zeroEfficient_;
+        mutable Property<bool> zeroEfficient_;
             /**< Is the triangulation zero-efficient? */
-        mutable NProperty<bool> splittingSurface_;
+        mutable Property<bool> splittingSurface_;
             /**< Does the triangulation have a normal splitting surface? */
 
-        mutable NProperty<bool> threeSphere_;
+        mutable Property<bool> threeSphere_;
             /**< Is this a triangulation of a 3-sphere? */
-        mutable NProperty<bool> threeBall_;
+        mutable Property<bool> threeBall_;
             /**< Is this a triangulation of a 3-dimensional ball? */
-        mutable NProperty<bool> solidTorus_;
+        mutable Property<bool> solidTorus_;
             /**< Is this a triangulation of the solid torus? */
-        mutable NProperty<bool> irreducible_;
+        mutable Property<bool> irreducible_;
             /**< Is this 3-manifold irreducible? */
-        mutable NProperty<bool> compressingDisc_;
+        mutable Property<bool> compressingDisc_;
             /**< Does this 3-manifold contain a compressing disc? */
-        mutable NProperty<bool> haken_;
+        mutable Property<bool> haken_;
             /**< Is this 3-manifold Haken?
                  This property must only be stored for triangulations
                  that are known to represent closed, connected,
                  orientable, irreducible 3-manifolds. */
 
-        mutable NProperty<AngleStructure, StoreManagedPtr>
+        mutable Property<AngleStructure, StoreManagedPtr>
                 strictAngleStructure_;
             /**< A strict angle structure on this triangulation, or the
                  null pointer if none exists. */
 
-        mutable NProperty<NTreeDecomposition, StoreManagedPtr>
+        mutable Property<TreeDecomposition, StoreManagedPtr>
                 niceTreeDecomposition_;
             /**< A nice tree decomposition of the face pairing graph of
                  this triangulation. */
@@ -544,9 +544,9 @@ class REGINA_API Triangulation<3> :
          *
          * \warning As with every routine implemented by Regina's
          * NTriangulation class, if you are calling this from the subclass
-         * NSnapPeaTriangulation then <b>any fillings on the cusps will be
+         * SnapPeaTriangulation then <b>any fillings on the cusps will be
          * ignored</b>.  If you wish to compute the fundamental group with
-         * fillings, call NSnapPeaTriangulation::fundamentalGroupFilled()
+         * fillings, call SnapPeaTriangulation::fundamentalGroupFilled()
          * instead.
          *
          * @return the fundamental group.
@@ -603,9 +603,9 @@ class REGINA_API Triangulation<3> :
          *
          * \warning As with every routine implemented by Regina's
          * NTriangulation class, if you are calling this from the subclass
-         * NSnapPeaTriangulation then <b>any fillings on the cusps will
+         * SnapPeaTriangulation then <b>any fillings on the cusps will
          * be ignored</b>.  If you wish to compute homology with fillings,
-         * call NSnapPeaTriangulation::homologyFilled() instead.
+         * call SnapPeaTriangulation::homologyFilled() instead.
          *
          * @return the first homology group.
          */
@@ -636,9 +636,9 @@ class REGINA_API Triangulation<3> :
          *
          * \warning As with every routine implemented by Regina's
          * NTriangulation class, if you are calling this from the subclass
-         * NSnapPeaTriangulation then <b>any fillings on the cusps will
+         * SnapPeaTriangulation then <b>any fillings on the cusps will
          * be ignored</b>.  If you wish to compute homology with fillings,
-         * call NSnapPeaTriangulation::homologyFilled() instead.
+         * call SnapPeaTriangulation::homologyFilled() instead.
          *
          * @return the first homology group.
          */
@@ -785,7 +785,7 @@ class REGINA_API Triangulation<3> :
          *
          * @see allCalculatedTuraevViro
          */
-        NCyclotomic turaevViro(unsigned long r, bool parity = true,
+        Cyclotomic turaevViro(unsigned long r, bool parity = true,
             TuraevViroAlg alg = TV_DEFAULT) const;
         /**
          * Computes the given Turaev-Viro state sum invariant of this
@@ -814,7 +814,7 @@ class REGINA_API Triangulation<3> :
          * lead to a much larger numerical error (since this routine might
          * perform an exponential number of floating point operations,
          * whereas the alternative only uses floating point for
-         * the final call to NCyclotomic::evaluate()).
+         * the final call to Cyclotomic::evaluate()).
          *
          * These invariants, although computed in the complex field,
          * should all be reals.  Thus the return type is an ordinary
@@ -2262,8 +2262,8 @@ class REGINA_API Triangulation<3> :
          * implementing algorithms that are fixed-parameter tractable
          * in the treewidth of the face pairing graph.
          *
-         * See NTreeDecomposition for further details on tree
-         * decompositions, and see NTreeDecomposition::makeNice() for
+         * See TreeDecomposition for further details on tree
+         * decompositions, and see TreeDecomposition::makeNice() for
          * details on what it means to be a \e nice tree decomposition.
          *
          * This routine is fast: it will use a greedy algorithm to find a
@@ -2279,7 +2279,7 @@ class REGINA_API Triangulation<3> :
          * @return a nice tree decomposition of the face pairing graph
          * of this triangulation.
          */
-        const NTreeDecomposition& niceTreeDecomposition() const;
+        const TreeDecomposition& niceTreeDecomposition() const;
 
         /*@}*/
         /**
@@ -2657,7 +2657,7 @@ class REGINA_API Triangulation<3> :
          *   information (such as the Turaev-Viro invariants) will not
          *   be written to the SnapPea file at all.
          *
-         * - If you are calling this from the subclass NSnapPeaTriangulation,
+         * - If you are calling this from the subclass SnapPeaTriangulation,
          *   then all additional SnapPea-specific information will be written
          *   to the file (indeed, the SnapPea kernel itself will be used to
          *   produce the file contents).
@@ -2690,7 +2690,7 @@ class REGINA_API Triangulation<3> :
          *   information (such as the Turaev-Viro invariants) will not
          *   be written to the SnapPea file at all.
          *
-         * - If you are calling this from the subclass NSnapPeaTriangulation,
+         * - If you are calling this from the subclass SnapPeaTriangulation,
          *   then all additional SnapPea-specific information will be written
          *   to the file (indeed, the SnapPea kernel itself will be used to
          *   produce the file contents).
@@ -2726,7 +2726,7 @@ class REGINA_API Triangulation<3> :
          *   information (such as the Turaev-Viro invariants) will not
          *   be written to the SnapPea file at all.
          *
-         * - If you are calling this from the subclass NSnapPeaTriangulation,
+         * - If you are calling this from the subclass SnapPeaTriangulation,
          *   then all additional SnapPea-specific information will be written
          *   to the file (indeed, the SnapPea kernel itself will be used to
          *   produce the file contents).
@@ -2889,12 +2889,12 @@ class REGINA_API Triangulation<3> :
          * Regina's NTriangulation class does not track such information itself.
          *
          * If you wish to preserve all SnapPea-specific information from the
-         * data file, you should work with the NSnapPeaTriangulation class
+         * data file, you should work with the SnapPeaTriangulation class
          * instead (which uses the SnapPea kernel directly, and can therefore
          * store anything that SnapPea can).
          *
          * If you wish to read a triangulation from a SnapPea \e file, you
-         * should likewise call the NSnapPeaTriangulation constructor, giving
+         * should likewise call the SnapPeaTriangulation constructor, giving
          * the filename as argument.  This will read all SnapPea-specific
          * information (as described above), and also avoids constructing an
          * enormous intermediate string.
@@ -2905,10 +2905,10 @@ class REGINA_API Triangulation<3> :
          *
          * \warning This routine is "lossy", in that drops SnapPea-specific
          * information (as described above).  Unless you specifically need an
-         * NTriangulation (not an NSnapPeaTriangulation) or you need to avoid
+         * NTriangulation (not an SnapPeaTriangulation) or you need to avoid
          * calling routines from the SnapPea kernel, it is highly recommended
-         * that you create an NSnapPeaTriangulation from the given file
-         * contents instead.  See the string-based NSnapPeaTriangulation
+         * that you create a SnapPeaTriangulation from the given file
+         * contents instead.  See the string-based SnapPeaTriangulation
          * constructor for how to do this.
          *
          * @param snapPeaData a string containing the full contents of a
@@ -3015,7 +3015,7 @@ class REGINA_API Triangulation<3> :
         /**
          * Reads the contents of a SnapPea data file from the given input
          * stream, and converts the result to a new NTriangulation.  Since
-         * this returns an NTriangulation, it will lose some SnapPea-specific
+         * this returns a NTriangulation, it will lose some SnapPea-specific
          * information in the process (such as peripheral curves).
          *
          * If the input stream could not be read or if the data was not in the
@@ -3023,7 +3023,7 @@ class REGINA_API Triangulation<3> :
          * triangulation will be returned, and it is the user's responsibility
          * to deallocate this when it is finished with.
          *
-         * Unlike the NSnapPeaTriangulation constructor, this routine uses
+         * Unlike the SnapPeaTriangulation constructor, this routine uses
          * Regina's own SnapPea input code - it does not call any functions
          * from the SnapPea kernel.
          *
@@ -3188,12 +3188,12 @@ inline bool Triangulation<3>::retriangulate(int height, unsigned nThreads,
         std::bind(action, std::placeholders::_1, args...));
 }
 
-inline const NTreeDecomposition& Triangulation<3>::niceTreeDecomposition()
+inline const TreeDecomposition& Triangulation<3>::niceTreeDecomposition()
         const {
     if (niceTreeDecomposition_.known())
         return *niceTreeDecomposition_.value();
 
-    NTreeDecomposition* ans = new NTreeDecomposition(*this, TD_UPPER);
+    TreeDecomposition* ans = new TreeDecomposition(*this, TD_UPPER);
     ans->makeNice();
     return *(niceTreeDecomposition_ = ans);
 }

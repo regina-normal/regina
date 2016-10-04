@@ -34,7 +34,7 @@
 #import "SnapPeaAlgebra.h"
 #import "TextHelper.h"
 #import "TriAlgebra.h"
-#import "snappea/nsnappeatriangulation.h"
+#import "snappea/snappeatriangulation.h"
 
 @interface SnapPeaAlgebra ()
 @property (weak, nonatomic) IBOutlet UILabel *header;
@@ -58,7 +58,7 @@
 @property (weak, nonatomic) IBOutlet UITextView *unfilledFundDetails;
 
 @property (strong, nonatomic) SnapPeaViewController* viewer;
-@property (assign, nonatomic) regina::NSnapPeaTriangulation* packet;
+@property (assign, nonatomic) regina::SnapPeaTriangulation* packet;
 @end
 
 @implementation SnapPeaAlgebra

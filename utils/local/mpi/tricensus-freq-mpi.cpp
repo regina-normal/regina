@@ -68,7 +68,7 @@
 #include <sstream>
 #include <popt.h>
 #include "census/ngluingpermsearcher.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 #include "triangulation/ntriangulation.h"
 #include "mpi.h"
 
@@ -84,7 +84,7 @@
 #define DAY_SEC (24 * HOUR_SEC)
 
 // Census parameters.
-regina::NBoolSet
+regina::BoolSet
     finiteness(true, true),
     orientability(true, true);
 int minimal = 0;
@@ -237,8 +237,8 @@ int parseCmdLine(int argc, const char* argv[], bool isController) {
     poptFreeContext(optCon);
 
     // Finalise the census parameters.
-    finiteness = regina::NBoolSet(! argIdeal, ! argFinite);
-    orientability = regina::NBoolSet(! argNor, ! argOr);
+    finiteness = regina::BoolSet(! argIdeal, ! argFinite);
+    orientability = regina::BoolSet(! argNor, ! argOr);
 
     if (minimalPrimeP2)
         whichPurge = regina::NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME |
@@ -575,12 +575,12 @@ void slaveFoundGluingPerms(const regina::NGluingPermSearcher* perms, void*) {
             nSolns++;
 
             // Enumerate normal surfaces!
-            regina::NNormalSurfaceList* s;
+            regina::NormalSurfaces* s;
 
-            s = regina::NNormalSurfaceList::enumerate(tri, regina::NS_STANDARD);
+            s = regina::NormalSurfaces::enumerate(tri, regina::NS_STANDARD);
             ++sfreq[s->size()];
 
-            s = regina::NNormalSurfaceList::enumerate(tri, regina::NS_QUAD);
+            s = regina::NormalSurfaces::enumerate(tri, regina::NS_QUAD);
             ++qfreq[s->size()];
         }
 

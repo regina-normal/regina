@@ -117,7 +117,7 @@ REGINA_API bool versionUsesUTF8(const char* version);
  * recent SnapPy releases.  See http://snappy.computop.org/ for details.
  *
  * In Regina, you can access the SnapPea kernel through the
- * NSnapPeaTriangulation class.
+ * SnapPeaTriangulation class.
  *
  * @return the version of SnapPy whose underlying SnapPea kernel is
  * built into Regina.

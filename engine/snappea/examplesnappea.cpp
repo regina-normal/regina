@@ -31,15 +31,15 @@
  **************************************************************************/
 
 #include "snappea/examplesnappea.h"
-#include "snappea/nsnappeatriangulation.h"
+#include "snappea/snappeatriangulation.h"
 
 namespace {
 }
 
 namespace regina {
 
-NSnapPeaTriangulation* ExampleSnapPea::figureEight() {
-    NSnapPeaTriangulation* ans = new NSnapPeaTriangulation(
+SnapPeaTriangulation* ExampleSnapPea::figureEight() {
+    SnapPeaTriangulation* ans = new SnapPeaTriangulation(
 "% Triangulation\n"
 "m004\n"
 "geometric_solution  2.02988321\n"
@@ -72,8 +72,8 @@ NSnapPeaTriangulation* ExampleSnapPea::figureEight() {
     return ans;
 }
 
-NSnapPeaTriangulation* ExampleSnapPea::trefoil() {
-    NSnapPeaTriangulation* ans = new NSnapPeaTriangulation(
+SnapPeaTriangulation* ExampleSnapPea::trefoil() {
+    SnapPeaTriangulation* ans = new SnapPeaTriangulation(
 "% Triangulation\n"
 "Trefoil\n"
 "flat_solution  0.00000000\n"
@@ -106,8 +106,8 @@ NSnapPeaTriangulation* ExampleSnapPea::trefoil() {
     return ans;
 }
 
-NSnapPeaTriangulation* ExampleSnapPea::whiteheadLink() {
-    NSnapPeaTriangulation* ans = new NSnapPeaTriangulation(
+SnapPeaTriangulation* ExampleSnapPea::whiteheadLink() {
+    SnapPeaTriangulation* ans = new SnapPeaTriangulation(
 "% Triangulation\n"
 "m129\n"
 "geometric_solution  3.66386238\n"
@@ -159,8 +159,8 @@ NSnapPeaTriangulation* ExampleSnapPea::whiteheadLink() {
     return ans;
 }
 
-NSnapPeaTriangulation* ExampleSnapPea::gieseking() {
-    NSnapPeaTriangulation* ans = new NSnapPeaTriangulation(
+SnapPeaTriangulation* ExampleSnapPea::gieseking() {
+    SnapPeaTriangulation* ans = new SnapPeaTriangulation(
 "% Triangulation\n"
 "m000\n"
 "geometric_solution  1.01494161\n"
@@ -184,8 +184,8 @@ NSnapPeaTriangulation* ExampleSnapPea::gieseking() {
     return ans;
 }
 
-NSnapPeaTriangulation* ExampleSnapPea::x101() {
-    NSnapPeaTriangulation* ans = new NSnapPeaTriangulation(
+SnapPeaTriangulation* ExampleSnapPea::x101() {
+    SnapPeaTriangulation* ans = new SnapPeaTriangulation(
 "% Triangulation\n"
 "x101\n"
 "geometric_solution  5.07470803\n"

@@ -5,9 +5,9 @@ SET ( FILES
   ndisc
   ndisctype
   nnormalsurface
-  nnormalsurfacelist
   normalcoords
   normalflags
+  normalsurfaces
   nprism
   nsurfacefilter
   nsurfacesubset

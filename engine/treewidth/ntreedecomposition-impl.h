@@ -31,14 +31,7 @@
  **************************************************************************/
 
 /*! \file treewidth/ntreedecomposition-impl.h
- *  \brief Contains implementations of template member functions in the
- *  NTreeDecomposition class.
- *
- *  This file is \e not included automatically by ntreedecomposition.h.
- *  However, most end users should never need to include it, since
- *  Regina's calculation engine provides full explicit instantiations
- *  of these routines for \ref stddim "standard dimensions" and for
- *  common types.
+ *  \brief Deprecated header.
  */
 
 #ifndef __NTREEDECOMPOSITION_IMPL_H
@@ -46,59 +39,9 @@
 #define __NTREEDECOMPOSITION_IMPL_H
 #endif
 
-#include "treewidth/ntreedecomposition.h"
+#warning This header is deprecated; please use treewidth/treedecomposition-impl.h instead.
 
-namespace regina {
-
-template <int dim>
-NTreeDecomposition::NTreeDecomposition(
-        const Triangulation<dim>& triangulation,
-        TreeDecompositionAlg alg) :
-        width_(0), root_(0) {
-    Graph g(triangulation.size());
-
-    int i, j;
-    const Simplex<dim>* simp;
-    for (i = 0; i < g.order_; ++i) {
-        simp = triangulation.simplex(i);
-        for (j = 0; j <= dim; ++j)
-            if (simp->adjacentSimplex(j))
-                g.adj_[i][simp->adjacentSimplex(j)->index()] = true;
-    }
-
-    construct(g, alg);
-}
-
-template <int dim>
-NTreeDecomposition::NTreeDecomposition(
-        const FacetPairing<dim>& pairing,
-        TreeDecompositionAlg alg) :
-        width_(0), root_(0) {
-    Graph g(pairing.size());
-
-    int i, j;
-    for (i = 0; i < g.order_; ++i)
-        for (j = 0; j <= dim; ++j)
-            if (! pairing.isUnmatched(i, j))
-                g.adj_[i][pairing.dest(i, j).simp] = true;
-
-    construct(g, alg);
-}
-
-template <typename T>
-NTreeDecomposition::NTreeDecomposition(unsigned order, T const** graph,
-        TreeDecompositionAlg alg) :
-        width_(0), root_(0) {
-    Graph g(order);
-
-    int i, j;
-    for (i = 0; i < order; ++i)
-        for (j = 0; j < order; ++j)
-            g.adj_[i][j] = graph[i][j] || graph[j][i];
-
-    construct(g, alg);
-}
-
-} // namespace regina
+#include "treewidth/treedecomposition-impl.h"
 
 #endif
+

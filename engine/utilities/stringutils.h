@@ -44,7 +44,7 @@
 
 namespace regina {
 
-class NBoolSet;
+class BoolSet;
 
 template <bool>
 class NIntegerBase;
@@ -329,7 +329,7 @@ REGINA_API bool valueOf(const std::string& str, bool& dest);
  * A set of booleans is represented by one of the four strings
  * <tt>--</tt>, <tt>T-</tt>, <tt>-F</tt> or <tt>TF</tt>.  If the
  * conversion is unsuccessful, argument \a dest will be set to
- * NBoolSet::sNone and \c false will be returned.
+ * BoolSet::sNone and \c false will be returned.
  *
  * \ifacespython Not present.
  *
@@ -337,7 +337,7 @@ REGINA_API bool valueOf(const std::string& str, bool& dest);
  * @param dest the variable in which to store the resulting set of booleans.
  * @return \c true if the conversion was successful or \c false otherwise.
  */
-REGINA_API bool valueOf(const std::string& str, NBoolSet& dest);
+REGINA_API bool valueOf(const std::string& str, BoolSet& dest);
 
 /**
  * Decomposes the given string into tokens.

@@ -11,12 +11,12 @@ def enum(t, coords, which, alg):
     start = time.clock()
     if progress:
         m = ProgressTracker()
-        s = NNormalSurfaceList.enumerate(t, coords, which, alg, m)
+        s = NormalSurfaces.enumerate(t, coords, which, alg, m)
         while not m.isFinished():
             print m.percent(), '%'
             time.sleep(0.3)
     else:
-        s = NNormalSurfaceList.enumerate(t, coords, which, alg)
+        s = NormalSurfaces.enumerate(t, coords, which, alg)
     print s
     print time.clock() - start
 

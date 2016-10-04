@@ -38,7 +38,7 @@ SnapPy version:
 SnapPea / SnapPy copyright (in addition to full license locations above):
     engine/snappea/kernel/README.txt
     engine/snappea/snappy/README.txt
-    engine/snappea/nsnappeatriangulation.h
+    engine/snappea/snappeatriangulation.h
 
 Acknowledgements (in addition to primary authors listed in the license):
     qtui/doc/regina/credits.docbook

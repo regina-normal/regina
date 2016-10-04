@@ -310,7 +310,7 @@ class TriangulationBase :
             /**< Used to iterate through connected components. */
 
     protected:
-        NMarkedVector<Simplex<dim>> simplices_;
+        MarkedVector<Simplex<dim>> simplices_;
             /**< The top-dimensional simplices that form the triangulation. */
         bool valid_;
             /**< Is this triangulation valid?  See isValid() for details
@@ -320,7 +320,7 @@ class TriangulationBase :
         bool calculatedSkeleton_;
             /**< Has the skeleton been calculated?  This is only done
                  "on demand", when a skeletal property is first queried. */
-        NMarkedVector<Component<dim>> components_;
+        MarkedVector<Component<dim>> components_;
             /**< The connected components that form the triangulation.
                  This list is only filled if/when the skeleton of the
                  triangulation is computed. */
@@ -1723,7 +1723,7 @@ void TriangulationBase<dim>::moveContentsTo(Triangulation<dim>& dest) {
 
     SimplexIterator it;
     for (it = simplices_.begin(); it != simplices_.end(); ++it) {
-        // This is an abuse of NMarkedVector, since for a brief moment
+        // This is an abuse of MarkedVector, since for a brief moment
         // each triangle belongs to both vectors simplices_ and dest.simplices_.
         // However, the subsequent clear() operation does not touch the
         // markings (indices), and so we end up with the correct result

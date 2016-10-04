@@ -95,11 +95,11 @@ class REGINA_API XMLPDFReader : public XMLPacketReader {
         XMLPDFReader(XMLTreeResolver& resolver);
 
         virtual Packet* packet() override;
-        virtual NXMLElementReader* startContentSubElement(
+        virtual XMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
         virtual void endContentSubElement(const std::string& subTagName,
-            NXMLElementReader* subReader) override;
+            XMLElementReader* subReader) override;
 };
 
 /**
@@ -122,11 +122,11 @@ class REGINA_API XMLScriptReader : public XMLPacketReader {
         XMLScriptReader(XMLTreeResolver& resolver);
 
         virtual Packet* packet() override;
-        virtual NXMLElementReader* startContentSubElement(
+        virtual XMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
         virtual void endContentSubElement(const std::string& subTagName,
-            NXMLElementReader* subReader) override;
+            XMLElementReader* subReader) override;
 };
 
 /**
@@ -149,11 +149,11 @@ class REGINA_API XMLTextReader : public XMLPacketReader {
         XMLTextReader(XMLTreeResolver& resolver);
 
         virtual Packet* packet() override;
-        virtual NXMLElementReader* startContentSubElement(
+        virtual XMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
         virtual void endContentSubElement(const std::string& subTagName,
-            NXMLElementReader* subReader) override;
+            XMLElementReader* subReader) override;
 };
 
 /*@}*/
@@ -198,18 +198,18 @@ inline Packet* XMLTextReader::packet() {
     return text;
 }
 
-inline NXMLElementReader* XMLTextReader::startContentSubElement(
+inline XMLElementReader* XMLTextReader::startContentSubElement(
         const std::string& subTagName, const regina::xml::XMLPropertyDict&) {
     if (subTagName == "text")
-        return new NXMLCharsReader();
+        return new XMLCharsReader();
     else
-        return new NXMLElementReader();
+        return new XMLElementReader();
 }
 
 inline void XMLTextReader::endContentSubElement(const std::string& subTagName,
-        NXMLElementReader* subReader) {
+        XMLElementReader* subReader) {
     if (subTagName == "text")
-        text->setText(dynamic_cast<NXMLCharsReader*>(subReader)->chars());
+        text->setText(dynamic_cast<XMLCharsReader*>(subReader)->chars());
 }
 
 } // namespace regina

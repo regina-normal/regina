@@ -32,7 +32,7 @@
 
 #include <algorithm>
 #include <thread>
-#include "enumerate/ntreetraversal.h"
+#include "enumerate/treetraversal.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/nprism.h"
 #include "triangulation/ntriangulation.h"
@@ -1358,7 +1358,7 @@ namespace {
 
             // Information specific to each thread:
             NTriangulation* t_[2];
-            NTreeSingleSoln<LPConstraintEuler, BanNone>* currSearch_[2];
+            TreeSingleSoln<LPConstraintEuler, BanNone>* currSearch_[2];
             std::mutex searchMutex_[2];
 
         public:
@@ -1456,7 +1456,7 @@ namespace {
                         return;
                     }
 
-                    NTreeSingleSoln<LPConstraintEuler, BanNone> search(t_[side],
+                    TreeSingleSoln<LPConstraintEuler, BanNone> search(t_[side],
                         NS_STANDARD);
                     {
                         std::lock_guard<std::mutex> lock(searchMutex_[side]);
@@ -1480,7 +1480,7 @@ namespace {
                         return;
                     }
 
-                    // NTreeSingleSoln guarantees that our solution is
+                    // TreeSingleSoln guarantees that our solution is
                     // connected, and so it (or its double) is a sphere or
                     // a disc.
                     ans = search.buildSurface();

@@ -5,7 +5,7 @@ SET ( FILES
   fundgroup
   homology
   examplesnappea
-  nsnappeatriangulation
+  snappeatriangulation
   xmlsnappeareader
   uimessages)
 
@@ -28,6 +28,7 @@ if (${REGINA_INSTALL_DEV})
     examplesnappea.h
     nexamplesnappeatriangulation.h
     nsnappeatriangulation.h
+    snappeatriangulation.h
     xmlsnappeareader.h
     DESTINATION ${INCLUDEDIR}/snappea COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

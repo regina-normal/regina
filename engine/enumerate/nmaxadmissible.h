@@ -31,8 +31,7 @@
  **************************************************************************/
 
 /*! \file enumerate/nmaxadmissible.h
- *  \brief Provides an algorithm for enumerating maximal faces of a
- *  polyhedral cone that satisfy a set of admissibility constraints.
+ *  \brief Deprecated header.
  */
 
 #ifndef __NMAXADMISSIBLE_H
@@ -40,99 +39,9 @@
 #define __NMAXADMISSIBLE_H
 #endif
 
-#include "regina-core.h"
-#include "utilities/nbitmask.h"
-#include <vector>
+#warning This header is deprecated; please use enumerate/maxadmissible.h instead.
 
-namespace regina {
-
-class NEnumConstraintList;
-
-/**
- * \weakgroup enumerate
- * @{
- */
-
-/**
- * Used to enumerate all maximal admissible faces of a polyhedral cone
- * under a given set of admissibility constraints.  See the routine
- * enumerate() for details.
- *
- * All routines of interest within this class are static; no object of
- * this class should ever be created.
- *
- * \ifacespython Not present.
- */
-class NMaxAdmissible {
-    public:
-        /**
-         * Enumerates all maximal admissible faces of the given polyhedral cone.
-         * The cone must be the intersection of the non-negative orthant in some
-         * Euclidean space R^n with a linear subspace.
-         *
-         * Admissibility is defined by the given set of constraints.  Each
-         * constraint requires that at most one of a given set of coordinates
-         * can be non-zero; see the NEnumConstraintList class for details.
-         * In particular, the quadrilateral constraints from normal surface
-         * theory are of this type.
-         *
-         * It is simple to show that the admissible region of the cone is a
-         * union of faces, which we call "admissible faces".  Those admissible
-         * faces that do not appear as a strict subface of some other
-         * admissible face are called "maximal admissible faces".
-         * The admissible region can therefore be expressed as the union of
-         * all maximal admissible faces.
-         *
-         * The input for this routine is the set of all admissible extremal rays
-         * of the cone.  These should be computed beforehand; for instance,
-         * using the routine NDoubleDescription::enumerateExtremalRays().
-         *
-         * The return value is the set of all maximal admissible faces, stored
-         * in a newly allocated vector.  Each face \a F is described by a
-         * bitmask.  Specifically: if we are working in R^n, then each face is
-         * described by a bitmask \a b of length n, where <tt>b[i]</tt>
-         * is \c false if every point \a x in \a F has <tt>x[i]=0</tt>,
-         * and <tt>b[i]</tt> is \c true if every point \a x in the relative
-         * interior of \a F has <tt>x[i] &gt; 0</tt>.
-         *
-         * \pre The template argument RayIterator should be an iterator
-         * type that, when dereferenced, can be cast to a const NRay*.
-         *
-         * \pre The template argument BitmaskType is one of the bitmask
-         * types NBitmask, NBitmask1 or NBitmask2.
-         *
-         * \pre Bitmasks of type BitmaskType can hold \a n bits, where
-         * \a n is the dimension of the underlying space (i.e., the size
-         * of the input vectors described by \a beginExtremalRays and
-         * \a endExtremalRays).  This is always true of NBitmask, but
-         * you must be careful when using one of the fast but size-limited
-         * types NBitmask1 or NBitmask2.
-         *
-         * @param beginExtremalRays an iterator that begins the set of
-         * admissible extremal rays, as described above.  Typically this would
-         * be rays.begin() if \a rays is a standard container type.
-         * @param endExtremalRays an iterator that is past-the-end of the set
-         * of admissible extremal rays.  Typically this would be rays.end()
-         * if \a rays is a standard container type.
-         * @param constraints a set of validity constraints as described
-         * above.  This may be 0 to indicate no constraints (in which
-         * case there will be just one maximal admissible face).
-         * @return a newly allocated list containing one bitmask
-         * representing each maximal admissible face, as described above.
-         */
-        template <class BitmaskType, class RayIterator>
-        static std::vector<BitmaskType>* enumerate(
-                RayIterator beginExtremalRays, RayIterator endExtremalRays,
-                const NEnumConstraintList* constraints);
-};
-
-/*@}*/
-
-} // namespace regina
-
-// Template definitions
-
-#include "enumerate/nmaxadmissible-impl.h"
+#include "enumerate/maxadmissible.h"
 
 #endif
 

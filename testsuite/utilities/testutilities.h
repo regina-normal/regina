@@ -43,5 +43,5 @@
 #include <cppunit/ui/text/TestRunner.h>
 
 void addBase64(CppUnit::TextUi::TestRunner& runner);
-void addNBitmask(CppUnit::TextUi::TestRunner& runner);
+void addBitmask(CppUnit::TextUi::TestRunner& runner);
 

@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "surfaces/nnormalsurface.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 #include "surfaces/nsstandard.h"
 #include "surfaces/nsquad.h"
 #include "surfaces/nsanstandard.h"
@@ -49,16 +49,16 @@ namespace regina {
 // Since the template funtcions are private, we do not need to declare
 // them with REGINA_API.
 
-NNormalSurfaceList* NNormalSurfaceList::standardToQuad() const {
+NormalSurfaces* NormalSurfaces::standardToQuad() const {
     return internalStandardToReduced<NormalSpec>();
 }
 
-NNormalSurfaceList* NNormalSurfaceList::standardANToQuadOct() const {
+NormalSurfaces* NormalSurfaces::standardANToQuadOct() const {
     return internalStandardToReduced<AlmostNormalSpec>();
 }
 
 template <class Variant>
-NNormalSurfaceList* NNormalSurfaceList::internalStandardToReduced() const {
+NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
     // And off we go!
     NTriangulation* owner = triangulation();
 
@@ -71,7 +71,7 @@ NNormalSurfaceList* NNormalSurfaceList::internalStandardToReduced() const {
         return 0;
 
     // Prepare a final surface list.
-    NNormalSurfaceList* ans = new NNormalSurfaceList(
+    NormalSurfaces* ans = new NormalSurfaces(
         Variant::reducedCoords(), NS_EMBEDDED_ONLY | NS_VERTEX, NS_ALG_CUSTOM);
 
     // Get the empty triangulation out of the way now.

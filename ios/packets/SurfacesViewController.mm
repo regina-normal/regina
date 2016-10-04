@@ -33,7 +33,7 @@
 #import "Coordinates.h"
 #import "ReginaHelper.h"
 #import "SurfacesViewController.h"
-#import "surfaces/nnormalsurfacelist.h"
+#import "surfaces/normalsurfaces.h"
 #import "triangulation/ntriangulation.h"
 
 #pragma mark - Surfaces view controller

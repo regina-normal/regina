@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 
 // UI includes:
 #include "coordinatechooser.h"
@@ -40,7 +40,7 @@
 
 #include <algorithm>
 
-using regina::NNormalSurfaceList;
+using regina::NormalSurfaces;
 
 void CoordinateChooser::insertSystem(regina::NormalCoords coordSystem) {
     addItem(tr(Coordinates::name(coordSystem)));
@@ -58,7 +58,7 @@ void CoordinateChooser::insertAllCreators() {
     }
 }
 
-void CoordinateChooser::insertAllViewers(regina::NNormalSurfaceList* surfaces) {
+void CoordinateChooser::insertAllViewers(regina::NormalSurfaces* surfaces) {
     if (surfaces->allowsAlmostNormal()) {
         // For lists created with Regina 4.5.1 or earlier, we have
         // already taken out surfaces with multiple octagons.  Make this

@@ -52,7 +52,7 @@
 #include "packet/container.h"
 #include "packet/text.h"
 #include "triangulation/ntriangulation.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 #include "packet/script.h"
 #include "surfaces/nsurfacefilter.h"
 #include "angle/anglestructures.h"
@@ -60,7 +60,7 @@
 #include "dim2/dim2triangulation.h"
 #include "dim4/dim4triangulation.h"
 #include "hypersurface/nnormalhypersurfacelist.h"
-#include "snappea/nsnappeatriangulation.h"
+#include "snappea/snappeatriangulation.h"
 #include "link/link.h"
 #include "generic/triangulation.h"
 

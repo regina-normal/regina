@@ -33,10 +33,10 @@
 #include <cstdlib>
 #include <iostream>
 
-#include "snappea/nsnappeatriangulation.h"
+#include "snappea/snappeatriangulation.h"
 #include "snappea/kernel/SnapPea.h"
 
-bool regina::NSnapPeaTriangulation::kernelMessages_ = false;
+bool regina::SnapPeaTriangulation::kernelMessages_ = false;
 
 namespace regina { namespace snappea {
 
@@ -47,13 +47,13 @@ namespace regina { namespace snappea {
  */
 
 void uAcknowledge(const char *message) {
-    if (regina::NSnapPeaTriangulation::kernelMessagesEnabled())
+    if (regina::SnapPeaTriangulation::kernelMessagesEnabled())
         std::cout << message << std::endl;
 }
 
 int uQuery(const char *message, const int num_responses,
         const char *responses[], const int default_response) {
-    if (regina::NSnapPeaTriangulation::kernelMessagesEnabled()) {
+    if (regina::SnapPeaTriangulation::kernelMessagesEnabled()) {
         std::cout << message << std::endl;
         for (int i = 0; i < num_responses; i++) {
             std::cout << i << ". " << responses[i] << std::endl;
@@ -81,7 +81,7 @@ void uPrepareMemFullMessage() {
 }
 
 void uLongComputationBegins(const char *message, Boolean /* is_abortable */) {
-    if (regina::NSnapPeaTriangulation::kernelMessagesEnabled())
+    if (regina::SnapPeaTriangulation::kernelMessagesEnabled())
         std::cout << message << std::endl;
 }
 

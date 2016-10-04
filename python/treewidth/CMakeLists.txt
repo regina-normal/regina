@@ -1,6 +1,6 @@
 # Files to compile
 SET ( FILES
-  ntreedecomposition
+  treedecomposition
   pytreewidth
   )
 

@@ -46,7 +46,7 @@
 #include "generic/alias/face.h"
 #include "generic/alias/facenumber.h"
 #include "generic/alias/simplex.h"
-#include "utilities/nmarkedvector.h"
+#include "utilities/markedvector.h"
 #include <deque>
 #include <vector>
 #include <boost/noncopyable.hpp>
@@ -842,7 +842,7 @@ class FaceBase :
         public FaceValidity<allowsInvalidFaces(dim, subdim), standardDim(dim)>,
         public FaceOrientability<allowsNonOrientableLinks(dim, subdim)>,
         public FaceNumbering<dim, subdim>,
-        public NMarkedElement,
+        public MarkedElement,
         public alias::FaceOfSimplex<FaceBase<dim, subdim>, dim, subdim - 1>,
         public boost::noncopyable {
     private:

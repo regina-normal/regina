@@ -30,8 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
-#include <enumerate/ntreetraversal.h>
-#include <surfaces/nnormalsurfacelist.h>
+#include <enumerate/treetraversal.h>
+#include <surfaces/normalsurfaces.h>
 #include <triangulation/ntriangulation.h>
 
 using namespace regina;
@@ -56,12 +56,12 @@ void usage(const char* program) {
 }
 
 /**
- * A variant of NTreeTraversal::writeTypes() that also performs sanity
+ * A variant of TreeTraversal::writeTypes() that also performs sanity
  * checking on the normal surface.
  */
 template <class LPConstraint, typename BanConstraint>
 bool writeTypesAndVerify(
-        const NTreeEnumeration<LPConstraint, BanConstraint>& tree, void* eqns) {
+        const TreeEnumeration<LPConstraint, BanConstraint>& tree, void* eqns) {
     /*
     std::cout << "SOLN #" << tree.nSolns() << ": ";
     tree.dumpTypes(std::cout);
@@ -131,7 +131,7 @@ int main(int argc, char* argv[]) {
                     mode == 'q' ? NS_QUAD :
                     mode == 'a' ? NS_AN_STANDARD :
                     NS_AN_QUAD_OCT);
-                NTreeEnumeration<> search(t, coords);
+                TreeEnumeration<> search(t, coords);
                 if (search.constraintsBroken())
                     std::cerr << "ERROR: Constraints broken." << std::endl;
                 else {
@@ -148,7 +148,7 @@ int main(int argc, char* argv[]) {
                     delete eqns;
                 }
             } else {
-                NTreeSingleSoln<LPConstraintEuler>
+                TreeSingleSoln<LPConstraintEuler>
                     search(t, mode == '3' ? NS_AN_STANDARD : NS_STANDARD);
                 if (search.constraintsBroken())
                     std::cerr << "ERROR: Constraints broken." << std::endl;

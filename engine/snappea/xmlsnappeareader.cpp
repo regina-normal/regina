@@ -30,14 +30,14 @@
  *                                                                        *
  **************************************************************************/
 
-#include "snappea/nsnappeatriangulation.h"
+#include "snappea/snappeatriangulation.h"
 #include "snappea/xmlsnappeareader.h"
 #include "snappea/kernel/unix_file_io.h"
 
 namespace regina {
 
 void XMLSnapPeaReader::endContentSubElement(
-        const std::string& subTagName, NXMLElementReader* subReader) {
+        const std::string& subTagName, XMLElementReader* subReader) {
     if (subTagName == "snappea") {
         if (snappea_->data_) {
             // We can't have two <snappea>..</snappea> blocks.
@@ -47,7 +47,7 @@ void XMLSnapPeaReader::endContentSubElement(
         try {
             regina::snappea::Triangulation* data =
                 regina::snappea::read_triangulation_from_string(
-                dynamic_cast<NXMLCharsReader*>(subReader)->chars().c_str());
+                dynamic_cast<XMLCharsReader*>(subReader)->chars().c_str());
             if (data) {
                 regina::snappea::find_complete_hyperbolic_structure(data);
                 regina::snappea::do_Dehn_filling(data);
@@ -60,7 +60,7 @@ void XMLSnapPeaReader::endContentSubElement(
     }
 }
 
-XMLPacketReader* NSnapPeaTriangulation::xmlReader(Packet*,
+XMLPacketReader* SnapPeaTriangulation::xmlReader(Packet*,
         XMLTreeResolver& resolver) {
     return new XMLSnapPeaReader(resolver);
 }

@@ -33,7 +33,7 @@
 #include "dim4/dim4edge.h"
 #include "dim4/dim4triangle.h"
 #include "dim4/dim4triangulation.h"
-#include "enumerate/nenumconstraint.h"
+#include "enumerate/enumconstraints.h"
 #include "hypersurface/nhsstandard.h"
 #include "maths/nmatrixint.h"
 #include "maths/nrational.h"
@@ -129,9 +129,9 @@ NMatrixInt* NNormalHypersurfaceVectorStandard::makeMatchingEquations(
     return ans;
 }
 
-NEnumConstraintList* NNormalHypersurfaceVectorStandard::makeEmbeddedConstraints(
+EnumConstraints* NNormalHypersurfaceVectorStandard::makeEmbeddedConstraints(
         const Dim4Triangulation* triangulation) {
-    NEnumConstraintList* ans = new NEnumConstraintList(
+    EnumConstraints* ans = new EnumConstraints(
         30 * triangulation->size());
 
     size_t base = 5;

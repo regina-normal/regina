@@ -32,14 +32,14 @@
 
 /*! \file utilities/normalspec-impl.h
  *  \brief Contains implementations of template classes from
- *  nnormalsurfacelist.h.
+ *  normalsurfaces.h.
  *
- *  This file is automatically included from nnormalsurfacelist.h; there
+ *  This file is automatically included from normalsurfaces.h; there
  *  is no need for end users to include it explicitly.
  */
 
-// Make sure nnormalsurfacelist.h is included first.
-#include "surfaces/nnormalsurfacelist.h"
+// Make sure normalsurfaces.h is included first.
+#include "surfaces/normalsurfaces.h"
 
 #ifndef __NORMALSPEC_IMPL_H
 #ifndef __DOXYGEN
@@ -56,7 +56,7 @@ class NNormalSurfaceVectorQuadOct;
 /**
  * Constants, typedefs and operations for working with normal (as
  * opposed to almost normal) surfaces.  See the declaration in
- * nnormalsurfacelist.h for further details.
+ * normalsurfaces.h for further details.
  *
  * For both normal and almost normal surfaces, we refer to different
  * coordinate systems by the generic names \e standard form and
@@ -66,7 +66,7 @@ class NNormalSurfaceVectorQuadOct;
  * non-triangular disc types (e.g., the quadrilateral coordinates of
  * Tollefson).
  */
-struct REGINA_API NNormalSurfaceList::NormalSpec {
+struct REGINA_API NormalSurfaces::NormalSpec {
     /**
      * The underlying class for vectors in standard form.
      */
@@ -138,7 +138,7 @@ struct REGINA_API NNormalSurfaceList::NormalSpec {
 /**
  * Constants, typedefs and operations for working with almost normal (as
  * opposed to almost normal) surfaces.  See the declaration in
- * nnormalsurfacelist.h for further details.
+ * normalsurfaces.h for further details.
  *
  * For both normal and almost normal surfaces, we refer to different
  * coordinate systems by the generic names \e standard form and
@@ -148,7 +148,7 @@ struct REGINA_API NNormalSurfaceList::NormalSpec {
  * non-triangular disc types (e.g., quad-oct coordinates for almost
  * normal surfaces).
  */
-struct REGINA_API NNormalSurfaceList::AlmostNormalSpec {
+struct REGINA_API NormalSurfaces::AlmostNormalSpec {
     /**
      * The underlying class for vectors in standard form.
      */

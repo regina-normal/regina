@@ -1,0 +1,60 @@
+SET ( FILES
+  anglescreator
+  anglesui
+  compatcanvas
+  containerui
+  dim2tricreator
+  dim2trigluings
+  dim2triskeleton
+  dim2triui
+  dim4eltmovedialog
+  dim4trialgebra
+  dim4tricreator
+  dim4trigluings
+  dim4triskeleton
+  dim4triui
+  eltmovedialog
+  facetgraphtab
+  gaprunner
+  generictriui
+  groupwidget
+  nhypercompatui
+  nhypercoordinateui
+  nhypermatchingui
+  nhypersurfacecreator
+  nhypersummaryui
+  nhypersurfaceui
+  nnormalsurfacecreator
+  nnormalsurfaceui
+  nsurfacecompatui
+  nsurfacecoordinateui
+  nsurfacefiltercomb
+  nsurfacefiltercreator
+  nsurfacefilterprop
+  nsurfacematchingui
+  nsurfacesummaryui
+  ntrialgebra
+  ntriangulationcreator
+  ntriangulationui
+  ntricomposition
+  ntrigluings
+  ntriskeleton
+  ntrisnappea
+  ntrisurfaces
+  pdfui
+  scriptui
+  skeletonwindow
+  snappeaalgebra
+  snappeacomponents
+  snappeacreator
+  snappeafile
+  snappeagluings
+  snappeashapes
+  snappeaui
+  textui
+  )
+
+FOREACH( FILE ${FILES} )
+  SET( SOURCES ${SOURCES} packets/${FILE})
+ENDFOREACH(FILE)
+SET( SOURCES ${SOURCES} PARENT_SCOPE)

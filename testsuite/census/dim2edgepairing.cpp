@@ -36,7 +36,7 @@
 #include "testsuite/census/testcensus.h"
 
 using regina::Dim2EdgePairing;
-using regina::NBoolSet;
+using regina::BoolSet;
 
 /**
  * Simply increment the given count when a face pairing is found.
@@ -74,7 +74,7 @@ class Dim2EdgePairingTest : public CppUnit::TestFixture {
             unsigned nTri;
             for (nTri = 0; nTri <= 12; nTri++) {
                 count = 0;
-                Dim2EdgePairing::findAllPairings(nTri, NBoolSet::sFalse,
+                Dim2EdgePairing::findAllPairings(nTri, BoolSet::sFalse,
                     0, countEdgePairings, &count);
 
                 std::ostringstream msg;

@@ -32,7 +32,7 @@
 
 #import "SurfacesCompat.h"
 #import "SurfacesViewController.h"
-#import "surfaces/nnormalsurfacelist.h"
+#import "surfaces/normalsurfaces.h"
 
 #define KEY_LAST_TYPE @"SurfacesCompatType"
 
@@ -51,7 +51,7 @@ static NSArray* typeText = @[@"Do surfaces have compatible quadrilateral and/or 
     NSMutableArray* local;
     NSMutableArray* global;
 }
-@property (assign, nonatomic) regina::NNormalSurfaceList* packet;
+@property (assign, nonatomic) regina::NormalSurfaces* packet;
 @property (assign, nonatomic) BOOL showLocal;
 
 @property (assign, nonatomic) CGFloat minCellSize;

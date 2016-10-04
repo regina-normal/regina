@@ -33,7 +33,7 @@
 #import "ReginaHelper.h"
 #import "SnapPeaViewController.h"
 #import "SnapPeaGluings.h"
-#import "snappea/nsnappeatriangulation.h"
+#import "snappea/snappeatriangulation.h"
 
 #pragma mark - Table cell
 
@@ -59,7 +59,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *tetrahedra;
 
 @property (strong, nonatomic) SnapPeaViewController* viewer;
-@property (assign, nonatomic) regina::NSnapPeaTriangulation* packet;
+@property (assign, nonatomic) regina::SnapPeaTriangulation* packet;
 @end
 
 @implementation SnapPeaGluings

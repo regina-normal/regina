@@ -33,9 +33,9 @@
 #include <list>
 #include <thread>
 #include "dim4/dim4triangulation.h"
-#include "enumerate/ndoubledescription.h"
-#include "enumerate/nhilbertdual.h"
-#include "enumerate/nhilbertprimal.h"
+#include "enumerate/doubledescription.h"
+#include "enumerate/hilbertdual.h"
+#include "enumerate/hilbertprimal.h"
 #include "hypersurface/nnormalhypersurfacelist.h"
 #include "hypersurface/hscoordregistry.h"
 #include "maths/nmatrixint.h"
@@ -74,15 +74,15 @@ NMatrixInt* makeMatchingEquations(const Dim4Triangulation* triangulation,
 }
 
 namespace {
-    struct EmbeddedConstraints : public Returns<NEnumConstraintList*> {
+    struct EmbeddedConstraints : public Returns<EnumConstraints*> {
         template <typename Coords>
-        inline NEnumConstraintList* operator() (const Dim4Triangulation* tri) {
+        inline EnumConstraints* operator() (const Dim4Triangulation* tri) {
             return Coords::Class::makeEmbeddedConstraints(tri);
         }
     };
 }
 
-NEnumConstraintList* makeEmbeddedConstraints(
+EnumConstraints* makeEmbeddedConstraints(
         const Dim4Triangulation* triangulation, HyperCoords coords) {
     return forCoords(coords, EmbeddedConstraints(), 0, triangulation);
 }

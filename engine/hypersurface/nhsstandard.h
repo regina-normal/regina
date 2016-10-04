@@ -108,7 +108,7 @@ class REGINA_API NNormalHypersurfaceVectorStandard :
             const Dim4Triangulation* triangulation);
         static NMatrixInt* makeMatchingEquations(
             const Dim4Triangulation* triangulation);
-        static NEnumConstraintList* makeEmbeddedConstraints(
+        static EnumConstraints* makeEmbeddedConstraints(
             const Dim4Triangulation* triangulation);
 };
 

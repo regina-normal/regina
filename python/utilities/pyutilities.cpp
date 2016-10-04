@@ -32,14 +32,14 @@
 
 void addIntUtils();
 void addLocale();
-void addNBoolSet();
+void addBoolSet();
 void addOSUtils();
 void addStringUtils();
 
 void addUtilitiesClasses() {
     addIntUtils();
     addLocale();
-    addNBoolSet();
+    addBoolSet();
     addOSUtils();
     addStringUtils();
 }

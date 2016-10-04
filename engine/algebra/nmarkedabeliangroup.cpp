@@ -1097,7 +1097,7 @@ bool NHomMarkedAbelianGroup::isCycleMap() const
     return true;
 }
 
-//  Returns an NHomMarkedAbelianGroup representing the induced map
+//  Returns a NHomMarkedAbelianGroup representing the induced map
 //  on the torsion subgroups. 
 std::unique_ptr<NHomMarkedAbelianGroup> NHomMarkedAbelianGroup::torsionSubgroup()
         const {

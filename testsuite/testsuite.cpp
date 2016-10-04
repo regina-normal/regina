@@ -106,7 +106,7 @@ std::string truncateFixture(const std::string& testName) {
 void populateTests(CppUnit::TextTestRunner& runner) {
     // Utilities:
     addBase64(runner);
-    addNBitmask(runner);
+    addBitmask(runner);
 
     // Maths:
     addNInteger(runner);
@@ -144,7 +144,7 @@ void populateTests(CppUnit::TextTestRunner& runner) {
     addNStandardTriangulation(runner);
 
     // Surfaces:
-    addNNormalSurfaceList(runner);
+    addNormalSurfaces(runner);
     addIncompressible(runner);
 
     // Angle structures:
@@ -159,7 +159,7 @@ void populateTests(CppUnit::TextTestRunner& runner) {
     addDim4FacetPairing(runner);
 
     // SnapPea:
-    addNSnapPeaTriangulation(runner);
+    addSnapPeaTriangulation(runner);
 
     // Knots and links:
     addLink(runner);

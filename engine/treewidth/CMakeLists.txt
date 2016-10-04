@@ -1,6 +1,6 @@
 # Files to compile
 SET ( FILES
-  ntreedecomposition
+  treedecomposition
   )
 
 # Prepend folder name
@@ -15,5 +15,7 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     ntreedecomposition.h
     ntreedecomposition-impl.h
+    treedecomposition.h
+    treedecomposition-impl.h
     DESTINATION ${INCLUDEDIR}/treewidth COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

@@ -46,7 +46,7 @@
 namespace regina {
 
 class NNormalSurface;
-class NNormalSurfaceList;
+class NormalSurfaces;
 class NSurfaceFilter;
 class XMLPacketReader;
 class NXMLFilterReader;

@@ -32,7 +32,7 @@
 
 #include <deque>
 #include <set>
-#include "enumerate/nenumconstraint.h"
+#include "enumerate/enumconstraints.h"
 #include "surfaces/nsquad.h"
 #include "surfaces/nsstandard.h"
 #include "maths/nmatrixint.h"
@@ -81,9 +81,9 @@ NMatrixInt* NNormalSurfaceVectorQuad::makeMatchingEquations(
     return ans;
 }
 
-NEnumConstraintList* NNormalSurfaceVectorQuad::makeEmbeddedConstraints(
+EnumConstraints* NNormalSurfaceVectorQuad::makeEmbeddedConstraints(
         const NTriangulation* triangulation) {
-    NEnumConstraintList* ans = new NEnumConstraintList(
+    EnumConstraints* ans = new EnumConstraints(
         triangulation->size());
 
     unsigned long base = 0;

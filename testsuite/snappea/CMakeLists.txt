@@ -2,7 +2,7 @@
 
 # Files to compile
 SET ( FILES
-  nsnappeatriangulation
+  snappeatriangulation
   )
 
 # Prepend folder name

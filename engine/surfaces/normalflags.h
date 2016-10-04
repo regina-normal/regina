@@ -153,7 +153,7 @@ inline NormalList operator | (NormalListFlags lhs, NormalListFlags rhs) {
  *
  * These options are typically combined in a bitwise fashion using the
  * NormalAlg type, and then passed to enumeration routines such as
- * NNormalSurfaceList::enumerate().
+ * NormalSurfaces::enumerate().
  *
  * \ifacespython The values in this enumeration type are present, but
  * they are treated by Python as NormalList objects (and they can be

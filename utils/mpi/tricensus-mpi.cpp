@@ -157,7 +157,7 @@ struct Dim4Params {
 };
 
 // Census parameters.
-regina::NBoolSet
+regina::BoolSet
     finiteness(true, true),
     orientability(true, true);
 int minimal = 0;
@@ -357,8 +357,8 @@ int parseCmdLine(int argc, const char* argv[], bool isController) {
     poptFreeContext(optCon);
 
     // Finalise the census parameters.
-    finiteness = regina::NBoolSet(! argIdeal, ! argFinite);
-    orientability = regina::NBoolSet(! argNor, ! argOr);
+    finiteness = regina::BoolSet(! argIdeal, ! argFinite);
+    orientability = regina::BoolSet(! argNor, ! argOr);
 
     if (minimalPrimeP2)
         whichPurge = regina::NGluingPermSearcher::PURGE_NON_MINIMAL_PRIME |
@@ -745,16 +745,16 @@ void slaveDescribeCensusParameters(std::ostream& out) {
     else
         out << "Searching for 3-manifold triangulations\n";
 
-    if (finiteness == regina::NBoolSet::sTrue)
+    if (finiteness == regina::BoolSet::sTrue)
         out << "Finite only\n";
-    else if (finiteness == regina::NBoolSet::sFalse)
+    else if (finiteness == regina::BoolSet::sFalse)
         out << "Ideal only\n";
     else
         out << "Finite and ideal\n";
 
-    if (orientability == regina::NBoolSet::sTrue)
+    if (orientability == regina::BoolSet::sTrue)
         out << "Orientable only\n";
-    else if (orientability == regina::NBoolSet::sFalse)
+    else if (orientability == regina::BoolSet::sFalse)
         out << "Non-orientable only\n";
     else
         out << "Orientable and non-orientable\n";

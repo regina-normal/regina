@@ -32,7 +32,7 @@
 
 #include "regina-config.h"
 #include "packet/container.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 
 #include "eventids.h"
 #include "examplesaction.h"

@@ -68,7 +68,7 @@ print p.str('z')
 print p.utf8()
 print p.utf8('z')
 
-p = NCyclotomic(7)
+p = Cyclotomic(7)
 p[4] = 3
 p[1] = -1
 p

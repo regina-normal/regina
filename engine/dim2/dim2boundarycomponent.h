@@ -43,7 +43,7 @@
 #include "regina-core.h"
 #include "output.h"
 #include "generic/alias/face.h"
-#include "utilities/nmarkedvector.h"
+#include "utilities/markedvector.h"
 #include <boost/noncopyable.hpp>
 // NOTE: More #includes follow after the class declarations.
 
@@ -73,7 +73,7 @@ class REGINA_API Dim2BoundaryComponent :
         public Output<Dim2BoundaryComponent>,
         public alias::FaceOfTriangulation<Dim2BoundaryComponent, 2>,
         public boost::noncopyable,
-        public NMarkedElement {
+        public MarkedElement {
     private:
         std::vector<Dim2Edge*> edges_;
             /**< List of edges in the component. */

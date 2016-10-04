@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 
 #include "csvsurfacehandler.h"
 #include "reginasupport.h"
@@ -42,13 +42,13 @@
 const CSVSurfaceHandler CSVSurfaceHandler::instance;
 
 PacketFilter* CSVSurfaceHandler::canExport() const {
-    return new SingleTypeFilter<regina::NNormalSurfaceList>();
+    return new SingleTypeFilter<regina::NormalSurfaces>();
 }
 
 bool CSVSurfaceHandler::exportData(regina::Packet* data,
         const QString& fileName, QWidget* parentWidget) const {
-    regina::NNormalSurfaceList* list =
-        dynamic_cast<regina::NNormalSurfaceList*>(data);
+    regina::NormalSurfaces* list =
+        dynamic_cast<regina::NormalSurfaces*>(data);
     if (! list->saveCSVStandard(
             static_cast<const char*>(QFile::encodeName(fileName)))) {
         ReginaSupport::warn(parentWidget,

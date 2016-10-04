@@ -47,8 +47,8 @@
 #include "hypersurface/hypercoords.h"
 #include "maths/nperm5.h"
 #include "maths/nray.h"
-#include "utilities/nbooleans.h"
-#include "utilities/nproperty.h"
+#include "utilities/boolset.h"
+#include "utilities/property.h"
 #include <boost/noncopyable.hpp>
 
 namespace regina {
@@ -59,7 +59,7 @@ namespace regina {
  * @{
  */
 
-class NEnumConstraintList;
+class EnumConstraints;
 class NXMLNormalHypersurfaceReader;
 
 template <int> class Triangulation;
@@ -374,7 +374,7 @@ class REGINA_API NNormalHypersurfaceVector : public NRay {
          * @return a newly allocated set of constraints.
          */
         #ifdef __DOXYGEN
-            static NEnumConstraintList* makeEmbeddedConstraints(
+            static EnumConstraints* makeEmbeddedConstraints(
                 const Dim4Triangulation* triangulation);
         #endif
 };
@@ -406,19 +406,19 @@ class REGINA_API NNormalHypersurface :
         std::string name_;
             /**< An optional name associated with this hypersurface. */
 
-        mutable NProperty<bool> orientable_;
+        mutable Property<bool> orientable_;
             /**< Is this hypersurface orientable? */
-        mutable NProperty<bool> twoSided_;
+        mutable Property<bool> twoSided_;
             /**< Is this hypersurface two-sided? */
-        mutable NProperty<bool> connected_;
+        mutable Property<bool> connected_;
             /**< Is this hypersurface connected? */
-        mutable NProperty<bool> realBoundary_;
+        mutable Property<bool> realBoundary_;
             /**< Does this hypersurface have real boundary (i.e. does it meet
                  any boundary facets)? */
-        mutable NProperty<bool> compact_;
+        mutable Property<bool> compact_;
             /**< Is this hypersurface compact (i.e., does it only
                  contain finitely many pieces)? */
-        mutable NProperty<NAbelianGroup, StoreManagedPtr> H1_;
+        mutable Property<NAbelianGroup, StoreManagedPtr> H1_;
             /**< First homology group of the hypersurface. */
 
     public:

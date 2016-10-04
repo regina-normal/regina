@@ -31,7 +31,7 @@
  **************************************************************************/
 
 void addMatrixOps();
-void addNCyclotomic();
+void addCyclotomic();
 void addNInteger();
 void addNLargeInteger();
 void addNLaurent();
@@ -50,7 +50,7 @@ void addNumberTheory();
 
 void addMathsClasses() {
     addMatrixOps();
-    addNCyclotomic();
+    addCyclotomic();
     addNInteger();
     addNLargeInteger();
     addNLaurent();

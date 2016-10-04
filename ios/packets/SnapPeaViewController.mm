@@ -32,7 +32,7 @@
 
 #import "SnapPeaViewController.h"
 #import "TextHelper.h"
-#import "snappea/nsnappeatriangulation.h"
+#import "snappea/snappeatriangulation.h"
 
 @implementation SnapPeaViewController
 
@@ -98,47 +98,47 @@
 
     // Volume and solution type:
     switch (self.packet->solutionType()) {
-        case regina::NSnapPeaTriangulation::not_attempted:
+        case regina::SnapPeaTriangulation::not_attempted:
             volume.text = @"Solution not attempted";
             solnType.text= @"";
             break;
-        case regina::NSnapPeaTriangulation::geometric_solution:
+        case regina::SnapPeaTriangulation::geometric_solution:
             if (self.packet->volumeZero())
                 volume.text = @"Volume approximately zero";
             else
                 volume.text = [NSString stringWithFormat:@"Volume: %lf", self.packet->volume()];
             solnType.text = @"Tetrahedra positively oriented";
             break;
-        case regina::NSnapPeaTriangulation::nongeometric_solution:
+        case regina::SnapPeaTriangulation::nongeometric_solution:
             if (self.packet->volumeZero())
                 volume.text = @"Volume approximately zero";
             else
                 volume.text = [NSString stringWithFormat:@"Volume: %lf", self.packet->volume()];
             solnType.text = @"Contains flat or negative tetrahedra";
             break;
-        case regina::NSnapPeaTriangulation::flat_solution:
+        case regina::SnapPeaTriangulation::flat_solution:
             if (self.packet->volumeZero())
                 volume.text = @"Volume approximately zero";
             else
                 volume.text = [NSString stringWithFormat:@"Volume: %lf", self.packet->volume()];
             solnType.text = @"All tetrahedra flat";
             break;
-        case regina::NSnapPeaTriangulation::degenerate_solution:
+        case regina::SnapPeaTriangulation::degenerate_solution:
             if (self.packet->volumeZero())
                 volume.text = @"Volume approximately zero";
             else
                 volume.text = [NSString stringWithFormat:@"Volume: %lf", self.packet->volume()];
             solnType.text = @"Contains degenerate tetrahedra";
             break;
-        case regina::NSnapPeaTriangulation::other_solution:
+        case regina::SnapPeaTriangulation::other_solution:
             volume.text = @"Unrecognised solution type";
             solnType.text = @"";
             break;
-        case regina::NSnapPeaTriangulation::no_solution:
+        case regina::SnapPeaTriangulation::no_solution:
             volume.text = @"No solution found";
             solnType.text = @"";
             break;
-        case regina::NSnapPeaTriangulation::externally_computed:
+        case regina::SnapPeaTriangulation::externally_computed:
             volume.text = @"Externally computed";
             solnType.text = @"";
             break;

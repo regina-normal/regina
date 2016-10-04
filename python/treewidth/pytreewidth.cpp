@@ -30,9 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-void addNTreeDecomposition();
+void addTreeDecomposition();
 
 void addTreewidthClasses() {
-    addNTreeDecomposition();
+    addTreeDecomposition();
 }
 

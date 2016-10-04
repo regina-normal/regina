@@ -48,7 +48,7 @@
  *
  *  To start: visit the <a href="modules.html">Modules</a> page and take
  *  a look around, or browse through the classes regina::Triangulation<3> and
- *  regina::NNormalSurfaceList.
+ *  regina::NormalSurfaces.
  *
  *  <h3>Python</h3>
  *
@@ -227,7 +227,7 @@ namespace regina {
  *    in Python.  However, not all classes and functions are wrapped.
  *    If a class or function is not available in Python then you will
  *    see a bold <b>Python:</b> note indicating this.  See for instance
- *    the class NBitmask, or the function duplicate().
+ *    the class Bitmask, or the function duplicate().
  *
  *  - Most of Regina's classes and functions have the same interface
  *    in both C++ and Python, but occasionally there are differences.

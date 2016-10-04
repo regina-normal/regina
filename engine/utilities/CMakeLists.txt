@@ -2,12 +2,12 @@
 
 # Files to compile
 SET ( FILES
+  boolset
   base64
   i18nutils
-  nbooleans
-  nxmlcallback
   osutils
   stringutils
+  xmlcallback
   xmlutils
   )
 
@@ -23,22 +23,19 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     base64.h
     bitmanip.h
+    bitmask.h
+    boolset.h
     flags.h
     i18nutils.h
     intutils.h
+    listoncall.h
+    markedvector.h
     memutils.h
-    nbitmask.h
     nbooleans.h
-    nlistoncall.h
-    nmarkedvector.h
-    nproperty.h
-    nqitmask.h
-    ntrieset.h
-    ntritmask.h
-    nxmlcallback.h
-    nxmlelementreader.h
     osutils.h
+    property.h
     ptrutils.h
+    qitmask.h
     registryutils.h
     safepointeebase.h
     safeptr.h
@@ -46,6 +43,10 @@ if (${REGINA_INSTALL_DEV})
     sequence.h
     stringutils.h
     stringutils-impl.h
+    trieset.h
+    tritmask.h
+    xmlcallback.h
+    xmlelementreader.h
     xmlutils.h
     DESTINATION ${INCLUDEDIR}/utilities COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

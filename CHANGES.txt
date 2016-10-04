@@ -15,13 +15,30 @@ Version 5.1  [ (under development) ]
           The old types and headers are deprecated but kept for backward
           compatibility.  There are some exceptions:
             + NAngleStructureList becomes AngleStructures.
+            + NEnumConstraintList becomes EnumConstraints.
             + NExampleSnapPeaTriangulation becomes ExampleSnapPea.
-            + NXMLFoo classes have no backward compatible headers or typedefs,
-              since these are for internal use only.
+            + NNormalSurfaceList becomes NormalSurfaces.
+            + utilities/nbooleans.h becomes utilities/boolset.h.
+            + Some internal classes do not have backward compatible headers or
+              typedefs.  None of these internal classes are exposed to Python,
+              and typical C++ users would have no reason to use them either.
     ENGINE:
+        Enum PacketType:
+            - Renamed PACKET_NORMALSURFACELIST to PACKET_NORMALSURFACES,
+              PACKET_NORMALHYPERSURFACELIST to PACKET_NORMALHYPERSURFACES,
+              and PACKET_ANGLESTRUCTURELIST to PACKET_ANGLESTRUCTURES.
+              The old names are kept but deprecated.
+        Routine isZero, isNonZero, isPositive, isNegative, isNonPositive,
+                isNonNegative:
+            - Deprecated, with no replacements.  This is because the methods
+              here for managing round-off error were quite brutal.
         Global array quadDefn[][]:
             - Added to nnormalsurface.h, with the same contents as the old
               (and now removed) array vertexSplitDefn[][].
+    PYTHON:
+        - Removed Regina's ancient "python libraries" facility, since Python
+          itself offers better and more standardised ways of doing this.  The
+          file ~/.regina-libs is now ignored, and you can happily delete it.
 
 Version 5.0  [ 26 September, 2016 ]
 

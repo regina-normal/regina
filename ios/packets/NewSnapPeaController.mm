@@ -35,7 +35,7 @@
 #import "PacketTreeController.h"
 #import "ReginaHelper.h"
 #import "snappea/examplesnappea.h"
-#import "snappea/nsnappeatriangulation.h"
+#import "snappea/snappeatriangulation.h"
 
 @interface NewSnapPeaController ()
 @property (weak, nonatomic) IBOutlet UISegmentedControl *types;
@@ -127,7 +127,7 @@
         return 0;
     }
 
-    regina::NSnapPeaTriangulation* ans = new regina::NSnapPeaTriangulation(*tri);
+    regina::SnapPeaTriangulation* ans = new regina::SnapPeaTriangulation(*tri);
     if (ans->isNull()) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Could Not Convert to SnapPea"
                                                         message:@"I was unable to convert this into a SnapPea triangulation.  Regina works with more general triangulations than SnapPea does, and not every Regina triangulation can be converted into SnapPea's format."
@@ -145,7 +145,7 @@
 
 #pragma mark - Example triangulation
 
-typedef regina::NSnapPeaTriangulation* (*SnapPeaCreator)();
+typedef regina::SnapPeaTriangulation* (*SnapPeaCreator)();
 
 /**
  * Represents a single option in the examples picker.
@@ -156,7 +156,7 @@ typedef regina::NSnapPeaTriangulation* (*SnapPeaCreator)();
 @property (assign, nonatomic) SnapPeaCreator creator;
 
 + (id)exampleWithName:(NSString*)name creator:(SnapPeaCreator)creator;
-- (regina::NSnapPeaTriangulation*)create;
+- (regina::SnapPeaTriangulation*)create;
 
 @end
 
@@ -172,9 +172,9 @@ typedef regina::NSnapPeaTriangulation* (*SnapPeaCreator)();
     return e;
 }
 
-- (regina::NSnapPeaTriangulation *)create
+- (regina::SnapPeaTriangulation *)create
 {
-    regina::NSnapPeaTriangulation* ans = (*self.creator)();
+    regina::SnapPeaTriangulation* ans = (*self.creator)();
     ans->setLabel(self.name.UTF8String);
     return ans;
 }

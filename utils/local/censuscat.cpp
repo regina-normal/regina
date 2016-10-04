@@ -48,7 +48,7 @@
  */
 
 #include "packet/container.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 #include "triangulation/ntriangulation.h"
 
 #include <cstdlib>
@@ -103,7 +103,7 @@ void insertTri(const NTriangulation& source) {
     }
 
     if (makeSurfaces)
-        NNormalSurfaceList::enumerate(t, NS_STANDARD)->
+        NormalSurfaces::enumerate(t, NS_STANDARD)->
             setLabel(t->adornedLabel("Surfaces"));
 }
 

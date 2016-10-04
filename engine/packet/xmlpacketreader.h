@@ -40,7 +40,7 @@
 #endif
 
 #include "regina-core.h"
-#include "utilities/nxmlelementreader.h"
+#include "utilities/xmlelementreader.h"
 
 namespace regina {
 
@@ -78,7 +78,7 @@ class XMLTreeResolver;
  *
  * \ifacespython Not present.
  */
-class REGINA_API XMLPacketReader : public NXMLElementReader {
+class REGINA_API XMLPacketReader : public XMLElementReader {
     private:
         std::string childLabel;
             /**< The packet label to give the child packet currently
@@ -139,7 +139,7 @@ class REGINA_API XMLPacketReader : public NXMLElementReader {
          * Used instead of startSubElement() for XML subelements that
          * are not child packets or packet tags.
          *
-         * The default implementation returns a new NXMLElementReader
+         * The default implementation returns a new XMLElementReader
          * which can be used to ignore the subelement completely.
          *
          * @param subTagName the name of the subelement opening tag.
@@ -149,7 +149,7 @@ class REGINA_API XMLPacketReader : public NXMLElementReader {
          * parse the subelement.  This class should \e not take care of
          * the new reader's destruction; that will be done by the parser.
          */
-        virtual NXMLElementReader* startContentSubElement(
+        virtual XMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps);
         /**
@@ -166,14 +166,14 @@ class REGINA_API XMLPacketReader : public NXMLElementReader {
          * and that the child reader has not yet been destroyed.
          */
         virtual void endContentSubElement(const std::string& subTagName,
-            NXMLElementReader* subReader);
+            XMLElementReader* subReader);
 
-        virtual NXMLElementReader* startSubElement(
+        virtual XMLElementReader* startSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps);
         virtual void endSubElement(const std::string& subTagName,
-            NXMLElementReader* subReader);
-        virtual void abort(NXMLElementReader *subReader);
+            XMLElementReader* subReader);
+        virtual void abort(XMLElementReader *subReader);
 };
 
 /*@}*/
@@ -188,13 +188,13 @@ inline Packet* XMLPacketReader::packet() {
     return 0;
 }
 
-inline NXMLElementReader* XMLPacketReader::startContentSubElement(
+inline XMLElementReader* XMLPacketReader::startContentSubElement(
         const std::string&, const regina::xml::XMLPropertyDict&) {
-    return new NXMLElementReader();
+    return new XMLElementReader();
 }
 
 inline void XMLPacketReader::endContentSubElement(const std::string&,
-        NXMLElementReader*) {
+        XMLElementReader*) {
 }
 
 } // namespace regina

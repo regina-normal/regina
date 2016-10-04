@@ -40,7 +40,7 @@
 #include "packet/container.h"
 #include "packet/xmlpacketreader.h"
 #include "packet/xmltreeresolver.h"
-#include "utilities/nxmlcallback.h"
+#include "utilities/xmlcallback.h"
 #include "utilities/stringutils.h"
 
 namespace regina {
@@ -81,7 +81,7 @@ namespace {
 
             virtual void startElement(const std::string& n,
                     const regina::xml::XMLPropertyDict& props,
-                    NXMLElementReader*) {
+                    XMLElementReader*) {
                 if (n == "reginadata") {
                     isReginaData = true;
 
@@ -92,7 +92,7 @@ namespace {
                 }
             }
 
-            virtual void abort(NXMLElementReader*) {
+            virtual void abort(XMLElementReader*) {
                 // Delete all children of the top-level container.
                 while (Packet* child = container.firstChild()) {
                     child->makeOrphan();
@@ -139,7 +139,7 @@ Packet* open(std::istream& s) {
     XMLTreeResolver resolver;
 
     ReginaDataReader reader(resolver);
-    regina::NXMLCallback callback(reader, std::cerr);
+    regina::XMLCallback callback(reader, std::cerr);
 
     // Instead of using the ready-made regina::xml::XMLParser::parse_stream(),
     // we split the stream into parseable chunks manually.  This allows us to
@@ -152,7 +152,7 @@ Packet* open(std::istream& s) {
         char* buf = new char[regChunkSize];
         int chunkRead;
         bool seenFirstChunk = false;
-        while (callback.state() != NXMLCallback::ABORTED) {
+        while (callback.state() != XMLCallback::ABORTED) {
             // Read in the next chunk.
             for (chunkRead = 0; chunkRead < regChunkSize; chunkRead++) {
                 buf[chunkRead] = static_cast<char>(in.get());

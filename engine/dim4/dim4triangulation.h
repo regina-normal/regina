@@ -47,8 +47,8 @@
 #include "algebra/ngrouppresentation.h"
 #include "generic/triangulation.h"
 #include "packet/packet.h"
-#include "utilities/nmarkedvector.h"
-#include "utilities/nproperty.h"
+#include "utilities/markedvector.h"
+#include "utilities/property.h"
 
 // The following headers are necessary so that std::unique_ptr can invoke
 // destructors where necessary.
@@ -147,18 +147,18 @@ class REGINA_API Triangulation<4> :
                  links, or it may mean that the vertex links have not yet
                  been calculated. */
 
-        NMarkedVector<Dim4BoundaryComponent> boundaryComponents_;
+        MarkedVector<Dim4BoundaryComponent> boundaryComponents_;
             /**< The components that form the boundary of the
                  triangulation. */
 
         bool ideal_;
             /**< Is the triangulation ideal? */
 
-        mutable NProperty<NGroupPresentation, StoreManagedPtr> fundGroup_;
+        mutable Property<NGroupPresentation, StoreManagedPtr> fundGroup_;
             /**< Fundamental group of the triangulation. */
-        mutable NProperty<NAbelianGroup, StoreManagedPtr> H1_;
+        mutable Property<NAbelianGroup, StoreManagedPtr> H1_;
             /**< First homology group of the triangulation. */
-        mutable NProperty<NAbelianGroup, StoreManagedPtr> H2_;
+        mutable Property<NAbelianGroup, StoreManagedPtr> H2_;
             /**< Second homology group of the triangulation. */
 
     public:

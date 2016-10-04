@@ -35,14 +35,14 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "surfaces/nnormalsurface.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
 #include "testsuite/triangulation/testtriangulation.h"
 
 using regina::NExampleTriangulation;
 using regina::NNormalSurface;
-using regina::NNormalSurfaceList;
+using regina::NormalSurfaces;
 using regina::NPerm4;
 using regina::NTetrahedron;
 using regina::NTriangulation;
@@ -72,7 +72,7 @@ class IncompressibleTest : public CppUnit::TestFixture {
 
         NTriangulation* verifyAllNotIncompressible(NTriangulation* tri,
                 const std::string& triName) {
-            NNormalSurfaceList* s = NNormalSurfaceList::enumerate(tri,
+            NormalSurfaces* s = NormalSurfaces::enumerate(tri,
                 regina::NS_STANDARD, regina::NS_EMBEDDED_ONLY);
             for (unsigned i = 0; i < s->size(); ++i)
                 verifyNotIncompressible(s->surface(i), triName);
@@ -82,7 +82,7 @@ class IncompressibleTest : public CppUnit::TestFixture {
 
         NTriangulation* verifyHasIncompressible(NTriangulation* tri,
                 const std::string& triName) {
-            NNormalSurfaceList* s = NNormalSurfaceList::enumerate(tri,
+            NormalSurfaces* s = NormalSurfaces::enumerate(tri,
                 regina::NS_STANDARD, regina::NS_EMBEDDED_ONLY);
             for (unsigned i = 0; i < s->size(); ++i)
                 if (s->surface(i)->isIncompressible()) {

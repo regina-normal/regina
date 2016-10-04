@@ -47,8 +47,8 @@
 #include "maths/nray.h"
 #include "surfaces/ndisctype.h"
 #include "surfaces/normalcoords.h"
-#include "utilities/nbooleans.h"
-#include "utilities/nproperty.h"
+#include "utilities/boolset.h"
+#include "utilities/property.h"
 #include <boost/noncopyable.hpp>
 
 namespace regina {
@@ -201,7 +201,7 @@ REGINA_API extern const NPerm4 __octDiscArcs[24];
 #define octDiscArcs(i, j) __octDiscArcs[(8 * (i)) + (j)]
 #endif
 
-class NEnumConstraintList;
+class EnumConstraints;
 class NXMLNormalSurfaceReader;
 class NMatrixInt;
 
@@ -717,7 +717,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          * @return a newly allocated set of constraints.
          */
         #ifdef __DOXYGEN
-            static NEnumConstraintList* makeEmbeddedConstraints(
+            static EnumConstraints* makeEmbeddedConstraints(
                 const NTriangulation* triangulation);
         #endif
 };
@@ -755,23 +755,23 @@ class REGINA_API NNormalSurface :
         std::string name_;
             /**< An optional name associated with this surface. */
 
-        mutable NProperty<NDiscType> octPosition_;
+        mutable Property<NDiscType> octPosition_;
             /**< The position of the first non-zero octagonal coordinate,
                  or NDiscType::NONE if there is no non-zero octagonal
                  coordinate.  Here NDiscType::type is an octagon type
                  between 0 and 2 inclusive. */
-        mutable NProperty<NLargeInteger> eulerChar_;
+        mutable Property<NLargeInteger> eulerChar_;
             /**< The Euler characteristic of this surface. */
-        mutable NProperty<bool> orientable;
+        mutable Property<bool> orientable;
             /**< Is this surface orientable? */
-        mutable NProperty<bool> twoSided;
+        mutable Property<bool> twoSided;
             /**< Is this surface two-sided? */
-        mutable NProperty<bool> connected;
+        mutable Property<bool> connected;
             /**< Is this surface connected? */
-        mutable NProperty<bool> realBoundary;
+        mutable Property<bool> realBoundary;
             /**< Does this surface have real boundary (i.e. does it meet
              *   any boundary triangles)? */
-        mutable NProperty<bool> compact;
+        mutable Property<bool> compact;
             /**< Is this surface compact (i.e. does it only contain
              *   finitely many discs)? */
 
@@ -1094,7 +1094,7 @@ class REGINA_API NNormalSurface :
         /**
          * Writes a chunk of XML containing this normal surface and all
          * of its properties.  This routine will be called from within
-         * NNormalSurfaceList::writeXMLPacketData().
+         * NormalSurfaces::writeXMLPacketData().
          *
          * \ifacespython Not present.
          *
@@ -1441,7 +1441,7 @@ class REGINA_API NNormalSurface :
          * disc types (such as octagons), this routine will still return
          * \c true if this particular surface does not use them.
          * This is in contrast to the routine
-         * NNormalSurfaceList::allowsAlmostNormal(), which only examines
+         * NormalSurfaces::allowsAlmostNormal(), which only examines
          * the underlying coordinate system.
          *
          * @return \c true if and only if this surface contains only
@@ -1538,7 +1538,7 @@ class REGINA_API NNormalSurface :
          * kernel, since Regina does not use or store peripheral curves for
          * its own NTriangulation class.  Therefore, if the underlying
          * triangulation (as returned by triangulation()) is not of the
-         * subclass NSnapPeaTriangulation, this routine will simply return 0.
+         * subclass SnapPeaTriangulation, this routine will simply return 0.
          *
          * All cusps are treated as complete.  That is, any Dehn fillings
          * stored in the SnapPea triangulation will be ignored.
@@ -1563,7 +1563,7 @@ class REGINA_API NNormalSurface :
          *
          * If the triangulation contains more than one vertex, the rows
          * in the resulting matrix are ordered by cusp index (as stored by
-         * SnapPea).  You can call NSnapPeaTriangulation::cuspVertex() to
+         * SnapPea).  You can call SnapPeaTriangulation::cuspVertex() to
          * map these to Regina's vertex indices if needed.
          *
          * At present, Regina can only compute boundary slopes if the
@@ -1577,7 +1577,7 @@ class REGINA_API NNormalSurface :
          * @return a newly allocated matrix with \a number_of_vertices
          * rows and two columns as described above, or 0 if the boundary
          * slopes cannot be computed (e.g., if the underlying triangulation
-         * is not of type NSnapPeaTriangulation, or if it fails to meet the
+         * is not of type SnapPeaTriangulation, or if it fails to meet the
          * preconditions outlined above).
          */
         NMatrixInt* boundaryIntersections() const;

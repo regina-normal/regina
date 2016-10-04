@@ -40,13 +40,12 @@
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
 #include "dim2/dim2triangulation.h"
-#include "maths/approx.h"
 #include "maths/nmatrixint.h"
 #include "maths/numbertheory.h"
 #include "packet/container.h"
 #include "split/nsignature.h"
 #include "subcomplex/nstandardtri.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"
@@ -64,7 +63,7 @@ using regina::NExampleTriangulation;
 using regina::NGroupPresentation;
 using regina::NIsomorphism;
 using regina::NNormalSurface;
-using regina::NNormalSurfaceList;
+using regina::NormalSurfaces;
 using regina::NPerm4;
 using regina::NSignature;
 using regina::NStandardTriangulation;
@@ -2050,7 +2049,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 expected = false;
             else {
                 expected = true;
-                NNormalSurfaceList* s = NNormalSurfaceList::enumerate(
+                NormalSurfaces* s = NormalSurfaces::enumerate(
                     tri, regina::NS_STANDARD);
                 const NNormalSurface* f;
                 for (size_t i = 0; i < s->size(); ++i) {

@@ -134,23 +134,23 @@ static NSMutableCharacterSet* eulerSeparators;
     myEdit = NO;
 }
 
-+ (regina::NBoolSet)setFromSelection:(long)selection
++ (regina::BoolSet)setFromSelection:(long)selection
 {
     switch (selection) {
-        case 0: return regina::NBoolSet::sBoth;
-        case 1: return regina::NBoolSet::sTrue;
-        case 2: return regina::NBoolSet::sFalse;
-        default: return regina::NBoolSet::sNone;
+        case 0: return regina::BoolSet::sBoth;
+        case 1: return regina::BoolSet::sTrue;
+        case 2: return regina::BoolSet::sFalse;
+        default: return regina::BoolSet::sNone;
     }
 }
 
-+ (long)selectionFromSet:(const regina::NBoolSet&)set
++ (long)selectionFromSet:(const regina::BoolSet&)set
 {
-    if (set == regina::NBoolSet::sBoth)
+    if (set == regina::BoolSet::sBoth)
         return 0;
-    if (set == regina::NBoolSet::sTrue)
+    if (set == regina::BoolSet::sTrue)
         return 1;
-    if (set == regina::NBoolSet::sFalse)
+    if (set == regina::BoolSet::sFalse)
         return 2;
     // Hmm?
     NSLog(@"Filter-by-properties: some property was set to sNone, changing to sBoth.");

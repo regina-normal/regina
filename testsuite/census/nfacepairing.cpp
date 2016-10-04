@@ -36,7 +36,7 @@
 #include "triangulation/nfacepairing.h"
 
 using regina::NFacePairing;
-using regina::NBoolSet;
+using regina::BoolSet;
 
 /**
  * Simply increment the given count when a face pairing is found.
@@ -129,7 +129,7 @@ class NFacePairingTest : public CppUnit::TestFixture {
             unsigned nTets;
             for (nTets = 0; nTets <= 8; nTets++) {
                 count = 0;
-                NFacePairing::findAllPairings(nTets, NBoolSet::sFalse,
+                NFacePairing::findAllPairings(nTets, BoolSet::sFalse,
                     0, countFacePairings, &count);
 
                 if (count != nPairs[nTets]) {
@@ -152,7 +152,7 @@ class NFacePairingTest : public CppUnit::TestFixture {
 
             for (nTets = 0; nTets <= 8; nTets++) {
                 count = 0;
-                NFacePairing::findAllPairings(nTets, NBoolSet::sTrue,
+                NFacePairing::findAllPairings(nTets, BoolSet::sTrue,
                     1, countFacePairings, &count);
 
                 if (count != 0) {
@@ -167,7 +167,7 @@ class NFacePairingTest : public CppUnit::TestFixture {
 
             for (nTets = 0; nTets <= 7; nTets++) {
                 count = 0;
-                NFacePairing::findAllPairings(nTets, NBoolSet::sTrue,
+                NFacePairing::findAllPairings(nTets, BoolSet::sTrue,
                     2, countFacePairings, &count);
 
                 if (count != nBdry2[nTets]) {
@@ -182,7 +182,7 @@ class NFacePairingTest : public CppUnit::TestFixture {
 
             for (nTets = 0; nTets <= 6; nTets++) {
                 count = 0;
-                NFacePairing::findAllPairings(nTets, NBoolSet::sTrue,
+                NFacePairing::findAllPairings(nTets, BoolSet::sTrue,
                     -1, countFacePairings, &count);
 
                 if (count != nBdry[nTets]) {
@@ -221,7 +221,7 @@ class NFacePairingTest : public CppUnit::TestFixture {
             unsigned nTets;
             for (nTets = 1; nTets <= 8; nTets++) {
                 BadGraphs bad;
-                NFacePairing::findAllPairings(nTets, NBoolSet::sFalse,
+                NFacePairing::findAllPairings(nTets, BoolSet::sFalse,
                     0, countBadGraphs, &bad);
 
                 if (bad.tripleEdge != nTriple[nTets]) {

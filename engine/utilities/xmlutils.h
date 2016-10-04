@@ -49,7 +49,7 @@
 #include <sstream>
 #include <libxml/parser.h>
 #include "regina-core.h"
-#include "utilities/nbooleans.h"
+#include "utilities/boolset.h"
 
 namespace regina {
 
@@ -353,8 +353,8 @@ inline std::string xmlValueTag(const std::string& tagName, const T& value) {
     }
 
     template <>
-    inline std::string xmlValueTag<NBoolSet>(const std::string& tagName,
-            const NBoolSet& value) {
+    inline std::string xmlValueTag<BoolSet>(const std::string& tagName,
+            const BoolSet& value) {
         return '<' + tagName + " value=\"" +
             (value.hasTrue() ? 'T' : '-') +
             (value.hasFalse() ? 'F' : '-') + "\"/>";

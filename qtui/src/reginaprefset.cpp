@@ -32,8 +32,8 @@
 
 #include "regina-config.h"
 #include "file/globaldirs.h"
-#include "snappea/nsnappeatriangulation.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "snappea/snappeatriangulation.h"
+#include "surfaces/normalsurfaces.h"
 #include "utilities/stringutils.h"
 
 #include "reginaprefset.h"
@@ -64,70 +64,6 @@ ReginaPrefSet ReginaPrefSet::instance_;
 #else
     const char* ReginaPrefSet::defaultGAPExec = "gap";
 #endif
-
-ReginaFilePref::ReginaFilePref(const QString& filename,
-        const QString& displayName, const QString& systemKey,
-        QSettings& settings) :
-        filename_(filename), displayName_(displayName), systemKey_(systemKey) {
-    active_ = settings.value(systemKey_, true).toBool();
-}
-
-void ReginaFilePref::setFilename(const QString& filename) {
-    filename_ = filename;
-    displayName_ = QFileInfo(filename_).fileName() + " [" + filename_ + ']';
-}
-
-bool ReginaFilePref::exists() const {
-    return QFileInfo(filename_).exists();
-}
-
-QString ReginaFilePref::shortDisplayName() const {
-    if (systemKey_.isNull())
-        return QFileInfo(filename_).fileName();
-    else
-        return displayName_;
-}
-
-QByteArray ReginaFilePref::encodeFilename() const {
-    return static_cast<const char*>(QFile::encodeName(filename_));
-}
-
-void ReginaFilePref::writeKeys(const QList<ReginaFilePref>& list,
-        QSettings& settings) {
-    QStringList strings;
-    foreach (const ReginaFilePref& f, list) {
-        if (f.systemKey_.isNull())
-            strings.push_back((f.active_ ? '+' : '-') + f.filename_);
-        else
-            settings.setValue(f.systemKey_, f.active_);
-    }
-    settings.setValue("UserFiles", strings);
-}
-
-void ReginaFilePref::readUserKey(QList<ReginaFilePref>& list,
-        QSettings& settings) {
-    QStringList strings = 
-        settings.value("UserFiles", QStringList()).value<QStringList>();
-
-    // Each string must start with + or - (active or inactive).
-    // Any other strings will be ignored.
-    for (QStringList::const_iterator it = strings.begin();
-            it != strings.end(); it++) {
-        if ((*it).isEmpty())
-            continue;
-        // Use toLatin1() since we're just testing a char for '+' or '-'.
-        switch ((*it)[0].toLatin1()) {
-            case '+':
-                // Active file.
-                list.push_back(ReginaFilePref((*it).mid(1), true));
-                break;
-            case '-':
-                // Inactive file.
-                list.push_back(ReginaFilePref((*it).mid(1), false));
-                break;
-        }
-    }
-}
 
 ReginaPrefSet::ReginaPrefSet() :
         anglesCreationTaut(false),
@@ -164,92 +100,6 @@ ReginaPrefSet::ReginaPrefSet() :
         triInitialGraphType(DualGraph),
         triSurfacePropsThreshold(6),
         warnOnNonEmbedded(true) {
-}
-
-QString ReginaPrefSet::pythonLibrariesConfig() {
-#ifdef Q_OS_WIN32
-    return QString(); // Use the registry instead.
-#elif defined(REGINA_INSTALL_BUNDLE) && defined(Q_OS_MACX) && defined(REGINA_XCODE_BUNDLE)
-    // The Xcode build is sandboxed, so we can't read ~/.regina-libs.
-    return QString();
-#else
-    return QDir::homePath() + "/.regina-libs";
-#endif
-}
-
-void ReginaPrefSet::readPythonLibraries() {
-    QString configFile = pythonLibrariesConfig();
-    if (configFile.isNull()) {
-        QSettings pySettings(QCoreApplication::organizationDomain(),
-            "Regina-Python");
-
-        pySettings.beginGroup("PythonLibraries");
-        pythonLibraries.clear();
-        ReginaFilePref::readUserKey(pythonLibraries, pySettings);
-        pySettings.endGroup();
-    } else {
-        pythonLibraries.clear();
-
-        QFile f(configFile);
-        if (! f.open(QIODevice::ReadOnly))
-            return /* false */;
-
-        QTextStream in(&f);
-        in.setCodec(QTextCodec::codecForName("UTF-8"));
-
-        bool active;
-        QString line = in.readLine();
-        while (! line.isNull()) {
-            // Is the file inactive?
-            active = true;
-            if (line.startsWith(INACTIVE)) {
-                active = false;
-                line = line.mid(INACTIVE.length());
-            }
-
-            line = line.trimmed();
-
-            // Is it a file at all?  If so, add it.
-            if ((! line.isEmpty()) && line[0] != '#')
-                pythonLibraries.push_back(ReginaFilePref(line, active));
-
-            // Next!
-            line = in.readLine();
-        }
-
-        return /* true */;
-    }
-}
-
-void ReginaPrefSet::savePythonLibraries() const {
-    QString configFile = pythonLibrariesConfig();
-    if (configFile.isNull()) {
-        QSettings pySettings(QCoreApplication::organizationDomain(),
-            "Regina-Python");
-
-        pySettings.beginGroup("PythonLibraries");
-        ReginaFilePref::writeKeys(pythonLibraries, pySettings);
-        pySettings.endGroup();
-    } else {
-        QFile f(configFile);
-        if (! f.open(QIODevice::WriteOnly))
-            return /* false */;
-
-        QTextStream out(&f);
-        out.setCodec(QTextCodec::codecForName("UTF-8"));
-
-        out << "# Python libraries configuration file\n#\n";
-        out << "# Automatically generated by the graphical user interface.\n\n";
-
-        foreach (const ReginaFilePref& f, pythonLibraries) {
-            if (f.active_)
-                out << f.filename_ << '\n';
-            else
-                out << INACTIVE << ' ' << f.filename_ << '\n';
-        }
-
-        return /* true */;
-    }
 }
 
 QFont ReginaPrefSet::fixedWidthFont() {
@@ -389,7 +239,7 @@ void ReginaPrefSet::readInternal() {
     settings.endGroup();
 
     settings.beginGroup("SnapPea");
-    regina::NSnapPeaTriangulation::enableKernelMessages(
+    regina::SnapPeaTriangulation::enableKernelMessages(
         settings.value("KernelMessages", false).toBool());
     settings.endGroup();
 
@@ -450,8 +300,6 @@ void ReginaPrefSet::readInternal() {
     triGAPExec = settings.value("GAPExec", defaultGAPExec).toString().trimmed();
     settings.endGroup();
 
-    readPythonLibraries();
-
     settings.beginGroup("Window");
     windowMainSize = settings.value("MainSizeV3", QSize()).toSize();
     windowPythonSize = settings.value("PythonSize", QSize()).toSize();
@@ -506,7 +354,7 @@ void ReginaPrefSet::saveInternal() const {
 
     settings.beginGroup("SnapPea");
     settings.setValue("KernelMessages",
-        regina::NSnapPeaTriangulation::kernelMessagesEnabled());
+        regina::SnapPeaTriangulation::kernelMessagesEnabled());
     settings.endGroup();
 
     settings.beginGroup("Surfaces");
@@ -563,8 +411,6 @@ void ReginaPrefSet::saveInternal() const {
     settings.setValue("PDFViewer", pdfExternalViewer);
     settings.setValue("GAPExec", triGAPExec);
     settings.endGroup();
-
-    savePythonLibraries();
 
     settings.beginGroup("Window");
     settings.setValue("MainSizeV3", windowMainSize);

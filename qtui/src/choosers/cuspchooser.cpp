@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "snappea/nsnappeatriangulation.h"
+#include "snappea/snappeatriangulation.h"
 
 // UI includes:
 #include "cuspchooser.h"
@@ -43,7 +43,7 @@
 using regina::Cusp;
 
 CuspChooser::CuspChooser(
-        regina::NSnapPeaTriangulation* tri,
+        regina::SnapPeaTriangulation* tri,
         CuspFilterFunc filter, QWidget* parent,
         bool autoUpdate) :
         QComboBox(parent), tri_(tri), filter_(filter) {
@@ -109,7 +109,7 @@ bool CuspChooser::filterComplete(const Cusp* c) {
 }
 
 CuspDialog::CuspDialog(QWidget* parent,
-        regina::NSnapPeaTriangulation* tri,
+        regina::SnapPeaTriangulation* tri,
         CuspFilterFunc filter,
         const QString& title,
         const QString& message,
@@ -134,7 +134,7 @@ CuspDialog::CuspDialog(QWidget* parent,
 }
 
 int CuspDialog::choose(QWidget* parent,
-        regina::NSnapPeaTriangulation* tri,
+        regina::SnapPeaTriangulation* tri,
         CuspFilterFunc filter,
         const QString& title,
         const QString& message,

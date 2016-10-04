@@ -42,7 +42,7 @@
  * command-line argument, and this directory must already exist.
  */
 
-#include <surfaces/nnormalsurfacelist.h>
+#include <surfaces/normalsurfaces.h>
 #include <triangulation/ntriangulation.h>
 
 #include <cstdio>
@@ -155,12 +155,12 @@ bool process(const std::string& filename) {
     }
 
     NTriangulation* t;
-    NNormalSurfaceList* s;
+    NormalSurfaces* s;
     long n, i, links;
     for (Packet* p = tree; p; p = p->nextTreePacket())
         if (p->type() == PACKET_TRIANGULATION) {
             t = static_cast<NTriangulation*>(p);
-            s = NNormalSurfaceList::enumerate(t, NS_QUAD);
+            s = NormalSurfaces::enumerate(t, NS_QUAD);
 
             links = 0;
             n = s->size();

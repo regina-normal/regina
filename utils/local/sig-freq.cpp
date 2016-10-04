@@ -55,7 +55,7 @@
 #include <algorithm>
 #include <cstdio>
 #include <fstream>
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 #include "triangulation/ntriangulation.h"
 
 #define MAXLEN 1000
@@ -75,13 +75,13 @@ int main() {
             break;
 
         regina::NTriangulation* tri = regina::NTriangulation::fromIsoSig(input);
-        regina::NNormalSurfaceList* s;
+        regina::NormalSurfaces* s;
 
-        s = regina::NNormalSurfaceList::enumerate(tri, regina::NS_STANDARD);
+        s = regina::NormalSurfaces::enumerate(tri, regina::NS_STANDARD);
         ++sfreq[s->size()];
         delete s;
 
-        s = regina::NNormalSurfaceList::enumerate(tri, regina::NS_QUAD);
+        s = regina::NormalSurfaces::enumerate(tri, regina::NS_QUAD);
         ++qfreq[s->size()];
         delete s;
 

@@ -34,16 +34,16 @@
  *  \brief Offers several ready-made example SnapPea triangulations.
  */
 
-#ifndef __NEXAMPLESNAPPEATRIANGULATION_H
+#ifndef __EXAMPLESNAPPEA_H
 #ifndef __DOXYGEN
-#define __NEXAMPLESNAPPEATRIANGULATION_H
+#define __EXAMPLESNAPPEA_H
 #endif
 
 #include "regina-core.h"
 
 namespace regina {
 
-class NSnapPeaTriangulation;
+class SnapPeaTriangulation;
 
 /**
  * \weakgroup snappea
@@ -67,7 +67,7 @@ class REGINA_API ExampleSnapPea {
          * @return a newly constructed SnapPea triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static NSnapPeaTriangulation* gieseking();
+        static SnapPeaTriangulation* gieseking();
 
         /**
          * Returns a new triangulation of the figure eight knot complement.
@@ -75,7 +75,7 @@ class REGINA_API ExampleSnapPea {
          * @return a newly constructed SnapPea triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static NSnapPeaTriangulation* figureEight();
+        static SnapPeaTriangulation* figureEight();
 
         /**
          * Returns a new triangulation of the trefoil knot complement.
@@ -83,7 +83,7 @@ class REGINA_API ExampleSnapPea {
          * @return a newly constructed SnapPea triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static NSnapPeaTriangulation* trefoil();
+        static SnapPeaTriangulation* trefoil();
 
         /**
          * Returns a new triangulation of the Whitehead link complement.
@@ -91,7 +91,7 @@ class REGINA_API ExampleSnapPea {
          * @return a newly constructed SnapPea triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static NSnapPeaTriangulation* whiteheadLink();
+        static SnapPeaTriangulation* whiteheadLink();
 
         /**
          * Returns a new triangulation of the census manifold \c x101.
@@ -99,7 +99,7 @@ class REGINA_API ExampleSnapPea {
          * @return a newly constructed SnapPea triangulation, which must be
          * destroyed by the caller of this routine.
          */
-        static NSnapPeaTriangulation* x101();
+        static SnapPeaTriangulation* x101();
 };
 
 /**
