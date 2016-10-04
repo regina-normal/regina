@@ -4,7 +4,7 @@
 SET ( FILES
   approx
   matrixops
-  ncyclotomic
+  cyclotomic
   ninteger
   nmatrix2
   nperm2
@@ -27,6 +27,7 @@ SET(SOURCES ${SOURCES} PARENT_SCOPE)
 if (${REGINA_INSTALL_DEV})
   INSTALL( FILES
     approx.h
+    cyclotomic.h
     matrixops.h
     ncyclotomic.h
     ninteger.h

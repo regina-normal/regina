@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "maths/ncyclotomic.h"
+#include "maths/cyclotomic.h"
 #include "../helpers.h"
 
 using namespace boost::python;

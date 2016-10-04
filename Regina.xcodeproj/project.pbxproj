@@ -102,7 +102,7 @@
 		050F5DF31B9BAB9C00C1F681 /* ntorusbundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D2A1B9BAB9C00C1F681 /* ntorusbundle.cpp */; };
 		050F5DF41B9BAB9C00C1F681 /* pymanifold.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D2B1B9BAB9C00C1F681 /* pymanifold.cpp */; };
 		050F5DF51B9BAB9C00C1F681 /* matrixops.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D2E1B9BAB9C00C1F681 /* matrixops.cpp */; };
-		050F5DF61B9BAB9C00C1F681 /* ncyclotomic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D2F1B9BAB9C00C1F681 /* ncyclotomic.cpp */; };
+		050F5DF61B9BAB9C00C1F681 /* cyclotomic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D2F1B9BAB9C00C1F681 /* cyclotomic.cpp */; };
 		050F5DF71B9BAB9C00C1F681 /* ninteger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D301B9BAB9C00C1F681 /* ninteger.cpp */; };
 		050F5DF81B9BAB9C00C1F681 /* nlargeinteger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D311B9BAB9C00C1F681 /* nlargeinteger.cpp */; };
 		050F5DF91B9BAB9C00C1F681 /* nmatrix2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D321B9BAB9C00C1F681 /* nmatrix2.cpp */; };
@@ -842,10 +842,10 @@
 		053E5B5619B3D79200166778 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 053E5B5519B3D79100166778 /* libbz2.dylib */; };
 		053ED8121D8B836C00628652 /* snappy_get_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */; };
 		053ED8131D8B837500628652 /* snappy_get_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */; };
-		0541AF4B1B8BE2F5002E166B /* ncyclotomic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0541AF481B8BE2F5002E166B /* ncyclotomic.cpp */; };
-		0541AF4C1B8BE2F5002E166B /* ncyclotomic.h in Headers */ = {isa = PBXBuildFile; fileRef = 0541AF491B8BE2F5002E166B /* ncyclotomic.h */; };
+		0541AF4B1B8BE2F5002E166B /* cyclotomic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0541AF481B8BE2F5002E166B /* cyclotomic.cpp */; };
+		0541AF4C1B8BE2F5002E166B /* cyclotomic.h in Headers */ = {isa = PBXBuildFile; fileRef = 0541AF491B8BE2F5002E166B /* cyclotomic.h */; };
 		0541AF4D1B8BE2F5002E166B /* npolynomial.h in Headers */ = {isa = PBXBuildFile; fileRef = 0541AF4A1B8BE2F5002E166B /* npolynomial.h */; };
-		0541AF4E1B8BE30B002E166B /* ncyclotomic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0541AF481B8BE2F5002E166B /* ncyclotomic.cpp */; };
+		0541AF4E1B8BE30B002E166B /* cyclotomic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0541AF481B8BE2F5002E166B /* cyclotomic.cpp */; };
 		0541AF501B8BE32E002E166B /* output.h in Headers */ = {isa = PBXBuildFile; fileRef = 0541AF4F1B8BE32E002E166B /* output.h */; };
 		0541AF521B8BE386002E166B /* sequence.h in Headers */ = {isa = PBXBuildFile; fileRef = 0541AF511B8BE386002E166B /* sequence.h */; };
 		0541AF601B8BE40B002E166B /* treedecomposition-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0541AF5D1B8BE40B002E166B /* treedecomposition-impl.h */; };
@@ -1551,6 +1551,7 @@
 		05DC051F1C41B87200C76D71 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05DC051E1C41B87200C76D71 /* boost.framework */; };
 		05DC05201C41B88D00C76D71 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05DC051C1C41B85100C76D71 /* boost.framework */; };
 		05E49D231DA34A5600B55E31 /* nnormalsurfacelist.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E49D221DA34A5600B55E31 /* nnormalsurfacelist.h */; };
+		05E49D251DA38C7D00B55E31 /* ncyclotomic.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E49D241DA38C7D00B55E31 /* ncyclotomic.h */; };
 		05EA195719F30A0100D37501 /* EltMovesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05EA195619F30A0100D37501 /* EltMovesController.mm */; };
 		05F23E0F19C08834005B53B5 /* snappea-doc-64.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F23E0D19C08834005B53B5 /* snappea-doc-64.png */; };
 		05F23E1019C08834005B53B5 /* snappea-doc-320.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F23E0E19C08834005B53B5 /* snappea-doc-320.png */; };
@@ -2019,7 +2020,7 @@
 		050F5D2B1B9BAB9C00C1F681 /* pymanifold.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pymanifold.cpp; sourceTree = "<group>"; };
 		050F5D2D1B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		050F5D2E1B9BAB9C00C1F681 /* matrixops.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = matrixops.cpp; sourceTree = "<group>"; };
-		050F5D2F1B9BAB9C00C1F681 /* ncyclotomic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ncyclotomic.cpp; sourceTree = "<group>"; };
+		050F5D2F1B9BAB9C00C1F681 /* cyclotomic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cyclotomic.cpp; sourceTree = "<group>"; };
 		050F5D301B9BAB9C00C1F681 /* ninteger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ninteger.cpp; sourceTree = "<group>"; };
 		050F5D311B9BAB9C00C1F681 /* nlargeinteger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nlargeinteger.cpp; sourceTree = "<group>"; };
 		050F5D321B9BAB9C00C1F681 /* nmatrix2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nmatrix2.cpp; sourceTree = "<group>"; };
@@ -2700,8 +2701,8 @@
 		052FA1441806103000FAE4DF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		053E5B5519B3D79100166778 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = usr/lib/libbz2.dylib; sourceTree = SDKROOT; };
 		053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = snappy_get_gluing_equations.c; sourceTree = "<group>"; };
-		0541AF481B8BE2F5002E166B /* ncyclotomic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ncyclotomic.cpp; sourceTree = "<group>"; };
-		0541AF491B8BE2F5002E166B /* ncyclotomic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ncyclotomic.h; sourceTree = "<group>"; };
+		0541AF481B8BE2F5002E166B /* cyclotomic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cyclotomic.cpp; sourceTree = "<group>"; };
+		0541AF491B8BE2F5002E166B /* cyclotomic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cyclotomic.h; sourceTree = "<group>"; };
 		0541AF4A1B8BE2F5002E166B /* npolynomial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = npolynomial.h; sourceTree = "<group>"; };
 		0541AF4F1B8BE32E002E166B /* output.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = output.h; sourceTree = "<group>"; };
 		0541AF511B8BE386002E166B /* sequence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sequence.h; sourceTree = "<group>"; };
@@ -3455,6 +3456,7 @@
 		05DC051C1C41B85100C76D71 /* boost.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = boost.framework; path = ../../Library/Frameworks/osx/boost.framework; sourceTree = "<group>"; };
 		05DC051E1C41B87200C76D71 /* boost.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = boost.framework; path = ../../Library/Frameworks/ios/boost.framework; sourceTree = "<group>"; };
 		05E49D221DA34A5600B55E31 /* nnormalsurfacelist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nnormalsurfacelist.h; sourceTree = "<group>"; };
+		05E49D241DA38C7D00B55E31 /* ncyclotomic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ncyclotomic.h; sourceTree = "<group>"; };
 		05E5312E1C53C48600ECEB72 /* simplexchooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simplexchooser.h; sourceTree = "<group>"; };
 		05EA195519F30A0100D37501 /* EltMovesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EltMovesController.h; sourceTree = "<group>"; };
 		05EA195619F30A0100D37501 /* EltMovesController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EltMovesController.mm; sourceTree = "<group>"; };
@@ -3883,8 +3885,8 @@
 			isa = PBXGroup;
 			children = (
 				050F5D2D1B9BAB9C00C1F681 /* CMakeLists.txt */,
+				050F5D2F1B9BAB9C00C1F681 /* cyclotomic.cpp */,
 				050F5D2E1B9BAB9C00C1F681 /* matrixops.cpp */,
-				050F5D2F1B9BAB9C00C1F681 /* ncyclotomic.cpp */,
 				050F5D301B9BAB9C00C1F681 /* ninteger.cpp */,
 				050F5D311B9BAB9C00C1F681 /* nlargeinteger.cpp */,
 				050F5D321B9BAB9C00C1F681 /* nmatrix2.cpp */,
@@ -4445,10 +4447,11 @@
 				052F9CDE180600FA00FAE4DF /* approx.cpp */,
 				052F9CDF180600FA00FAE4DF /* approx.h */,
 				052F9CE0180600FA00FAE4DF /* CMakeLists.txt */,
+				0541AF481B8BE2F5002E166B /* cyclotomic.cpp */,
+				0541AF491B8BE2F5002E166B /* cyclotomic.h */,
 				052F9CE1180600FA00FAE4DF /* matrixops.cpp */,
 				052F9CE2180600FA00FAE4DF /* matrixops.h */,
-				0541AF481B8BE2F5002E166B /* ncyclotomic.cpp */,
-				0541AF491B8BE2F5002E166B /* ncyclotomic.h */,
+				05E49D241DA38C7D00B55E31 /* ncyclotomic.h */,
 				052F9CE3180600FA00FAE4DF /* ninteger.cpp */,
 				052F9CE4180600FA00FAE4DF /* ninteger.h */,
 				052F9CE6180600FA00FAE4DF /* nmatrix.h */,
@@ -6006,6 +6009,7 @@
 				05431F861C40F3C9009BC072 /* vector_operations.h in Headers */,
 				05A73C9019B2EF130099C617 /* xmlsnappeareader.h in Headers */,
 				050C64CE1DA3311100C9420F /* ntreelp.h in Headers */,
+				05E49D251DA38C7D00B55E31 /* ncyclotomic.h in Headers */,
 				052F9E9C180600FB00FAE4DF /* dim2gluingpermsearcher.h in Headers */,
 				052F9FF1180600FB00FAE4DF /* nl31pillow.h in Headers */,
 				052942D31C5CDC8B0011C1E6 /* safeptr.h in Headers */,
@@ -6240,7 +6244,7 @@
 				050C64BF1DA32E7D00C9420F /* nhilbertcd-impl.h in Headers */,
 				052F9FE9180600FB00FAE4DF /* nblockedsfs.h in Headers */,
 				052FA003180600FB00FAE4DF /* npluggedtorusbundle.h in Headers */,
-				0541AF4C1B8BE2F5002E166B /* ncyclotomic.h in Headers */,
+				0541AF4C1B8BE2F5002E166B /* cyclotomic.h in Headers */,
 				05431F011C40F1F6009BC072 /* isomorphism.h in Headers */,
 				0583656D18DB8B68008B08D9 /* kernel_namespace.h in Headers */,
 				050C64B61DA32B1400C9420F /* ndoubledescription-impl.h in Headers */,
@@ -6998,7 +7002,7 @@
 				050F5E141B9BAB9C00C1F681 /* pysplit.cpp in Sources */,
 				05431FCC1C40F653009BC072 /* nfacepairing.cpp in Sources */,
 				050F5E431B9BAB9C00C1F681 /* nedge.cpp in Sources */,
-				050F5DF61B9BAB9C00C1F681 /* ncyclotomic.cpp in Sources */,
+				050F5DF61B9BAB9C00C1F681 /* cyclotomic.cpp in Sources */,
 				057EE4C01C600A3600C4D155 /* simplex8.cpp in Sources */,
 				0550010B1C4D9EF900501C24 /* face7.cpp in Sources */,
 				050C64901DA124EB00C9420F /* globaldirs.cpp in Sources */,
@@ -7115,7 +7119,7 @@
 				05431F901C40F40E009BC072 /* libnormaliz-templated.cpp in Sources */,
 				05A73CA719B2EF5A0099C617 /* sl2c_matrices.c in Sources */,
 				0591E7EA1C4F751B00793A9C /* nnormalhypersurfacelist.cpp in Sources */,
-				0541AF4E1B8BE30B002E166B /* ncyclotomic.cpp in Sources */,
+				0541AF4E1B8BE30B002E166B /* cyclotomic.cpp in Sources */,
 				050C646E1DA101A900C9420F /* anglestructures.cpp in Sources */,
 				05583A6219B8041F00076187 /* ReginaDocument.mm in Sources */,
 				052FA22B180612DD00FAE4DF /* intersection_numbers.c in Sources */,
@@ -7746,7 +7750,7 @@
 				052F9F37180600FB00FAE4DF /* approx.cpp in Sources */,
 				052F9F52180600FB00FAE4DF /* seedprimes.cpp in Sources */,
 				05A73C8419B2EEC50099C617 /* csv.cpp in Sources */,
-				0541AF4B1B8BE2F5002E166B /* ncyclotomic.cpp in Sources */,
+				0541AF4B1B8BE2F5002E166B /* cyclotomic.cpp in Sources */,
 				052FA00C180600FB00FAE4DF /* nsatblocktypes.cpp in Sources */,
 				052F9F1F180600FB00FAE4DF /* ngraphloop.cpp in Sources */,
 				0591E7B21C4F74C400793A9C /* homology.cpp in Sources */,

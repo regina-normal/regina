@@ -37,7 +37,7 @@
 #include <complex>
 #include "regina-config.h"
 #include "libnormaliz/cone.h"
-#include "maths/ncyclotomic.h"
+#include "maths/cyclotomic.h"
 #include "maths/numbertheory.h"
 #include "treewidth/treedecomposition.h"
 #include "triangulation/ntriangulation.h"

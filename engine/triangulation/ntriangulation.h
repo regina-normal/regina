@@ -49,7 +49,7 @@
 #include "algebra/ngrouppresentation.h"
 #include "angle/anglestructure.h"
 #include "generic/triangulation.h"
-#include "maths/ncyclotomic.h"
+#include "maths/cyclotomic.h"
 #include "packet/packet.h"
 #include "treewidth/treedecomposition.h"
 #include "utilities/boolset.h"
