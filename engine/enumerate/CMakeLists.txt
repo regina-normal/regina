@@ -20,6 +20,12 @@ if (${REGINA_INSTALL_DEV})
     enumconstraints.h
     doubledescription.h
     doubledescription-impl.h
+    hilbertcd.h
+    hilbertcd-impl.h
+    hilbertdual.h
+    hilbertdual-impl.h
+    hilbertprimal.h
+    hilbertprimal-impl.h
     nenumconstraint.h
     ndoubledescription.h
     ndoubledescription-impl.h

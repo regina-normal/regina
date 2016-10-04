@@ -34,8 +34,8 @@
 #include <thread>
 #include "dim4/dim4triangulation.h"
 #include "enumerate/doubledescription.h"
-#include "enumerate/nhilbertdual.h"
-#include "enumerate/nhilbertprimal.h"
+#include "enumerate/hilbertdual.h"
+#include "enumerate/hilbertprimal.h"
 #include "hypersurface/nnormalhypersurfacelist.h"
 #include "hypersurface/hscoordregistry.h"
 #include "maths/nmatrixint.h"

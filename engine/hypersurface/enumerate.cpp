@@ -33,8 +33,8 @@
 #include <thread>
 #include "dim4/dim4triangulation.h"
 #include "enumerate/doubledescription.h"
-#include "enumerate/nhilbertdual.h"
-#include "enumerate/nhilbertprimal.h"
+#include "enumerate/hilbertdual.h"
+#include "enumerate/hilbertprimal.h"
 #include "hypersurface/nnormalhypersurfacelist.h"
 #include "hypersurface/hscoordregistry.h"
 #include "maths/nmatrixint.h"
@@ -175,7 +175,7 @@ void NNormalHypersurfaceList::Enumerator::fillFundamentalPrimal() {
     if (tracker_)
         tracker_->newStage("Expanding to Hilbert basis", 0.5);
 
-    NHilbertPrimal::enumerateHilbertBasis<typename Coords::Class>(
+    HilbertPrimal::enumerateHilbertBasis<typename Coords::Class>(
         HypersurfaceInserter(*list_, triang_),
         vtx->beginVectors(), vtx->endVectors(), constraints, tracker_);
 
@@ -195,7 +195,7 @@ void NNormalHypersurfaceList::Enumerator::fillFundamentalDual() {
     EnumConstraints* constraints = (list_->which_.has(HS_EMBEDDED_ONLY) ?
         makeEmbeddedConstraints(triang_, list_->coords_) : 0);
 
-    NHilbertDual::enumerateHilbertBasis<typename Coords::Class>(
+    HilbertDual::enumerateHilbertBasis<typename Coords::Class>(
         HypersurfaceInserter(*list_, triang_), *eqns, constraints, tracker_);
 
     delete constraints;

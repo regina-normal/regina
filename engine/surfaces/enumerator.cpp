@@ -33,9 +33,9 @@
 #include <iterator>
 #include <thread>
 #include "enumerate/doubledescription.h"
-#include "enumerate/nhilbertcd.h"
-#include "enumerate/nhilbertdual.h"
-#include "enumerate/nhilbertprimal.h"
+#include "enumerate/hilbertcd.h"
+#include "enumerate/hilbertdual.h"
+#include "enumerate/hilbertprimal.h"
 #include "enumerate/ntreetraversal.h"
 #include "maths/matrixops.h"
 #include "maths/nmatrixint.h"
@@ -436,7 +436,7 @@ void NNormalSurfaceList::Enumerator::fillFundamentalDual() {
     EnumConstraints* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
         makeEmbeddedConstraints(triang_, list_->coords_) : 0);
 
-    NHilbertDual::enumerateHilbertBasis<typename Coords::Class>(
+    HilbertDual::enumerateHilbertBasis<typename Coords::Class>(
         SurfaceInserter(*list_, triang_), *eqns, constraints, tracker_);
 
     delete constraints;
@@ -456,7 +456,7 @@ void NNormalSurfaceList::Enumerator::fillFundamentalCD() {
     EnumConstraints* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
         makeEmbeddedConstraints(triang_, list_->coords_) : 0);
 
-    NHilbertCD::enumerateHilbertBasis<typename Coords::Class>(
+    HilbertCD::enumerateHilbertBasis<typename Coords::Class>(
         SurfaceInserter(*list_, triang_), *eqns, constraints);
 
     delete constraints;
@@ -495,7 +495,7 @@ void NNormalSurfaceList::Enumerator::fillFundamentalPrimal() {
     if (tracker_)
         tracker_->newStage("Expanding to Hilbert basis", 0.5);
 
-    NHilbertPrimal::enumerateHilbertBasis<typename Coords::Class>(
+    HilbertPrimal::enumerateHilbertBasis<typename Coords::Class>(
         SurfaceInserter(*list_, triang_),
         vtx->beginVectors(), vtx->endVectors(), constraints, tracker_);
 

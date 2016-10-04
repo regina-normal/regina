@@ -60,6 +60,12 @@
 		050C64B61DA32B1400C9420F /* ndoubledescription-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64B31DA32B1400C9420F /* ndoubledescription-impl.h */; };
 		050C64B71DA32B1400C9420F /* ndoubledescription.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64B41DA32B1400C9420F /* ndoubledescription.h */; };
 		050C64B81DA32B1400C9420F /* nenumconstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64B51DA32B1400C9420F /* nenumconstraint.h */; };
+		050C64BF1DA32E7D00C9420F /* nhilbertcd-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64B91DA32E7D00C9420F /* nhilbertcd-impl.h */; };
+		050C64C01DA32E7D00C9420F /* nhilbertcd.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64BA1DA32E7D00C9420F /* nhilbertcd.h */; };
+		050C64C11DA32E7D00C9420F /* nhilbertdual-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64BB1DA32E7D00C9420F /* nhilbertdual-impl.h */; };
+		050C64C21DA32E7D00C9420F /* nhilbertdual.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64BC1DA32E7D00C9420F /* nhilbertdual.h */; };
+		050C64C31DA32E7D00C9420F /* nhilbertprimal-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64BD1DA32E7D00C9420F /* nhilbertprimal-impl.h */; };
+		050C64C41DA32E7D00C9420F /* nhilbertprimal.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64BE1DA32E7D00C9420F /* nhilbertprimal.h */; };
 		050F5DD31B9BAB9C00C1F681 /* nabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D021B9BAB9C00C1F681 /* nabeliangroup.cpp */; };
 		050F5DD41B9BAB9C00C1F681 /* ngrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D031B9BAB9C00C1F681 /* ngrouppresentation.cpp */; };
 		050F5DD51B9BAB9C00C1F681 /* nhomgrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D041B9BAB9C00C1F681 /* nhomgrouppresentation.cpp */; };
@@ -268,12 +274,12 @@
 		052F9EC0180600FB00FAE4DF /* doubledescription-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C55180600FA00FAE4DF /* doubledescription-impl.h */; };
 		052F9EC1180600FB00FAE4DF /* doubledescription.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C56180600FA00FAE4DF /* doubledescription.h */; };
 		052F9EC5180600FB00FAE4DF /* enumconstraints.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C5A180600FA00FAE4DF /* enumconstraints.h */; };
-		052F9EC6180600FB00FAE4DF /* nhilbertcd-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C5B180600FA00FAE4DF /* nhilbertcd-impl.h */; };
-		052F9EC7180600FB00FAE4DF /* nhilbertcd.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C5C180600FA00FAE4DF /* nhilbertcd.h */; };
-		052F9EC9180600FB00FAE4DF /* nhilbertdual-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C5E180600FA00FAE4DF /* nhilbertdual-impl.h */; };
-		052F9ECA180600FB00FAE4DF /* nhilbertdual.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C5F180600FA00FAE4DF /* nhilbertdual.h */; };
-		052F9ECC180600FB00FAE4DF /* nhilbertprimal-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C61180600FA00FAE4DF /* nhilbertprimal-impl.h */; };
-		052F9ECD180600FB00FAE4DF /* nhilbertprimal.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C62180600FA00FAE4DF /* nhilbertprimal.h */; };
+		052F9EC6180600FB00FAE4DF /* hilbertcd-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C5B180600FA00FAE4DF /* hilbertcd-impl.h */; };
+		052F9EC7180600FB00FAE4DF /* hilbertcd.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C5C180600FA00FAE4DF /* hilbertcd.h */; };
+		052F9EC9180600FB00FAE4DF /* hilbertdual-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C5E180600FA00FAE4DF /* hilbertdual-impl.h */; };
+		052F9ECA180600FB00FAE4DF /* hilbertdual.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C5F180600FA00FAE4DF /* hilbertdual.h */; };
+		052F9ECC180600FB00FAE4DF /* hilbertprimal-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C61180600FA00FAE4DF /* hilbertprimal-impl.h */; };
+		052F9ECD180600FB00FAE4DF /* hilbertprimal.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C62180600FA00FAE4DF /* hilbertprimal.h */; };
 		052F9ECF180600FB00FAE4DF /* nmaxadmissible-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C64180600FA00FAE4DF /* nmaxadmissible-impl.h */; };
 		052F9ED0180600FB00FAE4DF /* nmaxadmissible.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C65180600FA00FAE4DF /* nmaxadmissible.h */; };
 		052F9EF3180600FB00FAE4DF /* ntreeconstraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C8E180600FA00FAE4DF /* ntreeconstraint.cpp */; };
@@ -1954,6 +1960,12 @@
 		050C64B31DA32B1400C9420F /* ndoubledescription-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ndoubledescription-impl.h"; sourceTree = "<group>"; };
 		050C64B41DA32B1400C9420F /* ndoubledescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndoubledescription.h; sourceTree = "<group>"; };
 		050C64B51DA32B1400C9420F /* nenumconstraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nenumconstraint.h; sourceTree = "<group>"; };
+		050C64B91DA32E7D00C9420F /* nhilbertcd-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "nhilbertcd-impl.h"; sourceTree = "<group>"; };
+		050C64BA1DA32E7D00C9420F /* nhilbertcd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhilbertcd.h; sourceTree = "<group>"; };
+		050C64BB1DA32E7D00C9420F /* nhilbertdual-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "nhilbertdual-impl.h"; sourceTree = "<group>"; };
+		050C64BC1DA32E7D00C9420F /* nhilbertdual.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhilbertdual.h; sourceTree = "<group>"; };
+		050C64BD1DA32E7D00C9420F /* nhilbertprimal-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "nhilbertprimal-impl.h"; sourceTree = "<group>"; };
+		050C64BE1DA32E7D00C9420F /* nhilbertprimal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhilbertprimal.h; sourceTree = "<group>"; };
 		050F5CDD1B9BAAAA00C1F681 /* engine.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = engine.so; sourceTree = BUILT_PRODUCTS_DIR; };
 		050F5D011B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		050F5D021B9BAB9C00C1F681 /* nabeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nabeliangroup.cpp; sourceTree = "<group>"; };
@@ -2224,12 +2236,12 @@
 		052F9C55180600FA00FAE4DF /* doubledescription-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "doubledescription-impl.h"; sourceTree = "<group>"; };
 		052F9C56180600FA00FAE4DF /* doubledescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = doubledescription.h; sourceTree = "<group>"; };
 		052F9C5A180600FA00FAE4DF /* enumconstraints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = enumconstraints.h; sourceTree = "<group>"; };
-		052F9C5B180600FA00FAE4DF /* nhilbertcd-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "nhilbertcd-impl.h"; sourceTree = "<group>"; };
-		052F9C5C180600FA00FAE4DF /* nhilbertcd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhilbertcd.h; sourceTree = "<group>"; };
-		052F9C5E180600FA00FAE4DF /* nhilbertdual-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "nhilbertdual-impl.h"; sourceTree = "<group>"; };
-		052F9C5F180600FA00FAE4DF /* nhilbertdual.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhilbertdual.h; sourceTree = "<group>"; };
-		052F9C61180600FA00FAE4DF /* nhilbertprimal-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "nhilbertprimal-impl.h"; sourceTree = "<group>"; };
-		052F9C62180600FA00FAE4DF /* nhilbertprimal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhilbertprimal.h; sourceTree = "<group>"; };
+		052F9C5B180600FA00FAE4DF /* hilbertcd-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "hilbertcd-impl.h"; sourceTree = "<group>"; };
+		052F9C5C180600FA00FAE4DF /* hilbertcd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hilbertcd.h; sourceTree = "<group>"; };
+		052F9C5E180600FA00FAE4DF /* hilbertdual-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "hilbertdual-impl.h"; sourceTree = "<group>"; };
+		052F9C5F180600FA00FAE4DF /* hilbertdual.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hilbertdual.h; sourceTree = "<group>"; };
+		052F9C61180600FA00FAE4DF /* hilbertprimal-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "hilbertprimal-impl.h"; sourceTree = "<group>"; };
+		052F9C62180600FA00FAE4DF /* hilbertprimal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hilbertprimal.h; sourceTree = "<group>"; };
 		052F9C64180600FA00FAE4DF /* nmaxadmissible-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "nmaxadmissible-impl.h"; sourceTree = "<group>"; };
 		052F9C65180600FA00FAE4DF /* nmaxadmissible.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nmaxadmissible.h; sourceTree = "<group>"; };
 		052F9C8E180600FA00FAE4DF /* ntreeconstraint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ntreeconstraint.cpp; sourceTree = "<group>"; };
@@ -4285,15 +4297,21 @@
 				052F9C55180600FA00FAE4DF /* doubledescription-impl.h */,
 				052F9C56180600FA00FAE4DF /* doubledescription.h */,
 				052F9C5A180600FA00FAE4DF /* enumconstraints.h */,
+				052F9C5B180600FA00FAE4DF /* hilbertcd-impl.h */,
+				052F9C5C180600FA00FAE4DF /* hilbertcd.h */,
+				052F9C5E180600FA00FAE4DF /* hilbertdual-impl.h */,
+				052F9C5F180600FA00FAE4DF /* hilbertdual.h */,
+				052F9C61180600FA00FAE4DF /* hilbertprimal-impl.h */,
+				052F9C62180600FA00FAE4DF /* hilbertprimal.h */,
 				050C64B31DA32B1400C9420F /* ndoubledescription-impl.h */,
 				050C64B41DA32B1400C9420F /* ndoubledescription.h */,
 				050C64B51DA32B1400C9420F /* nenumconstraint.h */,
-				052F9C5B180600FA00FAE4DF /* nhilbertcd-impl.h */,
-				052F9C5C180600FA00FAE4DF /* nhilbertcd.h */,
-				052F9C5E180600FA00FAE4DF /* nhilbertdual-impl.h */,
-				052F9C5F180600FA00FAE4DF /* nhilbertdual.h */,
-				052F9C61180600FA00FAE4DF /* nhilbertprimal-impl.h */,
-				052F9C62180600FA00FAE4DF /* nhilbertprimal.h */,
+				050C64B91DA32E7D00C9420F /* nhilbertcd-impl.h */,
+				050C64BA1DA32E7D00C9420F /* nhilbertcd.h */,
+				050C64BB1DA32E7D00C9420F /* nhilbertdual-impl.h */,
+				050C64BC1DA32E7D00C9420F /* nhilbertdual.h */,
+				050C64BD1DA32E7D00C9420F /* nhilbertprimal-impl.h */,
+				050C64BE1DA32E7D00C9420F /* nhilbertprimal.h */,
 				052F9C64180600FA00FAE4DF /* nmaxadmissible-impl.h */,
 				052F9C65180600FA00FAE4DF /* nmaxadmissible.h */,
 				052F9C8E180600FA00FAE4DF /* ntreeconstraint.cpp */,
@@ -5973,7 +5991,7 @@
 				052F9F2F180600FB00FAE4DF /* nsfsaltset.h in Headers */,
 				052F9F49180600FB00FAE4DF /* nprimes.h in Headers */,
 				052FA06B180600FB00FAE4DF /* nhomologicaldata.h in Headers */,
-				052F9ECA180600FB00FAE4DF /* nhilbertdual.h in Headers */,
+				052F9ECA180600FB00FAE4DF /* hilbertdual.h in Headers */,
 				050C64971DA1301B00C9420F /* nexamplesnappeatriangulation.h in Headers */,
 				052FA078180600FB00FAE4DF /* nvertex.h in Headers */,
 				052F9EAC180600FB00FAE4DF /* dim2boundarycomponent.h in Headers */,
@@ -5985,6 +6003,7 @@
 				052F9F8E180600FB00FAE4DF /* kernel_typedefs.h in Headers */,
 				0513753D1809B8D3002E525B /* coordregistry-impl.h in Headers */,
 				052FA08B180600FB00FAE4DF /* bitmask.h in Headers */,
+				050C64C41DA32E7D00C9420F /* nhilbertprimal.h in Headers */,
 				052FA00F180600FB00FAE4DF /* nsatregion.h in Headers */,
 				052FA047180600FB00FAE4DF /* nsurfacesubset.h in Headers */,
 				0591E7A81C4F74C400793A9C /* dim4isomorphism.h in Headers */,
@@ -5998,11 +6017,11 @@
 				05431F141C40F257009BC072 /* simplex.h in Headers */,
 				052FA061180600FB00FAE4DF /* nedge.h in Headers */,
 				052FA049180600FB00FAE4DF /* nxmlfilterreader.h in Headers */,
-				052F9EC6180600FB00FAE4DF /* nhilbertcd-impl.h in Headers */,
+				052F9EC6180600FB00FAE4DF /* hilbertcd-impl.h in Headers */,
 				052F9EFB180600FB00FAE4DF /* ntreetraversal.h in Headers */,
 				052F9FA4180600FB00FAE4DF /* triangulation.h in Headers */,
 				050C64A81DA1C63F00C9420F /* ncontainer.h in Headers */,
-				052F9ECC180600FB00FAE4DF /* nhilbertprimal-impl.h in Headers */,
+				052F9ECC180600FB00FAE4DF /* hilbertprimal-impl.h in Headers */,
 				05431F271C40F260009BC072 /* isosig-impl.h in Headers */,
 				052FA074180600FB00FAE4DF /* ntriangle.h in Headers */,
 				050C64AF1DA304BF00C9420F /* ntreedecomposition-impl.h in Headers */,
@@ -6012,8 +6031,9 @@
 				0591E7B61C4F74C400793A9C /* nxmldim4trireader.h in Headers */,
 				0541AF521B8BE386002E166B /* sequence.h in Headers */,
 				050C64781DA1035400C9420F /* nanglestructurelist.h in Headers */,
-				052F9ECD180600FB00FAE4DF /* nhilbertprimal.h in Headers */,
+				052F9ECD180600FB00FAE4DF /* hilbertprimal.h in Headers */,
 				050C649B1DA1B61000C9420F /* nscript.h in Headers */,
+				050C64C11DA32E7D00C9420F /* nhilbertdual-impl.h in Headers */,
 				050C64771DA1035400C9420F /* nanglestructure.h in Headers */,
 				052F9F8D180600FB00FAE4DF /* kernel_prototypes.h in Headers */,
 				052FA08D180600FB00FAE4DF /* boolset.h in Headers */,
@@ -6028,7 +6048,7 @@
 				052FA08F180600FB00FAE4DF /* markedvector.h in Headers */,
 				05A73C7D19B2EDFC0099C617 /* xmlelementreader.h in Headers */,
 				0591E7E11C4F750200793A9C /* nnormalhypersurface.h in Headers */,
-				052F9EC9180600FB00FAE4DF /* nhilbertdual-impl.h in Headers */,
+				052F9EC9180600FB00FAE4DF /* hilbertdual-impl.h in Headers */,
 				052F9FE5180600FB00FAE4DF /* nsignature.h in Headers */,
 				055DDCEF1808575300C973FB /* filterregistry-impl.h in Headers */,
 				052F9FA5180600FB00FAE4DF /* triangulation_io.h in Headers */,
@@ -6043,7 +6063,9 @@
 				05431F7A1C40F3C9009BC072 /* matrix.h in Headers */,
 				052FA098180600FB00FAE4DF /* tritmask.h in Headers */,
 				052F9EFE180600FB00FAE4DF /* ntypetrie.h in Headers */,
+				050C64C01DA32E7D00C9420F /* nhilbertcd.h in Headers */,
 				052FA04C180600FB00FAE4DF /* nxmlsurfacereader.h in Headers */,
+				050C64C21DA32E7D00C9420F /* nhilbertdual.h in Headers */,
 				052FA031180600FB00FAE4DF /* normalcoords.h in Headers */,
 				052FA024180600FB00FAE4DF /* filterregistry.h in Headers */,
 				052FA043180600FB00FAE4DF /* nsstandard.h in Headers */,
@@ -6143,6 +6165,7 @@
 				05431F6E1C40F3C9009BC072 /* general.h in Headers */,
 				0591E7DD1C4F750200793A9C /* nhsmirrored.h in Headers */,
 				052FA05F180600FB00FAE4DF /* ncomponent.h in Headers */,
+				050C64C31DA32E7D00C9420F /* nhilbertprimal-impl.h in Headers */,
 				05431F801C40F3C9009BC072 /* reduction.h in Headers */,
 				05431F781C40F3C9009BC072 /* map_operations.h in Headers */,
 				052F9FF7180600FB00FAE4DF /* nlayeredlensspace.h in Headers */,
@@ -6165,7 +6188,7 @@
 				0591E7DF1C4F750200793A9C /* nhsstandard.h in Headers */,
 				0541AF501B8BE32E002E166B /* output.h in Headers */,
 				05431F2D1C40F2DB009BC072 /* nperm.h in Headers */,
-				052F9EC7180600FB00FAE4DF /* nhilbertcd.h in Headers */,
+				052F9EC7180600FB00FAE4DF /* hilbertcd.h in Headers */,
 				05431F231C40F260009BC072 /* facenumbering.h in Headers */,
 				052F9FDC180600FB00FAE4DF /* snappeatriangulation.h in Headers */,
 				052F9F60180600FB00FAE4DF /* xmlpacketreader.h in Headers */,
@@ -6178,6 +6201,7 @@
 				05431F771C40F3C9009BC072 /* list_operations.h in Headers */,
 				0591E85F1C50D28700793A9C /* hyperflags.h in Headers */,
 				052F9EAD180600FB00FAE4DF /* dim2component.h in Headers */,
+				050C64BF1DA32E7D00C9420F /* nhilbertcd-impl.h in Headers */,
 				052F9FE9180600FB00FAE4DF /* nblockedsfs.h in Headers */,
 				052FA003180600FB00FAE4DF /* npluggedtorusbundle.h in Headers */,
 				0541AF4C1B8BE2F5002E166B /* ncyclotomic.h in Headers */,
