@@ -34,7 +34,7 @@
 #import "dim4/dim4triangulation.h"
 #import "generic/facenumbering.h"
 #import "hypersurface/nnormalhypersurfacelist.h"
-#import "surfaces/nnormalsurfacelist.h"
+#import "surfaces/normalsurfaces.h"
 #import "triangulation/ntriangle.h"
 #import "triangulation/ntriangulation.h"
 

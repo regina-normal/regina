@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "surfaces/nnormalsurface.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 #include "surfaces/nsstandard.h"
 #include "surfaces/nsquad.h"
 #include "surfaces/nsanstandard.h"

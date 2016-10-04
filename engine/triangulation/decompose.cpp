@@ -37,7 +37,7 @@
 #include "packet/container.h"
 #include "subcomplex/nsnappedball.h"
 #include "surfaces/nnormalsurface.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 #include "triangulation/nboundarycomponent.h"
 #include "triangulation/nisomorphism.h"
 #include "triangulation/ntriangulation.h"

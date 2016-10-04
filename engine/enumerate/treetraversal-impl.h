@@ -52,7 +52,7 @@
 #include "surfaces/nsquad.h"
 #include "surfaces/nsquadoct.h"
 #include "surfaces/nsstandard.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 #include "triangulation/ntriangulation.h"
 
 /**

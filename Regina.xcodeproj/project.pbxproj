@@ -523,7 +523,7 @@
 		052FA02D180600FB00FAE4DF /* nnormalsurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E07180600FB00FAE4DF /* nnormalsurface.cpp */; };
 		052FA02E180600FB00FAE4DF /* nnormalsurface.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E08180600FB00FAE4DF /* nnormalsurface.h */; };
 		052FA02F180600FB00FAE4DF /* nnormalsurfacelist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E09180600FB00FAE4DF /* nnormalsurfacelist.cpp */; };
-		052FA030180600FB00FAE4DF /* nnormalsurfacelist.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E0A180600FB00FAE4DF /* nnormalsurfacelist.h */; };
+		052FA030180600FB00FAE4DF /* normalsurfaces.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E0A180600FB00FAE4DF /* normalsurfaces.h */; };
 		052FA031180600FB00FAE4DF /* normalcoords.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E0B180600FB00FAE4DF /* normalcoords.h */; };
 		052FA032180600FB00FAE4DF /* normalflags.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E0C180600FB00FAE4DF /* normalflags.h */; };
 		052FA033180600FB00FAE4DF /* normalspec-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E0D180600FB00FAE4DF /* normalspec-impl.h */; };
@@ -1550,6 +1550,7 @@
 		05DC051D1C41B85100C76D71 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05DC051C1C41B85100C76D71 /* boost.framework */; };
 		05DC051F1C41B87200C76D71 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05DC051E1C41B87200C76D71 /* boost.framework */; };
 		05DC05201C41B88D00C76D71 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05DC051C1C41B85100C76D71 /* boost.framework */; };
+		05E49D231DA34A5600B55E31 /* nnormalsurfacelist.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E49D221DA34A5600B55E31 /* nnormalsurfacelist.h */; };
 		05EA195719F30A0100D37501 /* EltMovesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05EA195619F30A0100D37501 /* EltMovesController.mm */; };
 		05F23E0F19C08834005B53B5 /* snappea-doc-64.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F23E0D19C08834005B53B5 /* snappea-doc-64.png */; };
 		05F23E1019C08834005B53B5 /* snappea-doc-320.png in Resources */ = {isa = PBXBuildFile; fileRef = 05F23E0E19C08834005B53B5 /* snappea-doc-320.png */; };
@@ -2541,7 +2542,7 @@
 		052F9E07180600FB00FAE4DF /* nnormalsurface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nnormalsurface.cpp; sourceTree = "<group>"; };
 		052F9E08180600FB00FAE4DF /* nnormalsurface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nnormalsurface.h; sourceTree = "<group>"; };
 		052F9E09180600FB00FAE4DF /* nnormalsurfacelist.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nnormalsurfacelist.cpp; sourceTree = "<group>"; };
-		052F9E0A180600FB00FAE4DF /* nnormalsurfacelist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nnormalsurfacelist.h; sourceTree = "<group>"; };
+		052F9E0A180600FB00FAE4DF /* normalsurfaces.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = normalsurfaces.h; sourceTree = "<group>"; };
 		052F9E0B180600FB00FAE4DF /* normalcoords.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = normalcoords.h; sourceTree = "<group>"; };
 		052F9E0C180600FB00FAE4DF /* normalflags.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = normalflags.h; sourceTree = "<group>"; };
 		052F9E0D180600FB00FAE4DF /* normalspec-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "normalspec-impl.h"; sourceTree = "<group>"; };
@@ -3453,6 +3454,7 @@
 		05D81A8B1C66B0E500DDCE64 /* output.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = output.h; sourceTree = "<group>"; };
 		05DC051C1C41B85100C76D71 /* boost.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = boost.framework; path = ../../Library/Frameworks/osx/boost.framework; sourceTree = "<group>"; };
 		05DC051E1C41B87200C76D71 /* boost.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = boost.framework; path = ../../Library/Frameworks/ios/boost.framework; sourceTree = "<group>"; };
+		05E49D221DA34A5600B55E31 /* nnormalsurfacelist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nnormalsurfacelist.h; sourceTree = "<group>"; };
 		05E5312E1C53C48600ECEB72 /* simplexchooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simplexchooser.h; sourceTree = "<group>"; };
 		05EA195519F30A0100D37501 /* EltMovesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EltMovesController.h; sourceTree = "<group>"; };
 		05EA195619F30A0100D37501 /* EltMovesController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EltMovesController.mm; sourceTree = "<group>"; };
@@ -4767,10 +4769,11 @@
 				052F9E07180600FB00FAE4DF /* nnormalsurface.cpp */,
 				052F9E08180600FB00FAE4DF /* nnormalsurface.h */,
 				052F9E09180600FB00FAE4DF /* nnormalsurfacelist.cpp */,
-				052F9E0A180600FB00FAE4DF /* nnormalsurfacelist.h */,
+				05E49D221DA34A5600B55E31 /* nnormalsurfacelist.h */,
 				052F9E0B180600FB00FAE4DF /* normalcoords.h */,
 				052F9E0C180600FB00FAE4DF /* normalflags.h */,
 				052F9E0D180600FB00FAE4DF /* normalspec-impl.h */,
+				052F9E0A180600FB00FAE4DF /* normalsurfaces.h */,
 				052F9E0F180600FB00FAE4DF /* nprism.cpp */,
 				052F9E10180600FB00FAE4DF /* nprism.h */,
 				052F9E11180600FB00FAE4DF /* nsanstandard.cpp */,
@@ -6164,6 +6167,7 @@
 				0541AF601B8BE40B002E166B /* treedecomposition-impl.h in Headers */,
 				052FA02A180600FB00FAE4DF /* ndisc.h in Headers */,
 				05431F9E1C40F537009BC072 /* testgeneric.h in Headers */,
+				05E49D231DA34A5600B55E31 /* nnormalsurfacelist.h in Headers */,
 				052F9F2A180600FB00FAE4DF /* nmanifold.h in Headers */,
 				0591E7AB1C4F74C400793A9C /* dim4tetrahedron.h in Headers */,
 				052FA01B180600FB00FAE4DF /* ntrisolidtorus.h in Headers */,
@@ -6212,7 +6216,7 @@
 				052FA03B180600FB00FAE4DF /* nsoriented.h in Headers */,
 				0591E7E51C4F750200793A9C /* nxmlhypersurfacereader.h in Headers */,
 				052F9F6D180600FB00FAE4DF /* canonize.h in Headers */,
-				052FA030180600FB00FAE4DF /* nnormalsurfacelist.h in Headers */,
+				052FA030180600FB00FAE4DF /* normalsurfaces.h in Headers */,
 				052FA086180600FB00FAE4DF /* flags.h in Headers */,
 				052FA07A180600FB00FAE4DF /* nxmltrireader.h in Headers */,
 				0591E7DF1C4F750200793A9C /* nhsstandard.h in Headers */,

@@ -55,7 +55,7 @@
 #include <algorithm>
 #include <cstdio>
 #include <fstream>
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 #include "triangulation/ntriangulation.h"
 
 #define MAXLEN 1000

@@ -33,7 +33,7 @@
 #include "regina-config.h"
 #include "file/globaldirs.h"
 #include "snappea/snappeatriangulation.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 #include "utilities/stringutils.h"
 
 #include "reginaprefset.h"

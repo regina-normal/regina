@@ -34,7 +34,7 @@
 #import "PacketTreeController.h"
 #import "ReginaHelper.h"
 #import "progress/progresstracker.h"
-#import "surfaces/nnormalsurfacelist.h"
+#import "surfaces/normalsurfaces.h"
 
 #define KEY_LAST_TYPE @"NewSurfacesType"
 #define KEY_LAST_COORDS @"NewSurfacesCoords"

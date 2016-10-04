@@ -34,7 +34,7 @@
 #include "hypersurface/nnormalhypersurface.h"
 #include "hypersurface/nnormalhypersurfacelist.h"
 #include "surfaces/nnormalsurface.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 
 #define NICE_SIZE 200
 #define MIN_CELL 5

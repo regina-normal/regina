@@ -36,7 +36,7 @@
 #import "SurfacesViewController.h"
 #import "MDSpreadViewClasses.h"
 #import "maths/nmatrixint.h"
-#import "surfaces/nnormalsurfacelist.h"
+#import "surfaces/normalsurfaces.h"
 #import "triangulation/ntriangulation.h"
 
 #define KEY_SURFACES_MATCHING_COMPACT @"SurfacesMatchingCompact"

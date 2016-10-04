@@ -35,7 +35,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "maths/nmatrixint.h"
 #include "snappea/snappeatriangulation.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
 

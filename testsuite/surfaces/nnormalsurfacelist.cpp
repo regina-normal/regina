@@ -35,7 +35,7 @@
 #include <memory>
 #include "packet/container.h"
 #include "split/nsignature.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 #include "triangulation/nexampletriangulation.h"
 #include "triangulation/ntriangulation.h"
 

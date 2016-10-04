@@ -32,7 +32,7 @@
 
 #include "maths/nmatrixint.h"
 #include "surfaces/nnormalsurface.h"
-#include "surfaces/nnormalsurfacelist.h" // for makeZeroVector()
+#include "surfaces/normalsurfaces.h" // for makeZeroVector()
 #include "triangulation/ntriangulation.h"
 #include "../globalarray.h"
 #include "../helpers.h"

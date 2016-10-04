@@ -52,7 +52,7 @@
 #include "packet/container.h"
 #include "packet/text.h"
 #include "triangulation/ntriangulation.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 #include "packet/script.h"
 #include "surfaces/nsurfacefilter.h"
 #include "angle/anglestructures.h"

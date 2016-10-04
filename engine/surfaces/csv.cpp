@@ -33,7 +33,7 @@
 #include <fstream>
 
 #include "maths/nmatrixint.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {

@@ -34,7 +34,7 @@
 #include "maths/nmatrixint.h"
 #include "snappea/snappeatriangulation.h"
 #include "surfaces/nnormalsurface.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/xmlutils.h"
 

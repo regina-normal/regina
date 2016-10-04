@@ -32,7 +32,7 @@
 
 #include "dim4/dim4triangulation.h"
 #include "hypersurface/nnormalhypersurfacelist.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 #include "triangulation/ntriangle.h"
 #include "triangulation/ntriangulation.h"
 

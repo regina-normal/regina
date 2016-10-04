@@ -32,7 +32,7 @@
 
 #import "SurfacesCompat.h"
 #import "SurfacesViewController.h"
-#import "surfaces/nnormalsurfacelist.h"
+#import "surfaces/normalsurfaces.h"
 
 #define KEY_LAST_TYPE @"SurfacesCompatType"
 

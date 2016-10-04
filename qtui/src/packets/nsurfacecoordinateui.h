@@ -38,7 +38,7 @@
 #define __NSURFACECOODINATEUI_H
 
 #include "packet/packetlistener.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 
 #include "../packettabui.h"
 #include "coordinates.h"

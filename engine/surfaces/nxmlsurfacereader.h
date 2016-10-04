@@ -41,7 +41,7 @@
 
 #include "regina-core.h"
 #include "packet/xmlpacketreader.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 
 namespace regina {
 

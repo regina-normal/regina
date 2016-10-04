@@ -41,7 +41,7 @@
 #include "maths/nmatrixint.h"
 #include "progress/progresstracker.h"
 #include "surfaces/coordregistry.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {

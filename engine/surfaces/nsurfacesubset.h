@@ -42,7 +42,7 @@
 #include <vector>
 #include "regina-core.h"
 #include "output.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 #include <boost/noncopyable.hpp>
 
 namespace regina {

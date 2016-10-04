@@ -33,7 +33,7 @@
 #import "SurfacesSummary.h"
 #import "TextHelper.h"
 #import "surfaces/nnormalsurface.h"
-#import "surfaces/nnormalsurfacelist.h"
+#import "surfaces/normalsurfaces.h"
 #import <iterator>
 #import <map>
 

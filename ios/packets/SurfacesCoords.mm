@@ -38,7 +38,7 @@
 #import "TextHelper.h"
 #import "MDSpreadViewClasses.h"
 #import "snappea/snappeatriangulation.h"
-#import "surfaces/nnormalsurfacelist.h"
+#import "surfaces/normalsurfaces.h"
 #import "triangulation/ntriangulation.h"
 
 #define KEY_SURFACES_COORDS_COMPACT @"SurfacesCoordsCompact"

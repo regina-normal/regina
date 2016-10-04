@@ -61,7 +61,7 @@
  * exists (../normal-compare.cpp).
  */
 
-#include <surfaces/nnormalsurfacelist.h>
+#include <surfaces/normalsurfaces.h>
 #include <triangulation/ntriangulation.h>
 
 #include <cstdio>

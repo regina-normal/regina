@@ -48,7 +48,7 @@
  */
 
 #include "packet/container.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 #include "triangulation/ntriangulation.h"
 
 #include <cstdlib>
