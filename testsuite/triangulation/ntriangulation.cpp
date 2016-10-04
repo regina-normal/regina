@@ -117,6 +117,9 @@ class NTriangulationTest : public TriangulationTest<3> {
     CPPUNIT_TEST_SUITE_END();
 
     private:
+        static constexpr const double epsilon = 0.00000001;
+            /**< For comparing floating-point Turaev-Viro values. */
+
         // Trivial:
         NTriangulation empty;
             /**< An empty triangulation. */
@@ -2871,7 +2874,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 for (unsigned long i = 0; i < t.homologyH2Z2(); i++)
                     expectedTV += expectedTV;
 
-                if (regina::isNonZero(tv - expectedTV)) {
+                if (fabs(tv - expectedTV) > epsilon) {
                     std::ostringstream msg;
                     msg << "Turaev-Viro(" << triName << ", r = 3, root = "
                         << q0 << ") is " << tv << ", not " << expectedTV
@@ -2896,7 +2899,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 expectedTV = (expectedTV * expectedTV) /
                     (2 * static_cast<double>(r));
 
-                if (regina::isNonZero(tv - expectedTV)) {
+                if (fabs(tv - expectedTV) > epsilon) {
                     std::ostringstream msg;
                     msg << "Turaev-Viro(S^3, r = " << r << ", root = " << q0
                         << ") is " << tv << ", not " << expectedTV << ".";
@@ -2927,7 +2930,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                     expectedTV /= static_cast<double>(r);
                 }
 
-                if (regina::isNonZero(tv - expectedTV)) {
+                if (fabs(tv - expectedTV) > epsilon) {
                     std::ostringstream msg;
                     msg << "Turaev-Viro(RP^3, r = " << r << ", root = " << q0
                         << ") is " << tv << ", not " << expectedTV << ".";
@@ -2953,7 +2956,7 @@ class NTriangulationTest : public TriangulationTest<3> {
                 expectedTV = (expectedTV * expectedTV) /
                     (2 * static_cast<double>(r));
 
-                if (regina::isNonZero(tv - expectedTV)) {
+                if (fabs(tv - expectedTV) > epsilon) {
                     std::ostringstream msg;
                     msg << "Turaev-Viro(L(3,1), r = " << r << ", root = "
                         << q0 << ") is " << tv << ", not " << expectedTV
@@ -2976,7 +2979,7 @@ class NTriangulationTest : public TriangulationTest<3> {
 
                 double expectedTV = 1.0;
 
-                if (regina::isNonZero(tv - expectedTV)) {
+                if (fabs(tv - expectedTV) > epsilon) {
                     std::ostringstream msg;
                     msg << "Turaev-Viro(S^2 x S^1, r = " << r << ", root = "
                         << q0 << ") is " << tv << ", not " << expectedTV
