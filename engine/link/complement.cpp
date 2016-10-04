@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "link/link.h"
-#include "packet/ncontainer.h"
+#include "packet/container.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {
@@ -200,7 +200,7 @@ Triangulation<3>* Link::complement(bool simplify) const {
 
     if (! ans->isConnected()) {
         // Replace ans with the connected sum of its components.
-        NContainer parent;
+        Container parent;
         ans->splitIntoComponents(&parent, false /* setLabels */);
 
         // Use the first component to form the connected sum.

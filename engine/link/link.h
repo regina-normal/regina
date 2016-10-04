@@ -42,9 +42,9 @@
 #include <vector>
 #include <boost/noncopyable.hpp>
 #include "regina-core.h"
-#include "packet/npacket.h"
+#include "packet/packet.h"
 #include "maths/ninteger.h"
-#include "utilities/nmarkedvector.h"
+#include "utilities/markedvector.h"
 
 namespace regina {
 
@@ -362,7 +362,7 @@ std::ostream& operator << (std::ostream& out, const StrandRef& s);
  * such operations then you should use a pointer to the relevant Crossing
  * object instead.
  */
-class REGINA_API Crossing : public NMarkedElement,
+class REGINA_API Crossing : public MarkedElement,
         public Output<Crossing>, public boost::noncopyable {
     private:
         int sign_;
@@ -540,11 +540,11 @@ struct PacketInfo<PACKET_LINK> {
  * and it also supports components with no crossings (which form additional
  * unknot components of the overall link).
  */
-class REGINA_API Link : public NPacket {
+class REGINA_API Link : public Packet {
     REGINA_PACKET(Link, PACKET_LINK)
 
     private:
-        NMarkedVector<Crossing> crossings_;
+        MarkedVector<Crossing> crossings_;
             /**< The crossings in this link. */
         std::vector<StrandRef> components_;
             /**< For each component of the link, this array contains
@@ -1922,11 +1922,11 @@ class REGINA_API Link : public NPacket {
 
         /*@}*/
 
-        static NXMLPacketReader* xmlReader(NPacket* parent,
-            NXMLTreeResolver& resolver);
+        static XMLPacketReader* xmlReader(Packet* parent,
+            XMLTreeResolver& resolver);
 
     protected:
-        virtual NPacket* internalClonePacket(NPacket* parent) const;
+        virtual Packet* internalClonePacket(Packet* parent) const;
         virtual void writeXMLPacketData(std::ostream& out) const;
 
     private:
@@ -2256,7 +2256,7 @@ inline bool Link::dependsOnParent() const {
     return false;
 }
 
-inline NPacket* Link::internalClonePacket(NPacket*) const {
+inline Packet* Link::internalClonePacket(Packet*) const {
     return new Link(*this);
 }
 

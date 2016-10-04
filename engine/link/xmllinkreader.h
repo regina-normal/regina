@@ -34,14 +34,14 @@
  *  \brief Deals with parsing XML data for knot/link packets.
  */
 
-#ifndef __NXMLLINKREADER_H
+#ifndef __XMLLINKREADER_H
 #ifndef __DOXYGEN
-#define __NXMLLINKREADER_H
+#define __XMLLINKREADER_H
 #endif
 
 #include "regina-core.h"
 #include "link/link.h"
-#include "packet/nxmlpacketreader.h"
+#include "packet/xmlpacketreader.h"
 #include "utilities/stringutils.h"
 
 namespace regina {
@@ -54,7 +54,7 @@ namespace regina {
 /**
  * An XML packet reader that reads a single knot or link.
  */
-class REGINA_API XMLLinkReader : public NXMLPacketReader {
+class REGINA_API XMLLinkReader : public XMLPacketReader {
     private:
         Link* link_;
             /**< The link currently being read. */
@@ -66,21 +66,21 @@ class REGINA_API XMLLinkReader : public NXMLPacketReader {
          * @param resolver the master resolver that will be used to fix
          * dangling packet references after the entire XML file has been read.
          */
-        XMLLinkReader(NXMLTreeResolver& resolver);
+        XMLLinkReader(XMLTreeResolver& resolver);
 
-        virtual NPacket* packet() override;
-        virtual NXMLElementReader* startContentSubElement(
+        virtual Packet* packet() override;
+        virtual XMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
         virtual void endContentSubElement(const std::string& subTagName,
-            NXMLElementReader* subReader) override;
+            XMLElementReader* subReader) override;
 };
 
 /**
  * Helper class that reads the XML element containing basic information
  * about the crossings of a knot or link.
  */
-class REGINA_API XMLLinkCrossingsReader : public NXMLElementReader {
+class REGINA_API XMLLinkCrossingsReader : public XMLElementReader {
     private:
         Link* link_;
             /**< The link currently being read. */
@@ -100,7 +100,7 @@ class REGINA_API XMLLinkCrossingsReader : public NXMLElementReader {
         XMLLinkCrossingsReader(Link* link);
 
         virtual void startElement(const std::string&,
-            const regina::xml::XMLPropertyDict&, NXMLElementReader*);
+            const regina::xml::XMLPropertyDict&, XMLElementReader*);
         virtual void initialChars(const std::string& chars);
 
         bool broken() const;
@@ -110,7 +110,7 @@ class REGINA_API XMLLinkCrossingsReader : public NXMLElementReader {
  * Helper class that reads the XML element containing information on
  * connections between crossings of a knot or link.
  */
-class REGINA_API XMLLinkConnectionsReader : public NXMLElementReader {
+class REGINA_API XMLLinkConnectionsReader : public XMLElementReader {
     private:
         Link* link_;
             /**< The link currently being read. */
@@ -135,7 +135,7 @@ class REGINA_API XMLLinkConnectionsReader : public NXMLElementReader {
  * Helper class that reads the XML element containing information
  * about the individual components of a link.
  */
-class REGINA_API XMLLinkComponentsReader : public NXMLElementReader {
+class REGINA_API XMLLinkComponentsReader : public XMLElementReader {
     private:
         Link* link_;
             /**< The link currently being read. */
@@ -155,7 +155,7 @@ class REGINA_API XMLLinkComponentsReader : public NXMLElementReader {
         XMLLinkComponentsReader(Link* link);
 
         virtual void startElement(const std::string&,
-            const regina::xml::XMLPropertyDict&, NXMLElementReader*);
+            const regina::xml::XMLPropertyDict&, XMLElementReader*);
         virtual void initialChars(const std::string& chars);
 
         bool broken() const;
@@ -165,18 +165,18 @@ class REGINA_API XMLLinkComponentsReader : public NXMLElementReader {
 
 // Inline functions for XMLLinkReader
 
-inline XMLLinkReader::XMLLinkReader(NXMLTreeResolver& resolver) :
-        NXMLPacketReader(resolver), link_(new Link()) {
+inline XMLLinkReader::XMLLinkReader(XMLTreeResolver& resolver) :
+        XMLPacketReader(resolver), link_(new Link()) {
 }
 
-inline NPacket* XMLLinkReader::packet() {
+inline Packet* XMLLinkReader::packet() {
     return link_;
 }
 
-inline NXMLElementReader* XMLLinkReader::startContentSubElement(
+inline XMLElementReader* XMLLinkReader::startContentSubElement(
         const std::string& subTagName, const regina::xml::XMLPropertyDict&) {
     if (! link_)
-        return new NXMLElementReader();
+        return new XMLElementReader();
 
     if (subTagName == "crossings")
         return new XMLLinkCrossingsReader(link_);
@@ -185,11 +185,11 @@ inline NXMLElementReader* XMLLinkReader::startContentSubElement(
     else if (subTagName == "components")
         return new XMLLinkComponentsReader(link_);
 
-    return new NXMLElementReader();
+    return new XMLElementReader();
 }
 
 inline void XMLLinkReader::endContentSubElement(const std::string& subTagName,
-        NXMLElementReader* reader) {
+        XMLElementReader* reader) {
     if (! link_)
         return;
 
@@ -218,7 +218,7 @@ XMLLinkCrossingsReader::XMLLinkCrossingsReader(Link* link) :
 }
 
 void XMLLinkCrossingsReader::startElement(const std::string&,
-        const regina::xml::XMLPropertyDict& props, NXMLElementReader*) {
+        const regina::xml::XMLPropertyDict& props, XMLElementReader*) {
     if (! valueOf(props.lookup("size"), size_))
         link_ = 0;
 }
@@ -243,7 +243,7 @@ XMLLinkComponentsReader::XMLLinkComponentsReader(Link* link) :
 }
 
 void XMLLinkComponentsReader::startElement(const std::string&,
-        const regina::xml::XMLPropertyDict& props, NXMLElementReader*) {
+        const regina::xml::XMLPropertyDict& props, XMLElementReader*) {
     if (! valueOf(props.lookup("size"), size_))
         link_ = 0;
 }

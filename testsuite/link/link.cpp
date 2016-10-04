@@ -38,9 +38,9 @@
 #include "link/link.h"
 #include "maths/laurent.h"
 #include "maths/laurent2.h"
-#include "packet/ncontainer.h"
+#include "packet/container.h"
 #include "surfaces/nnormalsurface.h"
-#include "surfaces/nnormalsurfacelist.h"
+#include "surfaces/normalsurfaces.h"
 #include "triangulation/ntriangulation.h"
 
 #include "testsuite/link/testlink.h"
@@ -479,8 +479,8 @@ class LinkTest : public CppUnit::TestFixture {
             NTriangulation* c = l->complement();
 
             // Find a separating sphere.
-            regina::NNormalSurfaceList* vtx =
-                regina::NNormalSurfaceList::enumerate(c, regina::NS_STANDARD);
+            regina::NormalSurfaces* vtx =
+                regina::NormalSurfaces::enumerate(c, regina::NS_STANDARD);
             const regina::NNormalSurface* s;
             for (size_t i = 0; i < vtx->size(); ++i) {
                 s = vtx->surface(i);
@@ -500,7 +500,7 @@ class LinkTest : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                regina::NContainer parent;
+                regina::Container parent;
                 cut->intelligentSimplify();
                 cut->splitIntoComponents(&parent);
 

@@ -36,7 +36,7 @@
 
 namespace regina {
 
-NXMLPacketReader* Link::xmlReader(NPacket*, NXMLTreeResolver& resolver) {
+XMLPacketReader* Link::xmlReader(Packet*, XMLTreeResolver& resolver) {
     return new XMLLinkReader(resolver);
 }
 
