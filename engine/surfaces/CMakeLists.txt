@@ -11,7 +11,7 @@ SET ( FILES
   ndisc
   ndisctype
   nnormalsurface
-  nnormalsurfacelist
+  normalsurfaces
   nprism
   nsanstandard
   nsoriented

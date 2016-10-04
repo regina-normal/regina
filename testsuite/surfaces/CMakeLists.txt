@@ -3,7 +3,7 @@
 # Files to compile
 SET ( FILES
   incompressible
-  nnormalsurfacelist
+  normalsurfaces
   )
 
 # Prepend folder name
