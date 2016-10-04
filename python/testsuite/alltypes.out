@@ -1192,9 +1192,6 @@ Equality type : BY_REFERENCE
 NNormalSurface : class
 Equality type : BY_REFERENCE
 
-NormalSurfaces : class
-Equality type : BY_REFERENCE
-
 NPerm10 : class
 Equality type : BY_VALUE
 
@@ -1377,6 +1374,9 @@ Equality type : BY_VALUE
 
 NormalList : class
 Equality type : BY_VALUE
+
+NormalSurfaces : class
+Equality type : BY_REFERENCE
 
 PDF : class
 Equality type : BY_REFERENCE
