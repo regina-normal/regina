@@ -49,5 +49,6 @@ if (${REGINA_INSTALL_DEV})
     treeconstraint.h
     treelp.h
     treelp-impl.h
+    typetrie.h
     DESTINATION ${INCLUDEDIR}/enumerate COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

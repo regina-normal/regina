@@ -278,7 +278,7 @@ void DoubleDescription::enumerateUsingBitmask(OutputIterator results,
     // is based on position vectors, as described in
     // "Optimizing the double description method for normal surface
     // enumeration", B.A. Burton, Mathematics of Computation 79 (2010), 453-484.
-    // See the class NPosOrder for details.
+    // See the class PosOrder for details.
     //
     // Sort the integers 0..(nEqns-1) into the order in which we plan to
     // process the hyperplanes.
@@ -288,7 +288,7 @@ void DoubleDescription::enumerateUsingBitmask(OutputIterator results,
         hyperplanes[i] = i;
 
     std::sort(hyperplanes + initialRows, hyperplanes + nEqns,
-        NPosOrder(subspace));
+        PosOrder(subspace));
 
     // Create the two vector lists with which we will work.
     // Fill the first with the initial set of rays.

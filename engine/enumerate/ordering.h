@@ -70,7 +70,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class NPosOrder {
+class PosOrder {
     private:
         const NMatrixInt& matrix_;
             /**< The \a subspace matrix as passed to the enumeration routine. */
@@ -82,14 +82,14 @@ class NPosOrder {
          * @param matrix the \a subspace matrix as passed to
          * the normal surface enumeration routine.
          */
-        inline NPosOrder(const NMatrixInt& matrix);
+        inline PosOrder(const NMatrixInt& matrix);
 
         /**
          * Determines whether the hyperplane described by
          * row \a i of the matrix is smaller
          * than the hyperplane described by row \a j.
          * Here "smaller" is defined by position vectors;
-         * see the NPosOrder class notes for details.
+         * see the PosOrder class notes for details.
          *
          * @param i the first matrix row index; this must be between
          * 0 and matrix.rows()-1 inclusive, where \a matrix is
@@ -102,15 +102,23 @@ class NPosOrder {
         inline bool operator () (long i, long j) const;
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NPosOrder has now been renamed to PosOrder.
+ */
+REGINA_DEPRECATED typedef PosOrder NPosOrder;
+
 /*@}*/
 
-// Inline functions for NPosOrder
+// Inline functions for PosOrder
 
-inline NPosOrder::NPosOrder(const NMatrixInt& matrix) :
+inline PosOrder::PosOrder(const NMatrixInt& matrix) :
         matrix_(matrix) {
 }
 
-inline bool NPosOrder::operator () (
+inline bool PosOrder::operator () (
         long i, long j) const {
     for (unsigned long c = 0; c < matrix_.columns(); ++c) {
         if (matrix_.entry(i, c) == 0 && matrix_.entry(j, c) != 0)

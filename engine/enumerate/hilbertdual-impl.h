@@ -129,7 +129,7 @@ void HilbertDual::enumerateUsingBitmask(OutputIterator results,
         hyperplanes[i] = i;
 
     std::sort(hyperplanes + initialRows, hyperplanes + nEqns,
-        NPosOrder(subspace));
+        PosOrder(subspace));
 
     // Convert the set of constraints into bitmasks, where for every
     // original coordinate listed in the constraint, the corresponding

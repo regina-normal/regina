@@ -43,7 +43,7 @@
 #include <mutex>
 #include "enumerate/treeconstraint.h"
 #include "enumerate/treelp.h"
-#include "enumerate/ntypetrie.h"
+#include "enumerate/typetrie.h"
 
 namespace regina {
 
@@ -75,7 +75,7 @@ typedef Triangulation<3> NTriangulation;
  * This base class provides the infrastructure for the search tree, and the
  * subclasses handle the mechanics of the moving through the tree according
  * to the backtracking search.  The domination test is handled separately by
- * the class NTypeTrie, and the feasibility test is handled separately by the
+ * the class TypeTrie, and the feasibility test is handled separately by the
  * class LPData.
  *
  * This class holds the particular state of the tree traversal
@@ -711,7 +711,7 @@ class NTreeEnumeration :
         using NTreeTraversal<LPConstraint, BanConstraint, Integer>::setNext;
 
     private:
-        NTypeTrie<7> solns_;
+        TypeTrie<7> solns_;
             /**< A trie that holds the type vectors for all vertex
                  surfaces found so far.
                  We wastefully allow for 7 possible types always (which

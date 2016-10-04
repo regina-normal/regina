@@ -159,7 +159,7 @@ class HilbertDual {
          * will be reported, or 0 if no progress reporting is required.
          * @param initialRows specifies how many initial rows of \a subspace
          * are to be processed in the precise order in which they appear.
-         * The remaining rows will be sorted using the NPosOrder class
+         * The remaining rows will be sorted using the PosOrder class
          * before they are processed.
          */
         template <class RayClass, class OutputIterator>
