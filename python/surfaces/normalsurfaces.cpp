@@ -94,8 +94,7 @@ void addNormalSurfaces() {
         regina::makeMatchingEquations,
         return_value_policy<manage_new_object>());
 
-    scope s = class_<NormalSurfaces,
-            bases<regina::Packet>,
+    class_<NormalSurfaces, bases<regina::Packet>,
             SafeHeldType<NormalSurfaces>, boost::noncopyable>
             ("NormalSurfaces", no_init)
         .def("coords", &NormalSurfaces::coords)
@@ -144,13 +143,14 @@ void addNormalSurfaces() {
         .def("saveCSVEdgeWeight", &NormalSurfaces::saveCSVEdgeWeight,
             OL_saveCSVEdgeWeight())
         .staticmethod("enumerate")
+        .attr("typeID") = regina::PACKET_NORMALSURFACELIST;
     ;
-
-    s.attr("typeID") = regina::PACKET_NORMALSURFACELIST;
 
     implicitly_convertible<SafeHeldType<NormalSurfaces>,
         SafeHeldType<regina::Packet> >();
 
     FIX_REGINA_BOOST_CONVERTERS(NormalSurfaces);
+
+    scope().attr("NNormalSurfaceList") = scope().attr("NormalSurfaces");
 }
 
