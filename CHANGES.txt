@@ -10,6 +10,7 @@ Regina - A Normal Surface Theory Calculator
 Version 5.1  [ (under development) ]
 
     GENERAL:
+        - Now supports knots and links.
         - Removed all code that was deprecated in or before version 5.0.
         - Renamed all types NFoo to Foo, and renamed the headers accordingly.
           The old types and headers are deprecated but kept for backward
@@ -23,6 +24,12 @@ Version 5.1  [ (under development) ]
               typedefs.  None of these internal classes are exposed to Python,
               and typical C++ users would have no reason to use them either.
     ENGINE:
+        Class Crossing, CrossingStrand:
+            - Supporting classes for the new Link packet class.
+        Class Laurent, Laurent2:
+            - New classes for Laurent polynomials in one and two variables.
+        Class Link:
+            - New packet class for knots and links in the 3-sphere.
         Enum PacketType:
             - Renamed PACKET_NORMALSURFACELIST to PACKET_NORMALSURFACES,
               PACKET_NORMALHYPERSURFACELIST to PACKET_NORMALHYPERSURFACES,
@@ -46,7 +53,6 @@ Version 5.0  [ 26 September, 2016 ]
         - Now supports triangulations of all dimensions 2,...,15.
           Dimension 4 (like dimensions 3 and 2) has rich functionality;
           dimensions 5,...,15 have more basic support.
-        - Now supports knots and links.
         - Now uses aspects of C++11, which your compiler will need to support.
         - Merged sources for the iPad version into the main source tree.
         - Updated the bundled copy of Normaliz to version 3.0.0 (28 Sep 2015).
@@ -82,8 +88,6 @@ Version 5.0  [ 26 September, 2016 ]
         Class CompressionBuffer, CompressionStream, DecompressionBuffer,
                 DecompressionStream, ZBuffer:
             - Removed entirely.  Regina now uses boost::iostreams instead.
-        Class Crossing, CrossingStrand:
-            - Supporting classes for the new Link packet class.
         Class DegreeLessThan, DegreeGreaterThan:
             - New template-based helper classes for sorting subfaces of
               a triangulation by degree.
@@ -231,8 +235,6 @@ Version 5.0  [ 26 September, 2016 ]
               been kept as typedefs for convenience.
         Class LightweightSequence:
             - New lightweight class for storing an array of objects.
-        Class Link:
-            - New packet class for knots and links in the 3-sphere.
         Class NAbelianGroup:
             - Now supports unicode output via utf8().
         Class NAngleStructureList:
@@ -361,8 +363,6 @@ Version 5.0  [ 26 September, 2016 ]
         Class NLayeredSolidTorus:
             - Renamed getNumberOfTetrahedra() to size().  The old name
               is deprecated but kept for backward compatibility.
-        Class NLaurent, NLaurent2:
-            - New classes for Laurent polynomials in one and two variables.
         Class NManifold:
             - Renamed first homology routine getHomologyH1() to homology().  In
               addition, homology() has a new alias homologyH1().  The old names
