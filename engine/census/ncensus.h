@@ -314,9 +314,9 @@ class REGINA_API NCensus {
          *
          * Note that there may be many hits (possibly from multiple databases,
          * and in some cases possibly even within the same database).
-         * The list of hits will be returned as an NCensusHits object,
+         * The list of hits will be returned as a NCensusHits object,
          * which you can use to iterate through the individual matches.
-         * Even if there are no matches at all, an NCensusHits object will
+         * Even if there are no matches at all, a NCensusHits object will
          * still be returned; you can call NCensusHits::empty() to test
          * whether any matches were found.
          *
@@ -345,9 +345,9 @@ class REGINA_API NCensus {
          *
          * Note that there may be many hits (possibly from multiple databases,
          * and in some cases possibly even within the same database).
-         * The list of hits will be returned as an NCensusHits object,
+         * The list of hits will be returned as a NCensusHits object,
          * which you can use to iterate through the individual matches.
-         * Even if there are no matches at all, an NCensusHits object will
+         * Even if there are no matches at all, a NCensusHits object will
          * still be returned; you can call NCensusHits::empty() to test
          * whether any matches were found.
          *

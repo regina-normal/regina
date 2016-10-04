@@ -3015,7 +3015,7 @@ class REGINA_API Triangulation<3> :
         /**
          * Reads the contents of a SnapPea data file from the given input
          * stream, and converts the result to a new NTriangulation.  Since
-         * this returns an NTriangulation, it will lose some SnapPea-specific
+         * this returns a NTriangulation, it will lose some SnapPea-specific
          * information in the process (such as peripheral curves).
          *
          * If the input stream could not be read or if the data was not in the

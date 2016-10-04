@@ -621,7 +621,7 @@ class TreeTraversal : public BanConstraint {
  * triangulation, simply construct a TreeEnumeration object and call run().
  *
  * Alternatively, you can have more fine-grained control over the search.
- * Instead of calling run(), you can construct an TreeEnumeration object and
+ * Instead of calling run(), you can construct a TreeEnumeration object and
  * repeatedly call next() to step through each vertex surface one at
  * a time.  This allows you to pause and resume the search as you please.
  *
@@ -934,10 +934,10 @@ class TreeEnumeration :
  * Algorithmica 65:4 (2013), pp. 772-801.
  *
  * To enumerate all taut angle structures on a given 3-manifold
- * triangulation, simply construct an TautEnumeration object and call run().
+ * triangulation, simply construct a TautEnumeration object and call run().
  *
  * Alternatively, you can have more fine-grained control over the search.
- * Instead of calling run(), you can construct an TautEnumeration object and
+ * Instead of calling run(), you can construct a TautEnumeration object and
  * repeatedly call next() to step through each taut angle structure one at
  * a time.  This allows you to pause and resume the search as you please.
  *

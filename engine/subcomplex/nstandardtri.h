@@ -63,7 +63,7 @@ typedef Triangulation<3> NTriangulation;
 /**
  * Describes a triangulation or subcomplex of a triangulation whose structure
  * is well-understood.  An NStandardTriangulation is generally connected
- * with a real triangulation, i.e., an NTriangulation object, which it
+ * with a real triangulation, i.e., a NTriangulation object, which it
  * describes some portion of.
  *
  * In general NStandardTriangulation objects cannot be constructed
