@@ -30,39 +30,39 @@
  *                                                                        *
  **************************************************************************/
 
-#include "enumerate/ntreetraversal-impl.h"
+#include "enumerate/treetraversal-impl.h"
 
 namespace regina {
 
 // Instantiate templates for standard combinations of template arguments.
 // The header has matching "extern template class REGINA_API" declarations.
-template class NTreeTraversal<LPConstraintNone, BanNone, NInteger>;
-template class NTreeTraversal<LPConstraintNone, BanNone, NNativeLong>;
-template class NTreeEnumeration<LPConstraintNone, BanNone, NInteger>;
-template class NTreeEnumeration<LPConstraintNone, BanNone, NNativeLong>;
-template class NTautEnumeration<LPConstraintNone, BanNone, NInteger>;
-template class NTautEnumeration<LPConstraintNone, BanNone, NNativeLong>;
+template class TreeTraversal<LPConstraintNone, BanNone, NInteger>;
+template class TreeTraversal<LPConstraintNone, BanNone, NNativeLong>;
+template class TreeEnumeration<LPConstraintNone, BanNone, NInteger>;
+template class TreeEnumeration<LPConstraintNone, BanNone, NNativeLong>;
+template class TautEnumeration<LPConstraintNone, BanNone, NInteger>;
+template class TautEnumeration<LPConstraintNone, BanNone, NNativeLong>;
 
-template class NTreeTraversal<LPConstraintNone, BanBoundary, NInteger>;
-template class NTreeTraversal<LPConstraintNone, BanBoundary, NNativeLong>;
-template class NTreeEnumeration<LPConstraintNone, BanBoundary, NInteger>;
-template class NTreeEnumeration<LPConstraintNone, BanBoundary, NNativeLong>;
+template class TreeTraversal<LPConstraintNone, BanBoundary, NInteger>;
+template class TreeTraversal<LPConstraintNone, BanBoundary, NNativeLong>;
+template class TreeEnumeration<LPConstraintNone, BanBoundary, NInteger>;
+template class TreeEnumeration<LPConstraintNone, BanBoundary, NNativeLong>;
 
-template class NTreeTraversal<LPConstraintEuler, BanNone, NInteger>;
-template class NTreeTraversal<LPConstraintEuler, BanNone, NNativeLong>;
-template class NTreeSingleSoln<LPConstraintEuler, BanNone, NInteger>;
-template class NTreeSingleSoln<LPConstraintEuler, BanNone, NNativeLong>;
+template class TreeTraversal<LPConstraintEuler, BanNone, NInteger>;
+template class TreeTraversal<LPConstraintEuler, BanNone, NNativeLong>;
+template class TreeSingleSoln<LPConstraintEuler, BanNone, NInteger>;
+template class TreeSingleSoln<LPConstraintEuler, BanNone, NNativeLong>;
 
 #ifdef INT128_AVAILABLE
-template class NTreeTraversal<LPConstraintNone, BanNone, NNativeInteger<16> >;
-template class NTreeEnumeration<LPConstraintNone, BanNone, NNativeInteger<16> >;
-template class NTautEnumeration<LPConstraintNone, BanNone, NNativeInteger<16> >;
+template class TreeTraversal<LPConstraintNone, BanNone, NNativeInteger<16> >;
+template class TreeEnumeration<LPConstraintNone, BanNone, NNativeInteger<16> >;
+template class TautEnumeration<LPConstraintNone, BanNone, NNativeInteger<16> >;
 
-template class NTreeTraversal<LPConstraintNone, BanBoundary, NNativeInteger<16> >;
-template class NTreeEnumeration<LPConstraintNone, BanBoundary, NNativeInteger<16> >;
+template class TreeTraversal<LPConstraintNone, BanBoundary, NNativeInteger<16> >;
+template class TreeEnumeration<LPConstraintNone, BanBoundary, NNativeInteger<16> >;
 
-template class NTreeTraversal<LPConstraintEuler, BanNone, NNativeInteger<16> >;
-template class NTreeSingleSoln<LPConstraintEuler, BanNone, NNativeInteger<16> >;
+template class TreeTraversal<LPConstraintEuler, BanNone, NNativeInteger<16> >;
+template class TreeSingleSoln<LPConstraintEuler, BanNone, NNativeInteger<16> >;
 #endif
 
 } // namespace regina

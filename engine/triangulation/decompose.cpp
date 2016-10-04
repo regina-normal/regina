@@ -33,7 +33,7 @@
 #include <list>
 #include <sstream>
 
-#include "enumerate/ntreetraversal.h"
+#include "enumerate/treetraversal.h"
 #include "packet/container.h"
 #include "subcomplex/nsnappedball.h"
 #include "surfaces/nnormalsurface.h"
@@ -825,7 +825,7 @@ bool NTriangulation::hasCompressingDisc() const {
                 }
             }
 
-            NTreeSingleSoln<LPConstraintEuler> search(use, NS_STANDARD);
+            TreeSingleSoln<LPConstraintEuler> search(use, NS_STANDARD);
             if (! search.find()) {
                 // No compressing discs!
                 delete use;

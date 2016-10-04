@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "enumerate/ntreetraversal.h"
+#include "enumerate/treetraversal.h"
 #include "triangulation/ntriangulation.h"
 #include "surfaces/nnormalsurfacelist.h"
 
@@ -80,7 +80,7 @@ NNormalSurface* NTriangulation::hasNonTrivialSphereOrDisc() {
     // Use combinatorial optimisation if we can.
     if (isValid() && countVertices() == 1) {
         // For now, just use the safe arbitrary-precision NInteger type.
-        NTreeSingleSoln<LPConstraintEuler> tree(this, NS_STANDARD);
+        TreeSingleSoln<LPConstraintEuler> tree(this, NS_STANDARD);
         if (tree.find()) {
             NNormalSurface* s = tree.buildSurface();
             if (! ((! s->hasRealBoundary()) &&
@@ -143,7 +143,7 @@ NNormalSurface* NTriangulation::hasOctagonalAlmostNormalSphere() {
     // ones we need to be more fussy about.
     if (countVertices() == 1) {
         // For now, just use the safe arbitrary-precision NInteger type.
-        NTreeSingleSoln<LPConstraintEuler> tree(this, NS_AN_STANDARD);
+        TreeSingleSoln<LPConstraintEuler> tree(this, NS_AN_STANDARD);
         if (tree.find()) {
             // Since our preconditions ensure the triangulation is
             // closed, orientable and 0-efficient, there are no

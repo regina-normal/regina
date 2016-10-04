@@ -4,7 +4,7 @@
 SET ( FILES
   treeconstraint
   treelp
-  ntreetraversal
+  treetraversal
   ntypetrie
   )
 
@@ -49,6 +49,8 @@ if (${REGINA_INSTALL_DEV})
     treeconstraint.h
     treelp.h
     treelp-impl.h
+    treetraversal.h
+    treetraversal-impl.h
     typetrie.h
     DESTINATION ${INCLUDEDIR}/enumerate COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

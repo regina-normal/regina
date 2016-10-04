@@ -66,7 +66,7 @@ class LPConstraintNone;
 /**
  * A base class for additional linear constraints that we can add to the
  * tableaux of normal surface or angle structure matching equations.  This is
- * used with NTreeEnumeration, NTreeSingleSoln and related algorithms for
+ * used with TreeEnumeration, TreeSingleSoln and related algorithms for
  * enumerating and locating normal surfaces or angle structures in a
  * 3-manifold triangulation.  See the LPInitialTableaux class notes for
  * details on how these constraints interact with the tableaux of
@@ -351,7 +351,7 @@ class LPConstraintBase {
          *
          * @param coords the coordinate system being queried; this must
          * be one of the coordinate systems known to be supported by the
-         * generic NTreeTraversal infrastructure.
+         * generic TreeTraversal infrastructure.
          * @return \c true if and only if this coordinate system is
          * also supported by this specific constraint class.
          */
@@ -561,7 +561,7 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
 /**
  * A base class for additional banning and marking constraints that we
  * can place on tree traversal algorithms.  This is used with
- * NTreeEnumeration, NTreeSingleSoln and related algorithms for
+ * TreeEnumeration, TreeSingleSoln and related algorithms for
  * enumerating and locating normal surfaces and angle structures in a
  * 3-manifold triangulation.
  *
@@ -580,10 +580,10 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
  *
  * Currently marking is used in the following ways:
  *
- * - The NTreeEnumeration and NTautEnumeration algorithms do not use marking
+ * - The TreeEnumeration and TautEnumeration algorithms do not use marking
  *   at all.
  *
- * - In the NTreeSingleSoln algorithm, marking affects what is considered
+ * - In the TreeSingleSoln algorithm, marking affects what is considered
  *   a non-trivial normal surface.  Normally, a non-trivial surface is defined
  *   to be one in which some triangle coordinate is zero.  With marking,
  *   a non-trivial surface is redefined to be one in which some \e unmarked
@@ -697,7 +697,7 @@ class BanConstraintBase {
          *
          * @param coords the coordinate system being queried; this must
          * be one of the coordinate systems known to be supported by the
-         * generic NTreeTraversal infrastructure.
+         * generic TreeTraversal infrastructure.
          * @return \c true if and only if this coordinate system is
          * also supported by this specific constraint class.
          */

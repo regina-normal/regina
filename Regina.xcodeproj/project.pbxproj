@@ -72,6 +72,8 @@
 		050C64CD1DA3311100C9420F /* ntreelp-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64CA1DA3311100C9420F /* ntreelp-impl.h */; };
 		050C64CE1DA3311100C9420F /* ntreelp.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64CB1DA3311100C9420F /* ntreelp.h */; };
 		050C64D01DA3327300C9420F /* ntypetrie.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64CF1DA3327300C9420F /* ntypetrie.h */; };
+		050C64D31DA335DE00C9420F /* ntreetraversal-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64D11DA335DE00C9420F /* ntreetraversal-impl.h */; };
+		050C64D41DA335DE00C9420F /* ntreetraversal.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64D21DA335DE00C9420F /* ntreetraversal.h */; };
 		050F5DD31B9BAB9C00C1F681 /* nabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D021B9BAB9C00C1F681 /* nabeliangroup.cpp */; };
 		050F5DD41B9BAB9C00C1F681 /* ngrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D031B9BAB9C00C1F681 /* ngrouppresentation.cpp */; };
 		050F5DD51B9BAB9C00C1F681 /* nhomgrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D041B9BAB9C00C1F681 /* nhomgrouppresentation.cpp */; };
@@ -293,9 +295,9 @@
 		052F9EF5180600FB00FAE4DF /* treelp-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C90180600FA00FAE4DF /* treelp-impl.h */; };
 		052F9EF6180600FB00FAE4DF /* treelp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C91180600FA00FAE4DF /* treelp.cpp */; };
 		052F9EF7180600FB00FAE4DF /* treelp.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C92180600FA00FAE4DF /* treelp.h */; };
-		052F9EF9180600FB00FAE4DF /* ntreetraversal-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C94180600FA00FAE4DF /* ntreetraversal-impl.h */; };
-		052F9EFA180600FB00FAE4DF /* ntreetraversal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C95180600FA00FAE4DF /* ntreetraversal.cpp */; };
-		052F9EFB180600FB00FAE4DF /* ntreetraversal.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C96180600FA00FAE4DF /* ntreetraversal.h */; };
+		052F9EF9180600FB00FAE4DF /* treetraversal-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C94180600FA00FAE4DF /* treetraversal-impl.h */; };
+		052F9EFA180600FB00FAE4DF /* treetraversal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C95180600FA00FAE4DF /* treetraversal.cpp */; };
+		052F9EFB180600FB00FAE4DF /* treetraversal.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C96180600FA00FAE4DF /* treetraversal.h */; };
 		052F9EFD180600FB00FAE4DF /* typetrie.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C98180600FA00FAE4DF /* typetrie.cpp */; };
 		052F9EFE180600FB00FAE4DF /* typetrie.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C99180600FA00FAE4DF /* typetrie.h */; };
 		052F9EFF180600FB00FAE4DF /* ordering.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C9A180600FA00FAE4DF /* ordering.h */; };
@@ -669,7 +671,7 @@
 		052FA17A1806129B00FAE4DF /* engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C51180600FA00FAE4DF /* engine.cpp */; };
 		052FA17E1806129B00FAE4DF /* treeconstraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C8E180600FA00FAE4DF /* treeconstraint.cpp */; };
 		052FA17F1806129B00FAE4DF /* treelp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C91180600FA00FAE4DF /* treelp.cpp */; };
-		052FA1801806129B00FAE4DF /* ntreetraversal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C95180600FA00FAE4DF /* ntreetraversal.cpp */; };
+		052FA1801806129B00FAE4DF /* treetraversal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C95180600FA00FAE4DF /* treetraversal.cpp */; };
 		052FA1811806129B00FAE4DF /* typetrie.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C98180600FA00FAE4DF /* typetrie.cpp */; };
 		052FA1871806129B00FAE4DF /* dehydration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CAB180600FA00FAE4DF /* dehydration.cpp */; };
 		052FA1881806129B00FAE4DF /* isosig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CAD180600FA00FAE4DF /* isosig.cpp */; };
@@ -1978,6 +1980,8 @@
 		050C64CA1DA3311100C9420F /* ntreelp-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ntreelp-impl.h"; sourceTree = "<group>"; };
 		050C64CB1DA3311100C9420F /* ntreelp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntreelp.h; sourceTree = "<group>"; };
 		050C64CF1DA3327300C9420F /* ntypetrie.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntypetrie.h; sourceTree = "<group>"; };
+		050C64D11DA335DE00C9420F /* ntreetraversal-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ntreetraversal-impl.h"; sourceTree = "<group>"; };
+		050C64D21DA335DE00C9420F /* ntreetraversal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntreetraversal.h; sourceTree = "<group>"; };
 		050F5CDD1B9BAAAA00C1F681 /* engine.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = engine.so; sourceTree = BUILT_PRODUCTS_DIR; };
 		050F5D011B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		050F5D021B9BAB9C00C1F681 /* nabeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nabeliangroup.cpp; sourceTree = "<group>"; };
@@ -2261,9 +2265,9 @@
 		052F9C90180600FA00FAE4DF /* treelp-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "treelp-impl.h"; sourceTree = "<group>"; };
 		052F9C91180600FA00FAE4DF /* treelp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = treelp.cpp; sourceTree = "<group>"; };
 		052F9C92180600FA00FAE4DF /* treelp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = treelp.h; sourceTree = "<group>"; };
-		052F9C94180600FA00FAE4DF /* ntreetraversal-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ntreetraversal-impl.h"; sourceTree = "<group>"; };
-		052F9C95180600FA00FAE4DF /* ntreetraversal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ntreetraversal.cpp; sourceTree = "<group>"; };
-		052F9C96180600FA00FAE4DF /* ntreetraversal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntreetraversal.h; sourceTree = "<group>"; };
+		052F9C94180600FA00FAE4DF /* treetraversal-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "treetraversal-impl.h"; sourceTree = "<group>"; };
+		052F9C95180600FA00FAE4DF /* treetraversal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = treetraversal.cpp; sourceTree = "<group>"; };
+		052F9C96180600FA00FAE4DF /* treetraversal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = treetraversal.h; sourceTree = "<group>"; };
 		052F9C98180600FA00FAE4DF /* typetrie.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = typetrie.cpp; sourceTree = "<group>"; };
 		052F9C99180600FA00FAE4DF /* typetrie.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = typetrie.h; sourceTree = "<group>"; };
 		052F9C9A180600FA00FAE4DF /* ordering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ordering.h; sourceTree = "<group>"; };
@@ -4331,9 +4335,8 @@
 				050C64C91DA3311100C9420F /* ntreeconstraint.h */,
 				050C64CA1DA3311100C9420F /* ntreelp-impl.h */,
 				050C64CB1DA3311100C9420F /* ntreelp.h */,
-				052F9C94180600FA00FAE4DF /* ntreetraversal-impl.h */,
-				052F9C95180600FA00FAE4DF /* ntreetraversal.cpp */,
-				052F9C96180600FA00FAE4DF /* ntreetraversal.h */,
+				050C64D11DA335DE00C9420F /* ntreetraversal-impl.h */,
+				050C64D21DA335DE00C9420F /* ntreetraversal.h */,
 				050C64CF1DA3327300C9420F /* ntypetrie.h */,
 				052F9C9A180600FA00FAE4DF /* ordering.h */,
 				052F9C8E180600FA00FAE4DF /* treeconstraint.cpp */,
@@ -4341,6 +4344,9 @@
 				052F9C90180600FA00FAE4DF /* treelp-impl.h */,
 				052F9C91180600FA00FAE4DF /* treelp.cpp */,
 				052F9C92180600FA00FAE4DF /* treelp.h */,
+				052F9C94180600FA00FAE4DF /* treetraversal-impl.h */,
+				052F9C95180600FA00FAE4DF /* treetraversal.cpp */,
+				052F9C96180600FA00FAE4DF /* treetraversal.h */,
 				052F9C98180600FA00FAE4DF /* typetrie.cpp */,
 				052F9C99180600FA00FAE4DF /* typetrie.h */,
 			);
@@ -6029,6 +6035,7 @@
 				05431F291C40F260009BC072 /* triangulation.h in Headers */,
 				05431F001C40F1F6009BC072 /* facetpairing.h in Headers */,
 				052F9E88180600FB00FAE4DF /* nhomgrouppresentation.h in Headers */,
+				050C64D31DA335DE00C9420F /* ntreetraversal-impl.h in Headers */,
 				050C64881DA1249600C9420F /* globaldirs.h in Headers */,
 				052F9FF5180600FB00FAE4DF /* nlayeredchainpair.h in Headers */,
 				052FA045180600FB00FAE4DF /* nsurfacefilter.h in Headers */,
@@ -6037,7 +6044,7 @@
 				052FA061180600FB00FAE4DF /* nedge.h in Headers */,
 				052FA049180600FB00FAE4DF /* nxmlfilterreader.h in Headers */,
 				052F9EC6180600FB00FAE4DF /* hilbertcd-impl.h in Headers */,
-				052F9EFB180600FB00FAE4DF /* ntreetraversal.h in Headers */,
+				052F9EFB180600FB00FAE4DF /* treetraversal.h in Headers */,
 				052F9FA4180600FB00FAE4DF /* triangulation.h in Headers */,
 				050C64A81DA1C63F00C9420F /* ncontainer.h in Headers */,
 				052F9ECC180600FB00FAE4DF /* hilbertprimal-impl.h in Headers */,
@@ -6117,6 +6124,7 @@
 				0591E7F41C4F75C300793A9C /* dim4gluingpermsearcher.h in Headers */,
 				052F9EB5180600FB00FAE4DF /* dim2triangle.h in Headers */,
 				050C64CD1DA3311100C9420F /* ntreelp-impl.h in Headers */,
+				050C64D41DA335DE00C9420F /* ntreetraversal.h in Headers */,
 				052F9FED180600FB00FAE4DF /* nblockedsfspair.h in Headers */,
 				052F9F33180600FB00FAE4DF /* nsnappeacensusmfd.h in Headers */,
 				052F9F20180600FB00FAE4DF /* ngraphloop.h in Headers */,
@@ -6299,7 +6307,7 @@
 				052F9E86180600FB00FAE4DF /* ngrouppresentation.h in Headers */,
 				052FA076180600FB00FAE4DF /* ntriangulation.h in Headers */,
 				050C64861DA1249600C9420F /* fileinfo.h in Headers */,
-				052F9EF9180600FB00FAE4DF /* ntreetraversal-impl.h in Headers */,
+				052F9EF9180600FB00FAE4DF /* treetraversal-impl.h in Headers */,
 				052F9F09180600FB00FAE4DF /* casson.h in Headers */,
 				05431F6D1C40F3C9009BC072 /* full_cone.h in Headers */,
 				052F9EBB180600FB00FAE4DF /* nxmldim2trireader.h in Headers */,
@@ -7125,7 +7133,7 @@
 				05C0644C1C55A2E6006E6483 /* HyperMatching.mm in Sources */,
 				052FA1701806129B00FAE4DF /* ngluingpermsearcher.cpp in Sources */,
 				052FA21C180612DD00FAE4DF /* cusp_cross_sections.c in Sources */,
-				052FA1801806129B00FAE4DF /* ntreetraversal.cpp in Sources */,
+				052FA1801806129B00FAE4DF /* treetraversal.cpp in Sources */,
 				052FA1631806129B00FAE4DF /* nxmlalgebrareader.cpp in Sources */,
 				052FA1671806129B00FAE4DF /* closedprimemin.cpp in Sources */,
 				052FA1F81806129B00FAE4DF /* nexampletriangulation.cpp in Sources */,
@@ -7870,7 +7878,7 @@
 				052F9F9D180600FB00FAE4DF /* tables.c in Sources */,
 				05FEA07A19C1890900A31924 /* examplesnappea.cpp in Sources */,
 				052FA05C180600FB00FAE4DF /* insertlayered.cpp in Sources */,
-				052F9EFA180600FB00FAE4DF /* ntreetraversal.cpp in Sources */,
+				052F9EFA180600FB00FAE4DF /* treetraversal.cpp in Sources */,
 				052FA023180600FB00FAE4DF /* enumfilter.cpp in Sources */,
 				052FA051180600FB00FAE4DF /* sfproperties.cpp in Sources */,
 				05A73CA619B2EF5A0099C617 /* sl2c_matrices.c in Sources */,

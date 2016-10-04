@@ -32,7 +32,7 @@
 
 #include "angle/anglestructures.h"
 #include "enumerate/doubledescription.h"
-#include "enumerate/ntreetraversal.h"
+#include "enumerate/treetraversal.h"
 #include "maths/nmatrixint.h"
 #include "progress/progresstracker.h"
 #include "surfaces/nnormalsurface.h"
@@ -56,7 +56,7 @@ void AngleStructures::enumerateInternal(NTriangulation* triang,
         if (tracker)
             tracker->newStage("Enumerating taut angle structures");
 
-        NTautEnumeration<LPConstraintNone, BanNone, NInteger> search(triang);
+        TautEnumeration<LPConstraintNone, BanNone, NInteger> search(triang);
         while (search.next(tracker)) {
             structures.push_back(search.buildStructure());
             if (tracker && tracker->isCancelled())

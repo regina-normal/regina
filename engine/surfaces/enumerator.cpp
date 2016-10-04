@@ -36,7 +36,7 @@
 #include "enumerate/hilbertcd.h"
 #include "enumerate/hilbertdual.h"
 #include "enumerate/hilbertprimal.h"
-#include "enumerate/ntreetraversal.h"
+#include "enumerate/treetraversal.h"
 #include "maths/matrixops.h"
 #include "maths/nmatrixint.h"
 #include "progress/progresstracker.h"
@@ -136,11 +136,11 @@ void NNormalSurfaceList::Enumerator::fillVertex() {
 
     // Check whether tree traversal supports our enumeration arguments.
     // If not, switch back to double description.
-    // The integer template argument for NTreeTraversal::supported()
+    // The integer template argument for TreeTraversal::supported()
     // is unimportant here; we just use NInteger.
     if (list_->algorithm_.has(NS_VERTEX_TREE) &&
             ! (list_->which_.has(NS_EMBEDDED_ONLY) &&
-                NTreeTraversal<LPConstraintNone, BanNone, NInteger>::supported(
+                TreeTraversal<LPConstraintNone, BanNone, NInteger>::supported(
                 list_->coords_)))
         list_->algorithm_ ^= (NS_VERTEX_TREE | NS_VERTEX_DD);
 
@@ -232,7 +232,7 @@ void NNormalSurfaceList::Enumerator::fillVertexTree() {
     // algorithm are sufficiently small in magnitude.
     //
     // Here we compute an upper bound on the magnitude of the integers that
-    // could appear in a vanilla NTreeEnumeration<LPConstraintNone, BanNone>
+    // could appear in a vanilla TreeEnumeration<LPConstraintNone, BanNone>
     // algorithm.  For details on how these arguments work, see
     // section 4 of the tree traversal algorithm paper (Burton & Ozlen,
     // Algorithmica, 2013).
@@ -383,7 +383,7 @@ void NNormalSurfaceList::Enumerator::fillVertexTree() {
 
 template <typename Coords, typename Integer>
 void NNormalSurfaceList::Enumerator::fillVertexTreeWith() {
-    NTreeEnumeration<LPConstraintNone, BanNone, Integer> search(
+    TreeEnumeration<LPConstraintNone, BanNone, Integer> search(
         triang_, list_->coords_);
     while (search.next(tracker_)) {
         list_->surfaces.push_back(search.buildSurface());
