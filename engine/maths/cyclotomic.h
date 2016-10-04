@@ -75,7 +75,7 @@ namespace regina {
  *
  * This class requires that the order \a n is strictly positive.
  */
-class REGINA_API NCyclotomic : public ShortOutput<NCyclotomic, true> {
+class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
     private:
         size_t field_;
             /**< The order \a n of the underlying cyclotomic field.
@@ -102,14 +102,14 @@ class REGINA_API NCyclotomic : public ShortOutput<NCyclotomic, true> {
          * The underlying cyclotomic field is not yet known; this will also
          * be specified during the call to init() or the assignment operator.
          */
-        NCyclotomic();
+        Cyclotomic();
         /**
          * Creates the zero element of the given cyclotomic field.
          *
          * @param field the order of the underlying cyclotomic field;
          * this must be strictly positive.
          */
-        explicit NCyclotomic(size_t field);
+        explicit Cyclotomic(size_t field);
         /**
          * Creates the given integer element within the given cyclotomic field.
          *
@@ -121,7 +121,7 @@ class REGINA_API NCyclotomic : public ShortOutput<NCyclotomic, true> {
          * @param value the value of this element; that is, the integer
          * constant.
          */
-        NCyclotomic(size_t field, int value);
+        Cyclotomic(size_t field, int value);
         /**
          * Creates the given rational element within the given cyclotomic field.
          *
@@ -133,20 +133,20 @@ class REGINA_API NCyclotomic : public ShortOutput<NCyclotomic, true> {
          * @param value the value of this element; that is, the rational
          * constant.
          */
-        NCyclotomic(size_t field, const NRational& value);
+        Cyclotomic(size_t field, const NRational& value);
         /**
          * Creates a copy of the given field element, within the
          * same cyclotomic field.
          *
          * @param value the field element to copy.
          */
-        NCyclotomic(const NCyclotomic& value);
+        Cyclotomic(const Cyclotomic& value);
         /**
          * Destroys this field element.
          *
          * This is safe even if the field element was never initialised.
          */
-        ~NCyclotomic();
+        ~Cyclotomic();
         /**
          * Initialises this to be the zero element of the given
          * cyclotomic field.
@@ -194,7 +194,7 @@ class REGINA_API NCyclotomic : public ShortOutput<NCyclotomic, true> {
          * as a member of <tt>ℚ[x]/Φ_n</tt>, using a rational polynomial
          * of degree strictly less than <tt>deg(Φ_n) = φ(n)</tt>;
          * that is, strictly less than the value returned by degree().
-         * See the NCyclotomic class notes for further details.
+         * See the Cyclotomic class notes for further details.
          *
          * In particular, for a field element \a e, the operator
          * <tt>e[i]</tt> will return the coefficient of <tt>x^i</tt>
@@ -217,7 +217,7 @@ class REGINA_API NCyclotomic : public ShortOutput<NCyclotomic, true> {
          * as a member of <tt>ℚ[x]/Φ_n</tt>, using a rational polynomial
          * of degree strictly less than <tt>deg(Φ_n) = φ(n)</tt>;
          * that is, strictly less than the value returned by degree().
-         * See the NCyclotomic class notes for further details.
+         * See the Cyclotomic class notes for further details.
          *
          * In particular, for a field element \a e, the operator
          * <tt>e[i]</tt> will give access to the coefficient of <tt>x^i</tt>
@@ -240,16 +240,16 @@ class REGINA_API NCyclotomic : public ShortOutput<NCyclotomic, true> {
          * as a member of <tt>ℚ[x]/Φ_n</tt>, using a rational polynomial
          * of degree strictly less than <tt>deg(Φ_n) = φ(n)</tt>;
          * that is, strictly less than the value returned by degree().
-         * See the NCyclotomic class notes for further details.
+         * See the Cyclotomic class notes for further details.
          *
          * This routine returns the polynomial representation as a newly
          * allocated NPolynomial<NRational> object.  The caller of this
          * routine is responsible for destroying this new polynomial.
          *
-         * The new polynomial will become independent of this NCyclotomic field
+         * The new polynomial will become independent of this Cyclotomic field
          * element: if you subsequently change this field element then the
          * new NPolynomial object will not change, and likewise if you
-         * change the new NPolynomial object then this NCyclotomic field
+         * change the new NPolynomial object then this Cyclotomic field
          * element will not change.
          *
          * \pre This field element has been initialised (either through
@@ -269,7 +269,7 @@ class REGINA_API NCyclotomic : public ShortOutput<NCyclotomic, true> {
          * This ambiguity is resolved as follows.
          *
          * Suppose the polynomial representation of this field element in
-         * <tt>ℚ[x]/Φ_n</tt> (as described in the NCyclotomic class notes) is
+         * <tt>ℚ[x]/Φ_n</tt> (as described in the Cyclotomic class notes) is
          * <tt>f(x)</tt>.  Then the evaluation of this field element will be
          * <tt>f(ρ)</tt>, where \a ρ is the <tt>n</tt>th root of unity
          * <tt>ρ = exp(2πi × k/n)</tt>,
@@ -312,7 +312,7 @@ class REGINA_API NCyclotomic : public ShortOutput<NCyclotomic, true> {
          * @return \c true if and only if this and \a rhs are the same
          * element of the same cyclotomic field.
          */
-        bool operator == (const NCyclotomic& rhs) const;
+        bool operator == (const Cyclotomic& rhs) const;
 
         /**
          * Tests whether or not this and the given argument are the same
@@ -333,7 +333,7 @@ class REGINA_API NCyclotomic : public ShortOutput<NCyclotomic, true> {
          * @return \c false if this and \a rhs are the same element of the
          * same cyclotomic field, or \c true if they are not.
          */
-        bool operator != (const NCyclotomic& rhs) const;
+        bool operator != (const Cyclotomic& rhs) const;
 
         /**
          * Sets this to a copy of the given field element.
@@ -349,7 +349,7 @@ class REGINA_API NCyclotomic : public ShortOutput<NCyclotomic, true> {
          * @param value the new value to assign to this field element.
          * @return a reference to this field element.
          */
-        NCyclotomic& operator = (const NCyclotomic& value);
+        Cyclotomic& operator = (const Cyclotomic& value);
 
         /**
          * Sets this field element to the given rational.
@@ -364,7 +364,7 @@ class REGINA_API NCyclotomic : public ShortOutput<NCyclotomic, true> {
          * @param scalar the new rational value of this field element.
          * @return a reference to this field element.
          */
-        NCyclotomic& operator = (const NRational& scalar);
+        Cyclotomic& operator = (const NRational& scalar);
 
         /**
          * Negates this field element.
@@ -390,7 +390,7 @@ class REGINA_API NCyclotomic : public ShortOutput<NCyclotomic, true> {
          * @param scalar the rational to multiply this by.
          * @return a reference to this field element.
          */
-        NCyclotomic& operator *= (const NRational& scalar);
+        Cyclotomic& operator *= (const NRational& scalar);
 
         /**
          * Divides this field element by the given rational.
@@ -403,7 +403,7 @@ class REGINA_API NCyclotomic : public ShortOutput<NCyclotomic, true> {
          * @param scalar the rational to divide this by.
          * @return a reference to this field element.
          */
-        NCyclotomic& operator /= (const NRational& scalar);
+        Cyclotomic& operator /= (const NRational& scalar);
 
         /**
          * Adds the given field element to this.
@@ -414,7 +414,7 @@ class REGINA_API NCyclotomic : public ShortOutput<NCyclotomic, true> {
          * @param other the field element to add to this.
          * @return a reference to this field element.
          */
-        NCyclotomic& operator += (const NCyclotomic& other);
+        Cyclotomic& operator += (const Cyclotomic& other);
 
         /**
          * Subtracts the given field element from this.
@@ -425,7 +425,7 @@ class REGINA_API NCyclotomic : public ShortOutput<NCyclotomic, true> {
          * @param other the field element to subtract from this.
          * @return a reference to this field element.
          */
-        NCyclotomic& operator -= (const NCyclotomic& other);
+        Cyclotomic& operator -= (const Cyclotomic& other);
 
         /**
          * Multiplies this by the given field element.
@@ -436,7 +436,7 @@ class REGINA_API NCyclotomic : public ShortOutput<NCyclotomic, true> {
          * @param other the field element to multiply this by.
          * @return a reference to this field element.
          */
-        NCyclotomic& operator *= (const NCyclotomic& other);
+        Cyclotomic& operator *= (const Cyclotomic& other);
 
         /**
          * Divides this by the given field element.
@@ -448,7 +448,7 @@ class REGINA_API NCyclotomic : public ShortOutput<NCyclotomic, true> {
          * @param other the field element to divide this by.
          * @return a reference to this field element.
          */
-        NCyclotomic& operator /= (const NCyclotomic& other);
+        Cyclotomic& operator /= (const Cyclotomic& other);
 
         /**
          * Returns the <i>n</i>th cyclotomic polynomial <tt>Φ_n</tt>.
@@ -541,45 +541,53 @@ class REGINA_API NCyclotomic : public ShortOutput<NCyclotomic, true> {
         std::string utf8(const char* variable) const;
 };
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NCyclotomic has now been renamed to Cyclotomic.
+ */
+REGINA_DEPRECATED typedef Cyclotomic NCyclotomic;
+
 /*@}*/
 
-// Inline functions for NCyclotomic
+// Inline functions for Cyclotomic
 
-inline NCyclotomic::NCyclotomic() : field_(0), degree_(0), coeff_(0) {
+inline Cyclotomic::Cyclotomic() : field_(0), degree_(0), coeff_(0) {
 }
 
-inline NCyclotomic::NCyclotomic(size_t field) :
+inline Cyclotomic::Cyclotomic(size_t field) :
         field_(field), degree_(cyclotomic(field).degree()),
         coeff_(new NRational[degree_]) {
     // NRational initialises to 0 by default.
 }
 
-inline NCyclotomic::NCyclotomic(size_t field, int value) :
-        field_(field), degree_(cyclotomic(field).degree()),
-        coeff_(new NRational[degree_]) {
-    // NRational initialises to 0 by default.
-    coeff_[0] = value;
-}
-
-inline NCyclotomic::NCyclotomic(size_t field, const NRational& value) :
+inline Cyclotomic::Cyclotomic(size_t field, int value) :
         field_(field), degree_(cyclotomic(field).degree()),
         coeff_(new NRational[degree_]) {
     // NRational initialises to 0 by default.
     coeff_[0] = value;
 }
 
-inline NCyclotomic::NCyclotomic(const NCyclotomic& value) :
+inline Cyclotomic::Cyclotomic(size_t field, const NRational& value) :
+        field_(field), degree_(cyclotomic(field).degree()),
+        coeff_(new NRational[degree_]) {
+    // NRational initialises to 0 by default.
+    coeff_[0] = value;
+}
+
+inline Cyclotomic::Cyclotomic(const Cyclotomic& value) :
         field_(value.field_), degree_(value.degree_),
         coeff_(new NRational[value.degree_]) {
     for (size_t i = 0; i < degree_; ++i)
         coeff_[i] = value.coeff_[i];
 }
 
-inline NCyclotomic::~NCyclotomic() {
+inline Cyclotomic::~Cyclotomic() {
     delete[] coeff_;
 }
 
-inline void NCyclotomic::init(size_t field) {
+inline void Cyclotomic::init(size_t field) {
     delete[] coeff_;
     field_ = field;
     degree_ = cyclotomic(field).degree();
@@ -587,27 +595,27 @@ inline void NCyclotomic::init(size_t field) {
     // NRational initialises to 0 by default.
 }
 
-inline size_t NCyclotomic::field() const {
+inline size_t Cyclotomic::field() const {
     return field_;
 }
 
-inline size_t NCyclotomic::degree() const {
+inline size_t Cyclotomic::degree() const {
     return degree_;
 }
 
-inline const NRational& NCyclotomic::operator [] (size_t exp) const {
+inline const NRational& Cyclotomic::operator [] (size_t exp) const {
     return coeff_[exp];
 }
 
-inline NRational& NCyclotomic::operator [] (size_t exp) {
+inline NRational& Cyclotomic::operator [] (size_t exp) {
     return coeff_[exp];
 }
 
-inline NPolynomial<NRational>* NCyclotomic::polynomial() const {
+inline NPolynomial<NRational>* Cyclotomic::polynomial() const {
     return new NPolynomial<NRational>(coeff_, coeff_ + degree_);
 }
 
-inline bool NCyclotomic::operator == (const NCyclotomic& rhs) const {
+inline bool Cyclotomic::operator == (const Cyclotomic& rhs) const {
     if (field_ != rhs.field_)
         return false;
     for (size_t i = 0; i < degree_; ++i)
@@ -616,7 +624,7 @@ inline bool NCyclotomic::operator == (const NCyclotomic& rhs) const {
     return true;
 }
 
-inline bool NCyclotomic::operator != (const NCyclotomic& rhs) const {
+inline bool Cyclotomic::operator != (const Cyclotomic& rhs) const {
     if (field_ != rhs.field_)
         return true;
     for (size_t i = 0; i < degree_; ++i)
@@ -625,7 +633,7 @@ inline bool NCyclotomic::operator != (const NCyclotomic& rhs) const {
     return false;
 }
 
-inline NCyclotomic& NCyclotomic::operator = (const NCyclotomic& other) {
+inline Cyclotomic& Cyclotomic::operator = (const Cyclotomic& other) {
     if (degree_ < other.degree_) {
         delete[] coeff_;
         coeff_ = new NRational[other.degree_];
@@ -637,60 +645,60 @@ inline NCyclotomic& NCyclotomic::operator = (const NCyclotomic& other) {
     return *this;
 }
 
-inline NCyclotomic& NCyclotomic::operator = (const NRational& scalar) {
+inline Cyclotomic& Cyclotomic::operator = (const NRational& scalar) {
     coeff_[0] = scalar;
     for (size_t i = 1; i < degree_; ++i)
         coeff_[i] = 0;
     return *this;
 }
 
-inline void NCyclotomic::negate() {
+inline void Cyclotomic::negate() {
     for (size_t i = 0; i < degree_; ++i)
         coeff_[i].negate();
 }
 
-inline NCyclotomic& NCyclotomic::operator *= (const NRational& scalar) {
+inline Cyclotomic& Cyclotomic::operator *= (const NRational& scalar) {
     for (size_t i = 0; i < degree_; ++i)
         coeff_[i] *= scalar;
     return *this;
 }
 
-inline NCyclotomic& NCyclotomic::operator /= (const NRational& scalar) {
+inline Cyclotomic& Cyclotomic::operator /= (const NRational& scalar) {
     for (size_t i = 0; i < degree_; ++i)
         coeff_[i] /= scalar;
     return *this;
 }
 
-inline NCyclotomic& NCyclotomic::operator += (const NCyclotomic& other) {
+inline Cyclotomic& Cyclotomic::operator += (const Cyclotomic& other) {
     for (size_t i = 0; i < degree_; ++i)
         coeff_[i] += other.coeff_[i];
     return *this;
 }
 
-inline NCyclotomic& NCyclotomic::operator -= (const NCyclotomic& other) {
+inline Cyclotomic& Cyclotomic::operator -= (const Cyclotomic& other) {
     for (size_t i = 0; i < degree_; ++i)
         coeff_[i] -= other.coeff_[i];
     return *this;
 }
 
-inline NCyclotomic& NCyclotomic::operator /= (const NCyclotomic& other) {
-    NCyclotomic tmp(other);
+inline Cyclotomic& Cyclotomic::operator /= (const Cyclotomic& other) {
+    Cyclotomic tmp(other);
     tmp.invert();
     return (*this) *= tmp;
 }
 
-inline std::string NCyclotomic::str(const char* variable) const {
+inline std::string Cyclotomic::str(const char* variable) const {
     // Make sure that python will be able to find the inherited str().
-    static_assert(std::is_same<typename OutputBase<NCyclotomic>::type,
-        Output<NCyclotomic, true>>::value,
-        "NCyclotomic is not identified as being inherited from Output<...>");
+    static_assert(std::is_same<typename OutputBase<Cyclotomic>::type,
+        Output<Cyclotomic, true>>::value,
+        "Cyclotomic is not identified as being inherited from Output<...>");
 
     std::ostringstream out;
     writeTextShort(out, false, variable);
     return out.str();
 }
 
-inline std::string NCyclotomic::utf8(const char* variable) const {
+inline std::string Cyclotomic::utf8(const char* variable) const {
     std::ostringstream out;
     writeTextShort(out, true, variable);
     return out.str();

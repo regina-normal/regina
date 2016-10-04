@@ -59,8 +59,8 @@ namespace {
 
     template <>
     struct TuraevViroDetails<true> {
-        typedef NCyclotomic TVType;
-        typedef NCyclotomic TVResult;
+        typedef Cyclotomic TVType;
+        typedef Cyclotomic TVResult;
     };
 
     template <>
@@ -1216,11 +1216,11 @@ double NTriangulation::turaevViroApprox(unsigned long r,
     return ans.real();
 }
 
-NCyclotomic NTriangulation::turaevViro(unsigned long r, bool parity,
+Cyclotomic NTriangulation::turaevViro(unsigned long r, bool parity,
         TuraevViroAlg alg) const {
     // Do some basic parameter checks.
     if (r < 3)
-        return NCyclotomic();
+        return Cyclotomic();
     if (r % 2 == 0)
         parity = false; // As required by allCalculatedTuraevViroInvariants().
 
