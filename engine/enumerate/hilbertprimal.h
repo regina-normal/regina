@@ -171,7 +171,7 @@ class HilbertPrimal {
          * by the given bitmask.
          *
          * Faces are described using bitmasks in the same manner as described
-         * by NMaxAdmissible::enumerate(), where \c true represents a
+         * by MaxAdmissible::enumerate(), where \c true represents a
          * coordinate that is non-zero in the relative interior of the
          * face, and \c false represents a coordinate that is always
          * zero throughout the face.

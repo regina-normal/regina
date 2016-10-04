@@ -26,6 +26,8 @@ if (${REGINA_INSTALL_DEV})
     hilbertdual-impl.h
     hilbertprimal.h
     hilbertprimal-impl.h
+    maxadmissible.h
+    maxadmissible-impl.h
     nenumconstraint.h
     ndoubledescription.h
     ndoubledescription-impl.h

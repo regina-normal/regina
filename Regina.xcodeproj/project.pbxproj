@@ -66,6 +66,8 @@
 		050C64C21DA32E7D00C9420F /* nhilbertdual.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64BC1DA32E7D00C9420F /* nhilbertdual.h */; };
 		050C64C31DA32E7D00C9420F /* nhilbertprimal-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64BD1DA32E7D00C9420F /* nhilbertprimal-impl.h */; };
 		050C64C41DA32E7D00C9420F /* nhilbertprimal.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64BE1DA32E7D00C9420F /* nhilbertprimal.h */; };
+		050C64C71DA3302900C9420F /* nmaxadmissible-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64C51DA3302900C9420F /* nmaxadmissible-impl.h */; };
+		050C64C81DA3302900C9420F /* nmaxadmissible.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64C61DA3302900C9420F /* nmaxadmissible.h */; };
 		050F5DD31B9BAB9C00C1F681 /* nabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D021B9BAB9C00C1F681 /* nabeliangroup.cpp */; };
 		050F5DD41B9BAB9C00C1F681 /* ngrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D031B9BAB9C00C1F681 /* ngrouppresentation.cpp */; };
 		050F5DD51B9BAB9C00C1F681 /* nhomgrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D041B9BAB9C00C1F681 /* nhomgrouppresentation.cpp */; };
@@ -280,8 +282,8 @@
 		052F9ECA180600FB00FAE4DF /* hilbertdual.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C5F180600FA00FAE4DF /* hilbertdual.h */; };
 		052F9ECC180600FB00FAE4DF /* hilbertprimal-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C61180600FA00FAE4DF /* hilbertprimal-impl.h */; };
 		052F9ECD180600FB00FAE4DF /* hilbertprimal.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C62180600FA00FAE4DF /* hilbertprimal.h */; };
-		052F9ECF180600FB00FAE4DF /* nmaxadmissible-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C64180600FA00FAE4DF /* nmaxadmissible-impl.h */; };
-		052F9ED0180600FB00FAE4DF /* nmaxadmissible.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C65180600FA00FAE4DF /* nmaxadmissible.h */; };
+		052F9ECF180600FB00FAE4DF /* maxadmissible-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C64180600FA00FAE4DF /* maxadmissible-impl.h */; };
+		052F9ED0180600FB00FAE4DF /* maxadmissible.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C65180600FA00FAE4DF /* maxadmissible.h */; };
 		052F9EF3180600FB00FAE4DF /* ntreeconstraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C8E180600FA00FAE4DF /* ntreeconstraint.cpp */; };
 		052F9EF4180600FB00FAE4DF /* ntreeconstraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C8F180600FA00FAE4DF /* ntreeconstraint.h */; };
 		052F9EF5180600FB00FAE4DF /* ntreelp-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C90180600FA00FAE4DF /* ntreelp-impl.h */; };
@@ -1966,6 +1968,8 @@
 		050C64BC1DA32E7D00C9420F /* nhilbertdual.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhilbertdual.h; sourceTree = "<group>"; };
 		050C64BD1DA32E7D00C9420F /* nhilbertprimal-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "nhilbertprimal-impl.h"; sourceTree = "<group>"; };
 		050C64BE1DA32E7D00C9420F /* nhilbertprimal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhilbertprimal.h; sourceTree = "<group>"; };
+		050C64C51DA3302900C9420F /* nmaxadmissible-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "nmaxadmissible-impl.h"; sourceTree = "<group>"; };
+		050C64C61DA3302900C9420F /* nmaxadmissible.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nmaxadmissible.h; sourceTree = "<group>"; };
 		050F5CDD1B9BAAAA00C1F681 /* engine.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = engine.so; sourceTree = BUILT_PRODUCTS_DIR; };
 		050F5D011B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		050F5D021B9BAB9C00C1F681 /* nabeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nabeliangroup.cpp; sourceTree = "<group>"; };
@@ -2242,8 +2246,8 @@
 		052F9C5F180600FA00FAE4DF /* hilbertdual.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hilbertdual.h; sourceTree = "<group>"; };
 		052F9C61180600FA00FAE4DF /* hilbertprimal-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "hilbertprimal-impl.h"; sourceTree = "<group>"; };
 		052F9C62180600FA00FAE4DF /* hilbertprimal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hilbertprimal.h; sourceTree = "<group>"; };
-		052F9C64180600FA00FAE4DF /* nmaxadmissible-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "nmaxadmissible-impl.h"; sourceTree = "<group>"; };
-		052F9C65180600FA00FAE4DF /* nmaxadmissible.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nmaxadmissible.h; sourceTree = "<group>"; };
+		052F9C64180600FA00FAE4DF /* maxadmissible-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "maxadmissible-impl.h"; sourceTree = "<group>"; };
+		052F9C65180600FA00FAE4DF /* maxadmissible.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = maxadmissible.h; sourceTree = "<group>"; };
 		052F9C8E180600FA00FAE4DF /* ntreeconstraint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ntreeconstraint.cpp; sourceTree = "<group>"; };
 		052F9C8F180600FA00FAE4DF /* ntreeconstraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntreeconstraint.h; sourceTree = "<group>"; };
 		052F9C90180600FA00FAE4DF /* ntreelp-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ntreelp-impl.h"; sourceTree = "<group>"; };
@@ -4303,6 +4307,8 @@
 				052F9C5F180600FA00FAE4DF /* hilbertdual.h */,
 				052F9C61180600FA00FAE4DF /* hilbertprimal-impl.h */,
 				052F9C62180600FA00FAE4DF /* hilbertprimal.h */,
+				052F9C64180600FA00FAE4DF /* maxadmissible-impl.h */,
+				052F9C65180600FA00FAE4DF /* maxadmissible.h */,
 				050C64B31DA32B1400C9420F /* ndoubledescription-impl.h */,
 				050C64B41DA32B1400C9420F /* ndoubledescription.h */,
 				050C64B51DA32B1400C9420F /* nenumconstraint.h */,
@@ -4312,8 +4318,8 @@
 				050C64BC1DA32E7D00C9420F /* nhilbertdual.h */,
 				050C64BD1DA32E7D00C9420F /* nhilbertprimal-impl.h */,
 				050C64BE1DA32E7D00C9420F /* nhilbertprimal.h */,
-				052F9C64180600FA00FAE4DF /* nmaxadmissible-impl.h */,
-				052F9C65180600FA00FAE4DF /* nmaxadmissible.h */,
+				050C64C51DA3302900C9420F /* nmaxadmissible-impl.h */,
+				050C64C61DA3302900C9420F /* nmaxadmissible.h */,
 				052F9C8E180600FA00FAE4DF /* ntreeconstraint.cpp */,
 				052F9C8F180600FA00FAE4DF /* ntreeconstraint.h */,
 				052F9C90180600FA00FAE4DF /* ntreelp-impl.h */,
@@ -6027,6 +6033,7 @@
 				050C64AF1DA304BF00C9420F /* ntreedecomposition-impl.h in Headers */,
 				052FA001180600FB00FAE4DF /* npillowtwosphere.h in Headers */,
 				052F9F2B180600FB00FAE4DF /* notation.h in Headers */,
+				050C64C81DA3302900C9420F /* nmaxadmissible.h in Headers */,
 				052FA093180600FB00FAE4DF /* qitmask.h in Headers */,
 				0591E7B61C4F74C400793A9C /* nxmldim4trireader.h in Headers */,
 				0541AF521B8BE386002E166B /* sequence.h in Headers */,
@@ -6146,6 +6153,7 @@
 				05CA99E618078466006161DC /* registryutils.h in Headers */,
 				0513753E1809B8D3002E525B /* coordregistry.h in Headers */,
 				052FA072180600FB00FAE4DF /* ntetrahedron.h in Headers */,
+				050C64C71DA3302900C9420F /* nmaxadmissible-impl.h in Headers */,
 				0591E7E31C4F750200793A9C /* nnormalhypersurfacelist.h in Headers */,
 				052F9F77180600FB00FAE4DF /* covers.h in Headers */,
 				05431F661C40F3C9009BC072 /* cone_dual_mode.h in Headers */,
@@ -6215,7 +6223,7 @@
 				052F9F95180600FB00FAE4DF /* positioned_tet.h in Headers */,
 				05431F641C40F3C9009BC072 /* bottom.h in Headers */,
 				05431F7E1C40F3C9009BC072 /* offload_handler.h in Headers */,
-				052F9ED0180600FB00FAE4DF /* nmaxadmissible.h in Headers */,
+				052F9ED0180600FB00FAE4DF /* maxadmissible.h in Headers */,
 				052F9F9E180600FB00FAE4DF /* tables.h in Headers */,
 				052FA00B180600FB00FAE4DF /* nsatblockstarter.h in Headers */,
 				052F9F66180600FB00FAE4DF /* progresstracker.h in Headers */,
@@ -6270,7 +6278,7 @@
 				052942D21C5CDC8B0011C1E6 /* safepointeebase.h in Headers */,
 				052F9EC0180600FB00FAE4DF /* doubledescription-impl.h in Headers */,
 				052FA092180600FB00FAE4DF /* property.h in Headers */,
-				052F9ECF180600FB00FAE4DF /* nmaxadmissible-impl.h in Headers */,
+				052F9ECF180600FB00FAE4DF /* maxadmissible-impl.h in Headers */,
 				052F9FF3180600FB00FAE4DF /* nlayeredchain.h in Headers */,
 				052F9E86180600FB00FAE4DF /* ngrouppresentation.h in Headers */,
 				052FA076180600FB00FAE4DF /* ntriangulation.h in Headers */,

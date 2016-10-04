@@ -46,7 +46,7 @@
 #include "regina-config.h"
 #include "enumerate/enumconstraints.h"
 #include "enumerate/hilbertprimal.h"
-#include "enumerate/nmaxadmissible.h"
+#include "enumerate/maxadmissible.h"
 #include "libnormaliz/cone.h"
 #include "maths/nray.h"
 #include "progress/progresstracker.h"
@@ -112,7 +112,7 @@ void HilbertPrimal::enumerateUsingBitmask(OutputIterator results,
     // First enumerate all maximal admissible faces.
     if (tracker)
         tracker->setPercent(10);
-    std::vector<BitmaskType>* maxFaces = NMaxAdmissible::enumerate<BitmaskType>(
+    std::vector<BitmaskType>* maxFaces = MaxAdmissible::enumerate<BitmaskType>(
         raysBegin, raysEnd, constraints);
 
     // Now use normaliz to process each face.
