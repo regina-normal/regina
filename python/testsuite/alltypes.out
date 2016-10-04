@@ -58,86 +58,62 @@ Equality type : BY_REFERENCE
 Dim2BoundaryComponent : class
 Equality type : BY_REFERENCE
 
-Dim2Component : class
-Equality type : BY_REFERENCE
+Dim2Component : typedef ->  Component2
 
-Dim2Edge : class
-Equality type : BY_REFERENCE
+Dim2Edge : typedef ->  Face2_1
 
-Dim2EdgeEmbedding : class
-Equality type : BY_VALUE
+Dim2EdgeEmbedding : typedef ->  FaceEmbedding2_1
 
-Dim2EdgePairing : class
-Equality type : BY_REFERENCE
+Dim2EdgePairing : typedef ->  FacetPairing2
 
 Dim2ExampleTriangulation : class
 Equality type : NEVER_INSTANTIATED
 
-Dim2Isomorphism : class
-Equality type : BY_REFERENCE
+Dim2Isomorphism : typedef ->  Isomorphism2
 
-Dim2Triangle : class
-Equality type : BY_REFERENCE
+Dim2Triangle : typedef ->  Simplex2
 
-Dim2TriangleEdge : class
-Equality type : BY_VALUE
+Dim2TriangleEdge : typedef ->  FacetSpec2
 
-Dim2Triangulation : class
-Equality type : BY_REFERENCE
+Dim2Triangulation : typedef ->  Triangulation2
 
-Dim2Vertex : class
-Equality type : BY_REFERENCE
+Dim2Vertex : typedef ->  Face2_0
 
-Dim2VertexEmbedding : class
-Equality type : BY_VALUE
+Dim2VertexEmbedding : typedef ->  FaceEmbedding2_0
 
 Dim4BoundaryComponent : class
 Equality type : BY_REFERENCE
 
-Dim4Component : class
-Equality type : BY_REFERENCE
+Dim4Component : typedef ->  Component4
 
-Dim4Edge : class
-Equality type : BY_REFERENCE
+Dim4Edge : typedef ->  Face4_1
 
-Dim4EdgeEmbedding : class
-Equality type : BY_VALUE
+Dim4EdgeEmbedding : typedef ->  FaceEmbedding4_1
 
 Dim4ExampleTriangulation : class
 Equality type : NEVER_INSTANTIATED
 
-Dim4FacetPairing : class
-Equality type : BY_REFERENCE
+Dim4FacetPairing : typedef ->  FacetPairing4
 
-Dim4Isomorphism : class
-Equality type : BY_REFERENCE
+Dim4Isomorphism : typedef ->  Isomorphism4
 
-Dim4PentFacet : class
-Equality type : BY_VALUE
+Dim4PentFacet : typedef ->  FacetSpec4
 
-Dim4Pentachoron : class
-Equality type : BY_REFERENCE
+Dim4Pentachoron : typedef ->  Simplex4
 
-Dim4Tetrahedron : class
-Equality type : BY_REFERENCE
+Dim4Tetrahedron : typedef ->  Face4_3
 
-Dim4TetrahedronEmbedding : class
-Equality type : BY_VALUE
+Dim4TetrahedronEmbedding : typedef ->  FaceEmbedding4_3
 
-Dim4Triangle : class
-Equality type : BY_REFERENCE
+Dim4Triangle : typedef ->  Face4_2
 
-Dim4TriangleEmbedding : class
-Equality type : BY_VALUE
+Dim4TriangleEmbedding : typedef ->  FaceEmbedding4_2
 
-Dim4Triangulation : class
-Equality type : BY_REFERENCE
+Dim4Triangulation : typedef ->  Triangulation4
 
-Dim4Vertex : class
-Equality type : BY_REFERENCE
+Dim4Vertex : typedef ->  Face4_0
 
-Dim4VertexEmbedding : class
-Equality type : BY_VALUE
+Dim4VertexEmbedding : typedef ->  FaceEmbedding4_0
 
 ExampleSnapPea : class
 Equality type : NEVER_INSTANTIATED
@@ -1033,6 +1009,10 @@ Equality type : NEVER_INSTANTIATED
 NAbelianGroup : class
 Equality type : BY_VALUE
 
+NAngleStructure : typedef ->  AngleStructure
+
+NAngleStructureList : typedef ->  AngleStructures
+
 NAugTriSolidTorus : class
 Equality type : BY_REFERENCE
 
@@ -1047,6 +1027,8 @@ Equality type : BY_REFERENCE
 
 NBlockedSFSTriple : class
 Equality type : BY_REFERENCE
+
+NBoolSet : typedef ->  BoolSet
 
 NBoundaryComponent : class
 Equality type : BY_REFERENCE
@@ -1063,8 +1045,11 @@ Equality type : BY_REFERENCE
 NCensusHits : class
 Equality type : BY_REFERENCE
 
-NComponent : class
-Equality type : BY_REFERENCE
+NComponent : typedef ->  Component3
+
+NContainer : typedef ->  Container
+
+NCusp : typedef ->  Cusp
 
 NCyclotomic : class
 Equality type : BY_VALUE
@@ -1084,11 +1069,11 @@ Equality type : BY_VALUE
 NDiscType : class
 Equality type : BY_VALUE
 
-NEdge : class
-Equality type : BY_REFERENCE
+NEdge : typedef ->  Face3_1
 
-NEdgeEmbedding : class
-Equality type : BY_VALUE
+NEdgeEmbedding : typedef ->  FaceEmbedding3_1
+
+NExampleSnapPeaTriangulation : typedef ->  ExampleSnapPea
 
 NExampleTriangulation : class
 Equality type : NEVER_INSTANTIATED
@@ -1098,6 +1083,10 @@ Equality type : BY_VALUE
 
 NFacePairing : class
 Equality type : BY_REFERENCE
+
+NFileInfo : typedef ->  FileInfo
+
+NGlobalDirs : typedef ->  GlobalDirs
 
 NGluingPermSearcher : class
 Equality type : BY_REFERENCE
@@ -1135,8 +1124,7 @@ Equality type : BY_REFERENCE
 NInteger : class
 Equality type : BY_VALUE
 
-NIsomorphism : class
-Equality type : BY_REFERENCE
+NIsomorphism : typedef ->  Isomorphism3
 
 NL31Pillow : class
 Equality type : BY_REFERENCE
@@ -1191,6 +1179,12 @@ Equality type : BY_REFERENCE
 
 NNormalSurface : class
 Equality type : BY_REFERENCE
+
+NNormalSurfaceList : typedef ->  NormalSurfaces
+
+NPDF : typedef ->  PDF
+
+NPacket : typedef ->  Packet
 
 NPerm10 : class
 Equality type : BY_VALUE
@@ -1255,6 +1249,10 @@ Equality type : NEVER_INSTANTIATED
 NPrismSpec : class
 Equality type : BY_VALUE
 
+NProgressTracker : typedef ->  ProgressTracker
+
+NProgressTrackerOpen : typedef ->  ProgressTrackerOpen
+
 NRational : class
 Equality type : BY_VALUE
 
@@ -1294,6 +1292,8 @@ Equality type : BY_REFERENCE
 NSatTriPrism : class
 Equality type : BY_REFERENCE
 
+NScript : typedef ->  Script
+
 NSignature : class
 Equality type : BY_REFERENCE
 
@@ -1305,6 +1305,8 @@ Equality type : BY_VALUE
 
 NSnapPeaCensusTri : class
 Equality type : BY_VALUE
+
+NSnapPeaTriangulation : typedef ->  SnapPeaTriangulation
 
 NSnappedBall : class
 Equality type : BY_REFERENCE
@@ -1330,26 +1332,27 @@ Equality type : BY_REFERENCE
 NSurfaceSubset : class
 Equality type : BY_REFERENCE
 
-NTetFace : class
-Equality type : BY_VALUE
+NTetFace : typedef ->  FacetSpec3
 
-NTetrahedron : class
-Equality type : BY_REFERENCE
+NTetrahedron : typedef ->  Simplex3
+
+NText : typedef ->  Text
 
 NTorusBundle : class
 Equality type : BY_REFERENCE
 
+NTreeBag : typedef ->  TreeBag
+
+NTreeDecomposition : typedef ->  TreeDecomposition
+
 NTriSolidTorus : class
 Equality type : BY_REFERENCE
 
-NTriangle : class
-Equality type : BY_REFERENCE
+NTriangle : typedef ->  Face3_2
 
-NTriangleEmbedding : class
-Equality type : BY_VALUE
+NTriangleEmbedding : typedef ->  FaceEmbedding3_2
 
-NTriangulation : class
-Equality type : BY_REFERENCE
+NTriangulation : typedef ->  Triangulation3
 
 NTrivialTri : class
 Equality type : BY_REFERENCE
@@ -1363,11 +1366,9 @@ Equality type : BY_REFERENCE
 NTxIParallelCore : class
 Equality type : BY_REFERENCE
 
-NVertex : class
-Equality type : BY_REFERENCE
+NVertex : typedef ->  Face3_0
 
-NVertexEmbedding : class
-Equality type : BY_VALUE
+NVertexEmbedding : typedef ->  FaceEmbedding3_0
 
 NormalAlg : class
 Equality type : BY_VALUE
