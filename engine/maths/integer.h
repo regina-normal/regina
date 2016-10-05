@@ -2267,6 +2267,15 @@ REGINA_DEPRECATED typedef Integer NInteger;
  */
 REGINA_DEPRECATED typedef LargeInteger NLargeInteger;
 
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NNativeInteger has now been renamed to NativeInteger.
+ */
+template <int bytes>
+using NNativeInteger REGINA_DEPRECATED = NativeInteger<bytes>;
+
 /*@}*/
 
 // Inline functions for IntegerBase

@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file maths/integer.h
+/*! \file maths/ninteger.h
  *  \brief Deprecated header.
  */
 
