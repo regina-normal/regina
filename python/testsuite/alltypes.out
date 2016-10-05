@@ -1245,8 +1245,7 @@ Equality type : BY_REFERENCE
 NPolynomial : class
 Equality type : BY_VALUE
 
-NPrimes : class
-Equality type : NEVER_INSTANTIATED
+NPrimes : typedef ->  Primes
 
 NPrismSpec : class
 Equality type : BY_VALUE
@@ -1385,6 +1384,9 @@ Equality type : BY_REFERENCE
 
 Packet : class
 Equality type : BY_REFERENCE
+
+Primes : class
+Equality type : NEVER_INSTANTIATED
 
 ProgressTracker : class
 Equality type : BY_REFERENCE

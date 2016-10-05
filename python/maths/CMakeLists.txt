@@ -14,8 +14,8 @@ SET ( FILES
   nperm4
   nperm5
   npolynomial
-  nprimes
   numbertheory
+  primes
   pymaths
   rational
   )

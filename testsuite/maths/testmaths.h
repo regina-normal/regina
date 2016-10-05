@@ -49,7 +49,7 @@ void addNPerm2(CppUnit::TextUi::TestRunner& runner);
 void addNPerm3(CppUnit::TextUi::TestRunner& runner);
 void addNPerm4(CppUnit::TextUi::TestRunner& runner);
 void addNPerm5(CppUnit::TextUi::TestRunner& runner);
-void addNPrimes(CppUnit::TextUi::TestRunner& runner);
+void addPrimes(CppUnit::TextUi::TestRunner& runner);
 void addRational(CppUnit::TextUi::TestRunner& runner);
 void addNumberTheory(CppUnit::TextUi::TestRunner& runner);
 void addPermConv(CppUnit::TextUi::TestRunner& runner);

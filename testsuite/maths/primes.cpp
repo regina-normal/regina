@@ -33,13 +33,13 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "testsuite/maths/testmaths.h"
-#include "maths/nprimes.h"
+#include "maths/primes.h"
 
 using regina::NLargeInteger;
-using regina::NPrimes;
+using regina::Primes;
 
-class NPrimesTest : public CppUnit::TestFixture {
-    CPPUNIT_TEST_SUITE(NPrimesTest);
+class PrimesTest : public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(PrimesTest);
 
     CPPUNIT_TEST(autoGrow);
     CPPUNIT_TEST(primes);
@@ -56,7 +56,7 @@ class NPrimesTest : public CppUnit::TestFixture {
         }
 
         void testSize(long size, const char* list) {
-            long ans = NPrimes::size();
+            long ans = Primes::size();
 
             // We can't test the size exactly, since the size may be
             // larger than expected if other parts of Regina have
@@ -73,14 +73,14 @@ class NPrimesTest : public CppUnit::TestFixture {
 
         void autoGrow() {
             testSize(10000, "The initial list of seed primes");
-            NPrimes::prime(10005, false);
+            Primes::prime(10005, false);
             testSize(10000, "The unexpanded list of primes");
-            NPrimes::prime(10005, true);
+            Primes::prime(10005, true);
             testSize(10006, "The expanded list of primes");
         }
 
         void testPrime(long which, long prime) {
-            NLargeInteger ans = NPrimes::prime(which);
+            NLargeInteger ans = Primes::prime(which);
             if (ans != prime) {
                 std::ostringstream msg;
                 msg << "Prime #" << which << " should be "
@@ -121,7 +121,7 @@ class NPrimesTest : public CppUnit::TestFixture {
             else
                 expectedLen = 5;
 
-            std::vector<NLargeInteger> factors = NPrimes::primeDecomp(n);
+            std::vector<NLargeInteger> factors = Primes::primeDecomp(n);
 
             if (factors.size() != expectedLen) {
                 std::ostringstream msg;
@@ -192,7 +192,7 @@ class NPrimesTest : public CppUnit::TestFixture {
                 expectedLen = 3;
 
             std::vector<std::pair<NLargeInteger, unsigned long> > powers =
-                NPrimes::primePowerDecomp(n);
+                Primes::primePowerDecomp(n);
 
             if (powers.size() != expectedLen) {
                 std::ostringstream msg;
@@ -257,7 +257,7 @@ class NPrimesTest : public CppUnit::TestFixture {
         }
 };
 
-void addNPrimes(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(NPrimesTest::suite());
+void addPrimes(CppUnit::TextUi::TestRunner& runner) {
+    runner.addTest(PrimesTest::suite());
 }
 

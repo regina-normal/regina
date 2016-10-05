@@ -115,7 +115,7 @@ void populateTests(CppUnit::TextTestRunner& runner) {
     addNPerm4(runner);
     addNPerm5(runner);
     addNPerm(runner);
-    addNPrimes(runner);
+    addPrimes(runner);
     addNumberTheory(runner);
     addMatrixOps(runner);
     addPermConv(runner);

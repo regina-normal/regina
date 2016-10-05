@@ -9,9 +9,9 @@ SET ( FILES
   nperm3
   nperm4
   nperm5
-  nprimes
   numbertheory
   permconv
+  primes
   rational
   )
 

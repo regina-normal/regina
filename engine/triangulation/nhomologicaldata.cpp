@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "maths/matrixops.h"
-#include "maths/nprimes.h"
+#include "maths/primes.h"
 #include "triangulation/nhomologicaldata.h"
 #include <list>
 #include <iostream>
@@ -1113,7 +1113,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
 
     for (i=0; i<niv; i++) {
         tI = dmHomology1->invariantFactor(i);
-        tFac = NPrimes::primePowerDecomp(tI);
+        tFac = Primes::primePowerDecomp(tI);
 
         for (j=0; j<tFac.size(); j++) {
             pPrList.push_back(tFac[j]);

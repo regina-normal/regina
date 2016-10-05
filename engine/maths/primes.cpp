@@ -30,13 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-#include "maths/nprimes.h"
+#include "maths/primes.h"
 
 namespace regina {
 
-std::vector<NLargeInteger> NPrimes::largePrimes;
+std::vector<NLargeInteger> Primes::largePrimes;
 
-NLargeInteger NPrimes::prime(unsigned long which, bool autoGrow) {
+NLargeInteger Primes::prime(unsigned long which, bool autoGrow) {
     // Can we grab it straight out of the hard-coded seed list?
     if (which < numPrimeSeeds)
         return primeSeedList[which];
@@ -53,7 +53,7 @@ NLargeInteger NPrimes::prime(unsigned long which, bool autoGrow) {
     return largePrimes[which - numPrimeSeeds];
 }
 
-void NPrimes::growPrimeList(unsigned long extras) {
+void Primes::growPrimeList(unsigned long extras) {
     NLargeInteger lastPrime = (largePrimes.empty() ?
         primeSeedList[numPrimeSeeds - 1] :
         largePrimes[largePrimes.size() - 1]);
@@ -72,7 +72,7 @@ void NPrimes::growPrimeList(unsigned long extras) {
     }
 }
 
-std::vector<NLargeInteger> NPrimes::primeDecomp(const NLargeInteger& n) {
+std::vector<NLargeInteger> Primes::primeDecomp(const NLargeInteger& n) {
     std::vector<NLargeInteger> retval;
 
     // Deal with n=0 first.
@@ -140,7 +140,7 @@ std::vector<NLargeInteger> NPrimes::primeDecomp(const NLargeInteger& n) {
 }
 
 std::vector<std::pair<NLargeInteger, unsigned long> >
-        NPrimes::primePowerDecomp(const NLargeInteger& n) {
+        Primes::primePowerDecomp(const NLargeInteger& n) {
     std::vector<NLargeInteger> list1(primeDecomp(n));
     std::vector< std::pair<NLargeInteger, unsigned long> > retlist;
 

@@ -31,18 +31,18 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "maths/nprimes.h"
+#include "maths/primes.h"
 #include "../helpers.h"
 
 using namespace boost::python;
 using regina::NLargeInteger;
-using regina::NPrimes;
+using regina::Primes;
 
 namespace {
-    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_prime, NPrimes::prime, 1, 2);
+    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_prime, Primes::prime, 1, 2);
 
     boost::python::list primeDecomp_list(const NLargeInteger& n) {
-        std::vector<NLargeInteger> factors = NPrimes::primeDecomp(n);
+        std::vector<NLargeInteger> factors = Primes::primeDecomp(n);
 
         boost::python::list ans;
         for (std::vector<NLargeInteger>::const_iterator it = factors.begin();
@@ -52,7 +52,7 @@ namespace {
     }
 
     boost::python::list primeDecomp_list_int(const NLargeInteger& n) {
-        std::vector<NLargeInteger> factors = NPrimes::primeDecomp(n);
+        std::vector<NLargeInteger> factors = Primes::primeDecomp(n);
 
         boost::python::list ans;
         for (std::vector<NLargeInteger>::const_iterator it = factors.begin();
@@ -63,7 +63,7 @@ namespace {
 
     boost::python::list primePowerDecomp_list(const NLargeInteger& n) {
         std::vector<std::pair<NLargeInteger, unsigned long> >
-            factors = NPrimes::primePowerDecomp(n);
+            factors = Primes::primePowerDecomp(n);
 
         boost::python::list ans;
         for (std::vector<std::pair<NLargeInteger, unsigned long> >::
@@ -74,7 +74,7 @@ namespace {
 
     boost::python::list primePowerDecomp_list_int(const NLargeInteger& n) {
         std::vector<std::pair<NLargeInteger, unsigned long> >
-            factors = NPrimes::primePowerDecomp(n);
+            factors = Primes::primePowerDecomp(n);
 
         boost::python::list ans;
         for (std::vector<std::pair<NLargeInteger, unsigned long> >::
@@ -85,10 +85,10 @@ namespace {
     }
 }
 
-void addNPrimes() {
-    class_<NPrimes>("NPrimes", no_init)
-        .def("size", &NPrimes::size)
-        .def("prime", &NPrimes::prime, OL_prime())
+void addPrimes() {
+    class_<Primes>("Primes", no_init)
+        .def("size", &Primes::size)
+        .def("prime", &Primes::prime, OL_prime())
         .def("primeDecomp", primeDecomp_list)
         .def("primeDecompInt", primeDecomp_list_int)
         .def("primePowerDecomp", primePowerDecomp_list)
@@ -101,5 +101,7 @@ void addNPrimes() {
         .staticmethod("primePowerDecomp")
         .staticmethod("primePowerDecompInt")
     ;
+
+    scope().attr("NPrimes") = scope().attr("Primes");
 }
 
