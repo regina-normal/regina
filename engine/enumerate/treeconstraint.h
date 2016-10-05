@@ -39,7 +39,7 @@
 #define __TREECONSTRAINT_H
 #endif
 
-#include "maths/ninteger.h"
+#include "maths/integer.h"
 #include "surfaces/normalcoords.h"
 #include "surfaces/nnormalsurface.h"
 

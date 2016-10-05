@@ -32,7 +32,7 @@
 
 #import <Foundation/Foundation.h>
 #import "hypersurface/hypercoords.h"
-#import "maths/ninteger.h"
+#import "maths/integer.h"
 #import "surfaces/normalcoords.h"
 
 namespace regina {

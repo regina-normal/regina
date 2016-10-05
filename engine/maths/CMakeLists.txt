@@ -3,9 +3,9 @@
 # Files to compile
 SET ( FILES
   approx
-  matrixops
   cyclotomic
-  ninteger
+  integer
+  matrixops
   nmatrix2
   nperm2
   nperm3
@@ -28,6 +28,7 @@ if (${REGINA_INSTALL_DEV})
   INSTALL( FILES
     approx.h
     cyclotomic.h
+    integer.h
     matrixops.h
     ncyclotomic.h
     ninteger.h

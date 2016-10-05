@@ -4,8 +4,8 @@
 SET ( FILES
   matrixops
   cyclotomic
-  ninteger
-  nlargeinteger
+  integer
+  largeinteger
   nmatrixint
   nmatrix2
   nperm

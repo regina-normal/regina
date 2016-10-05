@@ -40,7 +40,7 @@
 #endif
 
 #include "regina-core.h"
-#include "maths/ninteger.h"
+#include "maths/integer.h"
 #include "maths/vector.h"
 
 namespace regina {

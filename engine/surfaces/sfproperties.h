@@ -42,7 +42,7 @@
 
 #include <set>
 #include "regina-core.h"
-#include "maths/ninteger.h"
+#include "maths/integer.h"
 #include "surfaces/nsurfacefilter.h"
 #include "utilities/boolset.h"
 

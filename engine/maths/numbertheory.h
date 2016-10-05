@@ -41,7 +41,7 @@
 
 #include <list>
 #include "regina-core.h"
-#include "maths/ninteger.h"
+#include "maths/integer.h"
 
 namespace regina {
 

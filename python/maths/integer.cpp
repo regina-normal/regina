@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "maths/ninteger.h"
+#include "maths/integer.h"
 #include "../helpers.h"
 
 using namespace boost::python;

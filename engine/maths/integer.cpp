@@ -33,7 +33,7 @@
 #include <cerrno>
 #include <cstdlib>
 #include <mutex>
-#include "maths/ninteger.h"
+#include "maths/integer.h"
 #include "maths/numbertheory.h"
 
 // We instantiate both variants of the NIntegerBase template at the bottom

@@ -39,7 +39,7 @@
 #define __TREELP_H
 #endif
 
-#include "maths/ninteger.h"
+#include "maths/integer.h"
 #include "maths/nmatrixint.h"
 #include "surfaces/normalcoords.h"
 #include <algorithm>

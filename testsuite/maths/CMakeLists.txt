@@ -2,8 +2,8 @@
 
 # Files to compile
 SET ( FILES
+  integer
   matrixops
-  ninteger
   nperm
   nperm2
   nperm3

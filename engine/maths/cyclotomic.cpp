@@ -33,7 +33,7 @@
 #define _USE_MATH_DEFINES // for M_PI, which is non-standard
 
 #include "maths/cyclotomic.h"
-#include "maths/ninteger.h"
+#include "maths/integer.h"
 #include <cmath>
 #include <vector>
 

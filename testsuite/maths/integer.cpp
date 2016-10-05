@@ -32,7 +32,7 @@
 
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
-#include "maths/ninteger.h"
+#include "maths/integer.h"
 #include "testsuite/utilities/testutilities.h"
 
 using regina::NIntegerBase;

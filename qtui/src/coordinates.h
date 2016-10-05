@@ -39,7 +39,7 @@
 #define __COORDINATES_H
 
 #include "hypersurface/hypercoords.h"
-#include "maths/ninteger.h"
+#include "maths/integer.h"
 #include "surfaces/normalcoords.h"
 
 #include <QString>

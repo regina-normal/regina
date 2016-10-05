@@ -41,7 +41,7 @@
 
 #include <set>
 #include "regina-core.h"
-#include "maths/ninteger.h"
+#include "maths/integer.h"
 #include "output.h"
 #include <boost/noncopyable.hpp>
 

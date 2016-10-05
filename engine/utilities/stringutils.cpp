@@ -33,7 +33,7 @@
 #include <cstdlib>
 #include <cctype>
 #include <climits>
-#include "maths/ninteger.h"
+#include "maths/integer.h"
 #include "utilities/stringutils.h"
 #include "utilities/boolset.h"
 
