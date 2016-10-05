@@ -28,6 +28,10 @@ Version 5.1  [ (under development) ]
               PACKET_NORMALHYPERSURFACELIST to PACKET_NORMALHYPERSURFACES,
               and PACKET_ANGLESTRUCTURELIST to PACKET_ANGLESTRUCTURES.
               The old names are kept but deprecated.
+        Routine isZero, isNonZero, isPositive, isNegative, isNonPositive,
+                isNonNegative:
+            - Deprecated, with no replacements.  This is because the methods
+              here for managing round-off error were quite brutal.
         Global array quadDefn[][]:
             - Added to nnormalsurface.h, with the same contents as the old
               (and now removed) array vertexSplitDefn[][].

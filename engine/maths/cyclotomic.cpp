@@ -32,7 +32,7 @@
 
 #define _USE_MATH_DEFINES // for M_PI, which is non-standard
 
-#include "maths/ncyclotomic.h"
+#include "maths/cyclotomic.h"
 #include "maths/ninteger.h"
 #include <cmath>
 #include <vector>
@@ -43,7 +43,7 @@ namespace {
     std::vector<NPolynomial<NInteger> > cyclotomicCache;
 }
 
-std::complex<double> NCyclotomic::evaluate(size_t whichRoot) const {
+std::complex<double> Cyclotomic::evaluate(size_t whichRoot) const {
     double real = coeff_[0].doubleApprox();
     double imag = 0;
     double c;
@@ -55,7 +55,7 @@ std::complex<double> NCyclotomic::evaluate(size_t whichRoot) const {
     return std::complex<double>(real, imag);
 }
 
-void NCyclotomic::invert() {
+void Cyclotomic::invert() {
     NPolynomial<NRational>* self = polynomial();
     NPolynomial<NRational> gcd, u, v;
 
@@ -70,7 +70,7 @@ void NCyclotomic::invert() {
     delete self;
 }
 
-NCyclotomic& NCyclotomic::operator *= (const NCyclotomic& other) {
+Cyclotomic& Cyclotomic::operator *= (const Cyclotomic& other) {
     const NPolynomial<NInteger>& cyc = cyclotomic(field_);
 
     size_t i, j;
@@ -90,7 +90,7 @@ NCyclotomic& NCyclotomic::operator *= (const NCyclotomic& other) {
     return *this;
 }
 
-const NPolynomial<NInteger>& NCyclotomic::cyclotomic(size_t n) {
+const NPolynomial<NInteger>& Cyclotomic::cyclotomic(size_t n) {
     if (cyclotomicCache.size() < n)
         cyclotomicCache.resize(n);
     if (cyclotomicCache[n - 1].degree() == 0) {
@@ -122,7 +122,7 @@ const NPolynomial<NInteger>& NCyclotomic::cyclotomic(size_t n) {
     return cyclotomicCache[n - 1];
 }
 
-void NCyclotomic::writeTextShort(std::ostream& out, bool utf8,
+void Cyclotomic::writeTextShort(std::ostream& out, bool utf8,
         const char* variable) const {
     if (! field_) {
         out << "<uninitialised>";

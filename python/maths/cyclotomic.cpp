@@ -31,49 +31,49 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "maths/ncyclotomic.h"
+#include "maths/cyclotomic.h"
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NCyclotomic;
+using regina::Cyclotomic;
 
 namespace {
-    const regina::NRational& getItem(const NCyclotomic& c, int exp) {
+    const regina::NRational& getItem(const Cyclotomic& c, int exp) {
         return c[exp];
     }
-    void setItem(NCyclotomic& c, int exp, const regina::NRational& value) {
+    void setItem(Cyclotomic& c, int exp, const regina::NRational& value) {
         c[exp] = value;
     }
     regina::NPolynomial<regina::NRational>* cyclotomic(size_t n) {
         return new regina::NPolynomial<regina::NRational>(
-            NCyclotomic::cyclotomic(n));
+            Cyclotomic::cyclotomic(n));
     }
 
-    std::string (NCyclotomic::*str_variable)(const char*) const =
-        &NCyclotomic::str;
-    std::string (NCyclotomic::*utf8_variable)(const char*) const =
-        &NCyclotomic::utf8;
+    std::string (Cyclotomic::*str_variable)(const char*) const =
+        &Cyclotomic::str;
+    std::string (Cyclotomic::*utf8_variable)(const char*) const =
+        &Cyclotomic::utf8;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_evaluate,
-        NCyclotomic::evaluate, 0, 1);
+        Cyclotomic::evaluate, 0, 1);
 }
 
-void addNCyclotomic() {
-    scope s = class_<NCyclotomic, std::auto_ptr<NCyclotomic> >("NCyclotomic")
+void addCyclotomic() {
+    class_<Cyclotomic, std::auto_ptr<Cyclotomic> >("Cyclotomic")
         .def(init<size_t>())
         .def(init<size_t, int>())
         .def(init<size_t, const regina::NRational&>())
-        .def(init<const NCyclotomic&>())
-        .def("init", &NCyclotomic::init)
-        .def("field", &NCyclotomic::field)
-        .def("degree", &NCyclotomic::degree)
+        .def(init<const Cyclotomic&>())
+        .def("init", &Cyclotomic::init)
+        .def("field", &Cyclotomic::field)
+        .def("degree", &Cyclotomic::degree)
         .def("__getitem__", getItem, return_internal_reference<>())
         .def("__setitem__", setItem)
-        .def("polynomial", &NCyclotomic::polynomial,
+        .def("polynomial", &Cyclotomic::polynomial,
             return_value_policy<manage_new_object>())
-        .def("evaluate", &NCyclotomic::evaluate, OL_evaluate())
-        .def("negate", &NCyclotomic::invert)
-        .def("invert", &NCyclotomic::invert)
+        .def("evaluate", &Cyclotomic::evaluate, OL_evaluate())
+        .def("negate", &Cyclotomic::invert)
+        .def("invert", &Cyclotomic::invert)
         .def(self *= regina::NRational())
         .def(self /= regina::NRational())
         .def(self += self)
@@ -89,5 +89,7 @@ void addNCyclotomic() {
         .def(regina::python::add_eq_operators())
         .staticmethod("cyclotomic")
     ;
+
+    scope().attr("NCyclotomic") = scope().attr("Cyclotomic");
 }
 

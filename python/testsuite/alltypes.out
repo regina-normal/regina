@@ -55,6 +55,9 @@ Equality type : BY_REFERENCE
 Cusp : class
 Equality type : BY_REFERENCE
 
+Cyclotomic : class
+Equality type : BY_VALUE
+
 Dim2BoundaryComponent : class
 Equality type : BY_REFERENCE
 
@@ -1051,8 +1054,7 @@ NContainer : typedef ->  Container
 
 NCusp : typedef ->  Cusp
 
-NCyclotomic : class
-Equality type : BY_VALUE
+NCyclotomic : typedef ->  Cyclotomic
 
 NDiscSetSurface : class
 Equality type : BY_REFERENCE

@@ -62,7 +62,7 @@
 #include <QTextDocument>
 #include <QValidator>
 
-using regina::NCyclotomic;
+using regina::Cyclotomic;
 using regina::Packet;
 using regina::NTriangulation;
 

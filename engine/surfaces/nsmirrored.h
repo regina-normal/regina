@@ -118,8 +118,8 @@ class REGINA_API NNormalSurfaceVectorMirrored : public NNormalSurfaceVector {
          * The mirror vector should represent the same normal surface as
          * this vector, and should have fast coordinate lookup routines
          * (triangles(), quads() and so on).  It is
-         * recommended that the mirror vector be an
-         * NNormalSurfaceVectorStandard or an NNormalSurfaceVectorANStandard.
+         * recommended that the mirror vector be a
+         * NNormalSurfaceVectorStandard or a NNormalSurfaceVectorANStandard.
          *
          * @param triang the triangulation in which this normal surface
          * lives.

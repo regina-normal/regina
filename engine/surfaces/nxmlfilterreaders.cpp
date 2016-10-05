@@ -59,7 +59,7 @@ namespace {
     };
 
     /**
-     * Reads an NSurfaceFilterCombination filter.
+     * Reads a NSurfaceFilterCombination filter.
      */
     class NCombinationReader : public NXMLFilterReader {
         private:
@@ -91,7 +91,7 @@ namespace {
     };
 
     /**
-     * Reads an NSurfaceFilterProperties filter.
+     * Reads a NSurfaceFilterProperties filter.
      */
     class NPropertiesReader : public NXMLFilterReader {
         private:

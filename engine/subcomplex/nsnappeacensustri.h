@@ -74,7 +74,7 @@ namespace regina {
  * Note that this class is closely tied to NSnapPeaCensusManifold.
  * In particular, the section constants defined in NSnapPeaCensusManifold
  * and NSnapPeaCensusTri are identical, and so may be freely mixed.
- * Furthermore, the section and index parameters of an NSnapPeaCensusTri
+ * Furthermore, the section and index parameters of a NSnapPeaCensusTri
  * are identical to those of its corresponding NSnapPeaCensusManifold.
  *
  * All of the optional NStandardTriangulation routines are implemented

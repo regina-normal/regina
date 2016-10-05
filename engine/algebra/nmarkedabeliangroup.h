@@ -669,13 +669,13 @@ class REGINA_API NMarkedAbelianGroup :
         const NLargeInteger& coefficients() const;
 
         /**
-         *  Returns an NMarkedAbelianGroup representing the torsion subgroup
+         *  Returns a NMarkedAbelianGroup representing the torsion subgroup
          *  of this group. 
          */
         std::unique_ptr<NMarkedAbelianGroup> torsionSubgroup() const;
 
         /**
-         *  Returns an NHomMarkedAbelianGroup representing the inclusion of the
+         *  Returns a NHomMarkedAbelianGroup representing the inclusion of the
          *  torsion subgroup into this group. 
          */
         std::unique_ptr<NHomMarkedAbelianGroup> torsionInclusion() const;
@@ -995,7 +995,7 @@ class REGINA_API NHomMarkedAbelianGroup :
             const std::vector<NLargeInteger> &input) const;
 
         /**
-         * Returns the inverse to an NHomMarkedAbelianGroup. If this
+         * Returns the inverse to a NHomMarkedAbelianGroup. If this
          * homomorphism is not invertible, this routine returns the zero
          * homomorphism.
          *
@@ -1025,7 +1025,7 @@ class REGINA_API NHomMarkedAbelianGroup :
             const NHomMarkedAbelianGroup &X) const;
 
         /**
-         *  Returns an NHomMarkedAbelianGroup representing the induced map
+         *  Returns a NHomMarkedAbelianGroup representing the induced map
          *  on the torsion subgroups. 
          */
         std::unique_ptr<NHomMarkedAbelianGroup> torsionSubgroup() const;

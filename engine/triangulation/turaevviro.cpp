@@ -37,8 +37,7 @@
 #include <complex>
 #include "regina-config.h"
 #include "libnormaliz/cone.h"
-#include "maths/approx.h"
-#include "maths/ncyclotomic.h"
+#include "maths/cyclotomic.h"
 #include "maths/numbertheory.h"
 #include "treewidth/treedecomposition.h"
 #include "triangulation/ntriangulation.h"
@@ -60,8 +59,8 @@ namespace {
 
     template <>
     struct TuraevViroDetails<true> {
-        typedef NCyclotomic TVType;
-        typedef NCyclotomic TVResult;
+        typedef Cyclotomic TVType;
+        typedef Cyclotomic TVResult;
     };
 
     template <>
@@ -1200,7 +1199,10 @@ double NTriangulation::turaevViroApprox(unsigned long r,
             ans = turaevViroNaive(*this, init);
             break;
     }
-
+    /*
+     * Disable this check for now, since testing whether img(z) == 0 is
+     * error-prone due to floating-point approximation.
+     *
     if (isNonZero(ans.imag())) {
         // This should never happen, since the Turaev-Viro invariant is the
         // square of the modulus of the Witten invariant for sl_2.
@@ -1210,14 +1212,15 @@ double NTriangulation::turaevViroApprox(unsigned long r,
             "         Please report this (along with the 3-manifold that"
             "         was used) to Regina's authors." << std::endl;
     }
+     */
     return ans.real();
 }
 
-NCyclotomic NTriangulation::turaevViro(unsigned long r, bool parity,
+Cyclotomic NTriangulation::turaevViro(unsigned long r, bool parity,
         TuraevViroAlg alg) const {
     // Do some basic parameter checks.
     if (r < 3)
-        return NCyclotomic();
+        return Cyclotomic();
     if (r % 2 == 0)
         parity = false; // As required by allCalculatedTuraevViroInvariants().
 

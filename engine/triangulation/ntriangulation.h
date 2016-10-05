@@ -49,7 +49,7 @@
 #include "algebra/ngrouppresentation.h"
 #include "angle/anglestructure.h"
 #include "generic/triangulation.h"
-#include "maths/ncyclotomic.h"
+#include "maths/cyclotomic.h"
 #include "packet/packet.h"
 #include "treewidth/treedecomposition.h"
 #include "utilities/boolset.h"
@@ -185,7 +185,7 @@ class REGINA_API Triangulation<3> :
                 BoundaryComponentIterator;
             /**< Used to iterate through boundary components. */
 
-        typedef std::map<std::pair<unsigned long, bool>, NCyclotomic>
+        typedef std::map<std::pair<unsigned long, bool>, Cyclotomic>
                 TuraevViroSet;
             /**< A map from (\a r, \a parity) pairs to Turaev-Viro invariants,
                  as described by turaevViro(). */
@@ -785,7 +785,7 @@ class REGINA_API Triangulation<3> :
          *
          * @see allCalculatedTuraevViro
          */
-        NCyclotomic turaevViro(unsigned long r, bool parity = true,
+        Cyclotomic turaevViro(unsigned long r, bool parity = true,
             TuraevViroAlg alg = TV_DEFAULT) const;
         /**
          * Computes the given Turaev-Viro state sum invariant of this
@@ -814,7 +814,7 @@ class REGINA_API Triangulation<3> :
          * lead to a much larger numerical error (since this routine might
          * perform an exponential number of floating point operations,
          * whereas the alternative only uses floating point for
-         * the final call to NCyclotomic::evaluate()).
+         * the final call to Cyclotomic::evaluate()).
          *
          * These invariants, although computed in the complex field,
          * should all be reals.  Thus the return type is an ordinary
@@ -3015,7 +3015,7 @@ class REGINA_API Triangulation<3> :
         /**
          * Reads the contents of a SnapPea data file from the given input
          * stream, and converts the result to a new NTriangulation.  Since
-         * this returns an NTriangulation, it will lose some SnapPea-specific
+         * this returns a NTriangulation, it will lose some SnapPea-specific
          * information in the process (such as peripheral curves).
          *
          * If the input stream could not be read or if the data was not in the

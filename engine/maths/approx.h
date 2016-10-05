@@ -31,14 +31,15 @@
  **************************************************************************/
 
 /*! \file maths/approx.h
- *  \brief Provides facilities for working around rounding errors when
- *  dealing with real numbers.
+ *  \brief Deprecated header for managing floating-point roundoff errors.
  */
 
 #ifndef __APPROX_H
 #ifndef __DOXYGEN
 #define __APPROX_H
 #endif
+
+#warning The header approx.h and all of its functions are now deprecated.
 
 #include "regina-core.h"
 
@@ -50,18 +51,34 @@ namespace regina {
  */
 
 /**
+ * Deprecated constant for managing floating-point roundoff errors.
+ *
  * A very small positive real designed to accommodate for rounding error.
  * Any two numbers within \a epsilon of each other are considered to be
  * equal by the generic zero-testing and sign-testing routines defined in
  * this file (isZero(), isPositive(), isNonNegative() and so on).
+ *
+ * \deprecated This method of using a hard-coded \a epsilon is very blunt.
+ * Currently Regina does not provide alternative methods for managing
+ * round-off error, though since Regina's computations are exact, this should
+ * not be necessary.
+ *
+ * \ifacespython Not present.
  */
-REGINA_API extern const double epsilon;
+REGINA_DEPRECATED REGINA_API extern const double epsilon;
 
 /**
+ * Deprecated routine for managing floating-point roundoff errors.
+ *
  * Determines whether the given real number is zero.
  * Any number within \a regina::epsilon of zero is considered to be zero.
  *
  * \pre R must be of a floating point real type.
+ *
+ * \deprecated This method of using a hard-coded \a epsilon is very blunt.
+ * Currently Regina does not provide alternative methods for managing
+ * round-off error, though since Regina's computations are exact, this should
+ * not be necessary.
  *
  * \ifacespython Not present.
  *
@@ -69,15 +86,22 @@ REGINA_API extern const double epsilon;
  * @return \c true if and only if the given number is approximately zero.
  */
 template <class R>
-inline bool isZero(R x) {
+inline REGINA_DEPRECATED bool isZero(R x) {
     return (x > -epsilon && x < epsilon);
 }
 
 /**
+ * Deprecated routine for managing floating-point roundoff errors.
+ *
  * Determines whether the given real number is non-zero.
  * Any number within \a regina::epsilon of zero is considered to be zero.
  *
  * \pre R must be of a floating point real type.
+ *
+ * \deprecated This method of using a hard-coded \a epsilon is very blunt.
+ * Currently Regina does not provide alternative methods for managing
+ * round-off error, though since Regina's computations are exact, this should
+ * not be necessary.
  *
  * \ifacespython Not present.
  *
@@ -85,15 +109,22 @@ inline bool isZero(R x) {
  * @return \c true if and only if the given number is approximately non-zero.
  */
 template <class R>
-inline bool isNonZero(R x) {
+inline REGINA_DEPRECATED bool isNonZero(R x) {
     return (x < -epsilon || x > epsilon);
 }
 
 /**
+ * Deprecated routine for managing floating-point roundoff errors.
+ *
  * Determines whether the given real number is strictly positive.
  * Any number within \a regina::epsilon of zero is considered to be zero.
  *
  * \pre R must be of a floating point real type.
+ *
+ * \deprecated This method of using a hard-coded \a epsilon is very blunt.
+ * Currently Regina does not provide alternative methods for managing
+ * round-off error, though since Regina's computations are exact, this should
+ * not be necessary.
  *
  * \ifacespython Not present.
  *
@@ -101,15 +132,22 @@ inline bool isNonZero(R x) {
  * @return \c true if and only if the given number is strictly positive.
  */
 template <class R>
-inline bool isPositive(R x) {
+inline REGINA_DEPRECATED bool isPositive(R x) {
     return (x > epsilon);
 }
 
 /**
+ * Deprecated routine for managing floating-point roundoff errors.
+ *
  * Determines whether the given real number is strictly negative.
  * Any number within \a regina::epsilon of zero is considered to be zero.
  *
  * \pre R must be of a floating point real type.
+ *
+ * \deprecated This method of using a hard-coded \a epsilon is very blunt.
+ * Currently Regina does not provide alternative methods for managing
+ * round-off error, though since Regina's computations are exact, this should
+ * not be necessary.
  *
  * \ifacespython Not present.
  *
@@ -117,15 +155,22 @@ inline bool isPositive(R x) {
  * @return \c true if and only if the given number is strictly negative.
  */
 template <class R>
-inline bool isNegative(R x) {
+inline REGINA_DEPRECATED bool isNegative(R x) {
     return (x < -epsilon);
 }
 
 /**
+ * Deprecated routine for managing floating-point roundoff errors.
+ *
  * Determines whether the given real number is non-negative.
  * Any number within \a regina::epsilon of zero is considered to be zero.
  *
  * \pre R must be of a floating point real type.
+ *
+ * \deprecated This method of using a hard-coded \a epsilon is very blunt.
+ * Currently Regina does not provide alternative methods for managing
+ * round-off error, though since Regina's computations are exact, this should
+ * not be necessary.
  *
  * \ifacespython Not present.
  *
@@ -133,15 +178,22 @@ inline bool isNegative(R x) {
  * @return \c true if and only if the given number is non-negative.
  */
 template <class R>
-inline bool isNonNegative(R x) {
+inline REGINA_DEPRECATED bool isNonNegative(R x) {
     return (x > -epsilon);
 }
 
 /**
+ * Deprecated routine for managing floating-point roundoff errors.
+ *
  * Determines whether the given real number is non-positive.
  * Any number within \a regina::epsilon of zero is considered to be zero.
  *
  * \pre R must be of a floating point real type.
+ *
+ * \deprecated This method of using a hard-coded \a epsilon is very blunt.
+ * Currently Regina does not provide alternative methods for managing
+ * round-off error, though since Regina's computations are exact, this should
+ * not be necessary.
  *
  * \ifacespython Not present.
  *
@@ -149,7 +201,7 @@ inline bool isNonNegative(R x) {
  * @return \c true if and only if the given number is non-positive.
  */
 template <class R>
-inline bool isNonPositive(R x) {
+inline REGINA_DEPRECATED bool isNonPositive(R x) {
     return (x < epsilon);
 }
 
