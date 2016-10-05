@@ -258,13 +258,20 @@ namespace {
                 if (! (facets_ <= link.facets_))
                     return;
 
-                LargeInteger max = LargeInteger::infinity;
+                bool start = true;
+                LargeInteger max; // max we are allowed to subtract
                 size_t i;
                 for (i = 0; i < size(); ++i)
-                    if (! link.facets_.get(i))
-                        if (max > elements[i])
+                    if (! link.facets_.get(i)) {
+                        if (start) {
                             max = elements[i];
+                            start = false;
+                        } else if (max > elements[i])
+                            max = elements[i];
+                    }
 
+                // If start == true then this next loop is harmless, since
+                // link.facets_.get(i) must always be true.
                 for (i = 0; i < size(); ++i)
                     if (! link.facets_.get(i))
                         if ((elements[i] -= max) == zero)
