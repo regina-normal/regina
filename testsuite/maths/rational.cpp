@@ -38,7 +38,7 @@
 
 #define HUGE_INTEGER "12364981726394781629378461923786491874569283746672"
 
-using regina::NInteger;
+using regina::Integer;
 using regina::IntegerBase;
 using regina::LargeInteger;
 using regina::Rational;
@@ -50,7 +50,7 @@ class RationalTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(constructInfinity);
     CPPUNIT_TEST(constructUndefined);
     CPPUNIT_TEST(assignFromInteger);
-    CPPUNIT_TEST(extractToNInteger);
+    CPPUNIT_TEST(extractToInteger);
     CPPUNIT_TEST(doubleApprox);
 
     CPPUNIT_TEST_SUITE_END();
@@ -127,13 +127,13 @@ class RationalTest : public CppUnit::TestFixture {
             verifyConstructFinite(1);
             verifyConstructFinite(LONG_MAX);
             verifyConstructFinite(LONG_MIN);
-            verifyConstructFinite(NInteger(LONG_MAX) + 1);
+            verifyConstructFinite(Integer(LONG_MAX) + 1);
             verifyConstructFinite(LargeInteger(LONG_MAX) + 1);
-            verifyConstructFinite(NInteger(LONG_MIN) - 1);
+            verifyConstructFinite(Integer(LONG_MIN) - 1);
             verifyConstructFinite(LargeInteger(LONG_MIN) - 1);
-            verifyConstructFinite(NInteger(HUGE_INTEGER));
+            verifyConstructFinite(Integer(HUGE_INTEGER));
             verifyConstructFinite(LargeInteger(HUGE_INTEGER));
-            verifyConstructFinite(NInteger("-" HUGE_INTEGER));
+            verifyConstructFinite(Integer("-" HUGE_INTEGER));
             verifyConstructFinite(LargeInteger("-" HUGE_INTEGER));
         }
 
@@ -165,15 +165,15 @@ class RationalTest : public CppUnit::TestFixture {
             verifyInfinite(Rational(-2, 0), "-2/0");
             verifyInfinite(Rational(LONG_MAX, 0), "LONG_MAX/0");
             verifyInfinite(Rational(LONG_MIN, 0), "LONG_MIN/0");
-            verifyInfinite(Rational(NInteger(LONG_MAX) + 1,
-                NInteger::zero),
-                "(NInteger(LONG_MAX)+1)/0");
+            verifyInfinite(Rational(Integer(LONG_MAX) + 1,
+                Integer::zero),
+                "(Integer(LONG_MAX)+1)/0");
             verifyInfinite(Rational(LargeInteger(LONG_MAX) + 1,
                 LargeInteger::zero),
                 "(LargeInteger(LONG_MAX)+1)/0");
-            verifyInfinite(Rational(NInteger(LONG_MIN) - 1,
-                NInteger::zero),
-                "(NInteger(LONG_MIN)-1)/0");
+            verifyInfinite(Rational(Integer(LONG_MIN) - 1,
+                Integer::zero),
+                "(Integer(LONG_MIN)-1)/0");
             verifyInfinite(Rational(LargeInteger(LONG_MIN) - 1,
                 LargeInteger::zero),
                 "(LargeInteger(LONG_MIN)-1)/0");
@@ -204,8 +204,8 @@ class RationalTest : public CppUnit::TestFixture {
 
         void constructUndefined() {
             verifyUndefined(Rational(0, 0), "0/0");
-            verifyUndefined(Rational(NInteger::zero, NInteger::zero),
-                "NInteger::zero/NInteger::zero");
+            verifyUndefined(Rational(Integer::zero, Integer::zero),
+                "Integer::zero/Integer::zero");
             verifyUndefined(Rational(LargeInteger::zero,
                 LargeInteger::zero),
                 "LargeInteger::zero/LargeInteger::zero");
@@ -266,13 +266,13 @@ class RationalTest : public CppUnit::TestFixture {
             verifyAssignFinite(1);
             verifyAssignFinite(LONG_MAX);
             verifyAssignFinite(LONG_MIN);
-            verifyAssignFinite(NInteger(LONG_MAX) + 1);
+            verifyAssignFinite(Integer(LONG_MAX) + 1);
             verifyAssignFinite(LargeInteger(LONG_MAX) + 1);
-            verifyAssignFinite(NInteger(LONG_MIN) - 1);
+            verifyAssignFinite(Integer(LONG_MIN) - 1);
             verifyAssignFinite(LargeInteger(LONG_MIN) - 1);
-            verifyAssignFinite(NInteger(HUGE_INTEGER));
+            verifyAssignFinite(Integer(HUGE_INTEGER));
             verifyAssignFinite(LargeInteger(HUGE_INTEGER));
-            verifyAssignFinite(NInteger("-" HUGE_INTEGER));
+            verifyAssignFinite(Integer("-" HUGE_INTEGER));
             verifyAssignFinite(LargeInteger("-" HUGE_INTEGER));
 
             Rational r = 0;
@@ -302,9 +302,9 @@ class RationalTest : public CppUnit::TestFixture {
                     " inverted reports an incorrect numerator.";
                 CPPUNIT_FAIL(msg.str());
             }
-            // Cast to NInteger because -LONG_MIN does not fit into a long.
+            // Cast to Integer because -LONG_MIN does not fit into a long.
             if (r.denominator() != (val >= 0 ?
-                    NInteger(val) : -NInteger(val))) {
+                    Integer(val) : -Integer(val))) {
                 std::ostringstream msg;
                 msg << "Rational (long)" << val <<
                     " inverted reports an incorrect denominator.";
@@ -343,19 +343,19 @@ class RationalTest : public CppUnit::TestFixture {
             }
         }
 
-        void extractToNInteger() {
+        void extractToInteger() {
             verifyNumDen(-1);
             verifyNumDen(0);
             verifyNumDen(1);
             verifyNumDen(LONG_MAX);
             verifyNumDen(LONG_MIN);
-            verifyNumDen(NInteger(LONG_MAX) + 1);
+            verifyNumDen(Integer(LONG_MAX) + 1);
             verifyNumDen(LargeInteger(LONG_MAX) + 1);
-            verifyNumDen(NInteger(LONG_MIN) - 1);
+            verifyNumDen(Integer(LONG_MIN) - 1);
             verifyNumDen(LargeInteger(LONG_MIN) - 1);
-            verifyNumDen(NInteger(HUGE_INTEGER));
+            verifyNumDen(Integer(HUGE_INTEGER));
             verifyNumDen(LargeInteger(HUGE_INTEGER));
-            verifyNumDen(NInteger("-" HUGE_INTEGER));
+            verifyNumDen(Integer("-" HUGE_INTEGER));
             verifyNumDen(LargeInteger("-" HUGE_INTEGER));
         }
 

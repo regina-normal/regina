@@ -35,44 +35,44 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NInteger;
+using regina::Integer;
 
 namespace {
-    NInteger& (NInteger::*divByExact_large)(const NInteger&) =
-        &NInteger::divByExact;
-    NInteger& (NInteger::*divByExact_long)(long) =
-        &NInteger::divByExact;
-    NInteger (NInteger::*divExact_large)(const NInteger&) const =
-        &NInteger::divExact;
-    NInteger (NInteger::*divExact_long)(long) const =
-        &NInteger::divExact;
+    Integer& (Integer::*divByExact_large)(const Integer&) =
+        &Integer::divByExact;
+    Integer& (Integer::*divByExact_long)(long) =
+        &Integer::divByExact;
+    Integer (Integer::*divExact_large)(const Integer&) const =
+        &Integer::divExact;
+    Integer (Integer::*divExact_long)(long) const =
+        &Integer::divExact;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_stringValue,
-        NInteger::stringValue, 0, 1);
+        Integer::stringValue, 0, 1);
 
-    boost::python::tuple divisionAlg(const NInteger& n,
-            const NInteger& divisor) {
-        NInteger remainder;
-        NInteger quotient = n.divisionAlg(divisor, remainder);
+    boost::python::tuple divisionAlg(const Integer& n,
+            const Integer& divisor) {
+        Integer remainder;
+        Integer quotient = n.divisionAlg(divisor, remainder);
         return boost::python::make_tuple(quotient, remainder);
     }
 }
 
-void addNInteger() {
-    scope s = class_<NInteger>("NInteger")
+void addInteger() {
+    scope s = class_<Integer>("Integer")
         .def(init<long>())
-        .def(init<const NInteger&>())
+        .def(init<const Integer&>())
         .def(init<const regina::LargeInteger&>())
         .def(init<double>())
         .def(init<const char*, optional<int> >())
-        .def("isNative", &NInteger::isNative)
-        .def("isZero", &NInteger::isZero)
-        .def("sign", &NInteger::sign)
-        .def("isInfinite", &NInteger::isInfinite)
-        .def("makeInfinite", &NInteger::makeInfinite)
-        .def("longValue", &NInteger::longValue)
-        .def("stringValue", &NInteger::stringValue, OL_stringValue())
-        .def("swap", &NInteger::swap)
+        .def("isNative", &Integer::isNative)
+        .def("isZero", &Integer::isZero)
+        .def("sign", &Integer::sign)
+        .def("isInfinite", &Integer::isInfinite)
+        .def("makeInfinite", &Integer::makeInfinite)
+        .def("longValue", &Integer::longValue)
+        .def("stringValue", &Integer::stringValue, OL_stringValue())
+        .def("swap", &Integer::swap)
         .def(self == long())
         .def(self == regina::LargeInteger())
         .def(self != long())
@@ -111,20 +111,20 @@ void addNInteger() {
         .def("divByExact", divByExact_long, return_internal_reference<>())
         .def(self %= self)
         .def(self %= long())
-        .def("negate", &NInteger::negate)
-        .def("raiseToPower", &NInteger::raiseToPower)
-        .def("abs", &NInteger::abs)
-        .def("gcdWith", &NInteger::gcdWith)
-        .def("gcd", &NInteger::gcd)
-        .def("lcmWith", &NInteger::lcmWith)
-        .def("lcm", &NInteger::lcm)
-        .def("gcdWithCoeffs", &NInteger::gcdWithCoeffs)
-        .def("legendre", &NInteger::legendre)
-        .def("randomBoundedByThis", &NInteger::randomBoundedByThis)
-        .def("randomBinary", &NInteger::randomBinary)
-        .def("randomCornerBinary", &NInteger::randomCornerBinary)
-        .def("makeLarge", &NInteger::makeLarge)
-        .def("tryReduce", &NInteger::tryReduce)
+        .def("negate", &Integer::negate)
+        .def("raiseToPower", &Integer::raiseToPower)
+        .def("abs", &Integer::abs)
+        .def("gcdWith", &Integer::gcdWith)
+        .def("gcd", &Integer::gcd)
+        .def("lcmWith", &Integer::lcmWith)
+        .def("lcm", &Integer::lcm)
+        .def("gcdWithCoeffs", &Integer::gcdWithCoeffs)
+        .def("legendre", &Integer::legendre)
+        .def("randomBoundedByThis", &Integer::randomBoundedByThis)
+        .def("randomBinary", &Integer::randomBinary)
+        .def("randomCornerBinary", &Integer::randomCornerBinary)
+        .def("makeLarge", &Integer::makeLarge)
+        .def("tryReduce", &Integer::tryReduce)
         .def(long() + self)
         .def(long() * self)
         .def(self_ns::str(self))
@@ -136,10 +136,10 @@ void addNInteger() {
 
     // Apparently there is no way in python to make a module attribute
     // read-only.
-    s.attr("zero") = NInteger::zero;
-    s.attr("one") = NInteger::one;
+    s.attr("zero") = Integer::zero;
+    s.attr("one") = Integer::one;
 
-    boost::python::implicitly_convertible<long, NInteger>();
-    boost::python::implicitly_convertible<std::string, NInteger>();
+    boost::python::implicitly_convertible<long, Integer>();
+    boost::python::implicitly_convertible<std::string, Integer>();
 }
 

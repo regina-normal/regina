@@ -1123,7 +1123,7 @@ Equality type : BY_REFERENCE
 NHomologicalData : class
 Equality type : BY_REFERENCE
 
-NInteger : class
+Integer : class
 Equality type : BY_VALUE
 
 NIsomorphism : typedef ->  Isomorphism3

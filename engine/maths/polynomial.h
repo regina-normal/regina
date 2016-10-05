@@ -64,7 +64,7 @@ namespace regina {
  *   tests of the form <tt>x == int</tt> and <tt>x < int</tt>;
  * - have a default constructor that assigns an explicit value of zero.
  *
- * This means that Regina's numerical types such as NInteger and Rational
+ * This means that Regina's numerical types such as Integer and Rational
  * are supported, but native data types such as int and long are not
  * (since they have no zero-initialising default constructor).
  *
@@ -375,7 +375,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * Coefficients are divided using the operator /= on type \a T.
          *
          * If your coefficient type \a T is not a field (e.g., if \a T
-         * is NInteger), you must be sure to know in advance that the
+         * is Integer), you must be sure to know in advance that the
          * quotient exists (see the precondition below).  Otherwise the
          * behaviour of this routine is undefined.
          *
@@ -383,7 +383,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          *
          * \pre The quotient as defined above exists.  If \a T is a field
          * type (e.g., if \a T is Rational) then this is true automatically.
-         * If not (e.g., if \a T is NInteger) then this requires some
+         * If not (e.g., if \a T is Integer) then this requires some
          * prior knowledge about the arguments.
          *
          * @param other the polynomial to divide this by.
@@ -407,7 +407,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * be a little faster.
          *
          * If your coefficient type \a T is not a field (e.g., if \a T
-         * is NInteger), you must be sure to know in advance that the
+         * is Integer), you must be sure to know in advance that the
          * quotient exists (see the precondition below).  Otherwise the
          * behaviour of this routine is undefined.
          *
@@ -417,7 +417,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          *
          * \pre The quotient as defined above exists.  If \a T is a field
          * type (e.g., if \a T is Rational) then this is true automatically.
-         * If not (e.g., if \a T is NInteger) then this requires some
+         * If not (e.g., if \a T is Integer) then this requires some
          * prior knowledge about the arguments.
          *
          * \pre Neither \a quotient nor \a remainder is a reference to
@@ -449,7 +449,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * As a special case, gcd(0,0) is considered to be zero.
          *
          * \pre The coefficient type \a T represents a field.  In particular,
-         * Rational is supported but NInteger is not.
+         * Rational is supported but Integer is not.
          *
          * @param other the polynomial whose greatest common divisor with this
          * polynomial we should compute.

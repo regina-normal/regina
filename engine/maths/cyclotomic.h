@@ -461,13 +461,13 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
          *
          * \ifacespython This routine returns a newly allocated polynomial
          * (not a constant reference).  Moreover, since Python exposes the
-         * class Polynomial<Rational> but not Polynomial<NInteger>, this
+         * class Polynomial<Rational> but not Polynomial<Integer>, this
          * routine returns an object of type Polynomial<Rational> instead.
          *
          * @param n indicates which cyclotomic polynomial to return.
          * @return the cyclotomic polynomial <tt>Φ_n</tt>.
          */
-        static const Polynomial<NInteger>& cyclotomic(size_t n);
+        static const Polynomial<Integer>& cyclotomic(size_t n);
 
         /**
          * Writes this field element to the given output stream, using the

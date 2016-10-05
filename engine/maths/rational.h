@@ -220,7 +220,7 @@ class REGINA_API Rational {
          *
          * @return the numerator.
          */
-        NInteger numerator() const;
+        Integer numerator() const;
         /**
          * Returns the denominator of this rational.
          * Note that rationals are always stored in lowest terms with
@@ -228,7 +228,7 @@ class REGINA_API Rational {
          *
          * @return the denominator.
          */
-        NInteger denominator() const;
+        Integer denominator() const;
 
         /**
          * Calculates the product of two rationals.

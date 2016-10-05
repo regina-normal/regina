@@ -108,7 +108,7 @@ void populateTests(CppUnit::TextTestRunner& runner) {
     addBitmask(runner);
 
     // Maths:
-    addNInteger(runner);
+    addInteger(runner);
     addRational(runner);
     addNPerm2(runner);
     addNPerm3(runner);

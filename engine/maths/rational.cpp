@@ -59,22 +59,22 @@ Rational::Rational(long newNum, unsigned long newDen) {
     }
 }
 
-NInteger Rational::numerator() const {
+Integer Rational::numerator() const {
     if (flavour == f_infinity)
-        return NInteger::one;
+        return Integer::one;
     else if (flavour == f_undefined)
-        return NInteger::zero;
+        return Integer::zero;
 
-    NInteger ans;
+    Integer ans;
     ans.setRaw(mpq_numref(data));
     return ans;
 }
 
-NInteger Rational::denominator() const {
+Integer Rational::denominator() const {
     if (flavour != f_normal)
-        return NInteger::zero;
+        return Integer::zero;
 
-    NInteger ans;
+    Integer ans;
     ans.setRaw(mpq_denref(data));
     return ans;
 }
@@ -342,15 +342,15 @@ void Rational::initDoubleBounds() {
     // In fact, we'll be even more conservative and divide by an extra
     // factor of FLT_RADIX to account for "minus a small amount".
 
-    NInteger maxNum = FLT_RADIX;
+    Integer maxNum = FLT_RADIX;
     maxNum.raiseToPower(DBL_MAX_EXP - 1);
 
-    NInteger minNum = FLT_RADIX;
+    Integer minNum = FLT_RADIX;
     minNum.raiseToPower(- DBL_MIN_EXP);
 
     // Cast away constness so we can actually change these variables.
-    const_cast<Rational&>(maxDouble) = Rational(maxNum, NInteger(1));
-    const_cast<Rational&>(minDouble) = Rational(NInteger(1), minNum);
+    const_cast<Rational&>(maxDouble) = Rational(maxNum, Integer(1));
+    const_cast<Rational&>(minDouble) = Rational(Integer(1), minNum);
 }
 
 } // namespace regina

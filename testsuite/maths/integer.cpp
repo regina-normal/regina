@@ -36,7 +36,7 @@
 #include "testsuite/utilities/testutilities.h"
 
 using regina::IntegerBase;
-using regina::NInteger;
+using regina::Integer;
 using regina::LargeInteger;
 
 #define ENORMOUS_INTEGER "115792089237316195423570985008687907853269984665640564039457584007913129639936"
@@ -63,52 +63,52 @@ using regina::LargeInteger;
 #define F63 F31 F32
 #define F64 F32 F32
 
-class NIntegerTest : public CppUnit::TestFixture {
-    CPPUNIT_TEST_SUITE(NIntegerTest);
+class IntegerTest : public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(IntegerTest);
 
-    CPPUNIT_TEST(constructAssignCopyNative<NInteger>);
+    CPPUNIT_TEST(constructAssignCopyNative<Integer>);
     CPPUNIT_TEST(constructAssignCopyNative<LargeInteger>);
-    CPPUNIT_TEST(constructAssignCopyString<NInteger>);
+    CPPUNIT_TEST(constructAssignCopyString<Integer>);
     CPPUNIT_TEST(constructAssignCopyString<LargeInteger>);
     CPPUNIT_TEST(constructAssignCopyInfinity);
-    CPPUNIT_TEST(constructSpecial<NInteger>);
+    CPPUNIT_TEST(constructSpecial<Integer>);
     CPPUNIT_TEST(constructSpecial<LargeInteger>);
 #ifdef INT128_AVAILABLE
-    CPPUNIT_TEST(constructNative128<NInteger>);
+    CPPUNIT_TEST(constructNative128<Integer>);
     CPPUNIT_TEST(constructNative128<LargeInteger>);
     CPPUNIT_TEST(gcdNative128);
 #endif
-    CPPUNIT_TEST(stringValue<NInteger>);
+    CPPUNIT_TEST(stringValue<Integer>);
     CPPUNIT_TEST(stringValue<LargeInteger>);
-    CPPUNIT_TEST(swap<NInteger>);
+    CPPUNIT_TEST(swap<Integer>);
     CPPUNIT_TEST(swap<LargeInteger>);
-    CPPUNIT_TEST(comparisons<NInteger>);
+    CPPUNIT_TEST(comparisons<Integer>);
     CPPUNIT_TEST(comparisons<LargeInteger>);
-    CPPUNIT_TEST(incDec<NInteger>);
+    CPPUNIT_TEST(incDec<Integer>);
     CPPUNIT_TEST(incDec<LargeInteger>);
-    CPPUNIT_TEST(plusMinus<NInteger>);
+    CPPUNIT_TEST(plusMinus<Integer>);
     CPPUNIT_TEST(plusMinus<LargeInteger>);
-    CPPUNIT_TEST(multiply<NInteger>);
+    CPPUNIT_TEST(multiply<Integer>);
     CPPUNIT_TEST(multiply<LargeInteger>);
-    CPPUNIT_TEST(divide<NInteger>);
+    CPPUNIT_TEST(divide<Integer>);
     CPPUNIT_TEST(divide<LargeInteger>);
-    CPPUNIT_TEST(mod<NInteger>);
+    CPPUNIT_TEST(mod<Integer>);
     CPPUNIT_TEST(mod<LargeInteger>);
-    CPPUNIT_TEST(negate<NInteger>);
+    CPPUNIT_TEST(negate<Integer>);
     CPPUNIT_TEST(negate<LargeInteger>);
-    CPPUNIT_TEST(abs<NInteger>);
+    CPPUNIT_TEST(abs<Integer>);
     CPPUNIT_TEST(abs<LargeInteger>);
-    CPPUNIT_TEST(divisionAlg<NInteger>);
+    CPPUNIT_TEST(divisionAlg<Integer>);
     CPPUNIT_TEST(divisionAlg<LargeInteger>);
-    CPPUNIT_TEST(gcdLcm<NInteger>);
+    CPPUNIT_TEST(gcdLcm<Integer>);
     CPPUNIT_TEST(gcdLcm<LargeInteger>);
-    CPPUNIT_TEST(raiseToPower<NInteger>);
+    CPPUNIT_TEST(raiseToPower<Integer>);
     CPPUNIT_TEST(raiseToPower<LargeInteger>);
-    CPPUNIT_TEST(tryReduce<NInteger>);
+    CPPUNIT_TEST(tryReduce<Integer>);
     CPPUNIT_TEST(tryReduce<LargeInteger>);
-    CPPUNIT_TEST(makeLarge<NInteger>);
+    CPPUNIT_TEST(makeLarge<Integer>);
     CPPUNIT_TEST(makeLarge<LargeInteger>);
-    CPPUNIT_TEST(nativeVsLarge<NInteger>);
+    CPPUNIT_TEST(nativeVsLarge<Integer>);
     CPPUNIT_TEST(nativeVsLarge<LargeInteger>);
 
     CPPUNIT_TEST_SUITE_END();
@@ -178,7 +178,7 @@ class NIntegerTest : public CppUnit::TestFixture {
         static const std::string zero2kdec[5]; // One less zero than zero2k[i].
 
         Data<LargeInteger> dataL;
-        Data<NInteger> dataI;
+        Data<Integer> dataI;
 
         long zeroL;
             /** We need this so we can test things like (LONG_MAX + 1 < 0)
@@ -2714,7 +2714,7 @@ class NIntegerTest : public CppUnit::TestFixture {
 // Out-of-line definitions of static arrays.
 
 template <typename IntType>
-const IntType NIntegerTest::Data<IntType>::cases[] = {
+const IntType IntegerTest::Data<IntType>::cases[] = {
     // Too low for a native long:
     "-" ENORMOUS_INTEGER,
     "-" HUGE_INTEGER"2",
@@ -2744,10 +2744,10 @@ const IntType NIntegerTest::Data<IntType>::cases[] = {
 };
 
 template <typename IntType>
-const unsigned NIntegerTest::Data<IntType>::nCases = 49;
+const unsigned IntegerTest::Data<IntType>::nCases = 49;
 
 template <typename IntType>
-const long NIntegerTest::Data<IntType>::longCases[] = {
+const long IntegerTest::Data<IntType>::longCases[] = {
     LONG_MIN, -LONG_MAX, LONG_MIN+2, -32768, -32767,
     -5000, -4999, -4998, -4997, -3000, -1000,
     -5, -4, -3, -2, -1,
@@ -2758,29 +2758,29 @@ const long NIntegerTest::Data<IntType>::longCases[] = {
 };
 
 template <typename IntType>
-const long NIntegerTest::Data<IntType>::nLongCases = 33;
+const long IntegerTest::Data<IntType>::nLongCases = 33;
 
-const size_t NIntegerTest::nZero = 5;
-const std::string NIntegerTest::f2k[5] = {
+const size_t IntegerTest::nZero = 5;
+const std::string IntegerTest::f2k[5] = {
     F4, F8, F16, F32, F64 };
-const std::string NIntegerTest::zero2k[5] = {
+const std::string IntegerTest::zero2k[5] = {
     ZERO4, ZERO8, ZERO16, ZERO32, ZERO64 };
-const std::string NIntegerTest::zero2kdec[5] = {
+const std::string IntegerTest::zero2kdec[5] = {
     ZERO3, ZERO7, ZERO15, ZERO31, ZERO63 };
 
 // Boilerplate stuff.
 
-void addNInteger(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(NIntegerTest::suite());
+void addInteger(CppUnit::TextUi::TestRunner& runner) {
+    runner.addTest(IntegerTest::suite());
 }
 
 template <>
-inline NIntegerTest::Data<LargeInteger>& NIntegerTest::data<LargeInteger>() {
+inline IntegerTest::Data<LargeInteger>& IntegerTest::data<LargeInteger>() {
     return dataL;
 }
 
 template <>
-inline NIntegerTest::Data<NInteger>& NIntegerTest::data<NInteger>() {
+inline IntegerTest::Data<Integer>& IntegerTest::data<Integer>() {
     return dataI;
 }
 

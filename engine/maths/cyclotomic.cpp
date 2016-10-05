@@ -40,7 +40,7 @@
 namespace regina {
 
 namespace {
-    std::vector<Polynomial<NInteger> > cyclotomicCache;
+    std::vector<Polynomial<Integer> > cyclotomicCache;
 }
 
 std::complex<double> Cyclotomic::evaluate(size_t whichRoot) const {
@@ -71,7 +71,7 @@ void Cyclotomic::invert() {
 }
 
 Cyclotomic& Cyclotomic::operator *= (const Cyclotomic& other) {
-    const Polynomial<NInteger>& cyc = cyclotomic(field_);
+    const Polynomial<Integer>& cyc = cyclotomic(field_);
 
     size_t i, j;
     Rational* tmp = new Rational[degree_ * 2 - 1];
@@ -90,7 +90,7 @@ Cyclotomic& Cyclotomic::operator *= (const Cyclotomic& other) {
     return *this;
 }
 
-const Polynomial<NInteger>& Cyclotomic::cyclotomic(size_t n) {
+const Polynomial<Integer>& Cyclotomic::cyclotomic(size_t n) {
     if (cyclotomicCache.size() < n)
         cyclotomicCache.resize(n);
     if (cyclotomicCache[n - 1].degree() == 0) {

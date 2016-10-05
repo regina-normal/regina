@@ -105,7 +105,7 @@ struct InfinityBase<true> {
 };
 
 /**
- * An empty internal base class inherited by NInteger, which does not
+ * An empty internal base class inherited by Integer, which does not
  * support infinity as an allowed value.
  */
 template <>
@@ -147,7 +147,7 @@ struct InfinityBase<false> {
  * instantiations for all possible template parameters.
  *
  * \ifacespython Both variants of this template are available through Python.
- * For \a supportInfinity = \c false, use the name NInteger.
+ * For \a supportInfinity = \c false, use the name Integer.
  * For \a supportInfinity = \c true, use the name LargeInteger.
  */
 template <bool supportInfinity = false>
@@ -1506,12 +1506,12 @@ class REGINA_API IntegerBase : private InfinityBase<supportInfinity> {
 typedef IntegerBase<true> LargeInteger;
 
 /**
- * NInteger is a typedef for IntegerBase<false>, which offers
+ * Integer is a typedef for IntegerBase<false>, which offers
  * arbitrary precision integers without support for infinity.
  *
  * \ifacespython This typedef is available in Python.
  */
-typedef IntegerBase<false> NInteger;
+typedef IntegerBase<false> Integer;
 
 /**
  * Writes the given integer to the given output stream.
@@ -1588,12 +1588,12 @@ extern template REGINA_API IntegerBase<false> operator *(long lhs,
  *
  * The reason for using this class, instead of working directly in a native
  * integer type, is that this class offers an interface that is compatible with
- * NInteger.  Only some of the NInteger member functions are offered here;
- * however, those that are offered behave just like their NInteger
+ * Integer.  Only some of the Integer member functions are offered here;
+ * however, those that are offered behave just like their Integer
  * counterparts (with the single exception that all arithmetic in
  * NativeInteger is subject to overflow).  Developers can therefore
  * switch between integer types easily with minimal changes to
- * their code, or support both NInteger and NativeInteger types as
+ * their code, or support both Integer and NativeInteger types as
  * template arguments.
  *
  * \pre The system must support integers of the given size; in particular,
@@ -3628,8 +3628,8 @@ template <>
 inline std::ostream& operator << (std::ostream& out,
         const NativeInteger<16>& i) {
     // The standard library does not support 128-bit integers (at least not
-    // always).  Go through NInteger and GMP instead (for now).
-    return out << NInteger(i);
+    // always).  Go through Integer and GMP instead (for now).
+    return out << Integer(i);
 }
 #endif
 

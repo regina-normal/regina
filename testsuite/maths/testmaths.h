@@ -43,7 +43,7 @@
 #include <cppunit/ui/text/TestRunner.h>
 
 void addMatrixOps(CppUnit::TextUi::TestRunner& runner);
-void addNInteger(CppUnit::TextUi::TestRunner& runner);
+void addInteger(CppUnit::TextUi::TestRunner& runner);
 void addNPerm(CppUnit::TextUi::TestRunner& runner);
 void addNPerm2(CppUnit::TextUi::TestRunner& runner);
 void addNPerm3(CppUnit::TextUi::TestRunner& runner);

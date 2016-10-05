@@ -64,7 +64,7 @@ const AngleStructure* NTriangulation::findStrictAngleStructure() const {
 
     LPInitialTableaux<LPConstraintNone> eqns(this, NS_ANGLE, false);
 
-    LPData<LPConstraintNone, NInteger> lp;
+    LPData<LPConstraintNone, Integer> lp;
     lp.reserve(&eqns);
 
     // Find an initial basis.

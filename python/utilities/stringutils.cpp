@@ -40,12 +40,12 @@ namespace {
     std::string (*stringToToken_string)(const std::string&) =
         &regina::stringToToken;
     std::string (*subscript_long)(long) = &regina::subscript;
-    std::string (*subscript_largeF)(const regina::NInteger&) =
+    std::string (*subscript_largeF)(const regina::Integer&) =
         &regina::subscript;
     std::string (*subscript_largeT)(const regina::LargeInteger&) =
         &regina::subscript;
     std::string (*superscript_long)(long) = &regina::superscript;
-    std::string (*superscript_largeF)(const regina::NInteger&) =
+    std::string (*superscript_largeF)(const regina::Integer&) =
         &regina::superscript;
     std::string (*superscript_largeT)(const regina::LargeInteger&) =
         &regina::superscript;

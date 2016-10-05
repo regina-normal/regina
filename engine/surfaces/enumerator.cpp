@@ -50,7 +50,7 @@ namespace regina {
 /**
  * The largest possible signed 128-bit integer,
  */
-NInteger maxSigned128(NativeInteger<16>(~(IntOfSize<16>::type(1) << 127)));
+Integer maxSigned128(NativeInteger<16>(~(IntOfSize<16>::type(1) << 127)));
 #endif
 
 NormalSurfaces* NormalSurfaces::enumerate(
@@ -137,10 +137,10 @@ void NormalSurfaces::Enumerator::fillVertex() {
     // Check whether tree traversal supports our enumeration arguments.
     // If not, switch back to double description.
     // The integer template argument for TreeTraversal::supported()
-    // is unimportant here; we just use NInteger.
+    // is unimportant here; we just use Integer.
     if (list_->algorithm_.has(NS_VERTEX_TREE) &&
             ! (list_->which_.has(NS_EMBEDDED_ONLY) &&
-                TreeTraversal<LPConstraintNone, BanNone, NInteger>::supported(
+                TreeTraversal<LPConstraintNone, BanNone, Integer>::supported(
                 list_->coords_)))
         list_->algorithm_ ^= (NS_VERTEX_TREE | NS_VERTEX_DD);
 
@@ -225,7 +225,7 @@ void NormalSurfaces::Enumerator::fillVertexDD() {
 
 template <typename Coords>
 void NormalSurfaces::Enumerator::fillVertexTree() {
-    // We can always do this with the arbitrary-precision NInteger,
+    // We can always do this with the arbitrary-precision Integer,
     // but it will be much faster if we can get away with native
     // integers instead.  To do this, though, we need to be able to
     // guarantee that all intermediate integers that could appear in the
@@ -273,18 +273,18 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
             break;
         default:
             // We shouldn't be here.. just use arbitrary precision arithmetic.
-            fillVertexTreeWith<Coords, NInteger>();
+            fillVertexTreeWith<Coords, Integer>();
             return;
     }
 
     size_t i, j;
-    NInteger tmp;
+    Integer tmp;
 
     // The rank of the matching equation matrix:
     unsigned long rank = rowBasis(*eqns);
 
     // The maximum entry in the matching equation matrix:
-    NInteger maxEqnEntry = 0;
+    Integer maxEqnEntry = 0;
     for (i = 0; i < rank; ++i)
         for (j = 0; j < eqns->columns(); ++j) {
             tmp = eqns->entry(i, j).abs();
@@ -294,16 +294,16 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
 
     // The maximum integer that can appear on the RHS of the original
     // tableaux, after all calls to constrainPositive() and/or constrainOct():
-    NInteger maxOrigRHS = maxEqnEntry * maxColsRHS;
+    Integer maxOrigRHS = maxEqnEntry * maxColsRHS;
 
     // The maximum sum of absolute values of entries in a single column
     // of the original tableaux (noting that for almost normal surfaces,
     // the octagon column will be the sum of two original columns):
-    NInteger maxOrigColSum = 0;
+    Integer maxOrigColSum = 0;
     for (i = 0; i < eqns->columns(); ++i) {
         tmp = 0;
         for (j = 0; j < rank; ++j)
-            tmp += NInteger(eqns->entry(j, i).abs());
+            tmp += Integer(eqns->entry(j, i).abs());
         if (tmp > maxOrigColSum)
             maxOrigColSum = tmp;
     }
@@ -311,12 +311,12 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
         maxOrigColSum *= 2;
 
     // The square of the Hadamard bound for the original tableaux:
-    NInteger hadamardSquare = 1;
-    NInteger* colNorm = new NInteger[eqns->columns()];
+    Integer hadamardSquare = 1;
+    Integer* colNorm = new Integer[eqns->columns()];
     for (i = 0; i < eqns->columns(); ++i) {
         colNorm[i] = 0;
         for (j = 0; j < rank; ++j)
-            colNorm[i] += NInteger(eqns->entry(j, i) * eqns->entry(j, i));
+            colNorm[i] += Integer(eqns->entry(j, i) * eqns->entry(j, i));
     }
     std::sort(colNorm, colNorm + eqns->columns());
     for (i = 0; i < rank; ++i)
@@ -351,7 +351,7 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
     // (X * X + X * X) in the tableaux, and (X * Y +  X * Y) on the RHS.
     // Therefore the largest integer we have to deal with is:
     // 2XY = 2 * hadamardSquare * maxOrigColSum * rank * maxOrigRHS.
-    NInteger worst = hadamardSquare;
+    Integer worst = hadamardSquare;
     worst *= 2;
     worst *= maxOrigColSum;
     worst *= rank;
@@ -376,8 +376,8 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
         fillVertexTreeWith<Coords, NativeInteger<16> >();
 #endif
     } else {
-        // std::cerr << "Using the fallback NInteger." << std::endl;
-        fillVertexTreeWith<Coords, NInteger>();
+        // std::cerr << "Using the fallback Integer." << std::endl;
+        fillVertexTreeWith<Coords, Integer>();
     }
 }
 

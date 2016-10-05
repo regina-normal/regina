@@ -56,7 +56,7 @@ void AngleStructures::enumerateInternal(NTriangulation* triang,
         if (tracker)
             tracker->newStage("Enumerating taut angle structures");
 
-        TautEnumeration<LPConstraintNone, BanNone, NInteger> search(triang);
+        TautEnumeration<LPConstraintNone, BanNone, Integer> search(triang);
         while (search.next(tracker)) {
             structures.push_back(search.buildStructure());
             if (tracker && tracker->isCancelled())
