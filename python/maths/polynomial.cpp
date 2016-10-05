@@ -68,7 +68,7 @@ namespace {
                 coeffs[i] = x_rat();
                 continue;
             }
-            extract<regina::NLargeInteger&> x_large(l[i]);
+            extract<regina::LargeInteger&> x_large(l[i]);
             if (x_large.check()) {
                 coeffs[i] = x_large();
                 continue;

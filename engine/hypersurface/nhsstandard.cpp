@@ -41,7 +41,7 @@
 
 namespace regina {
 
-NLargeInteger NNormalHypersurfaceVectorStandard::edgeWeight(
+LargeInteger NNormalHypersurfaceVectorStandard::edgeWeight(
         size_t edgeIndex, const Dim4Triangulation* triang) const {
     // Find a pentachoron next to the edge in question.
     const Dim4EdgeEmbedding& emb = triang->edge(edgeIndex)->front();
@@ -51,7 +51,7 @@ NLargeInteger NNormalHypersurfaceVectorStandard::edgeWeight(
 
     // Add up the tetrahedra and prisms meeting that edge.
     // Tetrahedra:
-    NLargeInteger ans((*this)[15 * pentIndex + start]);
+    LargeInteger ans((*this)[15 * pentIndex + start]);
     ans += (*this)[15 * pentIndex + end];
     // Prisms:
     unsigned e = Dim4Edge::edgeNumber[start][end];

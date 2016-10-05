@@ -35,49 +35,49 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NLargeInteger;
+using regina::LargeInteger;
 using regina::Primes;
 
 namespace {
     BOOST_PYTHON_FUNCTION_OVERLOADS(OL_prime, Primes::prime, 1, 2);
 
-    boost::python::list primeDecomp_list(const NLargeInteger& n) {
-        std::vector<NLargeInteger> factors = Primes::primeDecomp(n);
+    boost::python::list primeDecomp_list(const LargeInteger& n) {
+        std::vector<LargeInteger> factors = Primes::primeDecomp(n);
 
         boost::python::list ans;
-        for (std::vector<NLargeInteger>::const_iterator it = factors.begin();
+        for (std::vector<LargeInteger>::const_iterator it = factors.begin();
                 it != factors.end(); ++it)
             ans.append(*it);
         return ans;
     }
 
-    boost::python::list primeDecomp_list_int(const NLargeInteger& n) {
-        std::vector<NLargeInteger> factors = Primes::primeDecomp(n);
+    boost::python::list primeDecomp_list_int(const LargeInteger& n) {
+        std::vector<LargeInteger> factors = Primes::primeDecomp(n);
 
         boost::python::list ans;
-        for (std::vector<NLargeInteger>::const_iterator it = factors.begin();
+        for (std::vector<LargeInteger>::const_iterator it = factors.begin();
                 it != factors.end(); ++it)
             ans.append(it->longValue());
         return ans;
     }
 
-    boost::python::list primePowerDecomp_list(const NLargeInteger& n) {
-        std::vector<std::pair<NLargeInteger, unsigned long> >
+    boost::python::list primePowerDecomp_list(const LargeInteger& n) {
+        std::vector<std::pair<LargeInteger, unsigned long> >
             factors = Primes::primePowerDecomp(n);
 
         boost::python::list ans;
-        for (std::vector<std::pair<NLargeInteger, unsigned long> >::
+        for (std::vector<std::pair<LargeInteger, unsigned long> >::
                 const_iterator it = factors.begin(); it != factors.end(); ++it)
             ans.append(boost::python::make_tuple(it->first, it->second));
         return ans;
     }
 
-    boost::python::list primePowerDecomp_list_int(const NLargeInteger& n) {
-        std::vector<std::pair<NLargeInteger, unsigned long> >
+    boost::python::list primePowerDecomp_list_int(const LargeInteger& n) {
+        std::vector<std::pair<LargeInteger, unsigned long> >
             factors = Primes::primePowerDecomp(n);
 
         boost::python::list ans;
-        for (std::vector<std::pair<NLargeInteger, unsigned long> >::
+        for (std::vector<std::pair<LargeInteger, unsigned long> >::
                 const_iterator it = factors.begin(); it != factors.end(); ++it)
             ans.append(boost::python::make_tuple(
                 it->first.longValue(), it->second));

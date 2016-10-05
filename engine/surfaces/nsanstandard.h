@@ -103,17 +103,17 @@ class REGINA_API NNormalSurfaceVectorANStandard : public NNormalSurfaceVector {
          *
          * @param cloneMe the vector to clone.
          */
-        NNormalSurfaceVectorANStandard(const Vector<NLargeInteger>& cloneMe);
+        NNormalSurfaceVectorANStandard(const Vector<LargeInteger>& cloneMe);
 
-        virtual NLargeInteger triangles(size_t tetIndex,
+        virtual LargeInteger triangles(size_t tetIndex,
             int vertex, const NTriangulation* triang) const;
-        virtual NLargeInteger quads(size_t tetIndex,
+        virtual LargeInteger quads(size_t tetIndex,
             int quadType, const NTriangulation* triang) const;
-        virtual NLargeInteger octs(size_t tetIndex,
+        virtual LargeInteger octs(size_t tetIndex,
             int octType, const NTriangulation* triang) const;
-        virtual NLargeInteger edgeWeight(size_t edgeIndex,
+        virtual LargeInteger edgeWeight(size_t edgeIndex,
             const NTriangulation* triang) const;
-        virtual NLargeInteger arcs(size_t triIndex,
+        virtual LargeInteger arcs(size_t triIndex,
             int triVertex, const NTriangulation* triang) const;
 
         static NNormalSurfaceVector* makeZeroVector(
@@ -132,19 +132,19 @@ inline NNormalSurfaceVectorANStandard::NNormalSurfaceVectorANStandard(
         size_t length) : NNormalSurfaceVector(length) {
 }
 inline NNormalSurfaceVectorANStandard::NNormalSurfaceVectorANStandard(
-        const Vector<NLargeInteger>& cloneMe) :
+        const Vector<LargeInteger>& cloneMe) :
         NNormalSurfaceVector(cloneMe) {
 }
 
-inline NLargeInteger NNormalSurfaceVectorANStandard::triangles(
+inline LargeInteger NNormalSurfaceVectorANStandard::triangles(
         size_t tetIndex, int vertex, const NTriangulation*) const {
     return (*this)[10 * tetIndex + vertex];
 }
-inline NLargeInteger NNormalSurfaceVectorANStandard::quads(
+inline LargeInteger NNormalSurfaceVectorANStandard::quads(
         size_t tetIndex, int quadType, const NTriangulation*) const {
     return (*this)[10 * tetIndex + 4 + quadType];
 }
-inline NLargeInteger NNormalSurfaceVectorANStandard::octs(
+inline LargeInteger NNormalSurfaceVectorANStandard::octs(
         size_t tetIndex, int octType, const NTriangulation*) const {
     return (*this)[10 * tetIndex + 7 + octType];
 }

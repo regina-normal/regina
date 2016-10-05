@@ -216,7 +216,7 @@ using regina::NTriangle;
     }
 }
 
-+ (regina::NLargeInteger)getCoordinate:(regina::NormalCoords)coordSystem surface:(const regina::NNormalSurface&)surface whichCoord:(unsigned long)whichCoord
++ (regina::LargeInteger)getCoordinate:(regina::NormalCoords)coordSystem surface:(const regina::NNormalSurface&)surface whichCoord:(unsigned long)whichCoord
 {
     if (coordSystem == regina::NS_STANDARD) {
         if (whichCoord % 7 < 4)
@@ -338,7 +338,7 @@ using regina::NTriangle;
     }
 }
 
-+ (regina::NLargeInteger)getCoordinate:(regina::HyperCoords)coordSystem surface:(const regina::NNormalHypersurface&)surface whichCoord:(size_t)whichCoord
++ (regina::LargeInteger)getCoordinate:(regina::HyperCoords)coordSystem surface:(const regina::NNormalHypersurface&)surface whichCoord:(size_t)whichCoord
 {
     if (coordSystem == regina::HS_STANDARD) {
         if (whichCoord % 15 < 5)

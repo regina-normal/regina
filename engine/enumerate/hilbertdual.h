@@ -190,14 +190,14 @@ class HilbertDual {
         template <class BitmaskType>
         class VecSpec : private Ray {
             private:
-                NLargeInteger nextHyp_;
+                LargeInteger nextHyp_;
                     /**< The dot product of this vector with the
                          hyperplane currently being processed. */
                 BitmaskType mask_;
                     /**< A bitmask indicating which coordinates are zero
                          (\c false) and which are non-zero (\c true). */
 #ifdef __REGINA_HILBERT_DUAL_OPT_BI16D
-                NLargeInteger srcNextHyp_;
+                LargeInteger srcNextHyp_;
                     /**< Stores information from the summands used to
                          create this vector.  See srcNextHyp() for details. */
 #endif
@@ -261,7 +261,7 @@ class HilbertDual {
                  * Returns the dot product of this vector with the
                  * hyperplane currently being processed.
                  */
-                inline const NLargeInteger& nextHyp() const;
+                inline const LargeInteger& nextHyp() const;
 
                 /**
                  * Returns the bitmask describing which coordinate are
@@ -297,7 +297,7 @@ class HilbertDual {
                  *
                  * @return the summand information as described above.
                  */
-                inline const NLargeInteger& srcNextHyp() const;
+                inline const LargeInteger& srcNextHyp() const;
 #endif
 
                 /**
@@ -464,15 +464,15 @@ template <class BitmaskType>
 inline HilbertDual::VecSpec<BitmaskType>::VecSpec(size_t dim) :
         Ray(dim), mask_(dim) {
     // All vector elements, nextHyp_ and srcNextHyp_ are initialised to
-    // zero thanks to the NLargeInteger default constructor.
+    // zero thanks to the LargeInteger default constructor.
 }
 
 template <class BitmaskType>
 inline HilbertDual::VecSpec<BitmaskType>::VecSpec(size_t pos, size_t dim) :
         Ray(dim), mask_(dim) {
     // All coordinates are initialised to zero by default thanks to
-    // the NLargeInteger constructor.
-    setElement(pos, NLargeInteger::one);
+    // the LargeInteger constructor.
+    setElement(pos, LargeInteger::one);
     mask_.set(pos, true);
 }
 
@@ -490,9 +490,9 @@ inline HilbertDual::VecSpec<BitmaskType>::VecSpec(
 template <class BitmaskType>
 inline void HilbertDual::VecSpec<BitmaskType>::initNextHyp(
         const NMatrixInt& subspace, unsigned row) {
-    nextHyp_ = NLargeInteger::zero;
+    nextHyp_ = LargeInteger::zero;
 
-    NLargeInteger tmp;
+    LargeInteger tmp;
     for (int i = 0; i < subspace.columns(); ++i)
         if (subspace.entry(row, i) != 0 && (*this)[i] != 0) {
             tmp = subspace.entry(row, i);
@@ -524,7 +524,7 @@ inline void HilbertDual::VecSpec<BitmaskType>::formSum(
 }
 
 template <class BitmaskType>
-inline const NLargeInteger& HilbertDual::VecSpec<BitmaskType>::nextHyp()
+inline const LargeInteger& HilbertDual::VecSpec<BitmaskType>::nextHyp()
         const {
     return nextHyp_;
 }
@@ -541,7 +541,7 @@ inline int HilbertDual::VecSpec<BitmaskType>::sign() const {
 
 #ifdef __REGINA_HILBERT_DUAL_OPT_BI16D
 template <class BitmaskType>
-inline const NLargeInteger& HilbertDual::VecSpec<BitmaskType>::srcNextHyp()
+inline const LargeInteger& HilbertDual::VecSpec<BitmaskType>::srcNextHyp()
         const {
     return srcNextHyp_;
 }

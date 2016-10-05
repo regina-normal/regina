@@ -93,7 +93,7 @@ static NSMutableCharacterSet* eulerSeparators;
 
 - (void)updateEulerDisplay
 {
-    const std::set<regina::NLargeInteger>& ECs = self.packet->eulerChars();
+    const std::set<regina::LargeInteger>& ECs = self.packet->eulerChars();
     if (ECs.empty()) {
         self.euler.text = @"";
         self.eulerExpln.text = @"No restrictions on Euler characteristic.";
@@ -101,7 +101,7 @@ static NSMutableCharacterSet* eulerSeparators;
         self.euler.text = [NSString stringWithUTF8String:(*ECs.begin()).stringValue().c_str()];
         self.eulerExpln.text = @"The surface must have this exact Euler characteristic.";
     } else {
-        std::set<regina::NLargeInteger>::reverse_iterator it = ECs.rbegin();
+        std::set<regina::LargeInteger>::reverse_iterator it = ECs.rbegin();
         NSMutableString* ans = [NSMutableString stringWithUTF8String:(*it).stringValue().c_str()];
         for (++it; it != ECs.rend(); ++it)
             [ans appendFormat:@", %s", (*it).stringValue().c_str()];
@@ -183,14 +183,14 @@ static NSMutableCharacterSet* eulerSeparators;
         [eulerSeparators addCharactersInString:@",()"];
     }
 
-    std::set<regina::NLargeInteger> set;
+    std::set<regina::LargeInteger> set;
     bool valid;
     for (NSString* eulerStr in [textField.text componentsSeparatedByCharactersInSet:eulerSeparators]) {
         // Multiple spaces will result in empty strings.
         if (eulerStr.length == 0)
             continue;
 
-        regina::NLargeInteger euler([eulerStr UTF8String], 10, &valid);
+        regina::LargeInteger euler([eulerStr UTF8String], 10, &valid);
         if (! valid) {
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Euler Characteristics Must Be Integers"
                                                             message:@"Please enter a list of allowed Euler characteristics, separated by commas or spaces."

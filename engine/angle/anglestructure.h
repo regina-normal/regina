@@ -97,7 +97,7 @@ class REGINA_API AngleStructureVector : public Ray {
          *
          * @param cloneMe the vector to clone.
          */
-        AngleStructureVector(const Vector<NLargeInteger>& cloneMe);
+        AngleStructureVector(const Vector<LargeInteger>& cloneMe);
 
         /**
          * Creates a new set of angle structure equations for the given
@@ -334,7 +334,7 @@ inline AngleStructureVector::AngleStructureVector(size_t length) :
 }
 
 inline AngleStructureVector::AngleStructureVector(
-        const Vector<NLargeInteger>& cloneMe) : Ray(cloneMe) {
+        const Vector<LargeInteger>& cloneMe) : Ray(cloneMe) {
 }
 
 // Inline functions for AngleStructure

@@ -146,7 +146,7 @@ namespace {
             if (s->isSplitting())
                 out << "\"Splitting\"";
             else {
-                NLargeInteger tot = s->isCentral();
+                LargeInteger tot = s->isCentral();
                 if (tot != 0)
                     out << "\"Central (" << tot << ")\"";
             }

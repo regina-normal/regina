@@ -108,7 +108,7 @@ void HilbertDual::enumerateUsingBitmask(OutputIterator results,
         RayClass* ans;
         for (unsigned i = 0; i < dim; ++i) {
             ans = new RayClass(dim);
-            ans->setElement(i, NLargeInteger::one);
+            ans->setElement(i, LargeInteger::one);
             *results++ = ans;
         }
 

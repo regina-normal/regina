@@ -132,7 +132,7 @@ namespace {
             RaySpec(const NNormalSurfaceVector* v) :
                     Ray(v->size()), facets_(v->size()) {
                 // Note that the vector is initialised to zero since
-                // this is what NLargeInteger's default constructor does.
+                // this is what LargeInteger's default constructor does.
                 for (size_t i = 0; i < v->size(); ++i)
                     if ((elements[i] = (*v)[i]) == zero)
                         facets_.set(i, true);
@@ -156,7 +156,7 @@ namespace {
                     Ray(coordsPerTet * tri->size()),
                     facets_(coordsPerTet * tri->size()) {
                 // Note that the vector is initialised to zero since
-                // this is what NLargeInteger's default constructor does.
+                // this is what LargeInteger's default constructor does.
                 for (size_t i = 0; i < size(); ++i)
                     if (i % coordsPerTet > 3) {
                         // Not a triangular coordinate.
@@ -196,8 +196,8 @@ namespace {
                 // since we may end up setting some triangle coordinates
                 // to zero that were not zero in either \a pos or \a neg.
 
-                NLargeInteger posDiff = pos[coord];
-                NLargeInteger negDiff = neg[coord];
+                LargeInteger posDiff = pos[coord];
+                LargeInteger negDiff = neg[coord];
 
                 for (size_t i = 0; i < size(); ++i)
                     if ((elements[i] = neg[i] * posDiff - pos[i] * negDiff)
@@ -258,7 +258,7 @@ namespace {
                 if (! (facets_ <= link.facets_))
                     return;
 
-                NLargeInteger max = NLargeInteger::infinity;
+                LargeInteger max = LargeInteger::infinity;
                 size_t i;
                 for (i = 0; i < size(); ++i)
                     if (! link.facets_.get(i))

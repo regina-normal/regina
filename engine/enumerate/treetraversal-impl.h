@@ -171,7 +171,7 @@ bool TreeTraversal<LPConstraint, BanConstraint, Integer>::verify(
     // Verify the matching equations.
     unsigned row, col;
     for (row = 0; row < matchingEqns->rows(); ++row) {
-        NLargeInteger ans; // Initialised to zero.
+        LargeInteger ans; // Initialised to zero.
         for (col = 0; col < matchingEqns->columns(); ++col)
             ans += (matchingEqns->entry(row, col) * (*s->rawVector())[col]);
         if (ans != 0) {
@@ -202,7 +202,7 @@ bool TreeTraversal<LPConstraint, BanConstraint, Integer>::verify(
     // Verify the angle equations.
     unsigned row, col;
     for (row = 0; row < angleEqns->rows(); ++row) {
-        NLargeInteger ans; // Initialised to zero.
+        LargeInteger ans; // Initialised to zero.
         for (col = 0; col < angleEqns->columns(); ++col)
             ans += (angleEqns->entry(row, col) * (*s->rawVector())[col]);
         if (ans != 0) {

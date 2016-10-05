@@ -102,7 +102,7 @@ class REGINA_API NNormalHypersurfaceVectorMirrored :
          * @param cloneMe the vector to clone.
          */
         NNormalHypersurfaceVectorMirrored(
-            const Vector<NLargeInteger>& cloneMe);
+            const Vector<LargeInteger>& cloneMe);
         /**
          * Creates a new vector that is a clone of the given vector.
          *
@@ -130,11 +130,11 @@ class REGINA_API NNormalHypersurfaceVectorMirrored :
         virtual NNormalHypersurfaceVector* makeMirror(
             const Dim4Triangulation* triang) const = 0;
 
-        virtual NLargeInteger tetrahedra(size_t pentIndex,
+        virtual LargeInteger tetrahedra(size_t pentIndex,
             int vertex, const Dim4Triangulation* triang) const;
-        virtual NLargeInteger prisms(size_t pentIndex,
+        virtual LargeInteger prisms(size_t pentIndex,
             int prismType, const Dim4Triangulation* triang) const;
-        virtual NLargeInteger edgeWeight(size_t edgeIndex,
+        virtual LargeInteger edgeWeight(size_t edgeIndex,
             const Dim4Triangulation* triang) const;
 };
 
@@ -146,7 +146,7 @@ inline NNormalHypersurfaceVectorMirrored::NNormalHypersurfaceVectorMirrored(
         size_t length) : NNormalHypersurfaceVector(length), mirror_(0) {
 }
 inline NNormalHypersurfaceVectorMirrored::NNormalHypersurfaceVectorMirrored(
-        const Vector<NLargeInteger>& cloneMe) :
+        const Vector<LargeInteger>& cloneMe) :
         NNormalHypersurfaceVector(cloneMe), mirror_(0) {
 }
 inline NNormalHypersurfaceVectorMirrored::NNormalHypersurfaceVectorMirrored(
@@ -158,14 +158,14 @@ inline NNormalHypersurfaceVectorMirrored::~NNormalHypersurfaceVectorMirrored() {
         delete mirror_;
 }
 
-inline NLargeInteger NNormalHypersurfaceVectorMirrored::tetrahedra(
+inline LargeInteger NNormalHypersurfaceVectorMirrored::tetrahedra(
         size_t pentIndex, int vertex, const Dim4Triangulation* triang) const {
     if (! mirror_)
         const_cast<NNormalHypersurfaceVectorMirrored*>(this)->mirror_ =
             makeMirror(triang);
     return mirror_->tetrahedra(pentIndex, vertex, triang);
 }
-inline NLargeInteger NNormalHypersurfaceVectorMirrored::prisms(
+inline LargeInteger NNormalHypersurfaceVectorMirrored::prisms(
         size_t pentIndex, int prismType, const Dim4Triangulation* triang)
         const {
     if (! mirror_)
@@ -173,7 +173,7 @@ inline NLargeInteger NNormalHypersurfaceVectorMirrored::prisms(
             makeMirror(triang);
     return mirror_->prisms(pentIndex, prismType, triang);
 }
-inline NLargeInteger NNormalHypersurfaceVectorMirrored::edgeWeight(
+inline LargeInteger NNormalHypersurfaceVectorMirrored::edgeWeight(
         size_t edgeIndex, const Dim4Triangulation* triang) const {
     if (! mirror_)
         const_cast<NNormalHypersurfaceVectorMirrored*>(this)->mirror_ =

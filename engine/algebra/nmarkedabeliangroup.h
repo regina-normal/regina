@@ -120,7 +120,7 @@ class REGINA_API NMarkedAbelianGroup :
         std::unique_ptr<NMatrixInt> otR, otC, otRi, otCi;
 
         /** Internal list of invariant factors. */
-        std::vector<NLargeInteger> InvFacList;
+        std::vector<LargeInteger> InvFacList;
         /** The number of free generators, from SNF(ORN) */
         unsigned long snfrank;
         /** The row index of the first zero along the diagonal in SNF(ORN). */
@@ -132,19 +132,19 @@ class REGINA_API NMarkedAbelianGroup :
 
         // These variables store information for mod-p homology computations.
         /** coefficients to use in homology computation **/
-        NLargeInteger coeff;
+        LargeInteger coeff;
         /** TORLoc stores the location of the first TOR entry from the SNF
             of OM:  TORLoc == rankOM-TORVec.size() */
         unsigned long TORLoc;
         /** TORVec's i-th entry stores the entries q where Z_p --q-->Z_p
             is the i-th TOR entry from the SNF of OM */
-        std::vector<NLargeInteger> TORVec;
+        std::vector<LargeInteger> TORVec;
 
         /** invariant factor data in the tensor product presentation matrix
             SNF */
         unsigned long tensorIfLoc;
         unsigned long tensorIfNum;
-        std::vector<NLargeInteger> tensorInvFacList;
+        std::vector<LargeInteger> tensorInvFacList;
         // and NHomMarkedAbelianGroup at present needs to see some of the
         // internals of NMarkedAbelianGroup
         // at present this is only used for inverseHom().
@@ -186,7 +186,7 @@ class REGINA_API NMarkedAbelianGroup :
          * more efficient to use the previous constructor.
          */
         NMarkedAbelianGroup(const NMatrixInt& M, const NMatrixInt& N,
-            const NLargeInteger &pcoeff);
+            const LargeInteger &pcoeff);
 
         /**
          * Creates a free Z_p-module of a given rank using the direct sum
@@ -200,7 +200,7 @@ class REGINA_API NMarkedAbelianGroup :
          * @param p describes the type of ring that we use to talk about
          * the "free" module.
          */
-        NMarkedAbelianGroup(unsigned long rk, const NLargeInteger &p);
+        NMarkedAbelianGroup(unsigned long rk, const LargeInteger &p);
 
         /**
          * Creates a clone of the given group.
@@ -244,7 +244,7 @@ class REGINA_API NMarkedAbelianGroup :
          * @param degree the degree of the torsion term to query.
          * @return the rank in the group of the given torsion term.
          */
-        unsigned long torsionRank(const NLargeInteger& degree) const;
+        unsigned long torsionRank(const LargeInteger& degree) const;
 
         /**
          * Returns the rank in the group of the torsion term of given degree.
@@ -294,7 +294,7 @@ class REGINA_API NMarkedAbelianGroup :
          * this must be between 0 and countInvariantFactors()-1 inclusive.
          * @return the requested invariant factor.
          */
-        const NLargeInteger& invariantFactor(size_t index) const;
+        const LargeInteger& invariantFactor(size_t index) const;
 
         /**
          * Determines whether this is the trivial (zero) group.
@@ -364,7 +364,7 @@ class REGINA_API NMarkedAbelianGroup :
          * equivalently, N.rows()). If this generator does not exist,
          * you will receive an empty vector.
          */
-        std::vector<NLargeInteger> freeRep(unsigned long index) const;
+        std::vector<LargeInteger> freeRep(unsigned long index) const;
 
         /**
          * Returns the requested generator of the torsion subgroup but
@@ -389,7 +389,7 @@ class REGINA_API NMarkedAbelianGroup :
          * \a M; this vector will have length M.columns() (or
          * equivalently, N.rows()).
          */
-        std::vector<NLargeInteger> torsionRep(unsigned long index) const;
+        std::vector<LargeInteger> torsionRep(unsigned long index) const;
 
         /**
          * A combination of freeRep and torsionRep, this routine takes
@@ -412,11 +412,11 @@ class REGINA_API NMarkedAbelianGroup :
          * where \a M is one of the matrices that defines the chain
          * complex; see the class notes for details.
          */
-        std::vector<NLargeInteger> ccRep(
-            const std::vector<NLargeInteger>& SNFRep) const;
+        std::vector<LargeInteger> ccRep(
+            const std::vector<LargeInteger>& SNFRep) const;
 
         /**
-         * Same as ccRep(const std::vector<NLargeInteger>&), but we assume you
+         * Same as ccRep(const std::vector<LargeInteger>&), but we assume you
          * only want the chain complex representation of a standard basis
          * vector from SNF coordinates.
          *
@@ -433,7 +433,7 @@ class REGINA_API NMarkedAbelianGroup :
          * where \a M is one of the matrices that defines the chain
          * complex; see the class notes for details.
          */
-        std::vector<NLargeInteger> ccRep(unsigned long SNFRep) const;
+        std::vector<LargeInteger> ccRep(unsigned long SNFRep) const;
 
         /**
          * Projects an element of the chain complex to the subspace of cycles.
@@ -452,8 +452,8 @@ class REGINA_API NMarkedAbelianGroup :
          * @return a corresponding vector, also in the chain complex
          * coordinates.
          */
-        std::vector<NLargeInteger> cycleProjection(
-            const std::vector<NLargeInteger> &ccelt) const;
+        std::vector<LargeInteger> cycleProjection(
+            const std::vector<LargeInteger> &ccelt) const;
 
         /**
          * Projects an element of the chain complex to the subspace of cycles.
@@ -470,7 +470,7 @@ class REGINA_API NMarkedAbelianGroup :
          * @return the resulting projection, in the chain complex
          * coordinates.
          */
-        std::vector<NLargeInteger> cycleProjection(unsigned long ccindx) const;
+        std::vector<LargeInteger> cycleProjection(unsigned long ccindx) const;
 
         /**
          * Given a vector, determines if it represents a cycle in the chain
@@ -482,7 +482,7 @@ class REGINA_API NMarkedAbelianGroup :
          * @param input an input vector in chain complex coordinates.
          * @return \c true if and only if the given vector represents a cycle.
          */
-        bool isCycle(const std::vector<NLargeInteger> &input) const;
+        bool isCycle(const std::vector<LargeInteger> &input) const;
 
         /**
          * Computes the differential of the given vector in the chain
@@ -497,8 +497,8 @@ class REGINA_API NMarkedAbelianGroup :
          * complex (see the class notes for details).
          * @return the differential, expressed as a vector of length M.rows().
          */
-        std::vector<NLargeInteger> boundaryMap(
-            const std::vector<NLargeInteger> &CCrep) const;
+        std::vector<LargeInteger> boundaryMap(
+            const std::vector<LargeInteger> &CCrep) const;
 
         /**
          * Given a vector, determines if it represents a boundary in the chain
@@ -513,7 +513,7 @@ class REGINA_API NMarkedAbelianGroup :
          * @return \c true if and only if the given vector represents a
          * boundary.
          */
-        bool isBoundary(const std::vector<NLargeInteger> &input) const;
+        bool isBoundary(const std::vector<LargeInteger> &input) const;
 
         /**
          * Expresses the given vector as a boundary in the chain complex
@@ -535,8 +535,8 @@ class REGINA_API NMarkedAbelianGroup :
          * @return a length zero vector if the input is not a boundary;
          * otherwise a vector \a v such that <tt>Nv=input</tt>.
          */
-        std::vector<NLargeInteger> writeAsBoundary(
-            const std::vector<NLargeInteger> &input) const;
+        std::vector<LargeInteger> writeAsBoundary(
+            const std::vector<LargeInteger> &input) const;
 
         /**
          * Returns the rank of the chain complex supporting the homology
@@ -608,8 +608,8 @@ class REGINA_API NMarkedAbelianGroup :
          *  minNumberOfGenerators().
          *
          */
-        std::vector<NLargeInteger> snfRep(
-            const std::vector<NLargeInteger>& v) const;
+        std::vector<LargeInteger> snfRep(
+            const std::vector<LargeInteger>& v) const;
 
         /**
          * Returns the number of generators of ker(M), where M is one of
@@ -632,7 +632,7 @@ class REGINA_API NMarkedAbelianGroup :
          * @param i between 0 and minNumCycleGens()-1.
          * @return the corresponding generator in chain complex coordinates.
          */
-        std::vector<NLargeInteger> cycleGen(unsigned long i) const;
+        std::vector<LargeInteger> cycleGen(unsigned long i) const;
 
         /**
          * Returns the `right' matrix used in defining the chain complex.
@@ -666,7 +666,7 @@ class REGINA_API NMarkedAbelianGroup :
          *
          * @return the coefficients used in the homology calculation.
          */
-        const NLargeInteger& coefficients() const;
+        const LargeInteger& coefficients() const;
 
         /**
          *  Returns a NMarkedAbelianGroup representing the torsion subgroup
@@ -970,8 +970,8 @@ class REGINA_API NHomMarkedAbelianGroup :
          * @return the image of this vector in the range chain complex's
          * coordinates, of length range().M().columns().
          */
-        std::vector<NLargeInteger> evalCC(
-            const std::vector<NLargeInteger> &input) const; 
+        std::vector<LargeInteger> evalCC(
+            const std::vector<LargeInteger> &input) const; 
 
         /**
          * Evaluate the image of a vector under this homomorphism, using
@@ -991,8 +991,8 @@ class REGINA_API NHomMarkedAbelianGroup :
          * @return the image of this vector in the range chain complex's
          * coordinates, of length range().minNumberOfGenerators().
          */
-        std::vector<NLargeInteger> evalSNF(
-            const std::vector<NLargeInteger> &input) const;
+        std::vector<LargeInteger> evalSNF(
+            const std::vector<LargeInteger> &input) const;
 
         /**
          * Returns the inverse to a NHomMarkedAbelianGroup. If this
@@ -1084,14 +1084,14 @@ inline NMarkedAbelianGroup::NMarkedAbelianGroup(const NMarkedAbelianGroup& g) :
 
 inline unsigned long NMarkedAbelianGroup::torsionRank(unsigned long degree)
         const {
-    return torsionRank(NLargeInteger(degree));
+    return torsionRank(LargeInteger(degree));
 }
 
 inline size_t NMarkedAbelianGroup::countInvariantFactors() const {
     return ifNum;
 }
 
-inline const NLargeInteger& NMarkedAbelianGroup::invariantFactor(
+inline const LargeInteger& NMarkedAbelianGroup::invariantFactor(
         size_t index) const {
     return InvFacList[index];
 }
@@ -1132,7 +1132,7 @@ inline const NMatrixInt& NMarkedAbelianGroup::M() const {
 inline const NMatrixInt& NMarkedAbelianGroup::N() const {
     return ON;
 }
-inline const NLargeInteger& NMarkedAbelianGroup::coefficients() const {
+inline const LargeInteger& NMarkedAbelianGroup::coefficients() const {
     return coeff;
 }
 

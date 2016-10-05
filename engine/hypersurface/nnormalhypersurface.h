@@ -142,7 +142,7 @@ struct HyperInfo;
  *
  * Note that non-compact hypersurfaces (surfaces with infinitely many pieces)
  * are allowed; in these cases, the corresponding coordinate lookup routines
- * should return NLargeInteger::infinity where appropriate.
+ * should return LargeInteger::infinity where appropriate.
  *
  * All subclasses of NNormalHypersurfaceVector <b>must</b> have the following
  * properties:
@@ -167,7 +167,7 @@ struct HyperInfo;
  *   define various constants, typedefs and virtual functions (see the
  *   REGINA_NORMAL_HYPERSURFACE_FLAVOUR macro documentation for details).</li>
  *   <li>Constructors <tt>class(size_t length)</tt> and
- *   <tt>class(const Vector<NLargeInteger>& cloneMe)</tt> must be
+ *   <tt>class(const Vector<LargeInteger>& cloneMe)</tt> must be
  *   declared and implemented; these will usually just call the
  *   corresponding superclass constructors.</li>
  *   <li>All abstract functions must be implemented, except for those
@@ -199,7 +199,7 @@ class REGINA_API NNormalHypersurfaceVector : public Ray {
          *
          * @param cloneMe the vector to clone.
          */
-        NNormalHypersurfaceVector(const Vector<NLargeInteger>& cloneMe);
+        NNormalHypersurfaceVector(const Vector<LargeInteger>& cloneMe);
 
         /**
          * A virtual destructor.  This is required because here we
@@ -295,7 +295,7 @@ class REGINA_API NNormalHypersurfaceVector : public Ray {
          * lives.
          * @return the number of tetrahedron pieces of the given type.
          */
-        virtual NLargeInteger tetrahedra(size_t pentIndex,
+        virtual LargeInteger tetrahedra(size_t pentIndex,
             int vertex, const Dim4Triangulation* triang) const = 0;
         /**
          * Returns the number of prism pieces of the given type
@@ -312,7 +312,7 @@ class REGINA_API NNormalHypersurfaceVector : public Ray {
          * lives.
          * @return the number of prism pieces of the given type.
          */
-        virtual NLargeInteger prisms(size_t pentIndex,
+        virtual LargeInteger prisms(size_t pentIndex,
             int prismType, const Dim4Triangulation* triang) const = 0;
         /**
          * Returns the number of times this normal hypersurface crosses the
@@ -327,7 +327,7 @@ class REGINA_API NNormalHypersurfaceVector : public Ray {
          * @return the number of times this normal hypersurface crosses the
          * given edge.
          */
-        virtual NLargeInteger edgeWeight(size_t edgeIndex,
+        virtual LargeInteger edgeWeight(size_t edgeIndex,
             const Dim4Triangulation* triang) const = 0;
 
         /**
@@ -391,7 +391,7 @@ class REGINA_API NNormalHypersurfaceVector : public Ray {
  *
  * Note that non-compact surfaces (surfaces with infinitely many pieces,
  * are allowed; in these cases, the corresponding coordinate lookup routines
- * will return NLargeInteger::infinity where appropriate.
+ * will return LargeInteger::infinity where appropriate.
  */
 class REGINA_API NNormalHypersurface :
         public ShortOutput<NNormalHypersurface>,
@@ -463,7 +463,7 @@ class REGINA_API NNormalHypersurface :
          * hypersurface.
          * @param allCoords the corresponding vector of normal coordinates,
          * expressed as a Python list.  The list elements will be
-         * converted internally to NLargeInteger objects.
+         * converted internally to LargeInteger objects.
          */
         #ifdef __DOXYGEN
         NNormalHypersurface(const Dim4Triangulation* triang,
@@ -513,7 +513,7 @@ class REGINA_API NNormalHypersurface :
          * and 4 inclusive.
          * @return the number of tetrahedron pieces of the given type.
          */
-        NLargeInteger tetrahedra(size_t pentIndex, int vertex) const;
+        LargeInteger tetrahedra(size_t pentIndex, int vertex) const;
         /**
          * Returns the number of prism pieces of the given type
          * in this normal hypersurface.
@@ -535,7 +535,7 @@ class REGINA_API NNormalHypersurface :
          * this should be between 0 and 9 inclusive.
          * @return the number of prism pieces of the given type.
          */
-        NLargeInteger prisms(size_t pentIndex, int prismType) const;
+        LargeInteger prisms(size_t pentIndex, int prismType) const;
         /**
          * Returns the number of times this normal hypersurface crosses the
          * given edge.
@@ -546,7 +546,7 @@ class REGINA_API NNormalHypersurface :
          * @return the number of times this normal hypersurface crosses the
          * given edge.
          */
-        NLargeInteger edgeWeight(size_t edgeIndex) const;
+        LargeInteger edgeWeight(size_t edgeIndex) const;
 
         /**
          * Returns the number of coordinates in the specific underlying
@@ -886,7 +886,7 @@ inline NNormalHypersurfaceVector::NNormalHypersurfaceVector(size_t length) :
         Ray(length) {
 }
 inline NNormalHypersurfaceVector::NNormalHypersurfaceVector(
-        const Vector<NLargeInteger>& cloneMe) : Ray(cloneMe) {
+        const Vector<LargeInteger>& cloneMe) : Ray(cloneMe) {
 }
 inline NNormalHypersurfaceVector::~NNormalHypersurfaceVector() {
 }
@@ -897,15 +897,15 @@ inline NNormalHypersurface::~NNormalHypersurface() {
     delete vector_;
 }
 
-inline NLargeInteger NNormalHypersurface::tetrahedra(
+inline LargeInteger NNormalHypersurface::tetrahedra(
         size_t pentIndex, int vertex) const {
     return vector_->tetrahedra(pentIndex, vertex, triangulation_);
 }
-inline NLargeInteger NNormalHypersurface::prisms(
+inline LargeInteger NNormalHypersurface::prisms(
         size_t pentIndex, int prismType) const {
     return vector_->prisms(pentIndex, prismType, triangulation_);
 }
-inline NLargeInteger NNormalHypersurface::edgeWeight(size_t edgeIndex) const {
+inline LargeInteger NNormalHypersurface::edgeWeight(size_t edgeIndex) const {
     return vector_->edgeWeight(edgeIndex, triangulation_);
 }
 

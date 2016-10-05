@@ -304,7 +304,7 @@ struct NormalInfo;
  * Note that non-compact surfaces (surfaces with infinitely many discs,
  * such as spun-normal surfaces) are allowed; in these cases, the
  * corresponding coordinate lookup routines should return
- * NLargeInteger::infinity where appropriate.
+ * LargeInteger::infinity where appropriate.
  *
  * All subclasses of NNormalSurfaceVector <b>must</b> have the following
  * properties:
@@ -329,7 +329,7 @@ struct NormalInfo;
  *   various constants, typedefs and virtual functions (see the
  *   REGINA_NORMAL_SURFACE_FLAVOUR macro documentation for details).</li>
  *   <li>Constructors <tt>class(size_t length)</tt> and
- *   <tt>class(const Vector<NLargeInteger>& cloneMe)</tt> must be
+ *   <tt>class(const Vector<LargeInteger>& cloneMe)</tt> must be
  *   declared and implemented; these will usually just call the
  *   corresponding superclass constructors.</li>
  *   <li>All abstract functions must be implemented, except for those
@@ -367,7 +367,7 @@ class REGINA_API NNormalSurfaceVector : public Ray {
          *
          * @param cloneMe the vector to clone.
          */
-        NNormalSurfaceVector(const Vector<NLargeInteger>& cloneMe);
+        NNormalSurfaceVector(const Vector<LargeInteger>& cloneMe);
 
         /**
          * A virtual destructor.  This is required because here we introduce
@@ -544,7 +544,7 @@ class REGINA_API NNormalSurfaceVector : public Ray {
          * @return the number of tetrahedra that the surface meets if it
          * is a central surface, or 0 if it is not a central surface.
          */
-        virtual NLargeInteger isCentral(const NTriangulation* triang) const;
+        virtual LargeInteger isCentral(const NTriangulation* triang) const;
 
         /**
          * Returns the number of triangular discs of the given type in
@@ -561,7 +561,7 @@ class REGINA_API NNormalSurfaceVector : public Ray {
          * @param triang the triangulation in which this normal surface lives.
          * @return the number of triangular discs of the given type.
          */
-        virtual NLargeInteger triangles(size_t tetIndex,
+        virtual LargeInteger triangles(size_t tetIndex,
             int vertex, const NTriangulation* triang) const = 0;
 
         /**
@@ -584,7 +584,7 @@ class REGINA_API NNormalSurfaceVector : public Ray {
          * @param orientation the orientation of the normal discs.
          * @return the number of triangular discs of the given type.
          */
-        virtual NLargeInteger orientedTriangles(size_t tetIndex,
+        virtual LargeInteger orientedTriangles(size_t tetIndex,
             int vertex, const NTriangulation* triang, bool orientation) const;
 
         /**
@@ -601,7 +601,7 @@ class REGINA_API NNormalSurfaceVector : public Ray {
          * @param triang the triangulation in which this normal surface lives.
          * @return the number of quadrilateral discs of the given type.
          */
-        virtual NLargeInteger quads(size_t tetIndex,
+        virtual LargeInteger quads(size_t tetIndex,
             int quadType, const NTriangulation* triang) const = 0;
 
         /**
@@ -623,7 +623,7 @@ class REGINA_API NNormalSurfaceVector : public Ray {
          * @param orientation the orientation of the normal discs.
          * @return the number of quadrilateral discs of the given type.
          */
-        virtual NLargeInteger orientedQuads(size_t tetIndex,
+        virtual LargeInteger orientedQuads(size_t tetIndex,
             int quadType, const NTriangulation* triang, bool orientation) const;
         /**
          * Returns the number of octagonal discs of the given type
@@ -639,7 +639,7 @@ class REGINA_API NNormalSurfaceVector : public Ray {
          * @param triang the triangulation in which this normal surface lives.
          * @return the number of octagonal discs of the given type.
          */
-        virtual NLargeInteger octs(size_t tetIndex,
+        virtual LargeInteger octs(size_t tetIndex,
             int octType, const NTriangulation* triang) const = 0;
         /**
          * Returns the number of times this normal surface crosses the
@@ -653,7 +653,7 @@ class REGINA_API NNormalSurfaceVector : public Ray {
          * @return the number of times this normal surface crosses the
          * given edge.
          */
-        virtual NLargeInteger edgeWeight(size_t edgeIndex,
+        virtual LargeInteger edgeWeight(size_t edgeIndex,
             const NTriangulation* triang) const = 0;
         /**
          * Returns the number of arcs in which this normal surface
@@ -670,7 +670,7 @@ class REGINA_API NNormalSurfaceVector : public Ray {
          * @return the number of times this normal surface intersect the
          * given triangle with the given arc type.
          */
-        virtual NLargeInteger arcs(size_t triIndex,
+        virtual LargeInteger arcs(size_t triIndex,
             int triVertex, const NTriangulation* triang) const = 0;
 
         /**
@@ -735,7 +735,7 @@ class REGINA_API NNormalSurfaceVector : public Ray {
  * Note that non-compact surfaces (surfaces with infinitely many discs,
  * such as spun-normal surfaces) are allowed; in these cases, the
  * corresponding coordinate lookup routines will return
- * NLargeInteger::infinity where appropriate.
+ * LargeInteger::infinity where appropriate.
  *
  * \todo \feature Calculation of Euler characteristic and orientability
  * for non-compact surfaces.
@@ -760,7 +760,7 @@ class REGINA_API NNormalSurface :
                  or NDiscType::NONE if there is no non-zero octagonal
                  coordinate.  Here NDiscType::type is an octagon type
                  between 0 and 2 inclusive. */
-        mutable Property<NLargeInteger> eulerChar_;
+        mutable Property<LargeInteger> eulerChar_;
             /**< The Euler characteristic of this surface. */
         mutable Property<bool> orientable;
             /**< Is this surface orientable? */
@@ -815,7 +815,7 @@ class REGINA_API NNormalSurface :
          * @param coordSystem the coordinate system used by this normal surface.
          * @param allCoords the corresponding vector of normal coordinates,
          * expressed as a Python list.  The list elements will be
-         * converted internally to NLargeInteger objects.
+         * converted internally to LargeInteger objects.
          */
         #ifdef __DOXYGEN
         NNormalSurface(const NTriangulation* triang, NormalCoords coordSystem,
@@ -867,7 +867,7 @@ class REGINA_API NNormalSurface :
          * and 3 inclusive.
          * @return the number of triangular discs of the given type.
          */
-        NLargeInteger triangles(size_t tetIndex, int vertex) const;
+        LargeInteger triangles(size_t tetIndex, int vertex) const;
 
         /**
          * Returns the number of oriented triangular discs of the given type 
@@ -898,7 +898,7 @@ class REGINA_API NNormalSurface :
          * @param orientation the orientation of the triangle 
          * @return the number of triangular discs of the given type.
          */
-        NLargeInteger orientedTriangles(size_t tetIndex,
+        LargeInteger orientedTriangles(size_t tetIndex,
             int vertex, bool orientation) const;
         /**
          * Returns the number of quadrilateral discs of the given
@@ -927,7 +927,7 @@ class REGINA_API NNormalSurface :
          * tetrahedron; this should be 0, 1 or 2, as described above.
          * @return the number of quadrilateral discs of the given type.
          */
-        NLargeInteger quads(size_t tetIndex, int quadType) const;
+        LargeInteger quads(size_t tetIndex, int quadType) const;
         /**
          * Returns the number of oriented quadrilateral discs of the given type
          * in this normal surface.
@@ -957,7 +957,7 @@ class REGINA_API NNormalSurface :
          * @param orientation the orientation of the quadrilateral disc 
          * @return the number of quadrilateral discs of the given type.
          */
-        NLargeInteger orientedQuads(size_t tetIndex,
+        LargeInteger orientedQuads(size_t tetIndex,
             int quadType, bool orientation) const;
         /**
          * Returns the number of octagonal discs of the given type
@@ -986,7 +986,7 @@ class REGINA_API NNormalSurface :
          * this should be 0, 1 or 2, as described above.
          * @return the number of octagonal discs of the given type.
          */
-        NLargeInteger octs(size_t tetIndex, int octType) const;
+        LargeInteger octs(size_t tetIndex, int octType) const;
         /**
          * Returns the number of times this normal surface crosses the
          * given edge.
@@ -997,7 +997,7 @@ class REGINA_API NNormalSurface :
          * @return the number of times this normal surface crosses the
          * given edge.
          */
-        NLargeInteger edgeWeight(size_t edgeIndex) const;
+        LargeInteger edgeWeight(size_t edgeIndex) const;
         /**
          * Returns the number of arcs in which this normal surface
          * intersects the given triangle in the given direction.
@@ -1011,7 +1011,7 @@ class REGINA_API NNormalSurface :
          * @return the number of times this normal surface intersect the
          * given triangle with the given arc type.
          */
-        NLargeInteger arcs(size_t triIndex, int triVertex) const;
+        LargeInteger arcs(size_t triIndex, int triVertex) const;
 
         /**
          * Determines the first coordinate position at which this surface
@@ -1129,7 +1129,7 @@ class REGINA_API NNormalSurface :
          *
          * @return the Euler characteristic.
          */
-        NLargeInteger eulerChar() const;
+        LargeInteger eulerChar() const;
         /**
          * Returns whether or not this surface is orientable.
          * 
@@ -1276,7 +1276,7 @@ class REGINA_API NNormalSurface :
          * @return the number of tetrahedra that this surface meets if it
          * is a central surface, or 0 if it is not a central surface.
          */
-        NLargeInteger isCentral() const;
+        LargeInteger isCentral() const;
 
         /**
          * Determines whether this surface represents a compressing disc
@@ -1641,7 +1641,7 @@ inline NNormalSurfaceVector::NNormalSurfaceVector(size_t length) :
         Ray(length) {
 }
 inline NNormalSurfaceVector::NNormalSurfaceVector(
-        const Vector<NLargeInteger>& cloneMe) : Ray(cloneMe) {
+        const Vector<LargeInteger>& cloneMe) : Ray(cloneMe) {
 }
 inline NNormalSurfaceVector::~NNormalSurfaceVector() {
 }
@@ -1652,32 +1652,32 @@ inline NNormalSurface::~NNormalSurface() {
     delete vector;
 }
 
-inline NLargeInteger NNormalSurface::triangles(size_t tetIndex,
+inline LargeInteger NNormalSurface::triangles(size_t tetIndex,
         int vertex) const {
     return vector->triangles(tetIndex, vertex, triangulation_);
 }
-inline NLargeInteger NNormalSurface::orientedTriangles(
+inline LargeInteger NNormalSurface::orientedTriangles(
         size_t tetIndex, int vertex, bool oriented) const {
     return vector->orientedTriangles(tetIndex, vertex, triangulation_,
         oriented);
 }
-inline NLargeInteger NNormalSurface::quads(size_t tetIndex,
+inline LargeInteger NNormalSurface::quads(size_t tetIndex,
         int quadType) const {
     return vector->quads(tetIndex, quadType, triangulation_);
 }
-inline NLargeInteger NNormalSurface::orientedQuads(
+inline LargeInteger NNormalSurface::orientedQuads(
         size_t tetIndex, int quadType, bool oriented) const {
     return vector->orientedQuads(tetIndex, quadType, triangulation_,
         oriented);
 }
-inline NLargeInteger NNormalSurface::octs(size_t tetIndex, int octType) const {
+inline LargeInteger NNormalSurface::octs(size_t tetIndex, int octType) const {
     return vector->octs(tetIndex, octType, triangulation_);
 }
-inline NLargeInteger NNormalSurface::edgeWeight(size_t edgeIndex)
+inline LargeInteger NNormalSurface::edgeWeight(size_t edgeIndex)
         const {
     return vector->edgeWeight(edgeIndex, triangulation_);
 }
-inline NLargeInteger NNormalSurface::arcs(size_t triIndex,
+inline LargeInteger NNormalSurface::arcs(size_t triIndex,
         int triVertex) const {
     return vector->arcs(triIndex, triVertex, triangulation_);
 }
@@ -1712,7 +1712,7 @@ inline bool NNormalSurface::isCompact() const {
     return compact.value();
 }
 
-inline NLargeInteger NNormalSurface::eulerChar() const {
+inline LargeInteger NNormalSurface::eulerChar() const {
     if (! eulerChar_.known())
         calculateEulerChar();
     return eulerChar_.value();
@@ -1759,7 +1759,7 @@ inline bool NNormalSurface::isSplitting() const {
     return vector->isSplitting(triangulation_);
 }
 
-inline NLargeInteger NNormalSurface::isCentral() const {
+inline LargeInteger NNormalSurface::isCentral() const {
     return vector->isCentral(triangulation_);
 }
 

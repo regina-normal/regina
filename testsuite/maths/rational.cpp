@@ -40,7 +40,7 @@
 
 using regina::NInteger;
 using regina::NIntegerBase;
-using regina::NLargeInteger;
+using regina::LargeInteger;
 using regina::Rational;
 
 class RationalTest : public CppUnit::TestFixture {
@@ -128,13 +128,13 @@ class RationalTest : public CppUnit::TestFixture {
             verifyConstructFinite(LONG_MAX);
             verifyConstructFinite(LONG_MIN);
             verifyConstructFinite(NInteger(LONG_MAX) + 1);
-            verifyConstructFinite(NLargeInteger(LONG_MAX) + 1);
+            verifyConstructFinite(LargeInteger(LONG_MAX) + 1);
             verifyConstructFinite(NInteger(LONG_MIN) - 1);
-            verifyConstructFinite(NLargeInteger(LONG_MIN) - 1);
+            verifyConstructFinite(LargeInteger(LONG_MIN) - 1);
             verifyConstructFinite(NInteger(HUGE_INTEGER));
-            verifyConstructFinite(NLargeInteger(HUGE_INTEGER));
+            verifyConstructFinite(LargeInteger(HUGE_INTEGER));
             verifyConstructFinite(NInteger("-" HUGE_INTEGER));
-            verifyConstructFinite(NLargeInteger("-" HUGE_INTEGER));
+            verifyConstructFinite(LargeInteger("-" HUGE_INTEGER));
         }
 
         void verifyInfinite(const Rational& r, const char* name) {
@@ -168,17 +168,17 @@ class RationalTest : public CppUnit::TestFixture {
             verifyInfinite(Rational(NInteger(LONG_MAX) + 1,
                 NInteger::zero),
                 "(NInteger(LONG_MAX)+1)/0");
-            verifyInfinite(Rational(NLargeInteger(LONG_MAX) + 1,
-                NLargeInteger::zero),
-                "(NLargeInteger(LONG_MAX)+1)/0");
+            verifyInfinite(Rational(LargeInteger(LONG_MAX) + 1,
+                LargeInteger::zero),
+                "(LargeInteger(LONG_MAX)+1)/0");
             verifyInfinite(Rational(NInteger(LONG_MIN) - 1,
                 NInteger::zero),
                 "(NInteger(LONG_MIN)-1)/0");
-            verifyInfinite(Rational(NLargeInteger(LONG_MIN) - 1,
-                NLargeInteger::zero),
-                "(NLargeInteger(LONG_MIN)-1)/0");
-            verifyInfinite(Rational(NLargeInteger::infinity),
-                "Rational(NLargeInteger::infinity)");
+            verifyInfinite(Rational(LargeInteger(LONG_MIN) - 1,
+                LargeInteger::zero),
+                "(LargeInteger(LONG_MIN)-1)/0");
+            verifyInfinite(Rational(LargeInteger::infinity),
+                "Rational(LargeInteger::infinity)");
         }
 
         void verifyUndefined(const Rational& r, const char* name) {
@@ -206,9 +206,9 @@ class RationalTest : public CppUnit::TestFixture {
             verifyUndefined(Rational(0, 0), "0/0");
             verifyUndefined(Rational(NInteger::zero, NInteger::zero),
                 "NInteger::zero/NInteger::zero");
-            verifyUndefined(Rational(NLargeInteger::zero,
-                NLargeInteger::zero),
-                "NLargeInteger::zero/NLargeInteger::zero");
+            verifyUndefined(Rational(LargeInteger::zero,
+                LargeInteger::zero),
+                "LargeInteger::zero/LargeInteger::zero");
         }
 
         void verifyAssignFinite(long val) {
@@ -267,17 +267,17 @@ class RationalTest : public CppUnit::TestFixture {
             verifyAssignFinite(LONG_MAX);
             verifyAssignFinite(LONG_MIN);
             verifyAssignFinite(NInteger(LONG_MAX) + 1);
-            verifyAssignFinite(NLargeInteger(LONG_MAX) + 1);
+            verifyAssignFinite(LargeInteger(LONG_MAX) + 1);
             verifyAssignFinite(NInteger(LONG_MIN) - 1);
-            verifyAssignFinite(NLargeInteger(LONG_MIN) - 1);
+            verifyAssignFinite(LargeInteger(LONG_MIN) - 1);
             verifyAssignFinite(NInteger(HUGE_INTEGER));
-            verifyAssignFinite(NLargeInteger(HUGE_INTEGER));
+            verifyAssignFinite(LargeInteger(HUGE_INTEGER));
             verifyAssignFinite(NInteger("-" HUGE_INTEGER));
-            verifyAssignFinite(NLargeInteger("-" HUGE_INTEGER));
+            verifyAssignFinite(LargeInteger("-" HUGE_INTEGER));
 
             Rational r = 0;
-            r = NLargeInteger::infinity;
-            verifyInfinite(r, "Rational = NLargeInteger::infinity");
+            r = LargeInteger::infinity;
+            verifyInfinite(r, "Rational = LargeInteger::infinity");
         }
 
         void verifyNumDen(long val) {
@@ -350,13 +350,13 @@ class RationalTest : public CppUnit::TestFixture {
             verifyNumDen(LONG_MAX);
             verifyNumDen(LONG_MIN);
             verifyNumDen(NInteger(LONG_MAX) + 1);
-            verifyNumDen(NLargeInteger(LONG_MAX) + 1);
+            verifyNumDen(LargeInteger(LONG_MAX) + 1);
             verifyNumDen(NInteger(LONG_MIN) - 1);
-            verifyNumDen(NLargeInteger(LONG_MIN) - 1);
+            verifyNumDen(LargeInteger(LONG_MIN) - 1);
             verifyNumDen(NInteger(HUGE_INTEGER));
-            verifyNumDen(NLargeInteger(HUGE_INTEGER));
+            verifyNumDen(LargeInteger(HUGE_INTEGER));
             verifyNumDen(NInteger("-" HUGE_INTEGER));
-            verifyNumDen(NLargeInteger("-" HUGE_INTEGER));
+            verifyNumDen(LargeInteger("-" HUGE_INTEGER));
         }
 
         void checkDoubleInRange(const Rational& r,
@@ -412,30 +412,30 @@ class RationalTest : public CppUnit::TestFixture {
             // Construct something out of int's usual range but
             // well within double's.  Here we aim for around 2^70,
             // or about 7^25.
-            NLargeInteger in(7);
+            LargeInteger in(7);
             in.raiseToPower(25);
-            checkDoubleInRange(Rational(in, NLargeInteger(3)),
+            checkDoubleInRange(Rational(in, LargeInteger(3)),
                 4.470e+20, 4.471e+20, "7^25/3");
-            checkDoubleInRange(Rational(-in, NLargeInteger(3)),
+            checkDoubleInRange(Rational(-in, LargeInteger(3)),
                 -4.471e+20, -4.470e+20, "-7^25/3");
 
             // Construct something well out of double's usual range.
             // Here we aim for around 2^10000, or about 13^2702.
-            NLargeInteger out(13);
+            LargeInteger out(13);
             out.raiseToPower(2702);
-            checkDoubleOutOfRange(Rational(out, NLargeInteger(2)),
+            checkDoubleOutOfRange(Rational(out, LargeInteger(2)),
                 "13^2702/2");
-            checkDoubleOutOfRange(Rational(-out, NLargeInteger(2)),
+            checkDoubleOutOfRange(Rational(-out, LargeInteger(2)),
                 "-13^2702/2");
 
             // Check precision bounds close to zero also.
-            checkDoubleInRange(Rational(NLargeInteger(3), in),
+            checkDoubleInRange(Rational(LargeInteger(3), in),
                 2.237e-21, 2.238e-21, "3/7^25");
-            checkDoubleInRange(Rational(NLargeInteger(-3), in),
+            checkDoubleInRange(Rational(LargeInteger(-3), in),
                 -2.238e-21, -2.237e-21, "-3/7^25");
-            checkDoubleOutOfRange(Rational(NLargeInteger(2), out),
+            checkDoubleOutOfRange(Rational(LargeInteger(2), out),
                 "2/13^2702");
-            checkDoubleOutOfRange(Rational(NLargeInteger(-2), out),
+            checkDoubleOutOfRange(Rational(LargeInteger(-2), out),
                 "-2/13^2702");
         }
 };

@@ -63,10 +63,10 @@ const Dim4Vertex* NNormalHypersurfaceVector::isVertexLink(
 
     // Now examine the tetrahedra to see if we link only a single vertex.
     Dim4Vertex* ans = 0;
-    NLargeInteger ansMult;
+    LargeInteger ansMult;
 
     const Dim4Pentachoron* p;
-    NLargeInteger coord;
+    LargeInteger coord;
 
     for (pent = 0; pent < nPents; pent++) {
         p = triang->pentachoron(pent);
@@ -114,10 +114,10 @@ const Dim4Edge* NNormalHypersurfaceVector::isThinEdgeLink(
 
     // Search through prism pieces for one and only one candidate edge.
     Dim4Edge* ans = 0;
-    NLargeInteger ansMult;
+    LargeInteger ansMult;
 
     const Dim4Pentachoron* p;
-    NLargeInteger coord;
+    LargeInteger coord;
 
     for (pent = 0; pent < nPents; pent++) {
         p = triang->pentachoron(pent);

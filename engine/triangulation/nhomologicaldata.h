@@ -413,7 +413,7 @@ private:
     /** the prime power decomposition of the torsion subgroup of H1
      ** So if the invariant factors were 2,2,4,3,9,9,27,5,5, this would
      ** be the list: (2, (1, 1, 2)), (3, (1, 2, 2, 3)), (5, (1, 1)) */
-    std::vector< std::pair< NLargeInteger, std::vector<unsigned long> > >
+    std::vector< std::pair< LargeInteger, std::vector<unsigned long> > >
         h1PrimePowerDecomp;
     /** p-primary decomposition of the torsion linking form as needed to
      ** construct the Kawauchi-Kojima invariants. */
@@ -429,14 +429,14 @@ private:
 
     /** 1 of 3 Kawauchi-Kojima invariants: this describes the rank of the
      ** torsion subgroup of H1 */
-    std::vector< std::pair< NLargeInteger,
+    std::vector< std::pair< LargeInteger,
     std::vector< unsigned long > > > torRankV;
     /** 2 of 3 Kawauchi-Kojima invariants: this is the sigma-invariant
      ** of 2-torsion. */
-    std::vector< NLargeInteger > twoTorSigmaV;
+    std::vector< LargeInteger > twoTorSigmaV;
     /** 3 of 3 Kawauchi-Kojima invariants: this is the Legendre symbol
      ** invariant of odd torsion. */
-    std::vector< std::pair< NLargeInteger, std::vector< int > > > oddTorLegSymV;
+    std::vector< std::pair< LargeInteger, std::vector< int > > > oddTorLegSymV;
 
     /** string representing torRankV */
     std::string torsionRankString;
@@ -632,7 +632,7 @@ public:
      *
      * @return the torsion form rank vector.
      */
-    const std::vector< std::pair< NLargeInteger,
+    const std::vector< std::pair< LargeInteger,
         std::vector< unsigned long > > >& torsionRankVector();
     /**
      * Same as torsionRankVector() but returns as a human-readable string.
@@ -658,7 +658,7 @@ public:
      *
      * @return the Kawauchi-Kojima sigma-vector.
      */
-    const std::vector<NLargeInteger>& torsionSigmaVector();
+    const std::vector<LargeInteger>& torsionSigmaVector();
     /**
      * Same as torsionSigmaVector() but returns as a human-readable string.
      * This is an orientation-sensitive invariant.
@@ -685,7 +685,7 @@ public:
      * @return the Legendre symbol vector associated to the torsion
      * linking form.
      */
-    const std::vector< std::pair< NLargeInteger, std::vector< int > > >&
+    const std::vector< std::pair< LargeInteger, std::vector< int > > >&
         torsionLegendreSymbolVector();
     /**
      * Same as torsionLegendreSymbolVector() but returns as a
@@ -898,18 +898,18 @@ inline long int NHomologicalData::eulerChar()
     return numDualCells[0]-numDualCells[1]+numDualCells[2]-numDualCells[3];
 }
 
-inline const std::vector< std::pair< NLargeInteger,
+inline const std::vector< std::pair< LargeInteger,
 std::vector< unsigned long > > >& NHomologicalData::torsionRankVector()
 {
     computeTorsionLinkingForm();
     return torRankV;
 }
-inline const std::vector<NLargeInteger>& NHomologicalData::torsionSigmaVector()
+inline const std::vector<LargeInteger>& NHomologicalData::torsionSigmaVector()
 {
     computeTorsionLinkingForm();
     return twoTorSigmaV;
 }
-inline const std::vector< std::pair< NLargeInteger, std::vector< int > > >&
+inline const std::vector< std::pair< LargeInteger, std::vector< int > > >&
 NHomologicalData::torsionLegendreSymbolVector()
 {
     computeTorsionLinkingForm();

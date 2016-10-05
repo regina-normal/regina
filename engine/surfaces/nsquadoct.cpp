@@ -146,7 +146,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuadOct::makeMirror(
     int i;
     for (row = 0; row < nRows; row += 10)
         for (i = 0; i < 4; i++)
-            ans->setElement(row + i, NLargeInteger::infinity);
+            ans->setElement(row + i, LargeInteger::infinity);
     for (row = 0; 10 * row < nRows; ++row)
         for (i = 0; i < 6; i++)
             ans->setElement(10 * row + 4 + i, (*this)[6 * row + i]);
@@ -156,7 +156,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuadOct::makeMirror(
     std::set<NEdge*> usedEdges[2];
         // usedEdges[i] contains the edges for which we have already
         // examined end i.
-    NLargeInteger min;
+    LargeInteger min;
         // The minimum coordinate that has been assigned about this
         // vertex.
     std::deque<EdgeEnd> examine;
@@ -170,7 +170,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuadOct::makeMirror(
     NTetrahedron* tet;
     NPerm4 tetPerm, adjPerm;
     unsigned long tetIndex, adjIndex;
-    NLargeInteger expect;
+    LargeInteger expect;
     for (NTriangulation::VertexIterator vit = triang->vertices().begin();
             vit != triang->vertices().end(); vit++) {
         usedEdges[0].clear(); usedEdges[1].clear();
@@ -180,9 +180,9 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuadOct::makeMirror(
         // Pick some triangular disc and set it to zero.
         const NVertexEmbedding& vemb = (*vit)->front();
         row = 10 * vemb.tetrahedron()->index() + vemb.vertex();
-        ans->setElement(row, NLargeInteger::zero);
+        ans->setElement(row, LargeInteger::zero);
 
-        min = NLargeInteger::zero;
+        min = LargeInteger::zero;
 
         // Mark the three surrounding edge ends for examination.
         for (i=0; i<4; i++) {
@@ -318,7 +318,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorQuadOct::makeMirror(
         for (auto& emb : **vit) {
             row = 10 * emb.tetrahedron()->index() + emb.vertex();
             if (broken)
-                ans->setElement(row, NLargeInteger::infinity);
+                ans->setElement(row, LargeInteger::infinity);
             else
                 ans->setElement(row, (*ans)[row] - min);
         }

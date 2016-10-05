@@ -65,7 +65,7 @@ QVariant MatchingModel::data(const QModelIndex& index, int role) const {
         return QVariant();
 
     if (role == Qt::DisplayRole) {
-        regina::NLargeInteger ans = eqns_->entry(index.row(), index.column());
+        regina::LargeInteger ans = eqns_->entry(index.row(), index.column());
         if (ans == 0)
             return QVariant();
         else

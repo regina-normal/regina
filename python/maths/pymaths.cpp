@@ -33,7 +33,7 @@
 void addMatrixOps();
 void addCyclotomic();
 void addNInteger();
-void addNLargeInteger();
+void addLargeInteger();
 void addNMatrix2();
 void addNMatrixInt();
 void addNPerm2();
@@ -50,7 +50,7 @@ void addMathsClasses() {
     addMatrixOps();
     addCyclotomic();
     addNInteger();
-    addNLargeInteger();
+    addLargeInteger();
     addNMatrix2();
     addNMatrixInt();
     addNPerm2();

@@ -40,11 +40,11 @@ using namespace boost::python;
 using regina::NHomMarkedAbelianGroup;
 using regina::NMarkedAbelianGroup;
 using regina::NMatrixInt;
-using regina::NLargeInteger;
+using regina::LargeInteger;
 
 namespace {
     unsigned long (NMarkedAbelianGroup::*torsionRank_large)(
-        const regina::NLargeInteger&) const =
+        const regina::LargeInteger&) const =
         &NMarkedAbelianGroup::torsionRank;
     unsigned long (NMarkedAbelianGroup::*torsionRank_long)(unsigned long)
         const = &NMarkedAbelianGroup::torsionRank;
@@ -53,8 +53,8 @@ namespace {
             const NMarkedAbelianGroup& g, unsigned long index) {
         boost::python::list ans;
 
-        std::vector<regina::NLargeInteger> rep = g.freeRep(index);
-        for (std::vector<regina::NLargeInteger>::const_iterator
+        std::vector<regina::LargeInteger> rep = g.freeRep(index);
+        for (std::vector<regina::LargeInteger>::const_iterator
                 it = rep.begin(); it != rep.end(); ++it) {
             ans.append(*it);
         }
@@ -66,8 +66,8 @@ namespace {
             const NMarkedAbelianGroup& g, unsigned long index) {
         boost::python::list ans;
 
-        std::vector<regina::NLargeInteger> rep = g.torsionRep(index);
-        for (std::vector<regina::NLargeInteger>::const_iterator
+        std::vector<regina::LargeInteger> rep = g.torsionRep(index);
+        for (std::vector<regina::LargeInteger>::const_iterator
                 it = rep.begin(); it != rep.end(); ++it) {
             ans.append(*it);
         }
@@ -86,12 +86,12 @@ namespace {
             boost::python::throw_error_already_set();
         }
 
-        std::vector<regina::NLargeInteger> eltVector;
+        std::vector<regina::LargeInteger> eltVector;
 
         for (unsigned long i = 0; i < needLen; ++i) {
             // Accept any type that we know how to convert to a large
             // integer.
-            extract<regina::NLargeInteger&> x_large(element[i]);
+            extract<regina::LargeInteger&> x_large(element[i]);
             if (x_large.check()) {
                 eltVector.push_back(x_large());
                 continue;
@@ -113,10 +113,10 @@ namespace {
             x_large();
         }
 
-        std::vector<regina::NLargeInteger> rep = g.snfRep(eltVector);
+        std::vector<regina::LargeInteger> rep = g.snfRep(eltVector);
 
         boost::python::list ans;
-        for (std::vector<regina::NLargeInteger>::const_iterator
+        for (std::vector<regina::LargeInteger>::const_iterator
                 it = rep.begin(); it != rep.end(); ++it) {
             ans.append(*it);
         }
@@ -140,8 +140,8 @@ void addNMarkedAbelianGroup() {
             boost::noncopyable> ( "NMarkedAbelianGroup",
             init<const NMatrixInt&, const NMatrixInt&>())
         .def(init<const NMarkedAbelianGroup&>())
-        .def(init<const NMatrixInt&, const NMatrixInt&, const NLargeInteger&>())
-        .def(init<unsigned long, const NLargeInteger&>())
+        .def(init<const NMatrixInt&, const NMatrixInt&, const LargeInteger&>())
+        .def(init<unsigned long, const LargeInteger&>())
         .def("isChainComplex", &NMarkedAbelianGroup::isChainComplex)
         .def("rank", &NMarkedAbelianGroup::rank)
         .def("torsionRank", torsionRank_large)

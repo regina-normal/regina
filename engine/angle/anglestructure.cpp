@@ -92,11 +92,11 @@ AngleStructure* AngleStructure::clone() const {
 
 Rational AngleStructure::angle(size_t tetIndex, int edgePair)
         const {
-    const NLargeInteger& num = (*vector)[3 * tetIndex + edgePair];
-    const NLargeInteger& den =
+    const LargeInteger& num = (*vector)[3 * tetIndex + edgePair];
+    const LargeInteger& den =
         (*vector)[3 * triangulation_->size()];
 
-    NLargeInteger gcd = den.gcd(num);
+    LargeInteger gcd = den.gcd(num);
     if (gcd < 0)
         gcd.negate();
     return Rational(num.divExact(gcd), den.divExact(gcd));
@@ -122,7 +122,7 @@ void AngleStructure::writeXMLData(std::ostream& out) const {
     out << "  <struct len=\"" << vecLen << "\"> ";
 
     // Write the non-zero elements.
-    NLargeInteger entry;
+    LargeInteger entry;
     for (size_t i = 0; i < vecLen; i++) {
         entry = (*vector)[i];
         if (entry != 0)
@@ -154,7 +154,7 @@ void AngleStructure::calculateType() const {
     bool strict = true;
 
     // Run through the tetrahedra one by one.
-    const NLargeInteger& scale = (*vector)[size - 1];
+    const LargeInteger& scale = (*vector)[size - 1];
     size_t pair;
     for (size_t base = 0; base < size - 1; base += 3) {
         for (pair = 0; pair < 3; pair++) {
@@ -163,7 +163,7 @@ void AngleStructure::calculateType() const {
                 // tetrahedron are pi or zero.
                 strict = false;
                 break;
-            } else if ((*vector)[base + pair] == NLargeInteger::zero)
+            } else if ((*vector)[base + pair] == LargeInteger::zero)
                 strict = false;
             else
                 taut = false;

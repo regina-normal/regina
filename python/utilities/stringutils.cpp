@@ -42,12 +42,12 @@ namespace {
     std::string (*subscript_long)(long) = &regina::subscript;
     std::string (*subscript_largeF)(const regina::NInteger&) =
         &regina::subscript;
-    std::string (*subscript_largeT)(const regina::NLargeInteger&) =
+    std::string (*subscript_largeT)(const regina::LargeInteger&) =
         &regina::subscript;
     std::string (*superscript_long)(long) = &regina::superscript;
     std::string (*superscript_largeF)(const regina::NInteger&) =
         &regina::superscript;
-    std::string (*superscript_largeT)(const regina::NLargeInteger&) =
+    std::string (*superscript_largeT)(const regina::LargeInteger&) =
         &regina::superscript;
 }
 

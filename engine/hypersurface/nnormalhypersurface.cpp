@@ -114,7 +114,7 @@ void NNormalHypersurface::writeXMLData(std::ostream& out) const {
         << xmlEncodeSpecialChars(name_) << "\">";
 
     // Write all non-zero entries.
-    NLargeInteger entry;
+    LargeInteger entry;
     for (size_t i = 0; i < vecLen; i++) {
         entry = (*vector_)[i];
         if (entry != 0)

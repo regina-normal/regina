@@ -1131,7 +1131,7 @@ NIsomorphism : typedef ->  Isomorphism3
 NL31Pillow : class
 Equality type : BY_REFERENCE
 
-NLargeInteger : class
+LargeInteger : class
 Equality type : BY_VALUE
 
 NLayeredChain : class

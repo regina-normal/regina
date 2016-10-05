@@ -37,7 +37,7 @@
 
 using regina::NIntegerBase;
 using regina::NInteger;
-using regina::NLargeInteger;
+using regina::LargeInteger;
 
 #define ENORMOUS_INTEGER "115792089237316195423570985008687907853269984665640564039457584007913129639936"
 #define HUGE_INTEGER "12364981726394781629378461923786491874569283746672"
@@ -67,49 +67,49 @@ class NIntegerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(NIntegerTest);
 
     CPPUNIT_TEST(constructAssignCopyNative<NInteger>);
-    CPPUNIT_TEST(constructAssignCopyNative<NLargeInteger>);
+    CPPUNIT_TEST(constructAssignCopyNative<LargeInteger>);
     CPPUNIT_TEST(constructAssignCopyString<NInteger>);
-    CPPUNIT_TEST(constructAssignCopyString<NLargeInteger>);
+    CPPUNIT_TEST(constructAssignCopyString<LargeInteger>);
     CPPUNIT_TEST(constructAssignCopyInfinity);
     CPPUNIT_TEST(constructSpecial<NInteger>);
-    CPPUNIT_TEST(constructSpecial<NLargeInteger>);
+    CPPUNIT_TEST(constructSpecial<LargeInteger>);
 #ifdef INT128_AVAILABLE
     CPPUNIT_TEST(constructNative128<NInteger>);
-    CPPUNIT_TEST(constructNative128<NLargeInteger>);
+    CPPUNIT_TEST(constructNative128<LargeInteger>);
     CPPUNIT_TEST(gcdNative128);
 #endif
     CPPUNIT_TEST(stringValue<NInteger>);
-    CPPUNIT_TEST(stringValue<NLargeInteger>);
+    CPPUNIT_TEST(stringValue<LargeInteger>);
     CPPUNIT_TEST(swap<NInteger>);
-    CPPUNIT_TEST(swap<NLargeInteger>);
+    CPPUNIT_TEST(swap<LargeInteger>);
     CPPUNIT_TEST(comparisons<NInteger>);
-    CPPUNIT_TEST(comparisons<NLargeInteger>);
+    CPPUNIT_TEST(comparisons<LargeInteger>);
     CPPUNIT_TEST(incDec<NInteger>);
-    CPPUNIT_TEST(incDec<NLargeInteger>);
+    CPPUNIT_TEST(incDec<LargeInteger>);
     CPPUNIT_TEST(plusMinus<NInteger>);
-    CPPUNIT_TEST(plusMinus<NLargeInteger>);
+    CPPUNIT_TEST(plusMinus<LargeInteger>);
     CPPUNIT_TEST(multiply<NInteger>);
-    CPPUNIT_TEST(multiply<NLargeInteger>);
+    CPPUNIT_TEST(multiply<LargeInteger>);
     CPPUNIT_TEST(divide<NInteger>);
-    CPPUNIT_TEST(divide<NLargeInteger>);
+    CPPUNIT_TEST(divide<LargeInteger>);
     CPPUNIT_TEST(mod<NInteger>);
-    CPPUNIT_TEST(mod<NLargeInteger>);
+    CPPUNIT_TEST(mod<LargeInteger>);
     CPPUNIT_TEST(negate<NInteger>);
-    CPPUNIT_TEST(negate<NLargeInteger>);
+    CPPUNIT_TEST(negate<LargeInteger>);
     CPPUNIT_TEST(abs<NInteger>);
-    CPPUNIT_TEST(abs<NLargeInteger>);
+    CPPUNIT_TEST(abs<LargeInteger>);
     CPPUNIT_TEST(divisionAlg<NInteger>);
-    CPPUNIT_TEST(divisionAlg<NLargeInteger>);
+    CPPUNIT_TEST(divisionAlg<LargeInteger>);
     CPPUNIT_TEST(gcdLcm<NInteger>);
-    CPPUNIT_TEST(gcdLcm<NLargeInteger>);
+    CPPUNIT_TEST(gcdLcm<LargeInteger>);
     CPPUNIT_TEST(raiseToPower<NInteger>);
-    CPPUNIT_TEST(raiseToPower<NLargeInteger>);
+    CPPUNIT_TEST(raiseToPower<LargeInteger>);
     CPPUNIT_TEST(tryReduce<NInteger>);
-    CPPUNIT_TEST(tryReduce<NLargeInteger>);
+    CPPUNIT_TEST(tryReduce<LargeInteger>);
     CPPUNIT_TEST(makeLarge<NInteger>);
-    CPPUNIT_TEST(makeLarge<NLargeInteger>);
+    CPPUNIT_TEST(makeLarge<LargeInteger>);
     CPPUNIT_TEST(nativeVsLarge<NInteger>);
-    CPPUNIT_TEST(nativeVsLarge<NLargeInteger>);
+    CPPUNIT_TEST(nativeVsLarge<LargeInteger>);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -177,7 +177,7 @@ class NIntegerTest : public CppUnit::TestFixture {
         static const std::string zero2k[5]; // 2^k zeroes, for a range of k.
         static const std::string zero2kdec[5]; // One less zero than zero2k[i].
 
-        Data<NLargeInteger> dataL;
+        Data<LargeInteger> dataL;
         Data<NInteger> dataI;
 
         long zeroL;
@@ -908,7 +908,7 @@ class NIntegerTest : public CppUnit::TestFixture {
                 0, "-87112285931760246646623899502532662132736", -1);
         }
 
-        void testInfinity(const NLargeInteger& x, const char* name,
+        void testInfinity(const LargeInteger& x, const char* name,
                 bool testCopy = true) {
             if (x.isNative()) {
                 std::ostringstream msg;
@@ -953,10 +953,10 @@ class NIntegerTest : public CppUnit::TestFixture {
             if (testCopy) {
                 // Test the copy constructor and copy assignment here
                 // also.
-                NLargeInteger y(x);
+                LargeInteger y(x);
                 testInfinity(y, "Native copy", false);
 
-                NLargeInteger z(5);
+                LargeInteger z(5);
                 if (! z.isNative())
                     CPPUNIT_FAIL("Hard-coded 5 is not native.");
                 z = x;
@@ -979,28 +979,28 @@ class NIntegerTest : public CppUnit::TestFixture {
                 // Test raw GMP assignment.
                 z = x;
                 testInfinity(z, "Native = from native", false);
-                NLargeInteger raw(HUGE_INTEGER);
+                LargeInteger raw(HUGE_INTEGER);
                 z.setRaw(raw.rawData());
                 testLarge(z, "inf.setRaw()", HUGE_INTEGER, 1, false);
             }
         }
 
         void constructAssignCopyInfinity() {
-            testInfinity(NLargeInteger::infinity, "Static infinity");
+            testInfinity(LargeInteger::infinity, "Static infinity");
 
-            NLargeInteger x(5);
+            LargeInteger x(5);
             if (! x.isNative())
                 CPPUNIT_FAIL("Hard-coded 5 is not native.");
             x.makeInfinite();
             testInfinity(x, "5.makeInfinite()");
 
-            NLargeInteger y(HUGE_INTEGER);
+            LargeInteger y(HUGE_INTEGER);
             if (y.isNative())
                 CPPUNIT_FAIL("Hard-coded HUGE_INTEGER is not native.");
             y.makeInfinite();
             testInfinity(y, "HUGE_INTEGER.makeInfinite()");
 
-            NLargeInteger z(NLargeInteger::infinity);
+            LargeInteger z(LargeInteger::infinity);
             if (! z.isInfinite())
                 CPPUNIT_FAIL("Hard-coded infinity is not infinite.");
             z.makeInfinite();
@@ -1220,9 +1220,9 @@ class NIntegerTest : public CppUnit::TestFixture {
             testStringValue(neg, 36,
                 "-1omfro7zwmumr3umxudzyj6scg");
 
-            // Test infinity (which must be hard-coded to NLargeInteger).
+            // Test infinity (which must be hard-coded to LargeInteger).
             for (int i = 2; i <= 36; ++i)
-                if (NLargeInteger::infinity.stringValue(i) != "inf") {
+                if (LargeInteger::infinity.stringValue(i) != "inf") {
                     std::ostringstream msg;
                     msg << "Conversion of infinity to base " << i
                         << " is not \"inf\".";
@@ -1274,14 +1274,14 @@ class NIntegerTest : public CppUnit::TestFixture {
                 testLarge(e, "HUGE", HUGE_INTEGER, 1);
             }
 
-            // Tests for infinity are hard-coded to NLargeInteger.
+            // Tests for infinity are hard-coded to LargeInteger.
             {
-                NLargeInteger a(3);
-                NLargeInteger b(LONG_MIN);
-                NLargeInteger c(sLongMaxInc);
-                NLargeInteger d(HUGE_INTEGER);
-                NLargeInteger i(NLargeInteger::infinity);
-                NLargeInteger j;
+                LargeInteger a(3);
+                LargeInteger b(LONG_MIN);
+                LargeInteger c(sLongMaxInc);
+                LargeInteger d(HUGE_INTEGER);
+                LargeInteger i(LargeInteger::infinity);
+                LargeInteger j;
                 j.makeInfinite();
 
                 testNative(a, "3", 3, 1);
@@ -1388,15 +1388,15 @@ class NIntegerTest : public CppUnit::TestFixture {
                     shouldBeGreater(y, d.longCases[a]);
                 }
 
-            // Tests for infinity are hard-coded to NLargeInteger.
-            const NLargeInteger& infinity(NLargeInteger::infinity);
+            // Tests for infinity are hard-coded to LargeInteger.
+            const LargeInteger& infinity(LargeInteger::infinity);
 
             for (a = 0; a < dataL.nCases; a++)
                 shouldBeGreater(infinity, dataL.cases[a]);
             for (a = 0; a < dataL.nLongCases; a++)
                 shouldBeGreater(infinity, dataL.longCases[a]);
 
-            shouldBeEqual(infinity, NLargeInteger::infinity);
+            shouldBeEqual(infinity, LargeInteger::infinity);
         }
 
         template <typename IntType>
@@ -1445,33 +1445,33 @@ class NIntegerTest : public CppUnit::TestFixture {
             for (int a = 0; a < d.nCases; a++)
                 testIncDec(d.cases[a]);
 
-            // Tests for infinity are hard-coded to NLargeInteger.
+            // Tests for infinity are hard-coded to LargeInteger.
             {
-                NLargeInteger i(NLargeInteger::infinity);
-                if (++i != NLargeInteger::infinity)
+                LargeInteger i(LargeInteger::infinity);
+                if (++i != LargeInteger::infinity)
                     CPPUNIT_FAIL("++inf does not return inf.");
-                if (i != NLargeInteger::infinity)
+                if (i != LargeInteger::infinity)
                     CPPUNIT_FAIL("++inf does not result in inf.");
             }
             {
-                NLargeInteger i(NLargeInteger::infinity);
-                if (i++ != NLargeInteger::infinity)
+                LargeInteger i(LargeInteger::infinity);
+                if (i++ != LargeInteger::infinity)
                     CPPUNIT_FAIL("inf++ does not return inf.");
-                if (i != NLargeInteger::infinity)
+                if (i != LargeInteger::infinity)
                     CPPUNIT_FAIL("inf++ does not result in inf.");
             }
             {
-                NLargeInteger i(NLargeInteger::infinity);
-                if (--i != NLargeInteger::infinity)
+                LargeInteger i(LargeInteger::infinity);
+                if (--i != LargeInteger::infinity)
                     CPPUNIT_FAIL("--inf does not return inf.");
-                if (i != NLargeInteger::infinity)
+                if (i != LargeInteger::infinity)
                     CPPUNIT_FAIL("--inf does not result in inf.");
             }
             {
-                NLargeInteger i(NLargeInteger::infinity);
-                if (i-- != NLargeInteger::infinity)
+                LargeInteger i(LargeInteger::infinity);
+                if (i-- != LargeInteger::infinity)
                     CPPUNIT_FAIL("inf-- does not return inf.");
-                if (i != NLargeInteger::infinity)
+                if (i != LargeInteger::infinity)
                     CPPUNIT_FAIL("inf-- does not result in inf.");
             }
         }
@@ -1714,8 +1714,8 @@ class NIntegerTest : public CppUnit::TestFixture {
                     IntType(-1));
             }
 
-            // Tests for infinity are hard-coded to NLargeInteger.
-            const NLargeInteger& infinity(NLargeInteger::infinity);
+            // Tests for infinity are hard-coded to LargeInteger.
+            const LargeInteger& infinity(LargeInteger::infinity);
 
             shouldBeEqual(infinity + infinity, infinity);
             shouldBeEqual(infinity - infinity, infinity);
@@ -1955,8 +1955,8 @@ class NIntegerTest : public CppUnit::TestFixture {
             testMultiply(IntType(-3), long(-(LONG_MAX-1)/3 - 1),
                 IntType(str(static_cast<unsigned long>(LONG_MAX) + 2)));
 
-            // Tests for infinity are hard-coded to NLargeInteger.
-            const NLargeInteger& infinity(NLargeInteger::infinity);
+            // Tests for infinity are hard-coded to LargeInteger.
+            const LargeInteger& infinity(LargeInteger::infinity);
 
             shouldBeEqual(infinity * infinity, infinity);
             for (a = 0; a < dataL.nCases; a++) {
@@ -2154,14 +2154,14 @@ class NIntegerTest : public CppUnit::TestFixture {
             shouldBeEqual(d.longMaxInc.divExact(-d.longMin), 1);
             shouldBeEqual(d.longMaxInc.divExact(LONG_MIN), -1);
 
-            // Tests for infinity are hard-coded to NLargeInteger.
-            const NLargeInteger& infinity(NLargeInteger::infinity);
+            // Tests for infinity are hard-coded to LargeInteger.
+            const LargeInteger& infinity(LargeInteger::infinity);
 
             shouldBeEqual(infinity / infinity, infinity);
             for (a = 0; a < dataL.nCases; a++) {
                 shouldBeEqual(infinity / dataL.cases[a], infinity);
                 shouldBeEqual(dataL.cases[a] / infinity, 0L);
-                shouldBeEqual(dataL.cases[a] / NLargeInteger::zero, infinity);
+                shouldBeEqual(dataL.cases[a] / LargeInteger::zero, infinity);
                 shouldBeEqual(dataL.cases[a] / 0L, infinity);
             }
             for (a = 0; a < dataL.nLongCases; a++) {
@@ -2349,11 +2349,11 @@ class NIntegerTest : public CppUnit::TestFixture {
             for (int a = 0; a < d.nCases; a++)
                 testNegate(d.cases[a]);
 
-            // Tests for infinity are hard-coded to NLargeInteger.
-            NLargeInteger i(NLargeInteger::infinity);
-            shouldBeEqual(-i, NLargeInteger::infinity);
+            // Tests for infinity are hard-coded to LargeInteger.
+            LargeInteger i(LargeInteger::infinity);
+            shouldBeEqual(-i, LargeInteger::infinity);
             i.negate();
-            shouldBeEqual(i, NLargeInteger::infinity);
+            shouldBeEqual(i, LargeInteger::infinity);
         }
 
         template <typename IntType>
@@ -2403,9 +2403,9 @@ class NIntegerTest : public CppUnit::TestFixture {
             for (int a = 0; a < d.nCases; a++)
                 testAbs(d.cases[a]);
 
-            // Tests for infinity are hard-coded to NLargeInteger.
-            NLargeInteger i(NLargeInteger::infinity);
-            shouldBeEqual(i.abs(), NLargeInteger::infinity);
+            // Tests for infinity are hard-coded to LargeInteger.
+            LargeInteger i(LargeInteger::infinity);
+            shouldBeEqual(i.abs(), LargeInteger::infinity);
         }
 
         template <typename IntType>
@@ -2527,12 +2527,12 @@ class NIntegerTest : public CppUnit::TestFixture {
             }
 
             for (exp = 0; exp < 5; ++exp) {
-                NLargeInteger pow(NLargeInteger::infinity);
+                LargeInteger pow(LargeInteger::infinity);
                 pow.raiseToPower(exp);
                 if (exp == 0)
                     shouldBeEqual(pow, 1);
                 else
-                    shouldBeEqual(pow, NLargeInteger::infinity);
+                    shouldBeEqual(pow, LargeInteger::infinity);
             }
         }
 
@@ -2775,7 +2775,7 @@ void addNInteger(CppUnit::TextUi::TestRunner& runner) {
 }
 
 template <>
-inline NIntegerTest::Data<NLargeInteger>& NIntegerTest::data<NLargeInteger>() {
+inline NIntegerTest::Data<LargeInteger>& NIntegerTest::data<LargeInteger>() {
     return dataL;
 }
 

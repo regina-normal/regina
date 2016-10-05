@@ -87,7 +87,7 @@ namespace regina {
  * Return a particular coordinate of a normal surface in the given
  * coordinate system.
  */
-+ (regina::NLargeInteger)getCoordinate:(regina::NormalCoords)coordSystem surface:(const regina::NNormalSurface&)surface whichCoord:(unsigned long)whichCoord;
++ (regina::LargeInteger)getCoordinate:(regina::NormalCoords)coordSystem surface:(const regina::NNormalSurface&)surface whichCoord:(unsigned long)whichCoord;
 
 @end
 
@@ -125,6 +125,6 @@ namespace regina {
  * Return a particular coordinate of a normal surface in the given
  * coordinate system.
  */
-+ (regina::NLargeInteger)getCoordinate:(regina::HyperCoords)coordSystem surface:(const regina::NNormalHypersurface&)surface whichCoord:(size_t)whichCoord;
++ (regina::LargeInteger)getCoordinate:(regina::HyperCoords)coordSystem surface:(const regina::NNormalHypersurface&)surface whichCoord:(size_t)whichCoord;
 
 @end

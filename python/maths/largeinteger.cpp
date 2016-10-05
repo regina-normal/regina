@@ -35,44 +35,44 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NLargeInteger;
+using regina::LargeInteger;
 
 namespace {
-    NLargeInteger& (NLargeInteger::*divByExact_large)(const NLargeInteger&) =
-        &NLargeInteger::divByExact;
-    NLargeInteger& (NLargeInteger::*divByExact_long)(long) =
-        &NLargeInteger::divByExact;
-    NLargeInteger (NLargeInteger::*divExact_large)(const NLargeInteger&) const =
-        &NLargeInteger::divExact;
-    NLargeInteger (NLargeInteger::*divExact_long)(long) const =
-        &NLargeInteger::divExact;
+    LargeInteger& (LargeInteger::*divByExact_large)(const LargeInteger&) =
+        &LargeInteger::divByExact;
+    LargeInteger& (LargeInteger::*divByExact_long)(long) =
+        &LargeInteger::divByExact;
+    LargeInteger (LargeInteger::*divExact_large)(const LargeInteger&) const =
+        &LargeInteger::divExact;
+    LargeInteger (LargeInteger::*divExact_long)(long) const =
+        &LargeInteger::divExact;
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_stringValue,
-        NLargeInteger::stringValue, 0, 1);
+        LargeInteger::stringValue, 0, 1);
 
-    boost::python::tuple divisionAlg(const NLargeInteger& n,
-            const NLargeInteger& divisor) {
-        NLargeInteger remainder;
-        NLargeInteger quotient = n.divisionAlg(divisor, remainder);
+    boost::python::tuple divisionAlg(const LargeInteger& n,
+            const LargeInteger& divisor) {
+        LargeInteger remainder;
+        LargeInteger quotient = n.divisionAlg(divisor, remainder);
         return boost::python::make_tuple(quotient, remainder);
     }
 }
 
-void addNLargeInteger() {
-    scope s = class_<NLargeInteger>("NLargeInteger")
+void addLargeInteger() {
+    scope s = class_<LargeInteger>("LargeInteger")
         .def(init<long>())
-        .def(init<const NLargeInteger&>())
+        .def(init<const LargeInteger&>())
         .def(init<const regina::NInteger&>())
         .def(init<double>())
         .def(init<const char*, optional<int> >())
-        .def("isNative", &NLargeInteger::isNative)
-        .def("isZero", &NLargeInteger::isZero)
-        .def("sign", &NLargeInteger::sign)
-        .def("isInfinite", &NLargeInteger::isInfinite)
-        .def("makeInfinite", &NLargeInteger::makeInfinite)
-        .def("longValue", &NLargeInteger::longValue)
-        .def("stringValue", &NLargeInteger::stringValue, OL_stringValue())
-        .def("swap", &NLargeInteger::swap)
+        .def("isNative", &LargeInteger::isNative)
+        .def("isZero", &LargeInteger::isZero)
+        .def("sign", &LargeInteger::sign)
+        .def("isInfinite", &LargeInteger::isInfinite)
+        .def("makeInfinite", &LargeInteger::makeInfinite)
+        .def("longValue", &LargeInteger::longValue)
+        .def("stringValue", &LargeInteger::stringValue, OL_stringValue())
+        .def("swap", &LargeInteger::swap)
         .def(self == long())
         .def(self == regina::NInteger())
         .def(self != long())
@@ -111,20 +111,20 @@ void addNLargeInteger() {
         .def("divByExact", divByExact_long, return_internal_reference<>())
         .def(self %= self)
         .def(self %= long())
-        .def("negate", &NLargeInteger::negate)
-        .def("raiseToPower", &NLargeInteger::raiseToPower)
-        .def("abs", &NLargeInteger::abs)
-        .def("gcdWith", &NLargeInteger::gcdWith)
-        .def("gcd", &NLargeInteger::gcd)
-        .def("lcmWith", &NLargeInteger::lcmWith)
-        .def("lcm", &NLargeInteger::lcm)
-        .def("gcdWithCoeffs", &NLargeInteger::gcdWithCoeffs)
-        .def("legendre", &NLargeInteger::legendre)
-        .def("randomBoundedByThis", &NLargeInteger::randomBoundedByThis)
-        .def("randomBinary", &NLargeInteger::randomBinary)
-        .def("randomCornerBinary", &NLargeInteger::randomCornerBinary)
-        .def("makeLarge", &NLargeInteger::makeLarge)
-        .def("tryReduce", &NLargeInteger::tryReduce)
+        .def("negate", &LargeInteger::negate)
+        .def("raiseToPower", &LargeInteger::raiseToPower)
+        .def("abs", &LargeInteger::abs)
+        .def("gcdWith", &LargeInteger::gcdWith)
+        .def("gcd", &LargeInteger::gcd)
+        .def("lcmWith", &LargeInteger::lcmWith)
+        .def("lcm", &LargeInteger::lcm)
+        .def("gcdWithCoeffs", &LargeInteger::gcdWithCoeffs)
+        .def("legendre", &LargeInteger::legendre)
+        .def("randomBoundedByThis", &LargeInteger::randomBoundedByThis)
+        .def("randomBinary", &LargeInteger::randomBinary)
+        .def("randomCornerBinary", &LargeInteger::randomCornerBinary)
+        .def("makeLarge", &LargeInteger::makeLarge)
+        .def("tryReduce", &LargeInteger::tryReduce)
         .def(long() + self)
         .def(long() * self)
         .def(self_ns::str(self))
@@ -136,11 +136,11 @@ void addNLargeInteger() {
 
     // Apparently there is no way in python to make a module attribute
     // read-only.
-    s.attr("zero") = NLargeInteger::zero;
-    s.attr("one") = NLargeInteger::one;
-    s.attr("infinity") = NLargeInteger::infinity;
+    s.attr("zero") = LargeInteger::zero;
+    s.attr("one") = LargeInteger::one;
+    s.attr("infinity") = LargeInteger::infinity;
 
-    boost::python::implicitly_convertible<long, NLargeInteger>();
-    boost::python::implicitly_convertible<std::string, NLargeInteger>();
+    boost::python::implicitly_convertible<long, LargeInteger>();
+    boost::python::implicitly_convertible<std::string, LargeInteger>();
 }
 

@@ -408,9 +408,9 @@ inline DoubleDescription::RaySpec<BitmaskType>::RaySpec(
 
 template <class BitmaskType>
 inline int DoubleDescription::RaySpec<BitmaskType>::sign() const {
-    if (*elements < NLargeInteger::zero)
+    if (*elements < LargeInteger::zero)
         return -1;
-    if (*elements > NLargeInteger::zero)
+    if (*elements > LargeInteger::zero)
         return 1;
     return 0;
 }

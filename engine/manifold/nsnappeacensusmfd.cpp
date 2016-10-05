@@ -191,7 +191,7 @@ NAbelianGroup* NSnapPeaCensusManifold::homology() const {
     ans->addRank(val);
 
     // The remaining characters represent torsion.
-    std::multiset<NLargeInteger> torsion;
+    std::multiset<LargeInteger> torsion;
     for (c = hom + 1; *c; ++c) {
         val = homDecode(*c);
         if (val < 0) {

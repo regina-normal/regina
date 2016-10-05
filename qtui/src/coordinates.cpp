@@ -415,7 +415,7 @@ namespace Coordinates {
         return context->tr("This coordinate system is not known");
     }
 
-    regina::NLargeInteger getCoordinate(NormalCoords coordSystem,
+    regina::LargeInteger getCoordinate(NormalCoords coordSystem,
             const regina::NNormalSurface& surface, size_t whichCoord) {
         if (coordSystem == regina::NS_STANDARD) {
             if (whichCoord % 7 < 4)
@@ -460,7 +460,7 @@ namespace Coordinates {
         return (long)0;
     }
 
-    regina::NLargeInteger getCoordinate(HyperCoords coordSystem,
+    regina::LargeInteger getCoordinate(HyperCoords coordSystem,
             const regina::NNormalHypersurface& surface, size_t whichCoord) {
         if (coordSystem == regina::HS_STANDARD) {
             if (whichCoord % 15 < 5)

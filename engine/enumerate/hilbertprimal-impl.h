@@ -164,14 +164,14 @@ void HilbertPrimal::enumerateUsingBitmask(OutputIterator results,
         tracker->setPercent(90);
 
     RayClass* ans;
-    NLargeInteger tmpInt;
+    LargeInteger tmpInt;
     for (hsit = finalBasis.begin(); hsit != finalBasis.end(); ++hsit) {
         ans = new RayClass(dim);
         for (i = 0, hvit = hsit->begin(); hvit != hsit->end(); ++hvit, ++i) {
             // We make two copies of the GMP integer instead of one.
             // This is because Vector/Ray does not give us direct
             // non-const access to its elements, and so we need a
-            // temporary NLargeInteger to pass through setElement() instead.
+            // temporary LargeInteger to pass through setElement() instead.
             tmpInt.setRaw(hvit->get_mpz_t());
             ans->setElement(i, tmpInt);
         }

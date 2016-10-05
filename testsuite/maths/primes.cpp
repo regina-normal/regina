@@ -35,7 +35,7 @@
 #include "testsuite/maths/testmaths.h"
 #include "maths/primes.h"
 
-using regina::NLargeInteger;
+using regina::LargeInteger;
 using regina::Primes;
 
 class PrimesTest : public CppUnit::TestFixture {
@@ -80,7 +80,7 @@ class PrimesTest : public CppUnit::TestFixture {
         }
 
         void testPrime(long which, long prime) {
-            NLargeInteger ans = Primes::prime(which);
+            LargeInteger ans = Primes::prime(which);
             if (ans != prime) {
                 std::ostringstream msg;
                 msg << "Prime #" << which << " should be "
@@ -121,7 +121,7 @@ class PrimesTest : public CppUnit::TestFixture {
             else
                 expectedLen = 5;
 
-            std::vector<NLargeInteger> factors = Primes::primeDecomp(n);
+            std::vector<LargeInteger> factors = Primes::primeDecomp(n);
 
             if (factors.size() != expectedLen) {
                 std::ostringstream msg;
@@ -191,7 +191,7 @@ class PrimesTest : public CppUnit::TestFixture {
             else
                 expectedLen = 3;
 
-            std::vector<std::pair<NLargeInteger, unsigned long> > powers =
+            std::vector<std::pair<LargeInteger, unsigned long> > powers =
                 Primes::primePowerDecomp(n);
 
             if (powers.size() != expectedLen) {

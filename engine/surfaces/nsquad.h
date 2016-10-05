@@ -99,14 +99,14 @@ class REGINA_API NNormalSurfaceVectorQuad :
          *
          * @param cloneMe the vector to clone.
          */
-        NNormalSurfaceVectorQuad(const Vector<NLargeInteger>& cloneMe);
+        NNormalSurfaceVectorQuad(const Vector<LargeInteger>& cloneMe);
 
         virtual NNormalSurfaceVector* makeMirror(const NTriangulation* triang)
             const;
 
         virtual const NVertex* isVertexLink(const NTriangulation* triang) const;
 
-        virtual NLargeInteger octs(size_t tetIndex,
+        virtual LargeInteger octs(size_t tetIndex,
             int octType, const NTriangulation* triang) const;
 
         static NNormalSurfaceVector* makeZeroVector(
@@ -125,7 +125,7 @@ inline NNormalSurfaceVectorQuad::NNormalSurfaceVectorQuad(
         size_t length) : NNormalSurfaceVectorMirrored(length) {
 }
 inline NNormalSurfaceVectorQuad::NNormalSurfaceVectorQuad(
-        const Vector<NLargeInteger>& cloneMe) :
+        const Vector<LargeInteger>& cloneMe) :
         NNormalSurfaceVectorMirrored(cloneMe) {
 }
 
@@ -135,7 +135,7 @@ inline const NVertex* NNormalSurfaceVectorQuad::isVertexLink(
     return 0;
 }
 
-inline NLargeInteger NNormalSurfaceVectorQuad::octs(
+inline LargeInteger NNormalSurfaceVectorQuad::octs(
         size_t, int, const NTriangulation*) const {
     return zero;
 }

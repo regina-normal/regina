@@ -35,8 +35,8 @@
 namespace regina {
 
 void Ray::scaleDown() {
-    NLargeInteger gcd; // Initialised to 0.
-    NLargeInteger* e;
+    LargeInteger gcd; // Initialised to 0.
+    LargeInteger* e;
     for (e = elements; e < end; ++e) {
         if (e->isInfinite() || (*e) == zero)
             continue;

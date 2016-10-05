@@ -160,7 +160,7 @@ bool NNormalSurfaceVector::hasMultipleOctDiscs(const NTriangulation* triang)
         const {
     size_t nTets = triang->size();
     int oct;
-    NLargeInteger coord;
+    LargeInteger coord;
     for (size_t tet=0; tet<nTets; tet++)
         for (oct=0; oct<3; oct++) {
             coord = octs(tet, oct, triang);
@@ -199,7 +199,7 @@ bool NNormalSurfaceVector::isSplitting(const NTriangulation* triang) const {
     size_t nTets = triang->size();
     size_t tet;
     int type;
-    NLargeInteger tot;
+    LargeInteger tot;
     for (tet = 0; tet < nTets; tet++) {
         for (type = 0; type < 4; type++)
             if (triangles(tet, type, triang) != 0)
@@ -218,12 +218,12 @@ bool NNormalSurfaceVector::isSplitting(const NTriangulation* triang) const {
     return true;
 }
 
-NLargeInteger NNormalSurfaceVector::isCentral(const NTriangulation* triang)
+LargeInteger NNormalSurfaceVector::isCentral(const NTriangulation* triang)
         const {
     size_t nTets = triang->size();
     size_t tet;
     int type;
-    NLargeInteger tot, tetTot;
+    LargeInteger tot, tetTot;
     for (tet = 0; tet < nTets; tet++) {
         tetTot = 0L;
         for (type = 0; type < 4; type++)
@@ -233,7 +233,7 @@ NLargeInteger NNormalSurfaceVector::isCentral(const NTriangulation* triang)
         for (type = 0; type < 3; type++)
             tetTot += octs(tet, type, triang);
         if (tetTot > 1)
-            return NLargeInteger::zero;
+            return LargeInteger::zero;
         tot += tetTot;
     }
     return tot;
@@ -353,7 +353,7 @@ void NNormalSurface::calculateOctPosition() const {
 void NNormalSurface::calculateEulerChar() const {
     size_t index, tot;
     int type;
-    NLargeInteger ans = NLargeInteger::zero;
+    LargeInteger ans = LargeInteger::zero;
 
     // Add vertices.
     tot = triangulation_->countEdges();
@@ -456,8 +456,8 @@ NMatrixInt* NNormalSurface::boundaryIntersections() const {
     size_t numTet = snapPea->size();
     NMatrixInt* slopes = new NMatrixInt(cusps, 2);
     for(unsigned int i=0; i < cusps; i++) {
-        NLargeInteger meridian; // constructor sets this to 0
-        NLargeInteger longitude; // constructor sets this to 0
+        LargeInteger meridian; // constructor sets this to 0
+        LargeInteger longitude; // constructor sets this to 0
         for(unsigned int j=0; j < numTet; j++) {
             meridian += 
                 equations->entry(2*i, 3*j)*quads(j, quadSeparating[0][1]) +
@@ -485,7 +485,7 @@ void NNormalSurface::writeXMLData(std::ostream& out) const {
         << xmlEncodeSpecialChars(name_) << "\">";
 
     // Write all non-zero entries.
-    NLargeInteger entry;
+    LargeInteger entry;
     for (size_t i = 0; i < vecLen; i++) {
         entry = (*vector)[i];
         if (entry != 0)
@@ -512,14 +512,14 @@ void NNormalSurface::writeXMLData(std::ostream& out) const {
 
 // Default implementations for oriented surfaces. Returns zero as any
 // coordinate system which supports orientation should override these.
-NLargeInteger NNormalSurfaceVector::orientedTriangles(
+LargeInteger NNormalSurfaceVector::orientedTriangles(
         size_t, int, const NTriangulation*, bool) const {
-    return NLargeInteger::zero;
+    return LargeInteger::zero;
 };
 
-NLargeInteger NNormalSurfaceVector::orientedQuads(
+LargeInteger NNormalSurfaceVector::orientedQuads(
         size_t, int, const NTriangulation*, bool) const {
-    return NLargeInteger::zero;
+    return LargeInteger::zero;
 };
 
 } // namespace regina

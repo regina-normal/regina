@@ -89,7 +89,7 @@ struct InfinityBase;
 
 #ifndef __DOXYGEN
 /**
- * An internal base class inherited by NLargeInteger, which provides
+ * An internal base class inherited by LargeInteger, which provides
  * support for infinity as an allowed value.
  */
 template <>
@@ -148,7 +148,7 @@ struct InfinityBase<false> {
  *
  * \ifacespython Both variants of this template are available through Python.
  * For \a supportInfinity = \c false, use the name NInteger.
- * For \a supportInfinity = \c true, use the name NLargeInteger.
+ * For \a supportInfinity = \c true, use the name LargeInteger.
  */
 template <bool supportInfinity = false>
 class REGINA_API NIntegerBase : private InfinityBase<supportInfinity> {
@@ -1498,12 +1498,12 @@ class REGINA_API NIntegerBase : private InfinityBase<supportInfinity> {
 // doesn't require marking the entire template as REGINA_API.
 
 /**
- * NLargeInteger is a typedef for NIntegerBase<true>, which offers
+ * LargeInteger is a typedef for NIntegerBase<true>, which offers
  * arbitrary precision integers with support for infinity.
  *
  * \ifacespython This typedef is available in Python.
  */
-typedef NIntegerBase<true> NLargeInteger;
+typedef NIntegerBase<true> LargeInteger;
 
 /**
  * NInteger is a typedef for NIntegerBase<false>, which offers

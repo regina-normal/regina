@@ -70,7 +70,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class REGINA_API Ray : public Vector<NLargeInteger> {
+class REGINA_API Ray : public Vector<LargeInteger> {
     public:
         /**
          * Creates a new ray all of whose coordinates are initialised to zero.
@@ -83,7 +83,7 @@ class REGINA_API Ray : public Vector<NLargeInteger> {
          *
          * @param cloneMe the ray to clone.
          */
-        Ray(const Vector<NLargeInteger>& cloneMe);
+        Ray(const Vector<LargeInteger>& cloneMe);
 
         /**
          * Scales this vector down by the greatest common divisor of all
@@ -104,7 +104,7 @@ class REGINA_API Ray : public Vector<NLargeInteger> {
          * Negates every element of this vector.
          *
          * This is an optimised implementation that overrides
-         * Vector<NLargeInteger>::negate().
+         * Vector<LargeInteger>::negate().
          */
         inline void negate();
 };
@@ -121,18 +121,18 @@ REGINA_DEPRECATED typedef Ray NRay;
 
 // Inline functions for Ray
 
-inline Ray::Ray(size_t length) : Vector<NLargeInteger>(length) {
+inline Ray::Ray(size_t length) : Vector<LargeInteger>(length) {
     // Don't bother passing zero to the parent constructor, since the
-    // default NLargeInteger constructor already sets elements to zero.
+    // default LargeInteger constructor already sets elements to zero.
 }
 
-inline Ray::Ray(const Vector<NLargeInteger>& cloneMe) :
-        Vector<NLargeInteger>(cloneMe) {
+inline Ray::Ray(const Vector<LargeInteger>& cloneMe) :
+        Vector<LargeInteger>(cloneMe) {
 }
 
 inline void Ray::negate() {
     // Slightly more efficient than the default implementation.
-    for (NLargeInteger* e = elements; e < end; ++e)
+    for (LargeInteger* e = elements; e < end; ++e)
         e->negate();
 }
 

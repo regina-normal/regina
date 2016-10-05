@@ -210,7 +210,7 @@ template <class BitmaskType>
 inline HilbertCD::VecSpec<BitmaskType>::VecSpec(size_t dim) :
         Ray(dim), mask_(dim) {
     // All vector elements are initialised to zero thanks to the
-    // NLargeInteger default constructor.
+    // LargeInteger default constructor.
 }
 
 } // namespace regina

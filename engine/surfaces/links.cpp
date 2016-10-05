@@ -77,11 +77,11 @@ const NVertex* NNormalSurfaceVector::isVertexLink(const NTriangulation* triang)
     std::set<NVertex*> notAns;
         /**< We will ignore notAns once ans != 0. */
     NVertex* ans = 0;
-    NLargeInteger ansMult;
+    LargeInteger ansMult;
 
     const NTetrahedron* t;
     NVertex* v;
-    NLargeInteger coord;
+    LargeInteger coord;
 
     for (tet = 0; tet < nTets; tet++) {
         t = triang->tetrahedron(tet);
@@ -148,11 +148,11 @@ std::pair<const NEdge*, const NEdge*> NNormalSurfaceVector::isThinEdgeLink(
         /**< We will ignore notAns once ans != 0. */
     bool foundQuads = false;
     const NEdge* ans[2];
-    NLargeInteger ansMultDouble;
+    LargeInteger ansMultDouble;
 
     const NTetrahedron* t;
     NEdge* e[6]; // { 2*link, 4*intersect }
-    NLargeInteger coord;
+    LargeInteger coord;
     int i;
 
     for (tet = 0; tet < nTets; tet++) {

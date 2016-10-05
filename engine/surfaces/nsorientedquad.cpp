@@ -149,7 +149,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
     int i;
     for (row = 0; row < nRows; row+=14)
         for (i = 0; i < 8; i++)
-            ans->setElement(row + i, NLargeInteger::infinity);
+            ans->setElement(row + i, LargeInteger::infinity);
     for (row = 0; 14 * row < nRows; row++)
         for (i = 0; i < 6; i++)
             ans->setElement(14 * row + 8 + i, (*this)[6 * row + i]);
@@ -164,7 +164,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
         std::set<NEdge*> usedEdges[2];
             // usedEdges[i] contains the edges for which we have already
             // examined end i.
-        NLargeInteger min;
+        LargeInteger min;
             // The minimum coordinate that has been assigned about this
             // vertex.
         std::deque<EdgeEnd> examine;
@@ -178,7 +178,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
         NTetrahedron* tet;
         NPerm4 tetPerm, adjPerm;
         size_t tetIndex, adjIndex;
-        NLargeInteger expect;
+        LargeInteger expect;
         for (NTriangulation::VertexIterator vit = triang->vertices().begin();
                 vit != triang->vertices().end(); vit++) {
             usedEdges[0].clear(); usedEdges[1].clear();
@@ -188,9 +188,9 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
             // Pick some triangular disc and set it to zero.
             const NVertexEmbedding& vemb = (*vit)->front();
             row = 14 * vemb.tetrahedron()->index() + 2 * vemb.vertex() + orient;
-            ans->setElement(row, NLargeInteger::zero);
+            ans->setElement(row, LargeInteger::zero);
 
-            min = NLargeInteger::zero;
+            min = LargeInteger::zero;
 
             // Mark the three surrounding edge ends for examination.
             for (i=0; i<4; i++) {
@@ -325,7 +325,7 @@ NNormalSurfaceVector* NNormalSurfaceVectorOrientedQuad::makeMirror(
                 row = 14 * emb.tetrahedron()->index()
                     + 2 * emb.vertex() + orient;
                 if (broken)
-                    ans->setElement(row, NLargeInteger::infinity);
+                    ans->setElement(row, LargeInteger::infinity);
                 else
                     ans->setElement(row, (*ans)[row] - min);
             }

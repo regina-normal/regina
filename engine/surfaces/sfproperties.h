@@ -80,7 +80,7 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
     REGINA_SURFACE_FILTER(NSurfaceFilterProperties, NS_FILTER_PROPERTIES)
 
     private:
-        std::set<NLargeInteger> eulerChar_;
+        std::set<LargeInteger> eulerChar_;
             /**< The set of allowable Euler characteristics.  An empty
                  set signifies that any Euler characteristic is allowed. */
         BoolSet orientability_;
@@ -116,7 +116,7 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
          *
          * @return the set of allowable Euler characteristics.
          */
-        const std::set<NLargeInteger>& eulerChars() const;
+        const std::set<LargeInteger>& eulerChars() const;
         /**
          * Returns the number of allowable Euler characteristics.
          * See eulerChars() for further details.
@@ -133,7 +133,7 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
          * inclusive.
          * @return the requested allowable Euler characteristic.
          */
-        NLargeInteger eulerChar(size_t index) const;
+        LargeInteger eulerChar(size_t index) const;
         /**
          * Returns the set of allowable orientabilities.  Note that this
          * is a subset of <tt>{ true, false }</tt>.
@@ -170,7 +170,7 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
          *
          * @param s the new set of allowable Euler characteristics.
          */
-        void setEulerChars(const std::set<NLargeInteger>& s);
+        void setEulerChars(const std::set<LargeInteger>& s);
 
         /**
          * Adds the given Euler characteristic to the set of allowable
@@ -178,7 +178,7 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
          *
          * @param ec the new allowable Euler characteristic.
          */
-        void addEulerChar(const NLargeInteger& ec);
+        void addEulerChar(const LargeInteger& ec);
         /**
          * Removes the given Euler characteristic from the set of allowable
          * Euler characteristics.  See eulerChars() for further details.
@@ -191,7 +191,7 @@ class REGINA_API NSurfaceFilterProperties : public NSurfaceFilter {
          *
          * @param ec the allowable Euler characteristic to remove.
          */
-        void removeEulerChar(const NLargeInteger& ec);
+        void removeEulerChar(const LargeInteger& ec);
         /**
          * Empties the set of allowable Euler characteristics.  See
          * eulerChars() for further details.
@@ -250,7 +250,7 @@ inline NSurfaceFilterProperties::NSurfaceFilterProperties(
         realBoundary_(cloneMe.realBoundary_) {
 }
 
-inline const std::set<NLargeInteger>& NSurfaceFilterProperties::eulerChars()
+inline const std::set<LargeInteger>& NSurfaceFilterProperties::eulerChars()
         const {
     return eulerChar_;
 }
@@ -268,17 +268,17 @@ inline BoolSet NSurfaceFilterProperties::realBoundary() const {
 }
 
 inline void NSurfaceFilterProperties::setEulerChars(
-        const std::set<NLargeInteger>& s) {
+        const std::set<LargeInteger>& s) {
     if (eulerChar_ != s) {
         ChangeEventSpan span(this);
         eulerChar_ = s;
     }
 }
-inline void NSurfaceFilterProperties::addEulerChar(const NLargeInteger& ec) {
+inline void NSurfaceFilterProperties::addEulerChar(const LargeInteger& ec) {
     ChangeEventSpan span(this);
     eulerChar_.insert(ec);
 }
-inline void NSurfaceFilterProperties::removeEulerChar(const NLargeInteger& ec) {
+inline void NSurfaceFilterProperties::removeEulerChar(const LargeInteger& ec) {
     ChangeEventSpan span(this);
     eulerChar_.erase(ec);
 }

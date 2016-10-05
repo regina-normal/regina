@@ -87,7 +87,7 @@ class REGINA_API Primes {
         static const unsigned long primeSeedList[];
             /**< The full hard-coded list of seed primes. */
 
-        static std::vector<NLargeInteger> largePrimes;
+        static std::vector<LargeInteger> largePrimes;
             /**< Primes (or suspected primes) that have been found thus
                  far, not including the initial seed primes.  This list
                  begins empty, and is expanded as required throughout the
@@ -137,7 +137,7 @@ class REGINA_API Primes {
          * @return the requested prime (or suspected prime), or zero if
          * \a which was too large and \a autoGrow was \c false.
          */
-        static NLargeInteger prime(unsigned long which, bool autoGrow = true);
+        static LargeInteger prime(unsigned long which, bool autoGrow = true);
 
         /**
          * Returns the prime factorisation of the given integer as a list
@@ -177,13 +177,13 @@ class REGINA_API Primes {
          * primeDecompInt() is also available.  The routine
          * primeDecompInt() behaves identically to this routine except
          * that the (i) return values are of ordinary integer type, not
-         * NLargeInteger; (ii) the input value \a n must lie within
+         * LargeInteger; (ii) the input value \a n must lie within
          * the C++ long integer range (otherwise the behaviour is undefined).
          *
          * @param n the integer to factorise.
          * @return the list of prime factors as described above.
          */
-        static std::vector<NLargeInteger> primeDecomp(const NLargeInteger& n);
+        static std::vector<LargeInteger> primeDecomp(const LargeInteger& n);
 
         /**
          * Returns the prime factorisation of the given integer as a
@@ -230,14 +230,14 @@ class REGINA_API Primes {
          * primePowerDecompInt() is also available.  The routine
          * primePowerDecompInt() behaves identically to this routine except
          * that the (i) return values are of ordinary integer type, not
-         * NLargeInteger; (ii) the input value \a n must lie within
+         * LargeInteger; (ii) the input value \a n must lie within
          * the C++ long integer range (otherwise the behaviour is undefined).
          *
          * @param n the integer to factorise.
          * @return the list of prime power factors as described above.
          */
-        static std::vector<std::pair<NLargeInteger, unsigned long> >
-            primePowerDecomp(const NLargeInteger& n);
+        static std::vector<std::pair<LargeInteger, unsigned long> >
+            primePowerDecomp(const LargeInteger& n);
 
     private:
         /**

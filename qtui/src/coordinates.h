@@ -137,14 +137,14 @@ namespace Coordinates {
      * Return a particular coordinate of a normal surface in the given
      * coordinate system.
      */
-    regina::NLargeInteger getCoordinate(regina::NormalCoords coordSystem,
+    regina::LargeInteger getCoordinate(regina::NormalCoords coordSystem,
         const regina::NNormalSurface& surface, size_t whichCoord);
 
     /**
      * Return a particular coordinate of a normal hypersurface in the given
      * coordinate system.
      */
-    regina::NLargeInteger getCoordinate(regina::HyperCoords coordSystem,
+    regina::LargeInteger getCoordinate(regina::HyperCoords coordSystem,
         const regina::NNormalHypersurface& surface, size_t whichCoord);
 };
 

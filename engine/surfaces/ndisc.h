@@ -68,7 +68,7 @@ namespace regina {
  * flexible, the meaning of NDiscSpec::type is fixed as described above.
  *
  * \warning This class converts the indices of normal discs of a
- * given type from NLargeInteger to <tt>unsigned long</tt>.  See the
+ * given type from LargeInteger to <tt>unsigned long</tt>.  See the
  * precondition below.
  *
  * \pre The number of normal discs of a particular type
@@ -193,7 +193,7 @@ REGINA_API bool discOrientationFollowsEdge(int discType, int vertex,
  * coordinate system used.
  *
  * \warning This class converts the number of normal discs of a
- * given type from NLargeInteger to <tt>unsigned long</tt>.  See the
+ * given type from LargeInteger to <tt>unsigned long</tt>.  See the
  * precondition below.
  *
  * \pre The number of normal discs of a particular type
@@ -323,7 +323,7 @@ class REGINA_API NDiscSetTet {
  * tetrahedron.
  *
  * \warning This class converts the number of normal discs of a
- * given type from NLargeInteger to <tt>unsigned long</tt>.  See the
+ * given type from LargeInteger to <tt>unsigned long</tt>.  See the
  * precondition below.
  *
  * \pre The number of normal discs of a particular type
@@ -463,7 +463,7 @@ class NDiscSetTetData : public NDiscSetTet {
  * tetrahedron.
  *
  * \warning This class converts the number of normal discs of a
- * given type from NLargeInteger to <tt>unsigned long</tt>.  See the
+ * given type from LargeInteger to <tt>unsigned long</tt>.  See the
  * precondition below.
  *
  * \pre The number of normal discs of a particular type
@@ -581,7 +581,7 @@ class REGINA_API NDiscSetSurface {
  * tetDiscs() will return an object of class NDiscSetTetData<T>).
  *
  * \warning This class converts the number of normal discs of a
- * given type from NLargeInteger to <tt>unsigned long</tt>.  See the
+ * given type from LargeInteger to <tt>unsigned long</tt>.  See the
  * precondition below.
  *
  * \pre The number of normal discs of a particular type
@@ -650,7 +650,7 @@ class NDiscSetSurfaceData : public NDiscSetSurface {
  * surface.
  *
  * \warning This class converts the indices of normal discs of a
- * given type from NLargeInteger to <tt>unsigned long</tt>.  See the
+ * given type from LargeInteger to <tt>unsigned long</tt>.  See the
  * precondition below.
  *
  * \pre The number of normal discs of a particular type

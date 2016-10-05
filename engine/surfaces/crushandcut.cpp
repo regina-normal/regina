@@ -1012,7 +1012,7 @@ namespace {
         for (i = 0; i < 4; ++i)
             triCount_[i] = s->triangles(tetIndex, i).longValue();
 
-        NLargeInteger coord;
+        LargeInteger coord;
         if ((coord = s->quads(tetIndex, 0)) > 0) {
             quadCount_ = coord.longValue();
             quadType_ = 0;

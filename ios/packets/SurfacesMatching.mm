@@ -134,7 +134,7 @@ static NSString *regularCellID = @"_ReginaRegularSpreadCell";
 
 - (id)spreadView:(MDSpreadView *)aSpreadView objectValueForRowAtIndexPath:(MDIndexPath *)rowPath forColumnAtIndexPath:(MDIndexPath *)columnPath
 {
-    regina::NLargeInteger entry = self.matrix->entry(rowPath.row, columnPath.column);
+    regina::LargeInteger entry = self.matrix->entry(rowPath.row, columnPath.column);
     if (entry.isZero())
         return @"";
     else

@@ -65,7 +65,7 @@ void NXMLNormalSurfaceReader::initialChars(const std::string& chars) {
         return;
 
     long pos;
-    NLargeInteger value;
+    LargeInteger value;
     for (unsigned long i = 0; i < tokens.size(); i += 2) {
         if (valueOf(tokens[i], pos))
             if (valueOf(tokens[i + 1], value))
@@ -92,7 +92,7 @@ XMLElementReader* NXMLNormalSurfaceReader::startSubElement(
         return new XMLElementReader();
 
     if (subTagName == "euler") {
-        NLargeInteger val;
+        LargeInteger val;
         if (valueOf(props.lookup("value"), val))
             surface_->eulerChar_ = val;
     } else if (subTagName == "orbl") {

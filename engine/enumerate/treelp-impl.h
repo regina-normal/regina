@@ -862,9 +862,9 @@ void LPData<LPConstraint, Integer>::extractSolution(
     //
     // First compute this lcm.
     unsigned i;
-    NLargeInteger lcm(1);
+    LargeInteger lcm(1);
     for (i = 0; i < rank_; ++i)
-        lcm = lcm.lcm(NLargeInteger(entry(i, basis_[i])));
+        lcm = lcm.lcm(LargeInteger(entry(i, basis_[i])));
 
     // Now compute (lcm * the solution vector).  We do not yet
     // take into account the change of variables x_i -> x_i - 1
@@ -880,13 +880,13 @@ void LPData<LPConstraint, Integer>::extractSolution(
     // Because we are multiplying everything by lcm, the
     // divisions in the following code are all perfectly safe
     // (and give precise integer results).
-    NLargeInteger coord;
+    LargeInteger coord;
     for (i = 0; i < rank_; ++i) {
         if (basis_[i] >= v.size())
             continue;
         coord = lcm;
-        coord *= NLargeInteger(rhs_[i]);
-        coord /= NLargeInteger(entry(i, basis_[i]));
+        coord *= LargeInteger(rhs_[i]);
+        coord /= LargeInteger(entry(i, basis_[i]));
         v.setElement(columnPerm[basis_[i]], coord);
     }
 

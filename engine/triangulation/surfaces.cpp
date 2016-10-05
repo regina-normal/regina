@@ -172,7 +172,7 @@ NNormalSurface* NTriangulation::hasOctagonalAlmostNormalSphere() {
     unsigned long tet;
     unsigned oct;
     bool found, broken;
-    NLargeInteger coord;
+    LargeInteger coord;
     for (size_t i = 0; i < surfaces->size() && ! ans; ++i) {
         s = surfaces->surface(i);
 
@@ -253,7 +253,7 @@ bool NTriangulation::hasSplittingSurface() {
     // Run through all vertex surfaces.
     unsigned long nSurfaces = surfaces->size();
     const NNormalSurface* s;
-    NLargeInteger chi;
+    LargeInteger chi;
     for (unsigned long i = 0; i < nSurfaces; i++) {
         s = surfaces->surface(i);
 

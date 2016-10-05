@@ -524,7 +524,7 @@ void NormalSurfaces::Enumerator::fillFundamentalFullCone() {
         std::vector<mpz_class>& v(input.back());
         v.reserve(eqns->columns());
         for (c = 0; c < eqns->columns(); ++c) {
-            NLargeInteger& entry(eqns->entry(r, c));
+            LargeInteger& entry(eqns->entry(r, c));
             if (entry.isNative())
                 v.push_back(mpz_class(entry.longValue()));
             else
@@ -558,7 +558,7 @@ void NormalSurfaces::Enumerator::fillFundamentalFullCone() {
         EnumConstraints::const_iterator eit;
         std::set<unsigned long>::const_iterator sit;
         NNormalSurfaceVector* v;
-        NLargeInteger tmpInt;
+        LargeInteger tmpInt;
 
         const std::vector<std::vector<mpz_class> > basis =
             cone.getHilbertBasis();

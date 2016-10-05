@@ -162,13 +162,13 @@ void NSurfaceSummaryUI::refresh() {
     unsigned long spun = 0;
     unsigned long bounded = 0;
     unsigned long closed = 0;
-    std::map<regina::NLargeInteger, unsigned long>
+    std::map<regina::LargeInteger, unsigned long>
         countClosed[2][2], countBounded[2][2]; /* 2-sided, orbl ? */
-    std::set<regina::NLargeInteger> allECsClosed, allECsBounded;
+    std::set<regina::LargeInteger> allECsClosed, allECsBounded;
     std::set<std::pair<int, int> > allTypesClosed, allTypesBounded;
 
     const regina::NNormalSurface* s;
-    regina::NLargeInteger euler;
+    regina::LargeInteger euler;
     std::pair<int, int> type;
     unsigned long i;
     for (i = 0; i < n; ++i) {
@@ -207,8 +207,8 @@ void NSurfaceSummaryUI::refresh() {
         tot->setText(tr("<qt><b>%1 surfaces in total.</b></qt>").arg(n));
 
     std::set<std::pair<int, int> >::const_iterator typeIt;
-    std::set<regina::NLargeInteger>::const_iterator ECIt;
-    std::map<regina::NLargeInteger, unsigned long>::const_iterator countIt;
+    std::set<regina::LargeInteger>::const_iterator ECIt;
+    std::map<regina::LargeInteger, unsigned long>::const_iterator countIt;
     QTreeWidgetItem *row, *header;
     int col;
 

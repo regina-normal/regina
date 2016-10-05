@@ -36,7 +36,7 @@
 
 using namespace boost::python;
 using regina::NInteger;
-using regina::NLargeInteger;
+using regina::LargeInteger;
 using regina::Rational;
 
 namespace {
@@ -60,10 +60,10 @@ void addRational() {
         scope s = class_<Rational>("Rational")
             .def(init<const Rational&>())
             .def(init<const NInteger&>())
-            .def(init<const NLargeInteger&>())
+            .def(init<const LargeInteger&>())
             .def(init<long>())
             .def(init<const NInteger&, const NInteger&>())
-            .def(init<const NLargeInteger&, const NLargeInteger&>())
+            .def(init<const LargeInteger&, const LargeInteger&>())
             .def(init<long, unsigned long>())
             .def("swap", &Rational::swap)
             .def("numerator", &Rational::numerator)
@@ -103,7 +103,7 @@ void addRational() {
     }
 
     boost::python::implicitly_convertible<NInteger, Rational>();
-    boost::python::implicitly_convertible<NLargeInteger, Rational>();
+    boost::python::implicitly_convertible<LargeInteger, Rational>();
     boost::python::implicitly_convertible<long, Rational>();
 
     scope().attr("NRational") = scope().attr("Rational");

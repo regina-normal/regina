@@ -38,7 +38,7 @@
 
 namespace regina {
 
-NLargeInteger NNormalSurfaceVectorANStandard::edgeWeight(
+LargeInteger NNormalSurfaceVectorANStandard::edgeWeight(
         size_t edgeIndex, const NTriangulation* triang) const {
     // Find a tetrahedron next to the edge in question.
     const NEdgeEmbedding& emb = triang->edge(edgeIndex)->front();
@@ -48,7 +48,7 @@ NLargeInteger NNormalSurfaceVectorANStandard::edgeWeight(
 
     // Add up the triangles, quads and octagons meeting that edge.
     // Triangles:
-    NLargeInteger ans((*this)[10 * tetIndex + start]);
+    LargeInteger ans((*this)[10 * tetIndex + start]);
     ans += (*this)[10 * tetIndex + end];
     // Quads:
     ans += (*this)[10 * tetIndex + 4 + quadMeeting[start][end][0]];
@@ -61,7 +61,7 @@ NLargeInteger NNormalSurfaceVectorANStandard::edgeWeight(
     return ans;
 }
 
-NLargeInteger NNormalSurfaceVectorANStandard::arcs(size_t triIndex,
+LargeInteger NNormalSurfaceVectorANStandard::arcs(size_t triIndex,
         int triVertex, const NTriangulation* triang) const {
     // Find a tetrahedron next to the triangle in question.
     const NTriangleEmbedding& emb = triang->triangles()[triIndex]->front();
@@ -71,7 +71,7 @@ NLargeInteger NNormalSurfaceVectorANStandard::arcs(size_t triIndex,
 
     // Add up the discs meeting that triangle in that required arc.
     // Triangles:
-    NLargeInteger ans((*this)[10 * tetIndex + vertex]);
+    LargeInteger ans((*this)[10 * tetIndex + vertex]);
     // Quads:
     ans += (*this)[10 * tetIndex + 4 + quadSeparating[vertex][backOfFace]];
     // Octagons:

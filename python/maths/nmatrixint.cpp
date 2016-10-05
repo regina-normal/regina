@@ -39,12 +39,12 @@ using namespace boost::python;
 using regina::NMatrixInt;
 
 namespace {
-    regina::NLargeInteger& (NMatrixInt::*entry_non_const)(unsigned long,
+    regina::LargeInteger& (NMatrixInt::*entry_non_const)(unsigned long,
         unsigned long) = &NMatrixInt::entry;
     void (NMatrixInt::*addRow_triple)(unsigned long, unsigned long,
-        regina::NLargeInteger) = &NMatrixInt::addRow;
+        regina::LargeInteger) = &NMatrixInt::addRow;
     void (NMatrixInt::*addCol_triple)(unsigned long, unsigned long,
-        regina::NLargeInteger) = &NMatrixInt::addCol;
+        regina::LargeInteger) = &NMatrixInt::addCol;
 
     std::unique_ptr<NMatrixInt> multiply(const NMatrixInt& m1,
             const NMatrixInt& m2) {
@@ -52,7 +52,7 @@ namespace {
     }
 
     void setEntry(NMatrixInt& matrix, unsigned long row, unsigned long column,
-            const regina::NLargeInteger& value) {
+            const regina::LargeInteger& value) {
         matrix.entry(row, column) = value;
     }
 
@@ -69,7 +69,7 @@ namespace {
                 for (c = 0; c < matrix.columns(); ++c) {
                     // Accept any type that we know how to convert to a
                     // large integer.
-                    extract<regina::NLargeInteger&> x_large(values[i]);
+                    extract<regina::LargeInteger&> x_large(values[i]);
                     if (x_large.check()) {
                         matrix.entry(r, c) = x_large();
                         ++i;
