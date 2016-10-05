@@ -480,7 +480,6 @@ class NPolynomial : public ShortOutput<NPolynomial<T>, true> {
          * @param variable the symbol to use for the variable in this
          * polynomial.  This may be \c null, in which case the default
          * variable \c x will be used.
-         * @return a reference to the given output stream.
          */
         void writeTextShort(std::ostream& out, bool utf8 = false,
             const char* variable = 0) const;
