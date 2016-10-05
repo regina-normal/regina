@@ -39,7 +39,7 @@
 #define HUGE_INTEGER "12364981726394781629378461923786491874569283746672"
 
 using regina::NInteger;
-using regina::NIntegerBase;
+using regina::IntegerBase;
 using regina::LargeInteger;
 using regina::Rational;
 
@@ -99,23 +99,23 @@ class RationalTest : public CppUnit::TestFixture {
         }
 
         template <bool supportInfinity>
-        void verifyConstructFinite(const NIntegerBase<supportInfinity>& val) {
+        void verifyConstructFinite(const IntegerBase<supportInfinity>& val) {
             Rational r(val);
             if (r.numerator() != val) {
                 std::ostringstream msg;
-                msg << "Rational NIntegerBase<...>" << val <<
+                msg << "Rational IntegerBase<...>" << val <<
                     " reports an incorrect numerator.";
                 CPPUNIT_FAIL(msg.str());
             }
             if (r.denominator() != 1) {
                 std::ostringstream msg;
-                msg << "Rational NIntegerBase<...>" << val <<
+                msg << "Rational IntegerBase<...>" << val <<
                     " reports an incorrect denominator.";
                 CPPUNIT_FAIL(msg.str());
             }
             if (str(r) != val.stringValue()) {
                 std::ostringstream msg;
-                msg << "Rational NIntegerBase<...>" << val <<
+                msg << "Rational IntegerBase<...>" << val <<
                     " reports an incorrect string.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -235,18 +235,18 @@ class RationalTest : public CppUnit::TestFixture {
         }
 
         template <bool supportInfinity>
-        void verifyAssignFinite(const NIntegerBase<supportInfinity>& val) {
+        void verifyAssignFinite(const IntegerBase<supportInfinity>& val) {
             Rational r = 6;
             r = val;
             if (r.numerator() != val) {
                 std::ostringstream msg;
-                msg << "Rational assigned to NIntegerBase<...>" << val <<
+                msg << "Rational assigned to IntegerBase<...>" << val <<
                     " reports an incorrect numerator.";
                 CPPUNIT_FAIL(msg.str());
             }
             if (r.denominator() != 1) {
                 std::ostringstream msg;
-                msg << "Rational assigned to NIntegerBase<...>" << val <<
+                msg << "Rational assigned to IntegerBase<...>" << val <<
                     " reports an incorrect denominator.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -254,7 +254,7 @@ class RationalTest : public CppUnit::TestFixture {
             out << r;
             if (out.str() != val.stringValue()) {
                 std::ostringstream msg;
-                msg << "Rational assigned to NIntegerBase<...>" << val <<
+                msg << "Rational assigned to IntegerBase<...>" << val <<
                     " reports an incorrect string.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -313,17 +313,17 @@ class RationalTest : public CppUnit::TestFixture {
         }
 
         template <bool supportInfinity>
-        void verifyNumDen(const NIntegerBase<supportInfinity>& val) {
+        void verifyNumDen(const IntegerBase<supportInfinity>& val) {
             Rational r(val);
             if (r.numerator() != val) {
                 std::ostringstream msg;
-                msg << "Rational (NIntegerBase<...>)" << val <<
+                msg << "Rational (IntegerBase<...>)" << val <<
                     " reports an incorrect numerator.";
                 CPPUNIT_FAIL(msg.str());
             }
             if (r.denominator() != 1) {
                 std::ostringstream msg;
-                msg << "Rational (NIntegerBase<...>)" << val <<
+                msg << "Rational (IntegerBase<...>)" << val <<
                     " reports an incorrect denominator.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -331,13 +331,13 @@ class RationalTest : public CppUnit::TestFixture {
             r.invert();
             if (r.numerator() != (val >= 0 ? 1 : -1)) {
                 std::ostringstream msg;
-                msg << "Rational (NIntegerBase<...>)" << val <<
+                msg << "Rational (IntegerBase<...>)" << val <<
                     " inverted reports an incorrect numerator.";
                 CPPUNIT_FAIL(msg.str());
             }
             if (r.denominator() != (val >= 0 ? val : -val)) {
                 std::ostringstream msg;
-                msg << "Rational (NIntegerBase<...>)" << val <<
+                msg << "Rational (IntegerBase<...>)" << val <<
                     " inverted reports an incorrect denominator.";
                 CPPUNIT_FAIL(msg.str());
             }

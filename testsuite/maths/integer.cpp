@@ -35,7 +35,7 @@
 #include "maths/integer.h"
 #include "testsuite/utilities/testutilities.h"
 
-using regina::NIntegerBase;
+using regina::IntegerBase;
 using regina::NInteger;
 using regina::LargeInteger;
 

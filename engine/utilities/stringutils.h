@@ -47,7 +47,7 @@ namespace regina {
 class BoolSet;
 
 template <bool>
-class NIntegerBase;
+class IntegerBase;
 
 /**
  * \weakgroup utilities
@@ -287,7 +287,7 @@ REGINA_API bool valueOf(const std::string& str, unsigned long long& dest);
  * otherwise.
  */
 template <bool supportInfinity>
-bool valueOf(const std::string& str, NIntegerBase<supportInfinity>& dest);
+bool valueOf(const std::string& str, IntegerBase<supportInfinity>& dest);
 /**
  * Converts the entire given string to a double precision real number and
  * reports whether this conversion was successful.

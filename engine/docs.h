@@ -255,7 +255,7 @@ namespace regina {
  *
  *  - Some classes use <i>comparison by value</i>.  Here <tt>x == y</tt>
  *    tests whether the contents of \a x and \a y are mathematically
- *    equivalent.  Examples of such classes are \ref NIntegerBase "NInteger",
+ *    equivalent.  Examples of such classes are \ref IntegerBase "NInteger",
  *    Rational, and NAbelianGroup.
  *
  *    These classes all provide C++ comparison operators == and !=.  You

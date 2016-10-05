@@ -132,7 +132,7 @@ class REGINA_API Rational {
          * @param value the new integer value of this rational.
          */
         template <bool supportInfinity>
-        Rational(const NIntegerBase<supportInfinity>& value);
+        Rational(const IntegerBase<supportInfinity>& value);
         /**
          * Initialises to the given integer value.
          *
@@ -158,8 +158,8 @@ class REGINA_API Rational {
          * @param newDen the new denominator.
          */
         template <bool supportInfinity>
-        Rational(const NIntegerBase<supportInfinity>& newNum,
-                  const NIntegerBase<supportInfinity>& newDen);
+        Rational(const IntegerBase<supportInfinity>& newNum,
+                  const IntegerBase<supportInfinity>& newDen);
         /**
          * Initialises to <i>newNum</i>/<i>newDen</i>.
          *
@@ -197,7 +197,7 @@ class REGINA_API Rational {
          * @return a reference to this rational with its new value.
          */
         template <bool supportInfinity>
-        Rational& operator = (const NIntegerBase<supportInfinity>& value);
+        Rational& operator = (const IntegerBase<supportInfinity>& value);
         /**
          * Sets this rational to the given integer value.
          *
@@ -488,7 +488,7 @@ inline Rational::Rational(const Rational& value) : flavour(value.flavour) {
         mpq_set(data, value.data);
 }
 template <bool supportInfinity>
-inline Rational::Rational(const NIntegerBase<supportInfinity>& value) :
+inline Rational::Rational(const IntegerBase<supportInfinity>& value) :
         flavour(f_normal) {
     mpq_init(data);
     if (value.isInfinite())
@@ -503,8 +503,8 @@ inline Rational::Rational(long value) : flavour(f_normal) {
     mpq_set_si(data, value, 1);
 }
 template <bool supportInfinity>
-Rational::Rational(const NIntegerBase<supportInfinity>& newNum,
-                     const NIntegerBase<supportInfinity>& newDen) {
+Rational::Rational(const IntegerBase<supportInfinity>& newNum,
+                     const IntegerBase<supportInfinity>& newDen) {
     mpq_init(data);
     if (newDen.isZero()) {
         if (newNum.isZero())
@@ -517,12 +517,12 @@ Rational::Rational(const NIntegerBase<supportInfinity>& newNum,
             mpq_set_si(data, newNum.longValue(), newDen.longValue());
         else if (newNum.isNative()) {
             // Avoid bloating newNum with a GMP representation.
-            NIntegerBase<supportInfinity> tmp(newNum);
+            IntegerBase<supportInfinity> tmp(newNum);
             mpz_set(mpq_numref(data), tmp.rawData());
             mpz_set(mpq_denref(data), newDen.rawData());
         } else if (newDen.isNative()) {
             // Avoid bloating newDen with a GMP representation.
-            NIntegerBase<supportInfinity> tmp(newDen);
+            IntegerBase<supportInfinity> tmp(newDen);
             mpz_set(mpq_numref(data), newNum.rawData());
             mpz_set(mpq_denref(data), tmp.rawData());
         } else {
@@ -543,7 +543,7 @@ inline Rational& Rational::operator = (const Rational& value) {
 }
 template <bool supportInfinity>
 inline Rational& Rational::operator = (
-        const NIntegerBase<supportInfinity>& value) {
+        const IntegerBase<supportInfinity>& value) {
     if (value.isInfinite())
         flavour = f_infinity;
     else if (value.isNative()) {

@@ -51,9 +51,9 @@
 namespace regina {
 
 template <bool supportInfinity>
-bool valueOf(const std::string& str, NIntegerBase<supportInfinity>& dest) {
+bool valueOf(const std::string& str, IntegerBase<supportInfinity>& dest) {
     bool valid;
-    dest = NIntegerBase<supportInfinity>(str.c_str(), 10, &valid);
+    dest = IntegerBase<supportInfinity>(str.c_str(), 10, &valid);
     return valid;
 }
 
@@ -112,7 +112,7 @@ std::string superscript(T value) {
 }
 
 template <bool supportInfinity>
-std::string superscript(const NIntegerBase<supportInfinity>& value) {
+std::string superscript(const IntegerBase<supportInfinity>& value) {
     std::string s = value.stringValue();
     std::string ans;
     for (auto c : s)
@@ -158,7 +158,7 @@ std::string subscript(T value) {
 }
 
 template <bool supportInfinity>
-std::string subscript(const NIntegerBase<supportInfinity>& value) {
+std::string subscript(const IntegerBase<supportInfinity>& value) {
     std::string s = value.stringValue();
     std::string ans;
     for (auto c : s)
