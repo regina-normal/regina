@@ -12,8 +12,8 @@ SET ( FILES
   nperm4
   nperm5
   nprimes
-  nrational
   numbertheory
+  rational
   ray
   seedprimes
   )
@@ -46,6 +46,7 @@ if (${REGINA_INSTALL_DEV})
     nray.h
     numbertheory.h
     nvector.h
+    rational.h
     ray.h
     vector.h
     DESTINATION ${INCLUDEDIR}/maths COMPONENT Development)

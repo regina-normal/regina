@@ -36,7 +36,7 @@
 #include "enumerate/enumconstraints.h"
 #include "hypersurface/nhsstandard.h"
 #include "maths/nmatrixint.h"
-#include "maths/nrational.h"
+#include "maths/rational.h"
 #include "surfaces/nnormalsurface.h" // for quadDefn[][].
 
 namespace regina {

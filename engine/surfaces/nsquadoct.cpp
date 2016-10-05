@@ -36,7 +36,7 @@
 #include "surfaces/nsquadoct.h"
 #include "surfaces/nsanstandard.h"
 #include "maths/nmatrixint.h"
-#include "maths/nrational.h"
+#include "maths/rational.h"
 #include "triangulation/ntriangulation.h"
 
 namespace regina {

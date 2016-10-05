@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "maths/nrational.h"
+#include "maths/rational.h"
 #include <cfloat>
 #include <sstream>
 

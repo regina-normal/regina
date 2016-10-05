@@ -41,7 +41,7 @@
 
 #include "regina-core.h"
 #include "maths/npolynomial.h"
-#include "maths/nrational.h"
+#include "maths/rational.h"
 #include <complex>
 
 namespace regina {

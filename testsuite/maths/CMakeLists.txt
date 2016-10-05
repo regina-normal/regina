@@ -10,9 +10,9 @@ SET ( FILES
   nperm4
   nperm5
   nprimes
-  nrational
   numbertheory
   permconv
+  rational
   )
 
 # Prepend folder name

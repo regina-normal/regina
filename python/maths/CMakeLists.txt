@@ -15,9 +15,9 @@ SET ( FILES
   nperm5
   npolynomial
   nprimes
-  nrational
   numbertheory
   pymaths
+  rational
   )
 
 # Prepend folder name

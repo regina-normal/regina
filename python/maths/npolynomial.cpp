@@ -32,7 +32,7 @@
 
 #include <boost/python.hpp>
 #include "maths/npolynomial.h"
-#include "maths/nrational.h"
+#include "maths/rational.h"
 #include "../helpers.h"
 
 using namespace boost::python;

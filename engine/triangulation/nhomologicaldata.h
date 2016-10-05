@@ -42,7 +42,7 @@
 #include "regina-core.h"
 #include "output.h"
 #include "algebra/nmarkedabeliangroup.h"
-#include "maths/nrational.h"
+#include "maths/rational.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/ptrutils.h"
 #include <algorithm>

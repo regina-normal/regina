@@ -41,7 +41,7 @@
 
 #include "regina-core.h"
 #include "output.h"
-#include "maths/nrational.h"
+#include "maths/rational.h"
 #include "maths/ray.h"
 #include <boost/noncopyable.hpp>
 

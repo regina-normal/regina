@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <queue>
-#include "maths/nrational.h"
+#include "maths/rational.h"
 #include "triangulation/ntriangulation.h"
 
 #include <iostream>

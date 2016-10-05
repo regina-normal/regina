@@ -114,7 +114,7 @@
 		050F5DFD1B9BAB9C00C1F681 /* nperm5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D361B9BAB9C00C1F681 /* nperm5.cpp */; };
 		050F5DFE1B9BAB9C00C1F681 /* npolynomial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D371B9BAB9C00C1F681 /* npolynomial.cpp */; };
 		050F5DFF1B9BAB9C00C1F681 /* nprimes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D381B9BAB9C00C1F681 /* nprimes.cpp */; };
-		050F5E001B9BAB9C00C1F681 /* nrational.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D391B9BAB9C00C1F681 /* nrational.cpp */; };
+		050F5E001B9BAB9C00C1F681 /* rational.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D391B9BAB9C00C1F681 /* rational.cpp */; };
 		050F5E011B9BAB9C00C1F681 /* numbertheory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D3A1B9BAB9C00C1F681 /* numbertheory.cpp */; };
 		050F5E031B9BAB9C00C1F681 /* pymaths.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D3C1B9BAB9C00C1F681 /* pymaths.cpp */; };
 		050F5E041B9BAB9C00C1F681 /* modulemain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D3D1B9BAB9C00C1F681 /* modulemain.cpp */; };
@@ -354,8 +354,8 @@
 		052F9F47180600FB00FAE4DF /* nperm5.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9CEF180600FA00FAE4DF /* nperm5.h */; };
 		052F9F48180600FB00FAE4DF /* nprimes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CF0180600FA00FAE4DF /* nprimes.cpp */; };
 		052F9F49180600FB00FAE4DF /* nprimes.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9CF1180600FA00FAE4DF /* nprimes.h */; };
-		052F9F4A180600FB00FAE4DF /* nrational.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CF2180600FA00FAE4DF /* nrational.cpp */; };
-		052F9F4B180600FB00FAE4DF /* nrational.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9CF3180600FA00FAE4DF /* nrational.h */; };
+		052F9F4A180600FB00FAE4DF /* rational.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CF2180600FA00FAE4DF /* rational.cpp */; };
+		052F9F4B180600FB00FAE4DF /* rational.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9CF3180600FA00FAE4DF /* rational.h */; };
 		052F9F4C180600FB00FAE4DF /* ray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CF4180600FA00FAE4DF /* ray.cpp */; };
 		052F9F4D180600FB00FAE4DF /* ray.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9CF5180600FA00FAE4DF /* ray.h */; };
 		052F9F4E180600FB00FAE4DF /* numbertheory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CF6180600FA00FAE4DF /* numbertheory.cpp */; };
@@ -631,7 +631,7 @@
 		052FA10C1806088B00FAE4DF /* nperm4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0DE1806088B00FAE4DF /* nperm4.cpp */; };
 		052FA10D1806088B00FAE4DF /* nperm5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0DF1806088B00FAE4DF /* nperm5.cpp */; };
 		052FA10E1806088B00FAE4DF /* nprimes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0E01806088B00FAE4DF /* nprimes.cpp */; };
-		052FA10F1806088B00FAE4DF /* nrational.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0E11806088B00FAE4DF /* nrational.cpp */; };
+		052FA10F1806088B00FAE4DF /* rational.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0E11806088B00FAE4DF /* rational.cpp */; };
 		052FA1101806088B00FAE4DF /* numbertheory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0E21806088B00FAE4DF /* numbertheory.cpp */; };
 		052FA1111806088B00FAE4DF /* permconv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0E31806088B00FAE4DF /* permconv.cpp */; };
 		052FA1121806088B00FAE4DF /* runalltests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0E61806088B00FAE4DF /* runalltests.cpp */; };
@@ -698,7 +698,7 @@
 		052FA19F1806129B00FAE4DF /* nperm4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CEC180600FA00FAE4DF /* nperm4.cpp */; };
 		052FA1A01806129B00FAE4DF /* nperm5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CEE180600FA00FAE4DF /* nperm5.cpp */; };
 		052FA1A11806129B00FAE4DF /* nprimes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CF0180600FA00FAE4DF /* nprimes.cpp */; };
-		052FA1A21806129B00FAE4DF /* nrational.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CF2180600FA00FAE4DF /* nrational.cpp */; };
+		052FA1A21806129B00FAE4DF /* rational.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CF2180600FA00FAE4DF /* rational.cpp */; };
 		052FA1A31806129B00FAE4DF /* ray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CF4180600FA00FAE4DF /* ray.cpp */; };
 		052FA1A41806129B00FAE4DF /* numbertheory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CF6180600FA00FAE4DF /* numbertheory.cpp */; };
 		052FA1A51806129B00FAE4DF /* seedprimes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CFA180600FA00FAE4DF /* seedprimes.cpp */; };
@@ -841,6 +841,7 @@
 		052FA23B180612DD00FAE4DF /* unix_file_io.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D5C180600FA00FAE4DF /* unix_file_io.c */; };
 		052FA23C180612DD00FAE4DF /* update_shapes.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D8F180600FB00FAE4DF /* update_shapes.c */; };
 		052FA23D180612DD00FAE4DF /* volume.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D90180600FB00FAE4DF /* volume.c */; };
+		053CAB131DA4A27500A92F98 /* nrational.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB121DA4A27500A92F98 /* nrational.h */; };
 		053E5B5619B3D79200166778 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 053E5B5519B3D79100166778 /* libbz2.dylib */; };
 		053ED8121D8B836C00628652 /* snappy_get_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */; };
 		053ED8131D8B837500628652 /* snappy_get_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */; };
@@ -1533,7 +1534,7 @@
 		05D1173C19EE0197003BEC55 /* nperm4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0DE1806088B00FAE4DF /* nperm4.cpp */; };
 		05D1173D19EE0197003BEC55 /* nperm5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0DF1806088B00FAE4DF /* nperm5.cpp */; };
 		05D1173E19EE0197003BEC55 /* nprimes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0E01806088B00FAE4DF /* nprimes.cpp */; };
-		05D1173F19EE0197003BEC55 /* nrational.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0E11806088B00FAE4DF /* nrational.cpp */; };
+		05D1173F19EE0197003BEC55 /* rational.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0E11806088B00FAE4DF /* rational.cpp */; };
 		05D1174019EE0197003BEC55 /* numbertheory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0E21806088B00FAE4DF /* numbertheory.cpp */; };
 		05D1174119EE0197003BEC55 /* permconv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0E31806088B00FAE4DF /* permconv.cpp */; };
 		05D1174219EE019D003BEC55 /* dim2triangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0583656818DB88D9008B08D9 /* dim2triangulation.cpp */; };
@@ -2034,7 +2035,7 @@
 		050F5D361B9BAB9C00C1F681 /* nperm5.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nperm5.cpp; sourceTree = "<group>"; };
 		050F5D371B9BAB9C00C1F681 /* npolynomial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = npolynomial.cpp; sourceTree = "<group>"; };
 		050F5D381B9BAB9C00C1F681 /* nprimes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nprimes.cpp; sourceTree = "<group>"; };
-		050F5D391B9BAB9C00C1F681 /* nrational.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nrational.cpp; sourceTree = "<group>"; };
+		050F5D391B9BAB9C00C1F681 /* rational.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rational.cpp; sourceTree = "<group>"; };
 		050F5D3A1B9BAB9C00C1F681 /* numbertheory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = numbertheory.cpp; sourceTree = "<group>"; };
 		050F5D3C1B9BAB9C00C1F681 /* pymaths.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pymaths.cpp; sourceTree = "<group>"; };
 		050F5D3D1B9BAB9C00C1F681 /* modulemain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = modulemain.cpp; sourceTree = "<group>"; };
@@ -2336,8 +2337,8 @@
 		052F9CEF180600FA00FAE4DF /* nperm5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nperm5.h; sourceTree = "<group>"; };
 		052F9CF0180600FA00FAE4DF /* nprimes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nprimes.cpp; sourceTree = "<group>"; };
 		052F9CF1180600FA00FAE4DF /* nprimes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nprimes.h; sourceTree = "<group>"; };
-		052F9CF2180600FA00FAE4DF /* nrational.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nrational.cpp; sourceTree = "<group>"; };
-		052F9CF3180600FA00FAE4DF /* nrational.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nrational.h; sourceTree = "<group>"; };
+		052F9CF2180600FA00FAE4DF /* rational.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rational.cpp; sourceTree = "<group>"; };
+		052F9CF3180600FA00FAE4DF /* rational.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rational.h; sourceTree = "<group>"; };
 		052F9CF4180600FA00FAE4DF /* ray.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ray.cpp; sourceTree = "<group>"; };
 		052F9CF5180600FA00FAE4DF /* ray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ray.h; sourceTree = "<group>"; };
 		052F9CF6180600FA00FAE4DF /* numbertheory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = numbertheory.cpp; sourceTree = "<group>"; };
@@ -2663,7 +2664,7 @@
 		052FA0DE1806088B00FAE4DF /* nperm4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nperm4.cpp; sourceTree = "<group>"; };
 		052FA0DF1806088B00FAE4DF /* nperm5.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nperm5.cpp; sourceTree = "<group>"; };
 		052FA0E01806088B00FAE4DF /* nprimes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nprimes.cpp; sourceTree = "<group>"; };
-		052FA0E11806088B00FAE4DF /* nrational.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nrational.cpp; sourceTree = "<group>"; };
+		052FA0E11806088B00FAE4DF /* rational.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rational.cpp; sourceTree = "<group>"; };
 		052FA0E21806088B00FAE4DF /* numbertheory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = numbertheory.cpp; sourceTree = "<group>"; };
 		052FA0E31806088B00FAE4DF /* permconv.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = permconv.cpp; sourceTree = "<group>"; };
 		052FA0E41806088B00FAE4DF /* testmaths.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testmaths.h; sourceTree = "<group>"; };
@@ -2703,6 +2704,7 @@
 		052FA13E1806103000FAE4DF /* MasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MasterViewController.h; sourceTree = "<group>"; };
 		052FA13F1806103000FAE4DF /* MasterViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MasterViewController.mm; sourceTree = "<group>"; };
 		052FA1441806103000FAE4DF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		053CAB121DA4A27500A92F98 /* nrational.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nrational.h; sourceTree = "<group>"; };
 		053E5B5519B3D79100166778 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = usr/lib/libbz2.dylib; sourceTree = SDKROOT; };
 		053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = snappy_get_gluing_equations.c; sourceTree = "<group>"; };
 		0541AF481B8BE2F5002E166B /* cyclotomic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cyclotomic.cpp; sourceTree = "<group>"; };
@@ -3902,7 +3904,7 @@
 				050F5D361B9BAB9C00C1F681 /* nperm5.cpp */,
 				050F5D371B9BAB9C00C1F681 /* npolynomial.cpp */,
 				050F5D381B9BAB9C00C1F681 /* nprimes.cpp */,
-				050F5D391B9BAB9C00C1F681 /* nrational.cpp */,
+				050F5D391B9BAB9C00C1F681 /* rational.cpp */,
 				050F5D3A1B9BAB9C00C1F681 /* numbertheory.cpp */,
 				050F5D3C1B9BAB9C00C1F681 /* pymaths.cpp */,
 			);
@@ -4475,12 +4477,13 @@
 				0541AF4A1B8BE2F5002E166B /* npolynomial.h */,
 				052F9CF0180600FA00FAE4DF /* nprimes.cpp */,
 				052F9CF1180600FA00FAE4DF /* nprimes.h */,
-				052F9CF2180600FA00FAE4DF /* nrational.cpp */,
-				052F9CF3180600FA00FAE4DF /* nrational.h */,
+				053CAB121DA4A27500A92F98 /* nrational.h */,
 				05074A7D1DA480D60007773C /* nray.h */,
 				052F9CF6180600FA00FAE4DF /* numbertheory.cpp */,
 				052F9CF7180600FA00FAE4DF /* numbertheory.h */,
 				05074A7B1DA47E060007773C /* nvector.h */,
+				052F9CF2180600FA00FAE4DF /* rational.cpp */,
+				052F9CF3180600FA00FAE4DF /* rational.h */,
 				052F9CF4180600FA00FAE4DF /* ray.cpp */,
 				052F9CF5180600FA00FAE4DF /* ray.h */,
 				052F9CFA180600FA00FAE4DF /* seedprimes.cpp */,
@@ -4981,7 +4984,7 @@
 				052FA0DE1806088B00FAE4DF /* nperm4.cpp */,
 				052FA0DF1806088B00FAE4DF /* nperm5.cpp */,
 				052FA0E01806088B00FAE4DF /* nprimes.cpp */,
-				052FA0E11806088B00FAE4DF /* nrational.cpp */,
+				052FA0E11806088B00FAE4DF /* rational.cpp */,
 				052FA0E21806088B00FAE4DF /* numbertheory.cpp */,
 				052FA0E31806088B00FAE4DF /* permconv.cpp */,
 				052FA0E41806088B00FAE4DF /* testmaths.h */,
@@ -6084,6 +6087,7 @@
 				052F9EBD180600FB00FAE4DF /* docs.h in Headers */,
 				052FA038180600FB00FAE4DF /* nsanstandard.h in Headers */,
 				052FA013180600FB00FAE4DF /* nsnappedball.h in Headers */,
+				053CAB131DA4A27500A92F98 /* nrational.h in Headers */,
 				052F9F41180600FB00FAE4DF /* nmatrixint.h in Headers */,
 				052FA08F180600FB00FAE4DF /* markedvector.h in Headers */,
 				05A73C7D19B2EDFC0099C617 /* xmlelementreader.h in Headers */,
@@ -6155,7 +6159,7 @@
 				0591E7F21C4F75C300793A9C /* dim4gluingperms.h in Headers */,
 				050C64B01DA304BF00C9420F /* ntreedecomposition.h in Headers */,
 				052F9EF5180600FB00FAE4DF /* treelp-impl.h in Headers */,
-				052F9F4B180600FB00FAE4DF /* nrational.h in Headers */,
+				052F9F4B180600FB00FAE4DF /* rational.h in Headers */,
 				05431F211C40F260009BC072 /* component.h in Headers */,
 				052F9EC5180600FB00FAE4DF /* enumconstraints.h in Headers */,
 				0591E7DB1C4F750200793A9C /* hypercoords.h in Headers */,
@@ -6971,7 +6975,7 @@
 				057EE4DB1C600A3600C4D155 /* isomorphism13.cpp in Sources */,
 				057EE4571C6009F300C4D155 /* component6.cpp in Sources */,
 				050F5DFE1B9BAB9C00C1F681 /* npolynomial.cpp in Sources */,
-				050F5E001B9BAB9C00C1F681 /* nrational.cpp in Sources */,
+				050F5E001B9BAB9C00C1F681 /* rational.cpp in Sources */,
 				050F5E461B9BAB9C00C1F681 /* nhomologicaldata.cpp in Sources */,
 				057EE4D11C600A3600C4D155 /* triangulation14.cpp in Sources */,
 				050F5E3B1B9BAB9C00C1F681 /* pysurfaces.cpp in Sources */,
@@ -7071,7 +7075,7 @@
 				052FA1141806088B00FAE4DF /* nstandardtriangulation.cpp in Sources */,
 				052FA1051806088B00FAE4DF /* dim2edgepairing.cpp in Sources */,
 				052FA1081806088B00FAE4DF /* exhaustive.cpp in Sources */,
-				052FA10F1806088B00FAE4DF /* nrational.cpp in Sources */,
+				052FA10F1806088B00FAE4DF /* rational.cpp in Sources */,
 				052FA1091806088B00FAE4DF /* matrixops.cpp in Sources */,
 				052FA10D1806088B00FAE4DF /* nperm5.cpp in Sources */,
 				0591E84F1C4F777100793A9C /* dim4census.cpp in Sources */,
@@ -7122,7 +7126,7 @@
 				052FA1C41806129B00FAE4DF /* nplugtrisolidtorus.cpp in Sources */,
 				050C646D1DA101A900C9420F /* anglestructure.cpp in Sources */,
 				05937AD119CECF4300160F9A /* MDSpreadView.m in Sources */,
-				052FA1A21806129B00FAE4DF /* nrational.cpp in Sources */,
+				052FA1A21806129B00FAE4DF /* rational.cpp in Sources */,
 				052FA1A51806129B00FAE4DF /* seedprimes.cpp in Sources */,
 				05431F901C40F40E009BC072 /* libnormaliz-templated.cpp in Sources */,
 				05A73CA719B2EF5A0099C617 /* sl2c_matrices.c in Sources */,
@@ -7187,7 +7191,7 @@
 				052FA1C01806129B00FAE4DF /* nlayeredsurfacebundle.cpp in Sources */,
 				052774191C55761D00140918 /* NewHypersurfacesController.mm in Sources */,
 				052FA1901806129B00FAE4DF /* ngraphtriple.cpp in Sources */,
-				05D1173F19EE0197003BEC55 /* nrational.cpp in Sources */,
+				05D1173F19EE0197003BEC55 /* rational.cpp in Sources */,
 				052FA23D180612DD00FAE4DF /* volume.c in Sources */,
 				052FA19A1806129B00FAE4DF /* approx.cpp in Sources */,
 				052FA1DD1806129B00FAE4DF /* nprism.cpp in Sources */,
@@ -7843,7 +7847,7 @@
 				050C647B1DA1056700C9420F /* xmlanglestructreader.cpp in Sources */,
 				052F9FA3180600FB00FAE4DF /* transcendentals.c in Sources */,
 				052F9F0C180600FB00FAE4DF /* dehydration.cpp in Sources */,
-				052F9F4A180600FB00FAE4DF /* nrational.cpp in Sources */,
+				052F9F4A180600FB00FAE4DF /* rational.cpp in Sources */,
 				052F9F94180600FB00FAE4DF /* positioned_tet.c in Sources */,
 				05A73C9A19B2EF5A0099C617 /* abelian_group.c in Sources */,
 				0591E7E61C4F750200793A9C /* triangulate.cpp in Sources */,

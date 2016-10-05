@@ -32,7 +32,7 @@
 
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
-#include "maths/nrational.h"
+#include "maths/rational.h"
 #include "utilities/stringutils.h"
 #include "testsuite/utilities/testutilities.h"
 
