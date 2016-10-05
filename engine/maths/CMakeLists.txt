@@ -46,6 +46,7 @@ if (${REGINA_INSTALL_DEV})
     nray.h
     numbertheory.h
     nvector.h
+    polynomial.h
     primes.h
     rational.h
     ray.h

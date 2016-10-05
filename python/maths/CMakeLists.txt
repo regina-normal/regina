@@ -13,8 +13,8 @@ SET ( FILES
   nperm3
   nperm4
   nperm5
-  npolynomial
   numbertheory
+  polynomial
   primes
   pymaths
   rational

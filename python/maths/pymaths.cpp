@@ -41,7 +41,7 @@ void addNPerm3();
 void addNPerm4();
 void addNPerm5();
 void addNPerm();
-void addNPolynomial();
+void addPolynomial();
 void addPrimes();
 void addRational();
 void addNumberTheory();
@@ -58,7 +58,7 @@ void addMathsClasses() {
     addNPerm4();
     addNPerm5();
     addNPerm();
-    addNPolynomial();
+    addPolynomial();
     addPrimes();
     addRational();
     addNumberTheory();

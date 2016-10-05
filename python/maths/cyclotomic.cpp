@@ -44,8 +44,8 @@ namespace {
     void setItem(Cyclotomic& c, int exp, const regina::Rational& value) {
         c[exp] = value;
     }
-    regina::NPolynomial<regina::Rational>* cyclotomic(size_t n) {
-        return new regina::NPolynomial<regina::Rational>(
+    regina::Polynomial<regina::Rational>* cyclotomic(size_t n) {
+        return new regina::Polynomial<regina::Rational>(
             Cyclotomic::cyclotomic(n));
     }
 

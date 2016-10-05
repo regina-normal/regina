@@ -40,7 +40,7 @@
  */
 
 #include "regina-core.h"
-#include "maths/npolynomial.h"
+#include "maths/polynomial.h"
 #include "maths/rational.h"
 #include <complex>
 
@@ -243,13 +243,13 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * See the Cyclotomic class notes for further details.
          *
          * This routine returns the polynomial representation as a newly
-         * allocated NPolynomial<Rational> object.  The caller of this
+         * allocated Polynomial<Rational> object.  The caller of this
          * routine is responsible for destroying this new polynomial.
          *
          * The new polynomial will become independent of this Cyclotomic field
          * element: if you subsequently change this field element then the
-         * new NPolynomial object will not change, and likewise if you
-         * change the new NPolynomial object then this Cyclotomic field
+         * new Polynomial object will not change, and likewise if you
+         * change the new Polynomial object then this Cyclotomic field
          * element will not change.
          *
          * \pre This field element has been initialised (either through
@@ -259,7 +259,7 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * @return a new polynomial giving the full polynomial
          * representation of this field element.
          */
-        NPolynomial<Rational>* polynomial() const;
+        Polynomial<Rational>* polynomial() const;
         /**
          * Returns the value of this cyclotomic field element as a
          * complex number.
@@ -461,13 +461,13 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
          *
          * \ifacespython This routine returns a newly allocated polynomial
          * (not a constant reference).  Moreover, since Python exposes the
-         * class NPolynomial<Rational> but not NPolynomial<NInteger>, this
-         * routine returns an object of type NPolynomial<Rational> instead.
+         * class Polynomial<Rational> but not Polynomial<NInteger>, this
+         * routine returns an object of type Polynomial<Rational> instead.
          *
          * @param n indicates which cyclotomic polynomial to return.
          * @return the cyclotomic polynomial <tt>Φ_n</tt>.
          */
-        static const NPolynomial<NInteger>& cyclotomic(size_t n);
+        static const Polynomial<NInteger>& cyclotomic(size_t n);
 
         /**
          * Writes this field element to the given output stream, using the
@@ -611,8 +611,8 @@ inline Rational& Cyclotomic::operator [] (size_t exp) {
     return coeff_[exp];
 }
 
-inline NPolynomial<Rational>* Cyclotomic::polynomial() const {
-    return new NPolynomial<Rational>(coeff_, coeff_ + degree_);
+inline Polynomial<Rational>* Cyclotomic::polynomial() const {
+    return new Polynomial<Rational>(coeff_, coeff_ + degree_);
 }
 
 inline bool Cyclotomic::operator == (const Cyclotomic& rhs) const {
