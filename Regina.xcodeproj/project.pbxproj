@@ -619,7 +619,6 @@
 		052FA0A1180600FB00FAE4DF /* xmlutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E7F180600FB00FAE4DF /* xmlutils.cpp */; };
 		052FA0A2180600FB00FAE4DF /* xmlutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E80180600FB00FAE4DF /* xmlutils.h */; };
 		052FA0A61806047E00FAE4DF /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A51806047E00FAE4DF /* libz.dylib */; };
-		052FA1031806088B00FAE4DF /* nanglestructurelist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0CD1806088B00FAE4DF /* nanglestructurelist.cpp */; };
 		052FA1041806088B00FAE4DF /* dim2census.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D11806088B00FAE4DF /* dim2census.cpp */; };
 		052FA1051806088B00FAE4DF /* dim2edgepairing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D21806088B00FAE4DF /* dim2edgepairing.cpp */; };
 		052FA1061806088B00FAE4DF /* ncensus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D31806088B00FAE4DF /* ncensus.cpp */; };
@@ -842,6 +841,8 @@
 		052FA23C180612DD00FAE4DF /* update_shapes.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D8F180600FB00FAE4DF /* update_shapes.c */; };
 		052FA23D180612DD00FAE4DF /* volume.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D90180600FB00FAE4DF /* volume.c */; };
 		053CAB131DA4A27500A92F98 /* nrational.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB121DA4A27500A92F98 /* nrational.h */; };
+		053CAB161DA4A50700A92F98 /* anglestructures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053CAB141DA4A4FB00A92F98 /* anglestructures.cpp */; };
+		053CAB171DA4A50800A92F98 /* anglestructures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053CAB141DA4A4FB00A92F98 /* anglestructures.cpp */; };
 		053E5B5619B3D79200166778 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 053E5B5519B3D79100166778 /* libbz2.dylib */; };
 		053ED8121D8B836C00628652 /* snappy_get_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */; };
 		053ED8131D8B837500628652 /* snappy_get_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */; };
@@ -1542,7 +1543,6 @@
 		05D1174419EE01A1003BEC55 /* dim2edgepairing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D21806088B00FAE4DF /* dim2edgepairing.cpp */; };
 		05D1174519EE01A1003BEC55 /* ncensus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D31806088B00FAE4DF /* ncensus.cpp */; };
 		05D1174619EE01A1003BEC55 /* nfacepairing.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0D41806088B00FAE4DF /* nfacepairing.cpp */; };
-		05D1174719EE01A6003BEC55 /* nanglestructurelist.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0CD1806088B00FAE4DF /* nanglestructurelist.cpp */; };
 		05D1174819EE01AA003BEC55 /* ngrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CB819B2F14B0099C617 /* ngrouppresentation.cpp */; };
 		05D1174B19EE043F003BEC55 /* testsuite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05D1174919EE043F003BEC55 /* testsuite.cpp */; };
 		05D1174C19EE043F003BEC55 /* testsuite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05D1174919EE043F003BEC55 /* testsuite.cpp */; };
@@ -2646,7 +2646,6 @@
 		052FA0A51806047E00FAE4DF /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		052FA0C11806072900FAE4DF /* regtestsuite */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = regtestsuite; sourceTree = BUILT_PRODUCTS_DIR; };
 		052FA0CC1806088B00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		052FA0CD1806088B00FAE4DF /* nanglestructurelist.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nanglestructurelist.cpp; sourceTree = "<group>"; };
 		052FA0CE1806088B00FAE4DF /* testangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testangle.h; sourceTree = "<group>"; };
 		052FA0D01806088B00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052FA0D11806088B00FAE4DF /* dim2census.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim2census.cpp; sourceTree = "<group>"; };
@@ -2705,6 +2704,7 @@
 		052FA13F1806103000FAE4DF /* MasterViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MasterViewController.mm; sourceTree = "<group>"; };
 		052FA1441806103000FAE4DF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		053CAB121DA4A27500A92F98 /* nrational.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nrational.h; sourceTree = "<group>"; };
+		053CAB141DA4A4FB00A92F98 /* anglestructures.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = anglestructures.cpp; sourceTree = "<group>"; };
 		053E5B5519B3D79100166778 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = usr/lib/libbz2.dylib; sourceTree = SDKROOT; };
 		053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = snappy_get_gluing_equations.c; sourceTree = "<group>"; };
 		0541AF481B8BE2F5002E166B /* cyclotomic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cyclotomic.cpp; sourceTree = "<group>"; };
@@ -4951,7 +4951,7 @@
 			isa = PBXGroup;
 			children = (
 				052FA0CC1806088B00FAE4DF /* CMakeLists.txt */,
-				052FA0CD1806088B00FAE4DF /* nanglestructurelist.cpp */,
+				053CAB141DA4A4FB00A92F98 /* anglestructures.cpp */,
 				052FA0CE1806088B00FAE4DF /* testangle.h */,
 			);
 			path = angle;
@@ -7080,7 +7080,6 @@
 				052FA10D1806088B00FAE4DF /* nperm5.cpp in Sources */,
 				0591E84F1C4F777100793A9C /* dim4census.cpp in Sources */,
 				0591E8571C4F77A400793A9C /* dim4triangulation.cpp in Sources */,
-				052FA1031806088B00FAE4DF /* nanglestructurelist.cpp in Sources */,
 				052FA1151806088B00FAE4DF /* incompressible.cpp in Sources */,
 				052FA1111806088B00FAE4DF /* permconv.cpp in Sources */,
 				05431F9F1C40F543009BC072 /* facenumbering.cpp in Sources */,
@@ -7090,6 +7089,7 @@
 				0591E8501C4F777100793A9C /* dim4facetpairing.cpp in Sources */,
 				05431F971C40F527009BC072 /* nperm.cpp in Sources */,
 				052FA1061806088B00FAE4DF /* ncensus.cpp in Sources */,
+				053CAB161DA4A50700A92F98 /* anglestructures.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7198,6 +7198,7 @@
 				052FA1B01806129B00FAE4DF /* snappeatriangulation.cpp in Sources */,
 				052FA1B31806129B00FAE4DF /* nsigisomorphism.cpp in Sources */,
 				052FA1961806129B00FAE4DF /* nsimplesurfacebundle.cpp in Sources */,
+				053CAB171DA4A50800A92F98 /* anglestructures.cpp in Sources */,
 				052FA2051806129B00FAE4DF /* subdivide.cpp in Sources */,
 				0591E7C91C4F74E100793A9C /* subdivide.cpp in Sources */,
 				052FA19E1806129B00FAE4DF /* nperm3.cpp in Sources */,
@@ -7260,7 +7261,6 @@
 				05A73C9F19B2EF5A0099C617 /* homology.c in Sources */,
 				05D1C16F19C6542700CF92F2 /* ReginaHelper.mm in Sources */,
 				0503DCD819B7E3AD0085F3CC /* DocumentListController.mm in Sources */,
-				05D1174719EE01A6003BEC55 /* nanglestructurelist.cpp in Sources */,
 				05A73C8D19B2EF130099C617 /* homology.cpp in Sources */,
 				052FA1721806129B00FAE4DF /* dim2edge.cpp in Sources */,
 				052FA236180612DD00FAE4DF /* tables.c in Sources */,
