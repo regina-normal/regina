@@ -151,7 +151,7 @@ typedef Triangulation<3> NTriangulation;
  * LPConstraintBase and BanConstraintBase class notes for further details.
  *
  * \pre The default constructor for the template class Integer must intialise
- * each new integer to zero.  The classes NInteger and NNativeInteger,
+ * each new integer to zero.  The classes NInteger and NativeInteger,
  * for instance, have this property.
  *
  * \headers Parts of this template class are implemented in a separate header
@@ -660,7 +660,7 @@ class TreeTraversal : public BanConstraint {
  * class notes for further details.
  *
  * \pre The default constructor for the template class Integer must intialise
- * each new integer to zero.  The classes NInteger and NNativeInteger,
+ * each new integer to zero.  The classes NInteger and NativeInteger,
  * for instance, have this property.
  *
  * \warning Although the tree traversal algorithm can run in standard
@@ -960,7 +960,7 @@ class TreeEnumeration :
  * class notes for further details.
  *
  * \pre The default constructor for the template class Integer must intialise
- * each new integer to zero.  The classes NInteger and NNativeInteger,
+ * each new integer to zero.  The classes NInteger and NativeInteger,
  * for instance, have this property.
  *
  * \headers Parts of this template class are implemented in a separate header
@@ -1275,7 +1275,7 @@ class TautEnumeration :
  * LPConstraintBase and BanConstraintBase class notes for further details.
  *
  * \pre The default constructor for the template class Integer must intialise
- * each new integer to zero.  The classes NInteger and NNativeInteger,
+ * each new integer to zero.  The classes NInteger and NativeInteger,
  * for instance, have this property.
  *
  * \headers Parts of this template class are implemented in a separate header
@@ -1480,16 +1480,16 @@ extern template class REGINA_API TreeSingleSoln<LPConstraintEuler, BanNone,
 
 #ifdef INT128_AVAILABLE
 extern template class REGINA_API TreeTraversal<LPConstraintNone, BanNone,
-    NNativeInteger<16> >;
+    NativeInteger<16> >;
 extern template class REGINA_API TreeEnumeration<LPConstraintNone, BanNone,
-    NNativeInteger<16> >;
+    NativeInteger<16> >;
 extern template class REGINA_API TautEnumeration<LPConstraintNone, BanNone,
-    NNativeInteger<16> >;
+    NativeInteger<16> >;
 
 extern template class REGINA_API TreeTraversal<LPConstraintEuler, BanNone,
-    NNativeInteger<16> >;
+    NativeInteger<16> >;
 extern template class REGINA_API TreeSingleSoln<LPConstraintEuler, BanNone,
-    NNativeInteger<16> >;
+    NativeInteger<16> >;
 #endif
 
 

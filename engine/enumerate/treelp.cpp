@@ -56,9 +56,9 @@ template class LPData<LPConstraintNonSpun, NInteger>;
 template class LPData<LPConstraintNonSpun, NNativeLong>;
 
 #ifdef INT128_AVAILABLE
-template class LPData<LPConstraintNone, NNativeInteger<16> >;
-template class LPData<LPConstraintEuler, NNativeInteger<16> >;
-template class LPData<LPConstraintNonSpun, NNativeInteger<16> >;
+template class LPData<LPConstraintNone, NativeInteger<16> >;
+template class LPData<LPConstraintEuler, NativeInteger<16> >;
+template class LPData<LPConstraintNonSpun, NativeInteger<16> >;
 #endif
 
 } // namespace regina

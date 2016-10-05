@@ -76,7 +76,7 @@ namespace regina {
  */
 
 template <int bytes>
-class NNativeInteger;
+class NativeInteger;
 
 /**
  * Internal base classes for use with IntegerBase, templated on whether we
@@ -254,7 +254,7 @@ class REGINA_API IntegerBase : private InfinityBase<supportInfinity> {
          * @param value the new value of this integer.
          */
         template <int bytes>
-        explicit IntegerBase(const NNativeInteger<bytes>& value);
+        explicit IntegerBase(const NativeInteger<bytes>& value);
         /**
          * Initialises this integer to the truncation of the given
          * real number.
@@ -1452,7 +1452,7 @@ class REGINA_API IntegerBase : private InfinityBase<supportInfinity> {
     friend class IntegerBase<! supportInfinity>; // For conversions.
 
     template <int bytes>
-    friend class NNativeInteger; // For conversions.
+    friend class NativeInteger; // For conversions.
 
     template <bool supportInfinity_>
     friend std::ostream& operator << (std::ostream& out,
@@ -1591,9 +1591,9 @@ extern template REGINA_API IntegerBase<false> operator *(long lhs,
  * NInteger.  Only some of the NInteger member functions are offered here;
  * however, those that are offered behave just like their NInteger
  * counterparts (with the single exception that all arithmetic in
- * NNativeInteger is subject to overflow).  Developers can therefore
+ * NativeInteger is subject to overflow).  Developers can therefore
  * switch between integer types easily with minimal changes to
- * their code, or support both NInteger and NNativeInteger types as
+ * their code, or support both NInteger and NativeInteger types as
  * template arguments.
  *
  * \pre The system must support integers of the given size; in particular,
@@ -1602,7 +1602,7 @@ extern template REGINA_API IntegerBase<false> operator *(long lhs,
  * \ifacespython Not present.
  */
 template <int bytes>
-class NNativeInteger {
+class NativeInteger {
     public:
         typedef typename IntOfSize<bytes>::type Native;
             /**< The native data type used to store this integer. */
@@ -1615,19 +1615,19 @@ class NNativeInteger {
         /**
          * Initialises this integer to zero.
          */
-        NNativeInteger();
+        NativeInteger();
         /**
          * Initialises this integer to the given value.
          *
          * @param value the new value of this integer.
          */
-        NNativeInteger(Native value);
+        NativeInteger(Native value);
         /**
          * Initialises this integer to the given value.
          *
          * @param value the new value of this integer.
          */
-        NNativeInteger(const NNativeInteger<bytes>& value);
+        NativeInteger(const NativeInteger<bytes>& value);
         /**
          * Initialises this integer to the given value.
          *
@@ -1636,7 +1636,7 @@ class NNativeInteger {
          *
          * It is the programmer's reponsibility to ensure that the given value
          * fits within the required range.  If the given value is too large or
-         * small to fit into this native type, then this new NNativeInteger
+         * small to fit into this native type, then this new NativeInteger
          * will have an undefined initial value.
          *
          * \pre If \a bytes is larger than sizeof(long), then
@@ -1653,7 +1653,7 @@ class NNativeInteger {
          * @param value the new value of this integer.
          */
         template <bool supportInfinity>
-        explicit NNativeInteger(const IntegerBase<supportInfinity>& value);
+        explicit NativeInteger(const IntegerBase<supportInfinity>& value);
 
         /**
          * Returns whether or not this integer is zero.
@@ -1682,21 +1682,21 @@ class NNativeInteger {
          * @param value the new value of this integer.
          * @return a reference to this integer with its new value.
          */
-        NNativeInteger& operator =(const NNativeInteger& value);
+        NativeInteger& operator =(const NativeInteger& value);
         /**
          * Sets this integer to the given value.
          *
          * @param value the new value of this integer.
          * @return a reference to this integer with its new value.
          */
-        NNativeInteger& operator =(Native value);
+        NativeInteger& operator =(Native value);
         /**
          * Swaps the values of this and the given integer.
          *
          * @param other the integer whose value will be swapped with
          * this.
          */
-        void swap(NNativeInteger& other);
+        void swap(NativeInteger& other);
 
         /**
          * Determines if this is equal to the given integer.
@@ -1705,7 +1705,7 @@ class NNativeInteger {
          * @return \c true if and only if this and the given integer are
          * equal.
          */
-        bool operator ==(const NNativeInteger& rhs) const;
+        bool operator ==(const NativeInteger& rhs) const;
         /**
          * Determines if this is equal to the given integer.
          *
@@ -1721,7 +1721,7 @@ class NNativeInteger {
          * @return \c true if and only if this and the given integer are
          * not equal.
          */
-        bool operator !=(const NNativeInteger& rhs) const;
+        bool operator !=(const NativeInteger& rhs) const;
         /**
          * Determines if this is not equal to the given integer.
          *
@@ -1737,7 +1737,7 @@ class NNativeInteger {
          * @return \c true if and only if this is less than the given
          * integer.
          */
-        bool operator <(const NNativeInteger& rhs) const;
+        bool operator <(const NativeInteger& rhs) const;
         /**
          * Determines if this is less than the given integer.
          *
@@ -1753,7 +1753,7 @@ class NNativeInteger {
          * @return \c true if and only if this is greater than the given
          * integer.
          */
-        bool operator >(const NNativeInteger& rhs) const;
+        bool operator >(const NativeInteger& rhs) const;
         /**
          * Determines if this is greater than the given integer.
          *
@@ -1769,7 +1769,7 @@ class NNativeInteger {
          * @return \c true if and only if this is less than or equal to
          * the given integer.
          */
-        bool operator <=(const NNativeInteger& rhs) const;
+        bool operator <=(const NativeInteger& rhs) const;
         /**
          * Determines if this is less than or equal to the given integer.
          *
@@ -1785,7 +1785,7 @@ class NNativeInteger {
          * @return \c true if and only if this is greater than or equal
          * to the given integer.
          */
-        bool operator >=(const NNativeInteger& rhs) const;
+        bool operator >=(const NativeInteger& rhs) const;
         /**
          * Determines if this is greater than or equal to the given integer.
          *
@@ -1804,7 +1804,7 @@ class NNativeInteger {
          *
          * @return a reference to this integer after the increment.
          */
-        NNativeInteger& operator ++();
+        NativeInteger& operator ++();
 
         /**
          * The postincrement operator.
@@ -1816,7 +1816,7 @@ class NNativeInteger {
          * @return a copy of this integer before the
          * increment took place.
          */
-        NNativeInteger operator ++(int);
+        NativeInteger operator ++(int);
 
         /**
          * The predecrement operator.
@@ -1827,7 +1827,7 @@ class NNativeInteger {
          *
          * @return a reference to this integer after the decrement.
          */
-        NNativeInteger& operator --();
+        NativeInteger& operator --();
 
         /**
          * The postdecrement operator.
@@ -1839,7 +1839,7 @@ class NNativeInteger {
          * @return a copy of this integer before the
          * decrement took place.
          */
-        NNativeInteger operator --(int);
+        NativeInteger operator --(int);
 
         /**
          * Adds this to the given integer and returns the result.
@@ -1848,7 +1848,7 @@ class NNativeInteger {
          * @param other the integer to add to this integer.
          * @return the sum \a this plus \a other.
          */
-        NNativeInteger operator +(const NNativeInteger& other) const;
+        NativeInteger operator +(const NativeInteger& other) const;
         /**
          * Adds this to the given integer and returns the result.
          * This integer is not changed.
@@ -1856,7 +1856,7 @@ class NNativeInteger {
          * @param other the integer to add to this integer.
          * @return the sum \a this plus \a other.
          */
-        NNativeInteger operator +(Native other) const;
+        NativeInteger operator +(Native other) const;
         /**
          * Subtracts the given integer from this and returns the result.
          * This integer is not changed.
@@ -1864,7 +1864,7 @@ class NNativeInteger {
          * @param other the integer to subtract from this integer.
          * @return the difference \a this minus \a other.
          */
-        NNativeInteger operator -(const NNativeInteger& other) const;
+        NativeInteger operator -(const NativeInteger& other) const;
         /**
          * Subtracts the given integer from this and returns the result.
          * This integer is not changed.
@@ -1872,7 +1872,7 @@ class NNativeInteger {
          * @param other the integer to subtract from this integer.
          * @return the difference \a this minus \a other.
          */
-        NNativeInteger operator -(Native other) const;
+        NativeInteger operator -(Native other) const;
         /**
          * Multiplies this by the given integer and returns the
          * result.
@@ -1881,7 +1881,7 @@ class NNativeInteger {
          * @param other the integer to multiply by this integer.
          * @return the product \a this times \a other.
          */
-        NNativeInteger operator *(const NNativeInteger& other) const;
+        NativeInteger operator *(const NativeInteger& other) const;
         /**
          * Multiplies this by the given integer and returns the
          * result.
@@ -1890,7 +1890,7 @@ class NNativeInteger {
          * @param other the integer to multiply by this integer.
          * @return the product \a this times \a other.
          */
-        NNativeInteger operator *(Native other) const;
+        NativeInteger operator *(Native other) const;
         /**
          * Divides this by the given integer and returns the result.
          * The result will be truncated to an integer, i.e. rounded
@@ -1910,7 +1910,7 @@ class NNativeInteger {
          * @param other the integer to divide this by.
          * @return the quotient \a this divided by \a other.
          */
-        NNativeInteger operator /(const NNativeInteger& other) const;
+        NativeInteger operator /(const NativeInteger& other) const;
         /**
          * Divides this by the given integer and returns the result.
          * The result will be truncated to an integer, i.e. rounded
@@ -1930,7 +1930,7 @@ class NNativeInteger {
          * @param other the integer to divide this by.
          * @return the quotient \a this divided by \a other.
          */
-        NNativeInteger operator /(Native other) const;
+        NativeInteger operator /(Native other) const;
         /**
          * Divides this by the given integer and returns the result.
          * For native integers, this is identical to operator /.
@@ -1940,7 +1940,7 @@ class NNativeInteger {
          * @param other the integer to divide this by.
          * @return the quotient \a this divided by \a other.
          */
-        NNativeInteger divExact(const NNativeInteger& other) const;
+        NativeInteger divExact(const NativeInteger& other) const;
         /**
          * Divides this by the given integer and returns the result.
          * For native integers, this is identical to operator /.
@@ -1950,7 +1950,7 @@ class NNativeInteger {
          * @param other the integer to divide this by.
          * @return the quotient \a this divided by \a other.
          */
-        NNativeInteger divExact(Native other) const;
+        NativeInteger divExact(Native other) const;
         /**
          * Determines the remainder when this integer is divided by the
          * given integer.  If non-zero, the result will have the same sign
@@ -1972,7 +1972,7 @@ class NNativeInteger {
          * @param other the integer to divide this by.
          * @return the remainder \a this modulo \a other.
          */
-        NNativeInteger operator %(const NNativeInteger& other) const;
+        NativeInteger operator %(const NativeInteger& other) const;
         /**
          * Determines the remainder when this integer is divided by the
          * given integer.  If non-zero, the result will have the same sign
@@ -1994,7 +1994,7 @@ class NNativeInteger {
          * @param other the integer to divide this by.
          * @return the remainder \a this modulo \a other.
          */
-        NNativeInteger operator %(Native other) const;
+        NativeInteger operator %(Native other) const;
 
         /**
          * Uses the division algorithm to obtain a quotient and
@@ -2012,7 +2012,7 @@ class NNativeInteger {
          *
          * Note that this differs from other division routines in this
          * class, in that it always rounds to give a non-negative remainder.
-         * Thus NNativeInteger(-7).divisionAlg(3) gives quotient -3 and
+         * Thus NativeInteger(-7).divisionAlg(3) gives quotient -3 and
          * remainder 2, whereas (-7)/3 gives quotient -2 and (-7)\%3 gives
          * remainder -1.
          *
@@ -2032,9 +2032,9 @@ class NNativeInteger {
          *
          * @author Ryan Budney & B.B.
          */
-        NNativeInteger<bytes> divisionAlg(
-                const NNativeInteger<bytes>& divisor,
-                NNativeInteger<bytes>& remainder) const;
+        NativeInteger<bytes> divisionAlg(
+                const NativeInteger<bytes>& divisor,
+                NativeInteger<bytes>& remainder) const;
 
         /**
          * Determines the negative of this integer.
@@ -2042,7 +2042,7 @@ class NNativeInteger {
          *
          * @return the negative of this integer.
          */
-        NNativeInteger operator -() const;
+        NativeInteger operator -() const;
 
         /**
          * Adds the given integer to this.
@@ -2051,7 +2051,7 @@ class NNativeInteger {
          * @param other the integer to add to this integer.
          * @return a reference to this integer with its new value.
          */
-        NNativeInteger& operator +=(const NNativeInteger& other);
+        NativeInteger& operator +=(const NativeInteger& other);
         /**
          * Adds the given integer to this.
          * This integer is changed to reflect the result.
@@ -2059,7 +2059,7 @@ class NNativeInteger {
          * @param other the integer to add to this integer.
          * @return a reference to this integer with its new value.
          */
-        NNativeInteger& operator +=(Native other);
+        NativeInteger& operator +=(Native other);
         /**
          * Subtracts the given integer from this.
          * This integer is changed to reflect the result.
@@ -2067,7 +2067,7 @@ class NNativeInteger {
          * @param other the integer to subtract from this integer.
          * @return a reference to this integer with its new value.
          */
-        NNativeInteger& operator -=(const NNativeInteger& other);
+        NativeInteger& operator -=(const NativeInteger& other);
         /**
          * Subtracts the given integer from this.
          * This integer is changed to reflect the result.
@@ -2075,7 +2075,7 @@ class NNativeInteger {
          * @param other the integer to subtract from this integer.
          * @return a reference to this integer with its new value.
          */
-        NNativeInteger& operator -=(Native other);
+        NativeInteger& operator -=(Native other);
         /**
          * Multiplies the given integer by this.
          * This integer is changed to reflect the result.
@@ -2083,7 +2083,7 @@ class NNativeInteger {
          * @param other the integer to multiply with this integer.
          * @return a reference to this integer with its new value.
          */
-        NNativeInteger& operator *=(const NNativeInteger& other);
+        NativeInteger& operator *=(const NativeInteger& other);
         /**
          * Multiplies the given integer by this.
          * This integer is changed to reflect the result.
@@ -2091,7 +2091,7 @@ class NNativeInteger {
          * @param other the integer to multiply with this integer.
          * @return a reference to this integer with its new value.
          */
-        NNativeInteger& operator *=(Native other);
+        NativeInteger& operator *=(Native other);
         /**
          * Divides this by the given integer.
          * The result will be truncated to an integer, i.e. rounded
@@ -2111,7 +2111,7 @@ class NNativeInteger {
          * @param other the integer to divide this by.
          * @return a reference to this integer with its new value.
          */
-        NNativeInteger& operator /=(const NNativeInteger& other);
+        NativeInteger& operator /=(const NativeInteger& other);
         /**
          * Divides this by the given integer.
          * The result will be truncated to an integer, i.e. rounded
@@ -2131,7 +2131,7 @@ class NNativeInteger {
          * @param other the integer to divide this by.
          * @return a reference to this integer with its new value.
          */
-        NNativeInteger& operator /=(Native other);
+        NativeInteger& operator /=(Native other);
         /**
          * Divides this by the given integer.
          * For native integers, this routine is identical to operator /=.
@@ -2141,7 +2141,7 @@ class NNativeInteger {
          * @param other the integer to divide this by.
          * @return a reference to this integer with its new value.
          */
-        NNativeInteger& divByExact(const NNativeInteger& other);
+        NativeInteger& divByExact(const NativeInteger& other);
         /**
          * Divides this by the given integer.
          * For native integers, this routine is identical to operator /=.
@@ -2151,7 +2151,7 @@ class NNativeInteger {
          * @param other the integer to divide this by.
          * @return a reference to this integer with its new value.
          */
-        NNativeInteger& divByExact(Native other);
+        NativeInteger& divByExact(Native other);
         /**
          * Reduces this integer modulo the given integer.
          * If non-zero, the result will have the same sign as the original
@@ -2174,7 +2174,7 @@ class NNativeInteger {
          * reduced.
          * @return a reference to this integer with its new value.
          */
-        NNativeInteger& operator %=(const NNativeInteger& other);
+        NativeInteger& operator %=(const NativeInteger& other);
         /**
          * Reduces this integer modulo the given integer.
          * If non-zero, the result will have the same sign as the original
@@ -2197,7 +2197,7 @@ class NNativeInteger {
          * reduced.
          * @return a reference to this integer with its new value.
          */
-        NNativeInteger& operator %=(Native other);
+        NativeInteger& operator %=(Native other);
         /**
          * Negates this integer.
          * This integer is changed to reflect the result.
@@ -2213,7 +2213,7 @@ class NNativeInteger {
          * @param other the integer whose greatest common divisor with
          * this will be found.
          */
-        void gcdWith(const NNativeInteger& other);
+        void gcdWith(const NativeInteger& other);
         /**
          * Determines the greatest common divisor of this and the given
          * integer.  This integer is not changed.
@@ -2226,11 +2226,11 @@ class NNativeInteger {
          * @return the greatest common divisor of this and the given
          * integer.
          */
-        NNativeInteger gcd(const NNativeInteger& other) const;
+        NativeInteger gcd(const NativeInteger& other) const;
 
     template <int bytes_>
     friend std::ostream& operator << (std::ostream& out,
-        const NNativeInteger<bytes_>& large);
+        const NativeInteger<bytes_>& large);
 };
 
 /**
@@ -2241,15 +2241,15 @@ class NNativeInteger {
  * @return a reference to \a out.
  */
 template <int bytes>
-std::ostream& operator << (std::ostream& out, const NNativeInteger<bytes>& i);
+std::ostream& operator << (std::ostream& out, const NativeInteger<bytes>& i);
 
 /**
- * NNativeLong is a typedef for the NNativeInteger template class whose
+ * NNativeLong is a typedef for the NativeInteger template class whose
  * underlying integer type is a native long.
  *
  * \ifacespython Not present.
  */
-typedef NNativeInteger<sizeof(long)> NNativeLong;
+typedef NativeInteger<sizeof(long)> NNativeLong;
 
 /*@}*/
 
@@ -2324,7 +2324,7 @@ inline IntegerBase<supportInfinity>::IntegerBase(
 template <bool supportInfinity>
 template <int bytes>
 inline IntegerBase<supportInfinity>::IntegerBase(
-        const NNativeInteger<bytes>& value) :
+        const NativeInteger<bytes>& value) :
         small_(value.nativeValue()), large_(0) {
     static_assert(bytes % sizeof(long) == 0,
         "IntegerBase native constructor: native integer must partition exactly into long integers.");
@@ -3211,227 +3211,227 @@ inline IntegerBase<true>::IntegerBase(bool, bool) : large_(0) {
 
 #endif // __DOXYGEN
 
-// Inline functions for NNativeInteger
+// Inline functions for NativeInteger
 
 template <int bytes>
-inline NNativeInteger<bytes>::NNativeInteger() : data_(0) {
+inline NativeInteger<bytes>::NativeInteger() : data_(0) {
 }
 
 template <int bytes>
-inline NNativeInteger<bytes>::NNativeInteger(Native value) : data_(value) {
+inline NativeInteger<bytes>::NativeInteger(Native value) : data_(value) {
 }
 
 template <int bytes>
-inline NNativeInteger<bytes>::NNativeInteger(
-        const NNativeInteger<bytes>& value) :
+inline NativeInteger<bytes>::NativeInteger(
+        const NativeInteger<bytes>& value) :
         data_(value.data_) {
 }
 
 template <int bytes>
 template <bool supportInfinity>
-inline NNativeInteger<bytes>::NNativeInteger(
+inline NativeInteger<bytes>::NativeInteger(
         const IntegerBase<supportInfinity>& value) :
         data_(value.template nativeValue<bytes>()) {
 }
 
 template <int bytes>
-inline bool NNativeInteger<bytes>::isZero() const {
+inline bool NativeInteger<bytes>::isZero() const {
     return (data_ == 0);
 }
 
 template <int bytes>
-inline int NNativeInteger<bytes>::sign() const {
+inline int NativeInteger<bytes>::sign() const {
     return (data_ > 0 ? 1 : data_ < 0 ? -1 : 0);
 }
 
 template <int bytes>
-inline typename NNativeInteger<bytes>::Native NNativeInteger<bytes>::
+inline typename NativeInteger<bytes>::Native NativeInteger<bytes>::
         nativeValue() const {
     return data_;
 }
 
 template <int bytes>
-inline NNativeInteger<bytes>& NNativeInteger<bytes>::operator =(
-        const NNativeInteger<bytes>& value) {
+inline NativeInteger<bytes>& NativeInteger<bytes>::operator =(
+        const NativeInteger<bytes>& value) {
     data_ = value.data_;
     return *this;
 }
 
 template <int bytes>
-inline NNativeInteger<bytes>& NNativeInteger<bytes>::operator =(Native value) {
+inline NativeInteger<bytes>& NativeInteger<bytes>::operator =(Native value) {
     data_ = value;
     return *this;
 }
 
 template <int bytes>
-inline void NNativeInteger<bytes>::swap(NNativeInteger<bytes>& other) {
+inline void NativeInteger<bytes>::swap(NativeInteger<bytes>& other) {
     std::swap(data_, other.data_);
 }
 
 template <int bytes>
-inline bool NNativeInteger<bytes>::operator ==(
-        const NNativeInteger<bytes>& rhs) const {
+inline bool NativeInteger<bytes>::operator ==(
+        const NativeInteger<bytes>& rhs) const {
     return (data_ == rhs.data_);
 }
 
 template <int bytes>
-inline bool NNativeInteger<bytes>::operator ==(Native rhs) const {
+inline bool NativeInteger<bytes>::operator ==(Native rhs) const {
     return (data_ == rhs);
 }
 
 template <int bytes>
-inline bool NNativeInteger<bytes>::operator !=(
-        const NNativeInteger<bytes>& rhs) const {
+inline bool NativeInteger<bytes>::operator !=(
+        const NativeInteger<bytes>& rhs) const {
     return (data_ != rhs.data_);
 }
 
 template <int bytes>
-inline bool NNativeInteger<bytes>::operator !=(Native rhs) const {
+inline bool NativeInteger<bytes>::operator !=(Native rhs) const {
     return (data_ != rhs);
 }
 
 template <int bytes>
-inline bool NNativeInteger<bytes>::operator <(
-        const NNativeInteger<bytes>& rhs) const {
+inline bool NativeInteger<bytes>::operator <(
+        const NativeInteger<bytes>& rhs) const {
     return (data_ < rhs.data_);
 }
 
 template <int bytes>
-inline bool NNativeInteger<bytes>::operator <(Native rhs) const {
+inline bool NativeInteger<bytes>::operator <(Native rhs) const {
     return (data_ < rhs);
 }
 
 template <int bytes>
-inline bool NNativeInteger<bytes>::operator >(
-        const NNativeInteger<bytes>& rhs) const {
+inline bool NativeInteger<bytes>::operator >(
+        const NativeInteger<bytes>& rhs) const {
     return (data_ > rhs.data_);
 }
 
 template <int bytes>
-inline bool NNativeInteger<bytes>::operator >(Native rhs) const {
+inline bool NativeInteger<bytes>::operator >(Native rhs) const {
     return (data_ > rhs);
 }
 
 template <int bytes>
-inline bool NNativeInteger<bytes>::operator <=(
-        const NNativeInteger<bytes>& rhs) const {
+inline bool NativeInteger<bytes>::operator <=(
+        const NativeInteger<bytes>& rhs) const {
     return (data_ <= rhs.data_);
 }
 
 template <int bytes>
-inline bool NNativeInteger<bytes>::operator <=(Native rhs) const {
+inline bool NativeInteger<bytes>::operator <=(Native rhs) const {
     return (data_ <= rhs);
 }
 
 template <int bytes>
-inline bool NNativeInteger<bytes>::operator >=(
-        const NNativeInteger<bytes>& rhs) const {
+inline bool NativeInteger<bytes>::operator >=(
+        const NativeInteger<bytes>& rhs) const {
     return (data_ >= rhs.data_);
 }
 
 template <int bytes>
-inline bool NNativeInteger<bytes>::operator >=(Native rhs) const {
+inline bool NativeInteger<bytes>::operator >=(Native rhs) const {
     return (data_ >= rhs);
 }
 
 template <int bytes>
-inline NNativeInteger<bytes>& NNativeInteger<bytes>::operator ++() {
+inline NativeInteger<bytes>& NativeInteger<bytes>::operator ++() {
     ++data_;
     return *this;
 }
 
 template <int bytes>
-inline NNativeInteger<bytes> NNativeInteger<bytes>::operator ++(int) {
-    return NNativeInteger<bytes>(data_++);
+inline NativeInteger<bytes> NativeInteger<bytes>::operator ++(int) {
+    return NativeInteger<bytes>(data_++);
 }
 
 template <int bytes>
-inline NNativeInteger<bytes>& NNativeInteger<bytes>::operator --() {
+inline NativeInteger<bytes>& NativeInteger<bytes>::operator --() {
     --data_;
     return *this;
 }
 
 template <int bytes>
-inline NNativeInteger<bytes> NNativeInteger<bytes>::operator --(int) {
-    return NNativeInteger<bytes>(data_--);
+inline NativeInteger<bytes> NativeInteger<bytes>::operator --(int) {
+    return NativeInteger<bytes>(data_--);
 }
 
 template <int bytes>
-inline NNativeInteger<bytes> NNativeInteger<bytes>::operator +(
-        const NNativeInteger<bytes>& other) const {
-    return NNativeInteger<bytes>(data_ + other.data_);
+inline NativeInteger<bytes> NativeInteger<bytes>::operator +(
+        const NativeInteger<bytes>& other) const {
+    return NativeInteger<bytes>(data_ + other.data_);
 }
 
 template <int bytes>
-inline NNativeInteger<bytes> NNativeInteger<bytes>::operator +(
+inline NativeInteger<bytes> NativeInteger<bytes>::operator +(
         Native other) const {
-    return NNativeInteger<bytes>(data_ + other);
+    return NativeInteger<bytes>(data_ + other);
 }
 
 template <int bytes>
-inline NNativeInteger<bytes> NNativeInteger<bytes>::operator -(
-        const NNativeInteger<bytes>& other) const {
-    return NNativeInteger<bytes>(data_ - other.data_);
+inline NativeInteger<bytes> NativeInteger<bytes>::operator -(
+        const NativeInteger<bytes>& other) const {
+    return NativeInteger<bytes>(data_ - other.data_);
 }
 
 template <int bytes>
-inline NNativeInteger<bytes> NNativeInteger<bytes>::operator -(
+inline NativeInteger<bytes> NativeInteger<bytes>::operator -(
         Native other) const {
-    return NNativeInteger<bytes>(data_ - other);
+    return NativeInteger<bytes>(data_ - other);
 }
 
 template <int bytes>
-inline NNativeInteger<bytes> NNativeInteger<bytes>::operator *(
-        const NNativeInteger<bytes>& other) const {
-    return NNativeInteger<bytes>(data_ * other.data_);
+inline NativeInteger<bytes> NativeInteger<bytes>::operator *(
+        const NativeInteger<bytes>& other) const {
+    return NativeInteger<bytes>(data_ * other.data_);
 }
 
 template <int bytes>
-inline NNativeInteger<bytes> NNativeInteger<bytes>::operator *(
+inline NativeInteger<bytes> NativeInteger<bytes>::operator *(
         Native other) const {
-    return NNativeInteger<bytes>(data_ * other);
+    return NativeInteger<bytes>(data_ * other);
 }
 
 template <int bytes>
-inline NNativeInteger<bytes> NNativeInteger<bytes>::operator /(
-        const NNativeInteger<bytes>& other) const {
-    return NNativeInteger<bytes>(data_ / other.data_);
+inline NativeInteger<bytes> NativeInteger<bytes>::operator /(
+        const NativeInteger<bytes>& other) const {
+    return NativeInteger<bytes>(data_ / other.data_);
 }
 
 template <int bytes>
-inline NNativeInteger<bytes> NNativeInteger<bytes>::operator /(
+inline NativeInteger<bytes> NativeInteger<bytes>::operator /(
         Native other) const {
-    return NNativeInteger<bytes>(data_ / other);
+    return NativeInteger<bytes>(data_ / other);
 }
 
 template <int bytes>
-inline NNativeInteger<bytes> NNativeInteger<bytes>::divExact(
-        const NNativeInteger<bytes>& other) const {
-    return NNativeInteger<bytes>(data_ / other.data_);
+inline NativeInteger<bytes> NativeInteger<bytes>::divExact(
+        const NativeInteger<bytes>& other) const {
+    return NativeInteger<bytes>(data_ / other.data_);
 }
 
 template <int bytes>
-inline NNativeInteger<bytes> NNativeInteger<bytes>::divExact(
+inline NativeInteger<bytes> NativeInteger<bytes>::divExact(
         Native other) const {
-    return NNativeInteger<bytes>(data_ / other);
+    return NativeInteger<bytes>(data_ / other);
 }
 
 template <int bytes>
-inline NNativeInteger<bytes> NNativeInteger<bytes>::operator %(
-        const NNativeInteger<bytes>& other) const {
-    return NNativeInteger<bytes>(data_ % other.data_);
+inline NativeInteger<bytes> NativeInteger<bytes>::operator %(
+        const NativeInteger<bytes>& other) const {
+    return NativeInteger<bytes>(data_ % other.data_);
 }
 
 template <int bytes>
-inline NNativeInteger<bytes> NNativeInteger<bytes>::operator %(
+inline NativeInteger<bytes> NativeInteger<bytes>::operator %(
         Native other) const {
-    return NNativeInteger<bytes>(data_ % other);
+    return NativeInteger<bytes>(data_ % other);
 }
 
 template <int bytes>
-inline NNativeInteger<bytes> NNativeInteger<bytes>::divisionAlg(
-        const NNativeInteger<bytes>& divisor,
-        NNativeInteger<bytes>& remainder) const {
+inline NativeInteger<bytes> NativeInteger<bytes>::divisionAlg(
+        const NativeInteger<bytes>& divisor,
+        NativeInteger<bytes>& remainder) const {
     if (divisor == 0) {
         remainder.data_ = data_;
         return 0;
@@ -3440,7 +3440,7 @@ inline NNativeInteger<bytes> NNativeInteger<bytes>::divisionAlg(
     // Native integer division could leave a negative remainder
     // regardless of the sign of the divisor (I think the standard
     // indicates that the decision is based on the sign of *this?).
-    NNativeInteger<bytes> quotient = data_ / divisor.data_;
+    NativeInteger<bytes> quotient = data_ / divisor.data_;
     remainder = data_ - (quotient.data_ * divisor.data_);
     if (remainder.data_ < 0) {
         if (divisor.data_ > 0) {
@@ -3456,100 +3456,100 @@ inline NNativeInteger<bytes> NNativeInteger<bytes>::divisionAlg(
 }
 
 template <int bytes>
-inline NNativeInteger<bytes> NNativeInteger<bytes>::operator -() const {
-    return NNativeInteger<bytes>(- data_);
+inline NativeInteger<bytes> NativeInteger<bytes>::operator -() const {
+    return NativeInteger<bytes>(- data_);
 }
 
 template <int bytes>
-inline NNativeInteger<bytes>& NNativeInteger<bytes>::operator += (
-        const NNativeInteger<bytes>& other) {
+inline NativeInteger<bytes>& NativeInteger<bytes>::operator += (
+        const NativeInteger<bytes>& other) {
     data_ += other.data_;
     return *this;
 }
 
 template <int bytes>
-inline NNativeInteger<bytes>& NNativeInteger<bytes>::operator += (
+inline NativeInteger<bytes>& NativeInteger<bytes>::operator += (
         Native other) {
     data_ += other;
     return *this;
 }
 
 template <int bytes>
-inline NNativeInteger<bytes>& NNativeInteger<bytes>::operator -= (
-        const NNativeInteger<bytes>& other) {
+inline NativeInteger<bytes>& NativeInteger<bytes>::operator -= (
+        const NativeInteger<bytes>& other) {
     data_ -= other.data_;
     return *this;
 }
 
 template <int bytes>
-inline NNativeInteger<bytes>& NNativeInteger<bytes>::operator -= (
+inline NativeInteger<bytes>& NativeInteger<bytes>::operator -= (
         Native other) {
     data_ -= other;
     return *this;
 }
 
 template <int bytes>
-inline NNativeInteger<bytes>& NNativeInteger<bytes>::operator *= (
-        const NNativeInteger<bytes>& other) {
+inline NativeInteger<bytes>& NativeInteger<bytes>::operator *= (
+        const NativeInteger<bytes>& other) {
     data_ *= other.data_;
     return *this;
 }
 
 template <int bytes>
-inline NNativeInteger<bytes>& NNativeInteger<bytes>::operator *= (
+inline NativeInteger<bytes>& NativeInteger<bytes>::operator *= (
         Native other) {
     data_ *= other;
     return *this;
 }
 
 template <int bytes>
-inline NNativeInteger<bytes>& NNativeInteger<bytes>::operator /= (
-        const NNativeInteger<bytes>& other) {
+inline NativeInteger<bytes>& NativeInteger<bytes>::operator /= (
+        const NativeInteger<bytes>& other) {
     data_ /= other.data_;
     return *this;
 }
 
 template <int bytes>
-inline NNativeInteger<bytes>& NNativeInteger<bytes>::operator /= (
+inline NativeInteger<bytes>& NativeInteger<bytes>::operator /= (
         Native other) {
     data_ /= other;
     return *this;
 }
 
 template <int bytes>
-inline NNativeInteger<bytes>& NNativeInteger<bytes>::divByExact(
-        const NNativeInteger<bytes>& other) {
+inline NativeInteger<bytes>& NativeInteger<bytes>::divByExact(
+        const NativeInteger<bytes>& other) {
     data_ /= other.data_;
     return *this;
 }
 
 template <int bytes>
-inline NNativeInteger<bytes>& NNativeInteger<bytes>::divByExact(Native other) {
+inline NativeInteger<bytes>& NativeInteger<bytes>::divByExact(Native other) {
     data_ /= other;
     return *this;
 }
 
 template <int bytes>
-inline NNativeInteger<bytes>& NNativeInteger<bytes>::operator %= (
-        const NNativeInteger<bytes>& other) {
+inline NativeInteger<bytes>& NativeInteger<bytes>::operator %= (
+        const NativeInteger<bytes>& other) {
     data_ %= other.data_;
     return *this;
 }
 
 template <int bytes>
-inline NNativeInteger<bytes>& NNativeInteger<bytes>::operator %= (
+inline NativeInteger<bytes>& NativeInteger<bytes>::operator %= (
         Native other) {
     data_ %= other;
     return *this;
 }
 
 template <int bytes>
-inline void NNativeInteger<bytes>::negate() {
+inline void NativeInteger<bytes>::negate() {
     data_ = - data_;
 }
 
 template <int bytes>
-void NNativeInteger<bytes>::gcdWith(const NNativeInteger<bytes>& other) {
+void NativeInteger<bytes>::gcdWith(const NativeInteger<bytes>& other) {
     Native a = data_;
     Native b = other.data_;
 
@@ -3608,16 +3608,16 @@ void NNativeInteger<bytes>::gcdWith(const NNativeInteger<bytes>& other) {
 }
 
 template <int bytes>
-inline NNativeInteger<bytes> NNativeInteger<bytes>::gcd(
-        const NNativeInteger<bytes>& other) const {
-    NNativeInteger<bytes> ans(data_);
+inline NativeInteger<bytes> NativeInteger<bytes>::gcd(
+        const NativeInteger<bytes>& other) const {
+    NativeInteger<bytes> ans(data_);
     ans.gcdWith(other);
     return ans;
 }
 
 template <int bytes>
 inline std::ostream& operator << (std::ostream& out,
-        const NNativeInteger<bytes>& i) {
+        const NativeInteger<bytes>& i) {
     return out << i.data_;
 }
 
@@ -3626,7 +3626,7 @@ inline std::ostream& operator << (std::ostream& out,
 #ifdef INT128_AVAILABLE
 template <>
 inline std::ostream& operator << (std::ostream& out,
-        const NNativeInteger<16>& i) {
+        const NativeInteger<16>& i) {
     // The standard library does not support 128-bit integers (at least not
     // always).  Go through NInteger and GMP instead (for now).
     return out << NInteger(i);

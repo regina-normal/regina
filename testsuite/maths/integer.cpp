@@ -1057,8 +1057,8 @@ class NIntegerTest : public CppUnit::TestFixture {
 
 #ifdef INT128_AVAILABLE
         template <typename IntType>
-        void test128Value(const regina::NNativeInteger<16>& x,
-                const regina::NNativeInteger<16>& y) {
+        void test128Value(const regina::NativeInteger<16>& x,
+                const regina::NativeInteger<16>& y) {
             if (x != y) {
                 std::ostringstream msg;
                 msg << "128-bit integers " << x << " vs " << y
@@ -1081,7 +1081,7 @@ class NIntegerTest : public CppUnit::TestFixture {
 
 
         template <typename IntType>
-        void testNative128(const regina::NNativeInteger<16>& native,
+        void testNative128(const regina::NativeInteger<16>& native,
                 const char* string) {
             if (str(native) != string) {
                 std::ostringstream msg;
@@ -1092,28 +1092,28 @@ class NIntegerTest : public CppUnit::TestFixture {
 
             testStringValue(IntType(native), 10, string);
 
-            test128Value<IntType>(native, regina::NNativeInteger<16>(
+            test128Value<IntType>(native, regina::NativeInteger<16>(
                 IntType(string)));
-            test128Value<IntType>(native, regina::NNativeInteger<16>(
+            test128Value<IntType>(native, regina::NativeInteger<16>(
                 IntType(string).template nativeValue<16>()));
-            test128Value<IntType>(native, regina::NNativeInteger<16>(
+            test128Value<IntType>(native, regina::NativeInteger<16>(
                 IntType(native).template nativeValue<16>()));
         }
 
         template <typename IntType>
         void constructNative128() {
             // Test conversion from native types that are larger than long.
-            regina::NNativeInteger<16> pos62 = 1;
-            regina::NNativeInteger<16> pos63 = 1;
-            regina::NNativeInteger<16> pos64 = 1;
-            regina::NNativeInteger<16> pos126 = 1;
-            regina::NNativeInteger<16> neg62 = 1;
-            regina::NNativeInteger<16> neg63 = 1;
-            regina::NNativeInteger<16> neg64 = 1;
-            regina::NNativeInteger<16> neg126 = 1;
-            regina::NNativeInteger<16> pos127 = 1;
-            regina::NNativeInteger<16> neg127 = 1;
-            regina::NNativeInteger<16> maxVal(
+            regina::NativeInteger<16> pos62 = 1;
+            regina::NativeInteger<16> pos63 = 1;
+            regina::NativeInteger<16> pos64 = 1;
+            regina::NativeInteger<16> pos126 = 1;
+            regina::NativeInteger<16> neg62 = 1;
+            regina::NativeInteger<16> neg63 = 1;
+            regina::NativeInteger<16> neg64 = 1;
+            regina::NativeInteger<16> neg126 = 1;
+            regina::NativeInteger<16> pos127 = 1;
+            regina::NativeInteger<16> neg127 = 1;
+            regina::NativeInteger<16> maxVal(
                 ~(regina::IntOfSize<16>::type(1) << 127));
             pos62 *= 1073741824; // 2^30
             pos62 *= 1073741824; // 2^30
@@ -1162,7 +1162,7 @@ class NIntegerTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            regina::NNativeInteger<16> a, b;
+            regina::NativeInteger<16> a, b;
             a = b = 3;
             a.gcdWith(b);
             if (a != 3) {

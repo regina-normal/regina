@@ -102,7 +102,7 @@ typedef Triangulation<3> NTriangulation;
  * \a Integer, which is supplied as a template argument.
  *
  * \pre The default constructor for the template class Integer must intialise
- * each new integer to zero.  The classes NInteger and NNativeInteger,
+ * each new integer to zero.  The classes NInteger and NativeInteger,
  * for instance, have this property.
  *
  * \headers Parts of this template class are implemented in a separate header
@@ -900,7 +900,7 @@ class LPInitialTableaux {
  * LPConstraintBase.  See the LPConstraintBase class notes for further details.
  *
  * \pre The default constructor for the template class Integer must intialise
- * each new integer to zero.  The classes NInteger and NNativeInteger,
+ * each new integer to zero.  The classes NInteger and NativeInteger,
  * for instance, have this property.
  *
  * \headers Parts of this template class are implemented in a separate header
@@ -1439,10 +1439,10 @@ extern template class REGINA_API LPData<LPConstraintNonSpun, NInteger>;
 extern template class REGINA_API LPData<LPConstraintNonSpun, NNativeLong>;
 
 #ifdef INT128_AVAILABLE
-extern template class REGINA_API LPData<LPConstraintNone, NNativeInteger<16> >;
-extern template class REGINA_API LPData<LPConstraintEuler, NNativeInteger<16> >;
+extern template class REGINA_API LPData<LPConstraintNone, NativeInteger<16> >;
+extern template class REGINA_API LPData<LPConstraintEuler, NativeInteger<16> >;
 extern template class REGINA_API LPData<LPConstraintNonSpun,
-    NNativeInteger<16> >;
+    NativeInteger<16> >;
 #endif
 
 // Inline functions for LPMatrix

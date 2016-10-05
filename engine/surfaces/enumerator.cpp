@@ -50,7 +50,7 @@ namespace regina {
 /**
  * The largest possible signed 128-bit integer,
  */
-NInteger maxSigned128(NNativeInteger<16>(~(IntOfSize<16>::type(1) << 127)));
+NInteger maxSigned128(NativeInteger<16>(~(IntOfSize<16>::type(1) << 127)));
 #endif
 
 NormalSurfaces* NormalSurfaces::enumerate(
@@ -372,8 +372,8 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
         fillVertexTreeWith<Coords, NNativeLong>();
 #ifdef INT128_AVAILABLE
     } else if (worst <= maxSigned128) {
-        // std::cerr << "Using NNativeInteger<16>." << std::endl;
-        fillVertexTreeWith<Coords, NNativeInteger<16> >();
+        // std::cerr << "Using NativeInteger<16>." << std::endl;
+        fillVertexTreeWith<Coords, NativeInteger<16> >();
 #endif
     } else {
         // std::cerr << "Using the fallback NInteger." << std::endl;
