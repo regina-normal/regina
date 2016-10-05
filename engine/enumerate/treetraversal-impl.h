@@ -86,8 +86,8 @@
 
 namespace regina {
 
-template <class LPConstraint, typename BanConstraint, typename Integer>
-NNormalSurface* TreeTraversal<LPConstraint, BanConstraint, Integer>::
+template <class LPConstraint, typename BanConstraint, typename IntType>
+NNormalSurface* TreeTraversal<LPConstraint, BanConstraint, IntType>::
         buildSurface() const {
     // Note that the vector constructors automatically set all
     // elements to zero, as required by LPData::extractSolution().
@@ -141,8 +141,8 @@ NNormalSurface* TreeTraversal<LPConstraint, BanConstraint, Integer>::
     return new NNormalSurface(origTableaux_.tri(), an);
 }
 
-template <class LPConstraint, typename BanConstraint, typename Integer>
-AngleStructure* TreeTraversal<LPConstraint, BanConstraint, Integer>::
+template <class LPConstraint, typename BanConstraint, typename IntType>
+AngleStructure* TreeTraversal<LPConstraint, BanConstraint, IntType>::
         buildStructure() const {
     // Note that the vector constructors automatically set all
     // elements to zero, as required by LPData::extractSolution().
@@ -154,8 +154,8 @@ AngleStructure* TreeTraversal<LPConstraint, BanConstraint, Integer>::
     return new AngleStructure(origTableaux_.tri(), v);
 }
 
-template <class LPConstraint, typename BanConstraint, typename Integer>
-bool TreeTraversal<LPConstraint, BanConstraint, Integer>::verify(
+template <class LPConstraint, typename BanConstraint, typename IntType>
+bool TreeTraversal<LPConstraint, BanConstraint, IntType>::verify(
         const NNormalSurface* s, const NMatrixInt* matchingEqns) const {
     if (coords_ == NS_ANGLE)
         return false;
@@ -185,8 +185,8 @@ bool TreeTraversal<LPConstraint, BanConstraint, Integer>::verify(
     return LPConstraint::verify(s);
 }
 
-template <class LPConstraint, typename BanConstraint, typename Integer>
-bool TreeTraversal<LPConstraint, BanConstraint, Integer>::verify(
+template <class LPConstraint, typename BanConstraint, typename IntType>
+bool TreeTraversal<LPConstraint, BanConstraint, IntType>::verify(
         const AngleStructure* s, const NMatrixInt* angleEqns) const {
     if (coords_ != NS_ANGLE)
         return false;
@@ -216,8 +216,8 @@ bool TreeTraversal<LPConstraint, BanConstraint, Integer>::verify(
     return LPConstraint::verify(s);
 }
 
-template <class LPConstraint, typename BanConstraint, typename Integer>
-TreeTraversal<LPConstraint, BanConstraint, Integer>::TreeTraversal(
+template <class LPConstraint, typename BanConstraint, typename IntType>
+TreeTraversal<LPConstraint, BanConstraint, IntType>::TreeTraversal(
         const NTriangulation* tri, NormalCoords coords,
         int branchesPerQuad, int branchesPerTri, bool enumeration) :
         BanConstraint(tri, coords),
@@ -243,9 +243,9 @@ TreeTraversal<LPConstraint, BanConstraint, Integer>::TreeTraversal(
         level_(0),
         octLevel_(coords == NS_AN_STANDARD || coords == NS_AN_QUAD_OCT ?
             -1 : nTypes_),
-        lp_(new LPData<LPConstraint, Integer>[nTableaux_]),
-        lpSlot_(new LPData<LPConstraint, Integer>*[nTypes_ + 1]),
-        nextSlot_(new LPData<LPConstraint, Integer>*[nTypes_ + 1]),
+        lp_(new LPData<LPConstraint, IntType>[nTableaux_]),
+        lpSlot_(new LPData<LPConstraint, IntType>*[nTypes_ + 1]),
+        nextSlot_(new LPData<LPConstraint, IntType>*[nTypes_ + 1]),
         nVisited_(0) {
     // Initialise the type vector to the zero vector.
     std::fill(type_, type_ + nTypes_ + 1, 0);
@@ -276,8 +276,8 @@ TreeTraversal<LPConstraint, BanConstraint, Integer>::TreeTraversal(
 /**
  * Destroys this object.
  */
-template <class LPConstraint, typename BanConstraint, typename Integer>
-TreeTraversal<LPConstraint, BanConstraint, Integer>::~TreeTraversal() {
+template <class LPConstraint, typename BanConstraint, typename IntType>
+TreeTraversal<LPConstraint, BanConstraint, IntType>::~TreeTraversal() {
     delete[] type_;
     delete[] typeOrder_;
     delete[] lp_;
@@ -285,8 +285,8 @@ TreeTraversal<LPConstraint, BanConstraint, Integer>::~TreeTraversal() {
     delete[] nextSlot_;
 }
 
-template <class LPConstraint, typename BanConstraint, typename Integer>
-void TreeTraversal<LPConstraint, BanConstraint, Integer>::setNext(
+template <class LPConstraint, typename BanConstraint, typename IntType>
+void TreeTraversal<LPConstraint, BanConstraint, IntType>::setNext(
         int nextType) {
     int* pos = std::find(typeOrder_ + level_ + 1,
         typeOrder_ + nTypes_, nextType);
@@ -300,8 +300,8 @@ void TreeTraversal<LPConstraint, BanConstraint, Integer>::setNext(
     }
 }
 
-template <class LPConstraint, typename BanConstraint, typename Integer>
-int TreeTraversal<LPConstraint, BanConstraint, Integer>::feasibleBranches(
+template <class LPConstraint, typename BanConstraint, typename IntType>
+int TreeTraversal<LPConstraint, BanConstraint, IntType>::feasibleBranches(
         int quadType) {
     // Spin off clones for the new linear programs (reusing as much
     // work as possible).
@@ -373,8 +373,8 @@ int TreeTraversal<LPConstraint, BanConstraint, Integer>::feasibleBranches(
     }
 }
 
-template <class LPConstraint, typename BanConstraint, typename Integer>
-double TreeTraversal<LPConstraint, BanConstraint, Integer>::percent() const {
+template <class LPConstraint, typename BanConstraint, typename IntType>
+double TreeTraversal<LPConstraint, BanConstraint, IntType>::percent() const {
     double percent = 0.0;
     double range = 100.0;
     unsigned den;
@@ -416,8 +416,8 @@ double TreeTraversal<LPConstraint, BanConstraint, Integer>::percent() const {
     return percent;
 }
 
-template <class LPConstraint, typename BanConstraint, typename Integer>
-bool TreeEnumeration<LPConstraint, BanConstraint, Integer>::next(
+template <class LPConstraint, typename BanConstraint, typename IntType>
+bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::next(
         ProgressTracker* tracker) {
     if (lastNonZero_ < 0) {
         // Our type vector is the zero vector.
@@ -792,8 +792,8 @@ bool TreeEnumeration<LPConstraint, BanConstraint, Integer>::next(
     return false;
 }
 
-template <class LPConstraint, typename BanConstraint, typename Integer>
-bool TautEnumeration<LPConstraint, BanConstraint, Integer>::next(
+template <class LPConstraint, typename BanConstraint, typename IntType>
+bool TautEnumeration<LPConstraint, BanConstraint, IntType>::next(
         ProgressTracker* tracker) {
     // Note that for taut angle structures we have no domination test and
     // no zero test.  The domination comes for free (every taut angle
@@ -961,8 +961,8 @@ bool TautEnumeration<LPConstraint, BanConstraint, Integer>::next(
     return false;
 }
 
-template <class LPConstraint, typename BanConstraint, typename Integer>
-bool TautEnumeration<LPConstraint, BanConstraint, Integer>::
+template <class LPConstraint, typename BanConstraint, typename IntType>
+bool TautEnumeration<LPConstraint, BanConstraint, IntType>::
         writeStructure(const TautEnumeration& tree, void*) {
     std::cout << "SOLN #" << tree.nSolns() << ": ";
     AngleStructure* s = tree.buildStructure();
@@ -971,8 +971,8 @@ bool TautEnumeration<LPConstraint, BanConstraint, Integer>::
     return true;
 }
 
-template <class LPConstraint, typename BanConstraint, typename Integer>
-bool TreeSingleSoln<LPConstraint, BanConstraint, Integer>::find() {
+template <class LPConstraint, typename BanConstraint, typename IntType>
+bool TreeSingleSoln<LPConstraint, BanConstraint, IntType>::find() {
     // This code is similar to next(), but makes some changes to
     // account for the facts that:
     // - we only need a single solution that satisfies our
