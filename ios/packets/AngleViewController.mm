@@ -192,7 +192,7 @@
             return @"";
     }
 
-    regina::NRational angle = a->angle((columnPath.column - 1) / 3, (columnPath.column - 1) % 3);
+    regina::Rational angle = a->angle((columnPath.column - 1) / 3, (columnPath.column - 1) % 3);
     if (angle == 0)
         return @"";
     if (angle == 1)

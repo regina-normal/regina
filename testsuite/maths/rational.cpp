@@ -41,10 +41,10 @@
 using regina::NInteger;
 using regina::NIntegerBase;
 using regina::NLargeInteger;
-using regina::NRational;
+using regina::Rational;
 
-class NRationalTest : public CppUnit::TestFixture {
-    CPPUNIT_TEST_SUITE(NRationalTest);
+class RationalTest : public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(RationalTest);
 
     CPPUNIT_TEST(constructFromInteger);
     CPPUNIT_TEST(constructInfinity);
@@ -77,7 +77,7 @@ class NRationalTest : public CppUnit::TestFixture {
         }
 
         void verifyConstructFinite(long val) {
-            NRational r(val);
+            Rational r(val);
             if (r.numerator() != val) {
                 std::ostringstream msg;
                 msg << "Rational (long)" << val <<
@@ -100,7 +100,7 @@ class NRationalTest : public CppUnit::TestFixture {
 
         template <bool supportInfinity>
         void verifyConstructFinite(const NIntegerBase<supportInfinity>& val) {
-            NRational r(val);
+            Rational r(val);
             if (r.numerator() != val) {
                 std::ostringstream msg;
                 msg << "Rational NIntegerBase<...>" << val <<
@@ -137,7 +137,7 @@ class NRationalTest : public CppUnit::TestFixture {
             verifyConstructFinite(NLargeInteger("-" HUGE_INTEGER));
         }
 
-        void verifyInfinite(const NRational& r, const char* name) {
+        void verifyInfinite(const Rational& r, const char* name) {
             if (r.numerator() != 1) {
                 std::ostringstream msg;
                 msg << "Rational " << name <<
@@ -159,29 +159,29 @@ class NRationalTest : public CppUnit::TestFixture {
         }
 
         void constructInfinity() {
-            verifyInfinite(NRational(1, 0), "1/0");
-            verifyInfinite(NRational(-1, 0), "-1/0");
-            verifyInfinite(NRational(3, 0), "3/0");
-            verifyInfinite(NRational(-2, 0), "-2/0");
-            verifyInfinite(NRational(LONG_MAX, 0), "LONG_MAX/0");
-            verifyInfinite(NRational(LONG_MIN, 0), "LONG_MIN/0");
-            verifyInfinite(NRational(NInteger(LONG_MAX) + 1,
+            verifyInfinite(Rational(1, 0), "1/0");
+            verifyInfinite(Rational(-1, 0), "-1/0");
+            verifyInfinite(Rational(3, 0), "3/0");
+            verifyInfinite(Rational(-2, 0), "-2/0");
+            verifyInfinite(Rational(LONG_MAX, 0), "LONG_MAX/0");
+            verifyInfinite(Rational(LONG_MIN, 0), "LONG_MIN/0");
+            verifyInfinite(Rational(NInteger(LONG_MAX) + 1,
                 NInteger::zero),
                 "(NInteger(LONG_MAX)+1)/0");
-            verifyInfinite(NRational(NLargeInteger(LONG_MAX) + 1,
+            verifyInfinite(Rational(NLargeInteger(LONG_MAX) + 1,
                 NLargeInteger::zero),
                 "(NLargeInteger(LONG_MAX)+1)/0");
-            verifyInfinite(NRational(NInteger(LONG_MIN) - 1,
+            verifyInfinite(Rational(NInteger(LONG_MIN) - 1,
                 NInteger::zero),
                 "(NInteger(LONG_MIN)-1)/0");
-            verifyInfinite(NRational(NLargeInteger(LONG_MIN) - 1,
+            verifyInfinite(Rational(NLargeInteger(LONG_MIN) - 1,
                 NLargeInteger::zero),
                 "(NLargeInteger(LONG_MIN)-1)/0");
-            verifyInfinite(NRational(NLargeInteger::infinity),
-                "NRational(NLargeInteger::infinity)");
+            verifyInfinite(Rational(NLargeInteger::infinity),
+                "Rational(NLargeInteger::infinity)");
         }
 
-        void verifyUndefined(const NRational& r, const char* name) {
+        void verifyUndefined(const Rational& r, const char* name) {
             if (r.numerator() != 0) {
                 std::ostringstream msg;
                 msg << "Rational " << name <<
@@ -203,16 +203,16 @@ class NRationalTest : public CppUnit::TestFixture {
         }
 
         void constructUndefined() {
-            verifyUndefined(NRational(0, 0), "0/0");
-            verifyUndefined(NRational(NInteger::zero, NInteger::zero),
+            verifyUndefined(Rational(0, 0), "0/0");
+            verifyUndefined(Rational(NInteger::zero, NInteger::zero),
                 "NInteger::zero/NInteger::zero");
-            verifyUndefined(NRational(NLargeInteger::zero,
+            verifyUndefined(Rational(NLargeInteger::zero,
                 NLargeInteger::zero),
                 "NLargeInteger::zero/NLargeInteger::zero");
         }
 
         void verifyAssignFinite(long val) {
-            NRational r = 6;
+            Rational r = 6;
             r = val;
             if (r.numerator() != val) {
                 std::ostringstream msg;
@@ -236,7 +236,7 @@ class NRationalTest : public CppUnit::TestFixture {
 
         template <bool supportInfinity>
         void verifyAssignFinite(const NIntegerBase<supportInfinity>& val) {
-            NRational r = 6;
+            Rational r = 6;
             r = val;
             if (r.numerator() != val) {
                 std::ostringstream msg;
@@ -275,13 +275,13 @@ class NRationalTest : public CppUnit::TestFixture {
             verifyAssignFinite(NInteger("-" HUGE_INTEGER));
             verifyAssignFinite(NLargeInteger("-" HUGE_INTEGER));
 
-            NRational r = 0;
+            Rational r = 0;
             r = NLargeInteger::infinity;
-            verifyInfinite(r, "NRational = NLargeInteger::infinity");
+            verifyInfinite(r, "Rational = NLargeInteger::infinity");
         }
 
         void verifyNumDen(long val) {
-            NRational r(val);
+            Rational r(val);
             if (r.numerator() != val) {
                 std::ostringstream msg;
                 msg << "Rational (long)" << val <<
@@ -314,7 +314,7 @@ class NRationalTest : public CppUnit::TestFixture {
 
         template <bool supportInfinity>
         void verifyNumDen(const NIntegerBase<supportInfinity>& val) {
-            NRational r(val);
+            Rational r(val);
             if (r.numerator() != val) {
                 std::ostringstream msg;
                 msg << "Rational (NIntegerBase<...>)" << val <<
@@ -359,7 +359,7 @@ class NRationalTest : public CppUnit::TestFixture {
             verifyNumDen(NLargeInteger("-" HUGE_INTEGER));
         }
 
-        void checkDoubleInRange(const NRational& r,
+        void checkDoubleInRange(const Rational& r,
                 double lowerBnd, double upperBnd, const char* name) {
             bool inRange;
             double ans = r.doubleApprox(&inRange);
@@ -381,7 +381,7 @@ class NRationalTest : public CppUnit::TestFixture {
             }
         }
 
-        void checkDoubleOutOfRange(const NRational& r, const char* name) {
+        void checkDoubleOutOfRange(const Rational& r, const char* name) {
             bool inRange;
             double ans = r.doubleApprox(&inRange);
 
@@ -402,47 +402,47 @@ class NRationalTest : public CppUnit::TestFixture {
         }
 
         void doubleApprox() {
-            checkDoubleOutOfRange(NRational::infinity, "infinity");
-            checkDoubleOutOfRange(NRational::undefined, "undefined");
+            checkDoubleOutOfRange(Rational::infinity, "infinity");
+            checkDoubleOutOfRange(Rational::undefined, "undefined");
 
-            checkDoubleInRange(NRational::zero, -epsilon, epsilon, "zero");
-            checkDoubleInRange(NRational(5, 3), 1.666, 1.667, "5/3");
-            checkDoubleInRange(NRational(-5, 3), -1.667, -1.666, "-5/3");
+            checkDoubleInRange(Rational::zero, -epsilon, epsilon, "zero");
+            checkDoubleInRange(Rational(5, 3), 1.666, 1.667, "5/3");
+            checkDoubleInRange(Rational(-5, 3), -1.667, -1.666, "-5/3");
 
             // Construct something out of int's usual range but
             // well within double's.  Here we aim for around 2^70,
             // or about 7^25.
             NLargeInteger in(7);
             in.raiseToPower(25);
-            checkDoubleInRange(NRational(in, NLargeInteger(3)),
+            checkDoubleInRange(Rational(in, NLargeInteger(3)),
                 4.470e+20, 4.471e+20, "7^25/3");
-            checkDoubleInRange(NRational(-in, NLargeInteger(3)),
+            checkDoubleInRange(Rational(-in, NLargeInteger(3)),
                 -4.471e+20, -4.470e+20, "-7^25/3");
 
             // Construct something well out of double's usual range.
             // Here we aim for around 2^10000, or about 13^2702.
             NLargeInteger out(13);
             out.raiseToPower(2702);
-            checkDoubleOutOfRange(NRational(out, NLargeInteger(2)),
+            checkDoubleOutOfRange(Rational(out, NLargeInteger(2)),
                 "13^2702/2");
-            checkDoubleOutOfRange(NRational(-out, NLargeInteger(2)),
+            checkDoubleOutOfRange(Rational(-out, NLargeInteger(2)),
                 "-13^2702/2");
 
             // Check precision bounds close to zero also.
-            checkDoubleInRange(NRational(NLargeInteger(3), in),
+            checkDoubleInRange(Rational(NLargeInteger(3), in),
                 2.237e-21, 2.238e-21, "3/7^25");
-            checkDoubleInRange(NRational(NLargeInteger(-3), in),
+            checkDoubleInRange(Rational(NLargeInteger(-3), in),
                 -2.238e-21, -2.237e-21, "-3/7^25");
-            checkDoubleOutOfRange(NRational(NLargeInteger(2), out),
+            checkDoubleOutOfRange(Rational(NLargeInteger(2), out),
                 "2/13^2702");
-            checkDoubleOutOfRange(NRational(NLargeInteger(-2), out),
+            checkDoubleOutOfRange(Rational(NLargeInteger(-2), out),
                 "-2/13^2702");
         }
 };
 
-const double NRationalTest::epsilon = 0.0000001;
+const double RationalTest::epsilon = 0.0000001;
 
-void addNRational(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(NRationalTest::suite());
+void addRational(CppUnit::TextUi::TestRunner& runner) {
+    runner.addTest(RationalTest::suite());
 }
 

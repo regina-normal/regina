@@ -51,7 +51,7 @@ namespace regina {
 
 /**
  * Represents an arbitrary precision rational number.
- * Calculations with NRational objects will be exact.
+ * Calculations with Rational objects will be exact.
  *
  * Infinity (1/0) and undefined (0/0) are catered for.  (-1/0) is considered
  * the same as (1/0), and is represented as (1/0).
@@ -72,17 +72,17 @@ namespace regina {
  * supplying the numerator and denominator separately), it is your
  * responsibility to ensure that the rational is in lowest terms.
  */
-class REGINA_API NRational {
+class REGINA_API Rational {
     public:
-        static const NRational zero;
+        static const Rational zero;
             /**< Globally available zero. */
-        static const NRational one;
+        static const Rational one;
             /**< Globally available one. */
-        static const NRational infinity;
+        static const Rational infinity;
             /**< Globally available infinity.  Note that both 1/0 and
              *   -1/0 evaluate to this same rational.  When queried,
              *   the representation 1/0 will be returned. */
-        static const NRational undefined;
+        static const Rational undefined;
             /**< Globally available undefined.  This is represented as
              *   0/0. */
     private:
@@ -105,11 +105,11 @@ class REGINA_API NRational {
              *   (non-zero denominator) rationals.
              *   This is initialised even if the rational is infinite. */
 
-        static const NRational maxDouble;
+        static const Rational maxDouble;
             /**< The largest positive rational number that can be converted
              *   to a finite double.  This begins as undefined, and is set
              *   to its correct value on the first call to doubleApprox(). */
-        static const NRational minDouble;
+        static const Rational minDouble;
             /**< The smallest positive rational number that can be converted
              *   to a non-zero double.  This begins as undefined, and is set
              *   to its correct value on the first call to doubleApprox(). */
@@ -118,13 +118,13 @@ class REGINA_API NRational {
         /**
          * Initialises to 0/1.
          */
-        NRational();
+        Rational();
         /**
          * Initialises to the given rational value.
          *
          * @param value the new rational value of this rational.
          */
-        NRational(const NRational& value);
+        Rational(const Rational& value);
         /**
          * Initialises to the given integer value.
          * The given integer may be infinite.
@@ -132,13 +132,13 @@ class REGINA_API NRational {
          * @param value the new integer value of this rational.
          */
         template <bool supportInfinity>
-        NRational(const NIntegerBase<supportInfinity>& value);
+        Rational(const NIntegerBase<supportInfinity>& value);
         /**
          * Initialises to the given integer value.
          *
          * @param value the new integer value of this rational.
          */
-        NRational(long value);
+        Rational(long value);
         /**
          * Initialises to <i>newNum</i>/<i>newDen</i>.
          *
@@ -147,9 +147,9 @@ class REGINA_API NRational {
          *
          * \warning Failing to meet the preconditions above can result
          * in misleading or even undefined behaviour.  As an example,
-         * NRational(4,4) (which breaks the gcd requirement) is
-         * considered different from NRational(1,1) (a valid rational),
-         * which is different again from NRational(-1,-1) (which breaks
+         * Rational(4,4) (which breaks the gcd requirement) is
+         * considered different from Rational(1,1) (a valid rational),
+         * which is different again from Rational(-1,-1) (which breaks
          * the non-negativity requirement).
          *
          * \pre Neither of the given integers is infinite.
@@ -158,7 +158,7 @@ class REGINA_API NRational {
          * @param newDen the new denominator.
          */
         template <bool supportInfinity>
-        NRational(const NIntegerBase<supportInfinity>& newNum,
+        Rational(const NIntegerBase<supportInfinity>& newNum,
                   const NIntegerBase<supportInfinity>& newDen);
         /**
          * Initialises to <i>newNum</i>/<i>newDen</i>.
@@ -168,19 +168,19 @@ class REGINA_API NRational {
          *
          * \warning Failing to meet the preconditions above can result
          * in misleading or even undefined behaviour.  As an example,
-         * NRational(4,4) (which breaks the gcd requirement) is
-         * considered different from NRational(1,1) (a valid rational),
-         * which is different again from NRational(-1,-1) (which breaks
+         * Rational(4,4) (which breaks the gcd requirement) is
+         * considered different from Rational(1,1) (a valid rational),
+         * which is different again from Rational(-1,-1) (which breaks
          * the non-negativity requirement).
          *
          * @param newNum the new numerator.
          * @param newDen the new denominator.
          */
-        NRational(long newNum, unsigned long newDen);
+        Rational(long newNum, unsigned long newDen);
         /**
          * Destroys this rational.
          */
-        ~NRational();
+        ~Rational();
 
         /**
          * Sets this rational to the given rational value.
@@ -188,7 +188,7 @@ class REGINA_API NRational {
          * @param value the new value of this rational.
          * @return a reference to this rational with its new value.
          */
-        NRational& operator = (const NRational& value);
+        Rational& operator = (const Rational& value);
         /**
          * Sets this rational to the given integer value.
          * The given integer may be infinite.
@@ -197,21 +197,21 @@ class REGINA_API NRational {
          * @return a reference to this rational with its new value.
          */
         template <bool supportInfinity>
-        NRational& operator = (const NIntegerBase<supportInfinity>& value);
+        Rational& operator = (const NIntegerBase<supportInfinity>& value);
         /**
          * Sets this rational to the given integer value.
          *
          * @param value the new value of this rational.
          * @return a reference to this rational with its new value.
          */
-        NRational& operator = (long value);
+        Rational& operator = (long value);
         /**
          * Swaps the values of this and the given rational.
          *
          * @param other the rational whose value will be swapped with
          * this.
          */
-        void swap(NRational& other);
+        void swap(Rational& other);
 
         /**
          * Returns the numerator of this rational.
@@ -237,7 +237,7 @@ class REGINA_API NRational {
          * @param r the rational with which to multiply this.
          * @return the product \a this * \a r.
          */
-        NRational operator *(const NRational& r) const;
+        Rational operator *(const Rational& r) const;
         /**
          * Calculates the ratio of two rationals.
          * This rational is not changed.
@@ -245,7 +245,7 @@ class REGINA_API NRational {
          * @param r the rational to divide this by.
          * @return the ratio \a this / \a r.
          */
-        NRational operator /(const NRational& r) const;
+        Rational operator /(const Rational& r) const;
         /**
          * Calculates the sum of two rationals.
          * This rational is not changed.
@@ -253,7 +253,7 @@ class REGINA_API NRational {
          * @param r the rational to add to this.
          * @return the sum \a this + \a r.
          */
-        NRational operator +(const NRational& r) const;
+        Rational operator +(const Rational& r) const;
         /**
          * Calculates the difference of two rationals.
          * This rational is not changed.
@@ -261,28 +261,28 @@ class REGINA_API NRational {
          * @param r the rational to subtract from this.
          * @return the difference \a this - \a r.
          */
-        NRational operator -(const NRational& r) const;
+        Rational operator -(const Rational& r) const;
         /**
          * Determines the negative of this rational.
          * This rational is not changed.
          *
          * @return the negative of this rational.
          */
-        NRational operator - () const;
+        Rational operator - () const;
         /**
          * Calculates the inverse of this rational.
          * This rational is not changed.
          *
          * @return the inverse 1 / \a this.
          */
-        NRational inverse() const;
+        Rational inverse() const;
         /**
          * Determines the absolute value of this rational.
          * This rational is not changed.
          *
          * @return the absolute value of this rational.
          */
-        NRational abs() const;
+        Rational abs() const;
 
         /**
          * Adds the given rational to this.
@@ -291,7 +291,7 @@ class REGINA_API NRational {
          * @param other the rational to add to this.
          * @return a reference to this rational with its new value.
          */
-        NRational& operator += (const NRational& other);
+        Rational& operator += (const Rational& other);
         /**
          * Subtracts the given rational from this.
          * This rational is changed to reflect the result.
@@ -299,7 +299,7 @@ class REGINA_API NRational {
          * @param other the rational to subtract from this.
          * @return a reference to this rational with its new value.
          */
-        NRational& operator -= (const NRational& other);
+        Rational& operator -= (const Rational& other);
         /**
          * Multiplies the given rational by this.
          * This rational is changed to reflect the result.
@@ -307,7 +307,7 @@ class REGINA_API NRational {
          * @param other the rational to multiply by this.
          * @return a reference to this rational with its new value.
          */
-        NRational& operator *= (const NRational& other);
+        Rational& operator *= (const Rational& other);
         /**
          * Divides this by the given rational.
          * This rational is changed to reflect the result.
@@ -315,7 +315,7 @@ class REGINA_API NRational {
          * @param other the rational to divide this by.
          * @return a reference to this rational with its new value.
          */
-        NRational& operator /= (const NRational& other);
+        Rational& operator /= (const Rational& other);
         /**
          * Negates this rational.
          * This rational is changed to reflect the result.
@@ -334,7 +334,7 @@ class REGINA_API NRational {
          * @return \c true if and only if this rational is equal to
          * \a compare.
          */
-        bool operator == (const NRational& compare) const;
+        bool operator == (const Rational& compare) const;
         /**
          * Determines if this is not equal to the given rational.
          *
@@ -342,7 +342,7 @@ class REGINA_API NRational {
          * @return \c true if and only if this rational is not equal to
          * \a compare.
          */
-        bool operator != (const NRational& compare) const;
+        bool operator != (const Rational& compare) const;
         /**
          * Determines if this is less than the given rational.
          *
@@ -350,7 +350,7 @@ class REGINA_API NRational {
          * @return \c true if and only if this rational is less than
          * \a compare.
          */
-        bool operator < (const NRational& compare) const;
+        bool operator < (const Rational& compare) const;
         /**
          * Determines if this is greater than the given rational.
          *
@@ -358,7 +358,7 @@ class REGINA_API NRational {
          * @return \c true if and only if this rational is greater than
          * \a compare.
          */
-        bool operator > (const NRational& compare) const;
+        bool operator > (const Rational& compare) const;
         /**
          * Determines if this is less than or equal to the given rational.
          *
@@ -366,7 +366,7 @@ class REGINA_API NRational {
          * @return \c true if and only if this rational is less than or
          * equal to \a compare.
          */
-        bool operator <= (const NRational& compare) const;
+        bool operator <= (const Rational& compare) const;
         /**
          * Determines if this is greater than or equal to the given rational.
          *
@@ -374,7 +374,7 @@ class REGINA_API NRational {
          * @return \c true if and only if this rational is greater than
          * or equal to \a compare.
          */
-        bool operator >= (const NRational& compare) const;
+        bool operator >= (const Rational& compare) const;
 
         /**
          * Attempts to convert this rational to a real number.
@@ -451,7 +451,7 @@ class REGINA_API NRational {
          */
         static void initDoubleBounds();
 
-    friend std::ostream& operator << (std::ostream& out, const NRational& rat);
+    friend std::ostream& operator << (std::ostream& out, const Rational& rat);
 };
 
 /**
@@ -465,22 +465,30 @@ class REGINA_API NRational {
  * @param rat the rational to write.
  * @return a reference to \a out.
  */
-REGINA_API std::ostream& operator << (std::ostream& out, const NRational& rat);
+REGINA_API std::ostream& operator << (std::ostream& out, const Rational& rat);
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NRational has now been renamed to Rational.
+ */
+REGINA_DEPRECATED typedef Rational NRational;
 
 /*@}*/
 
-// Inline functions for NRational
+// Inline functions for Rational
 
-inline NRational::NRational() : flavour(f_normal) {
+inline Rational::Rational() : flavour(f_normal) {
     mpq_init(data);
 }
-inline NRational::NRational(const NRational& value) : flavour(value.flavour) {
+inline Rational::Rational(const Rational& value) : flavour(value.flavour) {
     mpq_init(data);
     if (flavour == f_normal)
         mpq_set(data, value.data);
 }
 template <bool supportInfinity>
-inline NRational::NRational(const NIntegerBase<supportInfinity>& value) :
+inline Rational::Rational(const NIntegerBase<supportInfinity>& value) :
         flavour(f_normal) {
     mpq_init(data);
     if (value.isInfinite())
@@ -490,12 +498,12 @@ inline NRational::NRational(const NIntegerBase<supportInfinity>& value) :
     else
         mpq_set_z(data, value.rawData());
 }
-inline NRational::NRational(long value) : flavour(f_normal) {
+inline Rational::Rational(long value) : flavour(f_normal) {
     mpq_init(data);
     mpq_set_si(data, value, 1);
 }
 template <bool supportInfinity>
-NRational::NRational(const NIntegerBase<supportInfinity>& newNum,
+Rational::Rational(const NIntegerBase<supportInfinity>& newNum,
                      const NIntegerBase<supportInfinity>& newDen) {
     mpq_init(data);
     if (newDen.isZero()) {
@@ -523,18 +531,18 @@ NRational::NRational(const NIntegerBase<supportInfinity>& newNum,
         }
     }
 }
-inline NRational::~NRational() {
+inline Rational::~Rational() {
     mpq_clear(data);
 }
 
-inline NRational& NRational::operator = (const NRational& value) {
+inline Rational& Rational::operator = (const Rational& value) {
     flavour = value.flavour;
     if (flavour == f_normal)
         mpq_set(data, value.data);
     return *this;
 }
 template <bool supportInfinity>
-inline NRational& NRational::operator = (
+inline Rational& Rational::operator = (
         const NIntegerBase<supportInfinity>& value) {
     if (value.isInfinite())
         flavour = f_infinity;
@@ -547,29 +555,29 @@ inline NRational& NRational::operator = (
     }
     return *this;
 }
-inline NRational& NRational::operator = (long value) {
+inline Rational& Rational::operator = (long value) {
     flavour = f_normal;
     mpq_set_si(data, value, 1);
     return *this;
 }
 
-inline void NRational::swap(NRational& other) {
+inline void Rational::swap(Rational& other) {
     std::swap(flavour, other.flavour);
     mpq_swap(data, other.data);
 }
 
-inline void NRational::negate() {
+inline void Rational::negate() {
     if (flavour == f_normal)
         mpq_neg(data, data);
 }
 
-inline bool NRational::operator <= (const NRational& compare) const {
+inline bool Rational::operator <= (const Rational& compare) const {
     return ! (*this > compare);
 }
-inline bool NRational::operator >= (const NRational& compare) const {
+inline bool Rational::operator >= (const Rational& compare) const {
     return ! (*this < compare);
 }
-inline bool NRational::operator != (const NRational& compare) const {
+inline bool Rational::operator != (const Rational& compare) const {
     return ! (*this == compare);
 }
 

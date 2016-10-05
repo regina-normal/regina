@@ -197,7 +197,7 @@ class REGINA_API AngleStructure :
          * the requested angle, as described above; this should be 0, 1 or 2.
          * @return the requested angle scaled down by <i>pi</i>.
          */
-        NRational angle(size_t tetIndex, int edgePair) const;
+        Rational angle(size_t tetIndex, int edgePair) const;
 
         /**
          * Returns the triangulation on which this angle structure lies.

@@ -37,33 +37,33 @@
 
 using namespace boost::python;
 using regina::NPolynomial;
-using regina::NRational;
+using regina::Rational;
 
 namespace {
-    const regina::NRational& getItem(const NPolynomial<NRational>& p,
+    const regina::Rational& getItem(const NPolynomial<Rational>& p,
             size_t exp) {
         return p[exp];
     }
-    void setItem(NPolynomial<NRational>& p, size_t exp,
-            const regina::NRational& value) {
+    void setItem(NPolynomial<Rational>& p, size_t exp,
+            const regina::Rational& value) {
         p.set(exp, value);
     }
 
-    boost::python::tuple divisionAlg(const NPolynomial<NRational>& p,
-            const NPolynomial<NRational>& divisor) {
-        std::auto_ptr<NPolynomial<NRational> > q(new NPolynomial<NRational>);
-        std::auto_ptr<NPolynomial<NRational> > r(new NPolynomial<NRational>);
+    boost::python::tuple divisionAlg(const NPolynomial<Rational>& p,
+            const NPolynomial<Rational>& divisor) {
+        std::auto_ptr<NPolynomial<Rational> > q(new NPolynomial<Rational>);
+        std::auto_ptr<NPolynomial<Rational> > r(new NPolynomial<Rational>);
 
         p.divisionAlg(divisor, *q, *r);
         return boost::python::make_tuple(q, r);
     }
 
-    NRational* seqFromList(boost::python::list l) {
+    Rational* seqFromList(boost::python::list l) {
         long len = boost::python::len(l);
-        NRational* coeffs = new NRational[len];
+        Rational* coeffs = new Rational[len];
         for (long i = 0; i < len; ++i) {
             // Accept any type that we know how to convert to a rational.
-            extract<regina::NRational&> x_rat(l[i]);
+            extract<regina::Rational&> x_rat(l[i]);
             if (x_rat.check()) {
                 coeffs[i] = x_rat();
                 continue;
@@ -86,10 +86,10 @@ namespace {
         return coeffs;
     }
 
-    NPolynomial<NRational>* create_seq(boost::python::list l) {
-        NRational* coeffs = seqFromList(l);
+    NPolynomial<Rational>* create_seq(boost::python::list l) {
+        Rational* coeffs = seqFromList(l);
         if (coeffs) {
-            NPolynomial<NRational>* ans = new NPolynomial<NRational>(
+            NPolynomial<Rational>* ans = new NPolynomial<Rational>(
                 coeffs, coeffs + boost::python::len(l));
             delete[] coeffs;
             return ans;
@@ -97,53 +97,53 @@ namespace {
         return 0;
     }
 
-    void init_seq(NPolynomial<NRational>& p, boost::python::list l) {
-        NRational* coeffs = seqFromList(l);
+    void init_seq(NPolynomial<Rational>& p, boost::python::list l) {
+        Rational* coeffs = seqFromList(l);
         if (coeffs) {
             p.init(coeffs, coeffs + boost::python::len(l));
             delete[] coeffs;
         }
     }
 
-    void (NPolynomial<NRational>::*init_void)() =
-        &NPolynomial<NRational>::init;
-    void (NPolynomial<NRational>::*init_degree)(size_t) =
-        &NPolynomial<NRational>::init;
-    std::string (NPolynomial<NRational>::*str_variable)(const char*) const =
-        &NPolynomial<NRational>::str;
-    std::string (NPolynomial<NRational>::*utf8_variable)(const char*) const =
-        &NPolynomial<NRational>::utf8;
+    void (NPolynomial<Rational>::*init_void)() =
+        &NPolynomial<Rational>::init;
+    void (NPolynomial<Rational>::*init_degree)(size_t) =
+        &NPolynomial<Rational>::init;
+    std::string (NPolynomial<Rational>::*str_variable)(const char*) const =
+        &NPolynomial<Rational>::str;
+    std::string (NPolynomial<Rational>::*utf8_variable)(const char*) const =
+        &NPolynomial<Rational>::utf8;
 }
 
 void addNPolynomial() {
-    scope s = class_<NPolynomial<NRational>,
-            std::auto_ptr<NPolynomial<NRational> >,
+    scope s = class_<NPolynomial<Rational>,
+            std::auto_ptr<NPolynomial<Rational> >,
             boost::noncopyable>("NPolynomial")
         .def(init<size_t>())
-        .def(init<const NPolynomial<NRational>&>())
+        .def(init<const NPolynomial<Rational>&>())
         .def("__init__", make_constructor(create_seq))
         .def("init", init_void)
         .def("init", init_degree)
         .def("init", init_seq)
-        .def("degree", &NPolynomial<NRational>::degree)
-        .def("isZero", &NPolynomial<NRational>::isZero)
-        .def("isMonic", &NPolynomial<NRational>::isMonic)
-        .def("leading", &NPolynomial<NRational>::leading,
+        .def("degree", &NPolynomial<Rational>::degree)
+        .def("isZero", &NPolynomial<Rational>::isZero)
+        .def("isMonic", &NPolynomial<Rational>::isMonic)
+        .def("leading", &NPolynomial<Rational>::leading,
             return_internal_reference<>())
         .def("__getitem__", getItem, return_internal_reference<>())
         .def("__setitem__", setItem)
-        .def("set", &NPolynomial<NRational>::set)
-        .def("swap", &NPolynomial<NRational>::swap)
+        .def("set", &NPolynomial<Rational>::set)
+        .def("swap", &NPolynomial<Rational>::swap)
         .def("str", str_variable)
         .def("utf8", utf8_variable)
-        .def(self *= NRational())
-        .def(self /= NRational())
+        .def(self *= Rational())
+        .def(self /= Rational())
         .def(self += self)
         .def(self -= self)
         .def(self *= self)
         .def(self /= self)
         .def("divisionAlg", &divisionAlg)
-        .def("gcdWithCoeffs", &NPolynomial<NRational>::gcdWithCoeffs<NRational>)
+        .def("gcdWithCoeffs", &NPolynomial<Rational>::gcdWithCoeffs<Rational>)
         .def(regina::python::add_output())
         .def(self_ns::repr(self)) // add_output only gives __str__
         .def(regina::python::add_eq_operators())

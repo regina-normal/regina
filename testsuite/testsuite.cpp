@@ -109,7 +109,7 @@ void populateTests(CppUnit::TextTestRunner& runner) {
 
     // Maths:
     addNInteger(runner);
-    addNRational(runner);
+    addRational(runner);
     addNPerm2(runner);
     addNPerm3(runner);
     addNPerm4(runner);

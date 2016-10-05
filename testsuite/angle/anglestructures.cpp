@@ -229,7 +229,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             }
 
             unsigned long i, j, k;
-            regina::NRational tmp, tot;
+            regina::Rational tmp, tot;
             regina::NEdge* e;
             for (i = 0; i < a->size(); ++i) {
                 const AngleStructure* s = a->structure(i);

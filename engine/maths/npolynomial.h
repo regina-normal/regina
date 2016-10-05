@@ -64,7 +64,7 @@ namespace regina {
  *   tests of the form <tt>x == int</tt> and <tt>x < int</tt>;
  * - have a default constructor that assigns an explicit value of zero.
  *
- * This means that Regina's numerical types such as NInteger and NRational
+ * This means that Regina's numerical types such as NInteger and Rational
  * are supported, but native data types such as int and long are not
  * (since they have no zero-initialising default constructor).
  *
@@ -72,7 +72,7 @@ namespace regina {
  * coefficients are explicitly stored, including zero coefficients).
  *
  * \ifacespython In Python, the class NPolynomial refers to the specific
- * template class NPolynomial<NRational>.
+ * template class NPolynomial<Rational>.
  */
 template <typename T>
 class NPolynomial : public ShortOutput<NPolynomial<T>, true> {
@@ -382,7 +382,7 @@ class NPolynomial : public ShortOutput<NPolynomial<T>, true> {
          * \pre The given polynomial is not the zero polynomial.
          *
          * \pre The quotient as defined above exists.  If \a T is a field
-         * type (e.g., if \a T is NRational) then this is true automatically.
+         * type (e.g., if \a T is Rational) then this is true automatically.
          * If not (e.g., if \a T is NInteger) then this requires some
          * prior knowledge about the arguments.
          *
@@ -416,7 +416,7 @@ class NPolynomial : public ShortOutput<NPolynomial<T>, true> {
          * \pre The given divisor is not the zero polynomial.
          *
          * \pre The quotient as defined above exists.  If \a T is a field
-         * type (e.g., if \a T is NRational) then this is true automatically.
+         * type (e.g., if \a T is Rational) then this is true automatically.
          * If not (e.g., if \a T is NInteger) then this requires some
          * prior knowledge about the arguments.
          *
@@ -449,7 +449,7 @@ class NPolynomial : public ShortOutput<NPolynomial<T>, true> {
          * As a special case, gcd(0,0) is considered to be zero.
          *
          * \pre The coefficient type \a T represents a field.  In particular,
-         * NRational is supported but NInteger is not.
+         * Rational is supported but NInteger is not.
          *
          * @param other the polynomial whose greatest common divisor with this
          * polynomial we should compute.

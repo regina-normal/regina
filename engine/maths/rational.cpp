@@ -36,17 +36,17 @@
 
 namespace regina {
 
-const NRational NRational::zero;
-const NRational NRational::one(1);
-const NRational NRational::infinity(1, 0);
-const NRational NRational::undefined(0, 0);
+const Rational Rational::zero;
+const Rational Rational::one(1);
+const Rational Rational::infinity(1, 0);
+const Rational Rational::undefined(0, 0);
 
 // These two constants are initialised to their intended values in
 // initDoubleBounds().
-const NRational NRational::maxDouble(0, 0);
-const NRational NRational::minDouble(0, 0);
+const Rational Rational::maxDouble(0, 0);
+const Rational Rational::minDouble(0, 0);
 
-NRational::NRational(long newNum, unsigned long newDen) {
+Rational::Rational(long newNum, unsigned long newDen) {
     mpq_init(data);
     if (newDen == 0) {
         if (newNum == 0)
@@ -59,7 +59,7 @@ NRational::NRational(long newNum, unsigned long newDen) {
     }
 }
 
-NInteger NRational::numerator() const {
+NInteger Rational::numerator() const {
     if (flavour == f_infinity)
         return NInteger::one;
     else if (flavour == f_undefined)
@@ -70,7 +70,7 @@ NInteger NRational::numerator() const {
     return ans;
 }
 
-NInteger NRational::denominator() const {
+NInteger Rational::denominator() const {
     if (flavour != f_normal)
         return NInteger::zero;
 
@@ -79,7 +79,7 @@ NInteger NRational::denominator() const {
     return ans;
 }
 
-NRational NRational::operator *(const NRational& r) const {
+Rational Rational::operator *(const Rational& r) const {
     if (flavour == f_undefined || r.flavour == f_undefined)
         return undefined;
     if (flavour == f_infinity) {
@@ -92,12 +92,12 @@ NRational NRational::operator *(const NRational& r) const {
             return undefined;
         return infinity;
     }
-    NRational ans;
+    Rational ans;
     mpq_mul(ans.data, data, r.data);
     return ans;
 }
 
-NRational NRational::operator /(const NRational& r) const {
+Rational Rational::operator /(const Rational& r) const {
     if (flavour == f_undefined || r.flavour == f_undefined)
         return undefined;
     if (flavour == f_infinity) {
@@ -112,60 +112,60 @@ NRational NRational::operator /(const NRational& r) const {
             return undefined;
         return infinity;
     }
-    NRational ans;
+    Rational ans;
     mpq_div(ans.data, data, r.data);
     return ans;
 }
 
-NRational NRational::operator +(const NRational& r) const {
+Rational Rational::operator +(const Rational& r) const {
     if (flavour == f_undefined || r.flavour == f_undefined)
         return undefined;
     if (flavour == f_infinity || r.flavour == f_infinity)
         return infinity;
-    NRational ans;
+    Rational ans;
     mpq_add(ans.data, data, r.data);
     return ans;
 }
 
-NRational NRational::operator -(const NRational& r) const {
+Rational Rational::operator -(const Rational& r) const {
     if (flavour == f_undefined || r.flavour == f_undefined)
         return undefined;
     if (flavour == f_infinity || r.flavour == f_infinity)
         return infinity;
-    NRational ans;
+    Rational ans;
     mpq_sub(ans.data, data, r.data);
     return ans;
 }
 
-NRational NRational::operator - () const {
+Rational Rational::operator - () const {
     if (flavour != f_normal)
         return *this;
-    NRational ans;
+    Rational ans;
     mpq_neg(ans.data, data);
     return ans;
 }
 
-NRational NRational::inverse() const {
+Rational Rational::inverse() const {
     if (flavour == f_undefined)
         return undefined;
     if (flavour == f_infinity)
         return zero;
     if (*this == zero)
         return infinity;
-    NRational ans;
+    Rational ans;
     mpq_inv(ans.data, data);
     return ans;
 }
 
-NRational NRational::abs() const {
+Rational Rational::abs() const {
     if (flavour != f_normal || mpq_cmp(data, zero.data) >= 0)
         return *this;
-    NRational ans;
+    Rational ans;
     mpq_neg(ans.data, data);
     return ans;
 }
 
-NRational& NRational::operator += (const NRational& other) {
+Rational& Rational::operator += (const Rational& other) {
     if (flavour == f_undefined || other.flavour == f_undefined)
         flavour = f_undefined;
     else if (flavour == f_infinity || other.flavour == f_infinity)
@@ -175,7 +175,7 @@ NRational& NRational::operator += (const NRational& other) {
     return *this;
 }
 
-NRational& NRational::operator -= (const NRational& other) {
+Rational& Rational::operator -= (const Rational& other) {
     if (flavour == f_undefined || other.flavour == f_undefined)
         flavour = f_undefined;
     else if (flavour == f_infinity || other.flavour == f_infinity)
@@ -185,7 +185,7 @@ NRational& NRational::operator -= (const NRational& other) {
     return *this;
 }
 
-NRational& NRational::operator *= (const NRational& other) {
+Rational& Rational::operator *= (const Rational& other) {
     if (flavour == f_undefined || other.flavour == f_undefined)
         flavour = f_undefined;
     else if (flavour == f_infinity) {
@@ -203,7 +203,7 @@ NRational& NRational::operator *= (const NRational& other) {
     return *this;
 }
 
-NRational& NRational::operator /= (const NRational& other) {
+Rational& Rational::operator /= (const Rational& other) {
     if (flavour == f_undefined || other.flavour == f_undefined)
         flavour = f_undefined;
     else if (flavour == f_infinity) {
@@ -223,7 +223,7 @@ NRational& NRational::operator /= (const NRational& other) {
     return *this;
 }
 
-void NRational::invert() {
+void Rational::invert() {
     if (flavour == f_undefined)
         return;
     else if (flavour == f_infinity) {
@@ -235,7 +235,7 @@ void NRational::invert() {
         mpq_inv(data, data);
 }
 
-bool NRational::operator == (const NRational& compare) const {
+bool Rational::operator == (const Rational& compare) const {
     if (flavour != compare.flavour)
         return false;
     if (flavour != f_normal)
@@ -243,7 +243,7 @@ bool NRational::operator == (const NRational& compare) const {
     return mpq_equal(data, compare.data);
 }
 
-bool NRational::operator < (const NRational& compare) const {
+bool Rational::operator < (const Rational& compare) const {
     if (flavour == f_infinity || compare.flavour == f_undefined)
         return false;
     if (flavour == f_undefined || compare.flavour == f_infinity)
@@ -251,7 +251,7 @@ bool NRational::operator < (const NRational& compare) const {
     return (mpq_cmp(data, compare.data) < 0);
 }
 
-bool NRational::operator > (const NRational& compare) const {
+bool Rational::operator > (const Rational& compare) const {
     if (flavour == f_undefined || compare.flavour == f_infinity)
         return false;
     if (flavour == f_infinity || compare.flavour == f_undefined)
@@ -259,10 +259,10 @@ bool NRational::operator > (const NRational& compare) const {
     return (mpq_cmp(data, compare.data) > 0);
 }
 
-std::ostream& operator << (std::ostream& out, const NRational& rat) {
-    if (rat.flavour == NRational::f_infinity)
+std::ostream& operator << (std::ostream& out, const Rational& rat) {
+    if (rat.flavour == Rational::f_infinity)
         out << "Inf";
-    else if (rat.flavour == NRational::f_undefined)
+    else if (rat.flavour == Rational::f_undefined)
         out << "Undef";
     else if (rat.denominator() == 1)
         out << rat.numerator();
@@ -271,16 +271,16 @@ std::ostream& operator << (std::ostream& out, const NRational& rat) {
     return out;
 }
 
-std::string NRational::TeX() const {
+std::string Rational::TeX() const {
     std::ostringstream out;
     writeTeX(out);
     return out.str();
 }
 
-std::ostream& NRational::writeTeX(std::ostream &out) const {
-    if (flavour == NRational::f_infinity)
+std::ostream& Rational::writeTeX(std::ostream &out) const {
+    if (flavour == Rational::f_infinity)
         out << "\\infty";
-    else if (flavour == NRational::f_undefined)
+    else if (flavour == Rational::f_undefined)
         out << "0/0";
     else if (denominator() == 1)
         out << numerator();
@@ -289,7 +289,7 @@ std::ostream& NRational::writeTeX(std::ostream &out) const {
     return out;
 }
 
-double NRational::doubleApprox(bool* inRange) const {
+double Rational::doubleApprox(bool* inRange) const {
     // Initialise maxDouble and minDouble if this has not already been done.
     // Do this even if the current doubleApprox() call is trivial, since we
     // promise this initialisation on the very first call to doubleApprox().
@@ -297,7 +297,7 @@ double NRational::doubleApprox(bool* inRange) const {
         initDoubleBounds();
 
     // Trivial cases.
-    if (flavour == NRational::f_infinity || flavour == NRational::f_undefined) {
+    if (flavour == Rational::f_infinity || flavour == Rational::f_undefined) {
         if (inRange)
             *inRange = false;
         return 0.0;
@@ -311,7 +311,7 @@ double NRational::doubleApprox(bool* inRange) const {
     }
 
     // In bounds or out of bounds?
-    NRational magnitude = this->abs();
+    Rational magnitude = this->abs();
     if (magnitude < minDouble || magnitude > maxDouble) {
         if (inRange)
             *inRange = false;
@@ -326,7 +326,7 @@ double NRational::doubleApprox(bool* inRange) const {
     return mpq_get_d(data);
 }
 
-void NRational::initDoubleBounds() {
+void Rational::initDoubleBounds() {
     // The largest and smallest possible (positive) doubles should be:
     //     FLT_RADIX ^ DBL_MAX_EXP (minus a small amount)
     //     FLT_RADIX ^ (DBL_MIN_EXP - 1)
@@ -349,8 +349,8 @@ void NRational::initDoubleBounds() {
     minNum.raiseToPower(- DBL_MIN_EXP);
 
     // Cast away constness so we can actually change these variables.
-    const_cast<NRational&>(maxDouble) = NRational(maxNum, NInteger(1));
-    const_cast<NRational&>(minDouble) = NRational(NInteger(1), minNum);
+    const_cast<Rational&>(maxDouble) = Rational(maxNum, NInteger(1));
+    const_cast<Rational&>(minDouble) = Rational(NInteger(1), minNum);
 }
 
 } // namespace regina

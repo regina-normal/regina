@@ -37,72 +37,75 @@
 using namespace boost::python;
 using regina::NInteger;
 using regina::NLargeInteger;
-using regina::NRational;
+using regina::Rational;
 
 namespace {
-    double doubleApprox_void(const NRational& r) {
+    double doubleApprox_void(const Rational& r) {
         return r.doubleApprox();
     }
 
-    boost::python::tuple doubleApprox_bool(const NRational& r) {
+    boost::python::tuple doubleApprox_bool(const Rational& r) {
         bool inRange;
         double ans = r.doubleApprox(&inRange);
         return boost::python::make_tuple(ans, inRange);
     }
 
-    void writeTeX_stdio(const NRational& r) {
+    void writeTeX_stdio(const Rational& r) {
         r.writeTeX(std::cout);
     }
 }
 
-void addNRational() {
-    scope s = class_<NRational>("NRational")
-        .def(init<const NRational&>())
-        .def(init<const NInteger&>())
-        .def(init<const NLargeInteger&>())
-        .def(init<long>())
-        .def(init<const NInteger&, const NInteger&>())
-        .def(init<const NLargeInteger&, const NLargeInteger&>())
-        .def(init<long, unsigned long>())
-        .def("swap", &NRational::swap)
-        .def("numerator", &NRational::numerator)
-        .def("denominator", &NRational::denominator)
-        .def(self * self)
-        .def(self / self)
-        .def(self + self)
-        .def(self - self)
-        .def(- self)
-        .def("inverse", &NRational::inverse)
-        .def("abs", &NRational::abs)
-        .def(self += self)
-        .def(self -= self)
-        .def(self *= self)
-        .def(self /= self)
-        .def("negate", &NRational::negate)
-        .def("invert", &NRational::invert)
-        .def(self < self)
-        .def(self > self)
-        .def(self <= self)
-        .def(self >= self)
-        .def("doubleApprox", doubleApprox_void)
-        .def("doubleApproxCheck", doubleApprox_bool)
-        .def("TeX", &NRational::TeX)
-        .def("writeTeX", writeTeX_stdio)
-        .def(self_ns::str(self))
-        .def(self_ns::repr(self))
-        .def(regina::python::add_eq_operators())
-    ;
+void addRational() {
+    {
+        scope s = class_<Rational>("Rational")
+            .def(init<const Rational&>())
+            .def(init<const NInteger&>())
+            .def(init<const NLargeInteger&>())
+            .def(init<long>())
+            .def(init<const NInteger&, const NInteger&>())
+            .def(init<const NLargeInteger&, const NLargeInteger&>())
+            .def(init<long, unsigned long>())
+            .def("swap", &Rational::swap)
+            .def("numerator", &Rational::numerator)
+            .def("denominator", &Rational::denominator)
+            .def(self * self)
+            .def(self / self)
+            .def(self + self)
+            .def(self - self)
+            .def(- self)
+            .def("inverse", &Rational::inverse)
+            .def("abs", &Rational::abs)
+            .def(self += self)
+            .def(self -= self)
+            .def(self *= self)
+            .def(self /= self)
+            .def("negate", &Rational::negate)
+            .def("invert", &Rational::invert)
+            .def(self < self)
+            .def(self > self)
+            .def(self <= self)
+            .def(self >= self)
+            .def("doubleApprox", doubleApprox_void)
+            .def("doubleApproxCheck", doubleApprox_bool)
+            .def("TeX", &Rational::TeX)
+            .def("writeTeX", writeTeX_stdio)
+            .def(self_ns::str(self))
+            .def(self_ns::repr(self))
+            .def(regina::python::add_eq_operators())
+        ;
 
-    // Apparently there is no way in python to make a module attribute
-    // read-only.
-    s.attr("zero") = NRational::zero;
-    s.attr("one") = NRational::one;
-    s.attr("infinity") = NRational::infinity;
-    s.attr("undefined") = NRational::undefined;
+        // Apparently there is no way in python to make a module attribute
+        // read-only.
+        s.attr("zero") = Rational::zero;
+        s.attr("one") = Rational::one;
+        s.attr("infinity") = Rational::infinity;
+        s.attr("undefined") = Rational::undefined;
+    }
 
-    boost::python::implicitly_convertible<NInteger, NRational>();
-    boost::python::implicitly_convertible<NLargeInteger, NRational>();
-    boost::python::implicitly_convertible<long, NRational>();
+    boost::python::implicitly_convertible<NInteger, Rational>();
+    boost::python::implicitly_convertible<NLargeInteger, Rational>();
+    boost::python::implicitly_convertible<long, Rational>();
 
+    scope().attr("NRational") = scope().attr("Rational");
 }
 

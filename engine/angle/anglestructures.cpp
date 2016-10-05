@@ -204,24 +204,24 @@ void AngleStructures::calculateSpanStrict() const {
     }
 
     // We run into trouble if there's a 0 or pi angle that never changes.
-    NRational* fixedAngles = new NRational[nTets * 3];
+    Rational* fixedAngles = new Rational[nTets * 3];
     unsigned long nFixed = 0;
 
     // Get the list of bad unchanging angles from the first structure.
     StructureIteratorConst it = structures.begin();
     const AngleStructure* s = *it;
 
-    NRational angle;
+    Rational angle;
     unsigned long tet;
     int edges;
     for (tet = 0; tet < nTets; tet++)
         for (edges = 0; edges < 3; edges++) {
             angle = s->angle(tet, edges);
-            if (angle == NRational::zero || angle == NRational::one) {
+            if (angle == Rational::zero || angle == Rational::one) {
                 fixedAngles[3 * tet + edges] = angle;
                 nFixed++;
             } else
-                fixedAngles[3 * tet + edges] = NRational::undefined;
+                fixedAngles[3 * tet + edges] = Rational::undefined;
         }
 
     if (nFixed == 0) {
@@ -236,11 +236,11 @@ void AngleStructures::calculateSpanStrict() const {
         s = *it;
         for (tet = 0; tet < nTets; tet++)
             for (edges = 0; edges < 3; edges++) {
-                if (fixedAngles[3 * tet + edges] == NRational::undefined)
+                if (fixedAngles[3 * tet + edges] == Rational::undefined)
                     continue;
                 if (s->angle(tet, edges) != fixedAngles[3 * tet + edges]) {
                     // Here's a bad angle that finally changed.
-                    fixedAngles[3 * tet + edges] = NRational::undefined;
+                    fixedAngles[3 * tet + edges] = Rational::undefined;
                     nFixed--;
                     if (nFixed == 0) {
                         doesSpanStrict = true;

@@ -1267,7 +1267,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
 
     // step 4: intersect, construct matrix.
 
-    NMatrixRing<NRational> torsionLinkingFormPresentationMat(
+    NMatrixRing<Rational> torsionLinkingFormPresentationMat(
         pvList.size(), pvList.size() );
 
     NLargeInteger tN,tD,tR;
@@ -1296,7 +1296,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
                 // standard ones coming first.
                 // pvList is vectors in dual 1-cells
                 torsionLinkingFormPresentationMat.entry(i,j) +=
-                    NRational(
+                    Rational(
                         boundingMat.entry(dNBF[k],i)*pvList[j][k]*
                         NLargeInteger(
                             tri->triangle(dNBF[k])->embedding(0).
@@ -1310,7 +1310,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
             tN = tR.gcd(tD);
             tR.divByExact(tN);
             tD.divByExact(tN);
-            torsionLinkingFormPresentationMat.entry(i,j)=NRational(tR,tD);
+            torsionLinkingFormPresentationMat.entry(i,j)=Rational(tR,tD);
         }
 
     // Compute indexing.size() just once, since for std::list this might be
@@ -1326,7 +1326,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
         for (j=0; j<it1->second.size(); j++)
             h1PrimePowerDecomp[i].second[j] = it1->second[j].first;
 
-        linkingFormPD[i] = new NMatrixRing<NRational>(it1->second.size(),
+        linkingFormPD[i] = new NMatrixRing<Rational>(it1->second.size(),
                 it1->second.size() );
         for (j=0; j<it1->second.size(); j++)
             for (k=0; k<it1->second.size(); k++)
@@ -1388,12 +1388,12 @@ void NHomologicalData::computeTorsionLinkingForm() {
     //           and NLargeInteger instead.
     // decide on if there is 2-torsion...
     NLargeInteger twoPow;
-    static const NRational pi = NRational(
+    static const Rational pi = Rational(
                 NLargeInteger("314159265358979323846264338327950288"),
                 NLargeInteger("100000000000000000000000000000000000") );
     std::vector< NLargeInteger > groupV;
     bool notatend;
-    NRational tSum;
+    Rational tSum;
 
     unsigned long incind;
     bool incrun;
@@ -1451,11 +1451,11 @@ void NHomologicalData::computeTorsionLinkingForm() {
                     // call doubleApprox()
                     // first we evaluate the form(x,x) for x==groupV.
                     // the form is linkingformPD[0]
-                    tSum=NRational::zero;
+                    tSum=Rational::zero;
                     for (j=0; j<linkingFormPD[0]->rows(); j++)
                         for (k=0; k<linkingFormPD[0]->columns();
                                 k++)
-                            tSum += NRational(groupV[j]*groupV[k])*
+                            tSum += Rational(groupV[j]*groupV[k])*
                                 linkingFormPD[0]->entry(j,k);
 
                     // reduce mod 1, then turn into a long double and
@@ -1463,7 +1463,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
                     tN = tSum.numerator();
                     tD = tSum.denominator();
                     tN.divisionAlg(tD,tR);
-                    tSum = NRational(twoPow) * pi * NRational( tR, tD );
+                    tSum = Rational(twoPow) * pi * Rational( tR, tD );
                     tLD = tSum.doubleApprox();
                     // we ignore `inrange' parameter as the number is reduced
                     // mod 1, so either way it is
@@ -1557,7 +1557,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
 
             for (k=0; k<torRankV[i].second[j]; k++)
                 for (l=0; l<torRankV[i].second[j]; l++)
-                    tempM.entry(k,l) = (NRational(tI)*linkingFormPD[i]->
+                    tempM.entry(k,l) = (Rational(tI)*linkingFormPD[i]->
                         entry(k+curri,l+curri)).numerator();
 
             tempa.push_back( tempM.det().legendre(torRankV[i].first) );
@@ -1618,7 +1618,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
                 torsionLinkingFormIsHyperbolic=false;
     }
 
-    NRational tRat;
+    Rational tRat;
 
     torsionLinkingFormSatisfiesKKtwoTorCondition=true;
     if (starti==1) { // for each k need to compute 2^{k-1}*form(x,x) on all
@@ -1627,14 +1627,14 @@ void NHomologicalData::computeTorsionLinkingForm() {
         // std::vector< std::pair< NLargeInteger,
         //     std::vector<unsigned long> > > h1PrimePowerDecomp;
         // stored as list { (2, (1, 1, 2)), (3, (1, 2, 2, 3)), (5, (1, 1, 2)) }
-        //std::vector< NMatrixRing<NRational>* > linkingFormPD;
+        //std::vector< NMatrixRing<Rational>* > linkingFormPD;
         for (i=0; i<h1PrimePowerDecomp[0].second.size(); i++) {
             // run down diagonal of linkingFormPD[0], for each (i,i) entry
             // multiply it by 2^{h1PrimePowerDecomp[0].second[i]-1} check if
             // congruent to zero. if not, trigger flag.
             tI = NLargeInteger("2");
             tI.raiseToPower(h1PrimePowerDecomp[0].second[i]-1);
-            tRat = NRational(tI) * linkingFormPD[0]->entry(i,i);
+            tRat = Rational(tI) * linkingFormPD[0]->entry(i,i);
             tN = tRat.numerator();
             tD = tRat.denominator();
             tN.divisionAlg(tD,tR);

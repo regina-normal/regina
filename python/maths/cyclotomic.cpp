@@ -38,14 +38,14 @@ using namespace boost::python;
 using regina::Cyclotomic;
 
 namespace {
-    const regina::NRational& getItem(const Cyclotomic& c, int exp) {
+    const regina::Rational& getItem(const Cyclotomic& c, int exp) {
         return c[exp];
     }
-    void setItem(Cyclotomic& c, int exp, const regina::NRational& value) {
+    void setItem(Cyclotomic& c, int exp, const regina::Rational& value) {
         c[exp] = value;
     }
-    regina::NPolynomial<regina::NRational>* cyclotomic(size_t n) {
-        return new regina::NPolynomial<regina::NRational>(
+    regina::NPolynomial<regina::Rational>* cyclotomic(size_t n) {
+        return new regina::NPolynomial<regina::Rational>(
             Cyclotomic::cyclotomic(n));
     }
 
@@ -62,7 +62,7 @@ void addCyclotomic() {
     class_<Cyclotomic, std::auto_ptr<Cyclotomic> >("Cyclotomic")
         .def(init<size_t>())
         .def(init<size_t, int>())
-        .def(init<size_t, const regina::NRational&>())
+        .def(init<size_t, const regina::Rational&>())
         .def(init<const Cyclotomic&>())
         .def("init", &Cyclotomic::init)
         .def("field", &Cyclotomic::field)
@@ -74,8 +74,8 @@ void addCyclotomic() {
         .def("evaluate", &Cyclotomic::evaluate, OL_evaluate())
         .def("negate", &Cyclotomic::invert)
         .def("invert", &Cyclotomic::invert)
-        .def(self *= regina::NRational())
-        .def(self /= regina::NRational())
+        .def(self *= regina::Rational())
+        .def(self /= regina::Rational())
         .def(self += self)
         .def(self -= self)
         .def(self *= self)

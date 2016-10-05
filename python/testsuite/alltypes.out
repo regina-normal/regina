@@ -1255,8 +1255,7 @@ NProgressTracker : typedef ->  ProgressTracker
 
 NProgressTrackerOpen : typedef ->  ProgressTrackerOpen
 
-NRational : class
-Equality type : BY_VALUE
+NRational : typedef ->  Rational
 
 NSFSFibre : class
 Equality type : BY_VALUE
@@ -1392,6 +1391,9 @@ Equality type : BY_REFERENCE
 
 ProgressTrackerOpen : class
 Equality type : BY_REFERENCE
+
+Rational : class
+Equality type : BY_VALUE
 
 Script : class
 Equality type : BY_REFERENCE

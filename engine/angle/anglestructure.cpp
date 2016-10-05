@@ -90,7 +90,7 @@ AngleStructure* AngleStructure::clone() const {
     return ans;
 }
 
-NRational AngleStructure::angle(size_t tetIndex, int edgePair)
+Rational AngleStructure::angle(size_t tetIndex, int edgePair)
         const {
     const NLargeInteger& num = (*vector)[3 * tetIndex + edgePair];
     const NLargeInteger& den =
@@ -99,7 +99,7 @@ NRational AngleStructure::angle(size_t tetIndex, int edgePair)
     NLargeInteger gcd = den.gcd(num);
     if (gcd < 0)
         gcd.negate();
-    return NRational(num.divExact(gcd), den.divExact(gcd));
+    return Rational(num.divExact(gcd), den.divExact(gcd));
 }
 
 void AngleStructure::writeTextShort(std::ostream& out) const {

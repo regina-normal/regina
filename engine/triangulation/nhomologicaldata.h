@@ -417,7 +417,7 @@ private:
         h1PrimePowerDecomp;
     /** p-primary decomposition of the torsion linking form as needed to
      ** construct the Kawauchi-Kojima invariants. */
-    std::vector< NMatrixRing<NRational>* > linkingFormPD;
+    std::vector< NMatrixRing<Rational>* > linkingFormPD;
 
     /** True if torsion linking form is `hyperbolic'.   */
     bool torsionLinkingFormIsHyperbolic;
@@ -848,7 +848,7 @@ inline NHomologicalData::NHomologicalData(const NHomologicalData& g) :
         h1PrimePowerDecomp = g.h1PrimePowerDecomp;
         linkingFormPD.resize( g.linkingFormPD.size(), 0 );
         for (unsigned long i=0; i<linkingFormPD.size(); i++)
-            linkingFormPD[i] = new NMatrixRing<NRational> (*g.linkingFormPD[i]);
+            linkingFormPD[i] = new NMatrixRing<Rational> (*g.linkingFormPD[i]);
         torsionLinkingFormIsHyperbolic = g.torsionLinkingFormIsHyperbolic;
         torsionLinkingFormIsSplit = g.torsionLinkingFormIsSplit;
         torsionLinkingFormSatisfiesKKtwoTorCondition =
