@@ -37,7 +37,7 @@ namespace regina {
 
 // Instantiate templates for standard combinations of template arguments.
 // The header has matching "extern template class REGINA_API" declarations.
-template class LPMatrix<NInteger>;
+template class LPMatrix<Integer>;
 template class LPMatrix<NNativeLong>;
 
 template class LPCol<LPConstraintNone>;
@@ -48,11 +48,11 @@ template class LPInitialTableaux<LPConstraintNone>;
 template class LPInitialTableaux<LPConstraintEuler>;
 template class LPInitialTableaux<LPConstraintNonSpun>;
 
-template class LPData<LPConstraintNone, NInteger>;
+template class LPData<LPConstraintNone, Integer>;
 template class LPData<LPConstraintNone, NNativeLong>;
-template class LPData<LPConstraintEuler, NInteger>;
+template class LPData<LPConstraintEuler, Integer>;
 template class LPData<LPConstraintEuler, NNativeLong>;
-template class LPData<LPConstraintNonSpun, NInteger>;
+template class LPData<LPConstraintNonSpun, Integer>;
 template class LPData<LPConstraintNonSpun, NNativeLong>;
 
 #ifdef INT128_AVAILABLE

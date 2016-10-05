@@ -143,7 +143,7 @@ typedef Triangulation<3> NTriangulation;
  * The template argument \a IntType indicates the integer type that
  * will be used throughout the underlying linear programming machinery.
  * Unless you have a good reason to do otherwise, you should use the
- * arbitrary-precision NInteger class (in which integers can grow
+ * arbitrary-precision Integer class (in which integers can grow
  * arbitrarily large, and overflow can never occur).
  *
  * \pre The parameters LPConstraint and BanConstraint must be subclasses of
@@ -151,7 +151,7 @@ typedef Triangulation<3> NTriangulation;
  * LPConstraintBase and BanConstraintBase class notes for further details.
  *
  * \pre The default constructor for the template class IntType must
- * intialise each new integer to zero.  The classes NInteger and NativeInteger,
+ * intialise each new integer to zero.  The classes Integer and NativeInteger,
  * for instance, have this property.
  *
  * \headers Parts of this template class are implemented in a separate header
@@ -650,7 +650,7 @@ class TreeTraversal : public BanConstraint {
  * The template argument \a IntType indicates the integer type that
  * will be used throughout the underlying linear programming machinery.
  * Unless you have a good reason to do otherwise, you should use the
- * arbitrary-precision NInteger class (in which integers can grow
+ * arbitrary-precision Integer class (in which integers can grow
  * arbitrarily large, and overflow can never occur).
  *
  * \pre The parameters LPConstraint and BanConstraint must be subclasses of
@@ -660,7 +660,7 @@ class TreeTraversal : public BanConstraint {
  * class notes for further details.
  *
  * \pre The default constructor for the template class IntType must
- * intialise each new integer to zero.  The classes NInteger and NativeInteger,
+ * intialise each new integer to zero.  The classes Integer and NativeInteger,
  * for instance, have this property.
  *
  * \warning Although the tree traversal algorithm can run in standard
@@ -683,7 +683,7 @@ class TreeTraversal : public BanConstraint {
  */
 template <class LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone,
-          typename IntType = NInteger>
+          typename IntType = Integer>
 class TreeEnumeration :
         public TreeTraversal<LPConstraint, BanConstraint, IntType> {
     public:
@@ -950,7 +950,7 @@ class TreeEnumeration :
  * The template argument \a IntType indicates the integer type that
  * will be used throughout the underlying linear programming machinery.
  * Unless you have a good reason to do otherwise, you should use the
- * arbitrary-precision NInteger class (in which integers can grow
+ * arbitrary-precision Integer class (in which integers can grow
  * arbitrarily large, and overflow can never occur).
  *
  * \pre The parameters LPConstraint and BanConstraint must be subclasses of
@@ -960,7 +960,7 @@ class TreeEnumeration :
  * class notes for further details.
  *
  * \pre The default constructor for the template class IntType must
- * intialise each new integer to zero.  The classes NInteger and NativeInteger,
+ * intialise each new integer to zero.  The classes Integer and NativeInteger,
  * for instance, have this property.
  *
  * \headers Parts of this template class are implemented in a separate header
@@ -975,7 +975,7 @@ class TreeEnumeration :
  */
 template <class LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone,
-          typename IntType = NInteger>
+          typename IntType = Integer>
 class TautEnumeration :
         public TreeTraversal<LPConstraint, BanConstraint, IntType> {
     public:
@@ -1253,7 +1253,7 @@ class TautEnumeration :
  * The template argument \a IntType indicates the integer type that
  * will be used throughout the underlying linear programming machinery.
  * Unless you have a good reason to do otherwise, you should use the
- * arbitrary-precision NInteger class (in which integers can grow
+ * arbitrary-precision Integer class (in which integers can grow
  * arbitrarily large, and overflow can never occur).
  *
  * \warning Typically one should only use this class with \e one-vertex
@@ -1275,7 +1275,7 @@ class TautEnumeration :
  * LPConstraintBase and BanConstraintBase class notes for further details.
  *
  * \pre The default constructor for the template class IntType must
- * intialise each new integer to zero.  The classes NInteger and NativeInteger,
+ * intialise each new integer to zero.  The classes Integer and NativeInteger,
  * for instance, have this property.
  *
  * \headers Parts of this template class are implemented in a separate header
@@ -1290,7 +1290,7 @@ class TautEnumeration :
  */
 template <class LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone,
-          typename IntType = NInteger>
+          typename IntType = Integer>
 class TreeSingleSoln :
         public TreeTraversal<LPConstraint, BanConstraint, IntType> {
     public:
@@ -1424,7 +1424,7 @@ using NTreeTraversal REGINA_DEPRECATED =
  */
 template <class LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone,
-          typename IntType = NInteger>
+          typename IntType = Integer>
 using NTreeEnumeration REGINA_DEPRECATED =
     TreeEnumeration<LPConstraint, BanConstraint, IntType>;
 
@@ -1437,7 +1437,7 @@ using NTreeEnumeration REGINA_DEPRECATED =
  */
 template <class LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone,
-          typename IntType = NInteger>
+          typename IntType = Integer>
 using NTautEnumeration REGINA_DEPRECATED =
     TautEnumeration<LPConstraint, BanConstraint, IntType>;
 
@@ -1449,7 +1449,7 @@ using NTautEnumeration REGINA_DEPRECATED =
  */
 template <class LPConstraint = LPConstraintNone,
           typename BanConstraint = BanNone,
-          typename IntType = NInteger>
+          typename IntType = Integer>
 using NTreeSingleSoln REGINA_DEPRECATED =
     TreeSingleSoln<LPConstraint, BanConstraint, IntType>;
 
@@ -1457,24 +1457,24 @@ using NTreeSingleSoln REGINA_DEPRECATED =
 
 // Help the compiler by noting which explicit instantiations we offer.
 extern template class REGINA_API TreeTraversal<LPConstraintNone, BanNone,
-    NInteger>;
+    Integer>;
 extern template class REGINA_API TreeTraversal<LPConstraintNone, BanNone,
     NNativeLong>;
 extern template class REGINA_API TreeEnumeration<LPConstraintNone, BanNone,
-    NInteger>;
+    Integer>;
 extern template class REGINA_API TreeEnumeration<LPConstraintNone, BanNone,
     NNativeLong>;
 extern template class REGINA_API TautEnumeration<LPConstraintNone, BanNone,
-    NInteger>;
+    Integer>;
 extern template class REGINA_API TautEnumeration<LPConstraintNone, BanNone,
     NNativeLong>;
 
 extern template class REGINA_API TreeTraversal<LPConstraintEuler, BanNone,
-    NInteger>;
+    Integer>;
 extern template class REGINA_API TreeTraversal<LPConstraintEuler, BanNone,
     NNativeLong>;
 extern template class REGINA_API TreeSingleSoln<LPConstraintEuler, BanNone,
-    NInteger>;
+    Integer>;
 extern template class REGINA_API TreeSingleSoln<LPConstraintEuler, BanNone,
     NNativeLong>;
 

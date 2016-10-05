@@ -102,7 +102,7 @@ typedef Triangulation<3> NTriangulation;
  * \a IntType, which is supplied as a template argument.
  *
  * \pre The default constructor for the template class IntType must intialise
- * each new integer to zero.  The classes NInteger and NativeInteger,
+ * each new integer to zero.  The classes Integer and NativeInteger,
  * for instance, have this property.
  *
  * \headers Parts of this template class are implemented in a separate header
@@ -900,7 +900,7 @@ class LPInitialTableaux {
  * LPConstraintBase.  See the LPConstraintBase class notes for further details.
  *
  * \pre The default constructor for the template class IntType must intialise
- * each new integer to zero.  The classes NInteger and NativeInteger,
+ * each new integer to zero.  The classes Integer and NativeInteger,
  * for instance, have this property.
  *
  * \headers Parts of this template class are implemented in a separate header
@@ -1343,7 +1343,7 @@ class LPData {
          * tree traversal algorithm, this does not really matter.
          *
          * In particular, it performs the entire Gauss-Jordan elimination
-         * using the arbitrary-precision NInteger class, so there is no need
+         * using the arbitrary-precision Integer class, so there is no need
          * to worry about the magnitudes of any intermediate matrix
          * entries that might appear during the process.  The final
          * row operation matrix will of course be copied into rowOps_
@@ -1420,7 +1420,7 @@ class LPData {
 
 namespace regina {
 
-extern template class REGINA_API LPMatrix<NInteger>;
+extern template class REGINA_API LPMatrix<Integer>;
 extern template class REGINA_API LPMatrix<NNativeLong>;
 
 extern template class REGINA_API LPCol<LPConstraintNone>;
@@ -1431,11 +1431,11 @@ extern template class REGINA_API LPInitialTableaux<LPConstraintNone>;
 extern template class REGINA_API LPInitialTableaux<LPConstraintEuler>;
 extern template class REGINA_API LPInitialTableaux<LPConstraintNonSpun>;
 
-extern template class REGINA_API LPData<LPConstraintNone, NInteger>;
+extern template class REGINA_API LPData<LPConstraintNone, Integer>;
 extern template class REGINA_API LPData<LPConstraintNone, NNativeLong>;
-extern template class REGINA_API LPData<LPConstraintEuler, NInteger>;
+extern template class REGINA_API LPData<LPConstraintEuler, Integer>;
 extern template class REGINA_API LPData<LPConstraintEuler, NNativeLong>;
-extern template class REGINA_API LPData<LPConstraintNonSpun, NInteger>;
+extern template class REGINA_API LPData<LPConstraintNonSpun, Integer>;
 extern template class REGINA_API LPData<LPConstraintNonSpun, NNativeLong>;
 
 #ifdef INT128_AVAILABLE

@@ -997,7 +997,7 @@ void LPData<LPConstraint, IntType>::findInitialBasis() {
     // We find our initial basis using Gauss-Jordan elimination.
     // Until we sit down and prove some results about the magnitude of
     // the intermediate integers that appear, we will need to do this
-    // entire process using the arbitrary-precision NInteger class.
+    // entire process using the arbitrary-precision Integer class.
 
     // We do not touch rhs_ at all, since our preconditions ensure that
     // rhs_ is the zero vector.
@@ -1008,10 +1008,10 @@ void LPData<LPConstraint, IntType>::findInitialBasis() {
 
     // Build a dense copy of the starting tableaux, which we
     // will work with as we perform our Gauss-Jordan elimination.
-    LPMatrix<NInteger> tab(rank_, origTableaux_->columns());
+    LPMatrix<Integer> tab(rank_, origTableaux_->columns());
     origTableaux_->fillInitialTableaux(tab);
 
-    LPMatrix<NInteger> ops(rank_, rank_);
+    LPMatrix<Integer> ops(rank_, rank_);
     ops.initIdentity(rank_);
 
     // Off we go with our Gauss-Jordan elimination.
@@ -1019,8 +1019,8 @@ void LPData<LPConstraint, IntType>::findInitialBasis() {
     // advance that every row will define some basic variable.
     unsigned row;
     unsigned r, c;
-    NInteger base, coeff;
-    NInteger gcdRow;
+    Integer base, coeff;
+    Integer gcdRow;
     for (row = 0; row < rank_; ++row) {
         // Find the first non-zero entry in this row.
         // The corresponding column will become our next basic variable.

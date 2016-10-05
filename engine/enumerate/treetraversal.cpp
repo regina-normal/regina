@@ -36,21 +36,21 @@ namespace regina {
 
 // Instantiate templates for standard combinations of template arguments.
 // The header has matching "extern template class REGINA_API" declarations.
-template class TreeTraversal<LPConstraintNone, BanNone, NInteger>;
+template class TreeTraversal<LPConstraintNone, BanNone, Integer>;
 template class TreeTraversal<LPConstraintNone, BanNone, NNativeLong>;
-template class TreeEnumeration<LPConstraintNone, BanNone, NInteger>;
+template class TreeEnumeration<LPConstraintNone, BanNone, Integer>;
 template class TreeEnumeration<LPConstraintNone, BanNone, NNativeLong>;
-template class TautEnumeration<LPConstraintNone, BanNone, NInteger>;
+template class TautEnumeration<LPConstraintNone, BanNone, Integer>;
 template class TautEnumeration<LPConstraintNone, BanNone, NNativeLong>;
 
-template class TreeTraversal<LPConstraintNone, BanBoundary, NInteger>;
+template class TreeTraversal<LPConstraintNone, BanBoundary, Integer>;
 template class TreeTraversal<LPConstraintNone, BanBoundary, NNativeLong>;
-template class TreeEnumeration<LPConstraintNone, BanBoundary, NInteger>;
+template class TreeEnumeration<LPConstraintNone, BanBoundary, Integer>;
 template class TreeEnumeration<LPConstraintNone, BanBoundary, NNativeLong>;
 
-template class TreeTraversal<LPConstraintEuler, BanNone, NInteger>;
+template class TreeTraversal<LPConstraintEuler, BanNone, Integer>;
 template class TreeTraversal<LPConstraintEuler, BanNone, NNativeLong>;
-template class TreeSingleSoln<LPConstraintEuler, BanNone, NInteger>;
+template class TreeSingleSoln<LPConstraintEuler, BanNone, Integer>;
 template class TreeSingleSoln<LPConstraintEuler, BanNone, NNativeLong>;
 
 #ifdef INT128_AVAILABLE
