@@ -41,7 +41,7 @@
 
 #include "regina-core.h"
 #include "maths/ninteger.h"
-#include "maths/nvector.h"
+#include "maths/vector.h"
 
 namespace regina {
 
@@ -70,7 +70,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NRay : public NVector<NLargeInteger> {
+class REGINA_API NRay : public Vector<NLargeInteger> {
     public:
         /**
          * Creates a new ray all of whose coordinates are initialised to zero.
@@ -83,7 +83,7 @@ class REGINA_API NRay : public NVector<NLargeInteger> {
          *
          * @param cloneMe the ray to clone.
          */
-        NRay(const NVector<NLargeInteger>& cloneMe);
+        NRay(const Vector<NLargeInteger>& cloneMe);
 
         /**
          * Scales this vector down by the greatest common divisor of all
@@ -104,7 +104,7 @@ class REGINA_API NRay : public NVector<NLargeInteger> {
          * Negates every element of this vector.
          *
          * This is an optimised implementation that overrides
-         * NVector<NLargeInteger>::negate().
+         * Vector<NLargeInteger>::negate().
          */
         inline void negate();
 };
@@ -113,13 +113,13 @@ class REGINA_API NRay : public NVector<NLargeInteger> {
 
 // Inline functions for NRay
 
-inline NRay::NRay(size_t length) : NVector<NLargeInteger>(length) {
+inline NRay::NRay(size_t length) : Vector<NLargeInteger>(length) {
     // Don't bother passing zero to the parent constructor, since the
     // default NLargeInteger constructor already sets elements to zero.
 }
 
-inline NRay::NRay(const NVector<NLargeInteger>& cloneMe) :
-        NVector<NLargeInteger>(cloneMe) {
+inline NRay::NRay(const Vector<NLargeInteger>& cloneMe) :
+        Vector<NLargeInteger>(cloneMe) {
 }
 
 inline void NRay::negate() {

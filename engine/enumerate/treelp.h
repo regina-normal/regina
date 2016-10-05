@@ -1223,7 +1223,7 @@ class LPData {
          * - To ensure that the variables are all integers, we scale the
          *   final vector by the smallest positive rational multiple
          *   for which all elements of the vector are integers.
-         *   (This is why the output class is NRay and not NVector.)
+         *   (This is why the output class is NRay and not Vector.)
          *
          * This routine is not used as an internal part of the tree traversal
          * algorithm; instead it is offered as a helper routine for

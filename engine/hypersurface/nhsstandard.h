@@ -95,7 +95,7 @@ class REGINA_API NNormalHypersurfaceVectorStandard :
          * @param cloneMe the vector to clone.
          */
         NNormalHypersurfaceVectorStandard(
-            const NVector<NLargeInteger>& cloneMe);
+            const Vector<NLargeInteger>& cloneMe);
 
         virtual NLargeInteger tetrahedra(size_t pentIndex,
             int vertex, const Dim4Triangulation* triang) const;
@@ -120,7 +120,7 @@ inline NNormalHypersurfaceVectorStandard::NNormalHypersurfaceVectorStandard(
         size_t length) : NNormalHypersurfaceVector(length) {
 }
 inline NNormalHypersurfaceVectorStandard::NNormalHypersurfaceVectorStandard(
-        const NVector<NLargeInteger>& cloneMe) :
+        const Vector<NLargeInteger>& cloneMe) :
         NNormalHypersurfaceVector(cloneMe) {
 }
 

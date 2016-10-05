@@ -103,7 +103,7 @@ class REGINA_API NNormalSurfaceVectorOrientedQuad :
          *
          * @param cloneMe the vector to clone.
          */
-        NNormalSurfaceVectorOrientedQuad(const NVector<NLargeInteger>& cloneMe);
+        NNormalSurfaceVectorOrientedQuad(const Vector<NLargeInteger>& cloneMe);
 
         virtual NNormalSurfaceVector* makeMirror(const NTriangulation* triang)
             const;
@@ -133,7 +133,7 @@ inline NNormalSurfaceVectorOrientedQuad::NNormalSurfaceVectorOrientedQuad(
         size_t length) : NNormalSurfaceVectorMirrored(length) {
 }
 inline NNormalSurfaceVectorOrientedQuad::NNormalSurfaceVectorOrientedQuad(
-        const NVector<NLargeInteger>& cloneMe) :
+        const Vector<NLargeInteger>& cloneMe) :
         NNormalSurfaceVectorMirrored(cloneMe) {
 }
 

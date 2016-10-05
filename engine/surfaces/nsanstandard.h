@@ -103,7 +103,7 @@ class REGINA_API NNormalSurfaceVectorANStandard : public NNormalSurfaceVector {
          *
          * @param cloneMe the vector to clone.
          */
-        NNormalSurfaceVectorANStandard(const NVector<NLargeInteger>& cloneMe);
+        NNormalSurfaceVectorANStandard(const Vector<NLargeInteger>& cloneMe);
 
         virtual NLargeInteger triangles(size_t tetIndex,
             int vertex, const NTriangulation* triang) const;
@@ -132,7 +132,7 @@ inline NNormalSurfaceVectorANStandard::NNormalSurfaceVectorANStandard(
         size_t length) : NNormalSurfaceVector(length) {
 }
 inline NNormalSurfaceVectorANStandard::NNormalSurfaceVectorANStandard(
-        const NVector<NLargeInteger>& cloneMe) :
+        const Vector<NLargeInteger>& cloneMe) :
         NNormalSurfaceVector(cloneMe) {
 }
 

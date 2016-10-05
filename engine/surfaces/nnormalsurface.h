@@ -329,7 +329,7 @@ struct NormalInfo;
  *   various constants, typedefs and virtual functions (see the
  *   REGINA_NORMAL_SURFACE_FLAVOUR macro documentation for details).</li>
  *   <li>Constructors <tt>class(size_t length)</tt> and
- *   <tt>class(const NVector<NLargeInteger>& cloneMe)</tt> must be
+ *   <tt>class(const Vector<NLargeInteger>& cloneMe)</tt> must be
  *   declared and implemented; these will usually just call the
  *   corresponding superclass constructors.</li>
  *   <li>All abstract functions must be implemented, except for those
@@ -367,7 +367,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
          *
          * @param cloneMe the vector to clone.
          */
-        NNormalSurfaceVector(const NVector<NLargeInteger>& cloneMe);
+        NNormalSurfaceVector(const Vector<NLargeInteger>& cloneMe);
 
         /**
          * A virtual destructor.  This is required because here we introduce
@@ -1641,7 +1641,7 @@ inline NNormalSurfaceVector::NNormalSurfaceVector(size_t length) :
         NRay(length) {
 }
 inline NNormalSurfaceVector::NNormalSurfaceVector(
-        const NVector<NLargeInteger>& cloneMe) : NRay(cloneMe) {
+        const Vector<NLargeInteger>& cloneMe) : NRay(cloneMe) {
 }
 inline NNormalSurfaceVector::~NNormalSurfaceVector() {
 }

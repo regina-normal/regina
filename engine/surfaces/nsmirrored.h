@@ -100,7 +100,7 @@ class REGINA_API NNormalSurfaceVectorMirrored : public NNormalSurfaceVector {
          *
          * @param cloneMe the vector to clone.
          */
-        NNormalSurfaceVectorMirrored(const NVector<NLargeInteger>& cloneMe);
+        NNormalSurfaceVectorMirrored(const Vector<NLargeInteger>& cloneMe);
         /**
          * Creates a new vector that is a clone of the given vector.
          *
@@ -152,7 +152,7 @@ inline NNormalSurfaceVectorMirrored::NNormalSurfaceVectorMirrored(
         size_t length) : NNormalSurfaceVector(length), mirror(0) {
 }
 inline NNormalSurfaceVectorMirrored::NNormalSurfaceVectorMirrored(
-        const NVector<NLargeInteger>& cloneMe) :
+        const Vector<NLargeInteger>& cloneMe) :
         NNormalSurfaceVector(cloneMe), mirror(0) {
 }
 inline NNormalSurfaceVectorMirrored::NNormalSurfaceVectorMirrored(

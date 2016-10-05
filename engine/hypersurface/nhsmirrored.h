@@ -102,7 +102,7 @@ class REGINA_API NNormalHypersurfaceVectorMirrored :
          * @param cloneMe the vector to clone.
          */
         NNormalHypersurfaceVectorMirrored(
-            const NVector<NLargeInteger>& cloneMe);
+            const Vector<NLargeInteger>& cloneMe);
         /**
          * Creates a new vector that is a clone of the given vector.
          *
@@ -146,7 +146,7 @@ inline NNormalHypersurfaceVectorMirrored::NNormalHypersurfaceVectorMirrored(
         size_t length) : NNormalHypersurfaceVector(length), mirror_(0) {
 }
 inline NNormalHypersurfaceVectorMirrored::NNormalHypersurfaceVectorMirrored(
-        const NVector<NLargeInteger>& cloneMe) :
+        const Vector<NLargeInteger>& cloneMe) :
         NNormalHypersurfaceVector(cloneMe), mirror_(0) {
 }
 inline NNormalHypersurfaceVectorMirrored::NNormalHypersurfaceVectorMirrored(

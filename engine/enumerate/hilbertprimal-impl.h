@@ -169,7 +169,7 @@ void HilbertPrimal::enumerateUsingBitmask(OutputIterator results,
         ans = new RayClass(dim);
         for (i = 0, hvit = hsit->begin(); hvit != hsit->end(); ++hvit, ++i) {
             // We make two copies of the GMP integer instead of one.
-            // This is because NVector/NRay does not give us direct
+            // This is because Vector/NRay does not give us direct
             // non-const access to its elements, and so we need a
             // temporary NLargeInteger to pass through setElement() instead.
             tmpInt.setRaw(hvit->get_mpz_t());
