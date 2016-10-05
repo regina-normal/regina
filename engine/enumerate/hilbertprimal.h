@@ -49,7 +49,7 @@ namespace regina {
 class EnumConstraints;
 class NMatrixInt;
 class ProgressTracker;
-class NRay;
+class Ray;
 
 /**
  * \weakgroup enumerate
@@ -117,10 +117,10 @@ class HilbertPrimal {
          * \pre If \a constraints is passed, then the given list of
          * extremal rays contains \e only those extremal rays that satisfy
          * all of the given constraints.
-         * \pre The template argument RayClass is derived from NRay (or
-         * may possibly be NRay itself).
+         * \pre The template argument RayClass is derived from Ray (or
+         * may possibly be Ray itself).
          * \pre The template argument RayIterator is a forward iterator type,
-         * and when dereferenced can be cast to (const NRay*).
+         * and when dereferenced can be cast to (const Ray*).
          *
          * \warning If a progress tracker is passed, be aware that the
          * present implementation updates percentage progress very infrequently,
@@ -182,7 +182,7 @@ class HilbertPrimal {
          * or \c false otherwise.
          */
         template <class BitmaskType>
-        static bool inFace(const NRay& ray, const BitmaskType& face);
+        static bool inFace(const Ray& ray, const BitmaskType& face);
 
         /**
          * Private constructor to ensure that objects of this class are

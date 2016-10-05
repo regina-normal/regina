@@ -50,7 +50,7 @@
 #include "enumerate/doubledescription.h"
 #include "enumerate/enumconstraints.h"
 #include "maths/matrixops.h"
-#include "maths/nray.h"
+#include "maths/ray.h"
 #include "progress/progresstracker.h"
 #include "utilities/memutils.h"
 #include "utilities/bitmask.h"
@@ -61,7 +61,7 @@ namespace regina {
 template <class BitmaskType>
 DoubleDescription::RaySpec<BitmaskType>::RaySpec(unsigned long axis,
         const NMatrixInt& subspace, const long* hypOrder) :
-        NRay(subspace.rows()),
+        Ray(subspace.rows()),
         facets_(subspace.columns()) {
     size_t i;
 
@@ -77,7 +77,7 @@ template <class BitmaskType>
 DoubleDescription::RaySpec<BitmaskType>::RaySpec(
         const RaySpec<BitmaskType>& first,
         const RaySpec<BitmaskType>& second) :
-        NRay(second.size() - 1),
+        Ray(second.size() - 1),
         facets_(second.facets_) {
     for (size_t i = 0; i < size(); ++i)
         elements[i] = second.elements[i + 1] * (*first.elements) -
@@ -93,7 +93,7 @@ DoubleDescription::RaySpec<BitmaskType>::RaySpec(
 
 template <class BitmaskType>
 void DoubleDescription::RaySpec<BitmaskType>::recover(
-        NRay& dest, const NMatrixInt& subspace) const {
+        Ray& dest, const NMatrixInt& subspace) const {
     unsigned long i, j;
 
     unsigned long rows = subspace.rows();

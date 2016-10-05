@@ -41,7 +41,7 @@
 
 #include "regina-core.h"
 #include "maths/nmatrixint.h"
-#include "maths/nray.h"
+#include "maths/ray.h"
 #include <iterator>
 #include <list>
 #include <vector>
@@ -142,8 +142,8 @@ class HilbertDual {
          * is called, and that ProgressTracker::setFinished() will be
          * called after this routine returns.
          *
-         * \pre The template argument RayClass is derived from NRay (or
-         * may possibly be NRay itself).
+         * \pre The template argument RayClass is derived from Ray (or
+         * may possibly be Ray itself).
          *
          * @param results the output iterator to which the resulting basis
          * elements will be written; this must accept objects of type
@@ -174,7 +174,7 @@ class HilbertDual {
          * partial solution space).
          *
          * The coordinates of the vector are inherited through the
-         * superclass NRay.
+         * superclass Ray.
          *
          * In addition, this class stores a data member \a nextHyp_,
          * which gives fast access to the dot product of this vector
@@ -188,7 +188,7 @@ class HilbertDual {
          * bitmask types, such as Bitmask, Bitmask1 or Bitmask2.
          */
         template <class BitmaskType>
-        class VecSpec : private NRay {
+        class VecSpec : private Ray {
             private:
                 NLargeInteger nextHyp_;
                     /**< The dot product of this vector with the
@@ -320,7 +320,7 @@ class HilbertDual {
                  */
                 inline bool operator <= (const VecSpec& other) const;
 
-                using NRay::operator [];
+                using Ray::operator [];
         };
 
         /**
@@ -462,14 +462,14 @@ inline HilbertDual::HilbertDual() {
 
 template <class BitmaskType>
 inline HilbertDual::VecSpec<BitmaskType>::VecSpec(size_t dim) :
-        NRay(dim), mask_(dim) {
+        Ray(dim), mask_(dim) {
     // All vector elements, nextHyp_ and srcNextHyp_ are initialised to
     // zero thanks to the NLargeInteger default constructor.
 }
 
 template <class BitmaskType>
 inline HilbertDual::VecSpec<BitmaskType>::VecSpec(size_t pos, size_t dim) :
-        NRay(dim), mask_(dim) {
+        Ray(dim), mask_(dim) {
     // All coordinates are initialised to zero by default thanks to
     // the NLargeInteger constructor.
     setElement(pos, NLargeInteger::one);
@@ -479,7 +479,7 @@ inline HilbertDual::VecSpec<BitmaskType>::VecSpec(size_t pos, size_t dim) :
 template <class BitmaskType>
 inline HilbertDual::VecSpec<BitmaskType>::VecSpec(
         const HilbertDual::VecSpec<BitmaskType>& other) :
-        NRay(other),
+        Ray(other),
         nextHyp_(other.nextHyp_),
 #ifdef __REGINA_HILBERT_DUAL_OPT_BI16D
         srcNextHyp_(other.srcNextHyp_),
@@ -553,7 +553,7 @@ inline bool HilbertDual::VecSpec<BitmaskType>::operator == (
     // Begin with simple tests that give us a fast way of saying no.
     if (! (mask_ == other.mask_))
         return false;
-    return (static_cast<const NRay&>(*this) == static_cast<const NRay&>(other));
+    return (static_cast<const Ray&>(*this) == static_cast<const Ray&>(other));
 }
 
 template <class BitmaskType>

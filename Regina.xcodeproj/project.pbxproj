@@ -17,6 +17,7 @@
 		05062FB718169F06008A20A5 /* nboundarycomponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05062FB418169F06008A20A5 /* nboundarycomponent.cpp */; };
 		0506EC1D19F65B43003E455B /* iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0506EC1C19F65B43003E455B /* iPhone.storyboard */; };
 		05074A7C1DA47E060007773C /* nvector.h in Headers */ = {isa = PBXBuildFile; fileRef = 05074A7B1DA47E060007773C /* nvector.h */; };
+		05074A7E1DA480D60007773C /* nray.h in Headers */ = {isa = PBXBuildFile; fileRef = 05074A7D1DA480D60007773C /* nray.h */; };
 		0507C5A71C54495D00D1C86C /* dim4eltmovedialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0507C5A31C54494E00D1C86C /* dim4eltmovedialog.cpp */; };
 		0507C5A81C54497200D1C86C /* dim4eltmovedialog.h in Sources */ = {isa = PBXBuildFile; fileRef = 0507C5A41C54494E00D1C86C /* dim4eltmovedialog.h */; };
 		050AFC5319DCB90E00835ED6 /* SnapPeaCusps.mm in Sources */ = {isa = PBXBuildFile; fileRef = 050AFC5219DCB90E00835ED6 /* SnapPeaCusps.mm */; };
@@ -355,8 +356,8 @@
 		052F9F49180600FB00FAE4DF /* nprimes.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9CF1180600FA00FAE4DF /* nprimes.h */; };
 		052F9F4A180600FB00FAE4DF /* nrational.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CF2180600FA00FAE4DF /* nrational.cpp */; };
 		052F9F4B180600FB00FAE4DF /* nrational.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9CF3180600FA00FAE4DF /* nrational.h */; };
-		052F9F4C180600FB00FAE4DF /* nray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CF4180600FA00FAE4DF /* nray.cpp */; };
-		052F9F4D180600FB00FAE4DF /* nray.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9CF5180600FA00FAE4DF /* nray.h */; };
+		052F9F4C180600FB00FAE4DF /* ray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CF4180600FA00FAE4DF /* ray.cpp */; };
+		052F9F4D180600FB00FAE4DF /* ray.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9CF5180600FA00FAE4DF /* ray.h */; };
 		052F9F4E180600FB00FAE4DF /* numbertheory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CF6180600FA00FAE4DF /* numbertheory.cpp */; };
 		052F9F4F180600FB00FAE4DF /* numbertheory.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9CF7180600FA00FAE4DF /* numbertheory.h */; };
 		052F9F50180600FB00FAE4DF /* vector.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9CF8180600FA00FAE4DF /* vector.h */; };
@@ -698,7 +699,7 @@
 		052FA1A01806129B00FAE4DF /* nperm5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CEE180600FA00FAE4DF /* nperm5.cpp */; };
 		052FA1A11806129B00FAE4DF /* nprimes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CF0180600FA00FAE4DF /* nprimes.cpp */; };
 		052FA1A21806129B00FAE4DF /* nrational.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CF2180600FA00FAE4DF /* nrational.cpp */; };
-		052FA1A31806129B00FAE4DF /* nray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CF4180600FA00FAE4DF /* nray.cpp */; };
+		052FA1A31806129B00FAE4DF /* ray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CF4180600FA00FAE4DF /* ray.cpp */; };
 		052FA1A41806129B00FAE4DF /* numbertheory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CF6180600FA00FAE4DF /* numbertheory.cpp */; };
 		052FA1A51806129B00FAE4DF /* seedprimes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CFA180600FA00FAE4DF /* seedprimes.cpp */; };
 		052FA1A61806129B00FAE4DF /* packet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9CFE180600FA00FAE4DF /* packet.cpp */; };
@@ -1927,6 +1928,7 @@
 		05062FB418169F06008A20A5 /* nboundarycomponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nboundarycomponent.cpp; sourceTree = "<group>"; };
 		0506EC1C19F65B43003E455B /* iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = iPhone.storyboard; sourceTree = "<group>"; };
 		05074A7B1DA47E060007773C /* nvector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nvector.h; sourceTree = "<group>"; };
+		05074A7D1DA480D60007773C /* nray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nray.h; sourceTree = "<group>"; };
 		0507C5A31C54494E00D1C86C /* dim4eltmovedialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dim4eltmovedialog.cpp; sourceTree = "<group>"; };
 		0507C5A41C54494E00D1C86C /* dim4eltmovedialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dim4eltmovedialog.h; sourceTree = "<group>"; };
 		050AFC5119DCB90E00835ED6 /* SnapPeaCusps.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SnapPeaCusps.h; sourceTree = "<group>"; };
@@ -2335,8 +2337,8 @@
 		052F9CF1180600FA00FAE4DF /* nprimes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nprimes.h; sourceTree = "<group>"; };
 		052F9CF2180600FA00FAE4DF /* nrational.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nrational.cpp; sourceTree = "<group>"; };
 		052F9CF3180600FA00FAE4DF /* nrational.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nrational.h; sourceTree = "<group>"; };
-		052F9CF4180600FA00FAE4DF /* nray.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nray.cpp; sourceTree = "<group>"; };
-		052F9CF5180600FA00FAE4DF /* nray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nray.h; sourceTree = "<group>"; };
+		052F9CF4180600FA00FAE4DF /* ray.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ray.cpp; sourceTree = "<group>"; };
+		052F9CF5180600FA00FAE4DF /* ray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ray.h; sourceTree = "<group>"; };
 		052F9CF6180600FA00FAE4DF /* numbertheory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = numbertheory.cpp; sourceTree = "<group>"; };
 		052F9CF7180600FA00FAE4DF /* numbertheory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = numbertheory.h; sourceTree = "<group>"; };
 		052F9CF8180600FA00FAE4DF /* vector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vector.h; sourceTree = "<group>"; };
@@ -4472,11 +4474,12 @@
 				052F9CF1180600FA00FAE4DF /* nprimes.h */,
 				052F9CF2180600FA00FAE4DF /* nrational.cpp */,
 				052F9CF3180600FA00FAE4DF /* nrational.h */,
-				052F9CF4180600FA00FAE4DF /* nray.cpp */,
-				052F9CF5180600FA00FAE4DF /* nray.h */,
+				05074A7D1DA480D60007773C /* nray.h */,
 				052F9CF6180600FA00FAE4DF /* numbertheory.cpp */,
 				052F9CF7180600FA00FAE4DF /* numbertheory.h */,
 				05074A7B1DA47E060007773C /* nvector.h */,
+				052F9CF4180600FA00FAE4DF /* ray.cpp */,
+				052F9CF5180600FA00FAE4DF /* ray.h */,
 				052F9CFA180600FA00FAE4DF /* seedprimes.cpp */,
 				052F9CF8180600FA00FAE4DF /* vector.h */,
 			);
@@ -6013,7 +6016,7 @@
 				052F9FF1180600FB00FAE4DF /* nl31pillow.h in Headers */,
 				052942D31C5CDC8B0011C1E6 /* safeptr.h in Headers */,
 				052FA033180600FB00FAE4DF /* normalspec-impl.h in Headers */,
-				052F9F4D180600FB00FAE4DF /* nray.h in Headers */,
+				052F9F4D180600FB00FAE4DF /* ray.h in Headers */,
 				052F9F3E180600FB00FAE4DF /* nmatrix.h in Headers */,
 				052F9F47180600FB00FAE4DF /* nperm5.h in Headers */,
 				052F9E8C180600FB00FAE4DF /* nxmlalgebrareader.h in Headers */,
@@ -6321,6 +6324,7 @@
 				052F9EBB180600FB00FAE4DF /* nxmldim2trireader.h in Headers */,
 				052F9F8F180600FB00FAE4DF /* link_projection.h in Headers */,
 				052F9EB7180600FB00FAE4DF /* dim2triangulation.h in Headers */,
+				05074A7E1DA480D60007773C /* nray.h in Headers */,
 				052F9F53180600FB00FAE4DF /* container.h in Headers */,
 				052F9F9C180600FB00FAE4DF /* symmetry_group.h in Headers */,
 				05431F031C40F1F6009BC072 /* triangulation.h in Headers */,
@@ -7264,7 +7268,7 @@
 				050AFC5F19DCC68B00835ED6 /* SurfacesCompat.mm in Sources */,
 				052FA1BA1806129B00FAE4DF /* nl31pillow.cpp in Sources */,
 				052FA22E180612DD00FAE4DF /* orient.c in Sources */,
-				052FA1A31806129B00FAE4DF /* nray.cpp in Sources */,
+				052FA1A31806129B00FAE4DF /* ray.cpp in Sources */,
 				052FA1601806129B00FAE4DF /* ngrouppresentation.cpp in Sources */,
 				05C064691C56C2ED006E6483 /* Dim4EltMovesController.mm in Sources */,
 				05D1174419EE01A1003BEC55 /* dim2edgepairing.cpp in Sources */,
@@ -7936,7 +7940,7 @@
 				052F9EFD180600FB00FAE4DF /* typetrie.cpp in Sources */,
 				0591E7B91C4F74C400793A9C /* skeleton.cpp in Sources */,
 				05431F8C1C40F40D009BC072 /* offload_handler.cpp in Sources */,
-				052F9F4C180600FB00FAE4DF /* nray.cpp in Sources */,
+				052F9F4C180600FB00FAE4DF /* ray.cpp in Sources */,
 				052F9EB6180600FB00FAE4DF /* dim2triangulation.cpp in Sources */,
 				052FA09E180600FB00FAE4DF /* stringutils.cpp in Sources */,
 				052F9FF2180600FB00FAE4DF /* nlayeredchain.cpp in Sources */,

@@ -30,11 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-#include "maths/nray.h"
+#include "maths/ray.h"
 
 namespace regina {
 
-void NRay::scaleDown() {
+void Ray::scaleDown() {
     NLargeInteger gcd; // Initialised to 0.
     NLargeInteger* e;
     for (e = elements; e < end; ++e) {

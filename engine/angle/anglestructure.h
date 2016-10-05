@@ -42,7 +42,7 @@
 #include "regina-core.h"
 #include "output.h"
 #include "maths/nrational.h"
-#include "maths/nray.h"
+#include "maths/ray.h"
 #include <boost/noncopyable.hpp>
 
 namespace regina {
@@ -83,7 +83,7 @@ typedef Triangulation<3> NTriangulation;
  *
  * \ifacespython Not present.
  */
-class REGINA_API AngleStructureVector : public NRay {
+class REGINA_API AngleStructureVector : public Ray {
     public:
         /**
          * Creates a new vector all of whose entries are initialised to
@@ -330,11 +330,11 @@ REGINA_DEPRECATED typedef AngleStructure NAngleStructure;
 // Inline functions for AngleStructureVector
 
 inline AngleStructureVector::AngleStructureVector(size_t length) :
-        NRay(length) {
+        Ray(length) {
 }
 
 inline AngleStructureVector::AngleStructureVector(
-        const Vector<NLargeInteger>& cloneMe) : NRay(cloneMe) {
+        const Vector<NLargeInteger>& cloneMe) : Ray(cloneMe) {
 }
 
 // Inline functions for AngleStructure

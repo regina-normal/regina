@@ -44,7 +44,7 @@
 #include "regina-core.h"
 #include "output.h"
 #include "maths/nperm4.h"
-#include "maths/nray.h"
+#include "maths/ray.h"
 #include "surfaces/ndisctype.h"
 #include "surfaces/normalcoords.h"
 #include "utilities/boolset.h"
@@ -353,7 +353,7 @@ struct NormalInfo;
  *
  * \ifacespython Not present.
  */
-class REGINA_API NNormalSurfaceVector : public NRay {
+class REGINA_API NNormalSurfaceVector : public Ray {
     public:
         /**
          * Creates a new vector all of whose entries are initialised to
@@ -371,7 +371,7 @@ class REGINA_API NNormalSurfaceVector : public NRay {
 
         /**
          * A virtual destructor.  This is required because here we introduce
-         * virtual functions into the NRay hierarchy.
+         * virtual functions into the Ray hierarchy.
          */
         virtual ~NNormalSurfaceVector();
 
@@ -1638,10 +1638,10 @@ class REGINA_API NNormalSurface :
 // Inline functions for NNormalSurfaceVector
 
 inline NNormalSurfaceVector::NNormalSurfaceVector(size_t length) :
-        NRay(length) {
+        Ray(length) {
 }
 inline NNormalSurfaceVector::NNormalSurfaceVector(
-        const Vector<NLargeInteger>& cloneMe) : NRay(cloneMe) {
+        const Vector<NLargeInteger>& cloneMe) : Ray(cloneMe) {
 }
 inline NNormalSurfaceVector::~NNormalSurfaceVector() {
 }

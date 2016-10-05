@@ -41,7 +41,7 @@
 #endif
 
 #include "regina-core.h"
-#include "maths/nray.h"
+#include "maths/ray.h"
 #include <iterator>
 #include <list>
 #include <vector>
@@ -50,7 +50,7 @@ namespace regina {
 
 class EnumConstraints;
 class NMatrixInt;
-class NRay;
+class Ray;
 
 /**
  * \weakgroup enumerate
@@ -111,8 +111,8 @@ class HilbertCD {
          * important property that, although validity is not preserved under
          * addition, \e invalidity is.
          *
-         * \pre The template argument RayClass is derived from NRay (or
-         * may possibly be NRay itself).
+         * \pre The template argument RayClass is derived from Ray (or
+         * may possibly be Ray itself).
          *
          * \warning For normal surface theory, the Contejean-Devie algorithm is
          * extremely slow, even when modified to incorporate admissibility
@@ -140,7 +140,7 @@ class HilbertCD {
          * single candidate basis vector.
          *
          * The coordinates of the vector are inherited through the
-         * superclass NRay.
+         * superclass Ray.
          *
          * The \a BitmaskType template argument is used to store one bit
          * per coordinate, which is \c false if the coordinate is zero
@@ -150,7 +150,7 @@ class HilbertCD {
          * bitmask types, such as Bitmask, Bitmask1 or Bitmask2.
          */
         template <class BitmaskType>
-        struct VecSpec : public NRay {
+        struct VecSpec : public Ray {
             BitmaskType mask_;
                 /**< A bitmask indicating which coordinates are zero
                      (\c false) and which are non-zero (\c true). */
@@ -208,7 +208,7 @@ inline HilbertCD::HilbertCD() {
 
 template <class BitmaskType>
 inline HilbertCD::VecSpec<BitmaskType>::VecSpec(size_t dim) :
-        NRay(dim), mask_(dim) {
+        Ray(dim), mask_(dim) {
     // All vector elements are initialised to zero thanks to the
     // NLargeInteger default constructor.
 }

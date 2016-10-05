@@ -33,7 +33,7 @@
 #include "regina-config.h"
 #include "enumerate/doubledescription.h"
 #include "maths/nmatrixint.h"
-#include "maths/nray.h"
+#include "maths/ray.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/normalsurfaces.h"
 #include "surfaces/nsstandard.h"
@@ -98,7 +98,7 @@ namespace {
      * solution sets, describing a single ray (which is typically a
      * vertex in some partial solution space).
      *
-     * This class derives from NRay, which stores the coordinates of
+     * This class derives from Ray, which stores the coordinates of
      * the ray itself in standard coordinates.  This RaySpec class also
      * stores a bitmask indicating which of these coordinates are set to zero.
      *
@@ -116,7 +116,7 @@ namespace {
      * bitmask types, such as Bitmask, Bitmask1 or Bitmask2.
      */
     template <class BitmaskType>
-    class RaySpec : private NRay {
+    class RaySpec : private Ray {
         private:
             BitmaskType facets_;
                 /**< A bitmask listing which coordinates of this ray are
@@ -130,7 +130,7 @@ namespace {
              * @param v the vector to clone.
              */
             RaySpec(const NNormalSurfaceVector* v) :
-                    NRay(v->size()), facets_(v->size()) {
+                    Ray(v->size()), facets_(v->size()) {
                 // Note that the vector is initialised to zero since
                 // this is what NLargeInteger's default constructor does.
                 for (size_t i = 0; i < v->size(); ++i)
@@ -153,7 +153,7 @@ namespace {
              */
             RaySpec(const NTriangulation* tri, unsigned long whichLink,
                     unsigned coordsPerTet) :
-                    NRay(coordsPerTet * tri->size()),
+                    Ray(coordsPerTet * tri->size()),
                     facets_(coordsPerTet * tri->size()) {
                 // Note that the vector is initialised to zero since
                 // this is what NLargeInteger's default constructor does.
@@ -189,7 +189,7 @@ namespace {
              * to zero to form the intersecting hyperplane.
              */
             RaySpec(const RaySpec& pos, const RaySpec& neg, size_t coord) :
-                    NRay(pos.size()), facets_(pos.facets_) {
+                    Ray(pos.size()), facets_(pos.facets_) {
                 facets_ &= neg.facets_;
 
                 // Note that we may need to re-enable some bits in \a facets_,
@@ -303,7 +303,7 @@ namespace {
                 return (elements[index] > zero ? 1 : -1);
             }
 
-            using NRay::scaleDown;
+            using Ray::scaleDown;
     };
 } // anonymous namespace
 

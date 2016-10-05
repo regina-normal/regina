@@ -53,7 +53,7 @@
 namespace regina {
 
 class NMatrixInt;
-class NRay;
+class Ray;
 
 template <int> class Triangulation;
 typedef Triangulation<3> NTriangulation;
@@ -1223,14 +1223,14 @@ class LPData {
          * - To ensure that the variables are all integers, we scale the
          *   final vector by the smallest positive rational multiple
          *   for which all elements of the vector are integers.
-         *   (This is why the output class is NRay and not Vector.)
+         *   (This is why the output class is Ray and not Vector.)
          *
          * This routine is not used as an internal part of the tree traversal
          * algorithm; instead it is offered as a helper routine for
          * reconstructing the normal surfaces or angle structures that result.
          *
          * \pre The given vector \a v has been initialised to the zero vector
-         * of length origTableaux_->columns().  Note that the NRay constructor
+         * of length origTableaux_->columns().  Note that the Ray constructor
          * will automatically initialise all elements to zero as required.
          *
          * \pre No individual coordinate column has had more than one call
@@ -1249,7 +1249,7 @@ class LPData {
          * one may pass \a type = 0, in which case this routine will
          * assume that \e every coordinate was constrained as positive.
          */
-        void extractSolution(NRay& v, const char* type) const;
+        void extractSolution(Ray& v, const char* type) const;
 
     private:
         /**

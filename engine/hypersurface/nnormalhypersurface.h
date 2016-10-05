@@ -46,7 +46,7 @@
 #include "algebra/nabeliangroup.h"
 #include "hypersurface/hypercoords.h"
 #include "maths/nperm5.h"
-#include "maths/nray.h"
+#include "maths/ray.h"
 #include "utilities/boolset.h"
 #include "utilities/property.h"
 #include <boost/noncopyable.hpp>
@@ -185,7 +185,7 @@ struct HyperInfo;
  *
  * \ifacespython Not present.
  */
-class REGINA_API NNormalHypersurfaceVector : public NRay {
+class REGINA_API NNormalHypersurfaceVector : public Ray {
     public:
         /**
          * Creates a new vector all of whose entries are initialised to
@@ -203,7 +203,7 @@ class REGINA_API NNormalHypersurfaceVector : public NRay {
 
         /**
          * A virtual destructor.  This is required because here we
-         * introduce virtual functions into the NRay hierarchy.
+         * introduce virtual functions into the Ray hierarchy.
          */
         virtual ~NNormalHypersurfaceVector();
 
@@ -883,10 +883,10 @@ class REGINA_API NNormalHypersurface :
 // Inline functions for NNormalHypersurfaceVector
 
 inline NNormalHypersurfaceVector::NNormalHypersurfaceVector(size_t length) :
-        NRay(length) {
+        Ray(length) {
 }
 inline NNormalHypersurfaceVector::NNormalHypersurfaceVector(
-        const Vector<NLargeInteger>& cloneMe) : NRay(cloneMe) {
+        const Vector<NLargeInteger>& cloneMe) : Ray(cloneMe) {
 }
 inline NNormalHypersurfaceVector::~NNormalHypersurfaceVector() {
 }
