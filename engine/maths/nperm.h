@@ -107,11 +107,7 @@ inline constexpr int64_t factorial(int n) {
  *
  * For \a n = 2,...,5 (which appear throughout 2-, 3- and 4-manifold
  * triangulations), this template is specialised: the code is highly optimised
- * and also offers some extra functionality.  You will need to include the
- * corresponding header(s) from nperm2.h, ..., nperm5.h to use these
- * specialised classes; otherwise any code that uses NPerm<2>, ..., NPerm<5>
- * will not compile.  For convenience, the respective typedefs
- * NPerm2, ..., NPerm5 are also available for these classes.
+ * and also offers some extra functionality.
  *
  * \ifacespython Python does not support templates.  For each
  * \a n = 2,...,16, this class is available in Python under the
