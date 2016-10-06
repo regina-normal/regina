@@ -44,7 +44,6 @@
 #include "surfaces/nnormalsurface.h"
 
 namespace regina {
-class NMatrixInt;
 class NNormalSurfaceVectorOriented;
 
 /**

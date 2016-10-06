@@ -45,7 +45,6 @@
 
 namespace regina {
 
-class NMatrixInt;
 class NNormalSurfaceVectorStandard;
 
 /**
