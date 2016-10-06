@@ -168,7 +168,7 @@ bool Dim2GluingsModel::setData(const QModelIndex& index, const QVariant& value,
         return false;
 
     int newAdjTri;
-    regina::NPerm<3> newAdjPerm;
+    regina::Perm<3> newAdjPerm;
 
     // Find the proposed new gluing.
     QString text = value.toString().trimmed();
@@ -239,7 +239,7 @@ bool Dim2GluingsModel::setData(const QModelIndex& index, const QVariant& value,
 
 QString Dim2GluingsModel::isEdgeStringValid(unsigned long srcTri, int srcEdge,
         unsigned long destTri, const QString& destEdge,
-        regina::NPerm<3>* gluing) {
+        regina::Perm<3>* gluing) {
     if (destTri >= tri_->size())
         return tr("There is no triangle number %1.").arg(destTri);
 
@@ -253,7 +253,7 @@ QString Dim2GluingsModel::isEdgeStringValid(unsigned long srcTri, int srcEdge,
         return tr("%1 is not a valid triangle edge.  The two vertices "
             "forming the edge must be distinct.").arg(destEdge);
 
-    regina::NPerm<3> foundGluing = edgeStringToPerm(srcEdge, destEdge);
+    regina::Perm<3> foundGluing = edgeStringToPerm(srcEdge, destEdge);
     if (srcTri == destTri && foundGluing[srcEdge] == srcEdge)
         return tr("An edge cannot be glued to itself.");
 
@@ -272,7 +272,7 @@ void Dim2GluingsModel::showError(const QString& message) {
 }
 
 QString Dim2GluingsModel::destString(int srcEdge, regina::Dim2Triangle* destTri,
-        const regina::NPerm<3>& gluing) {
+        const regina::Perm<3>& gluing) {
     if (! destTri)
         return "";
     else
@@ -280,7 +280,7 @@ QString Dim2GluingsModel::destString(int srcEdge, regina::Dim2Triangle* destTri,
             regina::Dim2Edge::ordering(srcEdge)).trunc2().c_str() + ')';
 }
 
-regina::NPerm<3> Dim2GluingsModel::edgeStringToPerm(int srcEdge,
+regina::Perm<3> Dim2GluingsModel::edgeStringToPerm(int srcEdge,
         const QString& str) {
     int destVertex[3];
 
@@ -292,7 +292,7 @@ regina::NPerm<3> Dim2GluingsModel::edgeStringToPerm(int srcEdge,
         destVertex[2] -= destVertex[i];
     }
 
-    return regina::NPerm<3>(destVertex[0], destVertex[1], destVertex[2]) *
+    return regina::Perm<3>(destVertex[0], destVertex[1], destVertex[2]) *
         regina::Dim2Edge::ordering(srcEdge).inverse();
 }
 

@@ -168,7 +168,7 @@ bool Dim4GluingsModel::setData(const QModelIndex& index, const QVariant& value,
         return false;
 
     int newAdjPent;
-    regina::NPerm<5> newAdjPerm;
+    regina::Perm<5> newAdjPerm;
 
     // Find the proposed new gluing.
     QString text = value.toString().trimmed();
@@ -240,7 +240,7 @@ bool Dim4GluingsModel::setData(const QModelIndex& index, const QVariant& value,
 
 QString Dim4GluingsModel::isFacetStringValid(unsigned long srcPent,
         int srcFacet, unsigned long destPent, const QString& destFacet,
-        regina::NPerm<5>* gluing) {
+        regina::Perm<5>* gluing) {
     if (destPent >= tri_->size())
         return tr("There is no pentachoron number %1.").arg(destPent);
 
@@ -256,7 +256,7 @@ QString Dim4GluingsModel::isFacetStringValid(unsigned long srcPent,
         return tr("%1 is not a valid pentachoron facet.  The four vertices "
             "forming the facet must be distinct.").arg(destFacet);
 
-    regina::NPerm<5> foundGluing = facetStringToPerm(srcFacet, destFacet);
+    regina::Perm<5> foundGluing = facetStringToPerm(srcFacet, destFacet);
     if (srcPent == destPent && foundGluing[srcFacet] == srcFacet)
         return tr("A facet cannot be glued to itself.");
 
@@ -276,7 +276,7 @@ void Dim4GluingsModel::showError(const QString& message) {
 
 QString Dim4GluingsModel::destString(int srcFacet,
         regina::Dim4Pentachoron* destPent,
-        const regina::NPerm<5>& gluing) {
+        const regina::Perm<5>& gluing) {
     if (! destPent)
         return "";
     else
@@ -285,7 +285,7 @@ QString Dim4GluingsModel::destString(int srcFacet,
             trunc4().c_str() + ')';
 }
 
-regina::NPerm<5> Dim4GluingsModel::facetStringToPerm(int srcFacet,
+regina::Perm<5> Dim4GluingsModel::facetStringToPerm(int srcFacet,
         const QString& str) {
     int destVertex[5];
 
@@ -297,7 +297,7 @@ regina::NPerm<5> Dim4GluingsModel::facetStringToPerm(int srcFacet,
         destVertex[4] -= destVertex[i];
     }
 
-    return regina::NPerm<5>(destVertex[0], destVertex[1], destVertex[2],
+    return regina::Perm<5>(destVertex[0], destVertex[1], destVertex[2],
         destVertex[3], destVertex[4]) *
         regina::Dim4Tetrahedron::ordering(srcFacet).inverse();
 }

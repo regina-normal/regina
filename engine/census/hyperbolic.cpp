@@ -119,7 +119,7 @@ void NHyperbolicMinSearcher::runSearch(long maxDepth) {
         }
 
         // We are sitting on a new permutation to try.
-        permIndex(adj) = NPerm<3>::invS3[permIndex(face)];
+        permIndex(adj) = Perm<3>::invS3[permIndex(face)];
 
         // Merge edge links and run corresponding tests.
         if (mergeEdgeClasses()) {
@@ -318,7 +318,7 @@ int NHyperbolicMinSearcher::mergeEdgeClasses() {
 
     int retVal = 0;
 
-    NPerm<4> p = gluingPerm(face);
+    Perm<4> p = gluingPerm(face);
     int v1, w1, v2, w2;
     int e, f;
     int orderIdx;

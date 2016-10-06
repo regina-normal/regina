@@ -43,7 +43,7 @@ bool Triangulation<2>::oneThreeMove(Dim2Triangle* tri, bool /* check */,
 
     // Before we unglue, record how the adjacent triangles are glued to tri.
     Dim2Triangle* adjTri[3];
-    NPerm<3> adjGlue[3];
+    Perm<3> adjGlue[3];
     unsigned i, j;
     for (i=0; i<3; i++) {
         adjTri[i] = tri->adjacentTriangle(i);
@@ -66,7 +66,7 @@ bool Triangulation<2>::oneThreeMove(Dim2Triangle* tri, bool /* check */,
     // Glue the new triangles to each other internally.
     for (i = 0; i < 3; ++i)
         for (j = i + 1; j < 3; ++j)
-            newTri[i]->join(j, newTri[j], NPerm<3>(i, j));
+            newTri[i]->join(j, newTri[j], Perm<3>(i, j));
 
     // Attach the new triangles to the old triangulation.
     for (i = 0; i < 3; ++i) {

@@ -92,7 +92,7 @@ MatrixInt* NNormalSurfaceVectorOriented::makeMatchingEquations(
     unsigned row = 0;
     int i;
     size_t tet0, tet1;
-    NPerm<4> perm0, perm1;
+    Perm<4> perm0, perm1;
     bool natural;
     for (auto fit = triangulation->triangles().begin();
             fit != triangulation->triangles().end(); fit++) {

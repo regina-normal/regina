@@ -108,7 +108,7 @@ class Dim4GluingsModel : public QAbstractItemModel {
          */
         QString isFacetStringValid(unsigned long srcPent, int srcFacet,
             unsigned long destPent, const QString& destFacet,
-            regina::NPerm<5>* gluing);
+            regina::Perm<5>* gluing);
 
         /**
          * Return a short string describing the destination of a
@@ -117,7 +117,7 @@ class Dim4GluingsModel : public QAbstractItemModel {
          */
         static QString destString(int srcFacet,
             regina::Dim4Pentachoron* destPent,
-            const regina::NPerm<5>& gluing);
+            const regina::Perm<5>& gluing);
 
         /**
          * Convert a facet string (e.g., "1304") to a facet permutation.
@@ -125,7 +125,7 @@ class Dim4GluingsModel : public QAbstractItemModel {
          * The given facet string must be valid; otherwise the results
          * could be unpredictable (and indeed a crash could result).
          */
-        static regina::NPerm<5> facetStringToPerm(int srcFacet,
+        static regina::Perm<5> facetStringToPerm(int srcFacet,
             const QString& str);
 
         /**

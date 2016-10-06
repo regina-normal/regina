@@ -80,7 +80,7 @@ void Triangulation<2>::writeTextLong(std::ostream& out) const {
     Dim2Triangle* adjTri;
     unsigned triPos;
     int i, j;
-    NPerm<3> adjPerm;
+    Perm<3> adjPerm;
 
     out << "Triangle gluing:\n";
     out << "  Triangle  |  glued to:     (01)     (02)     (12)\n";
@@ -172,7 +172,7 @@ void Triangulation<2>::cloneFrom(const Dim2Triangulation& X) {
     long triPos, adjPos;
     Dim2Triangle* tri;
     Dim2Triangle* adjTri;
-    NPerm<3> adjPerm;
+    Perm<3> adjPerm;
     int edge;
     triPos = 0;
     for (it = X.simplices_.begin(); it != X.simplices_.end(); ++it) {

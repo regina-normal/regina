@@ -569,8 +569,8 @@ class REGINA_API NDiscSetSurface {
          * specifier will be newly created, and it is up to the caller
          * of this routine to dispose of it.
          */
-        NDiscSpec* adjacentDisc(const NDiscSpec& disc, NPerm<4> arc,
-                NPerm<4>& adjArc) const;
+        NDiscSpec* adjacentDisc(const NDiscSpec& disc, Perm<4> arc,
+                Perm<4>& adjArc) const;
 };
 
 /**

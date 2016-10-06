@@ -54,29 +54,29 @@ class PermConvTest : public CppUnit::TestFixture {
         }
 
         void identity() {
-            typename NPerm<b>::Index i, j;
+            typename Perm<b>::Index i, j;
 
             {
-                NPerm<a> p, q;
-                for (i = 0; i < NPerm<a>::nPerms; ++i) {
-                    p = NPerm<a>::atIndex(i);
-                    q = regina::NPerm<a>::contract(NPerm<b>::extend(p));
+                Perm<a> p, q;
+                for (i = 0; i < Perm<a>::nPerms; ++i) {
+                    p = Perm<a>::atIndex(i);
+                    q = regina::Perm<a>::contract(Perm<b>::extend(p));
                     if (! (p == q && p.str() == q.str())) {
                         std::ostringstream msg;
                         msg << "Permutation #" << i << " is changed after "
-                            "NPerm<" << a << "> -> NPerm<" << b
-                            << "> -> NPerm<" << a << "> conversion.";
+                            "Perm<" << a << "> -> Perm<" << b
+                            << "> -> Perm<" << a << "> conversion.";
                         CPPUNIT_FAIL(msg.str());
                     }
                 }
             }
 
             {
-                NPerm<b> p, q;
+                Perm<b> p, q;
                 int done = 0;
                 bool id;
-                for (i = 0; i < NPerm<b>::nPerms; ++i) {
-                    p = NPerm<b>::atIndex(i);
+                for (i = 0; i < Perm<b>::nPerms; ++i) {
+                    p = Perm<b>::atIndex(i);
 
                     id = true;
                     for (j = a; j < b; ++j)
@@ -87,55 +87,55 @@ class PermConvTest : public CppUnit::TestFixture {
                     if (! id)
                         continue;
 
-                    q = NPerm<b>::extend(regina::NPerm<a>::contract(p));
+                    q = Perm<b>::extend(regina::Perm<a>::contract(p));
                     if (! (p == q && p.str() == q.str())) {
                         std::ostringstream msg;
                         msg << "Permutation #" << i << " is changed after "
-                            "NPerm<" << b << "> -> NPerm<" << a
-                            << "> -> NPerm<" << b << "> conversion.";
+                            "Perm<" << b << "> -> Perm<" << a
+                            << "> -> Perm<" << b << "> conversion.";
                         CPPUNIT_FAIL(msg.str());
                     }
                     ++done;
                 }
                 // Does it look like we tested everything that maps a,...,b-1
                 // to themselves?
-                if (done != NPerm<a>::nPerms) {
+                if (done != Perm<a>::nPerms) {
                     std::ostringstream msg;
                     msg << "The number of permutations tested was not "
-                        "NPerm<" << a << ">::nPerms .";
+                        "Perm<" << a << ">::nPerms .";
                     CPPUNIT_FAIL(msg.str());
                 }
             }
         }
 
         void strings() {
-            typename NPerm<b>::Index i, j;
+            typename Perm<b>::Index i, j;
             std::string s1, s2;
 
             {
-                NPerm<a> p;
-                for (i = 0; i < NPerm<a>::nPerms; ++i) {
-                    p = NPerm<a>::atIndex(i);
+                Perm<a> p;
+                for (i = 0; i < Perm<a>::nPerms; ++i) {
+                    p = Perm<a>::atIndex(i);
                     s1 = p.str();
                     for (j = a; j < b; ++j)
                         s1 += (j < 10 ? ('0' + j) : ('a' + j - 10));
-                    s2 = NPerm<b>::extend(p).str();
+                    s2 = Perm<b>::extend(p).str();
                     if (s1 != s2) {
                         std::ostringstream msg;
                         msg << "Permutation #" << i << " gives the wrong "
-                            "string representation after NPerm<" << a
-                            << "> -> NPerm<" << b << "> conversion.";
+                            "string representation after Perm<" << a
+                            << "> -> Perm<" << b << "> conversion.";
                         CPPUNIT_FAIL(msg.str());
                     }
                 }
             }
 
             {
-                NPerm<b> p;
+                Perm<b> p;
                 int done = 0;
                 bool id;
-                for (i = 0; i < NPerm<b>::nPerms; ++i) {
-                    p = NPerm<b>::atIndex(i);
+                for (i = 0; i < Perm<b>::nPerms; ++i) {
+                    p = Perm<b>::atIndex(i);
 
                     id = true;
                     for (j = a; j < b; ++j)
@@ -147,24 +147,24 @@ class PermConvTest : public CppUnit::TestFixture {
                         continue;
 
                     s1 = p.str();
-                    s2 = regina::NPerm<a>::contract(p).str();
+                    s2 = regina::Perm<a>::contract(p).str();
                     for (j = a; j < b; ++j)
                         s2 += (j < 10 ? ('0' + j) : ('a' + j - 10));
                     if (s1 != s2) {
                         std::ostringstream msg;
                         msg << "Permutation #" << i << " gives the wrong "
-                            "string representation after NPerm<" << b
-                            << "> -> NPerm<" << a << "> conversion.";
+                            "string representation after Perm<" << b
+                            << "> -> Perm<" << a << "> conversion.";
                         CPPUNIT_FAIL(msg.str());
                     }
                     ++done;
                 }
                 // Does it look like we tested everything that maps a,...,b-1
                 // to themselves?
-                if (done != NPerm<a>::nPerms) {
+                if (done != Perm<a>::nPerms) {
                     std::ostringstream msg;
                     msg << "The number of permutations tested was not "
-                        "NPerm<" << a << ">::nPerms .";
+                        "Perm<" << a << ">::nPerms .";
                     CPPUNIT_FAIL(msg.str());
                 }
             }

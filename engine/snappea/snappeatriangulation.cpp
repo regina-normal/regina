@@ -867,7 +867,7 @@ void SnapPeaTriangulation::fillRegina(regina::snappea::Triangulation* src,
             if (! tet[i]->adjacentTetrahedron(j))
                 tet[i]->join(j,
                     tet[tData->tetrahedron_data[i].neighbor_index[j]],
-                    NPerm<4>(tData->tetrahedron_data[i].gluing[j]));
+                    Perm<4>(tData->tetrahedron_data[i].gluing[j]));
 
     delete[] tet;
     regina::snappea::free_triangulation_data(tData);

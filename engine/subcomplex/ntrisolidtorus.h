@@ -91,7 +91,7 @@ class REGINA_API NTriSolidTorus : public NStandardTriangulation {
     private:
         NTetrahedron* tet[3];
             /**< The tetrahedra that make up this solid torus. */
-        NPerm<4> vertexRoles_[3];
+        Perm<4> vertexRoles_[3];
             /**< For tetrahedron \a i, <tt>vertexRoles[i]</tt> is a
                  permutation p chosen so that the axis edge for that
                  tetrahedron runs from vertex p[0] to p[3] and the
@@ -148,7 +148,7 @@ class REGINA_API NTriSolidTorus : public NStandardTriangulation {
          * @return a permutation representing the roles of the vertices
          * of the requested tetrahedron.
          */
-        NPerm<4> vertexRoles(int index) const;
+        Perm<4> vertexRoles(int index) const;
 
         /**
          * Determines whether the two triangles of the requested annulus are
@@ -177,7 +177,7 @@ class REGINA_API NTriSolidTorus : public NStandardTriangulation {
          * @return \c true if and only if the two triangles of the requested
          * annulus are glued together.
          */
-        bool isAnnulusSelfIdentified(int index, NPerm<4>* roleMap) const;
+        bool isAnnulusSelfIdentified(int index, Perm<4>* roleMap) const;
 
         /**
          * Determines whether the two given annuli are linked in a
@@ -264,7 +264,7 @@ class REGINA_API NTriSolidTorus : public NStandardTriangulation {
          * solid torus with the given vertex roles.
          */
         static NTriSolidTorus* formsTriSolidTorus(NTetrahedron* tet,
-                NPerm<4> useVertexRoles);
+                Perm<4> useVertexRoles);
 
         NManifold* manifold() const;
         NAbelianGroup* homology() const;
@@ -291,7 +291,7 @@ inline NTriSolidTorus::~NTriSolidTorus() {
 inline NTetrahedron* NTriSolidTorus::tetrahedron(int index) const {
     return tet[index];
 }
-inline NPerm<4> NTriSolidTorus::vertexRoles(int index) const {
+inline Perm<4> NTriSolidTorus::vertexRoles(int index) const {
     return vertexRoles_[index];
 }
 

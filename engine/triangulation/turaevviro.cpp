@@ -1112,7 +1112,7 @@ namespace {
 
         NTriangulation::EdgeIterator eit;
         const NTetrahedron* tet;
-        NPerm<4> p;
+        Perm<4> p;
         unsigned long i;
         for (eit = tri.edges().begin(); eit != tri.edges().end(); ++eit) {
             for (auto& emb : **eit) {

@@ -46,12 +46,12 @@ NSnappedBall* NSnappedBall::clone() const {
 
 NSnappedBall* NSnappedBall::formsSnappedBall(NTetrahedron* tet) {
     int inFace1, inFace2;
-    NPerm<4> perm;
+    Perm<4> perm;
     for (inFace1 = 0; inFace1 < 3; inFace1++)
         if (tet->adjacentTetrahedron(inFace1) == tet) {
             perm = tet->adjacentGluing(inFace1);
             inFace2 = perm[inFace1];
-            if (perm == NPerm<4>(inFace1, inFace2)) {
+            if (perm == Perm<4>(inFace1, inFace2)) {
                 // This is it!
                 NSnappedBall* ans = new NSnappedBall();
                 ans->tet = tet;

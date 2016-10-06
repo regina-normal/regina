@@ -964,11 +964,11 @@ void NTriCompositionUI::findSpiralSolidTori() {
     for (i = 0; i < nTets; i++) {
         tet = tri->tetrahedron(i);
         for (whichPerm = 0; whichPerm < 24 /* size of S4 */; ++whichPerm) {
-            if (NPerm<4>::S4[whichPerm][0] > NPerm<4>::S4[whichPerm][3])
+            if (Perm<4>::S4[whichPerm][0] > Perm<4>::S4[whichPerm][3])
                 continue;
 
             spiral = regina::NSpiralSolidTorus::formsSpiralSolidTorus(tet,
-                NPerm<4>::S4[whichPerm]);
+                Perm<4>::S4[whichPerm]);
             if (! spiral)
                 continue;
             if (! spiral->isCanonical(tri)) {
@@ -1069,7 +1069,7 @@ QString NTriCompositionUI::edgeString(unsigned long tetIndex,
 }
 
 QString NTriCompositionUI::edgeString(unsigned long tetIndex,
-        const regina::NPerm<4>& roles, int startPreimage, int endPreimage) {
+        const regina::Perm<4>& roles, int startPreimage, int endPreimage) {
     return QString("%1 (%2%3)").arg(tetIndex).arg(roles[startPreimage]).
         arg(roles[endPreimage]);
 }

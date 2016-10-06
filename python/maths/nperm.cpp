@@ -42,7 +42,7 @@ using regina::NPerm;
 
 namespace {
     template <int n>
-    boost::shared_ptr<NPerm<n>> fromList(boost::python::list l) {
+    boost::shared_ptr<Perm<n>> fromList(boost::python::list l) {
         long len = boost::python::len(l);
         if ( len != n ) {
             char err[80];
@@ -60,7 +60,7 @@ namespace {
             }
             image[i] = val();
         }
-        return boost::shared_ptr<NPerm<n>>(new NPerm<n>(image));
+        return boost::shared_ptr<Perm<n>>(new Perm<n>(image));
     }
 
     template <int n, int k>
@@ -69,7 +69,7 @@ namespace {
 
         template <typename Class>
         void visit(Class& c) const {
-            c.def("extend", &NPerm<n>::template extend<k>);
+            c.def("extend", &Perm<n>::template extend<k>);
             c.def(NPerm_extend<n, k-1>());
         }
     };
@@ -80,7 +80,7 @@ namespace {
 
         template <typename Class>
         void visit(Class& c) const {
-            c.def("extend", &NPerm<n>::template extend<2>);
+            c.def("extend", &Perm<n>::template extend<2>);
             c.staticmethod("extend");
         }
     };
@@ -91,7 +91,7 @@ namespace {
 
         template <typename Class>
         void visit(Class& c) const {
-            c.def("contract", &NPerm<n>::template contract<k>);
+            c.def("contract", &Perm<n>::template contract<k>);
             c.def(NPerm_contract<n, k+1>());
         }
     };
@@ -103,7 +103,7 @@ namespace {
 
         template <typename Class>
         void visit(Class& c) const {
-            c.def("contract", &NPerm<n>::template contract<16>);
+            c.def("contract", &Perm<n>::template contract<16>);
             c.staticmethod("contract");
         }
     };
@@ -122,27 +122,27 @@ namespace {
 
 template <int n>
 void addNPerm(const char* name) {
-    scope s = class_<NPerm<n> >(name)
+    scope s = class_<Perm<n> >(name)
         .def(init<int, int>())
-        .def(init<const NPerm<n>&>())
+        .def(init<const Perm<n>&>())
         .def("__init__", make_constructor(fromList<n>))
-        .def("permCode", &NPerm<n>::permCode)
-        .def("setPermCode", &NPerm<n>::setPermCode)
-        .def("fromPermCode", &NPerm<n>::fromPermCode)
-        .def("isPermCode", &NPerm<n>::isPermCode)
+        .def("permCode", &Perm<n>::permCode)
+        .def("setPermCode", &Perm<n>::setPermCode)
+        .def("fromPermCode", &Perm<n>::fromPermCode)
+        .def("isPermCode", &Perm<n>::isPermCode)
         .def(self * self)
-        .def("inverse", &NPerm<n>::inverse)
-        .def("reverse", &NPerm<n>::reverse)
-        .def("sign", &NPerm<n>::sign)
-        .def("__getitem__", &NPerm<n>::operator[])
-        .def("preImageOf", &NPerm<n>::preImageOf)
-        .def("compareWith", &NPerm<n>::compareWith)
-        .def("isIdentity", &NPerm<n>::isIdentity)
-        .def("atIndex", &NPerm<n>::atIndex)
-        .def("index", &NPerm<n>::index)
-        .def("rand", &NPerm<n>::rand)
-        .def("trunc", &NPerm<n>::trunc)
-        .def("__repr__", &NPerm<n>::str)
+        .def("inverse", &Perm<n>::inverse)
+        .def("reverse", &Perm<n>::reverse)
+        .def("sign", &Perm<n>::sign)
+        .def("__getitem__", &Perm<n>::operator[])
+        .def("preImageOf", &Perm<n>::preImageOf)
+        .def("compareWith", &Perm<n>::compareWith)
+        .def("isIdentity", &Perm<n>::isIdentity)
+        .def("atIndex", &Perm<n>::atIndex)
+        .def("index", &Perm<n>::index)
+        .def("rand", &Perm<n>::rand)
+        .def("trunc", &Perm<n>::trunc)
+        .def("__repr__", &Perm<n>::str)
         .def(NPerm_extend<n, n-1>())
         .def(NPerm_contract<n, n+1>())
         .def(regina::python::add_output_basic())
@@ -153,9 +153,9 @@ void addNPerm(const char* name) {
         .staticmethod("rand")
     ;
 
-    s.attr("nPerms") = NPerm<n>::nPerms;
-    s.attr("nPerms_1") = NPerm<n>::nPerms_1;
-    s.attr("imageBits") = NPerm<n>::imageBits;
+    s.attr("nPerms") = Perm<n>::nPerms;
+    s.attr("nPerms_1") = Perm<n>::nPerms_1;
+    s.attr("imageBits") = Perm<n>::imageBits;
 }
 
 void addNPerm() {

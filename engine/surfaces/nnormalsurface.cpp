@@ -70,26 +70,26 @@ const char quadString[3][6] = { "01/23", "02/13", "03/12" };
 
 // The following three arrays cannot be made 2-D because of a g++-2.95 bug.
 
-const NPerm<4> __triDiscArcs[12] = {
-    NPerm<4>(0,1,2,3), NPerm<4>(0,2,3,1), NPerm<4>(0,3,1,2),
-    NPerm<4>(1,0,3,2), NPerm<4>(1,3,2,0), NPerm<4>(1,2,0,3),
-    NPerm<4>(2,3,0,1), NPerm<4>(2,0,1,3), NPerm<4>(2,1,3,0),
-    NPerm<4>(3,2,1,0), NPerm<4>(3,1,0,2), NPerm<4>(3,0,2,1)
+const Perm<4> __triDiscArcs[12] = {
+    Perm<4>(0,1,2,3), Perm<4>(0,2,3,1), Perm<4>(0,3,1,2),
+    Perm<4>(1,0,3,2), Perm<4>(1,3,2,0), Perm<4>(1,2,0,3),
+    Perm<4>(2,3,0,1), Perm<4>(2,0,1,3), Perm<4>(2,1,3,0),
+    Perm<4>(3,2,1,0), Perm<4>(3,1,0,2), Perm<4>(3,0,2,1)
 };
 
-const NPerm<4> __quadDiscArcs[12] = {
-    NPerm<4>(0,2,3,1), NPerm<4>(3,0,1,2), NPerm<4>(1,3,2,0), NPerm<4>(2,1,0,3),
-    NPerm<4>(0,3,1,2), NPerm<4>(1,0,2,3), NPerm<4>(2,1,3,0), NPerm<4>(3,2,0,1),
-    NPerm<4>(0,1,2,3), NPerm<4>(2,0,3,1), NPerm<4>(3,2,1,0), NPerm<4>(1,3,0,2)
+const Perm<4> __quadDiscArcs[12] = {
+    Perm<4>(0,2,3,1), Perm<4>(3,0,1,2), Perm<4>(1,3,2,0), Perm<4>(2,1,0,3),
+    Perm<4>(0,3,1,2), Perm<4>(1,0,2,3), Perm<4>(2,1,3,0), Perm<4>(3,2,0,1),
+    Perm<4>(0,1,2,3), Perm<4>(2,0,3,1), Perm<4>(3,2,1,0), Perm<4>(1,3,0,2)
 };
 
-const NPerm<4> __octDiscArcs[24] = {
-    NPerm<4>(0,3,1,2), NPerm<4>(0,1,2,3), NPerm<4>(2,0,3,1), NPerm<4>(2,3,1,0),
-    NPerm<4>(1,2,0,3), NPerm<4>(1,0,3,2), NPerm<4>(3,1,2,0), NPerm<4>(3,2,0,1),
-    NPerm<4>(0,1,2,3), NPerm<4>(0,2,3,1), NPerm<4>(3,0,1,2), NPerm<4>(3,1,2,0),
-    NPerm<4>(2,3,0,1), NPerm<4>(2,0,1,3), NPerm<4>(1,2,3,0), NPerm<4>(1,3,0,2),
-    NPerm<4>(0,2,3,1), NPerm<4>(0,3,1,2), NPerm<4>(1,0,2,3), NPerm<4>(1,2,3,0),
-    NPerm<4>(3,1,0,2), NPerm<4>(3,0,2,1), NPerm<4>(2,3,1,0), NPerm<4>(2,1,0,3)
+const Perm<4> __octDiscArcs[24] = {
+    Perm<4>(0,3,1,2), Perm<4>(0,1,2,3), Perm<4>(2,0,3,1), Perm<4>(2,3,1,0),
+    Perm<4>(1,2,0,3), Perm<4>(1,0,3,2), Perm<4>(3,1,2,0), Perm<4>(3,2,0,1),
+    Perm<4>(0,1,2,3), Perm<4>(0,2,3,1), Perm<4>(3,0,1,2), Perm<4>(3,1,2,0),
+    Perm<4>(2,3,0,1), Perm<4>(2,0,1,3), Perm<4>(1,2,3,0), Perm<4>(1,3,0,2),
+    Perm<4>(0,2,3,1), Perm<4>(0,3,1,2), Perm<4>(1,0,2,3), Perm<4>(1,2,3,0),
+    Perm<4>(3,1,0,2), Perm<4>(3,0,2,1), Perm<4>(2,3,1,0), Perm<4>(2,1,0,3)
 };
 
 NNormalSurface* NNormalSurface::clone() const {

@@ -287,10 +287,10 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
     if (isUnmatched(0, 0)) {
         // We must have just one simplex with no facet gluings at all.
         Isomorphism<dim>* ans;
-        for (int i = 0; i < NPerm<dim+1>::nPerms; ++i) {
+        for (int i = 0; i < Perm<dim+1>::nPerms; ++i) {
             ans = new Isomorphism<dim>(1);
             ans->simpImage(0) = 0;
-            ans->facetPerm(0) = NPerm<dim+1>::atIndex(i);
+            ans->facetPerm(0) = Perm<dim+1>::atIndex(i);
             list.push_back(ans);
         }
         return true;
@@ -376,7 +376,7 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
                     ans->simpImage(i) = image[i * (dim + 1)].simp;
                     for (j = 0; j <= dim; ++j)
                         permImg[j] = image[i * (dim + 1) + j].facet;
-                    ans->facetPerm(i) = NPerm<dim+1>(permImg);
+                    ans->facetPerm(i) = Perm<dim+1>(permImg);
                 }
                 list.push_back(ans);
                 stepDown = true;

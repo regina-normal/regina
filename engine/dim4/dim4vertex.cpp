@@ -126,7 +126,7 @@ NTriangulation* Face<4, 0>::buildLinkDetail(bool labels,
 
             ans->tetrahedron(i)->join(faceInLink,
                 ans->tetrahedron(adjIndex),
-                NPerm<4>::contract(adj->tetrahedronMapping(adjVertex).inverse() *
+                Perm<4>::contract(adj->tetrahedronMapping(adjVertex).inverse() *
                     pent->adjacentGluing(exitTet) *
                     pent->tetrahedronMapping(v)));
         }

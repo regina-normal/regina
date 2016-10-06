@@ -211,7 +211,7 @@ class FaceEmbeddingBase :
          * @return a mapping from the vertices of the underlying
          * <i>subdim</i>-face to the corresponding vertices of simplex().
          */
-        NPerm<dim+1> vertices() const;
+        Perm<dim+1> vertices() const;
 
         /**
          * Tests whether this and the given object are identical.
@@ -955,7 +955,7 @@ class FaceBase :
          * this <i>subdim</i>-face.
          */
         template <int lowerdim>
-        NPerm<dim + 1> faceMapping(int face) const;
+        Perm<dim + 1> faceMapping(int face) const;
 
     protected:
         /**
@@ -1010,7 +1010,7 @@ inline int FaceEmbeddingBase<dim, subdim>::face() const {
 }
 
 template <int dim, int subdim>
-inline NPerm<dim+1> FaceEmbeddingBase<dim, subdim>::vertices() const {
+inline Perm<dim+1> FaceEmbeddingBase<dim, subdim>::vertices() const {
     return simplex_->template faceMapping<subdim>(face_);
 }
 
@@ -1298,7 +1298,7 @@ inline Face<dim, lowerdim>* FaceBase<dim, subdim>::face(int f) const {
         FaceStorage<dim, dim - subdim>::front().vertices()[f] :
         FaceNumbering<dim, lowerdim>::faceNumber(
             FaceStorage<dim, dim - subdim>::front().vertices() *
-            NPerm<dim + 1>::extend(
+            Perm<dim + 1>::extend(
                 FaceNumbering<subdim, lowerdim>::ordering(f))));
     return FaceStorage<dim, dim - subdim>::front().simplex()->
         template face<lowerdim>(inSimp);
@@ -1306,7 +1306,7 @@ inline Face<dim, lowerdim>* FaceBase<dim, subdim>::face(int f) const {
 
 template <int dim, int subdim>
 template <int lowerdim>
-NPerm<dim + 1> FaceBase<dim, subdim>::faceMapping(int f) const {
+Perm<dim + 1> FaceBase<dim, subdim>::faceMapping(int f) const {
     // Let S be the dim-simplex corresponding to the first embedding,
     // i.e., this->front().
     // Let face f of this subdim-face correspond to face inSimp of S.
@@ -1317,11 +1317,11 @@ NPerm<dim + 1> FaceBase<dim, subdim>::faceMapping(int f) const {
         FaceStorage<dim, dim - subdim>::front().vertices()[f] :
         FaceNumbering<dim, lowerdim>::faceNumber(
             FaceStorage<dim, dim - subdim>::front().vertices() *
-            NPerm<dim + 1>::extend(
+            Perm<dim + 1>::extend(
                 FaceNumbering<subdim, lowerdim>::ordering(f))));
 
     // Get the images of 0,...,lowerdim correct:
-    NPerm<dim + 1> p =
+    Perm<dim + 1> p =
         FaceStorage<dim, dim - subdim>::front().vertices().inverse() *
         FaceStorage<dim, dim - subdim>::front().simplex()->
             template faceMapping<lowerdim>(inSimp);
@@ -1336,7 +1336,7 @@ NPerm<dim + 1> FaceBase<dim, subdim>::faceMapping(int f) const {
             //
             // Change p to map x -> y and i -> i.
             //
-            p = NPerm<dim + 1>(p[i], i) * p;
+            p = Perm<dim + 1>(p[i], i) * p;
         }
 
     return p;

@@ -112,7 +112,7 @@
     [self.triangles reloadData];
 }
 
-+ (NSString*)destStringFromEdge:(int)srcEdge dest:(regina::Dim2Triangle*)destTri gluing:(const regina::NPerm<3>&)gluing
++ (NSString*)destStringFromEdge:(int)srcEdge dest:(regina::Dim2Triangle*)destTri gluing:(const regina::Perm<3>&)gluing
 {
     if (! destTri)
         return @" "; // Use a space to ensure the label has enough height to pick up touches.
@@ -420,7 +420,7 @@
                 [alert show];
                 goto cleanUpGluing;
             }
-            regina::NPerm<3> destGluing = regina::NPerm<3>(adj0, adj1, (3 - adj0 - adj1)) *
+            regina::Perm<3> destGluing = regina::Perm<3>(adj0, adj1, (3 - adj0 - adj1)) *
                 regina::Dim2Edge::ordering(editEdge).inverse();
 
             // Are we gluing the edge to itself?

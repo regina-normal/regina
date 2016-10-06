@@ -43,10 +43,10 @@ using regina::NPerm;
 using regina::python::GlobalArray;
 
 namespace {
-    GlobalArray<NPerm<3>> NPerm3_S3_arr(NPerm<3>::S3, 6);
-    GlobalArray<NPerm<3>> NPerm3_orderedS3_arr(NPerm<3>::orderedS3, 6);
-    GlobalArray<unsigned> NPerm3_invS3_arr(NPerm<3>::invS3, 6);
-    GlobalArray<NPerm<3>> NPerm3_S2_arr(NPerm<3>::S2, 2);
+    GlobalArray<Perm<3>> NPerm3_S3_arr(Perm<3>::S3, 6);
+    GlobalArray<Perm<3>> NPerm3_orderedS3_arr(Perm<3>::orderedS3, 6);
+    GlobalArray<unsigned> NPerm3_invS3_arr(Perm<3>::invS3, 6);
+    GlobalArray<Perm<3>> NPerm3_S2_arr(Perm<3>::S2, 2);
 
     template <int k>
     struct NPerm3_contract : boost::python::def_visitor<NPerm3_contract<k>> {
@@ -54,7 +54,7 @@ namespace {
 
         template <typename Class>
         void visit(Class& c) const {
-            c.def("contract", &NPerm<3>::contract<k>);
+            c.def("contract", &Perm<3>::contract<k>);
             c.def(NPerm3_contract<k+1>());
         }
     };
@@ -66,40 +66,40 @@ namespace {
 
         template <typename Class>
         void visit(Class& c) const {
-            c.def("contract", &NPerm<3>::contract<16>);
+            c.def("contract", &Perm<3>::contract<16>);
         }
     };
 }
 
 void addNPerm3() {
     {
-        scope s = class_<NPerm<3>>("Perm3")
+        scope s = class_<Perm<3>>("Perm3")
             .def(init<int, int>())
             .def(init<int, int, int>())
-            .def(init<const NPerm<3>&>())
-            .def("permCode", &NPerm<3>::permCode)
-            .def("setPermCode", &NPerm<3>::setPermCode)
-            .def("fromPermCode", &NPerm<3>::fromPermCode)
-            .def("isPermCode", &NPerm<3>::isPermCode)
+            .def(init<const Perm<3>&>())
+            .def("permCode", &Perm<3>::permCode)
+            .def("setPermCode", &Perm<3>::setPermCode)
+            .def("fromPermCode", &Perm<3>::fromPermCode)
+            .def("isPermCode", &Perm<3>::isPermCode)
             .def(self * self)
-            .def("inverse", &NPerm<3>::inverse)
-            .def("reverse", &NPerm<3>::reverse)
-            .def("sign", &NPerm<3>::sign)
-            .def("__getitem__", &NPerm<3>::operator[])
-            .def("preImageOf", &NPerm<3>::preImageOf)
-            .def("compareWith", &NPerm<3>::compareWith)
-            .def("isIdentity", &NPerm<3>::isIdentity)
-            .def("atIndex", &NPerm<3>::atIndex)
-            .def("index", &NPerm<3>::index)
-            .def("rand", &NPerm<3>::rand)
-            .def("trunc", &NPerm<3>::trunc)
-            .def("trunc2", &NPerm<3>::trunc2)
-            .def("S3Index", &NPerm<3>::S3Index)
-            .def("orderedS3Index", &NPerm<3>::orderedS3Index)
-            .def("orderedSnIndex", &NPerm<3>::orderedS3Index)
-            .def("extend", &NPerm<3>::extend<2>)
+            .def("inverse", &Perm<3>::inverse)
+            .def("reverse", &Perm<3>::reverse)
+            .def("sign", &Perm<3>::sign)
+            .def("__getitem__", &Perm<3>::operator[])
+            .def("preImageOf", &Perm<3>::preImageOf)
+            .def("compareWith", &Perm<3>::compareWith)
+            .def("isIdentity", &Perm<3>::isIdentity)
+            .def("atIndex", &Perm<3>::atIndex)
+            .def("index", &Perm<3>::index)
+            .def("rand", &Perm<3>::rand)
+            .def("trunc", &Perm<3>::trunc)
+            .def("trunc2", &Perm<3>::trunc2)
+            .def("S3Index", &Perm<3>::S3Index)
+            .def("orderedS3Index", &Perm<3>::orderedS3Index)
+            .def("orderedSnIndex", &Perm<3>::orderedS3Index)
+            .def("extend", &Perm<3>::extend<2>)
             .def(NPerm3_contract<4>())
-            .def("__repr__", &NPerm<3>::str)
+            .def("__repr__", &Perm<3>::str)
             .def(regina::python::add_output_basic())
             .def(regina::python::add_eq_operators())
             .staticmethod("fromPermCode")
@@ -110,8 +110,8 @@ void addNPerm3() {
             .staticmethod("contract")
         ;
 
-        s.attr("nPerms") = NPerm<3>::nPerms;
-        s.attr("nPerms_1") = NPerm<3>::nPerms_1;
+        s.attr("nPerms") = Perm<3>::nPerms;
+        s.attr("nPerms_1") = Perm<3>::nPerms_1;
 
         s.attr("S3") = &NPerm3_S3_arr;
         s.attr("Sn") = &NPerm3_S3_arr;

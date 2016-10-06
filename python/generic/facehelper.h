@@ -102,7 +102,7 @@ struct FaceHelper {
     }
 
     template <int permSize>
-    static NPerm<permSize> faceMappingFrom(const T& t, int subdimArg, int f) {
+    static Perm<permSize> faceMappingFrom(const T& t, int subdimArg, int f) {
         if (subdimArg == subdim)
             return t.template faceMapping<subdim>(f);
         return FaceHelper<T, dim, subdim - 1>::
@@ -140,7 +140,7 @@ struct FaceHelper<T, dim, 0> {
     }
 
     template <int permSize>
-    static NPerm<permSize> faceMappingFrom(const T& t, int, int f) {
+    static Perm<permSize> faceMappingFrom(const T& t, int, int f) {
         return t.template faceMapping<0>(f);
     }
 };
@@ -169,7 +169,7 @@ struct FaceHelper<T, dim, -1> {
     }
 
     template <int permSize>
-    static NPerm<permSize> faceMappingFrom(const T&, int, int) {
+    static Perm<permSize> faceMappingFrom(const T&, int, int) {
         throw -1;
     }
 };
@@ -226,7 +226,7 @@ boost::python::list faces(const T& t, int subdimArg) {
  * returns a permutation on permSize elements.
  */
 template <class T, int dim, int permSize = dim + 1>
-NPerm<permSize> faceMapping(const T& t, int subdimArg, int f) {
+Perm<permSize> faceMapping(const T& t, int subdimArg, int f) {
     if (subdimArg < 0 || subdimArg >= dim)
         invalidFaceDimension("faceMapping", dim);
     return FaceHelper<T, dim, dim - 1>::template faceMappingFrom<permSize>(

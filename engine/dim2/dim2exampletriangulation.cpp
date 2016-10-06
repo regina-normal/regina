@@ -50,11 +50,11 @@ Dim2Triangulation* Dim2ExampleTriangulation::orientable(
             ans->newTriangle();
         for (i = 0; i < n - 1; ++i)
             ans->triangle(i)->join(1, ans->triangle(i + 1),
-                NPerm<3>(1, 2));
-        ans->triangle(0)->join(0, ans->triangle(n - 1), NPerm<3>(0, 1));
+                Perm<3>(1, 2));
+        ans->triangle(0)->join(0, ans->triangle(n - 1), Perm<3>(0, 1));
         for (i = 1; i < punctures; ++i)
             ans->triangle(3 * i - 2)->join(0, ans->triangle(3 * i),
-                NPerm<3>(1, 2));
+                Perm<3>(1, 2));
     } else {
         unsigned n = 4 * genus + 3 * punctures - 2;
         unsigned i;
@@ -62,18 +62,18 @@ Dim2Triangulation* Dim2ExampleTriangulation::orientable(
             ans->newTriangle();
         for (i = 0; i < n - 1; ++i)
             ans->triangle(i)->join(1, ans->triangle(i + 1),
-                NPerm<3>(1, 2));
-        ans->triangle(0)->join(2, ans->triangle(n - 1), NPerm<3>(0, 2));
-        ans->triangle(0)->join(0, ans->triangle(n - 1), NPerm<3>(0, 1));
+                Perm<3>(1, 2));
+        ans->triangle(0)->join(2, ans->triangle(n - 1), Perm<3>(0, 2));
+        ans->triangle(0)->join(0, ans->triangle(n - 1), Perm<3>(0, 1));
         for (i = 1; i < genus; ++i) {
             ans->triangle(4 * i - 3)->join(0, ans->triangle(4 * i - 1),
-                NPerm<3>(1, 2));
+                Perm<3>(1, 2));
             ans->triangle(4 * i - 2)->join(0, ans->triangle(4 * i),
-                NPerm<3>(1, 2));
+                Perm<3>(1, 2));
         }
         for (i = 0; i < punctures; ++i)
             ans->triangle(4 * genus + 3 * i - 3)->join(
-                0, ans->triangle(4 * genus + 3 * i - 1), NPerm<3>(1, 2));
+                0, ans->triangle(4 * genus + 3 * i - 1), Perm<3>(1, 2));
     }
 
     // Set an appropriate packet label.
@@ -103,14 +103,14 @@ Dim2Triangulation* Dim2ExampleTriangulation::nonOrientable(
         ans->newTriangle();
     for (i = 0; i < n - 1; ++i)
         ans->triangle(i)->join(1, ans->triangle(i + 1),
-            NPerm<3>(1, 2));
-    ans->triangle(0)->join(2, ans->triangle(n - 1), NPerm<3>(2, 0, 1));
+            Perm<3>(1, 2));
+    ans->triangle(0)->join(2, ans->triangle(n - 1), Perm<3>(2, 0, 1));
     for (i = 1; i < genus; ++i)
         ans->triangle(2 * i - 2)->join(0, ans->triangle(2 * i - 1),
-            NPerm<3>());
+            Perm<3>());
     for (i = 0; i < punctures; ++i)
         ans->triangle(2 * genus + 3 * i - 2)->join(
-            0, ans->triangle(2 * genus + 3 * i), NPerm<3>(1, 2));
+            0, ans->triangle(2 * genus + 3 * i), Perm<3>(1, 2));
 
     // Set an appropriate packet label.
     std::ostringstream s;
@@ -130,9 +130,9 @@ Dim2Triangulation* Dim2ExampleTriangulation::sphere() {
 
     Dim2Triangle* r = ans->newTriangle();
     Dim2Triangle* s = ans->newTriangle();
-    r->join(0, s, NPerm<3>());
-    r->join(1, s, NPerm<3>());
-    r->join(2, s, NPerm<3>());
+    r->join(0, s, Perm<3>());
+    r->join(1, s, Perm<3>());
+    r->join(2, s, Perm<3>());
 
     return ans;
 }
@@ -145,12 +145,12 @@ Dim2Triangulation* Dim2ExampleTriangulation::sphereTetrahedron() {
     Dim2Triangle* s = ans->newTriangle();
     Dim2Triangle* t = ans->newTriangle();
     Dim2Triangle* u = ans->newTriangle();
-    r->join(1, s, NPerm<3>(1, 2));
-    s->join(1, t, NPerm<3>(1, 2));
-    t->join(1, r, NPerm<3>(1, 2));
-    r->join(0, u, NPerm<3>(0, 1, 2));
-    s->join(0, u, NPerm<3>(1, 2, 0));
-    t->join(0, u, NPerm<3>(2, 0, 1));
+    r->join(1, s, Perm<3>(1, 2));
+    s->join(1, t, Perm<3>(1, 2));
+    t->join(1, r, Perm<3>(1, 2));
+    r->join(0, u, Perm<3>(0, 1, 2));
+    s->join(0, u, Perm<3>(1, 2, 0));
+    t->join(0, u, Perm<3>(2, 0, 1));
 
     return ans;
 }
@@ -167,18 +167,18 @@ Dim2Triangulation* Dim2ExampleTriangulation::sphereOctahedron() {
     Dim2Triangle* w = ans->newTriangle();
     Dim2Triangle* x = ans->newTriangle();
     Dim2Triangle* y = ans->newTriangle();
-    r->join(1, s, NPerm<3>(1, 2));
-    s->join(1, t, NPerm<3>(1, 2));
-    t->join(1, u, NPerm<3>(1, 2));
-    u->join(1, r, NPerm<3>(1, 2));
-    v->join(1, w, NPerm<3>(1, 2));
-    w->join(1, x, NPerm<3>(1, 2));
-    x->join(1, y, NPerm<3>(1, 2));
-    y->join(1, v, NPerm<3>(1, 2));
-    r->join(0, v, NPerm<3>());
-    s->join(0, w, NPerm<3>());
-    t->join(0, x, NPerm<3>());
-    u->join(0, y, NPerm<3>());
+    r->join(1, s, Perm<3>(1, 2));
+    s->join(1, t, Perm<3>(1, 2));
+    t->join(1, u, Perm<3>(1, 2));
+    u->join(1, r, Perm<3>(1, 2));
+    v->join(1, w, Perm<3>(1, 2));
+    w->join(1, x, Perm<3>(1, 2));
+    x->join(1, y, Perm<3>(1, 2));
+    y->join(1, v, Perm<3>(1, 2));
+    r->join(0, v, Perm<3>());
+    s->join(0, w, Perm<3>());
+    t->join(0, x, Perm<3>());
+    u->join(0, y, Perm<3>());
 
     return ans;
 }
@@ -198,8 +198,8 @@ Dim2Triangulation* Dim2ExampleTriangulation::annulus() {
 
     Dim2Triangle* r = ans->newTriangle();
     Dim2Triangle* s = ans->newTriangle();
-    r->join(0, s, NPerm<3>(1, 2));
-    r->join(2, s, NPerm<3>(0, 1));
+    r->join(0, s, Perm<3>(1, 2));
+    r->join(2, s, Perm<3>(0, 1));
 
     return ans;
 }
@@ -209,7 +209,7 @@ Dim2Triangulation* Dim2ExampleTriangulation::mobius() {
     ans->setLabel("M\u00F6bius band");
 
     Dim2Triangle* r = ans->newTriangle();
-    r->join(0, r, NPerm<3>(2, 0, 1));
+    r->join(0, r, Perm<3>(2, 0, 1));
 
     return ans;
 }
@@ -220,9 +220,9 @@ Dim2Triangulation* Dim2ExampleTriangulation::torus() {
 
     Dim2Triangle* r = ans->newTriangle();
     Dim2Triangle* s = ans->newTriangle();
-    r->join(0, s, NPerm<3>(1, 2));
-    r->join(1, s, NPerm<3>(2, 0));
-    r->join(2, s, NPerm<3>(0, 1));
+    r->join(0, s, Perm<3>(1, 2));
+    r->join(1, s, Perm<3>(2, 0));
+    r->join(2, s, Perm<3>(0, 1));
 
     return ans;
 }
@@ -233,9 +233,9 @@ Dim2Triangulation* Dim2ExampleTriangulation::rp2() {
 
     Dim2Triangle* r = ans->newTriangle();
     Dim2Triangle* s = ans->newTriangle();
-    r->join(0, s, NPerm<3>(1, 2));
-    r->join(1, s, NPerm<3>());
-    r->join(2, s, NPerm<3>());
+    r->join(0, s, Perm<3>(1, 2));
+    r->join(1, s, Perm<3>());
+    r->join(2, s, Perm<3>());
 
     return ans;
 }
@@ -246,9 +246,9 @@ Dim2Triangulation* Dim2ExampleTriangulation::kb() {
 
     Dim2Triangle* r = ans->newTriangle();
     Dim2Triangle* s = ans->newTriangle();
-    r->join(0, s, NPerm<3>(1, 2));
-    r->join(1, s, NPerm<3>(2, 0));
-    r->join(2, s, NPerm<3>());
+    r->join(0, s, Perm<3>(1, 2));
+    r->join(1, s, Perm<3>(2, 0));
+    r->join(2, s, Perm<3>());
 
     return ans;
 }

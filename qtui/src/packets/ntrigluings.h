@@ -107,7 +107,7 @@ class GluingsModel : public QAbstractItemModel {
          */
         QString isFaceStringValid(unsigned long srcTet, int srcFace,
             unsigned long destTet, const QString& destFace,
-            regina::NPerm<4>* gluing);
+            regina::Perm<4>* gluing);
 
         /**
          * Return a short string describing the destination of a
@@ -115,7 +115,7 @@ class GluingsModel : public QAbstractItemModel {
          * non-boundary faces.
          */
         static QString destString(int srcFace, regina::Simplex<3>* destTet,
-            const regina::NPerm<4>& gluing);
+            const regina::Perm<4>& gluing);
 
         /**
          * Convert a face string (e.g., "130") to a face permutation.
@@ -123,7 +123,7 @@ class GluingsModel : public QAbstractItemModel {
          * The given face string must be valid; otherwise the results
          * could be unpredictable (and indeed a crash could result).
          */
-        static regina::NPerm<4> faceStringToPerm(int srcFace, const QString& str);
+        static regina::Perm<4> faceStringToPerm(int srcFace, const QString& str);
 
         /**
          * Display the given error to the user.

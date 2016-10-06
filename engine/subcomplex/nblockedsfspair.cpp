@@ -205,8 +205,8 @@ bool NBlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
 
     // We make the shell of an other-side boundary annulus; we will fill
     // in the precise vertex role permutations later on.
-    NSatAnnulus otherSide(layering.newBoundaryTet(0), NPerm<4>(),
-        layering.newBoundaryTet(1), NPerm<4>());
+    NSatAnnulus otherSide(layering.newBoundaryTet(0), Perm<4>(),
+        layering.newBoundaryTet(1), Perm<4>());
 
     if (otherSide.meetsBoundary()) {
         delete region[0];
@@ -234,15 +234,15 @@ bool NBlockedSFSPairSearcher::useStarterBlock(NSatBlock* starter) {
             layeringToAnnulus1 = Matrix2(1, 0, 0, 1);
         } else if (plugPos == 1) {
             otherSide.roles[0] = layering.newBoundaryRoles(0) *
-                NPerm<4>(1, 2, 0, 3);
+                Perm<4>(1, 2, 0, 3);
             otherSide.roles[1] = layering.newBoundaryRoles(1) *
-                NPerm<4>(1, 2, 0, 3);
+                Perm<4>(1, 2, 0, 3);
             layeringToAnnulus1 = Matrix2(-1, 1, -1, 0);
         } else {
             otherSide.roles[0] = layering.newBoundaryRoles(0) *
-                NPerm<4>(2, 0, 1, 3);
+                Perm<4>(2, 0, 1, 3);
             otherSide.roles[1] = layering.newBoundaryRoles(1) *
-                NPerm<4>(2, 0, 1, 3);
+                Perm<4>(2, 0, 1, 3);
             layeringToAnnulus1 = Matrix2(0, -1, 1, -1);
         }
 

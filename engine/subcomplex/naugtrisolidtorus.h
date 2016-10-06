@@ -110,7 +110,7 @@ class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
                  triangle, the corresponding pointer will be 0.
                  Note that <tt>augTorus[i]</tt> will be attached to
                  annulus \c i of the triangular solid torus. */
-        NPerm<4> edgeGroupRoles_[3];
+        Perm<4> edgeGroupRoles_[3];
             /**< Permutation <tt>edgeGroupRoles[i]</tt> describes the role
                  played by each top level edge group of layered solid torus
                  <tt>i</tt>.  For permutation <tt>p</tt>, group <tt>p[0]</tt>
@@ -182,7 +182,7 @@ class REGINA_API NAugTriSolidTorus : public NStandardTriangulation {
          * @return a permutation describing the roles of the
          * corresponding top level edge groups.
          */
-        NPerm<4> edgeGroupRoles(int annulus) const;
+        Perm<4> edgeGroupRoles(int annulus) const;
 
         /**
          * Returns the number of tetrahedra in the layered chain linking
@@ -282,7 +282,7 @@ inline const NLayeredSolidTorus* NAugTriSolidTorus::augTorus(
         int annulus) const {
     return augTorus_[annulus];
 }
-inline NPerm<4> NAugTriSolidTorus::edgeGroupRoles(int annulus) const {
+inline Perm<4> NAugTriSolidTorus::edgeGroupRoles(int annulus) const {
     return edgeGroupRoles_[annulus];
 }
 inline unsigned long NAugTriSolidTorus::chainLength() const {

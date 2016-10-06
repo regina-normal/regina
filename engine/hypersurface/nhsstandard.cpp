@@ -83,7 +83,7 @@ MatrixInt* NNormalHypersurfaceVectorStandard::makeMatchingEquations(
     size_t row = 0;
     int i;
     size_t pent0, pent1;
-    NPerm<5> perm0, perm1;
+    Perm<5> perm0, perm1;
     for (Dim4Triangulation::TetrahedronIterator tit =
             triangulation->tetrahedra().begin();
             tit != triangulation->tetrahedra().end(); tit++) {

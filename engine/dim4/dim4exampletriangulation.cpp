@@ -44,11 +44,11 @@ Dim4Triangulation* Dim4ExampleTriangulation::fourSphere() {
 
     Dim4Pentachoron* p = ans->newPentachoron();
     Dim4Pentachoron* q = ans->newPentachoron();
-    p->join(0, q, NPerm<5>());
-    p->join(1, q, NPerm<5>());
-    p->join(2, q, NPerm<5>());
-    p->join(3, q, NPerm<5>());
-    p->join(4, q, NPerm<5>());
+    p->join(0, q, Perm<5>());
+    p->join(1, q, Perm<5>());
+    p->join(2, q, Perm<5>());
+    p->join(3, q, Perm<5>());
+    p->join(4, q, Perm<5>());
 
     return ans;
 }
@@ -75,7 +75,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::simplicialFourSphere() {
                     map[k]=k+1;
                 else map[j-1]=i;
             }
-            penList[i]->join(j-1 , penList[j], NPerm<5>(map) );
+            penList[i]->join(j-1 , penList[j], Perm<5>(map) );
         }
     return ans;
 }
@@ -89,16 +89,16 @@ Dim4Triangulation* Dim4ExampleTriangulation::rp4() {
     Dim4Pentachoron* q = ans->newPentachoron();
     Dim4Pentachoron* r = ans->newPentachoron();
     Dim4Pentachoron* s = ans->newPentachoron();
-    p->join(0, s, NPerm<5>(1,0,3,2,4));
-    p->join(1, s, NPerm<5>(1,0,3,2,4));
-    p->join(2, q, NPerm<5>());
-    p->join(3, q, NPerm<5>());
-    p->join(4, r, NPerm<5>());
-    q->join(0, r, NPerm<5>(1,0,3,2,4));
-    q->join(1, r, NPerm<5>(1,0,3,2,4));
-    q->join(4, s, NPerm<5>());
-    r->join(2, s, NPerm<5>());
-    r->join(3, s, NPerm<5>());
+    p->join(0, s, Perm<5>(1,0,3,2,4));
+    p->join(1, s, Perm<5>(1,0,3,2,4));
+    p->join(2, q, Perm<5>());
+    p->join(3, q, Perm<5>());
+    p->join(4, r, Perm<5>());
+    q->join(0, r, Perm<5>(1,0,3,2,4));
+    q->join(1, r, Perm<5>(1,0,3,2,4));
+    q->join(4, s, Perm<5>());
+    r->join(2, s, Perm<5>());
+    r->join(3, s, Perm<5>());
 
     return ans;
 }
@@ -112,14 +112,14 @@ Dim4Triangulation* Dim4ExampleTriangulation::s3xs1() {
 
     Dim4Pentachoron* p = ans->newPentachoron();
     Dim4Pentachoron* q = ans->newPentachoron();
-    p->join(1, q, NPerm<5>());
-    p->join(2, q, NPerm<5>());
-    p->join(3, q, NPerm<5>());
+    p->join(1, q, Perm<5>());
+    p->join(2, q, Perm<5>());
+    p->join(3, q, Perm<5>());
 
     // Now join each 0123 to a 1234, which joins up the S1 loop.
     // Do this in the orientation-preserving way.
-    p->join(0, q, NPerm<5>(4,0,1,2,3));
-    q->join(0, p, NPerm<5>(4,0,1,2,3));
+    p->join(0, q, Perm<5>(4,0,1,2,3));
+    q->join(0, p, Perm<5>(4,0,1,2,3));
 
     // All done.
     return ans;
@@ -134,14 +134,14 @@ Dim4Triangulation* Dim4ExampleTriangulation::s3xs1Twisted() {
 
     Dim4Pentachoron* p = ans->newPentachoron();
     Dim4Pentachoron* q = ans->newPentachoron();
-    p->join(1, q, NPerm<5>());
-    p->join(2, q, NPerm<5>());
-    p->join(3, q, NPerm<5>());
+    p->join(1, q, Perm<5>());
+    p->join(2, q, Perm<5>());
+    p->join(3, q, Perm<5>());
 
     // Now join each 0123 to a 1234, which joins up the S1 loop.
     // Do this in the orientation-reversing way.
-    p->join(0, p, NPerm<5>(4,0,1,2,3));
-    q->join(0, q, NPerm<5>(4,0,1,2,3));
+    p->join(0, p, Perm<5>(4,0,1,2,3));
+    q->join(0, q, Perm<5>(4,0,1,2,3));
 
     // All done.
     return ans;
@@ -154,11 +154,11 @@ Dim4Triangulation* Dim4ExampleTriangulation::cappellShaneson() {
 
     Dim4Pentachoron* p = ans->newPentachoron();
     Dim4Pentachoron* q = ans->newPentachoron();
-    q->join(0, p, NPerm<5>(2,0,1,3,4));
-    q->join(2, p, NPerm<5>(0,1,4,2,3));
-    q->join(3, p, NPerm<5>(0,2,3,1,4));
-    p->join(3, p, NPerm<5>(1,2,3,0,4));
-    q->join(4, q, NPerm<5>(0,2,3,4,1));
+    q->join(0, p, Perm<5>(2,0,1,3,4));
+    q->join(2, p, Perm<5>(0,1,4,2,3));
+    q->join(3, p, Perm<5>(0,2,3,1,4));
+    p->join(3, p, Perm<5>(1,2,3,0,4));
+    q->join(4, q, Perm<5>(0,2,3,4,1));
 
     return ans;
 }
@@ -180,13 +180,13 @@ Dim4Triangulation* Dim4ExampleTriangulation::doubleCone(
     int face;
     unsigned long adjIndex;
     const NTetrahedron *tet, *adjTet;
-    NPerm<4> map;
+    Perm<4> map;
 
     for (i = 0; i < 2 * n; ++i)
         pent[i] = ans->newPentachoron();
 
     for (i = 0; i < n; ++i) {
-        pent[i]->join(4, pent[i + n], NPerm<5>());
+        pent[i]->join(4, pent[i + n], Perm<5>());
 
         tet = base.tetrahedron(i);
         for (face = 0; face < 4; ++face) {
@@ -202,8 +202,8 @@ Dim4Triangulation* Dim4ExampleTriangulation::doubleCone(
             if (adjIndex == i && map[face] > face)
                 continue;
 
-            pent[i]->join(face, pent[adjIndex], NPerm<5>::extend(map));
-            pent[i + n]->join(face, pent[adjIndex + n], NPerm<5>::extend(map));
+            pent[i]->join(face, pent[adjIndex], Perm<5>::extend(map));
+            pent[i + n]->join(face, pent[adjIndex + n], Perm<5>::extend(map));
         }
     }
 
@@ -228,7 +228,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::singleCone(
     int face;
     unsigned long adjIndex;
     const NTetrahedron *tet, *adjTet;
-    NPerm<4> map;
+    Perm<4> map;
     for (i = 0; i < n; ++i) {
         pent[i] = ans->newPentachoron();
 
@@ -246,7 +246,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::singleCone(
             if (adjIndex == i && map[face] > face)
                 continue;
 
-            pent[i]->join(face, pent[adjIndex], NPerm<5>::extend(map));
+            pent[i]->join(face, pent[adjIndex], Perm<5>::extend(map));
         }
     }
 
@@ -322,7 +322,7 @@ namespace {
          * Glue the pentachora of this prism together.
          */
         void glueInternally() {
-            NPerm<5> id;
+            Perm<5> id;
 
             unsigned i, j, k, l;
             for (i = 0; i < 2; ++i) {
@@ -345,7 +345,7 @@ namespace {
 
                             if (k < l)
                                 wallSide[i][j][k][l]->join(k,
-                                    wallSide[i][j][l][k], NPerm<5>(k, l));
+                                    wallSide[i][j][l][k], Perm<5>(k, l));
                         }
                     }
                 }
@@ -353,13 +353,13 @@ namespace {
                 for (j = 0; j < 4; ++j)
                     for (k = j + 1; k < 4; ++k) {
                         wallBase2[i][j][k]->join(j,
-                            wallBase2[i][k][j], NPerm<5>(j, k));
+                            wallBase2[i][k][j], Perm<5>(j, k));
 
                         for (l = 0; l < 4; ++l) {
                             if (l == j || l == k)
                                 continue;
                             wallSide[i][j][k][l]->join(j,
-                                wallSide[i][k][j][l], NPerm<5>(j, k));
+                                wallSide[i][k][j][l], Perm<5>(j, k));
                         }
                     }
             }
@@ -368,8 +368,8 @@ namespace {
         /**
          * Glue the walls of two adjacent prisms together.
          */
-        void glueAdjacent(Prism& adj, unsigned face, const NPerm<4>& gluing) {
-            NPerm<5> gluing5 = NPerm<5>::extend(gluing);
+        void glueAdjacent(Prism& adj, unsigned face, const Perm<4>& gluing) {
+            Perm<5> gluing5 = Perm<5>::extend(gluing);
             unsigned i, k, l;
             for (i = 0; i < 2; ++i) {
                 wallBase3[i][face]->join(4,
@@ -458,7 +458,7 @@ Dim4Triangulation* Dim4ExampleTriangulation::s1Bundle(
     Packet::ChangeEventSpan span(ans);
     ans->setLabel(base.label() + " x S1");
 
-    NPerm<5> id;
+    Perm<5> id;
     unsigned long n = base.size();
     unsigned long i;
     for (i = 0; i < n; ++i)
@@ -473,13 +473,13 @@ Dim4Triangulation* Dim4ExampleTriangulation::bundleWithMonodromy(
     Packet::ChangeEventSpan span(ans);
     ans->setLabel(base.label() + " x I / ~");
 
-    NPerm<5> id;
+    Perm<5> id;
     unsigned long n = base.size();
     unsigned long i;
     for (i = 0; i < n; ++i)
         ans->pentachoron(i)->join(4,
             ans->pentachoron(monodromy.simpImage(i) + n),
-            NPerm<5>::extend(monodromy.facetPerm(i)));
+            Perm<5>::extend(monodromy.facetPerm(i)));
 
     return ans;
 }

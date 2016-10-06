@@ -88,7 +88,7 @@ class IsomorphismBase :
             /**< Stores the simplex of the destination triangulation that
                  each simplex of the source triangulation maps to.
                  This array has size nSimplices_. */
-        NPerm<dim+1>* facetPerm_;
+        Perm<dim+1>* facetPerm_;
             /**< The permutation applied to the facets of each
                  source simplex.  This array has size nSimplices_. */
 
@@ -164,7 +164,7 @@ class IsomorphismBase :
          * @return a read-write reference to the permutation applied to the
          * facets of the source simplex.
          */
-        NPerm<dim+1>& facetPerm(unsigned sourceSimp);
+        Perm<dim+1>& facetPerm(unsigned sourceSimp);
         /**
          * Determines the permutation that is applied to the (\a dim + 1)
          * facets of the given source simplex under this isomorphism.
@@ -178,7 +178,7 @@ class IsomorphismBase :
          * @return the permutation applied to the facets of the
          * source simplex.
          */
-        NPerm<dim+1> facetPerm(unsigned sourceSimp) const;
+        Perm<dim+1> facetPerm(unsigned sourceSimp) const;
         /**
          * Determines the image of the given source simplex facet
          * under this isomorphism.  This operator returns by value:
@@ -332,14 +332,14 @@ template <int dim>
 inline IsomorphismBase<dim>::IsomorphismBase(unsigned nSimplices) :
         nSimplices_(nSimplices),
         simpImage_(new int[nSimplices]),
-        facetPerm_(new NPerm<dim+1>[nSimplices]) {
+        facetPerm_(new Perm<dim+1>[nSimplices]) {
 }
 
 template <int dim>
 inline IsomorphismBase<dim>::IsomorphismBase(const IsomorphismBase<dim>& copy) :
         nSimplices_(copy.nSimplices_),
         simpImage_(new int[copy.nSimplices_]),
-        facetPerm_(new NPerm<dim+1>[copy.nSimplices_]) {
+        facetPerm_(new Perm<dim+1>[copy.nSimplices_]) {
     std::copy(copy.simpImage_, copy.simpImage_ + nSimplices_, simpImage_);
     std::copy(copy.facetPerm_, copy.facetPerm_ + nSimplices_, facetPerm_);
 }
@@ -366,12 +366,12 @@ inline int IsomorphismBase<dim>::simpImage(unsigned sourceSimp) const {
 }
 
 template <int dim>
-inline NPerm<dim+1>& IsomorphismBase<dim>::facetPerm(unsigned sourceSimp) {
+inline Perm<dim+1>& IsomorphismBase<dim>::facetPerm(unsigned sourceSimp) {
     return facetPerm_[sourceSimp];
 }
 
 template <int dim>
-inline NPerm<dim+1> IsomorphismBase<dim>::facetPerm(unsigned sourceSimp) const {
+inline Perm<dim+1> IsomorphismBase<dim>::facetPerm(unsigned sourceSimp) const {
     return facetPerm_[sourceSimp];
 }
 
@@ -417,7 +417,7 @@ Triangulation<dim>* IsomorphismBase<dim>::apply(
 
     const Simplex<dim> *myTet, *adjTet;
     unsigned long adjTetIndex;
-    NPerm<dim+1> gluingPerm;
+    Perm<dim+1> gluingPerm;
     for (t = 0; t < nSimplices_; t++) {
         myTet = original->simplex(t);
         for (f = 0; f <= dim; f++)
@@ -484,7 +484,7 @@ Isomorphism<dim>* IsomorphismBase<dim>::random(unsigned nSimplices) {
 
     // Randomly choose the individual permutations.
     for (i = 0; i < nSimplices; i++)
-        ans->facetPerm_[i] = NPerm<dim+1>::rand();
+        ans->facetPerm_[i] = Perm<dim+1>::rand();
 
     return ans;
 }

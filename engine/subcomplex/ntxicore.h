@@ -89,7 +89,7 @@ class REGINA_API NTxICore :
         unsigned bdryTet_[2][2];
             /**< The tetrahedra that provide the upper and lower
                  boundary triangles.  See bdryTet() for details. */
-        NPerm<4> bdryRoles_[2][2];
+        Perm<4> bdryRoles_[2][2];
             /**< Describes which tetrahedron vertices play which roles
                  in the upper and lower boundary triangles.  See bdryRoles()
                  for details. */
@@ -185,7 +185,7 @@ class REGINA_API NTxICore :
          * @return the permutation mapping roles 0, 1 and 2 in the
          * diagram above to real tetrahedron vertex numbers.
          */
-        NPerm<4> bdryRoles(unsigned whichBdry, unsigned whichTri) const;
+        Perm<4> bdryRoles(unsigned whichBdry, unsigned whichTri) const;
         /**
          * Returns a 2-by-2 matrix describing the \a alpha and \a beta curves
          * on a torus boundary in terms of specific tetrahedron edges.
@@ -472,7 +472,7 @@ inline unsigned NTxICore::bdryTet(unsigned whichBdry, unsigned whichTri)
     return bdryTet_[whichBdry][whichTri];
 }
 
-inline NPerm<4> NTxICore::bdryRoles(unsigned whichBdry, unsigned whichTri)
+inline Perm<4> NTxICore::bdryRoles(unsigned whichBdry, unsigned whichTri)
         const {
     return bdryRoles_[whichBdry][whichTri];
 }

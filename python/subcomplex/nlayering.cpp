@@ -42,7 +42,7 @@ using regina::NTetrahedron;
 
 void addNLayering() {
     class_<NLayering, boost::noncopyable, std::auto_ptr<NLayering> >
-            ("NLayering", init<NTetrahedron*, NPerm<4>, NTetrahedron*, NPerm<4>>())
+            ("NLayering", init<NTetrahedron*, Perm<4>, NTetrahedron*, Perm<4>>())
         .def("size", &NLayering::size)
         .def("oldBoundaryTet", &NLayering::oldBoundaryTet,
             return_value_policy<reference_existing_object>())

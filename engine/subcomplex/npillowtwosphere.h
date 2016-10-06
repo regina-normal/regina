@@ -78,7 +78,7 @@ class REGINA_API NPillowTwoSphere :
     private:
         NTriangle* triangle_[2];
             /**< The two triangles whose edges are joined. */
-        NPerm<4> triMapping_;
+        Perm<4> triMapping_;
             /**< A mapping from vertices (0,1,2) of the first triangle to
                  vertices (0,1,2) of the second triangle describing how the
                  triangle boundaries are joined. */
@@ -111,7 +111,7 @@ class REGINA_API NPillowTwoSphere :
          * @return a permutation describing how the triangle boundaries are
          * joined.
          */
-        NPerm<4> triangleMapping() const;
+        Perm<4> triangleMapping() const;
 
         /**
          * Determines if the two given triangles together form a pillow
@@ -154,7 +154,7 @@ inline NPillowTwoSphere::NPillowTwoSphere() {
 inline NTriangle* NPillowTwoSphere::triangle(int index) const {
     return triangle_[index];
 }
-inline NPerm<4> NPillowTwoSphere::triangleMapping() const {
+inline Perm<4> NPillowTwoSphere::triangleMapping() const {
     return triMapping_;
 }
 inline void NPillowTwoSphere::writeTextShort(std::ostream& out) const {

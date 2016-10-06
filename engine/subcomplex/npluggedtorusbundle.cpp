@@ -148,7 +148,7 @@ NPluggedTorusBundle* NPluggedTorusBundle::hunt(NTriangulation* triang,
         return 0;
 
     int regionPos;
-    NPerm<4> annulusToUpperLayer;
+    Perm<4> annulusToUpperLayer;
     NSatAnnulus upperAnnulus, lowerAnnulus, bdryAnnulus;
     NSatBlock::TetList avoidTets;
     NSatBlock* starter;
@@ -193,7 +193,7 @@ NPluggedTorusBundle* NPluggedTorusBundle::hunt(NTriangulation* triang,
             // Construct the permutation from 0/1/2 markings on the
             // first saturated annulus boundary to 0/1/2 markings on the
             // first boundary triangle above the layering.
-            annulusToUpperLayer = NPerm<4>(regionPos, (regionPos + 1) % 3,
+            annulusToUpperLayer = Perm<4>(regionPos, (regionPos + 1) % 3,
                 (regionPos + 2) % 3, 3);
 
             upperAnnulus.tet[0] = layerUpper.newBoundaryTet(0);

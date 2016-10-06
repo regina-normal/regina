@@ -194,7 +194,7 @@ bool Dim4GluingPermSearcher::PentTriangleState::readData(std::istream& in,
         return false;
     if (bBounded != 1 && bBounded != 0)
         return false;
-    if (! NPerm<3>::isPermCode(static_cast<unsigned char>(twist)))
+    if (! Perm<3>::isPermCode(static_cast<unsigned char>(twist)))
         return false;
     if (bRank != 1 && bRank != 0)
         return false;
@@ -374,7 +374,7 @@ void Dim4GluingPermSearcher::runSearch(long maxDepth) {
         }
 
         // We are sitting on a new permutation to try.
-        permIndex(adj) = NPerm<4>::invS4[permIndex(facet)];
+        permIndex(adj) = Perm<4>::invS4[permIndex(facet)];
 
 #ifndef DIM4_NO_UNION_FIND
         // Merge triangle links and run corresponding tests.
@@ -789,11 +789,11 @@ bool Dim4GluingPermSearcher::badTriangleLink(const Dim4PentFacet& facet) const {
     // Run around all four triangles bounding the facet.
     Dim4PentFacet adj;
     unsigned pent;
-    NPerm<5> current;
-    NPerm<5> start(facet.facet, 4);
+    Perm<5> current;
+    Perm<5> start(facet.facet, 4);
     bool started, incomplete;
     for (unsigned permIdx = 0; permIdx < 4; ++permIdx) {
-        start = start * NPerm<5>(1, 2, 3, 0, 4);
+        start = start * Perm<5>(1, 2, 3, 0, 4);
 
         // start maps (0,1,2,3) to the four vertices of facet, with
         // (0,1,2) mapped to the 2-dimensional triangle that we wish to examine.
@@ -812,7 +812,7 @@ bool Dim4GluingPermSearcher::badTriangleLink(const Dim4PentFacet& facet) const {
                 (start[3] != current[3]) || (start[4] != current[4])) {
             // Push through the current pentachoron.
             started = true;
-            current = current * NPerm<5>(3, 4);
+            current = current * Perm<5>(3, 4);
 
             // Push across a facet.
             if (pairing_->isUnmatched(pent, current[4])) {
@@ -857,7 +857,7 @@ bool Dim4GluingPermSearcher::mergeEdgeClasses() {
     int eNext[2], fNext[2];
     char eTwistTriangle[2], fTwistTriangle[2];
 
-    NPerm<5> p = gluingPerm(facet);
+    Perm<5> p = gluingPerm(facet);
 
     int tmpInvariant;
     char parentTwistEdge, hasTwistEdge;
@@ -1162,7 +1162,7 @@ void Dim4GluingPermSearcher::splitEdgeClasses() {
     int eIdx, fIdx, orderIdx;
     int rep, subRep;
 
-    NPerm<5> p = gluingPerm(facet);
+    Perm<5> p = gluingPerm(facet);
 
     v1 = facet.facet;
     w1 = p[v1];
@@ -1268,7 +1268,7 @@ bool Dim4GluingPermSearcher::mergeTriangleClasses() {
 
     bool retVal = false;
 
-    NPerm<5> p = gluingPerm(facet);
+    Perm<5> p = gluingPerm(facet);
     int v1, w1, v2, w2;
     int e, f;
     int orderIdx;
@@ -1277,7 +1277,7 @@ bool Dim4GluingPermSearcher::mergeTriangleClasses() {
     v1 = facet.facet;
     w1 = p[v1];
 
-    NPerm<3> directTwist;
+    Perm<3> directTwist;
     for (v2 = 0; v2 < 5; ++v2) {
         if (v2 == v1)
             continue;
@@ -1296,25 +1296,25 @@ bool Dim4GluingPermSearcher::mergeTriangleClasses() {
                 Dim4Triangle::triangleVertex[f][0]) {
             if (p[Dim4Triangle::triangleVertex[e][1]] ==
                     Dim4Triangle::triangleVertex[f][1])
-                directTwist.setPermCode(NPerm<3>::code012);
+                directTwist.setPermCode(Perm<3>::code012);
             else
-                directTwist.setPermCode(NPerm<3>::code021);
+                directTwist.setPermCode(Perm<3>::code021);
         } else if (p[Dim4Triangle::triangleVertex[e][0]] ==
                 Dim4Triangle::triangleVertex[f][1]) {
             if (p[Dim4Triangle::triangleVertex[e][1]] ==
                     Dim4Triangle::triangleVertex[f][0])
-                directTwist.setPermCode(NPerm<3>::code102);
+                directTwist.setPermCode(Perm<3>::code102);
             else
-                directTwist.setPermCode(NPerm<3>::code120);
+                directTwist.setPermCode(Perm<3>::code120);
         } else {
             if (p[Dim4Triangle::triangleVertex[e][1]] ==
                     Dim4Triangle::triangleVertex[f][0])
-                directTwist.setPermCode(NPerm<3>::code201);
+                directTwist.setPermCode(Perm<3>::code201);
             else
-                directTwist.setPermCode(NPerm<3>::code210);
+                directTwist.setPermCode(Perm<3>::code210);
         }
 
-        NPerm<3> eTwist, fTwist; /* Initialise to identity permutations. */
+        Perm<3> eTwist, fTwist; /* Initialise to identity permutations. */
         eRep = findTriangleClass(e + 10 * facet.simp, eTwist);
         fRep = findTriangleClass(f + 10 * adj.simp, fTwist);
 

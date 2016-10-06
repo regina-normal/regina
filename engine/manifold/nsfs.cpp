@@ -756,15 +756,15 @@ NTriangulation* NSFSpace::construct() const {
     a = ans->newTetrahedron();
     b = ans->newTetrahedron();
     c = ans->newTetrahedron();
-    a->join(1, b, NPerm<4>());
-    b->join(2, c, NPerm<4>());
-    c->join(3, a, NPerm<4>(1, 2, 3, 0));
+    a->join(1, b, Perm<4>());
+    b->join(2, c, Perm<4>());
+    c->join(3, a, Perm<4>(1, 2, 3, 0));
 
     std::list<NSFSFibre>::const_iterator fit = fibres_.begin();
-    NSatAnnulus(a, NPerm<4>(1, 0, 2, 3), b, NPerm<4>(1, 2, 0, 3)).
+    NSatAnnulus(a, Perm<4>(1, 0, 2, 3), b, Perm<4>(1, 2, 0, 3)).
         attachLST(ans, fit->alpha, fit->beta);
     fit++;
-    NSatAnnulus(b, NPerm<4>(2, 1, 3, 0), c, NPerm<4>(2, 3, 1, 0)).
+    NSatAnnulus(b, Perm<4>(2, 1, 3, 0), c, Perm<4>(2, 3, 1, 0)).
         attachLST(ans, fit->alpha, fit->beta);
     fit++;
 
@@ -779,13 +779,13 @@ NTriangulation* NSFSpace::construct() const {
         a = ans->newTetrahedron();
         b = ans->newTetrahedron();
         c = ans->newTetrahedron();
-        a->join(3, prevA, NPerm<4>(2, 3));
-        b->join(3, prevC, NPerm<4>(0, 2, 3, 1));
-        a->join(1, b, NPerm<4>());
-        b->join(2, c, NPerm<4>());
-        c->join(3, a, NPerm<4>(1, 2, 3, 0));
+        a->join(3, prevA, Perm<4>(2, 3));
+        b->join(3, prevC, Perm<4>(0, 2, 3, 1));
+        a->join(1, b, Perm<4>());
+        b->join(2, c, Perm<4>());
+        c->join(3, a, Perm<4>(1, 2, 3, 0));
 
-        NSatAnnulus(b, NPerm<4>(2, 1, 3, 0), c, NPerm<4>(2, 3, 1, 0)).
+        NSatAnnulus(b, Perm<4>(2, 1, 3, 0), c, Perm<4>(2, 3, 1, 0)).
             attachLST(ans, nextFibre.alpha, nextFibre.beta);
 
         prevA = a;
@@ -795,7 +795,7 @@ NTriangulation* NSFSpace::construct() const {
 
     // We have one remaining fibre.  Fill in the final annulus of the
     // last triangular solid torus.
-    NSatAnnulus(a, NPerm<4>(1, 0, 3, 2), c, NPerm<4>(2, 3, 0, 1)).attachLST(ans,
+    NSatAnnulus(a, Perm<4>(1, 0, 3, 2), c, Perm<4>(2, 3, 0, 1)).attachLST(ans,
         nextFibre.alpha, -(nextFibre.beta + b_ * nextFibre.alpha));
 
     return ans;

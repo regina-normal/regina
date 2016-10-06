@@ -47,11 +47,11 @@ namespace detail {
 struct IsoSigHelper {
     /**
      * The numbers of base64 characters required to store an index into
-     * NPerm<dim+1>::Sn.
+     * Perm<dim+1>::Sn.
      */
     template <int dim>
     static constexpr unsigned CHARS_PER_PERM() {
-        return ((regina::bitsRequired(NPerm<(dim)+1>::nPerms) + 5) / 6);
+        return ((regina::bitsRequired(Perm<(dim)+1>::nPerms) + 5) / 6);
     }
 
     /**
@@ -150,7 +150,7 @@ struct IsoSigHelper {
 
 template <int dim>
 std::string TriangulationBase<dim>::isoSigFrom(size_t simp,
-        const NPerm<dim+1>& vertices, Isomorphism<dim>* relabelling) const {
+        const Perm<dim+1>& vertices, Isomorphism<dim>* relabelling) const {
     // Only process the component that simp belongs to.
 
     // ---------------------------------------------------------------------
@@ -174,9 +174,9 @@ std::string TriangulationBase<dim>::isoSigFrom(size_t simp,
     // What are the destination simplices and gluing permutations for
     // each facet under case #2 above?
     // For gluing permutations, we store the index of the permutation in
-    // NPerm<dim+1>::orderedSn.
+    // Perm<dim+1>::orderedSn.
     size_t* joinDest = new size_t[nFacets];
-    typedef typename NPerm<dim+1>::Index PermIndex;
+    typedef typename Perm<dim+1>::Index PermIndex;
     PermIndex* joinGluing = new PermIndex[nFacets];
 
     // ---------------------------------------------------------------------
@@ -186,7 +186,7 @@ std::string TriangulationBase<dim>::isoSigFrom(size_t simp,
 
     // The image for each simplex and its vertices:
     ptrdiff_t* image = new ptrdiff_t[nSimp];
-    NPerm<dim+1>* vertexMap = new NPerm<dim+1>[nSimp];
+    Perm<dim+1>* vertexMap = new Perm<dim+1>[nSimp];
 
     // The preimage for each simplex:
     ptrdiff_t* preImage = new ptrdiff_t[nSimp];
@@ -359,16 +359,16 @@ std::string TriangulationBase<dim>::isoSig(
     ComponentIterator it;
     size_t i;
     size_t simp;
-    typename NPerm<dim+1>::Index perm;
+    typename Perm<dim+1>::Index perm;
     std::string curr;
 
     std::string* comp = new std::string[countComponents()];
     for (it = components().begin(), i = 0;
             it != components().end(); ++it, ++i) {
         for (simp = 0; simp < (*it)->size(); ++simp)
-            for (perm = 0; perm < NPerm<dim+1>::nPerms; ++perm) {
+            for (perm = 0; perm < Perm<dim+1>::nPerms; ++perm) {
                 curr = isoSigFrom((*it)->simplex(simp)->index(),
-                    NPerm<dim+1>::atIndex(perm), currRelabelling);
+                    Perm<dim+1>::atIndex(perm), currRelabelling);
                 if ((simp == 0 && perm == 0) || (curr < comp[i])) {
                     comp[i].swap(curr);
                     if (relabelling)
@@ -491,8 +491,8 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
             c += nChars;
         }
 
-        typename NPerm<dim+1>::Index* joinGluing =
-            new typename NPerm<dim+1>::Index[nJoins + 1];
+        typename Perm<dim+1>::Index* joinGluing =
+            new typename Perm<dim+1>::Index[nJoins + 1];
         for (pos = 0; pos < nJoins; ++pos) {
             if (c + IsoSigHelper::CHARS_PER_PERM<dim>() > end) {
                 delete[] facetAction;
@@ -502,11 +502,11 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
             }
 
             joinGluing[pos] =
-                IsoSigHelper::SREAD<typename NPerm<dim+1>::Index>(c,
+                IsoSigHelper::SREAD<typename Perm<dim+1>::Index>(c,
                 IsoSigHelper::CHARS_PER_PERM<dim>());
             c += IsoSigHelper::CHARS_PER_PERM<dim>();
 
-            if (joinGluing[pos] >= NPerm<dim+1>::nPerms ||
+            if (joinGluing[pos] >= Perm<dim+1>::nPerms ||
                     joinGluing[pos] < 0) {
                 delete[] facetAction;
                 delete[] joinDest;
@@ -523,7 +523,7 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
         facetPos = 0;
         size_t nextUnused = 1;
         size_t joinPos = 0;
-        NPerm<dim+1> gluing;
+        Perm<dim+1> gluing;
         for (pos = 0; pos < nSimp; ++pos)
             for (j = 0; j <= dim; ++j) {
                 // Already glued from the other side:
@@ -541,10 +541,10 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
                         delete[] simp;
                         return 0;
                     }
-                    simp[pos]->join(j, simp[nextUnused++], NPerm<dim+1>());
+                    simp[pos]->join(j, simp[nextUnused++], Perm<dim+1>());
                 } else {
                     // Join to existing simplex.
-                    gluing = NPerm<dim+1>::atIndex(joinGluing[joinPos]);
+                    gluing = Perm<dim+1>::atIndex(joinGluing[joinPos]);
                     if (joinDest[joinPos] >= nextUnused ||
                             simp[joinDest[joinPos]]->adjacentSimplex(
                             gluing[j])) {

@@ -77,8 +77,8 @@ bool NSatAnnulus::isAdjacent(const NSatAnnulus& other, bool* refVert,
             return true;
         }
 
-        if (opposite.roles[0] == roles[0] * NPerm<4>(0, 1) &&
-                opposite.roles[1] == roles[1] * NPerm<4>(0, 1)) {
+        if (opposite.roles[0] == roles[0] * Perm<4>(0, 1) &&
+                opposite.roles[1] == roles[1] * Perm<4>(0, 1)) {
             // Match with vertical reflection.
             if (refVert) *refVert = true;
             if (refHoriz) *refHoriz = false;
@@ -89,8 +89,8 @@ bool NSatAnnulus::isAdjacent(const NSatAnnulus& other, bool* refVert,
     if (opposite.tet[0] == tet[1] && opposite.tet[1] == tet[0]) {
         // Could be a match with horizontal reflection.
 
-        if (opposite.roles[0] == roles[1] * NPerm<4>(0, 1) &&
-                opposite.roles[1] == roles[0] * NPerm<4>(0, 1)) {
+        if (opposite.roles[0] == roles[1] * Perm<4>(0, 1) &&
+                opposite.roles[1] == roles[0] * Perm<4>(0, 1)) {
             // Match with horizontal reflection.
             if (refVert) *refVert = false;
             if (refHoriz) *refHoriz = true;
@@ -118,7 +118,7 @@ bool NSatAnnulus::isJoined(const NSatAnnulus& other, Matrix2& matching) const {
     opposite.switchSides();
 
     bool swapTriangles;
-    NPerm<4> roleMap; // Maps this 0/1/2 roles -> opposite 0/1/2 roles.
+    Perm<4> roleMap; // Maps this 0/1/2 roles -> opposite 0/1/2 roles.
     if (opposite.tet[0] == tet[0] &&
             opposite.tet[1] == tet[1] &&
             opposite.roles[0][3] == roles[0][3] &&
@@ -141,17 +141,17 @@ bool NSatAnnulus::isJoined(const NSatAnnulus& other, Matrix2& matching) const {
         return false;
 
     // It's a match.  We just need to work out the matching matrix.
-    if        (roleMap == NPerm<4>(0, 1, 2, 3)) {
+    if        (roleMap == Perm<4>(0, 1, 2, 3)) {
         matching = Matrix2(1, 0, 0, 1);
-    } else if (roleMap == NPerm<4>(1, 2, 0, 3)) {
+    } else if (roleMap == Perm<4>(1, 2, 0, 3)) {
         matching = Matrix2(-1, 1, -1, 0);
-    } else if (roleMap == NPerm<4>(2, 0, 1, 3)) {
+    } else if (roleMap == Perm<4>(2, 0, 1, 3)) {
         matching = Matrix2(0, -1, 1, -1);
-    } else if (roleMap == NPerm<4>(0, 2, 1, 3)) {
+    } else if (roleMap == Perm<4>(0, 2, 1, 3)) {
         matching = Matrix2(0, 1, 1, 0);
-    } else if (roleMap == NPerm<4>(2, 1, 0, 3)) {
+    } else if (roleMap == Perm<4>(2, 1, 0, 3)) {
         matching = Matrix2(1, -1, 0, -1);
-    } else if (roleMap == NPerm<4>(1, 0, 2, 3)) {
+    } else if (roleMap == Perm<4>(1, 0, 2, 3)) {
         matching = Matrix2(-1, 0, -1, 1);
     }
     if (swapTriangles)
@@ -179,7 +179,7 @@ bool NSatAnnulus::isTwoSidedTorus() const {
 
     // Verify that edges are consistently oriented, and that the
     // orientations of the edge links indicate a two-sided torus.
-    NPerm<4> map0, map1;
+    Perm<4> map0, map1;
     int a, b, x, y;
     for (int i = 0; i < 3; i++) {
         // Examine edges corresponding to annulus markings a & b.
@@ -201,7 +201,7 @@ bool NSatAnnulus::isTwoSidedTorus() const {
         // Make sure that the two annulus edges are oriented in the same way
         // (i.e., (a,b) <-> (b,a)), and that the edge link runs in opposite
         // directions through the annulus on each side (i.e., (x,y) <-> (y,x)).
-        if (map0 != NPerm<4>(a, b) * NPerm<4>(x, y) * map1)
+        if (map0 != Perm<4>(a, b) * Perm<4>(x, y) * map1)
             return false;
     }
 
@@ -235,7 +235,7 @@ void NSatAnnulus::attachLST(NTriangulation* tri, long alpha, long beta) const {
     // Pull out the degenerate case.
     if (alpha == 2 && beta == 1) {
         tet[0]->join(roles[0][3], tet[1],
-            roles[1] * NPerm<4>(0, 1) * roles[0].inverse());
+            roles[1] * Perm<4>(0, 1) * roles[0].inverse());
         return;
     }
 
@@ -266,42 +266,42 @@ void NSatAnnulus::attachLST(NTriangulation* tri, long alpha, long beta) const {
     //         cuts0
 
     long cuts0, cuts1;
-    NPerm<4> cutsToRoles; // Maps cut labels to annulus vertex roles.
+    Perm<4> cutsToRoles; // Maps cut labels to annulus vertex roles.
     if (alpha <= beta) {
         if (-diag < alpha) {
             // 0 <= -diag  <   alpha <= beta:
             cuts0 = -diag;
             cuts1 = alpha;
-            cutsToRoles = NPerm<4>(0, 2, 1, 3);
+            cutsToRoles = Perm<4>(0, 2, 1, 3);
         } else {
             // 0 <   alpha <= -diag  <  beta:
             cuts0 = alpha;
             cuts1 = -diag;
-            cutsToRoles = NPerm<4>(2, 0, 1, 3);
+            cutsToRoles = Perm<4>(2, 0, 1, 3);
         }
     } else if (0 <= beta) {
         if (diag <= beta) {
             // 0 <   diag  <=  beta  <  alpha:
             cuts0 = diag;
             cuts1 = beta;
-            cutsToRoles = NPerm<4>(0, 1, 2, 3);
+            cutsToRoles = Perm<4>(0, 1, 2, 3);
         } else {
             // 0 <=  beta  <   diag  <= alpha:
             cuts0 = beta;
             cuts1 = diag;
-            cutsToRoles = NPerm<4>(1, 0, 2, 3);
+            cutsToRoles = Perm<4>(1, 0, 2, 3);
         }
     } else {
         if (-beta <= alpha) {
             // 0 <  -beta  <=  alpha <  diag
             cuts0 = -beta;
             cuts1 = alpha;
-            cutsToRoles = NPerm<4>(1, 2, 0, 3);
+            cutsToRoles = Perm<4>(1, 2, 0, 3);
         } else {
             // 0 <   alpha <  -beta  <  diag
             cuts0 = alpha;
             cuts1 = -beta;
-            cutsToRoles = NPerm<4>(2, 1, 0, 3);
+            cutsToRoles = Perm<4>(2, 1, 0, 3);
         }
     }
 
@@ -311,11 +311,11 @@ void NSatAnnulus::attachLST(NTriangulation* tri, long alpha, long beta) const {
     // cases (0,1,1) and (1,1,2); see the insertLayeredSolidTorus()
     // documentation for details.
     if (cuts1 == 1) {
-        lst->join(3, tet[0], roles[0] * cutsToRoles * NPerm<4>(1, 2, 0, 3));
-        lst->join(2, tet[1], roles[1] * cutsToRoles * NPerm<4>(2, 1, 3, 0));
+        lst->join(3, tet[0], roles[0] * cutsToRoles * Perm<4>(1, 2, 0, 3));
+        lst->join(2, tet[1], roles[1] * cutsToRoles * Perm<4>(2, 1, 3, 0));
     } else {
-        lst->join(3, tet[0], roles[0] * cutsToRoles * NPerm<4>(0, 1, 2, 3));
-        lst->join(2, tet[1], roles[1] * cutsToRoles * NPerm<4>(1, 0, 3, 2));
+        lst->join(3, tet[0], roles[0] * cutsToRoles * Perm<4>(0, 1, 2, 3));
+        lst->join(2, tet[1], roles[1] * cutsToRoles * Perm<4>(1, 0, 3, 2));
     }
 }
 

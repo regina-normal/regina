@@ -91,7 +91,7 @@ NTriangulation *cassonToNTriangulation( CassonFormat *cf )
  // now tet is a pointer to an array of NTetrahedrons,
  //  so for each tet[i] we need to run
  //   for (j=0; j<4; j++)
- //     tet[i]->join(j,tet[g[j]],NPerm<4>(p[j][0],p[j][1],p[j][2],p[j][3],p[j][4]))
+ //     tet[i]->join(j,tet[g[j]],Perm<4>(p[j][0],p[j][1],p[j][2],p[j][3],p[j][4]))
  //     where g[j] is the tetrahedron adjacent to face j of tet[i]
  //           p[j][k] is the permutation specifying how the faces are glued together.
  EdgeInfo *ei;
@@ -124,10 +124,10 @@ NTriangulation *cassonToNTriangulation( CassonFormat *cf )
                 b4 = vertex_at_faces[b2][b1];
 
                 tet[t1]->join( tei1->f1 , tet[t2], // 1st entry is the face of tet[t1]
-                                NPerm<4>(a1,b2,a2,b1,a3,b3,a4,b4) ); // being attached to tet[t2]
+                                Perm<4>(a1,b2,a2,b1,a3,b3,a4,b4) ); // being attached to tet[t2]
 
                 tet[t2]->join( tei2->f2 , tet[t1],
-                                NPerm<4>(b1,a2,b2,a1,b3,a3,b4,a4) );
+                                Perm<4>(b1,a2,b2,a1,b3,a3,b4,a4) );
 
                 tei1 = tei1->next;
                 }

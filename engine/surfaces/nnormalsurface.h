@@ -147,9 +147,9 @@ REGINA_API extern const char quadString[3][6];
  * the corresponding array.  This is necessary because of a bug in gcc 2.95.
  */
 #ifdef __DOXYGEN
-REGINA_API extern const NPerm<4> triDiscArcs[4][3];
+REGINA_API extern const Perm<4> triDiscArcs[4][3];
 #else
-REGINA_API extern const NPerm<4> __triDiscArcs[12];
+REGINA_API extern const Perm<4> __triDiscArcs[12];
 #define triDiscArcs(i, j) __triDiscArcs[(3 * (i)) + (j)]
 #endif
 
@@ -171,9 +171,9 @@ REGINA_API extern const NPerm<4> __triDiscArcs[12];
  * the corresponding array.  This is necessary because of a bug in gcc 2.95.
  */
 #ifdef __DOXYGEN
-REGINA_API extern const NPerm<4> quadDiscArcs[3][4];
+REGINA_API extern const Perm<4> quadDiscArcs[3][4];
 #else
-REGINA_API extern const NPerm<4> __quadDiscArcs[12];
+REGINA_API extern const Perm<4> __quadDiscArcs[12];
 #define quadDiscArcs(i, j) __quadDiscArcs[(4 * (i)) + (j)]
 #endif
 
@@ -195,9 +195,9 @@ REGINA_API extern const NPerm<4> __quadDiscArcs[12];
  * the corresponding array.  This is necessary because of a bug in gcc 2.95.
  */
 #ifdef __DOXYGEN
-REGINA_API extern const NPerm<4> octDiscArcs[3][8];
+REGINA_API extern const Perm<4> octDiscArcs[3][8];
 #else
-REGINA_API extern const NPerm<4> __octDiscArcs[24];
+REGINA_API extern const Perm<4> __octDiscArcs[24];
 #define octDiscArcs(i, j) __octDiscArcs[(8 * (i)) + (j)]
 #endif
 

@@ -45,7 +45,7 @@ namespace {
     struct PyIsoHelper {
         typedef int (Isomorphism<dim>::*simpImage_const_type)(unsigned) const;
 
-        typedef regina::NPerm<dim+1> (Isomorphism<dim>::*facetPerm_const_type)(
+        typedef regina::Perm<dim+1> (Isomorphism<dim>::*facetPerm_const_type)(
             unsigned) const;
     };
 }

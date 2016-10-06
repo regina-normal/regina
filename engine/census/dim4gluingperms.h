@@ -56,7 +56,7 @@ namespace regina {
  * particular pairwise matching of pentachoron facets.  Given a
  * pairwise matching of facets (as described by class Dim4FacetPairing), each
  * facet that is matched with some other facet will have an associated
- * permutation of five elements (as described by class NPerm<5>).
+ * permutation of five elements (as described by class Perm<5>).
  *
  * If a facet is matched with some other facet, the two associated
  * permutations in this set will be inverses.  If a facet is left

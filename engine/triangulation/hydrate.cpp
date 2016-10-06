@@ -121,9 +121,9 @@ bool NTriangulation::insertRehydration(const std::string& dehydration) {
     bool broken = false;        // Have we come across an inconsistency?
     unsigned adjTet;            // The tetrahedron to glue this to.
     unsigned permIndex;         // The index of the gluing permutation to use.
-    NPerm<4> adjPerm;              // The gluing permutation to use.
-    NPerm<4> identity;             // The identity permutation.
-    NPerm<4> reverse(3,2,1,0);     // The reverse permutation.
+    Perm<4> adjPerm;              // The gluing permutation to use.
+    Perm<4> identity;             // The identity permutation.
+    Perm<4> reverse(3,2,1,0);     // The reverse permutation.
 
     while (currTet < nTet) {
         // Is this face already glued?
@@ -166,7 +166,7 @@ bool NTriangulation::insertRehydration(const std::string& dehydration) {
                 break;
             }
 
-            adjPerm = NPerm<4>::orderedS4[permIndex] * reverse;
+            adjPerm = Perm<4>::orderedS4[permIndex] * reverse;
 
             if (tet[adjTet]->adjacentTetrahedron(adjPerm[currFace]) ||
                     (adjTet == currTet && adjPerm[currFace] == currFace)) {
@@ -237,7 +237,7 @@ std::string NTriangulation::dehydrate() const {
     unsigned nTets = simplices_.size();
     int* image = new int[nTets];
     int* preImage = new int[nTets];
-    NPerm<4>* vertexMap = new NPerm<4>[nTets];
+    Perm<4>* vertexMap = new Perm<4>[nTets];
 
     unsigned char* newTet = new unsigned char[(nTets / 4) + 2];
     unsigned newTetPos = 0;
@@ -249,14 +249,14 @@ std::string NTriangulation::dehydrate() const {
 
     unsigned nextUnused = 1;
     unsigned tetIndex, tet, dest, faceIndex, face;
-    NPerm<4> map;
+    Perm<4> map;
     unsigned mapIndex;
 
     for (tet = 0; tet < nTets; tet++)
         image[tet] = preImage[tet] = -1;
 
     image[0] = preImage[0] = 0;
-    vertexMap[0] = NPerm<4>();
+    vertexMap[0] = Perm<4>();
     newTet[0] = 0;
 
     for (tetIndex = 0; tetIndex < nTets; tetIndex++) {
@@ -301,12 +301,12 @@ std::string NTriangulation::dehydrate() const {
                 destChars[currGluingPos] = LETTER(image[dest]);
                 map = vertexMap[dest] *
                     simplices_[tet]->adjacentGluing(face) *
-                    vertexMap[tet].inverse() * NPerm<4>(3, 2, 1, 0);
+                    vertexMap[tet].inverse() * Perm<4>(3, 2, 1, 0);
                 // Just loop to find the index of the corresponding
                 // gluing permutation.  There's only 24 permutations and
                 // at most 25 tetrahedra; we'll live with it.
                 for (mapIndex = 0; mapIndex < 24; mapIndex++)
-                    if (map == NPerm<4>::orderedS4[mapIndex])
+                    if (map == Perm<4>::orderedS4[mapIndex])
                         break;
                 permChars[currGluingPos] = LETTER(mapIndex);
 
