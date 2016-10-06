@@ -38,17 +38,21 @@
  *  end users to include this implementation header explicitly.
  */
 
+// We include perm.h before the header guard, to ensure that the
+// various permutation headers are processed in exactly the right order.
+#include "maths/perm.h"
+
 #ifndef __DOXYGEN
 // Hide the entire implementation from doxygen, since it cannot handle
 // specialisations.
 #ifndef __PERM_IMPL_H
 #define __PERM_IMPL_H
 
-#include "maths/perm.h"
-#include "maths/nperm2.h"
-#include "maths/nperm3.h"
-#include "maths/nperm4.h"
-#include "maths/nperm5.h"
+// Import the specialised template classes.
+#include "maths/spec/perm2.h"
+#include "maths/spec/perm3.h"
+#include "maths/spec/perm4.h"
+#include "maths/spec/perm5.h"
 
 namespace regina {
 

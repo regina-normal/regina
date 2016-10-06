@@ -1,5 +1,7 @@
 # maths 
 
+ADD_SUBDIRECTORY("spec")
+
 # Files to compile
 SET ( FILES
   approx
@@ -8,10 +10,6 @@ SET ( FILES
   matrix2
   matrixops
   numbertheory
-  perm2
-  perm3
-  perm4
-  perm5
   primes
   rational
   ray
