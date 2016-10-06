@@ -690,7 +690,7 @@ class REGINA_API FaceNumberingImpl<4, 0, true> : public FaceNumberingAPI<4, 0> {
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
         static NPerm<5> ordering(unsigned face) {
-            return NPerm5(face, (face + 1) % 5, (face + 2) % 5,
+            return NPerm<5>(face, (face + 1) % 5, (face + 2) % 5,
                 (face + 3) % 5, (face + 4) % 5);
         }
 

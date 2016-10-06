@@ -238,7 +238,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
 
     const Dim4Pentachoron* outerPent;
     Dim4Tetrahedron* outerTet;
-    NPerm5 outerTetEmb;
+    NPerm<5> outerTetEmb;
 
     size_t tet;
     size_t pent;
@@ -327,10 +327,10 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                     triData = discData->data; // Only one triangle.
                     triData->map[triData->nMaps].dest = innerTet[0];
                     triData->map[triData->nMaps].vertexMap = NPerm4::contract(
-                        NPerm5(4, type) *
+                        NPerm<5>(4, type) *
                         outerTetEmb *
-                        NPerm5(3, outerTetDisc.type) *
-                        NPerm5(3, 4));
+                        NPerm<5>(3, outerTetDisc.type) *
+                        NPerm<5>(3, 4));
                     ++triData->nMaps;
                     assert(triData->nMaps <= 2);
                 }
@@ -338,7 +338,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
     }
 
     // Similarly for normal prisms.
-    NPerm5 roles;
+    NPerm<5> roles;
     int e0, e1, f0, f1, f2; // Vertices of the pentachoron that play
                             // various roles in the location of the prism.
     for (pent = 0; pent < nPents; ++pent) {
@@ -377,9 +377,9 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                 triData = discData->data; // Only one triangle.
                 triData->map[triData->nMaps].dest = innerTet[0];
                 triData->map[triData->nMaps].vertexMap = NPerm4::contract(
-                        NPerm5(f0, f1, f2, e1, e0).inverse() *
+                        NPerm<5>(f0, f1, f2, e1, e0).inverse() *
                         outerTetEmb *
-                        NPerm5(3, outerTetDisc.type));
+                        NPerm<5>(3, outerTetDisc.type));
                 ++triData->nMaps;
                 assert(triData->nMaps <= 2);
 
@@ -399,9 +399,9 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                 triData = discData->data; // Only one triangle.
                 triData->map[triData->nMaps].dest = innerTet[2];
                 triData->map[triData->nMaps].vertexMap = NPerm4::contract(
-                        NPerm5(f1, f2, e0, f0, e1).inverse() *
+                        NPerm<5>(f1, f2, e0, f0, e1).inverse() *
                         outerTetEmb *
-                        NPerm5(3, outerTetDisc.type));
+                        NPerm<5>(3, outerTetDisc.type));
                 ++triData->nMaps;
                 assert(triData->nMaps <= 2);
 
@@ -432,7 +432,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
 
                 // Map (A,B,C,D) of the outer tetrahedron to vertices of
                 // the pentachoron.
-                roles = outerTetEmb * NPerm5(
+                roles = outerTetEmb * NPerm<5>(
                     quadDefn[outerTetDisc.type - 4][0],
                     quadDefn[outerTetDisc.type - 4][1],
                     quadDefn[outerTetDisc.type - 4][2],
@@ -457,7 +457,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                     discData->data[0].map[discData->data[0].nMaps - 1],
                     discData->data[1].map[discData->data[1].nMaps - 1],
                     NPerm4::contract(
-                        NPerm5(e0, e1, f1, f2, f0).inverse() * roles),
+                        NPerm<5>(e0, e1, f1, f2, f0).inverse() * roles),
                     inner);
 
                 // Quadrilateral #2:
@@ -483,7 +483,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
 
                 // Map (A,B,C,D) of the outer tetrahedron to vertices of
                 // the pentachoron.
-                roles = outerTetEmb * NPerm5(
+                roles = outerTetEmb * NPerm<5>(
                     quadDefn[outerTetDisc.type - 4][0],
                     quadDefn[outerTetDisc.type - 4][1],
                     quadDefn[outerTetDisc.type - 4][2],
@@ -508,7 +508,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                     discData->data[0].map[discData->data[0].nMaps - 1],
                     discData->data[1].map[discData->data[1].nMaps - 1],
                     NPerm4::contract(
-                        NPerm5(e0, e1, f0, f2, f1).inverse() * roles),
+                        NPerm<5>(e0, e1, f0, f2, f1).inverse() * roles),
                     inner);
 
                 // Quadrilateral #3:
@@ -535,7 +535,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
 
                 // Map (A,B,C,D) of the outer tetrahedron to vertices of
                 // the pentachoron.
-                roles = outerTetEmb * NPerm5(
+                roles = outerTetEmb * NPerm<5>(
                     quadDefn[outerTetDisc.type - 4][0],
                     quadDefn[outerTetDisc.type - 4][1],
                     quadDefn[outerTetDisc.type - 4][2],
@@ -560,7 +560,7 @@ NTriangulation* NNormalHypersurface::triangulate() const {
                     discData->data[0].map[discData->data[0].nMaps - 1],
                     discData->data[1].map[discData->data[1].nMaps - 1],
                     NPerm4::contract(
-                        NPerm5(e0, e1, f0, f1, f2).inverse() * roles),
+                        NPerm<5>(e0, e1, f0, f1, f2).inverse() * roles),
                     inner);
             }
         }

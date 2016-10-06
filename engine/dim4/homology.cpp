@@ -135,7 +135,7 @@ const NAbelianGroup& Dim4Triangulation::homologyH2() const {
     Dim4Edge* e;
     Dim4Triangle* t;
     Dim4Tetrahedron* tet;
-    NPerm5 perm, tmpPerm;
+    NPerm<5> perm, tmpPerm;
     int pentEdge, pentTriangle;
 
     unsigned long nEdges = countEdges();
@@ -192,13 +192,13 @@ const NAbelianGroup& Dim4Triangulation::homologyH2() const {
             row = edgeInternalIndex[e->index()];
             pentEdge = Dim4Edge::edgeNumber[perm[(j+1) % 3]][perm[(j+2) % 3]];
 
-            tmpPerm = NPerm5(2, j) * perm.inverse() *
+            tmpPerm = NPerm<5>(2, j) * perm.inverse() *
                 pent->edgeMapping(pentEdge);
             // tmpPerm maps (2,3,4) -> (2,3,4), and maps the dual edge into
             // the dual 2-face with the correct orientation.
             // Force (0,1) to map to (0,1), and then read off the sign.
             if (tmpPerm[0] != 0)
-                tmpPerm = tmpPerm * NPerm5(0, 1);
+                tmpPerm = tmpPerm * NPerm<5>(0, 1);
             bdry32.entry(row, col) += tmpPerm.sign();
         }
 

@@ -790,11 +790,11 @@ bool Dim4GluingPermSearcher::badTriangleLink(const Dim4PentFacet& facet) const {
     // Run around all four triangles bounding the facet.
     Dim4PentFacet adj;
     unsigned pent;
-    NPerm5 current;
-    NPerm5 start(facet.facet, 4);
+    NPerm<5> current;
+    NPerm<5> start(facet.facet, 4);
     bool started, incomplete;
     for (unsigned permIdx = 0; permIdx < 4; ++permIdx) {
-        start = start * NPerm5(1, 2, 3, 0, 4);
+        start = start * NPerm<5>(1, 2, 3, 0, 4);
 
         // start maps (0,1,2,3) to the four vertices of facet, with
         // (0,1,2) mapped to the 2-dimensional triangle that we wish to examine.
@@ -813,7 +813,7 @@ bool Dim4GluingPermSearcher::badTriangleLink(const Dim4PentFacet& facet) const {
                 (start[3] != current[3]) || (start[4] != current[4])) {
             // Push through the current pentachoron.
             started = true;
-            current = current * NPerm5(3, 4);
+            current = current * NPerm<5>(3, 4);
 
             // Push across a facet.
             if (pairing_->isUnmatched(pent, current[4])) {
@@ -858,7 +858,7 @@ bool Dim4GluingPermSearcher::mergeEdgeClasses() {
     int eNext[2], fNext[2];
     char eTwistTriangle[2], fTwistTriangle[2];
 
-    NPerm5 p = gluingPerm(facet);
+    NPerm<5> p = gluingPerm(facet);
 
     int tmpInvariant;
     char parentTwistEdge, hasTwistEdge;
@@ -1163,7 +1163,7 @@ void Dim4GluingPermSearcher::splitEdgeClasses() {
     int eIdx, fIdx, orderIdx;
     int rep, subRep;
 
-    NPerm5 p = gluingPerm(facet);
+    NPerm<5> p = gluingPerm(facet);
 
     v1 = facet.facet;
     w1 = p[v1];
@@ -1269,7 +1269,7 @@ bool Dim4GluingPermSearcher::mergeTriangleClasses() {
 
     bool retVal = false;
 
-    NPerm5 p = gluingPerm(facet);
+    NPerm<5> p = gluingPerm(facet);
     int v1, w1, v2, w2;
     int e, f;
     int orderIdx;

@@ -72,12 +72,12 @@ namespace regina {
  * the identity permutation, or 1 for the (unique) non-identity permutation.
  *
  * \warning Every permutation class NPerm<n> provides a transposition
- * (i.e., pair swap) constructor <tt>NPerm<n>(a,b).</tt>  In addition,
- * the specialised classes NPerm3, NPerm4 and NPerm5 provide "list of images"
- * constructors <tt>NPerm3(a,b,c)</tt>, <tt>NPerm4(a,b,c,d)</tt> and
- * <tt>NPerm5(a,b,c,d,e)</tt>.  For NPerm2, these two constructors would
+ * (i.e., pair swap) constructor <tt>NPerm<n>(a,b).</tt>  In addition, the
+ * specialised classes NPerm<3>, NPerm<4> and NPerm<5> provide "list of images"
+ * constructors <tt>NPerm<3>(a,b,c)</tt>, <tt>NPerm<4>(a,b,c,d)</tt> and
+ * <tt>NPerm<5>(a,b,c,d,e)</tt>.  For NPerm<2>, these two constructors would
  * be indistinguishable (since both would take two integer arguments).
- * Here NPerm2 takes an approach that is consistent with the generic NPerm<n>
+ * Here NPerm<2> takes an approach that is consistent with the generic NPerm<n>
  * class: <tt>NPerm2(a,b)</tt> is interpreted as the \e transposition of
  * \a a and \a b.  In particular, <tt>NPerm(0,1)</tt> is \e not the
  * identity permutation.

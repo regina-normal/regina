@@ -67,7 +67,7 @@ namespace regina {
  * Each permutation has an internal code, which is a single native
  * integer that is sufficient to reconstruct the permutation.
  * Thus the internal code may be a useful means for passing permutation
- * objects to and from the engine.  For NPerm5, the internal code follows
+ * objects to and from the engine.  For NPerm<5>, the internal code follows
  * the general scheme used for NPerm<n>: the lowest three bits represent
  * the image of 0, the next lowest three bits represent the image of 1 and so
  * on.  See the generic NPerm template for further details.
@@ -671,7 +671,10 @@ class REGINA_API NPerm<5> {
 };
 
 /**
- * A convenience typedef for NPerm<5>.
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NPerm5 has now been renamed to Perm<5>.
  */
 typedef NPerm<5> NPerm5;
 

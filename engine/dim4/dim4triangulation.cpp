@@ -67,7 +67,7 @@ void Dim4Triangulation::writeTextLong(std::ostream& out) const {
     Dim4Pentachoron* adjPent;
     unsigned pentPos;
     int i, j, k;
-    NPerm5 adjPerm;
+    NPerm<5> adjPerm;
 
     out << "Pentachoron gluing:\n";
     out << "  Pent  |  glued to:     (0123)     (0124)     (0134)     (0234)     (1234)\n";
@@ -225,7 +225,7 @@ void Dim4Triangulation::cloneFrom(const Dim4Triangulation& X) {
     long pentPos, adjPos;
     Dim4Pentachoron* pent;
     Dim4Pentachoron* adjPent;
-    NPerm5 adjPerm;
+    NPerm<5> adjPerm;
     int facet;
     pentPos = 0;
     for (it = X.simplices_.begin(); it != X.simplices_.end(); ++it) {

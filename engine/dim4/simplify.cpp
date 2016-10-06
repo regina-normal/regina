@@ -64,12 +64,12 @@ namespace {
     //
     // This routine merely constructs this gluing permutation.
     // The permutation returned runs from S4 to S2 (so i -> j).
-    NPerm5 fourTwoPerm(int i /* 0 or 1 */, int j /* 0, 1, 2 or 3 */) {
+    NPerm<5> fourTwoPerm(int i /* 0 or 1 */, int j /* 0, 1, 2 or 3 */) {
         // Use & 3 instead of % 4 for non-negative integers.
         if (i == 0)
-            return NPerm5(j, 4, (5 - j) & 3, (2 + j) & 3, (3 - j) & 3);
+            return NPerm<5>(j, 4, (5 - j) & 3, (2 + j) & 3, (3 - j) & 3);
         else
-            return NPerm5(4, j, (5 - j) & 3, (2 + j) & 3, (3 - j) & 3);
+            return NPerm<5>(4, j, (5 - j) & 3, (2 + j) & 3, (3 - j) & 3);
     }
 
     // A helper routine that describes the mapping between subcomplexes
@@ -93,13 +93,13 @@ namespace {
     // This routine merely constructs this gluing permutation.
     // The permutation returned runs from S3b to S3a (so i -> j).
     // Note that threeThreePerm(i,j).inverse() == threeThreePerm(j,i).
-    NPerm5 threeThreePerm(int i /* 0, 1 or 2 */, int j /* 0, 1 or 2 */) {
+    NPerm<5> threeThreePerm(int i /* 0, 1 or 2 */, int j /* 0, 1 or 2 */) {
         if (i == 0)
-            return NPerm5(j, 3, 4, (j + 1) % 3, (j + 2) % 3);
+            return NPerm<5>(j, 3, 4, (j + 1) % 3, (j + 2) % 3);
         else if (i == 1)
-            return NPerm5(4, j, 3, (j + 1) % 3, (j + 2) % 3);
+            return NPerm<5>(4, j, 3, (j + 1) % 3, (j + 2) % 3);
         else
-            return NPerm5(3, 4, j, (j + 1) % 3, (j + 2) % 3);
+            return NPerm<5>(3, 4, j, (j + 1) % 3, (j + 2) % 3);
     }
 
     // A helper routine that uses union-find to test whether a graph
@@ -151,7 +151,7 @@ bool Dim4Triangulation::fourTwoMove(Dim4Edge* e, bool check, bool perform) {
     // e must meet four distinct pentachora, which must be glued around
     // the edge in a way that gives a 3-simplex link.  Find these pentachora.
     Dim4Pentachoron* oldPent[4];
-    NPerm5 oldVertices[4]; // 01 -> edge, 234 -> link
+    NPerm<5> oldVertices[4]; // 01 -> edge, 234 -> link
 
     // We will permute oldVertices so that:
     // oldPent[0] / 34 -> oldPent[1] / 43
@@ -173,7 +173,7 @@ bool Dim4Triangulation::fourTwoMove(Dim4Edge* e, bool check, bool perform) {
                 if (oldPent[i] == oldPent[j])
                     return false;
         oldVertices[i] = oldPent[0]->adjacentGluing(oldVertices[0][i + 1]) *
-            oldVertices[0] * NPerm5((i % 3) + 2, ((i + 1) % 3) + 2);
+            oldVertices[0] * NPerm<5>((i % 3) + 2, ((i + 1) % 3) + 2);
     }
 
     if (check) {
@@ -185,13 +185,13 @@ bool Dim4Triangulation::fourTwoMove(Dim4Edge* e, bool check, bool perform) {
             return false;
 
         if (oldVertices[2] != oldPent[1]->adjacentGluing(oldVertices[1][4])
-                * oldVertices[1] * NPerm5(2, 3))
+                * oldVertices[1] * NPerm<5>(2, 3))
             return false;
         if (oldVertices[3] != oldPent[1]->adjacentGluing(oldVertices[1][3])
-                * oldVertices[1] * NPerm5(2, 4))
+                * oldVertices[1] * NPerm<5>(2, 4))
             return false;
         if (oldVertices[3] != oldPent[2]->adjacentGluing(oldVertices[2][2])
-                * oldVertices[2] * NPerm5(3, 4))
+                * oldVertices[2] * NPerm<5>(3, 4))
             return false;
     }
 
@@ -211,7 +211,7 @@ bool Dim4Triangulation::fourTwoMove(Dim4Edge* e, bool check, bool perform) {
     // Find where their facets need to be glued.
     // Old pentachoron j, facet i <-> New pentachoron i, facet j.
     Dim4Pentachoron* adjPent[2][4];
-    NPerm5 adjGluing[2][4];
+    NPerm<5> adjGluing[2][4];
     int k,l;
     for (i = 0; i < 2; ++i) { // new pentachora ; old facets
         for (j = 0; j < 4; ++j) { // new facets ; old pentachora
@@ -256,7 +256,7 @@ bool Dim4Triangulation::fourTwoMove(Dim4Edge* e, bool check, bool perform) {
         for (j = 0; j < 4; ++j)
             if (adjPent[i][j])
                 newPent[i]->join(j, adjPent[i][j], adjGluing[i][j]);
-    newPent[0]->join(4, newPent[1], NPerm5());
+    newPent[0]->join(4, newPent[1], NPerm<5>());
 
     // Delete the old pentachora and insert the new.
     for (i = 0; i < 4; ++i)
@@ -280,7 +280,7 @@ bool Dim4Triangulation::threeThreeMove(Dim4Triangle* f, bool check,
 
     // f must meet three distinct pentachora.  Find these pentachora.
     Dim4Pentachoron* oldPent[3];
-    NPerm5 oldVertices[3]; // 012 -> triangle, 34 -> link
+    NPerm<5> oldVertices[3]; // 012 -> triangle, 34 -> link
     int i,j;
     for (i = 0; i < 3; ++i) {
         oldPent[i] = f->embedding(i).pentachoron();
@@ -307,7 +307,7 @@ bool Dim4Triangulation::threeThreeMove(Dim4Triangle* f, bool check,
     // Find where their facets need to be glued.
     // Old pentachoron j, facet i <-> New pentachoron i, facet j.
     Dim4Pentachoron* adjPent[3][3];
-    NPerm5 adjGluing[3][3];
+    NPerm<5> adjGluing[3][3];
     int k,l;
     for (i = 0; i < 3; ++i) { // new pentachora ; old facets
         for (j = 0; j < 3; ++j) { // new facets ; old pentachora
@@ -352,9 +352,9 @@ bool Dim4Triangulation::threeThreeMove(Dim4Triangle* f, bool check,
         for (j = 0; j < 3; ++j)
             if (adjPent[i][j])
                 newPent[i]->join(j, adjPent[i][j], adjGluing[i][j]);
-    newPent[0]->join(3, newPent[1], NPerm5(3, 4));
-    newPent[1]->join(3, newPent[2], NPerm5(3, 4));
-    newPent[2]->join(3, newPent[0], NPerm5(3, 4));
+    newPent[0]->join(3, newPent[1], NPerm<5>(3, 4));
+    newPent[1]->join(3, newPent[2], NPerm<5>(3, 4));
+    newPent[2]->join(3, newPent[0], NPerm<5>(3, 4));
 
     // Delete the old pentachora and insert the new.
     for (i = 0; i < 3; ++i)
@@ -375,7 +375,7 @@ bool Dim4Triangulation::twoFourMove(Dim4Tetrahedron* f, bool check,
 
     // f must meet two distinct pentachora.  Find these pentachora.
     Dim4Pentachoron* oldPent[2];
-    NPerm5 oldVertices[2]; // 0123 -> facet.
+    NPerm<5> oldVertices[2]; // 0123 -> facet.
     int i;
     for (i = 0; i < 2; ++i) {
         oldPent[i] = f->embedding(i).pentachoron();
@@ -402,7 +402,7 @@ bool Dim4Triangulation::twoFourMove(Dim4Tetrahedron* f, bool check,
     // Find where their facets need to be glued.
     // Old pentachoron j, facet i <-> New pentachoron i, facet j.
     Dim4Pentachoron* adjPent[4][2];
-    NPerm5 adjGluing[4][2];
+    NPerm<5> adjGluing[4][2];
     int j,k,l;
     for (i = 0; i < 4; ++i) { // new pentachora ; old facets
         for (j = 0; j < 2; ++j) { // new facets ; old pentachora
@@ -447,12 +447,12 @@ bool Dim4Triangulation::twoFourMove(Dim4Tetrahedron* f, bool check,
         for (j = 0; j < 2; ++j)
             if (adjPent[i][j])
                 newPent[i]->join(j, adjPent[i][j], adjGluing[i][j]);
-    newPent[0]->join(2, newPent[1], NPerm5(3, 4));
-    newPent[0]->join(3, newPent[2], NPerm5(2, 4));
-    newPent[0]->join(4, newPent[3], NPerm5(2, 3));
-    newPent[1]->join(4, newPent[2], NPerm5(2, 3));
-    newPent[1]->join(3, newPent[3], NPerm5(2, 4));
-    newPent[2]->join(2, newPent[3], NPerm5(3, 4));
+    newPent[0]->join(2, newPent[1], NPerm<5>(3, 4));
+    newPent[0]->join(3, newPent[2], NPerm<5>(2, 4));
+    newPent[0]->join(4, newPent[3], NPerm<5>(2, 3));
+    newPent[1]->join(4, newPent[2], NPerm<5>(2, 3));
+    newPent[1]->join(3, newPent[3], NPerm<5>(2, 4));
+    newPent[2]->join(2, newPent[3], NPerm<5>(3, 4));
 
     // Delete the old pentachora and insert the new.
     for (i = 0; i < 2; ++i)
@@ -474,7 +474,7 @@ bool Dim4Triangulation::oneFiveMove(Dim4Pentachoron* pen, bool /* check */,
 
     // Before we unglue, record how the adjacent pentachora are glued to pen.
     Dim4Pentachoron* adjPen[5];
-    NPerm5 adjGlue[5];
+    NPerm<5> adjGlue[5];
     unsigned i, j;
     for (i=0; i<5; i++) {
         adjPen[i] = pen->adjacentPentachoron(i);
@@ -497,7 +497,7 @@ bool Dim4Triangulation::oneFiveMove(Dim4Pentachoron* pen, bool /* check */,
     // Glue the new pentachora to each other internally.
     for (i = 0; i < 5; ++i)
         for (j = i + 1; j < 5; ++j)
-            newPen[i]->join(j, newPen[j], NPerm5(i, j));
+            newPen[i]->join(j, newPen[j], NPerm<5>(i, j));
 
     // Attach the new pentachora to the old triangulation.
     for (i = 0; i < 5; ++i) {
@@ -533,7 +533,7 @@ bool Dim4Triangulation::twoZeroMove(Dim4Triangle* t, bool check, bool perform) {
     }
 
     Dim4Pentachoron* pent[2];
-    NPerm5 perm[2];
+    NPerm<5> perm[2];
 
     int i;
     for (i = 0; i < 2; ++i) {
@@ -664,8 +664,8 @@ bool Dim4Triangulation::twoZeroMove(Dim4Triangle* t, bool check, bool perform) {
     ChangeEventSpan span(this);
 
     // Unglue facets from the doomed pentachora and glue them to each other.
-    NPerm5 crossover = pent[0]->adjacentGluing(perm[0][3]);
-    NPerm5 gluing;
+    NPerm<5> crossover = pent[0]->adjacentGluing(perm[0][3]);
+    NPerm<5> gluing;
     Dim4Pentachoron *top, *bottom;
     int topFacet;
     for (i = 0; i < 3; ++i) {
@@ -708,7 +708,7 @@ bool Dim4Triangulation::twoZeroMove(Dim4Edge* e, bool check, bool perform) {
     }
 
     Dim4Pentachoron* pent[2];
-    NPerm5 perm[2];
+    NPerm<5> perm[2];
 
     int i;
     for (i = 0; i < 2; ++i) {
@@ -765,8 +765,8 @@ bool Dim4Triangulation::twoZeroMove(Dim4Edge* e, bool check, bool perform) {
     ChangeEventSpan span(this);
 
     // Unglue facets from the doomed pentachora and glue them to each other.
-    NPerm5 crossover = pent[0]->adjacentGluing(perm[0][2]);
-    NPerm5 gluing;
+    NPerm<5> crossover = pent[0]->adjacentGluing(perm[0][2]);
+    NPerm<5> gluing;
     Dim4Pentachoron *top, *bottom;
     int topFacet;
     for (i = 0; i < 2; ++i) {
@@ -954,7 +954,7 @@ bool Dim4Triangulation::shellBoundary(Dim4Pentachoron* p,
 
 bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
     // Find the pentachora to remove.
-    NPerm5 p;
+    NPerm<5> p;
 
     if (check) {
         // We need a valid edge before we test anything else.
@@ -1299,14 +1299,14 @@ bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
     bool rememberSimpleLinks = knownSimpleLinks_;
 
     ChangeEventSpan span(this);
-    NPerm5 topPerm, botPerm;
+    NPerm<5> topPerm, botPerm;
     Dim4Pentachoron *top, *bot;
 
     // Clone the edge embeddings because we cannot rely on skeletal
     // objects once we start changing the triangulation.
     unsigned nEmbs = e->degree();
     Dim4Pentachoron** embPent = new Dim4Pentachoron*[nEmbs];
-    NPerm5* embVert = new NPerm5[nEmbs];
+    NPerm<5>* embVert = new NPerm<5>[nEmbs];
 
     unsigned i = 0;
     for (auto& emb : *e) {
@@ -1324,7 +1324,7 @@ bool Dim4Triangulation::collapseEdge(Dim4Edge* e, bool check, bool perform) {
         embPent[i]->isolate();
         if (top && bot)
             top->join(topPerm[embVert[i][0]], bot,
-                botPerm * NPerm5(embVert[i][0], embVert[i][1]) *
+                botPerm * NPerm<5>(embVert[i][0], embVert[i][1]) *
                 topPerm.inverse());
 
         removePentachoron(embPent[i]);

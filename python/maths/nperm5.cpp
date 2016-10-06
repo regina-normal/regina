@@ -39,18 +39,18 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NPerm5;
+using regina::NPerm;
 using regina::python::GlobalArray;
 
 namespace {
-    GlobalArray<NPerm5> NPerm5_S5_arr(NPerm5::S5, 120);
-    GlobalArray<NPerm5> NPerm5_orderedS5_arr(NPerm5::orderedS5, 120);
-    GlobalArray<unsigned> NPerm5_invS5_arr(NPerm5::invS5, 120);
-    GlobalArray<NPerm5> NPerm5_S4_arr(NPerm5::S4, 24);
-    GlobalArray<NPerm5> NPerm5_orderedS4_arr(NPerm5::orderedS4, 24);
-    GlobalArray<NPerm5> NPerm5_S3_arr(NPerm5::S3, 6);
-    GlobalArray<NPerm5> NPerm5_orderedS3_arr(NPerm5::orderedS3, 6);
-    GlobalArray<NPerm5> NPerm5_S2_arr(NPerm5::S2, 2);
+    GlobalArray<NPerm<5>> NPerm5_S5_arr(NPerm<5>::S5, 120);
+    GlobalArray<NPerm<5>> NPerm5_orderedS5_arr(NPerm<5>::orderedS5, 120);
+    GlobalArray<unsigned> NPerm5_invS5_arr(NPerm<5>::invS5, 120);
+    GlobalArray<NPerm<5>> NPerm5_S4_arr(NPerm<5>::S4, 24);
+    GlobalArray<NPerm<5>> NPerm5_orderedS4_arr(NPerm<5>::orderedS4, 24);
+    GlobalArray<NPerm<5>> NPerm5_S3_arr(NPerm<5>::S3, 6);
+    GlobalArray<NPerm<5>> NPerm5_orderedS3_arr(NPerm<5>::orderedS3, 6);
+    GlobalArray<NPerm<5>> NPerm5_S2_arr(NPerm<5>::S2, 2);
 
     template <int k>
     struct NPerm5_contract : boost::python::def_visitor<NPerm5_contract<k>> {
@@ -58,7 +58,7 @@ namespace {
 
         template <typename Class>
         void visit(Class& c) const {
-            c.def("contract", &NPerm5::contract<k>);
+            c.def("contract", &NPerm<5>::contract<k>);
             c.def(NPerm5_contract<k+1>());
         }
     };
@@ -70,44 +70,44 @@ namespace {
 
         template <typename Class>
         void visit(Class& c) const {
-            c.def("contract", &NPerm5::contract<16>);
+            c.def("contract", &NPerm<5>::contract<16>);
         }
     };
 }
 
 void addNPerm5() {
-    scope s = class_<NPerm5>("NPerm5")
+    scope s = class_<NPerm<5>>("NPerm5")
         .def(init<int, int>())
         .def(init<int, int, int, int, int>())
         .def(init<int, int, int, int, int, int, int, int, int, int>())
-        .def(init<const NPerm5&>())
-        .def("permCode", &NPerm5::permCode)
-        .def("setPermCode", &NPerm5::setPermCode)
-        .def("fromPermCode", &NPerm5::fromPermCode)
-        .def("isPermCode", &NPerm5::isPermCode)
+        .def(init<const NPerm<5>&>())
+        .def("permCode", &NPerm<5>::permCode)
+        .def("setPermCode", &NPerm<5>::setPermCode)
+        .def("fromPermCode", &NPerm<5>::fromPermCode)
+        .def("isPermCode", &NPerm<5>::isPermCode)
         .def(self * self)
-        .def("inverse", &NPerm5::inverse)
-        .def("reverse", &NPerm5::reverse)
-        .def("sign", &NPerm5::sign)
-        .def("__getitem__", &NPerm5::operator[])
-        .def("preImageOf", &NPerm5::preImageOf)
-        .def("compareWith", &NPerm5::compareWith)
-        .def("isIdentity", &NPerm5::isIdentity)
-        .def("atIndex", &NPerm5::atIndex)
-        .def("index", &NPerm5::index)
-        .def("rand", &NPerm5::rand)
-        .def("trunc", &NPerm5::trunc)
-        .def("trunc2", &NPerm5::trunc2)
-        .def("trunc3", &NPerm5::trunc3)
-        .def("trunc4", &NPerm5::trunc4)
-        .def("S5Index", &NPerm5::S5Index)
-        .def("orderedS5Index", &NPerm5::orderedS5Index)
-        .def("orderedSnIndex", &NPerm5::orderedS5Index)
-        .def("extend", &NPerm5::extend<2>)
-        .def("extend", &NPerm5::extend<3>)
-        .def("extend", &NPerm5::extend<4>)
+        .def("inverse", &NPerm<5>::inverse)
+        .def("reverse", &NPerm<5>::reverse)
+        .def("sign", &NPerm<5>::sign)
+        .def("__getitem__", &NPerm<5>::operator[])
+        .def("preImageOf", &NPerm<5>::preImageOf)
+        .def("compareWith", &NPerm<5>::compareWith)
+        .def("isIdentity", &NPerm<5>::isIdentity)
+        .def("atIndex", &NPerm<5>::atIndex)
+        .def("index", &NPerm<5>::index)
+        .def("rand", &NPerm<5>::rand)
+        .def("trunc", &NPerm<5>::trunc)
+        .def("trunc2", &NPerm<5>::trunc2)
+        .def("trunc3", &NPerm<5>::trunc3)
+        .def("trunc4", &NPerm<5>::trunc4)
+        .def("S5Index", &NPerm<5>::S5Index)
+        .def("orderedS5Index", &NPerm<5>::orderedS5Index)
+        .def("orderedSnIndex", &NPerm<5>::orderedS5Index)
+        .def("extend", &NPerm<5>::extend<2>)
+        .def("extend", &NPerm<5>::extend<3>)
+        .def("extend", &NPerm<5>::extend<4>)
         .def(NPerm5_contract<6>())
-        .def("__repr__", &NPerm5::str)
+        .def("__repr__", &NPerm<5>::str)
         .def(regina::python::add_output_basic())
         .def(regina::python::add_eq_operators())
         .staticmethod("fromPermCode")
@@ -118,9 +118,9 @@ void addNPerm5() {
         .staticmethod("contract")
     ;
 
-    s.attr("imageBits") = NPerm5::imageBits;
-    s.attr("nPerms") = NPerm5::nPerms;
-    s.attr("nPerms_1") = NPerm5::nPerms_1;
+    s.attr("imageBits") = NPerm<5>::imageBits;
+    s.attr("nPerms") = NPerm<5>::nPerms;
+    s.attr("nPerms_1") = NPerm<5>::nPerms_1;
 
     s.attr("S5") = &NPerm5_S5_arr;
     s.attr("Sn") = &NPerm5_S5_arr;

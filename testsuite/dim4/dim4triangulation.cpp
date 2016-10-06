@@ -64,7 +64,7 @@ using regina::NAbelianGroup;
 using regina::NExampleTriangulation;
 using regina::NGroupPresentation;
 using regina::NIsomorphism;
-using regina::NPerm5;
+using regina::NPerm;
 using regina::NStandardTriangulation;
 using regina::NTetrahedron;
 using regina::NTriangulation;
@@ -241,42 +241,42 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
             ball_singlePent.setLabel("D^4 (single pentachoron)");
 
             p[0] = ball_foldedPent.newPentachoron();
-            p[0]->join(2, p[0], NPerm5(2, 4));
+            p[0]->join(2, p[0], NPerm<5>(2, 4));
             ball_foldedPent.setLabel("Folded pentachoron");
 
             p[0] = ball_layerAndFold.newPentachoron();
             p[1] = ball_layerAndFold.newPentachoron();
-            p[0]->join(0, p[1], NPerm5());
-            p[0]->join(1, p[1], NPerm5());
-            p[0]->join(2, p[1], NPerm5());
-            p[0]->join(3, p[0], NPerm5(3, 4));
+            p[0]->join(0, p[1], NPerm<5>());
+            p[0]->join(1, p[1], NPerm<5>());
+            p[0]->join(2, p[1], NPerm<5>());
+            p[0]->join(3, p[0], NPerm<5>(3, 4));
             ball_layerAndFold.setLabel("Layered and folded ball");
 
             p[0] = pillow_twoCycle.newPentachoron();
             p[1] = pillow_twoCycle.newPentachoron();
-            p[0]->join(0, p[1], NPerm5());
-            p[0]->join(1, p[1], NPerm5());
-            p[0]->join(2, p[1], NPerm5());
-            p[0]->join(3, p[1], NPerm5());
-            p[0]->join(4, p[1], NPerm5(1, 2));
+            p[0]->join(0, p[1], NPerm<5>());
+            p[0]->join(1, p[1], NPerm<5>());
+            p[0]->join(2, p[1], NPerm<5>());
+            p[0]->join(3, p[1], NPerm<5>());
+            p[0]->join(4, p[1], NPerm<5>(1, 2));
             pillow_twoCycle.setLabel("Invalid 2-cycle pillow");
 
             p[0] = pillow_threeCycle.newPentachoron();
             p[1] = pillow_threeCycle.newPentachoron();
-            p[0]->join(0, p[1], NPerm5());
-            p[0]->join(1, p[1], NPerm5());
-            p[0]->join(2, p[1], NPerm5());
-            p[0]->join(3, p[1], NPerm5());
-            p[0]->join(4, p[1], NPerm5(2, 0, 1, 3, 4));
+            p[0]->join(0, p[1], NPerm<5>());
+            p[0]->join(1, p[1], NPerm<5>());
+            p[0]->join(2, p[1], NPerm<5>());
+            p[0]->join(3, p[1], NPerm<5>());
+            p[0]->join(4, p[1], NPerm<5>(2, 0, 1, 3, 4));
             pillow_threeCycle.setLabel("Invalid 3-cycle pillow");
 
             p[0] = pillow_fourCycle.newPentachoron();
             p[1] = pillow_fourCycle.newPentachoron();
-            p[0]->join(0, p[1], NPerm5());
-            p[0]->join(1, p[1], NPerm5());
-            p[0]->join(2, p[1], NPerm5());
-            p[0]->join(3, p[1], NPerm5());
-            p[0]->join(4, p[1], NPerm5(3, 2, 0, 1, 4));
+            p[0]->join(0, p[1], NPerm<5>());
+            p[0]->join(1, p[1], NPerm<5>());
+            p[0]->join(2, p[1], NPerm<5>());
+            p[0]->join(3, p[1], NPerm<5>());
+            p[0]->join(4, p[1], NPerm<5>(3, 2, 0, 1, 4));
             pillow_fourCycle.setLabel("Invalid 4-cycle pillow");
 
             // Build disconnected triangulations from others that we
@@ -1606,7 +1606,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 // the vertex links.
                 unsigned j, k;
                 Dim4Pentachoron* p;
-                NPerm5 perm;
+                NPerm<5> perm;
                 const regina::NTetrahedron *t, *adj;
                 unsigned vNum;
                 for (j = 0; j < v->degree(); ++j) {
@@ -1649,7 +1649,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                                 CPPUNIT_FAIL(msg.str());
                             } else if (p->adjacentGluing(perm[k]) !=
                                     iso->facetPerm(adj->index()) *
-                                    NPerm5::extend(t->adjacentGluing(k)) *
+                                    NPerm<5>::extend(t->adjacentGluing(k)) *
                                     perm.inverse()) {
                                 std::ostringstream msg;
                                 msg << tri->label()
@@ -1750,7 +1750,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                 unsigned j, k;
                 Dim4Pentachoron* p;
                 Dim4Vertex* v;
-                NPerm5 perm;
+                NPerm<5> perm;
                 const NTriangulation* vLink;
                 for (j = 0; j < 2; ++j) {
                     p = e->front().pentachoron();
@@ -1842,7 +1842,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
                             } else if ((! e->hasBadIdentification()) &&
                                     p->adjacentGluing(perm[k]) !=
                                     iso->facetPerm(adj->index()) *
-                                    NPerm5::extend(t->adjacentGluing(k)) *
+                                    NPerm<5>::extend(t->adjacentGluing(k)) *
                                     perm.inverse()) {
                                 // Note: we expect broken gluings with
                                 // reverse self-identifications.
