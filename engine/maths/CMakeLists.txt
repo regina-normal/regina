@@ -50,6 +50,7 @@ if (${REGINA_INSTALL_DEV})
     numbertheory.h
     nvector.h
     perm.h
+    perm-impl.h
     polynomial.h
     primes.h
     rational.h

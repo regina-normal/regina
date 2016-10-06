@@ -32,6 +32,10 @@
 
 /*! \file maths/perm.h
  *  \brief Deals with permutations of {0,1,...,<i>n</i>-1}.
+ *
+ *  This is the only header that you need to include for Regina's permutation
+ *  classes.  It will automatically bring in all implementation details and
+ *  specialisations.
  */
 
 #ifndef __PERM_H
@@ -762,7 +766,7 @@ std::string NPerm<n>::trunc(unsigned len) const {
 
 } // namespace regina
 
-#include "maths/nperm-impl.h"
+#include "maths/perm-impl.h"
 
 #endif
 

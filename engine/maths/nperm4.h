@@ -35,7 +35,9 @@
  */
 
 // We include perm.h before the header guard, to ensure that the
-// various nperm*.h headers are processed in exactly the right order.
+// various permutation headers are processed in exactly the right order.
+// This specialisation header will be re-included at the beginning of
+// perm-impl.h.
 #include "maths/perm.h"
 
 #ifndef __NPERM4_H
@@ -930,8 +932,6 @@ inline int NPerm<4>::SnIndex() const {
 }
 
 } // namespace regina
-
-#include "maths/nperm-impl.h"
 
 #endif
 

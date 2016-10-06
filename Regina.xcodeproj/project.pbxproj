@@ -849,6 +849,7 @@
 		053CAB201DA63C8900A92F98 /* nmatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB1E1DA63C8900A92F98 /* nmatrix.h */; };
 		053CAB211DA63C8900A92F98 /* nmatrix2.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB1F1DA63C8900A92F98 /* nmatrix2.h */; };
 		053CAB231DA6F69D00A92F98 /* nperm.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB221DA6F69D00A92F98 /* nperm.h */; };
+		053CAB251DA6F9FE00A92F98 /* nperm-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB241DA6F9FD00A92F98 /* nperm-impl.h */; };
 		053E5B5619B3D79200166778 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 053E5B5519B3D79100166778 /* libbz2.dylib */; };
 		053ED8121D8B836C00628652 /* snappy_get_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */; };
 		053ED8131D8B837500628652 /* snappy_get_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */; };
@@ -1204,7 +1205,7 @@
 		057118D219B30BC0009FEDC5 /* snappea-census-sec6o.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B519B308F8009FEDC5 /* snappea-census-sec6o.dat */; };
 		057118D319B30BC0009FEDC5 /* snappea-census-sec7n.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B619B308F8009FEDC5 /* snappea-census-sec7n.dat */; };
 		057118D419B30BC0009FEDC5 /* snappea-census-sec7o.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B719B308F8009FEDC5 /* snappea-census-sec7o.dat */; };
-		057EE4351C6009A700C4D155 /* nperm-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 057EE4341C6009A700C4D155 /* nperm-impl.h */; };
+		057EE4351C6009A700C4D155 /* perm-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 057EE4341C6009A700C4D155 /* perm-impl.h */; };
 		057EE4561C6009F300C4D155 /* component5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057EE4371C6009E600C4D155 /* component5.cpp */; };
 		057EE4571C6009F300C4D155 /* component6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057EE4381C6009E600C4D155 /* component6.cpp */; };
 		057EE4581C6009F300C4D155 /* component7.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057EE4391C6009E600C4D155 /* component7.cpp */; };
@@ -2717,6 +2718,7 @@
 		053CAB1E1DA63C8900A92F98 /* nmatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nmatrix.h; sourceTree = "<group>"; };
 		053CAB1F1DA63C8900A92F98 /* nmatrix2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nmatrix2.h; sourceTree = "<group>"; };
 		053CAB221DA6F69D00A92F98 /* nperm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nperm.h; sourceTree = "<group>"; };
+		053CAB241DA6F9FD00A92F98 /* nperm-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "nperm-impl.h"; sourceTree = "<group>"; };
 		053E5B5519B3D79100166778 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = usr/lib/libbz2.dylib; sourceTree = SDKROOT; };
 		053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = snappy_get_gluing_equations.c; sourceTree = "<group>"; };
 		0541AF481B8BE2F5002E166B /* cyclotomic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cyclotomic.cpp; sourceTree = "<group>"; };
@@ -3095,7 +3097,7 @@
 		057118B719B308F8009FEDC5 /* snappea-census-sec7o.dat */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "snappea-census-sec7o.dat"; sourceTree = "<group>"; };
 		057118B819B308F8009FEDC5 /* verify-snappea-census-data.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = "verify-snappea-census-data.py"; sourceTree = "<group>"; };
 		0575E6591805F36D009E3FC4 /* libregina-engine.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libregina-engine.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
-		057EE4341C6009A700C4D155 /* nperm-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "nperm-impl.h"; sourceTree = "<group>"; };
+		057EE4341C6009A700C4D155 /* perm-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "perm-impl.h"; sourceTree = "<group>"; };
 		057EE4361C6009E600C4D155 /* component-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "component-bindings.h"; sourceTree = "<group>"; };
 		057EE4371C6009E600C4D155 /* component5.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = component5.cpp; sourceTree = "<group>"; };
 		057EE4381C6009E600C4D155 /* component6.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = component6.cpp; sourceTree = "<group>"; };
@@ -4480,7 +4482,7 @@
 				053CAB1F1DA63C8900A92F98 /* nmatrix2.h */,
 				052F9CE9180600FA00FAE4DF /* nmatrixint.h */,
 				053CAB221DA6F69D00A92F98 /* nperm.h */,
-				057EE4341C6009A700C4D155 /* nperm-impl.h */,
+				053CAB241DA6F9FD00A92F98 /* nperm-impl.h */,
 				05431F2B1C40F2DB009BC072 /* nperm2.cpp */,
 				05431F2C1C40F2DB009BC072 /* nperm2.h */,
 				052F9CEA180600FA00FAE4DF /* nperm3.cpp */,
@@ -4497,6 +4499,7 @@
 				052F9CF7180600FA00FAE4DF /* numbertheory.h */,
 				05074A7B1DA47E060007773C /* nvector.h */,
 				05431F2A1C40F2DB009BC072 /* perm.h */,
+				057EE4341C6009A700C4D155 /* perm-impl.h */,
 				0541AF4A1B8BE2F5002E166B /* polynomial.h */,
 				052F9CF0180600FA00FAE4DF /* primes.cpp */,
 				052F9CF1180600FA00FAE4DF /* primes.h */,
@@ -6256,6 +6259,7 @@
 				05074A7C1DA47E060007773C /* nvector.h in Headers */,
 				052FA086180600FB00FAE4DF /* flags.h in Headers */,
 				052FA07A180600FB00FAE4DF /* nxmltrireader.h in Headers */,
+				053CAB251DA6F9FE00A92F98 /* nperm-impl.h in Headers */,
 				0591E7DF1C4F750200793A9C /* nhsstandard.h in Headers */,
 				0541AF501B8BE32E002E166B /* output.h in Headers */,
 				05431F2D1C40F2DB009BC072 /* perm.h in Headers */,
@@ -6271,7 +6275,7 @@
 				05431F021C40F1F6009BC072 /* simplex.h in Headers */,
 				052FA041180600FB00FAE4DF /* nsquadoct.h in Headers */,
 				052F9FF9180600FB00FAE4DF /* nlayeredloop.h in Headers */,
-				057EE4351C6009A700C4D155 /* nperm-impl.h in Headers */,
+				057EE4351C6009A700C4D155 /* perm-impl.h in Headers */,
 				05431F771C40F3C9009BC072 /* list_operations.h in Headers */,
 				0591E85F1C50D28700793A9C /* hyperflags.h in Headers */,
 				052F9EAD180600FB00FAE4DF /* dim2component.h in Headers */,
