@@ -196,6 +196,6 @@ Perm<n> Perm<n>::contract(Perm<k> p) {
 
 } // namespace regina
 
-#endif // __NPERM_IMPL_H
+#endif // __PERM_IMPL_H
 #endif // __DOXYGEN
 

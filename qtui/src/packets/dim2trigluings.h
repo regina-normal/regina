@@ -47,6 +47,7 @@ class QToolBar;
 
 namespace regina {
     class Packet;
+    template <int> class Perm;
     template <int> class Simplex;
     template <int> class Triangulation;
 };

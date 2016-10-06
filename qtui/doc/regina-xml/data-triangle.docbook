@@ -69,7 +69,7 @@ triangle ::= (#PCDATA)</synopsis>
   <para>
    A permutation is represented as an integer between 0 and 5 inclusive,
    representing the index of the permutation into Regina's internal
-   array <literal>NPerm3::S3</literal>.
+   array <literal>Perm3::S3</literal>.
    Specifically, the integers 0, 1, 2, 3, 4 and 5 represent the permutations
    (0,1,2), (0,2,1), (1,2,0), (1,0,2), (2,0,1) and (2,1,0) respectively.
   </para>

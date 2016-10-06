@@ -919,31 +919,31 @@ Equality type : BY_VALUE
 FileInfo : class
 Equality type : BY_REFERENCE
 
-GlobalArray2D_NPerm4 : class
+GlobalArray2D_Perm4 : class
 Equality type : BY_REFERENCE
 
-GlobalArray2D_NPerm5 : class
+GlobalArray2D_Perm5 : class
 Equality type : BY_REFERENCE
 
 GlobalArray2D_int : class
 Equality type : BY_REFERENCE
 
-GlobalArray3D_NPerm5 : class
+GlobalArray3D_Perm5 : class
 Equality type : BY_REFERENCE
 
 GlobalArray3D_int : class
 Equality type : BY_REFERENCE
 
-GlobalArray_NPerm2 : class
+GlobalArray_Perm2 : class
 Equality type : BY_REFERENCE
 
-GlobalArray_NPerm3 : class
+GlobalArray_Perm3 : class
 Equality type : BY_REFERENCE
 
-GlobalArray_NPerm4 : class
+GlobalArray_Perm4 : class
 Equality type : BY_REFERENCE
 
-GlobalArray_NPerm5 : class
+GlobalArray_Perm5 : class
 Equality type : BY_REFERENCE
 
 GlobalArray_char_string : class
