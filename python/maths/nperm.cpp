@@ -38,7 +38,7 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NPerm;
+using regina::Perm;
 
 namespace {
     template <int n>
@@ -64,18 +64,18 @@ namespace {
     }
 
     template <int n, int k>
-    struct NPerm_extend : boost::python::def_visitor<NPerm_extend<n, k>> {
+    struct Perm_extend : boost::python::def_visitor<Perm_extend<n, k>> {
         friend class boost::python::def_visitor_access;
 
         template <typename Class>
         void visit(Class& c) const {
             c.def("extend", &Perm<n>::template extend<k>);
-            c.def(NPerm_extend<n, k-1>());
+            c.def(Perm_extend<n, k-1>());
         }
     };
 
     template <int n>
-    struct NPerm_extend<n, 2> : boost::python::def_visitor<NPerm_extend<n, 2>> {
+    struct Perm_extend<n, 2> : boost::python::def_visitor<Perm_extend<n, 2>> {
         friend class boost::python::def_visitor_access;
 
         template <typename Class>
@@ -86,19 +86,19 @@ namespace {
     };
 
     template <int n, int k>
-    struct NPerm_contract : boost::python::def_visitor<NPerm_contract<n, k>> {
+    struct Perm_contract : boost::python::def_visitor<Perm_contract<n, k>> {
         friend class boost::python::def_visitor_access;
 
         template <typename Class>
         void visit(Class& c) const {
             c.def("contract", &Perm<n>::template contract<k>);
-            c.def(NPerm_contract<n, k+1>());
+            c.def(Perm_contract<n, k+1>());
         }
     };
 
     template <int n>
-    struct NPerm_contract<n, 16> :
-            boost::python::def_visitor<NPerm_contract<n, 16>> {
+    struct Perm_contract<n, 16> :
+            boost::python::def_visitor<Perm_contract<n, 16>> {
         friend class boost::python::def_visitor_access;
 
         template <typename Class>
@@ -109,19 +109,19 @@ namespace {
     };
 
     template <int n>
-    struct NPerm_contract<n, 17> :
-            boost::python::def_visitor<NPerm_contract<n, 17>> {
+    struct Perm_contract<n, 17> :
+            boost::python::def_visitor<Perm_contract<n, 17>> {
         friend class boost::python::def_visitor_access;
 
         template <typename Class>
         void visit(Class& c) const {
-            // Only called for NPerm16, which has no contract() methods at all.
+            // Only called for Perm16, which has no contract() methods at all.
         }
     };
 }
 
 template <int n>
-void addNPerm(const char* name) {
+void addPerm(const char* name) {
     scope s = class_<Perm<n> >(name)
         .def(init<int, int>())
         .def(init<const Perm<n>&>())
@@ -143,8 +143,8 @@ void addNPerm(const char* name) {
         .def("rand", &Perm<n>::rand)
         .def("trunc", &Perm<n>::trunc)
         .def("__repr__", &Perm<n>::str)
-        .def(NPerm_extend<n, n-1>())
-        .def(NPerm_contract<n, n+1>())
+        .def(Perm_extend<n, n-1>())
+        .def(Perm_contract<n, n+1>())
         .def(regina::python::add_output_basic())
         .def(regina::python::add_eq_operators())
         .staticmethod("fromPermCode")
@@ -158,21 +158,21 @@ void addNPerm(const char* name) {
     s.attr("imageBits") = Perm<n>::imageBits;
 }
 
-void addNPerm() {
+void addPerm() {
     boost::python::def("digit", regina::digit);
     boost::python::def("factorial", regina::factorial);
 
-    addNPerm<6>("Perm6");
-    addNPerm<7>("Perm7");
-    addNPerm<8>("Perm8");
-    addNPerm<9>("Perm9");
-    addNPerm<10>("Perm10");
-    addNPerm<11>("Perm11");
-    addNPerm<12>("Perm12");
-    addNPerm<13>("Perm13");
-    addNPerm<14>("Perm14");
-    addNPerm<15>("Perm15");
-    addNPerm<16>("Perm16");
+    addPerm<6>("Perm6");
+    addPerm<7>("Perm7");
+    addPerm<8>("Perm8");
+    addPerm<9>("Perm9");
+    addPerm<10>("Perm10");
+    addPerm<11>("Perm11");
+    addPerm<12>("Perm12");
+    addPerm<13>("Perm13");
+    addPerm<14>("Perm14");
+    addPerm<15>("Perm15");
+    addPerm<16>("Perm16");
 
     scope().attr("NPerm6") = scope().attr("Perm6");
     scope().attr("NPerm7") = scope().attr("Perm7");

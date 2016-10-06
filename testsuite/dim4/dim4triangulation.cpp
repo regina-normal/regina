@@ -64,7 +64,7 @@ using regina::NAbelianGroup;
 using regina::NExampleTriangulation;
 using regina::NGroupPresentation;
 using regina::NIsomorphism;
-using regina::NPerm;
+using regina::Perm;
 using regina::NStandardTriangulation;
 using regina::NTetrahedron;
 using regina::NTriangulation;

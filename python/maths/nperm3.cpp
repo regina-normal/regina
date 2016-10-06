@@ -39,29 +39,29 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NPerm;
+using regina::Perm;
 using regina::python::GlobalArray;
 
 namespace {
-    GlobalArray<Perm<3>> NPerm3_S3_arr(Perm<3>::S3, 6);
-    GlobalArray<Perm<3>> NPerm3_orderedS3_arr(Perm<3>::orderedS3, 6);
-    GlobalArray<unsigned> NPerm3_invS3_arr(Perm<3>::invS3, 6);
-    GlobalArray<Perm<3>> NPerm3_S2_arr(Perm<3>::S2, 2);
+    GlobalArray<Perm<3>> Perm3_S3_arr(Perm<3>::S3, 6);
+    GlobalArray<Perm<3>> Perm3_orderedS3_arr(Perm<3>::orderedS3, 6);
+    GlobalArray<unsigned> Perm3_invS3_arr(Perm<3>::invS3, 6);
+    GlobalArray<Perm<3>> Perm3_S2_arr(Perm<3>::S2, 2);
 
     template <int k>
-    struct NPerm3_contract : boost::python::def_visitor<NPerm3_contract<k>> {
+    struct Perm3_contract : boost::python::def_visitor<Perm3_contract<k>> {
         friend class boost::python::def_visitor_access;
 
         template <typename Class>
         void visit(Class& c) const {
             c.def("contract", &Perm<3>::contract<k>);
-            c.def(NPerm3_contract<k+1>());
+            c.def(Perm3_contract<k+1>());
         }
     };
 
     template <>
-    struct NPerm3_contract<16> :
-            boost::python::def_visitor<NPerm3_contract<16>> {
+    struct Perm3_contract<16> :
+            boost::python::def_visitor<Perm3_contract<16>> {
         friend class boost::python::def_visitor_access;
 
         template <typename Class>
@@ -71,7 +71,7 @@ namespace {
     };
 }
 
-void addNPerm3() {
+void addPerm3() {
     {
         scope s = class_<Perm<3>>("Perm3")
             .def(init<int, int>())
@@ -98,7 +98,7 @@ void addNPerm3() {
             .def("orderedS3Index", &Perm<3>::orderedS3Index)
             .def("orderedSnIndex", &Perm<3>::orderedS3Index)
             .def("extend", &Perm<3>::extend<2>)
-            .def(NPerm3_contract<4>())
+            .def(Perm3_contract<4>())
             .def("__repr__", &Perm<3>::str)
             .def(regina::python::add_output_basic())
             .def(regina::python::add_eq_operators())
@@ -113,14 +113,14 @@ void addNPerm3() {
         s.attr("nPerms") = Perm<3>::nPerms;
         s.attr("nPerms_1") = Perm<3>::nPerms_1;
 
-        s.attr("S3") = &NPerm3_S3_arr;
-        s.attr("Sn") = &NPerm3_S3_arr;
-        s.attr("orderedS3") = &NPerm3_orderedS3_arr;
-        s.attr("orderedSn") = &NPerm3_orderedS3_arr;
-        s.attr("invS3") = &NPerm3_invS3_arr;
-        s.attr("invSn") = &NPerm3_invS3_arr;
-        s.attr("S2") = &NPerm3_S2_arr;
-        s.attr("Sn_1") = &NPerm3_S2_arr;
+        s.attr("S3") = &Perm3_S3_arr;
+        s.attr("Sn") = &Perm3_S3_arr;
+        s.attr("orderedS3") = &Perm3_orderedS3_arr;
+        s.attr("orderedSn") = &Perm3_orderedS3_arr;
+        s.attr("invS3") = &Perm3_invS3_arr;
+        s.attr("invSn") = &Perm3_invS3_arr;
+        s.attr("S2") = &Perm3_S2_arr;
+        s.attr("Sn_1") = &Perm3_S2_arr;
     }
 
     scope().attr("NPerm3") = scope().attr("Perm3");

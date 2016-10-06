@@ -39,33 +39,33 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NPerm;
+using regina::Perm;
 using regina::python::GlobalArray;
 
 namespace {
-    GlobalArray<Perm<5>> NPerm5_S5_arr(Perm<5>::S5, 120);
-    GlobalArray<Perm<5>> NPerm5_orderedS5_arr(Perm<5>::orderedS5, 120);
-    GlobalArray<unsigned> NPerm5_invS5_arr(Perm<5>::invS5, 120);
-    GlobalArray<Perm<5>> NPerm5_S4_arr(Perm<5>::S4, 24);
-    GlobalArray<Perm<5>> NPerm5_orderedS4_arr(Perm<5>::orderedS4, 24);
-    GlobalArray<Perm<5>> NPerm5_S3_arr(Perm<5>::S3, 6);
-    GlobalArray<Perm<5>> NPerm5_orderedS3_arr(Perm<5>::orderedS3, 6);
-    GlobalArray<Perm<5>> NPerm5_S2_arr(Perm<5>::S2, 2);
+    GlobalArray<Perm<5>> Perm5_S5_arr(Perm<5>::S5, 120);
+    GlobalArray<Perm<5>> Perm5_orderedS5_arr(Perm<5>::orderedS5, 120);
+    GlobalArray<unsigned> Perm5_invS5_arr(Perm<5>::invS5, 120);
+    GlobalArray<Perm<5>> Perm5_S4_arr(Perm<5>::S4, 24);
+    GlobalArray<Perm<5>> Perm5_orderedS4_arr(Perm<5>::orderedS4, 24);
+    GlobalArray<Perm<5>> Perm5_S3_arr(Perm<5>::S3, 6);
+    GlobalArray<Perm<5>> Perm5_orderedS3_arr(Perm<5>::orderedS3, 6);
+    GlobalArray<Perm<5>> Perm5_S2_arr(Perm<5>::S2, 2);
 
     template <int k>
-    struct NPerm5_contract : boost::python::def_visitor<NPerm5_contract<k>> {
+    struct Perm5_contract : boost::python::def_visitor<Perm5_contract<k>> {
         friend class boost::python::def_visitor_access;
 
         template <typename Class>
         void visit(Class& c) const {
             c.def("contract", &Perm<5>::contract<k>);
-            c.def(NPerm5_contract<k+1>());
+            c.def(Perm5_contract<k+1>());
         }
     };
 
     template <>
-    struct NPerm5_contract<16> :
-            boost::python::def_visitor<NPerm5_contract<16>> {
+    struct Perm5_contract<16> :
+            boost::python::def_visitor<Perm5_contract<16>> {
         friend class boost::python::def_visitor_access;
 
         template <typename Class>
@@ -75,7 +75,7 @@ namespace {
     };
 }
 
-void addNPerm5() {
+void addPerm5() {
     {
         scope s = class_<Perm<5>>("Perm5")
             .def(init<int, int>())
@@ -107,7 +107,7 @@ void addNPerm5() {
             .def("extend", &Perm<5>::extend<2>)
             .def("extend", &Perm<5>::extend<3>)
             .def("extend", &Perm<5>::extend<4>)
-            .def(NPerm5_contract<6>())
+            .def(Perm5_contract<6>())
             .def("__repr__", &Perm<5>::str)
             .def(regina::python::add_output_basic())
             .def(regina::python::add_eq_operators())
@@ -123,18 +123,18 @@ void addNPerm5() {
         s.attr("nPerms") = Perm<5>::nPerms;
         s.attr("nPerms_1") = Perm<5>::nPerms_1;
 
-        s.attr("S5") = &NPerm5_S5_arr;
-        s.attr("Sn") = &NPerm5_S5_arr;
-        s.attr("orderedS5") = &NPerm5_orderedS5_arr;
-        s.attr("orderedSn") = &NPerm5_orderedS5_arr;
-        s.attr("invS5") = &NPerm5_invS5_arr;
-        s.attr("invSn") = &NPerm5_invS5_arr;
-        s.attr("S4") = &NPerm5_S4_arr;
-        s.attr("Sn_1") = &NPerm5_S4_arr;
-        s.attr("orderedS4") = &NPerm5_orderedS4_arr;
-        s.attr("S3") = &NPerm5_S3_arr;
-        s.attr("orderedS3") = &NPerm5_orderedS3_arr;
-        s.attr("S2") = &NPerm5_S2_arr;
+        s.attr("S5") = &Perm5_S5_arr;
+        s.attr("Sn") = &Perm5_S5_arr;
+        s.attr("orderedS5") = &Perm5_orderedS5_arr;
+        s.attr("orderedSn") = &Perm5_orderedS5_arr;
+        s.attr("invS5") = &Perm5_invS5_arr;
+        s.attr("invSn") = &Perm5_invS5_arr;
+        s.attr("S4") = &Perm5_S4_arr;
+        s.attr("Sn_1") = &Perm5_S4_arr;
+        s.attr("orderedS4") = &Perm5_orderedS4_arr;
+        s.attr("S3") = &Perm5_S3_arr;
+        s.attr("orderedS3") = &Perm5_orderedS3_arr;
+        s.attr("S2") = &Perm5_S2_arr;
     }
 
     scope().attr("NPerm5") = scope().attr("Perm5");

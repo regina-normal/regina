@@ -115,7 +115,7 @@ inline constexpr int64_t factorial(int n) {
  *
  * \ifacespython Python does not support templates.  For each
  * \a n = 2,...,16, this class is available in Python under the
- * corresponding name NPerm2, NPerm3, ..., NPerm16.
+ * corresponding name Perm2, Perm3, ..., Perm16.
  *
  * @tparam n the number of objects being permuted.
  * This must be between 2 and 16 inclusive.

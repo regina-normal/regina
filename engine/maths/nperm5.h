@@ -75,7 +75,7 @@ namespace regina {
  * on.  See the generic Perm template for further details.
  *
  * \ifacespython Since Python does not support templates, this class is
- * made available under the name NPerm5.
+ * made available under the name Perm5.
  */
 template <>
 class REGINA_API Perm<5> {
@@ -128,8 +128,8 @@ class REGINA_API Perm<5> {
 
         /**
          * A dimension-agnostic alias for Perm<5>::S5.  In general, for
-         * each \a K the class NPermK will define an alias \a Sn
-         * that references the list of all permutations NPermK::SK.
+         * each \a K the class PermK will define an alias \a Sn
+         * that references the list of all permutations PermK::SK.
          */
         static const Perm<5>* Sn;
 
@@ -141,8 +141,8 @@ class REGINA_API Perm<5> {
 
         /**
          * A dimension-agnostic alias for Perm<5>::orderedS5.  In general, for
-         * each \a K the class NPermK will define an alias \a orderedSn
-         * that references the list of all permutations NPermK::orderedSK.
+         * each \a K the class PermK will define an alias \a orderedSn
+         * that references the list of all permutations PermK::orderedSK.
          */
         static const Perm<5>* orderedSn;
 
@@ -156,8 +156,8 @@ class REGINA_API Perm<5> {
 
         /**
          * A dimension-agnostic alias for Perm<5>::invS5.  In general, for
-         * each \a K the class NPermK will define an alias \a invSn
-         * that references the list of all permutations NPermK::invSK.
+         * each \a K the class PermK will define an alias \a invSn
+         * that references the list of all permutations PermK::invSK.
          */
         static const unsigned* invSn;
 
@@ -181,8 +181,8 @@ class REGINA_API Perm<5> {
 
         /**
          * A dimension-agnostic alias for Perm<5>::S4.  In general, for
-         * each \a K the class NPermK will define an alias \a Sn_1
-         * that references the list of all permutations NPermK::S(K-1).
+         * each \a K the class PermK will define an alias \a Sn_1
+         * that references the list of all permutations PermK::S(K-1).
          */
         static const Perm<5>* Sn_1;
 

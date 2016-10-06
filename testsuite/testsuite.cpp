@@ -110,10 +110,10 @@ void populateTests(CppUnit::TextTestRunner& runner) {
     // Maths:
     addInteger(runner);
     addRational(runner);
-    addNPerm2(runner);
-    addNPerm3(runner);
-    addNPerm4(runner);
-    addNPerm5(runner);
+    addPerm2(runner);
+    addPerm3(runner);
+    addPerm4(runner);
+    addPerm5(runner);
     addPerm(runner);
     addPrimes(runner);
     addNumberTheory(runner);

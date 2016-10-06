@@ -77,7 +77,7 @@
 
 using regina::NEdge;
 using regina::Packet;
-using regina::NPerm;
+using regina::Perm;
 using regina::NSatRegion;
 using regina::NTriangulation;
 

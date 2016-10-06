@@ -47,7 +47,7 @@
 using regina::NAbelianGroup;
 using regina::Container;
 using regina::NManifold;
-using regina::NPerm;
+using regina::Perm;
 using regina::NSignature;
 using regina::NStandardTriangulation;
 using regina::NTetrahedron;

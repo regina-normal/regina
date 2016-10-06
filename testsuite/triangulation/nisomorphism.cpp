@@ -43,7 +43,7 @@
 using regina::NAbelianGroup;
 using regina::NExampleTriangulation;
 using regina::NIsomorphism;
-using regina::NPerm;
+using regina::Perm;
 using regina::NTetrahedron;
 using regina::NTriangulation;
 

@@ -37,7 +37,7 @@
 
 using namespace boost::python;
 using regina::NLayering;
-using regina::NPerm;
+using regina::Perm;
 using regina::NTetrahedron;
 
 void addNLayering() {

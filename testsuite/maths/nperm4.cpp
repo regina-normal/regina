@@ -36,10 +36,10 @@
 #include "maths/perm.h"
 #include "testsuite/triangulation/testtriangulation.h"
 
-using regina::NPerm;
+using regina::Perm;
 
-class NPerm4Test : public CppUnit::TestFixture {
-    CPPUNIT_TEST_SUITE(NPerm4Test);
+class Perm4Test : public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(Perm4Test);
 
     CPPUNIT_TEST(inverse);
     CPPUNIT_TEST(sign);
@@ -541,7 +541,7 @@ class NPerm4Test : public CppUnit::TestFixture {
         }
 };
 
-void addNPerm4(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(NPerm4Test::suite());
+void addPerm4(CppUnit::TextUi::TestRunner& runner) {
+    runner.addTest(Perm4Test::suite());
 }
 

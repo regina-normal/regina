@@ -36,10 +36,10 @@
 #include "maths/perm.h"
 #include "testsuite/maths/testmaths.h"
 
-using regina::NPerm;
+using regina::Perm;
 
-class NPerm2Test : public CppUnit::TestFixture {
-    CPPUNIT_TEST_SUITE(NPerm2Test);
+class Perm2Test : public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(Perm2Test);
 
     CPPUNIT_TEST(inverse);
     CPPUNIT_TEST(sign);
@@ -467,7 +467,7 @@ class NPerm2Test : public CppUnit::TestFixture {
         }
 };
 
-void addNPerm2(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(NPerm2Test::suite());
+void addPerm2(CppUnit::TextUi::TestRunner& runner) {
+    runner.addTest(Perm2Test::suite());
 }
 

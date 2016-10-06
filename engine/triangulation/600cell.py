@@ -59,7 +59,7 @@ def simpToReg(simp):
                 unused = unused - adj
             tmp[f] = unused
 
-            gluings[j][f] = regina.NPerm4(tmp[0], tmp[1], tmp[2], tmp[3])
+            gluings[j][f] = regina.Perm4(tmp[0], tmp[1], tmp[2], tmp[3])
 
     ans = regina.NTriangulation()
     for j in range(n):

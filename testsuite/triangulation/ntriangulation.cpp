@@ -64,7 +64,7 @@ using regina::NGroupPresentation;
 using regina::NIsomorphism;
 using regina::NNormalSurface;
 using regina::NormalSurfaces;
-using regina::NPerm;
+using regina::Perm;
 using regina::NSignature;
 using regina::NStandardTriangulation;
 using regina::NTetrahedron;

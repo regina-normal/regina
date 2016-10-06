@@ -41,7 +41,7 @@
 #include "testsuite/triangulation/testtriangulation.h"
 
 using regina::NEdge;
-using regina::NPerm;
+using regina::Perm;
 using regina::NSimpleSurfaceBundle;
 using regina::NTetrahedron;
 using regina::NTriangulation;

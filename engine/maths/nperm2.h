@@ -85,7 +85,7 @@ namespace regina {
  * identity permutation.
  *
  * \ifacespython Since Python does not support templates, this class is
- * made available under the name NPerm2.
+ * made available under the name Perm2.
  */
 template <>
 class REGINA_API Perm<2> {
@@ -130,8 +130,8 @@ class REGINA_API Perm<2> {
 
         /**
          * A dimension-agnostic alias for Perm<2>::S2.  In general, for
-         * each \a K the class NPermK will define an alias \a Sn
-         * that references the list of all permutations NPermK::SK.
+         * each \a K the class PermK will define an alias \a Sn
+         * that references the list of all permutations PermK::SK.
          */
         static const Perm<2>* Sn;
 
@@ -149,8 +149,8 @@ class REGINA_API Perm<2> {
 
         /**
          * A dimension-agnostic alias for Perm<2>::invS2.  In general, for
-         * each \a K the class NPermK will define an alias \a invSn
-         * that references the list of all permutations NPermK::invSK.
+         * each \a K the class PermK will define an alias \a invSn
+         * that references the list of all permutations PermK::invSK.
          */
         static const unsigned* invSn;
 
@@ -169,8 +169,8 @@ class REGINA_API Perm<2> {
 
         /**
          * A dimension-agnostic alias for Perm<2>::orderedS2.  In general, for
-         * each \a K the class NPermK will define an alias \a orderedSn
-         * that references the list of all permutations NPermK::orderedSK.
+         * each \a K the class PermK will define an alias \a orderedSn
+         * that references the list of all permutations PermK::orderedSK.
          */
         static const Perm<2>* orderedSn;
 
@@ -190,8 +190,8 @@ class REGINA_API Perm<2> {
 
         /**
          * A dimension-agnostic alias for Perm<2>::S1.  In general, for
-         * each \a K the class NPermK will define an alias \a Sn_1
-         * that references the list of all permutations NPermK::S(K-1).
+         * each \a K the class PermK will define an alias \a Sn_1
+         * that references the list of all permutations PermK::S(K-1).
          */
         static const Perm<2>* Sn_1;
 

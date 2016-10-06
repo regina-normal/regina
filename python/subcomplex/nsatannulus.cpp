@@ -38,7 +38,7 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NPerm;
+using regina::Perm;
 using regina::NSatAnnulus;
 using regina::NTetrahedron;
 

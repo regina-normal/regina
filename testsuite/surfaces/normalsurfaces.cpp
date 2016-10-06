@@ -52,7 +52,7 @@ using regina::NNormalSurface;
 using regina::NormalSurfaces;
 using regina::NNormalSurfaceVector;
 using regina::Packet;
-using regina::NPerm;
+using regina::Perm;
 using regina::NSignature;
 using regina::NTetrahedron;
 using regina::NTriangulation;

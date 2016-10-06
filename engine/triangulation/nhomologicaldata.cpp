@@ -1287,7 +1287,7 @@ void NHomologicalData::computeTorsionLinkingForm() {
                 // dual orientation of triangle points into some tetrahedron
                 //  given by triangle[?]->embedding(0) is a NTriangleEmbedding
                 //     triangle[]->embedding(0).tetrahedron() tet pointer
-                //     triangle[]->embedding(0).vertices() is a NPerm
+                //     triangle[]->embedding(0).vertices() is a Perm
                 //
                 // triangles[dNBF[k]] is the triangle pointer of the dual 1-cell
 

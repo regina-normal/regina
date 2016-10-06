@@ -39,28 +39,28 @@
 #include "../helpers.h"
 
 using namespace boost::python;
-using regina::NPerm;
+using regina::Perm;
 using regina::python::GlobalArray;
 
 namespace {
-    GlobalArray<Perm<2>> NPerm2_S2_arr(Perm<2>::S2, 2);
-    GlobalArray<unsigned> NPerm2_invS2_arr(Perm<2>::invS2, 2);
-    GlobalArray<Perm<2>> NPerm2_S1_arr(Perm<2>::S1, 1);
+    GlobalArray<Perm<2>> Perm2_S2_arr(Perm<2>::S2, 2);
+    GlobalArray<unsigned> Perm2_invS2_arr(Perm<2>::invS2, 2);
+    GlobalArray<Perm<2>> Perm2_S1_arr(Perm<2>::S1, 1);
 
     template <int k>
-    struct NPerm2_contract : boost::python::def_visitor<NPerm2_contract<k>> {
+    struct Perm2_contract : boost::python::def_visitor<Perm2_contract<k>> {
         friend class boost::python::def_visitor_access;
 
         template <typename Class>
         void visit(Class& c) const {
             c.def("contract", &Perm<2>::contract<k>);
-            c.def(NPerm2_contract<k+1>());
+            c.def(Perm2_contract<k+1>());
         }
     };
 
     template <>
-    struct NPerm2_contract<16> :
-            boost::python::def_visitor<NPerm2_contract<16>> {
+    struct Perm2_contract<16> :
+            boost::python::def_visitor<Perm2_contract<16>> {
         friend class boost::python::def_visitor_access;
 
         template <typename Class>
@@ -70,7 +70,7 @@ namespace {
     };
 }
 
-void addNPerm2() {
+void addPerm2() {
     {
         scope s = class_<Perm<2>>("Perm2")
             .def(init<int, int>())
@@ -94,7 +94,7 @@ void addNPerm2() {
             .def("S2Index", &Perm<2>::S2Index)
             .def("orderedS2Index", &Perm<2>::orderedS2Index)
             .def("orderedSnIndex", &Perm<2>::orderedS2Index)
-            .def(NPerm2_contract<3>())
+            .def(Perm2_contract<3>())
             .def("__repr__", &Perm<2>::str)
             .def(regina::python::add_output_basic())
             .def(regina::python::add_eq_operators())
@@ -108,14 +108,14 @@ void addNPerm2() {
         s.attr("nPerms") = Perm<2>::nPerms;
         s.attr("nPerms_1") = Perm<2>::nPerms_1;
 
-        s.attr("S2") = &NPerm2_S2_arr;
-        s.attr("Sn") = &NPerm2_S2_arr;
-        s.attr("orderedS2") = &NPerm2_S2_arr;
-        s.attr("orderedSn") = &NPerm2_S2_arr;
-        s.attr("invS2") = &NPerm2_invS2_arr;
-        s.attr("invSn") = &NPerm2_invS2_arr;
-        s.attr("S1") = &NPerm2_S1_arr;
-        s.attr("Sn_1") = &NPerm2_S1_arr;
+        s.attr("S2") = &Perm2_S2_arr;
+        s.attr("Sn") = &Perm2_S2_arr;
+        s.attr("orderedS2") = &Perm2_S2_arr;
+        s.attr("orderedSn") = &Perm2_S2_arr;
+        s.attr("invS2") = &Perm2_invS2_arr;
+        s.attr("invSn") = &Perm2_invS2_arr;
+        s.attr("S1") = &Perm2_S1_arr;
+        s.attr("Sn_1") = &Perm2_S1_arr;
     }
 
     scope().attr("NPerm2") = scope().attr("Perm2");

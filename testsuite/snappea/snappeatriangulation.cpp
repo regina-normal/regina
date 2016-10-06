@@ -43,7 +43,7 @@
 #include "testsuite/snappea/testsnappea.h"
 
 using regina::NExampleTriangulation;
-using regina::NPerm;
+using regina::Perm;
 using regina::SnapPeaTriangulation;
 using regina::NTetrahedron;
 using regina::NTriangulation;

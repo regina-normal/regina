@@ -35,7 +35,7 @@
 #include "maths/perm.h"
 #include "testsuite/triangulation/testtriangulation.h"
 
-using regina::NPerm;
+using regina::Perm;
 
 template <int a, int b>
 class PermConvTest : public CppUnit::TestFixture {

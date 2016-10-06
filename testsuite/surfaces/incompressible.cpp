@@ -43,7 +43,7 @@
 using regina::NExampleTriangulation;
 using regina::NNormalSurface;
 using regina::NormalSurfaces;
-using regina::NPerm;
+using regina::Perm;
 using regina::NTetrahedron;
 using regina::NTriangulation;
 
