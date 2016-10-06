@@ -35,7 +35,7 @@
  *  Perm class templates.
  *
  *  This file is automatically included from perm.h; there is no need for
- *  end users to include it explicitly.
+ *  end users to include this implementation header explicitly.
  */
 
 #ifndef __DOXYGEN

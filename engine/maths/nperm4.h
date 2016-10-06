@@ -32,6 +32,9 @@
 
 /*! \file maths/nperm4.h
  *  \brief Deals with permutations of {0,1,2,3}.
+ *
+ *  This file is automatically included from perm.h; there is no need for
+ *  end users to include this specialisation header explicitly.
  */
 
 // We include perm.h before the header guard, to ensure that the
@@ -92,6 +95,8 @@ namespace regina {
  * is because the first-generation routines incur additional overhead
  * in converting back and forth between the second-generation codes
  * (which are used internally by Perm<4>).
+ *
+ * To use this class, simply include the main permutation header maths/perm.h.
  *
  * \ifacespython Since Python does not support templates, this class is
  * made available under the name Perm4.

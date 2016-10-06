@@ -32,6 +32,9 @@
 
 /*! \file maths/nperm2.h
  *  \brief Deals with permutations of {0,1}.
+ *
+ *  This file is automatically included from perm.h; there is no need for
+ *  end users to include this specialisation header explicitly.
  */
 
 // We include perm.h before the header guard, to ensure that the
@@ -72,6 +75,8 @@ namespace regina {
  * Thus the internal code may be a useful means for passing permutation
  * objects to and from the engine.  For Perm<2>, the internal code is 0 for
  * the identity permutation, or 1 for the (unique) non-identity permutation.
+ *
+ * To use this class, simply include the main permutation header maths/perm.h.
  *
  * \warning Every permutation class Perm<n> provides a transposition
  * (i.e., pair swap) constructor <tt>Perm<n>(a,b).</tt>  In addition, the

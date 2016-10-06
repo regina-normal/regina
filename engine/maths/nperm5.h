@@ -32,6 +32,9 @@
 
 /*! \file maths/nperm5.h
  *  \brief Deals with permutations of {0,1,2,3,4}.
+ *
+ *  This file is automatically included from perm.h; there is no need for
+ *  end users to include this specialisation header explicitly.
  */
 
 // We include perm.h before the header guard, to ensure that the
@@ -73,6 +76,8 @@ namespace regina {
  * the general scheme used for Perm<n>: the lowest three bits represent
  * the image of 0, the next lowest three bits represent the image of 1 and so
  * on.  See the generic Perm template for further details.
+ *
+ * To use this class, simply include the main permutation header maths/perm.h.
  *
  * \ifacespython Since Python does not support templates, this class is
  * made available under the name Perm5.
