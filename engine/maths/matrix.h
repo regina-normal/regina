@@ -359,12 +359,12 @@ class Matrix : public Output<Matrix<T> >, public boost::noncopyable {
 template <class T>
 class MatrixRing : public Matrix<T> {
     public:
-        static T zero;
+        static const T zero;
             /**< Zero in the underlying ring.
              *   This would be \c const if it weren't for the fact that
              *   some compilers don't like this.  It should never be
              *   modified! */
-        static T one;
+        static const T one;
             /**< One (the multiplicative identity) in the underlying ring.
              *   This would be \c const if it weren't for the fact that
              *   some compilers don't like this.  It should never be
@@ -865,17 +865,11 @@ REGINA_DEPRECATED typedef MatrixInt NMatrixInt;
 // Constants for MatrixRing
 
 template <class T>
-T MatrixRing<T>::zero(0L);
-    /**< Zero in the underlying ring.
-     *   This would be \c const if it weren't for the fact that
-     *   some compilers don't like this.  It should never be
-     *   modified! */
+const T MatrixRing<T>::zero(0L);
+    /**< Zero in the underlying ring. */
 template <class T>
-T MatrixRing<T>::one(1L);
-    /**< One (the multiplicative identity) in the underlying ring.
-     *   This would be \c const if it weren't for the fact that
-     *   some compilers don't like this.  It should never be
-     *   modified! */
+const T MatrixRing<T>::one(1L);
+    /**< One (the multiplicative identity) in the underlying ring. */
 
 // Implementation details for MatrixIntDomain
 
