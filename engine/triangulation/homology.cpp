@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "triangulation/ntriangulation.h"
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 
 namespace regina {
 

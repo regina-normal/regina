@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "maths/nmatrix2.h"
+#include "maths/matrix2.h"
 #include "subcomplex/nsatannulus.h"
 #include "triangulation/nedge.h"
 #include "triangulation/nisomorphism.h"

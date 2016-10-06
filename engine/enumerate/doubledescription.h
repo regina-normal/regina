@@ -43,7 +43,7 @@
 #include "regina-core.h"
 #include "enumerate/ordering.h"
 #include "maths/ray.h"
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include <iterator>
 #include <vector>
 

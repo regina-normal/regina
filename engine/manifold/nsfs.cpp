@@ -36,7 +36,7 @@
 #include "algebra/nabeliangroup.h"
 #include "manifold/nlensspace.h"
 #include "manifold/nsfs.h"
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "maths/numbertheory.h"
 #include "subcomplex/nsatannulus.h"
 #include "triangulation/ntriangulation.h"

@@ -32,7 +32,7 @@
 
 #include <boost/python.hpp>
 #include "algebra/nmarkedabeliangroup.h"
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include <boost/python/detail/api_placeholder.hpp> // For len().
 #include "../helpers.h"
 

@@ -32,7 +32,7 @@
 
 #include "algebra/nabeliangroup.h"
 #include "manifold/nsfs.h"
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "triangulation/ncomponent.h"
 #include "triangulation/ntetrahedron.h"
 #include "subcomplex/nlayeredchainpair.h"

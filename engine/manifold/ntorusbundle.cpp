@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "algebra/nabeliangroup.h"
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "manifold/ntorusbundle.h"
 
 namespace regina {

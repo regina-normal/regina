@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <boost/python.hpp>
-#include "maths/nmatrix2.h"
+#include "maths/matrix2.h"
 #include "../helpers.h"
 
 namespace regina {

@@ -40,7 +40,7 @@
 #include "algebra/nabeliangroup.h"
 #include "algebra/ngrouppresentation.h"
 #include "dim2/dim2triangulation.h"
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "maths/numbertheory.h"
 #include "packet/container.h"
 #include "split/nsignature.h"

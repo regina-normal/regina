@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "progress/progresstracker.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/ntriangulation.h"

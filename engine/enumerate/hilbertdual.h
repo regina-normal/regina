@@ -40,7 +40,7 @@
 #endif
 
 #include "regina-core.h"
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "maths/ray.h"
 #include <iterator>
 #include <list>

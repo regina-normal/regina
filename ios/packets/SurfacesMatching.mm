@@ -35,7 +35,7 @@
 #import "SurfacesMatching.h"
 #import "SurfacesViewController.h"
 #import "MDSpreadViewClasses.h"
-#import "maths/nmatrixint.h"
+#import "maths/matrix.h"
 #import "surfaces/normalsurfaces.h"
 #import "triangulation/ntriangulation.h"
 

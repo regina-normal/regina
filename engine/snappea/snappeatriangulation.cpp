@@ -34,7 +34,7 @@
 #include <cstring>
 #include <mutex>
 
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "maths/numbertheory.h"
 #include "snappea/snappeatriangulation.h"
 #include "snappea/kernel/kernel_prototypes.h"

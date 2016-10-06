@@ -37,7 +37,7 @@
 #ifndef __NHYPERMATCHINGUI_H
 #define __NHYPERMATCHINGUI_H
 
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "../packettabui.h"
 
 #include <memory>

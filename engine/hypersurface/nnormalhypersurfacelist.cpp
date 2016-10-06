@@ -38,7 +38,7 @@
 #include "enumerate/hilbertprimal.h"
 #include "hypersurface/nnormalhypersurfacelist.h"
 #include "hypersurface/hscoordregistry.h"
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "progress/progresstracker.h"
 #include "utilities/xmlutils.h"
 

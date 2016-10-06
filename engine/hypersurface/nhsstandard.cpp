@@ -35,7 +35,7 @@
 #include "dim4/dim4triangulation.h"
 #include "enumerate/enumconstraints.h"
 #include "hypersurface/nhsstandard.h"
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "maths/rational.h"
 #include "surfaces/nnormalsurface.h" // for quadDefn[][].
 

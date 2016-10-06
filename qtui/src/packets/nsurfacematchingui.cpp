@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "surfaces/normalsurfaces.h"
 
 // UI includes:

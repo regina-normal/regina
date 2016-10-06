@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <iostream>
-#include "maths/nmatrix2.h"
+#include "maths/matrix2.h"
 
 namespace regina {
 

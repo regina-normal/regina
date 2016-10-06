@@ -33,7 +33,7 @@
 #include <cmath>
 #include <iomanip>
 #include <cppunit/extensions/HelperMacros.h>
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "snappea/snappeatriangulation.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/nexampletriangulation.h"

@@ -34,7 +34,7 @@
 #include "manifold/ngraphpair.h"
 #include "manifold/nsfs.h"
 #include "manifold/nsfsaltset.h"
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 
 namespace regina {
 

@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "angle/anglestructure.h"
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "triangulation/ntriangulation.h"
 #include "utilities/xmlutils.h"
 

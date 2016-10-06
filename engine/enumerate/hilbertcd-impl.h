@@ -46,7 +46,7 @@
 #include "regina-config.h"
 #include "enumerate/enumconstraints.h"
 #include "enumerate/hilbertcd.h"
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "maths/ray.h"
 #include "utilities/bitmask.h"
 #include <list>

@@ -35,7 +35,7 @@
 #include "enumerate/enumconstraints.h"
 #include "surfaces/nsorientedquad.h"
 #include "surfaces/nsoriented.h"
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "maths/rational.h"
 #include "triangulation/ntriangulation.h"
 

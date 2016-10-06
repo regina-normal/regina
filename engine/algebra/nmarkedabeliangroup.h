@@ -43,7 +43,7 @@
 #include <memory>
 #include "regina-core.h"
 #include "output.h"
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "utilities/ptrutils.h"
 #include <boost/noncopyable.hpp>
 

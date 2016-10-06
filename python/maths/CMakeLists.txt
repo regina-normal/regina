@@ -6,8 +6,8 @@ SET ( FILES
   cyclotomic
   integer
   largeinteger
-  nmatrixint
-  nmatrix2
+  matrix2
+  matrixint
   nperm
   nperm2
   nperm3

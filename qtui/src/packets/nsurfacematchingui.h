@@ -37,7 +37,7 @@
 #ifndef __NSURFACEMATCHINGUI_H
 #define __NSURFACEMATCHINGUI_H
 
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "../packettabui.h"
 
 #include <memory>

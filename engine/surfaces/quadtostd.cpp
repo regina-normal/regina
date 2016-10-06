@@ -32,7 +32,7 @@
 
 #include "regina-config.h"
 #include "enumerate/doubledescription.h"
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "maths/ray.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/normalsurfaces.h"

@@ -38,7 +38,7 @@
 #include "enumerate/hilbertprimal.h"
 #include "enumerate/treetraversal.h"
 #include "maths/matrixops.h"
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "progress/progresstracker.h"
 #include "surfaces/coordregistry.h"
 #include "surfaces/normalsurfaces.h"

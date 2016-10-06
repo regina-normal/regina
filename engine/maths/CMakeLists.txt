@@ -5,8 +5,8 @@ SET ( FILES
   approx
   cyclotomic
   integer
+  matrix2
   matrixops
-  nmatrix2
   nperm2
   nperm3
   nperm4
@@ -29,6 +29,8 @@ if (${REGINA_INSTALL_DEV})
     approx.h
     cyclotomic.h
     integer.h
+    matrix.h
+    matrix2.h
     matrixops.h
     ncyclotomic.h
     ninteger.h

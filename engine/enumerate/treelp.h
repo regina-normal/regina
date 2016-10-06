@@ -40,7 +40,7 @@
 #endif
 
 #include "maths/integer.h"
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "surfaces/normalcoords.h"
 #include <algorithm>
 

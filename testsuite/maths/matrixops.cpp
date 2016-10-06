@@ -33,7 +33,7 @@
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
 #include "maths/matrixops.h"
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "testsuite/maths/testmaths.h"
 
 using regina::NMatrixInt;

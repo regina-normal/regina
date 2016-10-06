@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <algorithm>
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "snappea/snappeatriangulation.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/normalsurfaces.h"

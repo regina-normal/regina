@@ -40,7 +40,7 @@
 #endif
 
 #include "regina-core.h"
-#include "maths/nmatrix2.h"
+#include "maths/matrix2.h"
 #include "maths/nperm4.h"
 
 namespace regina {

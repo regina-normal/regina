@@ -41,7 +41,7 @@
 
 #warning This header is deprecated; please use maths/matrix.h instead.
 
-#include "maths/nmatrix.h"
+#include "maths/matrix.h"
 
 #endif
 

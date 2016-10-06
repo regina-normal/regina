@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "surfaces/nnormalsurface.h"
 #include "surfaces/normalsurfaces.h" // for makeZeroVector()
 #include "triangulation/ntriangulation.h"

@@ -33,7 +33,7 @@
 #include "angle/anglestructures.h"
 #include "enumerate/doubledescription.h"
 #include "enumerate/treetraversal.h"
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include "progress/progresstracker.h"
 #include "surfaces/nnormalsurface.h"
 #include "triangulation/ntriangulation.h"

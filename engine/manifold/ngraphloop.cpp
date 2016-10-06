@@ -33,7 +33,7 @@
 #include "algebra/nabeliangroup.h"
 #include "manifold/ngraphloop.h"
 #include "manifold/nsfs.h"
-#include "maths/nmatrixint.h"
+#include "maths/matrix.h"
 #include <cstdlib> // For labs().
 
 namespace regina {
