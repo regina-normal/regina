@@ -50,9 +50,11 @@ namespace snappea {
     struct Triangulation;
 }
 
-class NMatrixInt;
 class SnapPeaTriangulation;
 class XMLSnapPeaReader;
+
+template <typename> class NMatrixIntDomain;
+typedef NMatrixIntDomain<Integer> NMatrixInt;
 
 template <int> class Triangulation;
 typedef Triangulation<3> NTriangulation;

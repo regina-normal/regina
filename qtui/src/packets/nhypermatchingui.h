@@ -46,7 +46,6 @@
 class QTreeView;
 
 namespace regina {
-    class NMatrixInt;
     class NNormalHypersurfaceList;
     class Packet;
     template <int> class Triangulation;

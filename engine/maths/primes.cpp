@@ -34,9 +34,9 @@
 
 namespace regina {
 
-std::vector<LargeInteger> Primes::largePrimes;
+std::vector<Integer> Primes::largePrimes;
 
-LargeInteger Primes::prime(unsigned long which, bool autoGrow) {
+Integer Primes::prime(unsigned long which, bool autoGrow) {
     // Can we grab it straight out of the hard-coded seed list?
     if (which < numPrimeSeeds)
         return primeSeedList[which];
@@ -46,7 +46,7 @@ LargeInteger Primes::prime(unsigned long which, bool autoGrow) {
         if (autoGrow)
             growPrimeList(which - numPrimeSeeds - largePrimes.size() + 1);
         else
-            return LargeInteger::zero;
+            return Integer::zero;
     }
 
     // Got it.
@@ -54,10 +54,10 @@ LargeInteger Primes::prime(unsigned long which, bool autoGrow) {
 }
 
 void Primes::growPrimeList(unsigned long extras) {
-    LargeInteger lastPrime = (largePrimes.empty() ?
+    Integer lastPrime = (largePrimes.empty() ?
         primeSeedList[numPrimeSeeds - 1] :
         largePrimes[largePrimes.size() - 1]);
-    LargeInteger newPrime;
+    Integer newPrime;
 
     // Since this is all being done through GMP, just bite the bullet
     // and make them all GMP integers (not native integers).
@@ -72,22 +72,22 @@ void Primes::growPrimeList(unsigned long extras) {
     }
 }
 
-std::vector<LargeInteger> Primes::primeDecomp(const LargeInteger& n) {
-    std::vector<LargeInteger> retval;
+std::vector<Integer> Primes::primeDecomp(const Integer& n) {
+    std::vector<Integer> retval;
 
     // Deal with n=0 first.
-    if (n == LargeInteger::zero) {
-        retval.push_back(LargeInteger::zero);
+    if (n == Integer::zero) {
+        retval.push_back(Integer::zero);
         return retval;
     }
 
-    LargeInteger temp(n);
-    LargeInteger r,q;
+    Integer temp(n);
+    Integer r,q;
 
     // if the number is negative, put -1 as first factor.
-    if (temp < LargeInteger::zero) {
+    if (temp < Integer::zero) {
         temp.negate();
-        retval.push_back(LargeInteger(-1));
+        retval.push_back(Integer(-1));
     }
 
     // repeatedly divide the number by the smallest primes until no
@@ -103,10 +103,10 @@ std::vector<LargeInteger> Primes::primeDecomp(const LargeInteger& n) {
     unsigned long iterSinceDivision=0; // keeps track of how many iterations
                                        // since the last successful division
 
-    while ( temp != LargeInteger::one ) {
+    while ( temp != Integer::one ) {
         // now cpi<size(), check to see if temp % prime(cpi) == 0
         q = temp.divisionAlg(prime(cpi), r); // means temp = q*prime(cpi) + r
-        if (r == LargeInteger::zero) {
+        if (r == Integer::zero) {
             temp=q;
             retval.push_back(prime(cpi));
             iterSinceDivision=0;
@@ -139,16 +139,16 @@ std::vector<LargeInteger> Primes::primeDecomp(const LargeInteger& n) {
                // that is... should consider importing it.
 }
 
-std::vector<std::pair<LargeInteger, unsigned long> >
-        Primes::primePowerDecomp(const LargeInteger& n) {
-    std::vector<LargeInteger> list1(primeDecomp(n));
-    std::vector< std::pair<LargeInteger, unsigned long> > retlist;
+std::vector<std::pair<Integer, unsigned long> >
+        Primes::primePowerDecomp(const Integer& n) {
+    std::vector<Integer> list1(primeDecomp(n));
+    std::vector< std::pair<Integer, unsigned long> > retlist;
 
     // go through list1, record number of each prime, put in retlist.
     if (! list1.empty()) {
-        LargeInteger cp(list1.front()); // current prime
+        Integer cp(list1.front()); // current prime
         unsigned long cc(1); // current count
-        std::vector<LargeInteger>::const_iterator it = list1.begin();
+        std::vector<Integer>::const_iterator it = list1.begin();
         for (++it; it != list1.end(); ++it) {
             if (*it == cp)
                 cc++;

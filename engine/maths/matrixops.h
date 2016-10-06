@@ -305,7 +305,7 @@ REGINA_API void columnEchelonForm(NMatrixInt &M, NMatrixInt &R, NMatrixInt &Ri,
  * \author Ryan Budney
  */
 REGINA_API std::unique_ptr<NMatrixInt> preImageOfLattice(const NMatrixInt& hom,
-        const std::vector<LargeInteger>& sublattice);
+        const std::vector<Integer>& sublattice);
 
 /**
  * Given an automorphism of an abelian group,
@@ -334,7 +334,7 @@ REGINA_API std::unique_ptr<NMatrixInt> preImageOfLattice(const NMatrixInt& hom,
  * \author Ryan Budney
  */
 REGINA_API std::unique_ptr<NMatrixInt> torsionAutInverse(
-    const NMatrixInt& input, const std::vector<LargeInteger> &invF);
+    const NMatrixInt& input, const std::vector<Integer> &invF);
 
 /*@}*/
 

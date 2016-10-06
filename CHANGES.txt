@@ -24,11 +24,28 @@ Version 5.1  [ (under development) ]
               typedefs.  None of these internal classes are exposed to Python,
               and typical C++ users would have no reason to use them either.
     ENGINE:
+        Class AbelianGroup, MarkedAbelianGroup, HomMarkedAbelianGroup:
+            - Now works with type Integer, not LargeInteger.
+        Class HomologicalData:
+            - Now works with type Integer instead of LargeInteger for all
+              member functions except for torsionSigmaVector().
+        Class MatrixInt:
+            - Now stores elements of type Integer, not LargeInteger.  If
+              you need support for infinity, you can always use the class
+              MatrixIntDomain<LargeInteger> instead.
+            - This is now a typedef, not a class in its own right.
+        Class MatrixIntDomain:
+            - New generalisation of MatrixInt for working in other
+              integral domains.
+        Class Primes:
+            - Now works with type Integer, not LargeInteger.
         Enum PacketType:
             - Renamed PACKET_NORMALSURFACELIST to PACKET_NORMALSURFACES,
               PACKET_NORMALHYPERSURFACELIST to PACKET_NORMALHYPERSURFACES,
               and PACKET_ANGLESTRUCTURELIST to PACKET_ANGLESTRUCTURES.
               The old names are kept but deprecated.
+        Routine preImageOfLattice(), torsionAutInverse():
+            - Now works with type Integer instead of LargeInteger.
         Routine isZero, isNonZero, isPositive, isNegative, isNonPositive,
                 isNonNegative:
             - Deprecated, with no replacements.  This is because the methods

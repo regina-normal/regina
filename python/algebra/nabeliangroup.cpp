@@ -38,12 +38,12 @@
 
 using namespace boost::python;
 using regina::NAbelianGroup;
-using regina::LargeInteger;
+using regina::Integer;
 using regina::NMatrixInt;
 
 namespace {
     void (NAbelianGroup::*addTorsionElement_large)(
-        const regina::LargeInteger&, unsigned) =
+        const regina::Integer&, unsigned) =
         &NAbelianGroup::addTorsionElement;
     void (NAbelianGroup::*addTorsionElement_long)(unsigned long,
         unsigned) = &NAbelianGroup::addTorsionElement;
@@ -52,7 +52,7 @@ namespace {
     void (NAbelianGroup::*addGroup_group)(const NAbelianGroup&) =
         &NAbelianGroup::addGroup;
     unsigned (NAbelianGroup::*torsionRank_large)(
-        const regina::LargeInteger&) const = &NAbelianGroup::torsionRank;
+        const regina::Integer&) const = &NAbelianGroup::torsionRank;
     unsigned (NAbelianGroup::*torsionRank_long)(unsigned long)
         const = &NAbelianGroup::torsionRank;
 
@@ -63,13 +63,13 @@ namespace {
 
     void addTorsionElements_dict(NAbelianGroup& g,
             boost::python::list elements) {
-        std::multiset<regina::LargeInteger> set;
+        std::multiset<regina::Integer> set;
 
         long len = boost::python::len(elements);
         for (long i = 0; i < len; i++) {
             // Accept any type that we know how to convert to a large
             // integer.
-            extract<regina::LargeInteger&> x_large(elements[i]);
+            extract<regina::Integer&> x_large(elements[i]);
             if (x_large.check()) {
                 set.insert(x_large());
                 continue;
@@ -98,7 +98,7 @@ void addNAbelianGroup() {
             ("NAbelianGroup")
         .def(init<const NAbelianGroup&>())
         .def(init<const NMatrixInt&, const NMatrixInt&>())
-        .def(init<const NMatrixInt&, const NMatrixInt&, const LargeInteger&>())
+        .def(init<const NMatrixInt&, const NMatrixInt&, const Integer&>())
         .def("addRank", &NAbelianGroup::addRank, OL_addRank())
         .def("addTorsionElement", addTorsionElement_large,
             OL_addTorsionElement())

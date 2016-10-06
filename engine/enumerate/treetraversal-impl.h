@@ -173,7 +173,7 @@ bool TreeTraversal<LPConstraint, BanConstraint, IntType>::verify(
     for (row = 0; row < matchingEqns->rows(); ++row) {
         LargeInteger ans; // Initialised to zero.
         for (col = 0; col < matchingEqns->columns(); ++col)
-            ans += (matchingEqns->entry(row, col) * (*s->rawVector())[col]);
+            ans += (LargeInteger(matchingEqns->entry(row, col)) * (*s->rawVector())[col]);
         if (ans != 0) {
             delete tmpEqns;
             return false;
@@ -204,7 +204,7 @@ bool TreeTraversal<LPConstraint, BanConstraint, IntType>::verify(
     for (row = 0; row < angleEqns->rows(); ++row) {
         LargeInteger ans; // Initialised to zero.
         for (col = 0; col < angleEqns->columns(); ++col)
-            ans += (angleEqns->entry(row, col) * (*s->rawVector())[col]);
+            ans += (LargeInteger(angleEqns->entry(row, col)) * (*s->rawVector())[col]);
         if (ans != 0) {
             delete tmpEqns;
             return false;

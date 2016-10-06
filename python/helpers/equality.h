@@ -130,7 +130,7 @@ namespace add_eq_operators_detail {
      * This is indeed necessary: if we just offer default == / != operators
      * for an arbitrary type T, then these default operators are chosen for
      * NMatrixInt *ahead* of the operators that NMatrixInt inherits from
-     * NMatrix<LargeInteger>.  If we use the Any helper class (as seen below),
+     * NMatrix<Integer>.  If we use the Any helper class (as seen below),
      * then the inherited == / != operators are (correctly) chosen intsead.
      */
     struct Any {

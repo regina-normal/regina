@@ -52,8 +52,10 @@
 
 namespace regina {
 
-class NMatrixInt;
 class Ray;
+
+template <typename> class NMatrixIntDomain;
+typedef NMatrixIntDomain<Integer> NMatrixInt;
 
 template <int> class Triangulation;
 typedef Triangulation<3> NTriangulation;

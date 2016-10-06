@@ -52,11 +52,13 @@
 
 namespace regina {
 
-class NMatrixInt;
 class NormalSurfaces;
 class ProgressTracker;
 class XMLPacketReader;
 class NXMLNormalSurfaceListReader;
+
+template <typename> class NMatrixIntDomain;
+typedef NMatrixIntDomain<Integer> NMatrixInt;
 
 template <int> class Triangulation;
 // We *must* declare the specialisation here; otherwise this header has

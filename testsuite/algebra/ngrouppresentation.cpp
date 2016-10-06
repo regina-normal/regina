@@ -39,7 +39,7 @@
 
 #include "testsuite/algebra/testalgebra.h"
 
-using regina::LargeInteger;
+using regina::Integer;
 using regina::NMarkedAbelianGroup;
 using regina::NHomMarkedAbelianGroup;
 using regina::NMatrixInt;
@@ -239,9 +239,9 @@ class NGroupPresentationTest : public CppUnit::TestFixture {
              * will be mapped to zero. 
              */
             for (unsigned long j=0; j<tPres.countGenerators(); j++) {
-                std::vector<LargeInteger> epsilon( tPres.countGenerators() );
+                std::vector<Integer> epsilon( tPres.countGenerators() );
                 epsilon[j] = 1;
-                std::vector<LargeInteger> temp( mab->snfRep(epsilon) );
+                std::vector<Integer> temp( mab->snfRep(epsilon) );
 
                 for (unsigned long k=0; k<M; k++) {
                     // case 1: columns of torsion abelianisations
@@ -250,13 +250,13 @@ class NGroupPresentationTest : public CppUnit::TestFixture {
                         // and             GCD(dj,entry(j)) == 1  j == k
                         if (k==j) {
                             if (temp[k].gcd( mab->invariantFactor(k) )!=
-                                    LargeInteger::one)
+                                    Integer::one)
                                 CPPUNIT_FAIL("NGroupPresentation: homologicalAlignment Error 1.");
                         } else if ( k < N ) {
                             if ( temp[k] % mab->invariantFactor(k) !=
-                                    LargeInteger::zero )
+                                    Integer::zero )
                                 CPPUNIT_FAIL("NGroupPresentation: homologicalAlignment Error 2.");
-                        } else if ( temp[k] != LargeInteger::zero )
+                        } else if ( temp[k] != Integer::zero )
                             CPPUNIT_FAIL("NGroupPresentation: homologicalAlignment Error 3.");
                         // dj divides entry(j) for all j!=k,
                         // and GCD(dk,entry(k)==1.
@@ -266,13 +266,13 @@ class NGroupPresentationTest : public CppUnit::TestFixture {
                     // case 2: column should be delta_ij
                     if (j<M) {  // entry
                         if (k==j) {
-                            if (temp[k].abs() != LargeInteger::one)
+                            if (temp[k].abs() != Integer::one)
                                 CPPUNIT_FAIL("NGroupPresentation: homologicalAlignment Error 4.");
                         } else if (k<N) {
                             if (temp[k] % mab->invariantFactor(k) !=
-                                    LargeInteger::zero )
+                                    Integer::zero )
                                 CPPUNIT_FAIL("NGroupPresentation: homologicalAlignment Error 5.");
-                        } else if (temp[k] != LargeInteger::zero)
+                        } else if (temp[k] != Integer::zero)
                             CPPUNIT_FAIL("NGroupPresentation: homologicalAlignment Error 6.");
                         continue;
                     }
@@ -280,9 +280,9 @@ class NGroupPresentationTest : public CppUnit::TestFixture {
                     // case 3: column should be zero (modulo d's)
                     if (k<N) {
                         if (temp[k] % mab->invariantFactor(k) !=
-                                LargeInteger::zero )
+                                Integer::zero )
                             CPPUNIT_FAIL("NGroupPresentation: homologicalAlignment Error 7.");
-                    } else if (temp[k] != LargeInteger::zero)
+                    } else if (temp[k] != Integer::zero)
                         CPPUNIT_FAIL("NGroupPresentation: homologicalAlignment Error 8.");
                 } // end k loop
             } // end j loop

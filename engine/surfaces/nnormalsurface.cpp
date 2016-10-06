@@ -456,17 +456,17 @@ NMatrixInt* NNormalSurface::boundaryIntersections() const {
     size_t numTet = snapPea->size();
     NMatrixInt* slopes = new NMatrixInt(cusps, 2);
     for(unsigned int i=0; i < cusps; i++) {
-        LargeInteger meridian; // constructor sets this to 0
-        LargeInteger longitude; // constructor sets this to 0
+        Integer meridian; // constructor sets this to 0
+        Integer longitude; // constructor sets this to 0
         for(unsigned int j=0; j < numTet; j++) {
             meridian += 
-                equations->entry(2*i, 3*j)*quads(j, quadSeparating[0][1]) +
-                equations->entry(2*i, 3*j+1)*quads(j, quadSeparating[0][2]) +
-                equations->entry(2*i, 3*j+2)*quads(j, quadSeparating[0][3]); 
+                equations->entry(2*i, 3*j) * Integer(quads(j, quadSeparating[0][1])) +
+                equations->entry(2*i, 3*j+1) * Integer(quads(j, quadSeparating[0][2])) +
+                equations->entry(2*i, 3*j+2) * Integer(quads(j, quadSeparating[0][3]));
             longitude += 
-                equations->entry(2*i+1, 3*j)*quads(j, quadSeparating[0][1]) +
-                equations->entry(2*i+1, 3*j+1)*quads(j, quadSeparating[0][2]) +
-                equations->entry(2*i+1, 3*j+2)*quads(j, quadSeparating[0][3]); 
+                equations->entry(2*i+1, 3*j) * Integer(quads(j, quadSeparating[0][1])) +
+                equations->entry(2*i+1, 3*j+1) * Integer(quads(j, quadSeparating[0][2])) +
+                equations->entry(2*i+1, 3*j+2) * Integer(quads(j, quadSeparating[0][3]));
         }
         slopes->entry(i,0) = meridian;
         slopes->entry(i,1) = longitude;

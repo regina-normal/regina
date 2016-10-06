@@ -62,6 +62,9 @@ namespace regina {
 class EnumConstraints;
 class NXMLNormalHypersurfaceReader;
 
+template <typename> class NMatrixIntDomain;
+typedef NMatrixIntDomain<Integer> NMatrixInt;
+
 template <int> class Triangulation;
 template <int, int> class Face;
 typedef Triangulation<3> NTriangulation;

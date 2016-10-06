@@ -203,7 +203,9 @@ REGINA_API extern const NPerm4 __octDiscArcs[24];
 
 class EnumConstraints;
 class NXMLNormalSurfaceReader;
-class NMatrixInt;
+
+template <typename> class NMatrixIntDomain;
+typedef NMatrixIntDomain<Integer> NMatrixInt;
 
 template <int> class Triangulation;
 template <int, int> class Face;

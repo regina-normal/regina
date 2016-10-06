@@ -524,7 +524,7 @@ void NormalSurfaces::Enumerator::fillFundamentalFullCone() {
         std::vector<mpz_class>& v(input.back());
         v.reserve(eqns->columns());
         for (c = 0; c < eqns->columns(); ++c) {
-            LargeInteger& entry(eqns->entry(r, c));
+            Integer& entry(eqns->entry(r, c));
             if (entry.isNative())
                 v.push_back(mpz_class(entry.longValue()));
             else

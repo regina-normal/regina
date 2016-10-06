@@ -72,11 +72,11 @@ namespace {
             boost::python::throw_error_already_set();
         }
 
-        std::vector<regina::LargeInteger> lVector;
+        std::vector<regina::Integer> lVector;
 
         for (unsigned long i = 0; i < m.rows(); ++i) {
             // Accept any type that we know how to convert to a large integer.
-            extract<regina::LargeInteger&> x_large(l[i]);
+            extract<regina::Integer&> x_large(l[i]);
             if (x_large.check()) {
                 lVector.push_back(x_large());
                 continue;
@@ -110,11 +110,11 @@ namespace {
             boost::python::throw_error_already_set();
         }
 
-        std::vector<regina::LargeInteger> lVector;
+        std::vector<regina::Integer> lVector;
 
         for (unsigned long i = 0; i < m.rows(); ++i) {
             // Accept any type that we know how to convert to a large integer.
-            extract<regina::LargeInteger&> x_large(l[i]);
+            extract<regina::Integer&> x_large(l[i]);
             if (x_large.check()) {
                 lVector.push_back(x_large());
                 continue;

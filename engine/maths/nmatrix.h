@@ -44,6 +44,7 @@
 #include <boost/noncopyable.hpp>
 #include "regina-core.h"
 #include "output.h"
+#include "maths/integer.h"
 
 namespace regina {
 
@@ -53,14 +54,14 @@ namespace regina {
  */
 
 /**
- * Represents a matrix of elements of the given type T.
+ * Represents a matrix of elements of the given type \a T.
  *
- * \pre Type T has a default constructor and overloads the assignment
+ * \pre Type \a T has a default constructor and overloads the assignment
  * (<tt>=</tt>) operator.
- * \pre An element <i>t</i> of type T can be written to an output stream
+ * \pre An element <i>t</i> of type \a T can be written to an output stream
  * <i>out</i> using the standard expression <tt>out << t</tt>.
  *
- * \ifacespython Not present, although the subclass NMatrixInt is.
+ * \ifacespython Not present, although the typedef MatrixInt is.
  */
 template <class T>
 class NMatrix : public Output<NMatrix<T> >, public boost::noncopyable {
@@ -337,22 +338,23 @@ class NMatrix : public Output<NMatrix<T> >, public boost::noncopyable {
 };
 
 /**
- * Represents a matrix of elements from a given ring T.
+ * Represents a matrix of elements from a given ring \a T.
  *
  * Note that many important functions (such as entry()) are inherited
  * from the parent class NMatrix, and are not documented again here.
  *
- * \pre Type T has a default constructor and overloads the assignment
+ * \pre Type \a T has a default constructor and overloads the assignment
  * (<tt>=</tt>) operator.
- * \pre An element <i>t</i> of type T can be written to an output stream
+ * \pre An element <i>t</i> of type \a T can be written to an output stream
  * <i>out</i> using the standard expression <tt>out << t</tt>.
- * \pre Type T provides binary operators <tt>+</tt>, <tt>-</tt> and
+ * \pre Type \a T provides binary operators <tt>+</tt>, <tt>-</tt> and
  * <tt>*</tt> and unary operators <tt>+=</tt>, <tt>-=</tt> and <tt>*=</tt>.
- * \pre Type T has a long integer constructor.  That is, if \c a is of type T,
- * then \c a can be initialised to a long integer \c l using <tt>a(l)</tt>.
- * Here the value 1 refers to the multiplicative identity in the ring T.
+ * \pre Type \a T has a long integer constructor.  That is, if \c a is of
+ * type \a T, then \c a can be initialised to a long integer \c l using
+ * <tt>a(l)</tt>.
+ * Here the value 1 refers to the multiplicative identity in the ring \a T.
  *
- * \ifacespython Not present, although the subclass NMatrixInt is.
+ * \ifacespython Not present, although the typedef MatrixInt is.
  */
 template <class T>
 class NMatrixRing : public NMatrix<T> {
@@ -371,8 +373,7 @@ class NMatrixRing : public NMatrix<T> {
     public:
         /**
          * Creates a new matrix of the given size.
-         * All entries will be initialised using their default
-         * constructors.
+         * All entries will be initialised using their default constructors.
          *
          * \pre The given number of rows and columns are
          * both strictly positive.
@@ -555,7 +556,7 @@ class NMatrixRing : public NMatrix<T> {
          * consider calling multiplyAs() instead.
          *
          * \ifacespython The multiplication operator for a subclass (such as
-         * NMatrixInt) will return a new matrix of that same subclass.
+         * NMatrixIntDomain) will return a new matrix of that same subclass.
          * That is, the python multiplication operator really calls
          * multiplyAs(), not this routine.
          *
@@ -687,6 +688,156 @@ class NMatrixRing : public NMatrix<T> {
         }
 };
 
+/**
+ * Represents a matrix of elements from a given integral domain \a T.
+ *
+ * Note that many important functions (such as entry()) are inherited
+ * from the superclasses NMatrix and NMatrixRing, and are not documented
+ * again here.  Many other algorithms that work on NMatrixIntDomain<Integer>
+ * are available in the maths/matrixops.h file. 
+ *
+ * \pre Type \a T has a default constructor and overloads the assignment
+ * (<tt>=</tt>) operator.
+ * \pre An element <i>t</i> of type \a T can be written to an output stream
+ * <i>out</i> using the standard expression <tt>out << t</tt>.
+ * \pre Type \a T provides binary operators <tt>+</tt>, <tt>-</tt> and
+ * <tt>*</tt> and unary operators <tt>+=</tt>, <tt>-=</tt> and <tt>*=</tt>.
+ * \pre Type \a T has a long integer constructor.  That is, if \c a is of
+ * type \a T, then \c a can be initialised to a long integer \c l using
+ * <tt>a(l)</tt>.
+ * \pre Type \a T can be tested for equality or inequality against an integer.
+ * \pre Type \a T has member functions divByExact() and gcdWith() that behave
+ * in a similar way to the Integer member functions of these names.
+ *
+ * All of Regina's integer types (Integer, LargeInteger and the various
+ * NativeInteger classes) satisfy these requirements.
+ *
+ * \ifacespython Not present, although the typedef MatrixInt is.
+ */
+template <typename T>
+class NMatrixIntDomain : public NMatrixRing<T> {
+    public:
+        /**
+         * Creates a new matrix of the given size.
+         * All entries will be initialised using their default constructors.
+         *
+         * Note that, for NMatrixIntDomain<Integer>, this means that all
+         * entries will be initialised to zero.
+         *
+         * \pre The given number of rows and columns are
+         * both strictly positive.
+         *
+         * @param rows the number of rows in the new matrix.
+         * @param cols the number of columns in the new matrix.
+         */
+        NMatrixIntDomain(unsigned long rows, unsigned long cols);
+        /**
+         * Creates a new matrix that is a clone of the given matrix.
+         *
+         * @param cloneMe the matrix to clone.
+         */
+        NMatrixIntDomain(const NMatrixIntDomain<T>& cloneMe);
+
+        /**
+         * Divides all elements of the given row by the given integer.
+         * This can only be used when the given integer divides into all
+         * row elements exactly (with no remainder).  For the Integer class,
+         * this may be much faster than ordinary division.
+         *
+         * \pre The argument \a divBy is neither zero nor infinity, and
+         * none of the elements of the given row are infinity.
+         * \pre The argument \a divBy divides exactly into every element
+         * of the given row (i.e., it leaves no remainder).
+         * \pre The given row number is between 0 and rows()-1 inclusive.
+         *
+         * @param row the index of the row whose elements should be
+         * divided by \a divBy.
+         * @param divBy the integer to divide each row element by.
+         */
+        void divRowExact(unsigned long row, const T& divBy);
+
+        /**
+         * Divides all elements of the given column by the given integer.
+         * This can only be used when the given integer divides into all
+         * column elements exactly (with no remainder).  For the Integer class,
+         * this may be much faster than ordinary division.
+         *
+         * \pre The argument \a divBy is neither zero nor infinity, and
+         * none of the elements of the given column are infinity.
+         * \pre The argument \a divBy divides exactly into every element
+         * of the given column (i.e., it leaves no remainder).
+         * \pre The given column number is between 0 and columns()-1 inclusive.
+         *
+         * @param col the index of the column whose elements should be
+         * divided by \a divBy.
+         * @param divBy the integer to divide each column element by.
+         */
+        void divColExact(unsigned long col, const T& divBy);
+
+        /**
+         * Computes the greatest common divisor of all elements of the
+         * given row.  The value returned is guaranteed to be non-negative.
+         *
+         * \pre The given row number is between 0 and rows()-1 inclusive.
+         *
+         * @param row the index of the row whose gcd should be computed.
+         * @return the greatest common divisor of all elements of this row.
+         */
+        T gcdRow(unsigned long row);
+
+        /**
+         * Computes the greatest common divisor of all elements of the
+         * given column.  The value returned is guaranteed to be non-negative.
+         *
+         * \pre The given column number is between 0 and columns()-1 inclusive.
+         *
+         * @param col the index of the column whose gcd should be computed.
+         * @return the greatest common divisor of all elements of this column.
+         */
+        T gcdCol(unsigned long col);
+
+        /**
+         * Reduces the given row by dividing all its elements by their
+         * greatest common divisor.  It is guaranteed that, if the row is
+         * changed at all, it will be divided by a \e positive integer.
+         *
+         * \pre The given row number is between 0 and rows()-1 inclusive.
+         *
+         * @param row the index of the row to reduce.
+         */
+        void reduceRow(unsigned long row);
+
+        /**
+         * Reduces the given column by dividing all its elements by their
+         * greatest common divisor.  It is guaranteed that, if the column is
+         * changed at all, it will be divided by a \e positive integer.
+         *
+         * \pre The given column number is between 0 and columns()-1 inclusive.
+         *
+         * @param col the index of the column to reduce.
+         */
+        void reduceCol(unsigned long col);
+};
+
+/**
+ * A matrix of arbitrary-precision integers.
+ *
+ * This is the most common class used by Regina when running algebraic
+ * algorithms over integer matrices.  Since the underlying type is
+ * Regina's Integer class, calculations will be exact regardless of
+ * how large the integers become.
+ *
+ * \ifacespython This represents the class MatrixIntDomain<Integer>,
+ * which inherits from Matrix<Integer> and MatrixRing<Integer>.
+ * Most but not all inherited functions are implemented; see the individual
+ * members' documentation for exceptions where they arise.
+ */
+typedef NMatrixIntDomain<Integer> NMatrixInt;
+
+/*@}*/
+
+// Constants for NMatrixRing
+
 template <class T>
 T NMatrixRing<T>::zero(0L);
     /**< Zero in the underlying ring.
@@ -700,9 +851,69 @@ T NMatrixRing<T>::one(1L);
      *   some compilers don't like this.  It should never be
      *   modified! */
 
-/*@}*/
+// Implementation details for NMatrixIntDomain
+
+template <typename T>
+inline NMatrixIntDomain<T>::NMatrixIntDomain(unsigned long rows, unsigned long cols) :
+        NMatrixRing<T>(rows, cols) {
+}
+template <typename T>
+inline NMatrixIntDomain<T>::NMatrixIntDomain(const NMatrixIntDomain<T>& cloneMe) :
+        NMatrixRing<T>(cloneMe) {
+}
+
+template <typename T>
+void NMatrixIntDomain<T>::divRowExact(unsigned long row, const T& divBy) {
+    for (T* x = this->data[row]; x != this->data[row] + NMatrix<T>::nCols; ++x)
+        x->divByExact(divBy);
+}
+
+template <typename T>
+void NMatrixIntDomain<T>::divColExact(unsigned long col, const T& divBy) {
+    for (T** row = this->data; row != this->data + NMatrix<T>::nRows; ++row)
+        (*row)[col].divByExact(divBy);
+}
+
+template <typename T>
+T NMatrixIntDomain<T>::gcdRow(unsigned long row) {
+    T* x = this->data[row];
+
+    T gcd = *x++;
+    while (x != this->data[row] + NMatrix<T>::nCols && gcd != 1 && gcd != -1)
+        gcd = gcd.gcd(*x++);
+
+    if (gcd < 0)
+        gcd.negate();
+    return gcd;
+}
+
+template <typename T>
+T NMatrixIntDomain<T>::gcdCol(unsigned long col) {
+    T** row = this->data;
+
+    T gcd = (*row++)[col];
+    while (row != this->data + NMatrix<T>::nRows && gcd != 1 && gcd != -1)
+        gcd = gcd.gcd((*row++)[col]);
+
+    if (gcd < 0)
+        gcd.negate();
+    return gcd;
+}
+
+template <typename T>
+void NMatrixIntDomain<T>::reduceRow(unsigned long row) {
+    T gcd = gcdRow(row);
+    if (gcd != 0 && gcd != 1)
+        divRowExact(row, gcd);
+}
+
+template <typename T>
+inline void NMatrixIntDomain<T>::reduceCol(unsigned long col) {
+    T gcd = gcdCol(col);
+    if (gcd != 0 && gcd != 1)
+        divColExact(col, gcd);
+}
 
 } // namespace regina
 
 #endif
-

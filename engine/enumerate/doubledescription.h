@@ -50,7 +50,6 @@
 namespace regina {
 
 class EnumConstraints;
-class NMatrixInt;
 class Ray;
 class ProgressTracker;
 

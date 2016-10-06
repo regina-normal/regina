@@ -1126,9 +1126,9 @@ NGroupPresentation::homologicalAlignmentDetail()
                       countGenerators() );
 
     for (unsigned long j=0; j<countGenerators(); j++) {
-        std::vector<LargeInteger> epsilon( countGenerators() );
+        std::vector<Integer> epsilon( countGenerators() );
         epsilon[j] = 1;
-        std::vector<LargeInteger> temp( abelianized->snfRep(epsilon) );
+        std::vector<Integer> temp( abelianized->snfRep(epsilon) );
         for (unsigned long i=0; i<abelianized->minNumberOfGenerators(); i++)
             abMat.entry(i,j) = temp[i]; // columns are snfreps of abelianized gens.
     }
@@ -1156,8 +1156,8 @@ NGroupPresentation::homologicalAlignmentDetail()
             }
             // column op!
             bool colFlag( abMat.entry(i,j0).abs() < abMat.entry(i,j1).abs() );
-            LargeInteger q = abMat.entry(i,colFlag ? j1 : j0) /
-                              abMat.entry(i,colFlag ? j0 : j1);
+            Integer q = abMat.entry(i,colFlag ? j1 : j0) /
+                        abMat.entry(i,colFlag ? j0 : j1);
             // subtract q times column j0 from column j1
             for (unsigned long r=0; r<abMat.rows(); r++)
                 abMat.entry(r,colFlag ? j1 : j0) -= abMat.entry(r,colFlag ? j0 : j1)*q;
@@ -1210,8 +1210,8 @@ NGroupPresentation::homologicalAlignmentDetail()
             // column op!
             bool colFlag( (abMat.entry(i,j0) % abelianized->invariantFactor(i)).abs() <
                           (abMat.entry(i,j1) % abelianized->invariantFactor(i)).abs() );
-            LargeInteger q = abMat.entry(i,colFlag ? j1 : j0) /
-                              abMat.entry(i,colFlag ? j0 : j1);
+            Integer q = abMat.entry(i,colFlag ? j1 : j0) /
+                        abMat.entry(i,colFlag ? j0 : j1);
 
             // subtract q times column j0 from column j1
             for (unsigned long r=0; r<abMat.rows(); r++)

@@ -47,8 +47,10 @@
 
 namespace regina {
 
-class NMatrixInt;
 class XMLAngleStructureReader;
+
+template <typename> class NMatrixIntDomain;
+typedef NMatrixIntDomain<Integer> NMatrixInt;
 
 template <int> class Triangulation;
 typedef Triangulation<3> NTriangulation;

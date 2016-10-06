@@ -122,7 +122,7 @@ void HilbertCD::enumerateUsingBitmask(OutputIterator results,
     for (i = 0; i < dim; ++i) {
         unitMatch[i] = new Ray(nEqns);
         for (j = 0; j < nEqns; ++j)
-            unitMatch[i]->setElement(j, subspace.entry(j, i));
+            unitMatch[i]->setElement(j, LargeInteger(subspace.entry(j, i)));
     }
 
     unsigned stackSize;
