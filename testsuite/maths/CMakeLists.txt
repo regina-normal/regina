@@ -4,12 +4,12 @@
 SET ( FILES
   integer
   matrixops
-  nperm
-  nperm2
-  nperm3
-  nperm4
-  nperm5
   numbertheory
+  perm
+  perm2
+  perm3
+  perm4
+  perm5
   permconv
   primes
   rational
