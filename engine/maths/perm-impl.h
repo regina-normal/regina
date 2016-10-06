@@ -32,7 +32,7 @@
 
 /*! \file maths/perm-impl.h
  *  \brief Contains some of the implementation details for the various
- *  NPerm class templates.
+ *  Perm class templates.
  *
  *  This file is automatically included from perm.h; there is no need for
  *  end users to include it explicitly.
@@ -53,97 +53,97 @@
 namespace regina {
 
 template <int k>
-inline NPerm<2> NPerm<2>::contract(NPerm<k> p) {
-    static_assert(k >= 5, "The generic implementation of NPerm<2>::contract<k> "
+inline Perm<2> Perm<2>::contract(Perm<k> p) {
+    static_assert(k >= 5, "The generic implementation of Perm<2>::contract<k> "
         "requires k >= 5.");
 
-    return NPerm<2>(static_cast<Code>(p.permCode() % 2 ? 1 : 0));
+    return Perm<2>(static_cast<Code>(p.permCode() % 2 ? 1 : 0));
 }
 
 template <>
-inline NPerm<2> NPerm<2>::contract(NPerm<3> p) {
-    return NPerm<2>(static_cast<Code>(p.permCode() == 0 ? 0 : 1));
+inline Perm<2> Perm<2>::contract(Perm<3> p) {
+    return Perm<2>(static_cast<Code>(p.permCode() == 0 ? 0 : 1));
 }
 
 template <>
-inline NPerm<2> NPerm<2>::contract(NPerm<4> p) {
-    return NPerm<2>(static_cast<Code>(p.permCode2() < 6 ? 0 : 1));
+inline Perm<2> Perm<2>::contract(Perm<4> p) {
+    return Perm<2>(static_cast<Code>(p.permCode2() < 6 ? 0 : 1));
 }
 
 template <>
-inline NPerm<3> NPerm<3>::extend(NPerm<2> p) {
-    return NPerm<3>(static_cast<Code>(
+inline Perm<3> Perm<3>::extend(Perm<2> p) {
+    return Perm<3>(static_cast<Code>(
         p.permCode() == 0 ? code012 : code102));
 }
 
 template <int k>
-inline NPerm<3> NPerm<3>::contract(NPerm<k> p) {
-    static_assert(k >= 5, "The generic implementation of NPerm<3>::contract<k> "
+inline Perm<3> Perm<3>::contract(Perm<k> p) {
+    static_assert(k >= 5, "The generic implementation of Perm<3>::contract<k> "
         "requires k >= 5.");
 
-    return NPerm<3>(p[0], p[1], p[2]);
+    return Perm<3>(p[0], p[1], p[2]);
 }
 
 template <>
-inline NPerm<3> NPerm<3>::contract(NPerm<4> p) {
+inline Perm<3> Perm<3>::contract(Perm<4> p) {
     // Code map: 0,3,8,7,12,15 -> 0,1,2,3,4,5.
-    NPerm<4>::Code c = p.permCode2();
-    return NPerm<3>::fromPermCode(c == 8 ? 2 : c == 7 ? 3 : c / 3);
+    Perm<4>::Code c = p.permCode2();
+    return Perm<3>::fromPermCode(c == 8 ? 2 : c == 7 ? 3 : c / 3);
 }
 
 template <>
-inline NPerm<4> NPerm<4>::extend(NPerm<2> p) {
-    return NPerm<4>(static_cast<Code>(p.permCode() == 0 ? 0 : 7));
+inline Perm<4> Perm<4>::extend(Perm<2> p) {
+    return Perm<4>(static_cast<Code>(p.permCode() == 0 ? 0 : 7));
 }
 
 template <>
-inline NPerm<4> NPerm<4>::extend(NPerm<3> p) {
+inline Perm<4> Perm<4>::extend(Perm<3> p) {
     // Code map: 0,1,2,3,4,5 -> 0,3,8,7,12,15.
     switch (p.permCode()) {
-        case 2 : return NPerm<4>(static_cast<Code>(8));
-        case 3 : return NPerm<4>(static_cast<Code>(7));
-        default : return NPerm<4>(static_cast<Code>(3 * p.permCode()));
+        case 2 : return Perm<4>(static_cast<Code>(8));
+        case 3 : return Perm<4>(static_cast<Code>(7));
+        default : return Perm<4>(static_cast<Code>(3 * p.permCode()));
     }
 }
 
 template <int k>
-inline NPerm<4> NPerm<4>::contract(NPerm<k> p) {
-    static_assert(k >= 6, "The generic implementation of NPerm<4>::contract<k> "
+inline Perm<4> Perm<4>::contract(Perm<k> p) {
+    static_assert(k >= 6, "The generic implementation of Perm<4>::contract<k> "
         "requires k >= 6.");
 
-    return NPerm<4>(p[0], p[1], p[2], p[3]);
+    return Perm<4>(p[0], p[1], p[2], p[3]);
 }
 
 template <>
-inline NPerm<4> NPerm<4>::contract(NPerm<5> p) {
-    NPerm<5>::Code code = p.permCode();
-    return NPerm<4>(code & 0x03, (code >> 3) & 0x03,
+inline Perm<4> Perm<4>::contract(Perm<5> p) {
+    Perm<5>::Code code = p.permCode();
+    return Perm<4>(code & 0x03, (code >> 3) & 0x03,
         (code >> 6) & 0x03, (code >> 9) & 0x03);
 }
 
 template <>
-inline NPerm<5> NPerm<5>::extend(NPerm<2> p) {
-    return NPerm<5>(static_cast<Code>(p.permCode() == 0 ? 18056 : 18049));
+inline Perm<5> Perm<5>::extend(Perm<2> p) {
+    return Perm<5>(static_cast<Code>(p.permCode() == 0 ? 18056 : 18049));
 }
 
 template <>
-inline NPerm<5> NPerm<5>::extend(NPerm<3> p) {
-    return NPerm<5>(p[0], p[1], p[2], 3, 4);
+inline Perm<5> Perm<5>::extend(Perm<3> p) {
+    return Perm<5>(p[0], p[1], p[2], 3, 4);
 }
 
 template <>
-inline NPerm<5> NPerm<5>::extend(NPerm<4> p) {
+inline Perm<5> Perm<5>::extend(Perm<4> p) {
     // Note that, if we decide to use p.permCode() in some later implementation,
     // we should actually use p.permCode2().
-    return NPerm<5>(p[0], p[1], p[2], p[3], 4);
+    return Perm<5>(p[0], p[1], p[2], p[3], 4);
 }
 
 template <int k>
-NPerm<5> NPerm<5>::contract(NPerm<k> p) {
-    static_assert(k > 5, "NPerm<5>::contract<k> requires k > 5.");
+Perm<5> Perm<5>::contract(Perm<k> p) {
+    static_assert(k > 5, "Perm<5>::contract<k> requires k > 5.");
 
     // TODO: Reimplement this to directly truncate p's code, in the case
-    // where NPerm<k> and NPerm<5> use the same style of code with the
+    // where Perm<k> and Perm<5> use the same style of code with the
     // same value of imageBits.
 
     Code c = 0;
@@ -151,16 +151,16 @@ NPerm<5> NPerm<5>::contract(NPerm<k> p) {
     for ( ; i < 5; ++i)
         c |= (static_cast<Code>(p[i]) << (imageBits * i));
 
-    return NPerm<5>(c);
+    return Perm<5>(c);
 }
 
 template <int n>
 template <int k>
-NPerm<n> NPerm<n>::extend(NPerm<k> p) {
-    static_assert(k < n, "NPerm<n>::extend<k> requires k < n.");
+Perm<n> Perm<n>::extend(Perm<k> p) {
+    static_assert(k < n, "Perm<n>::extend<k> requires k < n.");
 
     // TODO: Reimplement this to replace the first loop with a direct
-    // copy of p's code, in the case where NPerm<k> and NPerm<n> use the
+    // copy of p's code, in the case where Perm<k> and Perm<n> use the
     // same style of code with the same value of imageBits.
 
     Code c = 0;
@@ -170,16 +170,16 @@ NPerm<n> NPerm<n>::extend(NPerm<k> p) {
     for ( ; i < n; ++i)
         c |= (static_cast<Code>(i) << (imageBits * i));
 
-    return NPerm<n>(c);
+    return Perm<n>(c);
 }
 
 template <int n>
 template <int k>
-NPerm<n> NPerm<n>::contract(NPerm<k> p) {
-    static_assert(n < k, "NPerm<n>::contract<k> requires n < k.");
+Perm<n> Perm<n>::contract(Perm<k> p) {
+    static_assert(n < k, "Perm<n>::contract<k> requires n < k.");
 
     // TODO: Reimplement this to directly truncate p's code, in the case
-    // where NPerm<k> and NPerm<n> use the same style of code with the
+    // where Perm<k> and Perm<n> use the same style of code with the
     // same value of imageBits.
 
     Code c = 0;
@@ -187,7 +187,7 @@ NPerm<n> NPerm<n>::contract(NPerm<k> p) {
     for ( ; i < n; ++i)
         c |= (static_cast<Code>(p[i]) << (imageBits * i));
 
-    return NPerm<n>(c);
+    return Perm<n>(c);
 }
 
 } // namespace regina

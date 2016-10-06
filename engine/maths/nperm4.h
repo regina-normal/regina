@@ -58,19 +58,19 @@ namespace regina {
 
 /**
  * Represents a permutation of {0,1,2,3}.
- * This is a specialisation of the generic NPerm template: it is highly
+ * This is a specialisation of the generic Perm template: it is highly
  * optimised, and also offers some additional functionality.
  * Amongst other things, this permutation class is used to specify how
  * simplices of a 3-manifold triangulation are glued together.
  *
- * As with all NPerm template classes, these objects are small enough to
- * pass about by value instead of by reference.  Moreover, NPerm<4>
+ * As with all Perm template classes, these objects are small enough to
+ * pass about by value instead of by reference.  Moreover, Perm<4>
  * is extremely fast to work with.
  *
  * Each permutation has an internal code, which is a single native
  * integer that is sufficient to reconstruct the permutation.
  * Thus the internal code may be a useful means for passing permutation
- * objects to and from the engine.  For NPerm<4>, the internal permutation
+ * objects to and from the engine.  For Perm<4>, the internal permutation
  * codes have changed as of Regina 4.6.1:
  *
  * - \e First-generation codes were used internally in Regina 4.6 and earlier.
@@ -83,7 +83,7 @@ namespace regina {
  *
  * - \e Second-generation codes are used internally in Regina 4.6.1 and above.
  *   These codes are integers between 0 and 23 inclusive, representing the
- *   index of the permutation in the array NPerm<4>::S4.  The routines
+ *   index of the permutation in the array Perm<4>::S4.  The routines
  *   permCode2(), setPermCode2(), fromPermCode2() and isPermCode2()
  *   work with second-generation codes.
  *
@@ -91,13 +91,13 @@ namespace regina {
  * codes at all, you use second-generation codes where possible.  This
  * is because the first-generation routines incur additional overhead
  * in converting back and forth between the second-generation codes
- * (which are used internally by NPerm<4>).
+ * (which are used internally by Perm<4>).
  *
  * \ifacespython Since Python does not support templates, this class is
  * made available under the name NPerm4.
  */
 template <>
-class REGINA_API NPerm<4> {
+class REGINA_API Perm<4> {
     public:
         /**
          * Denotes a native signed integer type large enough to count all
@@ -131,21 +131,21 @@ class REGINA_API NPerm<4> {
          * permutations, and those with odd indices in the array are the
          * odd permutations.
          *
-         * For all permutation classes (NPerm<4>, NPerm<5> and so on), the
+         * For all permutation classes (Perm<4>, Perm<5> and so on), the
          * S4 array stores the same permutations in the same order (but
          * of course using different data types).
          *
          * Note that the permutations are not necessarily in
          * lexicographical order.
          */
-        static const NPerm<4> S4[24];
+        static const Perm<4> S4[24];
 
         /**
-         * A dimension-agnostic alias for NPerm<4>::S4.  In general, for
+         * A dimension-agnostic alias for Perm<4>::S4.  In general, for
          * each \a K the class NPermK will define an alias \a Sn
          * that references the list of all permutations NPermK::SK.
          */
-        static const NPerm<4>* Sn;
+        static const Perm<4>* Sn;
 
         /**
          * Contains the inverses of the permutations in the array \a S4.
@@ -156,7 +156,7 @@ class REGINA_API NPerm<4> {
         static const unsigned invS4[24];
 
         /**
-         * A dimension-agnostic alias for NPerm<4>::invS4.  In general, for
+         * A dimension-agnostic alias for Perm<4>::invS4.  In general, for
          * each \a K the class NPermK will define an alias \a invSn
          * that references the list of all permutations NPermK::invSK.
          */
@@ -166,14 +166,14 @@ class REGINA_API NPerm<4> {
          * Contains all possible permutations of four elements in
          * lexicographical order.
          */
-        static const NPerm<4> orderedS4[24];
+        static const Perm<4> orderedS4[24];
 
         /**
-         * A dimension-agnostic alias for NPerm<4>::orderedS4.  In general, for
+         * A dimension-agnostic alias for Perm<4>::orderedS4.  In general, for
          * each \a K the class NPermK will define an alias \a orderedSn
          * that references the list of all permutations NPermK::orderedSK.
          */
-        static const NPerm<4>* orderedSn;
+        static const Perm<4>* orderedSn;
 
         /**
          * Contains all possible permutations of three elements.
@@ -183,28 +183,28 @@ class REGINA_API NPerm<4> {
          * permutations, and those with odd indices in the array are the
          * odd permutations.
          *
-         * For all permutation classes (NPerm<4>, NPerm<5> and so on), the
+         * For all permutation classes (Perm<4>, Perm<5> and so on), the
          * S3 array stores the same permutations in the same order (but
          * of course using different data types).
          *
          * Note that the permutations are not necessarily in
          * lexicographical order.  For the corresponding inverse array,
-         * see NPerm<3>::invS3.
+         * see Perm<3>::invS3.
          */
-        static const NPerm<4> S3[6];
+        static const Perm<4> S3[6];
 
         /**
-         * A dimension-agnostic alias for NPerm<4>::S3.  In general, for
+         * A dimension-agnostic alias for Perm<4>::S3.  In general, for
          * each \a K the class NPermK will define an alias \a Sn_1
          * that references the list of all permutations NPermK::S(K-1).
          */
-        static const NPerm<4>* Sn_1;
+        static const Perm<4>* Sn_1;
 
         /**
          * Contains all possible permutations of three elements in
          * lexicographical order.  In each permutation, 3 maps to 3.
          */
-        static const NPerm<4> orderedS3[6];
+        static const Perm<4> orderedS3[6];
 
         /**
          * Contains all possible permutations of two elements.
@@ -214,13 +214,13 @@ class REGINA_API NPerm<4> {
          * permutations, and those with odd indices in the array are the
          * odd permutations.
          *
-         * For all permutation classes (NPerm<4>, NPerm<5> and so on), the
+         * For all permutation classes (Perm<4>, Perm<5> and so on), the
          * S2 array stores the same permutations in the same order (but
          * of course using different data types).
          *
          * Note that these permutations are already in lexicographical order.
          */
-        static const NPerm<4> S2[2];
+        static const Perm<4> S2[2];
 
     private:
         Code code_;
@@ -240,7 +240,7 @@ class REGINA_API NPerm<4> {
         /**
          * Creates the identity permutation.
          */
-        NPerm();
+        Perm();
 
         /**
          * Creates the transposition of \a a and \a b.
@@ -251,7 +251,7 @@ class REGINA_API NPerm<4> {
          * @param a the element to switch with \a b.
          * @param b the element to switch with \a a.
          */
-        NPerm(int a, int b);
+        Perm(int a, int b);
 
         /**
          * Creates a permutation mapping (0,1,2,3) to
@@ -264,7 +264,7 @@ class REGINA_API NPerm<4> {
          * @param c the desired image of 2.
          * @param d the desired image of 3.
          */
-        NPerm(int a, int b, int c, int d);
+        Perm(int a, int b, int c, int d);
 
         /**
          * Creates a permutation mapping \a i to \a image[i] for each
@@ -277,7 +277,7 @@ class REGINA_API NPerm<4> {
          *
          * @param image the array of images.
          */
-        NPerm(const int* image);
+        Perm(const int* image);
 
         /**
          * Creates a permutation mapping (\a a[0], ..., \a a[3]) to
@@ -292,7 +292,7 @@ class REGINA_API NPerm<4> {
          * @param b the corresponding array of images; this must also have
          * length 4.
          */
-        NPerm(const int* a, const int* b);
+        Perm(const int* a, const int* b);
 
         /**
          * Creates a permutation mapping
@@ -312,7 +312,7 @@ class REGINA_API NPerm<4> {
          * @param c1 the desired image of <i>c0</i>.
          * @param d1 the desired image of <i>d0</i>.
          */
-        NPerm(int a0, int a1, int b0, int b1, int c0, int c1, int d0, int d1);
+        Perm(int a0, int a1, int b0, int b1, int c0, int c1, int d0, int d1);
 
         /**
          * Creates a permutation that is a clone of the given
@@ -320,7 +320,7 @@ class REGINA_API NPerm<4> {
          *
          * @param cloneMe the permutation to clone.
          */
-        NPerm(const NPerm<4>& cloneMe);
+        Perm(const Perm<4>& cloneMe);
 
         /**
          * Returns the first-generation code representing this permutation.
@@ -330,7 +330,7 @@ class REGINA_API NPerm<4> {
          * code as determined by isPermCode().
          *
          * \warning This routine will incur additional overhead, since
-         * NPerm<4> now uses second-generation codes internally.
+         * Perm<4> now uses second-generation codes internally.
          * See the class notes and the routine permCode2() for details.
          *
          * @return the first-generation permutation code.
@@ -345,7 +345,7 @@ class REGINA_API NPerm<4> {
          * code as determined by isPermCode2().
          *
          * Second-generation codes are fast to work with, since they are
-         * used internally by the NPerm<4> class.
+         * used internally by the Perm<4> class.
          *
          * @return the second-generation permutation code.
          */
@@ -359,7 +359,7 @@ class REGINA_API NPerm<4> {
          * see isPermCode() for details.
          *
          * \warning This routine will incur additional overhead, since
-         * NPerm<4> now uses second-generation codes internally.
+         * Perm<4> now uses second-generation codes internally.
          * See the class notes and the routine setPermCode2() for details.
          *
          * @param code the first-generation code that will determine the
@@ -372,7 +372,7 @@ class REGINA_API NPerm<4> {
          * second-generation permutation code.
          *
          * Second-generation codes are fast to work with, since they are
-         * used internally by the NPerm<4> class.
+         * used internally by the Perm<4> class.
          *
          * \pre the given code is a valid second-generation permutation code;
          * see isPermCode2() for details.
@@ -390,20 +390,20 @@ class REGINA_API NPerm<4> {
          * see isPermCode() for details.
          *
          * \warning This routine will incur additional overhead, since
-         * NPerm<4> now uses second-generation codes internally.
+         * Perm<4> now uses second-generation codes internally.
          * See the class notes and the routine fromPermCode2() for details.
          *
          * @param code the first-generation code for the new permutation.
          * @return the permutation represented by the given code.
          */
-        static NPerm<4> fromPermCode(Code code);
+        static Perm<4> fromPermCode(Code code);
 
         /**
          * Creates a permutation from the given second-generation
          * permutation code.
          *
          * Second-generation codes are fast to work with, since they are
-         * used internally by the NPerm<4> class.
+         * used internally by the Perm<4> class.
          *
          * \pre the given code is a valid second-generation permutation code;
          * see isPermCode2() for details.
@@ -411,7 +411,7 @@ class REGINA_API NPerm<4> {
          * @param code the second-generation code for the new permutation.
          * @return the permutation represented by the given code.
          */
-        static NPerm<4> fromPermCode2(Code code);
+        static Perm<4> fromPermCode2(Code code);
 
         /**
          * Determines whether the given character is a valid first-generation
@@ -419,7 +419,7 @@ class REGINA_API NPerm<4> {
          * setPermCode() or fromPermCode(), and are returned by permCode().
          *
          * \warning This routine will incur additional overhead, since
-         * NPerm<4> now uses second-generation codes internally.
+         * Perm<4> now uses second-generation codes internally.
          * See the class notes and the routine isPermCode2() for details.
          *
          * @param code the permutation code to test.
@@ -434,7 +434,7 @@ class REGINA_API NPerm<4> {
          * setPermCode2() or fromPermCode2(), and are returned by permCode2().
          *
          * Second-generation codes are fast to work with, since they are
-         * used internally by the NPerm<4> class.
+         * used internally by the Perm<4> class.
          *
          * @param code the permutation code to test.
          * @return \c true if and only if the given code is a valid
@@ -449,7 +449,7 @@ class REGINA_API NPerm<4> {
          * to this permutation.
          * @return a reference to this permutation.
          */
-        NPerm<4>& operator = (const NPerm<4>& cloneMe);
+        Perm<4>& operator = (const Perm<4>& cloneMe);
 
         /**
          * Returns the composition of this permutation with the given
@@ -460,14 +460,14 @@ class REGINA_API NPerm<4> {
          * @param q the permutation with which to compose this.
          * @return the composition of both permutations.
          */
-        NPerm<4> operator *(const NPerm<4>& q) const;
+        Perm<4> operator *(const Perm<4>& q) const;
 
         /**
          * Finds the inverse of this permutation.
          *
          * @return the inverse of this permutation.
          */
-        NPerm<4> inverse() const;
+        Perm<4> inverse() const;
 
         /**
          * Finds the reverse of this permutation.
@@ -476,7 +476,7 @@ class REGINA_API NPerm<4> {
          * In other words, if permutation \a q is the
          * reverse of \a p, then <tt>p[i] == q[3 - i]</tt> for all \a i.
          */
-        NPerm<4> reverse() const;
+        Perm<4> reverse() const;
 
         /**
          * Determines the sign of this permutation.
@@ -515,7 +515,7 @@ class REGINA_API NPerm<4> {
          * @return \c true if and only if this and the given permutation
          * are equal.
          */
-        bool operator == (const NPerm<4>& other) const;
+        bool operator == (const Perm<4>& other) const;
 
         /**
          * Determines if this differs from the given permutation.
@@ -526,7 +526,7 @@ class REGINA_API NPerm<4> {
          * @return \c true if and only if this and the given permutation
          * differ.
          */
-        bool operator != (const NPerm<4>& other) const;
+        bool operator != (const Perm<4>& other) const;
 
         /**
          * Lexicographically compares the images of (0,1,2,3) under this
@@ -537,7 +537,7 @@ class REGINA_API NPerm<4> {
          * the permutations are equal and 1 if this permutation produces
          * a greater image.
          */
-        int compareWith(const NPerm<4>& other) const;
+        int compareWith(const Perm<4>& other) const;
 
         /**
          * Determines if this is the identity permutation.
@@ -562,7 +562,7 @@ class REGINA_API NPerm<4> {
          * must be between 0 and 23 inclusive.
          * @return the <i>i</i>th permutation.
          */
-        static NPerm atIndex(Index i);
+        static Perm atIndex(Index i);
 
         /**
          * Returns the lexicographical index of this permutation.  This
@@ -591,7 +591,7 @@ class REGINA_API NPerm<4> {
          *
          * @return a random permutation.
          */
-        static NPerm rand();
+        static Perm rand();
 
         /**
          * Returns a string representation of this permutation.
@@ -633,37 +633,37 @@ class REGINA_API NPerm<4> {
         std::string trunc3() const;
 
         /**
-         * Returns the index of this permutation in the NPerm<4>::S4 array.
+         * Returns the index of this permutation in the Perm<4>::S4 array.
          *
          * @return the index \a i for which this permutation is equal to
-         * NPerm<4>::S4[i].  This will be between 0 and 23 inclusive.
+         * Perm<4>::S4[i].  This will be between 0 and 23 inclusive.
          */
         int S4Index() const;
 
         /**
-         * Returns the index of this permutation in the NPerm<4>::S4 array.
+         * Returns the index of this permutation in the Perm<4>::S4 array.
          * This is a dimension-agnostic alias for S4Index().
          *
          * @return the index \a i for which this permutation is equal to
-         * NPerm<4>::S4[i].  This will be between 0 and 23 inclusive.
+         * Perm<4>::S4[i].  This will be between 0 and 23 inclusive.
          */
         int SnIndex() const;
 
         /**
-         * Returns the index of this permutation in the NPerm<4>::orderedS4 array.
+         * Returns the index of this permutation in the Perm<4>::orderedS4 array.
          *
          * @return the index \a i for which this permutation is equal to
-         * NPerm<4>::orderedS4[i].  This will be between 0 and 23 inclusive.
+         * Perm<4>::orderedS4[i].  This will be between 0 and 23 inclusive.
          */
         REGINA_INLINE_REQUIRED
         int orderedS4Index() const;
 
         /**
-         * Returns the index of this permutation in the NPerm<4>::orderedS4 array.
+         * Returns the index of this permutation in the Perm<4>::orderedS4 array.
          * This is a dimension-agnostic alias for orderedS4Index().
          *
          * @return the index \a i for which this permutation is equal to
-         * NPerm<4>::orderedS4[i].  This will be between 0 and 23 inclusive.
+         * Perm<4>::orderedS4[i].  This will be between 0 and 23 inclusive.
          */
         int orderedSnIndex() const;
 
@@ -683,7 +683,7 @@ class REGINA_API NPerm<4> {
          * four elements.
          */
         template <int k>
-        static NPerm<4> extend(NPerm<k> p);
+        static Perm<4> extend(Perm<k> p);
 
         /**
          * Restricts a <i>k</i>-element permutation to an 4-element
@@ -703,7 +703,7 @@ class REGINA_API NPerm<4> {
          * 4 elements.
          */
         template <int k>
-        static NPerm<4> contract(NPerm<k> p);
+        static Perm<4> contract(Perm<k> p);
 
     private:
         /**
@@ -743,10 +743,10 @@ class REGINA_API NPerm<4> {
          * @param code the second-generation code from which the new
          * permutation will be created.
          */
-        NPerm<4>(Code code);
+        Perm<4>(Code code);
 
         /**
-         * Returns the index into the NPerm<4>::S4 array of the permutation that
+         * Returns the index into the Perm<4>::S4 array of the permutation that
          * maps (0,1,2,3) to (<i>a</i>,<i>b</i>,<i>c</i>,<i>d</i>) respectively.
          *
          * \pre {<i>a</i>,<i>b</i>,<i>c</i>,<i>d</i>} = {0,1,2,3}.
@@ -756,7 +756,7 @@ class REGINA_API NPerm<4> {
          * @param c the desired image of 2.
          * @param d the desired image of 3.
          * @return the index \a i for which the given permutation is equal to
-         * NPerm<4>::S4[i].  This will be between 0 and 23 inclusive.
+         * Perm<4>::S4[i].  This will be between 0 and 23 inclusive.
          */
         REGINA_INLINE_REQUIRED
         static int S4Index(int a, int b, int c, int d);
@@ -768,37 +768,37 @@ class REGINA_API NPerm<4> {
  *
  * \deprecated The class NPerm4 has now been renamed to Perm<4>.
  */
-typedef NPerm<4> NPerm4;
+typedef Perm<4> NPerm4;
 
 // Routines for constructing the permutations associated to
 // triangles and edges of the triangulation
 
 /*@}*/
 
-// Inline functions for NPerm<4>
+// Inline functions for Perm<4>
 
-inline NPerm<4>::NPerm() : code_(0) {
+inline Perm<4>::Perm() : code_(0) {
 }
 
-inline NPerm<4>::NPerm(Code code) : code_(code) {
+inline Perm<4>::Perm(Code code) : code_(code) {
 }
 
-inline NPerm<4>::NPerm(int a, int b) : code_(swapTable[a][b]) {
+inline Perm<4>::Perm(int a, int b) : code_(swapTable[a][b]) {
 }
 
-inline NPerm<4>::NPerm(int a, int b, int c, int d) :
+inline Perm<4>::Perm(int a, int b, int c, int d) :
         code_(static_cast<Code>(S4Index(a, b, c, d))) {
 }
 
-inline NPerm<4>::NPerm(const int* image) :
+inline Perm<4>::Perm(const int* image) :
         code_(static_cast<Code>(S4Index(
         image[0], image[1], image[2], image[3]))) {
 }
 
-inline NPerm<4>::NPerm(const NPerm<4>& cloneMe) : code_(cloneMe.code_) {
+inline Perm<4>::Perm(const Perm<4>& cloneMe) : code_(cloneMe.code_) {
 }
 
-inline NPerm<4>::Code NPerm<4>::permCode() const {
+inline Perm<4>::Code Perm<4>::permCode() const {
     return static_cast<Code>(
         imageTable[code_][0] |
         (imageTable[code_][1] << 2) |
@@ -806,11 +806,11 @@ inline NPerm<4>::Code NPerm<4>::permCode() const {
         (imageTable[code_][3] << 6));
 }
 
-inline NPerm<4>::Code NPerm<4>::permCode2() const {
+inline Perm<4>::Code Perm<4>::permCode2() const {
     return code_;
 }
 
-inline void NPerm<4>::setPermCode(Code code) {
+inline void Perm<4>::setPermCode(Code code) {
     code_ = static_cast<Code>(S4Index(
         code & 0x03,
         (code >> 2) & 0x03,
@@ -818,57 +818,57 @@ inline void NPerm<4>::setPermCode(Code code) {
         (code >> 6) & 0x03));
 }
 
-inline void NPerm<4>::setPermCode2(Code code) {
+inline void Perm<4>::setPermCode2(Code code) {
     code_ = code;
 }
 
-inline NPerm<4> NPerm<4>::fromPermCode(Code code) {
-    return NPerm<4>(static_cast<Code>(S4Index(
+inline Perm<4> Perm<4>::fromPermCode(Code code) {
+    return Perm<4>(static_cast<Code>(S4Index(
         code & 0x03,
         (code >> 2) & 0x03,
         (code >> 4) & 0x03,
         (code >> 6) & 0x03)));
 }
 
-inline NPerm<4> NPerm<4>::fromPermCode2(Code code) {
-    return NPerm<4>(code);
+inline Perm<4> Perm<4>::fromPermCode2(Code code) {
+    return Perm<4>(code);
 }
 
-inline bool NPerm<4>::isPermCode2(Code code) {
+inline bool Perm<4>::isPermCode2(Code code) {
     // code >= 0 is automatic because we are using an unsigned data type.
     return (code < 24);
 }
 
-inline NPerm<4>& NPerm<4>::operator = (const NPerm<4>& cloneMe) {
+inline Perm<4>& Perm<4>::operator = (const Perm<4>& cloneMe) {
     code_ = cloneMe.code_;
     return *this;
 }
 
-inline NPerm<4> NPerm<4>::operator *(const NPerm<4>& q) const {
-    return NPerm<4>(productTable[code_][q.code_]);
+inline Perm<4> Perm<4>::operator *(const Perm<4>& q) const {
+    return Perm<4>(productTable[code_][q.code_]);
 }
 
-inline NPerm<4> NPerm<4>::inverse() const {
-    return NPerm<4>(static_cast<Code>(invS4[code_]));
+inline Perm<4> Perm<4>::inverse() const {
+    return Perm<4>(static_cast<Code>(invS4[code_]));
 }
 
-inline NPerm<4> NPerm<4>::reverse() const {
-    return NPerm<4>(static_cast<Code>(revS4[code_]));
+inline Perm<4> Perm<4>::reverse() const {
+    return Perm<4>(static_cast<Code>(revS4[code_]));
 }
 
-inline int NPerm<4>::sign() const {
+inline int Perm<4>::sign() const {
     return (code_ % 2 ? -1 : 1);
 }
 
-inline int NPerm<4>::operator[](int source) const {
+inline int Perm<4>::operator[](int source) const {
     return imageTable[code_][source];
 }
 
-inline int NPerm<4>::preImageOf(int image) const {
+inline int Perm<4>::preImageOf(int image) const {
     return imageTable[invS4[code_]][image];
 }
 
-inline int NPerm<4>::compareWith(const NPerm<4>& other) const {
+inline int Perm<4>::compareWith(const Perm<4>& other) const {
     // Computing orderedS4Index() is very fast, now that we use S4 indices
     // for internal permutation codes.  Use this instead of comparing images
     // one at a time.
@@ -877,35 +877,35 @@ inline int NPerm<4>::compareWith(const NPerm<4>& other) const {
     return (o1 == o2 ? 0 : o1 < o2 ? -1 : 1);
 }
 
-inline bool NPerm<4>::isIdentity() const {
+inline bool Perm<4>::isIdentity() const {
     return (code_ == 0);
 }
 
-inline NPerm<4> NPerm<4>::atIndex(Index i) {
+inline Perm<4> Perm<4>::atIndex(Index i) {
     return orderedS4[i];
 }
 
-inline NPerm<4>::Index NPerm<4>::index() const {
+inline Perm<4>::Index Perm<4>::index() const {
     return orderedS4Index();
 }
 
-inline NPerm<4> NPerm<4>::rand() {
+inline Perm<4> Perm<4>::rand() {
     return S4[::rand() % 24];
 }
 
-inline bool NPerm<4>::operator == (const NPerm<4>& other) const {
+inline bool Perm<4>::operator == (const Perm<4>& other) const {
     return (code_ == other.code_);
 }
 
-inline bool NPerm<4>::operator != (const NPerm<4>& other) const {
+inline bool Perm<4>::operator != (const Perm<4>& other) const {
     return (code_ != other.code_);
 }
 
-inline int NPerm<4>::S4Index() const {
+inline int Perm<4>::S4Index() const {
     return code_;
 }
 
-inline int NPerm<4>::orderedS4Index() const {
+inline int Perm<4>::orderedS4Index() const {
     // S4 is almost the same as orderedS4, except that some pairs
     // S4[2i] <--> S4[2i+1] have been swapped to ensure that all
     // permutations S4[2i] are even and all permutations S4[2i+1] are odd.
@@ -914,11 +914,11 @@ inline int NPerm<4>::orderedS4Index() const {
     return ((code_ & 2) ? (code_ ^ 1) : code_);
 }
 
-inline int NPerm<4>::orderedSnIndex() const {
+inline int Perm<4>::orderedSnIndex() const {
     return orderedS4Index();
 }
 
-inline int NPerm<4>::S4Index(int a, int b, int c, int d) {
+inline int Perm<4>::S4Index(int a, int b, int c, int d) {
     int orderedS4Index = 6 * a +
                          2 * (b - (b > a ? 1 : 0)) +
                              (c > d ? 1 : 0);
@@ -927,7 +927,7 @@ inline int NPerm<4>::S4Index(int a, int b, int c, int d) {
     return ((orderedS4Index & 2) ? (orderedS4Index ^ 1) : orderedS4Index);
 }
 
-inline int NPerm<4>::SnIndex() const {
+inline int Perm<4>::SnIndex() const {
     return S4Index();
 }
 

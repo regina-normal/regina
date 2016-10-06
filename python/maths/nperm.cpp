@@ -46,7 +46,7 @@ namespace {
         long len = boost::python::len(l);
         if ( len != n ) {
             char err[80];
-            snprintf(err, 80, "Initialisation list for NPerm%d must contain "
+            snprintf(err, 80, "Initialisation list for Perm%d must contain "
                               "exactly %d integers.", n, n);
             PyErr_SetString(PyExc_ValueError, err);
             boost::python::throw_error_already_set();
@@ -162,16 +162,28 @@ void addNPerm() {
     boost::python::def("digit", regina::digit);
     boost::python::def("factorial", regina::factorial);
 
-    addNPerm<6>("NPerm6");
-    addNPerm<7>("NPerm7");
-    addNPerm<8>("NPerm8");
-    addNPerm<9>("NPerm9");
-    addNPerm<10>("NPerm10");
-    addNPerm<11>("NPerm11");
-    addNPerm<12>("NPerm12");
-    addNPerm<13>("NPerm13");
-    addNPerm<14>("NPerm14");
-    addNPerm<15>("NPerm15");
-    addNPerm<16>("NPerm16");
+    addNPerm<6>("Perm6");
+    addNPerm<7>("Perm7");
+    addNPerm<8>("Perm8");
+    addNPerm<9>("Perm9");
+    addNPerm<10>("Perm10");
+    addNPerm<11>("Perm11");
+    addNPerm<12>("Perm12");
+    addNPerm<13>("Perm13");
+    addNPerm<14>("Perm14");
+    addNPerm<15>("Perm15");
+    addNPerm<16>("Perm16");
+
+    scope().attr("NPerm6") = scope().attr("Perm6");
+    scope().attr("NPerm7") = scope().attr("Perm7");
+    scope().attr("NPerm8") = scope().attr("Perm8");
+    scope().attr("NPerm9") = scope().attr("Perm9");
+    scope().attr("NPerm10") = scope().attr("Perm10");
+    scope().attr("NPerm11") = scope().attr("Perm11");
+    scope().attr("NPerm12") = scope().attr("Perm12");
+    scope().attr("NPerm13") = scope().attr("Perm13");
+    scope().attr("NPerm14") = scope().attr("Perm14");
+    scope().attr("NPerm15") = scope().attr("Perm15");
+    scope().attr("NPerm16") = scope().attr("Perm16");
 }
 

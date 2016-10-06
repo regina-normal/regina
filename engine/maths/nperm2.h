@@ -58,37 +58,37 @@ namespace regina {
 
 /**
  * Represents a permutation of {0,1}.
- * This is a specialisation of the generic NPerm template: it is highly
+ * This is a specialisation of the generic Perm template: it is highly
  * optimised, but also somewhat trivial (since there are only two
  * possible permutations).  It is provided simply to optimise the general
- * NPerm<n> template for this trivial case.
+ * Perm<n> template for this trivial case.
  *
- * As with all NPerm template classes, these objects are small enough to
- * pass about by value instead of by reference.  Moreover, NPerm<2> in
+ * As with all Perm template classes, these objects are small enough to
+ * pass about by value instead of by reference.  Moreover, Perm<2> in
  * particular is extremely fast to work with.
  *
  * Each permutation has an internal code, which is a single native
  * integer that is sufficient to reconstruct the permutation.
  * Thus the internal code may be a useful means for passing permutation
- * objects to and from the engine.  For NPerm<2>, the internal code is 0 for
+ * objects to and from the engine.  For Perm<2>, the internal code is 0 for
  * the identity permutation, or 1 for the (unique) non-identity permutation.
  *
- * \warning Every permutation class NPerm<n> provides a transposition
- * (i.e., pair swap) constructor <tt>NPerm<n>(a,b).</tt>  In addition, the
- * specialised classes NPerm<3>, NPerm<4> and NPerm<5> provide "list of images"
- * constructors <tt>NPerm<3>(a,b,c)</tt>, <tt>NPerm<4>(a,b,c,d)</tt> and
- * <tt>NPerm<5>(a,b,c,d,e)</tt>.  For NPerm<2>, these two constructors would
+ * \warning Every permutation class Perm<n> provides a transposition
+ * (i.e., pair swap) constructor <tt>Perm<n>(a,b).</tt>  In addition, the
+ * specialised classes Perm<3>, Perm<4> and Perm<5> provide "list of images"
+ * constructors <tt>Perm<3>(a,b,c)</tt>, <tt>Perm<4>(a,b,c,d)</tt> and
+ * <tt>Perm<5>(a,b,c,d,e)</tt>.  For Perm<2>, these two constructors would
  * be indistinguishable (since both would take two integer arguments).
- * Here NPerm<2> takes an approach that is consistent with the generic NPerm<n>
- * class: <tt>NPerm<2>(a,b)</tt> is interpreted as the \e transposition of
- * \a a and \a b.  In particular, <tt>NPerm(0,1)</tt> is \e not the
+ * Here Perm<2> takes an approach that is consistent with the generic Perm<n>
+ * class: <tt>Perm<2>(a,b)</tt> is interpreted as the \e transposition of
+ * \a a and \a b.  In particular, <tt>Perm(0,1)</tt> is \e not the
  * identity permutation.
  *
  * \ifacespython Since Python does not support templates, this class is
  * made available under the name NPerm2.
  */
 template <>
-class REGINA_API NPerm<2> {
+class REGINA_API Perm<2> {
     public:
         /**
          * Denotes a native signed integer type large enough to count all
@@ -122,18 +122,18 @@ class REGINA_API NPerm<2> {
          * permutation has index 1.  As a result, S2[\a i] is an even
          * permutation if and only if \a i is even.
          *
-         * For all permutation classes (NPerm<2>, NPerm<3> and so on),
+         * For all permutation classes (Perm<2>, Perm<3> and so on),
          * the S2 array stores the same permutations in the same order
          * (but of course using different data types).
          */
-        static const NPerm<2> S2[2];
+        static const Perm<2> S2[2];
 
         /**
-         * A dimension-agnostic alias for NPerm<2>::S2.  In general, for
+         * A dimension-agnostic alias for Perm<2>::S2.  In general, for
          * each \a K the class NPermK will define an alias \a Sn
          * that references the list of all permutations NPermK::SK.
          */
-        static const NPerm<2>* Sn;
+        static const Perm<2>* Sn;
 
         /**
          * Contains the inverses of the permutations in the array \a S2.
@@ -148,7 +148,7 @@ class REGINA_API NPerm<2> {
         static const unsigned invS2[2];
 
         /**
-         * A dimension-agnostic alias for NPerm<2>::invS2.  In general, for
+         * A dimension-agnostic alias for Perm<2>::invS2.  In general, for
          * each \a K the class NPermK will define an alias \a invSn
          * that references the list of all permutations NPermK::invSK.
          */
@@ -158,21 +158,21 @@ class REGINA_API NPerm<2> {
          * Contains all possible permutations of two elements in
          * lexicographical order.
          *
-         * This is identical to the array NPerm<2>::S2, and in fact
+         * This is identical to the array Perm<2>::S2, and in fact
          * \a orderedS2 and \a S2 are pointers to the same array in memory.
-         * Note however that for \a n &ge; 3, the arrays NPerm<n>::Sn and
-         * NPerm<n>::orderedSn are different: \a Sn alternates between even
+         * Note however that for \a n &ge; 3, the arrays Perm<n>::Sn and
+         * Perm<n>::orderedSn are different: \a Sn alternates between even
          * and odd permutations, and \a orderedSn stores permutations in
          * lexicograpical order.
          */
-        static const NPerm<2>* orderedS2;
+        static const Perm<2>* orderedS2;
 
         /**
-         * A dimension-agnostic alias for NPerm<2>::orderedS2.  In general, for
+         * A dimension-agnostic alias for Perm<2>::orderedS2.  In general, for
          * each \a K the class NPermK will define an alias \a orderedSn
          * that references the list of all permutations NPermK::orderedSK.
          */
-        static const NPerm<2>* orderedSn;
+        static const Perm<2>* orderedSn;
 
         /**
          * Contains all possible permutations of one element.
@@ -180,20 +180,20 @@ class REGINA_API NPerm<2> {
          *
          * Of course, this array is trivial: it contains just the
          * identity permutation.  This array is provided for consistency
-         * with larger permutation classes NPerm<n>.
+         * with larger permutation classes Perm<n>.
          *
          * Note that, as an implementation detail, the arrays \a S1 and \a S2
          * point to the same location in memory (however, they are treated as
          * arrays of different lengths).
          */
-        static const NPerm<2>* S1;
+        static const Perm<2>* S1;
 
         /**
-         * A dimension-agnostic alias for NPerm<2>::S1.  In general, for
+         * A dimension-agnostic alias for Perm<2>::S1.  In general, for
          * each \a K the class NPermK will define an alias \a Sn_1
          * that references the list of all permutations NPermK::S(K-1).
          */
-        static const NPerm<2>* Sn_1;
+        static const Perm<2>* Sn_1;
 
     private:
         Code code_;
@@ -203,7 +203,7 @@ class REGINA_API NPerm<2> {
         /**
          * Creates the identity permutation.
          */
-        NPerm();
+        Perm();
 
         /**
          * Creates the transposition of \a a and \a b.
@@ -214,7 +214,7 @@ class REGINA_API NPerm<2> {
          * @param a the element to switch with \a b.
          * @param b the element to switch with \a a.
          */
-        NPerm(int a, int b);
+        Perm(int a, int b);
 
         /**
          * Creates a permutation mapping \a i to \a image[i] for each
@@ -227,7 +227,7 @@ class REGINA_API NPerm<2> {
          *
          * @param image the array of images.
          */
-        NPerm(const int* image);
+        Perm(const int* image);
 
         /**
          * Creates a permutation mapping (\a a[0], \a a[1]) to
@@ -242,7 +242,7 @@ class REGINA_API NPerm<2> {
          * @param b the corresponding array of images; this must also have
          * length 2.
          */
-        NPerm(const int* a, const int* b);
+        Perm(const int* a, const int* b);
 
         /**
          * Creates a permutation that is a clone of the given
@@ -250,7 +250,7 @@ class REGINA_API NPerm<2> {
          *
          * @param cloneMe the permutation to clone.
          */
-        NPerm(const NPerm<2>& cloneMe);
+        Perm(const Perm<2>& cloneMe);
 
         /**
          * Returns the internal code representing this permutation.
@@ -285,7 +285,7 @@ class REGINA_API NPerm<2> {
          * @param code the internal code for the new permutation.
          * @return the permutation represented by the given internal code.
          */
-        static NPerm<2> fromPermCode(Code code);
+        static Perm<2> fromPermCode(Code code);
 
         /**
          * Determines whether the given integer is a valid internal
@@ -304,7 +304,7 @@ class REGINA_API NPerm<2> {
          * to this permutation.
          * @return a reference to this permutation.
          */
-        NPerm<2>& operator = (const NPerm<2>& cloneMe);
+        Perm<2>& operator = (const Perm<2>& cloneMe);
 
         /**
          * Returns the composition of this permutation with the given
@@ -315,14 +315,14 @@ class REGINA_API NPerm<2> {
          * @param q the permutation with which to compose this.
          * @return the composition of both permutations.
          */
-        NPerm<2> operator * (const NPerm<2>& q) const;
+        Perm<2> operator * (const Perm<2>& q) const;
 
         /**
          * Finds the inverse of this permutation.
          *
          * @return the inverse of this permutation.
          */
-        NPerm<2> inverse() const;
+        Perm<2> inverse() const;
 
         /**
          * Finds the reverse of this permutation.
@@ -331,7 +331,7 @@ class REGINA_API NPerm<2> {
          * In other words, if permutation \a q is the
          * reverse of \a p, then <tt>p[i] == q[1 - i]</tt> for all \a i.
          */
-        NPerm<2> reverse() const;
+        Perm<2> reverse() const;
 
         /**
          * Determines the sign of this permutation.
@@ -368,7 +368,7 @@ class REGINA_API NPerm<2> {
          * @return \c true if and only if this and the given permutation
          * are equal.
          */
-        bool operator == (const NPerm<2>& other) const;
+        bool operator == (const Perm<2>& other) const;
 
         /**
          * Determines if this differs from the given permutation.
@@ -379,7 +379,7 @@ class REGINA_API NPerm<2> {
          * @return \c true if and only if this and the given permutation
          * differ.
          */
-        bool operator != (const NPerm<2>& other) const;
+        bool operator != (const Perm<2>& other) const;
 
         /**
          * Lexicographically compares the images of (0,1) under this
@@ -390,7 +390,7 @@ class REGINA_API NPerm<2> {
          * the permutations are equal and 1 if this permutation produces
          * a greater image.
          */
-        int compareWith(const NPerm<2>& other) const;
+        int compareWith(const Perm<2>& other) const;
 
         /**
          * Determines if this is the identity permutation.
@@ -413,7 +413,7 @@ class REGINA_API NPerm<2> {
          * must be 0 or 1.
          * @return the <i>i</i>th permutation.
          */
-        static NPerm atIndex(Index i);
+        static Perm atIndex(Index i);
 
         /**
          * Returns a random permutation on two elements.
@@ -424,7 +424,7 @@ class REGINA_API NPerm<2> {
          *
          * @return a random permutation.
          */
-        static NPerm rand();
+        static Perm rand();
 
         /**
          * Returns the lexicographical index of this permutation.  This
@@ -464,36 +464,36 @@ class REGINA_API NPerm<2> {
         std::string trunc(unsigned len) const;
 
         /**
-         * Returns the index of this permutation in the NPerm<2>::S2 array.
+         * Returns the index of this permutation in the Perm<2>::S2 array.
          *
          * @return the index \a i for which this permutation is equal to
-         * NPerm<2>::S2[i].  This will be 0 or 1.
+         * Perm<2>::S2[i].  This will be 0 or 1.
          */
         int S2Index() const;
 
         /**
-         * Returns the index of this permutation in the NPerm<2>::S2 array.
+         * Returns the index of this permutation in the Perm<2>::S2 array.
          * This is a dimension-agnostic alias for S2Index().
          *
          * @return the index \a i for which this permutation is equal to
-         * NPerm<2>::S2[i].  This will be 0 or 1.
+         * Perm<2>::S2[i].  This will be 0 or 1.
          */
         int SnIndex() const;
 
         /**
-         * Returns the index of this permutation in the NPerm<2>::orderedS2 array.
+         * Returns the index of this permutation in the Perm<2>::orderedS2 array.
          *
          * @return the index \a i for which this permutation is equal to
-         * NPerm<2>::orderedS2[i].  This will be 0 or 1.
+         * Perm<2>::orderedS2[i].  This will be 0 or 1.
          */
         int orderedS2Index() const;
 
         /**
-         * Returns the index of this permutation in the NPerm<2>::orderedS2 array.
+         * Returns the index of this permutation in the Perm<2>::orderedS2 array.
          * This is a dimension-agnostic alias for orderedS2Index().
          *
          * @return the index \a i for which this permutation is equal to
-         * NPerm<2>::orderedS2[i].  This will be 0 or 1.
+         * Perm<2>::orderedS2[i].  This will be 0 or 1.
          */
         int orderedSnIndex() const;
 
@@ -515,7 +515,7 @@ class REGINA_API NPerm<2> {
          * 2 elements.
          */
         template <int k>
-        static NPerm<2> contract(NPerm<k> p);
+        static Perm<2> contract(Perm<k> p);
 
     private:
         /**
@@ -527,7 +527,7 @@ class REGINA_API NPerm<2> {
          * @param code the internal code from which the new
          * permutation will be created.
          */
-        NPerm<2>(Code code);
+        Perm<2>(Code code);
 };
 
 /**
@@ -536,114 +536,114 @@ class REGINA_API NPerm<2> {
  *
  * \deprecated The class NPerm2 has now been renamed to Perm<2>.
  */
-typedef NPerm<2> NPerm2;
+typedef Perm<2> NPerm2;
 
 /*@}*/
 
-// Inline functions for NPerm<2>
+// Inline functions for Perm<2>
 
-inline NPerm<2>::NPerm() : code_(0) {
+inline Perm<2>::Perm() : code_(0) {
 }
 
-inline NPerm<2>::NPerm(Code code) : code_(code) {
+inline Perm<2>::Perm(Code code) : code_(code) {
 }
 
-inline NPerm<2>::NPerm(int a, int b) {
+inline Perm<2>::Perm(int a, int b) {
     // Transposition.
     code_ = (a == b ? 0 : 1);
 }
 
-inline NPerm<2>::NPerm(const int* image) {
+inline Perm<2>::Perm(const int* image) {
     code_ = image[0];
 }
 
-inline NPerm<2>::NPerm(const int* a, const int* b) {
+inline Perm<2>::Perm(const int* a, const int* b) {
     code_ = (a[0] == b[0] ? 0 : 1);
 }
 
-inline NPerm<2>::NPerm(const NPerm<2>& cloneMe) : code_(cloneMe.code_) {
+inline Perm<2>::Perm(const Perm<2>& cloneMe) : code_(cloneMe.code_) {
 }
 
-inline NPerm<2>::Code NPerm<2>::permCode() const {
+inline Perm<2>::Code Perm<2>::permCode() const {
     return code_;
 }
 
-inline void NPerm<2>::setPermCode(Code code) {
+inline void Perm<2>::setPermCode(Code code) {
     code_ = code;
 }
 
-inline NPerm<2> NPerm<2>::fromPermCode(Code code) {
-    return NPerm<2>(code);
+inline Perm<2> Perm<2>::fromPermCode(Code code) {
+    return Perm<2>(code);
 }
 
-inline bool NPerm<2>::isPermCode(Code code) {
+inline bool Perm<2>::isPermCode(Code code) {
     // code >= 0 is a no-op because we are using an unsigned data type.
     return (code < 2);
 }
 
-inline NPerm<2>& NPerm<2>::operator = (const NPerm<2>& cloneMe) {
+inline Perm<2>& Perm<2>::operator = (const Perm<2>& cloneMe) {
     code_ = cloneMe.code_;
     return *this;
 }
 
-inline NPerm<2> NPerm<2>::operator * (const NPerm<2>& q) const {
-    return NPerm<2>(code_ ^ q.code_);
+inline Perm<2> Perm<2>::operator * (const Perm<2>& q) const {
+    return Perm<2>(code_ ^ q.code_);
 }
 
-inline NPerm<2> NPerm<2>::inverse() const {
+inline Perm<2> Perm<2>::inverse() const {
     return *this;
 }
 
-inline NPerm<2> NPerm<2>::reverse() const {
-    return NPerm<2>(static_cast<Code>(1 - code_));
+inline Perm<2> Perm<2>::reverse() const {
+    return Perm<2>(static_cast<Code>(1 - code_));
 }
 
-inline int NPerm<2>::sign() const {
+inline int Perm<2>::sign() const {
     return (code_ ? -1 : 1);
 }
 
-inline int NPerm<2>::operator[](int source) const {
+inline int Perm<2>::operator[](int source) const {
     return source ^ code_;
 }
 
-inline int NPerm<2>::preImageOf(int image) const {
+inline int Perm<2>::preImageOf(int image) const {
     return image ^ code_;
 }
 
-inline bool NPerm<2>::operator == (const NPerm<2>& other) const {
+inline bool Perm<2>::operator == (const Perm<2>& other) const {
     return (code_ == other.code_);
 }
 
-inline bool NPerm<2>::operator != (const NPerm<2>& other) const {
+inline bool Perm<2>::operator != (const Perm<2>& other) const {
     return (code_ != other.code_);
 }
 
-inline int NPerm<2>::compareWith(const NPerm<2>& other) const {
+inline int Perm<2>::compareWith(const Perm<2>& other) const {
     // For n=2, permutation codes respect lexicographical order.
     return (code_ == other.code_ ? 0 : code_ < other.code_ ? -1 : 1);
 }
 
-inline bool NPerm<2>::isIdentity() const {
+inline bool Perm<2>::isIdentity() const {
     return (code_ == 0);
 }
 
-inline NPerm<2> NPerm<2>::atIndex(Index i) {
-    return NPerm<2>(static_cast<Code>(i));
+inline Perm<2> Perm<2>::atIndex(Index i) {
+    return Perm<2>(static_cast<Code>(i));
 }
 
-inline NPerm<2>::Index NPerm<2>::index() const {
+inline Perm<2>::Index Perm<2>::index() const {
     return code_;
 }
 
-inline NPerm<2> NPerm<2>::rand() {
-    return NPerm<2>(static_cast<Code>(::rand() % 2));
+inline Perm<2> Perm<2>::rand() {
+    return Perm<2>(static_cast<Code>(::rand() % 2));
 }
 
-inline std::string NPerm<2>::str() const {
+inline std::string Perm<2>::str() const {
     return (code_ == 0 ? "01" : "10");
 }
 
-inline std::string NPerm<2>::trunc(unsigned len) const {
+inline std::string Perm<2>::trunc(unsigned len) const {
     switch (len) {
         case 2 : return (code_ == 0 ? "01" : "10");
         case 1 : return (code_ == 0 ? "0" : "1");
@@ -651,19 +651,19 @@ inline std::string NPerm<2>::trunc(unsigned len) const {
     }
 }
 
-inline int NPerm<2>::S2Index() const {
+inline int Perm<2>::S2Index() const {
     return code_;
 }
 
-inline int NPerm<2>::SnIndex() const {
+inline int Perm<2>::SnIndex() const {
     return code_;
 }
 
-inline int NPerm<2>::orderedS2Index() const {
+inline int Perm<2>::orderedS2Index() const {
     return code_;
 }
 
-inline int NPerm<2>::orderedSnIndex() const {
+inline int Perm<2>::orderedSnIndex() const {
     return code_;
 }
 

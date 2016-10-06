@@ -1198,50 +1198,35 @@ NPDF : typedef ->  PDF
 
 NPacket : typedef ->  Packet
 
-NPerm10 : class
-Equality type : BY_VALUE
+NPerm10 : typedef ->  Perm10
 
-NPerm11 : class
-Equality type : BY_VALUE
+NPerm11 : typedef ->  Perm11
 
-NPerm12 : class
-Equality type : BY_VALUE
+NPerm12 : typedef ->  Perm12
 
-NPerm13 : class
-Equality type : BY_VALUE
+NPerm13 : typedef ->  Perm13
 
-NPerm14 : class
-Equality type : BY_VALUE
+NPerm14 : typedef ->  Perm14
 
-NPerm15 : class
-Equality type : BY_VALUE
+NPerm15 : typedef ->  Perm15
 
-NPerm16 : class
-Equality type : BY_VALUE
+NPerm16 : typedef ->  Perm16
 
-NPerm2 : class
-Equality type : BY_VALUE
+NPerm2 : typedef ->  Perm2
 
-NPerm3 : class
-Equality type : BY_VALUE
+NPerm3 : typedef ->  Perm3
 
-NPerm4 : class
-Equality type : BY_VALUE
+NPerm4 : typedef ->  Perm4
 
-NPerm5 : class
-Equality type : BY_VALUE
+NPerm5 : typedef ->  Perm5
 
-NPerm6 : class
-Equality type : BY_VALUE
+NPerm6 : typedef ->  Perm6
 
-NPerm7 : class
-Equality type : BY_VALUE
+NPerm7 : typedef ->  Perm7
 
-NPerm8 : class
-Equality type : BY_VALUE
+NPerm8 : typedef ->  Perm8
 
-NPerm9 : class
-Equality type : BY_VALUE
+NPerm9 : typedef ->  Perm9
 
 NPillowTwoSphere : class
 Equality type : BY_REFERENCE
@@ -1393,6 +1378,51 @@ Equality type : BY_REFERENCE
 
 Packet : class
 Equality type : BY_REFERENCE
+
+Perm10 : class
+Equality type : BY_VALUE
+
+Perm11 : class
+Equality type : BY_VALUE
+
+Perm12 : class
+Equality type : BY_VALUE
+
+Perm13 : class
+Equality type : BY_VALUE
+
+Perm14 : class
+Equality type : BY_VALUE
+
+Perm15 : class
+Equality type : BY_VALUE
+
+Perm16 : class
+Equality type : BY_VALUE
+
+Perm2 : class
+Equality type : BY_VALUE
+
+Perm3 : class
+Equality type : BY_VALUE
+
+Perm4 : class
+Equality type : BY_VALUE
+
+Perm5 : class
+Equality type : BY_VALUE
+
+Perm6 : class
+Equality type : BY_VALUE
+
+Perm7 : class
+Equality type : BY_VALUE
+
+Perm8 : class
+Equality type : BY_VALUE
+
+Perm9 : class
+Equality type : BY_VALUE
 
 Polynomial : class
 Equality type : BY_VALUE

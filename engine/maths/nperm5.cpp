@@ -35,81 +35,81 @@
 
 namespace regina {
 
-const NPerm<5>::Index NPerm<5>::nPerms;
-const NPerm<5>::Index NPerm<5>::nPerms_1;
-const int NPerm<5>::imageBits;
+const Perm<5>::Index Perm<5>::nPerms;
+const Perm<5>::Index Perm<5>::nPerms_1;
+const int Perm<5>::imageBits;
 
-const NPerm<5> NPerm<5>::S5[120] = {
-    NPerm<5>(0,1,2,3,4), NPerm<5>(0,1,2,4,3), NPerm<5>(0,1,3,4,2), NPerm<5>(0,1,3,2,4),
-    NPerm<5>(0,1,4,2,3), NPerm<5>(0,1,4,3,2), NPerm<5>(0,2,1,4,3), NPerm<5>(0,2,1,3,4),
-    NPerm<5>(0,2,3,1,4), NPerm<5>(0,2,3,4,1), NPerm<5>(0,2,4,3,1), NPerm<5>(0,2,4,1,3),
-    NPerm<5>(0,3,1,2,4), NPerm<5>(0,3,1,4,2), NPerm<5>(0,3,2,4,1), NPerm<5>(0,3,2,1,4),
-    NPerm<5>(0,3,4,1,2), NPerm<5>(0,3,4,2,1), NPerm<5>(0,4,1,3,2), NPerm<5>(0,4,1,2,3),
-    NPerm<5>(0,4,2,1,3), NPerm<5>(0,4,2,3,1), NPerm<5>(0,4,3,2,1), NPerm<5>(0,4,3,1,2),
-    NPerm<5>(1,0,2,4,3), NPerm<5>(1,0,2,3,4), NPerm<5>(1,0,3,2,4), NPerm<5>(1,0,3,4,2),
-    NPerm<5>(1,0,4,3,2), NPerm<5>(1,0,4,2,3), NPerm<5>(1,2,0,3,4), NPerm<5>(1,2,0,4,3),
-    NPerm<5>(1,2,3,4,0), NPerm<5>(1,2,3,0,4), NPerm<5>(1,2,4,0,3), NPerm<5>(1,2,4,3,0),
-    NPerm<5>(1,3,0,4,2), NPerm<5>(1,3,0,2,4), NPerm<5>(1,3,2,0,4), NPerm<5>(1,3,2,4,0),
-    NPerm<5>(1,3,4,2,0), NPerm<5>(1,3,4,0,2), NPerm<5>(1,4,0,2,3), NPerm<5>(1,4,0,3,2),
-    NPerm<5>(1,4,2,3,0), NPerm<5>(1,4,2,0,3), NPerm<5>(1,4,3,0,2), NPerm<5>(1,4,3,2,0),
-    NPerm<5>(2,0,1,3,4), NPerm<5>(2,0,1,4,3), NPerm<5>(2,0,3,4,1), NPerm<5>(2,0,3,1,4),
-    NPerm<5>(2,0,4,1,3), NPerm<5>(2,0,4,3,1), NPerm<5>(2,1,0,4,3), NPerm<5>(2,1,0,3,4),
-    NPerm<5>(2,1,3,0,4), NPerm<5>(2,1,3,4,0), NPerm<5>(2,1,4,3,0), NPerm<5>(2,1,4,0,3),
-    NPerm<5>(2,3,0,1,4), NPerm<5>(2,3,0,4,1), NPerm<5>(2,3,1,4,0), NPerm<5>(2,3,1,0,4),
-    NPerm<5>(2,3,4,0,1), NPerm<5>(2,3,4,1,0), NPerm<5>(2,4,0,3,1), NPerm<5>(2,4,0,1,3),
-    NPerm<5>(2,4,1,0,3), NPerm<5>(2,4,1,3,0), NPerm<5>(2,4,3,1,0), NPerm<5>(2,4,3,0,1),
-    NPerm<5>(3,0,1,4,2), NPerm<5>(3,0,1,2,4), NPerm<5>(3,0,2,1,4), NPerm<5>(3,0,2,4,1),
-    NPerm<5>(3,0,4,2,1), NPerm<5>(3,0,4,1,2), NPerm<5>(3,1,0,2,4), NPerm<5>(3,1,0,4,2),
-    NPerm<5>(3,1,2,4,0), NPerm<5>(3,1,2,0,4), NPerm<5>(3,1,4,0,2), NPerm<5>(3,1,4,2,0),
-    NPerm<5>(3,2,0,4,1), NPerm<5>(3,2,0,1,4), NPerm<5>(3,2,1,0,4), NPerm<5>(3,2,1,4,0),
-    NPerm<5>(3,2,4,1,0), NPerm<5>(3,2,4,0,1), NPerm<5>(3,4,0,1,2), NPerm<5>(3,4,0,2,1),
-    NPerm<5>(3,4,1,2,0), NPerm<5>(3,4,1,0,2), NPerm<5>(3,4,2,0,1), NPerm<5>(3,4,2,1,0),
-    NPerm<5>(4,0,1,2,3), NPerm<5>(4,0,1,3,2), NPerm<5>(4,0,2,3,1), NPerm<5>(4,0,2,1,3),
-    NPerm<5>(4,0,3,1,2), NPerm<5>(4,0,3,2,1), NPerm<5>(4,1,0,3,2), NPerm<5>(4,1,0,2,3),
-    NPerm<5>(4,1,2,0,3), NPerm<5>(4,1,2,3,0), NPerm<5>(4,1,3,2,0), NPerm<5>(4,1,3,0,2),
-    NPerm<5>(4,2,0,1,3), NPerm<5>(4,2,0,3,1), NPerm<5>(4,2,1,3,0), NPerm<5>(4,2,1,0,3),
-    NPerm<5>(4,2,3,0,1), NPerm<5>(4,2,3,1,0), NPerm<5>(4,3,0,2,1), NPerm<5>(4,3,0,1,2),
-    NPerm<5>(4,3,1,0,2), NPerm<5>(4,3,1,2,0), NPerm<5>(4,3,2,1,0), NPerm<5>(4,3,2,0,1),
+const Perm<5> Perm<5>::S5[120] = {
+    Perm<5>(0,1,2,3,4), Perm<5>(0,1,2,4,3), Perm<5>(0,1,3,4,2), Perm<5>(0,1,3,2,4),
+    Perm<5>(0,1,4,2,3), Perm<5>(0,1,4,3,2), Perm<5>(0,2,1,4,3), Perm<5>(0,2,1,3,4),
+    Perm<5>(0,2,3,1,4), Perm<5>(0,2,3,4,1), Perm<5>(0,2,4,3,1), Perm<5>(0,2,4,1,3),
+    Perm<5>(0,3,1,2,4), Perm<5>(0,3,1,4,2), Perm<5>(0,3,2,4,1), Perm<5>(0,3,2,1,4),
+    Perm<5>(0,3,4,1,2), Perm<5>(0,3,4,2,1), Perm<5>(0,4,1,3,2), Perm<5>(0,4,1,2,3),
+    Perm<5>(0,4,2,1,3), Perm<5>(0,4,2,3,1), Perm<5>(0,4,3,2,1), Perm<5>(0,4,3,1,2),
+    Perm<5>(1,0,2,4,3), Perm<5>(1,0,2,3,4), Perm<5>(1,0,3,2,4), Perm<5>(1,0,3,4,2),
+    Perm<5>(1,0,4,3,2), Perm<5>(1,0,4,2,3), Perm<5>(1,2,0,3,4), Perm<5>(1,2,0,4,3),
+    Perm<5>(1,2,3,4,0), Perm<5>(1,2,3,0,4), Perm<5>(1,2,4,0,3), Perm<5>(1,2,4,3,0),
+    Perm<5>(1,3,0,4,2), Perm<5>(1,3,0,2,4), Perm<5>(1,3,2,0,4), Perm<5>(1,3,2,4,0),
+    Perm<5>(1,3,4,2,0), Perm<5>(1,3,4,0,2), Perm<5>(1,4,0,2,3), Perm<5>(1,4,0,3,2),
+    Perm<5>(1,4,2,3,0), Perm<5>(1,4,2,0,3), Perm<5>(1,4,3,0,2), Perm<5>(1,4,3,2,0),
+    Perm<5>(2,0,1,3,4), Perm<5>(2,0,1,4,3), Perm<5>(2,0,3,4,1), Perm<5>(2,0,3,1,4),
+    Perm<5>(2,0,4,1,3), Perm<5>(2,0,4,3,1), Perm<5>(2,1,0,4,3), Perm<5>(2,1,0,3,4),
+    Perm<5>(2,1,3,0,4), Perm<5>(2,1,3,4,0), Perm<5>(2,1,4,3,0), Perm<5>(2,1,4,0,3),
+    Perm<5>(2,3,0,1,4), Perm<5>(2,3,0,4,1), Perm<5>(2,3,1,4,0), Perm<5>(2,3,1,0,4),
+    Perm<5>(2,3,4,0,1), Perm<5>(2,3,4,1,0), Perm<5>(2,4,0,3,1), Perm<5>(2,4,0,1,3),
+    Perm<5>(2,4,1,0,3), Perm<5>(2,4,1,3,0), Perm<5>(2,4,3,1,0), Perm<5>(2,4,3,0,1),
+    Perm<5>(3,0,1,4,2), Perm<5>(3,0,1,2,4), Perm<5>(3,0,2,1,4), Perm<5>(3,0,2,4,1),
+    Perm<5>(3,0,4,2,1), Perm<5>(3,0,4,1,2), Perm<5>(3,1,0,2,4), Perm<5>(3,1,0,4,2),
+    Perm<5>(3,1,2,4,0), Perm<5>(3,1,2,0,4), Perm<5>(3,1,4,0,2), Perm<5>(3,1,4,2,0),
+    Perm<5>(3,2,0,4,1), Perm<5>(3,2,0,1,4), Perm<5>(3,2,1,0,4), Perm<5>(3,2,1,4,0),
+    Perm<5>(3,2,4,1,0), Perm<5>(3,2,4,0,1), Perm<5>(3,4,0,1,2), Perm<5>(3,4,0,2,1),
+    Perm<5>(3,4,1,2,0), Perm<5>(3,4,1,0,2), Perm<5>(3,4,2,0,1), Perm<5>(3,4,2,1,0),
+    Perm<5>(4,0,1,2,3), Perm<5>(4,0,1,3,2), Perm<5>(4,0,2,3,1), Perm<5>(4,0,2,1,3),
+    Perm<5>(4,0,3,1,2), Perm<5>(4,0,3,2,1), Perm<5>(4,1,0,3,2), Perm<5>(4,1,0,2,3),
+    Perm<5>(4,1,2,0,3), Perm<5>(4,1,2,3,0), Perm<5>(4,1,3,2,0), Perm<5>(4,1,3,0,2),
+    Perm<5>(4,2,0,1,3), Perm<5>(4,2,0,3,1), Perm<5>(4,2,1,3,0), Perm<5>(4,2,1,0,3),
+    Perm<5>(4,2,3,0,1), Perm<5>(4,2,3,1,0), Perm<5>(4,3,0,2,1), Perm<5>(4,3,0,1,2),
+    Perm<5>(4,3,1,0,2), Perm<5>(4,3,1,2,0), Perm<5>(4,3,2,1,0), Perm<5>(4,3,2,0,1),
 };
 
-const NPerm<5>* NPerm<5>::Sn = NPerm<5>::S5;
+const Perm<5>* Perm<5>::Sn = Perm<5>::S5;
 
-const NPerm<5> NPerm<5>::orderedS5[120] = {
-    NPerm<5>(0,1,2,3,4), NPerm<5>(0,1,2,4,3), NPerm<5>(0,1,3,2,4), NPerm<5>(0,1,3,4,2),
-    NPerm<5>(0,1,4,2,3), NPerm<5>(0,1,4,3,2), NPerm<5>(0,2,1,3,4), NPerm<5>(0,2,1,4,3),
-    NPerm<5>(0,2,3,1,4), NPerm<5>(0,2,3,4,1), NPerm<5>(0,2,4,1,3), NPerm<5>(0,2,4,3,1),
-    NPerm<5>(0,3,1,2,4), NPerm<5>(0,3,1,4,2), NPerm<5>(0,3,2,1,4), NPerm<5>(0,3,2,4,1),
-    NPerm<5>(0,3,4,1,2), NPerm<5>(0,3,4,2,1), NPerm<5>(0,4,1,2,3), NPerm<5>(0,4,1,3,2),
-    NPerm<5>(0,4,2,1,3), NPerm<5>(0,4,2,3,1), NPerm<5>(0,4,3,1,2), NPerm<5>(0,4,3,2,1),
-    NPerm<5>(1,0,2,3,4), NPerm<5>(1,0,2,4,3), NPerm<5>(1,0,3,2,4), NPerm<5>(1,0,3,4,2),
-    NPerm<5>(1,0,4,2,3), NPerm<5>(1,0,4,3,2), NPerm<5>(1,2,0,3,4), NPerm<5>(1,2,0,4,3),
-    NPerm<5>(1,2,3,0,4), NPerm<5>(1,2,3,4,0), NPerm<5>(1,2,4,0,3), NPerm<5>(1,2,4,3,0),
-    NPerm<5>(1,3,0,2,4), NPerm<5>(1,3,0,4,2), NPerm<5>(1,3,2,0,4), NPerm<5>(1,3,2,4,0),
-    NPerm<5>(1,3,4,0,2), NPerm<5>(1,3,4,2,0), NPerm<5>(1,4,0,2,3), NPerm<5>(1,4,0,3,2),
-    NPerm<5>(1,4,2,0,3), NPerm<5>(1,4,2,3,0), NPerm<5>(1,4,3,0,2), NPerm<5>(1,4,3,2,0),
-    NPerm<5>(2,0,1,3,4), NPerm<5>(2,0,1,4,3), NPerm<5>(2,0,3,1,4), NPerm<5>(2,0,3,4,1),
-    NPerm<5>(2,0,4,1,3), NPerm<5>(2,0,4,3,1), NPerm<5>(2,1,0,3,4), NPerm<5>(2,1,0,4,3),
-    NPerm<5>(2,1,3,0,4), NPerm<5>(2,1,3,4,0), NPerm<5>(2,1,4,0,3), NPerm<5>(2,1,4,3,0),
-    NPerm<5>(2,3,0,1,4), NPerm<5>(2,3,0,4,1), NPerm<5>(2,3,1,0,4), NPerm<5>(2,3,1,4,0),
-    NPerm<5>(2,3,4,0,1), NPerm<5>(2,3,4,1,0), NPerm<5>(2,4,0,1,3), NPerm<5>(2,4,0,3,1),
-    NPerm<5>(2,4,1,0,3), NPerm<5>(2,4,1,3,0), NPerm<5>(2,4,3,0,1), NPerm<5>(2,4,3,1,0),
-    NPerm<5>(3,0,1,2,4), NPerm<5>(3,0,1,4,2), NPerm<5>(3,0,2,1,4), NPerm<5>(3,0,2,4,1),
-    NPerm<5>(3,0,4,1,2), NPerm<5>(3,0,4,2,1), NPerm<5>(3,1,0,2,4), NPerm<5>(3,1,0,4,2),
-    NPerm<5>(3,1,2,0,4), NPerm<5>(3,1,2,4,0), NPerm<5>(3,1,4,0,2), NPerm<5>(3,1,4,2,0),
-    NPerm<5>(3,2,0,1,4), NPerm<5>(3,2,0,4,1), NPerm<5>(3,2,1,0,4), NPerm<5>(3,2,1,4,0),
-    NPerm<5>(3,2,4,0,1), NPerm<5>(3,2,4,1,0), NPerm<5>(3,4,0,1,2), NPerm<5>(3,4,0,2,1),
-    NPerm<5>(3,4,1,0,2), NPerm<5>(3,4,1,2,0), NPerm<5>(3,4,2,0,1), NPerm<5>(3,4,2,1,0),
-    NPerm<5>(4,0,1,2,3), NPerm<5>(4,0,1,3,2), NPerm<5>(4,0,2,1,3), NPerm<5>(4,0,2,3,1),
-    NPerm<5>(4,0,3,1,2), NPerm<5>(4,0,3,2,1), NPerm<5>(4,1,0,2,3), NPerm<5>(4,1,0,3,2),
-    NPerm<5>(4,1,2,0,3), NPerm<5>(4,1,2,3,0), NPerm<5>(4,1,3,0,2), NPerm<5>(4,1,3,2,0),
-    NPerm<5>(4,2,0,1,3), NPerm<5>(4,2,0,3,1), NPerm<5>(4,2,1,0,3), NPerm<5>(4,2,1,3,0),
-    NPerm<5>(4,2,3,0,1), NPerm<5>(4,2,3,1,0), NPerm<5>(4,3,0,1,2), NPerm<5>(4,3,0,2,1),
-    NPerm<5>(4,3,1,0,2), NPerm<5>(4,3,1,2,0), NPerm<5>(4,3,2,0,1), NPerm<5>(4,3,2,1,0),
+const Perm<5> Perm<5>::orderedS5[120] = {
+    Perm<5>(0,1,2,3,4), Perm<5>(0,1,2,4,3), Perm<5>(0,1,3,2,4), Perm<5>(0,1,3,4,2),
+    Perm<5>(0,1,4,2,3), Perm<5>(0,1,4,3,2), Perm<5>(0,2,1,3,4), Perm<5>(0,2,1,4,3),
+    Perm<5>(0,2,3,1,4), Perm<5>(0,2,3,4,1), Perm<5>(0,2,4,1,3), Perm<5>(0,2,4,3,1),
+    Perm<5>(0,3,1,2,4), Perm<5>(0,3,1,4,2), Perm<5>(0,3,2,1,4), Perm<5>(0,3,2,4,1),
+    Perm<5>(0,3,4,1,2), Perm<5>(0,3,4,2,1), Perm<5>(0,4,1,2,3), Perm<5>(0,4,1,3,2),
+    Perm<5>(0,4,2,1,3), Perm<5>(0,4,2,3,1), Perm<5>(0,4,3,1,2), Perm<5>(0,4,3,2,1),
+    Perm<5>(1,0,2,3,4), Perm<5>(1,0,2,4,3), Perm<5>(1,0,3,2,4), Perm<5>(1,0,3,4,2),
+    Perm<5>(1,0,4,2,3), Perm<5>(1,0,4,3,2), Perm<5>(1,2,0,3,4), Perm<5>(1,2,0,4,3),
+    Perm<5>(1,2,3,0,4), Perm<5>(1,2,3,4,0), Perm<5>(1,2,4,0,3), Perm<5>(1,2,4,3,0),
+    Perm<5>(1,3,0,2,4), Perm<5>(1,3,0,4,2), Perm<5>(1,3,2,0,4), Perm<5>(1,3,2,4,0),
+    Perm<5>(1,3,4,0,2), Perm<5>(1,3,4,2,0), Perm<5>(1,4,0,2,3), Perm<5>(1,4,0,3,2),
+    Perm<5>(1,4,2,0,3), Perm<5>(1,4,2,3,0), Perm<5>(1,4,3,0,2), Perm<5>(1,4,3,2,0),
+    Perm<5>(2,0,1,3,4), Perm<5>(2,0,1,4,3), Perm<5>(2,0,3,1,4), Perm<5>(2,0,3,4,1),
+    Perm<5>(2,0,4,1,3), Perm<5>(2,0,4,3,1), Perm<5>(2,1,0,3,4), Perm<5>(2,1,0,4,3),
+    Perm<5>(2,1,3,0,4), Perm<5>(2,1,3,4,0), Perm<5>(2,1,4,0,3), Perm<5>(2,1,4,3,0),
+    Perm<5>(2,3,0,1,4), Perm<5>(2,3,0,4,1), Perm<5>(2,3,1,0,4), Perm<5>(2,3,1,4,0),
+    Perm<5>(2,3,4,0,1), Perm<5>(2,3,4,1,0), Perm<5>(2,4,0,1,3), Perm<5>(2,4,0,3,1),
+    Perm<5>(2,4,1,0,3), Perm<5>(2,4,1,3,0), Perm<5>(2,4,3,0,1), Perm<5>(2,4,3,1,0),
+    Perm<5>(3,0,1,2,4), Perm<5>(3,0,1,4,2), Perm<5>(3,0,2,1,4), Perm<5>(3,0,2,4,1),
+    Perm<5>(3,0,4,1,2), Perm<5>(3,0,4,2,1), Perm<5>(3,1,0,2,4), Perm<5>(3,1,0,4,2),
+    Perm<5>(3,1,2,0,4), Perm<5>(3,1,2,4,0), Perm<5>(3,1,4,0,2), Perm<5>(3,1,4,2,0),
+    Perm<5>(3,2,0,1,4), Perm<5>(3,2,0,4,1), Perm<5>(3,2,1,0,4), Perm<5>(3,2,1,4,0),
+    Perm<5>(3,2,4,0,1), Perm<5>(3,2,4,1,0), Perm<5>(3,4,0,1,2), Perm<5>(3,4,0,2,1),
+    Perm<5>(3,4,1,0,2), Perm<5>(3,4,1,2,0), Perm<5>(3,4,2,0,1), Perm<5>(3,4,2,1,0),
+    Perm<5>(4,0,1,2,3), Perm<5>(4,0,1,3,2), Perm<5>(4,0,2,1,3), Perm<5>(4,0,2,3,1),
+    Perm<5>(4,0,3,1,2), Perm<5>(4,0,3,2,1), Perm<5>(4,1,0,2,3), Perm<5>(4,1,0,3,2),
+    Perm<5>(4,1,2,0,3), Perm<5>(4,1,2,3,0), Perm<5>(4,1,3,0,2), Perm<5>(4,1,3,2,0),
+    Perm<5>(4,2,0,1,3), Perm<5>(4,2,0,3,1), Perm<5>(4,2,1,0,3), Perm<5>(4,2,1,3,0),
+    Perm<5>(4,2,3,0,1), Perm<5>(4,2,3,1,0), Perm<5>(4,3,0,1,2), Perm<5>(4,3,0,2,1),
+    Perm<5>(4,3,1,0,2), Perm<5>(4,3,1,2,0), Perm<5>(4,3,2,0,1), Perm<5>(4,3,2,1,0),
 };
 
-const NPerm<5>* NPerm<5>::orderedSn = NPerm<5>::orderedS5;
+const Perm<5>* Perm<5>::orderedSn = Perm<5>::orderedS5;
 
-const unsigned NPerm<5>::invS5[120] = {
+const unsigned Perm<5>::invS5[120] = {
      0,  1,  4,  3,  2,  5,  6,  7, 12, 19, 18, 13,
      8, 11, 20, 15, 16, 23, 10,  9, 14, 21, 22, 17,
     24, 25, 26, 29, 28, 27, 48, 49, 96, 73, 72, 97,
@@ -122,45 +122,45 @@ const unsigned NPerm<5>::invS5[120] = {
     62, 69,110, 87, 92,117, 70, 65, 88,113,118, 95
 };
 
-const unsigned* NPerm<5>::invSn = NPerm<5>::invS5;
+const unsigned* Perm<5>::invSn = Perm<5>::invS5;
 
-const NPerm<5> NPerm<5>::S4[24] = {
-    NPerm<5>(0,1,2,3,4), NPerm<5>(0,1,3,2,4), NPerm<5>(0,2,3,1,4), NPerm<5>(0,2,1,3,4),
-    NPerm<5>(0,3,1,2,4), NPerm<5>(0,3,2,1,4), NPerm<5>(1,0,3,2,4), NPerm<5>(1,0,2,3,4),
-    NPerm<5>(1,2,0,3,4), NPerm<5>(1,2,3,0,4), NPerm<5>(1,3,2,0,4), NPerm<5>(1,3,0,2,4),
-    NPerm<5>(2,0,1,3,4), NPerm<5>(2,0,3,1,4), NPerm<5>(2,1,3,0,4), NPerm<5>(2,1,0,3,4),
-    NPerm<5>(2,3,0,1,4), NPerm<5>(2,3,1,0,4), NPerm<5>(3,0,2,1,4), NPerm<5>(3,0,1,2,4),
-    NPerm<5>(3,1,0,2,4), NPerm<5>(3,1,2,0,4), NPerm<5>(3,2,1,0,4), NPerm<5>(3,2,0,1,4)
+const Perm<5> Perm<5>::S4[24] = {
+    Perm<5>(0,1,2,3,4), Perm<5>(0,1,3,2,4), Perm<5>(0,2,3,1,4), Perm<5>(0,2,1,3,4),
+    Perm<5>(0,3,1,2,4), Perm<5>(0,3,2,1,4), Perm<5>(1,0,3,2,4), Perm<5>(1,0,2,3,4),
+    Perm<5>(1,2,0,3,4), Perm<5>(1,2,3,0,4), Perm<5>(1,3,2,0,4), Perm<5>(1,3,0,2,4),
+    Perm<5>(2,0,1,3,4), Perm<5>(2,0,3,1,4), Perm<5>(2,1,3,0,4), Perm<5>(2,1,0,3,4),
+    Perm<5>(2,3,0,1,4), Perm<5>(2,3,1,0,4), Perm<5>(3,0,2,1,4), Perm<5>(3,0,1,2,4),
+    Perm<5>(3,1,0,2,4), Perm<5>(3,1,2,0,4), Perm<5>(3,2,1,0,4), Perm<5>(3,2,0,1,4)
 };
 
-const NPerm<5>* NPerm<5>::Sn_1 = NPerm<5>::S4;
+const Perm<5>* Perm<5>::Sn_1 = Perm<5>::S4;
 
-const NPerm<5> NPerm<5>::orderedS4[24] = {
-    NPerm<5>(0,1,2,3,4), NPerm<5>(0,1,3,2,4), NPerm<5>(0,2,1,3,4), NPerm<5>(0,2,3,1,4),
-    NPerm<5>(0,3,1,2,4), NPerm<5>(0,3,2,1,4), NPerm<5>(1,0,2,3,4), NPerm<5>(1,0,3,2,4),
-    NPerm<5>(1,2,0,3,4), NPerm<5>(1,2,3,0,4), NPerm<5>(1,3,0,2,4), NPerm<5>(1,3,2,0,4),
-    NPerm<5>(2,0,1,3,4), NPerm<5>(2,0,3,1,4), NPerm<5>(2,1,0,3,4), NPerm<5>(2,1,3,0,4),
-    NPerm<5>(2,3,0,1,4), NPerm<5>(2,3,1,0,4), NPerm<5>(3,0,1,2,4), NPerm<5>(3,0,2,1,4),
-    NPerm<5>(3,1,0,2,4), NPerm<5>(3,1,2,0,4), NPerm<5>(3,2,0,1,4), NPerm<5>(3,2,1,0,4)
+const Perm<5> Perm<5>::orderedS4[24] = {
+    Perm<5>(0,1,2,3,4), Perm<5>(0,1,3,2,4), Perm<5>(0,2,1,3,4), Perm<5>(0,2,3,1,4),
+    Perm<5>(0,3,1,2,4), Perm<5>(0,3,2,1,4), Perm<5>(1,0,2,3,4), Perm<5>(1,0,3,2,4),
+    Perm<5>(1,2,0,3,4), Perm<5>(1,2,3,0,4), Perm<5>(1,3,0,2,4), Perm<5>(1,3,2,0,4),
+    Perm<5>(2,0,1,3,4), Perm<5>(2,0,3,1,4), Perm<5>(2,1,0,3,4), Perm<5>(2,1,3,0,4),
+    Perm<5>(2,3,0,1,4), Perm<5>(2,3,1,0,4), Perm<5>(3,0,1,2,4), Perm<5>(3,0,2,1,4),
+    Perm<5>(3,1,0,2,4), Perm<5>(3,1,2,0,4), Perm<5>(3,2,0,1,4), Perm<5>(3,2,1,0,4)
 };
 
-const NPerm<5> NPerm<5>::S3[6] = {
-    NPerm<5>(0,1,2,3,4), NPerm<5>(0,2,1,3,4),
-    NPerm<5>(1,2,0,3,4), NPerm<5>(1,0,2,3,4),
-    NPerm<5>(2,0,1,3,4), NPerm<5>(2,1,0,3,4)
+const Perm<5> Perm<5>::S3[6] = {
+    Perm<5>(0,1,2,3,4), Perm<5>(0,2,1,3,4),
+    Perm<5>(1,2,0,3,4), Perm<5>(1,0,2,3,4),
+    Perm<5>(2,0,1,3,4), Perm<5>(2,1,0,3,4)
 };
 
-const NPerm<5> NPerm<5>::orderedS3[6] = {
-    NPerm<5>(0,1,2,3,4), NPerm<5>(0,2,1,3,4),
-    NPerm<5>(1,0,2,3,4), NPerm<5>(1,2,0,3,4),
-    NPerm<5>(2,0,1,3,4), NPerm<5>(2,1,0,3,4)
+const Perm<5> Perm<5>::orderedS3[6] = {
+    Perm<5>(0,1,2,3,4), Perm<5>(0,2,1,3,4),
+    Perm<5>(1,0,2,3,4), Perm<5>(1,2,0,3,4),
+    Perm<5>(2,0,1,3,4), Perm<5>(2,1,0,3,4)
 };
 
-const NPerm<5> NPerm<5>::S2[2] = {
-    NPerm<5>(0,1,2,3,4), NPerm<5>(1,0,2,3,4)
+const Perm<5> Perm<5>::S2[2] = {
+    Perm<5>(0,1,2,3,4), Perm<5>(1,0,2,3,4)
 };
 
-bool NPerm<5>::isPermCode(Code code) {
+bool Perm<5>::isPermCode(Code code) {
     unsigned mask = 0;
     for (int i = 0; i < 5; i++)
         mask |= (1 << ((code >> (3 * i)) & 7));
@@ -168,7 +168,7 @@ bool NPerm<5>::isPermCode(Code code) {
     return (mask == 31);
 }
 
-int NPerm<5>::sign() const {
+int Perm<5>::sign() const {
     // Try to streamline this routine.
 
     // Count the number of elements that map to themselves.
@@ -222,7 +222,7 @@ int NPerm<5>::sign() const {
     return -1;
 }
 
-int NPerm<5>::compareWith(const NPerm<5>& other) const {
+int Perm<5>::compareWith(const Perm<5>& other) const {
     for (int i = 0; i < 5; i++) {
         if (imageOf(i) < other.imageOf(i))
             return -1;
@@ -232,7 +232,7 @@ int NPerm<5>::compareWith(const NPerm<5>& other) const {
     return 0;
 }
 
-std::string NPerm<5>::str() const {
+std::string Perm<5>::str() const {
     char ans[6];
     for (int i = 0; i < 5; i++)
         ans[i] = static_cast<char>('0' + imageOf(i));
@@ -241,7 +241,7 @@ std::string NPerm<5>::str() const {
     return ans;
 }
 
-std::string NPerm<5>::trunc(unsigned len) const {
+std::string Perm<5>::trunc(unsigned len) const {
     char ans[6];
     for (unsigned i = 0; i < len; ++i)
         ans[i] = static_cast<char>('0' + imageOf(i));
@@ -249,7 +249,7 @@ std::string NPerm<5>::trunc(unsigned len) const {
     return ans;
 }
 
-std::string NPerm<5>::trunc2() const {
+std::string Perm<5>::trunc2() const {
     char ans[3];
     ans[0] = static_cast<char>('0' + imageOf(0));
     ans[1] = static_cast<char>('0' + imageOf(1));
@@ -257,7 +257,7 @@ std::string NPerm<5>::trunc2() const {
     return ans;
 }
 
-std::string NPerm<5>::trunc3() const {
+std::string Perm<5>::trunc3() const {
     char ans[4];
     ans[0] = static_cast<char>('0' + imageOf(0));
     ans[1] = static_cast<char>('0' + imageOf(1));
@@ -266,7 +266,7 @@ std::string NPerm<5>::trunc3() const {
     return ans;
 }
 
-std::string NPerm<5>::trunc4() const {
+std::string Perm<5>::trunc4() const {
     char ans[5];
     ans[0] = static_cast<char>('0' + imageOf(0));
     ans[1] = static_cast<char>('0' + imageOf(1));
@@ -277,9 +277,9 @@ std::string NPerm<5>::trunc4() const {
 }
 
 /**
- * Returns the number n such that NPerm<5>::orderedS5[n] == *this.
+ * Returns the number n such that Perm<5>::orderedS5[n] == *this.
  */
-int NPerm<5>::orderedS5Index() const {
+int Perm<5>::orderedS5Index() const {
     return 24*imageOf(0) +
            6*( imageOf(1)-(   (imageOf(1) > imageOf(0)) ? 1 : 0) ) +
            2*( imageOf(2)-( ( (imageOf(2) > imageOf(1)) ? 1 : 0) +
@@ -289,9 +289,9 @@ int NPerm<5>::orderedS5Index() const {
 }
 
 /**
- * Returns the number n such that NPerm<5>::S5[n] == *this.
+ * Returns the number n such that Perm<5>::S5[n] == *this.
  */
-int NPerm<5>::S5Index() const {
+int Perm<5>::S5Index() const {
     // S5 is almost the same as orderedS5, except that some pairs
     // S5[2i] <--> S5[2i+1] have been swapped to ensure that all
     // permutations S5[2i] are even and all permutations S5[2i+1] are odd.

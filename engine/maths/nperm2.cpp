@@ -35,19 +35,19 @@
 
 namespace regina {
 
-const NPerm<2>::Index NPerm<2>::nPerms;
-const NPerm<2>::Index NPerm<2>::nPerms_1;
+const Perm<2>::Index Perm<2>::nPerms;
+const Perm<2>::Index Perm<2>::nPerms_1;
 
-const NPerm<2> NPerm<2>::S2[2] = { NPerm<2>(), NPerm<2>(1) };
-const unsigned NPerm<2>::invS2[2] = { 0, 1 };
+const Perm<2> Perm<2>::S2[2] = { Perm<2>(), Perm<2>(1) };
+const unsigned Perm<2>::invS2[2] = { 0, 1 };
 
-const NPerm<2>* NPerm<2>::Sn = NPerm<2>::S2;
-const unsigned* NPerm<2>::invSn = NPerm<2>::invS2;
+const Perm<2>* Perm<2>::Sn = Perm<2>::S2;
+const unsigned* Perm<2>::invSn = Perm<2>::invS2;
 
-const NPerm<2>* NPerm<2>::orderedS2 = NPerm<2>::S2;
-const NPerm<2>* NPerm<2>::orderedSn = NPerm<2>::S2;
-const NPerm<2>* NPerm<2>::S1 = NPerm<2>::S2;
-const NPerm<2>* NPerm<2>::Sn_1 = NPerm<2>::S2;
+const Perm<2>* Perm<2>::orderedS2 = Perm<2>::S2;
+const Perm<2>* Perm<2>::orderedSn = Perm<2>::S2;
+const Perm<2>* Perm<2>::S1 = Perm<2>::S2;
+const Perm<2>* Perm<2>::Sn_1 = Perm<2>::S2;
 
 } // namespace regina
 

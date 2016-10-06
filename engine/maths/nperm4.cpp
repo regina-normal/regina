@@ -35,20 +35,20 @@
 
 namespace regina {
 
-const NPerm<4>::Index NPerm<4>::nPerms;
-const NPerm<4>::Index NPerm<4>::nPerms_1;
+const Perm<4>::Index Perm<4>::nPerms;
+const Perm<4>::Index Perm<4>::nPerms_1;
 
-const NPerm<4> NPerm<4>::S4[24] = {
-    NPerm<4>((NPerm<4>::Code)0),
-                NPerm<4>(1),  NPerm<4>(2),  NPerm<4>(3),  NPerm<4>(4),  NPerm<4>(5),
-    NPerm<4>(6),  NPerm<4>(7),  NPerm<4>(8),  NPerm<4>(9),  NPerm<4>(10), NPerm<4>(11),
-    NPerm<4>(12), NPerm<4>(13), NPerm<4>(14), NPerm<4>(15), NPerm<4>(16), NPerm<4>(17),
-    NPerm<4>(18), NPerm<4>(19), NPerm<4>(20), NPerm<4>(21), NPerm<4>(22), NPerm<4>(23)
+const Perm<4> Perm<4>::S4[24] = {
+    Perm<4>((Perm<4>::Code)0),
+                Perm<4>(1),  Perm<4>(2),  Perm<4>(3),  Perm<4>(4),  Perm<4>(5),
+    Perm<4>(6),  Perm<4>(7),  Perm<4>(8),  Perm<4>(9),  Perm<4>(10), Perm<4>(11),
+    Perm<4>(12), Perm<4>(13), Perm<4>(14), Perm<4>(15), Perm<4>(16), Perm<4>(17),
+    Perm<4>(18), Perm<4>(19), Perm<4>(20), Perm<4>(21), Perm<4>(22), Perm<4>(23)
 };
 
-const NPerm<4>* NPerm<4>::Sn = NPerm<4>::S4;
+const Perm<4>* Perm<4>::Sn = Perm<4>::S4;
 
-const unsigned NPerm<4>::invS4[24] = {
+const unsigned Perm<4>::invS4[24] = {
     0, 1, 4, 3,
     2, 5, 6, 7,
     12, 19, 18, 13,
@@ -57,7 +57,7 @@ const unsigned NPerm<4>::invS4[24] = {
     14, 21, 22, 17
 };
 
-const unsigned NPerm<4>::revS4[24] = {
+const unsigned Perm<4>::revS4[24] = {
     22, 17, 10, 21,
     14, 9, 16, 23,
     18, 5, 2, 13,
@@ -66,38 +66,38 @@ const unsigned NPerm<4>::revS4[24] = {
     12, 3, 0, 7
 };
 
-const unsigned* NPerm<4>::invSn = NPerm<4>::invS4;
+const unsigned* Perm<4>::invSn = Perm<4>::invS4;
 
-const NPerm<4> NPerm<4>::orderedS4[24] = {
-    NPerm<4>((NPerm<4>::Code)0),  NPerm<4>(1),  NPerm<4>(3),  NPerm<4>(2),
-    NPerm<4>(4),  NPerm<4>(5),  NPerm<4>(7),  NPerm<4>(6),
-    NPerm<4>(8),  NPerm<4>(9),  NPerm<4>(11), NPerm<4>(10),
-    NPerm<4>(12), NPerm<4>(13), NPerm<4>(15), NPerm<4>(14),
-    NPerm<4>(16), NPerm<4>(17), NPerm<4>(19), NPerm<4>(18),
-    NPerm<4>(20), NPerm<4>(21), NPerm<4>(23), NPerm<4>(22)
+const Perm<4> Perm<4>::orderedS4[24] = {
+    Perm<4>((Perm<4>::Code)0),  Perm<4>(1),  Perm<4>(3),  Perm<4>(2),
+    Perm<4>(4),  Perm<4>(5),  Perm<4>(7),  Perm<4>(6),
+    Perm<4>(8),  Perm<4>(9),  Perm<4>(11), Perm<4>(10),
+    Perm<4>(12), Perm<4>(13), Perm<4>(15), Perm<4>(14),
+    Perm<4>(16), Perm<4>(17), Perm<4>(19), Perm<4>(18),
+    Perm<4>(20), Perm<4>(21), Perm<4>(23), Perm<4>(22)
 };
 
-const NPerm<4>* NPerm<4>::orderedSn = NPerm<4>::orderedS4;
+const Perm<4>* Perm<4>::orderedSn = Perm<4>::orderedS4;
 
-const NPerm<4> NPerm<4>::S3[6] = {
-    NPerm<4>(0,1,2,3), NPerm<4>(0,2,1,3),
-    NPerm<4>(1,2,0,3), NPerm<4>(1,0,2,3),
-    NPerm<4>(2,0,1,3), NPerm<4>(2,1,0,3)
+const Perm<4> Perm<4>::S3[6] = {
+    Perm<4>(0,1,2,3), Perm<4>(0,2,1,3),
+    Perm<4>(1,2,0,3), Perm<4>(1,0,2,3),
+    Perm<4>(2,0,1,3), Perm<4>(2,1,0,3)
 };
 
-const NPerm<4>* NPerm<4>::Sn_1 = NPerm<4>::S3;
+const Perm<4>* Perm<4>::Sn_1 = Perm<4>::S3;
 
-const NPerm<4> NPerm<4>::orderedS3[6] = {
-    NPerm<4>(0,1,2,3), NPerm<4>(0,2,1,3),
-    NPerm<4>(1,0,2,3), NPerm<4>(1,2,0,3),
-    NPerm<4>(2,0,1,3), NPerm<4>(2,1,0,3)
+const Perm<4> Perm<4>::orderedS3[6] = {
+    Perm<4>(0,1,2,3), Perm<4>(0,2,1,3),
+    Perm<4>(1,0,2,3), Perm<4>(1,2,0,3),
+    Perm<4>(2,0,1,3), Perm<4>(2,1,0,3)
 };
 
-const NPerm<4> NPerm<4>::S2[2] = {
-    NPerm<4>(0,1,2,3), NPerm<4>(1,0,2,3)
+const Perm<4> Perm<4>::S2[2] = {
+    Perm<4>(0,1,2,3), Perm<4>(1,0,2,3)
 };
 
-const NPerm<4>::Code NPerm<4>::imageTable[24][4] = {
+const Perm<4>::Code Perm<4>::imageTable[24][4] = {
     { 0, 1, 2, 3 }, { 0, 1, 3, 2 }, { 0, 2, 3, 1 }, { 0, 2, 1, 3 },
     { 0, 3, 1, 2 }, { 0, 3, 2, 1 }, { 1, 0, 3, 2 }, { 1, 0, 2, 3 },
     { 1, 2, 0, 3 }, { 1, 2, 3, 0 }, { 1, 3, 2, 0 }, { 1, 3, 0, 2 },
@@ -106,7 +106,7 @@ const NPerm<4>::Code NPerm<4>::imageTable[24][4] = {
     { 3, 1, 0, 2 }, { 3, 1, 2, 0 }, { 3, 2, 1, 0 }, { 3, 2, 0, 1 }
 };
 
-const NPerm<4>::Code NPerm<4>::productTable[24][24] = {
+const Perm<4>::Code Perm<4>::productTable[24][24] = {
     // Generated using an older version of Regina in which products were
     // computed (not simply looked up from a dictionary like the one below).
     { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23 },
@@ -135,14 +135,14 @@ const NPerm<4>::Code NPerm<4>::productTable[24][24] = {
     { 23,22,19,18,21,20,17,16,13,12,15,14,5,4,3,2,1,0,11,10,9,8,7,6 }
 };
 
-const NPerm<4>::Code NPerm<4>::swapTable[4][4] = {
+const Perm<4>::Code Perm<4>::swapTable[4][4] = {
     {  0, 7, 15, 21 },
     {  7, 0,  3,  5 },
     { 15, 3,  0,  1 },
     { 21, 5,  1,  0 }
 };
 
-NPerm<4>::NPerm(int a0, int a1, int b0, int b1, int c0, int c1, int d0, int d1) {
+Perm<4>::Perm(int a0, int a1, int b0, int b1, int c0, int c1, int d0, int d1) {
     int image[4];
     image[a0] = a1;
     image[b0] = b1;
@@ -151,7 +151,7 @@ NPerm<4>::NPerm(int a0, int a1, int b0, int b1, int c0, int c1, int d0, int d1) 
     code_ = static_cast<Code>(S4Index(image[0], image[1], image[2], image[3]));
 }
 
-NPerm<4>::NPerm(const int* a, const int* b) {
+Perm<4>::Perm(const int* a, const int* b) {
     int image[4];
     image[a[0]] = b[0];
     image[a[1]] = b[1];
@@ -160,7 +160,7 @@ NPerm<4>::NPerm(const int* a, const int* b) {
     code_ = static_cast<Code>(S4Index(image[0], image[1], image[2], image[3]));
 }
 
-bool NPerm<4>::isPermCode(Code code) {
+bool Perm<4>::isPermCode(Code code) {
     unsigned mask = 0;
     for (int i = 0; i < 4; i++)
         mask |= (1 << ((code >> (2 * i)) & 3));
@@ -168,7 +168,7 @@ bool NPerm<4>::isPermCode(Code code) {
     return (mask == 15);
 }
 
-std::string NPerm<4>::str() const {
+std::string Perm<4>::str() const {
     char ans[5];
     for (int i = 0; i < 4; i++)
         ans[i] = static_cast<char>('0' + imageTable[code_][i]);
@@ -177,7 +177,7 @@ std::string NPerm<4>::str() const {
     return ans;
 }
 
-std::string NPerm<4>::trunc(unsigned len) const {
+std::string Perm<4>::trunc(unsigned len) const {
     char ans[5];
     for (unsigned i = 0; i < len; ++i)
         ans[i] = static_cast<char>('0' + imageTable[code_][i]);
@@ -185,7 +185,7 @@ std::string NPerm<4>::trunc(unsigned len) const {
     return ans;
 }
 
-std::string NPerm<4>::trunc2() const {
+std::string Perm<4>::trunc2() const {
     char ans[3];
     ans[0] = static_cast<char>('0' + imageTable[code_][0]);
     ans[1] = static_cast<char>('0' + imageTable[code_][1]);
@@ -193,7 +193,7 @@ std::string NPerm<4>::trunc2() const {
     return ans;
 }
 
-std::string NPerm<4>::trunc3() const {
+std::string Perm<4>::trunc3() const {
     char ans[4];
     ans[0] = static_cast<char>('0' + imageTable[code_][0]);
     ans[1] = static_cast<char>('0' + imageTable[code_][1]);

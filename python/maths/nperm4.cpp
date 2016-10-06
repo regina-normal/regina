@@ -76,64 +76,68 @@ namespace {
 }
 
 void addNPerm4() {
-    scope s = class_<NPerm<4>>("NPerm4")
-        .def(init<int, int>())
-        .def(init<int, int, int, int>())
-        .def(init<int, int, int, int, int, int, int, int>())
-        .def(init<const NPerm<4>&>())
-        .def("permCode", &NPerm<4>::permCode)
-        .def("permCode2", &NPerm<4>::permCode2)
-        .def("setPermCode", &NPerm<4>::setPermCode)
-        .def("setPermCode2", &NPerm<4>::setPermCode2)
-        .def("fromPermCode", &NPerm<4>::fromPermCode)
-        .def("fromPermCode2", &NPerm<4>::fromPermCode2)
-        .def("isPermCode", &NPerm<4>::isPermCode)
-        .def("isPermCode2", &NPerm<4>::isPermCode2)
-        .def(self * self)
-        .def("inverse", &NPerm<4>::inverse)
-        .def("reverse", &NPerm<4>::reverse)
-        .def("sign", &NPerm<4>::sign)
-        .def("__getitem__", &NPerm<4>::operator[])
-        .def("preImageOf", &NPerm<4>::preImageOf)
-        .def("compareWith", &NPerm<4>::compareWith)
-        .def("isIdentity", &NPerm<4>::isIdentity)
-        .def("atIndex", &NPerm<4>::atIndex)
-        .def("index", &NPerm<4>::index)
-        .def("rand", &NPerm<4>::rand)
-        .def("trunc", &NPerm<4>::trunc)
-        .def("trunc2", &NPerm<4>::trunc2)
-        .def("trunc3", &NPerm<4>::trunc3)
-        .def("S4Index", S4Index_void)
-        .def("orderedS4Index", &NPerm<4>::orderedS4Index)
-        .def("orderedSnIndex", &NPerm<4>::orderedS4Index)
-        .def("extend", &NPerm<4>::extend<2>)
-        .def("extend", &NPerm<4>::extend<3>)
-        .def(NPerm4_contract<5>())
-        .def("__repr__", &NPerm<4>::str)
-        .def(regina::python::add_output_basic())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("fromPermCode")
-        .staticmethod("fromPermCode2")
-        .staticmethod("isPermCode")
-        .staticmethod("isPermCode2")
-        .staticmethod("atIndex")
-        .staticmethod("rand")
-        .staticmethod("extend")
-        .staticmethod("contract")
-    ;
+    {
+        scope s = class_<NPerm<4>>("Perm4")
+            .def(init<int, int>())
+            .def(init<int, int, int, int>())
+            .def(init<int, int, int, int, int, int, int, int>())
+            .def(init<const NPerm<4>&>())
+            .def("permCode", &NPerm<4>::permCode)
+            .def("permCode2", &NPerm<4>::permCode2)
+            .def("setPermCode", &NPerm<4>::setPermCode)
+            .def("setPermCode2", &NPerm<4>::setPermCode2)
+            .def("fromPermCode", &NPerm<4>::fromPermCode)
+            .def("fromPermCode2", &NPerm<4>::fromPermCode2)
+            .def("isPermCode", &NPerm<4>::isPermCode)
+            .def("isPermCode2", &NPerm<4>::isPermCode2)
+            .def(self * self)
+            .def("inverse", &NPerm<4>::inverse)
+            .def("reverse", &NPerm<4>::reverse)
+            .def("sign", &NPerm<4>::sign)
+            .def("__getitem__", &NPerm<4>::operator[])
+            .def("preImageOf", &NPerm<4>::preImageOf)
+            .def("compareWith", &NPerm<4>::compareWith)
+            .def("isIdentity", &NPerm<4>::isIdentity)
+            .def("atIndex", &NPerm<4>::atIndex)
+            .def("index", &NPerm<4>::index)
+            .def("rand", &NPerm<4>::rand)
+            .def("trunc", &NPerm<4>::trunc)
+            .def("trunc2", &NPerm<4>::trunc2)
+            .def("trunc3", &NPerm<4>::trunc3)
+            .def("S4Index", S4Index_void)
+            .def("orderedS4Index", &NPerm<4>::orderedS4Index)
+            .def("orderedSnIndex", &NPerm<4>::orderedS4Index)
+            .def("extend", &NPerm<4>::extend<2>)
+            .def("extend", &NPerm<4>::extend<3>)
+            .def(NPerm4_contract<5>())
+            .def("__repr__", &NPerm<4>::str)
+            .def(regina::python::add_output_basic())
+            .def(regina::python::add_eq_operators())
+            .staticmethod("fromPermCode")
+            .staticmethod("fromPermCode2")
+            .staticmethod("isPermCode")
+            .staticmethod("isPermCode2")
+            .staticmethod("atIndex")
+            .staticmethod("rand")
+            .staticmethod("extend")
+            .staticmethod("contract")
+        ;
 
-    s.attr("nPerms") = NPerm<4>::nPerms;
-    s.attr("nPerms_1") = NPerm<4>::nPerms_1;
+        s.attr("nPerms") = NPerm<4>::nPerms;
+        s.attr("nPerms_1") = NPerm<4>::nPerms_1;
 
-    s.attr("S4") = &NPerm4_S4_arr;
-    s.attr("Sn") = &NPerm4_S4_arr;
-    s.attr("invS4") = &NPerm4_invS4_arr;
-    s.attr("invSn") = &NPerm4_invS4_arr;
-    s.attr("orderedS4") = &NPerm4_orderedS4_arr;
-    s.attr("orderedSn") = &NPerm4_orderedS4_arr;
-    s.attr("S3") = &NPerm4_S3_arr;
-    s.attr("Sn_1") = &NPerm4_S3_arr;
-    s.attr("orderedS3") = &NPerm4_orderedS3_arr;
-    s.attr("S2") = &NPerm4_S2_arr;
+        s.attr("S4") = &NPerm4_S4_arr;
+        s.attr("Sn") = &NPerm4_S4_arr;
+        s.attr("invS4") = &NPerm4_invS4_arr;
+        s.attr("invSn") = &NPerm4_invS4_arr;
+        s.attr("orderedS4") = &NPerm4_orderedS4_arr;
+        s.attr("orderedSn") = &NPerm4_orderedS4_arr;
+        s.attr("S3") = &NPerm4_S3_arr;
+        s.attr("Sn_1") = &NPerm4_S3_arr;
+        s.attr("orderedS3") = &NPerm4_orderedS3_arr;
+        s.attr("S2") = &NPerm4_S2_arr;
+    }
+
+    scope().attr("NPerm4") = scope().attr("Perm4");
 }
 

@@ -89,8 +89,8 @@ inline constexpr int64_t factorial(int n) {
  * Amongst other things, such permutations are used to describe
  * simplex gluings in (<i>n</i>-1)-manifold triangulations.
  *
- * NPerm objects are small enough to pass about by value instead of by
- * reference.  The trade-off is that, for this to be possible, the NPerm
+ * Perm objects are small enough to pass about by value instead of by
+ * reference.  The trade-off is that, for this to be possible, the Perm
  * template class can only work with \a n &le; 16.
  *
  * Each permutation has an internal code, which is a single native
@@ -107,7 +107,7 @@ inline constexpr int64_t factorial(int n) {
  * - For \a n &le; 4, the code is an index into a hard-coded list of
  *   all possible permutations (i.e., an index into the symmetric group
  *   <i>S<sub>n</sub></i>).  For details, see the documentation for
- *   the specialisations NPerm<2>, NPerm<3> and NPerm<4> respectively.
+ *   the specialisations Perm<2>, Perm<3> and Perm<4> respectively.
  *
  * For \a n = 2,...,5 (which appear throughout 2-, 3- and 4-manifold
  * triangulations), this template is specialised: the code is highly optimised
@@ -121,16 +121,16 @@ inline constexpr int64_t factorial(int n) {
  * This must be between 2 and 16 inclusive.
  */
 template <int n>
-class NPerm {
+class Perm {
     static_assert(n >= 5 && n <= 16,
-        "The generic NPerm<n> template is only available for 5 <= n <= 16.");
+        "The generic Perm<n> template is only available for 5 <= n <= 16.");
     public:
         /**
          * Indicates the number of bits used by the permutation code
          * to store the image of a single integer.
          *
          * This constant refers to the "image packing" codes that are
-         * used for \a n &ge; 5, as described in the NPerm class notes.
+         * used for \a n &ge; 5, as described in the Perm class notes.
          * For \a n &le; 4 the permutation codes are constructed in a
          * different way, and so this constant is not present.
          *
@@ -177,13 +177,13 @@ class NPerm {
          * Internal helper routine.  This routine recursively computes the
          * private constant idCode_ at compile time.
          */
-        static constexpr typename NPerm<n>::Code idCodePartial(int k);
+        static constexpr typename Perm<n>::Code idCodePartial(int k);
 
         static constexpr Code idCode_ = idCodePartial(n - 1);
             /**< The internal code for the identity permutation. */
 
         static constexpr Code imageMask_ = (static_cast<
-                typename NPerm<n>::Code>(1) << NPerm<n>::imageBits) - 1;
+                typename Perm<n>::Code>(1) << Perm<n>::imageBits) - 1;
             /**< A bitmask whose lowest \a imageBits are 1, and whose
                  remaining higher order bits are all 0. */
 
@@ -191,7 +191,7 @@ class NPerm {
         /**
          * Creates the identity permutation.
          */
-        NPerm();
+        Perm();
 
         /**
          * Creates the transposition of \a a and \a b.
@@ -202,7 +202,7 @@ class NPerm {
          * @param a the element to switch with \a b.
          * @param b the element to switch with \a a.
          */
-        NPerm(int a, int b);
+        Perm(int a, int b);
 
         /**
          * Creates a permutation mapping \a i to \a image[\a i] for each
@@ -213,7 +213,7 @@ class NPerm {
          *
          * @param image the array of images.
          */
-        NPerm(const int* image);
+        Perm(const int* image);
 
         /**
          * Creates a permutation mapping
@@ -229,7 +229,7 @@ class NPerm {
          * @param b the corresponding array of images; this must also have
          * length \a n.
          */
-        NPerm(const int* a, const int* b);
+        Perm(const int* a, const int* b);
 
         /**
          * Creates a permutation that is a clone of the given
@@ -237,7 +237,7 @@ class NPerm {
          *
          * @param cloneMe the permutation to clone.
          */
-        NPerm(const NPerm<n>& cloneMe);
+        Perm(const Perm<n>& cloneMe);
 
         /**
          * Returns the internal code representing this permutation.
@@ -273,7 +273,7 @@ class NPerm {
          * @return the permutation reprsented by the given internal
          * code.
          */
-        static NPerm fromPermCode(Code code);
+        static Perm fromPermCode(Code code);
 
         /**
          * Determines whether the given integer is a valid internal
@@ -292,7 +292,7 @@ class NPerm {
          * to this permutation.
          * @return a reference to this permutation.
          */
-        NPerm& operator = (const NPerm& cloneMe);
+        Perm& operator = (const Perm& cloneMe);
 
         /**
          * Returns the composition of this permutation with the given
@@ -302,14 +302,14 @@ class NPerm {
          * @param q the permutation to compose this with.
          * @return the composition of both permutations.
          */
-        NPerm operator * (const NPerm& q) const;
+        Perm operator * (const Perm& q) const;
 
         /**
          * Finds the inverse of this permutation.
          *
          * @return the inverse of this permutation.
          */
-        NPerm inverse() const;
+        Perm inverse() const;
 
         /**
          * Finds the reverse of this permutation.
@@ -318,7 +318,7 @@ class NPerm {
          * 0,...,<i>n</i>-1.  In other words, if permutation \a q is the
          * reverse of \a p, then <tt>p[i] == q[n - 1 - i]</tt> for all \a i.
          */
-        NPerm reverse() const;
+        Perm reverse() const;
 
         /**
          * Determines the sign of this permutation.
@@ -357,7 +357,7 @@ class NPerm {
          * @return \c true if and only if this and the given permutation
          * are equal.
          */
-        bool operator == (const NPerm& other) const;
+        bool operator == (const Perm& other) const;
 
         /**
          * Determines if this differs from the given permutation.
@@ -368,7 +368,7 @@ class NPerm {
          * @return \c true if and only if this and the given permutation
          * differ.
          */
-        bool operator != (const NPerm& other) const;
+        bool operator != (const Perm& other) const;
 
         /**
          * Lexicographically compares the images of (0,1,...,\a n-1) under this
@@ -379,7 +379,7 @@ class NPerm {
          * the permutations are equal, and 1 if this permutation produces
          * a greater image.
          */
-        int compareWith(const NPerm& other) const;
+        int compareWith(const Perm& other) const;
 
         /**
          * Determines if this is the identity permutation.
@@ -402,7 +402,7 @@ class NPerm {
          * must be between 0 and <i>n</i>!-1 inclusive.
          * @return the <i>i</i>th permutation.
          */
-        static NPerm atIndex(Index i);
+        static Perm atIndex(Index i);
 
         /**
          * Returns the lexicographical index of this permutation.  This
@@ -429,7 +429,7 @@ class NPerm {
          *
          * @return a random permutation.
          */
-        static NPerm rand();
+        static Perm rand();
 
         /**
          * Returns a string representation of this permutation.
@@ -470,7 +470,7 @@ class NPerm {
          * \a n elements.
          */
         template <int k>
-        static NPerm extend(NPerm<k> p);
+        static Perm extend(Perm<k> p);
 
         /**
          * Restricts a <i>k</i>-element permutation to an <i>n</i>-element
@@ -491,7 +491,7 @@ class NPerm {
          * \a n elements.
          */
         template <int k>
-        static NPerm contract(NPerm<k> p);
+        static Perm contract(Perm<k> p);
 
     private:
         /**
@@ -503,13 +503,13 @@ class NPerm {
          * @param code the internal code from which the new permutation
          * will be created.
          */
-        NPerm(Code code);
+        Perm(Code code);
 };
 
 /**
  * Writes a string representation of the given permutation to the given
  * output stream.  The format will be the same as is used by
- * NPerm::str().
+ * Perm::str().
  *
  * @param out the output stream to which to write.
  * @param p the permutation to write.
@@ -519,51 +519,60 @@ class NPerm {
  * This must be between 3 and 16 inclusive.
  */
 template <int n>
-inline std::ostream& operator << (std::ostream& out, const NPerm<n>& p) {
+inline std::ostream& operator << (std::ostream& out, const Perm<n>& p) {
     return (out << p.str());
 }
 
 // Note that some of our permutation classes are specialised elsewhere.
 // Do not explicitly drag in the specialised headers just yet.
-template <> class NPerm<2>;
-template <> class NPerm<3>;
-template <> class NPerm<4>;
-template <> class NPerm<5>;
+template <> class Perm<2>;
+template <> class Perm<3>;
+template <> class Perm<4>;
+template <> class Perm<5>;
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NPerm has now been renamed to Perm.
+ */
+template <int n>
+using NPerm REGINA_DEPRECATED = Perm<n>;
 
 /*@}*/
 
-// Static constants for NPerm
+// Static constants for Perm
 
 template <int n>
-constexpr typename NPerm<n>::Index NPerm<n>::nPerms;
+constexpr typename Perm<n>::Index Perm<n>::nPerms;
 
 template <int n>
-constexpr typename NPerm<n>::Index NPerm<n>::nPerms_1;
+constexpr typename Perm<n>::Index Perm<n>::nPerms_1;
 
 template <int n>
-constexpr int NPerm<n>::imageBits;
+constexpr int Perm<n>::imageBits;
 
 template <int n>
-constexpr typename NPerm<n>::Code NPerm<n>::idCode_;
+constexpr typename Perm<n>::Code Perm<n>::idCode_;
 
 template <int n>
-constexpr typename NPerm<n>::Code NPerm<n>::imageMask_;
+constexpr typename Perm<n>::Code Perm<n>::imageMask_;
 
-// Inline functions for NPerm
+// Inline functions for Perm
 
 template <int n>
-inline constexpr typename NPerm<n>::Code NPerm<n>::idCodePartial(int k) {
+inline constexpr typename Perm<n>::Code Perm<n>::idCodePartial(int k) {
     return (k == 0 ? 0 :
-        (static_cast<Code>(k) << (NPerm<n>::imageBits * k)) |
+        (static_cast<Code>(k) << (Perm<n>::imageBits * k)) |
             idCodePartial(k - 1));
 }
 
 template <int n>
-inline NPerm<n>::NPerm() : code_(idCode_) {
+inline Perm<n>::Perm() : code_(idCode_) {
 }
 
 template <int n>
-inline NPerm<n>::NPerm(int a, int b) : code_(idCode_) {
+inline Perm<n>::Perm(int a, int b) : code_(idCode_) {
     code_ &= ~(imageMask_ << (imageBits * a));
     code_ &= ~(imageMask_ << (imageBits * b));
     code_ |= (static_cast<Code>(a) << (imageBits * b));
@@ -571,44 +580,44 @@ inline NPerm<n>::NPerm(int a, int b) : code_(idCode_) {
 }
 
 template <int n>
-inline NPerm<n>::NPerm(const int* image) {
+inline Perm<n>::Perm(const int* image) {
     code_ = 0;
     for (int i = 0; i < n; ++i)
         code_ |= (static_cast<Code>(image[i]) << (imageBits * i));
 }
 
 template <int n>
-inline NPerm<n>::NPerm(const int* a, const int* b) {
+inline Perm<n>::Perm(const int* a, const int* b) {
     code_ = 0;
     for (int i = 0; i < n; ++i)
         code_ |= (static_cast<Code>(b[i]) << (imageBits * a[i]));
 }
 
 template <int n>
-inline NPerm<n>::NPerm(const NPerm<n>& cloneMe) : code_(cloneMe.code_) {
+inline Perm<n>::Perm(const Perm<n>& cloneMe) : code_(cloneMe.code_) {
 }
 
 template <int n>
-inline NPerm<n>::NPerm(Code code) : code_(code) {
+inline Perm<n>::Perm(Code code) : code_(code) {
 }
 
 template <int n>
-inline typename NPerm<n>::Code NPerm<n>::permCode() const {
+inline typename Perm<n>::Code Perm<n>::permCode() const {
     return code_;
 }
 
 template <int n>
-inline void NPerm<n>::setPermCode(Code code) {
+inline void Perm<n>::setPermCode(Code code) {
     code_ = code;
 }
 
 template <int n>
-inline NPerm<n> NPerm<n>::fromPermCode(Code code) {
-    return NPerm<n>(code);
+inline Perm<n> Perm<n>::fromPermCode(Code code) {
+    return Perm<n>(code);
 }
 
 template <int n>
-bool NPerm<n>::isPermCode(Code code) {
+bool Perm<n>::isPermCode(Code code) {
     unsigned mask = 0;
     for (int i = 0; i < n; ++i)
         mask |= (1 << ((code >> (imageBits * i)) & imageMask_));
@@ -616,37 +625,37 @@ bool NPerm<n>::isPermCode(Code code) {
 }
 
 template <int n>
-inline NPerm<n>& NPerm<n>::operator = (const NPerm& cloneMe) {
+inline Perm<n>& Perm<n>::operator = (const Perm& cloneMe) {
     code_ = cloneMe.code_;
     return *this;
 }
 
 template <int n>
-inline NPerm<n> NPerm<n>::operator * (const NPerm& q) const {
+inline Perm<n> Perm<n>::operator * (const Perm& q) const {
     Code c = 0;
     for (int i = 0; i < n; ++i)
         c |= (static_cast<Code>((*this)[q[i]]) << (imageBits * i));
-    return NPerm<n>(c);
+    return Perm<n>(c);
 }
 
 template <int n>
-inline NPerm<n> NPerm<n>::inverse() const {
+inline Perm<n> Perm<n>::inverse() const {
     Code c = 0;
     for (int i = 0; i < n; ++i)
         c |= (static_cast<Code>(i) << (imageBits * (*this)[i]));
-    return NPerm<n>(c);
+    return Perm<n>(c);
 }
 
 template <int n>
-inline NPerm<n> NPerm<n>::reverse() const {
+inline Perm<n> Perm<n>::reverse() const {
     Code c = 0;
     for (int i = 0; i < n; ++i)
         c |= (static_cast<Code>((*this)[i]) << (imageBits * (n - 1 - i)));
-    return NPerm<n>(c);
+    return Perm<n>(c);
 }
 
 template <int n>
-int NPerm<n>::sign() const {
+int Perm<n>::sign() const {
     // This algorithm is quadratic in n.  Surely we can do better?
     bool even = true;
     for (int i = 0; i < n; ++i)
@@ -657,12 +666,12 @@ int NPerm<n>::sign() const {
 }
 
 template <int n>
-inline int NPerm<n>::operator[](int source) const {
+inline int Perm<n>::operator[](int source) const {
     return (code_ >> (imageBits * source)) & imageMask_;
 }
 
 template <int n>
-inline int NPerm<n>::preImageOf(int image) const {
+inline int Perm<n>::preImageOf(int image) const {
     for (int i = 0; i < n; ++i)
         if (((code_ >> (imageBits * i)) & imageMask_) == image)
             return i;
@@ -671,17 +680,17 @@ inline int NPerm<n>::preImageOf(int image) const {
 }
 
 template <int n>
-inline bool NPerm<n>::operator == (const NPerm& other) const {
+inline bool Perm<n>::operator == (const Perm& other) const {
     return (code_ == other.code_);
 }
 
 template <int n>
-inline bool NPerm<n>::operator != (const NPerm& other) const {
+inline bool Perm<n>::operator != (const Perm& other) const {
     return (code_ != other.code_);
 }
 
 template <int n>
-int NPerm<n>::compareWith(const NPerm& other) const {
+int Perm<n>::compareWith(const Perm& other) const {
     for (int i = 0; i < n; ++i) {
         if ((*this)[i] < other[i])
             return -1;
@@ -692,12 +701,12 @@ int NPerm<n>::compareWith(const NPerm& other) const {
 }
 
 template <int n>
-inline bool NPerm<n>::isIdentity() const {
+inline bool Perm<n>::isIdentity() const {
     return (code_ == idCode_);
 }
 
 template <int n>
-NPerm<n> NPerm<n>::atIndex(Index i) {
+Perm<n> Perm<n>::atIndex(Index i) {
     int image[n];
     int p, q;
     for (p = 0; p < n; ++p) {
@@ -708,11 +717,11 @@ NPerm<n> NPerm<n>::atIndex(Index i) {
         for (q = p + 1; q < n; ++q)
             if (image[q] >= image[p])
                 ++image[q];
-    return NPerm<n>(image);
+    return Perm<n>(image);
 }
 
 template <int n>
-typename NPerm<n>::Index NPerm<n>::index() const {
+typename Perm<n>::Index Perm<n>::index() const {
     int image[n];
     int p, q;
     for (p = 0; p < n; ++p)
@@ -730,7 +739,7 @@ typename NPerm<n>::Index NPerm<n>::index() const {
 }
 
 template <int n>
-NPerm<n> NPerm<n>::rand() {
+Perm<n> Perm<n>::rand() {
     // We can't just call atIndex(rand() % nPerms), since nPerms might
     // be too large to fit into an int (which is what rand() returns).
     int image[n];
@@ -741,11 +750,11 @@ NPerm<n> NPerm<n>::rand() {
         for (q = p + 1; q < n; ++q)
             if (image[q] >= image[p])
                 ++image[q];
-    return NPerm<n>(image);
+    return Perm<n>(image);
 }
 
 template <int n>
-std::string NPerm<n>::str() const {
+std::string Perm<n>::str() const {
     char ans[n + 1];
     for (int i = 0; i < n; ++i)
         ans[i] = regina::digit((code_ >> (imageBits * i)) & imageMask_);
@@ -755,7 +764,7 @@ std::string NPerm<n>::str() const {
 }
 
 template <int n>
-std::string NPerm<n>::trunc(unsigned len) const {
+std::string Perm<n>::trunc(unsigned len) const {
     char ans[n + 1];
     for (int i = 0; i < len; ++i)
         ans[i] = regina::digit((code_ >> (imageBits * i)) & imageMask_);
